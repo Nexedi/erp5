@@ -53,7 +53,9 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>def getModuleActionInformationDict(**kw):\n
+            <value> <string>from Products.ERP5Type.Cache import CachingMethod\n
+\n
+def getModuleActionInformationDict(**kw):\n
   Base_translateString = context.Base_translateString\n
   result_dict = {}\n
 \n
@@ -201,14 +203,12 @@
 \n
   return result_dict\n
 \n
-from Products.ERP5Type.Cache import CachingMethod\n
-from AccessControl import getSecurityManager\n
-\n
 getModuleActionInformationDict = CachingMethod(getModuleActionInformationDict,\n
                                                id=\'ERP5Site_getModuleActionInformationDict\',\n
                                                cache_factory=\'erp5_ui_long\')\n
-return getModuleActionInformationDict(user=getSecurityManager().getUser(),\n
-                                      language=context.Localizer.get_selected_language())\n
+return getModuleActionInformationDict(\n
+         user = context.portal_membership.getAuthenticatedMember().getId(), \\\n
+         language = context.Localizer.get_selected_language())\n
 </string> </value>
         </item>
         <item>
@@ -245,11 +245,9 @@ return getModuleActionInformationDict(user=getSecurityManager().getUser(),\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>getModuleActionInformationDict</string>
                             <string>Products.ERP5Type.Cache</string>
                             <string>CachingMethod</string>
-                            <string>AccessControl</string>
-                            <string>getSecurityManager</string>
+                            <string>getModuleActionInformationDict</string>
                             <string>_getattr_</string>
                             <string>context</string>
                           </tuple>

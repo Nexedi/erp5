@@ -53,72 +53,78 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>def getTabList(**kw):\n
-  tab_list = []\n
+            <value> <string>from Products.ERP5Type.Cache import CachingMethod\n
 \n
-  status_dict = context.ERP5Site_getConfiguredStatusDict()\n
+def getTabList(status_dict, info_dict):\n
+  tab_list = []\n
   basic_mode = status_dict[\'basic_mode\']\n
   dms_mode = status_dict[\'dms_mode\']\n
   express_mode = status_dict[\'express_mode\']\n
 \n
-  info_dict = context.ERP5Site_getCategorizedModuleActionInformationDict()\n
-\n
   if dms_mode:\n
     tab_list.append({\'id\': \'quick_search_tab\',\n
-\t             \'icon\': \'tab_icon/access_search.png\',\n
+                     \'icon\': \'tab_icon/access_search.png\',\n
                      \'renderer\': \'ERP5Site_renderQuickSearchDialog\',\n
                      \'title\': \'Quick Search\'})\n
 \n
     tab_list.append({\'id\': \'contribution_tab\',\n
-\t             \'icon\': \'tab_icon/share.png\',\n
+                     \'icon\': \'tab_icon/share.png\',\n
                      \'renderer\': \'ERP5Site_renderContributionDialog\',\n
                      \'title\': \'Contribute\'})\n
 \n
   if basic_mode:\n
     if info_dict.get(\'view\'):\n
       tab_list.append({\'id\': \'browse_tab\',\n
-\t               \'icon\': \'tab_icon/list.png\',\n
+                       \'icon\': \'tab_icon/list.png\',\n
                        \'renderer\': \'ERP5Site_renderViewActionList\',\n
                        \'title\': \'Browse\'})\n
     if info_dict.get(\'add\'):\n
       tab_list.append({\'id\': \'document_creation_tab\',\n
-\t               \'icon\': \'tab_icon/filenew.png\',\n
+                       \'icon\': \'tab_icon/filenew.png\',\n
                        \'renderer\': \'ERP5Site_renderDocumentCreationActionList\',\n
                        \'title\': \'New\'})\n
 \n
     if info_dict.get(\'search\'):\n
       tab_list.append({\'id\': \'document_search_tab\',\n
-\t                \'icon\': \'tab_icon/filefind.png\',\n
+                       \'icon\': \'tab_icon/filefind.png\',\n
                        \'renderer\': \'ERP5Site_renderDocumentSearchActionList\',\n
                        \'title\': \'Dig\'})\n
 \n
     if info_dict.get(\'report\'):\n
       tab_list.append({\'id\': \'report_tab\',\n
-\t               \'icon\': \'tab_icon/webexport.png\',\n
+                       \'icon\': \'tab_icon/webexport.png\',\n
                        \'renderer\': \'ERP5Site_renderReportActionList\',\n
                        \'title\': \'Reports\'})\n
 \n
     if info_dict.get(\'print\'):\n
       tab_list.append({\'id\': \'printout_tab\',\n
-\t               \'icon\': \'tab_icon/ps.png\',\n
+                       \'icon\': \'tab_icon/ps.png\',\n
                        \'renderer\': \'ERP5Site_renderPrintActionList\',\n
                        \'title\': \'Printouts\'})\n
 \n
     if info_dict.get(\'exchange\'):\n
       tab_list.append({\'id\': \'exchange_tab\',\n
-\t               \'icon\': \'tab_icon/imp-exp.png\',\n
+                       \'icon\': \'tab_icon/imp-exp.png\',\n
                        \'renderer\': \'ERP5Site_renderExchangeActionList\',\n
                        \'title\': \'Exchange\'})\n
 \n
   if express_mode in (\'support_enabled\', \'advertisement_enabled\'):\n
     tab_list.append({\'id\': \'express_support_tab\',\n
-\t              \'icon\': \'tab_icon/support.png\',\n
+                     \'icon\': \'tab_icon/support.png\',\n
                      \'renderer\': \'ERP5Site_renderExpressSupport\',\n
                      \'title\': \'Express Support\'})\n
-\n
   return tab_list\n
 \n
-return getTabList()\n
+getTabList = CachingMethod(getTabList, \\\n
+                           id = \'ERP5Site_getTabListInternal\', \\\n
+                           cache_factory = \'erp5_ui_long\')\n
+\n
+ERP5Site_getConfiguredStatusDict = CachingMethod(context.ERP5Site_getConfiguredStatusDict, \\\n
+                                                 id = \'ERP5Site_getConfiguredStatusDict\', \\\n
+                                                 cache_factory = \'erp5_ui_long\')\n
+\n
+return getTabList(status_dict = ERP5Site_getConfiguredStatusDict(), \\\n
+                  info_dict = context.ERP5Site_getCategorizedModuleActionInformationDict())\n
 </string> </value>
         </item>
         <item>
@@ -155,7 +161,12 @@ return getTabList()\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>Products.ERP5Type.Cache</string>
+                            <string>CachingMethod</string>
                             <string>getTabList</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>ERP5Site_getConfiguredStatusDict</string>
                           </tuple>
                         </value>
                     </item>
