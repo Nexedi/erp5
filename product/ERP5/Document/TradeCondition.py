@@ -97,7 +97,7 @@ class TradeCondition(Path, Transformation, XMLMatrix):
             len(set(normal_use_list).intersection(set(resource\
             .getUseList()))):
           keep_movement = True
-          break
+          continue
         for amount in aggregated_amount_list:
           # if movement is generated and if not exist, append to delete list
           update_kw = {}
@@ -322,6 +322,7 @@ class TradeCondition(Path, Transformation, XMLMatrix):
         visited_trade_condition_list = [model.getEffectiveModel(\
             start_date=start_date, stop_date=stop_date) for model in\
             model_list]
+      effecive_model_list = [ob for ob in effecive_model_list if ob is not None]
       while len(effecive_model_list) != 0:
         specialise = effecive_model_list.pop(0)
         effective_specialise = specialise.getEffectiveModel(start_date=start_date,
