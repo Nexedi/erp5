@@ -65,7 +65,8 @@ else:\n
   toggable_pad = knowledge_pad_url\n
 \n
 if toggable_pad is not None:\n
-  toggable_pad.visible()\n
+  if toggable_pad.getValidationState() == \'invisible\':\n
+    toggable_pad.visible()\n
   for pad in all_knowledge_pads:\n
     if pad.getObject()!=toggable_pad and pad.getValidationState()==\'visible\':\n
       pad.invisible()\n
