@@ -1,7 +1,9 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2006 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2006 Nexedi SA and Contributors. All Rights Reserved.
 #                    Jerome Perrin <jerome@nexedi.com>
+#                    Łukasz Nowak <luke@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -32,8 +34,8 @@ from Products.ERP5.Document.Movement import Movement
 
 class DummyMovement(Movement):
   """Dummy Movement for testing purposes."""
-  meta_type = 'ERP5 Movement'
-  portal_type = 'Movement'
+  meta_type = 'ERP5 Dummy Movement'
+  portal_type = 'Dummy Movement'
   add_permission = Permissions.AddPortalContent
   isPortalContent = 1
   isRADContent = 1
@@ -61,25 +63,38 @@ class DummyMovement(Movement):
     """Our dummy movement are always accountable."""
     return getattr(self, 'is_accountable', 1)
 
+  def _getPropertyDirectlyOrFromDummyDelivery(self, property, default=None):
+    """Returns property from delivery, in case if in Dummy Delivery, or movement"""
+    if self.getParentValue().getPortalType() == 'Dummy Delivery':
+      return self.getParentValue().getSimulationState()
+    return getattr(self, property, default)
+
   def getSimulationState(self):
-    """Directly returns a simulation state."""
-    return getattr(self, 'simulation_state', 'draft')
-  
+    return self._getPropertyDirectlyOrFromDummyDelivery(
+        'simulation_state', 'draft')
+
   def setSimulationState(self, state):
-    """Directly sets a simulation state."""
-    self.simulation_state = state
+    """Directly sets a simulation state if not in Dummy Delivery."""
+    if self.getParentValue().getPortalType() != 'Dummy Delivery':
+      self.simulation_state = state
+    else:
+      raise ValueError
 
   def getCausalityState(self):
-    """Directly returns a causality state."""
-    return getattr(self, 'simulation_state', 'draft')
-  
+    return self._getPropertyDirectlyOrFromDummyDelivery(
+        'causality_state', 'draft')
+
   def setCausalityState(self, state):
     """Directly sets a causality state."""
-    self.causality_state = state
-    
+    if self.getParentValue().getPortalType() != 'Dummy Delivery':
+      self.simulation_state = state
+    else:
+      raise ValueError
+
   def getDeliveryValue(self):
     """A dummy movement doesn't have a delivery relation, so return self as delivery.
     """
     return self
 
-
+  def hasCellContent(self):
+    return False

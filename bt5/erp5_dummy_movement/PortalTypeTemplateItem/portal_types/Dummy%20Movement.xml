@@ -3,21 +3,12 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.ERP5Type.ERP5Type</string>
-          <string>ERP5TypeInformation</string>
-        </tuple>
-        <none/>
+        <global name="ERP5TypeInformation" module="Products.ERP5Type.ERP5Type"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
       <dictionary>
-        <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
         <item>
             <key> <string>_actions</string> </key>
             <value>
@@ -28,12 +19,6 @@
             <key> <string>_aliases</string> </key>
             <value>
               <dictionary/>
-            </value>
-        </item>
-        <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
             </value>
         </item>
         <item>
@@ -81,7 +66,10 @@
         <item>
             <key> <string>group_list</string> </key>
             <value>
-              <tuple/>
+              <tuple>
+                <string>delivery_movement</string>
+                <string>order_movement</string>
+              </tuple>
             </value>
         </item>
         <item>
@@ -96,6 +84,10 @@
         </item>
         <item>
             <key> <string>init_script</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>permission</string> </key>
             <value> <string></string> </value>
         </item>
         <item>
