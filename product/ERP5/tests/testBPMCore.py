@@ -618,23 +618,23 @@ class TestBPMisBuildableImplementation(TestBPMMixin):
     self.portal.deleteContent(id='testing_folder')
     self.stepTic()
 
-  def test_isBuildable(self):
+  def test_isBuildable_OrderedDeliveredInvoiced(self):
     """Test isBuildable implementation for Business Paths and Simulation Movements"""
 
     # simple business process preparation
     business_process = self.createBusinessProcess()
-    first_state = self.createBusinessState(business_process)
-    middle_state = self.createBusinessState(business_process)
-    last_state = self.createBusinessState(business_process)
+    ordered = self.createBusinessState(business_process)
+    delivered = self.createBusinessState(business_process)
+    invoiced = self.createBusinessState(business_process)
 
     # path which is completed, as soon as related simulation movements are in
     # proper state
     delivery_path = self.createBusinessPath(business_process,
-        predecessor_value = first_state, successor_value = middle_state,
+        predecessor_value = ordered, successor_value = delivered,
         trade_phase='default/delivery', completed_state_list = ['confirmed'])
 
     invoice_path = self.createBusinessPath(business_process,
-        predecessor_value = middle_state, successor_value = last_state,
+        predecessor_value = delivered, successor_value = invoiced,
         trade_phase='default/invoicing')
 
     # create order and order line to have starting point for business process
