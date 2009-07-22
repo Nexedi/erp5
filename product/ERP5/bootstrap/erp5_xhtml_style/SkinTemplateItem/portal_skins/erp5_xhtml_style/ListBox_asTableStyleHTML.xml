@@ -72,7 +72,7 @@
 \n
                  <a tal:condition="not:is_gadget_mode" tal:attributes="href string:${context_url}/${table_form_id}?list_style=search">\n
                      <img id="style_toggle_icon"\n
-                          src="erp5/images/table_style_icon.png" \n
+                          tal:attributes="src string:${context_url}/images/table_style_icon.png"\n
                           height="16"\n
                           title="Search mode"\n
                           alt="Search mode"\n
@@ -102,7 +102,7 @@
                          i18n:domain="ui" i18n:attributes="title" />\n
                   \n
                   <input  tal:condition="python:not is_gadget_mode and (is_domain_tree_supported or is_report_tree_supported)"\n
-                         type="image" src="images/showall.png" id="listbox_reset_selection"\n
+                         type="image" id="listbox_reset_selection"\n
                          title="Show All" name="Folder_show:method"\n
                          id="listbox_reset_selection"\n
                          value="1" alt="Flat List"\n
@@ -119,7 +119,7 @@
                           i18n:domain="ui" i18n:attributes="title">\n
                     <img id="style_toggle_icon"\n
                          alt="Search mode"\n
-                         src="erp5/images/table_style_icon.png"\n
+                         tal:attributes="src string:${context_url}/images/table_style_icon.png"\n
                          height="16"/></button>\n
                   <a tal:attributes="id string:${field_id}_title; href here/getListActionUrl"\n
                      tal:condition="python: here.field.get_value(\'list_action\')">\n
@@ -142,8 +142,7 @@
                           tal:attributes="id string:${field_id}_flat_list_mode;\n
                                           onclick python: real_context.KnowledgePad_generateAjaxCall(context_url+\'/\'+form_id,box,dom_id,params);"\n
                           i18n:domain="ui" i18n:attributes="title">\n
-                    <img src="text_block.png"\n
-                         tal:attributes="src string:${portal_url_string}/images/text_block.png;"/></button>\n
+                    <img tal:attributes="src string:${portal_url_string}/images/text_block.png;"/></button>\n
 \n
                   <button tal:condition="python: is_gadget_mode and is_report_tree_supported"\n
                           tal:define = "params python: {\'setReportTreeMode:method\':1}"\n
@@ -166,8 +165,7 @@
                           tal:attributes="id string:${field_id}_domain_tree_mode;\n
                                           onclick python: real_context.KnowledgePad_generateAjaxCall(context_url+\'/\'+form_id,box,dom_id,params);"\n
                           i18n:domain="ui" i18n:attributes="title">\n
-                    <img src="view_choose.png"\n
-                         tal:attributes="src string:${portal_url_string}/images/view_choose.png;"/></button>\n
+                    <img tal:attributes="src string:${portal_url_string}/images/view_choose.png;"/></button>\n
                   -->\n
                 </span>\n
 \n
@@ -189,13 +187,12 @@
                     class="Data" style="width: 50px; text-align: center; vertical-align: middle; white-space: nowrap;">\n
                   <input id="listbox_check_all" type="image"\n
                          name="checkAll:method" value="1"\n
-                         src="checkall.png" alt="Check All" title="Check All"\n
+                         alt="Check All" title="Check All"\n
                          tal:attributes="id string:${field_id}_check_all;\n
                                          name string:${field_id}_checkAll:method;\n
                                          src string:${portal_url_string}/images/checkall.png"\n
                          i18n:domain="ui" i18n:attributes="title" />&nbsp;<input id="listbox_uncheck_all"\n
                                     type="image" name="uncheckAll:method" value="1"\n
-                                    src="%(portal_url_string)s/images/decheckall.png"\n
                                     style="border: 0" alt="Uncheck All" title="Uncheck All"\n
                                     tal:attributes="id string:${field_id}_uncheck_all;\n
                                                     src string:${portal_url_string}/images/decheckall.png;\n
@@ -229,12 +226,12 @@
                       </button>\n
 \n
                       <img tal:condition="python: sort_order == \'ascending\'"\n
-                        src="1bottomarrow.png" alt="Ascending Display" title="Ascending Display"\n
+                        alt="Ascending Display" title="Ascending Display"\n
                         tal:attributes="src string:${portal_url_string}/images/1bottomarrow.png"\n
                         style="float:left"\n
                         i18n:domain="ui" i18n:attributes="title"/>\n
                       <img tal:condition="python: sort_order == \'descending\'"\n
-                        src="1toparrow.png" alt="Descending Display" title="Descending Display"\n
+                        alt="Descending Display" title="Descending Display"\n
                         tal:attributes="src string:${portal_url_string}/images/1toparrow.png"\n
                         style="float:left"\n
                         i18n:domain="ui" i18n:attributes="title"/>\n
@@ -246,7 +243,7 @@
               <tr class="thead" tal:condition="show_search_line">\n
                 <td tal:condition="python: show_select_column and show_search_line and not is_gadget_mode"\n
                     class="Data" style="width: 50px; text-align: center; vertical-align: middle">\n
-                  <input id="listbox_select" type="image" src="exec16.png"\n
+                  <input id="listbox_select" type="image"\n
                          title="Action" alt="Action" name="Base_doSelect:method"\n
                          tal:attributes="id string:${field_id}_select;\n
                          src string:${portal_url_string}/images/exec16.png"\n
