@@ -3,22 +3,18 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <global name="BusinessState" module="Products.ERP5Type.Document.BusinessState"/>
+        <global name="OrderMovementGroup" module="Products.ERP5Type.Document.OrderMovementGroup"/>
         <tuple/>
       </tuple>
     </pickle>
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_identity_criterion</string> </key>
+            <key> <string>categories</string> </key>
             <value>
-              <dictionary/>
-            </value>
-        </item>
-        <item>
-            <key> <string>_range_criterion</string> </key>
-            <value>
-              <dictionary/>
+              <tuple>
+                <string>collect_order_group/delivery</string>
+              </tuple>
             </value>
         </item>
         <item>
@@ -28,24 +24,20 @@
             </value>
         </item>
         <item>
-            <key> <string>document_id</string> </key>
-            <value> <string>2</string> </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
-            <value> <string>2</string> </value>
+            <value> <string>order_movement_group_on_delivery</string> </value>
         </item>
         <item>
             <key> <string>int_index</string> </key>
-            <value> <int>2</int> </value>
+            <value> <int>1</int> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Business State</string> </value>
+            <value> <string>Order Movement Group</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>delivered</string> </value>
+            <value> <string>order_movement_group_on_delivery</string> </value>
         </item>
       </dictionary>
     </pickle>

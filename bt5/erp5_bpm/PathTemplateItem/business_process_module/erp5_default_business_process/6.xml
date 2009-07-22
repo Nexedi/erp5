@@ -83,8 +83,7 @@
                 <string>destination_stage/business_process_module/erp5_default_business_process/2</string>
                 <string>predecessor/business_process_module/erp5_default_business_process/1</string>
                 <string>successor/business_process_module/erp5_default_business_process/2</string>
-                <string>delivery_builder/portal_deliveries/purchase_packing_list_builder</string>
-                <string>delivery_builder/portal_deliveries/sale_packing_list_builder</string>
+                <string>delivery_builder/portal_deliveries/bpm_sale_packing_list_builder</string>
                 <string>trade_phase/default/delivery</string>
               </tuple>
             </value>

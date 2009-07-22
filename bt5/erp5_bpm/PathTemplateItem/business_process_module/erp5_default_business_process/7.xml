@@ -81,10 +81,9 @@
               <tuple>
                 <string>source_stage/business_process_module/erp5_default_business_process/2</string>
                 <string>destination_stage/business_process_module/erp5_default_business_process/3</string>
-                <string>delivery_builder/portal_deliveries/purchase_invoice_builder</string>
-                <string>delivery_builder/portal_deliveries/sale_invoice_builder</string>
                 <string>predecessor/business_process_module/erp5_default_business_process/2</string>
                 <string>successor/business_process_module/erp5_default_business_process/10</string>
+                <string>delivery_builder/portal_deliveries/bpm_sale_invoice_builder</string>
                 <string>trade_phase/default/invoicing</string>
               </tuple>
             </value>
