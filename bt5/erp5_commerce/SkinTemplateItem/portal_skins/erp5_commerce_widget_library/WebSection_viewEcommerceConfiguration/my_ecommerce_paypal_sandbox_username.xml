@@ -3,7 +3,7 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <global name="InputButtonField" module="Products.ERP5Form.InputButtonField"/>
+        <global name="StringField" module="Products.Formulator.StandardFields"/>
         <tuple/>
       </tuple>
     </pickle>
@@ -11,12 +11,25 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>fake_payment</string> </value>
+            <value> <string>my_ecommerce_paypal_sandbox_username</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
             <value>
-              <dictionary/>
+              <dictionary>
+                <item>
+                    <key> <string>external_validator_failed</string> </key>
+                    <value> <string>The input failed the external validator.</string> </value>
+                </item>
+                <item>
+                    <key> <string>required_not_found</string> </key>
+                    <value> <string>Input is required but no input given.</string> </value>
+                </item>
+                <item>
+                    <key> <string>too_long</string> </key>
+                    <value> <string>Too much input was given.</string> </value>
+                </item>
+              </dictionary>
             </value>
         </item>
         <item>
@@ -40,11 +53,23 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>display_maxwidth</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>display_width</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>editable</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>enabled</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>external_validator</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -56,11 +81,27 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>name</string> </key>
+                    <key> <string>max_length</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>required</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>truncate</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>unicode</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>whitespace_preserve</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -87,11 +128,25 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>display_maxwidth</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>display_width</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>editable</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>enabled</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>external_validator</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -100,16 +155,30 @@
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>name</string> </key>
+                    <key> <string>max_length</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>required</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>truncate</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>unicode</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>whitespace_preserve</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -125,15 +194,23 @@
                 </item>
                 <item>
                     <key> <string>css_class</string> </key>
-                    <value> <string>hiddenLabel</string> </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>default</string> </key>
-                    <value> <string>Choose payment and Buy</string> </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>description</string> </key>
                     <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>display_maxwidth</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>display_width</string> </key>
+                    <value> <int>20</int> </value>
                 </item>
                 <item>
                     <key> <string>editable</string> </key>
@@ -144,6 +221,10 @@
                     <value> <int>1</int> </value>
                 </item>
                 <item>
+                    <key> <string>external_validator</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>extra</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -152,16 +233,28 @@
                     <value> <int>0</int> </value>
                 </item>
                 <item>
-                    <key> <string>image</string> </key>
+                    <key> <string>max_length</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>name</string> </key>
-                    <value> <string>SaleOrder_viewAsWebConfirmPersonalInformation:method</string> </value>
+                    <key> <string>required</string> </key>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Fake Payment</string> </value>
+                    <value> <string>Paypal Sandbox Api Username</string> </value>
+                </item>
+                <item>
+                    <key> <string>truncate</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>unicode</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>whitespace_preserve</string> </key>
+                    <value> <int>0</int> </value>
                 </item>
               </dictionary>
             </value>
@@ -172,18 +265,15 @@
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.Formulator.TALESField</string>
-          <string>TALESMethod</string>
-        </tuple>
-        <none/>
+        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>not: here/SaleOrder_isConsistent</string> </value>
+            <value> <string>python: here.getLayoutProperty(\'ecommerce_test_environment_enabled\', False) and here.getPortalType() == \'Web Site\'</string> </value>
         </item>
       </dictionary>
     </pickle>

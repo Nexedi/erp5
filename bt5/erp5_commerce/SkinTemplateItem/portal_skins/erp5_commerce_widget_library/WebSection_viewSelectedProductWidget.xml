@@ -65,7 +65,7 @@
                      price python: here.ERP5Site_unrestrictedGetPrice(product)">\n
      <a href="#" tal:attributes="href product_href">\n
        <img tal:condition="python: product.getDefaultImageValue() not in (None, \'\') and product.getDefaultImageValue().getData() not in (None, \'\')"\n
-            tal:attributes="src python: product.getDefaultImageAbsoluteUrl() + \'?display=thumbnail\'" width="75" height="75"/>\n
+            tal:attributes="src python: product.getDefaultImageAbsoluteUrl() + \'?display=thumbnail&format=png&resolution=75\'" width="75"/>\n
        <tal:block tal:condition="python: product.getDefaultImageValue() in (None, \'\') or product.getDefaultImageValue().getData() in (None, \'\')">\n
          <div style="width:75px; height:75px;vertical-align:middle; text-align:middle;">\n
          <br />\n

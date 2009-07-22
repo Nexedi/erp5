@@ -91,6 +91,7 @@
                         <string>my_ecommerce_default_content</string>
                         <string>my_ecommerce_product_list</string>
                         <string>my_ecommerce_base_currency</string>
+                        <string>my_ecommerce_payment_mode_list</string>
                       </list>
                     </value>
                 </item>
@@ -109,7 +110,15 @@
                 <item>
                     <key> <string>right (Size)</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>my_ecommerce_test_environment_enabled</string>
+                        <string>my_ecommerce_paypal_username</string>
+                        <string>my_ecommerce_paypal_password</string>
+                        <string>my_ecommerce_paypal_signature</string>
+                        <string>my_ecommerce_paypal_sandbox_username</string>
+                        <string>my_ecommerce_paypal_sandbox_password</string>
+                        <string>my_ecommerce_paypal_sandbox_signature</string>
+                      </list>
                     </value>
                 </item>
               </dictionary>

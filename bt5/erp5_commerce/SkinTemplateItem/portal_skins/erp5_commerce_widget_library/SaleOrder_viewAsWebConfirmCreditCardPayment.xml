@@ -85,7 +85,6 @@
                     <value>
                       <list>
                         <string>shipping</string>
-                        <string>taxes</string>
                       </list>
                     </value>
                 </item>
@@ -93,8 +92,6 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>shopping_cart</string>
-                        <string>discounts</string>
                         <string>fake_form</string>
                         <string>submit</string>
                         <string>fake_payment</string>
@@ -112,7 +109,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>SaleOrder_viewAsWebConfirm</string> </value>
+            <value> <string>SaleOrder_viewAsWebConfirmCreditCardPayment</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>

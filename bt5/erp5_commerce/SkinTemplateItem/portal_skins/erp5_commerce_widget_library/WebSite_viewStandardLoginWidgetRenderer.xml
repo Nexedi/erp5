@@ -53,7 +53,7 @@
      <table>\n
        <tr>\n
          <td class="article"><span tal:replace="python: here.Base_translateString(\'Username\')"/>:</td>\n
-         <td><input name="__ac_name" size="10" tal:attributes="value python: request.get(\'__ac_name\') or \'\'"/></td>\n
+         <td><input name="__ac_name" size="10" type="text" tal:attributes="value python: request.get(\'__ac_name\') or \'\'"/></td>\n
        </tr>\n
        <tr>\n
          <td class="article"><span tal:replace="python: here.Base_translateString(\'Password\')"/>:</td>\n

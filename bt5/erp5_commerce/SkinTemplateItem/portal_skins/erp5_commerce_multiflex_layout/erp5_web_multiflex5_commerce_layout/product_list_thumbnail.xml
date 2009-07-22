@@ -16,6 +16,7 @@
                 <string>default</string>
                 <string>enabled</string>
                 <string>image_display</string>
+                <string>image_format</string>
                 <string>image_resolution</string>
               </list>
             </value>
@@ -118,8 +119,12 @@
                     <value> <string>micro</string> </value>
                 </item>
                 <item>
+                    <key> <string>image_format</string> </key>
+                    <value> <string>jpg</string> </value>
+                </item>
+                <item>
                     <key> <string>image_resolution</string> </key>
-                    <value> <int>75</int> </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>

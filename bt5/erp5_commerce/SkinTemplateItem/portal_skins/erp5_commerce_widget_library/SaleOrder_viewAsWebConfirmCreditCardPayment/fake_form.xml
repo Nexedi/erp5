@@ -11,7 +11,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>submit</string> </value>
+            <value> <string>fake_form</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -68,9 +68,7 @@
                 </item>
                 <item>
                     <key> <string>default</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>description</string> </key>
@@ -90,9 +88,7 @@
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
-                    </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>
@@ -111,15 +107,20 @@
                 </item>
                 <item>
                     <key> <string>default</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string encoding="cdata"><![CDATA[
+
+<form name="" method="post">\n
+</form>
+
+]]></string> </value>
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>This is a dirty hack to allow online payment form below.</string> </value>
                 </item>
                 <item>
                     <key> <string>editable</string> </key>
-                    <value> <int>0</int> </value>
+                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>enabled</string> </key>
@@ -135,42 +136,10 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Pay Button</string> </value>
+                    <value> <string>fake_form</string> </value>
                 </item>
               </dictionary>
             </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <tuple>
-        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-        <tuple/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>here/SaleOrder_viewAsWebConfirmPersonalInformation</string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="3" aka="AAAAAAAAAAM=">
-    <pickle>
-      <tuple>
-        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-        <tuple/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>not: here/SaleOrder_isConsistent</string> </value>
         </item>
       </dictionary>
     </pickle>

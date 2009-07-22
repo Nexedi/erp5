@@ -3,7 +3,7 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <global name="LabelField" module="Products.Formulator.StandardFields"/>
+        <global name="InputButtonField" module="Products.ERP5Form.InputButtonField"/>
         <tuple/>
       </tuple>
     </pickle>
@@ -11,7 +11,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>submit</string> </value>
+            <value> <string>fake_payment</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -23,6 +23,10 @@
             <key> <string>overrides</string> </key>
             <value>
               <dictionary>
+                <item>
+                    <key> <string>alternate_name</string> </key>
+                    <value> <string></string> </value>
+                </item>
                 <item>
                     <key> <string>css_class</string> </key>
                     <value> <string></string> </value>
@@ -49,6 +53,10 @@
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>name</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -63,14 +71,16 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>alternate_name</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>css_class</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>default</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>description</string> </key>
@@ -91,8 +101,12 @@
                 <item>
                     <key> <string>hidden</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
                     </value>
+                </item>
+                <item>
+                    <key> <string>name</string> </key>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>
@@ -106,12 +120,16 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>alternate_name</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>css_class</string> </key>
                     <value> <string>hiddenLabel</string> </value>
                 </item>
                 <item>
                     <key> <string>default</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>Proceed</string> </value>
                 </item>
                 <item>
                     <key> <string>description</string> </key>
@@ -119,7 +137,7 @@
                 </item>
                 <item>
                     <key> <string>editable</string> </key>
-                    <value> <int>0</int> </value>
+                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>enabled</string> </key>
@@ -134,8 +152,16 @@
                     <value> <int>0</int> </value>
                 </item>
                 <item>
+                    <key> <string>image</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>name</string> </key>
+                    <value> <string>SaleOrder_paymentRedirect:method</string> </value>
+                </item>
+                <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Pay Button</string> </value>
+                    <value> <string>Confirm Payment Method</string> </value>
                 </item>
               </dictionary>
             </value>
@@ -146,24 +172,11 @@
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
       <tuple>
-        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-        <tuple/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>here/SaleOrder_viewAsWebConfirmPersonalInformation</string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="3" aka="AAAAAAAAAAM=">
-    <pickle>
-      <tuple>
-        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-        <tuple/>
+        <tuple>
+          <string>Products.Formulator.TALESField</string>
+          <string>TALESMethod</string>
+        </tuple>
+        <none/>
       </tuple>
     </pickle>
     <pickle>

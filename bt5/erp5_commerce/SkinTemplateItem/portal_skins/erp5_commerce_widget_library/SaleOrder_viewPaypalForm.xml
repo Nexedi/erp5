@@ -1,0 +1,151 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<tal:block tal:define="web_site                python: here.getWebSiteValue();\n
+                       shopping_cart           here/SaleOrder_getShoppingCart;\n
+                       shopping_cart_item_list shopping_cart/SaleOrder_getShoppingCartItemList;\n
+                       shopping_cart_price     python: float(shopping_cart.SaleOrder_getShoppingCartTotalPrice());\n
+                       taxes_amount            python: float(shopping_cart.SaleOrder_getShoppingCartTotalPrice(include_taxes=True, include_shipping=True)) -\n
+                                                       float(shopping_cart.SaleOrder_getShoppingCartTotalPrice(include_shipping=True));\n
+                       shipping                here/SaleOrder_getSelectedShippingResource;\n
+                       shipping_price          python: here.restrictedTraverse(shipping).getPrice();\n
+                       customer                here/SaleOrder_getShoppingCartCustomer;\n
+                       paypal_method           python: \'_express-checkout\';\n
+                       test_env                python: True;\n
+                       test_base_url           python: \'http://www.dentra.net:9080/erp5\';\n
+                       base_url                python:here.getWebSiteValue().absolute_url();\n
+                       action                  python: test_env and \'https://www.sandbox.paypal.com/cgi-bin/webscr\'\n
+                                                                or  \'https://www.paypal.com/cgi-bin/webscr\';\n
+                       TPE python: options.get(\'TPE\', \'my_merchant_key_location\');\n
+                       langue python: options.get(\'language\', \'en\');">\n
+\n
+<!--  # can be _cart, _xclick, _express-checkout -->\n
+  <tal:block tal:condition="python: paypal_method == \'_express-checkout\'">\n
+    <tal:block tal:define="token python: web_site.WebSite_getNewPaypalToken()">\n
+      <a tal:condition="python: token is not None and token != \'\'"\n
+         tal:attributes="href python: \'%s?cmd=_express-checkout&token=%s&AMT=70.0&CURRENCYCODE=EUR\' % (action, token)">\n
+        <img src="https://www.paypal.com/en_US/i/btn/btn_xpressCheckout.gif" alt="PayPal - The safer, easier way to pay online!" style="border:none;">\n
+      </a>\n
+      <span tal:condition="python: token is None or token == \'\'" tal:content="python: here.Base_translateString(\'Paypal is not available actually.\')"></span>\n
+    </tal:block>\n
+  </tal:block>\n
+\n
+  <tal:block tal:condition="python: paypal_method != \'_express-checkout\'">\n
+  <form target="paypal"\n
+        tal:attributes="action action"\n
+        method="post">\n
+    <input type="hidden" name="lc" value="FR">\n
+    <input type="hidden" name="business" value="vincen_1247039207_biz@nexedi.com">\n
+\n
+    <input type="hidden" name="rm" value="POST">\n
+    <input type="hidden" name="notify_url" tal:attributes="value python: \'%s/SaleOrder_finalizeShopping\' % (test_base_url)">\n
+    <input type="hidden" name="return" tal:attributes="value python: \'%s/SaleOrder_viewThankYouMessage\' % (base_url)">\n
+    <input type="hidden" name="cancel_return" tal:attributes="value python: \'%s?portal_status_message=Payment canceled.\' % (base_url)">\n
+    \n
+    <tal:block tal:condition="python: paypal_method == \'_cart\'" tal:repeat="item shopping_cart_item_list">\n
+      <input type="hidden" name="cmd" value="_cart">\n
+      <input type="hidden" name="tax_cart" value="20">\n
+      <tal:block tal:define="resource python: here.restrictedTraverse(item.getResource());\n
+                             quantity python: int(item.getQuantity());\n
+                             price    python: resource.getPrice();">\n
+        <input type="hidden" tal:attributes="name  python: \'item_name_%s\' % (repeat[\'item\'].index + 1);\n
+                                             value resource/getTitle;">\n
+        <input type="hidden" tal:attributes="name  python: \'item_number_%s\' % (repeat[\'item\'].index + 1);\n
+                                             value resource/getUid;">\n
+        <input type="hidden" tal:attributes="name  python: \'amount_%s\' % (repeat[\'item\'].index + 1);\n
+                                             value price;">\n
+        <input type="hidden" tal:attributes="name  python: \'quantity_%s\' % (repeat[\'item\'].index + 1);\n
+                                             value quantity;">\n
+       </tal:block>\n
+    </tal:block>\n
+    \n
+    <tal:block tal:condition="python: paypal_method == \'_xclick\'" tal:repeat="item shopping_cart_item_list">\n
+    <input type="hidden" name="cmd" value="_xclick">\n
+    <input type="hidden" name="amount" tal:attributes="value shopping_cart_price">\n
+    <input type="hidden" name="item_name" value="Commande de test">\n
+    <input type="hidden" name="tax" tal:attributes="value taxes_amount">\n
+    </tal:block>\n
+\n
+    <input type="hidden" name="address_override" value="0">\n
+    <input type="hidden" name="address1" tal:attributes="value customer/getDefaultAddressStreetAddress">\n
+    <input type="hidden" name="city" tal:attributes="value customer/getDefaultAddressCity">\n
+    <input type="hidden" name="country" tal:attributes="value python: here.restrictedTraverse(\'portal_categories/region/%s\' % customer.getDefaultAddressRegion()).getReference()">\n
+    <input type="hidden" name="first_name" tal:attributes="value customer/getFirstName">\n
+    <input type="hidden" name="last_name" tal:attributes="value customer/getLastName">\n
+    <input type="hidden" name="zip" tal:attributes="value customer/getDefaultAddressZipCode">\n
+    <input type="hidden" name="night_phone_b" tal:attributes="value customer/getDefaultTelephoneText">\n
+\n
+    <input type="hidden" name="shipping" tal:attributes="value shipping_price">\n
+    <input type="hidden" name="currency_code" value="EUR">\n
+    <input type="hidden" name="button_subtype" value="products">\n
+    <input type="hidden" name="display" value="1">\n
+    <input type="hidden" name="upload" value="1">\n
+    <input type="hidden" name="no_note" value="1">\n
+    <input type="hidden" name="no_shipping" value="1"> \n
+    <input type="hidden" name="bn" value="PP-ShopCartBF:btn_cart_LG.gif:NonHosted">\n
+    <input type="image" src="https://www.paypal.com/en_US/i/btn/btn_buynowCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">\n
+    <img alt="" border="0" src="https://www.paypal.com/fr_FR/i/scr/pixel.gif" width="1" height="1">\n
+  </form>\n
+  </tal:block>\n
+</tal:block>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>SaleOrder_viewPaypalForm</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Paypal button for external payment</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

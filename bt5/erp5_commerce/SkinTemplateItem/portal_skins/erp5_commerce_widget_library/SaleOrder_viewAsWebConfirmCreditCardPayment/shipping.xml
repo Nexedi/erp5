@@ -3,15 +3,18 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <global name="EditorField" module="Products.ERP5Form.EditorField"/>
-        <tuple/>
+        <tuple>
+          <string>Products.ERP5Form.EditorField</string>
+          <string>EditorField</string>
+        </tuple>
+        <none/>
       </tuple>
     </pickle>
     <pickle>
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>default_image</string> </value>
+            <value> <string>shipping</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -101,10 +104,6 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>text_editor</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>title</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -137,7 +136,9 @@
                 </item>
                 <item>
                     <key> <string>default</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>description</string> </key>
@@ -149,9 +150,7 @@
                 </item>
                 <item>
                     <key> <string>enabled</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>external_validator</string> </key>
@@ -167,7 +166,9 @@
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>max_length</string> </key>
@@ -183,10 +184,6 @@
                 </item>
                 <item>
                     <key> <string>required</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>text_editor</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -218,16 +215,11 @@
                 </item>
                 <item>
                     <key> <string>css_class</string> </key>
-                    <value> <string>no_image</string> </value>
+                    <value> <string>hiddenLabel</string> </value>
                 </item>
                 <item>
                     <key> <string>default</string> </key>
-                    <value> <string encoding="cdata"><![CDATA[
-
-<br />\n
-<span>No image available.</span>
-
-]]></string> </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>description</string> </key>
@@ -274,12 +266,8 @@
                     <value> <int>0</int> </value>
                 </item>
                 <item>
-                    <key> <string>text_editor</string> </key>
-                    <value> <string>text_area</string> </value>
-                </item>
-                <item>
                     <key> <string>title</string> </key>
-                    <value> <string>default_image</string> </value>
+                    <value> <string>Shipping</string> </value>
                 </item>
                 <item>
                     <key> <string>unicode</string> </key>
@@ -302,15 +290,37 @@
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
       <tuple>
-        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-        <tuple/>
+        <tuple>
+          <string>Products.Formulator.TALESField</string>
+          <string>TALESMethod</string>
+        </tuple>
+        <none/>
       </tuple>
     </pickle>
     <pickle>
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.getDefaultImageValue() in (None, \'\') or here.getDefaultImageValue().getData() in (None, \'\')</string> </value>
+            <value> <string>here/SaleOrder_viewShippingRenderer</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.Formulator.TALESField</string>
+          <string>TALESMethod</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>not: here/SaleOrder_isShippingRequired</string> </value>
         </item>
       </dictionary>
     </pickle>

@@ -154,7 +154,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>here/SaleOrder_viewAsWebConfirmPersonalInformation</string> </value>
+            <value> <string>here/SaleOrder_viewPaypalForm</string> </value>
         </item>
       </dictionary>
     </pickle>

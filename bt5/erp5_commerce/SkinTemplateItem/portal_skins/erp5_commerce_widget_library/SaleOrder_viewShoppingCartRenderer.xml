@@ -158,6 +158,13 @@
          </td>\n
       </tr>\n
   </table>\n
+  <tal:block tal:condition="python: here.REQUEST.get(\'token\') is not None">\n
+  <div style="float:right;">\n
+    <a tal:attributes="href python: \'%s/checkout/%s?token=%s\' % (here.getWebSiteValue().absolute_url(), \'WebSection_doPaypalPayment\', here.REQUEST.get(\'token\'))">\n
+      <img src="https://www.paypal.com/en_US/i/btn/btn_buynowCC_LG.gif" style="border:none;" alt="PayPal - The safer, easier way to pay online!">\n
+    </a><br />\n
+  </div>\n
+  </tal:block>\n
   <tal:block tal:condition="python: here.SaleOrder_getSelectedShippingResource() is not None and confirm_mode"\n
              tal:define="tax_info here/Person_getApplicableTaxList">\n
     <p tal:condition="python: tax_info is not None">\n
@@ -171,7 +178,7 @@
     </p>\n
   </tal:block>\n
   </div>\n
-  </tal:block> \n
+  </tal:block>\n
 </tal:block>\n
 
 

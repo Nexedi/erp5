@@ -48,7 +48,7 @@
        tal:attributes="class python: repeat[\'product\'].index % 2 and \'product_list_bis\' or \'product_list\'">\n
     <div class="product_list_left">\n
       <a tal:attributes="href product_href">\n
-        <img  tal:attributes="src python: product.getDefaultImageAbsoluteUrl() + \'?display=thumbnail\'" width="75" height="75">\n
+        <img tal:attributes="src python: product.getDefaultImageAbsoluteUrl() + \'?display=micro\'" >\n
       </a>\n
       <p tal:content="python: product.getTranslatedTitle()">Title of the product</p>\n
       <p tal:content="python: \'%s ...\' % product.getDescription()[0:80]">Description of the product</p>\n

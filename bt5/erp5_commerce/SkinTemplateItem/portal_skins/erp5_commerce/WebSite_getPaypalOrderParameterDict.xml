@@ -1,0 +1,181 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>order_parameter_dict = context.WebSite_getPaypalSecurityParameterDict()\n
+if order_parameter_dict is None:\n
+  return None\n
+\n
+shopping_cart = context.SaleOrder_getShoppingCart()\n
+shopping_cart_product_list = shopping_cart.SaleOrder_getShoppingCartItemList()\n
+shopping_cart_price = float(shopping_cart.SaleOrder_getShoppingCartTotalPrice())\n
+taxes_amount = float(shopping_cart.SaleOrder_getShoppingCartTotalPrice(include_taxes=True, include_shipping=True)) - \\\n
+               float(shopping_cart.SaleOrder_getShoppingCartTotalPrice(include_shipping=True));\n
+shipping = context.SaleOrder_getSelectedShippingResource()\n
+shipping_price = context.restrictedTraverse(shipping).getPrice()\n
+customer = context.SaleOrder_getShoppingCartCustomer()\n
+site_url = context.getWebSiteValue().absolute_url()\n
+\n
+order_parameter_dict[\'METHOD\'] = \'SetExpressCheckout\'\n
+order_parameter_dict[\'RETURNURL\'] = \'%s/WebSection_checkPaypalIdentification\' % site_url\n
+order_parameter_dict[\'CANCELURL\'] = site_url\n
+order_parameter_dict[\'PAYMENTACTION\'] = \'Sale\'\n
+actual_product_index = 0\n
+\n
+for product in shopping_cart_product_list:\n
+  resource = context.restrictedTraverse(product.getResource())\n
+  quantity = int(product.getQuantity())\n
+  price = resource.getPrice()\n
+  order_parameter_dict[\'L_NAME%s\' % actual_product_index] = resource.getTitle()\n
+  order_parameter_dict[\'L_NUMBER%s\' % actual_product_index] = resource.getId()\n
+  order_parameter_dict[\'L_AMT%s\' % actual_product_index] = price\n
+  order_parameter_dict[\'L_QTY0%s\' % actual_product_index] = quantity\n
+  actual_product_index += 1\n
+\n
+order_parameter_dict[\'ITEMAMT\'] = shopping_cart_price\n
+order_parameter_dict[\'TAXAMT\'] = taxes_amount\n
+order_parameter_dict[\'SHIPPINGAMT\'] = shipping_price\n
+order_parameter_dict[\'AMT\'] = shopping_cart_price + taxes_amount + shipping_price\n
+order_parameter_dict[\'CURRENCYCODE\'] = \'EUR\'\n
+order_parameter_dict[\'NOSHIPPING\'] = \'1\'\n
+order_parameter_dict[\'ALLOWNOTE\'] = \'0\'\n
+\n
+return order_parameter_dict\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>0</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>order_parameter_dict</string>
+                            <string>None</string>
+                            <string>shopping_cart</string>
+                            <string>shopping_cart_product_list</string>
+                            <string>float</string>
+                            <string>shopping_cart_price</string>
+                            <string>True</string>
+                            <string>taxes_amount</string>
+                            <string>shipping</string>
+                            <string>shipping_price</string>
+                            <string>customer</string>
+                            <string>site_url</string>
+                            <string>_write_</string>
+                            <string>actual_product_index</string>
+                            <string>_getiter_</string>
+                            <string>product</string>
+                            <string>resource</string>
+                            <string>int</string>
+                            <string>quantity</string>
+                            <string>price</string>
+                            <string>_inplacevar_</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>WebSite_getPaypalOrderParameterDict</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
