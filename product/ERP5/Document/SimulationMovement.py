@@ -561,7 +561,8 @@ class SimulationMovement(Movement):
         for successor_related in predecessor.getSuccessorRelatedValueList():
           for business_path_movement in successor_related \
               .getRelatedSimulationMovementValueList(explanation_value):
-            if successor_related.isMovementRelatedWithMovement(self, business_path_movement):
+            if successor_related.isMovementRelatedWithMovement(self,
+                business_path_movement):
               business_path_movement_delivery = business_path_movement \
                   .getDeliveryValue()
               if business_path_movement_delivery is None:
