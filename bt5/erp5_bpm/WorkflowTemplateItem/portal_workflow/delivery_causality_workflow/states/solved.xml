@@ -1,0 +1,103 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="StateDefinition" module="Products.DCWorkflow.States"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string>The solved state is displayed whenever a divergent state has been corrected by a user of ERP5. A divergent state can strike a sales packing list for example, or an invoice, whenever the ordered and delivered quantities are different. Unless a user would take an action to solve this situation, the document could not be processed. When an action has been taken and the divergent stat has been corrected, the document will display the Solved state, and users will be able to process it again.</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>solved</string> </value>
+        </item>
+        <item>
+            <key> <string>permission_roles</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Solved</string> </value>
+        </item>
+        <item>
+            <key> <string>transitions</string> </key>
+            <value>
+              <tuple>
+                <string>calculate</string>
+                <string>converge</string>
+                <string>diverge</string>
+                <string>start_building</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>type_list</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <global name="PersistentMapping" module="Persistence.mapping"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>Add portal content</string> </key>
+                    <value>
+                      <tuple>
+                        <string>Assignee</string>
+                        <string>Assignor</string>
+                        <string>Associate</string>
+                        <string>Auditor</string>
+                        <string>Authenticated</string>
+                        <string>Author</string>
+                        <string>Manager</string>
+                        <string>Member</string>
+                        <string>Owner</string>
+                        <string>Reviewer</string>
+                      </tuple>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>Modify portal content</string> </key>
+                    <value>
+                      <tuple>
+                        <string>Assignee</string>
+                        <string>Assignor</string>
+                        <string>Associate</string>
+                        <string>Auditor</string>
+                        <string>Authenticated</string>
+                        <string>Author</string>
+                        <string>Manager</string>
+                        <string>Member</string>
+                        <string>Owner</string>
+                        <string>Reviewer</string>
+                      </tuple>
+                    </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
