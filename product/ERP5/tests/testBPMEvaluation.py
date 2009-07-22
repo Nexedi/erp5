@@ -102,6 +102,10 @@ class TestBPMEvaluationMixin(TestBPMMixin):
         specialise_value = self.trade_condition)
 
   def _checkBPMSimulation(self, delivery, root_applied_rule_portal_type):
+    """Checks BPM related simumation.
+
+    Note: Simulation tree is the same, it is totally independent from
+    BPM sequence"""
     # TODO:
     #  - gather errors into one list
     bpm_root_rule = delivery.getCausalityRelatedValue(
@@ -138,7 +142,19 @@ class TestBPMEvaluationMixin(TestBPMMixin):
               'Simulation Movement')
           self.assertEqual(invoicing_simulation_movement.getCausalityValue(),
               self.invoice_path)
-          self.assertEquals(len(invoicing_simulation_movement.contentValues()), 1)
+          property_problem_list = []
+          for property in 'resource', 'price', 'quantity', 'start_date', \
+            'stop_date', 'source', 'destination', 'source_section', \
+            'destination_section':
+            if movement.getProperty(property) != invoicing_simulation_movement \
+                .getProperty(property):
+              property_problem_list.append('property %s movement %s '
+                  'simulation %s' % (property, movement.getProperty(property),
+                    invoicing_simulation_movement.getProperty(property)))
+          if len(property_problem_list) > 0:
+            self.fail('\n'.join(property_problem_list))
+          self.assertEquals(len(invoicing_simulation_movement.contentValues()),
+              1)
           for trade_model_rule in invoicing_simulation_movement \
               .contentValues():
             self.assertEqual(trade_model_rule.getPortalType(), 'Applied Rule')
@@ -148,10 +164,6 @@ class TestBPMEvaluationMixin(TestBPMMixin):
               portal_type='Simulation Movement'), [])
 
   def _checkOrderBPMSimulation(self):
-    """Checks BPM related simumation.
-    
-    Note: Simulation tree is the same, it is totally independent from
-    BPM sequence"""
     self._checkBPMSimulation(self.order, 'BPM Order Rule')
 
 class TestBPMEvaluationDefaultProcessMixin:
@@ -168,7 +180,8 @@ class TestBPMEvaluationDefaultProcessMixin:
         trade_phase = 'default/delivery',
         deliverable = 1,
         completed_state_list = ['delivered'],
-        frozen_state_list = ['stopped', 'delivered'])
+        frozen_state_list = ['stopped', 'delivered']
+        )
 
     self.invoice_path = self.createBusinessPath(self.business_process,
         predecessor_value = delivered, successor_value = invoiced,
@@ -293,7 +306,8 @@ class TestPackingList(TestBPMEvaluationMixin):
   packing_list_stop_date = TestBPMEvaluationMixin.order_stop_date
 
   def _createPackingListLine(self, **kw):
-    return self.packing_list.newContent(portal_type=self.packing_list_line_portal_type, **kw)
+    return self.packing_list.newContent(
+        portal_type=self.packing_list_line_portal_type, **kw)
 
   def _createPackingList(self):
     self.packing_list = self._createDocument(self.packing_list_portal_type,
@@ -306,16 +320,12 @@ class TestPackingList(TestBPMEvaluationMixin):
         specialise_value = self.trade_condition)
 
   def _checkPackingListBPMSimulation(self):
-    """Checks BPM related simumation.
-    
-    Note: Simulation tree is the same, it is totally independent from
-    BPM sequence"""
     self._checkBPMSimulation(self.packing_list, 'BPM Delivery Rule')
 
   def test_confirming_packing_list_only(self):
     self._createPackingList()
-    self.packing_list_line = self._createPackingListLine(resource_value = self._createProduct(),
-        quantity = 10, price = 5)
+    self.packing_list_line = self._createPackingListLine(
+        resource_value = self._createProduct(), quantity = 10, price = 5)
     self.stepTic()
 
     self.packing_list.confirm()
