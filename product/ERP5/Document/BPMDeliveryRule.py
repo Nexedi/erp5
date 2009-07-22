@@ -48,110 +48,42 @@ class BPMDeliveryRule(BPMRule):
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-  # Default Properties
-  property_sheets = ( PropertySheet.Base
-                    , PropertySheet.XMLObject
-                    , PropertySheet.CategoryCore
-                    , PropertySheet.DublinCore
-                    , PropertySheet.Task
-                    , PropertySheet.AppliedRule
-                    )
+  def _getInputMovementList(self, applied_rule):
+    """Returns list of input movements for applied rule"""
+    order = applied_rule.getDefaultCausalityValue()
+    if order is not None:
+      return order.getMovementList(
+                     portal_type=order.getPortalDeliveryMovementTypeList())
+    return []
 
-  # Simulation workflow
+  def _getExpandablePropertyUpdateDict(self, applied_rule, movement, business_path,
+      **kw):
+    return {
+      'order_value': movement,
+      'delivery_value': movement,
+      'order_ratio': 1,
+      'delivery_ratio': 1,
+      'deliverable': 1,
+    }
+
   security.declareProtected(Permissions.ModifyPortalContent, 'expand')
-  def expand(self, applied_rule, delivery_movement_type_list=None, **kw):
-    """
-    Expands the additional Delivery movements to a new simulation tree.
-    Expand is only allowed to create or modify simulation movements for
-    delivery lines which are not already linked to another simulation
-    movement.
+  def expand(self, applied_rule, force=0, **kw):
+    add_list, modify_dict, \
+      delete_list = self._getCompensatedMovementList(applied_rule, **kw)
 
-    If the movement is not in current state, has no delivered child, and not
-    in delivery movements, it can be deleted.
-    Else if the movement is not in current state, it can be modified.
-    Else, it cannot be modified.
-    """
-    existing_movement_list = []
-    immutable_movement_list = []
-    delivery = applied_rule.getDefaultCausalityValue()
-    if delivery_movement_type_list is None:
-      delivery_movement_type_list = self.getPortalDeliveryMovementTypeList()
-    if delivery is not None:
-      delivery_movement_list = delivery.getMovementList(
-                                 portal_type=delivery_movement_type_list)
-      # Check existing movements
-      for movement in applied_rule.contentValues(
-          portal_type=self.movement_type):
-        if not movement.isFrozen():
-          movement_delivery = movement.getDeliveryValue()
-          if not movement._isTreeDelivered(ignore_first=1) and \
-              movement_delivery not in delivery_movement_list:
-            applied_rule._delObject(movement.getId())
-          else:
-            existing_movement_list.append(movement)
-        else:
-          existing_movement_list.append(movement)
-          immutable_movement_list.append(movement)
+    # delete not needed movements
+    for movement_id in delete_list:
+      applied_rule._delObject(movement_id)
 
-      # Create or modify movements
-      for deliv_mvt in delivery_movement_list:
-        sim_mvt = deliv_mvt.getDeliveryRelatedValue()
-        if sim_mvt is None:
-          # create a new deliv_mvt
-          if deliv_mvt.getParentUid() == deliv_mvt.getExplanationUid():
-            # We are on a line
-            new_id = deliv_mvt.getId()
-          else:
-            # We are on a cell
-            new_id = "%s_%s" % (deliv_mvt.getParentId(), deliv_mvt.getId())
-          # Generate the simulation deliv_mvt
-          property_dict = self.self._getExpandablePropertyDict(applied_rule,
-              deliv_mvt)
-          new_sim_mvt = applied_rule.newContent(
-              portal_type=self.movement_type,
-              id=new_id,
-              order_value=deliv_mvt,
-              order_ratio=1,
-              delivery_value=deliv_mvt,
-              delivery_ratio=1,
-              deliverable=1,
+    # update existing
+    for movement, property_dict in modify_dict.items():
+      applied_rule[movement].edit(**property_dict)
 
-              **property_dict
-          )
-        elif sim_mvt in existing_movement_list:
-          if sim_mvt not in immutable_movement_list:
-            # modification allowed
-            # XXX Hardcoded value
-            sim_mvt.edit(
-                delivery_value=deliv_mvt,
-                delivery_ratio=1,
-                deliverable=1,
-                force_update=1,
-                **property_dict
-                )
-          else:
-            # modification disallowed, must compensate
-            raise NotImplementedError('BPM *have* to support')
+    # add new ones
+    for movement_dict in add_list:
+      movement_id = applied_rule._get_id(movement_dict.pop('id', None))
+      new_movement = applied_rule.newContent(id=movement_id,
+          portal_type=self.movement_type, **movement_dict)
 
-      # Now we can set the last expand simulation state to the current state
-      applied_rule.setLastExpandSimulationState(delivery.getSimulationState())
     # Pass to base class
-    BPMRule.expand(self, applied_rule, **kw)
-
-  security.declareProtected(Permissions.AccessContentsInformation, 'isStable')
-  def isStable(self, applied_rule):
-    """
-    Checks that the applied_rule is stable
-    """
-    return 0
-
-  # Deliverability / orderability
-  def isOrderable(self, movement):
-    return 1
-
-  def isDeliverable(self, movement):
-    if movement.getSimulationState() in movement \
-        .getPortalDraftOrderStateList():
-      return 0
-    return 1
-
+    BPMRule.expand(self, applied_rule, force=force, **kw)  # Simulation workflow

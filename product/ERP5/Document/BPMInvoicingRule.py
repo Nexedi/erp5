@@ -44,22 +44,10 @@ class BPMInvoicingRule(BPMRule):
   # CMF Type Definition
   meta_type = 'ERP5 BPM Invoicing Rule'
   portal_type = 'BPM Invoicing Rule'
-  add_permission = Permissions.AddPortalContent
-  isPortalContent = 1
-  isRADContent = 1
 
   # Declarative security
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
-
-  # Default Properties
-  property_sheets = ( PropertySheet.Base
-                    , PropertySheet.XMLObject
-                    , PropertySheet.CategoryCore
-                    , PropertySheet.DublinCore
-                    , PropertySheet.Task
-                    , PropertySheet.AppliedRule
-                    )
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'isAccountable')
@@ -73,13 +61,11 @@ class BPMInvoicingRule(BPMRule):
     return 0
 
 #### Helper methods for expand
-  def _generatePrevisionList(self, applied_rule, **kw):
-    return_list = []
-    for prevision_dict in BPMRule._generatePrevisionList(self, applied_rule,
-        **kw):
-      prevision_dict['deliverable'] = 1
-      return_list.append(prevision_dict)
-    return return_list
+  def _getExpandablePropertyUpdateDict(self, applied_rule, movement, business_path,
+      **kw):
+    return {
+      'deliverable': 1
+    }
 
   security.declareProtected(Permissions.ModifyPortalContent, 'expand')
   def expand(self, applied_rule, force=0, **kw):
@@ -94,26 +80,29 @@ class BPMInvoicingRule(BPMRule):
     """
     parent_movement = applied_rule.getParentValue()
     if parent_movement is not None:
-      if not parent_movement.isFrozen():
-        add_list, modify_dict, \
-          delete_list = self._getCompensatedMovementList(applied_rule, **kw)
-        for movement_id in delete_list:
-          applied_rule._delObject(movement_id)
+      add_list, modify_dict, \
+        delete_list = self._getCompensatedMovementList(applied_rule, **kw)
+      for movement_id in delete_list:
+        applied_rule._delObject(movement_id)
 
-        for movement, prop_dict in modify_dict.items():
-          applied_rule[movement].edit(**prop_dict)
+      for movement, prop_dict in modify_dict.items():
+        applied_rule[movement].edit(**prop_dict)
 
-        for movement_dict in add_list:
-          if 'id' in movement_dict.keys():
-            mvmt_id = applied_rule._get_id(movement_dict.pop('id'))
-            new_mvmt = applied_rule.newContent(id=mvmt_id,
-                portal_type=self.movement_type)
-          else:
-            new_mvmt = applied_rule.newContent(portal_type=self.movement_type)
-          new_mvmt.edit(**movement_dict)
+      for movement_dict in add_list:
+        if 'id' in movement_dict.keys():
+          mvmt_id = applied_rule._get_id(movement_dict.pop('id'))
+          new_mvmt = applied_rule.newContent(id=mvmt_id,
+              portal_type=self.movement_type)
+        else:
+          new_mvmt = applied_rule.newContent(portal_type=self.movement_type)
+        new_mvmt.edit(**movement_dict)
 
     # Pass to base class
     BPMRule.expand(self, applied_rule, force=force, **kw)
+
+  def _getInputMovementList(self, applied_rule):
+    """Returns list of input movements for applied rule"""
+    return [applied_rule.getParentValue()]
 
   def isDeliverable(self, movement):
     return movement.getResource() is not None

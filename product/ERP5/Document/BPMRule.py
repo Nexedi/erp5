@@ -69,6 +69,7 @@ class BPMRule(Rule):
                     , PropertySheet.Predicate
                     , PropertySheet.Reference
                     , PropertySheet.Version
+                    , PropertySheet.AppliedRule
                     )
 
 #### Helpers
@@ -198,8 +199,6 @@ class BPMRule(Rule):
                 movement.getRelativeUrl())
     return (add_list, modify_dict, delete_list)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            '_getExpandablePropertyDict')
   def _getExpandablePropertyDict(self, applied_rule, movement, business_path,
       **kw):
     """
@@ -238,33 +237,40 @@ class BPMRule(Rule):
       property_dict['start_date'] = movement.getStartDate()
       property_dict['stop_date'] = movement.getStopDate()
 
-    # save a relation to supply path for builders XXX which category
+    # save a relation to business path
     property_dict['causality_value'] = business_path
 
+    # rule specific
+    property_dict.update(**self._getExpandablePropertyUpdateDict(applied_rule,
+      movement, business_path, **kw))
     return property_dict
 
   def _generatePrevisionList(self, applied_rule, **kw):
     """
-    Generate a list of movements, that should be children of this rule,
+    Generate a list of dictionaries, that contain calculated content of
+    current Simulation Movements in applied rule.
     based on its context (parent movement, delivery, configuration ...)
 
     These previsions are returned as dictionaries.
     """
-    # XXX support list of movements
-    context_movement = applied_rule.getParentValue()
+    input_movement_list = self._getInputMovementList(applied_rule)
     business_process = applied_rule.getBusinessProcessValue()
 
-    movement_and_path_list = []
-    for business_path in business_process.getPathValueList(
-                        self.getProperty('trade_phase_list'),
-                        context_movement):
-      movement_and_path_list.append((context_movement, business_path))
+    input_movement_and_path_list = []
+    business_path_list = []
+    for input_movement in input_movement_list:
+      for business_path in business_process.getPathValueList(
+                          self.getProperty('trade_phase_list'),
+                          input_movement):
+        input_movement_and_path_list.append((input_movement, business_path))
+        business_path not in business_path_list and business_path_list \
+            .append(business_path)
 
-    if len(movement_and_path_list) > 1:
+    if len(business_path_list) > 1:
       raise NotImplementedError
 
-    for movement, business_path in movement_and_path_list:
-      property_dict = self._getExpandablePropertyDict(
-                                     applied_rule, movement, business_path)
-      property_dict['deliverable'] = 1
-    return [property_dict]
+    prevision_dict_list = []
+    for input_movement, business_path in input_movement_and_path_list:
+      prevision_dict_list.append(self._getExpandablePropertyDict(applied_rule,
+          input_movement, business_path))
+    return prevision_dict_list
