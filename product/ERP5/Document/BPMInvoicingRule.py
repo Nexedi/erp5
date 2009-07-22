@@ -67,43 +67,9 @@ class BPMInvoicingRule(BPMRule):
       'deliverable': 1
     }
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'expand')
-  def expand(self, applied_rule, force=0, **kw):
-    """
-    Expands the rule:
-    - generate a list of previsions
-    - compare the prevision with existing children
-      - get the list of existing movements (immutable, mutable, deletable)
-      - compute the difference between prevision and existing (add,
-        modify, remove)
-    - add/modify/remove child movements to match prevision
-    """
-    parent_movement = applied_rule.getParentValue()
-    if parent_movement is not None:
-      add_list, modify_dict, \
-        delete_list = self._getCompensatedMovementList(applied_rule, **kw)
-      for movement_id in delete_list:
-        applied_rule._delObject(movement_id)
-
-      for movement, prop_dict in modify_dict.items():
-        applied_rule[movement].edit(**prop_dict)
-
-      for movement_dict in add_list:
-        if 'id' in movement_dict.keys():
-          mvmt_id = applied_rule._get_id(movement_dict.pop('id'))
-          new_mvmt = applied_rule.newContent(id=mvmt_id,
-              portal_type=self.movement_type)
-        else:
-          new_mvmt = applied_rule.newContent(portal_type=self.movement_type)
-        new_mvmt.edit(**movement_dict)
-
-    # Pass to base class
-    BPMRule.expand(self, applied_rule, force=force, **kw)
-
   def _getInputMovementList(self, applied_rule):
     """Returns list of input movements for applied rule"""
     return [applied_rule.getParentValue()]
 
   def isDeliverable(self, movement):
     return movement.getResource() is not None
-

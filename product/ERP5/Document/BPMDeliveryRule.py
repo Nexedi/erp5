@@ -65,25 +65,3 @@ class BPMDeliveryRule(BPMRule):
       'delivery_ratio': 1,
       'deliverable': 1,
     }
-
-  security.declareProtected(Permissions.ModifyPortalContent, 'expand')
-  def expand(self, applied_rule, force=0, **kw):
-    add_list, modify_dict, \
-      delete_list = self._getCompensatedMovementList(applied_rule, **kw)
-
-    # delete not needed movements
-    for movement_id in delete_list:
-      applied_rule._delObject(movement_id)
-
-    # update existing
-    for movement, property_dict in modify_dict.items():
-      applied_rule[movement].edit(**property_dict)
-
-    # add new ones
-    for movement_dict in add_list:
-      movement_id = applied_rule._get_id(movement_dict.pop('id', None))
-      new_movement = applied_rule.newContent(id=movement_id,
-          portal_type=self.movement_type, **movement_dict)
-
-    # Pass to base class
-    BPMRule.expand(self, applied_rule, force=force, **kw)  # Simulation workflow
