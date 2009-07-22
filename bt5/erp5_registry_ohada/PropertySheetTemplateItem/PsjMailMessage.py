@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #############################################################################
 #
 # Copyright (c) 2008-2009 Nexedi SA and Contributors. All Rights Reserved.

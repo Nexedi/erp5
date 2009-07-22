@@ -64,6 +64,7 @@ created with the P0.\n
 # Initalize some useful variables\n
 from Products.ZSQLCatalog.SQLCatalog import ComplexQuery\n
 from Products.ZSQLCatalog.SQLCatalog import Query\n
+from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
 request_eform = state_change[\'object\']\n
 portal = request_eform.getPortalObject()\n
 organisation_module = portal.organisation_module\n
