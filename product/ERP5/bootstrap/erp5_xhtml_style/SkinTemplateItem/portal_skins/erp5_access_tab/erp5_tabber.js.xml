@@ -3,7 +3,7 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <global name="DTMLMethod" module="OFS.DTMLMethod"/>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
         <tuple/>
       </tuple>
     </pickle>
@@ -14,23 +14,33 @@
             <value> <string>http_cache</string> </value>
         </item>
         <item>
-            <key> <string>__name__</string> </key>
-            <value> <string>erp5_tabber.js</string> </value>
-        </item>
-        <item>
-            <key> <string>_vars</string> </key>
+            <key> <string>_bind_names</string> </key>
             <value>
-              <dictionary/>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
             </value>
         </item>
         <item>
-            <key> <string>globals</string> </key>
-            <value>
-              <dictionary/>
-            </value>
-        </item>
-        <item>
-            <key> <string>raw</string> </key>
+            <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
 var loading_deferred = undefined;\n
@@ -42,9 +52,6 @@ function replaceContent(req) {\n
   }\n
 \n
   var container = $(\'container\');\n
-  //log(\'container is \', container);\n
-  //log(\'response is \', req.responseText);\n
-  // replaceChildNodes(container, req.responseXML);\n
   container.innerHTML = req.responseText;\n
 \n
   addOnClickEventsToTabs(req);\n
@@ -77,18 +84,13 @@ function selectTab(e) {\n
   }\n
 \n
   var mapping = {\n
-<dtml-in prefix="tab" expr="ERP5Site_getTabList()">\n
-    <dtml-var expr="tab_item[\'id\']">: "<dtml-var expr="tab_item[\'renderer\']">"<dtml-if sequence-end><dtml-else>,</dtml-if>\n
-\n
-</dtml-in>\n
+  <tal:block \n
+  tal:replace="structure python: \',\\n\'.join([\'%s: \\x22%s\\x22\' %(x[\'id\'], x[\'renderer\']) for x in context.ERP5Site_getTabList()])"></tal:block>\n
   };\n
 \n
   var url = mapping[this.parentNode.id];\n
-  //log(\'calling \', this, url);\n
   var d = doSimpleXMLHttpRequest(url);\n
   d.addBoth(replaceContent)\n
-  //var container = $(\'container\');\n
-  //container.innerHTML = \'\';\n
   e.stop();\n
 \n
   loading_deferred = callLater(0.3, showLoadingMessage);\n
@@ -105,7 +107,6 @@ function addOnClickEventsToTabs(e) {\n
     var node = item_list[i].getElementsByTagName(\'a\')[0];\n
     disconnectAll(node, \'onclick\');\n
     connect(node, \'onclick\', selectTab);\n
-    //log(node);\n
   }\n
   return true;\n
 }\n
@@ -113,6 +114,18 @@ function addOnClickEventsToTabs(e) {\n
 connect(window, \'onload\', addOnClickEventsToTabs);
 
 ]]></string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>erp5_tabber.js</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
