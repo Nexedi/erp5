@@ -35,6 +35,11 @@ inverted - TestBPMEvaluationDifferentProcessMixin.
 It uses only Sale path to demonstrate BPM.
 
 It is advised to *NOT* remove erp5_administration.
+
+TODOs:
+  * avoid duplication of code:
+    * _checkOrderBPMSimulation and _checkPackingListBPMSimulation
+  * implement tests wisely, to support at least both BPM cases
 """
 import unittest
 
@@ -45,6 +50,8 @@ class TestBPMEvaluationMixin(TestBPMMixin):
   node_portal_type = 'Organisation'
   order_portal_type = 'Sale Order'
   order_line_portal_type = 'Sale Order Line'
+  packing_list_portal_type = 'Sale Packing List'
+  packing_list_line_portal_type = 'Sale Packing List Line'
   trade_condition_portal_type = 'Sale Trade Condition'
   product_portal_type = 'Product'
   order_start_date = DateTime()
@@ -277,7 +284,78 @@ class TestOrder(TestBPMEvaluationMixin):
 
 class TestPackingList(TestBPMEvaluationMixin):
   """Evaluation of BPM Order to Packing List"""
-  pass
+  packing_list_start_date = TestBPMEvaluationMixin.order_start_date
+  packing_list_stop_date = TestBPMEvaluationMixin.order_stop_date
+
+  def _createPackingListLine(self, **kw):
+    return self.packing_list.newContent(portal_type=self.packing_list_line_portal_type, **kw)
+
+  def _createPackingList(self):
+    self.packing_list = self._createDocument(self.packing_list_portal_type,
+        source_value = self.source,
+        source_section_value = self.source_section,
+        destination_value = self.destination,
+        destination_section_value = self.destination_section,
+        start_date = self.packing_list_start_date,
+        stop_date = self.packing_list_stop_date,
+        specialise_value = self.trade_condition)
+
+  def _checkPackingListBPMSimulation(self):
+    """Checks BPM related simumation.
+    
+    Note: Simulation tree is the same, it is totally independent from
+    BPM sequence"""
+    # TODO:
+    #  - gather errors into one list
+    bpm_packing_list_rule = self.packing_list.getCausalityRelatedValue(
+        portal_type='Applied Rule')
+    self.assertEqual(bpm_packing_list_rule.getSpecialiseValue().getPortalType(),
+        'BPM Delivery Rule')
+    packing_list_simulation_movement_list = bpm_packing_list_rule.contentValues()
+    self.assertEqual(len(self.packing_list.getMovementList()),
+      len(packing_list_simulation_movement_list))
+    for packing_list_simulation_movement in packing_list_simulation_movement_list:
+      self.assertEqual(packing_list_simulation_movement.getPortalType(),
+          'Simulation Movement')
+      packing_list_line = packing_list_simulation_movement.getOrderValue()
+      property_problem_list = []
+      for property in 'resource', 'price', 'quantity', 'start_date', \
+        'stop_date', 'source', 'destination', 'source_section', \
+        'destination_section':
+        if packing_list_line.getProperty(property) != packing_list_simulation_movement \
+            .getProperty(property):
+          property_problem_list.append('property %s movement %s '
+              'simulation %s' % (property, packing_list_line.getProperty(property),
+                packing_list_simulation_movement.getProperty(property)))
+      if len(property_problem_list) > 0:
+        self.fail('\n'.join(property_problem_list))
+      for bpm_invoicing_rule in packing_list_simulation_movement.contentValues():
+        self.assertEqual(bpm_invoicing_rule.getPortalType(), 'Applied Rule')
+        self.assertEqual(bpm_invoicing_rule.getSpecialiseValue() \
+            .getPortalType(), 'BPM Invoicing Rule')
+        for invoicing_simulation_movement in bpm_invoicing_rule \
+            .contentValues():
+          self.assertEqual(invoicing_simulation_movement.getPortalType(),
+              'Simulation Movement')
+          self.assertEqual(invoicing_simulation_movement.getCausalityValue(),
+              self.invoice_path)
+          for trade_model_rule in invoicing_simulation_movement \
+              .contentValues():
+            self.assertEqual(trade_model_rule.getPortalType(), 'Applied Rule')
+            self.assertEqual(trade_model_rule.getSpecialiseValue() \
+                .getPortalType(), 'Trade Model Rule')
+            self.assertSameSet(trade_model_rule.contentValues(
+              portal_type='Simulation Movement'), [])
+
+  def test_confirming_packing_list_only(self):
+    self._createPackingList()
+    self.packing_list_line = self._createPackingListLine(resource_value = self._createProduct(),
+        quantity = 10, price = 5)
+    self.stepTic()
+
+    self.packing_list.confirm()
+    self.stepTic()
+    self._checkPackingListBPMSimulation()
 
 class TestInvoice(TestBPMEvaluationMixin):
   """Evaluation of BPM Order through Packing List to Invoice Transaction"""
