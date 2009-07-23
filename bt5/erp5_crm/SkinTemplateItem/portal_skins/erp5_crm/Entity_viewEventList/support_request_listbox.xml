@@ -13,13 +13,13 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
                 <string>columns</string>
-                <string>sort</string>
-                <string>list_method</string>
-                <string>selection_name</string>
-                <string>portal_types</string>
                 <string>editable_columns</string>
+                <string>list_method</string>
+                <string>portal_types</string>
+                <string>selection_name</string>
+                <string>sort</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -199,7 +199,7 @@
       <dictionary>
         <item>
             <key> <string>method_name</string> </key>
-            <value> <string>Entity_getRelatedTicketList</string> </value>
+            <value> <string>Base_getRelatedObjectList</string> </value>
         </item>
       </dictionary>
     </pickle>
