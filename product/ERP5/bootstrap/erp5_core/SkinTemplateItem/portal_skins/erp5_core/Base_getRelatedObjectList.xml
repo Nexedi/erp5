@@ -53,11 +53,8 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>category_tool = context.portal_categories\n
-base_category_list = kw.get(\'base_category_list\')\n
-portal_type = kw.get(\'portal_type\')\n
-\n
-return category_tool.getRelatedValueList(context, base_category_list, portal_type=portal_type)\n
+            <value> <string>kw[\'category.category_uid\'] = context.getUid()\n
+return context.portal_catalog(**kw)\n
 </string> </value>
         </item>
         <item>
@@ -97,9 +94,8 @@ return category_tool.getRelatedValueList(context, base_category_list, portal_typ
                             <string>kw</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>category_tool</string>
-                            <string>base_category_list</string>
-                            <string>portal_type</string>
+                            <string>_write_</string>
+                            <string>_apply_</string>
                           </tuple>
                         </value>
                     </item>
