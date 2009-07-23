@@ -53,30 +53,41 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># Probe known skins to determine whether erp5_base and erp5_dms are installed.\n
-basic_mode = (getattr(context, \'Currency_view\', None) is not None)\n
-dms_mode = (getattr(context, \'DocumentModule_viewDocumentList\', None) is not None)\n
-\n
-express_pref_dict = context.ERP5Site_getExpressPreferenceDict()\n
-subscription_status = express_pref_dict.get(\'subscription_status\')\n
-configuration_status = express_pref_dict.get(\'configuration_status\')\n
-user_id = express_pref_dict.get(\'user_id\')\n
-\n
-SUPPORT_ENABLED = \'support_enabled\'\n
-SUPPORT_DISABLED = \'support_disabled\'\n
-ADVERTISEMENT_ENABLED = \'advertisement_enabled\'\n
+            <value> <string>from Products.ERP5Type.Cache import CachingMethod\n
 \n
 portal = context.getPortalObject()\n
 \n
-if getattr(portal, \'portal_wizard\', None) is None:\n
-  express_mode = SUPPORT_DISABLED\n
-elif subscription_status:\n
-  if user_id:\n
-    express_mode = SUPPORT_ENABLED\n
-  else:\n
+def getConfiguredStatusDict():\n
+\n
+  # Probe known skins to determine whether erp5_base and erp5_dms are installed.\n
+  basic_mode = (getattr(context, \'Currency_view\', None) is not None)\n
+  dms_mode = (getattr(context, \'DocumentModule_viewDocumentList\', None) is not None)\n
+\n
+  express_pref_dict = context.ERP5Site_getExpressPreferenceDict()\n
+  subscription_status = express_pref_dict.get(\'subscription_status\')\n
+  configuration_status = express_pref_dict.get(\'configuration_status\')\n
+  user_id = express_pref_dict.get(\'user_id\')\n
+\n
+  SUPPORT_ENABLED = \'support_enabled\'\n
+  SUPPORT_DISABLED = \'support_disabled\'\n
+  ADVERTISEMENT_ENABLED = \'advertisement_enabled\'\n
+\n
+  if getattr(portal, \'portal_wizard\', None) is None:\n
     express_mode = SUPPORT_DISABLED\n
-else:\n
-  express_mode = ADVERTISEMENT_ENABLED\n
+  elif subscription_status:\n
+    if user_id:\n
+      express_mode = SUPPORT_ENABLED\n
+    else:\n
+      express_mode = SUPPORT_DISABLED\n
+  else:\n
+    express_mode = ADVERTISEMENT_ENABLED\n
+  return basic_mode, dms_mode, express_mode\n
+\n
+getConfiguredStatusDict = CachingMethod(getConfiguredStatusDict, \\\n
+                                        id = \'ERP5Site_getConfiguredStatusDict\', \\\n
+                                        cache_factory = \'erp5_ui_long\')\n
+\n
+basic_mode, dms_mode, express_mode = getConfiguredStatusDict()\n
 \n
 # One more test for express\n
 # If a user uses an account for configurator, only express tab will be displayed.\n
@@ -136,25 +147,22 @@ return {\'basic_mode\': basic_mode,\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>getattr</string>
+                            <string>Products.ERP5Type.Cache</string>
+                            <string>CachingMethod</string>
+                            <string>_getattr_</string>
                             <string>context</string>
-                            <string>None</string>
+                            <string>portal</string>
+                            <string>getConfiguredStatusDict</string>
+                            <string>_getiter_</string>
                             <string>basic_mode</string>
                             <string>dms_mode</string>
-                            <string>_getattr_</string>
-                            <string>express_pref_dict</string>
-                            <string>subscription_status</string>
-                            <string>configuration_status</string>
-                            <string>user_id</string>
-                            <string>SUPPORT_ENABLED</string>
-                            <string>SUPPORT_DISABLED</string>
-                            <string>ADVERTISEMENT_ENABLED</string>
-                            <string>portal</string>
                             <string>express_mode</string>
                             <string>member</string>
                             <string>list</string>
                             <string>role_list</string>
                             <string>group_list</string>
+                            <string>getattr</string>
+                            <string>None</string>
                             <string>getGroups</string>
                             <string>False</string>
                           </tuple>

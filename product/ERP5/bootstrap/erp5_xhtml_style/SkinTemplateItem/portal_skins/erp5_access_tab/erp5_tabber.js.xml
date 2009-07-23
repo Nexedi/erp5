@@ -85,7 +85,7 @@ function selectTab(e) {\n
 \n
   var mapping = {\n
   <tal:block \n
-  tal:replace="structure python: \',\\n\'.join([\'%s: \\x22%s\\x22\' %(x[\'id\'], x[\'renderer\']) for x in context.ERP5Site_getTabList()])"></tal:block>\n
+  tal:replace="structure python: \',\\n\'.join([\'%s: \\x22%s\\x22\' %(x[\'id\'], x[\'renderer\']) for x in context.ERP5Site_getTabList(add_all_tabs=1)])"></tal:block>\n
   };\n
 \n
   var url = mapping[this.parentNode.id];\n
