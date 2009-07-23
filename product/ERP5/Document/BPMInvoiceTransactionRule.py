@@ -151,7 +151,7 @@ class BPMInvoiceTransactionRule(BPMRule, PredicateMatrix):
             'causality_value': business_path,
             }
         from Products.ERP5Type.Document import newTempSimulationMovement
-        temporary_movement = newTempSimulationMovement(self.getPortalObjec(),
+        temporary_movement = newTempSimulationMovement(self.getPortalObject(),
             '1', **prevision_line)
         #set asset_price on movement when resource is different from price
         #currency of the source/destination section
