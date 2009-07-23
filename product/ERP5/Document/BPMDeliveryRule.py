@@ -49,15 +49,16 @@ class BPMDeliveryRule(BPMRule):
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
   def _getInputMovementList(self, applied_rule):
-    """Returns list of input movements for applied rule"""
-    order = applied_rule.getDefaultCausalityValue()
-    if order is not None:
-      return order.getMovementList(
-                     portal_type=order.getPortalDeliveryMovementTypeList())
+    """Return list of movements from delivery"""
+    delivery = applied_rule.getDefaultCausalityValue()
+    if delivery is not None:
+      return delivery.getMovementList(
+                     portal_type=delivery.getPortalDeliveryMovementTypeList())
     return []
 
   def _getExpandablePropertyUpdateDict(self, applied_rule, movement, business_path,
       **kw):
+    """Delivery specific update dict"""
     return {
       'order_value': movement,
       'delivery_value': movement,

@@ -199,12 +199,22 @@ class BPMRule(Rule):
                 movement.getRelativeUrl())
     return (add_list, modify_dict, delete_list)
 
+  def _getExpandablePropertyUpdateDict(self, applied_rule, movement, business_path, **kw):
+    """Rule specific dictionary used to update _getExpandablePropertyDict
+    This method might be overloaded.
+    """
+    return {}
+
+  def _getInputMovementList(self, applied_rule):
+    """Return list of movements for applied rule.
+    This method might be overloaded"""
+    return [applied_rule.getParentValue()]
+
   def _getExpandablePropertyDict(self, applied_rule, movement, business_path,
       **kw):
     """
-    Return a Dictionary with the Properties used to edit 
-    the simulation movement. A supply path can be passed to assign more
-    information
+    Return a Dictionary with the Properties used to edit the simulation
+    Do NOT overload this method, use _getExpandablePropertyUpdateDict instead
     """
     property_dict = {}
 

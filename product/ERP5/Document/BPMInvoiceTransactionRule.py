@@ -46,7 +46,7 @@ class BPMInvoiceTransactionRule(BPMRule, PredicateMatrix):
   add_permission = Permissions.AddPortalContent
   isPortalContent = 1
   isRADContent = 1
-  
+
   # Declarative security
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)

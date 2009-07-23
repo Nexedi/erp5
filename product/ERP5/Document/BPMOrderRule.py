@@ -48,7 +48,7 @@ class BPMOrderRule(BPMDeliveryRule):
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
   def _getInputMovementList(self, applied_rule):
-    """Returns list of input movements for applied rule"""
+    """Input movement list comes from order"""
     order = applied_rule.getDefaultCausalityValue()
     if order is not None:
       return order.getMovementList(
@@ -57,6 +57,7 @@ class BPMOrderRule(BPMDeliveryRule):
 
   def _getExpandablePropertyUpdateDict(self, applied_rule, movement, business_path,
       **kw):
+    """Order rule specific update dictionary"""
     return {
       'order_value': movement,
       'order_ratio': 1,

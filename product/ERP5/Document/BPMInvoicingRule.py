@@ -67,9 +67,5 @@ class BPMInvoicingRule(BPMRule):
       'deliverable': 1
     }
 
-  def _getInputMovementList(self, applied_rule):
-    """Returns list of input movements for applied rule"""
-    return [applied_rule.getParentValue()]
-
   def isDeliverable(self, movement):
     return movement.getResource() is not None
