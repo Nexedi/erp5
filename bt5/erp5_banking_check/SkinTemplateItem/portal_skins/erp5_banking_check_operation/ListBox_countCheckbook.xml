@@ -83,11 +83,17 @@ if fast_input_type == \'traveler_check_purchase\':\n
   item_portal_type_list = (\'Check\',)\n
   disable_node = 1\n
 \n
+# retrieve reference field to filter list\n
+reference = getattr(request, \'your_reference\', None)\n
+if reference is None:\n
+  reference = getattr(request, \'field_your_reference\', None)\n
+\n
 nb = context.Delivery_getCheckbookList(\n
                     item_portal_type_list=item_portal_type_list,\n
                     disable_node=disable_node,\n
                     at_date=at_date,\n
                     node=node,\n
+                    reference=reference,\n
                     count=True)\n
 \n
 return [[nb,],]\n
@@ -151,6 +157,7 @@ return [[nb,],]\n
                             <string>fast_input_type</string>
                             <string>disable_node</string>
                             <string>at_date</string>
+                            <string>reference</string>
                             <string>True</string>
                             <string>nb</string>
                           </tuple>

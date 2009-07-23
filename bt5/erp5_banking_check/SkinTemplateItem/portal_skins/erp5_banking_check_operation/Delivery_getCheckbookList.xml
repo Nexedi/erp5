@@ -105,9 +105,18 @@ if listbox is None:\n
     if disable_node:\n
       node=None\n
 \n
-    current_tracking_list = getCurrentTrackingList(to_date=at_date,\n
-                                                   node=node,\n
-                                                   where_expression="item_catalog.portal_type=\'Check\' or item_catalog.portal_type=\'Checkbook\'")\n
+    kw = {}\n
+    if reference not in (None, \'\'):\n
+      kw[\'aggregate_uid\'] = [x.uid for x in context.getPortalObject().portal_catalog(\n
+        destination_payment_internal_bank_account_number=reference,\n
+        portal_type=(\'Check\', \'Checkbook\')\n
+      )]\n
+\n
+    current_tracking_list = getCurrentTrackingList(\n
+      to_date=at_date,\n
+      node=node,\n
+      where_expression="item_catalog.portal_type=\'Check\' or item_catalog.portal_type=\'Checkbook\'",\n
+      **kw)\n
 \n
     if count is True:\n
       return len(current_tracking_list)\n
@@ -146,8 +155,6 @@ if listbox is None:\n
           destination_payment_value = item.getDestinationPaymentValue()\n
           if destination_payment_value is not None:\n
             internal_bank_account_number = destination_payment_value.getInternalBankAccountNumber()\n
-            if reference not in (None, \'\') and reference != internal_bank_account_number:\n
-              continue\n
             item_dict[\'internal_bank_account_number\'] = internal_bank_account_number\n
             item_dict[\'account_owner\'] = item.getDestinationPaymentTitle()\n
           item_dict[\'recept_date\'] = item.getStartDate()\n
@@ -244,6 +251,11 @@ return listbox\n
                             <string>context</string>
                             <string>item_list</string>
                             <string>getCurrentTrackingList</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>x</string>
+                            <string>_write_</string>
+                            <string>_apply_</string>
                             <string>current_tracking_list</string>
                             <string>True</string>
                             <string>len</string>
@@ -255,7 +267,6 @@ return listbox\n
                             <string>value</string>
                             <string>item_portal_type</string>
                             <string>item_dict</string>
-                            <string>_write_</string>
                             <string>destination_payment_value</string>
                             <string>internal_bank_account_number</string>
                             <string>_inplacevar_</string>
