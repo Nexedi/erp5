@@ -1,0 +1,194 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ERP5TypeInformation" module="Products.ERP5Type.ERP5Type"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_actions</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_aliases</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_property_domain_dict</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>short_title</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+        <item>
+            <key> <string>_roles</string> </key>
+            <value>
+              <list/>
+            </value>
+        </item>
+        <item>
+            <key> <string>acquire_local_roles</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+        <item>
+            <key> <string>allowed_content_types</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>base_category_list</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>content_icon</string> </key>
+            <value> <string>document.gif</string> </value>
+        </item>
+        <item>
+            <key> <string>content_meta_type</string> </key>
+            <value> <string>ERP5 Delivery Builder</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string>Delivery Builder objects allow to gather multiple Simulation Movements into\n
+a single Delivery. The initial quantity property of the Delivery Line is\n
+calculated by summing quantities of related Simulation Movements.\n
+\n
+Delivery Builders are called for example whenever an order is confirmed.\n
+They are also called globally in order to gather any confirmed or above\n
+Simulation Movement which was not associated to any Delivery Line.  Such\n
+movements are called orphaned Simulation Movements.\n
+\n
+Delivery Builder objects are provided with a set a parameters to achieve\n
+their goal:\n
+\n
+A path definition: source, destination, etc. which defines the general\n
+kind of movements it applies.\n
+\n
+simulation_select_method which defines how to query all Simulation\n
+Movements which meet certain criteria (including the above path path\n
+definition).\n
+\n
+collect_order_list which defines how to group selected movements according\n
+to gathering rules.\n
+\n
+delivery_select_method which defines how to select existing Delivery  which\n
+may eventually be updated with selected simulation movements.\n
+\n
+delivery_module, delivery_type and delivery_line_type which define the\n
+module and portal types for newly built Deliveries and Delivery Lines.\n
+\n
+Delivery Builders can also be provided with optional parameters to\n
+restrict selection to a given root Applied Rule caused by a single Order or\n
+to Simulation Movements related to a limited set of existing Deliveries.</string> </value>
+        </item>
+        <item>
+            <key> <string>factory</string> </key>
+            <value> <string>addDeliveryBuilder</string> </value>
+        </item>
+        <item>
+            <key> <string>filter_content_types</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+        <item>
+            <key> <string>group_list</string> </key>
+            <value>
+              <tuple>
+                <string>alarm</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>hidden_content_type_list</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Delivery Builder</string> </value>
+        </item>
+        <item>
+            <key> <string>init_script</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>permission</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>property_sheet_list</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <global name="TranslationInformation" module="Products.ERP5Type.TranslationProviderBase"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>domain_name</string> </key>
+            <value> <string>erp5_content</string> </value>
+        </item>
+        <item>
+            <key> <string>property_name</string> </key>
+            <value> <string>short_title</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <tuple>
+        <global name="TranslationInformation" module="Products.ERP5Type.TranslationProviderBase"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>domain_name</string> </key>
+            <value> <string>erp5_content</string> </value>
+        </item>
+        <item>
+            <key> <string>property_name</string> </key>
+            <value> <string>title</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
