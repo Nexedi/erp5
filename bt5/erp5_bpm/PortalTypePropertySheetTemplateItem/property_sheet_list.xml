@@ -1,0 +1,14 @@
+<property_sheet_list>
+ <portal_type id="BPM Delivery Rule">
+  <item>BPMAppliedRule</item>
+ </portal_type>
+ <portal_type id="BPM Invoice Transaction Rule">
+  <item>BPMAppliedRule</item>
+ </portal_type>
+ <portal_type id="BPM Invoicing Rule">
+  <item>BPMAppliedRule</item>
+ </portal_type>
+ <portal_type id="BPM Order Rule">
+  <item>BPMAppliedRule</item>
+ </portal_type>
+</property_sheet_list>
