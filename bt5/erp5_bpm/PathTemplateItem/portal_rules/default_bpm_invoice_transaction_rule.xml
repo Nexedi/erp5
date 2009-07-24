@@ -101,6 +101,31 @@
 NEVER USE IN PRODUCTION ENVIRONMENT!</string> </value>
         </item>
         <item>
+            <key> <string>expandable_property</string> </key>
+            <value>
+              <tuple>
+                <string>causality_value</string>
+                <string>destination_administration_list</string>
+                <string>destination_function_list</string>
+                <string>destination_list</string>
+                <string>destination_payment_list</string>
+                <string>destination_project_list</string>
+                <string>destination_section_list</string>
+                <string>price</string>
+                <string>quantity</string>
+                <string>resource_list</string>
+                <string>source_administration_list</string>
+                <string>source_function_list</string>
+                <string>source_list</string>
+                <string>source_payment_list</string>
+                <string>source_project_list</string>
+                <string>source_section_list</string>
+                <string>start_date</string>
+                <string>stop_date</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>expandable_property_list</string> </key>
             <value>
               <tuple/>
@@ -114,6 +139,16 @@ NEVER USE IN PRODUCTION ENVIRONMENT!</string> </value>
             <key> <string>index</string> </key>
             <value>
               <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>matching_property</string> </key>
+            <value>
+              <tuple>
+                <string>resource_list</string>
+                <string>source_list</string>
+                <string>destination_list</string>
+              </tuple>
             </value>
         </item>
         <item>

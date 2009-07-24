@@ -136,6 +136,16 @@ NEVER USE IN PRODUCTION ENVIRONMENT!</string> </value>
             <value> <string>default_bpm_invoicing_rule</string> </value>
         </item>
         <item>
+            <key> <string>matching_property</string> </key>
+            <value>
+              <tuple>
+                <string>resource_list</string>
+                <string>variation_category_list</string>
+                <string>variation_property_dict</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>portal_type</string> </key>
             <value> <string>BPM Invoicing Rule</string> </value>
         </item>
