@@ -3,7 +3,7 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <global name="ERP5Form" module="Products.ERP5Form.Form"/>
+        <global name="ERP5Report" module="Products.ERP5Form.Report"/>
         <tuple/>
       </tuple>
     </pickle>
@@ -31,14 +31,8 @@
             </value>
         </item>
         <item>
-            <key> <string>_objects</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
             <key> <string>action</string> </key>
-            <value> <string>Project_viewMonthlyReport</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -56,7 +50,7 @@
         </item>
         <item>
             <key> <string>enctype</string> </key>
-            <value> <string>multipart/form-data</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>group_list</string> </key>
@@ -64,6 +58,9 @@
               <list>
                 <string>left</string>
                 <string>right</string>
+                <string>center</string>
+                <string>bottom</string>
+                <string>hidden</string>
               </list>
             </value>
         </item>
@@ -72,21 +69,33 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>bottom</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>center</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>hidden</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
                     <key> <string>left</string> </key>
                     <value>
-                      <list>
-                        <string>your_report_depth</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
                     <key> <string>right</string> </key>
                     <value>
-                      <list>
-                        <string>your_simulation_state</string>
-                        <string>your_from_date</string>
-                        <string>your_at_date</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
               </dictionary>
@@ -94,7 +103,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Project_viewODSMonthlyReportPrintDialog</string> </value>
+            <value> <string>Project_viewMonthlyReport</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -102,11 +111,15 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>Project_viewODSMonthlyPrintDialog</string> </value>
+            <value> <string>Project_viewMonthlyReport</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
-            <value> <string>form_dialog</string> </value>
+            <value> <string>report_view</string> </value>
+        </item>
+        <item>
+            <key> <string>report_method</string> </key>
+            <value> <string>Project_getMonthlyReportSectionList</string> </value>
         </item>
         <item>
             <key> <string>row_length</string> </key>
@@ -118,7 +131,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Monthly Report</string> </value>
+            <value> <string>Project_viewMonthlyReport</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>

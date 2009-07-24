@@ -111,7 +111,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Project_viewODSMonthlyReport</string> </value>
+            <value> <string>Project_viewMonthlyReportData</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>

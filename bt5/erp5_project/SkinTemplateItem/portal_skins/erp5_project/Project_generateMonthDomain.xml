@@ -77,16 +77,19 @@ month = here.getStartDate().month()\n
 \n
 if depth == 0:\n
   # Get start date and stop date from document\n
-  start_date = here.getStartDate()\n
-  stop_date = here.getStopDate()\n
+  from_date = request.get(\'from_date\')\n
+  at_date = request.get(\'at_date\')\n
   current_month = None\n
-  # We must initialize start_date at the beginning of the month\n
-  current_date = start_date\n
-  month_dict = {}\n
-  while current_date < stop_date:\n
-    if (current_date.year(), current_date.month()) not in month_dict:\n
-      month_dict[(current_date.year(), current_date.month())] = 1\n
-    current_date += 1\n
+  # We must initialize from_date at the beginning of the month\n
+  current_date = from_date\n
+  month_dict = request.form.get(\'month_dict\', None)\n
+  if month_dict is None:\n
+    month_dict = {}\n
+    while current_date < at_date:\n
+      if (current_date.year(), current_date.month()) not in month_dict:\n
+        month_dict[(current_date.year(), current_date.month())] = 1\n
+      current_date += 1\n
+    request.form[\'month_dict\'] = month_dict\n
 \n
   category_list = []\n
   i = 1\n
@@ -203,8 +206,8 @@ return domain_list\n
                             <string>category_list</string>
                             <string>year</string>
                             <string>month</string>
-                            <string>start_date</string>
-                            <string>stop_date</string>
+                            <string>from_date</string>
+                            <string>at_date</string>
                             <string>current_month</string>
                             <string>current_date</string>
                             <string>month_dict</string>

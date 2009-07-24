@@ -57,8 +57,6 @@
 
 from Products.ZSQLCatalog.SQLCatalog import Query\n
 request = context.REQUEST\n
-start_date = context.getStartDate()\n
-stop_date = context.getStopDate()\n
 \n
 object_dict = {}\n
 \n
@@ -69,53 +67,27 @@ worker_column_list = []\n
 source_project_uid_list = [x.uid for x in context.portal_catalog(\n
      relative_url=\'%s%%\' % context.getRelativeUrl())]\n
 \n
+from_date = request.get(\'from_date\', None)\n
+if from_date is None:\n
+  from_date = context.getStartDate()\n
+  request.set(\'from_date\',from_date)\n
+at_date = request.get(\'at_date\', None)\n
+if at_date is None:\n
+  at_date = context.getStopDate()\n
+  request.set(\'at_date\',at_date)\n
+simulation_state = request.get(\'simulation_state\', None)\n
 \n
-sql_kw = {}\n
-if from_date is not None:\n
-  query_kw = {\'delivery.start_date\' : from_date,\n
-              \'range\' : \'min\'}\n
-  sql_kw[\'delivery.start_date\'] = Query(**query_kw)\n
-if at_date is not None:\n
-  query_kw = {\'delivery.stop_date\' : at_date,\n
-              \'range\' : \'ngt\'}\n
-  sql_kw[\'delivery.stop_date\'] = Query(**query_kw)\n
 \n
-# Make sure to not include "confirmed tasks" in any case, because in\n
-# this case we must take task reports\n
-ignore_task = 0\n
-if simulation_state is not None and len(simulation_state) > 0 :\n
-  task_simulation_state = [x for x in simulation_state if x != \'confirmed\']\n
-  if len(task_simulation_state) == 0:\n
-    ignore_task = 1\n
-  task_report_simulation_state = simulation_state\n
-else:\n
-  task_simulation_state = context.getPortalDraftOrderStateList() + \\\n
-                          context.getPortalPlannedOrderStateList()\n
-  task_report_simulation_state = None\n
-\n
-task_list = []\n
-if not ignore_task:\n
-  task_list = [x.getObject() for x in \\\n
-    context.portal_catalog(\n
-                           portal_type=\'Task\',\n
-                           source_project_uid = source_project_uid_list,\n
-                           simulation_state = task_simulation_state,\n
-                           **sql_kw)]\n
-task_list.extend([x.getObject() for x in \\\n
-  context.portal_catalog(\n
-                         portal_type=\'Task Report\',\n
-                         source_project_uid = source_project_uid_list,\n
-                         simulation_state = task_report_simulation_state,\n
-                         **sql_kw)])\n
-\n
-task_line_list = []\n
-for task in task_list:\n
-  task_line_list.extend(task.objectValues(portal_type=(\'Task Line\', \'Task Report Line\')))\n
+# We will use inventory API in order to find all quantities\n
+result_list = context.portal_simulation.getInventoryList(\n
+                  simulation_state = simulation_state,\n
+                  project_uid = source_project_uid_list,\n
+                  from_date=from_date,\n
+                  at_date=at_date)\n
 \n
 monthly_worker_quantity_dict = {} # Used to get quantity per month and per worker\n
 \n
-\n
-for task_line in task_line_list:\n
+for task_line in result_list:\n
   # initialize some variables\n
   source = task_line.getSource()\n
   if source is None:\n
@@ -187,14 +159,24 @@ for string_index, worker_quantity_dict in monthly_worker_quantity_dict.items():\
     temp_object.setProperty(source, quantity)\n
 \n
 column_list.extend(worker_column_list)\n
-context = context.asContext(object_dict = object_dict,\n
-                            summary_dict = summary_dict,\n
-                            column_list = column_list,)\n
 \n
 selection_name = \'project_monthly_report_selection\'\n
 context.portal_selections.setListboxDisplayMode(request, \'ReportTreeMode\',\n
                                               selection_name=selection_name)\n
-return context.Project_viewODSMonthlyReport()\n
+\n
+result = []\n
+from Products.ERP5Form.Report import ReportSection\n
+param_dict = {}\n
+\n
+param_list = [object_dict, summary_dict, column_list]\n
+\n
+result.append(ReportSection(\n
+              path=context.getPhysicalPath(),\n
+              param_list=param_list,\n
+              method_id=\'Project_getMonthlyReportContext\',\n
+              listbox_display_mode=\'ReportTreeMode\',\n
+              form_id=\'Project_viewMonthlyReportData\'))\n
+return result\n
 
 
 ]]></string> </value>
@@ -207,7 +189,7 @@ return context.Project_viewODSMonthlyReport()\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>from_date=None, at_date=None, simulation_state=None, **kw</string> </value>
+            <value> <string>**kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -227,23 +209,18 @@ return context.Project_viewODSMonthlyReport()\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>3</int> </value>
+                        <value> <int>0</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>from_date</string>
-                            <string>at_date</string>
-                            <string>simulation_state</string>
                             <string>kw</string>
                             <string>Products.ZSQLCatalog.SQLCatalog</string>
                             <string>Query</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>request</string>
-                            <string>start_date</string>
-                            <string>stop_date</string>
                             <string>object_dict</string>
                             <string>column_list</string>
                             <string>worker_column_list</string>
@@ -252,18 +229,11 @@ return context.Project_viewODSMonthlyReport()\n
                             <string>_getiter_</string>
                             <string>x</string>
                             <string>source_project_uid_list</string>
-                            <string>sql_kw</string>
                             <string>None</string>
-                            <string>query_kw</string>
-                            <string>_apply_</string>
-                            <string>_write_</string>
-                            <string>ignore_task</string>
-                            <string>len</string>
-                            <string>task_simulation_state</string>
-                            <string>task_report_simulation_state</string>
-                            <string>task_list</string>
-                            <string>task_line_list</string>
-                            <string>task</string>
+                            <string>from_date</string>
+                            <string>at_date</string>
+                            <string>simulation_state</string>
+                            <string>result_list</string>
                             <string>monthly_worker_quantity_dict</string>
                             <string>task_line</string>
                             <string>source</string>
@@ -275,6 +245,7 @@ return context.Project_viewODSMonthlyReport()\n
                             <string>month_start_date</string>
                             <string>date_string</string>
                             <string>current_date</string>
+                            <string>_write_</string>
                             <string>_inplacevar_</string>
                             <string>current_column</string>
                             <string>project</string>
@@ -295,6 +266,11 @@ return context.Project_viewODSMonthlyReport()\n
                             <string>object_quantity</string>
                             <string>summary_dict</string>
                             <string>selection_name</string>
+                            <string>result</string>
+                            <string>Products.ERP5Form.Report</string>
+                            <string>ReportSection</string>
+                            <string>param_dict</string>
+                            <string>param_list</string>
                           </tuple>
                         </value>
                     </item>
@@ -306,16 +282,12 @@ return context.Project_viewODSMonthlyReport()\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <tuple>
-                <none/>
-                <none/>
-                <none/>
-              </tuple>
+              <none/>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Project_printAsODSMonthly</string> </value>
+            <value> <string>Project_getMonthlyReportSectionList</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
