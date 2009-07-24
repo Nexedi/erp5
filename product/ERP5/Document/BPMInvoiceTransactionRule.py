@@ -69,21 +69,21 @@ class BPMInvoiceTransactionRule(BPMRule, PredicateMatrix):
     These previsions are actually returned as dictionaries.
     """
     prevision_list = []
-    context_movement = applied_rule.getParentValue()
+    input_movement = applied_rule.getParentValue()
 
     business_process = applied_rule.getBusinessProcessValue()
 
     movement_and_path_list = []
     for business_path in business_process.getPathValueList(
                         self.getProperty('trade_phase_list'),
-                        context_movement):
-      movement_and_path_list.append((context_movement, business_path))
+                        input_movement):
+      movement_and_path_list.append((input_movement, business_path))
 
     if len(movement_and_path_list) > 1:
       raise NotImplementedError
 
     # Find a matching cell
-    cell = self._getMatchingCell(context_movement)
+    cell = self._getMatchingCell(input_movement)
 
     if cell is not None : # else, we do nothing
       for accounting_rule_cell_line in cell.objectValues() :
@@ -95,7 +95,7 @@ class BPMInvoiceTransactionRule(BPMRule, PredicateMatrix):
         #  * price_currency from the top level simulation movement's
         # orderValue
         resource = None
-        invoice_line = context_movement.getDeliveryValue()
+        invoice_line = input_movement.getDeliveryValue()
         if invoice_line is not None :
           invoice = invoice_line.getExplanationValue()
           resource = invoice.getProperty('resource',
@@ -123,33 +123,19 @@ class BPMInvoiceTransactionRule(BPMRule, PredicateMatrix):
           # last resort : get the resource from the rule
           resource = accounting_rule_cell_line.getResource() \
               or cell.getResource()
-        # XXX Harcoded list
-        prevision_line = {
-            'source': accounting_rule_cell_line.getSource(),
-            'source_section': context_movement.getSourceSection(),
-            'source_decision': context_movement.getSourceDecision(),
-            'source_administration': context_movement \
-                .getSourceAdministration(),
-            'source_project': context_movement.getSourceProject(),
-            'source_function': context_movement.getSourceFunction(),
-            'source_payment': context_movement.getSourcePayment(),
-            'destination': accounting_rule_cell_line.getDestination(),
-            'destination_section': context_movement.getDestinationSection(),
-            'destination_decision': context_movement.getDestinationDecision(),
-            'destination_administration': context_movement \
-                .getDestinationAdministration(),
-            'destination_project': context_movement.getDestinationProject(),
-            'destination_function': context_movement.getDestinationFunction(),
-            'destination_payment': context_movement.getDestinationPayment(),
-            'start_date': context_movement.getStartDate(),
-            'stop_date': context_movement.getStopDate(),
-            'resource': resource,
-            'quantity': (context_movement.getCorrectedQuantity() *
-              context_movement.getPrice(0.0)) *
-              accounting_rule_cell_line.getQuantity(),
-            'price': 1,
-            'causality_value': business_path,
-            }
+        prevision_line = {}
+        prevision_line.update(**self._getExpandablePropertyDict(applied_rule,
+          input_movement, business_path))
+
+        prevision_line.update(
+          source_list = [accounting_rule_cell_line.getSource()],
+          destination_list = [accounting_rule_cell_line.getDestination()],
+          quantity = (input_movement.getCorrectedQuantity() *
+            input_movement.getPrice(0.0)) *
+            accounting_rule_cell_line.getQuantity(),
+          resource_list = [resource],
+          price = 1,
+        )
         from Products.ERP5Type.Document import newTempSimulationMovement
         temporary_movement = newTempSimulationMovement(self.getPortalObject(),
             '1', **prevision_line)
@@ -158,7 +144,7 @@ class BPMInvoiceTransactionRule(BPMRule, PredicateMatrix):
         if resource is not None:
           currency = self.restrictedTraverse(resource)
           currency_url = currency.getRelativeUrl()
-          destination_section = prevision_line['destination_section']
+          destination_section = prevision_line['destination_section_list'][0]
           if destination_section is not None:
             destination_currency_url = self.restrictedTraverse(
                 destination_section).getProperty('price_currency', None)
@@ -178,10 +164,10 @@ class BPMInvoiceTransactionRule(BPMRule, PredicateMatrix):
                (destination_exchange_ratio*
                 applied_rule.getParentValue().getTotalPrice()),precision))
 
-          source_section = prevision_line['source_section']
+          source_section = prevision_line['source_section_list'][0]
           if source_section is not None:
             source_currency_url = self.restrictedTraverse(
-                'source_section').getProperty('price_currency', None)
+                source_section).getProperty('price_currency', None)
           else:
             source_currency_url = None
           if source_currency_url is not None \
@@ -202,7 +188,7 @@ class BPMInvoiceTransactionRule(BPMRule, PredicateMatrix):
             'generate_prevision_script_id'):
           generate_prevision_script_id = \
                 accounting_rule_cell_line.getGeneratePrevisionScriptId()
-          prevision_line.update(getattr(context_movement,
+          prevision_line.update(getattr(input_movement,
                               generate_prevision_script_id)(prevision_line))
         prevision_list.append(prevision_line)
     return prevision_list

@@ -55,8 +55,8 @@ class BPMOrderRule(BPMDeliveryRule):
                      portal_type=order.getPortalOrderMovementTypeList())
     return []
 
-  def _getExpandablePropertyUpdateDict(self, applied_rule, movement, business_path,
-      **kw):
+  def _getExpandablePropertyUpdateDict(self, applied_rule, movement,
+      business_path, current_property_dict):
     """Order rule specific update dictionary"""
     return {
       'order_value': movement,

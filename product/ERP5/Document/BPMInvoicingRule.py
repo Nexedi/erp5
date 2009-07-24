@@ -61,8 +61,8 @@ class BPMInvoicingRule(BPMRule):
     return 0
 
 #### Helper methods for expand
-  def _getExpandablePropertyUpdateDict(self, applied_rule, movement, business_path,
-      **kw):
+  def _getExpandablePropertyUpdateDict(self, applied_rule, movement,
+      business_path, current_property_dict):
     return {
       'deliverable': 1
     }

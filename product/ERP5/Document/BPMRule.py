@@ -73,6 +73,7 @@ class BPMRule(Predicate, XMLObject):
                     , PropertySheet.Reference
                     , PropertySheet.Version
                     , PropertySheet.AppliedRule
+                    , PropertySheet.BPMAppliedRule
                     )
 
   movement_type = 'Simulation Movement'
@@ -161,7 +162,8 @@ class BPMRule(Predicate, XMLObject):
     return 1
 
 #### Helpers to overload
-  def _getExpandablePropertyUpdateDict(self, applied_rule, movement, business_path, **kw):
+  def _getExpandablePropertyUpdateDict(self, applied_rule, movement,
+      business_path, current_property_dict):
     """Rule specific dictionary used to update _getExpandablePropertyDict
     This method might be overloaded.
     """
@@ -231,11 +233,7 @@ class BPMRule(Predicate, XMLObject):
     return (immutable_movement_list, mutable_movement_list,
             deletable_movement_list)
 
-  def _getCompensatedMovementList(self, applied_rule,
-                                  matching_property_list=(
-                                  'resource_list',
-                                  'variation_category_list',
-                                  'variation_property_dict',), **kw):
+  def _getCompensatedMovementList(self, applied_rule, **kw):
     """
     Compute the difference between prevision and existing movements
 
@@ -259,7 +257,7 @@ class BPMRule(Predicate, XMLObject):
     for prevision in prevision_list:
       p_matched_list = []
       for movement in non_matched_list:
-        for prop in matching_property_list:
+        for prop in self.getMatchingPropertyList():
           if prevision.get(prop) != movement.getProperty(prop):
             break
         else:
@@ -345,9 +343,13 @@ class BPMRule(Predicate, XMLObject):
     for base_category in \
         business_path.getSourceBaseCategoryList() +\
         business_path.getDestinationBaseCategoryList():
-      property_dict[base_category] = business_path\
-                .getDefaultAcquiredCategoryMembership(base_category,
-                    context=movement)
+      # XXX: we need to use _list for categories *always*
+      category_url = business_path.getDefaultAcquiredCategoryMembership(
+          base_category, context=movement)
+      if category_url not in ['', None]:
+        property_dict['%s_list' % base_category] = [category_url]
+      else:
+        property_dict['%s_list' % base_category] = []
     # Amount
     if business_path.getQuantity():
       property_dict['quantity'] = business_path.getQuantity()
@@ -371,7 +373,7 @@ class BPMRule(Predicate, XMLObject):
 
     # rule specific
     property_dict.update(**self._getExpandablePropertyUpdateDict(applied_rule,
-      movement, business_path, **kw))
+      movement, business_path, property_dict))
     return property_dict
 
   security.declareProtected(Permissions.ModifyPortalContent, 'expand')
