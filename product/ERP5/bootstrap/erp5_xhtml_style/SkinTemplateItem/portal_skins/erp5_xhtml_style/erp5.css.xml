@@ -1506,7 +1506,14 @@ div.search .searchPages .selected{\n
 .document div.page div {\n
   color: black;\n
 }\n
-
+\n
+/* Listbox missing search criterion table row*/\n
+.listbox_missing_search_criterion {\n
+  background-color: white;\n
+}\n
+.listbox_missing_search_criterion td{\n
+  text-align: center!important;\n
+}
 
 ]]></string> </value>
         </item>

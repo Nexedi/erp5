@@ -315,6 +315,17 @@
                   <tal:block metal:use-macro="real_context/page_navigation_render/macros/page_navigation" />\n
                 </td>\n
               </tr>\n
+\n
+              <tr tal:condition="hide_rows_on_no_search_criterion"\n
+                  class="listbox_missing_search_criterion">\n
+                <td tal:attributes="colspan python: len(here.getSearchValueList()) + 1">\n
+                  <span i18n:translate="" \n
+                        i18n:domain="ui">\n
+                    To display actual content, please fill in one or more search criterion.\n
+                  </span>\n
+                </td>\n
+              </tr>\n
+\n
           </table>\n
 \n
           <!-- Advanced Search footer -->\n

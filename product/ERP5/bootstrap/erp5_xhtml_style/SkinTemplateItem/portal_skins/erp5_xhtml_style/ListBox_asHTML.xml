@@ -51,7 +51,10 @@
               real_context here/getContext;\n
               context_url real_context/absolute_url;\n
               md5_string here/getMD5Checksum;\n
-              line_list here/query;\n
+              hide_rows_on_no_search_criterion \n
+                python: here.isHideRowsOnNoSearchCriterion(request);\n
+              line_list python: test(hide_rows_on_no_search_criterion, \n
+                                     [], here.query());\n
               is_domain_tree_mode here/isDomainTreeMode;\n
               is_report_tree_mode here/isReportTreeMode;\n
               is_domain_tree_supported here/isDomainTreeSupported;\n
@@ -150,6 +153,7 @@
   <tal:block tal:condition="python: list_style not in (\'search\', \'table\')">\n
     <span metal:use-macro="real_context/ListBox_asStandardHTML/macros/main"/>\n
   </tal:block>\n
+\n
 </tal:block>\n
 
 

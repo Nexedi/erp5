@@ -243,8 +243,8 @@
                 </td>\n
               </tal:block>\n
             </tr>\n
-\n
             <tal:block tal:repeat="line line_list" tal:define="checked_uid_set here/getCheckedUidSet">\n
+\n
               <tr id="listbox_data_line_0" class="DataA"\n
                 tal:define="css python: line.getRowCSSClassName() or test(repeat[\'line\'].index % 2, \'DataB\', \'DataA\');\n
                             render_result line/render;"\n
@@ -288,6 +288,16 @@
               </tr>\n
             </tal:block>\n
 \n
+            <tr tal:condition="hide_rows_on_no_search_criterion"\n
+                class="listbox_missing_search_criterion">\n
+                <td tal:attributes="colspan python: len(here.getSearchValueList()) + 1">\n
+                  <span i18n:translate="" \n
+                      i18n:domain="ui">\n
+                      To display actual content, please fill in one or more search criterion.\n
+                </span>\n
+              </td>\n
+            </tr>\n
+\n
             <tr tal:condition="here/showStat" id="listbox_stat_line"\n
               class="listbox_stat_line"\n
               tal:attributes="id string:${field_id}_stat_line">\n
@@ -301,6 +311,7 @@
                   tal:content="structure processed_value" />\n
               </tal:block>\n
             </tr>\n
+\n
           </table>\n
         </div>\n
       </tal:block>\n
