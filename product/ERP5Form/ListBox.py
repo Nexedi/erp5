@@ -312,6 +312,14 @@ class ListBoxWidget(Widget.Widget):
                                   required=0)
     property_names.append('anchor')
 
+    hide_rows_on_no_search_criterion = \
+      fields.CheckBoxField('hide_rows_on_no_search_criterion', \
+                           title = 'Hide Rows (On No Search Criterion)', \
+                           description = ('Hide listbox rows if no search criterion is provided by user'), \
+                                          default = 0, \
+                                          required = 0)
+    property_names.append('hide_rows_on_no_search_criterion')
+
     editable_columns = fields.ListTextAreaField('editable_columns',
                                  title="Editable Columns",
                                  description=(
@@ -666,6 +674,32 @@ class ListBoxRenderer:
     return self.field.get_value('anchor')
 
   showAnchorColumn = lazyMethod(showAnchorColumn)
+
+  def isHideRowsOnNoSearchCriterion(self, REQUEST={}):
+    """
+      Return a boolean that represents whether search rows are shown or not.
+    """
+    hide_rows_on_no_search_criterion = \
+                            self.field.get_value('hide_rows_on_no_search_criterion')
+    if not hide_rows_on_no_search_criterion:
+      # we show all rows and do not care to hide anything
+      return 0
+    # we could hide rows only if missing in request or selection search criterions
+    selection_params = self.getSelection().getParams()
+    listbox_searchable_column_id_list = [x[0] for x in self.getSearchValueList() \
+                                           if x[0] is not None]
+
+    for listbox_searchable_column_id in listbox_searchable_column_id_list:
+      search_criterion = REQUEST.get(listbox_searchable_column_id, \
+                                     selection_params.get(listbox_searchable_column_id, None))
+      if search_criterion not in (None, "",) and not isinstance(search_criterion, dict):
+        # search criterion is usually input by user by UI, ignore created automated 
+        # by listbox_xxx form fields selection parameters as they do not represent
+        # user input but rather a developer formating definition in form
+        return 0
+    return 1
+
+  hideRowsMissingSearchCriterion = lazyMethod(isHideRowsOnNoSearchCriterion)
 
   def showStat(self):
     """Return a boolean that represents whether a stat line is displayed or not.
