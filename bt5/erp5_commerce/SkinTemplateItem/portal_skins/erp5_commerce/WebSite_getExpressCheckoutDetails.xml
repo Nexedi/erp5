@@ -60,7 +60,7 @@ security_parameter_dict[\'TOKEN\'] = token\n
 security_parameter_dict[\'METHOD\'] = \'GetExpressCheckoutDetails\'\n
 \n
 response_parameter_dict = context.ERP5Base_submitPaypalNVPRequest(parameter_dict=security_parameter_dict,\n
-                                                                  nvp_url=context.WebSite_getPaypalUrl(api=\'nvp\'))\n
+                                                                  nvp_url=context.WebSite_getPaypalUrl(api=\'nvp\', alternative_url=alternative_url))\n
 return response_parameter_dict\n
 </string> </value>
         </item>
@@ -72,7 +72,7 @@ return response_parameter_dict\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>token</string> </value>
+            <value> <string>token, alternative_url=None</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -92,13 +92,14 @@ return response_parameter_dict\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>2</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
                             <string>token</string>
+                            <string>alternative_url</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>security_parameter_dict</string>
@@ -116,7 +117,9 @@ return response_parameter_dict\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <none/>
+              </tuple>
             </value>
         </item>
         <item>

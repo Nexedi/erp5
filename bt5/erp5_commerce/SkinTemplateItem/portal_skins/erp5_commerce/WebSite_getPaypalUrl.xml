@@ -53,7 +53,10 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>test_environement = context.getLayoutProperty(\'ecommerce_test_environment_enabled\', None)\n
+            <value> <string>if alternative_url is not None:\n
+  return alternative_url\n
+\n
+test_environement = context.getLayoutProperty(\'ecommerce_test_environment_enabled\', None)\n
 \n
 if test_environement is not None and test_environement == 1:\n
   if api == \'nvp\':\n
@@ -73,7 +76,7 @@ return \'https://www.paypal.com/cgi-bin/webscr\'\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>api=None</string> </value>
+            <value> <string>api=None, alternative_url=None</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -93,16 +96,17 @@ return \'https://www.paypal.com/cgi-bin/webscr\'\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>2</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
                             <string>api</string>
+                            <string>alternative_url</string>
+                            <string>None</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>None</string>
                             <string>test_environement</string>
                           </tuple>
                         </value>
@@ -116,6 +120,7 @@ return \'https://www.paypal.com/cgi-bin/webscr\'\n
             <key> <string>func_defaults</string> </key>
             <value>
               <tuple>
+                <none/>
                 <none/>
               </tuple>
             </value>
