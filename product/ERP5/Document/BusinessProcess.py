@@ -71,7 +71,7 @@ class BusinessProcess(Path, XMLObject):
 
   # Access to path and states of the business process
   security.declareProtected(Permissions.AccessContentsInformation, 'getPathValueList')
-  def getPathValueList(self, trade_phase, context=None, **kw):
+  def getPathValueList(self, trade_phase=None, context=None, **kw):
     """
       Returns all Path of the current BusinessProcess which
       are matching the given trade_phase and the optional context.
@@ -89,6 +89,8 @@ class BusinessProcess(Path, XMLObject):
     if not isinstance(trade_phase, (list, tuple)):
       trade_phase = (trade_phase,)
     result = []
+    if len(trade_phase) == 0:
+      return self.contentValues(portal_type="Business Path")
     for document in self.contentValues(portal_type="Business Path"):
       for phase in trade_phase:
         if document.isMemberOf('trade_phase/' + phase): # XXX - not so good, use filter if possible
@@ -183,10 +185,11 @@ class BusinessProcess(Path, XMLObject):
           result.append(state)
     return result
 
-  def build(self, explanation):
+  def build(self, explanation_relative_url):
     """
       Build whatever is buildable
     """
+    explanation = self.restrictedTraverse(explanation_relative_url)
     for path in self.getBuildablePathValueList(explanation):
       path.build(explanation)
 
@@ -221,7 +224,7 @@ class BusinessProcess(Path, XMLObject):
     """
       Returns a list of head path(s) of this business process
 
-      trade_phase_list -- used to filterring, means that discovering
+      trade_phase_list -- used to filtering, means that discovering
                           a list of head path with the trade_phase_list
     """
     head_path_list = list()
