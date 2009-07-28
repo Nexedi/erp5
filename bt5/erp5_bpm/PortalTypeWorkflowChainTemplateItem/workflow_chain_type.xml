@@ -15,4 +15,8 @@
   <type>BPM Order Rule</type>
   <workflow>rule_validation_workflow, edit_workflow</workflow>
  </chain>
+ <chain>
+  <type>Sale Order</type>
+  <workflow>delivery_build_interaction_workflow</workflow>
+ </chain>
 </workflow_chain>

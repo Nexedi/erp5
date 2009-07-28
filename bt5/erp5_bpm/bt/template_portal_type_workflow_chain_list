@@ -7,3 +7,4 @@ BPM Invoicing Rule | edit_workflow
 BPM Invoicing Rule | rule_validation_workflow
 BPM Order Rule | edit_workflow
 BPM Order Rule | rule_validation_workflow
+Sale Order | delivery_build_interaction_workflow
