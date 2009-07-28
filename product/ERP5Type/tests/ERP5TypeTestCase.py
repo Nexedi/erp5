@@ -951,6 +951,7 @@ class ERP5ReportTestCase(ERP5TypeTestCase):
     here = report_section.getObject(self.portal)
     report_section.pushReport(self.portal)
     form = getattr(here, report_section.getFormId())
+    self.portal.REQUEST['here'] = here
     if form.has_field('listbox'):
       result = form.listbox.get_value('default',
                                       render_format='list',
@@ -968,7 +969,6 @@ class ERP5ReportTestCase(ERP5TypeTestCase):
                                 (k, v, line.getColumnProperty(k)))
     if diff_list:
       self.fail('Lines differs:\n' + '\n'.join(diff_list))
-
 
 from unittest import _makeLoader, TestSuite
 
