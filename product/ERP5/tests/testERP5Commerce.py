@@ -64,6 +64,22 @@ class TestCommerce(ERP5TypeTestCase):
   SaleOrder_finalizeShopping
   SaleOrder_getSelectedShippingResource
   SaleOrder_isShippingRequired
+  SaleOrder_paymentRedirect
+  WebSection_checkPaypalIdentification
+  WebSection_checkoutProcedure
+  WebSection_doPaypalPayment
+  WebSection_viewCurrentPersonAsWeb
+  WebSite_doExpressCheckoutPayment
+  WebSite_getExpressCheckoutDetails
+  WebSite_getNewPaypalToken
+  WebSite_getPaypalOrderParameterDict
+  WebSite_getPaypalSecurityParameterDict
+  WebSite_getPaypalUrl
+  WebSite_setupECommerceWebSite
+  Product_getRelatedDescription
+  Person_editPersonalInformation (maybe useless to unittest)
+  Resource_getShopUrl
+  WebSection_getProductList
   """
 
   run_all_test = 1
@@ -131,6 +147,51 @@ class TestCommerce(ERP5TypeTestCase):
       Get default product.
     """
     return self.getPortal().product_module[id]
+
+  def InitialiseShippingLine(self):
+    portal = self.getPortal()
+    euro = portal.currency_module.newContent(portal_type='Currency',
+                                                  id='euro',
+                                                  reference='EUR')
+    euro.setBaseUnitQuantity(1.00)
+    euro.validate()
+    
+    category_list = []
+    ldlc = portal.portal_categories.product_line.newContent(portal_type='Category', id='ldlc', title='LDLC')
+    laptop = ldlc.newContent(portal_type='Category', id='laptop', title='Laptop')
+    category_list.append(laptop)
+    netbook = laptop.newContent(portal_type='Category', id='netbook', title='Netbook')
+    category_list.append(netbook)
+    category_list.append(ldlc.newContent(portal_type='Category', id='lcd', title='Lcd Screen'))
+    category_list.append(ldlc.newContent(portal_type='Category', id='mp3', title='Mp3 Player'))
+
+    product_list = []
+    for category in category_list:
+      for i in range(3):
+        product = portal.product_module.newContent(portal_type="Product", title='%s %s' % (category.getTitle(),i), reference='%s_%s' % (category.getId(),i))
+        product.setProductLine(category.getRelativeUrl().replace('product_line/', ''))
+        product.setQuantityUnit('unit/piece')
+        supply_line = product.newContent(id='default_supply_line',portal_type='Supply Line')
+        supply_line.setBasePrice(10 * (i + 1))
+        supply_line.setPricedQuantity(1)
+        supply_line.setDefaultResourceValue(product)
+        supply_line.setPriceCurrency('currency_module/1')
+        product_list.append(product)
+      
+    for product in product_list:
+      product.validate()
+          
+    ups = portal.product_module.newContent(portal_type='Product',
+                                                 title='UPS Shipping : 24h',
+                                                 )
+    ups.validate()
+    ups.setQuantityUnit('unit/piece')
+    supply_line = ups.setProductLine('shipping/UPS24h')
+    supply_line = ups.newContent(id='default_supply_line',portal_type='Supply Line')
+    supply_line.setBasePrice(10)
+    supply_line.setPricedQuantity(1)
+    supply_line.setDefaultResourceValue(product)
+    supply_line.setPriceCurrency('currency_module/1')
     
   def test_01_AddResourceToShoppingCart(self, quiet=0, run=run_all_test):
     """ 
@@ -561,7 +622,31 @@ class TestCommerce(ERP5TypeTestCase):
     self.assertEquals(currency, portal.SaleOrder_getShoppingCartDefaultCurrency())
 
     
+  def test_18_webSiteInitialisation(self, quiet=0, run=run_all_test):
+    """
+      Test the SaleOrder_getShoppingCartDefaultCurrency script
+    """
+    if not run:
+      return
+    if not quiet:
+      message = '\nTest to get the default currency of a shopping cart'
+      ZopeTestCase._print(message)
+      LOG('Testing... ', 0, message)
 
+    portal = self.getPortal()
+
+  def test_19_simulatePaypalPayment(self, quiet=0, run=run_all_test):
+    """
+      Test all the scripts related to paypal
+    """
+    if not run:
+      return
+    if not quiet:
+      message = '\nTest to simulate paypal payment.'
+      ZopeTestCase._print(message)
+      LOG('Testing... ', 0, message)
+
+    portal = self.getPortal()
     
 import unittest
 def test_suite():
