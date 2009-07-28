@@ -36,6 +36,28 @@ import transaction
 import urllib
 
 SESSION_ID = "12345678"
+LANGUAGE_LIST = ('en', 'fr', 'de', 'bg',)
+SIMULATE_PAYPAL_SERVER = """
+# this script simulate the reponse of paypal
+if not 'METHOD' in parameter_dict:
+  return {'ACK':'Failure'}
+
+# Step 1 : get a token
+if parameter_dict['METHOD'] == 'SetExpressCheckout':
+  return {'ACK':'Success',
+          'TOKEN':'FOOTOKEN'}
+
+# Step 2 : check if token is good
+if parameter_dict['METHOD'] == 'GetExpressCheckoutDetails':
+  return {'ACK':'Success',
+          'PAYERID':'THEPAYERID'}
+
+# Step 3 : pay
+if parameter_dict['METHOD'] == 'DoExpressCheckoutPayment':
+  return {'ACK':'Success',
+          'PAYERID':'THEPAYERID'}
+return {'ACK':'Failure'}
+"""
 
 class TestCommerce(ERP5TypeTestCase):
   """
@@ -111,6 +133,7 @@ class TestCommerce(ERP5TypeTestCase):
     transaction.commit()
     self.tic()
 
+
   def clearModule(self, module):
     module.manage_delObjects(list(module.objectIds()))
     transaction.commit()
@@ -148,7 +171,7 @@ class TestCommerce(ERP5TypeTestCase):
     """
     return self.getPortal().product_module[id]
 
-  def InitialiseShippingLine(self):
+  def initialiseSupplyLine(self):
     portal = self.getPortal()
     euro = portal.currency_module.newContent(portal_type='Currency',
                                                   id='euro',
@@ -192,6 +215,30 @@ class TestCommerce(ERP5TypeTestCase):
     supply_line.setPricedQuantity(1)
     supply_line.setDefaultResourceValue(product)
     supply_line.setPriceCurrency('currency_module/1')
+    
+  def setupWebSite(self, **kw):
+    """
+      Setup Web Site
+    """
+    portal = self.getPortal()
+    request = self.app.REQUEST
+    
+    # add supported languages for Localizer
+    localizer = portal.Localizer
+    for language in LANGUAGE_LIST:
+      localizer.manage_addLanguage(language = language)
+      
+    # create website
+    if hasattr(portal.web_site_module, 'web_site'):
+      portal.web_site_module.manage_delObjects('web_site')
+    web_site = portal.web_site_module.newContent(portal_type = 'Web Site', 
+                                                id = 'web_site',
+                                                **kw)
+    transaction.commit()
+    self.tic()
+    web_site.WebSite_setupECommerceWebSite()
+    self.initialiseSupplyLine()
+    return web_site
     
   def test_01_AddResourceToShoppingCart(self, quiet=0, run=run_all_test):
     """ 
@@ -645,8 +692,46 @@ class TestCommerce(ERP5TypeTestCase):
       message = '\nTest to simulate paypal payment.'
       ZopeTestCase._print(message)
       LOG('Testing... ', 0, message)
-
     portal = self.getPortal()
+
+    # create new python script to replace the external method
+    custom_skin = self.getPortal().portal_skins.custom
+    method_id = 'ERP5Base_submitPaypalNVPRequest'
+    if method_id in custom_skin.objectIds():
+      custom_skin.manage_delObjects([method_id])
+    custom_skin.manage_addProduct['PythonScripts']\
+                   .manage_addPythonScript(id = method_id)
+    script = custom_skin[method_id]
+    script.ZPythonScript_edit('parameter_dict, nvp_url', SIMULATE_PAYPAL_SERVER)
+    self.getPortal().changeSkin('View')
+    
+    #1 initialise a website
+    web_site = self.setupWebSite()
+
+    #2 login    
+
+    #3 add a product in the cart
+
+    #4 chose a shipping for the cart
+
+    #5 : paypal step 1 : get a new token
+    #token = web_site.WebSite_getNewPaypalToken()    
+    #self.assertNotEquals(token, None)
+
+    #6 : paypal step 2 : go to paypal and confirm this token
+
+    #7 : paypal step 3 : check if this token is confirmed by paypal
+    # use WebSection_checkPaypalIdentification
+
+    #8 : paypal step 4 : validate the payment
+    # use WebSection_doPaypalPayment
+
+    #9 check if sale order created
+
+    #10 check sale order price and status
+
+    #11 clean
+    custom_skin.manage_delObjects([method_id])
     
 import unittest
 def test_suite():
