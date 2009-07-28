@@ -4,4 +4,5 @@ BPM Invoice Transaction Rule | view_divergence_testers
 BPM Invoicing Rule | view
 BPM Order Rule | view
 Delivery Builder | view_periodicity
+Delivery Tool | view
 Order Builder | view_periodicity
