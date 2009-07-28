@@ -100,13 +100,6 @@ for task_line in result_list:\n
   stop_date_task = task_line.getStopDate()\n
   year_start_date = start_date_task.year()\n
   month_start_date = start_date_task.month()\n
-  date_string = "%s-%s" % (year_start_date, month_start_date)\n
-  current_date = start_date_task\n
-  # We must initialize start_date at the beginning of the month\n
-  while current_date <= stop_date_task:\n
-    if date_string not in object_dict:\n
-      object_dict[date_string]={}\n
-    current_date += 1\n
 \n
   # create a list with people who works on the task\n
   current_column = (source, task_line.getSourceTitle())\n
@@ -243,10 +236,6 @@ return result\n
                             <string>stop_date_task</string>
                             <string>year_start_date</string>
                             <string>month_start_date</string>
-                            <string>date_string</string>
-                            <string>current_date</string>
-                            <string>_write_</string>
-                            <string>_inplacevar_</string>
                             <string>current_column</string>
                             <string>project</string>
                             <string>quantity</string>
@@ -259,6 +248,7 @@ return result\n
                             <string>quantity_dict</string>
                             <string>worker_quantity_dict</string>
                             <string>temp_object</string>
+                            <string>_write_</string>
                             <string>_getitem_</string>
                             <string>current_temp_object</string>
                             <string>min</string>
