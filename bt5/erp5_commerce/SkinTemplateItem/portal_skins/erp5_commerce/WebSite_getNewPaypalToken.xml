@@ -53,7 +53,10 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>response_parameter_dict = context.ERP5Base_submitPaypalNVPRequest(parameter_dict=context.WebSite_getPaypalOrderParameterDict(),\n
+            <value> <string>parameter_dict = context.WebSite_getPaypalOrderParameterDict()\n
+if parameter_dict is None:\n
+  return None\n
+response_parameter_dict = context.ERP5Base_submitPaypalNVPRequest(parameter_dict=parameter_dict,\n
                                                                   nvp_url=context.WebSite_getPaypalUrl(api=\'nvp\', alternative_url=alternative_url))\n
 \n
 if response_parameter_dict is None:\n
@@ -101,8 +104,9 @@ return \'\'\n
                             <string>alternative_url</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>response_parameter_dict</string>
+                            <string>parameter_dict</string>
                             <string>None</string>
+                            <string>response_parameter_dict</string>
                             <string>_getitem_</string>
                           </tuple>
                         </value>
