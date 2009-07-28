@@ -1,7 +1,8 @@
 ##############################################################################
 #
-# Copyright (c) 2005 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2005-2009 Nexedi SA and Contributors. All Rights Reserved.
 #                    Romain Courteaud <romain@nexedi.com>
+#                    Łukasz Nowak <luke@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -26,16 +27,14 @@
 #
 ##############################################################################
 
-from Products.CMFCore.utils import UniqueObject
-
 from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass, DTMLFile
-from Products.ERP5Type.Tool.BaseTool import BaseTool
+from Products.ERP5.Tool.BuilderTool import BuilderTool
 from Products.ERP5Type import Permissions
 
 from Products.ERP5 import _dtmldir
 
-class OrderTool(BaseTool):
+class OrderTool(BuilderTool):
   """
     OrderTool is a container for Order Builders.
   """
