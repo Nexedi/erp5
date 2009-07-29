@@ -1,7 +1,9 @@
+# -*- coding: utf-8 -*-
 #############################################################################
 #
-# Copyright (c) 2007 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2007-2009 Nexedi SA and Contributors. All Rights Reserved.
 #                    TAHARA Yusei <yusei@nexedi.com>
+#                    Łukasz Nowak <luke@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -107,6 +109,55 @@ class TestTemplate(ERP5TypeTestCase):
 
     self.assertEqual(new_document.getTitle(), 'My Foo 1')
 
+
+  def test_TemplateCreatePreferenceWithExistingUserPreference(self):
+    self.login(self.id())
+    user_preference = self.portal.portal_preferences.newContent(
+        portal_type='Preference')
+    user_preference.setPriority(Priority.USER)
+    user_preference.enable()
+    transaction.commit()
+    self.tic()
+
+    document = self.portal.foo_module.newContent(portal_type='Foo')
+    transaction.commit()
+    self.tic()
+
+    document.Base_makeTemplateFromDocument(form_id=None)
+    transaction.commit()
+    self.tic()
+
+    # created preference is reused to store template
+    self.assertEquals('enabled', user_preference.getPreferenceState())
+    self.assertEqual(len(user_preference.objectIds()), 1)
+
+  def test_TemplateCreatePreferenceWithSystemPreferenceEnabled(self):
+    ERP5TypeTestCase.login(self, 'ERP5TypeTestCase')
+    system_preference = self.portal.portal_preferences.newContent(
+        portal_type='System Preference')
+    system_preference.setPriority(Priority.SITE)
+    system_preference.enable()
+    transaction.commit()
+    self.tic()
+    self.login(self.id())
+    user_preference = self.portal.portal_preferences.newContent(
+        portal_type='Preference')
+    user_preference.setPriority(Priority.USER)
+    user_preference.enable()
+    transaction.commit()
+    self.tic()
+
+    document = self.portal.foo_module.newContent(portal_type='Foo')
+    transaction.commit()
+    self.tic()
+
+    document.Base_makeTemplateFromDocument(form_id=None)
+    transaction.commit()
+    self.tic()
+
+    # created preference is reused to store template
+    self.assertEquals('enabled', user_preference.getPreferenceState())
+    self.assertEqual(len(user_preference.objectIds()), 1)
 
   def test_TemplateCreatePreference(self):
     self.login('another user with no active preference')
