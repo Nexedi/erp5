@@ -317,8 +317,12 @@ class NotificationTool(BaseTool):
     default_from_email = portal.email_from_address
     default_to_email = getattr(portal, 'email_to_address',
                                default_from_email)
+    default_from_name = portal.title
+    default_from_name = getattr(portal, 'email_from_name', default_from_name)
     if from_person is None:
-      low_level_kw['from_url'] = default_from_email
+      # when sending without sender defined compose identifiable From header
+      low_level_kw['from_url'] = '%s <%s>' % (default_from_name,
+          default_from_email)
     if not to_person_list:
       low_level_kw['to_url'] = default_to_email
     if attachment_list is not None:
