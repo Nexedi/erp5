@@ -75,7 +75,7 @@
             <value> <string>    DISCLAIMER: Refer to BPMRule docstring disclaimer.\n
 \n
     This is BPM enabled Delivery Rule.\n
-  </string> </value>
+</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>
