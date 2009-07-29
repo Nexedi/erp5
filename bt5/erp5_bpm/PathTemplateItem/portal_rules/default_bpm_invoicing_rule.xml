@@ -91,13 +91,20 @@
             </value>
         </item>
         <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>trade_phase/default/invoicing</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>default_reference</string> </key>
             <value> <string>default_bpm_invoicing_rule</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>This is BPM enabled instance variation of Invoicing Rule, backward incompatible. This rule has special property hardcoded - trade_phase_list, until proper way of associating with BPM will be found.\r\n
-\r\n
+            <value> <string>This is BPM enabled instance variation of Invoicing Rule, backward incompatible.\r\n
 NEVER USE IN PRODUCTION ENVIRONMENT!</string> </value>
         </item>
         <item>
@@ -160,14 +167,6 @@ NEVER USE IN PRODUCTION ENVIRONMENT!</string> </value>
         <item>
             <key> <string>title</string> </key>
             <value> <string>Default BPM Invoicing Rule</string> </value>
-        </item>
-        <item>
-            <key> <string>trade_phase_list</string> </key>
-            <value>
-              <tuple>
-                <string>default/invoicing</string>
-              </tuple>
-            </value>
         </item>
         <item>
             <key> <string>version</string> </key>

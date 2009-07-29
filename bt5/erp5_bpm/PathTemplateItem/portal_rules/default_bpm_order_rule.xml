@@ -83,7 +83,9 @@
         <item>
             <key> <string>categories</string> </key>
             <value>
-              <tuple/>
+              <tuple>
+                <string>trade_phase/default/delivery</string>
+              </tuple>
             </value>
         </item>
         <item>
@@ -92,8 +94,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>This is BPM enabled instance variation of Order Rule, backward incompatible. This rule has special property hardcoded - trade_phase_list, until proper way of associating with BPM will be found.\r\n
-\r\n
+            <value> <string>This is BPM enabled instance variation of Order Rule, backward incompatible.\r\n
 NEVER USE IN PRODUCTION ENVIRONMENT!</string> </value>
         </item>
         <item>
@@ -129,20 +130,22 @@ NEVER USE IN PRODUCTION ENVIRONMENT!</string> </value>
             <value> <string>default_bpm_order_rule</string> </value>
         </item>
         <item>
+            <key> <string>matching_property</string> </key>
+            <value>
+              <tuple>
+                <string>resource_list</string>
+                <string>variation_category_list</string>
+                <string>variation_property_dict</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>portal_type</string> </key>
             <value> <string>BPM Order Rule</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
             <value> <string>Default BPM Order Rule</string> </value>
-        </item>
-        <item>
-            <key> <string>trade_phase_list</string> </key>
-            <value>
-              <tuple>
-                <string>default/delivery</string>
-              </tuple>
-            </value>
         </item>
         <item>
             <key> <string>version</string> </key>
