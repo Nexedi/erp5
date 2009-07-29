@@ -47,7 +47,7 @@ class IMimeSender(Interface):
     """
     pass
 
-  def getMIMEMultipartLogList(document=None)
+  def getMIMEMultipartLogList(document=None):
     """
       Retrieve the list of messages sent using with this sender
     """
