@@ -30,7 +30,7 @@ class BPMAppliedRule:
   """
     BPM extended Applied Rule properties
   """
-
+  # XXX: Name of this Property Sheet is wrong - this is for Rules
   _properties = (
         {  'id'          : 'matching_property',
            'description' : 'List of properties used in to compare previsions '
@@ -40,3 +40,5 @@ class BPMAppliedRule:
            'multivalued' : 1,
            'mode'        : 'w' },
   )
+
+  _categories = ('trade_phase', )

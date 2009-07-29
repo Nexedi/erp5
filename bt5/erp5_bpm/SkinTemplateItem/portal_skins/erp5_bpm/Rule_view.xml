@@ -101,6 +101,7 @@
                         <string>my_reference</string>
                         <string>my_version</string>
                         <string>my_expandable_property_list</string>
+                        <string>my_trade_phase_list</string>
                       </list>
                     </value>
                 </item>
