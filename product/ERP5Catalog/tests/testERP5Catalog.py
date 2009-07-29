@@ -3819,6 +3819,12 @@ VALUES
     self.assertEquals(1, len(res))
 
   def test_CatalogUidDuplicates(self, quiet=quiet, run=run_all_test):
+    """
+    Initially, the catalog was changing uids when a duplicate was found.
+
+    This operation was really too dangerous, so now we raise errors in this
+    case. Here we now check that the error is raised
+    """
     if not run: return
     if not quiet:
       message = 'Catalog Uid Duplicates'
@@ -3852,15 +3858,7 @@ VALUES
     # Force to assign the same uid, and catalog them.
     person1.uid = person2.uid = available_uid
     person1.is_indexable = person2.is_indexable = True
-    portal_catalog.catalogObjectList([person1, person2])
-
-    # The catalog must have either or both of their uids, so 
-    # the objects must have different ones at this point.
-    self.assertNotEquals(person1.uid, person2.uid)
-    
-    # And they must have been catalogued.
-    self.assertEquals(person1, portal_catalog(uid=person1.uid)[0].getObject())
-    self.assertEquals(person2, portal_catalog(uid=person2.uid)[0].getObject())
+    self.assertRaises(ValueError, portal_catalog.catalogObjectList,[person1, person2])
 
 def test_suite():
   suite = unittest.TestSuite()
