@@ -124,7 +124,7 @@ class ISendable(Interface):
     """
     pass
 
-  def getMIMEMultipartLogList(mime_sender=None)
+  def getMIMEMultipartLogList(mime_sender=None):
     """
       Retrieve the list of messages sent based on the current document
     """
