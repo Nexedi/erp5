@@ -31,6 +31,7 @@ import os, sys
 from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from AccessControl.SecurityManagement import newSecurityManager
+from AccessControl.SecurityManagement import getSecurityManager
 from zLOG import LOG
 import transaction
 import urllib
@@ -145,6 +146,49 @@ class TestCommerce(ERP5TypeTestCase):
     self.clearModule(self.portal.currency_module)
     self.portal.portal_caches.clearAllCache()
 
+  def createDefaultOrganisation(self):
+    """
+      Create Seller organisation
+    """
+    self.organisation_module = self.portal.getDefaultModule('Organisation')
+    if 'seller' not in self.organisation_module.objectIds():
+        self.nexedi = self.organisation_module.newContent(
+        title="Seller",
+        group='seller',
+        role='internal',
+        id='seller',
+      )
+
+  def createTestUser(self, first_name, last_name, reference, group,
+                     destination_project=None, id=None):
+    """
+      Create a user with the given parameters
+    """
+    # Do not create an already existing user - XXX why is this needed after all ? (JPS)
+    if self.portal.portal_catalog.getResultValue(portal_type='Person',
+                 reference=reference) is not None:
+      return
+    
+    self.person_module = self.getPersonModule()
+    person = self.person_module.newContent(
+      first_name=first_name,
+      last_name=last_name,
+      reference=reference,
+      password='secret',
+      career_role='internal',
+      id=id or reference,
+    )
+
+    # Set the assignment
+    assignment = person.newContent(portal_type='Assignment')
+    assignment.edit(function='', destination_value= getattr(self, 'seller', None),
+                    start_date='1972-01-01', stop_date='2999-12-31',
+                    group=group, destination_project=destination_project)
+    assignment.open()
+
+    get_transaction().commit()
+    self.tic()
+
   def changeUser(self, name):
     user_folder = self.getPortal().acl_users
     user = user_folder.getUserById(name).__of__(user_folder)
@@ -215,7 +259,16 @@ class TestCommerce(ERP5TypeTestCase):
     supply_line.setPricedQuantity(1)
     supply_line.setDefaultResourceValue(product)
     supply_line.setPriceCurrency('currency_module/1')
-    
+
+  def createUser(self, name, role_list):
+    user_folder = self.getPortal().acl_users
+    user_folder._doAddUser(name, 'password', role_list, [])
+
+  def changeUser(self, user_id):
+    user_folder = self.getPortal().acl_users
+    user = user_folder.getUserById(user_id).__of__(user_folder)
+    newSecurityManager(None, user)
+
   def setupWebSite(self, **kw):
     """
       Setup Web Site
@@ -236,8 +289,19 @@ class TestCommerce(ERP5TypeTestCase):
                                                 **kw)
     transaction.commit()
     self.tic()
+
     web_site.WebSite_setupECommerceWebSite()
     self.initialiseSupplyLine()
+
+    transaction.commit()
+    self.tic()
+
+    self.createDefaultOrganisation()
+    self.createTestUser(first_name="Web",
+                        last_name='master',
+                        reference='webmaster',
+                        group=None)
+    #XXX INSERT security here 
     return web_site
     
   def test_01_AddResourceToShoppingCart(self, quiet=0, run=run_all_test):
@@ -707,31 +771,51 @@ class TestCommerce(ERP5TypeTestCase):
     
     #1 initialise a website
     web_site = self.setupWebSite()
+    web_site.setProperty('ecommerce_paypal_username', 'user')
+    web_site.setProperty('ecommerce_paypal_password', 'pass')
+    web_site.setProperty('ecommerce_paypal_signature', 'signature')
 
-    #2 login    
+    #2 login and activate a cart
+    #self.changeUser('webmaster')
+    request = self.app.REQUEST
+    request.set('session_id', SESSION_ID)
 
     #3 add a product in the cart
-
+    default_product = self.getDefaultProduct()
+    portal.Resource_addToShoppingCart(default_product, 1)
+    get_transaction().commit()
+    self.tic()
+    
     #4 chose a shipping for the cart
+    shipping_resource_list = portal.SaleOrder_getAvailableShippingResourceList()
+    #XXX apply it to the cart
 
     #5 : paypal step 1 : get a new token
-    #token = web_site.WebSite_getNewPaypalToken()    
-    #self.assertNotEquals(token, None)
+    token = web_site.WebSite_getNewPaypalToken()    
+    self.assertNotEquals(token, None)
 
     #6 : paypal step 2 : go to paypal and confirm this token
-
+    # PayerID is normaly set in the request when paypal redirect to the instance
+    request.set('PayerID', 'THEPAYERID')
+    
     #7 : paypal step 3 : check if this token is confirmed by paypal
-    # use WebSection_checkPaypalIdentification
-
+    error = web_site.WebSection_checkPaypalIdentification()
+    self.assertEquals(error, None)
+    self.assertTrue('/checkout' in request.RESPONSE.getHeader('location'))
+    
     #8 : paypal step 4 : validate the payment
-    # use WebSection_doPaypalPayment
-
+    self.assertEquals(1, len(portal.SaleOrder_getShoppingCartItemList()))
+    self.assertEquals(0, len(portal.sale_order_module.contentValues()))
+    #web_site.WebSection_doPaypalPayment(token=token)
+    #get_transaction().commit()
+    #self.tic()
+    
     #9 check if sale order created
+    #self.assertEquals(0, len(portal.SaleOrder_getShoppingCartItemList()))
+    #self.assertEquals(1, len(portal.sale_order_module.contentValues()))
 
-    #10 check sale order price and status
-
-    #11 clean
     custom_skin.manage_delObjects([method_id])
+    self.changeUser('ivan')
     
 import unittest
 def test_suite():
