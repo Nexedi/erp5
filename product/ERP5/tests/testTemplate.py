@@ -138,6 +138,43 @@ class TestTemplate(ERP5TypeTestCase):
 
     self.assertEqual(len(preference.objectIds()), 1)
 
+  def test_manyTemplatesWithoutReindexation(self):
+    """Check what happen when templates are created one by one without reindexation"""
+    self.login(self.id())
+    active_user_preference_list = [p for p in
+        self.portal.portal_preferences._getSortedPreferenceList()
+        if p.getPriority() == Priority.USER]
+    self.assertEquals([], active_user_preference_list)
+
+    preference_id_list = list(self.portal.portal_preferences.objectIds())
+
+    document1 = self.portal.foo_module.newContent(portal_type='Foo')
+    transaction.commit()
+    document2 = self.portal.foo_module.newContent(portal_type='Foo')
+    transaction.commit()
+    self.tic()
+
+    document1.Base_makeTemplateFromDocument(form_id=None)
+    transaction.commit()
+
+    document2.Base_makeTemplateFromDocument(form_id=None)
+    transaction.commit()
+
+    self.tic()
+
+    # a new preference is created
+    new_preference_id_list = list(self.portal.portal_preferences.objectIds())
+    self.assertEqual(len(preference_id_list) + 1, len(new_preference_id_list))
+    preference_id = [x for x in new_preference_id_list if x not in
+                            preference_id_list][0]
+    preference = self.portal.portal_preferences._getOb(preference_id)
+
+    self.assertEquals('Preference', preference.getPortalType())
+    self.assertEquals('Document Template Container', preference.getTitle())
+    self.assertEquals(Priority.USER, preference.getPriority())
+    self.assertEquals('enabled', preference.getPreferenceState())
+
+    self.assertEqual(len(preference.objectIds()), 2)
 
   def test_TemplateNotIndexable(self):
     # template documents are not indexable
