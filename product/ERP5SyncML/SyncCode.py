@@ -39,13 +39,13 @@ class SyncCode(Persistent):
   TWO_WAY = 200
   SLOW_SYNC = 201 # This means we get the data from the publication
   ONE_WAY_FROM_SERVER = 204
-  WAITING_DATA = 214
-  REFRESH_REQUIRED = 508
   CODE_LIST = ( TWO_WAY, ONE_WAY_FROM_SERVER, )
 
   # SyncML Status Codes
   SUCCESS = 200
   ITEM_ADDED = 201
+  WAITING_DATA = 214
+  REFRESH_REQUIRED = 508
 
   CHUNK_OK = 214
   CONFLICT = 409 # A conflict is detected
@@ -128,3 +128,11 @@ class SyncCode(Persistent):
 
   #Activity priority
   PRIORITY = 5
+
+  #Namespace
+  #In SyncML Representation Protocol OMA
+  #we use URN as format of namespace
+  XHTML_NAMESPACE = 'SYNCML:SYNCML1.2'
+  # List namespaces supported
+  URN_LIST = ('SYNCML:SYNCML1.1', 'SYNCML:SYNCML1.2')
+
