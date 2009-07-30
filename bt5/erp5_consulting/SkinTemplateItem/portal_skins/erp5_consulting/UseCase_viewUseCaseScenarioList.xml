@@ -96,6 +96,7 @@
                       <list>
                         <string>my_int_index</string>
                         <string>my_title</string>
+                        <string>my_source_project_title</string>
                       </list>
                     </value>
                 </item>
