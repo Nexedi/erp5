@@ -647,12 +647,13 @@ class SynchronizationTool( SubscriptionSynchronization,
     subscriber = conflict.getSubscriber()
     publisher_object_path = conflict.getObjectPath()
     publisher_object = self.unrestrictedTraverse(publisher_object_path)
-    publisher_xml = subscriber.getXMLFromObject(publisher_object)
+    conduit_name = subscriber.getConduit()
+    conduit = self.getConduitByName(conduit_name)
+    publisher_xml = conduit.getXMLFromObjectWithId(publisher_object,\
+                    xml_mapping=subscriber.getXMLMapping())
     directory = publisher_object.aq_inner.aq_parent
     object_id = self._getCopyId(publisher_object)
     # Import the conduit and get it
-    conduit_name = subscriber.getConduit()
-    conduit = self.getConduitByName(conduit_name)
     conduit.addNode(
                 xml=publisher_xml,
                 object=directory,
@@ -855,8 +856,7 @@ class SynchronizationTool( SubscriptionSynchronization,
             return None
           #use activities to send send an http response
           #LOG('sendResponse, will start sendHttpResponse, xml', DEBUG, '')
-          activity = self.getActivityType(domain=domain)
-          self.activate(activity=activity,
+          self.activate(activity='SQLQueue',
                         tag=domain.getId(),
                         priority=self.PRIORITY).sendHttpResponse(
                                               sync_id=sync_id,
@@ -931,8 +931,7 @@ class SynchronizationTool( SubscriptionSynchronization,
       url_file = urllib2.urlopen(request)
       result = url_file.read()
     except socket.error, msg:
-      activity = self.getActivityType(domain=domain)
-      self.activate(activity=activity,
+      self.activate(activity='SQLQueue',
                     tag=domain.getId(),
                     priority=self.PRIORITY).sendHttpResponse(
                                                   to_url=to_url,
@@ -969,8 +968,7 @@ class SynchronizationTool( SubscriptionSynchronization,
         uf = self.getPortalObject().acl_users
         user = uf.getUserById(user_id).__of__(uf)
         newSecurityManager(None, user)
-        activity = self.getActivityType(domain=subscription)
-        subscription.activate(activity=activity,
+        subscription.activate(activity='SQLQueue',
                               tag=subscription.getId(),
                               priority=self.PRIORITY
                                   ).SubSync(subscription.getPath())
@@ -1034,8 +1032,7 @@ class SynchronizationTool( SubscriptionSynchronization,
         publication.getTitle() == sync_id:
           if publication.getActivityEnabled():
             #use activities to send SyncML data.
-            activity = self.getActivityType(domain=publication)
-            publication.activate(activity=activity,
+            publication.activate(activity='SQLQueue',
                                 tag=publication.getId(),
                                 priority=self.PRIORITY).PubSync(
                                                         publication.getPath(),
@@ -1053,14 +1050,12 @@ class SynchronizationTool( SubscriptionSynchronization,
         if subscription.getSubscriptionUrl() == url and \
             subscription.getTitle() == sync_id:
               subscription_path = subscription.getPath()
-              activity = self.getActivityType(domain=subscription)
-              self.activate(activity=activity,
+              self.activate(activity='SQLQueue',
                             tag=subscription.getId(),
                             priority=self.PRIORITY).SubSync(
                                                       subscription_path,
                                                       text)
               return ' '
-
     # we use from only if we have a file
     elif isinstance(from_url, str):
       if from_url.find('file://') == 0:
