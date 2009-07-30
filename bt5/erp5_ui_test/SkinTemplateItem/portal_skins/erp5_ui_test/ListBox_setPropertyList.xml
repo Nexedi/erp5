@@ -99,6 +99,7 @@ d = dict(\n
   field_page_template = \'\',\n
   field_external_validator = \'\',\n
   field_untranslatable_columns = \'\',\n
+  field_hide_rows_on_no_search_criterion = \'\',\n
 )\n
 \n
 d.update(context.REQUEST)\n
