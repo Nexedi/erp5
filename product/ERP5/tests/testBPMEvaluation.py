@@ -180,7 +180,8 @@ class TestBPMEvaluationDefaultProcessMixin:
         trade_phase = 'default/delivery',
         deliverable = 1,
         completed_state_list = ['delivered'],
-        frozen_state_list = ['stopped', 'delivered']
+        frozen_state_list = ['stopped', 'delivered'],
+        delivery_builder = 'portal_deliveries/bpm_sale_packing_list_builder',
         )
 
     self.invoice_path = self.createBusinessPath(self.business_process,
@@ -343,10 +344,41 @@ class TestPackingListDefaultProcess(TestPackingList, TestBPMEvaluationDefaultPro
   pass
 
 class TestInvoiceDefaultProcess(TestInvoice, TestBPMEvaluationDefaultProcessMixin):
-  pass
+  def test_confirming(self):
+    self.order_line = self._createOrderLine(resource_value = self._createProduct(),
+        quantity = 10, price = 5)
+    self.stepTic()
+
+    self.order.confirm()
+    self.stepTic()
+    self._checkOrderBPMSimulation()
+    self.assertEqual(
+      1,
+      len(self.order.getCausalityRelatedList(
+        portal_type=self.packing_list_portal_type))
+    )
+
 
 class TestOrderDifferentProcess(TestOrder, TestBPMEvaluationDifferentProcessMixin):
-  pass
+  def test_confirming(self):
+    # in current BPM configuration nothing shall be built
+    # as soon as test business process will be finished, it shall built proper
+    # delivery
+    self.order_line = self._createOrderLine(resource_value = self._createProduct(),
+        quantity = 10, price = 5)
+    self.stepTic()
+
+    self.order.confirm()
+    self.stepTic()
+    self._checkOrderBPMSimulation()
+    self.assertEqual(
+      1,
+      len(self.order.getCausalityRelatedList())
+    )
+    self.assertEqual(
+      'Applied Rule',
+      self.order.getCausalityRelatedValue().getPortalType()
+    )
 
 class TestPackingListDifferentProcess(TestPackingList, TestBPMEvaluationDifferentProcessMixin):
   pass
