@@ -1,7 +1,8 @@
--
-
 2008-03-18 shufla
 * introduced erp5_l10n_pl_PL skin for region specific scripts
 
-20060831 shufla added translation, some cleanups
-20060727 shufla many changes, updates and cleans
+2006-08-31 shufla
+* added translation, some cleanups
+
+2006-07-27 shufla
+* many changes, updates and cleans
