@@ -38,524 +38,15 @@ from Products.ERP5Type import Permissions
 from Products.ERP5Type import PropertySheet
 from DateTime import DateTime
 from zLOG import LOG, DEBUG, INFO
-
 import md5
 from base64 import b64encode, b64decode, b16encode, b16decode
 
-#class Conflict(SyncCode, Implicit):
-class Conflict(SyncCode, Base):
-  """
-    object_path : the path of the obect
-    keyword : an identifier of the conflict
-    publisher_value : the value that we have locally
-    subscriber_value : the value sent by the remote box
-
-  """
-  isIndexable = 0
-  isPortalContent = 0 # Make sure RAD generated accessors at the class level
-
-  def __init__(self, object_path=None, keyword=None, xupdate=None, 
-      publisher_value=None, subscriber_value=None, subscriber=None):
-    self.object_path=object_path
-    self.keyword = keyword
-    self.setLocalValue(publisher_value)
-    self.setRemoteValue(subscriber_value)
-    self.subscriber = subscriber
-    self.resetXupdate()
-    self.copy_path = None
-
-  def getObjectPath(self):
-    """
-    get the object path
-    """
-    return self.object_path
-
-  def getPublisherValue(self):
-    """
-    get the domain
-    """
-    return self.publisher_value
-
-  def getXupdateList(self):
-    """
-    get the xupdate wich gave an error
-    """
-    xupdate_list = []
-    if len(self.xupdate)>0:
-      for xupdate in self.xupdate:
-        xupdate_list+= [xupdate]
-    return xupdate_list
-
-  def resetXupdate(self):
-    """
-    Reset the xupdate list
-    """
-    self.xupdate = PersistentMapping()
-
-  def setXupdate(self, xupdate):
-    """
-    set the xupdate
-    """
-    if xupdate == None:
-      self.resetXupdate()
-    else:
-      self.xupdate = self.getXupdateList() + [xupdate]
-
-  def setXupdateList(self, xupdate):
-    """
-    set the xupdate
-    """
-    self.xupdate = xupdate
-
-  def setLocalValue(self, value):
-    """
-    get the domain
-    """
-    try:
-      self.publisher_value = value
-    except TypeError: # It happens when we try to store StringIO
-      self.publisher_value = None
-
-  def getSubscriberValue(self):
-    """
-    get the domain
-    """
-    return self.subscriber_value
-
-  def setRemoteValue(self, value):
-    """
-    get the domain
-    """
-    try:
-      self.subscriber_value = value
-    except TypeError: # It happens when we try to store StringIO
-      self.subscriber_value = None
-
-  def applyPublisherValue(self):
-    """
-      after a conflict resolution, we have decided
-      to keep the local version of this object
-    """
-    p_sync = getToolByName(self, 'portal_synchronizations')
-    p_sync.applyPublisherValue(self)
-
-  def applyPublisherDocument(self):
-    """
-      after a conflict resolution, we have decided
-      to keep the local version of this object
-    """
-    p_sync = getToolByName(self, 'portal_synchronizations')
-    p_sync.applyPublisherDocument(self)
-
-  def getPublisherDocument(self):
-    """
-      after a conflict resolution, we have decided
-      to keep the local version of this object
-    """
-    p_sync = getToolByName(self, 'portal_synchronizations')
-    return p_sync.getPublisherDocument(self)
-
-  def getPublisherDocumentPath(self):
-    """
-      after a conflict resolution, we have decided
-      to keep the local version of this object
-    """
-    p_sync = getToolByName(self, 'portal_synchronizations')
-    return p_sync.getPublisherDocumentPath(self)
-
-  def getSubscriberDocument(self):
-    """
-      after a conflict resolution, we have decided
-      to keep the local version of this object
-    """
-    p_sync = getToolByName(self, 'portal_synchronizations')
-    return p_sync.getSubscriberDocument(self)
-
-  def getSubscriberDocumentPath(self):
-    """
-      after a conflict resolution, we have decided
-      to keep the local version of this object
-    """
-    p_sync = getToolByName(self, 'portal_synchronizations')
-    return p_sync.getSubscriberDocumentPath(self)
-
-  def applySubscriberDocument(self):
-    """
-      after a conflict resolution, we have decided
-      to keep the local version of this object
-    """
-    p_sync = getToolByName(self, 'portal_synchronizations')
-    p_sync.applySubscriberDocument(self)
-
-  def applySubscriberValue(self, object=None):
-    """
-    get the domain
-    """
-    p_sync = getToolByName(self, 'portal_synchronizations')
-    p_sync.applySubscriberValue(self, object=object)
-
-  def setSubscriber(self, subscriber):
-    """
-    set the domain
-    """
-    self.subscriber = subscriber
-
-  def getSubscriber(self):
-    """
-    get the domain
-    """
-    return self.subscriber
-
-  def getKeyword(self):
-    """
-    get the domain
-    """
-    return self.keyword
-
-  def getPropertyId(self):
-    """
-    get the property id
-    """
-    return self.keyword
-
-  def getCopyPath(self):
-    """
-    Get the path of the copy, or None if none has been made
-    """
-    copy_path = self.copy_path
-    return copy_path
-
-  def setCopyPath(self, path):
-    """
-    """
-    self.copy_path = path
-
-class Signature(Folder, SyncCode):
-  """
-    status -- SENT, CONFLICT...
-    md5_object -- An MD5 value of a given document
-    #uid -- The UID of the document
-    id -- the ID of the document
-    gid -- the global id of the document
-    rid -- the uid of the document on the remote database,
-        only needed on the server.
-    xml -- the xml of the object at the time where it was synchronized
-  """
-  isIndexable = 0
-  isPortalContent = 0 # Make sure RAD generated accessors at the class level
-
-  # Constructor
-  def __init__(self,
-               id=None,
-               rid=None,
-               status=None,
-               xml_string=None,
-               object=None):
-    if object is not None:
-      self.setPath(object.getPhysicalPath())
-      self.setObjectId(object.getId())
-    else:
-      self.setPath(None)
-    self.setId(id)
-    self.setRid(rid)
-    self.status = status
-    self.setXML(xml_string)
-    self.partial_xml = None
-    self.action = None
-    self.setTempXML(None)
-    self.resetConflictList()
-    self.md5_string = None
-    self.force = 0
-    self.setSubscriberXupdate(None)
-    self.setPublisherXupdate(None)
-    Folder.__init__(self,id)
-
-  def setStatus(self, status):
-    """
-      set the Status (see SyncCode for numbers)
-    """
-    self.status = status
-    if status == self.SYNCHRONIZED:
-      temp_xml = self.getTempXML()
-      self.setForce(0)
-      if temp_xml is not None:
-        # This happens when we have sent the xml
-        # and we just get the confirmation
-        self.setXML(temp_xml)
-      self.setTempXML(None)
-      self.setPartialXML(None)
-      self.setSubscriberXupdate(None)
-      self.setPublisherXupdate(None)
-      if len(self.getConflictList())>0:
-        self.resetConflictList()
-      # XXX This may be a problem, if the document is changed
-      # during a synchronization
-      self.setLastSynchronizationDate(DateTime())
-      self.getParentValue().removeRemainingObjectPath(self.getPath())
-    if status == self.NOT_SYNCHRONIZED:
-      self.setTempXML(None)
-      self.setPartialXML(None)
-    elif status in (self.PUB_CONFLICT_MERGE, self.SENT):
-      # We have a solution for the conflict, don't need to keep the list
-      self.resetConflictList()
-
-  def getStatus(self):
-    """
-      get the Status (see SyncCode for numbers)
-    """
-    return self.status
-
-  def getPath(self):
-    """
-      get the force value (if we need to force update or not)
-    """
-    return getattr(self, 'path', None)
-
-  def setPath(self, path):
-    """
-      set the force value (if we need to force update or not)
-    """
-    self.path = path
-
-  def getForce(self):
-    """
-      get the force value (if we need to force update or not)
-    """
-    return self.force
-
-  def setForce(self, force):
-    """
-      set the force value (if we need to force update or not)
-    """
-    self.force = force
-
-  def getLastModificationDate(self):
-    """
-      get the last modfication date, so that we don't always
-      check the xml
-    """
-    return getattr(self, 'modification_date', None)
-
-  def setLastModificationDate(self,value):
-    """
-      set the last modfication date, so that we don't always
-      check the xml
-    """
-    setattr(self, 'modification_date', value)
-
-  def getLastSynchronizationDate(self):
-    """
-      get the last modfication date, so that we don't always
-      check the xml
-    """
-    return getattr(self, 'synchronization_date', None)
-
-  def setLastSynchronizationDate(self,value):
-    """
-      set the last modfication date, so that we don't always
-      check the xml
-    """
-    setattr(self, 'synchronization_date', value)
-
-  def setXML(self, xml):
-    """
-      set the XML corresponding to the object
-    """
-    self.xml = xml
-    if self.xml is not None:
-      self.setTempXML(None) # We make sure that the xml will not be erased
-      self.setMD5(xml)
-
-  def getXML(self):
-    """
-      get the XML corresponding to the object
-    """
-    #Never return empty string
-    return getattr(self, 'xml', None) or None
-
-  def setTempXML(self, xml):
-    """
-      This is the xml temporarily saved, it will
-      be stored with setXML when we will receive
-      the confirmation of synchronization
-    """
-    self.temp_xml = xml
-
-  def getTempXML(self):
-    """
-      get the temp xml
-    """
-    return self.temp_xml
-
-  def setSubscriberXupdate(self, xupdate):
-    """
-    set the full temp xupdate
-    """
-    self.subscriber_xupdate = xupdate
-
-  def getSubscriberXupdate(self):
-    """
-    get the full temp xupdate
-    """
-    return self.subscriber_xupdate
-
-  def setPublisherXupdate(self, xupdate):
-    """
-    set the full temp xupdate
-    """
-    self.publisher_xupdate = xupdate
-
-  def getPublisherXupdate(self):
-    """
-    get the full temp xupdate
-    """
-    return self.publisher_xupdate
-
-  def setMD5(self, xml):
-    """
-      set the MD5 object of this signature
-    """
-    self.md5_string = md5.new(xml).digest()
-
-  def getMD5(self):
-    """
-      get the MD5 object of this signature
-    """
-    return self.md5_string
-
-  def checkMD5(self, xml_string):
-    """
-    check if the given md5_object returns the same things as
-    the one stored in this signature, this is very usefull
-    if we want to know if an objects has changed or not
-    Returns 1 if MD5 are equals, else it returns 0
-    """
-    return ((md5.new(xml_string).digest()) == self.getMD5())
-
-  def setRid(self, rid):
-    """
-      set the rid
-    """
-    if isinstance(rid, unicode):
-      rid = rid.encode('utf-8')
-    self.rid = rid
-
-  def getRid(self):
-    """
-      get the rid
-    """
-    return getattr(self, 'rid', None)
-
-  def setId(self, id):
-    """
-      set the id
-    """
-    if isinstance(id, unicode):
-      id = id.encode('utf-8')
-    self.id = id
-
-  def getId(self):
-    """
-      get the id
-    """
-    return self.id
-
-  def getGid(self):
-    """
-      get the gid
-    """
-    return self.getId()
-
-  def setObjectId(self, id):
-    """
-      set the id of the object associated to this signature
-    """
-    if isinstance(id, unicode):
-      id = id.encode('utf-8')
-    self.object_id = id
-
-  def getObjectId(self):
-    """
-      get the id of the object associated to this signature
-    """
-    return getattr(self, 'object_id', None)
-
-  def setPartialXML(self, xml):
-    """
-    Set the partial string we will have to
-    deliver in the future
-    """
-    self.partial_xml = xml
-
-  def getPartialXML(self):
-    """
-    Set the partial string we will have to
-    deliver in the future
-    """
-    return self.partial_xml
-
-  def getAction(self):
-    """
-    Return the actual action for a partial synchronization
-    """
-    return self.action
-
-  def setAction(self, action):
-    """
-    Return the actual action for a partial synchronization
-    """
-    self.action = action
-
-  def getConflictList(self):
-    """
-    Return the actual action for a partial synchronization
-    """
-    returned_conflict_list = []
-    if len(self.conflict_list)>0:
-      returned_conflict_list.extend(self.conflict_list)
-    return returned_conflict_list
-
-  def resetConflictList(self):
-    """
-    Return the actual action for a partial synchronization
-    """
-    self.conflict_list = PersistentMapping()
-
-  def setConflictList(self, conflict_list):
-    """
-    Return the actual action for a partial synchronization
-    """
-    if conflict_list is None or conflict_list == []:
-      self.resetConflictList()
-    else:
-      self.conflict_list = conflict_list
-
-  def delConflict(self, conflict):
-    """
-    Return the actual action for a partial synchronization
-    """
-    conflict_list = []
-    for c in self.getConflictList():
-      #LOG('delConflict, c==conflict',0,c==aq_base(conflict))
-      if c != aq_base(conflict):
-        conflict_list += [c]
-    if conflict_list != []:
-      self.setConflictList(conflict_list)
-    else:
-      self.resetConflictList()
-
-  def getObject(self):
-    """
-    Returns the object corresponding to this signature
-    """
-    return self.getParentValue().getObjectFromGid(self.getObjectId())
-
 def addSubscription( self, id, title='', REQUEST=None ):
     """
-    Add a new Subscribption
+    Add a new Subscription
     """
-    o = Subscription( id ,'','','','','','')
-    self._setObject( id, o )
+    o = Subscription(id, '', '', '', '', '', '')
+    self._setObject(id, o)
     if REQUEST is not None:
         return self.manage_main(self, REQUEST, update_menu=1)
     return o
@@ -573,7 +64,7 @@ class Subscription(Folder, XMLSyncUtils):
 
     publication_url -- a URI to a publication
 
-    subsribtion_url -- URL of ourselves
+    subscription_url -- URL of ourselves
 
     destination_path -- the place where objects are stored
 
@@ -662,7 +153,6 @@ class Subscription(Folder, XMLSyncUtils):
     self.title = title
     self.setSyncContentType(sync_content_type)
     self.setSynchronizeWithERP5Sites(synchronize_with_erp5_sites)
-    #self.signatures = PersitentMapping()
 
   def getAlertCodeList(self):
     return self.CODE_LIST
@@ -910,18 +400,6 @@ class Subscription(Folder, XMLSyncUtils):
     xml_mapping = getattr(self, 'xml_mapping', None)
     return xml_mapping
 
-  def getXMLFromObject(self, object, force=0):
-    """
-      return the xml mapping
-    """
-    xml_mapping = self.getXMLMapping(force=force)
-    xml = ''
-    if xml_mapping is not None:
-      func = getattr(object, xml_mapping, None)
-      if func is not None:
-        xml = func()
-    return xml
-
   def getMediaType(self):
     """
     This method return the type of media used in this session,
@@ -1005,6 +483,8 @@ class Subscription(Folder, XMLSyncUtils):
 
   def getGidFromObject(self, object):
     """
+      GetGidFromObject is return the gid for mapping between server and
+      client
     """
     o_base = aq_base(object)
     o_gid = None
@@ -1041,12 +521,12 @@ class Subscription(Folder, XMLSyncUtils):
         pass
       o_id = signature.getObjectId()
       #try with id param too, because gid is not catalogged
-      object_list = self.getObjectList(gid = b16decode(gid), id = o_id)
+      object_list = self.getObjectList(gid=b16decode(gid), id=o_id)
       #LOG('getObjectFromGid :', DEBUG, 'object_list=%s, gid=%s, o_id=%s' % (object_list, gid, o_id))
       if o is not None and o in object_list:
         return o
     #LOG('entering in the slow loop of getObjectFromGid !!!',0,'')
-    object_list = self.getObjectList(gid = b16decode(gid))
+    object_list = self.getObjectList(gid=b16decode(gid))
     #LOG('getObjectFromGid :', DEBUG, 'object_list slow loop=%s, gid=%s' % (object_list, gid))
     for o in object_list:
       o_gid = self.getGidFromObject(o)
@@ -1067,36 +547,34 @@ class Subscription(Folder, XMLSyncUtils):
         break
     return o
 
-  def getObjectFromRid(self, rid):
-    """
-    return the object corresponding to the id
-    """
-    signature = self.getSignatureFromRid(rid)
-    destination = self.getDestination()
-    o = None
-    if signature is not None and signature.getPath() is not None:
-      try:
-        o = destination.getPortalObject().restrictedTraverse(signature.getPath())
-      except:
-        pass
-    return o
-
   def getObjectList(self, **kw):
     """
     This returns the list of sub-object corresponding
     to the query
     """
-    destination = self.getDestination()
+    destination = self.getDestinationPath()
     query = self.getQuery()
-    query_list = []
     if query is not None and isinstance(query, str):
+      count = query.count("/")
+      if count > 0:
+        # There is a query path different than destination path change
+        # destination path for this query
+        cut_query = query.split('/')
+        if destination.endswith('/'):
+          destination = "%s%s" % (destination, "/".join(cut_query[:count]))
+        else:  
+          destination = "%s/s" % (destination, "/".join(cut_query[:count]))
+        query = cut_query[count]
+      query_list = []
+      destination = self.unrestrictedTraverse(destination)
       query_method = getattr(destination, query, None)
       if query_method is not None:
         query_list = query_method(**kw)
       else:
-        raise KeyError, 'This Subscriber %s provide no Query with id: %s'\
+        raise KeyError, 'This Subscriber %s provide no Query: %s'\
           % (self.getTitle(), query)
     elif callable(query): # used in the test
+      destination = self.unrestrictedTraverse(destination)
       query_list = query(destination)
     else:
       raise KeyError, 'This Subscriber %s provide no Query with id: %s'\
@@ -1121,7 +599,7 @@ class Subscription(Folder, XMLSyncUtils):
         # This is probably a python script
         generator = getattr(object, id_generator)
         new_id = generator(object=object, gid=gid)
-      #LOG('generateNewId, new_id: ', DEBUG, new_id)
+      #LOG('generateNewIdWithGenerator, new_id: ', DEBUG, new_id)
       return new_id
     return None
 
@@ -1387,7 +865,6 @@ class Subscription(Folder, XMLSyncUtils):
         s.setTempXML(None)
     self.setRemainingObjectPathList(None)
 
-
   def isAuthenticated(self):
     """
     return True if the subscriber is authenticated for this session, False 
@@ -1467,3 +944,7 @@ class Subscription(Folder, XMLSyncUtils):
       conduit = getattr(conduit_module, conduit_name)()
     return conduit
 
+#XXX backwards compatibility
+from Products.ERP5SyncML import Signature, Conflict
+Signature = Signature.Signature
+Conflict = Conflict.Conflict
