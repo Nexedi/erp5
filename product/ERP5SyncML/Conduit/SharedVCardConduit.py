@@ -70,7 +70,7 @@ class SharedVCardConduit(VCardConduit, SyncCode):
     LOG('getGidFromObject gid :', DEBUG, gid)
     return gid
 
-  def getGidFromXML(self, vcard, gid_from_xml_list):
+  def getGidFromXML(self, vcard, namespace, gid_from_xml_list):
     """
     return the Gid composed of FirstName and LastName generate with a vcard
     """

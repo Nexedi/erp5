@@ -49,9 +49,15 @@ class ERP5ConduitTitleGid(ERP5Conduit):
     """
     return object.getTitle()
 
-#  def getGidFromXML(self, xml):
-#    """
-#    return the Gid composed of FirstName and LastName generate with a peace of
-#    xml
-#    """
-#    #to be defined
+  def getGidFromXML(self, xml, namespace, gid_from_xml_list):
+    """
+    return the Gid composed of FirstName and LastName generate with a peace of
+    xml
+    """
+    first_name = xml.xpath('string(.//syncml:object//syncml:first_name)')
+    last_name = xml.xpath('string(.//syncml:object//syncml:last_name)')
+    gid = "%s %s" % (first_name, last_name)
+    if gid in gid_from_xml_list or gid == ' ':
+      return False
+    return gid
+
