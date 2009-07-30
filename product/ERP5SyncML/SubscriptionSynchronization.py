@@ -27,7 +27,8 @@
 ##############################################################################
 
 import smtplib # to send emails
-from Subscription import Subscription,Signature
+from Subscription import Subscription
+from Signature import Signature
 from XMLSyncUtils import XMLSyncUtils
 import commands
 from Conduit.ERP5Conduit import ERP5Conduit
@@ -53,7 +54,9 @@ class SubscriptionSynchronization(XMLSyncUtils):
     subscription.setZopeUser(user)
     subscription.setAuthenticated(True)
 
-    xml = Element('SyncML')
+    #create element 'SyncML' with a default namespace
+    nsmap = {None : self.XHTML_NAMESPACE}
+    xml = Element('SyncML',nsmap=nsmap)
     # syncml header
     xml.append(self.SyncMLHeader(subscription.incrementSessionId(),
       subscription.incrementMessageId(), subscription.getPublicationUrl(),
@@ -92,7 +95,9 @@ class SubscriptionSynchronization(XMLSyncUtils):
       This method send crendentials
     """
     cmd_id = 1 # specifies a SyncML message-unique command identifier
-    xml = Element('SyncML')
+    #create element 'SyncML' with a default namespace
+    nsmap = {None : self.XHTML_NAMESPACE}
+    xml = Element('SyncML',nsmap=nsmap)
     # syncml header
     data = "%s:%s" % (subscription.getLogin(), subscription.getPassword())
     data = subscription.encode(subscription.getAuthenticationFormat(), data)
