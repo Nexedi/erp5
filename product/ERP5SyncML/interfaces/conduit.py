@@ -121,7 +121,7 @@ class IConduit(Interface):
     return the Gid composed with the object informations
     """
 
-  def getGidFromXML(self, xml, gid_from_xml_list):
+  def getGidFromXML(self, xml, namespace, gid_from_xml_list):
     """
     return the Gid composed with xml informations
-    """
+    """ 
