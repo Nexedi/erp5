@@ -59,6 +59,16 @@ class TestERP5SyncMLVCard(TestERP5SyncMLMixin, ERP5TypeTestCase):
     """
     return ('erp5_base','erp5_syncml')
 
+  def verifyFirstNameAndLastNameAreSynchronized(self, first_name, 
+      last_name, person_server, person_client):
+    """
+      verify if the first and last name are synchronized
+    """
+    self.assertEqual(person_server.getFirstName(), first_name)
+    self.assertEqual(person_server.getLastName(), last_name)
+    self.assertEqual(person_client.getFirstName(), first_name)
+    self.assertEqual(person_client.getLastName(), last_name)
+ 
   def getTitle(self):
     return 'testERP5SyncMLVCard'
 

@@ -28,7 +28,7 @@
 
 import smtplib
 from Products.ERP5SyncML.SyncCode import SyncCode
-from Products.ERP5SyncML.Subscription import Signature
+from Products.ERP5SyncML.Signature import Signature
 from AccessControl.SecurityManagement import newSecurityManager
 from ERP5Diff import ERP5Diff
 from zLOG import LOG, INFO
@@ -55,8 +55,8 @@ class XMLSyncUtilsMixin(SyncCode):
       way to set one quickly.
     """
     xml = (E.SyncHdr(
-            E.VerDTD('1.1'),
-            E.VerProto('SyncML/1.1'),
+            E.VerDTD('1.2'),
+            E.VerProto('SyncML/1.2'),
             E.SessionID('%s' % session_id),
             E.MsgID('%s' % msg_id),
           ))
@@ -108,13 +108,15 @@ class XMLSyncUtilsMixin(SyncCode):
     return a status bloc with all status corresponding to the syncml
     commands in remote_xml
     """
-
+    namespace = self.getNamespace(remote_xml.nsmap)
     #list of element in the SyncBody bloc
-    sub_syncbody_element_list = remote_xml.xpath('/SyncML/SyncBody/*')
+    sub_syncbody_element_list = remote_xml.xpath('/syncml:SyncML/syncml:SyncBody/*')
     message_id = self.getMessageIdFromXml(remote_xml)
     status_list = []
-    target_uri = '%s' % remote_xml.xpath('string(/SyncML/SyncHdr/Target/LocURI)')
-    source_uri = '%s' % remote_xml.xpath('string(/SyncML/SyncHdr/Source/LocURI)')
+    target_uri = '%s' %\
+    remote_xml.xpath('string(/syncml:SyncML/syncml:SyncHdr/syncml:Target/syncml:LocURI)')
+    source_uri = '%s' %\
+    remote_xml.xpath('string(/syncml:SyncML/syncml:SyncHdr/syncml:Source/syncml:LocURI)')
     if data_code != self.AUTH_REQUIRED:
       xml = (E.Status(
                E.CmdID('%s' % cmd_id),
@@ -128,34 +130,36 @@ class XMLSyncUtilsMixin(SyncCode):
       cmd_id += 1
       status_list.append(xml)
     for sub_syncbody_element in sub_syncbody_element_list:
-      if sub_syncbody_element.tag not in ('Status', 'Final', 'Get'):
+      if sub_syncbody_element.xpath('local-name()') not in ('Status', 'Final', 'Get'):
         xml = (E.Status(
                  E.CmdID('%s' % cmd_id),
                  E.MsgRef('%s' % message_id),
-                 E.CmdRef('%s' % sub_syncbody_element.xpath('string(.//CmdID)')),
-                 E.Cmd(sub_syncbody_element.tag)
+                 E.CmdRef('%s' %\
+                 sub_syncbody_element.xpath('string(.//syncml:CmdID)')),
+                 E.Cmd('%s' % sub_syncbody_element.xpath('name()'))
                  ))
         cmd_id += 1
-        target_ref = sub_syncbody_element.xpath('string(.//Target/LocURI)')
+        target_ref = sub_syncbody_element.xpath('string(.//syncml:Target/syncml:LocURI)')
         if target_ref:
           xml.append(E.TargetRef('%s' % target_ref))
-        source_ref = sub_syncbody_element.xpath('string(.//Source/LocURI)')
+        source_ref = sub_syncbody_element.xpath('string(.//syncml:Source/syncml:LocURI)')
         if source_ref:
           xml.append(E.SourceRef('%s' % source_ref))
-        if sub_syncbody_element.tag == 'Add':
+        if sub_syncbody_element.xpath('local-name()') == 'Add':
           xml.append(E.Data('%s' % self.ITEM_ADDED))
-        elif sub_syncbody_element.tag == 'Alert' and \
-            sub_syncbody_element.xpath('string(.//Data)') == \
+        elif sub_syncbody_element.xpath('local-name()') == 'Alert' and \
+            sub_syncbody_element.xpath('string(.//syncml:Data)') == \
             str(self.SLOW_SYNC):
           xml.append(E.Data('%s' % self.REFRESH_REQUIRED))
-        elif sub_syncbody_element.tag == 'Alert':
+        elif sub_syncbody_element.xpath('local-name()') == 'Alert':
           xml.append(E.Item(E.Data(E.Anchor(E.Next(next_anchor)))))
         else:
           xml.append(E.Data('%s' % self.SUCCESS))
         status_list.append(xml)
-
-      if sub_syncbody_element.tag == 'Get' and subscription is not None:
-        cmd_ref = '%s' % sub_syncbody_element.xpath('string(.//CmdID)')
+      #FIXME to do a test for Get
+      if sub_syncbody_element.xpath('local-name()') == 'Get'\
+          and subscription is not None:
+        cmd_ref = '%s' % sub_syncbody_element.xpath('string(.//syncml:CmdID)')
         syncml_result = self.SyncMLPut(
                                   cmd_id,
                                   subscription,
@@ -176,10 +180,12 @@ class XMLSyncUtilsMixin(SyncCode):
     synchronized
     """
     if remote_xml is not None:
-      msg_ref = '%s' % remote_xml.xpath("string(/SyncML/SyncHdr/MsgID)")
-      cmd_ref = '%s' % remote_xml.xpath("string(.//CmdID)")
-      target_ref = '%s' % remote_xml.xpath("string(.//Target/LocURI)")
-      source_ref = '%s' % remote_xml.xpath("string(.//Source/LocURI)")
+      namespace = self.getNamespace(remote_xml.nsmap)
+      msg_ref = '%s' %\
+      remote_xml.xpath("string(/syncml:SyncML/syncml:SyncHdr/syncml:MsgID)")
+      cmd_ref = '%s' % remote_xml.xpath("string(.//syncml:CmdID)")
+      target_ref = '%s' % remote_xml.xpath("string(.//syncml:Target/syncml:LocURI)")
+      source_ref = '%s' % remote_xml.xpath("string(.//syncml:Source/syncml:LocURI)")
     xml = Element('Status')
     if cmd_id:
       xml.append(E.CmdID('%s' % cmd_id))
@@ -296,6 +302,19 @@ class XMLSyncUtilsMixin(SyncCode):
     #server.sendmail(fromaddr, "seb@localhost", msg)
     server.quit()
 
+  def getNamespace(self,nsmap):
+    """
+      return the namespace with prefix of xml   
+    """
+    #search urn compatible in the namespaces of nsmap
+    urns = filter(lambda v: v.upper() in self.URN_LIST, nsmap.values())
+    if urns :
+      namespace = etree.FunctionNamespace(urns[0])
+      namespace.prefix='syncml'
+      return namespace
+    else :
+      raise ValueError, "Sorry, If have a namespace isn't supported"
+
   def addXMLObject(self, cmd_id=0, object=None, xml_string=None,
                   more_data=0, gid=None, media_type=None):
     """
@@ -400,63 +419,76 @@ class XMLSyncUtilsMixin(SyncCode):
     """
     We will retrieve the session id of the message
     """
-    return int(xml.xpath('string(/SyncML/SyncHdr/SessionID)'))
+    namespace = self.getNamespace(xml.nsmap)
+    return int(xml.xpath('string(/syncml:SyncML/syncml:SyncHdr/syncml:SessionID)'))
 
   def getMessageIdFromXml(self, xml):
     """
     We will retrieve the message id of the message
     """
-    return int(xml.xpath('string(/SyncML/SyncHdr/MsgID)'))
+    namespace = self.getNamespace(xml.nsmap)
+    return int(xml.xpath('string(/syncml:SyncML/syncml:SyncHdr/syncml:MsgID)'))
 
   def getTarget(self, xml):
     """
     return the target in the SyncHdr section
     """
-    return '%s' % xml.xpath('string(/SyncML/SyncHdr/Target/LocURI)')
+    namespace = self.getNamespace(xml.nsmap)
+    return '%s' % xml.xpath('string(/syncml:SyncML/syncml:SyncHdr/syncml:Target/syncml:LocURI)')
 
   def getAlertLastAnchor(self, xml_stream):
     """
       Return the value of the last anchor, in the
       alert section of the xml_stream
     """
-    return '%s' % xml_stream.xpath('string(.//Alert/Item/Meta/Anchor/Last)')
+    namespace = self.getNamespace(xml_stream.nsmap)
+    return '%s' % xml_stream.xpath('string(.//syncml:Alert/syncml:Item/syncml:Meta/syncml:Anchor/syncml:Last)')
 
   def getAlertNextAnchor(self, xml_stream):
     """
       Return the value of the next anchor, in the
       alert section of the xml_stream
     """
-    return '%s' % xml_stream.xpath('string(.//Alert/Item/Meta/Anchor/Next)')
+    namespace = self.getNamespace(xml_stream.nsmap)
+    return '%s' %\
+      xml_stream.xpath('string(.//syncml:Alert/syncml:Item/syncml:Meta/syncml:Anchor/syncml:Next)')
 
   def getSourceURI(self, xml):
     """
     return the source uri of the data base
     """
-    return '%s' % xml.xpath('string(//SyncBody/Alert/Item/Source/LocURI)')
+    namespace = self.getNamespace(xml.nsmap)
+    return '%s' %\
+      xml.xpath('string(//syncml:SyncBody/syncml:Alert/syncml:Item/syncml:Source/syncml:LocURI)')
 
   def getTargetURI(self, xml):
     """
     return the target uri of the data base
     """
-    return '%s' % xml.xpath('string(//SyncBody/Alert/Item/Target/LocURI)')
+    namespace = self.getNamespace(xml.nsmap)
+    return '%s' %\
+      xml.xpath('string(//syncml:SyncBody/syncml:Alert/syncml:Item/syncml:Target/syncml:LocURI)')
 
   def getSubscriptionUrlFromXML(self, xml):
     """
     return the source URI of the syncml header
     """
-    return '%s' % xml.xpath('string(//SyncHdr/Source/LocURI)')
+    namespace = self.getNamespace(xml.nsmap)
+    return '%s' % xml.xpath('string(//syncml:SyncHdr/syncml:Source/syncml:LocURI)')
 
   def getStatusTarget(self, xml):
     """
       Return the value of the alert code inside the xml_stream
     """
-    return '%s' % xml.xpath('string(TargetRef)')
+    namespace = self.getNamespace(xml.nsmap)
+    return '%s' % xml.xpath('string(syncml:TargetRef)')
 
   def getStatusCode(self, xml):
     """
       Return the value of the alert code inside the xml_stream
     """
-    status_code = '%s' % xml.xpath('string(Data)')
+    namespace = self.getNamespace(xml.nsmap)
+    status_code = '%s' % xml.xpath('string(syncml:Data)')
     if status_code:
       return int(status_code)
     return None
@@ -465,18 +497,22 @@ class XMLSyncUtilsMixin(SyncCode):
     """
       Return the value of the command inside the xml_stream
     """
+    namespace = self.getNamespace(xml.nsmap)
     cmd = None
-    if xml.tag == 'Status':
-      cmd = '%s' % xml.xpath('string(Cmd)')
+    if xml.xpath('local-name()') == 'Status':
+      cmd = '%s' % xml.xpath('string(syncml:Cmd)')
     return cmd
 
   def getCred(self, xml):
     """
       return the credential information : type, format and data
     """
-    format = '%s' % xml.xpath("string(/SyncML/SyncHdr/Cred/Meta/*[local-name() = 'Format'])")
-    type = '%s' % xml.xpath("string(/SyncML/SyncHdr/Cred/Meta/*[local-name() = 'Type'])")
-    data = '%s' % xml.xpath('string(/SyncML/SyncHdr/Cred/Data)')
+    namespace = self.getNamespace(xml.nsmap)
+    format = '%s' %\
+    xml.xpath("string(/syncml:SyncML/syncml:SyncHdr/syncml:Cred/syncml:Meta/*[local-name() = 'Format'])")
+    type = '%s' %\
+    xml.xpath("string(/syncml:SyncML/syncml:SyncHdr/syncml:Cred/syncml:Meta/*[local-name() = 'Type'])")
+    data = '%s' % xml.xpath('string(/syncml:SyncML/syncml:SyncHdr/syncml:Cred/syncml:Data)')
 
     return (format, type, data)
 
@@ -484,7 +520,8 @@ class XMLSyncUtilsMixin(SyncCode):
     """
       Check if there's a Cred section in the xml_stream
     """
-    return bool(xml_stream.xpath('string(/SyncML/SyncHdr/Cred)'))
+    namespace = self.getNamespace(xml_stream.nsmap)
+    return bool(xml_stream.xpath('string(/syncml:SyncML/syncml:SyncHdr/syncml:Cred)'))
 
   def getChal(self, xml):
     """
@@ -498,31 +535,37 @@ class XMLSyncUtilsMixin(SyncCode):
     """
       Check if there's a Chal section in the xml_stream
     """
-    return bool(xml_stream.xpath('string(/SyncML/SyncBody/Status/Chal)'))
+    namespace = self.getNamespace(xml_stream.nsmap)
+    return\
+      bool(xml_stream.xpath('string(/syncml:SyncML/syncml:SyncBody/syncml:Status/syncml:Chal)'))
 
   def checkMap(self, xml_stream):
     """
       Check if there's a Map section in the xml_stream
     """
-    return bool(xml_stream.xpath('string(/SyncML/SyncBody/Map)'))
+    namespace = self.getNamespace(xml_stream.nsmap)
+    return bool(xml_stream.xpath('string(/syncml:SyncML/syncml:SyncBody/syncml:Map)'))
 
   def setRidWithMap(self, xml_stream, subscriber):
     """
       get all the local objects of the given target id and set them the rid with
       the given source id (in the Map section)
     """
-    item_list = xml_stream.xpath('/SyncML/SyncBody/Map/MapItem')
+    namespace = self.getNamespace(xml_stream.nsmap)
+    item_list = xml_stream.xpath('/syncml:SyncML/syncml:SyncBody/syncml:Map/syncml:MapItem')
     for map_item in item_list:
-      gid = '%s' % map_item.xpath('string(.//Target/LocURI)')
+      gid = '%s' % map_item.xpath('string(.//syncml:Target/syncml:LocURI)')
       signature = subscriber.getSignatureFromGid(gid)
-      rid = '%s' % map_item.xpath('string(.//Source/LocURI)')
+      rid = '%s' % map_item.xpath('string(.//syncml:Source/syncml:LocURI)')
       signature.setRid(rid)
 
   def getAlertCodeFromXML(self, xml_stream):
     """
       Return the value of the alert code inside the full syncml message
     """
-    alert_code = '%s' % xml_stream.xpath('string(/SyncML/SyncBody/Alert/Data)')
+    namespace = self.getNamespace(xml_stream.nsmap)
+    alert_code = '%s' %\
+    xml_stream.xpath('string(/syncml:SyncML/syncml:SyncBody/syncml:Alert/syncml:Data)')
     if alert_code:
       return int(alert_code)
     else:
@@ -532,39 +575,52 @@ class XMLSyncUtilsMixin(SyncCode):
     """
       Check if there's an Alert section in the xml_stream
     """
-    return bool(xml_stream.xpath('string(/SyncML/SyncBody/Alert)'))
+    namespace = self.getNamespace(xml_stream.nsmap)
+    return bool(xml_stream.xpath('string(/syncml:SyncML/syncml:SyncBody/syncml:Alert)'))
 
   def checkSync(self, xml_stream):
     """
-      Check if there's an Sync section in the xml_xtream
+      Check if there's an Sync section in the xml_stream
     """
-    return bool(xml_stream.xpath('string(/SyncML/SyncBody/Sync)'))
-
+    namespace = self.getNamespace(xml_stream.nsmap)
+    return bool(xml_stream.xpath('string(/syncml:SyncML/syncml:SyncBody/syncml:Sync)'))
+  
+  def checkFinal(self, xml_stream):
+    """
+      Check if there's an Final section in the xml_stream
+      The end sections (inizialisation, modification) have this tag
+    """
+    namespace = self.getNamespace(xml_stream.nsmap)
+    return  bool(xml_stream.xpath('/syncml:SyncML/syncml:SyncBody/syncml:Final'))
+  
   def checkStatus(self, xml_stream):
     """
-      Check if there's a Status section in the xml_xtream
+      Check if there's a Status section in the xml_stream
     """
-    return bool(xml_stream.xpath('string(/SyncML/SyncBody/Status)'))
+    namespace = self.getNamespace(xml_stream.nsmap)
+    return bool(xml_stream.xpath('string(/syncml:SyncML/syncml:SyncBody/syncml:Status)'))
 
   def getSyncActionList(self, xml_stream):
     """
     return the list of the action (could be "add", "replace", "delete").
     """
-    return xml_stream.xpath('//Add|//Delete|//Replace')
+    namespace = self.getNamespace(xml_stream.nsmap)
+    return xml_stream.xpath('//syncml:Add|//syncml:Delete|//syncml:Replace')
 
   def getSyncBodyStatusList(self, xml_stream):
     """
     return the list of dictionary corredponding to the data of each status bloc
     the data are : cmd, code and source
     """
+    namespace = self.getNamespace(xml_stream.nsmap)
     status_list = []
-    status_node_list = xml_stream.xpath('//Status')
+    status_node_list = xml_stream.xpath('//syncml:Status')
     for status in status_node_list:
       tmp_dict = {}
-      tmp_dict['cmd'] = '%s' % status.xpath('string(./Cmd)')
-      tmp_dict['code'] = '%s' % status.xpath('string(./Data)')
-      tmp_dict['source'] = '%s' % status.xpath('string(./SourceRef)')
-      tmp_dict['target'] = '%s' % status.xpath('string(./TargetRef)')
+      tmp_dict['cmd'] = '%s' % status.xpath('string(./syncml:Cmd)')
+      tmp_dict['code'] = '%s' % status.xpath('string(./syncml:Data)')
+      tmp_dict['source'] = '%s' % status.xpath('string(./syncml:SourceRef)')
+      tmp_dict['target'] = '%s' % status.xpath('string(./syncml:TargetRef)')
       status_list.append(tmp_dict)
     return status_list
 
@@ -572,13 +628,15 @@ class XMLSyncUtilsMixin(SyncCode):
     """
     return the section data in text form, it's usefull for the VCardConduit
     """
-    return '%s' % action.xpath('string(.//Item/Data)')
+    namespace = self.getNamespace(action.nsmap)
+    return '%s' % action.xpath('string(.//syncml:Item/syncml:Data)')
 
   def getDataSubNode(self, action):
     """
       Return the node starting with <object....> of the action
     """
-    object_node_list = action.xpath('.//Item/Data/*[1]')
+    namespace = self.getNamespace(action.nsmap)
+    object_node_list = action.xpath('.//syncml:Item/syncml:Data/*[1]')
     if object_node_list:
       return object_node_list[0]
     return None
@@ -587,22 +645,25 @@ class XMLSyncUtilsMixin(SyncCode):
     """
       Return the rid of the object described by the action
     """
-    id = '%s' % action.xpath('string(.//Item/Source/LocURI)')
+    namespace = self.getNamespace(action.nsmap)
+    id = '%s' % action.xpath('string(.//syncml:Item/syncml:Source/syncml:LocURI)')
     if not id:
-      id = '%s' % action.xpath('string(.//Item/Target/LocURI)')
+      id = '%s' % action.xpath('string(.//syncml:Item/syncml:Target/syncml:LocURI)')
     return id
 
   def checkActionMoreData(self, action):
     """
       Return the rid of the object described by the action
     """
-    return bool(action.xpath('.//Item/MoreData'))
+    namespace = self.getNamespace(action.nsmap)
+    return bool(action.xpath('.//syncml:Item/syncml:MoreData'))
 
   def getActionType(self, action):
     """
       Return the type of the object described by the action
     """
-    return '%s' % action.xpath('string(.//Meta/Type)')
+    namespace = self.getNamespace(action.nsmap)
+    return '%s' % action.xpath('string(.//syncml:Meta/syncml:Type)')
 
   def cutXML(self, xml_string):
     """
@@ -636,7 +697,7 @@ class XMLSyncUtilsMixin(SyncCode):
     if isinstance(remote_xml, (str, unicode)):
       remote_xml = etree.XML(remote_xml, parser=parser)
     if domain.isOneWayFromServer():
-      #Do not set object_path_list, subscriber send nothing
+      #Do not set object_path_list, subscriber send nothing it's a client
       subscriber.setRemainingObjectPathList([])
     elif subscriber.getRemainingObjectPathList() is None:
       object_list = domain.getObjectList()
@@ -659,7 +720,6 @@ class XMLSyncUtilsMixin(SyncCode):
           #LOG('getSyncMLData :', DEBUG,'gid_not_encoded_list:%s, local_gid_list:%s, gid:%s' % (gid_not_encoded_list, local_gid_list, gid))
       else:
         local_gid_list = [domain.getGidFromObject(x) for x in object_list]
-
       # Objects to remove
       #LOG('getSyncMLData remove object to remove ...', DEBUG, '')
       for object_gid in subscriber.getGidList():
@@ -673,7 +733,7 @@ class XMLSyncUtilsMixin(SyncCode):
                                                          rid=rid,
                                                          cmd_id=cmd_id))
             cmd_id += 1
-          #delete Signature if object does not exist anymore
+          # Delete Signature if object does not exist anymore
           subscriber.delSignature(object_gid)
 
     local_gid_list = []
@@ -703,18 +763,18 @@ class XMLSyncUtilsMixin(SyncCode):
 
         signature = subscriber.getSignatureFromGid(object_gid)
         ## Here we first check if the object was modified or not by looking at dates
-        #if signature is not None:
-          #LOG('getSyncMLData', DEBUG, 'signature.getStatus: %s' % signature.getStatus())
         status = self.SENT
         more_data = 0
         # For the case it was never synchronized, we have to send everything
         if signature is not None and signature.getXMLMapping() is None:
           pass
-        elif signature is None or (signature.getXML() is None and \
-            signature.getStatus() != self.PARTIAL) or \
+        elif signature is None or\
+            (signature.getXML() is None and\
+            signature.getStatus() != self.PARTIAL) or\
             self.getAlertCodeFromXML(remote_xml) == self.SLOW_SYNC:
           #LOG('getSyncMLData', DEBUG, 'Current object.getPath: %s' % object.getPath())
-          xml_string = domain.getXMLFromObject(object)
+          xml_string = conduit.getXMLFromObjectWithId(object,\
+                       xml_mapping=domain.getXMLMapping())
           gid = subscriber.getGidFromObject(object)
           signature = Signature(id=gid, object=object).__of__(subscriber)
           signature.setTempXML(xml_string)
@@ -724,7 +784,7 @@ class XMLSyncUtilsMixin(SyncCode):
             signature.setPartialXML(rest_string)
             status = self.PARTIAL
             signature.setAction('Add')
-          #in fisrt, we try with rid if there is one
+          #in first, we try with rid if there is one
           gid = signature.getRid() or signature.getGid()
           syncml_data_list.append(self.addXMLObject(
                                   cmd_id=cmd_id,
@@ -738,8 +798,9 @@ class XMLSyncUtilsMixin(SyncCode):
           subscriber.addSignature(signature)
         elif signature.getStatus() in (self.NOT_SYNCHRONIZED,
                                        self.PUB_CONFLICT_MERGE,):
-          # We don't have synchronized this object yet
-          xml_object = domain.getXMLFromObject(object)
+          # We don't have synchronized this object yet but it has a signature
+          xml_object = conduit.getXMLFromObjectWithId(object,\
+                       xml_mapping=domain.getXMLMapping()) 
           #LOG('getSyncMLData', DEBUG, 'checkMD5: %s' % str(signature.checkMD5(xml_object)))
           #LOG('getSyncMLData', DEBUG, 'getStatus: %s' % str(signature.getStatus()))
           if signature.getStatus() == self.PUB_CONFLICT_MERGE:
@@ -751,22 +812,21 @@ class XMLSyncUtilsMixin(SyncCode):
           set_synchronized = 1
           if not signature.checkMD5(xml_object):
             set_synchronized = 0
-            # This object has changed on this side, we have to generate some xmldiff
-            if subscriber.getMediaType() == self.MEDIA_TYPE['TEXT_XML']:
-              xml_string = self.getXupdateObject(xml_object, signature.getXML())
-            else: #if there is no xml, we re-send all the object
-              xml_string = xml_object
             if subscriber.getMediaType() != self.MEDIA_TYPE['TEXT_XML']:
+              # If there is no xml, we re-send all the objects
               xml_string = xml_object
-            elif xml_string.count('\n') > self.MAX_LINES:
-              # This make comment fails, so we need to replace
-              xml_string, rest_string = self.cutXML(xml_string)
-              more_data = 1
-              signature.setPartialXML(rest_string)
-              status = self.PARTIAL
-              signature.setAction('Replace')
-              signature.setStatus(status)
-            rid = signature.getRid()#in fisrt, we try with rid if there is one
+            else:
+             # This object has changed on this side, we have to generate some xmldiff
+              xml_string = self.getXupdateObject(xml_object, signature.getXML())
+              if xml_string.count('\n') > self.MAX_LINES:
+                # This make comment fails, so we need to replace
+                xml_string, rest_string = self.cutXML(xml_string)
+                more_data = 1
+                signature.setPartialXML(rest_string)
+                status = self.PARTIAL
+                signature.setAction('Replace')
+                signature.setStatus(status)
+            rid = signature.getRid()#in first, we try with rid if there is
             gid = signature.getGid()
             syncml_data_list.append(self.replaceXMLObject(
                                         cmd_id=cmd_id, object=object,
@@ -780,6 +840,8 @@ class XMLSyncUtilsMixin(SyncCode):
           subscriber_xupdate = signature.getSubscriberXupdate()
           #LOG('getSyncMLData subscriber_xupdate', DEBUG, subscriber_xupdate)
           if subscriber_xupdate is not None:
+            # The modification in the xml from signature is compare and update
+            # with xml_xupdate from subscriber
             old_xml = signature.getXML()
             conduit.updateNode(
                         xml=subscriber_xupdate,
@@ -787,7 +849,8 @@ class XMLSyncUtilsMixin(SyncCode):
                         previous_xml=old_xml,
                         force=(domain.getDomainType() == self.SUB),
                         simulate=0)
-            xml_object = domain.getXMLFromObject(object)
+            xml_object = conduit.getXMLFromObjectWithId(object,\
+                         xml_mapping=domain.getXMLMapping()) 
             signature.setTempXML(xml_object)
           if set_synchronized: # We have to do that after this previous update
             # We should not have this case when we are in CONFLICT_MERGE
@@ -814,7 +877,8 @@ class XMLSyncUtilsMixin(SyncCode):
           xml_to_send = Element('Partial')
           xml_to_send.text = etree.CDATA(xml_string.decode('utf-8'))
           if(subscriber.getMediaType() != self.MEDIA_TYPE['TEXT_XML']):
-            xml_to_send = domain.getXMLFromObject(object)
+            xml_to_send = conduit.getXMLFromObjectWithId(object,\
+                                  xml_mapping=domain.getXMLMapping()) 
           elif xml_string.count('\n') > self.MAX_LINES:
             xml_to_send, rest_string = self.cutXML(xml_string)
             more_data = 1
@@ -859,59 +923,52 @@ class XMLSyncUtilsMixin(SyncCode):
     This just look to a list of action to do, then id applies
     each action one by one, thanks to a conduit
     """
+    namespace = self.getNamespace(remote_xml.nsmap)
     xml_confirmation_list = []
     has_next_action = 0
     gid_from_xml_list = []
     destination = self.unrestrictedTraverse(domain.getDestinationPath())
-    #LOG('applyActionList args', DEBUG, 'domain : %s\n subscriber : %s\n cmd_id : %s' % (domain.getPath(), subscriber.getPath(), cmd_id))
-    #LOG('applyActionList', DEBUG, self.getSyncActionList(remote_xml))
+    #LOG('applyActionList args', DEBUG, 'domain : %s\n subscriber : %s\n cmd_id: %s'\ 
+    #% (domain.getPath(), subscriber.getPath(), cmd_id))
+    #LOG('XMLSyncUtils applyActionList', DEBUG, self.getSyncActionList(remote_xml))
     for action in self.getSyncActionList(remote_xml):
       conflict_list = []
       status_code = self.SUCCESS
       # Thirst we have to check the kind of action it is
-      partial_data = '%s' % action.xpath('string(.//Item/Data/Partial)')
-      rid = self.getActionId(action)
-      if action.tag != 'Delete':
+
+      # The rid is the Temporary GUID (SYNCML Protocol). the rid sent by the
+      # client unlike gid. The rid is in MapItem for each Action Map it's the LocURI in
+      # the action. 
+      gid = rid = self.getActionId(action)
+      #The action delete hasn't need a gid and retrieve the gid of conduit for
+      #object.
+      if action.xpath('local-name()') != 'Delete':
+        data_action = self.getDataSubNode(action)
+        if subscriber.getMediaType() != self.MEDIA_TYPE['TEXT_XML']:
+          #data in unicode
+          data_action = self.getDataText(action)
         if getattr(conduit, 'getGidFromXML', None) is not None and \
-           conduit.getGidFromXML(self.getDataText(action), gid_from_xml_list):
-          gid = conduit.getGidFromXML(self.getDataText(action),
-                                      gid_from_xml_list)
+          conduit.getGidFromXML(data_action, namespace, gid_from_xml_list):
+          gid = conduit.getGidFromXML(data_action, namespace, gid_from_xml_list)
           gid_from_xml_list.append(gid)
           gid = b16encode(gid)
-        else:
-          gid = rid
-      else:
-        gid = rid
-      object_id = domain.generateNewIdWithGenerator(object=destination, gid=gid)
+      #the rid unlike gid, it's the rid or gid (if rid == gid) will use for
+      #retrieve object and send response to client
       signature = subscriber.getSignatureFromGid(gid)
-      if signature is not None and rid != gid:
-        #in this case, the object was created on another subscriber than erp5
-        # and we should save it's remote id
-        signature.setRid(rid)
-      #LOG('gid == rid ?', DEBUG, 'gid=%s, rid=%s' % (gid, rid))
       object = subscriber.getObjectFromGid(gid)
-      if object is None and not domain.getSynchronizeWithERP5Sites():
-        #if the object is None, that could mean two things :
-        # - the object to synchronize don't exists
-        # - the id is not a gid but a rid
-        #here we try to find an object with the rid
-        #LOG('applyActionList, try to find an object with rid', DEBUG, '')
-        object = subscriber.getObjectFromRid(rid)
-        signature = subscriber.getSignatureFromRid(rid)
-        if signature is not None:
-          gid = signature.getId()
-      #LOG('applyActionList subscriber.getObjectFromGid %s' % gid, DEBUG, object)
-      if signature is None:
-        #LOG('applyActionList, signature is None', DEBUG, signature)
-        if gid == rid:
-          signature = Signature(id=gid, status=self.NOT_SYNCHRONIZED,
-                                object=object).__of__(subscriber)
-        else:
-          signature = Signature(rid=rid, id=gid, status=self.NOT_SYNCHRONIZED,
+      object_id = domain.generateNewIdWithGenerator(object=destination, gid=gid)
+      if rid == gid:
+        #We can't use our own gid and the temporary GUID is useless
+        rid = None
+      if signature is not None:
+        signature.setRid(rid)
+      else:
+        signature = Signature(id=gid, rid=rid, status=self.NOT_SYNCHRONIZED,
                                 object=object).__of__(subscriber)
         signature.setObjectId(object_id)
         subscriber.addSignature(signature)
       force = signature.getForce()
+      partial_data = '%s' % action.xpath('string(.//syncml:Item/syncml:Data/syncml:Partial)')
       if not self.checkActionMoreData(action):
         data_subnode = None
         if partial_data:
@@ -928,7 +985,7 @@ class XMLSyncUtilsMixin(SyncCode):
             data_subnode = self.getDataText(action)
           else:
             data_subnode = self.getDataSubNode(action)
-        if action.tag == 'Add':
+        if action.xpath('local-name()') == 'Add':
           # Then store the xml of this new subobject
           reset = 0
           if object is None:
@@ -948,7 +1005,9 @@ class XMLSyncUtilsMixin(SyncCode):
             if data_subnode is not None:
               if not isinstance(data_subnode, str):
                 xml_string = etree.tostring(data_subnode, encoding='utf-8')
-              actual_xml = subscriber.getXMLFromObject(object=object, force=1)
+              #force = 1
+              actual_xml = conduit.getXMLFromObjectWithId(object,\
+                           xml_mapping=domain.getXMLMapping(force=1)) 
               data_subnode = self.getXupdateObject(xml_string, actual_xml)
             conflict_list.extend(conduit.updateNode(
                                         xml=data_subnode,
@@ -956,7 +1015,8 @@ class XMLSyncUtilsMixin(SyncCode):
                                         previous_xml=signature.getXML(),
                                         force=force,
                                         simulate=simulate))
-            xml_object = domain.getXMLFromObject(object)
+            xml_object = conduit.getXMLFromObjectWithId(object,\
+                         xml_mapping=domain.getXMLMapping()) 
             signature.setTempXML(xml_object)
           if object is not None:
             #LOG('applyActionList', DEBUG, 'addNode, found the object')
@@ -968,8 +1028,9 @@ class XMLSyncUtilsMixin(SyncCode):
                                             pretty_print=True)
               else:
                 xml_object = data_subnode
-            else:
-              xml_object = domain.getXMLFromObject(object)
+            else: 
+              xml_object = conduit.getXMLFromObjectWithId(object,\
+                           xml_mapping=domain.getXMLMapping()) 
             signature.setStatus(self.SYNCHRONIZED)
             #signature.setId(object.getId())
             signature.setPath(object.getPhysicalPath())
@@ -980,13 +1041,11 @@ class XMLSyncUtilsMixin(SyncCode):
                                     sync_code=self.ITEM_ADDED,
                                     remote_xml=action))
             cmd_id +=1
-        elif action.tag == 'Replace':
+        elif action.xpath('local-name()') == 'Replace':
           #LOG('applyActionList', DEBUG, 'object: %s will be updated...' % str(object))
           if object is not None:
             #LOG('applyActionList', DEBUG, 'object: %s will be updated...' % object.id)
             signature = subscriber.getSignatureFromGid(gid)
-            if signature is None:
-              signature = subscriber.getSignatureFromRid(gid)
             #LOG('applyActionList', DEBUG, 'previous signature: %s' % str(signature))
             previous_xml = signature.getXML()
             conflict_list += conduit.updateNode(
@@ -995,7 +1054,8 @@ class XMLSyncUtilsMixin(SyncCode):
                                         previous_xml=signature.getXML(),
                                         force=force,
                                         simulate=simulate)
-            xml_object = domain.getXMLFromObject(object)
+            xml_object = conduit.getXMLFromObjectWithId(object,\
+                         xml_mapping=domain.getXMLMapping())
             signature.setTempXML(xml_object)
             if conflict_list:
               status_code = self.CONFLICT
@@ -1019,7 +1079,8 @@ class XMLSyncUtilsMixin(SyncCode):
               #LOG('applyActionList, subscriber_xupdate:', TRACE, data_subnode_string)
               signature.setSubscriberXupdate(data_subnode_string)
 
-        elif action.tag == 'Delete':
+        elif action.xpath('local-name()') == 'Delete':
+          LOG("applyactionlist delete",INFO,"")
           object_id = signature.getId()
           #LOG('applyActionList Delete on : ', DEBUG, (signature.getId(), subscriber.getObjectFromGid(object_id)))
           if subscriber.getMediaType() != self.MEDIA_TYPE['TEXT_XML']:
@@ -1049,7 +1110,7 @@ class XMLSyncUtilsMixin(SyncCode):
         #LOG('applyActionList', DEBUG, 'waiting more data for :%s' % signature.getId())
         xml_confirmation_list.append(self.SyncMLConfirmation(
                                 cmd_id=cmd_id,
-                                cmd=action.tag,
+                                cmd= "%s" % action.xpath('name()'),
                                 sync_code=self.WAITING_DATA,
                                 remote_xml=action))
       if conflict_list and signature is not None:
@@ -1074,11 +1135,13 @@ class XMLSyncUtilsMixin(SyncCode):
       if not object_gid:
         object_gid = status['target']
       status_code = int(status['code'])
+      signature = subscriber.getSignatureFromGid(object_gid)
+      if signature is None and\
+      not(subscriber.getSynchronizeWithERP5Sites()):
+        #the client give his id but not the gid
+        signature = subscriber.getSignatureFromRid(object_gid)
       if status_cmd in ('Add', 'Replace',):
         has_status_list = 1
-        signature = subscriber.getSignatureFromGid(object_gid)
-        if signature is None:
-          signature = subscriber.getSignatureFromRid(object_gid)
         if status_code == self.CHUNK_OK:
           destination_waiting_more_data = 1
           signature.setStatus(self.PARTIAL)
@@ -1097,14 +1160,9 @@ class XMLSyncUtilsMixin(SyncCode):
       elif status_cmd == 'Delete':
         has_status_list = 1
         if status_code == self.SUCCESS:
-          signature = subscriber.getSignatureFromGid(object_gid)
-          if signature is None and \
-          not(subscriber.getSynchronizeWithERP5Sites()):
-            signature = subscriber.getSignatureFromRid(object_gid)
           if signature is not None:
             subscriber.delSignature(signature.getGid())
     return (destination_waiting_more_data, has_status_list)
-
 
 class XMLSyncUtils(XMLSyncUtilsMixin):
 
@@ -1152,7 +1210,8 @@ class XMLSyncUtils(XMLSyncUtilsMixin):
     #LOG('SyncModif', DEBUG, 'Starting... domain: %s' % domain.getId())
     # Get informations from the header
     xml_header = remote_xml[0]
-    if xml_header.tag != "SyncHdr":
+    #FIXME to apply a DTD or schema
+    if xml_header.xpath('local-name()') != "SyncHdr":
       LOG('SyncModif', INFO, 'This is not a SyncML Header')
       raise ValueError, "Sorry, This is not a SyncML Header"
 
@@ -1210,7 +1269,9 @@ class XMLSyncUtils(XMLSyncUtilsMixin):
                                           subscriber=subscriber,
                                           remote_xml=remote_xml,
                                           conduit=conduit, simulate=simulate)
-    xml = Element('SyncML')
+
+    nsmap = {None : self.XHTML_NAMESPACE}
+    xml = Element('SyncML', nsmap=nsmap)
 
     # syncml header
     if domain.domain_type == self.PUB:
@@ -1358,7 +1419,10 @@ class XMLSyncUtils(XMLSyncUtilsMixin):
   def sendSyncModif(self, syncml_data_list, cmd_id_before_getsyncmldata,
                     subscriber, domain, xml_confirmation_list, remote_xml,
                     xml_tree, has_status_list, has_response):
+    # XXX the better is a namespace for all
     sync_body = xml_tree.find('SyncBody')
+    if sync_body is None:
+      sync_body = xml_tree.xpath('syncml:SyncBody')[0]
     if syncml_data_list:
       sync_node = SubElement(sync_body, 'Sync')
       cmd_id_node = SubElement(sync_node, 'CmdID')
@@ -1372,14 +1436,19 @@ class XMLSyncUtils(XMLSyncUtilsMixin):
       for syncml_data in syncml_data_list:
         sync_node.append(etree.XML(syncml_data, parser=parser))
     for xml_confirmation in xml_confirmation_list:
-      if not isinstance(xml_confirmation, str):
-        sync_body.append(xml_confirmation)
-      else:
-        sync_body.append(etree.XML(xml_confirmation, parser=parser))
-    sync_body.append(Element('Final'))
-    xml_string = etree.tostring(xml_tree, encoding='utf-8', pretty_print=True)
-
+      if isinstance(xml_confirmation, str):
+        xml_confirmation = etree.XML(xml_confirmation, parser=parser)
+      sync_body.append(xml_confirmation)
+    
+    self.sync_finished = 0 
     if domain.domain_type == self.PUB: # We always reply
+      # When the publication recieved the response Final and the modification 
+      # data is finished so the publication send the tag "Final"
+      if not self.checkSync(remote_xml) and not xml_confirmation_list\
+        and not syncml_data_list and self.checkFinal(remote_xml):
+        sync_body.append(Element('Final'))
+        self.sync_finished = 1
+      xml_string = etree.tostring(xml_tree, encoding='utf-8', pretty_print=True)
       subscriber.setLastSentMessage(xml_string)
       self.sendResponse(
                 from_url=domain.publication_url,
@@ -1388,13 +1457,20 @@ class XMLSyncUtils(XMLSyncUtilsMixin):
                 xml=xml_string,
                 domain=domain,
                 content_type=domain.getSyncContentType())
-      if not syncml_data_list:
+      if self.sync_finished == 1:
         LOG('this is the end of the synchronisation session from PUB !!!', INFO, domain.getId())
         subscriber.setAuthenticated(False)
         domain.setAuthenticated(False)
       has_response = 1
     elif domain.domain_type == self.SUB:
-      if self.checkAlert(remote_xml) or xml_confirmation_list or syncml_data_list:
+      # the modification data is finished on the subscription so the tag
+      # "Final" sent to the publication
+      if not self.checkAlert(remote_xml) and not xml_confirmation_list\
+        and not syncml_data_list:
+        sync_body.append(Element('Final'))
+        self.sync_finished = 1
+      xml_string = etree.tostring(xml_tree, encoding='utf-8', pretty_print=True)
+      if not self.sync_finished or not self.checkFinal(remote_xml):
         subscriber.setLastSentMessage(xml_string)
         self.sendResponse(
                   from_url=domain.subscription_url,
@@ -1403,6 +1479,7 @@ class XMLSyncUtils(XMLSyncUtilsMixin):
                   xml=xml_string, domain=domain,
                   content_type=domain.getSyncContentType())
         has_response = 1
+      #When the receive the final element and the sub finished synchronization
       else:
         if domain.isOneWayFromServer():
           self.deleteRemainObjectList(domain, subscriber)
@@ -1453,17 +1530,22 @@ class XMLSyncUtils(XMLSyncUtilsMixin):
       xml_client = self.readResponse(from_url=publication.getPublicationUrl())
     #LOG('PubSync', DEBUG, 'Starting... msg: %s' % str(xml_client))
     result = None
-
     if xml_client is not None:
       if isinstance(xml_client, (str, unicode)):
         xml_client = etree.XML(xml_client, parser=parser)
-      if xml_client.tag != "SyncML":
+      if len(xml_client.nsmap) ==1:
+        namespace = xml_client.nsmap[None]
+      else :
+        namespace = xml_client.nsmap['syncml']
+      #FIXME to apply a DTD or schema
+      if xml_client.xpath('local-name()') != "SyncML":
         LOG('PubSync', INFO, 'This is not a SyncML Message')
         raise ValueError, "Sorry, This is not a SyncML Message"
       alert_code = self.getAlertCodeFromXML(xml_client)
       # Get informations from the header
       client_header = xml_client[0]
-      if client_header.tag != "SyncHdr":
+      #FIXME to apply a DTD or schema
+      if client_header.xpath('local-name()') != "SyncHdr":
         LOG('PubSync', INFO, 'This is not a SyncML Header')
         raise ValueError, "Sorry, This is not a SyncML Header"
       subscription_url = self.getSubscriptionUrlFromXML(client_header)
@@ -1560,7 +1642,3 @@ class XMLSyncUtils(XMLSyncUtilsMixin):
     else:
       return response
 
-  def getActivityType(self, domain):
-    if domain.getActivityEnabled():
-      return 'SQLQueue'
-    return 'RAMQueue'
