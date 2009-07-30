@@ -28,7 +28,7 @@
 
 import smtplib # to send emails
 from Publication import Publication,Subscriber
-from Subscription import Signature
+from Signature import Signature
 from XMLSyncUtils import XMLSyncUtils
 from Conduit.ERP5Conduit import ERP5Conduit
 from Products.CMFCore.utils import getToolByName
@@ -79,7 +79,10 @@ class PublicationSynchronization(XMLSyncUtils):
       subscriber.setTargetURI(self.getSourceURI(xml_client))
 
       cmd_id = 1 # specifies a SyncML message-unique command identifier      
-      xml = Element('SyncML')
+     
+      #create element 'SyncML' with a default namespace
+      nsmap = {None : self.XHTML_NAMESPACE}
+      xml = Element('SyncML',nsmap=nsmap)
       # syncml header
       xml.append(self.SyncMLHeader(subscriber.getSessionId(),
         subscriber.getMessageId(),
@@ -88,12 +91,11 @@ class PublicationSynchronization(XMLSyncUtils):
       # syncml body
       sync_body = SubElement(xml, 'SyncBody')
 
-
       #at the begining, the code is initialised at UNAUTHORIZED
       auth_code = self.UNAUTHORIZED
       if not cred:
         auth_code = self.AUTH_REQUIRED
-        LOG("PubSyncInit there's no credential !!!", INFO,'')
+        # LOG("PubSyncInit there's no credential !!!", INFO,'')
         # Prepare the xml message for the Sync initialization package
         sync_body.append(self.SyncMLChal(cmd_id, "SyncHdr",
           publication.getPublicationUrl(), subscriber.getSubscriptionUrl(),
@@ -144,17 +146,19 @@ class PublicationSynchronization(XMLSyncUtils):
               if plugin.authenticateCredentials(
                         {'login':login, 'password':password}) is not None:
                 subscriber.setAuthenticated(True)
-                auth_code = self.AUTH_ACCEPTED
                 LOG("PubSyncInit Authentication Accepted", INFO, '')
+                auth_code = self.AUTH_ACCEPTED
                 #here we must log in with the user authenticated :
                 user = uf.getUserById(login).__of__(uf)
                 newSecurityManager(None, user)
                 subscriber.setUser(login)
                 break
               else:
-                LOG("PubSyncInit Authentication Failed !! with login :", INFO, login)
                 auth_code = self.UNAUTHORIZED
+        
         #in all others cases, the auth_code is set to UNAUTHORIZED
+            if auth_code == self.UNAUTHORIZED:
+              LOG("PubSyncInit Authentication Failed !! with login :", INFO, login)
 
         # Prepare the xml message for the Sync initialization package
         if auth_code == self.AUTH_ACCEPTED:
