@@ -549,6 +549,13 @@ class TestERP5BankingMixin:
     if len(site_list) != 0:
       for site in site_list:
         if isinstance(site, tuple):
+          container = self.site_base_category
+          if len(site) == 3:
+            for category_id in site[2].split('/'):
+              contained = getattr(container, category_id, None)
+              if contained is None:
+                contained = container.newContent(id=cateogry_id, portal_type='Category')
+              container = contained
           codification = site[1]
           site = site[0]
         if site == "paris":
@@ -561,7 +568,7 @@ class TestERP5BankingMixin:
           self.siege = self.site_base_category.newContent(id='siege', portal_type='Category', codification='HQ1',  vault_type='site')
           created_site_list.append(self.siege)
         else:
-          site = self.site_base_category.newContent(id=site, portal_type='Category',  codification=codification, vault_type='site')
+          site = container.newContent(id=site, portal_type='Category',  codification=codification, vault_type='site')
           created_site_list.append(site)
           
     self.vault_type_base_category = getattr(self.category_tool, 'vault_type')
