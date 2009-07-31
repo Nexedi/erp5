@@ -212,7 +212,7 @@ class TestNotificationTool(ERP5TypeTestCase):
     last_message = self.portal.MailHost._last_message
     self.assertNotEquals((), last_message)
     mfrom, mto, messageText = last_message
-    self.assertEquals('site@example.invalid', mfrom)
+    self.assertEquals('Portal Administrator <site@example.invalid>', mfrom)
     self.assertEquals(['userA@example.invalid'], mto)
 
   def test_02_noSender(self, quiet=quiet, run=run_all_test):
@@ -270,7 +270,7 @@ class TestNotificationTool(ERP5TypeTestCase):
     last_message = self.portal.MailHost._last_message
     self.assertNotEquals((), last_message)
     mfrom, mto, messageText = last_message
-    self.assertEquals('site@example.invalid', mfrom)
+    self.assertEquals('Portal Administrator <site@example.invalid>', mfrom)
     self.assertEquals(['site@example.invalid'], mto)
 
   def stepCheckNotificationWithoutMessage(self, sequence=None, 
@@ -283,7 +283,7 @@ class TestNotificationTool(ERP5TypeTestCase):
     last_message = self.portal.MailHost._last_message
     self.assertNotEquals((), last_message)
     mfrom, mto, messageText = last_message
-    self.assertEquals('site@example.invalid', mfrom)
+    self.assertEquals('Portal Administrator <site@example.invalid>', mfrom)
     self.assertEquals(['userA@example.invalid'], mto)
 
   def test_05_noMessage(self, quiet=quiet, run=run_all_test):
@@ -312,7 +312,7 @@ class TestNotificationTool(ERP5TypeTestCase):
     last_message = self.portal.MailHost._last_message
     self.assertNotEquals((), last_message)
     mfrom, mto, messageText = last_message
-    self.assertEquals('site@example.invalid', mfrom)
+    self.assertEquals('Portal Administrator <site@example.invalid>', mfrom)
     self.assertEquals(['userA@example.invalid'], mto)
     # Check Message
     mail_dict = decode_email(messageText)
@@ -359,7 +359,7 @@ class TestNotificationTool(ERP5TypeTestCase):
 
     self.assertNotEquals((), last_message)
     mfrom, mto, messageText = last_message
-    self.assertEquals('site@example.invalid', mfrom)
+    self.assertEquals('Portal Administrator <site@example.invalid>', mfrom)
     self.assertEquals(['userA@example.invalid'], mto)
 
     # Check Message
@@ -397,13 +397,13 @@ class TestNotificationTool(ERP5TypeTestCase):
 
     self.assertNotEquals((), last_message)
     mfrom, mto, messageText = last_message
-    self.assertEquals('site@example.invalid', mfrom)
+    self.assertEquals('Portal Administrator <site@example.invalid>', mfrom)
     self.assertEquals(['userB@example.invalid'], mto)
 
     previous_message = self.portal.MailHost._previous_message
     self.assertNotEquals((), previous_message)
     mfrom, mto, messageText = previous_message
-    self.assertEquals('site@example.invalid', mfrom)
+    self.assertEquals('Portal Administrator <site@example.invalid>', mfrom)
     self.assertEquals(['userA@example.invalid'], mto)
 
   def test_08_MultiRecipient(self, quiet=quiet, run=run_all_test):
@@ -473,7 +473,7 @@ class TestNotificationTool(ERP5TypeTestCase):
     last_message = self.portal.MailHost._last_message
     self.assertNotEquals((), last_message)
     mfrom, mto, messageText = last_message
-    self.assertEquals('site@example.invalid', mfrom)
+    self.assertEquals('Portal Administrator <site@example.invalid>', mfrom)
     self.assertEquals(['userA@example.invalid'], mto)
     # Check Message
     mail_dict = decode_email(messageText)
@@ -513,7 +513,7 @@ Yes, I will go."""
     last_message = self.portal.MailHost._last_message
     self.assertNotEquals((), last_message)
     mfrom, mto, messageText = last_message
-    self.assertEquals('site@example.invalid', mfrom)
+    self.assertEquals('Portal Administrator <site@example.invalid>', mfrom)
     self.assertEquals(['userA@example.invalid'], mto)
     # Check Message
     mail_dict = decode_email(messageText)
@@ -551,7 +551,7 @@ Yes, I will go."""
     last_message = self.portal.MailHost._last_message
     self.assertNotEquals((), last_message)
     mfrom, mto, messageText = last_message
-    self.assertEquals('site@example.invalid', mfrom)
+    self.assertEquals('Portal Administrator <site@example.invalid>', mfrom)
     self.assertEquals(['userA@example.invalid'], mto)
     # Check Message
     mail_dict = decode_email(messageText)
@@ -609,7 +609,7 @@ class TestNotificationToolWithCRM(TestNotificationTool):
     last_message = self.portal.MailHost._last_message
     self.assertNotEquals((), last_message)
     mfrom, mto, messageText = last_message
-    self.assertEquals('site@example.invalid', mfrom)
+    self.assertEquals('Portal Administrator <site@example.invalid>', mfrom)
     self.assertEquals(['userA@example.invalid'], mto)
     
     # check that an event has been created
