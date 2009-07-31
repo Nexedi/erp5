@@ -31,7 +31,9 @@ import transaction
 
 from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from AccessControl.SecurityManagement import newSecurityManager
+from AccessControl.SecurityManagement import newSecurityManager, \
+        getSecurityManager, setSecurityManager
+from AccessControl import Unauthorized
 from DateTime import DateTime
 from zLOG import LOG
 from Products.ERP5Type.DateUtils import addToDate
@@ -591,7 +593,100 @@ class TestAlarm(ERP5TypeTestCase):
       else:
         raise AssertionError, m.method_id
 
+  def test_19_ManualInvocation(self, quiet=0, run=run_all_test):
+    """
+    test if an alarm can be invoked directly by the user securely,
+    and if the results are identical when allowed.
+    """
+    if not run: return
+    if not quiet:
+      message = 'Test manual invocation'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ', 0, message)
+
+    alarm = self.newAlarm()
+    # Create script that generate active process
+    sense_method_id = 'Alarm_setBogusLocalProperty'
+    skin_folder_id = 'custom'
+    skin_folder = self.getPortal().portal_skins[skin_folder_id]
+    skin_folder.manage_addProduct['PythonScripts']\
+        .manage_addPythonScript(id=sense_method_id)
+    skin_folder[sense_method_id].ZPythonScript_edit('*args,**kw', 
+          'context.setProperty("bogus", str(context.showPermissions()))')
+
+    # update alarm properties
+    alarm.edit(active_sense_method_id=sense_method_id,
+               enabled=False)
+    transaction.commit()
+    self.tic()
+
+    # Make a normal user.
+    uf = self.getPortal().acl_users
+    uf._doAddUser('normal', '', ['Member', 'Auditor'], [])
+    user = uf.getUserById('normal').__of__(uf)
     
+    # Check the pre-conditions.
+    self.assertEquals(alarm.getProperty('bogus', None), None)
+    self.assertEquals(alarm.getEnabled(), False)
+    sm = getSecurityManager()
+    newSecurityManager(None, user)
+
+    # Non-managers must not be able to invoke a disabled alarm.
+    self.assertRaises(Unauthorized, alarm.activeSense)
+    self.assertRaises(Unauthorized, alarm.activeSense, fixit=1)
+
+    # Non-managers must not be able to invoke the automatic fixation.
+    setSecurityManager(sm)
+    alarm.setEnabled(True)
+    self.assertEquals(alarm.getEnabled(), True)
+    newSecurityManager(None, user)
+    self.assertRaises(Unauthorized, alarm.activeSense, fixit=1)
+
+    # Now, check that everybody can invoke an enabled alarm manually.
+    setSecurityManager(sm)
+    correct_answer = str(alarm.showPermissions())
+    self.assertNotEquals(correct_answer, None)
+
+    alarm.activeSense()
+    transaction.commit()
+    self.tic()
+    self.assertEquals(alarm.getProperty('bogus', None), correct_answer)
+    alarm.setProperty('bogus', None)
+    self.assertEquals(alarm.getProperty('bogus', None), None)
+
+    newSecurityManager(None, user)
+    alarm.activeSense()
+    transaction.commit()
+    self.tic()
+    self.assertEquals(alarm.getProperty('bogus', None), correct_answer)
+    setSecurityManager(sm)
+    alarm.setProperty('bogus', None)
+
+    # Check that Manager can invoke an alarm freely.
+    alarm.activeSense(fixit=1)
+    transaction.commit()
+    self.tic()
+    self.assertEquals(alarm.getProperty('bogus', None), correct_answer)
+    alarm.setProperty('bogus', None)
+    self.assertEquals(alarm.getProperty('bogus', None), None)
+
+    alarm.setEnabled(False)
+    self.assertEquals(alarm.getEnabled(), False)
+
+    alarm.activeSense()
+    transaction.commit()
+    self.tic()
+    self.assertEquals(alarm.getProperty('bogus', None), correct_answer)
+    alarm.setProperty('bogus', None)
+    self.assertEquals(alarm.getProperty('bogus', None), None)
+
+    alarm.activeSense(fixit=1)
+    transaction.commit()
+    self.tic()
+    self.assertEquals(alarm.getProperty('bogus', None), correct_answer)
+    alarm.setProperty('bogus', None)
+    self.assertEquals(alarm.getProperty('bogus', None), None)
+
 
 def test_suite():
   suite = unittest.TestSuite()

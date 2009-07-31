@@ -28,6 +28,7 @@
 
 import zope.interface
 from AccessControl import ClassSecurityInfo
+from AccessControl import Unauthorized
 from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLObject import XMLObject
@@ -36,6 +37,9 @@ from DateTime import DateTime
 from Products.ERP5Type.Message import Message
 from Products.ERP5Type.DateUtils import addToDate
 from Products.CMFCore.PortalContent import _getViewFor
+from Products.ERP5Security.ERP5UserManager import SUPER_USER
+from AccessControl.SecurityManagement import getSecurityManager, \
+            setSecurityManager, newSecurityManager
 
 class PeriodicityMixin:
   """
@@ -280,7 +284,7 @@ class Alarm(XMLObject, PeriodicityMixin):
     """
     return self.hasActivity(only_valid=1)
 
-  security.declareProtected(Permissions.ManagePortal, 'activeSense')
+  security.declareProtected(Permissions.AccessContentsInformation, 'activeSense')
   def activeSense(self, fixit=0):
     """
     This method launches the sensing process as activities.
@@ -291,35 +295,47 @@ class Alarm(XMLObject, PeriodicityMixin):
     The result of the sensing process can be obtained by invoking
     the sense method or by requesting a report.
     """
-    # LOG('activeSense, self.getPath()',0,self.getPath())
+    portal_membership = self.getPortalObject().portal_membership
+    if fixit or not self.getEnabled():
+      checkPermission = portal_membership.checkPermission
+      if not checkPermission(Permissions.ManagePortal, self):
+        raise Unauthorized('fixing problems or activating a disabled alarm is not allowed')
 
-    # Set the next date at which this method should be invoked
-    self.setNextAlarmDate()
+    # Switch to the superuser temporarily, so that the behavior would not
+    # change even if this method is invoked by random users.
+    sm = getSecurityManager()
+    newSecurityManager(None, portal_membership.getMemberById(SUPER_USER))
+    try:
+      # Set the next date at which this method should be invoked
+      self.setNextAlarmDate()
 
-    # Find the active sensing method and invoke it
-    # as an activity so that we can benefit from
-    # distribution of alarm processing as soon as possible
-    method_id = self.getActiveSenseMethodId()
-    if method_id not in (None, ''):
-      # A tag is provided as a parameter in order to be
-      # able to notify the user after all processes are ended
-      # Tag is generated from portal_ids so that it can be retrieved
-      # later when creating an active process for example
-      # We do some inspection to keep compatibility
-      # (because fixit and tag were not set previously)
-      tag = str(self.portal_ids.generateNewLengthId(id_group=self.getId()))
-      kw = {}
-      method = getattr(self, method_id)
-      name_list = method.func_code.co_varnames
-      if 'fixit' in name_list or (method.func_defaults is not None
-        and len(method.func_defaults) < len(name_list)):
-        # New API - also if variable number of named parameters
-        getattr(self.activate(tag=tag), method_id)(fixit=fixit, tag=tag)
-      else:
-        # Old API
-        getattr(self.activate(tag=tag), method_id)()
-      if self.isAlarmNotificationMode():
-        self.activate(after_tag=tag).notify(include_active=True)
+      # Find the active sensing method and invoke it
+      # as an activity so that we can benefit from
+      # distribution of alarm processing as soon as possible
+      method_id = self.getActiveSenseMethodId()
+      if method_id not in (None, ''):
+        # A tag is provided as a parameter in order to be
+        # able to notify the user after all processes are ended
+        # Tag is generated from portal_ids so that it can be retrieved
+        # later when creating an active process for example
+        # We do some inspection to keep compatibility
+        # (because fixit and tag were not set previously)
+        tag = str(self.portal_ids.generateNewLengthId(id_group=self.getId()))
+        kw = {}
+        method = getattr(self, method_id)
+        name_list = method.func_code.co_varnames
+        if 'fixit' in name_list or (method.func_defaults is not None
+          and len(method.func_defaults) < len(name_list)):
+          # New API - also if variable number of named parameters
+          getattr(self.activate(tag=tag), method_id)(fixit=fixit, tag=tag)
+        else:
+          # Old API
+          getattr(self.activate(tag=tag), method_id)()
+        if self.isAlarmNotificationMode():
+          self.activate(after_tag=tag).notify(include_active=True)
+    finally:
+      # Restore the original user.
+      setSecurityManager(sm)
 
   security.declareProtected(Permissions.ManagePortal, 'sense')
   def sense(self, process=None):
