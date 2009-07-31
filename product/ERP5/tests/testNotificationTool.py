@@ -104,8 +104,6 @@ class TestNotificationTool(ERP5TypeTestCase):
   """
   Test notification tool
   """
-  run_all_test = 1
-  quiet = 1
 
   def getBusinessTemplateList(self):
     return ('erp5_base',)
@@ -186,13 +184,7 @@ class TestNotificationTool(ERP5TypeTestCase):
     assignment.open()
     self.changeToPreviousUser()
 
-  def test_01_defaultBehaviour(self, quiet=quiet, run=run_all_test):
-    if not run: return
-    if not quiet:
-      message = 'Test default behaviour of sendMessage'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
-
+  def test_01_defaultBehaviour(self):
     self.assertRaises(
       TypeError,
       self.portal.portal_notifications.sendMessage,
@@ -215,13 +207,7 @@ class TestNotificationTool(ERP5TypeTestCase):
     self.assertEquals('Portal Administrator <site@example.invalid>', mfrom)
     self.assertEquals(['userA@example.invalid'], mto)
 
-  def test_02_noSender(self, quiet=quiet, run=run_all_test):
-    if not run: return
-    if not quiet:
-      message = 'Test no sender value'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
-
+  def test_02_noSender(self):
     sequence_list = SequenceList()
     sequence_string = '\
         AddUserA \
@@ -229,7 +215,7 @@ class TestNotificationTool(ERP5TypeTestCase):
         CheckNotificationWithoutSender \
         '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
   def stepCheckNotificationFailsWithoutSubject(self, sequence=None, 
                                                sequence_list=None, **kw):
@@ -242,13 +228,7 @@ class TestNotificationTool(ERP5TypeTestCase):
         recipient='userA', message='Message'
     )
 
-  def test_03_noSubject(self, quiet=quiet, run=run_all_test):
-    if not run: return
-    if not quiet:
-      message = 'Test no subject value'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
-
+  def test_03_noSubject(self):
     sequence_list = SequenceList()
     sequence_string = '\
         AddUserA \
@@ -256,15 +236,9 @@ class TestNotificationTool(ERP5TypeTestCase):
         CheckNotificationFailsWithoutSubject \
         '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-  def test_04_noRecipient(self, quiet=quiet, run=run_all_test):
-    if not run: return
-    if not quiet:
-      message = 'Test no recipient value'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
-
+  def test_04_noRecipient(self):
     self.portal.portal_notifications.sendMessage(
         subject='Subject', message='Message')
     last_message = self.portal.MailHost._last_message
@@ -286,13 +260,7 @@ class TestNotificationTool(ERP5TypeTestCase):
     self.assertEquals('Portal Administrator <site@example.invalid>', mfrom)
     self.assertEquals(['userA@example.invalid'], mto)
 
-  def test_05_noMessage(self, quiet=quiet, run=run_all_test):
-    if not run: return
-    if not quiet:
-      message = 'Test no message value'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
-
+  def test_05_noMessage(self):
     sequence_list = SequenceList()
     sequence_string = '\
         AddUserA \
@@ -300,7 +268,7 @@ class TestNotificationTool(ERP5TypeTestCase):
         CheckNotificationWithoutMessage \
         '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
   def stepCheckSimpleNotification(self, sequence=None, 
                                   sequence_list=None, **kw):
@@ -320,13 +288,7 @@ class TestNotificationTool(ERP5TypeTestCase):
     self.assertEquals(mail_dict['body'], 'Message')
     self.assertSameSet([], mail_dict['attachment_list'])
 
-  def test_06_simpleMessage(self, quiet=quiet, run=run_all_test):
-    if not run: return
-    if not quiet:
-      message = 'Test simple message'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
-
+  def test_06_simpleMessage(self):
     sequence_list = SequenceList()
     sequence_string = '\
         AddUserA \
@@ -334,7 +296,7 @@ class TestNotificationTool(ERP5TypeTestCase):
         CheckSimpleNotification \
         '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
   def stepCheckNotificationWithAttachment(self, sequence=None, 
                                           sequence_list=None, **kw):
@@ -370,13 +332,7 @@ class TestNotificationTool(ERP5TypeTestCase):
                         ('Attachment 2', 'application/octet-stream', 'Text 2')], 
                        mail_dict['attachment_list'])
 
-  def test_07_AttachmentMessage(self, quiet=quiet, run=run_all_test):
-    if not run: return
-    if not quiet:
-      message = 'Test attachments'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
-
+  def test_07_AttachmentMessage(self):
     sequence_list = SequenceList()
     sequence_string = '\
         AddUserA \
@@ -384,7 +340,7 @@ class TestNotificationTool(ERP5TypeTestCase):
         CheckNotificationWithAttachment \
         '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
   def stepCheckMultiRecipientNotification(self, sequence=None, 
                                           sequence_list=None, **kw):
@@ -406,13 +362,7 @@ class TestNotificationTool(ERP5TypeTestCase):
     self.assertEquals('Portal Administrator <site@example.invalid>', mfrom)
     self.assertEquals(['userA@example.invalid'], mto)
 
-  def test_08_MultiRecipient(self, quiet=quiet, run=run_all_test):
-    if not run: return
-    if not quiet:
-      message = 'Test multi recipient value'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
-
+  def test_08_MultiRecipient(self):
     sequence_list = SequenceList()
     sequence_string = '\
         AddUserA \
@@ -421,7 +371,7 @@ class TestNotificationTool(ERP5TypeTestCase):
         CheckMultiRecipientNotification \
         '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
   def stepCheckPersonWithoutEmail(self, sequence=None, 
                                   sequence_list=None, **kw):
@@ -434,13 +384,7 @@ class TestNotificationTool(ERP5TypeTestCase):
       recipient='userWithoutEmail', subject='Subject', message='Message'
     )
 
-  def test_08_PersonWithoutEmail(self, quiet=quiet, run=run_all_test):
-    if not run: return
-    if not quiet:
-      message = 'Test no email value'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
-
+  def test_08_PersonWithoutEmail(self):
     sequence_list = SequenceList()
     sequence_string = '\
         AddUserWithoutEmail \
@@ -448,14 +392,9 @@ class TestNotificationTool(ERP5TypeTestCase):
         CheckPersonWithoutEmail \
         '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-  def test_09_InvalideRecipient(self, quiet=quiet, run=run_all_test):
-    if not run: return
-    if not quiet:
-      message = 'Test invalide recipient'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_09_InvalideRecipient(self):
     self.assertRaises(
       IndexError,
       self.portal.portal_notifications.sendMessage,
@@ -481,13 +420,7 @@ class TestNotificationTool(ERP5TypeTestCase):
     self.assertEquals(mail_dict['body'], 'Message')
     self.assertSameSet([], mail_dict['attachment_list'])
 
-  def test_10_PersonNotification(self, quiet=quiet, run=run_all_test):
-    if not run: return
-    if not quiet:
-      message = 'Test Person recipient'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
-
+  def test_10_PersonNotification(self):
     sequence_list = SequenceList()
     sequence_string = '\
         AddUserA \
@@ -495,7 +428,7 @@ class TestNotificationTool(ERP5TypeTestCase):
         CheckPersonNotification\
         '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
   def stepCheckNotificationPlainTextFormat(self, sequence=None, 
                                   sequence_list=None, **kw):
@@ -521,13 +454,7 @@ Yes, I will go."""
     self.assertEquals(mail_dict['body'], message)
     self.assertSameSet([], mail_dict['attachment_list'])
 
-  def test_11_TextMessage(self, quiet=quiet, run=run_all_test):
-    if not run: return
-    if not quiet:
-      message = 'Test message format'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
-
+  def test_11_TextMessage(self):
     sequence_list = SequenceList()
     sequence_string = '\
         AddUserA \
@@ -535,7 +462,7 @@ Yes, I will go."""
         CheckNotificationPlainTextFormat \
         '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
   def stepCheckNotificationHtmlFormat(self, sequence=None, 
                                   sequence_list=None, **kw):
@@ -559,13 +486,7 @@ Yes, I will go."""
     self.assertEquals(mail_dict['body'], '<html><body>%s</body></html>' % message)
     self.assertSameSet([], mail_dict['attachment_list'])
 
-  def test_12_HtmlMessage(self, quiet=quiet, run=run_all_test):
-    if not run: return
-    if not quiet:
-      message = 'Test message format'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
-
+  def test_12_HtmlMessage(self):
     sequence_list = SequenceList()
     sequence_string = '\
         AddUserA \
@@ -573,7 +494,7 @@ Yes, I will go."""
         CheckNotificationHtmlFormat \
         '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
 
 class TestNotificationToolWithCRM(TestNotificationTool):
