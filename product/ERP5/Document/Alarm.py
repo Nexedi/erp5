@@ -26,8 +26,6 @@
 #
 ##############################################################################
 
-import types
-
 import zope.interface
 from AccessControl import ClassSecurityInfo
 from Products.CMFCore.utils import getToolByName
@@ -402,7 +400,7 @@ class Alarm(XMLObject, PeriodicityMixin):
     """
     if process is None:
       process = self.getLastActiveProcess().getRelativeUrl()
-    elif not type(process) in types.StringTypes:
+    elif not isinstance(process, basestring):
       process = process.getRelativeUrl()
     list_action = _getViewFor(self, view='report')
     if getattr(aq_base(list_action), 'isDocTemp', 0):
