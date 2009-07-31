@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright (c) 2004, 2007 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2004,2007,2009 Nexedi SA and Contributors. All Rights Reserved.
 #                    Sebastien Robin <seb@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
@@ -31,16 +31,13 @@ import types
 import zope.interface
 from AccessControl import ClassSecurityInfo
 from Products.CMFCore.utils import getToolByName
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
+from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLObject import XMLObject
-from Products.ERP5Type.Base import WorkflowMethod
-from Acquisition import aq_base, aq_parent, aq_inner, aq_acquire
-from Products.CMFCore.utils import getToolByName
+from Acquisition import aq_base
 from DateTime import DateTime
 from Products.ERP5Type.Message import Message
 from Products.ERP5Type.DateUtils import addToDate
-
-from zLOG import LOG
+from Products.CMFCore.PortalContent import _getViewFor
 
 class PeriodicityMixin:
   """
@@ -132,6 +129,7 @@ class PeriodicityMixin:
     elif len(periodicity_month_list) > 0:
       return date.month() in periodicity_month_list
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'getNextPeriodicalDate')
   def getNextPeriodicalDate(self, current_date, next_start_date=None):
     """
     Get the next date where this periodic event should start.
@@ -192,14 +190,14 @@ class PeriodicityMixin:
     return next_start_date
 
   # XXX May be we should create a Date class for following methods ???
-  security.declareProtected(Permissions.View, 'getWeekDayList')
+  security.declareProtected(Permissions.AccessContentsInformation, 'getWeekDayList')
   def getWeekDayList(self):
     """
     returns something like ['Sunday','Monday',...]
     """
     return DateTime._days
 
-  security.declareProtected(Permissions.View, 'getWeekDayItemList')
+  security.declareProtected(Permissions.AccessContentsInformation, 'getWeekDayItemList')
   def getWeekDayItemList(self):
     """
     returns something like [('Sunday', 'Sunday'), ('Monday', 'Monday'),...]
@@ -207,7 +205,7 @@ class PeriodicityMixin:
     return [(Message(domain='erp5_ui', message=x), x) \
             for x in self.getWeekDayList()]
 
-  security.declareProtected(Permissions.View, 'getWeekDayItemList')
+  security.declareProtected(Permissions.AccessContentsInformation, 'getWeekDayItemList')
   def getMonthItemList(self):
     """
     returns something like [('January', 1), ('February', 2),...]
@@ -216,7 +214,7 @@ class PeriodicityMixin:
     return [(Message(domain='erp5_ui', message=DateTime._months[i]), i) \
             for i in range(1, len(DateTime._months))]
 
-  security.declareProtected(Permissions.View,'getPeriodicityWeekDayList')
+  security.declareProtected(Permissions.AccessContentsInformation,'getPeriodicityWeekDayList')
   def getPeriodicityWeekDayList(self):
     """
     Make sure that the list of days is ordered
@@ -272,7 +270,7 @@ class Alarm(XMLObject, PeriodicityMixin):
                     , PropertySheet.Alarm
                     )
 
-  security.declareProtected(Permissions.View, 'isActive')
+  security.declareProtected(Permissions.AccessContentsInformation, 'isActive')
   def isActive(self):
     """
     This method returns only True or False. 
@@ -284,7 +282,7 @@ class Alarm(XMLObject, PeriodicityMixin):
     """
     return self.hasActivity(only_valid=1)
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'activeSense')
+  security.declareProtected(Permissions.ManagePortal, 'activeSense')
   def activeSense(self, fixit=0):
     """
     This method launches the sensing process as activities.
@@ -325,7 +323,7 @@ class Alarm(XMLObject, PeriodicityMixin):
       if self.isAlarmNotificationMode():
         self.activate(after_tag=tag).notify(include_active=True)
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'sense')
+  security.declareProtected(Permissions.ManagePortal, 'sense')
   def sense(self, process=None):
     """
     This method returns True or False. False for no problem, True for problem.
@@ -413,7 +411,7 @@ class Alarm(XMLObject, PeriodicityMixin):
     else:
       return list_action(process=process, reset=reset)
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'solve')
+  security.declareProtected(Permissions.ManagePortal, 'solve')
   def solve(self):
     """
     This method tries resolve a problems detected by an Alarm
@@ -429,7 +427,7 @@ class Alarm(XMLObject, PeriodicityMixin):
       return method()
     return self.activeSense(fixit=1)
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'notify')
+  security.declareProtected(Permissions.ManagePortal, 'notify')
   def notify(self, include_active=False):
     """
     This method is called to notify people that some alarm has
@@ -483,7 +481,7 @@ Alarm URL: %s
 """ % (self.getTitle(), self.getDescription(), self.absolute_url()),
                                   attachment_list=attachment_list)
 
-  security.declareProtected(Permissions.View, 'getLastActiveProcess')
+  security.declareProtected(Permissions.ManagePortal, 'getLastActiveProcess')
   def getLastActiveProcess(self, include_active=False):
     """
     This returns the last active process finished. So it will
@@ -503,7 +501,7 @@ Alarm URL: %s
       process = active_process_list[-1].getObject()
     return process
 
-  security.declareProtected(Permissions.ModifyPortalContent, 
+  security.declareProtected(Permissions.ManagePortal, 
                             'newActiveProcess')
   def newActiveProcess(self, **kw):
     """
@@ -522,7 +520,7 @@ Alarm URL: %s
                                                         **kw)
     return active_process
 
-  security.declareProtected(Permissions.View, 'setNextAlarmDate')
+  security.declareProtected(Permissions.ModifyPortalContent, 'setNextAlarmDate')
   def setNextAlarmDate(self, current_date=None):
     """
     Save the next alarm date
@@ -541,7 +539,7 @@ Alarm URL: %s
       self.Alarm_zUpdateAlarmDate(uid=self.getUid(), 
                                   alarm_date=next_start_date)
 
-  security.declareProtected(Permissions.View, 'getAlarmDate')
+  security.declareProtected(Permissions.AccessContentsInformation, 'getAlarmDate')
   def getAlarmDate(self):
     """
     returns something like ['Sunday','Monday',...]
