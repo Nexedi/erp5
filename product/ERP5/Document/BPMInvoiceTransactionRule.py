@@ -60,6 +60,30 @@ class BPMInvoiceTransactionRule(BPMRule, PredicateMatrix):
                     , PropertySheet.AppliedRule
                     )
 
+  def _getCurrencyRatioByArrow(self, arrow, prevision_line):
+    from Products.ERP5Type.Document import newTempSimulationMovement
+    temporary_movement = newTempSimulationMovement(self.getPortalObject(),
+        '1', **prevision_line)
+    exchange_ratio = None
+    try:
+      section = prevision_line['%s_list' % arrow][0]
+    except IndexError:
+      section = None
+    if section is not None:
+      currency_url = self.restrictedTraverse(section).getProperty(
+          'price_currency', None)
+    else:
+      currency_url = None
+    if currency_url is not None and self.getResource() != currency_url:
+      precision = section.getPriceCurrencyValue() \
+          .getQuantityPrecision()
+      exchange_ratio = currency.getPrice(
+          context=temporary_movement.asContext(
+        categories=['price_currency/%s' % currency_url,
+                    'resource/%s' % self.getResource()],
+        start_date=temporary_movement.getStartDate()))
+    return exchange_ratio
+
 #### Helper method for expand
   def _generatePrevisionList(self, applied_rule, **kw):
     """
@@ -136,53 +160,22 @@ class BPMInvoiceTransactionRule(BPMRule, PredicateMatrix):
           resource_list = [resource],
           price = 1,
         )
-        from Products.ERP5Type.Document import newTempSimulationMovement
-        temporary_movement = newTempSimulationMovement(self.getPortalObject(),
-            '1', **prevision_line)
-        #set asset_price on movement when resource is different from price
-        #currency of the source/destination section
         if resource is not None:
-          currency = self.restrictedTraverse(resource)
-          currency_url = currency.getRelativeUrl()
-          destination_section = prevision_line['destination_section_list'][0]
-          if destination_section is not None:
-            destination_currency_url = self.restrictedTraverse(
-                destination_section).getProperty('price_currency', None)
-          else:
-            destination_currency_url = None
-          if destination_currency_url is not None \
-              and currency_url != destination_currency_url:
-            precision = destination_section.getPriceCurrencyValue() \
-                .getQuantityPrecision()
-            destination_exchange_ratio = currency.getPrice(
-                context=temporary_movement.asContext(
-              categories=['price_currency/%s' % destination_currency_url,
-                          'resource/%s' % currency_url],
-              start_date=temporary_movement.getStartDate()))
-            if destination_exchange_ratio is not None:
-              prevision_line.update(destination_total_asset_price=round(
-               (destination_exchange_ratio*
-                applied_rule.getParentValue().getTotalPrice()),precision))
+          #set asset_price on movement when resource is different from price
+          #currency of the source/destination section
+          destination_exchange_ratio = self._getCurrencyRatioByArrow(
+              'destination_section', prevision_line)
+          if destination_exchange_ratio is not None:
+            prevision_line.update(destination_total_asset_price=round(
+             (destination_exchange_ratio*
+              applied_rule.getParentValue().getTotalPrice()),precision))
 
-          source_section = prevision_line['source_section_list'][0]
-          if source_section is not None:
-            source_currency_url = self.restrictedTraverse(
-                source_section).getProperty('price_currency', None)
-          else:
-            source_currency_url = None
-          if source_currency_url is not None \
-              and currency_url != source_currency_url:
-            precision = source_section.getPriceCurrencyValue() \
-                .getQuantityPrecision()
-            source_exchange_ratio = currency.getPrice(
-                context=temporary_movement.asContext(
-              categories=['price_currency/%s' % source_currency_url,
-                          'resource/%s' % currency_url],
-              start_date=temporary_movement.getStartDate()))
-            if source_exchange_ratio is not None:
-              prevision_line.update(source_total_asset_price = round(
-          source_exchange_ratio*applied_rule.getParentValue().getTotalPrice(),
-              precision))
+          source_exchange_ratio = self._getCurrencyRatioByArrow(
+              'source_section', prevision_line)
+          if source_exchange_ratio is not None:
+            prevision_line.update(source_total_asset_price=round(
+             (source_exchange_ratio*
+              applied_rule.getParentValue().getTotalPrice()),precision))
 
         if accounting_rule_cell_line.hasProperty(
             'generate_prevision_script_id'):
