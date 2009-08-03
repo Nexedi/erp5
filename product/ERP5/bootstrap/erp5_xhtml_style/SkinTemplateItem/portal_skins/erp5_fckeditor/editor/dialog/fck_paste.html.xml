@@ -3,40 +3,30 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <global name="File" module="OFS.Image"/>
         <tuple/>
       </tuple>
     </pickle>
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_bind_names</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>_asgns</string> </key>
-                        <value>
-                          <dictionary>
-                            <item>
-                                <key> <string>name_subpath</string> </key>
-                                <value> <string>traverse_subpath</string> </value>
-                            </item>
-                          </dictionary>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>http_cache</string> </value>
         </item>
         <item>
-            <key> <string>_text</string> </key>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts49309338.5</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>fck_paste.html</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">\r\n
@@ -391,8 +381,16 @@ function CleanWord( oNode, bIgnoreFont, bRemoveStyles )\r\n
 ]]></string> </value>
         </item>
         <item>
-            <key> <string>id</string> </key>
-            <value> <string>fck_paste.html</string> </value>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>12291</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
         </item>
       </dictionary>
     </pickle>
