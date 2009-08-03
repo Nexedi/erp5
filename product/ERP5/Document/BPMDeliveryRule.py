@@ -44,6 +44,8 @@ class BPMDeliveryRule(BPMRule):
   meta_type = 'ERP5 BPM Delivery Rule'
   portal_type = 'BPM Delivery Rule'
 
+  property_sheets = BPMRule.property_sheets
+
   # Declarative security
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)

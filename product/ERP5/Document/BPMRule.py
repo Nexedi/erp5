@@ -173,14 +173,7 @@ class BPMRule(Predicate, XMLObject):
     This method might be overloaded"""
     return [applied_rule.getParentValue()]
 
-  def _generatePrevisionList(self, applied_rule, **kw):
-    """
-    Generate a list of dictionaries, that contain calculated content of
-    current Simulation Movements in applied rule.
-    based on its context (parent movement, delivery, configuration ...)
-
-    These previsions are returned as dictionaries.
-    """
+  def _getInputMovementAndPathList(self, applied_rule):
     input_movement_list = self._getInputMovementList(applied_rule)
     business_process = applied_rule.getBusinessProcessValue()
 
@@ -197,8 +190,18 @@ class BPMRule(Predicate, XMLObject):
     if len(business_path_list) > 1:
       raise NotImplementedError
 
+    return input_movement_and_path_list
+
+  def _generatePrevisionList(self, applied_rule, **kw):
+    """
+    Generate a list of dictionaries, that contain calculated content of
+    current Simulation Movements in applied rule.
+    based on its context (parent movement, delivery, configuration ...)
+
+    These previsions are returned as dictionaries.
+    """
     prevision_dict_list = []
-    for input_movement, business_path in input_movement_and_path_list:
+    for input_movement, business_path in self._getInputMovementAndPathList(applied_rule):
       prevision_dict_list.append(self._getExpandablePropertyDict(applied_rule,
           input_movement, business_path))
     return prevision_dict_list

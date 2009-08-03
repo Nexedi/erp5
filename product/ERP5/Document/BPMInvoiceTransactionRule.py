@@ -43,22 +43,12 @@ class BPMInvoiceTransactionRule(BPMRule, PredicateMatrix):
   # CMF Type Definition
   meta_type = 'ERP5 BPM Invoice Transaction Rule'
   portal_type = 'BPM Invoice Transaction Rule'
-  add_permission = Permissions.AddPortalContent
-  isPortalContent = 1
-  isRADContent = 1
+
+  property_sheets = BPMRule.property_sheets
 
   # Declarative security
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
-
-  # Default Properties
-  property_sheets = ( PropertySheet.Base
-                    , PropertySheet.XMLObject
-                    , PropertySheet.CategoryCore
-                    , PropertySheet.DublinCore
-                    , PropertySheet.Task
-                    , PropertySheet.AppliedRule
-                    )
 
   def _getCurrencyRatioByArrow(self, arrow, prevision_line):
     from Products.ERP5Type.Document import newTempSimulationMovement
@@ -92,19 +82,9 @@ class BPMInvoiceTransactionRule(BPMRule, PredicateMatrix):
 
     These previsions are actually returned as dictionaries.
     """
+    input_movement, business_path = self._getInputMovementAndPathList(
+        applied_rule)[0]
     prevision_list = []
-    input_movement = applied_rule.getParentValue()
-
-    business_process = applied_rule.getBusinessProcessValue()
-
-    movement_and_path_list = []
-    for business_path in business_process.getPathValueList(
-                        self.getProperty('trade_phase_list'),
-                        input_movement):
-      movement_and_path_list.append((input_movement, business_path))
-
-    if len(movement_and_path_list) > 1:
-      raise NotImplementedError
 
     # Find a matching cell
     cell = self._getMatchingCell(input_movement)
