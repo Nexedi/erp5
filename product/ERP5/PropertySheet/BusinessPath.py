@@ -70,4 +70,5 @@ class BusinessPath:
             'multivalued' : 1,
             'mode'        : 'w' },
     )
-    _categories = ( )
+    _categories = ( 'delivery_builder', 'order_builder', 'end_of',
+        'trade_phase' )

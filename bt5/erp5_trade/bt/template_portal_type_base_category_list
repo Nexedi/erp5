@@ -1,8 +1,3 @@
-Business Path | delivery_builder
-Business Path | end_of
-Business Path | order_builder
-Business Path | trade_phase
-Business Process | specialise
 Discount Module | business_application
 Internal Packing List Module | business_application
 Inventory Module | business_application

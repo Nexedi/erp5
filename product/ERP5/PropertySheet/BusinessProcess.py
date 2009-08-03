@@ -38,4 +38,4 @@ class BusinessProcess:
             'type'        : 'string',
             'mode'        : 'w' },
     )
-    _categories = ( )
+    _categories = ( 'specialise', )
