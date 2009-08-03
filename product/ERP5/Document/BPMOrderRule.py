@@ -43,7 +43,7 @@ class BPMOrderRule(BPMDeliveryRule):
   meta_type = 'ERP5 BPM Order Rule'
   portal_type = 'BPM Order Rule'
 
-  property_sheets = BPMRule.property_sheets
+  property_sheets = BPMDeliveryRule.property_sheets
 
   # Declarative security
   security = ClassSecurityInfo()
