@@ -73,10 +73,11 @@ class TestBPMMixin(ERP5TypeTestCase):
         ['accounting', 'delivery', 'invoicing', 'discount', 'tax', 'payment'])
 
   @reindex
-  def createBusinessProcess(self):
+  def createBusinessProcess(self, **kw):
     module = self.portal.getDefaultModule(
         portal_type=self.business_process_portal_type)
-    return module.newContent(portal_type=self.business_process_portal_type)
+    return module.newContent(portal_type=self.business_process_portal_type,
+        **kw)
 
   @reindex
   def createBusinessPath(self, business_process=None, **kw):
