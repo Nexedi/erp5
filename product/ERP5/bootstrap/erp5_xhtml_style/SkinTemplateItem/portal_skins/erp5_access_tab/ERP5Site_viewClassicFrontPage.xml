@@ -39,11 +39,10 @@
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-<tal:block tal:replace="nothing"\n
-           xmlns:tal="http://xml.zope.org/namespaces/tal"\n
+<tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"\n
            xmlns:metal="http://xml.zope.org/namespaces/metal"\n
            xmlns:i18n="http://xml.zope.org/namespaces/i18n">\n
-<!--\n
+<tal:block tal:replace="nothing"><!--\n
 Copyright (c) 2006 Nexedi SARL and Contributors. All Rights Reserved.\n
                    Vincent Pelletier <vincent@nexedi.com>\n
                    Christophe Dumez <christophe@nexedi.com>\n
@@ -61,8 +60,7 @@ GNU General Public License for more details.\n
 You should have received a copy of the GNU General Public License\n
 along with this program; if not, write to the Free Software\n
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
--->\n
-</tal:block>\n
+--></tal:block>\n
 <tal:block tal:define="title here/Title">\n
 <tal:block metal:use-macro="here/main_template/macros/master">\n
   <tal:block metal:fill-slot="main">\n
@@ -90,6 +88,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
       </table>\n
     </div>\n
   </tal:block>\n
+</tal:block>\n
 </tal:block>\n
 </tal:block>
 
