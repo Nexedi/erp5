@@ -135,9 +135,13 @@ class TradeCondition(Path, Transformation, XMLMatrix):
             portal_type=portal_type_list)
       while len(specialise_value_list) != 0:
         specialise = specialise_value_list.pop(0)
-        child_list = specialise.getSpecialiseValueList(\
-            portal_type=portal_type_list)
-
+        try:
+          child_list = specialise.getSpecialiseValueList(\
+              portal_type=portal_type_list)
+        except AttributeError:
+          # it is possible, that specialised object cannot be specialised
+          # anymore
+          continue
         intersection = set(child_list).intersection(\
             set(visited_trade_condition_list))
         for model in child_list:
