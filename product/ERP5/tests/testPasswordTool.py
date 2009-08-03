@@ -175,7 +175,7 @@ class TestPasswordTool(ERP5TypeTestCase):
     last_message = self.portal.MailHost._last_message
     self.assertNotEquals((), last_message)
     mfrom, mto, messageText = last_message
-    self.assertEquals('site@example.invalid', mfrom)
+    self.assertEquals('Portal Administrator <site@example.invalid>', mfrom)
     self.assertEquals(['userA@example.invalid'], mto)
 
 
