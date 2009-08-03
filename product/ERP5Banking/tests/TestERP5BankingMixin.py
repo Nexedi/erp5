@@ -554,7 +554,7 @@ class TestERP5BankingMixin:
             for category_id in site[2].split('/'):
               contained = getattr(container, category_id, None)
               if contained is None:
-                contained = container.newContent(id=cateogry_id, portal_type='Category')
+                contained = container.newContent(id=category_id, portal_type='Category')
               container = contained
           codification = site[1]
           site = site[0]
