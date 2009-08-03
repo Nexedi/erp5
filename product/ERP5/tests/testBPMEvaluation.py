@@ -91,6 +91,14 @@ class TestBPMEvaluationMixin(TestBPMMixin):
     self.destination, self.destination_section = self._createNode() \
         , self._createNode()
 
+  def _createBusinessStateList(self):
+    """Creates list of defaults states, set them on self as name_state property"""
+    for state_name in ('ordered', 'delivered', 'invoiced', 'accounted',
+        'paid'):
+      state_document = self.createBusinessState(self.business_process,
+        title=state_name)
+      setattr(self,'%s_state' % state_name, state_document)
+
   def _createOrder(self):
     self.order = self._createDocument(self.order_portal_type,
         source_value = self.source,
@@ -168,75 +176,74 @@ class TestBPMEvaluationMixin(TestBPMMixin):
 
 class TestBPMEvaluationDefaultProcessMixin:
   def _createBusinessProcess(self):
-    self.business_process = self.createBusinessProcess()
-    ordered = self.createBusinessState(self.business_process)
-    delivered = self.createBusinessState(self.business_process)
-    invoiced = self.createBusinessState(self.business_process)
-    accounted = self.createBusinessState(self.business_process)
-    paid = self.createBusinessState(self.business_process)
+    self.business_process = self.createBusinessProcess(title=self.id())
+    self._createBusinessStateList()
 
     self.delivery_path = self.createBusinessPath(self.business_process,
-        predecessor_value = ordered, successor_value = delivered,
-        trade_phase = 'default/delivery',
-        deliverable = 1,
-        completed_state_list = ['delivered'],
-        frozen_state_list = ['stopped', 'delivered'],
-        delivery_builder = 'portal_deliveries/bpm_sale_packing_list_builder',
+        predecessor_value=self.ordered_state, successor_value=delivered_state,
+        trade_phase='default/delivery',
+        deliverable=1,
+        completed_state_list=['delivered'],
+        frozen_state_list=['stopped', 'delivered'],
+        delivery_builder='portal_deliveries/bpm_sale_packing_list_builder',
         )
 
     self.invoice_path = self.createBusinessPath(self.business_process,
-        predecessor_value = delivered, successor_value = invoiced,
-        completed_state_list = ['delivered'],
-        frozen_state_list = ['stopped', 'delivered'],
+        predecessor_value=self.delivered_state,
+        successor_value=self.invoiced_state,
+        completed_state_list=['delivered'],
+        frozen_state_list=['stopped', 'delivered'],
         trade_phase='default/invoicing')
 
     self.account_path = self.createBusinessPath(self.business_process,
-        predecessor_value = invoiced, successor_value = accounted,
-        completed_state_list = ['delivered'],
-        frozen_state_list = ['stopped', 'delivered'],
+        predecessor_value=self.invoiced_state,
+        successor_value=self.accounted_state,
+        completed_state_list=['delivered'],
+        frozen_state_list=['stopped', 'delivered'],
         trade_phase='default/accounting')
 
     self.pay_path = self.createBusinessPath(self.business_process,
-        predecessor_value = invoiced, successor_value = accounted,
-        completed_state_list = ['delivered'],
-        frozen_state_list = ['stopped', 'delivered'],
+        predecessor_value=self.invoiced_state,
+        successor_value=self.accounted_state,
+        completed_state_list=['delivered'],
+        frozen_state_list=['stopped', 'delivered'],
         trade_phase='default/payment')
 
     self.stepTic()
 
 class TestBPMEvaluationDifferentProcessMixin:
   def _createBusinessProcess(self):
-    self.business_process = self.createBusinessProcess()
-    ordered = self.createBusinessState(self.business_process)
-    delivered = self.createBusinessState(self.business_process)
-    invoiced = self.createBusinessState(self.business_process)
-    accounted = self.createBusinessState(self.business_process)
-    paid = self.createBusinessState(self.business_process)
+    self.business_process = self.createBusinessProcess(title=self.id())
+    self._createBusinessStateList()
 
     self.invoice_path = self.createBusinessPath(self.business_process,
-        predecessor_value = ordered, successor_value = invoiced,
-        completed_state_list = ['delivered'],
-        frozen_state_list = ['stopped', 'delivered'],
+        predecessor_value=self.ordered_state,
+        successor_value=self.invoiced_state,
+        completed_state_list=['delivered'],
+        frozen_state_list=['stopped', 'delivered'],
         trade_phase='default/invoicing')
 
     self.account_path = self.createBusinessPath(self.business_process,
-        predecessor_value = invoiced, successor_value = accounted,
-        completed_state_list = ['delivered'],
-        frozen_state_list = ['stopped', 'delivered'],
+        predecessor_value=self.invoiced_state,
+        successor_value=self.accounted_state,
+        completed_state_list=['delivered'],
+        frozen_state_list=['stopped', 'delivered'],
         trade_phase='default/accounting')
 
     self.pay_path = self.createBusinessPath(self.business_process,
-        predecessor_value = invoiced, successor_value = accounted,
-        completed_state_list = ['delivered'],
-        frozen_state_list = ['stopped', 'delivered'],
+        predecessor_value=self.accounted_state,
+        successor_value=self.paid_state,
+        completed_state_list=['delivered'],
+        frozen_state_list=['stopped', 'delivered'],
         trade_phase='default/payment')
 
     self.delivery_path = self.createBusinessPath(self.business_process,
-        predecessor_value = accounted, successor_value = delivered,
-        trade_phase = 'default/delivery',
-        deliverable = 1,
-        completed_state_list = ['delivered'],
-        frozen_state_list = ['stopped', 'delivered'])
+        predecessor_value=self.paid_state,
+        successor_value=self.delivered_state,
+        trade_phase='default/delivery',
+        deliverable=1,
+        completed_state_list=['delivered'],
+        frozen_state_list=['stopped', 'delivered'])
 
     self.stepTic()
 
