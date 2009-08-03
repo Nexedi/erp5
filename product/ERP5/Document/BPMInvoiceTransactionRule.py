@@ -52,6 +52,10 @@ class BPMInvoiceTransactionRule(BPMRule, PredicateMatrix):
 
   def _getCurrencyRatioByArrow(self, arrow, prevision_line):
     from Products.ERP5Type.Document import newTempSimulationMovement
+    try:
+      prevision_currency = prevision_line['resource_list'][0]
+    except IndexError:
+      prevision_currency = None
     temporary_movement = newTempSimulationMovement(self.getPortalObject(),
         '1', **prevision_line)
     exchange_ratio = None
@@ -64,13 +68,13 @@ class BPMInvoiceTransactionRule(BPMRule, PredicateMatrix):
           'price_currency', None)
     else:
       currency_url = None
-    if currency_url is not None and self.getResource() != currency_url:
+    if currency_url is not None and prevision_currency != currency_url:
       precision = section.getPriceCurrencyValue() \
           .getQuantityPrecision()
       exchange_ratio = currency.getPrice(
           context=temporary_movement.asContext(
         categories=['price_currency/%s' % currency_url,
-                    'resource/%s' % self.getResource()],
+                    'resource/%s' % prevision_currency],
         start_date=temporary_movement.getStartDate()))
     return exchange_ratio
 
