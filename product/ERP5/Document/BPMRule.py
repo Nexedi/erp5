@@ -188,7 +188,7 @@ class BPMRule(Predicate, XMLObject):
     business_path_list = []
     for input_movement in input_movement_list:
       for business_path in business_process.getPathValueList(
-                          self.getProperty('trade_phase_list'),
+                          self.getTradePhaseList(),
                           input_movement):
         input_movement_and_path_list.append((input_movement, business_path))
         business_path not in business_path_list and business_path_list \
