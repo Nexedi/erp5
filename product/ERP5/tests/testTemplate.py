@@ -58,6 +58,11 @@ class TestTemplate(ERP5TypeTestCase):
     newSecurityManager(None, user)
 
   def afterSetUp(self):
+    ERP5TypeTestCase.login(self, 'ERP5TypeTestCase')
+    portal_preferences = self.portal.portal_preferences
+    portal_preferences.deleteContent(list(portal_preferences.objectIds()))
+    transaction.commit()
+    self.tic()
     self.portal.portal_types['Preference'].allowed_content_types = ('Foo',)
     self.portal.foo_module.manage_role(role_to_manage='Author',
                                 permissions=[Permissions.AddPortalContent,
