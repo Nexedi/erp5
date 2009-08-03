@@ -27,7 +27,7 @@
 ##############################################################################
 
 from Globals import PersistentMapping
-from time import gmtime,strftime # for anchors
+from time import gmtime, strftime # for anchors
 from SyncCode import SyncCode
 from AccessControl import ClassSecurityInfo
 from Products.CMFCore.utils import getToolByName
@@ -42,14 +42,14 @@ import md5
 from base64 import b64encode, b64decode, b16encode, b16decode
 
 def addSubscription( self, id, title='', REQUEST=None ):
-    """
-    Add a new Subscription
-    """
-    o = Subscription(id, '', '', '', '', '', '')
-    self._setObject(id, o)
-    if REQUEST is not None:
-        return self.manage_main(self, REQUEST, update_menu=1)
-    return o
+  """
+  Add a new Subscription
+  """
+  o = Subscription(id, '', '', '', '', '', '')
+  self._setObject(id, o)
+  if REQUEST is not None:
+    return self.manage_main(self, REQUEST, update_menu=1)
+  return o
 
 #class Subscription(SyncCode, Implicit):
 #class Subscription(Folder, SyncCode, Implicit, Folder, Impli):
@@ -91,8 +91,8 @@ class Subscription(Folder, XMLSyncUtils):
 
   """
 
-  meta_type='ERP5 Subscription'
-  portal_type='SyncML Subscription' # may be useful in the future...
+  meta_type = 'ERP5 Subscription'
+  portal_type = 'SyncML Subscription' # may be useful in the future...
   isPortalContent = 1
   isRADContent = 1
   icon = None
@@ -144,7 +144,7 @@ class Subscription(Folder, XMLSyncUtils):
     self.next_anchor = '00000000T000000Z'
     self.setMediaType(media_type)
     self.login = login
-    self.password=password
+    self.password = password
     self.domain_type = self.SUB
     self.gpg_key = gpg_key
     self.setSynchronizationIdGenerator(id_generator)
@@ -164,7 +164,8 @@ class Subscription(Folder, XMLSyncUtils):
     self.alert_code = int(value)
 
   def isOneWayFromServer(self):
-    return self.getDomainType() == self.SUB and self.getAlertCode() == self.ONE_WAY_FROM_SERVER
+    return self.getDomainType() == self.SUB and \
+           self.getAlertCode() == self.ONE_WAY_FROM_SERVER
 
   def getActivityEnabled(self):
     """
@@ -182,7 +183,7 @@ class Subscription(Folder, XMLSyncUtils):
     """
     getter for title
     """
-    return getattr(self,'title',None)
+    return getattr(self, 'title', None)
 
   def setTitle(self, value):
     """
@@ -292,8 +293,6 @@ class Subscription(Folder, XMLSyncUtils):
     return True if the message id was not seen, False if already seen
     """
     last_message_id = getattr(self, 'last_message_id', None)
-    #LOG('checkCorrectRemoteMessageId  last_message_id = ', DEBUG, last_message_id)
-    #LOG('checkCorrectRemoteMessageId  message_id = ', DEBUG, message_id)
     if last_message_id == message_id:
       return False
     self.last_message_id = message_id
@@ -483,8 +482,7 @@ class Subscription(Folder, XMLSyncUtils):
 
   def getGidFromObject(self, object):
     """
-      GetGidFromObject is return the gid for mapping between server and
-      client
+      Returns the object gid 
     """
     o_base = aq_base(object)
     o_gid = None
@@ -522,12 +520,10 @@ class Subscription(Folder, XMLSyncUtils):
       o_id = signature.getObjectId()
       #try with id param too, because gid is not catalogged
       object_list = self.getObjectList(gid=b16decode(gid), id=o_id)
-      #LOG('getObjectFromGid :', DEBUG, 'object_list=%s, gid=%s, o_id=%s' % (object_list, gid, o_id))
       if o is not None and o in object_list:
         return o
     #LOG('entering in the slow loop of getObjectFromGid !!!',0,'')
     object_list = self.getObjectList(gid=b16decode(gid))
-    #LOG('getObjectFromGid :', DEBUG, 'object_list slow loop=%s, gid=%s' % (object_list, gid))
     for o in object_list:
       o_gid = self.getGidFromObject(o)
       if o_gid == gid:
@@ -890,7 +886,8 @@ class Subscription(Folder, XMLSyncUtils):
     #elif format is .... put here the other formats
     else:#if there is no format corresponding with format, raise an error
       LOG('encode : unknown or not implemented format : ', INFO, format)
-      raise ValueError, "Sorry, the server ask for the format %s but it's unknow or not implemented" % format
+      raise ValueError, "Sorry, the server ask for the format %s but \
+            it's unknow or not implemented" % format
 
   def decode(self, format, string_to_decode):
     """
@@ -904,7 +901,8 @@ class Subscription(Folder, XMLSyncUtils):
     #elif format is .... put here the other formats
     else:#if there is no format corresponding with format, raise an error
       LOG('decode : unknown or not implemented format :', INFO, format)
-      raise ValueError, "Sorry, the format %s is unknow or not implemented" % format
+      raise ValueError, "Sorry, the format %s is unknow or \
+            not implemented" % format
 
   def isDecodeEncodeTheSame(self, string_encoded, string_decoded, format):
     """

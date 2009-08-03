@@ -302,18 +302,20 @@ class XMLSyncUtilsMixin(SyncCode):
     #server.sendmail(fromaddr, "seb@localhost", msg)
     server.quit()
 
-  def getNamespace(self,nsmap):
+  def getNamespace(self, nsmap):
     """
-      return the namespace with prefix of xml   
+      Set the namespace prefix, check if argument is conform
+      and return the full namespace updated for syncml
+      nsmap -- The namespace of the received xml
     """
     #search urn compatible in the namespaces of nsmap
     urns = filter(lambda v: v.upper() in self.URN_LIST, nsmap.values())
-    if urns :
+    if urns:
       namespace = etree.FunctionNamespace(urns[0])
-      namespace.prefix='syncml'
+      namespace.prefix = 'syncml'
       return namespace
-    else :
-      raise ValueError, "Sorry, If have a namespace isn't supported"
+    else:
+      raise ValueError, "Sorry, the given namespace is not supported"
 
   def addXMLObject(self, cmd_id=0, object=None, xml_string=None,
                   more_data=0, gid=None, media_type=None):

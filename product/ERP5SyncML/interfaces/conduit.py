@@ -66,7 +66,7 @@ class IConduit(Interface):
     XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
   """
 
-  def constructContent(self, object, object_id, portal_type):
+  def constructContent(object, object_id, portal_type):
     """
     This allows to specify how to construct a new content.
     This is really usefull if you want to write your
@@ -81,7 +81,7 @@ class IConduit(Interface):
     return newObject, reset_local_roles boolean, reset_workflow boolean
     """
 
-  def addNode(self, xml=None, object=None, previous_xml=None,
+  def addNode(xml=None, object=None, previous_xml=None,
               object_id=None, sub_object=None, force=0, simulate=0, **kw):
     """
     A node is added
@@ -99,13 +99,13 @@ class IConduit(Interface):
     [object.getPath(),keyword,local_and_actual_value,subscriber_value]
     """
 
-  def deleteNode(self, xml=None, object=None, object_id=None, force=None,
+  def deleteNode(xml=None, object=None, object_id=None, force=None,
                  simulate=0, **kw):
     """
     A node is deleted
     """
 
-  def updateNode(self, xml=None, object=None, previous_xml=None, force=0,
+  def updateNode(xml=None, object=None, previous_xml=None, force=0,
                  simulate=0,  **kw):
     """
     A node is updated with some xupdate
@@ -116,12 +116,12 @@ class IConduit(Interface):
 
     """
 
-  def getGidFromObject(self, object):
+  def getGidFromObject(object):
     """
     return the Gid composed with the object informations
     """
 
-  def getGidFromXML(self, xml, namespace, gid_from_xml_list):
+  def getGidFromXML(xml, namespace, gid_from_xml_list):
     """
     return the Gid composed with xml informations
     """ 

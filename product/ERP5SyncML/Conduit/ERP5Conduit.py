@@ -481,7 +481,6 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     This will change the xml in order to change the update
     from the object to the subobject
     """
-    # XXX sometimes problems not resolve
     from copy import deepcopy
     xml_copy = deepcopy(xml)
     self.changeSubObjectSelect(xml_copy)
