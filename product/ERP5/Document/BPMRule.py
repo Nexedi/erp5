@@ -115,29 +115,29 @@ class BPMRule(Predicate, XMLObject):
   # Solvers
   security.declareProtected( Permissions.AccessContentsInformation,
                             'isDivergent')
-  def isDivergent(self, sim_mvt, ignore_list=[]):
+  def isDivergent(self, simulation_movement, ignore_list=[]):
     """
     Returns true if the Simulation Movement is divergent comparing to
     the delivery value
     """
-    delivery = sim_mvt.getDeliveryValue()
+    delivery = simulation_movement.getDeliveryValue()
     if delivery is None:
       return 0
 
-    if self.getDivergenceList(sim_mvt) == []:
+    if self.getDivergenceList(simulation_movement) == []:
       return 0
     else:
       return 1
 
   security.declareProtected(Permissions.View, 'getDivergenceList')
-  def getDivergenceList(self, sim_mvt):
+  def getDivergenceList(self, simulation_movement):
     """
     Return a list of messages that contains the divergences.
     """
     result_list = []
     for divergence_tester in self.contentValues(
                portal_type=self.getPortalDivergenceTesterTypeList()):
-      result = divergence_tester.explain(sim_mvt)
+      result = divergence_tester.explain(simulation_movement)
       result_list.extend(result)
     return result_list
 
@@ -173,25 +173,6 @@ class BPMRule(Predicate, XMLObject):
     This method might be overloaded"""
     return [applied_rule.getParentValue()]
 
-  def _getInputMovementAndPathList(self, applied_rule):
-    input_movement_list = self._getInputMovementList(applied_rule)
-    business_process = applied_rule.getBusinessProcessValue()
-
-    input_movement_and_path_list = []
-    business_path_list = []
-    for input_movement in input_movement_list:
-      for business_path in business_process.getPathValueList(
-                          self.getTradePhaseList(),
-                          input_movement):
-        input_movement_and_path_list.append((input_movement, business_path))
-        business_path not in business_path_list and business_path_list \
-            .append(business_path)
-
-    if len(business_path_list) > 1:
-      raise NotImplementedError
-
-    return input_movement_and_path_list
-
   def _generatePrevisionList(self, applied_rule, **kw):
     """
     Generate a list of dictionaries, that contain calculated content of
@@ -201,7 +182,8 @@ class BPMRule(Predicate, XMLObject):
     These previsions are returned as dictionaries.
     """
     prevision_dict_list = []
-    for input_movement, business_path in self._getInputMovementAndPathList(applied_rule):
+    for input_movement, business_path in self \
+        ._getInputMovementAndPathTupleList(applied_rule):
       prevision_dict_list.append(self._getExpandablePropertyDict(applied_rule,
           input_movement, business_path))
     return prevision_dict_list
@@ -234,6 +216,26 @@ class BPMRule(Predicate, XMLObject):
 
     return (immutable_movement_list, mutable_movement_list,
             deletable_movement_list)
+
+  def _getInputMovementAndPathTupleList(self, applied_rule):
+    """Returns list of tuples (movement, business_path)"""
+    input_movement_list = self._getInputMovementList(applied_rule)
+    business_process = applied_rule.getBusinessProcessValue()
+
+    input_movement_and_path_list = []
+    business_path_list = []
+    for input_movement in input_movement_list:
+      for business_path in business_process.getPathValueList(
+                          self.getTradePhaseList(),
+                          input_movement):
+        input_movement_and_path_list.append((input_movement, business_path))
+        business_path not in business_path_list and business_path_list \
+            .append(business_path)
+
+    if len(business_path_list) > 1:
+      raise NotImplementedError
+
+    return input_movement_and_path_list
 
   def _getCompensatedMovementList(self, applied_rule, **kw):
     """

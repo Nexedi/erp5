@@ -82,7 +82,7 @@ class BPMInvoiceTransactionRule(BPMRule, PredicateMatrix):
 
     These previsions are actually returned as dictionaries.
     """
-    input_movement, business_path = self._getInputMovementAndPathList(
+    input_movement, business_path = self._getInputMovementAndPathTupleList(
         applied_rule)[0]
     prevision_list = []
 
