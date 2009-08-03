@@ -15,7 +15,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts49309338.49</string> </value>
+            <value> <string>ts49309716.77</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -109,8 +109,8 @@ window.onload = function()\r\n
 \t\t\t\t\t\t\t\tborder-left: #000000 1px solid; border-bottom: #000000 1px solid">\r\n
 \t\t\t\t\t\t\t\t<span fcklang="DlgAboutVersion">version</span>\r\n
 \t\t\t\t\t\t\t\t<br />\r\n
-\t\t\t\t\t\t\t\t<b>2.6.4</b><br />\r\n
-\t\t\t\t\t\t\t\tBuild 21629</td>\r\n
+\t\t\t\t\t\t\t\t<b>2.6.4.1</b><br />\r\n
+\t\t\t\t\t\t\t\tBuild 23187</td>\r\n
 \t\t\t\t\t\t</tr>\r\n
 \t\t\t\t\t</table>\r\n
 \t\t\t\t</td>\r\n
@@ -200,7 +200,7 @@ document.write( \'<b>User Language<\\/b><br />\' + sUserLang ) ;\r\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>5684</int> </value>
+            <value> <int>5686</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

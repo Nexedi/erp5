@@ -15,7 +15,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts45749208.15</string> </value>
+            <value> <string>ts49309716.93</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -90,8 +90,8 @@ FCKeditor.MinHeight = 200 ;\r\n
  */\r\n
 FCKeditor.MinWidth = 750 ;\r\n
 \r\n
-FCKeditor.prototype.Version\t\t\t= \'2.6.4\' ;\r\n
-FCKeditor.prototype.VersionBuild\t= \'21629\' ;\r\n
+FCKeditor.prototype.Version\t\t\t= \'2.6.4.1\' ;\r\n
+FCKeditor.prototype.VersionBuild\t= \'23187\' ;\r\n
 \r\n
 FCKeditor.prototype.Create = function()\r\n
 {\r\n
@@ -369,7 +369,7 @@ function FCKeditor_IsCompatibleBrowser()\r\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <long>9606</long> </value>
+            <value> <int>9608</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
