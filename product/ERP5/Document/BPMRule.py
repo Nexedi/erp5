@@ -238,10 +238,9 @@ class BPMRule(Predicate, XMLObject):
     return input_movement_and_path_list
 
   def _getCompensatedMovementList(self, applied_rule, **kw):
-    """
-    Compute the difference between prevision and existing movements
+    """Compute the difference between prevision and existing movements
 
-    immutable movements need compensation, mutables needs to be modified
+    Immutable movements need compensation, mutable ones needs to be modified
 
     XXX For now, this implementation is too simple. It could be improved by
     using MovementGroups
@@ -285,10 +284,9 @@ class BPMRule(Predicate, XMLObject):
               prop_dict['quantity'] = movement.getQuantity() + \
                   q_diff
               break
-          # no modifiable movement was found, need to create one
           else:
-            prevision['quantity'] = q_diff
-            add_list.append(prevision)
+            # no modifiable movement was found, need to compensate by quantity
+            raise NotImplementedError('Need to generate quantity compensation')
 
         # Check the date
         for movement in p_matched_list:
@@ -326,9 +324,8 @@ class BPMRule(Predicate, XMLObject):
       else:
         # movement not modifiable, we can decide to create a compensation
         # with negative quantity
-        raise NotImplementedError(
-                "Can not create a compensation movement for %s" % \
-                movement.getRelativeUrl())
+        raise NotImplementedError("Tried to delete immutable movement %s" % \
+            movement.getRelativeUrl())
     return (add_list, modify_dict, delete_list)
 
   def _getExpandablePropertyDict(self, applied_rule, movement, business_path,
