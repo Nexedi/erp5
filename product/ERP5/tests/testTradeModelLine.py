@@ -2084,10 +2084,10 @@ class TestTradeModelLine(TestTradeModelLineMixin):
     """
     Test the return of getAggregatedAmountList in the case of many model lines
     depending each others. In this test, lines are created in the order of the
-    dependancies (it means that if a line A depend of a line B, line B is
+    dependencies (it means that if a line A depend of a line B, line B is
     created before A). This is the most easy case.
 
-    Dependance tree :
+    Dependency tree :
     ModelLineTaxContributingToTotalTax : A
     ModelLineDiscountContributingToTotalDiscount : B
     ModelLineTaxContributingToTotalTax2 : C
@@ -2147,12 +2147,12 @@ class TestTradeModelLine(TestTradeModelLineMixin):
     """
     Test the return of getAggregatedAmountList in the case of many model lines
     depending each others. In this test, lines are created in a random order,
-    not in the dependancies order (it means that if a line A depend of a 
+    not in the dependencies order (it means that if a line A depend of a 
     line B, line A can be created before line B). getAggregatedAmountList
-    should be able to handle this case and redo calculation unill all
-    dependancies are satified
+    should be able to handle this case and redo calculation until all
+    dependencies are satisfied
 
-    Dependance tree :
+    Dependency tree :
     ModelLineTaxContributingToTotalTax : A
     ModelLineDiscountContributingToTotalDiscount : B
     ModelLineTaxContributingToTotalTax2 : C
