@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2006 Nexedi SARL and Contributors. All Rights Reserved.
@@ -57,6 +58,9 @@ class IntrospectionTool(LogMixin, BaseTool):
   security.declareProtected(Permissions.ManagePortal, 'manage_overview')
   manage_overview = DTMLFile('explainIntrospectionTool', _dtmldir )
 
+  #
+  #   Remote menu management
+  #
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getFilteredActionDict')
   def getFilteredActionDict(self, user_name=_MARKER):
@@ -89,7 +93,7 @@ class IntrospectionTool(LogMixin, BaseTool):
                            'getModuleItemList')
   def getModuleItemList(self, user_name=_MARKER):
     """
-      Returns menu items for a given user
+      Returns module items for a given user
     """
     portal = self.getPortalObject()
     is_portal_manager = getToolByName(portal, 
@@ -108,6 +112,9 @@ class IntrospectionTool(LogMixin, BaseTool):
 
     return erp5_module_list
 
+  #
+  #   Local file access
+  #
   def _getLocalFile(self, REQUEST, RESPONSE, file_path, 
                          tmp_file_path='/tmp/', compressed=1):
     """
@@ -185,5 +192,103 @@ class IntrospectionTool(LogMixin, BaseTool):
     return self._getLocalFile(REQUEST, response,
                                file_path='var/Data.fs',
                                compressed=1)
+
+  #
+  #   Instance variable definition access
+  #
+  security.declareProtected(Permissions.ManagePortal, 'getSoftwareHome')
+  def getSoftwareHome(self):
+    """
+      EXPERIMENTAL - DEVELOPMENT
+
+      Get the value of SOFTWARE_HOME for zopectl startup script
+      or from zope.conf (whichever is most relevant)
+    """
+
+  security.declareProtected(Permissions.ManagePortal, 'setSoftwareHome')
+  def setSoftwareHome(self, path):
+    """
+      EXPERIMENTAL - DEVELOPMENT
+
+      Set the value of SOFTWARE_HOME for zopectl startup script
+      or from zope.conf (whichever is most relevant)
+
+      Rationale: multiple versions of ERP5 / Zope can be present
+      at the same time on the same system
+
+      WARNING: the list of possible path should be protected 
+      if possible (ex. /etc/erp5/software_home)
+    """
+
+  security.declareProtected(Permissions.ManagePortal, 'getPythonExecutable')
+  def getPythonExecutable(self):
+    """
+      Get the value of PYTHON for zopectl startup script
+      or from zope.conf (whichever is most relevant)
+    """
+
+  security.declareProtected(Permissions.ManagePortal, 'setPythonExecutable')
+  def setPythonExecutable(self, path):
+    """
+      Set the value of PYTHON for zopectl startup script
+      or from zope.conf (whichever is most relevant)
+
+      Rationale: some day Zope will no longer use python2.4
+
+      WARNING: the list of possible path should be protected 
+      if possible (ex. /etc/erp5/python)
+    """
+
+  security.declareProtected(Permissions.ManagePortal, 'getProductPath')
+  def getProductPath(self):
+    """
+      Get the value of SOFTWARE_HOME for zopectl startup script
+      or from zope.conf (whichever is most relevant)
+    """
+
+  security.declareProtected(Permissions.ManagePortal, 'setProductPath')
+  def setProductPath(self, path):
+    """
+      Set the value of SOFTWARE_HOME for zopectl startup script
+      or from zope.conf (whichever is most relevant)
+
+      Rationale: multiple versions of Products can be present
+      on the same system
+
+      WARNING: the list of possible path should be protected 
+      if possible (ex. /etc/erp5/python)
+    """
+
+  security.declareProtected(Permissions.ManagePortal, 'updateSVNProductList')
+  def updateSVNProductList(self, path_list, revision=None):
+    """
+      Allow developers to create local products from the SVN
+      in order to play with recent versions of the system
+
+      Rationale: we can not do more than that or we take too
+      much risks for security. Large projects should simply use
+      buildout installer (server level) and build a complex custom
+      software home or product home
+    """
+    pass
+
+
+  #
+  #   Library signature
+  #
+  security.declareProtected(Permissions.ManagePortal, 'getSystemSignatureDict')
+  def getSystemSignatureDict(self):
+    """
+      Returns a dictionnary with all versions of installed libraries
+
+      {
+         'python': '2.4.3'
+       , 'pysvn': '1.2.3'
+    
+     
+      NOTE: consider using autoconf / automake tools ?
+    """
+
+
 
 InitializeClass(IntrospectionTool)
