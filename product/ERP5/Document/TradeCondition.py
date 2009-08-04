@@ -293,20 +293,20 @@ class TradeCondition(Path, Transformation, XMLMatrix):
         'findEffectiveSpecialiseValueList')
     def findEffectiveSpecialiseValueList(self, context, start_date=None,
         stop_date=None, portal_type_list=None, effecive_model_list=None):
-      '''Returns a list of effective specialised objects representing
+      '''Return a list of effective specialised objects that is the
       inheritance tree.
-      An effective object is an object which start and stop_date are equal (or
-      included) to the range of the given start and stop_date.
-      If no start date and stop date are provided, findSpecialiseValueList is
-      returned
+      An effective object is an object which have start_date and stop_date
+      included to the range of the given parameters start_date and stop_date.
+      If no start_date and stop_date are provided, findSpecialiseValueList
+      result is returned.
 
-      Uses Breadth First Search.
+      This algorithm uses Breadth First Search.
       '''
       if start_date is None and stop_date is None:
-        # if dates are not defined, return the specalise_value_list
+        # if dates are not defined, return findSpecialiseValueList result
         return self.findSpecialiseValueList(context=context)
       if effecive_model_list is None:
-        effecive_model_list=[]
+        effecive_model_list = []
       visited_trade_condition_list = []
       if portal_type_list is None:
         portal_type_list = [self.getPortalType()]
@@ -326,6 +326,7 @@ class TradeCondition(Path, Transformation, XMLMatrix):
         visited_trade_condition_list = [model.getEffectiveModel(\
             start_date=start_date, stop_date=stop_date) for model in\
             model_list]
+      # remove None models
       effecive_model_list = [ob for ob in effecive_model_list if ob is not None]
       while len(effecive_model_list) != 0:
         specialise = effecive_model_list.pop(0)
