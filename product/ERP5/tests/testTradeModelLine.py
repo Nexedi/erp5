@@ -1355,9 +1355,6 @@ class TestTradeModelLine(TestTradeModelLineMixin):
       If Trade Condition is specialised by another Trade Condition they
       Trade Model Lines shall be merged.
     """
-    service_1 = self.createResource('Service')
-    service_2 = self.createResource('Service')
-
     trade_condition_1 = self.createTradeCondition()
     trade_condition_2 = self.createTradeCondition()
 
@@ -1365,16 +1362,47 @@ class TestTradeModelLine(TestTradeModelLineMixin):
 
     trade_condition_1_trade_model_line = self.createTradeModelLine(
         trade_condition_1,
-        resource_value = service_1)
+        reference='A')
 
     trade_condition_2_trade_model_line = self.createTradeModelLine(
         trade_condition_2,
-        resource_value = service_2)
+        reference='B')
 
     self.assertSameSet(
       [trade_condition_1_trade_model_line,
         trade_condition_2_trade_model_line],
       trade_condition_1.getTradeModelLineComposedList()
+    )
+
+  def test_TradeConditionTradeModelLineBasicCompositionWithOrder(self):
+    trade_condition_1 = self.createTradeCondition()
+    trade_condition_2 = self.createTradeCondition()
+    order = self.createOrder()
+
+    trade_condition_1.setSpecialiseValue(trade_condition_2)
+    order.setSpecialiseValue(trade_condition_1)
+
+    trade_condition_1_trade_model_line = self.createTradeModelLine(
+        trade_condition_1,
+        reference='A')
+
+    trade_condition_2_trade_model_line = self.createTradeModelLine(
+        trade_condition_2,
+        reference='B')
+
+    order_trade_model_line = self.createTradeModelLine(
+        order,
+        reference='C')
+
+    self.assertSameSet(
+      [trade_condition_1_trade_model_line, trade_condition_2_trade_model_line],
+      trade_condition_1.getTradeModelLineComposedList()
+    )
+
+    self.assertSameSet(
+      [trade_condition_1_trade_model_line, trade_condition_2_trade_model_line,
+        order_trade_model_line],
+      trade_condition_1.getTradeModelLineComposedList(context=order)
     )
 
   def test_TradeConditionCircularCompositionIsSafe(self):
@@ -1423,44 +1451,6 @@ class TestTradeModelLine(TestTradeModelLineMixin):
     self.assertEquals(
       [trade_condition_1, trade_condition_2, trade_condition_3,
        trade_condition_4], speciliase_value_list)
-
-  def test_TradeConditionTradeModelLineBasicCompositionWithOrder(self):
-    service_1 = self.createResource('Service')
-    service_2 = self.createResource('Service')
-    service_3 = self.createResource('Service')
-
-    trade_condition_1 = self.createTradeCondition()
-    trade_condition_2 = self.createTradeCondition()
-    order = self.createOrder()
-
-    trade_condition_1.setSpecialiseValue(trade_condition_2)
-    order.setSpecialiseValue(trade_condition_1)
-
-    trade_condition_1_trade_model_line = self.createTradeModelLine(
-        trade_condition_1,
-        reference='A',
-        resource_value=service_1)
-
-    trade_condition_2_trade_model_line = self.createTradeModelLine(
-        trade_condition_2,
-        reference='B',
-        resource_value=service_2)
-
-    order_trade_model_line = self.createTradeModelLine(
-        order,
-        reference='C',
-        resource_value=service_3)
-
-    self.assertSameSet(
-      [trade_condition_1_trade_model_line, trade_condition_2_trade_model_line],
-      trade_condition_1.getTradeModelLineComposedList()
-    )
-
-    self.assertSameSet(
-      [trade_condition_1_trade_model_line, trade_condition_2_trade_model_line,
-        order_trade_model_line],
-      trade_condition_1.getTradeModelLineComposedList(context=order)
-    )
 
   def test_TradeConditionTradeModelLineReferenceIsShadowingComposition(self):
     trade_condition_1 = self.createTradeCondition()
