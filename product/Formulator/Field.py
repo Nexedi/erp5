@@ -170,7 +170,6 @@ class Field:
 
     def generate_subfield_key(self, id, validation=0, key=None):
       """Generate the key Silva uses to render a sub field.
-         Added key parameter for ERP5
          Added key parameter for ERP5 in order to be compatible with listbox/matrixbox
       """
       if key is None: key = self.id
