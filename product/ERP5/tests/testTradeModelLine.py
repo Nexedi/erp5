@@ -55,7 +55,8 @@ class TestTradeModelLineMixin(TestBPMMixin):
         title='Currency', base_unit_quantity=self.base_unit_quantity))
 
   def stepCreateBusinessProcess(self, sequence=None, **kw):
-    sequence.edit(business_process=self.createBusinessProcess())
+    sequence.edit(business_process=self.createBusinessProcess(
+      title=self.id()))
 
   def stepCreateBusinessPath(self, sequence=None, **kw):
     business_process = sequence.get('business_process')
