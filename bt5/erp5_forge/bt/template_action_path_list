@@ -7,6 +7,7 @@ Bug | new_file
 Bug | view
 Business Template | commit
 Business Template | create_report
+Business Template | manage_field_library
 Business Template | svn_cleanup_locks
 Business Template | svn_conflicted_files
 Business Template | svn_unversioned_files

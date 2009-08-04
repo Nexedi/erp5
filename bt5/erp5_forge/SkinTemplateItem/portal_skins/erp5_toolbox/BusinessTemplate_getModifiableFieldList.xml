@@ -1,0 +1,304 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string># vim:ft=python:\n
+from Products.ERP5Type.Document import newTempBase\n
+field_list = []\n
+\n
+action_title_item_list = [\n
+  [\'0_keep_non_proxy_field\', \'To be proxified\'],\n
+  [\'0_keep_dead_proxy_field\', \'Dead Proxy Field\'],\n
+  [\'0_check_delegated_value\', \'Check Delegated Values\'],\n
+  [\'1_create_form\', \'Create Form\'],\n
+  [\'2_unproxify_field\', \'Unproxify Field\'],\n
+  [\'4_delete_form\', \'Delete Old Field Library\'],\n
+  ]\n
+action_title_dict = dict(action_title_item_list)\n
+\n
+field_library_id_dict = {\n
+  \'erp5_pdm\': \'Base_viewPDMFieldLibrary\',\n
+}\n
+\n
+modified_object_dict = {}\n
+\n
+def calculateFieldLibraryID(skin_folder_id):\n
+  # For each skin folder, there could be at most one Field Library\n
+  # The field library name could be automatically calculated or hardcoded in\n
+  # the script\n
+  if field_library_id_dict.has_key(skin_folder_id):\n
+    field_library_id = field_library_id_dict[skin_folder_id]\n
+  else:\n
+    field_library_id = \'Base_view%sFieldLibrary\' % \\\n
+      \'\'.join([x.capitalize() for x in skin_folder_id.split(\'_\')[1:]])\n
+  return field_library_id\n
+\n
+def getForm(skin_folder, form_id):\n
+  try:\n
+    form = skin_folder[form_id]\n
+  except KeyError:\n
+    form = None\n
+  return form\n
+\n
+for skin_folder_id in context.getTemplateSkinIdList():\n
+  skin_folder = getattr(context.portal_skins, skin_folder_id)\n
+  field_library_id = calculateFieldLibraryID(skin_folder_id)\n
+  field_library = getForm(skin_folder, field_library_id)\n
+\n
+  # Check if the Field Library exists\n
+  if field_library is None:\n
+    # Field library has to be created\n
+    modified_object_dict[\'%s/%s\' % (skin_folder_id, field_library_id)] = \\\n
+                                                              \'1_create_form\'\n
+\n
+  # Find old field library to delete\n
+  for object_id in skin_folder.objectIds():\n
+    if (object_id.endswith(\'FieldLibrary\') and \\\n
+        (object_id != field_library_id)):\n
+      obj = getForm(skin_folder, object_id)\n
+      if obj is None:\n
+        raise KeyError, \'%s/%s\' % (skin_folder_id, object_id)\n
+      elif obj.meta_type == \'ERP5 Form\':\n
+        modified_object_dict[\'%s/%s\' % (skin_folder_id, object_id)] = \\\n
+                                                                  \'4_delete_form\'\n
+      else:\n
+        # Not an ERP5 Form, so, do nothing\n
+        pass\n
+\n
+  # Check all existing fields\n
+  for form in skin_folder.objectValues():\n
+    if form.meta_type in (\'ERP5 Form\', \'ERP5 Report\'):\n
+      form_id = form.getId()\n
+      form_path = \'%s/%s\' % (skin_folder_id, form_id)\n
+\n
+      if modified_object_dict.has_key(form_path):\n
+        # The form is a Field Library\n
+        if modified_object_dict[form_path] == \'4_delete_form\':\n
+          # As the form will be deleted, no need to manage its fields\n
+          pass\n
+        else:\n
+          raise KeyError, \'Unexpected form handling %s for %s\' % \\\n
+              (modified_object_dict[form_path], form_path)\n
+      else:\n
+\n
+        if form_id == field_library_id:\n
+          # Check that proxy field are proxified to erp5_base or erp5_core\n
+          for field in form.objectValues():\n
+            # XXX Should check if this field is used as a template\n
+            field_path = \'%s/%s/%s\' % (skin_folder_id, form_id, field.getId())\n
+            if field.meta_type == \'ProxyField\':\n
+              if field.getTemplateField() is None:\n
+                modified_object_dict[field_path] = \'0_keep_dead_proxy_field\'\n
+              else:\n
+                template_form_id = field.get_value(\'form_id\')\n
+                if template_form_id not in (\n
+                  \'Base_viewDialogFieldLibrary\',\n
+                  \'Base_viewFieldLibrary\',\n
+                  \'Base_viewReportFieldLibrary\',\n
+                  ):\n
+                  modified_object_dict[field_path] = \'2_unproxify_field\'\n
+            else:\n
+              # Do not force proxification of field library field.\n
+              # The nice developper probably have a good reason not to do it.\n
+              modified_object_dict[field_path] = \'0_keep_non_proxy_field\'\n
+        else:\n
+          # Check that proxy field are proxified to field library\n
+          for field in form.objectValues():\n
+            field_path = \'%s/%s/%s\' % (skin_folder_id, form_id, field.getId())\n
+            if field.meta_type == \'ProxyField\':\n
+              if field.getTemplateField() is None:\n
+                modified_object_dict[field_path] = \'0_keep_dead_proxy_field\'\n
+              else:\n
+                template_form_id = field.get_value(\'form_id\')\n
+                # XXX Only considere standard bt5 for now\n
+                template_form_path = \'%s/%s\' % (skin_folder_id, template_form_id)\n
+                if template_form_id != field_library_id:\n
+                  modified_object_dict[field_path] = \'2_unproxify_field\'\n
+                  # XXX Should proxify to a library\'s field\n
+                else:\n
+                  # Check that there is no delegated values\n
+                  if field.delegated_list:\n
+                    # Found some delegated list\n
+                    modified_object_dict[field_path] = \'0_check_delegated_value\'\n
+                  else:\n
+                    pass\n
+            else:\n
+              # Do not force proxification of field.\n
+              # The nice developper probably have a good reason not to do it.\n
+              modified_object_dict[field_path] = \'0_keep_non_proxy_field\'\n
+\n
+i = 0\n
+for key, value in modified_object_dict.items():\n
+  line = newTempBase(context, \'tmp_install_%s\' %(str(i)))\n
+ \n
+  if value.startswith(\'0_\'):\n
+    choice = []\n
+  else:\n
+    choice = [value]\n
+  line.edit(\n
+    object_id=key,\n
+    choice=choice,\n
+    choice_item_list=[[action_title_dict[value], value]],\n
+  )\n
+  line.setUid(\'new_%s\' % key)\n
+  field_list.append(line)\n
+  i += 1                                  \n
+\n
+field_list.sort(key=lambda x:(x.choice_item_list[0][1], x.object_id))\n
+\n
+\n
+return field_list\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>**kw</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>0</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>kw</string>
+                            <string>Products.ERP5Type.Document</string>
+                            <string>newTempBase</string>
+                            <string>field_list</string>
+                            <string>action_title_item_list</string>
+                            <string>dict</string>
+                            <string>action_title_dict</string>
+                            <string>field_library_id_dict</string>
+                            <string>modified_object_dict</string>
+                            <string>calculateFieldLibraryID</string>
+                            <string>getForm</string>
+                            <string>_getiter_</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>skin_folder_id</string>
+                            <string>getattr</string>
+                            <string>skin_folder</string>
+                            <string>field_library_id</string>
+                            <string>field_library</string>
+                            <string>None</string>
+                            <string>_write_</string>
+                            <string>object_id</string>
+                            <string>obj</string>
+                            <string>KeyError</string>
+                            <string>form</string>
+                            <string>form_id</string>
+                            <string>form_path</string>
+                            <string>_getitem_</string>
+                            <string>field</string>
+                            <string>field_path</string>
+                            <string>template_form_id</string>
+                            <string>template_form_path</string>
+                            <string>i</string>
+                            <string>key</string>
+                            <string>value</string>
+                            <string>str</string>
+                            <string>line</string>
+                            <string>choice</string>
+                            <string>_inplacevar_</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>BusinessTemplate_getModifiableFieldList</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
