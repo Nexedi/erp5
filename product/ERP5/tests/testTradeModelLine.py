@@ -1757,7 +1757,6 @@ class TestTradeModelLine(TestTradeModelLineMixin):
   """ + AGGREGATED_AMOUNT_SIMULATION_CHECK_SEQUENCE_STRING
 
   def test_TradeModelRuleSimulationExpandOrderSpecialise(self):
-    """Tests tree of simulations from Trade Model Rule"""
     sequence_list = SequenceList()
     sequence_string = self \
         .TRADE_MODEL_RULE_SIMULATION_ORDER_SPECIALISED_SEQUENCE_STRING
@@ -1765,7 +1764,6 @@ class TestTradeModelLine(TestTradeModelLineMixin):
     sequence_list.play(self)
 
   def test_TradeModelRuleSimulationReexpandOrderSpecialise(self):
-    """Tests tree of simulations from Trade Model Rule with reexpanding"""
     sequence_list = SequenceList()
     sequence_string = self \
         .TRADE_MODEL_RULE_SIMULATION_ORDER_SPECIALISED_SEQUENCE_STRING+ """
@@ -1817,9 +1815,32 @@ class TestTradeModelLine(TestTradeModelLineMixin):
     sequence_list.play(self)
 
   def test_TradeModelRuleSimulationBuildInvoice(self):
-    """Check that invoice lines on invoice are correctly set"""
     sequence_list = SequenceList()
     sequence_string = self.TRADE_MODEL_RULE_SIMULATION_SEQUENCE_STRING
+    sequence_string += """
+              ConfirmOrder
+              Tic
+    """ + self.AGGREGATED_AMOUNT_SIMULATION_CHECK_SEQUENCE_STRING + """
+              GetPackingList
+              PackPackingList
+              Tic
+    """ + self.AGGREGATED_AMOUNT_SIMULATION_CHECK_SEQUENCE_STRING + """
+              StartPackingList
+              StopPackingList
+              DeliverPackingList
+              Tic
+    """ + self.AGGREGATED_AMOUNT_SIMULATION_CHECK_SEQUENCE_STRING + """
+              GetInvoice
+              CheckInvoiceCausalityStateSolved
+              CheckInvoiceNormalMovements
+    """
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
+
+  def test_TradeModelRuleSimulationBuildInvoiceOrderSpecialise(self):
+    sequence_list = SequenceList()
+    sequence_string = self\
+        .TRADE_MODEL_RULE_SIMULATION_ORDER_SPECIALISED_SEQUENCE_STRING
     sequence_string += """
               ConfirmOrder
               Tic
