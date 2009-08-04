@@ -94,11 +94,12 @@
                     <value>
                       <list>
                         <string>my_title</string>
+                        <string>my_reference</string>
                         <string>my_destination_section_title</string>
                         <string>my_destination_title</string>
                         <string>my_destination_decision_title</string>
-                        <string>my_price_currency</string>
                         <string>my_specialise_title_list</string>
+                        <string>my_price_currency</string>
                         <string>my_incoterm</string>
                         <string>my_delivery_mode</string>
                       </list>
