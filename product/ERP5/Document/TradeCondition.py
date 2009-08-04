@@ -292,7 +292,7 @@ class TradeCondition(Path, Transformation, XMLMatrix):
     security.declareProtected(Permissions.AccessContentsInformation,
         'findEffectiveSpecialiseValueList')
     def findEffectiveSpecialiseValueList(self, context, start_date=None,
-        stop_date=None, portal_type_list=None, effecive_model_list=None):
+        stop_date=None, portal_type_list=None, effective_model_list=None):
       '''Return a list of effective specialised objects that is the
       inheritance tree.
       An effective object is an object which have start_date and stop_date
@@ -305,8 +305,8 @@ class TradeCondition(Path, Transformation, XMLMatrix):
       if start_date is None and stop_date is None:
         # if dates are not defined, return findSpecialiseValueList result
         return self.findSpecialiseValueList(context=context)
-      if effecive_model_list is None:
-        effecive_model_list = []
+      if effective_model_list is None:
+        effective_model_list = []
       visited_trade_condition_list = []
       if portal_type_list is None:
         portal_type_list = [self.getPortalType()]
@@ -315,21 +315,21 @@ class TradeCondition(Path, Transformation, XMLMatrix):
         effective_model = context.getEffectiveModel(
             start_date=start_date, stop_date=stop_date)
         if effective_model is not None:
-          effecive_model_list = [effective_model]
+          effective_model_list = [effective_model]
           visited_trade_condition_list = [effective_model]
       else:
         model_list = context.getSpecialiseValueList(\
             portal_type=portal_type_list)
-        effecive_model_list = [model.getEffectiveModel(\
+        effective_model_list = [model.getEffectiveModel(\
             start_date=start_date, stop_date=stop_date) for model in\
             model_list]
         visited_trade_condition_list = [model.getEffectiveModel(\
             start_date=start_date, stop_date=stop_date) for model in\
             model_list]
       # remove None models
-      effecive_model_list = [ob for ob in effecive_model_list if ob is not None]
-      while len(effecive_model_list) != 0:
-        specialise = effecive_model_list.pop(0)
+      effective_model_list = [ob for ob in effective_model_list if ob is not None]
+      while len(effective_model_list) != 0:
+        specialise = effective_model_list.pop(0)
         effective_specialise = specialise.getEffectiveModel(start_date=start_date,
           stop_date=stop_date)
         child_list = []
@@ -345,7 +345,7 @@ class TradeCondition(Path, Transformation, XMLMatrix):
           if effective_model not in intersection:
             # don't add model that are already been visited. This permit to
             # visit all model tree, and to not have circular dependency
-            effecive_model_list.append(effective_model)
+            effective_model_list.append(effective_model)
             visited_trade_condition_list.append(effective_model)
       return visited_trade_condition_list
 
