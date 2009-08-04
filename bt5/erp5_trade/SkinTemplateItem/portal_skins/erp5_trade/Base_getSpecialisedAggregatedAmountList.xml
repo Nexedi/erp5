@@ -55,7 +55,7 @@
             <key> <string>_body</string> </key>
             <value> <string>specialise = context.getSpecialiseValue(portal_type=(\'Purchase Trade Condition\',\'Sale Trade Condition\'))\n
 \n
-if specialise:\n
+if specialise is not None:\n
   return specialise.getAggregatedAmountList(context)\n
 \n
 return []\n
@@ -100,6 +100,7 @@ return []\n
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>specialise</string>
+                            <string>None</string>
                           </tuple>
                         </value>
                     </item>
