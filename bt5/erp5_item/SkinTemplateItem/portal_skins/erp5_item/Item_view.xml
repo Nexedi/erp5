@@ -94,6 +94,7 @@
                         <string>my_variation_category_list</string>
                         <string>my_current_owner</string>
                         <string>my_current_site</string>
+                        <string>my_origin</string>
                         <string>your_item_extra_property_list</string>
                       </list>
                     </value>

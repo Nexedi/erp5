@@ -13,12 +13,12 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
                 <string>columns</string>
-                <string>sort</string>
+                <string>editable_columns</string>
                 <string>list_method</string>
                 <string>selection_name</string>
-                <string>editable_columns</string>
+                <string>sort</string>
+                <string>title</string>
                 <string>url_columns</string>
               </list>
             </value>
@@ -99,6 +99,10 @@
                         <tuple>
                           <string>node_title</string>
                           <string>Site or Warehouse</string>
+                        </tuple>
+                        <tuple>
+                          <string>source_title</string>
+                          <string>Origin</string>
                         </tuple>
                         <tuple>
                           <string>section_title</string>
@@ -193,6 +197,10 @@
                         </tuple>
                         <tuple>
                           <string>node_title</string>
+                          <string>Brain_getItemExplanationUrl</string>
+                        </tuple>
+                        <tuple>
+                          <string>source_title</string>
                           <string>Brain_getItemExplanationUrl</string>
                         </tuple>
                         <tuple>

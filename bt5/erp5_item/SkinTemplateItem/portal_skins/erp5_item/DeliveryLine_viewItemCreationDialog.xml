@@ -112,6 +112,8 @@
                         <string>my_quantity_unit</string>
                         <string>my_total_quantity</string>
                         <string>my_simulation_quantity</string>
+                        <string>my_destination_section_title</string>
+                        <string>my_source_section_title</string>
                       </list>
                     </value>
                 </item>

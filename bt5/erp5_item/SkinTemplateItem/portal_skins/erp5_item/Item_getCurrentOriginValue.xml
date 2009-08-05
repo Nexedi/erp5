@@ -53,46 +53,22 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from Products.ERP5Type.Document import newTempBase\n
-catalog = context.portal_catalog.getResultValue\n
-if current:\n
-  method = context.portal_simulation.getCurrentTrackingList\n
-else:\n
-  method = context.portal_simulation.getTrackingList\n
+            <value> <string>from DateTime import DateTime\n
 \n
-uid = context.getUid()\n
+if at_date is None:\n
+  at_date = DateTime()\n
 \n
-history_list = []\n
+last_affectation_list = context.portal_simulation.getCurrentTrackingList(\n
+                            item=context.getRelativeUrl(), at_date=at_date)\n
 \n
-simulation_state = context.getPortalCurrentInventoryStateList() \\\n
-                                  + context.getPortalTransitInventoryStateList() \\\n
-                                  + context.getPortalReservedInventoryStateList()\n
+if len(last_affectation_list) == 0:\n
+  return None\n
 \n
-kw[\'item.simulation_state\'] = simulation_state\n
-for res in method(aggregate_uid=uid, **kw):\n
-  history = newTempBase(context, str(len(history_list)))\n
-  explanation = catalog(uid=res.delivery_uid)\n
-  node_value = catalog(uid=res.node_uid)\n
-  section_value = catalog(uid=res.section_uid)\n
-  resource_value = catalog(uid=res.resource_uid) \n
-  history.edit(\n
-      #uid = catalog(uid=res.uid).getTitle(),\n
-      date=res.getDate(),\n
-      node_title=node_value is not None and node_value.getTitle() or None,\n
-      source_title=explanation.getSourceTitle(),\n
-      section_title=section_value is not None and section_value.getTitle() or None,\n
-      resource_title=resource_value is not None and resource_value.getTitle() or None,\n
-      explanation=explanation.getTitle(),\n
-      translated_portal_type = explanation.getTranslatedPortalType(),\n
-      quantity = explanation.getQuantity(),\n
-      url=explanation.absolute_url(),\n
-      variation_category_item_list = [x[0] for x in explanation.getVariationCategoryItemList()],\n
-      simulation_state=explanation.getTranslatedSimulationStateTitle(),\n
-  )\n
- \n
-  history_list.append(history)\n
-  \n
-return history_list\n
+if last_affectation_list[0].node_uid is not None:\n
+  site = context.portal_catalog.getObject(last_affectation_list[0].delivery_uid)\n
+  return site\n
+\n
+return None\n
 </string> </value>
         </item>
         <item>
@@ -103,7 +79,7 @@ return history_list\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>current=1, *args, **kw</string> </value>
+            <value> <string>at_date=None</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -129,34 +105,15 @@ return history_list\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>current</string>
-                            <string>args</string>
-                            <string>kw</string>
-                            <string>Products.ERP5Type.Document</string>
-                            <string>newTempBase</string>
+                            <string>at_date</string>
+                            <string>DateTime</string>
+                            <string>None</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>catalog</string>
-                            <string>method</string>
-                            <string>uid</string>
-                            <string>history_list</string>
-                            <string>simulation_state</string>
-                            <string>_write_</string>
-                            <string>_getiter_</string>
-                            <string>_apply_</string>
-                            <string>res</string>
-                            <string>str</string>
+                            <string>last_affectation_list</string>
                             <string>len</string>
-                            <string>history</string>
-                            <string>explanation</string>
-                            <string>node_value</string>
-                            <string>section_value</string>
-                            <string>resource_value</string>
-                            <string>None</string>
-                            <string>append</string>
-                            <string>$append0</string>
-                            <string>x</string>
                             <string>_getitem_</string>
+                            <string>site</string>
                           </tuple>
                         </value>
                     </item>
@@ -169,13 +126,13 @@ return history_list\n
             <key> <string>func_defaults</string> </key>
             <value>
               <tuple>
-                <int>1</int>
+                <none/>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Item_getTrackingList</string> </value>
+            <value> <string>Item_getCurrentOriginValue</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
