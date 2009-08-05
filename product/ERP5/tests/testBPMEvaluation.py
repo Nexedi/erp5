@@ -180,7 +180,8 @@ class TestBPMEvaluationDefaultProcessMixin:
     self._createBusinessStateList()
 
     self.delivery_path = self.createBusinessPath(self.business_process,
-        predecessor_value=self.ordered_state, successor_value=delivered_state,
+        predecessor_value=self.ordered_state,
+        successor_value=self.delivered_state,
         trade_phase='default/delivery',
         deliverable=1,
         completed_state_list=['delivered'],
