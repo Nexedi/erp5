@@ -1,3 +1,6 @@
+2009-08-05 tatuya
+* Fix 'Generate POT File' function when there is a PageTemplate which is using nested i18n block and using tal:repeat in the block
+
 2009-06-30 romain
 * Revert latest proxy field library simplification, as the design was not finalized.
 

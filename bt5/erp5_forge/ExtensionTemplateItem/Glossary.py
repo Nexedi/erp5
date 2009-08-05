@@ -130,7 +130,7 @@ from TAL.DummyEngine import DummyEngine
 class MyDummyEngine(DummyEngine):
 
   def evaluate(self, expression):
-    return None
+    return [] 
 
 
 class MyDummyTALInterpreter(TALInterpreter):
