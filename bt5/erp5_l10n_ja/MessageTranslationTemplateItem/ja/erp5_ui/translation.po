@@ -1,16 +1,12 @@
 msgid ""
-msgstr ""
-"Project-Id-Version: ERP5 User Interface\n"
-"POT-Creation-Date: 2006-06-30 10:06+CET\n"
-"PO-Revision-Date: 2006-06-30 10:06+CET\n"
+msgstr "Project-Id-Version: ERP5 Localized Interface\n"
+"POT-Creation-Date: 2009-08-04 07:02+CET\n"
+"PO-Revision-Date: 2009-08-04 07:02+CET\n"
 "Last-Translator:  <>\n"
 "Language-Team: ja <>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-
-msgid "${number} item(s) selected"
-msgstr "${number} 個のアイテムが選択されています"
 
 msgid "${number} record(s)"
 msgstr "${number} レコード"
@@ -18,98 +14,740 @@ msgstr "${number} レコード"
 msgid "${page} of ${total_pages}"
 msgstr "${page} / ${total_pages}"
 
+msgid "${template_title} (Template)"
+msgstr "${template_title} (テンプレート)"
+
+msgid "${this_portal_type} related to ${that_portal_type} : ${that_title}."
+msgstr "${this_portal_type} は ${that_portal_type} と関連があります: ${that_title}。"
+
+msgid "- ${number} item(s) selected"
+msgstr "- ${number} 個のアイテムが選択されています"
+
+msgid "-- Developper Mode --"
+msgstr "-- 開発者モード --"
+
 msgid "-- Object --"
 msgstr "-- オブジェクト --"
 
 msgid "-- Others --"
 msgstr "-- その他 --"
 
+msgid "-- Select Classification --"
+msgstr "-- 分類を選択してください --"
+
+msgid "-- Select Project --"
+msgstr "-- プロジェクトを選択してください --"
+
 msgid "-- User --"
 msgstr "-- ユーザ --"
 
-msgid "Account"
-msgstr "勘定"
+msgid "-- Workflows --"
+msgstr "-- ワークフロー --"
 
-msgid "Accounting"
-msgstr "会計"
+msgid "Accept Offer"
+msgstr "依頼を受け入れる"
+
+msgid "Accept"
+msgstr "受け入れる"
+
+msgid "Account Module"
+msgstr "勘定科目モジュール"
+
+msgid "Account Name"
+msgstr "勘定科目名"
+
+msgid "Account Statement"
+msgstr "口座明細書"
+
+msgid "Account Type"
+msgstr "勘定科目種別"
+
+msgid "Account Workflow"
+msgstr "勘定科目ワークフロー"
+
+msgid "Account for Bank Line"
+msgstr "銀行ラインの勘定科目"
+
+msgid "Account"
+msgstr "勘定科目"
 
 msgid "Accounting Lines"
-msgstr "会計の行"
+msgstr "会計ライン"
+
+msgid "Accounting Operation Date"
+msgstr "記帳日"
+
+msgid "Accounting Period"
+msgstr "会計期間"
+
+msgid "Accounting Periods"
+msgstr "会計期間"
+
+msgid "Accounting Preference"
+msgstr "会計の設定"
+
+msgid "Accounting Preferences"
+msgstr "会計の設定"
+
+msgid "Accounting Rule Cell Line"
+msgstr "会計規則セルライン"
+
+msgid "Accounting Rule Cell"
+msgstr "会計規則セル"
+
+msgid "Accounting Transaction Line added."
+msgstr "会計取引ラインを追加しました。"
+
+msgid "Accounting Transaction Line"
+msgstr "会計取引ライン"
+
+msgid "Accounting Transaction Lines"
+msgstr "会計取引ライン"
+
+msgid "Accounting Transaction Module"
+msgstr "会計取引モジュール"
+
+msgid "Accounting Transaction Title"
+msgstr "会計取引のタイトル"
 
 msgid "Accounting Transaction"
 msgstr "会計取引"
 
-msgid "Accounting Transaction Line"
-msgstr "会計取引の行"
+msgid "Accounting Transactions to Start"
+msgstr "開始すべき会計取引"
 
-msgid "Accounting Transaction Lines"
-msgstr "会計取引の行"
+msgid "Accounting Transactions to Validate"
+msgstr "承認すべき会計取引"
 
 msgid "Accounting Transactions"
 msgstr "会計取引"
 
 msgid "Accounting View"
-msgstr "会計閲覧"
+msgstr "会計"
+
+msgid "Accounting Workflow"
+msgstr "会計ワークフロー"
+
+msgid "Accounting"
+msgstr "会計"
+
+msgid "Accounts to Validate"
+msgstr "承認すべき勘定科目"
+
+msgid "Accounts"
+msgstr "勘定科目"
+
+msgid "Action"
+msgstr "アクション"
 
 msgid "Action..."
 msgstr "実行..."
 
-msgid "Activity"
-msgstr "活動"
+msgid "Active Preference"
+msgstr "使用中の設定"
+
+msgid "Active Processes"
+msgstr "アクティブ・プロセス"
+
+msgid "Active"
+msgstr "使用中"
+
+msgid "Activity Code"
+msgstr "法人番号"
 
 msgid "Activity Pending"
-msgstr "アクティヴィティが保留中"
+msgstr "アクティビティが保留中"
+
+msgid "Activity"
+msgstr "業種"
+
+msgid "Actor"
+msgstr "実行したユーザ"
+
+msgid "Add ${document_template}"
+msgstr "${document_template} を追加する"
 
 msgid "Add ${portal_type}"
-msgstr "${portal_type} を追加"
+msgstr "${portal_type} を追加する"
+
+msgid "Additional Payments"
+msgstr "追加支払"
+
+msgid "Additional Price"
+msgstr "追加価格"
+
+msgid "Additional Term (days)"
+msgstr "追加期間 (日数)"
 
 msgid "Address"
 msgstr "住所"
 
+msgid "Advanced Search"
+msgstr "高度な検索"
+
+msgid "Agent Privilege"
+msgstr "代理人の特権"
+
+msgid "Agent"
+msgstr "代理人"
+
+msgid "Agents"
+msgstr "代理人"
+
+msgid "Aggregation Level"
+msgstr "まとめる期間"
+
+msgid "Alarm Tool"
+msgstr "アラームツール"
+
+msgid "Alarm"
+msgstr "アラーム"
+
+msgid "Alarms"
+msgstr "アラーム"
+
+msgid "All Documents"
+msgstr "全てのドキュメント"
+
+msgid "Amortisation"
+msgstr "償却費"
+
+msgid "Amount"
+msgstr "数量"
+
+msgid "An email has been sent to you."
+msgstr "あなたのメール・アドレスに送信しました。"
+
+msgid "Answered"
+msgstr "回答済み"
+
+msgid "Applied Rule"
+msgstr "適用された規則"
+
+msgid "Apply Purchase Trade Condition"
+msgstr "購入の取引条件を適用する"
+
+msgid "Apply Sale Trade Condition"
+msgstr "販売の取引条件を適用する"
+
+msgid "Area"
+msgstr "地域"
+
+msgid "Asset"
+msgstr "資産"
+
+msgid "Assigned"
+msgstr "割当済み"
+
+msgid "Assignee"
+msgstr "担当者"
+
+msgid "Assignment Start Date"
+msgstr "割当開始日"
+
+msgid "Assignment Stop Date"
+msgstr "割当終了日"
+
+msgid "Assignment Validation Workflow"
+msgstr "割当承認ワークフロー"
+
 msgid "Assignment"
-msgstr "職"
+msgstr "割当"
+
+msgid "Assignments"
+msgstr "割当"
+
+msgid "At Date"
+msgstr "終了日 (指定日を含む)"
+
+msgid "At least one section must be defined."
+msgstr "少なくとも一つの取引部門の定義が必要です。"
+
+msgid "Attach Document"
+msgstr "文書を添付する"
 
 msgid "Attachments"
 msgstr "添付"
 
+msgid "Auto Planned"
+msgstr "自動的に予定中"
+
+msgid "Available"
+msgstr "利用可能"
+
+msgid "Balance Sheet"
+msgstr "貸借対照表"
+
+msgid "Balance Transaction Line"
+msgstr "残高取引ライン"
+
+msgid "Balance Transaction Lines"
+msgstr "残高取引ライン"
+
+msgid "Balance Transaction"
+msgstr "残高取引"
+
+msgid "Balance"
+msgstr "残高"
+
+msgid "Bank Account Number"
+msgstr "銀行口座番号"
+
+msgid "Bank Account Type"
+msgstr "口座種別"
+
 msgid "Bank Account"
 msgstr "銀行口座"
 
+msgid "Bank Accounts"
+msgstr "銀行口座"
+
+msgid "Bank Code"
+msgstr "銀行コード"
+
+msgid "Bank Country Code"
+msgstr "国番号"
+
+msgid "Bank"
+msgstr "銀行"
+
+msgid "Base Application"
+msgstr "適用する計算基礎項目"
+
+msgid "Base Category"
+msgstr "ベース・カテゴリー"
+
+msgid "Base Contribution"
+msgstr "計算基礎対象"
+
+msgid "Base Domain"
+msgstr "ベース・ドメイン"
+
+msgid "Base Price Variation Axes"
+msgstr "基本価格のバリエーションの種類"
+
+msgid "Base Price"
+msgstr "基本価格"
+
+msgid "Base"
+msgstr "基本"
+
+msgid "Begin Date"
+msgstr "開始日"
+
+msgid "Begin"
+msgstr "開始"
+
+msgid "Bill of Materials and Operations"
+msgstr "部品表・工程表"
+
+msgid "Birth Date"
+msgstr "生年月日"
+
+msgid "Birth Name"
+msgstr "旧姓"
+
+msgid "Birthday"
+msgstr "誕生日"
+
+msgid "Block Account"
+msgstr "勘定科目を閉鎖する"
+
+msgid "Both sections must be defined for invoices"
+msgstr "請求書をつくるために部門を両方とも設定してください"
+
+msgid "Branch Number"
+msgstr "支店コード"
+
+msgid "Browse"
+msgstr "閲覧"
+
+msgid "Bug Line"
+msgstr "バグライン"
+
+msgid "Bug Module"
+msgstr "バグモジュール"
+
+msgid "Bug"
+msgstr "バグ"
+
+msgid "Bugs"
+msgstr "バグ"
+
+msgid "Build Business Template"
+msgstr "ビジネステンプレートを構築する"
+
+msgid "Building State"
+msgstr "構築状況"
+
+msgid "Building"
+msgstr "構築中"
+
+msgid "Built"
+msgstr "構築済み"
+
+msgid "Business Field"
+msgstr "業務領域"
+
+msgid "Business Template Building Workflow"
+msgstr "ビジネス・テンプレート構築ワークフロー"
+
+msgid "Business Template Definition"
+msgstr "ビジネス・テンプレートの定義"
+
+msgid "Business Template ID"
+msgstr "ビジネス・テンプレートID"
+
+msgid "Business Template Title"
+msgstr "ビジネス・テンプレートのタイトル"
+
+msgid "Business Template"
+msgstr "ビジネス・テンプレート"
+
+msgid "Business Templates"
+msgstr "ビジネス・テンプレート"
+
+msgid "Business template downloaded successfully."
+msgstr "ビジネス・テンプレートのダウンロードが成功しました。"
+
+msgid "Business templates updated successfully."
+msgstr "ビジネス・テンプレートの更新が成功しました。"
+
+msgid "Buyer"
+msgstr "買い手"
+
+msgid "CRM"
+msgstr "CRM"
+
+msgid "Cache Factory"
+msgstr "キャッシュ・ファクトリ"
+
+msgid "Cache Tool"
+msgstr "キャッシュ・ツール"
+
+msgid "Calculating"
+msgstr "計算中"
+
+msgid "Calculation Order"
+msgstr "計算順序"
+
+msgid "Calculation Script"
+msgstr "計算スクリプト"
+
+msgid "Campaign Detailed Report"
+msgstr "キャンペーンの詳細なレポート"
+
+msgid "Campaign Status"
+msgstr "キャンペーンの状況"
+
+msgid "Campaign"
+msgstr "キャンペーン"
+
+msgid "Campaigns"
+msgstr "キャンペーン"
+
+msgid "Cancel Accounting Period"
+msgstr "会計期間をキャンセルする"
+
+msgid "Cancel Action"
+msgstr "実行をやめる"
+
+msgid "Cancel Assignment"
+msgstr "割当をキャンセルする"
+
+msgid "Cancel Career Step"
+msgstr "経歴をキャンセルする"
+
+msgid "Cancel Inventory"
+msgstr "在庫目録をキャンセルする"
+
+msgid "Cancel Order"
+msgstr "注文をキャンセルする"
+
+msgid "Cancel Transaction"
+msgstr "取引をキャンセルする"
+
 msgid "Cancel"
-msgstr "キャンセル"
+msgstr "キャンセルする"
+
+msgid "Canceled"
+msgstr "キャンセル済み"
+
+msgid "Cancelled"
+msgstr "キャンセル済み"
+
+msgid "Career Begin Date"
+msgstr "経歴開始日"
+
+msgid "Career End Date"
+msgstr "経歴終了日"
+
+msgid "Career Function"
+msgstr "職務名"
+
+msgid "Career Start Date"
+msgstr "経歴開始日"
+
+msgid "Career Step"
+msgstr "経歴"
+
+msgid "Career Steps"
+msgstr "経歴"
+
+msgid "Career Title"
+msgstr "肩書"
+
+msgid "Career Validation Workflow"
+msgstr "経歴承認ワークフロー"
 
 msgid "Career"
 msgstr "経歴"
 
+msgid "Cash Register"
+msgstr "レジ"
+
+msgid "Cash"
+msgstr "現金"
+
 msgid "Categories"
-msgstr "分類"
+msgstr "カテゴリー"
+
+msgid "Category Divergence Tester"
+msgstr "カテゴリー整合性テスター"
+
+msgid "Category Fast Input"
+msgstr "カテゴリーの一括入力"
+
+msgid "Category Item List Method"
+msgstr "カテゴリー項目一覧メソッド"
+
+msgid "Category Tool"
+msgstr "カテゴリー・ツール"
 
 msgid "Category"
-msgstr "分類"
+msgstr "カテゴリー"
+
+msgid "Causality (Invoices ...)"
+msgstr "原因となった請求書等"
+
+msgid "Causality State"
+msgstr "整合性の状態"
+
+msgid "Causality Workflow"
+msgstr "整合性ワークフロー"
+
+msgid "Causality"
+msgstr "整合性"
+
+msgid "Cell Level Divergences"
+msgstr "セル・レベルの不整合"
+
+msgid "Change Function"
+msgstr "役割を変更する"
 
 msgid "Change Page"
-msgstr "ページ変更"
+msgstr "ページを変更する"
+
+msgid "Change Password"
+msgstr "パスワードを変更する"
+
+msgid "Change State"
+msgstr "状態を変更する"
+
+msgid "Changelog"
+msgstr "変更履歴"
+
+msgid "Chat Address"
+msgstr "チャット・アドレス"
 
 msgid "Check All"
 msgstr "全選択"
 
+msgid "Children"
+msgstr "子供の数"
+
+msgid "Choice"
+msgstr "選択"
+
 msgid "City"
-msgstr "都市名 (日本では不要)"
+msgstr "市名"
+
+msgid "Class"
+msgstr "クラス"
+
+msgid "Classification"
+msgstr "分類"
+
+msgid "Clean Business Template"
+msgstr "ビジネス・テンプレートを消去する"
+
+msgid "Clean SVN Unversioned Files"
+msgstr "SVNのバージョン外のファイルを消去する"
+
+msgid "Clean Up SVN Locks"
+msgstr "SVNのロックを除去する"
+
+msgid "Client Reference"
+msgstr "顧客のリファレンス"
 
 msgid "Client"
 msgstr "顧客"
 
+msgid "Clone"
+msgstr "複製する"
+
+msgid "Close Account"
+msgstr "この勘定科目を使わない"
+
+msgid "Close Accounting Transaction"
+msgstr "締める"
+
+msgid "Close Assignment"
+msgstr "終了する"
+
+msgid "Closed Account"
+msgstr "使っていない勘定科目"
+
+msgid "Closed Accounting Period"
+msgstr "締められた会計期間"
+
+msgid "Closed"
+msgstr "決算済み"
+
+msgid "Closing Date"
+msgstr "解約日"
+
+msgid "Codification"
+msgstr "分類"
+
+msgid "Collected VAT"
+msgstr "仮受消費税"
+
+msgid "Collective Agreement"
+msgstr "労使協定"
+
+msgid "Column"
+msgstr "列"
+
+msgid "Comment"
+msgstr "注釈"
+
 msgid "Comments"
 msgstr "注釈"
+
+msgid "Commit"
+msgstr "コミット"
+
+msgid "Complete Quantity Matrix"
+msgstr "数量の行列を完了する"
+
+msgid "Complete Variation Matrix"
+msgstr "バリエーションの行列を完了する"
+
+msgid "Component Individual Variation"
+msgstr "部品個別のバリエーション"
+
+msgid "Component"
+msgstr "部品"
+
+msgid "Components"
+msgstr "部品"
+
+msgid "Configure Categories"
+msgstr "カテゴリを設定する"
 
 msgid "Configure"
 msgstr "設定"
 
-msgid "Contact"
-msgstr "連絡先"
+msgid "Confirm Order"
+msgstr "確定する"
 
-msgid "Contacts"
-msgstr "連絡先"
+msgid "Confirm Transaction"
+msgstr "確認する"
+
+msgid "Confirm"
+msgstr "確認する"
+
+msgid "Confirmation"
+msgstr "確認"
+
+msgid "Confirmed"
+msgstr "確認済み"
+
+msgid "Consumption"
+msgstr "消耗品"
+
+msgid "Contact Function"
+msgstr "連絡先の役割"
+
+msgid "Contact Type"
+msgstr "連絡先種別"
+
+msgid "Contained Quantity"
+msgstr "中身の数量"
+
+msgid "Contained Total Quantity"
+msgstr "中身の総量"
+
+msgid "Container Cell"
+msgstr "容れ物セル"
+
+msgid "Container Content"
+msgstr "容れ物の中身"
+
+msgid "Container Fast Input"
+msgstr "容れ物の一括入力"
+
+msgid "Container Line"
+msgstr "容れ物ライン"
+
+msgid "Container Quantity"
+msgstr "容れ物の数"
+
+msgid "Container State"
+msgstr "容れ物の状態"
+
+msgid "Container Workflow"
+msgstr "容れ物ワークフロー"
+
+msgid "Container"
+msgstr "容れ物"
+
+msgid "Containers"
+msgstr "容れ物"
+
+msgid "Content of the web page"
+msgstr "ウェブページの内容"
+
+msgid "Content"
+msgstr "内容"
+
+msgid "Contents"
+msgstr "内容"
+
+msgid "Contribute"
+msgstr "貢献"
+
+msgid "Contribution Predicate"
+msgstr "計算対象の予測"
+
+msgid "Contribution Registry Tool"
+msgstr "計算対象登録ツール"
+
+msgid "Contribution Tool"
+msgstr "コントリビューション・ツール"
+
+msgid "Contributors"
+msgstr "貢献者"
+
+msgid "Converted Credit"
+msgstr "外貨換算貸方"
+
+msgid "Converted Debit"
+msgstr "外貨換算借方"
+
+msgid "Converted quantity"
+msgstr "変換済みの数量"
 
 msgid "Copy"
 msgstr "コピー"
@@ -117,14 +755,59 @@ msgstr "コピー"
 msgid "Corporate Name"
 msgstr "社名"
 
+msgid "Corporate Registration Code"
+msgstr "会社法人等番号"
+
+msgid "Count"
+msgstr "個数"
+
 msgid "Country"
 msgstr "国"
 
+msgid "Create Module"
+msgstr "モジュールを作成する"
+
 msgid "Create New Document(s)"
-msgstr "新しい文書を作成"
+msgstr "新しい文書を作成する"
+
+msgid "Create New Event"
+msgstr "新しいイベントを作成する"
+
+msgid "Create New File"
+msgstr "新しいファイルを作成する"
+
+msgid "Create New Module"
+msgstr "新しいモジュールを作成する"
+
+msgid "Create Related Payment"
+msgstr "関連した支払いを作成する"
+
+msgid "Create Related Payments"
+msgstr "関連した支払いを作成する"
+
+msgid "Create Terms from English Ones for Translation"
+msgstr "翻訳のために英語の用語集から用語を作成する"
+
+msgid "Create User"
+msgstr "ユーザを作成する"
+
+msgid "Created Clone ${portal_type}."
+msgstr "複製を作成しました ${portal_type}."
 
 msgid "Created by"
 msgstr "作成者"
+
+msgid "Creation Date"
+msgstr "作成日時"
+
+msgid "Credit Balance"
+msgstr "貸方残高"
+
+msgid "Credit Card"
+msgstr "クレジット・カード"
+
+msgid "Credit Transactions"
+msgstr "貸方"
 
 msgid "Credit"
 msgstr "貸方"
@@ -132,11 +815,65 @@ msgstr "貸方"
 msgid "Currencies"
 msgstr "通貨"
 
+msgid "Currency Code"
+msgstr "通貨コード"
+
+msgid "Currency Exchange Cell"
+msgstr "通貨両替セル"
+
+msgid "Currency Exchange Cells"
+msgstr "通貨両替セル"
+
+msgid "Currency Exchange Line"
+msgstr "通貨両替ライン"
+
+msgid "Currency Exchange Lines"
+msgstr "通貨両替ライン"
+
+msgid "Currency Exchange Rates"
+msgstr "通貨両替レート"
+
+msgid "Currency List"
+msgstr "通貨一覧"
+
+msgid "Currency Module"
+msgstr "通貨モジュール"
+
+msgid "Currency Symbol"
+msgstr "通貨の記号"
+
 msgid "Currency"
 msgstr "通貨"
 
+msgid "Current Function"
+msgstr "現在の役割"
+
+msgid "Current Period"
+msgstr "現在の期間"
+
+msgid "Current Value"
+msgstr "現在の値"
+
+msgid "Current career comments"
+msgstr "現在の経歴の注釈"
+
+msgid "Current career must exist."
+msgstr "現在の経歴は必須です。"
+
 msgid "Current organisation"
 msgstr "現在の組織"
+
+msgid "Current"
+msgstr "現在"
+
+msgid "Customer Account"
+msgstr "顧客の勘定科目"
+
+msgid "Customer Reference"
+msgstr "顧客のリファレンス"
+
+msgid "Customer Transaction Reference"
+msgstr "顧客の取引番号"
 
 msgid "Customer"
 msgstr "顧客"
@@ -144,35 +881,197 @@ msgstr "顧客"
 msgid "Cut"
 msgstr "切り取り"
 
-msgid "Data Updated."
+msgid "DMS"
+msgstr "文書管理"
+
+msgid "Data updated."
 msgstr "データを更新しました。"
+
+msgid "Date is not in an opened Accounting Period for destination section."
+msgstr "指定された日付は相手方の開始済みの会計期間内にありません。"
+
+msgid "Date is not in an opened Accounting Period for source section."
+msgstr "指定された日付は取引部門の開始済みの会計期間内にありません。"
+
+msgid "Date must be defined"
+msgstr "日付の設定が必要です。"
 
 msgid "Date"
 msgstr "日付"
 
+msgid "Day"
+msgstr "日"
+
+msgid "Days Of Month"
+msgstr "何日"
+
+msgid "Days Of Week"
+msgstr "何曜日"
+
+msgid "Debit Balance"
+msgstr "借方残高"
+
+msgid "Debit Transactions"
+msgstr "借方"
+
 msgid "Debit"
 msgstr "借方"
+
+msgid "Default (${search_key})"
+msgstr "初期値 (${search_key})"
+
+msgid "Default Accounting Currency"
+msgstr "標準会計通貨"
+
+msgid "Default Export of Each Document (One sheet per view)"
+msgstr "標準エクスポート (シート別)"
+
+msgid "Default Export of Each Document"
+msgstr "標準エクスポート"
+
+msgid "Default Image"
+msgstr "ロゴ"
+
+msgid "Default Metric Type"
+msgstr "標準計測方式"
+
+msgid "Default Price"
+msgstr "標準価格"
+
+msgid "Default Print of Each Document"
+msgstr "標準の印刷"
+
+msgid "Default"
+msgstr "標準"
+
+msgid "Define Sort Order"
+msgstr "並び順を定義する"
+
+msgid "Delete Objects"
+msgstr "オブジェクトを削除する"
+
+msgid "Delete The Objects"
+msgstr "オブジェクトを削除する"
 
 msgid "Delete"
 msgstr "削除"
 
-msgid "Delete the objects"
-msgstr "オブジェクトを削除"
+msgid "Deleted objects: ${object_ids}"
+msgstr "削除されたオブジェクト: ${object_ids}"
+
+msgid "Deleted"
+msgstr "削除済み"
 
 msgid "Deleted."
 msgstr "削除しました。"
 
+msgid "Deliver"
+msgstr "配達する"
+
+msgid "Delivered"
+msgstr "配達済み"
+
+msgid "Delivery Builder"
+msgstr "配達ビルダー"
+
+msgid "Delivery Cell Title"
+msgstr "配達セルのタイトル"
+
+msgid "Delivery Cell"
+msgstr "配達セル"
+
+msgid "Delivery Date"
+msgstr "配達日"
+
+msgid "Delivery Level Divergences"
+msgstr "配達の不整合"
+
+msgid "Delivery Line Title"
+msgstr "配達ラインのタイトル"
+
+msgid "Delivery Line"
+msgstr "配達ライン"
+
+msgid "Delivery Mode"
+msgstr "配送方法"
+
+msgid "Delivery Rule"
+msgstr "配達規則"
+
+msgid "Delivery State"
+msgstr "配達状態"
+
+msgid "Delivery Title"
+msgstr "配達のタイトル"
+
+msgid "Delivery Tool"
+msgstr "配達ツール"
+
+msgid "Dependencies"
+msgstr "依存関係"
+
 msgid "Description"
 msgstr "説明"
+
+msgid "Destination Account"
+msgstr "相手方の勘定科目"
+
+msgid "Destination Decision"
+msgstr "相手方の決定者"
+
+msgid "Destination Reference"
+msgstr "相手方のリファレンス"
+
+msgid "Destination Section"
+msgstr "相手部門"
 
 msgid "Destination"
 msgstr "到着点"
 
-msgid "Destination Reference"
-msgstr "到着側の参照番号"
-
 msgid "Details"
 msgstr "詳細"
+
+msgid "Diff Business Template"
+msgstr "ビジネス・テンプレートの差分を取る"
+
+msgid "Diff Two Objects"
+msgstr "二つのオブジェクトの差分を取る"
+
+msgid "Difficulty"
+msgstr "難易度"
+
+msgid "Dig"
+msgstr "特殊な検索"
+
+msgid "Dimension"
+msgstr "次元"
+
+msgid "Disable Preference"
+msgstr "設定を無効にする"
+
+msgid "Disabled"
+msgstr "無効"
+
+msgid "Discount Line"
+msgstr "割引ライン"
+
+msgid "Discount Lines"
+msgstr "割引ライン"
+
+msgid "Discount Model Line"
+msgstr "割引モデルライン"
+
+msgid "Discount Module"
+msgstr "割引モジュール"
+
+msgid "Discount Ratio Quantity Step"
+msgstr "数量にともなう割引率設定"
+
+msgid "Discount Ratio Variation Axes"
+msgstr "割引率のバリエーションの種類"
+
+msgid "Discount Ratio"
+msgstr "割引率"
 
 msgid "Discount"
 msgstr "割引"
@@ -180,17 +1079,146 @@ msgstr "割引"
 msgid "Discounts"
 msgstr "割引"
 
+msgid "Distributed Ram Cache"
+msgstr "分散RAMキャッシュ"
+
+msgid "Diverged"
+msgstr "不整合"
+
+msgid "Divergence"
+msgstr "不整合"
+
+msgid "Divergences"
+msgstr "不整合"
+
+msgid "Do not forget to logout or exit your browser when you are done."
+msgstr "パスワードを入力すると、ログアウトもしくはウェブブラウザを終了するまで記憶します。"
+
+msgid "Do nothing"
+msgstr "何もしない"
+
+msgid "Document Reference"
+msgstr "請求書リファレンス"
+
+msgid "Document Search"
+msgstr "文書検索"
+
+msgid "Document"
+msgstr "文書"
+
+msgid "Documents"
+msgstr "文書"
+
+msgid "Domain Tool"
+msgstr "ドメイン・ツール"
+
 msgid "Domain Tree"
 msgstr "ドメイン・ツリー"
 
+msgid "Domain"
+msgstr "ドメイン"
+
+msgid "Domains"
+msgstr "ドメイン"
+
+msgid "Download Business Template from URL"
+msgstr "URLからビジネス・テンプレートをダウンロードする"
+
+msgid "Download Business Template"
+msgstr "ビジネス・テンプレートをダウンロードする"
+
+msgid "Download Business Templates from Repositories"
+msgstr "レポジトリからビジネス・テンプレートをダウンロードする"
+
+msgid "Download Original File"
+msgstr "元のファイルをダウンロードする"
+
+msgid "Download Original Signature Image"
+msgstr "元の署名画像をダウンロードする"
+
+msgid "Download"
+msgstr "ダウンロード"
+
+msgid "Draft To Validate"
+msgstr "承認すべきドラフト"
+
+msgid "Draft"
+msgstr "ドラフト"
+
 msgid "Drafts to Validate"
-msgstr "確認すべき草案"
+msgstr "承認すべきドラフト"
+
+msgid "Drawing"
+msgstr "図形文書"
+
+msgid "EAN 13 Code"
+msgstr "EAN 13コード"
+
+msgid "EAN-13 Code"
+msgstr "EAN-13 コード"
 
 msgid "ERP5 Modules"
 msgstr "ERP5モジュール"
 
+msgid "Economic Class"
+msgstr "所得水準"
+
+msgid "Edit Portal Type '${portal_type}'"
+msgstr "ポータルタイプを編集する '${portal_type}'"
+
+msgid "Edit Workflow"
+msgstr "編集ワークフロー"
+
+msgid "Edit"
+msgstr "編集"
+
+msgid "Effective Date"
+msgstr "発効日"
+
+msgid "Efficiency"
+msgstr "歩留まり"
+
 msgid "Email"
 msgstr "Eメール"
+
+msgid "Employee Number"
+msgstr "社員番号"
+
+msgid "Enable Preference"
+msgstr "設定を有効にする"
+
+msgid "Enabled"
+msgstr "有効済み"
+
+msgid "End Date"
+msgstr "終了日"
+
+msgid "End of Month"
+msgstr "月末"
+
+msgid "End"
+msgstr "終了"
+
+msgid "Equals To"
+msgstr "等しい"
+
+msgid "Equity + Liability"
+msgstr "純資産 + 負債"
+
+msgid "Equity"
+msgstr "純資産"
+
+msgid "Error Message"
+msgstr "エラーメッセージ"
+
+msgid "Event Activity"
+msgstr "イベントの状況"
+
+msgid "Event Detailed Report"
+msgstr "イベントの詳細なレポート"
+
+msgid "Event Type"
+msgstr "イベント種別"
 
 msgid "Event"
 msgstr "イベント"
@@ -198,17 +1226,107 @@ msgstr "イベント"
 msgid "Events"
 msgstr "イベント"
 
+msgid "Everything"
+msgstr "全て"
+
+msgid "Exchange Rate"
+msgstr "両替レート"
+
+msgid "Exchange Type"
+msgstr "両替種別"
+
+msgid "Exchange"
+msgstr "ファイル入出力"
+
+msgid "Expanded view"
+msgstr "拡大ビュー"
+
+msgid "Expense"
+msgstr "費用"
+
+msgid "Expenses"
+msgstr "費用"
+
+msgid "Expiration Date"
+msgstr "有効期限"
+
+msgid "Explanation"
+msgstr "説明"
+
+msgid "Export Business Template"
+msgstr "ビジネス・テンプレートのエクスポート"
+
+msgid "Export Format"
+msgstr "エクスポート形式"
+
+msgid "Export Mode"
+msgstr "エクスポート方式"
+
+msgid "Export to Spreadsheet"
+msgstr "表計算文書をエクスポートする"
+
+msgid "External Folder"
+msgstr "外部フォルダー"
+
+msgid "External Sources"
+msgstr "外部参照元"
+
+msgid "FAX"
+msgstr "FAX"
+
+msgid "Fast Input"
+msgstr "一括入力"
+
+msgid "Fax Message"
+msgstr "FAXメッセージ"
+
 msgid "Fax"
-msgstr "ファックス"
+msgstr "FAX"
+
+msgid "File Type"
+msgstr "ファイル種別"
 
 msgid "File"
 msgstr "ファイル"
 
+msgid "Filename"
+msgstr "ファイル名"
+
+msgid "Files commited successfully."
+msgstr "ファイルのコミットに成功しました。"
+
 msgid "Filter"
 msgstr "フィルター"
 
+msgid "Final Balance (Credit)"
+msgstr "期末残高 (貸方)"
+
+msgid "Final Balance (Debit)"
+msgstr "期末残高 (借方)"
+
+msgid "Final Credit Balance"
+msgstr "貸方の期末残高"
+
+msgid "Final Debit Balance"
+msgstr "借方の期末残高"
+
+msgid "Financial Information"
+msgstr "財務情報"
+
+msgid "Financial Section"
+msgstr "財務区分"
+
+msgid "Find Terms from Property Sheet"
+msgstr "プロパティシートから用語を探す"
+
+msgid "Find Terms from Workflows"
+msgstr "ワークフローから用語を探す"
+
 msgid "Find"
 msgstr "検索"
+
+msgid "First Name"
+msgstr "姓"
 
 msgid "First"
 msgstr "最初"
@@ -216,56 +1334,359 @@ msgstr "最初"
 msgid "Flat List"
 msgstr "フラット・リスト"
 
+msgid "Folder Contents"
+msgstr "フォルダーの内容"
+
 msgid "Folder"
 msgstr "フォルダー"
 
-msgid "Folder Contents"
-msgstr "フォルダーの内容"
+msgid "Format"
+msgstr "形式"
+
+msgid "Frequency (weeks)"
+msgstr "周期 (週)"
+
+msgid "Frequency In Days"
+msgstr "周期 (日数)"
+
+msgid "Frequency In Hours"
+msgstr "周期 (時間)"
+
+msgid "Frequency In Minutes"
+msgstr "周期 (分)"
+
+msgid "Frequency In Months"
+msgstr "周期 (月)"
+
+msgid "Frequency In Weeks"
+msgstr "周期 (週)"
+
+msgid "Friday"
+msgstr "金曜"
+
+msgid "From Date"
+msgstr "開始日"
+
+msgid "Full Size Image"
+msgstr "フルサイズの画像"
+
+msgid "Full Sized Image"
+msgstr "フルサイズの画像"
 
 msgid "Function"
 msgstr "職務"
 
+msgid "Future"
+msgstr "将来"
+
+msgid "GAP - ${gap_title}"
+msgstr "GAP - ${gap_title}"
+
+msgid "GAP Account ID"
+msgstr "GAP 勘定科目ID"
+
+msgid "GAP ID"
+msgstr "GAP ID"
+
+msgid "GAP Number"
+msgstr "GAP番号"
+
+msgid "GAP"
+msgstr "GAP"
+
 msgid "Gender"
 msgstr "性別"
+
+msgid "General Ledger Summary"
+msgstr "総勘定元帳の概要"
+
+msgid "General Ledger"
+msgstr "総勘定元帳"
+
+msgid "Generate POT File"
+msgstr "POTファイルの生成"
+
+msgid "Generate References"
+msgstr "リファレンスの生成"
+
+msgid "Globally Enabled"
+msgstr "システム全体で有効"
+
+msgid "Glossary Module"
+msgstr "用語集モジュール"
+
+msgid "Glossary Term"
+msgstr "用語集の用語"
+
+msgid "Glossary"
+msgstr "用語集"
+
+msgid "Go"
+msgstr "行く"
+
+msgid "Grade"
+msgstr "職階"
+
+msgid "Greater Than"
+msgstr "より大きい"
+
+msgid "Gross Weight (kg)"
+msgstr "総重量 (kg)"
+
+msgid "Gross Weight"
+msgstr "総重量"
+
+msgid "Gross"
+msgstr "総計"
 
 msgid "Group"
 msgstr "グループ"
 
+msgid "Grouping Reference Fast Input"
+msgstr "勘定科目の分類を一括入力する"
+
+msgid "Grouping"
+msgstr "分類"
+
+msgid "Guess Portal Types from Modules"
+msgstr "モジュールから推測されるポータルタイプ"
+
+msgid "Guess Properties of Portal Types"
+msgstr "ポータルタイプから推測されるプロパティ"
+
+msgid "Having trouble logging in? Make sure to enable cookies in your web browser."
+msgstr "ログインでお困りでしょうか？ お使いのウェブブラウザでクッキーが有効になっているかご確認ください。"
+
+msgid "Height (cm)"
+msgstr "高さ (cm)"
+
+msgid "Height (m)"
+msgstr "高さ (m)"
+
 msgid "History"
 msgstr "履歴"
+
+msgid "Hours"
+msgstr "何時"
+
+msgid "I forgot my password!"
+msgstr "パスワードを忘れました!"
+
+msgid "IBAN Key"
+msgstr "IBANキー"
 
 msgid "ID"
 msgstr "識別子"
 
+msgid "Identity Criterion"
+msgstr "一意となる基準値"
+
 msgid "Image"
+msgstr "画像"
+
+msgid "Images"
 msgstr "画像"
 
 msgid "Import / Export"
 msgstr "インポート/エクスポート"
 
+msgid "Import Business Template"
+msgstr "ビジネス・テンプレートをインポートする"
+
+msgid "Import Categories"
+msgstr "カテゴリーをインポートする"
+
+msgid "Import OpenOffice Document"
+msgstr "オープンオフィス文書をインポートする"
+
+msgid "Import Persons from OpenOffice Calc"
+msgstr "オープンオフィス表計算文書から人物をインポートする"
+
+msgid "Import Signature"
+msgstr "署名をインポートする"
+
+msgid "Income"
+msgstr "利益"
+
+msgid "Incoterm"
+msgstr "インコターム"
+
+msgid "Indented Compact Title"
+msgstr "字下げされた略称"
+
+msgid "Indented Title"
+msgstr "字下げされたタイトル"
+
+msgid "Index"
+msgstr "インデックス"
+
+msgid "Individual Variation Base Category"
+msgstr "ベースカテゴリーの個別のバリエーション"
+
+msgid "Individual Variation"
+msgstr "個別のバリエーション"
+
+msgid "Info"
+msgstr "情報"
+
+msgid "Initial Credit Balance"
+msgstr "貸方の期首残高"
+
+msgid "Initial Debit Balance"
+msgstr "借方の期首残高"
+
+msgid "Initialized by Delivery Builder."
+msgstr "配達ビルダーにより初期化されました。"
+
+msgid "Input data has errors. Please look at the error messages below."
+msgstr "入力データにエラーがあります。下記のエラーメッセージを確認してください。"
+
+msgid "Input is required but no input given."
+msgstr "入力が必要です。"
+
+msgid "Inspect Object"
+msgstr "オブジェクトを調査する"
+
+msgid "Install Business Template"
+msgstr "ビジネス・テンプレートをインストールする"
+
+msgid "Install Business Templates from Repositories"
+msgstr "レポジトリからビジネス・テンプレートをインストールする"
+
+msgid "Installation Choice"
+msgstr "インストールの選択"
+
+msgid "Installation State"
+msgstr "インストールの状態"
+
+msgid "Installed"
+msgstr "インストール済み"
+
+msgid "Internal Packing List Cell"
+msgstr "内部用の梱包明細書セル"
+
+msgid "Internal Packing List Line"
+msgstr "内部用の梱包明細書ライン"
+
+msgid "Internal Packing List Lines"
+msgstr "内部用の梱包明細書ライン"
+
+msgid "Internal Packing List Module"
+msgstr "内部用の梱包明細書モジュール"
+
 msgid "Internal Packing List"
-msgstr "内部用梱包明細書"
+msgstr "内部用の梱包明細書"
 
 msgid "Internal Packing Lists"
-msgstr "内部用梱包明細書"
+msgstr "内部用の梱包明細書"
+
+msgid "International Form"
+msgstr "国際的な書式"
+
+msgid "Invalidate Action"
+msgstr "却下アクション"
+
+msgid "Invalidate"
+msgstr "却下する"
+
+msgid "Invalidated"
+msgstr "却下済み"
+
+msgid "Inventories to validate"
+msgstr "承認すべき在庫目録"
 
 msgid "Inventories"
 msgstr "在庫目録"
 
+msgid "Inventory Cell"
+msgstr "在庫目録セル"
+
+msgid "Inventory Date"
+msgstr "日付"
+
+msgid "Inventory Line"
+msgstr "在庫目録ライン"
+
+msgid "Inventory Lines"
+msgstr "在庫目録ライン"
+
+msgid "Inventory Module"
+msgstr "在庫目録モジュール"
+
+msgid "Inventory State"
+msgstr "在庫目録の状態"
+
+msgid "Inventory Workflow"
+msgstr "在庫目録ワークフロー"
+
 msgid "Inventory"
 msgstr "在庫目録"
+
+msgid "Invoice Cell"
+msgstr "請求セル"
+
+msgid "Invoice Date"
+msgstr "請求日"
+
+msgid "Invoice Line"
+msgstr "請求ライン"
+
+msgid "Invoice Lines"
+msgstr "請求ライン"
 
 msgid "Invoice Number"
 msgstr "請求番号"
 
-msgid "Invoice View"
-msgstr "請求閲覧"
+msgid "Invoice Recipient"
+msgstr "請求書の受取先"
 
-msgid "Invoiced Client"
-msgstr "請求先の顧客"
+msgid "Invoice Rule"
+msgstr "請求書の規則"
+
+msgid "Invoice Sender"
+msgstr "請求書の送信元"
+
+msgid "Invoice Transaction Rule"
+msgstr "請求書取引の規則"
+
+msgid "Invoice View"
+msgstr "請求"
+
+msgid "Invoice"
+msgstr "請求書"
+
+msgid "Invoicing Rule"
+msgstr "請求の規則"
+
+msgid "Item(s) copied."
+msgstr "項目がコピーされました。"
+
+msgid "Item(s) pasted."
+msgstr "項目が貼り付けられました。"
 
 msgid "Japanese"
 msgstr "日本語"
+
+msgid "Journal Type"
+msgstr "仕訳種別"
+
+msgid "Journal from Selection"
+msgstr "仕訳帳"
+
+msgid "Journal"
+msgstr "仕訳帳"
+
+msgid "Journalise"
+msgstr "記帳する"
+
+msgid "Journalised"
+msgstr "記帳済み"
+
+msgid "Jump Relation"
+msgstr "関連にジャンプする"
+
+msgid "Jump to Active Preference"
+msgstr "使用中の設定にジャンプする"
 
 msgid "Jump"
 msgstr "ジャンプ"
@@ -273,11 +1694,47 @@ msgstr "ジャンプ"
 msgid "Jump..."
 msgstr "ジャンプ..."
 
+msgid "Keyword"
+msgstr "キーワード"
+
+msgid "Landscape"
+msgstr "横長書式"
+
 msgid "Language"
 msgstr "言語"
 
+msgid "Last Name"
+msgstr "名"
+
 msgid "Last"
 msgstr "最後"
+
+msgid "Legal Form"
+msgstr "法的形式"
+
+msgid "Length (cm)"
+msgstr "長さ (cm)"
+
+msgid "Length (m)"
+msgstr "長さ (m)"
+
+msgid "Letter"
+msgstr "手紙"
+
+msgid "Level"
+msgstr "レベル"
+
+msgid "Liability + Equity"
+msgstr "負債 + 純資産"
+
+msgid "License"
+msgstr "ライセンス"
+
+msgid "Line No."
+msgstr "行番号"
+
+msgid "Line"
+msgstr "行"
 
 msgid "Link"
 msgstr "リンク"
@@ -285,23 +1742,167 @@ msgstr "リンク"
 msgid "List Mode"
 msgstr "一覧モード"
 
+msgid "List Trash Bin"
+msgstr "ごみ箱の中身の一覧"
+
+msgid "List of Documents"
+msgstr "文書のリスト"
+
+msgid "Local Roles"
+msgstr "ローカル規則"
+
+msgid "Log in"
+msgstr "ログイン"
+
 msgid "Log out"
 msgstr "ログアウト"
 
-msgid "Menus"
-msgstr "メニュー"
+msgid "Logged In as :"
+msgstr "ログイン名："
+
+msgid "Logged in as :"
+msgstr "ログイン名:"
+
+msgid "Logical Compact Path"
+msgstr "論理パスの省略形"
+
+msgid "Logical Path"
+msgstr "論理パス"
+
+msgid "Login and/or password is incorrect."
+msgstr "ユーザ名もしくはパスワードが間違っています。"
+
+msgid "Login"
+msgstr "ログイン"
+
+msgid "Logo"
+msgstr "ロゴ"
+
+msgid "Lost Password"
+msgstr "パスワードを紛失した場合"
+
+msgid "Mail Message"
+msgstr "メールメッセージ"
+
+msgid "Make Offer"
+msgstr "提案する"
+
+msgid "Make a Template"
+msgstr "テンプレートを作成する"
+
+msgid "Manage Business Templates"
+msgstr "ビジネス・テンプレートを管理する"
+
+msgid "Manual Price"
+msgstr "手動価格"
+
+msgid "Marital Status"
+msgstr "配偶者の有無"
+
+msgid "Materials"
+msgstr "材料"
+
+msgid "Max Criterion"
+msgstr "最大基準値"
+
+msgid "Max. Delay (Day)"
+msgstr "最大遅延(日)"
+
+msgid "Max. delay (day)"
+msgstr "最大遅延(日)"
+
+msgid "Measure Cell"
+msgstr "計測基準セル"
+
+msgid "Measure"
+msgstr "計測基準"
+
+msgid "Measures"
+msgstr "計測基準"
+
+msgid "Meeting Detailed Report"
+msgstr "ミーティングの詳細なレポート"
+
+msgid "Meeting Status"
+msgstr "ミーティングの状況"
+
+msgid "Meeting"
+msgstr "ミーティング"
+
+msgid "Meetings"
+msgstr "ミーティング"
 
 msgid "Metadata"
 msgstr "メタデータ"
 
+msgid "Metric Type"
+msgstr "計測方式"
+
+msgid "Middle Name"
+msgstr "ミドルネーム"
+
+msgid "Min Criterion"
+msgstr "最小基準値"
+
+msgid "Min. Delay (Day)"
+msgstr "最小遅延(日)"
+
+msgid "Min. Flow"
+msgstr "最小流量"
+
+msgid "Min. delay (day)"
+msgstr "最小遅延(日)"
+
+msgid "Mirror Account"
+msgstr "対になる勘定科目"
+
+msgid "Mirror"
+msgstr "対"
+
+msgid "Missing"
+msgstr "不足"
+
+msgid "Mobile Telephone"
+msgstr "携帯電話"
+
+msgid "Modification Date"
+msgstr "改変日時"
+
+msgid "Modified"
+msgstr "修正済み"
+
+msgid "Module Property"
+msgstr "モジュールのプロパティ"
+
+msgid "Module"
+msgstr "モジュール"
+
 msgid "Modules"
 msgstr "モジュール"
+
+msgid "Monday"
+msgstr "月曜"
+
+msgid "Months"
+msgstr "何月"
+
+msgid "Movements"
+msgstr "動き"
+
+msgid "My Drafts of Accounting Transactions"
+msgstr "会計取引のドラフト"
+
+msgid "My Favourites"
+msgstr "お気に入り"
+
+msgid "My Language"
+msgstr "標準の言語"
 
 msgid "My favourites"
 msgstr "お気に入り"
 
 msgid "My language"
-msgstr "言語"
+msgstr "標準の言語"
 
 msgid "Name"
 msgstr "名前"
@@ -309,20 +1910,284 @@ msgstr "名前"
 msgid "Nationality"
 msgstr "国籍"
 
-msgid "New"
-msgstr "新規"
+msgid "Net Profit"
+msgstr "純利益"
 
-msgid "Next"
-msgstr "次"
+msgid "Net Total Price"
+msgstr "正味帳簿価額の合計"
+
+msgid "Net"
+msgstr "正味帳簿価額"
+
+msgid "New ${portal_type}"
+msgstr "新規作成 ${portal_type}"
+
+msgid "New"
+msgstr "新規作成"
 
 msgid "Next Page"
 msgstr "次のページ"
 
+msgid "Next"
+msgstr "次"
+
+msgid "No ${portal_type} Related."
+msgstr "${portal_type} との関連がありません。"
+
+msgid "No ${portal_type} related."
+msgstr "${portal_type} との関連がありません。"
+
+msgid "No Trade Condition."
+msgstr "取引条件がありません。"
+
+msgid "No such document was found."
+msgstr "ドキュメントが見つかりませんでした。"
+
+msgid "None"
+msgstr "無し"
+
+msgid "Normal Balance"
+msgstr "勘定残高"
+
+msgid "Normal Credit Balance"
+msgstr "通常の勘定残高"
+
+msgid "Not Installed"
+msgstr "未インストール"
+
+msgid "Note"
+msgstr "備考"
+
+msgid "Notes"
+msgstr "備考"
+
+msgid "Nothing matches."
+msgstr "一致するものがありません。"
+
+msgid "Notification Message Module"
+msgstr "通知メッセージモジュール"
+
+msgid "Notification Message"
+msgstr "通知メッセージ"
+
+msgid "Notification Messages"
+msgstr "通知メッセージ"
+
+msgid "Notification"
+msgstr "通知"
+
+msgid "Number of Partners"
+msgstr "配偶者の数"
+
+msgid "Number of Related Objects"
+msgstr "関連するオブジェクトの数"
+
+msgid "Number"
+msgstr "番号"
+
+msgid "ODS Style"
+msgstr "ODSの形式"
+
+msgid "ODT Style"
+msgstr "ODTの形式"
+
+msgid "Object Created."
+msgstr "オブジェクトを作成しました。"
+
+msgid "Object created."
+msgstr "オブジェクトを作成しました。"
+
+msgid "Object"
+msgstr "オブジェクト"
+
+msgid "Offer"
+msgstr "依頼"
+
+msgid "Offered"
+msgstr "依頼済み"
+
+msgid "Open Account"
+msgstr "勘定科目を利用可能にする"
+
+msgid "Open Accounting Period"
+msgstr "会計期間を利用可能にする"
+
+msgid "Open Assignment"
+msgstr "割当を承認する"
+
+msgid "Open Bug"
+msgstr "バグを公開する"
+
+msgid "Open Order Line"
+msgstr "繰返注文ライン"
+
+msgid "Open Order Rule"
+msgstr "繰返注文の規則"
+
+msgid "Open Order WorkFlow"
+msgstr "繰返注文ワークフロー"
+
+msgid "Open Order"
+msgstr "繰返注文"
+
+msgid "Open Sale Order Line"
+msgstr "繰返販売注文ライン"
+
+msgid "Open Sale Order Lines"
+msgstr "繰返販売注文ライン"
+
+msgid "Open Sale Order"
+msgstr "繰返販売注文"
+
+msgid "Open"
+msgstr "利用可能"
+
+msgid "Opening Date"
+msgstr "開設日"
+
+msgid "Operation Upper Limit"
+msgstr "運用の上限"
+
+msgid "Operations"
+msgstr "作業"
+
+msgid "Order Builder"
+msgstr "注文ビルダー"
+
+msgid "Order Line"
+msgstr "注文ライン"
+
+msgid "Order Lines"
+msgstr "注文ライン"
+
+msgid "Order Placed"
+msgstr "発注済み"
+
+msgid "Order Report"
+msgstr "注文レポート"
+
+msgid "Order Rule"
+msgstr "注文規則"
+
+msgid "Order Tool"
+msgstr "注文ツール"
+
+msgid "Order Workflow"
+msgstr "発注ワークフロー"
+
+msgid "Order updated."
+msgstr "注文が更新されました。"
+
+msgid "Order"
+msgstr "注文"
+
+msgid "Ordered"
+msgstr "注文済み"
+
+msgid "Orders"
+msgstr "注文"
+
+msgid "Organisation Module"
+msgstr "組織モジュール"
+
 msgid "Organisation"
 msgstr "組織"
 
+msgid "Organisations to Validate"
+msgstr "承認すべき組織"
+
+msgid "Organisations"
+msgstr "組織"
+
+msgid "Original Supplier or Worker"
+msgstr "元々の供給元もしくは製作元"
+
+msgid "Original filename"
+msgstr "元のファイル名"
+
+msgid "Other Parties"
+msgstr "他の当事者"
+
+msgid "Others"
+msgstr "その他"
+
+msgid "Our Item No."
+msgstr "発送元項目番号"
+
+msgid "Overdraft Facility"
+msgstr "超過引き出し契約"
+
+msgid "Overdraft facility of a bank account"
+msgstr "銀行口座の超過引き出し契約"
+
+msgid "Owner"
+msgstr "所有者"
+
+msgid "PDM"
+msgstr "製品情報管理(PDM)"
+
+msgid "Packed"
+msgstr "梱包済み"
+
+msgid "Packing List Line"
+msgstr "梱包明細書ライン"
+
+msgid "Packing List Movement"
+msgstr "梱包明細書の動き"
+
+msgid "Packing List Workflow"
+msgstr "梱包明細書ワークフロー"
+
+msgid "Packing Lists"
+msgstr "梱包明細書"
+
+msgid "Page"
+msgstr "ページ"
+
+msgid "Password Confirmation"
+msgstr "パスワードの確認"
+
+msgid "Password Tool"
+msgstr "パスワードツール"
+
+msgid "Password changed."
+msgstr "パスワードを変更しました。"
+
+msgid "Password"
+msgstr "パスワード"
+
 msgid "Paste"
 msgstr "貼り付け"
+
+msgid "Path"
+msgstr "経路"
+
+msgid "Payable"
+msgstr "支払"
+
+msgid "Payee"
+msgstr "受取人"
+
+msgid "Payer"
+msgstr "支払人"
+
+msgid "Payment Condition"
+msgstr "支払条件"
+
+msgid "Payment Date"
+msgstr "支払日"
+
+msgid "Payment Mode"
+msgstr "支払方法"
+
+msgid "Payment Reference"
+msgstr "支払番号"
+
+msgid "Payment Rule"
+msgstr "支払規則"
+
+msgid "Payment Transaction"
+msgstr "支払取引"
 
 msgid "Payment"
 msgstr "支払"
@@ -330,32 +2195,203 @@ msgstr "支払"
 msgid "People"
 msgstr "個人"
 
+msgid "Percentage of Total"
+msgstr "全体の割合"
+
+msgid "Periodicity"
+msgstr "周期"
+
+msgid "Person Assignment View"
+msgstr "割当"
+
+msgid "Person Career"
+msgstr "人物の経歴"
+
+msgid "Person Detailed Report"
+msgstr "人物の詳細なレポート"
+
+msgid "Person Module"
+msgstr "人物モジュール"
+
 msgid "Person"
-msgstr "個人"
+msgstr "人物"
 
 msgid "Personal Name"
 msgstr "名前"
 
+msgid "Persons to Validate"
+msgstr "承認すべき人物"
+
+msgid "Persons"
+msgstr "人物"
+
+msgid "Phone Call"
+msgstr "電話"
+
 msgid "Phone"
 msgstr "電話"
 
-msgid "Post Code"
+msgid "Photo"
+msgstr "写真"
+
+msgid "Place Order Action"
+msgstr "発注アクション"
+
+msgid "Place Order"
+msgstr "発注する"
+
+msgid "Plan Order"
+msgstr "注文を予定する"
+
+msgid "Plan Transaction"
+msgstr "取引を予定する"
+
+msgid "Plan"
+msgstr "予定する"
+
+msgid "Planned"
+msgstr "予定済み"
+
+msgid "Please select one (or more) object."
+msgstr "一つ以上のオブジェクトを選択してください。"
+
+msgid "Please select one object."
+msgstr "オブジェクトを一つ選択してください。"
+
+msgid "Please select one or more items to copy first."
+msgstr "一つ以上の項目を選択してください。"
+
+msgid "Please set a ChangeLog message."
+msgstr "更新履歴メッセージを設定してください。"
+
+msgid "Portal Type Property"
+msgstr "ポータルタイプのプロパティ"
+
+msgid "Portal Types"
+msgstr "ポータルタイプ"
+
+msgid "Portal type"
+msgstr "ポータルタイプ"
+
+msgid "Post Query"
+msgstr "質問を投稿する"
+
+msgid "Post a Query"
+msgstr "質問を投稿する"
+
+msgid "Postal Code"
 msgstr "郵便番号"
+
+msgid "Posted"
+msgstr "記帳済み"
+
+msgid "Precision"
+msgstr "精度"
+
+msgid "Predicate Group"
+msgstr "予測グループ"
+
+msgid "Predicate"
+msgstr "予測"
+
+msgid "Predicates"
+msgstr "予測"
+
+msgid "Preference Tool"
+msgstr "設定ツール"
+
+msgid "Preference"
+msgstr "設定"
 
 msgid "Preferences"
 msgstr "設定"
 
-msgid "Previous"
-msgstr "前"
+msgid "Prefix"
+msgstr "接頭辞"
+
+msgid "Presentation"
+msgstr "プレゼンテーション文書"
+
+msgid "Prev. Period"
+msgstr "前の期間"
 
 msgid "Previous Page"
 msgstr "前のページ"
 
+msgid "Previous Period"
+msgstr "前の期間"
+
+msgid "Previous"
+msgstr "前"
+
+msgid "Prevision Quantity"
+msgstr "予想数量"
+
+msgid "Prevision Value"
+msgstr "予測値"
+
+msgid "Price Currency"
+msgstr "通貨"
+
+msgid "Price Validity"
+msgstr "価格有効日"
+
+msgid "Price"
+msgstr "価格"
+
+msgid "Priced Quantity"
+msgstr "価格単位"
+
+msgid "Print Invoice"
+msgstr "請求書を印刷する"
+
+msgid "Print Order"
+msgstr "注文を印刷する"
+
 msgid "Print"
 msgstr "印刷"
 
+msgid "Printouts"
+msgstr "印刷"
+
+msgid "Priority"
+msgstr "優先度"
+
+msgid "Privilege"
+msgstr "特権"
+
+msgid "Privileges"
+msgstr "特権"
+
+msgid "Problem Detected"
+msgstr "問題を検出しました"
+
+msgid "Problem"
+msgstr "問題"
+
+msgid "Product Individual Variation"
+msgstr "製品個別のバリエーション"
+
+msgid "Product Individual Variations"
+msgstr "製品個別のバリエーション"
+
+msgid "Product Interest"
+msgstr "関心のある商品"
+
+msgid "Product Line"
+msgstr "製品ライン"
+
+msgid "Product Module"
+msgstr "製品モジュール"
+
+msgid "Product or Service"
+msgstr "製品もしくはサービス"
+
 msgid "Product"
 msgstr "製品"
+
+msgid "Products to Validate"
+msgstr "承認すべき製品"
 
 msgid "Products"
 msgstr "製品"
@@ -363,11 +2399,11 @@ msgstr "製品"
 msgid "Profile"
 msgstr "プロフィール"
 
-msgid "Project"
-msgstr "プロジェクト"
+msgid "Profit and Loss"
+msgstr "損益計算書"
 
 msgid "Project Line"
-msgstr "プロジェクトの行"
+msgstr "プロジェクト・ライン"
 
 msgid "Project Report"
 msgstr "プロジェクト報告"
@@ -375,41 +2411,287 @@ msgstr "プロジェクト報告"
 msgid "Project Reports"
 msgstr "プロジェクト報告"
 
+msgid "Project"
+msgstr "プロジェクト"
+
 msgid "Projects"
 msgstr "プロジェクト"
 
+msgid "Property Criteria"
+msgstr "プロパティの基準値"
+
+msgid "Property Divergence Tester"
+msgstr "プロパティ整合性テスター"
+
+msgid "Property"
+msgstr "プロパティ"
+
+msgid "Provision"
+msgstr "供給"
+
+msgid "Purchase Invoice Transaction Line"
+msgstr "購入請求取引ライン"
+
+msgid "Purchase Invoice Transaction Lines"
+msgstr "購入請求取引ライン"
+
+msgid "Purchase Invoice Transaction"
+msgstr "購入請求取引"
+
+msgid "Purchase Order Cell"
+msgstr "購入注文セル"
+
+msgid "Purchase Order Line"
+msgstr "購入注文ライン"
+
+msgid "Purchase Order Lines"
+msgstr "購入注文ライン"
+
+msgid "Purchase Order Module"
+msgstr "購入注文モジュール"
+
 msgid "Purchase Order"
-msgstr "購入の注文"
+msgstr "購入注文"
+
+msgid "Purchase Orders to Plan"
+msgstr "予定すべき購入注文"
 
 msgid "Purchase Orders"
-msgstr "購入の注文"
+msgstr "購入注文"
+
+msgid "Purchase Packing List Cell"
+msgstr "購入用の梱包明細書セル"
+
+msgid "Purchase Packing List Details"
+msgstr "購入用の梱包明細書の詳細"
+
+msgid "Purchase Packing List Line"
+msgstr "購入用の梱包明細書ライン"
+
+msgid "Purchase Packing List Lines"
+msgstr "購入用の梱包明細書ライン"
+
+msgid "Purchase Packing List Module"
+msgstr "購入用の梱包明細書モジュール"
+
+msgid "Purchase Packing List Movements"
+msgstr "購入用の梱包明細書の動き"
+
+msgid "Purchase Packing List to Confirm"
+msgstr "確認すべき購入用の梱包明細書"
 
 msgid "Purchase Packing List"
-msgstr "購入用梱包明細書"
+msgstr "購入用の梱包明細書"
 
 msgid "Purchase Packing Lists"
-msgstr "購入用梱包明細書"
+msgstr "購入用の梱包明細書"
 
-msgid "Real Client"
-msgstr "本当の顧客"
+msgid "Purchase Price"
+msgstr "購入価格"
+
+msgid "Purchase Supplies"
+msgstr "購入先の供給条件"
+
+msgid "Purchase Supply Cell"
+msgstr "購入先の供給条件セル"
+
+msgid "Purchase Supply Line"
+msgstr "購入先の供給条件ライン"
+
+msgid "Purchase Supply Lines"
+msgstr "購入先の供給条件ライン"
+
+msgid "Purchase Supply Module"
+msgstr "購入先の供給条件モジュール"
+
+msgid "Purchase Supply"
+msgstr "購入先の供給条件"
+
+msgid "Purchase Trade Condition Module"
+msgstr "購入の取引条件モジュール"
+
+msgid "Purchase Trade Condition"
+msgstr "購入の取引条件"
+
+msgid "Purchase Trade Conditions to Validate"
+msgstr "承認すべき購入の取引条件"
+
+msgid "Purchase Trade Conditions"
+msgstr "購入の取引条件"
+
+msgid "Purchase"
+msgstr "購入"
+
+msgid "Quantity Divergence Tester"
+msgstr "数量整合性テスター"
+
+msgid "Quantity Step"
+msgstr "数量にともなう価格設定"
+
+msgid "Quantity Unit"
+msgstr "単位"
+
+msgid "Quantity unit"
+msgstr "単位"
+
+msgid "Quantity"
+msgstr "量"
+
+msgid "Queries"
+msgstr "質問"
+
+msgid "Query Module"
+msgstr "質問"
+
+msgid "Query"
+msgstr "質問"
+
+msgid "Question"
+msgstr "質問"
+
+msgid "Quick Search"
+msgstr "簡単検索"
+
+msgid "Ram Cache"
+msgstr "RAMキャッシュ"
+
+msgid "Ratio"
+msgstr "率"
+
+msgid "Re-install Business Template"
+msgstr "ビジネス・テンプレートを再インストールする"
+
+msgid "Ready"
+msgstr "準備する"
+
+msgid "Rebuild Business Template"
+msgstr "ビジネス・テンプレートを再構築する"
+
+msgid "Receivable"
+msgstr "売掛金"
+
+msgid "Receive"
+msgstr "受け取る"
+
+msgid "Received"
+msgstr "受け取り済み"
+
+msgid "Recipient or Beneficiary"
+msgstr "受取先"
 
 msgid "Reconfigure Portal"
 msgstr "ポータルの再設定"
 
-msgid "Region"
-msgstr "地域"
+msgid "Reference Currency"
+msgstr "基準通貨"
 
-msgid "Relative URL"
-msgstr "相対URL"
+msgid "Reference"
+msgstr "リファレンス"
+
+msgid "Region"
+msgstr "都道府県"
+
+msgid "Registered Capital"
+msgstr "登記資本金"
+
+msgid "Reject Offer"
+msgstr "依頼を却下する"
+
+msgid "Rejected"
+msgstr "却下済み"
+
+msgid "Related Invoice"
+msgstr "関連する請求書"
+
+msgid "Related Objects"
+msgstr "関連するオブジェクト"
+
+msgid "Related Payment Transaction"
+msgstr "関連する支払い取引"
+
+msgid "Related Purchase Invoice"
+msgstr "関連する購入請求"
+
+msgid "Related Purchase Order"
+msgstr "関連する購入注文"
+
+msgid "Related Purchase Packing List"
+msgstr "関連する購入用の梱包明細書"
+
+msgid "Related Purchase Trade Condition"
+msgstr "関連する購入の取引条件"
+
+msgid "Related Sale Invoice Transaction"
+msgstr "関連する売上請求取引"
+
+msgid "Related Sale Order"
+msgstr "関連する販売注文"
+
+msgid "Related Sale Packing List"
+msgstr "関連する販売用の梱包明細書"
+
+msgid "Related Transformation"
+msgstr "関連する変換"
+
+msgid "Related Trash Bin"
+msgstr "関連するごみ箱"
+
+msgid "Relation Results"
+msgstr "関連の結果"
+
+msgid "Remember my name"
+msgstr "名前を記憶する"
+
+msgid "Replaced"
+msgstr "置換済み"
 
 msgid "Report"
-msgstr "報告"
+msgstr "報告する"
 
-msgid "Report Tree"
-msgstr "レポート・ツリー"
+msgid "Reporter"
+msgstr "報告者"
+
+msgid "Reports"
+msgstr "レポート"
+
+msgid "Requirement Document"
+msgstr "要求定義書"
+
+msgid "Requirement Module"
+msgstr "要求定義モジュール"
+
+msgid "Requirement"
+msgstr "要求定義"
+
+msgid "Reset Password"
+msgstr "パスワードを初期化する"
+
+msgid "Resolve SVN Conflicted Files"
+msgstr "SVNの衝突ファイルを解決する"
+
+msgid "Resolved"
+msgstr "解決済み"
+
+msgid "Resource Inventory"
+msgstr "リソースの在庫目録"
+
+msgid "Resource List"
+msgstr "リソース一覧"
+
+msgid "Resource"
+msgstr "リソース"
 
 msgid "Results"
 msgstr "結果"
+
+msgid "Returned Sale Packing List"
+msgstr "返却された販売用の梱包明細書"
+
+msgid "Returned Sale Packing Lists"
+msgstr "返却された販売用の梱包明細書"
+
+msgid "Rights"
+msgstr "権利"
 
 msgid "Role"
 msgstr "役割"
@@ -417,96 +2699,572 @@ msgstr "役割"
 msgid "Roles"
 msgstr "役割"
 
+msgid "Running Balance"
+msgstr "積立残高"
+
+msgid "Salary Coefficient"
+msgstr "給与係数"
+
+msgid "Salary Level"
+msgstr "給与水準"
+
+msgid "Sale Invoice Lines"
+msgstr "売上請求ライン"
+
+msgid "Sale Invoice Transaction Line"
+msgstr "売上請求取引ライン"
+
+msgid "Sale Invoice Transaction Lines"
+msgstr "売上請求取引ライン"
+
+msgid "Sale Invoice Transaction"
+msgstr "売上請求取引"
+
 msgid "Sale Opportunities"
-msgstr "販売の機会"
+msgstr "販売見込み"
+
+msgid "Sale Opportunity Detailed Report"
+msgstr "販売見込みの詳細なレポート"
+
+msgid "Sale Opportunity Status"
+msgstr "販売見込みの状況"
 
 msgid "Sale Opportunity"
-msgstr "販売の機会"
+msgstr "販売見込み"
+
+msgid "Sale Order Cell"
+msgstr "販売注文セル"
+
+msgid "Sale Order Line"
+msgstr "販売注文ライン"
+
+msgid "Sale Order Lines"
+msgstr "販売注文ライン"
+
+msgid "Sale Order Module"
+msgstr "販売注文モジュール"
 
 msgid "Sale Order"
-msgstr "販売の注文"
+msgstr "販売注文"
+
+msgid "Sale Orders to Confirm"
+msgstr "確認すべき販売注文"
+
+msgid "Sale Orders to Plan"
+msgstr "予定すべき販売注文"
 
 msgid "Sale Orders"
-msgstr "販売の注文"
+msgstr "販売注文"
+
+msgid "Sale Packing List Cell"
+msgstr "販売用の梱包明細書セル"
+
+msgid "Sale Packing List Details"
+msgstr "販売用の梱包明細書の詳細"
+
+msgid "Sale Packing List Line"
+msgstr "販売用の梱包明細書ライン"
+
+msgid "Sale Packing List Lines"
+msgstr "販売用の梱包明細書ライン"
+
+msgid "Sale Packing List Module"
+msgstr "販売用の梱包明細書モジュール"
+
+msgid "Sale Packing List Movements"
+msgstr "販売用の梱包明細書リストの動き"
+
+msgid "Sale Packing List to Prepare"
+msgstr "準備すべき販売用の梱包明細書"
+
+msgid "Sale Packing List to Process"
+msgstr "処理すべき販売用の梱包明細書"
+
+msgid "Sale Packing List to Solve"
+msgstr "解決すべき販売用の梱包明細書"
+
+msgid "Sale Packing List to Validate"
+msgstr "承認すべき販売用の梱包明細書"
 
 msgid "Sale Packing List"
-msgstr "販売用梱包明細書"
+msgstr "販売用の梱包明細書"
 
 msgid "Sale Packing Lists"
-msgstr "販売用梱包明細書"
+msgstr "販売用の梱包明細書"
+
+msgid "Sale Supplies"
+msgstr "販売先の供給条件"
+
+msgid "Sale Supply Cell"
+msgstr "販売先の供給条件セル"
+
+msgid "Sale Supply Line"
+msgstr "販売先の供給条件ライン"
+
+msgid "Sale Supply Lines"
+msgstr "販売先の供給条件ライン"
+
+msgid "Sale Supply Module"
+msgstr "販売先の供給条件モジュール"
+
+msgid "Sale Supply"
+msgstr "販売先の供給条件"
+
+msgid "Sale Trade Condition List"
+msgstr "販売の取引条件リスト"
+
+msgid "Sale Trade Condition Module"
+msgstr "販売の取引条件モジュール"
+
+msgid "Sale Trade Condition"
+msgstr "販売の取引条件"
+
+msgid "Sale Trade Conditions to Validate"
+msgstr "承認すべき販売の取引条件"
+
+msgid "Sale Trade Conditions"
+msgstr "販売の取引条件"
+
+msgid "Sale trade condition"
+msgstr "販売の取引条件"
+
+msgid "Sale"
+msgstr "販売"
+
+msgid "Sales Price"
+msgstr "販売価格"
+
+msgid "Saturday"
+msgstr "土曜"
+
+msgid "Save Business Template"
+msgstr "ビジネス・テンプレートを保存する"
 
 msgid "Save"
 msgstr "保存"
 
-msgid "Search"
-msgstr "検索"
+msgid "Saved in ${path} ."
+msgstr "${path} に保存しました。"
+
+msgid "Search Key"
+msgstr "検索キー"
 
 msgid "Search Results"
 msgstr "検索結果"
 
+msgid "Search Transactions"
+msgstr "取引を検索する"
+
+msgid "Search"
+msgstr "検索"
+
+msgid "Section Account"
+msgstr "自分方の勘定科目"
+
+msgid "Section Bank Account"
+msgstr "取引部門の銀行口座"
+
+msgid "Section Category"
+msgstr "グループ区分"
+
+msgid "Section Transaction Reference"
+msgstr "取引部門のリファレンス"
+
+msgid "Section"
+msgstr "取引部門"
+
+msgid "Select Actions"
+msgstr "アクションを選択する"
+
+msgid "Select Exchange"
+msgstr "インポート/エクスポートの方法を選択"
+
 msgid "Select Favorite"
 msgstr "お気に入りを選択"
+
+msgid "Select Language"
+msgstr "言語の選択"
 
 msgid "Select Module"
 msgstr "モジュールを選択"
 
+msgid "Select Print"
+msgstr "印刷方法の選択"
+
+msgid "Select Template"
+msgstr "テンプレートを選択する"
+
+msgid "Select appropriate document in the list."
+msgstr "一覧から選択してください。"
+
+msgid "Seller"
+msgstr "売り手"
+
+msgid "Send"
+msgstr "送信する"
+
+msgid "Sender or Provider"
+msgstr "送り元または提供元"
+
+msgid "Sender"
+msgstr "送り元"
+
+msgid "Serial Number"
+msgstr "シリアルナンバー"
+
+msgid "Service Individual Variations"
+msgstr "サービス個別のバリエーション"
+
+msgid "Service Module"
+msgstr "サービスモジュール"
+
 msgid "Service"
 msgstr "サービス"
+
+msgid "Services to Validate"
+msgstr "承認すべきサービス"
 
 msgid "Services"
 msgstr "サービス"
 
+msgid "Set List Setting"
+msgstr "一覧の項目を設定する"
+
+msgid "Set Ready"
+msgstr "準備を完了する"
+
+msgid "Set Relation"
+msgstr "関連を設定する"
+
+msgid "Setting the 'Remember my name' option will set a cookie with your username, so that when you login next time, your user name will already be filled in for you."
+msgstr "'名前を記憶する'オプションはあなたの名前を含んだクッキーを設定します。このオプションを有効にすると、次回ログインの際にあなたの名前があらかじめ表示されます。"
+
+msgid "Ship From"
+msgstr "発送元"
+
+msgid "Ship To"
+msgstr "受取先"
+
+msgid "Ship"
+msgstr "出荷する"
+
+msgid "Shipped"
+msgstr "出荷済み"
+
+msgid "Shipping Date"
+msgstr "発送日"
+
+msgid "Short Title"
+msgstr "略称"
+
 msgid "Show All"
 msgstr "全表示"
+
+msgid "Signature"
+msgstr "署名"
+
+msgid "Simulation State"
+msgstr "シミュレーションの状態"
+
+msgid "Site"
+msgstr "所属"
+
+msgid "Skills"
+msgstr "スキル"
+
+msgid "Social Code"
+msgstr "住民票コード"
+
+msgid "Social Security Identification Number"
+msgstr "基礎年金番号"
+
+msgid "Solve Divergences"
+msgstr "不整合を解決する"
+
+msgid "Solved"
+msgstr "解決済み"
+
+msgid "Solving"
+msgstr "解決中"
+
+msgid "Sort Index"
+msgstr "並び順"
 
 msgid "Sort"
 msgstr "整列"
 
-msgid "Source"
-msgstr "出発点"
+msgid "Source Account"
+msgstr "自分方の勘定科目"
+
+msgid "Source Credit"
+msgstr "自分方の貸方"
+
+msgid "Source Debit"
+msgstr "自分方の借方"
 
 msgid "Source Reference"
-msgstr "出発側の参照番号"
+msgstr "自分方のリファレンス"
+
+msgid "Source"
+msgstr "自分方"
+
+msgid "Specialised Trade Conditions"
+msgstr "特化する取引条件"
+
+msgid "Split and Defer"
+msgstr "分割して延期する"
+
+msgid "Spreadsheet"
+msgstr "表計算文書"
+
+msgid "Start Career Step"
+msgstr "経歴を開始する"
 
 msgid "Start Date"
 msgstr "開始日"
 
+msgid "Start Open Order"
+msgstr "繰返販売注文を開始する"
+
+msgid "Started"
+msgstr "開始済み"
+
 msgid "State"
 msgstr "状態"
+
+msgid "Status changed."
+msgstr "状態を変更しました。"
+
+msgid "Status"
+msgstr "状態"
+
+msgid "Stock Report"
+msgstr "在庫品の報告書"
+
+msgid "Stock by Variation"
+msgstr "バリエーション毎の在庫"
+
+msgid "Stock per Variation"
+msgstr "バリエーション毎の在庫"
+
+msgid "Stock"
+msgstr "在庫品"
+
+msgid "Stop Career Step"
+msgstr "経歴を終了する"
 
 msgid "Stop Date"
 msgstr "終了日"
 
+msgid "Stopped"
+msgstr "終了済み"
+
+msgid "Street Address"
+msgstr "住所"
+
+msgid "Suffix"
+msgstr "接尾辞"
+
+msgid "Sunday"
+msgstr "日曜"
+
+msgid "Supplier Reference"
+msgstr "供給元の"
+
+msgid "Supplier"
+msgstr "供給元"
+
+msgid "Supply Cell"
+msgstr "供給セル"
+
+msgid "Supply Line"
+msgstr "供給ライン"
+
+msgid "Support Request Detailed Report"
+msgstr "サポート依頼の詳細なレポート"
+
+msgid "Support Request Status"
+msgstr "サポート依頼の状況"
+
 msgid "Support Request"
-msgstr "サポートの依頼"
+msgstr "サポート依頼"
 
 msgid "Support Requests"
-msgstr "サポートの依頼"
+msgstr "サポート依頼"
+
+msgid "Surcharge Ratio Quantity Step"
+msgstr "数量にともなう課徴金率"
+
+msgid "Surcharge Ratio Variation Axes"
+msgstr "課徴金率のバリエーションの種類"
+
+msgid "Surcharge Ratio"
+msgstr "課徴金率"
 
 msgid "Surname"
 msgstr "姓"
 
+msgid "Suspended"
+msgstr "中断済み"
+
+msgid "Symbol"
+msgstr "記号"
+
+msgid "Target Product"
+msgstr "対象の商品"
+
+msgid "Tax Excluding VAT"
+msgstr "税抜合計額"
+
+msgid "Tax Line"
+msgstr "税ライン"
+
+msgid "Tax Lines"
+msgstr "税ライン"
+
+msgid "Tax Model Line"
+msgstr "税モデルライン"
+
+msgid "Tax Model Lines"
+msgstr "税モデルライン"
+
+msgid "Tax Module"
+msgstr "税モジュール"
+
+msgid "Tax Rule"
+msgstr "税の規則"
+
+msgid "Tax"
+msgstr "税"
+
+msgid "Taxes"
+msgstr "税"
+
 msgid "Telephone"
 msgstr "電話"
 
-msgid ""
-"There is no such document in the database. You may create an new document of "
-"type ${portal_type} in relation with ${title} according to relation "
-"${base_category}. Use the form bellow to enter the ${catalog_index} values "
-"of new documents."
-msgstr ""
-"データベースにそのような文書がありません。${base_category} の関係に従って、"
-"${title} と関連した ${portal_type} 型の新しい文書を作成可能です。新規の文書"
-"の ${catalog_index} を以下のフォームを利用してください。"
+msgid "Term (days)"
+msgstr "期間 (日数)"
+
+msgid "Terminate the Current Career Step"
+msgstr "現在の経歴を終了する"
+
+msgid "Text"
+msgstr "ワープロ文書"
+
+msgid "The invoiced person or organisation."
+msgstr "請求される人物または組織"
+
+msgid "The organisation or person to whom merchandise or service is delivered over or provided to."
+msgstr "サービスを受ける人物または組織"
+
+msgid "The telephone area"
+msgstr "市外局番"
+
+msgid "The telephone country code"
+msgstr "国番号"
+
+msgid "The telephone extension"
+msgstr "内線"
+
+msgid "The values above are the parameters of the transaction list displayed below.<br/>Those parameters have a portal wide scope and can be edited in the <a href='${url}'>preference screen</a>."
+msgstr "上記の値によって下記に表示されている取引一覧が制御されています。<br/>これらのパラメータはポータル全体に適用されており、<a href='${url}'>設定画面</a>で編集できます。\r\n"
+
+msgid "There is no such document in the database. You may create an new document of type ${portal_type} in relation with ${title} according to relation ${base_category}. Use the form bellow to enter the ${catalog_index} values of new documents."
+msgstr "データベースにそのような文書がありません。${base_category} の関係に従って、${title} と関連した ${portal_type} 型の新しい文書を作成可能です。新規の文書の ${catalog_index} を以下のフォームを利用してください。"
+
+msgid "Third Parties"
+msgstr "相手方"
+
+msgid "Third Party Account"
+msgstr "相手方の勘定科目"
+
+msgid "Third Party Bank Account"
+msgstr "相手方の銀行口座"
+
+msgid "Third Party Reference"
+msgstr "相手方のリファレンス"
+
+msgid "Third Party"
+msgstr "相手方"
+
+msgid "Thumbnail"
+msgstr "サムネイル"
+
+msgid "Thursday"
+msgstr "木曜"
+
+msgid "Time"
+msgstr "時刻"
 
 msgid "Title"
 msgstr "タイトル"
 
+msgid "To reset your password, please enter your login below. An email will be sent to your address with a link to enter your new password."
+msgstr "パスワードをリセットするログイン名を入力してください。新しいパスワードを入力するためのリンクを含んだEメールがあなたのアドレスに送られます。"
+
+msgid "Too many documents were found."
+msgstr "見つかったドキュメントが多すぎます。"
+
+msgid "Total Excluding VAT"
+msgstr "税抜合計額"
+
+msgid "Total Including VAT"
+msgstr "税込合計額"
+
+msgid "Total Income"
+msgstr "総所得"
+
+msgid "Total Price"
+msgstr "合計"
+
+msgid "Total Quantity"
+msgstr "総量"
+
+msgid "Total Selected Amount"
+msgstr "選択された勘定科目の合計"
+
+msgid "Total TAX"
+msgstr "税額合計"
+
+msgid "Trade Date"
+msgstr "取引日付"
+
+msgid "Trade"
+msgstr "取引管理"
+
+msgid "Transaction Reference"
+msgstr "取引番号"
+
+msgid "Transaction Type"
+msgstr "取引タイプ"
+
+msgid "Transactions Related to This Account"
+msgstr "関連する取引"
+
+msgid "Transactions Related to This Entity"
+msgstr "関連する取引"
+
 msgid "Transactions"
 msgstr "取引"
 
+msgid "Transformation Module"
+msgstr "変換/組み立て"
+
+msgid "Transformation Optional Resource"
+msgstr "資源"
+
 msgid "Transformation"
 msgstr "変換"
+
+msgid "Transformations"
+msgstr "変換/組み立て"
+
+msgid "Trial Balance"
+msgstr "試算表"
+
+msgid "Tuesday"
+msgstr "火曜"
 
 msgid "Type"
 msgstr "型"
@@ -517,41 +3275,206 @@ msgstr "選択解除"
 msgid "Undo"
 msgstr "取り消し"
 
+msgid "Ungrouping"
+msgstr "未分類"
+
+msgid "Unit Base Price"
+msgstr "基本価格"
+
+msgid "Unit Price"
+msgstr "単価"
+
 msgid "Unit"
 msgstr "単位"
+
+msgid "Update Assignment"
+msgstr "割当を更新する"
+
+msgid "Update Quantity from Container"
+msgstr "入れ物から数量を更新する"
+
+msgid "Update"
+msgstr "更新する"
+
+msgid "Updated"
+msgstr "更新済み"
+
+msgid "Upload Module"
+msgstr "アップロード用モジュール"
+
+msgid "Upload"
+msgstr "アップロード"
+
+msgid "User Account Workflow"
+msgstr "ユーザアカウントワークフロー"
+
+msgid "User Interface"
+msgstr "ユーザインタフェース"
+
+msgid "User Login"
+msgstr "ログイン名"
+
+msgid "User Password"
+msgstr "パスワード"
+
+msgid "User"
+msgstr "ユーザ"
+
+msgid "Using category for section is invalid."
+msgstr "取引部門に対するカテゴリーの使用は不正です。"
 
 msgid "Usual Name"
 msgstr "通称"
 
+msgid "VAT Code"
+msgstr "VATコード"
+
+msgid "Validate Accounting Transaction"
+msgstr "会計取引を承認する"
+
+msgid "Validate Action"
+msgstr "承認アクション"
+
+msgid "Validate Inventory"
+msgstr "在庫目録を承認する"
+
+msgid "Validate Transaction"
+msgstr "取引を承認する"
+
+msgid "Validate Workflow Action"
+msgstr "ワークフロー・アクションを承認する"
+
+msgid "Validate"
+msgstr "承認する"
+
+msgid "Validated"
+msgstr "承認済み"
+
 msgid "Validation State"
-msgstr "確認状態"
+msgstr "承認状態"
+
+msgid "Validation Workflow"
+msgstr "承認ワークフロー"
+
+msgid "Validity Beginning Date"
+msgstr "有効開始日"
+
+msgid "Validity End Date"
+msgstr "取引終了日"
+
+msgid "Validity Start Date"
+msgstr "有効開始日"
+
+msgid "Validity Stop Date"
+msgstr "取引終了日"
 
 msgid "Value"
 msgstr "値"
 
-msgid "Vendor"
-msgstr "ベンダ"
+msgid "Variation"
+msgstr "バリエーション"
 
 msgid "Vendor Account"
 msgstr "ベンダの口座"
 
-msgid "Vendor Credit"
-msgstr "ベンダの貸方"
-
-msgid "Vendor Debit"
-msgstr "ベンダの借方"
-
 msgid "Vendor Transaction Reference"
-msgstr "ベンダの取引参照番号"
+msgstr "ベンダの取引番号"
+
+msgid "Vendor"
+msgstr "ベンダ"
+
+msgid "Version"
+msgstr "バージョン"
+
+msgid "View Accounting"
+msgstr "会計"
+
+msgid "View SVN History"
+msgstr "SVN履歴"
+
+msgid "View SVN Repository Information"
+msgstr "SVNレポジトリ情報"
+
+msgid "View Source"
+msgstr "ソース"
 
 msgid "View"
-msgstr "閲覧"
+msgstr "一般"
+
+msgid "Visit"
+msgstr "訪問"
+
+msgid "Warehouse"
+msgstr "倉庫"
+
+msgid "Web Message"
+msgstr "ウェブ・メッセージ"
+
+msgid "Web Page"
+msgstr "ウェブ・ページ"
+
+msgid "Web Pages"
+msgstr "ウェブ・ページ"
+
+msgid "Web Sites"
+msgstr "ウェブ・サイト"
+
+msgid "Wednesday"
+msgstr "水曜"
+
+msgid "Weeks"
+msgstr "何週"
+
+msgid "Weight (g)"
+msgstr "重量 (g)"
+
+msgid "Weight (g/m2)"
+msgstr "重量 (g/m2)"
+
+msgid "Weight (kg)"
+msgstr "重量 (kg)"
 
 msgid "Welcome to ERP5"
 msgstr "ERP5へようこそ"
 
+msgid "Width (cm)"
+msgstr "幅 (cm)"
+
+msgid "Width (m)"
+msgstr "幅 (m)"
+
+msgid "Width"
+msgstr "幅"
+
+msgid "Workflow Report"
+msgstr "ワークフローレポート"
+
+msgid "Workflow"
+msgstr "ワークフロー"
+
 msgid "Workflows"
 msgstr "ワークフロー"
 
-msgid "title"
-msgstr "タイトル"
+msgid "You are not allowed to clone this object."
+msgstr "このオブジェクトを複製する権限がありません。"
+
+msgid "You can login with another user name or ${go_back}."
+msgstr "別の名前でログインしていただくか、${go_back}。"
+
+msgid "You do not have enough permissions to access this page."
+msgstr "このページにアクセスする権限がありません。"
+
+msgid "You do not have the permissions to edit the object."
+msgstr "オブジェクトを編集する権限がありません。"
+
+msgid "You have been logged out."
+msgstr "ログアウトしています。"
+
+msgid "Your Item No."
+msgstr "受取先項目番号"
+
+msgid "go back"
+msgstr "前の画面に戻ります"
+
+msgid "of"
+msgstr "/"
