@@ -47,6 +47,29 @@
              dialog_mode python: True;\n
              dummy python: request.set(\'editable_mode\', editable_mode)">\n
     <tal:block metal:use-macro="here/dialog_main/macros/master">\n
+\n
+      <tal:block metal:define-macro="head">\n
+       <tal:block metal:fill-slot="head">\n
+        <tal:block tal:define="dummy python: request.set(\'here\', here);\n
+                   head_group python: form.get_fields_in_group(\'head\')">\n
+          <div tal:condition="python: len(head_group) > 0"\n
+               class="head">\n
+            <tal:block tal:repeat="field head_group">\n
+              <tal:block tal:condition="preferred_html_style_developper_mode">\n
+                <tal:block metal:use-macro="developper_shortcut_render/macros/field_developper" />\n
+              </tal:block>\n
+              <tal:block tal:define="field_description field/Field_getDescription"\n
+                         tal:condition="preferred_html_style_translator_mode">\n
+                <tal:block metal:use-macro="developper_shortcut_render/macros/field_translator" />\n
+              </tal:block>\n
+              <tal:block tal:define="value python:request.get(field.id, None)"\n
+                         tal:replace="structure python:field.render(value, request)" />\n
+            </tal:block>\n
+          </div>\n
+        </tal:block>\n
+       </tal:block>\n
+      </tal:block>\n
+\n
       <tal:block metal:fill-slot="main">\n
         <tal:block tal:define="dummy python: request.set(\'here\', here);\n
                    dialog_actions python: here.Base_fixDialogActions(actions, dialog_category);\n
@@ -89,7 +112,7 @@
                  tal:define="group_list form/Form_getGroupTitleAndId">\n
               <tal:block tal:repeat="group group_list">\n
                 <tal:block tal:define="gid    group/gid">\n
-                  <fieldset tal:condition="python: \'hidden\' not in gid and \'bottom\' not in gid"\n
+                  <fieldset tal:condition="python: \'hidden\' not in gid and \'bottom\' not in gid and \'head\' not in gid"\n
                             tal:attributes="class gid;\n
                             id    python: \'fieldset_\' + gid.replace(\' \', \'_\');">\n
                     <legend tal:content="group/gtitle" class="group_title" />\n
@@ -107,8 +130,8 @@
         </tal:block>\n
       </tal:block>\n
 \n
-     <tal:block metal:define-macro="bottom">\n
-      <tal:block metal:fill-slot="bottom">\n
+      <tal:block metal:define-macro="bottom">\n
+       <tal:block metal:fill-slot="bottom">\n
         <tal:block tal:define="dummy python: request.set(\'here\', here);\n
                    bottom_group python: form.get_fields_in_group(\'bottom\')">\n
           <div tal:condition="python: len(bottom_group) > 0"\n
@@ -128,10 +151,10 @@
         </tal:block>\n
        </tal:block>\n
       </tal:block>\n
+\n
     </tal:block>\n
   </tal:block>\n
-</tal:block>\n
-
+</tal:block>
 
 ]]></string> </value>
         </item>

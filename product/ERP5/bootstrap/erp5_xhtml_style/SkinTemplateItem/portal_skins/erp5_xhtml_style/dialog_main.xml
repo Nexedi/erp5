@@ -56,6 +56,7 @@
       <tal:block metal:use-macro="here/main_template/macros/master">\n
         <tal:block metal:fill-slot="main">\n
           <div class="list_dialog">\n
+            <tal:block metal:define-slot="head" />\n
             <tal:block metal:define-slot="main" />\n
             <tal:block metal:define-slot="bottom" />\n
           </div>\n
@@ -74,8 +75,7 @@
       </tal:block>\n
     </tal:block>\n
   </tal:block>\n
-</tal:block>\n
-
+</tal:block>
 
 ]]></string> </value>
         </item>
