@@ -70,7 +70,7 @@ class TestTemplate(ERP5TypeTestCase):
                                              ])
 
   def test_Template(self):
-    self.login('yusei')
+    self.login(self.id())
     preference = self.portal.portal_preferences.newContent(portal_type='Preference')
     preference.priority = Priority.USER
     preference.enable()
@@ -114,6 +114,59 @@ class TestTemplate(ERP5TypeTestCase):
 
     self.assertEqual(new_document.getTitle(), 'My Foo 1')
 
+
+  def test_TemplateDeletable(self):
+    self.login(self.id())
+    preference = self.portal.portal_preferences.newContent(portal_type='Preference')
+    preference.priority = Priority.USER
+    preference.enable()
+
+    transaction.commit()
+    self.tic()
+
+    document = self.portal.foo_module.newContent(portal_type='Foo')
+    document.edit(title='My Foo 1')
+    document.newContent(portal_type='Foo Line')
+
+    transaction.commit()
+    self.tic()
+
+    document.Base_makeTemplateFromDocument(form_id=None)
+
+    transaction.commit()
+    self.tic()
+
+    self.assertEqual(len(preference.objectIds()), 1)
+
+    # make sure that subobjects are not unindexed after making template.
+    subobject_uid = document.objectValues()[0].getUid()
+    self.assertEqual(len(self.portal.portal_catalog(uid=subobject_uid)), 1)
+
+    self.portal.foo_module.manage_delObjects(ids=[document.getId()])
+
+    transaction.commit()
+    self.tic()
+
+    template = preference.objectValues()[0]
+
+    cp = preference.manage_copyObjects(ids=[template.getId()], REQUEST=None, RESPONSE=None)
+    new_document_list = self.portal.foo_module.manage_pasteObjects(cp)
+    new_document_id = new_document_list[0]['new_id']
+    new_document = self.portal.foo_module[new_document_id]
+    new_document.makeTemplateInstance()
+
+    transaction.commit()
+    self.tic()
+
+    self.assertEqual(new_document.getTitle(), 'My Foo 1')
+
+    # as templates are not indexable it is required to know, if they would
+    # appear on Folder_getDeleteObjectList
+    template_uid = template.getUid()
+    self.assertEqual(
+      1,
+      len(preference.Folder_getDeleteObjectList(uid = [template_uid]))
+    )
 
   def test_TemplateCreatePreferenceWithExistingUserPreference(self):
     self.login(self.id())
@@ -234,7 +287,7 @@ class TestTemplate(ERP5TypeTestCase):
 
   def test_TemplateNotIndexable(self):
     # template documents are not indexable
-    self.login('yusei')
+    self.login(self.id())
     preference = self.portal.portal_preferences.newContent(portal_type='Preference')
     preference.priority = Priority.USER
     preference.enable()
