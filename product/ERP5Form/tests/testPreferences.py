@@ -467,6 +467,9 @@ class TestPreferences(ERP5TypeTestCase):
       from ZODB.Transaction import Transaction
     except ImportError:
       self.assertRaises(Unauthorized, user_pref.edit, preferred_ooodoc_server_address="localhost")
+    # even if there is System Preference enabled getActivePreference shall return
+    # user preference
+    self.assertEqual(user_pref, preference_tool.getActivePreference())
 
 def test_suite():
   suite = unittest.TestSuite()
