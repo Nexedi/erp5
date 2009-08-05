@@ -190,6 +190,8 @@ class TestTemplate(ERP5TypeTestCase):
     self.assertEqual(len(user_preference.objectIds()), 1)
 
   def test_TemplateCreatePreferenceWithSystemPreferenceEnabled(self):
+    # TODO: This test *might* be removed if it is good to trust
+    #       getActivePreference to return only Preference portal type
     ERP5TypeTestCase.login(self, 'ERP5TypeTestCase')
     system_preference = self.portal.portal_preferences.newContent(
         portal_type='System Preference')
