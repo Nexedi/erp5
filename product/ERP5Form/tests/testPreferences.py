@@ -110,12 +110,16 @@ class TestPreferences(ERP5TypeTestCase):
     site = self.getPreferenceTool()['site']
 
     self.assertEqual(None, self.getPreferenceTool().getActivePreference())
+    self.assertEqual(None,
+        self.getPreferenceTool().getActiveSystemPreference())
 
     person1.portal_workflow.doActionFor(
        person1, 'enable_action', wf_id='preference_workflow')
     self.assertEquals(person1.getPreferenceState(), 'enabled')
 
     self.assertEqual( person1, self.getPreferenceTool().getActivePreference())
+    self.assertEqual(None,
+        self.getPreferenceTool().getActiveSystemPreference())
 
     portal_workflow.doActionFor(
        site, 'enable_action', wf_id='preference_workflow')
@@ -123,6 +127,8 @@ class TestPreferences(ERP5TypeTestCase):
     self.assertEquals(site.getPreferenceState(),    'global')
 
     self.assertEqual(person1, self.getPreferenceTool().getActivePreference())
+    self.assertEqual(None,
+        self.getPreferenceTool().getActiveSystemPreference())
 
     portal_workflow.doActionFor(
        group, 'enable_action', wf_id='preference_workflow')
@@ -131,10 +137,14 @@ class TestPreferences(ERP5TypeTestCase):
     self.assertEquals(site.getPreferenceState(),    'global')
 
     self.assertEqual(person1, self.getPreferenceTool().getActivePreference())
+    self.assertEqual(None,
+        self.getPreferenceTool().getActiveSystemPreference())
 
     portal_workflow.doActionFor(
        person2, 'enable_action', wf_id='preference_workflow')
     self.assertEqual(person2, self.getPreferenceTool().getActivePreference())
+    self.assertEqual(None,
+        self.getPreferenceTool().getActiveSystemPreference())
     self.assertEquals(person2.getPreferenceState(), 'enabled')
     # enabling a preference disable all other of the same level
     self.assertEquals(person1.getPreferenceState(), 'disabled')
