@@ -1,7 +1,9 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2005 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2005-2009 Nexedi SA and Contributors. All Rights Reserved.
 #                    Jerome Perrin <jerome@nexedi.com>
+#                    Łukasz Nowak <luke@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -33,18 +35,14 @@ from AccessControl.SecurityManagement import newSecurityManager
 from AccessControl.SecurityManagement import noSecurityManager
 from AccessControl.SecurityManagement import getSecurityManager
 from zExceptions import Unauthorized
-from zLOG import LOG
 from DateTime import DateTime
-from Testing import ZopeTestCase
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Form.Document.Preference import Priority
 
 
 class TestPreferences(ERP5TypeTestCase):
-  quiet = 1
-  run_all_tests = 1
-  
+
   def getTitle(self):
     return "Portal Preference"
 
@@ -61,7 +59,7 @@ class TestPreferences(ERP5TypeTestCase):
     transaction.commit()
     self.tic()
 
-  def createPreferences(self) :
+  def createPreferences(self):
     """ create some preferences objects  """
     portal_preferences = self.getPreferenceTool()
     ## create initial preferences
@@ -75,12 +73,12 @@ class TestPreferences(ERP5TypeTestCase):
     site = portal_preferences.newContent(
         id='site', portal_type='Preference')
     site.setPriority(Priority.SITE)
-    
+
     # commit transaction
     transaction.commit()
     self.getPreferenceTool().recursiveReindexObject()
     self.tic()
-    
+
     # check preference levels are Ok
     self.assertEquals(person1.getPriority(), Priority.USER)
     self.assertEquals(person2.getPriority(), Priority.USER)
@@ -91,37 +89,30 @@ class TestPreferences(ERP5TypeTestCase):
     self.assertEquals(person2.getPreferenceState(), 'disabled')
     self.assertEquals(group.getPreferenceState(),   'disabled')
     self.assertEquals(site.getPreferenceState(),    'disabled')
-  
+
   def test_PreferenceToolTitle(self):
     """Tests that the title of the preference tool is correct.
     """
     self.assertEquals('Preferences', self.getPreferenceTool().Title())
 
-  def test_AllowedContentTypes(self, quiet=quiet, run=run_all_tests):
+  def test_AllowedContentTypes(self):
     """Tests Preference can be added in Preference Tool.
     """
-    if not run: return
-    if not quiet:
-      ZopeTestCase._print('\n Test allowed content types')
     self.failUnless('Preference' in [x.getId() for x in
            self.getPortal().portal_preferences.allowedContentTypes()])
 
-  def test_EnablePreferences(self, quiet=quiet, run=run_all_tests) :
+  def test_EnablePreferences(self):
     """ tests preference workflow """
-    if not run: return
-    if not quiet:
-      ZopeTestCase._print('\n Test enabling preferences')
-    
     portal_workflow = self.getWorkflowTool()
     person1 = self.getPreferenceTool()['person1']
     person2 = self.getPreferenceTool()['person2']
     group = self.getPreferenceTool()['group']
     site = self.getPreferenceTool()['site']
-    
+
     person1.portal_workflow.doActionFor(
        person1, 'enable_action', wf_id='preference_workflow')
     self.assertEquals(person1.getPreferenceState(), 'enabled')
-    
+
     portal_workflow.doActionFor(
        site, 'enable_action', wf_id='preference_workflow')
     self.assertEquals(person1.getPreferenceState(), 'enabled')
@@ -132,7 +123,7 @@ class TestPreferences(ERP5TypeTestCase):
     self.assertEquals(person1.getPreferenceState(), 'enabled')
     self.assertEquals(group.getPreferenceState(),   'enabled')
     self.assertEquals(site.getPreferenceState(),    'global')
-      
+
     portal_workflow.doActionFor(
        person2, 'enable_action', wf_id='preference_workflow')
     self.assertEquals(person2.getPreferenceState(), 'enabled')
@@ -141,18 +132,14 @@ class TestPreferences(ERP5TypeTestCase):
     self.assertEquals(group.getPreferenceState(),   'enabled')
     self.assertEquals(site.getPreferenceState(),    'global')
 
-  def test_GetPreference(self, quiet=quiet, run=run_all_tests):
+  def test_GetPreference(self):
     """ checks that getPreference returns the good preferred value"""
-    if not run: return
-    if not quiet:
-      ZopeTestCase._print('\n Test getPreference')
-   
     portal_workflow = self.getWorkflowTool()
     pref_tool = self.getPreferenceTool()
     person1 = self.getPreferenceTool()['person1']
     group = self.getPreferenceTool()['group']
     site = self.getPreferenceTool()['site']
-    
+
     portal_workflow.doActionFor(
        person1, 'enable_action', wf_id='preference_workflow')
     portal_workflow.doActionFor(
@@ -174,14 +161,14 @@ class TestPreferences(ERP5TypeTestCase):
 
     self.assertEquals(len(pref_tool.getPreference(
       'preferred_accounting_transaction_simulation_state_list')), 0)
-    
+
     site.edit(
       preferred_accounting_transaction_simulation_state_list=
       ['stopped', 'delivered'])
     self.assertEquals(list(pref_tool.getPreference(
       'preferred_accounting_transaction_simulation_state_list')),
       list(site.getPreferredAccountingTransactionSimulationStateList()))
-    
+
     # getPreference on the tool has the same behaviour as getProperty
     # on the preference (unless property is unset on this pref)
     for prop in ['preferred_accounting_transaction_simulation_state',
@@ -189,13 +176,13 @@ class TestPreferences(ERP5TypeTestCase):
 
       self.assertEquals(pref_tool.getPreference(prop),
                         site.getProperty(prop))
-    
+
     group.edit(
       preferred_accounting_transaction_simulation_state_list=['draft'])
     self.assertEquals(list(pref_tool.getPreference(
       'preferred_accounting_transaction_simulation_state_list')),
       list(group.getPreferredAccountingTransactionSimulationStateList()))
-    
+
     person1.edit(preferred_accounting_transaction_simulation_state_list=
               ['cancelled'])
     self.assertEquals(list(pref_tool.getPreference(
@@ -212,13 +199,9 @@ class TestPreferences(ERP5TypeTestCase):
                                         'this_does_not_exists', 'default'))
 
 
-  def test_GetAttr(self, quiet=quiet, run=run_all_tests) :
+  def test_GetAttr(self):
     """ checks that preference methods can be called directly
       on portal_preferences """
-    if not run: return
-    if not quiet:
-      ZopeTestCase._print('\n Test methods on portal_preference')
-    
     portal_workflow = self.getWorkflowTool()
     pref_tool = self.getPreferenceTool()
     person1 = self.getPreferenceTool()['person1']
@@ -232,7 +215,7 @@ class TestPreferences(ERP5TypeTestCase):
        site, 'enable_action', wf_id='preference_workflow')
     self.assertEquals(site.getPreferenceState(),     'global')
     group.setPreferredAccountingTransactionSimulationStateList(['cancelled'])
-    
+
     self.assertNotEquals( None,
       pref_tool.getPreferredAccountingTransactionSimulationStateList())
     self.assertNotEquals( [],
@@ -250,18 +233,14 @@ class TestPreferences(ERP5TypeTestCase):
       self.fail('Attribute error should be raised for dummy methods')
     except AttributeError :
       pass
-  
-  def test_SetPreference(self, quiet=quiet, run=run_all_tests) :
-    """ check setting a preference modifies 
+
+  def test_SetPreference(self):
+    """ check setting a preference modifies
      the first enabled user preference """
-    if not run: return
-    if not quiet:
-      ZopeTestCase._print('\n Test setting preferences')
-    
     portal_workflow = self.getWorkflowTool()
     pref_tool = self.getPreferenceTool()
     person1 = self.getPreferenceTool()['person1']
-    
+
     portal_workflow.doActionFor(
        person1, 'enable_action', wf_id='preference_workflow')
     self.assertEquals(person1.getPreferenceState(),    'enabled')
@@ -276,13 +255,8 @@ class TestPreferences(ERP5TypeTestCase):
       person1.getPreferredAccountingTransactionAtDate(),
       DateTime(2004, 12, 31))
 
-  def test_UserIndependance(self, quiet=quiet, run=run_all_tests) :
+  def test_UserIndependance(self):
     """ check that the preferences are related to the user. """
-    if not run: return
-    if not quiet:
-      ZopeTestCase._print(
-          '\n Test different users preferences are independants')
-    
     portal_workflow = self.getWorkflowTool()
     portal_preferences = self.getPreferenceTool()
     # create 2 users: user_a and user_b
@@ -291,10 +265,10 @@ class TestPreferences(ERP5TypeTestCase):
     user_a = uf.getUserById('user_a').__of__(uf)
     uf._doAddUser('user_b', '', ['Member', ], [])
     user_b = uf.getUserById('user_b').__of__(uf)
-    
-    # log as user_a 
+
+    # log as user_a
     newSecurityManager(None, user_a)
-    
+
     # create 2 prefs as user_a
     user_a_1 = portal_preferences.newContent(
         id='user_a_1', portal_type='Preference')
@@ -307,33 +281,33 @@ class TestPreferences(ERP5TypeTestCase):
        user_a_1, 'enable_action', wf_id='preference_workflow')
     self.assertEquals(user_a_1.getPreferenceState(), 'enabled')
     self.assertEquals(user_a_2.getPreferenceState(), 'disabled')
-    
+
     # log as user_b
     newSecurityManager(None, user_b)
-    
+
     # create a pref for user_b
     user_b_1 = portal_preferences.newContent(
         id='user_b_1', portal_type='Preference')
     user_b_1.setPreferredAccountingTransactionAtDate(DateTime(2002, 02, 02))
     transaction.commit(); self.tic()
-    
+
     # enable this preference
     portal_workflow.doActionFor(
        user_b_1, 'enable_action', wf_id='preference_workflow')
     self.assertEquals(user_b_1.getPreferenceState(), 'enabled')
-    
+
     # check user_a's preference is still enabled
     self.assertEquals(user_a_1.getPreferenceState(), 'enabled')
     self.assertEquals(user_a_2.getPreferenceState(), 'disabled')
-    
+
     # Checks that a manager preference doesn't disable any other user
     # preferences
     # log as manager
     newSecurityManager(None, uf.getUserById('manager').__of__(uf))
-    
+
     self.assert_('Manager' in
       getSecurityManager().getUser().getRolesInContext(portal_preferences))
-    
+
     # create a pref for manager
     manager_pref = portal_preferences.newContent(
         id='manager_pref', portal_type='Preference')
@@ -344,7 +318,7 @@ class TestPreferences(ERP5TypeTestCase):
     portal_workflow.doActionFor(
        manager_pref, 'enable_action', wf_id='preference_workflow')
     self.assertEquals(manager_pref.getPreferenceState(), 'enabled')
-    
+
     # check users preferences are still enabled
     self.assertEquals(user_a_1.getPreferenceState(), 'enabled')
     self.assertEquals(user_b_1.getPreferenceState(), 'enabled')
@@ -390,7 +364,7 @@ class TestPreferences(ERP5TypeTestCase):
     state_list = method(('default',))
     self.assertEquals(state_list, ['default',]) # getPreferredAccountingTransactionSimulationStateList
                                                 # always tries to cast tuples to lists
- 
+
     method = lambda *args: pref_tool.getPreference('preferred_accounting_transaction_simulation_state_list', *args)
     state_list = method()
     self.assertEquals(state_list, None)
@@ -405,7 +379,7 @@ class TestPreferences(ERP5TypeTestCase):
                           priority=Priority.SITE)
     self.portal.portal_workflow.doActionFor(site_pref, 'enable_action')
     self.assertEquals(site_pref.getPreferenceState(), 'global')
-    
+
     # Members can add new preferences
     uf = self.getPortal().acl_users
     uf._doAddUser('member', '', ['Member', ], [])
@@ -429,7 +403,7 @@ class TestPreferences(ERP5TypeTestCase):
     self.assertFalse(member.has_permission(
                          'Manage properties', user_pref))
 
-  
+
   def test_SystemPreference(self):
     preference_tool = self.portal.portal_preferences
     site_pref = preference_tool.newContent(
@@ -438,7 +412,7 @@ class TestPreferences(ERP5TypeTestCase):
                           priority=Priority.SITE)
     # check not taken into account if not enabled
     self.assertEquals(None,
-                      preference_tool.getPreferredAccountingTransactionSimulationStateList())    
+                      preference_tool.getPreferredAccountingTransactionSimulationStateList())
     # enable it and check preference is returned
     self.portal.portal_workflow.doActionFor(site_pref, 'enable_action')
     self.assertEquals(site_pref.getPreferenceState(), 'global')
@@ -446,7 +420,7 @@ class TestPreferences(ERP5TypeTestCase):
     self.tic()
     self.assertEquals(['this_is_default'],
                       preference_tool.getPreferredAccountingTransactionSimulationStateList())
-    
+
     # Members can't add new system preferences
     uf = self.getPortal().acl_users
     uf._doAddUser('member', '', ['Member', ], [])
@@ -484,8 +458,6 @@ class TestPreferences(ERP5TypeTestCase):
       from ZODB.Transaction import Transaction
     except ImportError:
       self.assertRaises(Unauthorized, user_pref.edit, preferred_ooodoc_server_address="localhost")
-
-    
 
 def test_suite():
   suite = unittest.TestSuite()
