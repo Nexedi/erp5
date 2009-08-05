@@ -470,6 +470,7 @@ class TestPreferences(ERP5TypeTestCase):
     # even if there is System Preference enabled getActivePreference shall return
     # user preference
     self.assertEqual(user_pref, preference_tool.getActivePreference())
+    self.assertEqual(site_pref, preference_tool.getActiveSystemPreference())
 
 def test_suite():
   suite = unittest.TestSuite()

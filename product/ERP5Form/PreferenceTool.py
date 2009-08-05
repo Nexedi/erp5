@@ -239,13 +239,27 @@ class PreferenceTool(BaseTool):
     sys_prefs.sort(key=lambda x: x.getPriority(), reverse=True)
     return sys_prefs + prefs
 
+  def _getActivePreferenceByPortalType(self, portal_type):
+    enabled_prefs = self._getSortedPreferenceList()
+    if len(enabled_prefs) > 0 :
+      try:
+        return [x for x in enabled_prefs
+            if x.getPortalType() == portal_type][0]
+      except IndexError:
+        pass
+    return None
+
   security.declareProtected(Permissions.View, 'getActivePreference')
   def getActivePreference(self) :
     """ returns the current preference for the user.
        Note that this preference may be read only. """
-    enabled_prefs = self._getSortedPreferenceList()
-    if len(enabled_prefs) > 0 :
-      return enabled_prefs[0]
+    return self._getActivePreferenceByPortalType('Preference')
+
+  security.declareProtected(Permissions.View, 'getActiveSystemPreference')
+  def getActiveSystemPreference(self) :
+    """ returns the current system preference for the user.
+       Note that this preference may be read only. """
+    return self._getActivePreferenceByPortalType('System Preference')
 
   security.declareProtected(Permissions.View, 'getDocumentTemplateList')
   def getDocumentTemplateList(self, folder=None) :
