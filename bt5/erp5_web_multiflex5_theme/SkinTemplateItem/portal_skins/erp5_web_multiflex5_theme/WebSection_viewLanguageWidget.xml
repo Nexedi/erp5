@@ -57,8 +57,8 @@
         tal:condition="python:language_id in available_language_list">\n
       <a href="./Base_doLanguage?select_language=en" title="English"\n
          tal:attributes="href string:${portal_path}/Base_doLanguage?select_language=${language_id}">\n
-        <img src="./mf54_image/icon_flag_us.gif" alt="Flag"\n
-             tal:attributes="src string:${portal_path}/mf54_image/icon_flag_${language_id}.png;\n
+        <img src="./mf54_image/icon_lang_en.gif" alt="Flag"\n
+             tal:attributes="src string:${portal_path}/mf54_image/icon_lang_${language_id}.png;\n
                              title language/title;\n
                              alt language/title" />\n
       </a>\n
