@@ -13,15 +13,15 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
-                <string>description</string>
-                <string>default</string>
                 <string>css_class</string>
-                <string>width</string>
-                <string>height</string>
-                <string>enabled</string>
+                <string>default</string>
+                <string>description</string>
                 <string>editable</string>
+                <string>enabled</string>
+                <string>height</string>
+                <string>title</string>
                 <string>whitespace_preserve</string>
+                <string>width</string>
               </list>
             </value>
         </item>
@@ -104,7 +104,7 @@
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string>The content of the document considered as a text string</string> </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>editable</string> </key>
