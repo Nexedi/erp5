@@ -140,7 +140,7 @@
       <div class="headline">\n
       <!-- Layout form rendering -->\n
       <tal:block tal:condition="python: layout_form is not None">\n
-        <tal:block tal:repeat="aggregate python: [(\'headlibe\', headline_area)]">\n
+        <tal:block tal:repeat="aggregate python: [(\'headline\', headline_area)]">\n
            <tal:block metal:use-macro="here/aggregate_render/macros/aggregate_render"/>\n
         </tal:block>\n
       </tal:block> \n
