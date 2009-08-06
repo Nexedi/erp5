@@ -1835,7 +1835,10 @@ class ListBoxRenderer:
     """
     start = self.getLineStart()
     max_lines = self.getMaxLineNumber()
-    report_section_list = self.getReportSectionList()
+    if self.isHideRowsOnNoSearchCriterion():
+      report_section_list = []
+    else:
+      report_section_list = self.getReportSectionList()
     param_dict = self.getParamDict()
 
     # Set the total number of objects.
