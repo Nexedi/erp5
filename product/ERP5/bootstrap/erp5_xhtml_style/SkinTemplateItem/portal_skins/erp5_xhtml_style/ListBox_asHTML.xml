@@ -53,8 +53,7 @@
               md5_string here/getMD5Checksum;\n
               hide_rows_on_no_search_criterion \n
                 python: here.isHideRowsOnNoSearchCriterion(request);\n
-              line_list python: test(hide_rows_on_no_search_criterion, \n
-                                     [], here.query());\n
+              line_list here/query;\n
               is_domain_tree_mode here/isDomainTreeMode;\n
               is_report_tree_mode here/isReportTreeMode;\n
               is_domain_tree_supported here/isDomainTreeSupported;\n
