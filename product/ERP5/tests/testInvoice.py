@@ -1059,13 +1059,13 @@ self.portal.getDefaultModule(self.packing_list_portal_type).newContent(
                        variation_category_list=['size/Child/32'],
                        mapped_value_property_list=['quantity', 'price'],)
     no_order_packing_list.confirm()
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     self.assertNotEquals(no_order_packing_list, None)
 
     no_order_packing_list.start()
     no_order_packing_list.stop()
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     related_invoice = no_order_packing_list.getCausalityRelatedValue(
@@ -1149,7 +1149,7 @@ self.portal.getDefaultModule(self.packing_list_portal_type).newContent(
                        variation_category_list=['size/Child/32'],
                        mapped_value_property_list=['quantity', 'price'],)
     order.confirm()
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     related_packing_list = order.getCausalityRelatedValue(
@@ -1158,7 +1158,7 @@ self.portal.getDefaultModule(self.packing_list_portal_type).newContent(
 
     related_packing_list.start()
     related_packing_list.stop()
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     related_invoice = related_packing_list.getCausalityRelatedValue(
@@ -2481,7 +2481,6 @@ class TestSaleInvoiceMixin(TestInvoiceMixin,
 class TestSaleInvoice(TestSaleInvoiceMixin, TestInvoice, ERP5TypeTestCase):
   """Tests for sale invoice.
   """
-  RUN_ALL_TESTS = 1
   quiet = 0
 
   # fix inheritance
@@ -2497,11 +2496,10 @@ class TestSaleInvoice(TestSaleInvoiceMixin, TestInvoice, ERP5TypeTestCase):
   
   
 
-  def test_01_SimpleInvoice(self, quiet=quiet, run=RUN_ALL_TESTS):
+  def test_01_SimpleInvoice(self, quiet=quiet):
     """
     Checks that a Simple Invoice is created from a Packing List
     """
-    if not run: return
     if not quiet:
       self.logMessage('Simple Invoice')
     sequence_list = SequenceList()
@@ -2521,7 +2519,7 @@ class TestSaleInvoice(TestSaleInvoiceMixin, TestInvoice, ERP5TypeTestCase):
       """)
     sequence_list.play(self, quiet=quiet)
 
-  def test_02_TwoInvoicesFromTwoPackingList(self, quiet=quiet, run=RUN_ALL_TESTS):
+  def test_02_TwoInvoicesFromTwoPackingList(self, quiet=quiet):
     """
     This test was created for the following bug:
         - an order is created and confirmed
@@ -2532,9 +2530,7 @@ class TestSaleInvoice(TestSaleInvoiceMixin, TestInvoice, ERP5TypeTestCase):
           so we have an invoice with twice the number of accounting rules
           and an invoice with no accounting rules. both invoices are wrong
     """
-    if not run: return
-    if not quiet:
-      self.logMessage('Two Invoices from Two Packing List')
+    if not quiet: self.logMessage('Two Invoices from Two Packing List')
     sequence_list = SequenceList()
     for base_sequence in (self.TWO_PACKING_LIST_DEFAULT_SEQUENCE, ) :
       sequence_list.addSequenceString(
@@ -2555,7 +2551,7 @@ class TestSaleInvoice(TestSaleInvoiceMixin, TestInvoice, ERP5TypeTestCase):
       """)
     sequence_list.play(self, quiet=quiet)
 
-  def test_03_InvoiceEditAndInvoiceRule(self, quiet=quiet, run=RUN_ALL_TESTS):
+  def test_03_InvoiceEditAndInvoiceRule(self, quiet=quiet):
     """
     Invoice Rule should not be applied on invoice lines created from\
     Packing List.
@@ -2567,7 +2563,6 @@ class TestSaleInvoice(TestSaleInvoiceMixin, TestInvoice, ERP5TypeTestCase):
       - A new Invoice Rule is created for this invoice, and accounting
         movements for this invoice are present twice in the simulation.
     """
-    if not run: return
     if not quiet:
       self.logMessage('Invoice Edit')
     sequence_list = SequenceList()
@@ -2587,13 +2582,11 @@ class TestSaleInvoice(TestSaleInvoiceMixin, TestInvoice, ERP5TypeTestCase):
       """)
     sequence_list.play(self, quiet=quiet)
 
-  def test_04_PackingListEditAndInvoiceRule(self, quiet=quiet,
-      run=RUN_ALL_TESTS):
+  def test_04_PackingListEditAndInvoiceRule(self, quiet=quiet):
     """
     Delivery Rule should not be applied on packing list lines created\
     from Order.
     """
-    if not run: return
     if not quiet:
       self.logMessage('Packing List Edit')
     sequence_list = SequenceList()
@@ -2607,12 +2600,11 @@ class TestSaleInvoice(TestSaleInvoiceMixin, TestInvoice, ERP5TypeTestCase):
       """)
     sequence_list.play(self, quiet=quiet)
 
-  def test_05_InvoiceEditPackingListLine(self, quiet=quiet, run=RUN_ALL_TESTS):
+  def test_05_InvoiceEditPackingListLine(self, quiet=quiet):
     """
     Checks that editing a Packing List Line still creates a correct
     Invoice
     """
-    if not run: return
     if not quiet:
       self.logMessage('Packing List Line Edit')
     sequence_list = SequenceList()
@@ -2632,13 +2624,11 @@ class TestSaleInvoice(TestSaleInvoiceMixin, TestInvoice, ERP5TypeTestCase):
     """)
     sequence_list.play(self, quiet=quiet)
 
-  def test_06_InvoiceDeletePackingListLine(self, quiet=quiet,
-      run=RUN_ALL_TESTS):
+  def test_06_InvoiceDeletePackingListLine(self, quiet=quiet):
     """
     Checks that deleting a Packing List Line still creates a correct
     Invoice
     """
-    if not run: return
     if not quiet:
       self.logMessage('Packing List Line Delete')
     sequence_list = SequenceList()
@@ -2658,12 +2648,11 @@ class TestSaleInvoice(TestSaleInvoiceMixin, TestInvoice, ERP5TypeTestCase):
     """)
     sequence_list.play(self, quiet=quiet)
 
-  def test_07_InvoiceAddPackingListLine(self, quiet=quiet, run=RUN_ALL_TESTS):
+  def test_07_InvoiceAddPackingListLine(self, quiet=quiet):
     """
     Checks that adding a Packing List Line still creates a correct
     Invoice
     """
-    if not run: return
     if not quiet:
       self.logMessage('Packing List Line Add')
     sequence_list = SequenceList()
@@ -2686,13 +2675,12 @@ class TestSaleInvoice(TestSaleInvoiceMixin, TestInvoice, ERP5TypeTestCase):
     """)
     sequence_list.play(self, quiet=quiet)
 
-  def test_08_InvoiceDecreaseQuantity(self, quiet=quiet, run=RUN_ALL_TESTS):
+  def test_08_InvoiceDecreaseQuantity(self, quiet=quiet):
     """
     Change the quantity of a Invoice Line,
     check that the invoice is divergent,
     then split and defer, and check everything is solved
     """
-    if not run: return
     if not quiet:
       self.logMessage('Invoice Decrease Qantity')
     sequence = self.PACKING_LIST_DEFAULT_SEQUENCE + \
@@ -2726,14 +2714,12 @@ class TestSaleInvoice(TestSaleInvoiceMixin, TestInvoice, ERP5TypeTestCase):
     """
     self.playSequence(sequence, quiet=quiet)
 
-  def test_09_InvoiceChangeStartDateFail(self, quiet=quiet,
-      run=RUN_ALL_TESTS):
+  def test_09_InvoiceChangeStartDateFail(self, quiet=quiet):
     """
     Change the start_date of a Invoice Line,
     check that the invoice is divergent,
     then accept decision, and check Packing list is divergent
     """
-    if not run: return
     if not quiet:
       self.logMessage('Invoice Change Sart Date')
     sequence = self.PACKING_LIST_DEFAULT_SEQUENCE + \
@@ -2762,15 +2748,13 @@ class TestSaleInvoice(TestSaleInvoiceMixin, TestInvoice, ERP5TypeTestCase):
     """
     self.playSequence(sequence, quiet=quiet)
 
-  def test_09b_InvoiceChangeStartDateSucceed(self, quiet=quiet,
-      run=RUN_ALL_TESTS):
+  def test_09b_InvoiceChangeStartDateSucceed(self, quiet=quiet):
     """
     Change the start_date of a Invoice Line,
     check that the invoice is divergent,
     deliver the Packing List to make sure it's frozen,
     then accept decision, and check everything is solved
     """
-    if not run: return
     if not quiet:
       self.logMessage('Invoice Change Sart Date')
     sequence = self.PACKING_LIST_DEFAULT_SEQUENCE + \
@@ -2808,14 +2792,13 @@ class TestSaleInvoice(TestSaleInvoiceMixin, TestInvoice, ERP5TypeTestCase):
     """
     self.playSequence(sequence, quiet=quiet)
 
-  def test_10_AcceptDecisionOnPackingList(self, quiet=quiet, run=RUN_ALL_TESTS):
+  def test_10_AcceptDecisionOnPackingList(self, quiet=quiet):
     """
     - Increase or Decrease the quantity of a Packing List line
     - Accept Decision on Packing List
     - Packing List must not be divergent and use new quantity
     - Invoice must not be divergent and use new quantity
     """
-    if not run: return
     if not quiet:
       self.logMessage('InvoiceAcceptDecisionOnPackingList')
     end_sequence = \
@@ -2926,8 +2909,7 @@ class TestSaleInvoice(TestSaleInvoiceMixin, TestInvoice, ERP5TypeTestCase):
     sequence_list.play(self, quiet=quiet)
 
 
-  def test_11_AcceptDecisionOnPackingListAndInvoice(self, quiet=quiet,
-      run=RUN_ALL_TESTS):
+  def test_11_AcceptDecisionOnPackingListAndInvoice(self, quiet=quiet):
     """
     - Increase or Decrease the quantity of a Packing List line
     - Accept Decision on Packing List
@@ -2937,7 +2919,6 @@ class TestSaleInvoice(TestSaleInvoiceMixin, TestInvoice, ERP5TypeTestCase):
     - Packing List must not be divergent and use new quantity
     - Invoice must not be divergent and use old quantity
     """
-    if not run: return
     if not quiet:
       self.logMessage('InvoiceAcceptDecisionOnPackingListAndInvoice')
     mid_sequence = \
@@ -3012,8 +2993,7 @@ class TestSaleInvoice(TestSaleInvoiceMixin, TestInvoice, ERP5TypeTestCase):
       sequence_list.addSequenceString(sequence)
     sequence_list.play(self, quiet=quiet)
 
-  def test_12_SplitPackingListAndAcceptInvoice(self, quiet=quiet,
-      run=RUN_ALL_TESTS):
+  def test_12_SplitPackingListAndAcceptInvoice(self, quiet=quiet):
     """
     - Decrease the quantity of a Packing List line
     - Split and Defer on Packing List
@@ -3033,7 +3013,6 @@ class TestSaleInvoice(TestSaleInvoiceMixin, TestInvoice, ERP5TypeTestCase):
     - Invoice1 must not be divergent and use old quantity
     - Invoice2 must not be divergent and use 0 as quantity
     """
-    if not run: return
     if not quiet:
       self.logMessage('InvoiceSplitPackingListAndAcceptInvoice')
     sequence = self.PACKING_LIST_DEFAULT_SEQUENCE + \
@@ -3126,8 +3105,7 @@ class TestSaleInvoice(TestSaleInvoiceMixin, TestInvoice, ERP5TypeTestCase):
     """
     self.playSequence(sequence, quiet=quiet)
 
-  def test_13_SplitAndDeferInvoice(self, quiet=quiet,
-        run=RUN_ALL_TESTS):
+  def test_13_SplitAndDeferInvoice(self, quiet=quiet):
     """
     - Accept Order, Accept Packing List
     - Decrease quantity on Invoice
@@ -3138,7 +3116,6 @@ class TestSaleInvoice(TestSaleInvoiceMixin, TestInvoice, ERP5TypeTestCase):
     - Invoice must not be divergent and use new quantity
     - splitted Invoice must not be divergent and use old - new quantity
     """
-    if not run: return
     if not quiet:
       self.logMessage('InvoiceSplitAndDeferInvoice')
     sequence = self.PACKING_LIST_DEFAULT_SEQUENCE + \
@@ -3197,7 +3174,7 @@ class TestSaleInvoice(TestSaleInvoiceMixin, TestInvoice, ERP5TypeTestCase):
     """
     self.playSequence(sequence, quiet=quiet)
 
-  def test_14_AcceptDecisionOnInvoice(self, quiet=quiet, run=RUN_ALL_TESTS):
+  def test_14_AcceptDecisionOnInvoice(self, quiet=quiet):
     """
     - Accept Order, Accept Packing List
     - Increase or Decrease quantity on Invoice
@@ -3206,7 +3183,6 @@ class TestSaleInvoice(TestSaleInvoiceMixin, TestInvoice, ERP5TypeTestCase):
     - Packing List must not be divergent and use old quantity
     - Invoice must not be divergent and use new quantity
     """
-    if not run: return
     if not quiet:
       self.logMessage('InvoiceAcceptDecisionOnInvoice')
     mid_sequence = \
@@ -3288,12 +3264,11 @@ class TestSaleInvoice(TestSaleInvoiceMixin, TestInvoice, ERP5TypeTestCase):
     # We could generate a better reference here.
     self.assertEquals('1', invoice.getReference())
 
-  def test_16_ManuallyAddedMovements(self, quiet=quiet, run=RUN_ALL_TESTS):
+  def test_16_ManuallyAddedMovements(self, quiet=quiet):
     """
     Checks that adding invoice lines and accounting lines to one invoice
     generates correct simulation
     """
-    if not run: return
     if not quiet:
       self.logMessage('Invoice with Manually Added Movements')
     sequence_list = SequenceList()
@@ -3317,12 +3292,11 @@ class TestSaleInvoice(TestSaleInvoiceMixin, TestInvoice, ERP5TypeTestCase):
           """)
     sequence_list.play(self, quiet=quiet)
 
-  def test_17_ManuallyAddedWrongMovements(self, quiet=quiet, run=RUN_ALL_TESTS):
+  def test_17_ManuallyAddedWrongMovements(self, quiet=quiet):
     """
     Checks that adding invoice lines and accounting lines to one invoice
     generates correct simulation, even when adding very wrong movements
     """
-    if not run: return
     if not quiet:
       self.logMessage('Invoice with Manually Added Movements')
     sequence_list = SequenceList()
@@ -3344,11 +3318,10 @@ class TestSaleInvoice(TestSaleInvoiceMixin, TestInvoice, ERP5TypeTestCase):
           """)
     sequence_list.play(self, quiet=quiet)
 
-  def test_18_compareInvoiceAndPackingList(self, quiet=quiet, run=RUN_ALL_TESTS):
+  def test_18_compareInvoiceAndPackingList(self, quiet=quiet):
     """
     Checks that a Simple Invoice is created from a Packing List
     """
-    if not run: return
     if not quiet:
       self.logMessage('Simple Invoice')
     sequence_list = SequenceList()
