@@ -74,6 +74,7 @@ class Transformation(XMLObject, Predicate, Variated):
                       , PropertySheet.Predicate
                       , PropertySheet.Comment
                       , PropertySheet.Reference
+                      , PropertySheet.Version
                       #, PropertySheet.Resource
                       , PropertySheet.TransformedResource
                       , PropertySheet.Path
