@@ -116,7 +116,7 @@ class TestCurrencyExchangeLine(AccountingTestCase, ERP5TypeTestCase):
     new_currency.setTitle('Francs CFA')
     new_currency.setBaseUnitQuantity(1.00)
     transaction.commit()
-    self.tic()#execute transaction
+    self.tic()
     self.organisation1.edit(
                     price_currency=new_currency.getRelativeUrl())
     euro = self.portal.currency_module.euro
@@ -168,7 +168,7 @@ class TestCurrencyExchangeLine(AccountingTestCase, ERP5TypeTestCase):
     new_currency.setTitle('Francs CFA')
     new_currency.setBaseUnitQuantity(1.00)
     transaction.commit()
-    self.tic()#execute transaction
+    self.tic()
     self.organisation1.edit(
                    price_currency=new_currency.getRelativeUrl())
     euro = self.portal.currency_module.euro
@@ -234,7 +234,7 @@ class TestCurrencyExchangeLine(AccountingTestCase, ERP5TypeTestCase):
     new_currency.setTitle('Francs CFA')
     new_currency.setBaseUnitQuantity(1.00)
     transaction.commit()
-    self.tic()#execute transaction
+    self.tic()
     self.organisation1.edit(
               price_currency=new_currency.getRelativeUrl())
     euro = self.portal.currency_module.euro
@@ -267,8 +267,14 @@ class TestCurrencyExchangeLine(AccountingTestCase, ERP5TypeTestCase):
     line_list = invoice.contentValues(
            portal_type=portal.getPortalAccountingMovementTypeList())
     for line in line_list:
-      self.assertEquals(line.getSourceTotalAssetPrice(),
-                         round(655.957*line.getQuantity()))
+      if line.getSourceValue() == self.account_module.goods_purchase:
+        self.assertEquals(line.getSourceTotalAssetDebit(),
+                           327978)
+      elif line.getSourceValue() == self.account_module.receivable:
+        self.assertEquals(line.getSourceTotalAssetCredit(),
+                           327978)
+      else:
+        self.fail('line not found')
 
   def test_NoCurrencyExchangeLineForResourceCurrency(self):
     """
@@ -284,7 +290,7 @@ class TestCurrencyExchangeLine(AccountingTestCase, ERP5TypeTestCase):
     new_currency.setTitle('Francs CFA')
     new_currency.setBaseUnitQuantity(1.00)
     transaction.commit()
-    self.tic()#execute transaction
+    self.tic()
     self.organisation1.edit(
                 price_currency=new_currency.getRelativeUrl())
     euro = self.portal.currency_module.euro
@@ -323,7 +329,7 @@ class TestCurrencyExchangeLine(AccountingTestCase, ERP5TypeTestCase):
     new_currency.setTitle('Francs CFA')
     new_currency.setBaseUnitQuantity(1.00)
     transaction.commit()
-    self.tic()#execute transaction
+    self.tic()
     self.organisation1.edit(
                price_currency=new_currency.getRelativeUrl())
     euro = self.portal.currency_module.euro
@@ -372,9 +378,16 @@ class TestCurrencyExchangeLine(AccountingTestCase, ERP5TypeTestCase):
     line_list = transaction2.contentValues(
            portal_type=portal.getPortalAccountingMovementTypeList())
     for line in line_list:
-      self.assertEquals(line.getDestinationTotalAssetPrice(),
-                    round(655.957*line.getQuantity()))
-                                          
+      if line.getDestinationValue() == self.account_module.goods_purchase:
+        self.assertEquals(line.getDestinationTotalAssetDebit(),
+                           327978)
+      elif line.getDestinationValue() == self.account_module.receivable:
+        self.assertEquals(line.getDestinationTotalAssetCredit(),
+                           327978)
+      else:
+        self.fail('line not found')
+
+
   def test_CreateCELWithNoReferenceCurrency(self):
     """
       Create a currency exchange line with no reference currency
@@ -389,7 +402,7 @@ class TestCurrencyExchangeLine(AccountingTestCase, ERP5TypeTestCase):
     new_currency.setTitle('Francs CFA')
     new_currency.setBaseUnitQuantity(1.00)
     transaction.commit()
-    self.tic()#execute transaction
+    self.tic()
     self.organisation1.edit(
             price_currency=new_currency.getRelativeUrl())
     euro = self.portal.currency_module.euro
@@ -441,7 +454,7 @@ class TestCurrencyExchangeLine(AccountingTestCase, ERP5TypeTestCase):
     new_currency.setTitle('Francs CFA')
     new_currency.setBaseUnitQuantity(1.00)
     transaction.commit()
-    self.tic()#execute transaction
+    self.tic()
     self.organisation1.edit(
                price_currency=new_currency.getRelativeUrl())
     euro = self.portal.currency_module.euro
@@ -488,11 +501,17 @@ class TestCurrencyExchangeLine(AccountingTestCase, ERP5TypeTestCase):
                            form_id='view')
     line_list = invoice.contentValues(
            portal_type=portal.getPortalAccountingMovementTypeList())
+
     for line in line_list:
-        self.assertEquals(line.getDestinationTotalAssetPrice(),
-                 round(655.957*line.getQuantity()))
-    
-   
+      if line.getDestinationValue() == self.account_module.goods_purchase:
+        self.assertEquals(line.getDestinationTotalAssetDebit(),
+                           327978)
+      elif line.getDestinationValue() == self.account_module.receivable:
+        self.assertEquals(line.getDestinationTotalAssetCredit(),
+                           327978)
+      else:
+        self.fail('line not found')
+  
 
 def test_suite():
   suite = unittest.TestSuite()
