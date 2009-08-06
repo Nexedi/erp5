@@ -1,0 +1,99 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>anonymous_http_cache</string> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<tal:block tal:replace="nothing"\n
+           xmlns:tal="http://xml.zope.org/namespaces/tal"\n
+           xmlns:metal="http://xml.zope.org/namespaces/metal"\n
+           xmlns:i18n="http://xml.zope.org/namespaces/i18n">\n
+<!--\n
+Copyright (c) 2006 Nexedi SARL and Contributors. All Rights Reserved.\n
+                   Vincent Pelletier <vincent@nexedi.com>\n
+                   Christophe Dumez <christophe@nexedi.com>\n
+\n
+This program is Free Software; you can redistribute it and/or\n
+modify it under the terms of the GNU General Public License\n
+as published by the Free Software Foundation; either version 2\n
+of the License, or (at your option) any later version.\n
+\n
+This program is distributed in the hope that it will be useful,\n
+but WITHOUT ANY WARRANTY; without even the implied warranty of\n
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n
+GNU General Public License for more details.\n
+\n
+You should have received a copy of the GNU General Public License\n
+along with this program; if not, write to the Free Software\n
+Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
+-->\n
+</tal:block>\n
+<tal:block metal:define-macro="master">\n
+  <tal:block metal:use-macro="here/view_main/macros/master">\n
+    <tal:block metal:fill-slot="main">\n
+      <p tal:replace="structure python:here.WebSection_viewSubjectIndexRenderer()">Content Goes Here</p>      \n
+    </tal:block>\n
+  </tal:block>\n
+</tal:block>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>WebSection_viewSubjectIndex</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Subject Index</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

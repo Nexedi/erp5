@@ -1,0 +1,196 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+"""\n
+  This Widget lists all documents of the current section\n
+  by subject. For each subject, it creates a title (<h1>)\n
+  then lists all documents which meet the section predicate\n
+  and provides a permanent URL to them.\n
+\n
+  Result is cached for high performance.\n
+"""\n
+\n
+web_site_value = context.getWebSiteValue()\n
+web_site_url = web_site_value.absolute_url()\n
+web_section_value = context.getWebSectionValue()\n
+web_section_url = web_section_value.absolute_url()\n
+context = web_section_value\n
+\n
+def buildIndex(language=None):\n
+  from Products.ZSQLCatalog.SQLCatalog import NegatedQuery, Query\n
+  # Retrieve the different subjects in the catalog\n
+  if language is not None:\n
+    subject_list = context.searchResults(\n
+      select_expression=\'subject, reference\',\n
+      query=NegatedQuery(Query(subject=None)),\n
+      language=language,\n
+      sort_on=((\'subject\', \'descending\'), (\'title\', \'ascending\')),\n
+      #src__=1,\n
+    )\n
+  else:\n
+    subject_list = context.searchResults(\n
+      select_expression=\'subject, reference\',\n
+      query=NegatedQuery(Query(subject=None)),\n
+      sort_on=((\'subject\', \'descending\'), (\'title\', \'ascending\')),\n
+      #src__=1,\n
+    )\n
+  #return subject_list\n
+  #return map(lambda x:(x.subject, x.reference), subject_list)\n
+  # Convert the result into list\n
+  # This is not the fastest approach but should be OK for\n
+  # moderate size\n
+  subject_list = list(subject_list)\n
+  subject_count = len(subject_list) # Not the fastest (use countResults instead)\n
+\n
+  # Return immediately if empty\n
+  if not subject_count:\n
+    return \'<p></p>\'\n
+\n
+  # Now build the page\n
+  result = []\n
+  last_subject = None\n
+  for subject in subject_list:\n
+    if last_subject != subject.subject:\n
+      subject_title = subject.subject\n
+      subject_title = subject_title[0].upper() + subject_title[1:]\n
+      result.append("<h1>%s</h1>" % subject_title)\n
+    result.append("""<p><a href="%s/%s/view">%s</a></p>""" % (web_section_url, subject.reference, subject.title))\n
+\n
+  return \'\\n\'.join(result)\n
+\n
+from Products.ERP5Type.Cache import CachingMethod\n
+buildIndex = CachingMethod(buildIndex, \n
+                   id=(\'WebSection_viewSubjectIndexRenderer\', web_section_url))\n
+language = context.Localizer.get_selected_language()\n
+return buildIndex(language=language)\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>0</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>web_site_value</string>
+                            <string>web_site_url</string>
+                            <string>web_section_value</string>
+                            <string>web_section_url</string>
+                            <string>None</string>
+                            <string>buildIndex</string>
+                            <string>Products.ERP5Type.Cache</string>
+                            <string>CachingMethod</string>
+                            <string>language</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>WebSection_viewSubjectIndexRenderer</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
