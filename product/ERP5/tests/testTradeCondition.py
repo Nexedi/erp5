@@ -1768,6 +1768,71 @@ class TestTradeConditionSupplyLine(TradeConditionTestCase):
     self.assertEquals(2, line.getPrice())
 
 
+class TestEffectiveTradeCondition(TradeConditionTestCase):
+  """Tests for getEffectiveModel
+  
+  XXX open questions:
+   - should getEffectiveModel take validation state into account ? if yes, how
+     to do it in generic/customizable way ?
+   - would getEffectiveModel(at_date) be enough ?
+   - should effective model respect security (currently you need to view the
+     effective TC to find it through catalog)
+  """
+  def test_getEffectiveModel(self):
+    # getEffectiveModel returns the model with highest version
+    reference = self.id()
+    self.trade_condition.setReference(reference)
+    self.trade_condition.setVersion('001')
+    self.trade_condition.setEffectiveDate('2009/01/01')
+    self.trade_condition.setExpirationDate('2009/12/31')
+    other_trade_condition = self.trade_condition_module.newContent(
+                            portal_type=self.trade_condition.getPortalType(),
+                            title='Other Trade Condition',
+                            reference=reference,
+                            effective_date='2009/01/01',
+                            expiration_date='2009/12/31',
+                            version='002')
+    transaction.commit()
+    self.tic()
+    
+    self.assertEquals(other_trade_condition,
+        self.trade_condition.getEffectiveModel(
+                    start_date=DateTime('2009/06/01'),
+                    stop_date=DateTime('2009/06/01')))
+
+    # outside date range, nothing
+    self.assertEquals(None,
+        self.trade_condition.getEffectiveModel(
+                    start_date=DateTime('2008/06/01'),
+                    stop_date=DateTime('2008/06/01')))
+    self.assertEquals(None,
+        self.trade_condition.getEffectiveModel(
+                    start_date=DateTime('2010/06/01'),
+                    stop_date=DateTime('2010/06/01')))
+
+  def test_getEffectiveModel_return_self(self):
+    # getEffectiveModel returns the trade condition if it's effective
+    self.trade_condition.setReference(self.id())
+    self.trade_condition.setEffectiveDate('2009/01/01')
+    self.trade_condition.setExpirationDate('2009/12/31')
+    transaction.commit()
+    self.tic()
+    self.assertEquals(self.trade_condition,
+        self.trade_condition.getEffectiveModel(
+                    start_date=DateTime('2009/06/01'),
+                    stop_date=DateTime('2009/06/01')))
+
+  def test_getEffectiveModel_return_self_when_no_reference(self):
+    # when no reference defined, getEffectiveModel returns the trade condition.
+    self.trade_condition.setReference(None)
+    self.assertEquals(self.trade_condition,
+        self.trade_condition.getEffectiveModel())
+    self.assertEquals(self.trade_condition,
+        self.trade_condition.getEffectiveModel(start_date=DateTime(),
+                                               stop_date=DateTime()))
+
+
+
 class TestWithSaleOrder:
   order_type = 'Sale Order'
   order_line_type = 'Sale Order Line'
@@ -1854,7 +1919,14 @@ class TestTradeConditionSupplyLinePurchaseInvoice(
       TestTradeConditionSupplyLine, TestWithPurchaseInvoice):
   pass
 
-
+class TestEffectiveSaleTradeCondition(
+            TestEffectiveTradeCondition,
+            TestWithSaleOrder):
+  pass
+class TestEffectivePurchaseTradeCondition(
+            TestEffectiveTradeCondition,
+            TestWithPurchaseOrder):
+  pass
 
 def test_suite():
   suite = unittest.TestSuite()
@@ -1872,5 +1944,7 @@ def test_suite():
   suite.addTest(unittest.makeSuite(TestTradeConditionSupplyLinePurchaseOrder))
   suite.addTest(unittest.makeSuite(TestTradeConditionSupplyLineSaleInvoice))
   suite.addTest(unittest.makeSuite(TestTradeConditionSupplyLinePurchaseInvoice))
+  suite.addTest(unittest.makeSuite(TestEffectiveSaleTradeCondition))
+  suite.addTest(unittest.makeSuite(TestEffectivePurchaseTradeCondition))
   return suite
 
