@@ -40,7 +40,7 @@
             <key> <string>tested_property</string> </key>
             <value>
               <tuple>
-                <string>quantity_unit</string>
+                <string>description</string>
               </tuple>
             </value>
         </item>
