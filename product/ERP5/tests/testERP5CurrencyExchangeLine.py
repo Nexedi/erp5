@@ -268,11 +268,11 @@ class TestCurrencyExchangeLine(AccountingTestCase, ERP5TypeTestCase):
            portal_type=portal.getPortalAccountingMovementTypeList())
     for line in line_list:
       if line.getSourceValue() == self.account_module.goods_purchase:
-        self.assertEquals(line.getSourceTotalAssetDebit(),
-                           327978)
+        self.assertEquals(line.getSourceInventoriatedTotalAssetDebit(),
+                           327979)
       elif line.getSourceValue() == self.account_module.receivable:
-        self.assertEquals(line.getSourceTotalAssetCredit(),
-                           327978)
+        self.assertEquals(line.getSourceInventoriatedTotalAssetCredit(),
+                           327979)
       else:
         self.fail('line not found')
 
@@ -379,11 +379,11 @@ class TestCurrencyExchangeLine(AccountingTestCase, ERP5TypeTestCase):
            portal_type=portal.getPortalAccountingMovementTypeList())
     for line in line_list:
       if line.getDestinationValue() == self.account_module.goods_purchase:
-        self.assertEquals(line.getDestinationTotalAssetDebit(),
-                           327978)
+        self.assertEquals(line.getDestinationInventoriatedTotalAssetDebit(),
+                           327979)
       elif line.getDestinationValue() == self.account_module.receivable:
-        self.assertEquals(line.getDestinationTotalAssetCredit(),
-                           327978)
+        self.assertEquals(line.getDestinationInventoriatedTotalAssetCredit(),
+                           327979)
       else:
         self.fail('line not found')
 
@@ -504,11 +504,11 @@ class TestCurrencyExchangeLine(AccountingTestCase, ERP5TypeTestCase):
 
     for line in line_list:
       if line.getDestinationValue() == self.account_module.goods_purchase:
-        self.assertEquals(line.getDestinationTotalAssetDebit(),
-                           327978)
+        self.assertEquals(line.getDestinationInventoriatedTotalAssetDebit(),
+                           327979)
       elif line.getDestinationValue() == self.account_module.receivable:
-        self.assertEquals(line.getDestinationTotalAssetCredit(),
-                           327978)
+        self.assertEquals(line.getDestinationInventoriatedTotalAssetCredit(),
+                           327979)
       else:
         self.fail('line not found')
   
