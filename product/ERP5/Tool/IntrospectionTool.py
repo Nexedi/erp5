@@ -39,6 +39,8 @@ from Products.ERP5 import _dtmldir
 from Products.ERP5.Tool.LogMixin import LogMixin
 from Products.ERP5Type.Utils import _setSuperSecurityManager
 from App.config import getConfiguration
+from AccessControl import Unauthorized
+from Products.ERP5Type.Cache import CachingMethod
 import tarfile
 
 _MARKER = []
@@ -196,6 +198,40 @@ class IntrospectionTool(LogMixin, BaseTool):
   #
   #   Instance variable definition access
   #
+  security.declareProtected(Permissions.ManagePortal, '_loadExternalConfig')
+  def _loadExternalConfig(self):
+    """
+      Load configuration from one external file, this configuration 
+      should be set for security reasons to prevent people access 
+      forbidden areas in the system.
+    """
+    def cached_loadExternalConfig():
+      import ConfigParser
+      config = ConfigParser.ConfigParser()
+      config.readfp(open('/etc/erp5.cfg'))
+      return config     
+
+    cached_loadExternalConfig = CachingMethod(cached_loadExternalConfig,
+                                id='IntrospectionTool__loadExternalConfig',
+                                cache_factory='erp5_content_long')
+    return  cached_loadExternalConfig()
+
+  security.declareProtected(Permissions.ManagePortal, '_getZopeConfigurationFile')
+  def _getZopeConfigurationFile(self, relative_path="", mode="r"):
+    """
+     Get a configuration file from the instance using relative path
+    """
+    if ".." in relative_path or relative_path.startswith("/"):
+      raise Unauthorized("In Relative Path, you cannot use .. or startwith / for security reason.")
+
+    instance_home = getConfiguration().instancehome
+    file_path = os.path.join(instance_home, relative_path)
+    if not os.path.exists(file_path):
+      raise IOError, 'The file: %s does not exist.' % file_path
+
+    return open(file_path, mode)
+    
+
   security.declareProtected(Permissions.ManagePortal, 'getSoftwareHome')
   def getSoftwareHome(self):
     """
@@ -204,6 +240,7 @@ class IntrospectionTool(LogMixin, BaseTool):
       Get the value of SOFTWARE_HOME for zopectl startup script
       or from zope.conf (whichever is most relevant)
     """
+    return getConfiguration().softwarehome
 
   security.declareProtected(Permissions.ManagePortal, 'setSoftwareHome')
   def setSoftwareHome(self, path):
@@ -219,6 +256,29 @@ class IntrospectionTool(LogMixin, BaseTool):
       WARNING: the list of possible path should be protected 
       if possible (ex. /etc/erp5/software_home)
     """
+    config = self._loadExternalConfig()
+    allowed_path_list = config.get("main", "zopehome").split("\n")
+  
+    if path not in allowed_path_list:
+      raise Unauthorized("You are setting one Unauthorized path as Zope Home.")
+
+    config_file = self._getZopeConfigurationFile("bin/zopectl")
+    new_file_list = []
+    for line in config_file:
+      if line.startswith("SOFTWARE_HOME="):
+        # Only comment the line, so it can easily reverted 
+        new_file_list.append("#%s" % (line))
+        new_file_list.append('SOFTWARE_HOME="%s"\n' % (path))
+      else:
+        new_file_list.append(line)
+
+    config_file.close()
+
+    # reopen file for write
+    config_file = self._getZopeConfigurationFile("bin/zopectl", "w")
+    config_file.write("".join(new_file_list))
+    config_file.close()
+    return 
 
   security.declareProtected(Permissions.ManagePortal, 'getPythonExecutable')
   def getPythonExecutable(self):
@@ -226,7 +286,15 @@ class IntrospectionTool(LogMixin, BaseTool):
       Get the value of PYTHON for zopectl startup script
       or from zope.conf (whichever is most relevant)
     """
+    config_file = self._getZopeConfigurationFile("bin/zopectl")
+    new_file_list = []
+    for line in config_file:
+      if line.startswith("PYTHON="):
+        return line.replace("PYTHON=","")
 
+    # Not possible get configuration from the zopecl
+    return None
+    
   security.declareProtected(Permissions.ManagePortal, 'setPythonExecutable')
   def setPythonExecutable(self, path):
     """
@@ -238,16 +306,39 @@ class IntrospectionTool(LogMixin, BaseTool):
       WARNING: the list of possible path should be protected 
       if possible (ex. /etc/erp5/python)
     """
+    config = self._loadExternalConfig()
+    allowed_path_list = config.get("main", "python").split("\n")
 
-  security.declareProtected(Permissions.ManagePortal, 'getProductPath')
-  def getProductPath(self):
+    if path not in allowed_path_list:
+      raise Unauthorized("You are setting one Unauthorized path as Python.")
+
+    config_file = self._getZopeConfigurationFile("bin/zopectl")
+    new_file_list = []
+    for line in config_file:
+      if line.startswith("PYTHON="):
+        # Only comment the line, so it can easily reverted 
+        new_file_list.append("#%s" % (line))
+        new_file_list.append('PYTHON="%s"\n' % (path))
+      else:
+        new_file_list.append(line)
+
+    config_file.close()    
+    # reopen file for write
+    config_file = self._getZopeConfigurationFile("bin/zopectl", "w")
+    config_file.write("".join(new_file_list))
+    config_file.close()
+    return 
+
+  security.declareProtected(Permissions.ManagePortal, 'getProductPathList')
+  def getProductPathList(self):
     """
       Get the value of SOFTWARE_HOME for zopectl startup script
       or from zope.conf (whichever is most relevant)
     """
+    return getConfiguration().products
 
-  security.declareProtected(Permissions.ManagePortal, 'setProductPath')
-  def setProductPath(self, path):
+  security.declareProtected(Permissions.ManagePortal, 'setProductPathList')
+  def setProductPathList(self, path_list):
     """
       Set the value of SOFTWARE_HOME for zopectl startup script
       or from zope.conf (whichever is most relevant)
@@ -256,8 +347,32 @@ class IntrospectionTool(LogMixin, BaseTool):
       on the same system
 
       WARNING: the list of possible path should be protected 
-      if possible (ex. /etc/erp5/python)
+      if possible (ex. /etc/erp5/product)
     """
+    config = self._loadExternalConfig()
+    allowed_path_list = config.get("main", "products").split("\n")
+
+    for path in path_list:
+       if path not in allowed_path_list:
+         raise Unauthorized("You are setting one Unauthorized path as Product Path.")
+
+    config_file = self._getZopeConfigurationFile("etc/zope.conf")
+    new_file_list = []
+    for line in config_file:
+      new_line = line
+      if line.strip(" ").startswith("products"):
+        # Only comment the line, so it can easily reverted 
+        new_line = "#%s" % ( line)
+      new_file_list.append(new_line)
+    for path in path_list:
+      new_file_list.append("products %s\n" % (path))
+    config_file.close()    
+
+    # reopen file for write
+    config_file = self._getZopeConfigurationFile("etc/zope.conf", "w")
+    config_file.write("".join(new_file_list))
+    config_file.close()
+    return 
 
   security.declareProtected(Permissions.ManagePortal, 'updateSVNProductList')
   def updateSVNProductList(self, path_list, revision=None):
@@ -270,12 +385,12 @@ class IntrospectionTool(LogMixin, BaseTool):
       buildout installer (server level) and build a complex custom
       software home or product home
     """
-    pass
-
+    raise NotImplemented 
 
   #
   #   Library signature
   #
+  # XXX this function can be cached to prevent save disk access.
   security.declareProtected(Permissions.ManagePortal, 'getSystemSignatureDict')
   def getSystemSignatureDict(self):
     """
@@ -284,11 +399,25 @@ class IntrospectionTool(LogMixin, BaseTool):
       {
          'python': '2.4.3'
        , 'pysvn': '1.2.3'
-    
-     
+      }
       NOTE: consider using autoconf / automake tools ?
     """
+    def tuple_to_format_str(t):
+       return '.'.join([str(i) for i in t])
 
-
+    from sys import version_info
+    # Get only x.x.x numbers.
+    py_version = tuple_to_format_str(version_info)
+    try:
+      import pysvn
+      # Convert tuple to x.x.x format
+      pysvn_version =  tuple_to_format_str(pysvn.version)
+    except:
+      pysvn_version = None
+    
+    return {
+            "python" : py_version, 
+            "pysvn"  : pysvn_version
+           }
 
 InitializeClass(IntrospectionTool)
