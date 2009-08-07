@@ -1,1 +1,2 @@
-The ERP5 Pdf style used in order to display nice PDF reports.
+erp5_pdf_style is deprecated. Use erp5_odt_style instead.
+
