@@ -58,7 +58,7 @@
   Please update accordingly relative path. \n
   XXX: there must be an way to do this better?\n
 """\n
-return context.getPortalObject().restrictedTraverse(\'currency_module/1\')\n
+return context.getPortalObject().restrictedTraverse(\'currency_module/EUR\')\n
 </string> </value>
         </item>
         <item>

@@ -92,7 +92,7 @@ line_found=False\n
 for order_line in shopping_cart_items:\n
   if order_line.getResource() == resource.getRelativeUrl():\n
     new_quantity = int(order_line.getQuantity()) + quantity\n
-    if new_quantity<=0:\n
+    if new_quantity <= 0:\n
       ## remove items with zero quantity\n
       shopping_cart.manage_delObjects(order_line)\n
     else:\n

@@ -60,7 +60,7 @@ if field_my_payment_mode is None:\n
 \n
 if field_my_payment_mode == \'Credit Card\':\n
   return context.getWebSectionValue().SaleOrder_viewAsWebConfirmCreditCardPayment()\n
-elif field_my_payment_mode == \'PayPal\':\n
+elif field_my_payment_mode.lower() == \'paypal\':\n
   return context.getWebSectionValue().SaleOrder_viewAsWebConfirmPayPalPayment()\n
 else:\n
   return "This method is actually not activated, sorry : %s" % field_my_payment_mode\n

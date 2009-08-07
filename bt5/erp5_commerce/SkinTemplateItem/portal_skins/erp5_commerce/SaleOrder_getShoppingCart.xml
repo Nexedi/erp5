@@ -79,7 +79,7 @@ else:\n
   if not shopping_cart_id in session.keys():\n
     from Products.ERP5Type.Document import newTempOrder\n
     shopping_cart = newTempOrder(portal_sessions, shopping_cart_id)\n
-    shopping_cart.setPriceCurrency(\'currency_module/1\')\n
+    shopping_cart.setPriceCurrency(\'currency_module/EUR\')\n
     session[shopping_cart_id] = shopping_cart\n
 \n
   ## return just a part of session for shopping cart\n
