@@ -14,23 +14,38 @@
             <value> <string>http_cache</string> </value>
         </item>
         <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts49660552.47</string> </value>
+        </item>
+        <item>
             <key> <string>__name__</string> </key>
             <value> <string>spreadsheet_icon.gif</string> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
-            <value> <string>image/jpeg</string> </value>
+            <value> <string>image/gif</string> </value>
         </item>
         <item>
             <key> <string>data</string> </key>
-            <value> <string encoding="base64">/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAkGBwgHBgkIBwgKCgkLDRYPDQwMDRsUFRAWIB0iIiAd
-Hx8kKDQsJCYxJx8fLT0tMTU3Ojo6Iys/RD84QzQ5Ojf/2wBDAQoKCg0MDRoPDxo3JR8lNzc3Nzc3
-Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzf/wAARCAAQABADASIA
-AhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAABAX/xAAiEAACAgICAgIDAAAAAAAAAAABAgMEBRES
-IQAxE1EGIkH/xAAVAQEBAAAAAAAAAAAAAAAAAAAABP/EABoRAAEFAQAAAAAAAAAAAAAAAAEAAgMR
-MQT/2gAMAwEAAhEDEQA/AL+QzEMaIkjR2pXiiZpDbmBhDAElwH9ft7XWvrvxE1m3Vw5uY6ZI5KEl
-qT5GDuJ0SVgFOyOQ1ods2h30wBDczHTx8aYu9nCK6QxmOC0KxHEcl9NExOuI/n335FyORxFb8du0
-qd+pKzQS6KsnySM55EHiqjQJbQAA1oa68c8LibOUpjbTq//Z</string> </value>
+            <value> <string encoding="base64">R0lGODlhEAAQAOesAAQEBJ4CA6ECAZwEBKQCASYmKKQGBZ8JCpgLDaQJCJsMDKcKBy8wMY8XGI4X
+IJ0VFZoXFTM0NpMeJKchIaghIa8gF4UrMHUyOG41T6UsLkdISqkyNV5GTaU0N6w4MZk/N2lJabFD
+RbNEOKZJMmtYU0lckKtMM61MNDRlpHFbVq9NNDVmpDZmpDZmpbBONbJONjlno7RPNjpppjppp3Zf
+WjpqplBpcztqp7ZRNrhRNztrp7pSN7tTOFBtdr9UOWlqcGhrbrhXShd/mYhlVpdhVbBdR55iTbNd
+Rx2EoLhfSDWAhieDl1p1jLRhTK5lOpVuOHR1eHV3e8ZkU8dlTcdpUb9sWTuOoD2RpcpvWsVxW8tx
+XMtyXclzXWOJuGOJubd2fmWKuXKJnb55e1yToL1+bb5/cMp+bVCcrbGLRL2DdI6PkX6TppWZXZ+b
+SrmMk4Waq7aSnqahTKChp8abpJuqt52su6ytssyoq7S0iri8UKW4zciwuay4xKy6xba8x7G+yqzC
+363C367D37DE383Hh7PH4bXI3svQibvM47rN5bvN47zN5LrO5bvO5bzP5bzP5svX58zY583Y583Z
+6M7Z6NPZ6NXa6NPb6tXc6tXc69bc6dfc6tXd69rg7Nzh7dzi7t3j7t/j697j7uDk7uHn7ujs9Oft
+9Oju9Pf4+/r7/Pv8/fz9/f//////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////yH5BAEKAP8ALAAAAAAQABAA
+AAj+AP8JFCjjBooWN2QMXPhvBphTq1ixWnUKzAyGNSj1CfMm1J81dVhNkjHwxiRVpT7xYUKn0ydQ
+qSTJEAgAQBRHjxwBqdmI0SNWXv7BIKWmABQ5GhjYEeVpU6VRpmToWOVITwQAPwwlKiQoUKBBq2Sw
+YJWJ0yU/c0JQIJBgwoYvrFasYIVI0SI4C6Ro4ZKlShARYlbIWKUJ054KW6bwwOHiSJEmHkDIMPUJ
+UAcsPnbEUDGERgoSRCT868LKkgEqOV6ccMIGiZArVg78kwEJVQYzSUyMQJNHyZklPRoIlBHpDgQy
+ZdIQOoRnjI0LC2d0cTPgg5E4bZ5wsPCA4T8ZJTAJOBAQAIGCgQEBADs=</string> </value>
         </item>
         <item>
             <key> <string>height</string> </key>
@@ -42,7 +57,7 @@ qd+pKzQS6KsnySM55EHiqjQJbQAA1oa68c8LibOUpjbTq//Z</string> </value>
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>435</int> </value>
+            <value> <int>1067</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

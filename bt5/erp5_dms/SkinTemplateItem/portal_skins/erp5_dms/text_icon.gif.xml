@@ -14,6 +14,10 @@
             <value> <string>http_cache</string> </value>
         </item>
         <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts49660557.11</string> </value>
+        </item>
+        <item>
             <key> <string>__name__</string> </key>
             <value> <string>text_icon.gif</string> </value>
         </item>
@@ -23,13 +27,22 @@
         </item>
         <item>
             <key> <string>data</string> </key>
-            <value> <string encoding="base64">R0lGODlhEgASAKIAAAAAAAAA/4SEhMbGxv///wAAAAAAAAAAACwAAAAAEgASAAAIdwAJCBxIsKBB
-AgISKlx4EGFDAQAIBgAwsSLFiA4xEtBYMIBAACAxWhwJYIBJAgMwXtzosaLAAShFEmgZsWRJlDE/
-srzYEqZPmRNTBoBZ8mRKnRRnyhx4dGbDoj8/knTJlKNDgiaNWhXQ8OXWrGDBbg1JtmzXswEBADs=</string> </value>
+            <value> <string encoding="base64">R0lGODlhEAAQAMZfAAQEBCYmKC8wMTM0NkdISjRlpDVmpDZmpDZmpTlnozpppjpppzpqpjtqpztr
+p2lqcGhrblp1jGR2j3R1eGd3jHV3e4GBgWOJuGOJuWWKuXKJnY6PkX6TpoWaq5+foaChp5uqt52s
+u6ytsqW4zay4xKy6xba8x7G+yqnA3arA3qrB3qzC37LF37PG4MTExMXFxcbGxrvM47vN47zN5LzN
+5brO5bvO5bzP5bzP5snT58vX58/W6M/X6MzY59DX6M3Y583Z6M7Z6NHZ6dPZ6NXa6NPb6tXc6tXc
+69bc6dfc6tXd69Xd7Nng7trg7Nzh7dzi7t3j7t/j697j7uDk7uHn7uvr6+js9Ozs7Oft9O3t7eju
+9Pf4+/r7/Pv8/fz9/f//////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////yH5
+BAEKAH8ALAAAAAAQABAAAAfYgH+CggoNBQgNCoOLfwsZWl5fX15aGQuMDEElGh1RJxwhX0AKgw1A
+XVZPJBEgTU9QXD8KggAAFTc4NxC1NjU4Xxh/CVQbARMfBAIiUk5JQ1NYCg5eNyMDAA8eFtvcFhIH
+X0dKRSZLFpLokhYGXzEyMzM0Fl8uLi8vMF8WCl5IRv9CLHypQvDKlS8WFGB5skIFihQWvtyDQfGL
+hT8XvhDZwcOHhS8EDWb5YuGPAh1biLBoYeELxZdfLAhS0OMLkxwWvhjc+cXCoAUXsHixkA6dBUYK
+FFDo1i0QADs=</string> </value>
         </item>
         <item>
             <key> <string>height</string> </key>
-            <value> <int>18</int> </value>
+            <value> <int>16</int> </value>
         </item>
         <item>
             <key> <string>precondition</string> </key>
@@ -37,7 +50,7 @@ srzYEqZPmRNTBoBZ8mRKnRRnyhx4dGbDoj8/knTJlKNDgiaNWhXQ8OXWrGDBbg1JtmzXswEBADs=</st
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <long>170</long> </value>
+            <value> <int>635</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -45,7 +58,7 @@ srzYEqZPmRNTBoBZ8mRKnRRnyhx4dGbDoj8/knTJlKNDgiaNWhXQ8OXWrGDBbg1JtmzXswEBADs=</st
         </item>
         <item>
             <key> <string>width</string> </key>
-            <value> <int>18</int> </value>
+            <value> <int>16</int> </value>
         </item>
       </dictionary>
     </pickle>
