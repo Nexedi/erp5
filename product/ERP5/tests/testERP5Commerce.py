@@ -114,23 +114,33 @@ class TestCommerce(ERP5TypeTestCase):
     self.login()
     portal = self.getPortal()
     # create default currency (EUR)
-    currency = portal.currency_module.newContent(portal_type = 'Currency', id = '1')
+    currency = portal.currency_module.newContent(portal_type='Currency', 
+                                                 id='EUR')
     currency.setTitle('EUR')
     currency.setReference('EUR')
     currency.setBaseUnitQuantity(0.01)
+
     # create product, set price & currency
-    product = portal.product_module.newContent(portal_type = 'Product', id = '1')
+    product = portal.product_module.newContent(portal_type='Product', id='1')
     product.setSupplyLinePriceCurrency(currency.getRelativeUrl())
     product.setBasePrice(10.0)
+
     # create second product, set price & currency
-    product = portal.product_module.newContent(portal_type = 'Product', id = '2')
+    product = portal.product_module.newContent(portal_type='Product', id='2')
     product.setSupplyLinePriceCurrency(currency.getRelativeUrl())
     product.setBasePrice(20.0)
     # create shipping which is actually a product
-    shipping = portal.product_module.newContent(portal_type = 'Product', id = '3')
+    shipping = portal.product_module.newContent(portal_type='Product', 
+                                                id='3')
     shipping.setSupplyLinePriceCurrency(currency.getRelativeUrl())
     shipping.setBasePrice(10.0)
     shipping.setProductLine('shipping')
+    
+    # validate default order rule
+    default_order_rule = portal.portal_rules.default_order_rule
+    if default_order_rule.getValidationState() != 'validated':
+      portal.portal_rules.default_order_rule.validate()
+
     transaction.commit()
     self.tic()
 
@@ -164,11 +174,6 @@ class TestCommerce(ERP5TypeTestCase):
     """
       Create a user with the given parameters
     """
-    # Do not create an already existing user - XXX why is this needed after all ? (JPS)
-    if self.portal.portal_catalog.getResultValue(portal_type='Person',
-                 reference=reference) is not None:
-      return
-    
     self.person_module = self.getPersonModule()
     person = self.person_module.newContent(
       first_name=first_name,
@@ -185,9 +190,11 @@ class TestCommerce(ERP5TypeTestCase):
                     start_date='1972-01-01', stop_date='2999-12-31',
                     group=group, destination_project=destination_project)
     assignment.open()
-
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
+
+    #XXX: Security hack (lucas)
+    self.portal.acl_users.zodb_roles.assignRoleToPrincipal('Manager', reference)
 
   def changeUser(self, name):
     user_folder = self.getPortal().acl_users
@@ -209,7 +216,7 @@ class TestCommerce(ERP5TypeTestCase):
     return ('erp5_base', 'erp5_web', 
             'erp5_trade', 'erp5_pdm', 'erp5_commerce',)
             
-  def getDefaultProduct(self, id = '1'):
+  def getDefaultProduct(self, id='1'):
     """ 
       Get default product.
     """
@@ -224,41 +231,62 @@ class TestCommerce(ERP5TypeTestCase):
     euro.validate()
     
     category_list = []
-    ldlc = portal.portal_categories.product_line.newContent(portal_type='Category', id='ldlc', title='LDLC')
-    laptop = ldlc.newContent(portal_type='Category', id='laptop', title='Laptop')
+    portal_categories = portal.portal_categories
+    ldlc = portal_categories.product_line.newContent(portal_type='Category', 
+                                                     id='ldlc', 
+                                                     title='LDLC')
+    laptop = ldlc.newContent(portal_type='Category', 
+                             id='laptop', 
+                             title='Laptop')
+
+    netbook = laptop.newContent(portal_type='Category', 
+                                id='netbook', 
+                                title='Netbook')
+
+    lcd = ldlc.newContent(portal_type='Category', 
+                          id='lcd', 
+                          title='Lcd Screen')
+    mp3_player = ldlc.newContent(portal_type='Category', 
+                                 id='mp3', 
+                                 title='Mp3 Player')
     category_list.append(laptop)
-    netbook = laptop.newContent(portal_type='Category', id='netbook', title='Netbook')
     category_list.append(netbook)
-    category_list.append(ldlc.newContent(portal_type='Category', id='lcd', title='Lcd Screen'))
-    category_list.append(ldlc.newContent(portal_type='Category', id='mp3', title='Mp3 Player'))
+    category_list.append(lcd)
+    category_list.append(mp3_player)
 
     product_list = []
     for category in category_list:
       for i in range(3):
-        product = portal.product_module.newContent(portal_type="Product", title='%s %s' % (category.getTitle(),i), reference='%s_%s' % (category.getId(),i))
-        product.setProductLine(category.getRelativeUrl().replace('product_line/', ''))
+        title = '%s %s' % (category.getTitle(), i)
+        reference = '%s_%s' % (category.getId(), i)
+        product = portal.product_module.newContent(portal_type="Product", 
+                                                   title=title,
+                                                   reference=reference)
+        product_line = category.getRelativeUrl().replace('product_line/', '')
+        product.setProductLine(product_line)
         product.setQuantityUnit('unit/piece')
-        supply_line = product.newContent(id='default_supply_line',portal_type='Supply Line')
+        supply_line = product.newContent(id='default_supply_line',
+                                         portal_type='Supply Line')
         supply_line.setBasePrice(10 * (i + 1))
         supply_line.setPricedQuantity(1)
         supply_line.setDefaultResourceValue(product)
-        supply_line.setPriceCurrency('currency_module/1')
+        supply_line.setPriceCurrency('currency_module/EUR')
         product_list.append(product)
       
     for product in product_list:
       product.validate()
           
     ups = portal.product_module.newContent(portal_type='Product',
-                                                 title='UPS Shipping : 24h',
-                                                 )
+                                           title='UPS Shipping : 24h')
     ups.validate()
     ups.setQuantityUnit('unit/piece')
     supply_line = ups.setProductLine('shipping/UPS24h')
-    supply_line = ups.newContent(id='default_supply_line',portal_type='Supply Line')
+    supply_line = ups.newContent(id='default_supply_line',
+                                 portal_type='Supply Line')
     supply_line.setBasePrice(10)
     supply_line.setPricedQuantity(1)
     supply_line.setDefaultResourceValue(product)
-    supply_line.setPriceCurrency('currency_module/1')
+    supply_line.setPriceCurrency('currency_module/EUR')
 
   def createUser(self, name, role_list):
     user_folder = self.getPortal().acl_users
@@ -279,7 +307,7 @@ class TestCommerce(ERP5TypeTestCase):
     # add supported languages for Localizer
     localizer = portal.Localizer
     for language in LANGUAGE_LIST:
-      localizer.manage_addLanguage(language = language)
+      localizer.manage_addLanguage(language=language)
       
     # create website
     if hasattr(portal.web_site_module, 'web_site'):
@@ -301,7 +329,7 @@ class TestCommerce(ERP5TypeTestCase):
                         last_name='master',
                         reference='webmaster',
                         group=None)
-    #XXX INSERT security here 
+
     return web_site
     
   def test_01_AddResourceToShoppingCart(self, quiet=0, run=run_all_test):
@@ -615,7 +643,7 @@ class TestCommerce(ERP5TypeTestCase):
                     request.RESPONSE.getHeader('location'))
     self.assertEquals(0, len(portal.SaleOrder_getShoppingCartItemList()))
 
-  def test_12_externalPaymentHandlet(self, quiet=0, run=run_all_test):
+  def test_12_externalPaymentHandler(self, quiet=0, run=run_all_test):
     """
       Test the SaleOrder_externalPaymentHandler script
     """
@@ -642,18 +670,36 @@ class TestCommerce(ERP5TypeTestCase):
       message = '\nTest the finalisation of the shopping procedure'
       ZopeTestCase._print(message)
       LOG('Testing... ', 0, message)
+
+    self.createTestUser(first_name="Lucas",
+                        last_name='Carvalho',
+                        reference='lucas',
+                        group=None)
+    self.changeUser('lucas')
     portal = self.getPortal()
     request = self.app.REQUEST
-    default_product = self.getDefaultProduct()
     request.set('session_id', SESSION_ID)
 
-    portal.Resource_addToShoppingCart(default_product, quantity=1)
-    self.tic()
+
+    portal.Resource_addToShoppingCart(self.getDefaultProduct(), quantity=1)
+    portal.Resource_addToShoppingCart(self.getDefaultProduct('2'), quantity=1)
     transaction.commit()
-    self.assertEquals(1, len(portal.SaleOrder_getShoppingCartItemList()))
+    self.tic()
+
+    self.assertEquals(2, len(portal.SaleOrder_getShoppingCartItemList()))
     self.assertEquals(0, len(portal.sale_order_module.contentValues()))
 
-    # XXX : to finish
+    portal.SaleOrder_finalizeShopping()
+    transaction.commit()
+    self.tic()
+    sale_order_object_list = portal.sale_order_module.contentValues()
+
+    self.assertEquals(1, len(sale_order_object_list))
+    self.assertEquals(2, len(sale_order_object_list[0].contentValues()))
+
+    self.assertEquals(0, len(portal.SaleOrder_getShoppingCartItemList()))
+
+    self.changeUser('ivan')
     
   def test_14_getAvailableShippingResourceList(self, quiet=0, run=run_all_test):
     """
@@ -665,12 +711,22 @@ class TestCommerce(ERP5TypeTestCase):
       message = '\nTest to get the available shipping resource list'
       ZopeTestCase._print(message)
       LOG('Testing... ', 0, message)
+
     portal = self.getPortal()
     request = self.app.REQUEST
     default_product = self.getDefaultProduct()
     request.set('session_id', SESSION_ID)
 
-    # XXX : to finish
+    shipping = portal.portal_categories.product_line.shipping.getRelativeUrl()
+    portal.product_module.newContent(portal_type='Product',
+                                     title='shipping',
+                                     product_line=shipping)
+    transaction.commit()
+    self.tic()
+
+    self.assertEquals(2,
+                    len(portal.SaleOrder_getAvailableShippingResourceList()))
+                                     
 
   def test_15_getFormatedData(self, quiet=0, run=run_all_test):
     """
@@ -712,10 +768,14 @@ class TestCommerce(ERP5TypeTestCase):
     portal.Resource_addToShoppingCart(default_product, 1)
     shopping_cart = portal.SaleOrder_getShoppingCart()
     shipping_resource_list = portal.SaleOrder_getAvailableShippingResourceList()
-    # how to set shopping_cart.shipping_method ?
 
-    #self.assertEquals(shipping_resource_list[0],
-    #                  portal.SaleOrder_getSelectedShippingResource())
+    order_line = getattr(shopping_cart, 'shipping_method', None)
+    if order_line is None:
+      order_line = shopping_cart.newContent(id='shipping_method', portal_type='Sale Order Line')
+    order_line.setResource(shipping_resource_list[0].getRelativeUrl())
+    order_line.setQuantity(1)
+    self.assertEquals(shipping_resource_list[0].getRelativeUrl(),
+                      portal.SaleOrder_getSelectedShippingResource())
 
   def test_17_getShoppingCartDefaultCurrency(self, quiet=0, run=run_all_test):
     """
@@ -729,7 +789,7 @@ class TestCommerce(ERP5TypeTestCase):
       LOG('Testing... ', 0, message)
 
     portal = self.getPortal()
-    currency = portal.restrictedTraverse('currency_module/1')
+    currency = portal.restrictedTraverse('currency_module/EUR')
     self.assertEquals(currency, portal.SaleOrder_getShoppingCartDefaultCurrency())
 
     
@@ -756,6 +816,7 @@ class TestCommerce(ERP5TypeTestCase):
       message = '\nTest to simulate paypal payment.'
       ZopeTestCase._print(message)
       LOG('Testing... ', 0, message)
+
     portal = self.getPortal()
 
     # create new python script to replace the external method
@@ -774,21 +835,29 @@ class TestCommerce(ERP5TypeTestCase):
     web_site.setProperty('ecommerce_paypal_username', 'user')
     web_site.setProperty('ecommerce_paypal_password', 'pass')
     web_site.setProperty('ecommerce_paypal_signature', 'signature')
-
+   
     #2 login and activate a cart
-    #self.changeUser('webmaster')
+    self.changeUser('webmaster')
     request = self.app.REQUEST
     request.set('session_id', SESSION_ID)
 
     #3 add a product in the cart
     default_product = self.getDefaultProduct()
-    portal.Resource_addToShoppingCart(default_product, 1)
-    get_transaction().commit()
+    portal.Resource_addToShoppingCart(resource=default_product, quantity=1)
+    transaction.commit()
     self.tic()
     
     #4 chose a shipping for the cart
+    shopping_cart = portal.SaleOrder_getShoppingCart()
     shipping_resource_list = portal.SaleOrder_getAvailableShippingResourceList()
-    #XXX apply it to the cart
+    order_line = getattr(shopping_cart, 'shipping_method', None)
+    if order_line is None:
+      order_line = shopping_cart.newContent(id='shipping_method',
+                                            portal_type='Sale Order Line')
+    order_line.setResource(shipping_resource_list[0].getRelativeUrl())
+    order_line.setQuantity(1)
+    self.assertEquals(shipping_resource_list[0].getRelativeUrl(),
+                      portal.SaleOrder_getSelectedShippingResource())
 
     #5 : paypal step 1 : get a new token
     token = web_site.WebSite_getNewPaypalToken()    
@@ -806,13 +875,14 @@ class TestCommerce(ERP5TypeTestCase):
     #8 : paypal step 4 : validate the payment
     self.assertEquals(1, len(portal.SaleOrder_getShoppingCartItemList()))
     self.assertEquals(0, len(portal.sale_order_module.contentValues()))
-    #web_site.WebSection_doPaypalPayment(token=token)
-    #get_transaction().commit()
-    #self.tic()
+    
+    web_site.WebSection_doPaypalPayment(token=token)
+    transaction.commit()
+    self.tic()
     
     #9 check if sale order created
-    #self.assertEquals(0, len(portal.SaleOrder_getShoppingCartItemList()))
-    #self.assertEquals(1, len(portal.sale_order_module.contentValues()))
+    self.assertEquals(0, len(portal.SaleOrder_getShoppingCartItemList()))
+    self.assertEquals(1, len(portal.sale_order_module.contentValues()))
 
     custom_skin.manage_delObjects([method_id])
     self.changeUser('ivan')
