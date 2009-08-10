@@ -341,6 +341,25 @@ class FolderMixIn(ExtensionClass.Base):
     """
     return self.countFolder(**kw)[0][0]
 
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getWebSiteValue')
+  def getWebSiteValue(self):
+    """
+    Since aq_dynamic will not work well to get Web Site for language
+    specified case (eg. web_site_module/site/fr/web_page_module), we
+    call aq_parent instead to reach the Web Site.
+    """
+    return self.aq_parent.getWebSiteValue()
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getWebSectionValue')
+  def getWebSectionValue(self):
+    """
+    Since aq_dynamic will not work well to get Web Section for language
+    specified case (eg. web_site_module/site/fr/section/web_page_module),
+    we call aq_parent instead to reach the Web Section.
+    """
+    return self.aq_parent.getWebSectionValue()
 
 BTREE_HANDLER = 1
 HBTREE_HANDLER = 2
