@@ -699,7 +699,7 @@ class ListBoxRenderer:
         return 0
     return 1
 
-  hideRowsMissingSearchCriterion = lazyMethod(isHideRowsOnNoSearchCriterion)
+  isHideRowsOnNoSearchCriterion = lazyMethod(isHideRowsOnNoSearchCriterion)
 
   def showStat(self):
     """Return a boolean that represents whether a stat line is displayed or not.
