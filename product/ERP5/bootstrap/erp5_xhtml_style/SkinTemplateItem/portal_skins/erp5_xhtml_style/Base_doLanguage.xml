@@ -53,13 +53,42 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># XXX Localizer-dependent\n
-portal = context.getPortalObject()\n
+            <value> <string>try:\n
+  website = context.getWebSiteValue()\n
+except AttributeError:\n
+  website = None\n
 \n
-if select_language is None:\n
-  select_language = context.REQUEST.form["Base_doLanguage"]\n
+if website is not None and website.isStaticLanguageSelection():\n
+  # Web Mode\n
+  referer_url = context.REQUEST.HTTP_REFERER\n
+  default_language = context.getDefaultAvailableLanguage()\n
+  current_language = context.Localizer.get_selected_language()\n
+  web_site_url = context.getWebSiteValue().absolute_url()\n
+  if web_site_url.endswith(\'/%s\' % current_language):\n
+    # Quick hack to handle acquisition of temp object\n
+    # which is different in the case of a Web Site\n
+    web_site_url = web_site_url[:-len(current_language) - 1]\n
 \n
-portal.Localizer.changeLanguage(select_language)\n
+  if current_language == select_language:\n
+    redirect_url = referer_url\n
+  elif current_language == default_language:\n
+    redirect_url = referer_url.replace(web_site_url, \'%s/%s\' %\n
+                            (web_site_url, select_language))\n
+  elif select_language == default_language:\n
+    redirect_url = referer_url.replace(\'%s/%s\' % (web_site_url, current_language), web_site_url)\n
+  else:\n
+    redirect_url = referer_url.replace(\'%s/%s\' % (web_site_url, current_language),\n
+                                       \'%s/%s\' % (web_site_url, select_language))\n
+  return context.REQUEST.RESPONSE.redirect(redirect_url)\n
+else:\n
+  # ERP5 Mode\n
+  # XXX Localizer-dependent\n
+  portal = context.getPortalObject()\n
+\n
+  if select_language is None:\n
+    select_language = context.REQUEST.form["Base_doLanguage"]\n
+\n
+  portal.Localizer.changeLanguage(select_language)\n
 </string> </value>
         </item>
         <item>
@@ -99,9 +128,17 @@ portal.Localizer.changeLanguage(select_language)\n
                             <string>select_language</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>portal</string>
+                            <string>website</string>
+                            <string>AttributeError</string>
                             <string>None</string>
+                            <string>referer_url</string>
+                            <string>default_language</string>
+                            <string>current_language</string>
+                            <string>web_site_url</string>
                             <string>_getitem_</string>
+                            <string>len</string>
+                            <string>redirect_url</string>
+                            <string>portal</string>
                           </tuple>
                         </value>
                     </item>
