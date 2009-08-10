@@ -814,6 +814,48 @@ class TestERP5Web(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.assertSameSet([sub_web_section], 
                        web_site.getWebSectionValueList(web_page))
 
+  def test_12_getWebSiteValue(self, quiet=quiet, run=run_all_test):
+    """
+      Test that getWebSiteValue() always includes selected Language.
+    """
+    if not run: return
+    if not quiet:
+      message = '\ntest_12_getWebSiteValue'
+      ZopeTestCase._print(message)
+
+    self.setupWebSite()
+    portal = self.getPortal()
+    web_site_module = self.portal.getDefaultModule('Web Site')
+    web_site = web_site_module[self.website_id]
+    web_site_relative_url = web_site.absolute_url(relative=1)
+    web_site_fr = web_site.restrictedTraverse('fr')
+    web_site_relative_url_fr = '%s/fr' % web_site_relative_url
+    page = self.web_page_module.newContent(portal_type='Web Page',
+                                           reference='foo',
+                                           text_content='<b>OK</b>')
+    page.publish()
+    transaction.commit()
+    self.tic()
+
+    web_page = web_site.restrictedTraverse('foo')
+    web_page_fr = web_site_fr.restrictedTraverse('foo')
+
+    web_page_module = web_site.restrictedTraverse('web_page_module')
+    web_page_module_fr = web_site_fr.restrictedTraverse('web_page_module')
+
+    self.assertEquals(web_site_relative_url,
+                      web_site.getWebSiteValue().absolute_url(relative=1))
+    self.assertEquals(web_site_relative_url_fr,
+                      web_site_fr.getWebSiteValue().absolute_url(relative=1))
+    self.assertEquals(web_site_relative_url,
+                      web_page.getWebSiteValue().absolute_url(relative=1))
+    self.assertEquals(web_site_relative_url_fr,
+                      web_page_fr.getWebSiteValue().absolute_url(relative=1))
+    self.assertEquals(web_site_relative_url,
+                      web_page_module.getWebSiteValue().absolute_url(relative=1))
+    self.assertEquals(web_site_relative_url_fr,
+                      web_page_module_fr.getWebSiteValue().absolute_url(relative=1))
+
 class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
   """
   Test for erp5_web with simple security.
