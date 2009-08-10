@@ -82,9 +82,7 @@ class TestCommerce(ERP5TypeTestCase):
   Not tested :
   Person_getApplicableDiscountList
   Person_getApplicableTaxList
-  SaleOrder_getAvailableShippingResourceList
   SaleOrder_externalPaymentHandler
-  SaleOrder_finalizeShopping
   SaleOrder_getSelectedShippingResource
   SaleOrder_isShippingRequired
   SaleOrder_paymentRedirect
@@ -102,11 +100,10 @@ class TestCommerce(ERP5TypeTestCase):
   Product_getRelatedDescription
   Person_editPersonalInformation (maybe useless to unittest)
   Resource_getShopUrl
-  WebSection_getProductList
   """
 
   run_all_test = 1
-  
+
   def getTitle(self):
     return "E-Commerce System"
   
@@ -175,6 +172,8 @@ class TestCommerce(ERP5TypeTestCase):
       Create a user with the given parameters
     """
     self.person_module = self.getPersonModule()
+    if hasattr(self.person_module, id or reference):
+      return
     person = self.person_module.newContent(
       first_name=first_name,
       last_name=last_name,
@@ -232,6 +231,8 @@ class TestCommerce(ERP5TypeTestCase):
     
     category_list = []
     portal_categories = portal.portal_categories
+    if hasattr(portal_categories.product_line, 'ldlc'):
+      portal_categories.product_line.manage_delObjects(['ldlc'])
     ldlc = portal_categories.product_line.newContent(portal_type='Category', 
                                                      id='ldlc', 
                                                      title='LDLC')
@@ -310,11 +311,11 @@ class TestCommerce(ERP5TypeTestCase):
       localizer.manage_addLanguage(language=language)
       
     # create website
-    if hasattr(portal.web_site_module, 'web_site'):
-      portal.web_site_module.manage_delObjects('web_site')
-    web_site = portal.web_site_module.newContent(portal_type = 'Web Site', 
-                                                id = 'web_site',
-                                                **kw)
+    web_site = getattr(portal.web_site_module, 'web_site', None)
+    if web_site is None:
+      web_site = portal.web_site_module.newContent(portal_type='Web Site', 
+                                                 id='web_site',
+                                                 **kw)
     transaction.commit()
     self.tic()
 
@@ -671,11 +672,9 @@ class TestCommerce(ERP5TypeTestCase):
       ZopeTestCase._print(message)
       LOG('Testing... ', 0, message)
 
-    self.createTestUser(first_name="Lucas",
-                        last_name='Carvalho',
-                        reference='lucas',
-                        group=None)
-    self.changeUser('lucas')
+    self.setupWebSite()
+    self.changeUser('webmaster')
+    
     portal = self.getPortal()
     request = self.app.REQUEST
     request.set('session_id', SESSION_ID)
@@ -886,6 +885,33 @@ class TestCommerce(ERP5TypeTestCase):
 
     custom_skin.manage_delObjects([method_id])
     self.changeUser('ivan')
+    
+  def test_20_getProductListFromWebSection(self, quiet=0, run=run_all_test):
+    """
+      Test the  WebSection_getProductList script.
+    """
+    if not run:
+      return
+    if not quiet:
+      message = '\nTest the script WebSection_getProductList.'
+      ZopeTestCase._print(message)
+      LOG('Testing... ', 0, message)
+
+    portal = self.getPortal()
+    web_site = self.setupWebSite()
+    laptop_product = self.getDefaultProduct(id='1')
+    laptop_product.setProductLine('ldlc/laptop')
+    netbook_product = self.getDefaultProduct(id='2')
+    netbook_product.setProductLine('ldlc/laptop')
+
+
+    web_site.WebSection_generateSectionFromCategory(category='product_line/ldlc',
+                                                    section_id='products',
+                                                    depth=2)
+    transaction.commit()
+    self.tic()
+
+    self.assertEquals(12, len(web_site.products.WebSection_getProductList()))
     
 import unittest
 def test_suite():
