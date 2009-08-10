@@ -30,8 +30,8 @@
                     <value>
                       <tuple>
                         <string>AUTHENTICATED_USER</string>
-                        <string>LOCALIZER_LANGUAGE</string>
                         <string>current_web_site_url</string>
+                        <string>web_site_language</string>
                       </tuple>
                     </value>
                 </item>
