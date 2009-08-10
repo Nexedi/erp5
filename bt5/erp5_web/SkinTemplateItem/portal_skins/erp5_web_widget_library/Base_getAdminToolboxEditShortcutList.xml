@@ -76,7 +76,7 @@ current_web_section_translated_portal_type = current_web_section.getTranslatedPo
 action_dict = request.get(\'actions\', {}) # XXX actions needs to be renamed to action_dict\n
 exchange_action_list = action_dict.get(\'object_exchange\', [])\n
 button_action_list = action_dict.get(\'object_button\', [])\n
-portal_url = context.portal_url()\n
+portal_url = getattr(context, \'getWebSiteValue\', context.getPortalObject)().absolute_url()\n
 http_parameters = request.get(\'http_parameters\', \'\')\n
 http_parameters = http_parameters.replace(\'editable_mode\', \'dummy_editable_mode\')\n
 \n
@@ -102,13 +102,13 @@ if not editable_mode:\n
   result.append(dict(\n
     url = "%s/view?editable_mode:int=1&%s" \n
             %(editable_absolute_url, http_parameters),\n
-    icon = context.getIcon() or \'file_icon.gif\',\n
+    icon = "%s/%s" % (portal_url, context.getIcon(relative_to_portal=True) or \'file_icon.gif\'),\n
     title = edit_title,\n
     label = "%s Icon" % translated_portal_type,))\n
 else: \n
   result.append(dict(\n
     url = "%s/view?editable_mode:int=0&%s" % (absolute_url, http_parameters),\n
-    icon  = context.getIcon() or \'file_icon.gif\',\n
+    icon = "%s/%s" % (portal_url, context.getIcon(relative_to_portal=True) or \'file_icon.gif\'),\n
     title = translateString("View ${portal_type}", \n
                             mapping=dict(portal_type=translated_portal_type)),\n
                             label = "%s Icon" % translated_portal_type,))\n
@@ -117,7 +117,7 @@ else: \n
 if portal_type not in (\'Web Section\', \'Web Site\'): \n
   result.append(dict(\n
     url = "%s/view?editable_mode=1" % current_web_section.absolute_url(),\n
-    icon = current_web_section.getIcon(),\n
+    icon = "%s/%s" % (portal_url, current_web_section.getIcon(relative_to_portal=True)),\n
     title = translateString("Edit Parent ${portal_type}",\n
                              mapping=dict(portal_type=current_web_section_translated_portal_type)),\n
     label = "%s Icon" % current_web_section_translated_portal_type,))\n
@@ -193,16 +193,17 @@ return result\n
                             <string>action_dict</string>
                             <string>exchange_action_list</string>
                             <string>button_action_list</string>
+                            <string>getattr</string>
                             <string>portal_url</string>
                             <string>http_parameters</string>
                             <string>absolute_url</string>
-                            <string>getattr</string>
                             <string>editable_absolute_url</string>
                             <string>getActionTitleForContext</string>
                             <string>int</string>
                             <string>editable_mode</string>
                             <string>edit_title</string>
                             <string>dict</string>
+                            <string>True</string>
                             <string>_getiter_</string>
                             <string>action</string>
                             <string>_getitem_</string>
