@@ -106,8 +106,8 @@
  body {font-size:62.5%; background-color:<tal:block tal:replace="body_color"/>; font-family:arial,sans-serif;} /*Font-size: 1.0em = 10px when browser default size is 16px*/\n
 .container {width:<tal:block tal:replace="container_width"/>px; padding-top:10px; padding-bottom:20px; margin:0 auto; font-size:1.0em;}\n
 .header {width:<tal:block tal:replace="main_width"/>px; min-height:130px /*Non-IE6*/; height:auto !important /*Non-IE6*/; height:130px /*IE6*/; border-left:solid <tal:block tal:replace="border_width"/>px <tal:block tal:replace="primary_color"/>; border-right:solid <tal:block tal:replace="border_width"/>px <tal:block tal:replace="primary_color"/>; background:<tal:block tal:replace="secondary_color"/> url(<tal:block tal:replace="header_background_image"/>) repeat-x /*Total header background image entered here. Height: 125px*/; font-size:1.0em;}\n
-.header-top {clear:both; width:<tal:block tal:replace="main_width"/>px; height:100px; background:<tal:block tal:replace="header_color"/> url(./mf54_image/bg_header_top.jpg) repeat-x /*Top header background image entered here. Height: 100px*/; font-size:1.0em;}\n
-.header-bottom {clear:both; width:<tal:block tal:replace="main_width"/>px; min-height:30px /*Non-IE6*/; height:auto !important /*Non-IE6*/; height:30px /*IE6*/; background:<tal:block tal:replace="secondary_color"/> url(./mf54_image/bg_header_bottom.jpg) repeat-x /*Bottom header background image entered here: Height: 25 px*/; font-size:1.0em;}\n
+.header-top {clear:both; width:<tal:block tal:replace="main_width"/>px; height:100px; background:<tal:block tal:replace="header_color"/> url(<tal:block tal:replace="site_url"/>/mf54_image/bg_header_top.jpg) repeat-x /*Top header background image entered here. Height: 100px*/; font-size:1.0em;}\n
+.header-bottom {clear:both; width:<tal:block tal:replace="main_width"/>px; min-height:30px /*Non-IE6*/; height:auto !important /*Non-IE6*/; height:30px /*IE6*/; background:<tal:block tal:replace="secondary_color"/> url(<tal:block tal:replace="site_url"/>/mf54_image/bg_header_bottom.jpg) repeat-x /*Bottom header background image entered here: Height: 25 px*/; font-size:1.0em;}\n
 .navbar {white-space:nowrap /*IE hack*/; float:left; width:<tal:block tal:replace="main_width"/>px; border-left:solid <tal:block tal:replace="border_width"/>px <tal:block tal:replace="primary_color"/>; border-right:solid <tal:block tal:replace="border_width"/>px <tal:block tal:replace="primary_color"/>; background-color:<tal:block tal:replace="secondary_color"/>; font-family:tahoma,arial,sans-serif; font-size:130% !important /*Non-IE6*/; font-size:120% /*IE6*/;} /*Color navigation bar normal mode*/\n
 .main {clear:both; width:<tal:block tal:replace="main_width"/>px; padding:10px 0 20px 0; border-left:solid <tal:block tal:replace="border_width"/>px <tal:block tal:replace="primary_color"/>; border-right:solid <tal:block tal:replace="border_width"/>px <tal:block tal:replace="primary_color"/>; background-color:<tal:block tal:replace="primary_color"/>; font-size:1.0em;}\n
 .main_content {display:inline; /*Fix IE floating margin bug*/; float:left; width:<tal:block tal:replace="main_content_width"/>px; background-color:<tal:block tal:replace="primary_color"/>; font-size:1.0em; overflow:visible !important /*Non-IE6*/; overflow:hidden /*IE6*/;}\n
@@ -147,7 +147,7 @@
 \n
 /* BREADCRUMB */\n
 .header-bottom ul {float:left; list-style:none; padding:8px 0 3px 10px !important /*Non-IE6*/; padding:8px 0 3px 10px /*IE6*/;}\n
-.header-bottom ul li {display:inline; padding:0 0 0 10px; background:transparent url(./mf54_image/bg_bullet_arrow.gif) no-repeat 0 50%; font-size:110% !important /*Non-IE6*/; font-size:100% /*IE6*/;}\n
+.header-bottom ul li {display:inline; padding:0 0 0 10px; background:transparent url(<tal:block tal:replace="site_url"/>/mf54_image/bg_bullet_arrow.gif) no-repeat 0 50%; font-size:110% !important /*Non-IE6*/; font-size:100% /*IE6*/;}\n
 .header-bottom ul li.nobullet {display:inline; padding:0; background:none; color:rgb(75,75,75);}\n
 .header-bottom ul a {color:rgb(125,125,125); font-weight:bold; text-decoration:none;}\n
 .header-bottom ul a:hover {color:rgb(255,255,255);}\n
@@ -235,8 +235,8 @@
 /* CONTENT */\n
 .corner-content-1col-top {clear:both; width:<tal:block tal:replace="main_content_width"/>px; height:7px; background:white url(<tal:block tal:replace="content_top_background_image"/>) no-repeat; overflow:hidden;}\n
 .corner-content-1col-bottom {clear:both; width:<tal:block tal:replace="main_content_width"/>px; height:7px; margin-bottom:10px; background:transparent url(<tal:block tal:replace="content_bottom_background_image"/>) no-repeat; overflow:hidden;}\n
-.corner-content-2col-top {width:333px; height:7px; background:transparent url(./mf54_image/bg_corner_content_2col_top.gif) no-repeat; overflow:hidden;}\n
-.corner-content-2col-bottom {width:333px; height:7px; margin-bottom:10px; background:transparent url(./mf54_image/bg_corner_content_2col_bottom.gif) no-repeat; overflow:hidden;}\n
+.corner-content-2col-top {width:333px; height:7px; background:transparent url(<tal:block tal:replace="site_url"/>/mf54_image/bg_corner_content_2col_top.gif) no-repeat; overflow:hidden;}\n
+.corner-content-2col-bottom {width:333px; height:7px; margin-bottom:10px; background:transparent url(<tal:block tal:replace="site_url"/>/mf54_image/bg_corner_content_2col_bottom.gif) no-repeat; overflow:hidden;}\n
 \n
 /* SUBCONTENT */\n
 .corner-subcontent-top {clear:both; width:<tal:block tal:replace="right_column_width"/>px; height:7px; background:transparent url(<tal:block tal:replace="subcontent_top_background_image"/>) no-repeat; overflow:hidden;}\n
@@ -299,17 +299,17 @@ fieldset.widget > div.field > label {\n
 \n
 \n
 /* HEADING - Special icon */\n
-div.subcontent-box.sidemenu1 h1.group_title {background: url(./mf54_image/icon_celltitle_menu.gif) no-repeat; background-position:225px 5px;}\n
-div.subcontent-box.sidemenu2 h1.group_title {background: url(./mf54_image/icon_celltitle_menu.gif) no-repeat; background-position:225px 5px;}\n
-div.subcontent-box.sidemenu3 h1.group_title {background: url(./mf54_image/icon_celltitle_menu.gif) no-repeat; background-position:225px 5px;}\n
-div.subcontent-box.loginbox h1.group_title {background: url(./mf54_image/icon_celltitle_login.gif) no-repeat; background-position:229px 5px;}\n
-div.subcontent-box.searchbox h1.group_title {background: url(./mf54_image/icon_celltitle_search.gif) no-repeat; background-position:225px 5px;}\n
-div.subcontent-box.videobox h1.group_title {background: url(./mf54_image/icon_celltitle_video.gif) no-repeat; background-position:231px 5px;}\n
-div.subcontent-box.audiobox h1.group_title {background: url(./mf54_image/icon_celltitle_audio.gif) no-repeat; background-position:225px 5px;}\n
-div.subcontent-box.webtemplatebox h1.group_title {background: url(./mf54_image/icon_celltitle_webtemplate.gif) no-repeat; background-position:226px 5px;}\n
-div.subcontent-box.documentbox h1.group_title {background: url(./mf54_image/icon_celltitle_document.gif) no-repeat; background-position:229px 5px;}\n
-div.subcontent-box.blogbox h1.group_title {background: url(./mf54_image/icon_celltitle_blog.gif) no-repeat; background-position:233px 5px;}\n
-div.subcontent-box.forumbox h1.group_title {background: url(./mf54_image/icon_celltitle_forum.gif) no-repeat; background-position:229px 5px;}\n
+div.subcontent-box.sidemenu1 h1.group_title {background: url(<tal:block tal:replace="site_url"/>/mf54_image/icon_celltitle_menu.gif) no-repeat; background-position:225px 5px;}\n
+div.subcontent-box.sidemenu2 h1.group_title {background: url(<tal:block tal:replace="site_url"/>/mf54_image/icon_celltitle_menu.gif) no-repeat; background-position:225px 5px;}\n
+div.subcontent-box.sidemenu3 h1.group_title {background: url(<tal:block tal:replace="site_url"/>/mf54_image/icon_celltitle_menu.gif) no-repeat; background-position:225px 5px;}\n
+div.subcontent-box.loginbox h1.group_title {background: url(<tal:block tal:replace="site_url"/>/mf54_image/icon_celltitle_login.gif) no-repeat; background-position:229px 5px;}\n
+div.subcontent-box.searchbox h1.group_title {background: url(<tal:block tal:replace="site_url"/>/mf54_image/icon_celltitle_search.gif) no-repeat; background-position:225px 5px;}\n
+div.subcontent-box.videobox h1.group_title {background: url(<tal:block tal:replace="site_url"/>/mf54_image/icon_celltitle_video.gif) no-repeat; background-position:231px 5px;}\n
+div.subcontent-box.audiobox h1.group_title {background: url(<tal:block tal:replace="site_url"/>/mf54_image/icon_celltitle_audio.gif) no-repeat; background-position:225px 5px;}\n
+div.subcontent-box.webtemplatebox h1.group_title {background: url(<tal:block tal:replace="site_url"/>/mf54_image/icon_celltitle_webtemplate.gif) no-repeat; background-position:226px 5px;}\n
+div.subcontent-box.documentbox h1.group_title {background: url(<tal:block tal:replace="site_url"/>/mf54_image/icon_celltitle_document.gif) no-repeat; background-position:229px 5px;}\n
+div.subcontent-box.blogbox h1.group_title {background: url(<tal:block tal:replace="site_url"/>/mf54_image/icon_celltitle_blog.gif) no-repeat; background-position:233px 5px;}\n
+div.subcontent-box.forumbox h1.group_title {background: url(<tal:block tal:replace="site_url"/>/mf54_image/icon_celltitle_forum.gif) no-repeat; background-position:229px 5px;}\n
 \n
 /* HEADING -- Without icon */\n
 div.subcontent-box.headbox1noicon h1.group_title {background:none;}\n

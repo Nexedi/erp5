@@ -88,13 +88,13 @@
 /*************/\n
 \n
 /* PAGETITLE */\n
-.main h1.pagetitle {margin:0 0 0.5em 0; padding:1px 0 1px 32px; background: url(./mf54_image/icon_pagetitle.gif) no-repeat; background-position:center left; color:rgb(255,255,255); font-weight:bold; font-size:220% !important /*Non-IE6*/; font-size:200% /*IE6*/;}\n
+.main h1.pagetitle {margin:0 0 0.5em 0; padding:1px 0 1px 32px; background: url(<tal:block tal:replace="site_url"/>/mf54_image/icon_pagetitle.gif) no-repeat; background-position:center left; color:rgb(255,255,255); font-weight:bold; font-size:220% !important /*Non-IE6*/; font-size:200% /*IE6*/;}\n
 \n
 /* HEADING -- Standard icon (1-Column / 2-Column) */\n
-.main_content h1 {margin:0; padding:5px 50px 12px 20px; border-bottom:solid 1px rgb(215,215,215); background: url(./mf54_image/icon_celltitle_level1.gif) no-repeat; background-position:<tal:block tal:replace="python:632 + content_icon_width"/>px 5px; color:rgb(75,75,75); font-weight:bold; font-size:220% !important /*Non-IE6*/; font-size:200% /*IE6*/;}\n
-.content-2col-box-leftcolumn h1, .content-2col-box-rightcolumn h1 {margin:0; padding:5px 50px 12px 20px; border-bottom:solid 1px rgb(215,215,215); background: url(./mf54_image/icon_celltitle_level1.gif) no-repeat; background-position:289px 3px; color:rgb(75,75,75); font-weight:bold; font-size:220% !important /*Non-IE6*/; font-size:200% /*IE6*/;}\n
+.main_content h1 {margin:0; padding:5px 50px 12px 20px; border-bottom:solid 1px rgb(215,215,215); background: url(<tal:block tal:replace="site_url"/>/mf54_image/icon_celltitle_level1.gif) no-repeat; background-position:<tal:block tal:replace="python:632 + content_icon_width"/>px 5px; color:rgb(75,75,75); font-weight:bold; font-size:220% !important /*Non-IE6*/; font-size:200% /*IE6*/;}\n
+.content-2col-box-leftcolumn h1, .content-2col-box-rightcolumn h1 {margin:0; padding:5px 50px 12px 20px; border-bottom:solid 1px rgb(215,215,215); background: url(<tal:block tal:replace="site_url"/>/mf54_image/icon_celltitle_level1.gif) no-repeat; background-position:289px 3px; color:rgb(75,75,75); font-weight:bold; font-size:220% !important /*Non-IE6*/; font-size:200% /*IE6*/;}\n
 \n
-.main_content h2 {clear:both; /*Start IE Hack*/ position:relative; z-index:1; top:-1px /* End IE Hack to remove vertical -1px margin bug otherwise produced by margin*/; margin: 0 20px 0 20px; padding:15px 35px 5px 0; border-top:solid 1px rgb(215,215,215); background: url(./mf54_image/icon_celltitle_level2.gif) no-repeat;  background-position:right 15px; color:rgb(75,75,75); font-weight:bold; font-size:180% !important /*Non-IE6*/; font-size:160% /*IE6*/;}\n
+.main_content h2 {clear:both; /*Start IE Hack*/ position:relative; z-index:1; top:-1px /* End IE Hack to remove vertical -1px margin bug otherwise produced by margin*/; margin: 0 20px 0 20px; padding:15px 35px 5px 0; border-top:solid 1px rgb(215,215,215); background: url(<tal:block tal:replace="site_url"/>/mf54_image/icon_celltitle_level2.gif) no-repeat;  background-position:right 15px; color:rgb(75,75,75); font-weight:bold; font-size:180% !important /*Non-IE6*/; font-size:160% /*IE6*/;}\n
 .main_content h3 {margin:1.0em 0 -0.3em 0; padding:0 20px 0 20px; color:rgb(75,75,75); font-weight:bold; font-size:180% !important /*Non-IE6*/; font-size:160% /*IE6*/;}\n
 .main_content h3.line {/*Start IE Hack*/ position:relative; z-index:1; top:-1px; /* End IE Hack vertical alignment to blend top border with h1, if directly after each other*/ margin:0 20px -0.3em 20px; padding:1.0em 0 0 0; border-top:solid 1px rgb(215,215,215);}\n
 .main_content h4 {margin:1.0em 0 -0.3em 0; padding:0 20px 0 20px; color:rgb(75,75,75); font-weight:bold; font-size:160% !important /*Non-IE6*/; font-size:140% /*IE6*/;}\n
@@ -102,25 +102,25 @@
 .main_content h6 {margin:0.4em 0 0.5em 0; padding:0 20px 0 20px; color:rgb(50,50,50); font-weight:normal; font-size:130% !important /*Non-IE6*/; font-size:115% /*IE6*/;}\n
 \n
 /* HEADING -- Special icon (1-Column / 2-Column) */\n
-.main_content h1.contact {background: url(./mf54_image/icon_celltitle_contact.gif) no-repeat; background-position:616px 5px;}\n
-.main_content h1.login {background: url(./mf54_image/icon_celltitle_login.gif) no-repeat; background-position:635px 5px;}\n
-.main_content h1.search {background: url(./mf54_image/icon_celltitle_search.gif) no-repeat; background-position:631px 5px;}\n
-.main_content h1.video {background: url(./mf54_image/icon_celltitle_video.gif) no-repeat; background-position:637px 5px;}\n
-.main_content h1.audio {background: url(./mf54_image/icon_celltitle_audio.gif) no-repeat; background-position:631px 5px;}\n
-.main_content h1.webtemplate {background: url(./mf54_image/icon_celltitle_webtemplate.gif) no-repeat; background-position:<tal:block tal:replace="python:632 + content_icon_width"/>px 5px;}\n
-.main_content h1.document {background: url(./mf54_image/icon_celltitle_document.gif) no-repeat; background-position:635px 5px;}\n
-.main_content h1.blog {background: url(./mf54_image/icon_celltitle_blog.gif) no-repeat; background-position:639px 5px;}\n
-.main_content h1.forum {background: url(./mf54_image/icon_celltitle_forum.gif) no-repeat; background-position:635px 5px;}\n
+.main_content h1.contact {background: url(<tal:block tal:replace="site_url"/>/mf54_image/icon_celltitle_contact.gif) no-repeat; background-position:616px 5px;}\n
+.main_content h1.login {background: url(<tal:block tal:replace="site_url"/>/mf54_image/icon_celltitle_login.gif) no-repeat; background-position:635px 5px;}\n
+.main_content h1.search {background: url(<tal:block tal:replace="site_url"/>/mf54_image/icon_celltitle_search.gif) no-repeat; background-position:631px 5px;}\n
+.main_content h1.video {background: url(<tal:block tal:replace="site_url"/>/mf54_image/icon_celltitle_video.gif) no-repeat; background-position:637px 5px;}\n
+.main_content h1.audio {background: url(<tal:block tal:replace="site_url"/>/mf54_image/icon_celltitle_audio.gif) no-repeat; background-position:631px 5px;}\n
+.main_content h1.webtemplate {background: url(<tal:block tal:replace="site_url"/>/mf54_image/icon_celltitle_webtemplate.gif) no-repeat; background-position:<tal:block tal:replace="python:632 + content_icon_width"/>px 5px;}\n
+.main_content h1.document {background: url(<tal:block tal:replace="site_url"/>/mf54_image/icon_celltitle_document.gif) no-repeat; background-position:635px 5px;}\n
+.main_content h1.blog {background: url(<tal:block tal:replace="site_url"/>/mf54_image/icon_celltitle_blog.gif) no-repeat; background-position:639px 5px;}\n
+.main_content h1.forum {background: url(<tal:block tal:replace="site_url"/>/mf54_image/icon_celltitle_forum.gif) no-repeat; background-position:635px 5px;}\n
 \n
-.content-2col-box-leftcolumn h1.contact, .content-2col-box-rightcolumn h1.contact {background: url(./mf54_image/icon_celltitle_contact.gif) no-repeat; background-position:273px 5px;}\n
-.content-2col-box-leftcolumn h1.login, .content-2col-box-rightcolumn h1.login {background: url(./mf54_image/icon_celltitle_login.gif) no-repeat; background-position:292px 5px;}\n
-.content-2col-box-leftcolumn h1.search, .content-2col-box-rightcolumn h1.search {background: url(./mf54_image/icon_celltitle_search.gif) no-repeat; background-position:288px 5px;}\n
-.content-2col-box-leftcolumn h1.video, .content-2col-box-rightcolumn h1.video {background: url(./mf54_image/icon_celltitle_video.gif) no-repeat; background-position:294px 5px;}\n
-.content-2col-box-leftcolumn h1.audio, .content-2col-box-rightcolumn h1.audio {background: url(./mf54_image/icon_celltitle_audio.gif) no-repeat; background-position:288px 5px;}\n
-.content-2col-box-leftcolumn h1.webtemplate, .content-2col-box-rightcolumn h1.webtemplate {background: url(./mf54_image/icon_celltitle_webtemplate.gif) no-repeat; background-position:289px 5px;}\n
-.content-2col-box-leftcolumn h1.document, .content-2col-box-rightcolumn h1.document {background: url(./mf54_image/icon_celltitle_document.gif) no-repeat; background-position:292px 5px;}\n
-.content-2col-box-leftcolumn h1.blog, .content-2col-box-rightcolumn h1.blog {background: url(./mf54_image/icon_celltitle_blog.gif) no-repeat; background-position:296px 5px;}\n
-.content-2col-box-leftcolumn h1.forum, .content-2col-box-rightcolumn h1.forum {background: url(./mf54_image/icon_celltitle_forum.gif) no-repeat; background-position:292px 5px;}\n
+.content-2col-box-leftcolumn h1.contact, .content-2col-box-rightcolumn h1.contact {background: url(<tal:block tal:replace="site_url"/>/mf54_image/icon_celltitle_contact.gif) no-repeat; background-position:273px 5px;}\n
+.content-2col-box-leftcolumn h1.login, .content-2col-box-rightcolumn h1.login {background: url(<tal:block tal:replace="site_url"/>/mf54_image/icon_celltitle_login.gif) no-repeat; background-position:292px 5px;}\n
+.content-2col-box-leftcolumn h1.search, .content-2col-box-rightcolumn h1.search {background: url(<tal:block tal:replace="site_url"/>/mf54_image/icon_celltitle_search.gif) no-repeat; background-position:288px 5px;}\n
+.content-2col-box-leftcolumn h1.video, .content-2col-box-rightcolumn h1.video {background: url(<tal:block tal:replace="site_url"/>/mf54_image/icon_celltitle_video.gif) no-repeat; background-position:294px 5px;}\n
+.content-2col-box-leftcolumn h1.audio, .content-2col-box-rightcolumn h1.audio {background: url(<tal:block tal:replace="site_url"/>/mf54_image/icon_celltitle_audio.gif) no-repeat; background-position:288px 5px;}\n
+.content-2col-box-leftcolumn h1.webtemplate, .content-2col-box-rightcolumn h1.webtemplate {background: url(<tal:block tal:replace="site_url"/>/mf54_image/icon_celltitle_webtemplate.gif) no-repeat; background-position:289px 5px;}\n
+.content-2col-box-leftcolumn h1.document, .content-2col-box-rightcolumn h1.document {background: url(<tal:block tal:replace="site_url"/>/mf54_image/icon_celltitle_document.gif) no-repeat; background-position:292px 5px;}\n
+.content-2col-box-leftcolumn h1.blog, .content-2col-box-rightcolumn h1.blog {background: url(<tal:block tal:replace="site_url"/>/mf54_image/icon_celltitle_blog.gif) no-repeat; background-position:296px 5px;}\n
+.content-2col-box-leftcolumn h1.forum, .content-2col-box-rightcolumn h1.forum {background: url(<tal:block tal:replace="site_url"/>/mf54_image/icon_celltitle_forum.gif) no-repeat; background-position:292px 5px;}\n
 \n
 /* HEADING -- No icon */\n
 .main h1.pagetitle-noicon {margin:0 0 0.5em 0; padding:1px 0 1px 0; background:none; color:rgb(255,255,255); font-weight:normal; font-size:220% !important /*Non-IE6*/; font-size:200% /*IE6*/;}\n
@@ -134,7 +134,7 @@
 \n
 /* LIST */\n
 .main_content ul {margin:1.4em 0 1.0em 0; padding:0em 20px 0em 20px; list-style:none;}\n
-.main_content ul li {margin:0 0 0.3em 2px; padding:0 0 0 12px; background:url(./mf54_image/bg_bullet_square.gif) no-repeat 0 0.5em; line-height:1.3em; font-size:131% !important /*Non-IE6*/; font-size:115% /*IE6*/;}\n
+.main_content ul li {margin:0 0 0.3em 2px; padding:0 0 0 12px; background:url(<tal:block tal:replace="site_url"/>/mf54_image/bg_bullet_square.gif) no-repeat 0 0.5em; line-height:1.3em; font-size:131% !important /*Non-IE6*/; font-size:115% /*IE6*/;}\n
 .main_content ol {margin:1.4em 0 1.0em 0; padding:0 20px 0 40px !important /*Non-IE6*/; padding:0 20px 0 50px /*IE6*/;}\n
 .main_content ol li {list-style-type:decimal; list-style-position:outside; margin:0 0 0.3em 3px; line-height:1.3em; font-size:131% !important /*Non-IE6*/; font-size:115% /*IE6*/;}\n
 .main_content ul.indent {padding:0 50px 0 50px;}\n
@@ -204,8 +204,8 @@
 /****************/\n
 \n
 /* HEADING -- Standard icon */\n
-.subcontent h1 {margin:0; padding:5px 20px 12px 20px; border-bottom:solid 1px rgb(215,215,215); background:url(./mf54_image/icon_celltitle_level1.gif) no-repeat; background-position:225px 5px; color:rgb(75,75,75); font-weight:bold; font-size:220% !important /*Non-IE6*/; font-size:200% /*IE6*/;}\n
-.subcontent h2 {/*Start IE Hack*/ position:relative; z-index:1; top:-1px; /* End IE Hack to remove vertical -1px margin bug otherwise produced by margin*/ margin:0 20px 0 20px; padding:15px 35px 5px 0; border-top:solid 1px rgb(215,215,215); background:url(./mf54_image/icon_celltitle_level2.gif) no-repeat;  background-position:right 15px; color:rgb(75,75,75); font-weight:bold; font-size:180% !important /*Non-IE6*/; font-size:160% /*IE6*/;}\n
+.subcontent h1 {margin:0; padding:5px 20px 12px 20px; border-bottom:solid 1px rgb(215,215,215); background:url(<tal:block tal:replace="site_url"/>/mf54_image/icon_celltitle_level1.gif) no-repeat; background-position:225px 5px; color:rgb(75,75,75); font-weight:bold; font-size:220% !important /*Non-IE6*/; font-size:200% /*IE6*/;}\n
+.subcontent h2 {/*Start IE Hack*/ position:relative; z-index:1; top:-1px; /* End IE Hack to remove vertical -1px margin bug otherwise produced by margin*/ margin:0 20px 0 20px; padding:15px 35px 5px 0; border-top:solid 1px rgb(215,215,215); background:url(<tal:block tal:replace="site_url"/>/mf54_image/icon_celltitle_level2.gif) no-repeat;  background-position:right 15px; color:rgb(75,75,75); font-weight:bold; font-size:180% !important /*Non-IE6*/; font-size:160% /*IE6*/;}\n
 .subcontent h3 {margin:1.0em 0 -0.3em 0; padding:0 20px 0 20px; color:rgb(75,75,75); font-weight:bold; font-size:180% !important /*Non-IE6*/; font-size:160% /*IE6*/;}\n
 .subcontent h3.line {/*Start IE Hack*/ position:relative; z-index:1; top:-1px; /* End IE Hack vertical alignment to blend top border with h1, if directly after each other*/ margin:0 20px -0.3em 20px; padding:1.0em 0 0 0; border-top:solid 1px rgb(215,215,215);}\n
 .subcontent h4 {margin:1.0em 0 -0.3em 0; padding:0 20px 0 20px; color:rgb(75,75,75); font-weight:bold; font-size:160% !important /*Non-IE6*/; font-size:140% /*IE6*/;}\n
@@ -213,15 +213,15 @@
 .subcontent h6 {margin:0.4em 0 0.5em 0; padding:0 20px 0 20px; color:rgb(50,50,50); font-weight:normal; font-size:130% !important /*Non-IE6*/; font-size:115% /*IE6*/;}\n
 \n
 /* HEADING - Special icon */\n
-.subcontent h1.menu {background: url(./mf54_image/icon_celltitle_menu.gif) no-repeat; background-position:225px 5px;}\n
-.subcontent h1.login {background: url(./mf54_image/icon_celltitle_login.gif) no-repeat; background-position:229px 5px;}\n
-.subcontent h1.search {background: url(./mf54_image/icon_celltitle_search.gif) no-repeat; background-position:225px 5px;}\n
-.subcontent h1.video {background: url(./mf54_image/icon_celltitle_video.gif) no-repeat; background-position:231px 5px;}\n
-.subcontent h1.audio {background: url(./mf54_image/icon_celltitle_audio.gif) no-repeat; background-position:225px 5px;}\n
-.subcontent h1.webtemplate {background: url(./mf54_image/icon_celltitle_webtemplate.gif) no-repeat; background-position:226px 5px;}\n
-.subcontent h1.document {background: url(./mf54_image/icon_celltitle_document.gif) no-repeat; background-position:229px 5px;}\n
-.subcontent h1.blog {background: url(./mf54_image/icon_celltitle_blog.gif) no-repeat; background-position:233px 5px;}\n
-.subcontent h1.forum {background: url(./mf54_image/icon_celltitle_forum.gif) no-repeat; background-position:229px 5px;}\n
+.subcontent h1.menu {background: url(<tal:block tal:replace="site_url"/>/mf54_image/icon_celltitle_menu.gif) no-repeat; background-position:225px 5px;}\n
+.subcontent h1.login {background: url(<tal:block tal:replace="site_url"/>/mf54_image/icon_celltitle_login.gif) no-repeat; background-position:229px 5px;}\n
+.subcontent h1.search {background: url(<tal:block tal:replace="site_url"/>/mf54_image/icon_celltitle_search.gif) no-repeat; background-position:225px 5px;}\n
+.subcontent h1.video {background: url(<tal:block tal:replace="site_url"/>/mf54_image/icon_celltitle_video.gif) no-repeat; background-position:231px 5px;}\n
+.subcontent h1.audio {background: url(<tal:block tal:replace="site_url"/>/mf54_image/icon_celltitle_audio.gif) no-repeat; background-position:225px 5px;}\n
+.subcontent h1.webtemplate {background: url(<tal:block tal:replace="site_url"/>/mf54_image/icon_celltitle_webtemplate.gif) no-repeat; background-position:226px 5px;}\n
+.subcontent h1.document {background: url(<tal:block tal:replace="site_url"/>/mf54_image/icon_celltitle_document.gif) no-repeat; background-position:229px 5px;}\n
+.subcontent h1.blog {background: url(<tal:block tal:replace="site_url"/>/mf54_image/icon_celltitle_blog.gif) no-repeat; background-position:233px 5px;}\n
+.subcontent h1.forum {background: url(<tal:block tal:replace="site_url"/>/mf54_image/icon_celltitle_forum.gif) no-repeat; background-position:229px 5px;}\n
 \n
 /* HEADING -- Without icon */\n
 .subcontent h1.noicon {background:none;}\n
@@ -234,7 +234,7 @@
 \n
 /* LIST */\n
 .subcontent ul {margin:1.4em 0 1.0em 0; padding:0 20px 0 20px; list-style:none;}\n
-.subcontent ul li {margin:0 0 0.3em 2px; padding:0 0 0 12px; background:url(./mf54_image/bg_bullet_square.gif) no-repeat 0 0.5em; line-height:1.3em; font-size:131% !important /*Non-IE6*/; font-size:115% /*IE6*/;}\n
+.subcontent ul li {margin:0 0 0.3em 2px; padding:0 0 0 12px; background:url(<tal:block tal:replace="site_url"/>/mf54_image/bg_bullet_square.gif) no-repeat 0 0.5em; line-height:1.3em; font-size:131% !important /*Non-IE6*/; font-size:115% /*IE6*/;}\n
 .subcontent ol {margin:1.4em 0 1.0em 0; padding:0 20px 0 40px !important /*Non-IE6*/; padding:0 20px 0 50px /*IE6*/;}\n
 .subcontent ol li {list-style-type:decimal; list-style-position:outside; margin:0 0 0.3em 3px; line-height:1.3em; font-size:131% !important /*Non-IE6*/; font-size:115% /*IE6*/;}\n
 .subcontent ul.indent {padding:0 50px 0 50px;}\n
@@ -290,7 +290,7 @@
 /* SIDE MENU #2 */\n
 .sidemenu2 {clear:both; margin:0; padding:0;}\n
 .sidemenu2 ul {margin:-3px 0 10px 0; padding:0 20px 0 20px; list-style:none;}\n
-.sidemenu2 ul li {margin:0; padding:3px 0 1px 12px; background:url(./mf54_image/bg_bullet_arrow.gif) no-repeat 0 0.6em; line-height:1.3em; font-size:131% !important /*Non-IE6*/; font-size:115% /*IE6*/;}\n
+.sidemenu2 ul li {margin:0; padding:3px 0 1px 12px; background:url(<tal:block tal:replace="site_url"/>/mf54_image/bg_bullet_arrow.gif) no-repeat 0 0.6em; line-height:1.3em; font-size:131% !important /*Non-IE6*/; font-size:115% /*IE6*/;}\n
 .sidemenu2 ul li ul {margin:2px 0 0 0; padding:0 10px 0 0; border:none;}\n
 .sidemenu2 ul li ul li {margin:0; padding:0 0 0 10px; background:none; font-size:100% !important /*Non-IE6*/; font-size:100% /*IE6*/;}\n
 .sidemenu2 ul li ul li a {font-weight:normal;}\n
@@ -298,7 +298,7 @@
 /* SIDE MENU #3 */\n
 .sidemenu3 {clear:both; margin:0; padding:0;}\n
 .sidemenu3 ul {margin:10px 0 10px 0; padding:0 20px 0 20px; list-style:none;}\n
-.sidemenu3 ul li {margin:0; padding:3px 0 1px 12px; background:url(./mf54_image/bg_bullet_arrow.gif) no-repeat 0 0.6em; line-height:1.3em; font-size:131% !important /*Non-IE6*/; font-size:115% /*IE6*/;}\n
+.sidemenu3 ul li {margin:0; padding:3px 0 1px 12px; background:url(<tal:block tal:replace="site_url"/>/mf54_image/bg_bullet_arrow.gif) no-repeat 0 0.6em; line-height:1.3em; font-size:131% !important /*Non-IE6*/; font-size:115% /*IE6*/;}\n
 .sidemenu3 ul li ul {margin:2px 0 0 0; padding:0 10px 0 0; border:none;}\n
 .sidemenu3 ul li ul li {margin:0; padding:0 0 0 10px; background:none; font-size:100% !important /*Non-IE6*/; font-size:100% /*IE6*/;}\n
 .sidemenu3 ul li ul li a {font-weight:normal;}\n
@@ -341,7 +341,7 @@
 /******************************************/\n
 \n
 /* We will have to handle the different types in another way */\n
-/* .subcontent h1.group_title {background: url(./mf54_image/icon_celltitle_menu.gif) no-repeat; background-position:225px 5px;} */\n
+/* .subcontent h1.group_title {background: url(<tal:block tal:replace="site_url"/>/mf54_image/icon_celltitle_menu.gif) no-repeat; background-position:225px 5px;} */\n
 \n
 .container {\n
   clear: both;\n
