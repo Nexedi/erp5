@@ -61,6 +61,11 @@ if (context.getPortalType() != \'Web Site\'):\n
                                        })\n
 \n
 # creation the default sections\n
+object_id_list = [\'cart\', \'checkout\', \'account\', \'register\']\n
+for id in object_id_list:\n
+  if id in context.objectIds():\n
+    context.manage_delObjects([id])\n
+\n
 cart_section = context.newContent(portal_type=\'Web Section\', title=\'Cart\', id=\'cart\')\n
 checkout_section = context.newContent(portal_type=\'Web Section\', title=\'Checkout\', id=\'checkout\')\n
 account_section = context.newContent(portal_type=\'Web Section\', title=\'My account\', id=\'account\')\n
@@ -135,6 +140,9 @@ context.Base_redirect(\'\', keep_items={\n
                             <string>context</string>
                             <string>translateString</string>
                             <string>dict</string>
+                            <string>object_id_list</string>
+                            <string>_getiter_</string>
+                            <string>id</string>
                             <string>cart_section</string>
                             <string>checkout_section</string>
                             <string>account_section</string>
