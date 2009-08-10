@@ -816,20 +816,32 @@ class TestERP5Web(ERP5TypeTestCase, ZopeTestCase.Functional):
 
   def test_12_getWebSiteValue(self, quiet=quiet, run=run_all_test):
     """
-      Test that getWebSiteValue() always includes selected Language.
+      Test that getWebSiteValue() and getWebSectionValue() always
+      include selected Language.
     """
     if not run: return
     if not quiet:
       message = '\ntest_12_getWebSiteValue'
       ZopeTestCase._print(message)
 
-    self.setupWebSite()
-    portal = self.getPortal()
-    web_site_module = self.portal.getDefaultModule('Web Site')
-    web_site = web_site_module[self.website_id]
-    web_site_relative_url = web_site.absolute_url(relative=1)
-    web_site_fr = web_site.restrictedTraverse('fr')
-    web_site_relative_url_fr = '%s/fr' % web_site_relative_url
+    website_id = self.setupWebSite().getId()
+    website = self.portal.restrictedTraverse(
+      'web_site_module/%s' % website_id)
+    website_relative_url = website.absolute_url(relative=1)
+    website_fr = self.portal.restrictedTraverse(
+      'web_site_module/%s/fr' % website_id)
+    website_relative_url_fr = '%s/fr' % website_relative_url
+
+    websection_id = self.setupWebSection().getId()
+    websection = self.portal.restrictedTraverse(
+      'web_site_module/%s/%s' % (website_id, websection_id))
+    websection_relative_url = websection.absolute_url(relative=1)
+    websection_fr = self.portal.restrictedTraverse(
+      'web_site_module/%s/fr/%s' % (website_id, websection_id))
+    websection_relative_url_fr = '%s/%s' % (website_relative_url_fr,
+                                            websection.getId())
+
+    page_ref = 'foo'
     page = self.web_page_module.newContent(portal_type='Web Page',
                                            reference='foo',
                                            text_content='<b>OK</b>')
@@ -837,24 +849,51 @@ class TestERP5Web(ERP5TypeTestCase, ZopeTestCase.Functional):
     transaction.commit()
     self.tic()
 
-    web_page = web_site.restrictedTraverse('foo')
-    web_page_fr = web_site_fr.restrictedTraverse('foo')
+    webpage = self.portal.restrictedTraverse(
+      'web_site_module/%s/%s' % (website_id, page_ref))
+    webpage_fr = self.portal.restrictedTraverse(
+      'web_site_module/%s/fr/%s' % (website_id, page_ref))
 
-    web_page_module = web_site.restrictedTraverse('web_page_module')
-    web_page_module_fr = web_site_fr.restrictedTraverse('web_page_module')
+    webpage_module = self.portal.restrictedTraverse(
+      'web_site_module/%s/web_page_module' % website_id)
+    webpage_module_fr = self.portal.restrictedTraverse(
+      'web_site_module/%s/fr/web_page_module' % website_id)
 
-    self.assertEquals(web_site_relative_url,
-                      web_site.getWebSiteValue().absolute_url(relative=1))
-    self.assertEquals(web_site_relative_url_fr,
-                      web_site_fr.getWebSiteValue().absolute_url(relative=1))
-    self.assertEquals(web_site_relative_url,
-                      web_page.getWebSiteValue().absolute_url(relative=1))
-    self.assertEquals(web_site_relative_url_fr,
-                      web_page_fr.getWebSiteValue().absolute_url(relative=1))
-    self.assertEquals(web_site_relative_url,
-                      web_page_module.getWebSiteValue().absolute_url(relative=1))
-    self.assertEquals(web_site_relative_url_fr,
-                      web_page_module_fr.getWebSiteValue().absolute_url(relative=1))
+    self.assertEquals(website_relative_url,
+                      website.getWebSiteValue().absolute_url(relative=1))
+    self.assertEquals(website_relative_url_fr,
+                      website_fr.getWebSiteValue().absolute_url(relative=1))
+    self.assertEquals(website_relative_url,
+                      webpage.getWebSiteValue().absolute_url(relative=1))
+    self.assertEquals(website_relative_url_fr,
+                      webpage_fr.getWebSiteValue().absolute_url(relative=1))
+    self.assertEquals(website_relative_url,
+                      webpage_module.getWebSiteValue().absolute_url(relative=1))
+    self.assertEquals(website_relative_url_fr,
+                      webpage_module_fr.getWebSiteValue().absolute_url(relative=1))
+
+    webpage = self.portal.restrictedTraverse(
+      'web_site_module/%s/%s/%s' % (website_id, websection_id, page_ref))
+    webpage_fr = self.portal.restrictedTraverse(
+      'web_site_module/%s/fr/%s/%s' % (website_id, websection_id, page_ref))
+
+    webpage_module = self.portal.restrictedTraverse(
+      'web_site_module/%s/%s/web_page_module' % (website_id, websection_id))
+    webpage_module_fr = self.portal.restrictedTraverse(
+      'web_site_module/%s/fr/%s/web_page_module' % (website_id, websection_id))
+
+    self.assertEquals(websection_relative_url,
+                      websection.getWebSectionValue().absolute_url(relative=1))
+    self.assertEquals(websection_relative_url_fr,
+                      websection_fr.getWebSectionValue().absolute_url(relative=1))
+    self.assertEquals(websection_relative_url,
+                      webpage.getWebSectionValue().absolute_url(relative=1))
+    self.assertEquals(websection_relative_url_fr,
+                      webpage_fr.getWebSectionValue().absolute_url(relative=1))
+    self.assertEquals(websection_relative_url,
+                      webpage_module.getWebSectionValue().absolute_url(relative=1))
+    self.assertEquals(websection_relative_url_fr,
+                      webpage_module_fr.getWebSectionValue().absolute_url(relative=1))
 
 class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
   """
