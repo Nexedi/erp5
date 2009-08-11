@@ -75,7 +75,7 @@ usage_map =  dict(min=\'>=\',\n
                   ngt=\'<=\',\n
                   nlt=\'>\',)\n
 \n
-new_mapping = dict()\n
+new_mapping = dict(ignore_hide_rows=1)\n
 for key in sorted(request.form.keys()):\n
   # we use sorted to make sure x_search_key appears before x\n
   value = request.form[key]\n
