@@ -113,43 +113,53 @@ class SimulationTool(BaseTool):
             ['Manager',])
       BaseTool.inheritedAttribute('manage_afterAdd')(self, item, container)
 
-    def solveDelivery(self, delivery, dsolver_name, tsolver_name,
-                                     additional_parameters=None,**kw):
+    def solveDelivery(self, delivery, delivery_solver_name, target_solver_name,
+                      additional_parameters=None, **kw):
       """
-        Solve a delivery by calling DeliverySolver and TargetSolver
+        Solves a delivery by calling first DeliverySolver, then TargetSolver
       """
-      self.solveMovementOrDelivery(delivery, dsolver_name, tsolver_name,
-          delivery=1,additional_parameters=additional_parameters,**kw)
+      return self._solveMovementOrDelivery(delivery, delivery_solver_name,
+          target_solver_name, delivery=1,
+          additional_parameters=additional_parameters, **kw)
 
-    def solveMovement(self, movement, dsolver_name, tsolver_name,
-                                       additional_parameters=None,**kw):
+    def solveMovement(self, movement, delivery_solver_name, target_solver_name,
+                      additional_parameters=None, **kw):
       """
-        Solve a movement by calling DeliverySolver and TargetSolver
+        Solves a movement by calling first DeliverySolver, then TargetSolver
       """
-      return self.solveMovementOrDelivery(movement, dsolver_name, tsolver_name,
-          movement=1,additional_parameters=additional_parameters,**kw)
+      return self._solveMovementOrDelivery(movement, delivery_solver_name,
+          target_solver_name, movement=1,
+          additional_parameters=additional_parameters, **kw)
 
-    def solveMovementOrDelivery(self, obj, dsolver_name, tsolver_name,
-                                          movement=0,delivery=0,
-                                          additional_parameters=None,**kw):
+    def _solveMovementOrDelivery(self, document, delivery_solver_name,
+                                 target_solver_name, movement=0, delivery=0,
+                                 additional_parameters=None,**kw):
       """
-        Solve a delivery by calling DeliverySolver and TargetSolver
+        Solves a document by calling first DeliverySolver, then TargetSolver
       """
-      for solver_name, solver_module in [(dsolver_name, DeliverySolver),\
-                                         (tsolver_name, TargetSolver)]:
+      if movement == delivery:
+        raise ValueError('Parameters movement and delivery have to be'
+                         ' different')
 
+      solve_result = []
+      for solver_name, solver_module in ((delivery_solver_name, DeliverySolver),
+                                         (target_solver_name, TargetSolver)):
+        result = None
         if solver_name is not None:
           solver_file_path = "%s.%s" % (solver_module.__name__,
                                         solver_name)
           __import__(solver_file_path)
           solver_file = getattr(solver_module, solver_name)
           solver_class = getattr(solver_file, solver_name)
-          solver = solver_class(additional_parameters=additional_parameters,**kw)
+          solver = solver_class(additional_parameters=additional_parameters,
+              **kw)
 
           if movement:
-            return solver.solveMovement(obj)
+            result = solver.solveMovement(document)
           if delivery:
-            return solver.solveDelivery(obj)
+            result = solver.solveDelivery(document)
+        solve_result.append(result)
+      return solve_result
 
     #######################################################
     # Stock Management
