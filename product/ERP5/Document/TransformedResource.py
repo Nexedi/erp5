@@ -38,7 +38,7 @@ from Products.ERP5Type.Utils import cartesianProduct
 from Products.ERP5Type.Base import TempBase
 
 from Products.ERP5.Document.Amount import Amount
-from Products.ERP5.Document.Transformation import AggregatedAmountList
+from Products.ERP5.AggregatedAmountList import AggregatedAmountList
 
 from Products.CMFCore.Expression import Expression
 from Products.ERP5.Document.Predicate import Predicate
