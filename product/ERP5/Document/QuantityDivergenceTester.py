@@ -55,12 +55,8 @@ class QuantityDivergenceTester(PropertyDivergenceTester):
 
 
   # Declarative properties
-  property_sheets = ( PropertySheet.Base
-                      , PropertySheet.XMLObject
-                      , PropertySheet.CategoryCore
-                      , PropertySheet.DublinCore
-                      , PropertySheet.DivergenceTester
-                      , PropertySheet.DecimalOption
+  property_sheets = PropertyDivergenceTester.property_sheets + (
+                      PropertySheet.DecimalOption,
                      )
 
   def explain(self, simulation_movement):

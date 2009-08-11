@@ -54,12 +54,7 @@ class CategoryDivergenceTester(PropertyDivergenceTester):
   zope.interface.implements( interfaces.IDivergenceTester, )
 
   # Declarative properties
-  property_sheets = (   PropertySheet.Base
-                      , PropertySheet.XMLObject
-                      , PropertySheet.CategoryCore
-                      , PropertySheet.DublinCore
-                      , PropertySheet.DivergenceTester
-  )
+  property_sheets = PropertyDivergenceTester.property_sheets
 
 
   def explain(self, simulation_movement):
