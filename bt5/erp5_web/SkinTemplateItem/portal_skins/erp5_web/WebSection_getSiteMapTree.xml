@@ -113,7 +113,7 @@ def getSiteMapItemTree(section, depth=0, level=None):   \n
   if not depth: return result\n
   if level is None: level = 1\n
   if include_document or (include_document is None and section.isSiteMapDocumentParent()):\n
-    for document in section.getDocumentValueList():\n
+    for document in section.getDocumentValueList(sort_on=\'title\'):\n
       result.append({\n
                       \'url\'      : section.getPermanentURL(document),\n
                       \'level\'    : level,\n
