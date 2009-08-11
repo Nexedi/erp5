@@ -675,17 +675,45 @@ class ListBoxRenderer:
 
   showAnchorColumn = lazyMethod(showAnchorColumn)
 
-  def isHideRowsOnNoSearchCriterion(self, REQUEST={}):
+  def isHideRowsOnNoSearchCriterion(self):
     """
       Return a boolean that represents whether search rows are shown or not.
     """
+    REQUEST = self.request
     hide_rows_on_no_search_criterion = \
                             self.field.get_value('hide_rows_on_no_search_criterion')
     if not hide_rows_on_no_search_criterion:
       # we show all rows and do not care to hide anything
       return 0
+
+    # Always display lines in report mode
+    if self.isReportTreeMode():
+      return 0
+
+    # In domain mode, returns lines only if a domain is selected
+    if self.isDomainTreeMode():
+      if self.getDomainSelection():
+        return 0
+
+    # ignore_hide_rows parameter force to display the content
+    ignore_hide_rows = REQUEST.get('ignore_hide_rows', 0)
+    if ignore_hide_rows:
+      return 0
+
     # we could hide rows only if missing in request or selection search criterions
     selection_params = self.getSelection().getParams()
+
+    # Try to get workflow state parameter, in order to always allow worklist display
+    # guess all column names from catalog schema
+    possible_state_list = [column_name for column_name in
+         self.getPortalObject().portal_catalog.getSQLCatalog().getColumnMap() if
+         column_name.endswith('state') and '.' not in column_name]
+    for state_var in possible_state_list:
+      workflow_state_criterion = REQUEST.get(state_var,
+                                        selection_params.get(state_var, None))
+      if workflow_state_criterion not in (None, ""):
+        return 0
+
     listbox_searchable_column_id_list = [x[0] for x in self.getSearchValueList() \
                                            if x[0] is not None]
 
