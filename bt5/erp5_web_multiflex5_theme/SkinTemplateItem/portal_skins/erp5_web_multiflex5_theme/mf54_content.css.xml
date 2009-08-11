@@ -340,6 +340,16 @@
 /*  ERP5 Extensions                       */\n
 /******************************************/\n
 \n
+/* bug fix */\n
+.main_content ul li ul li,\n
+.subcontent ul li ul li {\n
+  font-size:inherit !important /*Non-IE6*/; font-size:inherit /*IE6*/;\n
+}\n
+.main_content ul.indent ul.indent,\n
+.subcontent ul.indent ul.indent {\n
+  padding:0em 20px;\n
+}\n
+\n
 /* We will have to handle the different types in another way */\n
 /* .subcontent h1.group_title {background: url(<tal:block tal:replace="site_url"/>/mf54_image/icon_celltitle_menu.gif) no-repeat; background-position:225px 5px;} */\n
 \n
