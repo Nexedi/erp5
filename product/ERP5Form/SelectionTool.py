@@ -1189,6 +1189,7 @@ class SelectionTool( BaseTool, UniqueObject, SimpleItem ):
         kw['portal_status_message'] = portal_status_message
         kw['saved_form_data'] = saved_form_data
         kw['ignore_layout'] = int(REQUEST.get('ignore_layout', 0))
+        kw['ignore_hide_rows'] = 1
         # remove ignore_layout parameter from cancel_url otherwise we
         # will have two ignore_layout parameters after clicking cancel
         # button.
