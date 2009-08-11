@@ -192,7 +192,7 @@ class BPMRule(Predicate, XMLObject):
   def _getCurrentMovementList(self, applied_rule, **kw):
     """
     Returns the list of current children of the applied rule, sorted in 3
-    groups : immutables/mutables/deletable
+    groups : immutable/mutable/deletable
 
      * immutable is frozen
      * mutable is not frozen, but delivered
@@ -370,7 +370,7 @@ class BPMRule(Predicate, XMLObject):
       property_dict['stop_date'] = movement.getStopDate()
 
     # save a relation to business path
-    property_dict['causality_value'] = business_path
+    property_dict['causality_value_list'] = [business_path]
 
     # rule specific
     property_dict.update(**self._getExpandablePropertyUpdateDict(applied_rule,
