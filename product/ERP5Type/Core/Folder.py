@@ -28,7 +28,7 @@
 
 import transaction
 from AccessControl import ClassSecurityInfo
-from Acquisition import aq_base, aq_self
+from Acquisition import aq_base, aq_self, aq_parent
 from OFS.History import Historical
 from OFS.Folder import Folder as OFSFolder
 import ExtensionClass
@@ -349,7 +349,7 @@ class FolderMixIn(ExtensionClass.Base):
     specified case (eg. web_site_module/site/fr/web_page_module), we
     call aq_parent instead to reach the Web Site.
     """
-    return self.aq_parent.getWebSiteValue()
+    return aq_parent(self).getWebSiteValue()
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getWebSectionValue')
@@ -359,7 +359,7 @@ class FolderMixIn(ExtensionClass.Base):
     specified case (eg. web_site_module/site/fr/section/web_page_module),
     we call aq_parent instead to reach the Web Section.
     """
-    return self.aq_parent.getWebSectionValue()
+    return aq_parent(self).getWebSectionValue()
 
 BTREE_HANDLER = 1
 HBTREE_HANDLER = 2
