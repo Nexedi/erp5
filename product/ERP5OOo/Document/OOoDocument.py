@@ -47,7 +47,6 @@ from Products.ERP5.Document.Document import PermanentURLMixIn
 from Products.ERP5.Document.Document import ConversionCacheMixin
 from Products.ERP5.Document.Document import ConversionError
 from Products.ERP5.Document.Document import NotConvertedError
-from Products.ERP5.Document.File import _unpackData
 from zLOG import LOG, ERROR
 
 enc=base64.encodestring
@@ -317,7 +316,7 @@ class OOoDocument(PermanentURLMixIn, File, ConversionCacheMixin):
     if format == 'text-content':
       # Extract text from the ODF file
       cs = cStringIO.StringIO()
-      cs.write(_unpackData(self.getBaseData()))
+      cs.write(str(self.getBaseData()))
       z = zipfile.ZipFile(cs)
       s = z.read('content.xml')
       s = self.rx_strip.sub(" ", s) # strip xml
@@ -328,7 +327,7 @@ class OOoDocument(PermanentURLMixIn, File, ConversionCacheMixin):
     server_proxy = self._mkProxy()
     orig_format = self.getBaseContentType()
     generate_result = server_proxy.run_generate(self.getId(),
-                                       enc(_unpackData(self.getBaseData())),
+                                       enc(str(self.getBaseData())),
                                        None,
                                        format,
                                        orig_format)
@@ -362,7 +361,7 @@ class OOoDocument(PermanentURLMixIn, File, ConversionCacheMixin):
     if format == 'base-data':
       if not self.hasBaseData():
         raise NotConvertedError
-      return self.getBaseContentType(), self.getBaseData()
+      return self.getBaseContentType(), str(self.getBaseData())
     if format == 'pdf':
       format_list = [x for x in self.getTargetFormatList()
                                           if x.endswith('pdf')]
@@ -416,7 +415,7 @@ class OOoDocument(PermanentURLMixIn, File, ConversionCacheMixin):
         # Extra processing required since
         # we receive a zip file
         cs = cStringIO.StringIO()
-        cs.write(_unpackData(data))
+        cs.write(str(data))
         z = zipfile.ZipFile(cs) # A disk file would be more RAM efficient
         for f in z.infolist():
           fn = f.filename
@@ -479,7 +478,7 @@ class OOoDocument(PermanentURLMixIn, File, ConversionCacheMixin):
       format = format_list[0]
       mime, data = self._convert(format)
       archive_file = cStringIO.StringIO()
-      archive_file.write(_unpackData(data))
+      archive_file.write(str(data))
       zip_file = zipfile.ZipFile(archive_file)
       must_close = 1
     else:
@@ -503,7 +502,7 @@ class OOoDocument(PermanentURLMixIn, File, ConversionCacheMixin):
   def _getExtensibleContent(self, request, name):
     if self.hasConversion(format='_embedded', file_name=name):
       mime, data = self.getConversion(format='_embedded', file_name=name)
-      return OFSFile(name, name, data, content_type=mime)
+      return OFSFile(name, name, data, content_type=mime).__of__(self.aq_parent)
     return PermanentURLMixIn._getExtensibleContent(self, request, name)
 
   # Base format implementation
@@ -525,7 +524,7 @@ class OOoDocument(PermanentURLMixIn, File, ConversionCacheMixin):
     server_proxy = self._mkProxy()
     response_code, response_dict, response_message = server_proxy.run_convert(
                                       self.getSourceReference() or self.getId(),
-                                      enc(_unpackData(self.getData())))
+                                      enc(str(self.getData())))
     if response_code == 200:
       # sucessfully converted document
       self._setBaseData(dec(response_dict['data']))
@@ -564,7 +563,7 @@ class OOoDocument(PermanentURLMixIn, File, ConversionCacheMixin):
     server_proxy = self._mkProxy()
     response_code, response_dict, response_message = \
           server_proxy.run_setmetadata(self.getId(),
-                                       enc(_unpackData(self.getBaseData())),
+                                       enc(str(self.getBaseData())),
                                        kw)
     if response_code == 200:
       # successful meta data extraction
