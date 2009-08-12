@@ -145,6 +145,7 @@ Sale Trade Condition | view_profile
 Sale Trade Condition | view_tax
 Sale Trade Condition | view_trade_model_line_list
 System Preference | bpm_preference
+System Preference | trade_preference
 Tax Line | view
 Tax Model Line | view
 Tax Module | view
