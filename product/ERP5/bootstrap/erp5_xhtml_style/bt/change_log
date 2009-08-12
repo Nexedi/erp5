@@ -1,3 +1,6 @@
+2009-08-12 Jerome
+* add an onbeforeunload event to warn the user when he is about to leave the page without saving.
+
 2009-08-12 Kazuhiko
 * add resizeIFrameOnLoad that can be used to adjust the height of iframe according to its content.
 

@@ -61,6 +61,7 @@ function submitAction(form, act) {\n
 // reset the form action to it\'s original behaviour. This is actually\n
 // usefull when the user click the back button.\n
 function clickSaveButton(act) {\n
+  changed = false;\n
   document.forms[0].action = act;\n
 }\n
 \n
@@ -238,7 +239,49 @@ var resizeIFrameOnLoad = function() {\n
   }\n
 }\n
 \n
-addLoadEvent(indexAllCheckBoxesAtBTInstallationOnLoad);
+var changed = false;\n
+function installUnsavedChangesWarning(warning_message) {\n
+  window.onbeforeunload = function() {\n
+    if (changed) \n
+      return warning_message;\n
+  };\n
+};\n
+\n
+/* Add a onchange event handler for all fields inputs.\n
+This event handler set a dirty flag which cause a warning\n
+while leaving the page, unless leaving by:\n
+    - saving (see clickSaveButton function from this file)\n
+    - clicking a relation field wheel\n
+    - a dialog action\n
+*/\n
+var addOnChangeEventHandler = function() {\n
+  var master = document.getElementById("master");\n
+  divs = master.getElementsByTagName("div");\n
+  for (i=0; i<divs.length; i++) {\n
+    if (divs[i].getAttribute("class") == "input") {\n
+      nodes = divs[i].childNodes;\n
+\n
+      for (j=0; j<nodes.length; j++) {\n
+        if (nodes[j].nodeName == "INPUT" ||\n
+            nodes[j].nodeName == "SELECT" || \n
+            nodes[j].nodeName == "TEXTAREA") {\n
+         if (nodes[j].value == "update...") {\n
+           // this is a relation field wheel\n
+           nodes[j].onclick = function() { changed = false;};\n
+          } else {\n
+            if (!nodes[j].onchange) {\n
+              nodes[j].onchange = function() { changed = true; };\n
+            }\n
+          }\n
+        }\n
+      }\n
+    }\n
+  } \n
+}\n
+\n
+addLoadEvent(addOnChangeEventHandler);\n
+addLoadEvent(indexAllCheckBoxesAtBTInstallationOnLoad);\n
+
 
 ]]></string> </value>
         </item>

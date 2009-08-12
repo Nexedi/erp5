@@ -59,6 +59,10 @@
           <tal:block metal:use-macro="here/context_box_render/macros/master" />\n
         </tal:block>\n
         <tal:block metal:fill-slot="main">\n
+          <script type="text/javascript"\n
+            tal:define="message python:context.Base_translateString(\'You have unsaved changes\').replace(\'\\\'\', \'\\\\\\\'\')"\n
+            tal:content="string:installUnsavedChangesWarning(\'$message\')">\n
+          </script>\n
           <div class="document"\n
                tal:define="actions actions/object_view | python: []">\n
             <div class="actions"\n
