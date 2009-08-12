@@ -46,15 +46,9 @@ mimetypes.init()
 def _unpackData(data):
   """
   Unpack Pdata into string
+  OBSOLETED. use str(data) instead, because Pdata.__str__ is defined.
   """
-  if isinstance(data, str):
-    return data
-  else:
-    data_list = []
-    while data is not None:
-      data_list.append(data.data)
-      data = data.next
-    return ''.join(data_list)
+  return str(data)
 
 class File(Document, CMFFile, ConversionCacheMixin):
   """

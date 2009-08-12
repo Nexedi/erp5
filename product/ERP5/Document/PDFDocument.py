@@ -34,7 +34,6 @@ from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
 from Products.ERP5Type.Cache import CachingMethod
 from Products.ERP5.Document.Image import Image
 from Products.ERP5.Document.Document import ConversionCacheMixin, ConversionError
-from Products.ERP5.Document.File import _unpackData
 
 from zLOG import LOG, WARNING
 
@@ -82,7 +81,7 @@ class PDFDocument(Image, ConversionCacheMixin):
     """
     if format is None:
       RESPONSE.setHeader('Content-Type', 'application/pdf')
-      return _unpackData(self.data)
+      return str(self.data)
     if format in ('html', 'txt', 'text'):
       mime, data = self.convert(format)
       RESPONSE.setHeader('Content-Length', len(data))
@@ -129,7 +128,7 @@ class PDFDocument(Image, ConversionCacheMixin):
     if not self.data:
       return ''
     tmp = tempfile.NamedTemporaryFile()
-    tmp.write(_unpackData(self.data))
+    tmp.write(str(self.data))
     tmp.seek(0)
     cmd = 'pdftotext -layout -enc UTF-8 -nopgbrk %s -' % tmp.name
     r = os.popen(cmd)
@@ -194,7 +193,7 @@ class PDFDocument(Image, ConversionCacheMixin):
     if not self.data:
       return ''
     tmp = tempfile.NamedTemporaryFile()
-    tmp.write(_unpackData(self.data))
+    tmp.write(str(self.data))
     tmp.seek(0)
     cmd = 'pdftohtml -enc UTF-8 -stdout -noframes -i %s' % tmp.name
     r = os.popen(cmd)
@@ -219,7 +218,7 @@ class PDFDocument(Image, ConversionCacheMixin):
     except AttributeError:
       pass
     tmp = tempfile.NamedTemporaryFile()
-    tmp.write(_unpackData(self.data))
+    tmp.write(str(self.data))
     tmp.seek(0)
     cmd = 'pdfinfo -meta -box %s' % tmp.name
     r = os.popen(cmd)
