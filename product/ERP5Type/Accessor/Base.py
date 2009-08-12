@@ -95,6 +95,20 @@ class Setter(Method):
         modified_object_list.append(instance)
       return modified_object_list
 
+    class __roles__:
+      @staticmethod
+      def rolesForPermissionOn(ob):
+        # we explictly call _aq_dynamic to prevent acquiering the attribute
+        # from container
+        roles = ob.im_self._aq_dynamic('%s__roles__' % ob.__name__)
+        if roles is None:
+            return rolesForPermissionOn(None, ob.im_self, ('Manager',),
+                                        '_Modify_portal_content_Permission')
+        else:
+            # wrap explicitly, because we used _aq_dynamic
+            return roles.__of__(ob.im_self)
+
+
 from Products.CMFCore.Expression import Expression
 def _evaluateTales(instance=None, value=None):
   from Products.ERP5Type.Utils import createExpressionContext
@@ -158,6 +172,20 @@ class Getter(Method):
 
     psyco.bind(__call__)
 
+    class __roles__:
+      @staticmethod
+      def rolesForPermissionOn(ob):
+        # we explictly call _aq_dynamic to prevent acquiering the attribute
+        # from container
+        roles = ob.im_self._aq_dynamic('%s__roles__' % ob.__name__)
+        if roles is None:
+            return rolesForPermissionOn(None, ob.im_self, ('Manager',),
+                                        '_Access_contents_information_Permission')
+        else:
+            # wrap explicitly, because we used _aq_dynamic
+            return roles.__of__(ob.im_self)
+
+
 class Tester(Method):
     """
       Tests if an attribute value exists
@@ -184,35 +212,3 @@ class Tester(Method):
     def __call__(self, instance, *args, **kw):
       return getattr(aq_base(instance), self._storage_id, None) not in self._null
 
-try:
-    from ZODB.Transaction import Transaction
-    # Zope 2.7 do not patch
-except ImportError:
-    # Zope 2.8, patch
-    class __roles__:
-      @staticmethod
-      def rolesForPermissionOn(ob):
-        # we explictly call _aq_dynamic to prevent acquiering the attribute
-        # from container
-        roles = ob.im_self._aq_dynamic('%s__roles__' % ob.__name__)
-        if roles is None:
-            return rolesForPermissionOn(None, ob.im_self, ('Manager',),
-                                        '_Modify_portal_content_Permission')
-        else:
-            # wrap explicitly, because we used _aq_dynamic
-            return roles.__of__(ob.im_self)
-    Setter.__roles__ = __roles__
-
-    class __roles__:
-      @staticmethod
-      def rolesForPermissionOn(ob):
-        # we explictly call _aq_dynamic to prevent acquiering the attribute
-        # from container
-        roles = ob.im_self._aq_dynamic('%s__roles__' % ob.__name__)
-        if roles is None:
-            return rolesForPermissionOn(None, ob.im_self, ('Manager',),
-                                        '_Access_contents_information_Permission')
-        else:
-            # wrap explicitly, because we used _aq_dynamic
-            return roles.__of__(ob.im_self)
-    Getter.__roles__ = __roles__

@@ -2304,13 +2304,6 @@ class TestPropertySheet:
 
     def test_DefaultSecurityOnAccessors(self):
       # Test accessors are protected correctly
-      try:
-        from ZODB.Transaction import Transaction
-        return
-        # Zope 2.7 do not test
-      except ImportError:
-        pass
-
       self._addProperty('Person',
                   ''' { 'id':         'foo_bar',
                         'type':       'string',
@@ -2332,13 +2325,6 @@ class TestPropertySheet:
       self.assertFalse(guarded_hasattr(obj, 'getFooBar'))
 
     def test_DefaultSecurityOnListAccessors(self):
-      try:
-        from ZODB.Transaction import Transaction
-        return
-        # Zope 2.7 do not test
-      except ImportError:
-        pass
-
       # Test list accessors are protected correctly
       self._addProperty('Person',
                   ''' { 'id':         'foo_bar',
@@ -2360,12 +2346,6 @@ class TestPropertySheet:
       self.assertFalse(guarded_hasattr(obj, 'getFooBarList'))
 
     def test_DefaultSecurityOnCategoryAccessors(self):
-      try:
-        from ZODB.Transaction import Transaction
-        return
-        # Zope 2.7 do not test
-      except ImportError:
-        pass
       # Test category accessors are protected correctly
       obj = self.getPersonModule().newContent(portal_type='Person')
       self.assertTrue(guarded_hasattr(obj, 'setRegion'))
@@ -2402,13 +2382,6 @@ class TestPropertySheet:
       self.assertFalse(guarded_hasattr(obj, 'getRegionRelatedValueList'))
 
     def test_PropertySheetSecurityOnAccessors(self):
-      try:
-        from ZODB.Transaction import Transaction
-        return
-        # Zope 2.7 do not test
-      except ImportError:
-        pass
-
       # Test accessors are protected correctly when you specify the permission
       # in the property sheet.
       self._addProperty('Person',
@@ -2431,26 +2404,22 @@ class TestPropertySheet:
       self.assertFalse(guarded_hasattr(obj, 'getFooBar'))
 
     def test_edit(self):
-      # not working in 2.7 as accessor not patched
-      try:
-        from ZODB.Transaction import Transaction
-      except ImportError:
-        self._addProperty('Person',
-                          ''' { 'id':         'foo_bar',
-                          'write_permission' : 'Set own password',
-                          'read_permission'  : 'Manage users',
-                          'type':       'string',
-                          'mode':       'w', }''')
-        obj = self.getPersonModule().newContent(portal_type='Person')
-        obj.edit(foo_bar="v1")
-        self.assertEqual(obj.getFooBar(), "v1")
+      self._addProperty('Person',
+                        ''' { 'id':         'foo_bar',
+                        'write_permission' : 'Set own password',
+                        'read_permission'  : 'Manage users',
+                        'type':       'string',
+                        'mode':       'w', }''')
+      obj = self.getPersonModule().newContent(portal_type='Person')
+      obj.edit(foo_bar="v1")
+      self.assertEqual(obj.getFooBar(), "v1")
 
-        obj.manage_permission('Set own password', [], 0)
-        self.assertRaises(Unauthorized, obj.edit, foo_bar="v2")
-        self.assertEqual(obj.getFooBar(), "v1")
+      obj.manage_permission('Set own password', [], 0)
+      self.assertRaises(Unauthorized, obj.edit, foo_bar="v2")
+      self.assertEqual(obj.getFooBar(), "v1")
 
-        obj._edit(foo_bar="v3")
-        self.assertEqual(obj.getFooBar(), "v3")
+      obj._edit(foo_bar="v3")
+      self.assertEqual(obj.getFooBar(), "v3")
 
     def test_accessor_security_and_getTitle_acquisition(self):
       obj = self.getOrganisationModule().newContent(portal_type='Organisation')
@@ -2622,6 +2591,7 @@ class TestPropertySheet:
       person = self.getPersonModule().newContent(portal_type='Person')
       person.validate()
       self.assertRaises(WorkflowException, person.validate)
+
 
 class TestAccessControl(ERP5TypeTestCase):
   # Isolate test in a dedicaced class in order not to break other tests
