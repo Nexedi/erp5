@@ -327,12 +327,12 @@ class EmailDocument(File, TextDocument):
       result = self._baseGetGroupingReference(*args)
     else:
       if not len(args):
-	args = (self._baseGetGroupingReference(),)
+        args = (self._baseGetGroupingReference(),)
       result = self.getContentInformation().get('References', *args)
       if result:
-	result = result.split() # Only take the first reference
-	if result:
-	  result = result[0]
+        result = result.split() # Only take the first reference
+        if result:
+          result = result[0]
     if result:
       return result
     return self.getSourceReference(*args)
