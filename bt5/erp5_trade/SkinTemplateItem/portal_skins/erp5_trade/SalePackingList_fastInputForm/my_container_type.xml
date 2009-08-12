@@ -235,32 +235,7 @@
                 <item>
                     <key> <string>items</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>carton A</string>
-                          <string>composant/CAame/A</string>
-                        </tuple>
-                        <tuple>
-                          <string>carton B</string>
-                          <string>composant/CAame/B</string>
-                        </tuple>
-                        <tuple>
-                          <string>carton C</string>
-                          <string>composant/CAame/C</string>
-                        </tuple>
-                        <tuple>
-                          <string>carton D1</string>
-                          <string>composant/CAame/D1</string>
-                        </tuple>
-                        <tuple>
-                          <string>carton D2</string>
-                          <string>composant/CAame/D2</string>
-                        </tuple>
-                        <tuple>
-                          <string>carton D3</string>
-                          <string>composant/CAame/D3</string>
-                        </tuple>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -292,18 +267,15 @@
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.Formulator.TALESField</string>
-          <string>TALESMethod</string>
-        </tuple>
-        <none/>
+        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: map(lambda x: (x.getTitle(), x.getRelativeUrl()), here.portal_categories.getRelatedValueList(here.portal_categories.resource.packing))</string> </value>
+            <value> <string>python: context.Base_getResourceItemList(use_list=preferences.getPreferredPackingUseList(), validation_state=\'validated\')</string> </value>
         </item>
       </dictionary>
     </pickle>
