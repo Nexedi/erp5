@@ -289,8 +289,8 @@ div.main_content div.content fieldset.header {\n
   display: none;\n
 }\n
 \n
-div.subcontent-box fieldset.widget legend {\n
-  display: none;        /* Do not display legends on the right side */\n
+fieldset.widget legend {\n
+  display: none;        /* Do not display legends on widgets */\n
 }\n
 \n
 fieldset.widget > div.field > label {\n
