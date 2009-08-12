@@ -84,12 +84,12 @@
             <key> <string>tested_property</string> </key>
             <value>
               <tuple>
-                <string>source_section | Source Section</string>
-                <string>resource | Resource</string>
-                <string>destination_section | Destination Section</string>
-                <string>source | Source</string>
-                <string>destination | Destination</string>
-                <string>aggregate | Aggregate</string>
+                <string>source_section_list | Source Section</string>
+                <string>resource_list | Resource</string>
+                <string>destination_section_list | Destination Section</string>
+                <string>source_list | Source</string>
+                <string>destination_list | Destination</string>
+                <string>aggregate_list | Aggregate</string>
               </tuple>
             </value>
         </item>
