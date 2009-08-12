@@ -52,6 +52,7 @@ from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 from AccessControl import Unauthorized
 import zope.interface
 import string
+from OFS.Image import Pdata
 
 _MARKER = []
 VALID_ORDER_KEY_LIST = ('user_login', 'content', 'file_name', 'input')
@@ -1382,3 +1383,22 @@ class Document(PermanentURLMixIn, XMLObject, UrlMixIn, ConversionCacheMixin, Sna
         # but not in http://www.some.site/at
         base_url = '/'.join(base_url_list[:-1])
     return base_url
+
+  security.declareProtected(Permissions.ModifyPortalContent, '_setBaseData')
+  def _setBaseData(self, data):
+    self._baseSetBaseData(Pdata(data))
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getBaseData')
+  def getBaseData(self, default=None):
+    """return BaseData as str."""
+    return str(self._baseGetBaseData())
+
+  security.declareProtected(Permissions.ModifyPortalContent, '_setData')
+  def _setData(self, data):
+    self._baseSetData(Pdata(data))
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'getData')
+  def getData(self, default=None):
+    """return Data as str."""
+    return str(self._baseGetData())
