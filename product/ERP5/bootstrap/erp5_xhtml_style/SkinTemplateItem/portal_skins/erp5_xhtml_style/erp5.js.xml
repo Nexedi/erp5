@@ -228,7 +228,17 @@ function showPopik(dom_id, what, delay){\n
     obj.style.display=\'none\';}\n
 }\n
 \n
-addLoadEvent(indexAllCheckBoxesAtBTInstallationOnLoad)
+var resizeIFrameOnLoad = function() {\n
+  var iframe_list = window.getElementsByTagAndClassName("iframe", "auto_height");\n
+  for( var i=0; i<iframe_list.length; i++) {\n
+    var iframe = iframe_list[i];\n
+    var doc = iframe.contentWindow.document.documentElement;\n
+    var body = iframe.contentWindow.document.body;\n
+    iframe.style.height = doc.offsetHeight + \'px\';\n
+  }\n
+}\n
+\n
+addLoadEvent(indexAllCheckBoxesAtBTInstallationOnLoad);
 
 ]]></string> </value>
         </item>

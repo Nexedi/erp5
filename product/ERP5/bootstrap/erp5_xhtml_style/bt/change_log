@@ -1,3 +1,6 @@
+2009-08-12 Kazuhiko
+* add resizeIFrameOnLoad that can be used to adjust the height of iframe according to its content.
+
 2009-08-05 Kazuhiko
 * escape LINE SEPARATOR (U+2028) and PARAGRAPH SEPARATOR (U+2029) in fckeditor_wysiwyg_support otherwise FCKeditor will raise an error.
 
