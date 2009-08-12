@@ -724,6 +724,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         A method to factor common code used to search a single
         object in the database.
         """
+        kw.setdefault('limit', 1)
         result = self.searchResults(query=query, **kw)
         try:
           return result[0].getObject()
@@ -737,6 +738,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         object in the database. Same as getResultValue but without
         taking into account security.
         """
+        kw.setdefault('limit', 1)
         result = self.unrestrictedSearchResults(query=query, **kw)
         try:
           return result[0].getObject()
