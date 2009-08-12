@@ -185,7 +185,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>not:here/getUrlString</string> </value>
+            <value> <string>python:not here.getPortalType() in (\'Drawing\', \'Presentation\')</string> </value>
         </item>
       </dictionary>
     </pickle>
