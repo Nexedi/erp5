@@ -37,6 +37,7 @@ from Products.ERP5.Document.Transformation import Transformation
 from Products.ERP5.Document.Path import Path
 from Products.ERP5.AggregatedAmountList import AggregatedAmountList
 from Products.ERP5Type.XMLMatrix import XMLMatrix
+from Products.ZSQLCatalog.SQLCatalog import Query, ComplexQuery
 
 import zope.interface
 
@@ -387,17 +388,27 @@ class TradeCondition(Path, Transformation, XMLMatrix):
       reference = self.getReference()
       if not reference or (start_date is None and stop_date is None):
         return self
-      effective_model_list = []
-      model_object_list = [result.getObject() for result in \
-          self.portal_catalog(portal_type=self.portal_type,
-                              reference=reference,
-                              sort_on=(('version','descending'),),
-                              effective_date="<=%s"%start_date,
-                              expiration_date=">=%s"%stop_date,
-                              limit=1)]
-      if len(model_object_list):
-        return model_object_list[0]
-      return None
+      
+      return self.getPortalObject().portal_catalog.unrestrictedGetResultValue(
+                              query=ComplexQuery(
+                                      ComplexQuery(
+                                        Query(effective_date=None),
+                                        Query(effective_date=start_date,
+                                              range='ngt'),
+                                        logical_operator='OR'),
+                                      ComplexQuery(
+                                        Query(expiration_date=None),
+                                        Query(expiration_date=stop_date,
+                                              range='min'),
+                                        logical_operator='OR'),
+                                      Query(reference=reference),
+                                      Query(validation_state=(
+                                              'deleted', 'invalidated'),
+                                            operator='NOT'),
+                                      Query(portal_type=self.getPortalType()),
+                                      logical_operator='AND'),
+                              sort_on=(('version','descending'),))
+
 
     security.declareProtected(Permissions.AccessContentsInformation,
         'getModelIneritanceEffectiveProperty')

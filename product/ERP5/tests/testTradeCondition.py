@@ -1822,6 +1822,37 @@ class TestEffectiveTradeCondition(TradeConditionTestCase):
                     start_date=DateTime('2009/06/01'),
                     stop_date=DateTime('2009/06/01')))
 
+  def test_getEffectiveModel_without_dates(self):
+    # a trade condition without effective / expiration date is effective
+    self.trade_condition.setReference(self.id())
+    self.trade_condition.setEffectiveDate(None)
+    self.trade_condition.setExpirationDate(None)
+    transaction.commit()
+    self.tic()
+    self.assertEquals(self.trade_condition,
+        self.trade_condition.getEffectiveModel(
+                    start_date=DateTime('2009/06/01'),
+                    stop_date=DateTime('2009/06/01')))
+
+    self.trade_condition.setEffectiveDate(None)
+    self.trade_condition.setExpirationDate('2009/12/31')
+    transaction.commit()
+    self.tic()
+    self.assertEquals(self.trade_condition,
+        self.trade_condition.getEffectiveModel(
+                    start_date=DateTime('2009/06/01'),
+                    stop_date=DateTime('2009/06/01')))
+
+    self.trade_condition.setEffectiveDate('2009/01/01')
+    self.trade_condition.setExpirationDate(None)
+    transaction.commit()
+    self.tic()
+    self.assertEquals(self.trade_condition,
+        self.trade_condition.getEffectiveModel(
+                    start_date=DateTime('2009/06/01'),
+                    stop_date=DateTime('2009/06/01')))
+
+    
   def test_getEffectiveModel_return_self_when_no_reference(self):
     # when no reference defined, getEffectiveModel returns the trade condition.
     self.trade_condition.setReference(None)
