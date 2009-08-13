@@ -369,12 +369,13 @@ class BPMRule(Predicate, XMLObject):
       property_dict['start_date'] = movement.getStartDate()
       property_dict['stop_date'] = movement.getStopDate()
 
-    # save a relation to business path
-    property_dict['causality_value_list'] = [business_path]
-
     # rule specific
     property_dict.update(**self._getExpandablePropertyUpdateDict(applied_rule,
       movement, business_path, property_dict))
+
+    # save a relation to business path
+    property_dict['causality_list'] = [business_path.getRelativeUrl()]
+
     return property_dict
 
   security.declareProtected(Permissions.ModifyPortalContent, 'expand')
