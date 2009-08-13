@@ -1498,9 +1498,6 @@ div.search .searchPages .selected{\n
 \n
 .document div.page {\n
   background-color: white;\n
-  border-color: black;\n
-  border-width: 1px;\n
-  padding: 1em;\n
 }\n
 \n
 .document div.page div {\n
