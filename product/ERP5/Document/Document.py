@@ -171,22 +171,28 @@ class ConversionCacheMixin:
   security.declareProtected(Permissions.View, 'hasConversion')
   def hasConversion(self, **kw):
     """
+    If you want to get conversion cache value if exists, please write
+    the code like:
+
+      try:
+        mime, data = getConversion(**kw)
+      except KeyError:
+        ...
+
+    instead of:
+
+      if self.hasConversion(**kw):
+        mime, data = self.getConversion(**kw)
+      else:
+        ...
+
+    for better performance.
     """
-    self.updateConversionCache()
-    cache_id = self.generateCacheId(**kw)
-    if self.isTempObject():
-      temp_conversion_dict = getattr(aq_base(self), 'temp_conversion_data')
-      return temp_conversion_dict.has_key(cache_id)
-    cache_factory = self._getCacheFactory()
-    plugin_list = cache_factory.getCachePluginList()
-    #If there is no plugin list return False OR one them is doesn't contain
-    #cache_id for givent scope, return False
-    for cache_plugin in plugin_list:
-      if cache_plugin.has_key(self.getPath(), DEFAULT_CACHE_SCOPE):
-        cache_entry = cache_plugin.get(self.getPath(), DEFAULT_CACHE_SCOPE)
-        if cache_entry.getValue().has_key(cache_id):
-          return True
-    return False
+    try:
+      self.getConversion(**kw)
+      return True
+    except KeyError:
+      return False
 
   security.declareProtected(Permissions.ModifyPortalContent, 'setConversion')
   def setConversion(self, data, mime=None, calculation_time=None, **kw):
@@ -232,9 +238,10 @@ class ConversionCacheMixin:
   def getConversionSize(self, **kw):
     """
     """
-    if self.hasConversion(**kw):
+    try:
       return len(self.getConversion(**kw))
-    return 0
+    except KeyError:
+      return 0
 
   def generateCacheId(self, **kw):
     """Generate proper cache id based on **kw.
@@ -1149,13 +1156,14 @@ class Document(PermanentURLMixIn, XMLObject, UrlMixIn, ConversionCacheMixin, Sna
     """
     if not self.hasBaseData():
       raise ConversionError('This document has not been processed yet.')
-    if self.hasConversion(format='base-html'):
+    try:
       # FIXME: no substitution may occur in this case.
       mime, data = self.getConversion(format='base-html')
       return data
-    kw['format'] = 'html'
-    mime, html = self.convert(**kw)
-    return html
+    except KeyError:
+      kw['format'] = 'html'
+      mime, html = self.convert(**kw)
+      return html
 
   security.declareProtected(Permissions.View, 'asStrippedHTML')
   def asStrippedHTML(self, **kw):
@@ -1166,13 +1174,14 @@ class Document(PermanentURLMixIn, XMLObject, UrlMixIn, ConversionCacheMixin, Sna
     """
     if not self.hasBaseData():
       return ''
-    if self.hasConversion(format='stripped-html'): # XXX this is redundant since we never set it
+    try:
       # FIXME: no substitution may occur in this case.
       mime, data = self.getConversion(format='stripped-html')
       return data
-    kw['format'] = 'html'
-    mime, html = self.convert(**kw)
-    return self._stripHTML(str(html))
+    except KeyError:
+      kw['format'] = 'html'
+      mime, html = self.convert(**kw)
+      return self._stripHTML(str(html))
 
   def _guessEncoding(self, string):
     """

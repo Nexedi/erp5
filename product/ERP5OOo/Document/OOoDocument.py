@@ -500,10 +500,11 @@ class OOoDocument(PermanentURLMixIn, File, ConversionCacheMixin):
       archive_file.close()
 
   def _getExtensibleContent(self, request, name):
-    if self.hasConversion(format='_embedded', file_name=name):
+    try:
       mime, data = self.getConversion(format='_embedded', file_name=name)
       return OFSFile(name, name, data, content_type=mime).__of__(self.aq_parent)
-    return PermanentURLMixIn._getExtensibleContent(self, request, name)
+    except KeyError:
+      return PermanentURLMixIn._getExtensibleContent(self, request, name)
 
   # Base format implementation
   security.declareProtected(Permissions.AccessContentsInformation, 'hasBaseData')
