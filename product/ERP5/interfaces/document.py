@@ -235,10 +235,6 @@ class IDocument(Interface):
     needed here to overwrite class attribute with instance attrs
     """
 
-  def updateConversionCache():
-    """Initialise Caches
-    """
-
   def hasConversion(**kw):
     """Return a boolean if conversion is cached
     """
