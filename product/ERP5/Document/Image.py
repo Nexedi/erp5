@@ -204,16 +204,15 @@ class Image(File, OFSImage):
       image_size = self.getSizeFromImageDisplay(display)
       if (display is not None or resolution is not None or quality!=75 or format != ''\
                               or frame is not None) and image_size:
-          if not self.hasConversion(display=display, format=format,
-                                    quality=quality, resolution=resolution,
-                                    frame=frame, image_size=image_size):
+          try:
+              mime, image = self.getConversion(display=display, format=format,
+                                               quality=quality, resolution=resolution,
+                                               frame=frame, image_size=image_size)
+          except KeyError:
               # Generate photo on-the-fly
-              self._makeDisplayPhoto(display, format=format, quality=quality,
-                                     resolution=resolution, frame=frame,
-                                     image_size=image_size)
-          mime, image = self.getConversion(display=display, format=format,
-                                           quality=quality, resolution=resolution,
-                                           frame=frame, image_size=image_size)
+              mime, image = self._makeDisplayPhoto(display, format=format, quality=quality,
+                                                   resolution=resolution, frame=frame,
+                                                   image_size=image_size)
           width, height = (image.width, image.height)
           # Set cookie for chosen size
           if cookie:
@@ -336,25 +335,25 @@ class Image(File, OFSImage):
     Implementation of conversion for PDF files
     """
     if format in ('text', 'txt', 'html', 'base_html', 'stripped-html'):
-      if not self.hasConversion(format=format):
+      try:
+        return self.getConversion(format=format)
+      except KeyError:
         mime_type, data = self._convertToText(format)
         self.setConversion(data, mime=mime_type, format=format)
-      return self.getConversion(format=format)
+        return (mime_type, aq_base(data))
     image_size = self.getSizeFromImageDisplay(display)
     if (display is not None or resolution is not None or quality != 75 or format != ''\
                             or frame is not None) and image_size:
-        if not self.hasConversion(display=display, format=format,
-                                  quality=quality, resolution=resolution,
-                                  frame=frame, image_size=image_size):
-            # Generate photo on-the-fly
-            self._makeDisplayPhoto(display, format=format, quality=quality,
-                                   resolution=resolution, frame=frame,
-                                   image_size=image_size)
-        # Return resized image
+      try:
         mime, image = self.getConversion(display=display, format=format,
-                                         quality=quality ,resolution=resolution,
+                                         quality=quality, resolution=resolution,
                                          frame=frame, image_size=image_size)
-        return mime, image.data
+      except KeyError:
+        # Generate photo on-the-fly
+        mime, image = self._makeDisplayPhoto(display, format=format, quality=quality,
+                                             resolution=resolution, frame=frame,
+                                             image_size=image_size)
+      return mime, image.data
     return self.getContentType(), self.getData()
 
   security.declareProtected(Permissions.View, 'getSearchableText')
@@ -382,17 +381,15 @@ class Image(File, OFSImage):
       image_size = self.getSizeFromImageDisplay(display)
       if (display is not None or resolution is not None or quality != 75 or format != ''\
                               or frame is not None) and image_size:
-          if not self.hasConversion(display=display, format=format,
-                                    quality=quality, resolution=resolution,
-                                    frame=frame, image_size=image_size):
+          try:
+              mime, image = self.getConversion(display=display, format=format,
+                                               quality=quality, resolution=resolution,
+                                               frame=frame, image_size=image_size)
+          except KeyError:
               # Generate photo on-the-fly
-              self._makeDisplayPhoto(display, format=format, quality=quality,
-                                     resolution=resolution, frame=frame,
-                                     image_size=image_size)
-          # Return resized image
-          mime, image = self.getConversion(display=display, format=format,
-                                     quality=quality ,resolution=resolution,
-                                     frame=frame, image_size=image_size)
+              mime, image = self._makeDisplayPhoto(display, format=format, quality=quality,
+                                                   resolution=resolution, frame=frame,
+                                                   image_size=image_size)
           RESPONSE.setHeader('Content-Type', mime)
           return image.index_html(REQUEST, RESPONSE)
 
@@ -483,15 +480,14 @@ class Image(File, OFSImage):
   def _makeDisplayPhoto(self, display, format='', quality=75, resolution=None, frame=None,
                         image_size=None):
       """Create given display."""
-      if not self.hasConversion(display=display, format=format, quality=quality,
-                                resolution=resolution, frame=frame, image_size=image_size):
-          image = self._getDisplayPhoto(display, format=format, quality=quality,
-                                                 resolution=resolution, frame=frame,
-                                                 image_size=image_size)
-          self.setConversion(image, mime=image.content_type,
-                                    display=display, format=format,
-                                    quality=quality, resolution=resolution,
-                                    frame=frame, image_size=image_size)
+      image = self._getDisplayPhoto(display, format=format, quality=quality,
+                                             resolution=resolution, frame=frame,
+                                             image_size=image_size)
+      self.setConversion(image, mime=image.content_type,
+                                display=display, format=format,
+                                quality=quality, resolution=resolution,
+                                frame=frame, image_size=image_size)
+      return (image.content_type, aq_base(image))
 
   def _getAspectRatioSize(self, width, height):
       """Return proportional dimensions within desired size."""
