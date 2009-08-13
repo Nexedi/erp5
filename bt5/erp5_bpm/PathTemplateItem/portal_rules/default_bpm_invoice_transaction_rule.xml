@@ -111,7 +111,7 @@ NEVER USE IN PRODUCTION ENVIRONMENT!</string> </value>
             <key> <string>expandable_property</string> </key>
             <value>
               <tuple>
-                <string>causality_value</string>
+                <string>causality_list</string>
                 <string>destination_administration_list</string>
                 <string>destination_function_list</string>
                 <string>destination_list</string>
