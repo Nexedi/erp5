@@ -186,7 +186,7 @@ class ConversionCacheMixin:
     if self.isTempObject():
       if getattr(aq_base(self), 'temp_conversion_data', None) is None:
         self.temp_conversion_data = {}
-      self.temp_conversion_cache[cache_id] = (mime, aq_base(data))
+      self.temp_conversion_data[cache_id] = (mime, aq_base(data))
       return
     cache_factory = self._getCacheFactory()
     cache_duration = cache_factory.cache_duration
