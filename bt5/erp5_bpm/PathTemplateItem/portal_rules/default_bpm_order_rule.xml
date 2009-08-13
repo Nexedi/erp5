@@ -101,27 +101,28 @@ NEVER USE IN PRODUCTION ENVIRONMENT!</string> </value>
             <key> <string>expandable_property</string> </key>
             <value>
               <tuple>
-                <string>source_list</string>
-                <string>source_section_list</string>
-                <string>source_function_list</string>
-                <string>source_account_list</string>
-                <string>start_date</string>
-                <string>stop_date</string>
+                <string>aggregate_list</string>
+                <string>base_application_list</string>
+                <string>base_contribution_list</string>
+                <string>causality_list</string>
+                <string>description</string>
+                <string>destination_account_list</string>
+                <string>destination_function_list</string>
                 <string>destination_list</string>
                 <string>destination_section_list</string>
-                <string>destination_function_list</string>
-                <string>destination_account_list</string>
-                <string>description</string>
-                <string>resource_list</string>
-                <string>variation_category_list</string>
-                <string>variation_property_dict</string>
-                <string>base_contribution_list</string>
-                <string>base_application_list</string>
-                <string>aggregate_list</string>
                 <string>price</string>
                 <string>price_currency_list</string>
                 <string>quantity</string>
                 <string>quantity_unit_list</string>
+                <string>resource_list</string>
+                <string>source_account_list</string>
+                <string>source_function_list</string>
+                <string>source_list</string>
+                <string>source_section_list</string>
+                <string>start_date</string>
+                <string>stop_date</string>
+                <string>variation_category_list</string>
+                <string>variation_property_dict</string>
               </tuple>
             </value>
         </item>
