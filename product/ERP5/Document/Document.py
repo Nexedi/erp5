@@ -152,22 +152,6 @@ class ConversionCacheMixin:
     for cache_plugin in self._getCacheFactory().getCachePluginList():
       cache_plugin.delete(self.getPath(), DEFAULT_CACHE_SCOPE)
 
-  security.declareProtected(Permissions.View, 'updateConversionCache')
-  def updateConversionCache(self):
-    """
-    """
-    if self.isTempObject():
-      if getattr(aq_base(self), 'temp_conversion_data', None) is None:
-        self.temp_conversion_data = {}
-      return
-    cache_factory = self._getCacheFactory()
-    cache_duration = cache_factory.cache_duration
-    for cache_plugin in cache_factory.getCachePluginList():
-      cache_plugin.initCacheStorage()
-      if not cache_plugin.has_key(self.getPath(), DEFAULT_CACHE_SCOPE):
-        cache_dict = {}
-        cache_plugin.set(self.getPath(), DEFAULT_CACHE_SCOPE, cache_dict, cache_duration=cache_duration)
-
   security.declareProtected(Permissions.View, 'hasConversion')
   def hasConversion(self, **kw):
     """
@@ -198,20 +182,20 @@ class ConversionCacheMixin:
   def setConversion(self, data, mime=None, calculation_time=None, **kw):
     """
     """
-    self.updateConversionCache()
     cache_id = self.generateCacheId(**kw)
     if self.isTempObject():
-      temp_conversion_cache = getattr(aq_base(self), 'temp_conversion_data')
-      temp_conversion_cache[cache_id] = (mime, aq_base(data))
+      if getattr(aq_base(self), 'temp_conversion_data', None) is None:
+        self.temp_conversion_data = {}
+      self.temp_conversion_cache[cache_id] = (mime, aq_base(data))
       return
     cache_factory = self._getCacheFactory()
     cache_duration = cache_factory.cache_duration
     if data is not None:
       for cache_plugin in cache_factory.getCachePluginList():
-        if cache_plugin.has_key(self.getPath(), DEFAULT_CACHE_SCOPE):
+        try:
           cache_entry = cache_plugin.get(self.getPath(), DEFAULT_CACHE_SCOPE)
           cache_dict = cache_entry.getValue()
-        else:
+        except KeyError:
           cache_dict = {}
         cache_dict.update({cache_id: (mime, aq_base(data))})
         cache_plugin.set(self.getPath(), DEFAULT_CACHE_SCOPE,
@@ -222,11 +206,9 @@ class ConversionCacheMixin:
   def getConversion(self, **kw):
     """
     """
-    self.updateConversionCache()
     cache_id = self.generateCacheId(**kw)
     if self.isTempObject():
-      temp_conversion_cache = getattr(aq_base(self), 'temp_conversion_data')
-      return temp_conversion_cache[cache_id]
+      return getattr(aq_base(self), 'temp_conversion_data', {})[cache_id]
     for cache_plugin in self._getCacheFactory().getCachePluginList():
       cache_entry = cache_plugin.get(self.getPath(), DEFAULT_CACHE_SCOPE)
       data = cache_entry.getValue().get(cache_id)
