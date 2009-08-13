@@ -71,6 +71,20 @@
   <td>//div[contains(@class, \'error\')][.//@name=\'field_my_quantity\']</td>\n
   <td></td>\n
 </tr>\n
+\n
+<!-- cleanup -->\n
+<tr>\n
+  <td>type</td>\n
+  <td>field_my_quantity</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//button[@name=\'Base_edit:method\']</td>\n
+  <td></td>\n
+</tr>\n
+\n
+\n
 </body>\n
 </html>\n
 

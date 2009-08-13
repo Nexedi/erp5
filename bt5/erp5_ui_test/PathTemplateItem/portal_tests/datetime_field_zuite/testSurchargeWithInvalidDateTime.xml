@@ -149,6 +149,45 @@
   <td></td>\n
 </tr>\n
 \n
+\n
+\n
+\n
+<tr>\n
+  <td>type</td>\n
+  <td>subfield_field_my_start_date_year</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>subfield_field_my_start_date_month</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>subfield_field_my_start_date_day</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>subfield_field_my_start_date_hour</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>subfield_field_my_start_date_minute</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//button[@title=\'Save\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertPortalStatusMessage</td>\n
+  <td>Data updated.</td>\n
+  <td></td>\n
+</tr>\n
+\n
 </tbody></table>\n
 </body>\n
 </html>\n
