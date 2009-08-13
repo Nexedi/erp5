@@ -1392,7 +1392,11 @@ class Document(PermanentURLMixIn, XMLObject, UrlMixIn, ConversionCacheMixin, Sna
                             'getBaseData')
   def getBaseData(self, default=None):
     """return BaseData as str."""
-    return str(self._baseGetBaseData())
+    base_data = self._baseGetBaseData()
+    if base_data is None:
+      return None
+    else:
+      return str(base_data)
 
   security.declareProtected(Permissions.ModifyPortalContent, '_setData')
   def _setData(self, data):
@@ -1401,4 +1405,8 @@ class Document(PermanentURLMixIn, XMLObject, UrlMixIn, ConversionCacheMixin, Sna
   security.declareProtected(Permissions.AccessContentsInformation, 'getData')
   def getData(self, default=None):
     """return Data as str."""
-    return str(self._baseGetData())
+    data = self._baseGetData()
+    if data is None:
+      return None
+    else:
+      return str(data)
