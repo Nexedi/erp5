@@ -57,6 +57,7 @@
       \'SearchableText\':field_your_search_text,\n
       \'your_search_text\':field_your_search_text,\n
       \'all_languages\':all_languages,\n
+      \'ignore_hide_rows\': 1,\n
       \'list_style\':list_style}\n
 \n
 if field_your_search_portal_type:\n
