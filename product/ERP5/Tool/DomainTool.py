@@ -32,6 +32,7 @@ from Globals import InitializeClass, DTMLFile
 from Products.ERP5Type import Permissions
 from Products.ERP5 import _dtmldir
 from Products.ERP5Type.Tool.BaseTool import BaseTool
+from Products.ZSQLCatalog.SQLCatalog import SQLQuery
 from zLOG import LOG
 from DateTime import DateTime
 
@@ -188,7 +189,10 @@ class DomainTool(BaseTool):
         else:
           where_expression = category_expression
 
-      sql_kw['where_expression'] = where_expression
+      if len(where_expression):
+        sql_kw['where_expression'] = SQLQuery(where_expression)
+      else:
+        sql_kw['where_expression'] = ''
       kw.update(sql_kw)
 #       LOG('searchPredicateList, kw',0,kw)
 
