@@ -1379,7 +1379,7 @@ class Document(PermanentURLMixIn, XMLObject, UrlMixIn, ConversionCacheMixin, Sna
   def _setBaseData(self, data):
     if data is not None:
       data = Pdata(data)
-    self._baseSetBaseData(Pdata(data))
+    self._baseSetBaseData(data)
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getBaseData')
