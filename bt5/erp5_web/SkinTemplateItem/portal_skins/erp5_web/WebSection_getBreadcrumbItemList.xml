@@ -113,21 +113,23 @@ crumb_list = []\n
 \n
 # Implementation consists in browsing the aq_parent sequence\n
 chain_list = document.Base_getAcquisitionParentValueList(upper_portal_type=\'Web Site\')\n
-for i in range(0, len(chain_list)):\n
+chain_list.reverse()\n
+for i in xrange(0, len(chain_list)):\n
   try:\n
     crumb = chain_list[i]\n
-    crumb_list.append((crumb.getProperty(\'translated_short_title\', None) or\\\n
-                     crumb.getProperty(\'translated_title_or_id\', None) or\\\n
-                     crumb.title\n
-                   , crumb\n
-                   ))\n
+    if i == 0:\n
+      title = context.Base_translateString(\'Home\')\n
+    else:\n
+      title = crumb.getProperty(\'translated_short_title\', None) or\\\n
+              crumb.getProperty(\'translated_title_or_id\', None) or\\\n
+              crumb.title\n
+    crumb_list.append((title, crumb))\n
   except Unauthorized:\n
     # We should ignore any item in the chain which raises \n
     # a security exception. We use a catchall except here\n
     # because there is no way to import Unauthorized permission\n
     pass\n
 \n
-crumb_list.reverse()\n
 return crumb_list\n
 </string> </value>
         </item>
@@ -180,11 +182,12 @@ return crumb_list\n
                             <string>_getattr_</string>
                             <string>chain_list</string>
                             <string>_getiter_</string>
-                            <string>range</string>
+                            <string>xrange</string>
                             <string>len</string>
                             <string>i</string>
                             <string>_getitem_</string>
                             <string>crumb</string>
+                            <string>title</string>
                           </tuple>
                         </value>
                     </item>
