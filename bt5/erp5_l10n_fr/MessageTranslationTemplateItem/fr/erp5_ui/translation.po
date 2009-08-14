@@ -4696,6 +4696,9 @@ msgstr "Comparaison de l'historique "
 msgid "History"
 msgstr "Historique"
 
+msgid "Home"
+msgstr "Accueil"
+
 msgid "Hostname"
 msgstr "Nom d'hôte"
 
@@ -5883,6 +5886,9 @@ msgstr "Nouvelle page par défaut pour la section ${web_section}."
 
 msgid "New event created."
 msgstr "Nouvel évènement créé."
+
+msgid "News"
+msgstr "Actualité"
 
 msgid "Next"
 msgstr "Suivant"
