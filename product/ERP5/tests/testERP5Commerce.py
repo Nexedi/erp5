@@ -68,7 +68,6 @@ class TestCommerce(ERP5TypeTestCase):
   > implement Person_getApplicableDiscountList (actually just return None)
   > implement Person_getApplicableTaxList (actually always return a tax of 20%)
   > Fix proxy for SaleOrder_confirmShopping, and anonym user cant call it !
-  > SaleOrder_deleteShoppingCartItem doesnt use translation
   > SaleOrder_externalPaymentHandler is totally empty
   > SaleOrder_finalizeShopping doesnt check if the payment is successful or not
   > Fix proxy for SaleOrder_finalizeShopping anonym and normal user cant use it
@@ -86,6 +85,7 @@ class TestCommerce(ERP5TypeTestCase):
   SaleOrder_getSelectedShippingResource
   SaleOrder_isShippingRequired
   SaleOrder_paymentRedirect
+  SaleOrder_getShoppingCartDefaultCurrencySymbol
   WebSection_checkPaypalIdentification
   WebSection_checkoutProcedure
   WebSection_doPaypalPayment
@@ -98,7 +98,7 @@ class TestCommerce(ERP5TypeTestCase):
   WebSite_getPaypalUrl
   WebSite_setupECommerceWebSite
   Product_getRelatedDescription
-  Person_editPersonalInformation (maybe useless to unittest)
+  Person_editPersonalInformation
   Resource_getShopUrl
   """
 
@@ -429,7 +429,7 @@ class TestCommerce(ERP5TypeTestCase):
     portal = self.getPortal()
     request = self.app.REQUEST
     default_product = self.getDefaultProduct()
-    another_product = self.getDefaultProduct(id = '2')
+    another_product = self.getDefaultProduct(id='2')
     request.set('session_id', SESSION_ID)
     portal.Resource_addToShoppingCart(default_product, 1)
     portal.Resource_addToShoppingCart(default_product, 1)
@@ -440,21 +440,24 @@ class TestCommerce(ERP5TypeTestCase):
          float(shopping_cart.SaleOrder_getShoppingCartTotalPrice()))
     # include taxes (by default it's 20%)
     self.assertEquals(40.0*1.20, \
-       float(shopping_cart.SaleOrder_getShoppingCartTotalPrice(include_shipping = True,
-                                                                 include_taxes = True)))
+       float(shopping_cart.SaleOrder_getShoppingCartTotalPrice(include_shipping=True,
+                                                               include_taxes=True)))
     # no shipping selected yet so price should be the same
     self.assertEquals(40.0, \
-       float(shopping_cart.SaleOrder_getShoppingCartTotalPrice(include_shipping = True)))
+       float(shopping_cart.SaleOrder_getShoppingCartTotalPrice(include_shipping=True)))
+
     # add shipping
     shipping = self.getDefaultProduct('3')
     portal.SaleOrder_editShoppingCart(field_my_shipping_method=shipping.getRelativeUrl())
+
     # test price calculation only with shipping
     self.assertEquals(40.0 + 10.0, \
-       float(shopping_cart.SaleOrder_getShoppingCartTotalPrice(include_shipping = True)))
+       float(shopping_cart.SaleOrder_getShoppingCartTotalPrice(include_shipping=True)))
+
     # test price calculation shipping and taxes
     self.assertEquals((40.0 + 10.0)*1.20, \
-         float(shopping_cart.SaleOrder_getShoppingCartTotalPrice(include_shipping = True,
-                                                                 include_taxes = True)))
+         float(shopping_cart.SaleOrder_getShoppingCartTotalPrice(include_shipping=True,
+                                                                 include_taxes=True)))
                                                                  
   def test_05_TestUpdateShoppingCart(self, quiet=0, run=run_all_test):
     """ 
@@ -470,30 +473,31 @@ class TestCommerce(ERP5TypeTestCase):
     request = self.app.REQUEST
     
     default_product = self.getDefaultProduct()
-    another_product = self.getDefaultProduct(id = '2')
+    another_product = self.getDefaultProduct(id='2')
     shipping = self.getDefaultProduct('3')
     request.set('session_id', SESSION_ID)
     portal.Resource_addToShoppingCart(default_product, quantity=1)
     portal.Resource_addToShoppingCart(another_product, quantity=1)
 
     shopping_cart = portal.SaleOrder_getShoppingCart()
-    portal.SaleOrder_editShoppingCart(field_my_shipping_method=shipping.getRelativeUrl())
+    shipping_url = shipping.getRelativeUrl()
+    portal.SaleOrder_editShoppingCart(field_my_shipping_method=shipping_url)
     
     # increase shopping item number
     portal.SaleOrder_editShoppingCart((2, 1,))
     
     # test price calculation without shipping and without taxes
     self.assertEquals((10.0*2 + 20.0*1)*1.0, \
-       float(shopping_cart.SaleOrder_getShoppingCartTotalPrice(include_shipping = False,
-                                                               include_taxes = False)))
+       float(shopping_cart.SaleOrder_getShoppingCartTotalPrice(include_shipping=False,
+                                                               include_taxes=False)))
     # test price calculation with shipping and without taxes
     self.assertEquals((10.0*2  + 20.0*1 + 10.0)*1.0, \
-         float(shopping_cart.SaleOrder_getShoppingCartTotalPrice(include_shipping = True,
-                                                                 include_taxes = False)))
+         float(shopping_cart.SaleOrder_getShoppingCartTotalPrice(include_shipping=True,
+                                                                 include_taxes=False)))
     # test price calculation with shipping and with taxes
     self.assertEquals((10.0*2 + 20.0*1 + 10.0)*1.20, \
-         float(shopping_cart.SaleOrder_getShoppingCartTotalPrice(include_shipping = True,
-                                                                 include_taxes = True)))
+         float(shopping_cart.SaleOrder_getShoppingCartTotalPrice(include_shipping=True,
+                                                                 include_taxes=True)))
     
     # delete shopping item
     portal.SaleOrder_deleteShoppingCartItem('1')
@@ -820,7 +824,7 @@ class TestCommerce(ERP5TypeTestCase):
 
     # create new python script to replace the external method
     custom_skin = self.getPortal().portal_skins.custom
-    method_id = 'ERP5Base_submitPaypalNVPRequest'
+    method_id = 'WebSection_submitPaypalNVPRequest'
     if method_id in custom_skin.objectIds():
       custom_skin.manage_delObjects([method_id])
     custom_skin.manage_addProduct['PythonScripts']\
@@ -859,7 +863,7 @@ class TestCommerce(ERP5TypeTestCase):
                       portal.SaleOrder_getSelectedShippingResource())
 
     #5 : paypal step 1 : get a new token
-    token = web_site.WebSite_getNewPaypalToken()    
+    token = web_site.checkout.WebSection_getNewPaypalToken()    
     self.assertNotEquals(token, None)
 
     #6 : paypal step 2 : go to paypal and confirm this token
