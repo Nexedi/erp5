@@ -53,12 +53,15 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>""" \n
-  Return default currency used in shopping_cart.\n
-  Please update accordingly relative path. \n
-  XXX: there must be an way to do this better?\n
-"""\n
-return context.getPortalObject().SaleOrder_getShoppingCartDefaultCurrency().getShortTitle()\n
+            <value> <string>response_parameter_dict = context.WebSection_submitPaypalNVPRequest(parameter_dict=context.WebSite_getPaypalOrderParameterDict(),\n
+                                                                  nvp_url=context.WebSite_getPaypalUrl(api=\'nvp\', alternative_url=alternative_url))\n
+\n
+if response_parameter_dict is None:\n
+  return None\n
+\n
+if response_parameter_dict[\'ACK\'] == \'Success\':\n
+  return response_parameter_dict[\'TOKEN\']\n
+return \'\'\n
 </string> </value>
         </item>
         <item>
@@ -69,15 +72,7 @@ return context.getPortalObject().SaleOrder_getShoppingCartDefaultCurrency().getS
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string></string> </value>
-        </item>
-        <item>
-            <key> <string>_proxy_roles</string> </key>
-            <value>
-              <tuple>
-                <string>Manager</string>
-              </tuple>
-            </value>
+            <value> <string>alternative_url=None</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -97,14 +92,18 @@ return context.getPortalObject().SaleOrder_getShoppingCartDefaultCurrency().getS
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>1</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>alternative_url</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>response_parameter_dict</string>
+                            <string>None</string>
+                            <string>_getitem_</string>
                           </tuple>
                         </value>
                     </item>
@@ -116,16 +115,14 @@ return context.getPortalObject().SaleOrder_getShoppingCartDefaultCurrency().getS
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <none/>
+              </tuple>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>SaleOrder_getShoppingCartDefaultCurrencySymbole</string> </value>
-        </item>
-        <item>
-            <key> <string>title</string> </key>
-            <value> <string>Get default currency symbole for shop</string> </value>
+            <value> <string>WebSection_getNewPaypalToken</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

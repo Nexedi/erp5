@@ -11,7 +11,7 @@
       <dictionary>
         <item>
             <key> <string>_function</string> </key>
-            <value> <string>submitPaypalNVPRequest</string> </value>
+            <value> <string>getProductPrice</string> </value>
         </item>
         <item>
             <key> <string>_module</string> </key>
@@ -19,11 +19,11 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ERP5Base_submitPaypalNVPRequest</string> </value>
+            <value> <string>WebSection_unrestrictedGetPrice</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Submit a request to paypal</string> </value>
+            <value> <string>Unrestricted getPrice</string> </value>
         </item>
       </dictionary>
     </pickle>

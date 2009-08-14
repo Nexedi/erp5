@@ -39,8 +39,7 @@
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-<tal:block tal:define="web_site                python: here.getWebSiteValue();\n
-                       shopping_cart           here/SaleOrder_getShoppingCart;\n
+<tal:block tal:define="shopping_cart           here/SaleOrder_getShoppingCart;\n
                        shopping_cart_item_list shopping_cart/SaleOrder_getShoppingCartItemList;\n
                        shopping_cart_price     python: float(shopping_cart.SaleOrder_getShoppingCartTotalPrice());\n
                        taxes_amount            python: float(shopping_cart.SaleOrder_getShoppingCartTotalPrice(include_taxes=True, include_shipping=True)) -\n
@@ -59,7 +58,7 @@
 \n
 <!--  # can be _cart, _xclick, _express-checkout -->\n
   <tal:block tal:condition="python: paypal_method == \'_express-checkout\'">\n
-    <tal:block tal:define="token python: web_site.WebSite_getNewPaypalToken()">\n
+    <tal:block tal:define="token python: here.WebSection_getNewPaypalToken()">\n
       <a tal:condition="python: token is not None and token != \'\'"\n
          tal:attributes="href python: \'%s?cmd=_express-checkout&token=%s&AMT=70.0&CURRENCYCODE=EUR\' % (action, token)">\n
         <img src="https://www.paypal.com/en_US/i/btn/btn_xpressCheckout.gif" alt="PayPal - The safer, easier way to pay online!" style="border:none;">\n

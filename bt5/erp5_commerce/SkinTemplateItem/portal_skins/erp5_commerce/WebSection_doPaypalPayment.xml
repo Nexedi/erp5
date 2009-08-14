@@ -66,14 +66,14 @@ if isAnon:\n
   return\n
 \n
 ## check if the id of the token correspond to the good products\n
-parameter_dict = context.WebSite_getExpressCheckoutDetails(token)\n
+parameter_dict = context.WebSection_getExpressCheckoutDetails(token)\n
 if parameter_dict[\'ACK\'] != \'Success\':\n
   msg = translateString("This paypal session is not initialised with the actual card.")\n
   context.Base_redirect(\'\', \\\n
                         keep_items={\'portal_status_message\': msg,})\n
 \n
 payer_id = parameter_dict[\'PAYERID\']\n
-response_dict = context.WebSite_doExpressCheckoutPayment(token, payer_id)\n
+response_dict = context.WebSection_doExpressCheckoutPayment(token, payer_id)\n
 \n
 if response_dict[\'ACK\'] != \'Success\':\n
   msg = translateString("Your payment failed because of ")\n

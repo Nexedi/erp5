@@ -60,7 +60,7 @@ order_parameter_dict[\'TOKEN\'] = token\n
 order_parameter_dict[\'PAYERID\'] = payer_id\n
 order_parameter_dict[\'METHOD\'] = \'DoExpressCheckoutPayment\'\n
 \n
-response_parameter_dict = context.ERP5Base_submitPaypalNVPRequest(parameter_dict=order_parameter_dict,\n
+response_parameter_dict = context.WebSection_submitPaypalNVPRequest(parameter_dict=order_parameter_dict,\n
                                                                   nvp_url=context.WebSite_getPaypalUrl(api=\'nvp\'))\n
 return response_parameter_dict\n
 </string> </value>
@@ -123,7 +123,7 @@ return response_parameter_dict\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>WebSite_doExpressCheckoutPayment</string> </value>
+            <value> <string>WebSection_doExpressCheckoutPayment</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

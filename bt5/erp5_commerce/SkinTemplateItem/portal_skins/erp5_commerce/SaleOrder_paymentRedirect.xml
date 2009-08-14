@@ -54,16 +54,22 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string># redirect the user to the good payment form\n
+translateString = context.Base_translateString\n
 \n
 if field_my_payment_mode is None:\n
-  return "error"\n
-\n
-if field_my_payment_mode == \'Credit Card\':\n
-  return context.getWebSectionValue().SaleOrder_viewAsWebConfirmCreditCardPayment()\n
-elif field_my_payment_mode.lower() == \'paypal\':\n
-  return context.getWebSectionValue().SaleOrder_viewAsWebConfirmPayPalPayment()\n
+  msg = translateString("You must select a payment mode.")\n
 else:\n
-  return "This method is actually not activated, sorry : %s" % field_my_payment_mode\n
+  if field_my_payment_mode.lower() == \'credit card\':\n
+    return context.getWebSectionValue().SaleOrder_viewAsWebConfirmCreditCardPayment()\n
+  elif field_my_payment_mode.lower() == \'paypal\':\n
+    return context.getWebSectionValue().SaleOrder_viewAsWebConfirmPayPalPayment()\n
+  else:\n
+    msg = translateString("This payment mode is actually not activated, sorry: ${payment_mode}", \n
+                          mapping=dict(payment_mode=field_my_payment_mode))\n
+\n
+context.Base_redirect(\'SaleOrder_viewAsWebConfirmPaymentMode\', \\\n
+                        keep_items={\'portal_status_message\': msg})\n
+return\n
 </string> </value>
         </item>
         <item>
@@ -102,9 +108,12 @@ else:\n
                           <tuple>
                             <string>field_my_payment_mode</string>
                             <string>kw</string>
-                            <string>None</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>translateString</string>
+                            <string>None</string>
+                            <string>msg</string>
+                            <string>dict</string>
                           </tuple>
                         </value>
                     </item>

@@ -59,7 +59,7 @@ if security_parameter_dict is None:\n
 security_parameter_dict[\'TOKEN\'] = token\n
 security_parameter_dict[\'METHOD\'] = \'GetExpressCheckoutDetails\'\n
 \n
-response_parameter_dict = context.ERP5Base_submitPaypalNVPRequest(parameter_dict=security_parameter_dict,\n
+response_parameter_dict = context.WebSection_submitPaypalNVPRequest(parameter_dict=security_parameter_dict,\n
                                                                   nvp_url=context.WebSite_getPaypalUrl(api=\'nvp\', alternative_url=alternative_url))\n
 return response_parameter_dict\n
 </string> </value>
@@ -124,7 +124,7 @@ return response_parameter_dict\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>WebSite_getExpressCheckoutDetails</string> </value>
+            <value> <string>WebSection_getExpressCheckoutDetails</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

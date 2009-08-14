@@ -275,7 +275,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: \'%s %s\' % (here.ERP5Site_unrestrictedGetPrice(cell), cell.SaleOrder_getShoppingCartDefaultCurrencyCode())</string> </value>
+            <value> <string>python: \'%s %s\' % (here.WebSection_unrestrictedGetPrice(cell), cell.SaleOrder_getShoppingCartDefaultCurrencyCode())</string> </value>
         </item>
       </dictionary>
     </pickle>

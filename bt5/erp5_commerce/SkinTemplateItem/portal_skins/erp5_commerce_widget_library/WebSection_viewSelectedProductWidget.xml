@@ -57,12 +57,12 @@
 <div tal:define="site_url python:here.getWebSiteValue().absolute_url();\n
                  current_web_section python:request.get(\'current_web_section\', here);\n
                  shopping_cart       here/SaleOrder_getShoppingCart;\n
-                 currency_symbole    python: shopping_cart.SaleOrder_getShoppingCartDefaultCurrencySymbole();"\n
+                 currency_symbol    python: shopping_cart.SaleOrder_getShoppingCartDefaultCurrencySymbol();"\n
      i18n:translate="" i18n:domain="ui" i18n:attributes="title"\n
      title="Sections accessible from here." class="selected-product">\n
   <tal:block tal:repeat="product python: here.WebSection_getProductList(limit=5)">\n
     <div tal:define="product_href python: \'%s/product_module/%s/%s\' % (site_url, product.getId(), \'Resource_viewAsShop\');\n
-                     price python: here.ERP5Site_unrestrictedGetPrice(product)">\n
+                     price python: here.WebSection_unrestrictedGetPrice(product)">\n
      <a href="#" tal:attributes="href product_href">\n
        <img tal:condition="python: product.getDefaultImageValue() not in (None, \'\') and product.getDefaultImageValue().getData() not in (None, \'\')"\n
             tal:attributes="src python: product.getDefaultImageAbsoluteUrl() + \'?display=thumbnail&format=png&resolution=75\'" width="75"/>\n
@@ -77,7 +77,7 @@
                  tal:attributes="href product_href">A product</a>\n
      <br />\n
      <tal:block tal:condition="python: price is not None">\n
-       <span  tal:content="python: \'%s %s\' % (price, currency_symbole)"></span>\n
+       <span  tal:content="python: \'%s %s\' % (price, currency_symbol)"></span>\n
      </tal:block>\n
      <tal:block tal:condition="python: price is None">\n
        <span>The price is not setted yet.</span>\n

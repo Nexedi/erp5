@@ -54,12 +54,11 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>translateString = context.Base_translateString\n
-web_site = context.getWebSiteValue()\n
 \n
 token = context.REQUEST.get(\'token\')\n
 payer_id = context.REQUEST.get(\'PayerID\')\n
 \n
-parameter_dict = web_site.WebSite_getExpressCheckoutDetails(token)\n
+parameter_dict = context.WebSection_getExpressCheckoutDetails(token)\n
 \n
 if parameter_dict[\'ACK\'] != \'Success\':\n
   return "Identification failed.1 : %s" % parameter_dict[\'ACK\']\n
@@ -109,7 +108,6 @@ context.ERP5Site_redirect(\'%s/checkout\' % context.getWebSiteValue().absolute_u
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>translateString</string>
-                            <string>web_site</string>
                             <string>token</string>
                             <string>payer_id</string>
                             <string>parameter_dict</string>
