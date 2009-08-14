@@ -23,11 +23,11 @@
         </item>
         <item>
             <key> <string>after_script_name</string> </key>
-            <value> <string></string> </value>
+            <value> <string>buildTradeModelLineList</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>validate a plannified transaction that will be turned into real accounting transactions</string> </value>
+            <value> <string>validate a planned transaction that will be turned into real accounting transactions</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
