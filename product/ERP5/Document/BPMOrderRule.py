@@ -62,7 +62,5 @@ class BPMOrderRule(BPMDeliveryRule):
     """Order rule specific update dictionary"""
     return {
       'order_value': movement,
-      'order_ratio': 1,
-      'delivery_ratio': 1,
       'deliverable': 1,
     }

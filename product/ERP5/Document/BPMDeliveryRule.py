@@ -64,7 +64,5 @@ class BPMDeliveryRule(BPMRule):
     return {
       'order_value': movement,
       'delivery_value': movement,
-      'order_ratio': 1,
-      'delivery_ratio': 1,
       'deliverable': 1,
     }
