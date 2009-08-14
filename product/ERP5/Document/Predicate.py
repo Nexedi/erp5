@@ -288,7 +288,10 @@ class Predicate(XMLObject, Folder):
                             multimembership_select_list)
 
     # Now merge identity and membership criteria
-    catalog_kw['where_expression'] = SQLQuery(sql_text)
+    if len(sql_text):
+      catalog_kw['where_expression'] = SQLQuery(sql_text)
+    else:
+      catalog_kw['where_expression'] = ''
     sql_query = portal_catalog.buildSQLQuery(**catalog_kw)
     for alias, table in sql_query['from_table_list']:
       if from_table_dict.has_key(alias):
