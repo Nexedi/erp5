@@ -1377,6 +1377,8 @@ class Document(PermanentURLMixIn, XMLObject, UrlMixIn, ConversionCacheMixin, Sna
 
   security.declareProtected(Permissions.ModifyPortalContent, '_setBaseData')
   def _setBaseData(self, data):
+    if data is not None:
+      data = Pdata(data)
     self._baseSetBaseData(Pdata(data))
 
   security.declareProtected(Permissions.AccessContentsInformation,
@@ -1391,7 +1393,9 @@ class Document(PermanentURLMixIn, XMLObject, UrlMixIn, ConversionCacheMixin, Sna
 
   security.declareProtected(Permissions.ModifyPortalContent, '_setData')
   def _setData(self, data):
-    self._baseSetData(Pdata(data))
+    if data is not None:
+      data = Pdata(data)
+    self._baseSetData(data)
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getData')
   def getData(self, default=None):
