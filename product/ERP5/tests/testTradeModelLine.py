@@ -2197,6 +2197,124 @@ class TestTradeModelLine(TestTradeModelLineMixin):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
+  def test_BuildTradeModelLineFromOrder(self):
+    business_process = self.createBusinessProcess()
+    business_path = self.createBusinessPath(business_process,
+                              trade_phase='default/tax')
+
+    product = self.createResource('Product',
+                              title='Product',
+                              use='normal',
+                              base_contribution='base_amount/tax')
+    tax = self.createResource('Service',
+                              title='Tax',
+                              use='tax')
+    currency = self.createResource('Currency', title='EUR')
+    trade_condition = self.createTradeCondition()
+    trade_condition.setSpecialiseValue(business_process)
+    trade_model_line = self.createTradeModelLine(
+                              trade_condition,
+                              reference='VAT',
+                              price=.15,
+                              resource_value=tax,
+                              trade_phase='default/tax',
+                              base_application='base_amount/tax',)
+    source = self.portal.organisation_module.newContent(
+                              portal_type='Organisation')
+    destination = self.portal.organisation_module.newContent(
+                              portal_type='Organisation')
+
+    order = self.createOrder()
+    order.edit(source_value=source,
+               destination_value=destination,
+               source_section_value=source,
+               destination_section_value=destination,
+               specialise_value=trade_condition,
+               price_currency_value=currency,
+               start_date=self.order_date,
+               stop_date=self.order_date,)
+    order.newContent(
+                portal_type=self.order_line_portal_type,
+                resource_value=product,
+                quantity=10,
+                price=100)
+
+    order.plan()
+    order.confirm()
+    transaction.commit()
+    self.tic()
+
+    packing_list = order.getCausalityRelatedValue(
+                      portal_type=self.packing_list_portal_type)
+    self.assertNotEquals(packing_list, None)
+    self.assertEquals(1000, packing_list.getTotalPrice())
+    
+    packing_list.start()
+    packing_list.stop()
+    packing_list.deliver()
+
+    transaction.commit()
+    self.tic()
+
+    invoice = packing_list.getCausalityRelatedValue(
+                      portal_type=self.invoice_portal_type)
+    self.assertNotEquals(invoice, None)
+    self.assertEquals(2, len(invoice.getMovementList()))
+    self.assertEquals(1150, invoice.getTotalPrice())
+    
+  def test_BuildTradeModelLineFromInvoice(self):
+    business_process = self.createBusinessProcess()
+    business_path = self.createBusinessPath(business_process,
+                              trade_phase='default/tax')
+
+    product = self.createResource('Product',
+                              title='Product',
+                              use='normal',
+                              base_contribution='base_amount/tax')
+    tax = self.createResource('Service',
+                              title='Tax',
+                              use='tax')
+    currency = self.createResource('Currency', title='EUR')
+    trade_condition = self.createTradeCondition()
+    trade_condition.setSpecialiseValue(business_process)
+    trade_model_line = self.createTradeModelLine(
+                              trade_condition,
+                              reference='VAT',
+                              price=.15,
+                              resource_value=tax,
+                              trade_phase='default/tax',
+                              base_application='base_amount/tax',)
+    source = self.portal.organisation_module.newContent(
+                              portal_type='Organisation')
+    destination = self.portal.organisation_module.newContent(
+                              portal_type='Organisation')
+
+    invoice = self.portal.accounting_module.newContent(
+               portal_type=self.invoice_portal_type,
+               source_value=source,
+               destination_value=destination,
+               source_section_value=source,
+               destination_section_value=destination,
+               specialise_value=trade_condition,
+               price_currency_value=currency,
+               start_date=self.order_date,
+               stop_date=self.order_date,
+               created_by_builder=True)
+    invoice.newContent(
+                portal_type=self.invoice_line_portal_type,
+                resource_value=product,
+                quantity=10,
+                price=100)
+
+    invoice.plan()
+    invoice.confirm()
+    transaction.commit()
+    self.tic()
+
+    self.assertEquals(2, len(invoice.getMovementList()))
+    self.assertEquals(1150, invoice.getTotalPrice())
+    
+
 class TestTradeModelLineSale(TestTradeModelLine):
   invoice_portal_type = 'Sale Invoice Transaction'
   invoice_line_portal_type = 'Invoice Line'
