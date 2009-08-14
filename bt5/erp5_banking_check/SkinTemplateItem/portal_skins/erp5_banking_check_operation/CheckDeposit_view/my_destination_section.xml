@@ -290,7 +290,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: [x for x in here.portal_categories.accounting_code.getCategoryChildTitleItemList(base=1,display_none_category=1,sort_id=\'title\') if x[1]]</string> </value>
+            <value> <string>python: [x for x in here.portal_categories.accounting_code.getCategoryChildTitleItemList(base=1,display_none_category=1,sort_id=\'title\') if x[0] or x[0] == x[1] == \'\']</string> </value>
         </item>
       </dictionary>
     </pickle>
