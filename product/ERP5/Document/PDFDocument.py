@@ -102,16 +102,18 @@ class PDFDocument(Image, ConversionCacheMixin):
       try:
         return self.getConversion(format=format)
       except KeyError:
+        mime = 'text/html'
         data = self._convertToHTML()
-        self.setConversion(data, mime='text/html', format=format)
-        return (mime, aq_base(data))
+        self.setConversion(data, mime=mime, format=format)
+        return (mime, data)
     elif format in ('txt', 'text'):
       try:
         return self.getConversion(format='txt')
       except KeyError:
+        mime = 'text/plain'
         data = self._convertToText()
-        self.setConversion(data, mime='text/plain', format='txt')
-        return (mime, aq_base(data))
+        self.setConversion(data, mime=mime, format='txt')
+        return (mime, data)
     else:
       return Image.convert(self, format, **kw)
 
