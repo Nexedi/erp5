@@ -99,15 +99,19 @@ class PDFDocument(Image, ConversionCacheMixin):
     Implementation of conversion for PDF files
     """
     if format == 'html':
-      if not self.hasConversion(format=format):
+      try:
+        return self.getConversion(format=format)
+      except KeyError:
         data = self._convertToHTML()
         self.setConversion(data, mime='text/html', format=format)
-      return self.getConversion(format=format)
+        return (mime, aq_base(data))
     elif format in ('txt', 'text'):
-      if not self.hasConversion(format='txt'):
+      try:
+        return self.getConversion(format='txt')
+      except KeyError:
         data = self._convertToText()
         self.setConversion(data, mime='text/plain', format='txt')
-      return self.getConversion(format='txt')
+        return (mime, aq_base(data))
     else:
       return Image.convert(self, format, **kw)
 
