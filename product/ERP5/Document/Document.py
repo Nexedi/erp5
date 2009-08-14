@@ -769,7 +769,7 @@ class Document(PermanentURLMixIn, XMLObject, UrlMixIn, ConversionCacheMixin, Sna
     catalog = getToolByName(self, 'portal_catalog', None)
     kw = dict(portal_type=self.getPortalType(),
                    reference=self.getReference(),
-                   order_by=(('version', 'descending', 'SIGNED'),)
+                   sort_on=(('version', 'descending', 'SIGNED'),)
                   )
     if version: kw['version'] = version
     if language: kw['language'] = language
