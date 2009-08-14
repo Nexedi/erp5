@@ -53,7 +53,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>return context.getMetaType() == \'ERP5 Text Document\'\n
+            <value> <string>return context.getMetaType() in (\'ERP5 Text Document\', \'ERP5 Image\', \'ERP5 PDF Document\')\n
 </string> </value>
         </item>
         <item>
