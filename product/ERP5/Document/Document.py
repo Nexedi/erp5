@@ -49,6 +49,7 @@ from Products.ERP5Type.Cache import getReadOnlyTransactionCache, DEFAULT_CACHE_S
 from Products.ERP5.Document.Url import UrlMixIn
 from Products.ERP5.Tool.ContributionTool import MAX_REPEAT
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
+from Products.ZSQLCatalog.SQLCatalog import SQLQuery
 from AccessControl import Unauthorized
 import zope.interface
 import string
@@ -852,7 +853,7 @@ class Document(PermanentURLMixIn, XMLObject, UrlMixIn, ConversionCacheMixin, Sna
       # Find all document with same (reference, version, language)
       kw = dict(portal_type=self.getPortalDocumentTypeList(),
                 reference=self.getReference(),
-                where_expression="validation_state NOT IN ('cancelled', 'deleted')")
+                where_expression=SQLQuery("validation_state NOT IN ('cancelled', 'deleted')"))
       if self.getVersion(): kw['version'] = self.getVersion()
       if self.getLanguage(): kw['language'] = self.getLanguage()
       document_list = catalog.unrestrictedSearchResults(**kw)

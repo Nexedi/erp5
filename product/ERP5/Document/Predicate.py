@@ -40,6 +40,7 @@ from Products.ERP5Type.Document import newTempBase
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.Utils import convertToUpperCase
 from Products.ERP5Type.Cache import getReadOnlyTransactionCache, enableReadOnlyTransactionCache, disableReadOnlyTransactionCache
+from Products.ZSQLCatalog.SQLCatalog import SQLQuery
 from Globals import PersistentMapping
 
 from zLOG import LOG
@@ -287,7 +288,7 @@ class Predicate(XMLObject, Folder):
                             multimembership_select_list)
 
     # Now merge identity and membership criteria
-    catalog_kw['where_expression'] = sql_text
+    catalog_kw['where_expression'] = SQLQuery(sql_text)
     sql_query = portal_catalog.buildSQLQuery(**catalog_kw)
     for alias, table in sql_query['from_table_list']:
       if from_table_dict.has_key(alias):
