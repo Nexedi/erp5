@@ -139,6 +139,10 @@ class ERP5GroupManager(BasePlugin):
           security_category_list = security_category_dict.setdefault(
                                             base_category_list, [])
           try:
+            # The called script may want to distinguish if it is called
+            # from here or from _updateLocalRolesOnSecurityGroups.
+            # Currently, passing portal_type='' (instead of 'Person')
+            # is the only way to make the difference.
             security_category_list.extend(
               method(base_category_list, user_name, person_object, '')
             )
