@@ -483,17 +483,18 @@ class Alarm(XMLObject, PeriodicityMixin):
                               'mime_type': 'text/plain'})
 
     notification_tool.sendMessage(recipient=candidate_list, 
-                subject='[%s] ERP5 Alarm Notification: %s' %
-                  (prefix, self.getTitle()),
+                subject='[%s][%s] Alarm Notification: %s' %
+                  (prefix, self.getPortalObject().getTitle(), self.getTitle()),
                 message="""
-Alarm Title: %s
+Alarm Title: %s (%s)
 
 Alarm Description:
 %s
 
-Alarm URL: %s
-""" % (self.getTitle(), self.getDescription(), self.absolute_url()),
-                                  attachment_list=attachment_list)
+Alarm Tool Node: %s
+""" % (self.getTitle(), self.getId(), self.getDescription(),
+       self.getPortalObject().portal_alarms.getAlarmNode()),
+                attachment_list=attachment_list)
 
   security.declareProtected(Permissions.ManagePortal, 'getLastActiveProcess')
   def getLastActiveProcess(self, include_active=False):
