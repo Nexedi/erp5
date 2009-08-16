@@ -38,7 +38,7 @@ class TestERP5Administration(InventoryAPITestCase):
     return "ERP5Administration"
 
   def getBusinessTemplateList(self):
-    """ 
+    """
         Same list as for Inventory API and add erp5_administration
     """
     return InventoryAPITestCase.getBusinessTemplateList(self) + ('erp5_administration',)
@@ -53,7 +53,7 @@ class TestERP5Administration(InventoryAPITestCase):
     alarm = portal.portal_alarms.check_stock
 
     def checkActiveProcess(failed):
-      transaction.get().commit()
+      transaction.commit()
       self.tic()
       self.assertEqual(alarm.getLastActiveProcess().ActiveProcess_sense(),
                        failed)
@@ -68,7 +68,7 @@ class TestERP5Administration(InventoryAPITestCase):
 
     alarm.setAlarmNotificationMode('never')
     mvt = self._makeMovement(quantity=1.23)
-    transaction.get().commit()
+    transaction.commit()
     self.tic()
     alarm.activeSense()
     checkActiveProcess(0)
