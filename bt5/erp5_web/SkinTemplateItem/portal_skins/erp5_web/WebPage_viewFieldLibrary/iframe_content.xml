@@ -126,7 +126,7 @@
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-python:\'<script type="text/javascript">addLoadEvent(resizeIFrameOnLoad)</script><iframe class="auto_height" style="border:none;width:100%%;height:600px" src="%s/asEntireHTML"></iframe>\' % here.absolute_url()
+python:\'<iframe class="auto_height" style="border:none;width:100%%;height:600px" src="%s/asEntireHTML" onload="resizeIFrameOnLoad()"></iframe>\' % here.absolute_url()
 
 ]]></string> </value>
         </item>
