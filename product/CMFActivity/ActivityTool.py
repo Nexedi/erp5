@@ -942,12 +942,9 @@ class ActivityTool (Folder, UniqueObject):
 
       try:
         #Sort activity list by priority
-        activity_list = activity_dict.values()
-        # Sort method must be local to access "self"
-        def cmpActivities(activity_1, activity_2):
-          return cmp(activity_1.getPriority(self), activity_2.getPriority(self))
-        activity_list.sort(cmpActivities)
-        
+        activity_list = sorted(activity_dict.itervalues(),
+                               key=lambda activity: activity.getPriority(self))
+
         # Wakeup each queue
         for activity in activity_list:
           activity.wakeup(inner_self, processing_node)
