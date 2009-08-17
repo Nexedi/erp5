@@ -60,6 +60,8 @@ and same rule which is children of Trade Model Rule """\n
 \n
 # search for normal movements\n
 kw[\'parent_specialise_portal_type\'] = \'Invoice Transaction Rule\'\n
+kw[\'grand_grand_parent_specialise_portal_type\'] = [\n
+                          \'Invoicing Rule\', \'Invoice Rule\']\n
 if context.Invoice_isAdvanced():\n
   kw[\'explanation_portal_type\']       = [\'%s Order\' % trade_type,\n
                                          \'%s Invoice\' % trade_type,\n
