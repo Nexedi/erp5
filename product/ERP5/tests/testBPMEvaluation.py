@@ -38,7 +38,8 @@ It is advised to *NOT* remove erp5_administration.
 
 TODOs:
   * avoid duplication of code when possible
-  * implement tests wisely, to support at least both BPM cases
+  * implement tests wisely, to support at least both BPM scenarios
+  * test for root rule (similarity) and deeper rules
 
 Scenarios to cover:
 
@@ -71,7 +72,7 @@ class TestBPMEvaluationMixin(TestBPMMixin):
     self._createNodes()
     self._createBusinessProcess()
     self._createTradeCondition()
-    self._createOrder()
+    self._createRootDocument()
     self.stepTic()
 
   def _createDocument(self, portal_type, **kw):
@@ -89,8 +90,9 @@ class TestBPMEvaluationMixin(TestBPMMixin):
         self.trade_condition_portal_type,
         specialise_value=self.business_process, **kw)
 
-  def _createOrderLine(self, **kw):
-    return self.order.newContent(portal_type=self.order_line_portal_type, **kw)
+  def _createRootDocumentLine(self, **kw):
+    return self.root_document.newContent(
+        portal_type=self.root_document_line_portal_type, **kw)
 
   def _createNodes(self):
     self.source, self.source_section = self._createNode(), self._createNode()
@@ -105,8 +107,8 @@ class TestBPMEvaluationMixin(TestBPMMixin):
         title=state_name)
       setattr(self,'%s_state' % state_name, state_document)
 
-  def _createOrder(self):
-    self.order = self._createDocument(self.order_portal_type,
+  def _createRootDocument(self):
+    self.root_document = self._createDocument(self.root_document_portal_type,
         source_value = self.source,
         source_section_value = self.source_section,
         destination_value = self.destination,
@@ -115,19 +117,19 @@ class TestBPMEvaluationMixin(TestBPMMixin):
         stop_date = self.order_stop_date,
         specialise_value = self.trade_condition)
 
-  def _checkBPMSimulation(self, delivery, root_applied_rule_portal_type):
+  def _checkBPMSimulation(self):
     """Checks BPM related simumation.
 
     Note: Simulation tree is the same, it is totally independent from
     BPM sequence"""
     # TODO:
     #  - gather errors into one list
-    bpm_root_rule = delivery.getCausalityRelatedValue(
+    bpm_root_rule = self.root_document.getCausalityRelatedValue(
         portal_type='Applied Rule')
     self.assertEqual(bpm_root_rule.getSpecialiseValue().getPortalType(),
-        root_applied_rule_portal_type)
+        self.root_rule_portal_type)
     root_simulation_movement_list = bpm_root_rule.contentValues()
-    self.assertEqual(len(delivery.getMovementList()),
+    self.assertEqual(len(self.root_document.getMovementList()),
       len(root_simulation_movement_list))
     for root_simulation_movement in root_simulation_movement_list:
       self.assertEqual(root_simulation_movement.getPortalType(),
@@ -160,15 +162,15 @@ class TestBPMEvaluationMixin(TestBPMMixin):
           for property in 'resource', 'price', 'quantity', 'start_date', \
             'stop_date', 'source', 'destination', 'source_section', \
             'destination_section':
-            if movement.getProperty(property) != invoicing_simulation_movement \
-                .getProperty(property):
+            if movement.getProperty(property) != \
+                invoicing_simulation_movement.getProperty(property):
               property_problem_list.append('property %s movement %s '
                   'simulation %s' % (property, movement.getProperty(property),
                     invoicing_simulation_movement.getProperty(property)))
           if len(property_problem_list) > 0:
             self.fail('\n'.join(property_problem_list))
-          self.assertEquals(len(invoicing_simulation_movement.contentValues()),
-              1)
+          self.assertEquals(
+              len(invoicing_simulation_movement.contentValues()), 1)
           for trade_model_rule in invoicing_simulation_movement \
               .contentValues():
             self.assertEqual(trade_model_rule.getPortalType(), 'Applied Rule')
@@ -176,9 +178,6 @@ class TestBPMEvaluationMixin(TestBPMMixin):
                 .getPortalType(), 'Trade Model Rule')
             self.assertSameSet(trade_model_rule.contentValues(
               portal_type='Simulation Movement'), [])
-
-  def _checkOrderBPMSimulation(self):
-    self._checkBPMSimulation(self.order, 'BPM Order Rule')
 
 class TestBPMEvaluationDefaultProcessMixin:
   def _createBusinessProcess(self):
@@ -254,158 +253,164 @@ class TestBPMEvaluationDifferentProcessMixin:
 
     self.stepTic()
 
-class TestOrder(TestBPMEvaluationMixin):
-  """Evaluation of BPM Sale Order system"""
-
-  def test_planning(self):
-    self.order_line = self._createOrderLine(resource_value = self._createProduct(),
-        quantity = 10, price = 5)
+class GenericRuleTestsMixin:
+  """Tests which are generic for BPM Order, Delivery and Invoice Rule"""
+  def test_transition(self):
+    self.order_line = self._createRootDocumentLine(
+      resource_value = self._createProduct(), quantity = 10, price = 5)
     self.stepTic()
 
-    self.order.plan()
+    self._doFirstTransition(self.root_document)
     self.stepTic()
-    self._checkOrderBPMSimulation()
+    self._checkBPMSimulation()
 
-  def test_planning_line_edit(self):
-    self.test_planning()
+  def test_transition_line_edit(self):
+    self.test_transition()
     self.order_line.edit(quantity = 8, price = 6)
     self.stepTic()
-    self._checkOrderBPMSimulation()
+    self._checkBPMSimulation()
 
-  def test_planning_line_edit_add(self):
-    self.test_planning_line_edit()
-    self.order_line_2 = self._createOrderLine(
+  def test_transition_line_edit_add(self):
+    self.test_transition_line_edit()
+    self.order_line_2 = self._createRootDocumentLine(
         resource_value = self._createProduct(), quantity = 4, price = 2)
     self.stepTic()
-    self._checkOrderBPMSimulation()
+    self._checkBPMSimulation()
 
-  def test_planning_line_edit_add_many_transactions(self):
-    self.test_planning_line_edit()
-    self.order_line_9 = self._createOrderLine()
+  def test_transition_line_edit_add_many_transactions(self):
+    self.test_transition_line_edit()
+    self.order_line_9 = self._createRootDocumentLine()
     self.stepTic()
-    self._checkOrderBPMSimulation()
+    self._checkBPMSimulation()
 
     self.order_line_9.edit(resource_value = self._createProduct())
     self.stepTic()
-    self._checkOrderBPMSimulation()
+    self._checkBPMSimulation()
 
     self.order_line_9.edit(quantity = 1)
     self.stepTic()
-    self._checkOrderBPMSimulation()
+    self._checkBPMSimulation()
 
     self.order_line_9.edit(price = 33)
     self.stepTic()
-    self._checkOrderBPMSimulation()
+    self._checkBPMSimulation()
 
     self.order_line_9.edit(resource_value = self._createProduct())
     self.stepTic()
-    self._checkOrderBPMSimulation()
+    self._checkBPMSimulation()
 
-  def test_planning_line_edit_add_same_resource(self):
-    self.test_planning_line_edit()
+  def test_transition_line_edit_add_same_resource(self):
+    self.test_transition_line_edit()
     resource = self.order_line.getResourceValue()
-    self.order_line_10 = self._createOrderLine(resource_value = resource,
-        quantity = 9, price = 2)
+    self.order_line_10 = self._createRootDocumentLine(
+      resource_value = resource, quantity = 9, price = 2)
     self.stepTic()
-    self._checkOrderBPMSimulation()
+    self._checkBPMSimulation()
 
-  def test_planning_line_edit_add_same_resource_than_order(self):
-    self.test_planning_line_edit_add_same_resource()
-    self.order.order()
+  def test_transition_line_edit_add_same_resource_edit_again(self):
+    self.test_transition_line_edit_add_same_resource()
+
+    self.root_document.edit(title = self.root_document.getTitle() + 'a' )
     self.stepTic()
-    self._checkOrderBPMSimulation()
+    self._checkBPMSimulation()
 
-class TestPackingList(TestBPMEvaluationMixin):
-  """Evaluation of BPM Order to Packing List"""
-  packing_list_start_date = TestBPMEvaluationMixin.order_start_date
-  packing_list_stop_date = TestBPMEvaluationMixin.order_stop_date
+class TestOrder(TestBPMEvaluationMixin, GenericRuleTestsMixin):
+  """Check BPM Order Rule behaviour"""
+  root_document_portal_type = 'Sale Order'
+  root_document_line_portal_type = 'Sale Order Line'
+  root_rule_portal_type = 'BPM Order Rule'
 
-  def _createPackingListLine(self, **kw):
-    return self.packing_list.newContent(
-        portal_type=self.packing_list_line_portal_type, **kw)
+  def _doFirstTransition(self, document):
+    document.plan()
 
-  def _createPackingList(self):
-    self.packing_list = self._createDocument(self.packing_list_portal_type,
-        source_value = self.source,
-        source_section_value = self.source_section,
-        destination_value = self.destination,
-        destination_section_value = self.destination_section,
-        start_date = self.packing_list_start_date,
-        stop_date = self.packing_list_stop_date,
-        specialise_value = self.trade_condition)
-
-  def _checkPackingListBPMSimulation(self):
-    self._checkBPMSimulation(self.packing_list, 'BPM Delivery Rule')
-
-  def test_confirming_packing_list_only(self):
-    self._createPackingList()
-    self.packing_list_line = self._createPackingListLine(
-        resource_value = self._createProduct(), quantity = 10, price = 5)
-    self.stepTic()
-
-    self.packing_list.confirm()
-    self.stepTic()
-    self._checkPackingListBPMSimulation()
-
-class TestInvoice(TestBPMEvaluationMixin):
-  """Evaluation of BPM Order through Packing List to Invoice Transaction"""
-  pass
-
-class TestOrderDefaultProcess(TestOrder, TestBPMEvaluationDefaultProcessMixin):
-  pass
-
-class TestPackingListDefaultProcess(TestPackingList, TestBPMEvaluationDefaultProcessMixin):
-  pass
-
-class TestInvoiceDefaultProcess(TestInvoice, TestBPMEvaluationDefaultProcessMixin):
   def test_confirming(self):
-    self.order_line = self._createOrderLine(resource_value = self._createProduct(),
-        quantity = 10, price = 5)
+    self.order_line = self._createRootDocumentLine(
+      resource_value = self._createProduct(), quantity = 10, price = 5)
     self.stepTic()
 
-    self.order.confirm()
+    self.root_document.confirm()
     self.stepTic()
-    self._checkOrderBPMSimulation()
+    self._checkBPMSimulation()
     self.assertEqual(
-      1,
-      len(self.order.getCausalityRelatedList(
-        portal_type=self.packing_list_portal_type))
+      2,
+      len(self.root_document.getCausalityRelatedList())
+    )
+    self.assertEqual(
+      'Applied Rule',
+      self.root_document.getCausalityRelatedValue(
+        portal_type='Applied Rule').getPortalType()
     )
 
+    self.assertEqual(
+      self.packing_list_portal_type,
+      self.root_document.getCausalityRelatedValue(
+        portal_type=self.packing_list_portal_type).getPortalType()
+    )
 
-class TestOrderDifferentProcess(TestOrder, TestBPMEvaluationDifferentProcessMixin):
+class TestPackingList(TestBPMEvaluationMixin, GenericRuleTestsMixin):
+  """Check BPM Delivery Rule behaviour"""
+  root_document_portal_type = 'Sale Packing List'
+  root_document_line_portal_type = 'Sale Packing List Line'
+  root_rule_portal_type = 'BPM Delivery Rule'
+
+  def _doFirstTransition(self, document):
+    document.confirm()
+
+class TestInvoice(TestBPMEvaluationMixin, GenericRuleTestsMixin):
+  """Check BPM Invoice Rule behaviour"""
+  # not implemented yet
+  pass
+
+class TestOrderDefaultProcess(TestOrder,
+    TestBPMEvaluationDefaultProcessMixin):
+  pass
+
+class TestPackingListDefaultProcess(TestPackingList,
+    TestBPMEvaluationDefaultProcessMixin):
+  pass
+
+class TestInvoiceDefaultProcess(TestInvoice,
+    TestBPMEvaluationDefaultProcessMixin):
+  pass
+
+class TestOrderDifferentProcess(TestOrder,
+    TestBPMEvaluationDifferentProcessMixin):
   def test_confirming(self):
     # in current BPM configuration nothing shall be built
     # as soon as test business process will be finished, it shall built proper
     # delivery
-    self.order_line = self._createOrderLine(resource_value = self._createProduct(),
-        quantity = 10, price = 5)
+    self.order_line = self._createRootDocumentLine(
+      resource_value = self._createProduct(), quantity = 10, price = 5)
     self.stepTic()
 
-    self.order.confirm()
+    self.root_document.confirm()
     self.stepTic()
-    self._checkOrderBPMSimulation()
+    self._checkBPMSimulation()
     self.assertEqual(
       1,
-      len(self.order.getCausalityRelatedList())
+      len(self.root_document.getCausalityRelatedList())
     )
     self.assertEqual(
       'Applied Rule',
-      self.order.getCausalityRelatedValue().getPortalType()
+      self.root_document.getCausalityRelatedValue().getPortalType()
     )
 
-class TestPackingListDifferentProcess(TestPackingList, TestBPMEvaluationDifferentProcessMixin):
+class TestPackingListDifferentProcess(TestPackingList,
+    TestBPMEvaluationDifferentProcessMixin):
   pass
 
-class TestInvoiceDifferentProcess(TestInvoice, TestBPMEvaluationDifferentProcessMixin):
+class TestInvoiceDifferentProcess(TestInvoice,
+    TestBPMEvaluationDifferentProcessMixin):
   pass
 
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestOrderDefaultProcess))
   suite.addTest(unittest.makeSuite(TestPackingListDefaultProcess))
-  suite.addTest(unittest.makeSuite(TestInvoiceDefaultProcess))
+#  suite.addTest(unittest.makeSuite(TestInvoiceDefaultProcess))
+
   suite.addTest(unittest.makeSuite(TestOrderDifferentProcess))
   suite.addTest(unittest.makeSuite(TestPackingListDifferentProcess))
-  suite.addTest(unittest.makeSuite(TestInvoiceDifferentProcess))
+#  suite.addTest(unittest.makeSuite(TestInvoiceDifferentProcess))
+
   return suite
