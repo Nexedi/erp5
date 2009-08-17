@@ -349,7 +349,11 @@ class FolderMixIn(ExtensionClass.Base):
     specified case (eg. web_site_module/site/fr/web_page_module), we
     call aq_parent instead to reach the Web Site.
     """
-    return aq_parent(self).getWebSiteValue()
+    getWebSiteValue = getattr(aq_parent(self), 'getWebSiteValue', None)
+    if getWebSiteValue is not None:
+      return getWebSiteValue()
+    else:
+      return None
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getWebSectionValue')
@@ -359,7 +363,11 @@ class FolderMixIn(ExtensionClass.Base):
     specified case (eg. web_site_module/site/fr/section/web_page_module),
     we call aq_parent instead to reach the Web Section.
     """
-    return aq_parent(self).getWebSectionValue()
+    getWebSectionValue = getattr(aq_parent(self), 'getWebSectionValue', None)
+    if getWebSectionValue is not None:
+      return getWebSectionValue()
+    else:
+      return None
 
 BTREE_HANDLER = 1
 HBTREE_HANDLER = 2
