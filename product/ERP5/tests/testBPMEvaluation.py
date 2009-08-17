@@ -39,6 +39,12 @@ It is advised to *NOT* remove erp5_administration.
 TODOs:
   * avoid duplication of code when possible
   * implement tests wisely, to support at least both BPM cases
+
+Scenarios to cover:
+
+  * unify root rules (BPMOrderRule, BPMDeliveryRule, etc) tests - they share
+    a lot of code
+  * test case of splitting for root rules
 """
 import unittest
 
@@ -304,9 +310,6 @@ class TestOrder(TestBPMEvaluationMixin):
     self._checkOrderBPMSimulation()
 
   def test_planning_line_edit_add_same_resource_than_order(self):
-    # TODO: this test fails because BPMOrderRule do not matches movement using
-    # order link, this have to be done in similar way like OrderRule and
-    # DeliveryRule work
     self.test_planning_line_edit_add_same_resource()
     self.order.order()
     self.stepTic()

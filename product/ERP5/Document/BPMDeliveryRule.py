@@ -38,8 +38,6 @@ class BPMDeliveryRule(BPMRule):
     DISCLAIMER: Refer to BPMRule docstring disclaimer.
 
     This is BPM enabled Delivery Rule.
-
-    FIXME: override _getCompensatedMovementList to match per order link
   """
 
   # CMF Type Definition
@@ -64,7 +62,7 @@ class BPMDeliveryRule(BPMRule):
       business_path, current_property_dict):
     """Delivery specific update dict"""
     return {
-      'order_value': movement,
-      'delivery_value': movement,
+      'order_list': [movement.getRelativeUrl()],
+      'delivery_list': [movement.getRelativeUrl()],
       'deliverable': 1,
     }

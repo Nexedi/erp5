@@ -38,8 +38,6 @@ class BPMOrderRule(BPMDeliveryRule):
     DISCLAIMER: Refer to BPMRule docstring disclaimer.
 
     This is BPM enabled Order Rule.
-
-    FIXME: override _getCompensatedMovementList to match per order link
   """
   # CMF Type Definition
   meta_type = 'ERP5 BPM Order Rule'
@@ -63,6 +61,6 @@ class BPMOrderRule(BPMDeliveryRule):
       business_path, current_property_dict):
     """Order rule specific update dictionary"""
     return {
-      'order_value': movement,
+      'order_list': [movement.getRelativeUrl()],
       'deliverable': 1,
     }

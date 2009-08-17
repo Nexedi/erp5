@@ -260,11 +260,17 @@ class BPMRule(Predicate, XMLObject):
     for prevision in prevision_list:
       p_matched_list = []
       for movement in non_matched_list:
-        for prop in self.getMatchingPropertyList():
-          if prevision.get(prop) != movement.getProperty(prop):
-            break
+        if 'order_list' in prevision:
+          # applied rule is root, use order link to find movement
+          if movement.getOrder() ==  prevision.get('order_list', [''])[0]:
+            p_matched_list.append(movement)
         else:
-          p_matched_list.append(movement)
+          # applied rule is not root one, match
+          for prop in self.getMatchingPropertyList():
+            if prevision.get(prop) != movement.getProperty(prop):
+              break
+          else:
+            p_matched_list.append(movement)
 
       # Movements exist, we'll try to make them match the prevision
       if p_matched_list != []:
