@@ -125,7 +125,7 @@ return context.getPortalObject().SaleOrder_getShoppingCartDefaultCurrency().getS
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Get default currency symbole for shop</string> </value>
+            <value> <string>Get default Currency symbol for Shopping Cart</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

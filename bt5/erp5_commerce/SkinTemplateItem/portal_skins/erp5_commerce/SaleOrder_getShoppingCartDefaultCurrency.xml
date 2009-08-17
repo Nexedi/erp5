@@ -125,7 +125,7 @@ return context.getPortalObject().restrictedTraverse(\'currency_module/EUR\')\n
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Get default currency for shop</string> </value>
+            <value> <string>Get default Currency for Shopping Cart</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

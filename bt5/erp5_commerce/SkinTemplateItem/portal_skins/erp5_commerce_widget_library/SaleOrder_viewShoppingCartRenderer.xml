@@ -49,7 +49,7 @@
     <span tal:replace="python: here.Base_translateString(\'My shopping cart\')"/>\n
   </h2>\n
   <tal:block tal:condition = "empty_cart"> \n
-    <h3><span tal:replace="python: here.Base_translateString(\'You shopping cart is empty.\')"/></h3>\n
+    <h3><span tal:replace="python: here.Base_translateString(\'Your shopping cart is empty.\')"/></h3>\n
   </tal:block>\n
 \n
   <tal:block tal:condition = "not: empty_cart">\n
@@ -174,7 +174,7 @@
       </tal:block>\n
     </p>\n
     <p tal:condition="python: tax_info is None">\n
-      <span tal:replace="python: here.Base_translateString(\'No taxe are applicable for your region.\')"></span>\n
+      <span tal:replace="python: here.Base_translateString(\'There are no applicable tax for your region.\')"></span>\n
     </p>\n
   </tal:block>\n
   </div>\n

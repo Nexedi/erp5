@@ -72,7 +72,7 @@ else:\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>include_shipping = False</string> </value>
+            <value> <string>include_shipping=False</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
