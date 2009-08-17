@@ -29,13 +29,24 @@
 
 class DeliverySolver:
   """
-    DeliverySolver copies new target values of a delivery
-    into values of simulation movements / delivery.
+    Delivery solver is used to have control of how quantity property is
+    accepted into simulation.
+
+    Delivery solver is only used for quantity property.
+
+    Delivery solver is working on movement's quantity and related simulation
+    movements' quantities.
+
+    Can be used to:
+
+     * distribute
+     * queue (FIFO, FILO, ...)
+     * etc
   """
 
   def __init__(self, simulation_tool=None, **kw):
     """
-      Creates
+      Initialisation
     """
     self.simulation_tool = simulation_tool
     self.__dict__.update(kw)
@@ -44,11 +55,13 @@ class DeliverySolver:
     """
       Solves a delivery movement
     """
+    raise NotImplementedError
 
   def solveDelivery(self, delivery):
     """
       Solves the delivery itself
     """
-    # Default method is to adopt target dates
-    delivery.setStartDate(delivery.getTargetStartDate())
-    delivery.setStopDate(delivery.getTargetStopDate())
+    result_list = []
+    for movement in delivery.getMovementList():
+      result_list.append(self.solveMovement(movement))
+    return result_list
