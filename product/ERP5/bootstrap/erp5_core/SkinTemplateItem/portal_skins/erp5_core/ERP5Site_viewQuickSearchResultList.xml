@@ -72,7 +72,8 @@ if getWebSectionValue is not None and \\\n
   search_context = getWebSectionValue()\n
   if list_style is None:\n
     kw.update({\'list_style\':\'search\'})\n
-else:\n
+\n
+if search_context is None:\n
   search_context = context.getPortalObject()\n
 \n
 return search_context.Base_redirect(\'ERP5Site_viewSearchResult\', keep_items=kw)\n
