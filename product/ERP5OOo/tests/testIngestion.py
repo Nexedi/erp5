@@ -41,7 +41,6 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.ERP5Type.tests.utils import FileUpload
 from Products.ERP5OOo.Document.OOoDocument import ConversionError
-from Products.ERP5.Document.File import _unpackData
 from zLOG import LOG, INFO, ERROR
 
 # Define the conversion server host
@@ -725,7 +724,7 @@ class TestIngestion(ERP5TypeTestCase):
     context = self.getDocument('one')
     newcontent = context.getBaseData()
     cs = cStringIO.StringIO()
-    cs.write(_unpackData(newcontent))
+    cs.write(str(newcontent))
     z = zipfile.ZipFile(cs)
     s = z.read('meta.xml')
     xmlob = parseString(s)

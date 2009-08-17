@@ -1,6 +1,5 @@
 from Products.PortalTransforms.interfaces import itransform
 from oood_commandtransform import OOOdCommandTransform, OOoDocumentDataStream
-from Products.ERP5.Document.File import _unpackData
 from zLOG import LOG
 
 
@@ -26,7 +25,7 @@ class OdtToDoc:
     raise AttributeError(attr)
 
   def convert(self, orig, data, cache=None, filename=None, context=None, **kwargs):
-    data = _unpackData(orig)
+    data = str(orig)
     doc = OOOdCommandTransform(context, filename, data, self.inputs[0])
     doc.convert()
     msword = doc.convertTo('doc')
