@@ -27,7 +27,7 @@
 #
 ##############################################################################
 
-import fnmatch, os, re, shutil, sys
+import fnmatch, imp, os, re, shutil, sys
 from Shared.DC.ZRDB.Connection import Connection as RDBConnection
 from Globals import Persistent, PersistentMapping
 from Acquisition import Implicit, aq_base
@@ -57,7 +57,7 @@ from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.RoleInformation import RoleInformation
 from OFS.Traversable import NotFound
-from OFS import XMLExportImport
+from OFS import SimpleItem, XMLExportImport
 from cStringIO import StringIO
 from copy import deepcopy
 from zExceptions import BadRequest
@@ -5245,8 +5245,26 @@ Business Template is a set of definitions, such as skins, portal types and categ
           CatalogLocalRoleKeyTemplateItem(
                self.getTemplateCatalogLocalRoleKeyList())
 
+      # Create temporary modules/classes for classes defined by this BT.
+      # This is required if the BT contains instances of one of these classes.
+      module_id_list = []
+      for template_type in ('Constraint', 'Document', 'PropertySheet'):
+        for template_id in getattr(self,
+                                   'getTemplate%sIdList' % template_type)():
+          module_id = 'Products.ERP5Type.%s.%s' % (template_type, template_id)
+          if module_id not in sys.modules:
+            module_id_list.append(module_id)
+            sys.modules[module_id] = module = imp.new_module(module_id)
+            module.SimpleItem = SimpleItem.SimpleItem
+            exec "class %s(SimpleItem): pass" % template_id in module.__dict__
+
       for item_name in self._item_name_list:
         getattr(self, item_name).importFile(bta)
+
+      # Remove temporary modules created above to allow import of real modules
+      # (during the installation).
+      for module_id in module_id_list:
+        del sys.modules[module_id]
 
     def getItemsList(self):
       """Return list of items in business template
