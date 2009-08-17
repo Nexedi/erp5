@@ -38,6 +38,8 @@ class BPMDeliveryRule(BPMRule):
     DISCLAIMER: Refer to BPMRule docstring disclaimer.
 
     This is BPM enabled Delivery Rule.
+
+    FIXME: override _getCompensatedMovementList to match per order link
   """
 
   # CMF Type Definition

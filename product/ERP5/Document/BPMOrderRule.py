@@ -38,6 +38,8 @@ class BPMOrderRule(BPMDeliveryRule):
     DISCLAIMER: Refer to BPMRule docstring disclaimer.
 
     This is BPM enabled Order Rule.
+
+    FIXME: override _getCompensatedMovementList to match per order link
   """
   # CMF Type Definition
   meta_type = 'ERP5 BPM Order Rule'
