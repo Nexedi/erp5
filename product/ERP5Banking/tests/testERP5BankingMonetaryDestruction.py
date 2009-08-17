@@ -122,13 +122,13 @@ class TestERP5BankingMonetaryDestruction(TestERP5BankingMixin, ERP5TypeTestCase)
     inventory_dict_line_1 = {'id' : 'inventory_line_1',
                              'resource': self.billet_10000,
                              'variation_id': ('emission_letter', 'cash_status', 'variation'),
-                             'variation_value': ('emission_letter/p', 'cash_status/cancelled') + self.variation_list,
+                             'variation_value': ('emission_letter/p', 'cash_status/retired') + self.variation_list,
                              'quantity': self.quantity_10000}
     
     inventory_dict_line_2 = {'id' : 'inventory_line_2',
                              'resource': self.billet_5000,
                              'variation_id': ('emission_letter', 'cash_status', 'variation'),
-                             'variation_value': ('emission_letter/p', 'cash_status/cancelled') + self.variation_list,
+                             'variation_value': ('emission_letter/p', 'cash_status/retired') + self.variation_list,
                              'quantity': self.quantity_5000}
     
     inventory_dict_line_for_externe_1 = {'id' : 'inventory_line_1',
@@ -335,7 +335,7 @@ class TestERP5BankingMonetaryDestruction(TestERP5BankingMixin, ERP5TypeTestCase)
     """
     # create the monetary destruction line
     self.addCashLineToDelivery(self.monetary_destruction, 'valid_line_1', 'Monetary Destruction Line', self.billet_10000,
-            ('emission_letter', 'cash_status', 'variation'), ('emission_letter/p', 'cash_status/cancelled') + self.variation_list,
+            ('emission_letter', 'cash_status', 'variation'), ('emission_letter/p', 'cash_status/retired') + self.variation_list,
             self.quantity_10000)
     # execute tic
     self.stepTic()
@@ -356,7 +356,7 @@ class TestERP5BankingMonetaryDestruction(TestERP5BankingMixin, ERP5TypeTestCase)
     # now check for each variation (years 1992 and 2003)
     for variation in self.variation_list:
       # get the delivery cell
-      cell = self.valid_line_1.getCell('emission_letter/p', variation, 'cash_status/cancelled')
+      cell = self.valid_line_1.getCell('emission_letter/p', variation, 'cash_status/retired')
       # chek portal types
       self.assertEqual(cell.getPortalType(), 'Monetary Destruction Cell')
       # check the banknote of the cell is banknote of 10000
@@ -478,7 +478,7 @@ class TestERP5BankingMonetaryDestruction(TestERP5BankingMixin, ERP5TypeTestCase)
     """
     # create the line
     self.addCashLineToDelivery(self.monetary_destruction, 'valid_line_2', 'Monetary Destruction Line', self.billet_5000,
-            ('emission_letter', 'cash_status', 'variation'), ('emission_letter/p', 'cash_status/cancelled') + self.variation_list,
+            ('emission_letter', 'cash_status', 'variation'), ('emission_letter/p', 'cash_status/retired') + self.variation_list,
             self.quantity_5000)
     # execute tic
     self.stepTic()
@@ -498,7 +498,7 @@ class TestERP5BankingMonetaryDestruction(TestERP5BankingMixin, ERP5TypeTestCase)
     self.assertEqual(len(self.valid_line_2.objectValues()), 2)
     for variation in self.variation_list:
       # get the delivery  cell
-      cell = self.valid_line_2.getCell('emission_letter/p', variation, 'cash_status/cancelled')
+      cell = self.valid_line_2.getCell('emission_letter/p', variation, 'cash_status/retired')
       # check the portal type
       self.assertEqual(cell.getPortalType(), 'Monetary Destruction Cell')
       if cell.getId() == 'movement_0_0_0':
