@@ -28,7 +28,8 @@
 import tempfile, os, cStringIO
 
 from AccessControl import ClassSecurityInfo
-from Products.CMFCore.utils import getToolByName
+from Products.CMFCore.utils import getToolByName, _setCacheHeaders,\
+    _ViewEmulator
 
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
 from Products.ERP5Type.Cache import CachingMethod
@@ -79,7 +80,14 @@ class PDFDocument(Image, ConversionCacheMixin):
       it is always a zip because multi-page pdfs are converted into a zip
       file of many images
     """
-    if format is None:
+    _setCacheHeaders(_ViewEmulator().__of__(self), {'format' : format})
+    if format is '':
+      if self.getSourceReference() is not None:
+        filename = self.getSourceReference()
+      else:
+        filename = self.getId()
+      RESPONSE.setHeader('Content-Disposition',
+                         'attachment; filename="%s"' % filename)
       RESPONSE.setHeader('Content-Type', 'application/pdf')
       return str(self.data)
     if format in ('html', 'txt', 'text'):
