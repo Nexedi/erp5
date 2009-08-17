@@ -85,7 +85,6 @@ class TestCommerce(ERP5TypeTestCase):
   SaleOrder_getSelectedShippingResource
   SaleOrder_isShippingRequired
   SaleOrder_paymentRedirect
-  SaleOrder_getShoppingCartDefaultCurrencySymbol
   WebSection_checkPaypalIdentification
   WebSection_checkoutProcedure
   WebSection_doPaypalPayment
@@ -115,6 +114,7 @@ class TestCommerce(ERP5TypeTestCase):
                                                  id='EUR')
     currency.setTitle('EUR')
     currency.setReference('EUR')
+    currency.setShortTitle('€')
     currency.setBaseUnitQuantity(0.01)
 
     # create product, set price & currency
@@ -481,10 +481,10 @@ class TestCommerce(ERP5TypeTestCase):
 
     shopping_cart = portal.SaleOrder_getShoppingCart()
     shipping_url = shipping.getRelativeUrl()
-    portal.SaleOrder_editShoppingCart(field_my_shipping_method=shipping_url)
     
-    # increase shopping item number
-    portal.SaleOrder_editShoppingCart((2, 1,))
+    # increase shopping item number and set shipping
+    portal.SaleOrder_editShoppingCart(field_my_buy_quantity=(2, 1,),
+                                      field_my_shipping_method=shipping_url)
     
     # test price calculation without shipping and without taxes
     self.assertEquals((10.0*2 + 20.0*1)*1.0, \
@@ -782,7 +782,10 @@ class TestCommerce(ERP5TypeTestCase):
 
   def test_17_getShoppingCartDefaultCurrency(self, quiet=0, run=run_all_test):
     """
-      Test the SaleOrder_getShoppingCartDefaultCurrency script
+      Testing the scripts:
+      - SaleOrder_getShoppingCartDefaultCurrency
+      - SaleOrder_getShoppingCartDefaultCurrencyCode
+      - SaleOrder_getShoppingCartDefaultCurrencySymbol
     """
     if not run:
       return
@@ -793,7 +796,16 @@ class TestCommerce(ERP5TypeTestCase):
 
     portal = self.getPortal()
     currency = portal.restrictedTraverse('currency_module/EUR')
-    self.assertEquals(currency, portal.SaleOrder_getShoppingCartDefaultCurrency())
+    self.assertEquals(currency, 
+                        portal.SaleOrder_getShoppingCartDefaultCurrency())
+    
+    currency_code = currency.getReference()
+    self.assertEquals(currency_code, 
+                       portal.SaleOrder_getShoppingCartDefaultCurrencyCode())
+
+    currency_symbol = currency.getShortTitle()
+    self.assertEquals(currency_symbol,
+                     portal.SaleOrder_getShoppingCartDefaultCurrencySymbol())
 
     
   def test_18_webSiteInitialisation(self, quiet=0, run=run_all_test):
@@ -916,7 +928,72 @@ class TestCommerce(ERP5TypeTestCase):
     self.tic()
 
     self.assertEquals(12, len(web_site.products.WebSection_getProductList()))
-    
+
+  def test_21_editShoppingCardWithABlankShippingMethod(self,
+                                                       quiet=0,
+                                                       run=run_all_test):
+    """
+      This test must make sure that you can edit the shopping cart selecting a
+      blank shipping method and it will not break.
+    """
+    if not run:
+      return
+    if not quiet:
+      message = '\nTest edit the Shopping Cart with blank shipping method.'
+      ZopeTestCase._print(message)
+      LOG('Testing... ', 0, message)
+
+    portal = self.getPortal()
+    request = self.app.REQUEST
+    default_product = self.getDefaultProduct()
+    request.set('session_id', SESSION_ID)
+    portal.Resource_addToShoppingCart(default_product, 1)
+
+    shopping_cart = portal.SaleOrder_getShoppingCart()
+
+    self.assertFalse(hasattr(shopping_cart, 'shipping_method'))
+
+    portal.SaleOrder_editShoppingCart(field_my_shipping_method='')
+    portal.SaleOrder_editShoppingCart(field_my_shipping_method=None)
+
+    # add shipping
+    shipping = self.getDefaultProduct('3')
+    portal.SaleOrder_editShoppingCart(field_my_shipping_method=shipping.getRelativeUrl())
+
+    self.assertTrue(hasattr(shopping_cart, 'shipping_method'))
+
+
+  def test_22_editShoppingCardWithShippingMethodWithoutPrice(self,
+                                                       quiet=0,
+                                                       run=run_all_test):
+    """
+      This test must make sure that you can not edit the shopping cart 
+      selecting a shipping method without price.
+    """
+    if not run:
+      return
+    if not quiet:
+      message = '\nTest edit the Cart with shipping method without price.'
+      ZopeTestCase._print(message)
+      LOG('Testing... ', 0, message)
+
+    portal = self.getPortal()
+    request = self.app.REQUEST
+    default_product = self.getDefaultProduct()
+    request.set('session_id', SESSION_ID)
+    portal.Resource_addToShoppingCart(default_product, 1)
+
+    shopping_cart = portal.SaleOrder_getShoppingCart()
+
+    # add shipping
+    shipping = self.getDefaultProduct('3')
+    shipping.setBasePrice(None) 
+    portal.SaleOrder_editShoppingCart(field_my_shipping_method=shipping.getRelativeUrl())
+    self.assertEquals(10.0, \
+          float(shopping_cart.SaleOrder_getShoppingCartTotalPrice(include_shipping=True)))
+    shipping.setBasePrice(10.0) 
+
+
 import unittest
 def test_suite():
   suite = unittest.TestSuite()
