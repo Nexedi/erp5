@@ -202,36 +202,40 @@ request = context.REQUEST\n
 translateString = context.Base_translateString \n
 quantity = field_my_buy_quantity\n
 shipping_method =  field_my_shipping_method\n
-shopping_cart_items = context.SaleOrder_getShoppingCartItemList(include_shipping = True)\n
+shopping_cart_items = context.SaleOrder_getShoppingCartItemList(include_shipping=True)\n
 shopping_cart_products_items = filter(lambda x: x.getId()!=\'shipping_method\', shopping_cart_items)\n
 shopping_cart = context.SaleOrder_getShoppingCart()\n
 \n
 # handle change in quantity for shopping items\n
 if quantity is not None:\n
-  ## when we have one item in shoppping cart we get \n
-  ## quantity as a string rather as a list\n
+  # when we have one item in shoppping cart we get \n
+  # quantity as a string rather as a list\n
   if isinstance(quantity, str):\n
     quantity = [quantity]\n
+\n
   counter = 0\n
   for order_line in shopping_cart_products_items:\n
     new_quantity = int(quantity[counter])\n
     if new_quantity>=1:\n
       order_line.setQuantity(new_quantity)\n
     else:\n
-      ## remove it from shopping cart\n
+      # remove it from shopping cart\n
       shopping_cart.manage_delObjects(order_line.getId())\n
     counter += 1\n
 \n
-## handle shipping\n
-if shipping_method is not None:\n
+# handle shipping\n
+order_line = getattr(shopping_cart, \'shipping_method\', None)\n
+if shipping_method not in [\'\', None]:\n
   shipping = context.getPortalObject().restrictedTraverse(shipping_method)\n
-  order_line = getattr(shopping_cart, \'shipping_method\', None)\n
   if order_line is None:\n
-    ## create new shipping method order line\n
+    # create new shipping method order line\n
     order_line = shopping_cart.newContent(id=\'shipping_method\', portal_type=\'Sale Order Line\')\n
-  ## .. and update it\n
+  # .. and update it\n
   order_line.setResource(shipping.getRelativeUrl())\n
   order_line.setQuantity(1)\n
+else:\n
+  if field_my_shipping_method in [\'\', None] and order_line is not None:\n
+    shopping_cart.manage_delObjects(order_line.getId())\n
 \n
 context.Base_redirect(\'SaleOrder_viewAsWeb\', \\\n
                        keep_items={\'portal_status_message\': translateString("Your cart was successfuly updated.", mapping = dict())})\n
@@ -307,8 +311,8 @@ context.Base_redirect(\'SaleOrder_viewAsWeb\', \\\n
                             <string>_getitem_</string>
                             <string>new_quantity</string>
                             <string>_inplacevar_</string>
-                            <string>shipping</string>
                             <string>getattr</string>
+                            <string>shipping</string>
                             <string>dict</string>
                           </tuple>
                         </value>

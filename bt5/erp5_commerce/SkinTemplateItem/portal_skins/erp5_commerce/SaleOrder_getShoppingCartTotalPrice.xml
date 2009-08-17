@@ -69,7 +69,8 @@ total = 0.0\n
 shopping_cart_items = context.SaleOrder_getShoppingCartItemList(include_shipping)\n
 for order_line in shopping_cart_items:\n
   resource = context.restrictedTraverse(order_line.getResource())\n
-  total += order_line.getPrice() * order_line.getQuantity()\n
+  if order_line.getPrice() is not None:\n
+    total += order_line.getPrice() * order_line.getQuantity()\n
 \n
 # XXX: CHECK if we have to include taxes on shipping service\n
 if include_taxes:\n
@@ -137,9 +138,9 @@ else:\n
                             <string>_getiter_</string>
                             <string>order_line</string>
                             <string>resource</string>
+                            <string>None</string>
                             <string>_inplacevar_</string>
                             <string>tax_info</string>
-                            <string>None</string>
                             <string>tax_name</string>
                             <string>tax_percent</string>
                             <string>currency</string>
