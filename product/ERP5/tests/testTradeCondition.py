@@ -1775,8 +1775,6 @@ class TestEffectiveTradeCondition(TradeConditionTestCase):
    - should getEffectiveModel take validation state into account ? if yes, how
      to do it in generic/customizable way ?
    - would getEffectiveModel(at_date) be enough ?
-   - should effective model respect security (currently you need to view the
-     effective TC to find it through catalog)
   """
   def test_getEffectiveModel(self):
     # getEffectiveModel returns the model with highest version
