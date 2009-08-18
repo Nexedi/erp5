@@ -82,7 +82,7 @@
   <td>Dummy Workflow Action</td>\n
 </tr>\n
 <tr>\n
-  <td>assertValue</td>\n
+  <td>assertText</td>\n
   <td>id=dialog_submit_button</td>\n
   <td>Dummy Workflow Action</td>\n
 </tr>\n

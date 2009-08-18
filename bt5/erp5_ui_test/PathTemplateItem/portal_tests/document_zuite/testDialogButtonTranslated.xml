@@ -134,7 +134,7 @@
 \n
 \n
 <tr>\n
-  <td>verifyValue</td>\n
+  <td>verifyText</td>\n
   <td>dialog_submit_button</td>\n
   <td>Search Foos</td>\n
 </tr>\n
@@ -145,7 +145,7 @@
   <td>label=Wolof</td>\n
 </tr>\n
 <tr>\n
-  <td>verifyValue</td>\n
+  <td>verifyText</td>\n
   <td>dialog_submit_button</td>\n
   <td>Seet Foos</td>\n
 </tr>\n
@@ -155,7 +155,7 @@
   <td>label=Xhosa</td>\n
 </tr>\n
 <tr>\n
-  <td>verifyValue</td>\n
+  <td>verifyText</td>\n
   <td>dialog_submit_button</td>\n
   <td>Searching Foos</td>\n
 </tr>\n
@@ -181,7 +181,7 @@
   <td></td>\n
 </tr>\n
 <tr>\n
-  <td>verifyValue</td>\n
+  <td>verifyText</td>\n
   <td>dialog_submit_button</td>\n
   <td>Seet Foos</td>\n
 </tr>\n
@@ -201,7 +201,7 @@
   <td></td>\n
 </tr>\n
 <tr>\n
-  <td>verifyValue</td>\n
+  <td>verifyText</td>\n
   <td>dialog_submit_button</td>\n
   <td>Searching Foos</td>\n
 </tr>\n
