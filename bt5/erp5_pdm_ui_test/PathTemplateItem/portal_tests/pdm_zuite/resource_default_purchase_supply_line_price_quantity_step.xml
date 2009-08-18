@@ -166,6 +166,19 @@ bar</td>\n
   <td>You did not enter a floating point number.</td>\n
 </tr>\n
 \n
+\n
+<tr>\n
+  <td>type</td>\n
+  <td>field_my_purchase_supply_line_quantity_step_list</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>Base_edit:method</td>\n
+  <td></td>\n
+</tr>\n
+\n
+\n
 </tbody></table>\n
 </body>\n
 </html> \n
