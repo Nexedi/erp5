@@ -94,6 +94,7 @@
                         <string>my_layout_primary_color</string>
                         <string>my_layout_secondary_color</string>
                         <string>my_layout_header_color</string>
+                        <string>my_layout_footer_color</string>
                         <string>my_layout_menu_color</string>
                         <string>my_layout_additional_css</string>
                       </list>

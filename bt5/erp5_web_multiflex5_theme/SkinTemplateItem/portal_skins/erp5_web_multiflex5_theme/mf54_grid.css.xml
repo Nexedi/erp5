@@ -51,6 +51,7 @@
   primary_color python:here.getLayoutProperty(\'layout_primary_color\', \'rgb(200,200,200)\');\n
   secondary_color python:here.getLayoutProperty(\'layout_secondary_color\', \'rgb(225,225,225)\');\n
   header_color python:here.getLayoutProperty(\'layout_header_color\', \'rgb(218,218,218)\');\n
+  footer_color python:here.getLayoutProperty(\'layout_footer_color\', \'rgb(225,225,225)\');\n
   menu_color python:here.getLayoutProperty(\'layout_menu_color\', \'rgb(235,235,235)\');\n
   container_width python:here.getLayoutProperty(\'layout_container_width\', 978);\n
   border_width python:here.getLayoutProperty(\'layout_border_width\', 10);\n
@@ -112,7 +113,7 @@
 .main {clear:both; width:<tal:block tal:replace="main_width"/>px; padding:10px 0 20px 0; border-left:solid <tal:block tal:replace="border_width"/>px <tal:block tal:replace="primary_color"/>; border-right:solid <tal:block tal:replace="border_width"/>px <tal:block tal:replace="primary_color"/>; background-color:<tal:block tal:replace="primary_color"/>; font-size:1.0em;}\n
 .main_content {display:inline; /*Fix IE floating margin bug*/; float:left; width:<tal:block tal:replace="main_content_width"/>px; background-color:<tal:block tal:replace="primary_color"/>; font-size:1.0em; overflow:visible !important /*Non-IE6*/; overflow:hidden /*IE6*/;}\n
 .subcontent {display:inline /*Fix IE floating margin bug*/; float:right; width:<tal:block tal:replace="right_column_width"/>px; background-color:<tal:block tal:replace="primary_color"/>; font-size:1.0em; overflow:visible !important /*Non-IE6*/; overflow:hidden /*IE6*/;}\n
-.footer {clear:both; width:<tal:block tal:replace="main_width"/>px; padding:1.0em 0 1.0em 0; border-left:solid <tal:block tal:replace="border_width"/>px <tal:block tal:replace="primary_color"/>; border-right:solid <tal:block tal:replace="border_width"/>px <tal:block tal:replace="primary_color"/>; background-color:<tal:block tal:replace="secondary_color"/>; font-size:1.1em !important /*Non-IE6*/; font-size:1.0em /*IE6*/; overflow:visible !important /*Non-IE6*/; overflow:hidden /*IE6*/;}\n
+.footer {clear:both; width:<tal:block tal:replace="main_width"/>px; padding:1.0em 0 1.0em 0; border-left:solid <tal:block tal:replace="border_width"/>px <tal:block tal:replace="primary_color"/>; border-right:solid <tal:block tal:replace="border_width"/>px <tal:block tal:replace="primary_color"/>; background-color:<tal:block tal:replace="footer_color"/>; font-size:1.1em !important /*Non-IE6*/; font-size:1.0em /*IE6*/; overflow:visible !important /*Non-IE6*/; overflow:hidden /*IE6*/;}\n
 \n
 /****************/\n
 /*  HEADER-TOP  */\n
