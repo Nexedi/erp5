@@ -139,7 +139,7 @@ class TestBPMMixin(ERP5TypeTestCase):
     account.validate()
     return account
 
-  def createInvoiceTransationRule(self):
+  def createInvoiceTransactionRule(self):
     self.receivable_account = self.createAndValidateAccount('receivable',
         'asset/receivable')
     self.payable_account = self.createAndValidateAccount('payable',
@@ -230,7 +230,7 @@ class TestBPMMixin(ERP5TypeTestCase):
   def afterSetUp(self):
     self.createCategories()
     self.setSystemPreference()
-    self.createInvoiceTransationRule()
+    self.createInvoiceTransactionRule()
     self.stepTic()
 
   def beforeTearDown(self):
