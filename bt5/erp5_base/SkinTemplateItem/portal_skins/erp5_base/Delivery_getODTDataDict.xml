@@ -173,6 +173,7 @@ for line in getSubLineList(context):\n
       \'base_price\': \'\',\n
       \'total_price\': \'\',\n
       \'specialise_title\': \'\',\n
+      \'aggregate_title_list\' : [x.getReference() for x in line.getAggregateValueList()] or \'\',\n
     }\n
   else:\n
     if line.getPortalType().endswith(\'Cell\'):\n
@@ -197,6 +198,7 @@ for line in getSubLineList(context):\n
       \'base_price\': line.getPrice() or \'\',\n
       \'total_price\': line.getTotalPrice() or \'\',\n
       \'specialise_title\' : line.getProperty(\'specialise_title\', \'\'),\n
+      \'aggregate_title_list\' : [x.getReference() for x in line.getAggregateValueList()] or \'\',\n
     }\n
     total_price += line.getTotalPrice() or 0.0\n
   line_list.append(unicodeDict(line_dict.copy()))\n
@@ -474,11 +476,11 @@ return unicodeDict(data_dict)\n
                             <string>prod_desc</string>
                             <string>desc</string>
                             <string>getattr</string>
-                            <string>line_dict</string>
-                            <string>display_id</string>
                             <string>append</string>
                             <string>$append0</string>
                             <string>x</string>
+                            <string>line_dict</string>
+                            <string>display_id</string>
                             <string>_getitem_</string>
                             <string>_inplacevar_</string>
                             <string>inch_cm_ratio</string>
