@@ -16,7 +16,19 @@
   <workflow>rule_validation_workflow, edit_workflow</workflow>
  </chain>
  <chain>
+  <type>Purchase Order</type>
+  <workflow>delivery_build_interaction_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Purchase Packing List</type>
+  <workflow>delivery_build_interaction_workflow</workflow>
+ </chain>
+ <chain>
   <type>Sale Order</type>
+  <workflow>delivery_build_interaction_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Sale Packing List</type>
   <workflow>delivery_build_interaction_workflow</workflow>
  </chain>
 </workflow_chain>
