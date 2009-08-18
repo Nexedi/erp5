@@ -50,7 +50,7 @@ class LogMixin:
   """
   security = ClassSecurityInfo()
 
-  security.declareProtected('getLogFile', Permissions.ManagePortal)
+  security.declareProtected(Permissions.ManagePortal, 'getLogFile')
   def getLogFile(self, file_name, account=None):
     """
       Returns the raw log file (as they are)
@@ -58,7 +58,8 @@ class LogMixin:
     """
     raise NotImplementedError
 
-  security.declareProtected('getLogFileNameList', Permissions.ManagePortal)
+  security.declareProtected(Permissions.ManagePortal,
+                            'getLogFileNameList')
   def getLogFileNameList(self, log_name, account=None,
                         domain=None, user_name=None, 
                         from_line=None, to_line=None,
@@ -71,14 +72,14 @@ class LogMixin:
     """
     raise NotImplementedError
 
-  security.declareProtected('getLogNameList', Permissions.ManagePortal)
+  security.declareProtected(Permissions.ManagePortal, 'getLogNameList')
   def getLogNameList(self, account=None):
     """
       Returns the list of log names.
     """
     raise NotImplementedError
 
-  security.declareProtected('parseLogLine', Permissions.ManagePortal)
+  security.declareProtected(Permissions.ManagePortal, 'parseLogLine')
   def parseLogLine(self, log_name, log_line ):
     """
       Parses the line and returns a dict

@@ -62,7 +62,8 @@ class BuilderTool(BaseTool):
 
   security = ClassSecurityInfo()
 
-  security.declareProtected( Permissions.AccessContentsInformation, 'build')
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getBuilderValueList')
   def getBuilderValueList(self, business_process_list=None,
         trade_phase_list=None):
     """Returns sorted builder list with proper condition"""
@@ -86,7 +87,7 @@ class BuilderTool(BaseTool):
     # FIXME: what kind of sorting to use?
     return sorted(builder_value_list)
 
-  security.declareProtected( Permissions.View, 'build')
+  security.declareProtected(Permissions.AccessContentsInformation, 'build')
   def build(self, input_movement_list=None, existing_delivery_list=None,
       business_process_list=None, trade_phase_list=None):
     """Informs all builders to be build or invoke building
