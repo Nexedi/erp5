@@ -422,7 +422,7 @@ button, select, input {\n
 }\n
 \n
 button span {\n
-  background-color: inherit;\n
+  background-color: transparent;\n
   color: #000;\n
 }\n
 \n
@@ -1510,7 +1510,8 @@ div.search .searchPages .selected{\n
 }\n
 .listbox_missing_search_criterion td{\n
   text-align: center!important;\n
-}
+}\n
+
 
 ]]></string> </value>
         </item>
