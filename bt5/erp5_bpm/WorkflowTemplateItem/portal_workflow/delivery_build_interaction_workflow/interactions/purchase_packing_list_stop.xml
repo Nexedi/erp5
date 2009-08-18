@@ -53,13 +53,13 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>order_confirm</string> </value>
+            <value> <string>purchase_packing_list_stop</string> </value>
         </item>
         <item>
             <key> <string>method_id</string> </key>
             <value>
               <list>
-                <string>confirm</string>
+                <string>stop</string>
               </list>
             </value>
         </item>
@@ -71,8 +71,7 @@
             <key> <string>portal_type_filter</string> </key>
             <value>
               <list>
-                <string>Purchase Order</string>
-                <string>Sale Order</string>
+                <string>Purchase Packing List</string>
               </list>
             </value>
         </item>
@@ -84,7 +83,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Build Order after confirming</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>
