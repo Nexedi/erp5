@@ -462,7 +462,7 @@ class OOoParser(Implicit):
             elif value_type in ('float', 'percentage', 'currency'):
               cell_data = cell.xpath('./@*[local-name()="value"]')[0].value
             else:
-              text_tags = cell.xpath('.//*[name() = "text:p"]')
+              text_tags = cell.xpath('./*[name() = "text:p"]')
               if len(text_tags):
                 cell_data = ''.join([text.xpath('string(.)')
                                      for text in text_tags])

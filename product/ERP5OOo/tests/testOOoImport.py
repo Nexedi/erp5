@@ -854,6 +854,8 @@ class TestOOoImport(ERP5TypeTestCase):
                       ['2008-11-14T10:20:30']) # supported by DateTime
     self.assertEquals(mapping['Feuille1'][5],
                       ['PT12H34M56S']) # maybe not good, this is raw format
+    self.assertEquals(mapping['Feuille1'][6],
+                      ['With note'])
 
   # Base_getCategoriesSpreadSheetMapping tests
   def test_Base_getCategoriesSpreadSheetMapping(self):
