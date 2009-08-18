@@ -93,6 +93,8 @@
                     <value>
                       <list>
                         <string>listbox_quantity_unit</string>
+                        <string>listbox_variation_category_item_list</string>
+                        <string>listbox_aggregate_quantity_list</string>
                       </list>
                     </value>
                 </item>
@@ -102,6 +104,7 @@
                       <list>
                         <string>your_site_title</string>
                         <string>your_at_date</string>
+                        <string>listbox_aggregate_title_list</string>
                       </list>
                     </value>
                 </item>

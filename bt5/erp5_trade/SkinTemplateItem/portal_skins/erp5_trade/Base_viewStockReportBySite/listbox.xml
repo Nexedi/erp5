@@ -13,13 +13,13 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
-                <string>lines</string>
                 <string>columns</string>
-                <string>sort_columns</string>
+                <string>editable_columns</string>
+                <string>lines</string>
                 <string>list_method</string>
                 <string>selection_name</string>
-                <string>editable_columns</string>
+                <string>sort_columns</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -63,6 +63,12 @@
               <dictionary>
                 <item>
                     <key> <string>columns</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>editable_columns</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -83,6 +89,10 @@
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>sort_columns</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -119,11 +129,19 @@
                           <string>Reference</string>
                         </tuple>
                         <tuple>
-                          <string>variation_text</string>
+                          <string>variation_category_item_list</string>
                           <string>Variation</string>
                         </tuple>
                         <tuple>
-                          <string>inventory</string>
+                          <string>aggregate_title_list</string>
+                          <string>Items aggregated</string>
+                        </tuple>
+                        <tuple>
+                          <string>aggregate_quantity_list</string>
+                          <string>Items Quantity List</string>
+                        </tuple>
+                        <tuple>
+                          <string>getInventory</string>
                           <string>Stock</string>
                         </tuple>
                         <tuple>
@@ -140,6 +158,14 @@
                         <tuple>
                           <string>quantity_unit</string>
                           <string>Quantity Unit</string>
+                        </tuple>
+                        <tuple>
+                          <string>variation_category_item_list</string>
+                          <string>Variation</string>
+                        </tuple>
+                        <tuple>
+                          <string>aggregate_quantity_list</string>
+                          <string>Item Quantity List</string>
                         </tuple>
                       </list>
                     </value>
@@ -159,7 +185,7 @@
                 <item>
                     <key> <string>list_method</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
                     </value>
                 </item>
                 <item>
@@ -192,6 +218,22 @@
     </pickle>
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>context/Inventory_getStockReportBySiteDialogListboxColumnList</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
       <tuple>
         <global name="Method" module="Products.Formulator.MethodField"/>

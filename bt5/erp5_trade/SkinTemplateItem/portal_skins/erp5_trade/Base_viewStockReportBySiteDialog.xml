@@ -101,6 +101,7 @@
                         <string>your_positive_stock</string>
                         <string>your_negative_stock</string>
                         <string>your_zero_stock</string>
+                        <string>your_item_stock</string>
                       </list>
                     </value>
                 </item>
