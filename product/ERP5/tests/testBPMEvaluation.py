@@ -35,17 +35,6 @@ inverted - TestBPMEvaluationDifferentProcessMixin.
 It uses only Sale path to demonstrate BPM.
 
 It is advised to *NOT* remove erp5_administration.
-
-TODOs:
-  * avoid duplication of code when possible
-  * implement tests wisely, to support at least both BPM scenarios
-  * test for root rule (similarity) and deeper rules
-
-Scenarios to cover:
-
-  * unify root rules (BPMOrderRule, BPMDeliveryRule, etc) tests - they share
-    a lot of code
-  * test case of splitting for root rules
 """
 import unittest
 
