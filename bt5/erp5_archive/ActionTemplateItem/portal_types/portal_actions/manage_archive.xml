@@ -75,7 +75,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string: ${portal_url}/portal_archives/view</string> </value>
+            <value> <string>string:${portal_url}/portal_archives/view</string> </value>
         </item>
       </dictionary>
     </pickle>

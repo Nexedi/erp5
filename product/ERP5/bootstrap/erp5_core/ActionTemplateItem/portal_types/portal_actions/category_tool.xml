@@ -69,7 +69,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string: ${portal_url}/portal_categories/view</string> </value>
+            <value> <string>string:${portal_url}/portal_categories/view</string> </value>
         </item>
       </dictionary>
     </pickle>

@@ -81,7 +81,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string: ${portal_url}/ERP5Site_viewCreateModuleScribusDialog</string> </value>
+            <value> <string>string:${portal_url}/ERP5Site_viewCreateModuleScribusDialog</string> </value>
         </item>
       </dictionary>
     </pickle>
