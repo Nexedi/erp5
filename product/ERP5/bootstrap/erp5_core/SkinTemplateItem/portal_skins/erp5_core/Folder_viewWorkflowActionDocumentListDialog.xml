@@ -62,6 +62,7 @@ selection_tool.setSelectionParamsFor(selection_name,\n
 request = container.REQUEST\n
 request.set(\'proxy_form_id\', form_id)\n
 request.set(\'reset\', 1)\n
+request.set(\'ignore_hide_rows\', 1)\n
 \n
 return context.Folder_viewWorkflowActionDocumentListDialogRenderer(REQUEST=request)\n
 </string> </value>
