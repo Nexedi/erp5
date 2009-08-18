@@ -85,27 +85,31 @@
             </div>\n
             <div tal:attributes="class python: editable_mode and \'content editable\' or \'content\'">\n
               <tal:block metal:define-slot="main" />\n
-            </div>\n
-            <div class="bottom_actions"\n
-                 tal:condition="python: is_web_mode and editable_mode and len(actions) and form_action">\n
-              <input type="hidden" name="form_action" value=""\n
-                     tal:attributes="value form_action" />\n
-              <input type="hidden" name="edit_document_url" value=""\n
-                     tal:attributes="value python:\'%s/%s\' % (here.absolute_url(), form_id)" />\n
-              <input type="hidden" name="view_document_url" value=""\n
-                     tal:attributes="value python:\'%s/%s\' % (here.absolute_url(), \'view\')" />\n
-              <button type="submit" class="saveView" title="Save &amp; View"\n
-                      name="Base_editAndViewAsWeb:method"\n
-                      i18n:attributes="title" i18n:domain="ui">\n
-                <span class="image"></span>\n
-                <span class="description" i18n:translate="" i18n:domain="ui">Save &amp; View</span>\n
-              </button>\n
-              <button type="submit" class="saveEdit" title="Save &amp; Edit"\n
-                      name="Base_editAndEditAsWeb:method"\n
-                      i18n:attributes="title" i18n:domain="ui">\n
-                <span class="image"></span>\n
-                <span class="description" i18n:translate="" i18n:domain="ui">Save &amp; Edit</span>\n
-              </button>\n
+              <div class="bottom_actions"\n
+                   tal:condition="python: is_web_mode and editable_mode and len(actions) and form_action">\n
+                <input type="hidden" name="form_action" value=""\n
+                       tal:attributes="value form_action" />\n
+                <input type="hidden" name="edit_document_url" value=""\n
+                       tal:attributes="value python:\'%s/%s\' % (here.absolute_url(), form_id)" />\n
+                <input type="hidden" name="view_document_url" value=""\n
+                       tal:attributes="value python:\'%s/%s\' % (here.absolute_url(), \'view\')" />\n
+                <button id="input-save-view" class="formbt" type="submit"\n
+                        title="Save &amp; View" name="Base_editAndViewAsWeb:method"\n
+                        i18n:attributes="title" i18n:domain="ui">\n
+                  <span>\n
+                    <span class="image"></span>\n
+                    <span class="description" i18n:translate="" i18n:domain="ui">Save &amp; View</span>\n
+                  </span>\n
+                </button>\n
+                <button id="input-save-edit" class="formbt" type="submit"\n
+                        title="Save &amp; Edit" name="Base_editAndEditAsWeb:method"\n
+                        i18n:attributes="title" i18n:domain="ui">\n
+                  <span>\n
+                    <span class="image"></span>\n
+                    <span class="description" i18n:translate="" i18n:domain="ui">Save &amp; Edit</span>\n
+                  </span>\n
+                </button>\n
+              </div>\n
             </div>\n
           </div>\n
         </tal:block>\n
