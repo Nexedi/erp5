@@ -795,6 +795,7 @@ class Base( CopyContainer,
 
   # We want to use a default property view
   manage_main = manage_propertiesForm = DTMLFile( 'properties', _dtmldir )
+  manage_main._setName('manage_main')
 
   manage_options = ( PropertyManager.manage_options +
                      SimpleItem.manage_options +
