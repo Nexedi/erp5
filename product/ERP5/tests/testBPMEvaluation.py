@@ -59,6 +59,7 @@ class TestBPMEvaluationMixin(TestBPMMixin):
   packing_list_portal_type = 'Sale Packing List'
   packing_list_line_portal_type = 'Sale Packing List Line'
   trade_condition_portal_type = 'Sale Trade Condition'
+  invoice_portal_type = 'Sale Invoice Transaction'
   product_portal_type = 'Product'
   order_start_date = DateTime()
   order_stop_date = order_start_date + 10
@@ -126,9 +127,11 @@ class TestBPMEvaluationMixin(TestBPMMixin):
     #  - gather errors into one list
     bpm_root_rule = self.root_document.getCausalityRelatedValue(
         portal_type='Applied Rule')
+    # check that correct root rule applied
     self.assertEqual(bpm_root_rule.getSpecialiseValue().getPortalType(),
         self.root_rule_portal_type)
     root_simulation_movement_list = bpm_root_rule.contentValues()
+    # simplicity - one simulation movement for one delivery line
     self.assertEqual(len(self.root_document.getMovementList()),
       len(root_simulation_movement_list))
     for root_simulation_movement in root_simulation_movement_list:
@@ -136,6 +139,8 @@ class TestBPMEvaluationMixin(TestBPMMixin):
           'Simulation Movement')
       movement = root_simulation_movement.getOrderValue()
       property_problem_list = []
+      # check some properties equality between delivery line and simulation
+      # movement, gather errors
       for property in 'resource', 'price', 'quantity', 'start_date', \
         'stop_date', 'source', 'destination', 'source_section', \
         'destination_section':
@@ -146,11 +151,14 @@ class TestBPMEvaluationMixin(TestBPMMixin):
                 root_simulation_movement.getProperty(property)))
       if len(property_problem_list) > 0:
         self.fail('\n'.join(property_problem_list))
+      # root rule is order or delivery - so below each movement invoicing one
+      # is expected
       self.assertEquals(len(root_simulation_movement.contentValues()), 1)
       for bpm_invoicing_rule in root_simulation_movement.contentValues():
         self.assertEqual(bpm_invoicing_rule.getPortalType(), 'Applied Rule')
         self.assertEqual(bpm_invoicing_rule.getSpecialiseValue() \
             .getPortalType(), 'BPM Invoicing Rule')
+        # only one movement inside invoicing rule
         self.assertEquals(len(bpm_invoicing_rule.contentValues()), 1)
         for invoicing_simulation_movement in bpm_invoicing_rule \
             .contentValues():
@@ -159,6 +167,7 @@ class TestBPMEvaluationMixin(TestBPMMixin):
           self.assertEqual(invoicing_simulation_movement.getCausalityValue(),
               self.invoice_path)
           property_problem_list = []
+          # check equality of some properties, gather them
           for property in 'resource', 'price', 'quantity', 'start_date', \
             'stop_date', 'source', 'destination', 'source_section', \
             'destination_section':
@@ -169,6 +178,8 @@ class TestBPMEvaluationMixin(TestBPMMixin):
                     invoicing_simulation_movement.getProperty(property)))
           if len(property_problem_list) > 0:
             self.fail('\n'.join(property_problem_list))
+          # simple check for trade model rule existence, without movements,
+          # as no trade condition configured
           self.assertEquals(
               len(invoicing_simulation_movement.contentValues()), 1)
           for trade_model_rule in invoicing_simulation_movement \
@@ -189,8 +200,8 @@ class TestBPMEvaluationDefaultProcessMixin:
         successor_value=self.delivered_state,
         trade_phase='default/delivery',
         deliverable=1,
-        completed_state_list=['delivered'],
-        frozen_state_list=['stopped', 'delivered'],
+        completed_state_list=['started', 'stopped', 'delivered'],
+        frozen_state_list=['started', 'stopped', 'delivered'],
         delivery_builder='portal_deliveries/bpm_sale_packing_list_builder',
         )
 
@@ -199,6 +210,7 @@ class TestBPMEvaluationDefaultProcessMixin:
         successor_value=self.invoiced_state,
         completed_state_list=['delivered'],
         frozen_state_list=['stopped', 'delivered'],
+        delivery_builder='portal_deliveries/bpm_sale_invoice_builder',
         trade_phase='default/invoicing')
 
     self.account_path = self.createBusinessPath(self.business_process,
@@ -353,8 +365,50 @@ class TestPackingList(TestBPMEvaluationMixin, GenericRuleTestsMixin):
   root_document_line_portal_type = 'Sale Packing List Line'
   root_rule_portal_type = 'BPM Delivery Rule'
 
+  def _packDelivery(self):
+    """Packs delivery fully, removes possible containers before"""
+    self.root_document.deleteContent(self.root_document.contentIds(
+      filter={'portal_type':'Container'}))
+    cont = self.root_document.newContent(portal_type='Container')
+    for movement in self.root_document.getMovementList():
+      cont.newContent(portal_type='Container Line',
+        resource = movement.getResource(), quantity = movement.getQuantity())
+    self.stepTic()
+    self._checkBPMSimulation()
+
   def _doFirstTransition(self, document):
     document.confirm()
+
+  def test_starting(self):
+    self.delivery_line = self._createRootDocumentLine(
+      resource_value = self._createProduct(), quantity = 10, price = 5)
+    self.stepTic()
+
+    self.root_document.confirm()
+    self.stepTic()
+    self._checkBPMSimulation()
+
+    self._packDelivery()
+
+    self.root_document.start()
+    self.stepTic()
+    self._checkBPMSimulation()
+
+    self.assertEqual(
+      2,
+      len(self.root_document.getCausalityRelatedList())
+    )
+    self.assertEqual(
+      'Applied Rule',
+      self.root_document.getCausalityRelatedValue(
+        portal_type='Applied Rule').getPortalType()
+    )
+
+    self.assertEqual(
+      self.invoice_portal_type,
+      self.root_document.getCausalityRelatedValue(
+        portal_type=self.invoice_portal_type).getPortalType()
+    )
 
 class TestInvoice(TestBPMEvaluationMixin, GenericRuleTestsMixin):
   """Check BPM Invoice Rule behaviour"""
@@ -397,7 +451,29 @@ class TestOrderDifferentProcess(TestOrder,
 
 class TestPackingListDifferentProcess(TestPackingList,
     TestBPMEvaluationDifferentProcessMixin):
-  pass
+  def test_starting(self):
+    self.delivery_line = self._createRootDocumentLine(
+      resource_value = self._createProduct(), quantity = 10, price = 5)
+    self.stepTic()
+
+    self.root_document.confirm()
+    self.stepTic()
+    self._checkBPMSimulation()
+
+    self._packDelivery()
+    self.root_document.start()
+    self.stepTic()
+    self._checkBPMSimulation()
+
+    self.assertEqual(
+      1,
+      len(self.root_document.getCausalityRelatedList())
+    )
+    self.assertEqual(
+      'Applied Rule',
+      self.root_document.getCausalityRelatedValue(
+        portal_type='Applied Rule').getPortalType()
+    )
 
 class TestInvoiceDifferentProcess(TestInvoice,
     TestBPMEvaluationDifferentProcessMixin):
