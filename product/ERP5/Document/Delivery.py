@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright (c) 2002-2008 Nexedi SA and Contributors. All Rights Reserved.
+# Copyright (c) 2002-2009 Nexedi SA and Contributors. All Rights Reserved.
 #                    Jean-Paul Smets-Solanes <jp@nexedi.com>
 #                    Romain Courteaud <romain@nexedi.com>
 #
@@ -900,3 +900,49 @@ class Delivery(XMLObject, ImmobilisationDelivery):
         return None
       return findSpecialiseValue(self)
 
+    security.declareProtected( Permissions.ModifyPortalContent,
+                               'disconnectSimulationMovementList')
+    def disconnectSimulationMovementList(self, movement_list=None):
+      """Disconnects simulation movements from delivery's lines
+
+      Note: This is experimental code, do not use in production system
+
+      If movement_list is passed only those movements will be disconnected
+      from simulation.
+
+      If movements in movement_list do not belong to current
+      delivery they are silently ignored.
+
+      Returns list of disconnected Simulation Movements.
+
+      Known issues and open questions:
+       * how to protect disconnection from completed delivery?
+       * what to do if movements from movement_list do not belong to delivery?
+       * it is required to remove causality relation from delivery or delivery
+         lines??
+      """
+      delivery_movement_value_list = self.getMovementList()
+      if movement_list is not None:
+        movement_value_list = [self.restrictedTraverse(movement) for movement
+            in movement_list]
+        # only those how are in this delivery
+        movement_value_list = [movement_value for movement_value in
+            movement_value_list if movement_value
+            in delivery_movement_value_list]
+      else:
+        movement_value_list = delivery_movement_value_list
+
+      disconnected_simulation_movement_list = []
+      for movement_value in movement_value_list:
+        # Note: Relies on fact that is invoked, when simulation movements are
+        # indexed properly
+        for simulation_movement in movement_value \
+            .getDeliveryRelatedValueList(portal_type='Simulation Movement'):
+          simulation_movement.edit(
+            delivery = None,
+            delivery_ratio = None
+          )
+          disconnected_simulation_movement_list.append(
+              simulation_movement.getRelativeUrl())
+
+      return disconnected_simulation_movement_list
