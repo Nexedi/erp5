@@ -78,7 +78,7 @@ for resource in context.portal_catalog.searchResults(\n
                validation_state=validation_state,\n
                sort_on=((\'portal_type\', \'asc\'),\n
                         (\'title\', \'asc\'))) :\n
-  if resource.getQuantityUnit():\n
+  if show_default_quantity_unit and resource.getQuantityUnit():\n
     result.append(\n
      (\'%s (%s)\' % (resource.getTitle(),\n
                    translateString(resource.getQuantityUnitTitle()),),\n
@@ -101,7 +101,7 @@ return result\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>use_list, validation_state=\'validated\', portal_type=None</string> </value>
+            <value> <string>use_list, validation_state=\'validated\', portal_type=None, show_default_quantity_unit=True</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -121,7 +121,7 @@ return result\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>3</int> </value>
+                        <value> <int>4</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -130,6 +130,7 @@ return result\n
                             <string>use_list</string>
                             <string>validation_state</string>
                             <string>portal_type</string>
+                            <string>show_default_quantity_unit</string>
                             <string>_getitem_</string>
                             <string>_getattr_</string>
                             <string>container</string>
@@ -161,6 +162,7 @@ return result\n
               <tuple>
                 <string>validated</string>
                 <none/>
+                <int>1</int>
               </tuple>
             </value>
         </item>

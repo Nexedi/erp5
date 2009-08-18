@@ -13,9 +13,9 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
                 <string>default</string>
                 <string>items</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -133,7 +133,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: [(\'\', \'\')] + [(x.getTitle(), x.getRelativeUrl()) for x in here.portal_catalog(portal_type=[\'Product\',\'Service\'])]</string> </value>
+            <value> <string>python: context.Base_getResourceItemList(use_list=preferences.getPreferredPurchaseUseList(), validation_state=\'validated\', show_default_quantity_unit=False)</string> </value>
         </item>
       </dictionary>
     </pickle>
