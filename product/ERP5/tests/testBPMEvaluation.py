@@ -131,9 +131,6 @@ class TestBPMEvaluationMixin(TestBPMMixin):
     self.assertEqual(bpm_root_rule.getSpecialiseValue().getPortalType(),
         self.root_rule_portal_type)
     root_simulation_movement_list = bpm_root_rule.contentValues()
-    # simplicity - one simulation movement for one delivery line
-    self.assertEqual(len(self.root_document.getMovementList()),
-      len(root_simulation_movement_list))
     for root_simulation_movement in root_simulation_movement_list:
       self.assertEqual(root_simulation_movement.getPortalType(),
           'Simulation Movement')
@@ -141,9 +138,9 @@ class TestBPMEvaluationMixin(TestBPMMixin):
       property_problem_list = []
       # check some properties equality between delivery line and simulation
       # movement, gather errors
-      for property in 'resource', 'price', 'quantity', 'start_date', \
-        'stop_date', 'source', 'destination', 'source_section', \
-        'destination_section':
+      for property in 'resource', 'price', 'start_date', 'stop_date', \
+                      'source', 'destination', 'source_section', \
+                      'destination_section':
         if movement.getProperty(property) != root_simulation_movement \
             .getProperty(property):
           property_problem_list.append('property %s movement %s '
@@ -151,6 +148,9 @@ class TestBPMEvaluationMixin(TestBPMMixin):
                 root_simulation_movement.getProperty(property)))
       if len(property_problem_list) > 0:
         self.fail('\n'.join(property_problem_list))
+      self.assertEqual(
+        movement.getQuantity() * root_simulation_movement.getOrderRatio(),
+        root_simulation_movement.getQuantity())
       # root rule is order or delivery - so below each movement invoicing one
       # is expected
       self.assertEquals(len(root_simulation_movement.contentValues()), 1)
@@ -168,7 +168,7 @@ class TestBPMEvaluationMixin(TestBPMMixin):
               self.invoice_path)
           property_problem_list = []
           # check equality of some properties, gather them
-          for property in 'resource', 'price', 'quantity', 'start_date', \
+          for property in 'resource', 'price', 'start_date', \
             'stop_date', 'source', 'destination', 'source_section', \
             'destination_section':
             if movement.getProperty(property) != \
@@ -178,6 +178,9 @@ class TestBPMEvaluationMixin(TestBPMMixin):
                     invoicing_simulation_movement.getProperty(property)))
           if len(property_problem_list) > 0:
             self.fail('\n'.join(property_problem_list))
+          self.assertEqual(
+            movement.getQuantity() * root_simulation_movement.getOrderRatio(),
+            invoicing_simulation_movement.getQuantity())
           # simple check for trade model rule existence, without movements,
           # as no trade condition configured
           self.assertEquals(
@@ -273,6 +276,74 @@ class GenericRuleTestsMixin:
     self.stepTic()
 
     self._doFirstTransition(self.root_document)
+    self.stepTic()
+    self._checkBPMSimulation()
+
+  def _split(self):
+    """Invoke manual splitting"""
+    ratio = .5 # hardcoded value, hopefully float friendly
+    applied_rule = self.root_document.getCausalityRelatedValue(portal_type='Applied Rule')
+    for movement in applied_rule.contentValues(portal_type='Simulation Movement'):
+      new_movement = movement.Base_createCloneDocument(batch_mode=1)
+      old_quantity = movement.getQuantity()
+      movement.edit(
+        quantity = old_quantity * ratio
+      )
+
+      new_movement.edit(
+        quantity = old_quantity * (1 - ratio)
+      )
+
+    self.stepTic()
+
+    # recalculate order ratio
+    for movement in self.root_document.getMovementList():
+      movement_quantity = movement.getQuantity()
+      for simulation_movement in movement.getOrderRelatedValueList():
+        new_ratio = simulation_movement.getQuantity() / movement_quantity
+        simulation_movement.edit(order_ratio = new_ratio)
+        if simulation_movement.getDelivery() is not None:
+          simulation_movement.edit(delivery_ratio = new_ratio)
+
+    # reexpand
+    applied_rule.expand()
+    self.stepTic()
+
+    self._checkBPMSimulation()
+
+  def test_transition_split(self):
+    self.order_line = self._createRootDocumentLine(
+      resource_value = self._createProduct(), quantity = 10, price = 5)
+    self.stepTic()
+
+    self._doFirstTransition(self.root_document)
+    self.stepTic()
+    self._checkBPMSimulation()
+
+    self._split()
+
+    # expand
+    self.root_document.edit(title = self.root_document.getTitle() + 'a')
+
+    self.stepTic()
+    self._checkBPMSimulation()
+
+  def test_transition_split_line_add(self):
+    self.test_transition_split()
+    self.order_line_2 = self._createRootDocumentLine(
+        resource_value = self._createProduct(), quantity = 4, price = 2)
+    self.stepTic()
+    self._checkBPMSimulation()
+
+  def test_transition_split_line_add_split(self):
+    self.test_transition_split_line_add()
+
+    # second split
+    self._split()
+
+    # expand
+    self.root_document.edit(title = self.root_document.getTitle() + 'a')
+
     self.stepTic()
     self._checkBPMSimulation()
 
