@@ -65,6 +65,8 @@ READ_MESSAGE_LIMIT = 1000
 # first.
 MESSAGE_BUNDLE_SIZE = 1
 
+MAX_MESSAGE_LIST_SIZE = 100
+
 class SQLQueue(RAMQueue, SQLBase):
   """
     A simple OOBTree based queue. It should be compatible with transactions
@@ -73,8 +75,9 @@ class SQLQueue(RAMQueue, SQLBase):
   """
 
   def prepareQueueMessageList(self, activity_tool, message_list):
-    registered_message_list = [m for m in message_list if m.is_registered]
-    if len(registered_message_list):
+    message_list = [m for m in message_list if m.is_registered]
+    for i in xrange(0, len(message_list), MAX_MESSAGE_LIST_SIZE):
+      registered_message_list = message_list[i:i + MAX_MESSAGE_LIST_SIZE]
       uid_list = activity_tool.getPortalObject().portal_ids.generateNewLengthIdList(
         id_group='portal_activity_queue', id_count=len(registered_message_list),
         store=0)

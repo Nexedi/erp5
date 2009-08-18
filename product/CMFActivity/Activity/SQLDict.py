@@ -56,6 +56,8 @@ READ_MESSAGE_LIMIT = 1000
 # objects are impacted by elected messages.
 MAX_GROUPED_OBJECTS = 100
 
+MAX_MESSAGE_LIST_SIZE = 100
+
 class SQLDict(RAMDict, SQLBase):
   """
     A simple OOBTree based queue. It should be compatible with transactions
@@ -64,11 +66,9 @@ class SQLDict(RAMDict, SQLBase):
   """
   # Transaction commit methods
   def prepareQueueMessageList(self, activity_tool, message_list):
-    registered_message_list = []
-    for message in message_list:
-      if message.is_registered:
-        registered_message_list.append(message)
-    if len(registered_message_list) > 0:
+    message_list = [m for m in message_list if m.is_registered]
+    for i in xrange(0, len(message_list), MAX_MESSAGE_LIST_SIZE):
+      registered_message_list = message_list[i:i + MAX_MESSAGE_LIST_SIZE]
       #LOG('SQLDict prepareQueueMessageList', 0, 'registered_message_list = %r' % (registered_message_list,))
       path_list = ['/'.join(message.object_path) for message in registered_message_list]
       active_process_uid_list = [message.active_process_uid for message in registered_message_list]
