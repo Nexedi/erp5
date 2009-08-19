@@ -135,7 +135,9 @@ class TestInvoiceMixin(TestPackingListMixin,
                    self.portal.sale_packing_list_module,
                    self.portal.purchase_packing_list_module,
                    self.portal.portal_simulation,):
-      folder.manage_delObjects(list(folder.objectIds()))
+      
+      folder.manage_delObjects([x for x in folder.objectIds() if x not in ('organisation_1','organisation_2')])
+     
     transaction.commit()
     self.tic()
 
