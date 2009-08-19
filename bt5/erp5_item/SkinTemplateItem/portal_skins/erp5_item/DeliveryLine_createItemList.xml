@@ -71,6 +71,8 @@ elif context.getPortalType()==\'Sale Packing List Line\':\n
   cell_portal_type = \'Sale Packing List Cell\'\n
 elif context.getPortalType()== \'Internal Packing List Line\':\n
   cell_portal_type = \'Internal Packing List Cell\'\n
+elif context.getPortalType()== \'Inventory Line\':\n
+  cell_portal_type = \'Inventory Cell\'\n
 \n
 item_property_dict = dict()\n
 \n
@@ -162,7 +164,7 @@ if update_quantity:\n
           raise NotImplementedError(\n
             \'Quantity unit from the movement differs from quantity\'\n
             \' unit on the item\')\n
-      quantity += item.getQuantity()\n
+      quantity += item.getQuantity(at_date = DateTime().Date())\n
     movement.setQuantity(quantity)\n
 \n
 return context.Base_redirect(form_id, keep_items=dict(\n
