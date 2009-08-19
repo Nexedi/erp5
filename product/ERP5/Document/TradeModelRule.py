@@ -48,15 +48,6 @@ class TradeModelRule(TransformationRule):
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-  # Default Properties
-  property_sheets = ( PropertySheet.Base
-                    , PropertySheet.XMLObject
-                    , PropertySheet.CategoryCore
-                    , PropertySheet.DublinCore
-                    , PropertySheet.Task
-                    , PropertySheet.AppliedRule
-                    )
-
   def _getMovementDictByBusinessPath(self, movement, business_path_list):
     """Sets Business Path's provided values"""
     if len(business_path_list) > 1:

@@ -52,15 +52,6 @@ class ProductionOrderRule(OrderRule):
     __implements = ( interfaces.IPredicate,
                      interfaces.IRule )
 
-    # Default Properties
-    property_sheets = ( PropertySheet.Base
-                      , PropertySheet.XMLObject
-                      , PropertySheet.CategoryCore
-                      , PropertySheet.DublinCore
-                      , PropertySheet.Task
-                      , PropertySheet.AppliedRule
-                      )
-
     # Simulation workflow
     security.declareProtected(Permissions.AccessContentsInformation,
                               '_getExpandablePropertyDict')

@@ -53,13 +53,7 @@ class TransformationRule(TransformationSourcingRuleMixin, Rule):
     security.declareObjectProtected(Permissions.AccessContentsInformation)
     zope.interface.implements(interfaces.IPredicate,
                               interfaces.IRule )
-    # Default Properties
-    property_sheets = ( PropertySheet.Base
-                      , PropertySheet.XMLObject
-                      , PropertySheet.CategoryCore
-                      , PropertySheet.DublinCore
-                      , PropertySheet.Task
-                      )
+
     # Class variable 
     simulation_movement_portal_type = "Simulation Movement"
 

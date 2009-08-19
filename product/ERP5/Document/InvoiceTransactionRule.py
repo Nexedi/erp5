@@ -52,14 +52,6 @@ class InvoiceTransactionRule(Rule, PredicateMatrix):
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-  # Default Properties
-  property_sheets = ( PropertySheet.Base
-                    , PropertySheet.XMLObject
-                    , PropertySheet.CategoryCore
-                    , PropertySheet.DublinCore
-                    , PropertySheet.Task
-                    )
-  
 #### Helper method for expand
   def _generatePrevisionList(self, applied_rule, **kw):
     """

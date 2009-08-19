@@ -1,7 +1,6 @@
 ##############################################################################
 #
-# Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
-#                    Jean-Paul Smets-Solanes <jp@nexedi.com>
+# Copyright (c) 2009 Nexedi SARL and Contributors. All Rights Reserved.
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -26,30 +25,16 @@
 #
 ##############################################################################
 
-class AppliedRule:
+class Rule:
   """
-    AppliedRule
-
-    An AppliedRule makes the link between simulation movements it contains
-    and the rule that generated them.
+  Property sheet for Rule class and subclass instances
   """
 
   _properties = (
-        {   'id'          : 'last_expand_simulation_state',
-            'description' : 'Contains the id of the simulation state when the '\
-                            'object was last expanded (in order to avoid '\
-                            'recalculation)',
-            
-            'acquisition_base_category'     : ( 'parent',),
-            'acquisition_portal_type'       : ('Applied Rule', ),
-            'acquisition_copy_value'        : 0,
-            'acquisition_mask_value'        : 1,
-            'acquisition_accessor_id'       : 'getLastExpandSimulationState',
-            'acquisition_depends'           : None,
-            'alt_accessor_id'               : ('getLastExpandSimulationState', ),
-
-            'type'        : 'string',
-            'mode'        : 'w' },
+        {  'id'          : 'expandable_property',
+           'description' : 'List of properties used in expand',
+           'type'        : 'lines',
+           'default'     : [],
+           'multivalued' : 1,
+           'mode'        : 'w' },
   )
-
-  _categories = ('specialise', 'causality', 'order', )

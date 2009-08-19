@@ -51,14 +51,6 @@ class PaymentRule(Rule):
     security = ClassSecurityInfo()
     security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-    # Default Properties
-    property_sheets = ( PropertySheet.Base
-                      , PropertySheet.XMLObject
-                      , PropertySheet.CategoryCore
-                      , PropertySheet.DublinCore
-                      , PropertySheet.Task
-                      )
-
     receivable_account_type_list = ('asset/receivable', )
     payable_account_type_list = ('liability/payable', )
 

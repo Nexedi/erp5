@@ -46,15 +46,6 @@ class OpenOrderRule(DeliveryRule):
   # Declarative security
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
-  
-
-  # Default Properties
-  property_sheets = ( PropertySheet.Base
-                    , PropertySheet.XMLObject
-                    , PropertySheet.CategoryCore
-                    , PropertySheet.DublinCore
-                    , PropertySheet.Task
-                    )
 
   # Simulation workflow
   security.declareProtected(Permissions.ModifyPortalContent, 'expand')

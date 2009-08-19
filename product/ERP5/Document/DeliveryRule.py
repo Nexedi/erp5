@@ -48,14 +48,6 @@ class DeliveryRule(Rule):
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-  # Default Properties
-  property_sheets = ( PropertySheet.Base
-                    , PropertySheet.XMLObject
-                    , PropertySheet.CategoryCore
-                    , PropertySheet.DublinCore
-                    , PropertySheet.Task
-                    )
-
   # Simulation workflow
   security.declareProtected(Permissions.ModifyPortalContent, 'expand')
   def expand(self, applied_rule, delivery_movement_type_list=None, **kw):

@@ -63,13 +63,7 @@ class TransformationSourcingModelRule(TransformationModelRuleMixin, Rule):
   security.declareObjectProtected(Permissions.AccessContentsInformation)
   zope.interface.implements(interfaces.IPredicate,
                             interfaces.IRule )
-  # Default Properties
-  property_sheets = ( PropertySheet.Base
-                      , PropertySheet.XMLObject
-                      , PropertySheet.CategoryCore
-                      , PropertySheet.DublinCore
-                      , PropertySheet.Task
-                      )
+
   def getFactory(self):
     return SourcingMovementFactory()
 

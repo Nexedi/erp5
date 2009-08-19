@@ -86,6 +86,7 @@ class Rule(Predicate, XMLObject):
                     , PropertySheet.Predicate
                     , PropertySheet.Reference
                     , PropertySheet.Version
+                    , PropertySheet.Rule
                     )
   
   # Portal Type of created children

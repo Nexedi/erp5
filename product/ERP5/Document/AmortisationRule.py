@@ -56,14 +56,6 @@ class AmortisationRule(Rule):
     # Declarative security
     security = ClassSecurityInfo()
     security.declareObjectProtected(Permissions.AccessContentsInformation)
-    
-    # Default Properties
-    property_sheets = ( PropertySheet.Base
-                      , PropertySheet.XMLObject
-                      , PropertySheet.CategoryCore
-                      , PropertySheet.DublinCore
-                      , PropertySheet.Task
-                      )
 
     movement_name_dict = { 'immobilisation':   { 'immo':  'start_immo',
                                                  'amo':   'start_amo',
@@ -125,8 +117,6 @@ class AmortisationRule(Rule):
             setter = getattr(simulation_movement, setter_name)
             setter(value)
         simulation_movement.edit(start_date=simulation_movement.getStopDate())
-        if set_ratio:
-          simulation_movement.setDefaultDeliveryProperties()
         #simulation_movement.immediateReindexObject()
         return modified_properties
      

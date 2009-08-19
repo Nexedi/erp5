@@ -51,14 +51,6 @@ class InvoiceRule(DeliveryRule):
     security = ClassSecurityInfo()
     security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-    # Default Properties
-    property_sheets = ( PropertySheet.Base
-                      , PropertySheet.XMLObject
-                      , PropertySheet.CategoryCore
-                      , PropertySheet.DublinCore
-                      , PropertySheet.Task
-                      )
-    
     security.declareProtected(Permissions.AccessContentsInformation,
                               'isAccountable')
     def isAccountable(self, movement):
