@@ -45,8 +45,6 @@ class BPMInvoicingRule(BPMRule):
   meta_type = 'ERP5 BPM Invoicing Rule'
   portal_type = 'BPM Invoicing Rule'
 
-  property_sheets = BPMRule.property_sheets
-
   # Declarative security
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)

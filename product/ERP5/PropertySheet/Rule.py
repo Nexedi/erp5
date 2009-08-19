@@ -29,8 +29,14 @@ class Rule:
   """
   Property sheet for Rule class and subclass instances
   """
-
   _properties = (
+        {  'id'          : 'matching_property',
+           'description' : 'List of properties used in to compare previsions '
+                           'with Simulation Movements',
+           'type'        : 'lines',
+           'default'     : [],
+           'multivalued' : 1,
+           'mode'        : 'w' },
         {  'id'          : 'expandable_property',
            'description' : 'List of properties used in expand',
            'type'        : 'lines',
@@ -38,3 +44,5 @@ class Rule:
            'multivalued' : 1,
            'mode'        : 'w' },
   )
+
+

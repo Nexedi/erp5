@@ -44,8 +44,6 @@ class BPMInvoiceTransactionRule(BPMRule, PredicateMatrix):
   meta_type = 'ERP5 BPM Invoice Transaction Rule'
   portal_type = 'BPM Invoice Transaction Rule'
 
-  property_sheets = BPMRule.property_sheets
-
   # Declarative security
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)

@@ -72,7 +72,7 @@ class BPMRule(Predicate, XMLObject):
                     , PropertySheet.Predicate
                     , PropertySheet.Reference
                     , PropertySheet.Version
-                    , PropertySheet.AppliedRule
+                    , PropertySheet.Rule
                     )
 
   movement_type = 'Simulation Movement'
