@@ -1,3 +1,6 @@
+2009-08-19 tatuya
+* Fix listbox source_title column name for Ticket  from 'Handler' to 'Operations Manager'. In ticket, the word 'Handler ' is not used already.
+
 2009-07-02 romain
 * Revert latest proxy field library simplification, as the design was not finalized.
 
