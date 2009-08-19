@@ -357,13 +357,21 @@
   clear: both;\n
 }\n
 \n
+fieldset.editable {\n
+  font-size:120%;\n
+}\n
+\n
 fieldset.editable legend {\n
   padding: 10px 10px 0;\n
   font-weight: bold;\n
 }\n
 \n
 fieldset.editable label {\n
-  padding: 5px 10px 0;\n
+  padding: 0 10px;\n
+  float: left;\n
+  width: 140px;\n
+  font-weight: bold;\n
+  color: #666;\n
 }\n
 \n
 fieldset.editable div.input {\n
@@ -374,11 +382,10 @@ fieldset.editable.bottom div.input {\n
   padding: 0;\n
 }\n
 \n
-div.editable > a > img,\n
-fieldset.editable div.input > a > img,\n
-fieldset.editable div.field > label > a > img {\n
+div.editable a > img {\n
   float:none;\n
   margin:0;\n
+  border:none;\n
 }\n
 \n
 #transition_message {\n
@@ -455,7 +462,7 @@ div.document div.actions ul a,\n
 div.document div.actions ul li.selected a {\n
   display: block;\n
   float: left;\n
-  padding: 4px 1em;\n
+  padding: 0.2em 0.4em;\n
   margin: 1px 2px 0 0;\n
   text-align: center;\n
   text-decoration: none;\n
@@ -466,17 +473,21 @@ div.document div.actions ul a {\n
   border: 1px solid #999;\n
 }\n
 \n
-div.document div.actions ul li.selected a,\n
-div.document div.actions ul li.selected a:hover {\n
+div.document div.actions ul li.selected a {\n
   background: #ccc;\n
 }\n
 \n
 div.document div.actions ul a:hover {\n
-  border-color: #000;\n
+  background: #ddd;\n
 }\n
 \n
 div.input select, div.input textarea {\n
   border: 1px solid #999;\n
+  max-width:450px;\n
+}\n
+\n
+fieldset > div.field {\n
+  margin:5px 0;\n
 }\n
 \n
 #fieldset_bottom > div.field > div.input > textarea {\n
