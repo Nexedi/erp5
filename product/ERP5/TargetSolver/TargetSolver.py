@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2002-2009 Nexedi SA and Contributors. All Rights Reserved.
 #                    Jean-Paul Smets-Solanes <jp@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
@@ -29,13 +29,19 @@
 
 class TargetSolver:
   """
-    TargetSolver changes target values of parent movement
-    of applied rule based on new target provided on
-    a single child movement.
+    Target solver is used to do backtracking of solved movement up to
+    simulation tree.  It is able to detect if parent movement is frozen on
+    not, and take proper decision - invoke itself or compensate.
 
-    AppliedRules are considered to be linear. As
-    a first approximation, TargetSolver will be independent
-    of Applied Rules.
+    Target solver is able to generate new simulation tree for:
+
+     * split delivery
+     * simple backtrack
+     * loss generation
+     * etc
+
+    AppliedRules are considered to be linear. As a first approximation,
+    TargetSolver will be independent of Applied Rules.
 
     Possible future solutions:
 
@@ -65,17 +71,10 @@ class TargetSolver:
   def solve(self, simulation_movement):
     """
       Solve a simulation movement
-
-      previous_target must be accumulated globaly by the solver.
-      ie. the first time a target is changed, the previous
-      target must be recorded by the solver.
-
-      XXX: maybe we do not need to pass previous_target as parameter
-      (since we accumulate it)
-
-      This function must be implemented by the actual solver which derivates
+      This function must be implemented by the actual solver which deviates
       from this class.
     """
+    raise NotImplementedError
 
   def solveDelivery(self, delivery):
     """
@@ -96,13 +95,3 @@ class TargetSolver:
     for simulation_movement in simulation_movement_list:
       solved_movement_list.append(self.solve(simulation_movement))
     return solved_movement_list
-
-  def close(self):
-    """
-      After resolution has taken place, solver
-      may do some extra steps, such as create a new delivery
-      with deliverable split movements.
-    """
-    # XXX this is not the job of TargetSolver to create new Delivery !
-    pass
-
