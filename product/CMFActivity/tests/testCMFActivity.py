@@ -3306,6 +3306,58 @@ class TestCMFActivity(ERP5TypeTestCase):
       DB.query = DB.original_query
       del DB.original_query
 
+  def test_MAX_MESSAGE_LIST_SIZE_SQLQueue(self):
+    from Products.CMFActivity.Activity import SQLQueue
+    old_MAX_MESSAGE_LIST_SIZE = SQLQueue.MAX_MESSAGE_LIST_SIZE
+    SQLQueue.MAX_MESSAGE_LIST_SIZE = 3
+
+    try:
+      global call_count
+      call_count = 0
+      def dummy_counter(self):
+        global call_count
+        call_count += 1
+
+      Organisation.dummy_counter = dummy_counter
+      o = self.portal.organisation_module.newContent(portal_type='Organisation',)
+
+      for i in range(10):
+        o.activate(activity='SQLQueue').dummy_counter()
+        
+      self.flushAllActivities()
+      self.assertEquals(call_count, 10)
+    finally:
+      SQLQueue.MAX_MESSAGE_LIST_SIZE = old_MAX_MESSAGE_LIST_SIZE
+      del Organisation.dummy_counter
+
+  def test_MAX_MESSAGE_LIST_SIZE_SQLDict(self):
+    from Products.CMFActivity.Activity import SQLDict
+    old_MAX_MESSAGE_LIST_SIZE = SQLDict.MAX_MESSAGE_LIST_SIZE
+    SQLDict.MAX_MESSAGE_LIST_SIZE = 3
+
+    try:
+      global call_count
+      call_count = 0
+      def dummy_counter(self):
+        global call_count
+        call_count += 1
+
+      o = self.portal.organisation_module.newContent(portal_type='Organisation',)
+
+      for i in range(10):
+        method_name = 'dummy_counter_%s' % i
+        setattr(Organisation, method_name, dummy_counter)
+        getattr(o.activate(activity='SQLDict'), method_name)()
+        
+      self.flushAllActivities()
+      self.assertEquals(call_count, 10)
+    finally:
+      SQLDict.MAX_MESSAGE_LIST_SIZE = old_MAX_MESSAGE_LIST_SIZE
+      for i in range(10):
+        method_name = 'dummy_counter_%s' % i
+        delattr(Organisation, method_name)
+
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestCMFActivity))

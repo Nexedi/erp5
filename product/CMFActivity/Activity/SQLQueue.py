@@ -88,13 +88,13 @@ class SQLQueue(RAMQueue, SQLBase):
       date_list = [m.activity_kw.get('at_date', None) for m in registered_message_list]
       tag_list = [m.activity_kw.get('tag', '') for m in registered_message_list]
       serialization_tag_list = [m.activity_kw.get('serialization_tag', '') for m in registered_message_list]
-      message_list = [self.dumpMessage(m) for m in registered_message_list]
+      dumped_message_list = [self.dumpMessage(m) for m in registered_message_list]
       activity_tool.SQLQueue_writeMessageList(uid_list=uid_list,
                                               path_list=path_list,
                                               active_process_uid_list=active_process_uid_list,
                                               method_id_list=method_id_list,
                                               priority_list=priority_list,
-                                              message_list=message_list,
+                                              message_list=dumped_message_list,
                                               date_list=date_list,
                                               tag_list=tag_list,
                                               processing_node_list=None,
