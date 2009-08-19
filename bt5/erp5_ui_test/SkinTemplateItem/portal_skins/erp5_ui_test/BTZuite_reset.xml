@@ -63,11 +63,11 @@ for bt in bt_list:\n
 # modify repository list information\n
 if end:\n
   # set default repository list when test is finished\n
-  repository_list = [\'http://torrent.erp5.org/dists/snapshot/bt5\']\n
+  repository_list = [\'http://www.erp5.org/dists/snapshot/bt5\']\n
 else:\n
   # just used test repository to not display to many bt and thus have listbox\n
   # with many pages\n
-  repository_list = [\'http://torrent.erp5.org/dists/snapshot/test_bt5\']\n
+  repository_list = [\'http://www.erp5.org/dists/snapshot/test_bt5\']\n
 \n
 context.portal_templates.updateRepositoryBusinessTemplateList(repository_list)\n
 \n
