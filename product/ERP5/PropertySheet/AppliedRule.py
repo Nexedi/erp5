@@ -36,6 +36,7 @@ class AppliedRule:
 
   _properties = (
         {   'id'          : 'last_expand_simulation_state',
+            # XXX: This property shall be deprecated soon
             'description' : 'Contains the id of the simulation state when the '\
                             'object was last expanded (in order to avoid '\
                             'recalculation)',
@@ -49,6 +50,12 @@ class AppliedRule:
             'alt_accessor_id'               : ('getLastExpandSimulationState', ),
 
             'type'        : 'string',
+            'mode'        : 'w' },
+        {   'id'          : 'prevent_compensation',
+            'description' : 'Controls the fact if compensation is allowed or '
+                            'not in part of tree controlled by Applied Rule',
+            'type'        : 'boolean',
+            'default'     : False,
             'mode'        : 'w' },
   )
 
