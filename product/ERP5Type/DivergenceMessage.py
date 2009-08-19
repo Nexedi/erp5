@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright (c) 2008 Nexedi SA and Contributors. All Rights Reserved.
+# Copyright (c) 2008-2009 Nexedi SA and Contributors. All Rights Reserved.
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsibility of assessing all potential
@@ -32,14 +32,38 @@ from zLOG import LOG, PROBLEM, INFO
 class DivergenceMessage(ObjectMessage):
   """
   Divergence Message is used for notifications to user about divergences.
+
+  Properties are:
+
+   * divergence_scope
+     Scope of divergence as defined in collect_order_group category
+
+   * object_relative_url
+     Relative url of delivery line with divergence
+
+   * simulation_movement
+     Simulation Movement object
+
+   * decision_value
+     Value of decision (reality)
+
+   * prevision_value
+     Value of prevision (simulation)
+
+   * tested_property
+     Id of diverged property
+
+   * message
+     User understandable message about divergence
   """
   def getMovementGroup(self):
+    """Returns movement group of a builder which was responsible for generating tested_property"""
     divergence_scope = getattr(self, 'divergence_scope', None)
     if divergence_scope is None:
       return []
     tested_property = getattr(self, 'tested_property', None)
-    movement_group_list = []
     delivery = self.simulation_movement.getDeliveryValue().getParentValue()
+    # XXX: assumes one builder used in delivery, will use BPM in future
     for builder in delivery.getBuilderList():
       for movement_group in builder.getMovementGroupList():
         if movement_group.getDivergenceScope() == divergence_scope:
@@ -48,6 +72,7 @@ class DivergenceMessage(ObjectMessage):
             return movement_group
 
   def getCollectOrderGroup(self):
+    """Wraps and canonises result of Movement Groups' getCollectOrderGroup getter"""
     movement_group = self.getMovementGroup()
     if movement_group is not None:
       return movement_group.getCollectOrderGroup()
