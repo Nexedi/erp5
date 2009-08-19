@@ -1,3 +1,8 @@
+2009-08-19 Mohamadou
+* Disallow Export as vCard in  other modules
+* Add check/uncheck checkbox in list view
+* Add "Configure icon" in actions box
+
 2009-03-10 Mohamadou
 * In listmode it is now posible to copy/paste/cut/delete/find/filter/show_all/sort or add new element.
 * In document view it is possible to clone or add new one

@@ -132,10 +132,10 @@
           <div class="top_list">\n
             <div id="listbox_title_line" tal:attributes="id string:${field_id}_title_line" class="List_top">\n
                 <!-- <tal:block tal:define="global field_id string:${field_id}" /> -->\n
-\t        <span id="listbox_record_number"\n
+            <span id="listbox_record_number"\n
                   tal:attributes="id string:${field_id}_record_number"\n
                   i18n:translate="" i18n:domain="ui"><tal:block tal:replace="here/total_size" i18n:name="number">0</tal:block> record(s)</span>\n
-          <span id="listbox_item_number"\n
+            <span id="listbox_item_number"\n
                   tal:attributes="id string:${field_id}_item_number; class string:listbox_item_number"\n
                   i18n:translate="" i18n:domain="ui"> - <tal:block tal:replace="python: len(here.getCheckedUidList())" i18n:name="number">0</tal:block> item(s) selected</span>\n
                  <input type="hidden" tal:attributes="id string:${field_id}_listMax; name string:${field_id}_listMax; value python: len(search_value_list)">\n
@@ -173,8 +173,23 @@
                           src string:${portal_url_string}/images/1rightarrowv.png;\n
                           class string:listbox_next_page"\n
                           i18n:domain="ui" i18n:attributes="title" />&nbsp;&nbsp;\n
+                  <br />\n
+                  <tal:block tal:condition="python: len(line_list)>0">\n
+                  <input id="listbox_check_all" type="image"\n
+                  name="checkAll:method" value="1"\n
+                  src="checkall.png" alt="Check All" title="Check All"\n
+                  class="listbox_check_all"\n
+                  tal:attributes="id string:${field_id}_check_all;\n
+                  name string:${field_id}_checkAll:method;\n
+                  src string:${portal_url_string}/images/checkall.png"\n
+                  i18n:domain="ui" i18n:attributes="title" />&nbsp;<input id="listbox_uncheck_all" type="image" name="uncheckAll:method" value="1"\n
+                  src="%(portal_url_string)s/images/decheckall.png" style="border: 0" alt="Uncheck All" title="Uncheck All" class="listbox_uncheck_all"\n
+                  tal:attributes="id string:${field_id}_uncheck_all;\n
+                  name string:${field_id}_uncheckAll:method;\n
+                  src string:${portal_url_string}/images/decheckall.png"\n
+                  i18n:domain="ui" i18n:attributes="title" />&nbsp;&nbsp;&nbsp;\n
+                  </tal:block>\n
                 </span>\n
-\n
             </div>\n
           </div>\n
         </div>\n
@@ -217,10 +232,10 @@
                                 i18n:domain="ui" i18n:translate="">Show</a>\n
                 </div>\n
               </tal:block>\n
-\t          <div name="selection_mui" style="padding-bottom: 5px;">\n
+               <div name="selection_mui" style="padding-bottom: 5px;">\n
 \n
-             <select id="select_search_field" onChange="javascript: showSearchSelectedColumn();" name="select_search_field">\n
-                   <tal:block tal:repeat="valueX search_value_list">\n
+                    <select id="select_search_field" onChange="javascript: showSearchSelectedColumn();" name="select_search_field">\n
+                      <tal:block tal:repeat="valueX search_value_list">\n
                         <tal:block tal:define="\n
                                      aliasX python: valueX[0];\n
                                      paramX python: valueX[1];\n
@@ -249,7 +264,7 @@
                                tal:attributes="name alias; value param; id python: \'%s%s\' % (\'input\', foo)" type="text"/>\n
                        </span>\n
                     </div>\n
-                  </tal:block>\n
+                  </tal:block>\t      \n
               </div>\n
             </div>\n
 \n

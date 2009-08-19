@@ -140,6 +140,17 @@ XXX: Folder_filter accesses selection directly\n
                       <span class="image"></span>\n
                       <span class="description" i18n:translate="" i18n:domain="ui">Sort</span>\n
                     </a>\n
+                    <tal:block tal:condition="list_mode">\n
+                      <tal:block tal:condition="ui_actions">\n
+                      <span class="separator"><!--separator--></span>\n
+                      <a class="configure" title="Configure"\n
+                          tal:attributes="href python: portal.ERP5Site_renderCustomLink(ui_actions[0][\'url\'], http_parameter_list, dialog_category=\'object_ui\')"\n
+                          i18n:attributes="title" i18n:domain="ui">\n
+                          <span class="image"></span>\n
+                          <span class="description" i18n:translate="" i18n:domain="ui">Configure</span>\n
+                      </a>\n
+                      </tal:block>\n
+                    </tal:block>\n
                   </tal:block>\n
                 </span><br />\n
 \n

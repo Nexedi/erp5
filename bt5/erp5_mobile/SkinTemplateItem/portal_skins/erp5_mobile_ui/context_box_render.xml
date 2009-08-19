@@ -118,8 +118,9 @@ XXX: Folder_filter accesses selection directly\n
               <script>\n
                 loadDivSize();\n
               </script>\n
-              <div id="shortcuts" class="shortcuts">\n
-                <a class="import_export"\n
+              <div id="shortcuts" class="shortcuts" >\n
+                <a tal:condition="python: here.getPortalType() in [\'Person\',]"\n
+                   class="import_export"\n
                    title="Import / Export"\n
                    tal:attributes="href python:here.ERP5Site_renderLink(\'Person_exportPersonAsvCard\',http_parameters)"\n
                    i18n:attributes="title" i18n:domain="ui">\n
@@ -127,6 +128,10 @@ XXX: Folder_filter accesses selection directly\n
                     <span class="link" i18n:translate="" i18n:domain="ui">Export as vCard</span>\n
                   </button>\n
                 </a>\n
+      <button class="button" i18n:translate="" i18n:domain="ui">\n
+                    <span class="link" i18n:translate="" i18n:domain="ui">&nbsp;</span>\n
+                </button>\n
+\n
               </div>\n
               <script>\n
                 affShortcuts ();\n
