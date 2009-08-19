@@ -328,24 +328,16 @@ class PropertyHolder:
       accessor = Base._doNothing
     else:
       # Case 2 : a workflow method over an accessor
-      #LOG('createAccessor', 0, "%s %s %s" % (ptype, id, fake_accessor))
       (accessor_class, accessor_args, key) = fake_accessor
       accessor = accessor_class(id, key, *accessor_args)
-      #permission = getattr(self, '%s__roles__' % id, None)
-      #if permission is not None:
-        #LOG('Found security declaration', 0, id)
-        #accessor.__roles__ = permission.__of__(self)
-        #LOG('Found security declaration2', 0, repr(permission.__of__(self)))
     for wf_id, tr_id, once in self.workflow_method_registry.get(id, ()):
       if not isinstance(accessor, WorkflowMethod):
-        #LOG('createWorkflowMethod', 0, "%s %s %s %s" % (ptype, id, wf_id, tr_id))
         accessor = WorkflowMethod(accessor)
         if once:
           accessor.registerTransitionOncePerTransaction(ptype, wf_id, tr_id)
         else:
           accessor.registerTransitionAlways(ptype, wf_id, tr_id)
       else:
-        #LOG('registerTransition', 0, "%s %s %s %s" % (ptype, id, wf_id, tr_id))
         if once:
           accessor.registerTransitionOncePerTransaction(ptype, wf_id, tr_id)
         else:
