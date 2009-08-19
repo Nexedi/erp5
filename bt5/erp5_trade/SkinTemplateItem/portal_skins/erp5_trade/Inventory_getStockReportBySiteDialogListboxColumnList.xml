@@ -65,9 +65,6 @@ if item_stock==1:\n
   column_item_list.append((\'aggregate_title_list\',\n
                            \'Items aggregated\'))\n
 \n
-  column_item_list.append((\'aggregate_quantity_list\',\n
-                           \'Items Quantity List\'))\n
-\n
 \n
 return column_item_list\n
 </string> </value>

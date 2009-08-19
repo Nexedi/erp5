@@ -58,9 +58,8 @@ from Products.ERP5Type.Utils import cartesianProduct\n
 from DateTime import DateTime\n
 portal = context.getPortalObject()\n
 request = portal.REQUEST\n
-\n
-at_date = request.form["at_date"]\n
-context.log(at_date)\n
+at_date = request.form["at_date"].Date()\n
+at_date = DateTime().Date()\n
 \n
 tracking_parameters = {\n
     \'node_uid\': context.node_uid,\n
@@ -68,33 +67,24 @@ tracking_parameters = {\n
     \'section_uid\' : context.section_uid,\n
     \'at_date\': context.getStartDate(),\n
     \'output\': 0,\n
-\n
-    \'item_catalog_title\': request.get(\'title\') or \'\',\n
-    \'item_catalog_reference\': request.get(\'reference\') or \'\',\n
-    \'item_catalog_portal_type\': \'Item\',\n
 }\n
 result_list = []\n
-\n
+item_dict ={}\n
 check_variation = bool(context.getVariationCategoryList())\n
 if check_variation==True and context.getPortalType()!=\'Simulation Movement\':\n
   acceptable_variation_category_list = \\\n
       cartesianProduct(context.getObject().getCellRange(base_id=\'movement\'))\n
 \n
-\n
   for tracking_brain in portal.portal_simulation.getTrackingList(\n
                             **tracking_parameters):\n
     item = tracking_brain.getObject()\n
   \n
-    # XXX can this be done in SQL ?\n
-    # it could, by computing all variation texts, but I don\'t think this is\n
-    # really necessary.\n
     if check_variation and \\\n
       item.Item_getVariationCategoryList(at_date=context.getStartDate())\\\n
       not in acceptable_variation_category_list:\n
       continue\n
-  \n
-    result_list.append(item.getQuantity(at_date=DateTime().Date()))\n
-\n
+    item_dict = "%s : %s"%(item.getTitle(),item.getQuantity(at_date=at_date))\n
+    result_list.append(item_dict)\n
 return result_list\n
 </string> </value>
         </item>
@@ -150,6 +140,7 @@ return result_list\n
                             <string>_getitem_</string>
                             <string>tracking_parameters</string>
                             <string>result_list</string>
+                            <string>item_dict</string>
                             <string>bool</string>
                             <string>check_variation</string>
                             <string>True</string>
@@ -180,7 +171,7 @@ return result_list\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Inventory_getAggregatedItemsQuantityList</string> </value>
+            <value> <string>Inventory_getAggregatedItemList</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

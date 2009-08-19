@@ -137,10 +137,6 @@
                           <string>Items aggregated</string>
                         </tuple>
                         <tuple>
-                          <string>aggregate_quantity_list</string>
-                          <string>Items Quantity List</string>
-                        </tuple>
-                        <tuple>
                           <string>getInventory</string>
                           <string>Stock</string>
                         </tuple>
