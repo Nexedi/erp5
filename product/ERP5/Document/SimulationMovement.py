@@ -32,6 +32,7 @@ from Products.CMFCore.utils import getToolByName
 
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
+from Globals import PersistentMapping
 
 from Products.ERP5.Document.Movement import Movement
 
@@ -40,6 +41,7 @@ from zLOG import LOG, WARNING
 from Acquisition import aq_base
 
 from Products.ERP5.Document.AppliedRule import TREE_DELIVERED_CACHE_KEY, TREE_DELIVERED_CACHE_ENABLED
+from Products.ERP5Type.patches.WorkflowTool import WorkflowHistoryList
 
 # XXX Do we need to create groups ? (ie. confirm group include confirmed, getting_ready and ready
 
@@ -576,3 +578,34 @@ class SimulationMovement(Movement):
                 # related movements delivery is not completed
                 return False
     return True
+
+  security.declareProtected( Permissions.ModifyPortalContent,
+                             'appendDecision')
+  def appendDecision(self, decision):
+    """Appends decision, optionally initialises"""
+    property = decision.divergence.tested_property
+    if getattr(aq_base(self), 'divergence_history', None) is None:
+      # initialise divergence history mapping
+      self.divergence_history = PersistentMapping()
+    if self.divergence_history.get(property, None) is None:
+      self.divergence_history[property] = WorkflowHistoryList()
+    self.divergence_history[property].append(decision)
+
+  security.declareProtected( Permissions.AccessContentsInformation,
+                             'isPropertyForced')
+  def isPropertyForced(self, property):
+    """Check if property was forced by user"""
+    divergence_history = getattr(aq_base(self), 'divergence_history', None)
+    if divergence_history is None:
+      return False
+
+    for decision in divergence_history.get(property, [])[::-1]:
+      # fuzzy logic:
+      #  * if there was accept decision with force - force
+      #  * but if there was accept without force after - do not force
+      # To be discussed.
+      if decision.decision == 'accept':
+        if decision.force_property:
+          return True
+        return False
+    return False
