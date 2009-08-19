@@ -61,7 +61,7 @@
 <tal:block tal:repeat="item python:news_area_section.getDocumentValueList(limit=10, sort_on=[(\'modification_date\',\'descending\')])">\n
   <li><a href="#"\n
        tal:attributes="href python:news_area_section.getPermanentURL(item)"\n
-       tal:content="item/getTitle" /> (<tal:block tal:replace="python:item.getModificationDate().Date()"/>)</li>\n
+       tal:content="item/getTitle" /> <tal:block tal:replace="item/getDescription" /> (<tal:block tal:replace="python:item.getModificationDate().Date()"/>)</li>\n
 </tal:block>\n
 </ul>\n
 </tal:block>\n
