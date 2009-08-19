@@ -99,6 +99,8 @@ def initialize( context ):
                                                    'WorkflowException')
   ModuleSecurityInfo('Products.ERP5.Document.Image').declarePublic(
                                                 'getSizeFromImageDisplay')
+  ModuleSecurityInfo('Products.ERP5.DivergenceDecision').declarePublic(
+                                                'DivergenceDecision')
 
 # backward compatibility names
 XML = None
