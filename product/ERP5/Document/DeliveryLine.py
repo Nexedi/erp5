@@ -28,15 +28,13 @@
 
 from AccessControl import ClassSecurityInfo
 
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
+from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLMatrix import XMLMatrix
 from Products.ERP5Type.XMLObject import XMLObject
 
 from Products.ERP5.Document.Movement import Movement
 from Products.ERP5.Variated import Variated
 from Products.ERP5.Document.ImmobilisationMovement import ImmobilisationMovement
-
-from zLOG import LOG
 
 class DeliveryLine(Movement, XMLObject, XMLMatrix, Variated,
                    ImmobilisationMovement):
@@ -225,34 +223,6 @@ class DeliveryLine(Movement, XMLObject, XMLMatrix, Variated,
 
       return XMLMatrix.newCell(self, *kw, **kwd)
 
-    security.declareProtected(Permissions.View, 'isDivergent')
-    def isDivergent(self):
-      """
-        Returns 1 if the target is not met according to the current information
-        After and edit, the isOutOfTarget will be checked. If it is 1,
-        a message is emitted
-
-        emit targetUnreachable !
-      """
-      if self.getDivergenceList() == []:
-        return 0
-      else:
-        return 1
-  
-    security.declareProtected(Permissions.View, 'getDivergenceList')
-    def getDivergenceList(self):
-      """
-      Return a list of messages that contains the divergences
-      """
-      divergence_list = []
-      if self.hasCellContent():
-        for cell in self.contentValues(filter={
-                'portal_type': self.getPortalDeliveryMovementTypeList()}):
-          divergence_list.extend(cell.getDivergenceList())
-        return divergence_list
-      else:
-        return Movement.getDivergenceList(self)
-     
     def applyToDeliveryLineRelatedMovement(self, portal_type='Simulation Movement', method_id = 'expand'):
       # Find related in simulation
       for my_simulation_movement in self.getDeliveryRelatedValueList(
@@ -395,3 +365,203 @@ class DeliveryLine(Movement, XMLObject, XMLMatrix, Variated,
         container.reindexObject()
       return Movement.manage_beforeDelete(self, item, container)
 
+# divergence support with solving
+
+    security.declareProtected(Permissions.View, 'isDivergent')
+    def isDivergent(self):
+      """
+        Returns 1 if the target is not met according to the current information
+        After and edit, the isOutOfTarget will be checked. If it is 1,
+        a message is emitted
+
+        emit targetUnreachable !
+      """
+      if self.getDivergenceList() == []:
+        return 0
+      else:
+        return 1
+
+    security.declareProtected(Permissions.View, 'getDivergenceList')
+    def getDivergenceList(self):
+      """
+      Return a list of messages that contains the divergences
+      """
+      divergence_list = []
+      if self.hasCellContent():
+        for cell in self.contentValues(filter={
+                'portal_type': self.getPortalDeliveryMovementTypeList()}):
+          divergence_list.extend(cell.getDivergenceList())
+        return divergence_list
+      else:
+        return Movement.getDivergenceList(self)
+
+    def _distributePropertyToSimulation(self, decision):
+      """Distributes property from self to all related simulation movements
+
+      AKA - accept decision"""
+      for simulation_movement in self.getDeliveryRelatedValueList(
+          portal_type='Simulation Movement'):
+        simulation_movement.edit(**{
+          decision.divergence.tested_property:
+            self.getProperty(decision.divergence.tested_property)
+        })
+
+    def _updatePropertyFromSimulation(self, decision_list):
+      """Update property from simulation
+      'Stolen' from Products.ERP5.Document.DeliveryBuilder._solveDivergence
+
+      Another possibility is to just simply copy properties or, in case of
+      quantity, add from all simulation movements.
+      """
+      simulation_movement_list = self.getDeliveryRelatedValueList(
+                                      portal_type="Simulation Movement")
+
+      business_path = simulation_movement_list[0].getCausalityValue()
+      delivery = self.getExplanationValue()
+      delivery_portal_type = delivery.getPortalType()
+      delivery_line_portal_type = self.getPortalType()
+      # we need to find only one matching delivery builder
+      for delivery_builder in business_path.getDeliveryBuilderValueList():
+        if delivery_builder.getDeliveryPortalType() == \
+             delivery_portal_type and \
+           delivery_builder.getDeliveryLinePortalType() == \
+             delivery_line_portal_type:
+          break
+      else:
+        raise ValueError('No builder found')
+
+      self.edit(quantity=0) # adoption have to 'rebuild' delivery line
+      movement_type_list = (delivery_builder.getDeliveryLinePortalType(),
+              delivery_builder.getDeliveryCellPortalType())
+      # Collect
+      root_group_node = delivery_builder.collectMovement(
+          simulation_movement_list)
+
+      divergence_list = [decision.divergence for decision in decision_list]
+
+      # Build
+      portal = self.getPortalObject()
+      delivery_module = getattr(portal, delivery_builder.getDeliveryModule())
+      delivery_to_update_list = [delivery]
+      delivery_builder._resetUpdated()
+      delivery_list = delivery_builder._processDeliveryGroup(
+        delivery_module,
+        root_group_node,
+        delivery_builder.getDeliveryMovementGroupList(),
+        delivery_to_update_list=delivery_to_update_list,
+        divergence_list=divergence_list,
+        force_update=1)
+
+      new_delivery_list = [x for x in delivery_list if x != delivery]
+      if new_delivery_list:
+        raise ValueError('No new deliveries shall be created')
+
+      # Then, we should re-apply quantity divergence according to 'Do
+      # nothing' quantity divergence list because all quantity are already
+      # calculated in adopt prevision phase.
+      quantity_dict = {}
+      for divergence in self.getDivergenceList():
+        if divergence.getProperty('divergence_scope') != 'quantity' or \
+               divergence in divergence_list:
+          continue
+        s_m = divergence.getProperty('simulation_movement')
+        delivery_movement = s_m.getDeliveryValue()
+        assert delivery_movement == self
+        quantity_gap = divergence.getProperty('decision_value') - \
+                       divergence.getProperty('prevision_value')
+        delivery_movement.setQuantity(delivery_movement.getQuantity() + \
+                                      quantity_gap)
+        quantity_dict[s_m] = \
+            divergence.getProperty('decision_value')
+
+      # Finally, recalculate delivery_ratio
+      #
+      # Here, created/updated movements are not indexed yet. So we try to
+      # gather delivery relations from simulation movements.
+      delivery_dict = {}
+      for s_m in simulation_movement_list:
+        delivery_path = s_m.getDelivery()
+        delivery_dict[delivery_path] = \
+                                     delivery_dict.get(delivery_path, []) + \
+                                     [s_m]
+
+      for s_m_list_per_movement in delivery_dict.values():
+        total_quantity = sum([quantity_dict.get(s_m, s_m.getQuantity()) \
+                              for s_m in s_m_list_per_movement])
+        if total_quantity != 0.0:
+          for s_m in s_m_list_per_movement:
+            delivery_ratio = quantity_dict.get(s_m, s_m.getQuantity()) \
+                                               / total_quantity
+            s_m.edit(delivery_ratio=delivery_ratio)
+        else:
+          for s_m in s_m_list_per_movement:
+            delivery_ratio = 1.0 / len(s_m_list_per_movement)
+            s_m.edit(delivery_ratio=delivery_ratio)
+
+    def solve(self, decision_list):
+      """Solves line according to decision list
+      decision_list is list of DivergenceDecision class instance
+      """
+
+      """How to play
+delivery_line = context
+from DateTime import DateTime
+from Products.ERP5.DivergenceDecision import DivergenceDecision
+decision_list = []
+
+# adopt
+for d in context.getDivergenceList():
+  decision = DivergenceDecision(d, 'adopt', None, None)
+  decision_list.append(decision)
+
+delivery_line.solve(decision_list)
+return 'ok'
+
+# split
+for d in delivery_line.getDivergenceList():
+  if d.tested_property == 'quantity':
+    split_kw = {}
+    split_kw.update(start_date = DateTime('2009/01/01'),
+                    stop_date = DateTime('2009/01/10'))
+    decision = DivergenceDecision(d, 'split', None, 'SplitAndDefer',
+                                  split_kw = split_kw)
+    decision_list.append(decision)
+
+delivery_line.solve(decision_list)
+return 'ok'
+
+# adopt
+for d in delivery_line.getDivergenceList():
+  if d.tested_property == 'quantity':
+    decision = DivergenceDecision(d, 'adopt', None, None)
+    decision_list.append(decision)
+
+delivery_line.solve(decision_list)
+return 'ok'
+      """
+      simulation_tool = self.getPortalObject().portal_simulation
+      solveMovement = simulation_tool.solveMovement
+      solve_result_list = []
+      # accept + split
+      for decision in [q for q in decision_list if q.decision != 'adopt']:
+        for simulation_movement in self.getDeliveryRelatedValueList(
+            portal_type='Simulation Movement'):
+          simulation_movement.appendDecision(decision)
+        if decision.decision == 'accept':
+          # accepting - in case of passed DeliverySolver use it, otherwise
+          # simply copy values to simulation
+          if not decision.delivery_solver_name:
+            self._distributePropertyToSimulation(decision)
+          solveMovement(self, decision.delivery_solver_name,
+              decision.target_solver_name)
+        elif decision.decision == 'split':
+          solveMovement(self, decision.delivery_solver_name,
+              decision.target_solver_name, **decision.split_kw)
+        else: # aka - do nothing
+          pass
+      # adopt
+      adopt_decision_list = [q for q in decision_list \
+                             if q.decision == 'adopt']
+      if adopt_decision_list:
+        # XXX/FIXME appendDecision in this case
+        self._updatePropertyFromSimulation(adopt_decision_list)
