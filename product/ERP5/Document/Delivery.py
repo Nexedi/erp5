@@ -904,8 +904,6 @@ class Delivery(XMLObject, ImmobilisationDelivery):
     def disconnectSimulationMovementList(self, movement_list=None):
       """Disconnects simulation movements from delivery's lines
 
-      Note: This is experimental code, do not use in production system
-
       If movement_list is passed only those movements will be disconnected
       from simulation.
 
