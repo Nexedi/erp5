@@ -455,10 +455,7 @@ AAA=</string> </value>
               <text:p text:style-name=\'Item_20_Table_20_Title_20_Left\'><span tal:replace=\'orig_message\'/></text:p>\n
               <text:p text:style-name=\'Item_20_Table_20_Title_20_Left\' tal:condition=\'python:translated_message != orig_message\'><span tal:replace=\'translated_message\'/></text:p>\n
             </table:table-cell>\n
-            <table:table-cell table:style-name=\'Tableau1.A2\' office:value-type=\'string\' tal:define=\'orig_string string:Items; orig_message python:unicode(here.Base_translateString(orig_string, lang=default_language),"utf-8"); translated_message python:unicode(here.Base_translateString(orig_string),"utf-8")\'>\n
-              <text:p text:style-name=\'Item_20_Table_20_Title_20_Left\'><span tal:replace=\'orig_message\'/></text:p>\n
-              <text:p text:style-name=\'Item_20_Table_20_Title_20_Left\' tal:condition=\'python:translated_message != orig_message\'><span tal:replace=\'translated_message\'/></text:p>\n
-            </table:table-cell>\n
+            \n
             <table:table-cell table:style-name=\'Tableau1.A2\' office:value-type=\'string\' tal:define=\'orig_string string:Quantity; orig_message python:unicode(here.Base_translateString(orig_string, lang=default_language),"utf-8"); translated_message python:unicode(here.Base_translateString(orig_string),"utf-8")\'>\n
               <text:p text:style-name=\'Item_20_Table_20_Title_20_Left\'><span tal:replace=\'orig_message\'/></text:p>\n
               <text:p text:style-name=\'Item_20_Table_20_Title_20_Left\' tal:condition=\'python:translated_message != orig_message\'><span tal:replace=\'translated_message\'/></text:p>\n
@@ -488,10 +485,6 @@ AAA=</string> </value>
             </table:table-cell>\n
             <table:table-cell table:style-name=\'Tableau1.A3\' office:value-type=\'string\'>\n
               <text:p text:style-name=\'Table_20_Contents\' tal:attributes="text:style-name left_style_name"><tal:block tal:repeat="line line_dict/description"><tal:block\n
-                    tal:replace="line"/><text:line-break tal:condition="not:repeat/line/end"/></tal:block></text:p>\n
-            </table:table-cell>\n
-            <table:table-cell table:style-name=\'Tableau1.A3\' office:value-type=\'string\'>\n
-              <text:p text:style-name=\'Table_20_Contents\' tal:attributes="text:style-name left_style_name"><tal:block tal:repeat="line line_dict/aggregate_title_list"><tal:block\n
                     tal:replace="line"/><text:line-break tal:condition="not:repeat/line/end"/></tal:block></text:p>\n
             </table:table-cell>\n
             <table:table-cell table:style-name=\'Tableau1.A3\'\n
