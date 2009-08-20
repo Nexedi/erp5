@@ -3,7 +3,7 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <global name="InputButtonField" module="Products.ERP5Form.InputButtonField"/>
+        <global name="LabelField" module="Products.Formulator.StandardFields"/>
         <tuple/>
       </tuple>
     </pickle>
@@ -11,7 +11,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>confirm_information</string> </value>
+            <value> <string>payment</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -23,10 +23,6 @@
             <key> <string>overrides</string> </key>
             <value>
               <dictionary>
-                <item>
-                    <key> <string>alternate_name</string> </key>
-                    <value> <string></string> </value>
-                </item>
                 <item>
                     <key> <string>css_class</string> </key>
                     <value> <string></string> </value>
@@ -56,10 +52,6 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>name</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>title</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -70,10 +62,6 @@
             <key> <string>tales</string> </key>
             <value>
               <dictionary>
-                <item>
-                    <key> <string>alternate_name</string> </key>
-                    <value> <string></string> </value>
-                </item>
                 <item>
                     <key> <string>css_class</string> </key>
                     <value> <string></string> </value>
@@ -105,10 +93,6 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>name</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>title</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -120,16 +104,16 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>alternate_name</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>css_class</string> </key>
                     <value> <string>hiddenLabel</string> </value>
                 </item>
                 <item>
                     <key> <string>default</string> </key>
-                    <value> <string>Confirm informations</string> </value>
+                    <value> <string encoding="cdata"><![CDATA[
+
+<h2>Select Payment Mode</h2>
+
+]]></string> </value>
                 </item>
                 <item>
                     <key> <string>description</string> </key>
@@ -152,16 +136,8 @@
                     <value> <int>0</int> </value>
                 </item>
                 <item>
-                    <key> <string>image</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>name</string> </key>
-                    <value> <string>SaleOrder_viewAsWebConfirmPaymentMode:method</string> </value>
-                </item>
-                <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Confirm informations</string> </value>
+                    <value> <string>Select Payment Mode</string> </value>
                 </item>
               </dictionary>
             </value>
@@ -172,11 +148,8 @@
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.Formulator.TALESField</string>
-          <string>TALESMethod</string>
-        </tuple>
-        <none/>
+        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>

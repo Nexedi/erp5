@@ -1,3 +1,7 @@
+2009-08-20 lucas
+* Merged the three forms (SaleOrder_viewAsWebConfirmPaymentMode,
+SaleOrder_viewAsWebConfirmPersonalInformation and SaleOrder_viewAsWebConfirm) into only one SaleOrder_viewAsWebConfirm.
+
 2008-11-13 ivan
 * Move portal_sessions to erp5_core
 

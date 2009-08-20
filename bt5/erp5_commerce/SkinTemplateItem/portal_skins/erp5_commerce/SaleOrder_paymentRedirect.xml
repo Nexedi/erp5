@@ -67,7 +67,7 @@ else:\n
     msg = translateString("This payment mode is actually not activated, sorry: ${payment_mode}", \n
                           mapping=dict(payment_mode=field_my_payment_mode))\n
 \n
-context.Base_redirect(\'SaleOrder_viewAsWebConfirmPaymentMode\', \\\n
+context.Base_redirect(\'SaleOrder_viewAsWebConfirm\', \\\n
                         keep_items={\'portal_status_message\': msg})\n
 return\n
 </string> </value>
