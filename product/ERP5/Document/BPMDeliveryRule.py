@@ -31,12 +31,10 @@
 
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
-from Products.ERP5.Document.BPMRule import BPMRule
+from Products.ERP5.Document.Rule import Rule
 
-class BPMDeliveryRule(BPMRule):
+class BPMDeliveryRule(Rule):
   """
-    DISCLAIMER: Refer to BPMRule docstring disclaimer.
-
     This is BPM enabled Delivery Rule.
   """
 

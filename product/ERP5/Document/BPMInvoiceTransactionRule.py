@@ -30,13 +30,11 @@
 
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
-from Products.ERP5.Document.BPMRule import BPMRule
+from Products.ERP5.Document.Rule import Rule
 from Products.ERP5.Document.PredicateMatrix import PredicateMatrix
 
-class BPMInvoiceTransactionRule(BPMRule, PredicateMatrix):
+class BPMInvoiceTransactionRule(Rule, PredicateMatrix):
   """
-    DISCLAIMER: Refer to BPMRule docstring disclaimer.
-
     This is BPM enabled Invoice Transaction Rule.
   """
 

@@ -1,13 +1,15 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2002-2009 Nexedi SARL and Contributors. All Rights Reserved.
 #                    Jean-Paul Smets-Solanes <jp@nexedi.com>
+#                    Łukasz Nowak <luke@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
-# programmers who take the whole responsability of assessing all potential
+# programmers who take the whole responsibility of assessing all potential
 # consequences resulting from its eventual inadequacies and bugs
 # End users who are looking for a ready-to-use solution with commercial
-# garantees and support are strongly adviced to contract a Free Software
+# guarantees and support are strongly advised to contract a Free Software
 # Service Company
 #
 # This program is Free Software; you can redistribute it and/or
@@ -29,10 +31,10 @@
 import zope.interface
 from AccessControl import ClassSecurityInfo
 from Products.CMFCore.utils import getToolByName
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
+from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5.Document.Predicate import Predicate
-from Acquisition import aq_base, aq_parent, aq_inner, aq_acquire
+from Acquisition import aq_base
 from zLOG import LOG, WARNING
 
 class Rule(Predicate, XMLObject):
@@ -120,6 +122,10 @@ class Rule(Predicate, XMLObject):
                          activate_kw=activate_kw)
     return context.get(id)
 
+  def _isBPM(self):
+    """Checks if rule is used in BPM"""
+    return bool(self.getTradePhaseList())
+
   # Simulation workflow
   def test(self, *args, **kw):
     """
@@ -129,6 +135,29 @@ class Rule(Predicate, XMLObject):
       return False
     return Predicate.test(self, *args, **kw)
 
+  def _expandBPM(self, applied_rule, force=0, **kw):
+    """Generic expand with helpers.
+    Do NOT overload, use helpers."""
+    add_list, modify_dict, \
+      delete_list = self._getCompensatedMovementList(applied_rule, **kw)
+
+    # delete not needed movements
+    for movement_id in delete_list:
+      applied_rule._delObject(movement_id)
+
+    # update existing
+    for movement, property_dict in modify_dict.items():
+      applied_rule[movement].edit(**property_dict)
+
+    # add new ones
+    for movement_dict in add_list:
+      movement_id = applied_rule._get_id(movement_dict.pop('id', None))
+      new_movement = applied_rule.newContent(id=movement_id,
+          portal_type=self.movement_type, **movement_dict)
+
+    for o in applied_rule.objectValues():
+      o.expand(**kw)
+
   security.declareProtected(Permissions.ModifyPortalContent, 'expand')
   def expand(self, applied_rule, **kw):
     """
@@ -137,6 +166,8 @@ class Rule(Predicate, XMLObject):
       An applied rule can be expanded only if its parent movement
       is expanded.
     """
+    if self._isBPM():
+      return self._expandBPM(applied_rule, **kw)
     for o in applied_rule.objectValues():
       o.expand(**kw)
 
@@ -221,7 +252,35 @@ class Rule(Predicate, XMLObject):
         return 0
     return 1
 
-#### Helpers
+#### Helpers to overload
+  def _getExpandablePropertyUpdateDict(self, applied_rule, movement,
+      business_path, current_property_dict):
+    """Rule specific dictionary used to update _getExpandablePropertyDict
+    This method might be overloaded.
+    """
+    return {}
+
+  def _getInputMovementList(self, applied_rule):
+    """Return list of movements for applied rule.
+    This method might be overloaded"""
+    return [applied_rule.getParentValue()]
+
+  def _generatePrevisionList(self, applied_rule, **kw):
+    """
+    Generate a list of dictionaries, that contain calculated content of
+    current Simulation Movements in applied rule.
+    based on its context (parent movement, delivery, configuration ...)
+
+    These previsions are returned as dictionaries.
+    """
+    prevision_dict_list = []
+    for input_movement, business_path in self \
+        ._getInputMovementAndPathTupleList(applied_rule):
+      prevision_dict_list.append(self._getExpandablePropertyDict(applied_rule,
+          input_movement, business_path))
+    return prevision_dict_list
+
+#### Helpers NOT to overload
   def _getCurrentMovementList(self, applied_rule, **kw):
     """
     Returns the list of current children of the applied rule, sorted in 3
@@ -258,6 +317,121 @@ class Rule(Predicate, XMLObject):
     return (immutable_movement_list, mutable_movement_list,
             deletable_movement_list)
 
+  def _getInputMovementAndPathTupleList(self, applied_rule):
+    """Returns list of tuples (movement, business_path)"""
+    input_movement_list = self._getInputMovementList(applied_rule)
+    business_process = applied_rule.getBusinessProcessValue()
+
+    input_movement_and_path_list = []
+    business_path_list = []
+    for input_movement in input_movement_list:
+      for business_path in business_process.getPathValueList(
+                          self.getTradePhaseList(),
+                          input_movement):
+        input_movement_and_path_list.append((input_movement, business_path))
+        business_path not in business_path_list and business_path_list \
+            .append(business_path)
+
+    if len(business_path_list) > 1:
+      raise NotImplementedError
+
+    return input_movement_and_path_list
+
+  def _getCompensatedMovementListBPM(self, applied_rule, **kw):
+    """Compute the difference between prevision and existing movements
+
+    Immutable movements need compensation, mutable ones needs to be modified
+    """
+    add_list = [] # list of movements to be added
+    modify_dict = {} # dict of movements to be modified
+    delete_list = [] # list of movements to be deleted
+
+    prevision_list = self._generatePrevisionList(applied_rule, **kw)
+    immutable_movement_list, mutable_movement_list, \
+        deletable_movement_list = self._getCurrentMovementList(applied_rule,
+                                                               **kw)
+    movement_list = immutable_movement_list + mutable_movement_list \
+                    + deletable_movement_list
+    non_matched_list = movement_list[:] # list of remaining movements
+
+    for prevision in prevision_list:
+      p_matched_list = []
+      for movement in non_matched_list:
+        for prop in self.getMatchingPropertyList():
+          if prevision.get(prop) != movement.getProperty(prop):
+            break
+        else:
+          p_matched_list.append(movement)
+
+      # Movements exist, we'll try to make them match the prevision
+      if p_matched_list != []:
+        # Check the quantity
+        m_quantity = 0.0
+        for movement in p_matched_list:
+          m_quantity += movement.getQuantity()#getCorrectedQuantity()
+        if m_quantity != prevision.get('quantity'):
+          # special case - quantity
+          if movement.isPropertyForced('quantity'):
+            # TODO: support compensation if not prevent_compensation
+            LOG('%s:%s' % (self.getRelativeUrl(), movement.getRelativeUrl()), WARNING,
+                'Quantity forced to stay as %s, even if wanted %s' % (m_quantity, prevision.get('quantity')))
+            # DivergenceDecision mangle
+            pass
+          else:
+            q_diff = prevision.get('quantity') - m_quantity
+            # try to find a movement that can be edited
+            for movement in p_matched_list:
+              if movement in (mutable_movement_list \
+                  + deletable_movement_list):
+                # mark as requiring modification
+                prop_dict = modify_dict.setdefault(movement.getId(), {})
+                #prop_dict['quantity'] = movement.getCorrectedQuantity() + \
+                prop_dict['quantity'] = movement.getQuantity() + \
+                    q_diff
+                break
+            else:
+              # no modifiable movement was found, need to compensate by quantity
+              raise NotImplementedError('Need to generate quantity compensation')
+
+        for movement in p_matched_list:
+          if movement in (mutable_movement_list \
+              + deletable_movement_list):
+            prop_dict = modify_dict.setdefault(movement.getId(), {})
+            for k, v in prevision.items():
+              if k not in ('quantity',) and v != movement.getProperty(k):
+                # TODO: acceptance range
+                if movement.isPropertyForced(k):
+                  # support compensation if not prevent_compensation
+                  LOG('%s:%s' % (self.getRelativeUrl(), movement.getRelativeUrl()), WARNING,
+                      'Property %s forced to stay as %r, even if wanted %r' % (k, movement.getProperty(k), v))
+                  # DivergenceDecision mangle
+                  continue
+                prop_dict.setdefault(k, v)
+
+        # update movement lists
+        for movement in p_matched_list:
+          non_matched_list.remove(movement)
+
+      # No movement matched, we need to create one
+      else:
+        add_list.append(prevision)
+
+    # delete non matched movements
+    for movement in non_matched_list:
+      if movement in deletable_movement_list:
+        # delete movement
+        delete_list.append(movement.getId())
+      elif movement in mutable_movement_list:
+        # set movement quantity to 0 to make it "void"
+        prop_dict = modify_dict.setdefault(movement.getId(), {})
+        prop_dict['quantity'] = 0.0
+      else:
+        # movement not modifiable, we can decide to create a compensation
+        # with negative quantity
+        raise NotImplementedError("Tried to delete immutable movement %s" % \
+            movement.getRelativeUrl())
+    return (add_list, modify_dict, delete_list)
+
   def _getCompensatedMovementList(self, applied_rule,
                                   matching_property_list=(
                                   'resource',
@@ -271,6 +445,9 @@ class Rule(Predicate, XMLObject):
     XXX For now, this implementation is too simple. It could be improved by
     using MovementGroups
     """
+    if self._isBPM():
+      return self._getCompensatedMovementListBPM(applied_rule,
+          matching_property_list=matching_property_list, **kw)
     add_list = [] # list of movements to be added
     modify_dict = {} # dict of movements to be modified
     delete_list = [] # list of movements to be deleted
@@ -358,3 +535,55 @@ class Rule(Predicate, XMLObject):
                 "Can not create a compensation movement for %s" % \
                 movement.getRelativeUrl())
     return (add_list, modify_dict, delete_list)
+
+  def _getExpandablePropertyDict(self, applied_rule, movement, business_path,
+      **kw):
+    """
+    Return a Dictionary with the Properties used to edit the simulation
+    Do NOT overload this method, use _getExpandablePropertyUpdateDict instead
+    """
+    property_dict = {}
+
+    default_property_list = self.getExpandablePropertyList()
+    for prop in default_property_list:
+      property_dict[prop] = movement.getProperty(prop)
+
+    # Arrow
+    for base_category in \
+        business_path.getSourceBaseCategoryList() +\
+        business_path.getDestinationBaseCategoryList():
+      # XXX: we need to use _list for categories *always*
+      category_url = business_path.getDefaultAcquiredCategoryMembership(
+          base_category, context=movement)
+      if category_url not in ['', None]:
+        property_dict['%s_list' % base_category] = [category_url]
+      else:
+        property_dict['%s_list' % base_category] = []
+    # Amount
+    if business_path.getQuantity():
+      property_dict['quantity'] = business_path.getQuantity()
+    elif business_path.getEfficiency():
+      property_dict['quantity'] = movement.getQuantity() *\
+        business_path.getEfficiency()
+    else:
+      property_dict['quantity'] = movement.getQuantity()
+
+    if movement.getStartDate() == movement.getStopDate():
+      property_dict['start_date'] = business_path.getExpectedStartDate(
+          movement)
+      property_dict['stop_date'] = business_path.getExpectedStopDate(movement)
+    else: # XXX shall not be used, but business_path.getExpectedStart/StopDate
+          # do not works on second path...
+      property_dict['start_date'] = movement.getStartDate()
+      property_dict['stop_date'] = movement.getStopDate()
+
+    # rule specific
+    property_dict.update(**self._getExpandablePropertyUpdateDict(applied_rule,
+      movement, business_path, property_dict))
+
+    # save a relation to business path
+    property_dict['causality_list'] = [business_path.getRelativeUrl()]
+
+    return property_dict
+
+

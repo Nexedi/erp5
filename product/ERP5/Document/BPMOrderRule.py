@@ -35,8 +35,6 @@ from Products.ERP5.Document.BPMDeliveryRule import BPMDeliveryRule
 
 class BPMOrderRule(BPMDeliveryRule):
   """
-    DISCLAIMER: Refer to BPMRule docstring disclaimer.
-
     This is BPM enabled Order Rule.
   """
   # CMF Type Definition
