@@ -38,7 +38,8 @@ class TradeConditionTestCase(ERP5TypeTestCase):
   """
   def getBusinessTemplateList(self):
     return ('erp5_base', 'erp5_pdm', 'erp5_trade', 'erp5_accounting',
-            'erp5_invoicing', 'erp5_simplified_invoicing')
+            'erp5_invoicing', 'erp5_tax_resource', 'erp5_discount_resource',
+            'erp5_legacy_tax_system', 'erp5_simplified_invoicing',)
 
   size_category_list = ['small', 'big']
   def afterSetUp(self):
