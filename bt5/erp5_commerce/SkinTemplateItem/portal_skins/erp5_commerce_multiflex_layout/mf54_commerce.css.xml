@@ -81,15 +81,15 @@ div.portal_status_message h3 {margin:0px;}\n
 \n
 #fieldset_left {padding:10px;}\n
 #fieldset_left div.field {margin-top:5px; margin-bottom: 10px;}\n
-#fieldset_left label {float:left; width: <tal:block tal:replace="python: main_content_width / 5"/>px;}\n
+#fieldset_left label {font-size: 120% !important; color:#505050; float:left;  width: <tal:block tal:replace="python: main_content_width / 5"/>px;}\n
 #fieldset_left label a {display:none;}\n
 #fieldset_right {padding:10px;}\n
 #fieldset_right div.field {margin-top:5px; margin-bottom: 10px;}\n
-#fieldset_right label {float:left; width:<tal:block tal:replace="python: main_content_width / 5"/>px;}\n
+#fieldset_right label {font-size: 120% !important; color:#505050; float:left; width:<tal:block tal:replace="python: main_content_width / 5"/>px;}\n
 #fieldset_right label a {display:none;}\n
 #fieldset_center {padding:10px;}\n
 #fieldset_center div.field {margin-top:5px; margin-bottom: 10px;}\n
-#fieldset_center label {float:left; width:<tal:block tal:replace="python: main_content_width / 5"/>px;}\n
+#fieldset_center label {font-size: 120% !important; color:#505050; float:left; width:<tal:block tal:replace="python: main_content_width / 5"/>px;}\n
 #fieldset_center label a {display:none;}\n
 \n
 div.subcontent-box.cartbox fieldset.widget div.field label {display: none;}\n

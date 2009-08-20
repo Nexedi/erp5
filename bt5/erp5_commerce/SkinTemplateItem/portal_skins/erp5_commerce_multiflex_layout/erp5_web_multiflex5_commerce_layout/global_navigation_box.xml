@@ -13,11 +13,12 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
                 <string>default</string>
-                <string>whitespace_preserve</string>
+                <string>description</string>
                 <string>enabled</string>
                 <string>height</string>
+                <string>title</string>
+                <string>whitespace_preserve</string>
                 <string>width</string>
               </list>
             </value>
@@ -93,6 +94,10 @@
 </div>
 
 ]]></string> </value>
+                </item>
+                <item>
+                    <key> <string>description</string> </key>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>enabled</string> </key>
