@@ -57,7 +57,7 @@ class ICachePlugin(Interface):
   def get(cache_id, scope, default=None):
     """get the calculated value according to the cache_id and scope.
     raise KeyError if key does not exists and no default value provided.
-    return CacheEntry
+    return CacheEntry or default
     """
 
   def set(cache_id, scope, value, cache_duration=None, calculation_time=0):
