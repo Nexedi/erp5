@@ -51,9 +51,9 @@
 <tr><td rowspan="1" colspan="3">Test update from svn (You\n
       must have checkout a copy of test_core in your svn dir)</td></tr>\n
 </thead><tbody>\n
+<tal:block tal:condition="python: context.TestTool_getSkinName()!=\'Mobile\'">\n
 <tal:block metal:use-macro="here/BTZuite_CommonTemplate/macros/init" />\n
 \n
-<tal:block tal:condition="python: context.TestTool_getSkinName()!=\'Mobile\'">\n
 <tr>\n
   <td>open</td>\n
   <td>${base_url}/portal_templates/TemplateTool_viewUpdateRepositoryBusinessTemplateListDialog</td>\n
