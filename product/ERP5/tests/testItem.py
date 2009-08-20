@@ -32,15 +32,11 @@ import transaction
 from DateTime import DateTime
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import reindex
-from zLOG import LOG
 from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5Type.tests.Sequence import SequenceList
 from testInvoice import TestSaleInvoiceMixin
 
 class TestItemMixin(TestSaleInvoiceMixin):
-  """
-    Test business template erp5_trade 
-  """
   item_portal_type = 'Item'
 
   def getBusinessTemplateList(self):
@@ -48,18 +44,17 @@ class TestItemMixin(TestSaleInvoiceMixin):
     """
     return TestSaleInvoiceMixin.getBusinessTemplateList(self) + ('erp5_item',)
   
-  def login(self, quiet=0, run=1):
+  def login(self):
     uf = self.getPortal().acl_users
     uf._doAddUser('rc', '', ['Manager', 'Member', 'Assignee'], [])
     user = uf.getUserById('rc').__of__(uf)
     newSecurityManager(None, user)
     
-  def createOrganisation(self,title=None):
+  def createOrganisation(self, title=None):
     organisation_portal_type = 'Organisation'
-    portal = self.getPortal()
-    organisation_module = portal.getDefaultModule( \
+    organisation_module = self.portal.getDefaultModule(
                                    portal_type=organisation_portal_type)
-    organisation = organisation_module.newContent( \
+    organisation = organisation_module.newContent(
                                    portal_type=organisation_portal_type)
     if title is None:
       organisation.edit(title='organisation%s' % organisation.getId())
@@ -71,9 +66,8 @@ class TestItemMixin(TestSaleInvoiceMixin):
     """
       Create a resource with no variation
     """
-    portal = self.getPortal()
     resource_portal_type = 'Product'
-    resource_module = portal.getDefaultModule(resource_portal_type)
+    resource_module = self.portal.getDefaultModule(resource_portal_type)
     resource = resource_module.newContent(portal_type=resource_portal_type)
     resource.edit(
       title = "NotVariatedResource%s" % resource.getId(),
@@ -92,9 +86,8 @@ class TestItemMixin(TestSaleInvoiceMixin):
     transaction.commit()
     self.tic()
     
-    portal = self.getPortal()
     resource_portal_type = 'Product'
-    resource_module = portal.getDefaultModule(resource_portal_type)
+    resource_module = self.portal.getDefaultModule(resource_portal_type)
     resource = resource_module.newContent(portal_type=resource_portal_type)
     resource.edit(
       title = "VariatedResource%s" % resource.getId(),
@@ -201,13 +194,9 @@ class TestItemMixin(TestSaleInvoiceMixin):
 
 class TestItem(TestItemMixin, ERP5TypeTestCase):
 
-  run_all_test = 1
   quiet = 0
 
-  def test_01_ItemSimpleTest(self, quiet=quiet, run=run_all_test):
-    """
-    """
-    if not run: return
+  def test_01_ItemSimpleTest(self, quiet=quiet):
     sequence_list = SequenceList()
 
     # Test with a simply order without cell
@@ -236,10 +225,7 @@ class TestItem(TestItemMixin, ERP5TypeTestCase):
     sequence_list.play(self, quiet=quiet)
 
 
-  def test_02_ItemWithInvoice(self, quiet=quiet, run=run_all_test):
-    """
-    """
-    if not run: return
+  def test_02_ItemWithInvoice(self, quiet=quiet):
     sequence_list = SequenceList()
 
     sequence_string = 'stepCreateEntities \
@@ -283,10 +269,7 @@ class TestItem(TestItemMixin, ERP5TypeTestCase):
     sequence_list.play(self, quiet=quiet)
     
   
-  def test_03_CreateItemsFromPackingListLine(self,sequence=None,title=None,quiet=quiet, run=run_all_test):
-    """
-    """
-    if not run: return
+  def test_03_CreateItemsFromPackingListLine(self):
     organisation = self.createOrganisation(title='Organisation I')
     transaction.commit()
     self.tic()
@@ -297,7 +280,8 @@ class TestItem(TestItemMixin, ERP5TypeTestCase):
     transaction.commit()
     self.tic()
     packing_list = self.createPackingList(resource=resource,organisation=organisation)
-    packing_list_line= self.createPackingListLine(packing_list=packing_list,resource=resource)
+    packing_list_line= self.createPackingListLine(packing_list=packing_list,
+                                                  resource=resource)
     transaction.commit()
     self.tic()
     
@@ -330,11 +314,17 @@ class TestItem(TestItemMixin, ERP5TypeTestCase):
     transaction.commit()
     self.tic()
     self.assertEquals(
-           len([x.getObject() for x in self.portal.portal_catalog(portal_type='Item',title='Lot A')]),1)
+           len([x.getObject() for x in self.portal.portal_catalog(
+                                          portal_type='Item',
+                                          title='Lot A')]) ,1)
     self.assertEquals(
-           len([x.getObject() for x in self.portal.portal_catalog(portal_type='Item',title='Lot B')]),1)
+           len([x.getObject() for x in self.portal.portal_catalog(
+                                          portal_type='Item',
+                                          title='Lot B')]), 1)
     self.assertEquals(
-           len([x.getObject() for x in self.portal.portal_catalog(portal_type='Item',title='Lot C')]),1)
+           len([x.getObject() for x in self.portal.portal_catalog(
+                                          portal_type='Item',
+                                          title='Lot C')]), 1)
 
     self.assertEquals(packing_list_line.getTotalQuantity(), 45.0)
     self.assertEquals(sorted(packing_list_line.getVariationCategoryList()),
@@ -363,11 +353,7 @@ class TestItem(TestItemMixin, ERP5TypeTestCase):
     self.assertEquals(['Lot C'], cell.getAggregateTitleList())
     
      
-  def test_04_CreateItemsFromPackingListLineWithVariationDefined(
-        self,sequence=None,title=None,quiet=quiet, run=run_all_test):
-    """
-    """
-    if not run: return
+  def test_04_CreateItemsFromPackingListLineWithVariationDefined(self):
     organisation = self.createOrganisation(title='Organisation II')
     transaction.commit()
     self.tic()
@@ -379,7 +365,8 @@ class TestItem(TestItemMixin, ERP5TypeTestCase):
     self.tic()
     packing_list = self.createPackingList(resource=resource,organisation=organisation)
    
-    packing_list_line= self.createPackingListLine(packing_list=packing_list,resource=resource)
+    packing_list_line= self.createPackingListLine(packing_list=packing_list,
+                                                  resource=resource)
     transaction.commit()
     self.tic()
     # create a listbox 
@@ -441,20 +428,18 @@ class TestItem(TestItemMixin, ERP5TypeTestCase):
     self.assertEquals(['Lot C2'], cell.getAggregateTitleList())
  
 
-  def test_05_CreateItemsFromPackingListLineWithNotVariatedResource(
-          self,sequence=None,title=None,quiet=quiet, run=run_all_test):
-    """
-    """
-    if not run: return
+  def test_05_CreateItemsFromPackingListLineWithNotVariatedResource(self):
     organisation = self.createOrganisation(title='Organisation III')
     transaction.commit()
     self.tic()
     resource = self.createNotVariatedResource()
     transaction.commit()
     self.tic()
-    packing_list = self.createPackingList(resource=resource,organisation=organisation)
+    packing_list = self.createPackingList(resource=resource,
+                                          organisation=organisation)
    
-    packing_list_line= self.createPackingListLine(packing_list=packing_list,resource=resource)
+    packing_list_line= self.createPackingListLine(packing_list=packing_list,
+                                                  resource=resource)
     packing_list_line.setQuantity(32)
     transaction.commit()
     self.tic()
@@ -480,15 +465,22 @@ class TestItem(TestItemMixin, ERP5TypeTestCase):
     transaction.commit()
     self.tic()
     self.assertEquals(
-           len([x.getObject() for x in self.portal.portal_catalog(portal_type='Item',title='Lot A3')]),1)
+           len([x.getObject() for x in self.portal.portal_catalog(
+                                          portal_type='Item',
+                                          title='Lot A3')]), 1)
     self.assertEquals(
-           len([x.getObject() for x in self.portal.portal_catalog(portal_type='Item',title='Lot B3')]),1)
+           len([x.getObject() for x in self.portal.portal_catalog(
+                                          portal_type='Item',
+                                          title='Lot B3')]), 1)
     self.assertEquals(
-           len([x.getObject() for x in self.portal.portal_catalog(portal_type='Item',title='Lot C3')]),1)
+           len([x.getObject() for x in self.portal.portal_catalog(
+                                          portal_type='Item',
+                                          title='Lot C3')]), 1)
     self.assertEquals(packing_list_line.getQuantity(),30.0)
     
-    self.assertEquals(packing_list_line.getVariationCategoryList(),[])
-    self.assertEquals(packing_list_line.getAggregateTitleList(),['Lot A3','Lot B3','Lot C3'])
+    self.assertEquals(packing_list_line.getVariationCategoryList(), [])
+    self.assertEquals(packing_list_line.getAggregateTitleList(),
+                      ['Lot A3', 'Lot B3', 'Lot C3'])
     movement_cell_list = packing_list_line.contentValues(
                                     portal_type='Purchase Packing List Cell')
     self.assertEquals(movement_cell_list,[])
