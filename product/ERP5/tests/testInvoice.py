@@ -2409,7 +2409,7 @@ class TestSaleInvoiceMixin(TestInvoiceMixin,
     rule_dict = {
         'Order Rule': {
           'movement_type_list': ['Sale Packing List Line', 'Sale Packing List Cell'],
-          'next_rule_list': ['Invoicing Rule', 'Tax Rule'],
+          'next_rule_list': ['Invoicing Rule', ],
           },
         'Invoicing Rule': {
           'movement_type_list': invoice.getPortalInvoiceMovementTypeList(),
