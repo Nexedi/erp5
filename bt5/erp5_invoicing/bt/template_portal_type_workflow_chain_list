@@ -18,7 +18,5 @@ Purchase Order Cell | delivery_movement_account_interaction_workflow
 Purchase Order Line | delivery_movement_account_interaction_workflow
 Sale Order Cell | delivery_movement_account_interaction_workflow
 Sale Order Line | delivery_movement_account_interaction_workflow
-Tax Rule | edit_workflow
-Tax Rule | rule_validation_workflow
 Trade Model Rule | edit_workflow
 Trade Model Rule | rule_validation_workflow
