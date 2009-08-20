@@ -100,6 +100,7 @@
                         <string>my_reference</string>
                         <string>my_version</string>
                         <string>my_expandable_property_list</string>
+                        <string>my_trade_phase_list</string>
                       </list>
                     </value>
                 </item>
@@ -110,6 +111,7 @@
                         <string>my_start_date_range_min</string>
                         <string>my_start_date_range_max</string>
                         <string>my_test_method_id</string>
+                        <string>my_matching_property_list</string>
                         <string>my_translated_validation_state_title</string>
                       </list>
                     </value>
