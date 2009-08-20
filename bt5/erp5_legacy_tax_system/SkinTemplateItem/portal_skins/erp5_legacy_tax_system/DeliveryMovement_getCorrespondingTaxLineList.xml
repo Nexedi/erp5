@@ -1,0 +1,204 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>"""Calculate the tax price for this movement.\n
+\n
+We assume that all movement equally participate to each tax applied to base\n
+amounts they are contributing to.\n
+\n
+"""\n
+\n
+total_price = context.getTotalPrice()\n
+\n
+contributed_tax_line_list = []\n
+adjusted_tax_line_list = []\n
+tax_line_list = context.getExplanationValue().contentValues(\n
+                                 portal_type=context.getPortalTaxMovementTypeList())\n
+\n
+# 1 find all tax lines that this line contributed to\n
+for base_amount in context.getBaseContributionList():\n
+  for tax_line in tax_line_list:\n
+    if base_amount in tax_line.getBaseApplicationList():\n
+      if tax_line not in contributed_tax_line_list:\n
+        contributed_tax_line_list.append(tax_line)\n
+\n
+non_tax_movement_type_list = [t for t in context.getPortalMovementTypeList()\n
+                              if t not in context.getPortalTaxMovementTypeList()]\n
+other_movement_list = [m for m in context.getExplanationValue().getMovementList(\n
+                         portal_type=non_tax_movement_type_list)]\n
+# 2 for each tax line, calculate the corresponding ratio\n
+for tax_line in contributed_tax_line_list:\n
+  base_total_price = 0\n
+  added_movement_list = {}\n
+  for base_amount in tax_line.getBaseApplicationList():\n
+    for movement in other_movement_list:\n
+      if base_amount in movement.getBaseContributionList():\n
+        if movement.getRelativeUrl() not in added_movement_list:\n
+          base_total_price += movement.getTotalPrice(fast=0)\n
+          added_movement_list[movement.getRelativeUrl()] = 1\n
+\n
+  adjusted_tax_line_list.append(tax_line.asContext(quantity=\n
+        # XXX round ?\n
+        tax_line.getQuantity() * total_price / base_total_price))\n
+\n
+# 3 add tax movement that does not apply directly to any other movement\n
+delivery_total_price = context.getExplanationValue().getTotalPrice(fast=0)\n
+returned_tax_line_relative_url_list = [x.getRelativeUrl()\n
+                                       for x in adjusted_tax_line_list]\n
+contributed_base_amount_dict = dict()\n
+for movement in other_movement_list + [context]:\n
+  for base_amount in movement.getBaseContributionList():\n
+    contributed_base_amount_dict[base_amount] = 1\n
+\n
+for tax_line in tax_line_list:\n
+  if tax_line.getRelativeUrl() in returned_tax_line_relative_url_list:\n
+    continue\n
+  for base_amount in tax_line.getBaseApplicationList():\n
+    if base_amount in contributed_base_amount_dict:\n
+      break\n
+  else:\n
+    adjusted_tax_line_list.append(tax_line.asContext(\n
+      quantity=tax_line.getQuantity() * total_price / delivery_total_price))\n
+\n
+return adjusted_tax_line_list\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>0</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>total_price</string>
+                            <string>contributed_tax_line_list</string>
+                            <string>adjusted_tax_line_list</string>
+                            <string>tax_line_list</string>
+                            <string>_getiter_</string>
+                            <string>base_amount</string>
+                            <string>tax_line</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>t</string>
+                            <string>non_tax_movement_type_list</string>
+                            <string>m</string>
+                            <string>other_movement_list</string>
+                            <string>base_total_price</string>
+                            <string>added_movement_list</string>
+                            <string>movement</string>
+                            <string>_inplacevar_</string>
+                            <string>_write_</string>
+                            <string>delivery_total_price</string>
+                            <string>x</string>
+                            <string>returned_tax_line_relative_url_list</string>
+                            <string>dict</string>
+                            <string>contributed_base_amount_dict</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>DeliveryMovement_getCorrespondingTaxLineList</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,12 @@
+Invoice Cell | tax_interaction_workflow
+Invoice Line | tax_interaction_workflow
+Purchase Invoice Transaction | delivery_tax_interaction_workflow
+Purchase Order Cell | tax_interaction_workflow
+Purchase Order Line | tax_interaction_workflow
+Purchase Order | delivery_tax_interaction_workflow
+Sale Invoice Transaction | delivery_tax_interaction_workflow
+Sale Order Cell | tax_interaction_workflow
+Sale Order Line | tax_interaction_workflow
+Sale Order | delivery_tax_interaction_workflow
+Tax Rule | edit_workflow
+Tax Rule | rule_validation_workflow

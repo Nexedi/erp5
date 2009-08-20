@@ -1,0 +1,34 @@
+<allowed_content_type_list>
+ <portal_type id="Purchase Invoice Transaction">
+  <item>Tax Line</item>
+  <item>Discount Line</item>
+ </portal_type>
+ <portal_type id="Purchase Order">
+  <item>Discount Line</item>
+  <item>Tax Line</item>
+ </portal_type>
+ <portal_type id="Purchase Trade Condition">
+  <item>Tax Model Line</item>
+  <item>Discount Model Line</item>
+ </portal_type>
+ <portal_type id="Rule Tool">
+  <item>Tax Rule</item>
+ </portal_type>
+ <portal_type id="Sale Invoice Transaction">
+  <item>Discount Line</item>
+  <item>Tax Line</item>
+ </portal_type>
+ <portal_type id="Sale Order">
+  <item>Tax Line</item>
+  <item>Discount Line</item>
+ </portal_type>
+ <portal_type id="Sale Trade Condition">
+  <item>Tax Model Line</item>
+  <item>Discount Model Line</item>
+ </portal_type>
+ <portal_type id="Tax Rule">
+  <item>Property Divergence Tester</item>
+  <item>Category Divergence Tester</item>
+  <item>Quantity Divergence Tester</item>
+ </portal_type>
+</allowed_content_type_list>

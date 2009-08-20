@@ -1,0 +1,16 @@
+Purchase Invoice Transaction | Discount Line
+Purchase Invoice Transaction | Tax Line
+Purchase Order | Discount Line
+Purchase Order | Tax Line
+Purchase Trade Condition | Discount Model Line
+Purchase Trade Condition | Tax Model Line
+Rule Tool | Tax Rule
+Sale Invoice Transaction | Discount Line
+Sale Invoice Transaction | Tax Line
+Sale Order | Discount Line
+Sale Order | Tax Line
+Sale Trade Condition | Discount Model Line
+Sale Trade Condition | Tax Model Line
+Tax Rule | Category Divergence Tester
+Tax Rule | Property Divergence Tester
+Tax Rule | Quantity Divergence Tester

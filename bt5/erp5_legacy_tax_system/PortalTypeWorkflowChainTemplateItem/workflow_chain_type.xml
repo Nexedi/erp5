@@ -1,0 +1,46 @@
+<workflow_chain>
+ <chain>
+  <type>Invoice Cell</type>
+  <workflow>tax_interaction_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Invoice Line</type>
+  <workflow>tax_interaction_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Purchase Invoice Transaction</type>
+  <workflow>delivery_tax_interaction_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Purchase Order</type>
+  <workflow>delivery_tax_interaction_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Purchase Order Cell</type>
+  <workflow>tax_interaction_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Purchase Order Line</type>
+  <workflow>tax_interaction_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Sale Invoice Transaction</type>
+  <workflow>delivery_tax_interaction_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Sale Order</type>
+  <workflow>delivery_tax_interaction_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Sale Order Cell</type>
+  <workflow>tax_interaction_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Sale Order Line</type>
+  <workflow>tax_interaction_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Tax Rule</type>
+  <workflow>edit_workflow, rule_validation_workflow</workflow>
+ </chain>
+</workflow_chain>

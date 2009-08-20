@@ -1,0 +1,17 @@
+Discount Line | view
+Discount Model Line | view
+Purchase Invoice Transaction | view_discount
+Purchase Invoice Transaction | view_tax
+Purchase Order | view_discount
+Purchase Order | view_tax
+Purchase Trade Condition | view_discount
+Purchase Trade Condition | view_tax
+Sale Invoice Transaction | view_discount
+Sale Invoice Transaction | view_tax
+Sale Order | view_discount
+Sale Order | view_tax
+Sale Trade Condition | view_discount
+Sale Trade Condition | view_tax
+Tax Line | view
+Tax Model Line | view
+Tax Rule | view
