@@ -72,7 +72,7 @@
   <tal:block tal:condition = "empty_cart">\n
       <tr><td>\n
         <p class="article"> \n
-          <span tal:replace="python: here.Base_translateString(\'You shopping cart is empty.\')"/>\n
+          <span tal:replace="python: here.Base_translateString(\'Your shopping cart is empty.\')"/>\n
         </p>\n
       </td></tr>\t\t      \n
    </tal:block>\n
@@ -80,7 +80,7 @@
   <tal:block tal:condition = "not: empty_cart">\n
     <tr><td class="cart_middle">\n
         <div class="cart_left">\n
-          <span tal:replace="python: here.Base_translateString(\'Total cart\')"/> \n
+          <span tal:replace="python: here.Base_translateString(\'Total\')"/> \n
         </div>\n
         <div class="cart_right">\n
           <span tal:replace="total_price"/>\n
@@ -91,7 +91,7 @@
            <div class="cart_left">\n
              <a class="articlelink" \n
                 tal:attributes="href python: \'%s/%s\' % (website.absolute_url(), website.getLayoutProperty(\'ecommerce_cart_section_id\', \'\'))">\n
-                <span tal:replace="python: here.Base_translateString(\'Edit Shopping Cart\')"/>\n
+                <span tal:replace="python: here.Base_translateString(\'Shopping Cart\')"/>\n
              </a>\n
            </div>\n
            <div class="cart_right">\n
@@ -105,7 +105,6 @@
   </tal:block>\n
   </tal:block>\n
 </table>\n
-\n
 
 
 ]]></string> </value>

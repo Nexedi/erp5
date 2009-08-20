@@ -54,7 +54,7 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>creation_date = context.getCreationDate()\n
-return creation_date.strftime(\'%a, %b %Y %H:%M %p\')\n
+return creation_date.strftime(\'%a, %d %b %Y %H:%M %p\')\n
 </string> </value>
         </item>
         <item>
