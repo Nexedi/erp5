@@ -1,0 +1,6 @@
+<workflow_chain>
+ <chain>
+  <type>Discount</type>
+  <workflow>edit_workflow, validation_workflow</workflow>
+ </chain>
+</workflow_chain>
