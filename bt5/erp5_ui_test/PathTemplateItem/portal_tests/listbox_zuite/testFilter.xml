@@ -78,38 +78,38 @@
 </tr>\n
 <tr>\n
   <td>verifyEditable</td>\n
-  <td>//tr[@id="listbox_data_line_0"]/td//input</td>\n
+  <td>//*[@id="listbox_data_line_0"]//input[@type="checkbox"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>verifyValue</td>\n
-  <td>//tr[@id="listbox_data_line_0"]/td//input</td>\n
+  <td>//*[@id="listbox_data_line_0"]//input[@type="checkbox"]</td>\n
   <td>off</td>\n
 </tr>\n
 <tr>\n
   <td>verifyEditable</td>\n
-  <td>//tr[@id="listbox_data_line_1"]/td//input</td>\n
+  <td>//*[@id="listbox_data_line_1"]//input[@type="checkbox"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>verifyValue</td>\n
-  <td>//tr[@id="listbox_data_line_1"]/td//input</td>\n
+  <td>//*[@id="listbox_data_line_1"]//input[@type="checkbox"]</td>\n
   <td>off</td>\n
 </tr>\n
 <tr>\n
   <td>verifyEditable</td>\n
-  <td>//tr[@id="listbox_data_line_1"]/td//input</td>\n
+  <td>//*[@id="listbox_data_line_1"]//input[@type="checkbox"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>verifyValue</td>\n
-  <td>//tr[@id="listbox_data_line_1"]/td//input</td>\n
+  <td>//*[@id="listbox_data_line_1"]//input[@type="checkbox"]</td>\n
   <td>off</td>\n
 </tr>\n
 <!-- Checked rows must be remembered -->\n
 <tr>\n
   <td>click</td>\n
-  <td>//tr[@id="listbox_data_line_0"]/td//input</td>\n
+  <td>//*[@id="listbox_data_line_0"]//input[@type="checkbox"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -119,7 +119,7 @@
 </tr>\n
 <tr>\n
   <td>click</td>\n
-  <td>//tr[@id="listbox_data_line_0"]/td//input</td>\n
+  <td>//*[@id="listbox_data_line_0"]//input[@type="checkbox"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -129,17 +129,17 @@
 </tr>\n
 <tr>\n
   <td>verifyValue</td>\n
-  <td>//tr[@id="listbox_data_line_0"]/td//input</td>\n
+  <td>//*[@id="listbox_data_line_0"]//input[@type="checkbox"]</td>\n
   <td>on</td>\n
 </tr>\n
 <tr>\n
   <td>verifyValue</td>\n
-  <td>//tr[@id="listbox_data_line_1"]/td//input</td>\n
+  <td>//*[@id="listbox_data_line_1"]//input[@type="checkbox"]</td>\n
   <td>off</td>\n
 </tr>\n
 <tr>\n
   <td>verifyValue</td>\n
-  <td>//tr[@id="listbox_data_line_2"]/td//input</td>\n
+  <td>//*[@id=\'listbox_data_line_2\']//input[@type="checkbox"]</td>\n
   <td>off</td>\n
 </tr>\n
 <tr>\n
@@ -149,17 +149,17 @@
 </tr>\n
 <tr>\n
   <td>verifyValue</td>\n
-  <td>//tr[@id="listbox_data_line_0"]/td//input</td>\n
+  <td>//*[@id="listbox_data_line_0"]//input[@type="checkbox"]</td>\n
   <td>on</td>\n
 </tr>\n
 <tr>\n
   <td>verifyValue</td>\n
-  <td>//tr[@id="listbox_data_line_1"]/td//input</td>\n
+  <td>//*[@id="listbox_data_line_1"]//input[@type="checkbox"]</td>\n
   <td>off</td>\n
 </tr>\n
 <tr>\n
   <td>verifyValue</td>\n
-  <td>//tr[@id="listbox_data_line_2"]/td//input</td>\n
+  <td>//*[@id=\'listbox_data_line_2\']//input[@type="checkbox"]</td>\n
   <td>off</td>\n
 </tr>\n
 <!-- Filter on the second page -->\n
@@ -170,17 +170,17 @@
 </tr>\n
 <tr>\n
   <td>verifyValue</td>\n
-  <td>//tr[@id="listbox_data_line_0"]/td//input</td>\n
+  <td>//*[@id="listbox_data_line_0"]//input[@type="checkbox"]</td>\n
   <td>on</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@id="listbox_data_line_0"]/td[2]</td>\n
+  <td>//*[@id="listbox_data_line_0"]//a[not(@title)]</td>\n
   <td>0</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@id="listbox_data_line_1"]/td[2]</td>\n
+  <td>//*[@id="listbox_data_line_1"]//a[not(@title)]</td>\n
   <td>3</td>\n
 </tr>\n
 <tr>\n
@@ -188,11 +188,13 @@
   <td>id=listbox_data_line_2</td>\n
   <td></td>\n
 </tr>\n
+<tal:block tal:condition="python: context.TestTool_getSkinName()!=\'Mobile\'">\n
 <tr>\n
   <td>verifyElementNotPresent</td>\n
-  <td>id=listbox_page_selection</td>\n
+  <td>id=listbox_set_page</td>\n
   <td></td>\n
 </tr>\n
+</tal:block>\n
 <tr>\n
   <td>verifyElementNotPresent</td>\n
   <td>id=listbox_next_page</td>\n
@@ -204,20 +206,22 @@
   <td></td>\n
 </tr>\n
 <!-- Sort by id -->\n
+<tal:block tal:condition="python: context.TestTool_getSkinName()!=\'Mobile\'">\n
 <tr>\n
   <td>clickAndWait</td>\n
-    <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.id\']</td>\n
+  <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.id\']</td>\n
 <!--  <td>link=ID</td> -->\n
   <td></td>\n
 </tr>\n
+</tal:block>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@id="listbox_data_line_0"]/td[2]</td>\n
+  <td>//*[@id="listbox_data_line_0"]//a[not(@title)]</td>\n
   <td>0</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@id="listbox_data_line_1"]/td[2]</td>\n
+  <td>//*[@id="listbox_data_line_1"]//a[not(@title)]</td>\n
   <td>3</td>\n
 </tr>\n
 <tr>\n
@@ -225,6 +229,7 @@
   <td>id=listbox_data_line_2</td>\n
   <td></td>\n
 </tr>\n
+<tal:block tal:condition="python: context.TestTool_getSkinName()!=\'Mobile\'">\n
 <tr>\n
   <td>clickAndWait</td>\n
     <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.id\']</td>\n
@@ -233,14 +238,27 @@
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@id="listbox_data_line_0"]/td[2]</td>\n
+  <td>//*[@id="listbox_data_line_0"]//a[not(@title)]</td>\n
   <td>3</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@id="listbox_data_line_1"]/td[2]</td>\n
+  <td>//*[@id="listbox_data_line_1"]//a[not(@title)]</td>\n
   <td>0</td>\n
 </tr>\n
+</tal:block>\n
+<tal:block tal:condition="python: context.TestTool_getSkinName()==\'Mobile\'">\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//*[@id="listbox_data_line_0"]//a[not(@title)]</td>\n
+  <td>0</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//*[@id="listbox_data_line_1"]//a[not(@title)]</td>\n
+  <td>3</td>\n
+</tr>\n
+</tal:block>\n
 <tr>\n
   <td>verifyElementNotPresent</td>\n
   <td>id=listbox_data_line_2</td>\n
@@ -248,9 +266,16 @@
 </tr>\n
 <!-- Search by id -->\n
 <tr>\n
+  <tal:block tal:condition="python: context.TestTool_getSkinName()!=\'Mobile\'">\n
   <td>type</td>\n
   <td>//tr[@id="listbox_search_line"]/td[2]//input</td>\n
   <td>3</td>\n
+  </tal:block>\n
+  <tal:block tal:condition="python: context.TestTool_getSkinName()==\'Mobile\'">\n
+  <td>type</td>\n
+  <td>//*[@id="listbox_search_line"]//div[@id=\'0\']//input</td>\n
+  <td>3</td>\n
+  </tal:block>\n
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
@@ -259,7 +284,7 @@
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@id="listbox_data_line_0"]/td[2]</td>\n
+  <td>//*[@id="listbox_data_line_0"]//a[not(@title)]</td>\n
   <td>3</td>\n
 </tr>\n
 <tr>\n
@@ -275,34 +300,55 @@
 </tr>\n
 <tr>\n
   <td>verifyValue</td>\n
-  <td>//tr[@id="listbox_data_line_0"]/td//input</td>\n
+  <td>//*[@id="listbox_data_line_0"]//input[@type="checkbox"]</td>\n
   <td>off</td>\n
 </tr>\n
 <tr>\n
   <td>verifyValue</td>\n
-  <td>//tr[@id="listbox_data_line_1"]/td//input</td>\n
+  <td>//*[@id="listbox_data_line_1"]//input[@type="checkbox"]</td>\n
   <td>off</td>\n
 </tr>\n
 <tr>\n
   <td>verifyValue</td>\n
-  <td>//tr[@id="listbox_data_line_2"]/td//input</td>\n
+  <td>//*[@id=\'listbox_data_line_2\']//input[@type="checkbox"]</td>\n
   <td>off</td>\n
 </tr>\n
+<tal:block tal:condition="python: context.TestTool_getSkinName()!=\'Mobile\'">\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@id="listbox_data_line_0"]/td[2]</td>\n
+  <td>//*[@id="listbox_data_line_0"]//a[not(@title)]</td>\n
   <td>9</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@id="listbox_data_line_1"]/td[2]</td>\n
+  <td>//*[@id="listbox_data_line_1"]//a[not(@title)]</td>\n
   <td>8</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@id="listbox_data_line_2"]/td[2]</td>\n
+  <td>//*[@id="listbox_data_line_2"]//a[not(@title)]</td>\n
   <td>7</td>\n
 </tr>\n
+</tal:block>\n
+<tal:block tal:condition="python: context.TestTool_getSkinName()==\'Mobile\'">\n
+<!-- The elements are not descending sorted -->\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//*[@id="listbox_data_line_0"]//a[not(@title)]</td>\n
+  <td>0</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//*[@id="listbox_data_line_1"]//a[not(@title)]</td>\n
+  <td>1</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//*[@id="listbox_data_line_2"]//a[not(@title)]</td>\n
+  <td>2</td>\n
+</tr>\n
+</tal:block>\n
+\n
 <tr>\n
   <td>verifyElementNotPresent</td>\n
   <td>id=listbox_data_line_3</td>\n
@@ -316,17 +362,17 @@
 </tr>\n
 <tr>\n
   <td>verifyValue</td>\n
-  <td>//tr[@id="listbox_data_line_0"]/td//input</td>\n
+  <td>//*[@id="listbox_data_line_0"]//input[@type="checkbox"]</td>\n
   <td>on</td>\n
 </tr>\n
 <tr>\n
   <td>verifyValue</td>\n
-  <td>//tr[@id="listbox_data_line_1"]/td//input</td>\n
+  <td>//*[@id="listbox_data_line_1"]//input[@type="checkbox"]</td>\n
   <td>on</td>\n
 </tr>\n
 <tr>\n
   <td>verifyValue</td>\n
-  <td>//tr[@id="listbox_data_line_2"]/td//input</td>\n
+  <td>//*[@id=\'listbox_data_line_2\']//input[@type="checkbox"]</td>\n
   <td>on</td>\n
 </tr>\n
 <tr>\n
@@ -336,17 +382,17 @@
 </tr>\n
 <tr>\n
   <td>verifyValue</td>\n
-  <td>//tr[@id="listbox_data_line_0"]/td//input</td>\n
+  <td>//*[@id="listbox_data_line_0"]//input[@type="checkbox"]</td>\n
   <td>off</td>\n
 </tr>\n
 <tr>\n
   <td>verifyValue</td>\n
-  <td>//tr[@id="listbox_data_line_1"]/td//input</td>\n
+  <td>//*[@id="listbox_data_line_1"]//input[@type="checkbox"]</td>\n
   <td>off</td>\n
 </tr>\n
 <tr>\n
   <td>verifyValue</td>\n
-  <td>//tr[@id="listbox_data_line_2"]/td//input</td>\n
+  <td>//*[@id=\'listbox_data_line_2\']//input[@type="checkbox"]</td>\n
   <td>off</td>\n
 </tr>\n
 <tr>\n
@@ -356,17 +402,17 @@
 </tr>\n
 <tr>\n
   <td>verifyValue</td>\n
-  <td>//tr[@id="listbox_data_line_0"]/td//input</td>\n
+  <td>//*[@id="listbox_data_line_0"]//input[@type="checkbox"]</td>\n
   <td>on</td>\n
 </tr>\n
 <tr>\n
   <td>verifyValue</td>\n
-  <td>//tr[@id="listbox_data_line_1"]/td//input</td>\n
+  <td>//*[@id="listbox_data_line_1"]//input[@type="checkbox"]</td>\n
   <td>on</td>\n
 </tr>\n
 <tr>\n
   <td>verifyValue</td>\n
-  <td>//tr[@id="listbox_data_line_2"]/td//input</td>\n
+  <td>//*[@id=\'listbox_data_line_2\']//input[@type="checkbox"]</td>\n
   <td>on</td>\n
 </tr>\n
 <!-- Uncheck all -->\n
@@ -377,17 +423,17 @@
 </tr>\n
 <tr>\n
   <td>verifyValue</td>\n
-  <td>//tr[@id="listbox_data_line_0"]/td//input</td>\n
+  <td>//*[@id="listbox_data_line_0"]//input[@type="checkbox"]</td>\n
   <td>off</td>\n
 </tr>\n
 <tr>\n
   <td>verifyValue</td>\n
-  <td>//tr[@id="listbox_data_line_1"]/td//input</td>\n
+  <td>//*[@id="listbox_data_line_1"]//input[@type="checkbox"]</td>\n
   <td>off</td>\n
 </tr>\n
 <tr>\n
   <td>verifyValue</td>\n
-  <td>//tr[@id="listbox_data_line_2"]/td//input</td>\n
+  <td>//*[@id=\'listbox_data_line_2\']//input[@type="checkbox"]</td>\n
   <td>off</td>\n
 </tr>\n
 <tr>\n
@@ -397,17 +443,17 @@
 </tr>\n
 <tr>\n
   <td>verifyValue</td>\n
-  <td>//tr[@id="listbox_data_line_0"]/td//input</td>\n
+  <td>//*[@id="listbox_data_line_0"]//input[@type="checkbox"]</td>\n
   <td>on</td>\n
 </tr>\n
 <tr>\n
   <td>verifyValue</td>\n
-  <td>//tr[@id="listbox_data_line_1"]/td//input</td>\n
+  <td>//*[@id="listbox_data_line_1"]//input[@type="checkbox"]</td>\n
   <td>on</td>\n
 </tr>\n
 <tr>\n
   <td>verifyValue</td>\n
-  <td>//tr[@id="listbox_data_line_2"]/td//input</td>\n
+  <td>//*[@id=\'listbox_data_line_2\']//input[@type="checkbox"]</td>\n
   <td>on</td>\n
 </tr>\n
 <tr>\n
@@ -417,17 +463,17 @@
 </tr>\n
 <tr>\n
   <td>verifyValue</td>\n
-  <td>//tr[@id="listbox_data_line_0"]/td//input</td>\n
+  <td>//*[@id="listbox_data_line_0"]//input[@type="checkbox"]</td>\n
   <td>off</td>\n
 </tr>\n
 <tr>\n
   <td>verifyValue</td>\n
-  <td>//tr[@id="listbox_data_line_1"]/td//input</td>\n
+  <td>//*[@id="listbox_data_line_1"]//input[@type="checkbox"]</td>\n
   <td>off</td>\n
 </tr>\n
 <tr>\n
   <td>verifyValue</td>\n
-  <td>//tr[@id="listbox_data_line_2"]/td//input</td>\n
+  <td>//*[@id=\'listbox_data_line_2\']//input[@type="checkbox"]</td>\n
   <td>off</td>\n
 </tr>\n
 \n
@@ -445,12 +491,12 @@ and search parameters are remembered -->\n
 </tr>\n
 <tr>\n
   <td>click</td>\n
-  <td>//tr[@id="listbox_data_line_0"]/td//input</td>\n
+  <td>//*[@id="listbox_data_line_0"]//input[@type="checkbox"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>click</td>\n
-  <td>//tr[@id="listbox_data_line_2"]/td//input</td>\n
+  <td>//*[@id=\'listbox_data_line_2\']//input[@type="checkbox"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -486,17 +532,17 @@ and search parameters are remembered -->\n
 </tr>\n
 <tr>\n
   <td>verifyValue</td>\n
-  <td>//tr[@id="listbox_data_line_0"]/td//input</td>\n
+  <td>//*[@id="listbox_data_line_0"]//input[@type="checkbox"]</td>\n
   <td>on</td>\n
 </tr>\n
 <tr>\n
   <td>verifyValue</td>\n
-  <td>//tr[@id="listbox_data_line_1"]/td//input</td>\n
+  <td>//*[@id="listbox_data_line_1"]//input[@type="checkbox"]</td>\n
   <td>off</td>\n
 </tr>\n
 <tr>\n
   <td>verifyValue</td>\n
-  <td>//tr[@id="listbox_data_line_2"]/td//input</td>\n
+  <td>//*[@id=\'listbox_data_line_2\']//input[@type="checkbox"]</td>\n
   <td>on</td>\n
 </tr>\n
 <tr>\n
