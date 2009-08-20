@@ -103,17 +103,17 @@
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@id="listbox_data_line_0"]/td[2]</td>\n
+  <td>//*[@id="listbox_data_line_0"]//a[not(@title)]</td>\n
   <td>0</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@id="listbox_data_line_1"]/td[2]</td>\n
+  <td>//*[@id="listbox_data_line_1"]//a[not(@title)]</td>\n
   <td>1</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@id="listbox_data_line_2"]/td[2]</td>\n
+  <td>//*[@id="listbox_data_line_2"]//a[not(@title)]</td>\n
   <td>2</td>\n
 </tr>\n
 <tr>\n
@@ -158,9 +158,16 @@
   <td> - 0 item(s) selected</td>\n
 </tr>\n
 <tr>\n
+  <tal:block tal:condition="python: context.TestTool_getSkinName()!=\'Mobile\'">\n
   <td>verifyValue</td>\n
   <td>id=listbox_set_page</td>\n
   <td>1</td>\n
+  </tal:block>\n
+  <tal:block tal:condition="python: context.TestTool_getSkinName()==\'Mobile\'">\n
+  <td>verifyValue</td>\n
+  <td>id=listbox_page_selection</td>\n
+  <td>0</td>\n
+  </tal:block>\n
 </tr>\n
 <tr>\n
   <td>verifyElementPresent</td>\n
@@ -174,17 +181,17 @@
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@id="listbox_data_line_0"]/td[2]</td>\n
+  <td>//*[@id="listbox_data_line_0"]//a[not(@title)]</td>\n
   <td>0</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@id="listbox_data_line_1"]/td[2]</td>\n
+  <td>//*[@id="listbox_data_line_1"]//a[not(@title)]</td>\n
   <td>1</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@id="listbox_data_line_2"]/td[2]</td>\n
+  <td>//*[@id="listbox_data_line_2"]//a[not(@title)]</td>\n
   <td>2</td>\n
 </tr>\n
 <tr>\n
@@ -199,9 +206,16 @@
   <td></td>\n
 </tr>\n
 <tr>\n
+  <tal:block tal:condition="python: context.TestTool_getSkinName()!=\'Mobile\'">\n
   <td>verifyValue</td>\n
   <td>id=listbox_set_page</td>\n
   <td>2</td>\n
+  </tal:block>\n
+  <tal:block tal:condition="python: context.TestTool_getSkinName()==\'Mobile\'">\n
+  <td>verifyValue</td>\n
+  <td>id=listbox_page_selection</td>\n
+  <td>3</td>\n
+  </tal:block>\n
 </tr>\n
 <tr>\n
   <td>verifyElementPresent</td>\n
@@ -215,17 +229,17 @@
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@id="listbox_data_line_0"]/td[2]</td>\n
+  <td>//*[@id="listbox_data_line_0"]//a[not(@title)]</td>\n
   <td>3</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@id="listbox_data_line_1"]/td[2]</td>\n
+  <td>//*[@id="listbox_data_line_1"]//a[not(@title)]</td>\n
   <td>4</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@id="listbox_data_line_2"]/td[2]</td>\n
+  <td>//*[@id="listbox_data_line_2"]//a[not(@title)]</td>\n
   <td>5</td>\n
 </tr>\n
 <tr>\n
@@ -240,9 +254,16 @@
   <td></td>\n
 </tr>\n
 <tr>\n
+  <tal:block tal:condition="python: context.TestTool_getSkinName()!=\'Mobile\'">\n
   <td>verifyValue</td>\n
   <td>id=listbox_set_page</td>\n
   <td>1</td>\n
+  </tal:block>\n
+  <tal:block tal:condition="python: context.TestTool_getSkinName()==\'Mobile\'">\n
+  <td>verifyValue</td>\n
+  <td>id=listbox_page_selection</td>\n
+  <td>0</td>\n
+  </tal:block>\n
 </tr>\n
 <tr>\n
   <td>verifyElementPresent</td>\n
@@ -256,17 +277,17 @@
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@id="listbox_data_line_0"]/td[2]</td>\n
+  <td>//*[@id="listbox_data_line_0"]//a[not(@title)]</td>\n
   <td>0</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@id="listbox_data_line_1"]/td[2]</td>\n
+  <td>//*[@id="listbox_data_line_1"]//a[not(@title)]</td>\n
   <td>1</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@id="listbox_data_line_2"]/td[2]</td>\n
+  <td>//*[@id="listbox_data_line_2"]//a[not(@title)]</td>\n
   <td>2</td>\n
 </tr>\n
 <tr>\n
@@ -275,6 +296,7 @@
   <td></td>\n
 </tr>\n
 \n
+<tal:block tal:condition="python: context.TestTool_getSkinName()!=\'Mobile\'">\n
 <tr>\n
   <td>type</td>\n
   <td>id=listbox_set_page</td>\n
@@ -285,11 +307,25 @@
   <td>id=listbox_set_page</td>\n
   <td>\\13</td>\n
 </tr>\n
-<tr>\n
+<tr> \n
   <td>verifyValue</td>\n
   <td>id=listbox_set_page</td>\n
   <td>4</td>\n
 </tr>\n
+</tal:block>\n
+<tal:block tal:condition="python: context.TestTool_getSkinName()==\'Mobile\'">\n
+<tr>\n
+  <td>select</td>\n
+  <td>id=listbox_page_selection</td>\n
+  <td>4 of 4</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>id=listbox_page_selection</td>\n
+  <td>9</td>\n
+</tr>\n
+</tal:block>\n
+\n
 <tr>\n
   <td>verifyElementNotPresent</td>\n
   <td>id=listbox_next_page</td>\n
@@ -302,7 +338,7 @@
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@id="listbox_data_line_0"]/td[2]</td>\n
+  <td>//*[@id="listbox_data_line_0"]//a[not(@title)]</td>\n
   <td>9</td>\n
 </tr>\n
 <tr>\n
@@ -332,9 +368,16 @@
   <td> - 0 item(s) selected</td>\n
 </tr>\n
 <tr>\n
+  <tal:block tal:condition="python: context.TestTool_getSkinName()!=\'Mobile\'">\n
   <td>verifyValue</td>\n
   <td>id=listbox_set_page</td>\n
   <td>3</td>\n
+  </tal:block>\n
+  <tal:block tal:condition="python: context.TestTool_getSkinName()==\'Mobile\'">\n
+  <td>verifyValue</td>\n
+  <td>id=listbox_page_selection</td>\n
+  <td>6</td>\n
+  </tal:block>\n
 </tr>\n
 <tr>\n
   <td>verifyElementNotPresent</td>\n
@@ -348,17 +391,17 @@
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@id="listbox_data_line_0"]/td[2]</td>\n
+  <td>//*[@id="listbox_data_line_0"]//a[not(@title)]</td>\n
   <td>6</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@id="listbox_data_line_1"]/td[2]</td>\n
+  <td>//*[@id="listbox_data_line_1"]//a[not(@title)]</td>\n
   <td>7</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@id="listbox_data_line_2"]/td[2]</td>\n
+  <td>//*[@id="listbox_data_line_2"]//a[not(@title)]</td>\n
   <td>8</td>\n
 </tr>\n
 <tr>\n
