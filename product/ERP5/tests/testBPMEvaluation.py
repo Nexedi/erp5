@@ -37,6 +37,7 @@ It uses only Sale path to demonstrate BPM.
 It is advised to *NOT* remove erp5_administration.
 """
 import unittest
+import transaction
 
 from Products.ERP5.tests.testBPMCore import TestBPMMixin
 from DateTime import DateTime
@@ -63,7 +64,198 @@ class TestBPMEvaluationMixin(TestBPMMixin):
     self._createBusinessProcess()
     self._createTradeCondition()
     self._createRootDocument()
+    self._setUpRules()
     self.stepTic()
+
+  def _setUpRules(self):
+    """Setups rules
+
+    Rules are part of configuration, so anything provided by Business
+    Templates or previous test runs is ignored - all old rules are invalidated
+    between tests and new rules are created, configured and validated.
+    """
+    self.rule_tool = self.portal.portal_rules
+    for rule in self.rule_tool.contentValues():
+      if rule.getValidationState() == 'validated':
+        rule.invalidate()
+    transaction.commit()
+    self._createBPMOrderRule()
+    self._createBPMDeliveryRule()
+    self._createBPMInvoicingRule()
+    self._createTradeModelRule()
+
+  def _createRootTradeRule(self, **kw):
+    edit_dict = {}
+    edit_dict.update(
+      trade_phase = 'default/delivery',
+      expandable_property = ('aggregate_list', 'base_application_list',
+        'base_contribution_list', 'causality_list', 'description',
+        'destination_account_list', 'destination_function_list',
+        'destination_list', 'destination_section_list', 'price',
+        'price_currency_list', 'quantity', 'quantity_unit_list',
+        'resource_list', 'source_account_list', 'source_function_list',
+        'source_list', 'source_section_list', 'start_date', 'stop_date',
+        'variation_category_list', 'variation_property_dict'),
+      matching_property = ('resource_list', 'variation_category_list',
+        'variation_property_dict')
+    )
+    # TODO: version
+    edit_dict.update(**kw)
+    rule = self.rule_tool.newContent(**edit_dict)
+    rule.newContent(portal_type='Category Divergence Tester',
+        tested_property = ('source_section_list | Source Section',
+          'resource_list | Resource',
+          'destination_section_list | Destination Section',
+          'source_list | Source', 'destination_list | Destination',
+          'aggregate_list | Aggregate'))
+    rule.newContent(portal_type='Property Divergence Tester',
+        tested_property = ('start_date | Start Date',
+          'stop_date | Stop Date'))
+    rule.newContent(portal_type='Quantity Divergence Tester')
+
+    return rule
+
+  def _createBPMOrderRule(self):
+    rule = self._createRootTradeRule(portal_type='BPM Order Rule',
+        reference='default_bpm_order_rule')
+    rule.validate()
+    transaction.commit()
+
+  def _createBPMDeliveryRule(self):
+    rule = self._createRootTradeRule(portal_type='BPM Delivery Rule',
+        reference='default_bpm_delivery_rule'
+        )
+    rule.validate()
+    transaction.commit()
+
+  def _createTradeModelRule(self):
+    # TODO: version
+    edit_dict = {}
+    edit_dict.update(
+    )
+    rule = self.rule_tool.newContent(portal_type='Trade Model Rule',
+      reference='default_trade_model_rule',
+      expandable_property = ('delivery_mode_list', 'incoterm_list',
+        'source_list', 'destination_list', 'source_section_list',
+        'destination_section_list', 'source_decision_list',
+        'destination_decision_list', 'source_administration_list',
+        'destination_administration_list', 'price_currency_list',
+        'resource_list', 'aggregate_list', 'source_function_list',
+        'destination_function_list', 'source_account_list',
+        'destination_account_list', 'description',
+        'destination_payment_list', 'source_payment_list'),
+      test_method_id = ('SimulationMovement_testTradeModelRule',)
+      )
+    rule.newContent(portal_type='Category Divergence Tester',
+        tested_property = ('resource_list | Resource',
+          'source_section_list | Source Section',
+          'destination_section_list | Destination Section',
+          'source_list | Source', 'destination_list | Destination',
+          'source_function_list | Source Function',
+          'destination_function_list | Destination Function',
+          'source_project_list | Source Project',
+          'destination_project_list | Destination Project',
+          'aggregate_list | Aggregate',
+          'price_currency_list | Price Currency',
+          'base_contribution_list | Base Contribution',
+          'base_application_list | Base Application',
+          'source_account_list | Source Account',
+          'destination_account_list | Destination Account'))
+    rule.newContent(portal_type='Property Divergence Tester',
+        tested_property = ('start_date | Start Date',
+          'stop_date | Stop Date', 'price | Price'))
+    rule.newContent(portal_type='Quantity Divergence Tester')
+
+    rule.validate()
+    transaction.commit()
+
+  def _createBPMInvoicingRule(self):
+    # TODO: version
+    edit_dict = {}
+    edit_dict.update(
+    )
+    rule = self.rule_tool.newContent(portal_type='BPM Invoicing Rule',
+      reference='default_bpm_invoicing_rule',
+      trade_phase = 'default/invoicing',
+      expandable_property = ('aggregate_list', 'base_application_list',
+        'base_contribution_list', 'causality_list', 'delivery_mode_list',
+        'description', 'destination_account_list',
+        'destination_function_list', 'destination_list',
+        'destination_section_list', 'efficiency', 'incoterm_list', 'price',
+        'price_currency_list', 'quantity', 'quantity_unit_list',
+        'resource_list', 'source_account_list', 'source_function_list',
+        'source_list', 'source_section_list', 'start_date', 'stop_date',
+        'variation_category_list', 'variation_property_dict'),
+      matching_property = ('resource_list', 'variation_category_list',
+        'variation_property_dict'),
+      test_method_id = ('SimulationMovement_testBPMInvoicingRule',)
+      )
+    rule.newContent(portal_type='Category Divergence Tester',
+        tested_property = ('resource_list | Resource',
+          'source_section_list | Source Section',
+          'destination_section_list | Destination Section',
+          'source_list | Source', 'destination_list | Destination',
+          'source_function_list | Source Function',
+          'destination_function_list | Destination Function',
+          'source_project_list | Source Project',
+          'destination_project_list | Destination Project',
+          'aggregate_list | Aggregate',
+          'price_currency_list | Price Currency',
+          'base_contribution_list | Base Contribution',
+          'base_application_list | Base Application',
+          'source_account_list | Source Account',
+          'destination_account_list | Destination Account'))
+    rule.newContent(portal_type='Property Divergence Tester',
+        tested_property = ('start_date | Start Date',
+          'stop_date | Stop Date'))
+    rule.newContent(portal_type='Quantity Divergence Tester')
+
+    rule.validate()
+    transaction.commit()
+
+  def _createBPMInvoicingRule(self):
+    # TODO: version
+    edit_dict = {}
+    edit_dict.update(
+    )
+    rule = self.rule_tool.newContent(portal_type='BPM Invoicing Rule',
+      reference='default_bpm_invoicing_rule',
+      trade_phase = 'default/invoicing',
+      expandable_property = ('aggregate_list', 'base_application_list',
+        'base_contribution_list', 'causality_list', 'delivery_mode_list',
+        'description', 'destination_account_list',
+        'destination_function_list', 'destination_list',
+        'destination_section_list', 'efficiency', 'incoterm_list', 'price',
+        'price_currency_list', 'quantity', 'quantity_unit_list',
+        'resource_list', 'source_account_list', 'source_function_list',
+        'source_list', 'source_section_list', 'start_date', 'stop_date',
+        'variation_category_list', 'variation_property_dict'),
+      matching_property = ('resource_list', 'variation_category_list',
+        'variation_property_dict'),
+      test_method_id = ('SimulationMovement_testBPMInvoicingRule',)
+      )
+    rule.newContent(portal_type='Category Divergence Tester',
+        tested_property = ('resource_list | Resource',
+          'source_section_list | Source Section',
+          'destination_section_list | Destination Section',
+          'source_list | Source', 'destination_list | Destination',
+          'source_function_list | Source Function',
+          'destination_function_list | Destination Function',
+          'source_project_list | Source Project',
+          'destination_project_list | Destination Project',
+          'aggregate_list | Aggregate',
+          'price_currency_list | Price Currency',
+          'base_contribution_list | Base Contribution',
+          'base_application_list | Base Application',
+          'source_account_list | Source Account',
+          'destination_account_list | Destination Account'))
+    rule.newContent(portal_type='Property Divergence Tester',
+        tested_property = ('start_date | Start Date',
+          'stop_date | Stop Date'))
+    rule.newContent(portal_type='Quantity Divergence Tester')
+
+    rule.validate()
+    transaction.commit()
 
   def _createDocument(self, portal_type, **kw):
     module = self.portal.getDefaultModule(portal_type=portal_type)
