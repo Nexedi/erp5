@@ -2608,7 +2608,12 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
         self.resource_portal_type).newContent(
                     portal_type=self.resource_portal_type,
                     title='Résource',)
-    tax = self.portal.tax_module.newContent(portal_type='Tax', title='tàx')
+    
+    # TODO: once we have updated order printout to use trade model lines, test
+    # the case of a trade model line with non ascii title on resource.
+    
+    # tax = self.portal.tax_module.newContent(portal_type='Tax', title='tàx')
+ 
     client = self.portal.organisation_module.newContent(
                               portal_type='Organisation',
                               title='Cliént',
@@ -2629,10 +2634,13 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
                             resource_value=resource,
                             quantity=10,
                             price=3)
-    tax_line = order.newContent(portal_type='Tax Line',
-                                resource_value=tax,
-                                quantity=30,
-                                price=.26)
+
+    # see TODO above
+    #tax_line = order.newContent(portal_type='Tax Line',
+    #                            resource_value=tax,
+    #                            quantity=30,
+    #                            price=.26)
+
     order.confirm()
     transaction.commit()
     self.tic()
