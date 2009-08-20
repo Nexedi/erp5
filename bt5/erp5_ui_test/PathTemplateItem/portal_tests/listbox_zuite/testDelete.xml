@@ -88,7 +88,7 @@
 </tr>\n
 <tr>\n
   <td>click</td>\n
-  <td>//tr[@id="listbox_data_line_0"]/td[1]/input</td>\n
+  <td>//*[@id=\'listbox_data_line_0\']//input[@type="checkbox"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -104,6 +104,7 @@
 <!-- The listbox used to confirm deletion is a proxy to the previous listbox.\n
 It contains the same columns\n
 -->\n
+<tal:block tal:condition="python: context.TestTool_getSkinName()!=\'Mobile\'">\n
 <tr>\n
   <td>assertText</td>\n
   <td>//tr[@id=\'listbox_label_line\']/td[1]</td>\n
@@ -125,6 +126,25 @@ It contains the same columns\n
   <td>//tr[@id=\'listbox_label_line\']/td[4]</td>\n
   <td>Number of Related Objects</td>\n
 </tr>\n
+</tal:block>\n
+<tal:block tal:condition="python: context.TestTool_getSkinName()==\'Mobile\'">\n
+<tr>\n
+  <td>assertText</td>\n
+  <td>//*[@id="listbox_data_line_0"]/div[2]//span[1]</td>\n
+  <td>Title</td>\n
+</tr>\n
+<tr>\n
+  <td>assertText</td>\n
+  <td>//*[@id="listbox_data_line_0"]/div[3]//span[1]</td>\n
+  <td>Quantity</td>\n
+</tr>\n
+<!-- And an extra column to display the number of related objects. -->\n
+<tr>\n
+  <td>assertText</td>\n
+  <td>//*[@id="listbox_data_line_0"]/div[4]//span[1]</td>\n
+  <td>Number of Related Objects</td>\n
+</tr>\n
+</tal:block>\n
 <tr>\n
   <td>clickAndWait</td>\n
   <td>Base_callDialogMethod:method</td>\n
@@ -142,18 +162,18 @@ It contains the same columns\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@id="listbox_data_line_0"]/td[2]</td>\n
+  <td>//*[@id="listbox_data_line_0"]//a[not(@title)]</td>\n
   <td>0</td>\n
   <td>We suppose here that the workflow is configured in such way that deleted items can still be viewed.</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@id="listbox_data_line_1"]/td[2]</td>\n
+  <td>//*[@id="listbox_data_line_1"]//a[not(@title)]</td>\n
   <td>1</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@id="listbox_data_line_2"]/td[2]</td>\n
+  <td>//*[@id="listbox_data_line_2"]//a[not(@title)]</td>\n
   <td>2</td>\n
 </tr>\n
 <tr>\n
@@ -188,12 +208,12 @@ It contains the same columns\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@id="listbox_data_line_0"]/td[2]</td>\n
+  <td>//*[@id="listbox_data_line_0"]//a[not(@title)]</td>\n
   <td>0</td>\n
 </tr>\n
 <tr>\n
   <td>click</td>\n
-  <td>//tr[@id="listbox_data_line_0"]/td[1]/input</td>\n
+  <td>//*[@id=\'listbox_data_line_0\']//input[@type="checkbox"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -246,6 +266,7 @@ It contains the same columns\n
   <td>link=0</td>\n
   <td></td>\n
 </tr>\n
+<tal:block tal:condition="python: context.TestTool_getSkinName()!=\'Mobile\'">\n
 <tr>\n
   <td>clickAndWait</td>\n
   <td>link=Foo Lines:</td>\n
@@ -256,6 +277,19 @@ It contains the same columns\n
   <td>uids:list</td>\n
   <td></td>\n
 </tr>\n
+</tal:block>\n
+<tal:block tal:condition="python: context.TestTool_getSkinName()==\'Mobile\'">\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>link=Foos</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>click</td>\n
+  <td>uids:list</td>\n
+  <td></td>\n
+</tr>\n
+</tal:block>\n
 <tr>\n
   <td>clickAndWait</td>\n
   <td>Folder_deleteObjectList:method</td>\n
@@ -271,10 +305,18 @@ It contains the same columns\n
   <td>Deleted.</td>\n
   <td></td>\n
 </tr>\n
+\n
 <tr>\n
+<tal:block tal:condition="python: context.TestTool_getSkinName()!=\'Mobile\'">\n
   <td>clickAndWait</td>\n
   <td>link=Title 0</td>\n
   <td></td>\n
+</tal:block>\n
+<tal:block tal:condition="python: context.TestTool_getSkinName()==\'Mobile\'">\n
+  <td>clickAndWait</td>\n
+  <td>link=0</td>\n
+  <td></td>\n
+</tal:block>\n
 </tr>\n
 <tr>\n
   <td>open</td>\n

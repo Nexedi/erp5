@@ -86,10 +86,16 @@
   <td>${base_url}/foo_module/0/Foo_viewListBoxInReportMode</td>\n
   <td></td>\n
 </tr>\n
-<tal:block tal:define="prefix string:x0_listbox;\n
-                       set_page python:1">\n
+\n
+<tal:block tal:condition="python: context.TestTool_getSkinName()!=\'Mobile\'"\n
+\t    tal:define="prefix string:x0_listbox; set_page python:1">\n
   <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/checkCurrentPage" />\n
 </tal:block>\n
+<tal:block tal:condition="python: context.TestTool_getSkinName()==\'Mobile\'"\n
+\t    tal:define="prefix string:x0_listbox; set_page python:0">\n
+  <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/checkCurrentPage" />\n
+</tal:block>\n
+\n
 <tal:block tal:repeat="prefix python:range(3)">\n
 <tr>\n
   <td>verifyElementPresent</td>\n
@@ -107,18 +113,40 @@
   <td>id=x0_listbox_next_page</td>\n
   <td></td>\n
 </tr>\n
-<tal:block tal:define="prefix string:x0_listbox;\n
-                       set_page python:2">\n
-  <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/checkCurrentPage" />\n
+<tal:block tal:define="prefix string:x0_listbox;">\n
+  <tal:block tal:condition="python: context.TestTool_getSkinName()!=\'Mobile\'"\n
+\t     tal:define="set_page python:2">\n
+    <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/checkCurrentPage" />\n
+  </tal:block>\n
+  <tal:block tal:condition="python: context.TestTool_getSkinName()==\'Mobile\'"\n
+\t     tal:define="set_page python:3">\n
+    <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/checkCurrentPage" />\n
+  </tal:block>\n
 </tal:block>\n
-<tal:block tal:define="prefix string:x1_listbox;\n
-                       set_page python:1">\n
-  <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/checkCurrentPage" />\n
+\n
+<tal:block tal:define="prefix string:x1_listbox;">\n
+  <tal:block tal:condition="python: context.TestTool_getSkinName()!=\'Mobile\'"\n
+\t     tal:define="set_page python:1">\n
+    <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/checkCurrentPage" />\n
+  </tal:block>\n
+  <tal:block tal:condition="python: context.TestTool_getSkinName()==\'Mobile\'"\n
+\t     tal:define="set_page python:0">\n
+    <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/checkCurrentPage" />\n
+  </tal:block>\n
 </tal:block>\n
-<tal:block tal:define="prefix string:x2_listbox;\n
-                       set_page python:1">\n
-  <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/checkCurrentPage" />\n
+\n
+<tal:block tal:define="prefix string:x2_listbox;">\n
+  <tal:block tal:condition="python: context.TestTool_getSkinName()!=\'Mobile\'"\n
+\t     tal:define="set_page python:1">\n
+    <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/checkCurrentPage" />\n
+  </tal:block>\n
+  <tal:block tal:condition="python: context.TestTool_getSkinName()==\'Mobile\'"\n
+\t     tal:define="set_page python:0">\n
+    <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/checkCurrentPage" />\n
+  </tal:block>\n
 </tal:block>\n
+\n
+<tal:block tal:condition="python: context.TestTool_getSkinName()!=\'Mobile\'">\n
 <tr>\n
   <td>type</td>\n
   <td>id=x1_listbox_set_page</td>\n
@@ -129,34 +157,78 @@
   <td>id=x1_listbox_set_page</td>\n
   <td>\\13</td>\n
 </tr>\n
-<tal:block tal:define="prefix string:x0_listbox;\n
-                       set_page python:2">\n
-  <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/checkCurrentPage" />\n
 </tal:block>\n
-<tal:block tal:define="prefix string:x1_listbox;\n
-                       set_page python:5">\n
-  <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/checkCurrentPage" />\n
+<tal:block tal:condition="python: context.TestTool_getSkinName()==\'Mobile\'">\n
+<tr>\n
+  <td>select</td>\n
+  <td>id=listbox_page_selection</td>\n
+  <td>5 of 10</td>\n
+</tr>\n
 </tal:block>\n
-<tal:block tal:define="prefix string:x2_listbox;\n
-                       set_page python:1">\n
-  <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/checkCurrentPage" />\n
+\n
+<tal:block tal:define="prefix string:x0_listbox;">\n
+  <tal:block tal:condition="python: context.TestTool_getSkinName()!=\'Mobile\'"\n
+\t     tal:define="set_page python:2">\n
+    <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/checkCurrentPage" />\n
+  </tal:block>\n
+  <tal:block tal:condition="python: context.TestTool_getSkinName()==\'Mobile\'"\n
+\t     tal:define="set_page python:3">\n
+    <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/checkCurrentPage" />\n
+  </tal:block>\n
+</tal:block>\n
+<tal:block tal:define="prefix string:x1_listbox;">\n
+  <tal:block tal:condition="python: context.TestTool_getSkinName()!=\'Mobile\'"\n
+\t     tal:define="set_page python:5">\n
+  </tal:block>\n
+  <tal:block tal:condition="python: context.TestTool_getSkinName()==\'Mobile\'"\n
+\t     tal:define="set_page python:12">\n
+    <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/checkCurrentPage" />\n
+  </tal:block>\n
+</tal:block>\n
+<tal:block tal:define="prefix string:x2_listbox;">\n
+  <tal:block tal:condition="python: context.TestTool_getSkinName()!=\'Mobile\'"\n
+\t     tal:define="set_page python:1">\n
+    <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/checkCurrentPage" />\n
+  </tal:block>\n
+  <tal:block tal:condition="python: context.TestTool_getSkinName()==\'Mobile\'"\n
+\t     tal:define="set_page python:0">\n
+    <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/checkCurrentPage" />\n
+  </tal:block>\n
 </tal:block>\n
 <tr>\n
   <td>clickAndWait</td>\n
   <td>id=x1_listbox_previous_page</td>\n
   <td></td>\n
 </tr>\n
-<tal:block tal:define="prefix string:x0_listbox;\n
-                       set_page python:2">\n
-  <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/checkCurrentPage" />\n
+<tal:block tal:define="prefix string:x0_listbox;">\n
+  <tal:block tal:condition="python: context.TestTool_getSkinName()!=\'Mobile\'"\n
+\t     tal:define="set_page python:2">\n
+    <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/checkCurrentPage" />\n
+  </tal:block>\n
+  <tal:block tal:condition="python: context.TestTool_getSkinName()==\'Mobile\'"\n
+\t     tal:define="set_page python:3">\n
+    <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/checkCurrentPage" />\n
+  </tal:block>\n
 </tal:block>\n
-<tal:block tal:define="prefix string:x1_listbox;\n
-                       set_page python:4">\n
-  <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/checkCurrentPage" />\n
+<tal:block tal:define="prefix string:x1_listbox;">\n
+  <tal:block tal:condition="python: context.TestTool_getSkinName()!=\'Mobile\'"\n
+\t     tal:define="set_page python:4">\n
+    <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/checkCurrentPage" />\n
+  </tal:block>\n
+  <tal:block tal:condition="python: context.TestTool_getSkinName()==\'Mobile\'"\n
+\t     tal:define="set_page python:9">\n
+    <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/checkCurrentPage" />\n
+  </tal:block>\n
 </tal:block>\n
-<tal:block tal:define="prefix string:x2_listbox;\n
-                       set_page python:1">\n
-  <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/checkCurrentPage" />\n
+<tal:block tal:define="prefix string:x2_listbox;">\n
+  <tal:block tal:condition="python: context.TestTool_getSkinName()!=\'Mobile\'"\n
+\t     tal:define="set_page python:1">\n
+    <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/checkCurrentPage" />\n
+  </tal:block>\n
+  <tal:block tal:condition="python: context.TestTool_getSkinName()==\'Mobile\'"\n
+\t     tal:define="set_page python:0">\n
+    <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/checkCurrentPage" />\n
+  </tal:block>\n
 </tal:block>\n
 <tr>\n
   <td>clickAndWait</td>\n
