@@ -46,7 +46,7 @@
                        cleaninput         python: cleaninput.replace(\'\\n\',\'\\x5C\\x6E\');\n
                        cleaninput         python: cleaninput.replace(\'\\xE2\\x80\\xA8\',\'\\\\u2028\');\n
                        cleaninput         python: cleaninput.replace(\'\\xE2\\x80\\xA9\',\'\\\\u2029\');\n
-                       site_root          python: getattr(here, \'getWebSiteValue\', here.getPortalObject)();\n
+                       site_root          python: here.getWebSiteValue() or here.getPortalObject();\n
                        portal_url         python: site_root.absolute_url();\n
                        server_url         request/BASE0;\n
                        portal_path        python: portal_url.replace(server_url, \'\') + \'/\';\n

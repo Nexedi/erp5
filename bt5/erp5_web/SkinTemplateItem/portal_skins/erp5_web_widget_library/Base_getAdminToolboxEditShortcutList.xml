@@ -76,7 +76,7 @@ current_web_section_translated_portal_type = current_web_section.getTranslatedPo
 action_dict = request.get(\'actions\', {}) # XXX actions needs to be renamed to action_dict\n
 exchange_action_list = action_dict.get(\'object_exchange\', [])\n
 button_action_list = action_dict.get(\'object_button\', [])\n
-portal_url = getattr(context, \'getWebSiteValue\', context.getPortalObject)().absolute_url()\n
+portal_url = (context.getWebSiteValue() or context.getPortalObject()).absolute_url()\n
 http_parameters = request.get(\'http_parameters\', \'\')\n
 http_parameters = http_parameters.replace(\'editable_mode\', \'dummy_editable_mode\')\n
 \n

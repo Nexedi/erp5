@@ -55,7 +55,7 @@
                            here.Base_filterDuplicateActions(\n
                              here.portal_actions.listFilteredActionsFor(here));\n
               dummy        python:request.set(\'actions\', actions);\n
-              portal_url   python: getattr(here, \'getWebSiteValue\', here.getPortalObject)().absolute_url();\n
+              portal_url   python: (here.getWebSiteValue() or here.getPortalObject()).absolute_url();\n
               portal_type  here/getPortalType">\n
 \n
   <!-- XXX is this really useful - called how many times ?? - tried to removed but failed -->\n
