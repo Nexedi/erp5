@@ -67,7 +67,7 @@
 &lt;!--\n
 var oFCKeditor      = new FCKeditor(\'${inputname}\');\n
 var pathUser        = \'${path_user}/\';\n
-oFCKeditor.BasePath = \'${path_user}/\';\n
+oFCKeditor.BasePath = \'${portal_url}/\';\n
 oFCKeditor.Value    = \'${cleaninput}\';\n
 \n
 // set the base url for relative paths\n
