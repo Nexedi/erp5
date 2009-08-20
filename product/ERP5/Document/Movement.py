@@ -257,11 +257,14 @@ class Movement(XMLObject, Amount):
     return {'price': context.Movement_lookupPrice()}
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getPrice')
-  def getPrice(self, default=None, evaluate=1, **kw):
+  def getPrice(self, default=None, context=None, evaluate=1, **kw):
     """
       Get the Price in the context.
 
       If price is not stored locally, lookup a price and store it.
+
+      FIXME: Don't trust this docstring, this method is not at all using the
+      passed context, but uses this movement as context.
     """
     # XXX As all accessors can recieve the default value as first positional
     # argument, so we changed the first positional argument from context to
