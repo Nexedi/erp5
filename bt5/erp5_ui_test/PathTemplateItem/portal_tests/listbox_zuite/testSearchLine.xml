@@ -58,9 +58,11 @@
 </tr>\n
 <tr>\n
   <td>verifyElementPresent</td>\n
-  <td>//tr[@id="listbox_search_line"]</td>\n
+  <td>//*[@id="listbox_search_line"]</td>\n
   <td></td>\n
 </tr>\n
+\n
+<tal:block tal:condition="python: context.TestTool_getSkinName()!=\'Mobile\'">\n
 <tr>\n
   <td>verifyEditable</td>\n
   <td>//tr[@id="listbox_search_line"]/td[2]//input</td>\n
@@ -96,6 +98,40 @@
   <td>//tr[@id="listbox_search_line"]/td[5]</td>\n
   <td></td>\n
 </tr>\n
+</tal:block>\n
+<tal:block tal:condition="python: context.TestTool_getSkinName()==\'Mobile\'">\n
+<tr>\n
+  <td>verifyEditable</td>\n
+  <td>//*[@id="listbox_search_line"]//div[@id=\'0\']//input</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>//*[@id="listbox_search_line"]//div[@id=\'0\']//input</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyEditable</td>\n
+  <td>//*[@id="listbox_search_line"]//div[@id=\'1\']//input</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>//*[@id="listbox_search_line"]//div[@id=\'1\']//input</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyElementNotPresent</td>\n
+  <td>//*[@id="listbox_search_line"]//div[@id=\'2\']//input</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyElementNotPresent</td>\n
+  <td>//*[@id="listbox_search_line"]//div[@id=\'3\']//input</td>\n
+  <td></td>\n
+</tr>\n
+</tal:block>\n
+\n
 <tr>\n
   <td>open</td>\n
   <td>${base_url}/foo_module/FooModule_viewFooList/listbox/ListBox_setPropertyList?field_select=</td>\n
@@ -111,16 +147,19 @@
   <td>${base_url}/foo_module/view</td>\n
   <td></td>\n
 </tr>\n
+<tal:block tal:condition="python: context.TestTool_getSkinName()!=\'Mobile\'">\n
 <tr>\n
   <td>verifyElementNotPresent</td>\n
   <td>id=listbox_select</td>\n
   <td></td>\n
 </tr>\n
+</tal:block>\n
 <tr>\n
   <td>verifyElementPresent</td>\n
-  <td>//tr[@id="listbox_search_line"]</td>\n
+  <td>//*[@id="listbox_search_line"]</td>\n
   <td></td>\n
 </tr>\n
+<tal:block tal:condition="python: context.TestTool_getSkinName()!=\'Mobile\'">\n
 <tr>\n
   <td>verifyEditable</td>\n
   <td>//tr[@id="listbox_search_line"]/td[1]//input</td>\n
@@ -156,6 +195,39 @@
   <td>//tr[@id="listbox_search_line"]/td[4]</td>\n
   <td></td>\n
 </tr>\n
+</tal:block>\n
+<tal:block tal:condition="python: context.TestTool_getSkinName()==\'Mobile\'">\n
+<tr>\n
+  <td>verifyEditable</td>\n
+  <td>//*[@id="listbox_search_line"]//div[@id=\'0\']//input</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>//*[@id="listbox_search_line"]//div[@id=\'0\']//input</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyEditable</td>\n
+  <td>//*[@id="listbox_search_line"]//div[@id=\'1\']//input</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>//*[@id="listbox_search_line"]//div[@id=\'1\']//input</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyElementNotPresent</td>\n
+  <td>//*[@id="listbox_search_line"]//div[@id=\'2\']//input</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyElementNotPresent</td>\n
+  <td>//*[@id="listbox_search_line"]//div[@id=\'3\']//input</td>\n
+  <td></td>\n
+</tr>\n
+</tal:block>\n
 <tr>\n
   <td>open</td>\n
   <td>${base_url}/foo_module/FooModule_viewFooList/listbox/ListBox_setPropertyList?field_select=checked&amp;field_search=</td>\n
@@ -178,7 +250,7 @@
 </tr>\n
 <tr>\n
   <td>verifyElementNotPresent</td>\n
-  <td>//tr[@id="listbox_search_line"]</td>\n
+  <td>//*[@id="listbox_search_line"]</td>\n
   <td></td>\n
 </tr>\n
 \n

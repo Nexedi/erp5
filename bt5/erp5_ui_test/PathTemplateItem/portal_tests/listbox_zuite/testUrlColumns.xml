@@ -86,6 +86,7 @@
   <td>${base_url}/foo_module/view</td>\n
   <td></td>\n
 </tr>\n
+<tal:block tal:condition="python: context.TestTool_getSkinName()!=\'Mobile\'">\n
 <tr>\n
   <td>verifyAttribute</td>\n
   <td>//tr[@id="listbox_data_line_0"]/td[2]//a@href</td>\n
@@ -116,6 +117,40 @@
   <td>//tr[@id="listbox_data_line_2"]/td[3]//a</td>\n
   <td></td>\n
 </tr>\n
+</tal:block>\n
+<tal:block tal:condition="python: context.TestTool_getSkinName()==\'Mobile\'">\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//*[@id="listbox_data_line_0"]//a[not(@title)]</td>\n
+  <td>0</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyElementNotPresent</td>\n
+  <td>//*[@id="listbox_data_line_0"]/div[2]//span[@id=\'data_short\']//a</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//*[@id="listbox_data_line_1"]//a[not(@title)]</td>\n
+  <td>1</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyElementNotPresent</td>\n
+  <td>//*[@id="listbox_data_line_1"]/div[2]//span[@id=\'data_short\']//a</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//*[@id="listbox_data_line_2"]//a[not(@title)]</td>\n
+  <td>2</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyElementNotPresent</td>\n
+  <td>//*[@id="listbox_data_line_2"]/div[2]//span[@id=\'data_short\']//a</td>\n
+  <td></td>\n
+</tr>\n
+</tal:block>\n
+\n
 \n
 </tbody></table>\n
 </body>\n

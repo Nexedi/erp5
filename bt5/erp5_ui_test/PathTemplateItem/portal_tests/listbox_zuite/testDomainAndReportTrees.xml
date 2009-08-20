@@ -50,6 +50,10 @@
 <thead>\n
 <tr><td rowspan="1" colspan="3">Test Domain And Report Trees</td></tr>\n
 </thead><tbody>\n
+<!-- Domain tree are not avalaible in mobile skin \n
+     So this part is skipped -->\n
+<tal:block tal:condition="python: context.TestTool_getSkinName()!=\'Mobile\'">\n
+\n
 <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/init" />\n
 <tr>\n
   <td>open</td>\n
@@ -220,7 +224,7 @@
 </tr>\n
 \n
 \n
-\n
+</tal:block>\n
 </tbody></table>\n
 </body>\n
 </html>\n

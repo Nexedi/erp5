@@ -50,6 +50,9 @@
 <thead>\n
 <tr><td rowspan="1" colspan="3">Test Search and Sort on a Date Column</td></tr>\n
 </thead><tbody>\n
+<!-- XXX Mobile listbox columns label are not clickable for quick sorting\n
+     So this test is skipped -->\n
+<tal:block tal:condition="python: context.TestTool_getSkinName()!=\'Mobile\'">\n
 <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/init" />\n
 <tr>\n
   <td>open</td>\n
@@ -171,6 +174,7 @@
   <td>//tr[@id="listbox_data_line_2"]/td[2]</td>\n
   <td>2001/01/01</td>\n
 </tr>\n
+</tal:block>\n
 \n
 </tbody></table>\n
 </body>\n

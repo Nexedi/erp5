@@ -87,6 +87,9 @@
   <td>${base_url}/foo_module/view</td>\n
   <td></td>\n
 </tr>\n
+<!-- List cannot be sorted using the title link\n
+     So this part is skipped -->\n
+<tal:block tal:condition="python: context.TestTool_getSkinName()!=\'Mobile\'">\n
 <tr>\n
   <td>assertElementPresent</td>\n
   <td>//tr[@id="listbox_label_line"]/td[2]</td>\n
@@ -117,6 +120,9 @@
   <td>//tr[@id="listbox_label_line"]/td[4]/img</td>\n
   <td></td>\n
 </tr>\n
+</tal:block>\n
+\n
+<tal:block tal:condition="python: context.TestTool_getSkinName()!=\'Mobile\'">\n
 <tr>\n
   <td>verifyText</td>\n
   <td>//tr[@id="listbox_data_line_0"]/td[2]</td>\n
@@ -132,6 +138,25 @@
   <td>//tr[@id="listbox_data_line_2"]/td[2]</td>\n
   <td>2</td>\n
 </tr>\n
+</tal:block>\n
+<tal:block tal:condition="python: context.TestTool_getSkinName()==\'Mobile\'">\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//*[@id="listbox_data_line_0"]//a[not(@title)]</td>\n
+  <td>0</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//*[@id="listbox_data_line_1"]//a[not(@title)]</td>\n
+  <td>1</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//*[@id="listbox_data_line_2"]//a[not(@title)]</td>\n
+  <td>2</td>\n
+</tr>\n
+</tal:block>\n
+\n
 <tr>\n
   <td>assertElementNotPresent</td>\n
   <td>id=listbox_data_line_3</td>\n
@@ -164,6 +189,9 @@
   <td></td>\n
 </tr>\n
 <!-- Check the result -->\n
+<!-- List cannot be sorted using the title link\n
+     So this part is skipped -->\n
+<tal:block tal:condition="python: context.TestTool_getSkinName()!=\'Mobile\'">\n
 <tr>\n
   <td>assertElementPresent</td>\n
   <td>//tr[@id="listbox_label_line"]/td[2]</td>\n
@@ -204,6 +232,9 @@
   <td>//tr[@id="listbox_label_line"]/td[4]/img</td>\n
   <td></td>\n
 </tr>\n
+</tal:block>\n
+\n
+<tal:block tal:condition="python: context.TestTool_getSkinName()!=\'Mobile\'">\n
 <tr>\n
   <td>verifyText</td>\n
   <td>//tr[@id="listbox_data_line_0"]/td[2]</td>\n
@@ -219,12 +250,29 @@
   <td>//tr[@id="listbox_data_line_2"]/td[2]</td>\n
   <td>7</td>\n
 </tr>\n
+</tal:block>\n
+<tal:block tal:condition="python: context.TestTool_getSkinName()==\'Mobile\'">\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//*[@id="listbox_data_line_0"]//a[not(@title)]</td>\n
+  <td>9</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//*[@id="listbox_data_line_1"]//a[not(@title)]</td>\n
+  <td>8</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//*[@id="listbox_data_line_2"]//a[not(@title)]</td>\n
+  <td>7</td>\n
+</tr>\n
+</tal:block>\n
 <tr>\n
   <td>assertElementNotPresent</td>\n
   <td>id=listbox_data_line_3</td>\n
   <td></td>\n
 </tr>\n
-\n
 </tbody></table>\n
 </body>\n
 </html>\n

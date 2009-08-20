@@ -50,6 +50,10 @@
 <thead>\n
 <tr><td rowspan="1" colspan="3">Test Label Line</td></tr>\n
 </thead><tbody>\n
+<!-- In mobile-mode label Lines are only displayed if there are unless 1 record in the module\n
+     So this test is skipped \n
+-->\n
+<tal:block tal:condition="python: context.TestTool_getSkinName()!=\'Mobile\'">\n
 <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/init" />\n
 <tr>\n
   <td>verifyElementPresent</td>\n
@@ -136,7 +140,7 @@
   <td>//tr[@id="listbox_label_line"]/td[4]</td>\n
   <td></td>\n
 </tr>\n
-\n
+</tal:block>\n
 </tbody></table>\n
 </body>\n
 </html>\n

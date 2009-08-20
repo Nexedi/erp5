@@ -50,6 +50,9 @@
 <thead>\n
 <tr><td rowspan="1" colspan="3">Test Report Tree</td></tr>\n
 </thead><tbody>\n
+<!-- XXX Report tree mode doesn\'t exists in mobile\n
+     So this test is skipped -->\n
+<tal:block tal:condition="python: context.TestTool_getSkinName()!=\'Mobile\'">\n
 <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/init" />\n
 <tr>\n
   <td>open</td>\n
@@ -447,6 +450,7 @@
   <td>id=listbox_record_number</td>\n
   <td>0 record(s)</td>\n
 </tr>\n
+</tal:block>\n
 \n
 <!-- Still very far from complete. Show/Hide should be tested, closing a tree should be tested, sorting should be tested. -->\n
 \n

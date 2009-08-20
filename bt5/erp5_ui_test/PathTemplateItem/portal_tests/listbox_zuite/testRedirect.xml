@@ -50,7 +50,9 @@
 <thead>\n
 <tr><td rowspan="1" colspan="3">Test ListBox Redirections</td></tr>\n
 </thead><tbody>\n
-\n
+<!-- XXX Report tree mode doesn\'t exists in mobile\n
+     So this test is skipped -->\n
+<tal:block tal:condition="python: context.TestTool_getSkinName()!=\'Mobile\'">\n
 \n
 <!--\n
   === PART 0 ===\n
@@ -431,7 +433,7 @@
   <td tal:content="string:glob:${here/portal_url}/foo_module/0/unfoldDomain*" />\n
   <td></td>\n
 </tr>\n
-\n
+</tal:block>\n
 \n
 \n
 </tbody>\n

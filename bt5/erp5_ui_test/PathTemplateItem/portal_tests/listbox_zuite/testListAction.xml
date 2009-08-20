@@ -50,6 +50,9 @@
 <thead>\n
 <tr><td rowspan="1" colspan="3">Test List Action</td></tr>\n
 </thead><tbody>\n
+<!-- XXX listbox_title is not displayed in mobile mode unless there is one or many records \n
+     So this test is skipped -->\n
+<tal:block tal:condition="python: context.TestTool_getSkinName()!=\'Mobile\'">\n
 <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/init" />\n
 <tr>\n
   <td>assertElementPresent</td>\n
@@ -97,7 +100,7 @@
   <td>id=listbox_title</td>\n
   <td>exact:Foos:</td>\n
 </tr>\n
-\n
+</tal:block>\n
 </tbody></table>\n
 </body>\n
 </html>\n

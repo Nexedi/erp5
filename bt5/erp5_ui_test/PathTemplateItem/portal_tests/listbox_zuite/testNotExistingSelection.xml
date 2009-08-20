@@ -89,11 +89,13 @@ For now, selection too does not allow such deletion, so, this test is only valid
   <td>id=listbox_item_number</td>\n
   <td> - 0 item(s) selected</td>\n
 </tr>\n
+<tal:block tal:condition="python: context.TestTool_getSkinName()!=\'Mobile\'">\n
 <tr>\n
   <td>verifyElementNotPresent</td>\n
   <td>id=listbox_page_selection</td>\n
   <td></td>\n
-</tr>\n
+</tr> \n
+</tal:block>\n
 <tr>\n
   <td>clickAndWait</td>\n
   <td>Base_edit:method</td>\n

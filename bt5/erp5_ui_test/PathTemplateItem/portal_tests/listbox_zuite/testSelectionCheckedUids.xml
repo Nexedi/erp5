@@ -91,7 +91,7 @@ selection\'s checked uids are set to the uids of the filtered objects. -->\n
 </tr>\n
 <tr>\n
   <td>click</td>\n
-  <td>//tr[@id=\'listbox_data_line_1\']/td[1]/input</td>\n
+  <td>//*[@id="listbox_data_line_1"]//input[@type="checkbox"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -131,12 +131,12 @@ uids.\n
 </tr>\n
 <tr>\n
   <td>click</td>\n
-  <td>//tr[@id=\'listbox_data_line_1\']/td[1]/input</td>\n
+  <td>//*[@id="listbox_data_line_1"]//input[@type="checkbox"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>click</td>\n
-  <td>//tr[@id=\'listbox_data_line_2\']/td[1]/input</td>\n
+  <td>//*[@id="listbox_data_line_2"]//input[@type="checkbox"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -175,12 +175,12 @@ only have selected uids.\n
 </tr>\n
 <tr>\n
   <td>click</td>\n
-  <td>//tr[@id=\'listbox_data_line_1\']/td[1]/input</td>\n
+  <td>//*[@id="listbox_data_line_1"]//input[@type="checkbox"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>click</td>\n
-  <td>//tr[@id=\'listbox_data_line_2\']/td[1]/input</td>\n
+  <td>//*[@id="listbox_data_line_2"]//input[@type="checkbox"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -191,7 +191,7 @@ only have selected uids.\n
 <tr>\n
   <td>click</td>\n
   <!-- unselect 1 -->\n
-  <td>//tr[@id=\'listbox_data_line_0\']/td[1]/input</td>\n
+  <td>//*[@id="listbox_data_line_0"]//input[@type="checkbox"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
