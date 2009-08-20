@@ -1539,7 +1539,7 @@ class PortalTypeWorkflowChainTemplateItem(BaseTemplateItem):
           # XXX we don't use the chain (Default) in erp5 so don't keep it
           if old_chain_dict != '(Default)' and old_chain_dict != '':
             old_chain_workflow_id_set = {}
-            # get existent workflow id list
+            # get existing workflow id list
             for wf_id in old_chain_dict.split(', '):
               old_chain_workflow_id_set[wf_id] = 1
             # get new workflow id list
@@ -1569,6 +1569,10 @@ class PortalTypeWorkflowChainTemplateItem(BaseTemplateItem):
                                   (wf_id, portal_type)
             chain_dict['chain_%s' % portal_type] = self._objects[path]
         else:
+          if portal_type not in context.portal_types.objectIds():
+            raise ValueError('Cannot chain workflow %r to non existing '
+                           'portal type %r' % (self._objects[path],
+                                               portal_type))
           chain_dict['chain_%s' % portal_type] = self._objects[path]
     context.portal_workflow.manage_changeWorkflows(default_chain,
                                                    props=chain_dict)
