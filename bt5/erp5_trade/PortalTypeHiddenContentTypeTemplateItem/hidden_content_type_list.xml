@@ -11,10 +11,6 @@
  <portal_type id="Preference">
   <item>Sale Order</item>
  </portal_type>
- <portal_type id="Purchase Order">
-  <item>Discount Line</item>
-  <item>Tax Line</item>
- </portal_type>
  <portal_type id="Purchase Order Line">
   <item>Purchase Order Cell</item>
  </portal_type>
@@ -23,10 +19,6 @@
  </portal_type>
  <portal_type id="Returned Sale Packing List Line">
   <item>Returned Sale Packing List Cell</item>
- </portal_type>
- <portal_type id="Sale Order">
-  <item>Discount Line</item>
-  <item>Tax Line</item>
  </portal_type>
  <portal_type id="Sale Order Line">
   <item>Sale Order Cell</item>

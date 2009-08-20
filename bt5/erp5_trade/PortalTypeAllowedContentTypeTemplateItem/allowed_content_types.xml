@@ -21,9 +21,6 @@
   <item>Category Divergence Tester</item>
   <item>Property Divergence Tester</item>
  </portal_type>
- <portal_type id="Discount Module">
-  <item>Discount</item>
- </portal_type>
  <portal_type id="Internal Packing List">
   <item>Internal Packing List Line</item>
  </portal_type>
@@ -54,8 +51,6 @@
   <item>Payment Condition</item>
   <item>Purchase Order Line</item>
   <item>Trade Model Line</item>
-  <item>Tax Line</item>
-  <item>Discount Line</item>
  </portal_type>
  <portal_type id="Purchase Order Line">
   <item>Purchase Order Line</item>
@@ -74,8 +69,6 @@
   <item>Purchase Packing List</item>
  </portal_type>
  <portal_type id="Purchase Trade Condition">
-  <item>Tax Model Line</item>
-  <item>Discount Model Line</item>
   <item>Payment Condition</item>
   <item>Trade Model Line</item>
   <item>Purchase Supply Line</item>
@@ -100,8 +93,6 @@
  <portal_type id="Sale Order">
   <item>Trade Model Line</item>
   <item>Sale Order Line</item>
-  <item>Tax Line</item>
-  <item>Discount Line</item>
   <item>Payment Condition</item>
  </portal_type>
  <portal_type id="Sale Order Line">
@@ -122,17 +113,12 @@
   <item>Sale Packing List</item>
  </portal_type>
  <portal_type id="Sale Trade Condition">
-  <item>Tax Model Line</item>
   <item>Payment Condition</item>
-  <item>Discount Model Line</item>
   <item>Trade Model Line</item>
   <item>Sale Supply Line</item>
  </portal_type>
  <portal_type id="Sale Trade Condition Module">
   <item>Sale Trade Condition</item>
- </portal_type>
- <portal_type id="Tax Module">
-  <item>Tax</item>
  </portal_type>
  <portal_type id="Trade Model Line">
   <item>Trade Model Cell</item>

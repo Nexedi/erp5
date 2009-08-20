@@ -3,23 +3,19 @@ Invoice Cell | delivery_movement_causality_interaction_workflow
 Invoice Cell | delivery_movement_simulation_interaction_workflow
 Invoice Cell | edit_workflow
 Invoice Cell | pricing_interaction_workflow
-Invoice Cell | tax_interaction_workflow
 Invoice Line | delivery_movement_account_interaction_workflow
 Invoice Line | delivery_movement_causality_interaction_workflow
 Invoice Line | delivery_movement_simulation_interaction_workflow
 Invoice Line | edit_workflow
 Invoice Line | pricing_interaction_workflow
-Invoice Line | tax_interaction_workflow
 Invoice Line | trade_matrix_workflow
 Invoice Transaction Rule | edit_workflow
 Invoice Transaction Rule | rule_interaction_workflow
 Invoice Transaction Rule | rule_validation_workflow
 Invoicing Rule | edit_workflow
 Invoicing Rule | rule_validation_workflow
-Purchase Invoice Transaction | delivery_tax_interaction_workflow
 Purchase Order Cell | delivery_movement_account_interaction_workflow
 Purchase Order Line | delivery_movement_account_interaction_workflow
-Sale Invoice Transaction | delivery_tax_interaction_workflow
 Sale Order Cell | delivery_movement_account_interaction_workflow
 Sale Order Line | delivery_movement_account_interaction_workflow
 Tax Rule | edit_workflow

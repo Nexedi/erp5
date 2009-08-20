@@ -10,11 +10,6 @@ Container Line | view_quantity
 Container | view
 Delivery Cell | view
 Delivery Rule | view
-Discount Line | view
-Discount Model Line | view
-Discount Module | view
-Discount | view
-Discount | view
 First Causality Movement Group | view
 Internal Packing List Cell | view
 Internal Packing List Line | quantity_view
@@ -60,9 +55,7 @@ Purchase Order | order_print
 Purchase Order | payment_condition
 Purchase Order | profile_view
 Purchase Order | view
-Purchase Order | view_discount
 Purchase Order | view_stock
-Purchase Order | view_tax
 Purchase Order | view_trade_model
 Purchase Order | view_trade_model_line_list
 Purchase Packing List Cell | apparel_fabric_item_fast_input
@@ -82,10 +75,8 @@ Purchase Packing List | view
 Purchase Packing List | view_stock
 Purchase Trade Condition Module | view
 Purchase Trade Condition | view
-Purchase Trade Condition | view_discount
 Purchase Trade Condition | view_payment
 Purchase Trade Condition | view_profile
-Purchase Trade Condition | view_tax
 Purchase Trade Condition | view_trade_model_line_list
 Returned Sale Packing List Cell | view
 Returned Sale Packing List Line | price_view
@@ -117,9 +108,7 @@ Sale Order | reference_generate
 Sale Order | sale_order_fast_input
 Sale Order | sale_order_planning
 Sale Order | view
-Sale Order | view_discount
 Sale Order | view_stock
-Sale Order | view_tax
 Sale Order | view_trade_model
 Sale Order | view_trade_model_line_list
 Sale Packing List Cell | view
@@ -139,15 +128,9 @@ Sale Packing List | view_container_list
 Sale Packing List | view_stock
 Sale Trade Condition Module | view
 Sale Trade Condition | view
-Sale Trade Condition | view_discount
 Sale Trade Condition | view_payment
 Sale Trade Condition | view_profile
-Sale Trade Condition | view_tax
 Sale Trade Condition | view_trade_model_line_list
 System Preference | bpm_preference
 System Preference | trade_preference
-Tax Line | view
-Tax Model Line | view
-Tax Module | view
-Tax | view
 Trade Model Line | view

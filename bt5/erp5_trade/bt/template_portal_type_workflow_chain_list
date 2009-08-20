@@ -15,8 +15,6 @@ Delivery Cell | delivery_movement_causality_interaction_workflow
 Delivery Cell | delivery_movement_simulation_interaction_workflow
 Delivery Rule | edit_workflow
 Delivery Rule | rule_validation_workflow
-Discount | edit_workflow
-Discount | validation_workflow
 Internal Packing List Cell | delivery_movement_causality_interaction_workflow
 Internal Packing List Cell | delivery_movement_simulation_interaction_workflow
 Internal Packing List Cell | pricing_interaction_workflow
@@ -42,13 +40,10 @@ Payment Condition | edit_workflow
 Purchase Order Cell | edit_workflow
 Purchase Order Cell | order_movement_simulation_interaction_workflow
 Purchase Order Cell | pricing_interaction_workflow
-Purchase Order Cell | tax_interaction_workflow
 Purchase Order Line | edit_workflow
 Purchase Order Line | order_movement_simulation_interaction_workflow
 Purchase Order Line | pricing_interaction_workflow
-Purchase Order Line | tax_interaction_workflow
 Purchase Order Line | trade_matrix_workflow
-Purchase Order | delivery_tax_interaction_workflow
 Purchase Order | edit_workflow
 Purchase Order | order_simulation_interaction_workflow
 Purchase Order | order_workflow
@@ -74,13 +69,10 @@ Returned Sale Packing List | packing_list_workflow
 Sale Order Cell | edit_workflow
 Sale Order Cell | order_movement_simulation_interaction_workflow
 Sale Order Cell | pricing_interaction_workflow
-Sale Order Cell | tax_interaction_workflow
 Sale Order Line | edit_workflow
 Sale Order Line | order_movement_simulation_interaction_workflow
 Sale Order Line | pricing_interaction_workflow
-Sale Order Line | tax_interaction_workflow
 Sale Order Line | trade_matrix_workflow
-Sale Order | delivery_tax_interaction_workflow
 Sale Order | edit_workflow
 Sale Order | order_simulation_interaction_workflow
 Sale Order | order_workflow
@@ -102,7 +94,5 @@ Sale Packing List | packing_list_container_workflow
 Sale Packing List | packing_list_workflow
 Sale Trade Condition | edit_workflow
 Sale Trade Condition | validation_workflow
-Tax | edit_workflow
-Tax | validation_workflow
 Trade Model Line | edit_workflow
 Trade Model Line | trade_model_line_interaction_workflow

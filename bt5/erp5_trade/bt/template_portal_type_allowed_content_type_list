@@ -8,7 +8,6 @@ Delivery Builder | First Causality Movement Group
 Delivery Rule | Category Divergence Tester
 Delivery Rule | Property Divergence Tester
 Delivery Rule | Quantity Divergence Tester
-Discount Module | Discount
 Internal Packing List Line | Internal Packing List Cell
 Internal Packing List Module | Internal Packing List
 Internal Packing List | Internal Packing List Line
@@ -22,19 +21,15 @@ Preference | Sale Order
 Purchase Order Line | Purchase Order Cell
 Purchase Order Line | Purchase Order Line
 Purchase Order Module | Purchase Order
-Purchase Order | Discount Line
 Purchase Order | Payment Condition
 Purchase Order | Purchase Order Line
-Purchase Order | Tax Line
 Purchase Order | Trade Model Line
 Purchase Packing List Line | Purchase Packing List Cell
 Purchase Packing List Module | Purchase Packing List
 Purchase Packing List | Purchase Packing List Line
 Purchase Trade Condition Module | Purchase Trade Condition
-Purchase Trade Condition | Discount Model Line
 Purchase Trade Condition | Payment Condition
 Purchase Trade Condition | Purchase Supply Line
-Purchase Trade Condition | Tax Model Line
 Purchase Trade Condition | Trade Model Line
 Returned Sale Packing List Line | Returned Sale Packing List Cell
 Returned Sale Packing List Module | Returned Sale Packing List
@@ -45,20 +40,15 @@ Rule Tool | Order Rule
 Sale Order Line | Sale Order Cell
 Sale Order Line | Sale Order Line
 Sale Order Module | Sale Order
-Sale Order | Discount Line
 Sale Order | Payment Condition
 Sale Order | Sale Order Line
-Sale Order | Tax Line
 Sale Order | Trade Model Line
 Sale Packing List Line | Sale Packing List Cell
 Sale Packing List Module | Sale Packing List
 Sale Packing List | Container
 Sale Packing List | Sale Packing List Line
 Sale Trade Condition Module | Sale Trade Condition
-Sale Trade Condition | Discount Model Line
 Sale Trade Condition | Payment Condition
 Sale Trade Condition | Sale Supply Line
-Sale Trade Condition | Tax Model Line
 Sale Trade Condition | Trade Model Line
-Tax Module | Tax
 Trade Model Line | Trade Model Cell

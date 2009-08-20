@@ -1,3 +1,6 @@
+2009-08-20 Jérome
+* Move out old tax and discount system.
+
 2009-07-02 romain
 * Revert latest proxy field library simplification, as the design was not finalized.
 

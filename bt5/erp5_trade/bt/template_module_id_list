@@ -1,5 +1,4 @@
 business_process_module
-discount_module
 internal_packing_list_module
 inventory_module
 purchase_order_module
@@ -9,4 +8,3 @@ returned_sale_packing_list_module
 sale_order_module
 sale_packing_list_module
 sale_trade_condition_module
-tax_module

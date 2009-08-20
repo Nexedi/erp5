@@ -32,10 +32,6 @@
   <workflow>rule_validation_workflow, edit_workflow</workflow>
  </chain>
  <chain>
-  <type>Discount</type>
-  <workflow>edit_workflow, validation_workflow</workflow>
- </chain>
- <chain>
   <type>Internal Packing List</type>
   <workflow>packing_list_workflow, edit_workflow, delivery_causality_workflow, delivery_causality_interaction_workflow, delivery_simulation_interaction_workflow</workflow>
  </chain>
@@ -69,15 +65,15 @@
  </chain>
  <chain>
   <type>Purchase Order</type>
-  <workflow>edit_workflow, order_workflow, order_simulation_interaction_workflow, delivery_tax_interaction_workflow</workflow>
+  <workflow>edit_workflow, order_workflow, order_simulation_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>Purchase Order Cell</type>
-  <workflow>pricing_interaction_workflow, order_movement_simulation_interaction_workflow, tax_interaction_workflow, edit_workflow</workflow>
+  <workflow>pricing_interaction_workflow, order_movement_simulation_interaction_workflow, edit_workflow</workflow>
  </chain>
  <chain>
   <type>Purchase Order Line</type>
-  <workflow>tax_interaction_workflow, edit_workflow, pricing_interaction_workflow, trade_matrix_workflow, order_movement_simulation_interaction_workflow</workflow>
+  <workflow>edit_workflow, pricing_interaction_workflow, trade_matrix_workflow, order_movement_simulation_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>Purchase Packing List</type>
@@ -109,15 +105,15 @@
  </chain>
  <chain>
   <type>Sale Order</type>
-  <workflow>edit_workflow, order_workflow, order_simulation_interaction_workflow, delivery_tax_interaction_workflow</workflow>
+  <workflow>edit_workflow, order_workflow, order_simulation_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>Sale Order Cell</type>
-  <workflow>pricing_interaction_workflow, order_movement_simulation_interaction_workflow, tax_interaction_workflow, edit_workflow</workflow>
+  <workflow>pricing_interaction_workflow, order_movement_simulation_interaction_workflow, edit_workflow</workflow>
  </chain>
  <chain>
   <type>Sale Order Line</type>
-  <workflow>tax_interaction_workflow, edit_workflow, pricing_interaction_workflow, trade_matrix_workflow, order_movement_simulation_interaction_workflow</workflow>
+  <workflow>edit_workflow, pricing_interaction_workflow, trade_matrix_workflow, order_movement_simulation_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>Sale Packing List</type>
@@ -133,10 +129,6 @@
  </chain>
  <chain>
   <type>Sale Trade Condition</type>
-  <workflow>edit_workflow, validation_workflow</workflow>
- </chain>
- <chain>
-  <type>Tax</type>
   <workflow>edit_workflow, validation_workflow</workflow>
  </chain>
  <chain>

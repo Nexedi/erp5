@@ -3,12 +3,8 @@ Internal Packing List Line | Internal Packing List Cell
 Inventory Line | Inventory Cell
 Preference | Sale Order
 Purchase Order Line | Purchase Order Cell
-Purchase Order | Discount Line
-Purchase Order | Tax Line
 Purchase Packing List Line | Purchase Packing List Cell
 Returned Sale Packing List Line | Returned Sale Packing List Cell
 Sale Order Line | Sale Order Cell
-Sale Order | Discount Line
-Sale Order | Tax Line
 Sale Packing List Line | Sale Packing List Cell
 Trade Model Line | Trade Model Cell
