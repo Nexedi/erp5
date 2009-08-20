@@ -1,0 +1,271 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+order = context\n
+\n
+# copy categories\n
+category_list = [\n
+  \'source\', \'source_section\', \'source_decision\',\n
+  \'source_administration\', \'source_payment\', \'source_project\',\n
+  \'destination\', \'destination_section\', \'destination_decision\',\n
+  \'destination_administration\', \'destination_payment\', \'destination_project\',\n
+  \'price_currency\', \'incoterm\', \'delivery_mode\',\n
+]\n
+new_category_dict = {}\n
+\n
+\n
+def getPropertyFromTradeCondition(trade_condition, property_name):\n
+  """Get a property from the trade condition, or from a specialised trade\n
+  condition\n
+  """\n
+  v = trade_condition.getProperty(property_name)\n
+  if v:\n
+    return v\n
+  for specialised_trade_condition in trade_condition.getSpecialiseValueList():\n
+    v = getPropertyFromTradeCondition(\n
+              specialised_trade_condition, property_name)\n
+    if v:\n
+      return v\n
+\n
+\n
+for category in category_list:\n
+  if force or not order.getPropertyList(category):\n
+    v = getPropertyFromTradeCondition(trade_condition, category)\n
+    if v:\n
+      new_category_dict[category] = v\n
+\n
+\n
+def copyPaymentCondition(order, trade_condition):\n
+  filter_dict = {\'portal_type\': \'Payment Condition\'}\n
+  to_copy = trade_condition.contentIds(filter=filter_dict)\n
+  if len(to_copy) > 0 :\n
+    copy_data = trade_condition.manage_copyObjects(ids=to_copy)\n
+    order.manage_pasteObjects(copy_data)\n
+  for other_trade_condition in trade_condition.getSpecialiseValueList():\n
+    copyPaymentCondition(order, other_trade_condition)\n
+  \n
+filter_dict = {\'portal_type\': \'Payment Condition\'}\n
+if force:\n
+  order.manage_delObjects(list(order.contentIds(filter=filter_dict)))\n
+if len(order.contentIds(filter=filter_dict)) == 0:\n
+  copyPaymentCondition(order, trade_condition)\n
+\n
+# initialise discount lines\n
+def initialiseDiscountLineList(order, trade_condition):\n
+  for discount_model_line in trade_condition.contentValues(\n
+                                             portal_type=\'Discount Model Line\'):\n
+    discount_model_line_reference = discount_model_line.getReference()\n
+    if not discount_model_line_reference or discount_model_line_reference not in [\n
+            x.getProperty(\'reference\') for x in\n
+            order.contentValues(portal_type=\'Discount Line\')]:\n
+      discount_line = order.newContent(\n
+            portal_type=\'Discount Line\',\n
+            resource=discount_model_line.getResource(),\n
+            reference=discount_model_line_reference,\n
+            float_index=discount_model_line.getFloatIndex(),\n
+            base_application_list=discount_model_line.getBaseApplicationList(),\n
+            base_contribution_list=discount_model_line.getBaseContributionList(),\n
+            quantity=0,\n
+            price=0,)\n
+      # calculation_script\n
+      if discount_model_line.getProperty(\'calculation_script_id\'):\n
+        raise NotImplementedError\n
+      # fixed_amount\n
+      if discount_model_line.getQuantity():\n
+        raise NotImplementedError\n
+      # ratio\n
+      discount_line.setPrice(discount_model_line.getEfficiency())\n
+  \n
+  # recurse on other trade conditions\n
+  for specialised_trade_condition in trade_condition.getSpecialiseValueList():\n
+    initialiseDiscountLineList(order, specialised_trade_condition)\n
+\n
+\n
+# initialise tax lines\n
+def initialiseTaxLineList(order, trade_condition):\n
+  for tax_model_line in trade_condition.contentValues(portal_type=\'Tax Model Line\'):\n
+    tax_model_line_reference = tax_model_line.getReference()\n
+    if not tax_model_line_reference or tax_model_line_reference not in [\n
+            x.getProperty(\'reference\') for x in\n
+            order.contentValues(portal_type=\'Tax Line\')]:\n
+      tax_line = order.newContent(\n
+            portal_type=\'Tax Line\',\n
+            resource=tax_model_line.getResource(),\n
+            reference=tax_model_line_reference,\n
+            float_index=tax_model_line.getFloatIndex(),\n
+            base_application_list=tax_model_line.getBaseApplicationList(),\n
+            base_contribution_list=tax_model_line.getBaseContributionList(),\n
+            quantity=0,\n
+            price=0,)\n
+      # calculation_script\n
+      if tax_model_line.getProperty(\'calculation_script_id\'):\n
+        raise NotImplementedError\n
+      # fixed_amount\n
+      if tax_model_line.getQuantity():\n
+        raise NotImplementedError\n
+      # ratio\n
+      tax_line.setPrice(tax_model_line.getEfficiency())\n
+  \n
+  # recurse on other trade conditions\n
+  for specialised_trade_condition in trade_condition.getSpecialiseValueList():\n
+    initialiseTaxLineList(order, specialised_trade_condition)\n
+if force:\n
+  context.manage_delObjects([x.getId() for x in context.contentValues(\n
+                 portal_type=(\'Discount Line\', \'Tax Line\'))])\n
+\n
+if not len(context.contentValues(portal_type=(\'Discount Line\', \'Tax Line\'))):\n
+  initialiseTaxLineList(context, trade_condition)\n
+  initialiseDiscountLineList(context, trade_condition)\n
+ \n
+# if the order already contain lines, immediately update tax line\n
+if order.getMovementList():\n
+  order.Delivery_updateTaxLineList()\n
+\n
+# set specialise\n
+new_category_dict[\'specialise\'] = trade_condition.getRelativeUrl()\n
+\n
+order.edit(**new_category_dict)\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>trade_condition, force=0</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>2</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>trade_condition</string>
+                            <string>force</string>
+                            <string>context</string>
+                            <string>order</string>
+                            <string>category_list</string>
+                            <string>new_category_dict</string>
+                            <string>getPropertyFromTradeCondition</string>
+                            <string>_getiter_</string>
+                            <string>category</string>
+                            <string>_getattr_</string>
+                            <string>v</string>
+                            <string>_write_</string>
+                            <string>copyPaymentCondition</string>
+                            <string>filter_dict</string>
+                            <string>list</string>
+                            <string>len</string>
+                            <string>initialiseDiscountLineList</string>
+                            <string>initialiseTaxLineList</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>x</string>
+                            <string>_apply_</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <int>0</int>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Order_applyTradeCondition</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
