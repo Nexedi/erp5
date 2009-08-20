@@ -35,6 +35,7 @@ from Products.ERP5.Document.Predicate import Predicate
 from Products.ERP5Type.XMLObject import XMLObject
 from Acquisition import aq_base
 from Products.CMFCore.utils import getToolByName
+from zLOG import LOG
 
 class BPMRule(Predicate, XMLObject):
   """
@@ -260,17 +261,11 @@ class BPMRule(Predicate, XMLObject):
     for prevision in prevision_list:
       p_matched_list = []
       for movement in non_matched_list:
-        if 'order_list' in prevision:
-          # applied rule is root, use order link to find movement
-          if movement.getOrder() ==  prevision.get('order_list', [''])[0]:
-            p_matched_list.append(movement)
+        for prop in self.getMatchingPropertyList():
+          if prevision.get(prop) != movement.getProperty(prop):
+            break
         else:
-          # applied rule is not root one, match
-          for prop in self.getMatchingPropertyList():
-            if prevision.get(prop) != movement.getProperty(prop):
-              break
-          else:
-            p_matched_list.append(movement)
+          p_matched_list.append(movement)
 
       # Movements exist, we'll try to make them match the prevision
       if p_matched_list != []:
@@ -279,35 +274,42 @@ class BPMRule(Predicate, XMLObject):
         for movement in p_matched_list:
           m_quantity += movement.getQuantity()#getCorrectedQuantity()
         if m_quantity != prevision.get('quantity'):
-          q_diff = prevision.get('quantity') - m_quantity
-          # try to find a movement that can be edited
-          for movement in p_matched_list:
-            if movement in (mutable_movement_list \
-                + deletable_movement_list):
-              # mark as requiring modification
-              prop_dict = modify_dict.setdefault(movement.getId(), {})
-              #prop_dict['quantity'] = movement.getCorrectedQuantity() + \
-              prop_dict['quantity'] = movement.getQuantity() + \
-                  q_diff
-              break
+          # special case - quantity
+          if movement.isPropertyForced('quantity'):
+            # TODO: support compensation if not prevent_compensation
+            LOG('%s:%s' % (self.getRelativeUrl(), movement.getRelativeUrl()), 100,
+                'Quantity forced to stay as %s, even if wanted %s' % (m_quantity, prevision.get('quantity')))
+            # DivergenceDecision mangle
+            pass
           else:
-            # no modifiable movement was found, need to compensate by quantity
-            raise NotImplementedError('Need to generate quantity compensation')
+            q_diff = prevision.get('quantity') - m_quantity
+            # try to find a movement that can be edited
+            for movement in p_matched_list:
+              if movement in (mutable_movement_list \
+                  + deletable_movement_list):
+                # mark as requiring modification
+                prop_dict = modify_dict.setdefault(movement.getId(), {})
+                #prop_dict['quantity'] = movement.getCorrectedQuantity() + \
+                prop_dict['quantity'] = movement.getQuantity() + \
+                    q_diff
+                break
+            else:
+              # no modifiable movement was found, need to compensate by quantity
+              raise NotImplementedError('Need to generate quantity compensation')
 
-        # Check the date
         for movement in p_matched_list:
           if movement in (mutable_movement_list \
               + deletable_movement_list):
             prop_dict = modify_dict.setdefault(movement.getId(), {})
-            for prop in ('start_date', 'stop_date'):
-              #XXX should be >= 15
-              if prevision.get(prop) != movement.getProperty(prop):
-                prop_dict[prop] = prevision.get(prop)
-                break
-
             for k, v in prevision.items():
-              if k not in ('quantity', 'start_date', 'stop_date') and \
-                      v != movement.getProperty(k):
+              if k not in ('quantity',) and v != movement.getProperty(k):
+                # TODO: acceptance range
+                if movement.isPropertyForced(k):
+                  # support compensation if not prevent_compensation
+                  LOG('%s:%s' % (self.getRelativeUrl(), movement.getRelativeUrl()), 100,
+                      'Property %s forced to stay as %r, even if wanted %r' % (k, movement.getProperty(k), v))
+                  # DivergenceDecision mangle
+                  continue
                 prop_dict.setdefault(k, v)
 
         # update movement lists
