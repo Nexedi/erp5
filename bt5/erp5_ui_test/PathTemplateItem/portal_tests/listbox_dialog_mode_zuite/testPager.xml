@@ -135,9 +135,16 @@
   <td> - 0 item(s) selected</td>\n
 </tr>\n
 <tr>\n
+<tal:block tal:condition="python: context.TestTool_getSkinName()!=\'Mobile\'">\n
   <td>verifyValue</td>\n
   <td>id=listbox_set_page</td>\n
   <td>1</td>\n
+</tal:block>\n
+<tal:block tal:condition="python: context.TestTool_getSkinName()==\'Mobile\'">\n
+  <td>verifyValue</td>\n
+  <td>id=listbox_page_selection</td>\n
+  <td>0</td>\n
+</tal:block>\n
 </tr>\n
 <tr>\n
   <td>verifyElementPresent</td>\n
@@ -197,9 +204,16 @@
 <!--tal:block metal:use-macro="here/ListBoxDialogModeZuite_CommonTemplate/macros/verify_dialog" /-->\n
 \n
 <tr>\n
+<tal:block tal:condition="python: context.TestTool_getSkinName()!=\'Mobile\'">\n
   <td>verifyValue</td>\n
   <td>id=listbox_set_page</td>\n
   <td>2</td>\n
+</tal:block>\n
+<tal:block tal:condition="python: context.TestTool_getSkinName()==\'Mobile\'">\n
+  <td>verifyValue</td>\n
+  <td>id=listbox_page_selection</td>\n
+  <td>3</td>\n
+</tal:block>\n
 </tr>\n
 <tr>\n
   <td>verifyElementPresent</td>\n
@@ -241,9 +255,16 @@
 </tr>\n
 <tal:block metal:use-macro="here/ListBoxDialogModeZuite_CommonTemplate/macros/verify_dialog" />\n
 <tr>\n
+<tal:block tal:condition="python: context.TestTool_getSkinName()!=\'Mobile\'">\n
   <td>verifyValue</td>\n
   <td>id=listbox_set_page</td>\n
   <td>1</td>\n
+</tal:block>\n
+<tal:block tal:condition="python: context.TestTool_getSkinName()==\'Mobile\'">\n
+  <td>verifyValue</td>\n
+  <td>id=listbox_page_selection</td>\n
+  <td>0</td>\n
+</tal:block>\n
 </tr>\n
 <tr>\n
   <td>verifyElementPresent</td>\n
@@ -277,16 +298,28 @@
 </tr>\n
 \n
 <!-- Select page -->\n
+<!-- In mobile skin we do not use listbox_set_page \n
+     so change the page with the select -->\n
+<tal:block tal:condition="python: context.TestTool_getSkinName()!=\'Mobile\'">\n
 <tr>\n
   <td>type</td>\n
   <td>id=listbox_set_page</td>\n
   <td>4</td>\n
 </tr>\n
 <tr>\n
-  <td>keyPressAndWait</td>\n
-  <td>id=listbox_set_page</td>\n
-  <td>\\13</td>\n
+   <td>keyPressAndWait</td>\n
+   <td>id=listbox_set_page</td>\n
+   <td>\\13</td>\n
 </tr>\n
+</tal:block>\n
+<tal:block tal:condition="python: context.TestTool_getSkinName()==\'Mobile\'">\n
+<tr>\n
+   <td>select</td>\n
+   <td>id=listbox_page_selection</td>\n
+   <td>4 of 4</td>\n
+</tr>\n
+</tal:block>\n
+\n
 <!--tal:block metal:use-macro="here/ListBoxDialogModeZuite_CommonTemplate/macros/verify_dialog" /-->\n
 <tr>\n
   <td>assertTextPresent</td>\n
@@ -304,9 +337,16 @@
   <td> - 1 item(s) selected</td>\n
 </tr>\n
 <tr>\n
+<tal:block tal:condition="python: context.TestTool_getSkinName()!=\'Mobile\'">\n
   <td>verifyValue</td>\n
   <td>id=listbox_set_page</td>\n
   <td>4</td>\n
+</tal:block>\n
+<tal:block tal:condition="python: context.TestTool_getSkinName()==\'Mobile\'">\n
+  <td>verifyValue</td>\n
+  <td>id=listbox_page_selection</td>\n
+  <td>9</td>\n
+</tal:block>\n
 </tr>\n
 <tr>\n
   <td>verifyElementNotPresent</td>\n
@@ -346,9 +386,16 @@
   <td> - 0 item(s) selected</td>\n
 </tr>\n
 <tr>\n
+<tal:block tal:condition="python: context.TestTool_getSkinName()!=\'Mobile\'">\n
   <td>verifyValue</td>\n
   <td>id=listbox_set_page</td>\n
   <td>1</td>\n
+</tal:block>\n
+<tal:block tal:condition="python: context.TestTool_getSkinName()==\'Mobile\'">\n
+  <td>verifyValue</td>\n
+  <td>id=listbox_page_selection</td>\n
+  <td>0</td>\n
+</tal:block>\n
 </tr>\n
 <tr>\n
   <td>verifyElementPresent</td>\n

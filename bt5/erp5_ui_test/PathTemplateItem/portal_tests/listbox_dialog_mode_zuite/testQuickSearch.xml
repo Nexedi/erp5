@@ -53,16 +53,16 @@
 <tal:block metal:use-macro="here/ListBoxDialogModeZuite_CommonTemplate/macros/init" />\n
 <!-- Search by id -->\n
 <tr>\n
- <tal:block tal:condition="python: context.TestTool_getSkinName()!=\'Mobile\'">\n
+<tal:block tal:condition="python: context.TestTool_getSkinName()!=\'Mobile\'">\n
   <td>type</td>\n
   <td>//tr[@id="listbox_search_line"]/td[2]//input</td>\n
   <td>1</td>\n
- </tal:block>\n
- <tal:block tal:condition="python: context.TestTool_getSkinName()==\'Mobile\'">\n
+</tal:block>\n
+<tal:block tal:condition="python: context.TestTool_getSkinName()==\'Mobile\'">\n
   <td>type</td>\n
   <td>//div[@id="listbox_search_line"]//input[@id="input0"]</td>\n
   <td>1</td>\n
- </tal:block>\n
+</tal:block>\n
 </tr>\n
 <!--\n
 <tr>\n
