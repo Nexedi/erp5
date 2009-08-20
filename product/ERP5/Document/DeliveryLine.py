@@ -26,9 +26,10 @@
 #
 ##############################################################################
 
+import zope.interface
 from AccessControl import ClassSecurityInfo
 
-from Products.ERP5Type import Permissions, PropertySheet
+from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.XMLMatrix import XMLMatrix
 from Products.ERP5Type.XMLObject import XMLObject
 
@@ -66,6 +67,8 @@ class DeliveryLine(Movement, XMLObject, XMLMatrix, Variated,
                       , PropertySheet.ItemAggregation
                       , PropertySheet.SortIndex
                       )
+
+    zope.interface.implements(interfaces.IDivergenceSolver,)
 
     # Multiple inheritance definition
     updateRelatedContent = XMLMatrix.updateRelatedContent
@@ -500,7 +503,6 @@ class DeliveryLine(Movement, XMLObject, XMLMatrix, Variated,
 
     def solve(self, decision_list):
       """Solves line according to decision list
-      decision_list is list of DivergenceDecision class instance
       """
 
       """How to play

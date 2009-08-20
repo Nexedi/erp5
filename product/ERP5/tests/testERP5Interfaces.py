@@ -36,6 +36,7 @@ implements_tuple_list = [
   ('BusinessPath', 'IArrowBase'),
   ('BusinessPath', 'IBusinessPath'),
   ('BusinessPath', 'ICategoryAccessProvider'),
+  ('DeliveryLine', 'IDivergenceSolver'),
   ('TradeCondition', 'ITransformation'),
   ('TradeModelCell', 'ITransformation'),
   ('TradeModelCell', 'IVariated'),
