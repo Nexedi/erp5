@@ -45,4 +45,4 @@ class Rule:
            'mode'        : 'w' },
   )
 
-
+  _categories = ('trade_phase', )
