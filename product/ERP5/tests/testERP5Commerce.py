@@ -750,7 +750,7 @@ class TestCommerce(ERP5TypeTestCase):
 
     formated_date = sale_order.SaleOrder_getFormattedCreationDate()
     formated_price = sale_order.SaleOrder_getFormattedTotalPrice()
-    self.assertEqual(sale_order.getCreationDate().strftime('%a, %b %Y %H:%M %p'), formated_date)
+    self.assertEqual(sale_order.getCreationDate().strftime('%a, %d %b %Y %H:%M %p'), formated_date)
     self.assertEqual('%s %s' %('20.0', sale_order.getPriceCurrencyTitle()), formated_price)
 
   def test_16_getSelectedShippingResource(self, quiet=0, run=run_all_test):
