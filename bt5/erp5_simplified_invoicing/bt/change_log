@@ -1,3 +1,6 @@
+2009-08-20 Jérome
+* Move out old tax and discount system.
+
 2009-06-23 tatya
 * Fix delivery portal type Purchase Invoice to Purchase Invoice Transaction in the Purchase Transaction Builder
 

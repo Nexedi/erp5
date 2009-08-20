@@ -2,14 +2,10 @@
  <portal_type id="Purchase Invoice Transaction">
   <item>Trade Model Line</item>
   <item>Payment Condition</item>
-  <item>Tax Line</item>
-  <item>Discount Line</item>
   <item>Invoice Line</item>
  </portal_type>
  <portal_type id="Sale Invoice Transaction">
   <item>Trade Model Line</item>
-  <item>Discount Line</item>
-  <item>Tax Line</item>
   <item>Invoice Line</item>
   <item>Payment Condition</item>
  </portal_type>
