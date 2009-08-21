@@ -56,20 +56,30 @@
             <value> <string>result = []\n
 \n
 for r in context.contentValues(portal_type= "Requirement", sort_on = ((\'int_index\',\'ascending\', \'int\'),), checked_permission=\'View\'):\n
-  if not r.getRequirementRelatedValueList():\n
+  requirement_related_list = r.getRequirementRelatedValueList()\n
+  requirement_related_count = len(requirement_related_list)\n
+  if not requirement_related_list:\n
     if not r.contentValues(portal_type= "Requirement", sort_on = ((\'int_index\',\'ascending\', \'int\'),), checked_permission=\'View\'):\n
       result.append({\'requirement_reference\': r.Requirement_getDefaultReference(),\n
                      \'requirement_title\': r.getTitle(),\n
+                     \'requirement_comment\': r.getComment(),\n
+                     \'repeat_index\' : 0,\n
+                     \'repeat_count\' : 1,\n
                      \'project_reference\': \'Not covered\',\n
                      \'project_title\': \'\',\n
                      \'stop_date\': None})\n
   else:\n
-    for p in r.getRequirementRelatedValueList():\n
+    i = 0\n
+    for p in requirement_related_list:\n
       result.append({\'requirement_reference\': r.Requirement_getDefaultReference(),\n
                      \'requirement_title\': r.getTitle(),\n
+                     \'requirement_comment\': r.getComment(),\n
+                     \'repeat_index\' : i,\n
+                     \'repeat_count\' : requirement_related_count,\n
                      \'project_reference\': p.Project_getDefaultReference(),\n
                      \'project_title\': p.getTitle(),\n
                      \'stop_date\': p.getStopDate()})\n
+      i += 1\n
   result.extend(r.RequirementDocument_getProjectCoverageList())\n
 \n
 return result\n
@@ -114,8 +124,13 @@ return result\n
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>r</string>
+                            <string>requirement_related_list</string>
+                            <string>len</string>
+                            <string>requirement_related_count</string>
                             <string>None</string>
+                            <string>i</string>
                             <string>p</string>
+                            <string>_inplacevar_</string>
                           </tuple>
                         </value>
                     </item>

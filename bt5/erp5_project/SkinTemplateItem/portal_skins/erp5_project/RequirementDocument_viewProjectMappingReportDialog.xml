@@ -52,7 +52,7 @@
             <key> <string>group_list</string> </key>
             <value>
               <list>
-                <string>Default</string>
+                <string>left</string>
               </list>
             </value>
         </item>
@@ -61,9 +61,11 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>Default</string> </key>
+                    <key> <string>left</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>your_show_comment</string>
+                      </list>
                     </value>
                 </item>
               </dictionary>
