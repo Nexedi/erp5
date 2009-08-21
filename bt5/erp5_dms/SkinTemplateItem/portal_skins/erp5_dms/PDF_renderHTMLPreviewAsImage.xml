@@ -43,8 +43,8 @@
      tal:define="frame request/frame|\n
                    python:here.PDF_getPageNumberFromSelectionIndex(request.get(\'selection_index\', 0));\n
                  display request/display|string:large;\n
-                 format request/format|string:jpg;">\n
-  <img src="" \n
+                 format request/format|string:png;">\n
+  <img src="" style="margin:0pt 5%;width:90%;"\n
       tal:attributes="src\n
         string:${here/absolute_url}/index_html?display=${display}&format=${format}&frame=${frame}&resolution:int=200">\n
 </div>

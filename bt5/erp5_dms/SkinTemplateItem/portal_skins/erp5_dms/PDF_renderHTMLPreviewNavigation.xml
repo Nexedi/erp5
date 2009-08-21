@@ -42,7 +42,7 @@
 <tal:block tal:define="current_thumbnail_index    \n
                  request/frame|\n
                    python:here.PDF_getPageNumberFromSelectionIndex(request.get(\'selection_index\', 0));\n
-                 selection_name request/selection_name;\n
+                 selection_name request/selection_name | string:pdf_preview_selection;\n
                  all_thunmbnails python: here.PDF_countThumbnailList()[0][0];\n
                  next_thunmbnail_index python: current_thumbnail_index + 1;\n
                  previous_thunmbnail_index python: current_thumbnail_index - 1;\n
@@ -51,12 +51,7 @@
                    ${parent_doc_url}/PDF_viewHTMLPreviewAsImage?selection_name=${selection_name}&;">\n
 \n
   <div class="pdf-preview-navigation">\n
-    <!--\n
-    <span i18n:translate=""\n
-          i18n:domain="ui">Thumbnail</span>: \n
-    <span tal:content="current_thumbnail_index"/>  of <span tal:content="all_thunmbnails"/>\n
-  -->\n
-\n
+    <tal:block tal:condition="python:current_thumbnail_index >= 1">\n
     <a href=""\n
       tal:attributes="href string:${base_url}selection_index=0">\n
         <img src="images/2leftarrowb.png" \n
@@ -64,31 +59,33 @@
              i18n:domain="ui"\n
              alt="First"/>\n
       </a>\n
-\n
     <a href=""\n
-      tal:condition="python: current_thumbnail_index >= 1"\n
       tal:attributes="href string:${base_url}selection_index=${previous_thunmbnail_index}">\n
         <img src="images/1leftarrowb.png" \n
              i18n:attributes="alt"\n
              i18n:domain="ui"\n
              alt="Previous"/>\n
       </a>\n
-\n
+    </tal:block>\n
+    <tal:block tal:condition="python:current_thumbnail_index < 1">\n
+    <img src="images/2leftarrowb.png" style="opacity:0.2"\n
+              i18n:attributes="alt"\n
+              i18n:domain="ui"\n
+              alt="First"/>\n
+    <img src="images/1leftarrowb.png" style="opacity:0.2"\n
+              i18n:attributes="alt"\n
+              i18n:domain="ui"\n
+              alt="Previous"/>\n
+    </tal:block>\n
+    <span tal:content="python:current_thumbnail_index+1"/> / <span tal:content="all_thunmbnails"/>\n
+    <tal:block tal:condition="python:all_thunmbnails > next_thunmbnail_index">\n
     <a href=""\n
-      style="font-weight: bold;vertical-align:top;"\n
-      i18n:translate=""\n
-      i18n:domain="ui"\n
-      tal:attributes="href string:${parent_doc_url}/view">Exit Preview</a>\n
-\n
-    <a href=""\n
-      tal:condition="python: all_thunmbnails > next_thunmbnail_index"\n
       tal:attributes="href string:${base_url}selection_index=${next_thunmbnail_index}">\n
         <img src="images/1rightarrowb.png" \n
              i18n:attributes="alt"\n
              i18n:domain="ui"\n
              alt="Next"/>\n
     </a>\n
-\n
     <a href=""\n
       tal:attributes="href string:${base_url}selection_index=${all_thunmbnails}">\n
         <img src="images/2rightarrowb.png" \n
@@ -96,8 +93,17 @@
              i18n:domain="ui"\n
              alt="Last"/>\n
     </a>\n
-\n
-\n
+    </tal:block>\n
+    <tal:block tal:condition="python:all_thunmbnails <= next_thunmbnail_index">\n
+    <img src="images/1rightarrowb.png" style="opacity:0.1"\n
+              i18n:attributes="alt"\n
+              i18n:domain="ui"\n
+              alt="Next"/>\n
+    <img src="images/2rightarrowb.png" style="opacity:0.1"\n
+              i18n:attributes="alt"\n
+              i18n:domain="ui"\n
+              alt="Last"/>\n
+    </tal:block>\n
   </div>\n
 </tal:block>
 
