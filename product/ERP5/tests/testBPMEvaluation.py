@@ -79,9 +79,9 @@ class TestBPMEvaluationMixin(TestBPMMixin):
       if rule.getValidationState() == 'validated':
         rule.invalidate()
     transaction.commit()
-    self._createBPMOrderRule()
-    self._createBPMDeliveryRule()
-    self._createBPMInvoicingRule()
+    self._createOrderRule()
+    self._createDeliveryRule()
+    self._createInvoicingRule()
     self._createTradeModelRule()
 
   def _createRootTradeRule(self, **kw):
@@ -115,15 +115,15 @@ class TestBPMEvaluationMixin(TestBPMMixin):
 
     return rule
 
-  def _createBPMOrderRule(self):
-    rule = self._createRootTradeRule(portal_type='BPM Order Rule',
-        reference='default_bpm_order_rule')
+  def _createOrderRule(self):
+    rule = self._createRootTradeRule(portal_type='Order Rule',
+        reference='default_order_rule')
     rule.validate()
     transaction.commit()
 
-  def _createBPMDeliveryRule(self):
-    rule = self._createRootTradeRule(portal_type='BPM Delivery Rule',
-        reference='default_bpm_delivery_rule'
+  def _createDeliveryRule(self):
+    rule = self._createRootTradeRule(portal_type='Delivery Rule',
+        reference='default_delivery_rule'
         )
     rule.validate()
     transaction.commit()
@@ -169,13 +169,13 @@ class TestBPMEvaluationMixin(TestBPMMixin):
     rule.validate()
     transaction.commit()
 
-  def _createBPMInvoicingRule(self):
+  def _createInvoicingRule(self):
     # TODO: version
     edit_dict = {}
     edit_dict.update(
     )
-    rule = self.rule_tool.newContent(portal_type='BPM Invoicing Rule',
-      reference='default_bpm_invoicing_rule',
+    rule = self.rule_tool.newContent(portal_type='Invoicing Rule',
+      reference='default_invoicing_rule',
       trade_phase = 'default/invoicing',
       expandable_property = ('aggregate_list', 'base_application_list',
         'base_contribution_list', 'causality_list', 'delivery_mode_list',
@@ -188,51 +188,7 @@ class TestBPMEvaluationMixin(TestBPMMixin):
         'variation_category_list', 'variation_property_dict'),
       matching_property = ('resource_list', 'variation_category_list',
         'variation_property_dict'),
-      test_method_id = ('SimulationMovement_testBPMInvoicingRule',)
-      )
-    rule.newContent(portal_type='Category Divergence Tester',
-        tested_property = ('resource_list | Resource',
-          'source_section_list | Source Section',
-          'destination_section_list | Destination Section',
-          'source_list | Source', 'destination_list | Destination',
-          'source_function_list | Source Function',
-          'destination_function_list | Destination Function',
-          'source_project_list | Source Project',
-          'destination_project_list | Destination Project',
-          'aggregate_list | Aggregate',
-          'price_currency_list | Price Currency',
-          'base_contribution_list | Base Contribution',
-          'base_application_list | Base Application',
-          'source_account_list | Source Account',
-          'destination_account_list | Destination Account'))
-    rule.newContent(portal_type='Property Divergence Tester',
-        tested_property = ('start_date | Start Date',
-          'stop_date | Stop Date'))
-    rule.newContent(portal_type='Quantity Divergence Tester')
-
-    rule.validate()
-    transaction.commit()
-
-  def _createBPMInvoicingRule(self):
-    # TODO: version
-    edit_dict = {}
-    edit_dict.update(
-    )
-    rule = self.rule_tool.newContent(portal_type='BPM Invoicing Rule',
-      reference='default_bpm_invoicing_rule',
-      trade_phase = 'default/invoicing',
-      expandable_property = ('aggregate_list', 'base_application_list',
-        'base_contribution_list', 'causality_list', 'delivery_mode_list',
-        'description', 'destination_account_list',
-        'destination_function_list', 'destination_list',
-        'destination_section_list', 'efficiency', 'incoterm_list', 'price',
-        'price_currency_list', 'quantity', 'quantity_unit_list',
-        'resource_list', 'source_account_list', 'source_function_list',
-        'source_list', 'source_section_list', 'start_date', 'stop_date',
-        'variation_category_list', 'variation_property_dict'),
-      matching_property = ('resource_list', 'variation_category_list',
-        'variation_property_dict'),
-      test_method_id = ('SimulationMovement_testBPMInvoicingRule',)
+      test_method_id = ('SimulationMovement_testInvoicingRule',)
       )
     rule.newContent(portal_type='Category Divergence Tester',
         tested_property = ('resource_list | Resource',
@@ -300,7 +256,7 @@ class TestBPMEvaluationMixin(TestBPMMixin):
         specialise_value = self.trade_condition)
 
   def _checkBPMSimulation(self):
-    """Checks BPM related simumation.
+    """Checks BPMised related simumation.
 
     Note: Simulation tree is the same, it is totally independent from
     BPM sequence"""
@@ -338,7 +294,7 @@ class TestBPMEvaluationMixin(TestBPMMixin):
       for bpm_invoicing_rule in root_simulation_movement.contentValues():
         self.assertEqual(bpm_invoicing_rule.getPortalType(), 'Applied Rule')
         self.assertEqual(bpm_invoicing_rule.getSpecialiseValue() \
-            .getPortalType(), 'BPM Invoicing Rule')
+            .getPortalType(), 'Invoicing Rule')
         # only one movement inside invoicing rule
         self.assertEquals(len(bpm_invoicing_rule.contentValues()), 1)
         for invoicing_simulation_movement in bpm_invoicing_rule \
@@ -450,7 +406,7 @@ class TestBPMEvaluationDifferentProcessMixin:
     self.stepTic()
 
 class GenericRuleTestsMixin:
-  """Tests which are generic for BPM Order, Delivery and Invoice Rule"""
+  """Tests which are generic for BPMised Order, Delivery and Invoice Rule"""
   def test_transition(self):
     self.order_line = self._createRootDocumentLine(
       resource_value = self._createProduct(), quantity = 10, price = 5)
@@ -579,10 +535,10 @@ class GenericRuleTestsMixin:
     self._checkBPMSimulation()
 
 class TestOrder(TestBPMEvaluationMixin, GenericRuleTestsMixin):
-  """Check BPM Order Rule behaviour"""
+  """Check BPMised Order Rule behaviour"""
   root_document_portal_type = 'Sale Order'
   root_document_line_portal_type = 'Sale Order Line'
-  root_rule_portal_type = 'BPM Order Rule'
+  root_rule_portal_type = 'Order Rule'
 
   def _doFirstTransition(self, document):
     document.plan()
@@ -615,7 +571,7 @@ class TestPackingList(TestBPMEvaluationMixin, GenericRuleTestsMixin):
   """Check BPM Delivery Rule behaviour"""
   root_document_portal_type = 'Sale Packing List'
   root_document_line_portal_type = 'Sale Packing List Line'
-  root_rule_portal_type = 'BPM Delivery Rule'
+  root_rule_portal_type = 'Delivery Rule'
 
   def _packDelivery(self):
     """Packs delivery fully, removes possible containers before"""
