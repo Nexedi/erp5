@@ -42,13 +42,11 @@
 <tal:block tal:define="current_thumbnail_index    \n
                  request/frame|\n
                    python:here.PDF_getPageNumberFromSelectionIndex(request.get(\'selection_index\', 0));\n
-                 selection_name request/selection_name | string:pdf_preview_selection;\n
                  all_thunmbnails python: here.PDF_countThumbnailList()[0][0];\n
                  next_thunmbnail_index python: current_thumbnail_index + 1;\n
                  previous_thunmbnail_index python: current_thumbnail_index - 1;\n
                  parent_doc_url here/absolute_url;\n
-                 base_url string:\n
-                   ${parent_doc_url}/PDF_viewHTMLPreviewAsImage?selection_name=${selection_name}&;">\n
+                 base_url string:${parent_doc_url}/PDF_viewHTMLPreviewAsImage&;">\n
 \n
   <div class="pdf-preview-navigation">\n
     <tal:block tal:condition="python:current_thumbnail_index >= 1">\n
