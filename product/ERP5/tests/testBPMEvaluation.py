@@ -225,6 +225,7 @@ class TestBPMEvaluationMixin(TestBPMMixin):
 
   def _createTradeCondition(self, **kw):
     self.trade_condition = self._createDocument(
+        title = self.id(),
         self.trade_condition_portal_type,
         specialise_value=self.business_process, **kw)
 
