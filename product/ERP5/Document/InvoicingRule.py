@@ -68,6 +68,8 @@ class InvoicingRule(Rule):
 
     These previsions are returned as dictionaries.
     """
+    if self._isBPM():
+      return Rule._generatePrevisionList(self, applied_rule, **kw)
     # XXX Isn't it better to share the code with expand method
     context_movement = applied_rule.getParentValue()
 
@@ -121,6 +123,9 @@ class InvoicingRule(Rule):
         modify, remove)
     - add/modify/remove child movements to match prevision
     """
+    if self._isBPM():
+      Rule.expand(self, applied_rule, force=force, **kw)
+      return
     parent_movement = applied_rule.getParentValue()
     if parent_movement is not None:
       if not parent_movement.isFrozen():
@@ -146,4 +151,11 @@ class InvoicingRule(Rule):
 
   def isDeliverable(self, movement):
     return movement.getResource() is not None
+
+  def _getExpandablePropertyUpdateDict(self, applied_rule, movement,
+      business_path, current_property_dict):
+    return {
+      'deliverable': 1
+    }
+
 

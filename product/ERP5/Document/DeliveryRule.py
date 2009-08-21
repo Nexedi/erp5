@@ -62,6 +62,10 @@ class DeliveryRule(Rule):
     Else if the movement is not in current state, it can be modified.
     Else, it cannot be modified.
     """
+    if self._isBPM():
+      Rule.expand(self, applied_rule,
+          delivery_movement_type_list=delivery_movement_type_list, **kw)
+      return
     movement_type = 'Simulation Movement'
     existing_movement_list = []
     immutable_movement_list = []
@@ -220,3 +224,19 @@ class DeliveryRule(Rule):
       return 0
     return 1
 
+  def _getInputMovementList(self, applied_rule):
+    """Return list of movements from delivery"""
+    delivery = applied_rule.getDefaultCausalityValue()
+    if delivery is not None:
+      return delivery.getMovementList(
+                     portal_type=delivery.getPortalDeliveryMovementTypeList())
+    return []
+
+  def _getExpandablePropertyUpdateDict(self, applied_rule, movement,
+      business_path, current_property_dict):
+    """Delivery specific update dict"""
+    return {
+      'order_list': [movement.getRelativeUrl()],
+      'delivery_list': [movement.getRelativeUrl()],
+      'deliverable': 1,
+    }

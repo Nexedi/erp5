@@ -62,7 +62,10 @@ class OrderRule(DeliveryRule):
       delivered child, and is in order, it can be modified.
       Else, it cannot be modified.
     """
-    
+    if self._isBPM():
+      DeliveryRule.expand(self, applied_rule, force=force, **kw)
+      return
+
     movement_type = 'Simulation Movement'
     existing_movement_list = []
     immutable_movement_list = []
@@ -149,11 +152,15 @@ class OrderRule(DeliveryRule):
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             '_getExpandablePropertyDict')
-  def _getExpandablePropertyDict(self, applied_rule, movement, **kw):
+  def _getExpandablePropertyDict(self, applied_rule, movement,
+      business_path=None, **kw):
     """
     Return a Dictionary with the Properties used to edit 
     the simulation movement
     """
+    if self._isBPM():
+      return DeliveryRule._getExpandablePropertyDict(self, applied_rule,
+          movement, business_path, **kw)
     property_dict = {}
 
     default_property_list = self.getExpandablePropertyList()
@@ -191,3 +198,18 @@ class OrderRule(DeliveryRule):
        
     return property_dict
 
+  def _getInputMovementList(self, applied_rule):
+    """Input movement list comes from order"""
+    order = applied_rule.getDefaultCausalityValue()
+    if order is not None:
+      return order.getMovementList(
+                     portal_type=order.getPortalOrderMovementTypeList())
+    return []
+
+  def _getExpandablePropertyUpdateDict(self, applied_rule, movement,
+      business_path, current_property_dict):
+    """Order rule specific update dictionary"""
+    return {
+      'order_list': [movement.getRelativeUrl()],
+      'deliverable': 1,
+    }

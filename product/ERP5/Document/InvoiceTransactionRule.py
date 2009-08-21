@@ -53,6 +53,99 @@ class InvoiceTransactionRule(Rule, PredicateMatrix):
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
 #### Helper method for expand
+  def _generatePrevisionListBPM(self, applied_rule, **kw):
+    """
+    Generate a list of movements, that should be children of this rule,
+    based on its context (parent movement, delivery, configuration ...)
+
+    These previsions are actually returned as dictionaries.
+    """
+    input_movement, business_path = self._getInputMovementAndPathTupleList(
+        applied_rule)[0]
+    prevision_list = []
+
+    # Find a matching cell
+    cell = self._getMatchingCell(input_movement)
+
+    if cell is not None : # else, we do nothing
+      for accounting_rule_cell_line in cell.objectValues() :
+        # get the resource (in that order):
+        #  * resource from the invoice (using deliveryValue)
+        #  * price_currency from the invoice
+        #  * price_currency from the parents simulation movement's
+        # deliveryValue
+        #  * price_currency from the top level simulation movement's
+        # orderValue
+        resource = None
+        invoice_line = input_movement.getDeliveryValue()
+        if invoice_line is not None :
+          invoice = invoice_line.getExplanationValue()
+          resource = invoice.getProperty('resource',
+                     invoice.getProperty('price_currency', None))
+        if resource is None :
+          # search the resource on parents simulation movement's deliveries
+          simulation_movement = applied_rule.getParentValue()
+          portal_simulation = self.getPortalObject().portal_simulation
+          while resource is None and \
+                      simulation_movement != portal_simulation :
+            delivery = simulation_movement.getDeliveryValue()
+            if delivery is not None:
+              resource = delivery.getProperty('price_currency', None)
+            if (resource is None) and \
+               (simulation_movement.getParentValue().getParentValue() \
+                                      == portal_simulation) :
+              # we are on the first simulation movement, we'll try
+              # to get the resource from it's order price currency.
+              order = simulation_movement.getOrderValue()
+              if order is not None:
+                resource = order.getProperty('price_currency', None)
+            simulation_movement = simulation_movement\
+                                        .getParentValue().getParentValue()
+        if resource is None :
+          # last resort : get the resource from the rule
+          resource = accounting_rule_cell_line.getResource() \
+              or cell.getResource()
+        prevision_line = {}
+        prevision_line.update(**self._getExpandablePropertyDict(applied_rule,
+          input_movement, business_path))
+
+        prevision_line.update(
+          source_list = [accounting_rule_cell_line.getSource()],
+          destination_list = [accounting_rule_cell_line.getDestination()],
+          quantity = (input_movement.getCorrectedQuantity() *
+            input_movement.getPrice(0.0)) *
+            accounting_rule_cell_line.getQuantity(),
+          resource_list = [resource],
+          price = 1,
+        )
+        if resource is not None:
+          #set asset_price on movement when resource is different from price
+          #currency of the source/destination section
+          destination_exchange_ratio, precision = self \
+              ._getCurrencyRatioAndPrecisionByArrow(
+              'destination_section', prevision_line)
+          if destination_exchange_ratio is not None:
+            prevision_line.update(destination_total_asset_price=round(
+             (destination_exchange_ratio*
+              applied_rule.getParentValue().getTotalPrice()),precision))
+
+          source_exchange_ratio, precision = self \
+              ._getCurrencyRatioAndPrecisionByArrow(
+              'source_section', prevision_line)
+          if source_exchange_ratio is not None:
+            prevision_line.update(source_total_asset_price=round(
+             (source_exchange_ratio*
+              applied_rule.getParentValue().getTotalPrice()),precision))
+
+        if accounting_rule_cell_line.hasProperty(
+            'generate_prevision_script_id'):
+          generate_prevision_script_id = \
+                accounting_rule_cell_line.getGeneratePrevisionScriptId()
+          prevision_line.update(getattr(input_movement,
+                              generate_prevision_script_id)(prevision_line))
+        prevision_list.append(prevision_line)
+    return prevision_list
+
   def _generatePrevisionList(self, applied_rule, **kw):
     """
     Generate a list of movements, that should be children of this rule,
@@ -60,6 +153,8 @@ class InvoiceTransactionRule(Rule, PredicateMatrix):
 
     These previsions are acrually returned as dictionaries.
     """
+    if self._isBPM():
+      return self._generatePrevisionListBPM(applied_rule, *kw)
     prevision_list = []
     context_movement = applied_rule.getParentValue()
 
@@ -159,6 +254,10 @@ class InvoiceTransactionRule(Rule, PredicateMatrix):
         modify, remove)
     - add/modify/remove child movements to match prevision
     """
+    if self._isBPM():
+      Rule.expand(self, applied_rule, force=force, **kw)
+      return
+
     add_list, modify_dict, \
         delete_list = self._getCompensatedMovementList(applied_rule,
         matching_property_list=['resource', 'source',
@@ -283,4 +382,34 @@ class InvoiceTransactionRule(Rule, PredicateMatrix):
     if m.getSimulationState() in self.getPortalDraftOrderStateList():
       return 0
     return 1
-  
+
+  def _getCurrencyRatioAndPrecisionByArrow(self, arrow, prevision_line):
+    from Products.ERP5Type.Document import newTempSimulationMovement
+    try:
+      prevision_currency = prevision_line['resource_list'][0]
+    except IndexError:
+      prevision_currency = None
+    temporary_movement = newTempSimulationMovement(self.getPortalObject(),
+        '1', **prevision_line)
+    exchange_ratio = None
+    precision = None
+    try:
+      section = prevision_line['%s_list' % arrow][0]
+    except IndexError:
+      section = None
+    if section is not None:
+      currency_url = self.restrictedTraverse(section).getProperty(
+          'price_currency', None)
+    else:
+      currency_url = None
+    if currency_url is not None and prevision_currency != currency_url:
+      precision = section.getPriceCurrencyValue() \
+          .getQuantityPrecision()
+      exchange_ratio = self.restrictedTraverse(currency_url).getPrice(
+          context=temporary_movement.asContext(
+        categories=['price_currency/%s' % currency_url,
+                    'resource/%s' % prevision_currency],
+        start_date=temporary_movement.getStartDate()))
+    return exchange_ratio, precision
+
+
