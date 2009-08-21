@@ -54,9 +54,17 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>portal_deliveries = context.getPortalObject().portal_deliveries\n
-return [portal_deliveries.purchase_invoice_builder,\n
-        portal_deliveries.purchase_invoice_tax_builder,\n
-        portal_deliveries.purchase_invoice_transaction_builder]\n
+builder_list = []\n
+\n
+for builder_id in (\'purchase_invoice_buider\',\n
+                   \'purchase_invoice_tax_builder\',\n
+                   \'purchase_invoice_transaction_builder\',\n
+                   \'advanced_purchase_invoice_transaction_builder\', ):\n
+  builder = getattr(portal_deliveries, builder_id, None)\n
+  if builder is not None:\n
+    builder_list.append(builder)\n
+\n
+return builder_list\n
 </string> </value>
         </item>
         <item>
@@ -96,6 +104,12 @@ return [portal_deliveries.purchase_invoice_builder,\n
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>portal_deliveries</string>
+                            <string>builder_list</string>
+                            <string>_getiter_</string>
+                            <string>builder_id</string>
+                            <string>getattr</string>
+                            <string>None</string>
+                            <string>builder</string>
                           </tuple>
                         </value>
                     </item>
