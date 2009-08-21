@@ -138,7 +138,7 @@ if len(exchange_action_list):\n
   url = \'%s?dialog_category=object_exchange&cancel_url=%s/view\' % (url, absolute_url)\n
   result.append(dict(\n
     url = url,\n
-    icon  = \'%s/images/imp-exp.png\' % portal_url,\n
+    icon  = \'%s/import_export.png\' % portal_url,\n
     title = translateString(\'Import / Export\'),\n
     label = "Import / Export Icon",))\n
 \n
