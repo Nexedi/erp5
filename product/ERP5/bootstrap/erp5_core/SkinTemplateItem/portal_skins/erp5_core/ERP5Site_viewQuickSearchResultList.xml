@@ -66,14 +66,13 @@ if field_your_search_portal_type:\n
   else:\n
     kw.update({\'portal_type\':context.Base_translateString(field_your_search_portal_type)})\n
 \n
-getWebSectionValue = getattr(context, \'getWebSectionValue\', None)\n
-if getWebSectionValue is not None and \\\n
+web_section = context.getWebSectionValue()\n
+if web_section is not None and \\\n
     not bool(context.REQUEST.get(\'ignore_layout\', False)):\n
-  search_context = getWebSectionValue()\n
+  search_context = web_section\n
   if list_style is None:\n
     kw.update({\'list_style\':\'search\'})\n
-\n
-if search_context is None:\n
+else:\n
   search_context = context.getPortalObject()\n
 \n
 return search_context.Base_redirect(\'ERP5Site_viewSearchResult\', keep_items=kw)\n
@@ -121,9 +120,8 @@ return search_context.Base_redirect(\'ERP5Site_viewSearchResult\', keep_items=kw
                             <string>_getattr_</string>
                             <string>list</string>
                             <string>context</string>
-                            <string>getattr</string>
+                            <string>web_section</string>
                             <string>None</string>
-                            <string>getWebSectionValue</string>
                             <string>bool</string>
                             <string>False</string>
                             <string>search_context</string>
