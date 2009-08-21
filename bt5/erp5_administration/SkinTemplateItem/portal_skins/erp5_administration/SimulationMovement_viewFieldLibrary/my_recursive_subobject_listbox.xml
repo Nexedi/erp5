@@ -136,8 +136,8 @@
                           <string>Stop Date</string>
                         </tuple>
                         <tuple>
-                          <string>specialise</string>
-                          <string>Specialise</string>
+                          <string>specialise_reference</string>
+                          <string>Specialise Reference</string>
                         </tuple>
                         <tuple>
                           <string>order</string>
@@ -188,8 +188,8 @@
                           <string>Dict</string>
                         </tuple>
                         <tuple>
-                          <string>specialise_title</string>
-                          <string>Specialise Title</string>
+                          <string>specialise</string>
+                          <string>Specialise</string>
                         </tuple>
                         <tuple>
                           <string>variation_text</string>
@@ -261,8 +261,8 @@
                           <string>Causality</string>
                         </tuple>
                         <tuple>
-                          <string>specialise</string>
-                          <string>Specialise</string>
+                          <string>specialise_reference</string>
+                          <string>Specialise Reference</string>
                         </tuple>
                         <tuple>
                           <string>order</string>
@@ -366,10 +366,6 @@
                         <tuple>
                           <string>delivery</string>
                           <string>SimulationMovement_getDeliveryUrl</string>
-                        </tuple>
-                        <tuple>
-                          <string>specialise_id</string>
-                          <string>AppliedRule_getSpecialiseUrl</string>
                         </tuple>
                       </list>
                     </value>
