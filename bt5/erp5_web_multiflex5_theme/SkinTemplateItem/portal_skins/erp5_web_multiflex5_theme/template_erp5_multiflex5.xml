@@ -107,6 +107,7 @@
                            \n
                            global header_title python:\'%s | %s\' % (here.getTitleOrId(), website.getTitleOrId());\n
                            global css_list_template python:[\n
+                                  \'%s/erp5_web_toolbar.css\' % portal_path,\n
                                   \'%s/mf54_reset.css\' % portal_path,\n
                                   \'%s/mf54_grid.css\' % section_url,\n
                                   \'%s/mf54_content.css\' % section_url,\n
