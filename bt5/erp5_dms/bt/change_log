@@ -1,3 +1,6 @@
+2009-08-21 ivan
+* Use full text search to find related documents (i.e. referencing documents)
+
 2009-08-12 Kazuhiko
 * use iframe_content in OOoDocument_viewAsWeb for Drawing and Presentation to have better paginations.
 * use OOoDocument_viewAsWeb instead of Drawing_viewAsWeb in all preview for Drawing and Presentation.

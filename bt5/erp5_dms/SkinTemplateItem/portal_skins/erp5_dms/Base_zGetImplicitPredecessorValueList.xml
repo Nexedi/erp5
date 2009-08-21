@@ -125,7 +125,7 @@ FROM\n
       AND <dtml-var "query[\'where_expression\']">\n
       </dtml-if>\n
       AND\n
-        <dtml-sqltest "\'%\'+str(reference)+\'%\'" column=SearchableText op=like type=string>\n
+        MATCH(SearchableText) AGAINST(<dtml-sqlvar reference type=string>)\n
       AND\n
         <dtml-sqltest reference op=ne type=string>\n
     ORDER BY reference, language_order DESC, version DESC, revision DESC\n
@@ -211,7 +211,7 @@ FROM\n
       AND <dtml-var "query[\'where_expression\']">\n
       </dtml-if>\n
       AND\n
-        <dtml-sqltest "\'%\'+str(reference)+\'%\'" column=SearchableText op=like type=string>\n
+        MATCH(SearchableText) AGAINST(<dtml-sqlvar reference type=string>)\n
       AND\n
         <dtml-sqltest reference op=ne type=string>\n
     ORDER BY reference, language_order DESC, version DESC, revision DESC\n
