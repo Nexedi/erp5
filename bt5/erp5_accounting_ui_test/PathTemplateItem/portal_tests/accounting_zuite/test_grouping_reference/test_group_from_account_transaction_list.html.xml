@@ -103,7 +103,7 @@ Grouping from account transaction view\n
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
-  <td>//input[@id="dialog_update_button"]</td>\n
+  <td>//button[@id="dialog_update_button"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -120,7 +120,7 @@ Grouping from account transaction view\n
 <!-- Not possible to group for now -->\n
 <tr>\n
   <td>clickAndWait</td>\n
-  <td>//input[@id="dialog_submit_button"]</td>\n
+  <td>//button[@id="dialog_submit_button"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -142,7 +142,7 @@ Grouping from account transaction view\n
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
-  <td>//input[@id="dialog_update_button"]</td>\n
+  <td>//button[@id="dialog_update_button"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -159,7 +159,7 @@ Grouping from account transaction view\n
 <!-- selected amount is 0, so it will be possible to validate -->\n
 <tr>\n
   <td>clickAndWait</td>\n
-  <td>//input[@id="dialog_submit_button"]</td>\n
+  <td>//button[@id="dialog_submit_button"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -224,7 +224,7 @@ Grouping from account transaction view\n
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
-  <td>//input[@id="dialog_update_button"]</td>\n
+  <td>//button[@id="dialog_update_button"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -272,7 +272,7 @@ Grouping from account transaction view\n
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
-  <td>//input[@id="dialog_submit_button"]</td>\n
+  <td>//button[@id="dialog_submit_button"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -325,7 +325,7 @@ Grouping from account transaction view\n
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
-  <td>//input[@id="dialog_update_button"]</td>\n
+  <td>//button[@id="dialog_update_button"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n

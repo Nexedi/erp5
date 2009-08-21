@@ -203,7 +203,7 @@
 </tr>\n
 <tr>\n
     <td>clickAndWait</td>\n
-    <td>//input[@id="dialog_update_button"]</td>\n
+    <td>//button[@id="dialog_update_button"]</td>\n
     <td></td>\n
 </tr>\n
 <tr>\n

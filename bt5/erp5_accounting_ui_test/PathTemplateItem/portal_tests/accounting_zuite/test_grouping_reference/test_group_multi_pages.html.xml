@@ -109,7 +109,7 @@ Grouping with multiple pages\n
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
-  <td>//input[@id="dialog_update_button"]</td>\n
+  <td>//button[@id="dialog_update_button"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -147,7 +147,7 @@ Grouping with multiple pages\n
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
-  <td>//input[@id="dialog_submit_button"]</td>\n
+  <td>//button[@id="dialog_submit_button"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -217,7 +217,7 @@ Grouping with multiple pages\n
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
-  <td>//input[@id="dialog_update_button"]</td>\n
+  <td>//button[@id="dialog_update_button"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -271,7 +271,7 @@ lines -->\n
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
-  <td>//input[@id="dialog_submit_button"]</td>\n
+  <td>//button[@id="dialog_submit_button"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -324,7 +324,7 @@ lines -->\n
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
-  <td>//input[@id="dialog_update_button"]</td>\n
+  <td>//button[@id="dialog_update_button"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
