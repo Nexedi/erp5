@@ -648,6 +648,7 @@
               <tuple>
                 <string>build</string>
                 <string>build_action</string>
+                <string>clean</string>
                 <string>edit</string>
               </tuple>
             </value>
