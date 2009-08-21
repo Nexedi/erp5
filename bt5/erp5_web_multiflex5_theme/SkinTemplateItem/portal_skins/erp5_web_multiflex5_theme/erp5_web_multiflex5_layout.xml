@@ -69,7 +69,7 @@
                 <string>footer</string>
                 <string>subcontent subcontent-box sidemenu1 (Subsections)</string>
                 <string>subcontent subcontent-box sidemenu3 (News)</string>
-                <string>subcontent subcontent-box adminToolbox (Toolbox)</string>
+                <string>web-toolbar (Toolbar)</string>
               </list>
             </value>
         </item>
@@ -122,14 +122,6 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>subcontent subcontent-box adminToolbox (Toolbox)</string> </key>
-                    <value>
-                      <list>
-                        <string>tool_box</string>
-                      </list>
-                    </value>
-                </item>
-                <item>
                     <key> <string>subcontent subcontent-box sidemenu1 (Subsections)</string> </key>
                     <value>
                       <list>
@@ -142,6 +134,14 @@
                     <value>
                       <list>
                         <string>news_box</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>web-toolbar (Toolbar)</string> </key>
+                    <value>
+                      <list>
+                        <string>toolbar</string>
                       </list>
                     </value>
                 </item>

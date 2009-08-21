@@ -350,6 +350,11 @@
   padding:0em 20px;\n
 }\n
 \n
+/* no border for images */\n
+.main img, .main img.center, .main img.left, .main a img, .main a:hover img {\n
+  border:none;\n
+}\n
+\n
 /* We will have to handle the different types in another way */\n
 /* .subcontent h1.group_title {background: url(<tal:block tal:replace="site_url"/>/mf54_image/icon_celltitle_menu.gif) no-repeat; background-position:225px 5px;} */\n
 \n
@@ -514,130 +519,14 @@ div.bottom_actions button#input-save-view span.image {\n
   background-image: url(\'<tal:block tal:replace="site_url"/>/images/save-preview.png\');\n
 }\n
 \n
-div.adminToolbox select {\n
-  max-width: 15em;\n
+div.pdf-preview-navigation {\n
+  font-size:120%;\n
+  text-align:center;\n
 }\n
 \n
-div.adminToolbox.field label {\n
-  display: none!important;\n
-}\n
-\n
-div.adminToolbox div.adminSection label {\n
-  display: block!important;\n
-  width: 6em!important;\n
-  float: left;\n
-}\n
-\n
-div.adminToolbox div.hiddenLabel label {\n
-  display: none!important;\n
-}\n
-\n
-/* Sub section title */\n
-div.adminToolbox h3 {\n
-  font-size:120% !important /*Non-IE6*/; font-size:100% /*IE6*/;\n
-  margin:0;\n
-}\n
-\n
-/* Title */\n
-div.adminToolbox > div > h3 {\n
-  background: #f77;\n
-  padding: 0.5em 0;\n
-  margin: 0;\n
-  color: #fff;\n
-  cursor: pointer;\n
-}\n
-\n
-div.adminToolbox > div > h3:hover {background: #f00}\n
-\n
-div.adminToolbox div.input > div.adminSection {\n
-  border-bottom: 1px solid #eee;\n
-  padding: 0.5em 0;\n
-}\n
-\n
-div.adminToolbox div.input > div.adminSection:last-child {border-bottom: none}\n
-\n
-div.adminToolbox ul {list-style: none}\n
-\n
-div.adminToolbox li {\n
-  margin: 0;\n
-  padding: 0;\n
-  background: none;\n
-}\n
-\n
-div.adminToolbox li > a {text-decoration: none}\n
-\n
-div.adminToolbox button,\n
-div.adminToolbox li > a {\n
-  margin: .1em 0;\n
-  padding: .2em;\n
-}\n
-\n
-div.adminToolbox button[type="submit"] {\n
-  display: none;\n
-}\n
-\n
-/* Reset default styling of fields in admin tool box\n
-** TODO: find a CSS trick to let forms and fieldset embedded in\n
-**       ".adminToolbox" behave like default one instead of using\n
-**       the one defined by default "div.wrapper div.field" rules.\n
-*/\n
-div.adminToolbox fieldset {               /* Should be the same as "fieldset" rule */\n
-  background: none;\n
-  border: inherit;\n
-  margin: 0;\n
-  border: 0;\n
-}\n
-div.adminToolbox fieldset > div.field {   /* Should be similar to "fieldset > div" rule */\n
-  padding: 0;\n
-  margin: .1em 0;\n
-  border: none;\n
-  width: 100%;\n
-}\n
-\n
-/* Those values differ from default "fieldset label" rule to reduce admin toolbox minimum width */\n
-div.adminToolbox div.field div.input {margin-left: 0em}\n
-\n
-/* Cut the cascading heritance if margin-left for input */\n
-div.adminToolbox > div.input {margin-left: inherit}\n
-div.adminToolbox fieldset div.field label:after {content: inherit}\n
-\n
-\n
-/* Admin toolbox edit buttons have the same style as actions buttons */\n
-div.adminToolbox li > a,\n
-button {\n
-  border: 1px #ddd solid;\n
-  color: #999;\n
-  background: #eee;\n
-  cursor: pointer;\n
-  display: block;\n
-}\n
-\n
-div.adminToolbox li > a:hover,\n
-button:hover {\n
-  color: #333;\n
-  background: #b0cfcb;\n
-  border-color: #9abdb7;\n
-}\n
-\n
-div.adminToolbox a img,\n
-div.adminToolbox a:hover img,\n
-div.adminToolbox button img {\n
-  border:0 none;\n
+div.pdf-preview-navigation img {\n
   float:none;\n
   margin:0;\n
-}\n
-\n
-div.adminToolbox ul {\n
-  margin:0;\n
-}\n
-\n
-div.adminToolbox ul li {\n
-  font-size:100% !important;\n
-}\n
-\n
-div.adminToolbox div.adminSection > span,\n
-div.adminToolbox div.adminSection > fieldset > div.field {\n
-  margin:0 20px;\n
 }\n
 </tal:block>\n
 
