@@ -214,7 +214,7 @@
         </item>
         <item>
             <key> <string>simulation_select_method_id</string> </key>
-            <value> <string>SaleInvoiceTransaction_selectPackingListBPMMovement</string> </value>
+            <value> <string>SaleInvoiceTransaction_selectPackingListMovement</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

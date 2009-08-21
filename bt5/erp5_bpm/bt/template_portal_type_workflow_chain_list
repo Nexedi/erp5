@@ -1,12 +1,3 @@
-BPM Delivery Rule | edit_workflow
-BPM Delivery Rule | rule_validation_workflow
-BPM Invoice Transaction Rule | edit_workflow
-BPM Invoice Transaction Rule | rule_interaction_workflow
-BPM Invoice Transaction Rule | rule_validation_workflow
-BPM Invoicing Rule | edit_workflow
-BPM Invoicing Rule | rule_validation_workflow
-BPM Order Rule | edit_workflow
-BPM Order Rule | rule_validation_workflow
 Purchase Order | delivery_build_interaction_workflow
 Purchase Packing List | delivery_build_interaction_workflow
 Sale Order | delivery_build_interaction_workflow
