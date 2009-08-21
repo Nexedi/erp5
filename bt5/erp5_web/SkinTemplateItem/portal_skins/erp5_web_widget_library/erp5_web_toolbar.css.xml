@@ -43,7 +43,7 @@
 <tal:block>\n
 div.web-toolbar {\n
   z-index:999;\n
-  font-size:12px !important;\n
+  font-size:11px !important;\n
   bottom:0;\n
   left:0;\n
   position:fixed;\n
@@ -55,9 +55,10 @@ div.web-toolbar {\n
   margin:0;\n
 }\n
 div.web-toolbar h3 {\n
+  height:20px;\n
   font-size:100%;\n
   font-weight:bold;\n
-  padding:0 10px;\n
+  padding:3px 10px;\n
   cursor:pointer;\n
 }\n
 div.web-toolbar h3:hover {\n
@@ -92,23 +93,6 @@ div.web-toolbar.field label {\n
 div.web-toolbar div.hiddenLabel label {\n
   display: none!important;\n
 }\n
-\n
-/* Sub section title */\n
-div.web-toolbar h3 {\n
-  font-size:120% !important /*Non-IE6*/; font-size:100% /*IE6*/;\n
-  margin:0;\n
-}\n
-\n
-/* Title */\n
-div.web-toolbar > div > h3 {\n
-  background: #f77;\n
-  padding: 0.5em 0;\n
-  margin: 0;\n
-  color: #fff;\n
-  cursor: pointer;\n
-}\n
-\n
-div.web-toolbar > div > h3:hover {background: #f00}\n
 \n
 div.web-toolbar li {\n
   margin: 0;\n
@@ -162,7 +146,7 @@ div.web-toolbar button {\n
   margin: 0.3em 0;\n
   width:100%;\n
   font-family:sans-serif;\n
-  font-size:90%;\n
+  font-size:100%;\n
 }\n
 div.web-toolbar li > a span,\n
 div.web-toolbar button {\n

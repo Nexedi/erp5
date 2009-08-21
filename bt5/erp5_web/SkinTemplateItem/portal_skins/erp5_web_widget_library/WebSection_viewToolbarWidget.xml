@@ -61,7 +61,7 @@
   <!-- Edit button menu -->\n
   <li class="toolboxSection">\n
     <h3 class="menu_title" i18n:translate="" i18n:domain="ui">Edit</h3>\n
-    <div class="menu" style="display:none">\n
+    <div class="menu">\n
       <ul tal:define="edit_link_list python: here.Base_getAdminToolboxEditShortcutList()">\n
         <li tal:repeat="link edit_link_list">\n
           <a tal:attributes="href python: link[\'url\']">\n
@@ -87,7 +87,7 @@
   -->\n
   <li class="toolboxSection">\n
     <h3 class="menu_title"><tal:block tal:content="portal_type"/> Actions</h3>\n
-    <div class="menu" style="display:none">\n
+    <div class="menu">\n
       <label i18n:translate="" i18n:domain="ui">Add</label>\n
       <ul>\n
         <tal:block tal:define="allowed_content_type_list here/getVisibleAllowedContentTypeList | python:[] ">\n
@@ -180,7 +180,7 @@
         <tal:block tal:replace="string:Clone $portal_type"/>\n
       </span>\n
     </h3>\n
-    <div class="menu" style="display:none">\n
+    <div class="menu">\n
       <fieldset style="display:block;">\n
         <div class="field">\n
           <label i18n:translate="" i18n:domain="ui">Title</label>\n
@@ -290,6 +290,25 @@
           button.name  = name;\n
         }\n
       " />\n
+    </div>\n
+  </li>\n
+\n
+  <!-- Module panel.\n
+       Some modules that should be useful for web management will be listed.\n
+  -->\n
+  <li class="toolboxSection">\n
+    <h3 class="menu_title" i18n:translate="" i18n:domain="ui">Module</h3>\n
+    <div class="menu">\n
+      <ul>\n
+        <li tal:define="module_list here/WebSection_getToolbarModuleItemList"\n
+            tal:repeat="module module_list">\n
+          <button class="menu-link"\n
+                  tal:attributes="name string:Base_doModule:method;\n
+                                  value python: module[1];\n
+                                  title python: module[0]"\n
+                  tal:content="python: module[0]"></button>\n
+        </li>\n
+      </ul>\n
     </div>\n
   </li>\n
   <script type="text/javascript" src="erp5_web_toolbar.js" tal:attributes="src string:$portal_url/erp5_web_toolbar.js"></script>\n
