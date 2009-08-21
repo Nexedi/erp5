@@ -62,6 +62,17 @@ class TestDocumentConversionCache(ERP5TypeTestCase, ZopeTestCase.Functional):
   """
     Test basic document - related operations
   """
+  failed_format_list = (#'fodt',
+                        #'bib',
+                        #'writer.xhtml',
+                        #'pdb',
+                        #'psw',
+                        #'tex',
+                        #'wiki.txt',
+                        #'uot',
+                        #'2003.doc.xml',
+                        #'docbook.xml',
+                       )
 
   def getTitle(self):
     return "DMS"
@@ -147,7 +158,7 @@ class TestDocumentConversionCache(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.tic()
     document_url = document.getRelativeUrl()
     document = self.portal.restrictedTraverse(document_url)
-    format_list = document.getTargetFormatList()
+    format_list = [format for format in document.getTargetFormatList() if format not in self.failed_format_list]
     if not format_list:
       self.fail('Target format list is empty')
     #Test Conversion Cache
@@ -183,7 +194,7 @@ class TestDocumentConversionCache(ERP5TypeTestCase, ZopeTestCase.Functional):
     document.uploadFile()
     document.processFile()
     document.convertToBaseFormat()
-    format_list = document.getTargetFormatList()
+    format_list = [format for format in document.getTargetFormatList() if format not in self.failed_format_list]
     if not format_list:
       self.fail('Target format list is empty')
     #Test Conversion Cache
@@ -230,6 +241,49 @@ class TestDocumentConversionCache(ERP5TypeTestCase, ZopeTestCase.Functional):
     document2.convert(format=format)
     self.assertNotEqual(document1.getConversion(format=format),
                         document2.getConversion(format=format))
+
+  def test_04_PersistentCacheConversionWithFlare(self):
+    """
+      Test Conversion Cache mechanism
+    """
+    print '\nPersistent Cache Conversion with Flare'
+    default_pref = self.portal.portal_preferences.default_site_preference
+    default_pref.setPreferredConversionCacheFactory('dms_cache_factory')
+    #old preferred value is still cached
+    self.portal.portal_caches.clearAllCache()
+    transaction.commit()
+    self.tic()
+    filename = 'TEST-en-002.doc'
+    file = makeFileUpload(filename)
+    document = self.portal.portal_contributions.newContent(file=file)
+    transaction.commit()
+    self.tic()
+    document_url = document.getRelativeUrl()
+    document = self.portal.restrictedTraverse(document_url)
+    format_list = [format for format in document.getTargetFormatList() if format not in self.failed_format_list]
+    if not format_list:
+      self.fail('Target format list is empty')
+    #Test Conversion Cache
+    for format in format_list:
+      document.convert(format=format)
+      transaction.commit()
+      self.assertTrue(document.hasConversion(format=format), 'Cache Storage failed for %s' % (format))
+      self.assertTrue(document.getConversionSize(format=format))
+    document.clearConversionCache()
+    transaction.commit()
+    #Test Cache is cleared
+    for format in format_list:
+      self.assertFalse(document.hasConversion(format=format), 'Cache Storage failed for %s' % (format))
+      self.assertEqual(document.getConversionSize(format=format), 0)
+    document.clearConversionCache()
+    transaction.commit()
+    #Test Conversion Cache after clearConversionCache
+    for format in format_list:
+      document.convert(format=format)
+      transaction.commit()
+      self.assertTrue(document.hasConversion(format=format), 'Cache Storage failed for %s' % (format))
+      self.assertTrue(document.getConversionSize(format=format))
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestDocumentConversionCache))
