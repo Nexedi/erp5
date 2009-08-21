@@ -1,0 +1,225 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<tal:block define="dummy python: request.RESPONSE.setHeader(\'Content-Type\', \'text/css;; charset=utf-8\')"/>\n
+<tal:block>\n
+div.web-toolbar {\n
+  z-index:999;\n
+  font-size:12px !important;\n
+  bottom:0;\n
+  left:0;\n
+  position:fixed;\n
+  width:100%;\n
+  background:#eef;\n
+  height:20px;\n
+  border-top:1px #ccc solid;\n
+  padding:0 10px;\n
+  margin:0;\n
+}\n
+div.web-toolbar h3 {\n
+  font-size:100%;\n
+  font-weight:bold;\n
+  padding:0 10px;\n
+  cursor:pointer;\n
+}\n
+div.web-toolbar h3:hover {\n
+  background:#ccf;\n
+}\n
+div.web-toolbar u1 {\n
+  margin:0;\n
+  padding:0;\n
+  list-style:none\n
+}\n
+li.toolboxSection {\n
+  display:inline;\n
+  float:left;\n
+}\n
+li.toolboxSection > div {\n
+  display:none;\n
+  marding:0;\n
+  bottom:20px;\n
+  position:fixed;\n
+  background-color:white;\n
+  border:1px solid #ccc;\n
+  padding:8px;\n
+}\n
+div.web-toolbar select {\n
+  max-width: 15em;\n
+}\n
+\n
+div.web-toolbar.field label {\n
+  display: none!important;\n
+}\n
+\n
+div.web-toolbar div.hiddenLabel label {\n
+  display: none!important;\n
+}\n
+\n
+/* Sub section title */\n
+div.web-toolbar h3 {\n
+  font-size:120% !important /*Non-IE6*/; font-size:100% /*IE6*/;\n
+  margin:0;\n
+}\n
+\n
+/* Title */\n
+div.web-toolbar > div > h3 {\n
+  background: #f77;\n
+  padding: 0.5em 0;\n
+  margin: 0;\n
+  color: #fff;\n
+  cursor: pointer;\n
+}\n
+\n
+div.web-toolbar > div > h3:hover {background: #f00}\n
+\n
+div.web-toolbar li {\n
+  margin: 0;\n
+  padding: 0;\n
+  background: none;\n
+}\n
+\n
+div.web-toolbar li > a,\n
+div.web-toolbar li > a:hover,\n
+div.web-toolbar li > a:visited,\n
+div.web-toolbar li > a:active {text-decoration: none}\n
+\n
+div.web-toolbar button[type="submit"] {\n
+  display: none;\n
+}\n
+\n
+/* Reset default styling of fields in admin tool box\n
+** TODO: find a CSS trick to let forms and fieldset embedded in\n
+**       ".web-toolbar" behave like default one instead of using\n
+**       the one defined by default "div.wrapper div.field" rules.\n
+*/\n
+div.web-toolbar fieldset {               /* Should be the same as "fieldset" rule */\n
+  background: none;\n
+  border: inherit;\n
+  margin: 0;\n
+  border: 0;\n
+}\n
+div.web-toolbar fieldset > div.field {   /* Should be similar to "fieldset > div" rule */\n
+  padding: 0;\n
+  margin: 0;\n
+  border: none;\n
+  width: 100%;\n
+}\n
+\n
+/* Those values differ from default "fieldset label" rule to reduce admin toolbox minimum width */\n
+div.web-toolbar div.field div.input {margin-left: 0em}\n
+\n
+/* Cut the cascading heritance if margin-left for input */\n
+div.web-toolbar > div.input {margin-left: inherit}\n
+div.web-toolbar fieldset div.field label:after {content: inherit}\n
+\n
+\n
+/* Admin toolbox edit buttons have the same style as actions buttons */\n
+div.web-toolbar li > a,\n
+div.web-toolbar button {\n
+  border: 1px #ddd solid;\n
+  color: #999;\n
+  background: #eee;\n
+  cursor: pointer;\n
+  display: block;\n
+  margin: 0.3em 0;\n
+  width:100%;\n
+  font-family:sans-serif;\n
+  font-size:90%;\n
+}\n
+div.web-toolbar li > a span,\n
+div.web-toolbar button {\n
+  text-align:left;\n
+  padding: .2em;\n
+  display:block;\n
+}\n
+\n
+div.web-toolbar li > a:hover,\n
+button:hover {\n
+  color: #333;\n
+  background: #b0cfcb;\n
+  border-color: #9abdb7;\n
+}\n
+\n
+div.web-toolbar a img,\n
+div.web-toolbar a:hover img,\n
+div.web-toolbar button img {\n
+  border:0 none;\n
+  float:none;\n
+  margin:0;\n
+}\n
+\n
+div.web-toolbar ul {\n
+  margin:0;\n
+}\n
+\n
+div.web-toolbar ul li {\n
+  font-size:100% !important;\n
+}\n
+\n
+div.web-toolbar li.toolboxSection label {\n
+  display:block;\n
+  margin:0.2em 0 0 0;\n
+}\n
+</tal:block>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>erp5_web_toolbar.css</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
