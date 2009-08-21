@@ -657,7 +657,11 @@ class SelectionTool( BaseTool, UniqueObject, SimpleItem ):
         lastPage.
       """
       if uids is None: uids = []
-      REQUEST.form['list_start'] = 0
+      selection = self.getSelectionFor(list_selection_name, REQUEST)
+      if selection is not None:
+        params = selection.getParams()
+        params['list_start'] = 0
+        selection.edit(params=params)
       self.uncheckAll(list_selection_name, listbox_uid)
       return self.checkAll(list_selection_name, uids, REQUEST=REQUEST)
 
@@ -682,7 +686,8 @@ class SelectionTool( BaseTool, UniqueObject, SimpleItem ):
         if total_lines != BIG_INT:
           lines_per_page  = params.get('list_lines', 1)
           last_page_start = int(total_lines) - (int(total_lines) % int(lines_per_page))
-        REQUEST.form['list_start'] = last_page_start
+        params['list_start'] = last_page_start
+        selection.edit(params=params)
       self.uncheckAll(list_selection_name, listbox_uid)
       return self.checkAll(list_selection_name, uids, REQUEST=REQUEST)
 
