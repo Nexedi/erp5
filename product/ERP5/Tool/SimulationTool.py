@@ -39,7 +39,10 @@ from Products.ERP5 import _dtmldir
 from zLOG import LOG
 
 from Products.ERP5.Capacity.GLPK import solve
-from Numeric import zeros, resize
+try:
+  from numpy import zeros, resize
+except ImportError:
+  from Numeric import zeros, resize
 from DateTime import DateTime
 
 from Products.ERP5 import DeliverySolver

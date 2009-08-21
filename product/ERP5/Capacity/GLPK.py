@@ -26,7 +26,10 @@
 #
 ##############################################################################
 
-from Numeric import *
+try:
+  from numpy import shape, array
+except ImportError:
+  from Numeric import shape, array
 
 MODEL_HEAD = """
 /* The number of samples.  */
