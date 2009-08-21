@@ -1,10 +1,10 @@
 <workflow_chain>
  <chain>
   <type>Purchase Invoice</type>
-  <workflow>delivery_simulation_interaction_workflow, edit_workflow, invoice_workflow, delivery_tax_interaction_workflow, delivery_causality_workflow, delivery_causality_interaction_workflow</workflow>
+  <workflow>delivery_simulation_interaction_workflow, edit_workflow, invoice_workflow, delivery_causality_workflow, delivery_causality_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>Sale Invoice</type>
-  <workflow>invoice_workflow, delivery_simulation_interaction_workflow, delivery_tax_interaction_workflow, edit_workflow, delivery_causality_interaction_workflow, delivery_causality_workflow</workflow>
+  <workflow>invoice_workflow, delivery_simulation_interaction_workflow, edit_workflow, delivery_causality_interaction_workflow, delivery_causality_workflow</workflow>
  </chain>
 </workflow_chain>

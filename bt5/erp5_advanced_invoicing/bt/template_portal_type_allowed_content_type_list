@@ -1,14 +1,10 @@
 Purchase Invoice Module | Purchase Invoice
-Purchase Invoice | Discount Line
 Purchase Invoice | File
 Purchase Invoice | Image
 Purchase Invoice | Invoice Line
 Purchase Invoice | Payment Condition
-Purchase Invoice | Tax Line
 Sale Invoice Module | Sale Invoice
-Sale Invoice | Discount Line
 Sale Invoice | File
 Sale Invoice | Image
 Sale Invoice | Invoice Line
 Sale Invoice | Payment Condition
-Sale Invoice | Tax Line

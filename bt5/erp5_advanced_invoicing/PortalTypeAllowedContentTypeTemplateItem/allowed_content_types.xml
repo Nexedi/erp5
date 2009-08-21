@@ -1,22 +1,18 @@
 <allowed_content_type_list>
  <portal_type id="Purchase Invoice">
   <item>Image</item>
-  <item>Tax Line</item>
-  <item>Invoice Line</item>
   <item>Payment Condition</item>
+  <item>Invoice Line</item>
   <item>File</item>
-  <item>Discount Line</item>
  </portal_type>
  <portal_type id="Purchase Invoice Module">
   <item>Purchase Invoice</item>
  </portal_type>
  <portal_type id="Sale Invoice">
-  <item>Tax Line</item>
   <item>Payment Condition</item>
   <item>File</item>
   <item>Invoice Line</item>
   <item>Image</item>
-  <item>Discount Line</item>
  </portal_type>
  <portal_type id="Sale Invoice Module">
   <item>Sale Invoice</item>
