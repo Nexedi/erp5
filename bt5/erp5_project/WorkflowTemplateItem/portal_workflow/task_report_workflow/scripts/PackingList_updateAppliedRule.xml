@@ -69,7 +69,7 @@ tag = packing_list.getPath()+\'_expand\'\n
 activate_kw = {\'tag\':tag,\'priority\':3}\n
 \n
 packing_list.activate(after_tag=after_tag_list,tag=tag,\n
-    priority=3).updateAppliedRule(rule_id = \'default_delivery_rule\',activate_kw=activate_kw)\n
+    priority=3).updateAppliedRule(rule_reference=\'default_delivery_rule\', activate_kw=activate_kw)\n
 \n
 \n
 # Make sure to reindex related simulation movement if we are already\n
