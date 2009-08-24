@@ -1,6 +1,7 @@
 container_interaction_workflow
 internal_packing_list_workflow
 inventory_workflow
+movement_base_contribution_interaction_workflow
 order_workflow
 packing_list_container_workflow
 packing_list_workflow

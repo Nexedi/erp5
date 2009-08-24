@@ -41,7 +41,7 @@
  </chain>
  <chain>
   <type>Internal Packing List Line</type>
-  <workflow>delivery_movement_causality_interaction_workflow, edit_workflow, trade_matrix_workflow, pricing_interaction_workflow, delivery_movement_simulation_interaction_workflow</workflow>
+  <workflow>delivery_movement_causality_interaction_workflow, edit_workflow, movement_base_contribution_interaction_workflow, trade_matrix_workflow, pricing_interaction_workflow, delivery_movement_simulation_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>Inventory</type>
@@ -73,7 +73,7 @@
  </chain>
  <chain>
   <type>Purchase Order Line</type>
-  <workflow>edit_workflow, pricing_interaction_workflow, trade_matrix_workflow, order_movement_simulation_interaction_workflow</workflow>
+  <workflow>edit_workflow, movement_base_contribution_interaction_workflow, pricing_interaction_workflow, trade_matrix_workflow, order_movement_simulation_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>Purchase Packing List</type>
@@ -85,7 +85,7 @@
  </chain>
  <chain>
   <type>Purchase Packing List Line</type>
-  <workflow>edit_workflow, pricing_interaction_workflow, delivery_movement_causality_interaction_workflow, trade_matrix_workflow, delivery_movement_simulation_interaction_workflow</workflow>
+  <workflow>edit_workflow, pricing_interaction_workflow, delivery_movement_causality_interaction_workflow, trade_matrix_workflow, delivery_movement_simulation_interaction_workflow, movement_base_contribution_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>Purchase Trade Condition</type>
@@ -113,7 +113,7 @@
  </chain>
  <chain>
   <type>Sale Order Line</type>
-  <workflow>edit_workflow, pricing_interaction_workflow, trade_matrix_workflow, order_movement_simulation_interaction_workflow</workflow>
+  <workflow>edit_workflow, movement_base_contribution_interaction_workflow, pricing_interaction_workflow, trade_matrix_workflow, order_movement_simulation_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>Sale Packing List</type>
@@ -125,7 +125,7 @@
  </chain>
  <chain>
   <type>Sale Packing List Line</type>
-  <workflow>edit_workflow, pricing_interaction_workflow, container_interaction_workflow, trade_matrix_workflow, delivery_movement_causality_interaction_workflow, delivery_movement_simulation_interaction_workflow</workflow>
+  <workflow>edit_workflow, pricing_interaction_workflow, container_interaction_workflow, trade_matrix_workflow, delivery_movement_causality_interaction_workflow, delivery_movement_simulation_interaction_workflow, movement_base_contribution_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>Sale Trade Condition</type>

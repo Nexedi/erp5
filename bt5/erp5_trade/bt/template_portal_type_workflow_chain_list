@@ -21,6 +21,7 @@ Internal Packing List Cell | pricing_interaction_workflow
 Internal Packing List Line | delivery_movement_causality_interaction_workflow
 Internal Packing List Line | delivery_movement_simulation_interaction_workflow
 Internal Packing List Line | edit_workflow
+Internal Packing List Line | movement_base_contribution_interaction_workflow
 Internal Packing List Line | pricing_interaction_workflow
 Internal Packing List Line | trade_matrix_workflow
 Internal Packing List | delivery_causality_interaction_workflow
@@ -41,6 +42,7 @@ Purchase Order Cell | edit_workflow
 Purchase Order Cell | order_movement_simulation_interaction_workflow
 Purchase Order Cell | pricing_interaction_workflow
 Purchase Order Line | edit_workflow
+Purchase Order Line | movement_base_contribution_interaction_workflow
 Purchase Order Line | order_movement_simulation_interaction_workflow
 Purchase Order Line | pricing_interaction_workflow
 Purchase Order Line | trade_matrix_workflow
@@ -53,6 +55,7 @@ Purchase Packing List Cell | pricing_interaction_workflow
 Purchase Packing List Line | delivery_movement_causality_interaction_workflow
 Purchase Packing List Line | delivery_movement_simulation_interaction_workflow
 Purchase Packing List Line | edit_workflow
+Purchase Packing List Line | movement_base_contribution_interaction_workflow
 Purchase Packing List Line | pricing_interaction_workflow
 Purchase Packing List Line | trade_matrix_workflow
 Purchase Packing List | delivery_causality_interaction_workflow
@@ -70,6 +73,7 @@ Sale Order Cell | edit_workflow
 Sale Order Cell | order_movement_simulation_interaction_workflow
 Sale Order Cell | pricing_interaction_workflow
 Sale Order Line | edit_workflow
+Sale Order Line | movement_base_contribution_interaction_workflow
 Sale Order Line | order_movement_simulation_interaction_workflow
 Sale Order Line | pricing_interaction_workflow
 Sale Order Line | trade_matrix_workflow
@@ -84,6 +88,7 @@ Sale Packing List Line | container_interaction_workflow
 Sale Packing List Line | delivery_movement_causality_interaction_workflow
 Sale Packing List Line | delivery_movement_simulation_interaction_workflow
 Sale Packing List Line | edit_workflow
+Sale Packing List Line | movement_base_contribution_interaction_workflow
 Sale Packing List Line | pricing_interaction_workflow
 Sale Packing List Line | trade_matrix_workflow
 Sale Packing List | delivery_causality_interaction_workflow
