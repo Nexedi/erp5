@@ -266,7 +266,6 @@ class TestDocumentConversionCache(ERP5TypeTestCase, ZopeTestCase.Functional):
     #Test Conversion Cache
     for format in format_list:
       document.convert(format=format)
-      transaction.commit()
       self.assertTrue(document.hasConversion(format=format), 'Cache Storage failed for %s' % (format))
       self.assertTrue(document.getConversionSize(format=format))
     document.clearConversionCache()
@@ -280,7 +279,6 @@ class TestDocumentConversionCache(ERP5TypeTestCase, ZopeTestCase.Functional):
     #Test Conversion Cache after clearConversionCache
     for format in format_list:
       document.convert(format=format)
-      transaction.commit()
       self.assertTrue(document.hasConversion(format=format), 'Cache Storage failed for %s' % (format))
       self.assertTrue(document.getConversionSize(format=format))
 
