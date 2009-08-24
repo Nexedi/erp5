@@ -367,12 +367,12 @@ fieldset.editable {\n
 }\n
 \n
 fieldset.editable legend {\n
-  padding: 10px 10px 0;\n
+  padding: 10px 0 0 20px;\n
   font-weight: bold;\n
 }\n
 \n
 fieldset.editable label {\n
-  padding: 0 10px;\n
+  padding: 0 10px 0 20px;\n
   float: left;\n
   width: 140px;\n
   font-weight: bold;\n
