@@ -115,7 +115,7 @@ if len(listbox) == 0:\n
   session_id = context.browser_id_manager.getBrowserId(create=1)\n
   session = context.portal_sessions[session_id]\n
   temp_file = newTempFile(context, session_id)\n
-  temp_file.edit(data=spreadsheets)\n
+  temp_file.edit(spreadsheet_mapping=spreadsheets)\n
 \n
   #create a temporary file_name\n
   timestamp = "%s" % DateTime.timeTime(DateTime())\n
@@ -143,7 +143,7 @@ else:\n
     temp_file = session[temp_file_name]\n
     # Clear this session after import is done\n
     session[temp_file_name] = None\n
-    spreadsheets = temp_file.getData()\n
+    spreadsheets = temp_file.getProperty(\'spreadsheet_mapping\')\n
 \n
   # Build the data mapping\n
   mapping = {}\n
