@@ -53,6 +53,9 @@
                            now python: DateTime();\n
                            sday python: DateTime()-DateTime().dow();\n
                            page_list python:range(10)">\n
+<!-- Planning Box is not displayed in mobile skin\n
+     So this test is skipped -->\n
+<tal:block tal:condition="python: context.TestTool_getSkinName()!=\'Mobile\'">\n
 <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/init" />\n
 <tr>\n
   <td>open</td>\n
@@ -260,6 +263,8 @@
   <td>lane_path</td>\n
   <td>Day</td>\n
 </tr>\n
+</tal:block>\n
+\n
 </tbody></table>\n
 </body>\n
 </html>\n

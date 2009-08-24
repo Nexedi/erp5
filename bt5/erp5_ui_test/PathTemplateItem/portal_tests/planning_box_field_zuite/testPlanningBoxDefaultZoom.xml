@@ -50,6 +50,9 @@
 <thead>\n
 <tr><td rowspan="1" colspan="3">Test PlanningBox Default Zoom</td></tr>\n
 </thead><tbody>\n
+<!-- Planning Box is not displayed in mobile skin\n
+     So this test is skipped -->\n
+<tal:block tal:condition="python: context.TestTool_getSkinName()!=\'Mobile\'">\n
 <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/init" />\n
 <tr>\n
   <td>open</td>\n
@@ -177,6 +180,8 @@
   <td>Site Error</td>\n
   <td></td>\n
 </tr>\n
+</tal:block>\n
+\n
 </tbody></table>\n
 </body>\n
 </html>\n
