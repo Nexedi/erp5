@@ -1640,7 +1640,7 @@ class TestTradeModelLine(TestTradeModelLineMixin):
     sequence_string = self.AGGREGATED_AMOUNT_LIST_COMMON_SEQUENCE_STRING
 
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self)
+    sequence_list.play(self, quiet=True)
 
   ORDER_SPECIALISE_AGGREGATED_AMOUNT_COMMON_SEQUENCE_STRING = \
       COMMON_DOCUMENTS_CREATION_SEQUENCE_STRING + """
@@ -1682,7 +1682,7 @@ class TestTradeModelLine(TestTradeModelLineMixin):
         .ORDER_SPECIALISE_AGGREGATED_AMOUNT_COMMON_SEQUENCE_STRING
 
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self)
+    sequence_list.play(self, quiet=True)
 
   def test_getAggregatedAmountList_afterUpdateAggregatedAmountList(self):
     """
@@ -1701,7 +1701,7 @@ class TestTradeModelLine(TestTradeModelLineMixin):
     """ + self.AGGREGATED_AMOUNT_LIST_CHECK_SEQUENCE_STRING
 
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self)
+    sequence_list.play(self, quiet=True)
 
   AGGREGATED_AMOUNT_SIMULATION_CHECK_SEQUENCE_STRING = """
               CheckOrderLineTaxedSimulation
@@ -1720,7 +1720,7 @@ class TestTradeModelLine(TestTradeModelLineMixin):
     sequence_list = SequenceList()
     sequence_string = self.TRADE_MODEL_RULE_SIMULATION_SEQUENCE_STRING
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self)
+    sequence_list.play(self, quiet=True)
 
   def test_TradeModelRuleSimulationReexpand(self):
     """Tests tree of simulations from Trade Model Rule with reexpanding"""
@@ -1732,7 +1732,7 @@ class TestTradeModelLine(TestTradeModelLineMixin):
               Tic
     """ + self.AGGREGATED_AMOUNT_SIMULATION_CHECK_SEQUENCE_STRING
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self)
+    sequence_list.play(self, quiet=True)
 
   def test_TradeModelRuleSimulationReexpandResourceChange(self):
     """Tests tree of simulations from Trade Model Rule with reexpanding when resource changes on model"""
@@ -1747,7 +1747,7 @@ class TestTradeModelLine(TestTradeModelLineMixin):
               Tic
     """ + self.AGGREGATED_AMOUNT_SIMULATION_CHECK_SEQUENCE_STRING
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self)
+    sequence_list.play(self, quiet=True)
 
   TRADE_MODEL_RULE_SIMULATION_ORDER_SPECIALISED_SEQUENCE_STRING = \
       ORDER_SPECIALISE_AGGREGATED_AMOUNT_COMMON_SEQUENCE_STRING + """
@@ -1761,7 +1761,7 @@ class TestTradeModelLine(TestTradeModelLineMixin):
     sequence_string = self \
         .TRADE_MODEL_RULE_SIMULATION_ORDER_SPECIALISED_SEQUENCE_STRING
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self)
+    sequence_list.play(self, quiet=True)
 
   def test_TradeModelRuleSimulationReexpandOrderSpecialise(self):
     sequence_list = SequenceList()
@@ -1773,7 +1773,7 @@ class TestTradeModelLine(TestTradeModelLineMixin):
               Tic
     """ + self.AGGREGATED_AMOUNT_SIMULATION_CHECK_SEQUENCE_STRING
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self)
+    sequence_list.play(self, quiet=True)
 
   def test_TradeModelRuleSimulationWithoutBPM(self):
     """Tests tree of simulations from Trade Model Rule when there is no BPM"""
@@ -1795,7 +1795,7 @@ class TestTradeModelLine(TestTradeModelLineMixin):
               CheckOrderTaxNoSimulation
     """
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self)
+    sequence_list.play(self, quiet=True)
 
   def test_TradeModelRuleSimulationWithoutTradeCondition(self):
     """Tests tree of simulations from Trade Model Rule when there is no Trade Condition"""
@@ -1812,7 +1812,7 @@ class TestTradeModelLine(TestTradeModelLineMixin):
               CheckOrderTaxNoSimulation
     """
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self)
+    sequence_list.play(self, quiet=True)
 
   def test_TradeModelRuleSimulationBuildInvoice(self):
     sequence_list = SequenceList()
@@ -1835,7 +1835,7 @@ class TestTradeModelLine(TestTradeModelLineMixin):
               CheckInvoiceNormalMovements
     """
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self)
+    sequence_list.play(self, quiet=True)
 
   def test_TradeModelRuleSimulationBuildInvoiceOrderSpecialise(self):
     sequence_list = SequenceList()
@@ -1859,7 +1859,7 @@ class TestTradeModelLine(TestTradeModelLineMixin):
               CheckInvoiceNormalMovements
     """
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self)
+    sequence_list.play(self, quiet=True)
 
   def test_TradeModelRuleSimulationBuildInvoiceNewTradeCondition(self):
     """Check that after changing trade condition invoice is not diverged"""
@@ -1897,7 +1897,7 @@ class TestTradeModelLine(TestTradeModelLineMixin):
               CheckInvoiceCausalityStateSolved
     """
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self)
+    sequence_list.play(self, quiet=True)
 
   def test_TradeModelRuleSimulationBuildInvoiceNewInvoiceLineSupport(self):
     """Check how is supported addition of invoice line to invoice build from order"""
@@ -1941,7 +1941,7 @@ class TestTradeModelLine(TestTradeModelLineMixin):
               Tic
     """
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self)
+    sequence_list.play(self, quiet=True)
 
   def test_TradeModelRuleSimulationBuildInvoiceInvoiceLineModifyDivergencyAndSolving(self):
     """Check that after changing invoice line invoice is properly diverged and it is possible to solve"""
@@ -1979,7 +1979,7 @@ class TestTradeModelLine(TestTradeModelLineMixin):
               CheckInvoiceNormalMovements
     """
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self)
+    sequence_list.play(self, quiet=True)
 
   def test_TradeModelRuleSimulationBuildInvoiceBuildInvoiceTransactionLines(self):
     """Check that having properly configured invoice transaction rule it invoice transaction lines are nicely generated and have proper amounts"""
@@ -2012,7 +2012,7 @@ class TestTradeModelLine(TestTradeModelLineMixin):
               Tic
     """
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self)
+    sequence_list.play(self, quiet=True)
 
   PACKING_LIST_SPLIT_INVOICE_BUILD_SEQUENCE_STRING = \
       TRADE_MODEL_RULE_SIMULATION_SEQUENCE_STRING + """
@@ -2060,14 +2060,14 @@ class TestTradeModelLine(TestTradeModelLineMixin):
     sequence_list = SequenceList()
     sequence_list.addSequenceString(
         self.PACKING_LIST_SPLIT_INVOICE_BUILD_SEQUENCE_STRING)
-    sequence_list.play(self)
+    sequence_list.play(self, quiet=True)
 
   def test_TradeModelRuleSimulationPackingListSplitBuildInvoiceBuild(self):
     """Check building invoice after splitting packing list"""
     sequence_list = SequenceList()
     sequence_list.addSequenceString(
         self.PACKING_LIST_SPLIT_INVOICE_BUILD_SEQUENCE_STRING)
-    sequence_list.play(self)
+    sequence_list.play(self, quiet=True)
 
   def test_getAggregatedAmountListWithComplexModelLinesCreateInEasyOrder(self):
     """
@@ -2130,7 +2130,7 @@ class TestTradeModelLine(TestTradeModelLineMixin):
               CheckAggregatedAmountListWithComplexBaseContributionBaseApplication
     """
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self)
+    sequence_list.play(self, quiet=True)
 
   def test_getAggregatedAmountListWithComplexModelLinesCreateInRandomOrder(self):
     """
@@ -2195,7 +2195,7 @@ class TestTradeModelLine(TestTradeModelLineMixin):
               CheckAggregatedAmountListWithComplexBaseContributionBaseApplication
     """
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self)
+    sequence_list.play(self, quiet=True)
 
   def test_BuildTradeModelLineAndAccountingFromOrder(self):
     business_process = self.createBusinessProcess()
@@ -2384,8 +2384,6 @@ class TestTradeModelLine(TestTradeModelLineMixin):
     self.assertEquals(1000, income_movement.getSourceCredit())
 
 
-    
-
 class TestTradeModelLineSale(TestTradeModelLine):
   invoice_portal_type = 'Sale Invoice Transaction'
   invoice_line_portal_type = 'Invoice Line'
@@ -2394,7 +2392,6 @@ class TestTradeModelLineSale(TestTradeModelLine):
   order_line_portal_type = 'Sale Order Line'
   packing_list_portal_type = 'Sale Packing List'
   trade_condition_portal_type = 'Sale Trade Condition'
-  trade_model_line_portal_type = 'Trade Model Line'
 
 
 class TestTradeModelLinePurchase(TestTradeModelLine):
@@ -2405,7 +2402,7 @@ class TestTradeModelLinePurchase(TestTradeModelLine):
   order_line_portal_type = 'Purchase Order Line'
   packing_list_portal_type = 'Purchase Packing List'
   trade_condition_portal_type = 'Purchase Trade Condition'
-  trade_model_line_portal_type = 'Trade Model Line'
+
 
 def test_suite():
   suite = unittest.TestSuite()
