@@ -78,10 +78,7 @@ if context.cb_dataValid and error_message==\'\':\n
     return REQUEST.RESPONSE.redirect(context.absolute_url() + \'/\' + form_id + \'?portal_status_message=%s\' % msg)\n
   else:\n
     new_id_list = [i[\'new_id\'] for i in new_item_list]\n
-    for my_id in new_id_list:\n
-      context[my_id].flushActivity(invoke=0, method_id=\'immediateReindexObject\')\n
-      context[my_id].recursiveImmediateReindexObject()\n
-    msg = Base_translateString(\'Item(s) pasted.\')\n
+    msg = Base_translateString(\'Item(s) paste in progress.\')\n
     return REQUEST.RESPONSE.redirect(context.absolute_url() + \'/\' + form_id + \'?portal_status_message=%s\' % msg)\n
 elif context.cb_dataValid and error_message!=\'\':\n
   return REQUEST.RESPONSE.redirect(context.absolute_url() + \'/\' + form_id + \'?portal_status_message=%s\' % error_message)\n
@@ -145,7 +142,6 @@ else:\n
                             <string>msg</string>
                             <string>i</string>
                             <string>new_id_list</string>
-                            <string>my_id</string>
                           </tuple>
                         </value>
                     </item>
