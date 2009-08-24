@@ -1534,10 +1534,7 @@ class TestPayrollMixin(ERP5ReportTestCase, TestTradeModelLineMixin):
   def stepCheckModelWithoutDateValidity(self, sequence=None, **kw):
     '''
     If no date are defined on a model, the behavior is that this model
-    is valid only for paysheet that don't have dates.
-    So check that a line is created after calling calculation script on a
-    paysheet with no dates and check nothing is created on a paysheet that uses
-    dates
+    is always valid.
     '''
     eur = sequence.get('currency')
     labour = sequence.get('labour_service_output')
@@ -1589,16 +1586,17 @@ class TestPayrollMixin(ERP5ReportTestCase, TestTradeModelLineMixin):
 
     portal_type_list = ['Pay Sheet Model Line',]
 
-    # check the paysheet contail no lines before calculation
+    # check the paysheet contains no lines before calculation
     self.assertEquals(len(paysheet_with_date.contentValues(\
         portal_type='Pay Sheet Line')), 0)
     # calculate the pay sheet
     paysheet_with_date.applyTransformation()
     self.stepTic()
-    # after calculation, paysheet should contain no lines because no effective
-    # model could be found for this paysheet
+    # after calculation, paysheet contains one line, because the model applies.
     self.assertEquals(len(paysheet_with_date.contentValues(\
-        portal_type='Pay Sheet Line')), 0)
+        portal_type='Pay Sheet Line')), 1)
+    self.assertEquals(paysheet_without_date.contentValues()[0].getTotalPrice(),
+        10000)
 
   def stepCheckModelDateValidity(self, sequence=None, **kw):
     '''
