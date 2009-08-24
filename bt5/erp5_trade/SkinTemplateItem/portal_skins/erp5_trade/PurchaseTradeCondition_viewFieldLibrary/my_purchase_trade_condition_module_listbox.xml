@@ -13,16 +13,17 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
-                <string>columns</string>
                 <string>all_columns</string>
-                <string>search_columns</string>
-                <string>sort</string>
-                <string>selection_name</string>
-                <string>portal_types</string>
-                <string>domain_tree</string>
+                <string>columns</string>
                 <string>domain_root_list</string>
+                <string>domain_tree</string>
+                <string>portal_types</string>
                 <string>report_root_list</string>
+                <string>search_columns</string>
+                <string>selection_name</string>
+                <string>sort</string>
+                <string>sort_columns</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -122,6 +123,34 @@
                         <tuple>
                           <string>specialise_title</string>
                           <string>Specialised Trade Conditions</string>
+                        </tuple>
+                        <tuple>
+                          <string>reference</string>
+                          <string>Reference</string>
+                        </tuple>
+                        <tuple>
+                          <string>incoterm_title</string>
+                          <string>Incoterm</string>
+                        </tuple>
+                        <tuple>
+                          <string>delivery_mode_title</string>
+                          <string>Delivery Mode</string>
+                        </tuple>
+                        <tuple>
+                          <string>price_currency_title</string>
+                          <string>Currency</string>
+                        </tuple>
+                        <tuple>
+                          <string>trade_condition_type_title</string>
+                          <string>Trade Condition Type</string>
+                        </tuple>
+                        <tuple>
+                          <string>creation_date</string>
+                          <string>Creation Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>modification_date</string>
+                          <string>Modification Date</string>
                         </tuple>
                       </list>
                     </value>
@@ -257,12 +286,48 @@
                           <string>Sender or Provider</string>
                         </tuple>
                         <tuple>
+                          <string>effective_date</string>
+                          <string>Effective Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>expiration_date</string>
+                          <string>Expiration Date</string>
+                        </tuple>
+                        <tuple>
                           <string>translated_validation_state_title</string>
                           <string>State</string>
                         </tuple>
                         <tuple>
                           <string>specialise_title</string>
                           <string>Specialised Trade Conditions</string>
+                        </tuple>
+                        <tuple>
+                          <string>reference</string>
+                          <string>Reference</string>
+                        </tuple>
+                        <tuple>
+                          <string>incoterm_title</string>
+                          <string>Incoterm</string>
+                        </tuple>
+                        <tuple>
+                          <string>delivery_mode_title</string>
+                          <string>Delivery Mode</string>
+                        </tuple>
+                        <tuple>
+                          <string>price_currency_title</string>
+                          <string>Currency</string>
+                        </tuple>
+                        <tuple>
+                          <string>trade_condition_type_title</string>
+                          <string>Trade Condition Type</string>
+                        </tuple>
+                        <tuple>
+                          <string>creation_date</string>
+                          <string>Creation Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>modification_date</string>
+                          <string>Modification Date</string>
                         </tuple>
                       </list>
                     </value>
@@ -278,6 +343,77 @@
                         <tuple>
                           <string>title</string>
                           <string>ascending</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>sort_columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>title</string>
+                          <string>Purchase Trade Condition</string>
+                        </tuple>
+                        <tuple>
+                          <string>default_destination_section_title</string>
+                          <string>Client</string>
+                        </tuple>
+                        <tuple>
+                          <string>default_destination_title</string>
+                          <string>Recipient or Beneficiary</string>
+                        </tuple>
+                        <tuple>
+                          <string>default_source_section_title</string>
+                          <string>Supplier</string>
+                        </tuple>
+                        <tuple>
+                          <string>default_source_title</string>
+                          <string>Sender or Provider</string>
+                        </tuple>
+                        <tuple>
+                          <string>effective_date</string>
+                          <string>Effective Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>expiration_date</string>
+                          <string>Expiration Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>translated_validation_state_title</string>
+                          <string>State</string>
+                        </tuple>
+                        <tuple>
+                          <string>specialise_title</string>
+                          <string>Specialised Trade Conditions</string>
+                        </tuple>
+                        <tuple>
+                          <string>reference</string>
+                          <string>Reference</string>
+                        </tuple>
+                        <tuple>
+                          <string>incoterm_title</string>
+                          <string>Incoterm</string>
+                        </tuple>
+                        <tuple>
+                          <string>delivery_mode_title</string>
+                          <string>Delivery Mode</string>
+                        </tuple>
+                        <tuple>
+                          <string>price_currency_title</string>
+                          <string>Currency</string>
+                        </tuple>
+                        <tuple>
+                          <string>trade_condition_type_title</string>
+                          <string>Trade Condition Type</string>
+                        </tuple>
+                        <tuple>
+                          <string>creation_date</string>
+                          <string>Creation Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>modification_date</string>
+                          <string>Modification Date</string>
                         </tuple>
                       </list>
                     </value>
