@@ -2136,10 +2136,10 @@ class TestSaleInvoiceMixin(TestInvoiceMixin,
     invoice.edit()
 
     # call updateAppliedRule directly, don't rely on edit interactions
-    rule_id = 'default_invoice_rule'
-    self.failUnless(rule_id in
-                    self.getPortal().portal_rules.objectIds())
-    invoice.updateAppliedRule(rule_id=rule_id)
+    rule_reference = 'default_invoice_rule'
+    self.assertNotEquals(0,
+        len(self.portal.portal_rules.searchFolder(reference=rule_reference)))
+    invoice.updateAppliedRule(rule_reference=rule_reference)
 
   def stepCheckInvoiceRuleNotAppliedOnInvoiceEdit(self,
                     sequence=None, sequence_list=None, **kw):
@@ -2159,10 +2159,10 @@ class TestSaleInvoiceMixin(TestInvoiceMixin,
     packing_list.edit()
 
     # call updateAppliedRule directly, don't rely on edit interactions
-    rule_id = 'default_delivery_rule'
-    self.failUnless(rule_id in
-                    self.getPortal().portal_rules.objectIds())
-    packing_list.updateAppliedRule(rule_id=rule_id)
+    rule_reference = 'default_delivery_rule'
+    self.assertNotEquals(0,
+        len(self.portal.portal_rules.searchFolder(reference=rule_reference)))
+    packing_list.updateAppliedRule(rule_reference=rule_reference)
 
   def stepCheckDeliveryRuleNotAppliedOnPackingListEdit(self,
                     sequence=None, sequence_list=None, **kw):
