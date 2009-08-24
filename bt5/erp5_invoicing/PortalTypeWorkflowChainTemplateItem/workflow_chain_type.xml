@@ -5,7 +5,7 @@
  </chain>
  <chain>
   <type>Invoice Line</type>
-  <workflow>delivery_movement_simulation_interaction_workflow, delivery_movement_account_interaction_workflow, pricing_interaction_workflow, trade_matrix_workflow, delivery_movement_causality_interaction_workflow, edit_workflow</workflow>
+  <workflow>delivery_movement_simulation_interaction_workflow, delivery_movement_account_interaction_workflow, pricing_interaction_workflow, trade_matrix_workflow, movement_base_contribution_interaction_workflow, delivery_movement_causality_interaction_workflow, edit_workflow</workflow>
  </chain>
  <chain>
   <type>Invoice Transaction Rule</type>

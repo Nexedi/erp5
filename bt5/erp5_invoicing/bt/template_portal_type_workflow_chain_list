@@ -7,6 +7,7 @@ Invoice Line | delivery_movement_account_interaction_workflow
 Invoice Line | delivery_movement_causality_interaction_workflow
 Invoice Line | delivery_movement_simulation_interaction_workflow
 Invoice Line | edit_workflow
+Invoice Line | movement_base_contribution_interaction_workflow
 Invoice Line | pricing_interaction_workflow
 Invoice Line | trade_matrix_workflow
 Invoice Transaction Rule | edit_workflow
