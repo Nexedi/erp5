@@ -6,7 +6,6 @@ Production Order Module | Production Order
 Production Order Rule | Category Divergence Tester
 Production Order Rule | Property Divergence Tester
 Production Order Rule | Quantity Divergence Tester
-Production Order | Discount
 Production Order | Payment Condition
 Production Order | Production Order Line
 Production Packing List Line | Production Packing List Cell

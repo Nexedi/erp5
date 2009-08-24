@@ -1,7 +1,6 @@
 <allowed_content_type_list>
  <portal_type id="Production Order">
   <item>Payment Condition</item>
-  <item>Discount</item>
   <item>Production Order Line</item>
  </portal_type>
  <portal_type id="Production Order Line">

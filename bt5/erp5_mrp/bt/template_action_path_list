@@ -15,7 +15,6 @@ Production Order | production_order_operation_consumption
 Production Order | production_order_planning
 Production Order | profile_view
 Production Order | view
-Production Order | view_discount
 Production Order | view_stock
 Production Packing List Cell | view
 Production Packing List Line | option_view
