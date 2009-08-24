@@ -129,11 +129,20 @@
   <td>id=listbox_record_number</td>\n
   <td>1 record(s)</td>\n
 </tr>\n
+<tal:block tal:condition="python: context.TestTool_getSkinName()!=\'Mobile\'">\n
 <tr>\n
   <td>verifyText</td>\n
   <td>//tr[@id=\'listbox_data_line_0\']/td[4]</td>\n
   <td>Foo Line</td>\n
 </tr>\n
+</tal:block>\n
+<tal:block tal:condition="python: context.TestTool_getSkinName()==\'Mobile\'">\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//*[@id="listbox_data_line_0"]/div[3]//span[@id=\'data_short\']</td>\n
+  <td>Foo Line</td>\n
+</tr>\n
+</tal:block>\n
 \n
 <tr>\n
   <td>open</td>\n
