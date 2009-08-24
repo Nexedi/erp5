@@ -1,16 +1,15 @@
 <allowed_content_type_list>
  <portal_type id="Project">
+  <item>Project Line</item>
   <item>Project Milestone</item>
   <item>File</item>
-  <item>Project Line</item>
   <item>Image</item>
  </portal_type>
  <portal_type id="Project Line">
-  <item>Project Cell</item>
-  <item>Folder</item>
   <item>Project Line</item>
-  <item>File</item>
   <item>Image</item>
+  <item>Project Cell</item>
+  <item>File</item>
  </portal_type>
  <portal_type id="Project Milestone">
   <item>Image</item>
