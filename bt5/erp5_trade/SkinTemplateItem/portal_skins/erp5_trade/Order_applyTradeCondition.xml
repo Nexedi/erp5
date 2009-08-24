@@ -87,6 +87,12 @@ for category in category_list:\n
     v = getPropertyFromTradeCondition(trade_condition, category)\n
     if v:\n
       new_category_dict[category] = v\n
+      # for accounting transactions, we also initialize resource with the price\n
+      # currency\n
+      if category == \'price_currency\' and \\\n
+          context.getPortalType() in \\\n
+          context.getPortalAccountingTransactionTypeList():\n
+        new_category_dict[\'resource\'] = v\n
 \n
 \n
 def copyPaymentCondition(order, trade_condition):\n
