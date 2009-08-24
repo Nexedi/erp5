@@ -89,22 +89,13 @@
                            dummy python: request.set(\'dialog_mode\', dialog_mode);\n
                            dummy python: request.set(\'list_mode\', list_mode);\n
                            aggregate python: has_no_layout or layout_form.Form_getGroupList(\n
-                                             [\'header\', \'navbar\', \'headline\', \'dialog_fieldset\', \'subcontent\', \'footer\']);\n
+                                             [\'header\', \'navbar\', \'headline\', \'subcontent\', \'footer\']);\n
                            aggregate python: ((aggregate is not has_no_layout) and dict(aggregate)) or {};\n
                            header_area python:aggregate.get(\'header\', []);\n
                            navbar_area python:aggregate.get(\'navbar\', []);\n
                            headline_area python:aggregate.get(\'headline\', []);\n
-                           dialog_fieldset_area python:aggregate.get(\'dialog_fieldset\', []);\n
                            subcontent_area python:aggregate.get(\'subcontent\', []);\n
                            footer_area python:aggregate.get(\'footer\', []);\n
-                           is_dialog python:bool(dialog_fieldset_area);\n
-                           editable_mode python:bool(is_dialog);\n
-                           dummy python:here.REQUEST.set(\'editable_mode\', editable_mode);\n
-                           dialog_id layout_form/id | template/id;\n
-                           dialog_method layout_form/action | dialog_id;\n
-                           update_action layout_form/update_action;\n
-                           global dialog_category request/dialog_category | nothing;\n
-                           \n
                            global header_title python:\'%s | %s\' % (here.getTitleOrId(), website.getTitleOrId());\n
                            global css_list_template python:[\n
                                   \'%s/erp5_web_toolbar.css\' % portal_path,\n
@@ -162,23 +153,7 @@
         <div class="content-1col-nobox">\n
           <div id="transition_message" tal:condition="request/portal_status_message | nothing"\n
                tal:content="request/portal_status_message" />\n
-          <tal:block tal:condition="not: is_dialog">\n
-            <tal:block metal:define-slot="main"/>\n
-          </tal:block>\n
-          <tal:block tal:condition="is_dialog">\n
-            <tal:block tal:repeat="aggregate python: [(\'dialog_fieldset\', dialog_fieldset_area)]">\n
-              <tal:block metal:use-macro="here/aggregate_render/macros/aggregate_render"/>\n
-            </tal:block>\n
-            <input type="hidden" name="dialog_method" tal:attributes="value dialog_method"/>\n
-            <input type="hidden" name="dialog_id" tal:attributes="value dialog_id"/>\n
-            <input  tal:attributes="value python: here.Base_getFormViewDialogActionButtonTitle(layout_form);"\n
-                    i18n:attributes="value"\n
-                    i18n:domain="ui"\n
-                    accesskey="V"\n
-                    id="dialog_submit_button"\n
-                    type="submit"\n
-                    name="Base_callDialogMethod:method" />\n
-          </tal:block>\n
+          <tal:block metal:define-slot="main"/>\n
         </div>\n
         <div class="corner-content-1col-bottom"></div>                       \n
       </div>           \n
