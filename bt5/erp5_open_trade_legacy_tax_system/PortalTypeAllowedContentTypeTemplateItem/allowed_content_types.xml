@@ -1,0 +1,17 @@
+<allowed_content_type_list>
+ <portal_type id="Open Internal Order">
+  <item>Discount</item>
+  <item>Discount Line</item>
+  <item>Tax Line</item>
+ </portal_type>
+ <portal_type id="Open Purchase Order">
+  <item>Discount Line</item>
+  <item>Tax Line</item>
+  <item>Discount</item>
+ </portal_type>
+ <portal_type id="Open Sale Order">
+  <item>Discount</item>
+  <item>Tax Line</item>
+  <item>Discount Line</item>
+ </portal_type>
+</allowed_content_type_list>

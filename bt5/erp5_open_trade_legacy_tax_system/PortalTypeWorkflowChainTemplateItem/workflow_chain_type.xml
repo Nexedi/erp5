@@ -1,0 +1,10 @@
+<workflow_chain>
+ <chain>
+  <type>Open Sale Order</type>
+  <workflow>delivery_tax_interaction_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Open Sale Order Line</type>
+  <workflow>tax_interaction_workflow</workflow>
+ </chain>
+</workflow_chain>

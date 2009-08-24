@@ -1,0 +1,6 @@
+Open Internal Order | view_discount
+Open Internal Order | view_tax
+Open Purchase Order | view_discount
+Open Purchase Order | view_tax
+Open Sale Order | view_discount
+Open Sale Order | view_tax
