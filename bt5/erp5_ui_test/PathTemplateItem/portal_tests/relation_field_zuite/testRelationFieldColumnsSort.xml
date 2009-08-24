@@ -50,6 +50,9 @@
 <thead>\n
 <tr><td rowspan="1" colspan="3">Test Relation Field with sorting columns</td></tr>\n
 </thead><tbody>\n
+<!-- XXX Mobile listbox columns label are not clickable for quick sorting\n
+     So this test is skipped -->\n
+<tal:block tal:condition="python: context.TestTool_getSkinName()!=\'Mobile\'">\n
 <tal:block metal:use-macro="here/RelationFieldZuite_CommonTemplate/macros/init" />\n
 <tr>\n
   <td>open</td>\n
@@ -78,7 +81,7 @@
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
-  <td>link=Title 0</td>\n
+  <td>link=0</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -366,7 +369,7 @@
   <td>//tr[@id="listbox_label_line"]/td[4]/img</td>\n
   <td></td>\n
 </tr>\n
-\n
+</tal:block>\n
 \n
 </tbody></table>\n
 </body>\n
