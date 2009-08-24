@@ -60,7 +60,7 @@
             <tal:block metal:define-slot="main" />\n
             <tal:block metal:define-slot="bottom" />\n
           </div>\n
-          <button \n
+          <button tal:condition="cancel_url|request/cancel_url|nothing"\n
                  value="Cancel Action" accesskey="C"\n
                  id="dialog_cancel_button" name="Base_cancel:method"\n
                  type="submit" class="bt-med">\n
