@@ -32,7 +32,6 @@
   <item>Sale Order Milestone</item>
  </portal_type>
  <portal_type id="Task">
-  <item>Discount</item>
   <item>Task Line</item>
   <item>Payment Condition</item>
  </portal_type>

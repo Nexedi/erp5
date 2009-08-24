@@ -85,4 +85,3 @@ Task | jump_to_successor_task
 Task | payment_condition
 Task | profile_view
 Task | view
-Task | view_discount
