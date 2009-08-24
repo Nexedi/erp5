@@ -20,6 +20,7 @@ Options:
   -h, --help                 this help screen
   --email_to_address=STRING  send results to this address by email (defaults to
                              erp5-report@erp5.org)
+  --smtp_host=hostname       specify SMTP server
   -s, --stdout               print the results on stdout instead of sending
                              results by email (unless email_to_address is also
                              passed explictly)
@@ -45,6 +46,7 @@ send_mail = 0
 stdout = 0
 debug = 0
 email_to_address = 'erp5-report@erp5.org'
+smtp_host = ''
 run_only=''
 
 tests_framework_home = os.path.dirname(os.path.abspath(__file__))
@@ -75,6 +77,7 @@ def parseArgs():
   global stdout
   global debug
   global email_to_address
+  global smtp_host
   global host
   global port
   global portal_name
@@ -83,7 +86,8 @@ def parseArgs():
   try:
     opts, args = getopt.getopt(sys.argv[1:],
           "hsd", ["help", "stdout", "debug",
-                 "email_to_address=", "host=", "port=", "portal_name=", "run_only="] )
+                 "email_to_address=", "host=", "port=", "portal_name=", "run_only=",
+                 "smtp_host="] )
   except getopt.GetoptError, msg:
     usage(sys.stderr, msg)
     sys.exit(2)
@@ -96,6 +100,8 @@ def parseArgs():
     elif opt == '--email_to_address':
       email_to_address = arg
       send_mail = 1
+    elif opt == '--smtp_host':
+      smtp_host = arg
     elif opt in ('-h', '--help'):
       usage(sys.stdout)
       sys.exit()
@@ -287,7 +293,8 @@ Following tests failed:
              status=status,
              attachments=[detail],
              from_mail='nobody@svn.erp5.org',
-             to_mail=[email_to_address])
+             to_mail=[email_to_address],
+             smtp_host=smtp_host)
   if stdout:
     print '-' * 79
     print subject

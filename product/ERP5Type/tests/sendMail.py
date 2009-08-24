@@ -40,7 +40,8 @@ def sendMail(subject,
              attachments = [],
              status = False,
              from_mail = 'nobody@erp5.org',
-             to_mail = [ 'erp5-report@erp5.org' ]):
+             to_mail = [ 'erp5-report@erp5.org' ],
+             smtp_host = ''):
     if attachments:
         msg = MIMEMultipart()
     else:
@@ -78,8 +79,8 @@ def sendMail(subject,
     else:
         msg.set_payload(body)
 
-    # Send the email via our own SMTP server.
-    s = smtplib.SMTP()
+    # Send the email via SMTP server.
+    s = smtplib.SMTP(smtp_host)
     s.connect()
     s.sendmail(from_mail, to_mail, msg.as_string())
     s.close()
