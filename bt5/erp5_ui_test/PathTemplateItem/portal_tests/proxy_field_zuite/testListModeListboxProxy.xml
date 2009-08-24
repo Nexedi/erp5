@@ -50,6 +50,9 @@
 <thead>\n
 <tr><td rowspan="1" colspan="3">Test List Mode Listbox Proxy</td></tr>\n
 </thead><tbody>\n
+<!-- XXX listbox_title is not displayed in mobile mode\n
+     So this test is skipped -->\n
+<tal:block tal:condition="python: context.TestTool_getSkinName()!=\'Mobile\'">\n
 <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/init" />\n
 <tr>\n
   <td>open</td>\n
@@ -133,6 +136,7 @@
   <td>listbox_record_number</td>\n
   <td>1 record(s)</td>\n
 </tr>\n
+</tal:block>\n
 \n
 </tbody></table>\n
 </body>\n
