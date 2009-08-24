@@ -88,7 +88,7 @@ if builder_by_ptype.has_key(delivery_portal_type) :\n
     pay_sheet.activate( tag       = expand_tag\n
                       , after_tag = previous_tag\n
                       , priority  = PRIORITY\n
-                      ).updateAppliedRule( rule_id     = \'default_invoice_rule\'\n
+                      ).updateAppliedRule( rule_reference = \'default_invoice_rule\'\n
                                          , activate_kw = activate_kw\n
                                          )\n
 \n
