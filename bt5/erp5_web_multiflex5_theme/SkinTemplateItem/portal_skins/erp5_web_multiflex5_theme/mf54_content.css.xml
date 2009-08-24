@@ -528,6 +528,20 @@ div.pdf-preview-navigation img {\n
   float:none;\n
   margin:0;\n
 }\n
+\n
+button.bt-med {\n
+  margin:0 0 10px 20px;\n
+}\n
+\n
+div.error > div > input,\n
+div.error > div > textarea {\n
+  border:1px solid red;\n
+}\n
+\n
+div.error > span.error {\n
+  margin-left:170px;\n
+  font-weight:bold\n
+}\n
 </tal:block>\n
 
 
