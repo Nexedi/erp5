@@ -1,38 +1,26 @@
 <allowed_content_type_list>
  <portal_type id="Open Internal Order">
-  <item>Discount</item>
-  <item>Discount Line</item>
   <item>Open Sale Order Line</item>
-  <item>Tax Line</item>
   <item>Payment Condition</item>
  </portal_type>
  <portal_type id="Open Internal Order Module">
   <item>Open Internal Order</item>
  </portal_type>
  <portal_type id="Open Order Rule">
-  <item>Category Divergence Tester</item>
-  <item>Quantity Divergence Tester</item>
   <item>Property Divergence Tester</item>
- </portal_type>
- <portal_type id="Rule Tool">
-  <item>Open Order Rule</item>
+  <item>Quantity Divergence Tester</item>
+  <item>Category Divergence Tester</item>
  </portal_type>
  <portal_type id="Open Purchase Order">
-  <item>Open Sale Order Line</item>
-  <item>Discount Line</item>
-  <item>Tax Line</item>
-  <item>Discount</item>
   <item>Payment Condition</item>
+  <item>Open Sale Order Line</item>
  </portal_type>
  <portal_type id="Open Purchase Order Module">
   <item>Open Purchase Order</item>
  </portal_type>
  <portal_type id="Open Sale Order">
-  <item>Open Sale Order Line</item>
-  <item>Tax Line</item>
-  <item>Discount</item>
-  <item>Discount Line</item>
   <item>Payment Condition</item>
+  <item>Open Sale Order Line</item>
  </portal_type>
  <portal_type id="Open Sale Order Module">
   <item>Open Sale Order</item>
@@ -40,8 +28,11 @@
  <portal_type id="Periodicity Line">
   <item>Predicate</item>
  </portal_type>
+ <portal_type id="Rule Tool">
+  <item>Open Order Rule</item>
+ </portal_type>
  <portal_type id="Sale Order Module">
-   <item>Open Sale Order</item>
+  <item>Open Sale Order</item>
  </portal_type>
  <portal_type id="Sale Trade Condition">
   <item>Periodicity Line</item>

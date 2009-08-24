@@ -1,3 +1,6 @@
+2009-08-24 Jérome
+* move previous tax implementation in compatibility business template.
+
 2009-04-15 Kazuhiko
 * move open order functionality to erp5_open_order BT.
 

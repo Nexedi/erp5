@@ -1,24 +1,15 @@
 Open Internal Order Module | Open Internal Order
-Open Internal Order | Discount
-Open Internal Order | Discount Line
 Open Internal Order | Open Sale Order Line
 Open Internal Order | Payment Condition
-Open Internal Order | Tax Line
 Open Order Rule | Category Divergence Tester
 Open Order Rule | Property Divergence Tester
 Open Order Rule | Quantity Divergence Tester
 Open Purchase Order Module | Open Purchase Order
-Open Purchase Order | Discount
-Open Purchase Order | Discount Line
 Open Purchase Order | Open Sale Order Line
 Open Purchase Order | Payment Condition
-Open Purchase Order | Tax Line
 Open Sale Order Module | Open Sale Order
-Open Sale Order | Discount
-Open Sale Order | Discount Line
 Open Sale Order | Open Sale Order Line
 Open Sale Order | Payment Condition
-Open Sale Order | Tax Line
 Periodicity Line | Predicate
 Rule Tool | Open Order Rule
 Sale Order Module | Open Sale Order

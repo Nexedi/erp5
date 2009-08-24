@@ -5,10 +5,10 @@
  </chain>
  <chain>
   <type>Open Sale Order</type>
-  <workflow>edit_workflow, open_order_workflow, delivery_tax_interaction_workflow</workflow>
+  <workflow>edit_workflow, open_order_workflow</workflow>
  </chain>
  <chain>
   <type>Open Sale Order Line</type>
-  <workflow>trade_matrix_workflow, edit_workflow, tax_interaction_workflow, pricing_interaction_workflow, order_movement_simulation_interaction_workflow</workflow>
+  <workflow>trade_matrix_workflow, edit_workflow, pricing_interaction_workflow, order_movement_simulation_interaction_workflow</workflow>
  </chain>
 </workflow_chain>

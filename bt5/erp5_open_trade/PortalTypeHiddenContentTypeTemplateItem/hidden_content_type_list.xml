@@ -1,28 +1,5 @@
 <hidden_content_type_list>
- <portal_type id="Open Internal Order">
-  <item>Discount Line</item>
-  <item>Tax Line</item>
- </portal_type>
- <portal_type id="Open Order Rule">
-  <item>Category Divergence Tester</item>
-  <item>Quantity Divergence Tester</item>
-  <item>Property Divergence Tester</item>
- </portal_type>
- <portal_type id="Open Purchase Order">
-  <item>Discount Line</item>
-  <item>Tax Line</item>
- </portal_type>
- <portal_type id="Open Sale Order">
-  <item>Tax Line</item>
-  <item>Discount Line</item>
- </portal_type>
- <portal_type id="Rule Tool">
-  <item>Open Order Rule</item>
- </portal_type>
  <portal_type id="Periodicity Line">
   <item>Predicate</item>
- </portal_type>
- <portal_type id="Sale Trade Condition">
-  <item>Periodicity Line</item>
  </portal_type>
 </hidden_content_type_list>
