@@ -88,7 +88,7 @@
 </tr>\n
 <tr>\n
   <td>click</td>\n
-  <td>//tr[@id="listbox_data_line_0"]/td[1]/input</td>\n
+  <td>//*[@id=\'listbox_data_line_0\']//input[@type="checkbox"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -133,7 +133,7 @@
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@id="listbox_data_line_0"]/td[2]</td>\n
+  <td>//*[@id="listbox_data_line_0"]//a[not(@title)]</td>\n
   <td>0</td>\n
 </tr>\n
 <tr>\n
@@ -158,17 +158,17 @@
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@id="listbox_data_line_0"]/td[2]</td>\n
+  <td>//*[@id="listbox_data_line_0"]//a[not(@title)]</td>\n
   <td>0</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@id="listbox_data_line_1"]/td[2]</td>\n
+  <td>//*[@id="listbox_data_line_1"]//a[not(@title)]</td>\n
   <td>1</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@id="listbox_data_line_2"]/td[2]</td>\n
+  <td>//*[@id="listbox_data_line_2"]//a[not(@title)]</td>\n
   <td>2</td>\n
 </tr>\n
 <tr>\n
