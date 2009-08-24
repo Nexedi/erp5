@@ -46,7 +46,7 @@
                  next_thunmbnail_index python: current_thumbnail_index + 1;\n
                  previous_thunmbnail_index python: current_thumbnail_index - 1;\n
                  parent_doc_url here/absolute_url;\n
-                 base_url string:${parent_doc_url}/PDF_viewHTMLPreviewAsImage&;">\n
+                 base_url string:${parent_doc_url}/PDF_viewHTMLPreviewAsImage?">\n
 \n
   <div class="pdf-preview-navigation">\n
     <tal:block tal:condition="python:current_thumbnail_index >= 1">\n
