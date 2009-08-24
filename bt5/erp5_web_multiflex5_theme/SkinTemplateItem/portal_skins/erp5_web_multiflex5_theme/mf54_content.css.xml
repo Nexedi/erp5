@@ -491,12 +491,16 @@ div.input select, div.input textarea {\n
   max-width:450px;\n
 }\n
 \n
-fieldset > div.field {\n
+fieldset.editable > div.field {\n
   margin:5px 0;\n
 }\n
 \n
 #fieldset_bottom > div.field > div.input > textarea {\n
   width:<tal:block tal:replace="python:main_content_width-2"/>px;\n
+}\n
+\n
+div.bottom_action {\n
+  margin:0px 20px 20px;\n
 }\n
 \n
 div.bottom_actions button {\n
@@ -527,10 +531,6 @@ div.pdf-preview-navigation {\n
 div.pdf-preview-navigation img {\n
   float:none;\n
   margin:0;\n
-}\n
-\n
-button.bt-med {\n
-  margin:0 0 10px 20px;\n
 }\n
 \n
 div.error > div > input,\n
