@@ -62,7 +62,8 @@ class TestAccounting_l10n_M9(ERP5TypeTestCase):
 
   def getBusinessTemplateList(self):
     return ( 'erp5_base',
-             'erp5_trade', # TODO: remove those dependencies
+             'erp5_trade',
+             'erp5_invoicing',
              'erp5_pdm',
              'erp5_pdf_style',
              'erp5_accounting',
