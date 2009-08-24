@@ -395,7 +395,7 @@ class ListBoxWidget(Widget.Widget):
                                  title='List Action',
                                  description=('The id of the object action'
                                               ' to display the current list'),
-                                 default='list',
+                                 default='',
                                  required=0)
     property_names.append('list_action')
 
