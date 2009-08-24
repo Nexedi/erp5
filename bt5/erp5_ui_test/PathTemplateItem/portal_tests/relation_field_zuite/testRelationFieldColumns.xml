@@ -186,16 +186,9 @@
   <td></td>\n
 </tr>\n
 <tr>\n
-  <tal:block tal:condition="python: context.TestTool_getSkinName()!=\'Mobile\'">\n
-  <td>assertValue</td>\n
-  <td>//input[@id="listbox_set_page"]</td>\n
-  <td>2</td>\n
-  </tal:block>\n
-  <tal:block tal:condition="python: context.TestTool_getSkinName()==\'Mobile\'">\n
   <td>assertValue</td>\n
   <td>id=listbox_page_selection</td>\n
   <td>10</td>\n
-  </tal:block>\n
 </tr>\n
 <!--<tr>\n
   <td>assertText</td>\n

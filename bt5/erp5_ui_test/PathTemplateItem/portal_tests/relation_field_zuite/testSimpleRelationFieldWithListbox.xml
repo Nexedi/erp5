@@ -88,11 +88,20 @@
   <td>field_my_quantity</td>\n
   <td>x</td>\n
 </tr>\n
+<tal:block tal:condition="python: context.TestTool_getSkinName()!=\'Mobile\'">\n
 <tr>\n
   <td>type</td>\n
   <td>//tr[@id=\'listbox_data_line_0\']/td[3]/input</td>\n
   <td>y</td>\n
 </tr>\n
+</tal:block>\n
+<tal:block tal:condition="python: context.TestTool_getSkinName()==\'Mobile\'">\n
+<tr>\n
+  <td>type</td>\n
+  <td>//*[@id="listbox_0data2"]//input[@type="text"]</td>\n
+  <td>y</td>\n
+</tr>\n
+</tal:block>\n
 \n
 <tr>\n
   <td>clickAndWait</td>\n
@@ -116,6 +125,7 @@
   <td>field_my_quantity</td>\n
   <td>x</td>\n
 </tr>\n
+<tal:block tal:condition="python: context.TestTool_getSkinName()!=\'Mobile\'">\n
 <tr>\n
   <td>verifyElementPresent</td>\n
   <td>//fieldset[@id=\'fieldset_right\']/div[@class=\'field error\']/span[@class=\'error\']</td>\n
@@ -131,6 +141,25 @@
   <td>//tr[@id=\'listbox_data_line_0\']/td[3]/span[@class=\'error\']</td>\n
   <td/>\n
 </tr>\n
+</tal:block>\n
+<tal:block tal:condition="python: context.TestTool_getSkinName()==\'Mobile\'">\n
+<tr>\n
+  <td>verifyElementPresent</td>\n
+  <td>//fieldset[@id=\'fieldset_right\']/div[1]/div[@class=\'field error\']/span[@class=\'error\']</td>\n
+  <td/>\n
+</tr>\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>//*[@id="listbox_0data2"]//input[@type="text"]</td>\n
+  <td>y</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyElementPresent</td>\n
+  <td>//*[@id=\'listbox_0data2\']/div[1]/span[@class=\'error\']</td>\n
+  <td/>\n
+</tr>\n
+</tal:block>\n
+\n
 \n
 <!-- now save correct values -->\n
 <tr>\n
@@ -138,11 +167,20 @@
   <td>field_my_quantity</td>\n
   <td>1</td>\n
 </tr>\n
+<tal:block tal:condition="python: context.TestTool_getSkinName()!=\'Mobile\'">\n
 <tr>\n
   <td>type</td>\n
   <td>//tr[@id=\'listbox_data_line_0\']/td[3]/input</td>\n
   <td>2</td>\n
 </tr>\n
+</tal:block>\n
+<tal:block tal:condition="python: context.TestTool_getSkinName()==\'Mobile\'">\n
+<tr>\n
+  <td>type</td>\n
+  <td>//*[@id="listbox_0data2"]//input[@type="text"]</td>\n
+  <td>2</td>\n
+</tr>\n
+</tal:block>\n
 \n
 <tr>\n
   <td>clickAndWait</td>\n
