@@ -499,7 +499,7 @@ fieldset.editable > div.field {\n
   width:<tal:block tal:replace="python:main_content_width-2"/>px;\n
 }\n
 \n
-div.bottom_action {\n
+div.bottom_actions {\n
   margin:0px 20px 20px;\n
 }\n
 \n
