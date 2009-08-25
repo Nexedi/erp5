@@ -362,16 +362,20 @@
   clear: both;\n
 }\n
 \n
-fieldset.editable {\n
+p.clear {\n
+  font-size:0 !important;\n
+}\n
+\n
+#main_content fieldset {\n
   font-size:120%;\n
 }\n
 \n
-fieldset.editable legend {\n
+#main_content fieldset legend {\n
   padding: 10px 0 0 20px;\n
   font-weight: bold;\n
 }\n
 \n
-fieldset.editable label {\n
+#main_content fieldset label {\n
   padding: 0 10px 0 20px;\n
   float: left;\n
   width: 140px;\n
@@ -379,12 +383,15 @@ fieldset.editable label {\n
   color: #666;\n
 }\n
 \n
-fieldset.editable div.input {\n
-  padding: 0 20px;\n
+#main_content fieldset div.input {\n
+  padding: 0 20px 0 0;\n
+  margin-left:170px;\n
 }\n
 \n
-fieldset.editable.bottom div.input {\n
+#main_content fieldset div.page div.input,\n
+#main_content fieldset.bottom div.input {\n
   padding: 0;\n
+  margin:0\n
 }\n
 \n
 div.editable a > img {\n
@@ -475,7 +482,7 @@ div.input select, div.input textarea {\n
   max-width:450px;\n
 }\n
 \n
-fieldset.editable > div.field {\n
+#main_content fieldset > div.field {\n
   margin:5px 0;\n
 }\n
 \n
