@@ -263,9 +263,11 @@ var addOnChangeEventHandler = function() {\n
 \n
       for (j=0; j<nodes.length; j++) {\n
         if (nodes[j].nodeName == "INPUT" ||\n
-            nodes[j].nodeName == "SELECT" || \n
+            nodes[j].nodeName == "SELECT" ||\n
             nodes[j].nodeName == "TEXTAREA") {\n
-         if (nodes[j].value == "update...") {\n
+            if (nodes[j].value == "update..." ||\n
+                nodes[j].id == "__ac_name" ||\n
+                nodes[j].id == "password") {\n
            // this is a relation field wheel\n
            nodes[j].onclick = function() { changed = false;};\n
           } else {\n
