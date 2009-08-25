@@ -89,14 +89,8 @@
   <tal:block metal:define-macro="checkCurrentPage">\n
     <tr>\n
       <td>assertValue</td>\n
-      <!--<tal:block tal:condition="python: context.TestTool_getSkinName()!=\'Mobile\'">\n
-        <td tal:content="python: \'id=%s_set_page\' % (prefix, )"></td>\n
-      </tal:block>\n
-      <tal:block tal:condition="python: context.TestTool_getSkinName()==\'Mobile\'">\n
-        <td tal:content="python: \'id=%s_page_selection\' % (prefix, )"></td>\n
-      </tal:block> -->\n
-      <td tal:content="python: \'id=%s_set_page\' % (prefix, )"></td>\n
-      <td tal:content="set_page"></td>\n
+      <td tal:content="python: \'id=%s_page_selection\' % (prefix, )"></td>\n
+      <td tal:content="python: \'%d\' % (lines_per_pages*(set_page-1), )"></td>\n
     </tr>\n
   </tal:block>\n
 </tal:block>\n

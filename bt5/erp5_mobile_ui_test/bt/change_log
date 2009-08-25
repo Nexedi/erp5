@@ -1,2 +1,5 @@
+2009-08-25 Mohamadou
+* Refactor erp_ui_test to reduce "If mobile" statments.
+
 2009-04-20 Kazuhiko
 * initial prototype.

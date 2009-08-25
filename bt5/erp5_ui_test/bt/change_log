@@ -1,3 +1,6 @@
+2009-08-25 Mohamadou
+* Refactor erp_ui_test to reduce "If mobile" statments.
+
 2009-08-20 Mohamadou
 * Skip business_template_zuite in mobile ui tests.
 
