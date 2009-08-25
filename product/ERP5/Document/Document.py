@@ -52,6 +52,7 @@ from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 from Products.ZSQLCatalog.SQLCatalog import SQLQuery
 from AccessControl import Unauthorized
 import zope.interface
+import cStringIO
 import string
 from OFS.Image import Pdata
 
@@ -1378,8 +1379,15 @@ class Document(PermanentURLMixIn, XMLObject, UrlMixIn, ConversionCacheMixin, Sna
 
   security.declareProtected(Permissions.ModifyPortalContent, '_setBaseData')
   def _setBaseData(self, data):
-    if data is not None:
-      data = Pdata(data)
+    """
+      XXX - it is really wrong to put this method here since not
+      all documents are subclasses of "File". Instead, there should
+      be a interface for all classes which can convert their data
+      to a base format.
+    """
+    if not isinstance(data, Pdata) and data is not None:
+      file = cStringIO.StringIO(data)
+      data, size = self._read_data(file)
     self._baseSetBaseData(data)
 
   security.declareProtected(Permissions.AccessContentsInformation,
@@ -1394,9 +1402,23 @@ class Document(PermanentURLMixIn, XMLObject, UrlMixIn, ConversionCacheMixin, Sna
 
   security.declareProtected(Permissions.ModifyPortalContent, '_setData')
   def _setData(self, data):
-    if data is not None:
-      data = Pdata(data)
-    self._baseSetData(data)
+    """
+      XXX - it is really wrong to put this method here since not
+      all documents are subclasses of "File". Instead, there should
+      be a interface for all classes which can act as a File.
+    """
+    size = None
+    if not isinstance(data, Pdata) and data is not None:
+      file = cStringIO.StringIO(data)
+      data, size = self._read_data(file)
+    if getattr(self, 'update_date', None) is not None:
+      self.update_data(data, size=size) # We call this method to make sure size is set and caches reset
+    else:
+      self._baseSetData(data) # XXX - It would be better to always use this accessor
+      self.size=size # Using accessor or caching method would be better
+      self.ZCacheable_invalidate()
+      self.ZCacheable_set(None)
+      self.http__refreshEtag()
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getData')
   def getData(self, default=None):
