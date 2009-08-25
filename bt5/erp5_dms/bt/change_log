@@ -1,3 +1,6 @@
+2009-08-25 Kazuhiko
+* add File_viewEditor for text/* documents.
+
 2009-08-21 ivan
 * Use full text search to find related documents (i.e. referencing documents)
 
