@@ -401,22 +401,6 @@ div.editable a > img {\n
   font-weight: bold;\n
 }\n
 \n
-button.sort_button {\n
-  background-color: inherit;\n
-  color: inherit;\n
-  border-width: 0;\n
-  cursor: pointer;\n
-  margin: 0;\n
-  padding: 0;\n
-}\n
-\n
-button.sort_button span {\n
-  color: inherit;\n
-  text-decoration: underline;\n
-  font-size: 62.5% !important;\n
-  font-weight: bold;\n
-}\n
-\n
 /* Popup info window style */\n
 div.search_popup {\n
   background-color: #c3e3df;\n
@@ -542,6 +526,194 @@ div.error > span.error {\n
   margin-left:170px;\n
   font-weight:bold\n
 }\n
+\n
+fieldset.bottom .field label {\n
+  display:none;\n
+}\n
+\n
+/* Default Listbox styling\n
+** TODO: change colors to have better integration in default erp5 web theme.\n
+------------------------------------------------------------------ */\n
+\n
+div#main_content .ListSummary table {\n
+  width: 100%;\n
+  background-color: white;\n
+  padding: .1em;\n
+  margin-top: 1em;\n
+  background: #fff url(erp5-website-field.png) top repeat-x;\n
+  border: 1pt solid #ccc;\n
+  color: #666;\n
+  padding: 2px;\n
+}\n
+\n
+div#main_content .ListContent table {\n
+  margin-bottom: 2em;\n
+  width: 100%;\n
+}\n
+\n
+div#main_content .ListContent td {\n
+  padding: .1em;\n
+  border: 1pt solid #adb9cc;\n
+  vertical-align: top;\n
+}\n
+\n
+div#main_content .ListContent td.Data  {\n
+  background: #adb9cc\n
+}\n
+\n
+div#main_content .ListContent tr.DataA {\n
+  background: #fff\n
+}\n
+\n
+div#main_content .ListContent tr.DataB {\n
+  background: #eee\n
+}\n
+\n
+div#main_content .ListContent table tr:hover {background: #ccc}\n
+\n
+/* Custom web Listbox styling.\n
+** TODO: change colors to have better integration in default erp5 web theme.\n
+------------------------------------------------------------------ */\n
+\n
+div#main_content table.listbox,\n
+div#main_content table.listbox tr,\n
+div#main_content table.listbox td,\n
+div#main_content table.listbox th,\n
+div#main_content table.listbox th button.sort_button {\n
+  border: 0;\n
+  color: #000;\n
+  font-size: 10px !important;\n
+  font-weight: normal;\n
+  margin: 0;\n
+  padding: 0;\n
+}\n
+\n
+div#main_content table.listbox th button.sort_button {\n
+  background-color: inherit;\n
+  cursor: pointer;\n
+}\n
+\n
+/*\n
+button.sort_button {\n
+  color: inherit;\n
+  border-width: 0;\n
+  margin: 0;\n
+  padding: 0;\n
+}\n
+\n
+button.sort_button span {\n
+  color: inherit;\n
+  text-decoration: underline;\n
+  font-size: 62.5% !important;\n
+  font-weight: bold;\n
+}\n
+*/\n
+\n
+div#main_content table.listbox {\n
+  margin-bottom: 1em;\n
+  /* width: 100%; */\n
+  margin:0 20px 1em;\n
+}\n
+\n
+div#main_content table.listbox .right {float: right}\n
+div#main_content table.listbox .left  {float: left}\n
+\n
+div#main_content table.listbox caption,\n
+div#main_content div.searchResultHeader {\n
+  background-color:rgb(175,175,175);\n
+  padding: .2em;\n
+  color:white;\n
+}\n
+\n
+div#main_content table.listbox caption em,\n
+div#main_content div.searchResultHeader em {\n
+  font-weight: bold;\n
+  font-style: normal;\n
+  color:white;\n
+}\n
+\n
+div#main_content table.listbox caption img,\n
+div#main_content div.searchResultHeader img {\n
+  margin:2px 6px 2px 2px;\n
+}\n
+\n
+div#main_content div.searchResultHeader {\n
+  margin:0 20px;\n
+}\n
+\n
+div#main_content table.listbox thead th,\n
+div#main_content table.listbox thead td {\n
+  border-right: 1px #ccc solid;\n
+  text-align: center;\n
+  color: #666;\n
+  background: #ddd;\n
+}\n
+\n
+div#main_content table.listbox thead th:last-child,\n
+div#main_content table.listbox thead td:last-child {\n
+  border-right: none;\n
+}\n
+\n
+div#main_content table.listbox thead th {\n
+  text-transform: capitalize;\n
+  font-variant: small-caps;\n
+}\n
+\n
+div#main_content table.listbox tbody td.externalLink a,\n
+div#main_content table.listbox tbody th.externalLink a {\n
+  text-decoration: none;\n
+  background: transparent url(erp5-website-external-link.png) center right no-repeat;\n
+  padding-right: 15px;\n
+  color: #637dc1;\n
+}\n
+\n
+div#main_content table.listbox tbody td.externalLink a:hover,\n
+div#main_content table.listbox tbody th.externalLink a:hover {\n
+  text-decoration: underline;\n
+  color: #637dc1;\n
+}\n
+\n
+div#main_content table.listbox tbody td, table.listbox tbody th {border-top: 1px solid #eee}\n
+\n
+div#main_content table.listbox td, table.listbox th {\n
+  text-align: left;\n
+  padding: .2em .2em;\n
+}\n
+\n
+div#main_content table.listbox tbody td a,\n
+div#main_content table.listbox tbody td a:hover,\n
+div#main_content table.listbox tbody td a:visited {color: #4343D9}\n
+\n
+div#main_content table.listbox tbody tr {\n
+  background: #fff;\n
+}\n
+\n
+div#main_content table.listbox tbody tr:hover {background: #ccc}\n
+\n
+div#main_content table.listbox tbody span.number, tbody span.date {float: right}\n
+\n
+div#main_content table.listbox tbody .mainLink {\n
+  font-weight: bold;\n
+  display: block;\n
+}\n
+\n
+div#main_content table.listbox tfoot th, table.listbox tfoot td {border-top: 1px solid #999}\n
+\n
+div#main_content table.listbox tfoot td {text-align: right}\n
+\n
+div#main_content table.listbox tfoot .pageNavigation button {\n
+  border: 1px #eee solid;\n
+  background: #fff;\n
+  padding: .2em .4em;\n
+  margin: 0 .1em;\n
+}\n
+\n
+div#main_content table.listbox tfoot .pageNavigation button:hover {\n
+  border: 1px #999 solid;\n
+  text-decoration: none;\n
+  background: #eee;\n
+}\n
+\n
 </tal:block>\n
 
 

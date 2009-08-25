@@ -148,7 +148,7 @@
       </div>\n
 \n
       <!-- CONTENT -->\n
-      <div class="main_content">\n
+      <div id="main_content" class="main_content">\n
         <div class="corner-content-1col-top"></div>                        \n
         <div class="content-1col-nobox">\n
           <div id="transition_message" tal:condition="request/portal_status_message | nothing"\n
