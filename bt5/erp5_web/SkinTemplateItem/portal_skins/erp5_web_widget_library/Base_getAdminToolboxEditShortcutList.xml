@@ -85,33 +85,42 @@ absolute_url = context.absolute_url()\n
 editable_absolute_url = getattr(context, \'editable_absolute_url\', absolute_url)\n
 \n
 # action title based on security\n
-def getActionTitleForContext(context, portal_type):\n
-  if context.portal_membership.checkPermission(\'Modify portal content\', context):\n
-    edit_title = translateString("Edit ${portal_type}", \n
-                                 mapping=dict(portal_type=portal_type))\n
-  else:\n
-    edit_title = translateString("Access ${portal_type} Details",\n
-                                 mapping=dict(portal_type=portal_type))\n
-  return edit_title\n
 \n
 editable_mode = int(request.form.get(\'editable_mode\', \n
                                      request.get(\'editable_mode\', 0)))\n
+edit_permission = context.portal_membership.checkPermission(\'Modify portal content\', context)\n
+\n
+# Append a button to edit the content of the current document for Web Page\n
+if not editable_mode and edit_permission and portal_type == \'Web Page\':\n
+  result.append(dict(\n
+    url = "%s/WebPage_viewEditor?editable_mode:int=1&%s" \n
+            %(editable_absolute_url, http_parameters),\n
+    icon = "%s/%s" % (portal_url, context.getIcon(relative_to_portal=True) or \'file_icon.gif\'),\n
+    title = translateString("Edit ${portal_type} content",\n
+                                 mapping=dict(portal_type=translated_portal_type)),\n
+    label = ""))\n
+\n
 # Append a button to edit the current document\n
 if not editable_mode:\n
-  edit_title = getActionTitleForContext(context, translated_portal_type)\n
+  if edit_permission:\n
+    edit_title = translateString("Edit ${portal_type} details",\n
+                                 mapping=dict(portal_type=translated_portal_type))\n
+  else:\n
+    edit_title = translateString("Access ${portal_type} details",\n
+                                 mapping=dict(portal_type=translated_portal_type))\n
   result.append(dict(\n
     url = "%s/view?editable_mode:int=1&%s" \n
             %(editable_absolute_url, http_parameters),\n
     icon = "%s/%s" % (portal_url, context.getIcon(relative_to_portal=True) or \'file_icon.gif\'),\n
     title = edit_title,\n
-    label = "%s Icon" % translated_portal_type,))\n
+    label = ""))\n
 else: \n
   result.append(dict(\n
     url = "%s/view?editable_mode:int=0&%s" % (absolute_url, http_parameters),\n
     icon = "%s/%s" % (portal_url, context.getIcon(relative_to_portal=True) or \'file_icon.gif\'),\n
     title = translateString("View ${portal_type}", \n
                             mapping=dict(portal_type=translated_portal_type)),\n
-                            label = "%s Icon" % translated_portal_type,))\n
+                            label = ""))\n
 \n
 # Append a button to edit the parent section\n
 if portal_type not in (\'Web Section\', \'Web Site\'): \n
@@ -120,7 +129,7 @@ if portal_type not in (\'Web Section\', \'Web Site\'): \n
     icon = "%s/%s" % (portal_url, current_web_section.getIcon(relative_to_portal=True)),\n
     title = translateString("Edit Parent ${portal_type}",\n
                              mapping=dict(portal_type=current_web_section_translated_portal_type)),\n
-    label = "%s Icon" % current_web_section_translated_portal_type,))\n
+    label = ""))\n
 \n
 # Append all icon buttons\n
 for action in button_action_list:\n
@@ -129,7 +138,7 @@ for action in button_action_list:\n
       url = action[\'url\'].replace(absolute_url, editable_absolute_url),\n
       icon = action[\'icon\'],\n
       title = translateString(action[\'title\']),\n
-      label = "WebDAV Icon",))\n
+      label = ""))\n
 \n
 # Append an exchange button\n
 if len(exchange_action_list):\n
@@ -140,7 +149,7 @@ if len(exchange_action_list):\n
     url = url,\n
     icon  = \'%s/import_export.png\' % portal_url,\n
     title = translateString(\'Import / Export\'),\n
-    label = "Import / Export Icon",))\n
+    label = ""))\n
 \n
 return result\n
 
@@ -193,17 +202,17 @@ return result\n
                             <string>action_dict</string>
                             <string>exchange_action_list</string>
                             <string>button_action_list</string>
-                            <string>getattr</string>
                             <string>portal_url</string>
                             <string>http_parameters</string>
                             <string>absolute_url</string>
+                            <string>getattr</string>
                             <string>editable_absolute_url</string>
-                            <string>getActionTitleForContext</string>
                             <string>int</string>
                             <string>editable_mode</string>
-                            <string>edit_title</string>
+                            <string>edit_permission</string>
                             <string>dict</string>
                             <string>True</string>
+                            <string>edit_title</string>
                             <string>_getiter_</string>
                             <string>action</string>
                             <string>_getitem_</string>
