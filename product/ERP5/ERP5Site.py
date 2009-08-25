@@ -382,7 +382,7 @@ class ERP5Site(FolderMixIn, CMFSite):
       current_worklist_array = sorted_workflow_actions[key]
       if len(current_worklist_array)>0:
         current_worklist_dict = current_worklist_array[0]
-	if current_worklist_dict.has_key("workflow_id"):
+        if current_worklist_dict.has_key("workflow_id"):
           workflow_id = current_worklist_dict["workflow_id"]
       sorted_global_actions.append({'title': key, 'disabled': 1, 'workflow_id': workflow_id})
       sorted_global_actions.extend(sorted_workflow_actions[key])
