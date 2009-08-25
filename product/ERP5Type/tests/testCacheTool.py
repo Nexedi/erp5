@@ -63,6 +63,7 @@ class TestCacheTool(ERP5TypeTestCase):
     self.login()
     self.checkCacheTool()
     self.checkPortalTypes()
+    self.createPersistentMemcachedPlugin()
     self.createCacheFactories()
     self.createCachedMethod()
     transaction.commit()
@@ -89,6 +90,17 @@ class TestCacheTool(ERP5TypeTestCase):
       portal_type = getattr(portal_types, typeinfo_name, None)
       self.assertNotEqual(None, portal_type)
 
+  def createPersistentMemcachedPlugin(self):
+    portal_memcached = self.getPortal().portal_memcached
+    memcached_plugin_id = 'flare'
+    if getattr(portal_memcached, memcached_plugin_id, None) is None:
+      portal_memcached.newContent(portal_type='Memcached Plugin',
+                                  id=memcached_plugin_id,
+                                  url_string='127.0.0.1:12121',
+                                  server_max_key_length=0,
+                                  server_max_value_length=0,
+                                  priority=1)
+
   def createCacheFactories(self):
     portal = self.getPortal()
     portal_caches = portal.portal_caches
@@ -111,6 +123,15 @@ class TestCacheTool(ERP5TypeTestCase):
               portal_type="Distributed Ram Cache", specialise='portal_memcached/default_memcached_plugin' )
       dram_cache_plugin.setIntIndex(0)
 
+    if getattr(portal_caches, 'distributed_persistent_cache_factory', None) is None:
+      ## distributed_ram_cache_factory (to test Distributed Ram Cache Plugin) 
+      dram_cache_factory = portal_caches.newContent(portal_type="Cache Factory",
+                                                    id='distributed_persistent_cache_factory',
+                                                    container=portal_caches)
+      dram_cache_plugin = dram_cache_factory.newContent(
+              portal_type="Distributed Ram Cache", specialise='portal_memcached/flare' )
+      dram_cache_plugin.setIntIndex(0)
+
     if getattr(portal_caches, 'erp5_user_factory', None) is None:
 
       ## erp5_user_factory (to test a combination of all cache plugins)
@@ -130,6 +151,7 @@ class TestCacheTool(ERP5TypeTestCase):
     ## do we have the same structure we created above?
     self.assert_('ram_cache_factory' in CachingMethod.factories)
     self.assert_('distributed_ram_cache_factory' in CachingMethod.factories)
+    self.assert_('distributed_persistent_cache_factory' in CachingMethod.factories)
     self.assert_('erp5_user_factory' in CachingMethod.factories)
 
   def createCachedMethod(self):
@@ -165,6 +187,7 @@ return result
     py_script_obj = getattr(portal, py_script_id)
     for cf_name in ('ram_cache_factory',
                     'distributed_ram_cache_factory',
+                    'distributed_persistent_cache_factory',
                    ):
       my_cache = CachingMethod(py_script_obj,
                                'py_script_obj',
