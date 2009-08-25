@@ -75,12 +75,12 @@ if model is None:\n
 \n
 for category in category_list:\n
   if force or not paysheet.getPropertyList(category):\n
-    v = model.getModelIneritanceEffectiveProperty(paysheet, category)\n
+    v = model.getModelInheritanceEffectiveProperty(paysheet, category)\n
     if v:\n
       new_category_dict[category] = v\n
 \n
 # copy the price_currency into the ressource :\n
-price_currency = model.getModelIneritanceEffectiveProperty(paysheet, \'price_currency\')\n
+price_currency = model.getModelInheritanceEffectiveProperty(paysheet, \'price_currency\')\n
 if price_currency:\n
   new_category_dict[\'resource\'] = price_currency\n
   new_category_dict[\'price_currency\'] = price_currency\n

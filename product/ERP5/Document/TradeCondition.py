@@ -411,8 +411,8 @@ class TradeCondition(Path, Transformation, XMLMatrix):
 
 
     security.declareProtected(Permissions.AccessContentsInformation,
-        'getModelIneritanceEffectiveProperty')
-    def getModelIneritanceEffectiveProperty(self, paysheet, property_name):
+        'getModelInheritanceEffectiveProperty')
+    def getModelInheritanceEffectiveProperty(self, paysheet, property_name):
       """Get a property from an effective model
       """
       v = self.getProperty(property_name)
