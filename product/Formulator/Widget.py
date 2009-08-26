@@ -1280,7 +1280,7 @@ class FloatWidget(TextWidget):
                                       title='Precision',
                                       description=(
       "Number of digits after the decimal point"),
-                                      default=None,
+                                      default='',
                                       required=0)
 
   def format_value(self, field, value):
@@ -1394,7 +1394,7 @@ class FloatWidget(TextWidget):
         query : Passthrough of given value.
     """
     input_style = field.get_value('input_style')
-    precision = field.get_value('precision')      
+    precision = field.get_value('precision')
     if precision not in (None, '') and precision != 0:
       for x in xrange(1, precision):
         input_style += '5'
