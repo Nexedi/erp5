@@ -385,12 +385,15 @@ class IntrospectionTool(LogMixin, BaseTool):
       buildout installer (server level) and build a complex custom
       software home or product home
     """
+    # XXX (rafael) it better use (and extend if needed) the portal_subversions.
+    if self.getSystemSignatureDict()["pysvn"] is None:
+      raise 
     raise NotImplemented 
 
   #
   #   Library signature
   #
-  # XXX this function can be cached to prevent save disk access.
+  # XXX this function can be cached to prevent disk access.
   security.declareProtected(Permissions.ManagePortal, 'getSystemSignatureDict')
   def getSystemSignatureDict(self):
     """
@@ -399,11 +402,16 @@ class IntrospectionTool(LogMixin, BaseTool):
       {
          'python': '2.4.3'
        , 'pysvn': '1.2.3'
+       , 'ERP5' : "5.4.3"       
       }
       NOTE: consider using autoconf / automake tools ?
     """
     def tuple_to_format_str(t):
        return '.'.join([str(i) for i in t])
+    from Products import ERP5 as erp5_product
+    erp5_product_path =  erp5_product.__file__.split("/")[:-1]
+    erp5_version = open("/".join((erp5_product_path) + ["VERSION.txt"])).read().strip()
+    zope_version = open(getConfiguration().softwarehome + "/version.txt").read().strip()
 
     from sys import version_info
     # Get only x.x.x numbers.
@@ -416,8 +424,10 @@ class IntrospectionTool(LogMixin, BaseTool):
       pysvn_version = None
     
     return {
-            "python" : py_version, 
-            "pysvn"  : pysvn_version
+            "python" : py_version , 
+            "pysvn"  : pysvn_version ,
+            "erp5"   : erp5_version.replace("ERP5 ", ""),
+            "zope"   : zope_version.replace("Zope ", "")
            }
 
 InitializeClass(IntrospectionTool)
