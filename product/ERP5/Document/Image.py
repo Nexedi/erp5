@@ -407,6 +407,7 @@ class Image(File, OFSImage):
       newimg = StringIO()
       
       parameter_list = ['convert']
+      parameter_list.extend(['-colorspace', 'RGB'])
       if resolution:
         parameter_list.extend(['-density', '%sx%s' % (resolution, resolution)])
       parameter_list.extend(['-quality', str(quality)])
