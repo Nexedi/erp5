@@ -76,7 +76,7 @@ class BusinessTemplate:
       'mode'        : 'w',
       'default'     : () },
     { 'id'          : 'template_workflow_id',
-      'description' : 'A list of ids of skins used by this template',
+      'description' : 'A list of ids of workflows used by this template',
       'type'        : 'lines',
       'mode'        : 'w',
       'default'     : () },
