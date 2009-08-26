@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2005 Nexedi SARL and Contributors. All Rights Reserved.
@@ -209,12 +210,7 @@ class OOoTemplate(ZopePageTemplate):
         memory_file.seek(0)
         self.OLE_documents_zipstring = memory_file.read()
       self.content_type = builder.getMimeType()
-      #get XSL stylesheet from portal_skins
-      xsl_dtml = getattr(self, 'ERP5OOoTemplate_ooo2zpt', None)
-      xsl_content = None
-      if xsl_dtml is not None:
-        xsl_content = xsl_dtml()
-      file = builder.prepareContentXml(self.ooo_xml_file_id, xsl_content)
+      file = builder.prepareContentXml(self.ooo_xml_file_id)
     return ZopePageTemplate.pt_upload(self, REQUEST, file)
 
   security.declareProtected('Change Page Templates', 'pt_edit')
