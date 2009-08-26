@@ -381,7 +381,7 @@ class ERP5Site(FolderMixIn, CMFSite):
         sorted_workflow_actions[workflow_title].append(action)
       else:
         other_global_actions.append(action)
-    for key in sorted(sorted_workflow_actions.keys()):
+    for key in sorted(sorted_workflow_actions):
       sorted_global_actions.extend(sorted_workflow_actions[key])
     sorted_global_actions.append({'title': 'Others', 'disabled': 1})
     sorted_global_actions.extend(other_global_actions)
