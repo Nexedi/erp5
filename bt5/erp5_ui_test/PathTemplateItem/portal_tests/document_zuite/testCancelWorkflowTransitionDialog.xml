@@ -82,7 +82,7 @@
   <td>Dummy Workflow Action</td>\n
 </tr>\n
 <tr>\n
-  <td>assertValue</td>\n
+  <td>assertText</td>\n
   <td>name=Base_cancel:method</td>\n
   <td>Cancel Action</td>\n
 </tr>\n
