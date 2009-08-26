@@ -57,7 +57,7 @@
 \'\'\'\n
 from Products.ERP5Type.Document import newTempOOoDocument\n
 td = newTempOOoDocument(context, \'testOOo\')\n
-td.edit(base_content_type=base_content_type, base_data=1)\n
+td.edit(base_content_type=base_content_type, base_data=\'not empty\')\n
 return  [(\'\', \'\')] + td.getTargetFormatItemList()\n
 </string> </value>
         </item>
