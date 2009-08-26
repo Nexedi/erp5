@@ -648,6 +648,12 @@ div#main_content div.searchResultHeader {\n
   margin:0 20px;\n
 }\n
 \n
+div#main_content div.searchBar,\n
+div#main_content div.extendedSearchBar {\n
+  text-align:center;\n
+  margin:0 0 0.8em;\n
+}\n
+\n
 div#main_content table.listbox thead th,\n
 div#main_content table.listbox thead td {\n
   border-right: 1px #ccc solid;\n

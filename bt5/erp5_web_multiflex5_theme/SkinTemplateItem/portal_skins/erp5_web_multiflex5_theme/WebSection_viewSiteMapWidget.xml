@@ -1,0 +1,96 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>web_site_user_ram_cache</string> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<tal:block replace="nothing">\n
+  <!--\n
+  This widget is quite similar to WebSection_viewNavigationWidget, but this does not contain\n
+  any IE6-only hack, but just uses normal unordered lists.\n
+  -->\n
+</tal:block>\n
+\n
+<tal:block tal:define="current_web_site python:request.get(\'current_web_site\', here);\n
+                       menu_item_list python:current_web_site.WebSection_getSiteMapTree(depth=3);\n
+                       web_site_url python:current_web_site.absolute_url()">\n
+  <ul>\n
+    <li tal:repeat="menu_item menu_item_list">\n
+      <tal:block tal:condition="not:nocall:menu_item/subsection"><a tal:attributes="href menu_item/url" tal:content="menu_item/translated_title">Menu</a></tal:block>\n
+      <tal:block tal:condition="nocall:menu_item/subsection">\n
+      <a tal:attributes="href menu_item/url"><tal:block tal:replace="menu_item/translated_title">Drop-down Menu</tal:block></a>\n
+      <ul metal:define-macro="generateTree">\n
+        <li tal:repeat="item menu_item/subsection">\n
+          <a href="#" tal:attributes="href item/url" tal:content="item/translated_title">Menu subitem 1</a>\n
+          <tal:recurse define="menu_item item" tal:condition="nocall:item/subsection">\n
+            <metal:call use-macro="here/WebSection_viewNavigationWidget/macros/generateTree" />\n
+          </tal:recurse>\n
+        </li>\n
+      </ul>\n
+      </tal:block>\n
+    </li>\n
+  </ul>\n
+</tal:block>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>WebSection_viewSiteMapWidget</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

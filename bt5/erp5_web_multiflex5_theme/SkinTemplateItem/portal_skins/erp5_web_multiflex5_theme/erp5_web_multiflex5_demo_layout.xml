@@ -120,6 +120,7 @@
                         <string>rss_box</string>
                         <string>language_box</string>
                         <string>global_navigation_box</string>
+                        <string>sitemap</string>
                       </list>
                     </value>
                 </item>
