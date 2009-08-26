@@ -195,7 +195,7 @@ class TestAdvancedInvoice(TestSaleInvoiceMixin, ERP5TypeTestCase):
     packing_list = sequence.get('packing_list')
     invoice = packing_list.getCausalityRelatedValue(portal_type=self.invoice_portal_type)
     builder_list = invoice.getBuilderList()
-    self.assertEquals(2, len(builder_list))
+    self.assertEquals(1, len(builder_list))
     divergence_list = invoice.getDivergenceList()
     for builder in builder_list:
       builder.solveDivergence(invoice.getRelativeUrl(),
@@ -255,7 +255,7 @@ class TestAdvancedInvoice(TestSaleInvoiceMixin, ERP5TypeTestCase):
  
     divergence_list = invoice.getDivergenceList()
     builder_list = invoice.getBuilderList()
-    self.assertEquals(2, len(builder_list))
+    self.assertEquals(1, len(builder_list))
     for builder in builder_list:
       builder.solveDivergence(invoice.getRelativeUrl(),
                               divergence_to_adopt_list=divergence_list)
