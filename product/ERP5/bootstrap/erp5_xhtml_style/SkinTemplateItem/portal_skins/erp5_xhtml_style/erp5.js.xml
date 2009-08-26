@@ -182,14 +182,22 @@ function fixLeftRightHeightAndFocus(fix_height) {\n
   autoFocus();\n
 }\n
 \n
-// This function can be used to catch ENTER pressed in an input \n
+// This function can be used to catch ENTER pressed in an input\n
 // and modify respective main form action\n
-function submitFormOnEnter(event, form, method_name){\n
+// if clear_changed_flag is set to true, changed will be set to false, so no\n
+// warning message about unsaved changes will be displayed\n
+function submitFormOnEnter(event, form, method_name, clear_changed_flag){\n
+  if (clear_changed_flag == null){\n
+    clear_changed_flag = false;\n
+  }\n
   if(event.keyCode == 13){\n
     if (form == \'main_form\') {\n
       form = getElement(form); // backward compatibility\n
     }\n
     form.action = method_name;\n
+    if (clear_changed_flag==true) {\n
+      changed = false;\n
+    }\n
     form.submit();\n
   }\n
 }\n
@@ -252,7 +260,7 @@ This event handler set a dirty flag which cause a warning\n
 while leaving the page, unless leaving by:\n
     - saving (see clickSaveButton function from this file)\n
     - clicking a relation field wheel\n
-    - a dialog action\n
+    - clicking on a input with type submit\n
 */\n
 var addOnChangeEventHandler = function() {\n
   var master = document.getElementById("master");\n
@@ -266,9 +274,9 @@ var addOnChangeEventHandler = function() {\n
             nodes[j].nodeName == "SELECT" ||\n
             nodes[j].nodeName == "TEXTAREA") {\n
             if (nodes[j].value == "update..." ||\n
-                nodes[j].id == "__ac_name" ||\n
-                nodes[j].id == "password") {\n
-           // this is a relation field wheel\n
+                (nodes[j].nodeName == "INPUT" &&\n
+                nodes[j].type == \'submit\')) {\n
+             // this is a relation field wheel or a submit form button\n
            nodes[j].onclick = function() { changed = false;};\n
           } else {\n
             if (!nodes[j].onchange) {\n
@@ -278,7 +286,7 @@ var addOnChangeEventHandler = function() {\n
         }\n
       }\n
     }\n
-  } \n
+  }\n
 }\n
 \n
 addLoadEvent(addOnChangeEventHandler);\n
