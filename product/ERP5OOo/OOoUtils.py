@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2003-2005 Nexedi SARL and Contributors. All Rights Reserved.
@@ -44,19 +45,13 @@ except ImportError:
 import imghdr
 import random
 from Products.ERP5Type import Permissions
-from zLOG import LOG, INFO
-from zLOG import PROBLEM
+from zLOG import LOG, INFO, PROBLEM
 
 from OFS.Image import Pdata
 
-try:
-  from Ft.Xml import Parse
-except ImportError:
-  LOG('OOoUtils', INFO, "Can't import Parse")
-  class Parse:
-    def __init__(self, *args, **kw):
-      raise ImportError, "Sorry, it was not possible to import Ft library, python2.4-4Suite-XML is not installed"
-
+from lxml import etree
+from lxml.etree import Element, XMLSyntaxError
+from copy import deepcopy
 
 class CorruptedOOoFile(Exception): pass
 
@@ -142,7 +137,7 @@ class OOoBuilder(Implicit):
   def getMimeType(self):
     return self.extract('mimetype')
 
-  def prepareContentXml(self, ooo_xml_file_id, xsl_content=None):
+  def prepareContentXml(self, ooo_xml_file_id):
     """
       extracts content.xml text and prepare it :
         - add tal namespace
@@ -150,44 +145,21 @@ class OOoBuilder(Implicit):
     """
     content_xml = self.extract(ooo_xml_file_id)
     output = StringIO()
-    try:
-      from lxml import etree
-      from lxml.etree import Element
-      from copy import deepcopy
-      content_doc = etree.XML(content_xml)
-      if xsl_content is not None:
-        stylesheet_doc = etree.XML(xsl_content)
-        stylesheet = etree.XSLT(stylesheet_doc)
-        content_doc = stylesheet(content_doc)
-      root = content_doc.getroot()
-      #Declare zope namespaces
-      NSMAP = {'tal': 'http://xml.zope.org/namespaces/tal',
-               'i18n': 'http://xml.zope.org/namespaces/i18n',
-               'metal': 'http://xml.zope.org/namespaces/metal'}
-      NSMAP.update(root.nsmap)
-      new_root = Element(root.tag, nsmap=NSMAP)
-      new_root.attrib.update(dict(root.attrib))
-      new_root.attrib.update({'{%s}attributes' % NSMAP.get('tal'): 'dummy python:request.RESPONSE.setHeader(\'Content-Type\', \'text/html;; charset=utf-8\')'})
-      for child in root.getchildren():
-        new_root.append(deepcopy(child))
-      return etree.tostring(new_root, encoding='utf-8', xml_declaration=True,
-                            pretty_print=True)
-    except ImportError:
-      document = Parse(content_xml)
-      document_element = document.documentElement
-      tal = document.createAttributeNS('http://www.w3.org/2000/xmlns/', 'xmlns:tal')
-      tal.value = u'http://xml.zope.org/namespaces/tal'
-      i18n = document.createAttributeNS('http://www.w3.org/2000/xmlns/', 'xmlns:i18n')
-      i18n.value = u'http://xml.zope.org/namespaces/i18n'
-      metal = document.createAttributeNS('http://www.w3.org/2000/xmlns/', 'xmlns:metal')
-      metal.value = u'http://xml.zope.org/namespaces/metal'
-      document_element.setAttributeNodeNS(tal)
-      document_element.setAttributeNodeNS(i18n)
-      document_element.setAttributeNodeNS(metal)
-      document_element.setAttributeNS(None, 'tal:attributes', 'dummy python:request.RESPONSE.setHeader("Content-Type", "text/html;; charset=utf-8")')
-      from xml.dom.ext import PrettyPrint
-      PrettyPrint(document_element, output)
-      return output.getvalue()
+    content_doc = etree.XML(content_xml)
+    root = content_doc.getroot()
+    #Declare zope namespaces
+    NSMAP = {'tal': 'http://xml.zope.org/namespaces/tal',
+             'i18n': 'http://xml.zope.org/namespaces/i18n',
+             'metal': 'http://xml.zope.org/namespaces/metal'}
+    NSMAP.update(root.nsmap)
+    new_root = Element(root.tag, nsmap=NSMAP)
+    new_root.attrib.update(dict(root.attrib))
+    new_root.attrib.update({'{%s}attributes' % NSMAP.get('tal'): 'dummy python:request.RESPONSE.setHeader(\'Content-Type\', \'text/html;; charset=utf-8\')'})
+    for child in root.getchildren():
+      new_root.append(deepcopy(child))
+    return etree.tostring(new_root, encoding='utf-8', xml_declaration=True,
+                          pretty_print=True)
+
 
   def addFileEntry(self, full_path, media_type, content=None):
       """ Add a file entry to the manifest and possibly is content """
@@ -250,7 +222,6 @@ class OOoParser(Implicit):
     self.oo_styles_dom  = None
     self.oo_files = {}
     self.pictures = {}
-    self.ns = {}
     self.filename = None
 
   def openFromString(self, text_content):
@@ -279,17 +250,8 @@ class OOoParser(Implicit):
     oo_unzipped.close()
 
     # Get the main content and style definitions
-    self.oo_content_dom = Parse(self.oo_files["content.xml"])
-    self.oo_styles_dom  = Parse(self.oo_files["styles.xml"])
-
-    # Create a namespace table
-    xpath = './/*[name() = "office:document-styles"]'
-    doc_ns = self.oo_styles_dom.xpath(xpath)
-    for i in range(doc_ns[0].attributes.length)[1:]:
-        if doc_ns[0].attributes.item(i).nodeType == Node.ATTRIBUTE_NODE:
-            name = doc_ns[0].attributes.item(i).name
-            if name[:5] == "xmlns":
-                self.ns[name[6:]] = doc_ns[0].attributes.item(i).value
+    self.oo_content_dom = etree.XML(self.oo_files["content.xml"])
+    self.oo_styles_dom  = etree.XML(self.oo_files["styles.xml"])
 
   def getFilename(self):
     """
@@ -340,11 +302,8 @@ class OOoParser(Implicit):
     """
       Retrieve every spreadsheets from the document and get they DOM tree
     """
-    spreadsheets = []
-    # List all spreadsheets
-    for table in self.oo_content_dom.xpath('.//*[name() = "table:table"]'):
-      spreadsheets.append(table)
-    return spreadsheets
+    find_path = './/{%s}table' % self.oo_content_dom.nsmap['table']
+    return self.oo_content_dom.findall(find_path)
 
   def getPlainSpreadsheetsMapping(self, no_empty_lines=False, normalize=True):
     """
@@ -363,22 +322,22 @@ class OOoParser(Implicit):
     """
     spreadsheets = []
     # List all embedded spreadsheets
-    emb_objects = self.oo_content_dom.xpath('.//*[name() = "draw:object"]')
+    find_path = './/{%s}object' % self.oo_content_dom.nsmap['draw']
+    emb_objects = self.oo_content_dom.findall(find_path)
     for embedded in emb_objects:
-        document = embedded.getAttributeNS(self.ns["xlink"], "href")
-        if document:
-            try:
-                
-                object_content = Parse(self.oo_files[document[3:] + '/content.xml'])
-                xpath = './/*[name() = "table:table"]'
-                tables = self.oo_content_dom.xpath(xpath)
-                if tables:
-                    for table in tables:
-                        spreadsheets.append(table)
-                else: # XXX: insert the link to OLE document ?
-                    pass
-            except:
-                pass
+      document = embedded.get('{%s}href' % embedded.nsmap['xlink'])
+      if document:
+        try:
+          object_content = etree.XML(self.oo_files[document[3:] + '/content.xml'])
+          find_path = './/{%s}table' % self.oo_content_dom.nsmap['table']
+          table_list = self.oo_content_dom.findall(find_path)
+          if table_list:
+            for table in table_list:
+              spreadsheets.append(table)
+          else: # XXX: insert the link to OLE document ?
+            pass
+        except XMLSyntaxError:
+          pass
     return spreadsheets
 
   def getEmbeddedSpreadsheetsMapping(self, no_empty_lines=False, normalize=True):
@@ -397,20 +356,22 @@ class OOoParser(Implicit):
       This method convert an OpenOffice spreadsheet to a simple table.
       This code is based on the oo2pt tool (http://cvs.sourceforge.net/viewcvs.py/collective/CMFReportTool/oo2pt).
     """
-    if spreadsheet == None or spreadsheet.nodeName != 'table:table':
+    if spreadsheet is None or \
+      spreadsheet.tag != '{%s}table' % spreadsheet.nsmap['table']:
       return None
 
     table = []
 
     # Get the table name
-    table_name = spreadsheet.getAttributeNS(self.ns["table"], "name")
+    table_name = spreadsheet.get('{%s}name' % spreadsheet.nsmap["table"])
 
     # Scan table and store usable informations
-    for line in spreadsheet.xpath('.//*[name() = "table:table-row"]'):
+    find_path = './/{%s}table-row' % spreadsheet.nsmap['table']
+    for line in spreadsheet.findall(find_path):
 
       # TODO : to the same as cell about abusive repeated lines
 
-      line_group_found = line.getAttributeNS(self.ns["table"], "number-rows-repeated")
+      line_group_found = line.get('{%s}number-rows-repeated' % line.nsmap["table"])
       if not line_group_found:
         lines_to_repeat = 1
       else:
@@ -420,7 +381,8 @@ class OOoParser(Implicit):
         table_line = []
 
         # Get all cells
-        cells = line.xpath('.//*[name() = "table:table-cell"]')
+        find_path = './/{%s}table-cell' % line.nsmap['table']
+        cells = line.findall(find_path)
         cell_index_range = range(len(cells))
 
         for cell_index in cell_index_range:
@@ -434,11 +396,11 @@ class OOoParser(Implicit):
           #   can be found in OOo documents : <table:table-cell table:number-columns-repeated='246'/>
           # This is bad because it create too much irrevelent content that slow down the process
           # So it's a good idea to break the loop in this case
-          if len(cell.childNodes) == 0 and cell_index == cell_index_range[-1]:
+          if len(cell) == 0 and cell_index == cell_index_range[-1]:
             break
 
           # Handle cells group
-          cell_group_found = cell.getAttributeNS(self.ns["table"], "number-columns-repeated")
+          cell_group_found = cell.get('{%s}number-columns-repeated' % cell.nsmap['table'])
           if not cell_group_found:
             cells_to_repeat = 1
           else:
@@ -448,21 +410,19 @@ class OOoParser(Implicit):
           for j in range(cells_to_repeat):
             # Get the cell content
             cell_data = None
-            
-            value_type = None
-            # value-type and value attributes can be in table or office
-            # namespaces, so we use local-name
-            value_type_attribute_list = cell.xpath('./@*[local-name()="value-type"]')
-            if value_type_attribute_list:
-              value_type = value_type_attribute_list[0].value
-            if value_type == 'date':
-              cell_data = cell.xpath('./@*[local-name()="date-value"]')[0].value
-            elif value_type == 'time':
-              cell_data = cell.xpath('./@*[local-name()="time-value"]')[0].value
-            elif value_type in ('float', 'percentage', 'currency'):
-              cell_data = cell.xpath('./@*[local-name()="value"]')[0].value
-            else:
-              text_tags = cell.xpath('./*[name() = "text:p"]')
+            attribute_type_mapping = {'date': 'date-value',
+                                      'time': 'time-value',
+                                      'float': 'value',
+                                      'percentage': 'value',
+                                      'currency': 'value'}
+            # Depending of odf version, value-type and value attributes can be in
+            # table or office namespaces, so we use local-name.
+            value_type = str(cell.xpath('string(@*[local-name()="value-type"])'))
+            if value_type in attribute_type_mapping:
+              xpath = '@*[local-name()="%s"]' % attribute_type_mapping[value_type]
+              cell_data = str(cell.xpath(xpath)[0])
+            else: # read text nodes
+              text_tags = cell.findall('./{%s}p' % cell.nsmap['text'])
               if len(text_tags):
                 cell_data = ''.join([text.xpath('string(.)')
                                      for text in text_tags])
@@ -474,13 +434,13 @@ class OOoParser(Implicit):
         if no_empty_lines:
           empty_cell = 0
           for table_cell in table_line:
-            if table_cell == None:
+            if table_cell is None:
               empty_cell += 1
           if empty_cell == len(table_line):
             table_line = None
 
         # Add the line to the table
-        if table_line != None:
+        if table_line is not None:
           table.append(table_line)
         else:
           # If the line is empty here, the repeated line will also be empty, so
@@ -493,9 +453,9 @@ class OOoParser(Implicit):
     # Get a homogenized table
     if normalize:
       table_size = self._getTableSizeDict(new_table)
-      new_table = self._getNormalizedBoundsTable( table  = new_table
-                                                , width  = table_size['width']
-                                                , height = table_size['height']
+      new_table = self._getNormalizedBoundsTable( table=new_table
+                                                , width=table_size['width']
+                                                , height=table_size['height']
                                                 )
     return {table_name: new_table}
 
