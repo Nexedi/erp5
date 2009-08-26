@@ -6543,9 +6543,6 @@ msgstr "Feuille de paye"
 msgid "Pay sheet calculation done."
 msgstr "Calcul de feuille de salaire effectué."
 
-msgid "Payslip Order"
-msgstr "Ordre d'affichage sur la fiche de paye"
-
 msgid "Payable"
 msgstr "Dettes"
 
@@ -6601,6 +6598,9 @@ msgstr "Rapport des taxes sur salaires"
 #: [Glossary term 11672]
 msgid "Payslip"
 msgstr "Bulletin de paie"
+
+msgid "Payslip Order"
+msgstr "Ordre d'affichage sur la fiche de paye"
 
 msgid "Pending"
 msgstr "En attente de traitement"
@@ -11564,6 +11564,9 @@ msgstr "Vous avez été déconnecté avec succès."
 
 msgid "You have been logged out. Thank you for using this website."
 msgstr "Vous avez été déconnecté avec succès. Merci d'avoir utilisé ce site internet."
+
+msgid "You have unsaved changes"
+msgstr "Vous avez des changements non enregistrés"
 
 msgid "You selected an item that was not in the list."
 msgstr "Cet élément n'est pas dans la liste"
