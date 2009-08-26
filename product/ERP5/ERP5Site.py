@@ -369,22 +369,19 @@ class ERP5Site(FolderMixIn, CMFSite):
     other_global_actions = []
     for action in action_list:
       action['disabled'] = 0
-      if action.has_key('workflow_title'):
-        if not sorted_workflow_actions.has_key(action['workflow_title']):
-          sorted_workflow_actions[action['workflow_title']] = []
-        sorted_workflow_actions[action['workflow_title']].append(action)
+      workflow_title = action.get('workflow_title', None)
+      if workflow_title is not None:
+        if not sorted_workflow_actions.has_key(workflow_title):
+          sorted_workflow_actions[workflow_title] = [
+            {'title':workflow_title,
+             'disabled':1,
+             'workflow_id':action['workflow_id']
+             }
+            ]
+        sorted_workflow_actions[workflow_title].append(action)
       else:
         other_global_actions.append(action)
-    workflow_title_list = sorted_workflow_actions.keys()
-    workflow_title_list.sort()
-    for key in workflow_title_list:
-      workflow_id = ""
-      current_worklist_array = sorted_workflow_actions[key]
-      if len(current_worklist_array)>0:
-        current_worklist_dict = current_worklist_array[0]
-        if current_worklist_dict.has_key("workflow_id"):
-          workflow_id = current_worklist_dict["workflow_id"]
-      sorted_global_actions.append({'title': key, 'disabled': 1, 'workflow_id': workflow_id})
+    for key in sorted(sorted_workflow_actions.keys()):
       sorted_global_actions.extend(sorted_workflow_actions[key])
     sorted_global_actions.append({'title': 'Others', 'disabled': 1})
     sorted_global_actions.extend(other_global_actions)
