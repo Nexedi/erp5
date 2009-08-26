@@ -98,7 +98,6 @@ for paysheet_line in paysheet_line_list:\n
   previous_share = None\n
   indice = 0\n
 \n
-  object_dict = {}\n
   if cartesian_product == [[]] or cartesian_product == []:\n
     params = {\n
                   \'base\':paysheet_line.getTotalPrice(),\n
@@ -110,6 +109,7 @@ for paysheet_line in paysheet_line_list:\n
     line_list.append(paysheet_line.asContext(**params))\n
     continue\n
 \n
+  object_dict = {}\n
   for product in cartesian_product:\n
     indice += 1\n
     share_dict = {}\n
@@ -153,6 +153,26 @@ for paysheet_line in paysheet_line_list:\n
       object_dict[slice].update(share_dict)\n
     else:\n
       object_dict[slice].update(**share_dict)\n
+\n
+  if not object_dict:\n
+    # when the variation categories are set, but no cells.\n
+    slice_title = None\n
+    salary_range_list = [category for category in paysheet_line.getVariationCategoryList()\n
+                                  if category.startswith(\'salary_range\')]\n
+    if salary_range_list:\n
+      salary_range = portal.portal_categories.restrictedTraverse(salary_range_list[0])\n
+      slice_title = salary_range.getShortTitle() or salary_range.getTitle()\n
+\n
+    params = {\n
+      \'slice\': slice_title,\n
+      \'base\': paysheet_line.getTotalPrice(),\n
+      \'base_contribution_list\': base_contribution_list,\n
+      \'base_application_list\': base_application_list,\n
+      \'service\': service is not None and\\\n
+                 service.getId() or \'\',\n
+      \'causality\': causality,}\n
+    line_list.append(paysheet_line.asContext(**params))\n
+    continue\n
 \n
 #  print pprint.pformat(object_dict)\n
 \n
@@ -266,9 +286,9 @@ return line_list\n
                             <string>cartesian_product</string>
                             <string>previous_share</string>
                             <string>indice</string>
-                            <string>object_dict</string>
                             <string>params</string>
                             <string>_apply_</string>
+                            <string>object_dict</string>
                             <string>product</string>
                             <string>_inplacevar_</string>
                             <string>share_dict</string>
@@ -281,6 +301,9 @@ return line_list\n
                             <string>_getitem_</string>
                             <string>slice</string>
                             <string>slice_title</string>
+                            <string>category</string>
+                            <string>salary_range_list</string>
+                            <string>salary_range</string>
                             <string>object_key</string>
                             <string>sortByTitleAscending</string>
                             <string>sortByTitleDescending</string>
