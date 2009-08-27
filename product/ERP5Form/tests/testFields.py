@@ -140,6 +140,14 @@ class TestFloatField(unittest.TestCase):
     self.field.values['precision'] = 2
     self.field.values['editable'] = 0
     self.assertEquals('1&nbsp;000.00', self.field.render(1000))
+
+  def test_render_dict(self):
+    self.field.values['input_style'] = '-1 234.5'
+    self.field.values['precision'] = 4
+    self.assertEquals(dict(query=0.12345,
+                           format='0.0000',
+                           type='float'),
+                      self.field.render_dict(0.12345))
   
   def test_render_string_value(self):
     self.field.values['precision'] = 2

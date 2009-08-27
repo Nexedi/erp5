@@ -1417,17 +1417,19 @@ class FloatWidget(TextWidget):
                 format of provided value.
         query : Passthrough of given value.
     """
-    input_style = field.get_value('input_style')
     precision = field.get_value('precision')
-    if precision not in (None, '') and precision != 0:
-      for x in xrange(1, precision):
-        input_style += '5'
-    else:
-      input_style = input_style.split('.')[0]
+    format = '0'
+    if precision:
+      format = '0.'
+      # in 'format', the only important thing is the number of decimal places,
+      # so we add some places until we reach the precision defined on the
+      # field.
+      for x in xrange(0, precision):
+        format += '0'
     if isinstance(value, unicode):
       value = value.encode(field.get_form_encoding())
     return {'query': value,
-            'format': input_style,
+            'format': format,
             'type': 'float'}
 
 FloatWidgetInstance = FloatWidget()
