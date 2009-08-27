@@ -112,6 +112,21 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
             new_selection.append(skin_id)
         ps.manage_skinLayers(skinpath=tuple(new_selection),
                              skinname=skin_name, add_skin=1)
+    if 'erp5_static' in self.getSkinsTool().objectIds():
+      self.getSkinsTool().manage_delObjects(['erp5_static'])
+      ps = self.getSkinsTool()
+      for skin_name, selection in ps.getSkinPaths():
+        new_selection = []
+        selection = selection.split(',')
+        for skin_id in selection:
+          if skin_id != 'erp5_static':
+            new_selection.append(skin_id)
+        ps.manage_skinLayers(skinpath=tuple(new_selection),
+                             skinname=skin_name, add_skin=1)
+
+    if 'Foo' in self.getSkinsTool().getSkinSelections():
+      self.getSkinsTool().manage_skinLayers(chosen=('Foo',), del_skin=1)
+
     if 'Geek Object' in self.getTypeTool().objectIds():
       self.getTypeTool().manage_delObjects(['Geek Object', 'Geek Module'])
     if 'geek_module' in self.getPortal().objectIds():
@@ -612,6 +627,23 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
       if 'erp5_geek' not in selection:
         selection.append('erp5_geek')
       ps.manage_skinLayers(skinpath = tuple(selection), skinname = skin_name, add_skin = 1)
+
+  def stepCreateStaticSkinFolder(self, sequence=None, sequence_list=None, **kw):
+    """
+    Create a skin folder not managed by the bt5
+    """
+    ps = self.getSkinsTool()
+    ps.manage_addProduct['OFSP'].manage_addFolder('erp5_static')
+    skin_folder = ps._getOb('erp5_static', None)
+    self.failUnless(skin_folder is not None)
+    sequence.edit(static_skin_folder_id=skin_folder.getId())
+    # add skin in layers
+    for skin_name, selection in ps.getSkinPaths():
+      selection = selection.split(',')
+      if 'erp5_static' not in selection:
+        selection.append('erp5_static')
+      ps.manage_skinLayers(skinpath=tuple(selection), skinname=skin_name, 
+                           add_skin=1)
 
   def stepCreateSkinSubFolder(self, sequence=None, sequence_list=None, **kw):
     ps = self.getSkinsTool()
@@ -4532,6 +4564,24 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
           'business_template_registered_skin_selections', ('Foo',),
           type='tokens')
 
+  def stepCreateSkinSelection(self, sequence=None, **kw):
+    ps = self.getSkinsTool()
+    ps.manage_skinLayers(skinpath=('erp5_core',), skinname='Foo', add_skin=1)
+
+  def stepSetStaticSkinFolderRegistredSelections(self, sequence=None, **kw):
+    ps = self.getSkinsTool()
+    skin_id = sequence.get('static_skin_folder_id')
+    skin_folder = ps._getOb(skin_id, None)
+    skin_folder._setProperty(
+          'business_template_registered_skin_selections', ('Foo',),
+          type='tokens')
+    selection = ps.getSkinPath('Foo')
+    selection = selection.split(',')
+    if skin_id not in selection:
+      selection.append(skin_id)
+      ps.manage_skinLayers(skinpath=tuple(selection), 
+                           skinname='Foo', add_skin=1)
+
   def stepCheckSkinSelectionAdded(self, sequence=None, **kw):
     ps = self.getSkinsTool()
     skin_id = sequence.get('skin_folder_id')
@@ -4543,6 +4593,20 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     self.assertTrue(skin_id in layers, layers)
     self.assertTrue('erp5_core' in layers, layers)
     self.assertFalse('erp5_xhtml_style' in layers, layers)
+
+  def stepCheckStaticSkinSelection(self, sequence=None, **kw):
+    ps = self.getSkinsTool()
+    skin_id = sequence.get('skin_folder_id')
+    static_skin_id = sequence.get('static_skin_folder_id')
+    skin_paths = ps.getSkinPaths()
+    # a new skin selection is added
+    self.assertTrue('Foo' in ps.getSkinSelections())
+    # and it contains good layers
+    layers = ps.getSkinPath('Foo').split(',')
+    self.assertTrue(skin_id in layers, layers)
+    self.assertTrue('erp5_core' in layers, layers)
+    self.assertFalse('erp5_xhtml_style' in layers, layers)
+    self.assertTrue(static_skin_id in layers, layers)
 
   def test_33_BusinessTemplateWithNewSkinSelection(self, quiet=quiet,
                                                         run=run_all_test):
@@ -5217,6 +5281,13 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     """
     self.assertTrue('Foo' not in self.portal.portal_skins.getSkinSelections())
 
+  def stepCheckSkinSelectionNotRemoved(self, sequence=None, 
+                                       sequence_list=None, **kw):
+    """
+    Check that a skin selection has not been removed.
+    """
+    self.assertTrue('Foo' in self.portal.portal_skins.getSkinSelections())
+
   def stepUserDisableSkinSelectionRegistration(self, sequence=None, sequence_list=None, **kw):
     """
     Simulate User disabling skin registration from UI.
@@ -5353,6 +5424,36 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CheckSkinSelectionAdded \
                        UninstallBusinessTemplate \
                        CheckSkinSelectionRemoved \
+                       '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self, quiet=quiet)
+
+  def test_158_BusinessTemplateSkinSelectionRemoveOnlyIfUnused(self, quiet=quiet,
+                                                               run=run_all_test):
+    if not run: return
+    if not quiet:
+      message = 'Test Business Template Uninstall With an used Skin Selection'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ', 0, message)
+    sequence_list = SequenceList()
+    sequence_string = 'CreateSkinFolder \
+                       CreateStaticSkinFolder \
+                       CreateSkinSelection \
+                       SetSkinFolderRegistredSelections \
+                       SetStaticSkinFolderRegistredSelections \
+                       CreateNewBusinessTemplate \
+                       UseExportBusinessTemplate \
+                       AddSkinFolderToBusinessTemplate \
+                       BuildBusinessTemplate \
+                       SaveBusinessTemplate \
+                       RemoveSkinFolder \
+                       ImportBusinessTemplate \
+                       UseImportBusinessTemplate \
+                       InstallBusinessTemplate \
+                       Tic \
+                       CheckStaticSkinSelection \
+                       UninstallBusinessTemplate \
+                       CheckSkinSelectionNotRemoved \
                        '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)

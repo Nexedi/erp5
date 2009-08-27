@@ -966,11 +966,25 @@ class ObjectTemplateItem(BaseTemplateItem):
         if trash and trashbin is not None:
           self.portal_trash.backupObject(trashbin, container_path, object_id, save=1, keep_subobjects=1)
         if container.meta_type == 'CMF Skins Tool':
-          # we are removing a skin folder, check and remove if registered skin selection
+          # we are removing a skin folder, check and 
+          # remove if registered skin selection
           skin_folder = container[object_id]
-          registered_skin_selections = getattr(skin_folder, 'business_template_registered_skin_selections', None)
+          registered_skin_selections = getattr(skin_folder, 
+              'business_template_registered_skin_selections', None)
           if registered_skin_selections is not None:
-            container.manage_skinLayers(chosen=registered_skin_selections, del_skin=1)
+
+            for other_skin_folder in container.objectValues():
+              if other_skin_folder.getId() != object_id:
+                for other_registered_skin_selection in \
+                      other_skin_folder.getProperty(
+                       'business_template_registered_skin_selections', ()):
+                  if other_registered_skin_selection in \
+                                        registered_skin_selections:
+                    registered_skin_selections.remove(
+                        other_registered_skin_selection)
+            if registered_skin_selections:
+              container.manage_skinLayers(chosen=registered_skin_selections, 
+                                          del_skin=1)
         container.manage_delObjects([object_id])
         if container.aq_parent.meta_type == 'ERP5 Catalog' and len(container.objectIds()) == 0:
           # We are removing a ZSQLMethod, remove the SQLCatalog if empty
