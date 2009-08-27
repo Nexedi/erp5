@@ -1271,8 +1271,11 @@ class FloatWidget(TextWidget):
       "The type of float we should enter. "),
                                   default="-1234.5",
                                   items=[("-1234.5",  "-1234.5"),
-                                        ("-1 234.5", "-1 234.5"),
-                                        ("-12.3%", "-12.3%"),],
+                                         ("-1 234.5", "-1 234.5"),
+                                         ("-1 234,5", "-1 234,5"),
+                                         ("-1.234,5", "-1.234,5"),
+                                         ("-1,234.5", "-1,234.5"),
+                                         ("-12.3%", "-12.3%"),],
                                   required=1,
                                   size=1)
 
@@ -1309,17 +1312,38 @@ class FloatWidget(TextWidget):
           value = '%f' % float(original_value)
       value_list = value.split('.')
       integer = value_list[0]
-      if input_style.find(' ')>=0:
+      
+      decimal_separator = ''
+      decimal_point = '.'
+      
+      if input_style == "-1234.5":
+        decimal_point = '.'
+      elif input_style == '-1 234.5':
+        decimal_separator = ' '
+        decimal_point = '.'
+      elif input_style == '-1 234,5':
+        decimal_separator = ' '
+        decimal_point = ','
+      elif input_style == '-1.234,5':
+        decimal_separator = '.'
+        decimal_point = ','
+      elif input_style == '-1,234.5':
+        decimal_separator = ','
+        decimal_point = '.'
+
+      if input_style.find(decimal_separator) >= 0:
         integer = value_list[0]
-        i = len(integer)%3
+        i = len(integer) % 3
         value = integer[:i]
         while i != len(integer):
-          value += ' ' + integer[i:i+3]
+          value += decimal_separator + integer[i:i+3]
           i += 3
+        if value[0] == decimal_separator:
+          value = value[1:]
       else:
         value = value_list[0]
       if precision != 0:
-        value += '.'
+        value += decimal_point
       if precision not in (None,''):
         for i in range(0,precision):
           if i < len(value_list[1]):

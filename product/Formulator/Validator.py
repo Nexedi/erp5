@@ -294,16 +294,36 @@ class FloatValidator(StringBaseValidator):
     value = StringBaseValidator.validate(self, field, key, REQUEST)
     if value == "" and not field.get_value('required'):
       return value
-    value = value.replace(' ','')
+
     input_style = field.get_value('input_style')
-    if value.find(',') >= 0:
-      value = value.replace(',','.')
-    if value.find('%')>=0:
-      value = value.replace('%','')
+    decimal_separator = ''
+    decimal_point = '.'
+
+    if input_style == "-1234.5":
+      decimal_point = '.'
+    elif input_style == '-1 234.5':
+      decimal_separator = ' '
+      decimal_point = '.'
+    elif input_style == '-1 234,5':
+      decimal_separator = ' '
+      decimal_point = ','
+    elif input_style == '-1.234,5':
+      decimal_separator = '.'
+      decimal_point = ','
+    elif input_style == '-1,234.5':
+      decimal_separator = ','
+      decimal_point = '.'
+
+    value = value.replace(decimal_separator,'')
+    input_style = field.get_value('input_style')
+    if value.find(decimal_point) >= 0:
+      value = value.replace(decimal_point, '.')
+    if value.find('%') >= 0:
+      value = value.replace('%', '')
     try:
       value = float(value)
       if input_style.find('%')>=0:
-        value = value/100
+        value = value / 100
     except ValueError:
       self.raise_error('not_float', field)
     return value

@@ -26,6 +26,8 @@
 #
 ##############################################################################
 
+# TODO: Some tests from this file can be merged into Formulator
+
 import unittest
 
 # Make it possible to use Globals.get_request
@@ -52,6 +54,7 @@ ZopeTestCase.installProduct('ERP5Form')
 
 from Acquisition import aq_base
 from Products.Formulator.FieldRegistry import FieldRegistry
+from Products.Formulator.Validator import ValidationError
 from Products.Formulator.StandardFields import FloatField
 from Products.Formulator.StandardFields import StringField
 from Products.Formulator.StandardFields import DateTimeField
@@ -93,11 +96,29 @@ class TestFloatField(unittest.TestCase):
   def setUp(self):
     self.field = FloatField('test_field')
     self.widget = self.field.widget
+    self.validator = self.field.validator
 
-  def test_format_thousand_separator(self):
+  def test_format_thousand_separator_point(self):
     self.field.values['input_style'] = '-1 234.5'
     self.assertEquals('1 000.0', self.widget.format_value(self.field, 1000))
+  
+  def test_format_thousand_separator_coma(self):
+    self.field.values['input_style'] = '-1 234,5'
+    self.assertEquals('1 000,0', self.widget.format_value(self.field, 1000))
 
+  def test_format_thousand_separator_point_coma(self):
+    self.field.values['input_style'] = '-1.234,5'
+    self.assertEquals('1.000,0', self.widget.format_value(self.field, 1000))
+
+  def test_format_thousand_separator_coma_point(self):
+    self.field.values['input_style'] = '-1,234.5'
+    self.assertEquals('1,000.0', self.widget.format_value(self.field, 1000))
+
+  def test_format_thousand_separator_first_separator(self):
+    # test for an edge case bug bug, ",100,000.0" was displayed (with leading coma)
+    self.field.values['input_style'] = '-1,234.5'
+    self.assertEquals('100,000.0', self.widget.format_value(self.field, 100000))
+  
   def test_format_percent_style(self):
     self.field.values['input_style'] = '-12.3%'
     self.assertEquals('10.0%', self.widget.format_value(self.field, 0.1))
@@ -138,6 +159,52 @@ class TestFloatField(unittest.TestCase):
     self.assertEquals('10000000000000000000.00',
                       self.field.render(10000000000000000000))
 
+  def test_validate_thousand_separator_point(self):
+    self.field.values['input_style'] = '-1 234.5'
+    request.set('field_test_field', '1 000.0')
+    self.assertEquals(1000,
+        self.validator.validate(self.field, 'field_test_field', request))
+  
+  def test_validate_thousand_separator_coma(self):
+    self.field.values['input_style'] = '-1 234,5'
+    request.set('field_test_field', '1 000,0')
+    self.assertEquals(1000,
+        self.validator.validate(self.field, 'field_test_field', request))
+
+  def test_validate_thousand_separator_point_coma(self):
+    self.field.values['input_style'] = '-1.234,5'
+    request.set('field_test_field', '1.000,0')
+    self.assertEquals(1000,
+        self.validator.validate(self.field, 'field_test_field', request))
+
+  def test_validate_thousand_separator_coma_point(self):
+    self.field.values['input_style'] = '-1,234.5'
+    request.set('field_test_field', '1,000.0')
+    self.assertEquals(1000,
+        self.validator.validate(self.field, 'field_test_field', request))
+
+  def test_validate_percent_style(self):
+    self.field.values['input_style'] = '-12.3%'
+    request.set('field_test_field', '10.0%')
+    self.assertEquals(0.1,
+        self.validator.validate(self.field, 'field_test_field', request))
+
+  def test_validate_not_float(self):
+    request.set('field_test_field', 'not_float')
+    self.assertRaises(ValidationError,
+        self.validator.validate, self.field, 'field_test_field', request)
+
+  def test_validate_two_comma(self):
+    self.field.values['input_style'] = '-1.234,5'
+    request.set('field_test_field', '1,000,0')
+    self.assertRaises(ValidationError,
+        self.validator.validate, self.field, 'field_test_field', request)
+
+  def test_validate_two_dots(self):
+    self.field.values['input_style'] = '-1,234.5'
+    request.set('field_test_field', '1.000.0')
+    self.assertRaises(ValidationError,
+        self.validator.validate, self.field, 'field_test_field', request)
 
 class TestStringField(unittest.TestCase):
   """Tests string field
