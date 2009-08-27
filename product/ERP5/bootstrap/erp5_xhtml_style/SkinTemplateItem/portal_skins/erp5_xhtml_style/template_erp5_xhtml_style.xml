@@ -49,17 +49,18 @@ IDEAS:\n
 -->\n
   </tal:block>\n
   <tal:block metal:define-macro="master">\n
-    <tal:block tal:define="global_definitions_macros here/global_definitions/macros">\n
+    <tal:block tal:define="global_definitions_macros here/global_definitions/macros;\n
+                           subject_list subject_list | python:here.getProperty(\'subject_list\', []) or []">\n
       <tal:block metal:use-macro="global_definitions_macros/header_definitions" />\n
       <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">\n
       <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">\n
         <head>\n
           <base tal:attributes="href python: \'%s/\' % (url, )" />\n
-          <meta name="generator" content="ERP5 - Copyright (C) 2001 - 2009. All rights reserved." />\n
+          <meta name="generator" content="ERP5 - Copyright (C) 2001 - 2008. All rights reserved." />\n
           <meta name="description" content=""\n
-                tal:attributes="content title | string:ERP5 Free Open Source ERP and CRM" />\n
+                tal:attributes="content description | title | string:ERP5 Free Open Source ERP and CRM" />\n
           <meta name="keywords" content=""\n
-                tal:attributes="content python:\', \'.join(here.getProperty(\'subject_list\', []) or [])" />\n
+                tal:attributes="content python:\', \'.join(subject_list)" />\n
           <meta name="robots" content="index, follow" />\n
           <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />\n
           <meta http-equiv="Content-Script-Type" content="text/javascript" />\n
