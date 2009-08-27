@@ -55,7 +55,7 @@ IDEAS:\n
       <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">\n
         <head>\n
           <base tal:attributes="href python: \'%s/\' % (url, )" />\n
-          <meta name="generator" content="ERP5 - Copyright (C) 2001 - 2008. All rights reserved." />\n
+          <meta name="generator" content="ERP5 - Copyright (C) 2001 - 2009. All rights reserved." />\n
           <meta name="description" content=""\n
                 tal:attributes="content title | string:ERP5 Free Open Source ERP and CRM" />\n
           <meta name="keywords" content=""\n
