@@ -13,14 +13,14 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
                 <string>display_width</string>
+                <string>title</string>
               </list>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_layout_header_moto</string> </value>
+            <value> <string>my_layout_header_motto</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -93,7 +93,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Header Moto</string> </value>
+                    <value> <string>Header Motto</string> </value>
                 </item>
               </dictionary>
             </value>

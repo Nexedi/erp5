@@ -53,7 +53,7 @@
   possible to override certain sections of the site\n
   with special titles (ex. Some Site - BETA SECTION)\n
 \n
-  The moto is taken from the \'layout_header_moto\'\n
+  The motto is taken from the \'layout_header_motto\'\n
   property of the section for similar reasons.\n
 \n
   The URL points to the site root.\n
@@ -78,8 +78,8 @@
          tal:attributes="href current_web_site/absolute_url;\n
                          title current_web_section_header_title">Site Name</a></h1>\n
   <h2 i18n:translate="" i18n:domain="ui" i18n:attributes="title"\n
-      tal:content="python:current_web_section.getLayoutProperty(\'layout_header_moto\')"\n
-      tal:attributes="title python:current_web_section.getLayoutProperty(\'layout_header_moto\')">Open Source Designs</h2>\n
+      tal:content="python:current_web_section.getLayoutProperty(\'layout_header_motto\')"\n
+      tal:attributes="title python:current_web_section.getLayoutProperty(\'layout_header_motto\')">Open Source Designs</h2>\n
 </tal:block>
 
 ]]></string> </value>

@@ -79,7 +79,7 @@
                     <value>
                       <list>
                         <string>my_layout_header_title</string>
-                        <string>my_layout_header_moto</string>
+                        <string>my_layout_header_motto</string>
                         <string>my_layout_copyright_message</string>
                         <string>my_layout_search_area_section_id</string>
                         <string>my_layout_news_area_section_id</string>
