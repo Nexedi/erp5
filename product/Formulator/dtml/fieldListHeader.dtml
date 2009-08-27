@@ -14,4 +14,11 @@
   Field
   </div>
   </td>
+  <dtml-if "_['URL'].find('manage_main')>-1">
+  <td align="left" valign="top">
+  <div class="form-label">
+  Description
+  </div>
+  </td>
+  </dtml-if>
 </tr>

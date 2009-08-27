@@ -33,7 +33,7 @@ Edit <dtml-var meta_type> method overrides here.
     <td align="left" valign="top">
     <dtml-var "field.render(value)">
     </td>
-    <td><div class="form-element">
+    <td valign="top"><div class="form-element">
     <dtml-var "current_field.form.get_field(field.id).meta_type">
     </div></td>
   </tr>

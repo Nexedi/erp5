@@ -15,7 +15,7 @@ Edit <dtml-var meta_type> properties here.
 
 <dtml-if fields>
 <tr>
-<td colspan="3" class="form-title">
+<td colspan="4" class="form-title">
   <dtml-var "_.string.capitalize(group)"> properties
 </td>
 </tr>
@@ -37,8 +37,11 @@ Edit <dtml-var meta_type> properties here.
     <td align="left" valign="top">
     <dtml-var "field.render(value)">
     </td>
-    <td><div class="form-element">
+    <td valign="top" ><div class="form-element">
     <dtml-var "field.meta_type">
+    </div></td>
+    <td align="left" valign="top"><div class="form-element">
+    <dtml-var "field.get_value('description')">
     </div></td>
   </tr>
 </dtml-let>
