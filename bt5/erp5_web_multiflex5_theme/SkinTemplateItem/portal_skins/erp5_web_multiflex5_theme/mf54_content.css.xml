@@ -538,6 +538,11 @@ fieldset.bottom .field label {\n
   display:none;\n
 }\n
 \n
+div.required label {\n
+  background:url(<tal:block tal:replace="site_url"/>/mf54_image/bg_bullet_star.gif) no-repeat right;\n
+  width:inherit !important;\n
+}\n
+\n
 /* Default Listbox styling\n
 ** TODO: change colors to have better integration in default erp5 web theme.\n
 ------------------------------------------------------------------ */\n
