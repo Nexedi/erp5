@@ -82,6 +82,15 @@ def valueDefaultSearchTextRenderer(value):
 
 @profiler_decorator
 def columnFloatRenderer(column, format=None):
+  """Format a float column.
+
+  'format' is a string describing the precision, in which '.' is used as
+  decimal separator. The number of decimal places in this format string is used
+  to search with this precision.
+
+  For example column=0.12345, format='0.00' will match values equals to 0.12
+  when truncated to 2 places.
+  """
   if format is not None:
     if '.' in format:
       format = format.replace(' ', '')
