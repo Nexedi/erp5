@@ -60,7 +60,8 @@ kw = {\n
   \'form_id\': \'Foo_viewDummyListBox\',\n
   \'level\': 1,\n
 #  \'listbox_display_mode\': \'FlatListMode\',\n
-#  \'selection_params\': {}\n
+#  \'selection_params\': {},\n
+  \'temporary_selection\': False,\n
 }\n
 return [ReportSection(**kw) for x in xrange(3)]\n
 </string> </value>
@@ -103,6 +104,7 @@ return [ReportSection(**kw) for x in xrange(3)]\n
                             <string>ReportSection</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>False</string>
                             <string>kw</string>
                             <string>append</string>
                             <string>$append0</string>
