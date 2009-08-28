@@ -46,7 +46,7 @@ Options:
                              to erp5_sql_connection_string)
   --email_from_address=STRING
                              Initialise the email_from_address property of the
-                             portal, by defaults, CMFActivity failures are sent
+                             portal, by default, CMFActivity failures are sent
                              on localhost from this address, to this address
   --erp5_catalog_storage=STRING
                              Use the given business template as erp5_catalog
@@ -118,7 +118,9 @@ def initializeInstanceHome(tests_framework_home,
       shutil.copy(src, dst)
     else:
       os.symlink(src, dst)
+  # add some paths where we can find copyzopeskel
   sys.path.append(os.path.join(zope_home, "bin"))
+  sys.path.append(os.path.join(zope_home, "utilities"))
   import copyzopeskel
   kw = {
     "PYTHON":sys.executable,
@@ -130,23 +132,31 @@ def initializeInstanceHome(tests_framework_home,
   copyzopeskel.copyskel(skelsrc, instance_home, None, None, **kw)
 
 # site specific variables
-
 tests_framework_home = os.path.dirname(os.path.abspath(__file__))
 
-# handle 64bit architecture and windows
-if WIN:
-  erp5_home = os.path.sep.join(
-      tests_framework_home.split(os.path.sep)[:-4])
-  zope_home = os.path.join(erp5_home, 'Zope')
-elif os.path.isdir('/usr/lib64/zope/lib/python'):
-  zope_home = '/usr/lib64/zope'
-elif os.path.isdir('/usr/lib/erp5/lib/python'):
-  zope_home = '/usr/lib/erp5'
-elif os.path.isdir('/usr/lib/zope2.8/lib/python'):
-  zope_home = '/usr/lib/zope2.8'
+# find zope home, either from SOFTWARE_HOME environment variable, or by
+# guessing some common paths.
+if 'SOFTWARE_HOME' in os.environ:
+  software_home = os.environ['SOFTWARE_HOME']
+  if not os.path.exists(software_home):
+    raise ValueError('SOFTWARE_HOME is set to non existing directory %r'
+                      % (software_home,))
+  # software_home is zope_home/lib/python, remove lib/python
+  zope_home = os.path.split(os.path.split(software_home)[0])[0]
 else:
-  zope_home = '/usr/lib/zope'
-software_home = os.path.join(zope_home, 'lib', 'python')
+  if WIN:
+    erp5_home = os.path.sep.join(
+        tests_framework_home.split(os.path.sep)[:-4])
+    zope_home = os.path.join(erp5_home, 'Zope')
+  elif os.path.isdir('/usr/lib64/zope/lib/python'):
+    zope_home = '/usr/lib64/zope'
+  elif os.path.isdir('/usr/lib/erp5/lib/python'):
+    zope_home = '/usr/lib/erp5'
+  elif os.path.isdir('/usr/lib/zope2.8/lib/python'):
+    zope_home = '/usr/lib/zope2.8'
+  else:
+    zope_home = '/usr/lib/zope'
+  software_home = os.path.join(zope_home, 'lib', 'python')
 
 # handle 'system global' instance and windows
 if WIN:
