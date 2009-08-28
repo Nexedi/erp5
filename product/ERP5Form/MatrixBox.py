@@ -56,9 +56,10 @@ class MatrixBoxWidget(Widget.Widget):
     """
     property_names = Widget.Widget.property_names +\
                      ['cell_base_id', 'cell_portal_type',
-                      'lines', 'columns', 'tabs', 'getter_method' ,
+                      'lines', 'columns', 'tabs', 'getter_method',
+                      'cell_getter_method',
                       'editable_attributes' , 'global_attributes',
-                      'update_cell_range'
+                      'update_cell_range',
                        ]
 
     default = fields.TextAreaField('default',
@@ -117,6 +118,16 @@ class MatrixBoxWidget(Widget.Widget):
         You can specify a specific method in order to retrieve the context.
         This field can be empty, if so the MatrixBox will use the default 
         context."""),
+
+                                 default='',
+                                 required=0)
+
+    cell_getter_method = fields.StringField('cell_getter_method',
+                                 title='Cell Getter method',
+                                 description=("""
+        You can specify a method in order to retrieve cells. This field can
+        be empty, if so the MatrixBox will use the default method : getCell.
+        """),
 
                                  default='',
                                  required=0)
@@ -193,7 +204,11 @@ class MatrixBoxWidget(Widget.Widget):
           context = getattr(here,getter_method_id)()
         if context is None:
           return ''
-        cell_getter_method = context.getCell
+        cell_getter_method_id = field.get_value('cell_getter_method')
+        if cell_getter_method_id not in (None, ''):
+          cell_getter_method = getattr(here, cell_getter_method_id)
+        else:
+          cell_getter_method = context.getCell
         editable_attributes = field.get_value('editable_attributes')
 
         # This is required when we have no tabs
@@ -387,7 +402,11 @@ class MatrixBoxValidator(Validator.Validator):
         if getter_method_id not in (None,''):
           context = getattr(here,getter_method_id)()
           if context is None: return {}
-        cell_getter_method = context.getCell
+        cell_getter_method_id = field.get_value('cell_getter_method')
+        if cell_getter_method_id not in (None, ''):
+          cell_getter_method = getattr(here, cell_getter_method_id)
+        else:
+          cell_getter_method = context.getCell
 
         # This is required when we have no tabs
         if len(tabs) == 0: tabs = [(None,None)]
