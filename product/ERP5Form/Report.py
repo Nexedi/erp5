@@ -28,6 +28,7 @@
 
 from Globals import InitializeClass, DTMLFile, get_request
 from AccessControl import ClassSecurityInfo
+from Acquisition import aq_base
 from Products.PythonScripts.Utility import allow_class
 from Products.Formulator.DummyField import fields
 from Products.Formulator.Form import ZMIForm
@@ -123,6 +124,7 @@ class ERP5Report(ERP5Form):
 
     # Proxy method to PageTemplate
     def __call__(self, *args, **kwargs):
+        warn("ERP5Report to be obsolete, please use ReportBox and normal ERP5Form instead.", DeprecationWarning)
         if not self.report_method:
           raise KeyError, 'report method is not set on the report'
 
@@ -205,7 +207,8 @@ class ReportSection:
                      selection_stats=None,
                      selection_sort_order=None,
                      selection_report_path=None,
-                     selection_report_list=None):
+                     selection_report_list=None,
+                     temporary_selection=True):
     """
       Initialize the line and set the default values
       Selected columns must be defined in parameter of listbox.render...
@@ -213,6 +216,8 @@ class ReportSection:
       In ReportTree listbox display mode, you can override :
         selection_report_path, the root category for this report 
         selection_report_list, the list of unfolded categories (defaults to all)      
+
+      If temporary_selection is False, the selection will be written which is specified by selection_name.
     """
 
     self.path = path
@@ -222,20 +227,18 @@ class ReportSection:
       warn("Don't use translated_title, but title directly", DeprecationWarning)
     self.translated_title = translated_title
     self.level = level
-    self.saved_request = {}
     self.selection_name = selection_name
     self.selection_params = selection_params
     self.listbox_display_mode = listbox_display_mode
     self.selection_columns = selection_columns
     self.selection_stats = selection_stats
     self.selection_sort_order = selection_sort_order
-    self.saved_selections = {}
     self.selection_report_path = selection_report_path
     self.selection_report_list = selection_report_list
-    self.saved_request_form = {}
     self.param_dict = param_dict or {}
     self.param_list = param_list or []
     self.method_id = method_id
+    self.temporary_selection = temporary_selection
 
   security.declarePublic('getTitle')
   def getTitle(self):
@@ -266,17 +269,36 @@ class ReportSection:
   def getFormId(self):
     return self.form_id
 
-  _no_parameter_ = []
+  def pushRequest(self):
+    self = aq_base(self)
+    if hasattr(self, '_REQUEST'):
+      raise ValueError, "can not replace the backupped REQUEST"
+    self._REQUEST = {'form': {}, 'other': {},}
+    REQUEST = get_request()
+    self._REQUEST['form'].update(REQUEST.form)
+    self._REQUEST['other'].update(REQUEST.other)
+    REQUEST.form.update(self.param_dict)
 
+  def popRequest(self):
+    self = aq_base(self)
+    if not hasattr(self, '_REQUEST'):
+      raise ValueError, "no backupped REQUEST"
+    REQUEST = get_request()
+    REQUEST.form.clear()
+    REQUEST.other.clear()
+    REQUEST.form.update(self._REQUEST['form'])
+    REQUEST.other.update(self._REQUEST['other'])
+    del self._REQUEST
+    
   security.declarePublic('pushReport')
   def pushReport(self, context, render_prefix=None):
-    REQUEST = get_request()
-    for k,v in self.param_dict.items():
-      self.saved_request[k] = REQUEST.form.get(k, self._no_parameter_)
-      REQUEST.form[k] = v
+    self.pushRequest()
 
+    REQUEST = get_request()
     portal_selections = context.portal_selections
     selection_list = [self.selection_name]
+    # when the Form which is specified by form_id, has a listbox, make prefixed_selection_name.
+    # which is based on specified selection_name in the listbox.
     if self.getFormId() and hasattr(context[self.getFormId()], 'listbox') :
       selection_name = context[self.getFormId()].listbox.get_value('selection_name')
       if render_prefix is not None:
@@ -285,62 +307,46 @@ class ReportSection:
       selection_list += [selection_name]
     # save report's selection and orignal form's selection,
     #as ListBox will overwrite it
-    for selection_name in selection_list :
-      if selection_name is not None :
-        if not self.saved_selections.has_key(selection_name) :
-          self.saved_selections[selection_name] = {}
-        if self.selection_report_list is not None:
-          selection = portal_selections.getSelectionFor(selection_name,
-                                                        REQUEST=REQUEST)
-          if selection is None:
-            selection = Selection()
-            portal_selections.setSelectionFor(selection_name, selection, 
-                                              REQUEST=REQUEST)
-          self.saved_selections[selection_name]['report_list'] = \
-               selection.getReportList()
-          selection.edit(report_list=self.selection_report_list)
-        if self.selection_report_path is not None:
-          selection = portal_selections.getSelectionFor(selection_name,
-                                                        REQUEST=REQUEST)
-          self.saved_selections[selection_name]['report_path'] = \
-               selection.getReportPath()
-          selection.edit(report_path=self.selection_report_path)
-        if self.listbox_display_mode is not None:
-          self.saved_selections[selection_name]['display_mode'] = \
-               portal_selections.getListboxDisplayMode(selection_name,
-                                                       REQUEST=REQUEST)
-          # XXX Dirty fix, to be able to change the display mode in form_view
-          REQUEST.list_selection_name = selection_name
-          portal_selections.setListboxDisplayMode(
-                                           REQUEST, self.listbox_display_mode,
-                                           selection_name=selection_name)
-        if self.selection_params is not None:
-          params = portal_selections.getSelectionParams(
-                               selection_name, REQUEST=REQUEST)
-          self.saved_selections[selection_name]['params'] = params.copy()
-          params.update(self.selection_params)
-          portal_selections.setSelectionParamsFor(selection_name,
-                               params, REQUEST=REQUEST)
-        if self.selection_columns is not None:
-          self.saved_selections[selection_name]['columns'] =  \
-               portal_selections.getSelectionColumns(selection_name,
-                                                     REQUEST=REQUEST)
-          portal_selections.setSelectionColumns(selection_name,
-                                  self.selection_columns, REQUEST=REQUEST)
-        if self.selection_sort_order is not None:
-          self.saved_selections[selection_name]['sort_order'] =  \
-               portal_selections.getSelectionSortOrder(selection_name,
-                                                       REQUEST=REQUEST)
-          portal_selections.setSelectionSortOrder(selection_name,
-                      self.selection_sort_order, REQUEST=REQUEST)
-        if self.selection_stats is not None:
-          self.saved_selections[selection_name]['stats'] =  \
-               portal_selections.getSelectionStats(selection_name,
-                                                     REQUEST=REQUEST)
-          portal_selections.setSelectionStats(selection_name,
-                                  self.selection_stats, REQUEST=REQUEST)
+    for selection_name in filter(lambda x: x is not None, selection_list):
+      if self.temporary_selection:
+        portal_selections.pushSelection(selection_name)
+      else:
+        if portal_selections.getSelectionFor(selection_name) is None:
+          portal_selections.setSelectionFor(selection_name, Selection())
 
-    self.saved_request_form = REQUEST.form
+      if self.selection_report_list is not None:
+        selection = portal_selections.getSelectionFor(selection_name,
+                                                      REQUEST=REQUEST)
+        selection.edit(report_list=self.selection_report_list)
+      if self.selection_report_path is not None:
+        selection = portal_selections.getSelectionFor(selection_name,
+                                                      REQUEST=REQUEST)
+        selection.edit(report_path=self.selection_report_path)
+      if self.listbox_display_mode is not None:
+        # XXX Dirty fix, to be able to change the display mode in form_view
+        REQUEST.list_selection_name = selection_name
+        portal_selections.setListboxDisplayMode(REQUEST,
+                                                self.listbox_display_mode,
+                                                selection_name=selection_name)
+      if self.selection_params is not None:
+        params = portal_selections.getSelectionParamsFor(selection_name,
+                                                         REQUEST=REQUEST)
+        params.update(self.selection_params)
+        portal_selections.setSelectionParamsFor(selection_name,
+                                                params,
+                                                REQUEST=REQUEST)
+      if self.selection_columns is not None:
+        portal_selections.setSelectionColumns(selection_name,
+                                              self.selection_columns,
+                                              REQUEST=REQUEST)
+      if self.selection_sort_order is not None:
+        portal_selections.setSelectionSortOrder(selection_name,
+                                                self.selection_sort_order,
+                                                REQUEST=REQUEST)
+      if self.selection_stats is not None:
+        portal_selections.setSelectionStats(selection_name,
+                                            self.selection_stats,
+                                            REQUEST=REQUEST)
 
     # When rendering a report section with a listbox, listbox gets parameters
     # from request.form and edits selection with those parameters, so if you
@@ -354,68 +360,18 @@ class ReportSection:
 
   security.declarePublic('popReport')
   def popReport(self, context, render_prefix=None):
-    REQUEST = get_request()
-    for k,v in self.param_dict.items():
-      if self.saved_request[k] is self._no_parameter_:
-        if REQUEST.form.has_key(k):
-          del REQUEST.form[k]
-      else:
-        REQUEST.form[k] = self.saved_request[k]
+    self.popRequest()
 
     portal_selections = context.portal_selections
     selection_list = []
     if self.getFormId() and hasattr(context[self.getFormId()], 'listbox') :
       selection_name = context[self.getFormId()].listbox.get_value('selection_name')
-      if render_prefix is not None:
-        del REQUEST.other['prefixed_selection_name']
-        # Return before cleanup, because there is no interest in cleaning up
-        # what won't be shared.
-        return
       selection_list += [selection_name]
     selection_list += [self.selection_name]
-    # restore report then form selection
-    for selection_name in selection_list:
-      if selection_name is not None:
-        if self.selection_report_list is not None:
-          selection = portal_selections.getSelectionFor(
-                              selection_name, REQUEST=REQUEST)
-          selection.edit(report_list =
-                self.saved_selections[selection_name]['report_list'])
-        if self.selection_report_path is not None:
-          selection = portal_selections.getSelectionFor(
-                selection_name, REQUEST=REQUEST)
-          selection.edit(report_path =
-                self.saved_selections[selection_name]['report_path'])
-        if self.listbox_display_mode is not None:
-          # XXX Dirty fix, to be able to change the display mode in form_view
-          REQUEST.list_selection_name = selection_name
-          portal_selections.setListboxDisplayMode(
-                       REQUEST,
-                       self.saved_selections[selection_name]['display_mode'],
-                       selection_name=selection_name)
-
-        # first make sure no parameters that have been pushed are kept 
-        portal_selections.setSelectionParamsFor(selection_name,
-                                                {}, REQUEST=REQUEST)
-        if self.selection_params is not None:
-          # then restore the original params
-          portal_selections.setSelectionParamsFor(selection_name,
-                      self.saved_selections[selection_name]['params'],
-                      REQUEST=REQUEST)
-        if self.selection_columns is not None:
-          portal_selections.setSelectionColumns(selection_name,
-                      self.saved_selections[selection_name]['columns'],
-                      REQUEST=REQUEST)
-        if self.selection_sort_order is not None:
-          portal_selections.setSelectionSortOrder(selection_name,
-                      self.saved_selections[selection_name]['sort_order'],
-                      REQUEST=REQUEST)
-        if self.selection_stats is not None:
-          portal_selections.setSelectionStats(selection_name,
-                      self.saved_selections[selection_name]['stats'],
-                      REQUEST=REQUEST)
-
-    REQUEST.form = self.saved_request_form
+    if self.temporary_selection:
+      for selection_name in selection_list:
+        if selection_name is not None:
+          portal_selections.popSelection(selection_name)
 
 InitializeClass(ReportSection)
 allow_class(ReportSection)

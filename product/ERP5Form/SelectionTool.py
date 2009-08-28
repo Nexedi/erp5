@@ -37,6 +37,7 @@ from Globals import InitializeClass, DTMLFile, PersistentMapping, get_request
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type import Permissions as ERP5Permissions
+from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 from Products.ERP5Form import _dtmldir
 from Selection import Selection, DomainSelection
 from ZPublisher.HTTPRequest import FileUpload
@@ -1320,9 +1321,38 @@ class SelectionTool( BaseTool, UniqueObject, SimpleItem ):
       # XXX It would be good to add somthing here
       # So that 2 anonymous users do not share the same selection
 
+    def getTemporarySelectionDict(self):
+      """ Temporary selections are used in push/pop nested scope,
+      to prevent from editting for stored selection in the scope.
+      Typically, it is used for ReportSection."""
+      tv = getTransactionalVariable(self)
+      return tv.setdefault('_temporary_selection_dict', {})
+
+    def pushSelection(self, selection_name):
+      selection = self.getSelectionFor(selection_name)
+      # a temporary selection is kept in transaction.
+      temp_selection = Selection()
+      if selection:
+        temp_selection.__dict__.update(selection.__dict__)
+      self.getTemporarySelectionDict()\
+        .setdefault(selection_name, []).append(temp_selection)
+
+    def popSelection(self, selection_name):
+      temporary_selection_dict = self.getTemporarySelectionDict()
+      if selection_name in temporary_selection_dict and \
+         temporary_selection_dict[selection_name]:
+        temporary_selection_dict[selection_name].pop()
+
     def _getSelectionFromContainer(self, selection_name):
       user_id = self._getUserId()
       if user_id is None: return None
+
+      temporary_selection_dict = self.getTemporarySelectionDict()
+      if temporary_selection_dict and selection_name in temporary_selection_dict:
+        if temporary_selection_dict[selection_name]:
+          # focus the temporary selection in the most narrow scope.
+          return temporary_selection_dict[selection_name][-1]
+
       if self.isMemcachedUsed():
         return self._getMemcachedContainer().get('%s-%s' %
                                                  (user_id, selection_name))
@@ -1333,6 +1363,14 @@ class SelectionTool( BaseTool, UniqueObject, SimpleItem ):
     def _setSelectionToContainer(self, selection_name, selection):
       user_id = self._getUserId()
       if user_id is None: return
+
+      temporary_selection_dict = self.getTemporarySelectionDict()
+      if temporary_selection_dict and selection_name in temporary_selection_dict:
+        if temporary_selection_dict[selection_name]:
+          # focus the temporary selection in the most narrow scope.
+          temporary_selection_dict[selection_name][-1] = selection
+          return
+
       if self.isMemcachedUsed():
         self._getMemcachedContainer().set('%s-%s' % (user_id, selection_name), aq_base(selection))
       else:
@@ -1360,7 +1398,9 @@ class SelectionTool( BaseTool, UniqueObject, SimpleItem ):
       else:
         user_id = self._getUserId()
         if user_id is None: return []
-        return self._getPersistentContainer(user_id).keys()
+
+        tv = getTransactionalVariable(self)
+        return list(set(self._getPersistentContainer(user_id).keys() + self.getTemporarySelectionDict().keys()))
 
     def _getMemcachedContainer(self):
       value = getattr(aq_base(self), '_v_selection_data', None)

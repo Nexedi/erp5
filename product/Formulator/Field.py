@@ -625,6 +625,10 @@ class ZMIField(
             return 1
         except ImportError:
             return 0
+
+    def getTemplateField(self):
+        return self
+    getRecursiveTemplateField = getTemplateField
         
 Globals.InitializeClass(ZMIField)
 PythonField = ZMIField # NOTE: for backwards compatibility

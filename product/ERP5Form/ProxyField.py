@@ -671,6 +671,7 @@ class ProxyField(ZMIField):
     # defined by a TALES
     if self._p_oid is None or self.tales['field_id'] or self.tales['form_id']:
       return self._get_value(id, **kw)
+      # XXX: Are these disabled?
       proxy_field = self.getTemplateField(cache=False)
       if proxy_field is not None:
         return proxy_field.get_value(id, **kw)

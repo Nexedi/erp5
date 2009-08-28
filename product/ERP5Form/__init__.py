@@ -40,7 +40,7 @@ document_classes = updateGlobals( this_module, globals(),
                                   permissions_module = Permissions)
 
 # Define object classes and tools
-import Form, FSForm, ListBox, MatrixBox, SelectionTool
+import Form, FSForm, ListBox, ReportBox, MatrixBox, SelectionTool
 import OOoChart, PDFTemplate, Report, PDFForm, ParallelListField
 import PlanningBox, POSBox, FormBox, EditorField, ProxyField, DurationField
 import RelationField, ImageField, MultiRelationField, MultiLinkField, InputButtonField
@@ -85,6 +85,8 @@ def initialize( context ):
     FieldRegistry.registerField(POSBox.POSBox,
                                 'www/StringField.gif')
     FieldRegistry.registerField(ListBox.ListBox,
+                                'www/StringField.gif')
+    FieldRegistry.registerField(ReportBox.ReportBox,
                                 'www/StringField.gif')
     FieldRegistry.registerField(PlanningBox.PlanningBox,
                                 'www/StringField.gif')
