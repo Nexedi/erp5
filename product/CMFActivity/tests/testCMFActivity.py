@@ -3357,6 +3357,77 @@ class TestCMFActivity(ERP5TypeTestCase):
         method_name = 'dummy_counter_%s' % i
         delattr(Organisation, method_name)
 
+  def test_115_TestSerializationTagSQLDictPreventsParallelExecution(self, quiet=0, run=run_all_test):
+    """
+      Test if there are multiple activities with the same serialization tag,
+      then serialization tag guarantees that only one of the same serialization
+      tagged activities can be processed at the same time.
+    """
+    if not run: return
+    if not quiet:
+      message = '\n'
+      ZopeTestCase._print(message)
+      LOG('Testing... ',0,message)
+    from Products.CMFActivity import ActivityTool
+
+    portal = self.getPortal()
+    activity_tool = portal.portal_activities
+    get_transaction().commit()
+    self.tic()
+
+    # Add 6 activities
+    portal.organisation_module.activate(activity='SQLDict', tag='', serialization_tag='test_115').getId()
+    get_transaction().commit()
+    portal.organisation_module.activate(activity='SQLDict', serialization_tag='test_115').getTitle()
+    get_transaction().commit()
+    portal.organisation_module.activate(activity='SQLDict', tag='tag_1', serialization_tag='test_115').getId()
+    get_transaction().commit()
+    portal.person_module.activate(activity='SQLDict', serialization_tag='test_115').getId()
+    get_transaction().commit()
+    portal.person_module.activate(activity='SQLDict', tag='tag_2').getId()
+    get_transaction().commit()
+    portal.organisation_module.activate(activity='SQLDict', tag='', serialization_tag='test_115').getId()
+    get_transaction().commit()
+
+    # distribute and assign them to 3 nodes
+    activity_tool.distribute()
+    get_transaction().commit()
+
+    from Products.CMFActivity import ActivityTool
+    ActivityTool.activity_dict['SQLDict'].getProcessableMessageList(activity_tool, 1)
+    get_transaction().commit()
+    ActivityTool.activity_dict['SQLDict'].getProcessableMessageList(activity_tool, 2)
+    get_transaction().commit()
+    ActivityTool.activity_dict['SQLDict'].getProcessableMessageList(activity_tool, 3)
+    get_transaction().commit()
+
+    result = activity_tool.SQLDict_readMessageList(include_processing=1,
+                                                   processing_node=None,
+                                                   path=None,
+                                                   method_id=None,
+                                                   to_date=None,
+                                                   offset=0,
+                                                   count=1000)
+
+    self.assertEqual(len([message
+                          for message in result
+                          if (message.processing_node>0 and
+                              message.processing==1 and
+                              message.serialization_tag=='test_115')]),
+                     1)
+
+    self.assertEqual(len([message
+                          for message in result
+                          if (message.processing_node==-1 and
+                              message.serialization_tag=='test_115')]),
+                     3)
+
+    self.assertEqual(len([message
+                          for message in result
+                          if (message.processing_node>0 and
+                              message.processing==1 and
+                              message.serialization_tag=='')]),
+                     1)
 
 def test_suite():
   suite = unittest.TestSuite()
