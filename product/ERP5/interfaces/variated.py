@@ -47,25 +47,13 @@ class IVariated(Interface):
       a discrete variation (ie. a list of category
       memberships)
     """
-    pass
-
-  def _setVariationCategoryList(node_list):
-    """
-      modifies the discrete variation of an
-      variated instance by providing a list
-      of relative URLs
-    """
-    pass
 
   def setVariationCategoryList(node_list):
     """
       modifies the discrete variation of an
       variated instance by providing a list
       of relative URLs
-
-      reindexes the object
     """
-    pass
 
   def getVariationBaseCategoryList(node_list):
     """
@@ -73,15 +61,6 @@ class IVariated(Interface):
       which are used to define discrete variations
       for this instance
     """
-    pass
-
-  def _setVariationBaseCategoryList(node_list):
-    """
-      modifies the list of base category ids
-      which are used to define discrete variations
-      for this instance
-    """
-    pass
 
   def setVariationBaseCategoryList(node_list):
     """
@@ -89,26 +68,17 @@ class IVariated(Interface):
       which are used to define discrete variations
       for this instance
     """
-    pass
 
   # General Variation accessors
   def getVariationValue():
     """
       Returns a VariationValue object. 
     """
-    pass
-
-  def _setVariationValue(value):
-    """
-      Private setter for VariationValue.
-    """
-    pass
 
   def setVariationValue(value):
     """
       Sets the VariationValue.
     """
-    pass
 
 
   # The following methods are intended to access the
@@ -123,7 +93,6 @@ class IVariated(Interface):
       returns a list of categories which are acceptable
       as discrete variation values
     """
-    pass
 
   def getVariationRangeCategoryItemList(base_category_list=(),
                           display_id='getTitle', base=1, current_category=None):
@@ -131,14 +100,12 @@ class IVariated(Interface):
       returns a list of (category.id, category.display_id()) which are acceptable
       as discrete variation values
     """
-    pass
 
   def getVariationRangeBaseCategoryList(base_category_list=(), base=1):
     """
       returns a list of base categories which are acceptable
       as discrete variation values
     """
-    pass
 
   def getVariationRangeBaseCategoryItemList(base_category_list=(),
                           display_id='getTitle', base=1, current_category=None):
@@ -146,4 +113,3 @@ class IVariated(Interface):
       returns a list of base category items which are acceptable
       as discrete variation values
     """
-    pass
