@@ -56,7 +56,7 @@
             <value> <string>portal_deliveries = context.getPortalObject().portal_deliveries\n
 builder_list = []\n
 \n
-for builder_id in (\'sale_invoice_buider\',\n
+for builder_id in (\'sale_invoice_builder\',\n
                    \'sale_invoice_tax_builder\',\n
                    \'sale_invoice_transaction_builder\',\n
                    \'advanced_sale_invoice_transaction_builder\', ):\n
