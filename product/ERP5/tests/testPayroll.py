@@ -2548,8 +2548,8 @@ class TestPayroll(TestPayrollMixin):
     data_line_list = [l for l in line_list if l.isDataLine()]
     self.assertEquals(2, len(data_line_list))
 
-    # base_unit_quantity for EUR is set to 0.001 in createCurrencies, so the
-    # precision is 3
+    # base_unit_quantity for EUR is set to 0.001 in the created currencies, so the
+    # precision is 3. Editable Fields will reuse this precision.
     precision = self.portal.REQUEST.get('precision')
     self.assertEquals(3, precision)
 
@@ -2933,8 +2933,8 @@ class TestPayroll(TestPayrollMixin):
     data_line_list = [l for l in line_list if l.isDataLine()]
     self.assertEquals(2, len(data_line_list))
 
-    # base_unit_quantity for EUR is set to 0.001 in createCurrencies, so the
-    # precision is 3
+    # base_unit_quantity for EUR is set to 0.001 in the created currencies, so the
+    # precision is 3. Editable Fields will reuse this precision.
     precision = self.portal.REQUEST.get('precision')
     self.assertEquals(3, precision)
 
