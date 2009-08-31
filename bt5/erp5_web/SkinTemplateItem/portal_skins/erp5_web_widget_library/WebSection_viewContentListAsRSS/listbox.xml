@@ -311,7 +311,32 @@
                 <item>
                     <key> <string>all_columns</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>title</string>
+                          <string>title</string>
+                        </tuple>
+                        <tuple>
+                          <string>creation_date</string>
+                          <string>pubDate</string>
+                        </tuple>
+                        <tuple>
+                          <string>author</string>
+                          <string>author</string>
+                        </tuple>
+                        <tuple>
+                          <string>link</string>
+                          <string>link</string>
+                        </tuple>
+                        <tuple>
+                          <string>description</string>
+                          <string>description</string>
+                        </tuple>
+                        <tuple>
+                          <string>link</string>
+                          <string>guid</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -328,27 +353,23 @@
                       <list>
                         <tuple>
                           <string>title</string>
-                          <string>rss_title</string>
+                          <string>title</string>
                         </tuple>
                         <tuple>
                           <string>creation_date</string>
-                          <string>rss_pubDate</string>
-                        </tuple>
-                        <tuple>
-                          <string>Base_getRSSAuthor</string>
-                          <string>rss_author</string>
+                          <string>pubDate</string>
                         </tuple>
                         <tuple>
                           <string>link</string>
-                          <string>rss_link</string>
+                          <string>link</string>
                         </tuple>
                         <tuple>
-                          <string>Base_getRSSDescription</string>
-                          <string>rss_description</string>
+                          <string>description</string>
+                          <string>description</string>
                         </tuple>
                         <tuple>
-                          <string>absolute_url</string>
-                          <string>rss_guid</string>
+                          <string>link</string>
+                          <string>guid</string>
                         </tuple>
                       </list>
                     </value>
@@ -407,6 +428,10 @@
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>hide_rows_on_no_search_criterion</string> </key>
                     <value> <int>0</int> </value>
                 </item>
                 <item>
