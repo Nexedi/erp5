@@ -13,13 +13,13 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
                 <string>default</string>
-                <string>width</string>
+                <string>enabled</string>
                 <string>height</string>
                 <string>text_editor</string>
-                <string>enabled</string>
+                <string>title</string>
                 <string>whitespace_preserve</string>
+                <string>width</string>
               </list>
             </value>
         </item>
@@ -185,7 +185,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:len(request.current_web_section.contentValues())</string> </value>
+            <value> <string>python:len(request.current_web_section.getSiteMapTree())</string> </value>
         </item>
       </dictionary>
     </pickle>
