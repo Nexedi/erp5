@@ -84,7 +84,8 @@ for movement in movement_list:\n
   if line is None:\n
     line = movement.getParentValue().getParentValue().getDeliveryValue()\n
 \n
-  deliveries_keys[line.getExplanationValue()] = 1\n
+  if line is not None:\n
+    deliveries_keys[line.getExplanationValue()] = 1\n
 \n
 return filter(lambda x : x is not None, deliveries_keys.keys())\n
 </string> </value>
