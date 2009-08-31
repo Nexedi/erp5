@@ -67,16 +67,20 @@
   User can limit number of entries by passing "max_articles" in the url (default is 30).\n
 \n
   USAGE:\n
-  The RSS skin is to be used to render a custom rss listbox, which must have columns\n
+  The RSS skin is to be used to render a custom rss listbox, which can have columns\n
   with following titles:\n
   - title\n
-  - author\n
+  - link\n
   - description\n
+  - author\n
   - category\n
   - comments\n
+  - enclosure\n
+  - guid\n
   - pubDate\n
-  - link\n
-  - guid (which should be an absolute url of the document)\n
+  - source\n
+  All elements of an item are optional, however at least one of title or description must be\n
+  present. \n
   The way an object is presented should be defined in the listbox - the RSS skin passes on\n
   what is in the listbox, as is. So you can produce your own description, author information\n
   or publication date. A partial exception to this rule is dates - RSS protocol requires\n

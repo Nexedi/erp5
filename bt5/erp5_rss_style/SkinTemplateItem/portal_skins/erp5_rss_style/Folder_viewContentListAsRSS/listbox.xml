@@ -327,7 +327,7 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>Base_getRSSTitle</string>
+                          <string>title</string>
                           <string>title</string>
                         </tuple>
                         <tuple>
@@ -343,7 +343,7 @@
                           <string>link</string>
                         </tuple>
                         <tuple>
-                          <string>Base_getRSSDescription</string>
+                          <string>description</string>
                           <string>description</string>
                         </tuple>
                         <tuple>
@@ -415,6 +415,10 @@
                     <value> <int>0</int> </value>
                 </item>
                 <item>
+                    <key> <string>hide_rows_on_no_search_criterion</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
                     <key> <string>lines</string> </key>
                     <value> <int>20</int> </value>
                 </item>
@@ -453,6 +457,10 @@
                 <item>
                     <key> <string>report_tree</string> </key>
                     <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>row_css_method</string> </key>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>search</string> </key>
@@ -502,6 +510,12 @@
                 <item>
                     <key> <string>title</string> </key>
                     <value> <string>listbox</string> </value>
+                </item>
+                <item>
+                    <key> <string>untranslatable_columns</string> </key>
+                    <value>
+                      <list/>
+                    </value>
                 </item>
                 <item>
                     <key> <string>url_columns</string> </key>

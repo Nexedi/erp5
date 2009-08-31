@@ -60,6 +60,8 @@
   feed 100% standard-compliant.\n
 """\n
 \n
+# XXX What is the definition of \'author\' value?\n
+# Should it be \'the last person who modified the document\'?\n
 return context.getOwnerInfo().get(\'id\', \'\')\n
 </string> </value>
         </item>
