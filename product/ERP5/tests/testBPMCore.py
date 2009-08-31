@@ -42,7 +42,7 @@ class TestBPMMixin(ERP5TypeTestCase):
 
   def getBusinessTemplateList(self):
     return ('erp5_base', 'erp5_pdm', 'erp5_trade', 'erp5_accounting',
-      'erp5_invoicing', 'erp5_simplified_invoicing', 'erp5_administration')
+      'erp5_invoicing', 'erp5_simplified_invoicing')
 
   business_process_portal_type = 'Business Process'
   business_path_portal_type = 'Business Path'
