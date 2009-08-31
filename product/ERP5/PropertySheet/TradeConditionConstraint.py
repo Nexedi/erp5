@@ -42,7 +42,7 @@ class TradeConditionConstraint:
       'description'   : 'Expiration Date must be after Effective Date',
       'type'          : 'TALESConstraint',
       'condition'     : 'python: object.getExpirationDate() and '
-                        'object.getEffectiveDate()'
+                        'object.getEffectiveDate()',
       'expression'    : 'python: object.getExpirationDate() >= '
                         'object.getEffectiveDate()',
       'message_expression_false': 'Expiration date must be after effective date',
