@@ -27,11 +27,9 @@
 #
 ##############################################################################
 
-from Products.CMFCore.Expression import Expression
-
 class TradeModelLine:
   """
-    Properties which allow to define a generic Delivery Builder.
+    Properties for trade model lines
   """
   _properties = (
     { 'id'          : 'create_line',
@@ -42,8 +40,8 @@ class TradeModelLine:
       'default'     : True,
     },
     { 'id'          : 'calculation_script_id',
-      'description' : 'If a scrip is defined on Trade Model Line, this script'\
-                        ' is used to do localised calculs',
+      'description' : 'If a script is defined on trade model Line, this '
+                      'script will be used for calculation',
       'type'        : 'string',
       'mode'        : 'w',
     },
