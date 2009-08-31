@@ -13,15 +13,14 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>default</string>
-                <string>editable</string>
+                <string>display_width</string>
                 <string>title</string>
               </list>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>global_navigation_box</string> </value>
+            <value> <string>my_layout_sitemap_section_id</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -58,13 +57,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>default</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>editable</string> </key>
+                    <key> <string>display_width</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -91,27 +84,12 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>default</string> </key>
-                    <value> <string encoding="cdata"><![CDATA[
-
-<div class="navglobal">\n
-<ul>\n
-<li><a href="#" title="">About</a></li>\n
-<li><a href="#" title="">Contact</a></li>\n
-<li><a href="#" title="">Sitemap</a></li>\n
-<li><a href="#" title="">Links</a></li>\n
-</ul>\n
-</div>
-
-]]></string> </value>
-                </item>
-                <item>
-                    <key> <string>editable</string> </key>
-                    <value> <int>0</int> </value>
+                    <key> <string>display_width</string> </key>
+                    <value> <int>20</int> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_editor_field</string> </value>
+                    <value> <string>my_string_field</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
@@ -123,26 +101,10 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>top_header_box</string> </value>
+                    <value> <string>Sitemap Section ID</string> </value>
                 </item>
               </dictionary>
             </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <tuple>
-        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-        <tuple/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>here/WebSection_viewGlobalNavigationWidget</string> </value>
         </item>
       </dictionary>
     </pickle>

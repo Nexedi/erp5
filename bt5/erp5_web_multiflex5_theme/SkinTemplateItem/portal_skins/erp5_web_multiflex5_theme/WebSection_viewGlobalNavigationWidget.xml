@@ -55,9 +55,16 @@
 </tal:block>\n
 \n
 <tal:block tal:define="current_web_section python:request.get(\'current_web_section\', here);\n
-                       web_site_url python:current_web_section.getWebSiteValue().absolute_url();">\n
+                       web_site python:current_web_section.getWebSiteValue();\n
+                       web_site_url python:web_site.absolute_url();\n
+                       sitemap_section_id python:current_web_section.getLayoutProperty(\'layout_sitemap_section_id\', \'\');\n
+                       sitemap_section python:web_site.restrictedTraverse(sitemap_section_id)">\n
 <div class="navglobal">\n
 <ul>\n
+<tal:block tal:condition="sitemap_section_id">\n
+<li><a href="#" i18n:translate="" i18n:domain="ui"\n
+       tal:attributes="href python:\'%s\' % sitemap_section.absolute_url()">Sitemap</a></li>\n
+</tal:block>\n
 <tal:block tal:condition="here/portal_membership/isAnonymousUser">\n
 <li><a href="#" i18n:translate="" i18n:domain="ui"\n
        tal:attributes="href python:\'%s/login_form\' % web_site_url">Login</a></li>\n
