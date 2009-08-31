@@ -28,7 +28,7 @@
 
 class TradeConditionConstraint:
   """
-   Trade Model Line Constraints
+   Trade Condition Constraints
   """
   _constraints = (
     { 'id'            : 'reference_existence',
@@ -38,18 +38,14 @@ class TradeConditionConstraint:
       "message_property_not_set" : 'Reference must be defined',
       "message_no_such_property" : 'Reference must be defined'
     },
-    { 'id'            : 'effective_date_existence',
-      'description'   : 'Property start_date must be defined',
-      'type'          : 'PropertyExistence',
-      'effective_date'    : None,
-      'message_property_not_set': 'Effective Date must be defined',
-      'message_no_such_property' : 'Effective Date must be defined'
-    },
     { 'id'            : 'date_coherency',
       'description'   : 'Expiration Date must be after Effective Date',
       'type'          : 'TALESConstraint',
-      'expression'    : 'python: object.getExpirationDate() >= object.getEffectiveDate()',
-      'message_expression_false': 'Expiration Date must be after Begin Date',
+      'condition'     : 'python: object.getExpirationDate() and '
+                        'object.getEffectiveDate()'
+      'expression'    : 'python: object.getExpirationDate() >= '
+                        'object.getEffectiveDate()',
+      'message_expression_false': 'Expiration date must be after effective date',
     },
     { 'id'            : 'version_existence',
       'description'   : 'Version must be defined',
