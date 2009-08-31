@@ -2684,7 +2684,7 @@ class TestSaleInvoice(TestSaleInvoiceMixin, TestInvoice, ERP5TypeTestCase):
     then split and defer, and check everything is solved
     """
     if not quiet:
-      self.logMessage('Invoice Decrease Qantity')
+      self.logMessage('Invoice Decrease Quantity')
     sequence = self.PACKING_LIST_DEFAULT_SEQUENCE + \
     """
     stepSetReadyPackingList
