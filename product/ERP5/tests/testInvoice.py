@@ -1478,7 +1478,7 @@ self.portal.getDefaultModule(self.packing_list_portal_type).newContent(
 
     # accept decision
     builder_list = invoice.getBuilderList()
-    self.assertEquals(1, len(builder_list))
+    self.assertEquals(2, len(builder_list))
     for builder in builder_list:
       builder.solveDivergence(invoice.getRelativeUrl(),
                               divergence_to_accept_list=divergence_list)
@@ -3382,7 +3382,7 @@ class TestSaleInvoice(TestSaleInvoiceMixin, TestInvoice, ERP5TypeTestCase):
 
     # accept decision
     builder_list = invoice.getBuilderList()
-    self.assertEquals(1, len(builder_list))
+    self.assertEquals(2, len(builder_list))
     for builder in builder_list:
       builder.solveDivergence(invoice.getRelativeUrl(),
                               divergence_to_accept_list=divergence_list)
