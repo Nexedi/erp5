@@ -96,7 +96,7 @@ div.subcontent-box.cartbox fieldset.widget div.field label {display: none;}\n
 div.subcontent-box.cartbox h1.group_title {background: url(./mf54_image/icon_celltitle_cart.jpg) no-repeat; background-position:229px 5px;}\n
 div.subcontent-box.loginbox fieldset.widget div.field div p {font-weight: bold;color: #646464;}\n
 div.subcontent-box.loginbox fieldset.widget div.field div {text-align:center;}\n
-div.subcontent-box.loginbox fieldset.widget div.field div a {font-weight: bold;color: #646464; margin-left: 8px;}\n
+div.subcontent-box.loginbox fieldset.widget div.field div a {font-size:12px; font-weight: bold;color: #646464; margin-left: 8px;}\n
 div.subcontent-box.cartbox fieldset.widget div.field table {background-color:green; margin:0px; width:100%; padding:5px;}\n
 div.subcontent-box.cartbox fieldset.widget div.field table tr td {background-color:#FFFFFF; border:none;}\n
 div.subcontent-box.cartbox fieldset.widget div.field table tr td.cart_top {border-bottom: dashed 1px #cccccc;}\n
