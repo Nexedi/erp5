@@ -1538,7 +1538,7 @@ self.portal.getDefaultModule(self.packing_list_portal_type).newContent(
 
     # adopt prevision
     builder_list = invoice.getBuilderList()
-    self.assertEquals(1, len(builder_list))
+    self.assertEquals(2, len(builder_list))
     for builder in builder_list:
       builder.solveDivergence(invoice.getRelativeUrl(),
                               divergence_to_adopt_list=divergence_list)
