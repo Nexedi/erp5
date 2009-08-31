@@ -42,7 +42,7 @@ class TestBPMMixin(ERP5TypeTestCase):
 
   def getBusinessTemplateList(self):
     return ('erp5_base', 'erp5_pdm', 'erp5_trade', 'erp5_accounting',
-      'erp5_invoicing', 'erp5_simplified_invoicing')
+      'erp5_invoicing', 'erp5_simplified_invoicing', 'erp5_administration')
 
   business_process_portal_type = 'Business Process'
   business_path_portal_type = 'Business Path'
@@ -234,6 +234,14 @@ class TestBPMMixin(ERP5TypeTestCase):
     self.stepTic()
 
   def beforeTearDown(self):
+    # abort any transaction
+    transaction.abort()
+    # put non finished activities into ignored state
+    activity_connection = self.portal.cmf_activity_sql_connection
+    for table in 'message', 'message_queue':
+      activity_connection.manage_test(
+          'update %s set processing_node=-8 where processing_node=-2' % table)
+    # remove not needed rules
     self.portal.portal_rules.manage_delObjects(
         ids=['test_invoice_transaction_rule'])
     self.stepTic()
