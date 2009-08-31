@@ -57,7 +57,7 @@
 #the goal of this script is to get all the related product of this section\n
 \n
 if (context.getPortalType() != \'Web Section\'):\n
-  current_web_section = context.REQUEST.get(\'current_web_section\')\n
+  current_web_section = context.REQUEST.get(\'current_web_section\', context)\n
 else:\n
   current_web_section = context\n
 \n
