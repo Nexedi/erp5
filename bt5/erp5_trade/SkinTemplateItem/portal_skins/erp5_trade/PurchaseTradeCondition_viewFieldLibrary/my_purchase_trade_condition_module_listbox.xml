@@ -129,6 +129,10 @@
                           <string>Reference</string>
                         </tuple>
                         <tuple>
+                          <string>version</string>
+                          <string>Version</string>
+                        </tuple>
+                        <tuple>
                           <string>incoterm_title</string>
                           <string>Incoterm</string>
                         </tuple>
@@ -306,6 +310,10 @@
                           <string>Reference</string>
                         </tuple>
                         <tuple>
+                          <string>version</string>
+                          <string>Version</string>
+                        </tuple>
+                        <tuple>
                           <string>incoterm_title</string>
                           <string>Incoterm</string>
                         </tuple>
@@ -390,6 +398,10 @@
                         <tuple>
                           <string>reference</string>
                           <string>Reference</string>
+                        </tuple>
+                        <tuple>
+                          <string>version</string>
+                          <string>Version</string>
                         </tuple>
                         <tuple>
                           <string>incoterm_title</string>

@@ -94,7 +94,7 @@
                     <value>
                       <list>
                         <string>my_title</string>
-                        <string>my_reference</string>
+                        <string>my_trade_condition_type</string>
                         <string>my_source_section_title</string>
                         <string>my_source_title</string>
                         <string>my_source_decision_title</string>
@@ -109,7 +109,8 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
-                        <string>my_trade_condition_type</string>
+                        <string>my_reference</string>
+                        <string>my_version</string>
                         <string>my_destination_section_title</string>
                         <string>my_destination_title</string>
                         <string>my_destination_decision_title</string>
