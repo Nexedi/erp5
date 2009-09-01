@@ -368,7 +368,7 @@ class Rule(Predicate, XMLObject):
         # Check the quantity
         m_quantity = 0.0
         for movement in p_matched_list:
-          m_quantity += movement.getQuantity()#getCorrectedQuantity()
+          m_quantity += movement.getQuantity()
         if m_quantity != prevision.get('quantity'):
           # special case - quantity
           if movement.isPropertyForced('quantity'):
@@ -385,7 +385,6 @@ class Rule(Predicate, XMLObject):
                   + deletable_movement_list):
                 # mark as requiring modification
                 prop_dict = modify_dict.setdefault(movement.getId(), {})
-                #prop_dict['quantity'] = movement.getCorrectedQuantity() + \
                 prop_dict['quantity'] = movement.getQuantity() + \
                     q_diff
                 break
@@ -399,7 +398,6 @@ class Rule(Predicate, XMLObject):
             prop_dict = modify_dict.setdefault(movement.getId(), {})
             for k, v in prevision.items():
               if k not in ('quantity',) and v != movement.getProperty(k):
-                # TODO: acceptance range
                 if movement.isPropertyForced(k):
                   # support compensation if not prevent_compensation
                   LOG('%s:%s' % (self.getRelativeUrl(), movement.getRelativeUrl()), WARNING,
@@ -430,6 +428,7 @@ class Rule(Predicate, XMLObject):
         # with negative quantity
         raise NotImplementedError("Tried to delete immutable movement %s" % \
             movement.getRelativeUrl())
+
     return (add_list, modify_dict, delete_list)
 
   def _getCompensatedMovementList(self, applied_rule,
