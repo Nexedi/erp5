@@ -31,6 +31,7 @@ import unittest
 import transaction
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.Base import _aq_reset
+from AccessControl import ClassSecurityInfo
 from AccessControl.SecurityManagement import newSecurityManager
 import Products.ERP5Type
 
@@ -618,8 +619,9 @@ context.setTitle('Bar')
     # this method, but does not override existing security definition (defined
     # on the class)
     Organisation = Products.ERP5Type.Document.Organisation.Organisation
-    Organisation.security.declarePrivate('doSomethingStupid')
-    Organisation.security.apply(Organisation)
+    security = ClassSecurityInfo()
+    security.declarePrivate('doSomethingStupid')
+    security.apply(Organisation)
 
     self.createInteractionWorkflow()
     self.interaction.setProperties(
