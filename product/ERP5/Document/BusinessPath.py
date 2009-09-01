@@ -7,10 +7,10 @@
 #                    Łukasz Nowak <luke@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
-# programmers who take the whole responsability of assessing all potential
+# programmers who take the whole responsibility of assessing all potential
 # consequences resulting from its eventual inadequacies and bugs
 # End users who are looking for a ready-to-use solution with commercial
-# garantees and support are strongly adviced to contract a Free Software
+# guarantees and support are strongly advised to contract a Free Software
 # Service Company
 #
 # This program is Free Software; you can redistribute it and/or
@@ -43,15 +43,16 @@ class BusinessPath(Path):
     process.
 
     BusinessPath are also used as helper to build deliveries from
-    buildable movements. Here is the typical code of an alarm
-    in charge of the building process.
-
+    buildable movements. 
+    
     The idea is to invoke isBuildable() on the collected simulation
     movements (which are orphan) during build "after select" process
 
-      builder = portal_deliveries.default_order_builder
-      for path in builder.getSpecialiseRelatedValueList() # or wharever category
-        builder.build(causality_uid=path.getUid(),) # Select movemenents
+    Here is the typical code of an alarm in charge of the building process::
+    
+      builder = portal_deliveries.a_delivery_builder
+      for business_path in builder.getDeliveryBuilderRelatedValueList():
+        builder.build(causality_uid=business_path.getUid(),) # Select movements
 
       Pros: global select is possible by not providing a causality_uid
       Cons: global select retrieves long lists of orphan movements which 
@@ -115,7 +116,7 @@ class BusinessPath(Path):
         'destination_administration', 'destination_project', 'destination_function',
         'destination_payment', 'destination_account')
 
-  # ICategoryAccessProvider overriden methods
+  # ICategoryAccessProvider overridden methods
   def _getCategoryMembershipList(self, category, **kw):
     """
       Overridden in order to take into account dynamic arrow categories in case if no static
@@ -146,8 +147,9 @@ class BusinessPath(Path):
       result = dynamic_category_list
     return result
 
-  def _filterCategoryList(self, category_list, category, spec=(), filter=None, portal_type=(), base=0, 
-                         keep_default=1, checked_permission=None):
+  def _filterCategoryList(self, category_list, category, spec=(),
+                          filter=None, portal_type=(), base=0,
+                          keep_default=1, checked_permission=None):
     """
       XXX - implementation missing
       TBD - look at CategoryTool._buildFilter for inspiration
@@ -492,3 +494,4 @@ class BusinessPath(Path):
           return predecessor_expected_date
         else:
           return successor_expected_date
+
