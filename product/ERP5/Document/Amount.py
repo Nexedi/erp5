@@ -179,6 +179,14 @@ class Amount(Base, Variated):
         base_category_list.append(base_category)
     return base_category_list
 
+  security.declareProtected(Permissions.ModifyPortalContent,
+                            'setVariationBaseCategoryList')
+  def setVariationBaseCategoryList(self, node_list):
+    """Do nothing in the case of an amount, because variation base category
+    list are set on the resource.
+    """
+    pass
+
   security.declareProtected(Permissions.AccessContentsInformation, 
                             'getVariationBaseCategoryItemList')
   def getVariationBaseCategoryItemList(self,display_id='getTitleOrId',**kw):
@@ -212,9 +220,10 @@ class Amount(Base, Variated):
     self._setVariationValue(variation_value)
     self.reindexObject()
 
-  security.declareProtected(Permissions.AccessContentsInformation, \
+  security.declareProtected(Permissions.AccessContentsInformation,
                             'getVariationRangeCategoryItemList')
-  def getVariationRangeCategoryItemList(self, **kw):
+  def getVariationRangeCategoryItemList(self, base_category_list=(),
+      display_id='getTitleOrId', base=1, current_category=None, **kw):
     """
       Returns possible variation category values for the
       order line according to the default resource.
@@ -225,8 +234,12 @@ class Amount(Base, Variated):
     """
     resource = self.getResourceValue()
     if resource is not None:
+      kw['omit_individual_variation'] = 0
       result = resource.getVariationCategoryItemList(
-                               omit_individual_variation=0,**kw)
+                               base_category_list=base_category_list,
+                               display_id=display_id,
+                               base=base,
+                               current_category=current_category, **kw)
     else:
       result = []
     return result
