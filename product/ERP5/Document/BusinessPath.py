@@ -60,7 +60,8 @@ class BusinessPath(Path):
             the build process could be rather slow or require activities
 
     TODO:
-      - finish build process implementation
+      - merge build implementation from erp5_bpm business template to ERP5
+        product code with backward compatibility
   """
   meta_type = 'ERP5 Business Path'
   portal_type = 'Business Path'
