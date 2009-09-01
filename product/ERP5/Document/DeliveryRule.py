@@ -66,7 +66,6 @@ class DeliveryRule(Rule):
       Rule.expand(self, applied_rule,
           delivery_movement_type_list=delivery_movement_type_list, **kw)
       return
-    movement_type = 'Simulation Movement'
     existing_movement_list = []
     immutable_movement_list = []
     delivery = applied_rule.getDefaultCausalityValue()
@@ -76,7 +75,7 @@ class DeliveryRule(Rule):
       delivery_movement_list = delivery.getMovementList(
                                             portal_type=delivery_movement_type_list)
       # Check existing movements
-      for movement in applied_rule.contentValues(portal_type=movement_type):
+      for movement in applied_rule.contentValues(portal_type=self.movement_type):
         if movement.getLastExpandSimulationState() not in \
           self.getPortalCurrentInventoryStateList():
           # XXX: This condition is quick and dirty hack - knowing if Simulation
@@ -106,7 +105,7 @@ class DeliveryRule(Rule):
           # Generate the simulation deliv_mvt
           # XXX Hardcoded value
           new_sim_mvt = applied_rule.newContent(
-              portal_type=movement_type,
+              portal_type=self.movement_type,
               id=new_id,
               order_value=deliv_mvt,
               order_ratio=1,

@@ -46,7 +46,6 @@ class TaxRule(DeliveryRule):
   security.declareProtected(Permissions.ModifyPortalContent, 'expand')
   def expand(self, applied_rule, force=0, **kw):
     """ """ 
-    movement_type = 'Simulation Movement'
     immutable_movement_list = []
 
     parent_simulation_movement = applied_rule.getParentValue()
@@ -81,7 +80,7 @@ class TaxRule(DeliveryRule):
 
         if not existing_simulation_movement_list:
           applied_rule.newContent(
-                portal_type=movement_type,
+                portal_type=self.movement_type,
                 order_value=tax_movement,
                 order_ratio=1,
                 delivery_ratio=1,

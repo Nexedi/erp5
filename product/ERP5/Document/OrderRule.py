@@ -66,7 +66,6 @@ class OrderRule(DeliveryRule):
       DeliveryRule.expand(self, applied_rule, force=force, **kw)
       return
 
-    movement_type = 'Simulation Movement'
     existing_movement_list = []
     immutable_movement_list = []
     order = applied_rule.getDefaultCausalityValue()
@@ -74,7 +73,7 @@ class OrderRule(DeliveryRule):
       order_movement_list = order.getMovementList(
                      portal_type=order.getPortalOrderMovementTypeList())
       # check existing movements
-      for movement in applied_rule.contentValues(portal_type=movement_type):
+      for movement in applied_rule.contentValues(portal_type=self.movement_type):
         if (not movement.getLastExpandSimulationState() in
             order.getPortalReservedInventoryStateList() and
             not movement.getLastExpandSimulationState() in
@@ -109,7 +108,7 @@ class OrderRule(DeliveryRule):
           # Do not try to create meaningfull IDs, as order movement can be
           # hierarchicals
           applied_rule.newContent(
-              portal_type=movement_type,
+              portal_type=self.movement_type,
               order_value=movement,
               order_ratio=1,
               delivery_ratio=1,

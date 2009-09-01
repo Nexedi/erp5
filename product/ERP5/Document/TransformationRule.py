@@ -54,9 +54,6 @@ class TransformationRule(TransformationSourcingRuleMixin, Rule):
     zope.interface.implements(interfaces.IPredicate,
                               interfaces.IRule )
 
-    # Class variable 
-    simulation_movement_portal_type = "Simulation Movement"
-
     # Simulation workflow
     security.declareProtected(Permissions.ModifyPortalContent, 'expand')
     def expand(self, applied_rule, **kw):

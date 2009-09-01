@@ -135,7 +135,7 @@ class AmortisationRule(Rule):
         """
         def createMovement(property_dict, correction_number):
           new_id = '%s_%i_%i' % (self.movement_name_dict['correction'], aggregated_period_number, correction_number)
-          simulation_movement = applied_rule.newContent(portal_type=delivery_line_type, id=new_id)
+          simulation_movement = applied_rule.newContent(portal_type=self.movement_type, id=new_id)
           updateSimulationMovementProperties(simulation_movement = simulation_movement,
                                              calculated_movement = property_dict)
         if aggregated_movement['status'] not in invalid_state_list:
@@ -267,7 +267,6 @@ class AmortisationRule(Rule):
           
       ### Start of expand() ###
         
-      delivery_line_type = 'Simulation Movement'
       to_notify_delivery_list = []
       # Get the item we come from
       my_item = applied_rule.getCausalityValue()
@@ -376,7 +375,7 @@ class AmortisationRule(Rule):
               movement = movement_list[movement_number]
               if movement['quantity'] != 0:
                 new_id = '%s_%i_%i' % (mov_type, new_period, movement_number)
-                simulation_movement = applied_rule.newContent(portal_type=delivery_line_type, id=new_id)
+                simulation_movement = applied_rule.newContent(portal_type=self.movement_type, id=new_id)
                 # Set the properties
                 updateSimulationMovementProperties(simulation_movement = simulation_movement,
                                                    calculated_movement = movement)
@@ -418,7 +417,7 @@ class AmortisationRule(Rule):
                 else:
                   # No matching found. We simply create the annuity
                   new_id = '%s_%i_%i' % (mov_type, aggregated_period_number, new_aggregated_number)
-                  simulation_movement = applied_rule.newContent(portal_type=delivery_line_type, id=new_id)
+                  simulation_movement = applied_rule.newContent(portal_type=self.movement_type, id=new_id)
                   updateSimulationMovementProperties(simulation_movement = simulation_movement,
                                                      calculated_movement = calculated_movement)
                   new_aggregated_number += 1
@@ -462,7 +461,7 @@ class AmortisationRule(Rule):
                 else:
                   # There is no aggregated movement left. We simply create the remaining calculated movements
                   new_id = '%s_%i_%i' % (mov_type, aggregated_period_number, new_aggregated_number)
-                  simulation_movement = applied_rule.newContent(portal_type=delivery_line_type, id=new_id)
+                  simulation_movement = applied_rule.newContent(portal_type=self.movement_type, id=new_id)
                   updateSimulationMovementProperties(simulation_movement = simulation_movement,
                                                      calculated_movement = calculated_movement)
                   new_aggregated_number += 1

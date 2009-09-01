@@ -66,7 +66,6 @@ class OpenOrderRule(DeliveryRule):
       # Delegate implementation of expand to the SubscriptionItem or 
       # to the OpenOrder instance
       return order.expandOpenOrderRule(applied_rule, force=force, **kw)
-    movement_type = 'Simulation Movement'    
     if order is not None:
       order_movement_list = order.getMovementList(
         portal_type=order.getPortalOrderMovementTypeList())
@@ -89,7 +88,7 @@ class OpenOrderRule(DeliveryRule):
           property_dict = self._getExpandablePropertyDict(order_movement,
                                                           property_dict)
           simulation_movement = applied_rule.newContent(
-            portal_type=movement_type,
+            portal_type=self.movement_type,
             order_value=order_movement,
             order_ratio=1,
             delivery_ratio=1,

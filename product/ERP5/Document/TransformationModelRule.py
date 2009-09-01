@@ -40,6 +40,7 @@ from Products.ERP5.Document.SimulationMovement import SimulationMovement
 from Products.ERP5Type.Errors import TransformationRuleError
 
 class MovementFactory:
+  movement_type = 'Simulation Movement'
   def getRequestList(self):
     """
     return the list of a request which to be used to apply movements
@@ -65,7 +66,7 @@ class MovementFactory:
     """
     movement_dict = {}
     for movement in applied_rule.objectValues(
-        portal_type="Simulation Movement"):
+        portal_type=self.movement_type):
       key = tuple(sorted(movement.getCausalityList()))
       movement_dict[key] = movement
 
@@ -75,7 +76,7 @@ class MovementFactory:
       movement = movement_dict.get(key, None)
       # when no exist
       if movement is None:
-        movement = applied_rule.newContent(portal_type="Simulation Movement")
+        movement = applied_rule.newContent(portal_type=self.movement_type)
       # update
       if movement.isFrozen():
         self.makeDifferentMovement(movement, **request)
@@ -98,7 +99,7 @@ class MovementFactory:
     request['quantity'] = self._requestNetQuantity(request)\
                           - movement.getNetQuantity()
     if request['quantity'] != 0:
-      diff_movement = applied_rule.newContent(portal_type="Simulation Movement")
+      diff_movement = applied_rule.newContent(portal_type=self.movement_type)
       diff_movement.edit(**request)
 
 

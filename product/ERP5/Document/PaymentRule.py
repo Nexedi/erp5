@@ -76,7 +76,7 @@ class PaymentRule(Rule):
             return payment_condition_list
 
         movement = movement.getParentValue().getParentValue()
-        if movement.getPortalType() != 'Simulation Movement':
+        if movement.getPortalType() != self.movement_type:
           LOG('ERP5', INFO, "PaymentRule couldn't find payment condition")
           return []
      
@@ -121,8 +121,6 @@ class PaymentRule(Rule):
     def expand(self, applied_rule, **kw):
       """Expands the current movement downward.
       """
-      payment_line_type = 'Simulation Movement'
-
       my_parent_movement = applied_rule.getParentValue()
       # generate for source
       bank_account = self.getDestinationPaymentValue(

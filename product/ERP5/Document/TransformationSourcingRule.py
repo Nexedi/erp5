@@ -90,7 +90,7 @@ class TransformationSourcingRuleMixin(ExtensionClass.Base):
       # Create the movement if it does not exist
       if movement is None:
         movement = applied_rule.newContent(
-                        portal_type=self.simulation_movement_portal_type,
+                        portal_type=self.movement_type,
                         id=movement_id,
                         activate_kw=activate_kw
         )
@@ -142,9 +142,6 @@ class TransformationSourcingRule(TransformationSourcingRuleMixin, Rule):
     security.declareObjectProtected(Permissions.AccessContentsInformation)
     zope.interface.implements(interfaces.IPredicate,
                               interfaces.IRule )
-
-    # Class variable 
-    simulation_movement_portal_type = "Simulation Movement"
 
     security.declareProtected(Permissions.ModifyPortalContent, 'expand')
     def expand(self, applied_rule, activate_kw=None,**kw):
