@@ -143,8 +143,8 @@ class TestPayrollMixin(ERP5ReportTestCase, TestTradeModelLineMixin):
 
   def getNeededCategoryList(self):
     """return a list of categories that should be created."""
-    return ('contribution_share/employer_share',
-            'contribution_share/employee_share',
+    return ('contribution_share/employer',
+            'contribution_share/employee',
             'base_amount/deductible_tax',
             'base_amount/base_salary',
             'base_amount/net_salary',
@@ -186,8 +186,8 @@ class TestPayrollMixin(ERP5ReportTestCase, TestTradeModelLineMixin):
         product_line='state_insurance', quantity_unit='time/month',
         variation_base_category_list=['contribution_share', 'salary_range'],
         use='payroll/tax')
-    node.setVariationCategoryList(['contribution_share/employee_share',
-                                   'contribution_share/employer_share',
+    node.setVariationCategoryList(['contribution_share/employee',
+                                   'contribution_share/employer',
                                     'salary_range/france/slice_0_to_200',
                                     'salary_range/france/slice_200_to_400',
                                     'salary_range/france/slice_400_to_5000',
@@ -215,8 +215,8 @@ class TestPayrollMixin(ERP5ReportTestCase, TestTradeModelLineMixin):
     node.edit(title='Bonus', quantity_unit='time/month',
         variation_base_category_list=['contribution_share'],
         product_line='labour', use='payroll/base_salary')
-    node.setVariationCategoryList(['contribution_share/employee_share',
-                                   'contribution_share/employer_share'])
+    node.setVariationCategoryList(['contribution_share/employee',
+                                   'contribution_share/employer'])
     sequence.edit(bonus_service = node)
 
   def stepCreateOldAgeInsuranaceService(self, sequence=None, **kw):
@@ -224,8 +224,8 @@ class TestPayrollMixin(ERP5ReportTestCase, TestTradeModelLineMixin):
     node.edit(title='Old Age Insurance', quantity_unit='time/month',
         variation_base_category_list=['contribution_share', 'salary_range'],
         product_line='state_insurance', use='payroll/tax')
-    node.setVariationCategoryList(['contribution_share/employee_share',
-                                   'contribution_share/employer_share'])
+    node.setVariationCategoryList(['contribution_share/employee',
+                                   'contribution_share/employer'])
     sequence.edit(old_age_insurance_service = node)
 
   def stepCreateSicknessInsuranceService(self, sequence=None, **kw):
@@ -233,8 +233,8 @@ class TestPayrollMixin(ERP5ReportTestCase, TestTradeModelLineMixin):
     node.edit(title='Sickness Insurance', quantity_unit='time/month',
         variation_base_category_list=['contribution_share', 'salary_range'],
         product_line='state_insurance', use='payroll/tax')
-    node.setVariationCategoryList(['contribution_share/employee_share',
-                                   'contribution_share/employer_share'])
+    node.setVariationCategoryList(['contribution_share/employee',
+                                   'contribution_share/employer'])
     sequence.edit(sickness_insurance_service = node)
 
   def createModel(self):
@@ -311,8 +311,8 @@ class TestPayrollMixin(ERP5ReportTestCase, TestTradeModelLineMixin):
                     reference='urssaf_model_line',
                     trade_phase='payroll/france/urssaf',
                     resource_value=sequence.get('urssaf_service'),
-                    variation_category_list=['contribution_share/employee_share',
-                                             'contribution_share/employer_share'],
+                    variation_category_list=['contribution_share/employee',
+                                             'contribution_share/employer'],
                     base_application_list=[ 'base_amount/base_salary'],
                     base_contribution_list=['base_amount/deductible_tax'])
     sequence.edit(urssaf_model_line = model_line)
@@ -324,8 +324,8 @@ class TestPayrollMixin(ERP5ReportTestCase, TestTradeModelLineMixin):
                     reference='urssaf_model_line_2',
                     trade_phase='payroll/france/urssaf',
                     resource_value=sequence.get('urssaf_service'),
-                    variation_category_list=['contribution_share/employee_share',
-                                       'contribution_share/employer_share',
+                    variation_category_list=['contribution_share/employee',
+                                       'contribution_share/employer',
                                        'salary_range/france/slice_0_to_200',
                                        'salary_range/france/slice_200_to_400',
                                        'salary_range/france/slice_400_to_5000'],
@@ -340,8 +340,8 @@ class TestPayrollMixin(ERP5ReportTestCase, TestTradeModelLineMixin):
                     reference='urssaf_model_line_3',
                     trade_phase='payroll/france/urssaf',
                     resource_value=sequence.get('urssaf_service'),
-                    variation_category_list=['contribution_share/employee_share',
-                                       'contribution_share/employer_share',
+                    variation_category_list=['contribution_share/employee',
+                                       'contribution_share/employer',
                                        'salary_range/france/slice_200_to_400',
                                        'salary_range/france/slice_600_to_800'],
                     base_application_list=[ 'base_amount/base_salary'],
@@ -358,127 +358,127 @@ class TestPayrollMixin(ERP5ReportTestCase, TestTradeModelLineMixin):
                     reference='urssaf_model_line',
                     trade_phase='payroll/france/urssaf',
                     resource_value=sequence.get('urssaf_service'),
-                    variation_category_list=['contribution_share/employee_share',
-                                             'contribution_share/employer_share'],
+                    variation_category_list=['contribution_share/employee',
+                                             'contribution_share/employer'],
                     base_application_list=[ 'base_amount/base_salary'],
                     base_contribution_list=['base_amount/deductible_tax'])
     sequence.edit(urssaf_model_line = model_line)
 
   def stepUrssafModelLineCreateMovements(self, sequence=None, **kw):
     model_line = sequence.get('urssaf_model_line')
-    cell1 = model_line.newCell('contribution_share/employee_share',
+    cell1 = model_line.newCell('contribution_share/employee',
         portal_type='Pay Sheet Model Cell',
         base_id='movement',
         mapped_value_property_list=('quantity', 'price'))
-    cell1.edit(price=0.1, contribution_share='employee_share')
-    cell2 = model_line.newCell('contribution_share/employer_share',
+    cell1.edit(price=0.1, contribution_share='employee')
+    cell2 = model_line.newCell('contribution_share/employer',
         portal_type='Pay Sheet Model Cell',
         base_id='movement',
         mapped_value_property_list=('quantity', 'price'))
-    cell2.edit(price=0.5, contribution_share='employer_share')
+    cell2.edit(price=0.5, contribution_share='employer')
 
   def stepUrssafModelLineCreateMovementsWithQuantityOnly(self, sequence=None, **kw):
     model_line = sequence.get('urssaf_model_line')
-    cell1 = model_line.newCell('contribution_share/employee_share',
+    cell1 = model_line.newCell('contribution_share/employee',
         portal_type='Pay Sheet Model Cell',
         base_id='movement',
         mapped_value_property_list=('quantity', 'price'))
-    cell1.edit(quantity=-100, contribution_share='employee_share')
-    cell2 = model_line.newCell('contribution_share/employer_share',
+    cell1.edit(quantity=-100, contribution_share='employee')
+    cell2 = model_line.newCell('contribution_share/employer',
         portal_type='Pay Sheet Model Cell',
         base_id='movement',
         mapped_value_property_list=('quantity', 'price'))
-    cell2.edit(quantity=-200, contribution_share='employer_share')
+    cell2.edit(quantity=-200, contribution_share='employer')
 
   def stepUrssafModelLineWithSlicesCreateMovements(self, sequence=None, **kw):
     model_line = sequence.get('urssaf_model_line_with_slices')
-    cell1 = model_line.newCell('contribution_share/employee_share',
+    cell1 = model_line.newCell('contribution_share/employee',
         'salary_range/france/slice_0_to_200',
         portal_type='Pay Sheet Model Cell',
         base_id='movement',
         mapped_value_property_list=('quantity', 'price'))
-    cell1.edit(price=0.1, contribution_share='employee_share',
+    cell1.edit(price=0.1, contribution_share='employee',
         salary_range='france/slice_0_to_200')
-    cell2 = model_line.newCell('contribution_share/employer_share',
+    cell2 = model_line.newCell('contribution_share/employer',
         'salary_range/france/slice_0_to_200',
         portal_type='Pay Sheet Model Cell',
         base_id='movement',
         mapped_value_property_list=('quantity', 'price'))
-    cell2.edit(price=0.2, contribution_share='employer_share',
+    cell2.edit(price=0.2, contribution_share='employer',
         salary_range='france/slice_0_to_200')
-    cell3 = model_line.newCell('contribution_share/employee_share',
+    cell3 = model_line.newCell('contribution_share/employee',
         'salary_range/france/slice_200_to_400',
         portal_type='Pay Sheet Model Cell',
         base_id='movement',
         mapped_value_property_list=('quantity', 'price'))
-    cell3.edit(price=0.3, contribution_share='employee_share',
+    cell3.edit(price=0.3, contribution_share='employee',
         salary_range='france/slice_200_to_400')
-    cell4 = model_line.newCell('contribution_share/employer_share',
+    cell4 = model_line.newCell('contribution_share/employer',
         'salary_range/france/slice_200_to_400',
         portal_type='Pay Sheet Model Cell',
         base_id='movement',
         mapped_value_property_list=('quantity', 'price'))
-    cell4.edit(price=0.4, contribution_share='employer_share',
+    cell4.edit(price=0.4, contribution_share='employer',
         salary_range='france/slice_200_to_400')
-    cell5 = model_line.newCell('contribution_share/employee_share',
+    cell5 = model_line.newCell('contribution_share/employee',
         'salary_range/france/slice_400_to_5000',
         portal_type='Pay Sheet Model Cell',
         base_id='movement',
         mapped_value_property_list=('quantity', 'price'))
-    cell5.edit(price=0.5, contribution_share='employee_share',
+    cell5.edit(price=0.5, contribution_share='employee',
         salary_range='france/slice_400_to_5000')
-    cell6 = model_line.newCell('contribution_share/employer_share',
+    cell6 = model_line.newCell('contribution_share/employer',
         'salary_range/france/slice_400_to_5000',
         portal_type='Pay Sheet Model Cell',
         base_id='movement',
         mapped_value_property_list=('quantity', 'price'))
-    cell6.edit(price=0.6, contribution_share='employer_share',
+    cell6.edit(price=0.6, contribution_share='employer',
         salary_range='france/slice_400_to_5000')
 
   def stepUrssafModelLineWithComplexSlicesCreateMovements(self,
       sequence=None, **kw):
     model_line = sequence.get('urssaf_model_line_with_slices')
-    cell1 = model_line.newCell('contribution_share/employee_share',
+    cell1 = model_line.newCell('contribution_share/employee',
         'salary_range/france/slice_200_to_400',
         portal_type='Pay Sheet Model Cell',
         base_id='movement',
         mapped_value_property_list=('quantity', 'price'))
-    cell1.edit(price=0.1, contribution_share='employee_share',
+    cell1.edit(price=0.1, contribution_share='employee',
         salary_range='france/slice_200_to_400')
-    cell2 = model_line.newCell('contribution_share/employer_share',
+    cell2 = model_line.newCell('contribution_share/employer',
         'salary_range/france/slice_200_to_400',
         portal_type='Pay Sheet Model Cell',
         base_id='movement',
         mapped_value_property_list=('quantity', 'price'))
-    cell2.edit(price=0.2, contribution_share='employer_share',
+    cell2.edit(price=0.2, contribution_share='employer',
         salary_range='france/slice_200_to_400')
-    cell3 = model_line.newCell('contribution_share/employee_share',
+    cell3 = model_line.newCell('contribution_share/employee',
         'salary_range/france/slice_600_to_800',
         portal_type='Pay Sheet Model Cell',
         base_id='movement',
         mapped_value_property_list=('quantity', 'price'))
-    cell3.edit(price=0.3, contribution_share='employee_share',
+    cell3.edit(price=0.3, contribution_share='employee',
         salary_range='france/slice_600_to_800')
-    cell4 = model_line.newCell('contribution_share/employer_share',
+    cell4 = model_line.newCell('contribution_share/employer',
         'salary_range/france/slice_600_to_800',
         portal_type='Pay Sheet Model Cell',
         base_id='movement',
         mapped_value_property_list=('quantity', 'price'))
-    cell4.edit(price=0.4, contribution_share='employer_share',
+    cell4.edit(price=0.4, contribution_share='employer',
         salary_range='france/slice_600_to_800')
 
   def stepPaysheetUrssafModelLineCreateMovements(self, sequence=None, **kw):
     model_line = sequence.get('urssaf_model_line')
-    cell1 = model_line.newCell('contribution_share/employee_share',
+    cell1 = model_line.newCell('contribution_share/employee',
         portal_type='Pay Sheet Model Cell',
         base_id='movement',
         mapped_value_property_list=('quantity', 'price'))
-    cell1.edit(price=0.3, contribution_share='employee_share')
-    cell2 = model_line.newCell('contribution_share/employer_share',
+    cell1.edit(price=0.3, contribution_share='employee')
+    cell2 = model_line.newCell('contribution_share/employer',
         portal_type='Pay Sheet Model Cell',
         base_id='movement',
         mapped_value_property_list=('quantity', 'price'))
-    cell2.edit(price=0.7, contribution_share='employer_share')
+    cell2.edit(price=0.7, contribution_share='employer')
 
   def createPaysheet(self, sequence=None, **kw):
     module = self.portal.getDefaultModule(portal_type='Pay Sheet Transaction')
@@ -514,23 +514,23 @@ class TestPayrollMixin(ERP5ReportTestCase, TestTradeModelLineMixin):
     paysheet_line = self.createPaysheetLine(paysheet)
     paysheet_line.edit(title='Bonus',
                     resource_value=sequence.get('bonus_service'),
-                    variation_category_list=['contribution_share/employee_share',
-                                             'contribution_share/employer_share'],
+                    variation_category_list=['contribution_share/employee',
+                                             'contribution_share/employer'],
                     base_contribution_list=[ 'base_amount/base_salary'])
     sequence.edit(bonus_paysheet_line = paysheet_line)
 
   def stepPaysheetCreateBonusPaySheetLineMovements(self, sequence=None, **kw):
     paysheet_line = sequence.get('bonus_paysheet_line')
-    cell1 = paysheet_line.newCell('contribution_share/employee_share',
+    cell1 = paysheet_line.newCell('contribution_share/employee',
         portal_type='Pay Sheet Cell',
         base_id='movement',
         mapped_value_property_list=('quantity', 'price'))
-    cell1.edit(quantity=1000, price=1, contribution_share='employee_share')
-    cell2 = paysheet_line.newCell('contribution_share/employer_share',
+    cell1.edit(quantity=1000, price=1, contribution_share='employee')
+    cell2 = paysheet_line.newCell('contribution_share/employer',
         portal_type='Pay Sheet Cell',
         base_id='movement',
         mapped_value_property_list=('quantity', 'price'))
-    cell2.edit(quantity=1000, price=1, contribution_share='employer_share')
+    cell2.edit(quantity=1000, price=1, contribution_share='employer')
 
   def checkUpdateAggregatedAmountListReturn(self, model, paysheet,
       expected_movement_to_delete_count, expected_movement_to_add_count):
@@ -654,10 +654,10 @@ class TestPayrollMixin(ERP5ReportTestCase, TestTradeModelLineMixin):
     for paysheet_line in paysheet_line_list:
       service = paysheet_line.getResourceTitle()
       if service == 'Urssaf':
-        cell1 = paysheet_line.getCell('contribution_share/employee_share')
+        cell1 = paysheet_line.getCell('contribution_share/employee')
         self.assertEquals(cell1.getQuantity(), 3000)
         self.assertEquals(cell1.getPrice(), 0.1)
-        cell2 = paysheet_line.getCell('contribution_share/employer_share')
+        cell2 = paysheet_line.getCell('contribution_share/employer')
         self.assertEquals(cell2.getQuantity(), 3000)
         self.assertEquals(cell2.getPrice(), 0.5)
       elif service == 'Labour':
@@ -671,18 +671,18 @@ class TestPayrollMixin(ERP5ReportTestCase, TestTradeModelLineMixin):
     for paysheet_line in paysheet_line_list:
       service = paysheet_line.getResourceTitle()
       if service == 'Urssaf':
-        cell1 = paysheet_line.getCell('contribution_share/employee_share')
+        cell1 = paysheet_line.getCell('contribution_share/employee')
         self.assertEquals(cell1.getQuantity(), 4000)
         self.assertEquals(cell1.getPrice(), 0.1)
-        cell2 = paysheet_line.getCell('contribution_share/employer_share')
+        cell2 = paysheet_line.getCell('contribution_share/employer')
         self.assertEquals(cell2.getQuantity(), 4000)
         self.assertEquals(cell2.getPrice(), 0.5)
       elif service == 'Labour':
         self.assertEqual(paysheet_line.getTotalPrice(), 3000.0)
       elif service == 'Bonus':
-        cell1 = paysheet_line.getCell('contribution_share/employee_share')
+        cell1 = paysheet_line.getCell('contribution_share/employee')
         self.assertEquals(cell1.getTotalPrice(), 1000)
-        cell2 = paysheet_line.getCell('contribution_share/employer_share')
+        cell2 = paysheet_line.getCell('contribution_share/employer')
         self.assertEquals(cell2.getTotalPrice(), 1000)
       else:
         self.fail("Unknown service for line %s" % paysheet_line.getTitle())
@@ -693,10 +693,10 @@ class TestPayrollMixin(ERP5ReportTestCase, TestTradeModelLineMixin):
     for paysheet_line in paysheet_line_list:
       service = paysheet_line.getResourceTitle()
       if service == 'Urssaf':
-        cell1 = paysheet_line.getCell('contribution_share/employee_share')
+        cell1 = paysheet_line.getCell('contribution_share/employee')
         self.assertEquals(cell1.getQuantity(), -100)
         self.assertEquals(cell1.getPrice(), 1)
-        cell2 = paysheet_line.getCell('contribution_share/employer_share')
+        cell2 = paysheet_line.getCell('contribution_share/employer')
         self.assertEquals(cell2.getQuantity(), -200)
         self.assertEquals(cell2.getPrice(), 1)
       elif service == 'Labour':
@@ -710,27 +710,27 @@ class TestPayrollMixin(ERP5ReportTestCase, TestTradeModelLineMixin):
     for paysheet_line in paysheet_line_list:
       service = paysheet_line.getResourceTitle()
       if service == 'Urssaf':
-        cell1 = paysheet_line.getCell('contribution_share/employee_share',
+        cell1 = paysheet_line.getCell('contribution_share/employee',
             'salary_range/france/slice_0_to_200')
         self.assertEquals(cell1.getQuantity(), 200)
         self.assertEquals(cell1.getPrice(), 0.1)
-        cell2 = paysheet_line.getCell('contribution_share/employer_share',
+        cell2 = paysheet_line.getCell('contribution_share/employer',
             'salary_range/france/slice_0_to_200')
         self.assertEquals(cell2.getQuantity(), 200)
         self.assertEquals(cell2.getPrice(), 0.2)
-        cell3 = paysheet_line.getCell('contribution_share/employee_share',
+        cell3 = paysheet_line.getCell('contribution_share/employee',
             'salary_range/france/slice_200_to_400')
         self.assertEquals(cell3.getQuantity(), 200)
         self.assertEquals(cell3.getPrice(), 0.3)
-        cell4 = paysheet_line.getCell('contribution_share/employer_share',
+        cell4 = paysheet_line.getCell('contribution_share/employer',
             'salary_range/france/slice_200_to_400')
         self.assertEquals(cell4.getQuantity(), 200)
         self.assertEquals(cell4.getPrice(), 0.4)
-        cell5 = paysheet_line.getCell('contribution_share/employee_share',
+        cell5 = paysheet_line.getCell('contribution_share/employee',
             'salary_range/france/slice_400_to_5000')
         self.assertEquals(cell5.getQuantity(), 2600)
         self.assertEquals(cell5.getPrice(), 0.5)
-        cell6 = paysheet_line.getCell('contribution_share/employer_share',
+        cell6 = paysheet_line.getCell('contribution_share/employer',
             'salary_range/france/slice_400_to_5000')
         self.assertEquals(cell6.getQuantity(), 2600)
         self.assertEquals(cell6.getPrice(), 0.6)
@@ -745,19 +745,19 @@ class TestPayrollMixin(ERP5ReportTestCase, TestTradeModelLineMixin):
     for paysheet_line in paysheet_line_list:
       service = paysheet_line.getResourceTitle()
       if service == 'Urssaf':
-        cell1 = paysheet_line.getCell('contribution_share/employee_share',
+        cell1 = paysheet_line.getCell('contribution_share/employee',
             'salary_range/france/slice_200_to_400')
         self.assertEquals(cell1.getQuantity(), 200)
         self.assertEquals(cell1.getPrice(), 0.1)
-        cell2 = paysheet_line.getCell('contribution_share/employer_share',
+        cell2 = paysheet_line.getCell('contribution_share/employer',
             'salary_range/france/slice_200_to_400')
         self.assertEquals(cell2.getQuantity(), 200)
         self.assertEquals(cell2.getPrice(), 0.2)
-        cell3 = paysheet_line.getCell('contribution_share/employee_share',
+        cell3 = paysheet_line.getCell('contribution_share/employee',
             'salary_range/france/slice_600_to_800')
         self.assertEquals(cell3.getQuantity(), 200)
         self.assertEquals(cell3.getPrice(), 0.3)
-        cell4 = paysheet_line.getCell('contribution_share/employer_share',
+        cell4 = paysheet_line.getCell('contribution_share/employer',
             'salary_range/france/slice_600_to_800')
         self.assertEquals(cell4.getQuantity(), 200)
         self.assertEquals(cell4.getPrice(), 0.4)
@@ -776,35 +776,35 @@ class TestPayrollMixin(ERP5ReportTestCase, TestTradeModelLineMixin):
         if len(paysheet_line.contentValues(portal_type='Pay Sheet Cell')) == 6:
           # there is two lines with the same resource, one with slice and one
           # without
-          cell1 = paysheet_line.getCell('contribution_share/employee_share',
+          cell1 = paysheet_line.getCell('contribution_share/employee',
               'salary_range/france/slice_0_to_200')
           self.assertEquals(cell1.getQuantity(), 200)
           self.assertEquals(cell1.getPrice(), 0.1)
-          cell2 = paysheet_line.getCell('contribution_share/employer_share',
+          cell2 = paysheet_line.getCell('contribution_share/employer',
               'salary_range/france/slice_0_to_200')
           self.assertEquals(cell2.getQuantity(), 200)
           self.assertEquals(cell2.getPrice(), 0.2)
-          cell3 = paysheet_line.getCell('contribution_share/employee_share',
+          cell3 = paysheet_line.getCell('contribution_share/employee',
               'salary_range/france/slice_200_to_400')
           self.assertEquals(cell3.getQuantity(), 200)
           self.assertEquals(cell3.getPrice(), 0.3)
-          cell4 = paysheet_line.getCell('contribution_share/employer_share',
+          cell4 = paysheet_line.getCell('contribution_share/employer',
               'salary_range/france/slice_200_to_400')
           self.assertEquals(cell4.getQuantity(), 200)
           self.assertEquals(cell4.getPrice(), 0.4)
-          cell5 = paysheet_line.getCell('contribution_share/employee_share',
+          cell5 = paysheet_line.getCell('contribution_share/employee',
               'salary_range/france/slice_400_to_5000')
           self.assertEquals(cell5.getQuantity(), 2600)
           self.assertEquals(cell5.getPrice(), 0.5)
-          cell6 = paysheet_line.getCell('contribution_share/employer_share',
+          cell6 = paysheet_line.getCell('contribution_share/employer',
               'salary_range/france/slice_400_to_5000')
           self.assertEquals(cell6.getQuantity(), 2600)
           self.assertEquals(cell6.getPrice(), 0.6)
         else:
-          cell1 = paysheet_line.getCell('contribution_share/employee_share')
+          cell1 = paysheet_line.getCell('contribution_share/employee')
           self.assertEquals(cell1.getQuantity(), 3000)
           self.assertEquals(cell1.getPrice(), 0.1)
-          cell2 = paysheet_line.getCell('contribution_share/employer_share')
+          cell2 = paysheet_line.getCell('contribution_share/employer')
           self.assertEquals(cell2.getQuantity(), 3000)
           self.assertEquals(cell2.getPrice(), 0.5)
       elif service == 'Labour':
@@ -818,19 +818,19 @@ class TestPayrollMixin(ERP5ReportTestCase, TestTradeModelLineMixin):
     for paysheet_line in paysheet_line_list:
       service = paysheet_line.getResourceTitle()
       if service == 'Urssaf':
-        cell1 = paysheet_line.getCell('contribution_share/employee_share')
+        cell1 = paysheet_line.getCell('contribution_share/employee')
         self.assertEquals(cell1.getQuantity(), 3000)
         self.assertEquals(cell1.getPrice(), 0.1)
-        cell2 = paysheet_line.getCell('contribution_share/employer_share')
+        cell2 = paysheet_line.getCell('contribution_share/employer')
         self.assertEquals(cell2.getQuantity(), 3000)
         self.assertEquals(cell2.getPrice(), 0.5)
       elif service == 'Labour':
         self.assertEqual(paysheet_line.getTotalPrice(), 3000.0)
       elif service == 'Sickness Insurance':
-        cell1 = paysheet_line.getCell('contribution_share/employee_share')
+        cell1 = paysheet_line.getCell('contribution_share/employee')
         self.assertEquals(cell1.getQuantity(), 3000)
         self.assertEquals(cell1.getPrice(), 0.4)
-        cell2 = paysheet_line.getCell('contribution_share/employer_share')
+        cell2 = paysheet_line.getCell('contribution_share/employer')
         self.assertEquals(cell2.getQuantity(), 3000)
         self.assertEquals(cell2.getPrice(), 0.3)
       else:
@@ -842,19 +842,19 @@ class TestPayrollMixin(ERP5ReportTestCase, TestTradeModelLineMixin):
     for paysheet_line in paysheet_line_list:
       service = paysheet_line.getResourceTitle()
       if service == 'Urssaf':
-        cell1 = paysheet_line.getCell('contribution_share/employee_share')
+        cell1 = paysheet_line.getCell('contribution_share/employee')
         self.assertEquals(cell1.getQuantity(), 3000)
         self.assertEquals(cell1.getPrice(), 0.1)
-        cell2 = paysheet_line.getCell('contribution_share/employer_share')
+        cell2 = paysheet_line.getCell('contribution_share/employer')
         self.assertEquals(cell2.getQuantity(), 3000)
         self.assertEquals(cell2.getPrice(), 0.5)
       elif service == 'Labour':
         self.assertEqual(paysheet_line.getTotalPrice(), 3000.0)
       elif service == 'Old Age Insurance':
-        cell1 = paysheet_line.getCell('contribution_share/employee_share')
+        cell1 = paysheet_line.getCell('contribution_share/employee')
         self.assertEquals(cell1.getQuantity(), 3000)
         self.assertEquals(cell1.getPrice(), 0.5)
-        cell2 = paysheet_line.getCell('contribution_share/employer_share')
+        cell2 = paysheet_line.getCell('contribution_share/employer')
         self.assertEquals(cell2.getQuantity(), 3000)
         self.assertEquals(cell2.getPrice(), 0.8)
       else:
@@ -898,9 +898,9 @@ class TestPayrollMixin(ERP5ReportTestCase, TestTradeModelLineMixin):
     for paysheet_line in paysheet_line_list:
       service = paysheet_line.getResourceTitle()
       if service == 'Urssaf':
-        cell1 = paysheet_line.getCell('contribution_share/employee_share')
+        cell1 = paysheet_line.getCell('contribution_share/employee')
         self.assertEquals(cell1.getSourceSectionValue(), urssaf_roubaix)
-        cell2 = paysheet_line.getCell('contribution_share/employer_share')
+        cell2 = paysheet_line.getCell('contribution_share/employer')
         self.assertEquals(cell2.getSourceSectionValue(), urssaf_roubaix)
       elif service == 'Labour':
         pass
@@ -1077,8 +1077,8 @@ class TestPayrollMixin(ERP5ReportTestCase, TestTradeModelLineMixin):
                     trade_phase='payroll/france/urssaf',
                     resource_value=sequence.get('urssaf_service'),
                     reference='intermediate_line',
-                    variation_category_list=['contribution_share/employee_share',
-                                             'contribution_share/employer_share'],
+                    variation_category_list=['contribution_share/employee',
+                                             'contribution_share/employer'],
                     base_contribution_list=['base_amount/deductible_tax'],
                     base_application_list=['base_amount/base_salary'],
                     create_line=False,)
@@ -1094,8 +1094,8 @@ class TestPayrollMixin(ERP5ReportTestCase, TestTradeModelLineMixin):
                     trade_phase='payroll/france/urssaf',
                     resource_value=sequence.get('urssaf_service'),
                     reference='line_applied_on_intermediate_line',
-                    variation_category_list=['contribution_share/employee_share',
-                                             'contribution_share/employer_share'],
+                    variation_category_list=['contribution_share/employee',
+                                             'contribution_share/employer'],
                     base_contribution_list=['base_amount/net_salary'],
                     base_application_list=['base_amount/deductible_tax'])
     sequence.edit(model_line_applied_on_tax = model_line)
@@ -1103,29 +1103,29 @@ class TestPayrollMixin(ERP5ReportTestCase, TestTradeModelLineMixin):
   def stepIntermediateModelLineCreateMovements(self, sequence=None,
       **kw):
     model_line = sequence.get('intermediate_model_line')
-    cell1 = model_line.newCell('contribution_share/employee_share',
+    cell1 = model_line.newCell('contribution_share/employee',
         portal_type='Pay Sheet Model Cell',
         base_id='movement',
         mapped_value_property_list=('quantity', 'price'))
-    cell1.edit(price=0.2, contribution_share='employee_share')
-    cell2 = model_line.newCell('contribution_share/employer_share',
+    cell1.edit(price=0.2, contribution_share='employee')
+    cell2 = model_line.newCell('contribution_share/employer',
         portal_type='Pay Sheet Model Cell',
         base_id='movement',
         mapped_value_property_list=('quantity', 'price'))
-    cell2.edit(price=0.2, contribution_share='employer_share')
+    cell2.edit(price=0.2, contribution_share='employer')
 
   def stepAppliedOnTaxModelLineCreateMovements(self, sequence=None, **kw):
     model_line = sequence.get('model_line_applied_on_tax')
-    cell1 = model_line.newCell('contribution_share/employee_share',
+    cell1 = model_line.newCell('contribution_share/employee',
         portal_type='Pay Sheet Model Cell',
         base_id='movement',
         mapped_value_property_list=('quantity', 'price'))
-    cell1.edit(price=0.1, contribution_share='employee_share')
-    cell2 = model_line.newCell('contribution_share/employer_share',
+    cell1.edit(price=0.1, contribution_share='employee')
+    cell2 = model_line.newCell('contribution_share/employer',
         portal_type='Pay Sheet Model Cell',
         base_id='movement',
         mapped_value_property_list=('quantity', 'price'))
-    cell2.edit(price=0.5, contribution_share='employer_share')
+    cell2.edit(price=0.5, contribution_share='employer')
 
   def stepModelCreateOldAgeInsuranceModelLine(self, sequence=None, **kw):
     model = sequence.get('model')
@@ -1134,24 +1134,24 @@ class TestPayrollMixin(ERP5ReportTestCase, TestTradeModelLineMixin):
                     trade_phase='payroll/france/urssaf',
                     resource_value=sequence.get('old_age_insurance_service'),
                     reference='old_age_insurance',
-                    variation_category_list=['contribution_share/employee_share',
-                                             'contribution_share/employer_share'],
+                    variation_category_list=['contribution_share/employee',
+                                             'contribution_share/employer'],
                     base_application_list=[ 'base_amount/base_salary'],
                     base_contribution_list=['base_amount/deductible_tax'])
     sequence.edit(old_age_insurance = model_line)
 
   def stepOldAgeInsuranceModelLineCreateMovements(self, sequence=None, **kw):
     model_line = sequence.get('old_age_insurance')
-    cell1 = model_line.newCell('contribution_share/employee_share',
+    cell1 = model_line.newCell('contribution_share/employee',
         portal_type='Pay Sheet Model Cell',
         base_id='movement',
         mapped_value_property_list=('quantity', 'price'))
-    cell1.edit(price=0.5, contribution_share='employee_share')
-    cell2 = model_line.newCell('contribution_share/employer_share',
+    cell1.edit(price=0.5, contribution_share='employee')
+    cell2 = model_line.newCell('contribution_share/employer',
         portal_type='Pay Sheet Model Cell',
         base_id='movement',
         mapped_value_property_list=('quantity', 'price'))
-    cell2.edit(price=0.8, contribution_share='employer_share')
+    cell2.edit(price=0.8, contribution_share='employer')
 
   def stepModelCreateSicknessInsuranceModelLine(self, sequence=None, **kw):
     model = sequence.get('model')
@@ -1160,24 +1160,24 @@ class TestPayrollMixin(ERP5ReportTestCase, TestTradeModelLineMixin):
                     trade_phase='payroll/france/urssaf',
                     resource_value=sequence.get('sickness_insurance_service'),
                     reference='sickness_insurance',
-                    variation_category_list=['contribution_share/employee_share',
-                                             'contribution_share/employer_share'],
+                    variation_category_list=['contribution_share/employee',
+                                             'contribution_share/employer'],
                     base_application_list=[ 'base_amount/base_salary'],
                     base_contribution_list=['base_amount/deductible_tax'])
     sequence.edit(sickness_insurance = model_line)
 
   def stepSicknessInsuranceModelLineCreateMovements(self, sequence=None, **kw):
     model_line = sequence.get('sickness_insurance')
-    cell1 = model_line.newCell('contribution_share/employee_share',
+    cell1 = model_line.newCell('contribution_share/employee',
         portal_type='Pay Sheet Model Cell',
         base_id='movement',
         mapped_value_property_list=('quantity', 'price'))
-    cell1.edit(price=0.4, contribution_share='employee_share')
-    cell2 = model_line.newCell('contribution_share/employer_share',
+    cell1.edit(price=0.4, contribution_share='employee')
+    cell2 = model_line.newCell('contribution_share/employer',
         portal_type='Pay Sheet Model Cell',
         base_id='movement',
         mapped_value_property_list=('quantity', 'price'))
-    cell2.edit(price=0.3, contribution_share='employer_share')
+    cell2.edit(price=0.3, contribution_share='employer')
 
   def stepCheckPaysheetIntermediateLines(self, sequence=None, **kw):
     paysheet = sequence.get('paysheet')
@@ -1192,11 +1192,11 @@ class TestPayrollMixin(ERP5ReportTestCase, TestTradeModelLineMixin):
     for paysheet_line in paysheet_line_list:
       service = paysheet_line.getResourceTitle()
       if service == 'Urssaf':
-        cell1 = paysheet_line.getCell('contribution_share/employee_share')
+        cell1 = paysheet_line.getCell('contribution_share/employee')
         self.assertEquals(cell1.getQuantity(), 600) # here it's 600 of tax
                                   # because of the intermediate line (3000*0.2)
         self.assertEquals(cell1.getPrice(), 0.1)
-        cell2 = paysheet_line.getCell('contribution_share/employer_share')
+        cell2 = paysheet_line.getCell('contribution_share/employer')
         self.assertEquals(cell2.getQuantity(), 600) # here it's 600 of tax
                                   # because of the intermediate line (3000*0.2)
         self.assertEquals(cell2.getPrice(), 0.5)
@@ -1212,24 +1212,24 @@ class TestPayrollMixin(ERP5ReportTestCase, TestTradeModelLineMixin):
                     trade_phase='payroll/france/urssaf',
                     resource_value=sequence.get('old_age_insurance_service'),
                     reference='model_line_in_the_payesheet',
-                    variation_category_list=['contribution_share/employee_share',
-                                             'contribution_share/employer_share'],
+                    variation_category_list=['contribution_share/employee',
+                                             'contribution_share/employer'],
                     base_application_list=[ 'base_amount/base_salary'],
                     base_contribution_list=['base_amount/deductible_tax'])
     sequence.edit(model_line_on_paysheet = model_line)
 
   def stepPaysheetModelLineCreateMovements(self, sequence=None, **kw):
     model_line = sequence.get('model_line_on_paysheet')
-    cell1 = model_line.newCell('contribution_share/employee_share',
+    cell1 = model_line.newCell('contribution_share/employee',
         portal_type='Pay Sheet Model Cell',
         base_id='movement',
         mapped_value_property_list=('quantity', 'price'))
-    cell1.edit(price=0.5, contribution_share='employee_share')
-    cell2 = model_line.newCell('contribution_share/employer_share',
+    cell1.edit(price=0.5, contribution_share='employee')
+    cell2 = model_line.newCell('contribution_share/employer',
         portal_type='Pay Sheet Model Cell',
         base_id='movement',
         mapped_value_property_list=('quantity', 'price'))
-    cell2.edit(price=0.8, contribution_share='employer_share')
+    cell2.edit(price=0.8, contribution_share='employer')
 
   def stepCheckUpdateAggregatedAmountListReturnWithModelLineOnPaysheet(self,
       sequence=None, **kw):
@@ -1255,19 +1255,19 @@ class TestPayrollMixin(ERP5ReportTestCase, TestTradeModelLineMixin):
     for paysheet_line in paysheet_line_list:
       service = paysheet_line.getResourceTitle()
       if service == 'Urssaf':
-        cell1 = paysheet_line.getCell('contribution_share/employee_share')
+        cell1 = paysheet_line.getCell('contribution_share/employee')
         self.assertEquals(cell1.getQuantity(), 3000)
         self.assertEquals(cell1.getPrice(), 0.1)
-        cell2 = paysheet_line.getCell('contribution_share/employer_share')
+        cell2 = paysheet_line.getCell('contribution_share/employer')
         self.assertEquals(cell2.getQuantity(), 3000)
         self.assertEquals(cell2.getPrice(), 0.5)
       elif service == 'Labour':
         self.assertEqual(paysheet_line.getTotalPrice(), 3000.0)
       elif service == 'Old Age Insurance':
-        cell1 = paysheet_line.getCell('contribution_share/employee_share')
+        cell1 = paysheet_line.getCell('contribution_share/employee')
         self.assertEquals(cell1.getQuantity(), 3000)
         self.assertEquals(cell1.getPrice(), 0.5)
-        cell2 = paysheet_line.getCell('contribution_share/employer_share')
+        cell2 = paysheet_line.getCell('contribution_share/employer')
         self.assertEquals(cell2.getQuantity(), 3000)
         self.assertEquals(cell2.getPrice(), 0.8)
       else:
@@ -1276,11 +1276,11 @@ class TestPayrollMixin(ERP5ReportTestCase, TestTradeModelLineMixin):
   def stepModelModifyUrssafModelLine(self, sequence=None, **kw):
     model_line = sequence.get('urssaf_model_line')
     # modify price on movements :
-    cell_1 = model_line.getCell('contribution_share/employee_share',
+    cell_1 = model_line.getCell('contribution_share/employee',
         base_id='movement')
     self.assertNotEquals(cell_1, None)
     cell_1.edit(price=0.2)
-    cell_2 = model_line.getCell('contribution_share/employer_share',
+    cell_2 = model_line.getCell('contribution_share/employer',
         base_id='movement')
     self.assertNotEquals(cell_2, None)
     cell_2.edit(price=0.6)
@@ -1296,10 +1296,10 @@ class TestPayrollMixin(ERP5ReportTestCase, TestTradeModelLineMixin):
     for paysheet_line in paysheet_line_list:
       service = paysheet_line.getResourceTitle()
       if service == 'Urssaf':
-        cell1 = paysheet_line.getCell('contribution_share/employee_share')
+        cell1 = paysheet_line.getCell('contribution_share/employee')
         self.assertEquals(cell1.getQuantity(), 3000)
         self.assertEquals(cell1.getPrice(), 0.2)
-        cell2 = paysheet_line.getCell('contribution_share/employer_share')
+        cell2 = paysheet_line.getCell('contribution_share/employer')
         self.assertEquals(cell2.getQuantity(), 3000)
         self.assertEquals(cell2.getPrice(), 0.6)
       elif service == 'Labour':
@@ -1323,10 +1323,10 @@ class TestPayrollMixin(ERP5ReportTestCase, TestTradeModelLineMixin):
     for paysheet_line in paysheet_line_list:
       service = paysheet_line.getResourceTitle()
       if service == 'Urssaf':
-        cell1 = paysheet_line.getCell('contribution_share/employee_share')
+        cell1 = paysheet_line.getCell('contribution_share/employee')
         self.assertEquals(cell1.getQuantity(), 3000)
         self.assertEquals(cell1.getPrice(), 0.3)
-        cell2 = paysheet_line.getCell('contribution_share/employer_share')
+        cell2 = paysheet_line.getCell('contribution_share/employer')
         self.assertEquals(cell2.getQuantity(), 3000)
         self.assertEquals(cell2.getPrice(), 0.7)
       elif service == 'Labour':
@@ -1455,30 +1455,30 @@ class TestPayrollMixin(ERP5ReportTestCase, TestTradeModelLineMixin):
     # added to this line.
     urssaf_service = sequence.get('urssaf_service')
     line.setResourceValue(urssaf_service)
-    line.setVariationCategoryList(['contribution_share/employee_share',
-                                   'contribution_share/employer_share'])
-    cell0 = line.newCell('contribution_share/employee_share',
+    line.setVariationCategoryList(['contribution_share/employee',
+                                   'contribution_share/employer'])
+    cell0 = line.newCell('contribution_share/employee',
                          portal_type='Pay Sheet Cell', base_id='movement')
     cell0.setMappedValuePropertyList(['quantity', 'price'])
-    cell0.setVariationCategoryList(('contribution_share/employee_share',))
+    cell0.setVariationCategoryList(('contribution_share/employee',))
     cell0.setPrice(2)
     cell0.setQuantity(3)
-    cell1 = line.newCell('contribution_share/employer_share',
+    cell1 = line.newCell('contribution_share/employer',
                          portal_type='Pay Sheet Cell', base_id='movement')
     cell1.setMappedValuePropertyList(['quantity', 'price'])
-    cell1.setVariationCategoryList(('contribution_share/employer_share',))
+    cell1.setVariationCategoryList(('contribution_share/employer',))
     cell1.setPrice(4)
     cell1.setQuantity(5)
 
     movement_list = paysheet.PaySheetTransaction_getMovementList()
     self.assertEquals(1, len(movement_list))
     movement = movement_list[0]
-    self.assertEquals(2, movement.employee_share_price)
-    self.assertEquals(3, movement.employee_share_quantity)
-    self.assertEquals(2*3, movement.employee_share_total_price)
-    self.assertEquals(4, movement.employer_share_price)
-    self.assertEquals(5, movement.employer_share_quantity)
-    self.assertEquals(4*5, movement.employer_share_total_price)
+    self.assertEquals(2, movement.employee_price)
+    self.assertEquals(3, movement.employee_quantity)
+    self.assertEquals(2*3, movement.employee_total_price)
+    self.assertEquals(4, movement.employer_price)
+    self.assertEquals(5, movement.employer_quantity)
+    self.assertEquals(4*5, movement.employer_total_price)
 
   def stepCheckModelWithoutRefValidity(self, sequence=None, **kw):
     '''
@@ -2439,8 +2439,8 @@ class TestPayroll(TestPayrollMixin):
                       portal_type='Service',
                       title='PS1',
                       variation_base_category_list=('contribution_share',),
-                      variation_category_list=('contribution_share/employee_share',
-                                               'contribution_share/employer_share'))
+                      variation_category_list=('contribution_share/employee',
+                                               'contribution_share/employer'))
     employer = self.portal.organisation_module.newContent(
                       portal_type='Organisation',
                       title='Employer',
@@ -2473,20 +2473,20 @@ class TestPayroll(TestPayrollMixin):
                    source_section_value=provider,
                 # (destination is set by PaySheetTransaction.createPaySheetLine)
                    destination_value=employee1,
-                   variation_category_list=('contribution_share/employee_share',
-                                            'contribution_share/employer_share'))
-    cell_employee = line.newCell('contribution_share/employee_share',
+                   variation_category_list=('contribution_share/employee',
+                                            'contribution_share/employer'))
+    cell_employee = line.newCell('contribution_share/employee',
                                 portal_type='Pay Sheet Cell',
                                 base_id='movement',
                                 mapped_value_property_list=('price',
                                                             'quantity'),)
-    cell_employee.edit(price=-.50, quantity=2000, contribution_share='employee_share')
-    cell_employer = line.newCell('contribution_share/employer_share',
+    cell_employee.edit(price=-.50, quantity=2000, contribution_share='employee')
+    cell_employer = line.newCell('contribution_share/employer',
                                 portal_type='Pay Sheet Cell',
                                 base_id='movement',
                                 mapped_value_property_list=('price',
                                                             'quantity'),)
-    cell_employer.edit(price=-.40, quantity=2000, contribution_share='employer_share')
+    cell_employer.edit(price=-.40, quantity=2000, contribution_share='employer')
     ps1.plan()
 
     ps2 = self.portal.accounting_module.newContent(
@@ -2499,39 +2499,39 @@ class TestPayroll(TestPayrollMixin):
                    resource_value=service,
                    source_section_value=provider,
                    destination_value=employee2,
-                   variation_category_list=('contribution_share/employee_share',
-                                            'contribution_share/employer_share'))
-    cell_employee = line.newCell('contribution_share/employee_share',
+                   variation_category_list=('contribution_share/employee',
+                                            'contribution_share/employer'))
+    cell_employee = line.newCell('contribution_share/employee',
                                 portal_type='Pay Sheet Cell',
                                 base_id='movement',
                                 mapped_value_property_list=('price',
                                                             'quantity'),)
-    cell_employee.edit(price=-.50, quantity=3000, contribution_share='employee_share')
-    cell_employer = line.newCell('contribution_share/employer_share',
+    cell_employee.edit(price=-.50, quantity=3000, contribution_share='employee')
+    cell_employer = line.newCell('contribution_share/employer',
                                 portal_type='Pay Sheet Cell',
                                 base_id='movement',
                                 mapped_value_property_list=('price',
                                                             'quantity'),)
-    cell_employer.edit(price=-.40, quantity=3000, contribution_share='employer_share')
+    cell_employer.edit(price=-.40, quantity=3000, contribution_share='employer')
 
     other_line = ps2.newContent(portal_type='Pay Sheet Line',
                    resource_value=service,
                    destination_value=employee2,
                    source_section_value=other_provider,
-                   variation_category_list=('contribution_share/employee_share',
-                                            'contribution_share/employer_share'))
-    cell_employee = other_line.newCell('contribution_share/employee_share',
+                   variation_category_list=('contribution_share/employee',
+                                            'contribution_share/employer'))
+    cell_employee = other_line.newCell('contribution_share/employee',
                                 portal_type='Pay Sheet Cell',
                                 base_id='movement',
                                 mapped_value_property_list=('price',
                                                             'quantity'),)
-    cell_employee.edit(price=-.46, quantity=2998, contribution_share='employee_share')
-    cell_employer = other_line.newCell('contribution_share/employer_share',
+    cell_employee.edit(price=-.46, quantity=2998, contribution_share='employee')
+    cell_employer = other_line.newCell('contribution_share/employer',
                                 portal_type='Pay Sheet Cell',
                                 base_id='movement',
                                 mapped_value_property_list=('price',
                                                             'quantity'),)
-    cell_employer.edit(price=-.42, quantity=2998, contribution_share='employer_share')
+    cell_employer.edit(price=-.42, quantity=2998, contribution_share='employer')
     self.stepTic()
 
     # AccountingTransactionModule_getPaySheetMovementMirrorSectionItemList is
@@ -2569,22 +2569,22 @@ class TestPayroll(TestPayrollMixin):
                             employee_career_reference='E1',
                             employee_title='Employee One',
                             base=2000,
-                            employee_share=2000 * .50,
-                            employer_share=2000 * .40,
+                            employee=2000 * .50,
+                            employer=2000 * .40,
                             total=(2000 * .50 + 2000 * .40))
     self.checkLineProperties(data_line_list[1],
                             id=2,
                             employee_career_reference='E2',
                             employee_title='Employee Two',
                             base=3000,
-                            employee_share=3000 * .50,
-                            employer_share=3000 * .40,
+                            employee=3000 * .50,
+                            employer=3000 * .40,
                             total=(3000 * .50 + 3000 * .40))
     # stat line
     self.checkLineProperties(line_list[-1],
                             base=3000 + 2000,
-                            employee_share=(3000 + 2000) * .50,
-                            employer_share=(3000 + 2000) * .40,
+                            employee=(3000 + 2000) * .50,
+                            employer=(3000 + 2000) * .40,
                             total=((3000 + 2000) * .50 + (3000 + 2000) * .40))
 
   def test_PayrollTaxesReportDifferentSalaryRange(self):
@@ -2599,8 +2599,8 @@ class TestPayroll(TestPayrollMixin):
                       title='PS1',
                       variation_base_category_list=('contribution_share',
                                                     'salary_range'),
-                      variation_category_list=('contribution_share/employee_share',
-                                               'contribution_share/employer_share',
+                      variation_category_list=('contribution_share/employee',
+                                               'contribution_share/employer',
                                                'salary_range/france/slice_a',
                                                'salary_range/france/slice_b'))
     employer = self.portal.organisation_module.newContent(
@@ -2635,46 +2635,46 @@ class TestPayroll(TestPayrollMixin):
                    source_section_value=provider,
                 # (destination is set by PaySheetTransaction.createPaySheetLine)
                    destination_value=employee1,
-                   variation_category_list=('contribution_share/employee_share',
-                                            'contribution_share/employer_share',
+                   variation_category_list=('contribution_share/employee',
+                                            'contribution_share/employer',
                                             'salary_range/france/slice_a',
                                             'salary_range/france/slice_b'))
-    cell_employee_a = line.newCell('contribution_share/employee_share',
+    cell_employee_a = line.newCell('contribution_share/employee',
                                    'salary_range/france/slice_a',
                                    portal_type='Pay Sheet Cell',
                                    base_id='movement',
                                    mapped_value_property_list=('price',
                                                                'quantity'),)
     cell_employee_a.edit(price=-.50, quantity=1000,
-                         contribution_share='employee_share',
+                         contribution_share='employee',
                          salary_range='france/slice_a')
-    cell_employee_b = line.newCell('contribution_share/employee_share',
+    cell_employee_b = line.newCell('contribution_share/employee',
                                    'salary_range/france/slice_b',
                                    portal_type='Pay Sheet Cell',
                                    base_id='movement',
                                    mapped_value_property_list=('price',
                                                                'quantity'),)
     cell_employee_b.edit(price=-.20, quantity=500,
-                         contribution_share='employee_share',
+                         contribution_share='employee',
                          salary_range='france/slice_b')
 
-    cell_employer_a = line.newCell('contribution_share/employer_share',
+    cell_employer_a = line.newCell('contribution_share/employer',
                                    'salary_range/france/slice_a',
                                    portal_type='Pay Sheet Cell',
                                    base_id='movement',
                                    mapped_value_property_list=('price',
                                                                'quantity'),)
     cell_employer_a.edit(price=-.40, quantity=1000,
-                         contribution_share='employer_share',
+                         contribution_share='employer',
                          salary_range='france/slice_a')
-    cell_employer_b = line.newCell('contribution_share/employer_share',
+    cell_employer_b = line.newCell('contribution_share/employer',
                                    'salary_range/france/slice_b',
                                    portal_type='Pay Sheet Cell',
                                    base_id='movement',
                                    mapped_value_property_list=('price',
                                                                'quantity'),)
     cell_employer_b.edit(price=-.32, quantity=500,
-                         contribution_share='employer_share',
+                         contribution_share='employer',
                          salary_range='france/slice_b')
 
     ps1.plan()
@@ -2689,11 +2689,11 @@ class TestPayroll(TestPayrollMixin):
                    resource_value=service,
                    source_section_value=provider,
                    destination_value=employee2,
-                   variation_category_list=('contribution_share/employee_share',
-                                            'contribution_share/employer_share',
+                   variation_category_list=('contribution_share/employee',
+                                            'contribution_share/employer',
                                             'salary_range/france/slice_a',
                                             'salary_range/france/slice_b'))
-    cell_employee_a = line.newCell('contribution_share/employee_share',
+    cell_employee_a = line.newCell('contribution_share/employee',
                                    'salary_range/france/slice_a',
                                    portal_type='Pay Sheet Cell',
                                    base_id='movement',
@@ -2701,8 +2701,8 @@ class TestPayroll(TestPayrollMixin):
                                                                'quantity'),)
     cell_employee_a.edit(price=-.50, quantity=1000,
                          salary_range='france/slice_a',
-                         contribution_share='employee_share')
-    cell_employee_b = line.newCell('contribution_share/employee_share',
+                         contribution_share='employee')
+    cell_employee_b = line.newCell('contribution_share/employee',
                                    'salary_range/france/slice_b',
                                    portal_type='Pay Sheet Cell',
                                    base_id='movement',
@@ -2710,9 +2710,9 @@ class TestPayroll(TestPayrollMixin):
                                                                'quantity'),)
     cell_employee_b.edit(price=-.20, quantity=3000,
                          salary_range='france/slice_b',
-                         contribution_share='employee_share')
+                         contribution_share='employee')
 
-    cell_employer_a = line.newCell('contribution_share/employer_share',
+    cell_employer_a = line.newCell('contribution_share/employer',
                                    'salary_range/france/slice_a',
                                    portal_type='Pay Sheet Cell',
                                    base_id='movement',
@@ -2720,8 +2720,8 @@ class TestPayroll(TestPayrollMixin):
                                                                'quantity'),)
     cell_employer_a.edit(price=-.40, quantity=1000,
                          salary_range='france/slice_a',
-                         contribution_share='employer_share')
-    cell_employer_b = line.newCell('contribution_share/employer_share',
+                         contribution_share='employer')
+    cell_employer_b = line.newCell('contribution_share/employer',
                                    'salary_range/france/slice_b',
                                    portal_type='Pay Sheet Cell',
                                    base_id='movement',
@@ -2729,7 +2729,7 @@ class TestPayroll(TestPayrollMixin):
                                                                'quantity'),)
     cell_employer_b.edit(price=-.32, quantity=3000,
                          salary_range='france/slice_b',
-                         contribution_share='employer_share')
+                         contribution_share='employer')
     self.stepTic()
 
     # set request variables and render
@@ -2754,22 +2754,22 @@ class TestPayroll(TestPayrollMixin):
                             employee_career_reference='E1',
                             employee_title='Employee One',
                             base=1000,
-                            employee_share=1000 * .50,
-                            employer_share=1000 * .40,
+                            employee=1000 * .50,
+                            employer=1000 * .40,
                             total=(1000 * .50 + 1000 * .40))
     self.checkLineProperties(data_line_list[1],
                             id=2,
                             employee_career_reference='E2',
                             employee_title='Employee Two',
                             base=1000,
-                            employee_share=1000 * .50,
-                            employer_share=1000 * .40,
+                            employee=1000 * .50,
+                            employer=1000 * .40,
                             total=(1000 * .50 + 1000 * .40))
     self.checkLineProperties(data_line_list[2],
                             employee_title='Total Slice A',
                             base=2000,
-                            employee_share=2000 * .50,
-                            employer_share=2000 * .40,
+                            employee=2000 * .50,
+                            employer=2000 * .40,
                             #total=(2000 * .50 + 2000 * .40)
                             )
 
@@ -2778,30 +2778,30 @@ class TestPayroll(TestPayrollMixin):
                             employee_career_reference='E1',
                             employee_title='Employee One',
                             base=500,
-                            employee_share=500 * .20,
-                            employer_share=500 * .32,
+                            employee=500 * .20,
+                            employer=500 * .32,
                             total=(500 * .20 + 500 * .32))
     self.checkLineProperties(data_line_list[4],
                             id=4,
                             employee_career_reference='E2',
                             employee_title='Employee Two',
                             base=3000,
-                            employee_share=3000 * .20,
-                            employer_share=3000 * .32,
+                            employee=3000 * .20,
+                            employer=3000 * .32,
                             total=(3000 * .20 + 3000 * .32))
     self.checkLineProperties(data_line_list[5],
                             employee_title='Total Slice B',
                             base=3500,
-                            employee_share=3500 * .20,
-                            employer_share=3500 * .32,
+                            employee=3500 * .20,
+                            employer=3500 * .32,
                             #total=(3500 * .20 + 3500 * .32),
                             )
 
     # stat line
     self.checkLineProperties(line_list[-1],
                             base=2000 + 3500,
-                            employee_share=(2000 * .50 + 3500 * .20),
-                            employer_share=(2000 * .40 + 3500 * .32),
+                            employee=(2000 * .50 + 3500 * .20),
+                            employer=(2000 * .40 + 3500 * .32),
                             total=((2000 * .50 + 3500 * .20) +
                                    (2000 * .40 + 3500 * .32)))
 
@@ -2816,14 +2816,14 @@ class TestPayroll(TestPayrollMixin):
                       portal_type='Service',
                       title='Gross Salary',
                       variation_base_category_list=('contribution_share',),
-                      variation_category_list=('contribution_share/employee_share',
-                                               'contribution_share/employer_share'))
+                      variation_category_list=('contribution_share/employee',
+                                               'contribution_share/employer'))
     service = self.portal.service_module.newContent(
                       portal_type='Service',
                       title='PS1',
                       variation_base_category_list=('contribution_share',),
-                      variation_category_list=('contribution_share/employee_share',
-                                               'contribution_share/employer_share'))
+                      variation_category_list=('contribution_share/employee',
+                                               'contribution_share/employer'))
     employer = self.portal.organisation_module.newContent(
                       portal_type='Organisation',
                       title='Employer',
@@ -2860,33 +2860,33 @@ class TestPayroll(TestPayrollMixin):
                    resource_value=salary_service,
                    destination_value=employee1,
                    base_contribution_list=['base_amount/net_salary',],
-                   variation_category_list=('contribution_share/employee_share',
-                                            'contribution_share/employer_share'))
-    cell_employee = line.newCell('contribution_share/employee_share',
+                   variation_category_list=('contribution_share/employee',
+                                            'contribution_share/employer'))
+    cell_employee = line.newCell('contribution_share/employee',
                                 portal_type='Pay Sheet Cell',
                                 base_id='movement',
                                 mapped_value_property_list=('price',
                                                             'quantity'),)
-    cell_employee.edit(price=1, quantity=2000, contribution_share='employee_share')
+    cell_employee.edit(price=1, quantity=2000, contribution_share='employee')
     line = ps1.newContent(portal_type='Pay Sheet Line',
                    resource_value=service,
                    source_section_value=provider,
                    destination_value=employee1,
                    base_contribution_list=['base_amount/net_salary',],
-                   variation_category_list=('contribution_share/employee_share',
-                                            'contribution_share/employer_share'))
-    cell_employee = line.newCell('contribution_share/employee_share',
+                   variation_category_list=('contribution_share/employee',
+                                            'contribution_share/employer'))
+    cell_employee = line.newCell('contribution_share/employee',
                                 portal_type='Pay Sheet Cell',
                                 base_id='movement',
                                 mapped_value_property_list=('price',
                                                             'quantity'),)
-    cell_employee.edit(price=-.50, quantity=2000, contribution_share='employee_share')
-    cell_employer = line.newCell('contribution_share/employer_share',
+    cell_employee.edit(price=-.50, quantity=2000, contribution_share='employee')
+    cell_employer = line.newCell('contribution_share/employer',
                                 portal_type='Pay Sheet Cell',
                                 base_id='movement',
                                 mapped_value_property_list=('price',
                                                             'quantity'),)
-    cell_employer.edit(price=-.40, quantity=2000, contribution_share='employer_share')
+    cell_employer.edit(price=-.40, quantity=2000, contribution_share='employer')
     ps1.plan()
 
     ps2 = self.portal.accounting_module.newContent(
@@ -2900,33 +2900,33 @@ class TestPayroll(TestPayrollMixin):
                    resource_value=salary_service,
                    destination_value=employee2,
                    base_contribution_list=['base_amount/net_salary',],
-                   variation_category_list=('contribution_share/employee_share',
-                                            'contribution_share/employer_share'))
-    cell_employee = line.newCell('contribution_share/employee_share',
+                   variation_category_list=('contribution_share/employee',
+                                            'contribution_share/employer'))
+    cell_employee = line.newCell('contribution_share/employee',
                                 portal_type='Pay Sheet Cell',
                                 base_id='movement',
                                 mapped_value_property_list=('price',
                                                             'quantity'),)
-    cell_employee.edit(price=1, quantity=3000, contribution_share='employee_share')
+    cell_employee.edit(price=1, quantity=3000, contribution_share='employee')
     line = ps2.newContent(portal_type='Pay Sheet Line',
                    resource_value=service,
                    source_section_value=provider,
                    destination_value=employee2,
                    base_contribution_list=['base_amount/net_salary',],
-                   variation_category_list=('contribution_share/employee_share',
-                                            'contribution_share/employer_share'))
-    cell_employee = line.newCell('contribution_share/employee_share',
+                   variation_category_list=('contribution_share/employee',
+                                            'contribution_share/employer'))
+    cell_employee = line.newCell('contribution_share/employee',
                                 portal_type='Pay Sheet Cell',
                                 base_id='movement',
                                 mapped_value_property_list=('price',
                                                             'quantity'),)
-    cell_employee.edit(price=-.50, quantity=3000, contribution_share='employee_share')
-    cell_employer = line.newCell('contribution_share/employer_share',
+    cell_employee.edit(price=-.50, quantity=3000, contribution_share='employee')
+    cell_employer = line.newCell('contribution_share/employer',
                                 portal_type='Pay Sheet Cell',
                                 base_id='movement',
                                 mapped_value_property_list=('price',
                                                             'quantity'),)
-    cell_employer.edit(price=-.40, quantity=3000, contribution_share='employer_share')
+    cell_employer.edit(price=-.40, quantity=3000, contribution_share='employer')
     self.stepTic()
 
     # set request variables and render
@@ -2975,29 +2975,29 @@ class TestPayroll(TestPayrollMixin):
       title='Base Salary',
       product_line='base_salary',
       variation_base_category_list=('contribution_share',),
-      variation_category_list=('contribution_share/employee_share',
-                               'contribution_share/employer_share'))
+      variation_category_list=('contribution_share/employee',
+                               'contribution_share/employer'))
     bonus = self.portal.service_module.newContent(
       portal_type='Service',
       title='Bonus',
       product_line='base_salary',
       variation_base_category_list=('contribution_share',),
-      variation_category_list=('contribution_share/employee_share',
-                               'contribution_share/employer_share'))
+      variation_category_list=('contribution_share/employee',
+                               'contribution_share/employer'))
     deductions = self.portal.service_module.newContent(
       portal_type='Service',
       title='Deductions',
       product_line='base_salary',
       variation_base_category_list=('contribution_share',),
-      variation_category_list=('contribution_share/employee_share',
-                               'contribution_share/employer_share'))
+      variation_category_list=('contribution_share/employee',
+                               'contribution_share/employer'))
     tax1 = self.portal.service_module.newContent(
       portal_type='Service',
       title='Tax1',
       product_line='payroll_tax_1',
       variation_base_category_list=('contribution_share',),
-      variation_category_list=('contribution_share/employee_share',
-                               'contribution_share/employer_share'))
+      variation_category_list=('contribution_share/employee',
+                               'contribution_share/employer'))
 
     # create accounts
     account_payroll_wages_expense = self.portal.account_module.newContent(
@@ -3028,13 +3028,13 @@ class TestPayroll(TestPayrollMixin):
       string_index='contribution_share',
       int_index=1,
       membership_criterion_base_category_list=('contribution_share',),
-      membership_criterion_category_list=('contribution_share/employee_share',))
+      membership_criterion_category_list=('contribution_share/employee',))
     rule.newContent(portal_type='Predicate',
       title='Employer Share',
       string_index='contribution_share',
       int_index=2,
       membership_criterion_base_category_list=('contribution_share',),
-      membership_criterion_category_list=('contribution_share/employer_share',))
+      membership_criterion_category_list=('contribution_share/employer',))
 
     rule.newContent(portal_type='Predicate',
       title='Base Salary',
@@ -3122,60 +3122,60 @@ class TestPayroll(TestPayrollMixin):
                    title='Base salary',
                    resource_value=base_salary,
                    destination_value=employee,
-                   variation_category_list=('contribution_share/employee_share',
-                                            'contribution_share/employer_share'))
-    cell_employee = line.newCell('contribution_share/employee_share',
+                   variation_category_list=('contribution_share/employee',
+                                            'contribution_share/employer'))
+    cell_employee = line.newCell('contribution_share/employee',
                                 portal_type='Pay Sheet Cell',
                                 base_id='movement',
                                 mapped_value_property_list=('price',
                                                             'quantity'),)
-    cell_employee.edit(price=1, quantity=2000, contribution_share='employee_share')
-    cell_employer = line.newCell('contribution_share/employer_share',
+    cell_employee.edit(price=1, quantity=2000, contribution_share='employee')
+    cell_employer = line.newCell('contribution_share/employer',
                                 portal_type='Pay Sheet Cell',
                                 base_id='movement',
                                 mapped_value_property_list=('price',
                                                             'quantity'),)
-    cell_employer.edit(price=1, quantity=2000, contribution_share='employer_share')
+    cell_employer.edit(price=1, quantity=2000, contribution_share='employer')
 
     # base_salary += 100 (bonus)
     line = ps.newContent(portal_type='Pay Sheet Line',
                    title='Bonus',
                    resource_value=bonus,
                    destination_value=employee,
-                   variation_category_list=('contribution_share/employee_share',
-                                            'contribution_share/employer_share'))
-    cell_employee = line.newCell('contribution_share/employee_share',
+                   variation_category_list=('contribution_share/employee',
+                                            'contribution_share/employer'))
+    cell_employee = line.newCell('contribution_share/employee',
                                 portal_type='Pay Sheet Cell',
                                 base_id='movement',
                                 mapped_value_property_list=('price',
                                                             'quantity'),)
-    cell_employee.edit(price=1, quantity=100, contribution_share='employee_share')
-    cell_employer = line.newCell('contribution_share/employer_share',
+    cell_employee.edit(price=1, quantity=100, contribution_share='employee')
+    cell_employer = line.newCell('contribution_share/employer',
                                 portal_type='Pay Sheet Cell',
                                 base_id='movement',
                                 mapped_value_property_list=('price',
                                                             'quantity'),)
-    cell_employer.edit(price=1, quantity=100, contribution_share='employer_share')
+    cell_employer.edit(price=1, quantity=100, contribution_share='employer')
 
     # base_salary -= 50 (deductions)   => base_salary == 2050
     line = ps.newContent(portal_type='Pay Sheet Line',
                    title='Deduction',
                    resource_value=deductions,
                    destination_value=employee,
-                   variation_category_list=('contribution_share/employee_share',
-                                            'contribution_share/employer_share'))
-    cell_employee = line.newCell('contribution_share/employee_share',
+                   variation_category_list=('contribution_share/employee',
+                                            'contribution_share/employer'))
+    cell_employee = line.newCell('contribution_share/employee',
                                 portal_type='Pay Sheet Cell',
                                 base_id='movement',
                                 mapped_value_property_list=('price',
                                                             'quantity'),)
-    cell_employee.edit(price=-1, quantity=50, contribution_share='employee_share')
-    cell_employer = line.newCell('contribution_share/employer_share',
+    cell_employee.edit(price=-1, quantity=50, contribution_share='employee')
+    cell_employer = line.newCell('contribution_share/employer',
                                 portal_type='Pay Sheet Cell',
                                 base_id='movement',
                                 mapped_value_property_list=('price',
                                                             'quantity'),)
-    cell_employer.edit(price=-1, quantity=50, contribution_share='employer_share')
+    cell_employer.edit(price=-1, quantity=50, contribution_share='employer')
 
     # tax1 = 10% for employee ( 205 )
     #        20% for employer ( 410 )
@@ -3184,20 +3184,20 @@ class TestPayroll(TestPayrollMixin):
                    resource_value=tax1,
                    source_section_value=provider,
                    destination_value=employee,
-                   variation_category_list=('contribution_share/employee_share',
-                                            'contribution_share/employer_share'))
-    cell_employee = line.newCell('contribution_share/employee_share',
+                   variation_category_list=('contribution_share/employee',
+                                            'contribution_share/employer'))
+    cell_employee = line.newCell('contribution_share/employee',
                                 portal_type='Pay Sheet Cell',
                                 base_id='movement',
                                 mapped_value_property_list=('price',
                                                             'quantity'),)
-    cell_employee.edit(price=-.1, quantity=2050, contribution_share='employee_share')
-    cell_employer = line.newCell('contribution_share/employer_share',
+    cell_employee.edit(price=-.1, quantity=2050, contribution_share='employee')
+    cell_employer = line.newCell('contribution_share/employer',
                                 portal_type='Pay Sheet Cell',
                                 base_id='movement',
                                 mapped_value_property_list=('price',
                                                             'quantity'),)
-    cell_employer.edit(price=-.2, quantity=2050, contribution_share='employer_share')
+    cell_employer.edit(price=-.2, quantity=2050, contribution_share='employer')
     ps.plan()
     self.stepTic()
 
