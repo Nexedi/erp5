@@ -1939,6 +1939,18 @@ class TestPayrollMixin(ERP5ReportTestCase, TestTradeModelLineMixin):
       model_line.setIntIndex(index)
       index += 1
 
+  def checkPrecisionOfListBox(self, report_section, precision):
+    here = report_section.getObject(self.portal)
+    report_section.pushReport(self.portal)
+    form = getattr(here, report_section.getFormId())
+    self.portal.REQUEST['here'] = here
+    if form.has_field('listbox'):
+      result = form.listbox.get_value('default',
+                                      render_format='list',
+                                      REQUEST=self.portal.REQUEST)
+      self.assertEquals(precision, self.portal.REQUEST.get('precision'))
+    report_section.popReport(self.portal)
+
 class TestPayroll(TestPayrollMixin):
 
   def test_modelGetCell(self):
@@ -2550,8 +2562,7 @@ class TestPayroll(TestPayrollMixin):
 
     # base_unit_quantity for EUR is set to 0.001 in the created currencies, so the
     # precision is 3. Editable Fields will reuse this precision.
-    precision = self.portal.REQUEST.get('precision')
-    self.assertEquals(3, precision)
+    self.checkPrecisionOfListBox(report_section_list[0], 3)
 
     self.checkLineProperties(data_line_list[0],
                             id=1,
@@ -2935,8 +2946,7 @@ class TestPayroll(TestPayrollMixin):
 
     # base_unit_quantity for EUR is set to 0.001 in the created currencies, so the
     # precision is 3. Editable Fields will reuse this precision.
-    precision = self.portal.REQUEST.get('precision')
-    self.assertEquals(3, precision)
+    self.checkPrecisionOfListBox(report_section_list[0], 3)
 
     self.checkLineProperties(data_line_list[0],
                             employee_career_reference='E1',
