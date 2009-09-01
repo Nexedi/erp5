@@ -435,8 +435,10 @@ class GenericRuleTestsMixin:
   def _split(self):
     """Invoke manual splitting"""
     ratio = .5 # hardcoded value, hopefully float friendly
-    applied_rule = self.root_document.getCausalityRelatedValue(portal_type='Applied Rule')
-    for movement in applied_rule.contentValues(portal_type='Simulation Movement'):
+    applied_rule = self.root_document.getCausalityRelatedValue(
+        portal_type='Applied Rule')
+    for movement in applied_rule.contentValues(
+        portal_type='Simulation Movement'):
       new_movement = movement.Base_createCloneDocument(batch_mode=1)
       old_quantity = movement.getQuantity()
       movement.edit(
