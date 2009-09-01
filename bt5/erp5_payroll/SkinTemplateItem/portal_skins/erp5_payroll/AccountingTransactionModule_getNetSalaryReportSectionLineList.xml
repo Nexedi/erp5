@@ -62,8 +62,8 @@ translateString = portal.Base_translateString\n
 \n
 net_salary_base_amount_uid = \\\n
               portal.portal_categories.base_amount.net_salary.getUid()\n
-employee_share_uid = \\\n
-              portal.portal_categories.tax_category.employee_share.getUid()\n
+employee_contribution_share_uid = \\\n
+              portal.portal_categories.contribution_share.employee.getUid()\n
 \n
 section_category = request[\'section_category\']\n
 section_uid = portal.Base_getSectionUidListForSectionCategory(section_category)\n
@@ -85,7 +85,7 @@ total_price = 0\n
 # FIXME: this report does not support multiple Payment Condition\n
 for inventory in portal.portal_simulation.getInventoryList(\n
                     parent_base_contribution_uid=net_salary_base_amount_uid,\n
-                    tax_category_uid=employee_share_uid,\n
+                    contribution_share_uid=employee_contribution_share_uid,\n
                     portal_type=(\'Pay Sheet Line\', \'Pay Sheet Cell\'),\n
                     section_uid=section_uid,\n
                     simulation_state=simulation_state,\n
@@ -166,7 +166,7 @@ return object_list\n
                             <string>portal</string>
                             <string>translateString</string>
                             <string>net_salary_base_amount_uid</string>
-                            <string>employee_share_uid</string>
+                            <string>employee_contribution_share_uid</string>
                             <string>_getitem_</string>
                             <string>section_category</string>
                             <string>section_uid</string>

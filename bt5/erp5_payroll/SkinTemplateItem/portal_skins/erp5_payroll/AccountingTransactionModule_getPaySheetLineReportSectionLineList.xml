@@ -81,7 +81,7 @@ employee_params = {\n
     \'group_by_node\' : 1,\n
     \'group_by_variation\': 1,\n
     \'section_uid\' : section_uid_list,\n
-    \'tax_category_uid\' : context.portal_categories.tax_category.employee_share.getUid(),\n
+    \'contribution_share_uid\' : context.portal_categories.contribution_share.employee.getUid(),\n
     \'at_date\' : at_date,\n
     \'from_date\' : from_date,\n
     \'simulation_state\' : simulation_state,\n
@@ -93,7 +93,7 @@ employer_params = {\n
     \'group_by_node\' : 1,\n
     \'group_by_variation\': 1,\n
     \'section_uid\' : section_uid_list,\n
-    \'tax_category_uid\' : context.portal_categories.tax_category.employer_share.getUid(),\n
+    \'contribution_share_uid\' : context.portal_categories.contribution_share.employer.getUid(),\n
     \'at_date\' : at_date,\n
     \'from_date\' : from_date,\n
     \'simulation_state\' : simulation_state,\n

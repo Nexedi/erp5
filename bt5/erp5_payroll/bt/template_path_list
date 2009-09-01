@@ -9,8 +9,8 @@ portal_categories/base_amount/non_taxable_bonus
 portal_categories/base_amount/overtime
 portal_categories/base_amount/total_deductions
 portal_categories/base_amount/total_income
-portal_categories/tax_category/employee_share
-portal_categories/tax_category/employer_share
+portal_categories/contribution_share/employee
+portal_categories/contribution_share/employer
 portal_deliveries/pay_sheet_builder
 portal_deliveries/pay_sheet_builder/**
 portal_deliveries/pay_sheet_transaction_builder

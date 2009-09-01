@@ -35,8 +35,12 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>tax_category/employee_share</string>
-                <string>tax_category/employee_share</string>
+                <string>contribution_share/employee</string>
+                <string>contribution_share/employee</string>
+                <string>contribution_share/employee</string>
+                <string>contribution_share/employee</string>
+                <string>contribution_share/employee</string>
+                <string>contribution_share/employee</string>
               </tuple>
             </value>
         </item>
@@ -54,7 +58,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>employee_share</string> </value>
+            <value> <string>employee</string> </value>
         </item>
         <item>
             <key> <string>int_index</string> </key>
@@ -68,7 +72,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Employee Share</string> </value>
+            <value> <string>Employee</string> </value>
         </item>
       </dictionary>
     </pickle>

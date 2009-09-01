@@ -66,7 +66,11 @@
         <item>
             <key> <string>categories</string> </key>
             <value>
-              <tuple/>
+              <tuple>
+                <string>contribution_share</string>
+                <string>contribution_share</string>
+                <string>contribution_share</string>
+              </tuple>
             </value>
         </item>
         <item>
@@ -97,7 +101,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>tax_category</string> </value>
+            <value> <string>contribution_share</string> </value>
         </item>
         <item>
             <key> <string>id_generator</string> </key>
@@ -167,7 +171,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Tax Category</string> </value>
+            <value> <string>contribution_share</string> </value>
         </item>
         <item>
             <key> <string>write_permission</string> </key>

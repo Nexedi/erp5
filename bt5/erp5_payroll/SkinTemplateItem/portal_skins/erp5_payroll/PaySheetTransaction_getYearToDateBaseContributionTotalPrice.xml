@@ -84,8 +84,8 @@ params = {\n
     \'node_uid\' : paysheet.getSourceSectionUid(),\n
     \'mirror_section_uid\' : paysheet.getSourceSectionUid(),\n
     \'section_uid\' : paysheet.getDestinationSectionUid(),\n
-    \'tax_category_uid\' :\\\n
-        portal.portal_categories.tax_category.employee_share.getUid(),\n
+    \'contribution_share_uid\' :\\\n
+        portal.portal_categories.contribution_share.employee.getUid(),\n
     \'to_date\' : paysheet.getStartDate(),\n
     \'from_date\' : DateTime(paysheet.getStartDate().year(), 1, 1),\n
     \'simulation_state\'    : [\'stopped\', \'delivered\'],\n

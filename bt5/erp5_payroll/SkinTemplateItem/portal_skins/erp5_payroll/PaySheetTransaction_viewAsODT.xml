@@ -615,7 +615,7 @@ AAA=</string> </value>
                 <table:table-cell table:style-name=\'Tableau3.E2\'\n
                                   office:value-type=\'float\'\n
                                   tal:attributes=\'office:value data_dict/total_price_novat\'>\n
-                  <text:p text:style-name=\'Item_20_Table_20_Title_20_Right\' tal:content="python: \'%s %s\' % (quantity_renderer(context.PaySheetTransaction_getMovementTotalPriceFromCategory(base_contribution=\'base_contribution/base_amount/net_salary\', tax_category=\'tax_category/employee_share\')), data_dict[\'currency\'])">800.000,00</text:p>\n
+                  <text:p text:style-name=\'Item_20_Table_20_Title_20_Right\' tal:content="python: \'%s %s\' % (quantity_renderer(context.PaySheetTransaction_getMovementTotalPriceFromCategory(base_contribution=\'base_contribution/base_amount/net_salary\', contribution_share=\'contribution_share/employee\')), data_dict[\'currency\'])">800.000,00</text:p>\n
                 </table:table-cell>\n
               </table:table-row>\n
               <table:table-row table:style-name=\'Tableau1.4\'>\n

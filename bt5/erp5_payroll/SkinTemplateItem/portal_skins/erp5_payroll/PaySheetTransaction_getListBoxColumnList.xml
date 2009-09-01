@@ -77,10 +77,10 @@ if not editable:\n
 \n
 # this following columns are add for both edibales and not\n
 for model_line in context.contentValues(portal_type=\'Pay Sheet Line\'):\n
-  for tax_category in model_line.getTaxCategoryValueList():\n
-    price = (tax_category.getId()+\'_price\', tax_category.getTitle()+\' Rate\')\n
-    quantity = (tax_category.getId()+\'_total_price\', \n
-                tax_category.getTitle()+\' Amount\')\n
+  for contribution_share in model_line.getContributionShareValueList():\n
+    price = (contribution_share.getId()+\'_share_price\', contribution_share.getTitle()+\' Share Rate\')\n
+    quantity = (contribution_share.getId()+\'_share_total_price\', \n
+                contribution_share.getTitle()+\' Share Amount\')\n
     if price not in column_list:\n
       column_list.append(price)\n
       column_list.append(quantity)\n
@@ -130,7 +130,7 @@ return column_list\n
                             <string>_getiter_</string>
                             <string>context</string>
                             <string>model_line</string>
-                            <string>tax_category</string>
+                            <string>contribution_share</string>
                             <string>price</string>
                             <string>quantity</string>
                           </tuple>

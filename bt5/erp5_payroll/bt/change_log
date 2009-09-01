@@ -1,3 +1,6 @@
+2009-09-01 yusuke
+* tax_category category is renamed to contribution_share category
+
 2009-06-10 fabien
 * Payroll Service is now replaced by Service
 

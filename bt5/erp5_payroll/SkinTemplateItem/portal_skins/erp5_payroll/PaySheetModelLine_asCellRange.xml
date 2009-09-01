@@ -97,13 +97,13 @@ if matrixbox :\n
           category_cell_range.append((category_item[1],\\\n
               framing(model.getCell(category_item[1]),\n
                       category_item[0])))\n
-        elif base_category == \'tax_category\':\n
+        elif base_category == \'contribution_share\':\n
           category_cell_range.append((category_item[1],\n
-            translateString(\'${tax_category_title} (Amount or Percent)\',\n
-                            mapping=dict(tax_category_title=category_item[0]))))\n
+            translateString(\'${contribution_share_title} (Amount or Percent)\',\n
+                            mapping=dict(contribution_share_title=category_item[0]))))\n
         else:\n
           raise ValueError, "PaySheetModelLine_asCellRange: the two categories "\\\n
-                "must could be only tax_category and salary_range"\n
+                "must could be only contribution_share and salary_range"\n
       cell_range.append(category_cell_range)\n
 \n
     cell_range = filter(lambda x: x != [], cell_range)\n
