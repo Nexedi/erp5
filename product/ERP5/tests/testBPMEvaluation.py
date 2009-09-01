@@ -82,6 +82,7 @@ class TestBPMEvaluationMixin(TestBPMMixin):
     self._createOrderRule()
     self._createDeliveryRule()
     self._createInvoicingRule()
+    self._createInvoiceRule()
     self._createTradeModelRule()
 
   def _createRootTradeRule(self, **kw):
@@ -167,6 +168,17 @@ class TestBPMEvaluationMixin(TestBPMMixin):
     rule.newContent(portal_type='Quantity Divergence Tester')
 
     rule.validate()
+    transaction.commit()
+
+  def _createInvoiceRule(self):
+    # XXX: This is not needed, but invoices, even if built from simulation
+    #      need those rule to create empty one
+    rule_tool = self.portal.portal_rules
+
+    clipboard = rule_tool.manage_copyObjects(ids = ['default_invoice_rule'])
+    pasted = rule_tool.manage_pasteObjects(clipboard)
+    new_rule = getattr(rule_tool, pasted[0]['new_id'])
+    new_rule.validate()
     transaction.commit()
 
   def _createInvoicingRule(self):
