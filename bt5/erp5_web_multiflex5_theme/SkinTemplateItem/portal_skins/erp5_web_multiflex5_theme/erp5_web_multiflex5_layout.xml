@@ -67,7 +67,7 @@
                 <string>navbar navbar-left</string>
                 <string>headline</string>
                 <string>footer</string>
-                <string>subcontent subcontent-box sidemenu1 (Subsections)</string>
+                <string>subcontent subcontent-box (Subsections)</string>
                 <string>subcontent subcontent-box sidemenu3 (News)</string>
                 <string>web-toolbar (Toolbar)</string>
               </list>
@@ -122,7 +122,7 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>subcontent subcontent-box sidemenu1 (Subsections)</string> </key>
+                    <key> <string>subcontent subcontent-box (Subsections)</string> </key>
                     <value>
                       <list>
                         <string>subsection_list</string>

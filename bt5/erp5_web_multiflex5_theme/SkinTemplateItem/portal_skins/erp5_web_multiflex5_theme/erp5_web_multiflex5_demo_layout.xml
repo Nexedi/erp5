@@ -67,7 +67,7 @@
                 <string>navbar navbar-left</string>
                 <string>headline</string>
                 <string>footer</string>
-                <string>subcontent subcontent-box sidemenu1 (Subsections)</string>
+                <string>subcontent subcontent-box (Subsections)</string>
                 <string>subcontent subcontent-box sidemenu3 (News)</string>
                 <string>subcontent subcontent-box adminToolbox (Toolbox)</string>
                 <string>subcontent subcontent-box sidemenu1 (4-01a. Side menu 1)</string>
@@ -137,6 +137,14 @@
                     <value>
                       <list>
                         <string>navigation_bar</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>subcontent subcontent-box (Subsections)</string> </key>
+                    <value>
+                      <list>
+                        <string>subsection_list</string>
                       </list>
                     </value>
                 </item>
@@ -249,14 +257,6 @@
                     <value>
                       <list>
                         <string>side_menu_1</string>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>subcontent subcontent-box sidemenu1 (Subsections)</string> </key>
-                    <value>
-                      <list>
-                        <string>subsection_list</string>
                       </list>
                     </value>
                 </item>

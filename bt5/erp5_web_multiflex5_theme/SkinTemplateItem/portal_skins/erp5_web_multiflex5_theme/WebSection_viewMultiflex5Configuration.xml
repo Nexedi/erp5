@@ -64,9 +64,9 @@
               <list>
                 <string>left (Color)</string>
                 <string>right (Size)</string>
-                <string>left (Fonts)</string>
-                <string>right (Images)</string>
-                <string>center (Sections)</string>
+                <string>left (Fonts and Images)</string>
+                <string>right (Widgets)</string>
+                <string>center (Information)</string>
               </list>
             </value>
         </item>
@@ -75,15 +75,12 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>center (Sections)</string> </key>
+                    <key> <string>center (Information)</string> </key>
                     <value>
                       <list>
                         <string>my_layout_header_title</string>
                         <string>my_layout_header_motto</string>
                         <string>my_layout_copyright_message</string>
-                        <string>my_layout_search_area_section_id</string>
-                        <string>my_layout_news_area_section_id</string>
-                        <string>my_layout_sitemap_section_id</string>
                       </list>
                     </value>
                 </item>
@@ -102,17 +99,10 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>left (Fonts)</string> </key>
+                    <key> <string>left (Fonts and Images)</string> </key>
                     <value>
                       <list>
                         <string>my_layout_font_list</string>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>right (Images)</string> </key>
-                    <value>
-                      <list>
                         <string>my_layout_site_logo</string>
                         <string>my_layout_header_background_image</string>
                         <string>my_layout_page_top_background_image</string>
@@ -134,6 +124,20 @@
                         <string>my_layout_right_column_width</string>
                         <string>my_layout_right_column_padding</string>
                         <string>my_layout_sitename_width</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>right (Widgets)</string> </key>
+                    <value>
+                      <list>
+                        <string>my_layout_subsection</string>
+                        <string>my_layout_subsection_depth</string>
+                        <string>my_layout_subsection_style</string>
+                        <string>my_layout_search_area_section_id</string>
+                        <string>my_layout_news_area_section_id</string>
+                        <string>my_layout_sitemap_section_id</string>
+                        <string>my_layout_sitemap_depth</string>
                       </list>
                     </value>
                 </item>

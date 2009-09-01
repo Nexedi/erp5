@@ -10,10 +10,6 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_Cacheable__manager_id</string> </key>
-            <value> <string>web_section_user_ram_cache</string> </value>
-        </item>
-        <item>
             <key> <string>_bind_names</string> </key>
             <value>
               <object>
@@ -43,9 +39,24 @@
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-<tal:block tal:define="sitemap_root python:request.get(\'current_web_section\', here);\n
-                       depth python:here.getLayoutProperty(\'layout_subsection_depth\', 1)">\n
-<tal:block metal:use-macro="here/sitemap_renderer/macros/master" />\n
+<tal:block metal:define-macro="master"\n
+           tal:define="menu_item_list python:sitemap_root.getSiteMapTree(depth=depth)">\n
+  <ul>\n
+    <li tal:repeat="menu_item menu_item_list">\n
+      <tal:block tal:condition="not:nocall:menu_item/subsection"><a tal:attributes="href menu_item/url" tal:content="menu_item/translated_title">Menu</a></tal:block>\n
+      <tal:block tal:condition="nocall:menu_item/subsection">\n
+      <a tal:attributes="href menu_item/url"><tal:block tal:replace="menu_item/translated_title">Drop-down Menu</tal:block></a>\n
+      <ul metal:define-macro="generateTree">\n
+        <li tal:repeat="item menu_item/subsection">\n
+          <a href="#" tal:attributes="href item/url" tal:content="item/translated_title">Menu subitem 1</a>\n
+          <tal:recurse define="menu_item item" tal:condition="nocall:item/subsection">\n
+            <metal:call use-macro="here/WebSection_viewNavigationWidget/macros/generateTree" />\n
+          </tal:recurse>\n
+        </li>\n
+      </ul>\n
+      </tal:block>\n
+    </li>\n
+  </ul>\n
 </tal:block>\n
 
 
@@ -61,7 +72,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>WebSection_viewSubsectionWidget</string> </value>
+            <value> <string>sitemap_renderer</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
