@@ -89,7 +89,7 @@ plafond_min = slice.getQuantityRangeMin()\n
 \n
 gross_salary = context.PaySheetTransaction_getMovementTotalPriceFromCategory(\\\n
     base_contribution=\'base_contribution/base_amount/gross_salary\',\n
-    tax_category=\'tax_category/employee_share\')\n
+    contribution_share=\'contribution_share/employee\')\n
 \n
 if gross_salary < plafond_max:\n
   slice_amount = gross_salary - plafond_min\n
@@ -107,7 +107,7 @@ for paysheet in paysheet_list :\n
     plafond_min = slice.getQuantityRangeMin()\n
     gross_salary=paysheet.PaySheetTransaction_getMovementTotalPriceFromCategory(\\\n
         base_contribution=\'base_contribution/base_amount/gross_salary\',\n
-        tax_category=\'tax_category/employee_share\')\n
+        contribution_share=\'contribution_share/employee\')\n
     slice_amount = 0\n
     if gross_salary < plafond_max:\n
       slice_amount = gross_salary - plafond_min\n

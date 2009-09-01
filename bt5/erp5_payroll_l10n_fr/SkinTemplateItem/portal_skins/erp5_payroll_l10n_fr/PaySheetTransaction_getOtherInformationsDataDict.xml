@@ -115,7 +115,7 @@ def getPriceCurrencyId(currency):\n
 \n
 salaire_net_imposable = context.PaySheetTransaction_getMovementTotalPriceFromCategory(\\\n
     base_contribution=\'base_contribution/base_amount/salaire_net_imposable\',\n
-    tax_category=\'tax_category/employee_share\')\n
+    contribution_share=\'contribution_share/employee\')\n
 def getTaxableNetPayId(salaire_net_imposable):\n
   s = \'\'\n
   if salaire_net_imposable:\n
@@ -124,7 +124,7 @@ def getTaxableNetPayId(salaire_net_imposable):\n
 \n
 total_employee_tax = context.PaySheetTransaction_getMovementTotalPriceFromCategory(\\\n
     base_contribution=\'base_contribution/base_amount/total_deductions\',\n
-    tax_category=\'tax_category/employee_share\')\n
+    contribution_share=\'contribution_share/employee\')\n
 def getTotalEmployeeTaxId(total_employee_tax):\n
   s = \'\'\n
   if total_employee_tax:\n
@@ -134,7 +134,7 @@ def getTotalEmployeeTaxId(total_employee_tax):\n
 \n
 total_employer_tax = context.PaySheetTransaction_getMovementTotalPriceFromCategory(\\\n
     base_contribution=\'base_contribution/base_amount/total_deductions\',\n
-    tax_category=\'tax_category/employer_share\')\n
+    contribution_share=\'contribution_share/employer\')\n
 def getTotalEmployerTaxId(total_employer_tax):\n
   s = \'\'\n
   if total_employer_tax:\n
@@ -177,7 +177,7 @@ def getPaymentConditionText(paysheet):\n
 \n
 gross_salary = context.PaySheetTransaction_getMovementTotalPriceFromCategory(\\\n
     base_contribution=\'base_contribution/base_amount/gross_salary\',\n
-    tax_category=\'tax_category/employee_share\')\n
+    contribution_share=\'contribution_share/employee\')\n
 year_to_date_gross_salary = context.PaySheetTransaction_getYearToDateBaseContributionTotalPrice(\\\n
     paysheet=context, base_contribution_list=\'gross_salary\') + gross_salary\n
 \n
@@ -199,7 +199,7 @@ year_to_date_bonus_worked_hour_amount = context.PaySheetTransaction_getYearToDat
     paysheet=context, base_contribution_list=\'overtime\') + \\\n
     context.PaySheetTransaction_getMovementTotalPriceFromCategory(\\\n
     base_contribution=\'base_contribution/base_amount/overtime\', \\\n
-    tax_category=\'tax_category/employee_share\') or 0\n
+    contribution_share=\'contribution_share/employee\') or 0\n
 \n
 year_to_date_taxable_net_salary = context.PaySheetTransaction_getYearToDateBaseContributionTotalPrice(\\\n
     paysheet=context, base_contribution_list=\'salaire_net_imposable\') + salaire_net_imposable\n

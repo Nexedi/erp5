@@ -1,3 +1,6 @@
+2009-09-01 yusuke
+* tax_category category is renamed to contribution_share category
+
 2009-03-10 fabien
 * add a macro used to display localised information in a part of the payslip
 * increment version number because of the new style of the payslip
