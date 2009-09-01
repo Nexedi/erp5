@@ -451,7 +451,7 @@ class Rule(Predicate, XMLObject):
     add_list = [] # list of movements to be added
     modify_dict = {} # dict of movements to be modified
     delete_list = [] # list of movements to be deleted
-    
+
     prevision_list = self._generatePrevisionList(applied_rule, **kw)
     immutable_movement_list, mutable_movement_list, \
         deletable_movement_list = self._getCurrentMovementList(applied_rule,
