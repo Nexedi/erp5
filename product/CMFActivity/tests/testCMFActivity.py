@@ -3409,25 +3409,30 @@ class TestCMFActivity(ERP5TypeTestCase):
                                                    offset=0,
                                                    count=1000)
 
-    self.assertEqual(len([message
-                          for message in result
-                          if (message.processing_node>0 and
-                              message.processing==1 and
-                              message.serialization_tag=='test_115')]),
-                     1)
+    try:
+      self.assertEqual(len([message
+                            for message in result
+                            if (message.processing_node>0 and
+                                message.processing==1 and
+                                message.serialization_tag=='test_115')]),
+                       1)
 
-    self.assertEqual(len([message
-                          for message in result
-                          if (message.processing_node==-1 and
-                              message.serialization_tag=='test_115')]),
-                     3)
+      self.assertEqual(len([message
+                            for message in result
+                            if (message.processing_node==-1 and
+                                message.serialization_tag=='test_115')]),
+                       3)
 
-    self.assertEqual(len([message
-                          for message in result
-                          if (message.processing_node>0 and
-                              message.processing==1 and
-                              message.serialization_tag=='')]),
-                     1)
+      self.assertEqual(len([message
+                            for message in result
+                            if (message.processing_node>0 and
+                                message.processing==1 and
+                                message.serialization_tag=='')]),
+                       1)
+    finally:
+      # Clear activities from all nodes
+      activity_tool.SQLDict_delMessage(uid=[message.uid for message in result])
+      get_transaction().commit()
 
 def test_suite():
   suite = unittest.TestSuite()
