@@ -2819,7 +2819,13 @@ class TestCMFActivity(ERP5TypeTestCase):
     self.assertEqual(len(result), 2)
     activity_tool.distribute()
     result = activity_tool.getMessageList()
-    self.assertEqual(len([x for x in result if x.processing_node == 0]), 2)
+    # If activity is SQLDict, serialization tag prevents validating the same
+    # serialization tagged messages simultaneously.
+    # If activity is SQLQueue, this does not happen.
+    if activity=='SQLDict':
+      self.assertEqual(len([x for x in result if x.processing_node == 0]), 1)
+    else:
+      self.assertEqual(len([x for x in result if x.processing_node == 0]), 2)
     self.tic()
     result = activity_tool.getMessageList()
     self.assertEqual(len(result), 0)
