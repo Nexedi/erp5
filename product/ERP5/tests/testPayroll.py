@@ -2569,22 +2569,22 @@ class TestPayroll(TestPayrollMixin):
                             employee_career_reference='E1',
                             employee_title='Employee One',
                             base=2000,
-                            employee=2000 * .50,
-                            employer=2000 * .40,
+                            employee_share=2000 * .50,
+                            employer_share=2000 * .40,
                             total=(2000 * .50 + 2000 * .40))
     self.checkLineProperties(data_line_list[1],
                             id=2,
                             employee_career_reference='E2',
                             employee_title='Employee Two',
                             base=3000,
-                            employee=3000 * .50,
-                            employer=3000 * .40,
+                            employee_share=3000 * .50,
+                            employer_share=3000 * .40,
                             total=(3000 * .50 + 3000 * .40))
     # stat line
     self.checkLineProperties(line_list[-1],
                             base=3000 + 2000,
-                            employee=(3000 + 2000) * .50,
-                            employer=(3000 + 2000) * .40,
+                            employee_share=(3000 + 2000) * .50,
+                            employer_share=(3000 + 2000) * .40,
                             total=((3000 + 2000) * .50 + (3000 + 2000) * .40))
 
   def test_PayrollTaxesReportDifferentSalaryRange(self):
@@ -2754,22 +2754,22 @@ class TestPayroll(TestPayrollMixin):
                             employee_career_reference='E1',
                             employee_title='Employee One',
                             base=1000,
-                            employee=1000 * .50,
-                            employer=1000 * .40,
+                            employee_share=1000 * .50,
+                            employer_share=1000 * .40,
                             total=(1000 * .50 + 1000 * .40))
     self.checkLineProperties(data_line_list[1],
                             id=2,
                             employee_career_reference='E2',
                             employee_title='Employee Two',
                             base=1000,
-                            employee=1000 * .50,
-                            employer=1000 * .40,
+                            employee_share=1000 * .50,
+                            employer_share=1000 * .40,
                             total=(1000 * .50 + 1000 * .40))
     self.checkLineProperties(data_line_list[2],
                             employee_title='Total Slice A',
                             base=2000,
-                            employee=2000 * .50,
-                            employer=2000 * .40,
+                            employee_share=2000 * .50,
+                            employer_share=2000 * .40,
                             #total=(2000 * .50 + 2000 * .40)
                             )
 
@@ -2778,30 +2778,30 @@ class TestPayroll(TestPayrollMixin):
                             employee_career_reference='E1',
                             employee_title='Employee One',
                             base=500,
-                            employee=500 * .20,
-                            employer=500 * .32,
+                            employee_share=500 * .20,
+                            employer_share=500 * .32,
                             total=(500 * .20 + 500 * .32))
     self.checkLineProperties(data_line_list[4],
                             id=4,
                             employee_career_reference='E2',
                             employee_title='Employee Two',
                             base=3000,
-                            employee=3000 * .20,
-                            employer=3000 * .32,
+                            employee_share=3000 * .20,
+                            employer_share=3000 * .32,
                             total=(3000 * .20 + 3000 * .32))
     self.checkLineProperties(data_line_list[5],
                             employee_title='Total Slice B',
                             base=3500,
-                            employee=3500 * .20,
-                            employer=3500 * .32,
+                            employee_share=3500 * .20,
+                            employer_share=3500 * .32,
                             #total=(3500 * .20 + 3500 * .32),
                             )
 
     # stat line
     self.checkLineProperties(line_list[-1],
                             base=2000 + 3500,
-                            employee=(2000 * .50 + 3500 * .20),
-                            employer=(2000 * .40 + 3500 * .32),
+                            employee_share=(2000 * .50 + 3500 * .20),
+                            employer_share=(2000 * .40 + 3500 * .32),
                             total=((2000 * .50 + 3500 * .20) +
                                    (2000 * .40 + 3500 * .32)))
 
