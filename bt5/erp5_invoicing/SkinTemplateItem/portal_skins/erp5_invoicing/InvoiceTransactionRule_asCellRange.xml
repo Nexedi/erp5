@@ -53,7 +53,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>dimension_list = [\'tax_category\', \'product\', \'region\', \'product_line\',\n
+            <value> <string>dimension_list = [\'contribution_share\', \'product\', \'region\', \'product_line\',\n
                   \'destination_region\', \'has_vat_number\', \'movement\']\n
 \n
 for pred in context.objectValues(portal_type=\'Predicate\'):\n
