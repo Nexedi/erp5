@@ -37,6 +37,12 @@ class TradeModelRule(TransformationRule):
   """
     Rule for Trade Model
   """
+  # TODO:
+  #  * reuse Rule methods
+  #  * remove duplicated code
+  #  * use matching_property_list (needs update of rules instance)
+  #  * more usage of Business Process (remove 'if 0' conditions)
+
   # CMF Type Definition
   meta_type = 'ERP5 Trade Model Rule'
   portal_type = 'Trade Model Rule'
