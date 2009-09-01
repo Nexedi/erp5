@@ -118,13 +118,16 @@ class TestBPMEvaluationMixin(TestBPMMixin):
 
   def _createOrderRule(self):
     rule = self._createRootTradeRule(portal_type='Order Rule',
-        reference='default_order_rule')
+        reference='default_order_rule', matching_property = ('resource_list',
+          'variation_category_list', 'variation_property_dict', 'order_list'))
     rule.validate()
     transaction.commit()
 
   def _createDeliveryRule(self):
     rule = self._createRootTradeRule(portal_type='Delivery Rule',
-        reference='default_delivery_rule'
+        reference='default_delivery_rule', matching_property = (
+          'resource_list', 'variation_category_list',
+          'variation_property_dict', 'order_list')
         )
     rule.validate()
     transaction.commit()
