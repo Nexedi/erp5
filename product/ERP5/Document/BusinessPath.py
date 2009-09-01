@@ -91,8 +91,9 @@ class BusinessPath(Path):
                             )
 
   # IArrowBase implementation
-  security.declareProtected(Permissions.AccessContentsInformation, 'getSourceBaseCategoryList')
-  def getSourceBaseCategoryList(self):
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getSourceArrowBaseCategoryList')
+  def getSourceArrowBaseCategoryList(self):
     """
       Returns all categories which are used to define the source
       of this Arrow
@@ -102,8 +103,9 @@ class BusinessPath(Path):
         'source_administration', 'source_project', 'source_function',
         'source_payment', 'source_account')
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getDestinationBaseCategoryList')
-  def getDestinationBaseCategoryList(self):
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getDestinationArrowBaseCategoryList')
+  def getDestinationArrowBaseCategoryList(self):
     """
       Returns all categories which are used to define the destination
       of this Arrow
