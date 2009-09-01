@@ -240,7 +240,7 @@ class TestBPMMixin(ERP5TypeTestCase):
     activity_connection = self.portal.cmf_activity_sql_connection
     for table in 'message', 'message_queue':
       activity_connection.manage_test(
-          'update %s set processing_node=-8 where processing_node=-2' % table)
+          'delete from %s where processing_node=-2' % table)
     # remove not needed rules
     self.portal.portal_rules.manage_delObjects(
         ids=['test_invoice_transaction_rule'])
