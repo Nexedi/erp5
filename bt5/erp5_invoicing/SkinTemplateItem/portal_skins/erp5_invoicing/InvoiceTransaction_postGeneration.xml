@@ -79,26 +79,26 @@ if not invoice.Invoice_isAdvanced():\n
 related_packing_list = invoice.getDefaultCausalityValue()\n
 \n
 related_order = related_packing_list.getDefaultCausalityValue()\n
-# copy trade condition:\n
-if not context.getSpecialise():\n
-  if related_order is not None:\n
+if related_order is not None:\n
+  # copy trade condition:\n
+  if not context.getSpecialise():\n
     context.edit(specialise=related_order.getSpecialise())\n
-\n
-# copy order\'s trade model lines\n
-invoice_trade_model_line_reference_list = [document.getReference() \\\n
-    for document in context.contentValues(portal_type=\'Trade Model Line\')]\n
-order_trade_model_line_copy_id_list = []\n
-for order_trade_model_line in related_order.contentValues(\n
-    portal_type=\'Trade Model Line\'):\n
-  if order_trade_model_line.getReference() not in \\\n
-      invoice_trade_model_line_reference_list:\n
-    order_trade_model_line_copy_id_list.append(order_trade_model_line.getId())\n
-\n
-if order_trade_model_line_copy_id_list:\n
-  clipboard = related_order.manage_copyObjects(\n
-    ids=order_trade_model_line_copy_id_list)\n
-  context.manage_pasteObjects(clipboard)\n
-\n
+  \n
+  # copy order\'s trade model lines\n
+  invoice_trade_model_line_reference_list = [document.getReference() \\\n
+      for document in context.contentValues(portal_type=\'Trade Model Line\')]\n
+  order_trade_model_line_copy_id_list = []\n
+  for order_trade_model_line in related_order.contentValues(\n
+      portal_type=\'Trade Model Line\'):\n
+    if order_trade_model_line.getReference() not in \\\n
+        invoice_trade_model_line_reference_list:\n
+      order_trade_model_line_copy_id_list.append(order_trade_model_line.getId())\n
+  \n
+  if order_trade_model_line_copy_id_list:\n
+    clipboard = related_order.manage_copyObjects(\n
+      ids=order_trade_model_line_copy_id_list)\n
+    context.manage_pasteObjects(clipboard)\n
+  \n
 # copy title, if not updating a new delivery\n
 if not invoice.hasTitle() and related_packing_list.hasTitle():\n
   invoice.setTitle(related_packing_list.getTitle())\n
