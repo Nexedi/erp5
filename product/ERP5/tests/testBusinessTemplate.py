@@ -857,6 +857,16 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     self.assertEqual(len(wf_ids), 1)
     bt.edit(template_skin_id_list=wf_ids)
 
+  def stepAddRegistredSelectionToBusinessTemplate(self, sequence=None, 
+                                                  sequence_list=None, **kw):
+    """
+    Add registered selection to business template
+    """
+    bt = sequence.get('current_bt', None)
+    self.failUnless(bt is not None)
+    bt.edit(template_registered_skin_selection_list = \
+        ('%s | Foo' % sequence.get('skin_folder_id'), ))
+
   def stepAddPathToBusinessTemplate(self, sequence=None, sequence_list=None, **kw):
     """
     Add a path to business template
@@ -4622,6 +4632,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CreateNewBusinessTemplate \
                        UseExportBusinessTemplate \
                        AddSkinFolderToBusinessTemplate \
+                       AddRegistredSelectionToBusinessTemplate \
                        BuildBusinessTemplate \
                        SaveBusinessTemplate \
                        RemoveSkinFolder \
@@ -5414,6 +5425,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CreateNewBusinessTemplate \
                        UseExportBusinessTemplate \
                        AddSkinFolderToBusinessTemplate \
+                       AddRegistredSelectionToBusinessTemplate \
                        BuildBusinessTemplate \
                        SaveBusinessTemplate \
                        RemoveSkinFolder \
@@ -5444,6 +5456,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CreateNewBusinessTemplate \
                        UseExportBusinessTemplate \
                        AddSkinFolderToBusinessTemplate \
+                       AddRegistredSelectionToBusinessTemplate \
                        BuildBusinessTemplate \
                        SaveBusinessTemplate \
                        RemoveSkinFolder \
@@ -5471,6 +5484,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CreateNewBusinessTemplate \
                        UseExportBusinessTemplate \
                        AddSkinFolderToBusinessTemplate \
+                       AddRegistredSelectionToBusinessTemplate \
                        BuildBusinessTemplate \
                        SaveBusinessTemplate \
                        RemoveSkinFolder \

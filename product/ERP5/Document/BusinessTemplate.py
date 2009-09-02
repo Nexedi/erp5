@@ -180,6 +180,98 @@ def fixZSQLMethod(portal, method):
                     method.getId(), sql_connection_list[0]))
       method.connection_id = sql_connection_list[0]
 
+def registerSkinFolder(skin_tool, skin_folder):
+  request = skin_tool.REQUEST
+  register_skin_selection = request.get('your_register_skin_selection', 1)
+  reorder_skin_selection = request.get('your_reorder_skin_selection', 1)
+  skin_layer_list = request.get('your_skin_layer_list', 
+                                skin_tool.getSkinSelections()) 
+
+  skin_folder_id = skin_folder.getId()
+
+  try:
+    skin_selection_list = skin_folder.getProperty(
+                 'business_template_registered_skin_selections', 
+                 skin_tool.getSkinSelections()
+                 )
+  except AttributeError:
+    skin_selection_list = skin_tool.getSkinSelections()
+
+  for skin_name in skin_selection_list:
+
+    if (skin_name not in skin_tool.getSkinSelections()) and \
+                                          register_skin_selection:
+      createSkinSelection(skin_tool, skin_name)
+      # add newly created skins to list of skins we care for 
+      skin_layer_list.append(skin_name)
+
+    selection = skin_tool.getSkinPath(skin_name) or ''
+    if (skin_folder_id not in selection) and (skin_name in skin_layer_list):
+      selection_list = selection.split(',')
+      selection_list.insert(0, skin_folder_id)
+      if reorder_skin_selection:
+        selection_list.sort(
+          key=lambda x: x in skin_tool.objectIds() and -skin_tool[x].getProperty(
+          'business_template_skin_layer_priority', 0) or 0)
+      skin_tool.manage_skinLayers(skinpath=selection_list,
+                                  skinname=skin_name, add_skin=1)
+      skin_tool.getPortalObject().changeSkin(None)
+
+def createSkinSelection(skin_tool, skin_name):
+  # This skin selection does not exist, so we create a new one.
+  # We'll initialize it with all skin folders, unless:
+  #  - they explictly define a list of
+  #    "business_template_registered_skin_selections", and we
+  #    are not in this list.
+  #  - they are not registred in the default skin selection
+  skin_path = ''
+  for skin_folder in skin_tool.objectValues():
+    if skin_name in skin_folder.getProperty(
+             'business_template_registered_skin_selections',
+             (skin_name, )):
+      if skin_folder.getId() in \
+          skin_tool.getSkinPath(skin_tool.getDefaultSkin()):
+        if skin_path:
+          skin_path = '%s,%s' % (skin_path, skin_folder.getId())
+        else:
+          skin_path= skin_folder.getId()
+  # add newly created skins to list of skins we care for 
+  skin_tool.addSkinSelection(skin_name, skin_path)
+  skin_tool.getPortalObject().changeSkin(None)
+
+def deleteSkinSelection(skin_tool, skin_name):
+  # Do not delete default skin
+  if skin_tool.getDefaultSkin() != skin_name:
+
+    skin_selection_registered = False
+    for skin_folder in skin_tool.objectValues():
+      try:
+        skin_selection_list = skin_folder.getProperty(
+               'business_template_registered_skin_selections', ())
+        if skin_name in skin_selection_list:
+          skin_selection_registered = True
+          break
+      except AttributeError:
+        pass
+
+    if (not skin_selection_registered):
+      skin_tool.manage_skinLayers(chosen=[skin_name], 
+                                  del_skin=1)
+      skin_tool.getPortalObject().changeSkin(None)
+
+def unregisterSkinFolder(skin_tool, skin_folder, skin_selection_list):
+  skin_folder_id = skin_folder.getId()
+
+  for skin_selection in skin_selection_list:
+    selection = skin_tool.getSkinPath(skin_selection)
+    selection = selection.split(',')
+    if (skin_folder_id in selection):
+      selection.remove(skin_folder_id)
+      skin_tool.manage_skinLayers(skinpath=tuple(selection),
+                                  skinname=skin_selection, add_skin=1)
+      deleteSkinSelection(skin_tool, skin_selection)
+      skin_tool.getPortalObject().changeSkin(None)
+
 class BusinessTemplateArchive:
   """
     This is the base class for all Business Template archives
@@ -969,22 +1061,9 @@ class ObjectTemplateItem(BaseTemplateItem):
           # we are removing a skin folder, check and 
           # remove if registered skin selection
           skin_folder = container[object_id]
-          registered_skin_selections = getattr(skin_folder, 
-              'business_template_registered_skin_selections', None)
-          if registered_skin_selections is not None:
+          unregisterSkinFolder(container, skin_folder,
+              container.getSkinSelections())
 
-            for other_skin_folder in container.objectValues():
-              if other_skin_folder.getId() != object_id:
-                for other_registered_skin_selection in \
-                      other_skin_folder.getProperty(
-                       'business_template_registered_skin_selections', ()):
-                  if other_registered_skin_selection in \
-                                        registered_skin_selections:
-                    registered_skin_selections.remove(
-                        other_registered_skin_selection)
-            if registered_skin_selections:
-              container.manage_skinLayers(chosen=registered_skin_selections, 
-                                          del_skin=1)
         container.manage_delObjects([object_id])
         if container.aq_parent.meta_type == 'ERP5 Catalog' and len(container.objectIds()) == 0:
           # We are removing a ZSQLMethod, remove the SQLCatalog if empty
@@ -1196,6 +1275,16 @@ class SkinTemplateItem(ObjectTemplateItem):
   def __init__(self, id_list, tool_id='portal_skins', **kw):
     ObjectTemplateItem.__init__(self, id_list, tool_id=tool_id, **kw)
 
+  def build(self, context, **kw):
+    ObjectTemplateItem.build(self, context, **kw)
+    for relative_url in self._objects.keys():
+      obj = self._objects[relative_url]
+      if (getattr(obj, 'meta_type', None) == 'Folder') and \
+        (obj.getProperty('business_template_registered_skin_selections', None) \
+            is not None):
+          obj._delProperty(
+              'business_template_registered_skin_selections')
+
   def preinstall(self, context, installed_bt, **kw):
     modified_object_list = ObjectTemplateItem.preinstall(self, context, installed_bt, **kw)
     # We must install/update an ERP5 Form if one of its widget is modified.
@@ -1216,102 +1305,187 @@ class SkinTemplateItem(ObjectTemplateItem):
     update_dict = kw.get('object_to_update')
     force = kw.get('force')
     p = context.getPortalObject()
+    skin_tool = p.portal_skins
     for relative_url in self._archive.keys():
       folder = p.unrestrictedTraverse(relative_url)
       for obj in folder.objectValues(spec=('Z SQL Method',)):
         fixZSQLMethod(p, obj)
 
-    ps = p.portal_skins
-    request = context.REQUEST
-    register_skin_selection = request.get('your_register_skin_selection', 1)
-    reorder_skin_selection = request.get('your_reorder_skin_selection', 1)
-    skin_layer_list = request.get('your_skin_layer_list', ps.getSkinSelections()) 
-    # Add new skin selection if not already existing
-    for relative_url in self._archive.keys():
+      # Do not register skin which were explicitely ask not to be installed
       if context.getTemplateFormatVersion() == 1:
         if update_dict.has_key(relative_url) or force:
           if not force:
             if update_dict[relative_url] == 'nothing':
               continue
-        obj = self._objects[relative_url]
-      else:
-        obj = self._archive[relative_url]
-      selection_list = obj.getProperty(
-          'business_template_registered_skin_selections', [])
-      if isinstance(selection_list, basestring):
-        selection_list = selection_list.split()
-      for skin_selection in selection_list:
-        # user may explicitly choose not to register skin
-        if skin_selection not in ps.getSkinSelections() and register_skin_selection:
-          # This skin selection does not exist, so we create a new one.
-          # We'll initialize it with all skin folders, unless:
-          #  - they explictly define a list of
-          #    "business_template_registered_skin_selections", and we
-          #    are not in this list.
-          #  - they are not registred in the default skin selection
-          skin_path = ''
-          for skin_folder in ps.objectValues():
-            if skin_selection in skin_folder.getProperty(
-                     'business_template_registered_skin_selections',
-                     (skin_selection, )):
-              if skin_folder.getId() in ps.getSkinPath(ps.getDefaultSkin()):
-                if skin_path:
-                  skin_path = '%s,%s' % (skin_path, skin_folder.getId())
-                else:
-                  skin_path= skin_folder.getId()
-          # add newly created skins to list of skins we care for 
-          skin_layer_list.append(skin_selection)
-          ps.addSkinSelection(skin_selection, skin_path)
+      if folder.aq_parent.meta_type == 'CMF Skins Tool':
+        registerSkinFolder(skin_tool, folder)
 
-    # Add new folders into skin paths.
-    for skin_name, selection in ps.getSkinPaths():
-      # install only if user selected this skin to be reordered according to priority
-      if skin_name in skin_layer_list:      
-        new_selection = []
-        selection = selection.split(',')
-        for relative_url in self._archive.keys():
-          if context.getTemplateFormatVersion() == 1:
-            if update_dict.has_key(relative_url) or force:
-              if not force:
-                if update_dict[relative_url] == 'nothing':
-                  continue
-            obj = self._objects[relative_url]
-          else:
-            obj = self._archive[relative_url]
-          skin_id = relative_url.split('/')[-1]
-          selection_list = obj.getProperty('business_template_registered_skin_selections', None)
-          if selection_list is None or skin_name in selection_list:
-            if skin_id not in selection:
-              new_selection.append(skin_id)
-        new_selection.extend(selection)
-        # sort the layer according to skin priorities
-        if reorder_skin_selection:
-          new_selection.sort(
-            key=lambda x: x in ps.objectIds() and -ps[x].getProperty(
-            'business_template_skin_layer_priority', 0) or 0)
-        ps.manage_skinLayers(skinpath = tuple(new_selection), skinname = skin_name, add_skin = 1)
-    # Make sure that skin data is up-to-date (see CMFCore/Skinnable.py).
-    p.changeSkin(None)
+class RegisteredSkinSelectionTemplateItem(BaseTemplateItem):
+
+  def build(self, context, **kw):
+    portal = context.getPortalObject()
+    skin_tool = getToolByName(portal, 'portal_skins')
+
+    for key in self._archive.keys():
+      skin_folder_id, skin_selection_id = key.split(' | ')
+
+      skin_folder = skin_tool[skin_folder_id]
+      selection_list = skin_folder.getProperty(
+          'business_template_registered_skin_selections',
+          [])
+      if skin_selection_id in selection_list:
+        if self._objects.has_key(skin_folder_id):
+          self._objects[skin_folder_id].append(skin_selection_id)
+        else:
+          self._objects[skin_folder_id] = [skin_selection_id]
+      else:
+        raise NotFound, 'No skin selection %s found for skin folder %s.' \
+                          % (skin_selection_id, skin_folder_id)
+
+  # Function to generate XML Code Manually
+  def generateXml(self, path=None):
+    xml_data = '<registered_skin_selection>'
+    keys = self._objects.keys()
+    keys.sort()
+    for key in keys:
+      skin_selection_list = self._objects[key]
+      xml_data += '\n <skin_folder_selection>'
+      xml_data += '\n  <skin_folder>%s</skin_folder>' % key
+      xml_data += '\n  <skin_selection>%s</skin_selection>' \
+                      % ','.join(skin_selection_list)
+      xml_data += '\n </skin_folder_selection>'
+    xml_data += '\n</registered_skin_selection>'
+    return xml_data
+
+  def export(self, context, bta, **kw):
+    if len(self._objects.keys()) == 0:
+      return
+    root_path = os.path.join(bta.path, self.__class__.__name__)
+    bta.addFolder(name=root_path)
+    # export workflow chain
+    xml_data = self.generateXml()
+    bta.addObject(obj=xml_data, name='registered_skin_selection',  path=root_path)
+
+  def install(self, context, trashbin, **kw):
+    update_dict = kw.get('object_to_update')
+    force = kw.get('force')
+    portal = context.getPortalObject()
+    skin_tool = getToolByName(portal, 'portal_skins')
+
+    for skin_folder_id in self._objects.keys():
+
+      if update_dict.has_key(skin_folder_id) or force:
+        if not force:
+          action = update_dict[skin_folder_id]
+          if action == 'nothing':
+            continue
+        skin_folder = skin_tool[skin_folder_id]
+        selection_string = skin_folder.getProperty(
+          'business_template_registered_skin_selections', None)
+
+        if selection_string is None:
+          selection_string = self._objects[skin_folder_id].replace(',', ' ')
+        else:
+          selection_string += ' %s' % \
+            self._objects[skin_folder_id].replace(',', ' ')
+
+        # Remove duplicate
+        selection_string = \
+            ' '.join(dict([(x, 0) for x in selection_string.split(' ')]).keys())
+        skin_folder._setProperty(
+            'business_template_registered_skin_selections',
+            selection_string.split(' '), type='tokens')
+
+        selection_list = selection_string.split(' ')
+        unregisterSkinFolder(skin_tool, skin_folder,
+            skin_tool.getSkinSelections())
+        registerSkinFolder(skin_tool, skin_folder)
 
   def uninstall(self, context, **kw):
-    # Remove folders from skin paths.
+    portal = context.getPortalObject()
+    skin_tool = getToolByName(portal, 'portal_skins')
+
     object_path = kw.get('object_path', None)
     if object_path is not None:
       object_keys = [object_path]
     else:
-      object_keys = self._archive.keys()
-    ps = context.portal_skins
-    skin_id_list = [relative_url.split('/')[-1] for relative_url in object_keys]
-    for skin_name, selection in ps.getSkinPaths():
-      new_selection = []
-      selection = selection.split(',')
-      for skin_id in selection:
-        if skin_id not in skin_id_list:
-          new_selection.append(skin_id)
-      ps.manage_skinLayers(skinpath = tuple(new_selection), skinname = skin_name, add_skin = 1)
-    # Make sure that skin data is up-to-date (see CMFCore/Skinnable.py).
-    context.getPortalObject().changeSkin(None)
-    ObjectTemplateItem.uninstall(self, context, **kw)
+      object_keys = self._objects.keys()
+
+    for skin_folder_id in object_keys:
+      skin_folder = skin_tool[skin_folder_id]
+      current_selection_string = skin_folder.getProperty(
+        'business_template_registered_skin_selections', [])
+      current_selection_set = set(current_selection_string)
+
+      skin_selection = workflow_id = self._objects[skin_folder_id]
+      skin_selection_list = skin_selection.split(',')
+      for skin_selection in skin_selection_list:
+        current_selection_set.remove(skin_selection)
+
+      current_selection_list = list(current_selection_set)
+      if current_selection_list:
+        skin_folder.setProperty(
+            'business_template_registered_skin_selections',
+            current_selection_list)
+
+        # Unregister skin folder from skin selection
+        unregisterSkinFolder(skin_tool, skin_folder, skin_selection_list)
+      else:
+        delattr(skin_folder, 'business_template_registered_skin_selections')
+
+        # Delete all skin selection
+        for skin_selection in skin_selection_list:
+          deleteSkinSelection(skin_tool, skin_selection)
+        # Register to all other skin selection
+        registerSkinFolder(skin_tool, skin_folder)
+
+  def preinstall(self, context, installed_bt, **kw):
+    modified_object_list = {}
+    if context.getTemplateFormatVersion() == 1:
+      new_keys = self._objects.keys()
+      new_dict = PersistentMapping()
+      # Fix key from installed bt if necessary
+      for key in installed_bt._objects.keys():
+        new_key = 'registered_skin_selection/%s' %key
+        new_dict[new_key] = installed_bt._objects[key]
+      if len(new_dict):
+        installed_bt._objects = new_dict
+      for path in new_keys:
+        if installed_bt._objects.has_key(path):
+          # compare object to see it there is changes
+          new_object = self._objects[path]
+          old_object = installed_bt._objects[path]
+          if new_object != old_object:
+            modified_object_list.update({path : ['Modified', self.__class__.__name__[:-12]]})
+        else: # new object
+          modified_object_list.update({path : ['New', self.__class__.__name__[:-12]]})
+      # get removed object
+      old_keys = installed_bt._objects.keys()
+      for path in old_keys:
+        if path not in new_keys:
+          modified_object_list.update({path : ['Removed', self.__class__.__name__[:-12]]})
+    return modified_object_list
+
+  def _importFile(self, file_name, file):
+    if not file_name.endswith('.xml'):
+      if not file_name.endswith('.zexp'):
+        LOG('Business Template', 0, 'Skipping file "%s"' % (file_name, ))
+      return
+    # import workflow chain for portal_type
+    skin_selection_dict = {}
+    xml = parse(file)
+    skin_folder_selection_list = xml.getElementsByTagName('skin_folder_selection')
+    for skin_folder_selection in skin_folder_selection_list:
+      skin_folder_id = skin_folder_selection.getElementsByTagName(
+          'skin_folder')[0].childNodes[0].data
+      selection_list = skin_folder_selection.getElementsByTagName(
+          'skin_selection')[0].childNodes
+      if len(selection_list) == 0:
+        selection = ''
+      else:
+        selection = selection_list[0].data
+      skin_selection_dict[str(skin_folder_id)] = str(selection)
+    self._objects = skin_selection_dict
 
 
 class WorkflowTemplateItem(ObjectTemplateItem):
@@ -4460,6 +4634,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       '_module_item',
       '_path_item',
       '_skin_item',
+      '_registered_skin_selection_item',
       '_preference_item',
       '_action_item',
       '_portal_type_roles_item',
@@ -4551,6 +4726,9 @@ Business Template is a set of definitions, such as skins, portal types and categ
           WorkflowTemplateItem(self.getTemplateWorkflowIdList())
       self._skin_item = \
           SkinTemplateItem(self.getTemplateSkinIdList())
+      self._registered_skin_selection_item = \
+          RegisteredSkinSelectionTemplateItem(
+              self.getTemplateRegisteredSkinSelectionList())
       self._category_item = \
           CategoryTemplateItem(self.getTemplateBaseCategoryList())
       self._catalog_method_item = \
@@ -5100,6 +5278,13 @@ Business Template is a set of definitions, such as skins, portal types and categ
       """
       return self._getOrderedList('template_skin_id')
 
+    def getTemplateRegisteredSkinSelectionList(self):
+      """
+      We have to set this method because we want an
+      ordered list
+      """
+      return self._getOrderedList('template_registered_skin_selection')
+
     def getTemplateModuleIdList(self):
       """
       We have to set this method because we want an
@@ -5175,6 +5360,9 @@ Business Template is a set of definitions, such as skins, portal types and categ
           WorkflowTemplateItem(self.getTemplateWorkflowIdList())
       self._skin_item = \
           SkinTemplateItem(self.getTemplateSkinIdList())
+      self._registered_skin_selection_item = \
+          RegisteredSkinSelectionTemplateItem(
+              self.getTemplateRegisteredSkinSelectionList())
       self._category_item = \
           CategoryTemplateItem(self.getTemplateBaseCategoryList())
       self._catalog_method_item = \
@@ -5350,6 +5538,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
         'Category' : '_category_item',
         'Module' : '_module_item',
         'Skin' : '_skin_item',
+        'RegisteredSkinSelection' : '_registered_skin_selection_item',
         'Path' : '_path_item',
         'Preference' : '_preference_item',
         'Action' : '_action_item',
