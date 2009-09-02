@@ -619,7 +619,7 @@ class TestPayrollMixin(ERP5ReportTestCase, TestTradeModelLineMixin):
     self.assertEqual(len(paysheet_line_list), 2)
     self.assertEqual(len(paysheet.getMovementList(portal_type=\
         'Pay Sheet Cell')), 6) # 6 because labour line contain no movement and
-                               # because of the 3 slice and 2 tax_categories
+                               # because of the 3 slice and 2 contribution_shares
 
   def stepCheckPaysheetLineAreCreatedUsingComplexSlices(self, sequence=None, **kw):
     paysheet = sequence.get('paysheet')
@@ -627,7 +627,7 @@ class TestPayrollMixin(ERP5ReportTestCase, TestTradeModelLineMixin):
     self.assertEqual(len(paysheet_line_list), 2)
     self.assertEqual(len(paysheet.getMovementList(portal_type=\
         'Pay Sheet Cell')), 4) # 4 because labour line contain no movement and
-                               # because of the 2 slice and 2 tax_categories
+                               # because of the 2 slice and 2 contribution_shares
 
   def stepCheckPaysheetLineAreCreatedUsingWith3Lines(self, sequence=None, **kw):
     paysheet = sequence.get('paysheet')
@@ -635,7 +635,7 @@ class TestPayrollMixin(ERP5ReportTestCase, TestTradeModelLineMixin):
     self.assertEqual(len(paysheet_line_list), 3)
     self.assertEqual(len(paysheet.getMovementList(portal_type=\
         'Pay Sheet Cell')), 4) # 4 because labour line contain no movement and
-                               # because of the two lines and 2 tax_categories
+                               # because of the two lines and 2 contribution_shares
                                # (urssaf and sickness insurance. old age
                                # insurance does not match predicate)
 
@@ -645,8 +645,8 @@ class TestPayrollMixin(ERP5ReportTestCase, TestTradeModelLineMixin):
     self.assertEqual(len(paysheet_line_list), 3)
     self.assertEqual(len(paysheet.getMovementList(portal_type=\
         'Pay Sheet Cell')), 8) # 8 because labour line contain no movement and
-                               # because of the 3 slice and 2 tax_categories
-                               # + the first model line with 2 tax_categories
+                               # because of the 3 slice and 2 contribution_shares
+                               # + the first model line with 2 contribution_shares
 
   def stepCheckPaysheetLineAmounts(self, sequence=None, **kw):
     paysheet = sequence.get('paysheet')
