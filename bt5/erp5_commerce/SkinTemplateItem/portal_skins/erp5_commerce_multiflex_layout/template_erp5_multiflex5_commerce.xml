@@ -101,10 +101,8 @@
                                   \'%s/mf54_reset.css\' % portal_path,\n
                                   \'%s/mf54_grid.css\' % section_url,\n
                                   \'%s/mf54_content.css\' % portal_path,\n
-] + (section.getLayoutProperty(\'layout_additional_css\', None) and [section.getLayoutProperty(\'layout_additional_css\')] or []);\n
-                           global js_list python:[\n
-                                  \'%s/erp5_tabber.js\' % portal_path,\n
-]">\n
+                                   ] + (section.getLayoutProperty(\'layout_additional_css\', None) and [section.getLayoutProperty(\'layout_additional_css\')] or []);\n
+                                   global js_list python:[\'%s/erp5_tabber.js\' % portal_path,]">\n
       <tal:block metal:use-macro="here/template_erp5_xhtml_style/macros/master">\n
         <tal:block metal:fill-slot="layout">\n
           <tal:block metal:use-macro="here/aggregate_render/macros/populate_request"/>\n
@@ -112,8 +110,8 @@
   <!-- CONTAINER FOR ENTIRE PAGE -->\n
   <div class="container">\n
 \n
-    <!-- HEADER -->         \n
-    <div class="corner-page-top"></div>        \n
+    <!-- HEADER -->\n
+    <div class="corner-page-top"></div>\n
     <div class="header">\n
         <!-- Layout form rendering -->\n
         <tal:block tal:condition="python: layout_form is not None">\n
@@ -122,20 +120,20 @@
           </tal:block>\n
         </tal:block>\n
     </div>\n
-    <div class="corner-page-bottom"></div>    \n
+    <div class="corner-page-bottom"></div>\n
     \n
     <!-- NAVIGATION BAR -->\n
-    <div class="corner-page-top"></div>        \n
+    <div class="corner-page-top"></div>\n
     <div class="navbar">\n
       <!-- Layout form rendering -->\n
       <tal:block tal:condition="python: layout_form is not None">\n
         <tal:block tal:repeat="aggregate python: [(\'navbar\', navbar_area)]">\n
            <tal:block metal:use-macro="here/aggregate_render/macros/aggregate_render"/>\n
         </tal:block>\n
-      </tal:block>                 \n
+      </tal:block>\n
     </div>    \n
   \n
-    <!-- MAIN SECTION -->      \n
+    <!-- MAIN SECTION -->\n
     <div class="main">\n
       <div class="headline">\n
       <!-- Layout form rendering -->\n
@@ -148,7 +146,6 @@
 \n
       <!-- SUBCONTENT -->\n
       <div class="subcontent" tal:condition="python: section.getLayoutProperty(\'layout_right_column\', False)">\n
-\n
         <!-- Layout form rendering -->\n
         <tal:block tal:condition="python: layout_form is not None"\n
                    tal:define="widget_renderer here/multiflex5_box_renderer/macros/widget">\n
@@ -156,7 +153,6 @@
               <tal:block metal:use-macro="here/aggregate_render/macros/aggregate_render"/>\n
           </tal:block>\n
         </tal:block>\n
-    \n
       </div> \n
 \n
       <!-- CONTENT -->\n
@@ -169,7 +165,7 @@
               <span tal:content="python: request.get(\'portal_status_message\')"></span>\n
             </h3>\n
           </div>\n
-          <div class="corner-content-1col-bottom"></div>                       \n
+          <div class="corner-content-1col-bottom"></div>\n
         </div>\n
         </tal:block>        \n
         <tal:block  tal:condition="python: request.get(\'current_web_section\', here).getLayoutProperty(\'ecommerce_selected_product\', False)">\n
@@ -178,12 +174,12 @@
           <div class="content-1col-nobox">\n
             <tal:block tal:content="structure here/WebSection_viewSelectedProductWidget"/>\n
           </div>\n
-          <div class="corner-content-1col-bottom"></div>                       \n
+          <div class="corner-content-1col-bottom"></div>\n
         </div>\n
         </tal:block>\n
       <tal:block tal:condition="python: (section is website) or section.getLayoutProperty(\'ecommerce_default_content\', False)">\n
         <div class="main_content">\n
-        <div class="corner-content-1col-top"></div>                        \n
+        <div class="corner-content-1col-top"></div>\n
         <div class="content-1col-nobox">\n
           <tal:block metal:define-slot="main"/>\n
         </div>\n
@@ -196,13 +192,13 @@
             <tal:block tal:repeat="aggregate python: [(\'product_list\', product_list_area)]">\n
               <tal:block metal:use-macro="here/aggregate_render/macros/aggregate_render"/>\n
             </tal:block>\n
-          </tal:block>                     \n
+          </tal:block>\n
         </div>\n
-      </tal:block>                       \n
-      </div>            \n
-    </div>   \n
+      </tal:block>\n
+      </div>\n
+    </div>\n
       \n
-    <!-- FOOTER -->      \n
+    <!-- FOOTER -->\n
     <div class="footer">\n
         <!-- Layout form rendering -->\n
         <tal:block tal:condition="python: layout_form is not None">\n
@@ -211,7 +207,7 @@
           </tal:block>\n
         </tal:block>\n
     </div>\n
-    <div class="corner-page-bottom"></div>        \n
+    <div class="corner-page-bottom"></div>\n
   </div> \n
   \n
     <!-- ERP5 WEB INTEGRATION -->\n
@@ -220,11 +216,7 @@
     </tal:block>\n
   </tal:block>\n
 </body>\n
-</html>\n
-\n
-\n
-\n
-
+</html>
 
 ]]></string> </value>
         </item>
