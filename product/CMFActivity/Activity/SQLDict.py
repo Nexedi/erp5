@@ -612,7 +612,6 @@ class SQLDict(RAMDict, SQLBase):
       now_date = self.getNow(activity_tool)
       result = readMessageList(path=None, method_id=None, processing_node=-1,
                                to_date=now_date, include_processing=0, offset=offset, count=READ_MESSAGE_LIMIT)
-
       validated_count = 0
       while len(result) and validated_count < MAX_VALIDATED_LIMIT:
         get_transaction().commit()
@@ -632,21 +631,20 @@ class SQLDict(RAMDict, SQLBase):
           # SQLDict considers object_path, method_id, tag to unify activities,
           # but ignores method arguments. They are outside of semantics.
           for key in message_dict.keys():
+            # we manipulate message_dict below so that we cannot use
+            # iterator here.
             message = message_dict[key]
-            unique_key = (tuple(message.object_path), message.method_id,
-                          message.activity_kw.get('tag'),
-                          message.activity_kw.get('group_id'),
-                          )
+            unique_key = self.generateMessageUID(message)
             if unique_key in message_unique_set:
               deletable_uid_list.append(message.uid)
               del message_dict[message.uid]
             else:
               message_unique_set.add(unique_key)
-          # don't let through if there is the same serialization tag in the
-          # message dict. if there is the same serialization tag, only one can
+          # Don't let through if there is the same serialization tag in the
+          # message dict. If there is the same serialization tag, only one can
           # be validated and others must wait.
-          # but messages with group_method_id are exceptions. serialization_tag
-          # does not stop simultaneous validation. because such messages will
+          # But messages with group_method_id are exceptions. serialization_tag
+          # does not stop validating together. Because those messages should
           # be processed together at once.
           serialization_tag_set = set()
           serialization_tag_group_method_id_dict = {}
@@ -658,6 +656,7 @@ class SQLDict(RAMDict, SQLBase):
             if serialization_tag is not None:
               if serialization_tag in serialization_tag_set:
                 if group_method_id is not None:
+                  # Only one group_method_id can pass through.
                   if serialization_tag_group_method_id_dict[serialization_tag]!=group_method_id:
                     del message_dict[message.uid]
                 else:
