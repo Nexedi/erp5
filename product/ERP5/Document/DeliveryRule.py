@@ -93,7 +93,7 @@ class DeliveryRule(Rule):
 
       # Create or modify movements
       for deliv_mvt in delivery_movement_list:
-        sim_mvt = deliv_mvt.getDeliveryRelatedValue()
+        sim_mvt = self._getDeliveryRelatedSimulationMovement(deliv_mvt)
         if sim_mvt is None:
           # create a new deliv_mvt
           if deliv_mvt.getParentUid() == deliv_mvt.getExplanationUid():
@@ -176,6 +176,30 @@ class DeliveryRule(Rule):
       applied_rule.setLastExpandSimulationState(delivery.getSimulationState())
     # Pass to base class
     Rule.expand(self, applied_rule, **kw)
+
+  def _getDeliveryRelatedSimulationMovement(self, delivery_movement):
+    """Helper method to get the delivery related simulation movement.
+    This method is more robust than simply calling getDeliveryRelatedValue
+    which will not work if simulation movements are not indexed.
+    """
+    simulation_movement = delivery_movement.getDeliveryRelatedValue()
+    if simulation_movement is not None:
+      return simulation_movement
+    # simulation movement was not found, maybe simply because it's not indexed
+    # yet. We'll look in the simulation tree and try to find it anyway before
+    # creating another simulation movement.
+    # Try to find the one from trade model rule, which is the most common case
+    # where we may expand again before indexation of simulation movements is
+    # finished.
+    delivery = delivery_movement.getExplanationValue()
+    for movement in delivery.getMovementList():
+      related_simulation_movement = movement.getDeliveryRelatedValue()
+      if related_simulation_movement is not None:
+        for applied_rule in related_simulation_movement.contentValues():
+          for simulation_movement in applied_rule.contentValues():
+            if simulation_movement.getDeliveryValue() == delivery_movement:
+              return simulation_movement
+    return None
 
   security.declareProtected(Permissions.ModifyPortalContent, 'solve')
   def solve(self, applied_rule, solution_list):
