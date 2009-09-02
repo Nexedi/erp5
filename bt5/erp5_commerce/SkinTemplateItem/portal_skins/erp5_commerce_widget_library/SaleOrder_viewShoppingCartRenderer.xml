@@ -69,7 +69,7 @@
                       order_line_id python: order_line.getId();">\n
          <td>\n
              <div tal:attributes="class python: bool(confirm_mode) and \' \' or \'shopping_cart_renderer_title\'">\n
-               <a href="" tal:attributes="href resource/absolute_url">\n
+               <a href="" tal:attributes="href python: \'%s/%s\' % (resource.absolute_url(), \'Resource_viewAsShop\');">\n
                  <span tal:replace="resource/getTitle"/>           \n
                </a>\n
              </div>\n
