@@ -35,10 +35,6 @@ from Products.ERP5Type.tests.Sequence import SequenceList
 from DateTime import DateTime
 from Products.CMFCore.utils import getToolByName
 
-# XXX TODO:
-#  * subclass TestTradeModelLine from TestInvoiceMixin and refactor methods and
-#    style
-
 class TestTradeModelLineMixin(TestBPMMixin):
   """Provides methods to implementations sharing similar logic to Trade Model Lines"""
   # Constants and variables shared by tests
@@ -391,7 +387,14 @@ class TestTradeModelLine(TestTradeModelLineMixin):
         .getAccountType() in ['liability/payable/collected_vat',
           'asset/receivable/refundable_vat']][0]
 
-    rounded_total_price = round(invoice.getTotalPrice(), currency_precision)
+    # here, the net total price of the invoice is all invoices lines that does
+    # not use a tax or a discount as resource.
+    rounded_total_price = round(sum(
+      [movement.getTotalPrice() for movement in invoice.getMovementList()
+        if movement.getResource() not in (invoice_line_tax.getResource(),
+                                   invoice_line_discount.getResource())]),
+        currency_precision)
+
     rounded_tax_price = round(invoice_line_tax.getTotalPrice(),
         currency_precision)
     rounded_discount_price = round(invoice_line_discount.getTotalPrice(),
