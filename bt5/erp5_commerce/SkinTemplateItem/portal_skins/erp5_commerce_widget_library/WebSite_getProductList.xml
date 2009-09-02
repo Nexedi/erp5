@@ -66,16 +66,10 @@ kw[\'portal_type\'] = \'Product\'\n
 kw[\'limit\'] = limit\n
 \n
 # Getting all the products from all the visible Web Section.\n
-web_section_list = web_site.WebSite_getMainSectionList()\n
-for web_section in web_section_list:\n
-  product_result_list = web_section.WebSection_getDocumentValueListBase(all_versions=1, all_languages=1, **kw)\n
-  for product in product_result_list:\n
-    if product.getObject() not in product_list:\n
-      product_list.append(product.getObject())\n
+for web_section in web_site.WebSite_getMainSectionList():\n
+  product_list.extend([x.getObject() for x in web_section.getDocumentValueList(all_versions=1, all_languages=1, **kw) if x.getObject() not in product_list])\n
 \n
-if len(product_list) <= limit:\n
-  product_list = [x for x in product_list if x.getPortalType() == \'Product\']\n
-else:\n
+if len(product_list) > limit:\n
   random_index_list = []\n
   while len(random_index_list) < limit:\n
     random_number = randrange(0, len(product_list))\n
@@ -147,16 +141,13 @@ return product_list\n
                             <string>web_site</string>
                             <string>product_list</string>
                             <string>_write_</string>
-                            <string>web_section_list</string>
                             <string>_getiter_</string>
                             <string>web_section</string>
-                            <string>_apply_</string>
-                            <string>product_result_list</string>
-                            <string>product</string>
-                            <string>len</string>
                             <string>append</string>
                             <string>$append0</string>
+                            <string>_apply_</string>
                             <string>x</string>
+                            <string>len</string>
                             <string>random_index_list</string>
                             <string>random_number</string>
                             <string>_getitem_</string>
