@@ -45,9 +45,7 @@ def convert(S, find=None):
     ###              [\x00-\x1f] characters will be escaped to make a more
     ###              readable output.
     try:
-        if isinstance(S, unicode):
-            S = S.encode('utf8')
-        else:
+        if not isinstance(S, unicode):
             S.decode('utf8')
     except UnicodeDecodeError:
         new = ''.join([reprs3.get(x) for x in S])
