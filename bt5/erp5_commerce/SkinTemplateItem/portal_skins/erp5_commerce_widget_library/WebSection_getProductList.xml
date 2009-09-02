@@ -56,23 +56,17 @@
             <value> <string>#TODO : USE CACHE\n
 #the goal of this script is to get all the related product of this section\n
 \n
-if (context.getPortalType() != \'Web Section\'):\n
-  current_web_section = context.REQUEST.get(\'current_web_section\', context)\n
-else:\n
-  current_web_section = context\n
-\n
+current_web_section = context.REQUEST.get(\'current_web_section\', context)\n
 product_list = []\n
+\n
 kw[\'portal_type\'] = \'Product\'\n
 kw[\'limit\'] = limit\n
-\n
 if current_web_section.getMembershipCriterionCategoryList() in (None, []) and current_web_section.getCriterionList() in (None, []):\n
   kw[\'product_line_uid\'] = context.REQUEST.get(\'current_web_site\').getLayoutProperty(\'ecommerce_base_product_line\', \'\')\n
 \n
 product_list = current_web_section.WebSection_getDocumentValueListBase(all_versions=1,\n
                                                                        all_languages=1,\n
-                                                                       **kw\n
-                                                                      )\n
-\n
+                                                                       **kw)\n
 product_list = [x.getObject() for x in product_list if x.getPortalType() == \'Product\']\n
 \n
 # this step will be remove after have find a good way to improve WebSection_getDocumentValueListBase\n
