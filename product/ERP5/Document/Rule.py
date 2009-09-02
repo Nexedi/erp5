@@ -549,8 +549,8 @@ class Rule(Predicate, XMLObject):
 
     # Arrow
     for base_category in \
-        business_path.getSourceBaseCategoryList() +\
-        business_path.getDestinationBaseCategoryList():
+        business_path.getSourceArrowBaseCategoryList() +\
+        business_path.getDestinationArrowBaseCategoryList():
       # XXX: we need to use _list for categories *always*
       category_url = business_path.getDefaultAcquiredCategoryMembership(
           base_category, context=movement)
