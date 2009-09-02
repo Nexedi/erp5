@@ -11,7 +11,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>creation_date</string> </value>
+            <value> <string>my_stop_date</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -242,7 +242,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Ordered at</string> </value>
+                    <value> <string>Delivery Date</string> </value>
                 </item>
                 <item>
                     <key> <string>truncate</string> </key>
@@ -265,18 +265,15 @@
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.Formulator.TALESField</string>
-          <string>TALESMethod</string>
-        </tuple>
-        <none/>
+        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>here/SaleOrder_getFormattedCreationDate</string> </value>
+            <value> <string>python: here.getStopDate().strftime(\'%a, %d %b %Y %H:%M %p\')</string> </value>
         </item>
       </dictionary>
     </pickle>

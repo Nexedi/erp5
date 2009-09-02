@@ -180,7 +180,15 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>anchor</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>columns</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>count_method</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -232,6 +240,10 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>hide_rows_on_no_search_criterion</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>lines</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -248,6 +260,10 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>page_template</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>portal_types</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -257,6 +273,10 @@
                 </item>
                 <item>
                     <key> <string>report_tree</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>row_css_method</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -293,6 +313,10 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>untranslatable_columns</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -379,7 +403,7 @@
                 </item>
                 <item>
                     <key> <string>editable</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>editable_columns</string> </key>
@@ -403,6 +427,10 @@
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>hide_rows_on_no_search_criterion</string> </key>
                     <value> <int>0</int> </value>
                 </item>
                 <item>
@@ -451,6 +479,10 @@
                     <value> <int>0</int> </value>
                 </item>
                 <item>
+                    <key> <string>row_css_method</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>search</string> </key>
                     <value> <int>0</int> </value>
                 </item>
@@ -471,12 +503,7 @@
                 <item>
                     <key> <string>sort</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>id</string>
-                          <string>ID</string>
-                        </tuple>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -511,15 +538,15 @@
                       <list>
                         <tuple>
                           <string>title</string>
-                          <string>title</string>
+                          <string>SaleOrder_getResourceUrl</string>
                         </tuple>
                         <tuple>
                           <string>getTotalQuantity</string>
-                          <string>getTotalQuantity</string>
+                          <string>SaleOrder_getResourceUrl</string>
                         </tuple>
                         <tuple>
                           <string>SaleOrder_getFormattedTotalPrice</string>
-                          <string>SaleOrder_getFormattedTotalPrice</string>
+                          <string>SaleOrder_getResourceUrl</string>
                         </tuple>
                       </list>
                     </value>

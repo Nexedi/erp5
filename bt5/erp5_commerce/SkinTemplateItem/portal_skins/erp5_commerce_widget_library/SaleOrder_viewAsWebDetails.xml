@@ -86,8 +86,14 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
+                        <string>header_sale_order</string>
+                        <string>my_title</string>
+                        <string>my_reference</string>
                         <string>total_price</string>
                         <string>creation_date</string>
+                        <string>my_translated_simulation_state_title</string>
+                        <string>my_start_date</string>
+                        <string>my_stop_date</string>
                         <string>listbox</string>
                       </list>
                     </value>

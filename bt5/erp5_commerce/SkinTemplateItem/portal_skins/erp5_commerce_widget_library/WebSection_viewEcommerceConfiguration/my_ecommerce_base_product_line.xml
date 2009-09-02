@@ -169,7 +169,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: [(i.getTitle(), i.getId()) for i in here.getPortalObject().portal_categories.product_line.contentValues()]</string> </value>
+            <value> <string>python: [(i.getTitle(), i.getRelativeUrl()) for i in here.getPortalObject().portal_categories.product_line.contentValues()]</string> </value>
         </item>
       </dictionary>
     </pickle>

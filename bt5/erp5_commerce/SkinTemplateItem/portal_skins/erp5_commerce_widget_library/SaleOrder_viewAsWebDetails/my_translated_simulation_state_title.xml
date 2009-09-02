@@ -11,7 +11,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>creation_date</string> </value>
+            <value> <string>my_translated_simulation_state_title</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -121,9 +121,7 @@
                 </item>
                 <item>
                     <key> <string>default</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>description</string> </key>
@@ -242,7 +240,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Ordered at</string> </value>
+                    <value> <string>State</string> </value>
                 </item>
                 <item>
                     <key> <string>truncate</string> </key>
@@ -258,25 +256,6 @@
                 </item>
               </dictionary>
             </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <tuple>
-        <tuple>
-          <string>Products.Formulator.TALESField</string>
-          <string>TALESMethod</string>
-        </tuple>
-        <none/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>here/SaleOrder_getFormattedCreationDate</string> </value>
         </item>
       </dictionary>
     </pickle>
