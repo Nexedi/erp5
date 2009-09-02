@@ -2646,10 +2646,14 @@ class TestCMFActivity(ERP5TypeTestCase):
       LOG('Testing... ',0,message)
     self.TryChangeSkinInActivity('SQLQueue')
 
-  def test_102_CheckSQLDictDoesNotDeleteDuplicatesBeforeExecution(self, quiet=0, run=run_all_test):
+  def test_102_1_CheckSQLDictDoesNotDeleteSimilaritiesBeforeExecution(self, quiet=0, run=run_all_test):
+    """
+      Test that SQLDict does not delete similar messages which have the same
+      method_id and path but a different tag before execution.
+    """
     if not run: return
     if not quiet:
-      message = '\nCheck duplicates are not deleted before execution of original message (SQLDict)'
+      message = '\nCheck similarities are not deleted before execution of original message (SQLDict)'
       ZopeTestCase._print(message)
       LOG('Testing... ',0,message)
     organisation = self.getPortal().organisation_module.newContent(portal_type='Organisation')
@@ -2662,10 +2666,50 @@ class TestCMFActivity(ERP5TypeTestCase):
         check_result_dict['done'] = activity_tool.countMessage(tag=other_tag)
     try:
       Organisation.checkActivityCount = checkActivityCount
+      # Adds two similar but not the same activities.
       organisation.activate(activity='SQLDict', tag='a').checkActivityCount(other_tag='b')
       organisation.activate(activity='SQLDict', tag='b').checkActivityCount(other_tag='a')
       get_transaction().commit()
       self.assertEqual(len(activity_tool.getMessageList()), 2)
+      activity_tool.distribute()
+      # after distribute, similarities are still there.
+      self.assertEqual(len(activity_tool.getMessageList()), 2)
+      self.tic()
+      self.assertEqual(len(activity_tool.getMessageList()), 0)
+      self.assertEqual(len(check_result_dict), 1)
+      self.assertEqual(check_result_dict['done'], 1)
+    finally:
+      delattr(Organisation, 'checkActivityCount')
+
+  def test_102_2_CheckSQLDictDeleteDuplicatesBeforeExecution(self, quiet=0, run=run_all_test):
+    """
+      Test that SQLDict delete the same messages before execution if messages
+      has the same method_id and path and tag.
+    """
+    if not run: return
+    if not quiet:
+      message = '\nCheck duplicates are deleted before execution of original message (SQLDict)'
+      ZopeTestCase._print(message)
+      LOG('Testing... ',0,message)
+    organisation = self.getPortal().organisation_module.newContent(portal_type='Organisation')
+    get_transaction().commit()
+    self.tic()
+    activity_tool = self.getActivityTool()
+    check_result_dict = {}
+    def checkActivityCount(self, other_tag):
+      if len(check_result_dict) == 0:
+        check_result_dict['done'] = activity_tool.countMessage(tag=other_tag)
+    try:
+      Organisation.checkActivityCount = checkActivityCount
+      # Adds two same activities.
+      organisation.activate(activity='SQLDict', tag='a').checkActivityCount(other_tag='a')
+      get_transaction().commit()
+      organisation.activate(activity='SQLDict', tag='a').checkActivityCount(other_tag='a')
+      get_transaction().commit()
+      self.assertEqual(len(activity_tool.getMessageList()), 2)
+      activity_tool.distribute()
+      # After distribute, duplicate is deleted.
+      self.assertEqual(len(activity_tool.getMessageList()), 1)
       self.tic()
       self.assertEqual(len(activity_tool.getMessageList()), 0)
       self.assertEqual(len(check_result_dict), 1)
@@ -2823,8 +2867,12 @@ class TestCMFActivity(ERP5TypeTestCase):
     # serialization tagged messages simultaneously.
     # If activity is SQLQueue, this does not happen.
     if activity=='SQLDict':
+      # one is validated.
       self.assertEqual(len([x for x in result if x.processing_node == 0]), 1)
+      # the other one is still waiting for validation.
+      self.assertEqual(len([x for x in result if x.processing_node == -1]), 1)
     else:
+      # both are validated at once.
       self.assertEqual(len([x for x in result if x.processing_node == 0]), 2)
     self.tic()
     result = activity_tool.getMessageList()
