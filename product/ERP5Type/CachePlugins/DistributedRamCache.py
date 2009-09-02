@@ -31,7 +31,7 @@
 Memcached based cache plugin.
 """
 from thread import get_ident
-from zLOG import LOG
+from zLOG import LOG, WARNING
 from BaseCache import BaseCache
 from BaseCache import CacheEntry
 from Products.ERP5Type import interfaces
@@ -77,6 +77,17 @@ class DistributedRamCache(BaseCache):
     thread_id = get_ident()
 
     memcache_conn = connection_pool.get(thread_id, None)
+    if memcache_conn is not None:
+      stats = memcache_conn.get_stats()
+      if not len(stats) or not len(stats[0][1]):
+        # create a new connection if the existing connection seems
+        # dead.
+        # XXX Since python-memcached does not raise an exception in such
+        # a case, we check here by calling get_stats(), but it will take
+        # a bit more time for each getCacheStorage() call.
+        LOG('DistributedRamCache', WARNING, 'the existing connection seems dead. a new connection will be created.')
+        memcache_conn.disconnect_all()
+        memcache_conn = None
     if memcache_conn is None:
       ## we don't have memcache_conn for this thread
       memcache_conn = memcache.Client(self._servers.split('\n'),
