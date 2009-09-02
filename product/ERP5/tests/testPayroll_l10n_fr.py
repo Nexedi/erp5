@@ -32,6 +32,8 @@
 
 from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.ERP5.tests.testPayroll import TestPayrollMixin
+from DateTime import DateTime
+import transaction
 
 class TestPayroll_l10n_fr(TestPayrollMixin):
 
@@ -64,10 +66,17 @@ class TestPayroll_l10n_fr(TestPayrollMixin):
         'Pay Sheet Transaction')
     self.assertEquals(len(paysheet_list), 2) # 2 paysheet have been created
                                              # for this test
+
+    # set nice date on paysheet (ie. one paysheet per month)
+    paysheet_list[0].setStartDate(DateTime('2009/06/01'))
+    paysheet_list[0].setStopDate(DateTime('2009/06/30'))
+    paysheet_list[1].setStartDate(DateTime('2009/07/01'))
+    paysheet_list[1].setStopDate(DateTime('2009/07/31'))
     for paysheet in paysheet_list:
       # the script used for calculation only take into account stopped or
       # delivered paysheet
       paysheet.stop()
+    transaction.commit()
     self.stepTic()
 
     # here, check how much is contributed to the slices
