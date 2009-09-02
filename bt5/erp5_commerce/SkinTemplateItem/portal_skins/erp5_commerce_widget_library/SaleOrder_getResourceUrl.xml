@@ -56,8 +56,6 @@
             <value> <string>web_site = context.getWebSiteValue()\n
 resource = context.getResourceValue()\n
 web_site_product_line = web_site.getLayoutProperty(\'ecommerce_base_product_line\')\n
-from Products.ERP5Type.Log import log\n
-log(\'WebSite_getProductList\',web_site_product_line)\n
 portal_categories = context.getPortalObject().portal_categories\n
 base_product_line_object = portal_categories.restrictedTraverse(web_site_product_line)\n
 \n
@@ -106,8 +104,6 @@ return None\n
                             <string>web_site</string>
                             <string>resource</string>
                             <string>web_site_product_line</string>
-                            <string>Products.ERP5Type.Log</string>
-                            <string>log</string>
                             <string>portal_categories</string>
                             <string>base_product_line_object</string>
                             <string>None</string>
