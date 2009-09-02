@@ -2646,10 +2646,10 @@ class TestCMFActivity(ERP5TypeTestCase):
       LOG('Testing... ',0,message)
     self.TryChangeSkinInActivity('SQLQueue')
 
-  def test_102_CheckSQLQueueDoesNotDeleteDuplicatesBeforeExecution(self, quiet=0, run=run_all_test):
+  def test_102_CheckSQLDictDoesNotDeleteDuplicatesBeforeExecution(self, quiet=0, run=run_all_test):
     if not run: return
     if not quiet:
-      message = '\nCheck duplicates are not deleted before execution of original message (SQLQueue)'
+      message = '\nCheck duplicates are not deleted before execution of original message (SQLDict)'
       ZopeTestCase._print(message)
       LOG('Testing... ',0,message)
     organisation = self.getPortal().organisation_module.newContent(portal_type='Organisation')
