@@ -54,13 +54,15 @@
     - make it hierarchic\n
   -->\n
 </tal:block>\n
-<div tal:define="site_url python:here.getWebSiteValue().absolute_url();\n
+<div tal:define="web_site python: here.getWebSiteValue();\n
+                 site_url python: web_site.absolute_url();\n
                  current_web_section python:request.get(\'current_web_section\', here);\n
                  shopping_cart       here/SaleOrder_getShoppingCart;\n
-                 currency_symbol    python: shopping_cart.SaleOrder_getShoppingCartDefaultCurrencySymbol();"\n
+                 currency_symbol     python: shopping_cart.SaleOrder_getShoppingCartDefaultCurrencySymbol();\n
+                 product_list        python: web_site.WebSite_getProductList(limit=5);"\n
      i18n:translate="" i18n:domain="ui" i18n:attributes="title"\n
      title="Sections accessible from here." class="selected-product">\n
-  <tal:block tal:repeat="product python: here.WebSection_getProductList(limit=5)">\n
+  <tal:block tal:repeat="product python: product_list">\n
     <div tal:define="product_href python: \'%s/product_module/%s/%s\' % (site_url, product.getId(), \'Resource_viewAsShop\');\n
                      price python: here.WebSection_unrestrictedGetPrice(product)">\n
      <a href="#" tal:attributes="href product_href">\n
