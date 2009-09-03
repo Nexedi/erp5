@@ -555,7 +555,7 @@ return 'ok'
           if not decision.delivery_solver_name:
             self._distributePropertyToSimulation(decision)
           solveMovement(self, decision.delivery_solver_name,
-              decision.target_solver_name)
+              decision.target_solver_name, divergence_list = [decision.divergence])
         elif decision.decision == 'split':
           solveMovement(self, decision.delivery_solver_name,
               decision.target_solver_name, **decision.split_kw)
