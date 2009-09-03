@@ -1333,6 +1333,10 @@ class FloatWidget(TextWidget):
 
       if input_style.find(decimal_separator) >= 0:
         integer = value_list[0]
+        sign = ''
+        if integer.startswith('-'):
+          sign = '-'
+          integer = integer[1:]
         i = len(integer) % 3
         value = integer[:i]
         while i != len(integer):
@@ -1340,12 +1344,13 @@ class FloatWidget(TextWidget):
           i += 3
         if value[0] == decimal_separator:
           value = value[1:]
+        value = '%s%s' % (sign, value)
       else:
         value = value_list[0]
       if precision != 0:
         value += decimal_point
-      if precision not in (None,''):
-        for i in range(0,precision):
+      if precision not in (None, ''):
+        for i in range(0, precision):
           if i < len(value_list[1]):
             value += value_list[1][i]
           else:
