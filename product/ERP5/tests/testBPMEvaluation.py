@@ -40,6 +40,8 @@ import unittest
 import transaction
 
 from Products.ERP5.tests.testBPMCore import TestBPMMixin
+from Products.ERP5.DivergenceSolutionDecision import DivergenceSolutionDecision
+
 from DateTime import DateTime
 
 class TestBPMEvaluationMixin(TestBPMMixin):
@@ -348,7 +350,8 @@ class TestBPMEvaluationMixin(TestBPMMixin):
 
 class TestBPMEvaluationDefaultProcessMixin:
   def _createBusinessProcess(self):
-    self.business_process = self.createBusinessProcess(title=self.id())
+    self.business_process = self.createBusinessProcess(title=self.id(),
+        referential_date='start_date')
     self._createBusinessStateList()
 
     self.delivery_path = self.createBusinessPath(self.business_process,
@@ -387,7 +390,8 @@ class TestBPMEvaluationDefaultProcessMixin:
 
 class TestBPMEvaluationDifferentProcessMixin:
   def _createBusinessProcess(self):
-    self.business_process = self.createBusinessProcess(title=self.id())
+    self.business_process = self.createBusinessProcess(title=self.id(),
+        referential_date='start_date')
     self._createBusinessStateList()
 
     self.invoice_path = self.createBusinessPath(self.business_process,
@@ -701,6 +705,190 @@ class TestPackingListDifferentProcess(TestPackingList,
         portal_type='Applied Rule').getPortalType()
     )
 
+class TestDivergenceSolving(TestBPMEvaluationMixin,
+    TestBPMEvaluationDefaultProcessMixin):
+  # FIXME: make it more generic:
+  #  * use erp5_dummy_movement
+  #  * use dummy Rule class
+  #  * do manual reexpanding
+  root_document_portal_type = 'Sale Order'
+  root_document_line_portal_type = 'Sale Order Line'
+  root_rule_portal_type = 'Order Rule'
+
+  quantity = 10
+  price = 5
+  new_quantity = 9
+
+  def afterSetUp(self):
+    TestBPMEvaluationMixin.afterSetUp(self)
+
+    self.order_line = self._createRootDocumentLine(
+      resource_value = self._createProduct(), quantity = self.quantity,
+      price = self.price)
+
+    self.stepTic()
+
+    self.root_document.confirm()
+    self.stepTic()
+    self._checkBPMSimulation()
+    self.assertEqual(
+      2,
+      len(self.root_document.getCausalityRelatedList())
+    )
+    self.assertEqual(
+      'Applied Rule',
+      self.root_document.getCausalityRelatedValue(
+        portal_type='Applied Rule').getPortalType()
+    )
+
+    self.assertEqual(
+      self.packing_list_portal_type,
+      self.root_document.getCausalityRelatedValue(
+        portal_type=self.packing_list_portal_type).getPortalType()
+    )
+    self.packing_list = self.root_document.getCausalityRelatedValue(
+        portal_type=self.packing_list_portal_type)
+    self.movement = self.packing_list.getMovementList()[0]
+    self.simulation_movement = self.movement.getDeliveryRelatedValue()
+
+    # change quantity on movement
+    self.movement.edit(quantity = self.new_quantity)
+    self.stepTic()
+
+    self.assertEqual('diverged', self.packing_list.getCausalityState())
+    self.assertEqual(self.quantity,
+        self.simulation_movement.getQuantity())
+    self.assertEqual(self.new_quantity, self.movement.getQuantity())
+
+    divergence_list = self.movement.getDivergenceList()
+
+    self.assertEqual(1, len(divergence_list))
+
+    self.divergence = divergence_list[0]
+
+    self.assertEqual('quantity', self.divergence.divergence_scope)
+    self.assertEqual(self.new_quantity, self.divergence.decision_value)
+    self.assertEqual(self.quantity, self.divergence.prevision_value)
+    self.assertEqual(self.simulation_movement,
+        self.divergence.simulation_movement)
+
+  def test_divergence_adopt(self):
+    decision = DivergenceSolutionDecision(self.divergence, 'adopt')
+    self.movement.solve([decision])
+    transaction.commit()
+
+    self.assertEqual(self.quantity, self.simulation_movement.getQuantity())
+    self.assertEqual(self.quantity, self.movement.getQuantity())
+
+    simulation_movement_solution_history_list = self.simulation_movement \
+        .divergence_solution_history['quantity']
+    self.assertEqual(1, len(simulation_movement_solution_history_list))
+    simulation_movement_solution \
+        = simulation_movement_solution_history_list[0]
+
+    self.assertEqual(decision, simulation_movement_solution)
+
+    # reexpand
+    self.packing_list.Delivery_updateAppliedRule()
+    transaction.commit()
+    self.tic()
+    self.assertEqual(self.quantity, self.simulation_movement.getQuantity())
+    self.assertEqual('solved', self.packing_list.getCausalityState())
+
+  def test_divergence_accept(self):
+    decision = DivergenceSolutionDecision(self.divergence, 'accept',
+        'Distribute', 'CopyAndPropagate')
+    self.movement.solve([decision])
+    transaction.commit()
+
+    self.assertEqual(self.new_quantity,
+        self.simulation_movement.getQuantity())
+    self.assertEqual(self.new_quantity, self.movement.getQuantity())
+
+    simulation_movement_solution_history_list = self.simulation_movement \
+        .divergence_solution_history['quantity']
+    self.assertEqual(1, len(simulation_movement_solution_history_list))
+    simulation_movement_solution \
+        = simulation_movement_solution_history_list[0]
+
+    self.assertEqual(decision, simulation_movement_solution)
+
+    # reexpand
+    self.packing_list.Delivery_updateAppliedRule()
+    transaction.commit()
+    self.tic()
+    # property is not forced - so change after expand
+    self.assertEqual(self.quantity, self.simulation_movement.getQuantity())
+    self.assertEqual('diverged', self.packing_list.getCausalityState())
+
+  def test_divergence_accept_force(self):
+    decision = DivergenceSolutionDecision(self.divergence, 'accept',
+        'Distribute', 'CopyAndPropagate', True)
+    self.movement.solve([decision])
+    transaction.commit()
+
+    self.assertEqual(self.new_quantity,
+        self.simulation_movement.getQuantity())
+    self.assertEqual(self.new_quantity, self.movement.getQuantity())
+
+    simulation_movement_solution_history_list = self.simulation_movement \
+        .divergence_solution_history['quantity']
+    self.assertEqual(1, len(simulation_movement_solution_history_list))
+    simulation_movement_solution \
+        = simulation_movement_solution_history_list[0]
+
+    self.assertEqual(decision, simulation_movement_solution)
+
+    # reexpand
+    self.packing_list.Delivery_updateAppliedRule()
+    transaction.commit()
+    self.tic()
+    # property is forced - so no change after expand
+    self.assertEqual(self.new_quantity,
+        self.simulation_movement.getQuantity())
+    self.assertEqual('solved', self.packing_list.getCausalityState())
+
+  def test_divergence_split(self):
+    split_kw = {}
+    split_kw.update(start_date = DateTime(), stop_date = DateTime())
+    decision = DivergenceSolutionDecision(self.divergence, 'split', None,
+        'SplitAndDefer', split_kw = split_kw)
+    self.movement.solve([decision])
+    transaction.commit()
+
+    self.assertEqual(self.new_quantity,
+        self.simulation_movement.getQuantity())
+    self.assertEqual(self.new_quantity, self.movement.getQuantity())
+
+    simulation_movement_solution_history_list = self.simulation_movement \
+        .divergence_solution_history['quantity']
+    self.assertEqual(1, len(simulation_movement_solution_history_list))
+    simulation_movement_solution \
+        = simulation_movement_solution_history_list[0]
+
+    self.assertEqual(decision, simulation_movement_solution)
+
+    new_simulation_movement_list = [simulation_movement \
+        for simulation_movement \
+        in self.simulation_movement.getParentValue().contentValues(
+          portal_type='Simulation Movement') \
+        if simulation_movement != self.simulation_movement]
+    self.assertEqual(1, len(new_simulation_movement_list))
+    new_simulation_movement = new_simulation_movement_list[0]
+
+    self.assertEqual(self.quantity - self.new_quantity,
+        new_simulation_movement.getQuantity())
+
+    # reexpand
+    self.packing_list.Delivery_updateAppliedRule()
+    transaction.commit()
+    self.tic()
+    self.assertEqual(self.new_quantity,
+        self.simulation_movement.getQuantity())
+    self.assertEqual(self.quantity - self.new_quantity,
+        new_simulation_movement.getQuantity())
+    self.assertEqual('solved', self.packing_list.getCausalityState())
+
 class TestInvoiceDifferentProcess(TestInvoice,
     TestBPMEvaluationDifferentProcessMixin):
   pass
@@ -715,4 +903,5 @@ def test_suite():
   suite.addTest(unittest.makeSuite(TestPackingListDifferentProcess))
 #  suite.addTest(unittest.makeSuite(TestInvoiceDifferentProcess))
 
+  suite.addTest(unittest.makeSuite(TestDivergenceSolving))
   return suite
