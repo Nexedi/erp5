@@ -99,7 +99,8 @@ if not reference:\n
 # Return absolute URL if this is not an appropriate portal_type\n
 portal = context.getPortalObject()\n
 valid_portal_type_list = portal.getPortalDocumentTypeList()\n
-if document.getPortalType() not in valid_portal_type_list:\n
+portal_type = document.getPortalType()\n
+if portal_type not in valid_portal_type_list:\n
   return document.absolute_url()\n
 \n
 # Return absolute URL if this is not a \'live\' document\n
@@ -109,7 +110,12 @@ if document.getValidationState() not in validation_state:\n
   return document.absolute_url()\n
 \n
 # Return the URL\n
-return "%s/%s" % (context.absolute_url(), reference)\n
+# XXX we need to add \'/view\' in web view\'s permanent URL for non-Web Page documents.\n
+# If we change the behaviour of index_html() to same as view(), we can remove \'/view\'. \n
+if portal_type == \'Web Page\':\n
+  return "%s/%s" % (context.absolute_url(), reference)\n
+else:\n
+  return "%s/%s/view" % (context.absolute_url(), reference)\n
 </string> </value>
         </item>
         <item>
@@ -152,6 +158,7 @@ return "%s/%s" % (context.absolute_url(), reference)\n
                             <string>context</string>
                             <string>portal</string>
                             <string>valid_portal_type_list</string>
+                            <string>portal_type</string>
                             <string>validation_state</string>
                           </tuple>
                         </value>

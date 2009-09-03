@@ -273,7 +273,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:(cell.getPortalType() == \'Web Page\' and cell.getPermanentURL(cell) or cell.absolute_url() + \'/view\')</string> </value>
+            <value> <string>python:cell.getPermanentURL(cell)</string> </value>
         </item>
       </dictionary>
     </pickle>
