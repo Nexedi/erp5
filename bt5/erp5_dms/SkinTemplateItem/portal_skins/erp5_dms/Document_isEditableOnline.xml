@@ -53,7 +53,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>return context.getMetaType() in (\'ERP5 Text Document\', \'ERP5 Image\', \'ERP5 PDF Document\')\n
+            <value> <string>return not getattr(context, \'isSupportBaseDataConversion\', lambda:False)()\n
 </string> </value>
         </item>
         <item>
@@ -90,7 +90,7 @@
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>_getattr_</string>
+                            <string>getattr</string>
                             <string>context</string>
                           </tuple>
                         </value>
