@@ -38,11 +38,7 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string></string> </value>
-        </item>
-        <item>
-            <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Base_edit</string> </value>
         </item>
         <item>
             <key> <string>encoding</string> </key>
@@ -50,7 +46,7 @@
         </item>
         <item>
             <key> <string>enctype</string> </key>
-            <value> <string></string> </value>
+            <value> <string>multipart/form-data</string> </value>
         </item>
         <item>
             <key> <string>group_list</string> </key>
@@ -83,30 +79,29 @@
                 <item>
                     <key> <string>hidden</string> </key>
                     <value>
-                      <list>
-                        <string>shipping</string>
-                        <string>taxes</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>shopping_cart</string>
-                        <string>discounts</string>
-                        <string>payment</string>
-                        <string>my_payment_mode</string>
-                        <string>customer</string>
+                        <string>header_sale_order</string>
+                        <string>my_title</string>
+                        <string>my_reference</string>
+                        <string>total_price</string>
+                        <string>creation_date</string>
+                        <string>my_translated_simulation_state_title</string>
+                        <string>my_start_date</string>
+                        <string>my_stop_date</string>
+                        <string>listbox</string>
                       </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>right</string> </key>
                     <value>
-                      <list>
-                        <string>submit</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
               </dictionary>
@@ -114,7 +109,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>SaleOrder_viewAsWebConfirm</string> </value>
+            <value> <string>SaleOrder_viewDetailAsWeb</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -122,11 +117,11 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>Product_view</string> </value>
+            <value> <string>SaleOrder_view</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
-            <value> <string>form_view_editable</string> </value>
+            <value> <string>form_view</string> </value>
         </item>
         <item>
             <key> <string>row_length</string> </key>
@@ -138,7 +133,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Confirm Order</string> </value>
+            <value> <string>Sale Order</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>

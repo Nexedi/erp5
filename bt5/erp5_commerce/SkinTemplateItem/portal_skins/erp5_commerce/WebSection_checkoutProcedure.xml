@@ -56,7 +56,7 @@
             <value> <string>step = context.REQUEST.get(\'step\', None)\n
 \n
 if step is None:\n
-  return context.SaleOrder_viewAsWebConfirm()\n
+  return context.SaleOrder_viewConfirmAsWeb()\n
 \n
 if context.request.get(\'plop\', None) is not None:\n
   context.REQUEST.set(\'step\', 2)\n

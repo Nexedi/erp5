@@ -201,7 +201,7 @@ if isAnon:\n
                                   \'portal_status_message\': msg})\n
 else:\n
   ## redirect to final confirmation form\n
-  context.Base_redirect(\'SaleOrder_viewAsWebConfirm\')\n
+  context.Base_redirect(\'SaleOrder_viewConfirmAsWeb\')\n
 </string> </value>
         </item>
         <item>

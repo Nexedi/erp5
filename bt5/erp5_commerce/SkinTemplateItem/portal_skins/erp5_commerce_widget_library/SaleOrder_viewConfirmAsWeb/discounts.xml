@@ -3,18 +3,15 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.ERP5Form.EditorField</string>
-          <string>EditorField</string>
-        </tuple>
-        <none/>
+        <global name="EditorField" module="Products.ERP5Form.EditorField"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>shipping</string> </value>
+            <value> <string>discounts</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -231,7 +228,7 @@
                 </item>
                 <item>
                     <key> <string>enabled</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>external_validator</string> </key>
@@ -267,7 +264,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Shipping</string> </value>
+                    <value> <string>Discounts</string> </value>
                 </item>
                 <item>
                     <key> <string>unicode</string> </key>
@@ -301,7 +298,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>here/SaleOrder_viewShippingRenderer</string> </value>
+            <value> <string>here/SaleOrder_viewDiscountsRenderer</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -320,7 +317,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>not: here/SaleOrder_isShippingRequired</string> </value>
+            <value> <string>not: here/Person_getApplicableDiscountList</string> </value>
         </item>
       </dictionary>
     </pickle>

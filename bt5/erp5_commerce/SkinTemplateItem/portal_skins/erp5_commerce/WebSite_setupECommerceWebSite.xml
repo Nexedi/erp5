@@ -87,7 +87,7 @@ context.setProperty(\'layout_additional_css\', \'mf54_commerce.css\')\n
 cart_section.setCustomRenderMethodId(\'SaleOrder_viewAsWeb\')\n
 cart_section.setProperty(\'ecommerce_default_content\', True)\n
 cart_section.setProperty(\'ecommerce_product_list\', False)\n
-checkout_section.setCustomRenderMethodId(\'SaleOrder_viewAsWebConfirm\')\n
+checkout_section.setCustomRenderMethodId(\'SaleOrder_viewConfirmAsWeb\')\n
 checkout_section.setProperty(\'ecommerce_default_content\', True)\n
 checkout_section.setProperty(\'ecommerce_product_list\', False)\n
 account_section.setCustomRenderMethodId(\'WebSection_viewCurrentPersonAsWeb\')\n
