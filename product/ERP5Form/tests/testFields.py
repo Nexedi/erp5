@@ -118,7 +118,8 @@ class TestFloatField(unittest.TestCase):
     # test for an edge case bug bug, ",100,000.0" was displayed (with leading coma)
     self.field.values['input_style'] = '-1,234.5'
     self.assertEquals('100,000.0', self.widget.format_value(self.field, 100000))
-  
+    self.assertEquals('-100,000.0', self.widget.format_value(self.field, -100000))
+
   def test_format_percent_style(self):
     self.field.values['input_style'] = '-12.3%'
     self.assertEquals('10.0%', self.widget.format_value(self.field, 0.1))
