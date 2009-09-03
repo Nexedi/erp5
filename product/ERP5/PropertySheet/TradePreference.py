@@ -49,7 +49,7 @@ class TradePreference:
       'mode'        : '' },
 
     # uses
-    { 'id'          : 'preferred_sales_use',
+    { 'id'          : 'preferred_sale_use',
       'description' : 'Uses of resources that are sold',
       'type'        : 'lines',
       'preference'  : 1,

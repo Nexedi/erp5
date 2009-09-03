@@ -105,7 +105,7 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
-                        <string>my_preferred_sales_use_list</string>
+                        <string>my_preferred_sale_use_list</string>
                         <string>my_preferred_purchase_use_list</string>
                         <string>my_preferred_packing_use_list</string>
                       </list>
