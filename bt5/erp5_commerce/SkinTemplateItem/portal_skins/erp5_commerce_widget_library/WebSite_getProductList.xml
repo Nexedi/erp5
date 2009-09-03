@@ -58,26 +58,28 @@
 #TODO : USE CACHE\n
 # The goal of this script is to get all the products from all the visible Web Sections\n
 # and it must select randomly which product must be displayed for a given context.\n
-from random import randrange\n
+from random import choice\n
 \n
 web_site = context.getWebSiteValue() or context.REQUEST.get(\'current_web_site\')\n
-product_list = []\n
 kw[\'portal_type\'] = \'Product\'\n
-kw[\'limit\'] = limit\n
 \n
 # Getting all the products from all the visible Web Section.\n
+product_dict = {}\n
 for web_section in web_site.WebSite_getMainSectionList():\n
-  product_list.extend([x.uid for x in web_section.getDocumentValueList(all_versions=1, all_languages=1, **kw) if x.uid not in product_list])\n
+  for product in web_section.getDocumentValueList(all_versions=1, all_languages=1, **kw):\n
+    product_dict[product.uid] = product\n
 \n
-if len(product_list) > limit:\n
-  random_index_list = []\n
-  while len(random_index_list) < limit:\n
-    random_number = randrange(0, len(product_list))\n
-    if random_number not in random_index_list:\n
-      random_index_list.append(random_number)\n
-  product_list = [product_list[x] for x in random_index_list]\n
+if len(product_dict) > limit:\n
+  random_uid_list = []\n
+  key_list = product_dict.keys()\n
+  while len(random_uid_list) < limit:\n
+    random_uid = choice(key_list)\n
+    key_list.remove(random_uid)\n
+    random_uid_list.append(random_uid)\n
+  product_list = [product_dict.get(uid) for uid in random_uid_list]\n
+else:\n
+  product_list = product_dict.values()\n
 \n
-product_list = context.portal_catalog(portal_type=\'Product\', uid=product_list)\n
 return product_list\n
 
 
@@ -137,22 +139,24 @@ return product_list\n
                             <string>limit</string>
                             <string>kw</string>
                             <string>random</string>
-                            <string>randrange</string>
+                            <string>choice</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>web_site</string>
-                            <string>product_list</string>
                             <string>_write_</string>
+                            <string>product_dict</string>
                             <string>_getiter_</string>
                             <string>web_section</string>
+                            <string>_apply_</string>
+                            <string>product</string>
+                            <string>len</string>
+                            <string>random_uid_list</string>
+                            <string>key_list</string>
+                            <string>random_uid</string>
                             <string>append</string>
                             <string>$append0</string>
-                            <string>_apply_</string>
-                            <string>x</string>
-                            <string>len</string>
-                            <string>random_index_list</string>
-                            <string>random_number</string>
-                            <string>_getitem_</string>
+                            <string>uid</string>
+                            <string>product_list</string>
                           </tuple>
                         </value>
                     </item>
