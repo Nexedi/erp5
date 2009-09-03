@@ -37,7 +37,8 @@ class CopyAndPropagate(TargetSolver):
     """
     movement_relative_url = movement.getRelativeUrl()
     for divergence in self.divergence_list:
-      if movement_relative_url == divergence.getProperty('object_relative_url'):
+      if movement_relative_url == divergence.getProperty(
+          'object_relative_url'):
         self._acceptDecision(divergence)
 
   def _acceptDecision(self, divergence):
