@@ -209,8 +209,8 @@ def registerSkinFolder(skin_tool, skin_folder):
       skin_layer_list.append(skin_name)
 
     selection = skin_tool.getSkinPath(skin_name) or ''
-    if (skin_folder_id not in selection) and (skin_name in skin_layer_list):
-      selection_list = selection.split(',')
+    selection_list = selection.split(',')
+    if (skin_folder_id not in selection_list) and (skin_name in skin_layer_list):
       selection_list.insert(0, skin_folder_id)
       if reorder_skin_selection:
         selection_list.sort(
