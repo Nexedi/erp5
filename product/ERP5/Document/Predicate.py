@@ -108,7 +108,7 @@ class Predicate(XMLObject, Folder):
 #        'testing %s on context of %s' % \
 #        (self.getRelativeUrl(), context.getRelativeUrl()))
     for property, value in self._identity_criterion.iteritems():
-      result = result and (context.getProperty(property) == value)
+      result = result and (context.getProperty(property) in value)
 #      LOG('predicate test', 0,
 #          '%s after prop %s : %s == %s' % \
 #          (result, property, context.getProperty(property), value))
