@@ -1104,33 +1104,3 @@ class Movement(XMLObject, Amount):
     """
     return (self, )
 
-  # Experimental Arrow Interface (will be improved in the future)
-  security.declareProtected(Permissions.AccessContentsInformation, 'getSourceArrowList')
-  def getSourceArrowList(self, context=None):
-    # Naive implementation - XXX
-    return self._getCategoryMembershipList(self, ('source', 'source_section', 'source_project', 
-                                                  'source_trade', 'source_function', ))
-
-  security.declareProtected(Permissions.AccessContentsInformation, 'getDestinationArrowList')
-  def getDestinationArrowList(self, context=None):
-    # Naive implementation - XXX
-    return self._getCategoryMembershipList(self, ('destination', 'destination_section',
-                                                  'destination_project', 
-                                                  'destination_trade', 'destination_function', ))
-
-  security.declareProtected(Permissions.ModifyPortalContent, 'setSourceArrowList')
-  def setSourceArrowList(self, path):
-    # Naive implementation - XXX
-    self.setCategoryMembership(('source', 'source_section', 'source_project', 
-                                                  'source_trade', 'source_function', ),
-                                path)
-
-  security.declareProtected(Permissions.ModifyPortalContent, 'setDestinationArrowList')
-  def setDestinationArrowList(self, path):
-    # Naive implementation - XXX
-    self.setCategoryMembership(('destination', 'destination_section',
-                                                  'destination_project', 
-                                                  'destination_trade', 'destination_function', ),
-                                path)
-
-
