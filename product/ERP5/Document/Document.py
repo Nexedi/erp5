@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2009 Nexedi SA and Contributors. All Rights Reserved.
 #                    Jean-Paul Smets-Solanes <jp@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
-# programmers who take the whole responsability of assessing all potential
+# programmers who take the whole responsibility of assessing all potential
 # consequences resulting from its eventual inadequacies and bugs
 # End users who are looking for a ready-to-use solution with commercial
-# garantees and support are strongly adviced to contract a Free Software
+# guarantees and support are strongly adviced to contract a Free Software
 # Service Company
 #
 # This program is Free Software; you can redistribute it and/or
@@ -59,7 +59,7 @@ from OFS.Image import Pdata
 _MARKER = []
 VALID_ORDER_KEY_LIST = ('user_login', 'content', 'file_name', 'input')
 # these property ids are unchangable
-FIXED_PROPERTY_IDS =  ('id', 'uid', 'rid', 'sid') 
+FIXED_PROPERTY_IDS =  ('id', 'uid', 'rid', 'sid')
 
 def makeSortedTuple(kw):
   items = kw.items()
@@ -231,7 +231,7 @@ class ConversionCacheMixin:
     """Generate proper cache id based on **kw.
     Function inspired from ERP5Type.Cache
     """
-    return str(makeSortedTuple(kw)).translate(string.maketrans('', ''), """[]()<>'", """)
+    return str(makeSortedTuple(kw)).translate(string.maketrans('', ''), '[]()<>\'", ')
 
 class PermanentURLMixIn(ExtensibleTraversableMixIn):
   """
@@ -354,7 +354,7 @@ class PermanentURLMixIn(ExtensibleTraversableMixIn):
         pass
 
     if method is None:
-      method = self._getTypeBasedMethod('getDocumentValue', 
+      method = self._getTypeBasedMethod('getDocumentValue',
               fallback_script_id='WebSection_getDocumentValue')
 
     if cache is not None:
@@ -417,7 +417,7 @@ class UpdateMixIn:
   security.declareProtected(Permissions.AccessContentsInformation, 'getCreationDateIndex')
   def getCreationDateIndex(self, at_date = None):
     """
-    Returns the document Creation Date Index which is the creation 
+    Returns the document Creation Date Index which is the creation
     date converted into hours modulo the Frequency Index.
     """
     frequency_index = self.getFrequencyIndex()
@@ -440,7 +440,7 @@ class UpdateMixIn:
       workflow states (publication state,
       validation state) or on roles on the document.
     """
-    method = self._getTypeBasedMethod('isUpdatable', 
+    method = self._getTypeBasedMethod('isUpdatable',
         fallback_script_id = 'Document_isUpdatable')
     return method()
 
@@ -605,19 +605,19 @@ class Document(PermanentURLMixIn, XMLObject, UrlMixIn, ConversionCacheMixin, Sna
       The implementation goes in 2 steps:
 
     - Step 1: extract with a regular expression
-      a list of distionaries with various parameters such as 
+      a list of distionaries with various parameters such as
       reference, portal_type, language, version, user, etc. This
       part is configured through a portal preference.
 
     - Step 2: read the list of dictionaries
       and build a list of values by calling portal_catalog
-      with appropriate parameters (and if possible build 
+      with appropriate parameters (and if possible build
       a complex query whenever this becomes available in
       portal catalog)
-      
+
       The script is reponsible for calling getSearchableReferenceList
       so that it can use another approach if needed.
-      
+
       NOTE: passing a group_by parameter may be useful at a
       later stage of the implementation.
     """
@@ -637,7 +637,7 @@ class Document(PermanentURLMixIn, XMLObject, UrlMixIn, ConversionCacheMixin, Sna
   def getImplicitPredecessorValueList(self):
     """
       This function tries to find document which are referencing us - by reference only, or
-      by reference/language etc. Implementation is passed to 
+      by reference/language etc. Implementation is passed to
         Base_getImplicitPredecessorValueList
 
       The script should proceed in two steps:
@@ -647,7 +647,7 @@ class Document(PermanentURLMixIn, XMLObject, UrlMixIn, ConversionCacheMixin, Sna
 
       Step 2: search using the portal_catalog and use
       priorities (ex. INV-123456 before 123456)
-      ( if possible build  a complex query whenever 
+      ( if possible build  a complex query whenever
       this becomes available in portal catalog )
 
       NOTE: passing a group_by parameter may be useful at a
@@ -660,7 +660,7 @@ class Document(PermanentURLMixIn, XMLObject, UrlMixIn, ConversionCacheMixin, Sna
     except KeyError:
       pass
 
-    method = self._getTypeBasedMethod('getImplicitPredecessorValueList', 
+    method = self._getTypeBasedMethod('getImplicitPredecessorValueList',
         fallback_script_id = 'Base_getImplicitPredecessorValueList')
     result = method()
     tv[cache_key] = result
@@ -680,7 +680,7 @@ class Document(PermanentURLMixIn, XMLObject, UrlMixIn, ConversionCacheMixin, Sna
   def getSimilarCloudValueList(self, depth=0):
     """
       Returns all documents which are similar to us, directly or indirectly, and
-      in both directions. In other words, it is a transitive closure of similar 
+      in both directions. In other words, it is a transitive closure of similar
       relation. Every document is returned in the latest version available.
     """
     lista = {}
@@ -705,11 +705,11 @@ class Document(PermanentURLMixIn, XMLObject, UrlMixIn, ConversionCacheMixin, Sna
     lista_latest = {}
     for o in lista.keys():
       lista_latest[o.getLatestVersionValue()] = True # get latest versions avoiding duplicates again
-    if lista_latest.has_key(self): 
+    if lista_latest.has_key(self):
       lista_latest.pop(self) # remove this document
     if lista_latest.has_key(self.getLatestVersionValue()):
       # remove last version of document itself from related documents
-      lista_latest.pop(self.getLatestVersionValue()) 
+      lista_latest.pop(self.getLatestVersionValue())
 
     return lista_latest.keys()
 
@@ -916,7 +916,7 @@ class Document(PermanentURLMixIn, XMLObject, UrlMixIn, ConversionCacheMixin, Sna
     # XXX - cache or set?
     reference = self.getReference()
     if not reference:
-      return 
+      return
     catalog = getToolByName(self, 'portal_catalog', None)
     res = catalog(reference=self.getReference(), sort_on=(('creation_date','ascending'),))
     # XXX this should be security-unaware - delegate to script with proxy roles
@@ -989,7 +989,7 @@ class Document(PermanentURLMixIn, XMLObject, UrlMixIn, ConversionCacheMixin, Sna
     Returns the document coordinates as a standard file name. This
     method is the reverse of getPropertyDictFromFileName.
     """
-    method = self._getTypeBasedMethod('getStandardFileName', 
+    method = self._getTypeBasedMethod('getStandardFileName',
         fallback_script_id = 'Document_getStandardFileName')
     return method()
 
@@ -1009,7 +1009,7 @@ class Document(PermanentURLMixIn, XMLObject, UrlMixIn, ConversionCacheMixin, Sna
                    currently logged in, then we'll get him from session
     """
     # Preference is made of a sequence of 'user_login', 'content', 'file_name', 'input'
-    method = self._getTypeBasedMethod('getPreferredDocumentMetadataDiscoveryOrderList', 
+    method = self._getTypeBasedMethod('getPreferredDocumentMetadataDiscoveryOrderList',
         fallback_script_id = 'Document_getPreferredDocumentMetadataDiscoveryOrderList')
     order_list = list(method())
     order_list.reverse()
@@ -1189,14 +1189,14 @@ class Document(PermanentURLMixIn, XMLObject, UrlMixIn, ConversionCacheMixin, Sna
     else:
       stripped_html = html
     # find charset and convert to utf-8
-    charset_list = self.charset_parser.findall(str(html)) # XXX - Not efficient if this 
+    charset_list = self.charset_parser.findall(str(html)) # XXX - Not efficient if this
                                          # is datastream instance but hard to do better
     if charset and not charset_list:
       # Use optional parameter is we can not find encoding in HTML
       charset_list = [charset]
     if charset_list and charset_list[0] not in ('utf-8', 'UTF-8'):
       try:
-        stripped_html = unicode(str(stripped_html), 
+        stripped_html = unicode(str(stripped_html),
                                 charset_list[0]).encode('utf-8')
       except (UnicodeDecodeError, LookupError):
         return str(stripped_html)
@@ -1279,7 +1279,7 @@ class Document(PermanentURLMixIn, XMLObject, UrlMixIn, ConversionCacheMixin, Sna
       method = self._getTypeBasedMethod('getMetadataMappingDict')
     except KeyError, AttributeError:
       method = None
-    if method is not None: 
+    if method is not None:
       return method()
     else:
       return {}
@@ -1352,7 +1352,7 @@ class Document(PermanentURLMixIn, XMLObject, UrlMixIn, ConversionCacheMixin, Sna
       Ask container if we are and index, or a content.
       In the vast majority of cases we are content.
       This method is required in a crawling process to make
-      a difference between URLs which return an index (ex. the 
+      a difference between URLs which return an index (ex. the
       list of files in remote server which is accessed through HTTP)
       and the files themselves.
     """
