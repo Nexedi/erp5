@@ -196,6 +196,9 @@ class TestItem(TestItemMixin, ERP5TypeTestCase):
 
   quiet = 0
 
+  def getTitle(self):
+    return "Item"
+
   def test_01_ItemSimpleTest(self, quiet=quiet):
     sequence_list = SequenceList()
 
