@@ -483,6 +483,8 @@ class DeliveryLine(Movement, XMLObject, XMLMatrix, Variated,
       # gather delivery relations from simulation movements.
       delivery_dict = {}
       for s_m in simulation_movement_list:
+        for decision in decision_list:
+          s_m.appendDecision(decision)
         delivery_path = s_m.getDelivery()
         delivery_dict[delivery_path] = \
                                      delivery_dict.get(delivery_path, []) + \
@@ -503,43 +505,6 @@ class DeliveryLine(Movement, XMLObject, XMLMatrix, Variated,
 
     def solve(self, decision_list):
       """Solves line according to decision list
-      """
-
-      """How to play
-delivery_line = context
-from DateTime import DateTime
-from Products.ERP5.DivergenceSolutionDecision import DivergenceSolutionDecision
-decision_list = []
-
-# adopt
-for d in context.getDivergenceList():
-  decision = DivergenceSolutionDecision(d, 'adopt', None, None)
-  decision_list.append(decision)
-
-delivery_line.solve(decision_list)
-return 'ok'
-
-# split
-for d in delivery_line.getDivergenceList():
-  if d.tested_property == 'quantity':
-    split_kw = {}
-    split_kw.update(start_date = DateTime('2009/01/01'),
-                    stop_date = DateTime('2009/01/10'))
-    decision = DivergenceSolutionDecision(d, 'split', None, 'SplitAndDefer',
-                                  split_kw = split_kw)
-    decision_list.append(decision)
-
-delivery_line.solve(decision_list)
-return 'ok'
-
-# adopt
-for d in delivery_line.getDivergenceList():
-  if d.tested_property == 'quantity':
-    decision = DivergenceSolutionDecision(d, 'adopt', None, None)
-    decision_list.append(decision)
-
-delivery_line.solve(decision_list)
-return 'ok'
       """
       simulation_tool = self.getPortalObject().portal_simulation
       solveMovement = simulation_tool.solveMovement
