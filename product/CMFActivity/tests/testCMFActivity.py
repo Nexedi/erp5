@@ -2717,6 +2717,31 @@ class TestCMFActivity(ERP5TypeTestCase):
     finally:
       delattr(Organisation, 'checkActivityCount')
 
+  def test_102_3_CheckSQLDictDistributeWithSerializationTagAndGroupMethodId(
+      self, quiet=0):
+    """
+      Distribuation was at some point buggy with this scenario when there was
+      activate with the same serialization_tag and one time with a group_method
+      id and one without group_method_id :
+        foo.activate(serialization_tag='a', group_method_id='x').getTitle()
+        foo.activate(serialization_tag='a').getId()
+    """
+    organisation = self.getPortal().organisation_module.newContent(portal_type='Organisation')
+    get_transaction().commit()
+    self.tic()
+    activity_tool = self.getActivityTool()
+    organisation.activate(serialization_tag='a').getId()
+    get_transaction().commit()
+    organisation.activate(serialization_tag='a',
+              group_method_id='portal_catalog/catalogObjectList').getTitle()
+    get_transaction().commit()
+    self.assertEqual(len(activity_tool.getMessageList()), 2)
+    activity_tool.distribute()
+    # After distribute, there is no deletion because it is different method
+    self.assertEqual(len(activity_tool.getMessageList()), 2)
+    self.tic()
+    self.assertEqual(len(activity_tool.getMessageList()), 0)
+
   def test_103_interQueuePriorities(self, quiet=0, run=run_all_test):
     """
       Important note: there is no way to really reliably check that this
