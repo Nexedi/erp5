@@ -210,12 +210,13 @@ def registerSkinFolder(skin_tool, skin_folder):
 
     selection = skin_tool.getSkinPath(skin_name) or ''
     selection_list = selection.split(',')
-    if (skin_folder_id not in selection_list) and (skin_name in skin_layer_list):
+    if (skin_folder_id not in selection_list):
       selection_list.insert(0, skin_folder_id)
-      if reorder_skin_selection:
-        selection_list.sort(
-          key=lambda x: x in skin_tool.objectIds() and -skin_tool[x].getProperty(
-          'business_template_skin_layer_priority', 0) or 0)
+    if reorder_skin_selection:
+      selection_list.sort(
+        key=lambda x: x in skin_tool.objectIds() and -skin_tool[x].getProperty(
+        'business_template_skin_layer_priority', 0) or 0)
+    if (skin_name in skin_layer_list):
       skin_tool.manage_skinLayers(skinpath=selection_list,
                                   skinname=skin_name, add_skin=1)
       skin_tool.getPortalObject().changeSkin(None)
