@@ -220,10 +220,9 @@ class Amount(Base, Variated):
     self._setVariationValue(variation_value)
     self.reindexObject()
 
-  security.declareProtected(Permissions.AccessContentsInformation,
+  security.declareProtected(Permissions.AccessContentsInformation, \
                             'getVariationRangeCategoryItemList')
-  def getVariationRangeCategoryItemList(self, base_category_list=(),
-      display_id='getTitleOrId', base=1, current_category=None, **kw):
+  def getVariationRangeCategoryItemList(self, *args, **kw):
     """
       Returns possible variation category values for the
       order line according to the default resource.
@@ -233,16 +232,9 @@ class Amount(Base, Variated):
       menus.
     """
     resource = self.getResourceValue()
-    if resource is not None:
-      kw['omit_individual_variation'] = 0
-      result = resource.getVariationCategoryItemList(
-                               base_category_list=base_category_list,
-                               display_id=display_id,
-                               base=base,
-                               current_category=current_category, **kw)
-    else:
-      result = []
-    return result
+    if resource is None:
+      return []
+    return resource.getVariationCategoryItemList(*args, **kw)
 
   security.declareProtected(Permissions.AccessContentsInformation, \
                             'getVariationRangeCategoryList')
