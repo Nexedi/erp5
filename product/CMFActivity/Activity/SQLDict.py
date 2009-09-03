@@ -657,7 +657,8 @@ class SQLDict(RAMDict, SQLBase):
               if serialization_tag in serialization_tag_set:
                 if group_method_id is not None:
                   # Only one group_method_id can pass through.
-                  if serialization_tag_group_method_id_dict[serialization_tag]!=group_method_id:
+                  if serialization_tag_group_method_id_dict.get(
+                      serialization_tag,None) != group_method_id:
                     del message_dict[message.uid]
                 else:
                   del message_dict[message.uid]
