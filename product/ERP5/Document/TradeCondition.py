@@ -85,18 +85,13 @@ class TradeCondition(Path, Transformation, XMLMatrix):
       aggregated_amount_list = self.getAggregatedAmountList(context=context,
           movement_list=movement_list, **kw)
       modified_reference_list = []
-      normal_use_list = self.getPortalObject().portal_preferences\
-              .getPreferredNormalResourceUseCategoryList()
       # check if the existing movements are in aggregated movements
       movement_to_delete_list = []
       for movement in existing_movement_list:
         keep_movement = False
         # check if the movement is a generated one or entered by the user.
         # If it has been entered by user, keep it.
-        resource = movement.getResourceValue()
-        if resource is not None and \
-            len(set(normal_use_list).intersection(set(resource\
-            .getUseList()))):
+        if not movement.getBaseApplicationList():
           keep_movement = True
           continue
         for amount in aggregated_amount_list:

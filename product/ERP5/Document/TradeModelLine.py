@@ -116,12 +116,6 @@ class TradeModelLine(Predicate, XMLMatrix, Amount):
     if current_aggregated_amount_list is None:
       current_aggregated_amount_list = []
 
-    normal_resource_use_category_list = self.\
-        portal_preferences.getPreferredNormalResourceUseCategoryList()
-    if normal_resource_use_category_list is None:
-      raise ValueError('preferred_normal_resource_use_category is not ' + \
-          'configured in System Preferences')
-
     # if movement_list is passed as parameter, it shall be used,
     # otherwise it is needed to look up for movements
     if len(movement_list) == 0:
@@ -137,11 +131,8 @@ class TradeModelLine(Predicate, XMLMatrix, Amount):
           # add only movement which are input (i.e. resource use category
           # is in the normal resource use preference list). Output will
           # be recalculated
-          movement_resource = movement.getResourceValue()
-          if movement_resource is not None:
-            if movement_resource.getUse() in \
-                normal_resource_use_category_list:
-              movement_list.append(movement)
+          if not movement.getBaseApplication():
+            movement_list.append(movement)
 
     aggregated_amount_list = AggregatedAmountList()
     base_application_list = self.getBaseApplicationList()
