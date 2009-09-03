@@ -29,6 +29,9 @@
 
 from CopyToTarget import CopyToTarget
 from Acquisition import aq_base
+from Products.ERP5Type.DivergenceMessage import DivergenceMessage
+from Products.ERP5.DivergenceSolutionDecision \
+    import DivergenceSolutionDecision
 
 class SplitAndDefer(CopyToTarget):
   """
@@ -49,6 +52,13 @@ class SplitAndDefer(CopyToTarget):
     movement_quantity = simulation_movement.getQuantity()
     delivery_quantity = simulation_movement.getDeliveryQuantity()
     new_movement_quantity = delivery_quantity * simulation_movement.getDeliveryRatio()
+    applied_rule = simulation_movement.getParentValue()
+    rule = applied_rule.getSpecialiseValue()
+    expandable_property_list = []
+    forced_property_list = []
+
+    if getattr(rule, 'getExpandablePropertyList', None) is not None:
+      expandable_property_list = rule.getExpandablePropertyList()
 
     if movement_quantity > new_movement_quantity:
       split_index = 0
@@ -58,7 +68,41 @@ class SplitAndDefer(CopyToTarget):
         split_index += 1
         new_id = "%s_split_%s" % (simulation_movement.getId(), split_index)
       # Adopt different dates for deferred movements
-      new_movement = applied_rule.newContent(
+      if simulation_movement.getCausality() and expandable_property_list:
+        # working in BPM enabled system with nicely configured rules
+        movement_dict = {}
+        # new properties
+        movement_dict.update(
+          portal_type="Simulation Movement",
+          id=new_id,
+          start_date=self.start_date,
+          stop_date=self.stop_date,
+          quantity=movement_quantity - new_movement_quantity,
+          activate_kw=self.activate_kw,
+          order=simulation_movement.getOrder(),
+          **self.additional_parameters
+        )
+
+        for prop in applied_rule.getSpecialiseValue().getExpandablePropertyList():
+          if prop not in movement_dict: # XXX: better way to filter out
+            movement_dict.update(**{
+              prop: simulation_movement.getProperty(prop)})
+            if simulation_movement.isPropertyForced(prop):
+              # set same forcing on fresh movement - XXX might be good,
+              # might be wrong
+              forced_property_list.append(prop)
+        new_movement = applied_rule.newContent(**movement_dict)
+        new_movement.activate(**self.additional_parameters).expand()
+        # XXX: start and stop date have to be forced on movement too
+        forced_property_list.extend(['start_date', 'stop_date'])
+        for prop in forced_property_list:
+          fake_divergence = DivergenceMessage()
+          fake_divergence.tested_property = prop
+          decision = DivergenceSolutionDecision(fake_divergence, 'accept', None, None,
+              True)
+          new_movement.appendDecision(decision)
+      else:
+        new_movement = applied_rule.newContent(
                         portal_type="Simulation Movement",
                         id=new_id,
                         efficiency=simulation_movement.getEfficiency(),
