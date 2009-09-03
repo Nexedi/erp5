@@ -197,6 +197,9 @@ def registerSkinFolder(skin_tool, skin_folder):
   except AttributeError:
     skin_selection_list = skin_tool.getSkinSelections()
 
+  if isinstance(skin_selection_list, basestring):
+    skin_selection_list = skin_selection_list.split()
+
   for skin_name in skin_selection_list:
 
     if (skin_name not in skin_tool.getSkinSelections()) and \
