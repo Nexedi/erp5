@@ -197,7 +197,7 @@ class WebSite(WebSection):
         all documents in each of them to build a reverse
         mapping of getPermanentURL
       """
-      return map(lambda x:x.getPermanentURL(document), self.getWebSectionValueList())
+      return map(lambda x:x.getPermanentURL(document), self.getWebSectionValueList(document))
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getWebSectionValueList')
     def getWebSectionValueList(self, document):
