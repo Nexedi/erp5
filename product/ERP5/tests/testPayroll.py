@@ -35,9 +35,6 @@ from DateTime import DateTime
 import transaction
 
 class TestPayrollMixin(ERP5ReportTestCase, TestTradeModelLineMixin):
-  normal_resource_use_category_list = ['payroll/base_salary']
-  invoicing_resource_use_category_list = ['payroll/tax']
-
   BUSINESS_PATH_CREATION_SEQUENCE_STRING = """
                CreateBusinessProcess
                CreateBusinessPath
@@ -68,7 +65,6 @@ class TestPayrollMixin(ERP5ReportTestCase, TestTradeModelLineMixin):
   def afterSetUp(self):
     """Prepare the test."""
     self.createCategories()
-    self.setSystemPreference()
 
   @reindex
   def beforeTearDown(self):
@@ -90,30 +86,6 @@ class TestPayrollMixin(ERP5ReportTestCase, TestTradeModelLineMixin):
                                'Associate', 'Auditor', 'Author'], [])
     user = uf.getUserById('admin').__of__(uf)
     newSecurityManager(None, user)
-
-  @reindex
-  def setSystemPreference(self):
-    preference_tool = getToolByName(self.portal, 'portal_preferences')
-    system_preference_list = preference_tool.contentValues(
-        portal_type='System Preference')
-    if len(system_preference_list) > 1:
-      raise AttributeError('More than one System Preference, cannot test')
-    if len(system_preference_list) == 0:
-      system_preference = preference_tool.newContent(
-          portal_type='System Preference')
-    else:
-      system_preference = system_preference_list[0]
-    system_preference.edit(
-      preferred_invoicing_resource_use_category_list = \
-          self.invoicing_resource_use_category_list,
-      preferred_normal_resource_use_category_list = \
-          self.normal_resource_use_category_list,
-      preferred_payroll_resource_use_category_list = \
-          ['use/payroll'],
-      priority = 1,
-    )
-    if system_preference.getPreferenceState() == 'disabled':
-      system_preference.enable()
 
   @reindex
   def createCategories(self):
