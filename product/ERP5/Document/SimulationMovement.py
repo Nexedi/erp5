@@ -584,22 +584,23 @@ class SimulationMovement(Movement):
   def appendDecision(self, decision):
     """Appends decision, optionally initialises"""
     property = decision.divergence.tested_property
-    if getattr(aq_base(self), 'divergence_history', None) is None:
+    if getattr(aq_base(self), 'divergence_solution_history', None) is None:
       # initialise divergence history mapping
-      self.divergence_history = PersistentMapping()
-    if self.divergence_history.get(property, None) is None:
-      self.divergence_history[property] = WorkflowHistoryList()
-    self.divergence_history[property].append(decision)
+      self.divergence_solution_history = PersistentMapping()
+    if self.divergence_solution_history.get(property, None) is None:
+      self.divergence_solution_history[property] = WorkflowHistoryList()
+    self.divergence_solution_history[property].append(decision)
 
   security.declareProtected( Permissions.AccessContentsInformation,
                              'isPropertyForced')
   def isPropertyForced(self, property):
     """Check if property was forced by user"""
-    divergence_history = getattr(aq_base(self), 'divergence_history', None)
-    if divergence_history is None:
+    divergence_solution_history = getattr(aq_base(self),
+        'divergence_solution_history', None)
+    if divergence_solution_history is None:
       return False
 
-    for decision in divergence_history.get(property, [])[::-1]:
+    for decision in divergence_solution_history.get(property, [])[::-1]:
       # fuzzy logic:
       #  * if there was accept decision with force - force
       #  * but if there was accept without force after - do not force
