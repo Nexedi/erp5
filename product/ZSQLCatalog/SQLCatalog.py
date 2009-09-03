@@ -2502,6 +2502,12 @@ from Query.AutoQuery import AutoQuery as Query
 def NegatedQuery(query):
   return ComplexQuery(query, logical_operator='not')
 
+def AndQuery(*args):
+  return ComplexQuery(logical_operator='and', *args)
+
+def OrQuery(*args):
+  return ComplexQuery(logical_operator='or', *args)
+
 allow_class(SimpleQuery)
 allow_class(ComplexQuery)
 
