@@ -375,7 +375,7 @@ class Rule(Predicate, XMLObject):
             # TODO: support compensation if not prevent_compensation
             LOG('%s:%s' % (self.getRelativeUrl(), movement.getRelativeUrl()), WARNING,
                 'Quantity forced to stay as %s, even if wanted %s' % (m_quantity, prevision.get('quantity')))
-            # DivergenceDecision mangle
+            # DivergenceSolutionDecision mangle
             pass
           else:
             q_diff = prevision.get('quantity') - m_quantity
@@ -402,7 +402,7 @@ class Rule(Predicate, XMLObject):
                   # support compensation if not prevent_compensation
                   LOG('%s:%s' % (self.getRelativeUrl(), movement.getRelativeUrl()), WARNING,
                       'Property %s forced to stay as %r, even if wanted %r' % (k, movement.getProperty(k), v))
-                  # DivergenceDecision mangle
+                  # DivergenceSolutionDecision mangle
                   continue
                 prop_dict.setdefault(k, v)
 

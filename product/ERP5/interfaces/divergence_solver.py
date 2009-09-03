@@ -35,7 +35,7 @@ class IDivergenceSolver(Interface):
   def solve(decision_list):
     """Solves divergences on self according to decision_list
 
-    decision_list is list of instances of DivergenceDecision class
+    decision_list is list of instances of DivergenceSolutionDecision class
     """
 
 class IDeliverySolver(Interface):

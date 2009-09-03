@@ -32,7 +32,7 @@ from Products.PythonScripts.Utility import allow_class
 from AccessControl import ClassSecurityInfo
 from Persistence import Persistent
 
-class DivergenceDecision(Persistent):
+class DivergenceSolutionDecision(Persistent):
   """Decision class
 
     Represent decision took during solving divergence between reality and
@@ -75,7 +75,7 @@ class DivergenceDecision(Persistent):
     split_kw
       Dictionary passed to TargetSolver in case of splitting.
   """
-  meta_type = "DivergenceDecision"
+  meta_type = "DivergenceSolutionDecision"
   security = ClassSecurityInfo()
   security.declareObjectPublic() # FIXME need to be decided
 
@@ -102,5 +102,5 @@ class DivergenceDecision(Persistent):
       raise ValueError(
         'Decision %s is not supported' % self.decision)
 
-InitializeClass(DivergenceDecision)
-allow_class(DivergenceDecision)
+InitializeClass(DivergenceSolutionDecision)
+allow_class(DivergenceSolutionDecision)

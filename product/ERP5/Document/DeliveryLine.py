@@ -508,12 +508,12 @@ class DeliveryLine(Movement, XMLObject, XMLMatrix, Variated,
       """How to play
 delivery_line = context
 from DateTime import DateTime
-from Products.ERP5.DivergenceDecision import DivergenceDecision
+from Products.ERP5.DivergenceSolutionDecision import DivergenceSolutionDecision
 decision_list = []
 
 # adopt
 for d in context.getDivergenceList():
-  decision = DivergenceDecision(d, 'adopt', None, None)
+  decision = DivergenceSolutionDecision(d, 'adopt', None, None)
   decision_list.append(decision)
 
 delivery_line.solve(decision_list)
@@ -525,7 +525,7 @@ for d in delivery_line.getDivergenceList():
     split_kw = {}
     split_kw.update(start_date = DateTime('2009/01/01'),
                     stop_date = DateTime('2009/01/10'))
-    decision = DivergenceDecision(d, 'split', None, 'SplitAndDefer',
+    decision = DivergenceSolutionDecision(d, 'split', None, 'SplitAndDefer',
                                   split_kw = split_kw)
     decision_list.append(decision)
 
@@ -535,7 +535,7 @@ return 'ok'
 # adopt
 for d in delivery_line.getDivergenceList():
   if d.tested_property == 'quantity':
-    decision = DivergenceDecision(d, 'adopt', None, None)
+    decision = DivergenceSolutionDecision(d, 'adopt', None, None)
     decision_list.append(decision)
 
 delivery_line.solve(decision_list)
