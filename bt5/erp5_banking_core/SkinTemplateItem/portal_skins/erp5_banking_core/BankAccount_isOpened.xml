@@ -65,38 +65,8 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-# check that the amount of `resource` in account `payment` is greater than or equal to `quantity`\n
-# returns a dictionnary like : {\'error_code\', \'balance\'}\n
-\n
-manual_validation_account_category_list = (\'test\',)\n
-\n
-# First check that the payment account is in an acceptable state\n
-payment_value = context.restrictedTraverse(payment)\n
-payment_state = payment_value.getValidationState()\n
-\n
-if not context.BankAcocunt_isOpened():\n
-  return {\'error_code\':2} # closed account\n
-\n
-resource = payment_value.getPriceCurrencyValue()\n
-\n
-if resource is None :\n
-  raise AttributeError, \'No currency defined on %s\' % payment\n
-\n
-# Next, check the balance of the account\n
-# We must specify the resource !\n
-account_balance = resource.getAvailableInventory(payment=payment, resource=resource.getRelativeUrl(),src__=src__)\n
-if src__ :\n
-  return account_balance \n
-\n
-if account_balance - quantity < 0 :\n
-  return {\'error_code\':1, \'balance\':account_balance} # insufficient balance\n
-\n
-return {\'error_code\':0, \'balance\':account_balance} # ok\n
-
-
-]]></string> </value>
+            <value> <string>return context.getValidationState() in (\'valid\', \'being_modified\', \'validating_modification\')\n
+</string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -118,15 +88,7 @@ return {\'error_code\':0, \'balance\':account_balance} # ok\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>payment, quantity, src__=0</string> </value>
-        </item>
-        <item>
-            <key> <string>_proxy_roles</string> </key>
-            <value>
-              <tuple>
-                <string>Manager</string>
-              </tuple>
-            </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -146,24 +108,14 @@ return {\'error_code\':0, \'balance\':account_balance} # ok\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>3</int> </value>
+                        <value> <int>0</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>payment</string>
-                            <string>quantity</string>
-                            <string>src__</string>
-                            <string>manual_validation_account_category_list</string>
                             <string>_getattr_</string>
-                            <string>context</string>
-                            <string>payment_value</string>
-                            <string>payment_state</string>
-                            <string>resource</string>
-                            <string>None</string>
-                            <string>AttributeError</string>
-                            <string>account_balance</string>
+<string>context</string>
                           </tuple>
                         </value>
                     </item>
@@ -175,14 +127,12 @@ return {\'error_code\':0, \'balance\':account_balance} # ok\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <tuple>
-                <int>0</int>
-              </tuple>
+              <none/>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>BankAccount_checkBalance</string> </value>
+            <value> <string>BankAccount_isOpened</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

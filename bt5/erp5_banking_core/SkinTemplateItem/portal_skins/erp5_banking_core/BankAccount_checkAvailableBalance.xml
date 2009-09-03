@@ -72,7 +72,6 @@
 # returns a dictionnary like : {\'error_code\', \'balance\'}\n
 \n
 #workflow_id = \'bank_account_workflow\'\n
-workflow_correct_state_list = (\'valid\', \'being_modified\', \'validating_modification\')\n
 manual_validation_account_category_list = (\'test\',)\n
 \n
 # First check that the payment account is in an acceptable state\n
@@ -80,7 +79,7 @@ manual_validation_account_category_list = (\'test\',)\n
 payment_value = context.restrictedTraverse(payment)\n
 payment_state = payment_value.getValidationState()\n
 \n
-if payment_state not in workflow_correct_state_list :\n
+if not context.BankAccount_isOpened():\n
   return {\'error_code\':2} # closed account\n
 \n
 resource = payment_value.getPriceCurrencyValue()\n
@@ -163,7 +162,6 @@ return {\'error_code\':0, \'balance\':account_balance} # ok\n
                             <string>payment</string>
                             <string>quantity</string>
                             <string>src__</string>
-                            <string>workflow_correct_state_list</string>
                             <string>manual_validation_account_category_list</string>
                             <string>_getattr_</string>
                             <string>context</string>
