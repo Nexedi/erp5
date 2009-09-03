@@ -1865,7 +1865,7 @@ class TestTradeModelLine(TestTradeModelLineMixin):
     sequence_list.play(self, quiet=True)
 
   def test_TradeModelRuleSimulationBuildInvoiceNewTradeCondition(self):
-    """Check that after changing trade condition invoice is not diverged"""
+    """Check that after changing trade condition invoice is diverged"""
     sequence_list = SequenceList()
     sequence_string = self.TRADE_MODEL_RULE_SIMULATION_SEQUENCE_STRING
     sequence_string += """
@@ -1897,7 +1897,7 @@ class TestTradeModelLine(TestTradeModelLineMixin):
 
               SpecialiseInvoiceTradeCondition
               Tic
-              CheckInvoiceCausalityStateSolved
+              CheckInvoiceCausalityStateDiverged
     """
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=True)
