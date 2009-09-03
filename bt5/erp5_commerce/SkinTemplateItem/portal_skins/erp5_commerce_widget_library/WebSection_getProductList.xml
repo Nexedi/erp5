@@ -55,23 +55,11 @@
             <key> <string>_body</string> </key>
             <value> <string>#TODO : USE CACHE\n
 #the goal of this script is to get all the related product of this section\n
-\n
 current_web_section = context.REQUEST.get(\'current_web_section\', context)\n
 product_list = []\n
-\n
 kw[\'portal_type\'] = \'Product\'\n
 kw[\'limit\'] = limit\n
-if current_web_section.getMembershipCriterionCategoryList() in (None, []) and current_web_section.getCriterionList() in (None, []):\n
-  kw[\'product_line_uid\'] = context.REQUEST.get(\'current_web_site\').getLayoutProperty(\'ecommerce_base_product_line\', \'\')\n
-\n
-product_list = current_web_section.WebSection_getDocumentValueListBase(all_versions=1,\n
-                                                                       all_languages=1,\n
-                                                                       **kw)\n
-product_list = [x.getObject() for x in product_list if x.getPortalType() == \'Product\']\n
-\n
-# this step will be remove after have find a good way to improve WebSection_getDocumentValueListBase\n
-# or find another base script for get only product direclty\n
-\n
+product_list = current_web_section.getDocumentValueList(all_versions=1, all_languages=1, **kw)\n
 return product_list\n
 </string> </value>
         </item>
@@ -133,12 +121,7 @@ return product_list\n
                             <string>current_web_section</string>
                             <string>product_list</string>
                             <string>_write_</string>
-                            <string>None</string>
                             <string>_apply_</string>
-                            <string>append</string>
-                            <string>$append0</string>
-                            <string>_getiter_</string>
-                            <string>x</string>
                           </tuple>
                         </value>
                     </item>

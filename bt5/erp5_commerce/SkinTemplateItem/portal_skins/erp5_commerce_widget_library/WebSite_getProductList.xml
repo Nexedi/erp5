@@ -67,7 +67,7 @@ kw[\'limit\'] = limit\n
 \n
 # Getting all the products from all the visible Web Section.\n
 for web_section in web_site.WebSite_getMainSectionList():\n
-  product_list.extend([x.getObject() for x in web_section.getDocumentValueList(all_versions=1, all_languages=1, **kw) if x.getObject() not in product_list])\n
+  product_list.extend([x.uid for x in web_section.getDocumentValueList(all_versions=1, all_languages=1, **kw) if x.uid not in product_list])\n
 \n
 if len(product_list) > limit:\n
   random_index_list = []\n
@@ -75,7 +75,9 @@ if len(product_list) > limit:\n
     random_number = randrange(0, len(product_list))\n
     if random_number not in random_index_list:\n
       random_index_list.append(random_number)\n
-  product_list = [product_list[x] for x in random_index_list if product_list[x].getPortalType() == \'Product\']\n
+  product_list = [product_list[x] for x in random_index_list]\n
+\n
+product_list = context.portal_catalog(portal_type=\'Product\', uid=product_list)\n
 return product_list\n
 
 
