@@ -617,7 +617,7 @@ class TestCommerce(ERP5TypeTestCase):
     # but it should work if the user is authenticated
     self.changeUser('customer')
     self.portal.SaleOrder_confirmShopping()
-    self.assertTrue(urllib.quote("SaleOrder_viewAsWebConfirm") in
+    self.assertTrue(urllib.quote("SaleOrder_viewConfirmAsWeb") in
                     request.RESPONSE.getHeader('location'))
 
   def test_11_deleteShoppingCartItem(self, quiet=0, run=run_all_test):
