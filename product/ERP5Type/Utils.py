@@ -32,6 +32,7 @@ import os
 import re
 import string
 import time
+import warnings
 from md5 import new as md5_new
 from sha import new as sha_new
 
@@ -163,7 +164,27 @@ def sortValueList(value_list, sort_on=None, sort_order=None, **kw):
     value_list.sort(**sort_kw)
 
   return value_list
-      
+
+#####################################################
+# Logging
+#####################################################
+
+def _showwarning(message, category, filename, lineno, file=None):
+  if file is None:
+    LOG("%s:%u %s: %s" % (filename, lineno, category.__name__, message),
+        WARNING, '')
+  else:
+    file.write(warnings.formatwarning(message, category, filename, lineno))
+warnings.showwarning = _showwarning
+
+def deprecated(wrapped):
+  message = "Use of '%s' function (%s, line %s) is deprecated." % (
+    wrapped.__name__, wrapped.__module__, wrapped.func_code.co_firstlineno)
+  def wrapper(*args, **kw):
+    warnings.warn(message, DeprecationWarning, 2)
+    return wrapped(*args, **kw)
+  return wrapper
+
 #####################################################
 # Useful methods
 #####################################################
