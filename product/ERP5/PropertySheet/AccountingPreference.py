@@ -81,5 +81,6 @@ class AccountingPreference:
       'description' : 'Allow grouping lines with different quantities',
       'type'        : 'boolean',
       'preference'  : 1,
+      'write_permission': 'Manage properties',
       'mode'        : 'w'},
   )
