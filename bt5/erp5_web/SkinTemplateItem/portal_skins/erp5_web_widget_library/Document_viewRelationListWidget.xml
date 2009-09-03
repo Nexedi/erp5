@@ -42,10 +42,8 @@
 <tal:block tal:define="\n
   default_section_document python: request.get(\'current_web_document\', here);\n
   isDocument python: default_section_document.isDocument;">\n
-  \n
-  <tal:block tal:condition="isDocument">\n
 \n
-    <tal:block\n
+  <tal:block tal:condition="isDocument"\n
       tal:define="related_successor_document_list  python:\n
                     default_section_document.Document_getRelatedDocumentList(\n
                              relation_id=\'related_successor\');\n
@@ -88,7 +86,7 @@
 \n
       <div class="related_docs" \n
            tal:condition="all_similar">\n
-        <div class="title" i18n:translate="" i18n:domain="ui">Similar</div>\n
+        <h2 class="noicon" i18n:translate="" i18n:domain="ui">Similar</h2>\n
         <div class="related_docs_explicit" \n
              tal:condition="python: len(similar[0])">\n
           <ul>\n
@@ -112,7 +110,7 @@
       <div class="related_docs" \n
            tal:condition="all_reference">\n
 \n
-        <div class="title" i18n:translate="" i18n:domain="ui">Reference</div>\n
+        <h2 class="noicon" i18n:translate="" i18n:domain="ui">Reference</h2>\n
         <div class="related_docs_explicit" \n
              tal:condition="python: len(reference[0])">\n
           <ul>\n
@@ -135,7 +133,7 @@
 \n
       <div class="related_docs" \n
            tal:condition="all_related">\n
-        <div class="title" i18n:translate="" i18n:domain="ui">Related</div>\n
+        <h2 class="noicon" i18n:translate="" i18n:domain="ui">Related</h2>\n
         <div class="related_docs_explicit" \n
              tal:condition="python: len(related[0])">\n
           <ul>\n
@@ -162,9 +160,7 @@
         </div>\n
       </div>\n
 \n
-    </tal:block>\n
   </tal:block>\n
-\n
 \n
   <tal:block tal:condition="not: isDocument">\n
     <div i18n:translate="" i18n:domain="ui">\n
