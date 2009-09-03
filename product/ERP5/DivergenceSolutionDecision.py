@@ -90,8 +90,8 @@ class DivergenceSolutionDecision(Persistent):
     repr_str += '>'
     return repr_str
 
-  def __init__(self, divergence, decision, delivery_solver_name,
-      target_solver_name, force_property=False, split_kw=None):
+  def __init__(self, divergence, decision, delivery_solver_name=None,
+      target_solver_name=None, force_property=False, split_kw=None):
     self.divergence = divergence
     self.decision = decision
     self.delivery_solver_name = delivery_solver_name
