@@ -720,15 +720,16 @@ class TestTradeReports(ERP5ReportTestCase):
     
     # test columns values
     line = data_line_list[0]
-    self.assertEquals(line.column_id_list,
-        ['resource_title', 'resource_reference', 'variation_text', 
-          'inventory', 'quantity_unit'])
-
+    self.assertEqual(line.column_id_list, ['resource_title',
+                                           'resource_reference',
+                                           'variation_category_item_list',
+                                           'inventory',
+                                           'quantity_unit'])
     self.checkLineProperties(
                    data_line_list[0],
                    resource_title='product_A',
                    resource_reference='ref 2',
-                   variation_text='',
+                   variation_category_item_list=[],
                    inventory=11,
                    quantity_unit='G')
 
@@ -749,28 +750,28 @@ class TestTradeReports(ERP5ReportTestCase):
                    data_line_list[0],
                    resource_title='product_B',
                    resource_reference='ref 1',
-                   variation_text='',
+                   variation_category_item_list=[],
                    inventory=33,
                    quantity_unit='Kg')
     self.checkLineProperties(
                    data_line_list[1],
                    resource_title='product_A',
                    resource_reference='ref 2',
-                   variation_text='',
+                   variation_category_item_list=[],
                    inventory=22,
                    quantity_unit='G')
     self.checkLineProperties(
                    data_line_list[2],
                    resource_title='variated product',
                    resource_reference='ref 3',
-                   variation_text='colour/colour1',
+                   variation_category_item_list=['colour1'],
                    inventory=66,
                    quantity_unit='')
     self.checkLineProperties(
                    data_line_list[3],
                    resource_title='variated product',
                    resource_reference='ref 3',
-                   variation_text='colour/colour2',
+                   variation_category_item_list=['colour2'],
                    inventory=66,
                    quantity_unit='')
                     
@@ -871,14 +872,14 @@ class TestTradeReports(ERP5ReportTestCase):
                    data_line_list[0],
                    resource_title='product_B',
                    resource_reference='ref 1',
-                   variation_text='',
+                   variation_category_item_list=[],
                    inventory=-33,
                    quantity_unit='Kg')
     self.checkLineProperties(
                    data_line_list[1],
                    resource_title='product_A',
                    resource_reference='ref 2',
-                   variation_text='',
+                   variation_category_item_list=[],
                    inventory=0,
                    quantity_unit='G')
     ################################
@@ -901,21 +902,21 @@ class TestTradeReports(ERP5ReportTestCase):
                    data_line_list[0],
                    resource_title='product_A',
                    resource_reference='ref 2',
-                   variation_text='',
+                   variation_category_item_list=[],
                    inventory=0,
                    quantity_unit='G')
     self.checkLineProperties(
                    data_line_list[1],
                    resource_title='variated product',
                    resource_reference='ref 3',
-                   variation_text='colour/colour1',
+                   variation_category_item_list=['colour1'],
                    inventory=66,
                    quantity_unit='')
     self.checkLineProperties(
                    data_line_list[2],
                    resource_title='variated product',
                    resource_reference='ref 3',
-                   variation_text='colour/colour2',
+                   variation_category_item_list=['colour2'],
                    inventory=66,
                    quantity_unit='')
     ################################
@@ -938,21 +939,21 @@ class TestTradeReports(ERP5ReportTestCase):
                    data_line_list[0],
                    resource_title='product_B',
                    resource_reference='ref 1',
-                   variation_text='',
+                   variation_category_item_list=[],
                    inventory=-33,
                    quantity_unit='Kg')
     self.checkLineProperties(
                    data_line_list[1],
                    resource_title='variated product',
                    resource_reference='ref 3',
-                   variation_text='colour/colour1',
+                   variation_category_item_list=['colour1'],
                    inventory=66,
                    quantity_unit='')
     self.checkLineProperties(
                    data_line_list[2],
                    resource_title='variated product',
                    resource_reference='ref 3',
-                   variation_text='colour/colour2',
+                   variation_category_item_list=['colour2'],
                    inventory=66,
                    quantity_unit='')
     
@@ -978,7 +979,7 @@ class TestTradeReports(ERP5ReportTestCase):
                    data_line_list[0],
                    resource_title='product_A',
                    resource_reference='ref 2',
-                   variation_text='',
+                   variation_category_item_list=[],
                    inventory=0,
                    quantity_unit='G')
     ########################################
@@ -1001,7 +1002,7 @@ class TestTradeReports(ERP5ReportTestCase):
                    data_line_list[0],
                    resource_title='product_B',
                    resource_reference='ref 1',
-                   variation_text='',
+                   variation_category_item_list=[],
                    inventory=-33,
                    quantity_unit='Kg')
     ########################################
@@ -1024,14 +1025,14 @@ class TestTradeReports(ERP5ReportTestCase):
                    data_line_list[0],
                    resource_title='variated product',
                    resource_reference='ref 3',
-                   variation_text='colour/colour1',
+                   variation_category_item_list=['colour1'],
                    inventory=66,
                    quantity_unit='')
     self.checkLineProperties(
                    data_line_list[1],
                    resource_title='variated product',
                    resource_reference='ref 3',
-                   variation_text='colour/colour2',
+                   variation_category_item_list=['colour2'],
                    inventory=66,
                    quantity_unit='')
     ################################################
