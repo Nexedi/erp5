@@ -51,12 +51,22 @@
     <office:spreadsheet>\n
 \n
       <tal:block tal:define="rendered_report_item_list rendered_report_item_list | python:[];\n
-                             report_item_list python: rendered_report_item_list or report_method();\n
+                             report_item_list python: rendered_report_item_list or [];\n
                              dummy python: request.set(\'here\', here);\n
                              global sheet_per_reportsection python: int(request.get(\'sheet_per_report_section\', 0));\n
                              global column_len python: 5">\n
                              <!-- TODO: calculate column_len based on the first listbox (or selection_column if exists)-->\n
-\n
+        <tal:block tal:condition="not: report_item_list">\n
+          <tal:block tal:condition="python: form.meta_type == \'ERP5 Report\'">\n
+            <tal:block tal:define="dummy python: report_item_list.extend(report_method())" />\n
+          </tal:block>\n
+          <tal:block tal:condition="python: form.meta_type == \'ERP5 Form\'">\n
+            <tal:block tal:repeat="reportbox python: [field for field in form.get_fields()\n
+                                                      if field.getRecursiveTemplateField().meta_type == \'ReportBox\']">\n
+              <tal:block tal:define="dummy python: report_item_list.extend(reportbox.render())" />\n
+            </tal:block>\n
+          </tal:block>\n
+        </tal:block>\n
         <tal:block tal:define="portal_object here/portal_url/getPortalObject">\n
           <tal:block tal:condition="not: sheet_per_reportsection">\n
             <table:table tal:attributes="table:name python:unicode(here.getProperty(\'title\'), \'utf8\')" i18n:attributes="table:name">\n

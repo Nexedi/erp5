@@ -225,9 +225,19 @@ bWxQSwUGAAAAAAIAAgCeAAAAhwwAAAAA</string> </value>
       <!-- This template can be used to aggregate together some already rendered report sections.\n
         In this case, "rendered_report_item_list" must be in the page template context. -->\n
         <tal:block tal:define="rendered_report_item_list rendered_report_item_list | python:[];\n
-                                report_item_list python: rendered_report_item_list or report_method();">\n
-\n
-           <tal:block tal:define="dummy python: request.set(\'here\', here); "/>  \n
+                                report_item_list python: rendered_report_item_list or []">\n
+          <tal:block tal:condition="not: report_item_list">\n
+            <tal:block tal:condition="python: form.meta_type == \'ERP5 Report\'">\n
+              <tal:block tal:define="dummy python: report_item_list.extend(report_method())" />\n
+            </tal:block>\n
+            <tal:block tal:condition="python: form.meta_type == \'ERP5 Form\'">\n
+              <tal:block tal:repeat="reportbox python: [field for field in form.get_fields()\n
+                                                        if field.getRecursiveTemplateField().meta_type == \'ReportBox\']">\n
+                <tal:block tal:define="dummy python: report_item_list.extend(reportbox.render())" />\n
+              </tal:block>\n
+            </tal:block>\n
+          </tal:block>\n
+          <tal:block tal:define="dummy python: request.set(\'here\', here); "/>  \n
             <text:p text:style-name=\'report-title\'\n
                     i18n:domain="ui" i18n:translate=""\n
                     tal:content="python: form.getProperty(\'title\', \'\')"/>\n

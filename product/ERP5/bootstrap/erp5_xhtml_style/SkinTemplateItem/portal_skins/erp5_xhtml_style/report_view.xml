@@ -46,8 +46,18 @@
     <tal:block  metal:use-macro="here/view_main/macros/master">\n
       <tal:block metal:fill-slot="main">\n
         <tal:block metal:use-macro="here/form_render/macros/master" />\n
-        <tal:block tal:define="portal_object here/getPortalObject">\n
-          <tal:block tal:repeat="report_item report_method">\n
+        <tal:block tal:define="portal_object here/getPortalObject;\n
+                               report_item_list python:[]">\n
+          <tal:block tal:condition="python: form.meta_type == \'ERP5 Report\'">\n
+            <tal:block tal:define="dummy python: report_item_list.extend(report_method())" />\n
+          </tal:block>\n
+          <tal:block tal:condition="python: form.meta_type == \'ERP5 Form\'">\n
+            <tal:block tal:repeat="reportbox python: [field for field in form.get_fields()\n
+                                                      if field.getRecursiveTemplateField().meta_type == \'ReportBox\']">\n
+              <tal:block tal:define="dummy python: report_item_list.extend(reportbox.render())" />\n
+            </tal:block>\n
+          </tal:block>\n
+          <tal:block tal:repeat="report_item report_item_list">\n
             <tal:block tal:define="here python: report_item.getObject(portal_object);\n
                                    render_prefix python: \'x%s\' % (repeat[\'report_item\'].index, );\n
                                    dummy python: report_item.pushReport(portal_object, render_prefix=render_prefix)">\n
