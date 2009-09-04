@@ -83,9 +83,8 @@ def printAndLog(msg):
     LOG('Testing... ', 0, msg)
 
 
-
 def makeFilePath(name):
-  return os.getenv('INSTANCE_HOME') + '/../Products/ERP5OOo/tests/test_document/' + name
+  return os.path.join(os.path.dirname(__file__), 'test_document', name)
 
 def makeFileUpload(name, as_name=None):
   if as_name is None:
