@@ -133,11 +133,7 @@
                           <string>Variation</string>
                         </tuple>
                         <tuple>
-                          <string>aggregate_title_list</string>
-                          <string>Items aggregated</string>
-                        </tuple>
-                        <tuple>
-                          <string>getInventory</string>
+                          <string>inventory</string>
                           <string>Stock</string>
                         </tuple>
                         <tuple>
@@ -224,7 +220,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>context/Inventory_getStockReportBySiteDialogListboxColumnList</string> </value>
+            <value> <string>python: field.get_orig_value(\'columns\') + (context.REQUEST.form.get("item_stock") == 1 and [(\'aggregate_title_list\',\'Items aggregated\')] or [])</string> </value>
         </item>
       </dictionary>
     </pickle>
