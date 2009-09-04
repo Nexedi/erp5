@@ -762,6 +762,17 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.assert_('I use reference to look up TEST' in
                  document.SearchableText())
 
+  def test_PDFToImage(self):
+    upload_file = makeFileUpload('REF-en-001.pdf')
+    document = self.portal.portal_contributions.newContent(file=upload_file)
+    self.assertEquals('PDF', document.getPortalType())
+    content_type, image_data = document.convert(format='png',
+                                           frame=0,
+                                           display='thumbnail')
+    # it's a valid PNG
+    self.assertEquals('PNG', image_data[1:4])
+    
+
 class TestDocumentWithSecurity(ERP5TypeTestCase):
 
   username = 'yusei'
