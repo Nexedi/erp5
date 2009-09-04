@@ -772,6 +772,15 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
     # it's a valid PNG
     self.assertEquals('PNG', image_data[1:4])
     
+  def test_PDF_content_information(self):
+    upload_file = makeFileUpload('REF-en-001.pdf')
+    document = self.portal.portal_contributions.newContent(file=upload_file)
+    self.assertEquals('PDF', document.getPortalType())
+    content_information = document.getContentInformation()
+    self.assertEquals('1', content_information['Pages'])
+    self.assertEquals('subject', content_information['Subject'])
+    self.assertEquals('title', content_information['Title'])
+
 
 class TestDocumentWithSecurity(ERP5TypeTestCase):
 
