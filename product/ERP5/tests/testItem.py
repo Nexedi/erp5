@@ -30,7 +30,6 @@ import unittest
 
 import transaction
 from DateTime import DateTime
-from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import reindex
 from AccessControl.SecurityManagement import newSecurityManager
@@ -79,20 +78,13 @@ class TestItemMixin(TestSaleInvoiceMixin):
     return resource
   
   def createVariatedResource(self,title=None):
-    preference = self.portal.portal_preferences
-    portal_workflow = self.portal.portal_workflow
-    pref = preference.newContent(portal_type='System Preference')
-    pref.setPreferredProductIndividualVariationBaseCategoryList(['size'])
-    portal_workflow.doActionFor(pref, 'enable_action')
-    transaction.commit()
-    self.tic()
-    
     resource_portal_type = 'Product'
     resource_module = self.portal.getDefaultModule(resource_portal_type)
     resource = resource_module.newContent(portal_type=resource_portal_type)
     resource.edit(
       title = "VariatedResource%s" % resource.getId(),
     )
+    resource.setIndividualVariationBaseCategoryList(('size',))
     resource.setQuantityUnit('unit/piece')
     resource.setAggregatedPortalTypeList('Item')
     resource.setRequiredAggregatedPortalTypeList('Item')
@@ -754,8 +746,6 @@ class TestItemScripts(ERP5TypeTestCase):
     return cell
 
   def test_Item_getVariationCategoryList(self):
-    ZopeTestCase._print("\nWARNING test_Item_getVariationCategoryList"
-      " fails when it is executed after TestItem, and with the same portal_id")
     self.assertEquals([], self.item.Item_getVariationCategoryList())
     self._makeSalePackingListCellWithVariation()
     self.assertEquals(['size/small'], self.item.Item_getVariationCategoryList())
@@ -763,8 +753,6 @@ class TestItemScripts(ERP5TypeTestCase):
         self.item.Item_getVariationCategoryList(at_date=DateTime() - 2))
 
   def test_Item_getVariationRangeCategoryItemList(self):
-    ZopeTestCase._print("\nWARNING test_Item_getVariationRangeCategoryItemList"
-      " fails when it is executed after TestItem, and with the same portal_id")
     self.assertEquals([], self.item.Item_getVariationRangeCategoryItemList())
     self._makeSalePackingListCellWithVariation()
     self.assertEquals([['Big', 'size/big'],
