@@ -74,7 +74,8 @@ class EntireQuery(object):
   def asSQLExpression(self, sql_catalog, only_group_columns):
     column_map = self.column_map
     if column_map is None:
-      # XXX: should we provide a way to register column map as a separate mathod or do it here ?
+      # XXX: should we provide a way to register column map as a separate 
+      # method or do it here ?
       # Column Map was not built yet, do it.
       self.column_map = column_map = ColumnMap(catalog_table_name=self.catalog_table_name)
       for extra_column in self.extra_column_list:
