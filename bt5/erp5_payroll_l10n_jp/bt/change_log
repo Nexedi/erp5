@@ -1,3 +1,6 @@
+2009-09-04 yusuke
+* split standard remuneration into health_insurance and pension_insurance
+
 2009-08-24 yusuke
 * add a localisation dependency
 
