@@ -1445,12 +1445,12 @@ class TestPayrollMixin(ERP5ReportTestCase, TestTradeModelLineMixin):
     movement_list = paysheet.PaySheetTransaction_getMovementList()
     self.assertEquals(1, len(movement_list))
     movement = movement_list[0]
-    self.assertEquals(2, movement.employee_price)
-    self.assertEquals(3, movement.employee_quantity)
-    self.assertEquals(2*3, movement.employee_total_price)
-    self.assertEquals(4, movement.employer_price)
-    self.assertEquals(5, movement.employer_quantity)
-    self.assertEquals(4*5, movement.employer_total_price)
+    self.assertEquals(2, movement.employee_share_price)
+    self.assertEquals(3, movement.employee_share_quantity)
+    self.assertEquals(2*3, movement.employee_share_total_price)
+    self.assertEquals(4, movement.employer_share_price)
+    self.assertEquals(5, movement.employer_share_quantity)
+    self.assertEquals(4*5, movement.employer_share_total_price)
 
   def stepCheckModelWithoutRefValidity(self, sequence=None, **kw):
     '''
