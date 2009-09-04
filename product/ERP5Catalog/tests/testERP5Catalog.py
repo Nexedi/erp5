@@ -2307,17 +2307,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     query = ComplexQuery(query_find_european,
                          query_find_name_erp5,
                          operator='OR')
-
-    @todo_erp5
-    def todo():
-      """
-        This test is expected to fail with current code.
-        Adding support for this is required, and is not trivial.
-        Hence, mark it as TODO to silence this always-failing test.
-      """
-      self.assertEqual(len(catalog(query=query)), 3)
-
-    todo()
+    self.assertEqual(len(catalog(query=query)), 3)
 
   def test_check_security_table_content(self, quiet=quiet, run=run_all_test):
     sql_connection = self.getSQLConnection()
