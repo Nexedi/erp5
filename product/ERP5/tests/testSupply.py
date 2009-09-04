@@ -30,6 +30,7 @@ import unittest
 
 import transaction
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5Type.tests.utils import reindex
 from DateTime import DateTime
 
@@ -56,6 +57,22 @@ class TestSupplyMixin:
       self.portal.newContent(portal_type='Folder',
                             id='testing_folder')
     self.folder = self.portal.testing_folder
+
+  def changeUser(self, user_id):
+    """
+     Change the current user to user_id
+    """
+    user_folder = self.getPortal().acl_users
+    user = user_folder.getUserById(user_id).__of__(user_folder)
+    newSecurityManager(None, user)
+
+  def createTestUser(self, **kw):
+    """
+    """
+    person = self.portal.person_module.newContent(portal_type="Person", **kw)
+    person.validate()
+
+
 
 class TestSaleSupply(TestSupplyMixin, ERP5TypeTestCase):
   """
@@ -176,7 +193,40 @@ class TestSaleSupply(TestSupplyMixin, ERP5TypeTestCase):
     self.assertEquals(1, len(result) )
     result = result[0]
     self.assertEquals(result.start_date_range_min, new_date.toZone('UTC'))
+
+
+  def test_03_SupplyLineApplied(self, quiet=0, run=run_all_test):
+    """
+      Test supply line being found based on different users and security.
+      XXX: Still incimplete.
+    """
+    if not run: return
+
+    portal = self.portal
+    original_date = DateTime().earliestTime() # lower precision of date
+
+    # clean up
+    portal.sale_supply_module.manage_delObjects(list(portal.sale_supply_module.objectIds()))
+    portal.person_module.manage_delObjects(list(portal.person_module.objectIds()))
+    self.stepTic()
+
+    # movement is in middle of timeframe...
+    movement = self._makeMovement(start_date=original_date)
+    supply = self._makeSupply(start_date_range_min=original_date)
+    supply_line = self._makeSupplyLine(supply)
+    self.stepTic()
+   
+    user_reference = "dummy_%s" %self.supply_portal_type[:5]
+    self.createTestUser(reference=user_reference)
+    self.stepTic()
+    self.changeUser(user_reference)
+
+    res = self.domain_tool.searchPredicateList(movement,
+                                      portal_type=self.supply_line_portal_type)
     
+    # ...and predicate shall NOT be found
+    self.assertSameSet([], res)
+
 class TestPurchaseSupply(TestSaleSupply):
   """
     Test Purchase Supplies usage
