@@ -994,6 +994,25 @@ class TestCommerce(ERP5TypeTestCase):
     shipping.setBasePrice(10.0) 
 
 
+  def test_23_getProductListFromWebSite(self, quiet=0, run=run_all_test):
+    """
+      Test the  WebSite_getProductList script.
+    """
+    if not run:
+      return
+    if not quiet:
+      message = '\nTest the script WebSite_getProductList.'
+      ZopeTestCase._print(message)
+      LOG('Testing... ', 0, message)
+
+    portal = self.getPortal()
+    web_site = self.setupWebSite()
+    transaction.commit()
+    self.tic()
+
+    self.assertEquals(5, len(web_site.WebSite_getProductList()))
+    self.assertEquals(13, len(web_site.WebSite_getProductList(limit=1000)))
+
 import unittest
 def test_suite():
   suite = unittest.TestSuite()
