@@ -216,7 +216,7 @@ class SimulationMovement(Movement):
     """
       Returns 1 if this needs to be ordered
     """
-    if isOrderable():
+    if self.isOrderable():
       return len(self.getCategoryMembership('order')) is 0
     else:
       return 0
@@ -227,7 +227,7 @@ class SimulationMovement(Movement):
     """
       Returns 1 if this needs to be accounted
     """
-    if isDeliverable():
+    if self.isDeliverable():
       return len(self.getCategoryMembership('delivery')) is 0
     else:
       return 0
@@ -263,7 +263,7 @@ class SimulationMovement(Movement):
     for rule in portal_rules.searchRuleList(self, sort_on='version',
         sort_order='descending'):
       ref = rule.getReference()
-      if ref and ref not in applicable_rule_dict.iterkeys():
+      if ref and ref not in applicable_rule_dict:
         applicable_rule_dict[ref] = rule
 
     for applied_rule in self.objectValues():
@@ -275,7 +275,7 @@ class SimulationMovement(Movement):
 
     for rule in applicable_rule_dict.itervalues():
       rule_type = rule.getPortalType()
-      if rule_type not in applied_rule_dict.iterkeys():
+      if rule_type not in applied_rule_dict:
         applied_rule = rule.constructNewAppliedRule(self, **kw)
         applied_rule_dict[rule_type] = applied_rule
 
