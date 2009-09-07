@@ -1,3 +1,6 @@
+2009-09-07 yusuke
+* Replace ERP5Report to ERP5Form and ReportBox
+
 2008-10-07: mayoro
 adding new field to display template_path_list of  documented business templates
 

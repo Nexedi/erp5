@@ -3,7 +3,7 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <global name="ERP5Report" module="Products.ERP5Form.Report"/>
+        <global name="ERP5Form" module="Products.ERP5Form.Form"/>
         <tuple/>
       </tuple>
     </pickle>
@@ -28,6 +28,12 @@
                   </dictionary>
                 </state>
               </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_objects</string> </key>
+            <value>
+              <tuple/>
             </value>
         </item>
         <item>
@@ -77,7 +83,9 @@
                 <item>
                     <key> <string>hidden</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>your_reportbox</string>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -110,10 +118,6 @@
         <item>
             <key> <string>pt</string> </key>
             <value> <string>report_view</string> </value>
-        </item>
-        <item>
-            <key> <string>report_method</string> </key>
-            <value> <string>Base_getDocumentationReportSectionList</string> </value>
         </item>
         <item>
             <key> <string>row_length</string> </key>

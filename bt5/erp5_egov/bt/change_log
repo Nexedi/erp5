@@ -1,3 +1,6 @@
+2009-09-07 yusuke
+* Replace ERP5Report to ERP5Form and ReportBox
+
 2008-11-17 fabien
 * add workflow scripts to send notification by email
 

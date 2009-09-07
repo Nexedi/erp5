@@ -3,7 +3,7 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <global name="ERP5Report" module="Products.ERP5Form.Report"/>
+        <global name="ERP5Form" module="Products.ERP5Form.Form"/>
         <tuple/>
       </tuple>
     </pickle>
@@ -31,36 +31,9 @@
             </value>
         </item>
         <item>
-            <key> <string>_local_properties</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
             <key> <string>_objects</string> </key>
             <value>
               <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>_properties</string> </key>
-            <value>
-              <tuple>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>title</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>mode</string> </key>
-                      <value> <string>wd</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>tales</string> </value>
-                  </item>
-                </dictionary>
-              </tuple>
             </value>
         </item>
         <item>
@@ -70,12 +43,6 @@
         <item>
             <key> <string>description</string> </key>
             <value> <string></string> </value>
-        </item>
-        <item>
-            <key> <string>edit_order</string> </key>
-            <value>
-              <list/>
-            </value>
         </item>
         <item>
             <key> <string>encoding</string> </key>
@@ -116,7 +83,9 @@
                 <item>
                     <key> <string>hidden</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>your_reportbox</string>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -149,10 +118,6 @@
         <item>
             <key> <string>pt</string> </key>
             <value> <string>report_view</string> </value>
-        </item>
-        <item>
-            <key> <string>report_method</string> </key>
-            <value> <string>DocumentationHelper_getDocumentationSectionList</string> </value>
         </item>
         <item>
             <key> <string>row_length</string> </key>
