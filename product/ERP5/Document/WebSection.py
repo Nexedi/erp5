@@ -174,10 +174,7 @@ class WebSection(Domain, PermanentURLMixIn):
         self.REQUEST[self.web_section_key] = self.getPhysicalPath()
       self.REQUEST.set('current_web_section', self)
       if not self.REQUEST.get('editable_mode') and not self.REQUEST.get('ignore_layout'):
-        # Try to use a custom renderer if any
-        custom_render_method_id = self.getCustomRenderMethodId()
-        if custom_render_method_id is not None:
-          return getattr(self, custom_render_method_id)()
+        document = None
         if self.isDefaultPageDisplayed():
           # The following could be moved to a typed based method for more flexibility
           document = self.getDefaultDocumentValue()
@@ -200,8 +197,15 @@ class WebSection(Domain, PermanentURLMixIn):
                 id=document.getReference(),
                 original_container=document.getParentValue(),
                 original_id=document.getId(),
-                editable_absolute_url=document.absolute_url()))
-            return document.__of__(self)()
+                editable_absolute_url=document.absolute_url())).__of__(self)
+        # Try to use a custom renderer if any
+        custom_render_method_id = self.getCustomRenderMethodId()
+        if custom_render_method_id is not None:
+          if document is None:
+            document = self
+          return getattr(document, custom_render_method_id)()
+        elif document is not None:
+          return document()
       return Domain.__call__(self)
 
     # Layout Selection API
