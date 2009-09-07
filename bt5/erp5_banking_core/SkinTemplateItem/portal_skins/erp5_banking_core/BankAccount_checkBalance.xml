@@ -74,9 +74,8 @@ manual_validation_account_category_list = (\'test\',)\n
 \n
 # First check that the payment account is in an acceptable state\n
 payment_value = context.restrictedTraverse(payment)\n
-payment_state = payment_value.getValidationState()\n
 \n
-if not context.BankAcocunt_isOpened():\n
+if not payment_value.BankAccount_isOpened():\n
   return {\'error_code\':2} # closed account\n
 \n
 resource = payment_value.getPriceCurrencyValue()\n
@@ -159,7 +158,6 @@ return {\'error_code\':0, \'balance\':account_balance} # ok\n
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>payment_value</string>
-                            <string>payment_state</string>
                             <string>resource</string>
                             <string>None</string>
                             <string>AttributeError</string>
