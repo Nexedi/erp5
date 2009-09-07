@@ -548,15 +548,24 @@ class ERP5TypeTestCase(PortalTestCase):
         if rule.getValidationState() != 'validated':
           rule.validate()
 
-    def tic(self):
+    def tic(self, verbose=0):
       """
       Start all messages
       """
       portal_activities = getattr(self.getPortal(),'portal_activities',None)
       if portal_activities is not None:
+        if verbose:
+          ZopeTestCase._print('Executing pending activities ...')
+          old_message_count = 0
+          start = time.time()
         count = 1000
-        while len(portal_activities.getMessageList()) > 0:
+        message_count = len(portal_activities.getMessageList())
+        while message_count:
+          if verbose and old_message_count != message_count:
+            ZopeTestCase._print(' %i' % message_count)
+            old_message_count = message_count
           portal_activities.process_timer(None, None)
+          message_count = len(portal_activities.getMessageList())
           # This prevents an infinite loop.
           count -= 1
           if count == 0:
@@ -580,6 +589,8 @@ class ERP5TypeTestCase(PortalTestCase):
           if count % 10 == 0:
             from Products.CMFActivity.Activity.Queue import VALIDATION_ERROR_DELAY
             portal_activities.timeShift(3 * VALIDATION_ERROR_DELAY)
+        if verbose:
+          ZopeTestCase._print(' done (%.3fs)\n' % (time.time() - start))
 
     def failIfDifferentSet(self, a, b, msg=""):
       if not msg:
@@ -754,30 +765,7 @@ class ERP5TypeTestCase(PortalTestCase):
               portal.portal_catalog.manage_hotReindexAll()
 
             transaction.commit()
-
-            portal_activities = getattr(portal, 'portal_activities', None)
-            if portal_activities is not None:
-              if not quiet:
-                ZopeTestCase._print('Executing pending activities ... ')
-              start = time.time()
-              count = 1000
-              message_count = len(portal_activities.getMessageList())
-              while message_count > 0:
-                portal_activities.process_timer(None, None)
-                new_message_count = len(portal_activities.getMessageList())
-                if new_message_count != message_count:
-                  if not quiet:
-                    ZopeTestCase._print('%i ' % (message_count, ))
-                  message_count = new_message_count
-                count -= 1
-                if count == 0:
-                  raise RuntimeError, \
-                  'tic is looping forever. These messages are pending: %r' % (
-                      [('/'.join(m.object_path), m.method_id,
-                       m.processing_node, m.priority)
-                       for m in portal_activities.getMessageList()],)
-              if not quiet:
-                ZopeTestCase._print('done (%.3fs)\n' % (time.time() - start))
+            self.tic(not quiet)
 
             # Reset aq dynamic, so all unit tests will start again
             _aq_reset()
