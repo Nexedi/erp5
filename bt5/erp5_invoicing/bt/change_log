@@ -1,3 +1,6 @@
+2009-09-07 yusuke
+* Replace ERP5Report to ERP5Form and ReportBox
+
 2009-09-01 yusuke
 * tax_category category is renamed to contribution_share category
 

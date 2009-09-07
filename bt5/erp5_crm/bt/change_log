@@ -1,3 +1,6 @@
+2009-09-07 yusuke
+* Replace ERP5Report to ERP5Form and ReportBox
+
 2009-08-19 tatuya
 * Fix listbox source_title column name for Ticket  from 'Handler' to 'Operations Manager'. In ticket, the word 'Handler ' is not used already.
 

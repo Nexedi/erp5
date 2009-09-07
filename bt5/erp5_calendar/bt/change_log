@@ -1,3 +1,6 @@
+2009-09-07 yusuke
+* Replace ERP5Report to ERP5Form and ReportBox
+
 2008-05-21 jerome
 Move PropertySheets defining constraints in ERP5 products. Property sheet names also changed a bit.
 

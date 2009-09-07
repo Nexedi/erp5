@@ -3,7 +3,7 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <global name="ERP5Report" module="Products.ERP5Form.Report"/>
+        <global name="ERP5Form" module="Products.ERP5Form.Form"/>
         <tuple/>
       </tuple>
     </pickle>
@@ -56,7 +56,10 @@
             <key> <string>group_list</string> </key>
             <value>
               <list>
-                <string>Default</string>
+                <string>left</string>
+                <string>right</string>
+                <string>center</string>
+                <string>bottom</string>
                 <string>hidden</string>
               </list>
             </value>
@@ -66,7 +69,27 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>Default</string> </key>
+                    <key> <string>bottom</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>center</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>hidden</string> </key>
+                    <value>
+                      <list>
+                        <string>your_reportbox</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>left</string> </key>
                     <value>
                       <list>
                         <string>your_at_date</string>
@@ -78,7 +101,7 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>hidden</string> </key>
+                    <key> <string>right</string> </key>
                     <value>
                       <list/>
                     </value>
@@ -101,10 +124,6 @@
         <item>
             <key> <string>pt</string> </key>
             <value> <string>report_view</string> </value>
-        </item>
-        <item>
-            <key> <string>report_method</string> </key>
-            <value> <string>SaleOpportunityModule_getSaleOpportunityDetailedReportSectionList</string> </value>
         </item>
         <item>
             <key> <string>row_length</string> </key>

@@ -3,7 +3,7 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <global name="ERP5Report" module="Products.ERP5Form.Report"/>
+        <global name="ERP5Form" module="Products.ERP5Form.Form"/>
         <tuple/>
       </tuple>
     </pickle>
@@ -41,6 +41,10 @@
             <value> <string></string> </value>
         </item>
         <item>
+            <key> <string>description</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
             <key> <string>encoding</string> </key>
             <value> <string>UTF-8</string> </value>
         </item>
@@ -52,8 +56,11 @@
             <key> <string>group_list</string> </key>
             <value>
               <list>
-                <string>Default</string>
-                <string>not_assigned</string>
+                <string>left</string>
+                <string>right</string>
+                <string>center</string>
+                <string>bottom</string>
+                <string>hidden</string>
               </list>
             </value>
         </item>
@@ -62,7 +69,27 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>Default</string> </key>
+                    <key> <string>bottom</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>center</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>hidden</string> </key>
+                    <value>
+                      <list>
+                        <string>your_reportbox</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>left</string> </key>
                     <value>
                       <list>
                         <string>from_date</string>
@@ -84,6 +111,12 @@
                       </list>
                     </value>
                 </item>
+                <item>
+                    <key> <string>right</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
               </dictionary>
             </value>
         </item>
@@ -102,10 +135,6 @@
         <item>
             <key> <string>pt</string> </key>
             <value> <string>report_view</string> </value>
-        </item>
-        <item>
-            <key> <string>report_method</string> </key>
-            <value> <string>AccountModule_getBankAccountsReportSectionList</string> </value>
         </item>
         <item>
             <key> <string>row_length</string> </key>

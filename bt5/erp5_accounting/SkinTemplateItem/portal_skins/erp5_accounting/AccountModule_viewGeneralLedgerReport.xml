@@ -3,7 +3,7 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <global name="ERP5Report" module="Products.ERP5Form.Report"/>
+        <global name="ERP5Form" module="Products.ERP5Form.Form"/>
         <tuple/>
       </tuple>
     </pickle>
@@ -41,6 +41,10 @@
             <value> <string></string> </value>
         </item>
         <item>
+            <key> <string>description</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
             <key> <string>encoding</string> </key>
             <value> <string>UTF-8</string> </value>
         </item>
@@ -52,9 +56,11 @@
             <key> <string>group_list</string> </key>
             <value>
               <list>
-                <string>panel1</string>
-                <string>panel2</string>
-                <string>panel3</string>
+                <string>left</string>
+                <string>right</string>
+                <string>center</string>
+                <string>bottom</string>
+                <string>hidden</string>
               </list>
             </value>
         </item>
@@ -62,6 +68,39 @@
             <key> <string>groups</string> </key>
             <value>
               <dictionary>
+                <item>
+                    <key> <string>bottom</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>center</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>hidden</string> </key>
+                    <value>
+                      <list>
+                        <string>your_reportbox</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>left</string> </key>
+                    <value>
+                      <list>
+                        <string>your_at_date</string>
+                        <string>your_from_date</string>
+                        <string>your_gap</string>
+                        <string>your_gap_root</string>
+                        <string>your_section_category</string>
+                        <string>your_simulation_state</string>
+                      </list>
+                    </value>
+                </item>
                 <item>
                     <key> <string>panel1</string> </key>
                     <value>
@@ -87,6 +126,12 @@
                       <list/>
                     </value>
                 </item>
+                <item>
+                    <key> <string>right</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
               </dictionary>
             </value>
         </item>
@@ -105,10 +150,6 @@
         <item>
             <key> <string>pt</string> </key>
             <value> <string>report_view</string> </value>
-        </item>
-        <item>
-            <key> <string>report_method</string> </key>
-            <value> <string>AccountModule_getGeneralLedgerReportSectionList</string> </value>
         </item>
         <item>
             <key> <string>row_length</string> </key>
