@@ -273,7 +273,7 @@ class WebSection(Domain, PermanentURLMixIn):
       if cache is not None:
         cache[key] = result
 
-      if result is not None:
+      if result is not None and not kw.get('src__', 0):
         result = [doc.__of__(self) for doc in result]
 
       return result
