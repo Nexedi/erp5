@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 20049 Nexedi SA and Contributors. All Rights Reserved.
+# Copyright (c) 2009 Nexedi SA and Contributors. All Rights Reserved.
 #          Nicolas Delaby <nicolas@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
