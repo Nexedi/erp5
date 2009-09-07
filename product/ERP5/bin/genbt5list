@@ -1,4 +1,4 @@
-#! /usr/bin/python2.5
+#! /usr/bin/python
 ##############################################################################
 #
 # Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
@@ -103,6 +103,10 @@ def generateInformation(fd):
   os.write(fd, '</repository>\n')
 
 def main():
+  if sys.version < '2.5':
+    print "Python 2.4's tarfile.py has a bug that causes a broken bt5list."
+    print "Please use Python 2.5 or later for this script."
+    sys.exit(1)
   if len(sys.argv) < 2:
     dir_list = ['.']
   else:
@@ -122,6 +126,9 @@ def main():
       raise
     else:
       shutil.move(path, 'bt5list')
+      cur_umask = os.umask(0666)
+      os.chmod('bt5list', 0666 - cur_umask)
+      os.umask(cur_umask)
     os.chdir(cwd)
 
 main()
