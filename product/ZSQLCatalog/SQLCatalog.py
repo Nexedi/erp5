@@ -1313,9 +1313,8 @@ class Catalog(Folder,
       elif check_uid:
         uid = object.uid
         if uid in assigned_uid_dict:
-          raise ValueError('uid of %r is %r and \
-              is already assigned to %s in catalog !!! This can be fatal. You \
-              should reindex the whole site immediately.' % \
+          raise ValueError('uid of %r is %r and '
+              'is already assigned to %s in catalog !!! This can be fatal.' %
               (object, uid, assigned_uid_dict[uid]))
 
         path = object.getPath()
@@ -1329,9 +1328,8 @@ class Catalog(Folder,
             raise CatalogError, 'A negative uid %d is used for %s. Your catalog is broken. Recreate your catalog.' % (index, path)
           if uid != index or isinstance(uid, int):
             # We want to make sure that uid becomes long if it is an int
-            raise ValueError('uid of %r changed from %r (property) to %r \
-                (catalog, by path) !!! This can be fatal. You should reindex \
-                the whole site immediately.' % (object, uid, index))
+            raise ValueError('uid of %r changed from %r (property) to %r '
+                '(catalog, by path) !!! This can be fatal' % (object, uid, index))
         else:
           # Make sure no duplicates - ie. if an object with different path has same uid, we need a new uid
           # This can be very dangerous with relations stored in a category table (CMFCategory)
@@ -1369,10 +1367,11 @@ class Catalog(Folder,
               LOG('SQLCatalog', ERROR, 'path of object %r is too long for catalog. You should use a shorter path.' %(object,))
 
             LOG('SQLCatalog', ERROR,
-                'uid of %r changed from %r to %r as old one is assigned to %s in catalog !!! This can be fatal. You should reindex the whole site immediately.' % (object, uid, object.uid, catalog_path))
-            raise ValueError('uid of %r is %r  and \
-                is already assigned to %s in catalog !!! This can be fatal. You \
-                should reindex the whole site immediately.' % \
+                'uid of %r changed from %r to %r as old one is assigned'
+                ' to %s in catalog !!! This can be fatal.' % (
+                  object, uid, object.uid, catalog_path))
+            raise ValueError('uid of %r is %r and '
+                'is already assigned to %s in catalog !!! This can be fatal.' %
                 (object, uid, catalog_path))
             uid = object.uid
 
