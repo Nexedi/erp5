@@ -73,7 +73,8 @@ result.append(\n
     form_id=\'%s_view\' % class_name,\n
     param_list=[class_name,\n
                 uri],\n
-    #listbox_display_mode=\'FlatListMode\'\n
+    #listbox_display_mode=\'FlatListMode\',\n
+    temporary_selection=False,\n
     )\n
 )\n
 return result\n
@@ -122,6 +123,7 @@ return result\n
                             <string>None</string>
                             <string>uri</string>
                             <string>class_name</string>
+                            <string>False</string>
                           </tuple>
                         </value>
                     </item>
