@@ -3,21 +3,12 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.ERP5Form.Report</string>
-          <string>ERP5Report</string>
-        </tuple>
-        <none/>
+        <global name="ERP5Form" module="Products.ERP5Form.Form"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
       <dictionary>
-        <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
         <item>
             <key> <string>_bind_names</string> </key>
             <value>
@@ -50,6 +41,10 @@
             <value> <string></string> </value>
         </item>
         <item>
+            <key> <string>description</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
             <key> <string>encoding</string> </key>
             <value> <string>UTF-8</string> </value>
         </item>
@@ -61,7 +56,11 @@
             <key> <string>group_list</string> </key>
             <value>
               <list>
-                <string>Default</string>
+                <string>left</string>
+                <string>right</string>
+                <string>center</string>
+                <string>bottom</string>
+                <string>hidden</string>
               </list>
             </value>
         </item>
@@ -70,7 +69,27 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>Default</string> </key>
+                    <key> <string>bottom</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>center</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>hidden</string> </key>
+                    <value>
+                      <list>
+                        <string>your_reportbox</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>left</string> </key>
                     <value>
                       <list>
                         <string>from_date</string>
@@ -78,6 +97,12 @@
                         <string>transaction_section_category</string>
                         <string>transaction_simulation_state</string>
                       </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>right</string> </key>
+                    <value>
+                      <list/>
                     </value>
                 </item>
               </dictionary>
@@ -98,10 +123,6 @@
         <item>
             <key> <string>pt</string> </key>
             <value> <string>report_view</string> </value>
-        </item>
-        <item>
-            <key> <string>report_method</string> </key>
-            <value> <string>AccountModule_getTrialBalanceReportSectionList</string> </value>
         </item>
         <item>
             <key> <string>row_length</string> </key>

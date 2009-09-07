@@ -1,3 +1,6 @@
+2009-09-07 yusuke
+* Replace ERP5Report to ERP5Form and ReportBox
+
 ** 2006-07-17 by fab
 ADD: Sample Profit and Loss report + fixes
 
