@@ -119,9 +119,9 @@ for paysheet_line in paysheet_line_list:\n
 \n
     base = cell.getQuantity()\n
 \n
-    share_dict[cell.getContributionShare()+\'_price\'] = cell.getPrice()\n
-    share_dict[cell.getContributionShare()+\'_quantity\'] = cell.getQuantity()\n
-    share_dict[cell.getContributionShare()+\'_total_price\'] = \\\n
+    share_dict[cell.getContributionShare()+\'_share_price\'] = cell.getPrice()\n
+    share_dict[cell.getContributionShare()+\'_share_quantity\'] = cell.getQuantity()\n
+    share_dict[cell.getContributionShare()+\'_share_total_price\'] = \\\n
                     round(cell.getTotalPrice(), precision)\n
 \n
     tuple_dict = {}\n
