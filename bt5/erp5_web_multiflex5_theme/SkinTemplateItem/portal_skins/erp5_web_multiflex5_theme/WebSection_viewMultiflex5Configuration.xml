@@ -138,6 +138,7 @@
                         <string>my_layout_news_area_section_id</string>
                         <string>my_layout_sitemap_section_id</string>
                         <string>my_layout_sitemap_depth</string>
+                        <string>my_layout_related</string>
                       </list>
                     </value>
                 </item>

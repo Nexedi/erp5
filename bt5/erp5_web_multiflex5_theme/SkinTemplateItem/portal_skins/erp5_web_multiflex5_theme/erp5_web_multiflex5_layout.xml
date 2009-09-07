@@ -69,6 +69,7 @@
                 <string>footer</string>
                 <string>subcontent subcontent-box (Subsections)</string>
                 <string>subcontent subcontent-box sidemenu3 (News)</string>
+                <string>subcontent subcontent-box sidemenu2 (Related Documents)</string>
                 <string>web-toolbar (Toolbar)</string>
               </list>
             </value>
@@ -126,6 +127,14 @@
                     <value>
                       <list>
                         <string>subsection_list</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>subcontent subcontent-box sidemenu2 (Related Documents)</string> </key>
+                    <value>
+                      <list>
+                        <string>relation_box</string>
                       </list>
                     </value>
                 </item>

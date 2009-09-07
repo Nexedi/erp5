@@ -69,7 +69,7 @@
                 <string>footer</string>
                 <string>subcontent subcontent-box (Subsections)</string>
                 <string>subcontent subcontent-box sidemenu3 (News)</string>
-                <string>subcontent subcontent-box adminToolbox (Toolbox)</string>
+                <string>subcontent subcontent-box sidemenu2 (Related Documents)</string>
                 <string>subcontent subcontent-box sidemenu1 (4-01a. Side menu 1)</string>
                 <string>subcontent subcontent-box sidemenu2 (4-01b. Side menu 2)</string>
                 <string>subcontent subcontent-box sidemenu3 (4-01c. Side menu 3)</string>
@@ -88,6 +88,7 @@
                 <string>subcontent subcontent-box documentbox (4-13b. Document)</string>
                 <string>subcontent subcontent-box blogbox (4-13c. Blog)</string>
                 <string>subcontent subcontent-box forumbox (4.13d Forum)</string>
+                <string>web-toolbar (Toolbar)</string>
               </list>
             </value>
         </item>
@@ -145,14 +146,6 @@
                     <value>
                       <list>
                         <string>subsection_list</string>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>subcontent subcontent-box adminToolbox (Toolbox)</string> </key>
-                    <value>
-                      <list>
-                        <string>toolbar</string>
                       </list>
                     </value>
                 </item>
@@ -269,6 +262,14 @@
                     </value>
                 </item>
                 <item>
+                    <key> <string>subcontent subcontent-box sidemenu2 (Related Documents)</string> </key>
+                    <value>
+                      <list>
+                        <string>relation_box</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
                     <key> <string>subcontent subcontent-box sidemenu3 (4-01c. Side menu 3)</string> </key>
                     <value>
                       <list>
@@ -305,6 +306,14 @@
                     <value>
                       <list>
                         <string>web_template_box</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>web-toolbar (Toolbar)</string> </key>
+                    <value>
+                      <list>
+                        <string>toolbar</string>
                       </list>
                     </value>
                 </item>
