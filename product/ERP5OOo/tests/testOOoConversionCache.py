@@ -37,6 +37,7 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import FileUpload
 from Products.ERP5Type.tests.utils import DummyLocalizer
 from AccessControl.SecurityManagement import newSecurityManager
+from Products.ERP5Type.Cache import DEFAULT_CACHE_SCOPE
 from zLOG import LOG
 import os
 
@@ -281,6 +282,55 @@ class TestDocumentConversionCache(ERP5TypeTestCase, ZopeTestCase.Functional):
       document.convert(format=format)
       self.assertTrue(document.hasConversion(format=format), 'Cache Storage failed for %s' % (format))
       self.assertTrue(document.getConversionSize(format=format))
+
+  def test_05_checksum_conversion(self):
+    """
+      Test Conversion Cache return expected value with checksum
+    """
+    print '\nCheck checksum in Conversion'
+    filename = 'TEST-en-002.doc'
+    file = makeFileUpload(filename)
+    document = self.portal.portal_contributions.newContent(file=file)
+    transaction.commit()
+    self.tic()
+    document_url = document.getRelativeUrl()
+    document = self.portal.restrictedTraverse(document_url)
+    kw = {'format': 'html'}
+    #Generate one conversion
+    document.convert(**kw)
+    cache_id = document.generateCacheId(**kw)
+    cache_factory = document._getCacheFactory()
+    for cache_plugin in cache_factory.getCachePluginList():
+      cache_entry = cache_plugin.get(document.getPath(), DEFAULT_CACHE_SCOPE)
+      value = cache_entry.getValue()
+      md5sum, mime, data = value.get(cache_id)
+      #get data from cache
+      self.assertTrue(md5sum)
+      self.assertTrue(mime)
+      self.assertTrue(data)
+      #Change md5 manually
+      value.update({cache_id: ('Anything which is not md5', mime, data)})
+      cache_plugin.set(document.getPath(), DEFAULT_CACHE_SCOPE, value, 0, 0)
+    self.assertRaises(KeyError, document.getConversion, format='html')
+
+  def test_06_check_md5_is_updated(self):
+    """
+    Check that md5 checksum is well updated when upload a file
+    """
+    print '\nCheck checksum is updated'
+    filename = 'TEST-en-002.doc'
+    file = makeFileUpload(filename)
+    document = self.portal.portal_contributions.newContent(file=file)
+    transaction.commit()
+    self.tic()
+    document_url = document.getRelativeUrl()
+    document = self.portal.restrictedTraverse(document_url)
+    md5sum = document.getContentMd5()
+    self.assertTrue(md5sum)
+    filename2 = 'TEST-en-002.odt'
+    file2 = makeFileUpload(filename2)
+    document.edit(file=file2)
+    self.assertNotEqual(md5sum, document.getContentMd5())
 
 def test_suite():
   suite = unittest.TestSuite()
