@@ -144,7 +144,6 @@ class TestERP5BankingCashMovementNewNotEmitted(TestERP5BankingMonetaryReceptionM
     self.assertEqual(self.cash_movement.getPortalType(), 'Cash Movement New Not Emitted')
     self.assertEqual(self.cash_movement.getDestinationSection(), 'site/testsite/madrid')
     self.assertEqual(self.cash_movement.getBaobabSource(), 'site/testsite/paris/caveau/serre/encaisse_des_billets_neufs_non_emis_en_transit_allant_a/madrid')
-    self.assertEqual(self.cash_movement.getBaobabDestination(), 'site/testsite/madrid/caveau/serre/encaisse_des_billets_neufs_non_emis')
     self.setDocumentSourceReference(self.cash_movement)
 
 
@@ -190,6 +189,7 @@ class TestERP5BankingCashMovementNewNotEmitted(TestERP5BankingMonetaryReceptionM
 
     self.stepTic()
     self.assertEqual(len(self.cash_movement.objectValues()), 3)
+    self.assertEqual(self.cash_movement.getBaobabDestination(), 'site/testsite/madrid/caveau/serre/encaisse_des_billets_neufs_non_emis')
 
   def stepStopDocument(self, sequence=None, sequence_list=None, **kwd):
     """
