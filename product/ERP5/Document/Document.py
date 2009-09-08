@@ -55,6 +55,7 @@ import zope.interface
 import cStringIO
 import string
 from OFS.Image import Pdata
+import md5
 
 _MARKER = []
 VALID_ORDER_KEY_LIST = ('user_login', 'content', 'file_name', 'input')
@@ -199,7 +200,7 @@ class ConversionCacheMixin:
           cache_dict = cache_entry.getValue()
         except KeyError:
           cache_dict = {}
-        cache_dict.update({cache_id: (mime, aq_base(data))})
+        cache_dict.update({cache_id: (self.getContentMd5(), mime, aq_base(data))})
         cache_plugin.set(self.getPath(), DEFAULT_CACHE_SCOPE,
                          cache_dict, calculation_time=calculation_time,
                          cache_duration=cache_duration)
@@ -213,9 +214,13 @@ class ConversionCacheMixin:
       return getattr(aq_base(self), 'temp_conversion_data', {})[cache_id]
     for cache_plugin in self._getCacheFactory().getCachePluginList():
       cache_entry = cache_plugin.get(self.getPath(), DEFAULT_CACHE_SCOPE)
-      data = cache_entry.getValue().get(cache_id)
-      if data:
-        return data
+      data_list = cache_entry.getValue().get(cache_id)
+      if data_list:
+        md5sum, mime, data = data_list
+        if md5sum != self.getContentMd5():
+          raise KeyError, 'Conversion cache key is compromised for %r' % cache_id
+        if data:
+          return mime, data
     raise KeyError, 'Conversion cache key does not exists for %r' % cache_id
 
   security.declareProtected(Permissions.View, 'getConversionSize')
@@ -232,6 +237,10 @@ class ConversionCacheMixin:
     Function inspired from ERP5Type.Cache
     """
     return str(makeSortedTuple(kw)).translate(string.maketrans('', ''), '[]()<>\'", ')
+
+  def updateContentMd5(self):
+    data = self.getData()
+    self._setContentMd5(md5.new(data).digest()) #reindex is useless
 
 class PermanentURLMixIn(ExtensibleTraversableMixIn):
   """
