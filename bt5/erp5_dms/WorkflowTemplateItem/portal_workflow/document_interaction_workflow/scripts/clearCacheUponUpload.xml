@@ -53,10 +53,10 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>ob = state_change[\'object\']\n
+            <value> <string>document = state_change[\'object\']\n
 # if file uploaded, then:\n
-if hasattr(ob, \'clearConversionCache\'): # e.g. File doesn\'t have it\n
-  ob.clearConversionCache()\n
+if getattr(document, \'clearConversionCache\', None) is not None: # e.g. File doesn\'t have it\n
+  document.clearConversionCache()\n
 </string> </value>
         </item>
         <item>
@@ -95,8 +95,9 @@ if hasattr(ob, \'clearConversionCache\'): # e.g. File doesn\'t have it\n
                           <tuple>
                             <string>state_change</string>
                             <string>_getitem_</string>
-                            <string>ob</string>
-                            <string>hasattr</string>
+                            <string>document</string>
+                            <string>getattr</string>
+                            <string>None</string>
                             <string>_getattr_</string>
                           </tuple>
                         </value>
