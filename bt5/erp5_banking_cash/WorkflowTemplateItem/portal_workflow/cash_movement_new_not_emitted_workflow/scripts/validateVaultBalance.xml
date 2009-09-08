@@ -85,6 +85,13 @@ transaction.log(\'vliste\', vliste)\n
 if len(vliste) != 0:\n
   raise ValidationFailed, (vliste[0].getMessage(),)\n
 \n
+portal_type_with_no_space = transaction.getPortalType().replace(\' \',\'\')\n
+check_path_script = getattr(transaction,\'%s_checkPath\' % portal_type_with_no_space,None)\n
+if check_path_script is not None:\n
+  message = check_path_script()\n
+  if message is not None:\n
+    raise ValidationFailed, (message,)\n
+\n
 resource = transaction.CashDelivery_checkCounterInventory(source=vault, portal_type=\'Cash Movement New Not Emitted Line\')\n
 \n
 \n
@@ -157,6 +164,11 @@ elif resource <> 0 :\n
                             <string>vaultDestination</string>
                             <string>vliste</string>
                             <string>len</string>
+                            <string>portal_type_with_no_space</string>
+                            <string>getattr</string>
+                            <string>None</string>
+                            <string>check_path_script</string>
+                            <string>message</string>
                             <string>resource</string>
                             <string>amount</string>
                             <string>total_price</string>
