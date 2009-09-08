@@ -928,8 +928,15 @@ class ERP5ReportTestCase(ERP5TypeTestCase):
   def getReportSectionList(self, context, report_name):
     """Get the list of report sections in a report called on context."""
     report = getattr(context, report_name)
-    report_method = getattr(context, report.report_method)
-    return report_method()
+    if hasattr(report, 'report_method'):
+      report_method = getattr(context, report.report_method)
+      return report_method()
+    else:
+      report_item_list = []
+      for reportbox in [field for field in report.get_fields()
+                        if field.getRecursiveTemplateField().meta_type == 'ReportBox']:
+        report_item_list.extend(reportbox.render())
+      return report_item_list
 
   def getListBoxLineList(self, report_section):
     """Render the listbox in a report section, return None if no listbox exists
