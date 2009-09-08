@@ -1,3 +1,6 @@
+2009-09-08 Nicolas
+* update content_md5 when upload a new file
+
 2009-08-25 Kazuhiko
 * add File_viewEditor for text/* documents.
 

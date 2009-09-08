@@ -32,8 +32,15 @@
             <value>
               <list>
                 <string>clearCacheUponUpload</string>
+                <string>updateContentMd5</string>
                 <string>upload</string>
               </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>before_commit_script_name</string> </key>
+            <value>
+              <tuple/>
             </value>
         </item>
         <item>
@@ -57,6 +64,10 @@
                 <string>_setFile</string>
               </list>
             </value>
+        </item>
+        <item>
+            <key> <string>once_per_transaction</string> </key>
+            <value> <int>0</int> </value>
         </item>
         <item>
             <key> <string>portal_type_filter</string> </key>
