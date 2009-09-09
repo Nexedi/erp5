@@ -110,26 +110,26 @@
             <key> <string>expandable_property</string> </key>
             <value>
               <tuple>
-                <string>delivery_mode</string>
-                <string>incoterm</string>
-                <string>source</string>
-                <string>destination</string>
-                <string>source_section</string>
-                <string>destination_section</string>
-                <string>source_decision</string>
-                <string>destination_decision</string>
-                <string>source_administration</string>
-                <string>destination_administration</string>
-                <string>price_currency</string>
-                <string>resource</string>
-                <string>aggregate</string>
-                <string>source_function</string>
-                <string>destination_function</string>
-                <string>source_account</string>
-                <string>destination_account</string>
+                <string>aggregate_list</string>
+                <string>delivery_mode_list</string>
                 <string>description</string>
-                <string>destination_payment</string>
-                <string>source_payment</string>
+                <string>destination_account_list</string>
+                <string>destination_administration_list</string>
+                <string>destination_decision_list</string>
+                <string>destination_function_list</string>
+                <string>destination_list</string>
+                <string>destination_payment_list</string>
+                <string>destination_section_list</string>
+                <string>incoterm_list</string>
+                <string>price_currency_list</string>
+                <string>resource_list</string>
+                <string>source_account_list</string>
+                <string>source_administration_list</string>
+                <string>source_decision_list</string>
+                <string>source_function_list</string>
+                <string>source_list</string>
+                <string>source_payment_list</string>
+                <string>source_section_list</string>
               </tuple>
             </value>
         </item>
