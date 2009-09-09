@@ -102,7 +102,6 @@ class TestBPMEvaluationMixin(TestBPMMixin):
       matching_property = ('resource_list', 'variation_category_list',
         'variation_property_dict')
     )
-    # TODO: version
     edit_dict.update(**kw)
     rule = self.rule_tool.newContent(**edit_dict)
     rule.newContent(portal_type='Category Divergence Tester',
@@ -135,7 +134,6 @@ class TestBPMEvaluationMixin(TestBPMMixin):
     transaction.commit()
 
   def _createTradeModelRule(self):
-    # TODO: version
     edit_dict = {}
     edit_dict.update(
     )
@@ -187,7 +185,6 @@ class TestBPMEvaluationMixin(TestBPMMixin):
     transaction.commit()
 
   def _createInvoicingRule(self):
-    # TODO: version
     edit_dict = {}
     edit_dict.update(
     )
