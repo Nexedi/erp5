@@ -1,3 +1,6 @@
+2009-09-09 yusei
+* Fix list view of packing list modules and supply modules and use countFolder method to count result.
+
 2009-09-07 yusuke
 * Replace ERP5Report to ERP5Form and ReportBox
 
