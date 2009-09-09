@@ -91,8 +91,20 @@
             </value>
         </item>
         <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
             <key> <string>default_reference</string> </key>
             <value> <string>default_trade_model_rule</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>expandable_property</string> </key>
@@ -128,6 +140,14 @@
         <item>
             <key> <string>last_id</string> </key>
             <value> <string>3</string> </value>
+        </item>
+        <item>
+            <key> <string>matching_property</string> </key>
+            <value>
+              <tuple>
+                <string>reference</string>
+              </tuple>
+            </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
