@@ -29,18 +29,15 @@
 
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
-from Products.ERP5.Document.TransformationRule import TransformationRule
 
 from Products.ERP5.Document.Rule import Rule
 
-class TradeModelRule(TransformationRule):
+class TradeModelRule(Rule):
   """
     Rule for Trade Model
   """
   # TODO:
-  #  * reuse Rule methods
-  #  * remove duplicated code
-  #  * use matching_property_list (needs update of rules instance)
+  #  * override overrideable helpers
   #  * more usage of Business Process (remove 'if 0' conditions)
 
   # CMF Type Definition
@@ -53,6 +50,9 @@ class TradeModelRule(TransformationRule):
   # Declarative security
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
+
+  def _isBPM(self):
+    return True
 
   def _getMovementDictByBusinessPath(self, movement, business_path_list):
     """Sets Business Path's provided values"""
@@ -140,36 +140,3 @@ class TradeModelRule(TransformationRule):
       movement_list.append(movement_kw)
 
     return movement_list
-
-  security.declareProtected(Permissions.ModifyPortalContent, 'expand')
-  def expand(self, applied_rule, force=0, **kw):
-    """Expands XXX COPY & PASTE OF InvoicingRule.expand"""
-    parent_movement = applied_rule.getParentValue()
-    if parent_movement is not None:
-      if not parent_movement.isFrozen():
-        # XXX This will change, as soon as frozen will no longer be an expand
-        # stopper
-
-        # for now reference is used to compare movements, but as soon as Trade
-        # Models will create more than one movement magic have to be added -
-        # reference on movement have to be properly composed
-        add_list, modify_dict, \
-          delete_list = self._getCompensatedMovementList(applied_rule,
-              matching_property_list = ('reference',), **kw)
-        for movement_id in delete_list:
-          applied_rule._delObject(movement_id)
-
-        for movement, prop_dict in modify_dict.items():
-          applied_rule[movement].edit(**prop_dict)
-
-        for movement_dict in add_list:
-          if 'id' in movement_dict.keys():
-            mvmt_id = applied_rule._get_id(movement_dict.pop('id'))
-            new_mvmt = applied_rule.newContent(id=mvmt_id,
-                portal_type=self.movement_type)
-          else:
-            new_mvmt = applied_rule.newContent(portal_type=self.movement_type)
-          new_mvmt.edit(**movement_dict)
-
-    # Pass to base class
-    Rule.expand(self, applied_rule, force=force, **kw)
