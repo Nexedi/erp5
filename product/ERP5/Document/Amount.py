@@ -234,6 +234,7 @@ class Amount(Base, Variated):
     resource = self.getResourceValue()
     if resource is None:
       return []
+    kw['omit_individual_variation'] = 0
     return resource.getVariationCategoryItemList(*args, **kw)
 
   security.declareProtected(Permissions.AccessContentsInformation, \
