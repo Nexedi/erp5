@@ -170,8 +170,8 @@ class TestBPMEvaluationMixin(TestBPMMixin):
     transaction.commit()
 
   def _createInvoiceRule(self):
-    # XXX: This is not needed, but invoices, even if built from simulation
-    #      need those rule to create empty one
+    # Note: This is not used, but invoices, even if built from simulation,
+    #       need those rule to create empty one applied rule
     rule_tool = self.portal.portal_rules
 
     clipboard = rule_tool.manage_copyObjects(ids = ['default_invoice_rule'])
