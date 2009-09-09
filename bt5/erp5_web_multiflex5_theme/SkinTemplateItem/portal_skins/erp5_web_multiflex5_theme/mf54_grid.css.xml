@@ -294,10 +294,13 @@ fieldset.widget legend {\n
   display: none;        /* Do not display legends on widgets */\n
 }\n
 \n
-fieldset.widget > div.field > label {\n
+fieldset.widget div.field label {\n
   display: none;        /* Do not display labels on the right side */\n
 }\n
 \n
+fieldset.widget div.field div.input label {\n
+  display: block;\n
+}\n
 \n
 /* HEADING - Special icon */\n
 div.subcontent-box.sidemenu1 h1.group_title {background: url(<tal:block tal:replace="site_url"/>/mf54_image/icon_celltitle_menu.gif) no-repeat; background-position:225px 5px;}\n
