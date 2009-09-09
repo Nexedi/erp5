@@ -90,10 +90,6 @@ div.web-toolbar select {\n
   max-width: 15em;\n
 }\n
 \n
-div.web-toolbar.field label {\n
-  display: none!important;\n
-}\n
-\n
 div.web-toolbar div.hiddenLabel label {\n
   display: none!important;\n
 }\n
