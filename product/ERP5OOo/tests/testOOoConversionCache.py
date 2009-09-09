@@ -50,7 +50,7 @@ REFERENCE_REGULAR_EXPRESSION = "(?P<reference>[A-Z]{3,10})(-(?P<language>[a-z]{2
 
 
 def makeFilePath(name):
-  return os.getenv('INSTANCE_HOME') + '/../Products/ERP5OOo/tests/test_document/' + name
+  return os.path.join(os.path.dirname(__file__), 'test_document', name)
 
 def makeFileUpload(name, as_name=None):
   if as_name is None:
