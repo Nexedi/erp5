@@ -135,7 +135,10 @@ class DeliveryRule(Rule):
               price_currency=deliv_mvt.getPriceCurrency(),
               base_contribution_list=deliv_mvt.getBaseContributionList(),
               base_application_list=deliv_mvt.getBaseApplicationList(),
+              description=deliv_mvt.getDescription(),
           )
+          if deliv_mvt.hasTitle():
+            new_sim_mvt.setTitle(deliv_mvt.getTitle())
         elif sim_mvt in existing_movement_list:
           if sim_mvt not in immutable_movement_list:
             # modification allowed
@@ -167,7 +170,10 @@ class DeliveryRule(Rule):
                 price_currency=deliv_mvt.getPriceCurrency(),
                 base_contribution_list=deliv_mvt.getBaseContributionList(),
                 base_application_list=deliv_mvt.getBaseApplicationList(),
+                description=deliv_mvt.getDescription(),
                 force_update=1)
+            if deliv_mvt.hasTitle():
+              sim_mvt.setTitle(deliv_mvt.getTitle())
           else:
             # modification disallowed, must compensate
             pass
