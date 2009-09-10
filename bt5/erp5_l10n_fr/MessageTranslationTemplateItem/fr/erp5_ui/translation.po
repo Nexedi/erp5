@@ -5452,6 +5452,9 @@ msgstr "La connexion a échoué."
 msgid "Login success"
 msgstr "Connexion réussie"
 
+msgid "Logout"
+msgstr "Déconnexion"
+
 msgid "Long Title"
 msgstr "Titre long"
 
