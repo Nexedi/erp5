@@ -50,10 +50,10 @@ class Invoice(AccountingTransaction):
                       , PropertySheet.CategoryCore
                       , PropertySheet.DublinCore
                       , PropertySheet.Delivery
+                      , PropertySheet.Order
                       , PropertySheet.Task
                       , PropertySheet.Arrow
                       , PropertySheet.Movement
-                      , PropertySheet.Amount
                       , PropertySheet.Reference
                       , PropertySheet.TradeCondition
                       , PropertySheet.Folder

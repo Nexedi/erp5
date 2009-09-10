@@ -61,7 +61,7 @@ class AccountingTransaction(Delivery):
                       , PropertySheet.Arrow
                       , PropertySheet.Movement
                       , PropertySheet.Delivery
-                      , PropertySheet.Amount
+                      , PropertySheet.Order
                       , PropertySheet.Reference
                       , PropertySheet.Comment
                       , PropertySheet.PaymentCondition
