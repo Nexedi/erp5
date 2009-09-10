@@ -238,7 +238,10 @@ class ConversionCacheMixin:
     """
     return str(makeSortedTuple(kw)).translate(string.maketrans('', ''), '[]()<>\'", ')
 
+  security.declareProtected(Permissions.ModifyPortalContent, 'updateContentMd5')
   def updateContentMd5(self):
+    """Update md5 checksum from the original file
+    """
     data = self.getData()
     self._setContentMd5(md5.new(data).digest()) #reindex is useless
 
