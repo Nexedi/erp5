@@ -55,7 +55,6 @@ class PaySheetTransaction(Invoice):
                     , PropertySheet.Task
                     , PropertySheet.Arrow
                     , PropertySheet.Delivery
-                    , PropertySheet.PaySheet
                     , PropertySheet.Movement
                     , PropertySheet.Amount
                     , PropertySheet.XMLObject
