@@ -127,7 +127,7 @@ def main():
     else:
       shutil.move(path, 'bt5list')
       cur_umask = os.umask(0666)
-      os.chmod('bt5list', 0666 & cur_umask)
+      os.chmod('bt5list', 0666 & ~cur_umask)
       os.umask(cur_umask)
     os.chdir(cwd)
 
