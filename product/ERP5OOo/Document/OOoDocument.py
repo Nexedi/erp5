@@ -388,7 +388,13 @@ class OOoDocument(PermanentURLMixIn, File, ConversionCacheMixin):
       if 'enc.txt' in format_list:
         format = 'enc.txt'
       elif format not in format_list:
-        return self.asTextContent()
+        #Text conversion is not supported by oood, do it in other way
+        if not self.hasConversion(format=original_format):
+          #Do real conversion for text
+          mime, data = self._convert(format='text-content')
+          self.setConversion(data, mime, format=original_format)
+          return mime, data
+        return self.getConversion(format=original_format)
     # Raise an error if the format is not supported
     if not self.isTargetFormatAllowed(format):
       raise ConversionError("OOoDocument: target format %s is not supported" % format)
@@ -463,7 +469,11 @@ class OOoDocument(PermanentURLMixIn, File, ConversionCacheMixin):
       This is the simplest way, the most universal and it is compatible
       will all formats.
     """
-    return self._convert(format='text-content')
+    if not self.hasConversion(format='txt'):
+      mime, data = self._convert(format='text-content')
+      self.setConversion(data, mime, format='txt')
+      return mime, data
+    return self.getConversion(format='txt')
 
   security.declareProtected(Permissions.ModifyPortalContent,
                             '_populateConversionCacheWithHTML')
