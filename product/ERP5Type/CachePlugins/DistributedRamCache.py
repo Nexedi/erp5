@@ -79,7 +79,10 @@ class DistributedRamCache(BaseCache):
 
     memcache_conn = connection_pool.get(thread_id, None)
     if memcache_conn is not None:
-      stats = memcache_conn.get_stats()
+      try:
+        stats = memcache_conn.get_stats()
+      except IndexError:
+        stats = ()
       if not len(stats) or not len(stats[0][1]):
         # create a new connection if the existing connection seems
         # dead.
