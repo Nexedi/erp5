@@ -100,8 +100,8 @@
                         <string>my_visible</string>
                         <string>my_default_page_displayed</string>
                         <string>my_authorization_forced</string>
-                        <string>my_site_map_document_parent</string>
                         <string>my_site_map_section_parent</string>
+                        <string>my_site_map_document_parent</string>
                       </list>
                     </value>
                 </item>
