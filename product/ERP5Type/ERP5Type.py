@@ -471,8 +471,9 @@ class ERP5TypeInformationMixIn( FactoryTypeInformation,
 
       # Fill it with explicit local roles defined as subobjects of current
       # object
-      if getattr(aq_base(ob), 'isPrincipiaFolderish', 0):
-        for roledef in ob.objectValues(spec = 'ERP5 Role Definition'):
+      if getattr(aq_base(ob), 'isPrincipiaFolderish', 0) and \
+         self.allowType('Role Definition'):
+        for roledef in ob.objectValues(portal_type='Role Definition'):
           if roledef.getRoleName():
             role_category_list_dict.setdefault(roledef.getRoleName(), []).append(
                             {
