@@ -13,11 +13,12 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
+                <string>all_columns</string>
                 <string>columns</string>
-                <string>selection_name</string>
-                <string>portal_types</string>
                 <string>editable_columns</string>
+                <string>portal_types</string>
+                <string>selection_name</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -81,6 +82,53 @@
                 <item>
                     <key> <string>Base_viewSearchResultList</string> </key>
                     <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>all_columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>title</string>
+                          <string>Title</string>
+                        </tuple>
+                        <tuple>
+                          <string>destination_title</string>
+                          <string>Organisation</string>
+                        </tuple>
+                        <tuple>
+                          <string>destination_project_title</string>
+                          <string>Project</string>
+                        </tuple>
+                        <tuple>
+                          <string>site_title</string>
+                          <string>Site</string>
+                        </tuple>
+                        <tuple>
+                          <string>group_title</string>
+                          <string>Group</string>
+                        </tuple>
+                        <tuple>
+                          <string>function_title</string>
+                          <string>Function</string>
+                        </tuple>
+                        <tuple>
+                          <string>activity_title</string>
+                          <string>Activity</string>
+                        </tuple>
+                        <tuple>
+                          <string>start_date</string>
+                          <string>Start Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>stop_date</string>
+                          <string>Stop Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>translated_validation_state_title</string>
+                          <string>State</string>
+                        </tuple>
+                      </list>
+                    </value>
                 </item>
                 <item>
                     <key> <string>all_editable_columns</string> </key>
