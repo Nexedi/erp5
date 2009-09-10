@@ -1423,7 +1423,7 @@ class Document(PermanentURLMixIn, XMLObject, UrlMixIn, ConversionCacheMixin, Sna
     if not isinstance(data, Pdata) and data is not None:
       file = cStringIO.StringIO(data)
       data, size = self._read_data(file)
-    if getattr(self, 'update_date', None) is not None:
+    if getattr(self, 'update_data', None) is not None:
       self.update_data(data, size=size) # We call this method to make sure size is set and caches reset
     else:
       self._baseSetData(data) # XXX - It would be better to always use this accessor
