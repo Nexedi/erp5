@@ -40,10 +40,6 @@ Options:
                              ZSQL Connection string for
                              cmf_activity_sql_connection (if unset, defaults to
                              erp5_sql_connection_string)
-  --erp5_sql_deferred_connection_string=STRING 
-                             ZSQL Connection string for
-                             erp5_sql_deferred_connection (if unset, defaults
-                             to erp5_sql_connection_string)
   --email_from_address=STRING
                              Initialise the email_from_address property of the
                              portal, by default, CMFActivity failures are sent
@@ -393,7 +389,6 @@ def main():
         "bt5_path=",
         "recreate_catalog=", "erp5_sql_connection_string=",
         "cmf_activity_sql_connection_string=",
-        "erp5_sql_deferred_connection_string=",
         "erp5_catalog_storage=",
         "save",
         "load",
@@ -442,8 +437,6 @@ def main():
       os.environ["erp5_sql_connection_string"] = arg
     elif opt == "--cmf_activity_sql_connection_string":
       os.environ["cmf_activity_sql_connection_string"] = arg
-    elif opt == "--erp5_sql_deferred_connection_string":
-      os.environ["erp5_sql_deferred_connection_string"] = arg
     elif opt == "--email_from_address":
       os.environ["email_from_address"] = arg
     elif opt == "--save":

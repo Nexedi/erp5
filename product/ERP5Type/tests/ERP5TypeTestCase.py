@@ -199,12 +199,6 @@ def _getConnectionStringDict():
     if erp5_sql_transactionless_connection_string:
       connection_string_dict['erp5_sql_transactionless_connection_string'] = \
                               erp5_sql_transactionless_connection_string
-  erp5_sql_deferred_connection_string = os.environ.get(
-                            'erp5_sql_deferred_connection_string',
-                            os.environ.get('erp5_sql_connection_string'))
-  if erp5_sql_deferred_connection_string:
-    connection_string_dict['erp5_sql_deferred_connection_string'] = \
-                                erp5_sql_deferred_connection_string
   return connection_string_dict
 
 
