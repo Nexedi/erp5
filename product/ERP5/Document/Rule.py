@@ -571,6 +571,13 @@ class Rule(Predicate, XMLObject):
       property_dict['start_date'] = business_path.getExpectedStartDate(
           movement)
       property_dict['stop_date'] = business_path.getExpectedStopDate(movement)
+      # in case of not fully working BPM get dates from movement
+      # XXX: as soon as BPM will be fully operational this hack will not be
+      #      needed anymore
+      if property_dict['start_date'] is None:
+        property_dict['start_date'] = movement.getStartDate()
+      if property_dict['stop_date'] is None:
+        property_dict['stop_date'] = movement.getStopDate()
     else: # XXX shall not be used, but business_path.getExpectedStart/StopDate
           # do not works on second path...
       property_dict['start_date'] = movement.getStartDate()
