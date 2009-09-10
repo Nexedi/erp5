@@ -94,10 +94,6 @@ label {
       <input class="form-element" name="erp5_sql_connection_string" id="erp5_sql_connection_string" type="text" size="40" value="test test"/>
     </div>
     <div>
-      <label class="form-label" for="erp5_sql_deferred_connection_string">ERP5 Deferred Database</label>
-      <input class="form-element" name="erp5_sql_deferred_connection_string" id="erp5_sql_deferred_connection_string" type="text" size="40" value="test test"/>
-    </div>
-    <div>
       <label class="form-label" for="cmf_activity_sql_connection_string">CMF Activity Database</label>
       <input class="form-element" name="cmf_activity_sql_connection_string" id="cmf_activity_sql_connection_string" type="text" size="40" value="test test"/>
     </div>
