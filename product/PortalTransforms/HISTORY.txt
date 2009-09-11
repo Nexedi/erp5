@@ -1,3 +1,9 @@
+1.4.2-nexedi
+=========================
+
+  * Use ImageMagick's 'convert' program instead of PIL to handle CMYK
+    images well.
+
 1.4.1-nexedi - 2009-03-03
 =========================
 

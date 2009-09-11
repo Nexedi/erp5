@@ -1,6 +1,6 @@
-from Products.PortalTransforms.libtransforms.piltransform import PILTransforms
+from Products.PortalTransforms.libtransforms.imagemagick_transform import ImageMagickTransforms
 
-class image_to_tiff(PILTransforms):
+class image_to_tiff(ImageMagickTransforms):
     __name__  = "image_to_tiff"
     inputs    = ('image/*', )
     output   = 'image/tiff'

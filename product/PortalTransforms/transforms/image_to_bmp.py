@@ -1,6 +1,6 @@
-from Products.PortalTransforms.libtransforms.piltransform import PILTransforms
+from Products.PortalTransforms.libtransforms.imagemagick_transform import ImageMagickTransforms
 
-class image_to_bmp(PILTransforms):
+class image_to_bmp(ImageMagickTransforms):
     __name__  = "image_to_bmp"
     inputs    = ('image/*', )
     output   = 'image/x-ms-bmp'

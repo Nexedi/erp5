@@ -1,6 +1,6 @@
-from Products.PortalTransforms.libtransforms.piltransform import PILTransforms
+from Products.PortalTransforms.libtransforms.imagemagick_transform import ImageMagickTransforms
 
-class image_to_png(PILTransforms):
+class image_to_png(ImageMagickTransforms):
     __name__  = "image_to_png"
     inputs    = ('image/*', )
     output   = 'image/png'
