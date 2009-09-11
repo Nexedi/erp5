@@ -1,0 +1,141 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"\n
+      xmlns:metal="http://xml.zope.org/namespaces/metal">\n
+<head>\n
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">\n
+<title>Test Previous Next Selection In Website</title>\n
+</head>\n
+<body>\n
+<table cellpadding="1" cellspacing="1" border="1">\n
+<thead>\n
+<tr><td rowspan="1" colspan="3">Test Change Id Website</td></tr>\n
+</thead><tbody>\n
+<tal:block metal:use-macro="here/Zuite_erp5_web_common/macros/init" />\n
+<tr>\n
+  <td>open</td>\n
+  <td>${base_url}/web_site_module/WebSiteModule_createTestSite?id=test_web_site&amp;title=Test Web Site</td>\n
+  <td></td>\n
+  <td>Create a new site</td>\n
+</tr>\n
+<tr>\n
+  <td>assertTextPresent</td>\n
+  <td>Created Successfully.</td>\n
+  <td></td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>open</td>\n
+  <td>${base_url}/web_page_module/WebPageModule_createTestWebPage?id=test_web_page&amp;reference=test_web_page</td>\n
+  <td></td>\n
+  <td>Create a new site</td>\n
+</tr>\n
+<tr>\n
+  <td>assertTextPresent</td>\n
+  <td>Created Successfully.</td>\n
+  <td></td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>open</td>\n
+  <td>${base_url}/web_site_module/Zuite_waitForActivities</td>\n
+  <td></td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertTextPresent</td>\n
+  <td>Done.</td>\n
+  <td></td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>open</td>\n
+  <td>${base_url}/web_site_module/test_web_site/web_page_module/test_web_page/WebPage_viewEditor?editable_mode:int=1</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//button[@name="Base_editAndViewAsWeb:method"]</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+   <td>assertTextPresent</td>\n
+   <td>Data updated.</td>\n
+   <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertTitle</td>\n
+  <td>Web Page - test_web_page | ERP5</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertLocation</td>\n
+  <td>${base_url}/web_site_module/test_web_site/web_page_module/test_web_page/view*</td>\n
+  <td></td>\n
+</tr>\n
+</tbody></table>\n
+</body>\n
+</html>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>testWebPaveSaveAndView</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

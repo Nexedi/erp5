@@ -53,44 +53,8 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># Reset everything for the test.\n
-portal = context.getPortalObject()\n
-\n
-# Clean up the contents.\n
-if portal.web_site_module.has_key(\'test_web_site\'):\n
-  portal.web_site_module.manage_delObjects(\'test_web_site\')\n
-\n
-if portal.web_site_module.has_key(\'web_site_test\'):\n
-  portal.web_site_module.manage_delObjects(\'web_site_test\')\n
-\n
-if portal.web_site_module.has_key(\'test_web_site_2\'):\n
-  portal.web_site_module.manage_delObjects(\'test_web_site_2\')\n
-\n
-if portal.web_site_module.has_key(\'test_web_site\'):\n
-  portal.web_site_module.manage_delObjects(\'test_web_site\')\n
-\n
-if portal.web_page_module.has_key(\'test_web_page\'):\n
-  portal.web_page_module.manage_delObjects(\'test_web_page\')\n
-\n
-# Create new users\n
-if not portal.person_module.has_key(\'test_webmaster\'):\n
-  person = portal.person_module.newContent(id=\'test_webmaster\', portal_type=\'Person\')\n
-else:\n
-  person = portal.person_module.test_webmaster\n
-person.edit(first_name=\'Test\', last_name=\'Webmaster\',\n
-            reference=\'test_webmaster\', password=\'test_webmaster\')\n
-person.setRole(\'internal\')\n
-if not len(person.objectValues(portal_type=\'Assignment\')):\n
-  assignment = person.newContent(portal_type=\'Assignment\')\n
-  assignment.edit(group=\'web\',\n
-                  start_date=DateTime(\'2000/01/01\'),\n
-                  stop_date=DateTime(\'2990/12/31\'))\n
-  if assignment.getValidationState() != \'open\':\n
-    assignment.open()\n
-if person.getValidationState() != \'validated\':\n
-  person.validate()\n
-\n
-return \'Reset Successfully.\'\n
+            <value> <string>web_page = context.newContent(portal_type=\'Web Page\', id=id, reference=reference)\n
+return "Created Successfully."\n
 </string> </value>
         </item>
         <item>
@@ -101,7 +65,7 @@ return \'Reset Successfully.\'\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string></string> </value>
+            <value> <string>id=id, reference=None</string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>
@@ -129,19 +93,17 @@ return \'Reset Successfully.\'\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>2</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>id</string>
+                            <string>reference</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>portal</string>
-                            <string>person</string>
-                            <string>len</string>
-                            <string>assignment</string>
-                            <string>DateTime</string>
+                            <string>web_page</string>
                           </tuple>
                         </value>
                     </item>
@@ -153,12 +115,15 @@ return \'Reset Successfully.\'\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <global name="id" module="__builtin__"/>
+                <none/>
+              </tuple>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>WebSiteModule_resetWebZuite</string> </value>
+            <value> <string>WebPageModule_createTestWebPage</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
