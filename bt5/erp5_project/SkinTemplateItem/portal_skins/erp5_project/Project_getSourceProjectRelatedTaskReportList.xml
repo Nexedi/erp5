@@ -78,7 +78,7 @@ if kw.has_key(\'simulation_state\') and len(kw[\'simulation_state\']) > 0 :\n
 else:\n
   task_simulation_state = context.getPortalDraftOrderStateList() + \\\n
                           context.getPortalPlannedOrderStateList()\n
-  task_report_simulation_state = None\n
+  task_report_simulation_state = ""\n
 \n
 task_list = [x.getObject() for x in \\\n
   context.portal_catalog(selection=selection, selection_report=selection_report, \n
