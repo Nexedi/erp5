@@ -13,10 +13,10 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>default</string>
                 <string>css_class</string>
-                <string>text_editor</string>
+                <string>default</string>
                 <string>editable</string>
+                <string>text_editor</string>
               </list>
             </value>
         </item>
@@ -140,7 +140,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: cell.Event_getTextContentCorrespondToFormat(editable=False)</string> </value>
+            <value> <string>python: cell.Event_getEditorFieldTextContent(editable=False)</string> </value>
         </item>
       </dictionary>
     </pickle>
