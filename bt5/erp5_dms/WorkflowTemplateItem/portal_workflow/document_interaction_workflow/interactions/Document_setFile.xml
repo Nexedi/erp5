@@ -31,6 +31,7 @@
             <key> <string>after_script_name</string> </key>
             <value>
               <list>
+                <string>Document_guessMimeType</string>
                 <string>clearCacheUponUpload</string>
                 <string>updateContentMd5</string>
                 <string>upload</string>
