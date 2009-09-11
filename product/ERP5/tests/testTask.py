@@ -68,7 +68,8 @@ class TestTaskMixin:
                        stepSetTaskPriceCurrency \
                        stepConfirmTask \
                        stepTic \
-                       stepSetTaskReport '
+                       stepSetTaskReport \
+                       stepVerifyTaskReportDescription  '
 
   default_task_sequence_two_lines = '\
                        stepLogin \
@@ -85,7 +86,8 @@ class TestTaskMixin:
                        stepFillTaskLineWithData \
                        stepConfirmTask \
                        stepTic \
-                       stepSetTaskReport '
+                       stepSetTaskReport \
+                       stepVerifyTaskReportDescription  '
                        
   default_task_report_sequence = '\
                        stepLogin \
@@ -231,6 +233,7 @@ class TestTaskMixin:
     self.assertEquals(len(task.contentValues()), 0)
     task.edit(
       title = "Task",
+      description = "This is a very simple task. You can do it quickly."
     )
     sequence.edit(task=task)
 
@@ -430,6 +433,17 @@ class TestTaskMixin:
         self.assertTrue(task_line.getResource() in task_report_resource_list)
         self.assertTrue(task_line.getQuantity() in task_report_quantity_list)
         self.assertTrue(task_line.getPrice() in task_report_price_list)
+
+  def stepVerifyTaskReportDescription(self, sequence=None,
+                                      sequence_list=None, **kw):
+    """
+      Verify that task description is copied to task report.
+    """
+    task_report = sequence.get('task_report')
+    task = sequence.get('task')
+    self.assert_(task_report.getDescription())
+    self.assertEqual(task_report.getDescription(),
+                     task.getDescription())
 
   def stepVerifyTaskReportCausalityState(self, sequence=None,
                                          sequence_list=None, **kw):
