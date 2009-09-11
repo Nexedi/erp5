@@ -1234,6 +1234,19 @@ class TestCRMMailSend(ERP5TypeTestCase):
         part = i
     self.assertEqual(part.get_payload(decode=True), str(document_gif.getData()))
 
+  def test_cloneEvent(self):
+    """
+      All events uses after script and interaciton
+      workflow add a test for clone
+    """
+    portal_type = "Mail Message"
+    event = self.portal.event_module.newContent(portal_type=portal_type)
+    event.setData("This is the context of the event...")
+    self.stepTic()
+    new_event = event.Base_createCloneDocument(batch_mode=1)
+    self.failIf(new_event.hasFile())
+    self.assertEquals(new_event.getData(), "")
+
 
 def test_suite():
   suite = unittest.TestSuite()
