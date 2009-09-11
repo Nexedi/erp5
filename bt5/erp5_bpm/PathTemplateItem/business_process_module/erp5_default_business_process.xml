@@ -62,10 +62,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_folder_handler</string> </key>
-            <value> <string>CMFBTreeFolderHandler</string> </value>
-        </item>
-        <item>
             <key> <string>_identity_criterion</string> </key>
             <value>
               <dictionary/>
