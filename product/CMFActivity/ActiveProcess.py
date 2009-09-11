@@ -38,7 +38,7 @@ from Products.CMFActivity.ActiveObject import DISTRIBUTABLE_STATE, INVOKE_ERROR_
 from random import randint
 from zLOG import LOG
 
-manage_addActiveProcessForm=DTMLFile('dtml/ActiveProcess_add', globals())
+manage_addActiveProcessForm = DTMLFile('dtml/ActiveProcess_add', globals())
 
 def addActiveProcess(self, id, title='', REQUEST=None, activate_kw=None, **kw):
   """Add a new Active Process.
@@ -49,7 +49,8 @@ def addActiveProcess(self, id, title='', REQUEST=None, activate_kw=None, **kw):
   o.uid = self.portal_catalog.newUid()
   self._setObject(id, o)
   o = self._getOb(id)
-  if kw: o._edit(force_update=1, **kw)
+  if kw:
+    o._edit(force_update=1, **kw)
   if REQUEST is not None:
     REQUEST['RESPONSE'].redirect( 'manage_main' )
   return o
@@ -60,8 +61,8 @@ class ActiveProcess(Base):
       RENAME: ActiveResult
   """
 
-  meta_type='CMF Active Process'
-  portal_type='Active Process'
+  meta_type = 'CMF Active Process'
+  portal_type = 'Active Process'
   isPortalContent = 0 
   isRADContent = 1
   icon = None
@@ -126,7 +127,8 @@ class ActiveProcess(Base):
       Tells if there is still some activities not finished attached to this process
     """
     activity_tool = getattr(self, 'portal_activities', None)
-    if activity_tool is None: return 0 # Do nothing if no portal_activities
+    if activity_tool is None:
+      return 0 # Do nothing if no portal_activities
     return activity_tool.hasActivity(None, active_process_uid = self.getUid(), **kw)
 
   security.declareProtected( CMFCorePermissions.View, 'hasErrorActivity' )
@@ -153,7 +155,8 @@ class ActiveProcess(Base):
   def flush(self):
     # flush  activities related to this process
     activity_tool = getattr(self, 'portal_activities', None)
-    if activity_tool is None: return # Do nothing if no portal_activities
+    if activity_tool is None:
+      return # Do nothing if no portal_activities
     return activity_tool.flush(None, active_process = self, invoke = 0) # FLush
 
 
