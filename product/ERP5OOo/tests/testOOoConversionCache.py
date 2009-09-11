@@ -355,6 +355,37 @@ class TestDocumentConversionCache(ERP5TypeTestCase, ZopeTestCase.Functional):
     document.convert(format='txt')
     self.assertTrue(document.getConversion(format='txt'))
 
+  def test_08_check_conversion_cache_with_portal_document_type_list(self):
+    """Check cache conversion for all Portal Document Types
+    """
+    print '\nCheck cache conversion for all Portal Document Types'
+    portal_type_list = list(self.portal.getPortalDocumentTypeList())
+
+    if 'File' in portal_type_list:
+      #File conversion is not implemented
+      portal_type_list.remove('File')
+    data_mapping = {'Drawing': 'TEST-en-002.sxd',
+                    'Text': 'TEST-en-002.doc',
+                    'Spreadsheet': 'TEST-en-002.sxc',
+                    'Presentation': 'TEST-en-002.sxi',
+                    'Web Page': 'TEST-en-002.html',
+                    'Image': 'TEST-en-002.gif',
+                    #'File': 'TEST-en-002.rtf',
+                    'PDF': 'TEST-en-002.pdf'}
+    #Check that all portal_types are handled by test
+    self.assertEqual(len(portal_type_list), len([pt for pt in portal_type_list if pt in data_mapping]))
+    for portal_type in portal_type_list:
+      module = self.portal.getDefaultModule(portal_type=portal_type)
+      upload_file = makeFileUpload(data_mapping[portal_type])
+      document = module.newContent(portal_type=portal_type)
+      document.edit(file=upload_file)
+      transaction.commit()
+      self.tic()
+      document.convert(format='txt')
+      document.convert(format='html')
+      self.assertTrue(document.getConversion(format='txt'))
+      self.assertTrue(document.getConversion(format='html'))
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestDocumentConversionCache))
