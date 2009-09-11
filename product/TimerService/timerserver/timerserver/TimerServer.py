@@ -40,19 +40,21 @@ class TimerServer:
         # wait until the zhttp_server exist in socket_map
         # because TimerService has to be started after the Zope HTTPServer
         from asyncore import socket_map
+        ip = port = ''
         while 1:
             time.sleep(5)
             for k, v in socket_map.items():
-                if hasattr(v, 'port'):
+                if hasattr(v, 'addr'):
                         # see Zope/lib/python/App/ApplicationManager.py: def getServers(self)
                         type = str(getattr(v, '__class__', 'unknown'))
                         if type == 'ZServer.HTTPServer.zhttp_server':
-                            port = v.port
+                            ip, port = v.addr
                             break
             if port:
                 break
 
-        ip = socket.gethostbyname(socket.gethostname())
+        if ip == '0.0.0.0':
+          ip = socket.gethostbyname(socket.gethostname())
 
         # To be very sure, try to connect to the HTTPServer
         # and only start after we are able to connect and got a response

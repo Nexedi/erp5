@@ -692,16 +692,17 @@ class ActivityTool (Folder, UniqueObject):
         """ Return current node in form ip:port """
         global currentNode
         if currentNode is None:
-          port = ''
+          ip = port = ''
           from asyncore import socket_map
           for k, v in socket_map.items():
-              if hasattr(v, 'port'):
+              if hasattr(v, 'addr'):
                   # see Zope/lib/python/App/ApplicationManager.py: def getServers(self)
                   type = str(getattr(v, '__class__', 'unknown'))
                   if type == 'ZServer.HTTPServer.zhttp_server':
-                      port = v.port
+                      ip, port = v.addr
                       break
-          ip = socket.gethostbyname(socket.gethostname())
+          if ip == '0.0.0.0':
+            ip = socket.gethostbyname(socket.gethostname())
           currentNode = '%s:%s' %(ip, port)
         return currentNode
         
