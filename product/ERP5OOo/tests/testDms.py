@@ -798,7 +798,7 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
     # rewriteIngestionData type based method.
     # setFile should keep value provided by portal_contribution
     # instead of reading it from file itself.
-    # See special parameter set_filename__ in EPR5.Tool.ContributionTool
+    # See special parameter set_filename__ in ERP5.Tool.ContributionTool
     document.edit(file=upload_file)
     self.assertEquals('application/pdf', document.getContentType())
 
