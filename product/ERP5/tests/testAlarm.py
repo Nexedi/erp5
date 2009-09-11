@@ -687,6 +687,20 @@ class TestAlarm(ERP5TypeTestCase):
     alarm.setProperty('bogus', None)
     self.assertEquals(alarm.getProperty('bogus', None), None)
 
+  def test_20_UndefinedPeriodicityStartDate(self, quiet=0, run=run_all_test):
+    """
+    Test that getAlarmDate does not crash when PeriodicityStartDate is not set.
+    """
+    if not run: return
+    if not quiet:
+      message = 'Test undefined PeriodicityStartDate'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ',0,message)
+    alarm = self.newAlarm()
+    # Test sanity check.
+    self.assertEqual(alarm.getPeriodicityStartDate(), None)
+    # Actual test.
+    self.assertEquals(alarm.getAlarmDate(), None)
 
 def test_suite():
   suite = unittest.TestSuite()
