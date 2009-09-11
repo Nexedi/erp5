@@ -42,7 +42,7 @@ class w3m_dump(popentransform):
   __version__ = '2008.07.11-1'
 
   binaryName = "w3m"
-  binaryArgs = "-dump -T text/html -o display_charset=utf-8 "
+  binaryArgs = "-dump -T text/html -o display_charset=utf-8 -o ignore_null_img_alt=0 "
   useStdin = True
   
   def getData(self, couterr):
