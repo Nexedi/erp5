@@ -53,7 +53,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>context.setData(None)\n
+            <value> <string>context.setData("")\n
 </string> </value>
         </item>
         <item>
@@ -92,7 +92,6 @@
                           <tuple>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>None</string>
                           </tuple>
                         </value>
                     </item>
