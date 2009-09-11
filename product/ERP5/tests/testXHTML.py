@@ -32,6 +32,7 @@ import os
 import popen2
 import urllib
 
+from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.CMFCore.utils import getToolByName
 from AccessControl.SecurityManagement import newSecurityManager
@@ -174,6 +175,13 @@ class TestXHTML(ERP5TypeTestCase):
             if not callable(method):
               error_list.append(form_path)
     self.assertEquals(error_list, [])
+
+  def test_moduleListMethod(self):
+    """Make sure that module's list method works."""
+    for document in self.portal.contentValues():
+      if document.portal_type.endswith(' Module'):
+        ZopeTestCase._print('\n%s.' % document.id)
+        self.assert_(document.title in document.list(reset=1))
 
 class W3Validator(object):
 
