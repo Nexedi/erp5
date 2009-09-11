@@ -68,8 +68,7 @@ class TestTaskMixin:
                        stepSetTaskPriceCurrency \
                        stepConfirmTask \
                        stepTic \
-                       stepSetTaskReport \
-                       stepVerifyTaskReportDescription  '
+                       stepSetTaskReport '
 
   default_task_sequence_two_lines = '\
                        stepLogin \
@@ -86,8 +85,7 @@ class TestTaskMixin:
                        stepFillTaskLineWithData \
                        stepConfirmTask \
                        stepTic \
-                       stepSetTaskReport \
-                       stepVerifyTaskReportDescription  '
+                       stepSetTaskReport '
                        
   default_task_report_sequence = '\
                        stepLogin \
@@ -294,6 +292,7 @@ class TestTaskMixin:
               task_line_quantity = self.default_quantity,
               task_line_price = self.default_price,
               task_line_requirement_value = requirement,
+              task_line_description = 'Default Task Line Description',
     )
 
   def stepCreateSimpleTaskReport(self,sequence=None, sequence_list=None, **kw):
@@ -392,7 +391,8 @@ class TestTaskMixin:
     task = sequence.get('task')
     task_line = task.newContent(
         portal_type=self.task_line_portal_type,
-        title='New Task Line')
+        title='New Task Line',
+        description='New Task Line Description')
     sequence.edit(task_line=task_line)
 
   def stepFillTaskLineWithData(self, sequence=None, sequence_list=None, **kw):
@@ -434,16 +434,12 @@ class TestTaskMixin:
         self.assertTrue(task_line.getQuantity() in task_report_quantity_list)
         self.assertTrue(task_line.getPrice() in task_report_price_list)
 
-  def stepVerifyTaskReportDescription(self, sequence=None,
-                                      sequence_list=None, **kw):
-    """
-      Verify that task description is copied to task report.
-    """
-    task_report = sequence.get('task_report')
-    task = sequence.get('task')
-    self.assert_(task_report.getDescription())
-    self.assertEqual(task_report.getDescription(),
-                     task.getDescription())
+    for task_report_line in task_report.contentValues(portal_type='Task Report Line'):
+      simulation_movement = task_report_line.getDeliveryRelatedValue()
+      task_line = simulation_movement.getOrderValue()
+      self.assert_(task_line.getDescription())
+      self.assertEqual(task_line.getDescription(),
+                       task_report_line.getDescription())
 
   def stepVerifyTaskReportCausalityState(self, sequence=None,
                                          sequence_list=None, **kw):
