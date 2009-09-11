@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
@@ -310,6 +311,7 @@ class Image(File, OFSImage):
     """
     mime_type = getToolByName(self, 'mimetypes_registry').\
                                 lookupExtension('name.%s' % format)
+    mime_type = str(mime_type)
     src_mimetype = self.getContentType()
     content = '%s' % self.getData()
     if content is not None:
@@ -332,27 +334,32 @@ class Image(File, OFSImage):
   security.declareProtected(Permissions.ModifyPortalContent, 'convert')
   def convert(self, format, display=None, quality=75, resolution=None, frame=None, **kw):
     """
-    Implementation of conversion for PDF files
+    Implementation of conversion for Image files
     """
     if format in ('text', 'txt', 'html', 'base_html', 'stripped-html'):
-      try:
-        return self.getConversion(format=format)
-      except KeyError:
+      if not self.hasConversion(format=format):
         mime_type, data = self._convertToText(format)
+        data = aq_base(data)
         self.setConversion(data, mime=mime_type, format=format)
-        return (mime_type, aq_base(data))
+      else:
+        mime_type, data = self.getConversion(format=format)
+      return mime_type, data
     image_size = self.getSizeFromImageDisplay(display)
     if (display is not None or resolution is not None or quality != 75 or format != ''\
                             or frame is not None) and image_size:
-      try:
-        mime, image = self.getConversion(display=display, format=format,
-                                         quality=quality, resolution=resolution,
-                                         frame=frame, image_size=image_size)
-      except KeyError:
-        # Generate photo on-the-fly
+      if not self.hasConversion(display=display, format=format,
+                                quality=quality, resolution=resolution,
+                                frame=frame, image_size=image_size):
         mime, image = self._makeDisplayPhoto(display, format=format, quality=quality,
                                              resolution=resolution, frame=frame,
                                              image_size=image_size)
+        self.setConversion(image, mime, format=format, quality=quality,
+                           resolution=resolution, frame=frame,
+                           image_size=image_size)
+      else:
+        mime, image = self.getConversion(display=display, format=format,
+                                         quality=quality, resolution=resolution,
+                                         frame=frame, image_size=image_size)
       return mime, image.data
     return self.getContentType(), self.getData()
 
