@@ -13,16 +13,16 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
-                <string>columns</string>
                 <string>all_columns</string>
-                <string>list_method</string>
-                <string>stat_method</string>
-                <string>selection_name</string>
-                <string>portal_types</string>
+                <string>columns</string>
                 <string>editable_columns</string>
-                <string>report_tree</string>
+                <string>list_method</string>
+                <string>portal_types</string>
                 <string>report_root_list</string>
+                <string>report_tree</string>
+                <string>selection_name</string>
+                <string>stat_method</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -171,11 +171,11 @@
                         </tuple>
                         <tuple>
                           <string>parent_title</string>
-                          <string>Task Title</string>
+                          <string>Task Report Title</string>
                         </tuple>
                         <tuple>
                           <string>title</string>
-                          <string>Task Line Title</string>
+                          <string>Task Report Line Title</string>
                         </tuple>
                         <tuple>
                           <string>destination_title</string>
@@ -246,8 +246,8 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>Task</string>
-                          <string>Task</string>
+                          <string>Task Report</string>
+                          <string>Task Report</string>
                         </tuple>
                       </list>
                     </value>
