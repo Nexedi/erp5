@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 # -*- coding: utf-8 -*-
 # Copyright (c) 2009 Nexedi SA and Contributors. All Rights Reserved.
@@ -931,6 +932,24 @@ class TestOOoImport(ERP5TypeTestCase):
     else:
       self.fail('ValueError not raised')
 
+  def test_Base_getCategoriesSpreadSheetMapping_Id_is_reserved_property_name(self):
+    # tests Base_getCategoriesSpreadSheetMapping reserved property name are only test for path column, not all.
+    import_file = makeFileUpload(
+        'import_region_category_with_reserved_id_in_title.sxc')
+    mapping = self.portal.portal_categories.Base_getCategoriesSpreadSheetMapping(
+             import_file=import_file)
+    self.assertTrue(isinstance(mapping, dict))
+    self.assertEquals(['region'], list(mapping.keys()))
+    region = mapping['region']
+    self.assertTrue(isinstance(region, list))
+    self.assertEquals(7, len(region))
+    # Check that category can have a reserved property as title
+    self.assertEquals(dict(codification='codification',
+                           description='codification',
+                           path='region/antartica',
+                           short_title='codification',
+                           title='codification'),
+                      region[6])
 
 def test_suite():
   suite = unittest.TestSuite()
