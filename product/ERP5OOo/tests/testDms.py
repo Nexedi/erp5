@@ -794,10 +794,6 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
                                                       file=upload_file)
     self.tic()
     self.assertEquals('PDF', document.getPortalType())
-    content_information = document.getContentInformation()
-    self.assertEquals('1', content_information['Pages'])
-    self.assertEquals('subject', content_information['Subject'])
-    self.assertEquals('title', content_information['Title'])
     self.assertEquals('application/pdf', document.getContentType())
 
 class TestDocumentWithSecurity(ERP5TypeTestCase):
