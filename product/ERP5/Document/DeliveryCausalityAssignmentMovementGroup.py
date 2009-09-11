@@ -39,6 +39,11 @@ class DeliveryCausalityAssignmentMovementGroup(CausalityAssignmentMovementGroup)
   def _addCausalityToEdit(self, movement, property_dict=None):
     if property_dict is None:
       property_dict = {}
+    if movement.getParentValue().isRootAppliedRule():
+      # Here movement probably comes from invoice rule, in that situation, we
+      # are not able to go up and find a delivery.
+      return property_dict
+
     parent = movement.getParentValue().getParentValue()
     # Go upper into the simulation tree in order to find a delivery link
     while parent.getDeliveryValue() is None and not(parent.isRootAppliedRule()):
