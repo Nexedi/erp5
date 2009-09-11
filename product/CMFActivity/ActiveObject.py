@@ -96,8 +96,9 @@ class ActiveObject(ExtensionClass.Base):
                            tagged with this tag.
 
     """
-    # Get activate values from activate_kw, then _v_activate_kw
-    # only if they are not set directly as arguments to activate()
+    # Get activate values from activate_kw, then default_activate_parameter
+    # transactional variable only if they are not set directly as arguments
+    # to activate()
     if activate_kw is not None:
       for k, v in activate_kw.iteritems():
         if k not in kw:
