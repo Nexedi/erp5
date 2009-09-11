@@ -59,9 +59,7 @@ so this is what we return.\n
 """\n
 \n
 request = context.REQUEST\n
-request.RESPONSE.setHeader(\'Content-type\', \'application/x-pdf\')\n
-request.RESPONSE.setHeader(\'Content-disposition\', \'attachment; filename="%s"\' % context.title_or_id())\n
-return context.getTargetFile(\'pdf\')\n
+return context.index_html(request, request.RESPONSE, format=\'pdf\')\n
 </string> </value>
         </item>
         <item>
