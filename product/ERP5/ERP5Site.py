@@ -65,6 +65,8 @@ def manage_addERP5Site(self,
                        erp5_catalog_storage='',
                        erp5_sql_connection_type='Z MySQL Database Connection',
                        erp5_sql_connection_string='test test',
+                       erp5_sql_deferred_connection_type=\
+                           'Z MySQL Deferred Database Connection',
                        cmf_activity_sql_connection_type= \
                            'Z MySQL Database Connection',
                        cmf_activity_sql_connection_string='test test',
@@ -82,6 +84,7 @@ def manage_addERP5Site(self,
                  erp5_catalog_storage,
                  erp5_sql_connection_type,
                  erp5_sql_connection_string,
+                 erp5_sql_deferred_connection_type,
                  cmf_activity_sql_connection_type,
                  cmf_activity_sql_connection_string,
                  create_activities=create_activities,
@@ -1218,6 +1221,7 @@ class ERP5Generator(PortalGenerator):
              erp5_catalog_storage,
              erp5_sql_connection_type,
              erp5_sql_connection_string,
+             erp5_sql_deferred_connection_type,
              cmf_activity_sql_connection_type,
              cmf_activity_sql_connection_string,
              create_activities=1,
@@ -1232,7 +1236,6 @@ class ERP5Generator(PortalGenerator):
     # Return the fully wrapped object.
     p = parent.this()._getOb(id)
 
-    erp5_sql_deferred_connection_type = erp5_sql_connection_type
     erp5_sql_deferred_connection_string = erp5_sql_connection_string
     p._setProperty('erp5_catalog_storage',
                    erp5_catalog_storage, 'string')
