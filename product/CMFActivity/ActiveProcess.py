@@ -161,14 +161,6 @@ class ActiveProcess(Base):
       """
       return self.getStartDate()
 
-    def start():
-      # start activities related to this process
-      pass
-
-    def stop():
-      # stop activities related to this process
-      pass
-
     def flush(self):
       # flush  activities related to this process
       activity_tool = getattr(self, 'portal_activities', None)
