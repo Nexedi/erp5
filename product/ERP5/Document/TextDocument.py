@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
@@ -201,25 +202,28 @@ class TextDocument(Document, TextContent):
       if format == 'raw':
         return 'text/plain', self.getTextContent()
       mime_type = getToolByName(self, 'mimetypes_registry').lookupExtension('name.%s' % format)
+      mime_type = str(mime_type)
       src_mimetype = self.getTextFormat(DEFAULT_TEXT_FORMAT)
       if not src_mimetype.startswith('text/'):
         src_mimetype = 'text/%s' % src_mimetype
       # check if document has set text_content and convert if necessary
       text_content = self.getTextContent()
       if text_content:
-        portal_transforms = getToolByName(self, 'portal_transforms')
-        result = portal_transforms.convertToData(mime_type, text_content,
-                                                 object=self, context=self,
-                                                 filename=self.getTitleOrId(),
-                                                 mimetype=src_mimetype)
-        if result is None:
-          raise ConversionError('TextDocument conversion error. '
-                                'portal_transforms failed to convert to %s: %r' % (mime_type, self))
-
+        if not self.hasConversion(format=format):
+          portal_transforms = getToolByName(self, 'portal_transforms')
+          result = portal_transforms.convertToData(mime_type, text_content,
+                                                   object=self, context=self,
+                                                   filename=self.getTitleOrId(),
+                                                   mimetype=src_mimetype)
+          if result is None:
+            raise ConversionError('TextDocument conversion error. '
+                                  'portal_transforms failed to convert to %s: %r' % (mime_type, self))
+          self.setConversion(result, mime_type, format=format)
+        else:
+          mime_type, result = self.getConversion(format=format)
         if substitution_method_parameter_dict is None:
           substitution_method_parameter_dict = {}
         result = self._substituteTextContent(result, **substitution_method_parameter_dict)
-
         return mime_type, result
       else:
         # text_content is not set, return empty string instead of None
