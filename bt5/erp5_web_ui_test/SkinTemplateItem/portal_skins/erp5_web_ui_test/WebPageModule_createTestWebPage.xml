@@ -54,6 +54,8 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>web_page = context.newContent(portal_type=\'Web Page\', id=id, reference=reference)\n
+if publish:\n
+  web_page.publish()\n
 return "Created Successfully."\n
 </string> </value>
         </item>
@@ -65,7 +67,7 @@ return "Created Successfully."\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>id=id, reference=None</string> </value>
+            <value> <string>id=id, reference=None, publish=False</string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>
@@ -93,7 +95,7 @@ return "Created Successfully."\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>2</int> </value>
+                        <value> <int>3</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -101,6 +103,7 @@ return "Created Successfully."\n
                           <tuple>
                             <string>id</string>
                             <string>reference</string>
+                            <string>publish</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>web_page</string>
@@ -118,6 +121,7 @@ return "Created Successfully."\n
               <tuple>
                 <global name="id" module="__builtin__"/>
                 <none/>
+                <int>0</int>
               </tuple>
             </value>
         </item>

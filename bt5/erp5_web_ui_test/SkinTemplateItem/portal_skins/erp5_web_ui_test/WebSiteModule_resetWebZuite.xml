@@ -69,8 +69,9 @@ if portal.web_site_module.has_key(\'test_web_site_2\'):\n
 if portal.web_site_module.has_key(\'test_web_site\'):\n
   portal.web_site_module.manage_delObjects(\'test_web_site\')\n
 \n
-if portal.web_page_module.has_key(\'test_web_page\'):\n
-  portal.web_page_module.manage_delObjects(\'test_web_page\')\n
+portal.web_page_module.manage_delObjects(\n
+  [x.getId() for x in portal.web_page_module.objectValues() \\\n
+   if x.getTitle().startswith(\'test_\')])\n
 \n
 # Create new users\n
 if not portal.person_module.has_key(\'test_webmaster\'):\n
@@ -138,6 +139,10 @@ return \'Reset Successfully.\'\n
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>portal</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>_getiter_</string>
+                            <string>x</string>
                             <string>person</string>
                             <string>len</string>
                             <string>assignment</string>
