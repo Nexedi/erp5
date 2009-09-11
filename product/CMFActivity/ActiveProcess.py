@@ -26,7 +26,6 @@
 #
 ##############################################################################
 
-from Acquisition import aq_base
 from Globals import InitializeClass, DTMLFile
 from AccessControl import ClassSecurityInfo
 from Products.CMFCore import CMFCorePermissions
@@ -34,9 +33,8 @@ from Products.ERP5Type.Base import Base
 from Products.ERP5Type import PropertySheet
 from BTrees.IOBTree import IOBTree
 from BTrees.Length import Length
-from Products.CMFActivity.ActiveObject import DISTRIBUTABLE_STATE, INVOKE_ERROR_STATE, VALIDATE_ERROR_STATE
+from Products.CMFActivity.ActiveObject import INVOKE_ERROR_STATE, VALIDATE_ERROR_STATE
 from random import randint
-from zLOG import LOG
 
 manage_addActiveProcessForm = DTMLFile('dtml/ActiveProcess_add', globals())
 
