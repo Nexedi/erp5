@@ -33,7 +33,8 @@ from Products.ERP5Type.Base import Base
 from Products.ERP5Type import PropertySheet
 from BTrees.IOBTree import IOBTree
 from BTrees.Length import Length
-from Products.CMFActivity.ActiveObject import INVOKE_ERROR_STATE, VALIDATE_ERROR_STATE
+from Products.CMFActivity.ActiveObject import INVOKE_ERROR_STATE, \
+  VALIDATE_ERROR_STATE
 from random import randint
 
 manage_addActiveProcessForm = DTMLFile('dtml/ActiveProcess_add', globals())
@@ -55,7 +56,8 @@ def addActiveProcess(self, id, title='', REQUEST=None, activate_kw=None, **kw):
 
 class ActiveProcess(Base):
   """
-      ActiveProcess is used to centralise interaction between multiple ActiveObject
+      ActiveProcess is used to centralise interaction between multiple
+      ActiveObject
       RENAME: ActiveResult
   """
 
@@ -122,12 +124,14 @@ class ActiveProcess(Base):
   security.declareProtected( CMFCorePermissions.View, 'hasActivity' )
   def hasActivity(self, **kw):
     """
-      Tells if there is still some activities not finished attached to this process
+      Tells if there is still some activities not finished attached to this
+      process
     """
     activity_tool = getattr(self, 'portal_activities', None)
     if activity_tool is None:
       return 0 # Do nothing if no portal_activities
-    return activity_tool.hasActivity(None, active_process_uid = self.getUid(), **kw)
+    return activity_tool.hasActivity(None, active_process_uid = self.getUid(),
+      **kw)
 
   security.declareProtected( CMFCorePermissions.View, 'hasErrorActivity' )
   def hasErrorActivity(self, **kw):
