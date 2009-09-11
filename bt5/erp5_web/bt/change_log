@@ -1,3 +1,7 @@
+2009-09-11 yusei
+* Fix action orders of web page module and make view action first. Otherwise module list method does not work.
+* Add bt/template_registered_skin_selection_list to business template.
+
 2009-08-21 Kazuhiko
 * add WebSection_viewToolbarWidget that can be used for all web sites with the same appearance.
 
