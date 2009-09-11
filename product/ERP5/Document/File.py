@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
@@ -163,7 +164,7 @@ class File(Document, CMFFile, ConversionCacheMixin):
     """
       get mime type from file name
     """
-    if fname == '': fname = self.getOriginalFilename()
+    if fname == '': fname = self.getSourceReference()
     if fname:
       content_type,enc = mimetypes.guess_type(fname)
       if content_type is not None:
