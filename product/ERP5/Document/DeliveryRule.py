@@ -131,6 +131,7 @@ class DeliveryRule(Rule):
 
               quantity=deliv_mvt.getQuantity(),
               quantity_unit=deliv_mvt.getQuantityUnit(),
+              incoterm=deliv_mvt.getIncoterm(),
               price=deliv_mvt.getPrice(),
               price_currency=deliv_mvt.getPriceCurrency(),
               base_contribution_list=deliv_mvt.getBaseContributionList(),
@@ -166,6 +167,7 @@ class DeliveryRule(Rule):
 
                 quantity=deliv_mvt.getQuantity(),
                 quantity_unit=deliv_mvt.getQuantityUnit(),
+                incoterm=deliv_mvt.getIncoterm(),
                 price=deliv_mvt.getPrice(),
                 price_currency=deliv_mvt.getPriceCurrency(),
                 base_contribution_list=deliv_mvt.getBaseContributionList(),
