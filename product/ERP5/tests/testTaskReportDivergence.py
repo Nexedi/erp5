@@ -105,6 +105,29 @@ class TestTaskReportDivergenceMixin(TestTaskMixin):
     rule_tool.Base_setDefaultSecurity()
     self.logout()
 
+  def stepChangeCommentOnTaskReport(self, sequence=None, **kw):
+    task_report = sequence.get('task_report')
+    task_report.edit(comment='foo')
+    self.assertEquals('foo', task_report.getComment())
+
+  def stepAcceptDateDecision(self, sequence=None, **kw):
+    task_report = sequence.get('task_report')
+    # XXX This is not really cool, when we will have nice api, it is required
+    # to use it
+    self.getPortal().portal_deliveries\
+        .task_report_builder.solveDeliveryGroupDivergence(
+        task_report.getRelativeUrl(),
+        property_dict={'start_date':[self.datetime + 15]})
+
+  def stepCheckCommentStillOnTaskReport(self, sequence=None, **kw):
+    """
+    It already happened that the action of solving divergence
+    erased the comment on the delivery. We make sure that was is
+    logical (the comment remains) is true
+    """
+    task_report = sequence.get('task_report')
+    self.assertEquals('foo', task_report.getComment())
+
 class TestTaskReportDivergence(TestTaskReportDivergenceMixin, ERP5TypeTestCase) :
 
   run_all_test = 1
@@ -184,10 +207,15 @@ class TestTaskReportDivergence(TestTaskReportDivergenceMixin, ERP5TypeTestCase) 
                       stepSetStrictSecurity \
                       ' + self.default_task_sequence + '\
                       stepCheckTaskReportIsSolved \
+                      stepChangeCommentOnTaskReport \
                       stepChangeTaskReportStartDate \
                       stepCheckTaskReportIsCalculating \
                       stepTic \
                       stepCheckTaskReportIsDiverged \
+                      stepAcceptDateDecision \
+                      stepTic \
+                      stepCheckTaskReportIsSolved \
+                      stepCheckCommentStillOnTaskReport \
                       '
     sequence_list.addSequenceString(sequence_string)
 

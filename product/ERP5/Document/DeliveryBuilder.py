@@ -189,11 +189,10 @@ class DeliveryBuilder(OrderBuilder):
     return solveDeliveryGroupDivergence(*args, **kw)
 
   def _solveDeliveryGroupDivergence(self, delivery_relative_url,
-                                    property_dict=None, comment=None):
+                                    property_dict=None):
     if property_dict in (None, {}):
       return
     delivery = self.getPortalObject().restrictedTraverse(delivery_relative_url)
-    delivery.edit(comment=comment)
     for (property, value) in property_dict.iteritems():
       delivery.setPropertyList(property, value)
 
