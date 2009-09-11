@@ -169,6 +169,8 @@ class File(Document, CMFFile, ConversionCacheMixin):
       content_type,enc = mimetypes.guess_type(fname)
       if content_type is not None:
         self.setContentType(content_type)
+    else:
+      content_type = None
     return content_type
 
   security.declareProtected(Permissions.ModifyPortalContent,'PUT')
