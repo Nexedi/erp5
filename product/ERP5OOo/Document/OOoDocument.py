@@ -140,6 +140,7 @@ class OOoDocument(PermanentURLMixIn, File, ConversionCacheMixin):
                     , PropertySheet.ExternalDocument
                     , PropertySheet.Url
                     , PropertySheet.Periodicity
+                    , PropertySheet.SortIndex
                     )
 
   # regular expressions for stripping xml from ODF documents
