@@ -60,15 +60,15 @@
   Field expects to be provided valid HTML. It is therefore the responsibility\n
   of the Default value script to provide this valid HTML.\n
 """\n
+# Define default editable value\n
+if editable is None:\n
+  editable = context.Event_isTextContentEditable()\n
+\n
 # If content is editable, nothing to do\n
-if context.Event_isTextContentEditable():\n
+if editable:\n
   return context.getTextContent()\n
 \n
-# If content is HTML, nothing to do\n
-if context.getTextFormat() == \'text/html\':\n
-  return context.getTextContent()\n
-\n
-# If not, convert it\n
+# If not, convert it to stripped HTML (read-only)\n
 return context.asStrippedHTML()\n
 </string> </value>
         </item>
@@ -80,7 +80,7 @@ return context.asStrippedHTML()\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string></string> </value>
+            <value> <string>editable=None</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -100,12 +100,14 @@ return context.asStrippedHTML()\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>1</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>editable</string>
+                            <string>None</string>
                             <string>_getattr_</string>
                             <string>context</string>
                           </tuple>
@@ -119,7 +121,9 @@ return context.asStrippedHTML()\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <none/>
+              </tuple>
             </value>
         </item>
         <item>

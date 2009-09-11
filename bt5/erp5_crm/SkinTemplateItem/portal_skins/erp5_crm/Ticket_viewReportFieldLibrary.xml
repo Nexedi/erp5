@@ -61,6 +61,7 @@
                 <string>center</string>
                 <string>bottom</string>
                 <string>hidden</string>
+                <string>not_assigned</string>
               </list>
             </value>
         </item>
@@ -100,6 +101,14 @@
                         <string>your_report_mode_listbox</string>
                         <string>your_from_date</string>
                         <string>your_at_date</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>not_assigned</string> </key>
+                    <value>
+                      <list>
+                        <string>your_reportbox</string>
                       </list>
                     </value>
                 </item>
