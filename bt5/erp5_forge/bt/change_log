@@ -1,3 +1,6 @@
+2009-09-11 yusuke
+* Fix a dependency that this business template must depends on erp5_base
+
 2009-08-05 tatuya
 * Fix 'Generate POT File' function when there is a PageTemplate which is using nested i18n block and using tal:repeat in the block
 
