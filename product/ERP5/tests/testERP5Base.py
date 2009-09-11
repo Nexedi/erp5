@@ -722,7 +722,7 @@ class TestERP5Base(ERP5TypeTestCase):
                        new_organisation.getRelativeUrl() )
     self.assertEquals( new_career_step.getSubordinationTitle(),
                        new_organisation_title )
-    
+
   def stepCheckChangePersonAddress(self, sequence=None, **kw) :
     """
     We must make sure that if we change the address of a person,
@@ -779,6 +779,27 @@ class TestERP5Base(ERP5TypeTestCase):
     self.assertEquals(person.getDefaultAddressZipCode(), '69000')
     self.assertEquals(organisation.getDefaultAddressCity(),'Lille')
     self.assertEquals(organisation.getDefaultAddressZipCode(), '59000')
+
+    # if the address of the person is the same of the organisation
+    # there is no reason to create a subobject (default_address)
+    person.manage_delObjects(['default_address'])
+    person.edit(career_subordination_value=organisation)
+    self.assertTrue('default_address' not in person.objectIds())
+    self.assertEquals(person.getDefaultAddress(),
+        organisation.getDefaultAddress())
+    self.assertEquals(person.getDefaultAddressCity(),
+        organisation.getDefaultAddressCity())
+    self.assertEquals(person.getDefaultAddressZipCode(),
+        organisation.getDefaultAddressZipCode())
+    # if the address of the person is different then the subobject
+    # (default_address) must be created.
+    person.edit(default_address_city='La Garnache')
+    self.assertTrue('default_address' in person.objectIds())
+    self.assertNotEquals(person.getDefaultAddressCity(),
+         organisation.getDefaultAddressCity())
+
+
+
 
   ##################################
   ##  Tests
@@ -1404,7 +1425,6 @@ class TestERP5Base(ERP5TypeTestCase):
           self.portal.portal_catalog(translated_validation_state_title='Brouillon',
                                      translated_portal_type='Personne')])
     transaction.abort()
-
 
 def test_suite():
   suite = unittest.TestSuite()
