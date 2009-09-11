@@ -607,6 +607,13 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.assertEquals('attachment; filename="import_data_list.pdf"',
                       response.headers['content-disposition'])
 
+    # test Print icon works on OOoDocument
+    response = self.publish('%s/OOoDocument_print' % doc.getPath())
+    self.assertEquals('application/pdf',
+                      response.headers['content-type'])
+    self.assertEquals('attachment; filename="import_data_list.pdf"',
+                      response.headers['content-disposition'])
+
   def test_05_getCreationDate(self):
     """
     Check getCreationDate on all document type, as those documents 
