@@ -33,6 +33,7 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from zLOG import LOG
 from Products.ERP5Type.tests.Sequence import SequenceList
 from testOrder import TestOrderMixin
+from DateTime import DateTime
 
 class TestPackingListMixin(TestOrderMixin):
   """
@@ -1379,6 +1380,45 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
       self.assertTrue(len(delivery_builder.build()) ==  0)
     finally:
       delivery_builder.build = original_delivery_builder_build
+
+  def test_16_simulation_reindexation_on_cancel(self):
+    self.organisation_portal_type = 'Organisation'
+    self.resource_portal_type = 'Product'
+
+    packing_list_module = self.portal.getDefaultModule(
+        portal_type=self.packing_list_portal_type)
+    organisation_module = self.portal.getDefaultModule(
+        portal_type=self.organisation_portal_type)
+    resource_module = self.portal.getDefaultModule(
+        portal_type=self.resource_portal_type)
+    source = organisation_module.newContent(
+        portal_type=self.organisation_portal_type)
+    destination = organisation_module.newContent(
+        portal_type=self.organisation_portal_type)
+    resource = resource_module.newContent(
+        portal_type=self.resource_portal_type)
+
+    packing_list = packing_list_module.newContent(
+        portal_type=self.packing_list_portal_type,
+        source_value=source,
+        destination_value=destination,
+        start_date=DateTime())
+    packing_list_line = packing_list.newContent(
+        portal_type=self.packing_list_line_portal_type,
+        resource_value=resource,
+        quantity=1)
+    packing_list.confirm()
+    transaction.commit()
+    self.tic()
+    self.assertEqual('confirmed', packing_list.getSimulationState())
+    simulation_movement = packing_list_line.getDeliveryRelatedValue(
+        portal_type='Simulation Movement')
+    self.assertEqual('confirmed', simulation_movement.getSimulationState())
+    packing_list.cancel()
+    transaction.commit()
+    self.tic()
+    self.assertEqual('cancelled', packing_list.getSimulationState())
+    self.assertEqual('cancelled', simulation_movement.getSimulationState())
 
 class TestPurchasePackingListMixin(TestPackingListMixin):
   """Mixing class with steps to test purchase packing lists.
