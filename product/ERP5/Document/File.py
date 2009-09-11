@@ -110,14 +110,14 @@ class File(Document, CMFFile, ConversionCacheMixin):
     if kw.has_key('file'):
       file = kw.get('file')
       precondition = kw.get('precondition')
-      if self._isNotEmpty(file):
-        self._setFile(file, precondition=precondition)
       if set_filename__:
         filename = getattr(file, 'filename', None)
         # if file field is empty(no file is uploaded),
         # filename is empty string.
         if filename not in (None, ''):
-          kw['source_reference'] = filename
+          self._setSourceReference(filename)
+      if self._isNotEmpty(file):
+        self._setFile(file, precondition=precondition)
       del kw['file']
     Base._edit(self, **kw)
 
