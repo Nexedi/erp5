@@ -332,6 +332,29 @@ class TestDocumentConversionCache(ERP5TypeTestCase, ZopeTestCase.Functional):
     document.edit(file=file2)
     self.assertNotEqual(md5sum, document.getContentMd5())
 
+  def test_07_check_cache_key_is_escaped(self):
+    """
+    Check that key (based on path of document) support unauthorised chars
+    """
+    print '\nCheck key (based on path) support unauthorised chars'
+    default_pref = self.portal.portal_preferences.default_site_preference
+    default_pref.setPreferredConversionCacheFactory('dms_cache_factory')
+    #old preferred value is still cached
+    self.portal.portal_caches.clearAllCache()
+    transaction.commit()
+    self.tic()
+    filename = 'TEST-en-002.doc'
+    file = makeFileUpload(filename)
+    document_id = 'an id with spaces'
+    document = self.portal.portal_contributions.newContent(id=document_id, file=file)
+    transaction.commit()
+    self.tic()
+    document_url = document.getRelativeUrl()
+    document = self.portal.restrictedTraverse(document_url)
+    self.assertEquals(document.getId(), document_id)
+    document.convert(format='txt')
+    self.assertTrue(document.getConversion(format='txt'))
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestDocumentConversionCache))
