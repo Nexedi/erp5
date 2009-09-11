@@ -1,6 +1,6 @@
 2009-09-11 Kazuhiko
 * use existing 'language' property instead of 'language' category for Glossary Terms.
-* to migrate existing Glossary Terms, please use GlossaryTerm_getDuplicateGlossaryTermList script.
+* to migrate existing Glossary Terms, please use GlossaryTerm_migrateLanguageProperty script.
 
 2009-08-05 tatuya
 * Fix 'Generate POT File' function when there is a PageTemplate which is using nested i18n block and using tal:repeat in the block
