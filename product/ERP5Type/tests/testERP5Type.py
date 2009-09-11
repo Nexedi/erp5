@@ -26,12 +26,14 @@
 #
 ##############################################################################
 
+import cPickle
 import md5
 import unittest
 import sys
 
 import transaction
 from random import randint
+from Acquisition import aq_base
 from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import DummyLocalizer
@@ -278,9 +280,9 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
           o = portal.person_module.newContent(portal_type="Person", 
                                               temp_object=1)
         except WriteError:
-          raise self.failureException, "Container last ID modified"
+          self.fail("Container last ID modified")
       finally:
-        delattr(portal.person_module.__class__, '_setLastId')
+        del portal.person_module.__class__._setLastId
 
       # the module is not changed from ZODB point of view
       self.assertFalse(portal.person_module._p_changed)
@@ -289,7 +291,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       transaction.commit()
       self.assertEquals(o._p_jar, None)
 
-      # Temp objects always get 'None' ID by default.
+      # Temp objects always get a dummy ID by default.
       o = portal.person_module.newContent(portal_type="Person", 
                                           temp_object=1)
       first_id = o.getId()
@@ -298,7 +300,17 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       second_id = o.getId()
       self.assertEquals(first_id, second_id)
       self.assertEquals('None', second_id)
-    
+
+      # Make sure a temp object can't be stored in the ZODB
+      portal.person_module._setObject(o.getId(), aq_base(o))
+      try:
+        transaction.commit()
+      except cPickle.PicklingError:
+        transaction.abort()
+      else:
+        self.fail("No exception raised when storing explicitly a temp object"
+                  " on a persistent object")
+
       # Check temp objects subobjects can be accessed with OFS API
       parent = portal.person_module.newContent(portal_type="Person",
                                                temp_object=1)
