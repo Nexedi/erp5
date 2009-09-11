@@ -174,15 +174,17 @@ class ActiveObject(ExtensionClass.Base):
     if activity_tool is None: return None # Do nothing if no portal_activities
     return activity_tool.getActiveProcess()
 
-  security.declareProtected( permissions.ModifyPortalContent, 'setDefaultActivateParameters' )
+  security.declareProtected(permissions.ModifyPortalContent,
+    'setDefaultActivateParameters')
   def setDefaultActivateParameters(self, **kw):
-    # This method sets the default keyword parameters to activate. This is useful
-    # when you need to specify special parameters implicitly (e.g. to reindexObject).
+    # This method sets the default keyword parameters to activate. This is
+    # useful when you need to specify special parameters implicitly (e.g. to
+    # reindexObject).
     tv = getTransactionalVariable(self)
     key = ('default_activate_parameter', id(aq_base(self)))
     tv[key] = kw
 
-  security.declareProtected( permissions.View, 'getDefaultActivateParameterDict' )
+  security.declareProtected(permissions.View, 'getDefaultActivateParameterDict')
   def getDefaultActivateParameterDict(self, inherit_placeless=True):
     # This method returns default activate parameters to self.
     # The result can be either a dict object or None.
