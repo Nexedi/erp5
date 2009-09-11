@@ -115,21 +115,10 @@ class ActiveProcess(Base):
       # Improve this to include sort order XXX
       return self.result_list.values()
 
-#     security.declareProtected(CMFCorePermissions.ManagePortal, 'getErrorListText')
-#     def getResultListText(self):
-#       """
-#         Returns the list of errors as text
-#       """
-#       return '\n'.join(map(lambda x:repr(x), self.error_list))
-#
     security.declareProtected(CMFCorePermissions.ManagePortal, 'activateResult')
     def activateResult(self, result):
       if result not in (None, 0, '', (), []):
-        #self.activate().postError(result)
         self.postResult(result) # Until we get SQLQueue
-      # If result is a callable, then use it to propagate result (... ??? )
-      #if callable(result):
-      #  return self.activateResult(Result(self, 'activateResult',result())
 
     security.declareProtected( CMFCorePermissions.View, 'hasActivity' )
     def hasActivity(self, **kw):
