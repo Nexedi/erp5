@@ -143,6 +143,9 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
         self.portal.unittest_module.getTitleTranslationDomain())
     self.assertEquals('erp5_ui',
         self.portal.unittest_module.getShortTitleTranslationDomain())
+
+    type_information = self.portal.portal_types[module_portal_type]
+    self.assertTrue('business_application' in type_information.base_category_list)
     
   
   def test_02_FavouritesMenu(self, quiet=quiet, run=run_all_test):
