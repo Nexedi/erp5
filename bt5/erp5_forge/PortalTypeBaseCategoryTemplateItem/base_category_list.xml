@@ -11,7 +11,6 @@
   <item>business_application</item>
  </portal_type>
  <portal_type id="Glossary Term">
-  <item>language</item>
   <item>causality</item>
   <item>business_field</item>
  </portal_type>

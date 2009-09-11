@@ -53,14 +53,16 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>return context.getPortalObject().portal_catalog(\n
-    portal_type=\'Glossary Term\',\n
-    reference=context.getReference(),\n
-    uid=\'!=%d\' % context.getUid(),\n
-    language=context.getLanguage(),\n
-    business_field_uid=context.getBusinessFieldUid(),\n
-    validation_state=(\'draft\', \'validated\'),\n
-    **kw)\n
+            <value> <string># This script set language property according to existing language category.\n
+for i in context.getPortalObject().glossary_module.objectValues():\n
+  lang_list = [x.split(\'/\')[1] for x in i.categories if x.startswith(\'language/\')]\n
+  if len(lang_list):\n
+    lang = lang_list[0]\n
+    i.setLanguage(lang)\n
+    i.setCategoryList([x for x in i.categories if not x.startswith(\'language/\')])\n
+    print i.getPath(), lang\n
+print \'Migration finished.\'\n
+return printed\n
 </string> </value>
         </item>
         <item>
@@ -71,7 +73,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>**kw</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -97,10 +99,19 @@
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>kw</string>
-                            <string>_apply_</string>
+                            <string>_print_</string>
+                            <string>_print</string>
+                            <string>_getiter_</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>i</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>x</string>
+                            <string>_getitem_</string>
+                            <string>lang_list</string>
+                            <string>len</string>
+                            <string>lang</string>
                           </tuple>
                         </value>
                     </item>
@@ -117,7 +128,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>GlossaryTerm_getDuplicateGlossaryTermList</string> </value>
+            <value> <string>GlossaryModule_migrateLanguageProperty</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
