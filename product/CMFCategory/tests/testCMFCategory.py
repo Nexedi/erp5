@@ -239,6 +239,17 @@ class TestCMFCategory(ERP5TypeTestCase):
     p1.setRegion(self.region1)
     self.failUnless(p1.isMemberOf(region_path))
 
+  def test_isAcquiredMemberOf(self):
+    region_path = 'region/%s' % self.region1
+    p1 = self.getPersonModule()._getOb(self.id1)
+    sub_person = p1._getOb(self.id1)
+    p1.setRegion(None)
+    self.failIf(p1.isAcquiredMemberOf(region_path))
+    self.failIf(sub_person.isAcquiredMemberOf(region_path))
+    p1.setRegion(self.region1)
+    self.failUnless(p1.isAcquiredMemberOf(region_path))
+    self.failUnless(sub_person.isAcquiredMemberOf(region_path))
+
   def test_04_ReturnNone(self, quiet=quiet, run=run_all_test):
     # Test if we getCategory return None if the cat is '' or None
     if not run: return
