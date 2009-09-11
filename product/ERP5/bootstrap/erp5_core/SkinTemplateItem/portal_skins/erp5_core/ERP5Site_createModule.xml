@@ -71,7 +71,8 @@ module_portal_type_value.manage_changeProperties(\n
                content_icon=\'folder_icon.gif\',\n
                filter_content_types=1,\n
                allowed_content_types=(object_portal_type_id, ),\n
-               group_list=(\'module\',))\n
+               group_list=(\'module\',),\n
+               base_category_list=(\'business_application\',))\n
 # initialize translation domains\n
 module_portal_type_value.changeTranslations(\n
              properties=dict(title=\'erp5_ui\', short_title=\'erp5_ui\'))\n
