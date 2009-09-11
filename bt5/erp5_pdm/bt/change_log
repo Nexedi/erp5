@@ -1,3 +1,6 @@
+2009-09-11 yusei
+* Fix Component type information and make view action the first priority.
+
 2009-09-07 yusuke
 * Replace ERP5Report to ERP5Form and ReportBox
 
