@@ -36,7 +36,7 @@ from BaseCache import BaseCache
 from BaseCache import CacheEntry
 from Products.ERP5Type import interfaces
 import zope.interface
-import string
+from binascii import b2a_hex
 
 try:
   import memcache
@@ -109,11 +109,10 @@ class DistributedRamCache(BaseCache):
     ## such behaviour when constructing cache_id we add scope in front
     cache_id = "%s%s%s%s" % (self._key_prefix, self._cache_plugin_path,
                              scope, cache_id)
-    #Some chars are not allowed by memcached to build the key
-    cache_id = cache_id.translate(string.maketrans('', ''), '[]()<>\'", ')
-    if self._server_max_key_length != 0:
-      ## memcached will fail to store cache_id longer than MEMCACHED_SERVER_MAX_KEY_LENGTH.
-      return cache_id[:self._server_max_key_length]
+    # Escape key to normalise some chars
+    # which are not allowed by memcached
+    # Could reach the limit of max_key_len
+    cache_id = b2a_hex(cache_id)
     return cache_id
 
   def get(self, cache_id, scope, default=_MARKER):
