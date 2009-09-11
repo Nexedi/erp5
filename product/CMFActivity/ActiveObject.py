@@ -113,17 +113,6 @@ class ActiveObject(ExtensionClass.Base):
     except KeyError:
       pass
 
-    # Deprecated: This volatile variable '_v_activate_kw' can be used to pass parameters
-    # automatically to activate.
-    if getattr(self, '_v_activate_kw', None) is not None:
-      import warnings
-      warnings.warn('_v_activate_kw is deprecated;\n'
-                    ' use setDefaultActivateParameters instead.',
-                    DeprecationWarning)
-      for k, v in self._v_activate_kw.iteritems():
-        if k not in kw:
-          kw[k] = v
-
     if kw.get('group_id', '') is None:
       raise ValueError, "Cannot defined a group_id with value None"
     elif kw.get('group_method_id') is None and kw.get('group_id') is not None:
