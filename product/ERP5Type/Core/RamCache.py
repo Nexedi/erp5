@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2005 Nexedi SARL and Contributors. All Rights Reserved.
@@ -31,8 +32,6 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type import PropertySheet
 from Products.ERP5Type import Permissions
-from Products.ERP5.PropertySheet.SortIndex import SortIndex
-from Products.ERP5Type.PropertySheet.BaseCache import BaseCache
 
 class RamCache(XMLObject):
   """
@@ -55,6 +54,6 @@ class RamCache(XMLObject):
   property_sheets = ( PropertySheet.Base
                     , PropertySheet.SimpleItem
                     , PropertySheet.Folder
-                    , SortIndex
-                    , BaseCache 
+                    , PropertySheet.SortIndex
+                    , PropertySheet.BaseCache
                     )

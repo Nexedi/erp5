@@ -31,9 +31,6 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type import PropertySheet
 from Products.ERP5Type import Permissions
-from Products.ERP5.PropertySheet.SortIndex import SortIndex
-from Products.ERP5Type.PropertySheet.BaseCache import BaseCache
-from Products.ERP5Type.PropertySheet.DistributedRamCache import DistributedRamCache
 
 class DistributedRamCache(XMLObject):
   """
@@ -58,7 +55,7 @@ class DistributedRamCache(XMLObject):
   property_sheets = ( PropertySheet.Base
                     , PropertySheet.SimpleItem
                     , PropertySheet.Folder
-                    , SortIndex
-                    , BaseCache
-                    , DistributedRamCache
+                    , PropertySheet.SortIndex
+                    , PropertySheet.BaseCache
+                    , PropertySheet.DistributedRamCache
                     )

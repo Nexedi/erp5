@@ -30,8 +30,6 @@
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type import PropertySheet
-from Products.ERP5.PropertySheet.SortIndex import SortIndex
-from Products.ERP5.PropertySheet.Url import Url
 from Products.ERP5Type.PropertySheet.MemcachedPlugin import MemcachedPlugin
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.Tool.MemcachedTool import memcached_dict_pool
@@ -57,9 +55,9 @@ class MemcachedPlugin(XMLObject):
   property_sheets = ( PropertySheet.Base
                     , PropertySheet.SimpleItem
                     , PropertySheet.Folder
-                    , MemcachedPlugin
-                    , SortIndex
-                    , Url
+                    , PropertySheet.MemcachedPlugin
+                    , PropertySheet.SortIndex
+                    , PropertySheet.Url
                     )
 
   def manage_beforeDelete(self, *args, **kw):
