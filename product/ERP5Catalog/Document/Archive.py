@@ -62,4 +62,3 @@ class Archive(Predicate):
   isIndexable = 1
     
 
-InitializeClass(Archive)
