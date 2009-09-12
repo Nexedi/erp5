@@ -210,8 +210,12 @@ class TestERP5Web(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.portal.portal_transforms.max_sec_in_cache=-1
     page = self.web_page_module.newContent(portal_type='Web Page')
     page.edit(text_content='<p>Hé Hé Hé!</p>')
+    transaction.commit()
+    self.tic()
     self.assertEquals('Hé Hé Hé!', page.asText().strip())
     page.edit(text_content='<p>Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé!</p>')
+    transaction.commit()
+    self.tic()
     self.assertEquals("""Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé
 Hé Hé Hé!""", page.asText().strip())
 
