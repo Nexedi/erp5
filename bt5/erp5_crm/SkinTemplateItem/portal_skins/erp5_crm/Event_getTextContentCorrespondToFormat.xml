@@ -54,6 +54,9 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>from Products.PythonScripts.standard import newline_to_br\n
+from Products.ERP5Type.Log import log\n
+\n
+log("Event_getTextContentCorrespondToFormat is deprecated, use Event_getEditorFieldTextContent instead", level=100) # WARNING\n
 \n
 text_format = context.getTextFormat()\n
 \n
@@ -104,6 +107,8 @@ else:\n
                             <string>editable</string>
                             <string>Products.PythonScripts.standard</string>
                             <string>newline_to_br</string>
+                            <string>Products.ERP5Type.Log</string>
+                            <string>log</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>text_format</string>
