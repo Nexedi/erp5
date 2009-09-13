@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # Derived from PloneTestCase in Plone.
 
 #
@@ -129,14 +130,17 @@ ZopeTestCase.installProduct('ERP5Security', quiet=install_product_quiet)
 ZopeTestCase.installProduct('VerboseSecurity', quiet=install_product_quiet)
 ZopeTestCase.installProduct('Zelenium', quiet=install_product_quiet)
 
-# ERP5
+# ERP5 - ERP5Type product is installed last so that
+#        initializeProductDocumentRegistry is only called
+#        after all products which need to register their Document 
+#        classes can register them by invoking updateGlobals in __init__
 ZopeTestCase.installProduct('CMFActivity', quiet=install_product_quiet)
 ZopeTestCase.installProduct('ERP5Catalog', quiet=install_product_quiet)
-ZopeTestCase.installProduct('ERP5Type', quiet=install_product_quiet)
 ZopeTestCase.installProduct('ERP5Form', quiet=install_product_quiet)
-ZopeTestCase.installProduct('ERP5SyncML', quiet=install_product_quiet)
-ZopeTestCase.installProduct('CMFCategory', quiet=install_product_quiet)
 ZopeTestCase.installProduct('ERP5', quiet=install_product_quiet)
+ZopeTestCase.installProduct('ERP5SyncML', quiet=install_product_quiet)
+ZopeTestCase.installProduct('ERP5Type', quiet=install_product_quiet)
+ZopeTestCase.installProduct('CMFCategory', quiet=install_product_quiet)
 ZopeTestCase.installProduct('ZMySQLDDA', quiet=install_product_quiet)
 
 ZopeTestCase.installProduct('ParsedXML', quiet=install_product_quiet)
