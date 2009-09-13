@@ -48,6 +48,9 @@ class TestEditorField(ERP5TypeTestCase, ZopeTestCase.Functional):
     proxy fields are designed in a consistent way. This test has 
     been created after some changes in erp5_core had impact
     on other business templates.
+
+    Please refer to the ERP5 developer howto for more explanation
+      http://www.erp5.org/HowToDisplayOrEditHTML
   """
   manager_username = 'zope'
   manager_password = 'zope'
@@ -95,22 +98,22 @@ class TestEditorField(ERP5TypeTestCase, ZopeTestCase.Functional):
   def getDefaultSitePreference(self):
     return self.getPreferenceTool().default_site_preference
 
-  def _testPreferredDocumentEditor(self, event, editor, form_id, field_id):
+  def _testPreferredDocumentEditor(self, event, preferred_editor, editor, form_id, field_id):
     """
       Common code to test if current document (event)
       is using appropriate editor (editor) as defined 
       in preferences
     """
-    self.getDefaultSitePreference().setPreferredTextEditor(editor)
+    self.getDefaultSitePreference().setPreferredTextEditor(preferred_editor)
     if self.getDefaultSitePreference().getPreferenceState() == 'global':
       self.getDefaultSitePreference()._clearCache()
     else:
       self.getDefaultSitePreference().enable()
 
     # Make sure preferred editor was set on preference
-    self.assertEquals(self.getDefaultSitePreference().getPreferredTextEditor(), editor)
+    self.assertEquals(self.getDefaultSitePreference().getPreferredTextEditor(), preferred_editor)
     # then on portal preferences
-    self.assertEquals(self.getPreferenceTool().getPreferredTextEditor(), editor)
+    self.assertEquals(self.getPreferenceTool().getPreferredTextEditor(), preferred_editor)
     # Make sure editor field preference is also set
     form = getattr(event, form_id)
     field = getattr(form, field_id)
@@ -131,8 +134,12 @@ class TestEditorField(ERP5TypeTestCase, ZopeTestCase.Functional):
     match_string1 = "var oFCKeditor      = new FCKeditor('field_%s');" % field_id
     match_string2 = "oFCKeditor.Value    = '%s';" % ('\\n'.join(text_content.splitlines()))
     if html_text.find(match_string1) == -1:
+      print html_text
+      print match_string1
       return False
     if html_text.find(match_string2) == -1:
+      print html_text
+      print match_string2
       return False
     return True
 
@@ -150,6 +157,8 @@ class TestEditorField(ERP5TypeTestCase, ZopeTestCase.Functional):
     """
     match_string = """name="field_%s" >%s</textarea>""" % (field_id, text_content)
     if html_text.find(match_string) == -1:
+      print html_text
+      print match_string
       return False
     return True
 
@@ -165,10 +174,8 @@ class TestEditorField(ERP5TypeTestCase, ZopeTestCase.Functional):
                   read only mode
     """
     text_content = document.asStrippedHTML()
-    # Some reformatting needed to simulate page templates
-    text_content = '<br />\n'.join(text_content.split('<br />'))
     match_string1 = """<div class="input">%s</div>""" % text_content
-    match_string2 = """"<div class="field page"""
+    match_string2 = """<div class="field page"""
     if html_text.find(match_string1) == -1:
       print html_text
       print match_string1
@@ -179,20 +186,22 @@ class TestEditorField(ERP5TypeTestCase, ZopeTestCase.Functional):
       return False
     return True
 
-  def test_EditSimpleEmailEventFCKEditor(self):
+  def test_EditSimpleEmailEventFCKEditorHTML(self):
     """
       Create an event, make sure portal preferences are set as
       FCKEditor and make sure FCKEditor is displayed in the 
       default view of a CRM event
+
+      In this case we use HTML content for the test.
     """
     # Create an event
     event = self.event_module.newContent(portal_type='Note')
-    text_content = """Hé Hé\nHo Ho\nHi Hi"""
+    text_content = """<p>Hé Hé\nHo Ho\nHi Hi</p>"""
     event.setTextFormat('text/html')
     event.setTextContent(text_content)
    
     # Set FCKEditor as preferred editor and make sure it is taken into account
-    self._testPreferredDocumentEditor(event, 'fck_editor', 'Event_view', 'my_text_content')
+    self._testPreferredDocumentEditor(event, 'fck_editor', 'fck_editor', 'Event_view', 'my_text_content')
 
     # Make sure generated HTML is based on FCKEditor
     request=self.app.REQUEST
@@ -207,22 +216,27 @@ class TestEditorField(ERP5TypeTestCase, ZopeTestCase.Functional):
     html_text = event.view()
     self.assertTrue(self._isReadOnlyEditor(html_text, event))
 
-  def test_EditSimpleEmailEventTextArea(self):
+  def test_EditSimpleEmailEventFCKEditorText(self):
     """
       Create an event, make sure portal preferences are set as
-      TextArea and make sure TextArea is displayed in the 
+      FCKEditor and make sure FCKEditor is displayed in the 
       default view of a CRM event
+
+      In this case we use Text content for the test.
     """
     # Create an event
     event = self.event_module.newContent(portal_type='Note')
     text_content = """Hé Hé\nHo Ho\nHi Hi"""
-    event.setTextFormat('text/html')
+    event.setTextFormat('text/plain')
     event.setTextContent(text_content)
    
-    # Set FCKEditor as preferred editor and make sure it is taken into account
-    self._testPreferredDocumentEditor(event, 'text_area', 'Event_view', 'my_text_content')
+    # Set FCKEditor as preferred editor and make sure text_area is used since
+    # we are not doing HTML
+    self._testPreferredDocumentEditor(event, 'fck_editor', 'text_area', 'Event_view', 'my_text_content')
 
-    # Make sure generated HTML is based on FCKEditor
+    # Make sure generated HTML is based on TextArea since this is not HTML
+    request=self.app.REQUEST
+    request.set('URLPATH2', '/arbitrary/path') # A hack to make sure FCKEditor page template renders
     html_text = event.view()
     self.assertTrue(self._isTextAreaEditor(html_text, 'my_text_content', text_content))
 
@@ -233,40 +247,147 @@ class TestEditorField(ERP5TypeTestCase, ZopeTestCase.Functional):
     html_text = event.view()
     self.assertTrue(self._isReadOnlyEditor(html_text, event))
 
-  def test_EditWebPageFCKEditor(self):
+  def test_EditSimpleEmailEventTextAreaHTML(self):
+    """
+      Create an event, make sure portal preferences are set as
+      TextArea and make sure TextArea is displayed in the 
+      default view of a CRM event
+
+      In this case we use HTML content for the test.
+    """
+    # Create an event
+    event = self.event_module.newContent(portal_type='Note')
+    text_content = """<p>Hé Hé\nHo Ho\nHi Hi</p>"""
+    event.setTextFormat('text/html')
+    event.setTextContent(text_content)
+   
+    # Set TextArea as preferred editor and make sure it is taken into account
+    self._testPreferredDocumentEditor(event, 'text_area', 'text_area', 'Event_view', 'my_text_content')
+
+    # Make sure generated HTML is based on TextArea
+    html_text = event.view()
+    # text_content is processed to simulate the way TextArea does
+    text_content = text_content.replace('<', '&lt;')
+    text_content = text_content.replace('>', '&gt;')
+    self.assertTrue(self._isTextAreaEditor(html_text, 'my_text_content', text_content))
+
+    # Set a fake file on Event and make sure no more editor is displayed
+    # and that instead a div with page CSS style appears with stripped HTML
+    event.setData('fake')
+    self.assertFalse(event.Event_view.my_text_content.get_value('editable'))
+    html_text = event.view()
+    self.assertTrue(self._isReadOnlyEditor(html_text, event))
+
+  def test_EditSimpleEmailEventTextAreaText(self):
+    """
+      Create an event, make sure portal preferences are set as
+      TextArea and make sure TextArea is displayed in the 
+      default view of a CRM event
+
+      In this case we use Text content for the test.
+    """
+    # Create an event
+    event = self.event_module.newContent(portal_type='Note')
+    text_content = """Hé Hé\nHo Ho\nHi Hi"""
+    event.setTextFormat('text/plain')
+    event.setTextContent(text_content)
+   
+    # Set TextArea as preferred editor and make sure it is taken into account
+    self._testPreferredDocumentEditor(event, 'text_area', 'text_area', 'Event_view', 'my_text_content')
+
+    # Make sure generated HTML is based on TextArea
+    html_text = event.view()
+    self.assertTrue(self._isTextAreaEditor(html_text, 'my_text_content', text_content))
+
+    # Set a fake file on Event and make sure no more editor is displayed
+    # and that instead a div with page CSS style appears with stripped HTML
+    event.setData('fake')
+    self.assertFalse(event.Event_view.my_text_content.get_value('editable'))
+    html_text = event.view()
+    self.assertTrue(self._isReadOnlyEditor(html_text, event))
+
+  def test_EditWebPageFCKEditorHTML(self):
     """
       Create a web page. Make sure portal preferences are set as
       TextArea and make sure TextArea is displayed in the 
       editor view of a Web Page.
+
+      In this case we use HTML content for the test.
     """
     # Create a web page
     page = self.web_page_module.newContent(portal_type='Web Page')
-    text_content = """Hé Hé\nHo Ho\nHi Hi"""
+    text_content = """<p>Hé Hé\nHo Ho\nHi Hi</p>"""
     page.setTextFormat('text/html')
     page.setTextContent(text_content)
 
     # Set FCKEditor as preferred editor and make sure it is taken into account
-    self._testPreferredDocumentEditor(page, 'fck_editor', 'WebPage_viewEditor', 'my_text_content')
+    self._testPreferredDocumentEditor(page, 'fck_editor', 'fck_editor', 'WebPage_viewEditor', 'my_text_content')
 
     # Make sure default view is read only
     html_text = page.WebPage_view()
     self.assertFalse(page.WebPage_view.text_content.get_value('editable'))
     self.assertTrue(self._isReadOnlyEditor(html_text, page))
 
-  def test_EditWebPageTextArea(self):
+  def test_EditWebPageFCKEditorText(self):
     """
       Create a web page. Make sure portal preferences are set as
       TextArea and make sure TextArea is displayed in the 
       editor view of a Web Page.
+
+      In this case we use Text content for the test.
     """
     # Create a web page
     page = self.web_page_module.newContent(portal_type='Web Page')
     text_content = """Hé Hé\nHo Ho\nHi Hi"""
-    page.setTextFormat('text/html')
+    page.setTextFormat('text/plain')
     page.setTextContent(text_content)
 
     # Set FCKEditor as preferred editor and make sure it is taken into account
-    self._testPreferredDocumentEditor(page, 'text_area', 'WebPage_viewEditor', 'my_text_content')
+    self._testPreferredDocumentEditor(page, 'fck_editor', 'text_area', 'WebPage_viewEditor', 'my_text_content')
+
+    # Make sure default view is read only
+    html_text = page.WebPage_view()
+    self.assertFalse(page.WebPage_view.text_content.get_value('editable'))
+    self.assertTrue(self._isReadOnlyEditor(html_text, page))
+
+  def test_EditWebPageTextAreaHTML(self):
+    """
+      Create a web page. Make sure portal preferences are set as
+      TextArea and make sure TextArea is displayed in the 
+      editor view of a Web Page.
+
+      In this case we use HTML content for the test.
+    """
+    # Create a web page
+    page = self.web_page_module.newContent(portal_type='Web Page')
+    text_content = """<p>Hé Hé\nHo Ho\nHi Hi</p>"""
+    page.setTextFormat('text/html')
+    page.setTextContent(text_content)
+
+    # Set TextArea as preferred editor and make sure it is taken into account
+    self._testPreferredDocumentEditor(page, 'text_area', 'text_area', 'WebPage_viewEditor', 'my_text_content')
+
+    # Make sure default view is read only
+    html_text = page.WebPage_view()
+    self.assertFalse(page.WebPage_view.text_content.get_value('editable'))
+    self.assertTrue(self._isReadOnlyEditor(html_text, page))
+
+  def test_EditWebPageTextAreaText(self):
+    """
+      Create a web page. Make sure portal preferences are set as
+      TextArea and make sure TextArea is displayed in the 
+      editor view of a Web Page.
+
+      In this case we use Text content for the test.
+    """
+    # Create a web page
+    page = self.web_page_module.newContent(portal_type='Web Page')
+    text_content = """Hé Hé\nHo Ho\nHi Hi"""
+    page.setTextFormat('text/plain')
+    page.setTextContent(text_content)
+
+    # Set TextArea as preferred editor and make sure it is taken into account
+    self._testPreferredDocumentEditor(page, 'text_area', 'text_area', 'WebPage_viewEditor', 'my_text_content')
 
     # Make sure default view is read only
     html_text = page.WebPage_view()
