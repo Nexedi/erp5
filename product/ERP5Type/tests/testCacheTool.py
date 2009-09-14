@@ -114,6 +114,13 @@ class TestCacheTool(ERP5TypeTestCase):
       ram_cache_plugin = ram_cache_factory.newContent(portal_type="Ram Cache")
       ram_cache_plugin.setIntIndex(0)
 
+    if getattr(portal_caches, 'another_ram_cache_factory', None) is None:
+      cache_factory = portal_caches.newContent(portal_type="Cache Factory",
+                                                   id='another_ram_cache_factory',
+                                                   container=portal_caches)
+      cache_plugin = cache_factory.newContent(portal_type="Ram Cache")
+      cache_plugin.setIntIndex(0)
+
     if getattr(portal_caches, 'distributed_ram_cache_factory', None) is None:
       ## distributed_ram_cache_factory (to test Distributed Ram Cache Plugin) 
       dram_cache_factory = portal_caches.newContent(portal_type="Cache Factory",
@@ -150,6 +157,7 @@ class TestCacheTool(ERP5TypeTestCase):
 
     ## do we have the same structure we created above?
     self.assert_('ram_cache_factory' in CachingMethod.factories)
+    self.assert_('another_ram_cache_factory' in CachingMethod.factories)
     self.assert_('distributed_ram_cache_factory' in CachingMethod.factories)
     self.assert_('distributed_persistent_cache_factory' in CachingMethod.factories)
     self.assert_('erp5_user_factory' in CachingMethod.factories)
@@ -268,7 +276,46 @@ return result
     cached_func = CachingMethod(func, 'cache_bound_method')
     self.assertRaises(TypeError, cached_func)
 
-  def test_04_CachePluginInterface(self):
+  def test_04_CheckConcurrentRamCacheDict(self):
+    """Check that all RamCache doesn't clear the same cache_dict
+    """
+    portal = self.getPortal()
+    nb_iterations = 30000
+    from Products.ERP5Type.Cache import CachingMethod
+    py_script_id = "testCachedMethod"
+    py_script_obj = getattr(portal, py_script_id)
+
+    ram_cached_method = CachingMethod(py_script_obj,
+                             'py_script_obj',
+                             cache_factory='ram_cache_factory')
+
+    portal.portal_caches.clearCache(cache_factory_list=('ram_cache_factory', 'another_ram_cache_factory',))
+    #First call, fill the cache
+    start = time.time()
+    ram_cached_method(nb_iterations, portal_path=('', portal.getId()))
+    end = time.time()
+    calculation_time = end-start
+    print "\n\tCalculation time (1st call)", calculation_time
+
+    ## 2nd call - should be cached now
+    start = time.time()
+    cached = ram_cached_method(nb_iterations, portal_path=('', portal.getId()))
+    end = time.time()
+    calculation_time = end-start
+    print "\n\tCalculation time (2nd call)", calculation_time
+    self.assert_(1.0 > calculation_time)
+
+    #Clear only another_ram_cache_factory
+    portal.portal_caches.clearCacheFactory('another_ram_cache_factory')
+    #Call conversion for ram_cache_factory
+    start = time.time()
+    cached = ram_cached_method(nb_iterations, portal_path=('', portal.getId()))
+    end = time.time()
+    calculation_time = end-start
+    print "\n\tCalculation time (3rd call)", calculation_time
+    self.assert_(1.0 > calculation_time)
+
+  def test_99_CachePluginInterface(self):
     """Test Class against Interface
     """
     from Products.ERP5Type.CachePlugins.DistributedRamCache import DistributedRamCache
