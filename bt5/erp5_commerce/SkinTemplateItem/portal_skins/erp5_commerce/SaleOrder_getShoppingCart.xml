@@ -95,7 +95,7 @@ else:\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>action = \'\', new_shopping_cart=None</string> </value>
+            <value> <string>action=\'\', new_shopping_cart=None</string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>
