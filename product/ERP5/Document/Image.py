@@ -337,30 +337,28 @@ class Image(File, OFSImage):
     Implementation of conversion for Image files
     """
     if format in ('text', 'txt', 'html', 'base_html', 'stripped-html'):
-      if not self.hasConversion(format=format):
+      try:
+        return self.getConversion(format=format)
+      except KeyError:
         mime_type, data = self._convertToText(format)
         data = aq_base(data)
         self.setConversion(data, mime=mime_type, format=format)
-      else:
-        mime_type, data = self.getConversion(format=format)
-      return mime_type, data
+        return mime_type, data
     image_size = self.getSizeFromImageDisplay(display)
     if (display is not None or resolution is not None or quality != 75 or format != ''\
                             or frame is not None) and image_size:
-      if not self.hasConversion(display=display, format=format,
-                                quality=quality, resolution=resolution,
-                                frame=frame, image_size=image_size):
+      try:
+        return self.getConversion(display=display, format=format,
+                                  quality=quality, resolution=resolution,
+                                  frame=frame, image_size=image_size)
+      except KeyError:
         mime, image = self._makeDisplayPhoto(display, format=format, quality=quality,
                                              resolution=resolution, frame=frame,
                                              image_size=image_size)
         self.setConversion(image, mime, format=format, quality=quality,
                            resolution=resolution, frame=frame,
                            image_size=image_size)
-      else:
-        mime, image = self.getConversion(display=display, format=format,
-                                         quality=quality, resolution=resolution,
-                                         frame=frame, image_size=image_size)
-      return mime, image.data
+        return mime, image
     return self.getContentType(), self.getData()
 
   security.declareProtected(Permissions.View, 'getSearchableText')
