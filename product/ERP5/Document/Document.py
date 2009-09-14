@@ -219,8 +219,7 @@ class ConversionCacheMixin:
         md5sum, mime, data = data_list
         if md5sum != self.getContentMd5():
           raise KeyError, 'Conversion cache key is compromised for %r' % cache_id
-        if data:
-          return mime, data
+        return mime, data
     raise KeyError, 'Conversion cache key does not exists for %r' % cache_id
 
   security.declareProtected(Permissions.View, 'getConversionSize')
