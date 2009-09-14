@@ -493,10 +493,6 @@
                           <string>title</string>
                           <string>Title</string>
                         </tuple>
-                        <tuple>
-                          <string>decoratedPrice</string>
-                          <string>Price</string>
-                        </tuple>
                       </list>
                     </value>
                 </item>

@@ -13,13 +13,13 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
                 <string>default</string>
-                <string>width</string>
+                <string>enabled</string>
                 <string>height</string>
                 <string>text_editor</string>
-                <string>enabled</string>
+                <string>title</string>
                 <string>whitespace_preserve</string>
+                <string>width</string>
               </list>
             </value>
         </item>
@@ -112,7 +112,7 @@
               <dictionary>
                 <item>
                     <key> <string>default</string> </key>
-                    <value> <string>login is not available actually.</string> </value>
+                    <value> <string>Login is not available actually.</string> </value>
                 </item>
                 <item>
                     <key> <string>enabled</string> </key>

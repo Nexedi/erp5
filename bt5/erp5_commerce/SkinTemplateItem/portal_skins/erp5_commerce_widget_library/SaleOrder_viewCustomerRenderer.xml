@@ -39,42 +39,41 @@
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-<tal:block tal:define="customer here/SaleOrder_getShoppingCartCustomer">\n
-  <br />\n
-  <h2>Customer Information</h2>\n
-\n
-  <table>\n
-    <tr>\n
-      <td>Name:</td>\n
-      <td><span tal:content="customer/getTitle"/></td>\n
-    </tr>\n
-    <tr>\n
-      <td>Email:</td>\n
-      <td> <span tal:content="customer/getDefaultEmailText"/></td>\n
-    </tr>\n
-    <tr>\n
-      <td>Telephone:</td>\n
-      <td> <span tal:content="customer/getDefaultTelephoneText"/></td>\n
-    </tr>\n
-    <tr>\n
-      <td>Address:</td>\n
-      <td><span tal:content="customer/getDefaultAddressStreetAddress"/></td>\n
-    </tr>\n
-    <tr>\n
-      <td>City:</td>\n
-      <td><span tal:content="customer/getDefaultAddressCity"/>\n
-      </td>\n
-    </tr>\n
-    <tr>\n
-      <td>ZIP:</td>\n
-      <td><span tal:content="customer/getDefaultAddressZipCode"/>\n
-      </td>\n
-    </tr>\n
-    <tr>\n
-      <td>Country:</td>\n
-      <td><span tal:content="customer/getDefaultAddressRegionTitle"/></td>\n
-    </tr>\n
-  </table>\n
+<tal:block tal:condition="python: not here.getPortalObject().portal_membership.isAnonymousUser()">\n
+  <tal:block tal:define="customer here/SaleOrder_getShoppingCartCustomer">\n
+    <br />\n
+    <h2>Customer Information</h2>\n
+    <table>\n
+      <tr>\n
+        <td>Name:</td>\n
+        <td><span tal:content="customer/getTitle"/></td>\n
+      </tr>\n
+      <tr>\n
+        <td>Email:</td>\n
+        <td> <span tal:content="customer/getDefaultEmailText"/></td>\n
+      </tr>\n
+      <tr>\n
+        <td>Telephone:</td>\n
+        <td> <span tal:content="customer/getDefaultTelephoneText"/></td>\n
+      </tr>\n
+      <tr>\n
+        <td>Address:</td>\n
+        <td><span tal:content="customer/getDefaultAddressStreetAddress"/></td>\n
+      </tr>\n
+      <tr>\n
+        <td>City:</td>\n
+        <td><span tal:content="customer/getDefaultAddressCity"/></td>\n
+      </tr>\n
+      <tr>\n
+        <td>ZIP:</td>\n
+        <td><span tal:content="customer/getDefaultAddressZipCode"/></td>\n
+      </tr>\n
+      <tr>\n
+        <td>Country:</td>\n
+        <td><span tal:content="customer/getDefaultAddressRegionTitle"/></td>\n
+      </tr>\n
+    </table>\n
+  </tal:block>\n
 </tal:block>
 
 ]]></string> </value>

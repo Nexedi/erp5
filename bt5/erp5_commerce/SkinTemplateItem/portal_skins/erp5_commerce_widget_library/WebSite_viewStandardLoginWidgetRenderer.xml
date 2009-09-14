@@ -45,7 +45,8 @@
      <span tal:replace="python: here.Base_translateString(\'You are not logged in\')"/>\n
    </p>\n
    <p class="article">\n
-     <a class="articlelink" href="register">\n
+     <a tal:attributes="href python: here.getWebSiteValue().absolute_url()+\'/register\';\n
+                        class string: articlelink">\n
        &#149; <span tal:replace="python: here.Base_translateString(\'I want to create an account\')"/>\n
      </a>\n
    </p>\n
@@ -77,7 +78,7 @@
     <span><span tal:replace="python: here.Base_translateString(\'You are logged as\')"/>  <span tal:replace="customer/getTitle"/></span>\n
     </p>\n
     <a class="articlelink" \n
-      tal:attributes="href python: \'%s/SaleOrderModule_viewAsWebSaleOrderList\' %website.sale_order_module.absolute_url()">\n
+      tal:attributes="href python: \'%s/SaleOrderModule_viewAsWebSaleOrderList\' % website.sale_order_module.absolute_url()">\n
       <span tal:replace="python: here.Base_translateString(\'My Orders\')"/>\n
     </a> &nbsp;\n
     <a class="articlelink" \n
