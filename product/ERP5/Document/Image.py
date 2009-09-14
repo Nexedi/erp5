@@ -316,21 +316,17 @@ class Image(File, OFSImage):
     mime_type = str(mime_type)
     src_mimetype = self.getContentType()
     content = '%s' % self.getData()
-    if content is not None:
-      portal_transforms = getToolByName(self, 'portal_transforms')
-      result = portal_transforms.convertToData(mime_type, content,
-                                               object=self, context=self,
-                                               filename=self.getTitleOrId(),
-                                               mimetype=src_mimetype)
-      if result is None:
-        # portal_transforms fails to convert.
-        LOG('TextDocument.convert', WARNING,
-            'portal_transforms failed to convert to %s: %r' % (mime_type, self))
-        result = ''
-      return mime_type, result
-    else:
-      # text_content is not set, return empty string instead of None
-      return mime_type, ''
+    portal_transforms = getToolByName(self, 'portal_transforms')
+    result = portal_transforms.convertToData(mime_type, content,
+                                             object=self, context=self,
+                                             filename=self.getTitleOrId(),
+                                             mimetype=src_mimetype)
+    if result is None:
+      # portal_transforms fails to convert.
+      LOG('TextDocument.convert', WARNING,
+          'portal_transforms failed to convert to %s: %r' % (mime_type, self))
+      result = ''
+    return mime_type, result
 
   # Conversion API
   security.declareProtected(Permissions.ModifyPortalContent, 'convert')
