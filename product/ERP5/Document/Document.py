@@ -1416,11 +1416,17 @@ class Document(PermanentURLMixIn, XMLObject, UrlMixIn, ConversionCacheMixin, Sna
       be a interface for all classes which can act as a File.
     """
     size = None
+    # update_data use len(data) when size is None, which breaks this method.
+    # define size = 0 will prevent len be use and keep the consistency of 
+    # getData() and setData()
+    if data is None:
+      size = 0
     if not isinstance(data, Pdata) and data is not None:
       file = cStringIO.StringIO(data)
       data, size = self._read_data(file)
     if getattr(self, 'update_data', None) is not None:
-      self.update_data(data, size=size) # We call this method to make sure size is set and caches reset
+      # We call this method to make sure size is set and caches reset
+      self.update_data(data, size=size)
     else:
       self._baseSetData(data) # XXX - It would be better to always use this accessor
       self.size=size # Using accessor or caching method would be better
