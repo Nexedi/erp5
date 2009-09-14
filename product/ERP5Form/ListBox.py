@@ -228,7 +228,7 @@ class ListBoxWidget(Widget.Widget):
 
     list_method = fields.MethodField('list_method',
                                  title='List Method',
-                                 description=('The method to use to list'
+                                 description=('The method to use to list '
                                               'objects'),
                                  default='',
                                  required=0)
@@ -236,7 +236,7 @@ class ListBoxWidget(Widget.Widget):
 
     count_method = fields.MethodField('count_method',
                                  title='Count Method',
-                                 description=('The method to use to count'
+                                 description=('The method to use to count '
                                               'objects'),
                                  default='',
                                  required=0)
@@ -244,7 +244,7 @@ class ListBoxWidget(Widget.Widget):
 
     stat_method = fields.MethodField('stat_method',
                                  title='Stat Method',
-                                 description=('The method to use to stat'
+                                 description=('The method to use to stat '
                                               'objects'),
                                  default='',
                                  required=0)
@@ -252,15 +252,16 @@ class ListBoxWidget(Widget.Widget):
 
     row_css_method = fields.MethodField('row_css_method',
                                  title='Row CSS Method',
-                                 description=('The method to set the css class name of a row'),
+                                 description=('The method to set the css '
+                                              'class name of a row'),
                                  default='',
                                  required=0)
     property_names.append('row_css_method')
 
     selection_name = fields.StringField('selection_name',
                                  title='Selection Name',
-                                 description=('The name of the selection to store'
-                                              'params of selection'),
+                                 description=('The name of the selection to '
+                                              'store selection parameters'),
                                  default='',
                                  required=1)
     property_names.append('selection_name')
