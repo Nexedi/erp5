@@ -307,12 +307,13 @@ class ListBoxWidget(Widget.Widget):
                                   required=0)
     property_names.append('anchor')
 
-    hide_rows_on_no_search_criterion = \
-      fields.CheckBoxField('hide_rows_on_no_search_criterion', \
-                           title = 'Hide Rows (On No Search Criterion)', \
-                           description = ('Hide listbox rows if no search criterion is provided by user'), \
-                                          default = 0, \
-                                          required = 0)
+    hide_rows_on_no_search_criterion = fields.CheckBoxField(
+                                 'hide_rows_on_no_search_criterion',
+                                 title='Hide Rows (On No Search Criterion)',
+                                 description=('Hide listbox rows if no search '
+                                             'criterion is provided by user'),
+                                                default=0,
+                                                required=0)
     property_names.append('hide_rows_on_no_search_criterion')
 
     editable_columns = fields.ListTextAreaField('editable_columns',
@@ -351,7 +352,8 @@ class ListBoxWidget(Widget.Widget):
     global_attributes = fields.ListTextAreaField('global_attributes',
                                  title="Global Attributes",
                                  description=(
-        "An optional list of attributes which are set by hidden fields and which are applied to each editable column."),
+        "An optional list of attributes which are set by hidden fields and "
+        "which are applied to each editable column."),
                                  default=[],
                                  required=0)
     property_names.append('global_attributes')
