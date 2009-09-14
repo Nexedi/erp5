@@ -133,7 +133,6 @@ class Image(File, OFSImage):
     self.width = width
     self._setContentType(content_type)
 
-  
   def _upradeImage(self):
     """
       This method upgrades internal data structures is required
@@ -194,117 +193,117 @@ class Image(File, OFSImage):
   def tag(self, display=None, height=None, width=None, cookie=0,
                 alt=None, css_class=None, format='', quality=75,
                 resolution=None, frame=None, **kw):
-      """Return HTML img tag."""
-      self._upradeImage()
+    """Return HTML img tag."""
+    self._upradeImage()
 
-      # Get cookie if display is not specified.
-      if display is None:
-          display = self.REQUEST.cookies.get('display', None)
+    # Get cookie if display is not specified.
+    if display is None:
+      display = self.REQUEST.cookies.get('display', None)
 
-      # display may be set from a cookie.
-      image_size = self.getSizeFromImageDisplay(display)
-      if (display is not None or resolution is not None or quality!=75 or format != ''\
-                              or frame is not None) and image_size:
-          try:
-              mime, image = self.getConversion(display=display, format=format,
-                                               quality=quality, resolution=resolution,
-                                               frame=frame, image_size=image_size)
-          except KeyError:
-              # Generate photo on-the-fly
-              mime, image = self._makeDisplayPhoto(display, format=format, quality=quality,
-                                                   resolution=resolution, frame=frame,
-                                                   image_size=image_size)
-              self.setConversion(image, mime, display=display, format=format,
-                                 quality=quality, resolution=resolution,
-                                 frame=frame, image_size=image_size)
-          width, height = (image.width, image.height)
-          # Set cookie for chosen size
-          if cookie:
-              self.REQUEST.RESPONSE.setCookie('display', display, path="/")
-      else:
-          # TODO: Add support for on-the-fly resize?
-          height = self.getHeight()
-          width = self.getWidth()
+    # display may be set from a cookie.
+    image_size = self.getSizeFromImageDisplay(display)
+    if (display is not None or resolution is not None or quality!=75 or format != ''\
+                            or frame is not None) and image_size:
+      try:
+        mime, image = self.getConversion(display=display, format=format,
+                                           quality=quality, resolution=resolution,
+                                           frame=frame, image_size=image_size)
+      except KeyError:
+        # Generate photo on-the-fly
+        mime, image = self._makeDisplayPhoto(display, format=format, quality=quality,
+                                             resolution=resolution, frame=frame,
+                                             image_size=image_size)
+        self.setConversion(image, mime, display=display, format=format,
+                           quality=quality, resolution=resolution,
+                           frame=frame, image_size=image_size)
+      width, height = (image.width, image.height)
+      # Set cookie for chosen size
+      if cookie:
+        self.REQUEST.RESPONSE.setCookie('display', display, path="/")
+    else:
+      # TODO: Add support for on-the-fly resize?
+      height = self.getHeight()
+      width = self.getWidth()
 
-      if display:
-          result = '<img src="%s?display=%s"' % (self.absolute_url(), display)
-      else:
-          result = '<img src="%s"' % (self.absolute_url())
+    if display:
+      result = '<img src="%s?display=%s"' % (self.absolute_url(), display)
+    else:
+      result = '<img src="%s"' % (self.absolute_url())
 
-      if alt is None:
-          alt = getattr(self, 'title', '')
-      if alt == '':
-          alt = self.getId()
-      result = '%s alt="%s"' % (result, html_quote(alt))
+    if alt is None:
+      alt = getattr(self, 'title', '')
+    if alt == '':
+      alt = self.getId()
+    result = '%s alt="%s"' % (result, html_quote(alt))
 
-      if height:
-          result = '%s height="%s"' % (result, height)
+    if height:
+      result = '%s height="%s"' % (result, height)
 
-      if width:
-          result = '%s width="%s"' % (result, width)
+    if width:
+      result = '%s width="%s"' % (result, width)
 
-      if not 'border' in map(string.lower, kw.keys()):
-          result = '%s border="0"' % (result)
+    if not 'border' in map(string.lower, kw.keys()):
+      result = '%s border="0"' % (result)
 
-      if css_class is not None:
-          result = '%s class="%s"' % (result, css_class)
+    if css_class is not None:
+      result = '%s class="%s"' % (result, css_class)
 
-      for key in kw.keys():
-          value = kw.get(key)
-          result = '%s %s="%s"' % (result, key, value)
+    for key in kw.keys():
+      value = kw.get(key)
+      result = '%s %s="%s"' % (result, key, value)
 
-      result = '%s />' % (result)
+    result = '%s />' % (result)
 
-      return result
+    return result
 
   def __str__(self):
-      return self.tag()
+    return self.tag()
 
   security.declareProtected('Access contents information', 'displayIds')
   def displayIds(self, exclude=('thumbnail',)):
-      """Return list of display Ids."""
-      id_list = list(default_displays_id_list)
-      # Exclude specified displays
-      if exclude:
-        for id in exclude:
-          if id in id_list:
-            id_list.remove(id)
-      # Sort by desired photo surface area
-      def getSurfaceArea(img):
-        x, y = self.getSizeFromImageDisplay(img)
-        return x * y
-      id_list.sort(key=getSurfaceArea)
-      return id_list
+    """Return list of display Ids."""
+    id_list = list(default_displays_id_list)
+    # Exclude specified displays
+    if exclude:
+      for id in exclude:
+        if id in id_list:
+          id_list.remove(id)
+    # Sort by desired photo surface area
+    def getSurfaceArea(img):
+      x, y = self.getSizeFromImageDisplay(img)
+      return x * y
+    id_list.sort(key=getSurfaceArea)
+    return id_list
 
   security.declareProtected('Access contents information', 'displayLinks')
   def displayLinks(self, exclude=('thumbnail',)):
-      """Return list of HTML <a> tags for displays."""
-      links = []
-      for display in self.displayIds(exclude):
-          links.append('<a href="%s?display=%s">%s</a>' % (self.REQUEST['URL'], display, display))
-      return links
+    """Return list of HTML <a> tags for displays."""
+    links = []
+    for display in self.displayIds(exclude):
+        links.append('<a href="%s?display=%s">%s</a>' % (self.REQUEST['URL'], display, display))
+    return links
 
   security.declareProtected('Access contents information', 'displayMap')
   def displayMap(self, exclude=None, format='', quality=75, resolution=None):
-      """Return list of displays with size info."""
-      displays = []
-      for id in self.displayIds(exclude):
-          if self._isGenerated(id, format=format, quality=quality, resolution=resolution):
-              photo_width = self._photos[(id,format)].width
-              photo_height = self._photos[(id,format)].height
-              bytes = self._photos[(id,format)]._size()
-              age = self._photos[(id,format)]._age()
-          else:
-              (photo_width, photo_height, bytes, age) = (None, None, None, None)
-          displays.append({'id': id,
-                            'width': self.getSizeFromImageDisplay(id)[0],
-                            'height': self.getSizeFromImageDisplay(id)[1],
-                            'photo_width': photo_width,
-                            'photo_height': photo_height,
-                            'bytes': bytes,
-                            'age': age
-                            })
-      return displays
+    """Return list of displays with size info."""
+    displays = []
+    for id in self.displayIds(exclude):
+      if self._isGenerated(id, format=format, quality=quality, resolution=resolution):
+        photo_width = self._photos[(id,format)].width
+        photo_height = self._photos[(id,format)].height
+        bytes = self._photos[(id,format)]._size()
+        age = self._photos[(id,format)]._age()
+      else:
+        (photo_width, photo_height, bytes, age) = (None, None, None, None)
+      displays.append({'id': id,
+                        'width': self.getSizeFromImageDisplay(id)[0],
+                        'height': self.getSizeFromImageDisplay(id)[1],
+                        'photo_width': photo_width,
+                        'photo_height': photo_height,
+                        'bytes': bytes,
+                        'age': age
+                        })
+    return displays
 
 
   security.declarePrivate('_convertToText')
@@ -324,10 +323,10 @@ class Image(File, OFSImage):
                                                filename=self.getTitleOrId(),
                                                mimetype=src_mimetype)
       if result is None:
-          # portal_transforms fails to convert.
-          LOG('TextDocument.convert', WARNING,
-              'portal_transforms failed to convert to %s: %r' % (mime_type, self))
-          result = ''
+        # portal_transforms fails to convert.
+        LOG('TextDocument.convert', WARNING,
+            'portal_transforms failed to convert to %s: %r' % (mime_type, self))
+        result = ''
       return mime_type, result
     else:
       # text_content is not set, return empty string instead of None
@@ -379,30 +378,30 @@ class Image(File, OFSImage):
   security.declareProtected('View', 'index_html')
   def index_html(self, REQUEST, RESPONSE, display=None, format='', quality=75,
                        resolution=None, frame=None):
-      """Return the image data."""
-      self._upradeImage()
+    """Return the image data."""
+    self._upradeImage()
 
-      _setCacheHeaders(_ViewEmulator().__of__(self), dict(display=display,
-          format=format, quality=quality, resolution=resolution, frame=frame))
+    _setCacheHeaders(_ViewEmulator().__of__(self), dict(display=display,
+        format=format, quality=quality, resolution=resolution, frame=frame))
 
-      # display may be set from a cookie (?)
-      image_size = self.getSizeFromImageDisplay(display)
-      if (display is not None or resolution is not None or quality != 75 or format != ''\
-                              or frame is not None) and image_size:
-          try:
-              mime, image = self.getConversion(display=display, format=format,
-                                               quality=quality, resolution=resolution,
-                                               frame=frame, image_size=image_size)
-          except KeyError:
-              # Generate photo on-the-fly
-              mime, image = self._makeDisplayPhoto(display, format=format, quality=quality,
-                                                   resolution=resolution, frame=frame,
-                                                   image_size=image_size)
-          RESPONSE.setHeader('Content-Type', mime)
-          return image.index_html(REQUEST, RESPONSE)
+    # display may be set from a cookie (?)
+    image_size = self.getSizeFromImageDisplay(display)
+    if (display is not None or resolution is not None or quality != 75 or format != ''\
+                            or frame is not None) and image_size:
+      try:
+        mime, image = self.getConversion(display=display, format=format,
+                                         quality=quality, resolution=resolution,
+                                         frame=frame, image_size=image_size)
+      except KeyError:
+        # Generate photo on-the-fly
+        mime, image = self._makeDisplayPhoto(display, format=format, quality=quality,
+                                             resolution=resolution, frame=frame,
+                                             image_size=image_size)
+      RESPONSE.setHeader('Content-Type', mime)
+      return image.index_html(REQUEST, RESPONSE)
 
-      # Return original image
-      return OFSImage.index_html(self, REQUEST, RESPONSE)
+    # Return original image
+    return OFSImage.index_html(self, REQUEST, RESPONSE)
 
 
   #
@@ -411,114 +410,114 @@ class Image(File, OFSImage):
 
   def _resize(self, display, width, height, quality=75, format='',
                     resolution=None, frame=None):
-      """Resize and resample photo."""
-      newimg = StringIO()
-      
-      parameter_list = ['convert']
-      parameter_list.extend(['-colorspace', 'RGB'])
-      if resolution:
-        parameter_list.extend(['-density', '%sx%s' % (resolution, resolution)])
-      parameter_list.extend(['-quality', str(quality)])
-      parameter_list.extend(['-geometry', '%sx%s' % (width, height)])
-      if frame:
-        parameter_list.append('-[%s]' % frame)
+    """Resize and resample photo."""
+    newimg = StringIO()
+
+    parameter_list = ['convert']
+    parameter_list.extend(['-colorspace', 'RGB'])
+    if resolution:
+      parameter_list.extend(['-density', '%sx%s' % (resolution, resolution)])
+    parameter_list.extend(['-quality', str(quality)])
+    parameter_list.extend(['-geometry', '%sx%s' % (width, height)])
+    if frame:
+      parameter_list.append('-[%s]' % frame)
+    else:
+      parameter_list.append('-')
+
+    if format:
+      parameter_list.append('%s:-' % format)
+    else:
+      parameter_list.append('-')
+
+    process = subprocess.Popen(parameter_list,
+                               stdin=subprocess.PIPE,
+                               stdout=subprocess.PIPE,
+                               stderr=subprocess.PIPE,
+                               close_fds=True)
+    imgin, imgout, err = process.stdin, process.stdout, process.stderr
+
+    def writeData(stream, data):
+      if isinstance(data, str):
+        stream.write(str(self.getData()))
       else:
-        parameter_list.append('-')
+        # Use PData structure to prevent
+        # consuming too much memory
+        while data is not None:
+          stream.write(data.data)
+          data = data.next
 
-      if format:
-        parameter_list.append('%s:-' % format)
-      else:
-        parameter_list.append('-')
-
-      process = subprocess.Popen(parameter_list,
-                                 stdin=subprocess.PIPE,
-                                 stdout=subprocess.PIPE,
-                                 stderr=subprocess.PIPE,
-                                 close_fds=True)
-      imgin, imgout, err = process.stdin, process.stdout, process.stderr
-
-      def writeData(stream, data):
-        if isinstance(data, str):
-          stream.write(str(self.getData()))
-        else:
-          # Use PData structure to prevent
-          # consuming too much memory
-          while data is not None:
-            stream.write(data.data)
-            data = data.next
-
-      writeData(imgin, self.getData())
-      imgin.close()
-      newimg.write(imgout.read())
-      imgout.close()
-      if not newimg.tell():
-        raise ConversionError('Image conversion failed (%s).' % err.read())
-      newimg.seek(0)
-      return newimg
+    writeData(imgin, self.getData())
+    imgin.close()
+    newimg.write(imgout.read())
+    imgout.close()
+    if not newimg.tell():
+      raise ConversionError('Image conversion failed (%s).' % err.read())
+    newimg.seek(0)
+    return newimg
 
   def _getDisplayData(self, display, format='', quality=75, resolution=None, frame=None,
                       image_size=None):
-      """Return raw photo data for given display."""
-      if display is None:
-        (width, height) = (self.getWidth(), self.getHeight())
-      elif image_size is None:
-        (width, height) = self.getSizeFromImageDisplay(display)
-      else:
-        (width, height) = image_size
-      if width == 0 and height == 0:
-        width = self.getWidth()
-        height = self.getHeight()
-      (width, height) = self._getAspectRatioSize(width, height)
-      if (width, height) == (0, 0):return self.getData()
-      return self._resize(display, width, height, quality, format=format,
-                          resolution=resolution, frame=frame)
+    """Return raw photo data for given display."""
+    if display is None:
+      (width, height) = (self.getWidth(), self.getHeight())
+    elif image_size is None:
+      (width, height) = self.getSizeFromImageDisplay(display)
+    else:
+      (width, height) = image_size
+    if width == 0 and height == 0:
+      width = self.getWidth()
+      height = self.getHeight()
+    (width, height) = self._getAspectRatioSize(width, height)
+    if (width, height) == (0, 0):return self.getData()
+    return self._resize(display, width, height, quality, format=format,
+                        resolution=resolution, frame=frame)
 
   def _getDisplayPhoto(self, display, format='', quality=75, resolution=None, frame=None,
                        image_size=None):
-      """Return photo object for given display."""
-      try:
-          base, ext = string.split(self.id, '.')
-          id = base + '_' + display + '.' + ext
-      except ValueError:
-          id = self.id +'_'+ display
-      image = OFSImage(id, self.getTitle(), self._getDisplayData(display, format=format,
-                           quality=quality, resolution=resolution, frame=frame,
-                           image_size=image_size))
-      return image
+    """Return photo object for given display."""
+    try:
+        base, ext = string.split(self.id, '.')
+        id = base + '_' + display + '.' + ext
+    except ValueError:
+        id = self.id +'_'+ display
+    image = OFSImage(id, self.getTitle(), self._getDisplayData(display, format=format,
+                         quality=quality, resolution=resolution, frame=frame,
+                         image_size=image_size))
+    return image
 
   def _makeDisplayPhoto(self, display, format='', quality=75, resolution=None, frame=None,
                         image_size=None):
-      """Create given display."""
-      image = self._getDisplayPhoto(display, format=format, quality=quality,
-                                             resolution=resolution, frame=frame,
-                                             image_size=image_size)
-      self.setConversion(image, mime=image.content_type,
-                                display=display, format=format,
-                                quality=quality, resolution=resolution,
-                                frame=frame, image_size=image_size)
-      return (image.content_type, aq_base(image))
+    """Create given display."""
+    image = self._getDisplayPhoto(display, format=format, quality=quality,
+                                           resolution=resolution, frame=frame,
+                                           image_size=image_size)
+    self.setConversion(image, mime=image.content_type,
+                              display=display, format=format,
+                              quality=quality, resolution=resolution,
+                              frame=frame, image_size=image_size)
+    return (image.content_type, aq_base(image))
 
   def _getAspectRatioSize(self, width, height):
-      """Return proportional dimensions within desired size."""
-      img_width, img_height = (self.getWidth(), self.getHeight())
-      if img_width == 0:
-        return (0, 0)
+    """Return proportional dimensions within desired size."""
+    img_width, img_height = (self.getWidth(), self.getHeight())
+    if img_width == 0:
+      return (0, 0)
 
-      #XXX This is a temporary dirty fix!!!
-      width = int(width)
-      height = int(height)
-      img_width = int(img_width)
-      img_height = int(img_height)
+    #XXX This is a temporary dirty fix!!!
+    width = int(width)
+    height = int(height)
+    img_width = int(img_width)
+    img_height = int(img_height)
 
-      if height > img_height * width / img_width:
-          height = img_height * width / img_width
-      else:
-          width =  img_width * height / img_height
-      return (width, height)
+    if height > img_height * width / img_width:
+      height = img_height * width / img_width
+    else:
+      width =  img_width * height / img_height
+    return (width, height)
 
   def _validImage(self):
-      """At least see if it *might* be valid."""
-      return self.getWidth() and self.getHeight() and self.getData() and self.getContentType()
+    """At least see if it *might* be valid."""
+    return self.getWidth() and self.getHeight() and self.getData() and self.getContentType()
 
   security.declareProtected('View', 'getSizeFromImageDisplay')
   def getSizeFromImageDisplay(self, image_display):
