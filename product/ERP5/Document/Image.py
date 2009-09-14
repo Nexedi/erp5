@@ -214,6 +214,9 @@ class Image(File, OFSImage):
               mime, image = self._makeDisplayPhoto(display, format=format, quality=quality,
                                                    resolution=resolution, frame=frame,
                                                    image_size=image_size)
+              self.setConversion(image, mime, display=display, format=format,
+                                 quality=quality, resolution=resolution,
+                                 frame=frame, image_size=image_size)
           width, height = (image.width, image.height)
           # Set cookie for chosen size
           if cookie:
