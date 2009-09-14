@@ -36,7 +36,7 @@ from BaseCache import BaseCache
 from BaseCache import CacheEntry
 from Products.ERP5Type import interfaces
 import zope.interface
-from binascii import b2a_hex
+from base64 import encodestring
 
 try:
   import memcache
@@ -112,7 +112,7 @@ class DistributedRamCache(BaseCache):
     # Escape key to normalise some chars
     # which are not allowed by memcached
     # Could reach the limit of max_key_len
-    cache_id = b2a_hex(cache_id)
+    cache_id = encodestring(cache_id).replace('\n', '')
     return cache_id
 
   def get(self, cache_id, scope, default=_MARKER):
