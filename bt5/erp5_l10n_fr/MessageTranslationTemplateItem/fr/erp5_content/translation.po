@@ -198,6 +198,9 @@ msgstr "Construction"
 msgid "Consumers' cooperative"
 msgstr "Coopérative"
 
+msgid "Contact us"
+msgstr "Nous contacter"
+
 msgid "Cost and Freight"
 msgstr "Cost and Freight (CFR)"
 
@@ -666,6 +669,9 @@ msgstr "Services de défense nationale, d'ordre public, de secours et de sécuri
 msgid "Net Salary"
 msgstr "Salaire net"
 
+msgid "News"
+msgstr "Actualités"
+
 msgid "News Feed"
 msgstr "Flux RSS"
 
@@ -1005,6 +1011,9 @@ msgstr "Calendrier Google simplifié"
 msgid "Single"
 msgstr "Célibataire"
 
+msgid "Sitemap"
+msgstr "Plan du site"
+
 msgid "Software Developer"
 msgstr "Développeur informatique"
 
@@ -1139,3 +1148,6 @@ msgstr "Virement bancaire"
 
 msgid "Wood products except furniture"
 msgstr "Travail du bois et fabrication d'articles en bois et en liège, à l'exception des meubles ; fabrication d'articles en vannerie et sparterie"
+
+msgid "You are here:"
+msgstr "Vous êtes ici:"

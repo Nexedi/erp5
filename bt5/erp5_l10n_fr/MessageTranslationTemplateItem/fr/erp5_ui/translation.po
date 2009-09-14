@@ -8864,6 +8864,9 @@ msgstr "Sections du site"
 msgid "Site or Warehouse"
 msgstr "Site ou entrepôt"
 
+msgid "Sitemap"
+msgstr "Plan du site"
+
 msgid "Size"
 msgstr "Gamme de Tailles"
 
