@@ -2057,8 +2057,6 @@ def createValueAccessors(property_holder, id,
   """
     Creates relation accessors for category id
 
-     TODO: Security declarations must be checked
-
   """
   accessor_name = 'get' + UpperCase(id) + 'ValueList'
   if not hasattr(property_holder, accessor_name):
