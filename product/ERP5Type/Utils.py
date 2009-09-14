@@ -310,14 +310,10 @@ def getTranslationStringWithContext(self, msg_id, context, context_id):
    localizer = portal.Localizer
    selected_language = localizer.get_selected_language()
    msg_id_context = getMessageIdWithContext(msg_id, context, context_id)
-   result = localizer.erp5_ui.gettext(
-               msg_id_context, default='')   
+   result = localizer.erp5_ui.gettext(msg_id_context, default='')
    if result == '':
      result = localizer.erp5_ui.gettext(msg_id)
    return result.encode('utf8')
-
-ModuleSecurityInfo('Products.ERP5Type.Utils').declarePublic(
-  'getMessageIdWithContext', 'getTranslationStringWithContext')
 
 #####################################################
 # Globals initialization
