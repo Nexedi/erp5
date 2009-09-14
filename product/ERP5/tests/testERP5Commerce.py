@@ -26,12 +26,9 @@
 #
 ##############################################################################
 
-import os, sys
-
 from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from AccessControl.SecurityManagement import newSecurityManager
-from AccessControl.SecurityManagement import getSecurityManager
 from zLOG import LOG
 import transaction
 import urllib
@@ -67,7 +64,6 @@ class TestCommerce(ERP5TypeTestCase):
   > Test SaleOrder_getShoppingCartItemList With include_shipping=True
   > implement Person_getApplicableDiscountList (actually just return None)
   > implement Person_getApplicableTaxList (actually always return a tax of 20%)
-  > Fix proxy for SaleOrder_confirmShopping, and anonym user cant call it !
   > SaleOrder_externalPaymentHandler is totally empty
   > SaleOrder_finalizeShopping doesnt check if the payment is successful or not
   > Fix proxy for SaleOrder_finalizeShopping anonym and normal user cant use it
@@ -84,7 +80,6 @@ class TestCommerce(ERP5TypeTestCase):
   SaleOrder_externalPaymentHandler
   SaleOrder_getSelectedShippingResource
   SaleOrder_isShippingRequired
-  SaleOrder_paymentRedirect
   WebSection_checkPaypalIdentification
   WebSection_checkoutProcedure
   WebSection_doPaypalPayment
@@ -194,11 +189,6 @@ class TestCommerce(ERP5TypeTestCase):
 
     #XXX: Security hack (lucas)
     self.portal.acl_users.zodb_roles.assignRoleToPrincipal('Manager', reference)
-
-  def changeUser(self, name):
-    user_folder = self.getPortal().acl_users
-    user = user_folder.getUserById(name).__of__(user_folder)
-    newSecurityManager(None, user)
 
   def login(self):
     uf = self.getPortal().acl_users
@@ -587,14 +577,14 @@ class TestCommerce(ERP5TypeTestCase):
     # XXX : actually the script is only in squeleton mode, only return a tax of 20%
     self.assertEquals({'VAT':20.0}, self.getPortal().Person_getApplicableTaxList())
 
-  def test_10_confirmShopping(self, quiet=0, run=run_all_test):
+  def test_10_paymentRedirect(self, quiet=0, run=run_all_test):
     """
-      Test the SaleOrder_confirmShopping script
+      Test the SaleOrder_paymentRedirect script
     """
     if not run:
       return
     if not quiet:
-      message = '\nTest the confirmation of shopping'
+      message = '\nTest the confirmation of shopping and payment redirect'
       ZopeTestCase._print(message)
       LOG('Testing... ', 0, message)
     portal = self.getPortal()
@@ -609,14 +599,14 @@ class TestCommerce(ERP5TypeTestCase):
     # the confirmation should not be possible if the user is not logged
     self.logout()
     self.assertEquals(1, len(portal.SaleOrder_getShoppingCartItemList()))
-    self.portal.SaleOrder_confirmShopping()
+    self.portal.SaleOrder_paymentRedirect()
     self.assertTrue(urllib.quote("You need to create an account to " \
-                                 "continue If you already have please login.") in 
+                                 "continue. If you already have please login.") in 
                     request.RESPONSE.getHeader('location'))
 
     # but it should work if the user is authenticated
     self.changeUser('customer')
-    self.portal.SaleOrder_confirmShopping()
+    self.portal.SaleOrder_paymentRedirect()
     self.assertTrue(urllib.quote("SaleOrder_viewConfirmAsWeb") in
                     request.RESPONSE.getHeader('location'))
 
