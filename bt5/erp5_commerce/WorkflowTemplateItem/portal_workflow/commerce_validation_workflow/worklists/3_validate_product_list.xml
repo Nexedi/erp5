@@ -15,19 +15,19 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Persons to Validate (%(count)s)</string> </value>
+            <value> <string>Products to Publish (%(count)s)</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-person_module/view?validation_state=draft&local_roles:list=Assignee&local_roles:list=Assignor&reset=1
+product_module/view?validation_state=validated&local_roles:list=Assignee&local_roles:list=Assignor&reset=1
 
 ]]></string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Persons to Validate</string> </value>
+            <value> <string>Products to Published</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
@@ -37,7 +37,7 @@ person_module/view?validation_state=draft&local_roles:list=Assignee&local_roles:
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>1_draft_person_list</string> </value>
+            <value> <string>3_validate_product_list</string> </value>
         </item>
         <item>
             <key> <string>var_matches</string> </key>
@@ -86,7 +86,7 @@ person_module/view?validation_state=draft&local_roles:list=Assignee&local_roles:
                     <key> <string>portal_type</string> </key>
                     <value>
                       <tuple>
-                        <string>Person</string>
+                        <string>Product</string>
                       </tuple>
                     </value>
                 </item>
@@ -94,7 +94,7 @@ person_module/view?validation_state=draft&local_roles:list=Assignee&local_roles:
                     <key> <string>validation_state</string> </key>
                     <value>
                       <tuple>
-                        <string>draft</string>
+                        <string>validated</string>
                       </tuple>
                     </value>
                 </item>

@@ -15,19 +15,19 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Purchase Trade Conditions to Validate (%(count)s)</string> </value>
+            <value> <string>Products to Validate (%(count)s)</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-purchase_trade_condition_module/view?validation_state=draft&local_roles:list=Assignee&local_roles:list=Assignor&reset=1
+product_module/view?validation_state=draft&local_roles:list=Assignee&local_roles:list=Assignor&reset=1
 
 ]]></string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Purchase Trade Conditions to Validate</string> </value>
+            <value> <string>Products to Validate</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
@@ -37,7 +37,7 @@ purchase_trade_condition_module/view?validation_state=draft&local_roles:list=Ass
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>3_draft_purchase_trade_condition_list</string> </value>
+            <value> <string>1_draft_product_list</string> </value>
         </item>
         <item>
             <key> <string>var_matches</string> </key>
@@ -86,7 +86,7 @@ purchase_trade_condition_module/view?validation_state=draft&local_roles:list=Ass
                     <key> <string>portal_type</string> </key>
                     <value>
                       <tuple>
-                        <string>Purchase Trade Condition</string>
+                        <string>Product</string>
                       </tuple>
                     </value>
                 </item>
