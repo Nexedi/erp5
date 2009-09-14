@@ -1,0 +1,4 @@
+Currency | -validation_workflow
+Currency | commerce_validation_workflow
+Product | -validation_workflow
+Product | commerce_validation_workflow

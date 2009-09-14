@@ -1,3 +1,6 @@
+2009-09-14 lucas
+* added navigation for Anonymous user
+
 2009-08-20 lucas
 * Merged the three forms (SaleOrder_viewAsWebConfirmPaymentMode,
 SaleOrder_viewAsWebConfirmPersonalInformation and SaleOrder_viewAsWebConfirm) into only one SaleOrder_viewAsWebConfirm.
