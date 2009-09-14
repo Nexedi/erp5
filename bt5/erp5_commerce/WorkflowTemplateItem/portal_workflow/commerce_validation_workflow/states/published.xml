@@ -99,6 +99,7 @@
                     <key> <string>View</string> </key>
                     <value>
                       <tuple>
+                        <string>Anonymous</string>
                         <string>Assignee</string>
                         <string>Assignor</string>
                         <string>Associate</string>
