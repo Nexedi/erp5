@@ -242,7 +242,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Cache Plugin Total Memoty</string> </value>
+                    <value> <string>Cache Plugin Total Memory</string> </value>
                 </item>
                 <item>
                     <key> <string>truncate</string> </key>
@@ -265,18 +265,15 @@
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.Formulator.TALESField</string>
-          <string>TALESMethod</string>
-        </tuple>
-        <none/>
+        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.RamCache_getCachePluginStatistics(statistics_criteria=\'total\')</string> </value>
+            <value> <string>python: here.RamCache_getCachePluginStatisticList(statistics_criteria=\'total\')</string> </value>
         </item>
       </dictionary>
     </pickle>
