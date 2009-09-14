@@ -64,6 +64,10 @@
                     </value>
                 </item>
                 <item>
+                    <key> <string>editable</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -73,6 +77,10 @@
                 </item>
                 <item>
                     <key> <string>target</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -129,7 +137,7 @@
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-python:\'<h1 class="pagetitle">%s</h1>\' % request.current_web_document.getTitle()
+python:\'<h1 class="pagetitle">%s</h1>\' % request.current_web_document.getTranslatedTitle()
 
 ]]></string> </value>
         </item>
