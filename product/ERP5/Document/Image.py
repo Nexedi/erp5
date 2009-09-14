@@ -397,6 +397,9 @@ class Image(File, OFSImage):
         mime, image = self._makeDisplayPhoto(display, format=format, quality=quality,
                                              resolution=resolution, frame=frame,
                                              image_size=image_size)
+        self.setConversion(image, mime, format=format, quality=quality,
+                           resolution=resolution, frame=frame,
+                           image_size=image_size)
       RESPONSE.setHeader('Content-Type', mime)
       return image.index_html(REQUEST, RESPONSE)
 
@@ -491,10 +494,6 @@ class Image(File, OFSImage):
     image = self._getDisplayPhoto(display, format=format, quality=quality,
                                            resolution=resolution, frame=frame,
                                            image_size=image_size)
-    self.setConversion(image, mime=image.content_type,
-                              display=display, format=format,
-                              quality=quality, resolution=resolution,
-                              frame=frame, image_size=image_size)
     return (image.content_type, aq_base(image))
 
   def _getAspectRatioSize(self, width, height):
