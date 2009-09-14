@@ -53,8 +53,19 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># redirect the user to the good payment form\n
+            <value> <string># check if the user is Anonymous, if yes it must be redirected to Registration Dialog\n
+# otherwise it will redirect to the appropriated payment form based on Payment Mode selected\n
+request = context.REQUEST\n
+isAnon = context.portal_membership.isAnonymousUser()\n
 translateString = context.Base_translateString\n
+\n
+if isAnon:\n
+  # create first an account for user\n
+  msg = translateString("You need to create an account to continue. If you already have please login.")\n
+  context.Base_redirect(\'WebSite_viewRegistrationDialog\', \\\n
+                      keep_items={\'editable_mode\': 0,\n
+                                  \'portal_status_message\': msg})\n
+  return\n
 \n
 if field_my_payment_mode is None:\n
   msg = translateString("You must select a payment mode.")\n
@@ -81,6 +92,12 @@ return\n
         <item>
             <key> <string>_params</string> </key>
             <value> <string>field_my_payment_mode=None, **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple/>
+            </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -110,9 +127,11 @@ return\n
                             <string>kw</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>request</string>
+                            <string>isAnon</string>
                             <string>translateString</string>
-                            <string>None</string>
                             <string>msg</string>
+                            <string>None</string>
                             <string>dict</string>
                           </tuple>
                         </value>
