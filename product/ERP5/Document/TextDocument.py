@@ -128,6 +128,13 @@ class TextDocument(Document, TextContent):
     security.declareProtected( Permissions.ModifyPortalContent, 'edit' )
     edit = WorkflowMethod( _edit )
 
+    security.declareProtected(Permissions.ModifyPortalContent, '_setTextContent')
+    def _setTextContent(self, *args, **kw):
+      """Call Clear conversion cache when edit text_content
+      """
+      self.clearConversionCache()
+      self._baseSetTextContent(*args, **kw)
+
     # Default Display
     security.declareProtected(Permissions.View, 'index_html')
     def index_html(self, REQUEST, RESPONSE, format=None, **kw):
