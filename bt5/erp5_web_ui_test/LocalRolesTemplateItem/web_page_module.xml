@@ -1,0 +1,12 @@
+<local_roles_item>
+ <local_roles>
+  <role id='ERP5TypeTestCase'>
+   <item>Owner</item>
+  </role>
+  <role id='web'>
+   <item>Assignor</item>
+  </role>
+ </local_roles>
+ <group_local_roles>
+ </group_local_roles>
+</local_roles_item>
