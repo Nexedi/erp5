@@ -96,7 +96,7 @@
                            headline_area python:aggregate.get(\'headline\', []);\n
                            subcontent_area python:aggregate.get(\'subcontent\', []);\n
                            footer_area python:aggregate.get(\'footer\', []);\n
-                           global header_title python:\'%s | %s\' % (here.getTitleOrId(), website.getTitleOrId());\n
+                           global header_title python:\'%s | %s\' % (here.getTranslatedTitleOrId(), website.getTranslatedTitleOrId());\n
                            global description python:here.getDescription() or here.getLayoutProperty(\'description\');\n
                            global subject_list python:here.getSubjectList() or here.getLayoutProperty(\'subject_list\') or [];\n
                            global css_list_template python:[\n
