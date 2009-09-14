@@ -167,11 +167,6 @@ class ListBoxWidget(Widget.Widget):
         Parameters in case 3 should stored in a selection object which allows a per user
         per PC storage.
 
-        ListBox uses the following control variables
-
-        - sort_by -- the id to sort results
-
-        - sort_order -- the order of sorting
     """
     # Define Properties for ListBoxWidget.
     property_names = list(Widget.Widget.property_names)
@@ -269,7 +264,7 @@ class ListBoxWidget(Widget.Widget):
     meta_types = fields.ListTextAreaField('meta_types',
                                  title="Meta Types",
                                  description=(
-        "Meta Types of objects to list. Required."),
+        "Meta Types of objects to list."),
                                  default=[],
                                  required=0)
     property_names.append('meta_types')
@@ -277,12 +272,11 @@ class ListBoxWidget(Widget.Widget):
     portal_types = fields.ListTextAreaField('portal_types',
                                  title="Portal Types",
                                  description=(
-        "Portal Types of objects to list. Required."),
+        "Portal Types of objects to list."),
                                  default=[],
                                  required=0)
     property_names.append('portal_types')
 
-    # XXX Do we still need this?
     default_params = fields.ListTextAreaField('default_params',
                                  title="Default Parameters",
                                  description=(
