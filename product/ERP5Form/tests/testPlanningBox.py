@@ -29,7 +29,7 @@
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5Type.tests.Sequence import SequenceList
-from Products.ERP5Type.Utils import get_request
+from Globals import get_request
 from StringIO import StringIO
 from DateTime import DateTime
 
