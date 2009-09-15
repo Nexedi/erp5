@@ -77,7 +77,7 @@
                <a tal:condition="not: confirm_mode"\n
                   tal:attributes="href python: \'%s/SaleOrder_deleteShoppingCartItem?field_my_order_line_id=%s\' \n
                                                 %(here.absolute_url(), order_line_id)">\n
-                  <img src="images/icon_remove.gif" title="Remove from shopping cart"/>\n
+                  <img src="mf54_image/icon_remove.gif" title="Remove from shopping cart"/>\n
                </a>\n
              </div>\n
          </td>\n
