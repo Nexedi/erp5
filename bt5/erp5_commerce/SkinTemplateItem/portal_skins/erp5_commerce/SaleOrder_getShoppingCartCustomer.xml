@@ -56,17 +56,12 @@
             <value> <string># based on current Authenticated Member this script must return\n
 # the Person object\n
 from Products.ERP5Type.Cache import CachingMethod\n
-\n
-user_id = context.portal_membership.getAuthenticatedMember().getId()\n
-if context.portal_membership.isAnonymousUser():\n
-  return None\n
-\n
-def getAuthenticatedMemberPersonValue(user_id):\n
-  return context.getPortalObject().ERP5Site_getAuthenticatedMemberPersonValue(user_name=user_id)\n
+def getAuthenticatedMemberPersonValue():\n
+  return context.getPortalObject().ERP5Site_getAuthenticatedMemberPersonValue()\n
 \n
 getAuthenticatedMemberPersonValue = CachingMethod(getAuthenticatedMemberPersonValue,\n
                                                   id=script.getId())\n
-return getAuthenticatedMemberPersonValue(user_id)\n
+return getAuthenticatedMemberPersonValue()\n
 </string> </value>
         </item>
         <item>
@@ -114,11 +109,8 @@ return getAuthenticatedMemberPersonValue(user_id)\n
                           <tuple>
                             <string>Products.ERP5Type.Cache</string>
                             <string>CachingMethod</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>user_id</string>
-                            <string>None</string>
                             <string>getAuthenticatedMemberPersonValue</string>
+                            <string>_getattr_</string>
                             <string>script</string>
                           </tuple>
                         </value>
