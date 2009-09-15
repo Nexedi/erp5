@@ -1,3 +1,6 @@
+2009-09-15 yo
+* Show nearly the same columns in the dialog of related requirements on Project Line as in Requirement_view.
+
 2009-09-11 yusei
 * Fix Requirement type information and make view action the first priority.
 
