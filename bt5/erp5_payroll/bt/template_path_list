@@ -1,14 +1,3 @@
-portal_categories/base_amount/base_salary
-portal_categories/base_amount/bonus
-portal_categories/base_amount/deductible_tax
-portal_categories/base_amount/gross_salary
-portal_categories/base_amount/net_salary
-portal_categories/base_amount/non_deductible_tax
-portal_categories/base_amount/non_tax_withholding
-portal_categories/base_amount/non_taxable_bonus
-portal_categories/base_amount/overtime
-portal_categories/base_amount/total_deductions
-portal_categories/base_amount/total_income
 portal_categories/contribution_share/employee
 portal_categories/contribution_share/employer
 portal_deliveries/pay_sheet_builder
