@@ -32,6 +32,7 @@ from AccessControl.SecurityManagement import newSecurityManager
 from zLOG import LOG
 import transaction
 import urllib
+import string
 
 SESSION_ID = "12345678"
 LANGUAGE_LIST = ('en', 'fr', 'de', 'bg',)
@@ -68,7 +69,6 @@ class TestCommerce(ERP5TypeTestCase):
   > SaleOrder_finalizeShopping doesnt check if the payment is successful or not
   > Fix proxy for SaleOrder_finalizeShopping anonym and normal user cant use it
   > SaleOrder_getAvailableShippingResourceList have hardcoded
-  > SaleOrder_getSelectedShippingResource want a shipping_method but there is not
   > SaleOrder_getShoppingCartCustomer need to be refactor for fit clustering
   > SaleOrder_getShoppingCartDefaultCurrency should depend of site configuration
   > SaleOrder_isConsistent the usage must be more generic or rename it
@@ -76,9 +76,7 @@ class TestCommerce(ERP5TypeTestCase):
 
   Not tested :
   Person_getApplicableDiscountList
-  Person_getApplicableTaxList
   SaleOrder_externalPaymentHandler
-  SaleOrder_getSelectedShippingResource
   SaleOrder_isShippingRequired
   WebSection_checkPaypalIdentification
   WebSection_checkoutProcedure
@@ -100,6 +98,17 @@ class TestCommerce(ERP5TypeTestCase):
 
   def getTitle(self):
     return "E-Commerce System"
+
+  def getBusinessTemplateList(self):
+    """
+      Return the list of required business templates.
+    """
+    return ('erp5_base', 
+            'erp5_web', 
+            'erp5_trade', 
+            'erp5_pdm', 
+            'erp5_commerce',)
+
   
   def afterSetUp(self):
     self.login()
@@ -111,31 +120,42 @@ class TestCommerce(ERP5TypeTestCase):
     currency.setReference('EUR')
     currency.setShortTitle('€')
     currency.setBaseUnitQuantity(0.01)
+    currency.validate()
+    currency.publish()
 
     # create product, set price & currency
     product = portal.product_module.newContent(portal_type='Product', id='1')
     product.setSupplyLinePriceCurrency(currency.getRelativeUrl())
     product.setBasePrice(10.0)
+    product.validate()
+    product.publish()
 
     # create second product, set price & currency
     product = portal.product_module.newContent(portal_type='Product', id='2')
     product.setSupplyLinePriceCurrency(currency.getRelativeUrl())
     product.setBasePrice(20.0)
+    product.validate()
+    product.publish()
+
     # create shipping which is actually a product
     shipping = portal.product_module.newContent(portal_type='Product', 
                                                 id='3')
     shipping.setSupplyLinePriceCurrency(currency.getRelativeUrl())
     shipping.setBasePrice(10.0)
     shipping.setProductLine('shipping')
+    shipping.validate()
+    shipping.publish()
     
     # validate default order rule
     default_order_rule = portal.portal_rules.default_order_rule
     if default_order_rule.getValidationState() != 'validated':
       portal.portal_rules.default_order_rule.validate()
 
+    self.web_site = self.setupWebSite()
+    self.app.REQUEST.set('session_id', SESSION_ID)
+    self.changeUser('ivan')
     transaction.commit()
     self.tic()
-
 
   def clearModule(self, module):
     module.manage_delObjects(list(module.objectIds()))
@@ -143,6 +163,7 @@ class TestCommerce(ERP5TypeTestCase):
     self.tic()
 
   def beforeTearDown(self):
+    self.clearModule(self.portal.web_site_module)
     self.clearModule(self.portal.product_module)
     self.clearModule(self.portal.sale_order_module)
     self.clearModule(self.portal.currency_module)
@@ -154,12 +175,10 @@ class TestCommerce(ERP5TypeTestCase):
     """
     self.organisation_module = self.portal.getDefaultModule('Organisation')
     if 'seller' not in self.organisation_module.objectIds():
-        self.nexedi = self.organisation_module.newContent(
-        title="Seller",
-        group='seller',
-        role='internal',
-        id='seller',
-      )
+        self.nexedi = self.organisation_module.newContent(title="Seller",
+                                                          group='seller',
+                                                          role='internal',
+                                                          id='seller')
 
   def createTestUser(self, first_name, last_name, reference, group,
                      destination_project=None, id=None):
@@ -197,13 +216,6 @@ class TestCommerce(ERP5TypeTestCase):
     uf._doAddUser('ERP5TypeTestCase', '', ['Manager'], [])
     user = uf.getUserById('ivan').__of__(uf)
     newSecurityManager(None, user)
-
-  def getBusinessTemplateList(self):
-    """
-      Return the list of required business templates.
-    """
-    return ('erp5_base', 'erp5_web', 
-            'erp5_trade', 'erp5_pdm', 'erp5_commerce',)
             
   def getDefaultProduct(self, id='1'):
     """ 
@@ -212,15 +224,8 @@ class TestCommerce(ERP5TypeTestCase):
     return self.getPortal().product_module[id]
 
   def initialiseSupplyLine(self):
-    portal = self.getPortal()
-    euro = portal.currency_module.newContent(portal_type='Currency',
-                                                  id='euro',
-                                                  reference='EUR')
-    euro.setBaseUnitQuantity(1.00)
-    euro.validate()
-    
     category_list = []
-    portal_categories = portal.portal_categories
+    portal_categories = self.portal.portal_categories
     if hasattr(portal_categories.product_line, 'ldlc'):
       portal_categories.product_line.manage_delObjects(['ldlc'])
     ldlc = portal_categories.product_line.newContent(portal_type='Category', 
@@ -250,9 +255,9 @@ class TestCommerce(ERP5TypeTestCase):
       for i in range(3):
         title = '%s %s' % (category.getTitle(), i)
         reference = '%s_%s' % (category.getId(), i)
-        product = portal.product_module.newContent(portal_type="Product", 
-                                                   title=title,
-                                                   reference=reference)
+        product = self. portal.product_module.newContent(portal_type="Product",
+                                                         title=title,
+                                                         reference=reference)
         product_line = category.getRelativeUrl().replace('product_line/', '')
         product.setProductLine(product_line)
         product.setQuantityUnit('unit/piece')
@@ -266,10 +271,10 @@ class TestCommerce(ERP5TypeTestCase):
       
     for product in product_list:
       product.validate()
+      product.publish()
           
-    ups = portal.product_module.newContent(portal_type='Product',
+    ups = self.portal.product_module.newContent(portal_type='Product',
                                            title='UPS Shipping : 24h')
-    ups.validate()
     ups.setQuantityUnit('unit/piece')
     supply_line = ups.setProductLine('shipping/UPS24h')
     supply_line = ups.newContent(id='default_supply_line',
@@ -278,13 +283,17 @@ class TestCommerce(ERP5TypeTestCase):
     supply_line.setPricedQuantity(1)
     supply_line.setDefaultResourceValue(product)
     supply_line.setPriceCurrency('currency_module/EUR')
+    ups.validate()
+    ups.publish()
+    transaction.commit()
+    self.tic()
 
   def createUser(self, name, role_list):
-    user_folder = self.getPortal().acl_users
+    user_folder = self.portal.acl_users
     user_folder._doAddUser(name, 'password', role_list, [])
 
   def changeUser(self, user_id):
-    user_folder = self.getPortal().acl_users
+    user_folder = self.portal.acl_users
     user = user_folder.getUserById(user_id).__of__(user_folder)
     newSecurityManager(None, user)
 
@@ -292,26 +301,22 @@ class TestCommerce(ERP5TypeTestCase):
     """
       Setup Web Site
     """
-    portal = self.getPortal()
-    request = self.app.REQUEST
-    
     # add supported languages for Localizer
-    localizer = portal.Localizer
+    localizer = self.portal.Localizer
     for language in LANGUAGE_LIST:
       localizer.manage_addLanguage(language=language)
       
     # create website
-    web_site = getattr(portal.web_site_module, 'web_site', None)
+    web_site = getattr(self.portal.web_site_module, 'web_site', None)
     if web_site is None:
-      web_site = portal.web_site_module.newContent(portal_type='Web Site', 
-                                                 id='web_site',
-                                                 **kw)
-    transaction.commit()
-    self.tic()
+      web_site = self.portal.web_site_module.newContent(portal_type='Web Site',
+                                                        id='web_site',
+                                                        **kw)
+      transaction.commit()
+      self.tic()
 
     web_site.WebSite_setupECommerceWebSite()
     self.initialiseSupplyLine()
-
     transaction.commit()
     self.tic()
 
@@ -322,158 +327,144 @@ class TestCommerce(ERP5TypeTestCase):
                         group=None)
 
     return web_site
+
+  def createShoppingCartWithProductListAndShipping(self):
+    """
+      This method must create a Shopping Cart and add
+      some Products and select one Shipping.
+    """
+    default_product = self.getDefaultProduct()
+    self.portal.Resource_addToShoppingCart(resource=default_product, 
+                                           quantity=1)
+
+    shopping_cart = self.portal.SaleOrder_getShoppingCart()
+    shipping_list = self.portal.SaleOrder_getAvailableShippingResourceList()
+    order_line = getattr(shopping_cart, 'shipping_method', None)
+    if order_line is None:
+      order_line = shopping_cart.newContent(id='shipping_method',
+                                            portal_type='Sale Order Line')
+    order_line.setResource(shipping_list[0].getRelativeUrl())
+    order_line.setQuantity(1)
+    transaction.commit()
+    self.tic()
     
-  def test_01_AddResourceToShoppingCart(self, quiet=0, run=run_all_test):
+  def test_01_AddResourceToShoppingCart(self):
     """ 
        Test adding an arbitrary resources to shopping cart.
     """
-    if not run:
-      return
-    if not quiet:
-      message = '\nCheck adding product to shopping cart'
-      ZopeTestCase._print(message)
-      LOG('Testing... ', 0, message)
-    portal = self.getPortal()
-    request = self.app.REQUEST
     default_product = self.getDefaultProduct()
     
     # set 'session_id' to simulate browser (cookie) environment 
-    request.set('session_id', SESSION_ID)
-    self.assertEquals(SESSION_ID, portal.SaleOrder_getShoppingCartId())
+    self.app.REQUEST.set('session_id', SESSION_ID)
+    self.assertEquals(SESSION_ID, self.portal.SaleOrder_getShoppingCartId())
+
+    # check if the shopping cart is empty
+    self.assertTrue(self.portal.SaleOrder_isShoppingCartEmpty())
 
     # add product to shopping cart
-    self.assertTrue(portal.SaleOrder_isShoppingCartEmpty())
-    portal.Resource_addToShoppingCart(default_product, 1)
-    shoppping_cart_items =  portal.SaleOrder_getShoppingCartItemList()
-    self.assertEquals(1, len(shoppping_cart_items))
-    self.assertEquals(1, shoppping_cart_items[0].getQuantity())
-    self.assertEquals(shoppping_cart_items[0].getResource(), \
-                      default_product.getRelativeUrl())
-    self.assertFalse(portal.SaleOrder_isShoppingCartEmpty())
+    self.portal.Resource_addToShoppingCart(default_product, 1)
+
+    shoppping_cart_item_list = self.portal.SaleOrder_getShoppingCartItemList()
+    self.assertEquals(1, len(shoppping_cart_item_list))
+    self.assertEquals(1, shoppping_cart_item_list[0].getQuantity())
+    self.assertEquals(shoppping_cart_item_list[0].getResource(), \
+                                         default_product.getRelativeUrl())
+    self.assertFalse(self.portal.SaleOrder_isShoppingCartEmpty())
     
-  def test_02_AddSameResourceToShoppingCart(self, quiet=0, run=run_all_test):
+  def test_02_AddSameResourceToShoppingCart(self):
     """ 
        Test adding same resource to shopping cart.
     """
-    if not run:
-      return
-    if not quiet:
-      message = '\nCheck adding same product to shopping cart'
-      ZopeTestCase._print(message)
-      LOG('Testing... ', 0, message)
-    portal = self.getPortal()
-    request = self.app.REQUEST
     default_product = self.getDefaultProduct()
-    request.set('session_id', SESSION_ID)
 
     # add in two steps same product and check that we do not create
     # new Sale Order Line but just increase quantity on existing one
-    portal.Resource_addToShoppingCart(default_product, 1)
-    portal.Resource_addToShoppingCart(default_product, 1)
-    shoppping_cart_items =  portal.SaleOrder_getShoppingCartItemList()
-    self.assertEquals(1, len(shoppping_cart_items))
-    self.assertEquals(2, shoppping_cart_items[0].getQuantity())
-    self.assertEquals(shoppping_cart_items[0].getResource(), \
-                      default_product.getRelativeUrl())
+    self.portal.Resource_addToShoppingCart(default_product, 1)
+    self.portal.Resource_addToShoppingCart(default_product, 1)
 
-  def test_03_AddDifferentResourceToShoppingCart(self, quiet=0, run=run_all_test):
+    shoppping_cart_item_list = self.portal.SaleOrder_getShoppingCartItemList()
+
+    self.assertEquals(1, len(shoppping_cart_item_list))
+    self.assertEquals(2, shoppping_cart_item_list[0].getQuantity())
+    self.assertEquals(shoppping_cart_item_list[0].getResource(), \
+                                          default_product.getRelativeUrl())
+
+  def test_03_AddDifferentResourceToShoppingCart(self):
     """ 
        Test adding different resource to shopping cart.
     """
-    if not run:
-      return
-    if not quiet:
-      message = '\nCheck adding different product to shopping cart'
-      ZopeTestCase._print(message)
-      LOG('Testing... ', 0, message)
-    portal = self.getPortal()
-    request = self.app.REQUEST
     default_product = self.getDefaultProduct()
-    another_product = self.getDefaultProduct(id = '2')
-    request.set('session_id', SESSION_ID)
+    another_product = self.getDefaultProduct(id='2')
     
     # add second diff product and check that we create new Sale Order Line
-    portal.Resource_addToShoppingCart(default_product, 1)
-    portal.Resource_addToShoppingCart(default_product, 1)
-    portal.Resource_addToShoppingCart(another_product, 1)
-    shoppping_cart_items =  portal.SaleOrder_getShoppingCartItemList()
-    self.assertEquals(2, len(shoppping_cart_items))
-    self.assertEquals(2, shoppping_cart_items[0].getQuantity())
-    self.assertEquals(1, shoppping_cart_items[1].getQuantity())
-    self.assertEquals(shoppping_cart_items[0].getResource(), \
-                      default_product.getRelativeUrl())
-    self.assertEquals(shoppping_cart_items[1].getResource(), \
-                      another_product.getRelativeUrl())
+    self.portal.Resource_addToShoppingCart(default_product, 1)
+    self.portal.Resource_addToShoppingCart(default_product, 1)
+    self.portal.Resource_addToShoppingCart(another_product, 1)
+    shoppping_cart_item_list = self.portal.SaleOrder_getShoppingCartItemList()
+    self.assertEquals(2, len(shoppping_cart_item_list))
+    self.assertEquals(2, shoppping_cart_item_list[0].getQuantity())
+    self.assertEquals(1, shoppping_cart_item_list[1].getQuantity())
+    self.assertEquals(shoppping_cart_item_list[0].getResource(), \
+                                          default_product.getRelativeUrl())
+    self.assertEquals(shoppping_cart_item_list[1].getResource(), \
+                                          another_product.getRelativeUrl())
                       
                       
-  def test_04_CalculateTotaShoppingCartPrice(self, quiet=0, run=run_all_test):
+  def test_04_CalculateTotaShoppingCartPrice(self):
     """ 
        Test calculation shopping cart's total price.
     """
-    if not run:
-      return
-    if not quiet:
-      message = '\nTest calculation shopping cart total price'
-      ZopeTestCase._print(message)
-      LOG('Testing... ', 0, message)
-    portal = self.getPortal()
-    request = self.app.REQUEST
     default_product = self.getDefaultProduct()
     another_product = self.getDefaultProduct(id='2')
-    request.set('session_id', SESSION_ID)
-    portal.Resource_addToShoppingCart(default_product, 1)
-    portal.Resource_addToShoppingCart(default_product, 1)
-    portal.Resource_addToShoppingCart(another_product, 1)
+    self.portal.Resource_addToShoppingCart(default_product, 1)
+    self.portal.Resource_addToShoppingCart(default_product, 1)
+    self.portal.Resource_addToShoppingCart(another_product, 1)
 
-    shopping_cart = portal.SaleOrder_getShoppingCart()
+    shopping_cart = self.portal.SaleOrder_getShoppingCart()
     self.assertEquals(40.0, \
          float(shopping_cart.SaleOrder_getShoppingCartTotalPrice()))
     # include taxes (by default it's 20%)
     self.assertEquals(40.0*1.20, \
-       float(shopping_cart.SaleOrder_getShoppingCartTotalPrice(include_shipping=True,
-                                                               include_taxes=True)))
+                float(shopping_cart.SaleOrder_getShoppingCartTotalPrice(
+                                                        include_shipping=True,
+                                                        include_taxes=True)))
     # no shipping selected yet so price should be the same
     self.assertEquals(40.0, \
-       float(shopping_cart.SaleOrder_getShoppingCartTotalPrice(include_shipping=True)))
+                float(shopping_cart.SaleOrder_getShoppingCartTotalPrice(
+                                         include_shipping=True)))
 
     # add shipping
     shipping = self.getDefaultProduct('3')
-    portal.SaleOrder_editShoppingCart(field_my_shipping_method=shipping.getRelativeUrl())
+    self.portal.SaleOrder_editShoppingCart(
+                        field_my_shipping_method=shipping.getRelativeUrl())
 
     # test price calculation only with shipping
     self.assertEquals(40.0 + 10.0, \
-       float(shopping_cart.SaleOrder_getShoppingCartTotalPrice(include_shipping=True)))
+                float(shopping_cart.SaleOrder_getShoppingCartTotalPrice(
+                                                      include_shipping=True)))
 
     # test price calculation shipping and taxes
     self.assertEquals((40.0 + 10.0)*1.20, \
-         float(shopping_cart.SaleOrder_getShoppingCartTotalPrice(include_shipping=True,
-                                                                 include_taxes=True)))
+                float(shopping_cart.SaleOrder_getShoppingCartTotalPrice(
+                                                      include_shipping=True,
+                                                      include_taxes=True)))
                                                                  
-  def test_05_TestUpdateShoppingCart(self, quiet=0, run=run_all_test):
+  def test_05_TestUpdateShoppingCart(self):
     """ 
        Test update of shopping cart.
     """
-    if not run:
-      return
-    if not quiet:
-      message = '\nTest update of shopping cart'
-      ZopeTestCase._print(message)
-      LOG('Testing... ', 0, message)
-    portal = self.getPortal()
-    request = self.app.REQUEST
-    
     default_product = self.getDefaultProduct()
     another_product = self.getDefaultProduct(id='2')
     shipping = self.getDefaultProduct('3')
-    request.set('session_id', SESSION_ID)
-    portal.Resource_addToShoppingCart(default_product, quantity=1)
-    portal.Resource_addToShoppingCart(another_product, quantity=1)
 
-    shopping_cart = portal.SaleOrder_getShoppingCart()
+    self.portal.Resource_addToShoppingCart(default_product, quantity=1)
+    self.portal.Resource_addToShoppingCart(another_product, quantity=1)
+
+    shopping_cart = self.portal.SaleOrder_getShoppingCart()
     shipping_url = shipping.getRelativeUrl()
     
     # increase shopping item number and set shipping
-    portal.SaleOrder_editShoppingCart(field_my_buy_quantity=(2, 1,),
+    self.portal.SaleOrder_editShoppingCart(field_my_buy_quantity=(2, 1,),
                                       field_my_shipping_method=shipping_url)
     
     # test price calculation without shipping and without taxes
@@ -490,53 +481,33 @@ class TestCommerce(ERP5TypeTestCase):
                                                                  include_taxes=True)))
     
     # delete shopping item
-    portal.SaleOrder_deleteShoppingCartItem('1')
+    self.portal.SaleOrder_deleteShoppingCartItem('1')
     self.assertEquals(1, \
-                      len(portal.SaleOrder_getShoppingCartItemList()))
+                      len(self.portal.SaleOrder_getShoppingCartItemList()))
                        
-    portal.SaleOrder_deleteShoppingCartItem('2')
+    self.portal.SaleOrder_deleteShoppingCartItem('2')
     self.assertEquals(0, \
-                      len(portal.SaleOrder_getShoppingCartItemList()))
+                      len(self.portal.SaleOrder_getShoppingCartItemList()))
     self.assertEquals(0.0, \
                       float(shopping_cart.SaleOrder_getShoppingCartTotalPrice()))
 
-  def test_06_TestClearShoppingCart(self, quiet=0, run=run_all_test):
+  def test_06_TestClearShoppingCart(self):
     """ 
        Test clear of shopping cart.
     """
-    if not run:
-      return
-    if not quiet:
-      message = '\nTest clear shopping cart'
-      ZopeTestCase._print(message)
-      LOG('Testing... ', 0, message)
-    portal = self.getPortal()
-    request = self.app.REQUEST
     default_product = self.getDefaultProduct()
-    request.set('session_id', SESSION_ID)
-
-    another_product = self.getDefaultProduct(id = '2')
-    portal.Resource_addToShoppingCart(default_product, quantity=1)
-    portal.Resource_addToShoppingCart(another_product, quantity=1)
-    self.tic()
+    self.createShoppingCartWithProductListAndShipping()
     transaction.commit()
+    self.tic()
     
-    shopping_cart = portal.SaleOrder_getShoppingCart(action='reset')
-    self.assertEquals(0, len(portal.SaleOrder_getShoppingCartItemList()))
+    shopping_cart = self.portal.SaleOrder_getShoppingCart(action='reset')
+    self.assertEquals(0, len(self.portal.SaleOrder_getShoppingCartItemList()))
 
 
-  def test_07_SessionIDGeneration(self, quiet=0, run=run_all_test):
+  def test_07_SessionIDGeneration(self):
     """
-      Test the generation of session id
+      Test the generation of session id.
     """
-    if not run:
-      return
-    if not quiet:
-      message = '\nTest session id generation'
-      ZopeTestCase._print(message)
-      LOG('Testing... ', 0, message)
-    import string
-
     id_string = self.getPortal().Base_generateSessionID()
     self.assertEquals(10, len(id_string))
     for caracter in id_string:
@@ -549,283 +520,162 @@ class TestCommerce(ERP5TypeTestCase):
     id_string = self.getPortal().Base_generateSessionID(max_long=0)
     self.assertEquals(0, len(id_string))
 
-  def test_08_getApplicableDiscountList(self, quiet=0, run=run_all_test):
-    """
-      Test the Person_getApplicableDiscountList script
-    """
-    if not run:
-      return
-    if not quiet:
-      message = '\nTest the discount list'
-      ZopeTestCase._print(message)
-      LOG('Testing... ', 0, message)
-
-    # XXX : actually the script is only in squeleton mode, only return None
-    self.assertEquals(None, self.getPortal().Person_getApplicableDiscountList())
-
-  def test_09_getApplicableTaxList(self, quiet=0, run=run_all_test):
+  def test_09_getApplicableTaxList(self):
     """
       Test the Person_getApplicableTaxList script
     """
-    if not run:
-      return
-    if not quiet:
-      message = '\nTest the applicable tax list'
-      ZopeTestCase._print(message)
-      LOG('Testing... ', 0, message)
-
     # XXX : actually the script is only in squeleton mode, only return a tax of 20%
-    self.assertEquals({'VAT':20.0}, self.getPortal().Person_getApplicableTaxList())
+    self.assertEquals({'VAT': 20.0}, self.getPortal().Person_getApplicableTaxList())
 
-  def test_10_paymentRedirect(self, quiet=0, run=run_all_test):
+  def test_10_paymentRedirect(self):
     """
       Test the SaleOrder_paymentRedirect script
     """
-    if not run:
-      return
-    if not quiet:
-      message = '\nTest the confirmation of shopping and payment redirect'
-      ZopeTestCase._print(message)
-      LOG('Testing... ', 0, message)
-    portal = self.getPortal()
-    request = self.app.REQUEST
     default_product = self.getDefaultProduct()
-    request.set('session_id', SESSION_ID)
-
-    portal.Resource_addToShoppingCart(default_product, quantity=1)
-    self.tic()
+    self.portal.Resource_addToShoppingCart(default_product, quantity=1)
     transaction.commit()
+    self.tic()
 
     # the confirmation should not be possible if the user is not logged
     self.logout()
-    self.assertEquals(1, len(portal.SaleOrder_getShoppingCartItemList()))
+    self.assertEquals(1, len(self.portal.SaleOrder_getShoppingCartItemList()))
     self.portal.SaleOrder_paymentRedirect()
     self.assertTrue(urllib.quote("You need to create an account to " \
                                  "continue. If you already have please login.") in 
-                    request.RESPONSE.getHeader('location'))
+                    self.app.REQUEST.RESPONSE.getHeader('location'))
 
     # but it should work if the user is authenticated
     self.changeUser('customer')
     self.portal.SaleOrder_paymentRedirect()
     self.assertTrue(urllib.quote("SaleOrder_viewConfirmAsWeb") in
-                    request.RESPONSE.getHeader('location'))
+                    self.app.REQUEST.RESPONSE.getHeader('location'))
 
-  def test_11_deleteShoppingCartItem(self, quiet=0, run=run_all_test):
+  def test_11_deleteShoppingCartItem(self):
     """
       Test the SaleOrder_deleteShoppingCartItem script
     """
-    if not run:
-      return
-    if not quiet:
-      message = '\nTest the deletion of cart item'
-      ZopeTestCase._print(message)
-      LOG('Testing... ', 0, message)
-    portal = self.getPortal()
-    request = self.app.REQUEST
     default_product = self.getDefaultProduct()
-    request.set('session_id', SESSION_ID)
+    self.portal.Resource_addToShoppingCart(default_product, quantity=1)
+    self.assertEquals(1, len(self.portal.SaleOrder_getShoppingCartItemList()))
 
-    portal.Resource_addToShoppingCart(default_product, quantity=1)
-    self.tic()
-    transaction.commit()
-    self.assertEquals(1, len(portal.SaleOrder_getShoppingCartItemList()))
+    # Trying to remove
     self.portal.SaleOrder_deleteShoppingCartItem()
     self.assertTrue(urllib.quote("Please select an item.") in 
-                    request.RESPONSE.getHeader('location'))
-    self.assertEquals(1, len(portal.SaleOrder_getShoppingCartItemList()))
-    self.portal.SaleOrder_deleteShoppingCartItem(field_my_order_line_id=default_product.getId())
-    self.assertTrue(urllib.quote("Successfully removed from shopping cart.") in
-                    request.RESPONSE.getHeader('location'))
-    self.assertEquals(0, len(portal.SaleOrder_getShoppingCartItemList()))
+                               self.app.REQUEST.RESPONSE.getHeader('location'))
 
-  def test_12_externalPaymentHandler(self, quiet=0, run=run_all_test):
-    """
-      Test the SaleOrder_externalPaymentHandler script
-    """
-    if not run:
-      return
-    if not quiet:
-      message = '\nTest the External online payment system handler'
-      ZopeTestCase._print(message)
-      LOG('Testing... ', 0, message)
-    portal = self.getPortal()
-    request = self.app.REQUEST
-    default_product = self.getDefaultProduct()
-    request.set('session_id', SESSION_ID)
+    # Check if the item still into the Shopping Cart
+    self.assertEquals(1, len(self.portal.SaleOrder_getShoppingCartItemList()))
 
-    # XXX : no test possible, script empty
+    # Remove the product from the Shopping Cart
+    product_id = default_product.getId()
+    self.portal.SaleOrder_deleteShoppingCartItem(
+                                          field_my_order_line_id=product_id)
+   
+    # Check if the Product have been removed sucessfully
+    self.assertTrue(
+              urllib.quote("Successfully removed from shopping cart.") in
+                 self.app.REQUEST.RESPONSE.getHeader('location'))
 
-  def test_13_finalizeShopping(self, quiet=0, run=run_all_test):
+    # Check if the Shopping Cart is empty
+    self.assertEquals(0, len(self.portal.SaleOrder_getShoppingCartItemList()))
+
+  def test_13_finalizeShopping(self):
     """
       Test the SaleOrder_finalizeShopping script
     """
-    if not run:
-      return
-    if not quiet:
-      message = '\nTest the finalisation of the shopping procedure'
-      ZopeTestCase._print(message)
-      LOG('Testing... ', 0, message)
-
-    self.setupWebSite()
     self.changeUser('webmaster')
-    
-    portal = self.getPortal()
-    request = self.app.REQUEST
-    request.set('session_id', SESSION_ID)
-
-
-    portal.Resource_addToShoppingCart(self.getDefaultProduct(), quantity=1)
-    portal.Resource_addToShoppingCart(self.getDefaultProduct('2'), quantity=1)
+    self.portal.Resource_addToShoppingCart(self.getDefaultProduct(), 
+                                           quantity=1)
+    self.portal.Resource_addToShoppingCart(self.getDefaultProduct('2'), 
+                                           quantity=1)
     transaction.commit()
     self.tic()
 
-    self.assertEquals(2, len(portal.SaleOrder_getShoppingCartItemList()))
-    self.assertEquals(0, len(portal.sale_order_module.contentValues()))
+    self.assertEquals(2, len(self.portal.SaleOrder_getShoppingCartItemList()))
+    self.assertEquals(0, len(self.portal.sale_order_module.contentValues()))
 
-    portal.SaleOrder_finalizeShopping()
+    self.portal.SaleOrder_finalizeShopping()
     transaction.commit()
     self.tic()
-    sale_order_object_list = portal.sale_order_module.contentValues()
 
+    sale_order_object_list = self.portal.sale_order_module.contentValues()
     self.assertEquals(1, len(sale_order_object_list))
     self.assertEquals(2, len(sale_order_object_list[0].contentValues()))
-
-    self.assertEquals(0, len(portal.SaleOrder_getShoppingCartItemList()))
-
-    self.changeUser('ivan')
+    self.assertEquals(0, len(self.portal.SaleOrder_getShoppingCartItemList()))
     
-  def test_14_getAvailableShippingResourceList(self, quiet=0, run=run_all_test):
+  def test_14_getAvailableShippingResourceList(self):
     """
       Test the SaleOrder_getAvailableShippingResourceList script
     """
-    if not run:
-      return
-    if not quiet:
-      message = '\nTest to get the available shipping resource list'
-      ZopeTestCase._print(message)
-      LOG('Testing... ', 0, message)
-
-    portal = self.getPortal()
-    request = self.app.REQUEST
     default_product = self.getDefaultProduct()
-    request.set('session_id', SESSION_ID)
-
-    shipping = portal.portal_categories.product_line.shipping.getRelativeUrl()
-    portal.product_module.newContent(portal_type='Product',
-                                     title='shipping',
-                                     product_line=shipping)
+    product_line = self.portal.portal_categories.product_line
+    shipping_url = product_line.shipping.getRelativeUrl()
+    self.portal.product_module.newContent(portal_type='Product',
+                                          title='shipping',
+                                          product_line=shipping_url)
     transaction.commit()
     self.tic()
-
     self.assertEquals(2,
-                    len(portal.SaleOrder_getAvailableShippingResourceList()))
+               len(self.portal.SaleOrder_getAvailableShippingResourceList()))
                                      
-
-  def test_15_getFormatedData(self, quiet=0, run=run_all_test):
+  def test_15_getFormatedData(self):
     """
       Test the datas formating scripts
     """
-    if not run:
-      return
-    if not quiet:
-      message = '\nTest to get the datas formating scripts'
-      ZopeTestCase._print(message)
-      LOG('Testing... ', 0, message)
-    portal = self.getPortal()
-
-    sale_order = portal.sale_order_module.newContent(portal_type="Sale Order",)
+    sale_order = self.portal.sale_order_module.newContent(
+                                                portal_type="Sale Order")
     sale_order_line = sale_order.newContent(portal_type="Sale Order Line",
                                             quantity="2",
                                             price="10")
 
-    formated_date = sale_order.SaleOrder_getFormattedCreationDate()
-    formated_price = sale_order.SaleOrder_getFormattedTotalPrice()
-    self.assertEqual(sale_order.getCreationDate().strftime('%a, %d %b %Y %H:%M %p'), formated_date)
-    self.assertEqual('%s %s' %('20.0', sale_order.getPriceCurrencyTitle()), formated_price)
+    self.assertEqual(
+          sale_order.getCreationDate().strftime('%a, %d %b %Y %H:%M %p'), 
+                    sale_order.SaleOrder_getFormattedCreationDate())
+    self.assertEqual('%s %s' %('20.0', sale_order.getPriceCurrencyTitle()),
+                           sale_order.SaleOrder_getFormattedTotalPrice())
 
-  def test_16_getSelectedShippingResource(self, quiet=0, run=run_all_test):
+  def test_16_getSelectedShippingResource(self):
     """
       Test the SaleOrder_getSelectedShippingResource script
     """
-    if not run:
-      return
-    if not quiet:
-      message = '\nTest to get selected shipping method from shopping cart'
-      ZopeTestCase._print(message)
-      LOG('Testing... ', 0, message)
-    portal = self.getPortal()
-    request = self.app.REQUEST
-    request.set('session_id', SESSION_ID)
     default_product = self.getDefaultProduct()
-
-    portal.Resource_addToShoppingCart(default_product, 1)
-    shopping_cart = portal.SaleOrder_getShoppingCart()
-    shipping_resource_list = portal.SaleOrder_getAvailableShippingResourceList()
+    self.portal.Resource_addToShoppingCart(default_product, 1)
+    shopping_cart = self.portal.SaleOrder_getShoppingCart()
+    shipping_list = self.portal.SaleOrder_getAvailableShippingResourceList()
 
     order_line = getattr(shopping_cart, 'shipping_method', None)
     if order_line is None:
-      order_line = shopping_cart.newContent(id='shipping_method', portal_type='Sale Order Line')
-    order_line.setResource(shipping_resource_list[0].getRelativeUrl())
-    order_line.setQuantity(1)
-    self.assertEquals(shipping_resource_list[0].getRelativeUrl(),
-                      portal.SaleOrder_getSelectedShippingResource())
+      order_line = shopping_cart.newContent(id='shipping_method', 
+                                            portal_type='Sale Order Line')
 
-  def test_17_getShoppingCartDefaultCurrency(self, quiet=0, run=run_all_test):
+    order_line.setResource(shipping_list[0].getRelativeUrl())
+    order_line.setQuantity(1)
+    self.assertEquals(shipping_list[0].getRelativeUrl(),
+                      self.portal.SaleOrder_getSelectedShippingResource())
+
+  def test_17_getShoppingCartDefaultCurrency(self):
     """
       Testing the scripts:
       - SaleOrder_getShoppingCartDefaultCurrency
       - SaleOrder_getShoppingCartDefaultCurrencyCode
       - SaleOrder_getShoppingCartDefaultCurrencySymbol
     """
-    if not run:
-      return
-    if not quiet:
-      message = '\nTest to get the default currency of a shopping cart'
-      ZopeTestCase._print(message)
-      LOG('Testing... ', 0, message)
-
-    portal = self.getPortal()
-    currency = portal.restrictedTraverse('currency_module/EUR')
+    currency = self.portal.restrictedTraverse('currency_module/EUR')
     self.assertEquals(currency, 
-                        portal.SaleOrder_getShoppingCartDefaultCurrency())
+                      self.portal.SaleOrder_getShoppingCartDefaultCurrency())
     
-    currency_code = currency.getReference()
-    self.assertEquals(currency_code, 
-                       portal.SaleOrder_getShoppingCartDefaultCurrencyCode())
+    self.assertEquals(currency.getReference(), 
+                   self.portal.SaleOrder_getShoppingCartDefaultCurrencyCode())
 
-    currency_symbol = currency.getShortTitle()
-    self.assertEquals(currency_symbol,
-                     portal.SaleOrder_getShoppingCartDefaultCurrencySymbol())
+    self.assertEquals(currency.getShortTitle(),
+                 self.portal.SaleOrder_getShoppingCartDefaultCurrencySymbol())
 
-    
-  def test_18_webSiteInitialisation(self, quiet=0, run=run_all_test):
-    """
-      Test the SaleOrder_getShoppingCartDefaultCurrency script
-    """
-    if not run:
-      return
-    if not quiet:
-      message = '\nTest to get the default currency of a shopping cart'
-      ZopeTestCase._print(message)
-      LOG('Testing... ', 0, message)
-
-    portal = self.getPortal()
-
-  def test_19_simulatePaypalPayment(self, quiet=0, run=run_all_test):
+  def test_19_simulatePaypalPayment(self):
     """
       Test all the scripts related to paypal
     """
-    if not run:
-      return
-    if not quiet:
-      message = '\nTest to simulate paypal payment.'
-      ZopeTestCase._print(message)
-      LOG('Testing... ', 0, message)
-
-    portal = self.getPortal()
-
     # create new python script to replace the external method
-    custom_skin = self.getPortal().portal_skins.custom
+    custom_skin = self.portal.portal_skins.custom
     method_id = 'WebSection_submitPaypalNVPRequest'
     if method_id in custom_skin.objectIds():
       custom_skin.manage_delObjects([method_id])
@@ -833,13 +683,12 @@ class TestCommerce(ERP5TypeTestCase):
                    .manage_addPythonScript(id = method_id)
     script = custom_skin[method_id]
     script.ZPythonScript_edit('parameter_dict, nvp_url', SIMULATE_PAYPAL_SERVER)
-    self.getPortal().changeSkin('View')
+    self.portal.changeSkin('View')
     
     #1 initialise a website
-    web_site = self.setupWebSite()
-    web_site.setProperty('ecommerce_paypal_username', 'user')
-    web_site.setProperty('ecommerce_paypal_password', 'pass')
-    web_site.setProperty('ecommerce_paypal_signature', 'signature')
+    self.web_site.setProperty('ecommerce_paypal_username', 'user')
+    self.web_site.setProperty('ecommerce_paypal_password', 'pass')
+    self.web_site.setProperty('ecommerce_paypal_signature', 'signature')
    
     #2 login and activate a cart
     self.changeUser('webmaster')
@@ -847,161 +696,140 @@ class TestCommerce(ERP5TypeTestCase):
     request.set('session_id', SESSION_ID)
 
     #3 add a product in the cart
-    default_product = self.getDefaultProduct()
-    portal.Resource_addToShoppingCart(resource=default_product, quantity=1)
-    transaction.commit()
-    self.tic()
-    
-    #4 chose a shipping for the cart
-    shopping_cart = portal.SaleOrder_getShoppingCart()
-    shipping_resource_list = portal.SaleOrder_getAvailableShippingResourceList()
-    order_line = getattr(shopping_cart, 'shipping_method', None)
-    if order_line is None:
-      order_line = shopping_cart.newContent(id='shipping_method',
-                                            portal_type='Sale Order Line')
-    order_line.setResource(shipping_resource_list[0].getRelativeUrl())
-    order_line.setQuantity(1)
-    self.assertEquals(shipping_resource_list[0].getRelativeUrl(),
-                      portal.SaleOrder_getSelectedShippingResource())
+    self.createShoppingCartWithProductListAndShipping()
 
-    #5 : paypal step 1 : get a new token
-    token = web_site.checkout.WebSection_getNewPaypalToken()    
+    #4 : paypal step 1 : get a new token
+    token = self.web_site.checkout.WebSection_getNewPaypalToken()    
     self.assertNotEquals(token, None)
 
-    #6 : paypal step 2 : go to paypal and confirm this token
+    #5 : paypal step 2 : go to paypal and confirm this token
     # PayerID is normaly set in the request when paypal redirect to the instance
     request.set('PayerID', 'THEPAYERID')
     
-    #7 : paypal step 3 : check if this token is confirmed by paypal
-    error = web_site.WebSection_checkPaypalIdentification()
+    #6 : paypal step 3 : check if this token is confirmed by paypal
+    error = self.web_site.WebSection_checkPaypalIdentification()
     self.assertEquals(error, None)
     self.assertTrue('/checkout' in request.RESPONSE.getHeader('location'))
     
-    #8 : paypal step 4 : validate the payment
-    self.assertEquals(1, len(portal.SaleOrder_getShoppingCartItemList()))
-    self.assertEquals(0, len(portal.sale_order_module.contentValues()))
+    #7 : paypal step 4 : validate the payment
+    self.assertEquals(1, len(self.portal.SaleOrder_getShoppingCartItemList()))
+    self.assertEquals(0, len(self.portal.sale_order_module.contentValues()))
     
-    web_site.WebSection_doPaypalPayment(token=token)
+    self.web_site.WebSection_doPaypalPayment(token=token)
     transaction.commit()
     self.tic()
     
-    #9 check if sale order created
-    self.assertEquals(0, len(portal.SaleOrder_getShoppingCartItemList()))
-    self.assertEquals(1, len(portal.sale_order_module.contentValues()))
+    #8 check if sale order created
+    self.assertEquals(0, len(self.portal.SaleOrder_getShoppingCartItemList()))
+    self.assertEquals(1, len(self.portal.sale_order_module.contentValues()))
 
     custom_skin.manage_delObjects([method_id])
-    self.changeUser('ivan')
     
-  def test_20_getProductListFromWebSection(self, quiet=0, run=run_all_test):
+  def test_20_getProductListFromWebSection(self):
     """
       Test the  WebSection_getProductList script.
     """
-    if not run:
-      return
-    if not quiet:
-      message = '\nTest the script WebSection_getProductList.'
-      ZopeTestCase._print(message)
-      LOG('Testing... ', 0, message)
-
-    portal = self.getPortal()
-    web_site = self.setupWebSite()
     laptop_product = self.getDefaultProduct(id='1')
     laptop_product.setProductLine('ldlc/laptop')
     netbook_product = self.getDefaultProduct(id='2')
     netbook_product.setProductLine('ldlc/laptop')
 
-
-    web_site.WebSection_generateSectionFromCategory(category='product_line/ldlc',
-                                                    section_id='products',
-                                                    depth=2)
+    self.web_site.WebSection_generateSectionFromCategory(
+                                              category='product_line/ldlc',
+                                              section_id='products',
+                                              depth=2)
     transaction.commit()
     self.tic()
 
-    self.assertEquals(12, len(web_site.products.WebSection_getProductList()))
+    self.assertEquals(14, len(self.web_site.products.WebSection_getProductList()))
 
-  def test_21_editShoppingCardWithABlankShippingMethod(self,
-                                                       quiet=0,
-                                                       run=run_all_test):
+  def test_21_editShoppingCardWithABlankShippingMethod(self):
     """
       This test must make sure that you can edit the shopping cart selecting a
       blank shipping method and it will not break.
     """
-    if not run:
-      return
-    if not quiet:
-      message = '\nTest edit the Shopping Cart with blank shipping method.'
-      ZopeTestCase._print(message)
-      LOG('Testing... ', 0, message)
-
-    portal = self.getPortal()
-    request = self.app.REQUEST
     default_product = self.getDefaultProduct()
-    request.set('session_id', SESSION_ID)
-    portal.Resource_addToShoppingCart(default_product, 1)
+    self.portal.Resource_addToShoppingCart(default_product, 1)
 
-    shopping_cart = portal.SaleOrder_getShoppingCart()
-
+    shopping_cart = self.portal.SaleOrder_getShoppingCart()
     self.assertFalse(hasattr(shopping_cart, 'shipping_method'))
 
-    portal.SaleOrder_editShoppingCart(field_my_shipping_method='')
-    portal.SaleOrder_editShoppingCart(field_my_shipping_method=None)
+    self.portal.SaleOrder_editShoppingCart(field_my_shipping_method='')
+    self.portal.SaleOrder_editShoppingCart(field_my_shipping_method=None)
 
     # add shipping
     shipping = self.getDefaultProduct('3')
-    portal.SaleOrder_editShoppingCart(field_my_shipping_method=shipping.getRelativeUrl())
+    self.portal.SaleOrder_editShoppingCart(
+                          field_my_shipping_method=shipping.getRelativeUrl())
 
     self.assertTrue(hasattr(shopping_cart, 'shipping_method'))
 
-
-  def test_22_editShoppingCardWithShippingMethodWithoutPrice(self,
-                                                       quiet=0,
-                                                       run=run_all_test):
+  def test_22_editShoppingCardWithShippingMethodWithoutPrice(self):
     """
       This test must make sure that you can not edit the shopping cart 
       selecting a shipping method without price.
     """
-    if not run:
-      return
-    if not quiet:
-      message = '\nTest edit the Cart with shipping method without price.'
-      ZopeTestCase._print(message)
-      LOG('Testing... ', 0, message)
-
-    portal = self.getPortal()
-    request = self.app.REQUEST
     default_product = self.getDefaultProduct()
-    request.set('session_id', SESSION_ID)
-    portal.Resource_addToShoppingCart(default_product, 1)
-
-    shopping_cart = portal.SaleOrder_getShoppingCart()
+    self.portal.Resource_addToShoppingCart(default_product, 1)
+    shopping_cart = self.portal.SaleOrder_getShoppingCart()
 
     # add shipping
     shipping = self.getDefaultProduct('3')
     shipping.setBasePrice(None) 
-    portal.SaleOrder_editShoppingCart(field_my_shipping_method=shipping.getRelativeUrl())
+    self.portal.SaleOrder_editShoppingCart(
+                     field_my_shipping_method=shipping.getRelativeUrl())
+
     self.assertEquals(10.0, \
-          float(shopping_cart.SaleOrder_getShoppingCartTotalPrice(include_shipping=True)))
-    shipping.setBasePrice(10.0) 
+            float(shopping_cart.SaleOrder_getShoppingCartTotalPrice(
+                                                    include_shipping=True)))
 
-
-  def test_23_getProductListFromWebSite(self, quiet=0, run=run_all_test):
+  def test_23_getProductListFromWebSite(self):
     """
       Test the  WebSite_getProductList script.
     """
-    if not run:
-      return
-    if not quiet:
-      message = '\nTest the script WebSite_getProductList.'
-      ZopeTestCase._print(message)
-      LOG('Testing... ', 0, message)
+    self.assertEquals(5, len(self.web_site.WebSite_getProductList()))
+    self.assertEquals(16, 
+               len(self.web_site.WebSite_getProductList(limit=1000)))
 
-    portal = self.getPortal()
-    web_site = self.setupWebSite()
+
+  def test_24_AddResourceToShoppingCartWithAnonymousUser(self):
+    """
+      Test adding an arbitrary resources to shopping cart with Anonymous user.
+    """
+    # anonymous user
+    self.logout()
+    self.createShoppingCartWithProductListAndShipping()
+    shoppping_cart_item_list = self.portal.SaleOrder_getShoppingCartItemList()
+    self.assertEquals(1, len(shoppping_cart_item_list))
+
+  def test_25_createShoppingCartWithAnonymousAndLogin(self):
+    """
+      Test adding an arbitrary resources to shopping cart with Anonymous user
+      then create a new user, login and check if the Shopping Cart still the
+      same.
+    """
+    # anonymous user
+    self.logout()
+    self.createShoppingCartWithProductListAndShipping()
+    shoppping_cart_item_list = self.portal.SaleOrder_getShoppingCartItemList()
+    self.assertEquals(1, len(shoppping_cart_item_list))
+
+    kw = dict(reference='toto',
+              first_name='Toto',
+              last_name='Test',
+              default_email_text='test@test.com',
+              password='secret',
+              password_confirm='secret')
+    for key, item in kw.items():
+      self.app.REQUEST.set('field_your_%s' %key, item)
+    self.web_site.WebSite_createWebSiteAccount('WebSite_viewRegistrationDialog')
     transaction.commit()
     self.tic()
-
-    self.assertEquals(5, len(web_site.WebSite_getProductList()))
-    self.assertEquals(13, len(web_site.WebSite_getProductList(limit=1000)))
+ 
+    self.changeUser('toto')
+    self.portal.SaleOrder_paymentRedirect()
+    self.assertTrue(urllib.quote("SaleOrder_viewConfirmAsWeb") in
+                    self.app.REQUEST.RESPONSE.getHeader('location'))
 
 import unittest
 def test_suite():
