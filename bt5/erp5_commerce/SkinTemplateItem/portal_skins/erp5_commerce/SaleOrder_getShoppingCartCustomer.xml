@@ -53,30 +53,17 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
+            <value> <string># based on current Authenticated Member this script must return\n
+# the Person object\n
+# XXX: it must be cached.\n
 from Products.ERP5Type.Cache import CachingMethod\n
 \n
 user_id = context.portal_membership.getAuthenticatedMember().getId()\n
 if context.portal_membership.isAnonymousUser():\n
   return None\n
 \n
-def getFoundUserRelativeUrl(user_id):\n
-  """ Find Person object by login name. """\n
-  user_list = context.person_module.portal_catalog(reference=user_id, \\\n
-                                                 portal_type="Person")\n
-  if len(user_list)>0:\n
-    user_object = user_list[0].getObject()\n
-    return user_object.getRelativeUrl()\n
-\n
-#user_relative_url = CachingMethod(getFoundUserRelativeUrl, script.id)(user_id)\n
-user_relative_url = getFoundUserRelativeUrl(user_id)\n
-\n
-if user_relative_url is not None:\n
-  return context.getPortalObject().restrictedTraverse(user_relative_url)\n
-
-
-]]></string> </value>
+return context.getPortalObject().ERP5Site_getAuthenticatedMemberPersonValue(user_name=user_id)\n
+</string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -127,8 +114,6 @@ if user_relative_url is not None:\n
                             <string>context</string>
                             <string>user_id</string>
                             <string>None</string>
-                            <string>getFoundUserRelativeUrl</string>
-                            <string>user_relative_url</string>
                           </tuple>
                         </value>
                     </item>

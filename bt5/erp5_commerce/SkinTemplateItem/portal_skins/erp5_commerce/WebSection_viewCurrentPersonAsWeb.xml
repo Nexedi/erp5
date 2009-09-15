@@ -54,7 +54,8 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>context.REQUEST.set(\'editable_mode\', 1)\n
-return context.getWebSectionValue().restrictedTraverse(\'person_module/1\').Person_viewAsWeb(context.REQUEST)\n
+person_object = context.getWebSiteValue().SaleOrder_getShoppingCartCustomer()\n
+return context.getWebSectionValue().restrictedTraverse(person_object.getRelativeUrl()).Person_viewAsWeb(context.REQUEST)\n
 </string> </value>
         </item>
         <item>
@@ -93,6 +94,7 @@ return context.getWebSectionValue().restrictedTraverse(\'person_module/1\').Pers
                           <tuple>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>person_object</string>
                           </tuple>
                         </value>
                     </item>
