@@ -672,10 +672,12 @@ class ListBoxRenderer:
 
   showAnchorColumn = lazyMethod(showAnchorColumn)
 
-  def isHideRowsOnNoSearchCriterion(self):
+  def isHideRowsOnNoSearchCriterion(self, REQUEST=None):
     """
       Return a boolean that represents whether search rows are shown or not.
     """
+    # BBB REQUEST passed to this method is simply discarded. The parameter
+    # exists only for API compatibility.
     REQUEST = self.request
     hide_rows_on_no_search_criterion = \
                             self.field.get_value('hide_rows_on_no_search_criterion')
