@@ -108,16 +108,7 @@ class AppliedRule(XMLObject):
 
       rule = self.getSpecialiseValue()
       if rule is not None:
-        if self.isRootAppliedRule():
-          # We should capture here a list of url/uids of deliveires to update
-          rule._v_notify_dict = {}
         rule.expand(self,**kw)
-        # XXX This part must be done with a interaction workflow is needed.
-#       if self.isRootAppliedRule():
-#         self.activate(
-#                after_method_id=["immediateReindexObject",
-#                                 "recursiveImmediateReindexObject"]).\
-#                                   notifySimulationChange(rule._v_notify_dict)
 
       # disable and clear cache
       if not cache_enabled:
@@ -254,18 +245,6 @@ class AppliedRule(XMLObject):
       """
       return self._getExplanationSpecialiseValue(
           ('Business Process',))
-
-    security.declareProtected(Permissions.ModifyPortalContent,
-                              'notifySimulationChange')
-    def notifySimulationChange(self, notify_dict):
-      for delivery_url in notify_dict.keys():
-        delivery_value = self.getPortalObject().restrictedTraverse(delivery_url)
-        if delivery_value is None:
-          LOG("ERP5 WARNING", 0,
-              'Unable to access object %s to notify simulation change' %
-               delivery_url)
-        else:
-          delivery_value.notifySimulationChange()
 
     def _isTreeDelivered(self):
       """

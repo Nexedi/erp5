@@ -659,15 +659,6 @@ class Delivery(XMLObject, ImmobilisationDelivery):
       #if self.getSimulationState() in planned_order_state:
       #  self.updateAppliedRule() # This should be implemented with the interaction tool rather than with this hard coding
 
-    security.declareProtected(Permissions.ModifyPortalContent, 'notifySimulationChange')
-    def notifySimulationChange(self):
-      """
-        WorkflowMethod used to notify the causality workflow that the simulation
-        has changed, so we have to check if the delivery is divergent or not
-      """
-      pass
-    notifySimulationChange = WorkflowMethod(notifySimulationChange)
-
     ##########################################################################
     # Applied Rule stuff
     def updateAppliedRule(self, *args, **kw):
