@@ -49,9 +49,6 @@ class EditorWidget(Widget.TextAreaWidget):
     on FCK editor). This widget is intended to be used in
     conjunction with WebSite.
 
-    WARNING: this is still pre-alpha code for experimentation. Do not
-    use in production.
-
     TODO:
         - implement validation
         - extend to other widgets (kupu) ?
