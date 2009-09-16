@@ -55,13 +55,7 @@
             <key> <string>_body</string> </key>
             <value> <string># based on current Authenticated Member this script must return\n
 # the Person object\n
-from Products.ERP5Type.Cache import CachingMethod\n
-def getAuthenticatedMemberPersonValue():\n
-  return context.getPortalObject().ERP5Site_getAuthenticatedMemberPersonValue()\n
-\n
-getAuthenticatedMemberPersonValue = CachingMethod(getAuthenticatedMemberPersonValue,\n
-                                                  id=script.getId())\n
-return getAuthenticatedMemberPersonValue()\n
+return context.getPortalObject().ERP5Site_getAuthenticatedMemberPersonValue()\n
 </string> </value>
         </item>
         <item>
@@ -107,11 +101,8 @@ return getAuthenticatedMemberPersonValue()\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>Products.ERP5Type.Cache</string>
-                            <string>CachingMethod</string>
-                            <string>getAuthenticatedMemberPersonValue</string>
                             <string>_getattr_</string>
-                            <string>script</string>
+                            <string>context</string>
                           </tuple>
                         </value>
                     </item>
