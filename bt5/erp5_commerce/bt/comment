@@ -1,0 +1,4 @@
+To get the Anonymous navigation working is required to set some security:
+currency_module - Access contents information 
+product_module -  Access contents information 
+sale_order_module -  Access contents information 
