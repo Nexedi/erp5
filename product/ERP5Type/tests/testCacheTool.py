@@ -193,14 +193,14 @@ return result
     from Products.ERP5Type.Cache import CachingMethod
     py_script_id = "testCachedMethod"
     py_script_obj = getattr(portal, py_script_id)
-    for cf_name in ('ram_cache_factory',
-                    'distributed_ram_cache_factory',
-                    'distributed_persistent_cache_factory',
+    for cf_name, clear_allowed in (('ram_cache_factory', True),
+                    ('distributed_ram_cache_factory', False),
+                    ('distributed_persistent_cache_factory', False),
                    ):
       my_cache = CachingMethod(py_script_obj,
                                'py_script_obj',
                                cache_factory=cf_name)
-      self._cacheFactoryInstanceTest(my_cache, cf_name)
+      self._cacheFactoryInstanceTest(my_cache, cf_name, clear_allowed)
 
   def test_02_CacheFactoryMultiPlugins(self):
     """ Test a cache factory containing multiple cache plugins. """
@@ -212,9 +212,9 @@ return result
     my_cache = CachingMethod(py_script_obj,
                              'py_script_obj',
                              cache_factory=cf_name)
-    self._cacheFactoryInstanceTest(my_cache, cf_name)
+    self._cacheFactoryInstanceTest(my_cache, cf_name, clear_allowed=False)
 
-  def _cacheFactoryInstanceTest(self, my_cache, cf_name):
+  def _cacheFactoryInstanceTest(self, my_cache, cf_name, clear_allowed):
     portal = self.getPortal()
     print 
     print "="*40
@@ -248,17 +248,18 @@ return result
     self.assertEquals(original, cached)
 
     ## OK so far let's clear cache
-    portal.portal_caches.clearCacheFactory(cf_name)
+    if clear_allowed:
+      portal.portal_caches.clearCacheFactory(cf_name)
 
-    ## 1st call
-    start = time.time()
-    original =  my_cache(nb_iterations, portal_path=('', portal.getId()))
-    end = time.time()
-    calculation_time = end-start
-    print "\n\tCalculation time (after cache clear)", calculation_time
+      ## 1st call
+      start = time.time()
+      original =  my_cache(nb_iterations, portal_path=('', portal.getId()))
+      end = time.time()
+      calculation_time = end-start
+      print "\n\tCalculation time (after cache clear)", calculation_time
 
-    ## Cache  cleared shouldn't be previously cached
-    self.assert_(1.0 < calculation_time)
+      ## Cache  cleared shouldn't be previously cached
+      self.assert_(1.0 < calculation_time)
 
   def test_03_cachePersistentObjects(self):
     # storing persistent objects in cache is not allowed, but this check is
@@ -279,6 +280,9 @@ return result
   def test_04_CheckConcurrentRamCacheDict(self):
     """Check that all RamCache doesn't clear the same cache_dict
     """
+    print 
+    print "="*40
+    print "TESTING: Concurrent RamCache" 
     portal = self.getPortal()
     nb_iterations = 30000
     from Products.ERP5Type.Cache import CachingMethod
