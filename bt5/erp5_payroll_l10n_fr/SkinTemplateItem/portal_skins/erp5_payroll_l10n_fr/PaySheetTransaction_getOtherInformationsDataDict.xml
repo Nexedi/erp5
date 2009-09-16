@@ -114,7 +114,7 @@ def getPriceCurrencyId(currency):\n
   return s\n
 \n
 salaire_net_imposable = context.PaySheetTransaction_getMovementTotalPriceFromCategory(\\\n
-    base_contribution=\'base_contribution/base_amount/salaire_net_imposable\',\n
+    base_contribution=\'base_contribution/base_amount/payroll/earning/salary/taxable_net_salary\',\n
     contribution_share=\'contribution_share/employee\')\n
 def getTaxableNetPayId(salaire_net_imposable):\n
   s = \'\'\n
@@ -123,7 +123,7 @@ def getTaxableNetPayId(salaire_net_imposable):\n
   return s\n
 \n
 total_employee_tax = context.PaySheetTransaction_getMovementTotalPriceFromCategory(\\\n
-    base_contribution=\'base_contribution/base_amount/total_deductions\',\n
+    base_contribution=\'base_contribution/base_amount/payroll/tax\',\n
     contribution_share=\'contribution_share/employee\')\n
 def getTotalEmployeeTaxId(total_employee_tax):\n
   s = \'\'\n
@@ -133,7 +133,7 @@ def getTotalEmployeeTaxId(total_employee_tax):\n
   return s\n
 \n
 total_employer_tax = context.PaySheetTransaction_getMovementTotalPriceFromCategory(\\\n
-    base_contribution=\'base_contribution/base_amount/total_deductions\',\n
+    base_contribution=\'base_contribution/base_amount/payroll/tax\',\n
     contribution_share=\'contribution_share/employer\')\n
 def getTotalEmployerTaxId(total_employer_tax):\n
   s = \'\'\n
@@ -176,10 +176,10 @@ def getPaymentConditionText(paysheet):\n
   return \'\'\n
 \n
 gross_salary = context.PaySheetTransaction_getMovementTotalPriceFromCategory(\\\n
-    base_contribution=\'base_contribution/base_amount/gross_salary\',\n
+    base_contribution=\'base_contribution/base_amount/payroll/earning/salary/gross_salary\',\n
     contribution_share=\'contribution_share/employee\')\n
 year_to_date_gross_salary = context.PaySheetTransaction_getYearToDateBaseContributionTotalPrice(\\\n
-    paysheet=context, base_contribution_list=\'gross_salary\') + gross_salary\n
+    paysheet=context, base_contribution_list=\'payroll/earning/salary/gross_salary\') + gross_salary\n
 \n
 year_to_date_slice_a = context.PaySheetTransaction_getYearToDateSlice(\'salary_range/france/tranche_a\')\n
 \n
@@ -196,13 +196,13 @@ year_to_date_bonus_worked_hour_count = bonus_worked_hour_count + \\\n
     context.PaySheetTransaction_getYearToDateOvertimeHours() or 0\n
 \n
 year_to_date_bonus_worked_hour_amount = context.PaySheetTransaction_getYearToDateBaseContributionTotalPrice(\\\n
-    paysheet=context, base_contribution_list=\'overtime\') + \\\n
+    paysheet=context, base_contribution_list=\'payroll/earning/salary/overtime\') + \\\n
     context.PaySheetTransaction_getMovementTotalPriceFromCategory(\\\n
-    base_contribution=\'base_contribution/base_amount/overtime\', \\\n
+    base_contribution=\'base_contribution/base_amount/payroll/earning/salary/overtime\', \\\n
     contribution_share=\'contribution_share/employee\') or 0\n
 \n
 year_to_date_taxable_net_salary = context.PaySheetTransaction_getYearToDateBaseContributionTotalPrice(\\\n
-    paysheet=context, base_contribution_list=\'salaire_net_imposable\') + salaire_net_imposable\n
+    paysheet=context, base_contribution_list=\'payroll/earning/salary/net_salary\') + salaire_net_imposable\n
 \n
 def unicodeDict(d):\n
   for k, v in d.items():\n
