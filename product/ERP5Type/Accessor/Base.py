@@ -75,20 +75,28 @@ class Setter(Method):
       elif self._property_type == 'content':
         # A file object should be provided
         file_upload = args[0]
-        if isinstance(file_upload, FileUpload):
-          if file_upload:
-            try:
-              o = getattr(instance, self._storage_id)
-            except AttributeError:
+        if isinstance(file_upload, FileUpload) or \
+                getattr(aq_base(value), 'tell', None) is not None:
+          # When editing through the web interface, we are always provided a
+          # FileUpload, and when no file has been specified, the file is empty.
+          # In the case of empty file, we should not create the sub document.
+          # But, i don't think this code is actually used ...
+          file_upload.seek(0, 2)
+          is_empty_file = not file_upload.tell()
+          file_upload.seek(0)
+
+          if not is_empty_file:
+            content_document = instance._getOb(self._storage_id, None)
+            if content_document is None:
               # We create a default type
-              o = instance.PUT_factory(self._storage_id,
+              content_document = instance.PUT_factory(self._storage_id,
                 file_upload.headers.get('content-type', None), file_upload)
-              instance._setObject(self._storage_id, o)
-              o = getattr(instance, self._storage_id)
-            o.manage_upload(file = file_upload)
-            modified_object_list = [o]
+              instance._setObject(self._storage_id, content_document)
+              content_document = getattr(instance, self._storage_id)
+            content_document.manage_upload(file = file_upload)
+            modified_object_list = [content_document]
         else:
-          LOG('ERP5Type WARNING', 0, '%s is not an instance of FileUpload'
+          LOG('ERP5Type WARNING', 0, '%s is not a file like object'
               % str(file_upload))
       else:
         setattr(instance, self._storage_id, self._cast(args[0]))

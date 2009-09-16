@@ -26,7 +26,8 @@
 #
 ##############################################################################
 
-
+from Acquisition import aq_base
+from ZPublisher.HTTPRequest import FileUpload
 from Base import func_code, type_definition, list_types, ATTRIBUTE_PREFIX, Getter as BaseGetter, Setter as BaseSetter
 from Products.ERP5Type.PsycoWrapper import psyco
 from zLOG import LOG
@@ -161,6 +162,18 @@ class Setter(BaseSetter):
       assertAttributePortalType(instance, self._storage_id, self._portal_type)
       o = instance._getOb(self._storage_id, None)
       if o is None:
+        if self._acquired_property == 'file':
+          if isinstance(value, FileUpload) or \
+                getattr(aq_base(value), 'tell', None) is not None:
+            # When editing through the web interface, we are always provided a
+            # FileUpload, and when no file has been specified, the file is empty.
+            # In the case of empty file, we should not create the sub document.
+            value.seek(0, 2)
+            is_empty_file = not value.tell()
+            value.seek(0)
+            if is_empty_file:
+              return ()
+
         o = instance.newContent(id=self._storage_id,
             portal_type=self._portal_type[0])
       o._setProperty(self._acquired_property, value, *args, **kw)
