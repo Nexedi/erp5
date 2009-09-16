@@ -11,7 +11,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_template_registered_skin_selection</string> </value>
+            <value> <string>my_template_registered_skin_selection_list</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
