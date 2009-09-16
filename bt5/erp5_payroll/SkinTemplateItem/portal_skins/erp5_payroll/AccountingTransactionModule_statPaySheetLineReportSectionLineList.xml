@@ -57,8 +57,8 @@
 \n
 request = context.REQUEST\n
 \n
-return [Object(employee_share= request[\'employee_total\'],\n
-               employer_share=request[\'employer_total\'],\n
+return [Object(employee= request[\'employee_total\'],\n
+               employer=request[\'employer_total\'],\n
                base=request[\'base_total\'],\n
                total= request[\'total\']\n
               )\n

@@ -19,7 +19,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>listbox_employer_share</string> </value>
+            <value> <string>listbox_employer</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>

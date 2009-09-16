@@ -82,8 +82,8 @@
                     <key> <string>hidden</string> </key>
                     <value>
                       <list>
-                        <string>listbox_employee_share</string>
-                        <string>listbox_employer_share</string>
+                        <string>listbox_employee</string>
+                        <string>listbox_employer</string>
                         <string>listbox_total</string>
                         <string>listbox_base</string>
                       </list>

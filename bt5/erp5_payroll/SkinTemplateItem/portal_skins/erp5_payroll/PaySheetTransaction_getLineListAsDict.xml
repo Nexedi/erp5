@@ -70,10 +70,10 @@ property_list = [ \'slice\',\n
                   \'base_application_list\',\n
                   \'base_name\',\n
                   \'base\',\n
-                  \'employer_share_price\',\n
-                  \'employer_share_quantity\',\n
-                  \'employee_share_price\',\n
-                  \'employee_share_quantity\',\n
+                  \'employer_price\',\n
+                  \'employer_quantity\',\n
+                  \'employee_price\',\n
+                  \'employee_quantity\',\n
                   \'causality\',\n
                 ]\n
 for line in line_list:\n
@@ -84,8 +84,8 @@ for line in line_list:\n
       \'source_section_title\': line.getSourceSectionTitle(),\n
       \'title\'  : line.getTitle(),\n
       \'service\' : getattr(line, \'service\', None),\n
-      \'employer_share_total_price\' : getattr(line, \'employer_share_total_price\', None),\n
-      \'employee_share_total_price\' : getattr(line, \'employee_share_total_price\', None),\n
+      \'employer_total_price\' : getattr(line, \'employer_total_price\', None),\n
+      \'employee_total_price\' : getattr(line, \'employee_total_price\', None),\n
       }\n
 \n
   addProperties(line=line, line_dict=line_dict, property_list=property_list)\n

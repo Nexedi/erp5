@@ -414,13 +414,13 @@ AAA=</string> </value>
           <!-- If previous line has \'base_salary\' category in its\n
           base_contribution list and the next one don\'t have, display the total\n
           gross_salary -->\n
-          <tal:block condition="python: previous_line is not None and \'base_amount/gross_salary\' in previous_line[\'base_contribution_list\'] and \'base_amount/gross_salary\' not in line_dict[\'base_contribution_list\']">\n
+          <tal:block condition="python: previous_line is not None and \'base_amount/payroll/earning/salary/gross_salary\' in previous_line[\'base_contribution_list\'] and \'base_amount/payroll/earning/salary/gross_salary\' not in line_dict[\'base_contribution_list\']">\n
             <table:table-row table:style-name=\'Tableau1.3\'>\n
               <table:table-cell table:style-name=\'Tableau1.A8\' office:value-type=\'string\'>\n
                 <text:p text:style-name=\'Item_20_Table_20_Title_20_Left\' tal:content=\'python: here.Base_translateString("Gross Salary")\'>1</text:p>\n
               </table:table-cell>\n
               <table:table-cell table:style-name=\'Tableau1.A8\' office:value-type=\'string\'>\n
-                <text:p text:style-name=\'Table_20_Contents_20_Right\' tal:content=\'python:quantity_renderer(context.PaySheetTransaction_getMovementTotalPriceFromCategory(base_contribution="base_contribution/base_amount/gross_salary"))\'>400 000</text:p>\n
+                <text:p text:style-name=\'Table_20_Contents_20_Right\' tal:content=\'python:quantity_renderer(context.PaySheetTransaction_getMovementTotalPriceFromCategory(base_contribution="base_contribution/base_amount/payroll/earning/salary/gross_salary"))\'>400 000</text:p>\n
               </table:table-cell>\n
               <table:table-cell table:style-name=\'Tableau1.A8\' office:value-type=\'string\'>\n
                  <text:p text:style-name=\'Table_20_Contents\'/>\n
@@ -495,62 +495,62 @@ AAA=</string> </value>
 \n
               <table:table-cell table:style-name=\'Tableau1.A3\'\n
                                 office:value-type=\'float\'\n
-                                tal:condition="python: line_dict[\'employee_share_price\'] != None"\n
-                                tal:attributes=\'office:value line_dict/employee_share_price\'> \n
+                                tal:condition="python: line_dict[\'employee_price\'] != None"\n
+                                tal:attributes=\'office:value line_dict/employee_price\'> \n
                 <text:p text:style-name=\'Table_20_Contents\'\n
-                        tal:content="python: price_renderer(line_dict[\'employee_share_price\'])"\n
+                        tal:content="python: price_renderer(line_dict[\'employee_price\'])"\n
                         tal:attributes=\'text:style-name right_style_name\'>employee price</text:p>\n
               </table:table-cell>\n
               <table:table-cell table:style-name=\'Tableau1.A3\'\n
                                 office:value-type=\'string\'\n
-                                tal:condition="python: line_dict[\'employee_share_price\'] == None"> \n
+                                tal:condition="python: line_dict[\'employee_price\'] == None"> \n
                 <text:p text:style-name=\'Table_20_Contents\'/>\n
               </table:table-cell>\n
 \n
               <table:table-cell table:style-name=\'Tableau1.A3\'\n
                                 office:value-type=\'float\'\n
-                                tal:condition="python: line_dict[\'employee_share_total_price\'] != None"\n
-                                tal:attributes=\'office:value line_dict/employee_share_total_price\'> \n
+                                tal:condition="python: line_dict[\'employee_total_price\'] != None"\n
+                                tal:attributes=\'office:value line_dict/employee_total_price\'> \n
                 <text:p text:style-name=\'Table_20_Contents\'\n
-                        tal:content="python: quantity_renderer(line_dict[\'employee_share_total_price\'])"\n
+                        tal:content="python: quantity_renderer(line_dict[\'employee_total_price\'])"\n
                         tal:attributes=\'text:style-name right_style_name\'>employee total price</text:p>\n
               </table:table-cell>\n
               <table:table-cell table:style-name=\'Tableau1.A3\'\n
                                 office:value-type=\'string\'\n
-                                tal:condition="python: line_dict[\'employee_share_total_price\'] == None"> \n
+                                tal:condition="python: line_dict[\'employee_total_price\'] == None"> \n
                 <text:p text:style-name=\'Table_20_Contents\'/>\n
               </table:table-cell>\n
 \n
               <!-- if this line not contribute to gross_salary base amount display employer share else don\'t display it-->\n
-              <tal:block tal:condition="python: \'base_amount/gross_salary\' not in line_dict[\'base_contribution_list\']">\n
+              <tal:block tal:condition="python: \'base_amount/payroll/earning/salary/gross_salary\' not in line_dict[\'base_contribution_list\']">\n
                 <table:table-cell table:style-name=\'Tableau1.A3\'\n
                                   office:value-type=\'float\'\n
-                                  tal:condition="python: line_dict[\'employer_share_price\'] != None"\n
-                                  tal:attributes=\'office:value line_dict/employer_share_price\'> \n
+                                  tal:condition="python: line_dict[\'employer_price\'] != None"\n
+                                  tal:attributes=\'office:value line_dict/employer_price\'> \n
                   <text:p text:style-name=\'Table_20_Contents\'\n
-                          tal:content="python: price_renderer(line_dict[\'employer_share_price\'])"\n
+                          tal:content="python: price_renderer(line_dict[\'employer_price\'])"\n
                           tal:attributes=\'text:style-name right_style_name\'>employer price</text:p>\n
                 </table:table-cell>\n
                 <table:table-cell table:style-name=\'Tableau1.A3\'\n
                                   office:value-type=\'string\'\n
-                                  tal:condition="python: line_dict[\'employer_share_price\'] == None"> \n
+                                  tal:condition="python: line_dict[\'employer_price\'] == None"> \n
                   <text:p text:style-name=\'Table_20_Contents\'/>\n
                 </table:table-cell>\n
                 <table:table-cell table:style-name=\'Tableau1.A3\'\n
                                   office:value-type=\'float\'\n
-                                  tal:condition="python: line_dict[\'employer_share_total_price\'] != None"\n
-                                  tal:attributes=\'office:value line_dict/employer_share_total_price\'> \n
+                                  tal:condition="python: line_dict[\'employer_total_price\'] != None"\n
+                                  tal:attributes=\'office:value line_dict/employer_total_price\'> \n
                   <text:p text:style-name=\'Table_20_Contents\'\n
-                          tal:content="python: quantity_renderer(line_dict[\'employer_share_total_price\'])"\n
+                          tal:content="python: quantity_renderer(line_dict[\'employer_total_price\'])"\n
                           tal:attributes=\'text:style-name right_style_name\'>employer total price</text:p>\n
                 </table:table-cell>\n
                 <table:table-cell table:style-name=\'Tableau1.A3\'\n
                                   office:value-type=\'string\'\n
-                                  tal:condition="python: line_dict[\'employer_share_total_price\'] == None"> \n
+                                  tal:condition="python: line_dict[\'employer_total_price\'] == None"> \n
                   <text:p text:style-name=\'Table_20_Contents\'/>\n
                 </table:table-cell>\n
               </tal:block>\n
-              <tal:block tal:condition="python: \'base_amount/gross_salary\' in line_dict[\'base_contribution_list\']">\n
+              <tal:block tal:condition="python: \'base_amount/payroll/earning/salary/gross_salary\' in line_dict[\'base_contribution_list\']">\n
                 <table:table-cell table:style-name=\'Tableau1.A3\' office:value-type=\'string\'>\n
                    <text:p text:style-name=\'Table_20_Contents\'/>\n
                 </table:table-cell>\n
@@ -615,7 +615,7 @@ AAA=</string> </value>
                 <table:table-cell table:style-name=\'Tableau3.E2\'\n
                                   office:value-type=\'float\'\n
                                   tal:attributes=\'office:value data_dict/total_price_novat\'>\n
-                  <text:p text:style-name=\'Item_20_Table_20_Title_20_Right\' tal:content="python: \'%s %s\' % (quantity_renderer(context.PaySheetTransaction_getMovementTotalPriceFromCategory(base_contribution=\'base_contribution/base_amount/net_salary\', contribution_share=\'contribution_share/employee\')), data_dict[\'currency\'])">800.000,00</text:p>\n
+                  <text:p text:style-name=\'Item_20_Table_20_Title_20_Right\' tal:content="python: \'%s %s\' % (quantity_renderer(context.PaySheetTransaction_getMovementTotalPriceFromCategory(base_contribution=\'base_contribution/base_amount/payroll/earning/salary/net_salary\', contribution_share=\'contribution_share/employee\')), data_dict[\'currency\'])">800.000,00</text:p>\n
                 </table:table-cell>\n
               </table:table-row>\n
               <table:table-row table:style-name=\'Tableau1.4\'>\n

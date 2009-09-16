@@ -131,7 +131,7 @@ for inventory in employee_inventory_list:\n
                employee_career_function=employee.getCareerFunctionTitle(),\n
                salary_range=salary_range,\n
                salary_range_title=salary_range_title,\n
-               employee_share=price,\n
+               employee=price,\n
                base=inventory.quantity, )\n
   employee_total += price\n
   base_total += inventory.quantity\n
@@ -150,7 +150,7 @@ for inventory in employer_inventory_list:\n
                employee_career_reference=employee.getCareerReference(),\n
                employee_title=employee.getTitle(),\n
                employee_career_function=employee.getCareerFunctionTitle(),\n
-               employee_share=0,\n
+               employee=0,\n
                salary_range=salary_range,\n
                salary_range_title=salary_range_title,\n
                base=inventory.quantity, )\n
@@ -158,8 +158,8 @@ for inventory in employer_inventory_list:\n
     i = i + 1\n
 \n
   employee = inventory.getDestinationValue()\n
-  inventory_list[key].employer_share = price\n
-  inventory_list[key].total = inventory_list[key].employee_share + price\n
+  inventory_list[key].employer = price\n
+  inventory_list[key].total = inventory_list[key].employee + price\n
   employer_total += price\n
 \n
 total = employee_total + employer_total\n
@@ -208,8 +208,8 @@ if sorted_inventory_list:\n
                employee_title=translateString(\'Total ${salary_range_title}\',\n
                      mapping=dict(salary_range_title=current_salary_range_title)),\n
                base=intermediate_base_total,\n
-               employee_share=intermediate_employee_total,\n
-               employer_share=intermediate_employer_total))\n
+               employee=intermediate_employee_total,\n
+               employer=intermediate_employer_total))\n
 \n
       intermediate_base_total = 0\n
       intermediate_employee_total = 0\n
@@ -219,8 +219,8 @@ if sorted_inventory_list:\n
       current_salary_range_title = inventory[\'salary_range_title\']\n
 \n
     intermediate_base_total += inventory[\'base\']\n
-    intermediate_employee_total += inventory.get(\'employee_share\', 0)\n
-    intermediate_employer_total += inventory.get(\'employer_share\', 0)\n
+    intermediate_employee_total += inventory.get(\'employee\', 0)\n
+    intermediate_employer_total += inventory.get(\'employer\', 0)\n
     new_inventory_list.append(inventory)\n
 \n
   if multiple_salary_range:\n
@@ -228,8 +228,8 @@ if sorted_inventory_list:\n
            employee_title=translateString(\'Total ${salary_range_title}\',\n
                  mapping=dict(salary_range_title=current_salary_range_title)),\n
            base=intermediate_base_total,\n
-           employee_share=intermediate_employee_total,\n
-           employer_share=intermediate_employer_total))\n
+           employee=intermediate_employee_total,\n
+           employer=intermediate_employer_total))\n
      \n
   return new_inventory_list\n
 \n
@@ -312,7 +312,7 @@ return []\n
                             <string>salary_range_title</string>
                             <string>_inplacevar_</string>
                             <string>key</string>
-                            <string>employer_share</string>
+                            <string>employer</string>
                             <string>total</string>
                             <string>sorted_inventory_list</string>
                             <string>sort_method</string>

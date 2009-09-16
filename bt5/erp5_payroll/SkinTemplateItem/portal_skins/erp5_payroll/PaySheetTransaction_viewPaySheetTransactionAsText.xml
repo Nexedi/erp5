@@ -79,16 +79,16 @@ for line in line_dict_list:\n
   string_to_display.append(rightPad(line[\'title\'], 40))\n
   string_to_display.append(rightPad(line[\'base\'], 16))\n
 \n
-  if line.has_key(\'employer_share_quantity\'):\n
-    string_to_display.append(rightPad(str(line[\'employer_share_price\']), 24))\n
-    string_to_display.append(rightPad(str(line[\'employer_share_quantity\']), 24))\n
+  if line.has_key(\'employer_quantity\'):\n
+    string_to_display.append(rightPad(str(line[\'employer_price\']), 24))\n
+    string_to_display.append(rightPad(str(line[\'employer_quantity\']), 24))\n
   else:\n
     string_to_display.append(rightPad(\' \', 24))\n
     string_to_display.append(rightPad(\' \', 24))\n
 \n
-  if line.has_key(\'employee_share_quantity\'):\n
-    string_to_display.append(rightPad(str(line[\'employee_share_price\']), 24))\n
-    string_to_display.append(rightPad(str(line[\'employee_share_quantity\']), 24))\n
+  if line.has_key(\'employee_quantity\'):\n
+    string_to_display.append(rightPad(str(line[\'employee_price\']), 24))\n
+    string_to_display.append(rightPad(str(line[\'employee_quantity\']), 24))\n
   else:\n
     string_to_display.append(rightPad(\' \', 24))\n
     string_to_display.append(rightPad(\' \', 24))\n

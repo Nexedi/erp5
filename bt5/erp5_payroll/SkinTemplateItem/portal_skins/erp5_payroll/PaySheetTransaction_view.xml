@@ -85,10 +85,10 @@
                     <value>
                       <list>
                         <string>listbox_base</string>
-                        <string>listbox_employee_share_price</string>
-                        <string>listbox_employer_share_price</string>
-                        <string>listbox_employee_share_total_price</string>
-                        <string>listbox_employer_share_total_price</string>
+                        <string>listbox_employee_price</string>
+                        <string>listbox_employer_price</string>
+                        <string>listbox_employee_total_price</string>
+                        <string>listbox_employer_total_price</string>
                         <string>listbox_int_index</string>
                         <string>listbox_title</string>
                       </list>

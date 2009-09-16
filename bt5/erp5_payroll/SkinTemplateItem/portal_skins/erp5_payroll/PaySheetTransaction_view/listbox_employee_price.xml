@@ -13,18 +13,13 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>css_class</string>
-                <string>display_width</string>
                 <string>editable</string>
-                <string>input_style</string>
-                <string>precision</string>
-                <string>title</string>
               </list>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>listbox_employer_share_total_price</string> </value>
+            <value> <string>listbox_employee_price</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -61,24 +56,12 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>display_width</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>precision</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
-                    </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
@@ -92,75 +75,23 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>css_class</string> </key>
-                    <value> <string>figure</string> </value>
-                </item>
-                <item>
-                    <key> <string>display_width</string> </key>
-                    <value> <int>20</int> </value>
-                </item>
-                <item>
                     <key> <string>editable</string> </key>
                     <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_float_field</string> </value>
+                    <value> <string>my_percent</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string>Base_viewPayrollFieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key> <string>input_style</string> </key>
-                    <value> <string>-1 234.5</string> </value>
-                </item>
-                <item>
-                    <key> <string>precision</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
                 </item>
-                <item>
-                    <key> <string>title</string> </key>
-                    <value> <string>Money Quantity</string> </value>
-                </item>
               </dictionary>
             </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <tuple>
-        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-        <tuple/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>python: preferences.getPreference(\'preferred_money_quantity_field_width\', 10)</string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="3" aka="AAAAAAAAAAM=">
-    <pickle>
-      <tuple>
-        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-        <tuple/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>python: here.getQuantityPrecisionFromResource(here.getPriceCurrency())</string> </value>
         </item>
       </dictionary>
     </pickle>

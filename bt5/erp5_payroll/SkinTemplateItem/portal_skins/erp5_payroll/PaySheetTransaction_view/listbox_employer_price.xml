@@ -19,7 +19,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>listbox_employee_share</string> </value>
+            <value> <string>listbox_employer_price</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -80,7 +80,7 @@
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_money_quantity</string> </value>
+                    <value> <string>my_percent</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>

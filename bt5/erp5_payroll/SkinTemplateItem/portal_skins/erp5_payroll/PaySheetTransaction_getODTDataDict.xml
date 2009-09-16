@@ -53,7 +53,9 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>translateString = context.Base_translateString\n
+            <value> <string encoding="cdata"><![CDATA[
+
+translateString = context.Base_translateString\n
 model = context.getSpecialiseValue().getEffectiveModel(\\\n
    start_date=context.getStartDate(), stop_date=context.getStopDate())\n
 \n
@@ -143,6 +145,28 @@ def getPaymentConditionText(order):\n
   if days:\n
     return \'%s %s\' % (days, translateString(\'Days\'))\n
   return \'\'\n
+\n
+def getSocialOrganisationValue():\n
+  model = context.getSpecialiseValue()\n
+  business_process_list = model.findSpecialiseValueList(\\\n
+            context=context, portal_type_list=[\'Business Process\'])\n
+  business_process = None\n
+  if len(business_process_list):\n
+    # XXX currently, is too complicated to use more than\n
+    # one Business Process, so the first (which is the nearest from the\n
+    # delivery) is took\n
+    business_process = business_process_list[0]\n
+    business_path_list = business_process.getPathValueList(trade_phase=\\\n
+        \'payroll/invoicing/social_security\')\n
+    if len(business_path_list) > 1:\n
+      raise NotImplementedError, \'For now, it can not support more \'\\\n
+            \'than one business_path with same trade_phase. \'\\\n
+            \'%s have same trade_phase\' % repr(business_path_list)\n
+    if len(business_path_list) == 1:\n
+      business_path = business_path_list[0]\n
+      return business_path.getSourceSectionValue()\n
+\n
+  return None\n
 \n
 \n
 line_list = []\n
@@ -329,16 +353,10 @@ data_dict = {\n
       context.getDestinationSectionValue().getProperty(\'activity_code\') or \'\'),\n
   \'destination_section_social_codeid\': getSocialCodeId(context.getDestinationSection() and\n
       context.getDestinationSectionValue().getProperty(\'social_code\') or \'\'),\n
-  \'destination_section_social_company_title\' : context.getSocialInsuranceAnnotationLineValue() is not None and \\\n
-          context.getSocialInsuranceAnnotationLineValue().getSourceTitle() or \'\',\n
-  \'destination_section_social_address\': getOneLineAddress(\n
-      context.getSocialInsuranceAnnotationLineValue() is not None and \\\n
-          context.getSocialInsuranceAnnotationLineValue().getSource() and \\\n
-          context.getSocialInsuranceAnnotationLineValue().getSourceValue().getDefaultAddressText() or \'\',\n
-      context.getSocialInsuranceAnnotationLineValue() is not None and \\\n
-          context.getSocialInsuranceAnnotationLineValue().getSource() and \\\n
-          context.getSocialInsuranceAnnotationLineValue().getSourceValue().getDefaultAddressRegionTitle() or \'\'),\n
-\n
+  \'destination_section_social_company_title\' : getSocialOrganisationValue() is not None and getSocialOrganisationValue().getTitle() or \'\',\n
+  \'destination_section_social_address\': getSocialOrganisationValue() is not None and getOneLineAddress(\\\n
+                                            getSocialOrganisationValue().getDefaultAddressText(),\n
+                                            getSocialOrganisationValue().getDefaultAddressRegionTitle()) or \'\',\n
   \'destination_administration_title\':\\\n
     destination_administration.getProperty(\'corporate_name\') or \\\n
                                 destination_administration.getTitle(),\n
@@ -370,7 +388,9 @@ data_dict = {\n
 }\n
 \n
 return unicodeDict(data_dict)\n
-</string> </value>
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -425,6 +445,7 @@ return unicodeDict(data_dict)\n
                             <string>separator</string>
                             <string>getOrderedDate</string>
                             <string>getPaymentConditionText</string>
+                            <string>getSocialOrganisationValue</string>
                             <string>line_list</string>
                             <string>total_price</string>
                             <string>total_vat</string>
