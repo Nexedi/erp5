@@ -86,7 +86,7 @@
                     <value>
                       <list>
                         <string>my_template_skin_id_list</string>
-                        <string>my_template_registered_skin_selection</string>
+                        <string>my_template_registered_skin_selection_list</string>
                         <string>my_template_workflow_id_list</string>
                       </list>
                     </value>
