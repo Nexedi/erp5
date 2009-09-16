@@ -175,9 +175,12 @@ class DistributedRamCache(BaseCache):
     return []
 
   def clearCache(self):
+    """This method is disabled because it clear unique storage shared by other
+    client.
+    Use expiration time instead.
+    """
     BaseCache.clearCache(self)
-    cache_storage = self.getCacheStorage()
-    cache_storage.flush_all()
+    LOG('DistributedRamCache', WARNING, 'not allowed to clear memcache storage')
 
   def clearCacheForScope(self, scope):
     ## memcached doesn't support namespaces (cache scopes) neither getting cached key list.
