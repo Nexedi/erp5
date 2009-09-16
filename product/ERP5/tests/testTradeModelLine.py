@@ -1355,10 +1355,8 @@ class TestTradeModelLine(TestTradeModelLineMixin):
 
   # Tests
   def test_TradeConditionTradeModelLineBasicComposition(self):
-    """
-      If Trade Condition is specialised by another Trade Condition they
-      Trade Model Lines shall be merged.
-    """
+    # If Trade Condition is specialised by another Trade Condition they
+    # Trade Model Lines shall be merged.
     trade_condition_1 = self.createTradeCondition()
     trade_condition_2 = self.createTradeCondition()
 
@@ -1422,24 +1420,22 @@ class TestTradeModelLine(TestTradeModelLineMixin):
     )
 
   def test_findSpecialiseValueList(self):
-    '''
-      check that findSpecialiseValueList is able to return all the inheritance
-      model tree using Depth-first search
-
-                                  trade_condition_1
-                                    /           \
-                                   /             \
-                                  /               \
-                       trade_condition_2       trade_condition_3
-                               |
-                               |
-                               |
-                        trade_condition_4
-
-      According to Depth-first search algorithm, result of this graph is:
-      [trade_condition_1, trade_condition_2, trade_condition_3,
-      trade_condition_4]
-    '''
+    #  check that findSpecialiseValueList is able to return all the inheritance
+    #  model tree using Depth-first search
+    #
+    #                              trade_condition_1
+    #                                /           \
+    #                               /             \
+    #                              /               \
+    #                   trade_condition_2       trade_condition_3
+    #                           |
+    #                           |
+    #                           |
+    #                    trade_condition_4
+    #
+    #  According to Depth-first search algorithm, result of this graph is:
+    #  [trade_condition_1, trade_condition_2, trade_condition_3,
+    #  trade_condition_4]
     trade_condition_1 = self.createTradeCondition()
     trade_condition_2 = self.createTradeCondition()
     trade_condition_3 = self.createTradeCondition()
@@ -1507,26 +1503,25 @@ class TestTradeModelLine(TestTradeModelLineMixin):
     )
 
   def test_getTradeModelLineComposedList(self):
-    """Test that list of contribution/application relations is sorted to do easy traversal
-
-    Let assume such graph of contribution/application dependency:
-
-    D -----> B
-          /   \
-    E ---/     > A
-              /
-    F -----> C
-          /
-    G ---/
-
-    It shall return list which is sorted like:
-      * (DE) B (FG) C A
-        or
-      * (FG) C (DE) B A
-        or
-      * (DEFG) (BC) A
-    where everything in parenthesis can be not sorted
-    """
+    # Test that list of contribution/application relations is sorted to do easy traversal
+    #
+    # Let assume such graph of contribution/application dependency:
+    #
+    # D -----> B
+    #       /   \
+    # E ---/     > A
+    #           /
+    # F -----> C
+    #       /
+    # G ---/
+    #
+    # It shall return list which is sorted like:
+    #   * (DE) B (FG) C A
+    #     or
+    #   * (FG) C (DE) B A
+    #     or
+    #   * (DEFG) (BC) A
+    # where everything in parenthesis can be not sorted
     trade_condition = self.createTradeCondition()
 
     A = self.createTradeModelLine(trade_condition, reference='A',
@@ -1563,20 +1558,19 @@ class TestTradeModelLine(TestTradeModelLineMixin):
         [q.getReference() for q in [G, F, E, D, C, B, A]])
 
   def test_getComplexTradeModelLineComposedList(self):
-    """Test that list of contribution/application relations is sorted to do easy traversal
-
-    Let assume such graph of contribution/application dependency:
-
-             /--------\
-            /          \
-      A----+ -----B-----+-D
-            \          /
-             \----C---/
-
-    It shall return list which is sorted like:
-      * A (BC) D
-    where everything in parenthesis can be not sorted
-    """
+    # Test that list of contribution/application relations is sorted to do easy traversal
+    #
+    # Let assume such graph of contribution/application dependency:
+    #
+    #          /--------\
+    #         /          \
+    #   A----+ -----B-----+-D
+    #         \          /
+    #          \----C---/
+    #
+    # It shall return list which is sorted like:
+    #   * A (BC) D
+    # where everything in parenthesis can be not sorted
     trade_condition = self.createTradeCondition()
 
     C = self.createTradeModelLine(trade_condition, reference='C',
@@ -1602,11 +1596,9 @@ class TestTradeModelLine(TestTradeModelLineMixin):
         [q.getReference() for q in [A, B, C, D]])
 
   def test_tradeModelLineWithFixedPrice(self):
-    """
-      Check it's possible to have fixed quantity on lines. Sometimes we want
-      to say "discount 10 euros" or "pay more 10 euros" instead of saying "10%
-      discount from total"
-    """
+    # Check it's possible to have fixed quantity on lines. Sometimes we want
+    # to say "discount 10 euros" or "pay more 10 euros" instead of saying "10%
+    # discount from total"
     trade_condition = self.createTradeCondition()
 
     # create a model line with 100 euros
@@ -1636,9 +1628,7 @@ class TestTradeModelLine(TestTradeModelLineMixin):
     self.assertEqual(total_amount, 100 - 10)
 
   def test_getAggregatedAmountList(self):
-    """
-      Test for case, when discount contributes to tax, and order has mix of contributing lines
-    """
+    # Test for case, when discount contributes to tax, and order has mix of contributing lines
     sequence_list = SequenceList()
     sequence_string = self.AGGREGATED_AMOUNT_LIST_COMMON_SEQUENCE_STRING
 
@@ -1677,9 +1667,7 @@ class TestTradeModelLine(TestTradeModelLineMixin):
     """ + AGGREGATED_AMOUNT_LIST_CHECK_SEQUENCE_STRING
 
   def test_getAggregatedAmountListOrderSpecialise(self):
-    """
-      Test for case, when discount contributes to tax, and order has mix of contributing lines and order itself defines Trade Model Line
-    """
+    # Test for case, when discount contributes to tax, and order has mix of contributing lines and order itself defines Trade Model Line
     sequence_list = SequenceList()
     sequence_string = self\
         .ORDER_SPECIALISE_AGGREGATED_AMOUNT_COMMON_SEQUENCE_STRING
@@ -1688,15 +1676,13 @@ class TestTradeModelLine(TestTradeModelLineMixin):
     sequence_list.play(self, quiet=True)
 
   def test_getAggregatedAmountList_afterUpdateAggregatedAmountList(self):
-    """
-      Test for case, when discount contributes to tax, and order has mix of contributing lines
-
-      Check if it is stable if updateAggregatedAmountList was invoked.
-
-      Note: This test assumes, that somethings contributes after update, shall
-            be rewritten in a way, that adds explicitly movement which shall
-            not be aggregated.
-    """
+    #  Test for case, when discount contributes to tax, and order has mix of contributing lines
+    #
+    #  Check if it is stable if updateAggregatedAmountList was invoked.
+    #
+    #  Note: This test assumes, that somethings contributes after update, shall
+    #        be rewritten in a way, that adds explicitly movement which shall
+    #        not be aggregated.
     sequence_list = SequenceList()
     sequence_string = self.AGGREGATED_AMOUNT_LIST_COMMON_SEQUENCE_STRING + """
               UpdateAggregatedAmountListOnOrder
@@ -1719,14 +1705,14 @@ class TestTradeModelLine(TestTradeModelLineMixin):
   """ + AGGREGATED_AMOUNT_SIMULATION_CHECK_SEQUENCE_STRING
 
   def test_TradeModelRuleSimulationExpand(self):
-    """Tests tree of simulations from Trade Model Rule"""
+    # Tests tree of simulations from Trade Model Rule
     sequence_list = SequenceList()
     sequence_string = self.TRADE_MODEL_RULE_SIMULATION_SEQUENCE_STRING
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=True)
 
   def test_TradeModelRuleSimulationReexpand(self):
-    """Tests tree of simulations from Trade Model Rule with reexpanding"""
+    # Tests tree of simulations from Trade Model Rule with reexpanding
     sequence_list = SequenceList()
     sequence_string = self.TRADE_MODEL_RULE_SIMULATION_SEQUENCE_STRING + """
               ModifyAgainOrderLineTaxed
@@ -1738,7 +1724,8 @@ class TestTradeModelLine(TestTradeModelLineMixin):
     sequence_list.play(self, quiet=True)
 
   def test_TradeModelRuleSimulationReexpandResourceChange(self):
-    """Tests tree of simulations from Trade Model Rule with reexpanding when resource changes on model"""
+    # Tests tree of simulations from Trade Model Rule with reexpanding when
+    # resource changes on model
     sequence_list = SequenceList()
     sequence_string = self.TRADE_MODEL_RULE_SIMULATION_SEQUENCE_STRING + """
               CreateServiceTax
@@ -1779,7 +1766,7 @@ class TestTradeModelLine(TestTradeModelLineMixin):
     sequence_list.play(self, quiet=True)
 
   def test_TradeModelRuleSimulationWithoutBPM(self):
-    """Tests tree of simulations from Trade Model Rule when there is no BPM"""
+    # Tests tree of simulations from Trade Model Rule when there is no BPM
     sequence_list = SequenceList()
     sequence_string = self.COMMON_DOCUMENTS_CREATION_SEQUENCE_STRING + """
               CreateTradeCondition
@@ -1801,7 +1788,8 @@ class TestTradeModelLine(TestTradeModelLineMixin):
     sequence_list.play(self, quiet=True)
 
   def test_TradeModelRuleSimulationWithoutTradeCondition(self):
-    """Tests tree of simulations from Trade Model Rule when there is no Trade Condition"""
+    # Tests tree of simulations from Trade Model Rule when there is no Trade
+    # Condition
     sequence_list = SequenceList()
     sequence_string = self.COMMON_DOCUMENTS_CREATION_SEQUENCE_STRING + """
               CreateOrder
@@ -1865,7 +1853,7 @@ class TestTradeModelLine(TestTradeModelLineMixin):
     sequence_list.play(self, quiet=True)
 
   def test_TradeModelRuleSimulationBuildInvoiceNewTradeCondition(self):
-    """Check that after changing trade condition invoice is diverged"""
+    # Check that after changing trade condition invoice is diverged
     sequence_list = SequenceList()
     sequence_string = self.TRADE_MODEL_RULE_SIMULATION_SEQUENCE_STRING
     sequence_string += """
@@ -1903,7 +1891,8 @@ class TestTradeModelLine(TestTradeModelLineMixin):
     sequence_list.play(self, quiet=True)
 
   def test_TradeModelRuleSimulationBuildInvoiceNewInvoiceLineSupport(self):
-    """Check how is supported addition of invoice line to invoice build from order"""
+    # Check how is supported addition of invoice line to invoice build from
+    # order
     sequence_list = SequenceList()
     sequence_string = self.TRADE_MODEL_RULE_SIMULATION_SEQUENCE_STRING
     sequence_string += """
@@ -1947,7 +1936,8 @@ class TestTradeModelLine(TestTradeModelLineMixin):
     sequence_list.play(self, quiet=True)
 
   def test_TradeModelRuleSimulationBuildInvoiceInvoiceLineModifyDivergencyAndSolving(self):
-    """Check that after changing invoice line invoice is properly diverged and it is possible to solve"""
+    # Check that after changing invoice line invoice is properly diverged and
+    # it is possible to solve
     sequence_list = SequenceList()
     sequence_string = self.TRADE_MODEL_RULE_SIMULATION_SEQUENCE_STRING
     sequence_string += """
@@ -1985,7 +1975,8 @@ class TestTradeModelLine(TestTradeModelLineMixin):
     sequence_list.play(self, quiet=True)
 
   def test_TradeModelRuleSimulationBuildInvoiceBuildInvoiceTransactionLines(self):
-    """Check that having properly configured invoice transaction rule it invoice transaction lines are nicely generated and have proper amounts"""
+    # Check that having properly configured invoice transaction rule it
+    # invoice transaction lines are nicely generated and have proper amounts
     sequence_list = SequenceList()
     sequence_string = self.TRADE_MODEL_RULE_SIMULATION_SEQUENCE_STRING
     sequence_string += """
@@ -2058,7 +2049,7 @@ class TestTradeModelLine(TestTradeModelLineMixin):
     """
 
   def test_TradeModelRuleSimulationPackingListSplitBuildInvoiceBuildDifferentRatio(self):
-    """Check building invoice after splitting packing list using different ratio"""
+    # Check building invoice after splitting packing list using different ratio
     self.modified_packing_list_line_quantity_ratio = 0.4
     sequence_list = SequenceList()
     sequence_list.addSequenceString(
@@ -2066,37 +2057,35 @@ class TestTradeModelLine(TestTradeModelLineMixin):
     sequence_list.play(self, quiet=True)
 
   def test_TradeModelRuleSimulationPackingListSplitBuildInvoiceBuild(self):
-    """Check building invoice after splitting packing list"""
+    # Check building invoice after splitting packing list
     sequence_list = SequenceList()
     sequence_list.addSequenceString(
         self.PACKING_LIST_SPLIT_INVOICE_BUILD_SEQUENCE_STRING)
     sequence_list.play(self, quiet=True)
 
   def test_getAggregatedAmountListWithComplexModelLinesCreateInEasyOrder(self):
-    """
-    Test the return of getAggregatedAmountList in the case of many model lines
-    depending each others. In this test, lines are created in the order of the
-    dependencies (it means that if a line A depend of a line B, line B is
-    created before A). This is the most easy case.
-
-    Dependency tree :
-    ModelLineTaxContributingToTotalTax : A
-    ModelLineDiscountContributingToTotalDiscount : B
-    ModelLineTaxContributingToTotalTax2 : C
-    ModelLineTotalTax : D
-    ModelLineTotalDiscount : E
-
-                              D       E
-                               \     /
-                                \   /
-                                 \ /
-                                  C      B
-                                   \    /
-                                    \  /
-                                     \/
-                                      A
-    Model line creation order : E, D, C, B, A
-    """
+    # Test the return of getAggregatedAmountList in the case of many model lines
+    # depending each others. In this test, lines are created in the order of the
+    # dependencies (it means that if a line A depend of a line B, line B is
+    # created before A). This is the most easy case.
+    #
+    # Dependency tree :
+    # ModelLineTaxContributingToTotalTax : A
+    # ModelLineDiscountContributingToTotalDiscount : B
+    # ModelLineTaxContributingToTotalTax2 : C
+    # ModelLineTotalTax : D
+    # ModelLineTotalDiscount : E
+    #
+    #                           D       E
+    #                            \     /
+    #                             \   /
+    #                              \ /
+    #                               C      B
+    #                                \    /
+    #                                 \  /
+    #                                  \/
+    #                                   A
+    # Model line creation order : E, D, C, B, A
     sequence_list = SequenceList()
     sequence_string = self.COMMON_DOCUMENTS_CREATION_SEQUENCE_STRING + """
               CreateBusinessProcess
@@ -2136,32 +2125,30 @@ class TestTradeModelLine(TestTradeModelLineMixin):
     sequence_list.play(self, quiet=True)
 
   def test_getAggregatedAmountListWithComplexModelLinesCreateInRandomOrder(self):
-    """
-    Test the return of getAggregatedAmountList in the case of many model lines
-    depending each others. In this test, lines are created in a random order,
-    not in the dependencies order (it means that if a line A depend of a 
-    line B, line A can be created before line B). getAggregatedAmountList
-    should be able to handle this case and redo calculation until all
-    dependencies are satisfied
-
-    Dependency tree :
-    ModelLineTaxContributingToTotalTax : A
-    ModelLineDiscountContributingToTotalDiscount : B
-    ModelLineTaxContributingToTotalTax2 : C
-    ModelLineTotalTax : D
-    ModelLineTotalDiscount : E
-
-                              D       E
-                               \     /
-                                \   /
-                                 \ /
-                                  C      B
-                                   \    /
-                                    \  /
-                                     \/
-                                      A
-    Model line creation order : A, C, D, B, E
-    """
+    # Test the return of getAggregatedAmountList in the case of many model lines
+    # depending each others. In this test, lines are created in a random order,
+    # not in the dependencies order (it means that if a line A depend of a 
+    # line B, line A can be created before line B). getAggregatedAmountList
+    # should be able to handle this case and redo calculation until all
+    # dependencies are satisfied
+    #
+    # Dependency tree :
+    # ModelLineTaxContributingToTotalTax : A
+    # ModelLineDiscountContributingToTotalDiscount : B
+    # ModelLineTaxContributingToTotalTax2 : C
+    # ModelLineTotalTax : D
+    # ModelLineTotalDiscount : E
+    #
+    #                           D       E
+    #                            \     /
+    #                             \   /
+    #                              \ /
+    #                               C      B
+    #                                \    /
+    #                                 \  /
+    #                                  \/
+    #                                   A
+    # Model line creation order : A, C, D, B, E
     sequence_list = SequenceList()
     sequence_string = self.COMMON_DOCUMENTS_CREATION_SEQUENCE_STRING + """
               CreateBusinessProcess
