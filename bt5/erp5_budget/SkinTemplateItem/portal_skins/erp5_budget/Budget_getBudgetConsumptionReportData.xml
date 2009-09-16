@@ -134,7 +134,7 @@ for budget in budget_list:\n
     # we use BudgetLine_asCellRange to get cell names, and have a default value\n
     # for "virtual level 2"\n
     cell_name_dict = {budget_line.getResource(base=1):\n
-                          budget_line.getTitle().encode(\'utf8\')}\n
+                          budget_line.getTitle().decode(\'utf8\')}\n
     for cell_range_list in budget_line.BudgetLine_asCellRange(matrixbox=1):\n
       for category, title in cell_range_list:\n
         cell_name_dict[category] = title.decode(\'utf8\')\n
