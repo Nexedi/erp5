@@ -64,7 +64,7 @@ if field_your_search_portal_type:\n
   if field_your_search_portal_type == \'all\':\n
     kw.update({\'portal_type\':list(context.getPortalDocumentTypeList())})\n
   else:\n
-    kw.update({\'portal_type\':context.Base_translateString(field_your_search_portal_type)})\n
+    kw.update({\'portal_type\':field_your_search_portal_type})\n
 \n
 web_section = context.getWebSectionValue()\n
 if web_section is not None and \\\n
@@ -75,7 +75,7 @@ if web_section is not None and \\\n
 else:\n
   search_context = context.getPortalObject()\n
 \n
-return search_context.Base_redirect(\'ERP5Site_viewSearchResult\', keep_items=kw)\n
+return search_context.Base_redirect(field_your_search_form_id, keep_items=kw)\n
 </string> </value>
         </item>
         <item>
@@ -86,7 +86,7 @@ return search_context.Base_redirect(\'ERP5Site_viewSearchResult\', keep_items=kw
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>field_your_search_text=\'\', field_your_search_portal_type=\'\', all_languages=False, list_style=None</string> </value>
+            <value> <string>field_your_search_text=\'\', field_your_search_portal_type=\'\', all_languages=False, list_style=None, field_your_search_form_id=\'ERP5Site_viewSearchResult\'</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -106,7 +106,7 @@ return search_context.Base_redirect(\'ERP5Site_viewSearchResult\', keep_items=kw
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>4</int> </value>
+                        <value> <int>5</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -116,6 +116,7 @@ return search_context.Base_redirect(\'ERP5Site_viewSearchResult\', keep_items=kw
                             <string>field_your_search_portal_type</string>
                             <string>all_languages</string>
                             <string>list_style</string>
+                            <string>field_your_search_form_id</string>
                             <string>kw</string>
                             <string>_getattr_</string>
                             <string>list</string>
@@ -141,6 +142,7 @@ return search_context.Base_redirect(\'ERP5Site_viewSearchResult\', keep_items=kw
                 <string></string>
                 <int>0</int>
                 <none/>
+                <string>ERP5Site_viewSearchResult</string>
               </tuple>
             </value>
         </item>
