@@ -26,7 +26,6 @@
 #
 ##############################################################################
 
-import random
 from Acquisition import aq_base
 from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass, DTMLFile, PersistentMapping
