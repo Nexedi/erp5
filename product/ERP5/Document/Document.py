@@ -239,7 +239,7 @@ class ConversionCacheMixin:
     """Update md5 checksum from the original file
     """
     data = self.getData()
-    self._setContentMd5(md5.new(data).digest()) #reindex is useless
+    self._setContentMd5(md5.new(data).hexdigest()) #reindex is useless
 
 class PermanentURLMixIn(ExtensibleTraversableMixIn):
   """
