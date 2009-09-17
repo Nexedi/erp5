@@ -53,27 +53,27 @@ class IdTool(BaseTool):
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getLastGeneratedId')
-  def getLastGeneratedId(self,id_group=None,default=None):
+  def getLastGeneratedId(self, id_group=None, default=None):
     """
     Get the last id generated
     """
     if getattr(aq_base(self), 'dict_ids', None) is None:
       self.dict_ids = PersistentMapping()
     last_id = None
-    if id_group is not None and id_group!='None':
+    if id_group is not None and id_group != 'None':
       last_id = self.dict_ids.get(id_group, default)
     return last_id
         
   security.declareProtected(Permissions.ModifyPortalContent,
                             'setLastGeneratedId')
-  def setLastGeneratedId(self,new_id,id_group=None):
+  def setLastGeneratedId(self, new_id, id_group=None):
     """
     Set a new last id. This is usefull in order to reset
     a sequence of ids.
     """
     if getattr(aq_base(self), 'dict_ids', None) is None:
       self.dict_ids = PersistentMapping()
-    if id_group is not None and id_group!='None':
+    if id_group is not None and id_group != 'None':
       self.dict_ids[id_group] = new_id
         
   security.declareProtected(Permissions.AccessContentsInformation,
