@@ -36,8 +36,6 @@ from Products.CMFCore.utils import getToolByName
 from zLOG import LOG, WARNING
 from Products.ERP5 import _dtmldir
 
-import threading
-
 from BTrees.Length import Length
 
 class IdTool(BaseTool):
@@ -77,12 +75,7 @@ class IdTool(BaseTool):
     if getattr(aq_base(self), 'dict_ids', None) is None:
       self.dict_ids = PersistentMapping()
     if id_group is not None and id_group!='None':
-      l = threading.Lock()
-      l.acquire()
-      try:
-        self.dict_ids[id_group] = new_id
-      finally:
-        l.release()
+      self.dict_ids[id_group] = new_id
         
   security.declareProtected(Permissions.AccessContentsInformation,
                             'generateNewId')
@@ -98,31 +91,26 @@ class IdTool(BaseTool):
     if id_group is not None and id_group!='None':
       # Getting the last id
       last_id = None
-      l = threading.Lock()
-      l.acquire()
-      try:
-        class Dummy:
-          pass
-        dummy = Dummy()
-        last_id = self.dict_ids.get(id_group, dummy)
-        if last_id is dummy:
-          if default is None:
-            new_id=0
-          else:
-            new_id=default
-          if method is not None:
-            new_id=method(new_id)  
-        else:
-          # Now generate a new id
-          if method is not None:
-            new_id = method(last_id)
-          else:
-            new_id = last_id + 1
- 
-        # Store the new value
-        self.dict_ids[id_group] = new_id
-      finally:
-        l.release()
+      class Dummy:
+	pass
+      dummy = Dummy()
+      last_id = self.dict_ids.get(id_group, dummy)
+      if last_id is dummy:
+	if default is None:
+	  new_id=0
+	else:
+	  new_id=default
+	if method is not None:
+	  new_id=method(new_id)  
+      else:
+	# Now generate a new id
+	if method is not None:
+	  new_id = method(last_id)
+	else:
+	  new_id = last_id + 1
+
+      # Store the new value
+      self.dict_ids[id_group] = new_id
 
     return new_id
 
