@@ -83,35 +83,23 @@ class IdTool(BaseTool):
     """
       Generate a new Id
     """
-    
-    if getattr(aq_base(self), 'dict_ids', None) is None:
-      self.dict_ids = PersistentMapping()
+
+    dict_ids = getattr(aq_base(self), 'dict_ids', None)
+    if dict_ids is None:
+      dict_ids = self.dict_ids = PersistentMapping()
 
     new_id = None
-    if id_group is not None and id_group!='None':
+    if id_group is not None and id_group != 'None':
       # Getting the last id
-      last_id = None
-      class Dummy:
-	pass
-      dummy = Dummy()
-      last_id = self.dict_ids.get(id_group, dummy)
-      if last_id is dummy:
-	if default is None:
-	  new_id=0
-	else:
-	  new_id=default
-	if method is not None:
-	  new_id=method(new_id)  
+      if default is None:
+        default = 0
+      last_id = dict_ids.get(id_group, default)
+      if method is None:
+        new_id = new_id + 1
       else:
-	# Now generate a new id
-	if method is not None:
-	  new_id = method(last_id)
-	else:
-	  new_id = last_id + 1
-
+        new_id = method(new_id)  
       # Store the new value
-      self.dict_ids[id_group] = new_id
-
+      dict_ids[id_group] = new_id
     return new_id
 
   security.declareProtected(Permissions.AccessContentsInformation,
