@@ -45,7 +45,7 @@ document_classes = updateGlobals( this_module,
                                   permissions_module=Permissions,
                                   is_erp5_type=1 )
 
-import Interface, PropertySheet, ZopePatch, StateChangeInfoPatch, CMFCorePatch
+import Interface, PropertySheet, ZopePatch, CMFCorePatch
 import interfaces
 
 import Products.Localizer # So that we make sure Globals.get_request is available
