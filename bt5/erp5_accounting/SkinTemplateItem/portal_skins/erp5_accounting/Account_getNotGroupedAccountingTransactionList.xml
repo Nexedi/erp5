@@ -80,11 +80,7 @@ line_list = []\n
 for brain in portal.Base_zGetNotGroupedMovementList(\n
                                 at_date=from_date - 1, # this is not to_date\n
                                 simulation_state=params[\'simulation_state\'],\n
-                                # XXX this adds a need for account\n
-                                # ie. impossible to produce this report only\n
-                                # for a mirror section and any nodes\n
-                                node_uid=kw[\'node_uid\'],\n
-                                # XXX must be a list in current Z SQL Method\n
+                                node_uid=[kw[\'node_uid\']],\n
                                 section_uid=params[\'section_uid\']):\n
     \n
     # manually filter out not interesting lines\n

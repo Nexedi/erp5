@@ -40,7 +40,23 @@
                             <item>
                                 <key> <string>node_uid</string> </key>
                                 <value>
-                                  <dictionary/>
+                                  <dictionary>
+                                    <item>
+                                        <key> <string>type</string> </key>
+                                        <value> <string>list</string> </value>
+                                    </item>
+                                  </dictionary>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>portal_type</string> </key>
+                                <value>
+                                  <dictionary>
+                                    <item>
+                                        <key> <string>type</string> </key>
+                                        <value> <string>list</string> </value>
+                                    </item>
+                                  </dictionary>
                                 </value>
                             </item>
                             <item>
@@ -75,6 +91,7 @@
                             <string>node_uid</string>
                             <string>section_uid</string>
                             <string>simulation_state</string>
+                            <string>portal_type</string>
                             <string>at_date</string>
                           </list>
                         </value>
@@ -92,9 +109,10 @@
         </item>
         <item>
             <key> <string>arguments_src</string> </key>
-            <value> <string>node_uid\r\n
+            <value> <string>node_uid:list\r\n
 section_uid:list\r\n
 simulation_state:list\r\n
+portal_type:list\r\n
 at_date</string> </value>
         </item>
         <item>
@@ -156,11 +174,17 @@ Here, a group of movement means:\n
   FROM catalog, stock LEFT JOIN catalog AS mirror_section on \n
         ( stock.mirror_section_uid = mirror_section.uid )\n
 \n
-  WHERE stock.node_uid=<dtml-var node_uid> and\n
+  WHERE stock.node_uid in (<dtml-in node_uid><dtml-var sequence-item>\n
+         <dtml-unless sequence-end>, </dtml-unless></dtml-in>) and\n
        <dtml-if simulation_state>\n
         stock.simulation_state in (<dtml-in simulation_state>\n
             <dtml-sqlvar sequence-item type="string">\n
          <dtml-unless sequence-end>, </dtml-unless> </dtml-in simulation_state> ) and\n
+       </dtml-if>\n
+       <dtml-if portal_type>\n
+        stock.portal_type in (<dtml-in portal_type>\n
+            <dtml-sqlvar sequence-item type="string">\n
+         <dtml-unless sequence-end>, </dtml-unless> </dtml-in portal_type> ) and\n
        </dtml-if>\n
        <dtml-if section_uid>\n
         stock.section_uid in (<dtml-in section_uid><dtml-var sequence-item>\n
@@ -182,11 +206,17 @@ Here, a group of movement means:\n
         catalog AS catalog, stock AS stock LEFT JOIN catalog AS mirror_section\n
         ON ( stock.mirror_section_uid = mirror_section.uid )\n
 \n
-  WHERE stock.node_uid=<dtml-var node_uid> and\n
+  WHERE stock.node_uid in (<dtml-in node_uid><dtml-var sequence-item>\n
+         <dtml-unless sequence-end>, </dtml-unless></dtml-in>) and\n
        <dtml-if simulation_state>\n
         stock.simulation_state in (<dtml-in simulation_state>\n
             <dtml-sqlvar sequence-item type="string">\n
          <dtml-unless sequence-end>, </dtml-unless> </dtml-in simulation_state> ) and\n
+       </dtml-if>\n
+       <dtml-if portal_type>\n
+        stock.portal_type in (<dtml-in portal_type>\n
+            <dtml-sqlvar sequence-item type="string">\n
+         <dtml-unless sequence-end>, </dtml-unless> </dtml-in portal_type> ) and\n
        </dtml-if>\n
        <dtml-if section_uid>\n
         stock.section_uid in (<dtml-in section_uid><dtml-var sequence-item>\n
@@ -268,11 +298,17 @@ Here, a group of movement means:\n
   FROM catalog, stock LEFT JOIN catalog AS mirror_section on \n
         ( stock.mirror_section_uid = mirror_section.uid )\n
 \n
-  WHERE stock.node_uid=<dtml-var node_uid> and\n
+  WHERE stock.node_uid in (<dtml-in node_uid><dtml-var sequence-item>\n
+         <dtml-unless sequence-end>, </dtml-unless></dtml-in>) and\n
        <dtml-if simulation_state>\n
         stock.simulation_state in (<dtml-in simulation_state>\n
             <dtml-sqlvar sequence-item type="string">\n
          <dtml-unless sequence-end>, </dtml-unless> </dtml-in simulation_state> ) and\n
+       </dtml-if>\n
+       <dtml-if portal_type>\n
+        stock.portal_type in (<dtml-in portal_type>\n
+            <dtml-sqlvar sequence-item type="string">\n
+         <dtml-unless sequence-end>, </dtml-unless> </dtml-in portal_type> ) and\n
        </dtml-if>\n
        <dtml-if section_uid>\n
         stock.section_uid in (<dtml-in section_uid><dtml-var sequence-item>\n
@@ -294,11 +330,17 @@ Here, a group of movement means:\n
         catalog AS catalog, stock AS stock LEFT JOIN catalog AS mirror_section\n
         ON ( stock.mirror_section_uid = mirror_section.uid )\n
 \n
-  WHERE stock.node_uid=<dtml-var node_uid> and\n
+  WHERE stock.node_uid in (<dtml-in node_uid><dtml-var sequence-item>\n
+         <dtml-unless sequence-end>, </dtml-unless></dtml-in>) and\n
        <dtml-if simulation_state>\n
         stock.simulation_state in (<dtml-in simulation_state>\n
             <dtml-sqlvar sequence-item type="string">\n
          <dtml-unless sequence-end>, </dtml-unless> </dtml-in simulation_state> ) and\n
+       </dtml-if>\n
+       <dtml-if portal_type>\n
+        stock.portal_type in (<dtml-in portal_type>\n
+            <dtml-sqlvar sequence-item type="string">\n
+         <dtml-unless sequence-end>, </dtml-unless> </dtml-in portal_type> ) and\n
        </dtml-if>\n
        <dtml-if section_uid>\n
         stock.section_uid in (<dtml-in section_uid><dtml-var sequence-item>\n
