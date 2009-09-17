@@ -93,7 +93,7 @@ class IdTool(BaseTool):
       # Getting the last id
       if default is None:
         default = 0
-      last_id = dict_ids.get(id_group, default)
+      new_id = dict_ids.get(id_group, default)
       if method is None:
         new_id = new_id + 1
       else:
