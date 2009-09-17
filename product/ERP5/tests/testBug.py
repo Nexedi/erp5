@@ -510,6 +510,14 @@ class TestBug(ERP5TypeTestCase):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)
 
+  def test_06_BugLineClone(self):
+    bug_portal_type = 'Bug'
+    bug_line_portal_type = 'Bug Line'
+    module = self.portal.getDefaultModule(portal_type=bug_portal_type)
+    bug = module.newContent(portal_type=bug_portal_type)
+    bug_line = bug.newContent(portal_type='Bug Line')
+    cloned_bug_line = bug_line.Base_createCloneDocument(batch_mode=1)
+    self.assertTrue(cloned_bug_line.getStartDate() > bug_line.getStartDate())
 
 def test_suite():
   suite = unittest.TestSuite()
