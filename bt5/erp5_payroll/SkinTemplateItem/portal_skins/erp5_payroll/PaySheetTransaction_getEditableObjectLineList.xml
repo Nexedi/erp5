@@ -99,8 +99,8 @@ for model_line in model_line_list:\n
   if cartesian_product == [[]]: \n
     share_dict = {}\n
     if 0:\n
-      share_dict[cell.getContributionShare()+\'_share_price\'] = 0\n
-      share_dict[cell.getContributionShare()+\'_share_quantity\'] = 0\n
+      share_dict[cell.getContributionShare()+\'_price\'] = 0\n
+      share_dict[cell.getContributionShare()+\'_quantity\'] = 0\n
     continue\n
 \n
   for tuple in cartesian_product:\n
@@ -122,8 +122,8 @@ for model_line in model_line_list:\n
     price = cell.getPrice()\n
     if price is None:\n
       price = 1\n
-    share_dict[cell.getContributionShare()+\'_share_price\'] = price\n
-    share_dict[cell.getContributionShare()+\'_share_quantity\'] = quantity\n
+    share_dict[cell.getContributionShare()+\'_price\'] = price\n
+    share_dict[cell.getContributionShare()+\'_quantity\'] = quantity\n
 \n
     tuple_dict = {}\n
     for item in tuple:\n
