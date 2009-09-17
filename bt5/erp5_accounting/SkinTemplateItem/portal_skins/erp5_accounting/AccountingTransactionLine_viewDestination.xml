@@ -96,6 +96,7 @@
                       <list>
                         <string>my_destination_credit</string>
                         <string>my_resource</string>
+                        <string>my_grouping_reference</string>
                       </list>
                     </value>
                 </item>
