@@ -59,6 +59,7 @@
   which were already created so that they are not duplicated.\n
 """\n
 from Products.ERP5Type.Message import translateString\n
+from Products.ERP5Type.Log import log\n
 result_list = []\n
 sale_order_line_list = context.contentValues(portal_type=\'Sale Order Line\')\n
 if sale_order_line_list!=[]:\n
@@ -104,7 +105,7 @@ for line in listbox:\n
    else:\n
      # if there was no sale order line already defined\n
      # for the sale order, add a new sale order line\n
-     context.log("it goes in here second")\n
+     log("it goes in here second")\n
      if len(sale_order_line_list)==0 or line_id not in sale_order_line_id_list:\n
       sale_order_line= context.newContent(\n
                  portal_type=\'Sale Order Line\',)\n
@@ -180,6 +181,8 @@ return context.Base_redirect(form_id, keep_items=dict(\n
                             <string>kw</string>
                             <string>Products.ERP5Type.Message</string>
                             <string>translateString</string>
+                            <string>Products.ERP5Type.Log</string>
+                            <string>log</string>
                             <string>result_list</string>
                             <string>_getattr_</string>
                             <string>context</string>

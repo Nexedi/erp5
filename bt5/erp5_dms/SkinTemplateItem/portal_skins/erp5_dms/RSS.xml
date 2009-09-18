@@ -181,6 +181,7 @@ from ZTUtils import Batch\n
 from ZTUtils import LazyFilter\n
 from Products.CMFCore.utils import getToolByName\n
 from Products.CMFDefault.utils import toUnicode\n
+from Products.ERP5Type.Log import log\n
 \n
 req=context.REQUEST\n
 login,password=(req.get(\'login\'),req.get(\'password\'))\n
@@ -190,7 +191,7 @@ if login is not None and password is not None:\n
   context.portal_skins.updateSkinCookie()\n
   context.setupCurrentSkin(context.REQUEST)\n
 \n
-context.log(context.portal_membership.isAnonymousUser())\n
+log(context.portal_membership.isAnonymousUser())\n
 ptool = getToolByName(script, \'portal_properties\')\n
 stool = getToolByName(script, \'portal_syndication\')\n
 \n
@@ -289,6 +290,8 @@ return context.RSS_template(**options)\n
                             <string>getToolByName</string>
                             <string>Products.CMFDefault.utils</string>
                             <string>toUnicode</string>
+                            <string>Products.ERP5Type.Log</string>
+                            <string>log</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>req</string>

@@ -67,6 +67,7 @@ Differences to the stock implementation:\n
 """\n
 \n
 # XXX For now, this script requires proxy manager to retrieve the Person object in all cases\n
+from Products.ERP5Type.Log import log\n
 \n
 category_list = []\n
 \n
@@ -112,7 +113,7 @@ for assignment in person_object.contentValues(filter={\'portal_type\': \'Assignm
           cdict[base_category] = \'/\'.join(grouplist[:-i])\n
           category_list.append(cdict)\n
     except RuntimeError,e:\n
-      context.log(str(e))\n
+      log(str(e))\n
 \n
 return category_list\n
 
@@ -167,6 +168,8 @@ return category_list\n
                             <string>portal_type</string>
                             <string>strict</string>
                             <string>root</string>
+                            <string>Products.ERP5Type.Log</string>
+                            <string>log</string>
                             <string>category_list</string>
                             <string>_getattr_</string>
                             <string>context</string>

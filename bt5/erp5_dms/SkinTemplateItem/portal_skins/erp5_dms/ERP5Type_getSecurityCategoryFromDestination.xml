@@ -57,7 +57,7 @@
 Security categories assigned from the Person who is set as the destination\n
 of the document (e.g. in Memo type).\n
 """\n
-\n
+from Products.ERP5Type.Log import log\n
 category_list = []\n
 \n
 for ob in object.getDestinationValueList():\n
@@ -72,7 +72,8 @@ for ob in object.getDestinationValueList():\n
     else:\n
       raise RuntimeError, "Error: \'%s\' property is required in order to update person security group"  % (base_category)\n
   category_list.append(category_dict)\n
-context.log(category_list)\n
+\n
+log(category_list)\n
 return category_list\n
 </string> </value>
         </item>
@@ -122,6 +123,8 @@ return category_list\n
                             <string>user_name</string>
                             <string>object</string>
                             <string>portal_type</string>
+                            <string>Products.ERP5Type.Log</string>
+                            <string>log</string>
                             <string>category_list</string>
                             <string>_getiter_</string>
                             <string>_getattr_</string>
@@ -132,7 +135,6 @@ return category_list\n
                             <string>None</string>
                             <string>_write_</string>
                             <string>RuntimeError</string>
-                            <string>context</string>
                           </tuple>
                         </value>
                     </item>

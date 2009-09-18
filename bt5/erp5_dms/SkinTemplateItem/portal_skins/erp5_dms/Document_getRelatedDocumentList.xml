@@ -68,6 +68,7 @@ version of each of them.\n
 # BG - not much use, they\'re too different\n
 \n
 from Products.ERP5Type.Utils import convertToUpperCase, convertToMixedCase\n
+from Products.ERP5Type.Log import log\n
 \n
 def getRelatedLatest(category):\n
   funcname = \'get%sValueList\' % convertToUpperCase(category)\n
@@ -98,7 +99,7 @@ if relation_id == \'all\':\n
     dic[obj] = None\n
   return dic.keys()\n
 \n
-context.log(\'Relation %s is not provided for in this script\' % relation)\n
+log(\'Relation %s is not provided for in this script\' % relation)\n
 return [] # failover - undefined relation\n
 </string> </value>
         </item>
@@ -141,6 +142,8 @@ return [] # failover - undefined relation\n
                             <string>Products.ERP5Type.Utils</string>
                             <string>convertToUpperCase</string>
                             <string>convertToMixedCase</string>
+                            <string>Products.ERP5Type.Log</string>
+                            <string>log</string>
                             <string>getRelatedLatest</string>
                             <string>_getattr_</string>
                             <string>relation_id</string>

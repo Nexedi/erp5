@@ -56,6 +56,7 @@
             <value> <string># We wants to get data in order to do a nice summary of items inside the order\n
 # This report will mainly usefull when the same resource is ordered on many\n
 # different lines\n
+from Products.ERP5Type.Log import log\n
 if target_language:\n
   container.REQUEST[\'AcceptLanguage\'].set(target_language, 10)\n
 \n
@@ -91,7 +92,7 @@ def getMovementTitle(movement):\n
   parent_value = movement.getParentValue()\n
   while parent_value.getPortalType() not in order_type_list:\n
     title = parent_value.getTitle() + \' / \' + title\n
-    context.log(\'parent_value\', parent_value)\n
+    log(\'parent_value\', parent_value)\n
     parent_value = parent_value.getParentValue()\n
   return title\n
 \n
@@ -263,6 +264,8 @@ return context.Order_viewODSSummary(format=format)\n
                             <string>quantity_unit_list</string>
                             <string>format</string>
                             <string>kw</string>
+                            <string>Products.ERP5Type.Log</string>
+                            <string>log</string>
                             <string>_getattr_</string>
                             <string>_getitem_</string>
                             <string>container</string>
