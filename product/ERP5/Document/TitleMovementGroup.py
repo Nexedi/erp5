@@ -46,11 +46,11 @@ class TitleMovementGroup(MovementGroup):
     return True, property_dict
 
   def _getTitle(self,movement):
-    order_value = movement.getOrderValue()
-    title = ''
-    if order_value is not None:
-      if "Line" in order_value.getPortalType():
-        title = order_value.getTitle()
-      elif "Cell" in order_value.getPortalType():
-        title = order_value.getParentValue().getTitle()
+    order_movement_value = movement.getOrderValue()
+    title = None
+    if order_movement_value is not None:
+      if 'Cell' in order_movement_value.getPortalType():
+        order_movement_value = order_movement_value.getParentValue()
+      if order_movement_value.hasTitle():
+        title = order_movement_value.getTitle()
     return title
