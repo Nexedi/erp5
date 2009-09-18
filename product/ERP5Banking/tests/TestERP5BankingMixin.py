@@ -496,7 +496,7 @@ class TestERP5BankingMixin:
     Create site group function category that can be used for security
     """
     if site_list is None:
-      site_list = ["paris"]
+      site_list = ["paris", 'madrid', 'siege']
     # add category unit in quantity_unit which is the unit that will be used for banknotes and coins
     self.variation_base_category = getattr(self.category_tool, 'quantity_unit')
     self.unit = self.variation_base_category.newContent(id='unit', title='Unit')
@@ -545,32 +545,55 @@ class TestERP5BankingMixin:
     self.site_base_category = getattr(self.category_tool, 'site')
     # add the category testsite in the category site which hold vaults situated in the bank
     self.testsite = self.site_base_category.newContent(id='testsite', portal_type='Category',codification='TEST')
-    created_site_list = []
+    site_reference_from_codification_dict = {
+      'P10': ('FR', '000', '11111', '000000000000', '25'),
+      'S10': ('SP', '000', '11111', '000000000000', '08'),
+      'HQ1': ('FR', '000', '11112', '000000000000', '69'),
+    }
+    self.paris = self.testsite.newContent(id='paris', portal_type='Category', codification='P10',  vault_type='site')
+    self.madrid = self.testsite.newContent(id='madrid', portal_type='Category', codification='S10',  vault_type='site')
+    self.siege = self.site_base_category.newContent(id='siege', portal_type='Category', codification='HQ1',  vault_type='site')
+    created_site_list = [self.paris, self.madrid, self.siege]
     if len(site_list) != 0:
       for site in site_list:
         if isinstance(site, tuple):
           container = self.site_base_category
-          if len(site) == 3:
+          if len(site) in (3, 4):
             for category_id in site[2].split('/'):
               contained = getattr(container, category_id, None)
               if contained is None:
                 contained = container.newContent(id=category_id, portal_type='Category')
               container = contained
+            if len(site) == 4:
+              site_reference_from_codification_dict[site[1]] = site[3]
           codification = site[1]
           site = site[0]
-        if site == "paris":
-          self.paris = self.testsite.newContent(id='paris', portal_type='Category', codification='P10',  vault_type='site')
-          created_site_list.append(self.paris)
-        elif site == 'madrid' :
-          self.madrid = self.testsite.newContent(id='madrid', portal_type='Category', codification='S10',  vault_type='site')
-          created_site_list.append(self.madrid)
-        elif site == 'siege':        
-          self.siege = self.site_base_category.newContent(id='siege', portal_type='Category', codification='HQ1',  vault_type='site')
-          created_site_list.append(self.siege)
-        else:
+        if site not in ("paris", 'madrid', 'siege'):
           site = container.newContent(id=site, portal_type='Category',  codification=codification, vault_type='site')
           created_site_list.append(site)
-          
+
+    # Create organisation + bank account for each site category.
+    newContent = self.organisation_module.newContent
+    for site in created_site_list:
+      codification = site.getCodification()
+      organisation = newContent(
+        portal_type='Organisation',
+        id='site_%s' % (codification, ),
+        site=site.getRelativeUrl(),
+        group='baobab',
+        function='banking')
+      site_reference = site_reference_from_codification_dict.get(codification)
+      if site_reference is not None:
+        bank_account = organisation.newContent(
+          portal_type='Bank Account',
+          bank_country_code=site_reference[0],
+          bank_code=site_reference[1],
+          branch=site_reference[2],
+          bank_account_number=site_reference[3],
+          bank_account_key=site_reference[4], # XXX: Should be computed from other parts of site_reference
+        )
+        bank_account.validate()
+
     self.vault_type_base_category = getattr(self.category_tool, 'vault_type')
     site_vault_type = self.vault_type_base_category.newContent(id='site')
     surface_vault_type = site_vault_type.newContent('surface')
@@ -671,15 +694,6 @@ class TestERP5BankingMixin:
         # Create forreing currency entries in encaisse_des_devises.
         for currency in ['usd', ]:
           caisse_courante.encaisse_des_devises.newContent(id=currency, portal_type='Category', codification='', vault_type='site/surface/caisse_courante/encaisse_des_devises')
-
-    # Create other site now but without vault          
-    if len(site_list) != 0:
-      if 'paris' not in site_list:
-        self.paris = self.testsite.newContent(id='paris', portal_type='Category', codification='P10',  vault_type='site')
-      if 'madrid' not in site_list:
-        self.madrid = self.testsite.newContent(id='madrid', portal_type='Category', codification='S10',  vault_type='site')
-      if 'siege' not in site_list:
-        self.siege = self.site_base_category.newContent(id='siege', portal_type='Category', codification='HQ1',  vault_type='site')
 
     return created_site_list
 
