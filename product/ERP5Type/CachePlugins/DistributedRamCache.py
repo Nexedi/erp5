@@ -109,7 +109,7 @@ class DistributedRamCache(BaseCache):
     # since some memcached-like products does not support expiration, we
     # check it by ourselves.
     if cache_entry.isExpired():
-      cache_storage.delete(cache_id)
+      del cache_storage[cache_id]
       return default
     self.markCacheHit()
     return cache_entry
