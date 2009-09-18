@@ -39,7 +39,8 @@
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-<tal:block tal:define="shipping here/SaleOrder_getSelectedShippingResource;">\n
+<tal:block tal:define="shipping here/SaleOrder_getSelectedShippingResource;\n
+                       web_site here/getWebSiteValue;">\n
   <h2>\n
     <span tal:replace="python: here.Base_translateString(\'Shipping\')"/>\n
   </h2>\n
@@ -48,7 +49,7 @@
     <h3> <span tal:replace="python: here.Base_translateString(\'You have not selected shipping\')"/></h3>\n
     <p> \n
       <span tal:replace="python: here.Base_translateString(\'Your current cart selection requires shipping. Please select shipping from\')"/>\n
-      <a tal:attributes="href python: \'%s/cart\' % here.getWebSiteValue().absolute_url()">here</a>.\n
+      <a tal:attributes="href python: \'%s/cart\' % web_site.absolute_url()">here</a>.\n
     </p>\n
   </tal:block>\n
 \n
@@ -58,11 +59,10 @@
       <span tal:replace="shipping_obj/getTitle"/> : \n
       <b>\n
         <span tal:replace="shipping_obj/getPrice"/>\n
-        <span tal:replace="python: here.SaleOrder_getShoppingCartDefaultCurrency().getTitle()"/>\n
+        <span tal:replace="python: web_site.WebSite_getShoppingCartDefaultCurrency().getTitle()"/>\n
       </b>\n
     </p>\n
   </tal:block>\n
-  \n
 </tal:block>\n
 
 

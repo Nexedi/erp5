@@ -57,15 +57,16 @@
 if order_parameter_dict is None:\n
   return None\n
 \n
+web_site = context.getWebSiteValue()\n
 shopping_cart = context.SaleOrder_getShoppingCart()\n
 shopping_cart_product_list = shopping_cart.SaleOrder_getShoppingCartItemList()\n
-shopping_cart_price = float(shopping_cart.SaleOrder_getShoppingCartTotalPrice())\n
+shopping_cart_price = float(web_site.SaleOrder_getShoppingCartTotalPrice())\n
 taxes_amount = float(shopping_cart.SaleOrder_getShoppingCartTotalPrice(include_taxes=True, include_shipping=True)) - \\\n
                float(shopping_cart.SaleOrder_getShoppingCartTotalPrice(include_shipping=True));\n
 shipping = context.SaleOrder_getSelectedShippingResource()\n
 shipping_price = context.restrictedTraverse(shipping).getPrice()\n
 customer = context.SaleOrder_getShoppingCartCustomer()\n
-site_url = context.getWebSiteValue().absolute_url()\n
+site_url = web_site.absolute_url()\n
 \n
 order_parameter_dict[\'METHOD\'] = \'SetExpressCheckout\'\n
 order_parameter_dict[\'RETURNURL\'] = \'%s/WebSection_checkPaypalIdentification\' % site_url\n
@@ -132,6 +133,7 @@ return order_parameter_dict\n
                             <string>context</string>
                             <string>order_parameter_dict</string>
                             <string>None</string>
+                            <string>web_site</string>
                             <string>shopping_cart</string>
                             <string>shopping_cart_product_list</string>
                             <string>float</string>

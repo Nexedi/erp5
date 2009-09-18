@@ -65,9 +65,10 @@
   Script can optionally include currency.\n
 """\n
 \n
+web_site = context.getWebSiteValue()\n
 total = 0.0\n
-shopping_cart_items = context.SaleOrder_getShoppingCartItemList(include_shipping)\n
-for order_line in shopping_cart_items:\n
+shopping_cart_item_list = context.SaleOrder_getShoppingCartItemList(include_shipping)\n
+for order_line in shopping_cart_item_list:\n
   resource = context.restrictedTraverse(order_line.getResource())\n
   if order_line.getPrice() is not None:\n
     total += order_line.getPrice() * order_line.getQuantity()\n
@@ -80,7 +81,7 @@ if include_taxes:\n
       total += total*(tax_percent/100)\n
     \n
 if include_currency:\n
-  currency = context.SaleOrder_getShoppingCartDefaultCurrency()\n
+  currency = web_site.WebSite_getShoppingCartDefaultCurrency()\n
   return \'%s %s\' %(total, currency.getReference())\n
 else:\n
   return str(total)\n
@@ -131,10 +132,11 @@ else:\n
                             <string>include_shipping</string>
                             <string>include_taxes</string>
                             <string>include_currency</string>
-                            <string>total</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>shopping_cart_items</string>
+                            <string>web_site</string>
+                            <string>total</string>
+                            <string>shopping_cart_item_list</string>
                             <string>_getiter_</string>
                             <string>order_line</string>
                             <string>resource</string>

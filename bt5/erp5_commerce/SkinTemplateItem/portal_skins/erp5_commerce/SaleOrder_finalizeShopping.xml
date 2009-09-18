@@ -195,30 +195,31 @@
 """\n
 from DateTime import DateTime\n
 request = context.REQUEST\n
+web_site = context.getWebSiteValue()\n
 isAnon = context.portal_membership.isAnonymousUser()\n
 translateString = context.Base_translateString\n
-shopping_cart_items = context.SaleOrder_getShoppingCartItemList(include_shipping=True)\n
+shopping_cart_item_list = context.SaleOrder_getShoppingCartItemList(include_shipping=True)\n
 customer = context.SaleOrder_getShoppingCartCustomer()\n
 \n
 if isAnon:\n
-  ## create first an account for user\n
+  # create first an account for user\n
   msg = translateString("You need to create an account to continue If you already have please login.")\n
   context.Base_redirect(\'WebSite_viewRegistrationDialog\', \\\n
                         keep_items={\'portal_status_message\': msg,\n
                                     \'editable_mode\': 1})\n
   return\n
 \n
-## XXX: Implement check if payment is sucessfull\n
+# XXX: Implement check if payment is sucessfull\n
 sale_order_module = context.getPortalObject().sale_order_module\n
 sale_order = sale_order_module.newContent(portal_type=\'Sale Order\')\n
 sale_order.setDestination(customer.getRelativeUrl())\n
 sale_order.setStartDate(DateTime())\n
 sale_order.setReceivedDate(DateTime())\n
 \n
-## set order default currency\n
-sale_order.setDefaultPriceCurrency(context.SaleOrder_getShoppingCartDefaultCurrency().getRelativeUrl())\n
+# set order default currency\n
+sale_order.setDefaultPriceCurrency(web_site.WebSite_getShoppingCartDefaultCurrency().getRelativeUrl())\n
 \n
-for order_line in shopping_cart_items:\n
+for order_line in shopping_cart_item_list:\n
   resource = context.restrictedTraverse(order_line.getResource())\n
   sale_order.newContent(portal_type = \'Sale Order Line\',\n
                         resource = order_line.getResource(),\n
@@ -226,10 +227,10 @@ for order_line in shopping_cart_items:\n
                         price = resource.getPrice(),\n
                         title = resource.getTitle())\n
 \n
-## order it\n
+# order it\n
 sale_order.order()\n
 \n
-## clean up shopping cart\n
+# clean up shopping cart\n
 context.SaleOrder_getShoppingCart(action=\'reset\')\n
 \n
 context.Base_redirect(\'SaleOrder_viewThankYouMessage\')\n
@@ -279,10 +280,11 @@ context.Base_redirect(\'SaleOrder_viewThankYouMessage\')\n
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>request</string>
+                            <string>web_site</string>
                             <string>isAnon</string>
                             <string>translateString</string>
                             <string>True</string>
-                            <string>shopping_cart_items</string>
+                            <string>shopping_cart_item_list</string>
                             <string>customer</string>
                             <string>msg</string>
                             <string>sale_order_module</string>

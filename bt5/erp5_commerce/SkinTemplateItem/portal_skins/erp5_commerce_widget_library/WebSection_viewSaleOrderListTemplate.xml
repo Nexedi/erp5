@@ -41,10 +41,11 @@
 
 <div tal:repeat="product python: here.WebSection_getProductList()">\n
   <div tal:condition="python: product is not None"\n
-       tal:define="shopping_cart    here/SaleOrder_getShoppingCart;\n
-                   site_url         python:here.getWebSiteValue().absolute_url();\n
-                   product_href     python: \'%s/product_module/%s/%s\' % (site_url, product.getId(), \'Resource_viewAsShop\');\n
-                   currency_symbole python: context.SaleOrder_getShoppingCartDefaultCurrency().getShortTitle();"\n
+       tal:define="shopping_cart here/SaleOrder_getShoppingCart;\n
+                   web_site here/getWebSiteValue;\n
+                   site_url web_site/absolute_url;\n
+                   product_href python: \'%s/product_module/%s/%s\' % (site_url, product.getId(), \'Resource_viewAsShop\');\n
+                   currency_symbol python: web_site.WebSite_getShoppingCartDefaultCurrency().getShortTitle();"\n
        tal:attributes="class python: repeat[\'product\'].index % 2 and \'product_list_bis\' or \'product_list\'">\n
     <div class="product_list_left">\n
       <a tal:attributes="href product_href">\n
@@ -56,7 +57,7 @@
     <div class="product_list_right">\n
       <tal:block tal:define="price product/getPrice">\n
         <tal:block tal:condition="python: price is not None">\n
-          <span>Price : </span><span tal:content="python: \'%s %s\' % (product.getPrice(), currency_symbole)">0 euros</span><br />\n
+          <span>Price : </span><span tal:content="python: \'%s %s\' % (product.getPrice(), currency_symbol)" /><br />\n
         </tal:block>\n
         <tal:block tal:condition="python: price is None">\n
           <span>The price is not setted yet.</span><br />\n

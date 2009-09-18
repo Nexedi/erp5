@@ -39,12 +39,13 @@
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-<tal:block tal:define="shopping_cart        here/SaleOrder_getShoppingCart;\n
-                       shopping_cart_items  shopping_cart/SaleOrder_getShoppingCartItemList;\n
-                       total_price          python: shopping_cart.SaleOrder_getShoppingCartTotalPrice(include_currency=False);\n
-                       empty_cart           python: shopping_cart.SaleOrder_isShoppingCartEmpty();\n
-                       confirm_mode         python: bool(options.get(\'confirm_mode\', 0));\n
-                       currency_code        python: here.SaleOrder_getShoppingCartDefaultCurrencyCode();">\n
+<tal:block tal:define="shopping_cart here/SaleOrder_getShoppingCart;\n
+                       web_site here/getWebSiteValue;\n
+                       currency_code web_site/WebSite_getShoppingCartDefaultCurrencyCode();\n
+                       shopping_cart_item_list shopping_cart/SaleOrder_getShoppingCartItemList;\n
+                       empty_cart shopping_cart/SaleOrder_isShoppingCartEmpty;\n
+                       total_price python: shopping_cart.SaleOrder_getShoppingCartTotalPrice(include_currency=False);\n
+                       confirm_mode python: bool(options.get(\'confirm_mode\', 0));">\n
   <h2>\n
     <span tal:replace="python: here.Base_translateString(\'My shopping cart\')"/>\n
   </h2>\n
@@ -62,7 +63,7 @@
       <td class="Data" tal:content="python: here.Base_translateString(\'Unit Price\')"/>\n
       <td class="Data" tal:content="python: here.Base_translateString(\'Total\')"/>\n
     </tr>\n
-    <tal:block tal:repeat="order_line shopping_cart_items">\n
+    <tal:block tal:repeat="order_line shopping_cart_item_list">\n
       <tr tal:define="resource python: here.restrictedTraverse(order_line.getResource());\n
                       quantity python: int(order_line.getQuantity());\n
                       price    python: resource.getPrice();\n
