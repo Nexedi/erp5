@@ -54,11 +54,9 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>""" \n
-  Return default currency used in shopping_cart.\n
-  Please update accordingly relative path. \n
-  XXX: there must be an way to do this better?\n
+  Return reference of the default currency used in Shopping Cart.\n
 """\n
-return context.getPortalObject().SaleOrder_getShoppingCartDefaultCurrency().getReference()\n
+return context.getWebSiteValue().WebSite_getShoppingCartDefaultCurrency().getReference()\n
 </string> </value>
         </item>
         <item>
@@ -74,9 +72,7 @@ return context.getPortalObject().SaleOrder_getShoppingCartDefaultCurrency().getR
         <item>
             <key> <string>_proxy_roles</string> </key>
             <value>
-              <tuple>
-                <string>Manager</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>
@@ -121,7 +117,7 @@ return context.getPortalObject().SaleOrder_getShoppingCartDefaultCurrency().getR
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>SaleOrder_getShoppingCartDefaultCurrencyCode</string> </value>
+            <value> <string>WebSite_getShoppingCartDefaultCurrencyCode</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

@@ -54,11 +54,9 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>""" \n
-  Return default currency used in shopping_cart.\n
-  Please update accordingly relative path. \n
-  XXX: there must be an way to do this better?\n
+  Return the sort title of the default currency used in Shopping Cart.\n
 """\n
-return context.getPortalObject().restrictedTraverse(\'currency_module/EUR\')\n
+return context.getWebSiteValue().WebSite_getShoppingCartDefaultCurrency().getShortTitle()\n
 </string> </value>
         </item>
         <item>
@@ -74,9 +72,7 @@ return context.getPortalObject().restrictedTraverse(\'currency_module/EUR\')\n
         <item>
             <key> <string>_proxy_roles</string> </key>
             <value>
-              <tuple>
-                <string>Manager</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>
@@ -121,11 +117,11 @@ return context.getPortalObject().restrictedTraverse(\'currency_module/EUR\')\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>SaleOrder_getShoppingCartDefaultCurrency</string> </value>
+            <value> <string>WebSite_getShoppingCartDefaultCurrencySymbol</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Get default Currency for Shopping Cart</string> </value>
+            <value> <string>Get default Currency symbol for Shopping Cart</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
