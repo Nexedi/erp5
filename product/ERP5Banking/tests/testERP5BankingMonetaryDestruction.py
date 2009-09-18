@@ -185,20 +185,9 @@ class TestERP5BankingMonetaryDestruction(TestERP5BankingMixin, ERP5TypeTestCase)
     # in order to have an assigment defined which is used to do transition
     # Create an Organisation that will be used for users assignment
     self.checkUserFolderType()
-    self.organisation = self.organisation_module.newContent(id='site_P10', portal_type='Organisation',
-                                                            function='banking', group='baobab',
-                                                            site='testsite/paris',
-                                                            region='france')
-
-    self.organisation_externe = self.organisation_module.newContent(id='site_S10', portal_type='Organisation',
-                                                                    function='banking', group='baobab',
-                                                                    site='testsite/madrid',
-                                                                    region='spain')
-
-    self.organisation_auxiliaire = self.organisation_module.newContent(id='site_P11', portal_type='Organisation',
-                                                            function='banking', group='baobab',
-                                                            site='testsite/auxiliaire/lyon',
-                                                            region='france')
+    self.organisation = self.organisation_module['site_P10']
+    self.organisation_externe = self.organisation_module['site_S10']
+    self.organisation_auxiliaire = self.organisation_module['site_P11']
 
     # define the user
     user_dict = {
