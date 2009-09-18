@@ -195,7 +195,6 @@
   See also SaleOrder_viewDiscountRenderer.    \n
 """\n
 \n
-#customer = context.SaleOrder_getShoppingCartCustomer()\n
 return None\n
 </string> </value>
         </item>

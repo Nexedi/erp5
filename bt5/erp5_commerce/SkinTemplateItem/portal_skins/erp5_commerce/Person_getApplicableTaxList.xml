@@ -198,7 +198,6 @@
     - B2P in EU, tax\n
 """\n
 \n
-#customer = context.SaleOrder_getShoppingCartCustomer()\n
 return {context.Base_translateString(\'VAT\'): 20.0,}\n
 </string> </value>
         </item>
