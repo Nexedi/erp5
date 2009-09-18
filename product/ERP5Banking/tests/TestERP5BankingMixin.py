@@ -850,9 +850,12 @@ class TestERP5BankingMixin:
       
     # validate this bank account for payment
     bank_account.validate()
-    if amount == 0:
-      return bank_account
-    # we need to put some money on this bank account
+    if amount:
+      # we need to put some money on this bank account
+      self.createBankAccountInventory(bank_account, amount, inv_date=inv_date)
+    return bank_account
+
+  def createBankAccountInventory(self, bank_account, amount, inv_date=None):
     if not hasattr(self, 'bank_account_inventory'):
       self.bank_account_inventory = self.bank_account_inventory_module.newContent(id='account_inventory_group',
                                                                                 portal_type='Bank Account Inventory Group',
@@ -868,7 +871,7 @@ class TestERP5BankingMixin:
     account_inventory_line_id = 'account_inventory_line_%s' %(self.account_inventory_number,)
     inventory_line = inventory.newContent(id=account_inventory_line_id,
                                           portal_type='Bank Account Inventory Line',
-                                          resource_value=currency,
+                                          resource_value=bank_account.getPriceCurrencyValue(),
                                           quantity=amount)
 
 
@@ -877,8 +880,6 @@ class TestERP5BankingMixin:
       inventory.deliver()
 
     self.account_inventory_number += 1
-    return bank_account
-
 
   def createCheckbook(self, id, vault, bank_account, min, max, date=None):
     """
