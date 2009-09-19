@@ -1,9 +1,40 @@
 #!/bin/sh
 
-if [ $# -ne 1 ]; then
-  echo -e "Usage:\n  $0 <db_name>"
+function show_help ( )
+{
+  script_name=`basename $0`
+  echo """
+  Usage:
+    $script_name <mysql_opt> [interval seconds]
+  Interval is default 5.
+  mysql_opt are default mysql command line options.
+  Put them in quotes if more than one option is passed.
+
+  Typical usage:
+    $script_name erp5
+    $script_name \"-h remotehost -u user erp5remote\" 3
+  """
+}
+
+MYSQL_OPT=$1
+INTERVAL=$2
+
+if [ "$MYSQL_OPT" == "" ] ; then
+  show_help
   exit 1
 fi
 
-watch -n 5 "mysql -h localhost -u root -t '$1' --disable-pager -t -e 'SELECT count(path) as MESSAGE, method_id, processing as run, processing_node as node FROM message WHERE processing_node > -1 GROUP BY  method_id, processing, processing_node; SELECT count(path) as MESSAGE_QUEUE, method_id, processing as run, processing_node as node FROM message_queue WHERE processing_node > -1 GROUP BY method_id, processing, processing_node' "
+if [ "$INTERVAL" == "" ] ; then
+  INTERVAL=5
+fi
 
+SELECT="""
+SELECT count(path) AS message, method_id, processing, processing_node FROM message GROUP BY method_id, processing, processing_node;
+SELECT count(path) AS message_queue, method_id, processing, processing_node FROM message_queue GROUP BY method_id, processing, processing_node;
+SELECT count(path) AS message, processing, processing_node FROM message GROUP BY processing, processing_node;
+SELECT count(path) AS message_queue, processing, processing_node FROM message_queue GROUP BY processing, processing_node;
+SELECT count(path) AS message_count FROM message;
+SELECT count(path) AS message_queue_count FROM message_queue;
+"""
+
+watch -n $INTERVAL "mysql $MYSQL_OPT --disable-pager -t -e '$SELECT' "
