@@ -1,6 +1,11 @@
 #!/bin/sh
 # Small watching script based on Sébastien idea.
 
+# ideas:
+#  - more control on what would be displayed
+#  - allow to group by tag instead of method_id
+#  - use python with curses to have runtime control
+
 function show_help ( )
 {
   script_name=`basename $0`
