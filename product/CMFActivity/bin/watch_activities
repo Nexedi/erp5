@@ -1,4 +1,5 @@
 #!/bin/sh
+# Small watching script based on Sébastien idea.
 
 function show_help ( )
 {
