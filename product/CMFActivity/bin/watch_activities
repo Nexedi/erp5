@@ -29,13 +29,12 @@ if [ "$INTERVAL" == "" ] ; then
   INTERVAL=5
 fi
 
-SELECT="""
-SELECT count(path) AS message, method_id, processing, processing_node FROM message GROUP BY method_id, processing, processing_node;
-SELECT count(path) AS message_queue, method_id, processing, processing_node FROM message_queue GROUP BY method_id, processing, processing_node;
-SELECT count(path) AS message, processing, processing_node FROM message GROUP BY processing, processing_node;
-SELECT count(path) AS message_queue, processing, processing_node FROM message_queue GROUP BY processing, processing_node;
-SELECT count(path) AS message_count FROM message;
-SELECT count(path) AS message_queue_count FROM message_queue;
-"""
-
+SELECT=""
+for t in message message_queue ; do
+  SELECT=$SELECT"""
+  SELECT count(path) AS $t, method_id, processing, processing_node AS node, min(priority) AS min_pri, max(priority) AS max_pri FROM $t GROUP BY method_id, processing, processing_node;
+  SELECT count(path) AS $t, processing, processing_node, min(priority) AS min_pri, max(priority) AS max_pri FROM $t GROUP BY processing, processing_node;
+  SELECT count(path) AS ${t}_count FROM $t;
+  """
+done
 watch -n $INTERVAL "mysql $MYSQL_OPT --disable-pager -t -e '$SELECT' "
