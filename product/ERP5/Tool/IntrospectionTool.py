@@ -339,7 +339,7 @@ class IntrospectionTool(LogMixin, BaseTool):
     """
     return getConfiguration().products
 
-  security.declareProtected(Permissions.ManagePortal, 'setProductPathList')
+  security.declareProtected(Permissions.ManagePortal, 'setProductPath')
   def setProductPath(self, relative_path):
     """
       Set the value of SOFTWARE_HOME for zopectl startup script
@@ -356,9 +356,18 @@ class IntrospectionTool(LogMixin, BaseTool):
     """
     config = self._loadExternalConfig()
     allowed_path_list = config.get("main", "products").split("\n")
-    base_product_path = config.get("base", "base_product_path").split("\n")
+    base_product_path_list = config.get("base", "base_product_path").split("\n")
+    if len(base_product_path_list) == 0:
+      raise Unauthorized(
+             "base_product_path_list is not defined into configuration.")
 
+    base_product_path = base_product_path_list[0]
     path = base_product_path + relative_path
+
+    if path not in allowed_path_list:
+      raise Unauthorized(
+               "You are setting one Unauthorized path as Product Path (%s)." \
+               % (path))
 
     if path not in allowed_path_list:
       raise Unauthorized("You are setting one Unauthorized path as Product Path.")
@@ -370,9 +379,9 @@ class IntrospectionTool(LogMixin, BaseTool):
       if line.strip(" ").startswith("products %s" % (base_product_path)):
         # Only comment the line, so it can easily reverted 
         new_line = "#%s" % (line)
-        # Append the new line.
-        new_file_list.append("products %s\n" % (path))
       new_file_list.append(new_line)
+    # Append the new line.
+    new_file_list.append("products %s\n" % (path))
     config_file.close()    
 
     # reopen file for write
