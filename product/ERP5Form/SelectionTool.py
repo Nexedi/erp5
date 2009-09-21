@@ -1207,10 +1207,10 @@ class SelectionTool( BaseTool, UniqueObject, SimpleItem ):
 
         proxy_listbox_ids = field.get_value('proxy_listbox_ids')
         REQUEST.set('proxy_listbox_ids', proxy_listbox_ids)
-        if len(proxy_listbox_ids) > 0:
+        if len(proxy_listbox_ids) == 1:
           REQUEST.set('proxy_listbox_id', proxy_listbox_ids[0][0])
         else:
-          REQUEST.set('proxy_listbox_id', \
+          REQUEST.set('proxy_listbox_id',
                        "Base_viewRelatedObjectListBase/listbox")
 
         # Empty the selection (uid)
