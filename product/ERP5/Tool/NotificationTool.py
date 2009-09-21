@@ -1,13 +1,13 @@
 ##############################################################################
 #
-# Copyright (c) 2004 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2004-2009 Nexedi SA and Contributors. All Rights Reserved.
 #                    Sebastien Robin <seb@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
-# programmers who take the whole responsability of assessing all potential
+# programmers who take the whole responsibility of assessing all potential
 # consequences resulting from its eventual inadequacies and bugs
 # End users who are looking for a ready-to-use solution with commercial
-# garantees and support are strongly adviced to contract a Free Software
+# guarantees and support are strongly advised to contract a Free Software
 # Service Company
 #
 # This program is Free Software; you can redistribute it and/or
@@ -107,11 +107,11 @@ def buildEmailMessage(from_url, to_url, msg=None,
     Builds a mail message which is ready to be
     sent by Zope MailHost.
 
-    * attachment_list is a list of dictionnaries with those keys:
+    * attachment_list is a list of dictionaries with those keys:
      - name : name of the attachment,
      - content: data of the attachment
      - mime_type: mime-type corresponding to the attachment
-    * extra_headers is a dictionnary of custom headers to add to the email.
+    * extra_headers is a dictionary of custom headers to add to the email.
       "X-" prefix is automatically added to those headers.
     * additional_headers is similar to extra_headers, but no prefix is added.
   """
@@ -236,7 +236,7 @@ class NotificationTool(BaseTool):
                   portal_type_list=None):
     """
       This method provides a common API to send messages to erp5 users
-      from object actions of worflow scripts.
+      from object actions of workflow scripts.
 
       Note that you can't send message to person who don't have his own Person document.
       This method provides only high-level functionality so that you can't use email address
@@ -333,7 +333,7 @@ class NotificationTool(BaseTool):
     event_list = []
     if notifier_list is None:
       # XXX TODO: Use priority_level. Need to implement default notifier query system.
-      # XXX       For now, we use 'Mail Meessage'.
+      # XXX       For now, we use 'Mail Message'.
       notifier_list = ['Mail Message']
     if event_keyword_argument_dict is None:
       event_keyword_argument_dict = {}
@@ -358,7 +358,7 @@ class NotificationTool(BaseTool):
       event.send(**low_level_kw)
 
     return
-    # Future implemetation could consist in implementing
+    # Future implementation could consist in implementing
     # policies such as grouped notification (per hour, per day,
     # per week, etc.) depending on user preferences. It
     # also add some priority and selection of notification
