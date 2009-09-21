@@ -918,6 +918,24 @@ class TestCommerce(ERP5TypeTestCase):
     self.assertEquals(product.Resource_getShopUrl(),
                  '%s/%s' % (product.getRelativeUrl(), 'Resource_viewAsShop'))
 
+  def test_28_finalizeShoppingWithComment(self):
+    """
+      Testing if the comment added during the checkout will be set on the sale
+      order object generated.
+    """
+    self.changeUser('webmaster')
+    comment = 'TESTING COMMENT'
+    self.portal.Resource_addToShoppingCart(self.getDefaultProduct(), 
+                                           quantity=1)
+
+    self.web_site.SaleOrder_paymentRedirect(field_my_comment=comment)
+    self.web_site.SaleOrder_finalizeShopping()
+    transaction.commit()
+    self.tic()
+
+    sale_order_object_list = self.portal.sale_order_module.contentValues()
+    self.assertEquals(comment, sale_order_object_list[0].getComment())
+ 
 import unittest
 def test_suite():
   suite = unittest.TestSuite()
