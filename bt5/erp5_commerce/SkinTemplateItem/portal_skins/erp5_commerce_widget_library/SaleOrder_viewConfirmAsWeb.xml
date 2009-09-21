@@ -98,6 +98,8 @@
                         <string>payment</string>
                         <string>my_payment_mode</string>
                         <string>customer</string>
+                        <string>comment</string>
+                        <string>my_comment</string>
                       </list>
                     </value>
                 </item>

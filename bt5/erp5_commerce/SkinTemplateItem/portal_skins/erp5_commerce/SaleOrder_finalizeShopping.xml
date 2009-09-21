@@ -198,6 +198,7 @@ request = context.REQUEST\n
 web_site = context.getWebSiteValue()\n
 isAnon = context.portal_membership.isAnonymousUser()\n
 translateString = context.Base_translateString\n
+shopping_cart = context.SaleOrder_getShoppingCart()\n
 shopping_cart_item_list = context.SaleOrder_getShoppingCartItemList(include_shipping=True)\n
 customer = context.SaleOrder_getShoppingCartCustomer()\n
 \n
@@ -215,6 +216,7 @@ sale_order = sale_order_module.newContent(portal_type=\'Sale Order\')\n
 sale_order.setDestination(customer.getRelativeUrl())\n
 sale_order.setStartDate(DateTime())\n
 sale_order.setReceivedDate(DateTime())\n
+sale_order.setComment(shopping_cart.getComment())\n
 \n
 # set order default currency\n
 sale_order.setDefaultPriceCurrency(web_site.WebSite_getShoppingCartDefaultCurrency().getRelativeUrl())\n
@@ -283,6 +285,7 @@ context.Base_redirect(\'SaleOrder_viewThankYouMessage\')\n
                             <string>web_site</string>
                             <string>isAnon</string>
                             <string>translateString</string>
+                            <string>shopping_cart</string>
                             <string>True</string>
                             <string>shopping_cart_item_list</string>
                             <string>customer</string>

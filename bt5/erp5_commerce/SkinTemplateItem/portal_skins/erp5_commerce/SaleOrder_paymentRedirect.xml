@@ -59,6 +59,10 @@ request = context.REQUEST\n
 isAnon = context.portal_membership.isAnonymousUser()\n
 translateString = context.Base_translateString\n
 \n
+if field_my_comment is not None:\n
+  shopping_cart = context.SaleOrder_getShoppingCart()\n
+  shopping_cart.setComment(field_my_comment)\n
+\n
 if isAnon:\n
   # create first an account for user\n
   msg = translateString("You need to create an account to continue. If you already have please login.")\n
@@ -91,12 +95,14 @@ return\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>field_my_payment_mode=None, **kw</string> </value>
+            <value> <string>field_my_comment=None, field_my_payment_mode=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>
             <value>
-              <tuple/>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
             </value>
         </item>
         <item>
@@ -117,12 +123,13 @@ return\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>2</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>field_my_comment</string>
                             <string>field_my_payment_mode</string>
                             <string>kw</string>
                             <string>_getattr_</string>
@@ -130,8 +137,9 @@ return\n
                             <string>request</string>
                             <string>isAnon</string>
                             <string>translateString</string>
-                            <string>msg</string>
                             <string>None</string>
+                            <string>shopping_cart</string>
+                            <string>msg</string>
                             <string>dict</string>
                           </tuple>
                         </value>
@@ -145,6 +153,7 @@ return\n
             <key> <string>func_defaults</string> </key>
             <value>
               <tuple>
+                <none/>
                 <none/>
               </tuple>
             </value>
