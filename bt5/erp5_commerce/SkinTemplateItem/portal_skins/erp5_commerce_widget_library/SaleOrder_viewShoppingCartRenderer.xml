@@ -41,7 +41,7 @@
 
 <tal:block tal:define="shopping_cart here/SaleOrder_getShoppingCart;\n
                        web_site here/getWebSiteValue;\n
-                       currency_code web_site/WebSite_getShoppingCartDefaultCurrencyCode();\n
+                       currency_code web_site/WebSite_getShoppingCartDefaultCurrencyCode;\n
                        shopping_cart_item_list shopping_cart/SaleOrder_getShoppingCartItemList;\n
                        empty_cart shopping_cart/SaleOrder_isShoppingCartEmpty;\n
                        total_price python: shopping_cart.SaleOrder_getShoppingCartTotalPrice(include_currency=False);\n
