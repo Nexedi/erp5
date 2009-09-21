@@ -141,7 +141,7 @@ class DistributedRamCache(BaseCache):
     cache_storage = self.getCacheStorage()
     cache_id = self.checkAndFixCacheId(cache_id, scope)
     cache_entry = cache_storage.get(cache_id)
-    if isinstance(cache_entry, CacheEntry):
+    if isinstance(cache_entry, CacheEntry) and not cache_entry.isExpired():
       return True
     else:
       return False
