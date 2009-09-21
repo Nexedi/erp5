@@ -111,7 +111,8 @@ if depth == maximum_depth and id_list:\n
 else:\n
   if id_list is None:\n
     if full or not getattr(document, \'isHBTree\', lambda: 0)():\n
-      id_list = document.objectIds()\n
+      #Cast in list to avoid accessing ZODB objects for each iteration\n
+      id_list = list(document.objectIds())\n
       if not depth:\n
         id_list = tuple(x for x in id_list if x.endswith(\'_module\') or x in [\n
           \'portal_alarms\',\n
@@ -213,6 +214,7 @@ else:\n
                             <string>id</string>
                             <string>_getitem_</string>
                             <string>getattr</string>
+                            <string>list</string>
                             <string>tuple</string>
                             <string>DateTime</string>
                             <string>xrange</string>
