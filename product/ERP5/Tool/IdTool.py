@@ -92,11 +92,17 @@ class IdTool(BaseTool):
       # Getting the last id
       if default is None:
         default = 0
-      new_id = dict_ids.get(id_group, default)
+      marker = []
+      new_id = dict_ids.get(id_group, marker)
       if method is None:
-        new_id = new_id + 1
+        if new_id is marker:
+          new_id = default
+        else:
+          new_id = new_id + 1
       else:
-        new_id = method(new_id)  
+        if new_id is marker:
+          new_id = default
+        new_id = method(new_id)
       # Store the new value
       dict_ids[id_group] = new_id
     return new_id
