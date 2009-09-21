@@ -496,24 +496,6 @@ class FakeMovement:
 class RootMovementGroup(MovementGroupNode):
   pass
 
-class CriterionMovementGroup(RootMovementGroup):
-  def __init__(self,movement,**kw):
-    RootMovementGroup.__init__(self, movement=movement, **kw)
-    if hasattr(movement, 'getGroupCriterion'):
-      self.criterion = movement.getGroupCriterion()
-    else:
-      self.criterion = None
-
-  def test(self,movement):
-    # we must have the same criterion
-    if hasattr(movement, 'getGroupCriterion'):
-      criterion = movement.getGroupCriterion()
-    else:
-      criterion = None
-    return self.criterion == criterion
-
-allow_class(CriterionMovementGroup)
-
 class SplitResourceMovementGroup(RootMovementGroup):
 
   def __init__(self, movement, **kw):

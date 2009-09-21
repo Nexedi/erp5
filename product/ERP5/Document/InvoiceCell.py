@@ -87,9 +87,3 @@ class InvoiceCell(DeliveryCell):
 #      # Never divergent
 #      return 0
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'getGroupCriterion')
-    def getGroupCriterion(self):
-      """
-        Return the criterion for grouping. This should be overriden by each class.
-      """
-      return int(round(self.getPrice() * 100))
