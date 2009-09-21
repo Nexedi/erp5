@@ -64,36 +64,36 @@ class TestRamCache(unittest.TestCase):
     for i in range(0, iterations):
         test_scopes.append("my_scope_%s" %i)
     test_scopes.sort()
-    
+
     ## remove DistributedRamCache since it's a flat storage
     filtered_cache_plugins = filter(
         lambda x: not isinstance(x, DistributedRamCache), self.cache_plugins)
-    
+
     for cache_plugin in filtered_cache_plugins:
       if not self.quiet:
         print "TESTING (scope): ", cache_plugin
 
       ## clear cache for this plugin
       cache_plugin.clearCache()
-      
+
       ## should exists no scopes in cache
       self.assertEqual([], cache_plugin.getScopeList())
-      
+
       ## set some sample values 
       for scope in test_scopes:
         cache_id = '%s_cache_id' %scope
         cache_plugin.set(cache_id, scope, scope*10)
-        
+
         ## we set ONLY one value per scope -> check if we get the same cache_id
         self.assertEqual([cache_id], cache_plugin.getScopeKeyList(scope))
         if not self.quiet:
           print "\t", cache_id, scope, "\t\tOK"
-      
+
       ## get list of scopes which must be the same as test_scopes since we clear cache initially
       scopes_from_cache = cache_plugin.getScopeList()
       scopes_from_cache.sort()
       self.assertEqual(test_scopes, scopes_from_cache)
-      
+
       ## remove scope one by one
       count = 1 
       for scope in test_scopes:
@@ -102,24 +102,22 @@ class TestRamCache(unittest.TestCase):
         scopes_from_cache = cache_plugin.getScopeList()
         self.assertEqual(iterations - count, len(scopes_from_cache))
         count = count + 1
-        
+
       ## .. we shouldn't have any cache scopes 
       scopes_from_cache = cache_plugin.getScopeList()
       self.assertEqual([], scopes_from_cache)
 
-      
   def testSetGet(self):
     """ set value to cache and then get it back """
     for cache_plugin in self.cache_plugins:
       self.generaltestSetGet(cache_plugin, 100)
-    
+
   def testExpire(self):
     """ Check expired by setting a key, wit for its timeout and check if in
     cache"""
     for cache_plugin in self.cache_plugins:
       self.generalExpire(cache_plugin, 2)
 
-            
   def generalExpire(self, cache_plugin, iterations):
     if not self.quiet:
       print "TESTING (expire): ", cache_plugin
@@ -136,18 +134,18 @@ class TestRamCache(unittest.TestCase):
 
       ## set to cache
       cache_plugin.set(cache_id, scope, value, cache_timeout)
-        
+
       ## sleep for timeout +1
       time.sleep(cache_timeout + 1)
-        
+
       ## should remove from cache expired cache entries 
       cache_plugin.expireOldCacheEntries(forceCheck=True)
-        
+
       ##  check it, we MUST NOT have this key any more in cache
       self.assertEqual(False, cache_plugin.has_key(cache_id, scope))
       if not self.quiet:
         print "\t\tOK"
-     
+
   def generaltestSetGet(self, cache_plugin, iterations):
     if not self.quiet:
       print "TESTING (set/get/has/del): ", cache_plugin
@@ -158,15 +156,15 @@ class TestRamCache(unittest.TestCase):
     for value in values:
       count = count +1
       cache_id = "mycache_id_to_set_get_has_del_%s" %(count)
-        
+
       ## set to cache
       cache_plugin.set(cache_id, scope, value, cache_duration)
       if not self.quiet:
         print "\t", cache_id,
-        
+
       ## check has_key()
       self.assertEqual(True, cache_plugin.has_key(cache_id, scope))
-        
+
       ## check get()
       cache_entry = cache_plugin.get(cache_id, scope)
       if isinstance(value, Foo):
@@ -176,20 +174,20 @@ class TestRamCache(unittest.TestCase):
       else:
         ## primitive types, direct comparision
         self.assertEqual(value, cache_entry.getValue())
-        
+
       ## is returned result proper cache entry?
       self.assertEqual(True, isinstance(cache_entry, CacheEntry))
-        
+
       ## is returned result proper type?
       self.assertEqual(type(value), type(cache_entry.getValue()))
-        
+
       ## check delete(), key should be removed from there
       cache_plugin.delete(cache_id, scope)
       self.assertEqual(False, cache_plugin.has_key(cache_id, scope))
-        
+
       if not self.quiet:
         print "\t\tOK"
-    
+
   def prepareValues(self, iterations):
     """ generate a big list of values """
     values = []
