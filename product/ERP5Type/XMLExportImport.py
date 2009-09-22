@@ -98,12 +98,12 @@ def Base_asXML(object, root=None):
       elif prop_type in ('data',):
         # Create blocks to represent data
         # <data><block>ZERD</block><block>OEJJM</block></data>
+        size_block = 80
         if isinstance(value, str):
           sub_object.set('type_data','str')
-          size_block = 80
           iterator_block = 0
           data_encoded = standard_b64encode(value)
-          for index in xrange(0, len(data_encoded), 80):
+          for index in xrange(0, len(data_encoded), size_block):
             content = data_encoded[index:index + size_block]
             block = SubElement(sub_object, 'block_data', num=str(iterator_block))
             block.text = content
@@ -111,12 +111,11 @@ def Base_asXML(object, root=None):
         elif isinstance(value, Pdata):
           # Create blocks if there is a stack of data
           sub_object.set('type_data','Pdata')
-          size_block = 80
           data = value
           iterator_block = 0
           while data is not None:
             data_encoded = standard_b64encode(data.data)
-            for index in xrange(0, len(data_encoded), 80):
+            for index in xrange(0, len(data_encoded), size_block):
               content = data_encoded[index:index + size_block]
               block = SubElement(sub_object, 'block_data', num=str(iterator_block))
               block.text = content
