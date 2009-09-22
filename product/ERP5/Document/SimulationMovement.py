@@ -266,7 +266,7 @@ class SimulationMovement(Movement):
       if ref and ref not in applicable_rule_dict:
         applicable_rule_dict[ref] = rule
 
-    for applied_rule in self.objectValues():
+    for applied_rule in list(self.objectValues()):
       rule = applied_rule.getSpecialiseValue()
       if not applied_rule._isTreeDelivered() and not rule.test(self):
         self._delObject(applied_rule.getId())
