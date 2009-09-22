@@ -150,7 +150,7 @@ class TradeModelLine(Predicate, XMLMatrix, Amount):
         # if parent don't have findSpecialiseValueList, this mean it's on the
         # specialise_value
         document = self.getParentValue().getSpecialiseValue()
-      business_process_list = document.findSpecialiseValueList(\
+      business_process_list = document.findSpecialiseValueList(
           context=context, portal_type_list=['Business Process'])
       business_process = None
       property_dict = {}
@@ -159,7 +159,7 @@ class TradeModelLine(Predicate, XMLMatrix, Amount):
         # one Business Process, so the first (which is the nearest from the
         # delivery) is took
         business_process = business_process_list[0]
-        business_path_list = business_process.getPathValueList(trade_phase=\
+        business_path_list = business_process.getPathValueList(trade_phase=
             self.getTradePhase())
         if len(business_path_list) > 1:
           raise NotImplementedError, 'For now, it can not support more '\
@@ -213,7 +213,7 @@ class TradeModelLine(Predicate, XMLMatrix, Amount):
         for cell_coordinates in cell_key_list:
           cell = self.getCell(base_id=base_id, *cell_coordinates)
           if cell is None:
-            raise ValueError("Line '%s' (%s) can't find the cell corresponding"+\
+            raise ValueError("Line '%s' (%s) can't find the cell corresponding"+
                 " to those cells coordinates : %s" % (self.getTitle(),
                                                       self.getRelativeUrl(),
                                                       cell_coordinates))
@@ -269,12 +269,12 @@ class TradeModelLine(Predicate, XMLMatrix, Amount):
       # if a calculation script is defined, use it
       calculation_script = self.getCalculationScript(context)
       if calculation_script is not None:
-        tmp_movement = calculation_script(\
+        tmp_movement = calculation_script(
             current_aggregated_amount_list=movement_list,
             current_movement=tmp_movement)
 
       # check if slices are used
-      salary_range_list = tmp_movement.getVariationCategoryList(\
+      salary_range_list = tmp_movement.getVariationCategoryList(
           base_category_list='salary_range') #XXX hardcoded values
       salary_range = len(salary_range_list) and salary_range_list[0] or None
       if salary_range is not None and calculation_script is None:
