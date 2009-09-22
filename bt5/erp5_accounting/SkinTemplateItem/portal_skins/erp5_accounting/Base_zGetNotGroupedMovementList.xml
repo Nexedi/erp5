@@ -181,11 +181,9 @@ Here, a group of movement means:\n
             <dtml-sqlvar sequence-item type="string">\n
          <dtml-unless sequence-end>, </dtml-unless> </dtml-in simulation_state> ) and\n
        </dtml-if>\n
-       <dtml-if portal_type>\n
         stock.portal_type in (<dtml-in portal_type>\n
             <dtml-sqlvar sequence-item type="string">\n
          <dtml-unless sequence-end>, </dtml-unless> </dtml-in portal_type> ) and\n
-       </dtml-if>\n
        <dtml-if section_uid>\n
         stock.section_uid in (<dtml-in section_uid><dtml-var sequence-item>\n
          <dtml-unless sequence-end>, </dtml-unless> </dtml-in section_uid> ) and\n
@@ -213,11 +211,9 @@ Here, a group of movement means:\n
             <dtml-sqlvar sequence-item type="string">\n
          <dtml-unless sequence-end>, </dtml-unless> </dtml-in simulation_state> ) and\n
        </dtml-if>\n
-       <dtml-if portal_type>\n
         stock.portal_type in (<dtml-in portal_type>\n
             <dtml-sqlvar sequence-item type="string">\n
          <dtml-unless sequence-end>, </dtml-unless> </dtml-in portal_type> ) and\n
-       </dtml-if>\n
        <dtml-if section_uid>\n
         stock.section_uid in (<dtml-in section_uid><dtml-var sequence-item>\n
          <dtml-unless sequence-end>, </dtml-unless> </dtml-in section_uid> ) and\n
@@ -235,9 +231,7 @@ Here, a group of movement means:\n
   HAVING max(stock_2.date) > <dtml-sqlvar "at_date" type="datetime">\n
 )\n
 \n
-ORDER BY mirror_section_title, date\n
-\n
-
+ORDER BY mirror_section_title, date
 
 ]]></string> </value>
         </item>
@@ -305,11 +299,9 @@ Here, a group of movement means:\n
             <dtml-sqlvar sequence-item type="string">\n
          <dtml-unless sequence-end>, </dtml-unless> </dtml-in simulation_state> ) and\n
        </dtml-if>\n
-       <dtml-if portal_type>\n
         stock.portal_type in (<dtml-in portal_type>\n
             <dtml-sqlvar sequence-item type="string">\n
          <dtml-unless sequence-end>, </dtml-unless> </dtml-in portal_type> ) and\n
-       </dtml-if>\n
        <dtml-if section_uid>\n
         stock.section_uid in (<dtml-in section_uid><dtml-var sequence-item>\n
          <dtml-unless sequence-end>, </dtml-unless> </dtml-in section_uid> ) and\n
@@ -337,11 +329,9 @@ Here, a group of movement means:\n
             <dtml-sqlvar sequence-item type="string">\n
          <dtml-unless sequence-end>, </dtml-unless> </dtml-in simulation_state> ) and\n
        </dtml-if>\n
-       <dtml-if portal_type>\n
         stock.portal_type in (<dtml-in portal_type>\n
             <dtml-sqlvar sequence-item type="string">\n
          <dtml-unless sequence-end>, </dtml-unless> </dtml-in portal_type> ) and\n
-       </dtml-if>\n
        <dtml-if section_uid>\n
         stock.section_uid in (<dtml-in section_uid><dtml-var sequence-item>\n
          <dtml-unless sequence-end>, </dtml-unless> </dtml-in section_uid> ) and\n
@@ -359,9 +349,7 @@ Here, a group of movement means:\n
   HAVING max(stock_2.date) > <dtml-sqlvar "at_date" type="datetime">\n
 )\n
 \n
-ORDER BY mirror_section_title, date\n
-\n
-
+ORDER BY mirror_section_title, date
 
 ]]></string> </value>
                     </item>
