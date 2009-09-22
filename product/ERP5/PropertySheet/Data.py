@@ -35,7 +35,7 @@ class Data:
   _properties = (
     { 'id'          : 'data',
       'description' : 'An object (string, stream, etc.) which contains raw data',
-      'type'        : 'object',
+      'type'        : 'data',
       'default'     : '',
       'mode'        : 'w' },
     { 'id'          : 'content_type',

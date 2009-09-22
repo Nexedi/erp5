@@ -37,7 +37,7 @@ class Snapshot:
       'description' : 'An object (string, stream, etc.) which contains raw data'
                       'of a snapshot. Snapshot is used to keep a visual representation'
                       'of a document such as an invoice.',
-      'type'        : 'object',
+      'type'        : 'data',
       'write_permission' : 'Manage properties',
       'default'     : '',
       'mode'        : 'w' },

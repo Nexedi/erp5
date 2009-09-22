@@ -34,7 +34,7 @@ class Document:
     { 'id'              : 'base_data',
       'description'     : 'An object (string, stream, etc.) which contains raw data'
                           'to store the converted content of the document in its base format',
-      'type'            : 'object',
+      'type'            : 'data',
       'default'         : '',
       'read_permission' : 'Manage properties',
       'mode'            : 'w' },
