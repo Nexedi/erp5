@@ -36,7 +36,9 @@ from xml.sax.saxutils import escape, unescape
 from lxml import etree
 from lxml.etree import Element, SubElement
 from xml.marshal.generic import dumps as marshaler
+from OFS.Image import Pdata
 from zLOG import LOG
+from base64 import standard_b64encode
 
 class OrderedPickler(Pickler):
     
@@ -92,12 +94,40 @@ def Base_asXML(object, root=None):
         # We may have very long lines, so we should split
         value = aq_base(value)
         value = dumps(value)
-        msg = MIMEBase('application', 'octet-stream')
-        msg.set_payload(value)
-        Encoders.encode_base64(msg)
-        ascii_data = msg.get_payload()
-        sub_object.text = ascii_data
+        sub_object.text = standard_b64encode(value)
+      elif prop_type in ('data',):
+        # Create blocks to represent data
+        # <data><block>ZERD</block><block>OEJJM</block></data>
+        if isinstance(value, str):
+          sub_object.set('type_data','str')
+          size_block = 80
+          iterator_block = 0
+          data_encoded = standard_b64encode(value)
+          for index in xrange(0, len(data_encoded), 80):
+            content = data_encoded[index:index + size_block]
+            block = SubElement(sub_object, 'block_data', num=str(iterator_block))
+            block.text = content
+            iterator_block += 1
+        elif isinstance(value, Pdata):
+          # Create blocks if there is a stack of data
+          sub_object.set('type_data','Pdata')
+          size_block = 80
+          data = value
+          iterator_block = 0
+          while data is not None:
+            data_encoded = standard_b64encode(data.data)
+            for index in xrange(0, len(data_encoded), 80):
+              content = data_encoded[index:index + size_block]
+              block = SubElement(sub_object, 'block_data', num=str(iterator_block))
+              block.text = content
+              iterator_block += 1
+            data = data.next
+        else: 
+          raise "XMLExportImport failed, the data is undefined"
       elif prop_type in ('lines', 'tokens',):
+        # Use CDATA node to not be taken into account by erp5diff 
+        value = [word.decode('utf-8').encode('ascii','xmlcharrefreplace')\
+            for word in value]
         sub_object.text = etree.CDATA(marshaler(value))
       elif prop_type in ('text', 'string',):
         sub_object.text = unicode(escape(value), 'utf-8')

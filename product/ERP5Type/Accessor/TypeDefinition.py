@@ -174,9 +174,15 @@ type_definition = {
                              'default' : None,
                              'isList'  : 0,
                            },
-                           # Object are properties of any type (ex. data)
+                           # Object are properties of any type
                            # and are considered as simple properties
     'object'             : { 'cast'    : identity, 
+                             'null'    : ('', 'None', None,),
+                             'default' : None,
+                             'isList'  : 0,
+                           },
+                           # Used for converted documents (ex: data)
+    'data'               : { 'cast'    : identity,
                              'null'    : ('', 'None', None,),
                              'default' : None,
                              'isList'  : 0,
