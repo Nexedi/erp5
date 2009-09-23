@@ -1388,17 +1388,26 @@ class RegisteredSkinSelectionTemplateItem(BaseTemplateItem):
           'business_template_registered_skin_selections', None)
 
         if selection_string is None:
+          create_property = True
           selection_string = self._objects[skin_folder_id].replace(',', ' ')
         else:
+          create_property = False
+          if not isinstance(selection_string, basestring):
+            selection_string = ' '.join(selection_string)
           selection_string += ' %s' % \
             self._objects[skin_folder_id].replace(',', ' ')
 
         # Remove duplicate
         selection_string = \
             ' '.join(dict([(x, 0) for x in selection_string.split(' ')]).keys())
-        skin_folder._setProperty(
-            'business_template_registered_skin_selections',
-            selection_string.split(' '), type='tokens')
+        if create_property:
+          skin_folder._setProperty(
+              'business_template_registered_skin_selections',
+              selection_string.split(' '), type='tokens')
+        else:
+          skin_folder._updateProperty(
+              'business_template_registered_skin_selections',
+              selection_string.split(' '))
 
         selection_list = selection_string.split(' ')
         unregisterSkinFolder(skin_tool, skin_folder,
@@ -1428,7 +1437,7 @@ class RegisteredSkinSelectionTemplateItem(BaseTemplateItem):
 
       current_selection_list = list(current_selection_set)
       if current_selection_list:
-        skin_folder.setProperty(
+        skin_folder._updateProperty(
             'business_template_registered_skin_selections',
             current_selection_list)
 
