@@ -60,7 +60,7 @@ class PropertyTypeValidity(Constraint):
   }
   
   # Properties of type eg. "object" can hold anything
-  _permissive_type_list = ('object', )
+  _permissive_type_list = ('object', 'data')
 
   _message_id_list = [ 'message_unknown_type',
                        'message_incorrect_type',
