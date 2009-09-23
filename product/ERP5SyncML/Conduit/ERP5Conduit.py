@@ -654,9 +654,9 @@ class ERP5Conduit(XMLSyncUtilsMixin):
         object_element = xml_copy.find(self.xml_object_tag)
         id_element = object_element.find('id')
       else:
-        object_element = xml_copy.xpath('//syncml:object', \
+        object_element = xml_copy.xpath('//syncml:object',
             namespaces={'syncml':xml_copy.nsmap[xml_copy.prefix]})[0]
-        id_element = object_element.xpath('//syncml:object', \ 
+        id_element = object_element.xpath('//syncml:object',
             namespaces={'syncml':xml_copy.nsmap[xml_copy.prefix]})[0]
       object_element.attrib['id'] = new_id
       id_element.text = new_id
