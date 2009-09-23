@@ -95,6 +95,7 @@ class SyncCode(Persistent):
   dict_type_list = ('dict',)
   int_type_list = ('int',)
   pickle_type_list = ('object',)
+  data_type_list = ('data',)
   xml_object_tag = 'object'
   #history_tag = 'workflow_history'
   history_tag = 'workflow_action'

@@ -1002,21 +1002,27 @@ class XMLSyncUtilsMixin(SyncCode):
               signature.setObjectId(object.getId())
           else:
             reset = 1
-            #Object was retrieve but need to be updated without recreated
-            #usefull when an object is only deleted by workflow.
+            # Object was retrieve but need to be updated without recreated
+            # usefull when an object is only deleted by workflow.
             if data_subnode is not None:
-              if not isinstance(data_subnode, str):
-                xml_string = etree.tostring(data_subnode, encoding='utf-8')
-              #force = 1
+              if isinstance(data_subnode, str):
+                xml_string = etree.XML(data_subnode)
+              else:
+                xml_string = data_subnode
               actual_xml = conduit.getXMLFromObjectWithId(object,\
                            xml_mapping=domain.getXMLMapping(force=1)) 
-              data_subnode = self.getXupdateObject(xml_string, actual_xml)
+              xml_string_gid = conduit.replaceIdFromXML(xml_string, gid)
+              actual_xml = etree.XML(actual_xml)
+              actual_xml_gid = conduit.replaceIdFromXML(actual_xml, gid)
+              # use gid as compare key because their ids can be different
+              data_subnode = self.getXupdateObject(xml_string_gid, actual_xml_gid)
             conflict_list.extend(conduit.updateNode(
                                         xml=data_subnode,
                                         object=object,
                                         previous_xml=signature.getXML(),
                                         force=force,
-                                        simulate=simulate))
+                                        simulate=simulate,
+                                        reset=reset))
             xml_object = conduit.getXMLFromObjectWithId(object,\
                          xml_mapping=domain.getXMLMapping()) 
             signature.setTempXML(xml_object)
@@ -1025,11 +1031,9 @@ class XMLSyncUtilsMixin(SyncCode):
             if reset:
               #After a reset we want copy the LAST XML view on Signature.
               #this implementation is not sufficient, need to be improved.
-              if not isinstance(data_subnode, str):
-                xml_object = etree.tostring(data_subnode, encoding='utf-8',
+              if not isinstance(xml_object, str):
+                xml_object = etree.tostring(xml_object, encoding='utf-8',
                                             pretty_print=True)
-              else:
-                xml_object = data_subnode
             else: 
               xml_object = conduit.getXMLFromObjectWithId(object,\
                            xml_mapping=domain.getXMLMapping()) 
@@ -1422,6 +1426,7 @@ class XMLSyncUtils(XMLSyncUtilsMixin):
                     subscriber, domain, xml_confirmation_list, remote_xml,
                     xml_tree, has_status_list, has_response):
     # XXX the better is a namespace for all
+    namespace = self.getNamespace(xml_tree.nsmap)
     sync_body = xml_tree.find('SyncBody')
     if sync_body is None:
       sync_body = xml_tree.xpath('syncml:SyncBody')[0]

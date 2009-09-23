@@ -36,14 +36,16 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, interfaces
 from Globals import PersistentMapping
 import pickle
-from cStringIO import StringIO
 from xml.sax.saxutils import escape, unescape
 import re
-import cStringIO
+import StringIO
+import string
 from lxml import etree
 parser = etree.XMLParser(remove_blank_text=True)
 from xml.marshal.generic import loads as unmarshaler
 from zLOG import LOG, INFO, DEBUG
+from base64 import standard_b64decode
+from OFS.Image import Pdata
 
 class ERP5Conduit(XMLSyncUtilsMixin):
   """
@@ -102,7 +104,8 @@ class ERP5Conduit(XMLSyncUtilsMixin):
 
   security.declareProtected(Permissions.ModifyPortalContent, 'addNode')
   def addNode(self, xml=None, object=None, previous_xml=None,
-              object_id=None, sub_object=None, force=0, simulate=0, **kw):
+              object_id=None, sub_object=None, force=0, simulate=0,
+              reset=0, **kw):
     """
     A node is added
 
@@ -137,7 +140,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
                                     previous_xml=previous_xml,
                                     force=force,
                                     simulate=simulate,
-                                    **kw)['conflict_list']
+                                    reset=reset, **kw)['conflict_list']
     elif xml.xpath('local-name()') == self.xml_object_tag:
       if object_id is None:
         object_id = self.getAttribute(xml, 'id')
@@ -161,6 +164,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
                   object=sub_object,
                   xml=xml,
                   simulate=simulate,
+                  reset=reset,
                   reset_local_roles=reset_local_roles,
                   reset_workflow=reset_workflow)
     elif xml.xpath('name()') in self.XUPDATE_INSERT_OR_ADD \
@@ -185,8 +189,9 @@ class ERP5Conduit(XMLSyncUtilsMixin):
             # Then do the udpate
             conflict_list += self.addNode(xml=sub_xml,object=sub_object,
                             previous_xml=sub_previous_xml, force=force,
-                            simulate=simulate, **kw)['conflict_list']
-    elif xml.xpath('local-name()') == self.history_tag or self.isHistoryAdd(xml)>0:
+                            simulate=simulate, reset=reset, **kw)['conflict_list']
+    elif (xml.xpath('local-name()') == self.history_tag \
+       or self.isHistoryAdd(xml) > 0) and not reset:
       conflict_list += self.addWorkflowNode(object, xml, simulate)
     #elif xml.tag in self.local_role_list or self.isLocalRole(xml)>0 and not simulate:
     elif xml.xpath('local-name()') in self.local_role_list:
@@ -195,13 +200,13 @@ class ERP5Conduit(XMLSyncUtilsMixin):
       conflict_list += self.addLocalPermissionNode(object, xml)
     else:
       conflict_list += self.updateNode(xml=xml,object=object, force=force,
-                                       simulate=simulate,  **kw)
+                                       simulate=simulate, reset=reset, **kw)
     # We must returns the object created
     return {'conflict_list':conflict_list, 'object': sub_object}
 
   security.declareProtected(Permissions.ModifyPortalContent, 'deleteNode')
   def deleteNode(self, xml=None, object=None, object_id=None, force=None,
-                 simulate=0, **kw):
+                 simulate=0, reset=0, **kw):
     """
     A node is deleted
     """
@@ -226,7 +231,8 @@ class ERP5Conduit(XMLSyncUtilsMixin):
           sub_object = object._getOb(sub_object_id)
           sub_xml = self.getSubObjectXupdate(xml)
           conflict_list += self.deleteNode(xml=sub_xml,object=sub_object,
-                                       force=force, simulate=simulate, **kw)
+                                       force=force, simulate=simulate, 
+                                       reset=reset, **kw)
         except (KeyError, AttributeError, TypeError):
           #LOG('ERP5Conduit.deleteNode', DEBUG, 'deleteNode, Unable to delete SubObject: %s' % str(sub_object_id))
           pass
@@ -240,9 +246,9 @@ class ERP5Conduit(XMLSyncUtilsMixin):
         # We want to del a local role
         user = self.getAttribute(xml,'id')
         #LOG('ERP5Conduit.deleteNode local_role: ', DEBUG, 'user: %s' % repr(user))
-        if xml.xpath('local-name()') == self.local_role_tag :
+        if xml.xpath('local-name()') == self.local_role_tag:
           object.manage_delLocalRoles([user])
-        elif xml.xpath('local-name()') ==self.local_group_tag :
+        elif xml.xpath('local-name()') ==self.local_group_tag:
           object.manage_delLocalGroupRoles([user])
       if xml.xpath('local-name()') in self.local_permission_list and not simulate:
         permission = self.getAttribute(xml,'id')
@@ -259,7 +265,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
 
   security.declareProtected(Permissions.ModifyPortalContent, 'updateNode')
   def updateNode(self, xml=None, object=None, previous_xml=None, force=0,
-                 simulate=0,  **kw):
+                 simulate=0, reset=0, **kw):
     """
     A node is updated with some xupdate
       - xml : the xml corresponding to the update, it should be xupdate
@@ -281,7 +287,9 @@ class ERP5Conduit(XMLSyncUtilsMixin):
                                          conduit=self,
                                          previous_xml=previous_xml,
                                          force=force,
-                                         simulate=simulate, **kw)
+                                         simulate=simulate,
+                                         reset=reset,
+                                         **kw)
     # we may have only the part of an xupdate
     else:
       args = {}
@@ -310,6 +318,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
                                         object=object,
                                         force=force,
                                         simulate=simulate,
+                                        reset=reset,
                                         **kw)
           return conflict_list
 
@@ -318,6 +327,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
                                            object=object,
                                            force=force,
                                            simulate=simulate,
+                                           reset=reset,
                                            **kw)
           return conflict_list
         if keyword is None: # This is not a selection, directly the property
@@ -363,7 +373,8 @@ class ERP5Conduit(XMLSyncUtilsMixin):
                   conflict.setRemoteValue(data)
                 conflict_list += [conflict]
           # We will now apply the argument with the method edit
-          if args != {} and (isConflict == 0 or force) and (not simulate):
+          if args != {} and (isConflict == 0 or force) and \
+              (not simulate or reset):
             self.editDocument(object=object, **args)
             # It is sometimes required to do something after an edit
             if getattr(object, 'manage_afterEdit', None) is not None:
@@ -375,12 +386,13 @@ class ERP5Conduit(XMLSyncUtilsMixin):
                                         object=object,
                                         force=force,
                                         simulate=simulate,
+                                        reset=reset,
                                         **kw)['conflict_list']
         elif keyword == self.history_tag and not simulate:
           # This is the case where we have to call addNode
           conflict_list += self.addNode(xml=subnode, object=object,
                                         force=force, simulate=simulate,
-                                        **kw)['conflict_list']
+                                        reset=reset, **kw)['conflict_list']
         elif keyword in (self.local_role_tag, self.local_permission_tag) and not simulate:
           # This is the case where we have to update Roles or update permission
           #LOG('ERP5Conduit.updateNode', DEBUG, 'we will add a local role')
@@ -390,7 +402,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
           xml = self.getElementFromXupdate(xml)
           conflict_list += self.addNode(xml=xml, object=object,
                                        force=force, simulate=simulate,
-                                       **kw)['conflict_list']
+                                       reset=reset, **kw)['conflict_list']
       elif self.isSubObjectModification(xml):
         # We should find the object corresponding to
         # this update, so we have to look in the previous_xml
@@ -414,7 +426,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
             conflict_list += self.updateNode(xml=sub_xml, object=sub_object,
                                               force=force,
                                               previous_xml=sub_previous_xml,
-                                              simulate=simulate, **kw)
+                                              simulate=simulate, reset=reset, **kw)
         elif previous_xml is None and xml is not None and sub_object_id is not None:
           sub_object = None
           try:
@@ -427,6 +439,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
                                              object=sub_object,
                                              force=force,
                                              simulate=simulate,
+                                             reset=reset,
                                              **kw)
     return conflict_list
 
@@ -631,16 +644,23 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     """
       return a xml with id replace by a new id
     """
-    if xml is not None and new_id is not None :
-      xml = etree.XML(xml)
+    if xml is not None and new_id is not None:
+      if isinstance(xml, str):
+        xml = etree.XML(xml)
       #copy of xml object for modification
       from copy import deepcopy
       xml_copy = deepcopy(xml)
-      object_element = xml_copy.find('object')
+      if xml.nsmap == None or xml.nsmap == {}:
+        object_element = xml_copy.find(self.xml_object_tag)
+        id_element = object_element.find('id')
+      else:
+        object_element = xml_copy.xpath('//syncml:object', \
+            namespaces={'syncml':xml_copy.nsmap[xml_copy.prefix]})[0]
+        id_element = object_element.xpath('//syncml:object', \ 
+            namespaces={'syncml':xml_copy.nsmap[xml_copy.prefix]})[0]
       object_element.attrib['id'] = new_id
-      id_element = object_element.find('id')
       id_element.text = new_id
-      return xml_copy
+      return etree.tostring(xml_copy)
 
   def getXMLFromObjectWithId(self, object, xml_mapping):
     """
@@ -660,7 +680,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     """
     xml_id = self.getXMLFromObjectWithId(object, xml_mapping)
     xml_gid = self.replaceIdFromXML(xml_id, gid)
-    return etree.tostring(xml_gid)
+    return xml_gid
 
   def getXMLFromObjectWithRid(self, object, rid, xml_mapping=None):
     """
@@ -668,7 +688,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     """
     xml_id = self.getXMLFromObjectWithId(object, xml_mapping)
     xml_rid = self.replaceIdFromXML(xml_id, rid)
-    return etree.tostring(xml_rid)
+    return xml_rid
 
   security.declareProtected(Permissions.AccessContentsInformation,'convertToXml')
   def convertToXml(self, xml):
@@ -708,8 +728,8 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     return xml.xpath('string(.//*[name() == "xupdate:attribute"][@name = "portal_type"])') or None
 
   security.declareProtected(Permissions.ModifyPortalContent, 'newObject')
-  def newObject(self, object=None, xml=None, simulate=0, reset_local_roles=1,
-                reset_workflow=1):
+  def newObject(self, object=None, xml=None, simulate=0, reset=0, 
+      reset_local_roles=1, reset_workflow=1):
     """
       modify the object with datas from
       the xml (action section)
@@ -787,7 +807,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
       result += '>'
       # Then dumps the xml and remove what we does'nt want
       xml_string = self.nodeToString(xml)
-      maxi = max(xml_string.find('>')+1,\
+      maxi = max(xml_string.find('>') + 1, \
                  xml_string.rfind('</xupdate:attribute>')+len('</xupdate:attribute>'))
       result += xml_string[maxi:xml_string.find('</xupdate:element>')]
       result += '</%s>' % tag_name
@@ -847,21 +867,26 @@ class ERP5Conduit(XMLSyncUtilsMixin):
       data = data.encode('utf-8')
     elif data is None:
       if data_type in self.list_type_list:
-        data = ()
+        return ()
       elif data_type in self.text_type_list:
-        data = ''
-      return data
+        return ''
     # We can now convert string in tuple, dict, binary...
     if data_type in self.list_type_list:
       data = unmarshaler(node.text)
     elif data_type in self.text_type_list:
       data = unescape(data)
+    elif data_type in self.data_type_list:
+      if data is None:
+        # data is in blocks
+        type_data = node.get('type_data')
+        if type_data == 'str':
+          data = standard_b64decode(''.join([block.text \
+                 for block in node.iterchildren()]))
+        elif type_data == 'Pdata':
+          data = Pdata(standard_b64decode(''.join([block.text \
+              for block in node.iterchildren()])))
     elif data_type in self.pickle_type_list:
-      msg = MIMEBase('application', 'octet-stream')
-      Encoders.encode_base64(msg)
-      msg.set_payload(data)
-      data = msg.get_payload(decode=1)
-      data = pickle.loads(data)
+      data = pickle.loads(standard_b64decode(data))
     elif data_type in self.date_type_list:
       data = DateTime(data)
     elif data_type in self.int_type_list:
@@ -879,7 +904,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
   # have some specific things to do
   security.declareProtected(Permissions.ModifyPortalContent, 'applyXupdate')
   def applyXupdate(self, object=None, xupdate=None, conduit=None, force=0,
-                   simulate=0, **kw):
+                   simulate=0, reset=0, **kw):
     """
     Parse the xupdate and then it will call the conduit
     """
@@ -893,13 +918,15 @@ class ERP5Conduit(XMLSyncUtilsMixin):
       if subnode.xpath('name()') in self.XUPDATE_INSERT_OR_ADD:
         conflict_list += conduit.addNode(xml=sub_xupdate,object=object,
                                          force=force, simulate=simulate,
-                                         **kw)['conflict_list']
+                                         reset=reset, **kw)['conflict_list']
       elif subnode.xpath('name()') in self.XUPDATE_DEL:
         conflict_list += conduit.deleteNode(xml=sub_xupdate, object=object,
-                                            force=force, simulate=simulate, **kw)
+                                            force=force, simulate=simulate,
+                                            reset=reset, **kw)
       elif subnode.xpath('name()') in self.XUPDATE_UPDATE:
         conflict_list += conduit.updateNode(xml=sub_xupdate, object=object,
-                                            force=force, simulate=simulate, **kw)
+                                            force=force, simulate=simulate,
+                                            reset=reset, **kw)
 
     return conflict_list
 
@@ -990,9 +1017,9 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     #LOG('local_role: ',0,'user: %s roles: %s' % (repr(user),repr(roles)))
     #user = roles[0]
     #roles = roles[1:]
-    if xml.xpath('local-name()') == self.local_role_tag :
+    if xml.xpath('local-name()') == self.local_role_tag:
       object.manage_setLocalRoles(user, roles)
-    elif xml.xpath('local-name()') == self.local_group_tag :
+    elif xml.xpath('local-name()') == self.local_group_tag:
       object.manage_setLocalGroupRoles(user, roles)
 
   security.declareProtected(Permissions.ModifyPortalContent, 'addLocalPermissionNode')
@@ -1013,7 +1040,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     #LOG('local_role: ',0,'permission: %s roles: %s' % (repr(permission),repr(roles)))
     #user = roles[0]
     #roles = roles[1:]
-    if xml.xpath('local-name()') == self.local_permission_tag :
+    if xml.xpath('local-name()') == self.local_permission_tag:
       object.manage_setLocalPermissions(permission, roles)
     return conflict_list
 
