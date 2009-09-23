@@ -1,0 +1,10 @@
+<registered_skin_selection>
+ <skin_folder_selection>
+  <skin_folder>erp5_mobile_ui</skin_folder>
+  <skin_selection>Mobile</skin_selection>
+ </skin_folder_selection>
+ <skin_folder_selection>
+  <skin_folder>erp5_xhtml_style</skin_folder>
+  <skin_selection>Mobile</skin_selection>
+ </skin_folder_selection>
+</registered_skin_selection>

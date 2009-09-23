@@ -12,18 +12,7 @@
         <item>
             <key> <string>_local_properties</string> </key>
             <value>
-              <tuple>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>business_template_registered_skin_selections</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>string</string> </value>
-                  </item>
-                </dictionary>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>
@@ -31,10 +20,6 @@
             <value>
               <tuple/>
             </value>
-        </item>
-        <item>
-            <key> <string>business_template_registered_skin_selections</string> </key>
-            <value> <string>View</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
