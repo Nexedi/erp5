@@ -32,6 +32,7 @@ from _mysql_exceptions import OperationalError
 from Products.ZMySQLDA.db import hosed_connection
 from thread import get_ident
 from zLOG import LOG
+import transaction
 
 UNCONNECTED_STATE = 0
 CONNECTED_STATE = 1
@@ -124,7 +125,7 @@ class TestDeferredConnection(ERP5TypeTestCase):
     connection = self.getDeferredConnection()
     connection.query('REPLACE INTO `full_text` SET `uid`=0, `SearchableText`="dummy test"')
     try:
-      get_transaction().commit()
+      transaction.commit()
     except OperationalError:
       self.fail()
     except:
@@ -146,7 +147,7 @@ class TestDeferredConnection(ERP5TypeTestCase):
     connection._query = connection.db.query
     try:
       try:
-        get_transaction().commit()
+        transaction.commit()
       except OperationalError, m:
         if m[0] not in hosed_connection:
           raise
@@ -171,7 +172,7 @@ class TestDeferredConnection(ERP5TypeTestCase):
     self.monkeypatchConnection(connection)
     try:
       try:
-        get_transaction().commit()
+        transaction.commit()
       except OperationalError, m:
         LOG('TestDeferredConnection', 0, 'OperationalError exception raised: %s' % (m, ))
         self.fail()
@@ -190,7 +191,7 @@ class TestDeferredConnection(ERP5TypeTestCase):
     # Queue a query
     connection.query('REPLACE INTO `full_text` SET `uid`=0, `SearchableText`="dummy test"')
     self.assertEqual(len(connection._sql_string_list), 1)
-    get_transaction().commit()
+    transaction.commit()
     connection.query('REPLACE INTO `full_text` SET `uid`=0, `SearchableText`="dummy test"')
     self.assertEqual(len(connection._sql_string_list), 1)
 
