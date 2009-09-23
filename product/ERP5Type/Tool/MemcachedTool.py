@@ -76,8 +76,8 @@ if memcache is not None:
         - make picklable ?
     """
   
-    def __init__(self, server_list=('127.0.0.1:11211',), server_max_key_length=None,
-                 server_max_value_length=None):
+    def __init__(self, server_list=('127.0.0.1:11211',), server_max_key_length=MARKER,
+                 server_max_value_length=MARKER):
       """
         Initialise properties :
         memcached_connection
@@ -96,9 +96,9 @@ if memcache is not None:
       self.local_cache = {}
       self.scheduled_action_dict = {}
       init_dict = {}
-      if server_max_key_length:
+      if server_max_key_length is not MARKER:
         init_dict['server_max_key_length'] = server_max_key_length
-      if server_max_value_length:
+      if server_max_value_length is not MARKER:
         init_dict['server_max_value_length'] = server_max_value_length
       self.memcached_connection = memcache.Client(server_list, **init_dict)
 
