@@ -61,7 +61,9 @@
                        editor_width       python: str(editor_width).replace(\'px\',\'\');\n
                        editor_height      python: str(editor_height).replace(\'px\',\'\');\n
                        editor_width       python: test(\'\\x25\' in editor_width, str(int(int(editor_width.replace(\'\\x25\',\'\'))*780/100)), editor_width);\n
-                       editor_height      python: test(\'\\x25\' in editor_height, str(int(int(editor_height.replace(\'\\x25\',\'\'))*780/100)), editor_height);">\n
+                       editor_height      python: test(\'\\x25\' in editor_height, str(int(int(editor_height.replace(\'\\x25\',\'\'))*780/100)), editor_height);\n
+                       link_browser       python:site_root.restrictedTraverse(\'FCKeditor_viewDocumentSelectionDialog\', None) is not None and \'true\' or \'false\';\n
+                       image_browser      link_browser;">\n
   <script type="text/javascript" tal:attributes="src string:${portal_url}/fckeditor.js"></script>\n
   <script type="text/javascript" tal:content="structure string:\n
 &lt;!--\n
@@ -85,31 +87,22 @@ oFCKeditor.Height     = ${editor_height};\n
 oFCKeditor.Config[\'FirefoxSpellChecker\']\t= true ;\n
 \n
 // browsing for links\n
-oFCKeditor.Config[\'LinkBrowserURL\'] = \'${portal_path}editor/filemanager/browser/zope/browser.html?Connector=connectors/connectorERP5&ServerPath=/&CurrentPath=\' + pathUser ;\n
+oFCKeditor.Config[\'LinkBrowser\'] = ${link_browser};\n
+oFCKeditor.Config[\'LinkBrowserURL\'] = \'${portal_path}FCKeditor_viewDocumentSelectionDialog\';\n
 \n
 // rapid upload activation for links\n
-//oFCKeditor.Config[\'LinkUpload\'] = true ;\n
-//oFCKeditor.Config[\'LinkUploadURL\'] = \'${portal_path}editor/filemanager/upload/zope/uploadPlone?CurrentPath=\' + pathUser ;\n
-//oFCKeditor.Config[\'LinkUploadURL\'] = \'${portal_url}/\' + pathUser ;\n
+oFCKeditor.Config[\'LinkUpload\'] = false ; // XXX should be implemented using portal_contributions\n
 \n
 // browsing for images\n
-oFCKeditor.Config[\'ImageBrowserURL\'] = \'${portal_path}editor/filemanager/browser/zope/browser.html?Type=Image&Connector=connectors/connectorERP5&ServerPath=/&CurrentPath=\' + pathUser ;\n
+oFCKeditor.Config[\'ImageBrowser\'] = ${image_browser};\n
+oFCKeditor.Config[\'ImageBrowserURL\'] = \'${portal_path}FCKeditor_viewImageSelectionDialog\';\n
 \n
 // rapid upload activation for images\n
-//oFCKeditor.Config[\'ImageUpload\'] = true ;\n
-//oFCKeditor.Config[\'ImageUploadURL\'] = \'${portal_path}editor/filemanager/upload/zope/uploadPlone?CurrentPath=\' + pathUser ;\n
-\n
-// browsing for flash\n
-//oFCKeditor.Config[\'FlashBrowserURL\'] = \'${portal_path}editor/filemanager/browser/zope/browser.html?Type=Flash&Connector=connectors/connectorPlone&ServerPath=/&CurrentPath=\' + pathUser ;\n
-\n
-// rapid upload activation for flash\n
-//oFCKeditor.Config[\'FlashUpload\'] = true ;\n
-//oFCKeditor.Config[\'FlashUploadURL\'] = \'${portal_path}editor/filemanager/upload/zope/uploadPlone?CurrentPath=\' + pathUser ;\n
+oFCKeditor.Config[\'ImageUpload\'] = false ; // XXX should be implemented using portal_contributions\n
 \n
 oFCKeditor.Create();\n
 --&gt;"></script>\n
-</tal:block>\n
-
+</tal:block>
 
 ]]></string> </value>
         </item>
