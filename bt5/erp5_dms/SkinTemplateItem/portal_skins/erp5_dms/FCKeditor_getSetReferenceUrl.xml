@@ -54,7 +54,7 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>reference = brain.getObject().getReference() or \'\'\n
-return "javascript:window.opener.SetUrl(\'%s\');window.close();" % reference.replace("\'", "\\\\\'")\n
+return "javascript:SelectFile(\'%s\')" % reference.replace("\'", "\\\\\'")\n
 </string> </value>
         </item>
         <item>

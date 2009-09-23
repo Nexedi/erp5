@@ -1,3 +1,6 @@
+2009-09-23 Kazuhiko
+* add ERP5-integrated filebrowser for FCKeditor's image / link edit dialogue.
+
 2009-09-11 yusei
 * Fix Image Module action and make view action the first priority.
 

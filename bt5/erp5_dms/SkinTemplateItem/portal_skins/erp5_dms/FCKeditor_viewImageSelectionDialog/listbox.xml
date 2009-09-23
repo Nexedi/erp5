@@ -13,16 +13,14 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>all_columns</string>
                 <string>columns</string>
                 <string>count_method</string>
                 <string>default_params</string>
+                <string>list_action</string>
                 <string>list_method</string>
                 <string>portal_types</string>
-                <string>search_columns</string>
                 <string>select</string>
                 <string>selection_name</string>
-                <string>sort_columns</string>
                 <string>title</string>
                 <string>url_columns</string>
               </list>
@@ -67,10 +65,6 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>all_columns</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>columns</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -99,19 +93,7 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>search_columns</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>select</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>selection_name</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>sort_columns</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -132,93 +114,6 @@
                 <item>
                     <key> <string>Base_viewSearchResultList</string> </key>
                     <value> <int>1</int> </value>
-                </item>
-                <item>
-                    <key> <string>all_columns</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>title</string>
-                          <string>Title</string>
-                        </tuple>
-                        <tuple>
-                          <string>reference</string>
-                          <string>Reference</string>
-                        </tuple>
-                        <tuple>
-                          <string>version</string>
-                          <string>Version</string>
-                        </tuple>
-                        <tuple>
-                          <string>language</string>
-                          <string>Language</string>
-                        </tuple>
-                        <tuple>
-                          <string>revision</string>
-                          <string>Revision</string>
-                        </tuple>
-                        <tuple>
-                          <string>description</string>
-                          <string>Description</string>
-                        </tuple>
-                        <tuple>
-                          <string>translated_validation_state_title</string>
-                          <string>State</string>
-                        </tuple>
-                        <tuple>
-                          <string>source_reference</string>
-                          <string>Original Filename</string>
-                        </tuple>
-                        <tuple>
-                          <string>classification_logical_path</string>
-                          <string>Classification Path</string>
-                        </tuple>
-                        <tuple>
-                          <string>classification_title</string>
-                          <string>Classification</string>
-                        </tuple>
-                        <tuple>
-                          <string>group_title</string>
-                          <string>Group</string>
-                        </tuple>
-                        <tuple>
-                          <string>site_title</string>
-                          <string>Site</string>
-                        </tuple>
-                        <tuple>
-                          <string>function_title</string>
-                          <string>Function</string>
-                        </tuple>
-                        <tuple>
-                          <string>follow_up_title</string>
-                          <string>Follow Up</string>
-                        </tuple>
-                        <tuple>
-                          <string>publication_section_title</string>
-                          <string>Publication Section</string>
-                        </tuple>
-                        <tuple>
-                          <string>contributor_title</string>
-                          <string>Contributors</string>
-                        </tuple>
-                        <tuple>
-                          <string>thumbnail</string>
-                          <string>Thumbnail</string>
-                        </tuple>
-                        <tuple>
-                          <string>subject_title</string>
-                          <string>Keywords</string>
-                        </tuple>
-                        <tuple>
-                          <string>creation_date</string>
-                          <string>Creation Date</string>
-                        </tuple>
-                        <tuple>
-                          <string>modification_date</string>
-                          <string>Modification Date</string>
-                        </tuple>
-                      </list>
-                    </value>
                 </item>
                 <item>
                     <key> <string>all_editable_columns</string> </key>
@@ -280,6 +175,10 @@
                     <value> <int>5</int> </value>
                 </item>
                 <item>
+                    <key> <string>list_action</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>list_cookie</string> </key>
                     <value> <string>FOLDER_LIST</string> </value>
                 </item>
@@ -300,182 +199,12 @@
                     <value> <int>0</int> </value>
                 </item>
                 <item>
-                    <key> <string>search_columns</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>title</string>
-                          <string>Title</string>
-                        </tuple>
-                        <tuple>
-                          <string>translated_portal_type</string>
-                          <string>Type</string>
-                        </tuple>
-                        <tuple>
-                          <string>reference</string>
-                          <string>Reference</string>
-                        </tuple>
-                        <tuple>
-                          <string>version</string>
-                          <string>Version</string>
-                        </tuple>
-                        <tuple>
-                          <string>language</string>
-                          <string>Language</string>
-                        </tuple>
-                        <tuple>
-                          <string>revision</string>
-                          <string>Revision</string>
-                        </tuple>
-                        <tuple>
-                          <string>translated_validation_state_title</string>
-                          <string>State</string>
-                        </tuple>
-                        <tuple>
-                          <string>source_reference</string>
-                          <string>Original Filename</string>
-                        </tuple>
-                        <tuple>
-                          <string>classification_logical_path</string>
-                          <string>Classification Path</string>
-                        </tuple>
-                        <tuple>
-                          <string>classification_title</string>
-                          <string>Classification</string>
-                        </tuple>
-                        <tuple>
-                          <string>group_title</string>
-                          <string>Group</string>
-                        </tuple>
-                        <tuple>
-                          <string>site_title</string>
-                          <string>Site</string>
-                        </tuple>
-                        <tuple>
-                          <string>function_title</string>
-                          <string>Function</string>
-                        </tuple>
-                        <tuple>
-                          <string>follow_up_title</string>
-                          <string>Follow Up</string>
-                        </tuple>
-                        <tuple>
-                          <string>publication_section_title</string>
-                          <string>Publication Section</string>
-                        </tuple>
-                        <tuple>
-                          <string>contributor_title</string>
-                          <string>Contributors</string>
-                        </tuple>
-                        <tuple>
-                          <string>thumbnail</string>
-                          <string>Thumbnail</string>
-                        </tuple>
-                        <tuple>
-                          <string>subject_title</string>
-                          <string>Keywords</string>
-                        </tuple>
-                        <tuple>
-                          <string>creation_date</string>
-                          <string>Creation Date</string>
-                        </tuple>
-                        <tuple>
-                          <string>modification_date</string>
-                          <string>Modification Date</string>
-                        </tuple>
-                      </list>
-                    </value>
-                </item>
-                <item>
                     <key> <string>select</string> </key>
                     <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>
                     <value> <string>fckeditor_document_selection</string> </value>
-                </item>
-                <item>
-                    <key> <string>sort_columns</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>title</string>
-                          <string>Title</string>
-                        </tuple>
-                        <tuple>
-                          <string>translated_portal_type</string>
-                          <string>Type</string>
-                        </tuple>
-                        <tuple>
-                          <string>reference</string>
-                          <string>Reference</string>
-                        </tuple>
-                        <tuple>
-                          <string>version</string>
-                          <string>Version</string>
-                        </tuple>
-                        <tuple>
-                          <string>language</string>
-                          <string>Language</string>
-                        </tuple>
-                        <tuple>
-                          <string>translated_validation_state_title</string>
-                          <string>State</string>
-                        </tuple>
-                        <tuple>
-                          <string>source_reference</string>
-                          <string>Original Filename</string>
-                        </tuple>
-                        <tuple>
-                          <string>classification_logical_path</string>
-                          <string>Classification Path</string>
-                        </tuple>
-                        <tuple>
-                          <string>classification_title</string>
-                          <string>Classification</string>
-                        </tuple>
-                        <tuple>
-                          <string>group_title</string>
-                          <string>Group</string>
-                        </tuple>
-                        <tuple>
-                          <string>site_title</string>
-                          <string>Site</string>
-                        </tuple>
-                        <tuple>
-                          <string>function_title</string>
-                          <string>Function</string>
-                        </tuple>
-                        <tuple>
-                          <string>follow_up_title</string>
-                          <string>Follow Up</string>
-                        </tuple>
-                        <tuple>
-                          <string>publication_section_title</string>
-                          <string>Publication Section</string>
-                        </tuple>
-                        <tuple>
-                          <string>contributor_title</string>
-                          <string>Contributors</string>
-                        </tuple>
-                        <tuple>
-                          <string>thumbnail</string>
-                          <string>Thumbnail</string>
-                        </tuple>
-                        <tuple>
-                          <string>subject_title</string>
-                          <string>Keywords</string>
-                        </tuple>
-                        <tuple>
-                          <string>creation_date</string>
-                          <string>Creation Date</string>
-                        </tuple>
-                        <tuple>
-                          <string>modification_date</string>
-                          <string>Modification Date</string>
-                        </tuple>
-                      </list>
-                    </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
