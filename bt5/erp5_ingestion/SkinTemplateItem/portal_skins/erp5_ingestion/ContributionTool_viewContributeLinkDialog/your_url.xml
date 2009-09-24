@@ -226,7 +226,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Business Template URL</string> </value>
+                    <value> <string>URL</string> </value>
                 </item>
                 <item>
                     <key> <string>truncate</string> </key>
