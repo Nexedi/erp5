@@ -152,7 +152,7 @@
           <div class="input">\n
             <select class="input" name="clone_portal_type" \n
                     size="1" onchange="setCreationMode(this)">\n
-              <option value="None" selected>&mdash; Same as Current &mdash;</option>\n
+              <option value="None" selected="selected">&mdash; Same as Current &mdash;</option>\n
               <option tal:repeat="portal_type python: here.getPortalWebDocumentTypeList()"\n
                       tal:content="portal_type"\n
                       tal:attributes="value portal_type"\n
@@ -176,7 +176,7 @@
 \n
       </fieldset>\n
 \n
-      <script type="text/javascript" language="JavaScript" tal:content="string:\n
+      <script type="text/javascript" tal:content="string:\n
         // preload action icons\n
         if (document.images) {\n
           clone_icon = new Image();\n
