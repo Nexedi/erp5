@@ -37,8 +37,9 @@ from Products.ERP5Type import Permissions, interfaces
 from Globals import PersistentMapping
 import pickle
 from xml.sax.saxutils import escape, unescape
+from cStringIO import StringIO
 import re
-import StringIO
+import cStringIO
 import string
 from lxml import etree
 parser = etree.XMLParser(remove_blank_text=True)
@@ -650,7 +651,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
       #copy of xml object for modification
       from copy import deepcopy
       xml_copy = deepcopy(xml)
-      if xml.nsmap == None or xml.nsmap == {}:
+      if xml.nsmap is None or xml.nsmap == {}:
         object_element = xml_copy.find(self.xml_object_tag)
         id_element = object_element.find('id')
       else:
@@ -710,14 +711,14 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     """
     Retrieve the portal type from an xml
     """
-    return '%s' % xml.xpath('string(.//@portal_type)')
+    return xml.get('portal_type')
 
   security.declareProtected(Permissions.AccessContentsInformation,'getPropertyType')
   def getPropertyType(self, xml):
     """
     Retrieve the portal type from an xml
     """
-    return '%s' % xml.xpath('string(.//@type)')
+    return xml.get('type')
 
   security.declareProtected(Permissions.AccessContentsInformation,'getXupdateObjectType')
   def getXupdateObjectType(self, xml):
@@ -878,13 +879,8 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     elif data_type in self.data_type_list:
       if data is None:
         # data is in blocks
-        type_data = node.get('type_data')
-        if type_data == 'str':
-          data = standard_b64decode(''.join([block.text \
-                 for block in node.iterchildren()]))
-        elif type_data == 'Pdata':
-          data = Pdata(standard_b64decode(''.join([block.text \
-              for block in node.iterchildren()])))
+        data = ''.join([standard_b64decode(block.text) \
+               for block in node.iterchildren()])
     elif data_type in self.pickle_type_list:
       data = pickle.loads(standard_b64decode(data))
     elif data_type in self.date_type_list:
