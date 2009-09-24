@@ -39,7 +39,7 @@
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-<tal:block tal:attributes="dummy python:here.Base_activateReport(report_method=report_method, form=form)"/>
+<tal:block tal:attributes="dummy python:here.Base_activateReport(form=form)"/>
 
 ]]></string> </value>
         </item>

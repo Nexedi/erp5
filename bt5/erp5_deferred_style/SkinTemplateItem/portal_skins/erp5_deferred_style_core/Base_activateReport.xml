@@ -80,7 +80,15 @@ tag = \'active-report-%s\' % random.randint(0, 1000)\n
 priority = 3\n
 \n
 # compute list of report section to render\n
-report_section_list = report_method()\n
+if form.meta_type == \'ERP5 Report\':\n
+  report_section_list = getattr(context, form.report_method)()\n
+elif form.meta_type == \'ERP5 Form\':\n
+  report_section_list = []\n
+  for field in form.get_fields():\n
+    if field.getRecursiveTemplateField().meta_type == \'ReportBox\':\n
+      report_section_list.extend(field.render())\n
+else:\n
+  raise ValueError, \'form meta_type unknown\'\n
 \n
 # save request parameters (after calling the report_method which may tweak the\n
 # request). XXX we exclude some reserved names in a very ad hoc way\n
@@ -143,7 +151,7 @@ return context.Base_redirect(\'view\', keep_items=dict(\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>report_method, form, **kw</string> </value>
+            <value> <string>form, **kw</string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>
@@ -171,13 +179,12 @@ return context.Base_redirect(\'view\', keep_items=dict(\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>2</int> </value>
+                        <value> <int>1</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>report_method</string>
                             <string>form</string>
                             <string>kw</string>
                             <string>_getattr_</string>
@@ -197,9 +204,12 @@ return context.Base_redirect(\'view\', keep_items=dict(\n
                             <string>random</string>
                             <string>tag</string>
                             <string>priority</string>
+                            <string>getattr</string>
                             <string>report_section_list</string>
-                            <string>request_other</string>
                             <string>_getiter_</string>
+                            <string>field</string>
+                            <string>ValueError</string>
+                            <string>request_other</string>
                             <string>k</string>
                             <string>v</string>
                             <string>_write_</string>
