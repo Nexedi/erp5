@@ -78,7 +78,7 @@ class UrlMixIn:
     """
     if ':' in url:
       # This is the normal case (protocol specified in the URL)
-      protocol, url_string = url.split(':')
+      protocol, url_string = url.split(':', 1)
       if url_string.startswith('//'): url_string = url_string[2:]
       self._setUrlProtocol(protocol)
     else:
