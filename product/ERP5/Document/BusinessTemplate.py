@@ -1457,12 +1457,6 @@ class RegisteredSkinSelectionTemplateItem(BaseTemplateItem):
     if context.getTemplateFormatVersion() == 1:
       new_keys = self._objects.keys()
       new_dict = PersistentMapping()
-      # Fix key from installed bt if necessary
-      for key in installed_bt._objects.keys():
-        new_key = 'registered_skin_selection/%s' %key
-        new_dict[new_key] = installed_bt._objects[key]
-      if len(new_dict):
-        installed_bt._objects = new_dict
       for path in new_keys:
         if installed_bt._objects.has_key(path):
           # compare object to see it there is changes
