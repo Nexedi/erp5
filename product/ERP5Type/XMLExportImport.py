@@ -98,29 +98,15 @@ def Base_asXML(object, root=None):
       elif prop_type in ('data',):
         # Create blocks to represent data
         # <data><block>ZERD</block><block>OEJJM</block></data>
-        size_block = 80
+        size_block = 60
         if isinstance(value, str):
-          sub_object.set('type_data','str')
           iterator_block = 0
-          data_encoded = standard_b64encode(value)
-          for index in xrange(0, len(data_encoded), size_block):
-            content = data_encoded[index:index + size_block]
+          for index in xrange(0, len(value), size_block):
+            content = value[index:index + size_block]
+            data_encoded = standard_b64encode(content)
             block = SubElement(sub_object, 'block_data', num=str(iterator_block))
-            block.text = content
+            block.text = data_encoded
             iterator_block += 1
-        elif isinstance(value, Pdata):
-          # Create blocks if there is a stack of data
-          sub_object.set('type_data','Pdata')
-          data = value
-          iterator_block = 0
-          while data is not None:
-            data_encoded = standard_b64encode(data.data)
-            for index in xrange(0, len(data_encoded), size_block):
-              content = data_encoded[index:index + size_block]
-              block = SubElement(sub_object, 'block_data', num=str(iterator_block))
-              block.text = content
-              iterator_block += 1
-            data = data.next
         else: 
           raise "XMLExportImport failed, the data is undefined"
       elif prop_type in ('lines', 'tokens',):
