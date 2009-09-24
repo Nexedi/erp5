@@ -53,8 +53,22 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>return context.getPortalObject().portal_catalog(\n
-    context.FCKeditor_getDocumentListQuery(document_type=\'Image\', **kw))\n
+            <value> <string>from Products.ZSQLCatalog.SQLCatalog import Query, ComplexQuery\n
+\n
+if document_type == \'Image\':\n
+  portal_type = [\'Image\']\n
+else:\n
+  portal_type = [x for x in context.getPortalDocumentTypeList() if x != \'Image\']\n
+\n
+return ComplexQuery(\n
+  Query(portal_type=portal_type),\n
+  ComplexQuery(\n
+    Query(validation_state=(\'published\', \'published_alive\', \'released\', \'released_alive\', \'shared\', \'shared_alive\'),\n
+          reference=\'!=None\'),\n
+    Query(validation_state=\'embedded\', parent_uid=context.getUid()),\n
+    operator=\'or\'),\n
+  Query(**kw),\n
+  operator=\'and\')\n
 </string> </value>
         </item>
         <item>
@@ -65,7 +79,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>**kw</string> </value>
+            <value> <string>document_type=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -85,15 +99,24 @@
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>1</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>document_type</string>
                             <string>kw</string>
+                            <string>Products.ZSQLCatalog.SQLCatalog</string>
+                            <string>Query</string>
+                            <string>ComplexQuery</string>
+                            <string>portal_type</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>_getiter_</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>x</string>
                             <string>_apply_</string>
                           </tuple>
                         </value>
@@ -106,12 +129,14 @@
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <none/>
+              </tuple>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>FCKeditor_getImageList</string> </value>
+            <value> <string>FCKeditor_getDocumentListQuery</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

@@ -88,14 +88,14 @@ oFCKeditor.Config[\'FirefoxSpellChecker\']\t= true ;\n
 \n
 // browsing for links\n
 oFCKeditor.Config[\'LinkBrowser\'] = ${link_browser};\n
-oFCKeditor.Config[\'LinkBrowserURL\'] = \'${portal_path}FCKeditor_viewDocumentSelectionDialog\';\n
+oFCKeditor.Config[\'LinkBrowserURL\'] = \'${baseHrefUrl}/FCKeditor_viewDocumentSelectionDialog\';\n
 \n
 // rapid upload activation for links\n
 oFCKeditor.Config[\'LinkUpload\'] = false ; // XXX should be implemented using portal_contributions\n
 \n
 // browsing for images\n
 oFCKeditor.Config[\'ImageBrowser\'] = ${image_browser};\n
-oFCKeditor.Config[\'ImageBrowserURL\'] = \'${portal_path}FCKeditor_viewImageSelectionDialog\';\n
+oFCKeditor.Config[\'ImageBrowserURL\'] = \'${baseHrefUrl}/FCKeditor_viewImageSelectionDialog\';\n
 \n
 // rapid upload activation for images\n
 oFCKeditor.Config[\'ImageUpload\'] = false ; // XXX should be implemented using portal_contributions\n

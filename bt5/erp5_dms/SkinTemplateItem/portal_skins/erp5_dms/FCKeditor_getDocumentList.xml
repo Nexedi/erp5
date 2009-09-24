@@ -53,14 +53,8 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>kw[\'portal_type\'] = [x for x in context.getPortalDocumentTypeList() if x != \'Image\']\n
-\n
-kw[\'validation_state\'] = (\'published\', \'published_alive\', \'released\', \'released_alive\',\n
-                          \'shared\', \'shared_alive\')\n
-\n
-context.log(context.portal_catalog(src__=1,**kw))\n
-\n
-return context.portal_catalog(**kw)\n
+            <value> <string>return context.getPortalObject().portal_catalog(\n
+    context.FCKeditor_getDocumentListQuery(**kw))\n
 </string> </value>
         </item>
         <item>
@@ -98,13 +92,8 @@ return context.portal_catalog(**kw)\n
                         <value>
                           <tuple>
                             <string>kw</string>
-                            <string>append</string>
-                            <string>$append0</string>
-                            <string>_getiter_</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>x</string>
-                            <string>_write_</string>
                             <string>_apply_</string>
                           </tuple>
                         </value>
