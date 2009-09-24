@@ -61,14 +61,12 @@
 \n
 translateString = context.Base_translateString\n
 \n
-\n
 # ingest file (asynchronously)\n
-if portal_type:\n
-  doc = context.portal_contributions.newContent(file=file,\n
-                                                portal_type=portal_type,\n
-                                                classification=classification)\n
-else:\n
-  doc = context.portal_contributions.newContent(file=file, classification=classification)\n
+if not portal_type:\n
+  portal_type = None\n
+doc = context.portal_contributions.newContent(file=file,\n
+                                              portal_type=portal_type,\n
+                                              classification=classification)\n
 \n
 msg = translateString("${portal_type} created successfully.",\n
                        mapping = {\'portal_type\':doc.getPortalType()})\n
@@ -118,6 +116,7 @@ return context.Base_redirect(\'view\', keep_items = {\'portal_status_message\':m
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>translateString</string>
+                            <string>None</string>
                             <string>doc</string>
                             <string>msg</string>
                           </tuple>

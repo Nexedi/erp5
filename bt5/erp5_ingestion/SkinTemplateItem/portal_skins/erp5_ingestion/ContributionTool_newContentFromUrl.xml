@@ -60,14 +60,13 @@
 """\n
 \n
 translateString = context.Base_translateString\n
-portal_type = kw.get(\'portal_type\', None)\n
 \n
 # ingest file (asynchronously)\n
-if portal_type:\n
-  doc = context.portal_contributions.newContentFromURL(url = url,\n
-                                                portal_type = portal_type)\n
-else:\n
-  doc = context.portal_contributions.newContentFromURL(url=url)\n
+if not portal_type:\n
+  portal_type = None\n
+doc = context.portal_contributions.newContentFromURL(url = url,\n
+                                                     portal_type=portal_type,\n
+                                                     classification=classification)\n
 \n
 msg = translateString("URL contributed successfully.")\n
 return context.Base_redirect(\'view\', keep_items = {\'portal_status_message\':msg})\n
@@ -81,7 +80,7 @@ return context.Base_redirect(\'view\', keep_items = {\'portal_status_message\':m
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>dialog_id=None, form_id=None, url=None, **kw</string> </value>
+            <value> <string>dialog_id=None, form_id=None, url=None, portal_type=None, classification=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -101,7 +100,7 @@ return context.Base_redirect(\'view\', keep_items = {\'portal_status_message\':m
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>3</int> </value>
+                        <value> <int>5</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -110,12 +109,13 @@ return context.Base_redirect(\'view\', keep_items = {\'portal_status_message\':m
                             <string>dialog_id</string>
                             <string>form_id</string>
                             <string>url</string>
+                            <string>portal_type</string>
+                            <string>classification</string>
                             <string>kw</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>translateString</string>
                             <string>None</string>
-                            <string>portal_type</string>
                             <string>doc</string>
                             <string>msg</string>
                           </tuple>
@@ -130,6 +130,8 @@ return context.Base_redirect(\'view\', keep_items = {\'portal_status_message\':m
             <key> <string>func_defaults</string> </key>
             <value>
               <tuple>
+                <none/>
+                <none/>
                 <none/>
                 <none/>
                 <none/>
