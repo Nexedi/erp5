@@ -45,6 +45,9 @@ class TestDeferredStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
   password = 'bobpwd'
   first_name = 'Bob'
 
+  def getTitle(self):
+    return 'Test Deferred Style'
+
   def getBusinessTemplateList(self):
     return ('erp5_base', 'erp5_crm', 'erp5_ods_style', 'erp5_odt_style', 'erp5_deferred_style',)
 
@@ -97,7 +100,7 @@ class TestDeferredStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
       content_type = part.get_content_type()
       file_name = part.get_filename()
       if file_name == 'report_view':
-        self.assertEquals(part.get_type(), 'application/vnd.oasis.opendocument.text')
+        self.assertEquals(content_type, 'application/vnd.oasis.opendocument.text')
         ok = 1
         break
     if not ok:
