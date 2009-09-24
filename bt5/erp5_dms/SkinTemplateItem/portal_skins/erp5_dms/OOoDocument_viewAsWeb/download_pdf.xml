@@ -307,7 +307,7 @@
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-python:\'<button class="bt-med right" name="OOoDocument_downloadAsPDF:method" title="%(title)s" alt="%(title)s"><span>%(title)s</span></button>\' % {\'title\':here.Base_translateString("Download as PDF")}
+python:\'<button class="bt-med right" name="OOoDocument_downloadAsPDF:method" title="%(title)s"><span>%(title)s</span></button>\' % {\'title\':here.Base_translateString("Download as PDF")}
 
 ]]></string> </value>
         </item>
