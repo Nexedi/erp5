@@ -198,16 +198,13 @@ class OOoDocument(PermanentURLMixIn, File, ConversionCacheMixin):
     converted_filename = '%s.%s'%(filename.split('.')[0],  format)
     if not mime:
       mime = getToolByName(self, 'mimetypes_registry').lookupExtension('name.%s' % format)
-    if format in STANDARD_IMAGE_FORMAT_LIST:
-      RESPONSE.setHeader('Content-Type', mime)
-      return result.index_html(REQUEST, RESPONSE)
-    else:
-      RESPONSE.setHeader('Content-Length', len(result))
-      RESPONSE.setHeader('Content-Type', mime)
-      RESPONSE.setHeader('Accept-Ranges', 'bytes')
+    RESPONSE.setHeader('Content-Length', len(result))
+    RESPONSE.setHeader('Content-Type', mime)
+    RESPONSE.setHeader('Accept-Ranges', 'bytes')
+    if format not in STANDARD_IMAGE_FORMAT_LIST:
       RESPONSE.setHeader('Content-Disposition',
                          'attachment; filename="%s"' % converted_filename)
-      return result
+    return result
 
   # Format conversion implementation
   def _getServerCoordinate(self):
