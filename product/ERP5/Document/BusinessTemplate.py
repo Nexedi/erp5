@@ -1982,8 +1982,8 @@ class PortalTypeAllowedContentTypeTemplateItem(BaseTemplateItem):
           portal_id = key.split('/')[-1]
           portal_type = pt._getOb(portal_id)
         except AttributeError:
-          LOG("portal types not found : ", 100, portal_id)
-          continue
+          raise AttributeError, "Portal type '%s' not found while " \
+              "installing %s" % (portal_id, self.getTitle())
         property_list = self._objects.get(key, [])
         old_property_list = old_objects.get(key, ())
         object_property_list = getattr(portal_type, self.class_property, ())
