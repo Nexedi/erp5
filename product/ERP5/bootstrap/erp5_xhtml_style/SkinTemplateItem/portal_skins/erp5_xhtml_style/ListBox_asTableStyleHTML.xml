@@ -296,15 +296,12 @@
                                   original_value     python: value[1];\n
                                   error              python: value[2];\n
                                   editable_field     python: value[3];\n
-                                  editable_field_css python: editable_field != None and editable_field.get_value(\'css_class\');\n
-                                  empty              python: original_value in (\'\', None) and not request.get(\'editable_mode\')"\n
-                      tal:attributes="class python: empty and \'emptyCell\' or nothing">\n
-                    <tal:block tal:condition="empty"><span tal:attributes="class editable_field_css">-</span></tal:block>\n
+                                  editable_field_css python: editable_field != None and editable_field.get_value(\'css_class\')">\n
                     <input tal:condition="not: repeat/value/index"\n
                            type="hidden" value="1" name="listbox_uid:list"\n
                            tal:attributes="value python: line.getUid() or \'\';\n
                                       name string:${field_id}_uid:list" />\n
-                    <tal:block tal:condition="not: empty" tal:replace="structure html">value</tal:block>\n
+                    <tal:block tal:replace="structure html">value</tal:block>\n
                   </td>\n
                 </tal:block>\n
               </tr>\n
