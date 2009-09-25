@@ -37,9 +37,9 @@ fi
 SELECT=""
 for t in message message_queue ; do
   SELECT=$SELECT"""
-  SELECT count(path) AS $t, method_id, processing, processing_node AS node, min(priority) AS min_pri, max(priority) AS max_pri FROM $t GROUP BY method_id, processing, processing_node ORDER BY node;
-  SELECT count(path) AS $t, processing, processing_node, min(priority) AS min_pri, max(priority) AS max_pri FROM $t GROUP BY processing, processing_node;
-  SELECT count(path) AS ${t}_count FROM $t;
+  SELECT count(*) AS $t, method_id, processing, processing_node AS node, min(priority) AS min_pri, max(priority) AS max_pri FROM $t GROUP BY method_id, processing, processing_node ORDER BY node;
+  SELECT count(*) AS $t, processing, processing_node, min(priority) AS min_pri, max(priority) AS max_pri FROM $t GROUP BY processing, processing_node;
+  SELECT count(*) AS ${t}_count FROM $t;
   """
 done
 watch -n $INTERVAL "mysql $MYSQL_OPT --disable-pager -t -e '$SELECT' "
