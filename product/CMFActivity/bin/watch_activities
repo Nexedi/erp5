@@ -39,6 +39,7 @@ for t in message message_queue ; do
   SELECT=$SELECT"""
   SELECT count(*) AS $t, method_id, processing, processing_node AS node, min(priority) AS min_pri, max(priority) AS max_pri FROM $t GROUP BY method_id, processing, processing_node ORDER BY node;
   SELECT count(*) AS $t, processing, processing_node, min(priority) AS min_pri, max(priority) AS max_pri FROM $t GROUP BY processing, processing_node;
+  SELECT priority as pri, MIN(timediff(NOW(), date)) AS min, AVG(timediff(NOW() , date)) AS avg, MAX(timediff(NOW() , date)) AS max FROM $t GROUP BY priority;
   SELECT count(*) AS ${t}_count FROM $t;
   """
 done
