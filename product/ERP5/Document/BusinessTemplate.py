@@ -965,6 +965,15 @@ class ObjectTemplateItem(BaseTemplateItem):
                                  'ERP5 Distributed Ram Cache',):
             assert container.meta_type == 'ERP5 Cache Factory'
             container.getParentValue().updateCache()
+          elif (container.meta_type == 'CMF Skins Tool') and \
+              (old_obj is not None):
+            # Keep previous value of register skin selection for skin folder
+            skin_selection_list = old_obj.getProperty(
+                'business_template_registered_skin_selections', None)
+            if skin_selection_list is not None:
+              obj._setProperty(
+                  'business_template_registered_skin_selections',
+                  skin_selection_list, type='tokens')
            
           recurse(restoreHook, obj)
       # now put original order group

@@ -4603,6 +4603,10 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     self.assertTrue(skin_id in layers, layers)
     self.assertTrue('erp5_core' in layers, layers)
     self.assertFalse('erp5_xhtml_style' in layers, layers)
+    skin_folder = ps._getOb(skin_id, None)
+    skin_selection_list = skin_folder.getProperty(
+        'business_template_registered_skin_selections', ())
+    self.assertTrue('Foo' in skin_selection_list)
 
   def stepCheckStaticSkinSelection(self, sequence=None, **kw):
     ps = self.getSkinsTool()
@@ -5572,6 +5576,88 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        InstallBusinessTemplate \
                        Tic \
                        CheckSkinFolderPriorityOff \
+                       '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self, quiet=quiet)
+
+  def stepModifySkinFolder(self, sequence=None,sequence_list=None, **kw):
+    """
+    Modify the skin folder
+    """
+    ps = self.getSkinsTool()
+    skin_id = sequence.get('skin_folder_id')
+    skin_folder = ps._getOb(skin_id, None)
+    skin_folder._setProperty(
+                    'business_template_skin_layer_priority',
+                    99, type='float')
+
+  def stepUnmodifySkinFolder(self, sequence=None,sequence_list=None, **kw):
+    """
+    Modify the skin folder
+    """
+    ps = self.getSkinsTool()
+    skin_id = sequence.get('skin_folder_id')
+    skin_folder = ps._getOb(skin_id, None)
+    skin_folder._delProperty('business_template_skin_layer_priority')
+
+  def stepCheckModifiedSkinFolderExists(self, sequence=None,
+                                        sequence_list=None, **kw):
+    """
+    Check modified skin folder
+    """
+    ps = self.getSkinsTool()
+    skin_id = sequence.get('skin_folder_id')
+    skin_folder = ps._getOb(skin_id, None)
+    self.assertEquals(
+        99, skin_folder.getProperty('business_template_skin_layer_priority'))
+
+  def test_163_UpdateSkinFolderWithRegisteredSkinSelection(
+                                  self, quiet=quiet, run=run_all_test):
+    if not run: return
+    if not quiet:
+      message = 'Test Update Skin Folder'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ', 0, message)
+    sequence_list = SequenceList()
+
+    sequence_string = '\
+                       CreateSkinFolder \
+                       SetSkinFolderRegistredSelections \
+                       CreateNewBusinessTemplate \
+                       UseExportBusinessTemplate \
+                       AddSkinFolderToBusinessTemplate \
+                       AddRegistredSelectionToBusinessTemplate \
+                       BuildBusinessTemplate \
+                       SaveBusinessTemplate \
+                       RemoveSkinFolder \
+                       RemoveBusinessTemplate \
+                       RemoveAllTrashBins \
+                       \
+                       ImportBusinessTemplate \
+                       UseImportBusinessTemplate \
+                       InstallBusinessTemplate \
+                       Tic \
+                       CheckSkinSelectionAdded \
+                       \
+                       ModifySkinFolder \
+                       \
+                       CopyBusinessTemplate \
+                       Tic \
+                       EditBusinessTemplate \
+                       BuildBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       SaveBusinessTemplate \
+                       \
+                       UnmodifySkinFolder \
+                       \
+                       ImportBusinessTemplate \
+                       Tic \
+                       UseImportBusinessTemplate \
+                       InstallWithoutForceBusinessTemplate \
+                       Tic \
+                       \
+                       CheckModifiedSkinFolderExists \
+                       CheckSkinSelectionAdded \
                        '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)
