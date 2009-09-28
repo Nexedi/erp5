@@ -319,8 +319,8 @@ class ERP5TypeTestCase(PortalTestCase):
       erp5_load_data_fs = int(os.environ.get('erp5_load_data_fs', 0))
       if update_business_templates and erp5_load_data_fs:
         update_only = os.environ.get('update_only', None)
-        # XXX erp5_type BT will be merged into erp5_core later.
-        template_list = (erp5_catalog_storage, 'erp5_core', 'erp5_type', 'erp5_xhtml_style') + tuple(template_list)
+        template_list = (erp5_catalog_storage, 'erp5_core',
+                         'erp5_xhtml_style') + tuple(template_list)
         # Update only specified business templates, regular expression
         # can be used.
         if update_only is not None:

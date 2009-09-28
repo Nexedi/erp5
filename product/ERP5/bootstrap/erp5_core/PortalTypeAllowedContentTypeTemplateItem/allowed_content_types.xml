@@ -12,6 +12,10 @@
   <item>Domain</item>
   <item>Domain Generator</item>
  </portal_type>
+ <portal_type id="Base Type">
+  <item>Action Information</item>
+  <item>Role Information</item>
+ </portal_type>
  <portal_type id="Cache Factory">
   <item>Ram Cache</item>
   <item>Distributed Ram Cache</item>
@@ -39,8 +43,8 @@
   <item>Memcached Plugin</item>
  </portal_type>
  <portal_type id="Preference Tool">
-  <item>Preference</item>
   <item>System Preference</item>
+  <item>Preference</item>
  </portal_type>
  <portal_type id="Simulation Movement">
   <item>Applied Rule</item>
@@ -53,5 +57,8 @@
  </portal_type>
  <portal_type id="Trash Tool">
   <item>Trash Bin</item>
+ </portal_type>
+ <portal_type id="Types Tool">
+  <item>Base Type</item>
  </portal_type>
 </allowed_content_type_list>

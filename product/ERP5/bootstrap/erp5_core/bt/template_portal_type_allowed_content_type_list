@@ -3,6 +3,8 @@ Applied Rule | Simulation Movement
 Base Category | Category
 Base Domain | Domain
 Base Domain | Domain Generator
+Base Type | Action Information
+Base Type | Role Information
 Cache Factory | Distributed Ram Cache
 Cache Factory | Ram Cache
 Cache Tool | Cache Factory
@@ -19,3 +21,4 @@ Simulation Movement | Applied Rule
 Simulation Tool | Applied Rule
 Template Tool | Business Template
 Trash Tool | Trash Bin
+Types Tool | Base Type

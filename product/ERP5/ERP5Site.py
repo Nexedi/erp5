@@ -1728,8 +1728,7 @@ class ERP5Generator(PortalGenerator):
       return
     if template_tool.getInstalledBusinessTemplate('erp5_core') is None:
       bootstrap_dir = self.getBootstrapDirectory()
-      # XXX erp5_type BT will be merged into erp5_core later.
-      for bt in 'erp5_core', 'erp5_type', p.erp5_catalog_storage, 'erp5_xhtml_style':
+      for bt in 'erp5_core', p.erp5_catalog_storage, 'erp5_xhtml_style':
         if not bt:
           continue
         template = os.path.join(bootstrap_dir, bt)

@@ -62,17 +62,16 @@ portal_types = portal.portal_types\n
 object_portal_type_id = object_portal_type\n
 \n
 # Create a new portal_type for the module\n
-portal_types.manage_addTypeInformation( \'ERP5 Type Information\'\n
-                                       , typeinfo_name = \'ERP5Type: ERP5 Folder\'\n
-                                       , id            = module_portal_type)\n
+portal_types.manage_addTypeInformation(\'ERP5 Type Information\',\n
+  id=module_portal_type, typeinfo_name=\'ERP5Type: Folder (ERP5 Folder)\')\n
 module_portal_type_value = portal_types[module_portal_type]\n
 # Set icon and allowed content types\n
-module_portal_type_value.manage_changeProperties(\n
-               content_icon=\'folder_icon.gif\',\n
-               filter_content_types=1,\n
-               allowed_content_types=(object_portal_type_id, ),\n
-               group_list=(\'module\',),\n
-               base_category_list=(\'business_application\',))\n
+module_portal_type_value.edit(\n
+  type_icon=\'folder_icon.gif\',\n
+  type_filter_content_type=1,\n
+  type_allowed_content_type_list=(object_portal_type_id,),\n
+  type_base_category_list=(\'business_application\',),\n
+  type_group=\'module\')\n
 # initialize translation domains\n
 module_portal_type_value.changeTranslations(\n
              properties=dict(title=\'erp5_ui\', short_title=\'erp5_ui\'))\n
@@ -80,16 +79,11 @@ module_portal_type_value.changeTranslations(\n
 module_list_form_id = (\'%s_view%sList\' % (module_portal_type,\n
                         object_portal_type)).replace(\' \', \'\')\n
 \n
-action_list = module_portal_type_value.listActions()\n
-module_portal_type_value.deleteActions(selections=range(0, len(action_list)))\n
-module_portal_type_value.addAction( "view"\n
-                                  , "View"\n
-                                  , "string:${object_url}/%s" % module_list_form_id\n
-                                  , ""\n
-                                  , "View"\n
-                                  , "object_list"\n
-                                  , priority=1.0\n
-                                  )\n
+module_portal_type_value.newContent(portal_type=\'Action Information\',\n
+  reference="view",\n
+  title="View",\n
+  action="string:${object_url}/%s" % module_list_form_id,\n
+  action_type="object_list")\n
 \n
 # Create the skin folder if does not exist yet\n
 portal_skins_folder_name = portal_skins_folder\n
@@ -194,16 +188,11 @@ portal.portal_workflow.setChainForPortalTypes([object_portal_type_id],\n
                                               \'edit_workflow\')\n
 \n
 # Set default actions\n
-action_list = object_portal_type_value.listActions()\n
-object_portal_type_value.deleteActions(selections=range(0,len(action_list)))\n
-object_portal_type_value.addAction( "view"\n
-                                  , "View"\n
-                                  , "string:${object_url}/%s" % form_view_id\n
-                                  , ""\n
-                                  , "View"\n
-                                  , "object_view"\n
-                                  , priority = 1\n
-                                  )\n
+object_portal_type_value.newContent(portal_type=\'Action Information\',\n
+  reference="view",\n
+  title="View",\n
+  action="string:${object_url}/%s" % form_view_id,\n
+  action_type="object_view")\n
 \n
 # Finally add the module to the site\n
 module_object = portal.newContent( portal_type = module_portal_type\n
@@ -228,7 +217,6 @@ else:\n
                           , selection_name\n
                           , \'portal_status_message=Module+Created.\'\n
                           )\n
-\n
 \n
 \n
 request[ \'RESPONSE\' ].redirect( redirect_url )\n
@@ -290,9 +278,6 @@ request[ \'RESPONSE\' ].redirect( redirect_url )\n
                             <string>module_portal_type_value</string>
                             <string>dict</string>
                             <string>module_list_form_id</string>
-                            <string>action_list</string>
-                            <string>range</string>
-                            <string>len</string>
                             <string>portal_skins_folder_name</string>
                             <string>portal_skins</string>
                             <string>skin_folder</string>
