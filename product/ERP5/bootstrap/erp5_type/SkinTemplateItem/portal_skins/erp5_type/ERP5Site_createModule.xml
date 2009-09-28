@@ -62,12 +62,14 @@ portal_types = portal.portal_types\n
 object_portal_type_id = object_portal_type\n
 \n
 # Create a new portal_type for the module\n
-module_portal_type_value = portal_types.newContent(portal_type=\'Base Type\',\n
-  id=module_portal_type,\n
-  type_factory_method_id=\'addFolder\',\n
+portal_types.manage_addTypeInformation(\'ERP5 Type Information\',\n
+  id=module_portal_type, typeinfo_name=\'ERP5Type: Folder (ERP5 Folder)\')\n
+module_portal_type_value = portal_types[module_portal_type]\n
+# Set icon and allowed content types\n
+module_portal_type_value.edit(\n
   type_icon=\'folder_icon.gif\',\n
   type_filter_content_type=1,\n
-  type_allowed_content_type=object_portal_type_id,\n
+  type_allowed_content_type_list=(object_portal_type_id,),\n
   type_group=\'module\')\n
 # initialize translation domains\n
 module_portal_type_value.changeTranslations(\n
@@ -174,9 +176,11 @@ form.manage_addField(\n
 \n
 \n
 # Then add the portal_type corresponding to the new object\n
-object_portal_type_value = portal_types.newContent(portal_type=\'Base Type\',\n
-  id=object_portal_type_id,\n
-  type_factory_method_id=\'addXMLObject\')\n
+portal_types.manage_addTypeInformation(\'ERP5 Type Information\'\n
+                                      , typeinfo_name = \'ERP5Type: XML Object (ERP5 XML Object)\'\n
+                                      , id            = object_portal_type_id\n
+                                      )\n
+object_portal_type_value = portal_types[object_portal_type_id]\n
 \n
 # Chain to edit_workflow\n
 portal.portal_workflow.setChainForPortalTypes([object_portal_type_id],\n
@@ -269,12 +273,12 @@ request[ \'RESPONSE\' ].redirect( redirect_url )\n
                             <string>portal</string>
                             <string>portal_types</string>
                             <string>object_portal_type_id</string>
+                            <string>_getitem_</string>
                             <string>module_portal_type_value</string>
                             <string>dict</string>
                             <string>module_list_form_id</string>
                             <string>portal_skins_folder_name</string>
                             <string>portal_skins</string>
-                            <string>_getitem_</string>
                             <string>skin_folder</string>
                             <string>_getiter_</string>
                             <string>skin_name</string>

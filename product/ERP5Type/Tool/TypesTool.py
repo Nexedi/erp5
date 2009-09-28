@@ -116,7 +116,8 @@ class TypesTool(BaseTool, CMFCore_TypesTool.TypesTool):
       raise ValueError('An id is required.')
     type_info = self.newContent(id, 'Base Type')
     if fti:
-      type_info.__dict__.update(**fti)
+      type_info.__dict__.update((k, v) for k, v in fti.iteritems()
+        if k not in ('id', 'actions'))
 
 
 # Compatibility code to access old "ERP5 Role Information" objects.

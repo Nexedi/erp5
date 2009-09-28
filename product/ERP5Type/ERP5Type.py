@@ -526,9 +526,10 @@ class ERP5TypeInformation(XMLObject,
     def addAction(self, id, name, action, condition, permission, category,
                   icon=None, visible=1, priority=1.0, REQUEST=None,
                   description=None):
-      # XXX Should be deprecated. newContent already does everything we want.
       if isinstance(permission, basestring):
         permission = permission,
+      if isinstance(action, str) and action[:7] not in ('string:', 'python:'):
+        value = 'string:${object_url}/' + value
       self.newContent(portal_type='Action Information',
                       reference=id,
                       title=name,
