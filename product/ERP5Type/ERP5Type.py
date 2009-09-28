@@ -574,6 +574,7 @@ class ERP5TypeInformation(XMLObject,
           v = v.__class__(v.text)
         setattr(action, {'id': 'reference',
                          'priority': 'float_index',
+                         'permissions': 'action_permission',
                         }.get(k, k), v)
       action.uid = None
       action = self[self._setObject(action.id, action, set_owner=0)]
@@ -585,13 +586,12 @@ class ERP5TypeInformation(XMLObject,
       from Products.CMFCore.ActionInformation import ActionInformation
       old_action = ActionInformation(action.reference,
         category=action.getActionType(),
-        # We don't have the same default values for the following properties:
         priority=action.getFloatIndex(),
         permissions=tuple(action.getActionPermissionList()))
       for k, v in action.__dict__.iteritems():
         if k in ('action', 'condition', 'icon'):
           v = v.__class__(v.text)
-        elif k in ('id', 'float_index', 'permissions', 'reference'):
+        elif k in ('id', 'float_index', 'action_permission', 'reference'):
           continue
         setattr(old_action, k, v)
       return old_action

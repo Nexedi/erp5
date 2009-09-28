@@ -84,17 +84,17 @@ class ActionInformation(XMLObject):
       return condition is None or condition(ec)
     return False
 
-  security.declarePublic('getVisibility')
-  def getVisibility(self):
-    """Return whether the action should be visible in the CMF UI"""
-    return self.isVisible()
+  security.declarePrivate('getActionUrl')
+  def getActionUrl(self, ec):
+    action = self.getAction()
+    return action is not None and action(ec) or ''
 
-  def _setActionExpression(self, value):
+  def _setAction(self, value):
     """Overridden setter for 'action' to accept strings and clean null values
     """
     if isinstance(value, basestring):
       value = value and Expression(value) or None
-    self._baseSetActionExpression(value)
+    self._baseSetAction(value)
   def _setCondition(self, value):
     """Overridden setter for 'condition' to accept string and clean null values
     """
@@ -108,6 +108,11 @@ class ActionInformation(XMLObject):
       value = value and Expression(value) or None
     self._baseSetIcon(value)
 
+  def getAction(self):
+    """Overridden getter for 'action' to clean null values"""
+    if getattr(aq_base(self), 'action', None) == '':
+      del self.action
+    return self._baseGetAction()
   def getCondition(self):
     """Overridden getter for 'condition' to clean null values"""
     if getattr(aq_base(self), 'condition', None) == '':
@@ -122,7 +127,7 @@ class ActionInformation(XMLObject):
   security.declareProtected(AccessContentsInformation, 'getActionText')
   def getActionText(self):
     """Return the text of the action expression"""
-    return getattr(self.getActionExpression(), 'text', None)
+    return getattr(self.getAction(), 'text', None)
   security.declareProtected(AccessContentsInformation, 'getConditionText')
   def getConditionText(self):
     """Return the text of the condition expression"""
@@ -141,7 +146,3 @@ class ActionInformation(XMLObject):
                           self.getActionText(),
                           self.getConditionText()]
     return ' '.join(filter(None, search_source_list))
-
-  security.declarePrivate('getActionUrl')
-  def getActionUrl(self, ec):
-    return self.getActionExpression()(ec)

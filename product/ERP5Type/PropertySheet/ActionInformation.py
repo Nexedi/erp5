@@ -44,7 +44,6 @@ class ActionInformation:
       'mode':        'w',
       },
     { 'id':          'action_permission',
-      'storage_id':  'permissions', # CMF Compatibility
       'type':        'lines',
       'description': 'The permissions required to use the action',
       'mode':        'w',
@@ -62,8 +61,7 @@ class ActionInformation:
       'mode':        'w',
       'default':     True,
       },
-    { 'id':          'action_expression', # CMF Compatibility
-      'storage_id':  'action',
+    { 'id':          'action',
       'type':        'object',
       'description': 'TALES Expression to define the URL of the action',
       'mode':        'w',

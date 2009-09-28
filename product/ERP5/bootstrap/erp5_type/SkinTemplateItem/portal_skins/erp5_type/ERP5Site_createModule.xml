@@ -79,7 +79,7 @@ module_list_form_id = (\'%s_view%sList\' % (module_portal_type,\n
 module_portal_type_value.newContent(portal_type=\'Action Information\',\n
   reference="view",\n
   title="View",\n
-  action_expression="string:${object_url}/%s" % module_list_form_id,\n
+  action="string:${object_url}/%s" % module_list_form_id,\n
   action_type="object_list")\n
 \n
 # Create the skin folder if does not exist yet\n
@@ -186,7 +186,7 @@ portal.portal_workflow.setChainForPortalTypes([object_portal_type_id],\n
 object_portal_type_value.newContent(portal_type=\'Action Information\',\n
   reference="view",\n
   title="View",\n
-  action_expression="string:${object_url}/%s" % form_view_id,\n
+  action="string:${object_url}/%s" % form_view_id,\n
   action_type="object_view")\n
 \n
 # Finally add the module to the site\n
