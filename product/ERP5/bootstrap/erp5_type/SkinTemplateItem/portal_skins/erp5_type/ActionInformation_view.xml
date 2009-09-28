@@ -98,7 +98,7 @@
                       <list>
                         <string>my_reference</string>
                         <string>my_title</string>
-                        <string>my_action_expression</string>
+                        <string>my_action</string>
                         <string>my_description</string>
                         <string>my_icon</string>
                         <string>my_condition</string>

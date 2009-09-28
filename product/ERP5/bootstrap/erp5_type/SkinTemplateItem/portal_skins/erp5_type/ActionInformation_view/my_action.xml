@@ -20,7 +20,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_action_expression</string> </value>
+            <value> <string>my_action</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>

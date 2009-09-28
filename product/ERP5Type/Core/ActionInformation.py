@@ -66,7 +66,7 @@ class ActionInformation(XMLObject):
     if self.isVisible():
       permission_list = self.getActionPermissionList()
       if permission_list:
-        category = self.getActionType()
+        category = self.getActionType() or ''
         info = ec.vars
         if (info['here'] is not None and
             (category.startswith('object') or
