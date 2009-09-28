@@ -1113,7 +1113,7 @@ def createExpressionContext(object, portal=None):
   if portal is None and object is not None:
     portal = object.getPortalObject()
 
-  if object is None or getattr(object, 'aq_base', None) is None:
+  if object is None or aq_base(object) is None:
     folder = portal
   else:
     folder = object
@@ -1161,6 +1161,7 @@ def createExpressionContext(object, portal=None):
       'request':      getattr( object, 'REQUEST', None ),
       'modules':      SecureModuleImporter,
       'member':       member,
+      'here':         object,
       }
   return getEngine().getContext(data)
 

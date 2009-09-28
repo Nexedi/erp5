@@ -26,7 +26,7 @@ from AccessControl import ClassSecurityInfo, getSecurityManager
 from Acquisition import aq_base, aq_inner, aq_parent
 
 from Products.CMFCore.TypesTool import FactoryTypeInformation
-from Products.CMFCore.Expression import createExprContext, Expression
+from Products.CMFCore.Expression import Expression
 from Products.CMFCore.exceptions import AccessControl_Unauthorized
 from Products.CMFCore.utils import _checkPermission
 from Products.ERP5Type import interfaces, Constraint, Permissions, PropertySheet
@@ -53,22 +53,6 @@ from TranslationProviderBase import TranslationProviderBase
 from sys import exc_info
 from zLOG import LOG, ERROR
 from Products.CMFCore.exceptions import zExceptions_Unauthorized
-
-
-def getExprContext(context, ob=None):
-  portal = context.getPortalObject()
-  if ob is None:
-    folder = portal
-  else:
-    folder = aq_parent(ob)
-    # Search up the containment hierarchy until we find an
-    # object that claims it's a folder.
-    while folder is not None:
-      if getattr(aq_base(folder), 'isPrincipiaFolderish', 0):
-        break # found it.
-      else:
-        folder = aq_parent(folder)
-  return createExprContext(folder, portal, ob)
 
 
 class LocalRoleAssignorMixIn(object):
@@ -155,7 +139,7 @@ class LocalRoleAssignorMixIn(object):
     security.declarePrivate('getFilteredRoleListFor')
     def getFilteredRoleListFor(self, ob=None):
       """Return all role generators applicable to the object."""
-      ec = getExprContext(self, ob)
+      ec = createExpressionContext(ob)
       for role in self.getRoleInformationList():
         if role.testCondition(ec):
           yield role
@@ -478,7 +462,7 @@ class ERP5TypeInformation(XMLObject,
     security.declarePrivate('getFilteredActionListFor')
     def getFilteredActionListFor(self, ob=None):
       """Return all actions applicable to the object"""
-      ec = getExprContext(self, ob)
+      ec = createExpressionContext(ob)
       return (action for action in self.getActionInformationList()
                      if action.test(ec))
 

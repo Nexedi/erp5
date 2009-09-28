@@ -30,8 +30,8 @@ def listFilteredActionsFor(self, object=None):
         if IActionProvider.isImplementedBy(provider):
             actions.extend( provider.listActionInfos(object=object) )
         elif hasattr(provider, 'getFilteredActionListFor'):
-            from Products.ERP5Type.ERP5Type import getExprContext
-            ec = getExprContext(self, object)
+            from Products.ERP5Type.Utils import createExpressionContext
+            ec = createExpressionContext(object)
             actions += sorted(
               (action.getActionInfo(ec)
                for action in provider.getFilteredActionListFor(object)),

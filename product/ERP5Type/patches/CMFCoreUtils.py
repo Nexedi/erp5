@@ -15,8 +15,8 @@
 from warnings import warn
 from Products.CMFCore.exceptions import AccessControl_Unauthorized, NotFound
 from Products.CMFCore.utils import getActionContext
-from Products.CMFCore.Expression import getExprContext
 from Products.CMFCore import PortalContent
+from Products.ERP5Type.Utils import createExpressionContext
 
 from zLOG import LOG
 
@@ -40,7 +40,7 @@ def CMFCoreUtils_getViewFor(obj, view='view'):
       raise NotFound('Cannot find default view for %r' % obj.getPath())
 
     context = getActionContext(obj)
-    ec = getExprContext(obj, obj)
+    ec = createExpressionContext(obj)
     best_action = (), None
     for action in ti.getFilteredActionListFor(obj):
       if action.getReference() == view:
