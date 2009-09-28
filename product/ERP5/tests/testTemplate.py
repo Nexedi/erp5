@@ -309,8 +309,16 @@ class TestTemplate(ERP5TypeTestCase):
     self.tic()
     self.assertTrue(document.isIndexable)
     self.assertEqual(len(preference.objectIds()), 1)
-    for template in preference.objectValues():
-      self.assertFalse(template.isIndexable)
+    template = preference.objectValues()[0]
+    self.assertFalse(template.isIndexable)
+    
+    # Because they are not indexable, they cannot be found by catalog
+    transaction.commit()
+    self.tic()
+    self.assertEquals(0, len(self.portal.portal_catalog(uid=template.getUid())))
+    template_line = template.objectValues()[0]
+    self.assertEquals(0,
+        len(self.portal.portal_catalog(uid=template_line.getUid())))
 
     # and this is still true if you create two templates from the same document
     # #929
