@@ -75,7 +75,7 @@
                   context/Base_isUserAllowedToUseKnowledgePad;\n
               isKnowledgePadTemplateUsed python:\n
                   request.get(\'is_knowledge_pad_template_used\', 0);\n
-              cancel_url current_web_section_url;">\n
+              cancel_url string:${current_web_section_url}/view">\n
 \n
     <tal:block tal:condition="python: not createDefaultPadForUser and \n
                                       not waitForActivitiesOnServer and\n
