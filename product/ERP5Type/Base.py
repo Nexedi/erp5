@@ -3034,8 +3034,8 @@ class Base( CopyContainer,
     ERP5Security.ERP5UserFactory.ERP5User
     """
     def cached_getAcquireLocalRoles(portal_type):
-      ti = self._getTypesTool().getTypeInfo(self)
-      return getattr(ti, 'acquire_local_roles', True)
+      ti = self._getTypesTool().getTypeInfo(portal_type)
+      return ti is None or ti.getTypeAcquireLocalRole()
 
     cached_getAcquireLocalRoles = CachingMethod(cached_getAcquireLocalRoles,
                                                 id='Base__getAcquireLocalRoles',

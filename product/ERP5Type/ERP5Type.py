@@ -475,7 +475,7 @@ class ERP5TypeInformation(XMLObject,
 
     def getTypeInfo(self, *args):
       if args:
-        return self.getParentValue().getTypeInfo(self, *args)
+        return self.getParentValue().getTypeInfo(*args)
       return XMLObject.getTypeInfo(self)
 
     security.declareProtected(Permissions.AccessContentsInformation,

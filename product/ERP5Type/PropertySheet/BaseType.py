@@ -56,7 +56,7 @@ class BaseType:
           'label':      'Init Script'
          },
         { 'id':         'type_acquire_local_role'
-        , 'storage_id': 'acquire_local_roles' # CMF Compatibility
+        , 'storage_id': 'acquire_local_roles' # Compatibility
         , 'type':       'boolean'
         , 'mode':       'w'
         , 'label':      'Acquire Local Roles'

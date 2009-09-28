@@ -52,27 +52,12 @@ class TypesTool(BaseTool, CMFCore_TypesTool.TypesTool):
     return ()
 
   def getTypeInfo(self, *args):
-    if not len(args): 
+    if not args:
        return BaseTool.getTypeInfo(self)
-    else:
-      # The next 10 lines are taken from CMFCore
-      # which means that the entire file is ZPLed
-      # for now
-      contentType = args[0]
-      #return CMFCoreTypesTool.getTypeInfo(self, contentType)
-      if not isinstance(contentType, basestring):
-          if hasattr(aq_base(contentType), 'getPortalTypeName'):
-              contentType = contentType.getPortalTypeName()
-              if contentType is None:
-                  return None
-          else:
-              return None
-      #ob = getattr( self, contentType, None )
-      ob = self._getOb(contentType, None)
-      if getattr(aq_base(ob), '_isTypeInformation', 0):
-          return ob
-      else:
-          return None
+    portal_type, = args
+    if not isinstance(portal_type, basestring):
+      portal_type = aq_base(portal_type).getPortalType()
+    return self._getOb(portal_type, None)
 
   security.declareProtected(Permissions.AddPortalContent,
                             'manage_addTypeInformation')
@@ -80,6 +65,9 @@ class TypesTool(BaseTool, CMFCore_TypesTool.TypesTool):
                                 typeinfo_name=None, RESPONSE=None):
     """
     Create a TypeInformation in self.
+
+    This method is mainly a copy/paste of CMF Types Tool
+    which means that the entire file is ZPLed for now.
     """
     if add_meta_type != 'ERP5 Type Information' or RESPONSE is not None:
       raise ValueError
