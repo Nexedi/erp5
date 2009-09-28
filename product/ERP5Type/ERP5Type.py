@@ -245,7 +245,7 @@ class ERP5TypeInformation(XMLObject,
         # which acquire their security definition from their parent
         # The downside of this optimisation is that it is not possible to
         # set a local role definition if the local role list is empty
-        if len(self.objectValues(portal_type='Role Information')):
+        if self.getRoleList():
           self.updateLocalRolesOnObject(ob)
 
         # notify workflow after generating local roles, in order to prevent
@@ -528,9 +528,7 @@ class ERP5TypeInformation(XMLObject,
               folder = aq_parent(folder)
 
         ec = createExprContext(folder, portal, ob)
-        for role in self.objectValues(portal_type='Role Information'):
-          if role.testCondition(ec):
-            yield role
+        return (role for role in self.getRoleList() if role.testCondition(ec))
 
     security.declareProtected(Permissions.ManagePortal, 'updateRoleMapping')
     def updateRoleMapping(self, REQUEST=None, form_id=''):
@@ -601,6 +599,16 @@ class ERP5TypeInformation(XMLObject,
     # USE_BASE_TYPE
     #
 
+    security.declarePrivate('getRoleList')
+    def getRoleList(self):
+      """Return all roles for this portal type"""
+      return self.objectValues(portal_type='Role Information')
+
+    security.declarePrivate('getActionList')
+    def getActionList(self):
+      """Return all actions for this portal type"""
+      return self.objectValues(portal_type='Action Information')
+
     def getIcon(self):
       return self.content_icon
 
@@ -639,8 +647,7 @@ class ERP5TypeInformation(XMLObject,
     security.declarePrivate('listActions')
     def listActions(self, info=None, object=None):
       """ List all the actions defined by a provider."""
-      return sorted(self.objectValues(portal_type='Action Information'),
-                    key=lambda x: x.getFloatIndex())
+      return sorted(self.getActionList(), key=lambda x: x.getFloatIndex())
 
     def _importOldAction(self, old_action):
       from Products.ERP5Type.Document.ActionInformation import ActionInformation
