@@ -240,13 +240,7 @@ class ERP5TypeInformation(XMLObject,
           # workflow and it is annoyning without security setted
           ob.portal_type = self.getId()
 
-        # Only try to assign roles to security groups if some roles are defined
-        # This is an optimisation to prevent defining local roles on subobjects
-        # which acquire their security definition from their parent
-        # The downside of this optimisation is that it is not possible to
-        # set a local role definition if the local role list is empty
-        if self.getRoleInformationList():
-          self.updateLocalRolesOnObject(ob)
+        self.updateLocalRolesOnDocument(ob)
 
         # notify workflow after generating local roles, in order to prevent
         # Unauthorized error on transition's condition
@@ -322,10 +316,10 @@ class ERP5TypeInformation(XMLObject,
       return factory_method(portal, id).propertyMap()
 
     security.declarePrivate('updateLocalRolesOnObject')
-    def updateLocalRolesOnObject(self, *args, **kw):
-      return UnrestrictedMethod(self._updateLocalRolesOnObject)(*args, **kw)
+    def updateLocalRolesOnDocument(self, *args, **kw):
+      return UnrestrictedMethod(self._updateLocalRolesOnDocument)(*args, **kw)
 
-    def _updateLocalRolesOnObject(self, ob, user_name=None, reindex=True):
+    def _updateLocalRolesOnDocument(self, ob, user_name=None, reindex=True):
       """
         Assign Local Roles to Groups on object 'ob', based on Portal Type Role
         Definitions and "ERP5 Role Definition" objects contained inside 'ob'.
@@ -386,117 +380,12 @@ class ERP5TypeInformation(XMLObject,
     security.declareProtected(Permissions.AccessContentsInformation,
                               "getGroupIdRoleDict")
     def getGroupIdRoleDict(self, ob, user_name=None):
-      # Create an empty local Role Definition dict
-      role_category_list_dict = {}
       group_id_role_dict = {}
-
-      # Fill it with explicit local roles defined as subobjects of current
-      # object
-      if getattr(aq_base(ob), 'isPrincipiaFolderish', 0) and \
-         self.allowType('Role Definition'):
         for roledef in ob.objectValues(portal_type='Role Definition'):
-          if roledef.getRoleName():
-            role_category_list_dict.setdefault(roledef.getRoleName(), []).append(
-                            {
-                                'category_order'  : ['agent'],
-                                'agent'           : roledef.getAgentList()
-                            })
-
       # Retrieve and parse applicable roles
       for role in self.getFilteredRoleListFor(ob):
-        # For each role definition, we look for the base_category_script
-        # and try to use it to retrieve the values for the base_category list
-          # get the list of base_categories that are statically defined
-          static_base_category_list = [x.split('/', 1)[0]
-                                       for x in role.getRoleCategoryList()]
-          # get the list of base_categories that are to be fetched through the
-          # script
-          category_order_list = role.getRoleBaseCategoryList()
-          dynamic_base_category_list = [x for x in category_order_list
-                                        if x not in static_base_category_list]
-          # get the aggregated list of base categories, to preserve the order
-          for bc in static_base_category_list:
-            if bc not in category_order_list:
-              category_order_list.append(bc)
-
-          # get the script and apply it if dynamic_base_category_list is not
-          # empty
-          if len(dynamic_base_category_list) > 0:
-            base_category_script_id = role.getRoleBaseCategoryScriptId()
-            base_category_script = getattr(ob, base_category_script_id, None)
-            if base_category_script is not None:
-              # call the script, which should return either a dict or a list of
-              # dicts
-              category_result = base_category_script(
-                                        dynamic_base_category_list,
-                                        user_name,
-                                        ob,
-                                        ob.getPortalType() )
-              # If we decide in the script that we don't want to update the
-              # security for this object, we can just have it return None
-              # instead of a dict or list of dicts
-              if category_result is None:
-                continue
-            else:
-              raise RuntimeError, 'Script %s was not found to fetch values for'\
-                      ' base categories : %s' % (base_category_script_id,
-                                            ', '.join(dynamic_base_category_list))
-          else:
-            # no base_category needs to be retrieved using the script, we use
-            # a list containing an empty dict to trick the system into
-            # creating one category_value_dict (which will only use statically
-            # defined categories)
-            category_result = [{}]
-
-          # Prepare definition dict once only
-          category_definition_dict = {}
-          for c in role.getRoleCategoryList():
-            bc, value = c.split('/', 1)
-            category_definition_dict.setdefault(bc, []).append(value)
-
-          role_list = role.getRoleNameList()
-
-          if isinstance(category_result, dict):
-            # category_result is a dict (which provide group IDs directly)
-            # which represents of mapping of roles, security group IDs
-            # XXX explain that this is for providing user IDs mostly
-            for role, group_id_list in category_result.iteritems():
-              if role in role_list:
-                for group_id in group_id_list:
-                  group_id_role_dict.setdefault(group_id, set()).add(role)
-          else:
-            # Now create role dict for each roles
-            for role in role_list:
-              # category_result is a list of dicts that represents the resolved
-              # categories we create a category_value_dict from each of these
-              # dicts aggregated with category_order and statically defined
-              # categories
-              role_category_list = role_category_list_dict.setdefault(role, [])
-              for category_dict in category_result:
-                category_value_dict = {'category_order':category_order_list}
-                category_value_dict.update(category_dict)
-                category_value_dict.update(category_definition_dict)
-                role_category_list.append(category_value_dict)
-
-      # Generate security group ids from category_value_dicts
-      group_id_generator = getattr(aq_parent(ob),
-                             ERP5TYPE_SECURITY_GROUP_ID_GENERATION_SCRIPT)
-      group_id_generator = group_id_generator.__of__(ob)
-      for role, value_list in role_category_list_dict.iteritems():
-        role_group_set = group_id_role_dict.setdefault(role, set())
-        for category_dict in value_list:
-          group_id_list = group_id_generator(**category_dict) # category_order is passed in the dict
-          # If group_id is not defined, do not use it
-          if group_id_list:
-            if isinstance(group_id_list, str):
-              # Single group is defined (this is usually for group membership)
-              # DEPRECATED due to cartesian product requirement
-              group_id_list = group_id_list,
-            # Multiple groups are defined (list of users
-            # or list of group IDs resulting from a cartesian product)
-            for group_id in group_id_list:
-              group_id_role_dict.setdefault(group_id, set()).add(role)
-
+        for group_id, role_list in role.getGroupIdRoleList(ob, user_name):
+          group_id_role_dict.setdefault(group_id, set()).update(role_list)
       return group_id_role_dict
 
     security.declarePrivate('getFilteredRoleListFor')
@@ -516,8 +405,15 @@ class ERP5TypeInformation(XMLObject,
             folder = aq_parent(folder)
 
       ec = createExprContext(folder, portal, ob)
-      return (role for role in self.getRoleInformationList()
-                   if role.testCondition(ec))
+      for role in self.getRoleInformationList():
+        if role.testCondition(ec):
+          yield role
+
+      # Return also explicit local roles defined as subobjects of the document
+      if getattr(aq_base(ob), 'isPrincipiaFolderish', 0):
+        for role in ob.objectValues(portal_type='Role Definition'):
+          if role.getRoleName():
+            yield role
 
     security.declareProtected(Permissions.ManagePortal, 'updateRoleMapping')
     def updateRoleMapping(self, REQUEST=None, form_id=''):
@@ -584,9 +480,6 @@ class ERP5TypeInformation(XMLObject,
       search_source_list += self.getTypeBaseCategoryList(())
       return ' '.join(filter(None, search_source_list))
 
-    #
-    # USE_BASE_TYPE
-    #
 
     security.declarePrivate('getRoleInformationList')
     def getRoleInformationList(self):
@@ -599,13 +492,12 @@ class ERP5TypeInformation(XMLObject,
       return self.objectValues(portal_type='Action Information')
 
     def getIcon(self):
-      return self.content_icon
+      return self.getTypeIcon()
 
     def getTypeInfo(self, *args):
-      if not args:
-        return XMLObject.getTypeInfo(self)
-      else:
+      if args:
         return self.getParentValue().getTypeInfo(self, *args)
+      return XMLObject.getTypeInfo(self)
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getAvailablePropertySheetList')

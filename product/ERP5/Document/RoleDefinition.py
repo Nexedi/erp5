@@ -29,6 +29,8 @@ from AccessControl import ClassSecurityInfo
 from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
 from Products.ERP5Type.XMLObject import XMLObject
+from Products.ERP5Type.ERP5Type \
+  import ERP5TYPE_SECURITY_GROUP_ID_GENERATION_SCRIPT
 
 class RoleDefinition(XMLObject):
     # CMF Type Definition
@@ -49,3 +51,13 @@ class RoleDefinition(XMLObject):
                       , PropertySheet.DublinCore
                       , PropertySheet.RoleDefinition
                       )
+
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'getGroupIdRoleList')
+    def getGroupIdRoleList(self, ob, user_name=None):
+      group_id_generator = getattr(ob,
+        ERP5TYPE_SECURITY_GROUP_ID_GENERATION_SCRIPT)
+      role_list = self.getRoleName(),
+      return ((group_id, role_list)
+              for group_id in group_id_generator(category_order=('agent',),
+                                                 agent=self.getAgentList()))
