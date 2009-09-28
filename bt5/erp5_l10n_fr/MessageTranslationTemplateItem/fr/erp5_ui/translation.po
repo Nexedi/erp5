@@ -778,52 +778,52 @@ msgid "Apparel Measurement Module"
 msgstr "Module Mesures"
 
 msgid "Apparel Model"
-msgstr "Produit Fini"
+msgstr "Modèle"
 
 msgid "Apparel Model Colour Variation"
 msgstr "Coloris"
 
-msgid "Apparel Model Colour Variation already exists with                                   this price. Check your line."
+msgid "Apparel Model Colour Variation already exists with this price. Check your line."
 msgstr "Cette référence a déjà été saisie au même prix !"
 
 msgid "Apparel Model Industrial Description"
-msgstr "Données techniques"
+msgstr "Données techniques du modèle"
 
 msgid "Apparel Model List"
-msgstr "Produits Finis"
+msgstr "Modèles"
 
 msgid "Apparel Model Module"
-msgstr "Module Produits Finis"
+msgstr "Module des modèles"
 
 msgid "Apparel Model Template"
 msgstr "Articles assemblés"
 
 msgid "Apparel Models"
-msgstr "Produits Finis"
+msgstr "Modèles"
 
 msgid "Apparel Shape"
-msgstr "Modèles"
+msgstr "Forme"
 
 msgid "Apparel Shape Industrial Description"
-msgstr "Données techniques"
+msgstr "Données techniques de la forme"
 
 msgid "Apparel Shape List"
-msgstr "Modèles"
+msgstr "Formes"
 
 msgid "Apparel Shape Module"
-msgstr "Module Modèles"
+msgstr "Module des formes"
 
 msgid "Apparel Shape Owner"
-msgstr "Appartient au modèle"
+msgstr "Appartient à la forme"
 
 msgid "Apparel Shape Reference"
-msgstr "Réf Modèle"
+msgstr "Référence forme"
 
 msgid "Apparel Shape Taken"
-msgstr "Vêtements repris"
+msgstr "Forme reprise"
 
 msgid "Apparel Shape to design"
-msgstr "Modèles à définir"
+msgstr "Forme à définir"
 
 msgid "Apparel Size"
 msgstr "Correspondances de Tailles"
@@ -7839,10 +7839,10 @@ msgid "Related Apparel Fabrics"
 msgstr "Tissus fournis"
 
 msgid "Related Apparel Model"
-msgstr "Produits Finis dépendants"
+msgstr "Modèles dépendants"
 
 msgid "Related Apparel Shape"
-msgstr "Modèles repris"
+msgstr "Frome repris"
 
 msgid "Related Apparel Transformation"
 msgstr "Nomenclatures dépendantes"
@@ -8754,7 +8754,7 @@ msgid "Severity"
 msgstr "Gravité"
 
 msgid "Shape"
-msgstr "Modèle"
+msgstr "Forme"
 
 msgid "Shape type"
 msgstr "Forme"
