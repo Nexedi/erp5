@@ -51,36 +51,44 @@ class RoleInformation(XMLObject):
 
   security.declarePrivate('testCondition')
   def testCondition(self, ec):
-    """ Evaluate condition using context, 'ec', and return 0 or 1."""
+    """Evaluate condition using context, 'ec', and return 0 or 1"""
     condition = self.getCondition()
     return condition is None and 1 or condition(ec)
 
   def _setCondition(self, value):
+    """Overridden setter for 'condition' to accept string and clean null values
+    """
     if isinstance(value, basestring):
-      value = Expression(value)
+      value = value and Expression(value) or None
     self._baseSetCondition(value)
 
   def getCondition(self):
+    """Overridden getter for 'condition' to clean null values"""
     if getattr(aq_base(self), 'condition', None) == '':
       del self.condition
     return self._baseGetCondition()
 
   security.declareProtected(AccessContentsInformation, 'getConditionText')
   def getConditionText(self):
-    """
-    """
+    """Return the text of the condition"""
     return getattr(self.getCondition(), 'text', None)
 
+  security.declareProtected(AccessContentsInformation, 'PrincipiaSearchSource')
   def PrincipiaSearchSource(self):
-    # Support for "Find" tab in ZMI
-    return ' '.join((self.getId(),
-                     self.getTitle(),
-                     self.getDescription(),
-                     self.getCondition(),
-                     self.base_category_script))
+    """Return keywords for "Find" tab in ZMI"""
+    search_source_list = [self.getReference(),
+                          self.getTitle(),
+                          self.getDescription(),
+                          self.getConditionText(),
+                          self.getRoleBaseCategoryScriptId()]
+    return ' '.join(filter(None, search_source_list))
 
-  security.declareProtected(AccessContentsInformation, 'getGroupIdRoleList')
+  security.declarePrivate('getGroupIdRoleList')
   def getGroupIdRoleList(self, ob, user_name=None):
+    """Generate security groups (with roles) to be set on a document
+
+    Each returned value is a 2-tuple (group_id, role_name_list).
+    """
     # get the list of base_categories that are statically defined
     static_base_category_list = [x.split('/', 1)[0]
                                  for x in self.getRoleCategoryList()]

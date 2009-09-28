@@ -62,56 +62,61 @@ class ActionInformation(XMLObject):
                     )
 
   def testCondition(self, ec):
-    """ Evaluate condition using context, 'ec', and return 0 or 1."""
+    """Evaluate condition using context, 'ec', and return 0 or 1"""
     condition = self.getCondition()
     return condition is None and 1 or condition(ec)
 
   security.declarePublic('getVisibility')
   def getVisibility(self):
-    """ Return whether the action should be visible in the CMF UI."""
+    """Return whether the action should be visible in the CMF UI"""
     return self.isVisible()
 
   def _setActionExpression(self, value):
+    """Overridden setter for 'action' to accept strings and clean null values
+    """
     if isinstance(value, basestring):
       value = value and Expression(value) or None
     self._baseSetActionExpression(value)
   def _setCondition(self, value):
+    """Overridden setter for 'condition' to accept string and clean null values
+    """
     if isinstance(value, basestring):
       value = value and Expression(value) or None
     self._baseSetCondition(value)
   def _setIcon(self, value):
+    """Overridden setter for 'icon' to accept string and clean null values
+    """
     if isinstance(value, basestring):
       value = value and Expression(value) or None
     self._baseSetIcon(value)
 
   def getCondition(self):
+    """Overridden getter for 'condition' to clean null values"""
     if getattr(aq_base(self), 'condition', None) == '':
       del self.condition
     return self._baseGetCondition()
   def getIcon(self):
+    """Overridden getter for 'icon' to clean null values"""
     if getattr(aq_base(self), 'icon', None) == '':
       del self.icon
     return self._baseGetIcon()
 
   security.declareProtected(AccessContentsInformation, 'getActionText')
   def getActionText(self):
-    """
-    """
+    """Return the text of the action expression"""
     return getattr(self.getActionExpression(), 'text', None)
   security.declareProtected(AccessContentsInformation, 'getConditionText')
   def getConditionText(self):
-    """
-    """
+    """Return the text of the condition expression"""
     return getattr(self.getCondition(), 'text', None)
   security.declareProtected(AccessContentsInformation, 'getIconText')
   def getIconText(self):
-    """
-    """
+    """Return the text of the icon expression"""
     return getattr(self.getIcon(), 'text', None)
 
   security.declareProtected(AccessContentsInformation, 'PrincipiaSearchSource')
   def PrincipiaSearchSource(self):
-    # Support for "Find" tab in ZMI
+    """Return keywords for "Find" tab in ZMI"""
     search_source_list = [self.getReference(),
                           self.getTitle(),
                           self.getDescription(),

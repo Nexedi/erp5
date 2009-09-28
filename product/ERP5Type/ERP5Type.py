@@ -377,9 +377,12 @@ class ERP5TypeInformation(XMLObject,
       if reindex:
         ob.reindexObjectSecurity()
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              "getGroupIdRoleDict")
+    security.declarePrivate("getGroupIdRoleDict")
     def getGroupIdRoleDict(self, ob, user_name=None):
+      """Compute the security that should be applied on an object
+
+      Returned value is a dict: {groud_id: role_name_set, ...}
+      """
       group_id_role_dict = {}
         for roledef in ob.objectValues(portal_type='Role Definition'):
       # Retrieve and parse applicable roles
@@ -390,7 +393,7 @@ class ERP5TypeInformation(XMLObject,
 
     security.declarePrivate('getFilteredRoleListFor')
     def getFilteredRoleListFor(self, ob=None):
-      """Return all roles applicable to the object against user."""
+      """Return all roles applicable to the object."""
       portal = self.getPortalObject()
       if ob is None:
         folder = portal
@@ -471,7 +474,7 @@ class ERP5TypeInformation(XMLObject,
     security.declareProtected(Permissions.AccessContentsInformation,
                               'PrincipiaSearchSource')
     def PrincipiaSearchSource(self):
-      # Support for "Find" tab in ZMI
+     """Return keywords for "Find" tab in ZMI"""
       search_source_list = [self.getId(),
                             self.getTypeFactoryMethodId(),
                             self.getTypeAddPermission(),
@@ -481,14 +484,16 @@ class ERP5TypeInformation(XMLObject,
       return ' '.join(filter(None, search_source_list))
 
 
-    security.declarePrivate('getRoleInformationList')
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'getRoleInformationList')
     def getRoleInformationList(self):
-      """Return all roles for this portal type"""
+      """Return all Role Information objects stored on this portal type"""
       return self.objectValues(portal_type='Role Information')
 
-    security.declarePrivate('getActionInformationList')
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'getActionInformationList')
     def getActionInformationList(self):
-      """Return all actions for this portal type"""
+      """Return all Action Information objects stored on this portal type"""
       return self.objectValues(portal_type='Action Information')
 
     def getIcon(self):
