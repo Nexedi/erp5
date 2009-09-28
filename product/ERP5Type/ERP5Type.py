@@ -230,13 +230,10 @@ class ERP5TypeInformation(XMLObject,
 
     def __init__(self, id, **kw):
       XMLObject.__init__(self, id)
-      # copied from CMFCore.TypesTool
-      if (not kw.has_key('content_meta_type')
-          and kw.has_key('meta_type')):
-        kw['content_meta_type'] = kw['meta_type']
-      if (not kw.has_key('content_icon')
-          and kw.has_key('icon')):
-        kw['content_icon'] = kw['icon']
+      if 'meta_type' in kw:
+        kw.setdefault('content_meta_type', kw.pop('meta_type'))
+      if 'icon' in kw:
+        kw.setdefault('content_icon', kw.pop('icon'))
       self.__dict__.update(kw)
 
     # Groups are used to classify portal types (e.g. resource).

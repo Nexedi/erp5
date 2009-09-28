@@ -10,6 +10,10 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>content_meta_type</string> </key>
+            <value> <string>ERP5 Role Information</string> </value>
+        </item>
+        <item>
             <key> <string>description</string> </key>
             <value> <string>Role Information defines the way to generate local roles on each portal type.</string> </value>
         </item>

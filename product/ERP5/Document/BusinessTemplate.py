@@ -875,7 +875,7 @@ class ObjectTemplateItem(BaseTemplateItem):
                                                  container_path, object_id)
             # in case of portal types, we want to keep some properties
             if getattr(old_obj, 'meta_type', None) == 'ERP5 Base Type':
-              for attr in ('allowed_content_type_list',
+              for attr in ('allowed_content_types',
                            'hidden_content_type_list',
                            'property_sheet_list',
                            'base_category_list'):
