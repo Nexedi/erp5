@@ -75,7 +75,7 @@
                     <key> <string>center</string> </key>
                     <value>
                       <list>
-                        <string>my_comment</string>
+                        <string>my_description</string>
                       </list>
                     </value>
                 </item>
@@ -85,7 +85,6 @@
                       <list>
                         <string>my_title</string>
                         <string>my_shape_list</string>
-                        <string>my_description</string>
                         <string>my_apparel_shape_title_list</string>
                         <string>my_feature</string>
                       </list>
@@ -97,6 +96,7 @@
                       <list>
                         <string>my_collection_list</string>
                         <string>my_segment_list</string>
+                        <string>my_comment</string>
                         <string>state</string>
                       </list>
                     </value>

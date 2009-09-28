@@ -75,7 +75,7 @@
                     <key> <string>center</string> </key>
                     <value>
                       <list>
-                        <string>my_comment</string>
+                        <string>my_description</string>
                       </list>
                     </value>
                 </item>
@@ -97,6 +97,7 @@
                         <string>my_source_title</string>
                         <string>my_quantity</string>
                         <string>my_quantity_unit</string>
+                        <string>my_comment</string>
                       </list>
                     </value>
                 </item>

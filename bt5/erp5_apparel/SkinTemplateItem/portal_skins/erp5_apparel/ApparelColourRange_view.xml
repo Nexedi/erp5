@@ -74,7 +74,9 @@
                 <item>
                     <key> <string>center</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>my_description</string>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -82,7 +84,6 @@
                     <value>
                       <list>
                         <string>my_title</string>
-                        <string>my_description</string>
                       </list>
                     </value>
                 </item>

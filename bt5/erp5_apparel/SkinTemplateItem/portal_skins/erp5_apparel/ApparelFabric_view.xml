@@ -75,7 +75,7 @@
                     <key> <string>center</string> </key>
                     <value>
                       <list>
-                        <string>my_comment</string>
+                        <string>my_description</string>
                       </list>
                     </value>
                 </item>
@@ -89,7 +89,6 @@
                         <string>my_drawing_reference</string>
                         <string>my_resource</string>
                         <string>my_visual_pattern</string>
-                        <string>my_description</string>
                         <string>my_trade_description</string>
                         <string>my_color_count</string>
                         <string>my_raw_width</string>
@@ -106,6 +105,7 @@
                         <string>my_segment_list</string>
                         <string>my_composition_list</string>
                         <string>my_cleaning_code_list</string>
+                        <string>my_comment</string>
                         <string>apparel_fabric_state</string>
                       </list>
                     </value>

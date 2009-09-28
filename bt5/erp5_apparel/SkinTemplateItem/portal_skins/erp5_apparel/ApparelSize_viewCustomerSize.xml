@@ -52,7 +52,7 @@
             <key> <string>group_list</string> </key>
             <value>
               <list>
-                <string>Default</string>
+                <string>left</string>
                 <string>right</string>
                 <string>center</string>
                 <string>bottom</string>
@@ -64,14 +64,6 @@
             <key> <string>groups</string> </key>
             <value>
               <dictionary>
-                <item>
-                    <key> <string>Default</string> </key>
-                    <value>
-                      <list>
-                        <string>my_title</string>
-                      </list>
-                    </value>
-                </item>
                 <item>
                     <key> <string>bottom</string> </key>
                     <value>
@@ -94,6 +86,14 @@
                       <list>
                         <string>matrixbox_membership_criterion_category_list</string>
                         <string>matrixbox_size</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>left</string> </key>
+                    <value>
+                      <list>
+                        <string>my_title</string>
                       </list>
                     </value>
                 </item>

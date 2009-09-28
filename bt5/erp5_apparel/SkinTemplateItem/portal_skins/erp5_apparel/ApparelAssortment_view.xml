@@ -75,7 +75,7 @@
                     <key> <string>center</string> </key>
                     <value>
                       <list>
-                        <string>my_comment</string>
+                        <string>my_description</string>
                       </list>
                     </value>
                 </item>
@@ -84,7 +84,6 @@
                     <value>
                       <list>
                         <string>my_title</string>
-                        <string>my_description</string>
                         <string>my_trade_description</string>
                         <string>my_ean13_code</string>
                         <string>my_consumer_unit_quantity</string>
@@ -100,6 +99,7 @@
                         <string>my_destination_title</string>
                         <string>my_destination_reference</string>
                         <string>my_size_list</string>
+                        <string>my_comment</string>
                         <string>apparel_assortment_state</string>
                       </list>
                     </value>

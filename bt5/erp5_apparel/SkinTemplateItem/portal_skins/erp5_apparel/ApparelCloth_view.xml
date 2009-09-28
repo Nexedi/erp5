@@ -75,7 +75,7 @@
                     <key> <string>center</string> </key>
                     <value>
                       <list>
-                        <string>my_comment</string>
+                        <string>my_description</string>
                       </list>
                     </value>
                 </item>
@@ -85,7 +85,6 @@
                       <list>
                         <string>my_title</string>
                         <string>my_cad_library</string>
-                        <string>my_description</string>
                         <string>my_apparel_shape_title_list</string>
                         <string>my_base_size</string>
                         <string>my_apparel_measurement_title</string>
@@ -98,6 +97,7 @@
                       <list>
                         <string>my_size_list</string>
                         <string>my_measure_list</string>
+                        <string>my_comment</string>
                         <string>apparel_cloth_state</string>
                       </list>
                     </value>
