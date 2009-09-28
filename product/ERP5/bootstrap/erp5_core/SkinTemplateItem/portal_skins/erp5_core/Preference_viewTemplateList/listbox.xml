@@ -13,12 +13,12 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
                 <string>columns</string>
-                <string>list_method</string>
-                <string>selection_name</string>
-                <string>select</string>
                 <string>editable_columns</string>
+                <string>list_method</string>
+                <string>select</string>
+                <string>selection_name</string>
+                <string>title</string>
                 <string>url_columns</string>
               </list>
             </value>
@@ -120,12 +120,7 @@
                 <item>
                     <key> <string>editable_columns</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>title</string>
-                          <string>title</string>
-                        </tuple>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -161,16 +156,7 @@
                 <item>
                     <key> <string>url_columns</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>title</string>
-                          <string></string>
-                        </tuple>
-                        <tuple>
-                          <string>translated_portal_type</string>
-                          <string></string>
-                        </tuple>
-                      </list>
+                      <list/>
                     </value>
                 </item>
               </dictionary>
@@ -206,7 +192,7 @@
       <dictionary>
         <item>
             <key> <string>method_name</string> </key>
-            <value> <string>Preference_getTemplateList</string> </value>
+            <value> <string>contentValues</string> </value>
         </item>
       </dictionary>
     </pickle>
