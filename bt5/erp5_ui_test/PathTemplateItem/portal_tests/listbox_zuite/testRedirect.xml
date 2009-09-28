@@ -51,7 +51,7 @@
 <tr><td rowspan="1" colspan="3">Test ListBox Redirections</td></tr>\n
 </thead><tbody>\n
 <!-- XXX Report tree mode doesn\'t exists in mobile\n
-     So this test is skipped -->\n
+     So this test is skipped in mobile ui tests-->\n
 <tal:block tal:condition="python: context.TestTool_getSkinName()!=\'Mobile\'">\n
 \n
 <!--\n
