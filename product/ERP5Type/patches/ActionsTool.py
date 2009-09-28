@@ -18,6 +18,9 @@ ActionsTool_listFilteredActionsFor = ActionsTool.listFilteredActionsFor
 
 def listFilteredActionsFor(self, object=None):
     """ List all actions available to the user.
+
+    This patch remove inclusion of actions from the object itself.
+    It was never used and now, it breaks objects inside Types Tool.
     """
     actions = []
 
