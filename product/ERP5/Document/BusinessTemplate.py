@@ -2386,29 +2386,31 @@ class ActionTemplateItem(ObjectTemplateItem):
     BaseTemplateItem.build(self, context, **kw)
     p = context.getPortalObject()
     for id in self._archive.keys():
-      relative_url, value = id.split(' | ')
-      obj = p.unrestrictedTraverse(relative_url)
-      if USE_BASE_TYPE and obj.getParentId() == 'portal_types':
-        action = obj._exportOldAction(value)
+      url, value = id.split(' | ')
+      url = posixpath.split(url)
+      obj = p.unrestrictedTraverse(url)
+      is_new_action = USE_BASE_TYPE and obj.getParentId() == 'portal_types'
+      id_id = is_new_action and 'reference' or 'id'
+      for action in obj.listActions():
+        if getattr(action, id_id) == value:
+          break
       else:
-        for ai in obj.listActions():
-          if getattr(ai, 'id') == value:
-            break
-        else:
-          if self.is_bt_for_diff:
-            continue
-          raise NotFound('Action %r not found' % id)
-        action = ai._getCopy(context)
-      action = self.removeProperties(action)
-      url = posixpath.split(relative_url)
+        if self.is_bt_for_diff:
+          continue
+        raise NotFound('Action %r not found' % id)
+      if is_new_action:
+        action = obj._exportOldAction(action)
+      else:
+        action = action._getCopy(context)
       key = posixpath.join(url[-2], url[-1], value)
-      self._objects[key] = action
+      self._objects[key] = self.removeProperties(action)
       self._objects[key].wl_clearLocks()
 
   def install(self, context, trashbin, **kw):
     update_dict = kw.get('object_to_update')
     force = kw.get('force')
     if context.getTemplateFormatVersion() == 1:
+      portal_type_dict = {}
       p = context.getPortalObject()
       for id in self._objects.keys():
         if update_dict.has_key(id) or force:
@@ -2416,20 +2418,22 @@ class ActionTemplateItem(ObjectTemplateItem):
             action = update_dict[id]
             if action == 'nothing':
               continue
-          path = id.split('/')
-          container = p.unrestrictedTraverse(path[:-1])
+          obj = self._objects[id]
+          path, id = id.rsplit('/', 1)
+          container = p.unrestrictedTraverse(path)
 
           if USE_BASE_TYPE and container.getParentId() == 'portal_types':
-            container._importOldAction(self._objects[id])
+            # XXX future BT should use 'reference' instead of 'id'
+            reference = getattr(obj, 'reference', None) or obj.id
+            portal_type_dict.setdefault(path, {})[reference] = obj
             continue
 
-          obj = container
+          obj, action = container, obj
           action_list = obj.listActions()
           for index in range(len(action_list)):
-            if getattr(action_list[index], 'id') == path[-1]:
+            if action_list[index].id == id:
               # remove previous action
               obj.deleteActions(selections=(index,))
-          action = self._objects[id]
           action_text = action.action
           if isinstance(action_text, Expression):
             action_text = action_text.text
@@ -2456,6 +2460,13 @@ class ActionTemplateItem(ObjectTemplateItem):
             if action.priority > new_priority:
               move_down_list.append(str(index))
           obj.moveDownActions(selections=tuple(move_down_list))
+      for path, action_dict in portal_type_dict.iteritems():
+        container = p.unrestrictedTraverse(path)
+        for obj in container.objectValues(meta_type='ERP5 Action Information'):
+          if obj.reference in action_dict:
+            container._delObject(obj.id)
+        for obj in action_dict.itervalues():
+          container._importOldAction(obj)
     else:
       BaseTemplateItem.install(self, context, trashbin, **kw)
       p = context.getPortalObject()
@@ -4320,7 +4331,7 @@ class MessageTranslationTemplateItem(BaseTemplateItem):
     for lang_key in self._archive.keys():
       if '|' in lang_key:
         lang, catalog = lang_key.split(' | ')
-      else: # XXX backward compatibilty
+      else: # XXX backward compatibility
         lang = lang_key
         catalog = 'erp5_ui'
       path = posixpath.join(lang, catalog)

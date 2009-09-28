@@ -643,48 +643,36 @@ class ERP5TypeInformation(XMLObject,
       return sorted(self.objectValues(portal_type='Action Information'),
                     key=lambda x: x.getFloatIndex())
 
-    def _normalizeActionId(self, action_id):
-      try:
-        self._checkId(action_id)
-      except BadRequest:
-        if not self.hasObject(action_id):
-          return self._normalizeActionId('action__' + action_id)
-      return action_id
-
     def _importOldAction(self, old_action):
       from Products.ERP5Type.Document.ActionInformation import ActionInformation
       old_action = old_action.__getstate__()
       action_type = old_action.pop('category', None)
-      action_id = self._normalizeActionId(old_action.pop('id'))
-      if self.hasObject(action_id):
-        self._delObject(action_id)
-      action = ActionInformation(action_id)
+      action = ActionInformation(self.generateNewId())
       for k, v in old_action.iteritems():
         if k in ('action', 'condition', 'icon'):
           if not v:
             continue
           v = v.__class__(v.text)
-        elif k == 'priority':
-          k = 'float_index'
-        setattr(action, k, v)
+        setattr(action, {'id': 'reference',
+                         'priority': 'float_index',
+                        }.get(k, k), v)
       action.uid = None
       action = self[self._setObject(action.id, action, set_owner=0)]
       if action_type:
         action._setCategoryMembership('action_type', action_type)
       return action
 
-    def _exportOldAction(self, action_id):
+    def _exportOldAction(self, action):
       from Products.CMFCore.ActionInformation import ActionInformation
-      action = self[self._normalizeActionId(action_id)]
-      old_action = ActionInformation(action_id,
-        category = action.getActionType(),
+      old_action = ActionInformation(action.reference,
+        category=action.getActionType(),
         # We don't have the same default values for the following properties:
         priority=action.getFloatIndex(),
         permissions=tuple(action.getActionPermissionList()))
       for k, v in action.__dict__.iteritems():
         if k in ('action', 'condition', 'icon'):
           v = v.__class__(v.text)
-        elif k in ('id', 'float_index', 'permissions'):
+        elif k in ('id', 'float_index', 'permissions', 'reference'):
           continue
         setattr(old_action, k, v)
       return old_action

@@ -34,6 +34,10 @@ class ActionInformation:
   """
 
   _properties = (
+    { 'id':          'reference',
+      'type':        'string',
+      'mode':        'w',
+      },
     { 'id':          'condition',
       'type':        'object',
       'description': 'TALES Expression to define the applicability of the' \

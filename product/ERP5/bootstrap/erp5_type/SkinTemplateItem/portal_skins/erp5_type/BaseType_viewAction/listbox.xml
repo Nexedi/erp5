@@ -18,6 +18,7 @@
                 <string>portal_types</string>
                 <string>search_columns</string>
                 <string>selection_name</string>
+                <string>sort</string>
                 <string>sort_columns</string>
                 <string>title</string>
               </list>
@@ -115,8 +116,8 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>id</string>
-                          <string>ID</string>
+                          <string>reference</string>
+                          <string>Reference</string>
                         </tuple>
                         <tuple>
                           <string>title</string>
@@ -178,12 +179,27 @@
                     <value> <string>action_selection</string> </value>
                 </item>
                 <item>
+                    <key> <string>sort</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>action_type_title</string>
+                          <string></string>
+                        </tuple>
+                        <tuple>
+                          <string>float_index</string>
+                          <string></string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
                     <key> <string>sort_columns</string> </key>
                     <value>
                       <list>
                         <tuple>
-                          <string>id</string>
-                          <string>ID</string>
+                          <string>reference</string>
+                          <string>Reference</string>
                         </tuple>
                         <tuple>
                           <string>title</string>

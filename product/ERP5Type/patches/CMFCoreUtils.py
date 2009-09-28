@@ -39,15 +39,14 @@ def CMFCoreUtils_getViewFor(obj, view='view'):
     ti = obj.getTypeInfo()
 
     if ti is not None:
-        view_id = ti._normalizeActionId(view)
         context = getActionContext( obj )
         test_context = getExprContext(obj, obj) # Patch 1: mimic _listActionInfos in ActionsTool
         actions = ti.listActions()
         for action in actions:
             # portal_types hack
             action_type = action.getActionType()
-            if action.getId() == view_id or action_type.endswith('_%s' % view):
-                                                          # Patch 2: consider anything ending by _view
+            reference = getattr(action, 'reference', None) or action.id
+            if reference == view or action_type.endswith('_%s' % view): # Patch 2: consider anything ending by _view
                 if _verifyActionPermissions(obj, action):
                   if action.isVisible() and action.testCondition(test_context): # Patch 3: test actions
                     target = action.action(context).strip()

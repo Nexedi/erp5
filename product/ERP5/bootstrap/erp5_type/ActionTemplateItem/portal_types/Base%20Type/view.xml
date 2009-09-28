@@ -43,7 +43,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>base_view</string> </value>
+            <value> <string>view</string> </value>
         </item>
         <item>
             <key> <string>permissions</string> </key>
@@ -83,7 +83,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/RoleInformation_view</string> </value>
+            <value> <string>string:${object_url}/BaseType_view</string> </value>
         </item>
       </dictionary>
     </pickle>
