@@ -67,10 +67,6 @@ class ApparelModel:
       'acquisition_accessor_id'   : 'getTitle',
       'acquisition_depends'       : None,
       'mode'        : 'w' },
-    { 'id'          : 'composition', 
-      'description' : 'Apparel Model composition',
-      'type'        : 'text',
-      'mode'        : 'w' },
     { 'id'          : 'margin_ratio', ### XXX
       'description' : 'Margin coefficient',
       'type'        : 'float',
@@ -143,7 +139,7 @@ class ApparelModel:
         'mode'        : 'w' },
   )
 
-  _categories = ( 'transformation_state', 'pricing', 'origin', 'brand', 'tariff_nomenclature' )
+  _categories = ( 'composition', 'transformation_state', 'pricing', 'origin', 'brand', 'tariff_nomenclature' )
   #_categories = ( 'transformation_state', 'apparel_pricing', 'apparel_creation_type', 'brand', 'tariff_nomenclature' )
                   #     XXXXXXX              XXXX                XXXX   apparel_model_creation_type                        (As in Brussels Tariff Nomenclature)               
 

@@ -115,6 +115,7 @@ Apparel Model | jump_to_related_apparel_transformation
 Apparel Model | morphology_variation
 Apparel Model | references
 Apparel Model | view
+Apparel Model | view_composition
 Apparel Model | view_price
 Apparel Model | view_variated_reference_list
 Apparel Shape Module | csv_export

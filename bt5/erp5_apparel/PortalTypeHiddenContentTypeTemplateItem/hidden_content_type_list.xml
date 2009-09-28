@@ -12,6 +12,7 @@
  </portal_type>
  <portal_type id="Apparel Model">
   <item>Supply Line</item>
+  <item>Mapped Value</item>
  </portal_type>
  <portal_type id="Apparel Transformation Transformed Resource">
   <item>Mapped Value</item>

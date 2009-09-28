@@ -55,6 +55,7 @@
   <item>Apparel Measurement</item>
  </portal_type>
  <portal_type id="Apparel Model">
+  <item>Mapped Value</item>
   <item>Supply Line</item>
   <item>Apparel Model Colour Variation</item>
   <item>Apparel Model Morphology Variation</item>
