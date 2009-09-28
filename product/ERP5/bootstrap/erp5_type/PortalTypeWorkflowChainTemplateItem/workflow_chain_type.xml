@@ -1,0 +1,6 @@
+<workflow_chain>
+ <chain>
+  <type>Base Type</type>
+  <workflow>edit_workflow, base_type_workflow</workflow>
+ </chain>
+</workflow_chain>
