@@ -48,9 +48,9 @@ class TranslationProviderBase:
   """
 
   security = ClassSecurityInfo()
-  
 
-  _translation_form = DTMLFile( 'editToolsTranslation', _dtmldir )
+
+  _translation_form = DTMLFile('editToolsTranslation', _dtmldir)
 
   manage_options = ( { 'label' : 'Translation'
                        , 'action' : 'manage_editTranslationForm'
@@ -58,8 +58,8 @@ class TranslationProviderBase:
                      ,
                      )
 
-  security.declarePrivate( 'updateInitialPropertyTranslationDomainDict' )
-  def updateInitialPropertyTranslationDomainDict(self, ):
+  security.declarePrivate('updateInitialPropertyTranslationDomainDict')
+  def updateInitialPropertyTranslationDomainDict(self):
     """
     Create the initial list of association between property and domain name
     """
@@ -128,8 +128,8 @@ class TranslationProviderBase:
   #
   #   ZMI methods
   #
-  security.declareProtected( ManagePortal, 'manage_editTranslationForm' )
-  def manage_editTranslationForm( self, REQUEST, manage_tabs_message=None ):
+  security.declareProtected(ManagePortal, 'manage_editTranslationForm')
+  def manage_editTranslationForm(self, REQUEST, manage_tabs_message=None):
     """ Show the 'Translation' management tab.
     """
     translation_list = []
@@ -146,7 +146,7 @@ class TranslationProviderBase:
 
     # get list of Localizer catalog, add 'empty' one for no traduction
     catalog = self.getPortalObject().Localizer.objectIds() + ['']
-    
+
     return self._translation_form( self
                                    , REQUEST
                                    , translations = translation_list
@@ -154,16 +154,16 @@ class TranslationProviderBase:
                                    , management_view='Translation'
                                    , manage_tabs_message=manage_tabs_message
                                    )
-  
 
-  security.declareProtected( ManagePortal, 'changeTranslations' )
-  def changeTranslations( self, properties=None, REQUEST=None ):
+
+  security.declareProtected(ManagePortal, 'changeTranslations')
+  def changeTranslations(self, properties=None, REQUEST=None):
     """
     Update our list of translations domain name
     """
     if properties is None:
       properties = REQUEST
-    
+
     property_domain_dict = self.getPropertyTranslationDomainDict()
     for prop_name in property_domain_dict.keys():
       new_domain_name = properties.get(prop_name)
