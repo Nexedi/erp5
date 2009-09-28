@@ -57,6 +57,8 @@ from Products.CMFCore.exceptions import zExceptions_Unauthorized
 
 
 class LocalRoleAssignorMixIn(object):
+    """Mixin class used by type informations to compute and update local roles
+    """
     security = ClassSecurityInfo()
     security.declareObjectProtected(Permissions.AccessContentsInformation)
 
@@ -187,6 +189,29 @@ class LocalRoleAssignorMixIn(object):
         message = '%d objects updated' % object_list_len
         return REQUEST.RESPONSE.redirect('%s/%s?portal_status_message=%s'
           % (self.absolute_url_path(), form_id, message))
+
+    def _importRole(self, role_property_dict):
+      """Import a role from a BT or from an old portal type"""
+      from Products.ERP5Type.Document.RoleInformation import RoleInformation
+      role = RoleInformation(self.generateNewId())
+      for k, v in role_property_dict.iteritems():
+        if k == 'condition':
+          if isinstance(v, Expression):
+            v = v.text
+          if not v:
+            continue
+          v = Expression(v)
+        elif k == 'priority':
+          continue
+        elif k == 'id':
+          k, v = 'role_name', tuple(x.strip() for x in v.split(';'))
+        elif k in ('base_category', 'category'):
+          k, v = 'role_' + k, tuple(x.strip() for x in v)
+        elif k == 'base_category_script':
+          k = 'role_base_category_script_id'
+        setattr(role, k, v)
+      role.uid = None
+      return self[self._setObject(role.id, role, set_owner=0)]
 
 
 class ERP5TypeInformation(XMLObject,
@@ -553,6 +578,10 @@ class ERP5TypeInformation(XMLObject,
                     key=lambda x: (x.getFloatIndex(), x.getId()))
 
     def _importOldAction(self, old_action):
+      """Convert a CMF action to an ERP5 action
+
+      This is used to update an existing site or to import a BT.
+      """
       from Products.ERP5Type.Document.ActionInformation import ActionInformation
       old_action = old_action.__getstate__()
       action_type = old_action.pop('category', None)
@@ -573,6 +602,10 @@ class ERP5TypeInformation(XMLObject,
       return action
 
     def _exportOldAction(self, action):
+      """Convert an ERP5 action to a CMF action
+
+      This is used to export a BT.
+      """
       from Products.CMFCore.ActionInformation import ActionInformation
       old_action = ActionInformation(action.reference,
         category=action.getActionType(),
@@ -587,28 +620,6 @@ class ERP5TypeInformation(XMLObject,
           continue
         setattr(old_action, k, v)
       return old_action
-
-    def _importRole(self, role_property_dict):
-      from Products.ERP5Type.Document.RoleInformation import RoleInformation
-      role = RoleInformation(self.generateNewId())
-      for k, v in role_property_dict.iteritems():
-        if k == 'condition':
-          if isinstance(v, Expression):
-            v = v.text
-          if not v:
-            continue
-          v = Expression(v)
-        elif k == 'priority':
-          continue
-        elif k == 'id':
-          k, v = 'role_name', tuple(x.strip() for x in v.split(';'))
-        elif k in ('base_category', 'category'):
-          k, v = 'role_' + k, tuple(x.strip() for x in v)
-        elif k == 'base_category_script':
-          k = 'role_base_category_script_id'
-        setattr(role, k, v)
-      role.uid = None
-      return self[self._setObject(role.id, role, set_owner=0)]
 
 
 InitializeClass( ERP5TypeInformation )

@@ -55,7 +55,6 @@ from Products.ERP5Type.Utils import readLocalTest, \
 from Products.ERP5Type.Utils import convertToUpperCase
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLObject import XMLObject
-from Products.ERP5Type.Core.RoleInformation import RoleInformation
 from OFS.Traversable import NotFound
 from OFS import SimpleItem, XMLExportImport
 from cStringIO import StringIO
@@ -2378,6 +2377,7 @@ class ActionTemplateItem(ObjectTemplateItem):
       url, value = id.split(' | ')
       url = posixpath.split(url)
       obj = p.unrestrictedTraverse(url)
+      # Several tools still use CMF actions
       is_new_action = obj.getParentId() == 'portal_types'
       id_id = is_new_action and 'reference' or 'id'
       for action in (is_new_action and obj.getActionInformationList
@@ -2418,6 +2418,8 @@ class ActionTemplateItem(ObjectTemplateItem):
             portal_type_dict.setdefault(path, {})[reference] = obj
             continue
 
+          # Following code is for actions outside Types Tool.
+          # It will be removed when they are also converted to ERP5 actions.
           obj, action = container, obj
           action_list = obj.listActions()
           for index in range(len(action_list)):
