@@ -2375,7 +2375,8 @@ class ActionTemplateItem(ObjectTemplateItem):
       obj = p.unrestrictedTraverse(url)
       is_new_action = obj.getParentId() == 'portal_types'
       id_id = is_new_action and 'reference' or 'id'
-      for action in obj.listActions():
+      for action in (is_new_action and obj.getActionInformationList
+                                    or obj.listActions)():
         if getattr(action, id_id) == value:
           break
       else:

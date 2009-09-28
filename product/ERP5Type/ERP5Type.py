@@ -544,7 +544,6 @@ class ERP5TypeInformation(XMLObject,
     security.declareProtected(Permissions.ModifyPortalContent, 'deleteActions')
     @deprecated
     def deleteActions(self, selections=(), REQUEST=None):
-      # XXX Should be deprecated.
       action_list = self.listActions()
       self.manage_delObjects([action_list[x].id for x in selections])
 
@@ -553,7 +552,7 @@ class ERP5TypeInformation(XMLObject,
     def listActions(self, info=None, object=None):
       """ List all the actions defined by a provider."""
       return sorted(self.getActionInformationList(),
-                    key=lambda x: x.getFloatIndex())
+                    key=lambda x: (x.getFloatIndex(), x.getId()))
 
     def _importOldAction(self, old_action):
       from Products.ERP5Type.Document.ActionInformation import ActionInformation

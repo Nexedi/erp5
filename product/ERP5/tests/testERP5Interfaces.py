@@ -44,6 +44,7 @@ implements_tuple_list = [
   ('BusinessPath', 'IBusinessPath'),
   ('BusinessPath', 'ICategoryAccessProvider'),
   ('DeliveryLine', 'IDivergenceSolver'),
+  ('RoleDefinition', 'ILocalRoleGenerator'),
   ('TradeCondition', 'ITransformation'),
   ('TradeModelCell', 'ITransformation'),
   ('TradeModelCell', 'IVariated'),

@@ -1215,15 +1215,12 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     pt = self.getTypeTool()
     object_id = sequence.get('object_ptype_id')
     object_pt = pt._getOb(object_id)
-    object_pt.addAction(
-      id = 'become_geek'
-      , name = 'Become Geek'
-      , action = 'become_geek_action'
-      , condition = ''
-      , permission = ('View', )
-      , category = 'object_action'
-      , visible = 1
-      , priority = 2.0 )
+    object_pt.newContent(portal_type='Action Information',
+                         reference='become_geek',
+                         title='Become Geek',
+                         action='become_geek_action',
+                         action_type='object_action',
+                         float_index=2.0)
     sequence.edit(first_action_id='become_geek')
 
   def stepCreateEmptyAction(self, sequence=None, sequence_list=None, **kw):
@@ -1233,14 +1230,10 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     pt = self.getTypeTool()
     object_id = sequence.get('object_ptype_id')
     object_pt = pt._getOb(object_id)
-    object_pt.addAction(id = ''
-      , name = ' Nerd'
-      , action = ''
-      , condition = ''
-      , permission = ()
-      , category = ''
-      , visible = 1
-      , priority = 1.2)
+    object_pt.newContent(portal_type='Action Information',
+                         title='Name',
+                         action_permission_list=(),
+                         float_index=1.2)
 
   def stepCreateSecondAction(self, sequence=None, sequence_list=None, **kw):
     """
@@ -1249,15 +1242,12 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     pt = self.getTypeTool()
     object_id = sequence.get('object_ptype_id')
     object_pt = pt._getOb(object_id)
-    object_pt.addAction(
-      id = 'become_nerd'
-      , name = 'Become Nerd'
-      , action = 'become_nerd_action'
-      , condition = ''
-      , permission = ('View', )
-      , category = 'object_action'
-      , visible = 1
-      , priority = 1.5 )
+    object_pt.newContent(portal_type='Action Information',
+                         reference='become_nerd',
+                         title='Become Nerd',
+                         action='become_nerd_action',
+                         action_type='object_action',
+                         float_index=1.5)
     sequence.edit(second_action_id='become_nerd')
 
   def stepCheckFirstActionExists(self, sequence=None, sequence_list=None, **kw):
