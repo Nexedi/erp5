@@ -12,7 +12,7 @@
 #
 ##############################################################################
 
-from Globals import DTMLFile, InitializeClass
+from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 from Products.CMFCore.Expression import Expression
 from Products.ERP5Type import _dtmldir
@@ -43,21 +43,12 @@ class PropertyDomainDict(Implicit):
       return None
 
 
-class TranslationProviderBase:
+class TranslationProviderBase(object):
   """
   Provide Translation Tabs and management methods for PropertyTranslationDomain
   """
 
   security = ClassSecurityInfo()
-
-
-  _translation_form = DTMLFile('editToolsTranslation', _dtmldir)
-
-  manage_options = ( { 'label' : 'Translation'
-                       , 'action' : 'manage_editTranslationForm'
-                       }
-                     ,
-                     )
 
   security.declarePrivate('updateInitialPropertyTranslationDomainDict')
   def updateInitialPropertyTranslationDomainDict(self):
@@ -183,8 +174,6 @@ class TranslationProviderBase:
   @property
   def property_domain_dict(self):
     return PropertyDomainDict().__of__(self)
-
-InitializeClass(TranslationProviderBase)
 
 
 class TranslationInformation(SimpleItem):
