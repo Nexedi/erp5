@@ -1957,7 +1957,12 @@ class PortalTypeAllowedContentTypeTemplateItem(BaseTemplateItem):
           action = update_dict[key]
           if action == 'nothing':
             continue
-        portal_type = pt._getOb(key.split('/')[-1])
+        try:
+          portal_id = key.split('/')[-1]
+          portal_type = pt._getOb(portal_id)
+        except (AttributeError, KeyError):
+          LOG("portal types not found : ", 100, portal_id)
+          continue
         property_list = self._objects.get(key, [])
         old_property_list = old_objects.get(key, ())
         object_property_list = getattr(portal_type, self.class_property, ())
