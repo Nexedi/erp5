@@ -350,6 +350,7 @@ class SynchronizationTool( SubscriptionSynchronization,
     """
       reset a subscription
     """
+    LOG('Synchronisation Subscription', INFO, 'Starting ...')
     self.SubSync(self.getSubscription(title).getPath())
     if RESPONSE is not None:
       RESPONSE.redirect('manageSubscriptions')
