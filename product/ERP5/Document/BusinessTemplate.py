@@ -874,7 +874,7 @@ class ObjectTemplateItem(BaseTemplateItem):
             subobjects_dict = self._backupObject(action, trashbin,
                                                  container_path, object_id)
             # in case of portal types, we want to keep some properties
-            if getattr(old_obj, 'meta_type', None) == 'ERP5 Type Information':
+            if getattr(old_obj, 'meta_type', None) == 'ERP5 Base Type':
               for attr in ('allowed_content_type_list',
                            'hidden_content_type_list',
                            'property_sheet_list',

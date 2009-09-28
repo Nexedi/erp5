@@ -936,8 +936,8 @@ class Base( CopyContainer,
               #LOG( "Create createRelatedValueAccessors %s" % bid,0,'')
               createRelatedValueAccessors(property_holder, bid)
               generated_bid[bid] = 1
-      for ptype in portal_types.objectValues('ERP5 Type Information') :
-        for bid in ptype.base_category_list :
+      for ptype in portal_types.objectValues():
+        for bid in ptype.getTypeBaseCategoryList():
           if bid not in generated_bid :
             createRelatedValueAccessors(property_holder, bid)
             generated_bid[bid] = 1
