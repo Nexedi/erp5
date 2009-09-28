@@ -245,7 +245,7 @@ class ERP5TypeInformation(XMLObject,
         # which acquire their security definition from their parent
         # The downside of this optimisation is that it is not possible to
         # set a local role definition if the local role list is empty
-        if self.getRoleList():
+        if self.getRoleInformationList():
           self.updateLocalRolesOnObject(ob)
 
         # notify workflow after generating local roles, in order to prevent
@@ -349,9 +349,46 @@ class ERP5TypeInformation(XMLObject,
                 'your setup. '\
                 'Please install it to benefit from group-based security'
 
+      group_id_role_dict = self.getGroupIdRoleDict(ob, user_name)
+
+      # Update role assignments to groups
+      if ERP5UserManager is not None: # Default implementation
+        # Clean old group roles
+        old_group_list = ob.get_local_roles()
+        ob.manage_delLocalRoles([x[0] for x in old_group_list])
+        # Save the owner
+        for group, role_list in old_group_list:
+          if 'Owner' in role_list:
+            group_id_role_dict.setdefault(group, set()).add('Owner')
+        # Assign new roles
+        for group, role_list in group_id_role_dict.iteritems():
+          if role_list:
+            ob.manage_addLocalRoles(group, role_list)
+      else: # NuxUserGroups implementation
+        # Clean old group roles
+        old_group_list = ob.get_local_group_roles()
+        # We duplicate role settings to mimic PAS
+        ob.manage_delLocalGroupRoles([x[0] for x in old_group_list])
+        ob.manage_delLocalRoles([x[0] for x in old_group_list])
+        # Save the owner
+        for group, role_list in old_group_list:
+          if 'Owner' in role_list:
+            group_id_role_dict.setdefault(group, set()).add('Owner')
+        # Assign new roles
+        for group, role_list in group_id_role_dict.iteritems():
+          # We duplicate role settings to mimic PAS
+          ob.manage_addLocalGroupRoles(group, role_list)
+          ob.manage_addLocalRoles(group, role_list)
+      # Make sure that the object is reindexed
+      if reindex:
+        ob.reindexObjectSecurity()
+
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              "getGroupIdRoleDict")
+    def getGroupIdRoleDict(self, ob, user_name=None):
       # Create an empty local Role Definition dict
       role_category_list_dict = {}
-      role_group_list_dict = {}
+      group_id_role_dict = {}
 
       # Fill it with explicit local roles defined as subobjects of current
       # object
@@ -416,17 +453,20 @@ class ERP5TypeInformation(XMLObject,
           for c in role.getRoleCategoryList():
             bc, value = c.split('/', 1)
             category_definition_dict.setdefault(bc, []).append(value)
-          # Now create role dict for each roles
-          for role in role.getRoleNameList():
-            if isinstance(category_result, dict):
-              # category_result is a dict (which provide group IDs directly)
-              # which represents of mapping of roles, security group IDs
-              # XXX explain that this is for providing user IDs mostly
-              role_group_list = role_group_list_dict.setdefault(role, [])
-              for k, v in category_result.items():
-                if k == role:
-                  role_group_list.extend(v)
-            else:
+
+          role_list = role.getRoleNameList()
+
+          if isinstance(category_result, dict):
+            # category_result is a dict (which provide group IDs directly)
+            # which represents of mapping of roles, security group IDs
+            # XXX explain that this is for providing user IDs mostly
+            for role, group_id_list in category_result.iteritems():
+              if role in role_list:
+                for group_id in group_id_list:
+                  group_id_role_dict.setdefault(group_id, set()).add(role)
+          else:
+            # Now create role dict for each roles
+            for role in role_list:
               # category_result is a list of dicts that represents the resolved
               # categories we create a category_value_dict from each of these
               # dicts aggregated with category_order and statically defined
@@ -439,96 +479,45 @@ class ERP5TypeInformation(XMLObject,
                 role_category_list.append(category_value_dict)
 
       # Generate security group ids from category_value_dicts
-      role_group_id_dict = {}
-      parent = ob.aq_parent
-      group_id_generator = getattr( parent,
-                             ERP5TYPE_SECURITY_GROUP_ID_GENERATION_SCRIPT,
-                             None )
+      group_id_generator = getattr(aq_parent(ob),
+                             ERP5TYPE_SECURITY_GROUP_ID_GENERATION_SCRIPT)
       group_id_generator = group_id_generator.__of__(ob)
-      if group_id_generator is None:
-        raise RuntimeError, '%s script was not found' % \
-                              ERP5TYPE_SECURITY_GROUP_ID_GENERATION_SCRIPT
-      for role, group_list in role_group_list_dict.items():
-        role_group_id_dict.setdefault(role, []).extend(group_list)
-      for role, value_list in role_category_list_dict.items():
-        role_group_dict = {}
+      for role, value_list in role_category_list_dict.iteritems():
+        role_group_set = group_id_role_dict.setdefault(role, set())
         for category_dict in value_list:
-          group_id = group_id_generator(**category_dict) # category_order is passed in the dict
+          group_id_list = group_id_generator(**category_dict) # category_order is passed in the dict
           # If group_id is not defined, do not use it
-          if group_id not in (None, ''):
-            if isinstance(group_id, str):
+          if group_id_list:
+            if isinstance(group_id_list, str):
               # Single group is defined (this is usually for group membership)
               # DEPRECATED due to cartesian product requirement
-              role_group_dict[group_id] = 1
-            else:
-              # Multiple groups are defined (list of users
-              # or list of group IDs resulting from a cartesian product)
-              for user_id in group_id:
-                role_group_dict[user_id] = 1
-        role_group_id_dict.setdefault(role, []).extend(role_group_dict.keys())
+              group_id_list = group_id_list,
+            # Multiple groups are defined (list of users
+            # or list of group IDs resulting from a cartesian product)
+            for group_id in group_id_list:
+              group_id_role_dict.setdefault(group_id, set()).add(role)
 
-      # Switch index from role to group id
-      group_id_role_dict = {}
-      for role, group_list in role_group_id_dict.items():
-        for group_id in group_list:
-          group_id_role_dict.setdefault(group_id, []).append(role)
-
-      # Update role assignments to groups
-      if ERP5UserManager is not None: # Default implementation
-        # Clean old group roles
-        old_group_list = ob.get_local_roles()
-        ob.manage_delLocalRoles([x[0] for x in old_group_list])
-        # Save the owner
-        for group, role_list in old_group_list:
-          if 'Owner' in role_list:
-            if not group_id_role_dict.has_key(group):
-              group_id_role_dict[group] = ('Owner',)
-            else:
-              group_id_role_dict[group].append('Owner')
-        # Assign new roles
-        for group, role_list in group_id_role_dict.items():
-          ob.manage_addLocalRoles(group, role_list)
-      else: # NuxUserGroups implementation
-        # Clean old group roles
-        old_group_list = ob.get_local_group_roles()
-        # We duplicate role settings to mimic PAS
-        ob.manage_delLocalGroupRoles([x[0] for x in old_group_list])
-        ob.manage_delLocalRoles([x[0] for x in old_group_list])
-        # Save the owner
-        for group, role_list in old_group_list:
-          if 'Owner' in role_list:
-            if not group_id_role_dict.has_key(group):
-              group_id_role_dict[group] = ('Owner',)
-            else:
-              group_id_role_dict[group].append('Owner')
-        # Assign new roles
-        for group, role_list in group_id_role_dict.items():
-          # We duplicate role settings to mimic PAS
-          ob.manage_addLocalGroupRoles(group, role_list)
-          ob.manage_addLocalRoles(group, role_list)
-      # Make sure that the object is reindexed
-      if reindex:
-        ob.reindexObjectSecurity()
+      return group_id_role_dict
 
     security.declarePrivate('getFilteredRoleListFor')
     def getFilteredRoleListFor(self, ob=None):
-        """Return all roles applicable to the object against user."""
-        portal = self.portal_url.getPortalObject()
-        if ob is None:
-          folder = portal
-        else:
-          folder = aq_parent(ob)
-          # Search up the containment hierarchy until we find an
-          # object that claims it's a folder.
-          while folder is not None:
-            if getattr(aq_base(folder), 'isPrincipiaFolderish', 0):
-              # found it.
-              break
-            else:
-              folder = aq_parent(folder)
+      """Return all roles applicable to the object against user."""
+      portal = self.getPortalObject()
+      if ob is None:
+        folder = portal
+      else:
+        folder = aq_parent(ob)
+        # Search up the containment hierarchy until we find an
+        # object that claims it's a folder.
+        while folder is not None:
+          if getattr(aq_base(folder), 'isPrincipiaFolderish', 0):
+            break # found it.
+          else:
+            folder = aq_parent(folder)
 
-        ec = createExprContext(folder, portal, ob)
-        return (role for role in self.getRoleList() if role.testCondition(ec))
+      ec = createExprContext(folder, portal, ob)
+      return (role for role in self.getRoleInformationList()
+                   if role.testCondition(ec))
 
     security.declareProtected(Permissions.ManagePortal, 'updateRoleMapping')
     def updateRoleMapping(self, REQUEST=None, form_id=''):
@@ -599,13 +588,13 @@ class ERP5TypeInformation(XMLObject,
     # USE_BASE_TYPE
     #
 
-    security.declarePrivate('getRoleList')
-    def getRoleList(self):
+    security.declarePrivate('getRoleInformationList')
+    def getRoleInformationList(self):
       """Return all roles for this portal type"""
       return self.objectValues(portal_type='Role Information')
 
-    security.declarePrivate('getActionList')
-    def getActionList(self):
+    security.declarePrivate('getActionInformationList')
+    def getActionInformationList(self):
       """Return all actions for this portal type"""
       return self.objectValues(portal_type='Action Information')
 
@@ -672,7 +661,8 @@ class ERP5TypeInformation(XMLObject,
     security.declarePrivate('listActions')
     def listActions(self, info=None, object=None):
       """ List all the actions defined by a provider."""
-      return sorted(self.getActionList(), key=lambda x: x.getFloatIndex())
+      return sorted(self.getActionInformationList(),
+                    key=lambda x: x.getFloatIndex())
 
     def _importOldAction(self, old_action):
       from Products.ERP5Type.Document.ActionInformation import ActionInformation

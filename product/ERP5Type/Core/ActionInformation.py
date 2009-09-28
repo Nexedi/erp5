@@ -73,15 +73,15 @@ class ActionInformation(XMLObject):
 
   def _setActionExpression(self, value):
     if isinstance(value, basestring):
-      value = Expression(value)
+      value = value and Expression(value) or None
     self._baseSetActionExpression(value)
   def _setCondition(self, value):
     if isinstance(value, basestring):
-      value = Expression(value)
+      value = value and Expression(value) or None
     self._baseSetCondition(value)
   def _setIcon(self, value):
     if isinstance(value, basestring):
-      value = Expression(value)
+      value = value and Expression(value) or None
     self._baseSetIcon(value)
 
   def getCondition(self):

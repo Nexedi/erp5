@@ -2463,7 +2463,7 @@ class ActionTemplateItem(ObjectTemplateItem):
       for path, action_dict in portal_type_dict.iteritems():
         container = p.unrestrictedTraverse(path)
         container.manage_delObjects([obj.id
-          for obj in container.getActionList()
+          for obj in container.getActionInformationList()
           if obj.reference in action_dict])
         for obj in action_dict.itervalues():
           container._importOldAction(obj)
@@ -2544,7 +2544,7 @@ class PortalTypeRolesTemplateItem(BaseTemplateItem):
       obj = p.unrestrictedTraverse("portal_types/%s" %
           relative_url.split('/', 1)[1])
       self._objects[relative_url] = type_role_list = []
-      for role in obj.getRoleList():
+      for role in obj.getRoleInformationList():
         type_role_dict = {}
         for k, v in aq_base(role).__getstate__().iteritems():
           if k == 'condition':
@@ -2647,7 +2647,7 @@ class PortalTypeRolesTemplateItem(BaseTemplateItem):
         obj = p.unrestrictedTraverse(path, None)
         if obj is not None:
           # reset roles before applying
-          obj.manage_delObjects([x.id for x in obj.getRoleList()])
+          obj.manage_delObjects([x.id for x in obj.getRoleInformationList()])
           type_roles_list = self._objects[roles_path] or []
           for role_property_dict in type_roles_list:
             obj._importRole(role_property_dict)
