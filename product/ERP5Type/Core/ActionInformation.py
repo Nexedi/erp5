@@ -112,12 +112,12 @@ class ActionInformation(XMLObject):
   security.declareProtected(AccessContentsInformation, 'PrincipiaSearchSource')
   def PrincipiaSearchSource(self):
     # Support for "Find" tab in ZMI
-    search_source_list = [self.getId(),
+    search_source_list = [self.getReference(),
                           self.getTitle(),
                           self.getDescription(),
                           self.getActionText(),
                           self.getConditionText()]
-    return ' '.join(search_source_list)
+    return ' '.join(filter(None, search_source_list))
 
   #
   # XXX CMF compatibility
@@ -143,7 +143,7 @@ class ActionInformation(XMLObject):
   def getMapping(self):
     """ Get a mapping of this object's data.
     """
-    return { 'id': self.getId(),
+    return { 'id': self.getReference(),
              'title': self.getTitle(),
              'description': self.getDescription(),
              'category':  self.getActionType(),
@@ -160,9 +160,3 @@ class ActionInformation(XMLObject):
            so that 'action_expression' property can be renamed to 'action'.
     """
     return ActionInfo(self, ec)
-
-#  def Title(self):
-#    return self.getTitle()
-#
-#  def Description(self):
-#    return self.getDescription()

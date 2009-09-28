@@ -23,7 +23,6 @@
 from Globals import InitializeClass, DTMLFile
 from AccessControl import ClassSecurityInfo, getSecurityManager
 from Acquisition import aq_base, aq_inner, aq_parent
-from zExceptions import BadRequest
 
 import Products
 import Products.CMFCore.TypesTool
@@ -596,7 +595,7 @@ class ERP5TypeInformation(XMLObject,
                             self.getTypeInitScriptId()]
       search_source_list += self.getTypePropertySheetList(())
       search_source_list += self.getTypeBaseCategoryList(())
-      return ' '.join(search_source_list)
+      return ' '.join(filter(None, search_source_list))
 
     #
     # USE_BASE_TYPE

@@ -18,10 +18,6 @@
             <value> <int>1</int> </value>
         </item>
         <item>
-            <key> <string>content_meta_type</string> </key>
-            <value> <string>ERP5 Action Information</string> </value>
-        </item>
-        <item>
             <key> <string>description</string> </key>
             <value> <string>Action Information...</string> </value>
         </item>

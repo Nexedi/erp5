@@ -1717,9 +1717,7 @@ class ERP5Generator(PortalGenerator):
     for t in BusinessTemplate,:
       t = t.factory_type_information
       if not tool.hasObject(t['id']):
-        tool._setObject(t['id'],
-          ERP5TypeInformation(portal_type=ERP5TypeInformation.portal_type,
-                              uid=None, **t))
+        tool._setObject(t['id'], ERP5TypeInformation(uid=None, **t))
 
   def setupERP5Core(self,p,**kw):
     """

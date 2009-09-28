@@ -170,7 +170,7 @@ try:
     original_init(self, action, ec)
     if not isinstance(action, dict):
       # ivan
-      if self.data.get('icon',  None) is not None:
+      if self.data.get('icon') is not None:
         self.data['icon'] = self._getIcon
         self._lazy_keys.append('icon')
       else:

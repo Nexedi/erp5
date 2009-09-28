@@ -45,7 +45,7 @@ def CMFCoreUtils_getViewFor(obj, view='view'):
         for action in actions:
             # portal_types hack
             action_type = action.getActionType()
-            reference = getattr(action, 'reference', None) or action.id
+            reference = getattr(action, 'reference', action.id)
             if reference == view or action_type.endswith('_%s' % view): # Patch 2: consider anything ending by _view
                 if _verifyActionPermissions(obj, action):
                   if action.isVisible() and action.testCondition(test_context): # Patch 3: test actions

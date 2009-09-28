@@ -107,7 +107,7 @@ class TranslationProviderBase:
     original_property_domain_keys.sort()
 
     # Only update if required in order to prevent ZODB from growing
-    if original_property_domain_dict is None or\
+    if original_property_domain_dict is None or \
           property_domain_keys != original_property_domain_keys:
       # Update existing dict
       property_domain_dict.update(original_property_domain_dict)

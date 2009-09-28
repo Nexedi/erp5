@@ -33,14 +33,6 @@
             <value> <int>0</int> </value>
         </item>
         <item>
-            <key> <string>content_icon</string> </key>
-            <value> <string>folder_icon.gif</string> </value>
-        </item>
-        <item>
-            <key> <string>content_meta_type</string> </key>
-            <value> <string>ERP5 Folder</string> </value>
-        </item>
-        <item>
             <key> <string>description</string> </key>
             <value> <string>The Types Tool centralises all portal type definitions.</string> </value>
         </item>
