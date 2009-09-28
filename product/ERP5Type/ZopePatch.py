@@ -56,6 +56,7 @@ from Products.ERP5Type.patches import MailTemplates
 from Products.ERP5Type.patches import http_server
 from Products.ERP5Type.patches import memcache_client
 from Products.ERP5Type.patches import StateChangeInfoPatch
+from Products.ERP5Type.patches import OFSPdata
 
 # These symbols are required for backward compatibility
 from Products.ERP5Type.patches.PropertyManager import ERP5PropertyManager
