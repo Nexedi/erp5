@@ -66,7 +66,7 @@ class ActionInformation:
       'description': 'TALES Expression to define the URL of the action',
       'mode':        'w',
       },
-    { 'id':          'icon', # XXX not used
+    { 'id':          'icon',
       'type':        'object',
       'description': 'TALES Expression to define the URL of the icon of the' \
                      ' action',

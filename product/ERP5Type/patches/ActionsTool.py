@@ -32,14 +32,9 @@ def listFilteredActionsFor(self, object=None):
         elif hasattr(provider, 'getFilteredActionListFor'):
             from Products.ERP5Type.ERP5Type import getExprContext
             ec = getExprContext(self, object)
-            actions += sorted(({
-                'id': action.getReference(),
-                'name': action.getTitle(),
-                'description': action.getDescription(),
-                'category':  action.getActionType(),
-                'priority': action.getFloatIndex(),
-                'url': action.getActionUrl(ec),
-                } for action in provider.getFilteredActionListFor(object)),
+            actions += sorted(
+              (action.getActionInfo(ec)
+               for action in provider.getFilteredActionListFor(object)),
               key=lambda x: x['priority'])
         else:
             # for Action Providers written for CMF versions before 1.5

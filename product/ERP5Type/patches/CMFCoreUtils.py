@@ -47,8 +47,8 @@ def CMFCoreUtils_getViewFor(obj, view='view'):
         if action.test(ec):
           break
       else:
-        # In case that "view" action is not present or not allowed,
-        # find something that's allowed.
+        # In case that "view" (or "list") action is not present or not allowed,
+        # find something that's allowed (of the same category, if possible).
         index = (action.getActionType().endswith('_' + view),
                  -action.getFloatIndex())
         if best_action[0] < index and action.test(ec):
@@ -59,7 +59,7 @@ def CMFCoreUtils_getViewFor(obj, view='view'):
         raise AccessControl_Unauthorized('No accessible views available for %r'
                                          % obj.getPath())
 
-    target = action.getActionUrl(context).strip()
+    target = action.getAction()(context).strip()
     if target.startswith('/'):
         target = target[1:]
     __traceback_info__ = ti.getId(), target

@@ -28,21 +28,19 @@
 #
 ##############################################################################
 
+import zope.interface
 from AccessControl import ClassSecurityInfo, getSecurityManager
 from Acquisition import aq_base
 from Products.CMFCore.Expression import Expression
-from Products.CMFCore.ActionInformation import ActionInfo
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
+from Products.ERP5Type import interfaces, Constraint, Permissions, PropertySheet
 from Products.ERP5Type.Permissions import AccessContentsInformation
 from Products.ERP5Type.XMLObject import XMLObject
-from zLOG import LOG
+
 
 class ActionInformation(XMLObject):
   """
   ActionInformation is an ERP5 type which will eventually replace respective ActionInformation from CMF.
   """
-  # XXX 'icon' property is not used. We can problably drop it.
-
   meta_type = 'ERP5 Action Information'
   portal_type = 'Action Information'
   add_permission = Permissions.AddPortalContent
@@ -54,14 +52,17 @@ class ActionInformation(XMLObject):
   security = ClassSecurityInfo()
   security.declareObjectProtected(AccessContentsInformation)
 
+  zope.interface.implements(interfaces.IAction)
+
   # Declarative properties
   property_sheets = ( PropertySheet.CategoryCore
                     , PropertySheet.DublinCore
                     , PropertySheet.ActionInformation
                     )
 
-  security.declarePrivate('test')
+  security.declareProtected(AccessContentsInformation, 'test')
   def test(self, ec):
+    """Test if the action should be displayed or not for the given context"""
     if self.isVisible():
       permission_list = self.getActionPermissionList()
       if permission_list:
@@ -84,10 +85,19 @@ class ActionInformation(XMLObject):
       return condition is None or condition(ec)
     return False
 
-  security.declarePrivate('getActionUrl')
-  def getActionUrl(self, ec):
+  security.declareProtected(AccessContentsInformation, 'getActionInfo')
+  def getActionInfo(self, ec):
+    """Return a dict with values required to display the action"""
     action = self.getAction()
-    return action is not None and action(ec) or ''
+    icon = self.getIcon()
+    return {'id': self.getReference(),
+            'name': self.getTitle(),
+            'description': self.getDescription(),
+            'category':  self.getActionType(),
+            'priority': self.getFloatIndex(),
+            'icon': icon is not None and icon(ec) or '',
+            'url': action is not None and action(ec) or '',
+            }
 
   def _setAction(self, value):
     """Overridden setter for 'action' to accept strings and clean null values

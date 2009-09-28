@@ -230,6 +230,8 @@ class ERP5TypeInformation(XMLObject,
     security = ClassSecurityInfo()
     security.declareObjectProtected(Permissions.AccessContentsInformation)
 
+    zope.interface.implements(interfaces.IActionProvider)
+
     # Declarative properties
     property_sheets = ( PropertySheet.BaseType, )
 
@@ -475,6 +477,7 @@ class ERP5TypeInformation(XMLObject,
 
     security.declarePrivate('getFilteredActionListFor')
     def getFilteredActionListFor(self, ob=None):
+      """Return all actions applicable to the object"""
       ec = getExprContext(self, ob)
       return (action for action in self.getActionInformationList()
                      if action.test(ec))

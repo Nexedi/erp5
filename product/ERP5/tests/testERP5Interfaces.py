@@ -34,7 +34,10 @@ import unittest
 # manually and treated as reference to what implements what
 implements_tuple_list = [
   ## ERP5Type
+  ('ERP5Type.Tool.TypesTool.TypesTool', 'IActionProvider'),
+  ('ERP5Type.ERP5Type.ERP5TypeInformation', 'IActionProvider'),
   ('ERP5Type.ERP5Type.ERP5TypeInformation', 'ILocalRoleAssignor'),
+  ('ActionInformation', 'IAction'),
   ('RoleInformation', 'ILocalRoleGenerator'),
   ## ERP5
   ('BusinessPath', 'IArrowBase'),
