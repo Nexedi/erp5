@@ -521,7 +521,7 @@ class ERP5TypeInformation(XMLObject,
 
     # Compatibitility code for actions
 
-    security.declareProtected(Permissions.ModifyPortalContent, 'addAction')
+    security.declareProtected(Permissions.AddPortalContent, 'addAction')
     @deprecated
     def addAction(self, id, name, action, condition, permission, category,
                   icon=None, visible=1, priority=1.0, REQUEST=None,

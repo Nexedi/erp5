@@ -15,7 +15,7 @@
 #
 ##############################################################################
 
-import imp, sys
+import imp, sys, warnings
 import zope.interface
 from Acquisition import aq_base
 from AccessControl import ClassSecurityInfo
@@ -73,6 +73,51 @@ class TypesTool(BaseTool, CMFCore_TypesTool.TypesTool):
           return ob
       else:
           return None
+
+  security.declareProtected(Permissions.AddPortalContent,
+                            'manage_addTypeInformation')
+  def manage_addTypeInformation(self, add_meta_type, id=None,
+                                typeinfo_name=None, RESPONSE=None):
+    """
+    Create a TypeInformation in self.
+    """
+    if add_meta_type != 'ERP5 Type Information' or RESPONSE is not None:
+      raise ValueError
+
+    fti = None
+    if typeinfo_name:
+      info = self.listDefaultTypeInformation()
+      # Nasty workaround to stay backwards-compatible
+      # This workaround will disappear in CMF 1.7
+      if typeinfo_name.endswith(')'):
+        # This is a new-style name. Proceed normally.
+        for name, ft in info:
+          if name == typeinfo_name:
+            fti = ft
+            break
+      else:
+        # Attempt to work around the old way
+        # This attempt harbors the problem that the first match on
+        # meta_type will be used. There could potentially be more
+        # than one TypeInformation sharing the same meta_type.
+        warnings.warn('Please switch to the new format for typeinfo names '
+                      '\"product_id: type_id (meta_type)\", the old '
+                      'spelling will disappear in CMF 1.7', DeprecationWarning)
+        ti_prod, ti_mt = [x.strip() for x in typeinfo_name.split(':')]
+        for name, ft in info:
+          if name.startswith(ti_prod) and name.endswith('(%s)' % ti_mt):
+            fti = ft
+            break
+      if fti is None:
+        raise ValueError('%s not found.' % typeinfo_name)
+      if not id:
+        id = fti.get('id')
+    if not id:
+      raise ValueError('An id is required.')
+    type_info = self.newContent(id, 'Base Type')
+    if fti:
+      type_info.__dict__.update(**fti)
+
 
 # Compatibility code to access old "ERP5 Role Information" objects.
 OldRoleInformation = imp.new_module('Products.ERP5Type.RoleInformation')

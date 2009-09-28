@@ -408,19 +408,12 @@ class ManageModule:
     # set alowed content type
     module_portal_type_value.allowed_content_types = (object_portal_type_id,)
     module_portal_type_value.filter_content_types = 1
-    # making a list of all the portal_type actions to be able to delete them
-    action_list = module_portal_type_value.listActions()
-    # cleaning all portal_types actions
-    module_portal_type_value.deleteActions(
-                selections = range(0, len(action_list)))
     # adding usefull actions (in our case the view action)
-    module_portal_type_value.addAction( "view"
-          , "View"
-          , "string:${object_url}/%s"%object_names['view_list']
-          , ""
-          , "View"
-          , "object_view"
-          )
+    module_portal_type_value.newContent(portal_type='Action Information',
+      reference="view",
+      title="View",
+      action="string:${object_url}/%s" % object_names['view_list'],
+      action_type="object_view")
 
 
 
@@ -443,26 +436,18 @@ class ManageModule:
                                             id = object_portal_type_id)
     object_portal_type_value = portal_types[object_portal_type_id]
 
-    # cleaning all default actions
-    action_list = object_portal_type_value.listActions()
-    object_portal_type_value.deleteActions(
-              selections = range(0, len(action_list)))
     # adding usefull actions (in our case the view action)
-    object_portal_type_value.addAction( "view",
-          "View",
-          "string:${object_url}/%s" % object_names['view_id'],
-          "",
-          "View",
-          "object_view"
-          )
-    object_portal_type_value.addAction( "print"
-          , "Print"
-          , "string:${object_url}/%s" % object_names['view_pdf']
-          , ""
-          , "View"
-          , "object_print"
-          , priority=2.0
-          )
+    object_portal_type_value.newContent(portal_type='Action Information',
+      reference="view",
+      title="View",
+      action="string:${object_url}/%s" % object_names['view_id'],
+      action_type="object_view")
+    object_portal_type_value.newContent(portal_type='Action Information',
+      reference="print",
+      title="Print",
+      action="string:${object_url}/%s" % object_names['view_pdf'],
+      action_type="object_print",
+      float_index=2.0)
 
 
   security.declarePublic('registerModule')
