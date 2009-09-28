@@ -102,7 +102,8 @@ class TypesTool(BaseTool, CMFCore_TypesTool.TypesTool):
         # than one TypeInformation sharing the same meta_type.
         warnings.warn('Please switch to the new format for typeinfo names '
                       '\"product_id: type_id (meta_type)\", the old '
-                      'spelling will disappear in CMF 1.7', DeprecationWarning)
+                      'spelling will disappear in CMF 1.7', DeprecationWarning,
+                      stacklevel=2)
         ti_prod, ti_mt = [x.strip() for x in typeinfo_name.split(':')]
         for name, ft in info:
           if name.startswith(ti_prod) and name.endswith('(%s)' % ti_mt):
@@ -116,6 +117,9 @@ class TypesTool(BaseTool, CMFCore_TypesTool.TypesTool):
       raise ValueError('An id is required.')
     type_info = self.newContent(id, 'Base Type')
     if fti:
+      if 'actions' in fti:
+        warnings.warn('manage_addTypeInformation does not create default'
+                      ' actions automatically anymore.')
       type_info.__dict__.update((k, v) for k, v in fti.iteritems()
         if k not in ('id', 'actions'))
 
