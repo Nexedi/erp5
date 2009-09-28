@@ -39,6 +39,7 @@ from Products.ERP5Type.patches import States
 from Products.ERP5Type.patches import FSZSQLMethod
 from Products.ERP5Type.patches import ActionInformation
 from Products.ERP5Type.patches import ActionProviderBase
+from Products.ERP5Type.patches import ActionsTool
 from Products.ERP5Type.patches import CookieCrumbler
 from Products.ERP5Type.patches import i18n
 from Products.ERP5Type.patches import Localizer
