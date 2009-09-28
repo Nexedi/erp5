@@ -28,6 +28,12 @@ from zLOG import LOG
 
 
 class PropertyDomainDict(Implicit):
+  """
+  Combined with TranslationProviderBase.property_domain_dict,
+  this class makes TranslationInformation objects inside
+  TranslationProviderBase._property_domain_dict accessible with
+  (un)restrictedTraverse. This hack allows forms to use Base_edit such objects.
+  """
   def _aq_dynamic(self, attr):
     type_info = self.aq_parent
     try:
