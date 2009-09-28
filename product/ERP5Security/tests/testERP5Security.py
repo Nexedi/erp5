@@ -378,7 +378,8 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
       base_cat.manage_delObjects(list(base_cat.objectIds()))
     # clear role definitions
     for ti in self.getTypesTool().objectValues():
-      ti.manage_delObjects(list(ti.objectIds(spec='ERP5 Role Information')))
+      ti.manage_delObjects([x.id
+        for x in ti.objectValues(portal_type='ERP5 Role Information')])
     # clear modules
     for module in self.portal.objectValues():
       if module.getId().endswith('_module'):

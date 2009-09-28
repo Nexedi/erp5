@@ -245,7 +245,7 @@ class ERP5TypeInformation(XMLObject,
         # which acquire their security definition from their parent
         # The downside of this optimisation is that it is not possible to
         # set a local role definition if the local role list is empty
-        if len(self.objectValues(meta_type='ERP5 Role Information')):
+        if len(self.objectValues(portal_type='Role Information')):
           self.updateLocalRolesOnObject(ob)
 
         # notify workflow after generating local roles, in order to prevent
@@ -528,7 +528,7 @@ class ERP5TypeInformation(XMLObject,
               folder = aq_parent(folder)
 
         ec = createExprContext(folder, portal, ob)
-        for role in self.objectValues(meta_type='ERP5 Role Information'):
+        for role in self.objectValues(portal_type='Role Information'):
           if role.testCondition(ec):
             yield role
 
