@@ -2462,9 +2462,9 @@ class ActionTemplateItem(ObjectTemplateItem):
           obj.moveDownActions(selections=tuple(move_down_list))
       for path, action_dict in portal_type_dict.iteritems():
         container = p.unrestrictedTraverse(path)
-        for obj in container.objectValues(meta_type='ERP5 Action Information'):
-          if obj.reference in action_dict:
-            container._delObject(obj.id)
+        container.manage_delObjects([obj.id
+          for obj in container.objectValues(meta_type='ERP5 Action Information')
+          if obj.reference in action_dict])
         for obj in action_dict.itervalues():
           container._importOldAction(obj)
     else:
