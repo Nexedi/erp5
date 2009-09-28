@@ -15,7 +15,6 @@
 from warnings import warn
 from Products.CMFCore.exceptions import AccessControl_Unauthorized, NotFound
 from Products.CMFCore.utils import getActionContext
-from Products.CMFCore.utils import _verifyActionPermissions
 from Products.CMFCore.Expression import getExprContext
 from Products.CMFCore import PortalContent
 
@@ -25,8 +24,8 @@ from zLOG import LOG
   This patch is based on Products/CMFCore/utils.py file from CMF 1.5.0 package.
   Please update the following file if you update CMF to greater version.
   The modifications in this method are:
-    * new filter on default action (= "action.getCategory().endswith('_%s' % view)" statement)
-    * new test on action condition (= "action.testCondition(context)" statement)
+    * new filter on default action (= ".endswith('_%s' % view)" statement)
+    * use action API to check its visibility in the context
   This method was patched to let CMF choose between several default actions according conditions.
 """
 
@@ -37,38 +36,33 @@ def CMFCoreUtils_getViewFor(obj, view='view'):
          'Aliases.',
          DeprecationWarning)
     ti = obj.getTypeInfo()
+    if ti is None:
+      raise NotFound('Cannot find default view for %r' % obj.getPath())
 
-    if ti is not None:
-        context = getActionContext( obj )
-        test_context = getExprContext(obj, obj) # Patch 1: mimic _listActionInfos in ActionsTool
-        actions = ti.listActions()
-        for action in actions:
-            # portal_types hack
-            action_type = action.getActionType()
-            reference = getattr(action, 'reference', action.id)
-            if reference == view or action_type.endswith('_%s' % view): # Patch 2: consider anything ending by _view
-                if _verifyActionPermissions(obj, action):
-                  if action.isVisible() and action.testCondition(test_context): # Patch 3: test actions
-                    target = action.action(context).strip()
-                    if target.startswith('/'):
-                        target = target[1:]
-                    __traceback_info__ = ( ti.getId(), target )
-                    return obj.restrictedTraverse( target )
-
-        # "view" action is not present or not allowed.
-        # Find something that's allowed.
-        for action in actions:
-            if _verifyActionPermissions(obj, action):
-              if action.visible and action.testCondition(test_context): # Patch 3: test actions
-                target = action.action(context).strip()
-                if target.startswith('/'):
-                    target = target[1:]
-                __traceback_info__ = ( ti.getId(), target )
-                return obj.restrictedTraverse( target )
-        raise AccessControl_Unauthorized( 'No accessible views available for '
-                                    '%s' % '/'.join( obj.getPhysicalPath() ) )
+    context = getActionContext(obj)
+    ec = getExprContext(obj, obj)
+    best_action = (), None
+    for action in ti.getFilteredActionListFor(obj):
+      if action.getReference() == view:
+        if action.test(ec):
+          break
+      else:
+        # In case that "view" action is not present or not allowed,
+        # find something that's allowed.
+        index = (action.getActionType().endswith('_' + view),
+                 -action.getFloatIndex())
+        if best_action[0] < index and action.test(ec):
+          best_action = index, action
     else:
-        raise NotFound('Cannot find default view for "%s"' %
-                            '/'.join(obj.getPhysicalPath()))
+      action = best_action[1]
+      if action is None:
+        raise AccessControl_Unauthorized('No accessible views available for %r'
+                                         % obj.getPath())
+
+    target = action.getActionUrl(context).strip()
+    if target.startswith('/'):
+        target = target[1:]
+    __traceback_info__ = ti.getId(), target
+    return obj.restrictedTraverse(target)
 
 PortalContent._getViewFor = CMFCoreUtils_getViewFor

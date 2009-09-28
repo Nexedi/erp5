@@ -39,6 +39,13 @@ class TypesTool(BaseTool, CMFCore_TypesTool.TypesTool):
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
+  security.declarePrivate('getFilteredActionListFor')
+  def getFilteredActionListFor(self, ob=None):
+    if ob is not None:
+      type_info = self.getTypeInfo(ob)
+      if type_info is not None:
+        return type_info.getFilteredActionListFor(ob)
+    return ()
 
   def getTypeInfo(self, *args):
     if not len(args): 

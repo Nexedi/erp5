@@ -21,23 +21,15 @@
 ##############################################################################
 
 import zope.interface
-from Globals import InitializeClass, DTMLFile
+from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo, getSecurityManager
 from Acquisition import aq_base, aq_inner, aq_parent
 
-import Products
-import Products.CMFCore.TypesTool
-from Products.CMFCore.TypesTool import TypeInformation
 from Products.CMFCore.TypesTool import FactoryTypeInformation
-from Products.CMFCore.TypesTool import TypesTool
-from Products.CMFCore.interfaces.portal_types import ContentTypeInformation\
-                                                as ITypeInformation
-from Products.CMFCore.ActionProviderBase import ActionProviderBase
-from Products.CMFCore.utils import SimpleItemWithProperties
 from Products.CMFCore.Expression import createExprContext, Expression
 from Products.CMFCore.exceptions import AccessControl_Unauthorized
 from Products.CMFCore.utils import _checkPermission
-from Products.ERP5Type import _dtmldir, interfaces, Permissions, PropertySheet
+from Products.ERP5Type import interfaces, Constraint, Permissions, PropertySheet
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 from Products.ERP5Type.XMLObject import XMLObject
 
@@ -61,6 +53,22 @@ from TranslationProviderBase import TranslationProviderBase
 from sys import exc_info
 from zLOG import LOG, ERROR
 from Products.CMFCore.exceptions import zExceptions_Unauthorized
+
+
+def getExprContext(context, ob=None):
+  portal = context.getPortalObject()
+  if ob is None:
+    folder = portal
+  else:
+    folder = aq_parent(ob)
+    # Search up the containment hierarchy until we find an
+    # object that claims it's a folder.
+    while folder is not None:
+      if getattr(aq_base(folder), 'isPrincipiaFolderish', 0):
+        break # found it.
+      else:
+        folder = aq_parent(folder)
+  return createExprContext(folder, portal, ob)
 
 
 class LocalRoleAssignorMixIn(object):
@@ -147,20 +155,7 @@ class LocalRoleAssignorMixIn(object):
     security.declarePrivate('getFilteredRoleListFor')
     def getFilteredRoleListFor(self, ob=None):
       """Return all role generators applicable to the object."""
-      portal = self.getPortalObject()
-      if ob is None:
-        folder = portal
-      else:
-        folder = aq_parent(ob)
-        # Search up the containment hierarchy until we find an
-        # object that claims it's a folder.
-        while folder is not None:
-          if getattr(aq_base(folder), 'isPrincipiaFolderish', 0):
-            break # found it.
-          else:
-            folder = aq_parent(folder)
-
-      ec = createExprContext(folder, portal, ob)
+      ec = getExprContext(self, ob)
       for role in self.getRoleInformationList():
         if role.testCondition(ec):
           yield role
@@ -402,18 +397,6 @@ class ERP5TypeInformation(XMLObject,
 
         return ob
 
-    security.declareProtected(Permissions.ManagePortal,
-                              'setPropertySheetList')
-    def setPropertySheetList(self, property_sheet_list):
-      # XXX CMF compatibility
-      self._setTypePropertySheetList(property_sheet_list)
-
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'getHiddenContentTypeList')
-    def getHiddenContentTypeList(self):
-      # XXX CMF compatibility
-      return self.getTypeHiddenContentTypeList(())
-
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getInstanceBaseCategoryList')
     def getInstanceBaseCategoryList(self):
@@ -459,10 +442,7 @@ class ERP5TypeInformation(XMLObject,
         id = id + "d"
       return factory_method(portal, id).propertyMap()
 
-    #
-    #   Helper methods
-    #
-    def manage_editProperties(self, REQUEST):
+    def edit(self, *args, **kw):
       """
         Method overload
 
@@ -473,11 +453,10 @@ class ERP5TypeInformation(XMLObject,
             in order to implement a broadcast update
             on production hosts
       """
-      previous_property_sheet_list = self.property_sheet_list
-      base_category_list = self.base_category_list
-      result = FactoryTypeInformation.manage_editProperties(self, REQUEST)
-      if previous_property_sheet_list != self.property_sheet_list or \
-                   base_category_list != self.base_category_list:
+      property_list = 'factory', 'property_sheet_list', 'base_category_list'
+      previous_state = [getattr(aq_base(self), x) for x in property_list]
+      result = XMLObject.edit(self, *args, **kw)
+      if previous_state != [getattr(aq_base(self), x) for x in property_list]:
         from Products.ERP5Type.Base import _aq_reset
         _aq_reset()
       return result
@@ -493,6 +472,12 @@ class ERP5TypeInformation(XMLObject,
       search_source_list += self.getTypePropertySheetList(())
       search_source_list += self.getTypeBaseCategoryList(())
       return ' '.join(filter(None, search_source_list))
+
+    security.declarePrivate('getFilteredActionListFor')
+    def getFilteredActionListFor(self, ob=None):
+      ec = getExprContext(self, ob)
+      return (action for action in self.getActionInformationList()
+                     if action.test(ec))
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getActionInformationList')
@@ -511,13 +496,13 @@ class ERP5TypeInformation(XMLObject,
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getAvailablePropertySheetList')
     def getAvailablePropertySheetList(self):
-      return sorted(k for k in Products.ERP5Type.PropertySheet.__dict__
+      return sorted(k for k in PropertySheet.__dict__
                       if not k.startswith('__'))
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getAvailableConstraintList')
     def getAvailableConstraintList(self):
-      return sorted(k for k in Products.ERP5Type.Constraint.__dict__
+      return sorted(k for k in Constraint.__dict__
                       if k != 'Constraint' and not k.startswith('__'))
 
     security.declareProtected(Permissions.AccessContentsInformation,
@@ -531,8 +516,20 @@ class ERP5TypeInformation(XMLObject,
         return sorted(self._getCategoryTool().getBaseCategoryList())
 
     #
-    # Compatibitility code for actions
+    # XXX CMF compatibility
     #
+
+    security.declareProtected(Permissions.ManagePortal,
+                              'setPropertySheetList')
+    def setPropertySheetList(self, property_sheet_list):
+      self._setTypePropertySheetList(property_sheet_list)
+
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'getHiddenContentTypeList')
+    def getHiddenContentTypeList(self):
+      return self.getTypeHiddenContentTypeList(())
+
+    # Compatibitility code for actions
 
     security.declareProtected(Permissions.ModifyPortalContent, 'addAction')
     def addAction(self, id, name, action, condition, permission, category,

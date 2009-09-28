@@ -19,7 +19,7 @@ ActionsTool_listFilteredActionsFor = ActionsTool.listFilteredActionsFor
 def listFilteredActionsFor(self, object=None):
     """ List all actions available to the user.
 
-    This patch remove inclusion of actions from the object itself.
+    This patch removes inclusion of actions from the object itself.
     It was never used and now, it breaks objects inside Types Tool.
     """
     actions = []
@@ -29,6 +29,18 @@ def listFilteredActionsFor(self, object=None):
         provider = getattr(self, provider_name)
         if IActionProvider.isImplementedBy(provider):
             actions.extend( provider.listActionInfos(object=object) )
+        elif hasattr(provider, 'getFilteredActionListFor'):
+            from Products.ERP5Type.ERP5Type import getExprContext
+            ec = getExprContext(self, object)
+            actions += sorted(({
+                'id': action.getReference(),
+                'name': action.getTitle(),
+                'description': action.getDescription(),
+                'category':  action.getActionType(),
+                'priority': action.getFloatIndex(),
+                'url': action.getActionUrl(ec),
+                } for action in provider.getFilteredActionListFor(object)),
+              key=lambda x: x['priority'])
         else:
             # for Action Providers written for CMF versions before 1.5
             actions.extend( self._listActionInfos(provider, object) )

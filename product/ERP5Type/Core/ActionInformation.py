@@ -28,7 +28,7 @@
 #
 ##############################################################################
 
-from AccessControl import ClassSecurityInfo
+from AccessControl import ClassSecurityInfo, getSecurityManager
 from Acquisition import aq_base
 from Products.CMFCore.Expression import Expression
 from Products.CMFCore.ActionInformation import ActionInfo
@@ -60,10 +60,29 @@ class ActionInformation(XMLObject):
                     , PropertySheet.ActionInformation
                     )
 
-  def testCondition(self, ec):
-    """Evaluate condition using context, 'ec', and return 0 or 1"""
-    condition = self.getCondition()
-    return condition is None and 1 or condition(ec)
+  security.declarePrivate('test')
+  def test(self, ec):
+    if self.isVisible():
+      permission_list = self.getActionPermissionList()
+      if permission_list:
+        category = self.getActionType()
+        info = ec.vars
+        if (info['here'] is not None and
+            (category.startswith('object') or
+             category.startswith('workflow'))):
+          context = info['here']
+        elif (info['folder'] is not None and
+              category.startswith('folder')):
+          context = info['folder']
+        else:
+          context = info['portal']
+        has_permission = getSecurityManager().getUser().has_permission
+        for permission in permission_list:
+          if not has_permission(permission, context):
+            return False
+      condition = self.getCondition()
+      return condition is None or condition(ec)
+    return False
 
   security.declarePublic('getVisibility')
   def getVisibility(self):
@@ -123,44 +142,6 @@ class ActionInformation(XMLObject):
                           self.getConditionText()]
     return ' '.join(filter(None, search_source_list))
 
-  #
-  # XXX CMF compatibility
-  #
-
-  def _getActionObject(self):
-    return self.getActionExpression()
-
-  security.declarePrivate('getCategory')
-  def getCategory(self):
-    return self.getActionType()
-
-  security.declarePrivate('getPermissions')
-  def getPermissions(self):
-    return self.getActionPermissionList()
-
-  #def getActionCategorySelectionList(self):
-  #  return self._getCategoryTool().action_type.objectIds()
-  #def getPriority(self):
-  #  return self.getFloatIndex()
-
-  security.declarePrivate('getMapping')
-  def getMapping(self):
-    """ Get a mapping of this object's data.
-    """
-    return { 'id': self.getReference(),
-             'title': self.getTitle(),
-             'description': self.getDescription(),
-             'category':  self.getActionType(),
-             'condition': self.getCondition(),
-             'permissions': self.getPermissions(),   #self.permissions,
-             'visible': self.getVisibility(), #bool(self.visible),
-             'action': self.getActionText() }
-
-  security.declarePrivate('getAction')
-  def getAction(self, ec):
-    """ Compute the action using context, 'ec'; return a mapping of
-          info about the action.
-       XXX To be renamed or removed,
-           so that 'action_expression' property can be renamed to 'action'.
-    """
-    return ActionInfo(self, ec)
+  security.declarePrivate('getActionUrl')
+  def getActionUrl(self, ec):
+    return self.getActionExpression()(ec)

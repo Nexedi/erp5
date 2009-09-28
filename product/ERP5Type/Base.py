@@ -43,9 +43,11 @@ import OFS.History
 from OFS.SimpleItem import SimpleItem
 from OFS.PropertyManager import PropertyManager
 
-from Products.CMFCore.PortalContent import PortalContent
+from ZopePatch import ERP5PropertyManager
+
+from Products.CMFCore.PortalContent import PortalContent, _getViewFor
 from Products.CMFCore.Expression import Expression
-from Products.CMFCore.utils import getToolByName, _getViewFor
+from Products.CMFCore.utils import getToolByName
 from Products.CMFCore.WorkflowCore import ObjectDeleted, ObjectMoved
 from Products.CMFCore.CMFCatalogAware import CMFCatalogAware
 
@@ -67,7 +69,6 @@ from Accessor import WorkflowState
 from Products.ERP5Type.Log import log as unrestrictedLog
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 from Products.ERP5Type.Accessor.TypeDefinition import type_definition
-from ZopePatch import ERP5PropertyManager
 
 from CopySupport import CopyContainer, CopyError,\
     tryMethodCallWithTemporaryPermission
