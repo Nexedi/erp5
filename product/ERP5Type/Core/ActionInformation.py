@@ -69,11 +69,11 @@ class ActionInformation(XMLObject):
         category = self.getActionType() or ''
         info = ec.vars
         if (info['here'] is not None and
-            (category.startswith('object') or
-             category.startswith('workflow'))):
+            (category[:6] == 'object' or
+             category[:8] == 'workflow')):
           context = info['here']
         elif (info['folder'] is not None and
-              category.startswith('folder')):
+              category[:6] == 'folder'):
           context = info['folder']
         else:
           context = info['portal']
@@ -105,12 +105,14 @@ class ActionInformation(XMLObject):
     if isinstance(value, basestring):
       value = value and Expression(value) or None
     self._baseSetAction(value)
+
   def _setCondition(self, value):
     """Overridden setter for 'condition' to accept string and clean null values
     """
     if isinstance(value, basestring):
       value = value and Expression(value) or None
     self._baseSetCondition(value)
+
   def _setIcon(self, value):
     """Overridden setter for 'icon' to accept string and clean null values
     """
@@ -123,11 +125,13 @@ class ActionInformation(XMLObject):
     if getattr(aq_base(self), 'action', None) == '':
       del self.action
     return self._baseGetAction()
+
   def getCondition(self):
     """Overridden getter for 'condition' to clean null values"""
     if getattr(aq_base(self), 'condition', None) == '':
       del self.condition
     return self._baseGetCondition()
+
   def getIcon(self):
     """Overridden getter for 'icon' to clean null values"""
     if getattr(aq_base(self), 'icon', None) == '':
@@ -138,10 +142,12 @@ class ActionInformation(XMLObject):
   def getActionText(self):
     """Return the text of the action expression"""
     return getattr(self.getAction(), 'text', None)
+
   security.declareProtected(AccessContentsInformation, 'getConditionText')
   def getConditionText(self):
     """Return the text of the condition expression"""
     return getattr(self.getCondition(), 'text', None)
+
   security.declareProtected(AccessContentsInformation, 'getIconText')
   def getIconText(self):
     """Return the text of the icon expression"""

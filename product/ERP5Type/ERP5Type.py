@@ -457,7 +457,7 @@ class ERP5TypeInformation(XMLObject,
         id = id + "d"
       return factory_method(portal, id).propertyMap()
 
-    def edit(self, *args, **kw):
+    def _edit(self, *args, **kw):
       """
         Method overload
 
@@ -470,7 +470,7 @@ class ERP5TypeInformation(XMLObject,
       """
       property_list = 'factory', 'property_sheet_list', 'base_category_list'
       previous_state = [getattr(aq_base(self), x) for x in property_list]
-      result = XMLObject.edit(self, *args, **kw)
+      result = XMLObject._edit(self, *args, **kw)
       if previous_state != [getattr(aq_base(self), x) for x in property_list]:
         from Products.ERP5Type.Base import _aq_reset
         _aq_reset()

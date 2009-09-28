@@ -1554,8 +1554,10 @@ class PortalTypeTemplateItem(ObjectTemplateItem):
     for relative_url in self._archive.keys():
       obj = p.unrestrictedTraverse(relative_url)
       obj = obj._getCopy(context)
+      # obj is in ghost state and an attribute must be accessed
+      # so that obj.__dict__ does not return an empty dict
       obj.meta_type
-      for attr in tuple(obj.__dict__):
+      for attr in obj.__dict__.keys():
         if attr == '_property_domain_dict':
           continue
         if attr[0] == '_' or attr in ('allowed_content_types',

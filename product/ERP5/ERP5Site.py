@@ -1714,7 +1714,7 @@ class ERP5Generator(PortalGenerator):
     tool = getToolByName(p, 'portal_types', None)
     if tool is None:
       return
-    for t in BusinessTemplate,:
+    for t in (BusinessTemplate, ):
       t = t.factory_type_information
       if not tool.hasObject(t['id']):
         tool._setObject(t['id'], ERP5TypeInformation(uid=None, **t))
@@ -1728,7 +1728,7 @@ class ERP5Generator(PortalGenerator):
       return
     if template_tool.getInstalledBusinessTemplate('erp5_core') is None:
       bootstrap_dir = self.getBootstrapDirectory()
-      for bt in 'erp5_core', p.erp5_catalog_storage, 'erp5_xhtml_style':
+      for bt in ('erp5_core', p.erp5_catalog_storage, 'erp5_xhtml_style'):
         if not bt:
           continue
         template = os.path.join(bootstrap_dir, bt)
