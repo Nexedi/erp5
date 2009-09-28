@@ -124,7 +124,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: [(\'\',None)] + [(x,x) for x in here.getPortalObject().Localizer.objectIds()]</string> </value>
+            <value> <string>python: [(\'\',\'\')] + [(x,x) for x in here.getPortalObject().Localizer.objectIds()]</string> </value>
         </item>
       </dictionary>
     </pickle>

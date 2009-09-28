@@ -210,7 +210,8 @@ class TranslationInformation(SimpleItem):
     return self.domain_name
 
   security.declareProtected(ModifyPortalContent, 'edit')
-  def edit(self, **kw):
-    self.__dict__.update(kw)
+  def edit(self, edit_order=(), **kw):
+    self._p_changed = 1
+    self.__dict__.update((k, v or None) for k, v in kw.iteritems())
 
 InitializeClass(TranslationInformation)
