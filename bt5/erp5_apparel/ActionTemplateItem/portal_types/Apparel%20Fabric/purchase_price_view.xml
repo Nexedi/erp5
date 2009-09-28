@@ -33,7 +33,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>view_flow_capacity</string> </value>
+            <value> <string>purchase_price_view</string> </value>
         </item>
         <item>
             <key> <string>permissions</string> </key>
@@ -45,11 +45,11 @@
         </item>
         <item>
             <key> <string>priority</string> </key>
-            <value> <float>5.0</float> </value>
+            <value> <float>4.0</float> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Flow capacity</string> </value>
+            <value> <string>Purchase</string> </value>
         </item>
         <item>
             <key> <string>visible</string> </key>
@@ -69,7 +69,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/Resource_viewFlowCapacity</string> </value>
+            <value> <string>string:${object_url}/Resource_viewDefaultPurchaseSupplyLine</string> </value>
         </item>
       </dictionary>
     </pickle>

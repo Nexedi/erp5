@@ -33,7 +33,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>price_view</string> </value>
+            <value> <string>purchase_price_view</string> </value>
         </item>
         <item>
             <key> <string>permissions</string> </key>
@@ -45,11 +45,11 @@
         </item>
         <item>
             <key> <string>priority</string> </key>
-            <value> <float>3.0</float> </value>
+            <value> <float>5.0</float> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Price</string> </value>
+            <value> <string>Purchase</string> </value>
         </item>
         <item>
             <key> <string>visible</string> </key>
