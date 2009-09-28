@@ -75,11 +75,10 @@ class LocalRoleAssignorMixIn(object):
       """
       if user_name is None:
         # First try to guess from the owner
-        try:
-          user_name = ob.getOwnerInfo()['id']
-        except (AttributeError, TypeError):
-          pass
-        if user_name is None:
+        owner = ob.getOwnerTuple()
+        if owner:
+          user_name = owner[1]
+        else:
           #FIXME We should check the type of the acl_users folder instead of
           #      checking which product is installed.
           if ERP5UserManager is not None:
@@ -150,7 +149,7 @@ class LocalRoleAssignorMixIn(object):
       # Return also explicit local roles defined as subobjects of the document
       if getattr(aq_base(ob), 'isPrincipiaFolderish', 0) and \
          self.allowType('Role Definition'):
-        for role in ob.objectValues(portal_type='Role Definition'):
+        for role in ob.objectValues(meta_type='ERP5 Role Definition'):
           if role.getRoleName():
             yield role
 
@@ -158,7 +157,7 @@ class LocalRoleAssignorMixIn(object):
                               'getRoleInformationList')
     def getRoleInformationList(self):
       """Return all Role Information objects stored on this portal type"""
-      return self.objectValues(portal_type='Role Information')
+      return self.objectValues(meta_type='ERP5 Role Information')
 
     security.declareProtected(Permissions.View, 'updateRoleMapping')
     def updateRoleMapping(self, REQUEST=None, form_id=''):
@@ -309,6 +308,13 @@ class ERP5TypeInformation(XMLObject,
       'movement_group',
     )
     group_list = ()
+
+    security.declarePublic('allowType')
+    def allowType(self, contentType):
+      """Test if objects of 'self' can contain objects of 'contentType'
+      """
+      return (not self.getTypeFilterContentType()
+              or contentType in self.getTypeAllowedContentTypeList())
 
     #
     #   Acquisition editing interface
@@ -493,7 +499,7 @@ class ERP5TypeInformation(XMLObject,
                               'getActionInformationList')
     def getActionInformationList(self):
       """Return all Action Information objects stored on this portal type"""
-      return self.objectValues(portal_type='Action Information')
+      return self.objectValues(meta_type='ERP5 Action Information')
 
     def getIcon(self):
       return self.getTypeIcon()

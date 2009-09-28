@@ -4613,7 +4613,6 @@ Business Template is a set of definitions, such as skins, portal types and categ
          , 'allowed_content_types': (
                                       )
          , 'filter_content_types' : 1
-         , 'global_allow'   : 1
       }
 
     # This is a global variable
