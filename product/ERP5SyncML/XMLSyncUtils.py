@@ -771,7 +771,7 @@ class XMLSyncUtilsMixin(SyncCode):
         if signature is not None and signature.getXMLMapping() is None:
           pass
         elif signature is None or\
-            (signature.getXML() is None and\
+            (not signature.hasXML() and\
             signature.getStatus() != self.PARTIAL) or\
             self.getAlertCodeFromXML(remote_xml) == self.SLOW_SYNC:
           #LOG('getSyncMLData', DEBUG, 'Current object.getPath: %s' % object.getPath())
@@ -864,7 +864,7 @@ class XMLSyncUtilsMixin(SyncCode):
           # may not apply correctly
           xml_update = signature.getPartialXML()
           conduit.updateNode(
-                      xml=signature.getPartialXML(),
+                      xml=xml_update,
                       object=object,
                       previous_xml=signature.getXML(),
                       force=1)
@@ -974,9 +974,9 @@ class XMLSyncUtilsMixin(SyncCode):
       if not self.checkActionMoreData(action):
         data_subnode = None
         if partial_data:
-          signature_partial_xml = signature.getPartialXML()
-          if signature_partial_xml:
-            data_subnode = signature_partial_xml + partial_data
+          if signature.hasPartialXML():
+            signature.appendPartialXML(partial_data)
+            data_subnode = signature.getPartialXML()
           else:
             data_subnode = partial_data
           #LOG('applyActionList', DEBUG, 'data_subnode: %s' % data_subnode)
@@ -1057,7 +1057,7 @@ class XMLSyncUtilsMixin(SyncCode):
             conflict_list += conduit.updateNode(
                                         xml=data_subnode,
                                         object=object,
-                                        previous_xml=signature.getXML(),
+                                        previous_xml=previous_xml,
                                         force=force,
                                         simulate=simulate)
             xml_object = conduit.getXMLFromObjectWithId(object,\
@@ -1108,10 +1108,7 @@ class XMLSyncUtilsMixin(SyncCode):
                                   remote_xml=action))
       else: # We want to retrieve more data
         signature.setStatus(self.PARTIAL)
-        previous_partial = signature.getPartialXML() or ''
-        previous_partial += partial_data
-        #LOG('applyActionList', DEBUG, 'setPartialXML: %s' % str(previous_partial))
-        signature.setPartialXML(previous_partial)
+        signature.appendPartialXML(partial_data) 
         #LOG('applyActionList', DEBUG, 'previous_partial: %s' % str(previous_partial))
         #LOG('applyActionList', DEBUG, 'waiting more data for :%s' % signature.getId())
         xml_confirmation_list.append(self.SyncMLConfirmation(

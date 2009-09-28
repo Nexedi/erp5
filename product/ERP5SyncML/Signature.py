@@ -37,13 +37,16 @@ from Products.ERP5Type.Core.Folder import Folder
 from Products.ERP5Type.Base import Base
 from Products.ERP5Type import Permissions
 from Products.ERP5Type import PropertySheet
+from Products.ERP5.Document import Document
 from DateTime import DateTime
 from zLOG import LOG, DEBUG, INFO
-
+import cStringIO
+from OFS.Image import Pdata
+from OFS.Image import File
 import md5
 from base64 import b64encode, b64decode, b16encode, b16decode
 
-class Signature(Folder, SyncCode):
+class Signature(Folder, SyncCode, File):
   """
     status -- SENT, CONFLICT...
     md5_object -- An MD5 value of a given document
@@ -62,8 +65,10 @@ class Signature(Folder, SyncCode):
                id=None,
                rid=None,
                status=None,
-               xml_string=None,
+               xml_string='',
                object=None):
+    Folder.__init__(self, id)
+    File.__init__(self, id, '', xml_string)
     if object is not None:
       self.setPath(object.getPhysicalPath())
       self.setObjectId(object.getId())
@@ -73,7 +78,7 @@ class Signature(Folder, SyncCode):
     self.setRid(rid)
     self.status = status
     self.setXML(xml_string)
-    self.partial_xml = None
+    self.setPartialXML(None)
     self.action = None
     self.setTempXML(None)
     self.resetConflictList()
@@ -81,7 +86,7 @@ class Signature(Folder, SyncCode):
     self.force = 0
     self.setSubscriberXupdate(None)
     self.setPublisherXupdate(None)
-    Folder.__init__(self,id)
+    self.last_data_partial_xml = None
 
   def setStatus(self, status):
     """
@@ -169,22 +174,46 @@ class Signature(Folder, SyncCode):
       check the xml
     """
     setattr(self, 'synchronization_date', value)
-
+  
+  def hasXML(self):
+    """
+      return True if the xml is available
+    """
+    return bool(getattr(self, 'xml', None))
+  
   def setXML(self, xml):
     """
       set the XML corresponding to the object
     """
-    self.xml = xml
-    if self.xml is not None:
+    if xml is not None:
+      # convert the string to Pdata if the big size
+      file = cStringIO.StringIO(xml)
+      self.xml, size = self._read_data(file)
       self.setTempXML(None) # We make sure that the xml will not be erased
       self.setMD5(xml)
+    else:
+      self.xml = None
 
   def getXML(self):
     """
       get the XML corresponding to the object
     """
     #Never return empty string
-    return getattr(self, 'xml', None) or None
+    if self.hasXML():
+      if isinstance(self.xml, Pdata):
+        return str(self.xml)
+      elif isinstance(self.xml, str):
+        return self.xml
+      else:
+        raise "ErrorType the self.xml haven't good type"
+    else:
+      return None
+
+  def hasTempXML(self):
+    """
+      Return true if the temp_xml is available
+    """
+    return bool(getattr(self, 'temp_xml', None))
 
   def setTempXML(self, xml):
     """
@@ -192,13 +221,25 @@ class Signature(Folder, SyncCode):
       be stored with setXML when we will receive
       the confirmation of synchronization
     """
-    self.temp_xml = xml
+    if xml is not None:
+      file = cStringIO.StringIO(xml)
+      self.temp_xml, size = self._read_data(file)
+    else:
+      self.temp_xml = None
 
   def getTempXML(self):
     """
       get the temp xml
     """
-    return self.temp_xml
+    if self.hasTempXML():
+      if isinstance(self.temp_xml, Pdata):
+        return str(self.temp_xml)
+      elif isinstance(self.temp_xml, str):
+        return self.temp_xml
+      else:
+        raise "ErrorType the self.xml haven't good type"
+    else:
+      return None
 
   def setSubscriberXupdate(self, xupdate):
     """
@@ -293,19 +334,66 @@ class Signature(Folder, SyncCode):
     """
     return getattr(self, 'object_id', None)
 
+  def hasPartialXML(self):
+    """
+      Return true is the partial xml is available
+    """
+    return bool(getattr(self, 'partial_xml', None))
+
   def setPartialXML(self, xml):
     """
     Set the partial string we will have to
     deliver in the future
     """
-    self.partial_xml = xml
+    if xml is not None:
+      # change encoding of xml to convert in file
+      try:
+        xml = xml.encode('utf-8')
+      except UnicodeDecodeError:
+        xml = xml.decode('utf-8').encode('ascii','xmlcharrefreplace')
+      # convert the string to Pdata if the big size
+      file = cStringIO.StringIO(xml)
+      self.partial_xml, size = self._read_data(file)
+      if not isinstance(self.partial_xml, Pdata):
+        self.partial_xml = Pdata(self.partial_xml)
+      self.last_data_partial_xml = self.partial_xml.getLastPdata()
+    else:
+      self.partial_xml = None
+      self.last_data_partial_xml = None
 
+  def appendPartialXML(self, xml):
+    """
+    Append the partial string we will have to deliver in the future
+    """
+    if xml is not None:
+      try:
+        xml = xml.encode('utf-8')
+      except UnicodeDecodeError:
+        xml = xml.decode('utf-8').encode('ascii','xmlcharrefreplace')
+      
+      file = cStringIO.StringIO(xml)
+      xml_append, size = self._read_data(file)
+      if not isinstance(xml_append, Pdata):
+        xml_append = Pdata(xml_append)
+      last_data = xml_append.getLastPdata()
+      if self.last_data_partial_xml is not None:
+        self.last_data_partial_xml.next = xml_append
+      else:
+        self.partial_xml = xml_append
+      self.last_data_partial_xml = last_data
+   
   def getPartialXML(self):
     """
     Set the partial string we will have to
     deliver in the future
     """
-    return self.partial_xml
+    if self.hasPartialXML():
+      if isinstance(self.partial_xml, Pdata):
+        return str(self.partial_xml)
+      else:
+        raise "ErrorType the self.xml haven't good type"
+    else:
+      return None
 
   def getAction(self):
     """
