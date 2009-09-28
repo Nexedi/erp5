@@ -53,9 +53,9 @@ from Products.ERP5Type.Utils import readLocalTest, \
                                     writeLocalTest, \
                                     removeLocalTest
 from Products.ERP5Type.Utils import convertToUpperCase
-from Products.ERP5Type import Permissions, PropertySheet
+from Products.ERP5Type import Permissions, PropertySheet, USE_BASE_TYPE
 from Products.ERP5Type.XMLObject import XMLObject
-from Products.ERP5Type.RoleInformation import RoleInformation
+from Products.ERP5Type.Core.RoleInformation import RoleInformation
 from OFS.Traversable import NotFound
 from OFS import SimpleItem, XMLExportImport
 from cStringIO import StringIO
@@ -1571,21 +1571,16 @@ class PortalTypeTemplateItem(ObjectTemplateItem):
     for relative_url in self._archive.keys():
       obj = p.unrestrictedTraverse(relative_url)
       obj = obj._getCopy(context)
-      # remove actions and properties
-      action_len = len(obj.listActions())
-      obj.deleteActions(selections=range(action_len))
-      obj = self.removeProperties(obj)
-      # remove some properties
-      if hasattr(obj, 'allowed_content_types'):
-        setattr(obj, 'allowed_content_types', ())
-      if hasattr(obj, 'hidden_content_type_list'):
-        setattr(obj, 'hidden_content_type_list', ())
-      if hasattr(obj, 'property_sheet_list'):
-        setattr(obj, 'property_sheet_list', ())
-      if hasattr(obj, 'base_category_list'):
-        setattr(obj, 'base_category_list', ())
-      if hasattr(obj, '_roles'):
-        setattr(obj, '_roles', [])
+      obj.meta_type
+      for attr in tuple(obj.__dict__):
+        if attr == '_property_domain_dict':
+          continue
+        if attr[0] == '_' or attr in ('allowed_content_types',
+                                      'hidden_content_type_list',
+                                      'property_sheet_list',
+                                      'base_category_list',
+                                      'last_id', 'uid', 'workflow_history'):
+          delattr(obj, attr)
       self._objects[relative_url] = obj
       obj.wl_clearLocks()
 
@@ -1978,12 +1973,7 @@ class PortalTypeAllowedContentTypeTemplateItem(BaseTemplateItem):
           action = update_dict[key]
           if action == 'nothing':
             continue
-        try:
-          portal_id = key.split('/')[-1]
-          portal_type = pt._getOb(portal_id)
-        except AttributeError:
-          LOG("portal types not found : ", 100, portal_id)
-          continue
+        portal_type = pt._getOb(key.split('/')[-1])
         property_list = self._objects.get(key, [])
         old_property_list = old_objects.get(key, ())
         object_property_list = getattr(portal_type, self.class_property, ())
@@ -2011,7 +2001,7 @@ class PortalTypeAllowedContentTypeTemplateItem(BaseTemplateItem):
       try:
         portal_id = key.split('/')[-1]
         portal_type = pt._getOb(portal_id)
-      except AttributeError:
+      except (AttributeError,  KeyError):
         LOG("portal types not found : ", 100, portal_id)
         continue
       property_list = self._objects[key]
@@ -2398,18 +2388,22 @@ class ActionTemplateItem(ObjectTemplateItem):
     for id in self._archive.keys():
       relative_url, value = id.split(' | ')
       obj = p.unrestrictedTraverse(relative_url)
-      for ai in obj.listActions():
-        if getattr(ai, 'id') == value:
-          url = posixpath.split(relative_url)
-          key = posixpath.join(url[-2], url[-1], value)
-          action = ai._getCopy(context)
-          action = self.removeProperties(action)
-          self._objects[key] = action
-          self._objects[key].wl_clearLocks()
-          break
+      if USE_BASE_TYPE and obj.getParentId() == 'portal_types':
+        action = obj._exportOldAction(value)
       else:
-        if not self.is_bt_for_diff:
-          raise NotFound, 'Action %r not found' %(id,)
+        for ai in obj.listActions():
+          if getattr(ai, 'id') == value:
+            break
+        else:
+          if self.is_bt_for_diff:
+            continue
+          raise NotFound('Action %r not found' % id)
+        action = ai._getCopy(context)
+      action = self.removeProperties(action)
+      url = posixpath.split(relative_url)
+      key = posixpath.join(url[-2], url[-1], value)
+      self._objects[key] = action
+      self._objects[key].wl_clearLocks()
 
   def install(self, context, trashbin, **kw):
     update_dict = kw.get('object_to_update')
@@ -2423,7 +2417,13 @@ class ActionTemplateItem(ObjectTemplateItem):
             if action == 'nothing':
               continue
           path = id.split('/')
-          obj = p.unrestrictedTraverse(path[:-1])
+          container = p.unrestrictedTraverse(path[:-1])
+
+          if USE_BASE_TYPE and container.getParentId() == 'portal_types':
+            container._importOldAction(self._objects[id])
+            continue
+
+          obj = container
           action_list = obj.listActions()
           for index in range(len(action_list)):
             if getattr(action_list[index], 'id') == path[-1]:
@@ -2532,25 +2532,28 @@ class PortalTypeRolesTemplateItem(BaseTemplateItem):
     for relative_url in self._archive.keys():
       obj = p.unrestrictedTraverse("portal_types/%s" %
           relative_url.split('/', 1)[1])
-      type_roles_obj = getattr(obj, '_roles', ())
-      type_role_list = []
-      for role in type_roles_obj:
+      self._objects[relative_url] = type_role_list = []
+      for role in obj.objectValues(meta_type='ERP5 Role Information'):
         type_role_dict = {}
-        # uniq
-        for property in ('id', 'title', 'description',
-            'priority', 'base_category_script'):
-          prop_value = getattr(role, property)
-          if prop_value:
-            type_role_dict[property] = prop_value
-        # condition
-        prop_value = getattr(role, 'condition')
-        if prop_value:
-          type_role_dict['condition'] = prop_value.text
-        # multi
-        type_role_dict['category'] = role.getCategory()
-        type_role_dict['base_category'] = role.getBaseCategory()
+        for k, v in aq_base(role).__getstate__().iteritems():
+          if k == 'condition':
+            if not v:
+              continue
+            v = v.text
+          elif k in ('role_base_category', 'role_category'):
+            k = k[5:]
+          elif k == 'role_name':
+            k, v = 'id', '; '.join(v)
+          elif k not in ('title', 'description'):
+            k = {'id': 'object_id', # for stable sort
+                 'role_base_category': 'base_category',
+                 'role_base_category_script_id': 'base_category_script',
+                 'role_category': 'category'}.get(k)
+            if not k:
+              continue
+          type_role_dict[k] = v
         type_role_list.append(type_role_dict)
-      self._objects[relative_url] = type_role_list
+      type_role_list.sort(key=lambda x: (x.get('title'), x['object_id'],))
 
   # Function to generate XML Code Manually
   def generateXml(self, path=None):
@@ -2559,7 +2562,7 @@ class PortalTypeRolesTemplateItem(BaseTemplateItem):
     for role in type_role_list:
       xml_data += "\n  <role id='%s'>" % role['id']
       # uniq
-      for property in ('title', 'description', 'condition', 'priority',
+      for property in ('title', 'description', 'condition',
           'base_category_script'):
         prop_value = role.get(property)
         if prop_value:
@@ -2606,8 +2609,6 @@ class PortalTypeRolesTemplateItem(BaseTemplateItem):
         property_id = property.getAttribute('id').encode()
         if property.hasChildNodes():
           property_value = property.childNodes[0].data.encode('utf_8', 'backslashreplace')
-          if property_id == 'priority':
-            property_value = float(property_value)
           type_role_property_dict[property_id] = property_value
       # multi
       multi_property_list = role.getElementsByTagName('multi_property')
@@ -2634,10 +2635,12 @@ class PortalTypeRolesTemplateItem(BaseTemplateItem):
         path = 'portal_types/%s' % roles_path.split('/', 1)[1]
         obj = p.unrestrictedTraverse(path, None)
         if obj is not None:
-          setattr(obj, '_roles', []) # reset roles before applying
+          # reset roles before applying
+          obj.manage_delObjects(list(
+            obj.objectIds(spec='ERP5 Role Information')))
           type_roles_list = self._objects[roles_path] or []
-          for type_role_property_dict in type_roles_list:
-            obj._roles.append(RoleInformation(**type_role_property_dict))
+          for role_property_dict in type_roles_list:
+            obj._importRole(role_property_dict)
 
   def uninstall(self, context, **kw):
     p = context.getPortalObject()

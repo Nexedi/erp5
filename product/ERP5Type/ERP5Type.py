@@ -23,6 +23,7 @@
 from Globals import InitializeClass, DTMLFile
 from AccessControl import ClassSecurityInfo, getSecurityManager
 from Acquisition import aq_base, aq_inner, aq_parent
+from zExceptions import BadRequest
 
 import Products
 import Products.CMFCore.TypesTool
@@ -33,14 +34,14 @@ from Products.CMFCore.interfaces.portal_types import ContentTypeInformation\
                                                 as ITypeInformation
 from Products.CMFCore.ActionProviderBase import ActionProviderBase
 from Products.CMFCore.utils import SimpleItemWithProperties
-from Products.CMFCore.Expression import createExprContext
+from Products.CMFCore.Expression import createExprContext, Expression
 from Products.CMFCore.exceptions import AccessControl_Unauthorized
 from Products.CMFCore.utils import _checkPermission
 from Products.ERP5Type import PropertySheet
 from Products.ERP5Type import _dtmldir
 from Products.ERP5Type import Permissions
-from Products.ERP5Type import USE_BASE_TYPE
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
+from Products.ERP5Type.XMLObject import XMLObject
 
 # Security uses ERP5Security by default
 try:
@@ -55,9 +56,6 @@ if ERP5UserManager is None:
   except ImportError:
     NuxUserGroups = None
 
-from RoleProviderBase import RoleProviderBase
-from RoleInformation import ori
-
 from TranslationProviderBase import TranslationProviderBase
 
 from sys import exc_info
@@ -66,9 +64,9 @@ from Products.CMFCore.exceptions import zExceptions_Unauthorized
 
 ERP5TYPE_SECURITY_GROUP_ID_GENERATION_SCRIPT = 'ERP5Type_asSecurityGroupId'
 
-class ERP5TypeInformationMixIn( FactoryTypeInformation,
-                                RoleProviderBase,
-                                TranslationProviderBase ):
+class ERP5TypeInformation(XMLObject,
+                          FactoryTypeInformation,
+                          TranslationProviderBase):
     """
     ERP5 Types are based on FactoryTypeInformation
 
@@ -81,76 +79,40 @@ class ERP5TypeInformationMixIn( FactoryTypeInformation,
     through PropertySheet classes (TALES expressions)
     """
 
-    __implements__ = ITypeInformation
-    meta_type = 'ERP5 Type Information'
+    portal_type = 'Base Type'
+    meta_type = 'ERP5 Base Type'
+    isPortalContent = 1
+    isRADContent = 1
 
     security = ClassSecurityInfo()
+    security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-    manage_options = ( SimpleItemWithProperties.manage_options[:1]
-                     + ActionProviderBase.manage_options
-                     + RoleProviderBase.manage_options
-                     + TranslationProviderBase.manage_options
-                     + SimpleItemWithProperties.manage_options[1:]
-                     )
-
-    if not USE_BASE_TYPE:
-      _properties = (TypeInformation._basic_properties + (
-        {'id':'factory', 'type': 'string', 'mode':'w',
-         'label':'Product factory method'},
-        {'id':'permission', 'type': 'string', 'mode':'w',
-         'label':'Add permission'},
-        {'id':'init_script', 'type': 'string', 'mode':'w',
-         'label':'Init Script'},
-        {'id':'acquire_local_roles'
-         , 'type': 'boolean'
-         , 'mode':'w'
-         , 'label':'Acquire Local Roles'
-         },
-        {'id':'filter_content_types', 'type': 'boolean', 'mode':'w',
-         'label':'Filter content types?'},
-        {'id':'allowed_content_types'
-         , 'type': 'multiple selection'
-         , 'mode':'w'
-         , 'label':'Allowed content types'
-         , 'select_variable':'listContentTypes'
-         },
-        {'id':'hidden_content_type_list'
-         , 'type': 'multiple selection'
-         , 'mode':'w'
-         , 'label':'Hidden content types'
-         , 'select_variable':'listContentTypes'
-         },
-        {'id':'property_sheet_list'
-         , 'type': 'multiple selection'
-         , 'mode':'w'
-         , 'label':'Property Sheets'
-         , 'select_variable':'getPropertySheetList'
-         },
-        {'id':'base_category_list'
-         , 'type': 'multiple selection'
-         , 'mode':'w'
-         , 'label':'Base Categories'
-         , 'select_variable':'getBaseCategoryList'
-         },
-        {'id':'group_list'
-         , 'type': 'multiple selection'
-         , 'mode':'w'
-         , 'label':'Groups'
-         , 'select_variable':'getGroupList'
-         },
-        ))
+    # Declarative properties
+    property_sheets = ( PropertySheet.Base
+                      , PropertySheet.XMLObject
+                      , PropertySheet.SimpleItem
+                      , PropertySheet.Folder
+                      , PropertySheet.BaseType
+                      )
 
     acquire_local_roles = False
     property_sheet_list = ()
     base_category_list = ()
     init_script = ''
     product = 'ERP5Type'
-    immediate_view = 'view'
     hidden_content_type_list = ()
     permission = ''
 
-    security.declareProtected(Permissions.ManagePortal, 'manage_main')
-    manage_main = FactoryTypeInformation.manage_propertiesForm
+    def __init__(self, id, **kw):
+      XMLObject.__init__(self, id)
+      # copied from CMFCore.TypesTool
+      if (not kw.has_key('content_meta_type')
+          and kw.has_key('meta_type')):
+        kw['content_meta_type'] = kw['meta_type']
+      if (not kw.has_key('content_icon')
+          and kw.has_key('icon')):
+        kw['content_icon'] = kw['icon']
+      self.__dict__.update(kw)
 
     # Groups are used to classify portal types (e.g. resource).
     # IMPLEMENTATION NOTE
@@ -204,8 +166,6 @@ class ERP5TypeInformationMixIn( FactoryTypeInformation,
     #
     #   Acquisition editing interface
     #
-
-    _actions_form = DTMLFile( 'editToolsActions', _dtmldir )
 
     security.declarePrivate('_guessMethodAliases')
     def _guessMethodAliases(self):
@@ -265,9 +225,10 @@ class ERP5TypeInformationMixIn( FactoryTypeInformation,
         """
         # This is part is copied from CMFCore/TypesTool/constructInstance
         # In case of temp object, we don't want to check security
-        if not (hasattr(container, 'isTempObject') and container.isTempObject())\
-               and not self.isConstructionAllowed(container):
-            raise AccessControl_Unauthorized('Cannot create %s' % self.getId())
+        if (not (hasattr(container, 'isTempObject')
+                 and container.isTempObject())
+            and not self.isConstructionAllowed(container)):
+          raise AccessControl_Unauthorized('Cannot create %s' % self.getId())
 
         # Then keep on the construction process
         ob = self._constructInstance(container, id, *args, **kw)
@@ -285,8 +246,8 @@ class ERP5TypeInformationMixIn( FactoryTypeInformation,
         # which acquire their security definition from their parent
         # The downside of this optimisation is that it is not possible to
         # set a local role definition if the local role list is empty
-        if len(self._roles):
-            self.updateLocalRolesOnSecurityGroups(ob)
+        if len(self.objectValues(meta_type='ERP5 Role Information')):
+          self.updateLocalRolesOnObject(ob)
 
         # notify workflow after generating local roles, in order to prevent
         # Unauthorized error on transition's condition
@@ -296,121 +257,51 @@ class ERP5TypeInformationMixIn( FactoryTypeInformation,
         # Reindex the object at the end
         ob.reindexObject()
 
-        if self.init_script :
-            # Acquire the init script in the context of this object
-            init_script = getattr(ob, self.init_script)
-            kw['created_by_builder'] = created_by_builder
-            init_script(*args, **kw)
+        init_script = self.getTypeInitScriptId()
+        if init_script:
+          # Acquire the init script in the context of this object
+          kw['created_by_builder'] = created_by_builder
+          getattr(ob, init_script)(*args, **kw)
 
         return ob
 
     security.declareProtected(Permissions.ManagePortal,
                               'setPropertySheetList')
-    def setPropertySheetList( self, property_sheet_list):
-        """
-          Set the list of property_sheet for this portal type
-        """
-        self.property_sheet_list = property_sheet_list
+    def setPropertySheetList(self, property_sheet_list):
+      # XXX CMF compatibility
+      self._setTypePropertySheetList(property_sheet_list)
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getHiddenContentTypeList')
-    def getHiddenContentTypeList( self ):
-        """
-            Return list of content types.
-        """
-        return self.hidden_content_type_list
-
+    def getHiddenContentTypeList(self):
+      # XXX CMF compatibility
+      return self.getTypeHiddenContentTypeList(())
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getInstanceBaseCategoryList')
     def getInstanceBaseCategoryList(self):
       """ Return all base categories of the portal type """
-      current_list = []
-      ptype_object = self
-      # get the klass of the object based on the constructor document
-      m = Products.ERP5Type._m
-      constructor = self.factory
-      klass = None
-      for method, doc in m.items():
-        if method == constructor:
-          klass = doc.klass
-          break
-
       # get categories from portal type
-      cat_list = ptype_object.base_category_list
-      current_list += cat_list
+      base_category_set = set(self.getTypeBaseCategoryList())
+
       # get categories from property sheet
-      ps_list = map(lambda p: getattr(PropertySheet, p, None),
-                    ptype_object.property_sheet_list)
-      ps_list = filter(lambda p: p is not None, ps_list)
+      ps_list = [getattr(PropertySheet, p, None)
+                 for p in self.getTypePropertySheetList()]
       # from the property sheets defined on the class
-      if klass is not None:
-        from Products.ERP5Type.Base import getClassPropertyList
-        ps_list = tuple(ps_list) + getClassPropertyList(klass)
-      for base in ps_list:
-        ps_property = getattr(base, '_categories', None)
-        if type(ps_property) in (type(()), type([])):
-          cat_dict_list = []
-          for category in ps_property:
-            if category not in current_list:
-              current_list.append(category)
-      return current_list
-
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'getInstancePropertyAndBaseCategoryList')
-    def getInstancePropertyAndBaseCategoryList(self):
-      """Return all the properties and base categories of the portal type. """
-      # XXX Does not return the list of all properties and categories
-      # currently (as implementation does not follow exactly the accessor
-      # generation, like for Expression evaluation). Should be probably better
-      # to get the list from property holder and not from property sheet
-      ptype_object = self
-      # get the klass of the object based on the constructor document
       m = Products.ERP5Type._m
-      constructor = self.factory
-      klass = None
-      for method, doc in m.items():
-        if method == constructor:
-          klass = doc.klass
-          break
-      # get the property sheet list for the portal type
-      # from the list of property sheet defined on the portal type
-      ps_list = map(lambda p: getattr(PropertySheet, p, None),
-                  ptype_object.property_sheet_list)
-      cat_list = ptype_object.base_category_list
-      ps_list = filter(lambda p: p is not None, ps_list)
-      # from the property sheets defined on the class
-      if klass is not None:
-        from Products.ERP5Type.Base import getClassPropertyList
-        ps_list = tuple(ps_list) + getClassPropertyList(klass)
-      # get all properties from the property sheet list
-      current_list = []
-      current_list += cat_list
-      current_list += ["%s_free_text" % cat for cat in cat_list]
-      for base in ps_list:
-        ps_property = getattr(base, '_properties', None)
-        if type(ps_property) in (type(()), type([])):
-          for prop in ps_property:
-            if prop['type'] != 'content':
-              if prop['id'] not in current_list:
-                current_list.append(prop['id'])
-            else:
-              suffix_list = prop['acquired_property_id']
-              for suffix in suffix_list:
-                full_id = prop['id']+'_'+suffix
-                if full_id not in current_list:
-                  current_list.append(full_id)
-        ps_property = getattr(base, '_categories', None)
-        if type(ps_property) in (type(()), type([])):
-          cat_dict_list = []
-          for category in ps_property:
-            if category not in current_list:
-              current_list.append(category)
-              current_list.append('%s_free_text' % category)
-      return current_list
+      if m.has_key(self.factory):
+        klass = m[self.factory].klass
+        if klass is not None:
+          from Products.ERP5Type.Base import getClassPropertyList
+          ps_list += getClassPropertyList(klass)
+
+      # XXX Can't return set to restricted code in Zope 2.8.
+      return list(base_category_set.union(category
+        for base in ps_list
+        for category in getattr(base, '_categories', ())))
 
     security.declareProtected(Permissions.AccessContentsInformation,
-                              'getInstancePropertyMap' )
+                              'getInstancePropertyMap')
     def getInstancePropertyMap(self):
       """
       Returns the list of properties which are specific to the portal type.
@@ -425,20 +316,17 @@ class ERP5TypeInformationMixIn( FactoryTypeInformation,
         raise
       factory_method = getattr(Products.ERP5Type.Document, factory_method_id)
       id = "some_very_unlikely_temp_object_id_which_should_not_exist"
-      portal = self.portal_url.getPortalObject()
+      portal = self.getPortalObject()
       portal_ids = portal.objectIds()
       while id in portal_ids:
         id = id + "d"
       return factory_method(portal, id).propertyMap()
 
-    security.declarePrivate('updateLocalRolesOnSecurityGroups')
-    def updateLocalRolesOnSecurityGroups(self, *args, **kw):
-      updateLocalRolesOnSecurityGroups = \
-        UnrestrictedMethod(self._updateLocalRolesOnSecurityGroups)
-      return updateLocalRolesOnSecurityGroups(*args, **kw)
+    security.declarePrivate('updateLocalRolesOnObject')
+    def updateLocalRolesOnObject(self, *args, **kw):
+      return UnrestrictedMethod(self._updateLocalRolesOnObject)(*args, **kw)
 
-    def _updateLocalRolesOnSecurityGroups(self, ob, user_name=None,
-                                         reindex=True):
+    def _updateLocalRolesOnObject(self, ob, user_name=None, reindex=True):
       """
         Assign Local Roles to Groups on object 'ob', based on Portal Type Role
         Definitions and "ERP5 Role Definition" objects contained inside 'ob'.
@@ -462,9 +350,6 @@ class ERP5TypeInformationMixIn( FactoryTypeInformation,
                 'your setup. '\
                 'Please install it to benefit from group-based security'
 
-      # Retrieve applicable roles
-      role_mapping = self.getFilteredRoleListFor(ob=ob)
-
       # Create an empty local Role Definition dict
       role_category_list_dict = {}
       role_group_list_dict = {}
@@ -481,21 +366,19 @@ class ERP5TypeInformationMixIn( FactoryTypeInformation,
                                 'agent'           : roledef.getAgentList()
                             })
 
-      # Then parse role mapping
-      for role_text, definition_list in role_mapping.items():
+      # Retrieve and parse applicable roles
+      for role in self.getFilteredRoleListFor(ob):
         # For each role definition, we look for the base_category_script
         # and try to use it to retrieve the values for the base_category list
-        for definition in definition_list:
           # get the list of base_categories that are statically defined
           static_base_category_list = [x.split('/', 1)[0]
-                                       for x in definition['category']]
+                                       for x in role.getRoleCategoryList()]
           # get the list of base_categories that are to be fetched through the
           # script
-          dynamic_base_category_list = [x for x in 
-             definition['base_category'] if x not in static_base_category_list]
+          category_order_list = role.getRoleBaseCategoryList()
+          dynamic_base_category_list = [x for x in category_order_list
+                                        if x not in static_base_category_list]
           # get the aggregated list of base categories, to preserve the order
-          category_order_list = []
-          category_order_list.extend(definition['base_category'])
           for bc in static_base_category_list:
             if bc not in category_order_list:
               category_order_list.append(bc)
@@ -503,7 +386,7 @@ class ERP5TypeInformationMixIn( FactoryTypeInformation,
           # get the script and apply it if dynamic_base_category_list is not
           # empty
           if len(dynamic_base_category_list) > 0:
-            base_category_script_id = definition['base_category_script']
+            base_category_script_id = role.getRoleBaseCategoryScriptId()
             base_category_script = getattr(ob, base_category_script_id, None)
             if base_category_script is not None:
               # call the script, which should return either a dict or a list of
@@ -531,12 +414,11 @@ class ERP5TypeInformationMixIn( FactoryTypeInformation,
 
           # Prepare definition dict once only
           category_definition_dict = {}
-          for c in definition['category']:
+          for c in role.getRoleCategoryList():
             bc, value = c.split('/', 1)
             category_definition_dict.setdefault(bc, []).append(value)
           # Now create role dict for each roles
-          for role in role_text.split(';'):
-            role = role.strip()
+          for role in role.getRoleNameList():
             if isinstance(category_result, dict):
               # category_result is a dict (which provide group IDs directly)
               # which represents of mapping of roles, security group IDs
@@ -573,9 +455,6 @@ class ERP5TypeInformationMixIn( FactoryTypeInformation,
         role_group_dict = {}
         for category_dict in value_list:
           group_id = group_id_generator(**category_dict) # category_order is passed in the dict
-                                                         # apparently, python can handle it
-                                                         # even though category_order is not a named variable
-                                                         # of the script
           # If group_id is not defined, do not use it
           if group_id not in (None, ''):
             if isinstance(group_id, str):
@@ -632,22 +511,9 @@ class ERP5TypeInformationMixIn( FactoryTypeInformation,
       if reindex:
         ob.reindexObjectSecurity()
 
-    # XXX compat. alias
-    security.declareProtected(Permissions.ModifyPortalContent,
-                              'assignRoleToSecurityGroup')
-    assignRoleToSecurityGroup = updateLocalRolesOnSecurityGroups
-
-    security.declarePublic('getFilteredRoleListFor')
-    def getFilteredRoleListFor(self, ob=None, **kw):
-        """
-        Return a mapping containing of all roles applicable to the
-        object against user.
-        """
-        # This is only for backward-compatibility. The keyword parameter
-        # took object instead of ob in the old implementation.
-        if ob is None:
-          ob = kw.get('object')
-
+    security.declarePrivate('getFilteredRoleListFor')
+    def getFilteredRoleListFor(self, ob=None):
+        """Return all roles applicable to the object against user."""
         portal = self.portal_url.getPortalObject()
         if ob is None:
           folder = portal
@@ -663,38 +529,43 @@ class ERP5TypeInformationMixIn( FactoryTypeInformation,
               folder = aq_parent(folder)
 
         ec = createExprContext(folder, portal, ob)
-        roles = []
-        append = roles.append
-        info = ori(self, folder, ob)
+        for role in self.objectValues(meta_type='ERP5 Role Information'):
+          if role.testCondition(ec):
+            yield role
 
-        # Include actions from self
-        self._filterRoleList(append,self,info,ec)
+    security.declareProtected(Permissions.ManagePortal, 'updateRoleMapping')
+    def updateRoleMapping(self, REQUEST=None, form_id=''):
+      """Update the local roles in existing objects.
+         XXX This should be implemented the same way as
+             ERP5Site_checkCatalogTable (cf erp5_administration).
+      """
+      portal = self.getPortalObject()
+      update_role_tag = self.__class__.__name__ + ".updateRoleMapping"
 
-        # Reorganize the actions by role,
-        # filtering out disallowed actions.
-        filtered_roles={
-                       }
-        for role in roles:
-            id = role['id']
-            if not filtered_roles.has_key(id):
-                filtered_roles[id] = []
-            filtered_roles[id].append(role)
+      object_list = [x.path for x in
+                     portal.portal_catalog(portal_type=self.id, limit=None)]
+      object_list_len = len(object_list)
+      # We need to use activities in order to make sure it will
+      # work for an important number of objects
+      activate = portal.portal_activities.activate
+      for i in xrange(0, object_list_len, 100):
+        current_path_list = object_list[i:i+100]
+        activate(activity='SQLQueue', priority=3, tag=update_role_tag) \
+        .callMethodOnObjectList(current_path_list,
+                                'updateLocalRolesOnSecurityGroups',
+                                reindex=False)
+        activate(activity='SQLQueue', priority=3, after_tag=update_role_tag) \
+        .callMethodOnObjectList(current_path_list,
+                                'reindexObjectSecurity')
 
-        return filtered_roles
+      if REQUEST is not None:
+        message = '%d objects updated' % object_list_len
+        return REQUEST.RESPONSE.redirect('%s/%s?portal_status_message=%s'
+          % (self.absolute_url_path(), form_id, message))
 
     #
     #   Helper methods
     #
-    def _filterRoleList(self, append, ob, info, ec):
-        r = ob.getRoleList(info)
-        if r and not isinstance(r[0], dict):
-            for ri in r:
-                if ri.testCondition(ec):
-                    append(ri.getRole(ec))
-        else:
-            for i in r:
-                append(i)
-
     def manage_editProperties(self, REQUEST):
       """
         Method overload
@@ -715,145 +586,130 @@ class ERP5TypeInformationMixIn( FactoryTypeInformation,
         _aq_reset()
       return result
 
-    def reorderActions(self, REQUEST=None):
-      """Reorder actions according to their priorities."""
-      new_actions = self._cloneActions()
-      new_actions.sort(key=lambda x: x.getPriority())
-      self._actions = tuple( new_actions )
-
-      if REQUEST is not None:
-        return self.manage_editActionsForm(REQUEST,
-            manage_tabs_message='Actions reordered.')
-
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'PrincipiaSearchSource')
     def PrincipiaSearchSource(self):
       # Support for "Find" tab in ZMI
-      search_source_list =[ self.getId(),
-         self.factory, self.permission, self.init_script,
-         ' '.join(self.property_sheet_list),
-         ' '.join(self.base_category_list) ]
-      for ai in self._actions:
-        search_source_list.extend([ai.title, ai.id, ai.getActionExpression(),
-          ai.getCondition() ])
-      for ri in self._roles:
-        search_source_list.extend([ri.id, ri.title, ri.description,
-          ri.getCondition(), ri.base_category_script ])
+      search_source_list = [self.getId(),
+                            self.getTypeFactoryMethodId(),
+                            self.getTypeAddPermission(),
+                            self.getTypeInitScriptId()]
+      search_source_list += self.getTypePropertySheetList(())
+      search_source_list += self.getTypeBaseCategoryList(())
       return ' '.join(search_source_list)
 
-if USE_BASE_TYPE:
-  from Products.ERP5Type.XMLObject import XMLObject
+    #
+    # USE_BASE_TYPE
+    #
 
-  class ERP5TypeInformation(XMLObject,
-                            ERP5TypeInformationMixIn):
-    """
-       EXPERIMENTAL - DO NOT USE THIS CLASS BESIDES R&D
-    """
-    portal_type = 'Base Type'
-    isPortalContent = 1
-    isRADContent = 1
-
-    security = ClassSecurityInfo()
-
-    # Declarative properties
-    property_sheets = ( PropertySheet.Base
-                      , PropertySheet.XMLObject
-                      , PropertySheet.SimpleItem
-                      , PropertySheet.Folder
-                      , PropertySheet.BaseType
-                      )
+    def getIcon(self):
+      return self.content_icon
 
     def getTypeInfo(self, *args):
-      if not len(args): 
+      if not args:
         return XMLObject.getTypeInfo(self)
       else:
-        return self.getParentValue().getTypeInfo(self, args[0])
+        return self.getParentValue().getTypeInfo(self, *args)
 
     security.declareProtected(Permissions.AccessContentsInformation,
-                              'getPortalPropertySheetList')
-    def getPortalPropertySheetList( self ):
-        """
-            Return list of content types.
-            XXX I (seb) think the name is bad
-                (jp) yes, the name is bad, it should be getAvailablePropertySheetList
-        """
-        result = Products.ERP5Type.PropertySheet.__dict__.keys()
-        result = filter(lambda k: not k.startswith('__'),  result)
-        result.sort()
-        return result
+                              'getAvailablePropertySheetList')
+    def getAvailablePropertySheetList(self):
+      return sorted(k for k in Products.ERP5Type.PropertySheet.__dict__
+                      if not k.startswith('__'))
 
     security.declareProtected(Permissions.AccessContentsInformation,
-                              'getPortalBaseCategoryList')
-    def getPortalBaseCategoryList( self ):
-        result = self.portal_categories.getBaseCategoryList()
-        result.sort()
-        return result
+                              'getAvailableConstraintList')
+    def getAvailableConstraintList(self):
+      return sorted(k for k in Products.ERP5Type.Constraint.__dict__
+                      if k != 'Constraint' and not k.startswith('__'))
 
     security.declareProtected(Permissions.AccessContentsInformation,
-                              'getPortalConstraintList')
-    def getPortalConstraintList( self ):
-        result = Products.ERP5Type.Constraint.__dict__.keys()
-        result = filter(lambda k: k != 'Constraint' and not k.startswith('__'),
-                        result)
-        result.sort()
-        return result
+                              'getAvailableGroupList')
+    def getAvailableGroupList(self):
+      return sorted(self.defined_group_list)
 
     security.declareProtected(Permissions.AccessContentsInformation,
-                              'getPortalTypeGroupList')
-    def getPortalTypeGroupList( self ):
-        return sorted(self.defined_group_list)
+                              'getAvailableBaseCategoryList')
+    def getAvailableBaseCategoryList(self):
+        return sorted(self._getCategoryTool().getBaseCategoryList())
 
-else:
-  class ERP5TypeInformation(ERP5TypeInformationMixIn):
-  
-    security = ClassSecurityInfo()
-    
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'getPropertySheetList')
-    def getPropertySheetList( self ):
-        """
-            Return list of content types.
-            XXX I (seb) think the name is bad
-                (jp) yes, the name is bad, it should be getAvailablePropertySheetList
-        """
-        result = Products.ERP5Type.PropertySheet.__dict__.keys()
-        result = filter(lambda k: not k.startswith('__'),  result)
-        result.sort()
-        return result
+    #
+    # Compatibitility code for actions
+    #
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'getBaseCategoryList')
-    def getBaseCategoryList( self ):
-        result = self.portal_categories.getBaseCategoryList()
-        result.sort()
-        return result
+    security.declarePrivate('listActions')
+    def listActions(self, info=None, object=None):
+      """ List all the actions defined by a provider."""
+      return sorted(self.objectValues(portal_type='Action Information'),
+                    key=lambda x: x.getFloatIndex())
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'getConstraintList')
-    def getConstraintList( self ):
-        result = Products.ERP5Type.Constraint.__dict__.keys()
-        result = filter(lambda k: k != 'Constraint' and not k.startswith('__'),
-                        result)
-        result.sort()
-        return result
+    def _normalizeActionId(self, action_id):
+      try:
+        self._checkId(action_id)
+      except BadRequest:
+        if not self.hasObject(action_id):
+          return self._normalizeActionId('action__' + action_id)
+      return action_id
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'getGroupList')
-    def getGroupList( self ):
-        return sorted(self.defined_group_list)
+    def _importOldAction(self, old_action):
+      from Products.ERP5Type.Document.ActionInformation import ActionInformation
+      old_action = old_action.__getstate__()
+      action_type = old_action.pop('category', None)
+      action_id = self._normalizeActionId(old_action.pop('id'))
+      if self.hasObject(action_id):
+        self._delObject(action_id)
+      action = ActionInformation(action_id)
+      for k, v in old_action.iteritems():
+        if k in ('action', 'condition', 'icon'):
+          if not v:
+            continue
+          v = v.__class__(v.text)
+        elif k == 'priority':
+          k = 'float_index'
+        setattr(action, k, v)
+      action.uid = None
+      action = self[self._setObject(action.id, action, set_owner=0)]
+      if action_type:
+        action._setCategoryMembership('action_type', action_type)
+      return action
+
+    def _exportOldAction(self, action_id):
+      from Products.CMFCore.ActionInformation import ActionInformation
+      action = self[self._normalizeActionId(action_id)]
+      old_action = ActionInformation(action_id,
+        category = action.getActionType(),
+        # We don't have the same default values for the following properties:
+        priority=action.getFloatIndex(),
+        permissions=tuple(action.getActionPermissionList()))
+      for k, v in action.__dict__.iteritems():
+        if k in ('action', 'condition', 'icon'):
+          v = v.__class__(v.text)
+        elif k in ('id', 'float_index', 'permissions'):
+          continue
+        setattr(old_action, k, v)
+      return old_action
+
+    def _importRole(self, role_property_dict):
+      from Products.ERP5Type.Document.RoleInformation import RoleInformation
+      role = RoleInformation(self.generateNewId())
+      for k, v in role_property_dict.iteritems():
+        if k == 'condition':
+          if isinstance(v, Expression):
+            v = v.text
+          if not v:
+            continue
+          v = Expression(v)
+        elif k == 'priority':
+          continue
+        elif k == 'id':
+          k, v = 'role_name', tuple(x.strip() for x in v.split(';'))
+        elif k in ('base_category', 'category'):
+          k, v = 'role_' + k, tuple(x.strip() for x in v)
+        elif k == 'base_category_script':
+          k = 'role_base_category_script_id'
+        setattr(role, k, v)
+      role.uid = None
+      return self[self._setObject(role.id, role, set_owner=0)]
+
 
 InitializeClass( ERP5TypeInformation )
-
-def manage_addERP5TIForm(self, REQUEST):
-  ' form to add an ERP5 Type Information '
-  return self._addTIForm(
-      self, REQUEST,
-      add_meta_type=ERP5TypeInformation.meta_type,
-      types=self.listDefaultTypeInformation())
-
-
-# Dynamic patch
-Products.CMFCore.TypesTool.typeClasses.append(
-                          {'class':ERP5TypeInformation,
-                           'name':ERP5TypeInformation.meta_type,
-                           'action':'manage_addERP5TIForm',
-                           'permission':'Manage portal'}, )
-Products.CMFCore.TypesTool.TypesTool.manage_addERP5TIForm = manage_addERP5TIForm

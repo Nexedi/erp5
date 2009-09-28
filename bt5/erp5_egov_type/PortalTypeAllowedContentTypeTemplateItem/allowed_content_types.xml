@@ -1,0 +1,20 @@
+<allowed_content_type_list>
+ <portal_type id="EGov Type">
+  <item>File</item>
+  <item>Translation Information</item>
+  <item>PDF</item>
+  <item>Role Information</item>
+  <item>Action Information</item>
+ </portal_type>
+ <portal_type id="PDF Type">
+  <item>Role Information</item>
+  <item>PDF</item>
+  <item>File</item>
+  <item>Action Information</item>
+  <item>Translation Information</item>
+ </portal_type>
+ <portal_type id="Types Tool">
+  <item>EGov Type</item>
+  <item>PDF Type</item>
+ </portal_type>
+</allowed_content_type_list>

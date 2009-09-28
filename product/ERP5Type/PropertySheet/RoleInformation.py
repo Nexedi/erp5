@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright (c) 2008 Nexedi SA and Contributors. All Rights Reserved.
+# Copyright (c) 2009 Nexedi SA and Contributors. All Rights Reserved.
 #                    Jean-Paul Smets-Solanes <jp@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
@@ -27,35 +27,41 @@
 ##############################################################################
 
 class RoleInformation:
-    """
-      EXPERIMENTAL - DO NOT USE THIS PROPERTYSHEET BESIDES R&D
-      Properties of an ERP5 Type Role Information
-    """
+  """
+    EXPERIMENTAL - DO NOT USE THIS PROPERTYSHEET BESIDES R&D
+    Properties of an ERP5 Type Role Information
+  """
 
-    _properties = (
-        { 'id':         'role_name',
-          'type':       'tokens',
-          'description':'A list of role names defined by this Role Information',
-          'mode':       'w',
-         },
-        { 'id':         'condition',
-          'type':       'tales',
-          'description':'TALES Expression to define the applicability of the role definition',
-          'mode':       'w',
-         },
-        { 'id':         'role_category',
-          'type':       'lines',
-          'description':'Static definition of the security categories',
-          'mode':       'w',
-         },
-        { 'id':         'role_base_category',
-          'type':       'lines',
-          'description':'Base categories to use in order to retrieve dynamic security categories',
-          'mode':       'w',
-         },
-        { 'id':         'role_base_category_script_id',
-          'type':       'lines',
-          'description':'Script ID to use in order retrieve dynamic security categories',
-          'mode':       'w',
-         },
-   )
+  _properties = (
+    { 'id':          'role_name',
+      'type':        'lines',
+      'description': 'A list of role names defined by this Role Information',
+      'default':     [],
+      'mode':        'w',
+      },
+    { 'id':          'condition',
+      'type':        'object',
+      'description': 'TALES Expression to define the applicability of the' \
+                     ' role',
+      'mode':        'w',
+      },
+    { 'id':          'role_category',
+      'type':        'lines',
+      'description': 'Static definition of the security categories',
+      'default':     [],
+      'mode':        'w',
+      },
+    { 'id':          'role_base_category',
+      'type':        'tokens',
+      'description': 'Base categories to use in order to retrieve dynamic' \
+                     ' security categories',
+      'default':     [],
+      'mode':        'w',
+      },
+    { 'id':          'role_base_category_script_id',
+      'type':        'string',
+      'description': 'Script ID to use in order retrieve dynamic' \
+                     ' security categories',
+      'mode':        'w',
+      },
+  )

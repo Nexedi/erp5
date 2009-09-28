@@ -99,7 +99,6 @@ if 1:
                 self.icon = Expression( expr )
         return expr
 
-
     security.declarePrivate( 'setIconExpression' )
     def setIconExpression(self, icon):
         if icon and type( icon ) is StringType:
@@ -151,7 +150,6 @@ if 1:
                  'icon': self.getIconExpression(),
                  'priority': self.getPriority() }
 
-
 ActionInformation.__init__ = __init__
 ActionInformation.getAction = getAction
 ActionInformation._getIconObject = _getIconObject
@@ -171,14 +169,18 @@ try:
   def __init__(self, action, ec):
     original_init(self, action, ec)
     if not isinstance(action, dict):
-      if self.data['icon']:
+      # ivan
+      if self.data.get('icon',  None) is not None:
         self.data['icon'] = self._getIcon
         self._lazy_keys.append('icon')
       else:
         self.data['icon'] = ''
 
   def _getIcon(self):
-    return self._action._getIconObject()(self._ec)
+    # ivan
+    icon_expression_obj = self._action._getIconObject()
+    if icon_expression_obj not in ('',  None):
+      return icon_expression_obj(self._ec)
 
   ActionInfo.__init__ = __init__
   ActionInfo._getIcon = _getIcon

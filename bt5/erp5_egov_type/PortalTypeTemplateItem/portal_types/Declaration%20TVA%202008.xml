@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="EGovTypeInformation" module="Products.ERP5Type.Document.EGovTypeInformation"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string>Formulaire de déclaration de TVA modèle 2008. This form is an instance of EGov Type. The default view should be the view of "Application Form for the hosting of an application form". The PDF Form and Scribus files which are provided should define the TVA (VAT) form which is used by the end user.</string> </value>
+        </item>
+        <item>
+            <key> <string>factory</string> </key>
+            <value> <string>addPDFDocument</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Declaration TVA 2008</string> </value>
+        </item>
+        <item>
+            <key> <string>init_script</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>permission</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>EGov Type</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

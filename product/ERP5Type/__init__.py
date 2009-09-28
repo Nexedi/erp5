@@ -30,7 +30,7 @@
     All ERP5 classes derive from ERP5Type
 """
 # Switch(es) for ongoing development which require single code base
-USE_BASE_TYPE = False
+USE_BASE_TYPE = True #False
 USE_INTERACTOR = False
 
 # Update ERP5 Globals

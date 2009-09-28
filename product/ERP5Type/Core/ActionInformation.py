@@ -1,7 +1,9 @@
 ##############################################################################
 #
-# Copyright (c) 2008 Nexedi SA and Contributors. All Rights Reserved.
-#                     Jean-Paul Smets <jp@nexedi.com>
+# Copyright (c) 2002-2009 Nexedi SARL and Contributors. All Rights Reserved.
+#                         Jean-Paul Smets <jp@nexedi.com>
+#                         Ivan Tyagov <ivan@nerpix.com>
+#                         Julien Muchembled <jm@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -26,26 +28,141 @@
 #
 ##############################################################################
 
-
 from AccessControl import ClassSecurityInfo
-from Products.ERP5Type import Permissions
-from Products.ERP5Type import PropertySheet
-from Products.ERP5Type.Base import Base
+from Acquisition import aq_base
+from Products.CMFCore.Expression import Expression
+from Products.CMFCore.ActionInformation import ActionInfo
+from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
+from Products.ERP5Type.Permissions import AccessContentsInformation
+from Products.ERP5Type.XMLObject import XMLObject
+from zLOG import LOG
 
-class ActionInformation(Base):
+class ActionInformation(XMLObject):
   """
-    ActionInformation is a placeholder class which
-    implements the same interface as CMFCore.ActionInformation
+  EXPERIMENTAL - DO NOT USE THIS CLASS BESIDES R&D
+  ActionInformation is an ERP5 type which will eventually replace respective ActionInformation from CMF.
   """
-    
+  # XXX 'icon' property is not used. We can problably drop it.
+
   meta_type = 'ERP5 Action Information'
   portal_type = 'Action Information'
-  isPortalContent = 1 
+  add_permission = Permissions.AddPortalContent
+  isPortalContent = 1
   isRADContent = 1
-  
-  security = ClassSecurityInfo()
+  icon = None # Override DynamicType.icon from CMFCore
 
-  property_sheets = ( PropertySheet.Base
-                    , PropertySheet.SimpleItem
+  # Declarative security
+  security = ClassSecurityInfo()
+  security.declareObjectProtected(AccessContentsInformation)
+
+  # Declarative properties
+  property_sheets = ( PropertySheet.CategoryCore
+                    , PropertySheet.DublinCore
                     , PropertySheet.ActionInformation
                     )
+
+  def testCondition(self, ec):
+    """ Evaluate condition using context, 'ec', and return 0 or 1."""
+    condition = self.getCondition()
+    return condition is None and 1 or condition(ec)
+
+  security.declarePublic('getVisibility')
+  def getVisibility(self):
+    """ Return whether the action should be visible in the CMF UI."""
+    return self.isVisible()
+
+  def _setActionExpression(self, value):
+    if isinstance(value, basestring):
+      value = Expression(value)
+    self._baseSetActionExpression(value)
+  def _setCondition(self, value):
+    if isinstance(value, basestring):
+      value = Expression(value)
+    self._baseSetCondition(value)
+  def _setIcon(self, value):
+    if isinstance(value, basestring):
+      value = Expression(value)
+    self._baseSetIcon(value)
+
+  def getCondition(self):
+    if getattr(aq_base(self), 'condition', None) == '':
+      del self.condition
+    return self._baseGetCondition()
+  def getIcon(self):
+    if getattr(aq_base(self), 'icon', None) == '':
+      del self.icon
+    return self._baseGetIcon()
+
+  security.declareProtected(AccessContentsInformation, 'getActionText')
+  def getActionText(self):
+    """
+    """
+    return getattr(self.getActionExpression(), 'text', None)
+  security.declareProtected(AccessContentsInformation, 'getConditionText')
+  def getConditionText(self):
+    """
+    """
+    return getattr(self.getCondition(), 'text', None)
+  security.declareProtected(AccessContentsInformation, 'getIconText')
+  def getIconText(self):
+    """
+    """
+    return getattr(self.getIcon(), 'text', None)
+
+  security.declareProtected(AccessContentsInformation, 'PrincipiaSearchSource')
+  def PrincipiaSearchSource(self):
+    # Support for "Find" tab in ZMI
+    search_source_list = [self.getId(),
+                          self.getTitle(),
+                          self.getDescription(),
+                          self.getActionText(),
+                          self.getConditionText()]
+    return ' '.join(search_source_list)
+
+  #
+  # XXX CMF compatibility
+  #
+
+  def _getActionObject(self):
+    return self.getActionExpression()
+
+  security.declarePrivate('getCategory')
+  def getCategory(self):
+    return self.getActionType()
+
+  security.declarePrivate('getPermissions')
+  def getPermissions(self):
+    return self.getActionPermissionList()
+
+  #def getActionCategorySelectionList(self):
+  #  return self._getCategoryTool().action_type.objectIds()
+  #def getPriority(self):
+  #  return self.getFloatIndex()
+
+  security.declarePrivate('getMapping')
+  def getMapping(self):
+    """ Get a mapping of this object's data.
+    """
+    return { 'id': self.getId(),
+             'title': self.getTitle(),
+             'description': self.getDescription(),
+             'category':  self.getActionType(),
+             'condition': self.getCondition(),
+             'permissions': self.getPermissions(),   #self.permissions,
+             'visible': self.getVisibility(), #bool(self.visible),
+             'action': self.getActionText() }
+
+  security.declarePrivate('getAction')
+  def getAction(self, ec):
+    """ Compute the action using context, 'ec'; return a mapping of
+          info about the action.
+       XXX To be renamed or removed,
+           so that 'action_expression' property can be renamed to 'action'.
+    """
+    return ActionInfo(self, ec)
+
+#  def Title(self):
+#    return self.getTitle()
+#
+#  def Description(self):
+#    return self.getDescription()

@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="PDFTypeInformation" module="Products.ERP5Type.Document.PDFTypeInformation"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string>EGov Type extends PDF Type with egovernment configuration. EGov Type is implemented as a PDF Type for now. This means that the portal type of  "EGov Type" is PDF Type. It also means that all the configuration parameters are provided through a PDF form (rather than through a normal form) with the goal to implement the concept of "eForm Hosting Application Form" ie. an application form to request the hosting of another application form. Once the system is bootstrapped, The portal type of EGov Type should become "EGov Type". The idea behing is that the process of requesting to the Ministry of IT the hosting of an application form in ERP5 eGov is a business process no different in essence with the process of applying to the ministry of Finance for the payment of VAT.</string> </value>
+        </item>
+        <item>
+            <key> <string>factory</string> </key>
+            <value> <string>addEGovTypeInformation</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>EGov Type</string> </value>
+        </item>
+        <item>
+            <key> <string>init_script</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>permission</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>PDF Type</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1294,6 +1294,7 @@ class ERP5Generator(PortalGenerator):
     """
     if not 'portal_actions' in p.objectIds():
       PortalGenerator.setupTools(self, p)
+      p._delObject('portal_types')
 
     # It is better to remove portal_catalog
     # which is ZCatalog as soon as possible,
@@ -1349,6 +1350,8 @@ class ERP5Generator(PortalGenerator):
       addTool('ERP5 Cache Tool', None)
     if not p.hasObject('portal_memcached'):
       addTool('ERP5 Memcached Tool', None)
+    if not p.hasObject('portal_types'):
+      addTool('ERP5 Types Tool', None)
 
     try:
       addTool = p.manage_addProduct['ERP5Subversion'].manage_addTool
@@ -1681,7 +1684,7 @@ class ERP5Generator(PortalGenerator):
 
     # ERP5 Design Choice is that all content should be user defined
     # Content is disseminated through business templates
-    self.setupBusinessTemplate(p)
+    self.setupPortalTypes(p)
 
     if not p.hasObject('content_type_registry'):
       self.setupMimetypes(p)
@@ -1701,17 +1704,19 @@ class ERP5Generator(PortalGenerator):
     if not update:
       self.setupIndex(p, **kw)
 
-  def setupBusinessTemplate(self,p):
+  def setupPortalTypes(self, p):
     """
     Install the portal_type of Business Template
     """
     tool = getToolByName(p, 'portal_types', None)
     if tool is None:
       return
-    if 'Business Template' not in tool.objectIds():
-      t = BusinessTemplate.factory_type_information
-      ti = apply(ERP5TypeInformation, (), t)
-      tool._setObject(t['id'], ti)
+    for t in BusinessTemplate,:
+      t = t.factory_type_information
+      if not tool.hasObject(t['id']):
+        tool._setObject(t['id'],
+          ERP5TypeInformation(portal_type=ERP5TypeInformation.portal_type,
+                              uid=None, **t))
 
   def setupERP5Core(self,p,**kw):
     """
@@ -1722,11 +1727,10 @@ class ERP5Generator(PortalGenerator):
       return
     if template_tool.getInstalledBusinessTemplate('erp5_core') is None:
       bootstrap_dir = self.getBootstrapDirectory()
-      if p.erp5_catalog_storage is not '':
-        business_template_list = ('erp5_core', p.erp5_catalog_storage, 'erp5_xhtml_style')
-      else:
-        business_template_list = ('erp5_core', 'erp5_xhtml_style')
-      for bt in business_template_list:
+      # XXX erp5_type BT will be merged into erp5_core later.
+      for bt in 'erp5_core', 'erp5_type', p.erp5_catalog_storage, 'erp5_xhtml_style':
+        if not bt:
+          continue
         template = os.path.join(bootstrap_dir, bt)
         if not os.path.exists(template):
           template = os.path.join(bootstrap_dir, '%s.bt5' % bt)

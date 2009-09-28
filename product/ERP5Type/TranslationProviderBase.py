@@ -17,16 +17,24 @@ from AccessControl import ClassSecurityInfo
 from Products.CMFCore.Expression import Expression
 from Products.ERP5Type import _dtmldir
 
-from Permissions import ManagePortal
+from Permissions import AccessContentsInformation, ManagePortal, ModifyPortalContent
 from OFS.SimpleItem import SimpleItem
 from Products.ERP5Type import PropertySheet
-from Acquisition import aq_base
+from Acquisition import aq_base, Implicit
 
 import Products
 
 from zLOG import LOG
 
-_MARKER = {}
+
+class PropertyDomainDict(Implicit):
+  def _aq_dynamic(self, attr):
+    type_info = self.aq_parent
+    try:
+      return type_info._property_domain_dict[attr].__of__(type_info)
+    except KeyError:
+      return None
+
 
 class TranslationProviderBase:
   """
@@ -86,33 +94,30 @@ class TranslationProviderBase:
           property_domain_dict[prop_id] = TranslationInformation(prop_id, domain_name)
 
     original_property_domain_dict = getattr(aq_base(self),
-                                            '_property_domain_dict', _MARKER)
+                                            '_property_domain_dict', None)
     original_property_domain_keys = original_property_domain_dict.keys()
     property_domain_keys = property_domain_dict.keys()
     property_domain_keys.sort()
     original_property_domain_keys.sort()
 
     # Only update if required in order to prevent ZODB from growing
-    if original_property_domain_dict is _MARKER or\
+    if original_property_domain_dict is None or\
           property_domain_keys != original_property_domain_keys:
       # Update existing dict
       property_domain_dict.update(original_property_domain_dict)
       # And store
       self._property_domain_dict = property_domain_dict
 
-        
-  security.declarePrivate( 'getPropertyTranslationDomainDict' )
-  def getPropertyTranslationDomainDict(self,):
+  security.declareProtected(AccessContentsInformation, 'getPropertyTranslationDomainDict')
+  def getPropertyTranslationDomainDict(self):
     """
     Return all the translation defined by a provider.
     """
-    property_domain_dict = getattr(aq_base(self),
-                                   '_property_domain_dict', _MARKER)
     # initialize if needed
-    if property_domain_dict is _MARKER:
+    if getattr(self, '_property_domain_dict', None) is None:
       self.updateInitialPropertyTranslationDomainDict()
-      return self._property_domain_dict
-    return property_domain_dict
+    return dict((k, v.__of__(self))
+                for k, v in self._property_domain_dict.iteritems())
 
   #
   #   ZMI methods
@@ -167,19 +172,22 @@ class TranslationProviderBase:
       return self.manage_editTranslationForm(REQUEST, manage_tabs_message=
                                        'Translations Updated.')
 
+  security.declareProtected(ModifyPortalContent, 'property_domain_dict')
+  @property
+  def property_domain_dict(self):
+    return PropertyDomainDict().__of__(self)
 
 InitializeClass(TranslationProviderBase)
 
 
-class TranslationInformation (SimpleItem):
+class TranslationInformation(SimpleItem):
   """
   This class represent the association between a property of a portal type and
   the domain name used to translate this property
   """
-
   security = ClassSecurityInfo()
+  security.declareObjectProtected(AccessContentsInformation)
 
-  security.declarePrivate( '__init__')
   def __init__(self, property_name='', domain_name=None):
     """
     Set up an instance
@@ -187,26 +195,22 @@ class TranslationInformation (SimpleItem):
     self.property_name = property_name
     self.domain_name = domain_name
 
-  security.declarePrivate('getPropertyName')
+  security.declareProtected(AccessContentsInformation, 'getPropertyName')
   def getPropertyName(self):
     """
     Return the property name
     """
     return self.property_name
 
-  security.declarePrivate('getDomainName')
+  security.declareProtected(AccessContentsInformation, 'getDomainName')
   def getDomainName(self):
     """
     Return the domain name
     """
     return self.domain_name
 
-  security.declarePrivate('setDomainName')
-  def setDomainName(self, domain_name='erp5_ui'):
-    """
-    Set the domain name value
-    """
-    self.domain_name = domain_name
-  
-    
+  security.declareProtected(ModifyPortalContent, 'edit')
+  def edit(self, **kw):
+    self.__dict__.update(kw)
+
 InitializeClass(TranslationInformation)

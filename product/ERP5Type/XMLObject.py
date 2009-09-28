@@ -76,19 +76,11 @@ class XMLObject( Folder ):
         )
       }
 
-    # Declarative properties
-    property_sheets = ( PropertySheet.Base
-                      , PropertySheet.XMLObject
-                      , PropertySheet.SimpleItem
-                      , PropertySheet.Folder
-                      )
-
     # Declarative security
     security = ClassSecurityInfo()
 
     # Declarative properties
-    property_sheets = ( PropertySheet.Base
-                      , PropertySheet.XMLObject )
+    property_sheets = ( PropertySheet.XMLObject, )
 
     # Inheritance fixes
     security.declareProtected( Permissions.ModifyPortalContent, 'setDescription' )

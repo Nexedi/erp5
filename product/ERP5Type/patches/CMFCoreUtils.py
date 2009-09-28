@@ -39,15 +39,17 @@ def CMFCoreUtils_getViewFor(obj, view='view'):
     ti = obj.getTypeInfo()
 
     if ti is not None:
-
+        view_id = ti._normalizeActionId(view)
         context = getActionContext( obj )
         test_context = getExprContext(obj, obj) # Patch 1: mimic _listActionInfos in ActionsTool
         actions = ti.listActions()
         for action in actions:
-            if action.getId() == view or action.getCategory().endswith('_%s' % view):
+            # portal_types hack
+            action_type = action.getActionType()
+            if action.getId() == view_id or action_type.endswith('_%s' % view):
                                                           # Patch 2: consider anything ending by _view
                 if _verifyActionPermissions(obj, action):
-                  if action.visible and action.testCondition(test_context): # Patch 3: test actions
+                  if action.isVisible() and action.testCondition(test_context): # Patch 3: test actions
                     target = action.action(context).strip()
                     if target.startswith('/'):
                         target = target[1:]
@@ -64,7 +66,6 @@ def CMFCoreUtils_getViewFor(obj, view='view'):
                     target = target[1:]
                 __traceback_info__ = ( ti.getId(), target )
                 return obj.restrictedTraverse( target )
-
         raise AccessControl_Unauthorized( 'No accessible views available for '
                                     '%s' % '/'.join( obj.getPhysicalPath() ) )
     else:

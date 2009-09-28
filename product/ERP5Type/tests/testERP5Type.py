@@ -1371,16 +1371,16 @@ class TestPropertySheet:
       type_tool = self.getTypeTool()
       portal_type_object = type_tool['Organisation']
       def addCustomAction(name,condition):
-        portal_type_object.addAction(
-          id = name
-          , name = 'Become Geek'
-          , action = 'become_geek_action'
-          , condition = condition
-          , permission = ('View', )
-          , category = 'object_action'
-          , visible = 1
-          , priority = 2.0 )
-      addCustomAction('action1','python: object.getDescription()=="foo"')
+        portal_type_object.newContent(portal_type='Action Information',
+          id = name,
+          title = 'Become Geek',
+          action = 'string:${object_url}/become_geek_action',
+          condition = condition,
+          action_permission = 'View',
+          action_type = 'object_action',
+          visible = 1,
+          float_index = 2.0)
+      addCustomAction('action1','python: here.getDescription()=="foo"')
       obj = self.getOrganisationModule().newContent(portal_type='Organisation')
       action_tool = self.getPortal().portal_actions
       actions = action_tool.listFilteredActionsFor(obj)
@@ -2178,8 +2178,8 @@ class TestPropertySheet:
       doc = self.portal.person_module.newContent(portal_type='Person')
       ti = self.getTypesTool()['Person']
       self.assertFalse(hasattr(doc, 'getDestination'))
-      ti.manage_editProperties(dict(base_category_list=
-                               list(ti.base_category_list) + ['destination']))
+      ti.manage_editProperties(dict(type_base_category_list=
+        ti.getTypeBaseCategoryList(()) + ['destination']))
       self.assertTrue(hasattr(doc, 'getDestination'))
 
     def test_aq_reset_on_workflow_chain_change(self):

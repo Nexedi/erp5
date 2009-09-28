@@ -550,8 +550,7 @@ def initializePortalTypeDynamicProperties(self, klass, ptype, aq_key, portal):
     prop_list = list(getattr(klass, '_properties', []))
     cat_list = list(getattr(klass, '_categories', []))
     constraint_list = list(getattr(klass, '_constraints', []))
-    if (ptype_object is not None) and \
-       (ptype_object.meta_type == 'ERP5 Type Information'):
+    if ptype_object is not None:
       # Make sure this is an ERP5Type object
       ps_list = [getattr(PropertySheet, p, None) for p in
           ptype_object.property_sheet_list]
@@ -579,8 +578,7 @@ def initializePortalTypeDynamicProperties(self, klass, ptype, aq_key, portal):
             raise ValueError, "%s is not a list for %s" % (ps_property_name,
                                                            base)
 
-    if (ptype_object is not None) and \
-       (ptype_object.meta_type == 'ERP5 Type Information'):
+    if ptype_object is not None:
       cat_list += ptype_object.base_category_list
     prop_holder._portal_type = ptype
     prop_holder._properties = prop_list
@@ -3257,8 +3255,7 @@ class Base( CopyContainer,
     """Assign Local Roles to Groups on self, based on Portal Type Role
     Definitions and "ERP5 Role Definition" objects contained inside self.
     """
-    self._getTypesTool().getTypeInfo(self)\
-                          .updateLocalRolesOnSecurityGroups(self, **kw)
+    self._getTypesTool().getTypeInfo(self).updateLocalRolesOnObject(self, **kw)
 
   security.declareProtected(Permissions.ModifyPortalContent,
                             'assignRoleToSecurityGroup')
