@@ -41,6 +41,16 @@
             <value> <string>Base_doSelect</string> </value>
         </item>
         <item>
+            <key> <string>description</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>edit_order</string> </key>
+            <value>
+              <list/>
+            </value>
+        </item>
+        <item>
             <key> <string>encoding</string> </key>
             <value> <string>UTF-8</string> </value>
         </item>
@@ -81,7 +91,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>ApparelTintItemModule_viewApparelFabricItemList</string> </value>
+            <value> <string>ApparelBathModule_viewApparelBathList</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
@@ -97,7 +107,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Apparel Tint Items</string> </value>
+            <value> <string>Apparel Bathes</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>
@@ -105,6 +115,10 @@
         </item>
         <item>
             <key> <string>update_action</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>update_action_title</string> </key>
             <value> <string></string> </value>
         </item>
       </dictionary>
