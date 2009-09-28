@@ -81,10 +81,6 @@
    <role>Manager</role>
   </permission>
   <permission type='tuple'>
-   <name>Add CMF Report Tools</name>
-   <role>Manager</role>
-  </permission>
-  <permission type='tuple'>
    <name>Add CMF Setup Tools</name>
    <role>Manager</role>
   </permission>
@@ -131,6 +127,9 @@
   <permission type='tuple'>
    <name>Add ERP5 Filesystem Formulator Forms</name>
    <role>Manager</role>
+  </permission>
+  <permission type='list'>
+   <name>Add ERP5 Form Printouts</name>
   </permission>
   <permission type='tuple'>
    <name>Add ERP5 Forms</name>
@@ -211,6 +210,9 @@
   <permission type='tuple'>
    <name>Add Formulator Forms</name>
    <role>Manager</role>
+  </permission>
+  <permission type='list'>
+   <name>Add HBTreeFolder2s</name>
   </permission>
   <permission type='tuple'>
    <name>Add LocalContents</name>
@@ -454,10 +456,6 @@
    <role>Manager</role>
   </permission>
   <permission type='tuple'>
-   <name>Change user folder</name>
-   <role>Manager</role>
-  </permission>
-  <permission type='tuple'>
    <name>Copy or Move</name>
    <role>Assignee</role>
    <role>Assignor</role>
@@ -680,6 +678,9 @@
   <permission type='tuple'>
    <name>Use Factories</name>
    <role>Manager</role>
+  </permission>
+  <permission type='list'>
+   <name>Use external editor</name>
   </permission>
   <permission type='tuple'>
    <name>Use mailhost services</name>
