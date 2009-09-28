@@ -644,6 +644,31 @@ class ERP5TypeInformation(XMLObject,
     # Compatibitility code for actions
     #
 
+    security.declareProtected(Permissions.ModifyPortalContent, 'addAction')
+    def addAction(self, id, name, action, condition, permission, category,
+                  icon=None, visible=1, priority=1.0, REQUEST=None,
+                  description=None):
+      # XXX Should be deprecated. newContent already does everything we want.
+      if isinstance(permission, basestring):
+        permission = permission,
+      self.newContent(portal_type='Action Information',
+                      reference=id,
+                      title=name,
+                      action=action,
+                      condition=condition,
+                      permission_list=permission,
+                      action_type=category,
+                      icon=icon,
+                      visible=visible,
+                      float_index=priority,
+                      description=description)
+
+    security.declareProtected(Permissions.ModifyPortalContent, 'deleteActions')
+    def deleteActions(self, selections=(), REQUEST=None):
+      # XXX Should be deprecated.
+      action_list = self.listActions()
+      self.manage_delObjects([action_list[x].id for x in selections])
+
     security.declarePrivate('listActions')
     def listActions(self, info=None, object=None):
       """ List all the actions defined by a provider."""

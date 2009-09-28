@@ -26,6 +26,7 @@ import Products
 
 from zLOG import LOG
 
+_MARKER = {}
 
 class PropertyDomainDict(Implicit):
   """
@@ -100,14 +101,14 @@ class TranslationProviderBase:
           property_domain_dict[prop_id] = TranslationInformation(prop_id, domain_name)
 
     original_property_domain_dict = getattr(aq_base(self),
-                                            '_property_domain_dict', None)
+                                            '_property_domain_dict', _MARKER)
     original_property_domain_keys = original_property_domain_dict.keys()
     property_domain_keys = property_domain_dict.keys()
     property_domain_keys.sort()
     original_property_domain_keys.sort()
 
     # Only update if required in order to prevent ZODB from growing
-    if original_property_domain_dict is None or \
+    if original_property_domain_dict is _MARKER or\
           property_domain_keys != original_property_domain_keys:
       # Update existing dict
       property_domain_dict.update(original_property_domain_dict)
@@ -169,7 +170,7 @@ class TranslationProviderBase:
       new_domain_name = properties.get(prop_name)
       prop_object = property_domain_dict[prop_name]
       if new_domain_name != prop_object.getDomainName():
-        prop_object.setDomainName(new_domain_name)
+        prop_object.edit(domain_name=new_domain_name)
 
     from Products.ERP5Type.Base import _aq_reset
     _aq_reset() # Reset accessor cache

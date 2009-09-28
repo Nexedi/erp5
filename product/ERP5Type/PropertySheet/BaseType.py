@@ -33,6 +33,11 @@ class BaseType:
     """
 
     _properties = (
+        { 'id':         'type_icon',
+          'storage_id': 'content_icon', # CMF Compatibility
+          'type':       'string',
+          'mode':       'w',
+         },
         { 'id':         'type_factory_method_id',
           'storage_id': 'factory', # CMF Compatibility
           'type':       'string',
