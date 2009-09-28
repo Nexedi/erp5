@@ -20,6 +20,7 @@
 #
 ##############################################################################
 
+import zope.interface
 from Globals import InitializeClass, DTMLFile
 from AccessControl import ClassSecurityInfo, getSecurityManager
 from Acquisition import aq_base, aq_inner, aq_parent
@@ -36,11 +37,11 @@ from Products.CMFCore.utils import SimpleItemWithProperties
 from Products.CMFCore.Expression import createExprContext, Expression
 from Products.CMFCore.exceptions import AccessControl_Unauthorized
 from Products.CMFCore.utils import _checkPermission
-from Products.ERP5Type import PropertySheet
-from Products.ERP5Type import _dtmldir
-from Products.ERP5Type import Permissions
+from Products.ERP5Type import _dtmldir, interfaces, Permissions, PropertySheet
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 from Products.ERP5Type.XMLObject import XMLObject
+
+ERP5TYPE_SECURITY_GROUP_ID_GENERATION_SCRIPT = 'ERP5Type_asSecurityGroupId'
 
 # Security uses ERP5Security by default
 try:
@@ -61,10 +62,158 @@ from sys import exc_info
 from zLOG import LOG, ERROR
 from Products.CMFCore.exceptions import zExceptions_Unauthorized
 
-ERP5TYPE_SECURITY_GROUP_ID_GENERATION_SCRIPT = 'ERP5Type_asSecurityGroupId'
+
+class LocalRoleAssignorMixIn(object):
+    security = ClassSecurityInfo()
+    security.declareObjectProtected(Permissions.AccessContentsInformation)
+
+    zope.interface.implements(interfaces.ILocalRoleAssignor)
+
+    security.declarePrivate('updateLocalRolesOnObject')
+    def updateLocalRolesOnDocument(self, *args, **kw):
+      return UnrestrictedMethod(self._updateLocalRolesOnDocument)(*args, **kw)
+
+    def _updateLocalRolesOnDocument(self, ob, user_name=None, reindex=True):
+      """
+        Assign Local Roles to Groups on object 'ob', based on Portal Type Role
+        Definitions and "ERP5 Role Definition" objects contained inside 'ob'.
+      """
+      #FIXME We should check the type of the acl_users folder instead of
+      #      checking which product is installed.
+      if user_name is None:
+        # First try to guess from the owner
+        try:
+          user_name = ob.getOwnerInfo()['id']
+        except (AttributeError, TypeError):
+          pass
+      if user_name is None:
+        if ERP5UserManager is not None:
+          # We use id for roles in ERP5Security
+          user_name = getSecurityManager().getUser().getId()
+        elif NuxUserGroups is not None:
+          user_name = getSecurityManager().getUser().getUserName()
+        else:
+          raise RuntimeError, 'Product "ERP5Security" was not found on'\
+                'your setup. '\
+                'Please install it to benefit from group-based security'
+
+      group_id_role_dict = self.getLocalRolesFor(ob, user_name)
+
+      # Update role assignments to groups
+      if ERP5UserManager is not None: # Default implementation
+        # Clean old group roles
+        old_group_list = ob.get_local_roles()
+        ob.manage_delLocalRoles([x[0] for x in old_group_list])
+        # Save the owner
+        for group, role_list in old_group_list:
+          if 'Owner' in role_list:
+            group_id_role_dict.setdefault(group, set()).add('Owner')
+        # Assign new roles
+        for group, role_list in group_id_role_dict.iteritems():
+          if role_list:
+            ob.manage_addLocalRoles(group, role_list)
+      else: # NuxUserGroups implementation
+        # Clean old group roles
+        old_group_list = ob.get_local_group_roles()
+        # We duplicate role settings to mimic PAS
+        ob.manage_delLocalGroupRoles([x[0] for x in old_group_list])
+        ob.manage_delLocalRoles([x[0] for x in old_group_list])
+        # Save the owner
+        for group, role_list in old_group_list:
+          if 'Owner' in role_list:
+            group_id_role_dict.setdefault(group, set()).add('Owner')
+        # Assign new roles
+        for group, role_list in group_id_role_dict.iteritems():
+          # We duplicate role settings to mimic PAS
+          ob.manage_addLocalGroupRoles(group, role_list)
+          ob.manage_addLocalRoles(group, role_list)
+      # Make sure that the object is reindexed
+      if reindex:
+        ob.reindexObjectSecurity()
+
+    security.declarePrivate("getLocalRolesFor")
+    def getLocalRolesFor(self, ob, user_name=None):
+      """Compute the security that should be applied on an object
+
+      Returned value is a dict: {groud_id: role_name_set, ...}
+      """
+      group_id_role_dict = {}
+      # Merge results from applicable roles
+      for role in self.getFilteredRoleListFor(ob):
+        for group_id, role_list \
+        in role.getLocalRolesFor(ob, user_name).iteritems():
+          group_id_role_dict.setdefault(group_id, set()).update(role_list)
+      return group_id_role_dict
+
+    security.declarePrivate('getFilteredRoleListFor')
+    def getFilteredRoleListFor(self, ob=None):
+      """Return all role generators applicable to the object."""
+      portal = self.getPortalObject()
+      if ob is None:
+        folder = portal
+      else:
+        folder = aq_parent(ob)
+        # Search up the containment hierarchy until we find an
+        # object that claims it's a folder.
+        while folder is not None:
+          if getattr(aq_base(folder), 'isPrincipiaFolderish', 0):
+            break # found it.
+          else:
+            folder = aq_parent(folder)
+
+      ec = createExprContext(folder, portal, ob)
+      for role in self.getRoleInformationList():
+        if role.testCondition(ec):
+          yield role
+
+      # Return also explicit local roles defined as subobjects of the document
+      if getattr(aq_base(ob), 'isPrincipiaFolderish', 0) and \
+         self.allowType('Role Definition'):
+        for role in ob.objectValues(portal_type='Role Definition'):
+          if role.getRoleName():
+            yield role
+
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'getRoleInformationList')
+    def getRoleInformationList(self):
+      """Return all Role Information objects stored on this portal type"""
+      return self.objectValues(portal_type='Role Information')
+
+    security.declareProtected(Permissions.ModifyPortalContent,
+                              'updateRoleMapping')
+    def updateRoleMapping(self, REQUEST=None, form_id=''):
+      """Update the local roles in existing objects.
+         XXX This should be implemented the same way as
+             ERP5Site_checkCatalogTable (cf erp5_administration).
+      """
+      portal = self.getPortalObject()
+      update_role_tag = self.__class__.__name__ + ".updateRoleMapping"
+
+      object_list = [x.path for x in
+                     portal.portal_catalog(portal_type=self.id, limit=None)]
+      object_list_len = len(object_list)
+      # We need to use activities in order to make sure it will
+      # work for an important number of objects
+      activate = portal.portal_activities.activate
+      for i in xrange(0, object_list_len, 100):
+        current_path_list = object_list[i:i+100]
+        activate(activity='SQLQueue', priority=3, tag=update_role_tag) \
+        .callMethodOnObjectList(current_path_list,
+                                'updateLocalRolesOnSecurityGroups',
+                                reindex=False)
+        activate(activity='SQLQueue', priority=3, after_tag=update_role_tag) \
+        .callMethodOnObjectList(current_path_list,
+                                'reindexObjectSecurity')
+
+      if REQUEST is not None:
+        message = '%d objects updated' % object_list_len
+        return REQUEST.RESPONSE.redirect('%s/%s?portal_status_message=%s'
+          % (self.absolute_url_path(), form_id, message))
+
 
 class ERP5TypeInformation(XMLObject,
                           FactoryTypeInformation,
+                          LocalRoleAssignorMixIn,
                           TranslationProviderBase):
     """
     ERP5 Types are based on FactoryTypeInformation
@@ -89,12 +238,7 @@ class ERP5TypeInformation(XMLObject,
     security.declareObjectProtected(Permissions.AccessContentsInformation)
 
     # Declarative properties
-    property_sheets = ( PropertySheet.Base
-                      , PropertySheet.XMLObject
-                      , PropertySheet.SimpleItem
-                      , PropertySheet.Folder
-                      , PropertySheet.BaseType
-                      )
+    property_sheets = ( PropertySheet.BaseType, )
 
     acquire_local_roles = False
     property_sheet_list = ()
@@ -317,140 +461,6 @@ class ERP5TypeInformation(XMLObject,
         id = id + "d"
       return factory_method(portal, id).propertyMap()
 
-    security.declarePrivate('updateLocalRolesOnObject')
-    def updateLocalRolesOnDocument(self, *args, **kw):
-      return UnrestrictedMethod(self._updateLocalRolesOnDocument)(*args, **kw)
-
-    def _updateLocalRolesOnDocument(self, ob, user_name=None, reindex=True):
-      """
-        Assign Local Roles to Groups on object 'ob', based on Portal Type Role
-        Definitions and "ERP5 Role Definition" objects contained inside 'ob'.
-      """
-      #FIXME We should check the type of the acl_users folder instead of
-      #      checking which product is installed.
-      if user_name is None:
-        # First try to guess from the owner
-        try:
-          user_name = ob.getOwnerInfo()['id']
-        except (AttributeError, TypeError):
-          pass
-      if user_name is None:
-        if ERP5UserManager is not None:
-          # We use id for roles in ERP5Security
-          user_name = getSecurityManager().getUser().getId()
-        elif NuxUserGroups is not None:
-          user_name = getSecurityManager().getUser().getUserName()
-        else:
-          raise RuntimeError, 'Product "ERP5Security" was not found on'\
-                'your setup. '\
-                'Please install it to benefit from group-based security'
-
-      group_id_role_dict = self.getLocalRolesFor(ob, user_name)
-
-      # Update role assignments to groups
-      if ERP5UserManager is not None: # Default implementation
-        # Clean old group roles
-        old_group_list = ob.get_local_roles()
-        ob.manage_delLocalRoles([x[0] for x in old_group_list])
-        # Save the owner
-        for group, role_list in old_group_list:
-          if 'Owner' in role_list:
-            group_id_role_dict.setdefault(group, set()).add('Owner')
-        # Assign new roles
-        for group, role_list in group_id_role_dict.iteritems():
-          if role_list:
-            ob.manage_addLocalRoles(group, role_list)
-      else: # NuxUserGroups implementation
-        # Clean old group roles
-        old_group_list = ob.get_local_group_roles()
-        # We duplicate role settings to mimic PAS
-        ob.manage_delLocalGroupRoles([x[0] for x in old_group_list])
-        ob.manage_delLocalRoles([x[0] for x in old_group_list])
-        # Save the owner
-        for group, role_list in old_group_list:
-          if 'Owner' in role_list:
-            group_id_role_dict.setdefault(group, set()).add('Owner')
-        # Assign new roles
-        for group, role_list in group_id_role_dict.iteritems():
-          # We duplicate role settings to mimic PAS
-          ob.manage_addLocalGroupRoles(group, role_list)
-          ob.manage_addLocalRoles(group, role_list)
-      # Make sure that the object is reindexed
-      if reindex:
-        ob.reindexObjectSecurity()
-
-    security.declarePrivate("getLocalRolesFor")
-    def getLocalRolesFor(self, ob, user_name=None):
-      """Compute the security that should be applied on an object
-
-      Returned value is a dict: {groud_id: role_name_set, ...}
-      """
-      group_id_role_dict = {}
-      # Merge results from applicable roles
-      for role in self.getFilteredRoleListFor(ob):
-        for group_id, role_list \
-        in role.getLocalRolesFor(ob, user_name).iteritems():
-          group_id_role_dict.setdefault(group_id, set()).update(role_list)
-      return group_id_role_dict
-
-    security.declarePrivate('getFilteredRoleListFor')
-    def getFilteredRoleListFor(self, ob=None):
-      """Return all roles applicable to the object."""
-      portal = self.getPortalObject()
-      if ob is None:
-        folder = portal
-      else:
-        folder = aq_parent(ob)
-        # Search up the containment hierarchy until we find an
-        # object that claims it's a folder.
-        while folder is not None:
-          if getattr(aq_base(folder), 'isPrincipiaFolderish', 0):
-            break # found it.
-          else:
-            folder = aq_parent(folder)
-
-      ec = createExprContext(folder, portal, ob)
-      for role in self.getRoleInformationList():
-        if role.testCondition(ec):
-          yield role
-
-      # Return also explicit local roles defined as subobjects of the document
-      if getattr(aq_base(ob), 'isPrincipiaFolderish', 0) and \
-         self.allowType('Role Definition'):
-        for role in ob.objectValues(portal_type='Role Definition'):
-          if role.getRoleName():
-            yield role
-
-    security.declareProtected(Permissions.ManagePortal, 'updateRoleMapping')
-    def updateRoleMapping(self, REQUEST=None, form_id=''):
-      """Update the local roles in existing objects.
-         XXX This should be implemented the same way as
-             ERP5Site_checkCatalogTable (cf erp5_administration).
-      """
-      portal = self.getPortalObject()
-      update_role_tag = self.__class__.__name__ + ".updateRoleMapping"
-
-      object_list = [x.path for x in
-                     portal.portal_catalog(portal_type=self.id, limit=None)]
-      object_list_len = len(object_list)
-      # We need to use activities in order to make sure it will
-      # work for an important number of objects
-      activate = portal.portal_activities.activate
-      for i in xrange(0, object_list_len, 100):
-        current_path_list = object_list[i:i+100]
-        activate(activity='SQLQueue', priority=3, tag=update_role_tag) \
-        .callMethodOnObjectList(current_path_list,
-                                'updateLocalRolesOnSecurityGroups',
-                                reindex=False)
-        activate(activity='SQLQueue', priority=3, after_tag=update_role_tag) \
-        .callMethodOnObjectList(current_path_list,
-                                'reindexObjectSecurity')
-
-      if REQUEST is not None:
-        message = '%d objects updated' % object_list_len
-        return REQUEST.RESPONSE.redirect('%s/%s?portal_status_message=%s'
-          % (self.absolute_url_path(), form_id, message))
-
     #
     #   Helper methods
     #
@@ -477,7 +487,7 @@ class ERP5TypeInformation(XMLObject,
     security.declareProtected(Permissions.AccessContentsInformation,
                               'PrincipiaSearchSource')
     def PrincipiaSearchSource(self):
-     """Return keywords for "Find" tab in ZMI"""
+      """Return keywords for "Find" tab in ZMI"""
       search_source_list = [self.getId(),
                             self.getTypeFactoryMethodId(),
                             self.getTypeAddPermission(),
@@ -485,13 +495,6 @@ class ERP5TypeInformation(XMLObject,
       search_source_list += self.getTypePropertySheetList(())
       search_source_list += self.getTypeBaseCategoryList(())
       return ' '.join(filter(None, search_source_list))
-
-
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'getRoleInformationList')
-    def getRoleInformationList(self):
-      """Return all Role Information objects stored on this portal type"""
-      return self.objectValues(portal_type='Role Information')
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getActionInformationList')

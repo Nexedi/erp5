@@ -13,6 +13,7 @@
 """ Information about customizable roles.
 """
 
+import zope.interface
 from AccessControl import ClassSecurityInfo
 from Acquisition import aq_base
 from Globals import InitializeClass
@@ -21,7 +22,7 @@ from OFS.SimpleItem import SimpleItem
 from Products.CMFCore.utils import getToolByName
 from Products.CMFCore.Expression import Expression
 
-from Products.ERP5Type import Permissions, PropertySheet
+from Products.ERP5Type import interfaces, Permissions, PropertySheet
 from Products.ERP5Type.ERP5Type \
   import ERP5TYPE_SECURITY_GROUP_ID_GENERATION_SCRIPT
 from Products.ERP5Type.Permissions import AccessContentsInformation
@@ -34,8 +35,6 @@ class RoleInformation(XMLObject):
   Roles definitions defines local roles on ERP5Type documents. They are
   applied by the updateLocalRolesOnDocument method.
   """
-  # ILocalRoleGenerator
-
   meta_type = 'ERP5 Role Information'
   portal_type = 'Role Information'
   add_permission = Permissions.AddPortalContent
@@ -44,6 +43,8 @@ class RoleInformation(XMLObject):
 
   security = ClassSecurityInfo()
   security.declareObjectProtected(AccessContentsInformation)
+
+  zope.interface.implements(interfaces.ILocalRoleGenerator)
 
   # Declarative properties
   property_sheets = ( PropertySheet.CategoryCore

@@ -33,6 +33,10 @@ import unittest
 # this list can be generated automatically using introspection or can be set
 # manually and treated as reference to what implements what
 implements_tuple_list = [
+  ## ERP5Type
+  ('ERP5Type.ERP5Type.ERP5TypeInformation', 'ILocalRoleAssignor'),
+  ('RoleInformation', 'ILocalRoleGenerator'),
+  ## ERP5
   ('BusinessPath', 'IArrowBase'),
   ('BusinessPath', 'IBusinessPath'),
   ('BusinessPath', 'ICategoryAccessProvider'),
@@ -67,13 +71,14 @@ class TestERP5Interfaces(ERP5TypeTestCase):
     from Products.ERP5.interfaces.transformation import IAggregatedAmountList
     from Products.ERP5.AggregatedAmountList import AggregatedAmountList
     verifyClass(IAggregatedAmountList, AggregatedAmountList)
-  
+
 def makeTestMethod(document, interface):
   """Common method which checks if documents implements interface"""
   def testMethod(self):
-    _temp = __import__('Products.ERP5Type.Document.%s' % document, globals(),
-        locals(), ['%s' % document])
-    Document = getattr(_temp, document)
+    parts = document.rsplit('.', 1)
+    module = len(parts) > 1 and parts[0] or 'ERP5Type.Document.' + parts[-1]
+    _temp = __import__('Products.' + module, globals(), locals(), parts[-1:])
+    Document = getattr(_temp, parts[-1])
     _temp = __import__('Products.ERP5Type.interfaces', globals(), locals(),
         ['%s' % interface])
     Interface = getattr(_temp, interface)
