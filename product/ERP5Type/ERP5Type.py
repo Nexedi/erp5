@@ -31,6 +31,7 @@ from Products.CMFCore.exceptions import AccessControl_Unauthorized
 from Products.CMFCore.utils import _checkPermission
 from Products.ERP5Type import interfaces, Constraint, Permissions, PropertySheet
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
+from Products.ERP5Type.Utils import deprecated, createExpressionContext
 from Products.ERP5Type.XMLObject import XMLObject
 
 ERP5TYPE_SECURITY_GROUP_ID_GENERATION_SCRIPT = 'ERP5Type_asSecurityGroupId'
@@ -508,17 +509,20 @@ class ERP5TypeInformation(XMLObject,
 
     security.declareProtected(Permissions.ManagePortal,
                               'setPropertySheetList')
+    @deprecated
     def setPropertySheetList(self, property_sheet_list):
       self._setTypePropertySheetList(property_sheet_list)
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getHiddenContentTypeList')
+    @deprecated
     def getHiddenContentTypeList(self):
       return self.getTypeHiddenContentTypeList(())
 
     # Compatibitility code for actions
 
     security.declareProtected(Permissions.ModifyPortalContent, 'addAction')
+    @deprecated
     def addAction(self, id, name, action, condition, permission, category,
                   icon=None, visible=1, priority=1.0, REQUEST=None,
                   description=None):
@@ -538,12 +542,14 @@ class ERP5TypeInformation(XMLObject,
                       description=description)
 
     security.declareProtected(Permissions.ModifyPortalContent, 'deleteActions')
+    @deprecated
     def deleteActions(self, selections=(), REQUEST=None):
       # XXX Should be deprecated.
       action_list = self.listActions()
       self.manage_delObjects([action_list[x].id for x in selections])
 
     security.declarePrivate('listActions')
+    @deprecated
     def listActions(self, info=None, object=None):
       """ List all the actions defined by a provider."""
       return sorted(self.getActionInformationList(),
