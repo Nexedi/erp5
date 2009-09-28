@@ -39,7 +39,6 @@ from zLOG import LOG
 
 class ActionInformation(XMLObject):
   """
-  EXPERIMENTAL - DO NOT USE THIS CLASS BESIDES R&D
   ActionInformation is an ERP5 type which will eventually replace respective ActionInformation from CMF.
   """
   # XXX 'icon' property is not used. We can problably drop it.

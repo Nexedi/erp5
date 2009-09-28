@@ -53,7 +53,7 @@ from Products.ERP5Type.Utils import readLocalTest, \
                                     writeLocalTest, \
                                     removeLocalTest
 from Products.ERP5Type.Utils import convertToUpperCase
-from Products.ERP5Type import Permissions, PropertySheet, USE_BASE_TYPE
+from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.Core.RoleInformation import RoleInformation
 from OFS.Traversable import NotFound
@@ -2389,7 +2389,7 @@ class ActionTemplateItem(ObjectTemplateItem):
       url, value = id.split(' | ')
       url = posixpath.split(url)
       obj = p.unrestrictedTraverse(url)
-      is_new_action = USE_BASE_TYPE and obj.getParentId() == 'portal_types'
+      is_new_action = obj.getParentId() == 'portal_types'
       id_id = is_new_action and 'reference' or 'id'
       for action in obj.listActions():
         if getattr(action, id_id) == value:
@@ -2422,7 +2422,7 @@ class ActionTemplateItem(ObjectTemplateItem):
           path, id = id.rsplit('/', 1)
           container = p.unrestrictedTraverse(path)
 
-          if USE_BASE_TYPE and container.getParentId() == 'portal_types':
+          if container.getParentId() == 'portal_types':
             # XXX future BT should use 'reference' instead of 'id'
             reference = getattr(obj, 'reference', None) or obj.id
             portal_type_dict.setdefault(path, {})[reference] = obj

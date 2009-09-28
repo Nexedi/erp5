@@ -78,24 +78,23 @@ class LocalRoleAssignorMixIn(object):
         Assign Local Roles to Groups on object 'ob', based on Portal Type Role
         Definitions and "ERP5 Role Definition" objects contained inside 'ob'.
       """
-      #FIXME We should check the type of the acl_users folder instead of
-      #      checking which product is installed.
       if user_name is None:
         # First try to guess from the owner
         try:
           user_name = ob.getOwnerInfo()['id']
         except (AttributeError, TypeError):
           pass
-      if user_name is None:
-        if ERP5UserManager is not None:
-          # We use id for roles in ERP5Security
-          user_name = getSecurityManager().getUser().getId()
-        elif NuxUserGroups is not None:
-          user_name = getSecurityManager().getUser().getUserName()
-        else:
-          raise RuntimeError, 'Product "ERP5Security" was not found on'\
-                'your setup. '\
-                'Please install it to benefit from group-based security'
+        if user_name is None:
+          #FIXME We should check the type of the acl_users folder instead of
+          #      checking which product is installed.
+          if ERP5UserManager is not None:
+            # We use id for roles in ERP5Security
+            user_name = getSecurityManager().getUser().getId()
+          elif NuxUserGroups is not None:
+            user_name = getSecurityManager().getUser().getUserName()
+          else:
+            raise RuntimeError('Product "ERP5Security" was not found on your'
+              ' setup. Please install it to benefit from group-based security')
 
       group_id_role_dict = self.getLocalRolesFor(ob, user_name)
 
@@ -179,8 +178,7 @@ class LocalRoleAssignorMixIn(object):
       """Return all Role Information objects stored on this portal type"""
       return self.objectValues(portal_type='Role Information')
 
-    security.declareProtected(Permissions.ModifyPortalContent,
-                              'updateRoleMapping')
+    security.declareProtected(Permissions.View, 'updateRoleMapping')
     def updateRoleMapping(self, REQUEST=None, form_id=''):
       """Update the local roles in existing objects.
          XXX This should be implemented the same way as

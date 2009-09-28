@@ -28,8 +28,7 @@
 
 class RoleInformation:
   """
-    EXPERIMENTAL - DO NOT USE THIS PROPERTYSHEET BESIDES R&D
-    Properties of an ERP5 Type Role Information
+    Properties of an ERP5 Role Information
   """
 
   _properties = (

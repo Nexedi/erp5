@@ -16,10 +16,7 @@
 from OFS.PropertyManager import PropertyManager, type_converters
 from OFS.PropertyManager import escape
 from Globals import DTMLFile
-from Products.ERP5Type import USE_BASE_TYPE
 from Products.ERP5Type.Utils import createExpressionContext
-if not USE_BASE_TYPE:
-  from Products.ERP5Type.ERP5Type import ERP5TypeInformation
 from Products.CMFCore.Expression import Expression
 from Products.ERP5Type import _dtmldir
 from Acquisition import aq_base
@@ -197,8 +194,6 @@ PropertyManager._propertyMap = PropertyManager_propertyMap
 PropertyManager.propdict = PropertyManager_propdict
 PropertyManager.hasProperty = PropertyManager_hasProperty
 PropertyManager.getProperty = PropertyManager_getProperty
-if not USE_BASE_TYPE:
-  ERP5TypeInformation.manage_propertiesForm = PropertyManager_manage_propertiesForm
 
 from ZPublisher.Converters import type_converters, field2string
 

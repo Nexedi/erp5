@@ -29,8 +29,7 @@ from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 from zLOG import LOG, WARNING, PANIC
 
 class TypesTool(BaseTool, CMFCore_TypesTool.TypesTool):
-  """
-      EXPERIMENTAL - DO NOT USE THIS CLASS BESIDES R&D
+  """Provides a configurable registry of portal content types
   """
   id = 'portal_types'
   meta_type = 'ERP5 Types Tool'

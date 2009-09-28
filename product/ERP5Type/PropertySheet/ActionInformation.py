@@ -29,8 +29,7 @@
 
 class ActionInformation:
   """
-    EXPERIMENTAL - DO NOT USE THIS PROPERTYSHEET BESIDES R&D
-    Properties of an ERP5 Type action.
+    Properties of an ERP5 Action Information
   """
 
   _properties = (

@@ -28,7 +28,6 @@
 
 class BaseType:
     """
-      EXPERIMENTAL - DO NOT USE THIS PROPERTYSHEET BESIDES R&D
       Properties of an ERP5 portal type
     """
 
