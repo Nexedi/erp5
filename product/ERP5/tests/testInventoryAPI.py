@@ -1228,15 +1228,12 @@ class TestMovementHistoryList(InventoryAPITestCase):
           getMovementHistoryList(section_uid=self.section.getUid(),
                                  sort_on=(('title', 'descending'),)) ])
 
-
-  # FIXME: do we want to include it or no ?
   def test_Limit(self):
-    return "is it part of this API ?" # XXX
     getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
-    for q in range(10):
+    for q in range(6):
       self._makeMovement(quantity=1)
-    self.assertEquals(3, len(getMovementHistoryList(list_start=2,
-                                                    list_lines=3)))
+    self.assertEquals(3, len(getMovementHistoryList(limit=3)))
+    self.assertEquals(4, len(getMovementHistoryList(limit=(1, 4))))
   
   def test_SimulationState(self):
     getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
