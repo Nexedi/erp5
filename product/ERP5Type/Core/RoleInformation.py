@@ -34,6 +34,8 @@ class RoleInformation(XMLObject):
   Roles definitions defines local roles on ERP5Type documents. They are
   applied by the updateLocalRolesOnDocument method.
   """
+  # ILocalRoleGenerator
+
   meta_type = 'ERP5 Role Information'
   portal_type = 'Role Information'
   add_permission = Permissions.AddPortalContent
@@ -83,11 +85,11 @@ class RoleInformation(XMLObject):
                           self.getRoleBaseCategoryScriptId()]
     return ' '.join(filter(None, search_source_list))
 
-  security.declarePrivate('getGroupIdRoleList')
-  def getGroupIdRoleList(self, ob, user_name=None):
-    """Generate security groups (with roles) to be set on a document
+  security.declarePrivate("getLocalRolesFor")
+  def getLocalRolesFor(self, ob, user_name=None):
+    """Compute the security that should be applied on an object
 
-    Each returned value is a 2-tuple (group_id, role_name_list).
+    Returned value is a dict: {groud_id: role_name_set, ...}
     """
     # get the list of base_categories that are statically defined
     static_base_category_list = [x.split('/', 1)[0]
@@ -120,7 +122,7 @@ class RoleInformation(XMLObject):
       # security for this object, we can just have it return None
       # instead of a dict or list of dicts
       if category_result is None:
-        return
+        return {}
     else:
       # no base_category needs to be retrieved using the script, we use
       # a list containing an empty dict to trick the system into
@@ -128,6 +130,7 @@ class RoleInformation(XMLObject):
       # defined categories)
       category_result = [{}]
 
+    group_id_role_dict = {}
     role_list = self.getRoleNameList()
 
     if isinstance(category_result, dict):
@@ -137,7 +140,7 @@ class RoleInformation(XMLObject):
       for role, group_id_list in category_result.iteritems():
         if role in role_list:
           for group_id in group_id_list:
-            yield group_id, (role,)
+            group_id_role_dict.setdefault(group_id, set()).add(role)
     else:
       group_id_generator = getattr(ob,
         ERP5TYPE_SECURITY_GROUP_ID_GENERATION_SCRIPT)
@@ -165,7 +168,9 @@ class RoleInformation(XMLObject):
           # Multiple groups are defined (list of users
           # or list of group IDs resulting from a cartesian product)
           for group_id in group_id_list:
-            yield group_id, role_list
+            group_id_role_dict[group_id] = role_list
+
+    return group_id_role_dict
 
 
 InitializeClass(RoleInformation)

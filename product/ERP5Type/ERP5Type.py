@@ -83,6 +83,8 @@ class ERP5TypeInformation(XMLObject,
     isPortalContent = 1
     isRADContent = 1
 
+    # ILocalRoleAssignor
+
     security = ClassSecurityInfo()
     security.declareObjectProtected(Permissions.AccessContentsInformation)
 
@@ -343,7 +345,7 @@ class ERP5TypeInformation(XMLObject,
                 'your setup. '\
                 'Please install it to benefit from group-based security'
 
-      group_id_role_dict = self.getGroupIdRoleDict(ob, user_name)
+      group_id_role_dict = self.getLocalRolesFor(ob, user_name)
 
       # Update role assignments to groups
       if ERP5UserManager is not None: # Default implementation
@@ -377,17 +379,17 @@ class ERP5TypeInformation(XMLObject,
       if reindex:
         ob.reindexObjectSecurity()
 
-    security.declarePrivate("getGroupIdRoleDict")
-    def getGroupIdRoleDict(self, ob, user_name=None):
+    security.declarePrivate("getLocalRolesFor")
+    def getLocalRolesFor(self, ob, user_name=None):
       """Compute the security that should be applied on an object
 
       Returned value is a dict: {groud_id: role_name_set, ...}
       """
       group_id_role_dict = {}
-        for roledef in ob.objectValues(portal_type='Role Definition'):
-      # Retrieve and parse applicable roles
+      # Merge results from applicable roles
       for role in self.getFilteredRoleListFor(ob):
-        for group_id, role_list in role.getGroupIdRoleList(ob, user_name):
+        for group_id, role_list \
+        in role.getLocalRolesFor(ob, user_name).iteritems():
           group_id_role_dict.setdefault(group_id, set()).update(role_list)
       return group_id_role_dict
 
@@ -413,7 +415,8 @@ class ERP5TypeInformation(XMLObject,
           yield role
 
       # Return also explicit local roles defined as subobjects of the document
-      if getattr(aq_base(ob), 'isPrincipiaFolderish', 0):
+      if getattr(aq_base(ob), 'isPrincipiaFolderish', 0) and \
+         self.allowType('Role Definition'):
         for role in ob.objectValues(portal_type='Role Definition'):
           if role.getRoleName():
             yield role
