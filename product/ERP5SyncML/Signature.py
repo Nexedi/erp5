@@ -205,7 +205,7 @@ class Signature(Folder, SyncCode, File):
       elif isinstance(self.xml, str):
         return self.xml
       else:
-        raise "ErrorType the self.xml haven't good type"
+        raise ValueError, "the self.xml haven't good type"
     else:
       return None
 
@@ -237,7 +237,7 @@ class Signature(Folder, SyncCode, File):
       elif isinstance(self.temp_xml, str):
         return self.temp_xml
       else:
-        raise "ErrorType the self.xml haven't good type"
+        raise ValueError, "the self.xml haven't good type"
     else:
       return None
 
@@ -391,7 +391,7 @@ class Signature(Folder, SyncCode, File):
       if isinstance(self.partial_xml, Pdata):
         return str(self.partial_xml)
       else:
-        raise "ErrorType the self.xml haven't good type"
+        raise ValueError, "the self.xml haven't good type"
     else:
       return None
 
