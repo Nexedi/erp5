@@ -5034,8 +5034,9 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     object_id = sequence.get('object_ptype_id')
     object_pt = pt._getOb(object_id)
     object_pt.newContent(portal_type='Role Information',
+      title='Geek Role Definition',
       description='A definition with non ascii chars éàè',
-      role_name_list=('Geek Role Definition',),
+      role_name_list=('geek_role_definition',),
       role_category_list=('group/g1','function/f1'),
       role_base_category_script_id='Base Category Script',
       role_base_category_list=('group','site'))
@@ -5063,7 +5064,8 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     pt = self.getTypeTool()
     object_id = sequence.get('object_ptype_id')
     role, = pt[object_id].getRoleInformationList()
-    self.assertEqual(['Geek Role Definition'], role.getRoleNameList())
+    self.assertEqual('Geek Role Definition', role.getTitle())
+    self.assertEqual(['geek_role_definition'], role.getRoleNameList())
     self.assertEqual('A definition with non ascii chars éàè', role.getDescription())
     self.assertEqual(['group/g1','function/f1'], role.getRoleCategoryList())
     self.assertEqual(['group','site'], role.getRoleBaseCategoryList())

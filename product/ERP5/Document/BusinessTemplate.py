@@ -2377,7 +2377,7 @@ class ActionTemplateItem(ObjectTemplateItem):
       id_id = is_new_action and 'reference' or 'id'
       for action in (is_new_action and obj.getActionInformationList
                                     or obj.listActions)():
-        if getattr(action, id_id) == value:
+        if getattr(action, id_id, None) == value:
           break
       else:
         if self.is_bt_for_diff:
@@ -2449,7 +2449,7 @@ class ActionTemplateItem(ObjectTemplateItem):
         container = p.unrestrictedTraverse(path)
         container.manage_delObjects([obj.id
           for obj in container.getActionInformationList()
-          if obj.reference in action_dict])
+          if obj.getReference() in action_dict])
         for obj in action_dict.itervalues():
           container._importOldAction(obj)
     else:
