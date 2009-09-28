@@ -1353,8 +1353,8 @@ class ERP5Generator(PortalGenerator):
       addTool('ERP5 Memcached Tool', None)
     if not p.hasObject('portal_types'):
       addTool('ERP5 Types Tool', None)
-      transaction.get().beforeCommitHook(lambda:
-        p.portal_types.Base_setDefaultSecurity())
+      #transaction.get().beforeCommitHook(lambda:
+      #  p.portal_types.Base_setDefaultSecurity())
 
     try:
       addTool = p.manage_addProduct['ERP5Subversion'].manage_addTool

@@ -121,7 +121,7 @@ class OldTypesTool(OFSFolder):
         parent.portal_categories._setObject(action_type.id, action_type)
       for type_info in self.objectValues():
         self._migratePortalType(types_tool, type_info)
-      types_tool.activate().Base_setDefaultSecurity()
+      #types_tool.activate().Base_setDefaultSecurity()
     except:
       transaction.abort()
       LOG('OldTypesTool', PANIC, 'Could not convert portal_types: ',
