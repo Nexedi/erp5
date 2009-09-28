@@ -4078,6 +4078,9 @@ msgstr "L'évènement a été assigné et attend d'être traité par un utilisat
 msgid "Events in this state are outgoing events which were posted. Some events may be delivered later, whenever the recipient confirms he received them."
 msgstr "Les évènements dans cet état ont été envoyés au destinataire."
 
+msgid "Everybody"
+msgstr "Tout le monde"
+
 msgid "Everything"
 msgstr "Tous les résultats"
 
@@ -4290,6 +4293,9 @@ msgstr "Fichier committé."
 
 msgid "File format:"
 msgstr "Format du fichier:"
+
+msgid "File to upload"
+msgstr "Fichier à charger"
 
 msgid "File uploaded."
 msgstr "Fichier chargé"
@@ -5329,6 +5335,9 @@ msgstr "La dernière période ouverte prend fin le ${last_openned_date}, cette p
 msgid "Latest"
 msgstr "Le plus récent"
 
+msgid "Latest Additions"
+msgstr "Derniers ajouts"
+
 msgid "Latest Content List"
 msgstr "Documents récents"
 
@@ -5773,11 +5782,17 @@ msgstr "Mouvements"
 msgid "Multiple (${document_count}) documents ${document_reference} - ${document_language} - ${document_version} already exists."
 msgstr "Plusieurs (${document_count}) documents ${document_reference} - ${document_language} - ${document_version} existent déjà."
 
+msgid "My Contacts"
+msgstr "Mes contacts"
+
 msgid "My Content List"
 msgstr "Liste de mon contenu"
 
 msgid "My Contributed Content"
 msgstr "Mes fichiers partagés"
+
+msgid "My Documents"
+msgstr "Mes documents"
 
 msgid "My Drafts of Accounting Transactions"
 msgstr "Mes écritures comptables au brouillon"
@@ -5871,6 +5886,12 @@ msgstr "Nouvelle fonction"
 
 msgid "New Incoming Events"
 msgstr "Nouveaux évènements entrant"
+
+msgid "New Link"
+msgstr "Nouveau lien"
+
+msgid "New Page"
+msgstr "Nouveau page"
 
 msgid "New Value"
 msgstr "Nouvelle valeur"
@@ -8216,6 +8237,9 @@ msgstr "Résultat"
 msgid "Results"
 msgstr "Résultats"
 
+msgid "Results <em>${start} - ${stop}</em> of <em>${total}</em>."
+msgstr "Résultats <em>${start} - ${stop}</em> sur <em>${total}</em>."
+
 msgid "Retract"
 msgstr "Se rétracter"
 
@@ -8722,6 +8746,9 @@ msgstr "Cocher la case \"Se souvenir de moi\" autorise ERP5 à se souvenir de vo
 
 msgid "Setting the 'Remember my name' option will set a cookie with your username, so that when you next log in, your user name will already be filled in for you."
 msgstr "Cocher 'Mémoriser mon Nom'  permettra de le faire apparaître lors de votre prochaine connexion."
+
+msgid "Settings"
+msgstr "Paramètres"
 
 msgid "Severity"
 msgstr "Gravité"
