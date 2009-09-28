@@ -1,0 +1,14 @@
+<workflow_chain>
+ <chain>
+  <type>Apparel Cloth</type>
+  <workflow>apparel_cloth_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Apparel Model</type>
+  <workflow>apparel_model_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Apparel Shape</type>
+  <workflow>apparel_shape_workflow</workflow>
+ </chain>
+</workflow_chain>
