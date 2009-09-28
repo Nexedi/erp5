@@ -860,6 +860,7 @@ class ObjectTemplateItem(BaseTemplateItem):
               raise
           saved_uid_dict = {}
           subobjects_dict = {}
+          portal_type_dict = {}
           # Object already exists
           old_obj = container._getOb(object_id, None)
           if old_obj is not None:
@@ -872,6 +873,15 @@ class ObjectTemplateItem(BaseTemplateItem):
               old_groups[path] = deepcopy(old_obj.groups)
             subobjects_dict = self._backupObject(action, trashbin,
                                                  container_path, object_id)
+            # in case of portal types, we want to keep some properties
+            if getattr(old_obj, 'meta_type', None) == 'ERP5 Type Information':
+              for attr in ('allowed_content_type_list',
+                           'hidden_content_type_list',
+                           'property_sheet_list',
+                           'base_category_list'):
+                portal_type_dict[attr] = getattr(old_obj, attr, ())
+              portal_type_dict['workflow_chain'] = \
+                getChainByType(context)[1].get('chain_' + object_id, '')
             container.manage_delObjects([object_id])
           else:
             self.onNewObject()
@@ -897,43 +907,17 @@ class ObjectTemplateItem(BaseTemplateItem):
           self.REQUEST.set('is_business_template_installation', 1)
           obj.manage_afterClone(obj)
           obj.wl_clearLocks()
-          # if portal types upgrade, set backup properties
-          if getattr(obj, 'meta_type', None) == 'ERP5 Type Information' and \
-              len(subobjects_dict) > 0:
-            setattr(obj, 'allowed_content_types',
-                    subobjects_dict['allowed_content_type_list'] or [])
-            setattr(obj, 'hidden_content_type_list',
-                    subobjects_dict['hidden_content_type_list'] or [])
-            setattr(obj, 'property_sheet_list',
-                    subobjects_dict['property_sheet_list'] or [])
-            setattr(obj, 'base_category_list',
-                    subobjects_dict['base_category_list'] or [])
-            setattr(obj, '_roles', subobjects_dict['roles_list'] or [])
-            # set actions
-            action_list = subobjects_dict['action_list']
-            for action in action_list:
-              action_text = action.action
-              if isinstance(action_text, Expression):
-                action_text = action_text.text
-              obj.addAction(id = action.id
-                            , name = action.title
-                            , action = action_text
-                            , condition = action.getCondition()
-                            , permission = action.permissions
-                            , category = action.category
-                            , visible = action.visible
-                            , icon = getattr(action, 'icon', None) and action.icon.text or ''
-                            , priority = action.priority
-                            , description = action.description
-                            )
+          if portal_type_dict:
             # set workflow chain
-            wf_chain = subobjects_dict['workflow_chain']
+            wf_chain = portal_type_dict.pop('workflow_chain')
             chain_dict = getChainByType(context)[1]
             default_chain = ''
             chain_dict['chain_%s' % (object_id)] = wf_chain
             context.portal_workflow.manage_changeWorkflows(default_chain, props=chain_dict)
+            # restore some other properties
+            obj.__dict__.update(portal_type_dict)
           # import sub objects if there is
-          elif len(subobjects_dict) > 0:
+          if subobjects_dict:
             # get a jar
             connection = obj._p_jar
             o = obj
@@ -4881,7 +4865,6 @@ Business Template is a set of definitions, such as skins, portal types and categ
         Return the list of modified/new/removed object between a Business Template
         and the one installed if exists
       """
-
       if check_dependencies:
         # required because in multi installation, dependencies has already
         # been checked before and it will failed here as dependencies can be
@@ -5730,7 +5713,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
         portal_type = ttool.getTypeInfo(id)
         if portal_type is None:
           continue
-        if len(getattr(portal_type, '_roles', ())) > 0:
+        if portal_type.getRoleInformationList():
           if id not in bt_portal_type_roles_list:
             bt_portal_type_roles_list.append(id)
 
@@ -5747,8 +5730,8 @@ Business Template is a set of definitions, such as skins, portal types and categ
           property_sheet_list = portal_type.property_sheet_list
         if hasattr(portal_type, 'base_category_list'):
           base_category_list = portal_type.base_category_list
-        if hasattr(portal_type, 'listActions'):
-          action_list = [x.getId() for x in portal_type.listActions()]
+        for action in portal_type.getActionInformationList():
+          action_list.append(action.getReference())
 
         for a_id in allowed_content_type_list:
           allowed_id = id+' | '+a_id

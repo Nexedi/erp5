@@ -593,6 +593,8 @@ class ERP5TypeInformation(XMLObject,
         permissions=tuple(action.getActionPermissionList()))
       for k, v in action.__dict__.iteritems():
         if k in ('action', 'condition', 'icon'):
+          if not v:
+            continue
           v = v.__class__(v.text)
         elif k in ('id', 'float_index', 'action_permission', 'reference'):
           continue

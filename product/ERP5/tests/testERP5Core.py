@@ -210,14 +210,12 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
     translation_service = DummyTranslationService()
     setGlobalTranslationService(translation_service)
     # adds a new jump action to Template Tool portal type
-    self.getTypesTool().getTypeInfo('Template Tool').addAction(
-                      id='dummy_jump_action',
-                      name='Dummy Jump Action',
-                      action='',
-                      condition='',
-                      permission='View',
-                      category='object_jump',
-                      visible=1)
+    self.getTypesTool().getTypeInfo('Template Tool').newContent(
+                      portal_type='Action Information',
+                      reference='dummy_jump_action',
+                      title='Dummy Jump Action',
+                      action_permission='View',
+                      action_type='object_jump')
     response = self.publish('%s/portal_templates/view' %
                             self.portal_id, self.auth)
     self.assertEquals(HTTP_OK, response.getStatus())
