@@ -97,7 +97,7 @@
                         <string>my_collection_list</string>
                         <string>my_segment_list</string>
                         <string>my_comment</string>
-                        <string>state</string>
+                        <string>my_translated_validation_state_title</string>
                       </list>
                     </value>
                 </item>

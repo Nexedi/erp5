@@ -1,7 +1,19 @@
 <workflow_chain>
  <chain>
+  <type>Apparel Assortment</type>
+  <workflow>validation_workflow, edit_workflow</workflow>
+ </chain>
+ <chain>
   <type>Apparel Cloth</type>
   <workflow>apparel_cloth_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Apparel Component</type>
+  <workflow>validation_workflow, edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Apparel Fabric</type>
+  <workflow>edit_workflow, validation_workflow</workflow>
  </chain>
  <chain>
   <type>Apparel Model</type>
@@ -10,5 +22,9 @@
  <chain>
   <type>Apparel Shape</type>
   <workflow>apparel_shape_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Apparel Transformation</type>
+  <workflow>validation_workflow, edit_workflow</workflow>
  </chain>
 </workflow_chain>

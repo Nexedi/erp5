@@ -104,7 +104,7 @@
                         <string>my_color_count</string>
                         <string>my_length_quantity</string>
                         <string>my_comment</string>
-                        <string>apparel_component_state</string>
+                        <string>my_translated_validation_state_title</string>
                       </list>
                     </value>
                 </item>

@@ -106,7 +106,7 @@
                         <string>my_composition_list</string>
                         <string>my_cleaning_code_list</string>
                         <string>my_comment</string>
-                        <string>apparel_fabric_state</string>
+                        <string>my_translated_validation_state_title</string>
                       </list>
                     </value>
                 </item>

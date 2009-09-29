@@ -101,7 +101,7 @@
                     <value>
                       <list>
                         <string>my_variation_base_category_list</string>
-                        <string>apparel_transformation_state</string>
+                        <string>my_translated_validation_state_title</string>
                       </list>
                     </value>
                 </item>
