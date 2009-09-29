@@ -47,7 +47,7 @@ class ApparelSize(XMLObject, XMLMatrix):
 
     # Declarative security
     security = ClassSecurityInfo()
-    security.declareObjectProtected(Permissions.View)
+    security.declareObjectProtected(Permissions.AccessContentsInformation)
 
     # Declarative properties
     property_sheets = ( PropertySheet.Base
@@ -59,6 +59,7 @@ class ApparelSize(XMLObject, XMLMatrix):
                       , PropertySheet.ApparelSize
                       )
 
+    # XXX this should be done using an interraction workflow
     security.declareProtected(Permissions.ModifyPortalContent, '_updateMatrixCellRange')
     def _updateMatrixCellRange(self):
       lines = self.ApparelSize_asCellRange()[0]
@@ -69,6 +70,7 @@ class ApparelSize(XMLObject, XMLMatrix):
       else:
         self.setCellRange(lines, base_id='size')
 
+    # XXX this should be done using an interraction workflow
     security.declareProtected(Permissions.ModifyPortalContent, '_setSizeList')
     def _setSizeList(self,value):
       self._categorySetSizeList(value)

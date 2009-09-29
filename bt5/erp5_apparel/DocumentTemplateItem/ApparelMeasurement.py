@@ -47,7 +47,7 @@ class ApparelMeasurement(XMLObject, XMLMatrix, Image):
 
     # Declarative security
     security = ClassSecurityInfo()
-    security.declareObjectProtected(Permissions.View)
+    security.declareObjectProtected(Permissions.AccessContentsInformation)
 
     # Declarative properties
     property_sheets = ( PropertySheet.Base
@@ -65,13 +65,14 @@ class ApparelMeasurement(XMLObject, XMLMatrix, Image):
 
     # Inheritance
     _edit = Image._edit
-    security.declareProtected( Permissions.ModifyPortalContent, 'edit' )
+    security.declareProtected(Permissions.ModifyPortalContent, 'edit' )
     edit = WorkflowAction( _edit )
 
-    security.declareProtected('View', 'index_html')
+    security.declareProtected(Permissions.View,  'index_html')
     index_html = Image.index_html
 
-    security.declareProtected('AccessContentsInformation', 'content_type')
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'content_type')
     content_type = Image.content_type
 
     def manage_afterClone(self, item):
