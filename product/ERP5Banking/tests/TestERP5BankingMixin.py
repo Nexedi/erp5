@@ -550,6 +550,11 @@ class TestERP5BankingMixin:
       'S10': ('SP', '000', '11111', '000000000000', '08'),
       'HQ1': ('FR', '000', '11112', '000000000000', '69'),
     }
+    site_region_from_codification_dict = {
+      'P10': 'france',
+      'S10': 'spain',
+      'P11': 'france',
+    }
     self.paris = self.testsite.newContent(id='paris', portal_type='Category', codification='P10',  vault_type='site')
     self.madrid = self.testsite.newContent(id='madrid', portal_type='Category', codification='S10',  vault_type='site')
     self.siege = self.site_base_category.newContent(id='siege', portal_type='Category', codification='HQ1',  vault_type='site')
@@ -558,14 +563,16 @@ class TestERP5BankingMixin:
       for site in site_list:
         if isinstance(site, tuple):
           container = self.site_base_category
-          if len(site) in (3, 4):
+          if len(site) > 2:
             for category_id in site[2].split('/'):
               contained = getattr(container, category_id, None)
               if contained is None:
                 contained = container.newContent(id=category_id, portal_type='Category')
               container = contained
-            if len(site) == 4:
+            if len(site) > 3:
               site_reference_from_codification_dict[site[1]] = site[3]
+              if len(site) > 4:
+                site_region_from_codification_dict[site[1]] = site[4]
           codification = site[1]
           site = site[0]
         if site not in ("paris", 'madrid', 'siege'):
@@ -580,6 +587,7 @@ class TestERP5BankingMixin:
         portal_type='Organisation',
         id='site_%s' % (codification, ),
         site=site.getRelativeUrl(),
+        region=site_region_from_codification_dict.get(codification)
         group='baobab',
         function='banking')
       site_reference = site_reference_from_codification_dict.get(codification)
