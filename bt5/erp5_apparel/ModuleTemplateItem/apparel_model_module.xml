@@ -44,21 +44,18 @@
    <name>AccessContentsInformation</name>
    <role>Manager</role>
   </permission>
-  <permission type='tuple'>
+  <permission type='list'>
    <name>Add Accelerated HTTP Cache Managers</name>
-   <role>Manager</role>
   </permission>
   <permission type='tuple'>
    <name>Add BTreeFolder2s</name>
    <role>Manager</role>
   </permission>
-  <permission type='tuple'>
+  <permission type='list'>
    <name>Add Browser Id Manager</name>
-   <role>Manager</role>
   </permission>
-  <permission type='tuple'>
+  <permission type='list'>
    <name>Add CMF Action Icons Tools</name>
-   <role>Manager</role>
   </permission>
   <permission type='tuple'>
    <name>Add CMF Active Processs</name>
@@ -80,17 +77,15 @@
    <name>Add CMF Default Tools</name>
    <role>Manager</role>
   </permission>
-  <permission type='tuple'>
+  <permission type='list'>
    <name>Add CMF Setup Tools</name>
-   <role>Manager</role>
   </permission>
   <permission type='tuple'>
    <name>Add CMF Sites</name>
    <role>Manager</role>
   </permission>
-  <permission type='tuple'>
+  <permission type='list'>
    <name>Add CMF Unique Id Tools</name>
-   <role>Manager</role>
   </permission>
   <permission type='tuple'>
    <name>Add CMFActivity Tools</name>
@@ -104,9 +99,8 @@
    <name>Add CMFMailIn Tools</name>
    <role>Manager</role>
   </permission>
-  <permission type='tuple'>
+  <permission type='list'>
    <name>Add Configured CMF Sites</name>
-   <role>Manager</role>
   </permission>
   <permission type='tuple'>
    <name>Add Content Type Registrys</name>
@@ -246,9 +240,8 @@
    <name>Add Pluggable Index</name>
    <role>Manager</role>
   </permission>
-  <permission type='tuple'>
+  <permission type='list'>
    <name>Add Plugin Registrys</name>
-   <role>Manager</role>
   </permission>
   <permission type='tuple'>
    <name>Add PortalTransforms Tools</name>
@@ -258,45 +251,38 @@
    <name>Add Python Scripts</name>
    <role>Manager</role>
   </permission>
-  <permission type='tuple'>
+  <permission type='list'>
    <name>Add RAM Cache Managers</name>
-   <role>Manager</role>
   </permission>
-  <permission type='tuple'>
+  <permission type='list'>
    <name>Add ReStructuredText Documents</name>
-   <role>Manager</role>
   </permission>
-  <permission type='tuple'>
+  <permission type='list'>
    <name>Add Session Data Manager</name>
-   <role>Manager</role>
   </permission>
   <permission type='tuple'>
    <name>Add Site Roots</name>
    <role>Manager</role>
   </permission>
-  <permission type='tuple'>
+  <permission type='list'>
    <name>Add Temporary Folder</name>
-   <role>Manager</role>
   </permission>
-  <permission type='tuple'>
+  <permission type='list'>
    <name>Add Transient Object Container</name>
-   <role>Manager</role>
   </permission>
   <permission type='tuple'>
    <name>Add User Folders</name>
    <role>Manager</role>
   </permission>
-  <permission type='tuple'>
+  <permission type='list'>
    <name>Add Virtual Host Monsters</name>
-   <role>Manager</role>
   </permission>
   <permission type='tuple'>
    <name>Add Vocabularies</name>
    <role>Manager</role>
   </permission>
-  <permission type='tuple'>
+  <permission type='list'>
    <name>Add Z Gadfly Database Connections</name>
-   <role>Manager</role>
   </permission>
   <permission type='tuple'>
    <name>Add Z MySQL Database Connections</name>
@@ -318,13 +304,11 @@
    <name>Add ZMailMessages</name>
    <role>Manager</role>
   </permission>
-  <permission type='tuple'>
+  <permission type='list'>
    <name>Add ZODB Mount Points</name>
-   <role>Manager</role>
   </permission>
-  <permission type='tuple'>
+  <permission type='list'>
    <name>Add Zope Tutorials</name>
-   <role>Manager</role>
   </permission>
   <permission type='tuple'>
    <name>Add portal content</name>
