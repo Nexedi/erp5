@@ -214,6 +214,7 @@ if isAnon:\n
 sale_order_module = context.getPortalObject().sale_order_module\n
 sale_order = sale_order_module.newContent(portal_type=\'Sale Order\')\n
 sale_order.setDestination(customer.getRelativeUrl())\n
+sale_order.setDestinationSection(customer.getRelativeUrl())\n
 sale_order.setStartDate(DateTime())\n
 sale_order.setReceivedDate(DateTime())\n
 sale_order.setComment(shopping_cart.getComment())\n
