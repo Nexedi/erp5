@@ -120,7 +120,12 @@
                 <item>
                     <key> <string>editable_columns</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>title</string>
+                          <string>title</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -156,7 +161,16 @@
                 <item>
                     <key> <string>url_columns</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>title</string>
+                          <string></string>
+                        </tuple>
+                        <tuple>
+                          <string>translated_portal_type</string>
+                          <string></string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
               </dictionary>
@@ -192,7 +206,7 @@
       <dictionary>
         <item>
             <key> <string>method_name</string> </key>
-            <value> <string>contentValues</string> </value>
+            <value> <string>Preference_getTemplateList</string> </value>
         </item>
       </dictionary>
     </pickle>
