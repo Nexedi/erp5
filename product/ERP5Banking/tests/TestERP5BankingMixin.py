@@ -587,7 +587,7 @@ class TestERP5BankingMixin:
         portal_type='Organisation',
         id='site_%s' % (codification, ),
         site=site.getRelativeUrl(),
-        region=site_region_from_codification_dict.get(codification)
+        region=site_region_from_codification_dict.get(codification),
         group='baobab',
         function='banking')
       site_reference = site_reference_from_codification_dict.get(codification)
