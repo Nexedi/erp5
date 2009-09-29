@@ -40,10 +40,6 @@
    <role>Author</role>
    <role>Manager</role>
   </permission>
-  <permission type='tuple'>
-   <name>AccessContentsInformation</name>
-   <role>Manager</role>
-  </permission>
   <permission type='list'>
    <name>Add Accelerated HTTP Cache Managers</name>
   </permission>
