@@ -5341,6 +5341,9 @@ msgstr "Derniers ajouts"
 msgid "Latest Content List"
 msgstr "Documents récents"
 
+msgid "Latest Documents"
+msgstr "Derniers documents"
+
 msgid "Layout Configuration"
 msgstr "Configuration du design"
 
@@ -5928,6 +5931,9 @@ msgstr "Pas de ${portal_type} lié."
 
 msgid "No ${portal_type} related."
 msgstr "Pas de ${portal_type} correspondant."
+
+msgid "No result !"
+msgstr "Pas de résultat !"
 
 msgid "No Trade Condition."
 msgstr "Conditions de vente non définies."
