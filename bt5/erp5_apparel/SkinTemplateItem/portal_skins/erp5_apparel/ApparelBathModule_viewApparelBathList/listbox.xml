@@ -309,7 +309,24 @@
                 <item>
                     <key> <string>all_columns</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>title</string>
+                          <string>Title</string>
+                        </tuple>
+                        <tuple>
+                          <string>resource_title</string>
+                          <string>Resource</string>
+                        </tuple>
+                        <tuple>
+                          <string>variation_category_list</string>
+                          <string>Variation</string>
+                        </tuple>
+                        <tuple>
+                          <string>translated_validation_state_title</string>
+                          <string>State</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -331,10 +348,6 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>id</string>
-                          <string>ID</string>
-                        </tuple>
-                        <tuple>
                           <string>title</string>
                           <string>Title</string>
                         </tuple>
@@ -345,6 +358,10 @@
                         <tuple>
                           <string>variation_category_list</string>
                           <string>Variation</string>
+                        </tuple>
+                        <tuple>
+                          <string>translated_validation_state_title</string>
+                          <string>State</string>
                         </tuple>
                       </list>
                     </value>

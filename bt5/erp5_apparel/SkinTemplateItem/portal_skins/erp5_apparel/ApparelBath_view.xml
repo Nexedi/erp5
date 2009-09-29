@@ -72,7 +72,9 @@
                 <item>
                     <key> <string>center</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>my_description</string>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -90,6 +92,7 @@
                     <value>
                       <list>
                         <string>my_comment</string>
+                        <string>my_translated_validation_state_title</string>
                       </list>
                     </value>
                 </item>

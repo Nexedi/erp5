@@ -85,6 +85,7 @@
                       <list>
                         <string>my_size_list</string>
                         <string>my_apparel_morpho_type_list</string>
+                        <string>my_translated_validation_state_title</string>
                       </list>
                     </value>
                 </item>

@@ -11,7 +11,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_comment</string> </value>
+            <value> <string>my_description</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -236,7 +236,7 @@
                 </item>
                 <item>
                     <key> <string>height</string> </key>
-                    <value> <int>3</int> </value>
+                    <value> <int>5</int> </value>
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
@@ -260,7 +260,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Comments</string> </value>
+                    <value> <string>Description</string> </value>
                 </item>
                 <item>
                     <key> <string>unicode</string> </key>
@@ -272,7 +272,7 @@
                 </item>
                 <item>
                     <key> <string>width</string> </key>
-                    <value> <int>40</int> </value>
+                    <value> <int>80</int> </value>
                 </item>
               </dictionary>
             </value>
