@@ -7,7 +7,7 @@
 # programmers who take the whole responsibility of assessing all potential
 # consequences resulting from its eventual inadequacies and bugs
 # End users who are looking for a ready-to-use solution with commercial
-# guarantees and support are strongly adviced to contract a Free Software
+# guarantees and support are strongly advised to contract a Free Software
 # Service Company
 #
 # This program is Free Software; you can redistribute it and/or
@@ -27,6 +27,8 @@
 ##############################################################################
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from Products.ERP5Type.tests.testERP5TypeInterfaces import makeTestMethod, \
+  addTestMethodDynamically
 from zope.interface.verify import verifyClass
 import unittest
 
@@ -91,30 +93,6 @@ class TestERP5Interfaces(ERP5TypeTestCase):
         import IAggregatedAmountList
     from Products.ERP5.AggregatedAmountList import AggregatedAmountList
     verifyClass(IAggregatedAmountList, AggregatedAmountList)
-  
-def makeTestMethod(document, interface):
-  """Common method which checks if documents implements interface"""
-  def testMethod(self):
-    _temp = __import__('Products.ERP5Type.Document.%s' % document, globals(),
-        locals(), ['%s' % document])
-    Document = getattr(_temp, document)
-    _temp = __import__('Products.ERP5Type.interfaces', globals(), locals(),
-        ['%s' % interface])
-    Interface = getattr(_temp, interface)
-
-    verifyClass(Interface, Document)
-
-  return testMethod
-
-def addTestMethodDynamically():
-  """Creates test methods on the fly 
-
-    Uses naming test_TradeCondition_implements_ITransformation
-    It is possible to use --run_only on those dynamically generated methods"""
-  for document, interface in implements_tuple_list:
-    method_name = 'test_%s_implements_%s' % (document, interface)
-    method = makeTestMethod(document, interface)
-    setattr(TestERP5Interfaces, method_name, method)
 
 addTestMethodDynamically()
 
