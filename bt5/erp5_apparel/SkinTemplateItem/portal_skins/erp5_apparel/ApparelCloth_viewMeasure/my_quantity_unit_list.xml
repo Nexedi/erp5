@@ -10,17 +10,8 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>delegated_list</string> </key>
-            <value>
-              <list>
-                <string>default</string>
-                <string>input_style</string>
-              </list>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
-            <value> <string>matrixbox_quantity</string> </value>
+            <value> <string>my_quantity_unit_list</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -57,12 +48,6 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>default</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -82,20 +67,12 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>default</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_quantity</string> </value>
+                    <value> <string>my_quantity_unit_list</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Base_viewFieldLibrary</string> </value>
-                </item>
-                <item>
-                    <key> <string>input_style</string> </key>
-                    <value> <string>-12.3%</string> </value>
+                    <value> <string>Product_view</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
@@ -103,22 +80,6 @@
                 </item>
               </dictionary>
             </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <tuple>
-        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-        <tuple/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>python: cell is not None and cell.getQuantity() or \'\'</string> </value>
         </item>
       </dictionary>
     </pickle>

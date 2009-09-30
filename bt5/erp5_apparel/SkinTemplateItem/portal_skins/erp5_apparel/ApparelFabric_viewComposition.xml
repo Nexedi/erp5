@@ -84,8 +84,8 @@
                     <key> <string>hidden</string> </key>
                     <value>
                       <list>
-                        <string>matrixbox_quantity</string>
                         <string>matrixbox_membership_criterion_category_list</string>
+                        <string>matrixbox_quantity</string>
                       </list>
                     </value>
                 </item>

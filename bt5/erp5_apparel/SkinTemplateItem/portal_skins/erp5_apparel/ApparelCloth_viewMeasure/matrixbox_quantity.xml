@@ -14,7 +14,6 @@
             <value>
               <list>
                 <string>default</string>
-                <string>input_style</string>
               </list>
             </value>
         </item>
@@ -92,10 +91,6 @@
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string>Base_viewFieldLibrary</string> </value>
-                </item>
-                <item>
-                    <key> <string>input_style</string> </key>
-                    <value> <string>-12.3%</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>

@@ -193,6 +193,10 @@
                     <value> <string>measure</string> </value>
                 </item>
                 <item>
+                    <key> <string>cell_getter_method</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>cell_portal_type</string> </key>
                     <value> <string>Mapped Value</string> </value>
                 </item>
@@ -223,8 +227,8 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>measure</string>
-                          <string>measure</string>
+                          <string>quantity</string>
+                          <string>quantity</string>
                         </tuple>
                         <tuple>
                           <string>membership_criterion_category_list</string>

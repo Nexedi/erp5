@@ -3,7 +3,7 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <global name="MultiListField" module="Products.Formulator.StandardFields"/>
+        <global name="ParallelListField" module="Products.ERP5Form.ParallelListField"/>
         <tuple/>
       </tuple>
     </pickle>
@@ -11,7 +11,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_size_list</string> </value>
+            <value> <string>my_variation_category_list</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -73,6 +73,14 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>first_item</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>hash_script_id</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>hidden</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -117,9 +125,7 @@
                 </item>
                 <item>
                     <key> <string>default</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>description</string> </key>
@@ -131,7 +137,9 @@
                 </item>
                 <item>
                     <key> <string>enabled</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>external_validator</string> </key>
@@ -143,6 +151,14 @@
                 </item>
                 <item>
                     <key> <string>extra_item</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>first_item</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>hash_script_id</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -161,7 +177,9 @@
                 </item>
                 <item>
                     <key> <string>size</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>
@@ -206,7 +224,7 @@
                 </item>
                 <item>
                     <key> <string>enabled</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>external_validator</string> </key>
@@ -219,6 +237,14 @@
                 <item>
                     <key> <string>extra_item</string> </key>
                     <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>first_item</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>hash_script_id</string> </key>
+                    <value> <string>Base_getMultiListFieldPropertyDictList</string> </value>
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
@@ -236,11 +262,11 @@
                 </item>
                 <item>
                     <key> <string>size</string> </key>
-                    <value> <int>6</int> </value>
+                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Size</string> </value>
+                    <value> <string>Variation Category</string> </value>
                 </item>
                 <item>
                     <key> <string>unicode</string> </key>
@@ -263,18 +289,15 @@
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.Formulator.TALESField</string>
-          <string>TALESMethod</string>
-        </tuple>
-        <none/>
+        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>here/getSizeList</string> </value>
+            <value> <string>python: here.getVariationRangeCategoryItemList(omit_individual_variation=1)</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -282,18 +305,31 @@
   <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.Formulator.TALESField</string>
-          <string>TALESMethod</string>
-        </tuple>
-        <none/>
+        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>here/portal_categories/size/getCategoryChildLogicalPathItemList</string> </value>
+            <value> <string>python: here.getVariationRangeCategoryItemList(display_base_category=0, omit_individual_variation=1)</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="4" aka="AAAAAAAAAAQ=">
+    <pickle>
+      <tuple>
+        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>python: preferences.getPreference(\'preferred_textarea_height\', 5)</string> </value>
         </item>
       </dictionary>
     </pickle>

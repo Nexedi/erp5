@@ -53,21 +53,35 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>if matrixbox == 1:\n
-  line = [ (\'measure/\'+x[0],x[0]) for x in context.getMeasureItemList()]\n
-  column = [ (\'size/\'+x[0],x[0]) for x in context.getSizeItemList()]\n
-  tab = []\n
+            <value> <string encoding="cdata"><![CDATA[
+
+cell_range = []\n
 \n
+# Get base category list\n
+selected_base_category_list = context.getVariationBaseCategoryList()\n
 \n
-else:\n
-  line = [ \'measure/\'+x[0] for x in context.getMeasureItemList()]\n
-  column = [ \'size/\'+x[0] for x in context.getSizeItemList()]\n
-  tab = []\n
+# Generate cell range\n
+for base_category in selected_base_category_list:\n
+  if matrixbox==1:\n
+    # XXX matrixbox is right_display (not as listfield) \n
+    # => invert display and value in item\n
+    cell_range.append(map(lambda x: (x[1], x[0]),\n
+                          context.getVariationCategoryItemList(\n
+                                 base_category_list=[base_category,],\n
+                                 display_base_category=display_base_category,\n
+                                 sort_id=\'id\')))\n
+  else:\n
+    cell_range.append(\n
+              context.getVariationCategoryList(\n
+                                     base_category_list=[base_category,],\n
+                                     sort_id=\'id\'))\n
 \n
-cell_range = [line, column]\n
-\n
+# Remove empty range\n
+cell_range = [x for x in cell_range if x!=[]]\n
 return cell_range\n
-</string> </value>
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -77,7 +91,7 @@ return cell_range\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>matrixbox=0, base_id=None</string> </value>
+            <value> <string>base_id=\'path\', matrixbox=0, display_base_category=1, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -97,25 +111,26 @@ return cell_range\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>2</int> </value>
+                        <value> <int>3</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>matrixbox</string>
                             <string>base_id</string>
-                            <string>append</string>
-                            <string>$append0</string>
-                            <string>_getiter_</string>
+                            <string>matrixbox</string>
+                            <string>display_base_category</string>
+                            <string>kw</string>
+                            <string>cell_range</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>selected_base_category_list</string>
+                            <string>_getiter_</string>
+                            <string>base_category</string>
+                            <string>map</string>
+                            <string>append</string>
+                            <string>$append0</string>
                             <string>x</string>
-                            <string>_getitem_</string>
-                            <string>line</string>
-                            <string>column</string>
-                            <string>tab</string>
-                            <string>cell_range</string>
                           </tuple>
                         </value>
                     </item>
@@ -128,8 +143,9 @@ return cell_range\n
             <key> <string>func_defaults</string> </key>
             <value>
               <tuple>
+                <string>path</string>
                 <int>0</int>
-                <none/>
+                <int>1</int>
               </tuple>
             </value>
         </item>

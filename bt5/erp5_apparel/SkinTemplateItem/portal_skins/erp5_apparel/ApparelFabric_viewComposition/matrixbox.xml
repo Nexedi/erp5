@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.ERP5Form.MatrixBox</string>
-          <string>MatrixBox</string>
-        </tuple>
-        <none/>
+        <global name="MatrixBox" module="Products.ERP5Form.MatrixBox"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -183,6 +180,10 @@
                     <value> <string>composition</string> </value>
                 </item>
                 <item>
+                    <key> <string>cell_getter_method</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>cell_portal_type</string> </key>
                     <value> <string>Mapped Value</string> </value>
                 </item>
@@ -257,16 +258,7 @@
                 <item>
                     <key> <string>lines</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>coton</string>
-                          <string>coton</string>
-                        </tuple>
-                        <tuple>
-                          <string>elastanne</string>
-                          <string>elastanne</string>
-                        </tuple>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>

@@ -77,7 +77,10 @@
                 <item>
                     <key> <string>center</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>my_title</string>
+                        <string>my_quantity_unit_list</string>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -85,16 +88,14 @@
                     <value>
                       <list>
                         <string>matrixbox_membership_criterion_category_list</string>
-                        <string>matrixbox_measure</string>
+                        <string>matrixbox_quantity</string>
                       </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>left</string> </key>
                     <value>
-                      <list>
-                        <string>my_title</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
