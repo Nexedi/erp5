@@ -55,6 +55,7 @@
             <key> <string>_body</string> </key>
             <value> <string>from Products.ERP5Type.Document import newTempBase\n
 from Products.ERP5Type.Cache import CachingMethod\n
+Base_translateString = context.Base_translateString\n
 \n
 def getModifiedObjectList(context):\n
   result = context.preinstall()\n
@@ -79,23 +80,29 @@ no_backup_dict = {}\n
 for k in no_backup_list:\n
   no_backup_dict[k] = 1\n
 \n
+install_title = Base_translateString(\'Install\')\n
+upgrade_title = Base_translateString(\'Upgrade\')\n
+backup_title = Base_translateString(\'Backup And Upgrade\')\n
+remove_title = Base_translateString(\'Remove\')\n
+save_and_remove_title = Base_translateString(\'Backup And Remove\')\n
+\n
 i = 0\n
 object_list = []\n
 for object_id in keys:\n
   object_state, object_class = modified_object_list[object_id]\n
   line = newTempBase(context, \'tmp_install_%s\' %(str(i)))\n
   if object_state == \'New\':\n
-    choice_item_list=[[\'Install\', \'install\']]\n
+    choice_item_list=[[install_title, \'install\']]\n
   elif object_state == \'Modified\':\n
     if object_class in no_backup_dict:\n
-      choice_item_list=[[\'Upgrade\', \'install\']]\n
+      choice_item_list=[[upgrade_title, \'install\']]\n
     else:\n
-      choice_item_list=[[\'Backup And Upgrade\', \'backup\']]\n
+      choice_item_list=[[backup_title, \'backup\']]\n
   elif object_state == \'Removed\':\n
     if object_class in no_backup_dict:\n
-      choice_item_list=[[\'Remove\', \'remove\']]\n
+      choice_item_list=[[remove_title, \'remove\']]\n
     else:\n
-      choice_item_list=[[\'Backup And Remove\', \'save_and_remove\']]\n
+      choice_item_list=[[save_and_remove_title, \'save_and_remove\']]\n
 \n
   line.edit(object_id=object_id,\n
                 object_state=object_state,\n
@@ -148,16 +155,22 @@ return object_list\n
                             <string>newTempBase</string>
                             <string>Products.ERP5Type.Cache</string>
                             <string>CachingMethod</string>
-                            <string>getModifiedObjectList</string>
-                            <string>context</string>
-                            <string>modified_object_list</string>
                             <string>_getattr_</string>
+                            <string>context</string>
+                            <string>Base_translateString</string>
+                            <string>getModifiedObjectList</string>
+                            <string>modified_object_list</string>
                             <string>keys</string>
                             <string>no_backup_list</string>
                             <string>no_backup_dict</string>
                             <string>_getiter_</string>
                             <string>k</string>
                             <string>_write_</string>
+                            <string>install_title</string>
+                            <string>upgrade_title</string>
+                            <string>backup_title</string>
+                            <string>remove_title</string>
+                            <string>save_and_remove_title</string>
                             <string>i</string>
                             <string>object_list</string>
                             <string>object_id</string>
