@@ -65,10 +65,10 @@ class Signature(Folder, SyncCode, File):
                id=None,
                rid=None,
                status=None,
-               xml_string='',
+               xml_string=None,
                object=None):
     Folder.__init__(self, id)
-    File.__init__(self, id, '', xml_string)
+    File.__init__(self, id, '', '')
     if object is not None:
       self.setPath(object.getPhysicalPath())
       self.setObjectId(object.getId())
@@ -188,7 +188,7 @@ class Signature(Folder, SyncCode, File):
     if xml is not None:
       # convert the string to Pdata if the big size
       file = cStringIO.StringIO(xml)
-      self.xml, size = self._read_data(file)
+      self.xml, size = self.getParentValue()._read_data(file)
       self.setTempXML(None) # We make sure that the xml will not be erased
       self.setMD5(xml)
     else:
@@ -223,7 +223,7 @@ class Signature(Folder, SyncCode, File):
     """
     if xml is not None:
       file = cStringIO.StringIO(xml)
-      self.temp_xml, size = self._read_data(file)
+      self.temp_xml, size = self.getParentValue()._read_data(file)
     else:
       self.temp_xml = None
 
@@ -353,7 +353,7 @@ class Signature(Folder, SyncCode, File):
         xml = xml.decode('utf-8').encode('ascii','xmlcharrefreplace')
       # convert the string to Pdata if the big size
       file = cStringIO.StringIO(xml)
-      self.partial_xml, size = self._read_data(file)
+      self.partial_xml, size = self.getParentValue()._read_data(file)
       if not isinstance(self.partial_xml, Pdata):
         self.partial_xml = Pdata(self.partial_xml)
       self.last_data_partial_xml = self.partial_xml.getLastPdata()
@@ -372,7 +372,7 @@ class Signature(Folder, SyncCode, File):
         xml = xml.decode('utf-8').encode('ascii','xmlcharrefreplace')
       
       file = cStringIO.StringIO(xml)
-      xml_append, size = self._read_data(file)
+      xml_append, size = self.getParentValue()._read_data(file)
       if not isinstance(xml_append, Pdata):
         xml_append = Pdata(xml_append)
       last_data = xml_append.getLastPdata()
@@ -381,7 +381,36 @@ class Signature(Folder, SyncCode, File):
       else:
         self.partial_xml = xml_append
       self.last_data_partial_xml = last_data
-   
+  
+  def getFirstChunkPdata(self, size_lines):
+    """
+    """
+    chunk = list()
+    chunk.append(self.partial_xml.data)
+    size = chunk[0].count('\n')
+    index = 0
+    Pdata = next = self.partial_xml.next
+    while size < size_lines:
+      Pdata = next
+      size += Pdata.data.count('\n')
+      chunk.append(Pdata.data)
+      index += 1
+      next = Pdata.next
+     
+    if size == size_lines:
+      self.partial_xml = next
+    elif size > size_lines:
+      data_list = chunk[index].split('\n')
+      chunk[index] = '\n'.join(data_list[:size_lines])
+      if Pdata is not None:
+        Pdata.data = '\n'.join(data_list[size_lines:])
+        self.partial_xml = Pdata
+      else:
+        self.partial_xml.data = '\n'.join(data_list[size_lines:])
+ 
+    return ''.join(chunk)
+
+
   def getPartialXML(self):
     """
     Set the partial string we will have to

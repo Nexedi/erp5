@@ -781,8 +781,8 @@ class XMLSyncUtilsMixin(SyncCode):
           signature = Signature(id=gid, object=object).__of__(subscriber)
           signature.setTempXML(xml_string)
           if xml_string.count('\n') > self.MAX_LINES:
-            xml_string, rest_string = self.cutXML(xml_string)
             more_data = 1
+            xml_string, rest_string = self.cutXML(xml_string)
             signature.setPartialXML(rest_string)
             status = self.PARTIAL
             signature.setAction('Add')
@@ -822,8 +822,8 @@ class XMLSyncUtilsMixin(SyncCode):
               xml_string = self.getXupdateObject(xml_object, signature.getXML())
               if xml_string.count('\n') > self.MAX_LINES:
                 # This make comment fails, so we need to replace
-                xml_string, rest_string = self.cutXML(xml_string)
                 more_data = 1
+                xml_string, rest_string = self.cutXML(xml_string)
                 signature.setPartialXML(rest_string)
                 status = self.PARTIAL
                 signature.setAction('Replace')
@@ -876,19 +876,23 @@ class XMLSyncUtilsMixin(SyncCode):
           signature.setStatus(self.SYNCHRONIZED)
         elif signature.getStatus() == self.PARTIAL:
           xml_string = signature.getPartialXML()
-          xml_to_send = Element('Partial')
-          xml_to_send.text = etree.CDATA(xml_string.decode('utf-8'))
           if(subscriber.getMediaType() != self.MEDIA_TYPE['TEXT_XML']):
             xml_to_send = conduit.getXMLFromObjectWithId(object,\
                                   xml_mapping=domain.getXMLMapping()) 
           elif xml_string.count('\n') > self.MAX_LINES:
-            xml_to_send, rest_string = self.cutXML(xml_string)
             more_data = 1
-            signature.setPartialXML(rest_string)
+            # Receive the chunk of partial xml
+            short_string = signature.getFirstChunkPdata(self.MAX_LINES)
+            xml_to_send = etree.Element('Partial')
+            xml_to_send.text = etree.CDATA(short_string.decode('utf-8'))
             status = self.PARTIAL
+          else:
+            xml_to_send = Element('Partial')
+            xml_to_send.text = etree.CDATA(xml_string.decode('utf-8'))
           signature.setStatus(status)
           if signature.getAction() == 'Replace':
-            rid = signature.getRid()#in fisrt, we try with rid if there is one
+            rid = signature.getRid()
+            # In first, we try with rid if there is one
             gid = signature.getGid()
             syncml_data_list.append(self.replaceXMLObject(
                                        cmd_id=cmd_id,
