@@ -64,7 +64,8 @@ class TestERP5Interfaces(ERP5TypeTestCase):
 
   def test_AggregatedAmountList_implements_IAggregatedAmountList(self):
     # AggregatedAmountList is not a document
-    from Products.ERP5.interfaces.transformation import IAggregatedAmountList
+    from Products.ERP5.interfaces.aggregated_amount_list \
+        import IAggregatedAmountList
     from Products.ERP5.AggregatedAmountList import AggregatedAmountList
     verifyClass(IAggregatedAmountList, AggregatedAmountList)
   

@@ -30,14 +30,6 @@
 
 from zope.interface import Interface
 
-try:
-  from zope.interface.common.sequence import ISequence
-except ImportError:
-  # ISequence does not exists in old zope.interface versions
-  class ISequence(Interface):
-    pass
-
-
 class ITransformation(Interface):
   """
     Common Interface to implementing querying of indirect amount
@@ -82,11 +74,3 @@ class ITransformation(Interface):
       * movement_to_delete_list - a list of movements from movement_list or from the
         context that shall be deleted.
     """
-
-
-class IAggregatedAmountList(ISequence):
-  """An Aggregated Amount List is a list of amounts aggregated together.
-
-  It is a sequence of objects implementing IAmount interface.
-  """
-

@@ -29,11 +29,7 @@
 
 from zope.interface import Interface
 
-class IDivergenceSolver(Interface):
-  """Solves divergence between delivery line and related simulation movements"""
-
-  def solve(decision_list):
-    """Solves divergences on self according to decision_list
-
-    decision_list is list of instances of DivergenceSolutionDecision class
-    """
+class ITargetSolver(Interface):
+  """Solves changes of properties up to simulation tree with taking proper decisions"""
+  # placeholder to define
+  pass

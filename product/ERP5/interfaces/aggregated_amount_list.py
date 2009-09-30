@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2009 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2009 Nexedi SA and Contributors. All Rights Reserved.
+#                    Jean-Paul Smets-Solanes <jp@nexedi.com>
 #                    Łukasz Nowak <luke@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
@@ -29,11 +30,16 @@
 
 from zope.interface import Interface
 
-class IDivergenceSolver(Interface):
-  """Solves divergence between delivery line and related simulation movements"""
+try:
+  from zope.interface.common.sequence import ISequence
+except ImportError:
+  # ISequence does not exists in old zope.interface versions
+  class ISequence(Interface):
+    pass
 
-  def solve(decision_list):
-    """Solves divergences on self according to decision_list
+class IAggregatedAmountList(ISequence):
+  """An Aggregated Amount List is a list of amounts aggregated together.
 
-    decision_list is list of instances of DivergenceSolutionDecision class
-    """
+  It is a sequence of objects implementing IAmount interface.
+  """
+
