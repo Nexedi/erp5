@@ -89,6 +89,11 @@ class TestXHTML(ERP5TypeTestCase):
       'erp5_web',
       'erp5_dms',
 
+      'erp5_egov_catalog',
+      'erp5_egov',
+
+      'tiolive_base',
+
       'erp5_commerce',
 
       'erp5_forge',
