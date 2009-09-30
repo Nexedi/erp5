@@ -124,18 +124,38 @@ class TestXHTML(ERP5TypeTestCase):
     default_site_preference = portal_preferences.default_site_preference
     portal_workflow.doActionFor(default_site_preference, 'enable_action')
 
+  def changeSkin(self, skin_name):
+    """
+      Change current Skin
+    """
+    request = self.app.REQUEST
+    self.getPortal().portal_skins.changeSkin(skin_name)
+    request.set('portal_skin', skin_name)
+
   def test_deadProxyFields(self):
     # check that all proxy fields defined in business templates have a valid
     # target
     skins_tool = self.portal.portal_skins
     error_list = []
-    for field_path, field in skins_tool.ZopeFind(
-              skins_tool, obj_metatypes=['ProxyField'], search_sub=1):
-      template_field = field.getTemplateField()
-      if template_field is None:
-        error_list.append((field_path, field.get_value('form_id'),
-                           field.get_value('field_id')))
-    self.assertEquals(error_list, [])
+
+    for skin_name, skin_folder_string in skins_tool.getSkinPaths():
+      skin_folder_id_list = skin_folder_string.split(',')
+      self.changeSkin(skin_name)
+
+      for skin_folder_id in skin_folder_id_list:
+        for field_path, field in skins_tool[skin_folder_id].ZopeFind(
+                  skins_tool[skin_folder_id], 
+                  obj_metatypes=['ProxyField'], search_sub=1):
+          template_field = field.getTemplateField(cache=False)
+          if template_field is None:
+            error_list.append((skin_name, field_path, field.get_value('form_id'),
+                               field.get_value('field_id')))
+
+    if error_list:
+      message = '\nDead proxy field list\n'
+      for error in error_list:
+        message += '\t%s\n' % str(error)
+      self.fail(message)
     
   def test_emptySelectionNameInListbox(self):
     # check all empty selection name in listboxes
