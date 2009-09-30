@@ -95,9 +95,7 @@ class ISimulationMovement(Interface):
     """
 
   def getDivergenceList():
-    """Returns a list of divergences
-    XXX - unclear, please explan what the returned documents
-    or object are (type, class)
+    """Returns a list of divergences using DivergenceMessage class
     """
 
   def isFrozen():
