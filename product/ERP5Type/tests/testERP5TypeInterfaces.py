@@ -30,61 +30,51 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from zope.interface.verify import verifyClass
 import unittest
 
+implements_tuple_list = [
+  (('Products.ERP5Type.ObjectMessage', 'ObjectMessage'), 'IObjectMessage'),
+  (('Products.ERP5Type.ConsistencyMessage', 'ConsistencyMessage'),
+    'IObjectMessage'),
+  (('Products.ERP5Type.DivergenceMessage', 'DivergenceMessage'),
+    'IObjectMessage'),
+  (('Products.ERP5Type.ConsistencyMessage', 'ConsistencyMessage'),
+    'IConsistencyMessage'),
+  (('Products.ERP5Type.DivergenceMessage', 'DivergenceMessage'),
+    'IDivergenceMessage'),
+]
+
 class TestERP5TypeInterfaces(ERP5TypeTestCase):
   """Tests implementation of interfaces"""
 
-  def test_ObjectMessage_implements_IObjectMessage(self):
-    from Products.ERP5Type.interfaces.object_message import IObjectMessage
-    from Products.ERP5Type.ObjectMessage import ObjectMessage
-    verifyClass(IObjectMessage, ObjectMessage)
-
-  def test_ConsistencyMessage_implements_IObjectMessage(self):
-    from Products.ERP5Type.interfaces.object_message import IObjectMessage
-    from Products.ERP5Type.ConsistencyMessage import ConsistencyMessage
-    verifyClass(IObjectMessage, ConsistencyMessage)
-
-  def test_ConsistencyMessage_implements_IConsistencyMessage(self):
-    from Products.ERP5Type.interfaces.consistency_message \
-        import IConsistencyMessage
-    from Products.ERP5Type.ConsistencyMessage import ConsistencyMessage
-    verifyClass(IConsistencyMessage, ConsistencyMessage)
-
-  def test_DivergenceMessage_implements_IObjectMessage(self):
-    from Products.ERP5Type.interfaces.object_message import IObjectMessage
-    from Products.ERP5Type.DivergenceMessage import DivergenceMessage
-    verifyClass(IObjectMessage, DivergenceMessage)
-
-  def test_DivergenceMessage_implements_IDivergenceMessage(self):
-    from Products.ERP5Type.interfaces.divergence_message import IDivergenceMessage
-    from Products.ERP5Type.DivergenceMessage import DivergenceMessage
-    verifyClass(IDivergenceMessage, DivergenceMessage)
-
-def makeTestMethod(document, interface):
+def makeTestMethod(import_tuple, interface):
   """Common method which checks if documents implements interface"""
   def testMethod(self):
-    _temp = __import__('Products.ERP5Type.Document.%s' % document, globals(),
-        locals(), ['%s' % document])
-    Document = getattr(_temp, document)
+    _temp = __import__(import_tuple[0], globals(), locals(),
+        ['%s' % import_tuple[1]])
+    Klass = getattr(_temp, import_tuple[1])
     _temp = __import__('Products.ERP5Type.interfaces', globals(), locals(),
         ['%s' % interface])
     Interface = getattr(_temp, interface)
 
-    verifyClass(Interface, Document)
+    verifyClass(Interface, Klass)
 
   return testMethod
 
-def addTestMethodDynamically():
+def addTestMethodDynamically(test_class, implements_tuple_list):
   """Creates test methods on the fly
 
-    Uses naming test_<DocumentClass>_implements_<InterfaceClass>
+    Uses naming
+    test_<ImportPathOfClass>_<ImplementationClass>_implements_<InterfaceClass>
+
     It is possible to use --run_only on those dynamically generated methods"""
-  for document, interface in implements_tuple_list:
-    method_name = 'test_%s_implements_%s' % (document, interface)
-    method = makeTestMethod(document, interface)
-    setattr(TestERP5Interfaces, method_name, method)
+  for import_tuple, interface in implements_tuple_list:
+    method_name = '_'.join(
+      ('test',) + import_tuple + ('implements',) + (interface, )
+    )
+    method = makeTestMethod(import_tuple, interface)
+    setattr(test_class, method_name, method)
 
 # Note: Enable this method when implements_tuple_list will be filled
-#addTestMethodDynamically()
+addTestMethodDynamically(TestERP5TypeInterfaces, implements_tuple_list)
 
 def test_suite():
   suite = unittest.TestSuite()

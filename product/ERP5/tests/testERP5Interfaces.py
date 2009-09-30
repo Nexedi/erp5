@@ -27,74 +27,59 @@
 ##############################################################################
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from Products.ERP5Type.tests.testERP5TypeInterfaces import makeTestMethod, \
-  addTestMethodDynamically
-from zope.interface.verify import verifyClass
+from Products.ERP5Type.tests.testERP5TypeInterfaces import addTestMethodDynamically
 import unittest
 
 # this list can be generated automatically using introspection or can be set
 # manually and treated as reference to what implements what
 implements_tuple_list = [
-  ('BusinessPath', 'IArrowBase'),
-  ('BusinessPath', 'IBusinessPath'),
-  ('BusinessPath', 'ICategoryAccessProvider'),
-  ('DeliveryLine', 'IDivergenceSolver'),
-  ('TradeCondition', 'ITransformation'),
-  ('TradeModelCell', 'ITransformation'),
-  ('TradeModelCell', 'IVariated'),
-  ('TradeModelLine', 'ITransformation'),
-  ('TradeModelLine', 'IVariated'),
-  ('TradeModelRule', 'IPredicate'),
-  ('TradeModelRule', 'IRule'),
-  ('Transformation', 'ITransformation'),
-  ('Transformation', 'IVariated'),
-  ('TransformationRule', 'IPredicate'),
-  ('TransformationRule', 'IRule'),
-  ('TransformedResource', 'IVariated'),
+  (('Products.ERP5Type.Document.BusinessPath','BusinessPath'), 'IArrowBase'),
+  (('Products.ERP5Type.Document.BusinessPath','BusinessPath'), 'IBusinessPath'),
+  (('Products.ERP5Type.Document.BusinessPath','BusinessPath'), 'ICategoryAccessProvider'),
+  (('Products.ERP5Type.Document.DeliveryLine', 'DeliveryLine'), 'IDivergenceSolver'),
+  (('Products.ERP5Type.Document.TradeCondition','TradeCondition'), 'ITransformation'),
+  (('Products.ERP5Type.Document.TradeModelCell','TradeModelCell'), 'ITransformation'),
+  (('Products.ERP5Type.Document.TradeModelCell','TradeModelCell'), 'IVariated'),
+  (('Products.ERP5Type.Document.TradeModelLine','TradeModelLine'), 'ITransformation'),
+  (('Products.ERP5Type.Document.TradeModelLine','TradeModelLine'), 'IVariated'),
+  (('Products.ERP5Type.Document.TradeModelRule','TradeModelRule'), 'IPredicate'),
+  (('Products.ERP5Type.Document.TradeModelRule','TradeModelRule'), 'IRule'),
+  (('Products.ERP5Type.Document.Transformation','Transformation'), 'ITransformation'),
+  (('Products.ERP5Type.Document.Transformation','Transformation'), 'IVariated'),
+  (('Products.ERP5Type.Document.TransformationRule','TransformationRule'), 'IPredicate'),
+  (('Products.ERP5Type.Document.TransformationRule','TransformationRule'), 'IRule'),
+  (('Products.ERP5Type.Document.TransformedResource','TransformedResource'), 'IVariated'),
   #IDocument
-  ('Document', 'IDocument'),
-  ('Image', 'IDocument'),
-  ('File', 'IDocument'),
-  ('OOoDocument', 'IDocument'),
-  ('TextDocument', 'IDocument'),
-  ('EmailDocument', 'IDocument'),
-  ('Event', 'IDocument'),
-  #IMovementGroup
-  ('MovementGroup', 'IMovementGroup'),
-  ('BaseVariantMovementGroup', 'IMovementGroup'),
-  ('CategoryMovementGroup', 'IMovementGroup'),
-  ('CausalityAssignmentMovementGroup', 'IMovementGroup'),
-  ('CausalityMovementGroup', 'IMovementGroup'),
-  ('DayMovementGroup', 'IMovementGroup'),
-  ('DeliveryCausalityAssignmentMovementGroup', 'IMovementGroup'),
-  ('FirstCausalityMovementGroup', 'IMovementGroup'),
-  ('MonthlyRangeMovementGroup', 'IMovementGroup'),
-  ('NestedLineMovementGroup', 'IMovementGroup'),
-  ('OrderMovementGroup', 'IMovementGroup'),
-  ('ParentExplanationMovementGroup', 'IMovementGroup'),
-  ('PropertyAssignmentMovementGroup', 'IMovementGroup'),
-  ('PropertyMovementGroup', 'IMovementGroup'),
-  ('QuantitySignMovementGroup', 'IMovementGroup'),
-  ('RequirementMovementGroup', 'IMovementGroup'),
-  ('RootAppliedRuleCausalityMovementGroup', 'IMovementGroup'),
-  ('SplitMovementGroup', 'IMovementGroup'),
-  ('TaxLineDeliveryMovementGroup', 'IMovementGroup'),
-  ('TitleMovementGroup', 'IMovementGroup'),
-  ('VariantMovementGroup', 'IMovementGroup'),
-  ('VariationPropertyMovementGroup', 'IMovementGroup'),
+  (('Products.ERP5Type.Document.Document', 'Document'), 'IDocument'),
+  (('Products.ERP5Type.Document.Image', 'Image'), 'IDocument'),
+  (('Products.ERP5Type.Document.File', 'File'), 'IDocument'),
+  (('Products.ERP5Type.Document.OOoDocument', 'OOoDocument'), 'IDocument'),
+  (('Products.ERP5Type.Document.TextDocument', 'TextDocument'), 'IDocument'),
+  (('Products.ERP5Type.Document.EmailDocument', 'EmailDocument'), 'IDocument'),
+  (('Products.ERP5Type.Document.Event', 'Event'), 'IDocument'),
+  # IAggregatedAmountList
+  (('Products.ERP5.AggregatedAmountList', 'AggregatedAmountList'), 'IAggregatedAmountList'),
 ]
+# IMovementGroup
+for movement_group_class_name in ['MovementGroup', 'BaseVariantMovementGroup',
+    'CategoryMovementGroup', 'CausalityAssignmentMovementGroup',
+    'CausalityMovementGroup', 'DayMovementGroup',
+    'DeliveryCausalityAssignmentMovementGroup', 'FirstCausalityMovementGroup',
+    'MonthlyRangeMovementGroup', 'NestedLineMovementGroup',
+    'OrderMovementGroup', 'ParentExplanationMovementGroup',
+    'PropertyAssignmentMovementGroup', 'PropertyMovementGroup',
+    'QuantitySignMovementGroup', 'RequirementMovementGroup',
+    'RootAppliedRuleCausalityMovementGroup', 'SplitMovementGroup',
+    'TaxLineDeliveryMovementGroup', 'TitleMovementGroup',
+    'VariantMovementGroup', 'VariationPropertyMovementGroup']:
+  implements_tuple_list.append((('Products.ERP5Type.Document.%s' % \
+      movement_group_class_name, movement_group_class_name),
+      'IMovementGroup'))
 
 class TestERP5Interfaces(ERP5TypeTestCase):
   """Tests implementation of interfaces"""
 
-  def test_AggregatedAmountList_implements_IAggregatedAmountList(self):
-    # AggregatedAmountList is not a document
-    from Products.ERP5.interfaces.aggregated_amount_list \
-        import IAggregatedAmountList
-    from Products.ERP5.AggregatedAmountList import AggregatedAmountList
-    verifyClass(IAggregatedAmountList, AggregatedAmountList)
-
-addTestMethodDynamically()
+addTestMethodDynamically(TestERP5Interfaces, implements_tuple_list)
 
 def test_suite():
   suite = unittest.TestSuite()
