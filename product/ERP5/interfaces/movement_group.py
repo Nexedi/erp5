@@ -30,8 +30,24 @@
 from zope.interface import Interface
 
 class IMovementGroup(Interface):
-  """
-    XXX - add documentation here
-  """
+  """Movement Group interface specification
 
-  #XXX - add documentation here
+  The purpose of MovementGroup is to define how movements are grouped,
+  and how values are updated from simulation movements.
+  """
+  def test(document, property_dict, **kw):
+    """Returns a tuple of 2 values.
+    First one is True if document contains identical values than some 
+    contained property_dict.
+    Second one is a modified version of property_dict.
+    """
+
+  def separate(movement_list):
+    """
+    Returns a list of lists of movements, which are grouped by some of their
+    properties.
+    """
+
+  def isBranch():
+    """Returns True if self can be taken as branch point by the builder.
+    """
