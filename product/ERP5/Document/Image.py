@@ -345,17 +345,13 @@ class Image(File, OFSImage):
     image_size = self.getSizeFromImageDisplay(display)
     if (display is not None or resolution is not None or quality != 75 or format != ''\
                             or frame is not None) and image_size:
+      kw = dict(display=display, format=format, quality=quality,
+                resolution=resolution, frame=frame, image_size=image_size)
       try:
-        return self.getConversion(display=display, format=format,
-                                  quality=quality, resolution=resolution,
-                                  frame=frame, image_size=image_size)
+        return self.getConversion(**kw)
       except KeyError:
-        mime, image = self._makeDisplayPhoto(display, format=format, quality=quality,
-                                             resolution=resolution, frame=frame,
-                                             image_size=image_size)
-        self.setConversion(image.data, mime, format=format, quality=quality,
-                           resolution=resolution, frame=frame,
-                           image_size=image_size)
+        mime, image = self._makeDisplayPhoto(**kw)
+        self.setConversion(image.data, mime, **kw)
         return mime, image.data
     return self.getContentType(), self.getData()
 
