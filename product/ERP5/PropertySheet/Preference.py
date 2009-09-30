@@ -56,6 +56,12 @@ class Preference:
       'type'        : 'string',
       'preference'  : 1,
       'mode'        : 'w'},
+    { 'id'          : 'preferred_float_number_style',
+      'description' : 'The style of float number (with comma, point, '\
+                      'space, ...).',
+      'type'        : 'string',
+      'preference'  : 1,
+      'mode'        : 'w'},
     { 'id'          : 'preferred_money_quantity_style',
       'description' : 'The style of money quantities.',
       'type'        : 'string',
