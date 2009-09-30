@@ -1092,6 +1092,12 @@ msgstr "Clé n° de compte"
 msgid "BT Title"
 msgstr "Titre du BT"
 
+msgid "Backup And Remove"
+msgstr "Sauvegarder et enlever"
+
+msgid "Backup And Upgrade"
+msgstr "Sauvegarder et mettre à jour"
+
 msgid "Bad login provided."
 msgstr "Login incorrect"
 
@@ -4978,6 +4984,9 @@ msgstr "Ce champ est obligatoire."
 msgid "Inspect Object"
 msgstr "Inspecter l'objet"
 
+msgid "Install"
+msgstr "Installer"
+
 msgid "Install Business Template"
 msgstr "Installer le Business Template"
 
@@ -5932,9 +5941,6 @@ msgstr "Pas de ${portal_type} lié."
 msgid "No ${portal_type} related."
 msgstr "Pas de ${portal_type} correspondant."
 
-msgid "No result !"
-msgstr "Pas de résultat !"
-
 msgid "No Trade Condition."
 msgstr "Conditions de vente non définies."
 
@@ -5973,6 +5979,9 @@ msgstr "Aucun document correspondant n'a été trouvé."
 
 msgid "No related wiki documents found."
 msgstr "Aucun wiki correspondant n'a été trouvé."
+
+msgid "No result !"
+msgstr "Pas de résultat !"
 
 msgid "No such document was found."
 msgstr "Aucun document correspondant n'a été trouvé."
@@ -7993,6 +8002,9 @@ msgstr "Mémoriser mon Nom"
 
 msgid "Remember my name."
 msgstr "Mémoriser mon Nom"
+
+msgid "Remove"
+msgstr "Enlever"
 
 msgid "Rename"
 msgstr "Renommer"
@@ -11045,6 +11057,9 @@ msgstr "Business Templates mis à jour"
 
 msgid "Updated [state in assignment_workflow]"
 msgstr "Mis à jour"
+
+msgid "Upgrade"
+msgstr "Mettre à jour"
 
 msgid "Upgrade Business Templates from Repositories"
 msgstr "Mettre à jour les Business Templates depuis les dépôts"
