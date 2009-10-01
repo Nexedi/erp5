@@ -696,8 +696,14 @@ msgstr "Répondu"
 msgid "Any Documents"
 msgstr "N'importe quel document"
 
+msgid "Apparel Bath"
+msgstr "Vêtement de bain"
+
+msgid "Apparel Baths"
+msgstr "Vêtements de bain"
+
 msgid "Apparel Cloth"
-msgstr "Vêtements"
+msgstr "Vêtement"
 
 msgid "Apparel Cloth List"
 msgstr "Vêtements"
@@ -708,11 +714,11 @@ msgstr "Module des vêtements"
 msgid "Apparel Cloth to design"
 msgstr "Vêtements à définir"
 
-msgid "Apparel Colour Range"
-msgstr "Gammes matières"
+msgid "Apparel Clothes"
+msgstr "Vêtements"
 
-msgid "Apparel Colour Range Colour Variation"
-msgstr "Gammes coloris"
+msgid "Apparel Colour Range"
+msgstr "Gamme matière"
 
 msgid "Apparel Colour Range List"
 msgstr "Gammes matières"
@@ -720,20 +726,23 @@ msgstr "Gammes matières"
 msgid "Apparel Colour Range Module"
 msgstr "Module des gammes matières"
 
-msgid "Apparel Colour Range Title"
-msgstr "Gamme matières"
-
 msgid "Apparel Colour Range Variation"
-msgstr "Coloris gamme"
+msgstr "Gammes coloris"
+
+msgid "Apparel Colour Ranges"
+msgstr "Gammes matières"
 
 msgid "Apparel Component"
-msgstr "Fournitures"
+msgstr "Fourniture"
 
 msgid "Apparel Component Module"
 msgstr "Module des fournitures"
 
 msgid "Apparel Component Variation"
 msgstr "Coloris / variante"
+
+msgid "Apparel Components"
+msgstr "Fournitures"
 
 msgid "Apparel Consumption"
 msgstr "Tables de consommation"
@@ -745,16 +754,16 @@ msgid "Apparel Consumption Module"
 msgstr "Tables de consommation"
 
 msgid "Apparel Fabric"
-msgstr "Tissus"
+msgstr "Tissu"
 
 msgid "Apparel Fabric Colour"
-msgstr "Coloris"
+msgstr "Coloris de tissu"
 
 msgid "Apparel Fabric Colour Variation"
-msgstr "Coloris"
+msgstr "Gamme coloris de tissu"
 
 msgid "Apparel Fabric Item Fast Input"
-msgstr "Saisie rapide des appareils de fabrique"
+msgstr "Saisie rapide des tissus"
 
 msgid "Apparel Fabric List"
 msgstr "Tissus"
@@ -762,11 +771,11 @@ msgstr "Tissus"
 msgid "Apparel Fabric Module"
 msgstr "Module des tissus"
 
-msgid "Apparel Fabric Title"
-msgstr "Réf qualité tissu"
-
 msgid "Apparel Fabric to validate"
 msgstr "Tissus à définir"
+
+msgid "Apparel Fabrics"
+msgstr "Tissus"
 
 msgid "Apparel Measurement"
 msgstr "Correspondance de mesure"
@@ -776,6 +785,9 @@ msgstr "Correspondances de mesures"
 
 msgid "Apparel Measurement Module"
 msgstr "Module des mesures"
+
+msgid "Apparel Measurements"
+msgstr "Correspondances de mesures"
 
 msgid "Apparel Model"
 msgstr "Modèle"
@@ -832,19 +844,22 @@ msgid "Apparel Size"
 msgstr "Correspondances de tailles"
 
 msgid "Apparel Size List"
-msgstr "Correspondance de tailles"
+msgstr "Correspondances de tailles"
 
 msgid "Apparel Size Module"
 msgstr "Module des tailles"
+
+msgid "Apparel Sizes"
+msgstr "Correspondances de tailles"
 
 msgid "Apparel Technical Drawing"
 msgstr "Dessin technique"
 
 msgid "Apparel Transformation"
-msgstr "Nomenclatures"
+msgstr "Nomenclature"
 
 msgid "Apparel Transformation List"
-msgstr "Éléments de la nomenclature"
+msgstr "Nomenclatures"
 
 msgid "Apparel Transformation Module"
 msgstr "Module des nomenclatures"
@@ -856,16 +871,16 @@ msgid "Apparel Transformation Operation List"
 msgstr "Liste des opérations"
 
 msgid "Apparel Transformation Template"
-msgstr "Nomenclature(s) à inclure"
-
-msgid "Apparel Transformation Title"
-msgstr "Titre de la nomenclature"
+msgstr "Modèle de nomenclature"
 
 msgid "Apparel Transformation Transformed Resource"
 msgstr "Composant"
 
 msgid "Apparel Transformation Updated."
-msgstr "La Nomenclature est actualisée."
+msgstr "Nomenclature actualisée."
+
+msgid "Apparel Transformations"
+msgstr "Nomenclatures"
 
 msgid "Apparel fabric"
 msgstr "Tissu"
@@ -2121,6 +2136,9 @@ msgstr "Convention collective"
 msgid "Collective agreement"
 msgstr "Convention collective"
 
+msgid "Color Count"
+msgstr "Nombre de couleurs"
+
 msgid "Color Range"
 msgstr "Coloris"
 
@@ -2484,6 +2502,9 @@ msgstr "Coordonnées"
 msgid "Copy"
 msgstr "Copier"
 
+msgid "Copy Apparel Colour Range Variation"
+msgstr "Copier la gammes de coloris"
+
 msgid "Copy or cut one or more items to paste first."
 msgstr "Copier ou couper un ou plusieurs objets pour coller en premier"
 
@@ -2756,6 +2777,9 @@ msgstr "Client"
 
 msgid "Customer Account"
 msgstr "Compte Client"
+
+msgid "Customer Colour"
+msgstr "Coloris client"
 
 msgid "Customer Measure"
 msgstr "Mesures Client"
@@ -3767,10 +3791,7 @@ msgid "Drawing"
 msgstr "Dessin"
 
 msgid "Drawing Reference"
-msgstr "Réf Dessin"
-
-msgid "Drawing reference"
-msgstr "Réf Dessin"
+msgstr "Réf dessin"
 
 msgid "Duplicate"
 msgstr "Dupliquer"
@@ -5872,6 +5893,9 @@ msgstr "Montant Net"
 msgid "Net Width"
 msgstr "Laize des collections"
 
+msgid "Net Width (cm)"
+msgstr "Largeur utile (cm)"
+
 msgid "Net payable"
 msgstr "Net à payer"
 
@@ -7601,6 +7625,9 @@ msgstr "Valeur de la constante"
 msgid "Ratio Settings"
 msgstr "Constantes"
 
+msgid "Raw Width (cm)"
+msgstr "Largeur brute (cm)"
+
 msgid "Raw width (cm)"
 msgstr "Laize commerciale (cm)"
 
@@ -7851,7 +7878,7 @@ msgid "Related Apparel Colour Range Colour Variation"
 msgstr "Gammes dépendantes"
 
 msgid "Related Apparel Colour Range Variation"
-msgstr "Coloris coordonné"
+msgstr "Gammes coloris liées"
 
 msgid "Related Apparel Fabrics"
 msgstr "Tissus fournis"
@@ -7860,10 +7887,10 @@ msgid "Related Apparel Model"
 msgstr "Modèles dépendants"
 
 msgid "Related Apparel Shape"
-msgstr "Frome repris"
+msgstr "Forme liées"
 
 msgid "Related Apparel Transformation"
-msgstr "Nomenclatures dépendantes"
+msgstr "Nomenclatures liées"
 
 msgid "Related Balance Transaction"
 msgstr "Écriture de reprise des à nouveaux correspondante"
@@ -7875,7 +7902,7 @@ msgid "Related Business Template"
 msgstr "Business Template lié"
 
 msgid "Related Colour Range Colour Variation"
-msgstr "Gammes Matières concernées"
+msgstr "Gammes matières liées"
 
 msgid "Related Components"
 msgstr "Composants fournis"
@@ -9509,8 +9536,8 @@ msgstr "Origine / Personnel "
 msgid "Supplier Administrator"
 msgstr "Responsable des tâches administratives pour le fournisseur"
 
-msgid "Supplier Colour Reference"
-msgstr "Réf Coloris Fournisseur"
+msgid "Supplier Colour"
+msgstr "Coloris Fournisseur"
 
 msgid "Supplier Price"
 msgstr "Prix Fournisseur"
@@ -10795,7 +10822,7 @@ msgid "Trade Date"
 msgstr "Date de référence"
 
 msgid "Trade Description"
-msgstr "Libellé"
+msgstr "Désignation commerciale"
 
 msgid "Trade Line"
 msgstr "Ligne commerciale"
