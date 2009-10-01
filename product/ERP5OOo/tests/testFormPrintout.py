@@ -914,8 +914,8 @@ return report_section_list
                                    template='Foo3_getODTStyleSheet')
     odf_document = foo_report_printout()
 
-    test_output = open("/tmp/test_04_Iteratoin_02_Section_01.odf", "w")
-    test_output.write(odf_document)
+    #test_output = open("/tmp/test_04_Iteratoin_02_Section_01.odf", "w")
+    #test_output.write(odf_document)
     self.assertTrue(odf_document is not None)
     builder = OOoBuilder(odf_document)
     content_xml = builder.extract("content.xml")
