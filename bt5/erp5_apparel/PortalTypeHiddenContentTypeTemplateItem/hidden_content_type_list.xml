@@ -1,18 +1,23 @@
 <hidden_content_type_list>
  <portal_type id="Apparel Component">
-  <item>Supply Cell</item>
+  <item>Sale Supply Line</item>
   <item>Supply Line</item>
+  <item>Purchase Supply Line</item>
  </portal_type>
  <portal_type id="Apparel Consumption">
   <item>Mapped Value</item>
  </portal_type>
  <portal_type id="Apparel Fabric">
+  <item>Sale Supply Line</item>
   <item>Mapped Value</item>
+  <item>Purchase Supply Line</item>
   <item>Supply Line</item>
  </portal_type>
  <portal_type id="Apparel Model">
-  <item>Supply Line</item>
+  <item>Purchase Supply Line</item>
+  <item>Sale Supply Line</item>
   <item>Mapped Value</item>
+  <item>Supply Line</item>
  </portal_type>
  <portal_type id="Apparel Transformation Transformed Resource">
   <item>Mapped Value</item>
