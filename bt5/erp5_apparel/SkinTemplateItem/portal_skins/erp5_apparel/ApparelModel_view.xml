@@ -76,7 +76,7 @@
                     <key> <string>center</string> </key>
                     <value>
                       <list>
-                        <string>my_comment</string>
+                        <string>my_description</string>
                       </list>
                     </value>
                 </item>
@@ -93,7 +93,6 @@
                         <string>my_title</string>
                         <string>my_apparel_shape_title</string>
                         <string>my_apparel_colour_range_title</string>
-                        <string>my_description</string>
                         <string>my_trade_description</string>
                         <string>my_origin</string>
                         <string>my_apparel_model_template_title</string>
@@ -117,7 +116,8 @@
                         <string>my_size_list</string>
                         <string>my_industrial_phase_list</string>
                         <string>my_cleaning_code_list</string>
-                        <string>apparel_model_state</string>
+                        <string>my_comment</string>
+                        <string>my_translated_validation_state_title</string>
                       </list>
                     </value>
                 </item>
