@@ -81,7 +81,8 @@ else:\n
   else:\n
     msg = \'No new Apparel Colour Range Variation defined.\'\n
 \n
-context.Base_redirect(keep_items=dict(portal_status_message=msg))\n
+context.Base_redirect(form_id=form_id,\n
+                      keep_items=dict(portal_status_message=msg))\n
 </string> </value>
         </item>
         <item>
@@ -92,7 +93,7 @@ context.Base_redirect(keep_items=dict(portal_status_message=msg))\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>form_id=\'\'</string> </value>
+            <value> <string>form_id=\'view\'</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -146,7 +147,7 @@ context.Base_redirect(keep_items=dict(portal_status_message=msg))\n
             <key> <string>func_defaults</string> </key>
             <value>
               <tuple>
-                <string></string>
+                <string>view</string>
               </tuple>
             </value>
         </item>
