@@ -703,46 +703,46 @@ msgid "Apparel Cloth List"
 msgstr "Vêtements"
 
 msgid "Apparel Cloth Module"
-msgstr "Module Vêtements"
+msgstr "Module des vêtements"
 
 msgid "Apparel Cloth to design"
 msgstr "Vêtements à définir"
 
 msgid "Apparel Colour Range"
-msgstr "Gammes Matières"
+msgstr "Gammes matières"
 
 msgid "Apparel Colour Range Colour Variation"
-msgstr "Coloris Gamme"
+msgstr "Gammes coloris"
 
 msgid "Apparel Colour Range List"
-msgstr "Gammes Matières"
+msgstr "Gammes matières"
 
 msgid "Apparel Colour Range Module"
-msgstr "Module Gammes Matières"
+msgstr "Module des gammes matières"
 
 msgid "Apparel Colour Range Title"
-msgstr "Gamme Matières"
+msgstr "Gamme matières"
 
 msgid "Apparel Colour Range Variation"
-msgstr "Coloris Gamme"
+msgstr "Coloris gamme"
 
 msgid "Apparel Component"
 msgstr "Fournitures"
 
 msgid "Apparel Component Module"
-msgstr "Module Fournitures"
+msgstr "Module des fournitures"
 
 msgid "Apparel Component Variation"
 msgstr "Coloris / variante"
 
 msgid "Apparel Consumption"
-msgstr "Tables de Consommation"
+msgstr "Tables de consommation"
 
 msgid "Apparel Consumption List"
-msgstr "Tables de Consommation"
+msgstr "Tables de consommation"
 
 msgid "Apparel Consumption Module"
-msgstr "Tables de Consommation"
+msgstr "Tables de consommation"
 
 msgid "Apparel Fabric"
 msgstr "Tissus"
@@ -760,22 +760,22 @@ msgid "Apparel Fabric List"
 msgstr "Tissus"
 
 msgid "Apparel Fabric Module"
-msgstr "Module Tissus"
+msgstr "Module des tissus"
 
 msgid "Apparel Fabric Title"
-msgstr "Réf Qualité Tissu"
+msgstr "Réf qualité tissu"
 
 msgid "Apparel Fabric to validate"
 msgstr "Tissus à définir"
 
 msgid "Apparel Measurement"
-msgstr "Correspondances de Mesures"
+msgstr "Correspondance de mesure"
 
 msgid "Apparel Measurement List"
-msgstr "Correspondances de Mesures"
+msgstr "Correspondances de mesures"
 
 msgid "Apparel Measurement Module"
-msgstr "Module Mesures"
+msgstr "Module des mesures"
 
 msgid "Apparel Model"
 msgstr "Modèle"
@@ -825,35 +825,35 @@ msgstr "Forme reprise"
 msgid "Apparel Shape to design"
 msgstr "Forme à définir"
 
+msgid "Apparel Shapes"
+msgstr "Formes"
+
 msgid "Apparel Size"
-msgstr "Correspondances de Tailles"
+msgstr "Correspondances de tailles"
 
 msgid "Apparel Size List"
-msgstr "Correspondance de Tailles"
+msgstr "Correspondance de tailles"
 
 msgid "Apparel Size Module"
-msgstr "Module Tailles"
+msgstr "Module des tailles"
 
 msgid "Apparel Technical Drawing"
-msgstr "Figurine"
+msgstr "Dessin technique"
 
 msgid "Apparel Transformation"
 msgstr "Nomenclatures"
 
 msgid "Apparel Transformation List"
-msgstr "Éléments de la Nomenclature"
+msgstr "Éléments de la nomenclature"
 
 msgid "Apparel Transformation Module"
-msgstr "Nomenclatures"
+msgstr "Module des nomenclatures"
 
 msgid "Apparel Transformation Operation"
 msgstr "Opération de gamme"
 
 msgid "Apparel Transformation Operation List"
-msgstr "Liste des Opérations"
-
-msgid "Apparel Transformation State"
-msgstr "État Nomenclature"
+msgstr "Liste des opérations"
 
 msgid "Apparel Transformation Template"
 msgstr "Nomenclature(s) à inclure"
@@ -862,7 +862,7 @@ msgid "Apparel Transformation Title"
 msgstr "Titre de la nomenclature"
 
 msgid "Apparel Transformation Transformed Resource"
-msgstr "un Composant"
+msgstr "Composant"
 
 msgid "Apparel Transformation Updated."
 msgstr "La Nomenclature est actualisée."
@@ -1165,7 +1165,7 @@ msgid "Base"
 msgstr "Base"
 
 msgid "Base Apparel Shape"
-msgstr "Base reprise"
+msgstr "Forme de base"
 
 msgid "Base Application"
 msgstr "Appliqué sur"
@@ -1288,7 +1288,7 @@ msgid "Budget Models"
 msgstr "Modèles de budget"
 
 msgid "Budget Module"
-msgstr "Budgets"
+msgstr "Module des budgets"
 
 msgid "Budget Situation"
 msgstr "Situation budgétaire"
@@ -2143,6 +2143,9 @@ msgid "Colour Title"
 msgstr "Réf Coloris"
 
 msgid "Colour Variation"
+msgstr "Coloris"
+
+msgid "Colour Variations"
 msgstr "Coloris"
 
 msgid "Colour referential"
@@ -5590,7 +5593,7 @@ msgstr "Mesure"
 msgid "Measure Cell"
 msgstr "Cellule de mesure"
 
-msgid "Measure drawing"
+msgid "Measure Drawing"
 msgstr "Cote"
 
 msgid "Measure type"
@@ -7119,7 +7122,7 @@ msgid "Product Line"
 msgstr "Ligne de produit"
 
 msgid "Product Module"
-msgstr "Produit"
+msgstr "Module des produits"
 
 msgid "Product or Service"
 msgstr "Produit ou service"
@@ -8774,6 +8777,9 @@ msgstr "Gravité"
 msgid "Shape"
 msgstr "Forme"
 
+msgid "Shape Type"
+msgstr "Type de forme"
+
 msgid "Shape type"
 msgstr "Forme"
 
@@ -8913,7 +8919,7 @@ msgid "Sitemap"
 msgstr "Plan du site"
 
 msgid "Size"
-msgstr "Gamme de Tailles"
+msgstr "Taille"
 
 msgid "Size:"
 msgstr "Taille:"
@@ -9756,6 +9762,9 @@ msgstr "Taxes"
 
 msgid "Technical Drawing"
 msgstr "Dossier Technique"
+
+msgid "Technical Drawings"
+msgstr "Dessins techniques"
 
 msgid "Technical drawing type"
 msgstr "Élément du dossier"
