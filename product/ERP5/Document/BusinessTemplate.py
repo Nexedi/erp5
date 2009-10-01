@@ -967,13 +967,20 @@ class ObjectTemplateItem(BaseTemplateItem):
             container.getParentValue().updateCache()
           elif (container.meta_type == 'CMF Skins Tool') and \
               (old_obj is not None):
-            # Keep previous value of register skin selection for skin folder
-            skin_selection_list = old_obj.getProperty(
-                'business_template_registered_skin_selections', None)
-            if skin_selection_list is not None:
-              obj._setProperty(
-                  'business_template_registered_skin_selections',
-                  skin_selection_list, type='tokens')
+            # Keep compatibility with previous export format of
+            # business_template_registered_skin_selections
+            # and do not modify exported value
+            if obj.getProperty('business_template_registered_skin_selections', 
+                               None) is None:
+              # Keep previous value of register skin selection for skin folder
+              skin_selection_list = old_obj.getProperty(
+                  'business_template_registered_skin_selections', None)
+              if skin_selection_list is not None:
+                if isinstance(skin_selection_list, basestring):
+                  skin_selection_list = skin_selection_list.split(' ')
+                obj._setProperty(
+                    'business_template_registered_skin_selections',
+                    skin_selection_list, type='tokens')
            
           recurse(restoreHook, obj)
       # now put original order group
