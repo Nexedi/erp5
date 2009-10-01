@@ -13,8 +13,8 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
                 <string>display_width</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -93,7 +93,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Post Code</string> </value>
+                    <value> <string>Postal Code</string> </value>
                 </item>
               </dictionary>
             </value>
