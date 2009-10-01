@@ -111,6 +111,24 @@
   <td>//input[preceding-sibling::textarea[@name="field_my_bar_category_id_list"]][@value=\'update...\']</td>\n
   <td></td>\n
 </tr>\n
+\n
+<!-- if there are more than one proxy listbox id, default is used -->\n
+<tr>\n
+    <td>assertSelected</td>\n
+    <td>//select[@id="dialog_selector"]</td>\n
+    <td>Default</td>\n
+</tr>\n
+<tr>\n
+    <td>verifyText</td>\n
+    <td>id=listbox_record_number</td>\n
+    <td>15 record(s)</td> <!-- we have 15 Foo and Foo Lines in default template -->\n
+</tr>\n
+\n
+<tr>\n
+    <td>selectAndWait</td>\n
+    <td>//select[@id="dialog_selector"]</td>\n
+    <td>Foo Line Listbox</td>\n
+</tr>\n
 <tr>\n
     <td>verifyText</td>\n
     <td>id=listbox_record_number</td>\n
@@ -131,6 +149,7 @@
     <td>id=listbox_data_line_2</td>\n
     <td></td>\n
 </tr>\n
+<!-- Foo Lines listbox only shows 3 lines -->\n
 <tr>\n
     <td>verifyElementNotPresent</td>\n
     <td>id=listbox_data_line_3</td>\n
