@@ -279,7 +279,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: preferences.getPreference(\'preferred_float_number_style\', \'-1234.5\')</string> </value>
+            <value> <string>python: preferences.getPreference(\'preferred_float_number_style\', \'-1 234.5\')</string> </value>
         </item>
       </dictionary>
     </pickle>
