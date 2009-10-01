@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright (c) 2002, 2004 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2002, 2009 Nexedi SA and Contributors. All Rights Reserved.
 #          Jean-Paul Smets-Solanes <jp@nexedi.com>
 #          Romain Courteaud <romain@nexedi.com>
 #
@@ -35,10 +35,6 @@ class ApparelAssortment:
   """
 
   _properties = (
-#    { 'id'          : 'commentaires',
-#      'description' : 'Commentaires',
-#      'type'        : 'text',
-#      'mode'        : 'w' },
     { 'id'          : 'ean13_code',
       'description' : 'The EAN 13 code of this apparel model',
       'type'        : 'string',
@@ -53,15 +49,6 @@ class ApparelAssortment:
       'acquisition_accessor_id'   : 'getTitle',
       'acquisition_depends'       : None,
       'mode'        : 'w' },
-
-    # Override default value 
-    {   'id'          : 'variation_base_category',
-        'description' : 'A list of base categories which define possible discrete variations. '\
-                        'Variation ranges are stored as category membership. '\
-                        '(prev. variation_category_list).',
-        'type'        : 'tokens',
-        'default'     : ['colour','size'],
-        'mode'        : 'r' },
   )
 
   #_categories = ( 'eip', 'collection', 'destination', 'taille', 'nomenclature_douane', 'specialise' )

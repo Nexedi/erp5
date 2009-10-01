@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright (c) 2002, 2004 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2002, 2009 Nexedi SA and Contributors. All Rights Reserved.
 #                    Jean-Paul Smets-Solanes <jp@nexedi.com>
 #                    Romain Courteaud <romain@nexedi.com>
 #
@@ -33,8 +33,6 @@ from Products.ERP5.Document.Resource import Resource
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5Type.Base import Base
 from Products.ERP5Type.XMLMatrix import XMLMatrix
-
-
 from zLOG import LOG
 
 class ApparelAssortment(Resource, XMLMatrix):
@@ -63,27 +61,5 @@ class ApparelAssortment(Resource, XMLMatrix):
                       , PropertySheet.Comment
                       , PropertySheet.ApparelCollection
                       , PropertySheet.ApparelSize
+                      , PropertySheet.VariationRange
                       )
-
-    # Hard Wired Variation List
-    # XXX - may be incompatible with future versions of ERP5
-    #variation_base_category_list = ('coloris', 'taille')
-
-
-#    security.declareProtected(Permissions.View, 'getDefaultQuantityUnit')
-#    def getDefaultQuantityUnit(self):
-#      # Requires for Assorted Resource XXX temp patch until getAggregated methods use real classes instead of dicts
-#      # and access props/cats through accessors
-#      return "Unite"
-#
-#    security.declareProtected(Permissions.View, 'getQuantityUnit')
-#    def getQuantityUnit(self):
-#      # Requires for Assorted Resource XXX temp patch until getAggregated methods use real classes instead of dicts
-#      # and access props/cats through accessors
-#      return "Unite"
-#
-#    security.declareProtected(Permissions.View, 'getQuantityUnitList')
-#    def getQuantityUnitList(self):
-#      # Requires for Assorted Resource XXX temp patch until getAggregated methods use real classes instead of dicts
-#      # and access props/cats through accessors
-#      return ["Unite"]

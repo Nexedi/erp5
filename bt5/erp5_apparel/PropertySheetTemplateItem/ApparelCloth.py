@@ -2,7 +2,7 @@
 #
 # Copyright (c) 2002 Coramy SAS and Contributors. All Rights Reserved.
 #          Thierry Faucher <Thierry_Faucher@coramy.com>
-# Copyright (c) 2004 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2004 - 2009 Nexedi SA and Contributors. All Rights Reserved.
 #          Romain Courteaud <romain@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
@@ -35,7 +35,7 @@ class ApparelCloth:
   """
 
   _properties = (
-        {   'id'          : 'cad_library',  
+        {   'id'          : 'cad_library',
             'description' : 'library name containing the lectra files',
             'type'        : 'string',
             'mode'        : 'w' },
@@ -43,7 +43,6 @@ class ApparelCloth:
             'description' : 'size by default',
             'type'        : 'string',
             'mode'        : 'w' },
-
         {   'id'          : 'apparel_shape_title',
             'description' : 'Titles of the compatibles apparel shapes ',
             'type'        : 'lines',
@@ -54,7 +53,6 @@ class ApparelCloth:
             'acquisition_accessor_id'   : 'getTitle',
             'acquisition_depends'       : None,
             'mode'        : 'w' },
-
         {   'id'          : 'apparel_measurement_title',
             'description' : 'Titles of the apparel measurement associated',
             'type'        : 'lines',
@@ -65,13 +63,4 @@ class ApparelCloth:
             'acquisition_accessor_id'   : 'getTitle',
             'acquisition_depends'       : None,
             'mode'        : 'w' },
-        # Override default value XXX
-        {   'id'          : 'variation_base_category',
-            'description' : 'A list of base categories which define possible discrete variations. '\
-                            'Variation ranges are stored as category membership. '\
-                            '(prev. variation_category_list).',
-            'type'        : 'tokens',
-            'default'     : ['size'],
-            'mode'        : 'r' },
       )
-

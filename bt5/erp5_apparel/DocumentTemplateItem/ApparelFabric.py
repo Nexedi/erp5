@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright (c) 2002-2004 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2002-2009 Nexedi SA and Contributors. All Rights Reserved.
 #                    Jean-Paul Smets-Solanes <jp@nexedi.com>
 #                    Courteaud_Romain <romain@nexedi.com>
 #
@@ -57,6 +57,7 @@ class ApparelFabric(Resource):
                       , PropertySheet.Reference
                       , PropertySheet.ApparelCollection
                       , PropertySheet.ApparelLabel
+                      , PropertySheet.VariationRange
                       )
 
 
@@ -79,13 +80,3 @@ class ApparelFabric(Resource):
       # XXX return [my_default_quantity] + rejectIn( ['Surface/Centimetre_carre', 'Longueur/Metre'],
       return [my_default_quantity] + rejectIn( ['area/square centimeters', 'measurement/meter'],
                 [my_default_quantity])
-
-#    # Unit list
-#    security.declareProtected(Permissions.AccessContentsInformation, 'getQuantityUnitList')
-#    def getQuantityUnitList(self):
-#      my_default_quantity = self.getCategoryDefaultMembership('quantity_unit')
-#      # XXX return [my_default_quantity] + rejectIn( ['Surface/Centimetre_carre', 'Longueur/Metre'],
-#      return [my_default_quantity] + rejectIn( ['Surface/Centimetre_carre', 'length/meter'],
-#                [my_default_quantity])
-
-                
