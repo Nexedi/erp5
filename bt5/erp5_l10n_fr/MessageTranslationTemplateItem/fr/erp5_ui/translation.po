@@ -4132,6 +4132,9 @@ msgstr "Type d'échange"
 msgid "Exclusive Discount Ratio"
 msgstr "Taux de remise exclusif"
 
+msgid "Existing users please log in by entering your email adress and password in the two fields below."
+msgstr "Utilisateurs existants, veuillez-vous connecter en entrant vos adresse email et mot de passe dans les deux champs ci-dessus."
+
 msgid "Exit Preview"
 msgstr "Quitter l'aperçu"
 
@@ -4807,6 +4810,9 @@ msgstr "Cet état signifie qu'un document est actuellement manquant."
 
 msgid "If set, payment will occur at the end of the month of the payment term."
 msgstr "Indique si le paiement s'effectue à la fin du mois défini par l'application du délai de paiement en jours à la date de référence."
+
+msgid "If you have not created an account yet, please fill all the fields below to register yourself and create a new account."
+msgstr "Si vous n'avez pas encore créé de compte, veuillez remplir les champs pour vous enregistrer et créer un nouveau compte."
 
 msgid "Image"
 msgstr "Image"
@@ -5931,6 +5937,9 @@ msgstr "Nouveau lien"
 
 msgid "New Page"
 msgstr "Nouveau page"
+
+msgid "New User Registration"
+msgstr "Enregistrement d'un nouvel utilisateur"
 
 msgid "New Value"
 msgstr "Nouvelle valeur"
@@ -7792,6 +7801,9 @@ msgstr "Refus de traiter plus de 1000 documents, vérifiez votre sélection."
 
 msgid "Region"
 msgstr "Région"
+
+msgid "Register"
+msgstr "Enregistrer"
 
 msgid "Registered Capital"
 msgstr "Capital social"
