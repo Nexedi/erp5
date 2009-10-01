@@ -136,7 +136,11 @@ class FolderMixIn(ExtensionClass.Base):
     if portal_type is None:
       # XXX This feature is very confusing
       # And made the code more difficult to update
-      portal_type = container.allowedContentTypes()[0].id
+      allowed_content_type_list = container.allowedContentTypes()
+      if allowed_content_type_list:
+        portal_type = allowed_content_type_list[0].id
+      else:
+        raise ValueError('Creaion disallowed')
     else:
       type_info = pt.getTypeInfo(container)
       if type_info is not None and not type_info.allowType(portal_type) and \
