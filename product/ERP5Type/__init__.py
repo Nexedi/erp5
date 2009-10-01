@@ -56,7 +56,6 @@ import Products.Localizer # So that we make sure Globals.get_request is availabl
 class_tool_security_path = '%s%s%s' % (product_path, os.sep, 'ALLOW_CLASS_TOOL')
 
 def allowClassTool():
-  return True
   return os.access(class_tool_security_path, os.F_OK)
 
 def initialize( context ):
@@ -100,8 +99,9 @@ def initialize( context ):
   # We should register local classes at some point
   from Products.ERP5Type.Utils import initializeLocalDocumentRegistry
   initializeLocalDocumentRegistry()
-  # Interactor
-  import Interactor
+  # Experimental Interactor
+  if USE_INTERACTOR:
+    import Interactor
 
 from AccessControl.SecurityInfo import allow_module
 from AccessControl.SecurityInfo import ModuleSecurityInfo
