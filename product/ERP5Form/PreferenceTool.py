@@ -40,7 +40,7 @@ from Products.ERP5Type.Accessor.TypeDefinition import list_types
 from Products.ERP5Form import _dtmldir
 from Products.ERP5Form.Document.Preference import Priority
 
-_marker = []
+_marker = object()
 
 def updatePreferenceClassPropertySheetList():
   # The Preference class should be imported from the common location
@@ -104,7 +104,7 @@ def createPreferenceToolAccessorList(portal) :
       if prop['type'] in list_types :
         attr_list +=  ['get%sList' % convertToUpperCase(attribute), ]
       for attribute_name in attr_list:
-        method = PreferenceMethod(attribute_name)
+        method = PreferenceMethod(attribute_name, prop.get('default'))
         setattr(PreferenceTool, attribute_name, method)
 
 
@@ -118,46 +118,35 @@ class PreferenceMethod(Method):
   func_code.co_argcount = 1
   func_defaults = ()
 
-  def __init__(self, attribute):
-    self._preference_name = attribute
+  def __init__(self, attribute, default):
+    self._preference_getter = attribute
+    self._preference_default = default
     self._preference_cache_id = 'PreferenceTool.CachingMethod.%s' % attribute
-    self._null = (None, '', (), [])
 
-  def __call__(self, instance, *args, **kw):
+  def __call__(self, instance, default=_marker, *args, **kw):
     def _getPreference(*args, **kw):
-      value = None
       # XXX: sql_catalog_id is passed when calling getPreferredArchive
       # This is inconsistent with regular accessor API, and indicates that
       # there is a design problem in current archive API.
       sql_catalog_id = kw.pop('sql_catalog_id', None)
       for pref in instance._getSortedPreferenceList(sql_catalog_id=sql_catalog_id):
-        value = getattr(pref, self._preference_name, _marker)
-        # XXX-JPS Why don't we use accessors here such as:
-        # value = pref.getProperty(self._preference_name, _marker)
-        if value is not _marker:
-          # If callable, store the return value.
-          if callable(value):
-            value = value(*args, **kw)
-          if value not in self._null:
-            break
-      return value
+        value = getattr(pref, self._preference_getter)(_marker, *args, **kw)
+        # XXX Due to UI limitation, null value is treated as if the property
+        #     was not defined. The drawback is that it is not possible for a
+        #     user to mask a non-null global value with a null value.
+        if value not in (_marker, None, '', (), []):
+          return value
+      return _marker
     _getPreference = CachingMethod(_getPreference,
             id='%s.%s' % (self._preference_cache_id,
                           getSecurityManager().getUser().getId()),
             cache_factory='erp5_ui_short')
     value = _getPreference(*args, **kw)
-    # XXX Preference Tool has a strange assumption that, even if
-    # all values are null values, one of them must be returned.
-    # Therefore, return a default value, only if explicitly specified,
-    # instead of returning None.
-    default = _marker
-    if 'default' in kw:
-      default = kw['default']
-    elif args:
-      default = args[0]
-    if value in self._null and default is not _marker:
-      return default
-    return value
+    if value is not _marker:
+      return value
+    elif default is _marker:
+      return self._preference_default
+    return default
 
 class PreferenceTool(BaseTool):
   """
@@ -199,11 +188,7 @@ class PreferenceTool(BaseTool):
     """ get the preference on the most appopriate Preference object. """
     method = getattr(self, 'get%s' % convertToUpperCase(pref_name), None)
     if method is not None:
-      if default is not _marker:
-        kw = {'default': default}
-      else:
-        kw = {}
-      return method(**kw)
+      return method(default)
     return default
 
   security.declareProtected(Permissions.ModifyPortalContent, "setPreference")
