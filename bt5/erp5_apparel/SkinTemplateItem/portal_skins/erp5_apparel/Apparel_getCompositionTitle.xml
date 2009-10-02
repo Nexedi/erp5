@@ -57,12 +57,19 @@
 # it return something like "3.0 % Polyamide, 5.0 % Elasthanne"\n
 \n
 title_list = []\n
+cell_list = []\n
 poly_list = context.ApparelFabric_asCellRange(matrixbox=1)[0]\n
 for cat, title in poly_list:\n
   cell = context.getCell(cat, base_id=\'composition\')\n
   if cell is not None:\n
-    quantity = cell.getQuantity()\n
-    text = \'%s %% %s\' % (quantity*100, title)\n
+    cell_list.append({\'quantity\':cell.getQuantity(), \'title\':title})\n
+\n
+# sort by quantity\n
+cell_list.sort(key=lambda x: x[\'quantity\'], reverse=True)\n
+\n
+for cell in cell_list:\n
+    quantity = cell[\'quantity\']\n
+    text = \'%s %% %s\' % (quantity*100, cell[\'title\'])\n
     title_list.append(text)\n
 final_text = \', \'.join(title_list)\n
 return final_text\n
@@ -103,6 +110,7 @@ return final_text\n
                         <value>
                           <tuple>
                             <string>title_list</string>
+                            <string>cell_list</string>
                             <string>_getitem_</string>
                             <string>_getattr_</string>
                             <string>context</string>
@@ -112,6 +120,7 @@ return final_text\n
                             <string>title</string>
                             <string>cell</string>
                             <string>None</string>
+                            <string>True</string>
                             <string>quantity</string>
                             <string>text</string>
                             <string>final_text</string>
