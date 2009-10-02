@@ -86,6 +86,7 @@ for res in method(aggregate_uid=uid, **kw):\n
       translated_portal_type = explanation.getTranslatedPortalType(),\n
       quantity = explanation.getQuantity(),\n
       url=explanation.absolute_url(),\n
+      item_quantity = context.getQuantity(at_date=res.getDate()), \n
       variation_category_item_list = [x[0] for x in explanation.getVariationCategoryItemList()],\n
       simulation_state=explanation.getTranslatedSimulationStateTitle(),\n
   )\n
