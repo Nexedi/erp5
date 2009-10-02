@@ -488,6 +488,8 @@ class ERP5TypeInformation(XMLObject,
 
     security.declarePrivate('getDefaultViewFor')
     def getDefaultViewFor(self, ob, view='view'):
+      """Return the object that renders the default view for the given object
+      """
       ec = createExpressionContext(ob)
       best_action = (), None
       for action in self.getFilteredActionListFor(ob):
@@ -619,7 +621,7 @@ class ERP5TypeInformation(XMLObject,
       action = ActionInformation(self.generateNewId())
       for k, v in old_action.iteritems():
         if k in ('action', 'condition', 'icon'):
-          if not v or not v.text:
+          if not v:
             continue
           v = v.__class__(v.text)
         setattr(action, {'id': 'reference',

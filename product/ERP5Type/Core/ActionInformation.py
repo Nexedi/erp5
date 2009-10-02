@@ -120,22 +120,22 @@ class ActionInformation(XMLObject):
       value = value and Expression(value) or None
     self._baseSetIcon(value)
 
-#  def getAction(self):
-#    """Overridden getter for 'action' to clean null values"""
-#    if getattr(aq_base(self), 'action', None) == '':
-#      del self.action
-#    return self._baseGetAction()
-#
-#  def getCondition(self):
-#    """Overridden getter for 'condition' to clean null values"""
-#    if getattr(aq_base(self), 'condition', None) == '':
-#      del self.condition
-#    return self._baseGetCondition()
-#
+  def getAction(self):
+    """Overridden getter for 'action' to clean null values"""
+    if getattr(aq_base(self), 'action', None) == '':
+      del self.action
+    return self._baseGetAction()
+
+  def getCondition(self):
+    """Overridden getter for 'condition' to clean null values"""
+    if getattr(aq_base(self), 'condition', None) == '':
+      del self.condition
+    return self._baseGetCondition()
+
   def getIcon(self):
-    """Explicit getter for 'icon' to override DynamicType.getIcon from CMF"""
-#    if getattr(aq_base(self), 'icon', None) == '':
-#      del self.icon
+    """Overridden getter for 'icon' to clean null values"""
+    if getattr(aq_base(self), 'icon', None) == '':
+      del self.icon
     return self._baseGetIcon()
 
   security.declareProtected(AccessContentsInformation, 'getActionText')
