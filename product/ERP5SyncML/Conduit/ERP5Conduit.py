@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
@@ -657,7 +658,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
       else:
         object_element = xml_copy.xpath('//syncml:object',
             namespaces={'syncml':xml_copy.nsmap[xml_copy.prefix]})[0]
-        id_element = object_element.xpath('//syncml:object',
+        id_element = object_element.xpath('//syncml:id',
             namespaces={'syncml':xml_copy.nsmap[xml_copy.prefix]})[0]
       object_element.attrib['id'] = new_id
       id_element.text = new_id
