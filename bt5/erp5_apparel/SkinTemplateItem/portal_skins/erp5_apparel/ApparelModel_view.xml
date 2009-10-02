@@ -83,7 +83,9 @@
                 <item>
                     <key> <string>hidden</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>listbox_thumbnail</string>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -101,7 +103,6 @@
                         <string>my_tariff_nomenclature</string>
                         <string>my_transformation_state_list</string>
                         <string>composition_title</string>
-                        <string>listbox_thumbnail</string>
                       </list>
                     </value>
                 </item>

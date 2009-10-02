@@ -56,6 +56,7 @@
                 <string>right</string>
                 <string>center</string>
                 <string>bottom</string>
+                <string>hidden</string>
               </list>
             </value>
         </item>
@@ -80,6 +81,14 @@
                     </value>
                 </item>
                 <item>
+                    <key> <string>hidden</string> </key>
+                    <value>
+                      <list>
+                        <string>listbox_thumbnail</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
                     <key> <string>left</string> </key>
                     <value>
                       <list>
@@ -87,6 +96,7 @@
                         <string>my_source_title</string>
                         <string>my_quality_reference</string>
                         <string>my_drawing_reference</string>
+                        <string>my_apparel_fabric_template_title</string>
                         <string>my_resource</string>
                         <string>my_visual_pattern</string>
                         <string>my_trade_description</string>
@@ -95,7 +105,6 @@
                         <string>my_net_width</string>
                         <string>my_base_weight</string>
                         <string>composition_title</string>
-                        <string>listbox_thumbnail</string>
                       </list>
                     </value>
                 </item>

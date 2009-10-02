@@ -68,6 +68,16 @@ class ApparelFabric:
             'acquired_property_id': ('title','collection_list','colour_list','description','file','source_reference'),
 #            'acquired_property_id': ('collection_list','colour_list','description','file','source_reference','title'),
             'mode'        : 'w' },
+        { 'id'          : 'apparel_fabric_template_title',
+          'description' : 'Apparel fabric template title',
+          'type'        : 'string',
+          'acquisition_base_category' : ('specialise',),
+          'acquisition_portal_type'   : ('Apparel Fabric',),
+          'acquisition_copy_value'    : 0,
+          'acquisition_mask_value'    : 0,
+          'acquisition_accessor_id'   : 'getTitle',
+          'acquisition_depends'       : None,
+          'mode'        : 'w' },
     )
 
     _categories = ( 'composition', 'visual_pattern', 'resource' )
