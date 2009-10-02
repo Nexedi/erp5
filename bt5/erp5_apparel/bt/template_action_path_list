@@ -169,3 +169,4 @@ Apparel Transformation | view_transformation_component
 Apparel Transformation | view_transformation_operation
 Purchase Packing List Cell | apparel_fabric_item_fast_input
 Purchase Packing List Line | apparel_fabric_item_fast_input
+System Preference | apparel_preference
