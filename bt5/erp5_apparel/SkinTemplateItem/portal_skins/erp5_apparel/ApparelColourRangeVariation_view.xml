@@ -55,6 +55,7 @@
                 <string>left</string>
                 <string>right</string>
                 <string>center</string>
+                <string>bottom</string>
               </list>
             </value>
         </item>
@@ -62,6 +63,15 @@
             <key> <string>groups</string> </key>
             <value>
               <dictionary>
+                <item>
+                    <key> <string>bottom</string> </key>
+                    <value>
+                      <list>
+                        <string>listbox</string>
+                        <string>listbox_thumbnail</string>
+                      </list>
+                    </value>
+                </item>
                 <item>
                     <key> <string>center</string> </key>
                     <value>

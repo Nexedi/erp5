@@ -101,6 +101,7 @@
                         <string>my_tariff_nomenclature</string>
                         <string>my_transformation_state_list</string>
                         <string>composition_title</string>
+                        <string>listbox_thumbnail</string>
                       </list>
                     </value>
                 </item>

@@ -95,6 +95,7 @@
                         <string>my_net_width</string>
                         <string>my_base_weight</string>
                         <string>composition_title</string>
+                        <string>listbox_thumbnail</string>
                       </list>
                     </value>
                 </item>

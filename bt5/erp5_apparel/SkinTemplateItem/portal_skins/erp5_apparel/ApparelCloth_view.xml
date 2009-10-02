@@ -88,6 +88,7 @@
                         <string>my_apparel_shape_title_list</string>
                         <string>my_base_size</string>
                         <string>my_apparel_measurement_title</string>
+                        <string>listbox_thumbnail</string>
                       </list>
                     </value>
                 </item>

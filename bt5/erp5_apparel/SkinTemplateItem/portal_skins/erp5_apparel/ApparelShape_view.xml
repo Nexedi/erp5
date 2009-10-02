@@ -87,6 +87,7 @@
                         <string>my_shape_list</string>
                         <string>my_apparel_shape_title_list</string>
                         <string>my_feature</string>
+                        <string>listbox_thumbnail</string>
                       </list>
                     </value>
                 </item>

@@ -322,6 +322,10 @@
                           <string>getPrototype</string>
                           <string>Prototype</string>
                         </tuple>
+                        <tuple>
+                          <string>thumbnail</string>
+                          <string>Thumbnail</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>
@@ -354,6 +358,10 @@
                         <tuple>
                           <string>getPrototype</string>
                           <string>Prototype</string>
+                        </tuple>
+                        <tuple>
+                          <string>thumbnail</string>
+                          <string>Thumbnail</string>
                         </tuple>
                       </list>
                     </value>
@@ -397,7 +405,12 @@
                 <item>
                     <key> <string>editable_columns</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>thumbnail</string>
+                          <string>Thumbnail</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
