@@ -97,13 +97,18 @@
                     <value>
                       <list>
                         <string>my_preferred_apparel_cloth_variation_base_category</string>
+                        <string>my_preferred_apparel_component_variation_base_category</string>
+                        <string>my_preferred_apparel_shape_variation_base_category</string>
                       </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>right</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>my_preferred_apparel_model_variation_base_category</string>
+                        <string>my_preferred_apparel_fabric_variation_base_category</string>
+                      </list>
                     </value>
                 </item>
               </dictionary>

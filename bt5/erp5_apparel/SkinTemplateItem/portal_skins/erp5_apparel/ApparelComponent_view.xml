@@ -88,7 +88,11 @@
                         <string>my_source_reference</string>
                         <string>my_resource</string>
                         <string>my_trade_description</string>
-                        <string>my_collection_list</string>
+                        <string>my_base_weight</string>
+                        <string>my_base_length</string>
+                        <string>my_base_width</string>
+                        <string>my_base_height</string>
+                        <string>my_length_quantity</string>
                         <string>composition_title</string>
                       </list>
                     </value>
@@ -97,12 +101,8 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
-                        <string>my_base_weight</string>
-                        <string>my_base_length</string>
-                        <string>my_base_width</string>
-                        <string>my_base_height</string>
+                        <string>my_variation_category_list</string>
                         <string>my_color_count</string>
-                        <string>my_length_quantity</string>
                         <string>my_comment</string>
                         <string>my_translated_validation_state_title</string>
                       </list>
