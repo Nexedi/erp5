@@ -92,7 +92,9 @@
                 <item>
                     <key> <string>left</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>my_composition_list</string>
+                      </list>
                     </value>
                 </item>
                 <item>

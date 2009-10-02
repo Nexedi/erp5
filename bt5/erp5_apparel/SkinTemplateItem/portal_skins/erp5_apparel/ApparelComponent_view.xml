@@ -89,7 +89,7 @@
                         <string>my_resource</string>
                         <string>my_trade_description</string>
                         <string>my_collection_list</string>
-                        <string>my_composition_list</string>
+                        <string>composition_title</string>
                       </list>
                     </value>
                 </item>

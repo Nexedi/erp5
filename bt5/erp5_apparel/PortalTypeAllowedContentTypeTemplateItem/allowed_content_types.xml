@@ -25,6 +25,7 @@
   <item>Purchase Supply Line</item>
   <item>Sale Supply Line</item>
   <item>Apparel Component Variation</item>
+  <item>Mapped Value</item>
   <item>Supply Line</item>
  </portal_type>
  <portal_type id="Apparel Component Module">

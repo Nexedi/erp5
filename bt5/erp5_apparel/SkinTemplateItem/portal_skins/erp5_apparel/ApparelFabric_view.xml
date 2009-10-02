@@ -94,6 +94,7 @@
                         <string>my_raw_width</string>
                         <string>my_net_width</string>
                         <string>my_base_weight</string>
+                        <string>composition_title</string>
                       </list>
                     </value>
                 </item>
