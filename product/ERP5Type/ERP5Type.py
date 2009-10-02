@@ -234,8 +234,6 @@ class ERP5TypeInformation(XMLObject,
     isPortalContent = 1
     isRADContent = 1
 
-    # ILocalRoleAssignor
-
     security = ClassSecurityInfo()
     security.declareObjectProtected(Permissions.AccessContentsInformation)
 
@@ -594,7 +592,7 @@ class ERP5TypeInformation(XMLObject,
       action = ActionInformation(self.generateNewId())
       for k, v in old_action.iteritems():
         if k in ('action', 'condition', 'icon'):
-          if not v:
+          if not v or not v.text:
             continue
           v = v.__class__(v.text)
         setattr(action, {'id': 'reference',
