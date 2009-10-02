@@ -11,7 +11,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_segment_list</string> </value>
+            <value> <string>my_fabric_brand_list</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -238,7 +238,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Segment</string> </value>
+                    <value> <string>Fabric Brand</string> </value>
                 </item>
                 <item>
                     <key> <string>unicode</string> </key>
