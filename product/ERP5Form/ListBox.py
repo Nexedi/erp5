@@ -2411,10 +2411,6 @@ class ListBoxHTMLRenderer(ListBoxRenderer):
   def getMaxLineNumber(self):
     """Return the maximum number of lines shown in a page.
     """
-    list_lines = self.getParamDict().get('list_lines', None)
-    if list_lines is not None:
-      # it's possible to override max lines from selection parameters
-      return int(list_lines)
     return self.field.get_value('lines')
 
   getMaxLineNumber = lazyMethod(getMaxLineNumber)
