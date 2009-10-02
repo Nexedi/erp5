@@ -109,6 +109,7 @@ Apparel Model Module | view
 Apparel Model Module | workflow_report
 Apparel Model Morphology Variation | view
 Apparel Model | copy_colour_range_variation
+Apparel Model | copy_composition
 Apparel Model | development
 Apparel Model | inventory_view
 Apparel Model | jump_to_related_apparel_model
