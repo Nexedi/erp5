@@ -414,7 +414,7 @@ class Image(File, OFSImage):
       parameter_list.extend(['-density', '%sx%s' % (resolution, resolution)])
     parameter_list.extend(['-quality', str(quality)])
     parameter_list.extend(['-geometry', '%sx%s' % (width, height)])
-    if frame:
+    if frame is not None:
       parameter_list.append('-[%s]' % frame)
     else:
       parameter_list.append('-')
