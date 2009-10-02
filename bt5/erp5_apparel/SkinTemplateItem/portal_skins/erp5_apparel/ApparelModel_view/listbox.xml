@@ -323,6 +323,10 @@
                           <string>Prototype</string>
                         </tuple>
                         <tuple>
+                          <string>destination_reference</string>
+                          <string>Customer Colour</string>
+                        </tuple>
+                        <tuple>
                           <string>thumbnail</string>
                           <string>Thumbnail</string>
                         </tuple>

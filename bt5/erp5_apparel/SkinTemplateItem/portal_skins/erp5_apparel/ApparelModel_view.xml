@@ -96,12 +96,17 @@
                         <string>my_apparel_shape_title</string>
                         <string>my_apparel_colour_range_title</string>
                         <string>my_trade_description</string>
+                        <string>my_destination_title</string>
+                        <string>my_destination_reference</string>
                         <string>my_origin</string>
                         <string>my_apparel_model_template_title</string>
                         <string>my_apparel_cloth_title_list</string>
                         <string>my_ean13_code</string>
                         <string>my_tariff_nomenclature</string>
                         <string>my_transformation_state_list</string>
+                        <string>my_collection</string>
+                        <string>my_segment</string>
+                        <string>my_brand</string>
                         <string>composition_title</string>
                       </list>
                     </value>
@@ -110,11 +115,6 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
-                        <string>my_collection</string>
-                        <string>my_segment</string>
-                        <string>my_brand</string>
-                        <string>my_destination_title</string>
-                        <string>my_destination_reference</string>
                         <string>my_size_list</string>
                         <string>my_industrial_phase_list</string>
                         <string>my_cleaning_code_list</string>
