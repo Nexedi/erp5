@@ -63,7 +63,6 @@ for ram_cache_plugin in context.getPortalObject().portal_catalog(\n
                                              path =\'%\' + context.getRelativeUrl() +\'%\'):\n
   result.append(ReportSection(path = ram_cache_plugin.getRelativeUrl(), \n
                               form_id = \'RamCache_viewStatisticList\',\n
-                              selection_params = {\'list_lines\':0,},\n
                               title = \'%s/%s\' %(ram_cache_plugin.getParentValue().getTitle(),\n
                                                 ram_cache_plugin.getTitle()),))\n
 return result\n
