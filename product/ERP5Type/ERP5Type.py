@@ -486,6 +486,33 @@ class ERP5TypeInformation(XMLObject,
       search_source_list += self.getTypeBaseCategoryList(())
       return ' '.join(filter(None, search_source_list))
 
+    security.declarePrivate('getDefaultViewFor')
+    def getDefaultViewFor(self, ob, view='view'):
+      ec = createExpressionContext(ob)
+      best_action = (), None
+      for action in self.getFilteredActionListFor(ob):
+        if action.getReference() == view:
+          if action.test(ec):
+            break
+        else:
+          # In case that "view" (or "list") action is not present or not allowed,
+          # find something that's allowed (of the same category, if possible).
+          index = (action.getActionType().endswith('_' + view),
+                  -action.getFloatIndex())
+          if best_action[0] < index and action.test(ec):
+            best_action = index, action
+      else:
+        action = best_action[1]
+        if action is None:
+          raise AccessControl_Unauthorized(
+            'No accessible views available for %r' % ob.getPath())
+
+      target = action.getAction()(ec).strip().split(ec.vars['object_url'])[-1]
+      if target.startswith('/'):
+          target = target[1:]
+      __traceback_info__ = self.getId(), target
+      return ob.restrictedTraverse(target)
+
     security.declarePrivate('getFilteredActionListFor')
     def getFilteredActionListFor(self, ob=None):
       """Return all actions applicable to the object"""

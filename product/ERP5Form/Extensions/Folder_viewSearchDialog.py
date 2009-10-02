@@ -28,7 +28,6 @@
 
 from Globals import get_request
 from Products.Formulator.TALESField import TALESMethod
-from Products.CMFCore.utils import _getViewFor
 from Products.CMFCore.utils import getToolByName
 
 from Products.ERP5Type.Message import translateString
@@ -44,8 +43,8 @@ def getSearchDialog(self, REQUEST=None):
   category_tool = getToolByName(portal, 'portal_categories')
   types_tool = getToolByName(portal, 'portal_types')
   workflow_tool = getToolByName(portal, 'portal_workflow')
-  
-  default_view = _getViewFor(self)
+
+  default_view = self.getTypeInfo().getDefaultViewFor(self)
   listbox = default_view.listbox
 
   temp_form = ERP5Form('Folder_viewSearchDialog', 'Search').__of__(self)

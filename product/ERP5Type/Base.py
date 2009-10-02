@@ -45,7 +45,7 @@ from OFS.PropertyManager import PropertyManager
 
 from ZopePatch import ERP5PropertyManager
 
-from Products.CMFCore.PortalContent import PortalContent, _getViewFor
+from Products.CMFCore.PortalContent import PortalContent
 from Products.CMFCore.Expression import Expression
 from Products.CMFCore.utils import getToolByName
 from Products.CMFCore.WorkflowCore import ObjectDeleted, ObjectMoved
@@ -2597,22 +2597,32 @@ class Base( CopyContainer,
       except (ValueError, TypeError):
         return None
 
+  def _renderDefaultView(self, view, **kw):
+    ti = self.getTypeInfo()
+    if ti is None:
+      raise NotFound('Cannot find default %s for %r' % (view, self.getPath()))
+    method = ti.getDefaultViewFor(self, view)
+    if getattr(aq_base(method), 'isDocTemp', 0):
+        return method(self, self.REQUEST, self.REQUEST['RESPONSE'], **kw)
+    else:
+        return method(**kw)
+
+  security.declareProtected(Permissions.View, 'view')
+  def view(self):
+    """Returns the default view even if index_html is overridden"""
+    return self._renderDefaultView('view')
+
   # Default views - the default security in CMFCore
   # is View - however, security was not defined on
   # __call__ -  to be consistent, between view and
   # __call__ we have to define permission here to View
   security.declareProtected(Permissions.View, '__call__')
+  __call__ = view
 
   security.declareProtected(Permissions.View, 'list')
   def list(self, reset=0):
-    """
-    Returns the default list even if folder_contents is overridden.
-    """
-    list_action = _getViewFor(self, view='list')
-    if getattr(aq_base(list_action), 'isDocTemp', 0):
-        return apply(list_action, (self, self.REQUEST),reset=reset)
-    else:
-        return list_action(reset=reset)
+    """Returns the default list even if folder_contents is overridden"""
+    return self._renderDefaultView('list', reset=reset)
 
   # Proxy methods for security reasons
   security.declareProtected(Permissions.AccessContentsInformation, 'getOwnerInfo')

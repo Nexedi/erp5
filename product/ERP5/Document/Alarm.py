@@ -36,7 +36,6 @@ from Acquisition import aq_base
 from DateTime import DateTime
 from Products.ERP5Type.Message import Message
 from Products.ERP5Type.DateUtils import addToDate
-from Products.CMFCore.PortalContent import _getViewFor
 from Products.ERP5Security.ERP5UserManager import SUPER_USER
 from AccessControl.SecurityManagement import getSecurityManager, \
             setSecurityManager, newSecurityManager
@@ -418,12 +417,7 @@ class Alarm(XMLObject, PeriodicityMixin):
       process = self.getLastActiveProcess().getRelativeUrl()
     elif not isinstance(process, basestring):
       process = process.getRelativeUrl()
-    list_action = _getViewFor(self, view='report')
-    if getattr(aq_base(list_action), 'isDocTemp', 0):
-      return apply(list_action, (self, self.REQUEST),
-                   process=process, reset=reset)
-    else:
-      return list_action(process=process, reset=reset)
+    return self._renderDefaultView('report', process=process, reset=reset)
 
   security.declareProtected(Permissions.ManagePortal, 'solve')
   def solve(self):
