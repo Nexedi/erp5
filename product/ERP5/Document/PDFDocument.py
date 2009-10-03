@@ -161,9 +161,24 @@ class PDFDocument(Image, ConversionCacheMixin):
       text = ''
       content_information = self.getContentInformation()
       page_count = int(content_information.get('Pages', 0))
+      try:
+        # if the dimension is too big, rasterized image can be too
+        # big. so we limit the maximum of rasterized image to 4096
+        # pixles.
+        # XXX since the dimention can be different on each page, it is
+        # better to call 'pdfinfo -f page_num -l page_num' to get the
+        # size of each page.
+        max_size = 4096
+        size = content_information.get('Page size',
+                                       '%s x %s pts' % (max_size, max_size))
+        width = int(size.split(' ')[0])
+        height = int(size.split(' ')[2])
+        resolution = 72.0 * max_size / max(width, height)
+      except ValueError, ZeroDivisionError:
+        resolution = None
       for page_number in range(page_count):
         src_mimetype, png_data = self.convert(
-            'png', quality=100, resolution=300,
+            'png', quality=100, resolution=resolution,
             frame=page_number, display='identical')
         if not src_mimetype.endswith('png'):
           continue
