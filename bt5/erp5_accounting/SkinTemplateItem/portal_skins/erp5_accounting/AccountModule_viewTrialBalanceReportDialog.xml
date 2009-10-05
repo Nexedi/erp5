@@ -76,6 +76,8 @@
                     <value>
                       <list>
                         <string>your_section_category</string>
+                        <string>your_function</string>
+                        <string>your_project</string>
                         <string>your_from_date</string>
                         <string>your_at_date</string>
                         <string>your_expand_accounts</string>
