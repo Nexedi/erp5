@@ -43,6 +43,7 @@
   <item>Purchase Supply Line</item>
   <item>Supply Line</item>
   <item>Mapped Value</item>
+  <item>Measure</item>
  </portal_type>
  <portal_type id="Apparel Fabric Item">
   <item>Apparel Fabric Item</item>

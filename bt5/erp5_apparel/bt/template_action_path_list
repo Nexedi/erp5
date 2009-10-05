@@ -85,6 +85,7 @@ Apparel Fabric | purchase_price_view
 Apparel Fabric | sale_price_view
 Apparel Fabric | view
 Apparel Fabric | view_composition
+Apparel Fabric | view_measure
 Apparel Measurement Module | csv_export
 Apparel Measurement Module | csv_import
 Apparel Measurement Module | list_ui
