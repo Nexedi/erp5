@@ -59,24 +59,3 @@ class ApparelFabric(Resource):
                       , PropertySheet.ApparelLabel
                       , PropertySheet.VariationRange
                       )
-
-
-
-    # Unit conversion
-    security.declareProtected(Permissions.AccessContentsInformation, 'convertQuantity')
-    def convertQuantity(self, quantity, from_unit, to_unit):
-      # XXX if from_unit == 'Surface/Centimetre_carre' and to_unit == 'Longueur/Metre':
-      if from_unit == 'area/square centimeters' and to_unit == 'measurement/meter':
-        # XXX return quantity / 100.0 / float(self.getLaizeUtile())
-#        return quantity / 100.0 / float(self.getLaizeUtile())
-        return quantity / 100.0 / float(self.getNetWidth())
-      else:
-        return quantity
-
-    # Unit list
-    security.declareProtected(Permissions.AccessContentsInformation, 'getQuantityUnitList')
-    def getQuantityUnitList(self):
-      my_default_quantity = self.getCategoryDefaultMembership('quantity_unit')
-      # XXX return [my_default_quantity] + rejectIn( ['Surface/Centimetre_carre', 'Longueur/Metre'],
-      return [my_default_quantity] + rejectIn( ['area/square centimeters', 'measurement/meter'],
-                [my_default_quantity])
