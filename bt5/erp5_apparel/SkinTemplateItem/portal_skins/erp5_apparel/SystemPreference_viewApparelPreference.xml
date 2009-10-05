@@ -97,8 +97,14 @@
                     <value>
                       <list>
                         <string>my_preferred_apparel_cloth_variation_base_category</string>
+                        <string>my_preferred_apparel_cloth_optional_variation_base_category</string>
+                        <string>my_preferred_apparel_cloth_individual_variation_base_category</string>
                         <string>my_preferred_apparel_component_variation_base_category</string>
+                        <string>my_preferred_apparel_component_optional_variation_base_category</string>
+                        <string>my_preferred_apparel_component_individual_variation_base_category</string>
                         <string>my_preferred_apparel_shape_variation_base_category</string>
+                        <string>my_preferred_apparel_shape_optional_variation_base_category</string>
+                        <string>my_preferred_apparel_shape_individual_variation_base_category</string>
                       </list>
                     </value>
                 </item>
@@ -107,7 +113,11 @@
                     <value>
                       <list>
                         <string>my_preferred_apparel_model_variation_base_category</string>
+                        <string>my_preferred_apparel_model_optional_variation_base_category</string>
+                        <string>my_preferred_apparel_model_individual_variation_base_category</string>
                         <string>my_preferred_apparel_fabric_variation_base_category</string>
+                        <string>my_preferred_apparel_fabric_optional_variation_base_category</string>
+                        <string>my_preferred_apparel_fabric_individual_variation_base_category</string>
                       </list>
                     </value>
                 </item>
