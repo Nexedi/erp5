@@ -491,17 +491,21 @@ class SimulationTool(BaseTool):
         # instances
         resource=None, node=None, payment=None,
         section=None, mirror_section=None, item=None,
+        function=None, project=None,
         # used for tracking
         input=0, output=0,
         # categories
         resource_category=None, node_category=None, payment_category=None,
         section_category=None, mirror_section_category=None,
+        function_category=None, project_category=None,
         # categories with strict membership
         resource_category_strict_membership=None,
         node_category_strict_membership=None,
         payment_category_strict_membership=None,
         section_category_strict_membership=None,
         mirror_section_category_strict_membership=None,
+        function_category_strict_membership=None,
+        project_category_strict_membership=None,
         # simulation_state
         strict_simulation_state=0,
         simulation_state=None, transit_simulation_state = None, omit_transit=0,
@@ -512,7 +516,8 @@ class SimulationTool(BaseTool):
         variation_category=None,
         # uids
         resource_uid=None, node_uid=None, section_uid=None, payment_uid=None,
-        mirror_node_uid=None, mirror_section_uid=None,
+        mirror_node_uid=None, mirror_section_uid=None, function_uid=None,
+        project_uid=None,
         # omit input and output
         omit_input=0,
         omit_output=0,
@@ -584,6 +589,8 @@ class SimulationTool(BaseTool):
 
       column_value_dict.set('resource_uid', resource_uid)
       column_value_dict.set('payment_uid', payment_uid)
+      column_value_dict.set('project_uid', project_uid)
+      column_value_dict.set('function_uid', function_uid)
       if column_value_dict.set('section_uid', section_uid):
         sql_kw['section_filtered'] = 1
       column_value_dict.set('node_uid', node_uid)
@@ -593,6 +600,8 @@ class SimulationTool(BaseTool):
       column_value_dict.setUIDList('aggregate_uid', item)
       column_value_dict.setUIDList('node_uid', node)
       column_value_dict.setUIDList('payment_uid', payment)
+      column_value_dict.setUIDList('project_uid', project)
+      column_value_dict.setUIDList('function_uid', function)
       if column_value_dict.setUIDList('section_uid', section):
         sql_kw['section_filtered'] = 1
       column_value_dict.setUIDList('mirror_section_uid', mirror_section)
@@ -606,6 +615,8 @@ class SimulationTool(BaseTool):
       # category membership
       related_key_dict.setUIDList('resource_category_uid', resource_category)
       related_key_dict.setUIDList('node_category_uid', node_category)
+      related_key_dict.setUIDList('project_category_uid', project_category)
+      related_key_dict.setUIDList('function_category_uid', function_category)
       related_key_dict.setUIDList('payment_category_uid', payment_category)
       if related_key_dict.setUIDList('section_category_uid',
                                      section_category):
@@ -617,6 +628,10 @@ class SimulationTool(BaseTool):
                                   resource_category_strict_membership)
       related_key_dict.setUIDList('node_category_strict_membership_uid',
                                   node_category_strict_membership)
+      related_key_dict.setUIDList('project_category_strict_membership_uid',
+                                  project_category_strict_membership)
+      related_key_dict.setUIDList('function_category_strict_membership_uid',
+                                  function_category_strict_membership)
       related_key_dict.setUIDList('payment_category_strict_membership_uid',
                                   payment_category_strict_membership)
       if related_key_dict.setUIDList('section_category_strict_membership_uid',
