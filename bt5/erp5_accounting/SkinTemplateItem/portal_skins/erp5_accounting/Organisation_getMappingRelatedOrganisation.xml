@@ -53,32 +53,42 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-"""Returns the accounting period for the destination section that should be applied for this\n
-accounting transaction.\n
+            <value> <string>"""Returns the main organisation for that group.\n
 """\n
 \n
-operation_date = context.getStopDate()\n
-if not operation_date:\n
-  return None\n
+def getOrganisationForSectionCategory(section):\n
+  mapping = section.getMappingRelatedValue(portal_type=\'Organisation\',\n
+                           checked_permission=\'Access contents information\')\n
+  if mapping is not None:\n
+    return mapping\n
+  \n
+  organisation_list = section.getGroupRelatedValueList(portal_type=\'Organisation\',\n
+                              strict_membership=1,\n
+                              checked_permission=\'Access contents information\')\n
 \n
-section = context.getDestinationSectionValue(portal_type=\'Organisation\')\n
-if section is not None:\n
-  section = section.Organisation_getMappingRelatedOrganisation()\n
-  for accounting_period in section.contentValues(\n
-                          portal_type=\'Accounting Period\',\n
-                          checked_permission=\'Access contents information\'):\n
-    if accounting_period.getSimulationState() in (\n
-              \'draft\', \'cancelled\', \'deleted\'):\n
-      continue\n
-    if accounting_period.getStartDate().earliestTime()\\\n
-              <=  operation_date <= \\\n
-       accounting_period.getStopDate().latestTime():\n
-      return accounting_period\n
-
-
-]]></string> </value>
+  for organisation in organisation_list:\n
+    if organisation.getProperty(\'validation_state\', \'unset\') not in (\'deleted\', \'cancelled\'):\n
+      return organisation\n
+\n
+\n
+group = context.getGroupValue()\n
+if group is None:\n
+  return context\n
+\n
+group_chain = []\n
+while group.getPortalType() != \'Base Category\':\n
+  group_chain.append(group)\n
+  group = group.getParentValue()\n
+\n
+group_chain.reverse()\n
+\n
+for group in group_chain:\n
+  organisation = getOrganisationForSectionCategory(group)\n
+  if organisation is not None:\n
+    return organisation\n
+\n
+return context\n
+</string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -114,13 +124,14 @@ if section is not None:\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>getOrganisationForSectionCategory</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>operation_date</string>
+                            <string>group</string>
                             <string>None</string>
-                            <string>section</string>
+                            <string>group_chain</string>
                             <string>_getiter_</string>
-                            <string>accounting_period</string>
+                            <string>organisation</string>
                           </tuple>
                         </value>
                     </item>
@@ -137,7 +148,7 @@ if section is not None:\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>AccountingTransaction_getAccountingPeriodForDestinationSection</string> </value>
+            <value> <string>Organisation_getMappingRelatedOrganisation</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

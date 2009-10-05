@@ -101,16 +101,29 @@ else:\n
 for line in accounting_transaction_line_value_list:\n
   accounting_transaction = line.getParentValue()\n
   if accounting_transaction.AccountingTransaction_isSourceView():\n
+    section_relative_url = None\n
+    source_section = line.getSourceSectionValue(portal_type=\'Organisation\')\n
+    if source_section is not None:\n
+      source_section = \\\n
+        source_section.Organisation_getMappingRelatedOrganisation()\n
+      section_relative_url = source_section.getRelativeUrl()\n
     lines_per_node.setdefault(\n
                   (line.getSource(portal_type=\'Account\'),\n
-                   line.getSourceSection(portal_type=\'Organisation\'),\n
+                   section_relative_url,\n
                    line.getDestinationSection(), ), []).append(\n
       dict(total_price=line.getSourceInventoriatedTotalAssetPrice() or 0,\n
            path=line.getRelativeUrl()))\n
   else:\n
+    section_relative_url = None\n
+    destination_section = line.getDestinationSectionValue(\n
+                                    portal_type=\'Organisation\')\n
+    if destination_section is not None:\n
+      destination_section = \\\n
+        destination_section.Organisation_getMappingRelatedOrganisation()\n
+      section_relative_url = destination_section.getRelativeUrl()\n
     lines_per_node.setdefault(\n
               (line.getDestination(portal_type=\'Account\'),\n
-               line.getDestinationSection(portal_type=\'Organisation\'),\n
+               section_relative_url,\n
                line.getSourceSection(), ), []).append(\n
     dict(total_price=line.getDestinationInventoriatedTotalAssetPrice() or 0,\n
          path=line.getRelativeUrl()))\n
@@ -195,7 +208,10 @@ return changed_lines\n
                             <string>append</string>
                             <string>$append0</string>
                             <string>uid</string>
+                            <string>section_relative_url</string>
+                            <string>source_section</string>
                             <string>dict</string>
+                            <string>destination_section</string>
                             <string>changed_lines</string>
                             <string>node</string>
                             <string>section</string>
