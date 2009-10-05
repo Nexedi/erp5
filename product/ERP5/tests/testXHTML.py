@@ -194,11 +194,11 @@ class TestXHTML(ERP5TypeTestCase):
           list_method = field.get_value("list_method")
           if list_method:
             if isinstance(list_method, str):
-              method = getattr(self.portal, list_method)
+              method = getattr(self.portal, list_method, None)
             else:
               method = list_method
             if not callable(method):
-              error_list.append(form_path)
+              error_list.append((form_path, list_method))
     self.assertEquals(error_list, [])
 
   def test_moduleListMethod(self):
