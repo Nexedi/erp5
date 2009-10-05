@@ -1,0 +1,237 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>from Products.PythonScripts.standard import Object\n
+line_list = []\n
+request = context.REQUEST\n
+portal = context.getPortalObject()\n
+portal_selections = portal.portal_selections\n
+selection_name = \'accounting_selection\'\n
+\n
+section_category = \\\n
+  portal_selections.getSelectionParamsFor(selection_name).get(\'section_category\')\n
+if section_category:\n
+  currency = portal.Base_getCurrencyForSection(section_category)\n
+  request.set(\'currency\', currency)\n
+  request.set(\'precision\',\n
+      portal.account_module.getQuantityPrecisionFromResource(currency))\n
+\n
+checked_uid_list = \\\n
+    portal_selections.getSelectionCheckedUidsFor(selection_name)\n
+if checked_uid_list:\n
+  getObject = portal.portal_catalog.getObject\n
+  delivery_list = [getObject(uid) for uid in checked_uid_list]\n
+else:\n
+  delivery_list = \\\n
+    portal_selections.callSelectionFor(selection_name, context=context)\n
+\n
+account_reference_cache = dict()\n
+def getAccountReference(relative_url):\n
+  try:\n
+    return account_reference_cache[relative_url]\n
+  except KeyError:\n
+    if relative_url:\n
+      reference = \\\n
+        portal.restrictedTraverse(relative_url).Account_getGapId()\n
+    else:\n
+      reference = \'\'\n
+    account_reference_cache[relative_url] = reference\n
+    return reference\n
+\n
+def getTitle(document):\n
+  if document is not None:\n
+    return document.getTitle()\n
+  return \'\'\n
+\n
+\n
+portal_type = context.getPortalAccountingMovementTypeList()\n
+for delivery in delivery_list:\n
+  delivery = delivery.getObject()\n
+  is_source = delivery.AccountingTransaction_isSourceView()\n
+\n
+  for movement in delivery.getMovementList(portal_type=portal_type):\n
+\n
+    if is_source:\n
+      line_list.append(Object(\n
+        title=movement.hasTitle() and movement.getTitle() or\n
+                     delivery.getTitle(),\n
+        parent_description=delivery.getDescription(),\n
+        parent_reference=delivery.getReference(),\n
+        specific_reference=delivery.getSourceReference(),\n
+        node_reference=getAccountReference(movement.getSource(portal_type=\'Account\')),\n
+        node_title=movement.getSourceTitle(),\n
+        section_title=movement.getSourceSectionTitle(),\n
+        mirror_section_title=movement.getDestinationSectionTitle(),\n
+        function_title=getTitle(movement.getSourceFunctionValue()),\n
+        project_title=getTitle(movement.getSourceProjectValue()),\n
+        date=movement.getStartDate(),\n
+        debit=movement.getSourceInventoriatedTotalAssetDebit(),\n
+        credit=movement.getSourceInventoriatedTotalAssetCredit(),\n
+        translated_portal_type=movement.getTranslatedPortalType(),\n
+        parent_translated_portal_type=delivery.getTranslatedPortalType(),\n
+        translated_simulation_state_title=movement.getTranslatedSimulationStateTitle(),))\n
+    if delivery.portal_type == \'Internal Invoice Transaction\' or not is_source:\n
+      line_list.append(Object(\n
+        title=movement.hasTitle() and movement.getTitle() or\n
+                     delivery.getTitle(),\n
+        parent_description=delivery.getDescription(),\n
+        parent_reference=delivery.getReference(),\n
+        specific_reference=delivery.getDestinationReference(),\n
+        node_reference=getAccountReference(movement.getDestination(portal_type=\'Account\')),\n
+        node_title=movement.getDestinationTitle(),\n
+        section_title=movement.getDestinationSectionTitle(),\n
+        mirror_section_title=movement.getSourceSectionTitle(),\n
+        function_title=getTitle(movement.getDestinationFunctionValue()),\n
+        project_title=getTitle(movement.getDestinationProjectValue()),\n
+        date=movement.getStopDate(),\n
+        debit=movement.getDestinationInventoriatedTotalAssetDebit(),\n
+        credit=movement.getDestinationInventoriatedTotalAssetCredit(),\n
+        translated_portal_type=movement.getTranslatedPortalType(),\n
+        parent_translated_portal_type=delivery.getTranslatedPortalType(),\n
+        translated_simulation_state_title=movement.getTranslatedSimulationStateTitle(),))\n
+\n
+\n
+return line_list\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>**kw</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>0</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>kw</string>
+                            <string>Products.PythonScripts.standard</string>
+                            <string>Object</string>
+                            <string>line_list</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>request</string>
+                            <string>portal</string>
+                            <string>portal_selections</string>
+                            <string>selection_name</string>
+                            <string>section_category</string>
+                            <string>currency</string>
+                            <string>checked_uid_list</string>
+                            <string>getObject</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>_getiter_</string>
+                            <string>uid</string>
+                            <string>delivery_list</string>
+                            <string>dict</string>
+                            <string>account_reference_cache</string>
+                            <string>getAccountReference</string>
+                            <string>getTitle</string>
+                            <string>portal_type</string>
+                            <string>delivery</string>
+                            <string>is_source</string>
+                            <string>movement</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>AccountingTransactionModule_getAccountingLineReportLineList</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
