@@ -62,9 +62,13 @@ class TestFormPrintout(ERP5TypeTestCase):
     foo3_file_path = os.path.join(os.path.dirname(__file__),
                                   'test_document',
                                   'Foo_003.odt') 
+    foo4_file_path = os.path.join(os.path.dirname(__file__),
+                                  'test_document',
+                                  'Foo_004.odt') 
     foo_file = open(foo_file_path, 'rb')
     foo2_file = open(foo2_file_path, 'rb')
     foo3_file = open(foo3_file_path, 'rb')
+    foo4_file = open(foo4_file_path, 'rb')
     custom = self.portal.portal_skins.custom
     addStyleSheet = custom.manage_addProduct['OFSP'].manage_addFile
     if custom._getOb('Foo_getODTStyleSheet', None) is None:
@@ -75,6 +79,9 @@ class TestFormPrintout(ERP5TypeTestCase):
                     precondition='', content_type = 'application/vnd.oasis.opendocument.text')
     if custom._getOb('Foo3_getODTStyleSheet', None) is None:
       addStyleSheet(id='Foo3_getODTStyleSheet', file=foo3_file, title='',
+                    precondition='', content_type = 'application/vnd.oasis.opendocument.text')
+    if custom._getOb('Foo4_getODTStyleSheet', None) is None:
+      addStyleSheet(id='Foo4_getODTStyleSheet', file=foo4_file, title='',
                     precondition='', content_type = 'application/vnd.oasis.opendocument.text')
     erp5OOo = custom.manage_addProduct['ERP5OOo']
     addOOoTemplate = erp5OOo.addOOoTemplate
@@ -955,6 +962,117 @@ return []
     self._validate(odf_document)
 
     
+  def test_04_Iteration_03_ReportBox_and_Section(self, run=run_all_test):
+    """
+    Iteration using ReportBox and ODF Section test
+    """
+    if not run: return
+    # create test target
+    custom = self.portal.portal_skins.custom
+    erp5form = custom.manage_addProduct['ERP5Form']
+  
+    erp5form.addERP5Form(id='Foo_Box_view', title='Foo Box')
+    foo_box_view = custom.Foo_Box_view
+    foo_box_view.manage_addField('listbox_report', 'listbox report', 'ListBox')
+    listbox = foo_box_view.listbox_report
+
+    createZODBPythonScript(
+      self.portal.portal_skins.custom,
+      'FooReport_getFooList',
+      'title,**kw',
+r"""
+foo_list = context.objectValues(portal_type='Foo Line')
+for foo in foo_list:
+  foo.setTitle(title)
+return foo_list
+"""
+      )
+
+    message = listbox.ListBox_setPropertyList(
+      field_list_method = 'FooReport_getFooList',
+      field_selection_name = 'listbox_report_selection',
+      field_portal_types = 'Foo Line | Foo Line',
+      field_columns = 'id|ID\ntitle|Title\nquantity|Quantity\nstart_date|Date',)
+    self.failUnless('Set Successfully' in message)
+
+    # report box
+    foo2_view = erp5form.addERP5Form(id='Foo2_view', title='Foo2 View')
+    foo2_view = custom.Foo2_view
+    foo2_view.manage_addField('your_report_box1', 'Your Report Box', 'ReportBox')
+    your_report_box1 = foo2_view.your_report_box1
+    your_report_box1.report_method = 'FooReport_getReportSectionList'
+
+    createZODBPythonScript(
+      self.portal.portal_skins.custom,
+      'FooReport_getReportSectionList',
+      '',
+r"""
+from Products.ERP5Form.Report import ReportSection
+
+r1 = ReportSection(path=context.getPhysicalPath(),
+                   form_id='Foo_Box_view',
+                   selection_name='listbox_report_selection',
+                   selection_params={'title':'foo_04_Iteration_1'})
+r2 = ReportSection(path=context.getPhysicalPath(),
+                   form_id='Foo_Box_view',
+                   selection_name='listbox_report_selection',
+                   selection_params={'title':'foo_04_Iteration_2'})
+report_section_list = [r1, r2]
+return report_section_list
+"""
+       )
+
+    # 01. normal case using ODF Section
+    test1 = self.portal.foo_module.test1
+    request = self.app.REQUEST 
+    request['here'] = test1
+    foo_report_printout = test1.FooReport_viewAsPrintout
+    foo_report_printout.doSettings(REQUEST=request,
+                                   title='',
+                                   form_name='Foo2_view',
+                                   template='Foo4_getODTStyleSheet')
+    odf_document = foo_report_printout()
+
+    # test_output = open("/tmp/test_04_Iteratoin_03_Section_01.odf", "w")
+    # test_output.write(odf_document)
+    self.assertTrue(odf_document is not None)
+    builder = OOoBuilder(odf_document)
+    content_xml = builder.extract("content.xml")
+    self.assertTrue(content_xml.find("foo_04_Iteration_1") > 0)
+    content = etree.XML(content_xml)
+    section_xpath = '//text:section[@text:name="your_report_box1"]'
+    section_list = content.xpath(section_xpath, namespaces=content.nsmap)
+    self.assertEqual(len(section_list), 1)
+    section1_xpath = '//text:section[@text:name="your_report_box1_1"]'
+    section1_list = content.xpath(section1_xpath, namespaces=content.nsmap)
+    self.assertEqual(len(section1_list), 1)
+
+    self._validate(odf_document)
+ 
+    # 02. no report section and using ODF Section
+    custom.manage_delObjects(['FooReport_getReportSectionList'])
+    createZODBPythonScript(
+      self.portal.portal_skins.custom,
+      'FooReport_getReportSectionList',
+      '',
+r"""
+return []
+"""
+      )
+    odf_document = foo_report_printout()
+    #test_output = open("/tmp/test_04_Iteratoin_02_Section_02.odf", "w")
+    #test_output.write(odf_document)
+    self.assertTrue(odf_document is not None)
+    builder = OOoBuilder(odf_document)
+    content_xml = builder.extract("content.xml")
+    self.assertFalse(content_xml.find("foo_04_Iteration") > 0)
+    content = etree.XML(content_xml)
+    section_xpath = '//text:section[@text:name="your_report_box1"]'
+    section_list = content.xpath(section_xpath, namespaces=content.nsmap)
+    # the section was removed
+    self.assertEqual(len(section_list), 0)
+    self._validate(odf_document)
+
   def _test_05_Styles(self, run=run_all_test):
     """
     styles.xml not tested yet
