@@ -211,7 +211,7 @@
               <span class="image"></span>\n
               <span class="description" i18n:translate="" i18n:domain="ui">Previous</span>\n
             </a>\n
-            <a class="list_mode" title="List Mode" tal:attributes="href python: here.portal_selections.getSelectionListUrlFor(request[\'selection_name\'])"\n
+            <a class="list_mode" title="List Mode" tal:attributes="href python: here.portal_selections.getSelectionListUrlFor(request.get(\'selection_name\', None))"\n
                i18n:attributes="title" i18n:domain="ui">\n
               <span class="image"></span>\n
               <span class="description" i18n:translate="" i18n:domain="ui">List Mode</span>\n
@@ -244,7 +244,7 @@
             <span class="description" i18n:translate="" i18n:domain="ui">Show All</span>\n
           </button>\n
           <button type="submit" name="Folder_filter:method" title="Filter"\n
-                  tal:attributes="class python: here.portal_selections.getSelectionInvertModeFor(request[\'selection_name\']) and \'filter_on\' or \'filter\';"\n
+                  tal:attributes="class python: here.portal_selections.getSelectionInvertModeFor(request.get(\'selection_name\', None)) and \'filter_on\' or \'filter\';"\n
                   i18n:attributes="title" i18n:domain="ui">\n
             <span class="image"></span>\n
             <span class="description" i18n:translate="" i18n:domain="ui">Filter</span>\n
