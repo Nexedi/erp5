@@ -13,20 +13,19 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
-                <string>sort</string>
-                <string>list_method</string>
                 <string>count_method</string>
-                <string>selection_name</string>
+                <string>domain_root_list</string>
+                <string>domain_tree</string>
+                <string>list_method</string>
                 <string>portal_types</string>
+                <string>report_root_list</string>
+                <string>report_tree</string>
                 <string>search</string>
                 <string>select</string>
-                <string>editable_columns</string>
+                <string>selection_name</string>
+                <string>sort</string>
                 <string>stat_columns</string>
-                <string>domain_tree</string>
-                <string>domain_root_list</string>
-                <string>report_tree</string>
-                <string>report_root_list</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -78,10 +77,6 @@
                 </item>
                 <item>
                     <key> <string>domain_tree</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>editable_columns</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -176,12 +171,6 @@
                 <item>
                     <key> <string>domain_tree</string> </key>
                     <value> <int>0</int> </value>
-                </item>
-                <item>
-                    <key> <string>editable_columns</string> </key>
-                    <value>
-                      <list/>
-                    </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
