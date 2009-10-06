@@ -72,12 +72,19 @@ from Products.ERP5Type.Message import Message\n
 counter_date = state_change[\'object\']\n
 \n
 # First make sure that the site is defined\n
-site_uid = counter_date.getSiteUid()\n
-if site_uid is None:\n
+site_value = counter_date.getSiteValue()\n
+if site_value is None:\n
   msg = Message(domain=\'ui\',message="Sorry, the site is not defined")\n
   raise ValidationFailed (msg,)\n
 \n
 # Then, make sure there is not any counter date open for this site\n
+site_value.serialize()\n
+site_uid = site_value.getUid()\n
+activity_tag = \'%s_CounterDay\' % (site_uid, )\n
+if context.getPortalObject().portal_activities.countMessageWithTag(activity_tag) != 0:\n
+  msg = Message(domain=\'ui\',message="Sorry, there is a pending counter date opening, please retry later")\n
+  raise ValidationFailed (msg,)\n
+counter_date.setDefaultActivateParameters(tag=activity_tag)\n
 counter_date_list = [x.getObject() for x in counter_date.portal_catalog(portal_type=\'Counter Date\',site_uid=site_uid,simulation_state=\'open\')]\n
 for other_counter in counter_date_list:\n
   if other_counter.getUid()!=counter_date.getUid():\n
@@ -189,9 +196,12 @@ counter_date.setReference(reference)\n
                             <string>_getitem_</string>
                             <string>counter_date</string>
                             <string>_getattr_</string>
-                            <string>site_uid</string>
+                            <string>site_value</string>
                             <string>None</string>
                             <string>msg</string>
+                            <string>site_uid</string>
+                            <string>activity_tag</string>
+                            <string>context</string>
                             <string>append</string>
                             <string>$append0</string>
                             <string>_getiter_</string>
@@ -204,7 +214,6 @@ counter_date.setReference(reference)\n
                             <string>now</string>
                             <string>len</string>
                             <string>getattr</string>
-                            <string>context</string>
                             <string>not_working_day_list</string>
                             <string>check_date_is_today</string>
                             <string>line</string>
