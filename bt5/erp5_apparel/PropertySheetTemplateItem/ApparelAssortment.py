@@ -49,6 +49,14 @@ class ApparelAssortment:
       'acquisition_accessor_id'   : 'getTitle',
       'acquisition_depends'       : None,
       'mode'        : 'w' },
+     # Override default value
+       {   'id'          : 'variation_base_category',
+           'description' : 'A list of base categories which define possible discrete variations. '\
+                           'Variation ranges are stored as category membership. '\
+                           '(prev. variation_category_list).',
+           'type'        : 'tokens',
+           'default'     : ['colour','size'],
+           'mode'        : 'r' },
   )
 
   #_categories = ( 'eip', 'collection', 'destination', 'taille', 'nomenclature_douane', 'specialise' )

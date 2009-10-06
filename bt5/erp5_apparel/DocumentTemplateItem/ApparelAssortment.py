@@ -61,5 +61,4 @@ class ApparelAssortment(Resource, XMLMatrix):
                       , PropertySheet.Comment
                       , PropertySheet.ApparelCollection
                       , PropertySheet.ApparelSize
-                      , PropertySheet.VariationRange
                       )

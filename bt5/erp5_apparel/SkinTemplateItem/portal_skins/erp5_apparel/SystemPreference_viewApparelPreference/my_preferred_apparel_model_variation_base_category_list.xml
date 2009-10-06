@@ -20,7 +20,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_preferred_apparel_shape_variation_base_category</string> </value>
+            <value> <string>my_preferred_apparel_model_variation_base_category_list</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -58,9 +58,7 @@
               <dictionary>
                 <item>
                     <key> <string>default</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
@@ -105,26 +103,10 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Shape Variation</string> </value>
+                    <value> <string>Model Variation</string> </value>
                 </item>
               </dictionary>
             </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <tuple>
-        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-        <tuple/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>python: here.getPreferredApparelShapeVariationBaseCategoryList() or preferences.getPreferredProductVariationBaseCategoryList()</string> </value>
         </item>
       </dictionary>
     </pickle>

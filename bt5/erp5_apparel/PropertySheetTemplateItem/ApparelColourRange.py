@@ -1,9 +1,9 @@
 ##############################################################################
 #
 # Copyright (c) 2002 Coramy SAS and Contributors. All Rights Reserved.
-#                    Thierry_Faucher <Thierry_Faucher@coramy.com>
-# Copyright (c) 2004, 2009 Nexedi SA and Contributors. All Rights Reserved.
-#                    Courteaud_Romain <romain@nexedi.com>
+#          Thierry Faucher <Thierry_Faucher@coramy.com>
+# Copyright (c) 2004 Nexedi SARL and Contributors. All Rights Reserved.
+#	Romain Courteaud <romain@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -28,32 +28,22 @@
 #
 ##############################################################################
 
-from AccessControl import ClassSecurityInfo
 
-from Products.ERP5.Document.Resource import Resource
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
+class ApparelColourRange:
+  """
+    ApparelColourRange properties and categories
+  """
 
-class ApparelColourRange(Resource):
-    """
-      A apparel colour range
-      
-      It is considered here as a resource because planification can
-      eventually consider the sales of a certain quantity of items of a given ApparelColourRange
-    """
+  _properties = (
+    # Override default value 
+    {   'id'          : 'variation_base_category',
+        'description' : 'A list of base categories which define possible discrete variations. '\
+                        'Variation ranges are stored as category membership. '\
+                        '(prev. variation_category_list).',
+        'type'        : 'tokens',
+        'default'     : ['colour'],
+        'mode'        : 'r' },
+  )
+  _categories = (  )
 
-    meta_type = 'ERP5 Apparel Colour Range'
-    portal_type = 'Apparel Colour Range'
-
-    # Declarative security
-    security = ClassSecurityInfo()
-    security.declareObjectProtected(Permissions.AccessContentsInformation)
-
-    # Declarative properties
-    property_sheets = ( PropertySheet.Base
-                      , PropertySheet.XMLObject
-                      #, PropertySheet.TransformedResource
-                      , PropertySheet.CategoryCore
-                      , PropertySheet.DublinCore
-                      , PropertySheet.ApparelCollection
-                      , PropertySheet.ApparelColourRange
-    )
+  
