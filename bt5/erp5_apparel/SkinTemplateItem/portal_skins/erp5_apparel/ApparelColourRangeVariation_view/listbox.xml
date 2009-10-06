@@ -319,6 +319,14 @@
                           <string>Supplier Colour</string>
                         </tuple>
                         <tuple>
+                          <string>parent_title</string>
+                          <string>Apparel Fabric</string>
+                        </tuple>
+                        <tuple>
+                          <string>parent_source_title</string>
+                          <string>Supplier</string>
+                        </tuple>
+                        <tuple>
                           <string>description</string>
                           <string>Description</string>
                         </tuple>
@@ -354,6 +362,14 @@
                         <tuple>
                           <string>source_reference</string>
                           <string>Supplier Colour</string>
+                        </tuple>
+                        <tuple>
+                          <string>parent_title</string>
+                          <string>Apparel Fabric</string>
+                        </tuple>
+                        <tuple>
+                          <string>parent_source_title</string>
+                          <string>Supplier</string>
                         </tuple>
                         <tuple>
                           <string>description</string>
@@ -519,6 +535,14 @@
                           <string>Supplier Colour</string>
                         </tuple>
                         <tuple>
+                          <string>parent_title</string>
+                          <string>Apparel Fabric</string>
+                        </tuple>
+                        <tuple>
+                          <string>parent_source_title</string>
+                          <string>Supplier</string>
+                        </tuple>
+                        <tuple>
                           <string>description</string>
                           <string>Description</string>
                         </tuple>
@@ -559,6 +583,14 @@
                         <tuple>
                           <string>source_reference</string>
                           <string>Supplier Colour</string>
+                        </tuple>
+                        <tuple>
+                          <string>parent_title</string>
+                          <string>Apparel Fabric</string>
+                        </tuple>
+                        <tuple>
+                          <string>parent_source_title</string>
+                          <string>Supplier</string>
                         </tuple>
                         <tuple>
                           <string>description</string>

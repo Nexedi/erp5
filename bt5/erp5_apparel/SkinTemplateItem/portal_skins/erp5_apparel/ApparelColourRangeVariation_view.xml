@@ -93,6 +93,7 @@
                     <value>
                       <list>
                         <string>my_title</string>
+                        <string>listbox_parent_source_title</string>
                       </list>
                     </value>
                 </item>
