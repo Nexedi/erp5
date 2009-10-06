@@ -27,6 +27,10 @@
      Scripts (after): &dtml-after_script_name;
      <br />
    </dtml-if>
+   <dtml-if before_commit_script_name>
+     Scripts (before commit): &dtml-before_commit_script_name;
+     <br />
+   </dtml-if>
    <dtml-if activate_script_name>
      Scripts (later): &dtml-activate_script_name;
      <br />
