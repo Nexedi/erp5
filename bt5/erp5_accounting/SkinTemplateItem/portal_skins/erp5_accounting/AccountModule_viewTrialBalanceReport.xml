@@ -99,6 +99,7 @@
                         <string>your_at_date</string>
                         <string>your_gap_root</string>
                         <string>your_period_start_date</string>
+                        <string>your_portal_type</string>
                         <string>your_simulation_state</string>
                       </list>
                     </value>
