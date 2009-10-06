@@ -64,6 +64,8 @@ N_ = portal.Base_translateString\n
 at_date  = request[\'at_date\']\n
 from_date = request.get(\'from_date\', None)\n
 portal_type = request.get(\'portal_type\', None)\n
+function = request.get(\'function\', None)\n
+project = request.get(\'project\', None)\n
 simulation_state = request[\'simulation_state\']\n
 expand_accounts = request.get(\'expand_accounts\', False)\n
 show_empty_accounts = request[\'show_empty_accounts\']\n
@@ -113,6 +115,8 @@ return [ ReportSection(\n
                                   period_start_date=\n
                                           period_start_date.earliestTime(),\n
                                   section_uid=section_uid,\n
+                                  function=function,\n
+                                  project=project,\n
                                   portal_type=portal_type,\n
                                   simulation_state=simulation_state,\n
                                   precision=precision,\n
@@ -168,6 +172,8 @@ return [ ReportSection(\n
                             <string>None</string>
                             <string>from_date</string>
                             <string>portal_type</string>
+                            <string>function</string>
+                            <string>project</string>
                             <string>simulation_state</string>
                             <string>False</string>
                             <string>expand_accounts</string>
