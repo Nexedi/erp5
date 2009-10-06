@@ -37,6 +37,8 @@ from DateTime import DateTime
 from Products.ERP5.tests.testAccounting import AccountingTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5ReportTestCase
 
+# TODO: test reports with function
+# TODO: test reports with project
 
 class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
   """Test Accounting reports
@@ -1395,7 +1397,6 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
         final_balance_if_credit=0)
     
     self.checkLineProperties(data_line_list[2], node_id='3',
-        # XXX isn't "Inventory" a better name here ?
         node_title='Stocks', initial_debit_balance=0, initial_credit_balance=0,
         debit=0, credit=0, final_debit_balance=0, final_credit_balance=0,
         final_balance_if_debit=0, final_balance_if_credit=0)
@@ -2239,6 +2240,47 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
         initial_debit_balance=0, initial_credit_balance=0, debit=1000,
         credit=1000, final_debit_balance=1000, final_credit_balance=1000,
         final_balance_if_debit=200, final_balance_if_credit=200)
+
+  def testTrialBalancePortalType(self):
+    # portal_type filter on trial balance
+    self.createAccountStatementDataSet()
+
+    # set request variables and render
+    request_form = self.portal.REQUEST.form
+    request_form['from_date'] = DateTime(2006, 1, 1)
+    request_form['at_date'] = DateTime(2006, 12, 31)
+    request_form['section_category'] = 'group/demo_group'
+    request_form['simulation_state'] = ['stopped', 'delivered']
+    request_form['show_empty_accounts'] = 0
+    request_form['expand_accounts'] = 0
+    request_form['per_account_class_summary'] = 0
+    request_form['portal_type'] = ['Purchase Invoice Transaction']
+
+    report_section_list = self.getReportSectionList(
+                                    self.portal.accounting_module,
+                                    'AccountModule_viewTrialBalanceReport')
+    self.assertEquals(1, len(report_section_list))
+    line_list = self.getListBoxLineList(report_section_list[0])
+    data_line_list = [l for l in line_list if l.isDataLine()]
+    self.assertEquals(2, len(data_line_list))
+    
+    self.checkLineProperties(data_line_list[0], node_id='41',
+        node_title='Receivable', initial_debit_balance=0,
+        initial_credit_balance=0, debit=600, credit=0,
+        final_debit_balance=600, final_credit_balance=0,
+        final_balance_if_debit=600, final_balance_if_credit=0,)
+    
+    self.checkLineProperties(data_line_list[1], node_id='5',
+        node_title='Bank (Bank2)', initial_debit_balance=0,
+        initial_credit_balance=0, debit=0, credit=600, final_debit_balance=0,
+        final_credit_balance=600, final_balance_if_debit=0,
+        final_balance_if_credit=600,)
+    
+    self.failUnless(line_list[-1].isStatLine())
+    self.checkLineProperties(line_list[-1], node_id=None, node_title=None,
+        initial_debit_balance=0, initial_credit_balance=0, debit=600,
+        credit=600, final_debit_balance=600, final_credit_balance=600,
+        final_balance_if_debit=600, final_balance_if_credit=600)
 
 
   def testGeneralLedger(self):
