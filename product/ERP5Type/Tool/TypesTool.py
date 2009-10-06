@@ -111,6 +111,21 @@ class TypesTool(BaseTool, CMFCore_TypesTool.TypesTool):
       type_info.__dict__.update((k, v) for k, v in fti.iteritems()
         if k not in ('id', 'actions'))
 
+  def _finalizeMigration(self):
+    """Compatibility code to finalize migration from CMF Types Tool"""
+    portal = self.getPortalObject()
+    old_types_tool = portal.__dict__[OldTypesTool.id]
+    #self.Base_setDefaultSecurity()
+    trash_tool = getattr(portal, 'portal_trash', None)
+    if trash_tool is not None:
+      LOG('OldTypesTool', WARNING, 'Move old portal_types into a trash bin.')
+      portal._objects = tuple(i for i in portal._objects
+                                if i['id'] != old_types_tool.id)
+      portal._delOb(old_types_tool.id)
+      #old_types_tool.id = self.id # Not possible to keep the original id
+                                   # due to limitation of getToolByName
+      trashbin = UnrestrictedMethod(trash_tool.newTrashBin)(self.id)
+      trashbin._setOb(old_types_tool.id, old_types_tool)
 
 # Compatibility code to access old "ERP5 Role Information" objects.
 OldRoleInformation = imp.new_module('Products.ERP5Type.RoleInformation')
@@ -169,7 +184,7 @@ class OldTypesTool(OFSFolder):
         parent.portal_categories._setObject(action_type.id, action_type)
       for type_info in self.objectValues():
         self._migratePortalType(types_tool, type_info)
-      #types_tool.activate().Base_setDefaultSecurity()
+      types_tool.activate()._finalizeMigration()
     except:
       transaction.abort()
       LOG('OldTypesTool', PANIC, 'Could not convert portal_types: ',
@@ -182,7 +197,7 @@ class OldTypesTool(OFSFolder):
 
   def __of__(self, parent):
     base_self = aq_base(self) # Is it required ?
-    if parent.__dict__[TypesTool.id] is not base_self:
+    if parent.__dict__.get(TypesTool.id) is not base_self:
       return OFSFolder.__of__(self, parent)
     return UnrestrictedMethod(base_self._migrateTypesTool)(parent)
 

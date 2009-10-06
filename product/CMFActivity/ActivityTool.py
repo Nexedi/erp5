@@ -1101,7 +1101,8 @@ class ActivityTool (Folder, UniqueObject):
         request_info = message.request_info
         # PARENTS is truncated by clone
         new_request.other['PARENTS'] = parents
-        new_request._script = request_info['_script']
+        if '_script' in request_info:
+          new_request._script = request_info['_script']
         if 'SERVER_URL' in request_info:
           new_request.other['SERVER_URL'] = request_info['SERVER_URL']
         if 'VirtualRootPhysicalPath' in request_info:
