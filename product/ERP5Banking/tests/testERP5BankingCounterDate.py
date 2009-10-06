@@ -211,6 +211,26 @@ class TestERP5BankingCounterDate(TestERP5BankingMixin,
     openAndTest(self.paris, DateTime('2008/12/31'), '5')
     openAndTest(self.paris, DateTime('2009/01/01'), '1')
 
+  def test_04_CheckOpenCounterDateTwiceWithoutActivitiesFail(self, quiet=QUIET,
+    run=RUN_ALL_TEST):
+    """
+      Test that opening a counter date when there is a counter date opened
+      fails, even when activites are not executed.
+    """
+    if not run: return
+    if not quiet:
+      message = 'Check open CounterDate twice without activities fails'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ',0,message)
+    self.openCounterDate(site=self.paris, id='counter_date_1')
+    get_transaction().commit()
+    self.openCounterDate(site=self.paris, id='counter_date_2', open=0)
+    # open counter date and counter
+    self.assertRaises(ValidationFailed,
+                     self.workflow_tool.doActionFor,
+                     self.counter_date_2, 'open_action',
+                     wf_id='counter_date_workflow')
+
 # define how we launch the unit test
 if __name__ == '__main__':
   framework()
