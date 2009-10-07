@@ -27,7 +27,7 @@
 #
 ##############################################################################
 from AccessControl import ClassSecurityInfo
-from Globals import InitializeClass
+from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 
 

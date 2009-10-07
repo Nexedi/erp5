@@ -29,6 +29,7 @@
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
 from Products.ERP5Banking.Document.BankingOperation import BankingOperation
+from zope.interface import implements
 
 class CashDelivery(BankingOperation):
   """
@@ -45,7 +46,7 @@ class CashDelivery(BankingOperation):
   security.declareObjectProtected(Permissions.View)
 
   # Declarative interfaces
-  __implements__ = ( interfaces.IVariated, )
+  implements( interfaces.IVariated, )
 
   # Declarative properties
   property_sheets = ( PropertySheet.Base

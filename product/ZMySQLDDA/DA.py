@@ -89,7 +89,7 @@ import os
 from db import ThreadedDeferredDB
 import Shared.DC.ZRDB.Connection, sys, DABase
 from App.Dialogs import MessageDialog
-from Globals import HTMLFile
+from App.special_dtml import HTMLFile
 from ImageFile import ImageFile
 from ExtensionClass import Base
 from DateTime import DateTime

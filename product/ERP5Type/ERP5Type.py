@@ -21,7 +21,7 @@
 ##############################################################################
 
 import zope.interface
-from Globals import InitializeClass
+from Products.ERP5Type.Globals import InitializeClass
 from AccessControl import ClassSecurityInfo, getSecurityManager
 from Acquisition import aq_base, aq_inner, aq_parent
 

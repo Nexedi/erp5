@@ -1,4 +1,4 @@
-import Globals
+from Products.ERP5Type import Globals
 from AccessControl import ClassSecurityInfo
 
 from Products.CMFCore.CMFCorePermissions import View, ViewManagementScreens

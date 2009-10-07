@@ -26,7 +26,7 @@
 #
 ##############################################################################
 
-from Globals import InitializeClass
+from Products.ERP5Type.Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.Errors import SSHConnectionError

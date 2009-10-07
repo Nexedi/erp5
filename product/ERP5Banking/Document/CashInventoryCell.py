@@ -30,6 +30,7 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
 from Products.ERP5.Document.InventoryCell import InventoryCell
 from Products.ERP5Banking.Document.CashDeliveryCell import CashDeliveryCell
+from zope.interface import implements
 
 class CashInventoryCell(InventoryCell, CashDeliveryCell):
   """
@@ -47,7 +48,7 @@ class CashInventoryCell(InventoryCell, CashDeliveryCell):
   security.declareObjectProtected(Permissions.View)
 
   # Declarative interfaces
-  __implements__ = ( interfaces.IVariated, )
+  implements( interfaces.IVariated, )
 
   # Declarative properties
   property_sheets = ( PropertySheet.Base

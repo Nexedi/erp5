@@ -35,7 +35,7 @@ from Products.ERP5Form.Selection import Selection
 from Testing import ZopeTestCase
 from Products.ERP5OOo.tests.utils import Validator
 from Acquisition import aq_base
-from Globals import get_request
+from Products.ERP5Type.Globals import get_request
 from Products.ERP5OOo.Document.OOoDocument import STANDARD_IMAGE_FORMAT_LIST
 from Products.ERP5Type.Core.Folder import Folder
 

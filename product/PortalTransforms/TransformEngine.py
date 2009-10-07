@@ -3,9 +3,9 @@ from AccessControl import ClassSecurityInfo
 from Acquisition import Implicit
 from Acquisition import aq_parent
 from Acquisition import aq_base
-from Globals import Persistent
-from Globals import InitializeClass
-from Globals import PersistentMapping
+from Persistence import Persistent
+from App.class_init import default__class_init__ as InitializeClass
+from Persistence import PersistentMapping
 try:
     from ZODB.PersistentList import PersistentList
 except ImportError:
@@ -35,6 +35,8 @@ from Products.PortalTransforms.utils import TransformException
 from Products.PortalTransforms.utils import BadRequest
 from Products.PortalTransforms.utils import _www
 
+from zope.interface import implements
+
 __revision__ = '$Id: TransformEngine.py 6255 2006-04-11 15:29:29Z hannosch $'
 
 from logging import DEBUG
@@ -45,7 +47,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
     meta_type = id.title().replace('_', ' ')
     isPrincipiaFolderish = 1 # Show up in the ZMI
 
-    __implements__ = iengine
+    implements(iengine)
 
     meta_types = all_meta_types = (
         { 'name'   : 'Transform',

@@ -12,7 +12,8 @@ from DateTime import DateTime
 from email.MIMEMultipart import MIMEMultipart
 from email.MIMEText import MIMEText
 
-from Globals import InitializeClass, package_home
+from App.class_init import default__class_init__ as InitializeClass
+from App.Common import package_home
 from MTMultipart import MTMultipart
 from Products.PageTemplates.ZopePageTemplate import ZopePageTemplate, SUPPORTS_WEBDAV_LOCKS
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile

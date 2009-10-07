@@ -1,7 +1,7 @@
 # ERP5Type has a specific __init__ file to circumvent circular references
 
 ## Hide internal implementation
-#from Globals import InitializeClass
+#from Products.ERP5Type.Globals import InitializeClass
 #import Products.ERP5Type.Core.Folder as ERP5Folder
 ## Default constructor for Folder
 ## Can be overriden by adding a method addFolder in class Folder

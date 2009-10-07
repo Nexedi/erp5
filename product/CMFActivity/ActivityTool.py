@@ -44,7 +44,7 @@ from AccessControl.SecurityManagement import noSecurityManager
 from AccessControl.SecurityManagement import setSecurityManager
 from AccessControl.SecurityManagement import getSecurityManager
 from Products.CMFCore.utils import UniqueObject, _getAuthenticatedUser, getToolByName
-from Globals import InitializeClass, DTMLFile
+from Products.ERP5Type.Globals import InitializeClass, DTMLFile
 from Acquisition import aq_base
 from Acquisition import aq_inner
 from ActivityBuffer import ActivityBuffer

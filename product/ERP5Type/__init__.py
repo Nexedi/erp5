@@ -34,7 +34,7 @@ USE_INTERACTOR = False
 
 # Update ERP5 Globals
 import sys, Permissions, os
-from Globals import package_home
+from App.Common import package_home
 this_module = sys.modules[ __name__ ]
 product_path = package_home( globals() )
 this_module._dtmldir = os.path.join( product_path, 'dtml' )
@@ -44,7 +44,7 @@ document_classes = updateGlobals( this_module,
                                   permissions_module=Permissions,
                                   is_erp5_type=1 )
 
-import Interface, PropertySheet, ZopePatch
+import PropertySheet, ZopePatch
 import interfaces
 
 import Products.Localizer # So that we make sure Globals.get_request is available

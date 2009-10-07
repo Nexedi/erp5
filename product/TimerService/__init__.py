@@ -2,14 +2,14 @@
 # -*- Mode: Python; py-indent-offset: 4 -*-
 # Authors: Nik Kim <fafhrd@legco.biz> 
 
-import Globals
+from App.ImageFile import ImageFile
 from AccessControl import ModuleSecurityInfo, allow_module
 from AccessControl.Permissions import view
 
 from TimerService import TimerService, current_version
 
 misc_ = { 'timer_icon.gif':
-          Globals.ImageFile('zpt/timer_icon.gif', globals())}
+          ImageFile('zpt/timer_icon.gif', globals())}
 
 cp_id = 'timer_service'
 

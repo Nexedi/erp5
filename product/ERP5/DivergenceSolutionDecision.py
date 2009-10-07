@@ -27,7 +27,7 @@
 #
 ##############################################################################
 
-from Globals import InitializeClass
+from Products.ERP5Type.Globals import InitializeClass
 from Products.PythonScripts.Utility import allow_class
 from AccessControl import ClassSecurityInfo
 from Persistence import Persistent

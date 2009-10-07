@@ -31,7 +31,7 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.Accessor.Base import Method, func_code
 from Products.ERP5Type.Utils import convertToMixedCase, convertToUpperCase
-from Globals import InitializeClass
+from Products.ERP5Type.Globals import InitializeClass
 
 class BaobabGetter(Method):
   """Get a category differently

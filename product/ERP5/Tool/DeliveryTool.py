@@ -29,7 +29,7 @@
 ##############################################################################
 
 from AccessControl import ClassSecurityInfo
-from Globals import InitializeClass, DTMLFile
+from Products.ERP5Type.Globals import InitializeClass, DTMLFile
 from Products.ERP5.Tool.BuilderTool import BuilderTool
 from Products.ERP5Type import Permissions
 

@@ -31,7 +31,7 @@
 from OperatorBase import OperatorBase
 from Products.ZSQLCatalog.SQLExpression import SQLExpression
 from Products.ZSQLCatalog.interfaces.operator import IOperator
-from Interface.Verify import verifyClass
+from zope.interface.verify import verifyClass
 from Products.ZSQLCatalog.SQLCatalog import profiler_decorator
 
 class ComparisonOperatorBase(OperatorBase):

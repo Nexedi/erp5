@@ -39,8 +39,8 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from TAL.TALInterpreter import FasterStringIO
 from Products.ERP5Type import PropertySheet
 from urllib import quote
-from Globals import InitializeClass, DTMLFile, get_request
-from Globals import DevelopmentMode
+from Products.ERP5Type.Globals import InitializeClass, DTMLFile, get_request
+from Products.ERP5Type.Globals import DevelopmentMode
 from Acquisition import aq_base
 from AccessControl import ClassSecurityInfo
 from OOoUtils import OOoBuilder

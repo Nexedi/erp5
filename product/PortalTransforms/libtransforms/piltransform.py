@@ -1,9 +1,10 @@
 from Products.PortalTransforms.interfaces import itransform
 from StringIO import StringIO
 import PIL.Image
+from zope.interface import implements
 
 class PILTransforms:
-    __implements__ = itransform
+    implements(itransform)
     __name__  = "piltransforms"
     def __init__(self, name=None):
          if name is not None:

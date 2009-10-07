@@ -32,7 +32,7 @@ from Query import Query
 from Products.ZSQLCatalog.SQLExpression import SQLExpression
 from SQLQuery import SQLQuery
 from Products.ZSQLCatalog.interfaces.query import IQuery
-from Interface.Verify import verifyClass
+from zope.interface.verify import verifyClass
 from Products.ZSQLCatalog.SQLCatalog import profiler_decorator
 
 logical_operator_search_text_dict = {

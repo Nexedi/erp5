@@ -9,6 +9,7 @@ import re
 from os import popen3, popen4, system
 from cStringIO import StringIO
 
+from zope.interface import implements
 from Products.PortalTransforms.interfaces import itransform
 from Products.PortalTransforms.libtransforms.utils import bin_search, sansext
 from Products.PortalTransforms.libtransforms.commandtransform import commandtransform
@@ -23,7 +24,7 @@ class XsltTransform(commandtransform):
 
     You can associate different document type to different transformations.
     """
-    __implements__ = (itransform,)
+    implements(itransform,)
 
     __name__ = "xml_to_html"
 

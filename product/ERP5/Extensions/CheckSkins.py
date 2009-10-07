@@ -1,4 +1,4 @@
-from Globals import get_request
+from Products.ERP5Type.Globals import get_request
 import re
 import os
 import sys

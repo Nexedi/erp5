@@ -32,7 +32,8 @@ from Products.ZSQLCatalog.SQLExpression import SQLExpression
 from Products.ZSQLCatalog.ColumnMap import ColumnMap
 from zLOG import LOG
 from Products.ZSQLCatalog.interfaces.entire_query import IEntireQuery
-from Interface.Verify import verifyClass
+from zope.interface.verify import verifyClass
+from zope.interface import implements
 from Products.ZSQLCatalog.SQLCatalog import profiler_decorator
 
 def defaultDict(value):
@@ -48,7 +49,7 @@ class EntireQuery(object):
     internaly.
   """
 
-  __implements__ = IEntireQuery
+  implements(IEntireQuery)
 
   column_map = None
 

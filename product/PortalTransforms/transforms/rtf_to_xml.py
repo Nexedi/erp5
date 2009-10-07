@@ -6,9 +6,10 @@ from Products.PortalTransforms.interfaces import itransform
 from Products.PortalTransforms.libtransforms.utils import bin_search, sansext
 from Products.PortalTransforms.libtransforms.commandtransform import commandtransform
 import os
+from zope.interface import implements
 
 class rtf_to_xml(commandtransform):
-    __implements__ = itransform
+    implements(itransform)
 
     __name__ = "rtf_to_xml"
     inputs   = ('application/rtf',)

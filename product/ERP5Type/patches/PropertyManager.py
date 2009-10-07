@@ -15,7 +15,7 @@
 # Properties
 from OFS.PropertyManager import PropertyManager, type_converters
 from OFS.PropertyManager import escape
-from Globals import DTMLFile
+from Products.ERP5Type.Globals import DTMLFile
 from Products.ERP5Type.Utils import createExpressionContext
 from Products.CMFCore.Expression import Expression
 from Products.ERP5Type import _dtmldir

@@ -17,7 +17,8 @@
 
 import urllib2, os, dircache, urllib
 from StringIO import StringIO
-from urllib2 import FileHandler, url2pathname, mimetypes, mimetools, addinfourl, URLError
+from urllib2 import FileHandler, url2pathname, addinfourl, URLError
+import mimetypes, mimetools
 
 class DirectoryFileHandler(FileHandler):
     """

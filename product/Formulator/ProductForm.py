@@ -10,7 +10,8 @@ import string
 
 from AccessControl import ClassSecurityInfo
 
-from Globals import InitializeClass
+# this name is safe for importing on Zope 2.8 to 2.12
+from App.class_init import default__class_init__ as InitializeClass
 import FormValidationError, BasicForm
 import StandardFields
 

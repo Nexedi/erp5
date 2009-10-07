@@ -32,7 +32,7 @@ from copy import copy
 import warnings
 import types
 
-from Globals import InitializeClass, DTMLFile
+from Products.ERP5Type.Globals import InitializeClass, DTMLFile
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permission import pname, Permission
 from AccessControl.PermissionRole import rolesForPermissionOn

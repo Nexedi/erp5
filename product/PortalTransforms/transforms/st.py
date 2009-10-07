@@ -1,11 +1,12 @@
 from StructuredText.StructuredText import HTML
 from Products.PortalTransforms.interfaces import itransform
+from zope.interface import implements
 
 DEFAULT_STX_LEVEL = 2
 STX_LEVEL = DEFAULT_STX_LEVEL
 
 class st:
-    __implements__ = itransform
+    implements(itransform)
 
     __name__ = "st_to_html"
     inputs   = ("text/structured",)

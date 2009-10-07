@@ -40,7 +40,7 @@ from Products.CMFCore.exceptions import AccessControl_Unauthorized
 from Products.ERP5Type import PropertySheet, Permissions
 
 from urllib import quote
-from Globals import InitializeClass, PersistentMapping, DTMLFile, get_request
+from Products.ERP5Type.Globals import InitializeClass, PersistentMapping, DTMLFile, get_request
 from AccessControl import Unauthorized, getSecurityManager, ClassSecurityInfo
 from ZODB.POSException import ConflictError
 from Acquisition import aq_base

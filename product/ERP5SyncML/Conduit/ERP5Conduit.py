@@ -34,7 +34,7 @@ from email.MIMEBase import MIMEBase
 from email import Encoders
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, interfaces
-from Globals import PersistentMapping
+from Products.ERP5Type.Globals import PersistentMapping
 import pickle
 from xml.sax.saxutils import escape, unescape
 from cStringIO import StringIO
@@ -47,6 +47,7 @@ from xml.marshal.generic import loads as unmarshaler
 from zLOG import LOG, INFO, DEBUG
 from base64 import standard_b64decode
 from OFS.Image import Pdata
+from zope.interface import implements
 
 class ERP5Conduit(XMLSyncUtilsMixin):
   """
@@ -86,7 +87,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
   """
 
   # Declarative interfaces
-  __implements__ = ( interfaces.IConduit, )
+  implements( interfaces.IConduit, )
 
   # Declarative security
   security = ClassSecurityInfo()

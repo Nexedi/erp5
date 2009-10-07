@@ -28,8 +28,7 @@
 
 from AccessControl import ClassSecurityInfo
 from Products.CMFCore.utils import getToolByName
-from Products.ERP5Type import Permissions, PropertySheet,\
-                              Constraint, Interface, Cache
+from Products.ERP5Type import Permissions, PropertySheet, Constraint, Cache
 from Products.ERP5.Document.Domain import Domain
 from Products.ERP5.Document.Document import PermanentURLMixIn
 from Acquisition import ImplicitAcquisitionWrapper, aq_base, aq_inner

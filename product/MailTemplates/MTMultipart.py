@@ -8,7 +8,7 @@ from AccessControl import ClassSecurityInfo
 from email import Encoders
 from email.MIMEBase import MIMEBase
 from email.MIMEMultipart import MIMEMultipart
-from Globals import InitializeClass
+from App.class_init import default__class_init__ as InitializeClass
 try:
   from zope.app.content_types import guess_content_type
 except ImportError:

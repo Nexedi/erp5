@@ -34,7 +34,7 @@ from Products.CMFCategory.CategoryTool import CategoryTool as CMFCategoryTool
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from AccessControl import ClassSecurityInfo
 from Acquisition import aq_base
-from Globals import InitializeClass
+from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.CopySupport import CopyContainer
 from Products.CMFCore.utils import getToolByName

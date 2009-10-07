@@ -33,7 +33,7 @@ from Products.PageTemplates.Expressions import getEngine
 from Products.PageTemplates.TALES import SafeMapping
 
 from urllib import quote
-from Globals import InitializeClass, PersistentMapping, DTMLFile
+from Products.ERP5Type.Globals import InitializeClass, PersistentMapping, DTMLFile
 from AccessControl import ClassSecurityInfo
 from AccessControl.SecurityInfo import allow_class
 

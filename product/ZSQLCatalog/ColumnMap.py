@@ -29,7 +29,8 @@
 
 from zLOG import LOG, WARNING, INFO
 from interfaces.column_map import IColumnMap
-from Interface.Verify import verifyClass
+from zope.interface.verify import verifyClass
+from zope.interface import implements
 from SQLCatalog import profiler_decorator
 
 DEFAULT_GROUP_ID = None
@@ -44,7 +45,7 @@ MAPPING_TRACE = False
 
 class ColumnMap(object):
 
-  __implements__ = IColumnMap
+  implements(IColumnMap)
 
   @profiler_decorator
   def __init__(self, catalog_table_name=None):

@@ -28,7 +28,7 @@
 ##############################################################################
 
 import zope.interface
-from Globals import InitializeClass
+from Products.ERP5Type.Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 from Products.ERP5.Variated import Variated
 from Products.ERP5.VariationValue import VariationValue

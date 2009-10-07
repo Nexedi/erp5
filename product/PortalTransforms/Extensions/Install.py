@@ -5,7 +5,7 @@ from Products.CMFCore.DirectoryView import createDirectoryView
 from Products.CMFCore.DirectoryView import manage_listAvailableDirectories
 from Products.CMFCore.utils import getToolByName
 from Products.CMFCore.utils import minimalpath
-from Globals import package_home
+from App.Common import package_home
 from Acquisition import aq_base
 from OFS.ObjectManager import BadRequestException
 

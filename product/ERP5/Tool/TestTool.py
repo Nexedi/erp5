@@ -32,7 +32,7 @@ from Products.CMFCore.utils import UniqueObject
 
 from Acquisition import Implicit
 from AccessControl import ClassSecurityInfo
-from Globals import InitializeClass, DTMLFile, PersistentMapping
+from Products.ERP5Type.Globals import InitializeClass, DTMLFile, PersistentMapping
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type import Permissions
 

@@ -1,6 +1,6 @@
-from Globals import get_request
+from Products.ERP5Type.Globals import get_request
 from Acquisition import aq_base
-from Globals import PersistentMapping
+from Products.ERP5Type.Globals import PersistentMapping
 from Products.CMFCore.utils import getToolByName
 
 

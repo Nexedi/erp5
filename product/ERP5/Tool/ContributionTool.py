@@ -35,7 +35,7 @@ import urllib2, urllib
 import inspect
 
 from AccessControl import ClassSecurityInfo, getSecurityManager
-from Globals import InitializeClass, DTMLFile
+from Products.ERP5Type.Globals import InitializeClass, DTMLFile
 from Products.CMFCore.utils import getToolByName, _checkPermission
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type import Permissions

@@ -40,7 +40,7 @@ from AccessControl import ModuleSecurityInfo
 import MovementGroup
 allow_class(MovementGroup)
 
-from Globals import package_home
+from Products.ERP5Type.Globals import package_home
 product_path = package_home( globals() )
 
 # Define object classes and tools

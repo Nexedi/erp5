@@ -7,9 +7,10 @@ from Products.PortalTransforms.libtransforms.utils import bin_search, sansext
 from Products.PortalTransforms.libtransforms.commandtransform import commandtransform
 from Products.PortalTransforms.libtransforms.commandtransform import popentransform
 import os
+from zope.interface import implements
 
 class pdf_to_text(popentransform):
-    __implements__ = itransform
+    implements(itransform)
 
     __name__ = "pdf_to_text"
     inputs   = ('application/pdf',)
@@ -23,7 +24,7 @@ class pdf_to_text(popentransform):
     useStdin = False
 
 class old_pdf_to_text(commandtransform):
-    __implements__ = itransform
+    implements(itransform)
 
     __name__ = "pdf_to_text"
     inputs   = ('application/pdf',)

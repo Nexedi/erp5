@@ -27,7 +27,7 @@
 ##############################################################################
 
 from Products.ERP5Type.Accessor.TypeDefinition import list_types
-from Globals import Persistent
+from Products.ERP5Type.Globals import Persistent
 import re
 
 class SyncCode(Persistent):

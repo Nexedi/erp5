@@ -1,4 +1,4 @@
-import Globals
+from App.class_init import default__class_init__ as InitializeClass
 from AccessControl import ClassSecurityInfo
 
 try:
@@ -108,7 +108,7 @@ class FSForm(FSObject, ZMIForm):
 ##         self._updateFromFS()
 ##         return ZMIForm.get_group_rows(self)
 
-Globals.InitializeClass(FSForm)
+InitializeClass(FSForm)
 
 registerFileExtension('form', FSForm)
 registerMetaType('FSForm', FSForm)

@@ -28,7 +28,7 @@
 
 from AccessControl import ClassSecurityInfo
 from Products.CMFCore.utils import UniqueObject, _checkPermission, _getAuthenticatedUser
-from Globals import InitializeClass
+from Products.ERP5Type.Globals import InitializeClass
 from Acquisition import aq_base
 from DateTime import DateTime
 

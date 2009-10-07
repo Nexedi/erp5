@@ -30,7 +30,7 @@
 from Products.ERP5Type import Permissions
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Tool.BaseTool import BaseTool
-from Globals import InitializeClass
+from Products.ERP5Type.Globals import InitializeClass
 
 class BuilderTool(BaseTool):
   """Base class for builder tools

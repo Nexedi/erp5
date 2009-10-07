@@ -27,7 +27,7 @@
 ##############################################################################
 
 from AccessControl import ClassSecurityInfo
-from Globals import InitializeClass
+from Products.ERP5Type.Globals import InitializeClass
 from Products.CMFCore.utils import getToolByName
 
 from Products.ERP5Type import Context, interfaces, Permissions
@@ -35,6 +35,7 @@ from Products.ERP5Type.Base import Base
 from Products.CMFCategory.Renderer import Renderer
 
 from warnings import warn
+from zope.interface import implements
 
 class Variated(Base):
   """
@@ -57,7 +58,7 @@ class Variated(Base):
   security = ClassSecurityInfo()
 
   # Declarative interfaces
-  __implements__ = (interfaces.IVariated, )
+  implements(interfaces.IVariated)
 
   security.declareProtected(Permissions.AccessContentsInformation, 
                             'getVariationBaseCategoryList')

@@ -22,9 +22,9 @@ $Id$
 """
 
 from OFS.SimpleItem import SimpleItem
-from Globals import DTMLFile, PersistentMapping
+from Products.ERP5Type.Globals import DTMLFile, PersistentMapping
 from Acquisition import aq_inner, aq_parent
-import Globals
+from Products.ERP5Type import Globals
 from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type.Permissions import ManagePortal

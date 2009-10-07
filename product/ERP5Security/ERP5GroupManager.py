@@ -15,7 +15,7 @@
 """ Classes: ERP5GroupManager
 """
 
-from Globals import InitializeClass
+from Products.ERP5Type.Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 from AccessControl.SecurityManagement import newSecurityManager,\
     getSecurityManager, setSecurityManager

@@ -32,7 +32,7 @@ ERP portal_categories tool.
 
 from OFS.Folder import Folder
 from Products.CMFCore.utils import UniqueObject
-from Globals import InitializeClass, DTMLFile
+from Products.ERP5Type.Globals import InitializeClass, DTMLFile
 from AccessControl import ClassSecurityInfo
 from AccessControl import Unauthorized, getSecurityManager
 from Acquisition import aq_base, aq_inner

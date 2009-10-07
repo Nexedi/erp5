@@ -27,7 +27,7 @@
 ##############################################################################
 
 from AccessControl import ClassSecurityInfo
-from Globals import InitializeClass
+from Products.ERP5Type.Globals import InitializeClass
 from DCWorkflowDocumentationHelper import DCWorkflowDocumentationHelper
 from Products.ERP5Type import Permissions
 

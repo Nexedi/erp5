@@ -34,7 +34,7 @@ from Products.ExtFile.ExtFile import ExtFile
 from Products.ExtFile.ExtImage import ExtImage
 import os
 from App.config import getConfiguration
-from Globals import package_home
+from Products.ERP5Type.Globals import package_home
 from Products.ERP5 import product_path
 from Shared.DC.ZRDB.TM import TM
 import shutil

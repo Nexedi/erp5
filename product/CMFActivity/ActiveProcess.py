@@ -26,7 +26,7 @@
 #
 ##############################################################################
 
-from Globals import InitializeClass, DTMLFile
+from Products.ERP5Type.Globals import InitializeClass, DTMLFile
 from AccessControl import ClassSecurityInfo
 from Products.CMFCore import CMFCorePermissions
 from Products.ERP5Type.Base import Base

@@ -18,7 +18,7 @@
 ##############################################################################
 
 import transaction
-import Globals
+from Products.ERP5Type import Globals
 import App
 from types import StringTypes
 from AccessControl import getSecurityManager, ClassSecurityInfo

@@ -2,6 +2,7 @@ import logging
 from sgmllib import SGMLParser
 import re
 from cgi import escape
+from zope.interface import implements
 
 from Products.PortalTransforms.interfaces import itransform
 from Products.PortalTransforms.utils import log
@@ -184,7 +185,7 @@ class SafeHTML:
         -> Flush Cache.
     """
 
-    __implements__ = itransform
+    implements(itransform)
 
     __name__ = "safe_html"
     inputs   = ('text/html',)

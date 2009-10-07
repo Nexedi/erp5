@@ -29,7 +29,7 @@
 from Products.ERP5Type.Base import Base
 from Products.ERP5Type.Utils import getPath
 from zLOG import LOG
-from Globals import InitializeClass, DTMLFile
+from Products.ERP5Type.Globals import InitializeClass, DTMLFile
 from Products.PythonScripts.Utility import allow_class
 
 class Error:

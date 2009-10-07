@@ -32,7 +32,7 @@ from OFS.SimpleItem import SimpleItem
 from Products.ERP5Type.Core.Folder import Folder
 from Products.ERP5Type.Base import Base
 from Products.CMFCore.utils import UniqueObject
-from Globals import InitializeClass, DTMLFile, PersistentMapping, Persistent
+from Products.ERP5Type.Globals import InitializeClass, DTMLFile, PersistentMapping, Persistent
 from AccessControl import ClassSecurityInfo, getSecurityManager
 from Products.CMFCore import CMFCorePermissions
 from Products.ERP5SyncML import _dtmldir

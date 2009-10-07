@@ -13,7 +13,7 @@
 ##############################################################################
 
 from AccessControl.SecurityInfo import ClassSecurityInfo
-from Globals import InitializeClass
+from App.class_init import default__class_init__ as InitializeClass
 from Products.HBTreeFolder2.HBTreeFolder2 import HBTreeFolder2Base
 
 try:

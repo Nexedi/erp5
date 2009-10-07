@@ -26,7 +26,7 @@
 #
 ##############################################################################
 
-from Globals import Persistent, PersistentMapping
+from Products.ERP5Type.Globals import Persistent, PersistentMapping
 from SyncCode import SyncCode
 from Subscription import Subscription
 from Products.ERP5Type import Permissions

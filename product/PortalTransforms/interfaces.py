@@ -1,4 +1,4 @@
-from Interface import Interface, Attribute
+from zope.interface import Interface, Attribute
 
 class idatastream(Interface):
     """data stream, is the result of a transform"""

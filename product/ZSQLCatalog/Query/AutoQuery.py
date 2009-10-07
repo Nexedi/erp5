@@ -31,7 +31,7 @@
 from Query import Query
 from zLOG import LOG
 from Products.ZSQLCatalog.interfaces.query import IQuery
-from Interface.Verify import verifyClass
+from zope.interface.verify import verifyClass
 from Products.ZSQLCatalog.SQLCatalog import profiler_decorator
 
 class AutoQuery(Query):

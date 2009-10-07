@@ -14,9 +14,9 @@
   Portal class
 """
 
-import Globals
+from Products.ERP5Type import Globals
 import AccessControl
-from Globals import package_home
+from Products.ERP5Type.Globals import package_home
 
 from Products.SiteErrorLog.SiteErrorLog import manage_addErrorLog
 from ZPublisher import BeforeTraverse

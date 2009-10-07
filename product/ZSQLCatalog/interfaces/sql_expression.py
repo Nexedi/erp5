@@ -27,7 +27,7 @@
 #
 ##############################################################################
 
-from Interface import Interface
+from zope.interface import Interface
 
 class ISQLExpression(Interface):
   """

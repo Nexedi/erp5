@@ -26,13 +26,13 @@
 #
 ##############################################################################
 
-from Globals import InitializeClass
+from Products.ERP5Type.Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 from Products.CMFCore.utils import getToolByName
 
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
-from Globals import PersistentMapping
+from Products.ERP5Type.Globals import PersistentMapping
 
 from Products.ERP5.Document.Movement import Movement
 

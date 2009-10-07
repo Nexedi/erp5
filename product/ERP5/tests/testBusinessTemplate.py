@@ -40,7 +40,7 @@ from Products.ERP5Type.RoleInformation import RoleInformation
 from App.config import getConfiguration
 from Products.ERP5Type.tests.Sequence import SequenceList
 from urllib import pathname2url
-from Globals import PersistentMapping
+from Products.ERP5Type.Globals import PersistentMapping
 from Products.CMFCore.Expression import Expression
 from Products.CMFCore.tests.base.testcase import LogInterceptor
 import shutil

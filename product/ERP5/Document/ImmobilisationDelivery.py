@@ -26,7 +26,7 @@
 #
 ##############################################################################
 
-from Globals import InitializeClass, PersistentMapping
+from Products.ERP5Type.Globals import InitializeClass, PersistentMapping
 from AccessControl import ClassSecurityInfo
 
 from DateTime import DateTime

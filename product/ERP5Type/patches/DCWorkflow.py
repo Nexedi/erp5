@@ -14,7 +14,7 @@
 
 # Optimized rendering of global actions (cache)
 
-from Globals import DTMLFile
+from Products.ERP5Type.Globals import DTMLFile
 from Products.ERP5Type import _dtmldir
 from Products.DCWorkflow.DCWorkflow import DCWorkflowDefinition, StateChangeInfo, createExprContext
 from Products.DCWorkflow.DCWorkflow import ObjectDeleted, ObjectMoved, aq_parent, aq_inner
@@ -605,7 +605,17 @@ TransitionDefinition.getAvailableScriptIds = getAvailableScriptIds
 
 # Add a workflow factory for ERP5 style workflow, because some variables
 # are needed for History tab.
-from Products.CMFCore.WorkflowTool import addWorkflowFactory
+
+try:
+    from Products.CMFCore.WorkflowTool import addWorkflowFactory
+except ImportError:
+    import zLOG
+    zLOG.LOG('Products.ERP5Type.patches.DCWorkflow',
+        zLOG.ERROR,
+        'Products.CMFCore.WorkflowTool.addWorkflowFactory has been removed. '
+        'ERP5 Workflow factory not installed',
+        error=sys.exc_info())
+    addWorkflowFactory = lambda factory, id, title: None 
 from Products.ERP5Type import Permissions
 
 def setupERP5Workflow(wf):

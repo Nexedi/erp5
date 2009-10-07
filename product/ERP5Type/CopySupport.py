@@ -24,7 +24,7 @@ from OFS.CopySupport import sanity_check
 from Products.ERP5Type import Permissions
 from Acquisition import aq_base, aq_inner, aq_parent
 from Products.CMFCore.utils import getToolByName
-from Globals import PersistentMapping, MessageDialog
+from Products.ERP5Type.Globals import PersistentMapping, MessageDialog
 from Products.ERP5Type.Utils import get_request
 from Products.ERP5Type.Message import translateString
 from Products.CMFCore.WorkflowCore import WorkflowException

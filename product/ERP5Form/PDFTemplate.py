@@ -36,7 +36,7 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.ERP5Type import PropertySheet
 
 from urllib import quote
-from Globals import InitializeClass, PersistentMapping, DTMLFile, get_request
+from Products.ERP5Type.Globals import InitializeClass, PersistentMapping, DTMLFile, get_request
 from AccessControl import Unauthorized, getSecurityManager, ClassSecurityInfo
 import urllib2
 from ZODB.POSException import ConflictError

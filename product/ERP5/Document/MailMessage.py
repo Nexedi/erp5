@@ -27,7 +27,7 @@
 #
 ##############################################################################
 
-from Globals import InitializeClass
+from Products.ERP5Type.Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 
 from Products.CMFMailIn.MailMessage import MailMessage as CMFMailInMessage
@@ -40,7 +40,7 @@ from zLOG import LOG
 
 _MARKER = []
 
-class MailMessage(Event, CMFMailInMessage):
+class MailMessage(Event):
   """
   LEGACY
 

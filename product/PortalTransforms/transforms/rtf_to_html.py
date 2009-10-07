@@ -6,10 +6,11 @@ from Products.PortalTransforms.interfaces import itransform
 from Products.PortalTransforms.libtransforms.utils import bin_search, sansext
 from Products.PortalTransforms.libtransforms.commandtransform import commandtransform
 from Products.CMFDefault.utils import bodyfinder
+from zope.interface import implements
 import os
 
 class rtf_to_html(commandtransform):
-    __implements__ = itransform
+    implements(itransform)
 
     __name__ = "rtf_to_html"
     inputs   = ('application/rtf',)

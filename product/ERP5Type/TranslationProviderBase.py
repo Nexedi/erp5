@@ -12,7 +12,7 @@
 #
 ##############################################################################
 
-from Globals import InitializeClass
+from Products.ERP5Type.Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 from Products.CMFCore.Expression import Expression
 from Products.ERP5Type import _dtmldir

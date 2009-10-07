@@ -32,7 +32,7 @@ from ZPublisher.HTTPRequest import FileUpload
 from xml.dom.ext.reader import PyExpat
 from xml.dom import Node, minidom
 from AccessControl import ClassSecurityInfo
-from Globals import InitializeClass, get_request
+from Products.ERP5Type.Globals import InitializeClass, get_request
 from zipfile import ZipFile, ZIP_DEFLATED
 from StringIO import StringIO
 from zLOG import LOG, TRACE, WARNING, ERROR, INFO

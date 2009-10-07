@@ -31,7 +31,7 @@
 from SearchKey import SearchKey
 from Products.ZSQLCatalog.SearchText import parse
 from Products.ZSQLCatalog.interfaces.search_key import ISearchKey
-from Interface.Verify import verifyClass
+from zope.interface.verify import verifyClass
 
 class DefaultKey(SearchKey):
   """

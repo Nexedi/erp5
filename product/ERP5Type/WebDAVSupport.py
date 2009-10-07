@@ -17,7 +17,13 @@ import transaction
 from Acquisition import aq_parent, aq_inner, aq_base
 from AccessControl import ClassSecurityInfo, ModuleSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, Constraint
-from Products.CMFCore.PortalContent import NoWL, ResourceLockedError
+from Products.CMFCore.PortalContent import ResourceLockedError
+try:
+    from Products.CMFCore.PortalContent import NoWL
+except ImportError:
+    # NoWL has been 0 for a long time now
+    NoWL = 0
+    
 from Products.CMFCore.utils import getToolByName
 from Products.CMFDefault.utils import parseHeadersBody
 from Products.CMFDefault.utils import html_headcheck

@@ -15,7 +15,7 @@
 """ Classes: ERP5User, ERP5UserFactory
 """
 
-from Globals import InitializeClass
+from Products.ERP5Type.Globals import InitializeClass
 from Acquisition import aq_inner, aq_parent
 from AccessControl import ClassSecurityInfo
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile

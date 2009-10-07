@@ -29,7 +29,7 @@
 
 import fnmatch, imp, os, re, shutil, sys
 from Shared.DC.ZRDB.Connection import Connection as RDBConnection
-from Globals import Persistent, PersistentMapping
+from Products.ERP5Type.Globals import Persistent, PersistentMapping
 from Acquisition import Implicit, aq_base
 from AccessControl import ClassSecurityInfo
 from Products.CMFCore.utils import getToolByName

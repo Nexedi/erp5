@@ -1,4 +1,4 @@
-from Globals import DTMLFile
+from App.special_dtml import DTMLFile
 from HelpSys import HelpTopic
 
 class FieldHelpTopic(HelpTopic.HelpTopic):

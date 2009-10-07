@@ -26,7 +26,7 @@
 #
 ##############################################################################
 
-from Globals import InitializeClass, PersistentMapping
+from Products.ERP5Type.Globals import InitializeClass, PersistentMapping
 from Acquisition import aq_base, aq_parent, aq_inner, aq_acquire
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions

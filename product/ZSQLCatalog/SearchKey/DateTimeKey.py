@@ -35,7 +35,7 @@ from Products.ZSQLCatalog.Query.ComplexQuery import ComplexQuery
 from zLOG import LOG
 from DateTime.DateTime import DateTime, DateTimeError, _cache
 from Products.ZSQLCatalog.interfaces.search_key import ISearchKey
-from Interface.Verify import verifyClass
+from zope.interface.verify import verifyClass
 from Products.ZSQLCatalog.SQLCatalog import profiler_decorator
 from Products.ZSQLCatalog.SearchText import parse
 

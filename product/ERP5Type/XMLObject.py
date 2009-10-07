@@ -27,7 +27,7 @@
 ##############################################################################
 
 
-from Globals import InitializeClass
+from Products.ERP5Type.Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import _dtmldir
 from Products.ERP5Type import PropertySheet, Permissions

@@ -29,7 +29,7 @@
 from urllib import quote
 from Acquisition import Implicit, aq_base
 from AccessControl import ClassSecurityInfo
-from Globals import InitializeClass
+from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type import Permissions
 from App.config import getConfiguration
 import os

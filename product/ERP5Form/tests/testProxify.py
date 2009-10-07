@@ -40,7 +40,7 @@ def get_request():
   return request
 
 # apply patch (before it's imported by other modules)
-import Globals
+from Products.ERP5Type import Globals
 Globals.get_request = get_request
 
 from Products.Formulator.TALESField import TALESMethod

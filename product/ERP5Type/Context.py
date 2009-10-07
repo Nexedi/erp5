@@ -28,7 +28,7 @@
 
 
 from Acquisition import aq_base
-from Globals import InitializeClass
+from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type.Base import TempBase
 
 from zLOG import LOG

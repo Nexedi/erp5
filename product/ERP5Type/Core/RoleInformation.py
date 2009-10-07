@@ -31,7 +31,7 @@
 import zope.interface
 from AccessControl import ClassSecurityInfo
 from Acquisition import aq_base
-from Globals import InitializeClass
+from Products.ERP5Type.Globals import InitializeClass
 from OFS.SimpleItem import SimpleItem
 
 from Products.CMFCore.utils import getToolByName

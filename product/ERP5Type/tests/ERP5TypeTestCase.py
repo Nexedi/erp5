@@ -10,7 +10,7 @@ __version__ = '0.3.0'
 # XXX make sure that get_request works.
 current_app = None
 import Products.ERP5Type.Utils
-import Globals
+from Products.ERP5Type import Globals
 
 # store a copy of the original method
 original_get_request = Globals.get_request
@@ -116,7 +116,6 @@ ZopeTestCase.installProduct('CMFCalendar', quiet=install_product_quiet)
 ZopeTestCase.installProduct('CMFPhoto', quiet=install_product_quiet)
 ZopeTestCase.installProduct('BTreeFolder2', quiet=install_product_quiet)
 ZopeTestCase.installProduct('CMFReportTool', quiet=install_product_quiet) # Not required by ERP5Type but required by ERP5Form
-ZopeTestCase.installProduct('CMFMailIn', quiet=install_product_quiet)
 ZopeTestCase.installProduct('TranslationService', quiet=install_product_quiet)
 ZopeTestCase.installProduct('PortalTransforms', quiet=install_product_quiet)
 ZopeTestCase.installProduct('MimetypesRegistry', quiet=install_product_quiet)

@@ -8,7 +8,8 @@ import os
 
 from AccessControl import ClassSecurityInfo
 from AccessControl import getSecurityManager
-from Globals import InitializeClass, package_home
+from App.class_init import default__class_init__ as InitializeClass
+from App.Common import package_home
 from Products.PageTemplates.ZopePageTemplate import ZopePageTemplate, SUPPORTS_WEBDAV_LOCKS
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 

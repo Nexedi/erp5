@@ -39,10 +39,7 @@ from AccessControl.SecurityManagement import getSecurityManager
 from zLOG import LOG
 from Products.ERP5Type.Cache import clearCache
 from Products.PluggableAuthService import PluggableAuthService
-try:
-  from Interface.Verify import verifyClass
-except ImportError:
-  from zope.interface.verify import verifyClass
+from zope.interface.verify import verifyClass
 from DateTime import DateTime
 
 class TestUserManagement(ERP5TypeTestCase):

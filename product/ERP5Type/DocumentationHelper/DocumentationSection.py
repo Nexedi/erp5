@@ -28,7 +28,7 @@
 
 from Acquisition import Implicit
 from AccessControl import ClassSecurityInfo
-from Globals import InitializeClass
+from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type import Permissions
 from Products.PythonScripts.Utility import allow_class
 

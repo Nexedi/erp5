@@ -34,7 +34,7 @@ from Products.CMFCore.utils import getToolByName
 
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
-from Globals import get_request
+from Products.ERP5Type.Globals import get_request
 from Products.PythonScripts.Utility import allow_class
 
 from Products.PythonScripts.standard import url_quote_plus
