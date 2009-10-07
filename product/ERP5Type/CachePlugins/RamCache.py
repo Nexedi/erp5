@@ -62,7 +62,7 @@ class RamCache(BaseCache):
   def __init__(self, params={}):
     self._cache_dict = {}
     BaseCache.__init__(self)
- 
+
   def initCacheStorage(self):
     """ Init cache storage """
     ## cache storage is a RAM based dictionary
@@ -92,7 +92,7 @@ class RamCache(BaseCache):
     if forceCheck or (now > self._next_cache_expire_check_at):
       ## time to check for expired cache items
       self._next_cache_expire_check_at = now + self.cache_expire_check_interval
-      cache = self.getCacheStorage()        
+      cache = self.getCacheStorage()
       for key, value in cache.items():
         if value.isExpired():
           try:
