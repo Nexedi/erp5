@@ -2136,20 +2136,11 @@ msgstr "Convention collective"
 msgid "Collective agreement"
 msgstr "Convention collective"
 
-msgid "Color Count"
-msgstr "Nombre de couleurs"
-
-msgid "Color Range"
-msgstr "Coloris"
-
-msgid "Color Reference"
-msgstr "Réf coloris"
-
-msgid "Color count"
-msgstr "Nb de coloris"
-
 msgid "Colour"
 msgstr "Couleur"
+
+msgid "Colour Count"
+msgstr "Nombre de couleurs"
 
 msgid "Colour List"
 msgstr "Couleur"
