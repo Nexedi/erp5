@@ -31,7 +31,6 @@ import transaction
 from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from AccessControl.SecurityManagement import newSecurityManager
-from Products.CMFCore.utils import getToolByName
 from zLOG import LOG
 from Products.ERP5Type.tests.Sequence import SequenceList
 from DateTime import DateTime
@@ -75,22 +74,21 @@ class TestResource(ERP5TypeTestCase):
     newSecurityManager(None, user)
 
   def setUpPreferences(self):
-    portal = self.getPortal()
-    preferences = getToolByName(portal,'portal_preferences')
+    #create apparel variation preferences
+    portal_preferences = self.getPreferenceTool()
+    preference = getattr(portal_preferences, 'test_site_preference', None)
+    if preference is None:
+      preference = portal_preferences.newContent(portal_type='System Preference',
+                                title='Default Site Preference',
+                                id='test_site_preference')
+      if preference.getPreferenceState() == 'disabled':
+        preference.enable()
 
-    system_preference = preferences.newContent(
-      portal_type = 'System Preference'
-    )
-
-    system_preference.edit(
-      preferred_apparel_model_variation_base_category_list = ('colour', 'size', 'morphology', 'industrial_phase',),
-      preferred_apparel_cloth_variation_base_category_list = ('size',),
-      preferred_apparel_component_variation_base_category_list = ('variation',),
-      preferred_apparel_colour_variation_base_category_list = ('colour',),
-      priority = 1,
-    )
-
-    system_preference.enable()
+    preference.setPreferredApparelModelVariationBaseCategoryList(('colour', 'size', 'morphology', 'industrial_phase',))
+    preference.setPreferredApparelClothVariationBaseCategoryList(('size',))
+    preference.setPreferredApparelComponentVariationBaseCategoryList(('variation',))
+    if preference.getPreferenceState() == 'disabled':
+      preference.enable()
     transaction.commit()
     self.tic()
 
