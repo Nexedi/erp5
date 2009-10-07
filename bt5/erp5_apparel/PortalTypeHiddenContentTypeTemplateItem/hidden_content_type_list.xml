@@ -20,6 +20,9 @@
   <item>Mapped Value</item>
   <item>Supply Line</item>
  </portal_type>
+ <portal_type id="Apparel Size">
+  <item>Mapped Value</item>
+ </portal_type>
  <portal_type id="Apparel Transformation Transformed Resource">
   <item>Mapped Value</item>
  </portal_type>
