@@ -109,7 +109,15 @@ class RamCache(BaseCache):
 
   def has_key(self, cache_id, scope):
     cache = self.getCacheStorage()
-    return cache.has_key((scope, cache_id))
+    cache_entry = cache.get((scope, cache_id))
+    to_return = False
+    if isinstance(cache_entry, CacheEntry):
+      if cache_entry.isExpired():
+        #Delete expired CacheEntry
+        self.delete(cache_id, scope)
+      else:
+        to_return = True
+    return to_return
 
   def getScopeList(self):
     scope_set = set()
