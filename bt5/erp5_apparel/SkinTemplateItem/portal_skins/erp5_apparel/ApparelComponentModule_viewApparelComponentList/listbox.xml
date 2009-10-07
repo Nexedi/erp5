@@ -319,11 +319,11 @@
                           <string>Description</string>
                         </tuple>
                         <tuple>
-                          <string>source_title</string>
+                          <string>purchase_supply_line_source_title</string>
                           <string>Supplier</string>
                         </tuple>
                         <tuple>
-                          <string>source_reference</string>
+                          <string>purchase_supply_line_source_reference</string>
                           <string>Supplier Reference</string>
                         </tuple>
                         <tuple>
@@ -396,11 +396,11 @@
                           <string>Description</string>
                         </tuple>
                         <tuple>
-                          <string>source_title</string>
+                          <string>purchase_supply_line_source_title</string>
                           <string>Supplier</string>
                         </tuple>
                         <tuple>
-                          <string>source_reference</string>
+                          <string>purchase_supply_line_source_reference</string>
                           <string>Supplier Reference</string>
                         </tuple>
                         <tuple>
@@ -585,11 +585,11 @@
                           <string>Description</string>
                         </tuple>
                         <tuple>
-                          <string>source_title</string>
+                          <string>purchase_supply_line_source_title</string>
                           <string>Supplier</string>
                         </tuple>
                         <tuple>
-                          <string>source_reference</string>
+                          <string>purchase_supply_line_source_reference</string>
                           <string>Supplier Reference</string>
                         </tuple>
                         <tuple>
@@ -635,11 +635,11 @@
                           <string>Description</string>
                         </tuple>
                         <tuple>
-                          <string>source_title</string>
+                          <string>purchase_supply_line_source_title</string>
                           <string>Supplier</string>
                         </tuple>
                         <tuple>
-                          <string>source_reference</string>
+                          <string>purchase_supply_line_source_reference</string>
                           <string>Supplier Reference</string>
                         </tuple>
                         <tuple>

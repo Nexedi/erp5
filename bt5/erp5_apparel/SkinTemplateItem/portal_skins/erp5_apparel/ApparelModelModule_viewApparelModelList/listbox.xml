@@ -327,11 +327,11 @@
                           <string>Apparel Colour Range</string>
                         </tuple>
                         <tuple>
-                          <string>destination_title</string>
+                          <string>sale_supply_line_destination_title</string>
                           <string>Customer</string>
                         </tuple>
                         <tuple>
-                          <string>destination_reference</string>
+                          <string>sale_supply_line_destination_reference</string>
                           <string>Customer Reference</string>
                         </tuple>
                         <tuple>
@@ -396,11 +396,11 @@
                           <string>Apparel Colour Range</string>
                         </tuple>
                         <tuple>
-                          <string>destination_title</string>
+                          <string>sale_supply_line_destination_title</string>
                           <string>Customer</string>
                         </tuple>
                         <tuple>
-                          <string>destination_reference</string>
+                          <string>sale_supply_line_destination_reference</string>
                           <string>Customer Reference</string>
                         </tuple>
                         <tuple>
@@ -581,11 +581,11 @@
                           <string>Description</string>
                         </tuple>
                         <tuple>
-                          <string>destination_title</string>
+                          <string>sale_supply_line_destination_title</string>
                           <string>Customer</string>
                         </tuple>
                         <tuple>
-                          <string>destination_reference</string>
+                          <string>sale_supply_line_destination_reference</string>
                           <string>Customer Reference</string>
                         </tuple>
                         <tuple>
@@ -635,11 +635,11 @@
                           <string>Description</string>
                         </tuple>
                         <tuple>
-                          <string>destination_title</string>
+                          <string>sale_supply_line_destination_title</string>
                           <string>Customer</string>
                         </tuple>
                         <tuple>
-                          <string>destination_reference</string>
+                          <string>sale_supply_line_destination_reference</string>
                           <string>Customer Reference</string>
                         </tuple>
                         <tuple>

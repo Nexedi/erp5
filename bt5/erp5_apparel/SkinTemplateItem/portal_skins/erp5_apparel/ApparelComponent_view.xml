@@ -84,8 +84,6 @@
                     <value>
                       <list>
                         <string>my_title</string>
-                        <string>my_source_title</string>
-                        <string>my_source_reference</string>
                         <string>my_resource</string>
                         <string>my_trade_description</string>
                         <string>my_base_weight</string>
