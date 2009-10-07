@@ -319,7 +319,7 @@
                           <string>Description</string>
                         </tuple>
                         <tuple>
-                          <string>source_title</string>
+                          <string>purchase_supply_line_source_title</string>
                           <string>Supplier</string>
                         </tuple>
                         <tuple>
@@ -400,7 +400,7 @@
                           <string>Description</string>
                         </tuple>
                         <tuple>
-                          <string>source_title</string>
+                          <string>purchase_supply_line_source_title</string>
                           <string>Supplier</string>
                         </tuple>
                         <tuple>
@@ -601,7 +601,7 @@
                           <string>Description</string>
                         </tuple>
                         <tuple>
-                          <string>source_title</string>
+                          <string>purchase_supply_line_source_title</string>
                           <string>Supplier</string>
                         </tuple>
                         <tuple>
@@ -659,7 +659,7 @@
                           <string>Description</string>
                         </tuple>
                         <tuple>
-                          <string>source_title</string>
+                          <string>purchase_supply_line_source_title</string>
                           <string>Supplier</string>
                         </tuple>
                         <tuple>
