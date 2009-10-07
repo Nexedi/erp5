@@ -57,10 +57,10 @@ class RamCache(BaseCache):
         interfaces.ICachePlugin
     )
 
-  _cache_dict = {}
   cache_expire_check_interval = 300
 
   def __init__(self, params={}):
+    self._cache_dict = {}
     BaseCache.__init__(self)
  
   def initCacheStorage(self):
