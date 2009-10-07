@@ -67,6 +67,26 @@ class TestOrderMixin:
     user = uf.getUserById('rc').__of__(uf)
     newSecurityManager(None, user)
 
+  def setUpPreferences(self):
+    portal = self.getPortal()
+    preferences = getToolByName(portal,'portal_preferences')
+
+    system_preference = preferences.newContent(
+      portal_type = 'System Preference'
+    )
+
+    system_preference.edit(
+      preferred_apparel_model_variation_base_category_list = ('colour', 'size', 'morphology', 'industrial_phase',),
+      preferred_apparel_cloth_variation_base_category_list = ('size',),
+      preferred_apparel_component_variation_base_category_list = ('variation',),
+      preferred_apparel_colour_variation_base_category_list = ('colour',),
+      priority = 1,
+    )
+
+    system_preference.enable()
+    transaction.commit()
+    self.tic()
+
   def afterSetUp(self, quiet=1, run=1):
     self.login()
     portal = self.getPortal()
@@ -75,6 +95,7 @@ class TestOrderMixin:
     #portal_catalog.manage_catalogClear()
     self.createCategories()
     self.validateRules()
+    self.setUpPreferences()
 
   def createCurrency(self):
     currency_module = self.getPortal().currency_module

@@ -76,6 +76,26 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
     """
     return ('erp5_base', 'erp5_pdm', 'erp5_trade', 'erp5_apparel')
 
+    def setUpPreferences(self):
+    portal = self.getPortal()
+    preferences = getToolByName(portal,'portal_preferences')
+
+    system_preference = preferences.newContent(
+      portal_type = 'System Preference'
+    )
+
+    system_preference.edit(
+      preferred_apparel_model_variation_base_category_list = ('colour', 'size', 'morphology', 'industrial_phase',),
+      preferred_apparel_cloth_variation_base_category_list = ('size',),
+      preferred_apparel_component_variation_base_category_list = ('variation',),
+      preferred_apparel_colour_variation_base_category_list = ('colour',),
+      priority = 1,
+    )
+
+    system_preference.enable()
+    transaction.commit()
+    self.tic()
+
   def afterSetUp(self, quiet=1, run=run_all_test):
     self.login()
     self.category_tool = self.getCategoryTool()
@@ -88,6 +108,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
     from Products.ERP5Type.Document.PackingList import PackingList
     PackingList.isPacked = isPacked
     self.createCurrency()
+    self.setUpPreferences()
 
   def createCategory(self, parent, id_list):
       last_category = None
