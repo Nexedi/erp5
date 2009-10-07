@@ -514,7 +514,7 @@
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>
-                    <value> <string>apparel_transformation_module_apparel_transformation_selection</string> </value>
+                    <value> <string>apparel_transformation_module_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>sort</string> </key>

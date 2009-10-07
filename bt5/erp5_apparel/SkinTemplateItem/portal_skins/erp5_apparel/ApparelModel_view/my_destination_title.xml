@@ -372,7 +372,12 @@
                 <item>
                     <key> <string>proxy_listbox_ids</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>OrganisationModule_viewOrganisationList/listbox</string>
+                          <string>Organisation</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>

@@ -315,8 +315,56 @@
                           <string>Title</string>
                         </tuple>
                         <tuple>
-                          <string>default_source_title</string>
+                          <string>description</string>
+                          <string>Description</string>
+                        </tuple>
+                        <tuple>
+                          <string>source_title</string>
                           <string>Supplier</string>
+                        </tuple>
+                        <tuple>
+                          <string>quality_reference</string>
+                          <string>Quality Reference</string>
+                        </tuple>
+                        <tuple>
+                          <string>drawing_reference</string>
+                          <string>Drawing Reference</string>
+                        </tuple>
+                        <tuple>
+                          <string>apparel_fabric_template_title</string>
+                          <string>Apparel Fabric Template</string>
+                        </tuple>
+                        <tuple>
+                          <string>resource</string>
+                          <string>Resource</string>
+                        </tuple>
+                        <tuple>
+                          <string>visual_pattern</string>
+                          <string>Motive</string>
+                        </tuple>
+                        <tuple>
+                          <string>colour_count</string>
+                          <string>Colour Count</string>
+                        </tuple>
+                        <tuple>
+                          <string>raw_width</string>
+                          <string>Raw Width (cm)</string>
+                        </tuple>
+                        <tuple>
+                          <string>net_width</string>
+                          <string>Net Width (cm)</string>
+                        </tuple>
+                        <tuple>
+                          <string>base_weight</string>
+                          <string>Weight (g/m2)</string>
+                        </tuple>
+                        <tuple>
+                          <string>composition_title</string>
+                          <string>Composition</string>
+                        </tuple>
+                        <tuple>
+                          <string>collection_title_list</string>
+                          <string>Collection</string>
                         </tuple>
                         <tuple>
                           <string>translated_validation_state_title</string>
@@ -348,8 +396,44 @@
                           <string>Title</string>
                         </tuple>
                         <tuple>
-                          <string>default_source_title</string>
+                          <string>description</string>
+                          <string>Description</string>
+                        </tuple>
+                        <tuple>
+                          <string>source_title</string>
                           <string>Supplier</string>
+                        </tuple>
+                        <tuple>
+                          <string>quality_reference</string>
+                          <string>Quality Reference</string>
+                        </tuple>
+                        <tuple>
+                          <string>drawing_reference</string>
+                          <string>Drawing Reference</string>
+                        </tuple>
+                        <tuple>
+                          <string>resource</string>
+                          <string>Resource</string>
+                        </tuple>
+                        <tuple>
+                          <string>visual_pattern</string>
+                          <string>Motive</string>
+                        </tuple>
+                        <tuple>
+                          <string>colour_count</string>
+                          <string>Colour Count</string>
+                        </tuple>
+                        <tuple>
+                          <string>raw_width</string>
+                          <string>Raw Width (cm)</string>
+                        </tuple>
+                        <tuple>
+                          <string>net_width</string>
+                          <string>Net Width (cm)</string>
+                        </tuple>
+                        <tuple>
+                          <string>base_weight</string>
+                          <string>Weight (g/m2)</string>
                         </tuple>
                         <tuple>
                           <string>translated_validation_state_title</string>
@@ -489,41 +573,12 @@
                 <item>
                     <key> <string>report_root_list</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>apparel_fabric_category</string>
-                          <string>Fabric category</string>
-                        </tuple>
-                        <tuple>
-                          <string>visual_pattern</string>
-                          <string>Motive</string>
-                        </tuple>
-                        <tuple>
-                          <string>collection</string>
-                          <string>Collection</string>
-                        </tuple>
-                        <tuple>
-                          <string>segment</string>
-                          <string>Eip</string>
-                        </tuple>
-                        <tuple>
-                          <string>composition</string>
-                          <string>Composition</string>
-                        </tuple>
-                        <tuple>
-                          <string>cleaning_code</string>
-                          <string>Upkeep code</string>
-                        </tuple>
-                        <tuple>
-                          <string>apparel_label</string>
-                          <string>Label</string>
-                        </tuple>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
                     <key> <string>report_tree</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>row_css_method</string> </key>
@@ -542,8 +597,28 @@
                           <string>Title</string>
                         </tuple>
                         <tuple>
-                          <string>default_source_title</string>
+                          <string>description</string>
+                          <string>Description</string>
+                        </tuple>
+                        <tuple>
+                          <string>source_title</string>
                           <string>Supplier</string>
+                        </tuple>
+                        <tuple>
+                          <string>quality_reference</string>
+                          <string>Quality Reference</string>
+                        </tuple>
+                        <tuple>
+                          <string>drawing_reference</string>
+                          <string>Drawing Reference</string>
+                        </tuple>
+                        <tuple>
+                          <string>resource</string>
+                          <string>Resource</string>
+                        </tuple>
+                        <tuple>
+                          <string>visual_pattern</string>
+                          <string>Motive</string>
                         </tuple>
                         <tuple>
                           <string>translated_validation_state_title</string>
@@ -558,7 +633,7 @@
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>
-                    <value> <string>apparel_fabric_module_apparel_fabric_selection</string> </value>
+                    <value> <string>apparel_fabric_module_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>sort</string> </key>
@@ -580,8 +655,28 @@
                           <string>Title</string>
                         </tuple>
                         <tuple>
-                          <string>default_source_title</string>
+                          <string>description</string>
+                          <string>Description</string>
+                        </tuple>
+                        <tuple>
+                          <string>source_title</string>
                           <string>Supplier</string>
+                        </tuple>
+                        <tuple>
+                          <string>quality_reference</string>
+                          <string>Quality Reference</string>
+                        </tuple>
+                        <tuple>
+                          <string>drawing_reference</string>
+                          <string>Drawing Reference</string>
+                        </tuple>
+                        <tuple>
+                          <string>resource</string>
+                          <string>Resource</string>
+                        </tuple>
+                        <tuple>
+                          <string>visual_pattern</string>
+                          <string>Motive</string>
                         </tuple>
                         <tuple>
                           <string>translated_validation_state_title</string>

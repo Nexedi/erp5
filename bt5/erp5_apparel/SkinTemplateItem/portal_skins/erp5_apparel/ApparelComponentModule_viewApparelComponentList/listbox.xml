@@ -315,8 +315,52 @@
                           <string>Title</string>
                         </tuple>
                         <tuple>
-                          <string>default_source_title</string>
+                          <string>description</string>
+                          <string>Description</string>
+                        </tuple>
+                        <tuple>
+                          <string>source_title</string>
                           <string>Supplier</string>
+                        </tuple>
+                        <tuple>
+                          <string>source_reference</string>
+                          <string>Supplier Reference</string>
+                        </tuple>
+                        <tuple>
+                          <string>resource</string>
+                          <string>Resource</string>
+                        </tuple>
+                        <tuple>
+                          <string>base_weight</string>
+                          <string>Weight (g)</string>
+                        </tuple>
+                        <tuple>
+                          <string>base_lenght</string>
+                          <string>Lenght (cm)</string>
+                        </tuple>
+                        <tuple>
+                          <string>base_width</string>
+                          <string>Width (cm)</string>
+                        </tuple>
+                        <tuple>
+                          <string>base_height</string>
+                          <string>Height (cm)</string>
+                        </tuple>
+                        <tuple>
+                          <string>lenght_quantity</string>
+                          <string>Lenght Quantity</string>
+                        </tuple>
+                        <tuple>
+                          <string>composition_title</string>
+                          <string>Composition</string>
+                        </tuple>
+                        <tuple>
+                          <string>collection_title_list</string>
+                          <string>Collection</string>
+                        </tuple>
+                        <tuple>
+                          <string>colour_count</string>
+                          <string>Colour Count</string>
                         </tuple>
                         <tuple>
                           <string>translated_validation_state_title</string>
@@ -348,8 +392,44 @@
                           <string>Title</string>
                         </tuple>
                         <tuple>
-                          <string>default_source_title</string>
+                          <string>description</string>
+                          <string>Description</string>
+                        </tuple>
+                        <tuple>
+                          <string>source_title</string>
                           <string>Supplier</string>
+                        </tuple>
+                        <tuple>
+                          <string>source_reference</string>
+                          <string>Supplier Reference</string>
+                        </tuple>
+                        <tuple>
+                          <string>resource</string>
+                          <string>Resource</string>
+                        </tuple>
+                        <tuple>
+                          <string>base_weight</string>
+                          <string>Weight (g)</string>
+                        </tuple>
+                        <tuple>
+                          <string>base_lenght</string>
+                          <string>Lenght (cm)</string>
+                        </tuple>
+                        <tuple>
+                          <string>base_width</string>
+                          <string>Width (cm)</string>
+                        </tuple>
+                        <tuple>
+                          <string>base_height</string>
+                          <string>Height (cm)</string>
+                        </tuple>
+                        <tuple>
+                          <string>lenght_quantity</string>
+                          <string>Lenght Quantity</string>
+                        </tuple>
+                        <tuple>
+                          <string>colour_count</string>
+                          <string>Colour Count</string>
                         </tuple>
                         <tuple>
                           <string>translated_validation_state_title</string>
@@ -477,29 +557,12 @@
                 <item>
                     <key> <string>report_root_list</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>resource</string>
-                          <string>Resource</string>
-                        </tuple>
-                        <tuple>
-                          <string>collection</string>
-                          <string>Collection</string>
-                        </tuple>
-                        <tuple>
-                          <string>composition</string>
-                          <string>Composition</string>
-                        </tuple>
-                        <tuple>
-                          <string>quantity_unit</string>
-                          <string>Quantity unit</string>
-                        </tuple>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
                     <key> <string>report_tree</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>row_css_method</string> </key>
@@ -518,8 +581,20 @@
                           <string>Title</string>
                         </tuple>
                         <tuple>
-                          <string>default_source_title</string>
+                          <string>description</string>
+                          <string>Description</string>
+                        </tuple>
+                        <tuple>
+                          <string>source_title</string>
                           <string>Supplier</string>
+                        </tuple>
+                        <tuple>
+                          <string>source_reference</string>
+                          <string>Supplier Reference</string>
+                        </tuple>
+                        <tuple>
+                          <string>resource</string>
+                          <string>Resource</string>
                         </tuple>
                         <tuple>
                           <string>translated_validation_state_title</string>
@@ -534,7 +609,7 @@
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>
-                    <value> <string>apparel_component_module_apparel_component_selection</string> </value>
+                    <value> <string>apparel_component_module_apparel_component_module_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>sort</string> </key>
@@ -556,8 +631,20 @@
                           <string>Title</string>
                         </tuple>
                         <tuple>
-                          <string>default_source_title</string>
+                          <string>description</string>
+                          <string>Description</string>
+                        </tuple>
+                        <tuple>
+                          <string>source_title</string>
                           <string>Supplier</string>
+                        </tuple>
+                        <tuple>
+                          <string>source_reference</string>
+                          <string>Supplier Reference</string>
+                        </tuple>
+                        <tuple>
+                          <string>resource</string>
+                          <string>Resource</string>
                         </tuple>
                         <tuple>
                           <string>translated_validation_state_title</string>

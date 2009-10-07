@@ -319,12 +319,12 @@
                           <string>Resource</string>
                         </tuple>
                         <tuple>
-                          <string>variation_category_list</string>
-                          <string>Variation</string>
-                        </tuple>
-                        <tuple>
                           <string>net_width</string>
                           <string>Net Width</string>
+                        </tuple>
+                        <tuple>
+                          <string>source_title</string>
+                          <string>Source</string>
                         </tuple>
                         <tuple>
                           <string>quantity</string>
@@ -368,12 +368,12 @@
                           <string>Resource</string>
                         </tuple>
                         <tuple>
-                          <string>variation_category_list</string>
-                          <string>Variation</string>
-                        </tuple>
-                        <tuple>
                           <string>net_width</string>
                           <string>Net Width</string>
+                        </tuple>
+                        <tuple>
+                          <string>source_title</string>
+                          <string>Source</string>
                         </tuple>
                         <tuple>
                           <string>quantity</string>
@@ -510,7 +510,32 @@
                 <item>
                     <key> <string>search_columns</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>title</string>
+                          <string>Title</string>
+                        </tuple>
+                        <tuple>
+                          <string>resource_title</string>
+                          <string>Resource</string>
+                        </tuple>
+                        <tuple>
+                          <string>source_title</string>
+                          <string>Source</string>
+                        </tuple>
+                        <tuple>
+                          <string>quantity</string>
+                          <string>Quantity</string>
+                        </tuple>
+                        <tuple>
+                          <string>quantity_unit</string>
+                          <string>Quantity Unit</string>
+                        </tuple>
+                        <tuple>
+                          <string>translated_validation_state_title</string>
+                          <string>State</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -519,15 +544,15 @@
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>
-                    <value> <string>apparel_fabric_item_selection</string> </value>
+                    <value> <string>apparel_fabric_item_module_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>sort</string> </key>
                     <value>
                       <list>
                         <tuple>
-                          <string>id</string>
-                          <string>id</string>
+                          <string>title</string>
+                          <string>Title</string>
                         </tuple>
                       </list>
                     </value>
@@ -535,7 +560,32 @@
                 <item>
                     <key> <string>sort_columns</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>title</string>
+                          <string>Title</string>
+                        </tuple>
+                        <tuple>
+                          <string>resource_title</string>
+                          <string>Resource</string>
+                        </tuple>
+                        <tuple>
+                          <string>source_title</string>
+                          <string>Source</string>
+                        </tuple>
+                        <tuple>
+                          <string>quantity</string>
+                          <string>Quantity</string>
+                        </tuple>
+                        <tuple>
+                          <string>quantity_unit</string>
+                          <string>Quantity Unit</string>
+                        </tuple>
+                        <tuple>
+                          <string>translated_validation_state_title</string>
+                          <string>State</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>

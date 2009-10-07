@@ -93,7 +93,6 @@
                     <value>
                       <list>
                         <string>my_title</string>
-                        <string>my_source_title</string>
                         <string>my_quality_reference</string>
                         <string>my_drawing_reference</string>
                         <string>my_apparel_fabric_template_title</string>

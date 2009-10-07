@@ -319,6 +319,26 @@
                           <string>Description</string>
                         </tuple>
                         <tuple>
+                          <string>cad_library</string>
+                          <string>CAD Library</string>
+                        </tuple>
+                        <tuple>
+                          <string>apparel_shape_title_list</string>
+                          <string>Apparel Shape</string>
+                        </tuple>
+                        <tuple>
+                          <string>base_size</string>
+                          <string>Base Size</string>
+                        </tuple>
+                        <tuple>
+                          <string>apparel_measurement_title</string>
+                          <string>Apparel Measurement</string>
+                        </tuple>
+                        <tuple>
+                          <string>variation_category_list</string>
+                          <string>Variations</string>
+                        </tuple>
+                        <tuple>
                           <string>translated_validation_state_title</string>
                           <string>State</string>
                         </tuple>
@@ -350,6 +370,14 @@
                         <tuple>
                           <string>description</string>
                           <string>Description</string>
+                        </tuple>
+                        <tuple>
+                          <string>base_size</string>
+                          <string>Base Size</string>
+                        </tuple>
+                        <tuple>
+                          <string>apparel_measurement_title</string>
+                          <string>Apparel Measurement</string>
                         </tuple>
                         <tuple>
                           <string>translated_validation_state_title</string>
@@ -481,21 +509,12 @@
                 <item>
                     <key> <string>report_root_list</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>measure</string>
-                          <string>Measure</string>
-                        </tuple>
-                        <tuple>
-                          <string>size</string>
-                          <string>Size</string>
-                        </tuple>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
                     <key> <string>report_tree</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>reverse</string> </key>
@@ -520,6 +539,14 @@
                         <tuple>
                           <string>description</string>
                           <string>Description</string>
+                        </tuple>
+                        <tuple>
+                          <string>base_size</string>
+                          <string>Base Size</string>
+                        </tuple>
+                        <tuple>
+                          <string>apparel_measurement_title</string>
+                          <string>Apparel Measurement</string>
                         </tuple>
                         <tuple>
                           <string>translated_validation_state_title</string>
@@ -558,6 +585,14 @@
                         <tuple>
                           <string>description</string>
                           <string>Description</string>
+                        </tuple>
+                        <tuple>
+                          <string>base_size</string>
+                          <string>Base Size</string>
+                        </tuple>
+                        <tuple>
+                          <string>apparel_measurement_title</string>
+                          <string>Apparel Measurement</string>
                         </tuple>
                         <tuple>
                           <string>translated_validation_state_title</string>

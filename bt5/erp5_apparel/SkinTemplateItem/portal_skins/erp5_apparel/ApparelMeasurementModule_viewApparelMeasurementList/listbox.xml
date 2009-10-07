@@ -315,7 +315,7 @@
                           <string>Title</string>
                         </tuple>
                         <tuple>
-                          <string>default_destination_title</string>
+                          <string>destination_title</string>
                           <string>Customer</string>
                         </tuple>
                         <tuple>
@@ -352,7 +352,7 @@
                           <string>Title</string>
                         </tuple>
                         <tuple>
-                          <string>default_destination_title</string>
+                          <string>destination_title</string>
                           <string>Customer</string>
                         </tuple>
                         <tuple>
@@ -477,21 +477,12 @@
                 <item>
                     <key> <string>report_root_list</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>measure</string>
-                          <string>Measure</string>
-                        </tuple>
-                        <tuple>
-                          <string>apparel_measure_referential</string>
-                          <string>Measure referential</string>
-                        </tuple>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
                     <key> <string>report_tree</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>row_css_method</string> </key>
@@ -510,7 +501,7 @@
                           <string>Title</string>
                         </tuple>
                         <tuple>
-                          <string>default_destination_title</string>
+                          <string>destination_title</string>
                           <string>Customer</string>
                         </tuple>
                         <tuple>
@@ -530,7 +521,7 @@
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>
-                    <value> <string>apparel_measurement_selection</string> </value>
+                    <value> <string>apparel_measurement_module_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>sort</string> </key>
@@ -552,7 +543,7 @@
                           <string>Title</string>
                         </tuple>
                         <tuple>
-                          <string>default_destination_title</string>
+                          <string>destination_title</string>
                           <string>Customer</string>
                         </tuple>
                         <tuple>

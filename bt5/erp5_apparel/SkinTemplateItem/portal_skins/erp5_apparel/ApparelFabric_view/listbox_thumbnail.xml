@@ -15,6 +15,7 @@
               <list>
                 <string>default</string>
                 <string>enabled</string>
+                <string>image_display</string>
               </list>
             </value>
         </item>
@@ -102,6 +103,10 @@
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string>File_viewFieldLibrary</string> </value>
+                </item>
+                <item>
+                    <key> <string>image_display</string> </key>
+                    <value> <string>micro</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>

@@ -11,7 +11,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>listbox_parent_source_title</string> </value>
+            <value> <string>listbox_collection_title_list</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -242,7 +242,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>listbox_parent_source_title</string> </value>
+                    <value> <string>Collection</string> </value>
                 </item>
                 <item>
                     <key> <string>truncate</string> </key>
@@ -273,7 +273,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: cell.getParentValue().getSourceTitle()</string> </value>
+            <value> <string>python: \', \'.join(cell.getCollectionTitleList([]))</string> </value>
         </item>
       </dictionary>
     </pickle>

@@ -85,6 +85,7 @@
                     <value>
                       <list>
                         <string>listbox_thumbnail</string>
+                        <string>listbox_purchase_supply_line_source_title</string>
                       </list>
                     </value>
                 </item>
@@ -93,7 +94,6 @@
                     <value>
                       <list>
                         <string>my_title</string>
-                        <string>listbox_parent_source_title</string>
                       </list>
                     </value>
                 </item>

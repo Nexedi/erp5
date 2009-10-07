@@ -481,21 +481,12 @@
                 <item>
                     <key> <string>report_root_list</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>measure</string>
-                          <string>Measure</string>
-                        </tuple>
-                        <tuple>
-                          <string>size</string>
-                          <string>Size</string>
-                        </tuple>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
                     <key> <string>report_tree</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>reverse</string> </key>
