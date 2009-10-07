@@ -20,7 +20,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_preferred_apparel_shape_individual_variation_base_category</string> </value>
+            <value> <string>my_preferred_apparel_fabric_individual_variation_base_category_list</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -103,7 +103,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Shape Individual Variation</string> </value>
+                    <value> <string>Fabric Individual Variation</string> </value>
                 </item>
               </dictionary>
             </value>
