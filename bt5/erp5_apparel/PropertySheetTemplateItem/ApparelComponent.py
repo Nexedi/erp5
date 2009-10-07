@@ -33,8 +33,8 @@ class ApparelComponent:
     """
 
     _properties = (
-        {   'id'          : 'color_count', 
-            'description' : 'Number of colors',
+        {   'id'          : 'colour_count',
+            'description' : 'Number of colours',
             'type'        : 'int',
             'mode'        : 'w' },
         # Override default value XXX

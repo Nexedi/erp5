@@ -11,7 +11,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_color_count</string> </value>
+            <value> <string>my_colour_count</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -240,7 +240,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Color Count</string> </value>
+                    <value> <string>Colour Count</string> </value>
                 </item>
                 <item>
                     <key> <string>whitespace_preserve</string> </key>

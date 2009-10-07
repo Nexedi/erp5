@@ -100,7 +100,7 @@
                     <value>
                       <list>
                         <string>my_variation_category_list</string>
-                        <string>my_color_count</string>
+                        <string>my_colour_count</string>
                         <string>my_comment</string>
                         <string>my_translated_validation_state_title</string>
                       </list>

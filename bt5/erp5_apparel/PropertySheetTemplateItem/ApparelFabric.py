@@ -41,8 +41,8 @@ class ApparelFabric:
             'description' : 'The useful width of the fabric',
             'type'        : 'float',
             'mode'        : 'w' },
-        {   'id'          : 'color_count', # XXXX
-            'description' : 'Number of colors',
+        {   'id'          : 'colour_count', # XXXX
+            'description' : 'Number of colours',
             'type'        : 'int',
             'mode'        : 'w' },
         {   'id'          : 'quality_reference',
