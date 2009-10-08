@@ -21,10 +21,34 @@ try:
 except ImportError:
     from Products.CMFCore.PortalFolder import PortalFolder
 
-from Products.CMFCore.PortalFolder import factory_type_information as PortalFolder_FTI
 from Products.CMFCore.utils import getToolByName
 
-_actions = PortalFolder_FTI[0]['actions']
+_actions = ({'action': 'string:${object_url}',
+           'id': 'view',
+           'name': 'View',
+           'permissions': ('View',)},
+          {'action': 'string:${object_url}/folder_edit_form',
+           'id': 'edit',
+           'name': 'Edit',
+           'permissions': ('Manage properties',)},
+          {'action': 'string:${object_url}/folder_localrole_form',
+           'id': 'localroles',
+           'name': 'Local Roles',
+           'permissions': ('Change local roles',)},
+          {'action': 'string:${object_url}/folder_contents',
+           'id': 'folderContents',
+           'name': 'Folder contents',
+           'permissions': ('List folder contents',)},
+          {'action': 'string:${object_url}/folder_factories',
+           'id': 'new',
+           'name': 'New...',
+           'permissions': ('Add portal content',),
+           'visible': 0},
+          {'action': 'string:${object_url}/folder_rename_form',
+           'id': 'rename_items',
+           'name': 'Rename items',
+           'permissions': ('Add portal content',),
+           'visible': 0})
 
 factory_type_information = ( { 'id'             : 'CMF HBTree Folder',
                                'meta_type'      : 'CMF HBTree Folder',
