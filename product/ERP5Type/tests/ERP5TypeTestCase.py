@@ -212,10 +212,6 @@ class ERP5TypeTestCase(PortalTestCase):
     This TestCase setups an ERP5Site and installs business templates.
     """
 
-    def shortDescription(self):
-        doc = self._TestCase__testMethodDoc
-        return doc and str(self) + ', ' + doc.split("\n")[0].strip() or None
-
     def dummy_test(self):
       ZopeTestCase._print('All tests are skipped when --save option is passed '
                           'with --update_business_templates or without --load')
