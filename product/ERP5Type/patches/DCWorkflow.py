@@ -609,13 +609,26 @@ TransitionDefinition.getAvailableScriptIds = getAvailableScriptIds
 try:
     from Products.CMFCore.WorkflowTool import addWorkflowFactory
 except ImportError:
-    import zLOG
-    zLOG.LOG('Products.ERP5Type.patches.DCWorkflow',
-        zLOG.ERROR,
-        'Products.CMFCore.WorkflowTool.addWorkflowFactory has been removed. '
-        'ERP5 Workflow factory not installed',
-        error=sys.exc_info())
-    addWorkflowFactory = lambda factory, id, title: None 
+    def addWorkflowFactory(factory, id, title):
+        """addWorkflowFactory replacement
+        
+        addWorkflowFactory has been removed from CMF 2.x.
+        DCWorkflow, which actually handled the workflows added by this function
+        now consults the GenericSetup tool, at runtime to determine all valid
+        workflows.
+        
+        Instead of providing GenericSetup profiles for our workflows, we
+        install our own Zope2 style factories for the Workflow Tool
+        """ 
+        import zLOG
+        zLOG.LOG('Products.ERP5Type.patches.DCWorkflow.addWorkflowFactory',
+                 zLOG.ERROR,
+                 summary='Workflow Factory not registered',
+                 detail='Products.CMFCore.WorkflowTool.addWorkflowFactory has '
+                 'been removed from CMFCore, and a replacement has not been '
+                 'written yet. ERP5 Workflow factory for '
+                 '%s (%s) not installed.' % (id, title))
+
 from Products.ERP5Type import Permissions
 
 def setupERP5Workflow(wf):
