@@ -83,20 +83,4 @@
  <portal_type id="Apparel Size Module">
   <item>Apparel Size</item>
  </portal_type>
- <portal_type id="Apparel Transformation">
-  <item>Apparel Transformation Operation</item>
-  <item>Apparel Transformation Transformed Resource</item>
- </portal_type>
- <portal_type id="Apparel Transformation Assorted Resource">
-  <item>Mapped Value</item>
- </portal_type>
- <portal_type id="Apparel Transformation Module">
-  <item>Apparel Transformation</item>
- </portal_type>
- <portal_type id="Apparel Transformation Operation">
-  <item>Mapped Value</item>
- </portal_type>
- <portal_type id="Apparel Transformation Transformed Resource">
-  <item>Mapped Value</item>
- </portal_type>
 </allowed_content_type_list>

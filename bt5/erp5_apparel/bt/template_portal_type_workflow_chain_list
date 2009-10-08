@@ -19,5 +19,3 @@ Apparel Model | apparel_model_workflow
 Apparel Shape | apparel_shape_workflow
 Apparel Size | edit_workflow
 Apparel Size | validation_workflow
-Apparel Transformation | edit_workflow
-Apparel Transformation | validation_workflow

@@ -145,29 +145,6 @@ Apparel Size | view
 Apparel Technical Drawing | download
 Apparel Technical Drawing | image_view
 Apparel Technical Drawing | view
-Apparel Transformation Assorted Resource | view
-Apparel Transformation Assorted Resource | view_quantity
-Apparel Transformation Module | csv_export
-Apparel Transformation Module | csv_import
-Apparel Transformation Module | list_ui
-Apparel Transformation Module | search
-Apparel Transformation Module | sort_on
-Apparel Transformation Module | view
-Apparel Transformation Operation | complete_quantity_matrix
-Apparel Transformation Operation | view
-Apparel Transformation Operation | view_quantity
-Apparel Transformation Transformed Resource | complete_quantity_matrix
-Apparel Transformation Transformed Resource | complete_variation_matrix
-Apparel Transformation Transformed Resource | view
-Apparel Transformation Transformed Resource | view_quantity
-Apparel Transformation Transformed Resource | view_variation
-Apparel Transformation | expanded_view
-Apparel Transformation | jump_to_related_apparel_transformation
-Apparel Transformation | update_variation_list
-Apparel Transformation | view
-Apparel Transformation | view_transformation_assorted_component
-Apparel Transformation | view_transformation_component
-Apparel Transformation | view_transformation_operation
 Purchase Packing List Cell | apparel_fabric_item_fast_input
 Purchase Packing List Line | apparel_fabric_item_fast_input
 System Preference | apparel_preference

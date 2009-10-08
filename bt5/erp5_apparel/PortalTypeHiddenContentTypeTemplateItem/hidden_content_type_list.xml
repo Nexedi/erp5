@@ -23,7 +23,4 @@
  <portal_type id="Apparel Size">
   <item>Mapped Value</item>
  </portal_type>
- <portal_type id="Apparel Transformation Transformed Resource">
-  <item>Mapped Value</item>
- </portal_type>
 </hidden_content_type_list>

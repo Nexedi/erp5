@@ -17,7 +17,7 @@
  </chain>
  <chain>
   <type>Apparel Component</type>
-  <workflow>edit_workflow, validation_workflow</workflow>
+  <workflow>validation_workflow, edit_workflow</workflow>
  </chain>
  <chain>
   <type>Apparel Consumption</type>
@@ -33,7 +33,7 @@
  </chain>
  <chain>
   <type>Apparel Measurement</type>
-  <workflow>validation_workflow, edit_workflow</workflow>
+  <workflow>edit_workflow, validation_workflow</workflow>
  </chain>
  <chain>
   <type>Apparel Model</type>
@@ -45,10 +45,6 @@
  </chain>
  <chain>
   <type>Apparel Size</type>
-  <workflow>validation_workflow, edit_workflow</workflow>
- </chain>
- <chain>
-  <type>Apparel Transformation</type>
   <workflow>edit_workflow, validation_workflow</workflow>
  </chain>
 </workflow_chain>
