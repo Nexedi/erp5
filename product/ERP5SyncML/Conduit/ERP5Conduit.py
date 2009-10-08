@@ -189,7 +189,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
             sub_xml = self.getSubObjectXupdate(xml)
             #LOG('addNode', DEBUG, 'sub_xml: %s' % str(sub_xml))
             # Then do the udpate
-            conflict_list += self.addNode(xml=sub_xml,object=sub_object,
+            conflict_list += self.addNode(xml=sub_xml, object=sub_object,
                             previous_xml=sub_previous_xml, force=force,
                             simulate=simulate, reset=reset, **kw)['conflict_list']
     elif (xml.xpath('local-name()') == self.history_tag \
