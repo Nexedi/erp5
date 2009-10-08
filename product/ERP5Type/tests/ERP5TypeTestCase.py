@@ -212,6 +212,10 @@ class ERP5TypeTestCase(PortalTestCase):
     This TestCase setups an ERP5Site and installs business templates.
     """
 
+    def shortDescription(self):
+        doc = self._TestCase__testMethodDoc
+        return doc and str(self) + ', ' + doc.split("\n")[0].strip() or None
+
     def dummy_test(self):
       ZopeTestCase._print('All tests are skipped when --save option is passed '
                           'with --update_business_templates or without --load')
@@ -590,22 +594,39 @@ class ERP5TypeTestCase(PortalTestCase):
         if verbose:
           ZopeTestCase._print(' done (%.3fs)\n' % (time.time() - start))
 
-    def createUser(self, title, reference, password=None, function=None):
+    def createSimpleUser(self, title, reference, function):
       """
-        Create an ERP5 User, and create her an assignment.
+        Helper function to create a Simple ERP5 User.
+        User password is the reference.
+      """
+      user = self.createUser(reference, person_kw=dict(title=title))
+      assignment = self.createUserAssignement(user, assignment_kw=dict(function=function))
+      return user
+
+    def createUser(self, reference, password=None, person_kw=None):
+      """
+        Create an ERP5 User.
         Default password is the reference.
+        person_kw is passed as additional arguments when creating the person
       """
       if password is None:
         password = reference
+      if person_kw is None:
+        person_kw = dict()
+
       person = self.portal.person_module.newContent(portal_type='Person',
-                                                    title=title,
                                                     reference=reference,
                                                     password=password,
-                                                    function=function)                   
-      # and assign her function
-      assignment = person.newContent(portal_type='Assignment',
-                                     function=function)
+                                                    **person_kw)
+      return person
+
+    def createUserAssignement(self, user, assignment_kw):
+      """
+        Create an assignment to user.
+      """
+      assignment = user.newContent(portal_type='Assignment', **assignment_kw)
       assignment.open()
+      return assignment
 
     def failIfDifferentSet(self, a, b, msg=""):
       if not msg:
