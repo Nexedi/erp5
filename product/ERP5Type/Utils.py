@@ -984,11 +984,6 @@ def initializeProduct( context,
   # Aggregate
   content_constructors = list(content_constructors) + list(extra_content_constructors)
 
-  # Begin the initialization steps
-  bases = tuple(content_classes)
-  tools = portal_tools
-  z_bases = utils.initializeBasesPhase1( bases, this_module )
-  z_tool_bases = utils.initializeBasesPhase1( tools, this_module )
 
   # Try to make some standard directories available
   try:
@@ -1000,10 +995,8 @@ def initializeProduct( context,
   except:
     LOG("ERP5Type", BLATHER, "No help directory for %s" % product_name)
 
-  # Finish the initialization
-  utils.initializeBasesPhase2( z_bases, context )
-  utils.initializeBasesPhase2( z_tool_bases, context )
-
+  # Tools initialization
+  tools = portal_tools
   if len(tools) > 0:
     try:
       utils.ToolInit('%s Tool' % product_name,
