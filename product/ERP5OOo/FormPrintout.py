@@ -30,6 +30,7 @@ from Products.CMFCore.utils import _checkPermission
 from Products.ERP5Type import PropertySheet, Permissions
 from Products.ERP5Form.ListBox import ListBox
 from Products.ERP5Form.FormBox import FormBox
+from Products.ERP5Form.ReportBox import ReportBox
 from Products.ERP5Form.ImageField import ImageField
 from Products.ERP5OOo.OOoUtils import OOoBuilder
 from Products.CMFCore.exceptions import AccessControl_Unauthorized
@@ -277,8 +278,12 @@ class ODFStrategy(Implicit):
                                                   extra_context=extra_context,
                                                   ooo_builder=ooo_builder)
     # mapping ERP5Report report method to ODF
+    report_method=extra_context.get('report_method')
+    base_name = (report_method is not None) and report_method.__name__ or None 
     content_element_tree = self._replaceXmlByReportSection(element_tree=content_element_tree,
                                                            extra_context=extra_context,
+                                                           report_method=report_method,
+                                                           base_name=base_name,
                                                            ooo_builder=ooo_builder)
     content_xml = etree.tostring(content_element_tree, encoding='utf-8')
  
@@ -332,6 +337,13 @@ class ODFStrategy(Implicit):
                                             extra_context=extra_context,
                                             ooo_builder=ooo_builder,
                                             iteration_index=iteration_index)
+      elif isinstance(field, ReportBox):
+         report_method = getattr(field, field.report_method, None)
+         element_tree = self._replaceXmlByReportSection(element_tree=element_tree,
+                                                        extra_context=extra_context,
+                                                        report_method=report_method,
+                                                        base_name=field.id,
+                                                        ooo_builder=ooo_builder)
       elif isinstance(field, ImageField):
         element_tree = self._replaceXmlByImageField(element_tree=element_tree,
                                                     image_field=field,
@@ -446,16 +458,15 @@ class ODFStrategy(Implicit):
       parent_node.insert(paragraph_node_index, paragraph)
       paragraph_node_index = paragraph_node_index + 1
       
-  def _replaceXmlByReportSection(self, element_tree=None, extra_context=None, ooo_builder=None):
-    if not extra_context.has_key('report_method') or extra_context['report_method'] is None:
+  def _replaceXmlByReportSection(self, element_tree=None, extra_context=None, 
+                                 report_method=None, base_name=None, 
+                                 ooo_builder=None):
+    if report_method is None:
       return element_tree
-    report_method = extra_context['report_method']
     report_section_list = report_method()
     portal_object = self.getPortalObject()
-    REQUEST = get_request()
-    request = extra_context.get('REQUEST', REQUEST)
 
-    target_tuple = self._pickUpTargetSection(report_method_name=report_method.__name__,
+    target_tuple = self._pickUpTargetSection(base_name=base_name,
                                              report_section_list=report_section_list,
                                              element_tree=element_tree)
     if target_tuple is None:
@@ -475,7 +486,7 @@ class ODFStrategy(Implicit):
       if index is 0:
         office_body.remove(original_target)
       else:
-        self._setUniqueElementName(base_name=report_method.__name__,
+        self._setUniqueElementName(base_name=base_name,
                                    iteration_index=index,
                                    xpath=target_xpath,
                                    element_tree=target_element_tree)
@@ -491,19 +502,17 @@ class ODFStrategy(Implicit):
       report_item.popReport(portal_object, render_prefix=None)
     return element_tree
 
-  def _pickUpTargetSection(self, report_method_name='', report_section_list=[], element_tree=None):
+  def _pickUpTargetSection(self, base_name='', report_section_list=[], element_tree=None):
     """pick up a ODF target object to iterate ReportSection
-
-    report_method_name -- report method name
+    base_name -- the target name to replace in an ODF document
     report_section_list -- ERP5Form ReportSection List which was created by a report method
     element_tree -- XML ElementTree object
     """
-    frame_xpath = '//draw:frame[@draw:name="%s"]' % report_method_name
+    frame_xpath = '//draw:frame[@draw:name="%s"]' % base_name
     frame_list = element_tree.xpath(frame_xpath, namespaces=element_tree.nsmap)
     # <text:section text:style-name="Sect2" text:name="Section2">
-    section_xpath = '//text:section[@text:name="%s"]' % report_method_name
+    section_xpath = '//text:section[@text:name="%s"]' % base_name
     section_list = element_tree.xpath(section_xpath, namespaces=element_tree.nsmap)
-    
     if len(frame_list) is 0 and len(section_list) is 0:
       return None
 
@@ -705,7 +714,6 @@ class ODFStrategy(Implicit):
                                          render_format='list',
                                          REQUEST=REQUEST, 
                                          render_prefix=None)
-    
     # if ODF table has header rows, does not update the header rows
     # if does not have header rows, insert the listbox title line
     is_top = True

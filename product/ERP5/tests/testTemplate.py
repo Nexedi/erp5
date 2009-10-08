@@ -46,7 +46,7 @@ class TestTemplate(ERP5TypeTestCase):
 
   def getBusinessTemplateList(self):
     """Returns list of BT to be installed."""
-    return ('erp5_base', 'erp5_ui_test')
+    return ('erp5_base', 'erp5_knowledge_pad', 'erp5_ui_test')
 
   def login(self, name=None):
     """login with Member & Author roles."""
@@ -63,7 +63,7 @@ class TestTemplate(ERP5TypeTestCase):
     portal_preferences.deleteContent(list(portal_preferences.objectIds()))
     transaction.commit()
     self.tic()
-    self.portal.portal_types['Preference'].allowed_content_types = ('Foo',)
+    self.portal.portal_types['Preference'].allowed_content_types = ('Foo', 'Knowledge Pad')
     self.portal.foo_module.manage_role(role_to_manage='Author',
                                 permissions=[Permissions.AddPortalContent,
                                              Permissions.CopyOrMove,
@@ -287,19 +287,15 @@ class TestTemplate(ERP5TypeTestCase):
 
     self.assertEqual(len(preference.objectIds()), 2)
 
-  def test_TemplateNotIndexable(self):
+  def _testTemplateNotIndexable(self, document):
     # template documents are not indexable
+    self.portal.portal_activities.manage_enableActivityTracking()
+    self.portal.portal_activities.manage_enableActivityTimingLogging()
+    self.portal.portal_activities.manage_enableActivityCreationTrace()
     self.login(self.id())
     preference = self.portal.portal_preferences.newContent(portal_type='Preference')
     preference.priority = Priority.USER
     preference.enable()
-
-    transaction.commit()
-    self.tic()
-
-    document = self.portal.foo_module.newContent(portal_type='Foo')
-    document.edit(title='My Foo 1')
-    document.newContent(portal_type='Foo Line')
 
     transaction.commit()
     self.tic()
@@ -309,8 +305,16 @@ class TestTemplate(ERP5TypeTestCase):
     self.tic()
     self.assertTrue(document.isIndexable)
     self.assertEqual(len(preference.objectIds()), 1)
-    for template in preference.objectValues():
-      self.assertFalse(template.isIndexable)
+    template = preference.objectValues()[0]
+    self.assertFalse(template.isIndexable)
+    
+    # Because they are not indexable, they cannot be found by catalog
+    transaction.commit()
+    self.tic()
+    self.assertEquals(0, len(self.portal.portal_catalog(uid=template.getUid())))
+    template_line = template.objectValues()[0]
+    self.assertEquals(0,
+        len(self.portal.portal_catalog(uid=template_line.getUid())))
 
     # and this is still true if you create two templates from the same document
     # #929
@@ -322,6 +326,22 @@ class TestTemplate(ERP5TypeTestCase):
     self.assertEqual(len(preference.objectIds()), 2)
     for template in preference.objectValues():
       self.assertFalse(template.isIndexable)
+
+  def test_DeliveryTemplateNotIndexable(self):
+    document = self.portal.foo_module.newContent(portal_type='Foo')
+    document.edit(title='My Foo 1')
+    document.newContent(portal_type='Foo Line')
+    transaction.commit()
+    self.tic()
+    self._testTemplateNotIndexable(document)
+
+  def test_NonDeliveryTemplateNotIndexable(self):
+    document = self.portal.knowledge_pad_module.newContent(portal_type='Knowledge Pad')
+    document.edit(title='My Knowledge Pad 1')
+    document.newContent(portal_type='Knowledge Box')
+    transaction.commit()
+    self.tic()
+    self._testTemplateNotIndexable(document)
 
 
 def test_suite():

@@ -26,12 +26,18 @@
 #
 ##############################################################################
 
+import zope.interface
+
 from Products.PythonScripts.Utility import allow_class
+from Products.ERP5Type import interfaces
 
 class ObjectMessage:
   """
   Object Message is used for notifications to user.
   """
+
+  zope.interface.implements( interfaces.IObjectMessage, )
+
   def __init__(self, object_relative_url='', message='', mapping={}, **kw):
     
     self.object_relative_url = object_relative_url

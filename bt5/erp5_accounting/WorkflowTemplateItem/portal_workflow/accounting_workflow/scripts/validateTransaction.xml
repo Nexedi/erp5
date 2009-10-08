@@ -59,7 +59,6 @@
 \n
 XXX why proxy role ???\n
 """\n
-\n
 from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
 from Products.ERP5Type.Message import translateString\n
 \n
@@ -124,26 +123,24 @@ if not skip_period_validation :\n
         no_accounts = False\n
     if no_accounts:\n
       valid_date = True\n
-    transaction_date = transaction.getStartDate().earliestTime()\n
-    openned_accounting_period_list = source_section.searchFolder(\n
-                               portal_type="Accounting Period",\n
-                               # planned is for b/w compatibility\n
-                               simulation_state=(\'planned\', \'started\'))\n
-    if not len(source_section.contentValues(\n
+    else:\n
+      section = transaction.getSourceSectionValue()\n
+      if section is not None and not len(section.contentValues(\n
              filter=dict(portal_type="Accounting Period"))):\n
-      # if the entity doesn\'t have any accounting period, we can\n
-      # consider that they do not want to use accounting periods or\n
-      # we do not account from their side.\n
-      valid_date = True\n
-    for apd in openned_accounting_period_list:\n
-      apd = apd.getObject()\n
-      if apd.getStartDate().earliestTime() <= transaction_date <= \\\n
-                apd.getStopDate().latestTime():\n
-        valid_date = checkAccountingPeriodRecusivly(apd, transaction_date)\n
+        valid_date = True\n
+      else:\n
+        accounting_period = transaction\\\n
+          .AccountingTransaction_getAccountingPeriodForSourceSection()\n
+        transaction_date = transaction.getStartDate().earliestTime()\n
+        valid_date = False\n
+        if accounting_period is not None:\n
+          valid_date = checkAccountingPeriodRecusivly(accounting_period,\n
+                                                      transaction_date)\n
 \n
     if not valid_date:\n
       raise ValidationFailed(translateString("Date is not in a started Accounting Period "\n
                                              "for source section."))\n
+\n
   # do the same for destination section \n
   if destination_section is not None:\n
     # if we don\'t have any accounts on this side, we don\'t enforce date checks\n
@@ -154,18 +151,19 @@ if not skip_period_validation :\n
         no_accounts = False\n
     if no_accounts:\n
       valid_date = True\n
-    transaction_date = transaction.getStopDate().earliestTime()\n
-    openned_accounting_period_list = destination_section.searchFolder(\n
-                               portal_type = "Accounting Period",\n
-                               simulation_state=(\'planned\', \'started\'))\n
-    if not len(destination_section.contentValues(\n
+    else:\n
+      section = transaction.getDestinationSectionValue()\n
+      if section is not None and not len(section.contentValues(\n
              filter=dict(portal_type="Accounting Period"))):\n
-      valid_date = True\n
-    for apd in openned_accounting_period_list:\n
-      apd = apd.getObject()\n
-      if apd.getStartDate().earliestTime() <= transaction_date <= \\\n
-                  apd.getStopDate().latestTime():\n
-        valid_date = checkAccountingPeriodRecusivly(apd, transaction_date)\n
+        valid_date = True\n
+      else:\n
+        accounting_period = transaction\\\n
+          .AccountingTransaction_getAccountingPeriodForDestinationSection()\n
+        transaction_date = transaction.getStopDate().earliestTime()\n
+        valid_date = False\n
+        if accounting_period is not None:\n
+          valid_date = checkAccountingPeriodRecusivly(accounting_period,\n
+                                                      transaction_date)\n
 \n
     if not valid_date:\n
       raise ValidationFailed(translateString("Date is not in a started Accounting Period "\n
@@ -247,11 +245,11 @@ if not skip_period_validation :\n
                             <string>no_accounts</string>
                             <string>_getiter_</string>
                             <string>line</string>
-                            <string>transaction_date</string>
-                            <string>openned_accounting_period_list</string>
+                            <string>section</string>
                             <string>len</string>
                             <string>dict</string>
-                            <string>apd</string>
+                            <string>accounting_period</string>
+                            <string>transaction_date</string>
                           </tuple>
                         </value>
                     </item>

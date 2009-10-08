@@ -120,6 +120,10 @@
                           <string>simulation_state</string>
                           <string>State</string>
                         </tuple>
+                        <tuple>
+                          <string>item_quantity</string>
+                          <string>Quantity</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>
@@ -134,6 +138,10 @@
                         <tuple>
                           <string>variation_category_item_list</string>
                           <string>Variation</string>
+                        </tuple>
+                        <tuple>
+                          <string>item_quantity</string>
+                          <string>Quantity</string>
                         </tuple>
                       </list>
                     </value>

@@ -13,12 +13,12 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
                 <string>columns</string>
-                <string>list_method</string>
-                <string>selection_name</string>
-                <string>select</string>
                 <string>editable_columns</string>
+                <string>list_method</string>
+                <string>select</string>
+                <string>selection_name</string>
+                <string>title</string>
                 <string>url_columns</string>
               </list>
             </value>

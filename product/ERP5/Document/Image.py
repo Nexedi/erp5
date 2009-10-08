@@ -206,18 +206,14 @@ class Image(File, OFSImage):
     image_size = self.getSizeFromImageDisplay(display)
     if (display is not None or resolution is not None or quality!=75 or format != ''\
                             or frame is not None) and image_size:
+      kw = dict(display=display, format=format, quality=quality,
+                resolution=resolution, frame=frame, image_size=image_size)
       try:
-        mime, image = self.getConversion(display=display, format=format,
-                                           quality=quality, resolution=resolution,
-                                           frame=frame, image_size=image_size)
+        mime, image = self.getConversion(**kw)
       except KeyError:
         # Generate photo on-the-fly
-        mime, image = self._makeDisplayPhoto(display, format=format, quality=quality,
-                                             resolution=resolution, frame=frame,
-                                             image_size=image_size)
-        self.setConversion(image, mime, display=display, format=format,
-                           quality=quality, resolution=resolution,
-                           frame=frame, image_size=image_size)
+        mime, image = self._makeDisplayPhoto(**kw)
+        self.setConversion(image, mime, **kw)
       width, height = (image.width, image.height)
       # Set cookie for chosen size
       if cookie:
@@ -347,17 +343,13 @@ class Image(File, OFSImage):
     image_size = self.getSizeFromImageDisplay(display)
     if (display is not None or resolution is not None or quality != 75 or format != ''\
                             or frame is not None) and image_size:
+      kw = dict(display=display, format=format, quality=quality,
+                resolution=resolution, frame=frame, image_size=image_size)
       try:
-        return self.getConversion(display=display, format=format,
-                                  quality=quality, resolution=resolution,
-                                  frame=frame, image_size=image_size)
+        return self.getConversion(**kw)
       except KeyError:
-        mime, image = self._makeDisplayPhoto(display, format=format, quality=quality,
-                                             resolution=resolution, frame=frame,
-                                             image_size=image_size)
-        self.setConversion(image.data, mime, format=format, quality=quality,
-                           resolution=resolution, frame=frame,
-                           image_size=image_size)
+        mime, image = self._makeDisplayPhoto(**kw)
+        self.setConversion(image.data, mime, **kw)
         return mime, image.data
     return self.getContentType(), self.getData()
 
@@ -379,25 +371,20 @@ class Image(File, OFSImage):
     """Return the image data."""
     self._upradeImage()
 
-    _setCacheHeaders(_ViewEmulator().__of__(self), dict(display=display,
-        format=format, quality=quality, resolution=resolution, frame=frame))
-
     # display may be set from a cookie (?)
     image_size = self.getSizeFromImageDisplay(display)
+    kw = dict(display=display, format=format, quality=quality,
+              resolution=resolution, frame=frame, image_size=image_size)
+    _setCacheHeaders(_ViewEmulator().__of__(self), kw)
+
     if (display is not None or resolution is not None or quality != 75 or format != ''\
                             or frame is not None) and image_size:
       try:
-        mime, image = self.getConversion(display=display, format=format,
-                                         quality=quality, resolution=resolution,
-                                         frame=frame, image_size=image_size)
+        mime, image = self.getConversion(**kw)
       except KeyError:
         # Generate photo on-the-fly
-        mime, image = self._makeDisplayPhoto(display, format=format, quality=quality,
-                                             resolution=resolution, frame=frame,
-                                             image_size=image_size)
-        self.setConversion(image, mime, format=format, quality=quality,
-                           resolution=resolution, frame=frame,
-                           image_size=image_size)
+        mime, image = self._makeDisplayPhoto(**kw)
+        self.setConversion(image, mime, **kw)
       RESPONSE.setHeader('Content-Type', mime)
       return image.index_html(REQUEST, RESPONSE)
 
@@ -420,7 +407,7 @@ class Image(File, OFSImage):
       parameter_list.extend(['-density', '%sx%s' % (resolution, resolution)])
     parameter_list.extend(['-quality', str(quality)])
     parameter_list.extend(['-geometry', '%sx%s' % (width, height)])
-    if frame:
+    if frame is not None:
       parameter_list.append('-[%s]' % frame)
     else:
       parameter_list.append('-')

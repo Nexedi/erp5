@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright (c) 2002, 2004 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2002, 2004, 2009 Nexedi SA and Contributors. All Rights Reserved.
 #          Jean-Paul Smets-Solanes <jp@nexedi.com>
 #          Romain Courteaud <romain@nexedi.com>
 #

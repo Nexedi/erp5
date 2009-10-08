@@ -70,8 +70,8 @@
      tal:define="real_here python: request.get(\'current_web_section\', here);\n
                  real_here python: test(real_here.getPortalType()!=\'Web Site\', real_here, here);"\n
      tal:attributes="href python:\n
-     \'GadgetTool_viewPrettyGadgetDialog?reset=1&cancel_url=%s/view&active_pad_relative_url=%s&mode=%s\'\n
-      %(real_here.absolute_url(), \n
+     \'GadgetTool_viewPrettyGadgetDialog?reset=1&cancel_url=%s&active_pad_relative_url=%s&mode=%s\'\n
+      %(cancel_url, \n
         active_knowledge_pad.getRelativeUrl(), mode);"\n
      title="Click to add portlets"\n
      i18n:translate="" \n

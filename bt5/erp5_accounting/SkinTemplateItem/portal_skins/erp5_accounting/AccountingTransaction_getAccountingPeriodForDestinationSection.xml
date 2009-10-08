@@ -65,6 +65,7 @@ if not operation_date:\n
 \n
 section = context.getDestinationSectionValue(portal_type=\'Organisation\')\n
 if section is not None:\n
+  section = section.Organisation_getMappingRelatedOrganisation()\n
   for accounting_period in section.contentValues(\n
                           portal_type=\'Accounting Period\',\n
                           checked_permission=\'Access contents information\'):\n

@@ -53,7 +53,12 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>reference = brain.getObject().getReference() or \'\'\n
+            <value> <string># use \'id\' for embedded document, and use \'reference\' for non-embedded document.\n
+# XXX the condition should be changed when we introduce Embedded Image / File portal type.\n
+if brain.getValidationState() == \'embedded\':\n
+  reference = brain.getId()\n
+else:\n
+  reference = brain.getReference()\n
 return "javascript:SelectFile(\'%s\')" % reference.replace("\'", "\\\\\'")\n
 </string> </value>
         </item>

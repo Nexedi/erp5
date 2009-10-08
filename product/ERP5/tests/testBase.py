@@ -1055,6 +1055,52 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.assertEquals(1, len(self.getPortal().portal_catalog(
       translated_portal_type='Person', title='translate_table_test')))
 
+  def test_NonIndexable(self):
+    """check if a document is not indexed where we set isIndexable=0 in the same transaction of newContent().
+    """
+    person = self.portal.person_module.newContent(portal_type='Person')
+    person.isIndexable = 0
+    transaction.commit()
+    self.tic()
+    self.assertFalse(person.isIndexable)
+    self.assertEquals(0, len(self.portal.portal_catalog(uid=person.getUid())))
+
+  def test_NonIndexable2(self):
+    """check if a document is not indexed where we call edit() and set isIndexable=0 after it is already indexed.
+    """
+    person = self.portal.person_module.newContent(portal_type='Person')
+    transaction.commit()
+    self.tic()
+    self.assertTrue(person.isIndexable)
+    self.assertEquals(1, len(self.portal.portal_catalog(uid=person.getUid())))
+
+    # edit() will register a reindex activity because isIndexable is
+    # not yet False when edit() is called.
+    person.edit()
+    person.isIndexable = 0
+    transaction.commit()
+    self.tic()
+    self.assertFalse(person.isIndexable)
+    self.assertEquals(0, len(self.portal.portal_catalog(uid=person.getUid())))
+
+  def test_NonIndexable3(self):
+    """check if a document is not indexed where we set isIndexable=0 and call edit() after it is already indexed.
+    """
+    person = self.portal.person_module.newContent(portal_type='Person')
+    transaction.commit()
+    self.tic()
+    self.assertTrue(person.isIndexable)
+    self.assertEquals(1, len(self.portal.portal_catalog(uid=person.getUid())))
+
+    # edit() will not register a reindex activity because isIndexable
+    # is already False when edit() is called.
+    person.isIndexable = 0
+    person.edit()
+    transaction.commit()
+    self.tic()
+    self.assertFalse(person.isIndexable)
+    self.assertEquals(0, len(self.portal.portal_catalog(uid=person.getUid())))
+
 class TestERP5PropertyManager(unittest.TestCase):
   """Tests for ERP5PropertyManager.
   """

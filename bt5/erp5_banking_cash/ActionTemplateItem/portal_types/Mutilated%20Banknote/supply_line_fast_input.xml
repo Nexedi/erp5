@@ -111,7 +111,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${portal_url}/images/cash_in.png</string> </value>
+            <value> <string>string:${portal_url}/banking_images/cash_in.png</string> </value>
         </item>
       </dictionary>
     </pickle>

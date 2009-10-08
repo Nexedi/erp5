@@ -11,7 +11,8 @@ ApparelTransformation
 ApparelColourRangeVariation
 ApparelAssortment
 ApparelFabricColourVariation
-ApparelColourRange
 ApparelModelColourVariation
 ApparelComponentVariation
 ApparelSize
+ApparelPreference
+ApparelColourRange

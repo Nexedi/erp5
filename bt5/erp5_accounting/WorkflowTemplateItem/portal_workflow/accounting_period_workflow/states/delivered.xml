@@ -11,7 +11,7 @@
       <dictionary>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>The Accounting Period is closed. It is no longer possible to add accounting transactions in this period. A balance transaction has been created.</string> </value>
+            <value> <string>The Accounting Period is stopped. It is no longer possible to add accounting transactions in this period. A balance transaction has been created.</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -25,7 +25,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Closed</string> </value>
+            <value> <string>Stopped</string> </value>
         </item>
         <item>
             <key> <string>transitions</string> </key>

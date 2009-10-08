@@ -30,7 +30,7 @@
   <item>ApparelModelMorphologyVariation</item>
   <item>TransformedResource</item>
  </portal_type>
- <portal_type id="Apparel Transformation">
-  <item>ApparelTransformation</item>
+ <portal_type id="System Preference">
+  <item>ApparelPreference</item>
  </portal_type>
 </property_sheet_list>

@@ -24,12 +24,16 @@
  <key>parent_title | catalog/title/z_related_parent</key>
  <key>predicate_uid | predicate/uid/z_related_predicate</key>
  <key>resourceType | movement,catalog/portal_type/z_related_resource_from_movement</key>
+ <key>stock_function_category_strict_membership_uid | category/category_uid/z_related_strict_membership_function_uid_from_stock</key>
+ <key>stock_function_category_uid | category/category_uid/z_related_function_uid_from_stock</key>
  <key>stock_mirror_section_category_strict_membership_uid | category/category_uid/z_related_strict_membership_mirror_section_uid_from_stock</key>
  <key>stock_mirror_section_category_uid | category/category_uid/z_related_mirror_section_uid_from_stock</key>
  <key>stock_node_category_strict_membership_uid | category/category_uid/z_related_strict_membership_node_uid_from_stock</key>
  <key>stock_node_category_uid | category/category_uid/z_related_node_uid_from_stock</key>
  <key>stock_payment_category_strict_membership_uid | category/category_uid/z_related_strict_membership_payment_uid_from_stock</key>
  <key>stock_payment_category_uid | category/category_uid/z_related_payment_uid_from_stock</key>
+ <key>stock_project_category_strict_membership_uid | category/category_uid/z_related_strict_membership_project_uid_from_stock</key>
+ <key>stock_project_category_uid | category/category_uid/z_related_project_uid_from_stock</key>
  <key>stock_resource_category_strict_membership_uid | category/category_uid/z_related_strict_membership_resource_uid_from_stock</key>
  <key>stock_resource_category_uid | category/category_uid/z_related_resource_uid_from_stock</key>
  <key>stock_section_category_strict_membership_uid | category/category_uid/z_related_strict_membership_section_uid_from_stock</key>

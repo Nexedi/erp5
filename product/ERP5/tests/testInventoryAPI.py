@@ -189,6 +189,8 @@ class InventoryAPITestCase(ERP5TypeTestCase):
               'group/level1/level2',
               'group/anotherlevel',
               'product_line/level1/level2',
+              'function/function1',
+              'function/function1/function2',
            # we create a huge group category for consolidation tests
            ) + self.GROUP_CATEGORIES + self.VARIATION_CATEGORIES
   
@@ -393,6 +395,90 @@ class TestInventory(InventoryAPITestCase):
     self.assertEquals(getInventory(
                 node_category_strict_membership=['group/level1']), 100)
   
+  def test_Function(self):
+    """Tests inventory on function"""
+    getInventory = self.getSimulationTool().getInventory
+    self._makeMovement(quantity=100,
+                       destination_function='function/function1')
+    self.assertEquals(getInventory(
+                        function='function/function1'), 100)
+    self.assertEquals(getInventory(
+                        function='function/function1/function2'), 0)
+
+  def test_FunctionUid(self):
+    """Tests inventory on function uid"""
+    getInventory = self.getSimulationTool().getInventory
+    function = self.portal.portal_categories.function
+    self._makeMovement(quantity=100,
+                       destination_function='function/function1')
+    self.assertEquals(getInventory(
+                        function_uid=function.function1.getUid()), 100)
+    self.assertEquals(getInventory(
+                        function_uid=function.function1.function2.getUid()), 0)
+
+  def test_FunctionCategory(self):
+    """Tests inventory on function category"""
+    getInventory = self.getSimulationTool().getInventory
+    function = self.portal.portal_categories.function
+    self._makeMovement(quantity=100,
+                       destination_function='function/function1/function2')
+    self.assertEquals(getInventory(
+                        function_category='function/function1'), 100)
+    self.assertEquals(getInventory(
+                        function='function/function1/function2'), 100)
+
+  def test_FunctionCategoryStrictMembership(self):
+    """Tests inventory on function category strict membership"""
+    getInventory = self.getSimulationTool().getInventory
+    function = self.portal.portal_categories.function
+    self._makeMovement(quantity=100,
+                       destination_function='function/function1/function2')
+    self.assertEquals(getInventory(
+            function_category_strict_membership='function/function1'), 0)
+    self.assertEquals(getInventory(
+            function_category_strict_membership='function/function1/function2'), 100)
+  
+  def test_Project(self):
+    """Tests inventory on project"""
+    getInventory = self.getSimulationTool().getInventory
+    self._makeMovement(quantity=100,
+                       destination_project_value=self.mirror_node)
+    self.assertEquals(getInventory(
+                        project=self.mirror_node.getRelativeUrl()), 100)
+
+  def test_ProjectUid(self):
+    """Tests inventory on project uid"""
+    getInventory = self.getSimulationTool().getInventory
+    self._makeMovement(quantity=100,
+                       destination_project_value=self.mirror_node)
+    self.assertEquals(getInventory(
+                        project_uid=self.mirror_node.getUid()), 100)
+
+  def test_ProjectCategory(self):
+    """Tests inventory on project category"""
+    # this test uses unrealistic data
+    getInventory = self.getSimulationTool().getInventory
+    self.mirror_node.setGroup('level1/level2')
+    self._makeMovement(quantity=100,
+                       destination_project_value=self.mirror_node)
+    self.assertEquals(getInventory(
+                        project_category='group/level1'), 100)
+    self.assertEquals(getInventory(
+                        project_category='group/level1/level2'), 100)
+
+  def test_ProjectCategoryStrictMembership(self):
+    """Tests inventory on project category strict membership"""
+    # this test uses unrealistic data
+    getInventory = self.getSimulationTool().getInventory
+    self.mirror_node.setGroup('level1/level2')
+    self._makeMovement(quantity=100,
+                       destination_project_value=self.mirror_node)
+    self.assertEquals(getInventory(
+                project_category_strict_membership='group/level1'), 0)
+    self.assertEquals(getInventory(
+                project_category_strict_membership='group/level1/level2'), 100)
+
+
   def test_ResourceCategory(self):
     """Tests inventory on resource_category """
     getInventory = self.getSimulationTool().getInventory
@@ -1228,15 +1314,12 @@ class TestMovementHistoryList(InventoryAPITestCase):
           getMovementHistoryList(section_uid=self.section.getUid(),
                                  sort_on=(('title', 'descending'),)) ])
 
-
-  # FIXME: do we want to include it or no ?
   def test_Limit(self):
-    return "is it part of this API ?" # XXX
     getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
-    for q in range(10):
+    for q in range(6):
       self._makeMovement(quantity=1)
-    self.assertEquals(3, len(getMovementHistoryList(list_start=2,
-                                                    list_lines=3)))
+    self.assertEquals(3, len(getMovementHistoryList(limit=3)))
+    self.assertEquals(4, len(getMovementHistoryList(limit=(1, 4))))
   
   def test_SimulationState(self):
     getMovementHistoryList = self.getSimulationTool().getMovementHistoryList

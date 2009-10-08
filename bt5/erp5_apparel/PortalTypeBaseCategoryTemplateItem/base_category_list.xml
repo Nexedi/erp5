@@ -2,6 +2,9 @@
  <portal_type id="Apparel Cloth">
   <item>measure</item>
  </portal_type>
+ <portal_type id="Apparel Colour Range">
+  <item>fabric_brand</item>
+ </portal_type>
  <portal_type id="Apparel Component Variation">
   <item>collection</item>
  </portal_type>

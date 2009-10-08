@@ -8,6 +8,9 @@ Apparel Colour Range Module | Apparel Colour Range
 Apparel Colour Range | Apparel Colour Range Variation
 Apparel Component Module | Apparel Component
 Apparel Component | Apparel Component Variation
+Apparel Component | Mapped Value
+Apparel Component | Purchase Supply Line
+Apparel Component | Sale Supply Line
 Apparel Component | Supply Line
 Apparel Consumption Module | Apparel Consumption
 Apparel Consumption | Mapped Value
@@ -16,20 +19,20 @@ Apparel Fabric Item | Apparel Fabric Item
 Apparel Fabric Module | Apparel Fabric
 Apparel Fabric | Apparel Fabric Colour Variation
 Apparel Fabric | Mapped Value
+Apparel Fabric | Measure
+Apparel Fabric | Purchase Supply Line
+Apparel Fabric | Sale Supply Line
 Apparel Fabric | Supply Line
 Apparel Measurement Module | Apparel Measurement
 Apparel Measurement | Mapped Value
 Apparel Model Module | Apparel Model
 Apparel Model | Apparel Model Colour Variation
 Apparel Model | Apparel Model Morphology Variation
+Apparel Model | Mapped Value
+Apparel Model | Purchase Supply Line
+Apparel Model | Sale Supply Line
 Apparel Model | Supply Line
 Apparel Shape Module | Apparel Shape
 Apparel Shape | Apparel Technical Drawing
 Apparel Size Module | Apparel Size
 Apparel Size | Mapped Value
-Apparel Transformation Assorted Resource | Mapped Value
-Apparel Transformation Module | Apparel Transformation
-Apparel Transformation Operation | Mapped Value
-Apparel Transformation Transformed Resource | Mapped Value
-Apparel Transformation | Apparel Transformation Operation
-Apparel Transformation | Apparel Transformation Transformed Resource

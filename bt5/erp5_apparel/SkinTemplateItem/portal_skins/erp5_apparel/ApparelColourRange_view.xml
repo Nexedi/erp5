@@ -10,12 +10,6 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_bind_names</string> </key>
             <value>
               <object>
@@ -80,7 +74,9 @@
                 <item>
                     <key> <string>center</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>my_description</string>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -88,7 +84,7 @@
                     <value>
                       <list>
                         <string>my_title</string>
-                        <string>my_description</string>
+                        <string>my_fabric_brand_list</string>
                       </list>
                     </value>
                 </item>
@@ -98,6 +94,7 @@
                       <list>
                         <string>my_collection_list</string>
                         <string>my_segment_list</string>
+                        <string>my_translated_validation_state_title</string>
                       </list>
                     </value>
                 </item>

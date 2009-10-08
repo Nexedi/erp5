@@ -57,7 +57,6 @@ class Consumption(XMLObject, XMLMatrix, Variated):
                       , PropertySheet.CategoryCore
                       , PropertySheet.DublinCore
                       , PropertySheet.VariationRange
-#                      , PropertySheet.Consumption
                       )
 
     security.declareProtected(Permissions.ModifyPortalContent, 

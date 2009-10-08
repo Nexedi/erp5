@@ -78,8 +78,9 @@ else:\n
   session = portal_sessions[session_id]\n
   if not shopping_cart_id in session.keys():\n
     from Products.ERP5Type.Document import newTempOrder\n
+    web_site = context.getWebSiteValue()\n
     shopping_cart = newTempOrder(portal_sessions, shopping_cart_id)\n
-    shopping_cart.setPriceCurrency(\'currency_module/EUR\')\n
+    shopping_cart.setPriceCurrency(web_site.WebSite_getShoppingCartDefaultCurrency().getRelativeUrl())\n
     session[shopping_cart_id] = shopping_cart\n
 \n
   ## return just a part of session for shopping cart\n
@@ -145,6 +146,7 @@ else:\n
                             <string>session</string>
                             <string>Products.ERP5Type.Document</string>
                             <string>newTempOrder</string>
+                            <string>web_site</string>
                             <string>shopping_cart</string>
                             <string>_write_</string>
                           </tuple>

@@ -27,7 +27,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Closes the accounting period, can\'t be restarted later, no more transaction can be input on this accounting period.</string> </value>
+            <value> <string>Stop the accounting period, can\'t be restarted later, no more transaction can be input on this accounting period.</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
@@ -49,7 +49,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Close Accounting Period</string> </value>
+            <value> <string>Stop Accounting Period</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>

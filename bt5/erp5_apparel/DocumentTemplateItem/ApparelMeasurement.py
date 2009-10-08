@@ -2,7 +2,7 @@
 #
 # Copyright (c) 2002 Coramy SAS and Contributors. All Rights Reserved.
 #                    Thierry_Faucher <Thierry_Faucher@coramy.com>
-# Copyright (c) 2004 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2004, 2009 Nexedi SA and Contributors. All Rights Reserved.
 #                    Courteaud_Romain <romain@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
@@ -47,7 +47,7 @@ class ApparelMeasurement(XMLObject, XMLMatrix, Image):
 
     # Declarative security
     security = ClassSecurityInfo()
-    security.declareObjectProtected(Permissions.View)
+    security.declareObjectProtected(Permissions.AccessContentsInformation)
 
     # Declarative properties
     property_sheets = ( PropertySheet.Base
@@ -65,13 +65,14 @@ class ApparelMeasurement(XMLObject, XMLMatrix, Image):
 
     # Inheritance
     _edit = Image._edit
-    security.declareProtected( Permissions.ModifyPortalContent, 'edit' )
+    security.declareProtected(Permissions.ModifyPortalContent, 'edit' )
     edit = WorkflowAction( _edit )
 
-    security.declareProtected('View', 'index_html')
+    security.declareProtected(Permissions.View,  'index_html')
     index_html = Image.index_html
 
-    security.declareProtected('AccessContentsInformation', 'content_type')
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'content_type')
     content_type = Image.content_type
 
     def manage_afterClone(self, item):

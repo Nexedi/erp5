@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright (c) 2002-2004 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2002-2009 Nexedi SA and Contributors. All Rights Reserved.
 #                    Jean-Paul Smets-Solanes <jp@nexedi.com>
 #                    Courteaud_Romain <romain@nexedi.com>
 #
@@ -43,7 +43,7 @@ class ApparelComponent(Resource):
 
     # Declarative security
     security = ClassSecurityInfo()
-    security.declareObjectProtected(Permissions.View)
+    security.declareObjectProtected(Permissions.AccessContentsInformation)
 
     # Declarative properties
     property_sheets = ( PropertySheet.Base
@@ -56,8 +56,8 @@ class ApparelComponent(Resource):
                       , PropertySheet.Resource
                       , PropertySheet.Reference
                       , PropertySheet.ApparelCollection
+                      , PropertySheet.VariationRange
                       )
-
 
     # Unit conversion
     security.declareProtected(Permissions.AccessContentsInformation, 'convertQuantity')

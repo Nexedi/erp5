@@ -63,7 +63,7 @@ Account is the combination of :\n
 from Products.ERP5Form.Report import ReportSection\n
 from Products.ERP5Type.Message import translateString\n
 request = context.REQUEST\n
-traverse = context.getPortalObject().restrictedTraverse\n
+traverse = context.getPortalObject().portal_categories.restrictedTraverse\n
 \n
 # for preference info fields on Account_viewAccountingTransactionList\n
 request.set(\'is_accounting_report\', True)\n
@@ -76,6 +76,8 @@ section_uid = context.Base_getSectionUidListForSectionCategory(\n
 node = request[\'node\']\n
 mirror_section = request.get(\'mirror_section\', None)\n
 payment = request.get(\'payment\', None)\n
+function = request.get(\'function\', None)\n
+project = request.get(\'project\', None)\n
 simulation_state = request[\'simulation_state\']\n
 from_date = request.get(\'from_date\', None)\n
 detailed_from_date_summary = request.get(\'detailed_from_date_summary\', 0)\n
@@ -107,6 +109,11 @@ if from_date:\n
   params[\'from_date\'] = from_date\n
 if payment:\n
   params[\'payment_uid\'] = traverse(payment).getUid()\n
+if project:\n
+  params[\'project_uid\'] = traverse(project).getUid()\n
+if function:\n
+  params[\'function_uid\'] = traverse(function).getUid()\n
+  params[\'function\'] = function\n
 if mirror_section:\n
   params[\'mirror_section_uid\'] = traverse(mirror_section).getUid()  \n
 if parent_portal_type:\n
@@ -209,6 +216,8 @@ return report_section_list\n
                             <string>None</string>
                             <string>mirror_section</string>
                             <string>payment</string>
+                            <string>function</string>
+                            <string>project</string>
                             <string>simulation_state</string>
                             <string>from_date</string>
                             <string>detailed_from_date_summary</string>

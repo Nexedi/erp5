@@ -27,7 +27,8 @@
 
 from Products.ERP5Type.XMLObject import XMLObject
 from AccessControl import ClassSecurityInfo
-from Products.ERP5Type import Permissions, PropertySheet
+from Products.ERP5Type import Permissions, PropertySheet, interfaces
+import zope.interface
 
 class MovementGroup(XMLObject):
   """
@@ -36,6 +37,8 @@ class MovementGroup(XMLObject):
   """
   meta_type = 'ERP5 Movement Group'
   portal_type = 'Movement Group'
+
+  zope.interface.implements( interfaces.IMovementGroup, )
 
   # Declarative security
   security = ClassSecurityInfo()

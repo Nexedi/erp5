@@ -57,12 +57,12 @@ class RamCache(BaseCache):
         interfaces.ICachePlugin
     )
 
-  _cache_dict = {}
   cache_expire_check_interval = 300
 
   def __init__(self, params={}):
+    self._cache_dict = {}
     BaseCache.__init__(self)
- 
+
   def initCacheStorage(self):
     """ Init cache storage """
     ## cache storage is a RAM based dictionary
@@ -92,7 +92,7 @@ class RamCache(BaseCache):
     if forceCheck or (now > self._next_cache_expire_check_at):
       ## time to check for expired cache items
       self._next_cache_expire_check_at = now + self.cache_expire_check_interval
-      cache = self.getCacheStorage()        
+      cache = self.getCacheStorage()
       for key, value in cache.items():
         if value.isExpired():
           try:
@@ -109,7 +109,15 @@ class RamCache(BaseCache):
 
   def has_key(self, cache_id, scope):
     cache = self.getCacheStorage()
-    return cache.has_key((scope, cache_id))
+    cache_entry = cache.get((scope, cache_id))
+    to_return = False
+    if isinstance(cache_entry, CacheEntry):
+      if cache_entry.isExpired():
+        #Delete expired CacheEntry
+        self.delete(cache_id, scope)
+      else:
+        to_return = True
+    return to_return
 
   def getScopeList(self):
     scope_set = set()

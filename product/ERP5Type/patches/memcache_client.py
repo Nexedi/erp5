@@ -147,3 +147,5 @@ if memcache is not None:
   Client._val_to_store_info = Client__val_to_store_info
   memcache.check_key = memcache_check_key
   del Client__init__, Client__val_to_store_info, memcache_check_key
+  _Host = memcache._Host
+  _Host._SOCKET_TIMEOUT = 10

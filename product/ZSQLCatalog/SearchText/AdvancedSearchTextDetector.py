@@ -37,7 +37,10 @@ class AdvancedSearchTextDetector(lexer):
     return t
 
   def t_LEFT_PARENTHESE(self, t):
-    self.found = True
+    t.type = 'WORD'
+    return t
+
+  def t_RIGHT_PARENTHESE(self, t):
     t.type = 'WORD'
     return t
 

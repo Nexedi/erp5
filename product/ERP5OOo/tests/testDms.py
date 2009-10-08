@@ -802,6 +802,13 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
     document.edit(file=upload_file)
     self.assertEquals('application/pdf', document.getContentType())
 
+  def test_CMYKImageTextContent(self):
+    upload_file = makeFileUpload('cmyk_sample.jpg')
+    document = self.portal.portal_contributions.newContent(file=upload_file)
+    self.assertEquals('Image', document.getPortalType())
+    self.assertEquals('ERP5 is a free software.\n',
+                      document.SearchableText())
+
 class TestDocumentWithSecurity(ERP5TypeTestCase):
 
   username = 'yusei'

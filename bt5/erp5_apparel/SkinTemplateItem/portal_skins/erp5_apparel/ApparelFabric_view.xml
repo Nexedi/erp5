@@ -10,12 +10,6 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_bind_names</string> </key>
             <value>
               <object>
@@ -62,6 +56,7 @@
                 <string>right</string>
                 <string>center</string>
                 <string>bottom</string>
+                <string>hidden</string>
               </list>
             </value>
         </item>
@@ -81,7 +76,15 @@
                     <key> <string>center</string> </key>
                     <value>
                       <list>
-                        <string>my_comment</string>
+                        <string>my_description</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>hidden</string> </key>
+                    <value>
+                      <list>
+                        <string>listbox_thumbnail</string>
                       </list>
                     </value>
                 </item>
@@ -90,17 +93,18 @@
                     <value>
                       <list>
                         <string>my_title</string>
-                        <string>my_source_title</string>
                         <string>my_quality_reference</string>
                         <string>my_drawing_reference</string>
+                        <string>my_apparel_fabric_template_title</string>
+                        <string>my_quantity_unit_list</string>
                         <string>my_resource</string>
                         <string>my_visual_pattern</string>
-                        <string>my_description</string>
                         <string>my_trade_description</string>
-                        <string>my_color_count</string>
+                        <string>my_colour_count</string>
                         <string>my_raw_width</string>
                         <string>my_net_width</string>
                         <string>my_base_weight</string>
+                        <string>composition_title</string>
                       </list>
                     </value>
                 </item>
@@ -108,11 +112,9 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
-                        <string>my_collection_list</string>
-                        <string>my_segment_list</string>
-                        <string>my_composition_list</string>
-                        <string>my_cleaning_code_list</string>
-                        <string>apparel_fabric_state</string>
+                        <string>my_variation_category_list</string>
+                        <string>my_comment</string>
+                        <string>my_translated_validation_state_title</string>
                       </list>
                     </value>
                 </item>

@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright (c) 2002-2004 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2002-2009 Nexedi SA and Contributors. All Rights Reserved.
 #                    Jean-Paul Smets-Solanes <jp@nexedi.com>
 #                    Courteaud_Romain <romain@nexedi.com>
 #
@@ -43,7 +43,7 @@ class ApparelFabric(Resource):
 
     # Declarative security
     security = ClassSecurityInfo()
-    security.declareObjectProtected(Permissions.View)
+    security.declareObjectProtected(Permissions.AccessContentsInformation)
 
     # Declarative properties
     property_sheets = ( PropertySheet.Base
@@ -57,35 +57,5 @@ class ApparelFabric(Resource):
                       , PropertySheet.Reference
                       , PropertySheet.ApparelCollection
                       , PropertySheet.ApparelLabel
+                      , PropertySheet.VariationRange
                       )
-
-
-
-    # Unit conversion
-    security.declareProtected(Permissions.AccessContentsInformation, 'convertQuantity')
-    def convertQuantity(self, quantity, from_unit, to_unit):
-      # XXX if from_unit == 'Surface/Centimetre_carre' and to_unit == 'Longueur/Metre':
-      if from_unit == 'area/square centimeters' and to_unit == 'measurement/meter':
-        # XXX return quantity / 100.0 / float(self.getLaizeUtile())
-#        return quantity / 100.0 / float(self.getLaizeUtile())
-        return quantity / 100.0 / float(self.getNetWidth())
-      else:
-        return quantity
-
-    # Unit list
-    security.declareProtected(Permissions.AccessContentsInformation, 'getQuantityUnitList')
-    def getQuantityUnitList(self):
-      my_default_quantity = self.getCategoryDefaultMembership('quantity_unit')
-      # XXX return [my_default_quantity] + rejectIn( ['Surface/Centimetre_carre', 'Longueur/Metre'],
-      return [my_default_quantity] + rejectIn( ['area/square centimeters', 'measurement/meter'],
-                [my_default_quantity])
-
-#    # Unit list
-#    security.declareProtected(Permissions.AccessContentsInformation, 'getQuantityUnitList')
-#    def getQuantityUnitList(self):
-#      my_default_quantity = self.getCategoryDefaultMembership('quantity_unit')
-#      # XXX return [my_default_quantity] + rejectIn( ['Surface/Centimetre_carre', 'Longueur/Metre'],
-#      return [my_default_quantity] + rejectIn( ['Surface/Centimetre_carre', 'length/meter'],
-#                [my_default_quantity])
-
-                

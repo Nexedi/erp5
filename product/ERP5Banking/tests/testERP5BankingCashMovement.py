@@ -416,8 +416,8 @@ class TestERP5BankingCashMovement(TestERP5BankingMixin, ERP5TypeTestCase):
     # check its len is 2
     self.assertEqual(len(workflow_history), 2)
     # check we get an "Insufficient balance" message in the workflow history because of the invalid line
-    msg = workflow_history[-1]['error_message']
-    self.assertTrue('Insufficient balance' in "%s" %(msg,))
+    msg = '%s' % (workflow_history[-1]['error_message'], )
+    self.assertTrue('Insufficient balance' in msg, msg)
 
   def stepDelInvalidLine(self, sequence=None, sequence_list=None, **kwd):
     """

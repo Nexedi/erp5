@@ -78,11 +78,3 @@ class ITransformation(Interface):
       * movement_to_delete_list - a list of movements from movement_list or from the
         context that shall be deleted.
     """
-
-
-class IAggregatedAmountList(ISequence):
-  """An Aggregated Amount List is a list of amounts aggregated together.
-
-  It is a sequence of objects implementing IAmount interface.
-  """
-

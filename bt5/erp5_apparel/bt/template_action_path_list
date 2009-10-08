@@ -1,247 +1,150 @@
 Apparel Assortment Colour Variation | download
 Apparel Assortment Colour Variation | image_view
-Apparel Assortment Colour Variation | metadata
-Apparel Assortment Colour Variation | print
 Apparel Assortment Colour Variation | view
 Apparel Assortment Module | csv_export
 Apparel Assortment Module | csv_import
 Apparel Assortment Module | list_ui
-Apparel Assortment Module | print
 Apparel Assortment Module | search
 Apparel Assortment Module | sort_on
 Apparel Assortment Module | view
 Apparel Assortment Module | workflow_report
-Apparel Assortment | history
-Apparel Assortment | metadata
-Apparel Assortment | print
 Apparel Assortment | view
 Apparel Assortment | view_related_apparel_transformation
 Apparel Bath Module | csv_export
 Apparel Bath Module | import_csv
 Apparel Bath Module | list_ui
-Apparel Bath Module | print
 Apparel Bath Module | search
 Apparel Bath Module | sort_on
 Apparel Bath Module | view
-Apparel Bath | history
-Apparel Bath | metadata
-Apparel Bath | print
 Apparel Bath | view
 Apparel Cloth Module | csv_export
 Apparel Cloth Module | csv_import
 Apparel Cloth Module | list_ui
-Apparel Cloth Module | print
 Apparel Cloth Module | search
 Apparel Cloth Module | sort_on
 Apparel Cloth Module | view
 Apparel Cloth Module | workflow_report
 Apparel Cloth | apparel_measure
 Apparel Cloth | development
-Apparel Cloth | history
 Apparel Cloth | jump_to_related_apparel_model
 Apparel Cloth | jump_to_related_apparel_model_morphology_variation
-Apparel Cloth | metadata
-Apparel Cloth | print
 Apparel Cloth | view
 Apparel Colour Range Module | csv_import
 Apparel Colour Range Module | cvs_export
 Apparel Colour Range Module | list_ui
-Apparel Colour Range Module | print
 Apparel Colour Range Module | search
 Apparel Colour Range Module | sort_on
 Apparel Colour Range Module | view
-Apparel Colour Range Variation | history
-Apparel Colour Range Variation | metadata
-Apparel Colour Range Variation | print
 Apparel Colour Range Variation | view
-Apparel Colour Range | history
 Apparel Colour Range | jump_to_related_apparel_model
-Apparel Colour Range | metadata
-Apparel Colour Range | print
 Apparel Colour Range | view
 Apparel Component Module | csv_export
 Apparel Component Module | csv_import
 Apparel Component Module | list_ui
-Apparel Component Module | print
 Apparel Component Module | search
 Apparel Component Module | sort_on
 Apparel Component Module | view
 Apparel Component Module | workflow_report
 Apparel Component Variation | download
-Apparel Component Variation | history_view
 Apparel Component Variation | image_view
-Apparel Component Variation | metadata
-Apparel Component Variation | print
 Apparel Component Variation | view
-Apparel Component | history
 Apparel Component | instruction_view
-Apparel Component | metadata
-Apparel Component | price_view
-Apparel Component | print
+Apparel Component | purchase_price_view
+Apparel Component | sale_price_view
 Apparel Component | view
-Apparel Component | view_flow_capacity
+Apparel Component | view_composition
 Apparel Consumption Module | csv_export
 Apparel Consumption Module | csv_import
 Apparel Consumption Module | list_ui
-Apparel Consumption Module | print
 Apparel Consumption Module | search
 Apparel Consumption Module | sort_on
 Apparel Consumption Module | view
-Apparel Consumption | history
-Apparel Consumption | metadata
-Apparel Consumption | print
 Apparel Consumption | print_matrix
 Apparel Consumption | view
 Apparel Consumption | view_quantity
 Apparel Fabric Colour Variation | download
-Apparel Fabric Colour Variation | history
 Apparel Fabric Colour Variation | image
 Apparel Fabric Colour Variation | jump_to_related_apparel_colour_range_variation
-Apparel Fabric Colour Variation | metadata
-Apparel Fabric Colour Variation | print
 Apparel Fabric Colour Variation | view
 Apparel Fabric Item Module | csv_export
 Apparel Fabric Item Module | import_csv
 Apparel Fabric Item Module | list_ui
-Apparel Fabric Item Module | print
 Apparel Fabric Item Module | search
 Apparel Fabric Item Module | sort_on
 Apparel Fabric Item Module | view
-Apparel Fabric Item | history
-Apparel Fabric Item | metadata
-Apparel Fabric Item | print
 Apparel Fabric Item | view
 Apparel Fabric Module | csv_export
 Apparel Fabric Module | import_csv
 Apparel Fabric Module | list_ui
-Apparel Fabric Module | print
 Apparel Fabric Module | search
 Apparel Fabric Module | sort_on
 Apparel Fabric Module | view
 Apparel Fabric Module | workflow_report
-Apparel Fabric | history
 Apparel Fabric | instructions_view
-Apparel Fabric | metadata
-Apparel Fabric | print
+Apparel Fabric | purchase_price_view
+Apparel Fabric | sale_price_view
 Apparel Fabric | view
 Apparel Fabric | view_composition
-Apparel Fabric | view_flow_capacity
-Apparel Fabric | view_price
+Apparel Fabric | view_measure
 Apparel Measurement Module | csv_export
 Apparel Measurement Module | csv_import
 Apparel Measurement Module | list_ui
-Apparel Measurement Module | print
 Apparel Measurement Module | search
 Apparel Measurement Module | sort_on
 Apparel Measurement Module | view
 Apparel Measurement | customer_measure
 Apparel Measurement | download
-Apparel Measurement | history
 Apparel Measurement | image
 Apparel Measurement | jump_to_related_apparel_cloth
 Apparel Measurement | jump_to_related_apparel_model
-Apparel Measurement | metadata
-Apparel Measurement | print
 Apparel Measurement | view
 Apparel Model Colour Variation | download
 Apparel Model Colour Variation | image_view
-Apparel Model Colour Variation | metadata
-Apparel Model Colour Variation | print
 Apparel Model Colour Variation | view
 Apparel Model Module | csv_export
 Apparel Model Module | csv_import
 Apparel Model Module | list_ui
-Apparel Model Module | print
 Apparel Model Module | search
 Apparel Model Module | sort_on
 Apparel Model Module | view
 Apparel Model Module | workflow_report
-Apparel Model Morphology Variation | history
-Apparel Model Morphology Variation | metadata
-Apparel Model Morphology Variation | print
 Apparel Model Morphology Variation | view
 Apparel Model | copy_colour_range_variation
+Apparel Model | copy_composition
 Apparel Model | development
-Apparel Model | history
 Apparel Model | inventory_view
 Apparel Model | jump_to_related_apparel_model
 Apparel Model | jump_to_related_apparel_transformation
-Apparel Model | metadata
 Apparel Model | morphology_variation
-Apparel Model | print
-Apparel Model | references
+Apparel Model | purchase_price_view
+Apparel Model | sale_price_view
 Apparel Model | view
-Apparel Model | view_price
+Apparel Model | view_composition
 Apparel Model | view_variated_reference_list
 Apparel Shape Module | csv_export
 Apparel Shape Module | csv_import
 Apparel Shape Module | list_ui
-Apparel Shape Module | print
 Apparel Shape Module | search
 Apparel Shape Module | sort_on
 Apparel Shape Module | view
 Apparel Shape Module | workflow_report
 Apparel Shape | development
-Apparel Shape | history
 Apparel Shape | jump_to_related_apparel_cloth
 Apparel Shape | jump_to_related_apparel_model
 Apparel Shape | jump_to_related_apparel_shape
-Apparel Shape | metadata
-Apparel Shape | print
 Apparel Shape | view
 Apparel Size Module | csv_export
 Apparel Size Module | csv_import
 Apparel Size Module | list_ui
-Apparel Size Module | print
 Apparel Size Module | search
 Apparel Size Module | sort_on
 Apparel Size Module | view
 Apparel Size | customer_size
-Apparel Size | history
 Apparel Size | jump_to_related_apparel_model
-Apparel Size | metadata
-Apparel Size | print
 Apparel Size | view
 Apparel Technical Drawing | download
-Apparel Technical Drawing | history
 Apparel Technical Drawing | image_view
-Apparel Technical Drawing | metadata
 Apparel Technical Drawing | view
-Apparel Transformation Assorted Resource | history
-Apparel Transformation Assorted Resource | metadata
-Apparel Transformation Assorted Resource | print
-Apparel Transformation Assorted Resource | view
-Apparel Transformation Assorted Resource | view_quantity
-Apparel Transformation Module | csv_export
-Apparel Transformation Module | csv_import
-Apparel Transformation Module | list_ui
-Apparel Transformation Module | print
-Apparel Transformation Module | search
-Apparel Transformation Module | sort_on
-Apparel Transformation Module | view
-Apparel Transformation Operation | complete_quantity_matrix
-Apparel Transformation Operation | history
-Apparel Transformation Operation | metadata
-Apparel Transformation Operation | print
-Apparel Transformation Operation | view
-Apparel Transformation Operation | view_quantity
-Apparel Transformation Transformed Resource | complete_quantity_matrix
-Apparel Transformation Transformed Resource | complete_variation_matrix
-Apparel Transformation Transformed Resource | history
-Apparel Transformation Transformed Resource | metadata
-Apparel Transformation Transformed Resource | print
-Apparel Transformation Transformed Resource | view
-Apparel Transformation Transformed Resource | view_quantity
-Apparel Transformation Transformed Resource | view_variation
-Apparel Transformation | expanded_view
-Apparel Transformation | history
-Apparel Transformation | jump_to_related_apparel_transformation
-Apparel Transformation | metadata
-Apparel Transformation | print
-Apparel Transformation | update_variation_list
-Apparel Transformation | view
-Apparel Transformation | view_transformation_assorted_component
-Apparel Transformation | view_transformation_component
-Apparel Transformation | view_transformation_operation
 Purchase Packing List Cell | apparel_fabric_item_fast_input
 Purchase Packing List Line | apparel_fabric_item_fast_input
+System Preference | apparel_preference

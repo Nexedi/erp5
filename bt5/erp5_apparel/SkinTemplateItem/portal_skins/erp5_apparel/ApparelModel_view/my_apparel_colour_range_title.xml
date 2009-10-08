@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.ERP5Form.RelationField</string>
-          <string>RelationStringField</string>
-        </tuple>
-        <none/>
+        <global name="RelationStringField" module="Products.ERP5Form.RelationField"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -252,6 +249,14 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>allow_creation</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
+                    <key> <string>allow_jump</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
                     <key> <string>alternate_name</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -270,8 +275,12 @@
                     </value>
                 </item>
                 <item>
+                    <key> <string>container_getter_id</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>css_class</string> </key>
-                    <value> <string>error</string> </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>default</string> </key>
@@ -332,8 +341,26 @@
                     <value> <string>Base_jumpToRelatedDocument</string> </value>
                 </item>
                 <item>
+                    <key> <string>list_method</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>max_length</string> </key>
                     <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>max_linelength</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>max_lines</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>parameter_list</string> </key>
+                    <value>
+                      <list/>
+                    </value>
                 </item>
                 <item>
                     <key> <string>portal_type</string> </key>
@@ -345,6 +372,16 @@
                         </tuple>
                       </list>
                     </value>
+                </item>
+                <item>
+                    <key> <string>proxy_listbox_ids</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>relation_form_id</string> </key>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>relation_setter_id</string> </key>

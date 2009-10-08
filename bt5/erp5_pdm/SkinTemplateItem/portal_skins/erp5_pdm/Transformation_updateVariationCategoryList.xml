@@ -53,33 +53,16 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-import string \n
+            <value> <string>context.updateVariationCategoryList()\n
+portal = context.getPortalObject()\n
+Base_translateString = portal.Base_translateString\n
 \n
-request = context.REQUEST\n
-\n
-context.updateVariationCategoryList()\n
-\n
-portal_status_message = \'portal_status_message=\'+string.replace(context.getPortalType(), \' \', \'+\')+\'+Updated.\'\n
-\n
-if not selection_index:\n
-  redirect_url = \'%s/%s?%s\' % ( context.absolute_url()\n
-                            , form_id\n
-                            , portal_status_message\n
-                            )\n
-else:\n
-  redirect_url = \'%s/%s?selection_index=%s&selection_name=%s&%s\' % ( context.absolute_url()\n
-                            , form_id\n
-                            , selection_index\n
-                            , selection_name\n
-                            , portal_status_message\n
-                            )\n
-\n
-request[ \'RESPONSE\' ].redirect( redirect_url )\n
-
-
-]]></string> </value>
+message = Base_translateString(\'%s Updated.\' % context.getPortalType())\n
+return context.Base_redirect(form_id=form_id,\n
+                      selection_name=selection_name,\n
+                      selection_index=selection_index,\n
+                      keep_items={\'portal_status_message\': message})\n
+</string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -89,7 +72,7 @@ request[ \'RESPONSE\' ].redirect( redirect_url )\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>form_id, selection_index=0, selection_name=\'\'</string> </value>
+            <value> <string>form_id=\'view\', selection_index=0, selection_name=\'\'</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -118,13 +101,11 @@ request[ \'RESPONSE\' ].redirect( redirect_url )\n
                             <string>form_id</string>
                             <string>selection_index</string>
                             <string>selection_name</string>
-                            <string>string</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>request</string>
-                            <string>portal_status_message</string>
-                            <string>redirect_url</string>
-                            <string>_getitem_</string>
+                            <string>portal</string>
+                            <string>Base_translateString</string>
+                            <string>message</string>
                           </tuple>
                         </value>
                     </item>
@@ -137,6 +118,7 @@ request[ \'RESPONSE\' ].redirect( redirect_url )\n
             <key> <string>func_defaults</string> </key>
             <value>
               <tuple>
+                <string>view</string>
                 <int>0</int>
                 <string></string>
               </tuple>

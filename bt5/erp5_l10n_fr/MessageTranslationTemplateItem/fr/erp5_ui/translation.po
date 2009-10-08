@@ -696,176 +696,191 @@ msgstr "Répondu"
 msgid "Any Documents"
 msgstr "N'importe quel document"
 
+msgid "Apparel Bath"
+msgstr "Vêtement de bain"
+
+msgid "Apparel Baths"
+msgstr "Vêtements de bain"
+
 msgid "Apparel Cloth"
-msgstr "Vêtements"
+msgstr "Vêtement"
 
 msgid "Apparel Cloth List"
 msgstr "Vêtements"
 
 msgid "Apparel Cloth Module"
-msgstr "Module Vêtements"
+msgstr "Module des vêtements"
 
 msgid "Apparel Cloth to design"
 msgstr "Vêtements à définir"
 
-msgid "Apparel Colour Range"
-msgstr "Gammes Matières"
+msgid "Apparel Clothes"
+msgstr "Vêtements"
 
-msgid "Apparel Colour Range Colour Variation"
-msgstr "Coloris Gamme"
+msgid "Apparel Colour Range"
+msgstr "Gamme matière"
 
 msgid "Apparel Colour Range List"
-msgstr "Gammes Matières"
+msgstr "Gammes matières"
 
 msgid "Apparel Colour Range Module"
-msgstr "Module Gammes Matières"
-
-msgid "Apparel Colour Range Title"
-msgstr "Gamme Matières"
+msgstr "Module des gammes matières"
 
 msgid "Apparel Colour Range Variation"
-msgstr "Coloris Gamme"
+msgstr "Gammes coloris"
+
+msgid "Apparel Colour Ranges"
+msgstr "Gammes matières"
 
 msgid "Apparel Component"
-msgstr "Fournitures"
+msgstr "Fourniture"
 
 msgid "Apparel Component Module"
-msgstr "Module Fournitures"
+msgstr "Module des fournitures"
 
 msgid "Apparel Component Variation"
 msgstr "Coloris / variante"
 
+msgid "Apparel Components"
+msgstr "Fournitures"
+
 msgid "Apparel Consumption"
-msgstr "Tables de Consommation"
+msgstr "Tables de consommation"
 
 msgid "Apparel Consumption List"
-msgstr "Tables de Consommation"
+msgstr "Tables de consommation"
 
 msgid "Apparel Consumption Module"
-msgstr "Tables de Consommation"
+msgstr "Tables de consommation"
 
 msgid "Apparel Fabric"
-msgstr "Tissus"
+msgstr "Tissu"
 
 msgid "Apparel Fabric Colour"
-msgstr "Coloris"
+msgstr "Coloris de tissu"
 
 msgid "Apparel Fabric Colour Variation"
-msgstr "Coloris"
+msgstr "Gamme coloris de tissu"
 
 msgid "Apparel Fabric Item Fast Input"
-msgstr "Saisie rapide des appareils de fabrique"
+msgstr "Saisie rapide des tissus"
 
 msgid "Apparel Fabric List"
 msgstr "Tissus"
 
 msgid "Apparel Fabric Module"
-msgstr "Module Tissus"
-
-msgid "Apparel Fabric Title"
-msgstr "Réf Qualité Tissu"
+msgstr "Module des tissus"
 
 msgid "Apparel Fabric to validate"
 msgstr "Tissus à définir"
 
+msgid "Apparel Fabrics"
+msgstr "Tissus"
+
 msgid "Apparel Measurement"
-msgstr "Correspondances de Mesures"
+msgstr "Correspondance de mesure"
 
 msgid "Apparel Measurement List"
-msgstr "Correspondances de Mesures"
+msgstr "Correspondances de mesures"
 
 msgid "Apparel Measurement Module"
-msgstr "Module Mesures"
+msgstr "Module des mesures"
+
+msgid "Apparel Measurements"
+msgstr "Correspondances de mesures"
 
 msgid "Apparel Model"
-msgstr "Produit Fini"
+msgstr "Modèle"
 
 msgid "Apparel Model Colour Variation"
 msgstr "Coloris"
 
-msgid "Apparel Model Colour Variation already exists with                                   this price. Check your line."
+msgid "Apparel Model Colour Variation already exists with this price. Check your line."
 msgstr "Cette référence a déjà été saisie au même prix !"
 
 msgid "Apparel Model Industrial Description"
-msgstr "Données techniques"
+msgstr "Données techniques du modèle"
 
 msgid "Apparel Model List"
-msgstr "Produits Finis"
+msgstr "Modèles"
 
 msgid "Apparel Model Module"
-msgstr "Module Produits Finis"
+msgstr "Module des modèles"
 
 msgid "Apparel Model Template"
 msgstr "Articles assemblés"
 
 msgid "Apparel Models"
-msgstr "Produits Finis"
+msgstr "Modèles"
 
 msgid "Apparel Shape"
-msgstr "Modèles"
+msgstr "Forme"
 
 msgid "Apparel Shape Industrial Description"
-msgstr "Données techniques"
+msgstr "Données techniques de la forme"
 
 msgid "Apparel Shape List"
-msgstr "Modèles"
+msgstr "Formes"
 
 msgid "Apparel Shape Module"
-msgstr "Module Modèles"
+msgstr "Module des formes"
 
 msgid "Apparel Shape Owner"
-msgstr "Appartient au modèle"
+msgstr "Appartient à la forme"
 
 msgid "Apparel Shape Reference"
-msgstr "Réf Modèle"
+msgstr "Référence forme"
 
 msgid "Apparel Shape Taken"
-msgstr "Vêtements repris"
+msgstr "Forme reprise"
 
 msgid "Apparel Shape to design"
-msgstr "Modèles à définir"
+msgstr "Forme à définir"
+
+msgid "Apparel Shapes"
+msgstr "Formes"
 
 msgid "Apparel Size"
-msgstr "Correspondances de Tailles"
+msgstr "Correspondances de tailles"
 
 msgid "Apparel Size List"
-msgstr "Correspondance de Tailles"
+msgstr "Correspondances de tailles"
 
 msgid "Apparel Size Module"
-msgstr "Module Tailles"
+msgstr "Module des tailles"
+
+msgid "Apparel Sizes"
+msgstr "Correspondances de tailles"
 
 msgid "Apparel Technical Drawing"
-msgstr "Figurine"
+msgstr "Dessin technique"
 
 msgid "Apparel Transformation"
-msgstr "Nomenclatures"
+msgstr "Nomenclature"
 
 msgid "Apparel Transformation List"
-msgstr "Éléments de la Nomenclature"
+msgstr "Nomenclatures"
 
 msgid "Apparel Transformation Module"
-msgstr "Nomenclatures"
+msgstr "Module des nomenclatures"
 
 msgid "Apparel Transformation Operation"
 msgstr "Opération de gamme"
 
 msgid "Apparel Transformation Operation List"
-msgstr "Liste des Opérations"
-
-msgid "Apparel Transformation State"
-msgstr "État Nomenclature"
+msgstr "Liste des opérations"
 
 msgid "Apparel Transformation Template"
-msgstr "Nomenclature(s) à inclure"
-
-msgid "Apparel Transformation Title"
-msgstr "Titre de la nomenclature"
+msgstr "Modèle de nomenclature"
 
 msgid "Apparel Transformation Transformed Resource"
-msgstr "un Composant"
+msgstr "Composant"
 
 msgid "Apparel Transformation Updated."
-msgstr "La Nomenclature est actualisée."
+msgstr "Nomenclature actualisée."
+
+msgid "Apparel Transformations"
+msgstr "Nomenclatures"
 
 msgid "Apparel fabric"
 msgstr "Tissu"
@@ -1092,6 +1107,12 @@ msgstr "Clé n° de compte"
 msgid "BT Title"
 msgstr "Titre du BT"
 
+msgid "Backup And Remove"
+msgstr "Sauvegarder et enlever"
+
+msgid "Backup And Upgrade"
+msgstr "Sauvegarder et mettre à jour"
+
 msgid "Bad login provided."
 msgstr "Login incorrect"
 
@@ -1159,7 +1180,7 @@ msgid "Base"
 msgstr "Base"
 
 msgid "Base Apparel Shape"
-msgstr "Base reprise"
+msgstr "Forme de base"
 
 msgid "Base Application"
 msgstr "Appliqué sur"
@@ -1282,7 +1303,7 @@ msgid "Budget Models"
 msgstr "Modèles de budget"
 
 msgid "Budget Module"
-msgstr "Budgets"
+msgstr "Module des budgets"
 
 msgid "Budget Situation"
 msgstr "Situation budgétaire"
@@ -2115,17 +2136,11 @@ msgstr "Convention collective"
 msgid "Collective agreement"
 msgstr "Convention collective"
 
-msgid "Color Range"
-msgstr "Coloris"
-
-msgid "Color Reference"
-msgstr "Réf coloris"
-
-msgid "Color count"
-msgstr "Nb de coloris"
-
 msgid "Colour"
 msgstr "Couleur"
+
+msgid "Colour Count"
+msgstr "Nombre de couleurs"
 
 msgid "Colour List"
 msgstr "Couleur"
@@ -2137,6 +2152,9 @@ msgid "Colour Title"
 msgstr "Réf Coloris"
 
 msgid "Colour Variation"
+msgstr "Coloris"
+
+msgid "Colour Variations"
 msgstr "Coloris"
 
 msgid "Colour referential"
@@ -2475,6 +2493,9 @@ msgstr "Coordonnées"
 msgid "Copy"
 msgstr "Copier"
 
+msgid "Copy Apparel Colour Range Variation"
+msgstr "Copier la gammes de coloris"
+
 msgid "Copy or cut one or more items to paste first."
 msgstr "Copier ou couper un ou plusieurs objets pour coller en premier"
 
@@ -2747,6 +2768,9 @@ msgstr "Client"
 
 msgid "Customer Account"
 msgstr "Compte Client"
+
+msgid "Customer Colour"
+msgstr "Coloris client"
 
 msgid "Customer Measure"
 msgstr "Mesures Client"
@@ -3758,10 +3782,7 @@ msgid "Drawing"
 msgstr "Dessin"
 
 msgid "Drawing Reference"
-msgstr "Réf Dessin"
-
-msgid "Drawing reference"
-msgstr "Réf Dessin"
+msgstr "Réf dessin"
 
 msgid "Duplicate"
 msgstr "Dupliquer"
@@ -4078,6 +4099,9 @@ msgstr "L'évènement a été assigné et attend d'être traité par un utilisat
 msgid "Events in this state are outgoing events which were posted. Some events may be delivered later, whenever the recipient confirms he received them."
 msgstr "Les évènements dans cet état ont été envoyés au destinataire."
 
+msgid "Everybody"
+msgstr "Tout le monde"
+
 msgid "Everything"
 msgstr "Tous les résultats"
 
@@ -4098,6 +4122,9 @@ msgstr "Type d'échange"
 
 msgid "Exclusive Discount Ratio"
 msgstr "Taux de remise exclusif"
+
+msgid "Existing users please log in by entering your email adress and password in the two fields below."
+msgstr "Utilisateurs existants, veuillez-vous connecter en entrant vos adresse email et mot de passe dans les deux champs ci-dessus."
 
 msgid "Exit Preview"
 msgstr "Quitter l'aperçu"
@@ -4290,6 +4317,9 @@ msgstr "Fichier committé."
 
 msgid "File format:"
 msgstr "Format du fichier:"
+
+msgid "File to upload"
+msgstr "Fichier à charger"
 
 msgid "File uploaded."
 msgstr "Fichier chargé"
@@ -4772,6 +4802,9 @@ msgstr "Cet état signifie qu'un document est actuellement manquant."
 msgid "If set, payment will occur at the end of the month of the payment term."
 msgstr "Indique si le paiement s'effectue à la fin du mois défini par l'application du délai de paiement en jours à la date de référence."
 
+msgid "If you have not created an account yet, please fill all the fields below to register yourself and create a new account."
+msgstr "Si vous n'avez pas encore créé de compte, veuillez remplir les champs pour vous enregistrer et créer un nouveau compte."
+
 msgid "Image"
 msgstr "Image"
 
@@ -4971,6 +5004,9 @@ msgstr "Ce champ est obligatoire."
 
 msgid "Inspect Object"
 msgstr "Inspecter l'objet"
+
+msgid "Install"
+msgstr "Installer"
 
 msgid "Install Business Template"
 msgstr "Installer le Business Template"
@@ -5329,8 +5365,14 @@ msgstr "La dernière période ouverte prend fin le ${last_openned_date}, cette p
 msgid "Latest"
 msgstr "Le plus récent"
 
+msgid "Latest Additions"
+msgstr "Derniers ajouts"
+
 msgid "Latest Content List"
 msgstr "Documents récents"
+
+msgid "Latest Documents"
+msgstr "Derniers documents"
 
 msgid "Layout Configuration"
 msgstr "Configuration du design"
@@ -5569,7 +5611,7 @@ msgstr "Mesure"
 msgid "Measure Cell"
 msgstr "Cellule de mesure"
 
-msgid "Measure drawing"
+msgid "Measure Drawing"
 msgstr "Cote"
 
 msgid "Measure type"
@@ -5773,11 +5815,17 @@ msgstr "Mouvements"
 msgid "Multiple (${document_count}) documents ${document_reference} - ${document_language} - ${document_version} already exists."
 msgstr "Plusieurs (${document_count}) documents ${document_reference} - ${document_language} - ${document_version} existent déjà."
 
+msgid "My Contacts"
+msgstr "Mes contacts"
+
 msgid "My Content List"
 msgstr "Liste de mon contenu"
 
 msgid "My Contributed Content"
 msgstr "Mes fichiers partagés"
+
+msgid "My Documents"
+msgstr "Mes documents"
 
 msgid "My Drafts of Accounting Transactions"
 msgstr "Mes écritures comptables au brouillon"
@@ -5842,6 +5890,9 @@ msgstr "Montant Net"
 msgid "Net Width"
 msgstr "Laize des collections"
 
+msgid "Net Width (cm)"
+msgstr "Largeur utile (cm)"
+
 msgid "Net payable"
 msgstr "Net à payer"
 
@@ -5871,6 +5922,15 @@ msgstr "Nouvelle fonction"
 
 msgid "New Incoming Events"
 msgstr "Nouveaux évènements entrant"
+
+msgid "New Link"
+msgstr "Nouveau lien"
+
+msgid "New Page"
+msgstr "Nouveau page"
+
+msgid "New User Registration"
+msgstr "Enregistrement d'un nouvel utilisateur"
 
 msgid "New Value"
 msgstr "Nouvelle valeur"
@@ -5946,6 +6006,9 @@ msgstr "Aucun document correspondant n'a été trouvé."
 
 msgid "No related wiki documents found."
 msgstr "Aucun wiki correspondant n'a été trouvé."
+
+msgid "No result !"
+msgstr "Pas de résultat !"
 
 msgid "No such document was found."
 msgstr "Aucun document correspondant n'a été trouvé."
@@ -7083,7 +7146,7 @@ msgid "Product Line"
 msgstr "Ligne de produit"
 
 msgid "Product Module"
-msgstr "Produit"
+msgstr "Module des produits"
 
 msgid "Product or Service"
 msgstr "Produit ou service"
@@ -7562,6 +7625,9 @@ msgstr "Valeur de la constante"
 msgid "Ratio Settings"
 msgstr "Constantes"
 
+msgid "Raw Width (cm)"
+msgstr "Largeur brute (cm)"
+
 msgid "Raw width (cm)"
 msgstr "Laize commerciale (cm)"
 
@@ -7727,6 +7793,9 @@ msgstr "Refus de traiter plus de 1000 documents, vérifiez votre sélection."
 msgid "Region"
 msgstr "Région"
 
+msgid "Register"
+msgstr "Enregistrer"
+
 msgid "Registered Capital"
 msgstr "Capital social"
 
@@ -7812,19 +7881,19 @@ msgid "Related Apparel Colour Range Colour Variation"
 msgstr "Gammes dépendantes"
 
 msgid "Related Apparel Colour Range Variation"
-msgstr "Coloris coordonné"
+msgstr "Gammes coloris liées"
 
 msgid "Related Apparel Fabrics"
 msgstr "Tissus fournis"
 
 msgid "Related Apparel Model"
-msgstr "Produits Finis dépendants"
+msgstr "Modèles dépendants"
 
 msgid "Related Apparel Shape"
-msgstr "Modèles repris"
+msgstr "Forme liées"
 
 msgid "Related Apparel Transformation"
-msgstr "Nomenclatures dépendantes"
+msgstr "Nomenclatures liées"
 
 msgid "Related Balance Transaction"
 msgstr "Écriture de reprise des à nouveaux correspondante"
@@ -7836,7 +7905,7 @@ msgid "Related Business Template"
 msgstr "Business Template lié"
 
 msgid "Related Colour Range Colour Variation"
-msgstr "Gammes Matières concernées"
+msgstr "Gammes matières liées"
 
 msgid "Related Components"
 msgstr "Composants fournis"
@@ -7966,6 +8035,9 @@ msgstr "Mémoriser mon Nom"
 
 msgid "Remember my name."
 msgstr "Mémoriser mon Nom"
+
+msgid "Remove"
+msgstr "Enlever"
 
 msgid "Rename"
 msgstr "Renommer"
@@ -8215,6 +8287,9 @@ msgstr "Résultat"
 
 msgid "Results"
 msgstr "Résultats"
+
+msgid "Results <em>${start} - ${stop}</em> of <em>${total}</em>."
+msgstr "Résultats <em>${start} - ${stop}</em> sur <em>${total}</em>."
 
 msgid "Retract"
 msgstr "Se rétracter"
@@ -8723,11 +8798,17 @@ msgstr "Cocher la case \"Se souvenir de moi\" autorise ERP5 à se souvenir de vo
 msgid "Setting the 'Remember my name' option will set a cookie with your username, so that when you next log in, your user name will already be filled in for you."
 msgstr "Cocher 'Mémoriser mon Nom'  permettra de le faire apparaître lors de votre prochaine connexion."
 
+msgid "Settings"
+msgstr "Paramètres"
+
 msgid "Severity"
 msgstr "Gravité"
 
 msgid "Shape"
-msgstr "Modèle"
+msgstr "Forme"
+
+msgid "Shape Type"
+msgstr "Type de forme"
 
 msgid "Shape type"
 msgstr "Forme"
@@ -8868,7 +8949,7 @@ msgid "Sitemap"
 msgstr "Plan du site"
 
 msgid "Size"
-msgstr "Gamme de Tailles"
+msgstr "Taille"
 
 msgid "Size:"
 msgstr "Taille:"
@@ -9458,8 +9539,8 @@ msgstr "Origine / Personnel "
 msgid "Supplier Administrator"
 msgstr "Responsable des tâches administratives pour le fournisseur"
 
-msgid "Supplier Colour Reference"
-msgstr "Réf Coloris Fournisseur"
+msgid "Supplier Colour"
+msgstr "Coloris Fournisseur"
 
 msgid "Supplier Price"
 msgstr "Prix Fournisseur"
@@ -9711,6 +9792,9 @@ msgstr "Taxes"
 
 msgid "Technical Drawing"
 msgstr "Dossier Technique"
+
+msgid "Technical Drawings"
+msgstr "Dessins techniques"
 
 msgid "Technical drawing type"
 msgstr "Élément du dossier"
@@ -10741,7 +10825,7 @@ msgid "Trade Date"
 msgstr "Date de référence"
 
 msgid "Trade Description"
-msgstr "Libellé"
+msgstr "Désignation commerciale"
 
 msgid "Trade Line"
 msgstr "Ligne commerciale"
@@ -11012,6 +11096,9 @@ msgstr "Business Templates mis à jour"
 
 msgid "Updated [state in assignment_workflow]"
 msgstr "Mis à jour"
+
+msgid "Upgrade"
+msgstr "Mettre à jour"
 
 msgid "Upgrade Business Templates from Repositories"
 msgstr "Mettre à jour les Business Templates depuis les dépôts"

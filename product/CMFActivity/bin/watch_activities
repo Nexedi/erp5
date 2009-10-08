@@ -4,6 +4,7 @@
 # ideas:
 #  - more control on what would be displayed
 #  - allow to group by tag instead of method_id
+#    - somehow done, use shell variable text_group
 #  - use python with curses to have runtime control
 
 function show_help ( )
@@ -37,9 +38,10 @@ fi
 SELECT=""
 for t in message message_queue ; do
   SELECT=$SELECT"""
-  SELECT count(path) AS $t, method_id, processing, processing_node AS node, min(priority) AS min_pri, max(priority) AS max_pri FROM $t GROUP BY method_id, processing, processing_node ORDER BY node;
-  SELECT count(path) AS $t, processing, processing_node, min(priority) AS min_pri, max(priority) AS max_pri FROM $t GROUP BY processing, processing_node;
-  SELECT count(path) AS ${t}_count FROM $t;
+  SELECT count(*) AS $t, ${text_group:-method_id}, processing, processing_node AS node, min(priority) AS min_pri, max(priority) AS max_pri FROM $t GROUP BY ${text_group:-method_id}, processing, processing_node ORDER BY node;
+  SELECT count(*) AS $t, processing, processing_node, min(priority) AS min_pri, max(priority) AS max_pri FROM $t GROUP BY processing, processing_node;
+  SELECT priority as pri, MIN(timediff(NOW(), date)) AS min, AVG(timediff(NOW() , date)) AS avg, MAX(timediff(NOW() , date)) AS max FROM $t GROUP BY priority;
+  SELECT count(*) AS ${t}_count FROM $t;
   """
 done
 watch -n $INTERVAL "mysql $MYSQL_OPT --disable-pager -t -e '$SELECT' "

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
@@ -189,7 +190,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
             sub_xml = self.getSubObjectXupdate(xml)
             #LOG('addNode', DEBUG, 'sub_xml: %s' % str(sub_xml))
             # Then do the udpate
-            conflict_list += self.addNode(xml=sub_xml,object=sub_object,
+            conflict_list += self.addNode(xml=sub_xml, object=sub_object,
                             previous_xml=sub_previous_xml, force=force,
                             simulate=simulate, reset=reset, **kw)['conflict_list']
     elif (xml.xpath('local-name()') == self.history_tag \
@@ -641,25 +642,23 @@ class ERP5Conduit(XMLSyncUtilsMixin):
       if subnode.xpath('local-name()') == property:
         return self.convertXmlValue(subnode)
     return None
- 
+
   def replaceIdFromXML(self, xml, new_id):
     """
       return a xml with id replace by a new id
     """
     if xml is not None and new_id is not None:
       if isinstance(xml, str):
-        xml = etree.XML(xml)
+        xml = etree.XML(xml, parser=parser)
       #copy of xml object for modification
       from copy import deepcopy
       xml_copy = deepcopy(xml)
-      if xml.nsmap is None or xml.nsmap == {}:
-        object_element = xml_copy.find(self.xml_object_tag)
-        id_element = object_element.find('id')
+      if xml_copy.tag == self.xml_object_tag:
+        object_element = xml_copy
       else:
-        object_element = xml_copy.xpath('//syncml:object',
-            namespaces={'syncml':xml_copy.nsmap[xml_copy.prefix]})[0]
-        id_element = object_element.xpath('//syncml:object',
-            namespaces={'syncml':xml_copy.nsmap[xml_copy.prefix]})[0]
+        object_element = xml_copy.xpath('//object')[0]
+      #XXXElement id will be removed from asXML
+      id_element = object_element.xpath('./id')[0]
       object_element.attrib['id'] = new_id
       id_element.text = new_id
       return etree.tostring(xml_copy)

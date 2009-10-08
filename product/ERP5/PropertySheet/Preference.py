@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright (c) 2005 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2005-2009 Nexedi SA and Contributors. All Rights Reserved.
 #                    Jerome Perrin <jerome@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
@@ -32,7 +32,7 @@ class Preference:
 
     XXX: why is this here and not in ERP5Form ?
   """
-  
+
   _properties = (
     { 'id'          : 'priority',
       'description' : 'Priority of the preference.',
@@ -53,6 +53,12 @@ class Preference:
       'mode'        : 'w'},
     { 'id'          : 'preferred_date_order',
       'description' : 'The order of year, month and day.',
+      'type'        : 'string',
+      'preference'  : 1,
+      'mode'        : 'w'},
+    { 'id'          : 'preferred_float_number_style',
+      'description' : 'The style of float number (with comma, point, '\
+                      'space, ...).',
       'type'        : 'string',
       'preference'  : 1,
       'mode'        : 'w'},

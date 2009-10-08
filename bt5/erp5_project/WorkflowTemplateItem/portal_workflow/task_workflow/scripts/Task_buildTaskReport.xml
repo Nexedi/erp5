@@ -58,7 +58,7 @@
 previous_tag = task.getPath() + \'_firstUpdateAppliedRule\'\n
 expand_tag = task.getPath() + \'_expand\'\n
 activate_kw = {\'tag\':expand_tag,\'priority\':3}\n
-task.activate(tag=expand_tag,after_tag=previous_tag).updateAppliedRule(rule_id = \'default_order_rule\',activate_kw=activate_kw)\n
+task.activate(tag=expand_tag,after_tag=previous_tag).updateAppliedRule(rule_reference = \'default_order_rule\',activate_kw=activate_kw)\n
 \n
 delivery_builder = task.portal_deliveries.task_report_builder\n
 delivery_builder.activate(activity=\'SQLQueue\',after_tag=expand_tag).build(explanation_uid=task.getUid())\n

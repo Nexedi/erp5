@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.ERP5Form.ListBox</string>
-          <string>ListBox</string>
-        </tuple>
-        <none/>
+        <global name="ListBox" module="Products.ERP5Form.ListBox"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -314,12 +311,8 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>id</string>
-                          <string>ID</string>
-                        </tuple>
-                        <tuple>
                           <string>title</string>
-                          <string>Apparel Size</string>
+                          <string>Title</string>
                         </tuple>
                         <tuple>
                           <string>default_destination_title</string>
@@ -328,6 +321,10 @@
                         <tuple>
                           <string>description</string>
                           <string>Description</string>
+                        </tuple>
+                        <tuple>
+                          <string>translated_validation_state_title</string>
+                          <string>State</string>
                         </tuple>
                       </list>
                     </value>
@@ -343,16 +340,16 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>anchor</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
                     <key> <string>columns</string> </key>
                     <value>
                       <list>
                         <tuple>
-                          <string>id</string>
-                          <string>ID</string>
-                        </tuple>
-                        <tuple>
                           <string>title</string>
-                          <string>Apparel Size</string>
+                          <string>Title</string>
                         </tuple>
                         <tuple>
                           <string>default_destination_title</string>
@@ -361,6 +358,10 @@
                         <tuple>
                           <string>description</string>
                           <string>Description</string>
+                        </tuple>
+                        <tuple>
+                          <string>translated_validation_state_title</string>
+                          <string>State</string>
                         </tuple>
                       </list>
                     </value>
@@ -435,6 +436,10 @@
                     <value> <int>0</int> </value>
                 </item>
                 <item>
+                    <key> <string>hide_rows_on_no_search_criterion</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
                     <key> <string>lines</string> </key>
                     <value> <int>30</int> </value>
                 </item>
@@ -455,6 +460,10 @@
                     </value>
                 </item>
                 <item>
+                    <key> <string>page_template</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>portal_types</string> </key>
                     <value>
                       <list>
@@ -468,21 +477,16 @@
                 <item>
                     <key> <string>report_root_list</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>apparel_morpho_type</string>
-                          <string>Morphologies</string>
-                        </tuple>
-                        <tuple>
-                          <string>size</string>
-                          <string>Size</string>
-                        </tuple>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
                     <key> <string>report_tree</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>row_css_method</string> </key>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>search</string> </key>
@@ -493,12 +497,8 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>id</string>
-                          <string>ID</string>
-                        </tuple>
-                        <tuple>
                           <string>title</string>
-                          <string>Apparel Size</string>
+                          <string>Title</string>
                         </tuple>
                         <tuple>
                           <string>default_destination_title</string>
@@ -507,6 +507,10 @@
                         <tuple>
                           <string>description</string>
                           <string>Description</string>
+                        </tuple>
+                        <tuple>
+                          <string>translated_validation_state_title</string>
+                          <string>State</string>
                         </tuple>
                       </list>
                     </value>
@@ -517,7 +521,7 @@
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>
-                    <value> <string>size_selection</string> </value>
+                    <value> <string>apparel_size_module_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>sort</string> </key>
@@ -535,12 +539,8 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>id</string>
-                          <string>ID</string>
-                        </tuple>
-                        <tuple>
                           <string>title</string>
-                          <string>Apparel Size</string>
+                          <string>Title</string>
                         </tuple>
                         <tuple>
                           <string>default_destination_title</string>
@@ -549,6 +549,10 @@
                         <tuple>
                           <string>description</string>
                           <string>Description</string>
+                        </tuple>
+                        <tuple>
+                          <string>translated_validation_state_title</string>
+                          <string>State</string>
                         </tuple>
                       </list>
                     </value>
@@ -568,6 +572,12 @@
                     <value> <string>Apparel Sizes</string> </value>
                 </item>
                 <item>
+                    <key> <string>untranslatable_columns</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
                     <key> <string>url_columns</string> </key>
                     <value>
                       <list/>
@@ -582,11 +592,8 @@
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.Formulator.MethodField</string>
-          <string>Method</string>
-        </tuple>
-        <none/>
+        <global name="Method" module="Products.Formulator.MethodField"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>

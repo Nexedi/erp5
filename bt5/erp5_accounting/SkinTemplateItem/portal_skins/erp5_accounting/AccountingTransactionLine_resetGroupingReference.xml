@@ -67,18 +67,25 @@ assert context.getGroupingReference()\n
 \n
 if context.AccountingTransaction_isSourceView():\n
   node_uid = context.getSourceUid()\n
-  section_uid = context.getSourceSectionUid()\n
+  section_category = None\n
+  section = context.getSourceSectionValue()\n
+  if section is not None:\n
+    section = section.Organisation_getMappingRelatedOrganisation()\n
+    section_category = section.getGroup(base=1)\n
   mirror_section_uid = context.getDestinationSectionUid()\n
 else:\n
   node_uid = context.getDestinationUid()\n
-  section_uid = context.getDestinationSectionUid()\n
+  section = context.getDestinationSectionValue()\n
+  if section is not None:\n
+    section = section.Organisation_getMappingRelatedOrganisation()\n
+    section_category = section.getGroup(base=1)\n
   mirror_section_uid = context.getSourceSectionUid()\n
 \n
 line_list = portal.portal_simulation.getMovementHistoryList(\n
                   portal_type=portal.getPortalAccountingMovementTypeList(),\n
                   grouping_reference=context.getGroupingReference(),\n
                   node_uid=node_uid,\n
-                  section_uid=section_uid,\n
+                  section_category=section_category,\n
                   mirror_section_uid=mirror_section_uid)\n
 \n
 # If the group is still valid, we may want to keep it as is.\n
@@ -132,7 +139,9 @@ return line_list\n
                             <string>precision</string>
                             <string>AssertionError</string>
                             <string>node_uid</string>
-                            <string>section_uid</string>
+                            <string>None</string>
+                            <string>section_category</string>
+                            <string>section</string>
                             <string>mirror_section_uid</string>
                             <string>line_list</string>
                             <string>round</string>
@@ -142,7 +151,6 @@ return line_list\n
                             <string>_getiter_</string>
                             <string>l</string>
                             <string>line</string>
-                            <string>None</string>
                           </tuple>
                         </value>
                     </item>

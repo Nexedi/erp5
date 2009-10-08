@@ -23,7 +23,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value> <string>XXX This workflow should be renamed to trade_matrix_interaction_workflow</string> </value>
         </item>
         <item>
             <key> <string>groups</string> </key>

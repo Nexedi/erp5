@@ -10,20 +10,8 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>Python_magic</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>Script_magic</string> </key>
             <value> <int>3</int> </value>
-        </item>
-        <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <none/>
-            </value>
         </item>
         <item>
             <key> <string>_bind_names</string> </key>
@@ -69,13 +57,8 @@
 apparel_colour_range = context.getSpecialiseValue(portal_type=(\'Apparel Colour Range\',))\n
 \n
 if apparel_colour_range is None:\n
-  redirect_url = \'%s/%s?%s\' % ( context.absolute_url()\n
-                              , form_id\n
-                              , \'portal_status_message=No+Apparel+Colour+Range+defined.\'\n
-                              )\n
-\n
+  msg = \'No Apparel Colour Range defined.\'\n
 else:\n
-\n
   apparel_colour_range_variation_list = map( lambda x: x.getObject(), apparel_colour_range.searchFolder(portal_type=(\'Apparel Colour Range Variation\',)))\n
 \n
   apparel_model_colour_variation_list  = context.searchFolder(portal_type=(\'Apparel Model Colour Variation\',))\n
@@ -87,26 +70,19 @@ else:\n
     if apparel_colour_range_variation.getTitle() not in apparel_model_colour_variation_title_list:\n
       count += 1\n
       # Use portal activity for creating lot of variation\n
-      context.activate().newContent(\n
-        type_name = \'Apparel Model Colour Variation\',\n
+      context.activate(activity=\'SQLQueue\').newContent(\n
+        portal_type = \'Apparel Model Colour Variation\',\n
         title = apparel_colour_range_variation.getTitle(),\n
         description = apparel_colour_range_variation.getDescription()\n
       )\n
 \n
   if count != 0:\n
-    redirect_url = \'%s/%s?%s\' % ( context.absolute_url()\n
-                                , form_id\n
-                                , \'portal_status_message=Creating+%s+Apparel+Model+Colour+Variation.\' % count\n
-                                )\n
+    msg = \'Creating %s Apparel Model Colour Variation.\' % count\n
   else:\n
+    msg = \'No new Apparel Colour Range Variation defined.\'\n
 \n
-    redirect_url = \'%s/%s?%s\' % ( context.absolute_url()\n
-                                , form_id\n
-                                , \'portal_status_message=No+new+Apparel+Colour+Range+Variation+defined.\'\n
-                                )\n
-\n
-\n
-request[ \'RESPONSE\' ].redirect( redirect_url )\n
+context.Base_redirect(form_id=form_id,\n
+                      keep_items=dict(portal_status_message=msg))\n
 </string> </value>
         </item>
         <item>
@@ -116,14 +92,8 @@ request[ \'RESPONSE\' ].redirect( redirect_url )\n
             </value>
         </item>
         <item>
-            <key> <string>_filepath</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
-            <value> <string>form_id=\'\'</string> </value>
+            <value> <string>form_id=\'view\'</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -155,7 +125,7 @@ request[ \'RESPONSE\' ].redirect( redirect_url )\n
                             <string>request</string>
                             <string>apparel_colour_range</string>
                             <string>None</string>
-                            <string>redirect_url</string>
+                            <string>msg</string>
                             <string>map</string>
                             <string>apparel_colour_range_variation_list</string>
                             <string>apparel_model_colour_variation_list</string>
@@ -164,7 +134,7 @@ request[ \'RESPONSE\' ].redirect( redirect_url )\n
                             <string>_getiter_</string>
                             <string>apparel_colour_range_variation</string>
                             <string>_inplacevar_</string>
-                            <string>_getitem_</string>
+                            <string>dict</string>
                           </tuple>
                         </value>
                     </item>
@@ -177,7 +147,7 @@ request[ \'RESPONSE\' ].redirect( redirect_url )\n
             <key> <string>func_defaults</string> </key>
             <value>
               <tuple>
-                <string></string>
+                <string>view</string>
               </tuple>
             </value>
         </item>

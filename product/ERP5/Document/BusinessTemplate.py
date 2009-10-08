@@ -948,6 +948,22 @@ class ObjectTemplateItem(BaseTemplateItem):
                                  'ERP5 Distributed Ram Cache',):
             assert container.meta_type == 'ERP5 Cache Factory'
             container.getParentValue().updateCache()
+          elif (container.meta_type == 'CMF Skins Tool') and \
+              (old_obj is not None):
+            # Keep compatibility with previous export format of
+            # business_template_registered_skin_selections
+            # and do not modify exported value
+            if obj.getProperty('business_template_registered_skin_selections', 
+                               None) is None:
+              # Keep previous value of register skin selection for skin folder
+              skin_selection_list = old_obj.getProperty(
+                  'business_template_registered_skin_selections', None)
+              if skin_selection_list is not None:
+                if isinstance(skin_selection_list, basestring):
+                  skin_selection_list = skin_selection_list.split(' ')
+                obj._setProperty(
+                    'business_template_registered_skin_selections',
+                    skin_selection_list, type='tokens')
            
           recurse(restoreHook, obj)
       # now put original order group
@@ -1962,8 +1978,8 @@ class PortalTypeAllowedContentTypeTemplateItem(BaseTemplateItem):
           portal_id = key.split('/')[-1]
           portal_type = pt._getOb(portal_id)
         except (AttributeError, KeyError):
-          LOG("portal types not found : ", 100, portal_id)
-          continue
+          raise AttributeError, "Portal type '%s' not found while " \
+              "installing %s" % (portal_id, self.getTitle())
         property_list = self._objects.get(key, [])
         old_property_list = old_objects.get(key, ())
         object_property_list = getattr(portal_type, self.class_property, ())

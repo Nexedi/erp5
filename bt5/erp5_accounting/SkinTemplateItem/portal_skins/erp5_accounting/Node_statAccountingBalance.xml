@@ -64,6 +64,11 @@ if kw.get(\'node_uid\'):\n
 if kw.get(\'mirror_section_uid\'):\n
   params[\'mirror_section_uid\'] = kw[\'mirror_section_uid\']\n
 \n
+if kw.get(\'function_uid\'):\n
+  params[\'function_uid\'] = kw[\'function_uid\']\n
+if kw.get(\'project_uid\'):\n
+  params[\'project_uid\'] = kw[\'project_uid\']\n
+\n
 # FIXME: bank account uses quantity, not total_price\n
 if kw.get(\'payment_uid\'):\n
   params[\'payment_uid\'] = kw[\'payment_uid\']\n

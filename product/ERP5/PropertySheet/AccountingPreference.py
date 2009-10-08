@@ -48,6 +48,7 @@ class AccountingPreference:
       'description' : 'The simulation state for transactions',
       'type'        : 'tokens',
       'preference'  : 1,
+      'default'     : [],
       'mode'        : 'w'},
     { 'id'          : 'preferred_accounting_transaction_section_category',
       'description' : 'The section category for transactions; '\

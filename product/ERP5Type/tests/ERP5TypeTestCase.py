@@ -590,6 +590,40 @@ class ERP5TypeTestCase(PortalTestCase):
         if verbose:
           ZopeTestCase._print(' done (%.3fs)\n' % (time.time() - start))
 
+    def createSimpleUser(self, title, reference, function):
+      """
+        Helper function to create a Simple ERP5 User.
+        User password is the reference.
+      """
+      user = self.createUser(reference, person_kw=dict(title=title))
+      assignment = self.createUserAssignement(user, assignment_kw=dict(function=function))
+      return user
+
+    def createUser(self, reference, password=None, person_kw=None):
+      """
+        Create an ERP5 User.
+        Default password is the reference.
+        person_kw is passed as additional arguments when creating the person
+      """
+      if password is None:
+        password = reference
+      if person_kw is None:
+        person_kw = dict()
+
+      person = self.portal.person_module.newContent(portal_type='Person',
+                                                    reference=reference,
+                                                    password=password,
+                                                    **person_kw)
+      return person
+
+    def createUserAssignement(self, user, assignment_kw):
+      """
+        Create an assignment to user.
+      """
+      assignment = user.newContent(portal_type='Assignment', **assignment_kw)
+      assignment.open()
+      return assignment
+
     def failIfDifferentSet(self, a, b, msg=""):
       if not msg:
         msg='%r != %r' % (a, b)

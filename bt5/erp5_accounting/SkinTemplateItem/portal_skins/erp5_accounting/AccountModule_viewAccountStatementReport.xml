@@ -92,6 +92,9 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
+                        <string>your_section_category</string>
+                        <string>your_function</string>
+                        <string>your_project</string>
                         <string>your_omit_grouping_reference</string>
                         <string>your_mirror_section</string>
                         <string>your_payment</string>
@@ -99,7 +102,6 @@
                         <string>your_from_date</string>
                         <string>your_node</string>
                         <string>your_portal_type</string>
-                        <string>your_section_category</string>
                         <string>your_simulation_state</string>
                       </list>
                     </value>

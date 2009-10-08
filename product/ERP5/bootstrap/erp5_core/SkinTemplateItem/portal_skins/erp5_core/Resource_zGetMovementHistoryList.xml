@@ -70,6 +70,12 @@
                                 </value>
                             </item>
                             <item>
+                                <key> <string>limit_expression</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
                                 <key> <string>omit_input</string> </key>
                                 <value>
                                   <dictionary/>
@@ -151,6 +157,7 @@
                             <string>where_expression</string>
                             <string>order_by_expression</string>
                             <string>group_by_expression</string>
+                            <string>limit_expression</string>
                             <string>selection_domain</string>
                             <string>selection_report</string>
                             <string>ignore_variation</string>
@@ -587,6 +594,7 @@
 where_expression\r\n
 order_by_expression\r\n
 group_by_expression\r\n
+limit_expression\r\n
 selection_domain\r\n
 selection_report\r\n
 ignore_variation\r\n
@@ -758,6 +766,12 @@ GROUP BY\n
 ORDER BY\n
   <dtml-var order_by_expression>\n
 </dtml-if>\n
+\n
+<dtml-if limit_expression>\n
+LIMIT\n
+  <dtml-var limit_expression>\n
+</dtml-if>\n
+\n
 ) AS q1\n
 
 
@@ -918,6 +932,12 @@ GROUP BY\n
 ORDER BY\n
   <dtml-var order_by_expression>\n
 </dtml-if>\n
+\n
+<dtml-if limit_expression>\n
+LIMIT\n
+  <dtml-var limit_expression>\n
+</dtml-if>\n
+\n
 ) AS q1\n
 
 

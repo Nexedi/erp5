@@ -33,7 +33,7 @@
         </item>
         <item>
             <key> <string>max_sec_in_cache</string> </key>
-            <value> <int>3600</int> </value>
+            <value> <int>-1</int> </value>
         </item>
       </dictionary>
     </pickle>

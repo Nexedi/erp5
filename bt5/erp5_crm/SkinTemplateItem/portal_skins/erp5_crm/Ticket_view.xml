@@ -118,6 +118,7 @@
                     <value>
                       <list>
                         <string>my_source_trade_title_list</string>
+                        <string>my_specialise_title</string>
                         <string>my_start_date</string>
                         <string>my_stop_date</string>
                         <string>my_quantity</string>
@@ -126,7 +127,6 @@
                         <string>my_price_currency</string>
                         <string>my_total_price</string>
                         <string>my_translated_simulation_state_title</string>
-                        <string>my_specialise_title</string>
                       </list>
                     </value>
                 </item>

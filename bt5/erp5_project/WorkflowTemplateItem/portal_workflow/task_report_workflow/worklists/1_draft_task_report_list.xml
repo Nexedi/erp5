@@ -21,7 +21,7 @@
             <key> <string>actbox_url</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-task_report_module?simulation_state=confirmed&local_roles=%(local_roles)s&reset=1
+task_report_module?simulation_state=draft&local_roles=%(local_roles)s&reset=1
 
 ]]></string> </value>
         </item>

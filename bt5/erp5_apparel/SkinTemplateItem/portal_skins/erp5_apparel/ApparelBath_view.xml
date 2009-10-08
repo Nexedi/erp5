@@ -10,12 +10,6 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_bind_names</string> </key>
             <value>
               <object>
@@ -40,12 +34,6 @@
             <key> <string>_objects</string> </key>
             <value>
               <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
             </value>
         </item>
         <item>
@@ -85,7 +73,7 @@
                     <key> <string>center</string> </key>
                     <value>
                       <list>
-                        <string>my_comment</string>
+                        <string>my_description</string>
                       </list>
                     </value>
                 </item>
@@ -93,16 +81,19 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
+                        <string>my_title</string>
                         <string>my_resource_title</string>
                         <string>my_variation_category_list</string>
-                        <string>my_title</string>
                       </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>right</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>my_comment</string>
+                        <string>my_translated_validation_state_title</string>
+                      </list>
                     </value>
                 </item>
               </dictionary>

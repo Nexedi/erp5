@@ -141,10 +141,13 @@ class DistributedRamCache(BaseCache):
     cache_storage = self.getCacheStorage()
     cache_id = self.checkAndFixCacheId(cache_id, scope)
     cache_entry = cache_storage.get(cache_id)
-    if isinstance(cache_entry, CacheEntry) and not cache_entry.isExpired():
-      return True
-    else:
-      return False
+    to_return = False
+    if isinstance(cache_entry, CacheEntry):
+      if cache_entry.isExpired():
+        del cache_storage[cache_id]
+      else:
+        to_return = True
+    return to_return
 
   def getScopeList(self):
     ## memcached doesn't support namespaces (cache scopes) neither getting cached key list 

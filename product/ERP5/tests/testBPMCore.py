@@ -581,6 +581,29 @@ class TestBPMImplementation(TestBPMMixin):
     self.assertEquals(business_path_d_e.getExpectedStartDate(mock), DateTime('2009/04/08 GMT+9'))
     self.assertEquals(business_path_d_e.getExpectedStopDate(mock), DateTime('2009/04/12 GMT+9'))
 
+  def testBPMCopyAndPaste(self):
+    business_process = self.createBusinessProcess()
+    state = business_process.newContent(
+        portal_type=self.business_state_portal_type)
+    path = business_process.newContent(
+        portal_type=self.business_path_portal_type, predecessor_value=state,
+        successor_value=state)
+    transaction.commit()
+    self.tic()
+
+    pasted_business_process = business_process.Base_createCloneDocument(
+        batch_mode=1)
+    transaction.commit()
+    self.tic()
+
+    pasted_path = pasted_business_process.contentValues(
+        portal_type=self.business_path_portal_type)[0]
+    pasted_state = pasted_business_process.contentValues(
+        portal_type=self.business_state_portal_type)[0]
+
+    self.assertEqual(pasted_state, pasted_path.getSuccessorValue())
+    self.assertEqual(pasted_state, pasted_path.getPredecessorValue())
+
 class TestBPMDummyDeliveryMovementMixin(TestBPMMixin):
   def _createDelivery(self, **kw):
     return self.folder.newContent(portal_type='Dummy Delivery', **kw)

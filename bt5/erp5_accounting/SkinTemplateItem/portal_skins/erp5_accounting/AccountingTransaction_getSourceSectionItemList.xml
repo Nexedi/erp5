@@ -74,8 +74,13 @@ current_source_section = context.getSourceSectionValue()\n
 if current_source_section is not None and current_source_section not in result:\n
   result.append(current_source_section)\n
 \n
+def sorted(seq, key):\n
+  seq = seq[::]\n
+  seq.sort(key=key)\n
+  return seq\n
+\n
 # convert to ListField format\n
-return [(\'\', \'\')] + [(i.getTitle(), i.getRelativeUrl()) for i in result]\n
+return [(\'\', \'\')] + sorted([(i.getTitle(), i.getRelativeUrl()) for i in result], key=lambda x:x[0])\n
 </string> </value>
         </item>
         <item>
@@ -123,6 +128,7 @@ return [(\'\', \'\')] + [(i.getTitle(), i.getRelativeUrl()) for i in result]\n
                             <string>_getiter_</string>
                             <string>r</string>
                             <string>current_source_section</string>
+                            <string>sorted</string>
                             <string>i</string>
                           </tuple>
                         </value>

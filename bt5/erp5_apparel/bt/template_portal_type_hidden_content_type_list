@@ -1,7 +1,14 @@
-Apparel Component | Supply Cell
+Apparel Component | Mapped Value
+Apparel Component | Purchase Supply Line
+Apparel Component | Sale Supply Line
 Apparel Component | Supply Line
 Apparel Consumption | Mapped Value
 Apparel Fabric | Mapped Value
+Apparel Fabric | Purchase Supply Line
+Apparel Fabric | Sale Supply Line
 Apparel Fabric | Supply Line
+Apparel Model | Mapped Value
+Apparel Model | Purchase Supply Line
+Apparel Model | Sale Supply Line
 Apparel Model | Supply Line
-Apparel Transformation Transformed Resource | Mapped Value
+Apparel Size | Mapped Value

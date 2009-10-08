@@ -39,6 +39,11 @@ from DateTime import DateTime
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Form.Document.Preference import Priority
+from Products.ERP5.PropertySheet.HtmlStylePreference import HtmlStylePreference
+
+default_large_image_height, = [pref.get('default')
+                               for pref in HtmlStylePreference._properties
+                               if pref['id'] == 'preferred_large_image_height']
 
 
 class TestPreferences(ERP5TypeTestCase):
@@ -367,26 +372,27 @@ class TestPreferences(ERP5TypeTestCase):
 
     method = pref_tool.getPreferredAccountingTransactionSimulationState
     state = method()
-    self.assertEquals(state, None)
+    self.assertEquals(state, [])
     state = method('default')
     self.assertEquals(state, 'default')
 
     method = lambda *args: pref_tool.getPreference('preferred_accounting_transaction_simulation_state', *args)
     state = method()
-    self.assertEquals(state, None)
+    self.assertEquals(state, [])
     state = method('default')
     self.assertEquals(state, 'default')
 
     method = pref_tool.getPreferredAccountingTransactionSimulationStateList
     state_list = method()
-    self.assertEquals(state_list, None)
+    self.assertEquals(state_list, [])
     state_list = method(('default',))
-    self.assertEquals(state_list, ['default',]) # getPreferredAccountingTransactionSimulationStateList
-                                                # always tries to cast tuples to lists
+    # Initially, tuples were always casted to lists. This is not the case
+    # anymore when preference_tool.getXxxList returns the default value.
+    self.assertEquals(state_list, ('default',))
 
     method = lambda *args: pref_tool.getPreference('preferred_accounting_transaction_simulation_state_list', *args)
     state_list = method()
-    self.assertEquals(state_list, None)
+    self.assertEquals(state_list, [])
     state_list = method(('default',))
     self.assertEquals(state_list, ('default',))
 
@@ -424,21 +430,33 @@ class TestPreferences(ERP5TypeTestCase):
 
 
   def test_SystemPreference(self):
+    # We want to test a property with a default value defined
+    self.assertTrue(default_large_image_height > 0)
+    large_image_height = default_large_image_height + 1
+
     preference_tool = self.portal.portal_preferences
-    site_pref = preference_tool.newContent(
+    system_pref = preference_tool.newContent(
                           portal_type='System Preference',
-                          preferred_accounting_transaction_simulation_state_list="this_is_default",
+                          preferred_ooodoc_server_address='127.0.0.1',
                           priority=Priority.SITE)
     # check not taken into account if not enabled
-    self.assertEquals(None,
-                      preference_tool.getPreferredAccountingTransactionSimulationStateList())
+    self.assertEqual(None,
+                     preference_tool.getPreferredOoodocServerAddress())
+    self.assertEqual('localhost',
+                     preference_tool.getPreferredOoodocServerAddress('localhost'))
+    self.assertEqual(default_large_image_height,
+                     preference_tool.getPreferredLargeImageHeight())
     # enable it and check preference is returned
-    self.portal.portal_workflow.doActionFor(site_pref, 'enable_action')
-    self.assertEquals(site_pref.getPreferenceState(), 'global')
+    self.portal.portal_workflow.doActionFor(system_pref, 'enable_action')
+    self.assertEqual(system_pref.getPreferenceState(), 'global')
     transaction.commit()
     self.tic()
-    self.assertEquals(['this_is_default'],
-                      preference_tool.getPreferredAccountingTransactionSimulationStateList())
+    self.assertEqual('127.0.0.1',
+                     preference_tool.getPreferredOoodocServerAddress())
+    self.assertEqual('127.0.0.1',
+                     preference_tool.getPreferredOoodocServerAddress('localhost'))
+    self.assertEqual(default_large_image_height,
+                     preference_tool.getPreferredLargeImageHeight())
 
     # Members can't add new system preferences
     uf = self.getPortal().acl_users
@@ -447,40 +465,39 @@ class TestPreferences(ERP5TypeTestCase):
     newSecurityManager(None, member)
     self.assertRaises(Unauthorized, preference_tool.newContent, portal_type='System Preference')
     # But they can see others
-    site_pref.view()
+    system_pref.view()
     # check accessors works
-    site_pref.setPreferredAccountingTransactionSimulationStateList(
-      ['this_is_system'])
+    system_pref.setPreferredOoodocServerAddress('1.2.3.4')
     transaction.commit()
     self.tic()
-    self.assertEquals(['this_is_system'],
-                      preference_tool.getPreferredAccountingTransactionSimulationStateList())
+    self.assertEqual('1.2.3.4',
+                     preference_tool.getPreferredOoodocServerAddress())
+    self.assertEqual('1.2.3.4',
+                     preference_tool.getPreferredOoodocServerAddress('localhost'))
+    self.assertEqual(default_large_image_height,
+                     preference_tool.getPreferredLargeImageHeight())
 
     # create a user pref and check it doesn't outranks the system one if
     # they both defined same pref
     user_pref = preference_tool.newContent(
                           portal_type='Preference',
                           priority=Priority.USER)
-    user_pref.setPreferredAccountingTransactionSimulationStateList(
-      ['this_is_user'])
+    user_pref.setPreferredLargeImageHeight(large_image_height)
     self.portal.portal_workflow.doActionFor(user_pref, 'enable_action')
-    self.assertEquals(user_pref.getPreferenceState(), 'enabled')
+    self.assertEqual(user_pref.getPreferenceState(), 'enabled')
     transaction.commit()
     self.tic()
-    self.assertEquals(['this_is_user'],
-                      user_pref.getPreferredAccountingTransactionSimulationStateList())
-    self.assertEquals(['this_is_system'],
-                      preference_tool.getPreferredAccountingTransactionSimulationStateList())
+    self.assertEqual('1.2.3.4',
+                     preference_tool.getPreferredOoodocServerAddress('localhost'))
+    self.assertEqual(large_image_height,
+                     preference_tool.getPreferredLargeImageHeight())
 
-    # check a user can't edit preference which are marked for manager (only for zope2.8)
-    try:
-      from ZODB.Transaction import Transaction
-    except ImportError:
-      self.assertRaises(Unauthorized, user_pref.edit, preferred_ooodoc_server_address="localhost")
+    # check a user can't edit preference which are marked for manager
+    self.assertRaises(Unauthorized, user_pref.edit, preferred_ooodoc_server_address="localhost")
     # even if there is System Preference enabled getActivePreference shall return
     # user preference
     self.assertEqual(user_pref, preference_tool.getActivePreference())
-    self.assertEqual(site_pref, preference_tool.getActiveSystemPreference())
+    self.assertEqual(system_pref, preference_tool.getActiveSystemPreference())
 
 def test_suite():
   suite = unittest.TestSuite()

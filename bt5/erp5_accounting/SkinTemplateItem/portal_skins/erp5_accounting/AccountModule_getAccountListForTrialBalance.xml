@@ -80,6 +80,13 @@ inventory_params = dict(section_uid=section_uid,\n
                         simulation_state=simulation_state,\n
                         precision=precision,\n
                         group_by_resource=0)\n
+if portal_type and portal_type != portal.getPortalAccountingTransactionTypeList():\n
+  inventory_params[\'parent_portal_type\'] = portal_type\n
+if function:\n
+  inventory_params[\'function\'] = function\n
+if project:\n
+  inventory_params[\'project\'] = project\n
+\n
 if node_uid:\n
   inventory_params[\'node_uid\'] = node_uid\n
 \n
@@ -723,7 +730,7 @@ return new_line_list\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>show_empty_accounts, expand_accounts, at_date, from_date, period_start_date, section_uid, simulation_state, precision, node_uid, gap_root=None, per_account_class_summary=0, **kw</string> </value>
+            <value> <string>show_empty_accounts, expand_accounts, at_date, from_date, period_start_date, section_uid, simulation_state, precision, node_uid, gap_root=None, per_account_class_summary=0, portal_type=None, function=None, project=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -743,7 +750,7 @@ return new_line_list\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>11</int> </value>
+                        <value> <int>14</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -760,6 +767,9 @@ return new_line_list\n
                             <string>node_uid</string>
                             <string>gap_root</string>
                             <string>per_account_class_summary</string>
+                            <string>portal_type</string>
+                            <string>function</string>
+                            <string>project</string>
                             <string>kw</string>
                             <string>Products.PythonScripts.standard</string>
                             <string>Object</string>
@@ -857,6 +867,9 @@ return new_line_list\n
               <tuple>
                 <none/>
                 <int>0</int>
+                <none/>
+                <none/>
+                <none/>
               </tuple>
             </value>
         </item>

@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright (c) 2002-2004 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2002-2009 Nexedi SA and Contributors. All Rights Reserved.
 #                    Jean-Paul Smets-Solanes <jp@nexedi.com>
 #                    Romain Courteaud <romain@nexedi.com>
 #
@@ -33,29 +33,17 @@ class ApparelComponent:
     """
 
     _properties = (
-        {   'id'          : 'color_count', 
-            'description' : 'Number of colors',
+        {   'id'          : 'colour_count',
+            'description' : 'Number of colours',
             'type'        : 'int',
             'mode'        : 'w' },
         # Override default value XXX
-        {   'id'          : 'variation_base_category',
-            'description' : 'A list of base categories which define possible discrete variations. '\
-                            'Variation ranges are stored as category membership. '\
-                            '(prev. variation_category_list).',
-            'type'        : 'tokens',
-            'default'     : ['variation'],
-            'mode'        : 'w' },
         {   'id'          : 'p_variation_base_category',
             'description' : 'A list of base categories which define possible discrete variations. '\
                             'Price ranges are stored as category membership. '\
                             '(prev. variation_category_list).',
             'type'        : 'lines',
             'default'     : ['variation'],
-            'mode'        : 'w' },
-        {   'id'          : 'variation_base_category_line',
-            'description' : 'The variation base category which serves as line in the matrix representation.',
-            'type'        : 'string',
-            'default'     : 'variation',
             'mode'        : 'w' },
     )
 

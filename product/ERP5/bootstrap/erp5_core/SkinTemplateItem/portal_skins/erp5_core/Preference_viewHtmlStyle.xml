@@ -102,6 +102,7 @@
                     <value>
                       <list>
                         <string>my_preferred_date_order</string>
+                        <string>my_preferred_float_number_style</string>
                         <string>my_preferred_report_style</string>
                         <string>my_preferred_report_format</string>
                         <string>my_preferred_nano_image_height</string>

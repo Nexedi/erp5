@@ -76,11 +76,11 @@ if reference is None:\n
   raise ValueError, message\n
 \n
 #context.log(\'reference\',reference)\n
-account_list = catalog(string_index=reference, portal_type=portal_type, validation_state=\'valid\')\n
-# context.log(\'sql src\',catalog(string_index=reference, portal_type=portal_type, validation_state=\'valid\',src__=1))\n
+account_list = catalog(string_index=reference, portal_type=portal_type, validation_state=(\'valid\', \'closed\'))\n
+# context.log(\'sql src\',catalog(string_index=reference, portal_type=portal_type, validation_state=(\'valid\', \'closed\'),src__=1))\n
 # context.log(\'len 1\',len(account_list))\n
 if len(account_list) == 0:\n
-  account_list = catalog(string_index="%%%s%%" % reference, portal_type=portal_type, validation_state=\'valid\')\n
+  account_list = catalog(string_index="%%%s%%" % reference, portal_type=portal_type, validation_state=(\'valid\', \'closed\'))\n
 #context.log(\'len 2\',len(account_list))\n
 if len(account_list) == 0:\n
   message = Message(domain="ui", message="No bank account have this reference")\n

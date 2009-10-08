@@ -22,7 +22,10 @@
   <item>Apparel Colour Range</item>
  </portal_type>
  <portal_type id="Apparel Component">
+  <item>Purchase Supply Line</item>
+  <item>Sale Supply Line</item>
   <item>Apparel Component Variation</item>
+  <item>Mapped Value</item>
   <item>Supply Line</item>
  </portal_type>
  <portal_type id="Apparel Component Module">
@@ -35,9 +38,12 @@
   <item>Apparel Consumption</item>
  </portal_type>
  <portal_type id="Apparel Fabric">
+  <item>Sale Supply Line</item>
   <item>Apparel Fabric Colour Variation</item>
+  <item>Purchase Supply Line</item>
   <item>Supply Line</item>
   <item>Mapped Value</item>
+  <item>Measure</item>
  </portal_type>
  <portal_type id="Apparel Fabric Item">
   <item>Apparel Fabric Item</item>
@@ -55,9 +61,12 @@
   <item>Apparel Measurement</item>
  </portal_type>
  <portal_type id="Apparel Model">
-  <item>Supply Line</item>
+  <item>Mapped Value</item>
   <item>Apparel Model Colour Variation</item>
   <item>Apparel Model Morphology Variation</item>
+  <item>Purchase Supply Line</item>
+  <item>Sale Supply Line</item>
+  <item>Supply Line</item>
  </portal_type>
  <portal_type id="Apparel Model Module">
   <item>Apparel Model</item>
@@ -73,21 +82,5 @@
  </portal_type>
  <portal_type id="Apparel Size Module">
   <item>Apparel Size</item>
- </portal_type>
- <portal_type id="Apparel Transformation">
-  <item>Apparel Transformation Operation</item>
-  <item>Apparel Transformation Transformed Resource</item>
- </portal_type>
- <portal_type id="Apparel Transformation Assorted Resource">
-  <item>Mapped Value</item>
- </portal_type>
- <portal_type id="Apparel Transformation Module">
-  <item>Apparel Transformation</item>
- </portal_type>
- <portal_type id="Apparel Transformation Operation">
-  <item>Mapped Value</item>
- </portal_type>
- <portal_type id="Apparel Transformation Transformed Resource">
-  <item>Mapped Value</item>
  </portal_type>
 </allowed_content_type_list>

@@ -80,7 +80,7 @@
               </button>\n
             </div>\n
             <div tal:condition="python: len(proxy_form_id_list) == 0">\n
-              <input type="hidden" name="proxy_listbox_id" value=\'Base_viewRelatedObjectListBase/listbox\'>\n
+              <input type="hidden" name="proxy_listbox_id" value=\'Base_viewRelatedObjectListBase/listbox\'/>\n
             </div>\n
             <tal:block metal:use-macro="here/form_dialog/macros/content" />\n
           </div>\n

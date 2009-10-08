@@ -36,6 +36,7 @@ from Products.ERP5Type.Core.Folder import Folder
 from Products.ERP5Type.Base import Base
 from Products.ERP5Type import Permissions
 from Products.ERP5Type import PropertySheet
+from OFS.Image import File
 from DateTime import DateTime
 from zLOG import LOG, DEBUG, INFO
 import md5
@@ -55,7 +56,7 @@ def addSubscription( self, id, title='', REQUEST=None ):
 #class Subscription(Folder, SyncCode, Implicit, Folder, Impli):
 from XMLSyncUtils import XMLSyncUtils
 
-class Subscription(Folder, XMLSyncUtils):
+class Subscription(Folder, XMLSyncUtils, File):
   """
     Subscription hold the definition of a master ODB
     from/to which a selection of objects will be synchronised
@@ -88,8 +89,11 @@ class Subscription(Folder, XMLSyncUtils):
     last_anchor - it defines the id of the last synchronisation
 
     next_anchor - it defines the id of the current synchronisation
-
-  """
+    
+    Subscription inherit of File because the Signature use method _read_data
+    which have the need of a __r_jar not None.
+    During the initialization of a Signature this __p_jar is None 
+    """
 
   meta_type = 'ERP5 Subscription'
   portal_type = 'SyncML Subscription' # may be useful in the future...

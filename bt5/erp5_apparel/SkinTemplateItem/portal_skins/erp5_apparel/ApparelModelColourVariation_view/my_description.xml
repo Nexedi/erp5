@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.Formulator.StandardFields</string>
-          <string>TextAreaField</string>
-        </tuple>
-        <none/>
+        <global name="TextAreaField" module="Products.Formulator.StandardFields"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -277,7 +274,7 @@
                 </item>
                 <item>
                     <key> <string>width</string> </key>
-                    <value> <int>40</int> </value>
+                    <value> <int>80</int> </value>
                 </item>
               </dictionary>
             </value>

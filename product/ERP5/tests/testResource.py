@@ -73,11 +73,31 @@ class TestResource(ERP5TypeTestCase):
     user = uf.getUserById('rc').__of__(uf)
     newSecurityManager(None, user)
 
+  def setUpPreferences(self):
+    #create apparel variation preferences
+    portal_preferences = self.getPreferenceTool()
+    preference = getattr(portal_preferences, 'test_site_preference', None)
+    if preference is None:
+      preference = portal_preferences.newContent(portal_type='System Preference',
+                                title='Default Site Preference',
+                                id='test_site_preference')
+      if preference.getPreferenceState() == 'disabled':
+        preference.enable()
+
+    preference.setPreferredApparelModelVariationBaseCategoryList(('colour', 'size', 'morphology', 'industrial_phase',))
+    preference.setPreferredApparelClothVariationBaseCategoryList(('size',))
+    preference.setPreferredApparelComponentVariationBaseCategoryList(('variation',))
+    if preference.getPreferenceState() == 'disabled':
+      preference.enable()
+    transaction.commit()
+    self.tic()
+
   def afterSetUp(self):
     self.login()
     self.portal = self.getPortal()
     self.category_tool = self.getCategoryTool()
     self.createCategories()
+    self.setUpPreferences()
 
   def beforeTearDown(self):
     transaction.abort()

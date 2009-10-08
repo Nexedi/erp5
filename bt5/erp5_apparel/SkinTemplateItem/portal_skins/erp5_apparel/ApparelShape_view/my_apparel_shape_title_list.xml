@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.ERP5Form.MultiRelationField</string>
-          <string>MultiRelationStringField</string>
-        </tuple>
-        <none/>
+        <global name="MultiRelationStringField" module="Products.ERP5Form.MultiRelationField"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -270,6 +267,14 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>allow_creation</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
+                    <key> <string>allow_jump</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
                     <key> <string>alternate_name</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -280,6 +285,16 @@
                 <item>
                     <key> <string>catalog_index</string> </key>
                     <value> <string>title</string> </value>
+                </item>
+                <item>
+                    <key> <string>columns</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>container_getter_id</string> </key>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>css_class</string> </key>
@@ -300,6 +315,14 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>display_maxwidth</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>display_width</string> </key>
+                    <value> <int>20</int> </value>
+                </item>
+                <item>
                     <key> <string>editable</string> </key>
                     <value> <int>1</int> </value>
                 </item>
@@ -316,6 +339,14 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>extra_item</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>first_item</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
                     <key> <string>height</string> </key>
                     <value> <int>2</int> </value>
                 </item>
@@ -324,8 +355,18 @@
                     <value> <int>0</int> </value>
                 </item>
                 <item>
+                    <key> <string>items</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
                     <key> <string>jump_method</string> </key>
                     <value> <string>Base_jumpToRelatedDocument</string> </value>
+                </item>
+                <item>
+                    <key> <string>list_method</string> </key>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>max_length</string> </key>
@@ -340,6 +381,12 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>parameter_list</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
                     <key> <string>portal_type</string> </key>
                     <value>
                       <list>
@@ -351,12 +398,37 @@
                     </value>
                 </item>
                 <item>
+                    <key> <string>proxy_listbox_ids</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>ApparelShapeModule_viewApparelShapeList/listbox</string>
+                          <string>Apparel Shape</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>relation_form_id</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>relation_setter_id</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>required</string> </key>
                     <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>size</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
+                    <key> <string>sort</string> </key>
+                    <value>
+                      <list/>
+                    </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>

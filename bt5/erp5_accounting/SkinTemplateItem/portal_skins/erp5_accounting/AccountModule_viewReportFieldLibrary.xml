@@ -91,6 +91,8 @@
                         <string>your_node</string>
                         <string>your_gap</string>
                         <string>your_gap_root</string>
+                        <string>your_function</string>
+                        <string>your_project</string>
                       </list>
                     </value>
                 </item>

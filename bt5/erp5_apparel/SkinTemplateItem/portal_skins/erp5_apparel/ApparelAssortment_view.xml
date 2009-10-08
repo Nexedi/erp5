@@ -10,12 +10,6 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_bind_names</string> </key>
             <value>
               <object>
@@ -62,6 +56,7 @@
                 <string>right</string>
                 <string>center</string>
                 <string>bottom</string>
+                <string>hidden</string>
               </list>
             </value>
         </item>
@@ -81,7 +76,15 @@
                     <key> <string>center</string> </key>
                     <value>
                       <list>
-                        <string>my_comment</string>
+                        <string>my_description</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>hidden</string> </key>
+                    <value>
+                      <list>
+                        <string>listbox_thumbnail</string>
                       </list>
                     </value>
                 </item>
@@ -90,7 +93,6 @@
                     <value>
                       <list>
                         <string>my_title</string>
-                        <string>my_description</string>
                         <string>my_trade_description</string>
                         <string>my_ean13_code</string>
                         <string>my_consumer_unit_quantity</string>
@@ -106,7 +108,8 @@
                         <string>my_destination_title</string>
                         <string>my_destination_reference</string>
                         <string>my_size_list</string>
-                        <string>apparel_assortment_state</string>
+                        <string>my_comment</string>
+                        <string>my_translated_validation_state_title</string>
                       </list>
                     </value>
                 </item>

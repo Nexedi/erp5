@@ -108,18 +108,19 @@
   <td>id=listbox_item_number</td>\n
   <td> - 0 item(s) selected</td>\n
 </tr>\n
-<tr>\n
-  <tal:block tal:condition="python: context.TestTool_getSkinName()!=\'Mobile\'">\n
-  <td>verifyValue</td>\n
-  <td>id=listbox_set_page</td>\n
-  <td>1</td>\n
-  </tal:block>\n
-  <tal:block tal:condition="python: context.TestTool_getSkinName()==\'Mobile\'">\n
-  <td>verifyValue</td>\n
-  <td>id=listbox_page_selection</td>\n
-  <td>0</td>\n
-  </tal:block>\n
-</tr>\n
+<!-- \n
+  To check page number use ListBoxZuite_CommonTemplate/macros/checkCurrentPage to reduce \n
+  "if TestTool_getSkinName()!=\'Mobile\'" statements\n
+  - prefix is gives the prefix of the id of the element containing the page number\n
+  - set_page the number of the page\n
+  - lines_per_page is used in mobile because there isn\'t "listbox_set_page" element\n
+-->\n
+<tal:block tal:define="prefix string:listbox; \n
+                       set_page python:1;\n
+                       lines_per_pages python:3">\n
+  <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/checkCurrentPage" />\n
+</tal:block>\n
+\n
 <tr>\n
   <td>verifyElementPresent</td>\n
   <td>id=listbox_next_page</td>\n
@@ -233,18 +234,12 @@
   <td></td>\n
 </tr>\n
 \n
-<tr>\n
-  <tal:block tal:condition="python: context.TestTool_getSkinName()!=\'Mobile\'">\n
-  <td>verifyValue</td>\n
-  <td>id=listbox_set_page</td>\n
-  <td>2</td>\n
-  </tal:block>\n
-  <tal:block tal:condition="python: context.TestTool_getSkinName()==\'Mobile\'">\n
-  <td>verifyValue</td>\n
-  <td>id=listbox_page_selection</td>\n
-  <td>3</td>\n
-  </tal:block>\n
-</tr>\n
+<tal:block tal:define="prefix string:listbox; \n
+                       set_page python:2;\n
+                       lines_per_pages python:3">\n
+  <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/checkCurrentPage" />\n
+</tal:block>\n
+\n
 <tr>\n
   <td>verifyElementPresent</td>\n
   <td>id=listbox_next_page</td>\n
@@ -364,18 +359,13 @@
   <td>Base_edit:method</td>\n
   <td></td>\n
 </tr>\n
-<tr>\n
-  <tal:block tal:condition="python: context.TestTool_getSkinName()!=\'Mobile\'">\n
-  <td>verifyValue</td>\n
-  <td>id=listbox_set_page</td>\n
-  <td>2</td>\n
-  </tal:block>\n
-  <tal:block tal:condition="python: context.TestTool_getSkinName()==\'Mobile\'">\n
-  <td>verifyValue</td>\n
-  <td>id=listbox_page_selection</td>\n
-  <td>3</td>\n
-  </tal:block>\n
-</tr>\n
+\n
+<tal:block tal:define="prefix string:listbox; \n
+                       set_page python:2;\n
+                       lines_per_pages python:3">\n
+  <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/checkCurrentPage" />\n
+</tal:block>\n
+\n
 <tr>\n
   <td>verifyElementPresent</td>\n
   <td>id=listbox_next_page</td>\n

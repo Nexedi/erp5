@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.ERP5Form.ListBox</string>
-          <string>ListBox</string>
-        </tuple>
-        <none/>
+        <global name="ListBox" module="Products.ERP5Form.ListBox"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -314,10 +311,6 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>id</string>
-                          <string>ID</string>
-                        </tuple>
-                        <tuple>
                           <string>title</string>
                           <string>Colour Variation</string>
                         </tuple>
@@ -326,8 +319,16 @@
                           <string>Description</string>
                         </tuple>
                         <tuple>
-                          <string>getPrototype</string>
+                          <string>prototype</string>
                           <string>Prototype</string>
+                        </tuple>
+                        <tuple>
+                          <string>destination_reference</string>
+                          <string>Customer Colour</string>
+                        </tuple>
+                        <tuple>
+                          <string>thumbnail</string>
+                          <string>Thumbnail</string>
                         </tuple>
                       </list>
                     </value>
@@ -343,13 +344,13 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>anchor</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
                     <key> <string>columns</string> </key>
                     <value>
                       <list>
-                        <tuple>
-                          <string>id</string>
-                          <string>ID</string>
-                        </tuple>
                         <tuple>
                           <string>title</string>
                           <string>Colour Variation</string>
@@ -359,8 +360,16 @@
                           <string>Description</string>
                         </tuple>
                         <tuple>
-                          <string>getPrototype</string>
+                          <string>prototype</string>
                           <string>Prototype</string>
+                        </tuple>
+                        <tuple>
+                          <string>destination_reference</string>
+                          <string>Customer Colour</string>
+                        </tuple>
+                        <tuple>
+                          <string>thumbnail</string>
+                          <string>Thumbnail</string>
                         </tuple>
                       </list>
                     </value>
@@ -404,7 +413,12 @@
                 <item>
                     <key> <string>editable_columns</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>thumbnail</string>
+                          <string>Thumbnail</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -423,6 +437,10 @@
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>hide_rows_on_no_search_criterion</string> </key>
                     <value> <int>0</int> </value>
                 </item>
                 <item>
@@ -446,6 +464,10 @@
                     </value>
                 </item>
                 <item>
+                    <key> <string>page_template</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>portal_types</string> </key>
                     <value>
                       <list>
@@ -465,6 +487,10 @@
                 <item>
                     <key> <string>report_tree</string> </key>
                     <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>row_css_method</string> </key>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>search</string> </key>
@@ -511,6 +537,12 @@
                     <value> <string>Colour Variations</string> </value>
                 </item>
                 <item>
+                    <key> <string>untranslatable_columns</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
                     <key> <string>url_columns</string> </key>
                     <value>
                       <list/>
@@ -525,18 +557,15 @@
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.Formulator.MethodField</string>
-          <string>Method</string>
-        </tuple>
-        <none/>
+        <global name="Method" module="Products.Formulator.MethodField"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
       <dictionary>
         <item>
             <key> <string>method_name</string> </key>
-            <value> <string>searchFolder</string> </value>
+            <value> <string>contentValues</string> </value>
         </item>
       </dictionary>
     </pickle>

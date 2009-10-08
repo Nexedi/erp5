@@ -1,0 +1,219 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ProxyField" module="Products.ERP5Form.ProxyField"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>delegated_list</string> </key>
+            <value>
+              <list>
+                <string>columns</string>
+                <string>editable_columns</string>
+                <string>list_method</string>
+                <string>selection_name</string>
+                <string>title</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>listbox</string> </value>
+        </item>
+        <item>
+            <key> <string>message_values</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>external_validator_failed</string> </key>
+                    <value> <string>The input failed the external validator.</string> </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+        <item>
+            <key> <string>overrides</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>field_id</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>form_id</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>target</string> </key>
+                    <value> <string></string> </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+        <item>
+            <key> <string>tales</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>field_id</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>form_id</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>target</string> </key>
+                    <value> <string></string> </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+        <item>
+            <key> <string>values</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>title</string>
+                          <string>Title</string>
+                        </tuple>
+                        <tuple>
+                          <string>parent_description</string>
+                          <string>Description</string>
+                        </tuple>
+                        <tuple>
+                          <string>parent_reference</string>
+                          <string>Invoice Number</string>
+                        </tuple>
+                        <tuple>
+                          <string>specific_reference</string>
+                          <string>Transaction Reference</string>
+                        </tuple>
+                        <tuple>
+                          <string>node_reference</string>
+                          <string>Account Code</string>
+                        </tuple>
+                        <tuple>
+                          <string>node_title</string>
+                          <string>Account Name</string>
+                        </tuple>
+                        <tuple>
+                          <string>section_title</string>
+                          <string>Section</string>
+                        </tuple>
+                        <tuple>
+                          <string>mirror_section_title</string>
+                          <string>Third Party</string>
+                        </tuple>
+                        <tuple>
+                          <string>function_title</string>
+                          <string>Function</string>
+                        </tuple>
+                        <tuple>
+                          <string>project_title</string>
+                          <string>Project</string>
+                        </tuple>
+                        <tuple>
+                          <string>date</string>
+                          <string>Operation Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>debit</string>
+                          <string>Debit</string>
+                        </tuple>
+                        <tuple>
+                          <string>credit</string>
+                          <string>Credit</string>
+                        </tuple>
+                        <tuple>
+                          <string>translated_portal_type</string>
+                          <string>Line Type</string>
+                        </tuple>
+                        <tuple>
+                          <string>parent_translated_portal_type</string>
+                          <string>Transaction Type</string>
+                        </tuple>
+                        <tuple>
+                          <string>translated_simulation_state_title</string>
+                          <string>State</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>editable_columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>date</string>
+                          <string>Operation Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>debit</string>
+                          <string>Debit</string>
+                        </tuple>
+                        <tuple>
+                          <string>credit</string>
+                          <string>Credit</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>field_id</string> </key>
+                    <value> <string>my_view_mode_listbox</string> </value>
+                </item>
+                <item>
+                    <key> <string>form_id</string> </key>
+                    <value> <string>Base_viewFieldLibrary</string> </value>
+                </item>
+                <item>
+                    <key> <string>list_method</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>selection_name</string> </key>
+                    <value> <string>accounting_transaction_moduleaccounting_line_report_selection</string> </value>
+                </item>
+                <item>
+                    <key> <string>target</string> </key>
+                    <value> <string>Click to edit the target</string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value> <string>Accounting Line Report</string> </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <global name="Method" module="Products.Formulator.MethodField"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>method_name</string> </key>
+            <value> <string>AccountingTransactionModule_getAccountingLineReportLineList</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

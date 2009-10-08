@@ -13,17 +13,17 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
-                <string>css_class</string>
                 <string>columns</string>
-                <string>list_method</string>
                 <string>count_method</string>
-                <string>selection_name</string>
-                <string>portal_types</string>
+                <string>css_class</string>
                 <string>default_params</string>
-                <string>search</string>
                 <string>editable_columns</string>
                 <string>list_action</string>
+                <string>list_method</string>
+                <string>portal_types</string>
+                <string>search</string>
+                <string>selection_name</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -133,6 +133,10 @@
                     <key> <string>editable_columns</string> </key>
                     <value>
                       <list>
+                        <tuple>
+                          <string>thumbnail</string>
+                          <string>Thumbnail</string>
+                        </tuple>
                         <tuple>
                           <string>modification_date</string>
                           <string>Modification Date</string>

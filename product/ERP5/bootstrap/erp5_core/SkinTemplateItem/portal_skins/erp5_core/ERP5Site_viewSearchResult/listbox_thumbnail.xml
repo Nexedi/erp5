@@ -240,7 +240,7 @@
                 </item>
                 <item>
                     <key> <string>editable</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>enabled</string> </key>
@@ -264,7 +264,7 @@
                 </item>
                 <item>
                     <key> <string>image_format</string> </key>
-                    <value> <string>jpg</string> </value>
+                    <value> <string>png</string> </value>
                 </item>
                 <item>
                     <key> <string>image_resolution</string> </key>
@@ -311,7 +311,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:getattr(cell, \'Base_getThumbnailAbsoluteUrl\', None) and cell.Base_getThumbnailAbsoluteUrl() or None</string> </value>
+            <value> <string>python:getattr(cell, \'Base_getThumbnailAbsoluteUrl\', lambda:None)()</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -327,7 +327,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: getattr(cell, \'Base_getThumbnailAbsoluteUrl\', None) and True or False</string> </value>
+            <value> <string>python:getattr(cell, \'Base_getThumbnailAbsoluteUrl\', lambda:None)()</string> </value>
         </item>
       </dictionary>
     </pickle>

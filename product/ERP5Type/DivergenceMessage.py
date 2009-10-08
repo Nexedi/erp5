@@ -25,9 +25,12 @@
 #
 ##############################################################################
 
+import zope.interface
+
 from Products.PythonScripts.Utility import allow_class
 from Products.ERP5Type.ObjectMessage import ObjectMessage
 from zLOG import LOG, PROBLEM, INFO
+from Products.ERP5Type import interfaces
 
 class DivergenceMessage(ObjectMessage):
   """
@@ -56,6 +59,9 @@ class DivergenceMessage(ObjectMessage):
    * message
      User understandable message about divergence
   """
+  
+  zope.interface.implements( interfaces.IDivergenceMessage, )
+
   def getMovementGroup(self):
     """Returns movement group of a builder which was responsible for generating tested_property"""
     divergence_scope = getattr(self, 'divergence_scope', None)

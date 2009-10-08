@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ## Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
 #          Sebastien Robin <seb@nexedi.com>
 #
@@ -35,8 +36,6 @@ from Products.CMFCore.utils import UniqueObject
 from Products.ERP5Type.Globals import InitializeClass, DTMLFile, PersistentMapping, Persistent
 from AccessControl import ClassSecurityInfo, getSecurityManager
 from Products.CMFCore import permissions as CMFCorePermissions
-from Products.ERP5SyncML import _dtmldir
-from Products.ERP5SyncML import Conduit
 from Publication import Publication, Subscriber
 from Products.BTreeFolder2.BTreeFolder2 import BTreeFolder2
 from Subscription import Subscription
@@ -350,6 +349,7 @@ class SynchronizationTool( SubscriptionSynchronization,
     """
       reset a subscription
     """
+    LOG('Synchronisation Subscription', INFO, 'Starting ...')
     self.SubSync(self.getSubscription(title).getPath())
     if RESPONSE is not None:
       RESPONSE.redirect('manageSubscriptions')

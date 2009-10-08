@@ -1,3 +1,6 @@
+2009-10-02 yusei
+* Update titles of state and transition of accounting period workflow and fix mixed up of open/close/start/stop. they are unified into a pair of start/stop.
+
 2009-09-07 yusuke
 * Replace ERP5Report to ERP5Form and ReportBox
 

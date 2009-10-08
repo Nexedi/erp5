@@ -76,9 +76,7 @@
                 <item>
                     <key> <string>center</string> </key>
                     <value>
-                      <list>
-                        <string>my_comment</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -102,7 +100,9 @@
                 <item>
                     <key> <string>right</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>my_comment</string>
+                      </list>
                     </value>
                 </item>
               </dictionary>

@@ -40,25 +40,18 @@
    <role>Author</role>
    <role>Manager</role>
   </permission>
-  <permission type='tuple'>
-   <name>AccessContentsInformation</name>
-   <role>Manager</role>
-  </permission>
-  <permission type='tuple'>
+  <permission type='list'>
    <name>Add Accelerated HTTP Cache Managers</name>
-   <role>Manager</role>
   </permission>
   <permission type='tuple'>
    <name>Add BTreeFolder2s</name>
    <role>Manager</role>
   </permission>
-  <permission type='tuple'>
+  <permission type='list'>
    <name>Add Browser Id Manager</name>
-   <role>Manager</role>
   </permission>
-  <permission type='tuple'>
+  <permission type='list'>
    <name>Add CMF Action Icons Tools</name>
-   <role>Manager</role>
   </permission>
   <permission type='tuple'>
    <name>Add CMF Active Processs</name>
@@ -80,21 +73,15 @@
    <name>Add CMF Default Tools</name>
    <role>Manager</role>
   </permission>
-  <permission type='tuple'>
-   <name>Add CMF Report Tools</name>
-   <role>Manager</role>
-  </permission>
-  <permission type='tuple'>
+  <permission type='list'>
    <name>Add CMF Setup Tools</name>
-   <role>Manager</role>
   </permission>
   <permission type='tuple'>
    <name>Add CMF Sites</name>
    <role>Manager</role>
   </permission>
-  <permission type='tuple'>
+  <permission type='list'>
    <name>Add CMF Unique Id Tools</name>
-   <role>Manager</role>
   </permission>
   <permission type='tuple'>
    <name>Add CMFActivity Tools</name>
@@ -108,9 +95,8 @@
    <name>Add CMFMailIn Tools</name>
    <role>Manager</role>
   </permission>
-  <permission type='tuple'>
+  <permission type='list'>
    <name>Add Configured CMF Sites</name>
-   <role>Manager</role>
   </permission>
   <permission type='tuple'>
    <name>Add Content Type Registrys</name>
@@ -131,6 +117,9 @@
   <permission type='tuple'>
    <name>Add ERP5 Filesystem Formulator Forms</name>
    <role>Manager</role>
+  </permission>
+  <permission type='list'>
+   <name>Add ERP5 Form Printouts</name>
   </permission>
   <permission type='tuple'>
    <name>Add ERP5 Forms</name>
@@ -212,6 +201,9 @@
    <name>Add Formulator Forms</name>
    <role>Manager</role>
   </permission>
+  <permission type='list'>
+   <name>Add HBTreeFolder2s</name>
+  </permission>
   <permission type='tuple'>
    <name>Add LocalContents</name>
    <role>Manager</role>
@@ -244,9 +236,8 @@
    <name>Add Pluggable Index</name>
    <role>Manager</role>
   </permission>
-  <permission type='tuple'>
+  <permission type='list'>
    <name>Add Plugin Registrys</name>
-   <role>Manager</role>
   </permission>
   <permission type='tuple'>
    <name>Add PortalTransforms Tools</name>
@@ -256,45 +247,38 @@
    <name>Add Python Scripts</name>
    <role>Manager</role>
   </permission>
-  <permission type='tuple'>
+  <permission type='list'>
    <name>Add RAM Cache Managers</name>
-   <role>Manager</role>
   </permission>
-  <permission type='tuple'>
+  <permission type='list'>
    <name>Add ReStructuredText Documents</name>
-   <role>Manager</role>
   </permission>
-  <permission type='tuple'>
+  <permission type='list'>
    <name>Add Session Data Manager</name>
-   <role>Manager</role>
   </permission>
   <permission type='tuple'>
    <name>Add Site Roots</name>
    <role>Manager</role>
   </permission>
-  <permission type='tuple'>
+  <permission type='list'>
    <name>Add Temporary Folder</name>
-   <role>Manager</role>
   </permission>
-  <permission type='tuple'>
+  <permission type='list'>
    <name>Add Transient Object Container</name>
-   <role>Manager</role>
   </permission>
   <permission type='tuple'>
    <name>Add User Folders</name>
    <role>Manager</role>
   </permission>
-  <permission type='tuple'>
+  <permission type='list'>
    <name>Add Virtual Host Monsters</name>
-   <role>Manager</role>
   </permission>
   <permission type='tuple'>
    <name>Add Vocabularies</name>
    <role>Manager</role>
   </permission>
-  <permission type='tuple'>
+  <permission type='list'>
    <name>Add Z Gadfly Database Connections</name>
-   <role>Manager</role>
   </permission>
   <permission type='tuple'>
    <name>Add Z MySQL Database Connections</name>
@@ -316,13 +300,11 @@
    <name>Add ZMailMessages</name>
    <role>Manager</role>
   </permission>
-  <permission type='tuple'>
+  <permission type='list'>
    <name>Add ZODB Mount Points</name>
-   <role>Manager</role>
   </permission>
-  <permission type='tuple'>
+  <permission type='list'>
    <name>Add Zope Tutorials</name>
-   <role>Manager</role>
   </permission>
   <permission type='tuple'>
    <name>Add portal content</name>
@@ -451,10 +433,6 @@
   </permission>
   <permission type='tuple'>
    <name>Change proxy roles</name>
-   <role>Manager</role>
-  </permission>
-  <permission type='tuple'>
-   <name>Change user folder</name>
    <role>Manager</role>
   </permission>
   <permission type='tuple'>
@@ -680,6 +658,9 @@
   <permission type='tuple'>
    <name>Use Factories</name>
    <role>Manager</role>
+  </permission>
+  <permission type='list'>
+   <name>Use external editor</name>
   </permission>
   <permission type='tuple'>
    <name>Use mailhost services</name>

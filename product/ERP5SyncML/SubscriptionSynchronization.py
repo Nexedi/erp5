@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2003 Nexedi SARL and Contributors. All Rights Reserved.
@@ -35,8 +36,11 @@ from Conduit.ERP5Conduit import ERP5Conduit
 from AccessControl import getSecurityManager
 from DateTime import DateTime
 from zLOG import LOG, DEBUG, INFO
-from lxml.etree import Element, SubElement
 from lxml import etree
+from lxml.builder import ElementMaker
+from SyncCode import SYNCML_NAMESPACE
+nsmap = {'syncml' : SYNCML_NAMESPACE}
+E = ElementMaker(namespace=SYNCML_NAMESPACE, nsmap=nsmap)
 
 class SubscriptionSynchronization(XMLSyncUtils):
 
@@ -54,17 +58,16 @@ class SubscriptionSynchronization(XMLSyncUtils):
     subscription.setZopeUser(user)
     subscription.setAuthenticated(True)
 
-    #create element 'SyncML' with a default namespace
-    nsmap = {None : self.XHTML_NAMESPACE}
-    xml = Element('SyncML',nsmap=nsmap)
+    #create element 'SyncML'
+    xml = E.SyncML()
     # syncml header
     xml.append(self.SyncMLHeader(subscription.incrementSessionId(),
       subscription.incrementMessageId(), subscription.getPublicationUrl(),
       subscription.getSubscriptionUrl(), source_name=subscription.getLogin()))
 
     # syncml body
-    sync_body = SubElement(xml, 'SyncBody')
-
+    sync_body = E.SyncBody()
+    xml.append(sync_body)
     # We have to set every object as NOT_SYNCHRONIZED
     subscription.startSynchronization()
 
@@ -96,8 +99,7 @@ class SubscriptionSynchronization(XMLSyncUtils):
     """
     cmd_id = 1 # specifies a SyncML message-unique command identifier
     #create element 'SyncML' with a default namespace
-    nsmap = {None : self.XHTML_NAMESPACE}
-    xml = Element('SyncML',nsmap=nsmap)
+    xml = E.SyncML()
     # syncml header
     data = "%s:%s" % (subscription.getLogin(), subscription.getPassword())
     data = subscription.encode(subscription.getAuthenticationFormat(), data)
@@ -112,7 +114,8 @@ class SubscriptionSynchronization(XMLSyncUtils):
       authentication_type=subscription.getAuthenticationType()))
 
     # syncml body
-    sync_body = SubElement(xml, 'SyncBody')
+    sync_body = E.SyncBody()
+    xml.append(sync_body)
 
     # We have to set every object as NOT_SYNCHRONIZED
     subscription.startSynchronization()
@@ -128,7 +131,7 @@ class SubscriptionSynchronization(XMLSyncUtils):
     if syncml_put is not None:
       sync_body.append(syncml_put)
     cmd_id += 1
-    sync_body.append(Element('Final'))
+    sync_body.append(E.Final())
     xml_string = etree.tostring(xml, encoding='utf-8', xml_declaration=True,
                                 pretty_print=True)
     self.sendResponse(from_url=subscription.subscription_url,

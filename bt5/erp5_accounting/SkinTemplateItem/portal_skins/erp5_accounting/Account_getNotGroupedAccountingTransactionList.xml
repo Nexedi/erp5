@@ -99,12 +99,20 @@ for brain in portal.Base_zGetNotGroupedMovementList(\n
       continue\n
     \n
     if transaction.AccountingTransaction_isSourceView():\n
-      if payment_uid and transaction.getSourcePaymentUid() == payment_uid:\n
+      if payment_uid and mvt.getSourcePaymentUid() != payment_uid:\n
+        continue\n
+      if project_uid and mvt.getSourceProjectUid() != project_uid:\n
+        continue\n
+      if function and not (mvt.getSourceFunction() or \'\').startswith(function):\n
         continue\n
       specific_reference = transaction.getSourceReference()\n
       mirror_section_title = transaction.getDestinationSectionTitle()\n
     else:\n
-      if payment_uid and transaction.getDestinationPaymentUid() == payment_uid:\n
+      if payment_uid and mvt.getDestinationPaymentUid() != payment_uid:\n
+        continue\n
+      if project_uid and mvt.getDestinationProjectUid() != project_uid:\n
+        continue\n
+      if function and not (mvt.getDestinationFunction() or \'\').startswith(function):\n
         continue\n
       specific_reference = transaction.getDestinationReference()\n
       mirror_section_title = transaction.getSourceSectionTitle()\n
@@ -145,7 +153,7 @@ return line_list\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>selection=None, sort_on=[], node_category=None, node_category_strict_membership=None, from_date=None, selection_name=None, **kw</string> </value>
+            <value> <string>selection=None, sort_on=[], node_category=None, node_category_strict_membership=None, from_date=None, selection_name=None, function=None, project_uid=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -165,7 +173,7 @@ return line_list\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>6</int> </value>
+                        <value> <int>8</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -177,6 +185,8 @@ return line_list\n
                             <string>node_category_strict_membership</string>
                             <string>from_date</string>
                             <string>selection_name</string>
+                            <string>function</string>
+                            <string>project_uid</string>
                             <string>kw</string>
                             <string>Products.PythonScripts.standard</string>
                             <string>Object</string>
@@ -224,6 +234,8 @@ return line_list\n
               <tuple>
                 <none/>
                 <list/>
+                <none/>
+                <none/>
                 <none/>
                 <none/>
                 <none/>

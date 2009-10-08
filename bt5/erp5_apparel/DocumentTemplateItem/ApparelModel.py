@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright (c) 2002-2004 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2002-2009 Nexedi SA and Contributors. All Rights Reserved.
 #                    Jean-Paul Smets-Solanes <jp@nexedi.com>
 #                    Romain Courteaud <romain@nexedi.com>
 #
@@ -44,7 +44,7 @@ class ApparelModel(Resource, XMLMatrix):
 
     # Declarative security
     security = ClassSecurityInfo()
-    security.declareObjectProtected(Permissions.View)
+    security.declareObjectProtected(Permissions.AccessContentsInformation)
 
     # Declarative properties
     property_sheets = ( PropertySheet.Base
@@ -62,4 +62,5 @@ class ApparelModel(Resource, XMLMatrix):
                       , PropertySheet.ApparelCollection
                       , PropertySheet.ApparelSize
                       , PropertySheet.ApparelLabel
+                      , PropertySheet.VariationRange
                       )

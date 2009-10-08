@@ -54,7 +54,7 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>REQUEST = container.REQUEST\n
-\n
+Base_translateString = context.Base_translateString\n
 \n
 bt_id_list = getattr(REQUEST, \'bt_list\', ())\n
 if len(bt_id_list) == 0:\n
@@ -89,6 +89,12 @@ no_backup_list = [\'Action\', \'SiteProperty\', \'Module\', \'Document\', \n
                   \'PortalTypeAllowedContentType\', \'PortalTypeHiddenContentType\', \n
                   \'PortalTypePropertySheet\', \'PortalTypeBaseCategory\']\n
 \n
+install_title = Base_translateString(\'Install\')\n
+upgrade_title = Base_translateString(\'Upgrade\')\n
+backup_title = Base_translateString(\'Backup And Upgrade\')\n
+remove_title = Base_translateString(\'Remove\')\n
+save_and_remove_title = Base_translateString(\'Backup And Remove\')\n
+\n
 for bt in bt_id_list:\n
   modified_object_list = bt_objects[bt][1]  \n
   bt_title = bt_objects[bt][0]\n
@@ -104,20 +110,20 @@ for bt in bt_id_list:\n
                 bt_title = bt_title, \n
                 object_state=object_state, \n
                 object_class=object_class, \n
-                choice_item_list=[[\'Install\', \'install\']])\n
+                choice_item_list=[[install_title, \'install\']])\n
     elif object_state == \'Modified\':\n
       if object_class in no_backup_list:\n
         line.edit(object_id=object_id, \n
                   bt_title = bt_title, \n
                   object_state=object_state, \n
                   object_class=object_class, \n
-                  choice_item_list=[[\'Upgrade\', \'install\']])\n
+                  choice_item_list=[[upgrade_title, \'install\']])\n
       else:\n
         line.edit(object_id=object_id, \n
                   bt_title = bt_title, \n
                   object_state=object_state, \n
                   object_class=object_class, \n
-                  choice_item_list=[[\'Backup And Upgrade\', \'backup\']])\n
+                  choice_item_list=[[backup_title, \'backup\']])\n
     \n
     elif object_state == \'Removed\':\n
       if object_class in no_backup_list:\n
@@ -125,13 +131,13 @@ for bt in bt_id_list:\n
                   bt_title = bt_title, \n
                   object_state=object_state, \n
                   object_class=object_class, \n
-                  choice_item_list=[[\'Remove\', \'remove\']])\n
+                  choice_item_list=[[remove_title, \'remove\']])\n
       else:\n
         line.edit(object_id=object_id, \n
                   bt_title = bt_title, \n
                   object_state=object_state, \n
                   object_class=object_class, \n
-                  choice_item_list=[[\'Backup And Remove\', \'save_and_remove\']])\n
+                  choice_item_list=[[save_and_remove_title, \'save_and_remove\']])\n
     line.setUid(\'new_%s\' % object_id)\n
     object_list.append(line)\n
   i += 1 \n
@@ -178,6 +184,8 @@ return object_list\n
                             <string>_getattr_</string>
                             <string>container</string>
                             <string>REQUEST</string>
+                            <string>context</string>
+                            <string>Base_translateString</string>
                             <string>getattr</string>
                             <string>bt_id_list</string>
                             <string>len</string>
@@ -191,11 +199,15 @@ return object_list\n
                             <string>_getiter_</string>
                             <string>bt_id</string>
                             <string>_getitem_</string>
-                            <string>context</string>
                             <string>bt</string>
                             <string>_write_</string>
                             <string>object_list</string>
                             <string>no_backup_list</string>
+                            <string>install_title</string>
+                            <string>upgrade_title</string>
+                            <string>backup_title</string>
+                            <string>remove_title</string>
+                            <string>save_and_remove_title</string>
                             <string>modified_object_list</string>
                             <string>bt_title</string>
                             <string>keys</string>

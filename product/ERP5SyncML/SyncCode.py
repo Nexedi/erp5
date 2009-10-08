@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
@@ -29,6 +30,8 @@
 from Products.ERP5Type.Accessor.TypeDefinition import list_types
 from Products.ERP5Type.Globals import Persistent
 import re
+
+SYNCML_NAMESPACE = 'SYNCML:SYNCML1.2'
 
 class SyncCode(Persistent):
   """
@@ -133,7 +136,6 @@ class SyncCode(Persistent):
   #Namespace
   #In SyncML Representation Protocol OMA
   #we use URN as format of namespace
-  XHTML_NAMESPACE = 'SYNCML:SYNCML1.2'
   # List namespaces supported
   URN_LIST = ('SYNCML:SYNCML1.1', 'SYNCML:SYNCML1.2')
 

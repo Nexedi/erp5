@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.ERP5Form.ListBox</string>
-          <string>ListBox</string>
-        </tuple>
-        <none/>
+        <global name="ListBox" module="Products.ERP5Form.ListBox"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -183,7 +180,15 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>anchor</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>columns</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>count_method</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -204,7 +209,9 @@
                 </item>
                 <item>
                     <key> <string>domain_root_list</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>domain_tree</string> </key>
@@ -235,6 +242,10 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>hide_rows_on_no_search_criterion</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>lines</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -251,6 +262,10 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>page_template</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>portal_types</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -260,6 +275,10 @@
                 </item>
                 <item>
                     <key> <string>report_tree</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>row_css_method</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -299,6 +318,10 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>untranslatable_columns</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>url_columns</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -314,20 +337,80 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>id</string>
-                          <string>ID</string>
-                        </tuple>
-                        <tuple>
                           <string>title</string>
-                          <string>Apparel Fabric</string>
+                          <string>Title</string>
                         </tuple>
                         <tuple>
-                          <string>default_source_title</string>
+                          <string>description</string>
+                          <string>Description</string>
+                        </tuple>
+                        <tuple>
+                          <string>purchase_supply_line_source_title</string>
                           <string>Supplier</string>
                         </tuple>
                         <tuple>
-                          <string>validation_state</string>
+                          <string>quality_reference</string>
+                          <string>Quality Reference</string>
+                        </tuple>
+                        <tuple>
+                          <string>drawing_reference</string>
+                          <string>Drawing Reference</string>
+                        </tuple>
+                        <tuple>
+                          <string>apparel_fabric_template_title</string>
+                          <string>Apparel Fabric Template</string>
+                        </tuple>
+                        <tuple>
+                          <string>resource_title</string>
+                          <string>Resource</string>
+                        </tuple>
+                        <tuple>
+                          <string>visual_pattern_title</string>
+                          <string>Motive</string>
+                        </tuple>
+                        <tuple>
+                          <string>colour_count</string>
+                          <string>Colour Count</string>
+                        </tuple>
+                        <tuple>
+                          <string>raw_width</string>
+                          <string>Raw Width (cm)</string>
+                        </tuple>
+                        <tuple>
+                          <string>net_width</string>
+                          <string>Net Width (cm)</string>
+                        </tuple>
+                        <tuple>
+                          <string>base_weight</string>
+                          <string>Weight (g/m2)</string>
+                        </tuple>
+                        <tuple>
+                          <string>composition_title</string>
+                          <string>Composition</string>
+                        </tuple>
+                        <tuple>
+                          <string>translated_validation_state_title</string>
                           <string>State</string>
+                        </tuple>
+                        <tuple>
+                          <string>comment</string>
+                          <string>Comment</string>
+                        </tuple>
+                        <tuple>
+                          <string>purchase_supply_line_base_price</string>
+                          <string>Default Purchase Price</string>
+                        </tuple>
+                        <tuple>
+                          <string>sale_supply_line_base_price</string>
+                          <string>Default Sale Price</string>
+                        </tuple>
+                        <tuple>
+                          <string>modification_date</string>
+                          <string>Modification Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>creation_date</string>
+                          <string>Creation Date</string>
                         </tuple>
                       </list>
                     </value>
@@ -343,23 +426,59 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>anchor</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
                     <key> <string>columns</string> </key>
                     <value>
                       <list>
                         <tuple>
-                          <string>id</string>
-                          <string>ID</string>
-                        </tuple>
-                        <tuple>
                           <string>title</string>
-                          <string>Apparel Fabric</string>
+                          <string>Title</string>
                         </tuple>
                         <tuple>
-                          <string>default_source_title</string>
+                          <string>description</string>
+                          <string>Description</string>
+                        </tuple>
+                        <tuple>
+                          <string>purchase_supply_line_source_title</string>
                           <string>Supplier</string>
                         </tuple>
                         <tuple>
-                          <string>validation_state</string>
+                          <string>quality_reference</string>
+                          <string>Quality Reference</string>
+                        </tuple>
+                        <tuple>
+                          <string>drawing_reference</string>
+                          <string>Drawing Reference</string>
+                        </tuple>
+                        <tuple>
+                          <string>resource_title</string>
+                          <string>Resource</string>
+                        </tuple>
+                        <tuple>
+                          <string>visual_pattern_title</string>
+                          <string>Motive</string>
+                        </tuple>
+                        <tuple>
+                          <string>colour_count</string>
+                          <string>Colour Count</string>
+                        </tuple>
+                        <tuple>
+                          <string>raw_width</string>
+                          <string>Raw Width (cm)</string>
+                        </tuple>
+                        <tuple>
+                          <string>net_width</string>
+                          <string>Net Width (cm)</string>
+                        </tuple>
+                        <tuple>
+                          <string>base_weight</string>
+                          <string>Weight (g/m2)</string>
+                        </tuple>
+                        <tuple>
+                          <string>translated_validation_state_title</string>
                           <string>State</string>
                         </tuple>
                       </list>
@@ -455,6 +574,10 @@
                     <value> <int>0</int> </value>
                 </item>
                 <item>
+                    <key> <string>hide_rows_on_no_search_criterion</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
                     <key> <string>lines</string> </key>
                     <value> <int>30</int> </value>
                 </item>
@@ -465,7 +588,7 @@
                 <item>
                     <key> <string>list_method</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
                     </value>
                 </item>
                 <item>
@@ -473,6 +596,10 @@
                     <value>
                       <list/>
                     </value>
+                </item>
+                <item>
+                    <key> <string>page_template</string> </key>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>portal_types</string> </key>
@@ -488,41 +615,16 @@
                 <item>
                     <key> <string>report_root_list</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>apparel_fabric_category</string>
-                          <string>Fabric category</string>
-                        </tuple>
-                        <tuple>
-                          <string>visual_pattern</string>
-                          <string>Motive</string>
-                        </tuple>
-                        <tuple>
-                          <string>collection</string>
-                          <string>Collection</string>
-                        </tuple>
-                        <tuple>
-                          <string>segment</string>
-                          <string>Eip</string>
-                        </tuple>
-                        <tuple>
-                          <string>composition</string>
-                          <string>Composition</string>
-                        </tuple>
-                        <tuple>
-                          <string>cleaning_code</string>
-                          <string>Upkeep code</string>
-                        </tuple>
-                        <tuple>
-                          <string>apparel_label</string>
-                          <string>Label</string>
-                        </tuple>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
                     <key> <string>report_tree</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>row_css_method</string> </key>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>search</string> </key>
@@ -533,19 +635,35 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>id</string>
-                          <string>ID</string>
-                        </tuple>
-                        <tuple>
                           <string>title</string>
-                          <string>Apparel Fabric</string>
+                          <string>Title</string>
                         </tuple>
                         <tuple>
-                          <string>default_source_title</string>
+                          <string>description</string>
+                          <string>Description</string>
+                        </tuple>
+                        <tuple>
+                          <string>purchase_supply_line_source_title</string>
                           <string>Supplier</string>
                         </tuple>
                         <tuple>
-                          <string>validation_state</string>
+                          <string>quality_reference</string>
+                          <string>Quality Reference</string>
+                        </tuple>
+                        <tuple>
+                          <string>drawing_reference</string>
+                          <string>Drawing Reference</string>
+                        </tuple>
+                        <tuple>
+                          <string>resource_title</string>
+                          <string>Resource</string>
+                        </tuple>
+                        <tuple>
+                          <string>visual_pattern_title</string>
+                          <string>Motive</string>
+                        </tuple>
+                        <tuple>
+                          <string>translated_validation_state_title</string>
                           <string>State</string>
                         </tuple>
                       </list>
@@ -557,7 +675,7 @@
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>
-                    <value> <string>apparel_fabric_module_apparel_fabric_selection</string> </value>
+                    <value> <string>apparel_fabric_module_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>sort</string> </key>
@@ -575,19 +693,35 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>id</string>
-                          <string>ID</string>
-                        </tuple>
-                        <tuple>
                           <string>title</string>
-                          <string>Apparel Fabric</string>
+                          <string>Title</string>
                         </tuple>
                         <tuple>
-                          <string>default_source_title</string>
+                          <string>description</string>
+                          <string>Description</string>
+                        </tuple>
+                        <tuple>
+                          <string>purchase_supply_line_source_title</string>
                           <string>Supplier</string>
                         </tuple>
                         <tuple>
-                          <string>validation_state</string>
+                          <string>quality_reference</string>
+                          <string>Quality Reference</string>
+                        </tuple>
+                        <tuple>
+                          <string>drawing_reference</string>
+                          <string>Drawing Reference</string>
+                        </tuple>
+                        <tuple>
+                          <string>resource_title</string>
+                          <string>Resource</string>
+                        </tuple>
+                        <tuple>
+                          <string>visual_pattern_title</string>
+                          <string>Motive</string>
+                        </tuple>
+                        <tuple>
+                          <string>translated_validation_state_title</string>
                           <string>State</string>
                         </tuple>
                       </list>
@@ -608,6 +742,12 @@
                     <value> <string>Apparel Fabrics</string> </value>
                 </item>
                 <item>
+                    <key> <string>untranslatable_columns</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
                     <key> <string>url_columns</string> </key>
                     <value>
                       <list/>
@@ -622,11 +762,24 @@
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.Formulator.MethodField</string>
-          <string>Method</string>
-        </tuple>
-        <none/>
+        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>here/Apparel_getDomainRootListFromModule</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <tuple>
+        <global name="Method" module="Products.Formulator.MethodField"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>

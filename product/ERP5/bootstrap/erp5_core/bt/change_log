@@ -1,3 +1,6 @@
+2009-10-05 Kazuhiko
+* disable cache in portal_transforms
+
 2009-09-07 yusuke
 * Replace ERP5Report to ERP5Form and ReportBox
 
