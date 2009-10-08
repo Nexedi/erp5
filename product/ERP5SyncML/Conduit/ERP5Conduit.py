@@ -654,6 +654,8 @@ class ERP5Conduit(XMLSyncUtilsMixin):
       xml_copy = deepcopy(xml)
       if xml.nsmap is None or xml.nsmap == {}:
         object_element = xml_copy.find(self.xml_object_tag)
+        if object_element is None and xml_copy.tag == self.xml_object_tag:
+          object_element = xml_copy
         id_element = object_element.find('id')
       else:
         object_element = xml_copy.xpath('//syncml:object',
