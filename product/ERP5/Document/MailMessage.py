@@ -30,7 +30,6 @@
 from Products.ERP5Type.Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 
-from Products.CMFMailIn.MailMessage import MailMessage as CMFMailInMessage
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
 
 from Products.ERP5.Document.Event import Event
