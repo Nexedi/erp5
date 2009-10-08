@@ -641,7 +641,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
       if subnode.xpath('local-name()') == property:
         return self.convertXmlValue(subnode)
     return None
- 
+
   def replaceIdFromXML(self, xml, new_id):
     """
       return a xml with id replace by a new id
@@ -652,16 +652,12 @@ class ERP5Conduit(XMLSyncUtilsMixin):
       #copy of xml object for modification
       from copy import deepcopy
       xml_copy = deepcopy(xml)
-      if xml.nsmap is None or xml.nsmap == {}:
-        object_element = xml_copy.find(self.xml_object_tag)
-        if object_element is None and xml_copy.tag == self.xml_object_tag:
-          object_element = xml_copy
-        id_element = object_element.find('id')
+      if xml_copy.tag == self.xml_object_tag:
+        object_element = xml_copy
       else:
-        object_element = xml_copy.xpath('//syncml:object',
-            namespaces={'syncml':xml_copy.nsmap[xml_copy.prefix]})[0]
-        id_element = object_element.xpath('//syncml:id',
-            namespaces={'syncml':xml_copy.nsmap[xml_copy.prefix]})[0]
+        object_element = xml_copy.xpath('//object')[0]
+      #XXXElement id will be removed from asXML
+      id_element = object_element.xpath('./id')[0]
       object_element.attrib['id'] = new_id
       id_element.text = new_id
       return etree.tostring(xml_copy)

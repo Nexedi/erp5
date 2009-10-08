@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2003 Nexedi SARL and Contributors. All Rights Reserved.
@@ -39,8 +40,11 @@ from AccessControl.SecurityManagement import newSecurityManager
 import commands
 from DateTime import DateTime
 from zLOG import LOG, DEBUG, INFO, WARNING
-from lxml.etree import Element, SubElement
 from lxml import etree
+from lxml.builder import ElementMaker
+from SyncCode import SYNCML_NAMESPACE
+nsmap = {'syncml' : SYNCML_NAMESPACE}
+E = ElementMaker(namespace=SYNCML_NAMESPACE, nsmap=nsmap)
 
 class PublicationSynchronization(XMLSyncUtils):
   """
@@ -78,18 +82,17 @@ class PublicationSynchronization(XMLSyncUtils):
       subscriber.setSourceURI(self.getTargetURI(xml_client))
       subscriber.setTargetURI(self.getSourceURI(xml_client))
 
-      cmd_id = 1 # specifies a SyncML message-unique command identifier      
-     
+      cmd_id = 1 # specifies a SyncML message-unique command identifier
       #create element 'SyncML' with a default namespace
-      nsmap = {None : self.XHTML_NAMESPACE}
-      xml = Element('SyncML',nsmap=nsmap)
+      xml = E.SyncML()
       # syncml header
       xml.append(self.SyncMLHeader(subscriber.getSessionId(),
         subscriber.getMessageId(),
         subscriber.getSubscriptionUrl(),
         publication.getPublicationUrl()))
       # syncml body
-      sync_body = SubElement(xml, 'SyncBody')
+      sync_body = E.SyncBody()
+      xml.append(sync_body)
 
       #at the begining, the code is initialised at UNAUTHORIZED
       auth_code = self.UNAUTHORIZED
@@ -197,7 +200,7 @@ class PublicationSynchronization(XMLSyncUtils):
           has been started from the server (forbiden)"
       # a synchronisation is always starded from a client and can't be from
       # a server !
-    sync_body.append(Element('Final'))
+    sync_body.append(E.Final())
     xml_string = etree.tostring(xml, encoding='utf-8', pretty_print=True)
     if publication.getSyncContentType() == self.CONTENT_TYPE['SYNCML_WBXML']:
       xml_string = self.xml2wbxml(xml_string)
