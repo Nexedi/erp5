@@ -906,7 +906,10 @@ class TestERP5DocumentSyncML(TestERP5DocumentSyncMLMixin, ERP5TypeTestCase):
     self.tic()
     self.synchronize(self.sub_id1)
     conflict_list = portal_sync.getConflictList()
-    self.assertEqual(len(conflict_list), 5)
+    self.assertEqual(len(conflict_list), 6)
+    self.assertEqual(sorted([x.getKeyword() for x in conflict_list]),
+                     ['content_md5', 'content_type', 'description',
+                      'short_title', 'source_reference', 'title'])
     # check if we have the state conflict on all clients
     self.checkSynchronizationStateIsConflict()
     # we will take :
