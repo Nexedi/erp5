@@ -33,10 +33,7 @@ from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 from ActivityRuntimeEnvironment import getActivityRuntimeEnvironment
 
-try:
-  from Products.CMFCore import permissions
-except ImportError:
-  from Products.CMFCore import CMFCorePermissions as permissions
+from Products.CMFCore import permissions
 
 DEFAULT_ACTIVITY = 'SQLDict'
 

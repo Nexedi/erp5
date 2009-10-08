@@ -7,7 +7,8 @@
 from AccessControl import ClassSecurityInfo
 from AccessControl import getSecurityManager
 from App.class_init import default__class_init__ as InitializeClass
-from Products.CMFCore.FSPageTemplate import FSPageTemplate,expandpath
+from Products.CMFCore.FSPageTemplate import FSPageTemplate
+from Products.CMFCore.utils import expandpath
 from Products.CMFCore.DirectoryView import registerFileExtension
 from Products.CMFCore.DirectoryView import registerMetaType
 

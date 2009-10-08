@@ -8,7 +8,8 @@ except ImportError:
     from Products.CMFCore.permissions import View
     from Products.CMFCore.FSObject import FSObject
     from Products.CMFCore.DirectoryView import registerFileExtension,\
-                                               registerMetaType, expandpath
+                                               registerMetaType
+    from Products.CMFCore.utils import expandpath
 else:
     # use FileSystemSite product
     from Products.FileSystemSite.Permissions import View
