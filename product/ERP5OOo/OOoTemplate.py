@@ -36,7 +36,10 @@ from Products.CMFCore.FSPageTemplate import FSPageTemplate
 from Products.CMFCore.DirectoryView import registerFileExtension, registerMetaType
 from Products.PageTemplates.ZopePageTemplate import ZopePageTemplate
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
-from TAL.TALInterpreter import FasterStringIO
+try:
+    from TAL.TALInterpreter import FasterStringIO
+except ImportError:
+    from zope.tal.talinterpreter import FasterStringIO
 from Products.ERP5Type import PropertySheet
 from urllib import quote
 from Products.ERP5Type.Globals import InitializeClass, DTMLFile, get_request
