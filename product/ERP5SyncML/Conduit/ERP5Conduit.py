@@ -648,7 +648,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     """
     if xml is not None and new_id is not None:
       if isinstance(xml, str):
-        xml = etree.XML(xml)
+        xml = etree.XML(xml, parser=parser)
       #copy of xml object for modification
       from copy import deepcopy
       xml_copy = deepcopy(xml)
