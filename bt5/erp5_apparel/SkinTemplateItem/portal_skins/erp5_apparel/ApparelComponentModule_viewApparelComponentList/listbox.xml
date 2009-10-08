@@ -392,6 +392,22 @@
                           <string>translated_validation_state_title</string>
                           <string>State</string>
                         </tuple>
+                        <tuple>
+                          <string>purchase_supply_line_base_price</string>
+                          <string>Default Purchase Price</string>
+                        </tuple>
+                        <tuple>
+                          <string>sale_supply_line_base_price</string>
+                          <string>Default Sale Price</string>
+                        </tuple>
+                        <tuple>
+                          <string>modification_date</string>
+                          <string>Modification Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>creation_date</string>
+                          <string>Creation Date</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>

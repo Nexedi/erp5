@@ -323,24 +323,12 @@
                           <string>Consumer Unit Quantity</string>
                         </tuple>
                         <tuple>
-                          <string>collection</string>
-                          <string>Collection</string>
-                        </tuple>
-                        <tuple>
-                          <string>segment</string>
-                          <string>Segment</string>
-                        </tuple>
-                        <tuple>
                           <string>destination_title</string>
                           <string>Customer</string>
                         </tuple>
                         <tuple>
                           <string>destination_reference</string>
                           <string>Customer Reference</string>
-                        </tuple>
-                        <tuple>
-                          <string>size_list</string>
-                          <string>Size</string>
                         </tuple>
                         <tuple>
                           <string>description</string>

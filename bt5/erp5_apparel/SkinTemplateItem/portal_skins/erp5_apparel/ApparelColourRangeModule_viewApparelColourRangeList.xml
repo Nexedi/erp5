@@ -72,11 +72,7 @@
                 <item>
                     <key> <string>hidden</string> </key>
                     <value>
-                      <list>
-                        <string>listbox_fabric_brand_title_list</string>
-                        <string>listbox_collection_title_list</string>
-                        <string>listbox_segment_title_list</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
               </dictionary>

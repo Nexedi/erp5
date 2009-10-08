@@ -73,7 +73,6 @@
                     <key> <string>hidden</string> </key>
                     <value>
                       <list>
-                        <string>listbox_collection_title_list</string>
                         <string>listbox_composition_title</string>
                       </list>
                     </value>

@@ -110,9 +110,6 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
-                        <string>my_collection</string>
-                        <string>my_segment</string>
-                        <string>my_brand</string>
                         <string>my_variation_category_list</string>
                         <string>my_comment</string>
                         <string>my_translated_validation_state_title</string>

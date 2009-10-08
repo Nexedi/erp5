@@ -361,10 +361,6 @@
                           <string>Apparel Measurement</string>
                         </tuple>
                         <tuple>
-                          <string>variation_category_list</string>
-                          <string>Variations</string>
-                        </tuple>
-                        <tuple>
                           <string>translated_validation_state_title</string>
                           <string>State</string>
                         </tuple>
