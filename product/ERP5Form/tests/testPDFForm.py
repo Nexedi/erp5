@@ -74,7 +74,8 @@ class TestPDFForm(unittest.TestCase):
     self.assertEquals('here/getId', self.pdf_form.getCellTALES('text_1'))
 
   def test_setInvalidTALES(self):
-    from Products.PageTemplates.TALES import CompilerError
+    from Products.PageTemplates.Expressions import getEngine
+    CompilerError = getEngine().getCompilerError()
     self.pdf_form.setCellTALES('text_1', 'python:(inv.alid "= ')
     # maybe should raise when setting the TALES, not when getting ?
     self.assertRaises(CompilerError, self.pdf_form.evaluateCell, 'text_1')

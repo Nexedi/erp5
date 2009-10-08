@@ -34,7 +34,7 @@ from Products.ERP5Type.Base import Base
 from Products.CMFCore.utils import UniqueObject
 from Products.ERP5Type.Globals import InitializeClass, DTMLFile, PersistentMapping, Persistent
 from AccessControl import ClassSecurityInfo, getSecurityManager
-from Products.CMFCore import CMFCorePermissions
+from Products.CMFCore import permissions as CMFCorePermissions
 from Products.ERP5SyncML import _dtmldir
 from Products.ERP5SyncML import Conduit
 from Publication import Publication, Subscriber

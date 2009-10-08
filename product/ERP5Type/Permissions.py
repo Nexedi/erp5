@@ -36,15 +36,7 @@ A complete explanation of the Zope security architecture is available here:
 http://dev.zope.org/Wikis/DevSite/Projects/DeclarativeSecurity/ZopeSecurityForDevelopers
 """
 
-try:
-  from Products.CMFCore import permissions
-except ImportError:
-  from Products.CMFCore import CMFCorePermissions as permissions
-  # XXX "Change local roles" didn't exist at the time of CMF 1.4
-  permissions.ChangeLocalRoles = 'Change local roles'
-  permissions.setDefaultRoles(permissions.ChangeLocalRoles,
-                              ('Owner', 'Manager'))
-
+from Products.CMFCore import permissions
 from AccessControl import Permissions as ac_permissions
 
 setDefaultRoles = permissions.setDefaultRoles

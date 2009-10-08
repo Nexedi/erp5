@@ -102,5 +102,5 @@ class LDAPConnectionAccessors:
         if not transactional:
             self._isCommitting = 1
         
-import Globals
-Globals.default__class_init__(LDAPConnectionAccessors)
+import App.class_init
+App.class_init.default__class_init__(LDAPConnectionAccessors)

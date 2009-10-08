@@ -49,8 +49,10 @@ from Products.ERP5.Document.Document import ConversionError
 
 from OFS.Image import Image as OFSImage
 from OFS.Image import getImageInfo
-from OFS.content_types import guess_content_type
-
+try:
+    from OFS.content_types import guess_content_type
+except ImportError:
+    from zope.contenttype import guess_content_type
 from zLOG import LOG, WARNING
 
 from Products.CMFCore.utils import getToolByName

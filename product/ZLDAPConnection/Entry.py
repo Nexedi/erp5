@@ -550,7 +550,7 @@ class ZopeEntry(OFS.SimpleItem.Item):
                 action ='manage_propertiesForm')
 
 
-import Globals
+import App.class_init
 for klass in (GenericEntry, TransactionalEntry, ZopeEntry):
-    Globals.default__class_init__(klass)
+    App.class_init.default__class_init__(klass)
 

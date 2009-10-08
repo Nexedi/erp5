@@ -36,7 +36,10 @@ from AccessControl import ClassSecurityInfo
 from AccessControl import Unauthorized
 from OFS.Image import Pdata
 from OFS.Image import File as OFSFile
-from OFS.content_types import guess_content_type
+try:
+    from OFS.content_types import guess_content_type
+except ImportError:
+    from zope.contenttype import guess_content_type
 from Products.CMFCore.utils import getToolByName, _setCacheHeaders,\
     _ViewEmulator
 from Products.ERP5Type import Permissions, PropertySheet, Constraint
