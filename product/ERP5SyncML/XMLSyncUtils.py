@@ -1014,11 +1014,10 @@ class XMLSyncUtilsMixin(SyncCode):
             # Object was retrieve but need to be updated without recreated
             # usefull when an object is only deleted by workflow.
             if data_subnode is not None:
-              xml_string = conduit.convertToXml(data_subnode)
               actual_xml = conduit.getXMLFromObjectWithId(object,
                            xml_mapping=domain.getXMLMapping(force=1))
-              actual_xml = conduit.convertToXml(actual_xml)
-              xml_string_gid = conduit.replaceIdFromXML(xml_string, gid)
+              actual_xml = etree.XML(actual_xml, parser=parser)
+              xml_string_gid = conduit.replaceIdFromXML(data_subnode, gid)
               actual_xml_gid = conduit.replaceIdFromXML(actual_xml, gid)
               # use gid as compare key because their ids can be different
               data_subnode = self.getXupdateObject(xml_string_gid, actual_xml_gid)
