@@ -73,7 +73,7 @@ if packing_list_state == "draft":\n
 packing_list.startBuilding()\n
 # Then an activity should put the causality state in diverged or solved\n
 packing_list.activate(after_path_and_method_id=(related_simulation_movement_path_list,\n
-  (\'immediateReindexObject\',\'recursiveImmediateReindexObject\'))).updateCausalityState(fast=1)\n
+  (\'immediateReindexObject\',\'recursiveImmediateReindexObject\'))).updateCausalityState()\n
 </string> </value>
         </item>
         <item>
