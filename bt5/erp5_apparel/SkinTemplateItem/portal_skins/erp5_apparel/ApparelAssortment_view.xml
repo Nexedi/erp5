@@ -56,6 +56,7 @@
                 <string>right</string>
                 <string>center</string>
                 <string>bottom</string>
+                <string>hidden</string>
               </list>
             </value>
         </item>
@@ -76,6 +77,14 @@
                     <value>
                       <list>
                         <string>my_description</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>hidden</string> </key>
+                    <value>
+                      <list>
+                        <string>listbox_thumbnail</string>
                       </list>
                     </value>
                 </item>

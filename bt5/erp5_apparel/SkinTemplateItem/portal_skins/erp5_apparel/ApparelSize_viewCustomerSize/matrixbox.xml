@@ -193,6 +193,14 @@
                     <value> <string>size</string> </value>
                 </item>
                 <item>
+                    <key> <string>cell_getter_method</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>cell_portal_type</string> </key>
+                    <value> <string>Mapped Value</string> </value>
+                </item>
+                <item>
                     <key> <string>columns</string> </key>
                     <value>
                       <list>
@@ -224,8 +232,8 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>size</string>
-                          <string>size</string>
+                          <string>size_title</string>
+                          <string>Size</string>
                         </tuple>
                         <tuple>
                           <string>membership_criterion_category_list</string>

@@ -319,7 +319,7 @@
                           <string>Description</string>
                         </tuple>
                         <tuple>
-                          <string>getPrototype</string>
+                          <string>prototype</string>
                           <string>Prototype</string>
                         </tuple>
                         <tuple>
@@ -360,8 +360,12 @@
                           <string>Description</string>
                         </tuple>
                         <tuple>
-                          <string>getPrototype</string>
+                          <string>prototype</string>
                           <string>Prototype</string>
+                        </tuple>
+                        <tuple>
+                          <string>destination_reference</string>
+                          <string>Customer Colour</string>
                         </tuple>
                         <tuple>
                           <string>thumbnail</string>

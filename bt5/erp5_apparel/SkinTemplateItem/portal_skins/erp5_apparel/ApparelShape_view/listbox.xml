@@ -319,8 +319,8 @@
                           <string>Description</string>
                         </tuple>
                         <tuple>
-                          <string>measure_drawing</string>
-                          <string>Measure Drawing</string>
+                          <string>image</string>
+                          <string>Technical Drawing Type</string>
                         </tuple>
                         <tuple>
                           <string>thumbnail</string>
@@ -356,8 +356,8 @@
                           <string>Description</string>
                         </tuple>
                         <tuple>
-                          <string>measure_drawing</string>
-                          <string>Measure Drawing</string>
+                          <string>image</string>
+                          <string>Technical Drawing Type</string>
                         </tuple>
                         <tuple>
                           <string>thumbnail</string>
@@ -506,8 +506,8 @@
                           <string>Description</string>
                         </tuple>
                         <tuple>
-                          <string>measure_drawing</string>
-                          <string>Measure Drawing</string>
+                          <string>image</string>
+                          <string>Technical Drawing Type</string>
                         </tuple>
                         <tuple>
                           <string>thumbnail</string>
@@ -548,8 +548,8 @@
                           <string>Description</string>
                         </tuple>
                         <tuple>
-                          <string>measure_drawing</string>
-                          <string>Measure Drawing</string>
+                          <string>image</string>
+                          <string>Technical Drawing Type</string>
                         </tuple>
                         <tuple>
                           <string>thumbnail</string>

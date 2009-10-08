@@ -309,7 +309,32 @@
                 <item>
                     <key> <string>all_columns</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>title</string>
+                          <string>Title</string>
+                        </tuple>
+                        <tuple>
+                          <string>resource_title</string>
+                          <string>Resource</string>
+                        </tuple>
+                        <tuple>
+                          <string>net_width</string>
+                          <string>Net Width</string>
+                        </tuple>
+                        <tuple>
+                          <string>source_title</string>
+                          <string>Source</string>
+                        </tuple>
+                        <tuple>
+                          <string>quantity</string>
+                          <string>Quantity</string>
+                        </tuple>
+                        <tuple>
+                          <string>quantity_unit_title</string>
+                          <string>Quantity Unit</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -339,19 +364,19 @@
                           <string>Resource</string>
                         </tuple>
                         <tuple>
-                          <string>variation_category_list</string>
-                          <string>Variation</string>
-                        </tuple>
-                        <tuple>
                           <string>net_width</string>
                           <string>Net Width</string>
+                        </tuple>
+                        <tuple>
+                          <string>source_title</string>
+                          <string>Source</string>
                         </tuple>
                         <tuple>
                           <string>quantity</string>
                           <string>Quantity</string>
                         </tuple>
                         <tuple>
-                          <string>quantity_unit</string>
+                          <string>quantity_unit_title</string>
                           <string>Quantity Unit</string>
                         </tuple>
                       </list>
@@ -477,7 +502,32 @@
                 <item>
                     <key> <string>search_columns</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>title</string>
+                          <string>Title</string>
+                        </tuple>
+                        <tuple>
+                          <string>resource_title</string>
+                          <string>Resource</string>
+                        </tuple>
+                        <tuple>
+                          <string>net_width</string>
+                          <string>Net Width</string>
+                        </tuple>
+                        <tuple>
+                          <string>source_title</string>
+                          <string>Source</string>
+                        </tuple>
+                        <tuple>
+                          <string>quantity</string>
+                          <string>Quantity</string>
+                        </tuple>
+                        <tuple>
+                          <string>quantity_unit_title</string>
+                          <string>Quantity Unit</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -493,8 +543,8 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>id</string>
-                          <string>id</string>
+                          <string>title</string>
+                          <string>title</string>
                         </tuple>
                       </list>
                     </value>
@@ -502,7 +552,32 @@
                 <item>
                     <key> <string>sort_columns</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>title</string>
+                          <string>Title</string>
+                        </tuple>
+                        <tuple>
+                          <string>resource_title</string>
+                          <string>Resource</string>
+                        </tuple>
+                        <tuple>
+                          <string>net_width</string>
+                          <string>Net Width</string>
+                        </tuple>
+                        <tuple>
+                          <string>source_title</string>
+                          <string>Source</string>
+                        </tuple>
+                        <tuple>
+                          <string>quantity</string>
+                          <string>Quantity</string>
+                        </tuple>
+                        <tuple>
+                          <string>quantity_unit_title</string>
+                          <string>Quantity Unit</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>

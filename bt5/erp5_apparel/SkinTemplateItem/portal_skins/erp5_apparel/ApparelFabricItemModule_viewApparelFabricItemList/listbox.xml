@@ -331,7 +331,7 @@
                           <string>Quantity</string>
                         </tuple>
                         <tuple>
-                          <string>quantity_unit</string>
+                          <string>quantity_unit_title</string>
                           <string>Quantity Unit</string>
                         </tuple>
                         <tuple>
@@ -380,7 +380,7 @@
                           <string>Quantity</string>
                         </tuple>
                         <tuple>
-                          <string>quantity_unit</string>
+                          <string>quantity_unit_title</string>
                           <string>Quantity Unit</string>
                         </tuple>
                         <tuple>
@@ -528,7 +528,7 @@
                           <string>Quantity</string>
                         </tuple>
                         <tuple>
-                          <string>quantity_unit</string>
+                          <string>quantity_unit_title</string>
                           <string>Quantity Unit</string>
                         </tuple>
                         <tuple>
@@ -578,7 +578,7 @@
                           <string>Quantity</string>
                         </tuple>
                         <tuple>
-                          <string>quantity_unit</string>
+                          <string>quantity_unit_title</string>
                           <string>Quantity Unit</string>
                         </tuple>
                         <tuple>

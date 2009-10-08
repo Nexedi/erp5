@@ -75,7 +75,7 @@ return cell_range\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>matrixbox=0, base_id=None</string> </value>
+            <value> <string>matrixbox=0, base_id=None, display_base_category=1, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -95,7 +95,7 @@ return cell_range\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>2</int> </value>
+                        <value> <int>3</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -103,6 +103,8 @@ return cell_range\n
                           <tuple>
                             <string>matrixbox</string>
                             <string>base_id</string>
+                            <string>display_base_category</string>
+                            <string>kw</string>
                             <string>append</string>
                             <string>$append0</string>
                             <string>_getiter_</string>
@@ -128,6 +130,7 @@ return cell_range\n
               <tuple>
                 <int>0</int>
                 <none/>
+                <int>1</int>
               </tuple>
             </value>
         </item>
