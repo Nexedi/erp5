@@ -26,6 +26,9 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
 ##############################################################################
+"""
+Products.ERP5.interfaces.movement
+"""
 
 from Products.ERP5.interfaces.amount import IAmount
 from Products.ERP5.interfaces.arrow_base import IArrowBase

@@ -27,16 +27,12 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
 ##############################################################################
+"""
+Products.ERP5.interfaces.simulation_movement
+"""
 
 from zope.interface import Interface
-
-try:
-  from zope.interface.common.sequence import ISequence
-except ImportError:
-  # ISequence does not exists in old zope.interface versions
-  class ISequence(Interface):
-    pass
-
+from zope.schema.interfaces import ISequence
 
 class ITransformation(Interface):
   """

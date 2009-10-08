@@ -26,6 +26,9 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
 ##############################################################################
+"""
+Products.ERP5Type.interfaces.cache_plugin
+"""
 
 from zope.interface import Interface
 
