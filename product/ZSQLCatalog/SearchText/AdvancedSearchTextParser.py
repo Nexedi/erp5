@@ -27,9 +27,20 @@
 ##############################################################################
 
 from lexer import lexer, update_docstrings
-from Products.ZSQLCatalog.interfaces.abstract_syntax_node import INode, IValueNode, ILogicalNode, IColumnNode
-from zope.interface.verify import verifyClass
-from zope.interface import implements
+try:
+  from Products.ZSQLCatalog.interfaces.abstract_syntax_node import INode, IValueNode, ILogicalNode, IColumnNode
+  from zope.interface.verify import verifyClass
+  from zope.interface import implements
+except ImportError:
+  # allow this module to be imported by stand-alone scripts without
+  # Products.ZSQLCatalog.interfaces or zope.interface around.
+  INode = None
+  IValueNode = None
+  ILogicalNode = None
+  IColumnNode = None
+  def verifyClass(*args, **kw):
+    pass
+  implements = verifyClass
 
 class Node(object):
 
