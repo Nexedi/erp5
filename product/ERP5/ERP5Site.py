@@ -21,7 +21,7 @@ from Products.ERP5Type.Globals import package_home
 from Products.SiteErrorLog.SiteErrorLog import manage_addErrorLog
 from ZPublisher import BeforeTraverse
 from AccessControl import ClassSecurityInfo
-from Products.CMFDefault.Portal import CMFSite, PortalGenerator
+from Products.CMFDefault.Portal import CMFSite
 from Products.CMFCore.utils import getToolByName, _getAuthenticatedUser
 from Products.ERP5Type import Permissions, PropertySheet, Constraint
 from Products.ERP5Type.Core.Folder import FolderMixIn
@@ -1207,6 +1207,198 @@ def getBootstrapDirectory():
   """
   product_path = package_home(globals())
   return os.path.join(product_path, 'bootstrap')
+
+
+# This PortalGenerator class was copied wholesale from CMF 1.5 which is
+# identical to the one on 1.6, and hasn't been used by CMF itself since even
+# 1.5, as they already used CMFSetup by then (later replaced by GenericSetup).
+
+
+factory_type_information = () # No original CMF portal_types installed by default
+
+class PortalGenerator:
+
+    klass = CMFSite
+
+    def setupTools(self, p):
+        """Set up initial tools"""
+
+        addCMFCoreTool = p.manage_addProduct['CMFCore'].manage_addTool
+        addCMFCoreTool('CMF Actions Tool', None)
+        addCMFCoreTool('CMF Catalog', None)
+        addCMFCoreTool('CMF Member Data Tool', None)
+        addCMFCoreTool('CMF Skins Tool', None)
+        addCMFCoreTool('CMF Types Tool', None)
+        addCMFCoreTool('CMF Undo Tool', None)
+        addCMFCoreTool('CMF URL Tool', None)
+        addCMFCoreTool('CMF Workflow Tool', None)
+
+        addCMFDefaultTool = p.manage_addProduct['CMFDefault'].manage_addTool
+        addCMFDefaultTool('Default Discussion Tool', None)
+        addCMFDefaultTool('Default Membership Tool', None)
+        addCMFDefaultTool('Default Registration Tool', None)
+        addCMFDefaultTool('Default Properties Tool', None)
+        addCMFDefaultTool('Default Metadata Tool', None)
+        addCMFDefaultTool('Default Syndication Tool', None)
+
+        # try to install CMFUid without raising exceptions if not available
+        try:
+            addCMFUidTool = p.manage_addProduct['CMFUid'].manage_addTool
+        except AttributeError:
+            pass
+        else:
+            addCMFUidTool('Unique Id Annotation Tool', None)
+            addCMFUidTool('Unique Id Generator Tool', None)
+            addCMFUidTool('Unique Id Handler Tool', None)
+
+    def setupMailHost(self, p):
+        p.manage_addProduct['MailHost'].manage_addMailHost(
+            'MailHost', smtp_host='localhost')
+
+    def setupUserFolder(self, p):
+        p.manage_addProduct['OFSP'].manage_addUserFolder()
+
+    def setupCookieAuth(self, p):
+        p.manage_addProduct['CMFCore'].manage_addCC(
+            id='cookie_authentication')
+
+    def setupMembersFolder(self, p):
+        PortalFolder.manage_addPortalFolder(p, 'Members')
+        p.Members.manage_addProduct['OFSP'].manage_addDTMLMethod(
+            'index_html', 'Member list', '<dtml-return roster>')
+
+    def setupRoles(self, p):
+        # Set up the suggested roles.
+        p.__ac_roles__ = ('Member', 'Reviewer',)
+
+    def setupPermissions(self, p):
+        # Set up some suggested role to permission mappings.
+        mp = p.manage_permission
+
+        mp(AccessFuturePortalContent, ['Reviewer','Manager',], 1)
+        mp(AddPortalContent,          ['Owner','Manager',],    1)
+        mp(AddPortalFolders,          ['Owner','Manager',],    1)
+        mp(ListPortalMembers,         ['Member','Manager',],   1)
+        mp(ListUndoableChanges,       ['Member','Manager',],   1)
+        mp(ReplyToItem,               ['Member','Manager',],   1)
+        mp(ReviewPortalContent,       ['Reviewer','Manager',], 1)
+        mp(SetOwnPassword,            ['Member','Manager',],   1)
+        mp(SetOwnProperties,          ['Member','Manager',],   1)
+
+        # Add some other permissions mappings that may be helpful.
+        mp(DeleteObjects,             ['Owner','Manager',],    1)
+        mp(FTPAccess,                 ['Owner','Manager',],    1)
+        mp(ManageProperties,          ['Owner','Manager',],    1)
+        mp(UndoChanges,               ['Owner','Manager',],    1)
+        mp(ViewManagementScreens,     ['Owner','Manager',],    1)
+
+    def setupDefaultSkins(self, p):
+        from Products.CMFCore.DirectoryView import addDirectoryViews
+        from Products.CMFTopic import topic_globals
+        ps = getToolByName(p, 'portal_skins')
+        addDirectoryViews(ps, 'skins', globals())
+        addDirectoryViews(ps, 'skins', topic_globals)
+        ps.manage_addProduct['OFSP'].manage_addFolder(id='custom')
+        ps.addSkinSelection('Basic',
+            'custom, zpt_topic, zpt_content, zpt_generic,'
+            + 'zpt_control, Images',
+            make_default=1)
+        ps.addSkinSelection('Nouvelle',
+            'nouvelle, custom, topic, content, generic, control, Images')
+        ps.addSkinSelection('No CSS',
+            'no_css, custom, topic, content, generic, control, Images')
+        p.setupCurrentSkin()
+
+    def setupTypes(self, p, initial_types=factory_type_information):
+        tool = getToolByName(p, 'portal_types', None)
+        if tool is None:
+            return
+        for t in initial_types:
+            fti = FactoryTypeInformation(**t)
+            tool._setObject(t['id'], fti)
+
+    def setupMimetypes(self, p):
+        p.manage_addProduct[ 'CMFCore' ].manage_addRegistry()
+        reg = p.content_type_registry
+
+        reg.addPredicate( 'link', 'extension' )
+        reg.getPredicate( 'link' ).edit( extensions="url, link" )
+        reg.assignTypeName( 'link', 'Link' )
+
+        reg.addPredicate( 'news', 'extension' )
+        reg.getPredicate( 'news' ).edit( extensions="news" )
+        reg.assignTypeName( 'news', 'News Item' )
+
+        reg.addPredicate( 'document', 'major_minor' )
+        reg.getPredicate( 'document' ).edit( major="text", minor="" )
+        reg.assignTypeName( 'document', 'Document' )
+
+        reg.addPredicate( 'image', 'major_minor' )
+        reg.getPredicate( 'image' ).edit( major="image", minor="" )
+        reg.assignTypeName( 'image', 'Image' )
+
+        reg.addPredicate( 'file', 'major_minor' )
+        reg.getPredicate( 'file' ).edit( major="application", minor="" )
+        reg.assignTypeName( 'file', 'File' )
+
+    def setupWorkflow(self, p):
+        wftool = getToolByName(p, 'portal_workflow', None)
+        if wftool is None:
+            return
+        try:
+            from Products.DCWorkflow.Default \
+                    import createDefaultWorkflowClassic
+        except ImportError:
+            return
+        id = 'default_workflow'
+        wftool._setObject( id, createDefaultWorkflowClassic(id) )
+
+        #   These objects don't participate in workflow by default.
+        wftool.setChainForPortalTypes( ('Folder', 'Topic'), () )
+
+    def setup(self, p, create_userfolder):
+        from Products.CMFTopic import Topic
+        self.setupTools(p)
+        self.setupMailHost(p)
+        if int(create_userfolder) != 0:
+            self.setupUserFolder(p)
+        self.setupCookieAuth(p)
+        self.setupMembersFolder(p)
+        self.setupRoles(p)
+        self.setupPermissions(p)
+        self.setupDefaultSkins(p)
+
+        #   SkinnedFolders are only for customization;
+        #   they aren't a default type.
+        default_types = tuple( filter( lambda x: x['id'] != 'Skinned Folder'
+                                     , factory_type_information ) )
+        self.setupTypes(p, default_types )
+
+        self.setupTypes(p, PortalFolder.factory_type_information)
+        self.setupTypes(p, Topic.factory_type_information)
+        self.setupMimetypes(p)
+        self.setupWorkflow(p)
+
+    def create(self, parent, id, create_userfolder):
+        id = str(id)
+        portal = self.klass(id=id)
+        parent._setObject(id, portal)
+        # Return the fully wrapped object.
+        p = parent.this()._getOb(id)
+        self.setup(p, create_userfolder)
+        return p
+
+    def setupDefaultProperties(self, p, title, description,
+                               email_from_address, email_from_name,
+                               validate_email, default_charset=''):
+        p._setProperty('email_from_address', email_from_address, 'string')
+        p._setProperty('email_from_name', email_from_name, 'string')
+        p._setProperty('validate_email', validate_email and 1 or 0, 'boolean')
+        p._setProperty('default_charset', default_charset, 'string')
+        p._setProperty('enable_permalink', 0, 'boolean')
+        p.title = title
+        p.description = description
+
 
 class ERP5Generator(PortalGenerator):
 
