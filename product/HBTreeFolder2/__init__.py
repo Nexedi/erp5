@@ -26,8 +26,6 @@ def initialize(context):
     #context.registerHelp()
     #context.registerHelpTitle('Zope Help')
 
-    context.registerBaseClass(HBTreeFolder2.HBTreeFolder2)
-
     try:
         from Products.CMFCore import utils
     except ImportError:
