@@ -1043,6 +1043,8 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
                           site.get_local_roles_for_userid(person_reference))
     self.assertSameSet(('Associate',),
                           section.get_local_roles_for_userid(person_reference))
+    self.assertRaises(Unauthorized, site_role_definition.edit,
+                      role_name='Manager')
 
     # delete Role Definition and check again (local roles must be gone too)
     site.manage_delObjects(site_role_definition.getId())

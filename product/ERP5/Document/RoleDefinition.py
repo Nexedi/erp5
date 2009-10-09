@@ -25,7 +25,7 @@
 #
 ##############################################################################
 
-from AccessControl import ClassSecurityInfo
+from AccessControl import ClassSecurityInfo, Unauthorized
 from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
 from Products.ERP5Type.XMLObject import XMLObject
@@ -49,3 +49,9 @@ class RoleDefinition(XMLObject):
                       , PropertySheet.DublinCore
                       , PropertySheet.RoleDefinition
                       )
+
+    def _setRoleName(self, value):
+      if value and value not in \
+         zip(*self.RoleDefinition_getRoleNameItemList())[1]:
+        raise Unauthorized("You are not allowed to give %s role" % value)
+      self._baseSetRoleName(value)

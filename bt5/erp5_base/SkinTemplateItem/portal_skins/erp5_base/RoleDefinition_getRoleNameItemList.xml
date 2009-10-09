@@ -54,13 +54,10 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>from Products.ERP5Type.Message import translateString\n
-item_list = [(\'\', \'\')]\n
 \n
-for role in context.valid_roles():\n
-  if role not in (\'Owner\', \'Manager\', \'Assignor\',):\n
-    item_list.append((translateString(role), role))\n
-\n
-return item_list\n
+return [(translateString(role), role)\n
+        for role in context.valid_roles()\n
+        if role not in (\'Owner\', \'Manager\')]\n
 </string> </value>
         </item>
         <item>
@@ -99,7 +96,8 @@ return item_list\n
                           <tuple>
                             <string>Products.ERP5Type.Message</string>
                             <string>translateString</string>
-                            <string>item_list</string>
+                            <string>append</string>
+                            <string>$append0</string>
                             <string>_getiter_</string>
                             <string>_getattr_</string>
                             <string>context</string>
