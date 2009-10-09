@@ -14650,7 +14650,7 @@
         </item>
         <item>
             <key> <string>module</string> </key>
-            <value> <string>Products.ERP5Type.patches.transforms.png_to_text</string> </value>
+            <value> <string>Products.PortalTransforms.transforms.png_to_text</string> </value>
         </item>
         <item>
             <key> <string>output</string> </key>
@@ -15171,7 +15171,7 @@
         </item>
         <item>
             <key> <string>module</string> </key>
-            <value> <string>Products.ERP5Type.patches.transforms.w3m_dump</string> </value>
+            <value> <string>Products.PortalTransforms.transforms.w3m_dump</string> </value>
         </item>
         <item>
             <key> <string>output</string> </key>
