@@ -951,6 +951,19 @@ class TestOOoImport(ERP5TypeTestCase):
                            title='codification'),
                       region[6])
 
+  def test_BigSpreadSheet_can_be_parsed(self,):
+    """Test than OOoimport can parse a file with more than 40000 lines
+    """
+    parser = OOoParser()
+    parser.openFile(open(makeFilePath('import_big_spreadsheet.ods'), 'rb'))
+    mapping = parser.getSpreadsheetsMapping()
+    not_ok = 1
+    for spread, values in mapping.iteritems():
+      self.assertEquals(len(values), 41001)
+      not_ok = 0
+    if not_ok:
+      self.fail('Spreadsheet not read!')
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestOOoImport))
