@@ -319,7 +319,7 @@ def getTranslationStringWithContext(self, msg_id, context, context_id):
 # Globals initialization
 #####################################################
 
-from InitGenerator import InitializeDocument
+from InitGenerator import InitializeDocument, InitializeInteractor, registerInteractorClass
 
 # List Regexp
 python_file_expr = re.compile("py$")
@@ -355,7 +355,7 @@ def updateGlobals(this_module, global_hook,
     this_module._dtmldir = os.path.join( product_path, 'dtml' )
 
     # Update PropertySheet Registry
-    for module_id in ('PropertySheet', 'interfaces', 'Constraint', ):
+    for module_id in ('PropertySheet', 'interfaces', 'Constraint'):
       path, module_id_list = getModuleIdList(product_path, module_id)
       if module_id == 'PropertySheet':
         import_method = importLocalPropertySheet
@@ -383,6 +383,12 @@ def updateGlobals(this_module, global_hook,
   path, module_id_list = getModuleIdList(product_path, 'Document')
   for document in module_id_list:
     InitializeDocument(document, document_path=path)
+
+  # Return interactor_class list
+  path, interactor_id_list = getModuleIdList(product_path, 'Interactor')
+  for interactor in interactor_id_list:
+    InitializeInteractor(interactor, interactor_path=path)
+
   return module_id_list + core_module_id_list
 
 #####################################################
@@ -564,6 +570,20 @@ def importLocalConstraint(class_id, path = None):
   try:
     module = imp.load_source(class_id, path, f)
     setattr(Products.ERP5Type.Constraint, class_id, getattr(module, class_id))
+  finally:
+    f.close()
+
+def importLocalInteractor(class_id, path=None):
+  import Products.ERP5Type.Interactor
+  if path is None:
+    instance_home = getConfiguration().instancehome
+    path = os.path.join(instance_home, "Interactor")
+  path = os.path.join(path, "%s.py" % class_id)
+  f = open(path)
+  try:
+    module = imp.load_source(class_id, path, f)
+    setattr(Products.ERP5Type.Interactor, class_id, getattr(module, class_id))
+    registerInteractorClass(class_id, getattr(Products.ERP5Type.Interactor, class_id))
   finally:
     f.close()
 
@@ -801,6 +821,7 @@ def importLocalDocument(class_id, document_path = None):
   import Products.ERP5Type.Document
   import Permissions
   import Products
+
   if document_path is None:
     instance_home = getConfiguration().instancehome
     path = os.path.join(instance_home, "Document")
@@ -934,6 +955,10 @@ def initializeLocalPropertySheetRegistry():
 def initializeLocalConstraintRegistry():
   initializeLocalRegistry("Constraint", importLocalConstraint)
 
+def initializeLocalInteractorRegistry():
+  initializeLocalRegistry("Interactor", importLocalInteractor)
+
+
 #####################################################
 # Product initialization
 #####################################################
@@ -942,7 +967,7 @@ def initializeProduct( context,
                        this_module,
                        global_hook,
                        document_module=None,
-                       document_classes=None,
+                       document_classes=None, # XXX - Never used - must be likely removed
                        object_classes=None,
                        portal_tools=None,
                        content_constructors=None,

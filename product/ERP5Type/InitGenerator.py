@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
@@ -35,6 +36,10 @@ from zLOG import LOG
 
 global product_document_registry
 product_document_registry = []
+global product_interactor_registry
+product_interactor_registry = []
+global interactor_class_id_registry 
+interactor_class_id_registry = {}
 
 def getProductDocumentPathList():
   result = product_document_registry
@@ -45,7 +50,16 @@ def InitializeDocument(document_class, document_path=None):
   global product_document_registry
   # Register class in ERP5Type.Document
   product_document_registry.append(((document_class, document_path)))
-  #LOG('InitializeDocument', 0, document_class.__name__)
+
+def getProductInteractorPathList():
+  result = product_interactor_registry
+  result.sort()
+  return result
+
+def InitializeInteractor(interactor_class, interactor_path=None):
+  global product_interactor_registry
+  # Register class in ERP5Type.Interactor
+  product_interactor_registry.append(((interactor_class, interactor_path)))
 
 def initializeProductDocumentRegistry():
   from Utils import importLocalDocument
@@ -56,3 +70,17 @@ def initializeProductDocumentRegistry():
     #LOG('Added product document to ERP5Type repository: %s (%s)' % (class_id, document_path), 0, '')
     #print 'Added product document to ERP5Type repository: %s (%s)' % (class_id, document_path)
     
+def initializeProductInteractorRegistry():
+  from Utils import importLocalInteractor
+  for (class_id, interactor_path) in product_interactor_registry:
+    if class_id != 'Interactor': # Base class can not be global and placeless
+      importLocalInteractor(class_id, path=interactor_path)
+
+def registerInteractorClass(class_id, klass):
+  global interactor_class_id_registry
+  interactor_class_id_registry[class_id] = klass
+
+def installInteractorClassRegistry():
+  global interactor_class_id_registry
+  for class_id, klass in interactor_class_id_registry.items():
+    klass().install()

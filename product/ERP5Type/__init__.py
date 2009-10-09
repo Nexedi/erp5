@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
@@ -29,9 +30,9 @@
     ERP5Type is provides a RAD environment for Zope / CMF
     All ERP5 classes derive from ERP5Type
 """
+
 # Switch(es) for ongoing development which require single code base
 USE_BASE_TYPE = False
-USE_INTERACTOR = False
 
 # Update ERP5 Globals
 import sys, Permissions, os
@@ -99,9 +100,15 @@ def initialize( context ):
   # We should register local classes at some point
   from Products.ERP5Type.Utils import initializeLocalDocumentRegistry
   initializeLocalDocumentRegistry()
-  # Experimental Interactor
-  if USE_INTERACTOR:
-    import Interactor
+  # We can now setup global interactors
+  from Products.ERP5Type.InitGenerator import initializeProductInteractorRegistry
+  initializeProductInteractorRegistry()
+  # And local interactors
+  from Products.ERP5Type.Utils import initializeLocalInteractorRegistry
+  initializeLocalInteractorRegistry()
+  # We can now install all interactors
+  from Products.ERP5Type.InitGenerator import installInteractorClassRegistry
+  installInteractorClassRegistry()
 
 from AccessControl.SecurityInfo import allow_module
 from AccessControl.SecurityInfo import ModuleSecurityInfo
