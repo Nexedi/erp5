@@ -26,7 +26,6 @@
 #
 ##############################################################################
 
-import os
 from Products.PortalTransforms.interfaces import itransform
 from Products.PortalTransforms.libtransforms.commandtransform import popentransform
 
