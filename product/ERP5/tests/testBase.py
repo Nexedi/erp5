@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2004, 2005, 2006 Nexedi SARL and Contributors. 
@@ -956,6 +957,59 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
                     if wf_id != dummy_worlflow_id]
         props['chain_%s' % id] = ','.join(wf_ids)
       pw.manage_changeWorkflows('', props = props)
+
+  def test_14_UpdateRoleMappingwithNoDefinedRoleAndAcquisitionActivatedOnWorkflow(self, quiet=quiet, run=run_all_test):
+    """updateRoleMappingsFor does a logical AND between all workflow defining security,
+    if a workflow defines no permission and is set to acquire permissions,
+    and another workflow defines permission and is set not to acquire perm,
+    then user have no permissions.
+    It may depends on which workflow pass the last transition.
+    """
+    if not run: return
+
+    portal = self.getPortal()
+    portal_type = "Organisation"
+    module = portal.getDefaultModule(portal_type=portal_type)
+
+    # Add a non-existent workflow.
+    pw = self.getWorkflowTool()
+    dummy_worlflow_id = 'fake_simulation_workflow'
+    #Assume that erp5_styles workflow Manage permissions with acquired Role by default
+    pw.manage_addWorkflow('erp5_workflow (ERP5-style empty workflow)',
+                          dummy_worlflow_id)
+    wf = pw[dummy_worlflow_id]
+    cbt = pw._chains_by_type
+    props = {}
+    for id, wf_ids in cbt.iteritems():
+      if id == portal_type:
+        wf_ids = list(wf_ids) + [dummy_worlflow_id]
+      props['chain_%s' % id] = ','.join(wf_ids)
+    pw.manage_changeWorkflows('', props=props)
+
+    from AccessControl import getSecurityManager
+    user = getSecurityManager().getUser()
+    try:
+      self.assertTrue(wf.permissions)
+      self.assertFalse(wf.states.draft.permission_roles)
+      obj = module.newContent(portal_type=portal_type)
+      #Check First permission on module
+      for permission in wf.permissions:
+        self.assertTrue(user.has_permission(permission, module))
+      #then check permission is acquired
+      for permission in wf.permissions:
+        self.assertTrue(user.has_permission(permission, obj))
+    finally:
+      # Make sure that the artificial workflow is not referred to any longer.
+      cbt = pw._chains_by_type
+      props = {}
+      for id, wf_ids in cbt.iteritems():
+        if id == portal_type:
+          # Remove the non-existent workflow.
+          wf_ids = [wf_id for wf_id in wf_ids \
+                    if wf_id != dummy_worlflow_id]
+        props['chain_%s' % id] = ','.join(wf_ids)
+      pw.manage_changeWorkflows('', props=props)
+      pw.manage_delObjects([dummy_worlflow_id])
 
   def test_getViewPermissionOwnerDefault(self):
     """Test getViewPermissionOwner method behaviour"""
