@@ -33,6 +33,7 @@ from Products.ERP5Type.Base import Base
 from Products.ERP5.Document.Coordinate import Coordinate
 from Products.ERP5.Tool.NotificationTool import buildEmailMessage
 from zLOG import LOG
+import urllib
 
 no_crawl_protocol_list = ['mailto', 'javascript', ]
 no_host_protocol_list = ['mailto', 'news', 'javascript',]
@@ -52,6 +53,11 @@ class UrlMixIn:
     Returns a text representation of the Url if defined
     or None else.
     """
+    url_string = self.getUrlString()
+    if not url_string:
+      return None
+    if urllib.splittype(url_string)[0]:
+      return url_string
     protocol = self.getUrlProtocol()
     if not protocol:
       # A quick fix for all objects which did not
@@ -61,8 +67,6 @@ class UrlMixIn:
         protocol = default_protocol_dict[ptype]
       else:
         protocol = 'http'
-    url_string = self.getUrlString()
-    if not url_string: return None
     if protocol in no_host_protocol_list or url_string.startswith('//'):
       return '%s:%s' % (protocol, url_string)
     return '%s://%s' % (protocol, url_string)

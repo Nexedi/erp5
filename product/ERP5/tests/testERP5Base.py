@@ -1189,6 +1189,15 @@ class TestERP5Base(ERP5TypeTestCase):
     self.assertEquals('mailto:nobody@example.com',
                       pers.Entity_getDefaultEmailAsURL())
 
+  def test_LinkAsURL(self):
+    person = self.getPersonModule().newContent(portal_type='Person')
+    link = person.newContent(portal_type='Link',
+                             url_string='http://www.nexedi.com/')
+    self.assertEquals(link.asURL(), 'http://www.nexedi.com/')
+    link = person.newContent(portal_type='Link',
+                             url_string='www.nexedi.com')
+    self.assertEquals(link.asURL(), 'http://www.nexedi.com')
+
   def test_getTranslatedId(self):
     pers = self.getPersonModule().newContent(
                 portal_type='Person', id='default_email')
