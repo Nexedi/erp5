@@ -52,8 +52,6 @@
 </thead><tbody>\n
 <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/init" />\n
 \n
-<!-- XXX TODO: selection foo_line_selection has to be deleted at the beginning of this test.\n
-For now, selection too does not allow such deletion, so, this test is only valid once on a new site...-->\n
 <tr>\n
   <td>open</td>\n
   <td>${base_url}/foo_module/FooModule_createObjects?num:int=1</td>\n
@@ -73,6 +71,16 @@ For now, selection too does not allow such deletion, so, this test is only valid
   <td>assertTextPresent</td>\n
   <td>Done.</td>\n
   <td></td>\n
+</tr>\n
+<tr>\n
+  <td>open</td>\n
+  <td>${base_url}/Base_checkSelectionExists?selection_name=foo_line_selection</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertTextPresent</td>\n
+  <td></td>\n
+  <td>False</td>\n
 </tr>\n
 <tr>\n
   <td>open</td>\n
