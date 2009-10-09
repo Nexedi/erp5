@@ -70,21 +70,23 @@ if context.cb_dataValid:\n
     for portal_type in portal_type_list:\n
       if portal_type not in allowed_type_list:\n
         error_message = Base_translateString(\'Sorry, you can not paste these items here.\')\n
+\n
 if context.cb_dataValid and error_message==\'\':\n
   try:\n
     new_item_list = context.manage_pasteObjects(REQUEST[\'__cp\'])\n
   except KeyError:\n
-    msg = Base_translateString(\'Nothing to paste.\')\n
-    return REQUEST.RESPONSE.redirect(context.absolute_url() + \'/\' + form_id + \'?portal_status_message=%s\' % msg)\n
+    return context.Base_redirect(form_id,\n
+              keep_items=dict(portal_status_message=Base_translateString(\'Nothing to paste.\')))\n
   else:\n
     new_id_list = [i[\'new_id\'] for i in new_item_list]\n
-    msg = Base_translateString(\'Item(s) paste in progress.\')\n
-    return REQUEST.RESPONSE.redirect(context.absolute_url() + \'/\' + form_id + \'?portal_status_message=%s\' % msg)\n
-elif context.cb_dataValid and error_message!=\'\':\n
-  return REQUEST.RESPONSE.redirect(context.absolute_url() + \'/\' + form_id + \'?portal_status_message=%s\' % error_message)\n
-else:\n
-  error_message = Base_translateString(\'Copy or cut one or more items to paste first.\')\n
-  return REQUEST.RESPONSE.redirect(context.absolute_url() + \'/\' + form_id + \'?portal_status_message=%s\' % error_message)\n
+    return context.Base_redirect(form_id,\n
+          keep_items=dict(portal_status_message=Base_translateString(\'Items paste in progress.\')))\n
+\n
+elif context.cb_dataValid and error_message != \'\':\n
+  return context.Base_redirect(form_id, keep_items=dict(portal_status_message=error_message))\n
+\n
+error_message = Base_translateString(\'Copy or cut one or more items to paste first.\')\n
+return context.Base_redirect(form_id, keep_items=dict(portal_status_message=error_message))\n
 </string> </value>
         </item>
         <item>
@@ -139,7 +141,7 @@ else:\n
                             <string>_getitem_</string>
                             <string>new_item_list</string>
                             <string>KeyError</string>
-                            <string>msg</string>
+                            <string>dict</string>
                             <string>i</string>
                             <string>new_id_list</string>
                           </tuple>

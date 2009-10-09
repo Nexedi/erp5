@@ -96,10 +96,11 @@ if uids != []:\n
     qs = \'?portal_status_message=%s\' % message  \n
   else:\n
     context.manage_cutObjects(uids=uids, REQUEST=request)\n
-    message = Base_translateString("Item(s) cut.")\n
+    message = Base_translateString("Items cut.")\n
 else:\n
   message = Base_translateString("Please select one or more items to cut first.")\n
-return request.RESPONSE.redirect(context.absolute_url() + \'/\' + form_id + \'?portal_status_message=%s\' % message)\n
+\n
+return context.Base_redirect(form_id, keep_items=dict(portal_status_message=message))\n
 
 
 ]]></string> </value>
@@ -112,7 +113,7 @@ return request.RESPONSE.redirect(context.absolute_url() + \'/\' + form_id + \'?p
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>form_id,selection_name=\'\',uids=[],listbox_uid=[]</string> </value>
+            <value> <string>form_id, selection_name=\'\', uids=[], listbox_uid=[]</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -159,6 +160,7 @@ return request.RESPONSE.redirect(context.absolute_url() + \'/\' + form_id + \'?p
                             <string>message</string>
                             <string>repr</string>
                             <string>qs</string>
+                            <string>dict</string>
                           </tuple>
                         </value>
                     </item>
