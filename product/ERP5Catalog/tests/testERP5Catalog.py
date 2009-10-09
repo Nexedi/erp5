@@ -1381,6 +1381,12 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     org_e = self._makeOrganisation(title='foo',description='bir')
     org_f = self._makeOrganisation(title='foo',description='bar')
 
+    # uid=[]
+    catalog_kw= {'query':Query(uid=[])}
+    self.failIfDifferentSet(
+        [x.getPath() for x in (org_a, org_b, org_c, org_e, org_f)],
+        [x.path for x in self.getCatalogTool()(
+                portal_type='Organisation',**catalog_kw)])
     # title='abc'
     catalog_kw= {'title':Query(title='abc')}
     self.failIfDifferentSet([org_a.getPath()],
