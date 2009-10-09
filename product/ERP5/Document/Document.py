@@ -53,6 +53,7 @@ import cStringIO
 import string
 from OFS.Image import Pdata
 import md5
+from Products.PythonScripts.Utility import allow_class
 
 _MARKER = []
 VALID_ORDER_KEY_LIST = ('user_login', 'content', 'file_name', 'input')
@@ -110,6 +111,7 @@ class ConversionError(Exception):pass
 class DocumentProxyError(Exception):pass
 
 class NotConvertedError(Exception):pass
+allow_class(NotConvertedError)
 
 class ConversionCacheMixin:
   """
