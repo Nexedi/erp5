@@ -3875,7 +3875,29 @@ VALUES
     folder_object_list = [x.getObject().getId() for x in 
                               person_module.searchFolder(title=title)]
     self.assertEquals([person_id],folder_object_list)
-  
+ 
+  def test_SearchFolderWithMultipleSpaces(self, quiet=quiet):
+    if not quiet:
+      message = 'Search Folder With Multiple Spaces'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ',0,message)
+
+    person_module = self.getPersonModule()
+
+    # Make sure that the catalog will not split it with such research :
+    # title=foo AND title=bar
+    title='foo bar'
+    person_module.newContent(portal_type='Person',title=title).immediateReindexObject()
+    title = title.replace(' ', '  ')
+    person = person_module.newContent(portal_type='Person',title=title)
+    person_id = person.getId()
+    person.immediateReindexObject()
+    folder_object_list = [x.getObject().getId() for x in person_module.searchFolder()]
+    self.assertTrue(person_id in folder_object_list)
+    folder_object_list = [x.getObject().getId() for x in 
+                              person_module.searchFolder(title=title)]
+    self.assertEquals([person_id],folder_object_list)
+ 
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestERP5Catalog))
