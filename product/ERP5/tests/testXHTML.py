@@ -203,6 +203,24 @@ class TestXHTML(ERP5TypeTestCase):
         ZopeTestCase._print('\n%s.' % document.id)
         self.assert_(document.title in document.list(reset=1))
 
+  def test_preferenceViewDuplication(self):
+    """Make sure that preference view is not duplicated."""
+    preference_view_id_dict = {}
+    def addPreferenceView(folder_id, view_id):
+      if not view_id in preference_view_id_dict:
+        preference_view_id_dict[view_id] = []
+      preference_view_id_dict[view_id].append('%s.%s' % (folder_id, view_id))
+    error_list = []
+    for object_ in self.portal.portal_skins.objectValues():
+      if object_.isPrincipiaFolderish:
+        for id_ in object_.objectIds():
+          if id_.startswith('Preference_view'):
+            addPreferenceView(object_.id, id_)
+    for view_id, location_list in preference_view_id_dict.items():
+      if len(location_list)>1:
+        error_list.extend(location_list)
+    self.assertEqual(error_list, [])
+
 class W3Validator(object):
 
   def __init__(self, validator_path, show_warnings):
