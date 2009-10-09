@@ -55,13 +55,15 @@
             <key> <string>_body</string> </key>
             <value> <string>object = state_change[\'object\']\n
 \n
-if context.isTransitionPossible(object, \'expire\'):\n
+workflow_tool = object.getPortalObject().portal_workflow\n
+\n
+if workflow_tool.isTransitionPossible(object, \'expire\'):\n
   object.expire()\n
 \n
-if context.isTransitionPossible(object, \'expire_protected\'):\n
+if workflow_tool.isTransitionPossible(object, \'expire_protected\'):\n
   object.expireProtected()\n
 \n
-if context.isTransitionPossible(object, \'expire_published\'):\n
+if workflow_tool.isTransitionPossible(object, \'expire_published\'):\n
   object.expirePublished()\n
 </string> </value>
         </item>
@@ -103,7 +105,7 @@ if context.isTransitionPossible(object, \'expire_published\'):\n
                             <string>_getitem_</string>
                             <string>object</string>
                             <string>_getattr_</string>
-                            <string>context</string>
+                            <string>workflow_tool</string>
                           </tuple>
                         </value>
                     </item>
