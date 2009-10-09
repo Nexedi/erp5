@@ -56,7 +56,18 @@
             <value> <string>"""\n
   Get TioLive Site root URL.\n
 """\n
-return context.REQUEST.get(\'BASE0\', \'https://www.tiolive.com\')\n
+root_url = context.REQUEST.get(\'BASE0\', \'https://www.tiolive.com\')\n
+language = context.Localizer.get_selected_language()\n
+\n
+# This is far from perfect, to add language all the time\n
+# in the url, because default languages of\n
+# websites are usually not included in the url. But this\n
+# script is also used in tiolive instances, and from them\n
+# it is impossible to have the configuration of the web site\n
+if language is not None:\n
+  root_url = "%s/%s" % (root_url, language)\n
+  \n
+return root_url\n
 </string> </value>
         </item>
         <item>
@@ -95,6 +106,9 @@ return context.REQUEST.get(\'BASE0\', \'https://www.tiolive.com\')\n
                           <tuple>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>root_url</string>
+                            <string>language</string>
+                            <string>None</string>
                           </tuple>
                         </value>
                     </item>
