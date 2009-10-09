@@ -1402,8 +1402,39 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
     except Unauthorized:
       self.fail("A webmaster should be able to rename a Category.")
 
+class TestERP5WebCategoryPublicationWorkflow(ERP5TypeTestCase):
+  """Tests possible transitions for category_publication_workflow"""
+  def getBusinessTemplateList(self):
+    return ('erp5_base',
+            'erp5_web',
+            )
+
+  def afterSetUp(self):
+    base_category = self.getPortal().portal_categories\
+        .newContent(portal_type='Base Category')
+    self.doActionFor = self.getPortal().portal_workflow.doActionFor
+    self.category = base_category.newContent(portal_type='Category')
+    self.assertEqual('embedded', self.category.getValidationState())
+
+  def test_category_embedded_expired(self):
+    self.doActionFor(self.category, 'expire_action')
+    self.assertEqual('expired', self.category.getValidationState())
+
+  def test_category_embedded_protected_expired(self):
+    self.doActionFor(self.category, 'protect_action')
+    self.assertEqual('protected', self.category.getValidationState())
+    self.doActionFor(self.category, 'expire_action')
+    self.assertEqual('expired_protected', self.category.getValidationState())
+
+  def test_category_embedded_published_expired(self):
+    self.doActionFor(self.category, 'publish_action')
+    self.assertEqual('published', self.category.getValidationState())
+    self.doActionFor(self.category, 'expire_action')
+    self.assertEqual('expired_published', self.category.getValidationState())
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestERP5Web))
   suite.addTest(unittest.makeSuite(TestERP5WebWithSimpleSecurity))
+  suite.addTest(unittest.makeSuite(TestERP5WebCategoryPublicationWorkflow))
   return suite
