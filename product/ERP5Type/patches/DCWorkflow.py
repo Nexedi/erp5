@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2001 Zope Corporation and Contributors. All Rights Reserved.
@@ -454,52 +453,52 @@ DCWorkflowDefinition.wrapWorkflowMethod = DCWorkflowDefinition_wrapWorkflowMetho
 # Patch updateRoleMappingsFor so that if 2 workflows define security, then we
 # should do an AND operation between each permission
 def updateRoleMappingsFor(self, ob):
-  '''
-  Changes the object permissions according to the current
-  state.
-  '''
-  changed = 0
-  sdef = self._getWorkflowStateOf(ob)
+    '''
+    Changes the object permissions according to the current
+    state.
+    '''
+    changed = 0
+    sdef = self._getWorkflowStateOf(ob)
 
-  tool = aq_parent(aq_inner(self))
-  other_workflow_list = \
-     [x for x in tool.getWorkflowsFor(ob) if x.id != self.id and isinstance(x,DCWorkflowDefinition)]
-  other_data_list = []
-  for other_workflow in other_workflow_list:
-    other_sdef = other_workflow._getWorkflowStateOf(ob)
-    if other_sdef is not None and other_sdef.permission_roles is not None:
-      other_data_list.append((other_workflow,other_sdef))
-  # Be carefull, permissions_roles should not change
-  # from list to tuple or vice-versa. (in modifyRolesForPermission,
-  # list means acquire roles, tuple means do not acquire)
-  if sdef is not None and self.permissions:
-    for p in self.permissions:
-      roles = []
-      refused_roles = []
-      role_type = 'list'
-      if sdef.permission_roles is not None:
-        roles = sdef.permission_roles.get(p, roles)
-        if type(roles) is type(()):
-          role_type = 'tuple'
-        roles = list(roles)
-      # We will check that each role is activated
-      # in each DCWorkflow
-      for other_workflow,other_sdef in other_data_list:
-        if p in other_workflow.permissions:
-          other_roles = other_sdef.permission_roles.get(p, [])
-          if type(other_roles) is type(()) :
-            role_type = 'tuple'
-          for role in roles:
-            if role not in other_roles :
-              refused_roles.append(role)
-      for role in refused_roles :
-        if role in roles :
-          roles.remove(role)
-      if role_type=='tuple':
-        roles = tuple(roles)
-      if modifyRolesForPermission(ob, p, roles):
-        changed = 1
-  return changed
+    tool = aq_parent(aq_inner(self))
+    other_workflow_list = \
+       [x for x in tool.getWorkflowsFor(ob) if x.id != self.id and isinstance(x,DCWorkflowDefinition)]
+    other_data_list = []
+    for other_workflow in other_workflow_list:
+      other_sdef = other_workflow._getWorkflowStateOf(ob)
+      if other_sdef is not None and other_sdef.permission_roles is not None:
+        other_data_list.append((other_workflow,other_sdef))
+    # Be carefull, permissions_roles should not change
+    # from list to tuple or vice-versa. (in modifyRolesForPermission,
+    # list means acquire roles, tuple means do not acquire)
+    if sdef is not None and self.permissions:
+        for p in self.permissions:
+            roles = []
+            refused_roles = []
+            role_type = 'list'
+            if sdef.permission_roles is not None:
+                roles = sdef.permission_roles.get(p, roles)
+                if type(roles) is type(()):
+                  role_type = 'tuple'
+                roles = list(roles)
+            # We will check that each role is activated
+            # in each DCWorkflow
+            for other_workflow,other_sdef in other_data_list:
+              if p in other_workflow.permissions:
+                other_roles = other_sdef.permission_roles.get(p, [])
+                if type(other_roles) is type(()) :
+                  role_type = 'tuple'
+                for role in roles:
+                  if role not in other_roles :
+                    refused_roles.append(role)
+            for role in refused_roles :
+              if role in roles :
+                roles.remove(role)
+            if role_type=='tuple':
+              roles = tuple(roles)
+            if modifyRolesForPermission(ob, p, roles):
+                changed = 1
+    return changed
 
 DCWorkflowDefinition.updateRoleMappingsFor = updateRoleMappingsFor
 
