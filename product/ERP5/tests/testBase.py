@@ -1028,7 +1028,6 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
       #4 enable acquisition for dummy_simulation_worlflow
       dummy_simulation_worlflow.states.draft.permission_roles = None
       dummy_simulation_worlflow.updateRoleMappingsFor(obj)
-      #for permission in dummy_simulation_worlflow.permissions:
       for permission in permission_list:
         self.assertTrue(user.has_permission(permission, obj))
     finally:
