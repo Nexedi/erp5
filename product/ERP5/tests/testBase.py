@@ -973,30 +973,63 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
 
     # Add a non-existent workflow.
     pw = self.getWorkflowTool()
-    dummy_worlflow_id = 'fake_simulation_workflow'
+    dummy_simulation_worlflow_id = 'fake_simulation_workflow'
+    dummy_validation_worlflow_id = 'fake_validation_workflow'
     #Assume that erp5_styles workflow Manage permissions with acquired Role by default
     pw.manage_addWorkflow('erp5_workflow (ERP5-style empty workflow)',
-                          dummy_worlflow_id)
-    wf = pw[dummy_worlflow_id]
+                          dummy_simulation_worlflow_id)
+    pw.manage_addWorkflow('erp5_workflow (ERP5-style empty workflow)',
+                          dummy_validation_worlflow_id)
+    dummy_simulation_worlflow = pw[dummy_simulation_worlflow_id]
+    dummy_validation_worlflow = pw[dummy_validation_worlflow_id]
+    dummy_validation_worlflow.variables.setStateVar('validation_state')
     cbt = pw._chains_by_type
     props = {}
     for id, wf_ids in cbt.iteritems():
       if id == portal_type:
-        wf_ids = list(wf_ids) + [dummy_worlflow_id]
-      props['chain_%s' % id] = ','.join(wf_ids)
+        old_wf_ids = wf_ids
+      props['chain_%s' % id] = ','.join([dummy_validation_worlflow_id, dummy_simulation_worlflow_id])
     pw.manage_changeWorkflows('', props=props)
+    permission_list = list(dummy_simulation_worlflow.permissions)
+    manager_has_permission = {}
+    for permission in permission_list:
+      manager_has_permission[permission] = ('Manager',)
+    manager_has_no_permission = {}
+    for permission in permission_list:
+      manager_has_no_permission[permission] = ()
 
     from AccessControl import getSecurityManager
     user = getSecurityManager().getUser()
     try:
-      self.assertTrue(wf.permissions)
-      self.assertFalse(wf.states.draft.permission_roles)
+      self.assertTrue(permission_list)
+      self.assertFalse(dummy_simulation_worlflow.states.draft.permission_roles)
+      #1
       obj = module.newContent(portal_type=portal_type)
-      #Check First permission on module
-      for permission in wf.permissions:
-        self.assertTrue(user.has_permission(permission, module))
+      #No role is defined by default on workflow
+      for permission in permission_list:
+        self.assertTrue(user.has_permission(permission, module)) 
       #then check permission is acquired
-      for permission in wf.permissions:
+      for permission in permission_list:
+        self.assertTrue(user.has_permission(permission, obj))
+      #2 Now configure both workflow with same configuration
+      dummy_simulation_worlflow.states.draft.permission_roles = manager_has_permission.copy()
+      dummy_validation_worlflow.states.draft.permission_roles = manager_has_permission.copy()
+      dummy_simulation_worlflow.updateRoleMappingsFor(obj)
+      dummy_validation_worlflow.updateRoleMappingsFor(obj)
+
+      for permission in permission_list:
+        self.assertTrue(user.has_permission(permission, obj))
+      #3 change only dummy_simulation_worlflow
+      dummy_simulation_worlflow.states.draft.permission_roles = manager_has_no_permission.copy()
+      dummy_simulation_worlflow.updateRoleMappingsFor(obj)
+
+      for permission in permission_list:
+        self.assertFalse(user.has_permission(permission, obj))
+      #4 enable acquisition for dummy_simulation_worlflow
+      dummy_simulation_worlflow.states.draft.permission_roles = None
+      dummy_simulation_worlflow.updateRoleMappingsFor(obj)
+      #for permission in dummy_simulation_worlflow.permissions:
+      for permission in permission_list:
         self.assertTrue(user.has_permission(permission, obj))
     finally:
       # Make sure that the artificial workflow is not referred to any longer.
@@ -1005,11 +1038,10 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
       for id, wf_ids in cbt.iteritems():
         if id == portal_type:
           # Remove the non-existent workflow.
-          wf_ids = [wf_id for wf_id in wf_ids \
-                    if wf_id != dummy_worlflow_id]
+          wf_ids = old_wf_ids
         props['chain_%s' % id] = ','.join(wf_ids)
       pw.manage_changeWorkflows('', props=props)
-      pw.manage_delObjects([dummy_worlflow_id])
+      pw.manage_delObjects([dummy_simulation_worlflow_id, dummy_validation_worlflow_id])
 
   def test_getViewPermissionOwnerDefault(self):
     """Test getViewPermissionOwner method behaviour"""
