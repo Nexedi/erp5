@@ -58,6 +58,7 @@ from Products.ERP5Type.tests.utils import FileUpload
 from Products.ERP5Type.tests.utils import DummyLocalizer
 from AccessControl.SecurityManagement import newSecurityManager
 from zLOG import LOG
+from Products.ERP5.Document.Document import NotConvertedError
 import os
 
 QUIET = 0
@@ -808,6 +809,30 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.assertEquals('Image', document.getPortalType())
     self.assertEquals('ERP5 is a free software.\n',
                       document.SearchableText())
+
+  def test_Base_showFoundText(self):
+    # Create document with good content
+    document = self.portal.document_module.newContent(portal_type='Drawing')
+    self.assertEquals('empty', document.getExternalProcessingState())
+
+    filename = 'TEST-en-002.odt'
+    upload_file = makeFileUpload(filename)
+    document.edit(file=upload_file)
+    transaction.commit()
+    self.tic()
+    self.assertEquals('converted', document.getExternalProcessingState())
+
+    # Upload different type of file inside
+    upload_file = makeFileUpload('REF-en-001.pdf')
+    document.edit(file=upload_file)
+    self.assertEquals('application/pdf', document.getContentType())
+    self.assertEquals('converting', document.getExternalProcessingState())
+    # As document is not converted, text convertion is impossible
+    # But document can still be retrive with portal catalog
+    self.assertRaises(NotConvertedError, document.asText)
+    self.assertRaises(NotConvertedError, document.getSearchableText)
+    self.assertEquals('This document is not converted yet.', 
+                      document.Base_showFoundText())
 
 class TestDocumentWithSecurity(ERP5TypeTestCase):
 
