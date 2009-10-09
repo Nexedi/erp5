@@ -130,12 +130,18 @@ another object of the same type. -->\n
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
+  <td>link=History</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
   <td>//button[@title=\'Clone\']</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
+  <!-- Check that clone action keep current form view on clone object -->\n
   <td>assertAbsoluteLocation</td>\n
-  <td tal:content="string:glob:${here/portal_url}/foo_module/3/Foo_view*" />\n
+  <td tal:content="string:glob:${here/portal_url}/foo_module/3/Base_viewHistory*" />\n
   <td></td>\n
 </tr>\n
 <tr>\n
