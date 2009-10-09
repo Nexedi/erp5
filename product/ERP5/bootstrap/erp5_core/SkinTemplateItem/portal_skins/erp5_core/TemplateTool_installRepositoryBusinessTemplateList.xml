@@ -87,7 +87,7 @@ for uid in uids:\n
     if dep_id not in id_list:\n
       id_list.append(dep_id)\n
       if dep_repository != \'meta\':\n
-        portal_status_message+=\'\\\'%s\\\' added because \\\'%s\\\' depends on it.<br/>\'%(dep_id.replace(\'.bt5\', \'\'), id.replace(\'.bt5\', \'\'))\n
+        portal_status_message+=\'\\\'%s\\\' added because \\\'%s\\\' depends on it.\'%(dep_id.replace(\'.bt5\', \'\'), id.replace(\'.bt5\', \'\'))\n
         current_uid_list.append(context.encodeRepositoryBusinessTemplateUid(dep_repository, dep_id))\n
       else:\n
         provider_list = context.getProviderList(dep_id)\n
