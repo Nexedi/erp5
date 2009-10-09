@@ -1,0 +1,9 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
+import pyuno
+
+# Invoke OpenOffice with appropriate port number provided by OpenOffice converter
+
+
+# Return result
