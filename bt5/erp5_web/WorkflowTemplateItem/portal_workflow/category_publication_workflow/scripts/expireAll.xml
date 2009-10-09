@@ -55,10 +55,14 @@
             <key> <string>_body</string> </key>
             <value> <string>object = state_change[\'object\']\n
 \n
-# Try all expire methods\n
-object.expire()\n
-object.expireProtected()\n
-object.expirePublished()\n
+if context.isTransitionPossible(object, \'expire\'):\n
+  object.expire()\n
+\n
+if context.isTransitionPossible(object, \'expire_protected\'):\n
+  object.expireProtected()\n
+\n
+if context.isTransitionPossible(object, \'expire_published\'):\n
+  object.expirePublished()\n
 </string> </value>
         </item>
         <item>
@@ -99,6 +103,7 @@ object.expirePublished()\n
                             <string>_getitem_</string>
                             <string>object</string>
                             <string>_getattr_</string>
+                            <string>context</string>
                           </tuple>
                         </value>
                     </item>
