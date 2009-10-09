@@ -7,7 +7,6 @@ ApparelComponent
 ApparelModel
 ApparelLabel
 ApparelModelMorphologyVariation
-ApparelTransformation
 ApparelColourRangeVariation
 ApparelAssortment
 ApparelFabricColourVariation
