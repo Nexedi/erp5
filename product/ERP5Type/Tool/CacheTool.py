@@ -91,7 +91,6 @@ class CacheTool(BaseTool):
                 'server': server,
                 'server_max_key_length': memcached_plugin.getServerMaxKeyLength(),
                 'server_max_value_length': memcached_plugin.getServerMaxValueLength(),
-                'cache_plugin_path': cp.getPath(),
                 'key_prefix': getattr(self, 'erp5_site_global_id', '')
                             }
               cache_obj = DistributedRamCache(init_dict)
