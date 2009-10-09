@@ -138,7 +138,7 @@ for bt in bt_id_list:\n
                   object_state=object_state, \n
                   object_class=object_class, \n
                   choice_item_list=[[save_and_remove_title, \'save_and_remove\']])\n
-    line.setUid(\'new_%s\' % object_id)\n
+    line.setUid(\'new_%s\' % str(object_id))\n
     object_list.append(line)\n
   i += 1 \n
 \n
