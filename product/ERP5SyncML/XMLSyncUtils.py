@@ -43,10 +43,7 @@ parser = etree.XMLParser(remove_blank_text=True)
 
 from xml.dom import minidom
 
-try:
-  from base64 import b16encode, b16decode
-except ImportError:
-  from base64 import encodestring as b16encode, decodestring as b16decode
+from base64 import b16encode, b16decode
 
 class XMLSyncUtilsMixin(SyncCode):
 
