@@ -31,6 +31,7 @@ from webdav.client import Resource
 from App.config import getConfiguration
 import os
 import shutil
+import sys
 
 from Acquisition import Implicit
 from AccessControl import ClassSecurityInfo
@@ -451,8 +452,10 @@ class TemplateTool (BaseTool):
         outfile =  StringIO()
       if RESPONSE is not None:
         RESPONSE.setHeader('Content-type', 'text/plain')
-      process = os.popen('/usr/bin/python %s %s 2>&1'
-                      % (getUnitTestFile(), ' '.join(test_list)))
+      process = os.popen('%s %s %s 2>&1'
+                      % (sys.executable,
+                         getUnitTestFile(),
+                         ' '.join(test_list)))
       while 1:
         try:
           outfile.write(process.next())
