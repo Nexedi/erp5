@@ -123,7 +123,7 @@ Test for Creating Reversal Transaction for a Purchase Invoice Transaction\n
 <tr>\n
   <td>assertText</td>\n
   <td>//span[@id=\'listbox_record_number\']</td>\n
-  <td>3 record(s)</td>\n
+  <td>3 records</td>\n
 </tr>\n
 \n
 <tr>\n
@@ -274,7 +274,7 @@ delivered.\n
 <tr>\n
   <td>assertText</td>\n
   <td>//span[@id=\'listbox_record_number\']</td>\n
-  <td>3 record(s)</td>\n
+  <td>3 records</td>\n
 </tr>\n
 <!-- Same as above, bad ordering ... -->\n
 <tr>\n

@@ -94,7 +94,7 @@ Grouping from account transaction view\n
 <tr>\n
   <td>verifyText</td>\n
   <td>//span[@id=\'listbox_record_number\']</td>\n
-  <td>4 record(s)</td>\n
+  <td>4 records</td>\n
 </tr>\n
 <tr>\n
   <td>click</td>\n
@@ -251,7 +251,7 @@ Grouping from account transaction view\n
 <tr>\n
   <td>verifyText</td>\n
   <td>//span[@id=\'listbox_record_number\']</td>\n
-  <td>2 record(s)</td>\n
+  <td>2 records</td>\n
 </tr>\n
 <tr>\n
   <td>assertElementPresent</td>\n
@@ -341,7 +341,7 @@ Grouping from account transaction view\n
 <tr>\n
   <td>verifyText</td>\n
   <td>//span[@id=\'listbox_record_number\']</td>\n
-  <td>4 record(s)</td>\n
+  <td>4 records</td>\n
 </tr>\n
 <tr>\n
   <td>assertElementNotPresent</td>\n

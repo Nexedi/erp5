@@ -121,7 +121,7 @@ be selected {{{ -->\n
 <tr>\n
   <td>assertText</td>\n
   <td>//span[@id=\'listbox_record_number\']</td>\n
-  <td>2 record(s)</td>\n
+  <td>2 records</td>\n
 </tr>\n
 <tr>\n
   <td>assertElementNotPresent</td>\n

@@ -88,7 +88,7 @@ Test Transactions related to an Organisation, with multiple pages and date range
 <tr>\n
   <td>verifyText</td>\n
   <td>listbox_record_number</td>\n
-  <td>56 record(s)</td>\n
+  <td>56 records</td>\n
 </tr>\n
 \n
 <tr>\n
@@ -127,7 +127,7 @@ Test Transactions related to an Organisation, with multiple pages and date range
 <tr>\n
   <td>verifyText</td>\n
   <td>listbox_record_number</td>\n
-  <td>56 record(s)</td>\n
+  <td>56 records</td>\n
 </tr>\n
 <!-- check first line -->\n
 <tr>\n

@@ -69,7 +69,7 @@ Accounting Transaction Module Displays empty Transactions\n
 <tr>\n
   <td>verifyText</td>\n
   <td>listbox_record_number</td>\n
-  <td>4 record(s)</td>\n
+  <td>4 records</td>\n
 </tr>\n
 <!-- check amounts for stats -->\n
 <tr>\n
@@ -135,7 +135,7 @@ Accounting Transaction Module Displays empty Transactions\n
 <tr>\n
   <td>verifyText</td>\n
   <td>listbox_record_number</td>\n
-  <td>5 record(s)</td>\n
+  <td>5 records</td>\n
 </tr>\n
 <!-- column properties -->\n
 <tr>\n
@@ -258,7 +258,7 @@ Accounting Transaction Module Displays empty Transactions\n
 <tr>\n
   <td>assertText</td>\n
   <td>listbox_record_number</td>\n
-  <td>2 record(s)</td>\n
+  <td>2 records</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -274,7 +274,7 @@ Accounting Transaction Module Displays empty Transactions\n
 <tr>\n
   <td>assertText</td>\n
   <td>listbox_record_number</td>\n
-  <td>0 record(s)</td>\n
+  <td>0 records</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -303,7 +303,7 @@ Accounting Transaction Module Displays empty Transactions\n
 <tr>\n
   <td>verifyText</td>\n
   <td>listbox_record_number</td>\n
-  <td>6 record(s)</td>\n
+  <td>6 records</td>\n
 </tr>\n
 <!-- column properties line 0 -->\n
 <tr>\n

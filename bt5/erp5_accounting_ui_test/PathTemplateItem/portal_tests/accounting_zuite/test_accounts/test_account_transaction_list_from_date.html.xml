@@ -107,7 +107,7 @@ Test Transactions related to an account, with from date parameter\n
 <tr>\n
   <td>verifyText</td>\n
   <td>listbox_record_number</td>\n
-  <td>89 record(s)</td>\n
+  <td>89 records</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n

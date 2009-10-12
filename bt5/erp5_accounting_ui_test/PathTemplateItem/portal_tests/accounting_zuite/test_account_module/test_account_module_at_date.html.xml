@@ -97,7 +97,7 @@ Test display of Account Module, with at_date parameter\n
 <tr>\n
   <td>verifyText</td>\n
   <td>listbox_record_number</td>\n
-  <td>10 record(s)</td>\n
+  <td>10 records</td>\n
 </tr>\n
 <!-- }}} -->\n
 \n

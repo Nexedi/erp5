@@ -79,7 +79,7 @@ Accounting Transaction Module Search Columns\n
 <tr>\n
   <td>verifyText</td>\n
   <td>listbox_record_number</td>\n
-  <td>1 record(s)</td>\n
+  <td>1 records</td>\n
 </tr>\n
 \n
 <!-- check amounts for lines -->\n
@@ -156,7 +156,7 @@ as title is a search key -->\n
 <tr>\n
   <td>verifyText</td>\n
   <td>listbox_record_number</td>\n
-  <td>2 record(s)</td>\n
+  <td>2 records</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
@@ -239,7 +239,7 @@ as title is a search key -->\n
 <tr>\n
   <td>verifyText</td>\n
   <td>listbox_record_number</td>\n
-  <td>2 record(s)</td>\n
+  <td>2 records</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
@@ -322,7 +322,7 @@ as title is a search key -->\n
 <tr>\n
   <td>verifyText</td>\n
   <td>listbox_record_number</td>\n
-  <td>1 record(s)</td>\n
+  <td>1 records</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
@@ -403,7 +403,7 @@ as title is a search key -->\n
 <tr>\n
   <td>verifyText</td>\n
   <td>listbox_record_number</td>\n
-  <td>1 record(s)</td>\n
+  <td>1 records</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
@@ -464,7 +464,7 @@ as title is a search key -->\n
 <tr>\n
   <td>verifyText</td>\n
   <td>listbox_record_number</td>\n
-  <td>1 record(s)</td>\n
+  <td>1 records</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
@@ -518,7 +518,7 @@ as title is a search key -->\n
 <tr>\n
   <td>verifyText</td>\n
   <td>listbox_record_number</td>\n
-  <td>4 record(s)</td>\n
+  <td>4 records</td>\n
 </tr>\n
 \n
 \n
@@ -541,7 +541,7 @@ as title is a search key -->\n
 <tr>\n
   <td>verifyText</td>\n
   <td>listbox_record_number</td>\n
-  <td>1 record(s)</td>\n
+  <td>1 records</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
@@ -594,7 +594,7 @@ as title is a search key -->\n
 <tr>\n
   <td>verifyText</td>\n
   <td>listbox_record_number</td>\n
-  <td>4 record(s)</td>\n
+  <td>4 records</td>\n
 </tr>\n
 \n
 <!-- }}} --> \n

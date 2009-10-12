@@ -67,7 +67,7 @@ Test Accounting module listbox display values + sort on dates\n
 <tr>\n
   <td>verifyText</td>\n
   <td>listbox_record_number</td>\n
-  <td>4 record(s)</td>\n
+  <td>4 records</td>\n
 </tr>\n
 <!-- }}} -->\n
 \n

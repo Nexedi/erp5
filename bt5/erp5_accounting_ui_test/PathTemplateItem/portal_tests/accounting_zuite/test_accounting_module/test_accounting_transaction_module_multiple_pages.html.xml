@@ -67,7 +67,7 @@ Test Accounting module listbox multi pages\n
 <tr>\n
   <td>verifyText</td>\n
   <td>listbox_record_number</td>\n
-  <td>48 record(s)</td>\n
+  <td>48 records</td>\n
 </tr>\n
 <!-- }}} -->\n
 \n
@@ -231,7 +231,7 @@ Test Accounting module listbox multi pages\n
 <tr>\n
   <td>verifyText</td>\n
   <td>listbox_record_number</td>\n
-  <td>48 record(s)</td>\n
+  <td>48 records</td>\n
 </tr>\n
 \n
 <tr>\n
@@ -248,7 +248,7 @@ Test Accounting module listbox multi pages\n
 <tr>\n
   <td>verifyText</td>\n
   <td>listbox_record_number</td>\n
-  <td>24 record(s)</td>\n
+  <td>24 records</td>\n
 </tr>\n
 \n
 <tr>\n

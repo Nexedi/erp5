@@ -77,7 +77,7 @@ Test Account Transaction List then jump to accounting module.\n
 <tr>\n
   <td>verifyText</td>\n
   <td>listbox_record_number</td>\n
-  <td>2 record(s)</td>\n
+  <td>2 records</td>\n
 </tr>\n
 \n
 <!-- {{{ stat line -->\n
@@ -107,7 +107,7 @@ Test Account Transaction List then jump to accounting module.\n
 <tr>\n
   <td>verifyText</td>\n
   <td>listbox_record_number</td>\n
-  <td>2 record(s)</td>\n
+  <td>2 records</td>\n
 </tr>\n
 <!-- check amounts for lines -->\n
 <tr>\n

@@ -67,7 +67,7 @@ Test filter in Account Module\n
 <tr>\n
   <td>verifyText</td>\n
   <td>listbox_record_number</td>\n
-  <td>10 record(s)</td>\n
+  <td>10 records</td>\n
 </tr>\n
 <!-- }}} -->\n
 \n
@@ -85,7 +85,7 @@ Test filter in Account Module\n
 <tr>\n
   <td>verifyText</td>\n
   <td>listbox_record_number</td>\n
-  <td>1 record(s)</td>\n
+  <td>1 records</td>\n
 </tr>\n
 \n
 <!-- column values -->\n
@@ -183,7 +183,7 @@ Test filter in Account Module\n
 <tr>\n
   <td>verifyText</td>\n
   <td>listbox_record_number</td>\n
-  <td>10 record(s)</td>\n
+  <td>10 records</td>\n
 </tr>\n
 <!-- }}} -->\n
 \n
@@ -206,7 +206,7 @@ Test filter in Account Module\n
 <tr>\n
   <td>verifyText</td>\n
   <td>listbox_record_number</td>\n
-  <td>2 record(s)</td>\n
+  <td>2 records</td>\n
 </tr>\n
 \n
 <!-- column values -->\n
@@ -345,7 +345,7 @@ Test filter in Account Module\n
 <tr>\n
   <td>verifyText</td>\n
   <td>listbox_record_number</td>\n
-  <td>10 record(s)</td>\n
+  <td>10 records</td>\n
 </tr>\n
 <!-- }}} -->\n
 \n

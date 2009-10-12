@@ -88,7 +88,7 @@ Test Transactions related to an Organisation\n
 <tr>\n
   <td>verifyText</td>\n
   <td>listbox_record_number</td>\n
-  <td>1 record(s)</td>\n
+  <td>1 records</td>\n
 </tr>\n
 \n
 <!-- Dumped lisbox {{{ \n
@@ -195,7 +195,7 @@ from http://localhost:9080/erp5/Entity_viewAccountingTransactionList/listbox?for
 <tr>\n
   <td>verifyText</td>\n
   <td>listbox_record_number</td>\n
-  <td>1 record(s)</td>\n
+  <td>1 records</td>\n
 </tr>\n
 <!-- check amounts for lines -->\n
 <tr>\n

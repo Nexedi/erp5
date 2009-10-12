@@ -98,7 +98,7 @@ Test Simple view of an Accounting Transaction\n
 <tr>\n
   <td>assertText</td>\n
   <td>//span[@id=\'listbox_record_number\']</td>\n
-  <td>2 record(s)</td>\n
+  <td>2 records</td>\n
 </tr>\n
 <tr>\n
   <td>select</td>\n
@@ -195,7 +195,7 @@ Test Simple view of an Accounting Transaction\n
 <tr>\n
   <td>verifyText</td>\n
   <td>listbox_record_number</td>\n
-  <td>3 record(s)</td>\n
+  <td>3 records</td>\n
 </tr>\n
 <tr>\n
   <td>assertValue</td>\n

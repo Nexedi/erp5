@@ -79,7 +79,7 @@ Accounting Transaction Module Search Dialog: seach by amount\n
 <tr>\n
   <td>verifyText</td>\n
   <td>listbox_record_number</td>\n
-  <td>1 record(s)</td>\n
+  <td>1 records</td>\n
 </tr>\n
 \n
 <!-- check amounts for lines -->\n
@@ -149,7 +149,7 @@ Accounting Transaction Module Search Dialog: seach by amount\n
 <tr>\n
   <td>verifyText</td>\n
   <td>listbox_record_number</td>\n
-  <td>1 record(s)</td>\n
+  <td>1 records</td>\n
 </tr>\n
 \n
 <!-- check amounts for lines -->\n
