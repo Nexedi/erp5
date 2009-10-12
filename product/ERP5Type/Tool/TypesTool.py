@@ -156,7 +156,7 @@ class OldTypesTool(OFSFolder):
       else:
         if k == '_property_domain_dict':
           v = dict((k, t.__class__(property_name=t.property_name,
-                                   domain_name=t.property_name))
+                                   domain_name=t.domain_name))
                    for k, t in v.iteritems())
         setattr(new_type, k, v)
 
