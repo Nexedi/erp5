@@ -149,7 +149,7 @@ class LocalRoleAssignorMixIn(object):
       # Return also explicit local roles defined as subobjects of the document
       if getattr(aq_base(ob), 'isPrincipiaFolderish', 0) and \
          self.allowType('Role Definition'):
-        for role in ob.objectValues(meta_type='ERP5 Role Definition'):
+        for role in ob.objectValues(spec='ERP5 Role Definition'):
           if role.getRoleName():
             yield role
 
