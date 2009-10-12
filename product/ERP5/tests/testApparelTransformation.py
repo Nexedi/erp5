@@ -68,11 +68,11 @@ class TestApparelTransformation(TestOrderMixin, ERP5TypeTestCase):
     Therefore, it's better to use testTransformation for future tests
   """
   run_all_test = 1
-  transformation_portal_type = 'Apparel Transformation'
+  transformation_portal_type = 'Transformation'
   component_portal_type = 'Apparel Component'
   component_variation_portal_type = 'Apparel Component Variation'
-  transformed_resource_portal_type = 'Apparel Transformation Transformed Resource'
-  operation_portal_type = 'Apparel Transformation Operation'
+  transformed_resource_portal_type = 'Transformation Transformed Resource'
+  operation_portal_type = 'Transformation Operation'
 
   def getTitle(self):
     return "Transformation"

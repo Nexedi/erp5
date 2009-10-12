@@ -45,10 +45,10 @@ class TestProductionOrderApparelMixin(TestOrderMixin):
   supply_node_portal_type = 'Supply Node'
   supply_link_portal_type = 'Supply Link'
   component_portal_type = 'Apparel Component'
-  transformation_portal_type = 'Apparel Transformation'
+  transformation_portal_type = 'Transformation'
   transformed_resource_portal_type = \
-                        'Apparel Transformation Transformed Resource'
-  operation_line_portal_type = 'Apparel Transformation Operation'
+                        'Transformation Transformed Resource'
+  operation_line_portal_type = 'Transformation Operation'
   colour_variation_portal_type = 'Apparel Model Colour Variation'
   morphology_variation_portal_type = 'Apparel Model Morphology Variation'
 
