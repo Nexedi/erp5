@@ -156,7 +156,31 @@ class TestXHTML(ERP5TypeTestCase):
       for error in error_list:
         message += '\t%s\n' % str(error)
       self.fail(message)
-    
+
+  def test_portalTypesDomainTranslation(self):
+    # according to bt5-Module.Creation.Guidelines document, module
+    # portal_types should be translated using erp5_ui, and normal ones, using
+    # erp5_content
+    error_list = []
+    portal_types_module = self.portal.portal_types
+    for portal_type in portal_types_module.contentValues(portal_type=\
+        'Base Type'):
+      if 'Module' in portal_type.getTitle():
+        for k, v in portal_type.getPropertyTranslationDomainDict().items():
+          if v.getDomainName() != 'erp5_ui':
+            error_list.append('"%s" should use erp5_ui' % \
+                portal_type.getId())
+      else:
+        for k, v in portal_type.getPropertyTranslationDomainDict().items():
+          if v.getDomainName() != 'erp5_content':
+            error_list.append('"%s" should use erp5_content' % \
+                portal_type.getId())
+    if error_list:
+      message = '\nBad portal_type domain translation list\n'
+      for error in error_list:
+        message += '\t%s\n' % str(error)
+      self.fail(message)
+
   def test_emptySelectionNameInListbox(self):
     # check all empty selection name in listboxes
     skins_tool = self.portal.portal_skins
