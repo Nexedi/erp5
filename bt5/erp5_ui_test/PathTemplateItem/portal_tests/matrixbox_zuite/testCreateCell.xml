@@ -127,7 +127,7 @@
 <tr>\n
   <td>verifyText</td>\n
   <td>id=listbox_record_number</td>\n
-  <td>1 record(s)</td>\n
+  <td>1 records</td>\n
 </tr>\n
 <tal:block tal:condition="python: context.TestTool_getSkinName()!=\'Mobile\'">\n
 <tr>\n
@@ -198,7 +198,7 @@
 <tr>\n
   <td>verifyText</td>\n
   <td>id=listbox_record_number</td>\n
-  <td>2 record(s)</td>\n
+  <td>2 records</td>\n
 </tr>\n
 \n
 </tbody>\n

@@ -179,7 +179,7 @@
 <tr>\n
   <td>verifyText</td>\n
   <td>id=listbox_record_number</td>\n
-  <td>2 record(s)</td>\n
+  <td>2 records</td>\n
 </tr>\n
 <!-- Click on + a -->\n
 <tr>\n
@@ -245,7 +245,7 @@
 <tr>\n
   <td>verifyText</td>\n
   <td>id=listbox_record_number</td>\n
-  <td>6 record(s)</td>\n
+  <td>6 records</td>\n
 </tr>\n
 <!-- Go to next page -->\n
 <tr>\n
@@ -311,7 +311,7 @@
 <tr>\n
   <td>verifyText</td>\n
   <td>id=listbox_record_number</td>\n
-  <td>6 record(s)</td>\n
+  <td>6 records</td>\n
 </tr>\n
 <!-- Show all the 1st level -->\n
 <tr>\n
@@ -377,7 +377,7 @@
 <tr>\n
   <td>verifyText</td>\n
   <td>id=listbox_record_number</td>\n
-  <td>8 record(s)</td>\n
+  <td>8 records</td>\n
 </tr>\n
 <!-- Go to next page -->\n
 <tr>\n
@@ -428,7 +428,7 @@
 <tr>\n
   <td>verifyText</td>\n
   <td>id=listbox_record_number</td>\n
-  <td>8 record(s)</td>\n
+  <td>8 records</td>\n
 </tr>\n
 <!-- Still very far from complete. Show/Hide should be tested, closing a tree should be tested, sorting should be tested. -->\n
 </tal:block>\n

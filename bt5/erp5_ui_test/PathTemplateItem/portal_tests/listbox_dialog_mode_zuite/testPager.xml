@@ -55,12 +55,12 @@
 <tr>\n
   <td>verifyText</td>\n
   <td>id=listbox_record_number</td>\n
-  <td>3 record(s)</td>\n
+  <td>3 records</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
   <td>id=listbox_item_number</td>\n
-  <td> - 0 item(s) selected</td>\n
+  <td> - 0 items selected</td>\n
 </tr>\n
 <tr>\n
   <td>verifyElementNotPresent</td>\n
@@ -127,12 +127,12 @@
 <tr>\n
   <td>verifyText</td>\n
   <td>id=listbox_record_number</td>\n
-  <td>10 record(s)</td>\n
+  <td>10 records</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
   <td>id=listbox_item_number</td>\n
-  <td> - 0 item(s) selected</td>\n
+  <td> - 0 items selected</td>\n
 </tr>\n
 <tr>\n
 <tal:block tal:condition="python: context.TestTool_getSkinName()!=\'Mobile\'">\n
@@ -199,7 +199,7 @@
 <tr>\n
   <td>verifyText</td>\n
   <td>id=listbox_item_number</td>\n
-  <td> - 1 item(s) selected</td>\n
+  <td> - 1 items selected</td>\n
 </tr>\n
 <!--tal:block metal:use-macro="here/ListBoxDialogModeZuite_CommonTemplate/macros/verify_dialog" /-->\n
 \n
@@ -334,7 +334,7 @@
 <tr>\n
   <td>verifyText</td>\n
   <td>id=listbox_item_number</td>\n
-  <td> - 1 item(s) selected</td>\n
+  <td> - 1 items selected</td>\n
 </tr>\n
 <tr>\n
 <tal:block tal:condition="python: context.TestTool_getSkinName()!=\'Mobile\'">\n
@@ -378,12 +378,12 @@
 <tr>\n
   <td>verifyText</td>\n
   <td>id=listbox_record_number</td>\n
-  <td>9 record(s)</td>\n
+  <td>9 records</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
   <td>id=listbox_item_number</td>\n
-  <td> - 0 item(s) selected</td>\n
+  <td> - 0 items selected</td>\n
 </tr>\n
 <tr>\n
 <tal:block tal:condition="python: context.TestTool_getSkinName()!=\'Mobile\'">\n

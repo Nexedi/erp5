@@ -79,12 +79,12 @@
 <tr>\n
   <td>verifyText</td>\n
   <td>id=listbox_record_number</td>\n
-  <td>3 record(s)</td>\n
+  <td>3 records</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
   <td>id=listbox_item_number</td>\n
-  <td> - 0 item(s) selected</td>\n
+  <td> - 0 items selected</td>\n
 </tr>\n
 <tr>\n
   <td>verifyElementNotPresent</td>\n
@@ -150,12 +150,12 @@
 <tr>\n
   <td>verifyText</td>\n
   <td>id=listbox_record_number</td>\n
-  <td>10 record(s)</td>\n
+  <td>10 records</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
   <td>id=listbox_item_number</td>\n
-  <td> - 0 item(s) selected</td>\n
+  <td> - 0 items selected</td>\n
 </tr>\n
 \n
 <tal:block tal:define="prefix string:listbox; \n
@@ -341,12 +341,12 @@
 <tr>\n
   <td>verifyText</td>\n
   <td>id=listbox_record_number</td>\n
-  <td>9 record(s)</td>\n
+  <td>9 records</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
   <td>id=listbox_item_number</td>\n
-  <td> - 0 item(s) selected</td>\n
+  <td> - 0 items selected</td>\n
 </tr>\n
 \n
 <tal:block tal:define="prefix string:listbox; \n

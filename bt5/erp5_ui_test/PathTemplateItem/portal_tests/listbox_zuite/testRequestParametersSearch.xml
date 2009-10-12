@@ -88,7 +88,7 @@
 <tr>\n
   <td>verifyText</td>\n
   <td>listbox_record_number</td>\n
-  <td>1 record(s)</td>\n
+  <td>1 records</td>\n
 </tr>\n
 \n
 <tal:block tal:condition="python: context.TestTool_getSkinName()!=\'Mobile\'">\n
@@ -121,7 +121,7 @@
 <tr>\n
   <td>verifyText</td>\n
   <td>listbox_record_number</td>\n
-  <td>1 record(s)</td>\n
+  <td>1 records</td>\n
 </tr>\n
 <tal:block tal:condition="python: context.TestTool_getSkinName()!=\'Mobile\'">\n
 <tr>\n
@@ -156,7 +156,7 @@ XXX what should we display in the field in that case ?\n
 <tr>\n
   <td>verifyText</td>\n
   <td>listbox_record_number</td>\n
-  <td>2 record(s)</td>\n
+  <td>2 records</td>\n
 </tr>\n
 <tal:block tal:condition="python: context.TestTool_getSkinName()!=\'Mobile\'">\n
 <tr>\n
@@ -193,7 +193,7 @@ XXX what should we display in the field in that case ?\n
 <tr>\n
   <td>verifyText</td>\n
   <td>listbox_record_number</td>\n
-  <td>10 record(s)</td>\n
+  <td>10 records</td>\n
 </tr>\n
 \n
 </tbody></table>\n

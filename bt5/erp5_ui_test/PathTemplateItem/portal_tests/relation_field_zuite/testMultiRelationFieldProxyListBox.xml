@@ -121,7 +121,7 @@
 <tr>\n
     <td>verifyText</td>\n
     <td>id=listbox_record_number</td>\n
-    <td>15 record(s)</td> <!-- we have 15 Foo and Foo Lines in default template -->\n
+    <td>15 records</td> <!-- we have 15 Foo and Foo Lines in default template -->\n
 </tr>\n
 \n
 <tr>\n
@@ -132,7 +132,7 @@
 <tr>\n
     <td>verifyText</td>\n
     <td>id=listbox_record_number</td>\n
-    <td>5 record(s)</td> <!-- we have 5 Foo Lines -->\n
+    <td>5 records</td> <!-- we have 5 Foo Lines -->\n
 </tr>\n
 <tr>\n
     <td>verifyElementPresent</td>\n
@@ -208,7 +208,7 @@
 <tr>\n
     <td>verifyText</td>\n
     <td>id=listbox_record_number</td>\n
-    <td>10 record(s)</td> <!-- we have 10 Foos -->\n
+    <td>10 records</td> <!-- we have 10 Foos -->\n
 </tr>\n
 <tr>\n
     <td>verifyElementPresent</td>\n

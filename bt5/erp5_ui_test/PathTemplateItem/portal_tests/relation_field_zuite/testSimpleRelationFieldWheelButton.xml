@@ -106,7 +106,7 @@
   <td>verifyText</td>\n
   <td>//span[@id=\'listbox_record_number\']</td>\n
   <!-- XXX this will probably fail ... -->\n
-  <td>1 record(s)</td>\n
+  <td>1 records</td>\n
 </tr>\n
   <!-- its not possible to sort the relation field listbox currently... -->\n
 <!--tr>\n
@@ -164,7 +164,7 @@
   <td>verifyText</td>\n
   <td>//span[@id=\'listbox_record_number\']</td>\n
   <!-- XXX this will probably fail ... -->\n
-  <td>0 record(s)</td>\n
+  <td>0 records</td>\n
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n

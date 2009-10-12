@@ -126,7 +126,7 @@
 <tr>\n
   <td>verifyText</td>\n
   <td>x0_listbox_record_number</td>\n
-  <td>4 record(s)</td> <!-- Creation + edited 3 times -->\n
+  <td>4 records</td> <!-- Creation + edited 3 times -->\n
 </tr>\n
 \n
 <!-- First modification -->\n
@@ -162,7 +162,7 @@
 <tr>\n
   <td>verifyText</td>\n
   <td>listbox_record_number</td>\n
-  <td>1 record(s)</td> <!-- Only one property changed. -->\n
+  <td>1 records</td> <!-- Only one property changed. -->\n
 </tr>\n
 <tal:block tal:condition="python: context.TestTool_getSkinName()!=\'Mobile\'">\n
 <tr>\n
@@ -222,7 +222,7 @@
 <tr>\n
   <td>verifyText</td>\n
   <td>listbox_record_number</td>\n
-  <td>1 record(s)</td> <!-- Only one property changed. -->\n
+  <td>1 records</td> <!-- Only one property changed. -->\n
 </tr>\n
 <tal:block tal:condition="python: context.TestTool_getSkinName()!=\'Mobile\'">\n
 <tr>\n
@@ -300,7 +300,7 @@
 <tr>\n
   <td>verifyText</td>\n
   <td>listbox_record_number</td>\n
-  <td>1 record(s)</td> <!-- Only one property changed. -->\n
+  <td>1 records</td> <!-- Only one property changed. -->\n
 </tr>\n
 <tal:block tal:condition="python: context.TestTool_getSkinName()!=\'Mobile\'">\n
 <tr>\n

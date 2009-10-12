@@ -63,12 +63,12 @@
 <tr>\n
   <td>verifyText</td>\n
   <td>id=listbox_record_number</td>\n
-  <td>0 record(s)</td>\n
+  <td>0 records</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
   <td>id=listbox_item_number</td>\n
-  <td> - 0 item(s) selected</td>\n
+  <td> - 0 items selected</td>\n
 </tr>\n
 <tr>\n
   <td>verifyElementNotPresent</td>\n

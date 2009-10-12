@@ -123,7 +123,7 @@
 <tr>\n
   <td>verifyText</td>\n
   <td>listbox_record_number</td>\n
-  <td>2 record(s)</td>\n
+  <td>2 records</td>\n
 </tr>\n
 \n
 \n
@@ -169,7 +169,7 @@ commands from selenium 0.8\n
 <tr>\n
   <td>verifyText</td>\n
   <td>listbox_record_number</td>\n
-  <td>1 record(s)</td>\n
+  <td>1 records</td>\n
 </tr>\n
 \n
 \n
@@ -193,7 +193,7 @@ commands from selenium 0.8\n
 <tr>\n
   <td>verifyText</td>\n
   <td>listbox_record_number</td>\n
-  <td>0 record(s)</td>\n
+  <td>0 records</td>\n
 </tr>\n
 \n
 </body>\n
