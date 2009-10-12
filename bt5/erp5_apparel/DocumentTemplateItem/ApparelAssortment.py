@@ -30,10 +30,8 @@
 from AccessControl import ClassSecurityInfo
 
 from Products.ERP5.Document.Resource import Resource
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
-from Products.ERP5Type.Base import Base
+from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLMatrix import XMLMatrix
-from zLOG import LOG
 
 class ApparelAssortment(Resource, XMLMatrix):
     """

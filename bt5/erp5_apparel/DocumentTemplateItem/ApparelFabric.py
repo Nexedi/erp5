@@ -28,10 +28,8 @@
 ##############################################################################
 
 from AccessControl import ClassSecurityInfo
-
 from Products.ERP5.Document.Resource import Resource
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
-from Products.ERP5Type.Utils import rejectIn
+from Products.ERP5Type import Permissions, PropertySheet
 
 class ApparelFabric(Resource):
     """

@@ -28,14 +28,10 @@
 #
 ##############################################################################
 
-from Globals import InitializeClass, PersistentMapping
 from AccessControl import ClassSecurityInfo
-
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
+from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5.Document.Resource import Resource
-from Products.CMFCore.WorkflowCore import WorkflowMethod
 from Products.ERP5Type.XMLMatrix import XMLMatrix
-from Products.ERP5.Document.Domain import Domain
 
 class ApparelCloth(Resource, XMLMatrix):
     """
