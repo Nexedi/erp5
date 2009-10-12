@@ -42,6 +42,7 @@ from Acquisition import aq_base, aq_inner, aq_acquire, aq_chain
 import OFS.History
 from OFS.SimpleItem import SimpleItem
 from OFS.PropertyManager import PropertyManager
+from zExceptions import NotFound
 
 from ZopePatch import ERP5PropertyManager
 
