@@ -1653,6 +1653,11 @@ class ERP5Generator(PortalGenerator):
 
     # Remove unused default actions
     def removeActionsFromTool(tool, remove_list):
+      from Products.CMFCore.interfaces import IActionProvider
+      if not IActionProvider.providedBy(tool):
+        # On CMF 2.x, some tools (portal_membership)
+        # are no longer action providers
+        return
       action_id_list = [i.id for i in tool.listActions()]
       remove_index_list = []
       for i in remove_list:
