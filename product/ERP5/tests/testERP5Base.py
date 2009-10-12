@@ -1189,6 +1189,15 @@ class TestERP5Base(ERP5TypeTestCase):
     self.assertEquals('mailto:nobody@example.com',
                       pers.Entity_getDefaultEmailAsURL())
 
+  def test_LinkAsURL(self):
+    person = self.getPersonModule().newContent(portal_type='Person')
+    link = person.newContent(portal_type='Link',
+                             url_string='http://www.nexedi.com/')
+    self.assertEquals(link.asURL(), 'http://www.nexedi.com/')
+    link = person.newContent(portal_type='Link',
+                             url_string='www.nexedi.com')
+    self.assertEquals(link.asURL(), 'http://www.nexedi.com')
+
   def test_getTranslatedId(self):
     pers = self.getPersonModule().newContent(
                 portal_type='Person', id='default_email')
@@ -1253,22 +1262,20 @@ class TestERP5Base(ERP5TypeTestCase):
   def test_ConvertImage(self):
     image = self.portal.newContent(portal_type='Image', id='test_image')
     image.edit(file=self.makeImageFileUpload('erp5_logo.png'))
-    image_type, image_data = image.convert('jpg', display='thumbnail')
-    self.assertEquals('image/jpeg', image_type)
-    # magic
-    self.assertEquals('\xff', image_data[0])
-    self.assertEquals('\xd8', image_data[1])
-  
-  def test_ConvertImageQuality(self):
-    image = self.portal.newContent(portal_type='Image', id='test_image')
-    image.edit(file=self.makeImageFileUpload('erp5_logo.png'))
-    image_type, image_data = image.convert('jpg', display='thumbnail',
-                                           quality=100)
-    self.assertEquals('image/jpeg', image_type)
-    # magic
-    self.assertEquals('\xff', image_data[0])
-    self.assertEquals('\xd8', image_data[1])
-  
+    self.assertEqual('image/png', image.getContentType())
+    self.assertEqual((320, 250), (image.getWidth(), image.getHeight()))
+
+    from Products.ERP5Type.Document import newTempImage
+    def convert(**kw):
+      image_type, image_data = image.convert('jpg', display='thumbnail', **kw)
+      self.assertEqual('image/jpeg', image_type)
+      thumbnail = newTempImage(self.portal, 'thumbnail', data=image_data)
+      self.assertEqual(image_type, thumbnail.getContentType())
+      self.assertEqual((128, 100), (thumbnail.getWidth(),
+                                    thumbnail.getHeight()))
+      return thumbnail.getSize()
+    self.assertTrue(convert() < convert(quality=100))
+
   def test_ConvertImagePdata(self):
     image = self.portal.newContent(portal_type='Image', id='test_image')
     image.edit(file=self.makeImageFileUpload('erp5_logo.bmp'))

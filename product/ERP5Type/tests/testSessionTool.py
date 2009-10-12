@@ -245,6 +245,28 @@ class TestSessionTool(ERP5TypeTestCase):
     # session should be an emty dic as it expired
     self.assert_(session == {})
 
+  def stepTestCheckSessionAfterNewPerson(self, sequence=None, \
+                                  sequence_list=None, **kw):
+    """ Test if session still the same after create new person setting the
+    reference. """
+    session = self.portal.portal_sessions[self.session_id]
+    session.clear()
+    session['key'] = 'value'
+    
+    self.getPortal().person_module.newContent(portal_type='Person',
+                                        default_address_city='test',
+                                        default_address_region='test',
+                                        default_address_street_address='test',
+                                        default_email_text='test@test.com',
+                                        default_fax_text='123456789',
+                                        first_name='test',
+                                        last_name='test',
+                                        password='secret',
+                                        reference='test')
+
+    session = self.portal.portal_sessions[self.session_id]
+    self.assertEquals(session.get('key'),  'value')
+
   def test_01_CheckSessionTool(self, quiet=0, run=run_all_test):
     """ Create portal_sessions tool and needed cache factory. """
     if not run:
@@ -274,6 +296,7 @@ class TestSessionTool(ERP5TypeTestCase):
                     stepTestSessionGetattr  \
                     stepTestSessionBulkStorage  \
                     stepTestSessionExpire  \
+                    stepTestCheckSessionAfterNewPerson \
                     '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
@@ -297,6 +320,7 @@ class TestSessionTool(ERP5TypeTestCase):
                         stepTestSessionGetattr  \
                         stepTestSessionBulkStorage  \
                         stepTestSessionExpire  \
+                        stepTestCheckSessionAfterNewPerson \
                    '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)

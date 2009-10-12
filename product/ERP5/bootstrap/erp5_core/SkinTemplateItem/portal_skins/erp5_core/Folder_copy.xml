@@ -65,10 +65,12 @@ request=context.REQUEST\n
 \n
 if uids != []:\n
   context.manage_copyObjects(uids=uids, REQUEST=request, RESPONSE=request.RESPONSE)\n
-  message = Base_translateString("Item(s) copied.")\n
+  message = Base_translateString("Items copied.")\n
 else:\n
   message = Base_translateString("Please select one or more items to copy first.")\n
-return request.RESPONSE.redirect(context.absolute_url() + \'/\' + form_id + \'?portal_status_message=%s\' % message)\n
+\n
+return context.Base_redirect(form_id,\n
+             keep_items=dict(portal_status_message=message))\n
 </string> </value>
         </item>
         <item>
@@ -79,7 +81,7 @@ return request.RESPONSE.redirect(context.absolute_url() + \'/\' + form_id + \'?p
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>form_id, uids=[], listbox_uid=[],selection_name=\'\'</string> </value>
+            <value> <string>form_id, uids=[], listbox_uid=[], selection_name=\'\'</string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>
@@ -122,6 +124,7 @@ return request.RESPONSE.redirect(context.absolute_url() + \'/\' + form_id + \'?p
                             <string>selected_uids</string>
                             <string>request</string>
                             <string>message</string>
+                            <string>dict</string>
                           </tuple>
                         </value>
                     </item>

@@ -457,6 +457,10 @@ class TestPreferences(ERP5TypeTestCase):
                      preference_tool.getPreferredOoodocServerAddress('localhost'))
     self.assertEqual(default_large_image_height,
                      preference_tool.getPreferredLargeImageHeight())
+    # Default value passed by parameter has priority over the default in the
+    # property sheet.
+    self.assertEqual(large_image_height,
+                     preference_tool.getPreferredLargeImageHeight(large_image_height))
 
     # Members can't add new system preferences
     uf = self.getPortal().acl_users
@@ -491,6 +495,8 @@ class TestPreferences(ERP5TypeTestCase):
                      preference_tool.getPreferredOoodocServerAddress('localhost'))
     self.assertEqual(large_image_height,
                      preference_tool.getPreferredLargeImageHeight())
+    self.assertEqual(large_image_height,
+                     preference_tool.getPreferredLargeImageHeight(0))
 
     # check a user can't edit preference which are marked for manager
     self.assertRaises(Unauthorized, user_pref.edit, preferred_ooodoc_server_address="localhost")

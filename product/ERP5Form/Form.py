@@ -1170,7 +1170,3 @@ psyco.bind(Field.get_value)
 #from Products.CMFCore.ActionsTool import ActionsTool
 #psyco.bind(ActionsTool.listFilteredActionsFor)
 
-# install interactor
-# we need to install interactor after to apply get_value patch.
-from Products.ERP5Type.Interactor import field_value_interactor
-field_value_interactor.install()

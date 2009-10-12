@@ -35,6 +35,7 @@ from ERP5Diff import ERP5Diff
 from zLOG import LOG, INFO
 
 from lxml import etree
+from lxml.etree import Element
 from lxml.builder import ElementMaker
 from SyncCode import SYNCML_NAMESPACE
 nsmap = {'syncml' : SYNCML_NAMESPACE}
@@ -43,10 +44,7 @@ parser = etree.XMLParser(remove_blank_text=True)
 
 from xml.dom import minidom
 
-try:
-  from base64 import b16encode, b16decode
-except ImportError:
-  from base64 import encodestring as b16encode, decodestring as b16decode
+from base64 import b16encode, b16decode
 
 class XMLSyncUtilsMixin(SyncCode):
 
@@ -263,7 +261,7 @@ class XMLSyncUtilsMixin(SyncCode):
                    )
                  )
                )))
-      data_store = xml.find('Item/Data/DevInf/DataStore')
+      data_store = xml.find('{%(ns)s}Item/{%(ns)s}Data/{%(ns)s}DevInf/{%(ns)s}DataStore' % {'ns': SYNCML_NAMESPACE})
       tx_element_list = []
       rx_element_list = []
       for type in conduit.getCapabilitiesCTTypeList():

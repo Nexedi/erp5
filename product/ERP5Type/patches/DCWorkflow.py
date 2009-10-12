@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2001 Zope Corporation and Contributors. All Rights Reserved.
@@ -476,6 +477,7 @@ def updateRoleMappingsFor(self, ob):
             roles = []
             refused_roles = []
             role_type = 'list'
+            other_role_type_list = []
             if sdef.permission_roles is not None:
                 roles = sdef.permission_roles.get(p, roles)
                 if type(roles) is type(()):
@@ -487,14 +489,17 @@ def updateRoleMappingsFor(self, ob):
               if p in other_workflow.permissions:
                 other_roles = other_sdef.permission_roles.get(p, [])
                 if type(other_roles) is type(()) :
-                  role_type = 'tuple'
+                  other_role_type_list.append('tuple')
+                else:
+                  other_role_type_list.append('list')
                 for role in roles:
                   if role not in other_roles :
                     refused_roles.append(role)
             for role in refused_roles :
               if role in roles :
                 roles.remove(role)
-            if role_type=='tuple':
+            if role_type == 'tuple' and ((not other_role_type_list) or ('list' not in other_role_type_list)):
+              #If at least, one of other workflows manage security and for all are role_type are tuple
               roles = tuple(roles)
             if modifyRolesForPermission(ob, p, roles):
                 changed = 1

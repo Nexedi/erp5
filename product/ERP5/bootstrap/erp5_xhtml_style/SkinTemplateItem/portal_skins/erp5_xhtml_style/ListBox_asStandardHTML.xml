@@ -109,10 +109,10 @@
                 </tal:block>\n
                 <span id="listbox_record_number" class="listbox_record_number"\n
                   tal:attributes="id string:${field_id}_record_number"\n
-                  i18n:translate="" i18n:domain="ui"><tal:block tal:replace="here/total_size" i18n:name="number">0</tal:block> record(s)</span>\n
+                  i18n:translate="" i18n:domain="ui"><tal:block tal:replace="here/total_size" i18n:name="number">0</tal:block> records</span>\n
                 <span id="listbox_item_number" class="listbox_item_number"\n
                     tal:attributes="id string:${field_id}_item_number"\n
-                    i18n:translate="" i18n:domain="ui"> - <tal:block tal:replace="python: len(here.getCheckedUidList())" i18n:name="number">0</tal:block> item(s) selected</span>\n
+                    i18n:translate="" i18n:domain="ui"> - <tal:block tal:replace="python: len(here.getCheckedUidList())" i18n:name="number">0</tal:block> items selected</span>\n
               </td>\n
 \n
               <td class="pageNavigation" style="white-space: nowrap; vertical-align: middle; text-align: center;">\n

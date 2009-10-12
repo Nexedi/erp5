@@ -1,11 +1,8 @@
 from Products.PortalTransforms.interfaces import itransform
-from StringIO import StringIO
-import PIL.Image
 from Products.PortalTransforms.libtransforms.commandtransform \
     import popentransform
 
 import os
-import sys
 import tempfile
 from zope.interface import implements
 

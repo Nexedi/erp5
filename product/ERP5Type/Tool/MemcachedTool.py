@@ -32,6 +32,7 @@ from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type import Permissions, _dtmldir
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Globals import DTMLFile
+from quopri import encodestring
 
 MEMCACHED_TOOL_MODIFIED_FLAG_PROPERTY_ID = '_v_memcached_edited'
 
@@ -42,14 +43,12 @@ except ImportError:
 
 def encodeKey(key):
   """
-    Encode the key. The current encoding is not very good
-    since it is not bijective. Implementing a bijective
-    encoding is required.
+    Encode the key like 'Quoted Printable'.
   """
-  # Memcached refuses characters which are below ' ' (included) in
-  # ascii table. Just strip them here to avoid the raise.
-  return ''.join([x for x in key if ord(x) > \
-                              MEMCACHED_MINIMUM_KEY_CHAR_ORD])
+  # According to the memcached's protocol.txt, the key cannot contain
+  # control characters and white spaces.
+  return encodestring(key, True).replace('\n', '').replace('\r', '')
+
 memcached_dict_pool = local()
 if memcache is not None:
   # Real memcache tool
@@ -299,6 +298,9 @@ if memcache is not None:
         plugin_path
           relative_url of dedicated Memcached Plugin
       """
+      global_prefix = getattr(self, 'erp5_site_global_id', '')
+      if global_prefix:
+        key_prefix = '%s_%s' % (global_prefix, key_prefix)
       return SharedDict(self._getMemcachedDict(plugin_path), prefix=key_prefix)
 
 else:

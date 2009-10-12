@@ -55,10 +55,16 @@
             <key> <string>_body</string> </key>
             <value> <string>object = state_change[\'object\']\n
 \n
-# Try all expire methods\n
-object.expire()\n
-object.expireProtected()\n
-object.expirePublished()\n
+workflow_tool = object.getPortalObject().portal_workflow\n
+\n
+if workflow_tool.isTransitionPossible(object, \'expire\'):\n
+  object.expire()\n
+\n
+if workflow_tool.isTransitionPossible(object, \'expire_protected\'):\n
+  object.expireProtected()\n
+\n
+if workflow_tool.isTransitionPossible(object, \'expire_published\'):\n
+  object.expirePublished()\n
 </string> </value>
         </item>
         <item>
@@ -99,6 +105,7 @@ object.expirePublished()\n
                             <string>_getitem_</string>
                             <string>object</string>
                             <string>_getattr_</string>
+                            <string>workflow_tool</string>
                           </tuple>
                         </value>
                     </item>

@@ -40,7 +40,7 @@ from base64 import encodestring
 
 try:
   import memcache
-  from Products.ERP5Type.Tool.MemcachedTool import MemcachedDict
+  from Products.ERP5Type.Tool.MemcachedTool import MemcachedDict, SharedDict
 except ImportError:
   LOG('DistributedRamCache', 0, 'unable to import memcache')
 
@@ -62,7 +62,6 @@ class DistributedRamCache(BaseCache):
     self._server_max_value_length = params.get('server_max_value_length', 1024*1024)
     self._debug_level = params.get('debug_level', 0)
     self._key_prefix = params.get('key_prefix', '')
-    self._cache_plugin_path = params.get('cache_plugin_path')
     BaseCache.__init__(self)
 
   def initCacheStorage(self):
@@ -78,26 +77,20 @@ class DistributedRamCache(BaseCache):
     try:
       dictionary = connection_pool.memcached_dict
     except AttributeError:
-      dictionary = MemcachedDict(self._servers.split('\n'),
-                                 server_max_key_length=self._server_max_key_length,
-                                 server_max_value_length=self._server_max_value_length)
+      dictionary = SharedDict(
+        MemcachedDict(self._servers.split('\n'),
+                      server_max_key_length=self._server_max_key_length,
+                      server_max_value_length=self._server_max_value_length),
+        prefix=self._key_prefix)
       connection_pool.memcached_dict = dictionary
     return dictionary
 
-  def checkAndFixCacheId(self, cache_id, scope):
-    ## memcached doesn't support namespaces (cache scopes) so to "emmulate"
-    ## such behaviour when constructing cache_id we add scope in front
-    cache_id = "%s%s%s%s" % (self._key_prefix, self._cache_plugin_path,
-                             scope, cache_id)
-    # Escape key to normalise some chars
-    # which are not allowed by memcached
-    # Could reach the limit of max_key_len
-    cache_id = encodestring(cache_id).replace('\n', '')
-    return cache_id
+  def _getCacheId(self, cache_id, scope):
+    return '%s_%s' % (scope, cache_id)
 
   def get(self, cache_id, scope, default=_MARKER):
     cache_storage = self.getCacheStorage()
-    cache_id = self.checkAndFixCacheId(cache_id, scope)
+    cache_id = self._getCacheId(cache_id, scope)
     cache_entry = cache_storage.get(cache_id)
     #Simulate the behaviour of a standard Dictionary
     if not isinstance(cache_entry, CacheEntry):
@@ -116,7 +109,7 @@ class DistributedRamCache(BaseCache):
 
   def set(self, cache_id, scope, value, cache_duration=None, calculation_time=0):
     cache_storage = self.getCacheStorage()
-    cache_id = self.checkAndFixCacheId(cache_id, scope)
+    cache_id = self._getCacheId(cache_id, scope)
     cache_entry = CacheEntry(value, cache_duration, calculation_time)
     cache_storage.set(cache_id, cache_entry)
     self.markCacheMiss()
@@ -134,12 +127,12 @@ class DistributedRamCache(BaseCache):
 
   def delete(self, cache_id, scope):
     cache_storage = self.getCacheStorage()
-    cache_id = self.checkAndFixCacheId(cache_id, scope)
+    cache_id = self._getCacheId(cache_id, scope)
     del cache_storage[cache_id]
 
   def has_key(self, cache_id, scope):
     cache_storage = self.getCacheStorage()
-    cache_id = self.checkAndFixCacheId(cache_id, scope)
+    cache_id = self._getCacheId(cache_id, scope)
     cache_entry = cache_storage.get(cache_id)
     to_return = False
     if isinstance(cache_entry, CacheEntry):

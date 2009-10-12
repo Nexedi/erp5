@@ -23,6 +23,7 @@ modules = [
     'html_to_text',   # re based transform
     'text_to_html',   # wrap text in a verbatim env
     'text_pre_to_html', # wrap text into a pre
+    'png_to_text',
     'pdf_to_html',    # sf.net/projects/pdftohtml
     'pdf_to_text',    # www.foolabs.com/xpdf
     'rtf_to_html',    # sf.net/projects/rtf-converter
@@ -35,6 +36,7 @@ modules = [
     'image_to_tiff',  # transforms any image to a TIFF image
     'image_to_bmp',   # transforms any image to a BMP image
     'lynx_dump',      # lynx -dump
+    'w3m dump',
     'python',         # python source files, no dependancies
     'identity',       # identity transform, no dependancies
     ]

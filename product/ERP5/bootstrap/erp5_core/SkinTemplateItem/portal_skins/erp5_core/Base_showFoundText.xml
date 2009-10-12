@@ -61,6 +61,7 @@
   containing searched words as well highlighting the searched \n
   words in the text itself.\n
 """\n
+from Products.ERP5.Document.Document import NotConvertedError\n
 \n
 is_gadget_mode = context.REQUEST.get(\'is_gadget_mode\', 0)\n
 \n
@@ -89,7 +90,10 @@ argument_names = (\'advanced_search_text\', \n
                   \'searchabletext_phrase\',)\n
 \n
 if document_text is None:\n
-  document_text = context.getSearchableText()\n
+  try:\n
+    document_text = context.getSearchableText()\n
+  except NotConvertedError:\n
+    return context.Base_translateString("This document is not converted yet.")\n
 \n
 if selection is not None:\n
   params = selection.getParams()\n
@@ -166,6 +170,8 @@ else:\n
                             <string>selection</string>
                             <string>max_lines</string>
                             <string>max_text_length</string>
+                            <string>Products.ERP5.Document.Document</string>
+                            <string>NotConvertedError</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>is_gadget_mode</string>
