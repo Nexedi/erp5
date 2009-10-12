@@ -24,7 +24,6 @@ Notification Message | notification_message_workflow
 Organisation | edit_workflow
 Organisation | validation_workflow
 Person | edit_workflow
-Person | person_interaction_workflow
 Person | user_account_workflow
 Person | validation_workflow
 Property Divergence Tester | edit_workflow

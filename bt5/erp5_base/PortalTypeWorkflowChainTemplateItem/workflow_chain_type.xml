@@ -69,7 +69,7 @@
  </chain>
  <chain>
   <type>Person</type>
-  <workflow>edit_workflow, person_interaction_workflow, user_account_workflow, validation_workflow</workflow>
+  <workflow>edit_workflow, user_account_workflow, validation_workflow</workflow>
  </chain>
  <chain>
   <type>Property Divergence Tester</type>
