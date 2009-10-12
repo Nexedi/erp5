@@ -31,12 +31,13 @@
 from Products.CMFCore.Expression import Expression
 from Products.ERP5Type.interfaces import IConstraint
 from Products.ERP5Type.ConsistencyMessage import ConsistencyMessage
+from zope.interface import implements
 
 class Constraint:
     """
       Default Constraint implementation
     """
-    __implements__ = (IConstraint, )
+    implements( IConstraint, )
 
     _message_id_list = []
 

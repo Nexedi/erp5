@@ -29,7 +29,8 @@
 ##############################################################################
 
 from Products.ZSQLCatalog.interfaces.query import IQuery
-from Interface.Verify import verifyClass
+from zope.interface.verify import verifyClass
+from zope.interface import implements
 
 class Query(object):
   """
@@ -37,7 +38,7 @@ class Query(object):
     able to distinguish any kind of value from a query.
   """
 
-  __implements__ = IQuery
+  implements(IQuery)
   __allow_access_to_unprotected_subobjects__ = 1
 
   def asSQLExpression(self, sql_catalog, column_map, only_group_columns):

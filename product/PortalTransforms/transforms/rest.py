@@ -1,9 +1,10 @@
 from Products.PortalTransforms.interfaces import itransform
 from reStructuredText import HTML
 import sys
+from zope.interface import implements
 
 class rest:
-    __implements__ = itransform
+    implements(itransform)
 
     __name__ = "rest_to_html"
     inputs  = ("text/x-rst", "text/restructured",)

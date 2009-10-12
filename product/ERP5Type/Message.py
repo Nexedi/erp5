@@ -26,11 +26,25 @@
 #
 ##############################################################################
 
-from Globals import InitializeClass, Persistent
+from Products.ERP5Type.Globals import InitializeClass, Persistent
 from AccessControl import ClassSecurityInfo
 from Products.PythonScripts.Utility import allow_class
-from Products.PageTemplates.GlobalTranslationService import getGlobalTranslationService
-from Globals import get_request
+try:
+    from Products.PageTemplates.GlobalTranslationService import getGlobalTranslationService
+except ImportError:
+    import zLOG, sys
+    zLOG.LOG('Products.ERP5Type.Messages',
+        zLOG.ERROR,
+        'Products.PageTemplates.GlobalTranslationService has been removed. '
+        'Translation services for Message will be disabled',
+        error=sys.exc_info())
+    def getGlobalTranslationService():
+        zLOG.LOG('Products.ERP5Type.Messages',
+                 zLOG.WARNING,
+                 'not returning a translation service!')
+        return None
+        
+from Products.ERP5Type.Globals import get_request
 from cPickle import dumps, loads
 
 try:

@@ -29,8 +29,10 @@
 from Products.ERP5Type import interfaces, Permissions
 from Products.ERP5Type.Context import Context
 from Products.ERP5Type.Base import Base
-from Globals import InitializeClass
+from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5.Variated import Variated
+
+from zope.interface import implements
 
 def newVariationValue(context=None, REQUEST=None, **kw):
     # Create context object
@@ -47,7 +49,7 @@ class VariationValue(Context, Variated):
   """
 
   # Declarative interfaces
-  __implements__ = (interfaces.IVariated)
+  implements(interfaces.IVariated)
 
   def __init__(self, context=None, REQUEST=None, **kw):
     Context.__init__(self, context=context, REQUEST=REQUEST, **kw)

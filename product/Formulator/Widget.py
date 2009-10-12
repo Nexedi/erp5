@@ -7,7 +7,6 @@ from cgi import escape
 import types
 from DocumentTemplate.ustr import ustr
 from urlparse import urljoin
-from Globals import get_request
 
 class Widget:
   """A field widget that knows how to display itself as HTML.
@@ -1445,7 +1444,8 @@ class LinkWidget(TextWidget):
     """
     link_type = field.get_value('link_type', REQUEST=REQUEST)
     if REQUEST is None:
-      REQUEST = get_request()
+      # stop relying on get_request bein patched in Globals
+      REQUEST = field.REQUEST
 
     if link_type == 'internal':
       value = urljoin(REQUEST['BASE0'], value)

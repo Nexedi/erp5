@@ -32,11 +32,10 @@
 """
 
 # Switch(es) for ongoing development which require single code base
-USE_BASE_TYPE = False
 
 # Update ERP5 Globals
 import sys, Permissions, os
-from Globals import package_home
+from App.Common import package_home
 this_module = sys.modules[ __name__ ]
 product_path = package_home( globals() )
 this_module._dtmldir = os.path.join( product_path, 'dtml' )
@@ -46,7 +45,7 @@ document_classes = updateGlobals( this_module,
                                   permissions_module=Permissions,
                                   is_erp5_type=1 )
 
-import Interface, PropertySheet, ZopePatch
+import PropertySheet, ZopePatch
 import interfaces
 
 import Products.Localizer # So that we make sure Globals.get_request is available
@@ -61,25 +60,22 @@ def allowClassTool():
 
 def initialize( context ):
   # Import Product Components
-  from Tool import ClassTool, CacheTool, MemcachedTool, SessionTool, WebServiceTool
-  if USE_BASE_TYPE:
-    from Tool import TypesTool
+  from Tool import (ClassTool, CacheTool, MemcachedTool, SessionTool,
+                    TypesTool, WebServiceTool)
   import Document
   import Base, XMLObject
   from ERP5Type import ERP5TypeInformation
   # Define documents, classes, constructors and tools
   object_classes = ()
   content_constructors = ()
-  content_classes = ( Base.Base, XMLObject.XMLObject)
+  content_classes = Base.Base, XMLObject.XMLObject, ERP5TypeInformation
   portal_tools = ( ClassTool.ClassTool,
                    CacheTool.CacheTool,
                    MemcachedTool.MemcachedTool,
                    SessionTool.SessionTool,
+                   TypesTool.TypesTool,
                    WebServiceTool.WebServiceTool,
                   )
-  if USE_BASE_TYPE:
-    content_classes = content_classes + (ERP5TypeInformation,)
-    portal_tools = portal_tools + (TypesTool.TypesTool, )
   # Do initialization step
   initializeProduct(context, this_module, globals(),
                          document_module = Document,

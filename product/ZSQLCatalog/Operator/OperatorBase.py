@@ -30,7 +30,8 @@
 
 from zLOG import LOG
 from Products.ZSQLCatalog.interfaces.operator import IOperator
-from Interface.Verify import verifyClass
+from zope.interface.verify import verifyClass
+from zope.interface import implements
 from Products.ZSQLCatalog.SQLCatalog import profiler_decorator
 
 @profiler_decorator
@@ -107,7 +108,7 @@ column_renderer = {
 
 class OperatorBase(object):
 
-  __implements__ = IOperator
+  implements(IOperator)
 
   def __init__(self, operator, operator_search_text=None):
     self.operator = operator

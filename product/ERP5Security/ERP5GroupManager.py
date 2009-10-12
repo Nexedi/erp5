@@ -15,7 +15,7 @@
 """ Classes: ERP5GroupManager
 """
 
-from Globals import InitializeClass
+from Products.ERP5Type.Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 from AccessControl.SecurityManagement import newSecurityManager,\
     getSecurityManager, setSecurityManager
@@ -24,6 +24,8 @@ from Products.PluggableAuthService.plugins.BasePlugin import BasePlugin
 from Products.PluggableAuthService.utils import classImplements
 from Products.PluggableAuthService.interfaces.plugins import IGroupsPlugin
 from Products.ERP5Type.Cache import CachingMethod
+from Products.ERP5Type.ERP5Type \
+  import ERP5TYPE_SECURITY_GROUP_ID_GENERATION_SCRIPT
 from Products.PluggableAuthService.PropertiedUser import PropertiedUser
 from ZODB.POSException import ConflictError
 
@@ -154,15 +156,14 @@ class ERP5GroupManager(BasePlugin):
                 error = sys.exc_info())
 
         # Get group names from category values
-        group_id_list_generator = getattr(self,
-                                      'ERP5Type_asSecurityGroupIdList', None)
+        # XXX try ERP5Type_asSecurityGroupIdList first for compatibility
+        generator_name = 'ERP5Type_asSecurityGroupIdList'
+        group_id_list_generator = getattr(self, generator_name, None)
         if group_id_list_generator is None:
-          group_id_list_generator = getattr(self, 'ERP5Type_asSecurityGroupId')
-          generator_name = "ERP5Type_asSecurityGroupId"
-        else:
-          generator_name = 'ERP5Type_asSecurityGroupIdList'
+          generator_name = ERP5TYPE_SECURITY_GROUP_ID_GENERATION_SCRIPT
+          group_id_list_generator = getattr(self, generator_name)
         for base_category_list, category_value_list in \
-            security_category_dict.items():
+            security_category_dict.iteritems():
           for category_dict in category_value_list:
             try:
               group_id_list = group_id_list_generator(

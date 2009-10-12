@@ -8,9 +8,10 @@ from Products.PortalTransforms.libtransforms.commandtransform import commandtran
 from Products.PortalTransforms.libtransforms.commandtransform import popentransform
 from Products.CMFDefault.utils import bodyfinder
 import os
+from zope.interface import implements
 
 class popen_pdf_to_html(popentransform):
-    __implements__ = itransform
+    implements(itransform)
     
     __version__ = '2004-07-02.01'
 
@@ -27,7 +28,7 @@ class popen_pdf_to_html(popentransform):
         return bodyfinder(couterr.read())
 
 class pdf_to_html(commandtransform):
-    __implements__ = itransform
+    implements(itransform)
 
     __name__ = "pdf_to_html"
     inputs   = ('application/pdf',)

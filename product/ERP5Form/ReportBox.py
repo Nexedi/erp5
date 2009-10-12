@@ -26,7 +26,7 @@
 #
 ##############################################################################
 
-from Globals import get_request
+from Products.ERP5Type.Globals import get_request
 from AccessControl.ZopeGuards import guarded_getattr
 from Products.Formulator import Widget, Validator
 from Products.Formulator.Field import ZMIField

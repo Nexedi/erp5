@@ -5,7 +5,7 @@ __version__ = '$Revision: 1.3 $'[11:-2]
 
 import sys, time, threading
 from DateTime import DateTime
-from Globals import InitializeClass
+from App.class_init import default__class_init__ as InitializeClass
 from OFS.SimpleItem import SimpleItem
 from OFS.PropertyManager import PropertyManager
 

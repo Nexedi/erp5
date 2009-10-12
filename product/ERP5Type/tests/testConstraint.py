@@ -1176,7 +1176,8 @@ class TestConstraint(PropertySheetTestCase):
                    klass_name='TALESConstraint',
                    id='tales_constraint',
                    expression='python: None (" ')
-    from Products.PageTemplates.TALES import CompilerError
+    from Products.PageTemplates.Expressions import getEngine
+    CompilerError = getEngine().getCompilerError()
     self.assertRaises(CompilerError, constraint.checkConsistency, obj)
 
     constraint = self._createGenericConstraint(

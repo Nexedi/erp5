@@ -28,11 +28,15 @@
 
 class BaseType:
     """
-      EXPERIMENTAL - DO NOT USE THIS PROPERTYSHEET BESIDES R&D
       Properties of an ERP5 portal type
     """
 
     _properties = (
+        { 'id':         'type_icon',
+          'storage_id': 'content_icon', # CMF Compatibility
+          'type':       'string',
+          'mode':       'w',
+         },
         { 'id':         'type_factory_method_id',
           'storage_id': 'factory', # CMF Compatibility
           'type':       'string',
@@ -52,7 +56,7 @@ class BaseType:
           'label':      'Init Script'
          },
         { 'id':         'type_acquire_local_role'
-        , 'storage_id': 'acquire_local_roles' # CMF Compatibility
+        , 'storage_id': 'acquire_local_roles' # Compatibility
         , 'type':       'boolean'
         , 'mode':       'w'
         , 'label':      'Acquire Local Roles'
@@ -80,21 +84,21 @@ class BaseType:
         , 'type':       'multiple selection'
         , 'mode':       'w'
         , 'label':      'Property Sheets'
-        , 'select_variable':'getPortalPropertySheetList'
+        , 'select_variable':'getAvailablePropertySheetList'
          },
         { 'id':         'type_base_category'
         , 'storage_id': 'base_category_list' # CMF Compatibility
         , 'type':       'multiple selection'
         , 'mode':       'w'
         , 'label':      'Base Categories'
-        , 'select_variable':'getPortalBaseCategoryList'
+        , 'select_variable':'getAvailableBaseCategoryList'
          },
         { 'id':         'type_group'
         , 'storage_id': 'group_list' # CMF Compatibility
         , 'type':       'multiple selection'
         , 'mode':       'w'
         , 'label':      'Groups'
-        , 'select_variable':'getPortalTypeGroupList'
+        , 'select_variable':'getAvailableGroupList'
          },
     )
 

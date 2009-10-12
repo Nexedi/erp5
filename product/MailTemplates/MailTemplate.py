@@ -8,8 +8,9 @@ import os
 
 from AccessControl import ClassSecurityInfo
 from AccessControl import getSecurityManager
-from Globals import InitializeClass, package_home
-from Products.PageTemplates.ZopePageTemplate import ZopePageTemplate, SUPPORTS_WEBDAV_LOCKS
+from App.class_init import default__class_init__ as InitializeClass
+from App.Common import package_home
+from Products.PageTemplates.ZopePageTemplate import ZopePageTemplate
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
 from BaseMailTemplate import BaseMailTemplate
@@ -37,7 +38,7 @@ class MailTemplate(BaseMailTemplate,ZopePageTemplate):
     security.declareProtected('Change Page Templates','pt_editAction')
     def pt_editAction(self, REQUEST, mailhost, text, content_type, expand):
         """Change the mailhost and document."""
-        if SUPPORTS_WEBDAV_LOCKS and self.wl_isLocked():
+        if self.wl_isLocked():
             raise ResourceLockedError, "File is locked via WebDAV"
         self.expand=expand
         self._setPropValue('mailhost',mailhost)

@@ -18,7 +18,7 @@
 ##############################################################################
 
 import transaction
-import Globals
+from Products.ERP5Type import Globals
 import App
 from types import StringTypes
 from AccessControl import getSecurityManager, ClassSecurityInfo
@@ -26,7 +26,7 @@ from Products.CMFCore.utils import getToolByName
 from Products.DCWorkflow.DCWorkflow import DCWorkflowDefinition
 from Products.DCWorkflow.Transitions import TRIGGER_WORKFLOW_METHOD
 from Products.DCWorkflow.Expression import StateChangeInfo, createExprContext
-from Products.CMFCore.WorkflowTool import addWorkflowFactory
+from Products.ERP5Type.patches.DCWorkflow import addWorkflowFactory
 from Products.CMFActivity.ActiveObject import ActiveObject
 from Products.ERP5Type import Permissions
 

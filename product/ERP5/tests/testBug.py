@@ -132,9 +132,12 @@ class TestBug(ERP5TypeTestCase):
 
       for portal_type in portal_type_list:
         ti = portal.portal_types[portal_type]
-        ti.addRole('Auditor;Author;Assignee;Assignor,Manager', '', 'Dummy',
-                   '', 'group/dummy', 'ERP5Type_getSecurityCategoryFromAssignment',
-                   '')
+        ti.newContent(portal_type='Role Information',
+          role_name_list=('Auditor','Author','Assignee','Assignor','Manager'),
+          title='Dummy',
+          role_base_category_script_id=
+            'ERP5Type_getSecurityCategoryFromAssignment',
+          role_category='group/dummy')
         ti.updateRoleMapping()
 
       transaction.commit()

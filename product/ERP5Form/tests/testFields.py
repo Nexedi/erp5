@@ -44,7 +44,7 @@ def get_request():
   return request
 
 # apply patch (before it's imported by other modules)
-import Globals
+from Products.ERP5Type import Globals
 Globals.get_request = get_request
 
 
@@ -510,7 +510,10 @@ class TestFieldValueCache(unittest.TestCase):
 
   def setUp(self):
     self.root = Folder('root')
+    self.root = self.root.__of__(self.root)
     self.root.form = ERP5Form('form', 'Form')
+    self.root.getProperty = lambda key, d=None: \
+      dict(on_memory_field='123').get(key, d)
 
     form = self.root.form
     form.field = StringField('test_field')
@@ -518,8 +521,12 @@ class TestFieldValueCache(unittest.TestCase):
     # method field
     form.field.values['external_validator'] = Method('this_is_a_method')
     # on-memory field (not in zodb)
-    form.on_memory_field = StringField('test_on_memory_field')
-    form.on_memory_field._p_oid = None
+    form.my_on_memory_field = StringField('my_on_memory_field')
+    form.my_on_memory_field._p_oid = None
+    form.my_on_memory_tales_field = StringField('my_on_memory_tales_field')
+    form.my_on_memory_tales_field.manage_tales_xmlrpc({
+      'default': 'python: repr(here)'})
+    form.my_on_memory_field._p_oid = None
     # proxy field
     form.proxy_field = ProxyField.ProxyField('test_proxy_field')
     form.proxy_field._p_oid = makeDummyOid()
@@ -553,7 +560,10 @@ class TestFieldValueCache(unittest.TestCase):
     # check on-memory field
     # make sure that this will not use cache.
     cache_size = len(Form._field_value_cache)
-    self.root.form.on_memory_field.get_value('title')
+    self.assertEqual(repr(self.root),
+      self.root.form.my_on_memory_tales_field.get_value('default'))
+    self.assertEqual('123',
+      self.root.form.my_on_memory_field.get_value('default'))
     self.assertEqual(True, cache_size == len(Form._field_value_cache))
 
     # check proxy field

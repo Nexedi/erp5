@@ -1,7 +1,7 @@
 import string
 from DummyField import fields
 import Widget, Validator
-from Globals import Persistent
+from Persistence import Persistent
 import Acquisition
 from Field import ZMIField
 from AccessControl import getSecurityManager

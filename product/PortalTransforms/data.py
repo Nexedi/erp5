@@ -1,8 +1,9 @@
 from Products.PortalTransforms.interfaces import idatastream
+from zope.interface import implements
 
 class datastream:
     """A transformation datastream packet"""
-    __implements__ = idatastream
+    implements(idatastream)
     __slots__ = ('name', '_data', '_metadata')
 
     def __init__(self, name):

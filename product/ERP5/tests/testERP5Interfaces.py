@@ -33,6 +33,7 @@ import unittest
 # this list can be generated automatically using introspection or can be set
 # manually and treated as reference to what implements what
 implements_tuple_list = [
+  (('Products.ERP5Type.Document.RoleDefinition', 'RoleDefinition'), 'ILocalRoleGenerator'),
   (('Products.ERP5Type.Document.BusinessPath','BusinessPath'), 'IArrowBase'),
   (('Products.ERP5Type.Document.BusinessPath','BusinessPath'), 'IBusinessPath'),
   (('Products.ERP5Type.Document.BusinessPath','BusinessPath'), 'ICategoryAccessProvider'),

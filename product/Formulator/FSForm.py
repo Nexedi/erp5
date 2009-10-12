@@ -1,4 +1,4 @@
-import Globals
+from App.class_init import default__class_init__ as InitializeClass
 from AccessControl import ClassSecurityInfo
 
 try:
@@ -8,7 +8,8 @@ except ImportError:
     from Products.CMFCore.permissions import View
     from Products.CMFCore.FSObject import FSObject
     from Products.CMFCore.DirectoryView import registerFileExtension,\
-                                               registerMetaType, expandpath
+                                               registerMetaType
+    from Products.CMFCore.utils import expandpath
 else:
     # use FileSystemSite product
     from Products.FileSystemSite.Permissions import View
@@ -108,7 +109,7 @@ class FSForm(FSObject, ZMIForm):
 ##         self._updateFromFS()
 ##         return ZMIForm.get_group_rows(self)
 
-Globals.InitializeClass(FSForm)
+InitializeClass(FSForm)
 
 registerFileExtension('form', FSForm)
 registerMetaType('FSForm', FSForm)

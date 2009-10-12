@@ -13,6 +13,7 @@ portal_caches/erp5_ui_medium
 portal_caches/erp5_ui_medium/default_ram_cache
 portal_caches/erp5_ui_short
 portal_caches/erp5_ui_short/default_ram_cache
+portal_categories/action_type/*
 portal_contribution_registry/default_predicate
 portal_contribution_registry/drawing_extension
 portal_contribution_registry/image_extension

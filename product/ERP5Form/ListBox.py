@@ -42,10 +42,11 @@ from Products.ZSQLCatalog.zsqlbrain import ZSQLBrain
 from Products.ERP5Type.Message import Message
 
 from Acquisition import aq_base, aq_self
+import Acquisition
 from zLOG import LOG, WARNING
 from ZODB.POSException import ConflictError
 
-from Globals import InitializeClass, Acquisition, get_request
+from Products.ERP5Type.Globals import InitializeClass, get_request
 from Products.PythonScripts.Utility import allow_class
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 

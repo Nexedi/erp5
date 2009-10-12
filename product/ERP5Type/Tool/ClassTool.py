@@ -37,7 +37,7 @@ from Products.CMFCore.utils import UniqueObject
 from zExceptions import BadRequest
 from Acquisition import Implicit
 from AccessControl import ClassSecurityInfo
-from Globals import InitializeClass, DTMLFile
+from Products.ERP5Type.Globals import InitializeClass, DTMLFile
 from App.config import getConfiguration
 from Shared.DC.ZRDB.TM import TM
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile

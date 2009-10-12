@@ -13,8 +13,9 @@
 ##############################################################################
 """ZCatalog product"""
 
-from Globals import DTMLFile, MessageDialog
-import Globals
+from App.special_dtml import DTMLFile
+from App.Dialogs import MessageDialog
+from App.class_init import default__class_init__ as InitializeClass
 
 from OFS.Folder import Folder
 from DateTime import DateTime
@@ -1331,7 +1332,7 @@ class ZCatalog(Folder, Persistent, Implicit):
     return []
 
 
-Globals.default__class_init__(ZCatalog)
+InitializeClass(ZCatalog)
 
 
 def p_name(name):

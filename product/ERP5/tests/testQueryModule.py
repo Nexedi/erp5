@@ -61,13 +61,13 @@ class TestQueryModule(ERP5TypeTestCase):
     action_list = self.portal.portal_actions.listFilteredActionsFor(
                 self.doc).get('object_action')
     self.assertEquals(1, len([ai for ai in
-            action_list if ai['title'] == 'Post a Query']))
+            action_list if ai['name'] == 'Post a Query']))
 
   def test_jump_query_action_visible(self):
     action_list = self.portal.portal_actions.listFilteredActionsFor(
                 self.doc).get('object_jump')
     self.assertEquals(1, len([ai for ai in
-            action_list if ai['title'] == 'Queries']))
+            action_list if ai['name'] == 'Queries']))
 
   def test_post_query(self):
     self.doc.Base_postQuery(description='question ?')

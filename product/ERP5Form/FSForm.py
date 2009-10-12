@@ -1,10 +1,11 @@
-import Globals
+from Products.ERP5Type import Globals
 from AccessControl import ClassSecurityInfo
 
-from Products.CMFCore.CMFCorePermissions import View, ViewManagementScreens
+from Products.CMFCore.permissions import View, ViewManagementScreens
 from Products.CMFCore.FSObject import FSObject
 from Products.CMFCore.DirectoryView import registerFileExtension,\
-     registerMetaType, expandpath
+     registerMetaType
+from Products.CMFCore.utils import expandpath
 
 from Products.ERP5Form import _dtmldir
 from Products.ERP5Form.Form import ERP5Form

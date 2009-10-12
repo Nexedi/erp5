@@ -1,4 +1,5 @@
 from Products.PortalTransforms.interfaces import itransform
+from zope.interface import implements
 from oood_commandtransform import OOOdCommandTransform, OOoDocumentDataStream
 from zLOG import LOG
 
@@ -6,7 +7,7 @@ from zLOG import LOG
 class OdtToPdf:
   """Transforms ODT to PDF by using oood"""
 
-  __implements__ = itransform
+  implements(itransform)
 
   __name__ = 'odt_to_pdf'
   inputs   = ('application/vnd.oasis.opendocument.text',)

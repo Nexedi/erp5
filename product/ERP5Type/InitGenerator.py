@@ -30,7 +30,7 @@
 
 
 import os, re, string, sys
-from Globals import package_home, InitializeClass
+from Products.ERP5Type.Globals import package_home, InitializeClass
 
 from zLOG import LOG
 

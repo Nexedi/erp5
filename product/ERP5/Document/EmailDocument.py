@@ -29,7 +29,7 @@
 
 import re, types
 from DateTime import DateTime
-from Globals import get_request
+from Products.ERP5Type.Globals import get_request
 from AccessControl import ClassSecurityInfo, Unauthorized
 from Products.ERP5Type.Base import WorkflowMethod
 from Products.CMFCore.utils import getToolByName, _checkPermission

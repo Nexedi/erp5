@@ -1,7 +1,9 @@
-import Globals, AccessControl
+import AccessControl
 import OFS
+from App.class_init import default__class_init__ as InitializeClass
 from Acquisition import aq_base
-from Globals import DTMLFile, Persistent
+from App.special_dtml import DTMLFile
+from Persistence import Persistent
 from AccessControl import ClassSecurityInfo
 from AccessControl.Role import RoleManager
 from OFS.ObjectManager import ObjectManager
@@ -496,7 +498,7 @@ class Form:
             'Content-Type',
             'text/html;charset=%s' % encoding)
     
-Globals.InitializeClass(Form)
+InitializeClass(Form)
 
 class BasicForm(Persistent, Acquisition.Implicit, Form):
     """A form that manages its own fields, not using ObjectManager.
@@ -567,7 +569,7 @@ class BasicForm(Persistent, Acquisition.Implicit, Form):
             self.fields[field.id] = field
         self.fields = self.fields
 
-Globals.InitializeClass(BasicForm)
+InitializeClass(BasicForm)
 
 def create_settings_form():
     """Create settings form for ZMIForm.
@@ -980,7 +982,7 @@ class ZMIForm(ObjectManager, PropertyManager, RoleManager, Item, Form):
                               manage_tabs_message=message)
 
 PythonForm = ZMIForm # NOTE: backwards compatibility
-Globals.InitializeClass(ZMIForm)
+InitializeClass(ZMIForm)
         
 manage_addForm = DTMLFile("dtml/formAdd", globals())
 

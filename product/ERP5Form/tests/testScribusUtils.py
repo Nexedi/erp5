@@ -315,7 +315,7 @@ class TestScribusUtils(ERP5TypeTestCase):
     self.assertNotEqual(portal_types.getTypeInfo("Authorisation"), None)
     # Create an Authorisation
     # add property sheet Task in portal type Authorisation
-    self.portal.portal_types.Authorisation.setPropertySheetList('Task')
+    self.portal.portal_types.Authorisation._setTypePropertySheet('Task')
     authorisation_module = self.portal.authorisation_module
     start_date = DateTime('2000/01/01')
     stop_date = DateTime('2001/01/01 12:00 GMT')

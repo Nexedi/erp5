@@ -32,7 +32,7 @@ from copy import copy
 import warnings
 import types
 
-from Globals import InitializeClass, DTMLFile
+from Products.ERP5Type.Globals import InitializeClass, DTMLFile
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permission import pname, Permission
 from AccessControl.PermissionRole import rolesForPermissionOn
@@ -43,9 +43,11 @@ import OFS.History
 from OFS.SimpleItem import SimpleItem
 from OFS.PropertyManager import PropertyManager
 
+from ZopePatch import ERP5PropertyManager
+
 from Products.CMFCore.PortalContent import PortalContent
 from Products.CMFCore.Expression import Expression
-from Products.CMFCore.utils import getToolByName, _getViewFor
+from Products.CMFCore.utils import getToolByName
 from Products.CMFCore.WorkflowCore import ObjectDeleted, ObjectMoved
 from Products.CMFCore.CMFCatalogAware import CMFCatalogAware
 
@@ -67,7 +69,6 @@ from Accessor import WorkflowState
 from Products.ERP5Type.Log import log as unrestrictedLog
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 from Products.ERP5Type.Accessor.TypeDefinition import type_definition
-from ZopePatch import ERP5PropertyManager
 
 from CopySupport import CopyContainer, CopyError,\
     tryMethodCallWithTemporaryPermission
@@ -550,8 +551,7 @@ def initializePortalTypeDynamicProperties(self, klass, ptype, aq_key, portal):
     prop_list = list(getattr(klass, '_properties', []))
     cat_list = list(getattr(klass, '_categories', []))
     constraint_list = list(getattr(klass, '_constraints', []))
-    if (ptype_object is not None) and \
-       (ptype_object.meta_type == 'ERP5 Type Information'):
+    if ptype_object is not None:
       # Make sure this is an ERP5Type object
       ps_list = [getattr(PropertySheet, p, None) for p in
           ptype_object.property_sheet_list]
@@ -579,8 +579,7 @@ def initializePortalTypeDynamicProperties(self, klass, ptype, aq_key, portal):
             raise ValueError, "%s is not a list for %s" % (ps_property_name,
                                                            base)
 
-    if (ptype_object is not None) and \
-       (ptype_object.meta_type == 'ERP5 Type Information'):
+    if ptype_object is not None:
       cat_list += ptype_object.base_category_list
     prop_holder._portal_type = ptype
     prop_holder._properties = prop_list
@@ -937,8 +936,8 @@ class Base( CopyContainer,
               #LOG( "Create createRelatedValueAccessors %s" % bid,0,'')
               createRelatedValueAccessors(property_holder, bid)
               generated_bid[bid] = 1
-      for ptype in portal_types.objectValues('ERP5 Type Information') :
-        for bid in ptype.base_category_list :
+      for ptype in portal_types.objectValues():
+        for bid in ptype.getTypeBaseCategoryList():
           if bid not in generated_bid :
             createRelatedValueAccessors(property_holder, bid)
             generated_bid[bid] = 1
@@ -2598,22 +2597,32 @@ class Base( CopyContainer,
       except (ValueError, TypeError):
         return None
 
+  def _renderDefaultView(self, view, **kw):
+    ti = self.getTypeInfo()
+    if ti is None:
+      raise NotFound('Cannot find default %s for %r' % (view, self.getPath()))
+    method = ti.getDefaultViewFor(self, view)
+    if getattr(aq_base(method), 'isDocTemp', 0):
+        return method(self, self.REQUEST, self.REQUEST['RESPONSE'], **kw)
+    else:
+        return method(**kw)
+
+  security.declareProtected(Permissions.View, 'view')
+  def view(self):
+    """Returns the default view even if index_html is overridden"""
+    return self._renderDefaultView('view')
+
   # Default views - the default security in CMFCore
   # is View - however, security was not defined on
   # __call__ -  to be consistent, between view and
   # __call__ we have to define permission here to View
   security.declareProtected(Permissions.View, '__call__')
+  __call__ = view
 
   security.declareProtected(Permissions.View, 'list')
   def list(self, reset=0):
-    """
-    Returns the default list even if folder_contents is overridden.
-    """
-    list_action = _getViewFor(self, view='list')
-    if getattr(aq_base(list_action), 'isDocTemp', 0):
-        return apply(list_action, (self, self.REQUEST),reset=reset)
-    else:
-        return list_action(reset=reset)
+    """Returns the default list even if folder_contents is overridden"""
+    return self._renderDefaultView('list', reset=reset)
 
   # Proxy methods for security reasons
   security.declareProtected(Permissions.AccessContentsInformation, 'getOwnerInfo')
@@ -3035,8 +3044,8 @@ class Base( CopyContainer,
     ERP5Security.ERP5UserFactory.ERP5User
     """
     def cached_getAcquireLocalRoles(portal_type):
-      ti = self._getTypesTool().getTypeInfo(self)
-      return getattr(ti, 'acquire_local_roles', True)
+      ti = self._getTypesTool().getTypeInfo(portal_type)
+      return ti is None or ti.getTypeAcquireLocalRole()
 
     cached_getAcquireLocalRoles = CachingMethod(cached_getAcquireLocalRoles,
                                                 id='Base__getAcquireLocalRoles',
@@ -3257,8 +3266,8 @@ class Base( CopyContainer,
     """Assign Local Roles to Groups on self, based on Portal Type Role
     Definitions and "ERP5 Role Definition" objects contained inside self.
     """
-    self._getTypesTool().getTypeInfo(self)\
-                          .updateLocalRolesOnSecurityGroups(self, **kw)
+    self._getTypesTool().getTypeInfo(self) \
+    .updateLocalRolesOnDocument(self, **kw)
 
   security.declareProtected(Permissions.ModifyPortalContent,
                             'assignRoleToSecurityGroup')

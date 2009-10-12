@@ -32,7 +32,7 @@ from Products.ERP5.Document.WebSection import WebSection, WEBSECTION_KEY
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces, Cache
 from Products.ERP5Type.Cache import CachingMethod
 
-from Globals import get_request
+from Products.ERP5Type.Globals import get_request
 from Persistence import Persistent
 from ZPublisher import BeforeTraverse
 from ZPublisher.HTTPRequest import HTTPRequest

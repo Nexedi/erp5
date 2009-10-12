@@ -32,7 +32,7 @@ from Products.ERP5Type.Cache import CachingMethod
 from sets import ImmutableSet
 from Acquisition import aq_base
 from Persistence import Persistent
-from Globals import PersistentMapping
+from Products.ERP5Type.Globals import PersistentMapping
 from itertools import izip
 from MySQLdb import ProgrammingError, OperationalError
 

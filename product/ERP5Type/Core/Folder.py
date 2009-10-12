@@ -1307,7 +1307,7 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn, 
     portal = self.getPortalObject()
 
     hidden_type_list = portal.portal_types.getTypeInfo(self)\
-                                              .getHiddenContentTypeList()
+                                              .getTypeHiddenContentTypeList()
     return [ ti.id for ti in self.allowedContentTypes()
                if ti.id not in hidden_type_list ]
 

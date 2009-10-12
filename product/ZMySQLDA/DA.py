@@ -92,8 +92,8 @@ import os
 from db import ThreadedDB
 import Shared.DC.ZRDB.Connection, sys, DABase
 from App.Dialogs import MessageDialog
-from Globals import HTMLFile
-from ImageFile import ImageFile
+from App.special_dtml import HTMLFile
+from App.ImageFile import ImageFile
 from ExtensionClass import Base
 from DateTime import DateTime
 from thread import allocate_lock

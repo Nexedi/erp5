@@ -28,7 +28,7 @@
 ##############################################################################
 
 from Products.ERP5Type.Accessor.TypeDefinition import list_types
-from Globals import Persistent
+from Products.ERP5Type.Globals import Persistent
 import re
 
 SYNCML_NAMESPACE = 'SYNCML:SYNCML1.2'

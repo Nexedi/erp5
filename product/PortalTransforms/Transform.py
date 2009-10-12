@@ -2,8 +2,8 @@ from logging import ERROR
 from UserDict import UserDict
 
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
-from Globals import InitializeClass
-from Globals import PersistentMapping
+from App.class_init import default__class_init__ as InitializeClass
+from Persistence import PersistentMapping
 try:
     from ZODB.PersistentList import PersistentList
 except ImportError:
@@ -17,6 +17,7 @@ from Products.CMFCore.utils import getToolByName
 from Products.PortalTransforms.interfaces import itransform
 from Products.PortalTransforms.utils import TransformException, log, _www
 from Products.PortalTransforms.transforms.broken import BrokenTransform
+from zope.interface import implements
 
 __revision__ = '$Id: Transform.py 6255 2006-04-11 15:29:29Z hannosch $'
 
@@ -67,7 +68,7 @@ class Transform(SimpleItem):
     additional configuration information
     """
 
-    __implements__ = itransform
+    implements(itransform)
 
     meta_type = 'Transform'
 

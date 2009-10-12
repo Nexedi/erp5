@@ -153,6 +153,8 @@ print "#### Indexing applied rules ####"\n
 print "#### Indexing delivery builders ####"\n
 # Next we index order builders\n
 print "#### Indexing order builders ####"\n
+# Next we index portal types\n
+print "#### Indexing portal types ####"\n
 \n
 folder_tag = \'module\'\n
 folder_after_tag = (\'category\', \'person_stage_1\', \'group_person_stage_1\')\n
@@ -162,7 +164,7 @@ object_priority = 2 + additional_priority\n
 tool_list = [portal.portal_templates, portal.portal_trash,\n
              portal.portal_domains, portal.portal_rules,\n
              portal.portal_deliveries, portal.portal_orders,\n
-             portal.portal_caches]\n
+             portal.portal_caches, portal.portal_types]\n
 if hasattr(portal, \'portal_gadgets\'):\n
   tool_list.append(portal.portal_gadgets)\n
 \n

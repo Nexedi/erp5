@@ -32,7 +32,8 @@ from zLOG import LOG
 from Products.ZSQLCatalog.Query.SimpleQuery import SimpleQuery
 from Products.ZSQLCatalog.Query.ComplexQuery import ComplexQuery
 from Products.ZSQLCatalog.interfaces.search_key import ISearchKey
-from Interface.Verify import verifyClass
+from zope.interface.verify import verifyClass
+from zope.interface import implements
 from Products.ZSQLCatalog.SQLCatalog import profiler_decorator
 
 single_operator_dict = {
@@ -74,7 +75,7 @@ operator_value_deprocessor_dict = {
 
 class SearchKey(object):
 
-  __implements__ = ISearchKey
+  implements(ISearchKey)
 
   # Comparison operator to use when parsing a string value and no operator is
   # found.

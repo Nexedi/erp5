@@ -10,6 +10,7 @@ from Products.PortalTransforms.interfaces import itransform
 from Products.PortalTransforms.libtransforms.utils import bin_search, sansext
 from Products.PortalTransforms.libtransforms.commandtransform import commandtransform
 from Products.PortalTransforms.utils import log
+from zope.interface import implements
 
 class ExternalCommandTransform(commandtransform):
     """ Custom external command
@@ -20,7 +21,7 @@ class ExternalCommandTransform(commandtransform):
     the command line parameters) and return output on stdout.
     Input and output mime types must be set correctly !
     """
-    __implements__ = (itransform,)
+    implements(itransform,)
 
     __name__ = "command_transform"
 

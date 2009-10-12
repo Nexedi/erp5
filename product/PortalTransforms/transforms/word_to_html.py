@@ -1,4 +1,5 @@
 from Products.PortalTransforms.interfaces import itransform
+from zope.interface import implements
 
 EXTRACT_BODY  = 1
 EXTRACT_STYLE = 0
@@ -30,7 +31,7 @@ else:
 import os.path
 
 class word_to_html:
-    __implements__ = itransform
+    implements(itransform)
 
     __name__ = "word_to_html"
     inputs   = ('application/msword',)

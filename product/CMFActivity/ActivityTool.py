@@ -33,7 +33,7 @@ import sys
 from types import StringType
 import re
 
-from Products.CMFCore import CMFCorePermissions
+from Products.CMFCore import permissions as CMFCorePermissions
 from Products.ERP5Type.Core.Folder import Folder
 from Products.CMFActivity.ActiveResult import ActiveResult
 from Products.CMFActivity.ActiveObject import DEFAULT_ACTIVITY
@@ -44,7 +44,7 @@ from AccessControl.SecurityManagement import noSecurityManager
 from AccessControl.SecurityManagement import setSecurityManager
 from AccessControl.SecurityManagement import getSecurityManager
 from Products.CMFCore.utils import UniqueObject, _getAuthenticatedUser, getToolByName
-from Globals import InitializeClass, DTMLFile
+from Products.ERP5Type.Globals import InitializeClass, DTMLFile
 from Acquisition import aq_base
 from Acquisition import aq_inner
 from ActivityBuffer import ActivityBuffer
@@ -1101,7 +1101,8 @@ class ActivityTool (Folder, UniqueObject):
         request_info = message.request_info
         # PARENTS is truncated by clone
         new_request.other['PARENTS'] = parents
-        new_request._script = request_info['_script']
+        if '_script' in request_info:
+          new_request._script = request_info['_script']
         if 'SERVER_URL' in request_info:
           new_request.other['SERVER_URL'] = request_info['SERVER_URL']
         if 'VirtualRootPhysicalPath' in request_info:

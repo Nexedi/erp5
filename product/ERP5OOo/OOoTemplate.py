@@ -36,11 +36,14 @@ from Products.CMFCore.FSPageTemplate import FSPageTemplate
 from Products.CMFCore.DirectoryView import registerFileExtension, registerMetaType
 from Products.PageTemplates.ZopePageTemplate import ZopePageTemplate
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
-from TAL.TALInterpreter import FasterStringIO
+try:
+    from TAL.TALInterpreter import FasterStringIO
+except ImportError:
+    from zope.tal.talinterpreter import FasterStringIO
 from Products.ERP5Type import PropertySheet
 from urllib import quote
-from Globals import InitializeClass, DTMLFile, get_request
-from Globals import DevelopmentMode
+from Products.ERP5Type.Globals import InitializeClass, DTMLFile, get_request
+from Products.ERP5Type.Globals import DevelopmentMode
 from Acquisition import aq_base
 from AccessControl import ClassSecurityInfo
 from OOoUtils import OOoBuilder

@@ -28,7 +28,7 @@
 
 import zope.interface
 from warnings import warn
-from Globals import InitializeClass
+from Products.ERP5Type.Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 from Acquisition import aq_base, aq_inner
 
@@ -41,7 +41,7 @@ from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.Utils import convertToUpperCase
 from Products.ERP5Type.Cache import getReadOnlyTransactionCache, enableReadOnlyTransactionCache, disableReadOnlyTransactionCache
 from Products.ZSQLCatalog.SQLCatalog import SQLQuery
-from Globals import PersistentMapping
+from Products.ERP5Type.Globals import PersistentMapping
 
 from zLOG import LOG
 

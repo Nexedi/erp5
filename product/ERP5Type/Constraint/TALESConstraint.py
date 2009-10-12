@@ -30,12 +30,12 @@ import sys
 
 from Products.CMFCore.Expression import Expression
 from ZODB.POSException import ConflictError
-try:
-  # Zope 2.8
-  from Products.PageTemplates.TALES import CompilerError
-except ImportError:
-  # Zope 2.12
-  from zope.tales.tales import CompilerError
+
+import Products.PageTemplates.Expressions
+# this gets the CompilerError class wherever it is defined (which is different
+# depending on the Zope version
+CompilerError = Products.PageTemplates.Expressions.getEngine().getCompilerError()
+
 from zLOG import LOG, PROBLEM
 
 from Constraint import Constraint

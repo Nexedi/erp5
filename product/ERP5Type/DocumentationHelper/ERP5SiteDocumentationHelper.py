@@ -28,7 +28,7 @@
 ##############################################################################
 
 from AccessControl import ClassSecurityInfo
-from Globals import InitializeClass
+from Products.ERP5Type.Globals import InitializeClass
 from DocumentationHelper import DocumentationHelper
 from Products.ERP5Type import Permissions
 

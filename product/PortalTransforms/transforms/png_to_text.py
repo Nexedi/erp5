@@ -4,9 +4,10 @@ from Products.PortalTransforms.libtransforms.commandtransform \
 
 import os
 import tempfile
+from zope.interface import implements
 
 class png_to_text(popentransform):
-    __implements__ = itransform
+    implements(itransform)
     __name__  = "png_to_text"
 
     inputs   = ('image/png',)

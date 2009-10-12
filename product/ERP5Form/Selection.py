@@ -26,7 +26,8 @@
 #
 ##############################################################################
 
-from Globals import InitializeClass, Persistent, Acquisition
+from Products.ERP5Type.Globals import InitializeClass, Persistent
+import Acquisition
 from Acquisition import aq_base
 from OFS.Traversable import Traversable
 from AccessControl import ClassSecurityInfo

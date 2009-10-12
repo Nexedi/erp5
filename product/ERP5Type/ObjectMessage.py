@@ -85,7 +85,7 @@ class ObjectMessage:
     """
     Get the Object.
     """
-    from Globals import get_request
+    from Products.ERP5Type.Globals import get_request
     request = get_request()['PARENTS']
     if request is not None:
       for item in request:

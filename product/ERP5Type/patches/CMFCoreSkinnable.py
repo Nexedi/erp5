@@ -13,7 +13,13 @@
 ##############################################################################
 
 from Products.CMFCore import Skinnable
-from Products.CMFCore.Skinnable import SKINDATA, superGetAttr, SkinnableObjectManager
+from Products.CMFCore.Skinnable import SKINDATA, SkinnableObjectManager
+try:
+    from Products.CMFCore.Skinnable import superGetAttr
+except ImportError:
+    # Removed on CMFCore 2.x
+    superGetAttr = None
+
 from thread import get_ident
 from zLOG import LOG, WARNING, DEBUG
 from Acquisition import aq_base

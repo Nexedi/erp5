@@ -1,12 +1,13 @@
 from Products.PortalTransforms.interfaces import itransform
 from DocumentTemplate.DT_Util import html_quote
+from zope.interface import implements
 
 __revision__ = '$Id: text_pre_to_html.py 3658 2005-02-23 16:29:54Z tiran $'
 
 class TextPreToHTML:
     """simple transform which wraps raw text into a <pre> tag"""
 
-    __implements__ = itransform
+    implements(itransform)
 
     __name__ = "text-pre_to_html"
     inputs   = ('text/plain-pre',)

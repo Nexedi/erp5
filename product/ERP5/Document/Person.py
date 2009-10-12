@@ -31,7 +31,7 @@ from AccessControl import ClassSecurityInfo
 from Products.CMFCore.utils import getToolByName
 from Products.CMFCore.utils import _checkPermission
 from Products.CMFCore.exceptions import AccessControl_Unauthorized
-from Globals import PersistentMapping
+from Products.ERP5Type.Globals import PersistentMapping
 from Acquisition import aq_base
 
 #from Products.ERP5.Core.Node import Node

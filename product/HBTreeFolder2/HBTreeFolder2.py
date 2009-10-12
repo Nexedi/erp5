@@ -18,9 +18,9 @@ from urllib import quote
 from random import randint
 from types import StringType
 
-import Globals
-from Globals import DTMLFile
-from Globals import Persistent, PersistentMapping
+from App.class_init import default__class_init__ as InitializeClass
+from App.special_dtml import DTMLFile
+from Persistence import Persistent, PersistentMapping
 from Acquisition import aq_base
 from BTrees.OOBTree import OOBTree
 from BTrees.OIBTree import OIBTree, union
@@ -595,7 +595,7 @@ class HBTreeFolder2Base (Persistent):
         return res
 
 
-Globals.InitializeClass(HBTreeFolder2Base)
+InitializeClass(HBTreeFolder2Base)
 
 
 class HBTreeFolder2 (HBTreeFolder2Base, Folder):
@@ -608,5 +608,5 @@ class HBTreeFolder2 (HBTreeFolder2Base, Folder):
         HBTreeFolder2Base._checkId(self, id, allow_dup)
     
 
-Globals.InitializeClass(HBTreeFolder2)
+InitializeClass(HBTreeFolder2)
 

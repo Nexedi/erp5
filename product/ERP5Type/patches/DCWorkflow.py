@@ -15,7 +15,7 @@
 
 # Optimized rendering of global actions (cache)
 
-from Globals import DTMLFile
+from Products.ERP5Type.Globals import DTMLFile
 from Products.ERP5Type import _dtmldir
 from Products.DCWorkflow.DCWorkflow import DCWorkflowDefinition, StateChangeInfo, createExprContext
 from Products.DCWorkflow.DCWorkflow import ObjectDeleted, ObjectMoved, aq_parent, aq_inner
@@ -610,7 +610,30 @@ TransitionDefinition.getAvailableScriptIds = getAvailableScriptIds
 
 # Add a workflow factory for ERP5 style workflow, because some variables
 # are needed for History tab.
-from Products.CMFCore.WorkflowTool import addWorkflowFactory
+
+try:
+    from Products.CMFCore.WorkflowTool import addWorkflowFactory
+except ImportError:
+    def addWorkflowFactory(factory, id, title):
+        """addWorkflowFactory replacement
+        
+        addWorkflowFactory has been removed from CMF 2.x.
+        DCWorkflow, which actually handled the workflows added by this function
+        now consults the GenericSetup tool, at runtime to determine all valid
+        workflows.
+        
+        Instead of providing GenericSetup profiles for our workflows, we
+        install our own Zope2 style factories for the Workflow Tool
+        """ 
+        import zLOG
+        zLOG.LOG('Products.ERP5Type.patches.DCWorkflow.addWorkflowFactory',
+                 zLOG.ERROR,
+                 summary='Workflow Factory not registered',
+                 detail='Products.CMFCore.WorkflowTool.addWorkflowFactory has '
+                 'been removed from CMFCore, and a replacement has not been '
+                 'written yet. ERP5 Workflow factory for '
+                 '%s (%s) not installed.' % (id, title))
+
 from Products.ERP5Type import Permissions
 
 def setupERP5Workflow(wf):

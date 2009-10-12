@@ -28,7 +28,7 @@
 
 from AccessControl import ClassSecurityInfo, getSecurityManager
 from MethodObject import Method
-from Globals import InitializeClass, DTMLFile
+from Products.ERP5Type.Globals import InitializeClass, DTMLFile
 from zLOG import LOG, PROBLEM
 
 from Products.CMFCore.utils import getToolByName

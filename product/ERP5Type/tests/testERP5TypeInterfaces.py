@@ -40,6 +40,16 @@ implements_tuple_list = [
     'IConsistencyMessage'),
   (('Products.ERP5Type.DivergenceMessage', 'DivergenceMessage'),
     'IDivergenceMessage'),
+  (('Products.ERP5Type.Tool.TypesTool.TypesTool', 'TypesTool'),
+    'IActionProvider'),
+  (('Products.ERP5Type.ERP5Type.ERP5TypeInformation', 'ERP5TypeInformation'),
+    'IActionProvider'),
+  (('Products.ERP5Type.ERP5Type.ERP5TypeInformation', 'ERP5TypeInformation'),
+    'ILocalRoleAssignor'),
+  (('Products.ERP5Type.Document.ActionInformation', 'ActionInformation'),
+    'IAction'),
+  (('Products.ERP5Type.Document.RoleInformation', 'RoleInformation'),
+    'ILocalRoleGenerator'),
 ]
 
 class TestERP5TypeInterfaces(ERP5TypeTestCase):

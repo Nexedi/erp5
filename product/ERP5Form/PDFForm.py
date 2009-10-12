@@ -30,10 +30,13 @@ from OFS.Image import File
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.ERP5Type import PropertySheet, Permissions
 from Products.PageTemplates.Expressions import getEngine
-from Products.PageTemplates.TALES import SafeMapping
+try:
+    from Products.PageTemplates.TALES import SafeMapping
+except ImportError:
+    from Products.PageTemplates.Expressions import SafeMapping
 
 from urllib import quote
-from Globals import InitializeClass, PersistentMapping, DTMLFile
+from Products.ERP5Type.Globals import InitializeClass, PersistentMapping, DTMLFile
 from AccessControl import ClassSecurityInfo
 from AccessControl.SecurityInfo import allow_class
 

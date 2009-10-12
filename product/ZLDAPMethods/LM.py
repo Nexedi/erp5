@@ -558,6 +558,6 @@ pretty_results=DocumentTemplate.HTML("""\
   </table>""")
 
 
-import Globals
-Globals.default__class_init__(LDAPMethod)
-Globals.default__class_init__(LDIFMethod)
+import App.class_init
+App.class_init.default__class_init__(LDAPMethod)
+App.class_init.default__class_init__(LDIFMethod)

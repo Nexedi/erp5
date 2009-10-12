@@ -26,7 +26,7 @@
 #
 ##############################################################################
 
-from Globals import InitializeClass, DTMLFile, get_request
+from Products.ERP5Type.Globals import InitializeClass, DTMLFile, get_request
 from AccessControl import ClassSecurityInfo
 from Acquisition import aq_base
 from Products.PythonScripts.Utility import allow_class

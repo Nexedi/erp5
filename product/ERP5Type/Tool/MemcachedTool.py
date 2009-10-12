@@ -31,7 +31,7 @@ from threading import local
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type import Permissions, _dtmldir
 from AccessControl import ClassSecurityInfo
-from Globals import DTMLFile
+from Products.ERP5Type.Globals import DTMLFile
 from quopri import encodestring
 
 MEMCACHED_TOOL_MODIFIED_FLAG_PROPERTY_ID = '_v_memcached_edited'

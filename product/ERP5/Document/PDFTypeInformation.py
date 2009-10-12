@@ -26,49 +26,23 @@
 ##############################################################################
 
 from AccessControl import ClassSecurityInfo
-from Products.CMFCore.utils import getToolByName
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
-from Products.ERP5Type import USE_BASE_TYPE
+from Products.ERP5Type import Permissions, PropertySheet
+from Products.ERP5Type.ERP5Type import ERP5TypeInformation
 
-if not USE_BASE_TYPE:
-  from Products.ERP5Type.XMLObject import XMLObject
-  
-  class PDFTypeInformation(XMLObject):
-    """
-      Dummy class
-    """
-    # CMF Type Definition
-    meta_type = 'ERP5 PDF Type Information'
-    portal_type = 'PDF Type'
-    isPortalContent = 1
-    isRADContent = 1
+class PDFTypeInformation(ERP5TypeInformation):
+  """
+    EXPERIMENTAL - DO NOT USE THIS CLASS BESIDES R&D
 
-else:
-  from Products.ERP5Type.ERP5Type import ERP5TypeInformation
+    A Type Information class which (will) implement
+    all PDF Editor related methods in a more generic
+    way.
+  """
+  # CMF Type Definition
+  meta_type = 'ERP5 PDF Type Information'
+  portal_type = 'PDF Type'
+  isPortalContent = 1
+  isRADContent = 1
 
-  class PDFTypeInformation(ERP5TypeInformation):
-      """
-        EXPERIMENTAL - DO NOT USE THIS CLASS BESIDES R&D
-  
-        A Type Information class which (will) implement
-        all PDF Editor related methods in a more generic
-        way.
-      """
-      # CMF Type Definition
-      meta_type = 'ERP5 PDF Type Information'
-      portal_type = 'PDF Type'
-      isPortalContent = 1
-      isRADContent = 1
-  
-      # Declarative security
-      security = ClassSecurityInfo()
-      security.declareObjectProtected(Permissions.AccessContentsInformation)
-  
-      # Default Properties
-      property_sheets = ( PropertySheet.Base
-                        , PropertySheet.XMLObject
-                        , PropertySheet.CategoryCore
-                        , PropertySheet.SimpleItem
-                        , PropertySheet.Folder
-                        , PropertySheet.BaseType
-                      )
+  # Declarative security
+  security = ClassSecurityInfo()
+  security.declareObjectProtected(Permissions.AccessContentsInformation)

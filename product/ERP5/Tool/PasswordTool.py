@@ -29,7 +29,7 @@
 import socket
 
 from AccessControl import ClassSecurityInfo
-from Globals import InitializeClass, DTMLFile, get_request
+from Products.ERP5Type.Globals import InitializeClass, DTMLFile, get_request
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type import Permissions
 from Products.ERP5 import _dtmldir
@@ -38,7 +38,7 @@ import time, random, md5
 from DateTime import DateTime
 from Products.ERP5Type.Message import translateString
 from Acquisition import aq_base
-from Globals import PersistentMapping
+from Products.ERP5Type.Globals import PersistentMapping
 
 class PasswordTool(BaseTool):
   """

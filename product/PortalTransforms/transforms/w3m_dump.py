@@ -28,11 +28,12 @@
 
 from Products.PortalTransforms.interfaces import itransform
 from Products.PortalTransforms.libtransforms.commandtransform import popentransform
+from zope.interface import implements
 
 # Conversor using w3m to replace lynx at PortalTransforms...
 
 class w3m_dump(popentransform):
-  __implements__ = itransform
+  implements(itransform)
 
   __name__ = "w3m_dump"
   inputs   = ('text/html',)

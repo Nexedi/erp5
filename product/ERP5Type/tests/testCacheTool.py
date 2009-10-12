@@ -325,7 +325,7 @@ return result
     from Products.ERP5Type.CachePlugins.DistributedRamCache import DistributedRamCache
     from Products.ERP5Type.CachePlugins.RamCache import RamCache
     from Products.ERP5Type.interfaces.cache_plugin import ICachePlugin
-    from Interface.Verify import verifyClass
+    from zope.interface.verify import verifyClass
     verifyClass(ICachePlugin, DistributedRamCache)
     verifyClass(ICachePlugin, RamCache)
 

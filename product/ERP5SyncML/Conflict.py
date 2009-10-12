@@ -27,7 +27,7 @@
 #
 ##############################################################################
 
-from Globals import PersistentMapping
+from Products.ERP5Type.Globals import PersistentMapping
 from time import gmtime,strftime # for anchors
 from SyncCode import SyncCode
 from AccessControl import ClassSecurityInfo

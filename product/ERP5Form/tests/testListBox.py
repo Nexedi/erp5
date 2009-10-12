@@ -35,7 +35,7 @@ from AccessControl.SecurityManagement import newSecurityManager
 from zLOG import LOG
 from Products.ERP5Type.tests.Sequence import SequenceList
 from Testing import ZopeTestCase
-from Globals import get_request
+from Products.ERP5Type.Globals import get_request
 from Products.ERP5Type.tests.utils import createZODBPythonScript
 from ZPublisher.HTTPRequest import FileUpload
 from StringIO import StringIO

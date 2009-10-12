@@ -14,12 +14,6 @@
 """ZCatalog product"""
 
 import ZSQLCatalog, SQLCatalog
-from ZClasses import createZClassForBase
-
-createZClassForBase( ZSQLCatalog.ZCatalog , globals()
-                   , 'ZSQLCatalogBase', 'ZSQLCatalog' )
-createZClassForBase( SQLCatalog.Catalog , globals()
-                   , 'SQLCatalogBase', 'SQLCatalog' )
 
 def initialize(context):
     context.registerClass(

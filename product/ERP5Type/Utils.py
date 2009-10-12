@@ -36,8 +36,8 @@ import warnings
 from md5 import new as md5_new
 from sha import new as sha_new
 
-from Globals import package_home
-from Globals import DevelopmentMode
+from Products.ERP5Type.Globals import package_home
+from Products.ERP5Type.Globals import DevelopmentMode
 from Acquisition import aq_base
 from Acquisition import aq_inner
 from Acquisition import aq_parent
@@ -63,6 +63,11 @@ from Products.ERP5Type.Cache import getReadOnlyTransactionCache
 from zLOG import LOG, BLATHER, PROBLEM, WARNING
 
 from AccessControl.SecurityManagement import newSecurityManager, getSecurityManager
+
+#####################################################
+# Avoid importing from (possibly unpatched) Globals
+#####################################################
+from Products.ERP5Type.Globals import get_request
 
 #####################################################
 # Compatibility - XXX - BAD
@@ -404,7 +409,7 @@ except ImportError:
   getConfiguration = None
   pass
 
-from Globals import InitializeClass
+from Products.ERP5Type.Globals import InitializeClass
 from Accessor.Base import func_code
 from Products.CMFCore.utils import manage_addContentForm, manage_addContent
 from AccessControl.PermissionRole import PermissionRole
@@ -556,6 +561,7 @@ def importLocalInterface(module_id, path = None):
   try:
     class_id = "I" + convertToUpperCase(module_id)
     module = imp.load_source(class_id, path, f)
+    import Products.ERP5Type.interfaces
     setattr(Products.ERP5Type.interfaces, class_id, getattr(module, class_id))
   finally:
     f.close()
@@ -1003,11 +1009,6 @@ def initializeProduct( context,
   # Aggregate
   content_constructors = list(content_constructors) + list(extra_content_constructors)
 
-  # Begin the initialization steps
-  bases = tuple(content_classes)
-  tools = portal_tools
-  z_bases = utils.initializeBasesPhase1( bases, this_module )
-  z_tool_bases = utils.initializeBasesPhase1( tools, this_module )
 
   # Try to make some standard directories available
   try:
@@ -1019,10 +1020,8 @@ def initializeProduct( context,
   except:
     LOG("ERP5Type", BLATHER, "No help directory for %s" % product_name)
 
-  # Finish the initialization
-  utils.initializeBasesPhase2( z_bases, context )
-  utils.initializeBasesPhase2( z_tool_bases, context )
-
+  # Tools initialization
+  tools = portal_tools
   if len(tools) > 0:
     try:
       utils.ToolInit('%s Tool' % product_name,
@@ -1186,6 +1185,7 @@ def createExpressionContext(object, portal=None):
       'request':      getattr( object, 'REQUEST', None ),
       'modules':      SecureModuleImporter,
       'member':       member,
+      'here':         object,
       }
   return getEngine().getContext(data)
 
@@ -1499,19 +1499,6 @@ def setDefaultProperties(property_holder, object=None, portal=None):
       else:
           raise TypeError, '"%s" is invalid type for propertysheet' % \
                                           prop['type']
-
-##########################################
-# Localizer is not always loaded prior to ERP5 products,
-# thus, as Localizer is supposed to patch Global to add get_request to it,
-# we prefer to redefine get_request inside ERP5Type/Utils,
-# to avoid the case when Global wasn't patched and get_request is not available.
-##########################################
-try:
-  import Products.iHotfix
-  get_request = Products.iHotfix.get_request
-except (ImportError, AttributeError):
-  import Products.Localizer
-  get_request = Products.Localizer.get_request
 
 #####################################################
 # Accessor initialization

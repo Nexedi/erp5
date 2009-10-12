@@ -40,7 +40,7 @@ from Products.ERP5Type.RoleInformation import RoleInformation
 from App.config import getConfiguration
 from Products.ERP5Type.tests.Sequence import SequenceList
 from urllib import pathname2url
-from Globals import PersistentMapping
+from Products.ERP5Type.Globals import PersistentMapping
 from Products.CMFCore.Expression import Expression
 from Products.CMFCore.tests.base.testcase import LogInterceptor
 import shutil
@@ -331,29 +331,25 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     """
     pt = self.getTypeTool()
     # create module object portal type
-    pt.manage_addTypeInformation(ERP5TypeInformation.meta_type,
-                                 id='Geek Object',
-                                 typeinfo_name='ERP5Type: ERP5 Person',)
-    object_type = pt._getOb('Geek Object', None)
+    object_type = pt.newContent('Geek Object', 'Base Type',
+                                type_factory_method_id='addPerson')
     self.failUnless(object_type is not None)
     sequence.edit(object_ptype_id=object_type.getId())
     # create module portal type
-    pt.manage_addTypeInformation(ERP5TypeInformation.meta_type,
-                                 id='Geek Module',
-                                 typeinfo_name='ERP5Type: ERP5 Folder')
-    module_type = pt._getOb('Geek Module', None)
+    module_type = pt.newContent('Geek Module', 'Base Type',
+      type_factory_method_id='addFolder',
+      type_filter_content_type=1,
+      type_allowed_content_type_list=('Geek Object',),
+      type_hidden_content_type_list=('Geek Object',),
+      type_base_category_list=('destination',),
+      type_property_sheet_list=('Version',))
     self.failUnless(module_type is not None)
-    module_type.filter_content_types = 1
-    module_type.allowed_content_types = ('Geek Object',)
-    module_type.hidden_content_type_list = ('Geek Object',)
-    module_type.base_category_list = ('destination',)
-    module_type.property_sheet_list = ('Version',)
     sequence.edit(module_ptype_id=module_type.getId(),
-          module_ptype_filter_content_types=module_type.filter_content_types,
-          module_ptype_allowed_content_types=module_type.allowed_content_types,
-          module_ptype_hidden_content_type_list=module_type.hidden_content_type_list,
-          module_ptype_base_category_list=module_type.base_category_list,
-          module_ptype_property_sheet_list=module_type.property_sheet_list)
+      module_ptype_filter_content_types=module_type.getTypeFilterContentType(),
+      module_ptype_allowed_content_types=module_type.getTypeAllowedContentTypeList(),
+      module_ptype_hidden_content_type_list=module_type.getTypeHiddenContentTypeList(),
+      module_ptype_base_category_list=module_type.getTypeBaseCategoryList(),
+      module_ptype_property_sheet_list=module_type.getTypePropertySheetList())
 
   def stepModifyPortalTypeInBusinessTemplate(self, sequence=None, sequence_list=None, **kw):
     """
@@ -374,10 +370,10 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
             template_portal_type_hidden_content_type=(),
             template_portal_type_base_category=('Geek Module | source',),
             template_portal_type_property_sheet=())
-    sequence.edit(module_ptype_allowed_content_types=('Geek Module',),
-                  module_ptype_hidden_content_type_list=(),
-                  module_ptype_base_category_list=('source',),
-                  module_ptype_property_sheet_list=())
+    sequence.edit(module_ptype_allowed_content_types=['Geek Module'],
+                  module_ptype_hidden_content_type_list=[],
+                  module_ptype_base_category_list=['source'],
+                  module_ptype_property_sheet_list=[])
 
   def stepAddPortalTypeToBusinessTemplate(self, sequence=None, sequence_list=None, **kw):
     """
@@ -417,15 +413,17 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     object_type = pt._getOb(object_id, None)
     self.failUnless(object_type is None)
 
-  def stepRemoveViewAction(self, sequence=None, sequence_list=None, **kw):
+  def stepRemoveFirstAction(self, sequence=None, sequence_list=None, **kw):
     """
     Remove PortalType
     """
     pt = self.getTypeTool()
     object_id = sequence.get('object_ptype_id')
-    module_id = sequence.get('module_ptype_id')
-    object_type = pt._getOb(object_id, None)
-    object_type.deleteActions([0])
+    action_id = sequence.get('first_action_id')
+    object_type = pt[object_id]
+    action_id, = [x.getId() for x in object_type.getActionInformationList()
+                            if x.getReference() == action_id]
+    object_type._delObject(action_id)
 
   def stepCheckPortalTypeExists(self, sequence=None, sequence_list=None, **kw):
     """
@@ -436,15 +434,15 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     module_id = sequence.get('module_ptype_id')
     module_type = pt._getOb(module_id, None)
     self.failUnless(module_type is not None)
-    self.assertEquals(module_type.allowed_content_types,
+    self.assertEqual(module_type.getTypeAllowedContentTypeList(),
         sequence.get('module_ptype_allowed_content_types'))
-    self.assertEquals(module_type.hidden_content_type_list,
+    self.assertEqual(module_type.getTypeHiddenContentTypeList(),
         sequence.get('module_ptype_hidden_content_type_list'))
-    self.assertEquals(module_type.filter_content_types,
+    self.assertEqual(module_type.getTypeFilterContentType(),
         sequence.get('module_ptype_filter_content_types'))
-    self.assertEquals(module_type.base_category_list,
+    self.assertEqual(module_type.getTypeBaseCategoryList(),
         sequence.get('module_ptype_base_category_list'))
-    self.assertEquals(module_type.property_sheet_list,
+    self.assertEqual(module_type.getTypePropertySheetList(),
         sequence.get('module_ptype_property_sheet_list'))
     object_type = pt._getOb(object_id, None)
     self.failUnless(object_type is not None)
@@ -1217,15 +1215,12 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     pt = self.getTypeTool()
     object_id = sequence.get('object_ptype_id')
     object_pt = pt._getOb(object_id)
-    object_pt.addAction(
-      id = 'become_geek'
-      , name = 'Become Geek'
-      , action = 'become_geek_action'
-      , condition = ''
-      , permission = ('View', )
-      , category = 'object_action'
-      , visible = 1
-      , priority = 2.0 )
+    object_pt.newContent(portal_type='Action Information',
+                         reference='become_geek',
+                         title='Become Geek',
+                         action='become_geek_action',
+                         action_type='object_action',
+                         float_index=2.0)
     sequence.edit(first_action_id='become_geek')
 
   def stepCreateEmptyAction(self, sequence=None, sequence_list=None, **kw):
@@ -1235,14 +1230,10 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     pt = self.getTypeTool()
     object_id = sequence.get('object_ptype_id')
     object_pt = pt._getOb(object_id)
-    object_pt.addAction(id = ''
-      , name = ' Nerd'
-      , action = ''
-      , condition = ''
-      , permission = ()
-      , category = ''
-      , visible = 1
-      , priority = 1.2)
+    object_pt.newContent(portal_type='Action Information',
+                         title='Name',
+                         action_permission_list=(),
+                         float_index=1.2)
 
   def stepCreateSecondAction(self, sequence=None, sequence_list=None, **kw):
     """
@@ -1251,29 +1242,13 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     pt = self.getTypeTool()
     object_id = sequence.get('object_ptype_id')
     object_pt = pt._getOb(object_id)
-    object_pt.addAction(
-      id = 'become_nerd'
-      , name = 'Become Nerd'
-      , action = 'become_nerd_action'
-      , condition = ''
-      , permission = ('View', )
-      , category = 'object_action'
-      , visible = 1
-      , priority = 1.5 )
+    object_pt.newContent(portal_type='Action Information',
+                         reference='become_nerd',
+                         title='Become Nerd',
+                         action='become_nerd_action',
+                         action_type='object_action',
+                         float_index=1.5)
     sequence.edit(second_action_id='become_nerd')
-
-  def stepCheckActionsOrder(self, sequence=None, sequence_list=None, **kw):
-    """
-    Check Actions Order
-    """
-    pt = self.getTypeTool()
-    object_id = sequence.get('object_ptype_id')
-    object_pt = pt._getOb(object_id)
-    actions_list = object_pt.listActions()
-    priority = 0
-    for action in actions_list:
-      self.failIf(action.priority < priority)
-      priority = action.priority
 
   def stepCheckFirstActionExists(self, sequence=None, sequence_list=None, **kw):
     """
@@ -1283,7 +1258,8 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     object_id = sequence.get('object_ptype_id')
     object_pt = pt._getOb(object_id)
     action_id = sequence.get('first_action_id')
-    self.failUnless(action_id in [x.getId() for x in object_pt.listActions()])
+    self.assertTrue(action_id in [x.getReference()
+      for x in object_pt.getActionInformationList()])
 
   def stepCheckFirstActionNotExists(self, sequence=None, sequence_list=None, **kw):
     """
@@ -1293,7 +1269,8 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     object_id = sequence.get('object_ptype_id')
     object_pt = pt._getOb(object_id)
     action_id = sequence.get('first_action_id')
-    self.failUnless(action_id not in [x.getId() for x in object_pt.listActions()])
+    self.assertTrue(action_id in [x.getReference()
+      for x in object_pt.getActionInformationList()])
 
   def stepCheckSecondActionExists(self, sequence=None, sequence_list=None, **kw):
     """
@@ -1303,7 +1280,8 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     object_id = sequence.get('object_ptype_id')
     object_pt = pt._getOb(object_id)
     action_id = sequence.get('second_action_id')
-    self.failUnless(action_id in [x.getId() for x in object_pt.listActions()])
+    self.assertTrue(action_id in [x.getReference()
+      for x in object_pt.getActionInformationList()])
 
   def stepCheckSecondActionNotExists(self, sequence=None, sequence_list=None, **kw):
     """
@@ -1313,7 +1291,8 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     object_id = sequence.get('object_ptype_id')
     object_pt = pt._getOb(object_id)
     action_id = sequence.get('second_action_id')
-    self.failUnless(action_id not in [x.getId() for x in object_pt.listActions()])
+    self.assertTrue(action_id in [x.getReference()
+      for x in object_pt.getActionInformationList()])
 
   def stepAddSecondActionToBusinessTemplate(self, sequence=None, sequence_list=None, **kw):
     """
@@ -2218,7 +2197,8 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     """
     import_bt = sequence.get('current_bt')
     diff_list = import_bt.BusinessTemplate_getModifiedObject()
-    self.assertTrue('portal_types/Geek Object/view' in [line.object_id for line in diff_list])
+    self.assertTrue('portal_types/Geek Object/become_geek'
+                    in [line.object_id for line in diff_list])
     import_bt.reinstall()
 
   def stepInstallCurrentBusinessTemplate(self, sequence=None, sequence_list=None, **kw):
@@ -3077,7 +3057,6 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CheckSkinsLayers \
                        CheckFirstActionExists \
                        CheckSecondActionExists \
-                       CheckActionsOrder \
                        UninstallBusinessTemplate \
                        CheckBuiltBuildingState \
                        CheckNotInstalledInstallationState \
@@ -5058,13 +5037,13 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     pt = self.getTypeTool()
     object_id = sequence.get('object_ptype_id')
     object_pt = pt._getOb(object_id)
-    object_pt.addRole(id='geek_role_definition',
-                       description='A definition with non ascii chars éàè',
-                       name='Geek Role Definition',
-                       condition='',
-                       category='group/g1\nfunction/f1\n',
-                       base_category_script='Base Category Script',
-                       base_category='group site',)
+    object_pt.newContent(portal_type='Role Information',
+      title='Geek Role Definition',
+      description='A definition with non ascii chars éàè',
+      role_name_list=('geek_role_definition',),
+      role_category_list=('group/g1','function/f1'),
+      role_base_category_script_id='Base Category Script',
+      role_base_category_list=('group','site'))
 
     sequence.edit(portal_type_role='geek_role_definition')
 
@@ -5088,18 +5067,13 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     """
     pt = self.getTypeTool()
     object_id = sequence.get('object_ptype_id')
-    object_pt = pt._getOb(object_id)
-    role_list = object_pt._roles
-    role_list = [x for x in role_list if x.id == 'geek_role_definition']
-    self.assertEquals(1, len(role_list))
-    role = role_list[0]
-    self.assertEquals('Geek Role Definition', role.title)
-    self.assertEquals('A definition with non ascii chars éàè', role.description)
-    self.assertEquals(('group/g1','function/f1'), role.getCategory())
-    self.assertEquals(('group','site'), role.getBaseCategory())
-    self.assertEquals('Base Category Script', role.getBaseCategoryScript())
-    # role name is a string, not unicode
-    self.assertTrue(isinstance(role.id, str))
+    role, = pt[object_id].getRoleInformationList()
+    self.assertEqual('Geek Role Definition', role.getTitle())
+    self.assertEqual(['geek_role_definition'], role.getRoleNameList())
+    self.assertEqual('A definition with non ascii chars éàè', role.getDescription())
+    self.assertEqual(['group/g1','function/f1'], role.getRoleCategoryList())
+    self.assertEqual(['group','site'], role.getRoleBaseCategoryList())
+    self.assertEqual('Base Category Script', role.getRoleBaseCategoryScriptId())
 
   def test_36_CheckPortalTypeRoles(self, quiet=quiet, run=run_all_test):
     if not run: return
@@ -5248,7 +5222,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        SaveBusinessTemplate \
                        InstallCurrentBusinessTemplate Tic \
                        Tic \
-                       RemoveViewAction \
+                       RemoveFirstAction \
                        ReinstallBusinessTemplate Tic \
                        '
     sequence_list.addSequenceString(sequence_string)

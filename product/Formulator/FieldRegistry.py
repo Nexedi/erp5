@@ -1,6 +1,6 @@
 import os
 import OFS
-from Globals import ImageFile
+from App.ImageFile import ImageFile
 from FieldHelpTopic import FieldHelpTopic
 
 class FieldRegistry:

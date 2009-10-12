@@ -35,7 +35,7 @@ import os
 import sys
 from Products.ERP5Type.Utils import convertToUpperCase
 from MethodObject import Method
-from Globals import InitializeClass
+from Products.ERP5Type.Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 from Products.PythonScripts.Utility import allow_class
 from tempfile import mktemp

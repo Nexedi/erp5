@@ -12,7 +12,7 @@
 #
 ##############################################################################
 
-from Globals import DTMLFile
+from Products.ERP5Type.Globals import DTMLFile
 from Products.CMFCore.ActionProviderBase import ActionProviderBase
 from Products.CMFCore.ActionInformation import ActionInformation
 from Products.CMFCore.Expression import Expression

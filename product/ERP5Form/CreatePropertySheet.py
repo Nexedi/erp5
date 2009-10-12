@@ -30,7 +30,7 @@ from Products.ERP5Type.Utils import writeLocalPropertySheet, writeLocalDocument
 from Products.PythonScripts.Utility import allow_class
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions
-from Globals import InitializeClass
+from Products.ERP5Type.Globals import InitializeClass
 
 class LocalGenerator:
   """ Create Local PropertySheets and Documents

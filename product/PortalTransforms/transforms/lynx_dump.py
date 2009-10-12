@@ -5,9 +5,10 @@ from Products.PortalTransforms.interfaces import itransform
 from Products.PortalTransforms.libtransforms.commandtransform import commandtransform
 from Products.PortalTransforms.libtransforms.commandtransform import popentransform
 import os
+from zope.interface import implements
 
 class lynx_dump(popentransform):
-    __implements__ = itransform
+    implements(itransform)
 
     __name__ = "lynx_dump"
     inputs   = ('text/html',)
@@ -25,7 +26,7 @@ class lynx_dump(popentransform):
         return ''.join(lines[3:])
 
 class old_lynx_dump(commandtransform):
-    __implements__ = itransform
+    implements(itransform)
 
     __name__ = "lynx_dump"
     inputs   = ('text/html',)

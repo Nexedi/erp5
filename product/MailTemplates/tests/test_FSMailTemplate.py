@@ -26,7 +26,7 @@ else:
     from Products.CMFCore.tests.base.testcase import FSDVTest
     from Products.CMFCore.tests.base.dummy import DummyFolder
     from AccessControl import ClassSecurityInfo
-    from Globals import InitializeClass
+    from App.class_init import default__class_init__ as InitializeClass
     
     class DummyMember:
 

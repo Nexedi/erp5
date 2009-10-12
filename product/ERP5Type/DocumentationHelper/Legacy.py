@@ -1,6 +1,6 @@
 from Acquisition import Implicit
 from AccessControl import ClassSecurityInfo
-from Globals import InitializeClass
+from Products.ERP5Type.Globals import InitializeClass
 
 from Products.CMFCore.utils import getToolByName
 

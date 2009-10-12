@@ -1,11 +1,12 @@
 from Products.PortalTransforms.interfaces import itransform
+from zope.interface import implements
 from oood_commandtransform import OOOdCommandTransform, OOoDocumentDataStream
 from zLOG import LOG
 
 class HTMLToOdt:
   """Transforms HTML to odt by using oood"""
 
-  __implements__ = itransform
+  implements(itransform)
 
   __name__ = 'html_to_odt'
   inputs   = ('text/html',)

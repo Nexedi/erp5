@@ -33,7 +33,7 @@ from zLOG import LOG
 from AccessControl import ClassSecurityInfo, getSecurityManager
 from AccessControl.SecurityManagement import newSecurityManager, setSecurityManager
 from Acquisition import aq_base
-from Globals import get_request
+from Products.ERP5Type.Globals import get_request
 from Products.CMFCore.utils import getToolByName, _checkPermission
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
 from Products.ERP5Type.XMLObject import XMLObject

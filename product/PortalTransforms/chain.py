@@ -1,6 +1,6 @@
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
-from Globals import Persistent
-from Globals import InitializeClass
+from Persistence import Persistent
+from App.class_init import default__class_init__ as InitializeClass
 from Acquisition import Implicit
 from OFS.SimpleItem import Item
 from AccessControl.Role import RoleManager
@@ -12,13 +12,14 @@ from Products.CMFCore.utils import getToolByName
 from Products.PortalTransforms.utils import TransformException, _www
 from  Products.PortalTransforms.interfaces import ichain
 from  Products.PortalTransforms.interfaces import itransform
+from zope.interface import implements
 
 from UserList import UserList
 
 class chain(UserList):
     """A chain of transforms used to transform data"""
 
-    __implements__ = (ichain, itransform)
+    implements(ichain, itransform)
 
     def __init__(self, name='',*args):
         UserList.__init__(self, *args)

@@ -40,7 +40,7 @@ from Products.CMFCore.exceptions import AccessControl_Unauthorized
 from Products.ERP5Type import PropertySheet, Permissions
 
 from urllib import quote
-from Globals import InitializeClass, PersistentMapping, DTMLFile, get_request
+from Products.ERP5Type.Globals import InitializeClass, PersistentMapping, DTMLFile, get_request
 from AccessControl import Unauthorized, getSecurityManager, ClassSecurityInfo
 from ZODB.POSException import ConflictError
 from Acquisition import aq_base
@@ -320,14 +320,6 @@ def get_value(self, id, **kw):
   else:
     field = self
 
-  # If field is not stored in zodb, then must use original get_value instead.
-  # Because field which is not stored in zodb must be used for editing field
-  # in ZMI and field value cache sometimes break these field settings at
-  # initialization. As the result, we will see broken field editing screen
-  # in ZMI.
-  if self._p_oid is None:
-    return self._original_get_value(id, **kw)
-
   cache_id = ('Form.get_value',
               self._p_oid,
               field._p_oid,
@@ -339,7 +331,11 @@ def get_value(self, id, **kw):
     # either returns non callable value (ex. "Title")
     # or a FieldValue instance of appropriate class
     value, cacheable = getFieldValue(self, field, id, **kw)
-    if cacheable:
+    # Do not cache if the field is not stored in zodb,
+    # because such field must be used for editing field in ZMI
+    # and caching sometimes break these field settings at initialization.
+    # As the result, we would see broken field editing screen in ZMI.
+    if cacheable and self._p_oid:
       _field_value_cache[cache_id] = value
 
   if callable(value):
@@ -376,9 +372,7 @@ def _get_default(self, key, value, REQUEST):
 
 
 # Dynamic Patch
-original_get_value = Field.get_value
 Field.get_value = get_value
-Field._original_get_value = original_get_value
 Field._get_default = _get_default
 Field.om_icons = om_icons
 

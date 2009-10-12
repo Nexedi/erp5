@@ -3,6 +3,7 @@ from Products.PortalTransforms.interfaces import idatastream
 from Products.ERP5Type.Document import newTempOOoDocument
 from Products.CMFCore.utils import getToolByName
 from Acquisition import aq_base
+from zope.interface import implements
 try:
   from Products.ERP5OOo.OOoUtils import OOoBuilder
   import re
@@ -20,7 +21,7 @@ class TransformError(Exception):
 
 class OOoDocumentDataStream:
   """Handle OOoDocument in Portal Transforms"""
-  __implements__ = idatastream
+  implements(idatastream)
 
   def setData(self, value):
     """set the main"""

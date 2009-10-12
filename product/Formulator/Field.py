@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
-import Globals
+from App.class_init import default__class_init__ as InitializeClass
 import Acquisition
-from Globals import Persistent, DTMLFile
+from Persistence import Persistent
+from App.special_dtml import DTMLFile
 from AccessControl import ClassSecurityInfo
 import OFS
 from Shared.DC.Scripts.Bindings import Bindings
@@ -379,7 +380,7 @@ class Field:
                          (self.values.values()+self.tales.values()+
                           self.overrides.values())))
 
-Globals.InitializeClass(Field)
+InitializeClass(Field)
     
 class ZMIField(
     Acquisition.Implicit,
@@ -630,7 +631,7 @@ class ZMIField(
         return self
     getRecursiveTemplateField = getTemplateField
         
-Globals.InitializeClass(ZMIField)
+InitializeClass(ZMIField)
 PythonField = ZMIField # NOTE: for backwards compatibility
 
 class ZClassField(Field):

@@ -1,7 +1,8 @@
 ##############################################################################
 #
-# Copyright (c) 2008 Nexedi SA and Contributors. All Rights Reserved.
+# Copyright (c) 2009 Nexedi SA and Contributors. All Rights Reserved.
 #                    Jean-Paul Smets-Solanes <jp@nexedi.com>
+#                    Julien Muchembled <jm@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -27,57 +28,50 @@
 ##############################################################################
 
 class ActionInformation:
-    """
-      EXPERIMENTAL - DO NOT USE THIS PROPERTYSHEET BESIDES R&D
-      Properties of an ERP5 Type action.
-    """
+  """
+    Properties of an ERP5 Action Information
+  """
 
-    _properties = (
-        { 'id':         'action_category',
-          'storage_id': 'category', # CMF Compatibility
-          'type':       'selection',
-          'description':'The category of the action',
-          'select_variable': 'getActionCategorySelectionList',
-          'mode':       'w',
-         },
-        { 'id':         'condition',
-          'type':       'tales',
-          'description':'TALES Expression to define the applicability of the role definition',
-          'mode':       'w',
-         },
-        { 'id':         'action_permission',
-          'storage_id': 'permissions', # CMF Compatibility
-          'type':       'lines',
-          'description':'The permissions required to use the current view the current action',
-          'mode':       'w',
-         },
-        { 'id':         'priority',
-          'type':       'float',
-          'description':'Priority of the current action',
-          'mode':       'w',
-         },
-        { 'id':         'visible',
-          'type':       'boolean',
-          'description':'Visibility of the current action',
-          'mode':       'w',
-         },
-        { 'id':         'action',
-          'type':       'tales',
-          'description':'TALES Expression to define the URL of the action',
-          'mode':       'w',
-         },
-        { 'id':         'icon',
-          'type':       'tales',
-          'description':'TALES Expression to define the URL of the icon of the current action',
-          'mode':       'w',
-         },
-        # This is the current way to define closed lists of values which are not categories
-        { 'id'              : 'action_category_selection',
-          'description'     : 'List of possible values for action_category',
-          'type'            : 'tokens',
-          'default'         : ['object_view', 'object_list', 'object_action',
-                               'object_web_view', 'object_print', 'object_exchange',
-                               'object_report', 'object_dialog', 'object_icon', ],
-          'mode'            : 'w'},
-    )
+  _properties = (
+    { 'id':          'reference',
+      'type':        'string',
+      'mode':        'w',
+      },
+    { 'id':          'condition',
+      'type':        'object',
+      'description': 'TALES Expression to define the applicability of the' \
+                     ' action',
+      'mode':        'w',
+      },
+    { 'id':          'action_permission',
+      'type':        'lines',
+      'description': 'The permissions required to use the action',
+      'mode':        'w',
+      'default':     ['View'],
+      },
+    { 'id':          'float_index',
+      'type':        'float',
+      'description': 'Priority of the current action',
+      'mode':        'w',
+      'default':     1.0,
+      },
+    { 'id':          'visible',
+      'type':        'boolean',
+      'description': 'Visibility of the current action',
+      'mode':        'w',
+      'default':     True,
+      },
+    { 'id':          'action',
+      'type':        'object',
+      'description': 'TALES Expression to define the URL of the action',
+      'mode':        'w',
+      },
+    { 'id':          'icon',
+      'type':        'object',
+      'description': 'TALES Expression to define the URL of the icon of the' \
+                     ' action',
+      'mode':        'w',
+      },
+  )
 
+  _categories = ('action_type', )

@@ -1,3 +1,4 @@
+Action Information | view
 Alarm Tool | alarm_report
 Alarm Tool | view
 Alarm | custom_report
@@ -9,6 +10,11 @@ Alarm | view
 Applied Rule | view
 Base Category | view
 Base Domain | view
+Base Type | action_view
+Base Type | role_view
+Base Type | translation_view
+Base Type | update_local_roles
+Base Type | view
 Business Template | export
 Business Template | get_portal_type_properties
 Business Template | guess_portal_types
@@ -44,6 +50,7 @@ Preference | view
 Preference | view_template
 Ram Cache | statistics
 Ram Cache | view
+Role Information | view
 Rule Tool | view
 Simulation Movement | view
 Simulation Tool | view
@@ -61,10 +68,12 @@ Trash Bin | jump_bt5
 Trash Bin | view
 Trash Folder | view
 Trash Tool | view
+Types Tool | view
 portal_actions | bt_tool
 portal_actions | category_tool
 portal_actions | create_module
 portal_actions | make_template
+portal_actions | types_tool
 portal_properties | history
 portal_properties | list_ui
 portal_properties | mass_workflow

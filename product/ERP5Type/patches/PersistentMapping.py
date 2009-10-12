@@ -26,7 +26,7 @@
 #
 ##############################################################################
 
-from Globals import PersistentMapping
+from Products.ERP5Type.Globals import PersistentMapping
 
 PersistentMapping__super_copy = PersistentMapping.copy
 def PersistentMapping_copy(self):

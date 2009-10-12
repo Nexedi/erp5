@@ -14,7 +14,7 @@
 
 # State types patch for DCWorkflow
 from Products.DCWorkflow.States import StateDefinition
-from Globals import DTMLFile
+from Products.ERP5Type.Globals import DTMLFile
 from Products.ERP5Type import _dtmldir
 
 _properties_form = DTMLFile('state_properties', _dtmldir)

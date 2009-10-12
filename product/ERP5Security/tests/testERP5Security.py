@@ -39,24 +39,21 @@ from AccessControl.SecurityManagement import getSecurityManager
 from zLOG import LOG
 from Products.ERP5Type.Cache import clearCache
 from Products.PluggableAuthService import PluggableAuthService
-try:
-  from Interface.Verify import verifyClass
-except ImportError:
-  from zope.interface.verify import verifyClass
+from zope.interface.verify import verifyClass
 from DateTime import DateTime
 
 class TestUserManagement(ERP5TypeTestCase):
   """Tests User Management in ERP5Security.
   """
-  
+
   def getTitle(self):
     """Title of the test."""
     return "ERP5Security: User Management"
-  
+
   def getBusinessTemplateList(self):
     """List of BT to install. """
     return ('erp5_base',)
-  
+
   def beforeTearDown(self):
     """Clears person module and invalidate caches when tests are finished."""
     # XXX Isn't it better to clear the cache when deleting a Person ?
@@ -65,7 +62,7 @@ class TestUserManagement(ERP5TypeTestCase):
                              self.getPersonModule().objectIds()])
     transaction.commit()
     self.tic()
-  
+
   def login(self):
     uf = self.getUserFolder()
     uf._doAddUser('alex', '', ['Manager', 'Assignee', 'Assignor',
@@ -134,7 +131,7 @@ class TestUserManagement(ERP5TypeTestCase):
     else:
       self.fail("No plugin could authenticate '%s' with password '%s'" %
               (login, password))
-  
+
   def _assertUserDoesNotExists(self, login, password):
     """Checks that a user with login and password does not exists and cannot
     log in to the system.
@@ -154,13 +151,13 @@ class TestUserManagement(ERP5TypeTestCase):
     """Tests a person with a login & password is a valid user."""
     p = self._makePerson(reference='the_user', password='secret',)
     self._assertUserExists('the_user', 'secret')
-    
+
   def test_PersonLoginCaseSensitive(self):
     """Login/password are case sensitive."""
     p = self._makePerson(reference='the_user', password='secret',)
     self._assertUserExists('the_user', 'secret')
     self._assertUserDoesNotExists('the_User', 'secret')
-  
+
   def test_PersonLoginIsNotStripped(self):
     """Make sure 'foo ', ' foo' and ' foo ' do not match user 'foo'. """
     p = self._makePerson(reference='foo', password='secret',)
@@ -207,12 +204,12 @@ class TestUserManagement(ERP5TypeTestCase):
     self._assertUserDoesNotExists('the_user', None)
     self._makePerson(reference='another_user', password='',)
     self._assertUserDoesNotExists('another_user', '')
-  
+
   def test_PersonWithEmptyLoginAreNotUsers(self):
     """Tests a person with empty login & password is a valid user."""
     self._makePerson(reference='', password='secret')
     self._assertUserDoesNotExists('', 'secret')
-  
+
   def test_PersonWithLoginWithNotAssignmentAreNotUsers(self):
     """Tests a person with a login & password and no assignment open is not a valid user."""
     self._makePerson(reference='the_user', password='secret', open_assignment=0)
@@ -222,7 +219,7 @@ class TestUserManagement(ERP5TypeTestCase):
     """Tests one cannot create person with the "super user" special login."""
     from Products.ERP5Security.ERP5UserManager import SUPER_USER
     self.assertRaises(RuntimeError, self._makePerson, reference=SUPER_USER)
-  
+
   def test_PersonWithSuperUserLogin(self):
     """Tests one cannot use the "super user" special login."""
     from Products.ERP5Security.ERP5UserManager import SUPER_USER
@@ -240,7 +237,7 @@ class TestUserManagement(ERP5TypeTestCase):
     p1 = self._makePerson(reference='person1')
     p2 = self._makePerson(reference='person2')
     self.assertEquals(['person', ],
-         [x['userid'] for x in 
+         [x['userid'] for x in
            self.portal.acl_users.searchUsers(id='person', exact_match=True)])
 
   def test_MultiplePersonReference(self):
@@ -256,7 +253,7 @@ class TestUserManagement(ERP5TypeTestCase):
     changed, = person_module.manage_pasteObjects(copy_data)
     self.assertNotEquals(person_module[changed['new_id']].getReference(),
                          person_module[changed['id']].getReference())
-  
+
   def test_PreferenceTool_setNewPassword(self):
     # Preference Tool has an action to change password
     pers = self._makePerson(reference='the_user', password='secret',)
@@ -378,19 +375,20 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
     assignment.open()
     transaction.commit()
     self.tic()
-  
+
   def beforeTearDown(self):
     """Called before teardown."""
     # clear base categories
     for bc in ['group', 'site', 'function']:
       base_cat = self.getCategoryTool()[bc]
-      base_cat.manage_delObjects([x for x in base_cat.objectIds()])
+      base_cat.manage_delObjects(list(base_cat.objectIds()))
     # clear role definitions
-    for ti in self.getTypesTool().objectValues(spec=('ERP5 Type Information',)):
-      ti._roles = ()
+    for ti in self.getTypesTool().objectValues():
+      ti.manage_delObjects([x.id for x in ti.getRoleInformationList()])
     # clear modules
-    for module in self.portal.objectValues(spec=('ERP5 Folder',)):
-      module.manage_delObjects([x for x in module.objectIds()])
+    for module in self.portal.objectValues():
+      if module.getId().endswith('_module'):
+        module.manage_delObjects(list(module.objectIds()))
     # commit this
     transaction.commit()
     self.tic()
@@ -401,20 +399,20 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
     uf = self.portal.acl_users
     user = uf.getUserById(username).__of__(uf)
     newSecurityManager(None, user)
-  
+
   def _getTypeInfo(self):
     return self.getTypesTool()['Organisation']
-  
+
   def _getModuleTypeInfo(self):
     return self.getTypesTool()['Organisation Module']
-  
+
   def _makeOne(self):
     return self.getOrganisationModule().newContent(portal_type='Organisation')
-  
+
   def getBusinessTemplateList(self):
     """List of BT to install. """
     return ('erp5_base',)
-  
+
   def test_RolesManagerInterfaces(self):
     """Tests group manager plugin respects interfaces."""
     from Products.PluggableAuthService.interfaces.plugins import IRolesPlugin
@@ -433,33 +431,32 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
   def testSimpleLocalRole(self):
     """Test simple case of setting a role.
     """
-    ti = self._getTypeInfo()
-    ti.addRole(id='Assignor', description='desc.',
-           name='an Assignor role for testing',
-           condition='',
-           category=self.defined_category,
-           base_category_script='ERP5Type_getSecurityCategoryFromAssignment',
-           base_category='')
+    self._getTypeInfo().newContent(portal_type='Role Information',
+      role_name='Assignor',
+      description='desc.',
+      title='an Assignor role for testing',
+      role_category=self.defined_category,
+      role_base_category_script_id='ERP5Type_getSecurityCategoryFromAssignment')
     obj = self._makeOne()
     self.assertEquals(['Assignor'], obj.__ac_local_roles__.get('F1_G1_S1'))
-    
+
     self.loginAsUser(self.username)
     self.failUnless('Assignor' in
             getSecurityManager().getUser().getRolesInContext(obj))
-        
+
   def testDynamicLocalRole(self):
     """Test simple case of setting a dynamic role.
     The site category is not defined explictly the role, and will have the
     current site of the user.
     """
-    ti = self._getTypeInfo()
-    ti.addRole(id='Assignor', description='desc.',
-           name='an Assignor role for testing',
-           condition='',
-           category='group/subcat\nfunction/subcat',
-           base_category_script='ERP5Type_getSecurityCategoryFromAssignment',
-           base_category='site')
-    
+    self._getTypeInfo().newContent(portal_type='Role Information',
+      role_name='Assignor',
+      description='desc.',
+      title='an Assignor role for testing',
+      role_category_list=('group/subcat', 'function/subcat'),
+      role_base_category_script_id='ERP5Type_getSecurityCategoryFromAssignment',
+      role_base_category='site')
+
     self.loginAsUser(self.username)
     obj = self._makeOne()
     self.assertEquals(['Assignor'], obj.__ac_local_roles__.get('F1_G1_S1'))
@@ -471,13 +468,12 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
     "acquire local roles" is not checked."""
     ti = self._getTypeInfo()
     ti.acquire_local_roles = False
-    module_ti = self._getModuleTypeInfo()
-    module_ti.addRole(id='Assignor', description='desc.',
-           name='an Assignor role for testing',
-           condition='',
-           category=self.defined_category,
-           base_category_script='ERP5Type_getSecurityCategoryFromAssignment',
-           base_category='')
+    self._getModuleTypeInfo().newContent(portal_type='Role Information',
+      role_name='Assignor',
+      description='desc.',
+      title='an Assignor role for testing',
+      role_category=self.defined_category,
+      role_base_category_script_id='ERP5Type_getSecurityCategoryFromAssignment')
     obj = self._makeOne()
     module = obj.getParentValue()
     module.updateLocalRolesOnSecurityGroups()
@@ -532,7 +528,7 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
     """Make sure that local role works correctly when traversing
     """
     self.assert_(not self.portal.portal_types.Person.acquire_local_roles)
-    
+
     self.getPersonModule().newContent(portal_type='Person',
                                       id='first_last',
                                       first_name='First',
@@ -547,14 +543,11 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
     self.tic()
 
     person_module_type_information = self.getTypesTool()['Person Module']
-    person_module_type_information.addRole(
-      id='Auditor',
+    person_module_type_information.newContent(portal_type='Role Information',
+      role_name='Auditor',
       description='',
-      name='An Auditor role for testing',
-      condition='',
-      category='function/another_subcat',
-      base_category_script='',
-      base_category='')
+      title='An Auditor role for testing',
+      role_category='function/another_subcat')
     person_module_type_information.updateRoleMapping()
     transaction.commit()
     self.tic()

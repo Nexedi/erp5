@@ -30,6 +30,7 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
 from Products.ERP5.Document.DeliveryLine import DeliveryLine
 from Products.ERP5Banking.BaobabMixin import BaobabMixin
+from zope.interface import implements
 
 class CheckOperationLine(BaobabMixin, DeliveryLine):
   """Check Operation Line supports an operation (typically delivery) of a check.
@@ -46,7 +47,7 @@ class CheckOperationLine(BaobabMixin, DeliveryLine):
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
   # Declarative interfaces
-  __implements__ = ( interfaces.IVariated, )
+  implements( interfaces.IVariated, )
 
   # Declarative properties
   property_sheets = ( PropertySheet.Base

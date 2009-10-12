@@ -36,7 +36,7 @@ from AccessControl import ClassSecurityInfo, getSecurityManager
 from Products.CMFCore.CatalogTool import IndexableObjectWrapper as CMFCoreIndexableObjectWrapper
 from Products.CMFCore.utils import UniqueObject, _checkPermission, _getAuthenticatedUser, getToolByName
 from Products.CMFCore.utils import _mergedLocalRoles
-from Globals import InitializeClass, DTMLFile, package_home
+from Products.ERP5Type.Globals import InitializeClass, DTMLFile, package_home
 from Acquisition import aq_base, aq_inner, aq_parent, ImplicitAcquisitionWrapper
 from DateTime.DateTime import DateTime
 from Products.CMFActivity.ActiveObject import ActiveObject

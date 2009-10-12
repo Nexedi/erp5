@@ -29,7 +29,8 @@
 
 from zLOG import LOG
 from interfaces.sql_expression import ISQLExpression
-from Interface.Verify import verifyClass
+from zope.interface.verify import verifyClass
+from zope.interface import implements
 from types import NoneType
 from SQLCatalog import profiler_decorator
 
@@ -56,7 +57,7 @@ def defaultDict(value):
 
 class SQLExpression(object):
 
-  __implements__ = ISQLExpression
+  implements(ISQLExpression)
 
   @profiler_decorator
   def __init__(self,

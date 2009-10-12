@@ -34,7 +34,8 @@ from Products.ZSQLCatalog.Query.RelatedQuery import RelatedQuery
 from Products.ZSQLCatalog.Query.SQLQuery import SQLQuery
 from Products.ZSQLCatalog.SQLExpression import SQLExpression
 from Products.ZSQLCatalog.interfaces.search_key import IRelatedKey
-from Interface.Verify import verifyClass
+from zope.interface.verify import verifyClass
+from zope.interface import implements
 from Products.ZSQLCatalog.SQLCatalog import profiler_decorator
 
 BACKWARD_COMPATIBILITY = True
@@ -46,7 +47,7 @@ class RelatedKey(SearchKey):
     column to compare, plus a regular query on that column if needed.
   """
 
-  __implements__ = IRelatedKey
+  implements(IRelatedKey)
 
   related_key_definition = None
 

@@ -12,6 +12,7 @@ from Products.PortalTransforms.chain import chain
 import urllib
 import time
 import re
+from zope.interface import implements
 
 class BaseTransform:
     def name(self):
@@ -19,7 +20,7 @@ class BaseTransform:
 
 
 class HtmlToText(BaseTransform):
-    __implements__ = itransform
+    implements(itransform)
     inputs = ('text/html',)
     output = 'text/plain'
 
@@ -36,7 +37,7 @@ class HtmlToTextWithEncoding(HtmlToText):
     output_encoding = 'ascii'
 
 class FooToBar(BaseTransform):
-    __implements__ = itransform
+    implements(itransform)
     inputs = ('text/*',)
     output = 'text/plain'
 
@@ -51,30 +52,30 @@ class FooToBar(BaseTransform):
 
 
 class TransformNoIO(BaseTransform):
-    __implements__ = itransform
+    implements(itransform)
 
 class BadTransformMissingImplements(BaseTransform):
-    __implements__ = None
+    #__implements__ = None
     inputs = ('text/*',)
     output = 'text/plain'
 
 class BadTransformBadMIMEType1(BaseTransform):
-    __implements__ = itransform
+    implements(itransform)
     inputs = ('truc/muche',)
     output = 'text/plain'
 
 class BadTransformBadMIMEType2(BaseTransform):
-    __implements__ = itransform
+    implements(itransform)
     inputs = ('text/plain',)
     output = 'truc/muche'
 
 class BadTransformNoInput(BaseTransform):
-    __implements__ = itransform
+    implements(itransform)
     inputs = ()
     output = 'text/plain'
 
 class BadTransformWildcardOutput(BaseTransform):
-    __implements__ = itransform
+    implements(itransform)
     inputs = ('text/plain',)
     output = 'text/*'
 

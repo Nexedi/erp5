@@ -38,7 +38,7 @@ from AccessControl import ClassSecurityInfo
 from types import StringType
 from zLOG import LOG
 from Products.Formulator.DummyField import fields
-from Globals import get_request
+from Products.ERP5Type.Globals import get_request
 from AccessControl import Unauthorized
 from AccessControl import getSecurityManager
 

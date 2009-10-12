@@ -35,7 +35,7 @@ from Products.ERP5Form.ImageField import ImageField
 from Products.ERP5OOo.OOoUtils import OOoBuilder
 from Products.CMFCore.exceptions import AccessControl_Unauthorized
 from Acquisition import Implicit, aq_base
-from Globals import InitializeClass, DTMLFile, Persistent, get_request
+from Products.ERP5Type.Globals import InitializeClass, DTMLFile, Persistent, get_request
 from AccessControl import ClassSecurityInfo
 from AccessControl.Role import RoleManager
 from OFS.SimpleItem import Item

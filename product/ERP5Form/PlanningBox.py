@@ -39,7 +39,7 @@
 
 # Class monitoring access security control
 from Products.PythonScripts.Utility import allow_class
-from Globals import InitializeClass
+from Products.ERP5Type.Globals import InitializeClass
 
 from Products.ERP5Form.ListBox import lazyMethod
 from Products.Formulator.Field import ZMIField

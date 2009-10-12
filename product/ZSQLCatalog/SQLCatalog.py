@@ -12,12 +12,12 @@
 #
 ##############################################################################
 
-from Persistence import Persistent
+from Persistence import Persistent, PersistentMapping
 import Acquisition
 import ExtensionClass
-import Globals
 import OFS.History
-from Globals import DTMLFile, PersistentMapping
+from App.class_init import default__class_init__ as InitializeClass
+from App.special_dtml import DTMLFile
 from thread import allocate_lock, get_ident
 from OFS.Folder import Folder
 from AccessControl import ClassSecurityInfo
@@ -43,7 +43,8 @@ import os
 import md5
 
 from interfaces.query_catalog import ISearchKeyCatalog
-from Interface.Verify import verifyClass
+from zope.interface.verify import verifyClass
+from zope.interface import implements
 
 from SearchText import isAdvancedSearchText
 
@@ -258,7 +259,8 @@ class Catalog(Folder,
 
  """
 
-  __implements__ = ISearchKeyCatalog
+  implements(ISearchKeyCatalog)
+  
 
   meta_type = "SQLCatalog"
   icon = 'misc_/ZCatalog/ZCatalog.gif' # FIXME: use a different icon
@@ -2489,7 +2491,7 @@ class Catalog(Folder,
         return getEngine().getContext(data)
 
 
-Globals.default__class_init__(Catalog)
+InitializeClass(Catalog)
 
 class CatalogError(Exception): pass
 
