@@ -51,6 +51,8 @@ Globals.get_request = get_request
 # Initialize ERP5Form Product to load monkey patches
 from Testing import ZopeTestCase
 ZopeTestCase.installProduct('ERP5Form')
+# Initialize ERP5Type Product to install interactors
+ZopeTestCase.installProduct('ERP5Type')
 
 from Acquisition import aq_base
 from Products.Formulator.FieldRegistry import FieldRegistry
