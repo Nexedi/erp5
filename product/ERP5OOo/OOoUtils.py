@@ -146,7 +146,7 @@ class OOoBuilder(Implicit):
     content_xml = self.extract(ooo_xml_file_id)
     output = StringIO()
     content_doc = etree.XML(content_xml)
-    root = content_doc.getroot()
+    root = content_doc.getroottree().getroot()
     #Declare zope namespaces
     NSMAP = {'tal': 'http://xml.zope.org/namespaces/tal',
              'i18n': 'http://xml.zope.org/namespaces/i18n',
