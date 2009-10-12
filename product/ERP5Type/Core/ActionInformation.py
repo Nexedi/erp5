@@ -120,6 +120,9 @@ class ActionInformation(XMLObject):
       value = value and Expression(value) or None
     self._baseSetIcon(value)
 
+  # XXX Following getAction/getCondition/getIcon are problably not useful
+  #     because properties should already be cleaned up during migration
+  #     or installation from BT.
   def getAction(self):
     """Overridden getter for 'action' to clean null values"""
     if getattr(aq_base(self), 'action', None) == '':
