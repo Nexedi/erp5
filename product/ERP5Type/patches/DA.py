@@ -22,7 +22,7 @@ from Shared.DC.ZRDB import RDB
 from Shared.DC.ZRDB.Results import Results
 from App.Extensions import getBrain
 from AccessControl import getSecurityManager
-from Acquisition import aq_base
+from Acquisition import aq_base, aq_parent
 from zLOG import LOG, INFO, ERROR
 from string import find
 from cStringIO import StringIO
@@ -187,11 +187,7 @@ def DA__call__(self, REQUEST=None, __ick__=None, src__=0, test__=0, **kw):
     except: raise DatabaseError, (
         '%s is not connected to a database' % self.id)
 
-    if hasattr(self, 'aq_parent'):
-        p=self.aq_parent
-        if self._isBeingAccessedAsZClassDefinedInstanceMethod():
-            p=p.aq_parent
-    else: p=None
+    p = aq_parent(self) # None if no aq_parent
 
     argdata=self._argdata(REQUEST)
     argdata['sql_delimiter']='\0'
@@ -230,16 +226,13 @@ def DA__call__(self, REQUEST=None, __ick__=None, src__=0, test__=0, **kw):
     else:
         brain=self._v_brain=getBrain(self.class_file_, self.class_name_)
 
-    zc=self._zclass
-    if zc is not None: zc=zc._zclass_
-
     if type(result) is type(''):
         f=StringIO()
         f.write(result)
         f.seek(0)
-        result=RDB.File(f,brain,p, zc)
+        result=RDB.File(f,brain,p)
     else:
-        result=Results(result, brain, p, zc)
+        result=Results(result, brain, p)
     columns=result._searchable_result_columns()
     if test__ and columns != self._col: self._col=columns
 
