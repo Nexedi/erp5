@@ -459,10 +459,12 @@ class TemplateTool (BaseTool):
                                  stdout=subprocess.PIPE,
                                  stderr=subprocess.STDOUT)
 
-      output = process.communicate()[0]
-
-      outfile.write(output)
-      outfile.flush()
+      while True:
+        line = process.stdout.readline()
+        if not line:
+          break
+        outfile.write(line)
+        outfile.flush()
 
       if hasattr(outfile, 'getvalue'):
         return outfile.getvalue()
