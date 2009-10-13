@@ -94,22 +94,18 @@ def getModuleActionInformationDict(**kw):\n
       action_dict = module.Base_filterDuplicateActions(listFilteredActionsFor(module))\n
 \n
       # Obtain a form id and a selection name from the view.\n
+      # XXX Is it useful ?\n
       form_id = \'view\'\n
       selection_name = \'default_selection\'\n
-      type_info = module.getTypeInfo()\n
-      expr = None\n
-      for ai in type_info.listActions():\n
-        if ai.getId() == \'view\':\n
+      for ai in action_dict[\'object_view\']:\n
+        if ai[\'id\'] == \'view\':\n
+          form_id = ai[\'url\'].rsplit(\'/\', 1)[-1]\n
+          form = getattr(portal, form_id, None)\n
+          if form is not None:\n
+            listbox = form.Form_getListbox()\n
+            if listbox is not None:\n
+              selection_name = listbox.get_value(\'selection_name\')\n
           break\n
-      else:\n
-        ai = None\n
-      if ai is not None:\n
-        form_id = str(ai.getActionExpression()).rsplit(\'/\', 1)[-1]\n
-        form = getattr(portal, form_id, None)\n
-        if form is not None:\n
-          listbox = form.Form_getListbox()\n
-          if listbox is not None:\n
-            selection_name = listbox.get_value(\'selection_name\')\n
 \n
       # Collect view actions.\n
       module_view_list = [(None, \'%s/view\' % module_url)]\n
