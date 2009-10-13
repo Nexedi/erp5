@@ -30,12 +30,8 @@ def listFilteredActionsFor(self, object=None):
         if IActionProvider.isImplementedBy(provider):
             actions.extend( provider.listActionInfos(object=object) )
         elif hasattr(provider, 'getFilteredActionListFor'):
-            from Products.ERP5Type.Utils import createExpressionContext
-            ec = createExpressionContext(object)
-            actions += sorted(
-              (action.getActionInfo(ec)
-               for action in provider.getFilteredActionListFor(object)),
-              key=lambda x: x['priority'])
+            actions += sorted(provider.getFilteredActionListFor(object),
+                              key=lambda x:x['priority'])
         else:
             # for Action Providers written for CMF versions before 1.5
             actions.extend( self._listActionInfos(provider, object) )

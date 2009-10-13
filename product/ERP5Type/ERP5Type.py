@@ -519,8 +519,8 @@ class ERP5TypeInformation(XMLObject,
     def getFilteredActionListFor(self, ob=None):
       """Return all actions applicable to the object"""
       ec = createExpressionContext(ob)
-      return (action for action in self.getActionInformationList()
-                     if action.test(ec))
+      return (action.getActionInfo(ec) for action \
+              in self.getActionInformationList() if action.test(ec))
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getActionInformationList')
