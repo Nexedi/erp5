@@ -459,6 +459,10 @@ class TemplateTool (BaseTool):
                                  stdout=subprocess.PIPE,
                                  stderr=subprocess.STDOUT)
 
+      # "for line in process.stdout" is cleaner but is buffered,
+      # see http://bugs.python.org/issue3907
+      # We use this ugly construct to avoid waiting for test
+      # termination before printing content
       while True:
         line = process.stdout.readline()
         if not line:
