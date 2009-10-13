@@ -15,6 +15,7 @@
               <list>
                 <string>columns</string>
                 <string>selection_name</string>
+                <string>sort</string>
                 <string>title</string>
               </list>
             </value>
@@ -110,6 +111,17 @@
                 <item>
                     <key> <string>selection_name</string> </key>
                     <value> <string>portal_type_selection</string> </value>
+                </item>
+                <item>
+                    <key> <string>sort</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>id</string>
+                          <string>id</string>
+                        </tuple>
+                      </list>
+                    </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
