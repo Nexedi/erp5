@@ -52,6 +52,7 @@ from base64 import b64encode, b64decode
 from Products.ERP5Type.Message import translateString
 from zLOG import LOG, INFO
 from base64 import decodestring
+import subprocess
 
 
 WIN = os.name == 'nt'
@@ -452,16 +453,17 @@ class TemplateTool (BaseTool):
         outfile =  StringIO()
       if RESPONSE is not None:
         RESPONSE.setHeader('Content-type', 'text/plain')
-      process = os.popen('%s %s %s 2>&1'
-                      % (sys.executable,
-                         getUnitTestFile(),
-                         ' '.join(test_list)))
-      while 1:
-        try:
-          outfile.write(process.next())
-          outfile.flush()
-        except StopIteration:
-          break
+      test_cmd_args = [sys.executable, getUnitTestFile()]
+      test_cmd_args += test_list
+      process = subprocess.Popen(test_cmd_args,
+                                 stdout=subprocess.PIPE,
+                                 stderr=subprocess.STDOUT)
+
+      output = process.communicate()[0]
+
+      outfile.write(output)
+      outfile.flush()
+
       if hasattr(outfile, 'getvalue'):
         return outfile.getvalue()
 
