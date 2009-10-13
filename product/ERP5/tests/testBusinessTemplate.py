@@ -35,8 +35,6 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from AccessControl.SecurityManagement import newSecurityManager
 from Acquisition import aq_base
 from zLOG import LOG
-from Products.ERP5Type.ERP5Type import ERP5TypeInformation
-from Products.ERP5Type.RoleInformation import RoleInformation
 from App.config import getConfiguration
 from Products.ERP5Type.tests.Sequence import SequenceList
 from urllib import pathname2url

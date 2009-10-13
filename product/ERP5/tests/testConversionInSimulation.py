@@ -27,26 +27,15 @@
 ##############################################################################
 
 import unittest
-import os
 
 import transaction
 from DateTime import DateTime
 from zLOG import LOG
-from Products.CMFCore.utils import _checkPermission
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from Products.ERP5Type.tests.utils import reindex
 from Testing import ZopeTestCase
-from Products.ERP5Type.tests.Sequence import SequenceList
-from Products.DCWorkflow.DCWorkflow import Unauthorized, ValidationFailed
 from Products.ERP5.tests.testAccounting import AccountingTestCase
-from Testing.ZopeTestCase.PortalTestCase import PortalTestCase
 from AccessControl.SecurityManagement import newSecurityManager
-from AccessControl.SecurityManagement import getSecurityManager
-from Products.ERP5Form.Document.Preference import Priority
-from testPackingList import TestPackingListMixin
-from testAccountingRules import TestAccountingRulesMixin
-from Acquisition import aq_parent
 QUIET = False
 run_all_test = True
 

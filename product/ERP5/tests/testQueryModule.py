@@ -26,7 +26,6 @@
 ##############################################################################
 
 import unittest
-import os
 from AccessControl.SecurityManagement import newSecurityManager
 
 import transaction

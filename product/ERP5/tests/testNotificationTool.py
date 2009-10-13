@@ -29,14 +29,11 @@
 import unittest
 
 import transaction
-from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from AccessControl.SecurityManagement import newSecurityManager
 from AccessControl.SecurityManagement import getSecurityManager
-from zLOG import LOG
 from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.ERP5Type.tests.utils import DummyMailHost
-from DateTime import DateTime
 import email
 from email.Header import decode_header, make_header
 from email.Utils import parseaddr

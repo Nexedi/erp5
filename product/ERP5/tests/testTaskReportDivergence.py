@@ -29,7 +29,6 @@
 import unittest
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from zLOG import LOG
 from Products.ERP5Type.tests.Sequence import SequenceList
 from testTask import TestTaskMixin
 

@@ -27,7 +27,6 @@
 
 import unittest
 import os
-import email
 import email.Header
 
 import transaction

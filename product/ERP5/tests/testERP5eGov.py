@@ -35,7 +35,6 @@ TODO:
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from AccessControl.SecurityManagement import newSecurityManager
-from Acquisition import aq_parent
 
 class TestERP5eGov(ERP5TypeTestCase):
 

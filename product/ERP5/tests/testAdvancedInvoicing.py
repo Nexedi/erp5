@@ -33,17 +33,10 @@
 
 import transaction
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from Products.ERP5Type.tests.utils import FileUpload
-from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
-from Products.ERP5OOo.OOoUtils import OOoParser
 from AccessControl.SecurityManagement import newSecurityManager
 from DateTime import DateTime
-from Acquisition import aq_parent
-from zLOG import LOG
 from Products.ERP5Type.tests.Sequence import SequenceList
-from testPackingList import TestPackingListMixin
-from testAccountingRules import TestAccountingRulesMixin
-from testInvoice import TestInvoiceMixin, TestSaleInvoice, TestSaleInvoiceMixin
+from testInvoice import TestSaleInvoiceMixin
 
 class TestAdvancedInvoice(TestSaleInvoiceMixin, ERP5TypeTestCase):
   """Test methods for sale and purchase invoice.

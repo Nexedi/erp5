@@ -31,10 +31,7 @@ import unittest
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from AccessControl.SecurityManagement import newSecurityManager
 from DateTime import DateTime
-from zLOG import LOG
 from Products.ERP5Type.tests.Sequence import SequenceList
-from Products.CMFCore.utils import getToolByName
-from Testing import ZopeTestCase
 from Testing.ZopeTestCase.PortalTestCase import PortalTestCase
 
 class TestTaskMixin:

@@ -26,9 +26,7 @@
 #
 ##############################################################################
 
-from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from zLOG import LOG
 
 class TestTransformationMixin:
   """

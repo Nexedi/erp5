@@ -37,11 +37,7 @@ from Testing import ZopeTestCase
 from zLOG import LOG
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import reindex
-from Products.DCWorkflow.DCWorkflow import ValidationFailed
 from AccessControl.SecurityManagement import newSecurityManager
-from AccessControl import getSecurityManager
-from Products.ERP5Type.tests.Sequence import Sequence, SequenceList
-from DateTime import DateTime
 
 class ResourceVariationTestCase(ERP5TypeTestCase):
   """Tests starts with a preference activated for self.my_organisation, logged in

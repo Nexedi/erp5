@@ -26,19 +26,12 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 #
 ##############################################################################
-import os, sys
 import unittest
 
 import transaction
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from AccessControl.SecurityManagement import newSecurityManager, \
-                                             noSecurityManager
-from Products.ERP5Type.tests.Sequence import Sequence, SequenceList
-from string import zfill
-import sys
 from zLOG import LOG
-from Products.ERP5Type.Message import Message
 
 # dependency order
 target_business_templates = (

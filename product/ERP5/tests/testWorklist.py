@@ -31,10 +31,6 @@ import unittest
 
 import transaction
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from AccessControl.SecurityManagement import newSecurityManager
-from Products.ERP5Type.tests.Sequence import SequenceList
-from zExceptions import BadRequest
-from Products.ERP5Type.Tool.ClassTool import _aq_reset
 from Testing.ZopeTestCase.PortalTestCase import PortalTestCase
 
 class TestWorklist(ERP5TypeTestCase):

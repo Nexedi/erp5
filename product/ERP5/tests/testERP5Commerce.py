@@ -34,8 +34,6 @@ import urllib
 from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import FileUpload
-from Testing import ZopeTestCase
-from zLOG import LOG
 
 SESSION_ID = "12345678"
 LANGUAGE_LIST = ('en', 'fr', 'de', 'bg',)

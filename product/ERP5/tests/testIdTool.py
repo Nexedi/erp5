@@ -30,10 +30,6 @@ import unittest
 import transaction
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from DateTime import DateTime
-from AccessControl.SecurityManagement import newSecurityManager
-from zLOG import LOG
-from Products.ZSQLCatalog.SQLCatalog import Query
 
 class TestIdTool(ERP5TypeTestCase):
 

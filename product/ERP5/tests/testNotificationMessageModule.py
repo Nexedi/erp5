@@ -34,9 +34,7 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from AccessControl.SecurityManagement import newSecurityManager
 from AccessControl.SecurityManagement import getSecurityManager
 from zLOG import LOG
-from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.ERP5Type.tests.utils import DummyMailHost
-from DateTime import DateTime
 
 class TestNotificationMessageModule(ERP5TypeTestCase):
   """

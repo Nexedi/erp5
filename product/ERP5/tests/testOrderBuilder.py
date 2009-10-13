@@ -32,9 +32,7 @@ import unittest
 import transaction
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from DateTime import DateTime
-from zLOG import LOG
 from Products.ERP5Type.tests.Sequence import SequenceList
-from Products.CMFCore.utils import getToolByName
 
 from Products.ERP5.tests.testOrder import TestOrderMixin
 

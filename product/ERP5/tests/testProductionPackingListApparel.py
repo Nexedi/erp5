@@ -30,14 +30,11 @@
 import unittest
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from zLOG import LOG
-from Products.ERP5Type.tests.Sequence import SequenceList
-from Products.CMFCore.utils import getToolByName
 from testProductionOrderApparel import TestProductionOrderApparelMixin
 from testProductionPackingList import TestProductionDelivery
 
-class TestProductionDeliveryApparel(TestProductionOrderApparelMixin,TestProductionDelivery,
-    ERP5TypeTestCase):
+class TestProductionDeliveryApparel(TestProductionOrderApparelMixin,
+    TestProductionDelivery, ERP5TypeTestCase):
   pass # everything defined in testProductionPackingList shall pass
 
 def test_suite():

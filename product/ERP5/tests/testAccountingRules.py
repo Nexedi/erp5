@@ -41,13 +41,12 @@ way it is used in the invoice related simulation.
 #
 
 import unittest
-import os
 import random
 
 import transaction
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from Products.ERP5Type.tests.Sequence import Sequence, SequenceList
+from Products.ERP5Type.tests.Sequence import SequenceList
 
 from Testing import ZopeTestCase
 from AccessControl.SecurityManagement import newSecurityManager

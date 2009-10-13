@@ -26,19 +26,13 @@
 #
 ##############################################################################
 
-import os
-import re
 import unittest
-import random
 
 import transaction
 from AccessControl import Unauthorized
 from AccessControl.SecurityManagement import newSecurityManager
-from AccessControl.SecurityManagement import getSecurityManager
 from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from Products.ERP5Type.tests.utils import DummyLocalizer
-from Products.ERP5Type.tests.utils import createZODBPythonScript
 
 LANGUAGE_LIST = ('en', 'fr', 'de', 'bg',)
 

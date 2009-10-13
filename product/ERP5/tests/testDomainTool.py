@@ -30,9 +30,9 @@ import unittest
 
 import transaction
 
-from Products.ERP5.tests.testPredicate import TestPredicateMixIn, REGION_FRANCE_PATH, REGION_GERMANY_PATH, GROUP_STOREVER_PATH, GROUP_OTHER_PATH
+from Products.ERP5.tests.testPredicate import TestPredicateMixIn, \
+    REGION_FRANCE_PATH, REGION_GERMANY_PATH, GROUP_STOREVER_PATH
 from DateTime import DateTime
-from AccessControl.SecurityManagement import newSecurityManager
 from zLOG import LOG
 from Products.ZSQLCatalog.SQLCatalog import Query
 

@@ -31,8 +31,6 @@ import transaction
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import createZODBPythonScript
-from zLOG import LOG
-from Products.ERP5Type.tests.Sequence import SequenceList
 from testOrder import TestOrderMixin
 
 class TestRuleMixin(TestOrderMixin):

@@ -31,7 +31,6 @@
 # Skeleton ZopeTestCase
 #
 
-from random import randint
 
 import transaction
 import os, sys
@@ -42,19 +41,9 @@ if __name__ == '__main__':
 os.environ['EVENT_LOG_FILE'] = os.path.join(os.getcwd(), 'zLOG.log')
 os.environ['EVENT_LOG_SEVERITY'] = '-300'
 
-from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from AccessControl.SecurityManagement import newSecurityManager, \
-                                             noSecurityManager
-from DateTime import DateTime
-from Acquisition import aq_base, aq_inner
 from zLOG import LOG
-from Products.ERP5Type.DateUtils import addToDate
-from Products.ERP5Type.tests.Sequence import Sequence, SequenceList
-import time
-import os
-from Products.ERP5Type import product_path
-from Products.CMFCore.utils import getToolByName
+from Products.ERP5Type.tests.Sequence import SequenceList
 from testOrder import TestOrderMixin
 
 class TestApparelTransformation(TestOrderMixin, ERP5TypeTestCase):

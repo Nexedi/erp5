@@ -34,7 +34,6 @@ from DateTime import DateTime
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.ERP5Type.tests.utils import DummyMailHost
-from AccessControl.SecurityManagement import newSecurityManager
 
 
 class TestBug(ERP5TypeTestCase):

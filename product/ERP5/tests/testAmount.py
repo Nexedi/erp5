@@ -30,9 +30,8 @@ import unittest
 import os
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from AccessControl.SecurityManagement import newSecurityManager, \
-                                             noSecurityManager
-from Products.ERP5Type.tests.Sequence import Sequence, SequenceList
+from AccessControl.SecurityManagement import newSecurityManager
+from Products.ERP5Type.tests.Sequence import SequenceList
 
 class TestAmount(ERP5TypeTestCase):
 
