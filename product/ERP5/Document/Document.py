@@ -495,7 +495,7 @@ class Document(PermanentURLMixIn, XMLObject, UrlMixIn, ConversionCacheMixin, Sna
 
   searchable_property_list = ('asText', 'title', 'description', 'id', 'reference',
                               'version', 'short_title',
-                              'subject', 'source_reference', 'source_project_title',)
+                              'subject', 'source_reference',)
 
   ### Content processing methods
   security.declareProtected(Permissions.View, 'index_html')
