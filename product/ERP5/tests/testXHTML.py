@@ -165,8 +165,8 @@ class TestXHTML(ERP5TypeTestCase):
     portal_types_module = self.portal.portal_types
     for portal_type in portal_types_module.contentValues(portal_type=\
         'Base Type'):
-      if portial_type.getTitle().endswith('Module') or
-          portial_type.getTitle().endswith('Tool'):
+      if portial_type.getId().endswith('Module') or
+          portial_type.getId().endswith('Tool'):
         for k, v in portal_type.getPropertyTranslationDomainDict().items():
           if v.getDomainName() != 'erp5_ui':
             error_list.append('"%s" should use erp5_ui' % \
