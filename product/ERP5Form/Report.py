@@ -195,29 +195,52 @@ class ReportSection:
   def __init__(self, path='',
                      form_id='',
                      method_id=None,
-                     title=None, 
-                     translated_title=None, 
+                     title=None,
+                     translated_title=None,
                      level=1,
                      param_list=None,
                      param_dict=None,
-                     selection_name=None, 
+                     selection_name=None,
                      selection_params=None,
-                     listbox_display_mode=None, 
+                     listbox_display_mode=None,
                      selection_columns=None,
                      selection_stats=None,
                      selection_sort_order=None,
                      selection_report_path=None,
                      selection_report_list=None,
                      temporary_selection=True):
-    """
-      Initialize the line and set the default values
-      Selected columns must be defined in parameter of listbox.render...
+    """A report section contains instructions to render a section of a report.
+      Typically it will render a given form on a given context with specified
+      selection parameter or different listbox configuration.
+      Some report section simply define a title.
 
-      In ReportTree listbox display mode, you can override :
-        selection_report_path, the root category for this report 
-        selection_report_list, the list of unfolded categories (defaults to all)      
+      The following parameters can be provided:
 
-      If temporary_selection is False, the selection will be written which is specified by selection_name.
+        * path: The path to the document used as a context of this section.
+        * form_id: The ID of the ERP5 Form for this section.
+        * method_id: The ID of a method that will return a temp document to use
+            as a context for this section.
+        * title: The title of the section, displayed in the report and in the
+            outline if the report style supports it.
+        * translated_title: deprecated. Simply pass a Message to title instead.
+        * level: The heading level of the title. 1 correspond to a top level
+            title, 9 to a small title.
+        * param_list: ?
+        * param_dict ?
+        * selection_name: The name of the selection used in the report section.
+        * selection_params: A dictionary of selection parameters which will be
+            used during the rendering of the report section.
+        * selection_columns: A list of tuples (column_name, column_title) that
+            will be used in the listbox contained in this report section.
+        * listbox_display_mode: The mode used to display the listbox, using
+            the same values as SelectionTool.setListboxDisplayMode.
+        * selection_stats: ?
+        * selection_sort_order: ?
+        * selection_report_path: The root category for this report section
+        * selection_report_list: The list of infolded categories (defaults to
+            all)
+        * temporary_selection: If set to False, the selection will be written
+             which is specified by selection_name.
     """
 
     self.path = path
