@@ -159,7 +159,7 @@ class TemplateTool (BaseTool):
       path = os.path.join(cfg.clienthome,
                           '%s' % (business_template.getTitle(),))
       path = pathname2url(path)
-      business_template.export(path=path, local=1)
+      business_template.export(path=path, local=True)
       if REQUEST is not None:
         psm = translateString('Saved in ${path} .',
                               mapping={'path':pathname2url(path)})
@@ -203,7 +203,7 @@ class TemplateTool (BaseTool):
       """
       business_template.build()
       export_string = self.manage_exportObject(id=business_template.getId(),
-                                               download=1)
+                                               download=True)
       bt = Resource(url, username=username, password=password)
       bt.put(file=export_string,
              content_type='application/x-erp5-business-template')
@@ -325,7 +325,7 @@ class TemplateTool (BaseTool):
         prop_dict.pop('id', '')
         bt.edit(**prop_dict)
         # import all others objects
-        bt.importFile(dir=1, file=file_list, root_path=path)
+        bt.importFile(dir=True, file=file_list, root_path=path)
         return bt
       else:
         # this should be a file
@@ -381,11 +381,11 @@ class TemplateTool (BaseTool):
       else:
         bt = self._download_local(name, id)
 
-      bt.build(no_action=1)
+      bt.build(no_action=True)
       return bt
 
     def importBase64EncodedText(self, file_data=None, id=None, REQUEST=None, 
-                                batch_mode=0, **kw):
+                                batch_mode=False, **kw):
       """ 
         Import Business Template from passed base64 encoded text.
       """
@@ -394,7 +394,7 @@ class TemplateTool (BaseTool):
                              batch_mode = batch_mode, **kw)
 
     def importFile(self, import_file=None, id=None, REQUEST=None, 
-                   batch_mode=0, **kw):
+                   batch_mode=False, **kw):
       """
         Import Business Template from one file
       """
@@ -425,7 +425,7 @@ class TemplateTool (BaseTool):
         bt = self._importBT(temppath, id)
       finally:
         os.remove(temppath)
-      bt.build(no_action=1)
+      bt.build(no_action=True)
       bt.reindexObject()
 
       if (batch_mode == 0) and \
@@ -767,7 +767,7 @@ class TemplateTool (BaseTool):
     
     security.declareProtected( Permissions.AccessContentsInformation,
                                'getRepositoryBusinessTemplateList' )
-    def getRepositoryBusinessTemplateList(self, update_only=0, **kw):
+    def getRepositoryBusinessTemplateList(self, update_only=False, **kw):
       """Get the list of Business Templates in repositories.
       """
       version_state_title_dict = { 'new' : 'New', 'present' : 'Present',
@@ -859,7 +859,7 @@ class TemplateTool (BaseTool):
       """Get the list of updated Business Templates in repositories.
       """
       #LOG('getUpdatedRepositoryBusinessTemplateList', 0, 'kw = %r' % (kw,))
-      return self.getRepositoryBusinessTemplateList(update_only=1, **kw)
+      return self.getRepositoryBusinessTemplateList(update_only=True, **kw)
       
     def compareVersions(self, version1, version2):
       """
