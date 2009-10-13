@@ -1660,6 +1660,9 @@ class ERP5Generator(PortalGenerator):
           # are no longer action providers
           return
       except ImportError:
+        # Currently ERP5 tests don't load ZCML which is needed by the above
+        # import on CMF 1.5. This "try" should be removed when ERP5 tests
+        # start loading ZCML. 
         pass
       action_id_list = [i.id for i in tool.listActions()]
       remove_index_list = []
@@ -1701,7 +1704,9 @@ class ERP5Generator(PortalGenerator):
     try:
       from Products.CMFCore.DirectoryView import _generateKey
     except ImportError:
-      # Still on CMF 1.x
+      # Means we're still on CMF 1.x, were they generate the DirectoryView
+      # key using minimalpath
+      # ( see Products.CMFCore.DirectoryView.addDirectoryViews() )
       from Products.CMFCore.DirectoryView import minimalpath
       def _generateKey(package, subdir):
         package_path = os.path.dirname(package.__file__)
