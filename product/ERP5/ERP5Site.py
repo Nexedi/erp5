@@ -1703,12 +1703,14 @@ class ERP5Generator(PortalGenerator):
     from Products.CMFCore.DirectoryView import createDirectoryView
     try:
       from Products.CMFCore.DirectoryView import _generateKey
+      def generateKey(package, subdir):
+        return _generateKey(package.__name__, subdir)
     except ImportError:
       # Means we're still on CMF 1.x, were they generate the DirectoryView
       # key using minimalpath
       # ( see Products.CMFCore.DirectoryView.addDirectoryViews() )
       from Products.CMFCore.DirectoryView import minimalpath
-      def _generateKey(package, subdir):
+      def generateKey(package, subdir):
         package_path = os.path.dirname(package.__file__)
         return minimalpath(os.path.join(package_path, subdir))
     import Products.CMFDefault
@@ -1716,8 +1718,8 @@ class ERP5Generator(PortalGenerator):
     ps = getToolByName(p, 'portal_skins')
     # get the layer directories actually present
     for cmfdefault_skin_layer in self.CMFDEFAULT_FOLDER_LIST:
-      reg_key = _generateKey(Products.CMFDefault,
-                             'skins/' + cmfdefault_skin_layer)
+      reg_key = generateKey(Products.CMFDefault,
+                            'skins/' + cmfdefault_skin_layer)
       createDirectoryView(ps, reg_key)
 
   def setupDefaultSkins(self, p):
