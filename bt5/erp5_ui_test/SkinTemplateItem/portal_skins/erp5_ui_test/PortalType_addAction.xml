@@ -55,7 +55,7 @@
             <key> <string>_body</string> </key>
             <value> <string>"""Add or replace an action on a type informations from types tool.\n
 """\n
-assert context.meta_type == \'ERP5 Type Information\'\n
+assert context.meta_type in (\'ERP5 Type Information\', \'ERP5 Base Type\'), context.meta_type\n
 \n
 context.PortalType_deleteAction(id=id)\n
 \n
@@ -66,6 +66,7 @@ context.addAction( id         = id\n
                  , permission = permission\n
                  , category   = category\n
                  , icon       = icon\n
+                 , priority   = 10.0\n
                  )\n
 \n
 return \'Set Successfully.\'\n
