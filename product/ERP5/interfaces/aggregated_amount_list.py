@@ -29,13 +29,7 @@
 ##############################################################################
 
 from zope.interface import Interface
-
-try:
-  from zope.interface.common.sequence import ISequence
-except ImportError:
-  # ISequence does not exists in old zope.interface versions
-  class ISequence(Interface):
-    pass
+from zope.schema.interfaces import ISequence
 
 class IAggregatedAmountList(ISequence):
   """An Aggregated Amount List is a list of amounts aggregated together.
