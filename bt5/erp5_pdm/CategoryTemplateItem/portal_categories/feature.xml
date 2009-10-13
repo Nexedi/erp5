@@ -68,7 +68,9 @@
         <item>
             <key> <string>category_type</string> </key>
             <value>
-              <tuple/>
+              <tuple>
+                <string>variation</string>
+              </tuple>
             </value>
         </item>
         <item>
@@ -79,7 +81,9 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>fallback_base_category</string> </key>
@@ -161,9 +165,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>Feature</string> </value>
         </item>
         <item>
             <key> <string>write_permission</string> </key>
