@@ -118,11 +118,10 @@ class CacheTool(BaseTool):
     CachingMethod.factories = {}
     ## read configuration from ZODB
     for key, item in self.getCacheFactoryList().items():
-      if len(item['cache_plugins']):
-        ## init cache backend storages
-        for cp in item["cache_plugins"]:
-          cp.initCacheStorage()
-        CachingMethod.factories[key] = CacheFactory(item['cache_plugins'], item['cache_params'])    
+      ## init cache backend storages
+      for cp in item["cache_plugins"]:
+        cp.initCacheStorage()
+      CachingMethod.factories[key] = CacheFactory(item['cache_plugins'], item['cache_params'])    
     if REQUEST is not None:
       self.REQUEST.RESPONSE.redirect('cache_tool_configure?manage_tabs_message=Cache updated.')
 
