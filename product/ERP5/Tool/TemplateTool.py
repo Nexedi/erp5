@@ -428,13 +428,13 @@ class TemplateTool (BaseTool):
       bt.build(no_action=True)
       bt.reindexObject()
 
-      if (batch_mode == 0) and \
+      if not batch_mode and \
          (REQUEST is not None):
         ret_url = bt.absolute_url() + '/view'
         psm = translateString("Business templates imported successfully.")
         REQUEST.RESPONSE.redirect("%s?portal_status_message=%s"
                                   % (ret_url, psm))
-      elif (batch_mode == 1):
+      elif batch_mode:
         return bt
 
     security.declareProtected(Permissions.ManagePortal, 'runUnitTestList')
