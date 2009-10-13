@@ -71,7 +71,13 @@ Options:
 def getUnitTestFile():
   """returns the absolute path of this script.
   This is used by template tool to run unit tests."""
-  return os.path.abspath(__file__)
+  # ERP5_TEST_RUNNER is set when the instance was created by a buildout
+  # It should point to a wrapper to this script setting up the necessary paths
+  test_runner = os.environ.get('ERP5_TEST_RUNNER')
+  if test_runner is not None and os.path.exists(test_runner):
+    return test_runner
+  else:
+    return os.path.abspath(__file__)
 
 
 def initializeInstanceHome(tests_framework_home,
