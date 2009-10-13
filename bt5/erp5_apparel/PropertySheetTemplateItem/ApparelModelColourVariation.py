@@ -40,21 +40,6 @@ class ApparelModelColourVariation:
             'description' : 'define the prototype variation',
             'type'        : 'boolean',
             'mode'        : 'w' },
-        # Override default value XXX
-        {   'id'          : 'variation_base_category',
-            'description' : 'A list of base categories which define possible discrete variations. '\
-                            'Variation ranges are stored as category membership. '\
-                            '(prev. variation_category_list).',
-            'type'        : 'tokens',
-            'default'     : ['colour' ],
-            'mode'        : 'r' },
-#        {   'id'          : 'variation_base_category',
-#            'description' : 'A list of base categories which define possible discrete variations. '\
-#                            'Variation ranges are stored as category membership. '\
-#                            '(prev. variation_category_list).',
-#            'type'        : 'lines',
-#            'default'     : ('colour', ),
-#            'mode'        : 'r' },
       )
 
 # Trash for better design

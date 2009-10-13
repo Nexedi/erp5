@@ -42,7 +42,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>A morphology variation from apparel model\n
+            <value> <string>A morphology variation from apparel model\r\n
 </string> </value>
         </item>
         <item>
@@ -67,7 +67,13 @@
         </item>
         <item>
             <key> <string>init_script</string> </key>
-            <value> <string></string> </value>
+            <value> <string>ApparelModelColourAndMorphologieVariation_init</string> </value>
+        </item>
+        <item>
+            <key> <string>permission</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>title</string> </key>

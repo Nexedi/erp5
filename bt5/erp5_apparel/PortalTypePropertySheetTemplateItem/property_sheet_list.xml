@@ -27,7 +27,6 @@
   <item>ApparelModelColourVariation</item>
  </portal_type>
  <portal_type id="Apparel Model Morphology Variation">
-  <item>ApparelModelMorphologyVariation</item>
   <item>TransformedResource</item>
  </portal_type>
  <portal_type id="System Preference">

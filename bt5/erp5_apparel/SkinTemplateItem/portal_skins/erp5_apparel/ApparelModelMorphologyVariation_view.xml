@@ -75,6 +75,7 @@
                     <value>
                       <list>
                         <string>my_title</string>
+                        <string>my_variation_base_category</string>
                       </list>
                     </value>
                 </item>
@@ -82,7 +83,6 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
-                        <string>my_apparel_morpho_type</string>
                         <string>my_apparel_cloth_title_list</string>
                       </list>
                     </value>
