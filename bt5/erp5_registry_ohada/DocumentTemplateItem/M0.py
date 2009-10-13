@@ -28,25 +28,8 @@
 ##############################################################################
 
 from AccessControl import ClassSecurityInfo
-from Products.CMFCore.utils import getToolByName
-
-#from Products.ERP5.Core.Node import Node
-
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
-from Products.ERP5Type.Utils import assertAttributePortalType
+from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLObject import XMLObject
-from Products.ERP5Type.Cache import clearCache
-
-try:
-  from Products import PluggableAuthService
-  from Products.ERP5Security.ERP5UserManager import ERP5UserManager
-except ImportError:
-  PluggableAuthService = None
-
-try :
-  from AccessControl.AuthEncoding import pw_encrypt
-except ImportError:
-  pw_encrypt = lambda pw:pw
 
 class M0(XMLObject):
     """
