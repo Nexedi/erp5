@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2004-2009 Nexedi SA and Contributors. All Rights Reserved.
@@ -422,6 +423,7 @@ class NotificationTool(BaseTool):
     """
     return self.getPortalEventTypeList()
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'getDocumentValue')
   def getDocumentValue(self, **kw):
     """
       Returns the last version of a Notification Document in selected Language.
