@@ -377,14 +377,6 @@
                           <string>Lenght Quantity</string>
                         </tuple>
                         <tuple>
-                          <string>composition_title</string>
-                          <string>Composition</string>
-                        </tuple>
-                        <tuple>
-                          <string>collection_title_list</string>
-                          <string>Collection</string>
-                        </tuple>
-                        <tuple>
                           <string>colour_count</string>
                           <string>Colour Count</string>
                         </tuple>

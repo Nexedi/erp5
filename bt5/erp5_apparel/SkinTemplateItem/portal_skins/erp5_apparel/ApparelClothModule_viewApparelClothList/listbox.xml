@@ -349,10 +349,6 @@
                           <string>CAD Library</string>
                         </tuple>
                         <tuple>
-                          <string>apparel_shape_title_list</string>
-                          <string>Apparel Shape</string>
-                        </tuple>
-                        <tuple>
                           <string>base_size</string>
                           <string>Base Size</string>
                         </tuple>
