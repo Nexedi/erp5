@@ -1686,12 +1686,40 @@ class ERP5Generator(PortalGenerator):
     """
     pass
 
+  # this lists only the skin layers of Products.CMFDefault we are actually
+  # interested in.
+  CMFDEFAULT_FOLDER_LIST = [ 'zpt_content'
+                           , 'zpt_generic'
+                           , 'zpt_control'
+                           , 'Images'
+                           ]
+  def addCMFDefaultDirectoryViews(self, p):
+    """Semi-manually create DirectoryViews since CMFDefault 2.X no longer
+    registers the "skins" directory, only its subdirectories, making it
+    unusable with Products.CMFCore.DirectoryView.addDirectoryViews."""
+    from Products.CMFCore.DirectoryView import createDirectoryView
+    try:
+      from Products.CMFCore.DirectoryView import _generateKey
+    except ImportError:
+      # Still on CMF 1.x
+      from Products.CMFCore.DirectoryView import minimalpath
+      def _generateKey(package, subdir):
+        package_path = os.path.dirname(package.__file__)
+        return minimalpath(os.path.join(package_path, subdir))
+    import Products.CMFDefault
+
+    ps = getToolByName(p, 'portal_skins')
+    # get the layer directories actually present
+    for cmfdefault_skin_layer in self.CMFDEFAULT_FOLDER_LIST:
+      reg_key = _generateKey(Products.CMFDefault,
+                             'skins/' + cmfdefault_skin_layer)
+      createDirectoryView(ps, reg_key)
+
   def setupDefaultSkins(self, p):
     from Products.CMFCore.DirectoryView import addDirectoryViews
-    from Products.CMFDefault  import cmfdefault_globals
     from Products.CMFActivity import cmfactivity_globals
     ps = getToolByName(p, 'portal_skins')
-    addDirectoryViews(ps, 'skins', cmfdefault_globals)
+    self.addCMFDefaultDirectoryViews(p)
     addDirectoryViews(ps, 'skins', cmfactivity_globals)
     ps.manage_addProduct['OFSP'].manage_addFolder(id='external_method')
     ps.manage_addProduct['OFSP'].manage_addFolder(id='custom')
@@ -1701,14 +1729,7 @@ class ERP5Generator(PortalGenerator):
     skin_folder_list = [ 'custom'
                        , 'external_method'
                        , 'activity'
-                       , 'zpt_content'
-                       , 'zpt_generic'
-                       , 'zpt_control'
-                       , 'content'
-                       , 'generic'
-                       , 'control'
-                       , 'Images'
-                       ]
+                       ] + self.CMFDEFAULT_FOLDER_LIST
     skin_folders = ', '.join(skin_folder_list)
     ps.addSkinSelection( 'View'
                        , skin_folders
