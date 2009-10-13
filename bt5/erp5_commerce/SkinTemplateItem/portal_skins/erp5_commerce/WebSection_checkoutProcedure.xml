@@ -60,7 +60,8 @@ if step is None:\n
 \n
 if context.request.get(\'plop\', None) is not None:\n
   context.REQUEST.set(\'step\', 2)\n
-  return context.getWebSectionValue().restrictedTraverse(\'person_module/1\').Person_viewAsWeb(context.REQUEST)\n
+  person_object = context.getWebSiteValue().SaleOrder_getShoppingCartCustomer()\n
+  return context.getWebSectionValue().restrictedTraverse(person_object.getRelativeUrl()).Person_viewAsWeb(context.REQUEST)\n
 </string> </value>
         </item>
         <item>
@@ -101,6 +102,7 @@ if context.request.get(\'plop\', None) is not None:\n
                             <string>context</string>
                             <string>None</string>
                             <string>step</string>
+                            <string>person_object</string>
                           </tuple>
                         </value>
                     </item>

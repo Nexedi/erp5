@@ -78,7 +78,7 @@
     <span><span tal:replace="python: here.Base_translateString(\'You are logged as\')"/>  <span tal:replace="customer/getTitle"/></span>\n
     </p>\n
     <a class="articlelink" \n
-      tal:attributes="href python: \'%s/SaleOrderModule_viewAsWebSaleOrderList\' % website.sale_order_module.absolute_url()">\n
+      tal:attributes="href python: \'%s/sale_order_module/SaleOrderModule_viewAsWebSaleOrderList\' % website.absolute_url()">\n
       <span tal:replace="python: here.Base_translateString(\'My Orders\')"/>\n
     </a> &nbsp;\n
     <a class="articlelink" \n
