@@ -159,7 +159,8 @@ class LocalRoleAssignorMixIn(object):
       """Return all Role Information objects stored on this portal type"""
       return self.objectValues(meta_type='ERP5 Role Information')
 
-    security.declareProtected(Permissions.View, 'updateRoleMapping')
+    security.declareProtected(Permissions.ModifyPortalContent,
+                              'updateRoleMapping')
     def updateRoleMapping(self, REQUEST=None, form_id=''):
       """Update the local roles in existing objects.
          XXX This should be implemented the same way as
