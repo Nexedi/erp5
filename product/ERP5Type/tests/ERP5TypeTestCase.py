@@ -212,8 +212,11 @@ class ERP5TypeTestCase(PortalTestCase):
     """
 
     def shortDescription(self):
-        doc = self._TestCase__testMethodDoc
-        return doc and str(self) + ', ' + doc.split("\n")[0].strip() or None
+      description = str(self)
+      doc = self._TestCase__testMethodDoc
+      if doc and doc.split("\n")[0].strip():
+        description += ', ' + doc.split("\n")[0].strip()
+      return description
 
     def dummy_test(self):
       ZopeTestCase._print('All tests are skipped when --save option is passed '
