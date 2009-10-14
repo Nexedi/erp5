@@ -170,7 +170,7 @@ class Resource(XMLMatrix, Variated):
             => [(display, value)]
 
         *old parameters: base=1, current_category=None, 
-                         display_id='getTitle' (default value getTitleOrId)
+                         display_id='title' (default value title)
       """
       base_category_list = base_category_list or \
           self.getVariationBaseCategoryList()
