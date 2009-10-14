@@ -392,7 +392,12 @@ class ERP5TypeInformation(XMLObject,
           # workflow and it is annoyning without security setted
           ob.portal_type = self.getId()
 
-        self.updateLocalRolesOnDocument(ob)
+        # Here we don't use "if len(self.getFilteredRoleListFor(ob))"
+        # but use "for role in self.getFilteredRoleListFor(ob)" because
+        # getFilteredRoleListFor returns a generator.
+        for role in self.getFilteredRoleListFor(ob):
+          self.updateLocalRolesOnDocument(ob)
+          break
 
         # notify workflow after generating local roles, in order to prevent
         # Unauthorized error on transition's condition
