@@ -165,3 +165,12 @@ class ActionInformation(XMLObject):
                           self.getActionText(),
                           self.getConditionText()]
     return ' '.join(filter(None, search_source_list))
+
+  security.declareProtected(AccessContentsInformation, 'getActionType')
+  def getActionType(self):
+    # Since we should have only one category that starts with
+    # 'action_type/' here, we call self.categories[0][12:] (12 is the
+    # length of 'action_type/'), instead of self.getActionType() for
+    # better performance.
+    categories = getattr(self, 'categories', [])
+    return len(categories) and categories[0][12:] or None
