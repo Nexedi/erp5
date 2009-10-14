@@ -799,8 +799,8 @@ class TestPropertySheet:
       person = module.newContent(portal_type='Person')
 
       # Do the same tests as in test_11_valueAccessor 
-      person.setSubject('beta')
-      self.assertEquals(person.getSubject(), 'beta')
+      person.setSubject('beta gamma')
+      self.assertEquals(person.getSubject(), 'beta gamma')
       person.setSubjectList(['alpha', 'alpha'])
       self.assertEquals(person.getSubjectList(), ['alpha', 'alpha'])
       self.assertEquals(person.getSubjectSet(), ['alpha'])
