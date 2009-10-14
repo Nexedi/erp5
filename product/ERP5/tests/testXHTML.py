@@ -171,11 +171,6 @@ class TestXHTML(ERP5TypeTestCase):
           if v.getDomainName() != 'erp5_ui':
             error_list.append('"%s" should use erp5_ui' % \
                 portal_type.getId())
-      else:
-        for k, v in portal_type.getPropertyTranslationDomainDict().items():
-          if v.getDomainName() != 'erp5_content':
-            error_list.append('"%s" should use erp5_content' % \
-                portal_type.getId())
     if error_list:
       message = '\nBad portal_type domain translation list\n'
       for error in error_list:
