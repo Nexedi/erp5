@@ -24,7 +24,7 @@ import zope.interface
 from Products.ERP5Type.Globals import InitializeClass
 from AccessControl import ClassSecurityInfo, getSecurityManager
 from Acquisition import aq_base, aq_inner, aq_parent
-
+import Products
 from Products.CMFCore.TypesTool import FactoryTypeInformation
 from Products.CMFCore.Expression import Expression
 from Products.CMFCore.exceptions import AccessControl_Unauthorized
