@@ -1292,23 +1292,6 @@ class PortalGenerator:
         mp(UndoChanges,               ['Owner','Manager',],    1)
         mp(ViewManagementScreens,     ['Owner','Manager',],    1)
 
-    def setupDefaultSkins(self, p):
-        from Products.CMFCore.DirectoryView import addDirectoryViews
-        from Products.CMFTopic import topic_globals
-        ps = getToolByName(p, 'portal_skins')
-        addDirectoryViews(ps, 'skins', globals())
-        addDirectoryViews(ps, 'skins', topic_globals)
-        ps.manage_addProduct['OFSP'].manage_addFolder(id='custom')
-        ps.addSkinSelection('Basic',
-            'custom, zpt_topic, zpt_content, zpt_generic,'
-            + 'zpt_control, Images',
-            make_default=1)
-        ps.addSkinSelection('Nouvelle',
-            'nouvelle, custom, topic, content, generic, control, Images')
-        ps.addSkinSelection('No CSS',
-            'no_css, custom, topic, content, generic, control, Images')
-        p.setupCurrentSkin()
-
     def setupTypes(self, p, initial_types=factory_type_information):
         tool = getToolByName(p, 'portal_types', None)
         if tool is None:
