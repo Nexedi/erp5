@@ -108,5 +108,12 @@ class Preference:
                            'title', 'reference', 'language',],
       'preference'      : 1,
       'mode'            : 'w'},
+    { 'id'              : 'preferred_hide_rows_on_no_search_criterion',
+      'description'     : 'If enabled will not show any records if search criteria for a listbox is missing',
+      'type'            : 'boolean',
+      'default'         :  False,
+      'preference'      : 1,
+      'write_permission': 'Manage properties',
+      'mode'            : 'w'},
   )
 
