@@ -86,7 +86,7 @@ return search_context.Base_redirect(field_your_search_form_id, keep_items=kw)\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>field_your_search_text=\'\', field_your_search_portal_type=\'\', all_languages=False, list_style=None, field_your_search_form_id=\'ERP5Site_viewSearchResult\'</string> </value>
+            <value> <string>field_your_search_text=\'\', field_your_search_portal_type=\'\', all_languages=None, list_style=None, field_your_search_form_id=\'ERP5Site_viewSearchResult\'</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -140,7 +140,7 @@ return search_context.Base_redirect(field_your_search_form_id, keep_items=kw)\n
               <tuple>
                 <string></string>
                 <string></string>
-                <int>0</int>
+                <none/>
                 <none/>
                 <string>ERP5Site_viewSearchResult</string>
               </tuple>
