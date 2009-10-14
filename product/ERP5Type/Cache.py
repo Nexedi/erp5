@@ -69,7 +69,7 @@ class CacheFactory:
     ## separete local and shared cache plugins
     self.quick_cache = self.cache_plugins[0]
     try:
-      self.shared_caches =self.cache_plugins[1:]
+      self.shared_caches = self.cache_plugins[1:]
     except IndexError:
       self.shared_caches = []
 
@@ -79,7 +79,7 @@ class CacheFactory:
     self._last_cache_expire_check_at = time()
     for cp in self.cache_plugins:
       l.append(cp.cache_expire_check_interval)
-    l = filter(lambda x: x!=None and x!=0, l)
+    l = filter(lambda x: x is not None and x != 0, l)
     self.cache_expire_check_interval = min(l)
 
   def __call__(self, callable_object, cache_id, scope, cache_duration=None, *args, **kwd):
