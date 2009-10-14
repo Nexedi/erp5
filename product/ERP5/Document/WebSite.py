@@ -122,6 +122,15 @@ class WebSiteTraversalHook(Persistent):
     if default_language and container.isStaticLanguageSelection():
       if request.get('AcceptLanguage') is not None:
         request['AcceptLanguage'].set(default_language, 80)
+    else:
+      accept_language = request.get('AcceptLanguage')
+      if accept_language is not None:
+        selected_language = accept_language.select_language(
+            container.getAvailableLanguageList())
+        if selected_language:
+          request['AcceptLanguage'].set(selected_language, 80)
+        elif default_language:
+          request['AcceptLanguage'].set(default_language, 80)
 
 class WebSite(WebSection):
     """
