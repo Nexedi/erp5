@@ -53,7 +53,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>return \',\'.join([q[0] for q in context.getVariationCategoryItemList(display_id=\'getTranslatedTitle\')])\n
+            <value> <string>return \',\'.join([q[0] for q in context.getVariationCategoryItemList(display_id=\'translated_title\', display_base_category=True)])\n
 </string> </value>
         </item>
         <item>
@@ -97,6 +97,7 @@
                             <string>$append0</string>
                             <string>_getiter_</string>
                             <string>context</string>
+                            <string>True</string>
                             <string>q</string>
                             <string>_getitem_</string>
                           </tuple>

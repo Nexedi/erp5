@@ -81,7 +81,14 @@
                 <item>
                     <key> <string>hidden</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>listbox_resource_default_quantity_unit</string>
+                        <string>listbox_quantity</string>
+                        <string>listbox_converted_quantity</string>
+                        <string>listbox_efficiency</string>
+                        <string>listbox_getResourcePrice</string>
+                        <string>listbox_getTotalPrice</string>
+                      </list>
                     </value>
                 </item>
                 <item>
