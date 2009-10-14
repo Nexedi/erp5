@@ -1,3 +1,6 @@
+2009-10-15 Ivan
+* Add system preference for enabling hiding listbox rows if no search criterion is present.
+
 2009-10-05 Kazuhiko
 * disable cache in portal_transforms
 
