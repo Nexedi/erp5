@@ -497,15 +497,16 @@ class ERP5TypeInformation(XMLObject,
       """
       ec = createExpressionContext(ob)
       best_action = (), None
-      for action in self.getFilteredActionListFor(ob):
+      for action in self.getActionListFor(ob):
         if action.getReference() == view:
-          break
+          if action.test(ec):
+            break
         else:
           # In case that "view" (or "list") action is not present or not allowed,
           # find something that's allowed (of the same category, if possible).
           index = (action.getActionType().endswith('_' + view),
                   -action.getFloatIndex())
-          if best_action[0] < index:
+          if best_action[0] < index and action.test(ec):
             best_action = index, action
       else:
         action = best_action[1]
@@ -518,6 +519,11 @@ class ERP5TypeInformation(XMLObject,
           target = target[1:]
       __traceback_info__ = self.getId(), target
       return ob.restrictedTraverse(target)
+
+    security.declarePrivate('getActionListFor')
+    def getActionListFor(self, ob=None):
+      """Return all actions of the object"""
+      return self.getActionInformationList()
 
     security.declarePrivate('getFilteredActionListFor')
     def getFilteredActionListFor(self, ob=None):

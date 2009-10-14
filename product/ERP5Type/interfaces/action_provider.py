@@ -53,6 +53,9 @@ class IAction(Interface):
 class IActionProvider(Interface):
   """
   """
+  def getActionListFor(ob):
+    """Return all actions of the object"""
+
   def getFilteredActionListFor(ob):
     """Return all actions applicable to the object
     """
