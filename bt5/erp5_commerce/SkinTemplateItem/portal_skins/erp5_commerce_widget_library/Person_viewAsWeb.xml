@@ -102,6 +102,8 @@
                         <string>my_gender</string>
                         <string>my_nationality</string>
                         <string>my_translated_validation_state_title</string>
+                        <string>my_default_address_city</string>
+                        <string>my_default_address_region</string>
                       </list>
                     </value>
                 </item>
@@ -114,8 +116,6 @@
                         <string>my_default_fax_text</string>
                         <string>my_default_address_street_address</string>
                         <string>my_default_address_zip_code</string>
-                        <string>my_default_address_city</string>
-                        <string>my_default_address_region</string>
                       </list>
                     </value>
                 </item>
