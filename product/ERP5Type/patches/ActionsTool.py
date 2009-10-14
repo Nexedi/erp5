@@ -15,11 +15,11 @@
 from Products.CMFCore.ActionsTool import ActionsTool
 try:
   from Products.CMFCore.interfaces import IActionProvider
-  providedBy = IActionProvider.providedBy
+  IActionProvider_providedBy = IActionProvider.providedBy
 except ImportError:
   # XXX Do not initialize ZCML in unit tests on Zope 2.8 for the moment
   from Products.CMFCore.ActionsTool import IActionProvider
-  providedBy = IActionProvider.isImplementedBy
+  IActionProvider_providedBy = IActionProvider.isImplementedBy
 
 ActionsTool_listFilteredActionsFor = ActionsTool.listFilteredActionsFor
 
@@ -34,7 +34,7 @@ def listFilteredActionsFor(self, object=None):
     # Include actions from specific tools.
     for provider_name in self.listActionProviders():
         provider = getattr(self, provider_name)
-        if providedBy(provider):
+        if IActionProvider_providedBy(provider):
             actions.extend( provider.listActionInfos(object=object) )
         elif hasattr(provider, 'getActionListFor'):
             from Products.ERP5Type.Utils import createExpressionContext
