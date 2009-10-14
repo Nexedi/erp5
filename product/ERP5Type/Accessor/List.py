@@ -99,19 +99,7 @@ class ListSetter(DefaultSetter):
           value = map(self._item_cast, value)
         setattr(instance, self._storage_id, tuple(value))
 
-class Setter(DefaultSetter):
-
-    def __call__(self, instance, *args, **kw):
-      value = args[0]
-      # Modify the property
-      if value in self._null:
-        setattr(instance, self._storage_id, ())
-      elif self._is_tales_type:
-        setattr(instance, self._storage_id, str(value))
-      else:
-        if self._item_cast is not identity:
-          value = self._item_cast(value)
-        setattr(instance, self._storage_id, (value,))
+Setter = ListSetter
 
 class SetSetter(Base.Setter):
     """
