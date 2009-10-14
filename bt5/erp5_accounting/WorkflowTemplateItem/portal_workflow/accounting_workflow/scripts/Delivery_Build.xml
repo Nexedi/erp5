@@ -123,7 +123,8 @@ if builder_by_ptype.has_key(delivery_portal_type) :\n
   tag = \'invoice_transaction_build_%s\' % delivery.getRelativeUrl()\n
   builder.activate(\n
       activity=\'SQLQueue\',\n
-      after_method_id=method_id_list,\n
+      after_path_and_method_id=(delivery.getPath(), method_id_list),\n
+      after_tag=delivery.getPath() + \'_updateAppliedRule\',\n
       tag=tag,\n
       activate_kw=dict(tag=tag)).build(activate_kw=dict(tag=tag),\n
                                        explanation_uid=explanation_uid_list)\n
