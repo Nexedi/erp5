@@ -10,18 +10,6 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_actions</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>_aliases</string> </key>
-            <value>
-              <dictionary/>
-            </value>
-        </item>
-        <item>
             <key> <string>_property_domain_dict</string> </key>
             <value>
               <dictionary>
@@ -38,24 +26,6 @@
                     </value>
                 </item>
               </dictionary>
-            </value>
-        </item>
-        <item>
-            <key> <string>_roles</string> </key>
-            <value>
-              <list/>
-            </value>
-        </item>
-        <item>
-            <key> <string>allowed_content_types</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>base_category_list</string> </key>
-            <value>
-              <tuple/>
             </value>
         </item>
         <item>
@@ -111,20 +81,8 @@
             </value>
         </item>
         <item>
-            <key> <string>hidden_content_type_list</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>Notification Message Module</string> </value>
-        </item>
-        <item>
-            <key> <string>property_sheet_list</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>
@@ -140,7 +98,7 @@
       <dictionary>
         <item>
             <key> <string>domain_name</string> </key>
-            <value> <string>erp5_content</string> </value>
+            <value> <string>erp5_ui</string> </value>
         </item>
         <item>
             <key> <string>property_name</string> </key>
@@ -160,7 +118,7 @@
       <dictionary>
         <item>
             <key> <string>domain_name</string> </key>
-            <value> <string>erp5_content</string> </value>
+            <value> <string>erp5_ui</string> </value>
         </item>
         <item>
             <key> <string>property_name</string> </key>
