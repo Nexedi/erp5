@@ -499,14 +499,13 @@ class ERP5TypeInformation(XMLObject,
       best_action = (), None
       for action in self.getFilteredActionListFor(ob):
         if action.getReference() == view:
-          if action.test(ec):
-            break
+          break
         else:
           # In case that "view" (or "list") action is not present or not allowed,
           # find something that's allowed (of the same category, if possible).
           index = (action.getActionType().endswith('_' + view),
                   -action.getFloatIndex())
-          if best_action[0] < index and action.test(ec):
+          if best_action[0] < index:
             best_action = index, action
       else:
         action = best_action[1]
