@@ -153,9 +153,6 @@ class CachingMethod:
   ## cache factories will be initialized for every ERP5 site
   factories = {}
 
-  ## replace string table for some control characters not allowed in cache id
-  _cache_id_translate_table = string.maketrans("""[]()<>'", """,'__________')
-
   def __init__(self, callable_object, id, cache_duration=180,
                cache_factory=DEFAULT_CACHE_FACTORY):
     """Wrap a callable object in a caching method.
@@ -217,7 +214,7 @@ class CachingMethod:
     ## generate cache id out of arguments passed.
     ## depending on arguments we may have different
     ## cache_id for same method_id
-    return str((method_id, args, kwd)).translate(self._cache_id_translate_table)
+    return str((method_id, args, kwd))
 
 allow_class(CachingMethod)
 
