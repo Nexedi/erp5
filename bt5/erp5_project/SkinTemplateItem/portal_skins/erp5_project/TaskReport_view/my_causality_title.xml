@@ -13,10 +13,11 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>base_category</string>
-                <string>catalog_index</string>
-                <string>portal_type</string>
                 <string>title</string>
+                <string>base_category</string>
+                <string>portal_type</string>
+                <string>catalog_index</string>
+                <string>editable</string>
               </list>
             </value>
         </item>
@@ -84,6 +85,10 @@
                 <item>
                     <key> <string>catalog_index</string> </key>
                     <value> <string>title</string> </value>
+                </item>
+                <item>
+                    <key> <string>editable</string> </key>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
