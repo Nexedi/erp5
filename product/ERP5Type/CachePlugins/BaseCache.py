@@ -30,7 +30,7 @@
 """ 
 Base Cache plugin.
 """
-import time
+from time import time
 
 class CachedMethodError(Exception):
   pass
@@ -51,7 +51,7 @@ class CacheEntry(object):
     if cache_duration in (None, 0):
       self.expires_at = None
     else:
-      self.expires_at = time.time() + cache_duration
+      self.expires_at = time() + cache_duration
     self._cache_hit_count = 0
     self.calculation_time = calculation_time
 
@@ -60,7 +60,7 @@ class CacheEntry(object):
       - None means allways expire
       - 0 means never expire
     """
-    return self.expires_at is None or self.expires_at < time.time()
+    return self.expires_at is None or self.expires_at < time()
 
   def markCacheHit(self, delta=1):
     """ mark a read to this cache entry """
@@ -101,7 +101,7 @@ class BaseCache(object):
   cache_expire_check_interval = 60
 
   def __init__(self, params={}):
-    self._next_cache_expire_check_at = time.time()
+    self._next_cache_expire_check_at = time()
     self._cache_hit_count = 0
     self._cache_miss_count = 0
 
