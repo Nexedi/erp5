@@ -89,10 +89,10 @@ class CacheFactory:
     ## Expired Cache (if needed)
     self.expire()
 
-    if self.quick_cache.has_key(cache_id, scope):
+    try:
       quick_cached = self.quick_cache.get(cache_id, scope)
       return quick_cached.getValue()
-    else:
+    except KeyError:
       ## not in local, check if it's in shared
       for shared_cache in self.shared_caches:
         if shared_cache.has_key(cache_id, scope):

@@ -74,13 +74,18 @@ class RamCache(BaseCache):
   def get(self, cache_id, scope, default=_MARKER):
     cache = self.getCacheStorage()
     cache_entry = cache.get((scope, cache_id), default)
-    if cache_entry is _MARKER:
-      raise KeyError, 'CacheEntry for key %s not Found' % ((scope, cache_id),)
     if isinstance(cache_entry, CacheEntry):
-      #The value is well retrieved from cache storage
-      cache_entry.markCacheHit()
-      self.markCacheHit()
-    return cache_entry
+      if not cache_entry.isExpired():
+        #The value is well retrieved from cache storage
+        cache_entry.markCacheHit()
+        self.markCacheHit()
+        return cache_entry
+      else:
+        #Delete expired CacheEntry
+        self.delete(cache_id, scope)
+    if default is _MARKER:
+      raise KeyError, 'CacheEntry for key %s not Found' % ((scope, cache_id),)
+    return default
 
   def set(self, cache_id, scope, value, cache_duration=None, calculation_time=0):
     cache = self.getCacheStorage()
