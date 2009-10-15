@@ -96,12 +96,6 @@ class DocumentPreference:
       'write_permission': 'Manage properties',
       'preference'  : 1,
       'mode'        : '' },
-    { 'id'          : 'preferred_unit_test_sql_connection_string',
-      'description' : 'Preferred Unit Test SQL Connection String',
-      'type'        : 'string',
-      'write_permission': 'Manage properties',
-      'preference'  : 1,
-      'mode'        : '' },
     )
 
 # vim: shiftwidth=2

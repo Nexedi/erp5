@@ -115,5 +115,11 @@ class Preference:
       'preference'      : 1,
       'write_permission': 'Manage properties',
       'mode'            : 'w'},
+    { 'id'              : 'preferred_unit_test_sql_connection_string',
+      'description'     : 'Preferred Unit Test SQL Connection String',
+      'type'            : 'string',
+      'write_permission': 'Manage properties',
+      'preference'      : 1,
+      'mode'            : '' },
   )
 
