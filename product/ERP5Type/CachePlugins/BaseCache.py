@@ -69,7 +69,7 @@ class CacheEntry(object):
 
   def getValue(self):
     """ return cached value """ 
-    return getattr(self, 'value', None)
+    return self.value
 
   def __len__(self):
     """return value size
