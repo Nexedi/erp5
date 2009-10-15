@@ -117,7 +117,8 @@ class ActiveObject(ExtensionClass.Base):
       active_process = portal.unrestrictedTraverse(active_process)
 
     activity_tool = getattr(portal, 'portal_activities', None)
-    if activity_tool is None: return self # Do nothing if no portal_activities
+    if activity_tool is None:
+      return self # Do nothing if no portal_activities
     # activate returns an ActiveWrapper
     # a queue can be provided as well as extra parameters
     # which can be used for example to define deferred tasks
@@ -126,7 +127,8 @@ class ActiveObject(ExtensionClass.Base):
   security.declareProtected( permissions.ModifyPortalContent, 'flushActivity' )
   def flushActivity(self, invoke=0, **kw):
     activity_tool = getToolByName(self, 'portal_activities', None)
-    if activity_tool is None: return # Do nothing if no portal_activities
+    if activity_tool is None:
+      return # Do nothing if no portal_activities
     # flush all activities related to this object
     activity_tool.flush(self, invoke=invoke, **kw)
 
@@ -164,7 +166,8 @@ class ActiveObject(ExtensionClass.Base):
   security.declareProtected( permissions.View, 'getActiveProcess' )
   def getActiveProcess(self):
     activity_tool = getToolByName(self, 'portal_activities', None)
-    if activity_tool is None: return None # Do nothing if no portal_activities
+    if activity_tool is None:
+      return None # Do nothing if no portal_activities
     return activity_tool.getActiveProcess()
 
   security.declareProtected(permissions.ModifyPortalContent,
