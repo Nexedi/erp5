@@ -277,11 +277,11 @@ class ERP5TypeTestCase(PortalTestCase):
       """
       return 0
 
-    def login(self, quiet=0):
+    def login(self, user_name='ERP5TypeTestCase', quiet=0):
       """
       Most of the time, we need to login before doing anything
       """
-      PortalTestCase.login(self, 'ERP5TypeTestCase')
+      PortalTestCase.login(self, user_name)
 
     def _setupUser(self):
       '''Creates the default user.'''
