@@ -92,20 +92,18 @@ class DistributedRamCache(BaseCache):
     cache_storage = self.getCacheStorage()
     cache_id = self._getCacheId(cache_id, scope)
     cache_entry = cache_storage.get(cache_id)
-    #Simulate the behaviour of a standard Dictionary
-    if not isinstance(cache_entry, CacheEntry):
-      if default is _MARKER:
-        #Error to connect memcached server
-        raise KeyError('Failed to retrieve value or to access memcached server: %s' % self._servers)
+    if isinstance(cache_entry, CacheEntry):
+      # since some memcached-like products does not support expiration, we
+      # check it by ourselves.
+      if not cache_entry.isExpired():
+        self.markCacheHit()
+        return cache_entry
       else:
-        return default
-    # since some memcached-like products does not support expiration, we
-    # check it by ourselves.
-    if cache_entry.isExpired():
-      del cache_storage[cache_id]
-      return default
-    self.markCacheHit()
-    return cache_entry
+        del cache_storage[cache_id]
+    if default is _MARKER:
+      # Error to connect memcached server or cache is expired
+      raise KeyError('Failed to retrieve value or to access memcached server: %s or cache is expired.' % self._servers)
+    return default
 
   def set(self, cache_id, scope, value, cache_duration=None, calculation_time=0):
     cache_storage = self.getCacheStorage()
