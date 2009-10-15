@@ -157,7 +157,8 @@ class CachingMethod:
   factories = {}
 
   def __init__(self, callable_object, id, cache_duration=180,
-               cache_factory=DEFAULT_CACHE_FACTORY):
+               cache_factory=DEFAULT_CACHE_FACTORY,
+               cache_id_func=None):
     """Wrap a callable object in a caching method.
 
     callable_object must be callable.
@@ -175,6 +176,7 @@ class CachingMethod:
     self.callable_object = callable_object
     self.cache_duration = cache_duration
     self.cache_factory = cache_factory
+    self.cache_id_func = cache_id_func
 
   def __call__(self, *args, **kwd):
     """Call the method or return cached value using appropriate cache plugin """
@@ -221,6 +223,9 @@ class CachingMethod:
     ## generate cache id out of arguments passed.
     ## depending on arguments we may have different
     ## cache_id for same method_id
+    cache_id_func = self.cache_id_func
+    if cache_id_func is not None:
+      return cache_id_func(method_id, *args, **kwd)
     return str((method_id, args, kwd))
 
 allow_class(CachingMethod)
