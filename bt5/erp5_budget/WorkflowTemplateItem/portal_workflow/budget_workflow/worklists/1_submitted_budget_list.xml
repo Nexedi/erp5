@@ -90,14 +90,6 @@ budget_module/view?validation_state=submitted&local_roles:list=Assignor&reset=1
                     </value>
                 </item>
                 <item>
-                    <key> <string>simulation_state</string> </key>
-                    <value>
-                      <tuple>
-                        <string>planned</string>
-                      </tuple>
-                    </value>
-                </item>
-                <item>
                     <key> <string>validation_state</string> </key>
                     <value>
                       <tuple>
