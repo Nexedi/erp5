@@ -76,18 +76,20 @@ class CacheFactory:
     ## set 'check_expire_cache_interval' to the minimal value between
     ## individual 'check_expire_cache_interval' for each cache plugin contained
     l = []
-    self._last_cache_expire_check_at = time()
     for cp in self.cache_plugins:
       l.append(cp.cache_expire_check_interval)
     l = filter(lambda x: x is not None and x != 0, l)
     self.cache_expire_check_interval = min(l)
+    self._next_cache_expire_check_at = time() + self.cache_expire_check_interval
 
   def __call__(self, callable_object, cache_id, scope, cache_duration=None, *args, **kwd):
     """ When CacheFactory is called it will try to return cached value using
     appropriate cache plugin.
     """
     ## Expired Cache (if needed)
-    self.expire()
+    now = time()
+    if now > self._next_cache_expire_check_at:
+      self.expire(now)
 
     try:
       quick_cached = self.quick_cache.get(cache_id, scope)
@@ -117,13 +119,11 @@ class CacheFactory:
       shared_cache.set(cache_id, scope, value, cache_duration, calculation_time)
     return value
 
-  def expire(self):
-    """ Expire (if needed) cache plugins """
-    now = time()
-    if now > (self._last_cache_expire_check_at + self.cache_expire_check_interval):
-      self._last_cache_expire_check_at = now
-      for cache_plugin in self.getCachePluginList():
-        cache_plugin.expireOldCacheEntries()
+  def expire(self, now):
+    """ Expire cache plugins """
+    self._next_cache_expire_check_at = now + self.cache_expire_check_interval
+    for cache_plugin in self.getCachePluginList():
+      cache_plugin.expireOldCacheEntries()
 
   def getCachePluginList(self, omit_cache_plugin_name=None):
     """ get list of all cache plugins except specified by name in omit """
