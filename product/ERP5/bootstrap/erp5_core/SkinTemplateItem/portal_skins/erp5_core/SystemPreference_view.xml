@@ -76,6 +76,7 @@
                       <list>
                         <string>my_title</string>
                         <string>my_description</string>
+                        <string>my_preferred_unit_test_sql_connection_string</string>
                       </list>
                     </value>
                 </item>
