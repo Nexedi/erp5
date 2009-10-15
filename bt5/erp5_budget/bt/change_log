@@ -1,3 +1,6 @@
+2009-10-15 yusei
+* Fix budget_workflow worklist. Planned state did not exist. Now 1_submitted_budget_list shows a list of budgets which are waiting to be validated.
+
 2000-01-08 jerome
 Introduce budget models
 

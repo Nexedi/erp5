@@ -15,19 +15,19 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Budget to Submit (%(count)s)</string> </value>
+            <value> <string>Budget to Validate (%(count)s)</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-budget_module/view?validation_state=planned&local_roles:list=Assignor&reset=1
+budget_module/view?validation_state=submitted&local_roles:list=Assignor&reset=1
 
 ]]></string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Budget to Submit</string> </value>
+            <value> <string>Budget to Validate</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
@@ -37,7 +37,7 @@ budget_module/view?validation_state=planned&local_roles:list=Assignor&reset=1
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>1_planned_budget_list</string> </value>
+            <value> <string>1_submitted_budget_list</string> </value>
         </item>
         <item>
             <key> <string>var_matches</string> </key>
@@ -94,6 +94,14 @@ budget_module/view?validation_state=planned&local_roles:list=Assignor&reset=1
                     <value>
                       <tuple>
                         <string>planned</string>
+                      </tuple>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>validation_state</string> </key>
+                    <value>
+                      <tuple>
+                        <string>submitted</string>
                       </tuple>
                     </value>
                 </item>
