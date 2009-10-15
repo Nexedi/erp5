@@ -180,7 +180,7 @@ class CachingMethod:
     """Call the method or return cached value using appropriate cache plugin """
 
     ## cache scope is based on user which is a kwd argument
-    scope = kwd.get('scope', DEFAULT_CACHE_SCOPE)
+    scope = kwd.pop('scope', DEFAULT_CACHE_SCOPE)
 
     ## generate unique cache id
     cache_id = self.generateCacheId(self.id, *args, **kwd)
