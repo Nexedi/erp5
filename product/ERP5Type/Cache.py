@@ -97,8 +97,11 @@ class CacheFactory:
     except KeyError:
       ## not in local, check if it's in shared
       for shared_cache in self.shared_caches:
-        if shared_cache.has_key(cache_id, scope):
+        try:
           cache_entry = shared_cache.get(cache_id, scope)
+        except KeyError:
+          pass
+        else:
           value = cache_entry.getValue()
           ## update local cache
           self.quick_cache.set(cache_id, scope, value,
