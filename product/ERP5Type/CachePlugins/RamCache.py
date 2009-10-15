@@ -73,8 +73,8 @@ class RamCache(BaseCache):
 
   def get(self, cache_id, scope, default=_MARKER):
     cache = self.getCacheStorage()
-    cache_entry = cache.get((scope, cache_id), default)
-    if isinstance(cache_entry, CacheEntry):
+    cache_entry = cache.get((scope, cache_id), _MARKER)
+    if cache_entry is not _MARKER:
       if not cache_entry.isExpired():
         #The value is well retrieved from cache storage
         cache_entry.markCacheHit()
