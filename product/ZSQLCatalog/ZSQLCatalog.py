@@ -781,17 +781,10 @@ class ZCatalog(Folder, Persistent, Implicit):
         goto_current_catalog = 1
 
       if goto_current_catalog:
-        try:
-          # wrap object only when sure it will be reindex now
-          # thus security uid is also reindex
-          wrap_obj = self.wrapObject(obj, sql_catalog_id=sql_catalog_id)
-          wrapped_object_list.append(wrap_obj)
-        except ConflictError:
-          raise
-        except:
-          raise
-          LOG('WARNING ZSQLCatalog', 0, 'wrapObject failed on the object %r' % (obj,), error=sys.exc_info())
-          failed_object_list.append(obj) # XXX Strange JPS - why LOG and keep on ?? wrap_obj not defined
+        # wrap object only when sure it will be reindex now
+        # thus security uid is also reindex
+        wrap_obj = self.wrapObject(obj, sql_catalog_id=sql_catalog_id)
+        wrapped_object_list.append(wrap_obj)
 
     # run activity or execute for each archive depending on priority
     if len(catalog_dict):
