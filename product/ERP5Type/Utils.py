@@ -1134,52 +1134,30 @@ def createExpressionContext(object, portal=None):
   """
     Return a context used for evaluating a TALES expression.
   """
-  if portal is None and object is not None:
-    portal = object.getPortalObject()
-
-  if object is None or getattr(object, 'aq_base', None) is None:
-    folder = portal
+  if object is None:
+    object_url = ''
   else:
-    folder = object
-    # Search up the containment hierarchy until we find an
-    # object that claims it's a folder.
-    while folder is not None:
-      if getattr(aq_base(folder), 'isPrincipiaFolderish', 0):
-        # found it.
-        break
-      else:
-        folder = aq_parent(aq_inner(folder))
+    object_url = object.absolute_url()
+    if portal is None:
+      portal = object.getPortalObject()
 
   if portal is not None:
-    pm = getToolByName(portal, 'portal_membership')
+    portal_url = portal.absolute_url()
+    pm = portal.portal_membership
     if pm.isAnonymousUser():
       member = None
     else:
       member = pm.getAuthenticatedMember()
   else:
-    member = None
-
-  if object is None:
-    object_url = ''
-  else:
-    object_url = object.absolute_url()
-
-  if folder is None:
-    folder_url = ''
-  else:
-    folder_url = folder.absolute_url()
-
-  if portal is None:
     portal_url = ''
-  else:
-    portal_url = portal.absolute_url()
+    member = None
 
   data = {
       'object_url':   object_url,
-      'folder_url':   folder_url,
       'portal_url':   portal_url,
       'object':       object,
-      'folder':       folder,
+      'folder':       None, # XXX to be removed when
+                            #     ERP5Type.Core.ActionInformation is cleaned up
       'portal':       portal,
       'nothing':      None,
       'request':      getattr( object, 'REQUEST', None ),
