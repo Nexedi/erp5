@@ -68,6 +68,7 @@ class CacheFactory:
 
     ## separete local and shared cache plugins
     self.quick_cache = self.cache_plugins[0]
+    self._quick_cache_get = self.quick_cache.get
     try:
       self.shared_caches = self.cache_plugins[1:]
     except IndexError:
@@ -92,8 +93,7 @@ class CacheFactory:
       self.expire(now)
 
     try:
-      quick_cached = self.quick_cache.get(cache_id, scope)
-      return quick_cached.getValue()
+      return self._quick_cache_get(cache_id, scope).getValue()
     except KeyError:
       ## not in local, check if it's in shared
       for shared_cache in self.shared_caches:
