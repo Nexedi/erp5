@@ -174,3 +174,64 @@ class ActionInformation(XMLObject):
     # better performance.
     categories = getattr(self, 'categories', [])
     return len(categories) and categories[0][12:] or None
+
+  security.declarePrivate('getRawActionInformation')
+  def getRawActionInformation(self):
+    """Return RawActionInformation instance that is not persistent and
+    is cacheable."""
+    return RawActionInformation(
+      {'id':self.getReference(),
+       'name':self.getTitle(),
+       'description':self.getDescription(),
+       'category':self.getActionType(),
+       'priority':self.getFloatIndex(),
+       'icon':self.getIcon(),
+       'action':self.getAction(),
+       'condition':self.getCondition(),
+       'action_permission':self.getActionPermissionList(),
+       }
+      )
+
+class RawActionInformation(object):
+  """The purpose of this class is to provide a cacheable instance having
+  an enough information of Action Information document."""
+
+  def __init__(self, kw):
+    self.action = kw.pop('action')
+    self.icon = kw.pop('icon')
+    self.condition = kw.pop('condition')
+    self.action_permission = kw.pop('action_permission')
+    self.param_dict = kw
+
+  def getPriority(self):
+    return self.param_dict['priority']
+
+  def test(self, ec):
+    """Test if the action should be displayed or not for the given context"""
+    permission_list = self.action_permission
+    if permission_list:
+      category = self.param_dict['category'] or ''
+      info = ec.vars
+      if (info['here'] is not None and
+          (category[:6] == 'object' or
+           category[:8] == 'workflow')):
+        context = info['here']
+      elif (info['folder'] is not None and
+            category[:6] == 'folder'):
+        context = info['folder']
+      else:
+        context = info['portal']
+      has_permission = getSecurityManager().getUser().has_permission
+      for permission in permission_list:
+        if not has_permission(permission, context):
+          return False
+    condition = self.condition
+    return condition is None or condition(ec)
+
+  def cook(self, ec):
+    param_dict = self.param_dict.copy()
+    action = self.action
+    param_dict['url'] = action is not None and action(ec) or ''
+    icon = self.icon
+    param_dict['icon'] = icon is not None and icon(ec) or ''
+    return param_dict

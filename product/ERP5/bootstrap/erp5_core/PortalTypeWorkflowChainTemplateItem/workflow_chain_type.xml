@@ -1,7 +1,15 @@
 <workflow_chain>
  <chain>
+  <type>Action Information</type>
+  <workflow>base_type_interaction_workflow</workflow>
+ </chain>
+ <chain>
   <type>Base Category</type>
   <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Base Type</type>
+  <workflow>base_type_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>Category</type>

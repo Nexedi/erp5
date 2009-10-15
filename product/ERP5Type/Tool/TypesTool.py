@@ -42,6 +42,15 @@ class TypesTool(BaseTool, CMFCore_TypesTool.TypesTool):
 
   zope.interface.implements(interfaces.IActionProvider)
 
+  security.declarePrivate('getRawActionInformationListFor')
+  def getRawActionInformationListFor(self, ob=None):
+    """Return all action informations of the object"""
+    if ob is not None:
+      type_info = self.getTypeInfo(ob)
+      if type_info is not None:
+        return type_info.getRawActionInformationList()
+    return ()
+
   security.declarePrivate('getActionListFor')
   def getActionListFor(self, ob=None):
     """Return all actions of the object"""

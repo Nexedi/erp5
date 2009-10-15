@@ -1,4 +1,6 @@
+Action Information | base_type_interaction_workflow
 Base Category | edit_workflow
+Base Type | base_type_interaction_workflow
 Category | edit_workflow
 Distributed Ram Cache | distributed_ram_cache_interaction_workflow
 Document | edit_workflow

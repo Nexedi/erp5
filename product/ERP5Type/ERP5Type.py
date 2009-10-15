@@ -33,6 +33,7 @@ from Products.ERP5Type import interfaces, Constraint, Permissions, PropertySheet
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 from Products.ERP5Type.Utils import deprecated, createExpressionContext
 from Products.ERP5Type.XMLObject import XMLObject
+from Products.ERP5Type.Cache import CachingMethod
 
 ERP5TYPE_SECURITY_GROUP_ID_GENERATION_SCRIPT = 'ERP5Type_asSecurityGroupId'
 
@@ -520,6 +521,27 @@ class ERP5TypeInformation(XMLObject,
           target = target[1:]
       __traceback_info__ = self.getId(), target
       return ob.restrictedTraverse(target)
+
+    def _getRawActionInformationList(self):
+      return sorted(
+        (x.getRawActionInformation() for x in \
+         self.getActionInformationList() if x.isVisible()),
+        key=lambda x:x.getPriority())
+    _getRawActionInformationList = CachingMethod(
+      _getRawActionInformationList,
+      id='_getRawActionInformationList',
+      cache_factory='erp5_content_long')
+
+    security.declarePrivate('getRawActionInformationList')
+    def getRawActionInformationList(self):
+      """Return all visible action informations sorted by priority."""
+      return self._getRawActionInformationList(self, scope=self.id)
+
+    security.declareProtected(Permissions.ModifyPortalContent,
+                              'clearGetRawActionInformationListCache')
+    def clearGetRawActionInformationListCache(self):
+      """Clear a cache of _getRawActionInformationList."""
+      self._getRawActionInformationList.delete(scope=self.id)
 
     security.declarePrivate('getActionListFor')
     def getActionListFor(self, ob=None):
