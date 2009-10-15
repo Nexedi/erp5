@@ -30,9 +30,7 @@
         <item>
             <key> <string>transitions</string> </key>
             <value>
-              <tuple>
-                <string>delete_action</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>
