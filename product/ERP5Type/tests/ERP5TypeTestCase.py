@@ -281,11 +281,7 @@ class ERP5TypeTestCase(PortalTestCase):
       """
       Most of the time, we need to login before doing anything
       """
-      uf = self.getPortal().acl_users
-      uf._doAddUser('ERP5TypeTestCase', '', ['Manager', 'Member', 'Assignee',
-          'Assignor', 'Author', 'Auditor', 'Associate'], [])
-      user = uf.getUserById('ERP5TypeTestCase').__of__(uf)
-      newSecurityManager(None, user)
+      PortalTestCase.login(self, 'ERP5TypeTestCase')
 
     def _setupUser(self):
       '''Creates the default user.'''
@@ -783,6 +779,12 @@ class ERP5TypeTestCase(PortalTestCase):
               transaction.commit()
               if not quiet:
                 ZopeTestCase._print('done (%.3fs)\n' % (time.time() - start))
+
+            # Create a Manager user at the Portal level
+            uf = self.getPortal().acl_users
+            uf._doAddUser('ERP5TypeTestCase', '', ['Manager', 'Member', 'Assignee',
+                            'Assignor', 'Author', 'Auditor', 'Associate'], [])
+            user = uf.getUserById('ERP5TypeTestCase').__of__(uf)
 
             setup_once = getattr(self, 'setUpOnce', None)
             if setup_once is not None and \
