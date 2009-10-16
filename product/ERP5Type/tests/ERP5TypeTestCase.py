@@ -748,6 +748,18 @@ class ERP5TypeTestCase(PortalTestCase):
             update_business_templates = os.environ.get('update_business_templates') is not None
             BusinessTemplate_getModifiedObject = aq_base(getattr(portal, 'BusinessTemplate_getModifiedObject', None))
 
+            # check that all bt5 exists, this permit to save time in case of
+            # missing bt
+            missing_bt_list = []
+            from DateTime import DateTime
+            for url, bt_title in business_template_list:
+              # if the bt is not found, an error is raised
+              if not portal.portal_templates.assertBtPathExists(url):
+                missing_bt_list.append(bt_title)
+            if len(missing_bt_list):
+              raise "Some bt can't be found on your system : %r" % \
+                missing_bt_list
+
             # Add some business templates
             for url, bt_title in business_template_list:
               start = time.time()
