@@ -467,8 +467,7 @@ class TemplateTool (BaseTool):
       if RESPONSE is not None:
         RESPONSE.setHeader('Content-type', 'text/plain')
       test_cmd_args = [sys.executable, getUnitTestFile()]
-      test_cmd_args.append('--erp5_sql_connection_string="%s"'
-                           % sql_connection_string)
+      test_cmd_args += ['--erp5_sql_connection_string', sql_connection_string]
       test_cmd_args += test_list
       process = subprocess.Popen(test_cmd_args,
                                  stdout=subprocess.PIPE,
