@@ -12,10 +12,10 @@ msgstr ""
 msgid "${key} ${usage}"
 msgstr "${usage}: ${key} "
 
-msgid "${number} item(s) selected"
+msgid "${number} items selected"
 msgstr "${number} pozycji zaznaczonych"
 
-msgid "${number} record(s)"
+msgid "${number} records"
 msgstr "${number} rekordów"
 
 msgid "${page} of ${total_pages}"
@@ -27,7 +27,7 @@ msgstr "Wyszukiwanie: ${title}"
 msgid "(deleted)"
 msgstr "(usunięte)"
 
-msgid "- ${number} item(s) selected"
+msgid "- ${number} items selected"
 msgstr "- ${number} pozycji zaznaczonych"
 
 msgid "-- Developper Mode --"
@@ -1515,13 +1515,13 @@ msgstr "Element"
 msgid "Item Module"
 msgstr "Moduł elementów"
 
-msgid "Item(s) Copied."
+msgid "Items Copied."
 msgstr "Elementów skopiowanych."
 
-msgid "Item(s) Pasted."
+msgid "Items Pasted."
 msgstr "Elementów wklejonych."
 
-msgid "Item(s)+Copied."
+msgid "Items+Copied."
 msgstr "Elementów+skopiowanych."
 
 msgid "Items"
@@ -2577,7 +2577,7 @@ msgstr "Komórka Zamówienia Sprzedaży"
 msgid "Sale Order Line"
 msgstr "Linia sprzedaży"
 
-msgid "Sale Order Line(s)"
+msgid "Sale Order Lines"
 msgstr "Linie Zamówienia Sprzedaży"
 
 msgid "Sale Order Lines"

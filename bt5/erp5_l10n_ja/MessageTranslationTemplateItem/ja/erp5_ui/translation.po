@@ -11,10 +11,10 @@ msgstr "Project-Id-Version: ERP5 Localized Interface\n"
 msgid "${count} documents created successfully."
 msgstr "${count} 個のドキュメントを作成しました。"
 
-msgid "${number} item(s) selected"
+msgid "${number} items selected"
 msgstr "${number} 個のアイテムが選択されています"
 
-msgid "${number} record(s)"
+msgid "${number} records"
 msgstr "${number} レコード"
 
 msgid "${page} of ${total_pages}"
@@ -29,7 +29,7 @@ msgstr "${template_title} (テンプレート)"
 msgid "${this_portal_type} related to ${that_portal_type} : ${that_title}."
 msgstr "${this_portal_type} は ${that_portal_type} と関連があります: ${that_title}。"
 
-msgid "- ${number} item(s) selected"
+msgid "- ${number} items selected"
 msgstr "- ${number} 個のアイテムが選択されています"
 
 msgid "-- Developper Mode --"
@@ -1274,7 +1274,7 @@ msgstr "モジュールを作成する"
 msgid "Create New Bug"
 msgstr "不具合を報告する"
 
-msgid "Create New Document(s)"
+msgid "Create New Documents"
 msgstr "新しい文書を作成する"
 
 msgid "Create New Event"
@@ -2552,10 +2552,10 @@ msgstr "請求先の顧客"
 msgid "Invoicing Rule"
 msgstr "請求の規則"
 
-msgid "Item(s) copied."
+msgid "Items copied."
 msgstr "項目がコピーされました。"
 
-msgid "Item(s) pasted."
+msgid "Items pasted."
 msgstr "項目が貼り付けられました。"
 
 msgid "Japanese"

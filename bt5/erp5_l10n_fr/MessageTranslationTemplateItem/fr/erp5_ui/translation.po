@@ -51,7 +51,7 @@ msgstr "${min_quantity} <= Quantité < ${max_quantity}"
 msgid "${month_name} ${year}"
 msgstr "${month_name} ${year}"
 
-msgid "${number} record(s)"
+msgid "${number} records"
 msgstr "${number} enregistrements "
 
 msgid "${page} of ${total_pages}"
@@ -73,13 +73,13 @@ msgid "${this_portal_type} related to ${that_portal_type} : ${that_title}."
 msgstr "${this_portal_type} lié au ${that_portal_type} : ${that_title}."
 
 msgid "${timedif} days ago"
-msgstr "Il y a ${timedif} jour(s)"
+msgstr "Il y a ${timedif} jours"
 
 msgid "${timedif} min ago"
-msgstr "Il y a ${timedif} minute(s)"
+msgstr "Il y a ${timedif} minutes"
 
 msgid "${timedif}h ago"
-msgstr "Il y a ${timedif} heure(s)"
+msgstr "Il y a ${timedif} heures"
 
 msgid "${transaction_title} (Transaction Reference = ${transaction_reference}, Creation Date = ${creation_date}  Currency = ${currency_title})"
 msgstr "${transaction_title} (Référence de la transaction= ${transaction_reference}, Date de création = ${creation_date}  Devise = ${currency_title})"
@@ -90,7 +90,7 @@ msgstr "${ungrouped_line_count} lignes délettrées."
 msgid "${year} years old"
 msgstr "Âgé de ${year} ans"
 
-msgid "- ${number} item(s) selected"
+msgid "- ${number} items selected"
 msgstr "- ${number} éléments sélectionnés"
 
 msgid "-- Any Other Document Type --"
@@ -1068,8 +1068,8 @@ msgstr "Août"
 msgid "Author"
 msgstr "Auteur"
 
-msgid "Author(s):"
-msgstr "Auteur(s)"
+msgid "Authors:"
+msgstr "Auteurs"
 
 msgid "Authorization Forced"
 msgstr "Autorisation forcée"
@@ -2556,7 +2556,7 @@ msgstr "Créer un bogue"
 msgid "Create New Document"
 msgstr "Créer un nouveau document"
 
-msgid "Create New Document(s)"
+msgid "Create New Documents"
 msgstr "Création"
 
 msgid "Create New Event"
@@ -5209,32 +5209,14 @@ msgstr "Règle de facturation"
 msgid "Item"
 msgstr "Objet"
 
-msgid "Item(s) copied."
-msgstr "Objet(s) copié(s)"
+msgid "Items copied."
+msgstr "Objets copiés"
 
-msgid "Item(s) cut."
-msgstr "Objet(s) coupé(s)"
+msgid "Items cut."
+msgstr "Objets coupés"
 
-msgid "Item(s) pasted."
-msgstr "Objet(s) collé(s)"
-
-msgid "Item(s)+Copied."
-msgstr "Éléments+copiés"
-
-msgid "Item(s)+Cut."
-msgstr "Éléments+coupés"
-
-msgid "Item(s)+Pasted."
-msgstr "Éléments+collés"
-
-msgid "Items+Copied."
-msgstr "Éléments+copiés"
-
-msgid "Items+Cut."
-msgstr "Éléments+coupés"
-
-msgid "Items+Pasted."
-msgstr "Éléments+collés"
+msgid "Items pasted."
+msgstr "Objets collés"
 
 msgid "January"
 msgstr "Janvier"
@@ -8670,7 +8652,7 @@ msgid "Select Template"
 msgstr "Sélectionner un template"
 
 msgid "Select Variation"
-msgstr "Variante(s) à commander"
+msgstr "Variantes à commander"
 
 msgid "Select appropriate document in the list."
 msgstr "Sélectionnez le document approprié dans la liste."
