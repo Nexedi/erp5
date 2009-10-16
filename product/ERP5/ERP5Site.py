@@ -427,11 +427,7 @@ class ERP5Site(FolderMixIn, CMFSite):
         if group in getattr(pt, 'group_list', ()):
           type_list.append(pt.getId())
 
-      def sortByTranslation(a, b):
-        return cmp(localizer_tool.translate('ui', a),
-                   localizer_tool.translate('ui', b))
-
-      type_list.sort(sortByTranslation)
+      type_list.sort(key=lambda x:localizer_tool.translate('ui', x))
       return tuple(type_list)
 
     localizer_tool = getToolByName(self, 'Localizer')
