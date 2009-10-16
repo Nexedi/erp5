@@ -50,7 +50,6 @@ class TestERP5BankingMonetarySurvey(TestERP5BankingMixin, ERP5TypeTestCase):
     This class is a unit test to check the module of Monetary Survey
   """
 
-  login = PortalTestCase.login
 
   # pseudo constants
   RUN_ALL_TEST = 1 # we want to run all test

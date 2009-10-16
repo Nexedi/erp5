@@ -91,7 +91,6 @@ class TestERP5BankingCashMovement(TestERP5BankingMixin, ERP5TypeTestCase):
 
   """
 
-  login = PortalTestCase.login
 
   # pseudo constants
   RUN_ALL_TEST = 1 # we want to run all test

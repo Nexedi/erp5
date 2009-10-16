@@ -41,7 +41,6 @@ class TestERP5BankingAccountingDate(TestERP5BankingMixin, ERP5TypeTestCase):
     Unit test Accounting Date definition and utility script.
   """
 
-  login = PortalTestCase.login
 
   def getTitle(self):
     return "ERP5BankingAccountingDate"

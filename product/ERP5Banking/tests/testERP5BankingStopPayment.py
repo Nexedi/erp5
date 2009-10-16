@@ -60,7 +60,6 @@ class TestERP5BankingStopPayment( TestERP5BankingCheckbookDeliveryMixin,
     This class is a unit test to check the module of Stop Payment
   """
 
-  login = PortalTestCase.login
 
   # pseudo constants
   RUN_ALL_TEST = 1 # we want to run all test

@@ -80,7 +80,6 @@ class TestERP5BankingMoneyDepositRendering(TestERP5BankingMixin, ERP5TypeTestCas
     - check that the destination has been credited correctly (current == future)
   """
 
-  login = PortalTestCase.login
 
   # pseudo constants
   RUN_ALL_TEST = 1 # we want to run all test

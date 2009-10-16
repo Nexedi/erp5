@@ -51,7 +51,6 @@ if __name__ == '__main__':
 
 class TestERP5BankingCounterDate(TestERP5BankingMixin,
                                   ERP5TypeTestCase):
-  login = PortalTestCase.login
   RUN_ALL_TEST = 1 # we want to run all test
   QUIET = 0 # we don't want the test to be quiet
 

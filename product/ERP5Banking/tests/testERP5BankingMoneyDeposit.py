@@ -49,7 +49,6 @@ if __name__ == '__main__':
 class TestERP5BankingMoneyDepositMixin:
   
 
-  login = PortalTestCase.login
 
   # pseudo constants
   RUN_ALL_TEST = 1 # we want to run all test

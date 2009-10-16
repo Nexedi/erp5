@@ -52,7 +52,6 @@ class TestERP5BankingInventory(TestERP5BankingMixin, ERP5TypeTestCase):
     This class is a unit test to check the module of Bank Account Inventory
   """
 
-  login = PortalTestCase.login
   RUN_ALL_TEST = 1
   QUIET = 0
 

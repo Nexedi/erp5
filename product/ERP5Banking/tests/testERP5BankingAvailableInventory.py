@@ -77,7 +77,6 @@ class TestERP5BankingAvailableInventory(TestERP5BankingCheckPaymentMixin,
   payments by the same time (due to tag on counter)
   """
 
-  login = PortalTestCase.login
 
   # pseudo constants
   RUN_ALL_TEST = 1 # we want to run all test

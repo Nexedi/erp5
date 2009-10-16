@@ -59,7 +59,6 @@ class TestERP5BankingAccountingCancellation(TestERP5BankingMixin,
   RUN_ALL_TEST = 1 # we want to run all test
   QUIET = 0 # we don't want the test to be quiet
 
-  login = PortalTestCase.login
 
   def getAccountingCancellationModule(self):
     """
