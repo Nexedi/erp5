@@ -60,6 +60,7 @@ from Products.ERP5Type import Permissions
 from Products.ERP5Type import Constraint
 
 from Products.ERP5Type.Cache import getReadOnlyTransactionCache
+from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 from zLOG import LOG, BLATHER, PROBLEM, WARNING
 
 from AccessControl.SecurityManagement import newSecurityManager, getSecurityManager
@@ -1134,6 +1135,12 @@ def createExpressionContext(object, portal=None):
   """
     Return a context used for evaluating a TALES expression.
   """
+  tv = getTransactionalVariable(None)
+  cache_key = ('createExpressionContext', id(object))
+  try:
+    return tv[cache_key]
+  except KeyError:
+    pass
   if portal is None and object is not None:
     portal = object.getPortalObject()
 
@@ -1187,7 +1194,9 @@ def createExpressionContext(object, portal=None):
       'member':       member,
       'here':         object,
       }
-  return getEngine().getContext(data)
+  ec = getEngine().getContext(data)
+  tv[cache_key] = ec
+  return ec
 
 def getExistingBaseCategoryList(portal, base_cat_list):
   cache = getReadOnlyTransactionCache(portal)
