@@ -273,3 +273,18 @@ def clearCache(cache_factory_list=(DEFAULT_CACHE_FACTORY,)):
       for cp in cache_storage[cf_key].getCachePluginList():
         cp.clearCache()
 
+def generateCacheIdWithoutFirstArg(method_id, *args, **kwd):
+  # If we use CachingMethod as a class method, the first item of args
+  # is 'self' that can be ignored to create a cache id.
+  return str((method_id, args[1:], kwd))
+
+class caching_class_method_decorator:
+  def __init__(self, *args, **kw):
+    self.args = args
+    kw.setdefault(
+      'cache_id_func', generateCacheIdWithoutFirstArg)
+    self.kw = kw
+
+  def __call__(self, method):
+    caching_method = CachingMethod(method, *self.args, **self.kw)
+    return lambda *args, **kw: caching_method(*args, **kw)
