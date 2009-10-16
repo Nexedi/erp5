@@ -1,3 +1,6 @@
+2009-10-16 rafael
+* Update for the changes of new portal types of portal types.
+
 2009-09-11 yusei
 * Fix action orders of web page module and make view action first. Otherwise module list method does not work.
 * Add bt/template_registered_skin_selection_list to business template.
