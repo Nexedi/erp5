@@ -56,20 +56,6 @@ class TestERP5BankingCashMovementNewNotEmitted(TestERP5BankingMonetaryReceptionM
   # pseudo constants
   RUN_ALL_TEST = 1 # we want to run all test
   QUIET = 0 # we don't want the test to be quiet
-  def getBusinessTemplateList(self):
-    """
-      Return the list of business templates we need to run the test.
-      This method is called during the initialization of the unit test by
-      the unit test framework in order to know which business templates
-      need to be installed to run the test on.
-    """
-    return ('erp5_base',
-            'erp5_trade',
-            'erp5_accounting',
-            'erp5_banking_core',
-            'erp5_banking_inventory',
-            'erp5_banking_cash',
-            'erp5_banking_check',)
 
   def getTitle(self):
     """
