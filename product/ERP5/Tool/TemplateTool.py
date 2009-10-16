@@ -355,6 +355,19 @@ class TemplateTool (BaseTool):
       finally:
         shutil.rmtree(svn_checkout_tmp_dir)
 
+    def assertBtPathExists(self, url):
+      """
+      Check if bt is present on the system
+      """
+      urltype, name = splittype(url)
+      # Windows compatibility
+      if WIN:
+        if os.path.isdir(os.path.normpath(url)) or \
+           os.path.isfile(os.path.normpath(url)):
+          urltype = 'file'
+          name = os.path.normpath(url)
+      return os.path.exists(os.path.normpath(name))
+
     security.declareProtected( 'Import/Export objects', 'download' )
     def download(self, url, id=None, REQUEST=None):
       """
