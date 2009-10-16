@@ -59,8 +59,21 @@
 transaction = state_change[\'object\']\n
 \n
 # Get sections.\n
-source_section = transaction.getSourceSection()\n
-destination_section = transaction.getDestinationSection()\n
+source_section = None\n
+source_section_value = transaction.getSourceSectionValue()\n
+if source_section_value is not None \\\n
+      and source_section_value.getPortalType() == \'Organisation\':\n
+  source_section_value = \\\n
+      source_section_value.Organisation_getMappingRelatedOrganisation()\n
+  source_section = source_section_value.getRelativeUrl()\n
+\n
+destination_section = None\n
+destination_section_value = transaction.getDestinationSectionValue()\n
+if destination_section_value is not None \\\n
+      and destination_section_value.getPortalType() == \'Organisation\':\n
+  destination_section_value = \\\n
+      destination_section_value.Organisation_getMappingRelatedOrganisation()\n
+  destination_section = destination_section_value.getRelativeUrl()\n
 \n
 id_generator = state_change.getPortal().portal_ids.generateNewLengthId\n
 \n
@@ -142,15 +155,17 @@ if not transaction.getDestinationReference():\n
                             <string>state_change</string>
                             <string>_getitem_</string>
                             <string>transaction</string>
-                            <string>_getattr_</string>
+                            <string>None</string>
                             <string>source_section</string>
+                            <string>_getattr_</string>
+                            <string>source_section_value</string>
                             <string>destination_section</string>
+                            <string>destination_section_value</string>
                             <string>id_generator</string>
                             <string>invoice_id_group</string>
                             <string>invoice_reference</string>
                             <string>period</string>
                             <string>period_code</string>
-                            <string>None</string>
                             <string>str</string>
                             <string>source_id_group</string>
                             <string>source_reference</string>
