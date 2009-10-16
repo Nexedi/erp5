@@ -179,15 +179,26 @@ class ActionInformation(XMLObject):
   def getRawActionInformation(self):
     """Return RawActionInformation instance that is not persistent and
     is cacheable."""
+    # we cache cloned Expressions because original ones are persistent
+    # objects.
+    icon = self.getIcon()
+    if icon is not None:
+      icon = Expression(icon.text)
+    action = self.getAction()
+    if action is not None:
+      action = Expression(action.text)
+    condition = self.getCondition()
+    if condition is not None:
+      condition = Expression(condition.text)
     return RawActionInformation(
       {'id':self.getReference(),
        'name':self.getTitle(),
        'description':self.getDescription(),
        'category':self.getActionType(),
        'priority':self.getFloatIndex(),
-       'icon':self.getIcon(),
-       'action':self.getAction(),
-       'condition':self.getCondition(),
+       'icon':icon,
+       'action':action,
+       'condition':condition,
        'action_permission':self.getActionPermissionList(),
        }
       )
