@@ -281,5 +281,12 @@ def generateCacheIdWithoutFirstArg(method_id, *args, **kwd):
 def caching_class_method_decorator(*args, **kw):
   kw.setdefault('cache_id_func', generateCacheIdWithoutFirstArg)
   def wrapped(method):
-    return lambda *a, **k: CachingMethod(method, *args, **kw)(*a, **k)
+    # The speed of returned function must be fast
+    # so we instanciate CachingMethod now.
+    caching_method = CachingMethod(method, *args, **kw)
+    # Here, we can't return caching_method directly because an instanciated
+    # class with a __call__ method does not behave exactly like a simple
+    # function: if the decorator is used to create a method, the instance on
+    # which the method is called would not be passed as first parameter.
+    return lambda *args, **kw: caching_method(*args, **kw)
   return wrapped
