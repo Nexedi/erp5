@@ -16,6 +16,14 @@
             </value>
         </item>
         <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>action_type/object_report</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>category</string> </key>
             <value> <string>object_report</string> </value>
         </item>

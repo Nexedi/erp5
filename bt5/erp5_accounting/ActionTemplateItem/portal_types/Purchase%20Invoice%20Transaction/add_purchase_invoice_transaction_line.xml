@@ -16,6 +16,14 @@
             </value>
         </item>
         <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>action_type/object_add</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>category</string> </key>
             <value> <string>object_add</string> </value>
         </item>

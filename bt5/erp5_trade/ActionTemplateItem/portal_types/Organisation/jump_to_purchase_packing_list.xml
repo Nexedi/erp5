@@ -14,6 +14,14 @@
             <value> <string></string> </value>
         </item>
         <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>action_type/object_jump</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>category</string> </key>
             <value> <string>object_jump</string> </value>
         </item>

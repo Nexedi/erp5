@@ -1,3 +1,6 @@
+2009-10-16 yusei
+* Update for the changes of new portal types of portal types.
+
 2009-09-09 yusei
 * Fix list view of packing list modules and supply modules and use countFolder method to count result.
 
