@@ -34,13 +34,14 @@ from Testing import ZopeTestCase
 from Products.ERP5Type.tests.utils import DummyMailHost
 from AccessControl import getSecurityManager
 from AccessControl.SecurityManagement import newSecurityManager
+from Products.ERP5OOo.tests.utils import Validator
 import email
 
+
 class TestDeferredStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
-  """Tests ODF styles for ERP5."""
-  skin = 'Deferred'
-  content_type = None
-  recipient_email_address = 'anybody@anywhere.aaa'
+  """Tests deferred styles for ERP5."""
+  skin = content_type = None
+  recipient_email_address = 'invalid@example.com'
   username = 'bob'
   password = 'bobpwd'
   first_name = 'Bob'
@@ -49,7 +50,8 @@ class TestDeferredStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
     return 'Test Deferred Style'
 
   def getBusinessTemplateList(self):
-    return ('erp5_base', 'erp5_crm', 'erp5_ods_style', 'erp5_odt_style', 'erp5_deferred_style',)
+    return ('erp5_base', 'erp5_ods_style',
+            'erp5_odt_style', 'erp5_deferred_style',)
 
   def afterSetUp(self):
     self.login()
@@ -59,12 +61,13 @@ class TestDeferredStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
     person_module = self.portal.person_module
     if person_module._getOb('pers', None) is None:
       person = person_module.newContent(id='pers', portal_type='Person',
-                                        reference=self.username, first_name=self.first_name,
-                                        password=self.password, default_email_text=self.recipient_email_address)
+                                        reference=self.username,
+                                        first_name=self.first_name,
+                                        password=self.password,
+                                        default_email_text=self.recipient_email_address)
       assignment = person.newContent(portal_type='Assignment')
       assignment.open()
 
-    self.portal.changeSkin(self.skin)
     # replace MailHost
     if 'MailHost' in self.portal.objectIds():
       self.portal.manage_delObjects(['MailHost'])
@@ -79,15 +82,14 @@ class TestDeferredStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
     newSecurityManager(None, user)
 
   def test_skin_selection(self):
-    self.assertTrue(self.skin in self.portal.portal_skins.getSkinSelections())
+    self.assertTrue('Deferred' in self.portal.portal_skins.getSkinSelections())
 
-  def test_form_list(self):
+  def test_report_view(self):
     self.loginAsUser('bob')
-    self.portal.changeSkin(self.skin)
-    #self.portal.event_module.EventModule_viewEventActivityReport()
-    self.portal.REQUEST.set('portal_skin', self.skin)
-    response = self.publish('/%s/event_module/EventModule_viewEventActivityReport' % self.portal.getId(),
-                            '%s:%s' % (self.username, self.password))
+    self.portal.changeSkin('Deferred')
+    response = self.publish(
+        '/%s/person_module/pers/Base_viewHistory?deferred_portal_skin=%s'
+        % (self.portal.getId(), self.skin), '%s:%s' % (self.username, self.password))
     transaction.commit()
     self.tic()
     last_message = self.portal.MailHost._last_message
@@ -95,19 +97,34 @@ class TestDeferredStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
     mfrom, mto, message_text = last_message
     self.assertEquals('"%s" <%s>' % (self.first_name, self.recipient_email_address), mto[0])
     mail_message = email.message_from_string(message_text)
-    ok = 0
     for part in mail_message.walk():
       content_type = part.get_content_type()
       file_name = part.get_filename()
+      # XXX the attachment name might change some day
       if file_name == 'report_view':
-        self.assertEquals(content_type, 'application/vnd.oasis.opendocument.text')
-        ok = 1
+        self.assertEquals(content_type, self.content_type)
+        data = part.get_payload(decode=True)
+        error_list = Validator().validate(data)
+        if error_list:
+          self.fail(''.join(error_list))
         break
-    if not ok:
+    else:
       self.fail('Attachment not found in email')
+
+
+class TestODSDeferredStyle(TestDeferredStyle):
+  skin = 'ODS'
+  content_type = 'application/vnd.oasis.opendocument.spreadsheet'
+
+
+class TestODTDeferredStyle(TestDeferredStyle):
+  skin = 'ODT'
+  content_type = 'application/vnd.oasis.opendocument.text'
+
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestDeferredStyle))
+  suite.addTest(unittest.makeSuite(TestODSDeferredStyle))
+  suite.addTest(unittest.makeSuite(TestODTDeferredStyle))
   return suite
 
