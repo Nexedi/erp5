@@ -84,8 +84,10 @@ group_chain.reverse()\n
 \n
 for group in group_chain:\n
   organisation = getOrganisationForSectionCategory(group)\n
-  if organisation is not None and \\\n
-      len(organisation.contentValues(filter=dict(portal_type=\'Accounting Period\'))):\n
+  if organisation is not None and (\n
+      len(organisation.contentValues(\n
+              filter=dict(portal_type=\'Accounting Period\'))) or \n
+      organisation.getMapping()):\n
     return organisation\n
 \n
 return context\n
