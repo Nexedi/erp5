@@ -32,11 +32,12 @@ from zLOG import LOG
 
 def isSameSet(a, b):
   for i in a:
-    if not(i in b) : return 0
+    if i not in b:
+      return False
   for i in b:
-    if not(i in a): return 0
-  if len(a) != len(b) : return 0
-  return 1
+    if i not in a:
+      return False
+  return len(a) == len(b)
 
 class TestERP5BankingMixin:
   """
