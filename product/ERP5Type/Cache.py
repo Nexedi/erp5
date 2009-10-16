@@ -280,4 +280,4 @@ def generateCacheIdWithoutFirstArg(method_id, *args, **kwd):
 
 def caching_class_method_decorator(*args, **kw):
   kw.setdefault('cache_id_func', generateCacheIdWithoutFirstArg)
-  return lambda method: CachingMethod(method, *args, **kw)
+  return lambda m: lambda *a, **k: CachingMethod(m, *args, **kw)(*a, **k)
