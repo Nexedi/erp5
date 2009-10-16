@@ -143,7 +143,6 @@ return [q for q in simulation_tool.getFutureInventoryList(*args,**kwargs) if q.i
                             <string>None</string>
                             <string>ignored_resource_uid_list</string>
                             <string>_apply_</string>
-                            <string>query</string>
                             <string>_write_</string>
                           </tuple>
                         </value>
