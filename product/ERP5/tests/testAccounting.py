@@ -84,9 +84,13 @@ class AccountingTestCase(ERP5TypeTestCase):
     * payment_mode/check
   
   Organisations:
-    * `self.section` an organisation in region europe/west/france
-    using EUR as default currency, without any openned accounting period by
-    default. This organisation is member of group/demo_group/sub1
+    * `self.section` an organisation using EUR as default currency, without any
+    openned accounting period by default. This organisation is member of
+    group/demo_group/sub1
+    * `self.master_section` an using EUR as default currency, without any
+    openned accounting period by default. This organisation is member of
+    group/demo_group. Both self.master_section and self.section are in the same
+    company from accounting point of view.
     * self.client_1, self.client_2 & self.supplier, some other organisations
   
   Accounts:
@@ -172,6 +176,8 @@ class AccountingTestCase(ERP5TypeTestCase):
     self.currency_module = self.portal.currency_module
     if not hasattr(self, 'section'):
       self.section = getattr(self.organisation_module, 'my_organisation', None)
+    if not hasattr(self, 'main_section'):
+      self.main_section = getattr(self.organisation_module, 'main_organisation', None)
     
     # make sure documents are validated
     for module in (self.account_module, self.organisation_module,
@@ -203,7 +209,8 @@ class AccountingTestCase(ERP5TypeTestCase):
     transaction.abort()
     self.accounting_module.manage_delObjects(
                       list(self.accounting_module.objectIds()))
-    organisation_list = ('my_organisation', 'client_1', 'client_2', 'supplier')
+    organisation_list = ('my_organisation', 'main_organisation',
+                         'client_1', 'client_2', 'supplier')
     self.organisation_module.manage_delObjects([x for x in 
           self.accounting_module.objectIds() if x not in organisation_list])
     for organisation_id in organisation_list:
@@ -278,22 +285,22 @@ class TestAccounts(AccountingTestCase):
 class TestTransactionValidation(AccountingTestCase):
   """Test validations of accounting transactions.
 
-  In this test suite, the section have a closed accounting period for 2006, and
-  an open one for 2007.
+  In this test suite, the main section have a closed accounting period for
+  2006, and an open one for 2007.
   """
   def afterSetUp(self):
     self.organisation_module = self.portal.organisation_module
-    self.section = self.organisation_module.my_organisation
+    self.main_section = self.organisation_module.main_organisation
 
-    if 'accounting_period_2006' not in self.section.objectIds():
-      accounting_period_2006 = self.section.newContent(
+    if 'accounting_period_2006' not in self.main_section.objectIds():
+      accounting_period_2006 = self.main_section.newContent(
                                   id='accounting_period_2006',
                                   portal_type='Accounting Period',
                                   start_date=DateTime('2006/01/01'),
                                   stop_date=DateTime('2006/12/31'))
       accounting_period_2006.start()
       accounting_period_2006.stop()
-      accounting_period_2007 = self.section.newContent(
+      accounting_period_2007 = self.main_section.newContent(
                                   id='accounting_period_2007',
                                   portal_type='Accounting Period',
                                   start_date=DateTime('2007/01/01'),
@@ -363,7 +370,7 @@ class TestTransactionValidation(AccountingTestCase):
                portal_type='Payment Transaction',
                stop_date=DateTime('2006/03/03'),
                source_section_value=self.organisation_module.supplier,
-               destination_section_value=self.section, 
+               destination_section_value=self.section,
                payment_mode='default',
                lines=(dict(destination_value=self.account_module.goods_purchase,
                            destination_debit=500),
@@ -456,7 +463,7 @@ class TestTransactionValidation(AccountingTestCase):
   def test_AccountingTransactionValidationRecursivePeriod(self):
     # Check we can/cannot validate when secondary period exists
 
-    accounting_period_2007 = self.section.accounting_period_2007
+    accounting_period_2007 = self.main_section.accounting_period_2007
     accounting_period_2007_1 = accounting_period_2007.newContent(
                                 portal_type='Accounting Period',
                                 start_date=DateTime('2007/01/01'),
@@ -473,6 +480,7 @@ class TestTransactionValidation(AccountingTestCase):
     accounting_transaction = self._makeOne(
                portal_type='Accounting Transaction',
                start_date=DateTime('2007/01/02'),
+               source_section_value=self.main_section,
                destination_section_value=self.organisation_module.supplier,
                payment_mode='default',
                lines=(dict(source_value=self.account_module.goods_purchase,
@@ -1989,14 +1997,20 @@ class TestAccountingExport(AccountingTestCase):
 class TestTransactions(AccountingTestCase):
   """Test behaviours and utility scripts for Accounting Transactions.
   """
+  def _resetIdGenerator(self):
+    # clear all existing ids in portal ids
+    if hasattr(self.portal.portal_ids, 'dict_ids'):
+      self.portal.portal_ids.dict_ids.clear()
+    if hasattr(self.portal.portal_ids, 'dict_length_ids'):
+      self.portal.portal_ids.dict_length_ids.clear()
+      self.portal.erp5_sql_transactionless_connection.manage_test(
+        """DELETE FROM portal_ids WHERE id_group LIKE '%accounting%'""")
+      self.portal.portal_catalog.getSQLCatalog().z_portal_ids_commit()
   
   def test_SourceDestinationReference(self):
     # Check that source reference and destination reference are filled
     # automatically.
-
-    # clear all existing ids in portal ids
-    if hasattr(self.portal.portal_ids, 'dict_ids'):
-      self.portal.portal_ids.dict_ids.clear()
+    self._resetIdGenerator()
     section_period_2001 = self.section.newContent(
                         portal_type='Accounting Period',
                         short_title='code-2001',
@@ -2043,14 +2057,54 @@ class TestTransactions(AccountingTestCase):
     self.assertEquals('code-2002-1', next_year_transaction.getSourceReference())
     self.assertEquals('2002-1', next_year_transaction.getDestinationReference())
 
+  def test_SourceDestinationReferenceGroupAccounting(self):
+    # Check that source reference and destination reference are filled
+    # automatically when using multiple sections
+    self._resetIdGenerator()
+    section_period_2001 = self.main_section.newContent(
+                        portal_type='Accounting Period',
+                        short_title='code-2001',
+                        start_date=DateTime(2001, 01, 01),
+                        stop_date=DateTime(2001, 12, 31))
+    section_period_2001.start()
+    section_period_2002 = self.main_section.newContent(
+                        portal_type='Accounting Period',
+                        short_title='code-2002',
+                        start_date=DateTime(2002, 01, 01),
+                        stop_date=DateTime(2002, 12, 31))
+    section_period_2002.start()
+
+    accounting_transaction = self._makeOne(
+              source_section_value=self.main_section,
+              destination_section_value=self.organisation_module.client_1,
+              start_date=DateTime(2001, 01, 01),
+              stop_date=DateTime(2001, 01, 01))
+    self.portal.portal_workflow.doActionFor(
+          accounting_transaction, 'stop_action')
+    # The reference generated for the source section uses the short title from
+    # the accounting period
+    self.assertEquals('code-2001-1', accounting_transaction.getSourceReference())
+    # This works, because we use
+    # 'AccountingTransaction_getAccountingPeriodForSourceSection' script
+    self.assertEquals(section_period_2001, accounting_transaction\
+              .AccountingTransaction_getAccountingPeriodForSourceSection())
+    # If no accounting period exists on this side, the transaction date is
+    # used.
+    self.assertEquals('2001-1', accounting_transaction.getDestinationReference())
+
+    other_section_transaction = self._makeOne(
+              destination_section_value=self.organisation_module.client_2,
+              start_date=DateTime(2001, 01, 01),
+              stop_date=DateTime(2001, 01, 01))
+    self.portal.portal_workflow.doActionFor(other_section_transaction, 'stop_action')
+    # The numbering is shared by all the sections
+    self.assertEquals('code-2001-2', other_section_transaction.getSourceReference())
+    self.assertEquals('2001-1', other_section_transaction.getDestinationReference())
+
   def test_SourceDestinationReferenceSecurity(self):
     # Check that we don't need specific roles to set source reference and
     # destination reference, as long as we can pass the workflow transition
-
-    # clear all existing ids in portal ids
-    if hasattr(self.portal.portal_ids, 'dict_ids'):
-      self.portal.portal_ids.dict_ids.clear()
-
+    self._resetIdGenerator()
     section_period_2001 = self.section.newContent(
                         portal_type='Accounting Period',
                         short_title='code-2001',
@@ -2097,6 +2151,27 @@ class TestTransactions(AccountingTestCase):
     self.assertTrue('A description' in searchable_text)
     self.assertTrue('Some comments' in searchable_text)
 
+
+  def test_Organisation_getMappingRelatedOrganisation(self):
+    # the main section needs an accounting period to be treated as mapping
+    # related by Organisation_getMappingRelatedOrganisation
+    section_period_2001 = self.main_section.newContent(
+                        portal_type='Accounting Period',
+                        short_title='code-2001',
+                        start_date=DateTime(2001, 01, 01),
+                        stop_date=DateTime(2001, 12, 31))
+
+    self.assertEquals(self.main_section,
+        self.section.Organisation_getMappingRelatedOrganisation())
+    self.assertEquals(self.main_section,
+        self.main_section.Organisation_getMappingRelatedOrganisation())
+
+    client = self.organisation_module.client_1
+    self.assertEquals(None, client.getGroupValue())
+    self.assertEquals(client,
+        client.Organisation_getMappingRelatedOrganisation())
+
+  
   # tests for Invoice_createRelatedPaymentTransaction
   def _checkRelatedSalePayment(self, invoice, payment, payment_node, quantity):
     """Check payment of a Sale Invoice.
@@ -2388,6 +2463,61 @@ class TestTransactions(AccountingTestCase):
                simulation_state='delivered',
                causality_value=invoice,
                source_payment_value=self.section.newContent(
+                                            portal_type='Bank Account'),
+               destination_section_value=self.organisation_module.client_1,
+               lines=(dict(source_value=self.account_module.receivable,
+                           id='line_for_grouping_reference',
+                           source_debit=100),
+                      dict(source_value=self.account_module.bank,
+                           source_credit=100,)))
+    payment_line = payment.line_for_grouping_reference
+    
+    self.failIf(invoice_line.getGroupingReference())
+    self.failIf(payment_line.getGroupingReference())
+    
+    # lines match, they are automatically grouped
+    invoice.stop()
+    self.failUnless(invoice_line.getGroupingReference())
+    self.failUnless(payment_line.getGroupingReference())
+  
+    # when restarting, grouping is removed
+    invoice.restart()
+    transaction.commit()
+    self.tic()
+    self.failIf(invoice_line.getGroupingReference())
+    self.failIf(payment_line.getGroupingReference())
+    invoice.stop()
+    self.failUnless(invoice_line.getGroupingReference())
+    self.failUnless(payment_line.getGroupingReference())
+
+  def test_automatically_setting_grouping_reference_same_group(self):
+    # invoice is for section, payment is for main_section
+
+    # the main section needs an accounting period to be treated as mapping
+    # related by Organisation_getMappingRelatedOrganisation
+    section_period_2001 = self.main_section.newContent(
+                        portal_type='Accounting Period',
+                        short_title='code-2001',
+                        start_date=DateTime(2001, 01, 01),
+                        stop_date=DateTime(2001, 12, 31))
+
+    invoice = self._makeOne(
+               title='First Invoice',
+               destination_section_value=self.organisation_module.client_1,
+               lines=(dict(source_value=self.account_module.goods_purchase,
+                           source_debit=100),
+                      dict(source_value=self.account_module.receivable,
+                           source_credit=100,
+                           id='line_for_grouping_reference',)))
+    invoice_line = invoice.line_for_grouping_reference
+
+    payment = self._makeOne(
+               title='First Invoice Payment',
+               portal_type='Payment Transaction',
+               simulation_state='delivered',
+               causality_value=invoice,
+               source_section_value=self.main_section,
+               source_payment_value=self.main_section.newContent(
                                             portal_type='Bank Account'),
                destination_section_value=self.organisation_module.client_1,
                lines=(dict(source_value=self.account_module.receivable,
