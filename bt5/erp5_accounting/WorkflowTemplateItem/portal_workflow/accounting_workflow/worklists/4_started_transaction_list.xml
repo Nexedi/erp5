@@ -15,7 +15,7 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Accounting Transactions to Validate (%(count)s)</string> </value>
+            <value> <string>Accounting Transactions to Post (%(count)s)</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
