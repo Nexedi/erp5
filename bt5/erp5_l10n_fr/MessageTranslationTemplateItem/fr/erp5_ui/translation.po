@@ -396,7 +396,7 @@ msgstr "Écritures comptables à clôturer"
 msgid "Accounting Transactions to Start"
 msgstr "Écritures comptables à passer au brouillard"
 
-msgid "Accounting Transactions to Validate"
+msgid "Accounting Transactions to Post"
 msgstr "Écritures comptables à valider"
 
 msgid "Accounting View"
