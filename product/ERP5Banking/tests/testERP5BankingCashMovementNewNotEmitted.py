@@ -32,7 +32,6 @@ import os
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.DCWorkflow.DCWorkflow import Unauthorized, ValidationFailed
-from Testing.ZopeTestCase.PortalTestCase import PortalTestCase
 from Products.ERP5Banking.tests.TestERP5BankingMixin import TestERP5BankingMixin
 from Products.ERP5Banking.tests.testERP5BankingMonetaryIssue import TestERP5BankingMonetaryReceptionMixin
 from DateTime import DateTime

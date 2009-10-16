@@ -34,7 +34,6 @@ from DateTime import DateTime
 from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.DCWorkflow.DCWorkflow import ValidationFailed
-from Testing.ZopeTestCase.PortalTestCase import PortalTestCase
 from Products.ERP5Banking.tests.TestERP5BankingMixin import TestERP5BankingMixin
 #from Products.ERP5Banking.tests.testERP5BankingCheckPayment \
 #      import TestERP5BankingCheckPaymentMixin
