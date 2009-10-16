@@ -77,7 +77,6 @@ class RamCache(BaseCache):
     if cache_entry is not _MARKER:
       if not cache_entry.isExpired():
         #The value is well retrieved from cache storage
-        cache_entry.markCacheHit()
         self.markCacheHit()
         return cache_entry
       else:

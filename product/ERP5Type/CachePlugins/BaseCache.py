@@ -52,7 +52,6 @@ class CacheEntry(object):
       self.expires_at = cache_duration
     else:
       self.expires_at = time() + cache_duration
-    self._cache_hit_count = 0
     self.calculation_time = calculation_time
 
   def isExpired(self):
@@ -61,11 +60,6 @@ class CacheEntry(object):
       - 0 means never expire
     """
     return self.expires_at is None or self.expires_at != 0 and self.expires_at < time()
-
-  def markCacheHit(self, delta=1):
-    """ mark a read to this cache entry """
-    if ACTIVATE_TRACKING:
-      self._cache_hit_count = self._cache_hit_count + delta 
 
   def getValue(self):
     """ return cached value """ 
