@@ -84,11 +84,8 @@ except ImportError:
       self.function = callable
     def __call__(self, *opts, **kw):
       return self.function(*opts, **kw)
-  class caching_class_method_decorator:
-    def __init__(self, *args, **kw):
-      pass
-    def __call__(self, method):
-      return method
+  def caching_class_method_decorator(*args, **kw):
+    return lambda method: method
   enableReadOnlyTransactionCache = doNothing
   disableReadOnlyTransactionCache = doNothing
 

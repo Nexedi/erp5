@@ -278,13 +278,6 @@ def generateCacheIdWithoutFirstArg(method_id, *args, **kwd):
   # is 'self' that can be ignored to create a cache id.
   return str((method_id, args[1:], kwd))
 
-class caching_class_method_decorator:
-  def __init__(self, *args, **kw):
-    self.args = args
-    kw.setdefault(
-      'cache_id_func', generateCacheIdWithoutFirstArg)
-    self.kw = kw
-
-  def __call__(self, method):
-    caching_method = CachingMethod(method, *self.args, **self.kw)
-    return lambda *args, **kw: caching_method(*args, **kw)
+def caching_class_method_decorator(*args, **kw):
+  kw.setdefault('cache_id_func', generateCacheIdWithoutFirstArg)
+  return lambda method: CachingMethod(method, *args, **kw)
