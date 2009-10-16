@@ -69,8 +69,9 @@ except ImportError:
   psyco = None
 
 try:
-  from Products.ERP5Type.Cache import enableReadOnlyTransactionCache
-  from Products.ERP5Type.Cache import disableReadOnlyTransactionCache, CachingMethod
+  from Products.ERP5Type.Cache import enableReadOnlyTransactionCache, \
+       disableReadOnlyTransactionCache, CachingMethod, \
+       caching_class_method_decorator
 except ImportError:
   LOG('SQLCatalog', WARNING, 'Count not import CachingMethod, expect slowness.')
   def doNothing(context):
@@ -83,17 +84,13 @@ except ImportError:
       self.function = callable
     def __call__(self, *opts, **kw):
       return self.function(*opts, **kw)
+  class caching_class_method_decorator:
+    def __init__(self, *args, **kw):
+      pass
+    def __call__(self, method):
+      return method
   enableReadOnlyTransactionCache = doNothing
   disableReadOnlyTransactionCache = doNothing
-
-class caching_class_method_decorator:
-  def __init__(self, *args, **kw):
-    self.args = args
-    self.kw = kw
-
-  def __call__(self, method):
-    caching_method = CachingMethod(method, *self.args, **self.kw)
-    return lambda *args, **kw: caching_method(*args, **kw)
 
 try:
   from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
