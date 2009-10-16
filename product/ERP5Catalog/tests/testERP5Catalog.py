@@ -36,7 +36,6 @@ from AccessControl.SecurityManagement import newSecurityManager
 from zLOG import LOG
 from DateTime import DateTime
 from Products.CMFCore.tests.base.testcase import LogInterceptor
-from Testing.ZopeTestCase.PortalTestCase import PortalTestCase
 from Products.ERP5Type.tests.utils import createZODBPythonScript, todo_erp5
 from Products.ZSQLCatalog.ZSQLCatalog import HOT_REINDEXING_FINISHED_STATE,\
       HOT_REINDEXING_RECORDING_STATE, HOT_REINDEXING_DOUBLE_INDEXING_STATE
@@ -1951,7 +1950,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     get_transaction().commit()
     self.tic()
 
-    PortalTestCase.self.login('bob')
+    self.login('bob')
     self.assertEquals([obj2], [x.getObject() for x in
                                obj.searchFolder(portal_type='Bank Account')])
     # now if we pass the bank account in deleted state, it's no longer returned
