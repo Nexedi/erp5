@@ -60,7 +60,7 @@ class datastream:
     def setCacheable(self, value):
         """Set cacheable flag to yes or no
         """
-        self._cacheable = not not value
+        self._cacheable = bool(value)
 
     #data = property('getData', 'setData', None, """idata.data""")
 

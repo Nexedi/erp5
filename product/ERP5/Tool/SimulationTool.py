@@ -554,7 +554,7 @@ class SimulationTool(BaseTool):
 
       class DictMixIn(dict):
         def set(dictionary, key, value):
-          result = not(not(value))
+          result = bool(value)
           if result:
             dictionary[key] = value
           return result

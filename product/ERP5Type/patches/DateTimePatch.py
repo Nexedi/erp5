@@ -110,7 +110,7 @@ def DateTime_parse(self, st, datefmt=getDefaultDateFormat()):
       ls=len(s)
       i=i+ls
       if (ls==4 and d and d in '+-' and
-          (len(ints) + (not not month) >= 3)):
+          (len(ints) + bool(month) >= 3)):
           tz='%s%s' % (d,s)
       else:
           v=int(s)
