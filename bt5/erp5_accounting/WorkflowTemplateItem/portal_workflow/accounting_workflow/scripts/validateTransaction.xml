@@ -124,8 +124,10 @@ if not skip_period_validation :\n
     if no_accounts:\n
       valid_date = True\n
     else:\n
-      section = transaction.getSourceSectionValue()\n
-      if section is not None and not len(section.contentValues(\n
+      section = source_section\n
+      if section.getPortalType() == \'Organisation\':\n
+        section = section.Organisation_getMappingRelatedOrganisation()\n
+      if not len(section.contentValues(\n
              filter=dict(portal_type="Accounting Period"))):\n
         valid_date = True\n
       else:\n
@@ -152,8 +154,10 @@ if not skip_period_validation :\n
     if no_accounts:\n
       valid_date = True\n
     else:\n
-      section = transaction.getDestinationSectionValue()\n
-      if section is not None and not len(section.contentValues(\n
+      section = destination_section\n
+      if section.getPortalType() == \'Organisation\':\n
+        section = section.Organisation_getMappingRelatedOrganisation()\n
+      if not len(section.contentValues(\n
              filter=dict(portal_type="Accounting Period"))):\n
         valid_date = True\n
       else:\n
