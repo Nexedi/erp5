@@ -31,6 +31,7 @@ Purchase Supply Line | variable_additional_price
 Purchase Supply Line | view
 Purchase Supply Module | view
 Purchase Supply | view
+Purchase Supply | view_profile
 Sale Supply Line | additional_price
 Sale Supply Line | base_price
 Sale Supply Line | discount_ratio
@@ -41,6 +42,7 @@ Sale Supply Line | variable_additional_price
 Sale Supply Line | view
 Sale Supply Module | view
 Sale Supply | view
+Sale Supply | view_profile
 Service Individual Variation | view
 Service Module | converted_inventory_report
 Service Module | view
