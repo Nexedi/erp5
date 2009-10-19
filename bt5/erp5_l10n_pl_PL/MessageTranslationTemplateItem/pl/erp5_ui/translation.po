@@ -2578,9 +2578,6 @@ msgid "Sale Order Line"
 msgstr "Linia sprzedaży"
 
 msgid "Sale Order Lines"
-msgstr "Linie Zamówienia Sprzedaży"
-
-msgid "Sale Order Lines"
 msgstr "Linie sprzedaży"
 
 msgid "Sale Order Module"
