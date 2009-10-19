@@ -33,7 +33,7 @@ class IDownloadable(Interface):
   """
   Downloadable interface specification
 
-  Documents which implement the IDownloadable can be downloaded
+  Documents which implement IDownloadable can be downloaded
   directly from their URL using any format specified as a parameter.
   """
 
@@ -51,4 +51,10 @@ class IDownloadable(Interface):
 
     kw -- optional conversion parameters
     """
- 
+
+  def getStandardFileName():
+    """
+    Returns a standard file name for the document to download.
+    This method is the reverse of
+    IMetadataDiscoverable.getPropertyDictFromFileName.
+    """ 
