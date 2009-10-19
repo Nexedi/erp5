@@ -4410,7 +4410,7 @@ msgid "The telephone extension"
 msgstr "内線"
 
 msgid "The values above are the parameters of the transaction list displayed below.<br/>Those parameters have a portal wide scope and can be edited in the <a href='${url}'>preference screen</a>."
-msgstr "上記の値によって下記に表示されている取引一覧が制御されています。<br/>これらのパラメータはポータル全体に適用されており、<a href='${url}'>設定画面</a>で編集できます。\r\n"
+msgstr "上記の値によって下記に表示されている取引一覧が制御されています。<br/>これらのパラメータはポータル全体に適用されており、<a href='${url}'>設定画面</a>で編集できます。"
 
 msgid "There is no such document in the database. You may create an new document of type ${portal_type} in relation with ${title} according to relation ${base_category}. Use the form bellow to enter the ${catalog_index} values of new documents."
 msgstr "データベースにそのような文書がありません。${base_category} の関係に従って、${title} と関連した ${portal_type} 型の新しい文書を作成可能です。新規の文書の ${catalog_index} を以下のフォームを利用してください。"
