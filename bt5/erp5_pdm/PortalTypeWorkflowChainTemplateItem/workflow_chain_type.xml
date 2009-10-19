@@ -13,7 +13,7 @@
  </chain>
  <chain>
   <type>Purchase Supply</type>
-  <workflow>edit_workflow</workflow>
+  <workflow>edit_workflow, validation_workflow</workflow>
  </chain>
  <chain>
   <type>Purchase Supply Line</type>
@@ -21,7 +21,7 @@
  </chain>
  <chain>
   <type>Sale Supply</type>
-  <workflow>edit_workflow</workflow>
+  <workflow>edit_workflow, validation_workflow</workflow>
  </chain>
  <chain>
   <type>Sale Supply Line</type>
