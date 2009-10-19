@@ -45,6 +45,7 @@ from cStringIO import StringIO
 from urllib import pathname2url, urlopen, splittype, urlretrieve
 import re
 from xml.dom.minidom import parse
+from xml.parsers.expat import ExpatError
 import struct
 import cPickle
 import posixpath
@@ -526,7 +527,17 @@ class TemplateTool (BaseTool):
         f = urlopen(url)
         property_dict_list = []
         try:
-          doc = parse(f)
+          try:
+            doc = parse(f)
+          except ExpatError:
+            if REQUEST is not None:
+              psm = translateString('Invalid repository: ${repo}',
+                                    mapping={'repo':repository})
+              REQUEST.RESPONSE.redirect("%s?portal_status_message=%s"
+                                       % (self.absolute_url(), psm))
+              return
+            else:
+              raise RuntimeError, 'Invalid repository: %s' % repository
           try:
             root = doc.documentElement
             for template in root.getElementsByTagName("template"):
