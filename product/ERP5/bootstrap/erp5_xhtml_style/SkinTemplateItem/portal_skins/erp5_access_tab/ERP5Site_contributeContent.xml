@@ -88,8 +88,9 @@ merged_content = None\n
 \n
 try:\n
   new_content = context.portal_contributions.newContent(**kw)\n
-  new_content.processFile()\n
-  merged_content = new_content.Document_convertToBaseFormatAndDiscoverMetadata(file_name=file_name)\n
+  if new_content.isSupportBaseDataConversion():\n
+    new_content.processFile()\n
+    merged_content = new_content.Document_convertToBaseFormatAndDiscoverMetadata(file_name=file_name)\n
 except ConversionError, Fault:\n
   # there are errors during ingestion content\n
   failure = 1\n
