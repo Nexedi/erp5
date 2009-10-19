@@ -38,7 +38,8 @@ class IWatermarkable(Interface):
   """
 
   # Declarative interface classification
-  _subject_list = ('DMS', )
+  # XXX using a concrete attribute like this will raise an exception.
+  # _subject_list = ('DMS', )
 
   def getWatermarkedData(**kw):
     """
