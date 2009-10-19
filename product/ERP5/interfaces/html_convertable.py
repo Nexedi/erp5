@@ -33,7 +33,7 @@ class IHtmlConvertable(Interface):
   """
   HTML Convertable interface specification
 
-  Documents which implement the ITextConvertable interface
+  Documents which implement the IHtmlConvertable interface
   can be converted to HTML.
   """
 
