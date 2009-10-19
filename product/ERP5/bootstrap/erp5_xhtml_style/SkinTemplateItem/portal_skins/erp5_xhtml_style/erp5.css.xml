@@ -1087,6 +1087,7 @@ a.tree_closed {\n
   background: url(\'<dtml-var expr="portal_url()">/images/tab_left.png\') top left no-repeat;\n
   margin: 0;\n
   padding: 0 0 0 10px;\n
+  line-height: 1.2em;\n
 }\n
 \n
 .document .actions li.selected a {\n
