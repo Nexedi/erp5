@@ -149,7 +149,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>destination_decision</string> </value>
+            <value> <string>Destination Decision</string> </value>
         </item>
         <item>
             <key> <string>write_permission</string> </key>

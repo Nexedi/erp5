@@ -168,7 +168,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>destination_project</string> </value>
+            <value> <string>Destination Project</string> </value>
         </item>
         <item>
             <key> <string>write_permission</string> </key>

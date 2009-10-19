@@ -163,9 +163,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>Agent Privilege</string> </value>
         </item>
         <item>
             <key> <string>write_permission</string> </key>

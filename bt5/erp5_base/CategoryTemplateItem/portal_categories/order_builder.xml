@@ -170,7 +170,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>order_builder</string> </value>
+            <value> <string>Order Builder</string> </value>
         </item>
         <item>
             <key> <string>write_permission</string> </key>

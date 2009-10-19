@@ -149,7 +149,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>source_payment</string> </value>
+            <value> <string>Source Payment</string> </value>
         </item>
         <item>
             <key> <string>write_permission</string> </key>
