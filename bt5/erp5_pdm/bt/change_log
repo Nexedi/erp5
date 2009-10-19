@@ -1,4 +1,5 @@
 2009-10-19 Kazuhiko
+* add more columns in Purchase Supply module list and Sale Supply module list.
 * add more fields in Purchase Supply view and Sale Supply view.
 * add Profile tab in Purchase Supply and Sale Supply.
 * add validation workflow in Purchase Supply and Sale Supply.
