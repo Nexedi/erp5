@@ -84,10 +84,10 @@ class ICrawlable(Interface):
                  isIndexContent is delegated to, by default the
                  parent document
 
-    content -- the content document to ass, by default self
+    content -- the content document to assess, by default self
 
     NOTE: Crawlable Documents and External Sources current
     use the same isIndexContent method which is unified here,
     but with a different signature. This is probably inconsistent
-    and the interface must be revised.
+    and the interface must be revised. XXX
     """
