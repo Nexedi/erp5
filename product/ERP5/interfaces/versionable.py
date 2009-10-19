@@ -33,7 +33,7 @@ class IVersionable(Interface):
   """
   Versionable interface specification
 
-  Documents which implement the IVersionable are available in different
+  Documents which implement IVersionable are available in different
   versions and languages and include a revision number.
   """
 

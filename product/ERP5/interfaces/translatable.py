@@ -33,7 +33,7 @@ class ITranslatable(Interface):
   """
   Translatable interface specification
 
-  Documents which implement the ITranslatable are available in different
+  Documents which implement ITranslatable are available in different
   languages.
   """
 
