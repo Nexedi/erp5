@@ -88,5 +88,6 @@ class IVersionable(Interface):
     Merge the current document with any previous revision
     by using the content of the current document to replace
     the content of previous revisions, and by deleting the
-    current document afterwards.
+    current document afterwards. Returns the resulting
+    document of the merge process.
     """
