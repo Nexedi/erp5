@@ -579,15 +579,15 @@ class Test(ERP5TypeTestCase):
 
   def enableLightInstall(self):
     """
-    Return if we should do a light install (1) or not (0)
+    Return if we should do a light install or not
     """
-    return 1
+    return True
 
   def enableActivityTool(self):
     """
-    Return if we should create (1) or not (0) an activity tool
+    Return if we should create or not an activity tool
     """
-    return 1
+    return True
 
   def afterSetUp(self):
     """
