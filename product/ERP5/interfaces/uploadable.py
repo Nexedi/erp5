@@ -28,6 +28,7 @@
 ##############################################################################
 
 from zope.interface import Interface
+MAX_REPEAT = 0 # XXX - this variable should be put somewhere else
 
 class IUploadable(Interface):
   """
@@ -91,4 +92,23 @@ class IUploadable(Interface):
     Returns the list of acceptable formats for upload
     where format is an extension (ex. 'png') which can be 
     passed to IConvertable.convert or to IDownloadable.index_html
+    """
+
+  def updateContentFromURL(url=None, repeat=MAX_REPEAT, crawling_depth=0):
+    """
+    Download and update content of this document from the specified URL.
+    If no url is specified, Document which support the IUrlGetter
+    interface use the Url of the document itself. 
+
+    url -- optional URL to download the updated content from.
+           required whenever document does not implement IUrlGetter
+
+    repeat -- optional max number of retries for download
+
+    crawling_depth -- optional crawling depth for documents which 
+                      implement ICrawlable
+
+    NOTE: implementation is normally delegated to ContributionTool.
+
+    XXX - it is unclear whether MAX_REPEAT should be part of signature
     """
