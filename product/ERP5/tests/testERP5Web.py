@@ -54,12 +54,6 @@ class TestERP5Web(ERP5TypeTestCase, ZopeTestCase.Functional):
   def getTitle(self):
     return "ERP5Web"
 
-  def login(self, quiet=0, run=run_all_test):
-    uf = self.getPortal().acl_users
-    uf._doAddUser(self.manager_username, self.manager_password, ['Manager'], [])
-    user = uf.getUserById(self.manager_username).__of__(uf)
-    newSecurityManager(None, user)
-
   def getBusinessTemplateList(self):
     """
     Return the list of required business templates.
@@ -69,8 +63,12 @@ class TestERP5Web(ERP5TypeTestCase, ZopeTestCase.Functional):
             )
 
   def afterSetUp(self):
-    self.login()
     portal = self.getPortal()
+
+    uf = portal.acl_users
+    uf._doAddUser(self.manager_username, self.manager_password, ['Manager'], [])
+    self.login(self.manager_username)
+
     self.web_page_module = self.portal.web_page_module
     self.web_site_module = self.portal.web_site_module
     portal.Localizer.manage_changeDefaultLang(language = 'en')
@@ -929,12 +927,6 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
     user_folder = self.getPortal().acl_users
     user_folder._doAddUser(name, 'password', role_list, [])
 
-  def changeUser(self, name):
-    self.old_user = getSecurityManager().getUser()
-    user_folder = self.getPortal().acl_users
-    user = user_folder.getUserById(name).__of__(user_folder)
-    newSecurityManager(None, user)
-
   def afterSetUp(self):
     self.portal.Localizer = DummyLocalizer()
     self.createUser('admin', ['Manager'])
@@ -958,7 +950,7 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
       message = '\ntest_01_AccessWebPageByReference'
       ZopeTestCase._print(message)
 
-    self.changeUser('admin')
+    self.login('admin')
     site = self.portal.web_site_module.newContent(portal_type='Web Site',
                                                   id='site')
     section = site.newContent(portal_type='Web Section', id='section')
@@ -972,7 +964,7 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
     transaction.commit()
     self.tic()
 
-    self.changeUser('erp5user')
+    self.login('erp5user')
     page_en = self.portal.web_page_module.newContent(portal_type='Web Page')
     page_en.edit(reference='my-first-web-page',
                  language='en',
@@ -1062,7 +1054,7 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
     if not quiet:
       message = '\ntest_03_WebSection_getDocumentValueListSecurity'
       ZopeTestCase._print(message)
-    self.changeUser('admin')
+    self.login('admin')
     web_site_module = self.portal.web_site_module
     site = web_site_module.newContent(portal_type='Web Site',
                                       id='site')
@@ -1080,7 +1072,7 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
     transaction.commit()
     self.tic()
 
-    self.changeUser('erp5user')
+    self.login('erp5user')
     page_en_0 = self.portal.web_page_module.newContent(portal_type='Web Page')
     page_en_0.edit(reference='my-first-web-page',
                  language='en',
@@ -1110,13 +1102,13 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
                  text_content='Hello, World!')
 
     transaction.commit()
-    self.changeUser('erp5user')
+    self.login('erp5user')
     self.tic()
     self.portal.Localizer.changeLanguage('en')
 
     self.assertEquals(0, len(section.WebSection_getDocumentValueList()))
 
-    self.changeUser('erp5user')
+    self.login('erp5user')
     page_en_0.publish()
     transaction.commit()
     self.tic()
@@ -1139,7 +1131,7 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
     self.assertEquals(0, len(section.WebSection_getDocumentValueList()))
 
     # Second Object
-    self.changeUser('erp5user')
+    self.login('erp5user')
     page_en_1.publish()
     transaction.commit()
     self.tic()
@@ -1159,7 +1151,7 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
                       section.WebSection_getDocumentValueList()[0].getUid())
 
     # Trird Object
-    self.changeUser('erp5user')
+    self.login('erp5user')
     page_en_2.publish()
     transaction.commit()
     self.tic()
@@ -1177,7 +1169,7 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
     self.assertEquals(0, len(section.WebSection_getDocumentValueList()))
 
     # First Japanese Object
-    self.changeUser('erp5user')
+    self.login('erp5user')
     page_jp_0.publish()
     transaction.commit()
     self.tic()
@@ -1203,7 +1195,7 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
       message = '\ntest_04_ExpireUserAction'
       ZopeTestCase._print(message)
 
-    self.changeUser('admin')
+    self.login('admin')
     web_site_module = self.portal.web_site_module
     site = web_site_module.newContent(portal_type='Web Site', id='site')
 
@@ -1225,7 +1217,7 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
       self.fail("Admin should be able to expire a Web Section.")
 
     # test if a user (ASSIGNOR) can expire them
-    self.changeUser('webmaster')
+    self.login('webmaster')
     try:
       section_2.expire()
       section_6.expire()
@@ -1239,7 +1231,7 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
       message = '\ntest_05_createWebSite'
       ZopeTestCase._print(message)
 
-    self.changeUser('admin')
+    self.login('admin')
     web_site_module = self.portal.web_site_module
 
     # test for admin
@@ -1249,7 +1241,7 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
       self.fail("Admin should be able to create a Web Site.")
 
     # test as a web user (assignor)
-    self.changeUser('webmaster')
+    self.login('webmaster')
     try:
       site_2 = web_site_module.newContent(portal_type='Web Site', id='site_2')
     except Unauthorized:
@@ -1267,7 +1259,7 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
       message = '\ntest_06_createWebSection'
       ZopeTestCase._print(message)
 
-    self.changeUser('admin')
+    self.login('admin')
     web_site_module = self.portal.web_site_module
     site = web_site_module.newContent(portal_type='Web Site', id='site')
 
@@ -1279,7 +1271,7 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
       self.fail("Admin should be able to create a Web Section.")
 
     # test as a webmaster (assignor)
-    self.changeUser('webmaster')
+    self.login('webmaster')
     try:
       section_2 = site.newContent(portal_type='Web Section', id='section_2')
       section_3 = section_2.newContent(portal_type='Web Section', id='section_3')
@@ -1301,7 +1293,7 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
       message = '\ntest_07_createCategory'
       ZopeTestCase._print(message)
 
-    self.changeUser('admin')
+    self.login('admin')
     portal_categories = self.portal.portal_categories
     publication_section = portal_categories.publication_section
 
@@ -1325,7 +1317,7 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
     self.assertEquals(category_2_clone.getPortalType(), 'Category')
 
     # test as a web user (assignor)
-    self.changeUser('webmaster')
+    self.login('webmaster')
     try:
       base_category_2 = portal_categories.newContent(portal_type='Base Category', id='base_category_2')
       self.fail("A webmaster should not be able to create a Base Category.")
@@ -1360,7 +1352,7 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
       message = '\ntest_08_createAndrenameCategory'
       ZopeTestCase._print(message)
 
-    self.changeUser('admin')
+    self.login('admin')
     portal_categories = self.portal.portal_categories
     publication_section = portal_categories.publication_section
 
@@ -1383,7 +1375,7 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
     except Unauthorized:
       self.fail("Admin should be able to rename a Category.")
     # test as a web user (assignor)
-    self.changeUser('webmaster')
+    self.login('webmaster')
     try:
       base_category_2 = portal_categories.newContent(portal_type='Base Category', id='base_category_2')
       self.fail("A webmaster should not be able to create a Base Category.")
