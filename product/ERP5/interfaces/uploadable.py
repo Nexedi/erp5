@@ -112,3 +112,9 @@ class IUploadable(Interface):
 
     XXX - it is unclear whether MAX_REPEAT should be part of signature
     """
+
+  def isExternalDocument():
+    """
+    Returns True if content was downloaded from a URL. Returns False
+    if content was uploaded from a file.
+    """
