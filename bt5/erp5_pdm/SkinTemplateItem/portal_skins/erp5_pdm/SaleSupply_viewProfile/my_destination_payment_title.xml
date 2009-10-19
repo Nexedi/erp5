@@ -109,10 +109,6 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>description</string> </key>
-                    <value> <string>The organisation or person in charge of paying for the client.</string> </value>
-                </item>
-                <item>
                     <key> <string>extra_context</string> </key>
                     <value>
                       <list/>
@@ -124,11 +120,7 @@
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>SaleTradeCondition_viewFieldLibrary</string> </value>
-                </item>
-                <item>
-                    <key> <string>title</string> </key>
-                    <value> <string>Payer</string> </value>
+                    <value> <string>Base_viewPDMFieldLibrary</string> </value>
                 </item>
               </dictionary>
             </value>

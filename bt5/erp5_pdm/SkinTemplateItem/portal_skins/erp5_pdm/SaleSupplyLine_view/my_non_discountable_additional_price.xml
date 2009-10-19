@@ -109,10 +109,6 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>description</string> </key>
-                    <value> <string>A per unit additional price that is not impacted by discount ratio</string> </value>
-                </item>
-                <item>
                     <key> <string>extra_context</string> </key>
                     <value>
                       <list/>
@@ -124,11 +120,7 @@
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>BaseTradeSale_FieldLibrary</string> </value>
-                </item>
-                <item>
-                    <key> <string>title</string> </key>
-                    <value> <string>Non Discountable Additional Price</string> </value>
+                    <value> <string>Base_viewPDMFieldLibrary</string> </value>
                 </item>
               </dictionary>
             </value>
