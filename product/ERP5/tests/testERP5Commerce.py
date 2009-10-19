@@ -109,7 +109,12 @@ class TestCommerce(ERP5TypeTestCase):
 
   
   def afterSetUp(self):
-    self.login()
+    uf = self.getPortal().acl_users
+    uf._doAddUser('ivan', '', ['Manager'], [])
+    uf._doAddUser('customer', '', ['Auditor', 'Author'], [])
+
+    self.login('ivan')
+
     product_module = self.portal.product_module
     currency_module = self.portal.currency_module
     sale_order_module = self.portal.sale_order_module
@@ -163,7 +168,7 @@ class TestCommerce(ERP5TypeTestCase):
                                             currency.getRelativeUrl())
 
     self.app.REQUEST.set('session_id', SESSION_ID)
-    self.changeUser('ivan')
+    self.login('ivan')
     transaction.commit()
     self.tic()
 
@@ -219,14 +224,6 @@ class TestCommerce(ERP5TypeTestCase):
     #XXX: Security hack (lucas)
     self.portal.acl_users.zodb_roles.assignRoleToPrincipal('Manager', reference)
 
-  def login(self):
-    uf = self.getPortal().acl_users
-    uf._doAddUser('ivan', '', ['Manager'], [])
-    uf._doAddUser('customer', '', ['Auditor', 'Author'], [])
-    uf._doAddUser('ERP5TypeTestCase', '', ['Manager'], [])
-    user = uf.getUserById('ivan').__of__(uf)
-    newSecurityManager(None, user)
-            
   def getDefaultProduct(self, id='1'):
     """ 
       Get default product.
@@ -301,11 +298,6 @@ class TestCommerce(ERP5TypeTestCase):
   def createUser(self, name, role_list):
     user_folder = self.portal.acl_users
     user_folder._doAddUser(name, 'password', role_list, [])
-
-  def changeUser(self, user_id):
-    user_folder = self.portal.acl_users
-    user = user_folder.getUserById(user_id).__of__(user_folder)
-    newSecurityManager(None, user)
 
   def setupWebSite(self, **kw):
     """
@@ -559,7 +551,7 @@ class TestCommerce(ERP5TypeTestCase):
                     self.app.REQUEST.RESPONSE.getHeader('location'))
 
     # but it should work if the user is authenticated
-    self.changeUser('customer')
+    self.login('customer')
     self.portal.SaleOrder_paymentRedirect()
     self.assertTrue(urllib.quote("SaleOrder_viewConfirmAsWeb") in
                     self.app.REQUEST.RESPONSE.getHeader('location'))
@@ -597,7 +589,7 @@ class TestCommerce(ERP5TypeTestCase):
     """
       Test the SaleOrder_finalizeShopping script
     """
-    self.changeUser('webmaster')
+    self.login('webmaster')
     self.web_site.Resource_addToShoppingCart(self.getDefaultProduct(), 
                                            quantity=1)
     self.web_site.Resource_addToShoppingCart(self.getDefaultProduct('2'), 
@@ -707,7 +699,7 @@ class TestCommerce(ERP5TypeTestCase):
     self.web_site.setProperty('ecommerce_paypal_signature', 'signature')
    
     #2 login and activate a cart
-    self.changeUser('webmaster')
+    self.login('webmaster')
     request = self.app.REQUEST
     request.set('session_id', SESSION_ID)
 
@@ -846,7 +838,7 @@ class TestCommerce(ERP5TypeTestCase):
     transaction.commit()
     self.tic()
  
-    self.changeUser('toto')
+    self.login('toto')
     self.portal.SaleOrder_paymentRedirect()
     self.assertTrue(urllib.quote("SaleOrder_viewConfirmAsWeb") in
                     self.app.REQUEST.RESPONSE.getHeader('location'))
@@ -860,7 +852,7 @@ class TestCommerce(ERP5TypeTestCase):
     person_object = self.web_site.SaleOrder_getShoppingCartCustomer()
     self.assertEquals(person_object, None)
 
-    self.changeUser('webmaster')
+    self.login('webmaster')
     person_object = self.web_site.SaleOrder_getShoppingCartCustomer()
     self.assertNotEquals(person_object, None)
     self.assertEquals(person_object.getReference(), 'webmaster')
@@ -924,7 +916,7 @@ class TestCommerce(ERP5TypeTestCase):
       Testing if the comment added during the checkout will be set on the sale
       order object generated.
     """
-    self.changeUser('webmaster')
+    self.login('webmaster')
     comment = 'TESTING COMMENT'
     self.web_site.Resource_addToShoppingCart(self.getDefaultProduct(), 
                                            quantity=1)
