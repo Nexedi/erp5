@@ -184,14 +184,17 @@ class FolderMixIn(ExtensionClass.Base):
     """ delete items in this folder.
       `id` can be a list or a string.
     """
+    error_message = 'deleteContent only accepts string or list of strings not '
     if isinstance(id, str):
       self._delObject(id)
     elif isinstance(id, list) or isinstance(id, tuple):
       for my_id in id:
-        self._delObject(my_id)
+        if isinstance(my_id, str):
+          self._delObject(my_id)
+        else:
+          raise TypeError, error_message + str(type(my_id))
     else:
-      raise TypeError, 'deleteContent only accepts string or list, '\
-                       'not %s' % type(id)
+      raise TypeError, error_message + str(type(id))
 
   def _generatePerDayId(self):
     """
