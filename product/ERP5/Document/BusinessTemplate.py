@@ -1690,7 +1690,7 @@ class PortalTypeWorkflowChainTemplateItem(BaseTemplateItem):
         workflow_list = [workflow_list]
       xml_data += '\n <chain>'
       xml_data += '\n  <type>%s</type>' %(key,)
-      xml_data += '\n  <workflow>%s</workflow>' %(', '.join(workflow_list))
+      xml_data += '\n  <workflow>%s</workflow>' %(', '.join(sorted(workflow_list)))
       xml_data += '\n </chain>'
     xml_data += '\n</workflow_chain>'
     return xml_data
