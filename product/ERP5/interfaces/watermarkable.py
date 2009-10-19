@@ -37,10 +37,6 @@ class IWatermarkable(Interface):
   added a watermark before conversion and download.
   """
 
-  # Declarative interface classification
-  # XXX using a concrete attribute like this will raise an exception.
-  # _subject_list = ('DMS', )
-
   def getWatermarkedData(**kw):
     """
     Adds a watermark to the original data of this document 
