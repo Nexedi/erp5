@@ -1,7 +1,7 @@
 msgid ""
 msgstr "Project-Id-Version: ERP5 Localized Interface\n"
-"POT-Creation-Date: 2009-08-20 07:02+CET\n"
-"PO-Revision-Date: 2009-08-20 07:02+CET\n"
+"POT-Creation-Date: 2009-10-19 07:02+CET\n"
+"PO-Revision-Date: 2009-10-19 07:02+CET\n"
 "Last-Translator:  <>\n"
 "Language-Team: ja <>\n"
 "MIME-Version: 1.0\n"
@@ -954,7 +954,7 @@ msgid "Client"
 msgstr "顧客"
 
 msgid "Clone"
-msgstr "複製する"
+msgstr "複製"
 
 msgid "Clone Ticket and Events"
 msgstr "チケットとイベントを複製する"
@@ -3744,7 +3744,7 @@ msgid "Report Tree"
 msgstr "レポート・ツリー"
 
 msgid "Report"
-msgstr "報告する"
+msgstr "レポート"
 
 msgid "Reporter"
 msgstr "報告者"
