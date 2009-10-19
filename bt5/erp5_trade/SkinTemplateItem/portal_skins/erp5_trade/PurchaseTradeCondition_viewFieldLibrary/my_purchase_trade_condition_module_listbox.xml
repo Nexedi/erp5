@@ -90,7 +90,7 @@
                       <list>
                         <tuple>
                           <string>title</string>
-                          <string>Purchase Trade Condition</string>
+                          <string>Title</string>
                         </tuple>
                         <tuple>
                           <string>default_destination_section_title</string>
@@ -171,7 +171,7 @@
                       <list>
                         <tuple>
                           <string>title</string>
-                          <string>Purchase Trade Condition</string>
+                          <string>Title</string>
                         </tuple>
                         <tuple>
                           <string>default_destination_section_title</string>
@@ -271,7 +271,7 @@
                       <list>
                         <tuple>
                           <string>title</string>
-                          <string>Purchase Trade Condition</string>
+                          <string>Title</string>
                         </tuple>
                         <tuple>
                           <string>default_destination_section_title</string>
@@ -361,7 +361,7 @@
                       <list>
                         <tuple>
                           <string>title</string>
-                          <string>Purchase Trade Condition</string>
+                          <string>Title</string>
                         </tuple>
                         <tuple>
                           <string>default_destination_section_title</string>
