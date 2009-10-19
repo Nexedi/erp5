@@ -60,6 +60,7 @@ class Supply(Path, XMLObject):
                       , PropertySheet.Delivery
                       , PropertySheet.Path
                       , PropertySheet.FlowCapacity
+                      , PropertySheet.Comment
                       )
 
     #######################################################
