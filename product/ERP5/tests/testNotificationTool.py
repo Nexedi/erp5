@@ -114,9 +114,7 @@ class TestNotificationTool(ERP5TypeTestCase):
 
   def changeUser(self, name):
     self.old_user = getSecurityManager().getUser()
-    user_folder = self.getPortal().acl_users
-    user = user_folder.getUserById(name).__of__(user_folder)
-    newSecurityManager(None, user)
+    self.login(name)
 
   def changeToPreviousUser(self):
     newSecurityManager(None, self.old_user)
@@ -132,7 +130,7 @@ class TestNotificationTool(ERP5TypeTestCase):
     self.portal.portal_caches.clearAllCache()
     transaction.commit()
     self.tic()
-    self.changeUser('erp5user')
+    self.login('erp5user')
 
   def beforeTearDown(self):
     transaction.abort()

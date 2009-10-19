@@ -56,15 +56,6 @@ class TestNotificationMessageModule(ERP5TypeTestCase):
     user_folder = self.getPortal().acl_users
     user_folder._doAddUser(name, 'password', role_list, [])
 
-  def changeUser(self, name):
-    self.old_user = getSecurityManager().getUser()
-    user_folder = self.getPortal().acl_users
-    user = user_folder.getUserById(name).__of__(user_folder)
-    newSecurityManager(None, user)
-
-  def changeToPreviousUser(self):
-    newSecurityManager(None, self.old_user)
-
   def afterSetUp(self):
     self.createUser('erp5user', ['Auditor', 'Author'])
     self.createUser('manager', ['Manager'])
@@ -76,7 +67,7 @@ class TestNotificationMessageModule(ERP5TypeTestCase):
     self.portal.portal_caches.clearAllCache()
     transaction.commit()
     self.tic()
-    self.changeUser('erp5user')
+    self.login('erp5user')
 
   def beforeTearDown(self):
     transaction.abort()
