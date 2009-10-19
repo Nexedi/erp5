@@ -163,7 +163,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>metric_type</string> </value>
+            <value> <string>Metric Type</string> </value>
         </item>
         <item>
             <key> <string>write_permission</string> </key>
