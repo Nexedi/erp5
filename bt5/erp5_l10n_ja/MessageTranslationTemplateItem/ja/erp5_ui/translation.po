@@ -3267,7 +3267,7 @@ msgid "Please select one or more items to copy first."
 msgstr "一つ以上の項目を選択してください。"
 
 msgid "Please set a ChangeLog message."
-msgstr "更新履歴メッセージを設定してください。"
+msgstr "変更履歴メッセージを設定してください。"
 
 msgid "Portal Type Property"
 msgstr "ポータルタイプのプロパティ"
