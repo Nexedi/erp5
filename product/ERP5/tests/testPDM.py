@@ -52,15 +52,14 @@ class TestPDMWithSecurity(ERP5TypeTestCase):
 
 
     self.portal._run_after_setup = True
-    transaction.commit()
-    self.tic()
 
-  def login(self, quiet=0):
-    ERP5TypeTestCase.login(self, quiet)
     user_folder = self.getPortal().acl_users
     user_folder._doAddUser('author', '', ['Auditor', 'Author'], [])
     user_folder._doAddUser('assignor', '', ['Auditor', 'Author', 'Assignor'], [])
     user_folder._doAddUser('assignee', '', ['Auditor', 'Author', 'Assignee'], [])
+
+    transaction.commit()
+    self.tic()
 
   def changeUser(self, name):
     user_folder = self.getPortal().acl_users
