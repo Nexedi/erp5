@@ -38,7 +38,7 @@ from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.CopySupport import CopyContainer
 from Products.CMFCore.utils import getToolByName
-from Products.ERP5Type.Cache import CachingMethod
+from Products.ERP5Type.Cache import caching_instance_method
 
 from zLOG import LOG
 
@@ -127,15 +127,14 @@ class CategoryTool(CopyContainer, CMFCategoryTool, BaseTool):
     security.declareProtected(Permissions.AccessContentsInformation, 'getUids')
     getUids = getCategoryParentUidList
 
+    @caching_instance_method(id='portal_categories.getBaseCategoryDict', cache_factory='erp5_content_long', cache_id_generator=lambda m, *a, **k:m)
     def getBaseCategoryDict(self):
       """
         Cached method to which resturns a dict with category names as keys, and None as values.
         This allows to search for an element existence in the list faster.
         ie: if x in self.getPortalObject().portal_categories.getBaseCategoryDict()
       """
-      def getBaseCategoryDict(self):
-        return dict.fromkeys(self.getBaseCategoryList(), None)
-      return CachingMethod(getBaseCategoryDict, 'portal_categories.getBaseCategoryDict', cache_factory='erp5_content_long')(self)
+      return dict.fromkeys(self.getBaseCategoryList(), None)
 
     def updateRelatedContent(self, context,
                              previous_category_url, new_category_url):
