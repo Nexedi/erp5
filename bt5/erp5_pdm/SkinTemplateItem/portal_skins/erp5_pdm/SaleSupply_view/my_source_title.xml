@@ -17,7 +17,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_price_currency</string> </value>
+            <value> <string>my_source_title</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -109,6 +109,10 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>description</string> </key>
+                    <value> <string>The organisation or person who sends merchandise or provides service.</string> </value>
+                </item>
+                <item>
                     <key> <string>extra_context</string> </key>
                     <value>
                       <list/>
@@ -116,11 +120,15 @@
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_price_currency</string> </value>
+                    <value> <string>my_source_title</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string>SaleTradeCondition_viewFieldLibrary</string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value> <string>Sender or Provider</string> </value>
                 </item>
               </dictionary>
             </value>

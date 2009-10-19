@@ -109,10 +109,6 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>description</string> </key>
-                    <value> <string>The person or organisation in charge of sending the invoice or handling administrative paperwork for the supplier.</string> </value>
-                </item>
-                <item>
                     <key> <string>extra_context</string> </key>
                     <value>
                       <list/>
@@ -124,11 +120,7 @@
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>BaseTradeSale_FieldLibrary</string> </value>
-                </item>
-                <item>
-                    <key> <string>title</string> </key>
-                    <value> <string>Invoice Sender</string> </value>
+                    <value> <string>SaleTradeCondition_viewFieldLibrary</string> </value>
                 </item>
               </dictionary>
             </value>

@@ -109,10 +109,6 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>description</string> </key>
-                    <value> <string>Title of the transformation</string> </value>
-                </item>
-                <item>
                     <key> <string>extra_context</string> </key>
                     <value>
                       <list/>
@@ -124,11 +120,7 @@
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>BaseTradePurchase_FieldLibrary</string> </value>
-                </item>
-                <item>
-                    <key> <string>title</string> </key>
-                    <value> <string>Title</string> </value>
+                    <value> <string>SaleTradeCondition_viewFieldLibrary</string> </value>
                 </item>
               </dictionary>
             </value>
