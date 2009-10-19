@@ -158,7 +158,7 @@ class CachingMethod:
 
   def __init__(self, callable_object, id, cache_duration=180,
                cache_factory=DEFAULT_CACHE_FACTORY,
-               cache_id_func=None):
+               cache_id_generator=None):
     """Wrap a callable object in a caching method.
 
     callable_object must be callable.
@@ -176,7 +176,7 @@ class CachingMethod:
     self.callable_object = callable_object
     self.cache_duration = cache_duration
     self.cache_factory = cache_factory
-    self.cache_id_func = cache_id_func
+    self.cache_id_generator = cache_id_generator
 
   def __call__(self, *args, **kwd):
     """Call the method or return cached value using appropriate cache plugin """
@@ -223,9 +223,9 @@ class CachingMethod:
     ## generate cache id out of arguments passed.
     ## depending on arguments we may have different
     ## cache_id for same method_id
-    cache_id_func = self.cache_id_func
-    if cache_id_func is not None:
-      return cache_id_func(method_id, *args, **kwd)
+    cache_id_generator = self.cache_id_generator
+    if cache_id_generator is not None:
+      return cache_id_generator(method_id, *args, **kwd)
     return str((method_id, args, kwd))
 
 allow_class(CachingMethod)
@@ -278,8 +278,8 @@ def generateCacheIdWithoutFirstArg(method_id, *args, **kwd):
   # is 'self' that can be ignored to create a cache id.
   return str((method_id, args[1:], kwd))
 
-def caching_class_method_decorator(*args, **kw):
-  kw.setdefault('cache_id_func', generateCacheIdWithoutFirstArg)
+def caching_instance_method(*args, **kw):
+  kw.setdefault('cache_id_generator', generateCacheIdWithoutFirstArg)
   def wrapped(method):
     # The speed of returned function must be fast
     # so we instanciate CachingMethod now.

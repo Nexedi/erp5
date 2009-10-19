@@ -526,7 +526,7 @@ class ERP5TypeInformation(XMLObject,
       _getRawActionInformationList,
       id='_getRawActionInformationList',
       cache_factory='erp5_content_long',
-      cache_id_func=lambda method_id, *args, **kwd:str(method_id))
+      cache_id_generator=lambda method_id, *args, **kwd:str(method_id))
 
     security.declarePrivate('getRawActionInformationList')
     def getRawActionInformationList(self):

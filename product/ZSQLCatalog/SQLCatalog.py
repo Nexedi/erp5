@@ -71,7 +71,7 @@ except ImportError:
 try:
   from Products.ERP5Type.Cache import enableReadOnlyTransactionCache, \
        disableReadOnlyTransactionCache, CachingMethod, \
-       caching_class_method_decorator
+       caching_instance_method
 except ImportError:
   LOG('SQLCatalog', WARNING, 'Count not import CachingMethod, expect slowness.')
   def doNothing(context):
@@ -84,7 +84,7 @@ except ImportError:
       self.function = callable
     def __call__(self, *opts, **kw):
       return self.function(*opts, **kw)
-  def caching_class_method_decorator(*args, **kw):
+  def caching_instance_method(*args, **kw):
     return lambda method: method
   enableReadOnlyTransactionCache = doNothing
   disableReadOnlyTransactionCache = doNothing
@@ -936,7 +936,7 @@ class Catalog(Folder,
   @profiler_decorator
   @transactional_cache_decorator('SQLCatalog.getColumnMap')
   @profiler_decorator
-  @caching_class_method_decorator(id='SQLCatalog.getColumnMap', cache_factory='erp5_content_long')
+  @caching_instance_method(id='SQLCatalog.getColumnMap', cache_factory='erp5_content_long')
   @profiler_decorator
   def getColumnMap(self):
     """
@@ -2191,7 +2191,7 @@ class Catalog(Folder,
   @profiler_decorator
   @transactional_cache_decorator('SQLCatalog._getSearchKeyDict')
   @profiler_decorator
-  @caching_class_method_decorator(id='SQLCatalog._getSearchKeyDict', cache_factory='erp5_content_long')
+  @caching_instance_method(id='SQLCatalog._getSearchKeyDict', cache_factory='erp5_content_long')
   @profiler_decorator
   def _getSearchKeyDict(self):
     result = {}
