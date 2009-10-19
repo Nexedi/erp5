@@ -575,7 +575,7 @@ class Test(ERP5TypeTestCase):
     """
     Tuple of Business Templates we need to install
     """
-    return (,)
+    return ('erp5_base',)
 
   def enableLightInstall(self):
     """
