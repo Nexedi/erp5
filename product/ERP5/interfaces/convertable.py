@@ -33,7 +33,7 @@ class IConvertable(Interface):
   """
   Convertable interface specification
 
-  Documents which immplement IConvertable can be converted
+  Documents which implement IConvertable can be converted
   to multiple formats. IConvertable also provides 
   methods to list possible formats which documents can
   be converted to.

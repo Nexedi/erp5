@@ -33,7 +33,7 @@ class ITextConvertable(Interface):
   """
   Text Convertable interface specification
 
-  Documents which immplement the ITextConvertable interface
+  Documents which implement the ITextConvertable interface
   can be converted to plain text.
   """
 

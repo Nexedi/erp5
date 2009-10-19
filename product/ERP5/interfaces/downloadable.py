@@ -33,7 +33,7 @@ class IDownloadable(Interface):
   """
   Downloadable interface specification
 
-  Documents which immplement the IDownloadable can be downloaded
+  Documents which implement the IDownloadable can be downloaded
   directly from their URL using any format specified as a parameter.
   """
 
