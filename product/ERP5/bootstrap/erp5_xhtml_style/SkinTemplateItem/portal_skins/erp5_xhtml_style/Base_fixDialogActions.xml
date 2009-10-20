@@ -80,8 +80,8 @@ for ai in print_action_list:\n
   ai_copy = ai.copy()\n
   # this is quite low level. It may require to be done from file system code in\n
   # the future.\n
-  ai_copy.data[\'original_url\'] = ai_copy[\'url\']\n
-  ai_copy.data[\'url\'] = addDialogIfNeeded(ai_copy[\'url\'])\n
+  ai_copy[\'original_url\'] = ai_copy[\'url\']\n
+  ai_copy[\'url\'] = addDialogIfNeeded(ai_copy[\'url\'])\n
   new_print_action_list.append( ai_copy )\n
 \n
 return new_print_action_list\n
