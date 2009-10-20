@@ -59,25 +59,28 @@ from xmlrpclib import Fault\n
 from socket import error as SocketError\n
 \n
 message = None\n
-try:\n
-  return context.convertToBaseFormat()\n
-except ConflictError:\n
-  raise\n
-except ConversionError, e:\n
-  message = \'Conversion Error: %s\' % (str(e) or \'undefined.\')\n
-except Fault, e:\n
-  message = \'XMLFault: %s\' % (repr(e) or \'undefined.\')\n
-except SocketError, e:\n
-  message = \'Socket Error: %s\' % (repr(e) or \'undefined.\')\n
-except Exception, e:\n
-  message = \'Problem: %s\' % (repr(e) or \'undefined.\')\n
-except:\n
-  message = \'Problem: unknown\'\n
-# reach here, then exception was raised.\n
-# message must be logged in workflow.\n
-context.processFile(comment=message)\n
-# try again.\n
-context.activate(priority=3).convertToBaseFormat()\n
+if context.getExternalProcessingState()!=\'converted\':\n
+  # try to convert to base format only if not already done\n
+  try:\n
+    return context.convertToBaseFormat()\n
+  except ConflictError:\n
+    raise\n
+  except ConversionError, e:\n
+    message = \'Conversion Error: %s\' % (str(e) or \'undefined.\')\n
+  except Fault, e:\n
+    message = \'XMLFault: %s\' % (repr(e) or \'undefined.\')\n
+  except SocketError, e:\n
+    message = \'Socket Error: %s\' % (repr(e) or \'undefined.\')\n
+  except Exception, e:\n
+    message = \'Problem: %s\' % (repr(e) or \'undefined.\')\n
+  except:\n
+    message = \'Problem: unknown\'\n
+\n
+  # reach here, then exception was raised.\n
+  # message must be logged in workflow.\n
+  context.processFile(comment=message)\n
+  # try again.\n
+  context.activate(priority=3).convertToBaseFormat()\n
 return message\n
 </string> </value>
         </item>
