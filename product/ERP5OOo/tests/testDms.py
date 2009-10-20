@@ -114,13 +114,15 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
                            'Access contents information', ['Anonymous'], 1)
 
   def setSystemPreference(self):
-    default_pref = self.portal.portal_preferences.default_site_preference
+    default_pref = self.portal.portal_preferences.newContent(portal_type='System Preference')
     default_pref.setPreferredOoodocServerAddress(conversion_server_host[0])
     default_pref.setPreferredOoodocServerPortNumber(conversion_server_host[1])
     default_pref.setPreferredDocumentFileNameRegularExpression(FILE_NAME_REGULAR_EXPRESSION)
     default_pref.setPreferredDocumentReferenceRegularExpression(REFERENCE_REGULAR_EXPRESSION)
     if default_pref.getPreferenceState() != 'global':
       default_pref.enable()
+    get_transaction().commit()
+    self.tic()
 
   def getDocumentModule(self):
     return getattr(self.getPortal(),'document_module')
