@@ -436,6 +436,48 @@ class ERP5TypeInformation(XMLObject,
         for category in getattr(base, '_categories', ())))
 
     security.declareProtected(Permissions.AccessContentsInformation,
+                              'getInstancePropertyAndBaseCategoryList')
+    def getInstancePropertyAndBaseCategoryList(self):
+      """Return all the properties and base categories of the portal type. """
+      # XXX Does not return the list of all properties and categories currently
+      #     (as implementation does not follow exactly the accessor generation,
+      #     like for Expression evaluation). Should be probably better to get
+      #     the list from property holder and not from property sheet
+      # get categories from portal type
+      return_set = set()
+      for category in self.getTypeBaseCategoryList():
+        return_set.add(category)
+        return_set.add(category + '_free_text')
+
+      # get the property sheet list for the portal type
+      ps_list = [getattr(PropertySheet, p, None)
+                 for p in self.getTypePropertySheetList()]
+      m = Products.ERP5Type._m
+      if m.has_key(self.factory):
+        klass = m[self.factory].klass
+        if klass is not None:
+          from Products.ERP5Type.Base import getClassPropertyList
+          ps_list += getClassPropertyList(klass)
+      # get all properties from the property sheet list
+      for base in ps_list:
+        property_list = getattr(base, '_properties', None)
+        if property_list:
+          for property in property_list:
+            if property['type'] == 'content':
+              for suffix in property['acquired_property_id']:
+                return_set.add(property['id'] + '_' + suffix)
+            else:
+              return_set.add(property['id'])
+        category_list = getattr(base, '_categories', None)
+        if category_list:
+          for category in category_list:
+            return_set.add(category)
+            return_set.add(category + '_free_text')
+
+      # XXX Can't return set to restricted code in Zope 2.8.
+      return list(return_set)
+
+    security.declareProtected(Permissions.AccessContentsInformation,
                               'getInstancePropertyMap')
     def getInstancePropertyMap(self):
       """
