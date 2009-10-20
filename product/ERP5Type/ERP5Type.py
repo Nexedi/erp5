@@ -239,7 +239,7 @@ class ERP5TypeInformation(XMLObject,
     security = ClassSecurityInfo()
     security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-    zope.interface.implements(interfaces.IActionProvider)
+    zope.interface.implements(interfaces.IActionContainer)
 
     # Declarative properties
     property_sheets = ( PropertySheet.BaseType, )
@@ -494,15 +494,14 @@ class ERP5TypeInformation(XMLObject,
       """
       ec = createExpressionContext(ob)
       best_action = (), None
-      for action in self.getActionListFor(ob):
-        if action.getReference() == view:
+      for action in self.getActionList():
+        if action['id'] == view:
           if action.test(ec):
             break
         else:
           # In case that "view" (or "list") action is not present or not allowed,
           # find something that's allowed (of the same category, if possible).
-          index = (action.getActionType().endswith('_' + view),
-                  -action.getFloatIndex())
+          index = action['category'].endswith('_' + view),
           if best_action[0] < index and action.test(ec):
             best_action = index, action
       else:
@@ -511,45 +510,38 @@ class ERP5TypeInformation(XMLObject,
           raise AccessControl_Unauthorized(
             'No accessible views available for %r' % ob.getPath())
 
-      target = action.getAction()(ec).strip().split(ec.vars['object_url'])[-1]
+      target = action.cook(ec)['url'].strip().split(ec.vars['object_url'])[-1]
       if target.startswith('/'):
           target = target[1:]
       __traceback_info__ = self.getId(), target
       return ob.restrictedTraverse(target)
 
-    def _getRawActionInformationList(self):
-      return sorted(
-        (x.getRawActionInformation() for x in \
-         self.getActionInformationList() if x.isVisible()),
-        key=lambda x:x.getPriority())
-    _getRawActionInformationList = CachingMethod(
-      _getRawActionInformationList,
-      id='_getRawActionInformationList',
-      cache_factory='erp5_content_long',
-      cache_id_generator=lambda method_id, *args, **kwd:str(method_id))
+    security.declarePrivate('getCachedActionList')
+    def getCacheableActionList(self):
+      """Return a cacheable list of enabled actions"""
+      return [action.getCacheableAction()
+              for action in self.getActionInformationList()
+              if action.isVisible()]
 
-    security.declarePrivate('getRawActionInformationList')
-    def getRawActionInformationList(self):
-      """Return all visible action informations sorted by priority."""
-      return self._getRawActionInformationList(self, scope=self.id)
+    def _getActionList(self):
+      action_list = self.getCacheableActionList()
+      action_list.sort(key=lambda x:x['priority'])
+      return action_list
+    _getActionList = CachingMethod(_getActionList,
+      id='getActionList',
+      cache_factory='erp5_content_long',
+      cache_id_generator=lambda method_id, *args: method_id)
+
+    security.declarePrivate('getActionList')
+    def getActionList(self):
+      """Return the list of enabled actions from cache, sorted by priority"""
+      return self._getActionList(self, scope=self.id)
 
     security.declareProtected(Permissions.ModifyPortalContent,
-                              'clearGetRawActionInformationListCache')
-    def clearGetRawActionInformationListCache(self):
+                              'clearGetActionListCache')
+    def clearGetActionListCache(self):
       """Clear a cache of _getRawActionInformationList."""
-      self._getRawActionInformationList.delete(scope=self.id)
-
-    security.declarePrivate('getActionListFor')
-    def getActionListFor(self, ob=None):
-      """Return all actions of the object"""
-      return self.getActionInformationList()
-
-    security.declarePrivate('getFilteredActionListFor')
-    def getFilteredActionListFor(self, ob=None):
-      """Return all actions applicable to the object"""
-      ec = createExpressionContext(ob)
-      return (action for action in self.getActionInformationList()
-                     if action.test(ec))
+      self._getActionList.delete(scope=self.id)
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getActionInformationList')

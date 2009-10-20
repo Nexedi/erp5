@@ -39,10 +39,9 @@ def listFilteredActionsFor(self, object=None):
         elif hasattr(provider, 'getActionListFor'):
             from Products.ERP5Type.Utils import createExpressionContext
             ec = createExpressionContext(object)
-            actions.extend(
-              (action.cook(ec)
-               for action in provider.getRawActionInformationListFor(object)
-               if action.test(ec)))
+            actions.extend(action.cook(ec)
+                           for action in provider.getActionListFor(object)
+                           if action.test(ec))
         else:
             # for Action Providers written for CMF versions before 1.5
             actions.extend( self._listActionInfos(provider, object) )

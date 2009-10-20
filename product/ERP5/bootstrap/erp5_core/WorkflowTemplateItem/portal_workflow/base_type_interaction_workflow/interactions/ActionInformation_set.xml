@@ -31,7 +31,7 @@
             <key> <string>after_script_name</string> </key>
             <value>
               <list>
-                <string>ActionInformation_clearCache</string>
+                <string>BaseType_clearCache</string>
               </list>
             </value>
         </item>

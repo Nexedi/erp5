@@ -53,8 +53,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>base_type = state_change[\'object\']\n
-base_type.clearGetRawActionInformationListCache()\n
+            <value> <string>state_change[\'object\'].clearGetActionListCache()\n
 </string> </value>
         </item>
         <item>
@@ -66,6 +65,14 @@ base_type.clearGetRawActionInformationListCache()\n
         <item>
             <key> <string>_params</string> </key>
             <value> <string>state_change</string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -92,9 +99,8 @@ base_type.clearGetRawActionInformationListCache()\n
                         <value>
                           <tuple>
                             <string>state_change</string>
-                            <string>_getitem_</string>
-                            <string>base_type</string>
                             <string>_getattr_</string>
+                            <string>_getitem_</string>
                           </tuple>
                         </value>
                     </item>

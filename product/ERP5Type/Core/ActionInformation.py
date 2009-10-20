@@ -52,52 +52,11 @@ class ActionInformation(XMLObject):
   security = ClassSecurityInfo()
   security.declareObjectProtected(AccessContentsInformation)
 
-  zope.interface.implements(interfaces.IAction)
-
   # Declarative properties
   property_sheets = ( PropertySheet.CategoryCore
                     , PropertySheet.DublinCore
                     , PropertySheet.ActionInformation
                     )
-
-  security.declareProtected(AccessContentsInformation, 'test')
-  def test(self, ec):
-    """Test if the action should be displayed or not for the given context"""
-    if self.isVisible():
-      permission_list = self.getActionPermissionList()
-      if permission_list:
-        category = self.getActionType() or ''
-        info = ec.vars
-        if (info['here'] is not None and
-            (category[:6] == 'object' or
-             category[:8] == 'workflow')):
-          context = info['here']
-        elif (info['folder'] is not None and
-              category[:6] == 'folder'):
-          context = info['folder']
-        else:
-          context = info['portal']
-        has_permission = getSecurityManager().getUser().has_permission
-        for permission in permission_list:
-          if not has_permission(permission, context):
-            return False
-      condition = self.getCondition()
-      return condition is None or condition(ec)
-    return False
-
-  security.declareProtected(AccessContentsInformation, 'getActionInfo')
-  def getActionInfo(self, ec):
-    """Return a dict with values required to display the action"""
-    action = self.getAction()
-    icon = self.getIcon()
-    return {'id': self.getReference(),
-            'name': self.getTitle(),
-            'description': self.getDescription(),
-            'category':  self.getActionType(),
-            'priority': self.getFloatIndex(),
-            'icon': icon is not None and icon(ec) or '',
-            'url': action is not None and action(ec) or '',
-            }
 
   def _setAction(self, value):
     """Overridden setter for 'action' to accept strings and clean null values
@@ -166,78 +125,58 @@ class ActionInformation(XMLObject):
                           self.getConditionText()]
     return ' '.join(filter(None, search_source_list))
 
-  security.declareProtected(AccessContentsInformation, 'getActionType')
-  def getActionType(self):
-    # Since we should have only one category that starts with
-    # 'action_type/' here, we call self.categories[0][12:] (12 is the
-    # length of 'action_type/'), instead of self.getActionType() for
-    # better performance.
-    categories = getattr(self, 'categories', [])
-    return len(categories) and categories[0][12:] or None
+  security.declarePrivate('getCacheableAction')
+  def getCacheableAction(self):
+    """Return an action object that is not persistent and is cacheable"""
+    return CacheableAction(id=self.getReference(),
+                           name=self.getTitle(),
+                           description=self.getDescription(),
+                           category=self.getActionType(),
+                           priority=self.getFloatIndex(),
+                           icon=self.getIconText(),
+                           action=self.getActionText(),
+                           condition=self.getConditionText(),
+                           permission_list=self.getActionPermissionList())
 
-  security.declarePrivate('getRawActionInformation')
-  def getRawActionInformation(self):
-    """Return RawActionInformation instance that is not persistent and
-    is cacheable."""
-    # we cache cloned Expressions because original ones are persistent
-    # objects.
-    icon = self.getIcon()
-    if icon is not None:
-      icon = Expression(icon.text)
-    action = self.getAction()
-    if action is not None:
-      action = Expression(action.text)
-    condition = self.getCondition()
-    if condition is not None:
-      condition = Expression(condition.text)
-    return RawActionInformation(
-      {'id':self.getReference(),
-       'name':self.getTitle(),
-       'description':self.getDescription(),
-       'category':self.getActionType(),
-       'priority':self.getFloatIndex(),
-       'icon':icon,
-       'action':action,
-       'condition':condition,
-       'action_permission':self.getActionPermissionList(),
-       }
-      )
 
-class RawActionInformation(object):
+class CacheableAction(object):
   """The purpose of this class is to provide a cacheable instance having
   an enough information of Action Information document."""
 
-  def __init__(self, kw):
-    self.action = kw.pop('action')
-    self.icon = kw.pop('icon')
-    self.condition = kw.pop('condition')
-    self.action_permission = kw.pop('action_permission')
-    self.param_dict = kw
+  zope.interface.implements(interfaces.IAction)
 
-  def getPriority(self):
-    return self.param_dict['priority']
+  test_permission = None
+
+  def __init__(self, **kw):
+    for attr in 'action', 'icon', 'condition':
+      expression = kw.pop(attr, None)
+      setattr(self, attr, expression and Expression(expression))
+    self.param_dict = kw
+    self.permission_list = kw.pop('permission_list', None)
+    if self.permission_list:
+      category = kw['category'] or ''
+      if category[:6] == 'object' or category[:8] == 'workflow':
+        self.test_permission = 'here'
+      elif category[:6] == 'folder':
+        self.test_permission = 'folder'
+      else:
+        self.test_permission = 'portal'
+
+  def __getitem__(self, attr):
+    return self.param_dict[attr]
 
   def test(self, ec):
     """Test if the action should be displayed or not for the given context"""
-    permission_list = self.action_permission
-    if permission_list:
-      category = self.param_dict['category'] or ''
-      info = ec.vars
-      if (info['here'] is not None and
-          (category[:6] == 'object' or
-           category[:8] == 'workflow')):
-        context = info['here']
-      elif (info['folder'] is not None and
-            category[:6] == 'folder'):
-        context = info['folder']
-      else:
-        context = info['portal']
+    test_permission = self.test_permission
+    if test_permission:
+      context = ec.vars[test_permission]
+      if context is None:
+        context = ec.vars['portal']
       has_permission = getSecurityManager().getUser().has_permission
-      for permission in permission_list:
+      for permission in self.permission_list:
         if not has_permission(permission, context):
           return False
-    condition = self.condition
-    return condition is None or condition(ec)
+    return self.condition is None or self.condition(ec)
 
   def cook(self, ec):
     param_dict = self.param_dict.copy()

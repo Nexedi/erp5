@@ -23,8 +23,7 @@ from OFS.Folder import Folder as OFSFolder
 import transaction
 from Products.CMFCore import TypesTool as CMFCore_TypesTool
 from Products.ERP5Type.Tool.BaseTool import BaseTool
-from Products.ERP5Type.Cache import CachingMethod
-from Products.ERP5Type import interfaces, Permissions
+from Products.ERP5Type import Permissions
 from Products.ERP5Type.ERP5Type import ERP5TypeInformation
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 from zLOG import LOG, WARNING, PANIC
@@ -40,33 +39,13 @@ class TypesTool(BaseTool, CMFCore_TypesTool.TypesTool):
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-  zope.interface.implements(interfaces.IActionProvider)
-
-  security.declarePrivate('getRawActionInformationListFor')
-  def getRawActionInformationListFor(self, ob=None):
-    """Return all action informations of the object"""
-    if ob is not None:
-      type_info = self.getTypeInfo(ob)
-      if type_info is not None:
-        return type_info.getRawActionInformationList()
-    return ()
-
   security.declarePrivate('getActionListFor')
   def getActionListFor(self, ob=None):
-    """Return all actions of the object"""
-    if ob is not None:
-      type_info = self.getTypeInfo(ob)
-      if type_info is not None:
-        return type_info.getActionListFor(ob)
-    return ()
-
-  security.declarePrivate('getFilteredActionListFor')
-  def getFilteredActionListFor(self, ob=None):
     """Return all actions applicable to the object"""
     if ob is not None:
       type_info = self.getTypeInfo(ob)
       if type_info is not None:
-        return type_info.getFilteredActionListFor(ob)
+        return type_info.getActionList()
     return ()
 
   def getTypeInfo(self, *args):

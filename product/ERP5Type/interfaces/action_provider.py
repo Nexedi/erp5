@@ -33,11 +33,18 @@ from zope.interface import Interface
 class IAction(Interface):
   """
   """
+  def __getitem__(attr):
+    """Return any information independant of the context
+
+    The following keys must have a value:
+    - id (string)
+    - category (string)
+    - priority (numeric)
+    """
   def test(ec):
     """Test if the action should be displayed or not for the given context
     """
-
-  def getActionInfo(ec):
+  def cook(ec):
     """Return a dict with information required to display the action
 
     The dict must contain the following keys:
@@ -50,12 +57,12 @@ class IAction(Interface):
     - priority (numeric)
     """
 
-class IActionProvider(Interface):
+class IActionContainer(Interface):
   """
   """
-  def getActionListFor(ob):
-    """Return all actions of the object"""
-
-  def getFilteredActionListFor(ob):
-    """Return all actions applicable to the object
+  def getCacheableActionList():
+    """Return a cacheable list of enabled actions
+    """
+  def getActionList():
+    """Return the list of enabled actions from cache, sorted by priority
     """

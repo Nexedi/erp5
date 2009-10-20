@@ -4,7 +4,7 @@
 from consistency_message import IConsistencyMessage
 from divergence_message import IDivergenceMessage
 from object_message import IObjectMessage
-from action_provider import IAction, IActionProvider
+from action_provider import IAction, IActionContainer
 from cache_plugin import ICachePlugin
 from category_access_provider import ICategoryAccessProvider
 from value_access_provider import IValueAccessProvider
