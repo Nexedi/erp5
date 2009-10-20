@@ -577,18 +577,6 @@ class Test(ERP5TypeTestCase):
     """
     return ('erp5_base',)
 
-  def enableLightInstall(self):
-    """
-    Return if we should do a light install or not
-    """
-    return True
-
-  def enableActivityTool(self):
-    """
-    Return if we should create or not an activity tool
-    """
-    return True
-
   def afterSetUp(self):
     """
     This is ran before anything, used to set the environment
