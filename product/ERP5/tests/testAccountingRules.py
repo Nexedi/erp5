@@ -129,12 +129,6 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
     self.createCategories()
     self.validateRules()
     
-  def login(self):
-    uf = self.getPortal().acl_users
-    uf._doAddUser('alex', '', ['Manager', 'Owner', 'Assignor'], [])
-    user = uf.getUserById('alex').__of__(uf)
-    newSecurityManager(None, user)
-  
   def createCategories(self) :
     """ create all categories that are needed for this test.
     It uses getCategoriesToCreate, so you should overload this method.
