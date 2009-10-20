@@ -62,6 +62,7 @@ document.uploadFile()\n
 if document.getParentValue().getPortalType() != \'Contribution Tool\' \\\n
    and document.isSupportBaseDataConversion():\n
   document.processFile()\n
+  document.activate().Document_tryToConvertToBaseFormat()\n
 </string> </value>
         </item>
         <item>
