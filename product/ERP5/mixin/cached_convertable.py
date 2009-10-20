@@ -31,6 +31,8 @@ import md5
 
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions
+from Products.CMFCore.utils import getToolByName
+from Products.ERP5Type.Cache import DEFAULT_CACHE_SCOPE
 
 class CachedConvertableMixin:
   """
