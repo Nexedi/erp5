@@ -109,28 +109,12 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>title</string>
-                          <string>Title</string>
-                        </tuple>
-                        <tuple>
-                          <string>delivery_mirror_section_title</string>
-                          <string>Third Party</string>
-                        </tuple>
-                        <tuple>
                           <string>translated_portal_type</string>
                           <string>Type</string>
                         </tuple>
                         <tuple>
-                          <string>operation_date</string>
-                          <string>Accounting Operation Date</string>
-                        </tuple>
-                        <tuple>
                           <string>reference</string>
                           <string>Invoice Number</string>
-                        </tuple>
-                        <tuple>
-                          <string>specific_reference</string>
-                          <string>Transaction Reference</string>
                         </tuple>
                         <tuple>
                           <string>source_reference</string>
@@ -139,18 +123,6 @@
                         <tuple>
                           <string>destination_reference</string>
                           <string>Destination Reference</string>
-                        </tuple>
-                        <tuple>
-                          <string>translated_simulation_state_title</string>
-                          <string>State</string>
-                        </tuple>
-                        <tuple>
-                          <string>debit</string>
-                          <string>Debit</string>
-                        </tuple>
-                        <tuple>
-                          <string>credit</string>
-                          <string>Credit</string>
                         </tuple>
                         <tuple>
                           <string>creation_date</string>
