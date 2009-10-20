@@ -301,28 +301,12 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>node_title</string>
-                          <string>Site or Warehouse</string>
-                        </tuple>
-                        <tuple>
                           <string>section_title</string>
                           <string>Owner</string>
                         </tuple>
                         <tuple>
                           <string>variation_text</string>
                           <string>Variation</string>
-                        </tuple>
-                        <tuple>
-                          <string>getCurrentInventory</string>
-                          <string>Current</string>
-                        </tuple>
-                        <tuple>
-                          <string>getAvailableInventory</string>
-                          <string>Available</string>
-                        </tuple>
-                        <tuple>
-                          <string>inventory</string>
-                          <string>Future</string>
                         </tuple>
                       </list>
                     </value>
