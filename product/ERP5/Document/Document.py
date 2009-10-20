@@ -52,8 +52,10 @@ import zope.interface
 import cStringIO
 import string
 from OFS.Image import Pdata
-import md5
 from Products.PythonScripts.Utility import allow_class
+
+# Mixin Import
+from Products.ERP5.mixin.cached_convertable import CachedConvertableMixin
 
 _MARKER = []
 VALID_ORDER_KEY_LIST = ('user_login', 'content', 'file_name', 'input')
@@ -112,136 +114,6 @@ class DocumentProxyError(Exception):pass
 
 class NotConvertedError(Exception):pass
 allow_class(NotConvertedError)
-
-class ConversionCacheMixin:
-  """
-    This class provides a generic API to store in the ZODB
-    various converted versions of a file or of a string.
-
-    Versions are stored in dictionaries; the class stores also
-    generation time of every format and its mime-type string.
-    Format can be a string or a tuple (e.g. format, resolution).
-  """
-
-  # Declarative security
-  security = ClassSecurityInfo()
-  security.declareObjectProtected(Permissions.AccessContentsInformation)
-
-  def _getCacheFactory(self):
-    """
-    """
-    if self.isTempObject():
-      return
-    cache_tool = getToolByName(self, 'portal_caches')
-    preference_tool = getToolByName(self, 'portal_preferences')
-    cache_factory_name = preference_tool.getPreferredConversionCacheFactory('document_cache_factory')
-    cache_factory = cache_tool.getRamCacheRoot().get(cache_factory_name)
-    #XXX This conditional statement should be remove as soon as
-    #Broadcasting will be enable among all zeo clients.
-    #Interaction which update portal_caches should interact with all nodes.
-    if cache_factory is None and getattr(cache_tool, cache_factory_name, None) is not None:
-      #ram_cache_root is not up to date for current node
-      cache_tool.updateCache()
-    return cache_tool.getRamCacheRoot().get(cache_factory_name)
-
-  security.declareProtected(Permissions.ModifyPortalContent, 'clearConversionCache')
-  def clearConversionCache(self):
-    """
-    """
-    if self.isTempObject():
-      self.temp_conversion_data = {}
-      return
-    for cache_plugin in self._getCacheFactory().getCachePluginList():
-      cache_plugin.delete(self.getPath(), DEFAULT_CACHE_SCOPE)
-
-  security.declareProtected(Permissions.View, 'hasConversion')
-  def hasConversion(self, **kw):
-    """
-    If you want to get conversion cache value if exists, please write
-    the code like:
-
-      try:
-        mime, data = getConversion(**kw)
-      except KeyError:
-        ...
-
-    instead of:
-
-      if self.hasConversion(**kw):
-        mime, data = self.getConversion(**kw)
-      else:
-        ...
-
-    for better performance.
-    """
-    try:
-      self.getConversion(**kw)
-      return True
-    except KeyError:
-      return False
-
-  security.declareProtected(Permissions.ModifyPortalContent, 'setConversion')
-  def setConversion(self, data, mime=None, calculation_time=None, **kw):
-    """
-    """
-    cache_id = self.generateCacheId(**kw)
-    if self.isTempObject():
-      if getattr(aq_base(self), 'temp_conversion_data', None) is None:
-        self.temp_conversion_data = {}
-      self.temp_conversion_data[cache_id] = (mime, aq_base(data))
-      return
-    cache_factory = self._getCacheFactory()
-    cache_duration = cache_factory.cache_duration
-    if data is not None:
-      for cache_plugin in cache_factory.getCachePluginList():
-        try:
-          cache_entry = cache_plugin.get(self.getPath(), DEFAULT_CACHE_SCOPE)
-          cache_dict = cache_entry.getValue()
-        except KeyError:
-          cache_dict = {}
-        cache_dict.update({cache_id: (self.getContentMd5(), mime, aq_base(data))})
-        cache_plugin.set(self.getPath(), DEFAULT_CACHE_SCOPE,
-                         cache_dict, calculation_time=calculation_time,
-                         cache_duration=cache_duration)
-
-  security.declareProtected(Permissions.View, 'getConversion')
-  def getConversion(self, **kw):
-    """
-    """
-    cache_id = self.generateCacheId(**kw)
-    if self.isTempObject():
-      return getattr(aq_base(self), 'temp_conversion_data', {})[cache_id]
-    for cache_plugin in self._getCacheFactory().getCachePluginList():
-      cache_entry = cache_plugin.get(self.getPath(), DEFAULT_CACHE_SCOPE)
-      data_list = cache_entry.getValue().get(cache_id)
-      if data_list:
-        md5sum, mime, data = data_list
-        if md5sum != self.getContentMd5():
-          raise KeyError, 'Conversion cache key is compromised for %r' % cache_id
-        return mime, data
-    raise KeyError, 'Conversion cache key does not exists for %r' % cache_id
-
-  security.declareProtected(Permissions.View, 'getConversionSize')
-  def getConversionSize(self, **kw):
-    """
-    """
-    try:
-      return len(self.getConversion(**kw))
-    except KeyError:
-      return 0
-
-  def generateCacheId(self, **kw):
-    """Generate proper cache id based on **kw.
-    Function inspired from ERP5Type.Cache
-    """
-    return str(makeSortedTuple(kw)).translate(string.maketrans('', ''), '[]()<>\'", ')
-
-  security.declareProtected(Permissions.ModifyPortalContent, 'updateContentMd5')
-  def updateContentMd5(self):
-    """Update md5 checksum from the original file
-    """
-    data = self.getData()
-    self._setContentMd5(md5.new(data).hexdigest()) #reindex is useless
 
 class PermanentURLMixIn(ExtensibleTraversableMixIn):
   """
@@ -455,8 +327,168 @@ class UpdateMixIn:
     return method()
 
 
-class Document(PermanentURLMixIn, XMLObject, UrlMixIn, ConversionCacheMixin, SnapshotMixin, UpdateMixIn):
-  """
+class Document(PermanentURLMixIn, XMLObject, UrlMixIn, CachedConvertableMixin, SnapshotMixin, UpdateMixIn):
+  """Document is an abstract class with all methods related to document
+  management in ERP5. This includes searchable text, explicit relations,
+  implicit relations, metadata, versions, languages, etc.
+
+  Documents may either store their content directly or cache content
+  which is retrieved from a specified URL. The second case if often
+  referred as "External Document". Standalone "External Documents" may
+  be created by specifying a URL to the contribution tool which is in
+  charge of initiating the download process and selecting the appropriate
+  document type. Groups of "External Documents" may also be generated from
+  so-called "External Source" (refer to ExternalSource class for more
+  information).
+
+  External Documents may be downloaded once or updated at regular interval.
+  The later can be useful to update the content of an external source.
+  Previous versions may be stored in place or kept in a separate file.
+  This feature is known as the crawling API. It is mostly implemented
+  in ContributionTool with wrappers in the Document class. It can be useful
+  for create a small search engine.
+
+  There are currently two types of Document subclasses:
+
+  * File for binary file based documents. File has subclasses such as Image,
+    OOoDocument, PDFDocument, etc. to implement specific conversion methods.
+
+  * TextDocument for text based documents. TextDocument has subclasses such
+    as Wiki to implement specific methods. 
+    TextDocument itself has a subclass (XSLTDocument) which provides
+    XSLT based analysis and transformation of XML content based on XSLT
+    templates. 
+
+  Conversion should be achieved through the convert method and other methods
+  of the conversion API (convertToBaseFormat, etc.).
+  Moreover, any Document subclass must ne able to convert documents to text
+  (asText method) and HTML (asHTML method). Text is required for full text
+  indexing. HTML is required for crawling.
+
+  Instances can be created directly, or via portal_contributions tool which
+  manages document ingestion process whereby a file can be uploaded by http
+  or sent in by email or dropped in by webdav or in some other way as yet
+  unknown. The ingestion process has the following steps:
+
+  (1) portal type detection
+  (2) object creation and upload of data
+  (3) metadata discovery (optionally with conversion of data to another format)
+  (4) other possible actions to finalise the ingestion (ex. by assigning
+      a reference)
+
+  This class handles (3) and calls a ZMI script to do (4).
+
+  Metadata can be drawn from various sources:
+
+  input      -   data supplied with http request or set on the object during (2) (e.g.
+                 discovered from email text)
+  file_name  -   data which might be encoded in file name
+  user_login -   information about user who is contributing the file
+  content    -   data which might be derived from document content
+
+  If a certain property is defined in more than one source, it is set according to
+  preference order returned by a script 
+     Document_getPreferredDocumentMetadataDiscoveryOrderList
+     (or any type-based version since discovery is type dependent)
+
+  Methods for discovering metadata are:
+
+    getPropertyDictFromInput
+    getPropertyDictFromFileName
+    getPropertyDictFromUserLogin
+    getPropertyDictFromContent
+
+  Methods for processing content are implemented either in Document class
+  or in Base class:
+
+    getSearchableReferenceList (Base)
+    getSearchableText (Base)
+    index_html (overriden in Document subclasses)
+
+  Methods for handling relations are implemented either in Document class
+  or in Base class:
+
+    getImplicitSuccessorValueList (Base)
+    getImplicitPredecessorValueList (Base)
+    getImplicitSimilarValueList (Base)
+    getSimilarCloudValueList (Document)
+
+  Implicit relations consist in finding document references inside
+  searchable text (ex. INV-23456) and deducting relations from that.
+  Two customisable methods required. One to find a list of implicit references
+  inside the content (getSearchableReferenceList) and one to convert a given
+  document reference into a list of reference strings which could be present
+  in other content (asSearchableReferenceList).
+
+  document.getSearchableReferenceList() returns
+    [
+     {'reference':' INV-12367'},
+     {'reference': 'INV-1112', 'version':'012}', 
+     {'reference': 'AB-CC-DRK', 'version':'011', 'language': 'en'}
+    ]
+
+  The Document class behaviour can be extended / customized through scripts
+  (which are type-based so can be adjusted per portal type).
+
+  * Document_getPropertyDictFromUserLogin - finds a user (by user_login or
+    from session) and returns properties which should be set on the document
+
+  * Document_getPropertyDictFromContent - analyzes document content and returns
+    properties which should be set on the document
+
+  * Base_getImplicitSuccessorValueList - finds appropriate all documents
+    referenced in the current content
+
+  * Base_getImplicitPredecessorValueList - finds document predecessors based on
+    the document coordinates (can use only complete coordinates, or also partial)
+
+  * Document_getPreferredDocumentMetadataDiscoveryOrderList - returns an order
+    in which metadata should be set/overwritten
+
+  * Document_finishIngestion - called by portal_activities after all the ingestion
+    is completed (and after document has been converted, so text_content
+    is available if the document has it)
+
+  * Document_getNewRevision - calculates revision number which should be set
+    on this document. Implementation depends on revision numbering policy which
+    can be very different. Interaction workflow should call setNewRevision method.
+
+  * Document_populateContent - analyses the document content and produces
+    subcontent based on it (ex. images, news, etc.). This scripts can
+    involve for example an XSLT transformation to process XML.
+
+  Subcontent: documents may include subcontent (files, images, etc.)
+  so that publication of rich content can be path independent. Subcontent
+  can also be used to help the rendering in HTML of complex documents
+  such as ODF documents.
+
+  Consistency checking:
+    Default implementation uses DocumentReferenceConstraint to check if the 
+    reference/language/version triplet is unique. Additional constraints
+    can be added if necessary.
+
+  NOTE: Document.py supports a notion of revision which is very specific.
+  The underlying concept is that, as soon as a document has a reference,
+  the association of (reference, version, language) must be unique accross
+  the whole system. This means that a given document in a given version in a
+  given language is unique. The underlying idea is similar to the one in a Wiki
+  system in which each page is unique and acts the the atom of collaboration.
+  In the case of ERP5, if a team collaborates on a Text document written with
+  an offline word processor, all updates should be placed inside the same object.
+  A Contribution will thus modify an existing document, if allowed from security
+  point of view, and increase the revision number. Same goes for properties
+  (title). Each change generates a new revision.
+
+    conversion API - not same as document - XXX BAD
+    XXX make multiple interfaces
+
+  TODO:
+    - move all implementation bits to MixIn classes
+    - in the end, Document class should have zero code
+      and only serve as a quick and easy way to create 
+      new types of documents (one could even consider 
+      that this class should be trashed)
+    - 
   """
 
   meta_type = 'ERP5 Document'
@@ -467,7 +499,14 @@ class Document(PermanentURLMixIn, XMLObject, UrlMixIn, ConversionCacheMixin, Sna
   isDocument = 1
   __dav_collection__=0
 
-  zope.interface.implements( interfaces.IDocument, )
+  zope.interface.implements(interfaces.IConvertable,
+                            interfaces.ITextConvertable,
+                            interfaces.IHtmlConvertable,
+                            interfaces.ICachedConvertable,
+                            interfaces.IVersionable,
+                            interfaces.IDownloadable,
+                            interfaces.ICrawlable,
+                           )
 
   # Regular expressions
   href_parser = re.compile('<a[^>]*href=[\'"](.*?)[\'"]',re.IGNORECASE)
@@ -1051,13 +1090,13 @@ class Document(PermanentURLMixIn, XMLObject, UrlMixIn, ConversionCacheMixin, Sna
     # Try not to invoke an automatic transition here
     self._edit(**kw)
     # Finish ingestion by calling method
-    self.finishIngestion()
-    self.reindexObject()
+    self.finishIngestion() # XXX - is this really the right place ?
+    self.reindexObject() # XXX - is this really the right place ?
     # Revision merge is tightly coupled
     # to metadata discovery - refer to the documentation of mergeRevision method
-    merged_doc = self.mergeRevision()
-    merged_doc.reindexObject()
-    return merged_doc
+    merged_doc = self.mergeRevision() # XXX - is this really the right place ?
+    merged_doc.reindexObject() # XXX - is this really the right place ?
+    return merged_doc # XXX - is this really the right place ?
 
   security.declareProtected(Permissions.ModifyPortalContent, 'finishIngestion')
   def finishIngestion(self):
@@ -1091,13 +1130,6 @@ class Document(PermanentURLMixIn, XMLObject, UrlMixIn, ConversionCacheMixin, Sna
     if format in ('text', 'txt'):
       return 'text/plain', '' # XXX - Why ?
     raise NotImplementedError
-
-  def getConvertedSize(self, format):
-    """
-      Returns the size of the converted document
-    """
-    format, data = self.convert(format)
-    return len(data)
 
   security.declareProtected(Permissions.View, 'asSubjectText')
   def asSubjectText(self, **kw):
@@ -1272,7 +1304,7 @@ class Document(PermanentURLMixIn, XMLObject, UrlMixIn, ConversionCacheMixin, Sna
     """
     return False
 
-  def convertFile(self, **kw):
+  def convertFile(self, **kw): # XXX - It it really useful to explicitly define ?
     """
     Workflow transition invoked when conversion occurs.
     """

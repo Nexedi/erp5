@@ -47,10 +47,12 @@ from Products.ERP5Type.Cache import CachingMethod
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 from Products.ERP5.Document.File import File
 from Products.ERP5.Document.Document import PermanentURLMixIn
-from Products.ERP5.Document.Document import ConversionCacheMixin
 from Products.ERP5.Document.Document import ConversionError
 from Products.ERP5.Document.Document import NotConvertedError
 from zLOG import LOG, ERROR
+
+# Mixin Import
+from Products.ERP5.mixin.cached_convertable import CachedConvertableMixin
 
 enc=base64.encodestring
 dec=base64.decodestring
@@ -80,7 +82,7 @@ class TimeoutTransport(SafeTransport):
     return SafeTransport.make_connection(self, h)
 
 
-class OOoDocument(PermanentURLMixIn, File, ConversionCacheMixin):
+class OOoDocument(PermanentURLMixIn, File, CachedConvertableMixin):
   """
     A file document able to convert OOo compatible files to
     any OOo supported format, to capture metadata and to

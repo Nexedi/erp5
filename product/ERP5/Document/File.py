@@ -35,12 +35,14 @@ from Products.ERP5Type.Base import WorkflowMethod
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
 from Products.ERP5Type.Cache import CachingMethod
 from Products.ERP5.Document.Document import Document
-from Products.ERP5.Document.Document import ConversionCacheMixin
 from Products.ERP5.Document.Document import ConversionError
 from Products.ERP5Type.Base import Base
 from Products.CMFDefault.File import File as CMFFile
 from zLOG import LOG
 from DateTime import DateTime
+
+# Mixin Import
+from Products.ERP5.mixin.cached_convertable import CachedConvertableMixin
 
 mimetypes.init()
 
@@ -51,7 +53,7 @@ def _unpackData(data):
   """
   return str(data)
 
-class File(Document, CMFFile, ConversionCacheMixin):
+class File(Document, CMFFile, CachedConvertableMixin):
   """
       A File can contain raw data which can be uploaded and downloaded.
       It is the root class of Image, OOoDocument (ERP5OOo product),

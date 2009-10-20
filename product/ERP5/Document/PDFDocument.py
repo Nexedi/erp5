@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2002-2006 Nexedi SARL and Contributors. All Rights Reserved.
@@ -34,11 +35,12 @@ from Products.CMFCore.utils import getToolByName, _setCacheHeaders,\
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
 from Products.ERP5Type.Cache import CachingMethod
 from Products.ERP5.Document.Image import Image
-from Products.ERP5.Document.Document import ConversionCacheMixin, ConversionError
+from Products.ERP5.Document.Document import ConversionError
+from Products.ERP5.mixin.cached_convertable import CachedConvertableMixin
 
 from zLOG import LOG, WARNING
 
-class PDFDocument(Image, ConversionCacheMixin):
+class PDFDocument(Image, CachedConvertableMixin):
   """
   PDFDocument is a subclass of Image which is able to
   extract text content from a PDF file either as text
