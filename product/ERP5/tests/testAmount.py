@@ -82,9 +82,6 @@ class TestAmount(ERP5TypeTestCase):
   def afterSetUp(self, quiet=1, run=run_all_test):
     self.login()
 
-  def stepTic(self,**kw):
-    self.tic()
-
   def stepCreateResource(self, sequence=None, sequence_list=None, **kw):
     """
       Create a resource

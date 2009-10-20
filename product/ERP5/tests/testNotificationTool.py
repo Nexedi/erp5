@@ -140,9 +140,6 @@ class TestNotificationTool(ERP5TypeTestCase):
     transaction.commit()
     self.tic()
 
-  def stepTic(self,**kw):
-    self.tic()
-
   def stepAddUserA(self, sequence=None, sequence_list=None, **kw):
     """
     Create a user

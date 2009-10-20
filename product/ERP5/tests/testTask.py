@@ -154,9 +154,6 @@ class TestTaskMixin:
     user = uf.getUserById('alex').__of__(uf)
     newSecurityManager(None, user)
 
-  def stepTic(self, **kw):
-    self.tic()
-
   def stepCreateResource(self,sequence=None, sequence_list=None, \
                                     **kw):
     """

@@ -421,9 +421,6 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
         item_id = 'item%i' % i
         item_module.newContent(id=item_id, reference='%i' % i)
 
-  def stepTic(self, sequence=None, sequence_list=None, **kw):
-    self.tic()
-
   def stepCreatePackingList(self, sequence=None, sequence_list=None, **kw):
     property_dict = {}
     for property in ('source_section','destination_section','datetime','destination'):

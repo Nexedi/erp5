@@ -145,9 +145,6 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     user = uf.getUserById('seb').__of__(uf)
     newSecurityManager(None, user)
 
-  def stepTic(self,**kw):
-    self.tic()
-
   def stepUseCoreBusinessTemplate(self, sequence=None,
                                   sequence_list=None, **kw):
     """

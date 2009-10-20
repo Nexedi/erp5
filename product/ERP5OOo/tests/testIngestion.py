@@ -448,10 +448,6 @@ class TestIngestion(ERP5TypeTestCase):
   ##################################
   ##  Basic steps
   ##################################
- 
-  def stepTic(self, sequence=None, sequence_list=None, **kw):
-    self.tic()
-
   def stepCreatePerson(self, sequence=None, sequence_list=None, **kw):
     """
       Create a person with ID "john" if it does not exists already

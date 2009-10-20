@@ -94,12 +94,6 @@ class TestBug(ERP5TypeTestCase):
   ##################################
   ##  Basic steps
   ##################################
-  def stepTic(self, **kw):
-    """
-      Flush activity queue.
-    """
-    self.tic()
-
   def stepLoginUsualUser(self, **kw):
     portal = self.getPortal()
     uf = portal.acl_users

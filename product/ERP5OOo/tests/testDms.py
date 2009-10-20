@@ -180,11 +180,6 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
   def clearCache(self):
     self.portal.portal_caches.clearAllCache()
 
-  ## steps
-  
-  def stepTic(self, sequence=None, sequence_list=None, **kw):
-    self.tic()
-
   ## tests
 
   def test_01_HasEverything(self, quiet=QUIET, run=RUN_ALL_TEST):

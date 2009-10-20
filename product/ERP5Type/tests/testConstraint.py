@@ -71,9 +71,6 @@ class TestConstraint(PropertySheetTestCase):
     transaction.commit()
     self.tic()
 
-  def stepTic(self,**kw):
-    self.tic()
-
   def createCategories(self):
     """ 
       Light install create only base categories, so we create 

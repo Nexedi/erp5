@@ -2855,11 +2855,7 @@ class TestAccountingWithSequences(AccountingTestCase):
     """Returns a list of categories that should be created."""
     return ('group/client', 'group/vendor/sub1', 'group/vendor/sub2',
             'payment_mode/check', 'region/%s' % self.default_region, )
-  
-  def stepTic(self, **kw):
-    """Flush activity queue. """
-    self.tic()
-  
+
   def createEntities(self):
     """Create entities. """
     self.client = self.getOrganisationModule().newContent(

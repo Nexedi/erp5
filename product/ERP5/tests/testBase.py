@@ -103,9 +103,6 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
         o = self.category_tool.group.newContent(portal_type='Category',
                                                 id=category_id)
 
-  def stepTic(self,**kw):
-    self.tic()
-
   def stepRemoveWorkflowsRelated(self, sequence=None, sequence_list=None, 
                                  **kw):
     """

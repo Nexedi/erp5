@@ -97,9 +97,6 @@ class TestGeographicalAddress(ERP5TypeTestCase):
     self.region_category_list = ['region/%s' % x for x \
                                   in region_category_list]
 
-  def stepTic(self,**kw):
-    self.tic()
-
   def stepCreateEntity(self, sequence=None, sequence_list=None, **kw):
     """
     Create an entity

@@ -66,9 +66,6 @@ class TestPlanningBox(ERP5TypeTestCase):
     user = uf.getUserById('seb').__of__(uf)
     newSecurityManager(None, user)
 
-  def stepTic(self,**kw):
-    self.tic()
-
   def stepCreateObjects(self, sequence = None, sequence_list = None, **kw):
     # Make sure that the status is clean.
     portal = self.getPortal()

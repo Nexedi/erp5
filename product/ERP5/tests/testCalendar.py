@@ -78,9 +78,6 @@ class TestCalendar(ERP5ReportTestCase):
                                           id='my_group')
 
 
-  def stepTic(self,**kw):
-    self.tic()
-
   def afterSetUp(self):
     """
     Fake after setup

@@ -137,9 +137,6 @@ class TestOrderMixin:
                                                  portal_type='Category',
                                                  id=category_id)
 
-  def stepTic(self,**kw):
-    self.tic()
-
   def stepCreateNotVariatedResource(self,sequence=None, sequence_list=None, \
                                     **kw):
     """

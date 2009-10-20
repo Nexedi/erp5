@@ -178,10 +178,6 @@ class TestOOoImport(ERP5TypeTestCase):
   ##################################
   ##  Basic steps
   ##################################
-
-  def stepTic(self, sequence=None, sequence_list=None, **kw):
-    self.tic()
-
   def stepImportRawDataFile(self, sequence=None, sequence_list=None, **kw):
     f = makeFileUpload('import_data_list.ods')
     person_module = self.getPortal().person_module

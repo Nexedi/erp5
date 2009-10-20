@@ -67,10 +67,6 @@ class TestPasswordTool(ERP5TypeTestCase):
     transaction.commit()
     self.tic()
 
-  def stepTic(self,**kw):
-    transaction.commit()
-    self.tic()
-
   def getUserFolder(self):
     """Returns the acl_users. """
     return self.getPortal().acl_users

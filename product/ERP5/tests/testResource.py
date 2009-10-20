@@ -171,9 +171,6 @@ class TestResource(ERP5TypeTestCase):
                                       id='kilo')
 
 
-  def stepTic(self,**kw):
-    self.tic()
-
   def stepCreateResource(self, sequence=None, sequence_list=None, **kw):
     """
       Create a resource without variation
