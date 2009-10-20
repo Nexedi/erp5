@@ -113,7 +113,10 @@ try:\n
   groups = form.get_groups()\n
   columns_dict = {}\n
 \n
-  for (k, v) in [(\'None\',\'None\')] + form.get_fields_in_group(groups[0])[0].get_value(\'all_columns\'):\n
+  field = form.get_fields_in_group(groups[0])[0]\n
+  columns = field.get_value(\'columns\')\n
+  all_columns = columns + [x for x in field.get_value(\'all_columns\') if x not in columns]\n
+  for (k, v) in [(\'None\',\'None\')] + all_columns:\n
     if k in field_columns and k != \'None\':\n
       columns_dict[k] = v\n
   columns = []\n
@@ -190,9 +193,13 @@ request[ \'RESPONSE\' ].redirect( redirect_url )\n
                             <string>form</string>
                             <string>groups</string>
                             <string>columns_dict</string>
+                            <string>field</string>
+                            <string>columns</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>all_columns</string>
                             <string>k</string>
                             <string>v</string>
-                            <string>columns</string>
                             <string>_inplacevar_</string>
                             <string>validation_errors</string>
                             <string>field_errors</string>
