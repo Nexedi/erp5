@@ -1451,6 +1451,19 @@ class ERP5Generator(PortalGenerator):
           keep = 0
         portal_activities.manageClearActivities(keep=keep)
 
+    # Add several other tools, only at the end in order
+    # to make sure that they will be reindexed
+    addTool = p.manage_addProduct['ERP5'].manage_addTool
+    if not p.hasObject('portal_rules'):
+      addTool('ERP5 Rule Tool', None)
+    if not p.hasObject('portal_simulation'):
+      addTool('ERP5 Simulation Tool', None)
+    if not p.hasObject('portal_deliveries'):
+      addTool('ERP5 Delivery Tool', None)
+    if not p.hasObject('portal_orders'):
+      addTool('ERP5 Order Tool', None)
+
+
   def setupTemplateTool(self, p, **kw):
     """
     Setup the Template Tool. Security must be set strictly.
@@ -1493,12 +1506,8 @@ class ERP5Generator(PortalGenerator):
     addTool = p.manage_addProduct['ERP5'].manage_addTool
     if not p.hasObject('portal_categories'):
       addTool('ERP5 Categories', None)
-    if not p.hasObject('portal_rules'):
-      addTool('ERP5 Rule Tool', None)
     if not p.hasObject('portal_ids'):
       addTool('ERP5 Id Tool', None)
-    if not p.hasObject('portal_simulation'):
-      addTool('ERP5 Simulation Tool', None)
     if not p.hasObject('portal_templates'):
       self.setupTemplateTool(p)
     if not p.hasObject('portal_trash'):
@@ -1507,10 +1516,6 @@ class ERP5Generator(PortalGenerator):
       addTool('ERP5 Alarm Tool', None)
     if not p.hasObject('portal_domains'):
       addTool('ERP5 Domain Tool', None)
-    if not p.hasObject('portal_deliveries'):
-      addTool('ERP5 Delivery Tool', None)
-    if not p.hasObject('portal_orders'):
-      addTool('ERP5 Order Tool', None)
     if not p.hasObject('portal_tests'):
       addTool('ERP5 Test Tool', None)
     if not p.hasObject('portal_password'):
@@ -1774,7 +1779,7 @@ class ERP5Generator(PortalGenerator):
       portal_catalog.getSQLCatalog().z0_drop_portal_ids()
       # Then clear the catalog and reindex it
       portal_catalog.manage_catalogClear()
-      skins_tool["erp5_core"].ERP5Site_reindexAll()
+      # Calling ERP5Site_reindexAll is useless.
 
   def setupUserFolder(self, p):
     # We use if possible ERP5Security, then NuxUserGroups

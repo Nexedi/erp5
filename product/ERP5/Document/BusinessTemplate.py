@@ -904,7 +904,15 @@ class ObjectTemplateItem(BaseTemplateItem):
           # mark a business template installation so in 'PortalType_afterClone' scripts
           # we can implement logical for reseting or not attributes (i.e reference).
           self.REQUEST.set('is_business_template_installation', 1)
+          # We set isIndexable to 0 before calling
+          # manage_afterClone in order to not call recursiveReindex, this is
+          # useless because we will already reindex every created object, so
+          # we avoid duplication of reindexation
+          obj.isIndexable = 0
           obj.manage_afterClone(obj)
+          del obj.isIndexable
+          if getattr(aq_base(obj), 'reindexObject', None) is not None:
+            obj.reindexObject()
           obj.wl_clearLocks()
           if portal_type_dict:
             # set workflow chain
