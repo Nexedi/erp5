@@ -34,11 +34,6 @@ from Products.ERP5Type.tests.utils import reindex
 from DateTime import DateTime
 
 class TestSupplyMixin:
-
-  supply_portal_type = 'Sale Supply'
-  supply_line_portal_type = 'Sale Supply Line'
-  supply_cell_portal_type = 'Sale Supply Cell'
-
   def getBusinessTemplateList(self):
     """
       List of needed Business Templates
@@ -57,11 +52,20 @@ class TestSupplyMixin:
                             id='testing_folder')
     self.folder = self.portal.testing_folder
 
+  def beforeTearDown(self):
+    module = self.portal.getDefaultModule(self.supply_portal_type)
+    module.manage_delObjects(list(module.objectIds()))
+    self.stepTic()
+
 class TestSaleSupply(TestSupplyMixin, ERP5TypeTestCase):
   """
     Test Supplies usage
   """
   run_all_test = 1
+
+  supply_portal_type = 'Sale Supply'
+  supply_line_portal_type = 'Sale Supply Line'
+  supply_cell_portal_type = 'Sale Supply Cell'
 
   def getTitle(self):
     return "Sale Supply"
@@ -187,10 +191,6 @@ class TestSaleSupply(TestSupplyMixin, ERP5TypeTestCase):
 
     portal = self.portal
     original_date = DateTime().earliestTime()
-
-    # clean up
-    portal.sale_supply_module.manage_delObjects(list(portal.sale_supply_module.objectIds()))
-    self.stepTic()
 
     supply = self._makeSupply(start_date_range_min=original_date)
     supply_line = self._makeSupplyLine(supply)
