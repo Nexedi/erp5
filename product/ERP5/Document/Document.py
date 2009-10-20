@@ -42,7 +42,7 @@ from Products.ERP5Type.Utils import convertToUpperCase
 from Products.ERP5Type.Base import WorkflowMethod
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 from Products.ERP5Type.ExtensibleTraversable import ExtensibleTraversableMixIn
-from Products.ERP5Type.Cache import getReadOnlyTransactionCache, DEFAULT_CACHE_SCOPE
+from Products.ERP5Type.Cache import getReadOnlyTransactionCache
 from Products.ERP5.Document.Url import UrlMixIn
 from Products.ERP5.Tool.ContributionTool import MAX_REPEAT
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
@@ -61,11 +61,6 @@ _MARKER = []
 VALID_ORDER_KEY_LIST = ('user_login', 'content', 'file_name', 'input')
 # these property ids are unchangable
 FIXED_PROPERTY_IDS =  ('id', 'uid', 'rid', 'sid')
-
-def makeSortedTuple(kw):
-  items = kw.items()
-  items.sort()
-  return tuple(items)
 
 class SnapshotMixin:
   """

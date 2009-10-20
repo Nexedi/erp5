@@ -34,6 +34,11 @@ from Products.ERP5Type import Permissions
 from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type.Cache import DEFAULT_CACHE_SCOPE
 
+def makeSortedTuple(kw):
+  items = kw.items()
+  items.sort()
+  return tuple(items)
+
 class CachedConvertableMixin:
   """
   This class provides a generic implementation of IConvertable.
