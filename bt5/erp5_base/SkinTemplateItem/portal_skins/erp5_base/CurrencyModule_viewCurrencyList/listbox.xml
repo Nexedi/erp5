@@ -88,26 +88,6 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>reference</string>
-                          <string>Currency Code</string>
-                        </tuple>
-                        <tuple>
-                          <string>title</string>
-                          <string>Title</string>
-                        </tuple>
-                        <tuple>
-                          <string>short_title</string>
-                          <string>Symbol</string>
-                        </tuple>
-                        <tuple>
-                          <string>base_unit_quantity</string>
-                          <string>Precision</string>
-                        </tuple>
-                        <tuple>
-                          <string>translated_validation_state_title</string>
-                          <string>State</string>
-                        </tuple>
-                        <tuple>
                           <string>creation_date</string>
                           <string>Creation Date</string>
                         </tuple>
