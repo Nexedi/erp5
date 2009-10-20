@@ -194,9 +194,6 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       "hd_size/120Go",
     )
 
-  def stepTic(self, **kw):
-    self.tic()
-
   def stepCreateInvoiceTransactionRule(self, sequence, **kw) :
     """ 
       Create some predicates in the Invoice Transaction Rule
