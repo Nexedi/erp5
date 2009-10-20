@@ -1077,6 +1077,13 @@ def optimize():
       self._filepath = self.get_filepath()
   PythonScript._makeFunction = _makeFunction
 
+  # Do not reindex portal types sub objects
+  # We will probably disable reindexing for other types later
+  from Products.ERP5Type.Document.RoleInformation import RoleInformation
+  RoleInformation.isIndexable = 0
+  from Products.ERP5Type.Document.ActionInformation import ActionInformation
+  ActionInformation.isIndexable = 0
+
 optimize()
 
 
