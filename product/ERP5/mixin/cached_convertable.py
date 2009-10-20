@@ -28,7 +28,9 @@
 ##############################################################################
 
 import md5
+import string
 
+from Acquisition import aq_base
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions
 from Products.CMFCore.utils import getToolByName
