@@ -10,21 +10,9 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_objects</string> </key>
             <value>
               <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
             </value>
         </item>
         <item>
@@ -32,6 +20,10 @@
             <value>
               <none/>
             </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string>workflow used to validate an inventory</string> </value>
         </item>
         <item>
             <key> <string>groups</string> </key>
@@ -55,9 +47,9 @@
             <key> <string>permissions</string> </key>
             <value>
               <tuple>
+                <string>Access contents information</string>
                 <string>View</string>
                 <string>Modify portal content</string>
-                <string>Access contents information</string>
                 <string>Add portal content</string>
                 <string>Delete objects</string>
               </tuple>
