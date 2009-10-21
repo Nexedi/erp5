@@ -327,6 +327,14 @@ class ERP5TypeInformation(XMLObject,
         self.setMethodAliases({})
         return 1
 
+    # security is declared by superclass
+    def queryMethodID(self, alias, default=None, context=None):
+        """ Query method ID by alias.
+        
+        In ERP5 we don't do aliases.
+        """
+        return default
+
     #
     #   Agent methods
     #
