@@ -10,12 +10,6 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>my_start_date</string> </value>
         </item>
@@ -310,7 +304,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Date de l\'op\xc3\xa9ration</string> </value>
+                    <value> <string>Date de l\'opération</string> </value>
                 </item>
               </dictionary>
             </value>

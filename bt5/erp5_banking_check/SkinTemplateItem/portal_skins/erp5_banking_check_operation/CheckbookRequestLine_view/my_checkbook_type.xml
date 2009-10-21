@@ -10,12 +10,6 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>my_checkbook_type</string> </value>
         </item>
@@ -254,7 +248,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string encoding="base64">VHlwZSBmb3JtdWxlIG51bcOpcm90w6ll</string> </value>
+                    <value> <string>Type formule numérotée</string> </value>
                 </item>
                 <item>
                     <key> <string>unicode</string> </key>

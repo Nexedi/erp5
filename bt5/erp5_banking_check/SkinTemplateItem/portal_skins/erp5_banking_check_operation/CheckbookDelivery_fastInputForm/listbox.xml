@@ -10,12 +10,6 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>listbox</string> </value>
         </item>
@@ -520,27 +514,27 @@
                       <list>
                         <tuple>
                           <string>selection</string>
-<string></string>
+                          <string></string>
                         </tuple>
                         <tuple>
                           <string>resource_title</string>
-<string></string>
+                          <string></string>
                         </tuple>
                         <tuple>
                           <string>check_amount_title</string>
-<string></string>
+                          <string></string>
                         </tuple>
                         <tuple>
                           <string>reference_range_min</string>
-<string></string>
+                          <string></string>
                         </tuple>
                         <tuple>
                           <string>reference_range_max</string>
-<string></string>
+                          <string></string>
                         </tuple>
                         <tuple>
                           <string>destination_trade</string>
-<string></string>
+                          <string></string>
                         </tuple>
                       </list>
                     </value>

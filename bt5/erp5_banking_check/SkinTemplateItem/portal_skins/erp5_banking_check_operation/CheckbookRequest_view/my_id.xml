@@ -10,12 +10,6 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>my_id</string> </value>
         </item>
@@ -246,7 +240,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string encoding="base64">TnVtw6lybw==</string> </value>
+                    <value> <string>Numéro</string> </value>
                 </item>
                 <item>
                     <key> <string>truncate</string> </key>
