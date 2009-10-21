@@ -10,12 +10,6 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>listbox</string> </value>
         </item>
@@ -553,43 +547,43 @@
                       <list>
                         <tuple>
                           <string>counter_title</string>
-<string></string>
+                          <string></string>
                         </tuple>
                         <tuple>
                           <string>resource_translated_title</string>
-<string></string>
+                          <string></string>
                         </tuple>
                         <tuple>
                           <string>price_currency_title</string>
-<string></string>
+                          <string></string>
                         </tuple>
                         <tuple>
                           <string>cash_status_translated_title</string>
-<string></string>
+                          <string></string>
                         </tuple>
                         <tuple>
                           <string>emission_letter_title</string>
-<string></string>
+                          <string></string>
                         </tuple>
                         <tuple>
                           <string>variation_title</string>
-<string></string>
+                          <string></string>
                         </tuple>
                         <tuple>
                           <string>date</string>
-<string></string>
+                          <string></string>
                         </tuple>
                         <tuple>
                           <string>explanation_relative_url</string>
-<string></string>
+                          <string></string>
                         </tuple>
                         <tuple>
                           <string>total_quantity</string>
-<string></string>
+                          <string></string>
                         </tuple>
                         <tuple>
                           <string>total_price</string>
-<string></string>
+                          <string></string>
                         </tuple>
                       </list>
                     </value>

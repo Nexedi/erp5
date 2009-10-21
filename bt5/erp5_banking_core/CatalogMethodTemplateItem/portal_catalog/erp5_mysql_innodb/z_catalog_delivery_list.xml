@@ -10,12 +10,6 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_arg</string> </key>
             <value>
               <object>
@@ -114,19 +108,19 @@
                         <key> <string>_keys</string> </key>
                         <value>
                           <list>
-<string>isDelivery</string>
-<string>uid</string>
-<string>getSourceUid</string>
-<string>getDestinationUid</string>
-<string>getSourceSectionUid</string>
-<string>getDestinationSectionUid</string>
-<string>getResourceUid</string>
-<string>getRecoupDate</string>
-<string>getSourcePaymentReference</string>
-<string>getDestinationPaymentReference</string>
-<string>getSourcePaymentInternalBankAccountNumber</string>
-<string>getDestinationPaymentInternalBankAccountNumber</string>
-<string>getSourceTotalAssetPrice</string>
+                            <string>isDelivery</string>
+                            <string>uid</string>
+                            <string>getSourceUid</string>
+                            <string>getDestinationUid</string>
+                            <string>getSourceSectionUid</string>
+                            <string>getDestinationSectionUid</string>
+                            <string>getResourceUid</string>
+                            <string>getRecoupDate</string>
+                            <string>getSourcePaymentReference</string>
+                            <string>getDestinationPaymentReference</string>
+                            <string>getSourcePaymentInternalBankAccountNumber</string>
+                            <string>getDestinationPaymentInternalBankAccountNumber</string>
+                            <string>getSourceTotalAssetPrice</string>
                           </list>
                         </value>
                     </item>

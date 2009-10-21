@@ -520,35 +520,35 @@
                       <list>
                         <tuple>
                           <string>reference</string>
-<string></string>
+                          <string></string>
                         </tuple>
                         <tuple>
                           <string>selection</string>
-<string></string>
+                          <string></string>
                         </tuple>
                         <tuple>
                           <string>cash_number_range_start</string>
-<string></string>
+                          <string></string>
                         </tuple>
                         <tuple>
                           <string>cash_number_range_stop</string>
-<string></string>
+                          <string></string>
                         </tuple>
                         <tuple>
                           <string>resource_translated_title</string>
-<string></string>
+                          <string></string>
                         </tuple>
                         <tuple>
                           <string>quantity</string>
-<string></string>
+                          <string></string>
                         </tuple>
                         <tuple>
                           <string>date</string>
-<string></string>
+                          <string></string>
                         </tuple>
                         <tuple>
                           <string>total_price</string>
-<string></string>
+                          <string></string>
                         </tuple>
                       </list>
                     </value>

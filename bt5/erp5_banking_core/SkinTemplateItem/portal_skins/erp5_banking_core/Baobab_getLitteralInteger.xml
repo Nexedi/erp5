@@ -10,20 +10,8 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>Python_magic</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>Script_magic</string> </key>
             <value> <int>3</int> </value>
-        </item>
-        <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <none/>
-            </value>
         </item>
         <item>
             <key> <string>_bind_names</string> </key>
@@ -68,7 +56,7 @@
             <value> <string encoding="cdata"><![CDATA[
 
 class Number:\n
-    DIC  = {0:\'Z\xc3\xa9ro\', 1:\'un\',2:\'deux\',3:\'trois\',4:\'quatre\',5:\'cinq\',6:\'six\',7:\'sept\', 8:\'huit\',9:\'neuf\',\n
+    DIC  = {0:\'Zéro\', 1:\'un\',2:\'deux\',3:\'trois\',4:\'quatre\',5:\'cinq\',6:\'six\',7:\'sept\', 8:\'huit\',9:\'neuf\',\n
             10:\'dix\',11:\'onze\',12:\'douze\',13:\'treize\', 14:\'quatorze\',15:\'quinze\',16:\'seize\',17:\'dix-sept\',\n
             18:\'dix-huit\',19:\'dix-neuf\',20:\'vingt\',30:\'trente\',40:\'quarante\',50:\'cinquante\', 60:\'soixante\',\n
             80:\'quatre vingt\',100:\'cent\',1000:\'mille\',1000000:\'million\',1000000000:\'milliard\'}\n
@@ -120,18 +108,6 @@ return prefix + v_value.numbertoletter(pvalue)\n
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>_filepath</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>_owner</string> </key>
             <value>
               <none/>
             </value>

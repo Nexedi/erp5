@@ -326,7 +326,7 @@
                       <list>
                         <tuple>
                           <string>quantity</string>
-                          <string encoding="base64">TW9udGFudCDDoCBjcsOpZGl0ZXI=</string>
+                          <string>Montant à créditer</string>
                         </tuple>
                         <tuple>
                           <string>destination_asset_price</string>

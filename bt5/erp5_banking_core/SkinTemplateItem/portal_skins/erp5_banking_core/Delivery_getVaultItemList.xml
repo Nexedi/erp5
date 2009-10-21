@@ -10,20 +10,8 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>Python_magic</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>Script_magic</string> </key>
             <value> <int>3</int> </value>
-        </item>
-        <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <none/>
-            </value>
         </item>
         <item>
             <key> <string>_bind_names</string> </key>
@@ -67,26 +55,26 @@
             <key> <string>_body</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-# vault_type = None : D\xc3\xa9finit les vaut_types \xc3\xa0 afficher,\n
-#                     si valeur est None on r\xc3\xa9cup\xc3\xa8re vault_type\n
-#                     depuis les sites auxquels est assign\xc3\xa9 l\'user\n
-# exclude_vault_type = None : D\xc3\xa9finit les vaut_types \xc3\xa0 exclure,\n
+# vault_type = None : Définit les vaut_types à afficher,\n
+#                     si valeur est None on récupère vault_type\n
+#                     depuis les sites auxquels est assigné l\'user\n
+# exclude_vault_type = None : Définit les vaut_types à exclure,\n
 #                             on veut par exemple les encaisses du Caveau, sauf celles du Tri tiers\n
-# current_url = None : Permet de r\xc3\xa9injecter la valeur courante dans le popup et \xc3\xa9vite ainsi l\'affichage de \'???\',\n
-#                      on mettra par exemple "current_url=here.getSource()" en param\xc3\xa8tre du\n
-#                      Delivery_getVaultItemList utilis\xc3\xa9 dans le TALES de my_source dans le formulaire\n
-# user_site = 1 : Permet de s\xc3\xa9lectionner uniquement les encaisses des sites auquels l\'user est affect\xc3\xa9,\n
+# current_url = None : Permet de réinjecter la valeur courante dans le popup et évite ainsi l\'affichage de \'???\',\n
+#                      on mettra par exemple "current_url=here.getSource()" en paramètre du\n
+#                      Delivery_getVaultItemList utilisé dans le TALES de my_source dans le formulaire\n
+# user_site = 1 : Permet de sélectionner uniquement les encaisses des sites auquels l\'user est affecté,\n
 #                 au lieu des encaisses de tous le sites\n
-# exclude_user_site = 0 : Permet de ne pas s\xef\xbf\xbdlectionner les encaisses du site auquel appartient l\'utilisateur\n
-# owner_site = 1 :  Permet de s\xc3\xa9lectionner uniquement les encaisses des sites auquels le propri\xc3\xa9taire du document est affect\xc3\xa9,\n
+# exclude_user_site = 0 : Permet de ne pas s�lectionner les encaisses du site auquel appartient l\'utilisateur\n
+# owner_site = 1 :  Permet de sélectionner uniquement les encaisses des sites auquels le propriétaire du document est affecté,\n
 #                 au lieu des encaisses de tous le sites\n
-# main_agency = 0 :  Permet de s\xc3\xa9lectionner uniquement les encaisses des sites qui appartiennent \xef\xbf\xbd une agence principale,\n
-# leaf_node = 1 : S\xc3\xa9lectionne uniquement les noeuds qui sont des feuilles de l\'arbre (qui n\'ont pas de sous-cat\xc3\xa9gories)\n
-# strict_membership = 0 : Appartenance stricte. Si vault_type=\'site\', on s\xc3\xa9lectionnera \'site/agence/principale/paris\',\n
+# main_agency = 0 :  Permet de sélectionner uniquement les encaisses des sites qui appartiennent � une agence principale,\n
+# leaf_node = 1 : Sélectionne uniquement les noeuds qui sont des feuilles de l\'arbre (qui n\'ont pas de sous-catégories)\n
+# strict_membership = 0 : Appartenance stricte. Si vault_type=\'site\', on sélectionnera \'site/agence/principale/paris\',\n
 #                         mais pas \'site/agence/principale/paris/caveau\', \'site/agence/principale/paris/surface\' et\n
-#                         leurs encaisses. Attention : possibilit\xc3\xa9 de conflit (et donc de popup menu vide) si\n
-#                         utilis\xc3\xa9 en m\xc3\xaame temps que leaf_node\n
-# with_base = 1 : D\xc3\xa9finie si on renvoie la base categorie \'site\' dans la liste de valeur\n
+#                         leurs encaisses. Attention : possibilité de conflit (et donc de popup menu vide) si\n
+#                         utilisé en même temps que leaf_node\n
+# with_base = 1 : Définie si on renvoie la base categorie \'site\' dans la liste de valeur\n
 # all = 0 : Affiche aussi entrante/sortante, utile pour les inventaires\n
 # user_vault = 0 : Display only subvaults that corresponds to the user assigned vault\n
 # first_level = 0 : Ne prend que le premier niveau pour un vault type, meme si les sous categories\n
@@ -305,18 +293,6 @@ return [(\'\', \'\')] + list(vault_list)\n
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>_filepath</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>_owner</string> </key>
             <value>
               <none/>
             </value>
