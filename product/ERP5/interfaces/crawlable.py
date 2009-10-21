@@ -70,7 +70,7 @@ class ICrawlable(Interface):
   def isIndexContent(container=None, content=None):
     """
     Returns True if the content document acts as an index
-    to other documents. Returns False is the content document
+    to other documents. Returns False if the content document
     contains relevant content for the end-user. 
 
     This method is used by ERP5 crawlers to make a difference between
