@@ -3654,7 +3654,7 @@ msgid "Reference"
 msgstr "リファレンス"
 
 msgid "Region"
-msgstr "都道府県"
+msgstr "地域"
 
 msgid "Registered Capital"
 msgstr "登記資本金"
