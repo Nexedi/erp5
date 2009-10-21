@@ -135,20 +135,16 @@ if 1:
                              , icon=self.getIconExpression()
                              )
 
+    ActionInformation_getMapping = ActionInformation.getMapping 
     def getMapping(self):
         """ Get a mapping of this object's data.
         """
-        return { 'id': self.id,
-                 'title': self.title or self.id,
-                 'description': self.description,
-                 'category': self.category or 'object',
-                 'condition': getattr(self, 'condition', None)
-                              and self.condition.text or '',
-                 'permissions': self.permissions,
-                 'visible': bool(self.visible),
-                 'action': self.getActionExpression(),
-                 'icon': self.getIconExpression(),
-                 'priority': self.getPriority() }
+        mapping = ActionInformation_getMapping(self)
+        # missing on CMF 1.5, provided as icon_expression on CMF 2
+        mapping['icon'] = icon=self.getIconExpression()
+        # missing on both CMF 1.5 and 2
+        mapping['priority'] = self.getPriority()
+        return mapping
 
 ActionInformation.__init__ = __init__
 ActionInformation.getAction = getAction
@@ -175,6 +171,8 @@ try:
         self._lazy_keys.append('icon')
       else:
         self.data['icon'] = ''
+      # put back 'name' if it's not there. CMF 2.x removes it.
+      self.data['name'] = self.data['title']
 
   def _getIcon(self):
     # ivan
