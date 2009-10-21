@@ -34,14 +34,14 @@ def listFilteredActionsFor(self, object=None):
     # Include actions from specific tools.
     for provider_name in self.listActionProviders():
         provider = getattr(self, provider_name)
-        if IActionProvider_providedBy(provider):
-            actions.extend( provider.listActionInfos(object=object) )
-        elif hasattr(provider, 'getActionListFor'):
+        if hasattr(provider, 'getActionListFor'):
             from Products.ERP5Type.Utils import createExpressionContext
             ec = createExpressionContext(object)
             actions.extend(action.cook(ec)
                            for action in provider.getActionListFor(object)
                            if action.test(ec))
+        elif IActionProvider_providedBy(provider):
+            actions.extend( provider.listActionInfos(object=object) )
         else:
             # for Action Providers written for CMF versions before 1.5
             actions.extend( self._listActionInfos(provider, object) )
