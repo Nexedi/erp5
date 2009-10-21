@@ -53,7 +53,10 @@ class TypesTool(BaseTool, CMFCore_TypesTool.TypesTool):
        return BaseTool.getTypeInfo(self)
     portal_type, = args
     if not isinstance(portal_type, basestring):
-      portal_type = aq_base(portal_type).getPortalType()
+      try:
+        portal_type = aq_base(portal_type).getPortalType()
+      except AttributeError:
+        return None
     return self._getOb(portal_type, None)
 
   security.declareProtected(Permissions.AddPortalContent,
