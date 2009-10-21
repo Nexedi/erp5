@@ -80,6 +80,8 @@ from Products.ERP5Type.Accessor.TypeDefinition import asDate
 from Products.ERP5Type.Message import Message
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 
+from zope.interface import classImplementsOnly, implementedBy
+
 from string import join
 import sys, re
 from Products.ERP5Type.PsycoWrapper import psyco
@@ -2620,6 +2622,15 @@ class Base( CopyContainer,
   security.declareProtected(Permissions.View, '__call__')
   __call__ = view
 
+  # This special value informs ZPublisher to use __call__. We define it here
+  # since Products.CMFCore.PortalContent.PortalContent stopped defining it on
+  # CMF 2.x. They use aliases and Zope3 style views now and make pretty sure
+  # not to let zpublisher reach this value.
+  index_html = None
+  # By the Way, Products.ERP5.Document.File and .Image define their own
+  # index_html to make sure this value here is not used so that they're
+  # downloadable by their naked URL.
+
   security.declareProtected(Permissions.View, 'list')
   def list(self, reset=0):
     """Returns the default list even if folder_contents is overridden"""
@@ -3700,6 +3711,19 @@ class Base( CopyContainer,
     return self.portal_type in self.getPortalItemTypeList()
 
 InitializeClass(Base)
+
+try:
+  from Products.CMFCore.interfaces import IContentish
+except ImportError:
+  # We're on CMF 1.5 where the IContentish is not yet bridged as a Zope3
+  # interface, so no need to worry about events here. Remove this "try:" once
+  # we abandon Zope 2.8
+  pass
+else:
+  # suppress CMFCore event machinery from trying to reindex us through events
+  # by removing Products.CMFCore.interfaces.IContentish interface.
+  # We reindex ourselves in manage_afterAdd thank you very much.
+  classImplementsOnly(Base, implementedBy(Base) - IContentish)
 
 class TempBase(Base):
   """
