@@ -11817,7 +11817,7 @@ msgstr "État"
 msgid "the employee number of a person"
 msgstr "La référence interne de l'employé au sein de son entreprise."
 
-msgid "the heigh in pixel of nano image"
+msgid "the height in pixel of nano image"
 msgstr "La longueur en pixel des nano-images"
 
 msgid "the height in pixel for large image"
