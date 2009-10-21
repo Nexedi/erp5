@@ -76,7 +76,7 @@
               <dictionary>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string>the heigh in pixel of medium image</string> </value>
+                    <value> <string>the height in pixel of medium image</string> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
