@@ -2426,7 +2426,7 @@ msgstr "貸方の期首残高"
 msgid "Initial Debit Balance"
 msgstr "借方の期首残高"
 
-msgid "Initialized by Delivery Builder."
+msgid "Initialised by Delivery Builder."
 msgstr "配達ビルダーにより初期化されました。"
 
 msgid "Input data has errors. Please look at the error messages below."
@@ -4052,7 +4052,7 @@ msgstr "アクションを選択する"
 msgid "Select Exchange"
 msgstr "インポート/エクスポートの方法を選択"
 
-msgid "Select Favorite"
+msgid "Select Favourite"
 msgstr "お気に入りを選択"
 
 msgid "Select Language"
