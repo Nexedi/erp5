@@ -121,7 +121,7 @@ def CMFCoreSkinnableSkinnableObjectManager___getattr__(self, name):
     raise AttributeError, name
   return superGetAttr(self, name)
 
-def CMFCoreSkinnableSkinnableObjectManager_changeSkin(self, skinname):
+def CMFCoreSkinnableSkinnableObjectManager_changeSkin(self, skinname, REQUEST=None):
   '''
     Change the current skin.
 
@@ -138,7 +138,8 @@ def CMFCoreSkinnableSkinnableObjectManager_changeSkin(self, skinname):
         skinname = sf.getDefaultSkin()
   tid = get_ident()
   SKINDATA[tid] = (skinname, {'portal_skins': None}, {})
-  REQUEST = getattr(self, 'REQUEST', None)
+  if REQUEST is None:
+    REQUEST = getattr(self, 'REQUEST', None)
   if REQUEST is not None:
     REQUEST._hold(SkinDataCleanup(tid, SKINDATA[tid]))
 
