@@ -209,6 +209,17 @@ class ERP5Site(FolderMixIn, CMFSite):
     """
     return self.index_html()
 
+  def manage_beforeDelete(self, item, container):
+    # On Zope 2.8, skin is setup during Acquisition (in the .__of__() method).
+    # On Zope 2.12, skin is setup during __before_publishing_traverse__, which
+    # doesn't happen when the object is being deleted from the management
+    # interface, but we need it to be set for portal_activities when we're
+    # being deleted. 
+    self.setupCurrentSkin(self.REQUEST)
+    return ERP5Site.inheritedAttribute('manage_beforeDelete')(self,
+                                                              item,
+                                                              container)
+
   security.declareProtected( Permissions.ModifyPortalContent, 'manage_renameObject' )
   def manage_renameObject(self, id=None, new_id=None, REQUEST=None):
     """manage renaming an object while keeping coherency for contained
