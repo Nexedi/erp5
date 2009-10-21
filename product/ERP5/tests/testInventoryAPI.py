@@ -1933,8 +1933,8 @@ class TestInventoryDocument(InventoryAPITestCase):
 
   def test_01_CurrentInventoryWithFullInventory(self):
     """
-      #Check that inventory optimisation is executed when querying current
-      #amount (there is a usable full inventory which is the latest).
+      Check that inventory optimisation is executed when querying current
+      amount (there is a usable full inventory which is the latest).
     """
     self.getInventoryEquals(value=self.INVENTORY_QUANTITY_3 + \
                                   self.BASE_QUANTITY,
@@ -1942,8 +1942,8 @@ class TestInventoryDocument(InventoryAPITestCase):
 
   def test_02_InventoryAtLatestFullInventoryDate(self):
     """
-      #Check that inventory optimisation is executed when querying an amount
-      #at the exact time of latest usable full inventory.
+      Check that inventory optimisation is executed when querying an amount
+      at the exact time of latest usable full inventory.
     """
     self.getInventoryEquals(value=self.INVENTORY_QUANTITY_3,
                             inventory_kw={'node_uid': self.node_uid,
@@ -1951,8 +1951,8 @@ class TestInventoryDocument(InventoryAPITestCase):
 
   def test_03_InventoryAtEarlierFullInventoryDate(self):
     """
-      #Check that inventory optimisation is executed when querying past
-      #amount (there is a usable full inventory which is not the latest).
+      Check that inventory optimisation is executed when querying past
+      amount (there is a usable full inventory which is not the latest).
     """
     self.getInventoryEquals(value=self.INVENTORY_QUANTITY_2 + \
                                   self.BASE_QUANTITY,
@@ -1962,12 +1962,12 @@ class TestInventoryDocument(InventoryAPITestCase):
 
   def test_04_InventoryBeforeFullInventoryAfterPartialInventory(self):
     """
-      #Check that optimisation is not executed when querying past amount
-      #with no usable full inventory.
+      Check that optimisation is not executed when querying past amount
+      with no usable full inventory.
 
-      #If optimisation was executed,
-      #  self.INVENTORY_QUANTITY_1 * 2 + self.BASE_QUANTITY * 2
-      #would be found.
+      If optimisation was executed,
+        self.INVENTORY_QUANTITY_1 * 2 + self.BASE_QUANTITY * 2
+      would be found.
     """
     self.assertEquals(self.ACTUAL_INVENTORY_QUANTITY_1 + \
                       self.BASE_QUANTITY * 2,
@@ -1976,8 +1976,8 @@ class TestInventoryDocument(InventoryAPITestCase):
 
   def test_05_InventoryListWithFullInventory(self):
     """
-      #Check that inventory optimisation is executed when querying current
-      #amount list (there is a usable full inventory which is the latest).
+      Check that inventory optimisation is executed when querying current
+      amount list (there is a usable full inventory which is the latest).
     """
     inventory = self.getInventoryList(node_uid=self.node_uid)
     reference_inventory = [
@@ -2249,14 +2249,12 @@ class TestInventoryDocument(InventoryAPITestCase):
     # use optimisation
     self.assertEquals(True,movement in self.resource.getCurrentInventoryList(
                                         from_date=movement.getStartDate(),
-                                         node_uid=self.node_uid,
-                                          **inventory_kw))
+                                         node_uid=self.node_uid))
     # without optimisation
     self.assertEquals(True,movement in self.resource.getCurrentInventoryList(
                                      optimisation__=False,
                                      from_date=movement.getStartDate(),
-                                     node_uid=self.node_uid,
-                                     **inventory_kw))
+                                     node_uid=self.node_uid))
     
 class TestUnitConversion(InventoryAPITestCase):
   QUANTITY_UNIT_CATEGORIES = {
