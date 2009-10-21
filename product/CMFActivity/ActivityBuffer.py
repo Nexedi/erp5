@@ -27,10 +27,7 @@ from Shared.DC.ZRDB.TM import TM
 from zLOG import LOG, ERROR, INFO
 import sys
 
-try:
-  from transaction import get as get_transaction
-except ImportError:
-  pass
+import transaction
 
 class ActivityBuffer(TM):
 
@@ -81,13 +78,11 @@ class ActivityBuffer(TM):
       for activity in activity_dict.itervalues():
         activity.registerActivityBuffer(self)
 
-      # In Zope 2.8 (ZODB 3.4), use beforeCommitHook instead of
-      # patching Trasaction.
-      transaction = get_transaction()
-      try:
-        transaction.beforeCommitHook(self.tpc_prepare, transaction, activity_tool=activity_tool)
-      except AttributeError:
-        pass
+      # Notice: The operation below cannot fail silently, or we get errors late
+      # in the transaction that are very hard to understand.
+      transaction.get().addBeforeCommitHook(self.tpc_prepare,
+                                            (transaction,),
+                                            dict(activity_tool=activity_tool))
     except:
       LOG('ActivityBuffer', ERROR, "exception during _begin",
           error=sys.exc_info())

@@ -306,7 +306,7 @@ class InteractionWorkflowDefinition (DCWorkflowDefinition, ActiveObject):
               # Execute Before Commit
               for script_name in tdef.before_commit_script_name:
                 script = self.scripts[script_name]
-                transaction.get().beforeCommitHook(script, sci)
+                transaction.get().addBeforeCommitHook(script, (sci,))
 
               # Execute "activity" scripts
               for script_name in tdef.activate_script_name:
@@ -329,4 +329,4 @@ class InteractionWorkflowDefinition (DCWorkflowDefinition, ActiveObject):
 Globals.InitializeClass(InteractionWorkflowDefinition)
 
 addWorkflowFactory(InteractionWorkflowDefinition, id='interaction_workflow',
-                                     title='Web-configurable interaction workflow')
+                   title='Web-configurable interaction workflow')
