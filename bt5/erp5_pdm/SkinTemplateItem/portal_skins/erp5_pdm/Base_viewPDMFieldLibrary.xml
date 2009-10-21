@@ -117,6 +117,8 @@
                         <string>my_resource_title</string>
                         <string>my_surcharge_ratio</string>
                         <string>my_variable_additional_price</string>
+                        <string>my_purchase_supply_lines_listbox</string>
+                        <string>my_sale_supply_lines_listbox</string>
                       </list>
                     </value>
                 </item>

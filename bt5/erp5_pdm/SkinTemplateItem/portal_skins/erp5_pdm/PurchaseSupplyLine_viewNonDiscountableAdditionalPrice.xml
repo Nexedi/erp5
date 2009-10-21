@@ -116,7 +116,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>SaleSupplyLine_viewNonDiscountableAdditionalPrice</string> </value>
+            <value> <string>PurchaseSupplyLine_viewNonDiscountableAdditionalPrice</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>

@@ -69,6 +69,7 @@
                     <value>
                       <list>
                         <string>matrixbox</string>
+                        <string>matrixbox1</string>
                         <string>mapped_value_property_list</string>
                       </list>
                     </value>
@@ -83,9 +84,12 @@
                     <key> <string>hidden</string> </key>
                     <value>
                       <list>
-                        <string>matrixbox_predicate_category_list</string>
                         <string>matrixbox_variation_category_list</string>
-                        <string>matrixbox_non_discountable_additional_price</string>
+                        <string>matrixbox_predicate_category_list</string>
+                        <string>matrixbox_surcharge_ratio</string>
+                        <string>matrixbox1_predicate_category_list</string>
+                        <string>matrixbox1_surcharge_ratio</string>
+                        <string>matrixbox1_variation_category_list</string>
                       </list>
                     </value>
                 </item>
@@ -106,8 +110,9 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
-                        <string>my_non_discountable_additional_price</string>
-                        <string>my_non_discountable_additional_price_quantity_step_list</string>
+                        <string>my_surcharge_ratio</string>
+                        <string>my_surcharge_ratio_variation_base_category_list</string>
+                        <string>my_surcharge_ratio_quantity_step_list</string>
                       </list>
                     </value>
                 </item>
@@ -116,7 +121,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>SaleSupplyLine_viewNonDiscountableAdditionalPrice</string> </value>
+            <value> <string>PurchaseSupplyLine_viewSurchargeRatio</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -124,7 +129,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>SupplyLine_viewNonDiscountableAdditionalPrice</string> </value>
+            <value> <string>SupplyLine_viewSurchargeRatio</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
@@ -140,7 +145,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Non Discountable Additional Price</string> </value>
+            <value> <string>Surcharge Ratio</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>
