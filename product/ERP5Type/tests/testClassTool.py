@@ -30,6 +30,7 @@ from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5Type.tests.utils import installRealClassTool
+from App.config import getConfiguration
 from zLOG import LOG
 
 try:
@@ -84,6 +85,11 @@ class TestClassTool(ERP5TypeTestCase):
     portal = self.getPortal()
     portal_classes = portal.portal_classes
     
+    self.assertEqual(portal_classes.getLocalDocumentList(), [],
+        'Test environment is dirty. Please clean up the instance home of '
+        'the test environment and fix up tests that might have left over '
+        'files at %s' % getConfiguration().instancehome
+    )
     portal_classes.newDocument('Toto')
     get_transaction().abort()
     self.assertNotEqual(portal_classes.getLocalDocumentList(), ['Toto'])
