@@ -96,6 +96,17 @@ def getSecurityProduct(acl_users):
 
 class IndexableObjectWrapper(CMFCoreIndexableObjectWrapper):
 
+    def __init__(self, vars, ob):
+        # sigh... CMFCoreIndexableObjectWrapper changed signature between
+        # CMF 1.5 and 2.x. The new signature is (self, ob, catalog), and the
+        # 'vars' calculation is done by __init__ itself
+        # FIXME, we should consider taking a page from the CMFCore parent and
+        # move the 'vars' logic here. We would be actually making use of the
+        # 'catalog' parameter, instead of just using it to fetch
+        # portal_workflow.
+        self.__vars = vars
+        self.__ob = ob
+
     def __setattr__(self, name, value):
       # We need to update the uid during the cataloging process
       if name == 'uid':
