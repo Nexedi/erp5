@@ -138,6 +138,10 @@
                           <string>float_index</string>
                           <string>Priority</string>
                         </tuple>
+                        <tuple>
+                          <string>visible</string>
+                          <string>Visible</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>
@@ -152,6 +156,10 @@
                         <tuple>
                           <string>float_index</string>
                           <string>float_index</string>
+                        </tuple>
+                        <tuple>
+                          <string>visible</string>
+                          <string>Visible</string>
                         </tuple>
                       </list>
                     </value>

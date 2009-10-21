@@ -96,6 +96,7 @@
                       <list>
                         <string>listbox_float_index</string>
                         <string>listbox_title</string>
+                        <string>listbox_visible</string>
                       </list>
                     </value>
                 </item>
