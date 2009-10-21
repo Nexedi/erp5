@@ -119,7 +119,7 @@ class Transform(SimpleItem):
         # check this is a valid transform
         if not hasattr(transform, '__class__'):
             raise TransformException('Invalid transform : transform is not a class')
-        if not itransform.isImplementedBy(transform):
+        if not itransform.providedBy(transform):
             raise TransformException('Invalid transform : itransform is not implemented by %s' % transform.__class__)
         if not hasattr(transform, 'inputs'):
             raise TransformException('Invalid transform : missing required "inputs" attribute')

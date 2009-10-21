@@ -274,7 +274,7 @@ class TestPredicates(TestPredicateMixIn):
     from Products.ERP5Type.interfaces import IPredicate
     from Products.ERP5Type.Document.Predicate import Predicate
     predicate = self.createPredicate()
-    self.failUnless(IPredicate.isImplementedBy(predicate))
+    self.failUnless(IPredicate.providedBy(predicate))
     from zope.interface.verify import verifyClass
     verifyClass(IPredicate, Predicate)
 

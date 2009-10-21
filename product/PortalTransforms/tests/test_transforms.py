@@ -40,7 +40,7 @@ class TransformTest(ATSiteTestCase):
         input.close()
         data = datastream(self.transform.name())
         res_data = self.transform.convert(orig, data, filename=filename)
-        self.assert_(idatastream.isImplementedBy(res_data))
+        self.assert_(idatastream.providedBy(res_data))
         got = res_data.getData()
         try:
             output = open(output)

@@ -183,8 +183,8 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
             transform = path[0]
 
         result = transform.convert(orig, data, context=context, usedby=usedby, **kwargs)
-        assert(idatastream.isImplementedBy(result),
-               'result doesn\'t implemented idatastream')
+        assert(idatastream.providedBy(result),
+               'result doesn\'t is not an idatastream')
         self._setMetaData(result, transform)
 
         # set cache if possible
@@ -254,7 +254,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
 
     def _unwrap(self, data):
         """unwrap data from an icache"""
-        if idatastream.isImplementedBy(data):
+        if idatastream.providedBy(data):
             data = data.getData()
         return data
 
@@ -482,7 +482,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
         # register non zope transform
         module = str(transform.__module__)
         transform = Transform(transform.name(), module, transform)
-        if not itransform.isImplementedBy(transform):
+        if not itransform.providedBy(transform):
             raise TransformException('%s does not implement itransform' % transform)
         name = transform.name()
         __traceback_info__ = (name, transform)
