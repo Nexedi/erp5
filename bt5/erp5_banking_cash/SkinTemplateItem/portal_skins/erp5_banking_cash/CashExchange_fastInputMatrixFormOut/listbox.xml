@@ -10,12 +10,6 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>listbox</string> </value>
         </item>
@@ -342,7 +336,7 @@
                         </tuple>
                         <tuple>
                           <string>variation</string>
-                          <string encoding="base64">TWlsbMOpc2ltZQ==</string>
+                          <string>Millésime</string>
                         </tuple>
                         <tuple>
                           <string>emission_letter</string>
@@ -405,7 +399,7 @@
                         </tuple>
                         <tuple>
                           <string>variation</string>
-                          <string encoding="base64">TWlsbMOpc2ltZQ==</string>
+                          <string>Millésime</string>
                         </tuple>
                         <tuple>
                           <string>emission_letter</string>

@@ -10,20 +10,8 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>Python_magic</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>Script_magic</string> </key>
             <value> <int>3</int> </value>
-        </item>
-        <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <none/>
-            </value>
         </item>
         <item>
             <key> <string>_bind_names</string> </key>
@@ -68,20 +56,20 @@
             <value> <string encoding="cdata"><![CDATA[
 
 message_dict = {\n
-     \'00\' : \'Fichier colisage charg\xc3\xa9...\'\n
+     \'00\' : \'Fichier colisage chargé...\'\n
     ,\'01\' : \'Date colisage incorrecte\'\n
-    ,\'02\' : \'Num\xc3\xa9ro livraison du colisage inexistant\'\n
-    ,\'03\' : \'Num\xc3\xa9ro livraison existe d\xc3\xa9ja dans la base\'\n
+    ,\'02\' : \'Numéro livraison du colisage inexistant\'\n
+    ,\'03\' : \'Numéro livraison existe déja dans la base\'\n
     ,\'04\' : \'Lettre du pays incorrect\'\n
-    ,\'05\' : \'Num\xc3\xa9ro caisse inexistant\'\n
+    ,\'05\' : \'Numéro caisse inexistant\'\n
     ,\'06\' : \'doublon avec une autre ligne\'\n
-    ,\'07\' : \'Quantit\xc3\xa9 billet incorrecte\'\n
+    ,\'07\' : \'Quantité billet incorrecte\'\n
     ,\'08\' : \'Livraison vide\'\n
-    ,\'09\' : \'Billet ou lettre non d\xc3\xa9fini\'\n
-    ,\'10\' : \'Mill\xc3\xa9sime incorrect\'\n
-    ,\'11\' : \'Montant billet ou pi\xc3\xa8ce incorrect\'\n
-    ,\'12\' : \'Billet ou pi\xc3\xa8ce correspondant au montant et \xc3\xa0 la mill\xc3\xa9sime n\'\'existe pas dans la base\'\n
-    ,\'13\' : \'L\'\'utilisateur connect\xc3\xa9 n\'\'est pas param\xc3\xaatr\xc3\xa9 pour ex\xc3\xa9cuter cette fonction\'\n
+    ,\'09\' : \'Billet ou lettre non défini\'\n
+    ,\'10\' : \'Millésime incorrect\'\n
+    ,\'11\' : \'Montant billet ou pièce incorrect\'\n
+    ,\'12\' : \'Billet ou pièce correspondant au montant et à la millésime n\'\'existe pas dans la base\'\n
+    ,\'13\' : \'L\'\'utilisateur connecté n\'\'est pas paramêtré pour exécuter cette fonction\'\n
                }\n
 \n
 def isSameSet(a, b):\n
@@ -399,18 +387,6 @@ return url_redirection(message_dict[\'message\' ],delivery_id=message_dict[\'del
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>_filepath</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>_owner</string> </key>
             <value>
               <none/>
             </value>
