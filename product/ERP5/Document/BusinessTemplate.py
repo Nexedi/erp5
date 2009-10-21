@@ -2446,16 +2446,22 @@ class ActionTemplateItem(ObjectTemplateItem):
 
           # Following code is for actions outside Types Tool.
           # It will be removed when they are also converted to ERP5 actions.
-          from Products.CMFCore.interfaces import IActionProvider
-          if not IActionProvider.providedBy(container):
-            # some tools stopped being ActionProviders in CMF 2.x. Drop the
-            # action into portal_actions.
-            LOG('Products.ERP5.Document.BusinessTemplate', WARNING,
-                'Misplaced action',
-                'Attempted to store action %r in %r which is no longer an '
-                'IActionProvided. Storing action on portal_actions instead' %
-                (id, path))
-            container = p.portal_actions
+          try:
+            from Products.CMFCore.interfaces import IActionProvider
+          except ImportError:
+              # we still don't load ZCML on tests on 2.8, but on 2.8 we don't
+              # need to redirect actions to portal_actions.
+              pass
+          else:
+            if not IActionProvider.providedBy(container):
+              # some tools stopped being ActionProviders in CMF 2.x. Drop the
+              # action into portal_actions.
+              LOG('Products.ERP5.Document.BusinessTemplate', WARNING,
+                  'Misplaced action',
+                  'Attempted to store action %r in %r which is no longer an '
+                  'IActionProvided. Storing action on portal_actions instead' %
+                  (id, path))
+              container = p.portal_actions
           obj, action = container, obj
           action_list = obj.listActions()
           for index in range(len(action_list)):
