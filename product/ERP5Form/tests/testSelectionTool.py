@@ -227,7 +227,19 @@ class TestSelectionTool(ERP5TypeTestCase):
     self.assertEquals(None,
                       self.portal_selections.getSelectionIndexFor('test_selection'))
 
+  def testDeleteSelection(self):
+    selection = self.portal_selections.getSelectionFor('test_selection')
+    self.assert_(isinstance(selection, Selection))
+    self.portal_selections.manage_deleteSelection('test_selection')
+    selection = self.portal_selections.getSelectionFor('test_selection')
+    self.assertEqual(selection, None)
 
+  def testDeleteGlobalSelection(self):
+    selection = self.portal_selections.getSelectionFor('test_selection')
+    self.assert_(isinstance(selection, Selection))
+    self.portal_selections.manage_deleteGlobalSelection('test_selection')
+    selection = self.portal_selections.getSelectionFor('test_selection')
+    self.assertEqual(selection, None)
 
 class TestSelectionPersistence(unittest.TestCase):
   """SelectionTool tests that needs a "real" FileStorage to make sure selection
