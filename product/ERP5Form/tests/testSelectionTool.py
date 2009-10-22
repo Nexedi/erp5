@@ -249,13 +249,13 @@ class TestSelectionPersistence(unittest.TestCase):
       self.cnx.root().portal_selections = SelectionTool()
     self.portal_selections.setSelectionFor('test_selection', Selection())
     transaction.commit()
-    
+
   def tearDown(self):
     # revert the patch from setUp
     SelectionTool._getUserId = SelectionTool._getUserId_saved
     self.cnx.close()
     ZODButil.cleanDB()
-  
+
   def _runWithAnotherConnection(self, thread_func):
     """runs `thread_func` with another ZODB connection
 
