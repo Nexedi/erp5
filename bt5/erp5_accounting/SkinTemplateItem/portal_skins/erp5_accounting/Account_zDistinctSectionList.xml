@@ -171,14 +171,18 @@ simulation_state:list</string> </value>
             <key> <string>src</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
+<dtml-let query="portal_catalog.buildSQLQuery(query=portal_catalog.getSecurityQuery())">\n
 SELECT DISTINCT\n
-  catalog.uid,\n
-  catalog.path,\n
   catalog.relative_url,\n
   catalog.title,\n
   catalog.portal_type,\n
   catalog.validation_state\n
 FROM\n
+  <dtml-in prefix="table" expr="query[\'from_table_list\']">\n
+   <dtml-if "table_key not in (\'stock\', \'catalog\')">\n
+     <dtml-var table_item> AS <dtml-var table_key>,\n
+   </dtml-if>\n
+  </dtml-in>\n
   catalog,\n
   stock\n
 WHERE\n
@@ -195,9 +199,14 @@ WHERE\n
                 <dtml-unless sequence-end>OR </dtml-unless>\n
   </dtml-in> )\n
 </dtml-if>\n
+  AND stock.portal_type in ( <dtml-in getPortalAccountingMovementTypeList><dtml-sqlvar\n
+    sequence-item type="string"><dtml-unless sequence-end>, </dtml-unless></dtml-in> )\n
+<dtml-if "query[\'where_expression\']">\n
+  AND <dtml-var "query[\'where_expression\']">\n
+</dtml-if>\n
 ORDER BY\n
   catalog.portal_type, catalog.title\n
-
+</dtml-let>
 
 ]]></string> </value>
         </item>
@@ -237,14 +246,18 @@ ORDER BY\n
                         <key> <string>raw</string> </key>
                         <value> <string encoding="cdata"><![CDATA[
 
+<dtml-let query="portal_catalog.buildSQLQuery(query=portal_catalog.getSecurityQuery())">\n
 SELECT DISTINCT\n
-  catalog.uid,\n
-  catalog.path,\n
   catalog.relative_url,\n
   catalog.title,\n
   catalog.portal_type,\n
   catalog.validation_state\n
 FROM\n
+  <dtml-in prefix="table" expr="query[\'from_table_list\']">\n
+   <dtml-if "table_key not in (\'stock\', \'catalog\')">\n
+     <dtml-var table_item> AS <dtml-var table_key>,\n
+   </dtml-if>\n
+  </dtml-in>\n
   catalog,\n
   stock\n
 WHERE\n
@@ -261,9 +274,14 @@ WHERE\n
                 <dtml-unless sequence-end>OR </dtml-unless>\n
   </dtml-in> )\n
 </dtml-if>\n
+  AND stock.portal_type in ( <dtml-in getPortalAccountingMovementTypeList><dtml-sqlvar\n
+    sequence-item type="string"><dtml-unless sequence-end>, </dtml-unless></dtml-in> )\n
+<dtml-if "query[\'where_expression\']">\n
+  AND <dtml-var "query[\'where_expression\']">\n
+</dtml-if>\n
 ORDER BY\n
   catalog.portal_type, catalog.title\n
-
+</dtml-let>
 
 ]]></string> </value>
                     </item>
