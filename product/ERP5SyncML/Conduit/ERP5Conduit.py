@@ -657,10 +657,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
         object_element = xml_copy
       else:
         object_element = xml_copy.xpath('//object')[0]
-      #XXXElement id will be removed from asXML
-      id_element = object_element.xpath('./id')[0]
       object_element.attrib['id'] = new_id
-      id_element.text = new_id
       return etree.tostring(xml_copy)
 
   def getXMLFromObjectWithId(self, object, xml_mapping):
