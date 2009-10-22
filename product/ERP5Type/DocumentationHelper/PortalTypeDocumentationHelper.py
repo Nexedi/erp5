@@ -203,9 +203,8 @@ class PortalTypeDocumentationHelper(DocumentationHelper):
     """
     """
     action_list = []
-    actions = getattr(self.getDocumentedObject(), "_actions")
-    for action in actions:
-      action_list.append(action.getId())
+    for action in  self.getDocumentedObject().getActionInformationList():
+      action_list.append(action.getReference())
     return action_list
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getActionItemList')
@@ -214,11 +213,11 @@ class PortalTypeDocumentationHelper(DocumentationHelper):
     """
     action_list = []
     TITLE =['No', 'Yes']
-    for action in  self.getDocumentedObject()._actions:
-      permission = ', '.join(x for x in action.permissions)
-      visible = TITLE[action.visible]
-      category = action.category
-      action_list.append((action.getId(), action.title, action.Description(), permission, visible, category))
+    for action in  self.getDocumentedObject().getActionInformationList():
+      permission = ', '.join(x for x in action.getActionPermissionList())
+      visible = TITLE[int(action.isVisible())]
+      category = action.getActionType()
+      action_list.append((action.getReference(), action.getTitle(), action.getDescription(), permission, visible, category))
     return action_list
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getActionUriList')
@@ -226,15 +225,14 @@ class PortalTypeDocumentationHelper(DocumentationHelper):
     """
     """
     action_id_list = self.getActionIdList()
-    return map(lambda x: ('%s?_actions#%s' % (self.uri, x)), action_id_list)
+    return map(lambda x: ('%s/%s' % (self.uri, x)), action_id_list)
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getRoleIdList')
   def getRoleIdList(self):
     """
     """
     role_list = []
-    roles = getattr(self.getDocumentedObject(), "_roles")
-    for role in roles:
+    for role in self.getDocumentedObject().getRoleInformationList():
       role_list.append(role.Title())
     return role_list
 
@@ -243,8 +241,8 @@ class PortalTypeDocumentationHelper(DocumentationHelper):
     """
     """
     role_list = []
-    for role in  self.getDocumentedObject()._roles:
-      role_list.append((role.__name__, role.Title(), role.Description()))
+    for role in self.getDocumentedObject().getRoleInformationList():
+      role_list.append((';'.join(role.getRoleNameList()), role.getTitle(), role.getDescription()))
     return role_list
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getRoleURIList')
@@ -263,7 +261,7 @@ class PortalTypeDocumentationHelper(DocumentationHelper):
     """
     """
     role_id_list = self.getRoleIdList()
-    return map(lambda x: ('%s?_roles#%s' % (self.uri, x)), role_id_list)
+    return map(lambda x: ('%s/%s' % (self.uri, x)), role_id_list)
 
   def _getPropertyHolder(self):
     portal_type = getPortalType(self.uri)
