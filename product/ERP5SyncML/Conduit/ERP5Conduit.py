@@ -312,7 +312,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
         data = None
         if xml.xpath('name()') not in self.XUPDATE_INSERT_OR_ADD:
           for subnode in xml:
-            if subnode.xpath('name()') in self.XUPDATE_EL:
+            if subnode.xpath('name()') in self.XUPDATE_ELEMENT:
               keyword = subnode.attrib.get('name', None)
               data_xml = subnode
         else:
@@ -790,14 +790,14 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     """
     Retrieve the list of xupdate:element subnodes
     """
-    return xml.xpath('|'.join(['.//*[name() = "%s"]' % name for name in self.XUPDATE_EL]))
+    return xml.xpath('|'.join(['.//*[name() = "%s"]' % name for name in self.XUPDATE_ELEMENT]))
 
   security.declareProtected(Permissions.AccessContentsInformation,'getElementFromXupdate')
   def getElementFromXupdate(self, xml):
     """
     from a xupdate:element returns the element as xml
     """
-    if xml.xpath('name()') in self.XUPDATE_EL:
+    if xml.xpath('name()') in self.XUPDATE_ELEMENT:
       result = '<'
       tag_name = xml.attrib.get('name')
       result += tag_name
@@ -843,7 +843,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     Return the list of workflow actions
     """
     action_list = []
-    if xml.xpath('name()') in self.XUPDATE_EL:
+    if xml.xpath('name()') in self.XUPDATE_ELEMENT:
       action_list.append(xml)
       return action_list
     for subnode in xml:

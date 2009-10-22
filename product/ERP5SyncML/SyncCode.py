@@ -85,7 +85,7 @@ class SyncCode(Persistent):
   XUPDATE_ADD =           ('xupdate:append',)
   XUPDATE_DEL =           ('xupdate:remove',)
   XUPDATE_UPDATE =        ('xupdate:update',)
-  XUPDATE_EL =        ('xupdate:element',)
+  XUPDATE_ELEMENT =        ('xupdate:element',)
   XUPDATE_INSERT_OR_ADD = tuple(XUPDATE_INSERT) + tuple(XUPDATE_ADD)
   XUPDATE_TAG = tuple(XUPDATE_INSERT) + tuple(XUPDATE_ADD) + \
                 tuple(XUPDATE_UPDATE) + tuple(XUPDATE_DEL)
@@ -110,7 +110,7 @@ class SyncCode(Persistent):
                      local_group_tag,'/'+local_group_tag)
   ADDABLE_PROPERTY = local_role_list + (history_tag,) + local_permission_list
   NOT_EDITABLE_PROPERTY = ('id','object','uid','xupdate:attribute') \
-                          + XUPDATE_EL + ADDABLE_PROPERTY
+                          + XUPDATE_ELEMENT + ADDABLE_PROPERTY
   sub_object_exp = re.compile("/object\[@id='.*'\]/")
   object_exp = re.compile("/object\[@id='.*'\]")
   attribute_type_exp = re.compile("^.*attribute::type$")
