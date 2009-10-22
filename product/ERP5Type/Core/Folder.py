@@ -35,7 +35,6 @@ import ExtensionClass
 
 from Products.CMFCore.utils import _getAuthenticatedUser
 from Products.CMFCore.CMFCatalogAware import CMFCatalogAware
-from Products.CMFCore.PortalFolder import ContentFilter
 
 from Products.ERP5Type.Base import Base
 from Products.ERP5Type.CopySupport import CopyContainer
@@ -1434,17 +1433,24 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn, 
 
   security.declareProtected( Permissions.AccessContentsInformation,
                              'contentValues' )
-  def contentValues(self, *args, **kw):
-    filter_kw = kw.pop('filter', None) or {}
-    portal_type_id_list = self._getTypesTool().objectIds()
-    if 'portal_type' in filter_kw:
-      kw['portal_type'] = [x for x in filter_kw.pop('portal_type')
-                             if x in portal_type_id_list]
-    elif 'portal_type' not in kw:
-      kw['portal_type'] = portal_type_id_list
-    object_list = self.objectValues(*args, **kw)
-    if filter_kw:
-      object_list = filter(ContentFilter(**filter_kw), object_list)
+  def contentValues(self, spec=None, meta_type=None, portal_type=None,
+                    sort_on=None, sort_order=None, checked_permission=None, **kw):
+    # Returns a list of documents contained in this folder.
+    # ( no docstring to prevent publishing )
+    if meta_type is not None:
+      spec = meta_type
+    if portal_type is not None:
+      kw['portal_type'] = portal_type
+    filter = kw.pop('filter', {}) or {}
+    kw.update(filter)
+    if self._folder_handler == HBTREE_HANDLER:
+      object_list = CMFHBTreeFolder.contentValues(self, spec=spec, filter=kw)
+    else:
+      object_list = CMFBTreeFolder.contentValues(self, spec=spec, filter=kw)
+    if checked_permission is not None:
+      checkPermission = getSecurityManager().checkPermission
+      object_list = [o for o in object_list if checkPermission(checked_permission, o)]
+    object_list = sortValueList(object_list, sort_on, sort_order, **kw)
     return object_list
 
   # Override security declaration of CMFCore/PortalFolder (used by CMFBTreeFolder)
