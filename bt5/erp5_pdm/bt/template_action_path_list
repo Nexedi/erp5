@@ -9,6 +9,17 @@ Component | sale_price_view
 Component | view
 Component | view_measure
 Component | view_stock
+Internal Supply Line | additional_price
+Internal Supply Line | base_price
+Internal Supply Line | discount_ratio
+Internal Supply Line | exclusive_discount_ratio
+Internal Supply Line | non_discountable_additional_price
+Internal Supply Line | surcharge_ratio
+Internal Supply Line | variable_additional_price
+Internal Supply Line | view
+Internal Supply Module | view
+Internal Supply | view
+Internal Supply | view_profile
 Measure | view
 Product Individual Variation | view
 Product Module | converted_inventory_report

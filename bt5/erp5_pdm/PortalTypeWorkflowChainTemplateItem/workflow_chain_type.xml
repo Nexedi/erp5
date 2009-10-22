@@ -1,7 +1,15 @@
 <workflow_chain>
  <chain>
   <type>Component</type>
-  <workflow>validation_workflow, edit_workflow</workflow>
+  <workflow>edit_workflow, validation_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Internal Supply</type>
+  <workflow>edit_workflow, validation_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Internal Supply Line</type>
+  <workflow>edit_workflow, supply_line_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>Measure</type>
@@ -9,7 +17,7 @@
  </chain>
  <chain>
   <type>Product</type>
-  <workflow>validation_workflow, edit_workflow</workflow>
+  <workflow>edit_workflow, validation_workflow</workflow>
  </chain>
  <chain>
   <type>Purchase Supply</type>
@@ -29,11 +37,11 @@
  </chain>
  <chain>
   <type>Service</type>
-  <workflow>validation_workflow, edit_workflow</workflow>
+  <workflow>edit_workflow, validation_workflow</workflow>
  </chain>
  <chain>
   <type>Supply Line</type>
-  <workflow>supply_line_interaction_workflow, edit_workflow</workflow>
+  <workflow>edit_workflow, supply_line_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>Transformation</type>

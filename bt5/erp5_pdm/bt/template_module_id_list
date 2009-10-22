@@ -1,4 +1,5 @@
 component_module
+internal_supply_module
 product_module
 purchase_supply_module
 sale_supply_module
