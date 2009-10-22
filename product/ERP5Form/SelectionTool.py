@@ -93,6 +93,17 @@ class SelectionTool( BaseTool, UniqueObject, SimpleItem ):
     manage_configure = DTMLFile( 'SelectionTool_configure', _dtmldir )
 
     security.declareProtected( ERP5Permissions.ManagePortal
+                             , 'manage_deleteSelectionForUser' )
+    def manage_deleteSelectionForUser(self, selection_name, user_id, REQUEST=None):
+      """
+        Delete a specified selection
+      """
+      self._deleteSelectionForUserFromContainer(selection_name, user_id)
+      if REQUEST is not None:
+        return REQUEST.RESPONSE.redirect('%s/%s' %
+                (self.absolute_url(), 'manage_viewSelections'))
+
+    security.declareProtected( ERP5Permissions.ManagePortal
                              , 'manage_deleteSelection' )
     def manage_deleteSelection(self, selection_name, REQUEST=None):
       """
@@ -1376,13 +1387,16 @@ class SelectionTool( BaseTool, UniqueObject, SimpleItem ):
       else:
         self._getPersistentContainer(user_id)[selection_name] = aq_base(selection)
 
-    def _deleteSelectionFromContainer(self, selection_name):
-      user_id = self._getUserId()
+    def _deleteSelectionForUserFromContainer(self, selection_name, user_id):
       if user_id is None: return None
       if self.isMemcachedUsed():
         del(self._getMemcachedContainer()['%s-%s' % (user_id, selection_name)])
       else:
         del(self._getPersistentContainer(user_id)[selection_name])
+
+    def _deleteSelectionFromContainer(self, selection_name):
+      user_id = self._getUserId()
+      self._deleteSelectionForUserFromContainer(selection_name, user_id)
 
     def _deleteGlobalSelectionFromContainer(self, selection_name):
       if not self.isMemcachedUsed():

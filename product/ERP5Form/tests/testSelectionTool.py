@@ -234,6 +234,16 @@ class TestSelectionTool(ERP5TypeTestCase):
     selection = self.portal_selections.getSelectionFor('test_selection')
     self.assertEqual(selection, None)
 
+  def testDeleteSelectionForUser(self):
+    # XXX: There is side effect, that manager, running user, is the same use
+    #      and there is no way (for now) to get selections per user...
+    selection = self.portal_selections.getSelectionFor('test_selection')
+    self.assert_(isinstance(selection, Selection))
+    self.portal_selections.manage_deleteSelectionForUser('test_selection',
+        'manager')
+    selection = self.portal_selections.getSelectionFor('test_selection')
+    self.assertEqual(selection, None)
+
   def testDeleteGlobalSelection(self):
     selection = self.portal_selections.getSelectionFor('test_selection')
     self.assert_(isinstance(selection, Selection))
