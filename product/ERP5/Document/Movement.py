@@ -184,7 +184,8 @@ class Movement(XMLObject, Amount):
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
   # Declarative interfaces
-  zope.interface.implements( interfaces.IVariated, )
+  zope.interface.implements( interfaces.IVariated,
+                             interfaces.IMovement )
 
   # Declarative properties
   property_sheets = ( PropertySheet.Base
