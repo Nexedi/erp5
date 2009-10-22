@@ -17,7 +17,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_source_administration_title</string> </value>
+            <value> <string>my_source_decision_title</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -116,7 +116,7 @@
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_source_administration_title</string> </value>
+                    <value> <string>my_source_decision_title</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
