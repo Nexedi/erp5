@@ -93,7 +93,7 @@
                         <string>my_title</string>
                         <string>my_source_section_title</string>
                         <string>my_source_title</string>
-                        <string>my_source_administration_title</string>
+                        <string>my_source_decision_title</string>
                         <string>my_price_currency</string>
                       </list>
                     </value>
@@ -104,7 +104,7 @@
                       <list>
                         <string>my_destination_section_title</string>
                         <string>my_destination_title</string>
-                        <string>my_destination_administration_title</string>
+                        <string>my_destination_decision_title</string>
                         <string>my_start_date_range_min</string>
                         <string>my_start_date_range_max</string>
                         <string>my_comment</string>
