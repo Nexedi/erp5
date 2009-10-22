@@ -1901,7 +1901,7 @@ class PortalTypeAllowedContentTypeTemplateItem(BaseTemplateItem):
     keys = dictio.keys()
     keys.sort()
     for key in keys:
-      allowed_list = dictio[key]
+      allowed_list = sorted(dictio[key])
       xml_data += '\n <portal_type id="%s">' %(key,)
       for allowed_item in allowed_list:
         xml_data += '\n  <item>%s</item>' %(allowed_item,)
