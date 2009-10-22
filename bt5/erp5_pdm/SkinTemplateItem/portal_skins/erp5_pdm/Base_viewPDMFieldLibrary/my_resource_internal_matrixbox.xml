@@ -116,6 +116,10 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>cell_getter_method</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>cell_portal_type</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -342,7 +346,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:here.default_ssl.SupplyLine_asCellRange(\'path\', matrixbox=1, display_base_category=0)[1]</string> </value>
+            <value> <string>python:here.Resource_getDefaultInternalSupplyLine().SupplyLine_asCellRange(\'path\', matrixbox=1, display_base_category=0)[1]</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -358,7 +362,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:here.default_ssl.SupplyLine_asCellRange(\'path\', matrixbox=1, display_base_category=0)[0]</string> </value>
+            <value> <string>python:here.Resource_getDefaultInternalSupplyLine().SupplyLine_asCellRange(\'path\', matrixbox=1, display_base_category=0)[0]</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -374,7 +378,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:here.default_ssl.SupplyLine_asCellRange(\'path\', matrixbox=1, display_base_category=0)[2]</string> </value>
+            <value> <string>python:here.Resource_getDefaultInternalSupplyLine().SupplyLine_asCellRange(\'path\', matrixbox=1, display_base_category=0)[2]</string> </value>
         </item>
       </dictionary>
     </pickle>

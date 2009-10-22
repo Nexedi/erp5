@@ -126,6 +126,24 @@
                         <string>my_resource_purchase_matrixbox</string>
                         <string>my_resource_sale_matrixbox</string>
                         <string>my_resource_internal_matrixbox</string>
+                        <string>my_destination_account</string>
+                        <string>my_purchase_reference</string>
+                        <string>my_sale_reference</string>
+                        <string>my_source_account</string>
+                        <string>my_mapped_value_property_list</string>
+                        <string>my_matrixbox_base_price</string>
+                        <string>my_matrixbox_predicate_category_list</string>
+                        <string>my_matrixbox_variation_category_list</string>
+                        <string>my_internal_base_price</string>
+                        <string>my_purchase_base_price</string>
+                        <string>my_sale_base_price</string>
+                        <string>my_max_delay</string>
+                        <string>my_min_delay</string>
+                        <string>my_min_flow</string>
+                        <string>my_p_variation_base_category_list</string>
+                        <string>my_resource_purchase_quantity_step_list</string>
+                        <string>my_resource_sale_quantity_step_list</string>
+                        <string>my_resource_internal_quantity_step_list</string>
                       </list>
                     </value>
                 </item>
