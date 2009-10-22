@@ -203,147 +203,159 @@ class TestOOoImport(ERP5TypeTestCase):
       method_id = message_list[i].method_id
       self.assertEqual('Base_importFileLine',method_id)'''
 
-  def stepCheckImportedPersonList(self, sequence=None, sequence_list=None, **kw):
+  def stepCheckImportedPersonList(self, sequence=None, sequence_list=None,
+                                  num=101, **kw):
     global person_current_id
     person_module = self.getPortal().person_module
-    for i in range(101):
-      object_id = i + person_current_id
-      object = person_module['%s' % (object_id)]
-      self.assertEqual('John Doe %s' % (i), object.getTitle())
-      self.assertEqual('John', object.getFirstName())
-      self.assertEqual('Doe %s' % (i), object.getLastName())
-      self.assertEqual('john.doe%s@foo.com' % (i), object.getDefaultEmailText())
-    person_current_id =  person_current_id+101
+    person_list = [person_module[str(i + person_current_id)] \
+                   for i in range(num)]
+    self.assertEqual(
+      sorted(['John Doe %s' % (i) for i in range(num)]),
+      sorted([person_list[i].getTitle() for i in range(num)]))
+    self.assertEqual(
+      sorted(['John' for i in range(num)]),
+      sorted([person_list[i].getFirstName() for i in range(num)]))
+    self.assertEqual(
+      sorted(['Doe %s' % (i) for i in range(num)]),
+      sorted([person_list[i].getLastName() for i in range(num)]))
+    self.assertEqual(
+      sorted(['john.doe%s@foo.com' % (i) for i in range(num)]),
+      sorted([person_list[i].getDefaultEmailText() for i in range(num)]))
+    person_current_id = person_current_id+num
 
   def stepCheckImportedPersonListBlank(self, sequence=None, sequence_list=None, **kw):
-    global person_current_id
-    person_module = self.getPortal().person_module
-    for i in range(101):
-      object_id = i + person_current_id
-      object = person_module['%s' % (object_id)]
-      self.assertEqual('John Doe %s' % (i), object.getTitle())
-      self.assertEqual('John', object.getFirstName())
-      self.assertEqual('Doe %s' % (i), object.getLastName())
-      self.assertEqual('john.doe%s@foo.com' % (i), object.getDefaultEmailText())
-    person_current_id = person_current_id+101
+    return self.stepCheckImportedPersonList(sequence=sequence,
+                                            sequence_list=sequence_list, **kw)
 
   def stepCheckImportedPersonListCategory(self, sequence=None, sequence_list=None, **kw):
     global person_current_id
+    num = 10
     person_module = self.getPortal().person_module
-    for i in range(10):
-      object_id = i + person_current_id
-      object = person_module['%s' % (object_id)]
-      self.assertEqual('John Doe %s' % (i), object.getTitle())
-      self.assertEqual('John', object.getFirstName())
-      self.assertEqual('male', object.getGender())
-      self.assertEqual('director', object.getFunction())
-    person_current_id = person_current_id+10
+    person_list = [person_module[str(i + person_current_id)] \
+                   for i in range(num)]
+    self.assertEqual(
+      sorted(['John Doe %s' % (i) for i in range(num)]),
+      sorted([person_list[i].getTitle() for i in range(num)]))
+    self.assertEqual(
+      sorted(['John' for i in range(num)]),
+      sorted([person_list[i].getFirstName() for i in range(num)]))
+    self.assertEqual(
+      sorted(['male' for i in range(num)]),
+      sorted([person_list[i].getGender() for i in range(num)]))
+    self.assertEqual(
+      sorted(['director' for i in range(num)]),
+      sorted([person_list[i].getFunction() for i in range(num)]))
+    person_current_id = person_current_id+num
 
   def stepCheckAuthorImportedPersonList(self, sequence=None, sequence_list=None, **kw):
-    global person_current_id
-    person_module = self.getPortal().person_module
-    for i in range(10):
-      object_id = i + person_current_id
-      object = person_module['%s' % (object_id)]
-      self.assertEqual('John Doe %s' % (i), object.getTitle())
-      self.assertEqual('John', object.getFirstName())
-      self.assertEqual('male', object.getGender())
-      self.assertEqual('director', object.getFunction())
-    person_current_id=person_current_id+10
+    return self.stepCheckImportedPersonListCategory(sequence=sequence,
+                                                    sequence_list=sequence_list,
+                                                    **kw)
 
   def stepCheckImportedPersonListFreeText(self, sequence=None, sequence_list=None, **kw):
     global person_current_id
+    num = 10
     person_module = self.getPortal().person_module
-    for i in range(10):
-      object_id = i + person_current_id
-      object = person_module['%s' % (object_id)]
-      self.assertEqual('John Doe %s' % (i), object.getTitle())
-      self.assertEqual('John', object.getFirstName())
-      self.assertEqual('male', object.getGenderFreeText())
-      self.assertEqual('Director', object.getFunctionFreeText())
-    person_current_id=person_current_id+10
+    person_list = [person_module[str(i + person_current_id)] \
+                   for i in range(num)]
+    self.assertEqual(
+      sorted(['John Doe %s' % (i) for i in range(num)]),
+      sorted([person_list[i].getTitle() for i in range(num)]))
+    self.assertEqual(
+      sorted(['John' for i in range(num)]),
+      sorted([person_list[i].getFirstName() for i in range(num)]))
+    self.assertEqual(
+      sorted(['male' for i in range(num)]),
+      sorted([person_list[i].getGenderFreeText() for i in range(num)]))
+    self.assertEqual(
+      sorted(['Director' for i in range(num)]),
+      sorted([person_list[i].getFunctionFreeText() for i in range(num)]))
+    person_current_id = person_current_id+num
 
   def stepCheckImportedPersonListAccentuated(self, sequence=None, sequence_list=None, **kw):
     global person_current_id
+    num = 10
     person_module = self.getPortal().person_module
-    for i in range(10):
-      object_id = i + person_current_id
-      object = person_module['%s' % (object_id)]
-      title = 'John Doe é %s' % (i)
-      #encode_title = title.encode('UTF-8')
-      self.assertEqual(title, object.getTitle())
-      self.assertEqual('John', object.getFirstName())
-      self.assertEqual('male', object.getGender())
-      self.assertEqual('director', object.getFunction())
-    person_current_id = person_current_id+10
+    person_list = [person_module[str(i + person_current_id)] \
+                   for i in range(num)]
+    self.assertEqual(
+      sorted(['John Doe é %s' % (i) for i in range(num)]),
+      sorted([person_list[i].getTitle() for i in range(num)]))
+    self.assertEqual(
+      sorted(['John' for i in range(num)]),
+      sorted([person_list[i].getFirstName() for i in range(num)]))
+    self.assertEqual(
+      sorted(['male' for i in range(num)]),
+      sorted([person_list[i].getGender() for i in range(num)]))
+    self.assertEqual(
+      sorted(['director' for i in range(num)]),
+      sorted([person_list[i].getFunction() for i in range(num)]))
+    person_current_id = person_current_id+num
 
   def stepCheckXLSImportedPersonList(self, sequence=None, sequence_list=None, **kw):
-    global person_current_id
-    person_module = self.getPortal().person_module
-    for i in range(10):
-      object_id = i + person_current_id
-      object = person_module['%s' % (object_id)]
-      self.assertEqual('John Doe %s' % (i), object.getTitle())
-      self.assertEqual('John', object.getFirstName())
-      self.assertEqual('Doe %s' % (i), object.getLastName())
-      self.assertEqual('john.doe%s@foo.com' % (i), object.getDefaultEmailText())
-    person_current_id = person_current_id+10
+    return self.stepCheckImportedPersonList(sequence=sequence,
+                                            sequence_list=sequence_list,
+                                            num=10, **kw)
 
   def stepCheckImportedPersonListWithDates(self, sequence=None, sequence_list=None, **kw):
     global person_current_id
+    num = 10
     person_module = self.getPortal().person_module
-    for i in range(9):
-      object_id = i + person_current_id
-      object = person_module['%s' % (object_id)]
-      self.assertEqual('John Doe %s' % (i), object.getTitle())
-      self.assertEqual('John', object.getFirstName())
-      self.assertEqual('male', object.getGender())
-      self.assertEqual(DateTime('2008/02/0%s %s' % (i+1, 'GMT')), object.getStartDate())
-    object = person_module['%s' % (object_id+1)]
-    self.assertEqual(DateTime('2008/02/%s %s' % (10, 'GMT')), object.getStartDate())
-    person_current_id = person_current_id+10
+    person_list = [person_module[str(i + person_current_id)] \
+                   for i in range(num)]
+    self.assertEqual(
+      sorted(['John Doe %s' % (i) for i in range(num)]),
+      sorted([person_list[i].getTitle() for i in range(num)]))
+    self.assertEqual(
+      sorted(['John' for i in range(num)]),
+      sorted([person_list[i].getFirstName() for i in range(num)]))
+    self.assertEqual(
+      sorted(['male' for i in range(num)]),
+      sorted([person_list[i].getGender() for i in range(num)]))
+    self.assertEqual(
+      sorted([DateTime('2008/02/%02d %s' % (i+1, 'GMT')) for i in range(num)]),
+      sorted([person_list[i].getStartDate() for i in range(num)]))
+    person_current_id = person_current_id+num
 
   def stepCheckImportFloatsAndPercentage(self, sequence=None, sequence_list=None, **kw):
+    num = 10
     currency_module = self.getPortal().currency_module
-    for i in range(10):
-      height_quantity = 1000.3 + i
-      object = currency_module['%s' % (i + 1)]
-      self.assertEqual('Currency %s' % (i), object.getTitle())
-      self.assertEqual(height_quantity, object.getHeightQuantity())
+    currency_list = [currency_module[str(i + 1)] \
+                   for i in range(num)]
+    self.assertEqual(
+      sorted(['Currency %s' % (i) for i in range(num)]),
+      sorted([currency_list[i].getTitle() for i in range(num)]))
+    self.assertEqual(
+      sorted([1000.3 + i for i in range(num)]),
+      sorted([currency_list[i].getHeightQuantity() for i in range(num)]))
 
   def stepCheckImportedPersonList_1(self, sequence=None, sequence_list=None, **kw):
-    global person_current_id
-    person_module = self.getPortal().person_module
-    for i in range(1000):
-      object_id = i + person_current_id
-      object = person_module['%s' % (object_id)]
-      self.assertEqual('John Doe %s' % (i), object.getTitle())
-      self.assertEqual('John', object.getFirstName())
-      self.assertEqual('Doe %s' % (i), object.getLastName())
-      self.assertEqual('john.doe%s@foo.com' % (i), object.getDefaultEmailText())
-    person_current_id =  person_current_id+1000
+    return self.stepCheckImportedPersonList(sequence=sequence,
+                                            sequence_list=sequence_list,
+                                            num=1000, **kw)
 
   def stepCheckImportedPersonList_2(self, sequence=None, sequence_list=None, **kw):
-    global person_current_id
-    person_module = self.getPortal().person_module
-    for i in range(10000):
-      object_id = i + person_current_id
-      object = person_module['%s' % (object_id)]
-      self.assertEqual('John Doe %s' % (i), object.getTitle())
-      self.assertEqual('John', object.getFirstName())
-      self.assertEqual('Doe %s' % (i), object.getLastName())
-      self.assertEqual('john.doe%s@foo.com' % (i), object.getDefaultEmailText())
-    person_current_id =  person_current_id+10000
+    return self.stepCheckImportedPersonList(sequence=sequence,
+                                            sequence_list=sequence_list,
+                                            num=10000, **kw)
 
   def stepCheckImportedOrganisationList(self, sequence=None, sequence_list=None, **kw):
+    num = 10
     organisation_module = self.getPortal().organisation_module
-    for i in range(10):
-      object_id = i + 1
-      object = organisation_module['%s' % (object_id)]
-      self.assertEqual('Foo Organisation %s' % (i), object.getTitle())
-      self.assertEqual('Description organisation %s' % (i), object.getDescription())
-      self.assert_('1234567%s' % (i) in object.getTelephoneText())
-      self.assertEqual('org%s@foo.com' % (i), object.getEmailText())
+    organisation_list = [organisation_module[str(i + 1)] \
+                   for i in range(num)]
+    self.assertEqual(
+      sorted(['Foo Organisation %s' % (i) for i in range(num)]),
+      sorted([organisation_list[i].getTitle() for i in range(num)]))
+    self.assertEqual(
+      sorted(['Description organisation %s' % (i) for i in range(num)]),
+      sorted([organisation_list[i].getDescription() for i in range(num)]))
+    self.assertEqual(
+      sorted(['+(0)-1234567%s' % i for i in range(num)]),
+      sorted([organisation_list[i].getTelephoneText() for i in range(num)]))
+    self.assertEqual(
+      sorted(['org%s@foo.com' % i for i in range(num)]),
+      sorted([organisation_list[i].getEmailText() for i in range(num)]))
 
   def stepImportFileNoMapping(self, sequence=None, sequence_list=None, **kw):
     f = makeFileUpload('import_data_list.ods')
