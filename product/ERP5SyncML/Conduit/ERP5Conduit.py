@@ -43,12 +43,14 @@ import re
 import cStringIO
 import string
 from lxml import etree
+from lxml.etree import Element
 parser = etree.XMLParser(remove_blank_text=True)
 from xml.marshal.generic import loads as unmarshaler
 from zLOG import LOG, INFO, DEBUG
 from base64 import standard_b64decode
 from OFS.Image import Pdata
 from zope.interface import implements
+from copy import deepcopy
 
 class ERP5Conduit(XMLSyncUtilsMixin):
   """
@@ -497,7 +499,6 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     This will change the xml in order to change the update
     from the object to the subobject
     """
-    from copy import deepcopy
     xml_copy = deepcopy(xml)
     self.changeSubObjectSelect(xml_copy)
     return xml_copy
@@ -651,7 +652,6 @@ class ERP5Conduit(XMLSyncUtilsMixin):
       if isinstance(xml, str):
         xml = etree.XML(xml, parser=parser)
       #copy of xml object for modification
-      from copy import deepcopy
       xml_copy = deepcopy(xml)
       if xml_copy.tag == self.xml_object_tag:
         object_element = xml_copy
@@ -795,21 +795,17 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     from a xupdate:element returns the element as xml
     """
     if xml.xpath('name()') in self.XUPDATE_ELEMENT:
-      result = '<'
-      tag_name = xml.attrib.get('name')
-      result += tag_name
+      new_node = Element(xml.attrib.get('name'), nsmap=xml.nsmap)
       for subnode in xml:
         if subnode.xpath('name()') == 'xupdate:attribute':
-          result += ' %s=' % subnode.attrib.get('name')
-          result += '"%s"' % subnode.text
-      result += '>'
+          new_node.attrib.update({subnode.attrib.get('name'): subnode.text})
       # Then dumps the xml and remove what we does'nt want
-      xml_string = self.nodeToString(xml)
-      maxi = max(xml_string.find('>') + 1, \
-                 xml_string.rfind('</xupdate:attribute>')+len('</xupdate:attribute>'))
-      result += xml_string[maxi:xml_string.find('</xupdate:element>')]
-      result += '</%s>' % tag_name
-      return self.convertToXml(result)
+      new_node.extend(deepcopy(child) for child in xml.xpath('*[namespace-uri(.) != "http://www.xmldb.org/xupdate"]'))
+      #Strange behaviour of lxml, xml.text return nothing when xml.text is CDATA
+      #new_node.text = xml.text
+      new_node.text = xml.xpath('string(text())')
+      new_node.tail = xml.tail
+      return new_node
     if xml.xpath('name()') in (self.XUPDATE_UPDATE + self.XUPDATE_DEL):
       result = u'<'
       attribute = xml.attrib.get('select')
