@@ -40,9 +40,7 @@ from Products.ERP5Form.SelectionTool import SelectionTool
 
 
 class TestSelectionTool(ERP5TypeTestCase):
-  quiet = 1
-  run_all_test = 1
-  
+
   def getTitle(self):
     return "SelectionTool"
 
@@ -58,8 +56,7 @@ class TestSelectionTool(ERP5TypeTestCase):
     self.portal_selections.setSelectionFor('test_selection', Selection())
     self.portal_selections.setSelectionParamsFor('test_selection', {'key':'value'})
 
-  def testGetSelectionContainer(self, quiet=quiet, run=run_all_test):
-    if not run: return
+  def testGetSelectionContainer(self):
     self.assertEquals(['test_selection'],
                       self.portal_selections.getSelectionNameList())
     self.assertEquals(['test_selection'],
@@ -69,14 +66,12 @@ class TestSelectionTool(ERP5TypeTestCase):
     self.assert_(getattr(self.portal_selections, 'selection_data', None)
                  is not None)
 
-  def testGetSelectionFor(self, quiet=quiet, run=run_all_test):
-    if not run: return
+  def testGetSelectionFor(self):
     selection = self.portal_selections.getSelectionFor('test_selection')
     self.assert_(isinstance(selection, Selection))
     self.assertEquals('test_selection', selection.name)
 
-  def testGetSelectionParamsFor(self, quiet=quiet, run=run_all_test):
-    if not run: return
+  def testGetSelectionParamsFor(self):
     self.assertEquals({'key':'value'},
                       self.portal_selections.getSelectionParamsFor('test_selection'))
 
@@ -92,14 +87,12 @@ class TestSelectionTool(ERP5TypeTestCase):
       'context/portal_selections/test_selection/not_found | string:default'))
 
 
-  def testCallSelectionFor(self, quiet=quiet, run=run_all_test):
-    if not run: return
+  def testCallSelectionFor(self):
     self.assertEquals(None,
                       self.portal_selections.callSelectionFor('not_found_selection'))
     # XXX more tests needed
 
-  def testCheckedUids(self, quiet=quiet, run=run_all_test):
-    if not run: return
+  def testCheckedUids(self):
     self.assertEquals([],
                       self.portal_selections.getSelectionCheckedUidsFor('test_selection'))
     self.portal_selections.setSelectionCheckedUidsFor('test_selection',
@@ -119,21 +112,18 @@ class TestSelectionTool(ERP5TypeTestCase):
     self.assertEquals(['baz'],
                       self.portal_selections.getSelectionCheckedUidsFor('test_selection'))
 
-  def testGetSelectionListUrlFor(self, quiet=quiet, run=run_all_test):
-    if not run: return
+  def testGetSelectionListUrlFor(self):
     self.assertEquals('',
                       self.portal_selections.getSelectionListUrlFor('test_selection'))
 
-  def testInvertMode(self, quiet=quiet, run=run_all_test):
-    if not run: return
+  def testInvertMode(self):
     self.portal_selections.setSelectionInvertModeFor('test_selection', 1)
     self.assertEquals(1,
                       self.portal_selections.getSelectionInvertModeFor('test_selection'))
     self.assertEquals([],
                       self.portal_selections.getSelectionInvertModeUidListFor('test_selection'))
 
-  def testSetSelectionToAll(self, quiet=quiet, run=run_all_test):
-    if not run: return
+  def testSetSelectionToAll(self):
     self.portal_selections.checkAll('test_selection',
                                     ['foo', 'bar'])
     self.portal_selections.setSelectionToAll('test_selection')
@@ -144,8 +134,7 @@ class TestSelectionTool(ERP5TypeTestCase):
     self.assertEquals([],
                       self.portal_selections.getSelectionCheckedUidsFor('test_selection'))
 
-  def testSortOrder(self, quiet=quiet, run=run_all_test):
-    if not run: return
+  def testSortOrder(self):
     self.portal_selections.setSelectionSortOrder('test_selection',
                                                  [('title', 'ascending')])
     self.assertEquals([('title', 'ascending')],
@@ -159,8 +148,7 @@ class TestSelectionTool(ERP5TypeTestCase):
     self.assertEquals([('date', 'ascending')],
                       self.portal_selections.getSelectionSortOrder('test_selection'))
 
-  def testColumns(self, quiet=quiet, run=run_all_test):
-    if not run: return
+  def testColumns(self):
     self.assertEquals([],
                       self.portal_selections.getSelectionColumns('test_selection'))
     self.assertEquals([('default_key', 'default_val')],
@@ -172,8 +160,7 @@ class TestSelectionTool(ERP5TypeTestCase):
     self.assertEquals([('key', 'val')],
                       self.portal_selections.getSelectionColumns('test_selection', [('default_key', 'default_val')]))
 
-  def testStats(self, quiet=quiet, run=run_all_test):
-    if not run: return
+  def testStats(self):
     self.assertEquals([' ', ' ', ' ', ' ', ' ', ' '],
                       self.portal_selections.getSelectionStats('test_selection'))
     self.portal_selections.setSelectionStats('test_selection',
@@ -181,16 +168,15 @@ class TestSelectionTool(ERP5TypeTestCase):
     self.assertEquals([],
                       self.portal_selections.getSelectionStats('test_selection'))
 
-  def testView(self, quiet=quiet, run=run_all_test):
-    if not run: return
+  def testView(self):
     # XXX tests should be added
+    pass
 
-  def testPage(self, quiet=quiet, run=run_all_test):
-    if not run: return
+  def testPage(self):
     # XXX tests should be added
+    pass
 
-  def testDomainSelection(self, quiet=quiet, run=run_all_test):
-    if not run: return
+  def testDomainSelection(self):
     self.assertEquals('',
                       self.portal_selections.buildSQLJoinExpressionFromDomainSelection({}))
     self.assertEquals('',
@@ -215,15 +201,13 @@ class TestSelectionTool(ERP5TypeTestCase):
     self.assertEquals('( catalog.uid = test_base_cat_category.uid AND (test_base_cat_category.category_uid = %d AND test_base_cat_category.base_category_uid = %d AND test_base_cat_category.category_strict_membership = 1) )' % (test_uid, base_uid),
                       self.portal_selections.buildSQLExpressionFromDomainSelection({'test_base_cat': ('portal_categories', 'test_base_cat/test_cat')}, strict_membership = 1))
 
-  def testDict(self, quiet=quiet, run=run_all_test):
-    if not run: return
+  def testDict(self):
     self.assertEquals({},
                       self.portal_selections.getSelectionDomainDictFor('test_selection'))
     self.assertEquals({},
                       self.portal_selections.getSelectionReportDictFor('test_selection'))
 
-  def testIndex(self, quiet=quiet, run=run_all_test):
-    if not run: return
+  def testIndex(self):
     self.assertEquals(None,
                       self.portal_selections.getSelectionIndexFor('test_selection'))
 
@@ -369,9 +353,7 @@ class TestSelectionPersistence(unittest.TestCase):
         portal_selections.getSelectionParamsFor('test_selection').get('key'))
 
 class TestSelectionToolMemcachedStorage(TestSelectionTool):
-  quiet = 1
-  run_all_test = 1
-  
+
   def getTitle(self):
     return "SelectionTool with Memcached Storage"
 
@@ -386,8 +368,7 @@ class TestSelectionToolMemcachedStorage(TestSelectionTool):
     self.portal.portal_selections.setStorage('portal_memcached/default_memcached_plugin')
     TestSelectionTool.afterSetUp(self)
 
-  def testGetSelectionContainer(self, quiet=quiet, run=run_all_test):
-    if not run: return
+  def testGetSelectionContainer(self):
     self.assertEquals([],
                       self.portal_selections.getSelectionNameList())
     self.assertEquals([],
