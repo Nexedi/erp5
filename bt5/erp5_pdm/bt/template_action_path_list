@@ -1,6 +1,7 @@
 Component Individual Variation | view
 Component Module | converted_inventory_report
 Component Module | view
+Component | internal_price_view
 Component | inventory_chart
 Component | inventory_variation_chart
 Component | jump_to_related_transformation
@@ -24,6 +25,7 @@ Measure | view
 Product Individual Variation | view
 Product Module | converted_inventory_report
 Product Module | view
+Product | internal_price_view
 Product | inventory_chart
 Product | inventory_variation_chart
 Product | jump_to_related_transformation
@@ -57,6 +59,7 @@ Sale Supply | view_profile
 Service Individual Variation | view
 Service Module | converted_inventory_report
 Service Module | view
+Service | internal_price_view
 Service | purchase_price_view
 Service | sale_price_view
 Service | view
