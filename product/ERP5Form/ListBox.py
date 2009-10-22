@@ -34,7 +34,7 @@ from Products.Formulator import Widget, Validator
 from Products.Formulator.Field import ZMIField
 from Products.Formulator.Errors import FormValidationError, ValidationError
 from Selection import Selection, DomainSelection
-from SelectionTool import createFolderMixInPageSelectionMethod
+from Tool.SelectionTool import createFolderMixInPageSelectionMethod
 from Products.ERP5Type.Utils import getPath
 from Products.ERP5Type.Document import newTempBase
 from Products.CMFCore.utils import getToolByName

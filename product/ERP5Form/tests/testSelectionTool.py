@@ -36,7 +36,7 @@ from Testing import ZODButil
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5Form.Selection import Selection
-from Products.ERP5Form.SelectionTool import SelectionTool
+from Products.ERP5Form.Tool.SelectionTool import SelectionTool
 
 
 class TestSelectionTool(ERP5TypeTestCase):

@@ -46,7 +46,7 @@ from Products.Formulator.Field import ZMIField
 from Products.Formulator.DummyField import fields
 from Products.Formulator import Widget, Validator
 from Products.Formulator.Errors import FormValidationError, ValidationError
-from SelectionTool import makeTreeList
+from Tool.SelectionTool import makeTreeList
 from Selection import Selection
 from AccessControl import ClassSecurityInfo
 from zLOG import LOG

@@ -39,7 +39,7 @@ from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type import Permissions as ERP5Permissions
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 from Products.ERP5Form import _dtmldir
-from Selection import Selection, DomainSelection
+from Products.ERP5Form.Selection import Selection, DomainSelection
 from ZPublisher.HTTPRequest import FileUpload
 import md5
 import string, re

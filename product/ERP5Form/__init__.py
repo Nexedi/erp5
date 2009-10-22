@@ -40,7 +40,8 @@ document_classes = updateGlobals( this_module, globals(),
                                   permissions_module = Permissions)
 
 # Define object classes and tools
-import Form, FSForm, ListBox, ReportBox, MatrixBox, SelectionTool
+import Form, FSForm, ListBox, ReportBox, MatrixBox
+from Tool import SelectionTool
 import OOoChart, PDFTemplate, Report, PDFForm, ParallelListField
 import PlanningBox, POSBox, FormBox, EditorField, ProxyField, DurationField
 import RelationField, ImageField, MultiRelationField, MultiLinkField, InputButtonField
