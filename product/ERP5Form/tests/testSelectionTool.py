@@ -90,7 +90,7 @@ class TestSelectionTool(ERP5TypeTestCase):
   def testCallSelectionFor(self):
     self.assertEquals(None,
                       self.portal_selections.callSelectionFor('not_found_selection'))
-    # XXX more tests needed
+    raise NotImplementedError('more tests needed')
 
   def testCheckedUids(self):
     self.assertEquals([],
