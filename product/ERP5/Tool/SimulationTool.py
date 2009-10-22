@@ -851,7 +851,8 @@ class SimulationTool(BaseTool):
       #   build a table in MySQL
       #   and join that table with the stock table
       method = getattr(self,'get%sInventoryList' % simulation_period)
-      result = method(inventory_list=0, ignore_group_by=1, src__=src__, **kw)
+      kw['ignore_group_by'] = 1
+      result = method(inventory_list=0, src__=src__, **kw)
       if src__:
         return result
 
@@ -1466,7 +1467,8 @@ class SimulationTool(BaseTool):
       price rather than an inventory.
       """
       method = getattr(self,'get%sInventoryList' % simulation_period)
-      result = method( src__=src__, inventory_list=0, ignore_group_by=1, **kw)
+      kw['ignore_group_by'] = 1
+      result = method( src__=src__, inventory_list=0, **kw)
       if src__ :
         return result
 
