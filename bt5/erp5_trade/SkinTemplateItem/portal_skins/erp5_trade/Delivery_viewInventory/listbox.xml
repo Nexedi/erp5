@@ -13,15 +13,15 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
                 <string>columns</string>
+                <string>default_params</string>
+                <string>domain_root_list</string>
+                <string>domain_tree</string>
+                <string>editable_columns</string>
+                <string>list_action</string>
                 <string>list_method</string>
                 <string>selection_name</string>
-                <string>default_params</string>
-                <string>editable_columns</string>
-                <string>domain_tree</string>
-                <string>domain_root_list</string>
-                <string>list_action</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -172,6 +172,10 @@
                         <tuple>
                           <string>order_quantity_unit</string>
                           <string>Order Quantity Unit</string>
+                        </tuple>
+                        <tuple>
+                          <string>variation_category_item_list</string>
+                          <string>Variation</string>
                         </tuple>
                       </list>
                     </value>
