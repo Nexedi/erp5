@@ -169,12 +169,10 @@ class TestSelectionTool(ERP5TypeTestCase):
                       self.portal_selections.getSelectionStats('test_selection'))
 
   def testView(self):
-    # XXX tests should be added
-    pass
+    raise NotImplementedError('test should be added')
 
   def testPage(self):
-    # XXX tests should be added
-    pass
+    raise NotImplementedError('test should be added')
 
   def testDomainSelection(self):
     self.assertEquals('',
