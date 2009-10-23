@@ -167,7 +167,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
         result = self.objectIds()
       else:
         # XXX Incompatible with ERP5Type per portal type categories
-        result = context._categories[:]
+        result = list(context._categories[:])
       if sort:
         result.sort()
       return result
