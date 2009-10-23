@@ -75,7 +75,7 @@ def _isUserAcknowledged(cookiejar):
     if cookie.name == '__ac' and cookie.value != '':
       return 1
   return 0
-  
+
 def _getAcCookieFromServer(url, opener, cookiejar, username, password, header_dict = {}):
   """ get __ac cookie from server """
   data = urllib.urlencode({'__ac_name':  username,
@@ -86,7 +86,7 @@ def _getAcCookieFromServer(url, opener, cookiejar, username, password, header_di
 
 class GeneratorCall(UserDict):
   """ Class use to generate/interpret XML-RPC call for the wizard. """
-  
+
   _binary_keys = ("data", "filedata", "previous", "next",)
   _string_keys = ( "command", "server_buffer",)
 
@@ -95,7 +95,7 @@ class GeneratorCall(UserDict):
     self.convert_data = {}
     for key in (self._binary_keys + self._string_keys):
       self.setdefault(key, None)
-      
+
   def load(self, xmlrpccall):
     """ Convert the xmlrpccall into the object. """
     self.convert_data = xmlrpclib.loads(xmlrpccall)[0][0]
@@ -389,11 +389,14 @@ class WizardTool(BaseTool):
                                       transport = 'xml-rpc')
     return handle.portal_witch
 
-  def callRemoteProxyMethod(self, distant_method, server_url=None, use_cache=1, **kw):
+  def callRemoteProxyMethod(self, distant_method, server_url=None, \
+                            use_cache=1, ignore_exceptions=1, **kw):
     """ Call proxy method on server. """
     configurator_user_preferred_language = self.getConfiguratorUserPreferredLanguage()
     def wrapper(distant_method, **kw):
-      return self._callRemoteMethod(distant_method, use_proxy=1, **kw)['data']
+      return self._callRemoteMethod(distant_method, \
+                                    use_proxy=1, \
+                                    ignore_exceptions=ignore_exceptions, **kw)['data']
     if use_cache:
       wrapper = CachingMethod(wrapper,
                               id = 'callRemoteProxyMethod_%s_%s' 
@@ -402,7 +405,8 @@ class WizardTool(BaseTool):
     rc = wrapper(distant_method, **kw)
     return rc
 
-  def _callRemoteMethod(self, distant_method, server_url=None, use_proxy=0, **kw):
+  def _callRemoteMethod(self, distant_method, server_url=None, \
+                        use_proxy=0, ignore_exceptions=1, **kw):
     """ Call remote method on server and get result. """
     result_call = GeneratorCall()
     user_name = None
@@ -426,6 +430,7 @@ class WizardTool(BaseTool):
     self._updateParameterDictWithServerInfo(parameter_dict)
     ## handle file upload
     self._updateParameterDictWithFileUpload(parameter_dict)
+    message = None
     ## call remote method 
     try:
       method = getattr(witch_tool, distant_method)
@@ -457,6 +462,9 @@ class WizardTool(BaseTool):
       result_call.load(html)
       command = result_call["command"]
       html = result_call["data"]
+    if message is not None and not ignore_exceptions:
+      # raise last cought exception
+      raise
     return result_call
 
   def _setServerInfo(self, **kw):
