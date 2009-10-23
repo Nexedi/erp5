@@ -78,12 +78,17 @@ report_data = context.restrictedTraverse(form_path).report_view.pt_render(\n
                          report_method=dummyReportMethod,\n
                          form=portal.restrictedTraverse(form_path)))\n
 \n
+attachment_name = [x[len(\'filename=\'):] for x in request.RESPONSE.getHeader(\n
+               \'content-disposition\').split(\';\')\n
+               if x.startswith(\'filename=\')][0]\n
+if attachment_name.startswith(\'"\'):\n
+  attachment_name = attachment_name[1:]\n
+if attachment_name.endswith(\'"\'):\n
+  attachment_name = attachment_name[:-1]\n
 attachment_list = (\n
   {\'mime_type\': request.RESPONSE.getHeader(\'content-type\').split(\';\')[0],\n
    \'content\': \'%s\' % report_data,\n
-   \'name\': [x[len(\'filename=\'):] for x in request.RESPONSE.getHeader(\n
-               \'content-disposition\').split(\';\') \\\n
-               if x.startswith(\'filename=\')][0]},)\n
+   \'name\': attachment_name},)\n
 \n
 # XXX Use notification message to improve message content\n
 portal.portal_notifications.sendMessage(\n
@@ -166,6 +171,7 @@ portal.portal_notifications.sendMessage(\n
                             <string>report_data</string>
                             <string>x</string>
                             <string>len</string>
+                            <string>attachment_name</string>
                             <string>attachment_list</string>
                             <string>False</string>
                           </tuple>
