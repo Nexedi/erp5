@@ -146,7 +146,7 @@ class CachedConvertableMixin:
     if self.isTempObject():
       return getattr(aq_base(self), 'temp_conversion_data', {})[cache_id]
     for cache_plugin in self._getCacheFactory().getCachePluginList():
-      document_path = getattr(self, 'original_path', self.getPath())
+      document_path = getattr(aq_base(self), 'original_path', self.getPath())
       cache_entry = cache_plugin.get(document_path, DEFAULT_CACHE_SCOPE)
       data_list = cache_entry.getValue().get(cache_id)
       if data_list:
