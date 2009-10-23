@@ -1351,6 +1351,69 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     self.checkLineProperties(line_list[-1], debit=-100, credit=-200,)
 
 
+  def testAccountStatementSameSectionSameNode(self):
+    # Account statement with a movement on the same section and the same node
+    account_module = self.account_module
+    t1 = self._makeOne(
+              portal_type='Accounting Transaction',
+              title='Transaction 1',
+              source_reference='Source Reference',
+              destination_reference='Destination Reference',
+              simulation_state='delivered',
+              source_section_value=self.section,
+              destination_section_value=self.section,
+              start_date=DateTime(2006, 2, 1),
+              lines=(dict(source_value=account_module.payable,
+                          destination_value=account_module.payable,
+                          source_debit=100.0,),
+                     dict(source_value=account_module.receivable,
+                          destination_value=account_module.receivable,
+                          source_credit=100.0,)))
+    
+    # set request variables and render                 
+    request_form = self.portal.REQUEST.form
+    request_form['node'] = \
+                self.portal.account_module.receivable.getRelativeUrl()
+    request_form['from_date'] = DateTime(2006, 1, 1)
+    request_form['at_date'] = DateTime(2006, 12, 31)
+    request_form['section_category'] = 'group/demo_group'
+    request_form['simulation_state'] = ['delivered']
+    
+    report_section_list = self.getReportSectionList(
+                               self.portal.accounting_module,
+                               'AccountModule_viewAccountStatementReport')
+    self.assertEquals(1, len(report_section_list))
+    line_list = self.getListBoxLineList(report_section_list[0])
+    data_line_list = [l for l in line_list if l.isDataLine()]
+    self.assertEquals(2, len(data_line_list))
+    self.assertEquals(
+        set([line.getColumnProperty('Movement_getSpecificReference') for line in
+              data_line_list]),
+        set(('Source Reference', 'Destination Reference')))
+
+    for line in data_line_list:
+      if line.getColumnProperty('Movement_getSpecificReference')\
+              == 'Source Reference':
+        self.checkLineProperties(line,
+                                 Movement_getSpecificReference='Source Reference',
+                                 date=DateTime(2006, 2, 1),
+                                 Movement_getExplanationTitle='Transaction 1',
+                                 Movement_getMirrorSectionTitle=self.section.getTitle(),
+                                 debit=0,
+                                 credit=100,)
+      else:
+        self.checkLineProperties(line,
+                                 Movement_getSpecificReference='Destination Reference',
+                                 date=DateTime(2006, 2, 1),
+                                 Movement_getExplanationTitle='Transaction 1',
+                                 Movement_getMirrorSectionTitle=self.section.getTitle(),
+                                 debit=100,
+                                 credit=0,)
+
+    self.failUnless(line_list[-1].isStatLine())
+    self.checkLineProperties(line_list[-1], debit=0, credit=0,)
+
+
   def testTrialBalance(self):
     # Simple test of trial balance
     # we will use the same data set as account statement
