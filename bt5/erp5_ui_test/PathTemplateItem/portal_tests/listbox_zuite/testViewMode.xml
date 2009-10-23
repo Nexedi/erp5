@@ -104,9 +104,9 @@
   <td>10 records</td>\n
 </tr>\n
 <tr>\n
-  <td>verifyText</td>\n
+  <td>verifyElementNotPresent</td>\n
   <td>id=listbox_item_number</td>\n
-  <td> - 0 items selected</td>\n
+  <td></td>\n
 </tr>\n
 <!-- \n
   To check page number use ListBoxZuite_CommonTemplate/macros/checkCurrentPage to reduce \n
