@@ -95,6 +95,7 @@ if memcache is not None:
       self.local_cache = {}
       self.scheduled_action_dict = {}
       init_dict = {}
+      self.server_list = server_list
       if server_max_key_length is not MARKER:
         init_dict['server_max_key_length'] = server_max_key_length
       if server_max_value_length is not MARKER:
@@ -121,9 +122,13 @@ if memcache is not None:
             self.scheduled_action_dict[key] = UPDATE_ACTION
         for key, action in self.scheduled_action_dict.iteritems():
           if action is UPDATE_ACTION:
-            self.memcached_connection.set(encodeKey(key), self.local_cache[key], 0)
+            succeed = self.memcached_connection.set(encodeKey(key), self.local_cache[key], 0)
+            if not succeed:
+              LOG('MemcacheTool', 0, 'set command to memcached server (%r) failed' % (self.server_list))
           elif action is DELETE_ACTION:
-            self.memcached_connection.delete(encodeKey(key), 0)
+            succeed = self.memcached_connection.delete(encodeKey(key), 0)
+            if not succeed:
+              LOG('MemcacheTool', 0, 'delete command to memcached server (%r) failed' % (self.server_list))
       except:
         LOG('MemcachedDict', 0, 'An exception occured during _finish : %s' % (traceback.format_exc(), ))
       self.scheduled_action_dict.clear()
