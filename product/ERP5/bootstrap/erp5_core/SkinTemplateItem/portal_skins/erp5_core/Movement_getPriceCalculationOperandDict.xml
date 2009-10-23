@@ -65,6 +65,26 @@ def destinationSectionSortMethod(a, b):\n
   return 1 # a defines no destination section and loses\n
 \n
 \n
+def getResourceInternalPriceSortMethod(high_priority_supply_line_list):\n
+  def resourceInternalPriceSortMethod(a, b):\n
+    if a in high_priority_supply_line_list:\n
+      return -1\n
+    elif b in high_priority_supply_line_list:\n
+      return 1\n
+\n
+    if "Internal" in a.getPortalType():\n
+      if "Internal" in b.getPortalType():\n
+        return destinationSectionSortMethod(a, b)\n
+      else:\n
+        return -1\n
+    else:\n
+      if "Internal" in b.getPortalType():\n
+        return 1\n
+      else:\n
+        return sourceSectionSortMethod(a, b)\n
+  return resourceInternalPriceSortMethod\n
+\n
+\n
 def getResourcePurchasePriceSortMethod(high_priority_supply_line_list):\n
   def resourcePurchasePriceSortMethod(a, b):\n
     if a in high_priority_supply_line_list:\n
@@ -138,7 +158,10 @@ if explanation is not None:\n
                   checked_permission=\'View\')))\n
 \n
   # XXX FIXME: Hardcoded values\n
-  if "Purchase" in explanation_type:\n
+  if "Internal" in explanation_type:\n
+    kw[\'sort_method\'] = getResourceInternalPriceSortMethod(\n
+                                  high_priority_supply_line_list)\n
+  elif "Purchase" in explanation_type:\n
     kw[\'sort_method\'] = getResourcePurchasePriceSortMethod(\n
                                   high_priority_supply_line_list)\n
   elif "Sale" in explanation_type:\n
@@ -192,6 +215,7 @@ return default\n
                             <string>kw</string>
                             <string>sourceSectionSortMethod</string>
                             <string>destinationSectionSortMethod</string>
+                            <string>getResourceInternalPriceSortMethod</string>
                             <string>getResourcePurchasePriceSortMethod</string>
                             <string>getResourceSalePriceSortMethod</string>
                             <string>getRelatedTradeConditionList</string>
