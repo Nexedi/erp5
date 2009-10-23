@@ -146,9 +146,9 @@ def buildEmailMessage(from_url, to_url, msg=None,
 
     # try to guess the mime type
     if not attachment.has_key('mime_type'):
-      type, encoding = guess_type( attachment_name )
-      if type != None:
-        attachment['mime_type'] = type
+      mime_type, encoding = guess_type( attachment_name )
+      if mime_type is not None:
+        attachment['mime_type'] = mime_type
       else:
         attachment['mime_type'] = 'application/octet-stream'
 
