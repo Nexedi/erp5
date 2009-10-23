@@ -424,6 +424,15 @@ class ERP5TypeInformation(XMLObject,
                               'getInstanceBaseCategoryList')
     def getInstanceBaseCategoryList(self):
       """ Return all base categories of the portal type """
+      # try to get categories from a temporary object if possible
+      module = self.getPortalObject().getDefaultModule(self.getId())
+      if module is not None:
+        return module.newContent(portal_type=self.getId(), temp_object=1).getBaseCategoryList()
+
+      # XXX The following does not return the list of all categories currently
+      #     (as implementation does not follow exactly the accessor generation,
+      #     like for Expression evaluation). Should be probably better to get
+      #     the list from property holder and not from property sheet
       # get categories from portal type
       base_category_set = set(self.getTypeBaseCategoryList())
 
@@ -447,15 +456,7 @@ class ERP5TypeInformation(XMLObject,
                               'getInstancePropertyAndBaseCategoryList')
     def getInstancePropertyAndBaseCategoryList(self):
       """Return all the properties and base categories of the portal type. """
-      # XXX Does not return the list of all properties and categories currently
-      #     (as implementation does not follow exactly the accessor generation,
-      #     like for Expression evaluation). Should be probably better to get
-      #     the list from property holder and not from property sheet
-      # get categories from portal type
       return_set = set()
-      for category in self.getTypeBaseCategoryList():
-        return_set.add(category)
-        return_set.add(category + '_free_text')
 
       # get the property sheet list for the portal type
       ps_list = [getattr(PropertySheet, p, None)
@@ -476,11 +477,10 @@ class ERP5TypeInformation(XMLObject,
                 return_set.add(property['id'] + '_' + suffix)
             else:
               return_set.add(property['id'])
-        category_list = getattr(base, '_categories', None)
-        if category_list:
-          for category in category_list:
-            return_set.add(category)
-            return_set.add(category + '_free_text')
+      # get base categories
+      for category in self.getInstanceBaseCategoryList():
+        return_set.add(category)
+        return_set.add(category + '_free_text')
 
       # XXX Can't return set to restricted code in Zope 2.8.
       return list(return_set)
