@@ -10,8 +10,27 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>_property_domain_dict</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>short_title</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+        <item>
             <key> <string>acquire_local_roles</string> </key>
-            <value> <int>1</int> </value>
+            <value> <int>0</int> </value>
         </item>
         <item>
             <key> <string>content_icon</string> </key>
@@ -23,7 +42,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Sale Packing List allows for keeping a trace of goods or services which have been delivered to a customer. It can track how delivered goods or services differ from ordered goods or services. A single order may therefore result in multiple packing lists. Packing Lists directly impact the inventory. It is essential to understand that once an order has been confirmed, it should never be modified since it defines a contractual relation. Changes to initial expectations shall be entered into Packing Lists, not in Orders. The impact of changes shall be calculated automatically through so-called "Solvers" which postpone backordered goods, accept the changes to initial expectations, etc. based on standard or custom business rules.</string> </value>
+            <value> <string>Returned Sale Packing List allows for keeping a trace of goods or services which have been delivered to a customer. It can track how delivered goods or services differ from ordered goods or services. A single order may therefore result in multiple packing lists. Packing Lists directly impact the inventory. It is essential to understand that once an order has been confirmed, it should never be modified since it defines a contractual relation. Changes to initial expectations shall be entered into Packing Lists, not in Orders. The impact of changes shall be calculated automatically through so-called "Solvers" which postpone backordered goods, accept the changes to initial expectations, etc. based on standard or custom business rules.</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>
@@ -47,11 +66,57 @@
         </item>
         <item>
             <key> <string>init_script</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Delivery_generateReference</string> </value>
+        </item>
+        <item>
+            <key> <string>permission</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <global name="TranslationInformation" module="Products.ERP5Type.TranslationProviderBase"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>domain_name</string> </key>
+            <value> <string>erp5_content</string> </value>
+        </item>
+        <item>
+            <key> <string>property_name</string> </key>
+            <value> <string>short_title</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <tuple>
+        <global name="TranslationInformation" module="Products.ERP5Type.TranslationProviderBase"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>domain_name</string> </key>
+            <value> <string>erp5_content</string> </value>
+        </item>
+        <item>
+            <key> <string>property_name</string> </key>
+            <value> <string>title</string> </value>
         </item>
       </dictionary>
     </pickle>

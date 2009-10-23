@@ -79,6 +79,7 @@
                 <string>Pay Sheet Model Line</string>
                 <string>Purchase Order Line</string>
                 <string>Purchase Packing List Line</string>
+                <string>Returned Sale Packing List Line</string>
                 <string>Sale Order Line</string>
                 <string>Sale Packing List Line</string>
               </list>

@@ -67,6 +67,8 @@ Purchase Trade Condition | edit_workflow
 Purchase Trade Condition | validation_workflow
 Returned Sale Packing List Cell | pricing_interaction_workflow
 Returned Sale Packing List Line | pricing_interaction_workflow
+Returned Sale Packing List Line | trade_matrix_workflow
+Returned Sale Packing List | delivery_causality_workflow
 Returned Sale Packing List | edit_workflow
 Returned Sale Packing List | packing_list_workflow
 Sale Order Cell | edit_workflow

@@ -41,6 +41,16 @@
             <value> <string>Base_edit</string> </value>
         </item>
         <item>
+            <key> <string>description</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>edit_order</string> </key>
+            <value>
+              <list/>
+            </value>
+        </item>
+        <item>
             <key> <string>encoding</string> </key>
             <value> <string>UTF-8</string> </value>
         </item>
@@ -83,7 +93,15 @@
                 <item>
                     <key> <string>hidden</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>listbox_stop_date</string>
+                        <string>listbox_quantity_unit</string>
+                        <string>listbox_quantity</string>
+                        <string>listbox_reference</string>
+                        <string>listbox_variation_category_item_list</string>
+                        <string>listbox_total_price</string>
+                        <string>listbox_aggregate_title_list</string>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -91,11 +109,13 @@
                     <value>
                       <list>
                         <string>my_title</string>
-                        <string>my_source_section</string>
-                        <string>my_source_administration_title</string>
+                        <string>my_destination_section_title</string>
+                        <string>my_destination_title</string>
+                        <string>my_destination_decision_title</string>
+                        <string>my_price_currency</string>
                         <string>my_incoterm</string>
                         <string>my_delivery_mode</string>
-                        <string>my_source_title</string>
+                        <string>my_causality_title</string>
                       </list>
                     </value>
                 </item>
@@ -103,17 +123,16 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
-                        <string>my_causality_title</string>
-                        <string>my_destination_title</string>
-                        <string>my_destination_section_title</string>
+                        <string>my_reference</string>
+                        <string>my_source_section_title</string>
+                        <string>my_source_title</string>
+                        <string>my_source_decision_title</string>
                         <string>my_start_date</string>
                         <string>my_stop_date</string>
                         <string>my_comment</string>
                         <string>my_translated_simulation_state_title</string>
-                        <string>my_causality_state</string>
-                        <string>my_container_state</string>
-                        <string>total_quantity</string>
-                        <string>total_price</string>
+                        <string>my_translated_causality_state_title</string>
+                        <string>my_translated_immobilisation_state_title</string>
                       </list>
                     </value>
                 </item>
@@ -130,7 +149,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>SalePackingList_view</string> </value>
+            <value> <string>ReturnedSalePackingList_view</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
@@ -154,6 +173,10 @@
         </item>
         <item>
             <key> <string>update_action</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>update_action_title</string> </key>
             <value> <string></string> </value>
         </item>
       </dictionary>

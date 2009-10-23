@@ -17,7 +17,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_translated_simulation_state_title</string> </value>
+            <value> <string>my_destination_decision_title</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -73,6 +73,10 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>description</string> </key>
+                    <value> <string>The person or organisation in charge of selecting the supplier or taking the decision to place the order.</string> </value>
+                </item>
+                <item>
                     <key> <string>extra_context</string> </key>
                     <value>
                       <list/>
@@ -80,11 +84,15 @@
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_translated_simulation_state_title</string> </value>
+                    <value> <string>my_destination_decision_title</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string>PurchasePackingList_viewFieldLibrary</string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value> <string>Buyer</string> </value>
                 </item>
               </dictionary>
             </value>
