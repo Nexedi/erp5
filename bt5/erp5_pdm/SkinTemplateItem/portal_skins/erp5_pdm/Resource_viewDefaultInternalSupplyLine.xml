@@ -103,8 +103,8 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>my_internal_supply_line_source_title</string>
-                        <string>my_internal_supply_line_source_reference</string>
+                        <string>my_internal_supply_line_destination_title</string>
+                        <string>my_internal_supply_line_destination_reference</string>
                         <string>my_internal_supply_line_base_price</string>
                         <string>my_internal_supply_line_price_currency</string>
                         <string>my_internal_supply_line_destination_account</string>
