@@ -57,6 +57,7 @@ class TestInventoryModule(TestOrderMixin, ERP5TypeTestCase):
     """
     pplm = self.getPortal().purchase_packing_list_module
     splm = self.getPortal().sale_packing_list_module
+    iplm = self.getPortal().internal_packing_list_module
 
     def deliverPackingList(pl):
       """step through all steps of packing list workflow."""
@@ -70,7 +71,7 @@ class TestInventoryModule(TestOrderMixin, ERP5TypeTestCase):
     # we create content :
     #   1 purchase packing list
     #   1 sale packing list
-    #   1 internal packing list (actually sale with same source)
+    #   1 internal packing list
     for month in range(1, 11):
       ppl = pplm.newContent(
                       portal_type='Purchase Packing List',
@@ -95,13 +96,13 @@ class TestInventoryModule(TestOrderMixin, ERP5TypeTestCase):
                       quantity=month*10)
       deliverPackingList(spl)
       
-      ipl = splm.newContent(
-                      portal_type='Sale Packing List',
+      ipl = iplm.newContent(
+                      portal_type='Internal Packing List',
                       source_value = sequence.get('organisation1'),
                       destination_value = sequence.get('organisation1'),
                       start_date=DateTime(2005, month, 1),
                     )
-      ipl.newContent( portal_type='Sale Packing List Line',
+      ipl.newContent( portal_type='Internal Packing List Line',
                       resource_value=sequence.get('resource'),
                       quantity=month*10)
       deliverPackingList(ipl)
