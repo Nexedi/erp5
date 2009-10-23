@@ -286,7 +286,7 @@
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string>The Account in the third party\'s accounting</string> </value>
+                    <value> <string>The Account in the client\'s accounting</string> </value>
                 </item>
                 <item>
                     <key> <string>display_maxwidth</string> </key>
@@ -402,7 +402,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Third Party Account</string> </value>
+                    <value> <string>Client Account</string> </value>
                 </item>
                 <item>
                     <key> <string>truncate</string> </key>
