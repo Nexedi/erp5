@@ -103,6 +103,8 @@ class TestDeferredStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
       # XXX the attachment name might change some day
       if file_name == 'report_view':
         self.assertEquals(content_type, self.content_type)
+        self.assertEquals('attachment; filename="report_view"',
+                          part.get('Content-Disposition'))
         data = part.get_payload(decode=True)
         error_list = Validator().validate(data)
         if error_list:
