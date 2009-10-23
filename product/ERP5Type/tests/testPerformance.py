@@ -189,15 +189,23 @@ class TestPerformance(ERP5TypeTestCase, LogInterceptor):
       add_result = {}
       # add object in bar module
       for i in xrange(10):
+          def add():
+            for x in xrange(100):
+              p = self.bar_module.newContent(portal_type='Bar',
+                                             title='Bar Test',
+                                             quantity="%4d" %(x,))
           before_add = time()
-          for x in xrange(100):
-            p = self.bar_module.newContent(portal_type='Bar',
-                                           title='Bar Test',
-                                           quantity="%4d" %(x,))
+          if PROFILE:
+            self.profile(add, i)
+          else:
+            add()
           after_add = time()
           transaction.commit()
           before_tic = time()
-          self.tic()
+          if PROFILE:
+              self.profile(self.tic, i)
+          else:
+              self.tic()
           after_tic = time()
           gc.collect()
           before_form = time()
@@ -276,6 +284,8 @@ class TestPerformance(ERP5TypeTestCase, LogInterceptor):
               ( MIN_OBJECT_PROXYFIELD_VIEW,
                 req_time,
                 MAX_OBJECT_PROXYFIELD_VIEW )
+      if PROFILE:
+        self.profile(foo.Foo_viewProxyField)
       if DO_TEST:
         self.failUnless( MIN_OBJECT_PROXYFIELD_VIEW < req_time
                                     < MAX_OBJECT_PROXYFIELD_VIEW,
