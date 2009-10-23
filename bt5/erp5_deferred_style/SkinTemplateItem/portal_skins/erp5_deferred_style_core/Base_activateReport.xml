@@ -57,7 +57,7 @@
 RESPONSE =  request.RESPONSE\n
 \n
 format = request.get(\'format\', \'\')\n
-skin_name = request.get(\'deferred_portal_skin\', \'ODT\')  or \'ODT\'\n
+skin_name = request[\'deferred_portal_skin\']\n
 \n
 portal = context.getPortalObject()\n
 N_ = portal.Base_translateString\n
@@ -192,6 +192,7 @@ return context.Base_redirect(\'view\', keep_items=dict(\n
                             <string>request</string>
                             <string>RESPONSE</string>
                             <string>format</string>
+                            <string>_getitem_</string>
                             <string>skin_name</string>
                             <string>context</string>
                             <string>portal</string>
