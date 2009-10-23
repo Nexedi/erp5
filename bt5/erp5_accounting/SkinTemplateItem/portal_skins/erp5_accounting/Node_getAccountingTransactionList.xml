@@ -87,6 +87,7 @@ if node_category:\n
 if not \'parent_portal_type\' in params:\n
   params.setdefault(\'portal_type\', portal.getPortalAccountingMovementTypeList())\n
 \n
+\n
 # Create the related accouting line list\n
 new_result  = []\n
 net_balance = 0.0\n
@@ -189,11 +190,13 @@ if from_date or node_account_type in (\'expense\', \'income\'):\n
                    selection_domain=context.portal_selections.getSelectionDomainDictFor(selection_name),\n
                    selection_domain_join_column=\'section_uid\',\n
                    sort_on=sort_on,\n
+                   ignore_group_by=True,\n
                    **params))\n
     return new_result\n
 \n
 if context.portal_selections.getSelectionParamsFor(selection_name).get(\'hide_grouping\'):\n
   params[\'where_expression\'] = \'catalog.grouping_reference is NULL\'\n
+\n
 \n
 # We try not to convert to a list, hence the copy & paste\n
 return portal.portal_simulation.getMovementHistoryList(\n
@@ -203,6 +206,7 @@ return portal.portal_simulation.getMovementHistoryList(\n
                  selection_domain=context.portal_selections.getSelectionDomainDictFor(selection_name),\n
                  selection_domain_join_column=\'section_uid\',\n
                  sort_on=sort_on,\n
+                  ignore_group_by=True,\n
                  **params)\n
 
 
