@@ -298,14 +298,17 @@ Hé Hé Hé!""", page.asText().strip())
     """
       Simple Case of showing the proper text content with and without a substitution
       mapping method.
+      In case of asText, the content should be replaced too
     """
     if not run: return
     if not quiet:
-      message = '\ntest_05_WebPageTextContentSubstituions'
+      message = '\ntest_05_WebPageTextContentSubstitutions'
       ZopeTestCase._print(message)
 
     content = '<a href="${toto}">$titi</a>'
+    asText_content = '$titi'
     substituted_content = '<a href="foo">bar</a>'
+    substituted_asText_content = 'bar'
     mapping = dict(toto='foo', titi='bar')
 
     portal = self.getPortal()
@@ -314,6 +317,7 @@ Hé Hé Hé!""", page.asText().strip())
 
     # No substitution should occur.
     self.assertEquals(document.asStrippedHTML(), content)
+    self.assertEquals(document.asText(), asText_content)
 
     klass = document.__class__
     klass.getTestSubstitutionMapping = lambda self, **kw: mapping
@@ -321,6 +325,7 @@ Hé Hé Hé!""", page.asText().strip())
 
     # Substitutions should occur.
     self.assertEquals(document.asStrippedHTML(), substituted_content)
+    self.assertEquals(document.asText(), substituted_asText_content)
 
     klass._getTestSubstitutionMapping = klass.getTestSubstitutionMapping
     document.setTextContentSubstitutionMappingMethodId('_getTestSubstitutionMapping')
