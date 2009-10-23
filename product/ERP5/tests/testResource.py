@@ -51,6 +51,7 @@ class TestResource(ERP5TypeTestCase):
   sale_order_line_portal_type = 'Sale Order Line'
   sale_supply_line_portal_type = 'Sale Supply Line'
   purchase_supply_line_portal_type = 'Purchase Supply Line'
+  internal_supply_line_portal_type = 'Internal Supply Line'
   sale_supply_cell_portal_type = 'Sale Supply Cell'
   variation_base_category_list = ['colour', 'size', 'morphology',
                                   'industrial_phase']
@@ -885,10 +886,10 @@ class TestResource(ERP5TypeTestCase):
                           product.getPrice(categories=[variation]))
   
 
-  def test_12_getPurchaseVsSalePrice(self, quiet=quiet, run=run_all_test):
+  def test_12_getInternalVsPurchaseVsSalePrice(self, quiet=quiet, run=run_all_test):
     """
-    Test the pricing model with purchase and sale supply lines, and with
-    source_section/destination_section.
+    Test the pricing model with internal, purchase and sale supply
+    lines, and with source_section/destination_section.
     """
     if not run: return
     # Initialize variables
@@ -897,6 +898,7 @@ class TestResource(ERP5TypeTestCase):
     currency_module = self.getCurrencyModule()
     sale_order_module = self.portal.getDefaultModule("Sale Order")
     purchase_order_module = self.portal.getDefaultModule("Purchase Order")
+    internal_packing_list_module = self.portal.getDefaultModule("Internal Packing List")
     # Create product
     product = product_module.newContent(
         portal_type=self.product_portal_type,
@@ -932,6 +934,18 @@ class TestResource(ERP5TypeTestCase):
     product.newContent(
         portal_type=self.purchase_supply_line_portal_type,
         base_price=40.0)
+    # Create internal supply lines
+    product.newContent(
+        portal_type=self.internal_supply_line_portal_type,
+        base_price=1.0,
+        destination_section_value=orga1)
+    product.newContent(
+        portal_type=self.internal_supply_line_portal_type,
+        base_price=2.0,
+        destination_section_value=orga2)
+    product.newContent(
+        portal_type=self.internal_supply_line_portal_type,
+        base_price=4.0)
     # Create sale order and check price
     sale_order = sale_order_module.newContent(
         portal_type="Sale Order",
@@ -964,6 +978,22 @@ class TestResource(ERP5TypeTestCase):
     self.tic()
     purchase_order_line.setPrice(None)
     self.assertEquals(purchase_order_line.getPrice(), 20.0)
+    # Create internal packing list and check price
+    internal_packing_list = internal_packing_list_module.newContent(
+        portal_type="Internal Packing List",
+        start_date=DateTime(),
+        stop_date=DateTime())
+    internal_packing_list_line = internal_packing_list.newContent(
+        portal_type="Internal Packing List Line",
+        resource_value=product)
+    transaction.commit()
+    self.tic()
+    self.assertEquals(internal_packing_list_line.getPrice(), 4.0)
+    internal_packing_list.setDestinationSectionValue(orga2)
+    transaction.commit()
+    self.tic()
+    internal_packing_list_line.setPrice(None)
+    self.assertEquals(internal_packing_list_line.getPrice(), 2.0)
   
   def testGetPriceWithQuantityUnit(self):
     resource = self.portal.getDefaultModule(self.product_portal_type)\
