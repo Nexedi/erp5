@@ -2489,6 +2489,8 @@ class Base( CopyContainer,
           social_insurance_annotation_line='Social Insurance Annotation Line',
           overtime_annotation_line='Overtime Annotation Line'),
         'Image': dict(default_image='Default Image'),
+        'Internal Supply Line': dict(internal_supply_line=
+                                     'Default Internal Supply Line'),
         'Purchase Supply Line': dict(purchase_supply_line=
                                     'Default Purchase Supply Line'),
         'Sale Supply Line': dict(sale_supply_line=
