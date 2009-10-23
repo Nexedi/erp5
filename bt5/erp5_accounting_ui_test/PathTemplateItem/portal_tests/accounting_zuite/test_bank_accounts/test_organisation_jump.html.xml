@@ -81,7 +81,7 @@ section or destination section\n
 <tr>\n
   <td>verifyText</td>\n
   <td>listbox_record_number</td>\n
-  <td>4 records</td>\n
+  <td>5 records</td>\n
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
@@ -137,7 +137,7 @@ section or destination section\n
 <tr>\n
   <td>verifyText</td>\n
   <td>listbox_record_number</td>\n
-  <td>4 records</td>\n
+  <td>5 records</td>\n
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
@@ -172,7 +172,7 @@ We have a purchase with `Supplier` Organisation\n
 <tr>\n
   <td>verifyText</td>\n
   <td>listbox_record_number</td>\n
-  <td>4 records</td>\n
+  <td>5 records</td>\n
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
