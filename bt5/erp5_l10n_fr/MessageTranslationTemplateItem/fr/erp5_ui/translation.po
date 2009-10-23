@@ -393,11 +393,11 @@ msgstr "Écritures comptables"
 msgid "Accounting Transactions to Close"
 msgstr "Écritures comptables à clôturer"
 
-msgid "Accounting Transactions to Start"
-msgstr "Écritures comptables à passer au brouillard"
-
 msgid "Accounting Transactions to Post"
 msgstr "Écritures comptables à valider"
+
+msgid "Accounting Transactions to Start"
+msgstr "Écritures comptables à passer au brouillard"
 
 msgid "Accounting View"
 msgstr "Comptabilité"
@@ -1068,11 +1068,11 @@ msgstr "Août"
 msgid "Author"
 msgstr "Auteur"
 
-msgid "Authors:"
-msgstr "Auteurs"
-
 msgid "Authorization Forced"
 msgstr "Autorisation forcée"
+
+msgid "Authors:"
+msgstr "Auteurs"
 
 msgid "Auto Plan [transition in order_workflow]"
 msgstr "Planifier automatiquement"
@@ -1997,6 +1997,9 @@ msgstr "Cliquer ici pour contribuer par email"
 
 msgid "Client"
 msgstr "Client"
+
+msgid "Client Account"
+msgstr "Compte pour le client"
 
 msgid "Client Administrator"
 msgstr "Responsable des tâches administratives pour le client"
@@ -9518,6 +9521,9 @@ msgstr "Fournisseur"
 msgid "Supplier / Worker"
 msgstr "Origine / Personnel "
 
+msgid "Supplier Account"
+msgstr "Compte pour le fournisseur"
+
 msgid "Supplier Administrator"
 msgstr "Responsable des tâches administratives pour le fournisseur"
 
@@ -11301,9 +11307,6 @@ msgstr "Variantes prises en compte."
 msgid "Vendor"
 msgstr "Vendeur"
 
-msgid "Vendor Account"
-msgstr "Compte de Fournisseur"
-
 msgid "Vendor Transaction Reference"
 msgstr "Référence du vendeur"
 
@@ -11817,9 +11820,6 @@ msgstr "État"
 msgid "the employee number of a person"
 msgstr "La référence interne de l'employé au sein de son entreprise."
 
-msgid "the height in pixel of nano image"
-msgstr "La longueur en pixel des nano-images"
-
 msgid "the height in pixel for large image"
 msgstr "la longueur en pixel des  grandes images."
 
@@ -11828,6 +11828,9 @@ msgstr "la longueur en pixel des images de taille moyenne."
 
 msgid "the height in pixel of micro image"
 msgstr "la longueur en pixel des micro-images."
+
+msgid "the height in pixel of nano image"
+msgstr "La longueur en pixel des nano-images"
 
 msgid "the number of revision used by the business template. This number increases each time we commit a modification"
 msgstr "le numéro de révision utilisé par le business template. Ce numéro augmente à chaque fois qu'on committe une modification."
