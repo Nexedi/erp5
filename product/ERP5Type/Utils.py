@@ -974,20 +974,15 @@ def initializeProduct( context,
                        this_module,
                        global_hook,
                        document_module=None,
-                       document_classes=None, # XXX - Never used - must be likely removed
-                       object_classes=None,
-                       portal_tools=None,
-                       content_constructors=None,
-                       content_classes=None):
+                       document_classes=(), # XXX - Never used - must be likely removed
+                       object_classes=(),
+                       portal_tools=(),
+                       content_constructors=(),
+                       content_classes=()):
   """
     This function does all the initialization steps required
     for a Zope / CMF Product
   """
-  if document_classes is None: document_classes = []
-  if object_classes is None: object_classes = []
-  if portal_tools is None: portal_tools = []
-  if content_constructors is None: content_constructors = []
-  if content_classes is None: content_classes = []
   product_name = this_module.__name__.split('.')[-1]
 
   # Define content constructors for Document content classes (RAD)
@@ -1069,19 +1064,12 @@ def initializeProduct( context,
 
   # Register Objets
   for c in object_classes:
-    if hasattr(c, 'icon'):
-      icon = getattr(c, 'icon')
-    else:
-      icon = None
-    if hasattr(c, 'permission_type'):
-      context.registerClass( c,
-                           constructors = c.constructors,
-                           permission = c.permission_type,
-                           icon = icon)
-    else:
-      context.registerClass( c,
-                           constructors = c.constructors,
-                           icon = icon)
+    icon = getattr(c, 'icon', None)
+    permission = getattr(c, 'permission_type', None)
+    context.registerClass(c,
+                          constructors = c.constructors,
+                          permission = permission,
+                          icon = icon)
 
 class ConstraintNotFound(Exception):
   pass
