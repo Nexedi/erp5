@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2006-2008 Nexedi SA and Contributors. All Rights Reserved.
@@ -38,4 +39,9 @@ class DivergenceTester:
        'type'        : 'lines',
        'default'     : (),
        'mode'        : 'w' },
+    {  'id'          : 'matching_provider',
+       'description' : 'Defines whether a divergence tester acts as a matching provider.',
+       'type'        : 'boolean',
+       'default'     : 0,
+       'mode'        : 'rw' },
   )
