@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2006-2008 Nexedi SA and Contributors. All Rights Reserved.
@@ -59,6 +60,7 @@ class PropertyDivergenceTester(XMLObject):
                       , PropertySheet.CategoryCore
                       , PropertySheet.DublinCore
                       , PropertySheet.DivergenceTester
+                      , PropertySheet.SolverSelection
                      )
 
   def test(self, simulation_movement):

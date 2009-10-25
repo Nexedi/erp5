@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2006-2008 Nexedi SA and Contributors. All Rights Reserved.
-#               Rafael Monnerat <rafael@nexedi.com>
+# Copyright (c) 2009 Nexedi SA and Contributors. All Rights Reserved.
+#               Jean-a
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsibility of assessing all potential
@@ -28,17 +28,15 @@
 ##############################################################################
 
 
-class DivergenceTester:
+class SolverSelection:
   """
-    Divergence Tester are use for the divergence testers.
+    Solver Selection provides provides properties to 
+    store a selection of solver portal types. It uses
+    for now lines property type but will later use 
+    categories (since portal types are portal types).
   """
 
   _properties = (
-    {  'id'          : 'tested_property',
-       'description' : 'Property used to Test',
-       'type'        : 'lines',
-       'default'     : (),
-       'mode'        : 'w' },
     {  'id'          : 'delivery_solver',
        'description' : 'Applicable Deliver Solver Portal Types',
        'type'        : 'lines',
@@ -49,9 +47,4 @@ class DivergenceTester:
        'type'        : 'lines',
        'default'     : (),
        'mode'        : 'w' },
-    {  'id'          : 'matching_provider',
-       'description' : 'Defines whether a divergence tester acts as a matching provider.',
-       'type'        : 'boolean',
-       'default'     : 0,
-       'mode'        : 'rw' },
   )
