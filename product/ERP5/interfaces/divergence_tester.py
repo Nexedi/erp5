@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2006 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2006-2009 Nexedi SA and Contributors. All Rights Reserved.
+#                    Jean-Paul Smets-Solanes <jp@nexedi.com>
 #                    Rafael Monnerat <rafael@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
@@ -34,17 +35,119 @@ from zope.interface import Interface
 
 class IDivergenceTester(Interface):
   """
-    ERP5 Divergence Tester
+  Divergence Tester interface specification
+ 
+  All divergence testers in ERP5 must implement IDivergenceTester.
+  IDivergenceTester provides methods to test simulation movements
+  divergence with related delivery movements. A list of 
+  explanation messages can be generated if needed, and used
+  to help users understand why a given delivery line and its related
+  simulation movements are divergent.
+
+  IDivergenceTester also provides methods to match movements 
+  each other, based on comparison and hash keys. Movement matching
+  is required by Rules to decide which simulation movements should
+  be updated, deleted, or compensated.
+
+  IDivergenceTester provides helper methods to copy or update properties
+  between movements, from simulation to deliveries or from deliveries to
+  simulation.
   """
 
   def test(simulation_movement):
     """
-    This is the fast method to test, return 0 or 1.
-    It depends if the simulation_movement is divergent or not.
+    Tests if simulation_movement is divergent. Returnn False (0) 
+    or True (1).
+
+    If decision_movement is a simulation movement, use
+    the recorded properties instead of the native ones.
+
+    simulation_movement -- a simulation movement
     """
     
   def explain(simulation_movement):
     """
-    This method returns a list of messages that contains
-    the divergence of the Delivery Line.
+    Returns a list of messages which explain the nature of
+    the divergence of simulation_movement with its related
+    delivery movement.
+
+    If decision_movement is a simulation movement, use
+    the recorded properties instead of the native ones.
+
+    simulation_movement -- a simulation movement
+    """
+
+  def generateHashKey(movement):
+    """
+    Returns a hash key which can be used to optimise the
+    matching algorithm between movements. The purpose
+    of this hash key is to reduce the size of lists of
+    movements which need to be compared using the compare
+    method (quadratic complexity).
+
+    If decision_movement is a simulation movement, use
+    the recorded properties instead of the native ones.
+    """
+
+  def compare(prevision_movement, decision_movement):
+    """
+    Returns True if simulation_movement and delivery_movement
+    match. Returns False else. The method is asymetric and
+    the order of parameter matters. For example, a sourcing
+    rule may use a tester which makes sure that movements are
+    delivered no sooner than 2 weeks before production but
+    no later than the production date.
+
+    If decision_movement is a simulation movement, use
+    the recorded properties instead of the native ones.
+
+    prevision_movement -- a simulation movement (prevision)
+
+    decision_movement -- a delivery movement (decision)
+    """
+
+  def update(prevision_movement, decision_movement):
+    """
+    Updates decision_movement with properties from
+    prevision_movement so that next call to 
+    compare returns True. This method is normally 
+    invoked to copy properties from simulation movements
+    to delivery movements. It is also invoked to copy
+    properties from temp simulation movements of
+    Aggregated Amount Lists to pre-existing simulation
+    movements.
+
+    If decision_movement is a simulation movement, then
+    do not update recorded properties.
+
+    prevision_movement -- a simulation movement (prevision)
+
+    decision_movement -- a delivery movement (decision)
+
+    NOTE: recorded (forced) properties are not updated by 
+    expand.
+
+    NOTE2: it is still unkown how to update properties from
+    a simulation movement to the relevant level of
+    delivery / line / cell.
+    """
+
+  def accept(simulation_movement):
+    """
+    Copies the properties handled by the divergence tester
+    from the related delivery movement to simulation_movement.
+
+    NOTE: the future existence of this method is still unknown
+    because it is likely to be implemented in TargetSolver 
+    instead.
+    """
+
+  def adopt(simulation_movement):
+    """
+    Copies the properties handled by the divergence tester
+    from simulation_movement to the related delivery movement
+
+    NOTE: the future existence of this method is still unknown
+    because it is likely to be implemented in TargetSolver 
+    instead.
     """
