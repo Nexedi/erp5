@@ -28,7 +28,7 @@ if load:
       shutil.copytree(os.path.join(instance_home, '%s.bak' % dir),
                       full_path, symlinks=True)
 else:
-  print("Cleaning static files ... ")
+  print("Cleaning static files at %s ... " % instance_home)
   for dir in ('Constraint', 'Document', 'PropertySheet', 'Extensions'):
     full_path = os.path.join(instance_home, dir)
     if os.path.exists(full_path):
