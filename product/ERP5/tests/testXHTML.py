@@ -132,6 +132,18 @@ class TestXHTML(ERP5TypeTestCase):
     self.getPortal().portal_skins.changeSkin(skin_name)
     request.set('portal_skin', skin_name)
 
+  def getFieldList(self, form, form_path):
+    try:
+      for field in form.get_fields(include_disabled=1):
+        if field.getTemplateField() is not None:
+          try:
+            if field.get_value('enabled'):
+              yield field
+          except Exception:
+            yield field
+    except AttributeError, e:
+      ZopeTestCase._print("%s is broken: %s" % (form_path, e))
+
   def test_deadProxyFields(self):
     # check that all proxy fields defined in business templates have a valid
     # target
@@ -183,11 +195,7 @@ class TestXHTML(ERP5TypeTestCase):
     error_list = []
     for form_path, form in skins_tool.ZopeFind(
               skins_tool, obj_metatypes=['ERP5 Form'], search_sub=1):
-      try:
-       fields = form.get_fields()
-      except AttributeError, e:
-        print "%s is broken: %s" % (form_path, e)
-      for field in fields:
+      for field in self.getFieldList(form, form_path):
         if field.meta_type =='ListBox':
           selection_name = field.get_value("selection_name")
           if selection_name in ("",None):
@@ -200,11 +208,7 @@ class TestXHTML(ERP5TypeTestCase):
     error_list = []
     for form_path, form in skins_tool.ZopeFind(
               skins_tool, obj_metatypes=['ERP5 Form'], search_sub=1):
-      try:
-       fields = form.get_fields()
-      except AttributeError, e:
-        print "%s is broken: %s" % (form_path, e)
-      for field in fields:
+      for field in self.getFieldList(form, form_path):
         if field.meta_type == 'ListBox':
           list_method = field.get_value("list_method")
           if list_method:
@@ -218,10 +222,12 @@ class TestXHTML(ERP5TypeTestCase):
 
   def test_moduleListMethod(self):
     """Make sure that module's list method works."""
+    error_list = []
     for document in self.portal.contentValues():
       if document.portal_type.endswith(' Module'):
-        ZopeTestCase._print('\n%s.' % document.id)
-        self.assert_(document.title in document.list(reset=1))
+        if document.title not in document.list(reset=1):
+          error_list.append(document.id)
+    self.assertEqual([], error_list)
 
   def test_preferenceViewDuplication(self):
     """Make sure that preference view is not duplicated."""
