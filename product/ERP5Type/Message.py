@@ -30,20 +30,56 @@ from Products.ERP5Type.Globals import InitializeClass, Persistent
 from AccessControl import ClassSecurityInfo
 from Products.PythonScripts.Utility import allow_class
 try:
-    from Products.PageTemplates.GlobalTranslationService import getGlobalTranslationService
+  from Products.PageTemplates.GlobalTranslationService import getGlobalTranslationService
+  # on Zope 2.8
 except ImportError:
-    import zLOG, sys
-    zLOG.LOG('Products.ERP5Type.Messages',
-        zLOG.ERROR,
-        'Products.PageTemplates.GlobalTranslationService has been removed. '
-        'Translation services for Message will be disabled',
-        error=sys.exc_info())
-    def getGlobalTranslationService():
-        zLOG.LOG('Products.ERP5Type.Messages',
-                 zLOG.WARNING,
-                 'not returning a translation service!')
-        return None
+  # on Zope 2.12
+  import zLOG, sys
+  zLOG.LOG('Products.ERP5Type.Messages',
+      zLOG.ERROR,
+      'Products.PageTemplates.GlobalTranslationService has been removed. '
+      'Using alternative implementation',)
+  import zope.i18n
+  from zope.i18n.interfaces import ITranslationDomain
+  from Acquisition import aq_get
+
+  class GlobalTranslationService(object):
+    """ GlobalTranslationService replacement """
+    # inspired by the old Localizer GlobalTranslationService 
+
+    def getTranslateMethod(self, context, domain):
+        """Returns either the translate() method of an appropriate Localizer
+        MessageCatalog or zope.i18n.translate
+        """
+        if context is None:
+            return zope.i18n.translate
+        # Try to get a catalog from a Localizer Object using acquisition
+        # FIXME: This should be fixed to use queryUtility instead, but only
+        # after ERP5Site starts implementing ISite so that MessageCatalogs can
+        # registerm themselves as local utilities.
+        # translation_domain = zope.component.getUtility(ITranslationDomain,
+        #                                                domain,
+        #                                                context=context)
+        translation_domain = context.unrestrictedTraverse(("Localizer", domain),
+                                                          None)
+        # FIXME: Remove this check once we're using getUtility
+        if ITranslationDomain.providedBy(translation_domain):
+            return translation_domain.translate
+        return zope.i18n.translate
+
+    def translate(self, domain, msgid, context=None, **kw):
+        translate = self.getTranslateMethod(context, domain)
         
+        # For zope.i18n, the 'context' of a translation request is actually the
+        # an IBrowserRequest, for languate negotiation (see, for instance,
+        # Products.CMFPlone.TranslationServiceTool). The new localizer
+        # MessageCatalog abides by the zope.i18n.interface definitions.
+        # (Actually, it ignores the context).
+        request = aq_get(context, 'REQUEST', None)
+        return translate(msgid=msgid, domain=domain, context=request, **kw)
+
+  getGlobalTranslationService = GlobalTranslationService
+
 from Products.ERP5Type.Globals import get_request
 from cPickle import dumps, loads
 
