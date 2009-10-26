@@ -178,3 +178,5 @@ ModuleSecurityInfo('Products.ERP5Form.Report').declarePublic('ReportSection',)
 import Selection
 allow_class(Selection)
 
+__module_aliases__ = ('Products.ERP5Form.SelectionTool', SelectionTool),
+
