@@ -33,7 +33,7 @@ try:
   from Products.PageTemplates.GlobalTranslationService import getGlobalTranslationService
   # on Zope 2.8
 except ImportError:
-  # on Zope 2.12
+  # on Zope 2.12, though we should try to see if it works on 2.8 as well
   import zLOG, sys
   zLOG.LOG('Products.ERP5Type.Messages',
       zLOG.ERROR,
