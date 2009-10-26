@@ -306,7 +306,7 @@ Hé Hé Hé!""", page.asText().strip())
       ZopeTestCase._print(message)
 
     content = '<a href="${toto}">$titi</a>'
-    asText_content = '$titi'
+    asText_content = '$titi\n'
     substituted_content = '<a href="foo">bar</a>'
     substituted_asText_content = 'bar'
     mapping = dict(toto='foo', titi='bar')
