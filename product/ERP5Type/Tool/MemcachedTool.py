@@ -124,11 +124,11 @@ if memcache is not None:
           if action is UPDATE_ACTION:
             succeed = self.memcached_connection.set(encodeKey(key), self.local_cache[key], 0)
             if not succeed:
-              LOG('MemcacheTool', 0, 'set command to memcached server (%r) failed' % (self.server_list))
+              LOG('MemcacheTool', 0, 'set command to memcached server (%r) failed' % (self.server_list,))
           elif action is DELETE_ACTION:
             succeed = self.memcached_connection.delete(encodeKey(key), 0)
             if not succeed:
-              LOG('MemcacheTool', 0, 'delete command to memcached server (%r) failed' % (self.server_list))
+              LOG('MemcacheTool', 0, 'delete command to memcached server (%r) failed' % (self.server_list,))
       except:
         LOG('MemcachedDict', 0, 'An exception occured during _finish : %s' % (traceback.format_exc(), ))
       self.scheduled_action_dict.clear()
