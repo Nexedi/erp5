@@ -41,6 +41,6 @@ else:
 if save:
   Storage = FileStorage(data_fs_path)
 elif load:
-  Storage = DemoStorage(base=FileStorage(data_fs_path), quota=(1<<20))
+  Storage = DemoStorage(base=FileStorage(data_fs_path))
 else:
-  Storage = DemoStorage(quota=(1<<20))
+  Storage = DemoStorage()
