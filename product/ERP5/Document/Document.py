@@ -186,6 +186,7 @@ class PermanentURLMixIn(ExtensibleTraversableMixIn):
       document = aq_base(document.asContext(id=name, # Hide some properties to permit locating the original
                                             original_container=document.getParentValue(),
                                             original_id=document.getId(),
+                                            original_path=document.getPath(),
                                             editable_absolute_url=document.absolute_url()))
       return document.__of__(self)
 
