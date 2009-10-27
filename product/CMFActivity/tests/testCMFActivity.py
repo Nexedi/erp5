@@ -2243,7 +2243,7 @@ class TestCMFActivity(ERP5TypeTestCase):
       self.assertEqual(activity_tool.countMessage(method_id='appendToTitle'), 3)
       self.flushAllActivities(silent=1, loop_size=100)
       self.assertEqual(activity_tool.countMessage(method_id='appendToTitle'), 1)
-      self.assertEqual(obj.getTitle(), 'abd')
+      self.assertEqual(sorted(obj.getTitle()), ['a', 'b', 'd'])
     finally:
       delattr(Organisation, 'appendToTitle')
 
