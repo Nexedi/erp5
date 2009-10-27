@@ -2833,11 +2833,23 @@ class TestAccountingWithSequences(AccountingTestCase):
 
   def beforeTearDown(self):
     """Cleanup for next test.
-    All tests uses the same accounts and same entities, so we just cleanup
-    accounting module and simulation. """
+    """
     transaction.abort()
     for folder in (self.accounting_module, self.portal.portal_simulation):
       folder.manage_delObjects([i for i in folder.objectIds()])
+
+    # Some tests commits transaction, some other does not, so accounts and
+    # organisations created in this tests will not always be present at this
+    # point
+    folder = self.portal.account_module
+    for account in self.account_list:
+      if account.getId() in folder.objectIds():
+        folder.manage_delObjects([account.getId()])
+    folder = self.portal.organisation_module
+    for entity in (self.client, self.vendor, self.other_vendor):
+      if entity.getId() in folder.objectIds():
+        folder.manage_delObjects([entity.getId()])
+
     transaction.commit()
     self.tic()
 
