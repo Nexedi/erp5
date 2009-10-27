@@ -48,5 +48,5 @@ class TradeModelLine:
   )
 
   _categories = (
-        'base_application', 'base_contribution', 'trade_phase', 'rounding_method',
+        'base_application', 'base_contribution', 'trade_phase',
       )
