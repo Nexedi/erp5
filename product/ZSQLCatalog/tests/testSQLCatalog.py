@@ -117,7 +117,8 @@ class DummyCatalog(SQLCatalog):
       'keyword': ['foo', ],
       'date': ['foo', ],
       'fulltext': ['foo', ],
-      'other_uid': ['bar', ]
+      'other_uid': ['bar', ],
+      'ambiguous_mapping': ['foo', 'bar'],
     }
 
   def getSQLCatalogRelatedKeyList(self, key_list):
@@ -156,6 +157,10 @@ class TestSQLCatalog(unittest.TestCase):
       self.assertEqual(reference_param_dict, search_text_param_dict,
           'Query: %r\nSearchText: %r\nReference: %r\nSecond rendering: %r' % \
                        (query, search_text, reference_param_dict, search_text_param_dict))
+
+  def asSQLExpression(self, kw):
+    entire_query = self._catalog.buildEntireQuery(kw)
+    return entire_query.asSQLExpression(self._catalog, False)
 
   def _testDefaultKey(self, column):
     self.catalog(ReferenceQuery(ReferenceQuery(operator='=', default='a'), operator='and'),
@@ -440,6 +445,29 @@ class TestSQLCatalog(unittest.TestCase):
     self.catalog(ReferenceQuery(ReferenceQuery(ReferenceQuery(operator='like', default='a% b'),
                                                ReferenceQuery(operator='like', default='a%'), operator='or'), operator='and'),
                  {'default': ['a% b', 'a%']})
+
+  def test_SelectDict(self):
+    # Simple case: no mapping hint, no ambiguity in table schema
+    sql_expression = self.asSQLExpression({'select_dict': {'default': None}})
+    select_dict = sql_expression.getSelectDict()
+    self.assertTrue('default' in select_dict, select_dict)
+    # Case with a valid hint
+    sql_expression = self.asSQLExpression({'select_dict': {'default': 'foo'}})
+    select_dict = sql_expression.getSelectDict()
+    self.assertTrue('default' in select_dict, select_dict)
+    # Case with an invalid hint: we trust user
+    sql_expression = self.asSQLExpression({'select_dict': {'default': 'bar'}})
+    select_dict = sql_expression.getSelectDict()
+    self.assertTrue('default' in select_dict, select_dict)
+    self.assertTrue('bar' in select_dict['default'], select_dict['default'])
+    # Ambiguous case: mapping must raise if there is no hint
+    self.assertRaises(ValueError, self.asSQLExpression, {'select_dict':
+      {'ambiguous_mapping': None}})
+    # Ambiguous case, but with a hint: must succeed
+    sql_expression = self.asSQLExpression({'select_dict': {'ambiguous_mapping': 'bar'}})
+    select_dict = sql_expression.getSelectDict()
+    self.assertTrue('ambiguous_mapping' in select_dict, select_dict)
+    self.assertTrue('bar' in select_dict['ambiguous_mapping'], select_dict['ambiguous_mapping'])
 
 ##return catalog(title=Query(title='a', operator='not'))
 #return catalog(title={'query': 'a', 'operator': 'not'})
