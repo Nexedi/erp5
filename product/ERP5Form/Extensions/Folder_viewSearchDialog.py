@@ -298,7 +298,7 @@ def getSearchDialog(self, REQUEST=None):
       field._surcharged_tales(
           dict(
               default=TALESMethod(
-                'here/portal_selections/%s/%s | nothing' 
+                'here/portal_selections/%s/%s | python:[]'
                         % (selection_name, state_var))),
               ['title', 'items', 'size', 'default'])
       
