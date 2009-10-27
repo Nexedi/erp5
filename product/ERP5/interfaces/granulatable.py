@@ -31,7 +31,7 @@ from zope.interface import Interface
 
 class IGranulatable(Interface):
   """
-  Convertable interface specification
+  Granulatable interface specification
 
   Documents which implement IGranulatable can be analysed
   and granulated into smaller sub documents. Reversely,

@@ -33,16 +33,16 @@ class IMetadataDiscoverable(Interface):
   """
   Metadata Discoverable interface specification
 
-  Documents which implement IMetadataDiscoverable provide
+  Documents which implement IMetadataDiscoverable provides
   methods to discover and update metadata properties
   from content, user input, file name, etc.
   """
 
   def getContentInformation():
     """
-    Returns all possible metadata which can be extracted 
-    from the document content (ex. title from an HTML file,
-    creation date from a PDF document, etc.)
+    Returns a dictionnary of possible metadata which can be extracted from the
+    document content (ex. title from an HTML file, creation date from a PDF
+    document, etc.)
     """
 
   def getPropertyDictFromUserLogin(user_login=None):
@@ -55,7 +55,7 @@ class IMetadataDiscoverable(Interface):
 
   def getPropertyDictFromContent():
     """
-    Base on the result of getContentInformation, find out all
+    Based on the result of getContentInformation, find out all
     properties which can be discovered to later update document metadata.
     """
 

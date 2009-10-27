@@ -41,7 +41,7 @@ class ICrawlable(Interface):
   def crawlContent():
     """
     Initialises the crawling process from the current document.
-    The crawling process is delegate to an ERP5 crawler such
+    The crawling process is delegated to an ERP5 crawler such
     as the ContributionTool.
     """
 
