@@ -289,7 +289,7 @@ def getSearchDialog(self, REQUEST=None):
           field_id='your_category_list'))
       items = [('', '')] + sorted([(translateString(x.title), x.id) for x
                          in workflow.states.objectValues()],
-                         key=lambda x: x[0])
+                         key=lambda x:str(x[0]))
       field._surcharged_edit(
               dict(title=translateString(workflow.title),
                    items=items,
