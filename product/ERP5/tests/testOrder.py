@@ -59,7 +59,8 @@ class TestOrderMixin:
   def getBusinessTemplateList(self):
     """
     """
-    return ('erp5_base','erp5_pdm', 'erp5_trade', 'erp5_apparel',)
+    return ('erp5_base','erp5_pdm', 'erp5_trade', 'erp5_apparel',
+            'erp5_project')
 
   def login(self, quiet=0, run=1):
     uf = self.getPortal().acl_users
@@ -228,11 +229,31 @@ class TestOrderMixin:
       organisation.edit(title=title)
       sequence.edit(**{title:organisation})
 
+  def stepCreateProject(self, sequence=None, sequence_list=None,
+                        title=None, **kw):
+    """
+      Create a project
+    """
+    project = sequence.get('project')
+    project_portal_type = 'Project'
+    portal = self.getPortal()
+    project_module = portal.getDefaultModule( \
+                                   portal_type=project_portal_type)
+    project = project_module.newContent( \
+                                   portal_type=project_portal_type)
+    if title is None:
+      project.edit(title='project%s' % project.getId())
+      sequence.edit(project=project)
+    else:
+      project.edit(title=title)
+      sequence.edit(**{title:project})
+
   def stepCreateOrder(self,sequence=None, sequence_list=None, **kw):
     """
       Create a empty order
     """
     organisation = sequence.get('organisation')
+    project = sequence.get('project')
 #     person = sequence.get('person')
     portal = self.getPortal()
     order_module = portal.getDefaultModule(portal_type=self.order_portal_type)
@@ -253,6 +274,10 @@ class TestOrderMixin:
                  source_administration_value=organisation,
                  destination_administration_value=organisation,
                  )
+    if project is not None:
+      order.edit(source_project_value=project,
+                 destination_project_value=project,
+                 )
     sequence.edit( order = order )
 
   def stepCheckOrder(self, sequence=None, sequence_list=None, **kw):
@@ -260,6 +285,7 @@ class TestOrderMixin:
       Check if order was well created
     """
     organisation = sequence.get('organisation')
+    project = sequence.get('project')
     order = sequence.get('order')
     self.assertEquals(self.datetime+10, order.getStartDate())
     self.assertEquals(self.datetime+20, order.getStopDate())
@@ -267,6 +293,8 @@ class TestOrderMixin:
     self.assertEquals(organisation, order.getDestinationValue())
     self.assertEquals(organisation, order.getSourceSectionValue())
     self.assertEquals(organisation, order.getDestinationSectionValue())
+    self.assertEquals(project, order.getSourceProjectValue())
+    self.assertEquals(project, order.getDestinationProjectValue())
 
 
   def stepCreateOrderLine(self,sequence=None, sequence_list=None, **kw):
@@ -848,17 +876,39 @@ class TestOrderMixin:
     organisation = sequence.get('organisation')
     sequence.edit(organisation2=organisation)
 
+  def stepCreateProject1(self,sequence=None, sequence_list=None, **kw):
+    """
+      Create a project
+    """
+    self.stepCreateProject(sequence=sequence, sequence_list=sequence_list,
+                           **kw)
+    project = sequence.get('project')
+    sequence.edit(project1=project)
+
+  def stepCreateProject2(self,sequence=None, sequence_list=None, **kw):
+    """
+      Create a project
+    """
+    self.stepCreateProject(sequence=sequence, sequence_list=sequence_list,
+                           **kw)
+    project = sequence.get('project')
+    sequence.edit(project2=project)
+
   def stepSetOrderProfile(self,sequence=None, sequence_list=None, **kw):
     """
       Set different source and destination on the order
     """
     organisation1 = sequence.get('organisation1')
     organisation2 = sequence.get('organisation2')
+    project1 = sequence.get('project1')
+    project2 = sequence.get('project2')
     order = sequence.get('order')
     order.edit( source_value = organisation1,
                 source_section_value = organisation1,
                 destination_value = organisation2,
-                destination_section_value = organisation2 )
+                destination_section_value = organisation2,
+                source_project_value = project1,
+                destination_project_value = project2 )
     self.failUnless('Site Error' not in order.view())
 
   def stepCheckDeliveryBuilding(self, sequence=None, sequence_list=None, **kw):
@@ -1475,6 +1525,7 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
     sequence_list = SequenceList()
     sequence_string = '\
                       stepCreateOrganisation \
+                      stepCreateProject \
                       ' + self.variated_order_line_creation + '\
                       stepCheckOrder \
                       stepCheckOrderInitialState \
@@ -1501,6 +1552,7 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
     sequence_list = SequenceList()
     sequence_string = '\
                       stepCreateOrganisation \
+                      stepCreateProject \
                       ' + self.variated_order_line_creation + '\
                       stepCheckOrder \
                       stepCheckOrderInitialState \
@@ -1528,6 +1580,7 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
     # Test when order is cancelled
     sequence_string = '\
                       stepCreateOrganisation \
+                      stepCreateProject \
                       ' + self.non_variated_order_creation + '\
                       stepCheckOrderSimulation \
                       stepPlanOrder \
@@ -1546,6 +1599,7 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
     # Test with a simply order without cell
     sequence_string = '\
                       stepCreateOrganisation \
+                      stepCreateProject \
                       ' + self.non_variated_order_creation + '\
                       stepPlanOrder \
                       stepTic \
@@ -1562,6 +1616,7 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
     # Test to confirm order without planned or ordered it
     sequence_string = '\
                       stepCreateOrganisation \
+                      stepCreateProject \
                       ' + self.variated_order_line_creation + '\
                       stepSetOrderLineResource \
                       stepSetOrderLineDefaultValues \
@@ -1577,6 +1632,7 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
     # Test to confirm order with variated resource
     sequence_string = '\
                       stepCreateOrganisation \
+                      stepCreateProject \
                       ' + self.variated_order_creation + '\
                       stepTic \
                       stepOrderOrder \
@@ -1591,6 +1647,7 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
     # Test to confirm order with multiples lines
     sequence_string = '\
                       stepCreateOrganisation \
+                      stepCreateProject \
                       ' + self.variated_order_creation + '\
                       stepCreateNotVariatedResource \
                       stepTic \
@@ -1618,6 +1675,7 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
     # Test when order is modified
     sequence_string = '\
                       stepCreateOrganisation \
+                      stepCreateProject \
                       ' + self.variated_order_creation + '\
                       stepOrderOrder \
                       stepTic \
@@ -1629,6 +1687,7 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
     # Test when order line is modified
     sequence_string = '\
                       stepCreateOrganisation \
+                      stepCreateProject \
                       ' + self.variated_order_creation + '\
                       stepOrderOrder \
                       stepTic \
@@ -1640,6 +1699,7 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
     # Test when order cell is modified
     sequence_string = '\
                       stepCreateOrganisation \
+                      stepCreateProject \
                       ' + self.variated_order_creation + '\
                       stepOrderOrder \
                       stepTic \
@@ -1652,6 +1712,7 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
     # Test when workflow state is modified
     sequence_string = '\
                       stepCreateOrganisation \
+                      stepCreateProject \
                       ' + self.variated_order_creation + '\
                       stepPlanOrder \
                       stepTic \
@@ -1687,6 +1748,8 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
     sequence_string = '\
                       stepCreateOrganisation1 \
                       stepCreateOrganisation2 \
+                      stepCreateProject1 \
+                      stepCreateProject2 \
                       stepCreateOrder \
                       stepSetOrderProfile \
                       stepCreateNotVariatedResource \
@@ -1707,6 +1770,8 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
     sequence_string = '\
                       stepCreateOrganisation1 \
                       stepCreateOrganisation2 \
+                      stepCreateProject1 \
+                      stepCreateProject2 \
                       stepCreateOrder \
                       stepSetOrderProfile \
                       stepCreateVariatedResource \
@@ -1727,6 +1792,8 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
     sequence_string = '\
                       stepCreateOrganisation1 \
                       stepCreateOrganisation2 \
+                      stepCreateProject1 \
+                      stepCreateProject2 \
                       stepCreateOrder \
                       stepSetOrderProfile \
                       stepCreateVariatedResource \
@@ -1752,6 +1819,8 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
     sequence_string = '\
                       stepCreateOrganisation1 \
                       stepCreateOrganisation2 \
+                      stepCreateProject1 \
+                      stepCreateProject2 \
                       stepCreateOrder \
                       stepSetOrderProfile \
                       stepCreateNotVariatedResource \
@@ -1775,6 +1844,8 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
     sequence_string = '\
                       stepCreateOrganisation1 \
                       stepCreateOrganisation2 \
+                      stepCreateProject1 \
+                      stepCreateProject2 \
                       stepCreateOrder \
                       stepSetOrderProfile \
                       stepCreateVariatedResource \
@@ -1810,6 +1881,8 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
     sequence_string = '\
                       stepCreateOrganisation1 \
                       stepCreateOrganisation2 \
+                      stepCreateProject1 \
+                      stepCreateProject2 \
                       stepTic \
                       stepCreateOrder \
                       stepSetOrderProfile \
@@ -1853,6 +1926,8 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
     sequence_string = '\
                       stepCreateOrganisation1 \
                       stepCreateOrganisation2 \
+                      stepCreateProject1 \
+                      stepCreateProject2 \
                       stepCreateOrder \
                       stepSetOrderProfile \
                       stepCreateNotVariatedResource \
@@ -1879,6 +1954,8 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
     sequence_string = '\
                       stepCreateOrganisation1 \
                       stepCreateOrganisation2 \
+                      stepCreateProject1 \
+                      stepCreateProject2 \
                       stepCreateOrder \
                       stepSetOrderProfile \
                       stepCreateNotVariatedResource \
@@ -1920,6 +1997,7 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
 
     sequence_string = '\
                       stepCreateOrganisation \
+                      stepCreateProject \
                       ' + self.non_variated_order_creation + '\
                       stepTic \
                       stepCheckCatalogued \
@@ -2365,6 +2443,7 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
     # Test when order is cancelled
     sequence_string = '\
                       stepCreateOrganisation \
+                      stepCreateProject \
                       ' + hierarchical_order_creation + '\
                       stepCheckOrderSimulation \
                       stepPlanOrder \
