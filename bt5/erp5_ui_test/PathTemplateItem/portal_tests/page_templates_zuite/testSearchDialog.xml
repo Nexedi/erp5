@@ -97,7 +97,6 @@
   <td>type</td>\n
   <td>//input[@name=\'field_your_title\']</td>\n
   <td>Title</td>\n
-  <td></td>\n
 </tr>\n
 <!-- Title \n
 <tr>\n
@@ -137,7 +136,6 @@
   <td>assertValue</td>\n
   <td>//input[@name=\'field_your_title\']</td>\n
   <td>Title</td>\n
-  <td></td>\n
 </tr>\n
 <tr>\n
   <td>assertSelected</td>\n
@@ -183,7 +181,6 @@ commands from selenium 0.8\n
   <td>select</td>\n
   <td>field_your_title_search_key</td>\n
   <td>label=Exact Match</td>\n
-  <td></td>\n
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
