@@ -4305,7 +4305,7 @@ msgid "Supervisor"
 msgstr "監督者"
 
 msgid "Supplier Reference"
-msgstr "供給元の"
+msgstr "供給元のリファレンス"
 
 msgid "Supplier"
 msgstr "供給元"
