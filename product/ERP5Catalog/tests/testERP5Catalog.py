@@ -3905,6 +3905,29 @@ VALUES
                               person_module.searchFolder(title=title)]
     self.assertEquals([person_id],folder_object_list)
 
+  def test_ParameterSelectDict(self, quiet=quiet):
+    if not quiet:
+      message = 'Check Parameter Select Dict'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ',0,message)
+
+    person_module = self.getPersonModule()
+
+    # Make sure that we are able to retrieve data directly from mysql
+    # without retrieving real objects
+    title="foo"
+    person = person_module.newContent(portal_type='Person',title=title)
+    person_uid = person.getUid()
+    person.immediateReindexObject()
+    folder_object_list = person_module.searchFolder(uid=person_uid, select_dict={'title': None})
+    new_title = 'bar'
+    person.setTitle(new_title)
+    self.assertEquals(new_title, person.getTitle())
+    expected_sql_title_list = [title]
+    self.assertEquals([x.title for x in folder_object_list], expected_sql_title_list)
+    real_title_list = [new_title]
+    self.assertEquals([x.getTitle() for x in folder_object_list], real_title_list)
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestERP5Catalog))
