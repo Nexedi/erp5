@@ -201,6 +201,7 @@ class TradeModelLine(Predicate, XMLMatrix, Amount):
         'stop_date': context.getStopDate(),
         'create_line': self.isCreateLine(),
         'trade_phase_list': self.getTradePhaseList(),
+        'efficiency': self.getEfficiency(),
       }
       common_params.update(property_dict)
 
@@ -223,6 +224,7 @@ class TradeModelLine(Predicate, XMLMatrix, Amount):
               variation_base_category_list = cell.getVariationBaseCategoryList(),
               variation_category_list = cell.getVariationCategoryList(),
               price = cell.getPrice(),
+              base_quantity = cell.getQuantity(0.0),
               quantity = cell.getQuantity(0.0),
               **common_params
               )
@@ -231,6 +233,7 @@ class TradeModelLine(Predicate, XMLMatrix, Amount):
         tmp_movement = newTempSimulationMovement(self.getPortalObject(),
           self_id,
           quantity = self.getQuantity(0.0),
+          base_quantity = self.getQuantity(0.0),
           price = self.getPrice(),
           **common_params
         )
@@ -255,10 +258,17 @@ class TradeModelLine(Predicate, XMLMatrix, Amount):
             # at least one base application is in base contributions and
             # if the movement have no variation category, it's the same as
             # if he have all variation categories
-            quantity = tmp_movement.getQuantity(0.0)
+            original_quantity = tmp_movement.getQuantity(0.0)
+            total_price = movement.getTotalPrice()
+            base_quantity = original_quantity + total_price
+            quantity = original_quantity + total_price * self.getEfficiency()
             modified = 1
-            tmp_movement.setQuantity(quantity + movement.getTotalPrice())
-
+            rounding_method = self.getRoundingMethod()
+            if rounding_method:
+              roundQuantity = getattr(self, 'TradeModelLine_roundQuantity', None)  
+              if roundQuantity is not None:
+                quantity = roundQuantity(context, quantity, rounding_method)
+            tmp_movement.edit(base_quantity=base_quantity, quantity=quantity)
       else:
         # if the quantity is defined, use it
         modified = 1
