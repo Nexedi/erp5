@@ -37,6 +37,45 @@ from Products.ZSQLCatalog.Query.RelatedQuery import RelatedQuery
 from DateTime import DateTime
 
 class ReferenceQuery:
+  """
+    This class is made to be able to compare a generated query tree with a
+    reference one.
+
+    It supports the following types of queries:
+      SimpleQuery
+        This can be compared with a ReferenceQuery in the form:
+        ReferenceQuery(operator=some_operator, column=value)
+        Where:
+        - operator is the expected comparison operator (see
+          ZSQLCatalog/Operator/ComparisonOperator.py:operator_dict keys)
+        - column is the expected column name (without table mapping)
+        - value is the expected value (rendered as text)
+      ComplexQuery
+        This can be compares with a ReferenceQuery in the form:
+        ReferenceQuery(*arg, operator=logical_operator)
+        Where:
+        - args is a list of sub-queries (each will be searched for into
+          compared query tree, so order doesn't matter)
+        - operator is a logical operator name (see ComplexQuery class)
+      EntireQuery
+        This type of query is considered as an operator-less, single-subquery
+        ComplexQuery. Its embeded query will be recursed into.
+      RelatedQuery
+        This type of query is considered as an operator-less, single-subquery
+        ComplexQuery. Its "join condition" query will be recursed into (raw sql
+        will not).
+      AutoQuery (known here as "Query")
+        This type of query is considered as an operator-less, single-subquery
+        ComplexQuery. Its wrapped (=auto-generated equivalent query) query will
+        be recursed into.
+
+    Note: This code is quite ugly as it references query classes and access
+    instance attributes directly.
+    But I (Vincent) believe that it would be pointless to design individual
+    __eq__ methods on all queries, as anyway they must know the compared query
+    class, and as such it would spread the dirtyness among code which is not
+    limited to tests.
+  """
   operator = None
   column = None
   value = None
@@ -90,6 +129,11 @@ class ReferenceQuery:
       (self.__class__.__name__, self.column, self.operator, self.value, self.args)
 
 class RelatedReferenceQuery:
+  """
+    This class has the same objective as ReferenceQuery, but it is limited to
+    RelatedQuery comparison: the compared query *must* be a RelatedQuery
+    instance for equality to be confirmed.
+  """
   def __init__(self, reference_subquery):
     self.subquery = reference_subquery
 
@@ -102,7 +146,9 @@ class RelatedReferenceQuery:
 
 class DummyCatalog(SQLCatalog):
   """
-    Mimic a table stucture.
+    Mimic a table stucture definition.
+    Removes the need to instanciate a complete catalog and the need to create
+    associated tables. This offers a huge flexibility.
   """
 
   sql_catalog_keyword_search_keys = ('keyword', )
@@ -111,6 +157,9 @@ class DummyCatalog(SQLCatalog):
   sql_catalog_scriptable_keys = ('scriptable_keyword | scriptableKeyScript', )
 
   def getColumnMap(self):
+    """
+      Fake table structure description.
+    """
     return {
       'uid': ['foo', 'bar'],
       'default': ['foo', ],
@@ -122,6 +171,9 @@ class DummyCatalog(SQLCatalog):
     }
 
   def getSQLCatalogRelatedKeyList(self, key_list):
+    """
+      Fake auto-generated related key definitions.
+    """
     return [
       'related_default | bar,foo/default/z_related_table',
       'related_keyword | bar,foo/keyword/z_related_table',
@@ -129,6 +181,9 @@ class DummyCatalog(SQLCatalog):
     ]
 
   def z_related_table(self, *args, **kw):
+    """
+      Mimics a ZSQLMethod subobject.
+    """
     assert kw.get('src__', False)
     assert 'query_table' in kw
     assert 'table_0' in kw
@@ -137,6 +192,9 @@ class DummyCatalog(SQLCatalog):
     return '%(table_0)s.uid = %(query_table)s.uid AND %(table_0)s.other_uid = %(table_1)s' % kw
 
   def scriptableKeyScript(self, value):
+    """
+      Mimics a scriptable key (PythonScript) subobject.
+    """
     return SimpleQuery(comparison_operator='=', keyword=value)
 
 class TestSQLCatalog(unittest.TestCase):
