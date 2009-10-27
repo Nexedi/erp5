@@ -468,6 +468,13 @@ class TestSQLCatalog(unittest.TestCase):
     select_dict = sql_expression.getSelectDict()
     self.assertTrue('ambiguous_mapping' in select_dict, select_dict)
     self.assertTrue('bar' in select_dict['ambiguous_mapping'], select_dict['ambiguous_mapping'])
+    # Ambiguous case, without a direct hint, but one of the tables is used in
+    # the query: must succeed
+    sql_expression = self.asSQLExpression({'select_dict': {'ambiguous_mapping': None},
+      'other_uid': None})
+    select_dict = sql_expression.getSelectDict()
+    self.assertTrue('ambiguous_mapping' in select_dict, select_dict)
+    self.assertTrue('bar' in select_dict['ambiguous_mapping'], select_dict['ambiguous_mapping'])
 
 ##return catalog(title=Query(title='a', operator='not'))
 #return catalog(title={'query': 'a', 'operator': 'not'})
