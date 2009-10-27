@@ -53,7 +53,12 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>listbox = []\n
+            <value> <string>"""\n
+This script is in charge to retrive all milestones that\n
+match report parameters, then sort them and prepare data\n
+that will allows to generate temp objects for listbox\n
+"""\n
+listbox = []\n
 translateString = context.Base_translateString\n
 portal = context.getPortalObject()\n
 \n
@@ -89,8 +94,6 @@ select_dict[\'catalog.title\'] = None\n
 select_dict[\'parent_title\'] = None\n
 milestone_list = [x for x in portal.portal_catalog(parent_uid=project_uid_list,\n
                      portal_type=\'Project Milestone\', select_dict=select_dict, **sql_kw)]\n
-context.log("sql src", portal.portal_catalog(parent_uid=project_uid_list,\n
-   portal_type=\'Project Milestone\', select_dict=select_dict, src__=1,**sql_kw))\n
                 \n
 milestone_list.sort(key = lambda x: (x.parent_title, x.stop_date, x.title))\n
 \n
@@ -99,9 +102,6 @@ for milestone in milestone_list:\n
   # of this project\n
   line_kw = {}\n
   parent_title = milestone.parent_title\n
-  #line_kw[\'project_title\'] = \'\'\n
-  #if parent_title != current_project:\n
-  #  current_project = parent_title\n
   line_kw[\'project_title\'] = milestone.parent_title\n
   line_kw[\'milestone_title\'] = milestone.title\n
   line_kw[\'stop_date\'] = milestone.stop_date\n
