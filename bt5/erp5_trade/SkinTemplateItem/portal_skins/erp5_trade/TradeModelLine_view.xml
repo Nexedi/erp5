@@ -108,7 +108,6 @@
                         <string>my_price</string>
                         <string>my_quantity</string>
                         <string>my_efficiency</string>
-                        <string>my_rounding_method</string>
                       </list>
                     </value>
                 </item>

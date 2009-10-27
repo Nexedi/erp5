@@ -134,23 +134,15 @@
                         </tuple>
                         <tuple>
                           <string>resource_title</string>
-                          <string>Service</string>
-                        </tuple>
-                        <tuple>
-                          <string>base_quantity</string>
-                          <string>Base</string>
-                        </tuple>
-                        <tuple>
-                          <string>efficiency</string>
-                          <string>Efficiency</string>
+                          <string>Model</string>
                         </tuple>
                         <tuple>
                           <string>quantity</string>
-                          <string>Quantity</string>
+                          <string>Base</string>
                         </tuple>
                         <tuple>
                           <string>price</string>
-                          <string>Price</string>
+                          <string>Ratio</string>
                         </tuple>
                         <tuple>
                           <string>total_price</string>
