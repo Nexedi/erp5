@@ -2119,10 +2119,8 @@ class Catalog(Folder,
     return order_by_list
 
   @profiler_decorator
-  def buildSQLQuery(self, query_table='catalog', REQUEST=None,
-                          ignore_empty_string=1, only_group_columns=False,
-                          limit=None, extra_column_list=(),
-                          **kw):
+  def buildEntireQuery(self, kw, query_table='catalog', ignore_empty_string=1,
+                       limit=None, extra_column_list=()):
     group_by_list = kw.pop('group_by_list', kw.pop('group_by', kw.pop('group_by_expression', ())))
     if isinstance(group_by_list, basestring):
       group_by_list = [x.strip() for x in group_by_list.split(',')]
@@ -2172,7 +2170,7 @@ class Catalog(Folder,
     # compatiblity, but I'm not sure if there can be a serious use for it in
     # new API.
     order_by_override_list = kw.pop('select_expression_key', ())
-    query = EntireQuery(
+    return EntireQuery(
       query=self.buildQuery(kw, ignore_empty_string=ignore_empty_string),
       order_by_list=order_by_list,
       order_by_override_list=order_by_override_list,
@@ -2182,6 +2180,15 @@ class Catalog(Folder,
       catalog_table_name=query_table,
       extra_column_list=extra_column_list,
       from_expression=from_expression)
+
+  @profiler_decorator
+  def buildSQLQuery(self, query_table='catalog', REQUEST=None,
+                          ignore_empty_string=1, only_group_columns=False,
+                          limit=None, extra_column_list=(),
+                          **kw):
+    query = self.buildEntireQuery(kw, query_table=query_table,
+      ignore_empty_string=ignore_empty_string, limit=limit,
+      extra_column_list=extra_column_list)
     result = query.asSQLExpression(self, only_group_columns).asSQLExpressionDict()
     return result
 
