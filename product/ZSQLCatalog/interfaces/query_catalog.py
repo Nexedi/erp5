@@ -63,9 +63,8 @@ class ISearchKeyCatalog(Interface):
         It must be a valid ComplexQuery logical operator ('and', 'or').
     """
 
-  def buildEntireQuery(kw, query_table='catalog', REQUEST=None,
-                       ignore_empty_string=1, limit=None,
-                       extra_column_list=None)
+  def buildEntireQuery(kw, query_table='catalog', ignore_empty_string=1,
+                       limit=None, extra_column_list=None):
     """
       Construct and return an instance of EntireQuery class from given
       parameters by calling buildQuery.
