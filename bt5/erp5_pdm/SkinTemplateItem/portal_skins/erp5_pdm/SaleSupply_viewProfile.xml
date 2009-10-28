@@ -64,7 +64,6 @@
               <list>
                 <string>left</string>
                 <string>right</string>
-                <string>hidden</string>
               </list>
             </value>
         </item>
@@ -72,15 +71,6 @@
             <key> <string>groups</string> </key>
             <value>
               <dictionary>
-                <item>
-                    <key> <string>hidden</string> </key>
-                    <value>
-                      <list>
-                        <string>my_source_payment_title</string>
-                        <string>my_destination_payment_title</string>
-                      </list>
-                    </value>
-                </item>
                 <item>
                     <key> <string>left</string> </key>
                     <value>
@@ -91,6 +81,7 @@
                         <string>my_source_administration_title</string>
                         <string>my_source_payment</string>
                         <string>my_source_project_title</string>
+                        <string>my_source_reference</string>
                       </list>
                     </value>
                 </item>
@@ -104,6 +95,7 @@
                         <string>my_destination_administration_title</string>
                         <string>my_destination_payment</string>
                         <string>my_destination_project_title</string>
+                        <string>my_destination_reference</string>
                       </list>
                     </value>
                 </item>

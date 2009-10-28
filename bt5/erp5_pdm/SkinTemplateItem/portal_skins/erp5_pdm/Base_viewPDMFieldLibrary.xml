@@ -127,8 +127,6 @@
                         <string>my_resource_sale_matrixbox</string>
                         <string>my_resource_internal_matrixbox</string>
                         <string>my_destination_account</string>
-                        <string>my_purchase_reference</string>
-                        <string>my_sale_reference</string>
                         <string>my_source_account</string>
                         <string>my_mapped_value_property_list</string>
                         <string>my_matrixbox_base_price</string>
@@ -144,6 +142,8 @@
                         <string>my_resource_purchase_quantity_step_list</string>
                         <string>my_resource_sale_quantity_step_list</string>
                         <string>my_resource_internal_quantity_step_list</string>
+                        <string>my_destination_reference</string>
+                        <string>my_source_reference</string>
                       </list>
                     </value>
                 </item>
