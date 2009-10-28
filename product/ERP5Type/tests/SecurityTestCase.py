@@ -113,7 +113,7 @@ class SecurityTestCase(ERP5TypeTestCase):
   """Base class for security tests.
   """
   def _setup(self):
-    """set up, create categories and users."""
+    """set up and login as default user"""
     ERP5TypeTestCase._setup(self)
     self.login()
     self.portal = self.getPortal()
@@ -122,10 +122,10 @@ class SecurityTestCase(ERP5TypeTestCase):
   def tearDown(self):
     """Clean up for next test.
     """
-    self.tic()
     transaction.abort()
     self.portal.portal_caches.clearAllCache()
     ERP5TypeTestCase.tearDown(self)
+    self.tic()
 
   def _loginAsUser(self, username):
     """Login as a given username. The user must exist.
