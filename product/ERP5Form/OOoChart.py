@@ -26,6 +26,7 @@
 #
 ##############################################################################
 
+from ZTUtils import make_query
 from Products.Formulator import Widget
 from Products.Formulator import Widget, Validator
 from Products.Formulator.DummyField import fields
@@ -436,41 +437,35 @@ class OOoChartWidget(Widget.Widget):
     # Update the render format based on REQUEST parameters
     render_format = getattr(REQUEST, 'render_format', render_format)
     if render_format == 'html':
-      field_absolute_url = '%s/%s/%s' % (here.absolute_url(),
-                                         form.getId(),
-                                         field.getId())
       css_class = field.get_value('css_class')
       format = field.get_value('image_format') or 'png'
-      display = field.get_value('image_display')
+      query_dict = dict(REQUEST.form.items())
+      query_dict.update(render_format=format != 'raw' and format or '',
+                        render_prefix=render_prefix,
+                        display=field.get_value('image_display'))
+      # XXX make_query does not handle tuples properly so listbox should be
+      #     not editable (otherwise, REQUEST.form may contain listbox=()).
+      url = '%s/%s/%s?%s' % (here.absolute_url(), form.getId(), field.getId(),
+                             make_query(query_dict))
       if format in STANDARD_IMAGE_FORMAT_LIST:
-        main_content = '''<div class="OOoChartContent">
-          <img class="%s" src="%s?render_format=%s&display=%s&render_prefix=%s" title="%s" alt="%s"/">
+        return '''<div class="OOoChartContent">
+          <img class="%s" src="%s" title="%s" alt="%s"/">
           </div>''' % (css_class,
-                       field_absolute_url,
-                       format,
-                       display,
-                       render_prefix,
+                       url,
                        title,
                        alt)
-        return main_content
       elif format == 'raw':
         UrlIconOOo = '%s/misc_/ERP5OOo/OOo.png' % REQUEST['BASEPATH1']
-        main_content = '''<div class="OOoChartContent">
-          <a href="%s?render_format=&display=%s&render_prefix=%s"><img src="%s" alt="OOo"/></a></div>
-          ''' % (field_absolute_url,
-                 display,
-                 render_prefix,
-                 UrlIconOOo)
-        return main_content
+        return '''<div class="OOoChartContent">
+          <a href="%s"><img src="%s" alt="OOo"/></a>
+          </div>''' % (url,
+                       UrlIconOOo)
       elif format == 'pdf':
         UrlIconPdf = '%s/misc_/ERP5Form/PDF.png' % REQUEST['BASEPATH1']
-        main_content = '''<div class="OOoChartContent">
-          <a href="%s?render_format=pdf&display=%s"><img src="%s" alt="PDF" /></a>
-          </div>''' % (field_absolute_url,
-                       display,
-                       render_prefix,
+        return '''<div class="OOoChartContent">
+          <a href="%s"><img src="%s" alt="PDF" /></a>
+          </div>''' % (url,
                        UrlIconPdf)
-        return main_content
       else:
         raise NotImplementedError, 'Format: %s not handled' % format
 
