@@ -614,7 +614,7 @@ class XMLSyncUtilsMixin(SyncCode):
     the data are : cmd, code and source
     """
     status_list = []
-    status_node_list = xml.xpath('//syncml:Status')
+    status_node_list = xml.xpath('//syncml:Status', namespaces=xml.nsmap)
     for status in status_node_list:
       tmp_dict = {}
       tmp_dict['cmd'] = '%s' % status.xpath('string(./syncml:Cmd)',
@@ -878,7 +878,7 @@ class XMLSyncUtilsMixin(SyncCode):
                                   cmd='Replace'))
           signature.setStatus(self.SYNCHRONIZED)
         elif signature.getStatus() == self.PARTIAL:
-          xml_string = signature.getPartialXML()
+          xml_string = signature.getPartialXML(default='')
           if(subscriber.getMediaType() != self.MEDIA_TYPE['TEXT_XML']):
             xml_to_send = conduit.getXMLFromObjectWithId(object,\
                                   xml_mapping=domain.getXMLMapping()) 

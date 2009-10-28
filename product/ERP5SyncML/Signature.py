@@ -194,7 +194,7 @@ class Signature(Folder, SyncCode, File):
     else:
       self.xml = None
 
-  def getXML(self):
+  def getXML(self, default=None):
     """
       get the XML corresponding to the object
     """
@@ -207,7 +207,7 @@ class Signature(Folder, SyncCode, File):
       else:
         raise ValueError, "the self.xml haven't good type"
     else:
-      return None
+      return default
 
   def hasTempXML(self):
     """
@@ -227,7 +227,7 @@ class Signature(Folder, SyncCode, File):
     else:
       self.temp_xml = None
 
-  def getTempXML(self):
+  def getTempXML(self, default=None):
     """
       get the temp xml
     """
@@ -239,7 +239,7 @@ class Signature(Folder, SyncCode, File):
       else:
         raise ValueError, "the self.xml haven't good type"
     else:
-      return None
+      return default
 
   def setSubscriberXupdate(self, xupdate):
     """
@@ -411,7 +411,7 @@ class Signature(Folder, SyncCode, File):
     return ''.join(chunk)
 
 
-  def getPartialXML(self):
+  def getPartialXML(self, default=None):
     """
     Set the partial string we will have to
     deliver in the future
@@ -422,7 +422,7 @@ class Signature(Folder, SyncCode, File):
       else:
         raise ValueError, "the self.xml haven't good type"
     else:
-      return None
+      return default
 
   def getAction(self):
     """
