@@ -100,7 +100,7 @@ if len(project_uid_list):\n
   milestone_list = [x for x in portal.portal_catalog(parent_uid=project_uid_list,\n
                        portal_type=\'Project Milestone\', select_dict=select_dict, **sql_kw)]\n
                 \n
-milestone_list.sort(key = lambda x: (x.parent_title, x.stop_date, x.title))\n
+milestone_list.sort(key = lambda x: (x.parent_title, getattr(x, \'stop_date\', None), x.title))\n
 \n
 for milestone in milestone_list:\n
   # We wish to display the project only for the first milestone\n
@@ -109,7 +109,7 @@ for milestone in milestone_list:\n
   parent_title = milestone.parent_title\n
   line_kw[\'project_title\'] = milestone.parent_title\n
   line_kw[\'milestone_title\'] = milestone.title\n
-  line_kw[\'stop_date\'] = milestone.stop_date\n
+  line_kw[\'stop_date\'] = getattr(milestone, \'stop_date\', None)\n
   listbox.append(line_kw)\n
 \n
 context.Base_updateDialogForm(listbox=listbox, empty_line_number=0)\n
@@ -189,6 +189,7 @@ return context.ProjectModule_viewMilestoneReport()\n
                             <string>milestone</string>
                             <string>line_kw</string>
                             <string>parent_title</string>
+                            <string>getattr</string>
                           </tuple>
                         </value>
                     </item>
