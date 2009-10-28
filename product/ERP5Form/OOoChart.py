@@ -55,12 +55,8 @@ class OOoChartWidget(Widget.Widget):
 
   property_names = list(Widget.Widget.property_names)
 
-  default = fields.StringField(
-                              'default',
-                              title='Default',
-                              description=("A default value (not used)."),
-                              default="",
-                              required=0)
+  # Default has no meaning in OOoChart.
+  property_names.remove('default')
 
   listbox_form_id = fields.StringField(
                               'listbox_form_id',
@@ -173,6 +169,30 @@ class OOoChartWidget(Widget.Widget):
                               required=0)
   property_names.append('chart_title_or_no')
 
+  # Axis
+  x_axis_property_list = fields.ListTextAreaField('x_axis_property_list',
+                              title="X-Axis Properties",
+                              description="Examples of recognized properties:"
+                                          " 'chart:visible',"
+                                          " 'chart:display-label',"
+                                          " 'chart:label-arrangement',"
+                                          " 'chart:tick-marks-major-inner',"
+                                          " 'chart:reverse-direction',"
+                                          " 'chart:logarithmic',"
+                                          " 'chart:text-overlap',"
+                                          " 'chart:origin',"
+                                          " 'text:line-break',"
+                                          " 'style:rotation-angle'...",
+                              default=(),
+                              required=0)
+  property_names.append('x_axis_property_list')
+
+  y_axis_property_list = fields.ListTextAreaField('y_axis_property_list',
+                              title="Y-Axis Properties",
+                              default=(),
+                              required=0)
+  property_names.append('y_axis_property_list')
+
   #grid or not
   grid_graph = fields.CheckBoxField('grid_graph',
                               title='Chart Grid ',
@@ -248,7 +268,6 @@ class OOoChartWidget(Widget.Widget):
                               default=0,
                               required=0)
   property_names.append('sector_pie_offset')
-  
 
 
   #interpolation="none", cubic-spline, b-spline
@@ -358,6 +377,8 @@ class OOoChartWidget(Widget.Widget):
       chart_position = field.get_value('chart_position'),
       chart_legend = stringBoolean(field.get_value('chart_legend')),
       chart_title_or_no = stringBoolean(field.get_value('chart_title_or_no')),
+      x_axis_property_dict = dict(field.get_value('x_axis_property_list')),
+      y_axis_property_dict = dict(field.get_value('y_axis_property_list')),
       grid_graph = stringBoolean(field.get_value('grid_graph')),
       grid_size=field.get_value('grid_size'),
       chart_three_dimensional = stringBoolean(field.get_value('chart_three_dimensional')),

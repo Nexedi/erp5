@@ -168,16 +168,17 @@
     </tal:block>\n
     <style:style style:name="chart_x_axis"\n
                  style:family="chart"\n
-                 style:data-style-name="N0">\n
-      <style:chart-properties chart:display-label="true"\n
-                              chart:tick-marks-major-inner="true"\n
-                              chart:tick-marks-major-outer="true"\n
-                              chart:logarithmic="false"\n
-                              chart:text-overlap="true"\n
-                              text:line-break="true"\n
-                              chart:label-arrangement="side-by-side"\n
-                              chart:visible="true"\n
-                              style:direction="ltr"/>\n
+                 style:data-style-name="N0"\n
+                 tal:define="property_dict python:{\n
+                   \'chart:display-label\': \'true\',\n
+                   \'chart:tick-marks-major-inner\': \'true\',\n
+                   \'chart:tick-marks-major-outer\': \'true\'};\n
+                   x_axis_property_dict x_axis_property_dict | request/x_axis_property_dict;\n
+                   dummy python: property_dict.update(x_axis_property_dict)">\n
+      <tal:block replace="structure python: \'&lt;style:chart-properties %s /&gt;\'\n
+                          % \' \'.join(\'%s=%r\' % (k, v)\n
+                                     for k, v in property_dict.items()\n
+                                     if v is not None)" />\n
       <style:graphic-properties draw:stroke="solid"\n
                                 svg:stroke-width="0cm"\n
                                 svg:stroke-color="#000000"/>\n
@@ -185,19 +186,17 @@
     </style:style>\n
     <style:style style:name="chart_y_axis"\n
                  style:family="chart"\n
-                 style:data-style-name="N0">\n
-      <style:chart-properties chart:display-label="true"\n
-                              chart:tick-marks-major-inner="true"\n
-                              chart:tick-marks-major-outer="true"\n
-                              chart:logarithmic="false"\n
-                              chart:origin="0"\n
-                              chart:gap-width="100"\n
-                              chart:overlap="0"\n
-                              chart:text-overlap="false"\n
-                              text:line-break="false"\n
-                              chart:label-arrangement="side-by-side"\n
-                              chart:visible="true"\n
-                              style:direction="ltr"/>\n
+                 style:data-style-name="N0"\n
+                 tal:define="property_dict python:{\n
+                   \'chart:display-label\': \'true\',\n
+                   \'chart:tick-marks-major-inner\': \'true\',\n
+                   \'chart:tick-marks-major-outer\': \'true\'};\n
+                   y_axis_property_dict y_axis_property_dict | request/y_axis_property_dict;\n
+                   dummy python: property_dict.update(y_axis_property_dict)">\n
+      <tal:block replace="structure python: \'&lt;style:chart-properties %s /&gt;\'\n
+                          % \' \'.join(\'%s=%r\' % (k, v)\n
+                                     for k, v in property_dict.items()\n
+                                     if v is not None)" />\n
       <style:graphic-properties draw:stroke="solid"\n
                                 svg:stroke-width="0cm"\n
                                 svg:stroke-color="#000000"/>\n
