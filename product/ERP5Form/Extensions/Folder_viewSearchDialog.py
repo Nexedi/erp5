@@ -76,6 +76,7 @@ def getSearchDialog(self, REQUEST=None):
                              'preferred_category_child_item_list_method_id",'
                              '"getCategoryChildCompactLogicalPathItemList"))('
                              'checked_permission="View", base=1,'
+                             'display_none_category=False,'
                              'local_sort_id="int_index")' % request_key)),
             ['title', 'items', 'default'])
 
@@ -287,7 +288,7 @@ def getSearchDialog(self, REQUEST=None):
       field.manage_edit_xmlrpc(dict(
           form_id='Base_viewDialogFieldLibrary',
           field_id='your_category_list'))
-      items = [('', '')] + sorted([(translateString(x.title), x.id) for x
+      items = sorted([(translateString(x.title), x.id) for x
                          in workflow.states.objectValues()],
                          key=lambda x:str(x[0]))
       field._surcharged_edit(
