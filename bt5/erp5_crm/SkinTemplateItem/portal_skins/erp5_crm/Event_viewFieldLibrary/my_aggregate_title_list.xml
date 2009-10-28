@@ -13,12 +13,12 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
                 <string>base_category</string>
-                <string>portal_type</string>
                 <string>catalog_index</string>
-                <string>proxy_listbox_ids</string>
                 <string>enabled</string>
+                <string>portal_type</string>
+                <string>proxy_listbox_ids</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -143,7 +143,7 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>DocumentModule_viewDocumentList</string>
+                          <string>DocumentModule_viewDocumentList/listbox</string>
                           <string>Documents</string>
                         </tuple>
                       </list>
