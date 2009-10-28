@@ -45,12 +45,10 @@ class TitleMovementGroup(MovementGroup):
     # of creating a new one.
     return True, property_dict
 
-  def _getTitle(self,movement):
-    order_movement_value = movement.getOrderValue()
+  def _getTitle(self, movement):
     title = None
-    if order_movement_value is not None:
-      if 'Cell' in order_movement_value.getPortalType():
-        order_movement_value = order_movement_value.getParentValue()
-      if order_movement_value.hasTitle():
-        title = order_movement_value.getTitle()
+    if 'Cell' in movement.getPortalType():
+      movement = movement.getParentValue()
+    if movement.hasTitle():
+      title = movement.getTitle()
     return title
