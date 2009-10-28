@@ -12,9 +12,7 @@
         <item>
             <key> <string>delegated_list</string> </key>
             <value>
-              <list>
-                <string>portal_types</string>
-              </list>
+              <list/>
             </value>
         </item>
         <item>
@@ -99,37 +97,6 @@
                 <item>
                     <key> <string>list_cookie</string> </key>
                     <value> <string>FOLDER_LIST</string> </value>
-                </item>
-                <item>
-                    <key> <string>portal_types</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>File</string>
-                          <string>File</string>
-                        </tuple>
-                        <tuple>
-                          <string>Drawing</string>
-                          <string>Drawing</string>
-                        </tuple>
-                        <tuple>
-                          <string>PDF</string>
-                          <string>PDF</string>
-                        </tuple>
-                        <tuple>
-                          <string>Text</string>
-                          <string>Text</string>
-                        </tuple>
-                        <tuple>
-                          <string>Presentation</string>
-                          <string>Presentation</string>
-                        </tuple>
-                        <tuple>
-                          <string>Spreadsheet</string>
-                          <string>Spreadsheet</string>
-                        </tuple>
-                      </list>
-                    </value>
                 </item>
                 <item>
                     <key> <string>reverse</string> </key>
