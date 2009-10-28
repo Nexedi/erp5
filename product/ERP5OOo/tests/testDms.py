@@ -104,7 +104,7 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
 
   ## setup
 
-  def afterSetUp(self):
+  def setUpOnce(self):
     self.setSystemPreference()
     # set a dummy localizer (because normally it is cookie based)
     self.portal.Localizer = DummyLocalizer()
@@ -115,6 +115,7 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
 
   def setSystemPreference(self):
     default_pref = self.portal.portal_preferences.newContent(portal_type='System Preference')
+    default_pref.setPriority(1)
     default_pref.setPreferredOoodocServerAddress(conversion_server_host[0])
     default_pref.setPreferredOoodocServerPortNumber(conversion_server_host[1])
     default_pref.setPreferredDocumentFileNameRegularExpression(FILE_NAME_REGULAR_EXPRESSION)
