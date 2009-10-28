@@ -77,9 +77,10 @@ if parameter is not None:\n
                 relation_field_proxy_listbox, None)\n
     if proxied_listbox is None:\n
       return portal_type\n
-    \n
+\n
     proxied_listbox_portal_type = proxied_listbox.get_value(\'portal_types\')\n
-    return [x for x in proxied_listbox_portal_type if x in portal_type] or portal_type\n
+    portal_type_first_item_list = [x[0] for x in portal_type]\n
+    return [x for x in proxied_listbox_portal_type if x[0] in portal_type_first_item_list] or portal_type\n
 \n
 return result\n
 </string> </value>
@@ -135,6 +136,8 @@ return result\n
                             <string>$append0</string>
                             <string>_getiter_</string>
                             <string>x</string>
+                            <string>_getitem_</string>
+                            <string>portal_type_first_item_list</string>
                           </tuple>
                         </value>
                     </item>
