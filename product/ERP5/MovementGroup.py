@@ -228,13 +228,22 @@ class MovementGroupNode:
   def calculateSeparatePrice(self, movement, added_movement=None):
     """ Separate movements which have different price
     """
-    if added_movement is not None and \
-            movement.getPrice() == added_movement.getPrice() :
-      new_movement = self._genericCalculation(movement,
-                                              added_movement=added_movement)
-      new_movement.setPriceMethod('getAveragePrice')
-      new_movement.setQuantityMethod("getAddQuantity")
-      return new_movement, None
+    if added_movement is not None:
+      # XXX To prevent float rounding issue, we round the price with an
+      # arbirary precision before comparision.
+      movement_price = movement.getPrice()
+      if movement_price is not None:
+        movement_price = round(movement_price, 5)
+      added_movement_price = added_movement.getPrice()
+      if added_movement_price is not None:
+        added_movement_price = round(added_movement_price, 5)
+
+      if movement_price == added_movement_price:
+        new_movement = self._genericCalculation(movement,
+                                                added_movement=added_movement)
+        new_movement.setPriceMethod('getAveragePrice')
+        new_movement.setQuantityMethod("getAddQuantity")
+        return new_movement, None
     return movement, added_movement
 
   def calculateAddQuantity(self, movement, added_movement=None):
