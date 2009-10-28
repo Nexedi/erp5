@@ -41,6 +41,16 @@
             <value> <string>Base_edit</string> </value>
         </item>
         <item>
+            <key> <string>description</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>edit_order</string> </key>
+            <value>
+              <list/>
+            </value>
+        </item>
+        <item>
             <key> <string>encoding</string> </key>
             <value> <string>UTF-8</string> </value>
         </item>
@@ -54,9 +64,6 @@
               <list>
                 <string>left</string>
                 <string>right</string>
-                <string>center</string>
-                <string>bottom</string>
-                <string>hidden</string>
               </list>
             </value>
         </item>
@@ -64,27 +71,6 @@
             <key> <string>groups</string> </key>
             <value>
               <dictionary>
-                <item>
-                    <key> <string>bottom</string> </key>
-                    <value>
-                      <list/>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>center</string> </key>
-                    <value>
-                      <list/>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>hidden</string> </key>
-                    <value>
-                      <list>
-                        <string>my_source_payment_title</string>
-                        <string>my_destination_payment_title</string>
-                      </list>
-                    </value>
-                </item>
                 <item>
                     <key> <string>left</string> </key>
                     <value>
@@ -126,7 +112,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>TradeCondition_viewProfile</string> </value>
+            <value> <string>SaleOrder_viewProfile</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
@@ -150,6 +136,10 @@
         </item>
         <item>
             <key> <string>update_action</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>update_action_title</string> </key>
             <value> <string></string> </value>
         </item>
       </dictionary>
