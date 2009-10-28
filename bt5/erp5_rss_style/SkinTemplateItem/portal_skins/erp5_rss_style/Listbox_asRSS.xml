@@ -101,7 +101,8 @@ required_field_list = (\'title\', \'description\', \'link\',)\n
 \n
 # required + optional channel elements\n
 allowed_field_list = (\'title\', \'description\', \'link\', \'author\', \n
-                      \'category\', \'comments\', \'guid\', \'pubdate\',)\n
+                      \'category\', \'comments\', \'guid\', \'pubdate\',\n
+                      \'thumbnail\', )\n
 \n
 # figure out which column is which, by using column titles\n
 rss_column_mapping = {}\n
@@ -131,6 +132,10 @@ for line in line_list:\n
     if key == \'pubdate\':\n
       # pubDate should be returned unconditionally as \'pubDate\'\n
       key = \'pubDate\'\n
+    elif key == \'thumbnail\' and value:\n
+      # This part prints an image if the "thumbnail" column of listbox is supplied\n
+      rss_item_string += (\'\\t\\t\\t<enclosure url="%s" type="image" />\\n\' % value)\n
+      continue\n
     rss_item_string += (\'\\t\\t\\t<%s>%s</%s>\\n\' % (key,value or \'\',key))\n
 \n
   # if required fields not present in listbox columns as label we \n
