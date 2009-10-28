@@ -1175,6 +1175,16 @@ class TestCMFCategory(ERP5TypeTestCase):
     self.assertTrue(getattr(obj, 'getRegionValueList') is not None)
     self.assertTrue(getattr(obj, 'getRegionList') is not None)
 
+  def test_CategoryTool_FolderInterface(self):
+    # minimal tests for Folder methods on Category Tool
+    category_tool = self.portal.portal_categories
+    self.assertNotEquals([], list(category_tool.contentValues()))
+    self.assertNotEquals([], list(category_tool.contentIds()))
+    self.assertNotEquals([], list(category_tool.objectValues()))
+    self.assertNotEquals([], list(category_tool.objectIds()))
+    self.assertNotEquals([], list(category_tool.searchFolder()))
+
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestCMFCategory))
