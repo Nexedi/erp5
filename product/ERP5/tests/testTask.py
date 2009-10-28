@@ -67,6 +67,20 @@ class TestTaskMixin:
                        stepTic \
                        stepSetTaskReport '
 
+  default_task_no_price_sequence = '\
+                       stepLogin \
+                       stepCreateOrganisation \
+                       stepCreateOrganisation \
+                       stepCreateResource \
+                       stepCreateProject \
+                       stepCreateRequirement \
+                       stepCreateSimpleTask \
+                       stepFillTaskWithData \
+                       stepConfirmTask \
+                       stepTic \
+                       stepSetTaskReport '
+
+
   default_task_sequence_two_lines = '\
                        stepLogin \
                        stepCreateOrganisation \
@@ -245,9 +259,7 @@ class TestTaskMixin:
   def stepSetTaskPriceCurrency(self, sequence, **kw) :
     """Set the price currency of the task.
 
-    This step is not necessary.
-    TODO : - include a test without this step.
-           - include a test with this step late.
+    TODO : include a test with this step late.
     """
     currency = sequence.get('currency')
     task = sequence.get('task')
@@ -443,6 +455,14 @@ class TestTaskMixin:
     task_report = sequence.get('task_report')
     self.assertEqual(task_report.getCausalityState(), 'solved')
 
+  def stepVerifyTaskReportNoPrice(self, sequence=None,
+                                  sequence_list=None, **kw):
+    task_report = sequence.get('task_report')
+    self.assertEqual(None, task_report.getPriceCurrency())
+    self.assertEqual(1, len(task_report.getMovementList()))
+    task_report_line = task_report.getMovementList()[0]
+    self.assertEqual(None, task_report_line.getPrice())
+      
   def modifyState(self, object_name, transition_name, sequence=None,
                        sequence_list=None):
     object_value = sequence.get(object_name)
@@ -543,6 +563,24 @@ class TestTask(TestTaskMixin, ERP5TypeTestCase):
     sequence_list = SequenceList()
     sequence_string = self.default_task_sequence + '\
                        stepVerifyGeneratedByBuilderTaskReport \
+                       stepStartTaskReport \
+                       stepFinishTaskReport \
+                       stepCloseTaskReport \
+                       '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
+ 
+  def test_01_testTaskNoPrice(self, quiet=0, run=run_all_test):
+    """
+      Test creation of task and (automatic) task_report when no price is
+      defined on the task
+    """
+    if not run: return
+    self.default_price = None
+    sequence_list = SequenceList()
+    sequence_string = self.default_task_no_price_sequence + '\
+                       stepVerifyGeneratedByBuilderTaskReport \
+                       stepVerifyTaskReportNoPrice \
                        stepStartTaskReport \
                        stepFinishTaskReport \
                        stepCloseTaskReport \
