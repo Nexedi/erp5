@@ -174,7 +174,7 @@
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>listbox</string> </value>
+                    <value> <string>(listbox)</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
