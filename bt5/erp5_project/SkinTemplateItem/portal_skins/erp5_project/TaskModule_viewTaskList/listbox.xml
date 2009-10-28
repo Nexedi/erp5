@@ -95,46 +95,6 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>title</string>
-                          <string>Title</string>
-                        </tuple>
-                        <tuple>
-                          <string>source_project_title</string>
-                          <string>Project</string>
-                        </tuple>
-                        <tuple>
-                          <string>delivery.start_date</string>
-                          <string>Begin Date</string>
-                        </tuple>
-                        <tuple>
-                          <string>delivery.stop_date</string>
-                          <string>End Date</string>
-                        </tuple>
-                        <tuple>
-                          <string>destination_decision_title</string>
-                          <string>Requester</string>
-                        </tuple>
-                        <tuple>
-                          <string>source_title</string>
-                          <string>Assignee</string>
-                        </tuple>
-                        <tuple>
-                          <string>destination_title</string>
-                          <string>Location</string>
-                        </tuple>
-                        <tuple>
-                          <string>total_quantity</string>
-                          <string>Total</string>
-                        </tuple>
-                        <tuple>
-                          <string>task_line_quantity_unit_title</string>
-                          <string>Unit</string>
-                        </tuple>
-                        <tuple>
-                          <string>translated_simulation_state_title</string>
-                          <string>State</string>
-                        </tuple>
-                        <tuple>
                           <string>Task_getTaskReportTranslatedSimulationStateTitle</string>
                           <string>Task Report State</string>
                         </tuple>

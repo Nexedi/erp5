@@ -92,60 +92,12 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>int_index</string>
-                          <string>Index</string>
-                        </tuple>
-                        <tuple>
-                          <string>parent_title</string>
-                          <string>Task Title</string>
-                        </tuple>
-                        <tuple>
-                          <string>title</string>
-                          <string>Task Line Title</string>
-                        </tuple>
-                        <tuple>
-                          <string>destination_title</string>
-                          <string>Location</string>
-                        </tuple>
-                        <tuple>
-                          <string>source_title</string>
-                          <string>Assignee</string>
-                        </tuple>
-                        <tuple>
-                          <string>resource_title</string>
-                          <string>Resource</string>
-                        </tuple>
-                        <tuple>
                           <string>initial_start_date</string>
                           <string>Initial Begin Date</string>
                         </tuple>
                         <tuple>
                           <string>initial_stop_date</string>
                           <string>Initial End Date</string>
-                        </tuple>
-                        <tuple>
-                          <string>initial_quantity</string>
-                          <string>Estimated Time</string>
-                        </tuple>
-                        <tuple>
-                          <string>real_start_date</string>
-                          <string>Real Begin Date</string>
-                        </tuple>
-                        <tuple>
-                          <string>real_stop_date</string>
-                          <string>Real End Date</string>
-                        </tuple>
-                        <tuple>
-                          <string>real_quantity</string>
-                          <string>Real Time</string>
-                        </tuple>
-                        <tuple>
-                          <string>quantity_unit_title</string>
-                          <string>Unit</string>
-                        </tuple>
-                        <tuple>
-                          <string>getTranslatedSimulationStateTitle</string>
-                          <string>State</string>
                         </tuple>
                       </list>
                     </value>

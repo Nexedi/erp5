@@ -87,40 +87,7 @@
                 <item>
                     <key> <string>all_columns</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>title</string>
-                          <string>Title</string>
-                        </tuple>
-                        <tuple>
-                          <string>reference</string>
-                          <string>Reference</string>
-                        </tuple>
-                        <tuple>
-                          <string>default_destination_section_title</string>
-                          <string>Billable Client</string>
-                        </tuple>
-                        <tuple>
-                          <string>source_decision_title</string>
-                          <string>Supervisor</string>
-                        </tuple>
-                        <tuple>
-                          <string>start_date</string>
-                          <string>Begin Date</string>
-                        </tuple>
-                        <tuple>
-                          <string>stop_date</string>
-                          <string>End Date</string>
-                        </tuple>
-                        <tuple>
-                          <string>default_destination_title</string>
-                          <string>Project Location</string>
-                        </tuple>
-                        <tuple>
-                          <string>translated_validation_state_title</string>
-                          <string>State</string>
-                        </tuple>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>

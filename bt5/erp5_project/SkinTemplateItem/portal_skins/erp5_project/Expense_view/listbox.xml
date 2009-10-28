@@ -313,28 +313,7 @@
                 <item>
                     <key> <string>all_columns</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>id</string>
-                          <string>ID</string>
-                        </tuple>
-                        <tuple>
-                          <string>Start_date</string>
-                          <string>Date</string>
-                        </tuple>
-                        <tuple>
-                          <string>Default_order_title</string>
-                          <string>Project</string>
-                        </tuple>
-                        <tuple>
-                          <string>target_quantity</string>
-                          <string>Target Quantity</string>
-                        </tuple>
-                        <tuple>
-                          <string>title</string>
-                          <string>Title</string>
-                        </tuple>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>

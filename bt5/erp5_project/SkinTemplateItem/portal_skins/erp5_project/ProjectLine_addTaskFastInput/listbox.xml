@@ -313,24 +313,7 @@
                 <item>
                     <key> <string>all_columns</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>task_title</string>
-                          <string>Task Title</string>
-                        </tuple>
-                        <tuple>
-                          <string>task_start_date</string>
-                          <string>Begin Date</string>
-                        </tuple>
-                        <tuple>
-                          <string>task_stop_date</string>
-                          <string>End Date</string>
-                        </tuple>
-                        <tuple>
-                          <string>task_comment</string>
-                          <string>Comment</string>
-                        </tuple>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
