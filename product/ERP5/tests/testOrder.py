@@ -2574,6 +2574,7 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
                               source_section_value=vendor,
                               destination_value=client,
                               destination_section_value=client)
+    order.setReference('OrderReference')
     line = order.newContent(portal_type=self.order_line_portal_type,
                             resource_value=resource,
                             quantity=10,
@@ -2588,6 +2589,9 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
     err_list = odf_validator.validate(odt)
     if err_list:
       self.fail(''.join(err_list))
+    # The name of the printout is the reference of the order
+    content_disposition = self.portal.REQUEST.RESPONSE.getHeader('content-disposition')
+    self.assertEquals(content_disposition, 'inline;filename="OrderReference.odt"')
 
   def test_Order_viewAsODT_person(self):
     # test order printout with a person as destination
