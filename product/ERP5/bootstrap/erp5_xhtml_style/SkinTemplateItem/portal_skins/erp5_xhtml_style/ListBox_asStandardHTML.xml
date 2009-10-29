@@ -299,7 +299,7 @@
               </td>\n
             </tr>\n
 \n
-            <tr tal:condition="here/showStat" id="listbox_stat_line"\n
+            <tr tal:condition="python:here.showStat() and not hide_rows_on_no_search_criterion" id="listbox_stat_line"\n
               class="listbox_stat_line"\n
               tal:attributes="id string:${field_id}_stat_line">\n
               <td tal:condition="is_report_tree_mode" class="Data">&nbsp;</td>\n
