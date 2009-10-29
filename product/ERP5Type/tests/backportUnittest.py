@@ -166,9 +166,6 @@ class TestCase(unittest.TestCase):
     def defaultTestResult(self):
         return TestResult()
 
-def strclass(cls):
-    return "%s.%s" % (cls.__module__, cls.__name__)
-
 class TestResult(unittest.TestResult):
     def __init__(self):
         super(TestResult, self).__init__()
