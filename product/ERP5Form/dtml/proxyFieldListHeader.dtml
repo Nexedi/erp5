@@ -19,4 +19,9 @@
   Field
   </div>
   </td>
+  <td align="left" valign="top">
+  <div class="form-label">
+  Description
+  </div>
+  </td>
 </tr>

@@ -102,6 +102,9 @@ Surcharge <dtml-var meta_type> properties here.
             <td><div class="form-element">
             <dtml-var "field.meta_type">
             </div></td>
+            <td><div class="form-element">
+            <dtml-var "field.get_value('description')">
+            </div></td>
           </tr>
         </dtml-let>
         </dtml-in>
