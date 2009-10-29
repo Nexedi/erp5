@@ -977,7 +977,7 @@ class XMLSyncUtilsMixin(SyncCode):
         signature.setObjectId(object_id)
         subscriber.addSignature(signature)
       force = signature.getForce()
-      partial_node = action.find('.//%(uri)sItem/%(uri)sData/%(uri)sPartial' % {'uri': '{SYNCML:SYNCML1.2}'})
+      partial_node = action.find('.//{%(ns)s}Item/{%(ns)s}Data/{%(ns)s}Partial' % {'ns': SYNCML_NAMESPACE})
       partial_data = partial_node is not None and partial_node.text or ''
       if not self.checkActionMoreData(action):
         data_subnode = None
