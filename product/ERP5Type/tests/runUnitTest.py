@@ -183,9 +183,17 @@ if '__INSTANCE_HOME' not in globals().keys() :
   __INSTANCE_HOME = instance_home
 
 
+class FilteredTestSuite(unittest.TestSuite):
+  """Marker class to identify TestSuites that we have already filtered"""
+  pass
+
 class ERP5TypeTestLoader(unittest.TestLoader):
   """Load test cases from the name passed on the command line.
   """
+  def __init__(self, test_patterns_list=None):
+    super(ERP5TypeTestLoader, self).__init__()
+    self.test_patterns_list = test_patterns_list
+
   def loadTestsFromName(self, name, module=None):
     """This method is here for compatibility with old style arguments.
     - It is possible to have the .py prefix for the test file
@@ -201,9 +209,41 @@ class ERP5TypeTestLoader(unittest.TestLoader):
     """ERP5Type test loader supports a function named 'test_suite'
     """
     if hasattr(module, 'test_suite'):
-      return module.test_suite()
+      return self.suiteClass(module.test_suite())
     return unittest.TestLoader.loadTestsFromModule(self, module)
 
+  def _filterTestList(self, test_list):
+    """test_list is a list of TestCase or TestSuite instances.
+    Returns a list of objects that contain only TestCase/TestSuite
+    matching --run_only"""
+    filtered = []
+
+    # Using FilteredTestSuite as a marker ensures that each Test
+    # is checked only once.
+    for item in test_list:
+      if isinstance(item, unittest.TestCase):
+        test_method_name = item.id().rsplit('.', 1)[-1]
+        for valid_test_method_name_re in self.test_patterns_list:
+          if re.search(valid_test_method_name_re, test_method_name):
+            filtered.append(item)
+      elif isinstance(item, FilteredTestSuite):
+        # has already been filtered, dont check it again
+        filtered.append(item)
+      elif isinstance(item, unittest.TestSuite):
+        filtered.append(FilteredTestSuite(self._filterTestList(item)))
+      else:
+        # should not happen.
+        raise ValueError, "What what what?"
+
+    return filtered
+
+  def suiteClass(self, test_list):
+    """Constructs a Test Suite from test lists.
+    Keep only tests matching commandline parameter --run_only"""
+    if self.test_patterns_list:
+      test_list = self._filterTestList(test_list)
+
+    return FilteredTestSuite(test_list)
 
 class DebugTestResult:
   """Wrap an unittest.TestResult, invoking pdb on errors / failures
@@ -310,7 +350,6 @@ def runUnitTestList(test_list, verbosity=1, debug=0):
   # it is then possible to run the debugger by "import pdb; pdb.set_trace()"
   sys.path.insert(0, tests_framework_home)
 
-  test_loader = ERP5TypeTestLoader()
 
   save = int(os.environ.get('erp5_save_data_fs', 0))
   dummy_test = save and (int(os.environ.get('update_business_templates', 0))
@@ -325,13 +364,11 @@ def runUnitTestList(test_list, verbosity=1, debug=0):
     unittest.makeSuite = dummy_makeSuite
     PortalTestCase.setUp = dummy_setUp
     PortalTestCase.tearDown = dummy_tearDown
+    test_loader = ERP5TypeTestLoader()
     test_loader.testMethodPrefix = 'dummy_test'
-
-  suite = test_loader.loadTestsFromNames(test_list)
-
-  # Hack the profiler to run only specified test methods, and wrap results when
-  # running in debug mode.
-  if not dummy_test:
+  else:
+    # Hack the profiler to run only specified test methods, and wrap results when
+    # running in debug mode.
     if debug:
       class DebugTextTestRunner(backportUnittest.TextTestRunner):
         def _makeResult(self):
@@ -341,29 +378,9 @@ def runUnitTestList(test_list, verbosity=1, debug=0):
       TestRunner = DebugTextTestRunner
 
     test_method_list = os.environ.get('run_only', '').split(',')
+    test_loader = ERP5TypeTestLoader(test_method_list)
 
-    def wrapped_run(run_orig):
-      # wrap the method that run the test to run test method only if its name
-      # matches the run_only spec and to provide post mortem debugging facility
-      def run(self, result=None):
-        if not test_method_list:
-          return run_orig(self, result)
-        test_method_name = self.id().rsplit('.', 1)[-1]
-        for valid_test_method_name_re in test_method_list:
-          if re.search(valid_test_method_name_re, test_method_name):
-            return run_orig(self, result)
-      return run
-
-    from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-    ERP5TypeTestCase.__call__ = wrapped_run(ERP5TypeTestCase.__call__)
-
-    # for tests subclassing ZopeTestCase but not ERP5TypeTestCase
-    from Testing.ZopeTestCase import profiler
-    profiler.Profiled.__call__ = wrapped_run(profiler.Profiled.__call__)
-
-    # tests not using ERP5TypeTestCase or ZopeTestCase
-    from unittest import TestCase
-    TestCase.__call__ = wrapped_run(TestCase.__call__)
+  suite = test_loader.loadTestsFromNames(test_list)
 
   # change current directory to the test home, to create zLOG.log in this dir.
   os.chdir(tests_home)
