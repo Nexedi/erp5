@@ -54,10 +54,6 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>from Products.ERP5Type.Message import translateString\n
-\n
-title = context.REQUEST.get(\'title\')\n
-text_content = context.REQUEST.get(\'text_content\')\n
-\n
 bug_line = context.newContent(portal_type=\'Bug Line\',\n
   title = title, text_content=text_content)\n
 bug_line.start()\n
@@ -77,7 +73,7 @@ else:\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>batch_mode=0, form_id=\'view\', *args, **kwargs</string> </value>
+            <value> <string>title=\'\', text_content=\'\', form_id=\'view\', batch_mode=0, *args, **kwargs</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -97,22 +93,22 @@ else:\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>2</int> </value>
+                        <value> <int>4</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>batch_mode</string>
+                            <string>title</string>
+                            <string>text_content</string>
                             <string>form_id</string>
+                            <string>batch_mode</string>
                             <string>args</string>
                             <string>kwargs</string>
                             <string>Products.ERP5Type.Message</string>
                             <string>translateString</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>title</string>
-                            <string>text_content</string>
                             <string>bug_line</string>
                             <string>dict</string>
                           </tuple>
@@ -127,8 +123,10 @@ else:\n
             <key> <string>func_defaults</string> </key>
             <value>
               <tuple>
-                <int>0</int>
+                <string></string>
+                <string></string>
                 <string>view</string>
+                <int>0</int>
               </tuple>
             </value>
         </item>
