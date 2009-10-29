@@ -34,6 +34,7 @@ from string import join
 import sys
 from zLOG import LOG
 from Acquisition import aq_base
+from copy import deepcopy
 
 # Patch WorkflowUIMixin to add description on workflows
 from Products.DCWorkflow.WorkflowUIMixin import WorkflowUIMixin as WorkflowUIMixin_class
@@ -330,7 +331,7 @@ def DCWorkflowDefinition_executeTransition(self, ob, tdef=None, kwargs=None):
             script(sci)  # May throw an exception.
         except ValidationFailed, validation_exc:
             before_script_success = 0
-            before_script_error_message = validation_exc.msg
+            before_script_error_message = deepcopy(validation_exc.msg)
             validation_exc_traceback = sys.exc_traceback
         except ObjectMoved, moved_exc:
             ob = moved_exc.getNewObject()
