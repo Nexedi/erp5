@@ -65,11 +65,11 @@ class ERP5DocumentConduit(ERP5Conduit):
       elif subnode.xpath('name()') in self.XUPDATE_DEL:
         conflict_list += conduit.deleteNode(xml=sub_xupdate, object=object,
                                             force=force, simulate=simulate,
-					    reset=reset, **kw)
+                                            reset=reset, **kw)
       elif subnode.xpath('name()') in self.XUPDATE_UPDATE:
         conflict_list += conduit.updateNode(xml=sub_xupdate, object=object,
                                             force=force, simulate=simulate,
-					    reset=reset, **kw)
+                                            reset=reset, **kw)
 
     return conflict_list
 
