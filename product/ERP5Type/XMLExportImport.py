@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2002-2003 Nexedi SARL and Contributors. All Rights Reserved.
@@ -100,13 +101,11 @@ def Base_asXML(object, root=None):
         # <data><block>ZERD</block><block>OEJJM</block></data>
         size_block = 60
         if isinstance(value, str):
-          iterator_block = 0
           for index in xrange(0, len(value), size_block):
             content = value[index:index + size_block]
             data_encoded = standard_b64encode(content)
-            block = SubElement(sub_object, 'block_data', num=str(iterator_block))
+            block = SubElement(sub_object, 'block_data')
             block.text = data_encoded
-            iterator_block += 1
         else: 
           raise "XMLExportImport failed, the data is undefined"
       elif prop_type in ('lines', 'tokens',):
