@@ -62,6 +62,17 @@ class TestXHTML(ERP5TypeTestCase):
     """  """
     return ( # dependency order
       'erp5_base',
+      'erp5_pdf_editor',
+      'erp5_ingestion',
+      'erp5_ingestion_mysql_innodb_catalog',
+      'erp5_web',
+      'erp5_dms',
+      'erp5_egov_mysql_innodb_catalog',
+      'erp5_egov',
+      )
+
+  def foo(self):
+    return ('erp5_base',
       'erp5_trade',
 
       'erp5_pdf_editor',

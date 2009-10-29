@@ -46,6 +46,8 @@ class TestPackingListMixin(TestOrderMixin):
                       stepCreateOrganisation1 \
                       stepCreateOrganisation2 \
                       stepCreateOrganisation3 \
+                      stepCreateProject1 \
+                      stepCreateProject2 \
                       stepCreateOrder \
                       stepCreateCurrency \
                       stepSetOrderPriceCurrency \
@@ -171,6 +173,10 @@ class TestPackingListMixin(TestOrderMixin):
                                        order.getSourceAdministration())
     self.assertEquals(packing_list.getPriceCurrency(), \
                                        order.getPriceCurrency())
+    self.assertEquals(packing_list.getDestinationProject(), \
+                                       order.getDestinationProject())
+    self.assertEquals(packing_list.getSourceProject(), \
+                                       order.getSourceProject())
 
   def stepCheckPackingListIsDivergent(self, sequence=None, sequence_list=None,
                                       packing_list=None,**kw):
