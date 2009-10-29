@@ -524,11 +524,8 @@ class TestBug(ERP5TypeTestCase):
     text_content = 'text content'
     title = 'title'
 
-    request = self.portal.REQUEST
-
-    request.set('text_content', text_content)
-    request.set('title', title)
-    bug_line = bug.Bug_doBugLineSendFastInputAction(batch_mode=1)
+    bug_line = bug.Bug_doBugLineSendFastInputAction(batch_mode=1, title=title,
+        text_content=text_content)
 
     self.assertEqual(text_content, bug_line.getTextContent())
     self.assertEqual(title, bug_line.getTitle())
