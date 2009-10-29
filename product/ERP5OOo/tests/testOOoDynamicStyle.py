@@ -123,7 +123,7 @@ return getattr(context, "%s_%s" % (parameter, current_language))
     response = self.publish('/' + self.folder.Dynamic_viewAsOdt.absolute_url(1))
     self.assertEqual('application/vnd.oasis.opendocument.text',
                      response.getHeader('content-type').split(';')[0])
-    self.assertEqual('inline;filename="Dynamic_viewAsOdt"',
+    self.assertEqual('inline;filename="Dynamic_viewAsOdt.odt"',
                      response.getHeader('content-disposition'))
     self._validate(response.getBody()) 
     self.assertTrue(200, response.getStatus())
@@ -177,7 +177,7 @@ return getattr(context, "%s_%s" % (parameter, current_language))
     self.assertTrue(200, response.getStatus())
     self.assertEqual('application/vnd.oasis.opendocument.text',
                      response.getHeader('content-type').split(';')[0])
-    self.assertEqual('inline;filename="Static_viewAsOdt"',
+    self.assertEqual('inline;filename="Static_viewAsOdt.odt"',
                      response.getHeader('content-disposition'))
     self._validate(response.getBody()) 
     odt_zip_file = self._create_odt_zip_file(response.getBody())

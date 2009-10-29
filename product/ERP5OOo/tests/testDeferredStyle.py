@@ -42,6 +42,7 @@ class TestDeferredStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
   """Tests deferred styles for ERP5."""
   skin = content_type = None
   recipient_email_address = 'invalid@example.com'
+  attachment_file_extension = ''
   username = 'bob'
   password = 'bobpwd'
   first_name = 'Bob'
@@ -100,10 +101,10 @@ class TestDeferredStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
     for part in mail_message.walk():
       content_type = part.get_content_type()
       file_name = part.get_filename()
-      # XXX the attachment name might change some day
-      if file_name == 'report_view':
+      if file_name == 'report_view%s' % self.attachment_file_extension:
         self.assertEquals(content_type, self.content_type)
-        self.assertEquals('attachment; filename="report_view"',
+        self.assertEquals('attachment; filename="report_view%s"' %
+                                self.attachment_file_extension,
                           part.get('Content-Disposition'))
         data = part.get_payload(decode=True)
         error_list = Validator().validate(data)
@@ -117,11 +118,13 @@ class TestDeferredStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
 class TestODSDeferredStyle(TestDeferredStyle):
   skin = 'ODS'
   content_type = 'application/vnd.oasis.opendocument.spreadsheet'
+  attachment_file_extension = '.ods'
 
 
 class TestODTDeferredStyle(TestDeferredStyle):
   skin = 'ODT'
   content_type = 'application/vnd.oasis.opendocument.text'
+  attachment_file_extension = '.odt'
 
 
 def test_suite():

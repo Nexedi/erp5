@@ -522,8 +522,11 @@ class OOoTemplate(ZopePageTemplate):
       return self._asFormat(ooo, format, request, batch_mode)
 
     if not format and not batch_mode:
-      request.RESPONSE.setHeader('Content-Type','%s; charset=utf-8' % self.content_type)
-      request.RESPONSE.setHeader('Content-disposition', 'inline;filename="%s"' % self.title_or_id())
+      request.RESPONSE.setHeader('Content-Type',
+          '%s; charset=utf-8' % self.content_type)
+      request.RESPONSE.setHeader('Content-disposition',
+          'inline;filename="%s%s"' % (self.title_or_id(),
+                                      guess_extension(self.content_type)))
     
     if DevelopmentMode:
       # Validate XML in development mode
