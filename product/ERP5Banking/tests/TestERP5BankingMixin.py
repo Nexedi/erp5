@@ -52,6 +52,7 @@ class TestERP5BankingMixin:
       need to be installed to run the test on.
     """
     return ('erp5_base',
+            'erp5_pdm',
             'erp5_trade',
             'erp5_accounting',
             'erp5_banking_core',
