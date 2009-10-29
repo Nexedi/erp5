@@ -324,7 +324,6 @@ def runUnitTestList(test_list, verbosity=1, debug=0):
     pass
   
   TestRunner = backportUnittest.TextTestRunner
-  suite = unittest.TestSuite()
 
   # allow unit tests of our Products or business templates to be reached.
   from glob import glob
