@@ -42,7 +42,6 @@
               <tuple>
                 <string>start_date</string>
                 <string>stop_date</string>
-                <string>source_project</string>
               </tuple>
             </value>
         </item>
