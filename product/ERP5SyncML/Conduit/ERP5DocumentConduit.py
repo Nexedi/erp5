@@ -100,7 +100,7 @@ class ERP5DocumentConduit(ERP5Conduit):
         if subnode.xpath('name()') in self.XUPDATE_DEL:
           node_to_remove_list = xml.xpath(request)
           if node_to_remove_list:
-            xml.remove(xml.xpath(request)[0]) 
+            xml.remove(node_to_remove_list[0]) 
             data_change[prop_id] = xml
           xml_xupdate.remove(subnode)
         elif subnode.xpath('name()') in self.XUPDATE_UPDATE:
