@@ -125,7 +125,6 @@ class SecurityTestCase(ERP5TypeTestCase):
     transaction.abort()
     self.portal.portal_caches.clearAllCache()
     ERP5TypeTestCase.tearDown(self)
-    self.tic()
 
   def _loginAsUser(self, username):
     """Login as a given username. The user must exist.
