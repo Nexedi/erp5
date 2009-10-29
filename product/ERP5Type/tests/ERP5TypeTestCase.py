@@ -205,6 +205,19 @@ def _getConnectionStringDict():
   return connection_string_dict
 
 
+def profile_if_environ(environment_var_name):
+    if int(os.environ.get(environment_var_name, 0)):
+      def decorator(self, method):
+        def decorated():
+          self.runcall(method)
+        decorated.__name__ = method.__name__
+        decorated.__doc__ = method.__doc__
+        return decorated
+      return decorator
+    else:
+      # No profiling, return identity decorator
+      return lambda self, method: method
+
 class ERP5TypeTestCase(PortalTestCase):
     """TestCase for ERP5 based tests.
 
@@ -289,6 +302,29 @@ class ERP5TypeTestCase(PortalTestCase):
       # do nothing if the user already exists
       if not uf.getUser(user_name):
         uf._doAddUser(user_name, 'secret', ['Member'], [])
+
+    # class-defined decorators for profiling.
+    # Depending on the environment variable, they return
+    # the same method, or a profiling wrapped call
+    _decorate_setUp = profile_if_environ('PROFILE_SETUP')
+    _decorate_testRun = profile_if_environ('PROFILE_TESTS')
+    _decorate_tearDown = profile_if_environ('PROFILE_TEARDOWN')
+
+    def __call__(self, *args, **kw):
+      # Pulling down the profiling from ZopeTestCase.profiler to allow
+      # overriding run()
+      # This cannot be done at instanciation because we need to
+      # wrap the bottom-most methods, e.g.
+      # SecurityTestCase.tearDown instead of ERP5TestCase.tearDown
+
+      self.setUp = self._decorate_setUp(self.setUp)
+      self.tearDown = self._decorate_tearDown(self.tearDown)
+
+      test_name = self._TestCase__testMethodName
+      test_method = getattr(self, test_name)
+      setattr(self, test_name, self._decorate_testRun(test_method))
+
+      self.run(*args, **kw)
 
     def setUp(self):
       '''Sets up the fixture. Do not override,
