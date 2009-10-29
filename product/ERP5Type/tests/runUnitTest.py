@@ -330,8 +330,7 @@ def runUnitTestList(test_list, verbosity=1, debug=0):
   suite = test_loader.loadTestsFromNames(test_list)
 
   # Hack the profiler to run only specified test methods, and wrap results when
-  # running in debug mode. We also monkeypatch unittest.TestCase for tests that
-  # does not use ERP5TypeTestCase
+  # running in debug mode.
   if not dummy_test:
     test_method_list = os.environ.get('run_only', '').split(',')
 
@@ -349,8 +348,14 @@ def runUnitTestList(test_list, verbosity=1, debug=0):
             return run_orig(self, result)
       return run
 
+    from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+    ERP5TypeTestCase.__call__ = wrapped_run(ERP5TypeTestCase.__call__)
+
+    # for tests subclassing ZopeTestCase but not ERP5TypeTestCase
     from Testing.ZopeTestCase import profiler
     profiler.Profiled.__call__ = wrapped_run(profiler.Profiled.__call__)
+
+    # tests not using ERP5TypeTestCase or ZopeTestCase
     from unittest import TestCase
     TestCase.__call__ = wrapped_run(TestCase.__call__)
 
