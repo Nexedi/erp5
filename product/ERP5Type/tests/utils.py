@@ -36,6 +36,8 @@ import Products.ERP5Type
 from Products.MailHost.MailHost import MailHost
 from zLOG import LOG
 
+import backportUnittest
+
 class FileUpload(file):
   """Act as an uploaded file.
   """
@@ -240,28 +242,11 @@ class reindex(object):
       self._instance.tic()
     return ret
 
-def todo_erp5(function):
-  """
-    Use this function as a decorator around a test method to tag it as TODO.
-    Tagging as TODO means that:
-    - a failure (AssertionError exception) is expected, and will not be
-      reported as a failure in test report.
-    - a success or any other exception is *not* expected, and will cause the
-      test to be reported as failed.
-
-    Inspired from Wine's tests (http://www.winehq.org).
-  """
-  func_code = function.func_code
-  function_id = '%s:%s %s' % (func_code.co_filename, func_code.co_firstlineno,
-                              func_code.co_name)
-  def wrapper(*args, **kw):
-    try:
-      result = function(*args, **kw)
-    except AssertionError:
-      LOG('TODO', 0, function_id)
-      print 'TODO: %s' % (function_id, )
-    else:
-      raise AssertionError, '%s Succeeded although being tagged as TODO' % (function_id, )
-  wrapper.__name__ = function.__name__
-  return wrapper
+# Use this as a method or class decorator to tag it as TODO.
+# The test will be skipped:
+#  - the fixture itself is not run
+#  - if a TODO test is in fact successful, no one will ever know
+#
+# Test cases using this decorator must extend backportUnittest.TestCase
+todo_erp5 = backportUnittest.skip("TODO ERP5")
 

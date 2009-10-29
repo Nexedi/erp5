@@ -40,6 +40,8 @@ from Products.DCWorkflow.DCWorkflow import ValidationFailed
 from Products.ERP5Type.Base import _aq_reset
 from zLOG import LOG, DEBUG
 
+import backportUnittest
+
 # Quiet messages when installing products
 install_product_quiet = 1
 # Quiet messages when installing business templates
@@ -218,7 +220,7 @@ def profile_if_environ(environment_var_name):
       # No profiling, return identity decorator
       return lambda self, method: method
 
-class ERP5TypeTestCase(PortalTestCase):
+class ERP5TypeTestCase(backportUnittest.TestCase, PortalTestCase):
     """TestCase for ERP5 based tests.
 
     This TestCase setups an ERP5Site and installs business templates.

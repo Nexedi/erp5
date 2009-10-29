@@ -8,8 +8,9 @@ import unittest
 import shutil
 import errno
 
-WIN = os.name == 'nt'
+import backportUnittest
 
+WIN = os.name == 'nt'
 
 __doc__ = """%(program)s: unit test runner for the ERP5 Project
 
@@ -282,7 +283,7 @@ def runUnitTestList(test_list, verbosity=1, debug=0):
   except ImportError:
     pass
   
-  TestRunner = unittest.TextTestRunner
+  TestRunner = backportUnittest.TextTestRunner
   suite = unittest.TestSuite()
 
   # allow unit tests of our Products or business templates to be reached.
