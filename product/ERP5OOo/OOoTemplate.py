@@ -166,6 +166,12 @@ class OOoTemplate(ZopePageTemplate):
       )
     )
 
+  _properties= ZopePageTemplate._properties + (
+                                        {'id': 'filename',
+                                         'type': 'tales',
+                                         'mode': 'w',}, )
+  filename = 'object/title_or_id'
+
   security.declareProtected('View management screens', 'formSettings')
   formSettings = PageTemplateFile('www/formSettings', globals(),
                                   __name__='formSettings')
@@ -525,7 +531,7 @@ class OOoTemplate(ZopePageTemplate):
       request.RESPONSE.setHeader('Content-Type',
           '%s; charset=utf-8' % self.content_type)
       request.RESPONSE.setHeader('Content-disposition',
-          'inline;filename="%s%s"' % (self.title_or_id(),
+          'inline;filename="%s%s"' % (self._getFileName(),
                                       guess_extension(self.content_type)))
     
     if DevelopmentMode:
@@ -572,28 +578,35 @@ class OOoTemplate(ZopePageTemplate):
               if x[1].endswith('pdf')]
       if len(tgts) > 1:
         REQUEST.RESPONSE.setHeader('Content-type', 'text/html')
-        REQUEST.RESPONSE.setHeader('Content-disposition',
-            'inline;filename="%s.pdf"' % self.title_or_id())
         raise ValueError, 'multiple pdf formats found - this shouldnt happen'
       if len(tgts) == 0:
         REQUEST.RESPONSE.setHeader('Content-type', 'text/html')
-        REQUEST.RESPONSE.setHeader('Content-disposition',
-            'inline;filename="%s.pdf"' % self.title_or_id())
         raise ValueError, 'no pdf format found'
       fmt = tgts[0]
       mime, data = tmp_ooo.convert(fmt)
       if REQUEST is not None:
           REQUEST.RESPONSE.setHeader('Content-type', 'application/pdf')
           REQUEST.RESPONSE.setHeader('Content-disposition',
-              'attachment;filename="%s.pdf"' % self.title_or_id())
+              'attachment;filename="%s.pdf"' % self._getFileName())
       return data
     mime, data = tmp_ooo.convert(format)
     if REQUEST is not None and not batch_mode:
       REQUEST.RESPONSE.setHeader('Content-type', mime)
       REQUEST.RESPONSE.setHeader('Content-disposition',
-          'attachment;filename="%s.%s"' % (self.title_or_id(),format))
+          'attachment;filename="%s.%s"' % (self._getFileName(),format))
         # FIXME the above lines should return zip format when html was requested
     return data
+
+  def _getFileName(self):
+    """Returns the filename used for content-disposition header.
+    """
+    # The "filename" property has a TALES type, but getProperty for TALES types
+    # only works if the context has an ERP5 Site in his acquisition context.
+    # If it's not the case, we will not evaluate the TALES, but simply use the
+    # template's title or id as filename.
+    if getattr(self, 'getPortalObject', None) is None:
+      return self.title_or_id()
+    return self.getProperty('filename')
 
 InitializeClass(OOoTemplate)
 

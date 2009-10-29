@@ -101,9 +101,10 @@ class TestDeferredStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
     for part in mail_message.walk():
       content_type = part.get_content_type()
       file_name = part.get_filename()
-      if file_name == 'report_view%s' % self.attachment_file_extension:
+      # "History" is the title of Base_viewHistory form
+      if file_name == 'History%s' % self.attachment_file_extension:
         self.assertEquals(content_type, self.content_type)
-        self.assertEquals('attachment; filename="report_view%s"' %
+        self.assertEquals('attachment; filename="History%s"' %
                                 self.attachment_file_extension,
                           part.get('Content-Disposition'))
         data = part.get_payload(decode=True)
