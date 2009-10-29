@@ -96,18 +96,17 @@ class ERP5DocumentConduit(ERP5Conduit):
           xml = data_change[prop_id]
         else:
           xml = xml_previous.xpath(path_prop_id)[0]
-        num = prop_list[2].split('[')[1].rstrip(']')
+        request = prop_list[-1]
         if subnode.xpath('name()') in self.XUPDATE_DEL:
-          request = 'block_data[@num = $num]'
-          xml.remove(xml.xpath(request, num=num)[0]) 
-          data_change[prop_id] = xml
+          node_to_remove_list = xml.xpath(request)
+          if node_to_remove_list:
+            xml.remove(xml.xpath(request)[0]) 
+            data_change[prop_id] = xml
           xml_xupdate.remove(subnode)
         elif subnode.xpath('name()') in self.XUPDATE_UPDATE:
           #retrieve element in previous_xml
-          request = 'block_data[@num = $num]'
-          element = xml.xpath(request, num=num)[0]
-          if element is not None:
-           element.text = subnode.text
+          element = xml.xpath(request)[0]
+          element.text = subnode.text
           data_change[prop_id] = xml
           xml_xupdate.remove(subnode)
       elif subnode.xpath('name()') in self.XUPDATE_INSERT_OR_ADD:
@@ -138,7 +137,7 @@ class ERP5DocumentConduit(ERP5Conduit):
               xml_xupdate.remove(subnode)
 
     #apply modification
-    if len(data_change) != 0:
+    if len(data_change):
       args = {}
       for key in data_change.keys():
         node = data_change[key]
