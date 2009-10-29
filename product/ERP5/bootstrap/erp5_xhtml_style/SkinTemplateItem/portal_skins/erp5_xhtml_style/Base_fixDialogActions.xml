@@ -80,8 +80,9 @@ for ai in print_action_list:\n
   ai_copy = ai.copy()\n
   # this is quite low level. It may require to be done from file system code in\n
   # the future.\n
-  ai_copy[\'original_url\'] = ai_copy[\'url\']\n
-  ai_copy[\'url\'] = addDialogIfNeeded(ai_copy[\'url\'])\n
+  ai_copy.update(dict(\n
+                    original_url=ai_copy[\'url\'],\n
+                    url=addDialogIfNeeded(ai_copy[\'url\'])))\n
   new_print_action_list.append( ai_copy )\n
 \n
 return new_print_action_list\n
@@ -133,7 +134,7 @@ return new_print_action_list\n
                             <string>_getiter_</string>
                             <string>ai</string>
                             <string>ai_copy</string>
-                            <string>_write_</string>
+                            <string>dict</string>
                           </tuple>
                         </value>
                     </item>
