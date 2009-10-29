@@ -53,7 +53,15 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>return context.Baobab_getAccountForSite(context.Baobab_getMainAgencyForSite(site))\n
+            <value> <string>code = site.getCodification()\n
+\n
+if code[-1] != "0":\n
+  main_code = "%s0" %code[:-1]\n
+  main_site = context.Baobab_getSiteFromCodification(main_code)\n
+else:\n
+  main_site = site\n
+\n
+return main_site\n
 </string> </value>
         </item>
         <item>
@@ -92,7 +100,11 @@
                           <tuple>
                             <string>site</string>
                             <string>_getattr_</string>
+                            <string>code</string>
+                            <string>_getitem_</string>
+                            <string>main_code</string>
                             <string>context</string>
+                            <string>main_site</string>
                           </tuple>
                         </value>
                     </item>
@@ -109,7 +121,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Baobab_getMainAgencyAccountForSite</string> </value>
+            <value> <string>Baobab_getMainAgencyForSite</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
