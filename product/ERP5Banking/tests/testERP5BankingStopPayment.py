@@ -308,9 +308,6 @@ class TestERP5BankingStopPayment( TestERP5BankingCheckbookDeliveryMixin,
     """
     self.assertEqual(self.check_1.getSimulationState(),'confirmed')
 
-  def stepCheckStopPaymentWorklist(self, **kw):
-    self.checkWorklist(self.stop_payment)
-
   ##################################
   ##  Tests
   ##################################

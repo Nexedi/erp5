@@ -261,9 +261,6 @@ class TestERP5BankingInternalMoneyDeposit(TestERP5BankingMixin, ERP5TypeTestCase
     """
     self.internal_money_deposit_module.deleteContent('internal_money_deposit_1')
 
-  def stepCheckWorklist(self, **kw):
-    self.checkWorklist(self.internal_money_deposit)
-
   ##################################
   ##  Tests
   ##################################
@@ -278,7 +275,6 @@ class TestERP5BankingInternalMoneyDeposit(TestERP5BankingMixin, ERP5TypeTestCase
     sequence_string = 'Tic CheckObjects Tic CheckInitialInventory ' \
                     + 'CreateInternalMoneyDeposit ' \
                     + 'InputCashDetails  Tic ' \
-                    + 'Tic CheckWorklist ' \
                     + 'DeliverInternalMoneyDeposit Tic ' \
                     + 'CheckFinalInventory'
     sequence_list.addSequenceString(sequence_string)

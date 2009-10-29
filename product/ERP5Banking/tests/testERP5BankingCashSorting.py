@@ -540,9 +540,6 @@ class TestERP5BankingCashSorting(TestERP5BankingMixin, ERP5TypeTestCase):
               'cash_sorting_workflow','deliver_action')
     self.failUnless(message.find('Insufficient balance')>=0)
 
-  def stepCheckWorklist(self, **kw):
-    self.checkWorklist(self.cash_sorting)
-
   ##################################
   ##  Tests
   ##################################
@@ -562,11 +559,9 @@ class TestERP5BankingCashSorting(TestERP5BankingMixin, ERP5TypeTestCase):
                     + 'CreateValidOutgoingLineForInternalAndCancelledBanknote ' \
                     + 'Tic CheckTotal ' \
                     + 'CheckSource CheckDestination ' \
-                    + 'Tic CheckWorklist ' \
                     + 'ConfirmCashSorting Tic ' \
                     + 'CheckSourceDebitPlanned CheckDestinationCreditPlanned ' \
                     + 'ResetSourceInventory Tic ' \
-                    + 'Tic CheckWorklist ' \
                     + 'DeliverCashSortingFails Tic ' \
                     + 'DeleteResetInventory Tic ' \
                     + 'DeliverCashSorting Tic ' \

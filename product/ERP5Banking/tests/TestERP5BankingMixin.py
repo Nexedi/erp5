@@ -1197,29 +1197,3 @@ class TestERP5BankingMixin:
                          if x.find('reset')>=0]
     inventory_module.manage_delObjects(ids=to_delete_id_list)
 
-  def checkWorklist(self, document):
-    """
-    """
-    portal = self.getPortalObject()
-    portal.portal_caches.clearAllCache()
-    try:
-      portal.portal_workflow.refreshWorklistCache()
-    except AttributeError:
-      import sys
-      LOG('TestEERP5Banking.checkWorklist', 0, 'unable to find everything to refresh',
-             error=sys.exc_info())
-    portal_type = document.getPortalType()
-    state = document.getSimulationState()
-    workflow_id = '%s_workflow' % portal_type.lower().replace(' ', '_')
-    actions = portal.portal_actions.listFilteredActionsFor(document)
-    found = 0
-    for action in actions['global']:
-      if action.get('workflow_id', None) == workflow_id:
-        url = action.get('url', None)
-        if url is not None:
-          if url.find(state)>=0 and url.find(portal_type)>=0:
-            found = 1
-    #if not found:
-    #  import pdb; pdb.set_trace()
-    self.assertEquals(found, 1)
-

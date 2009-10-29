@@ -634,9 +634,6 @@ class TestERP5BankingCashMovement(TestERP5BankingMixin, ERP5TypeTestCase):
               'cash_movement_workflow','start_action')
     self.failUnless(message.find('Insufficient balance')>=0)
 
-  def stepCheckWorklist(self, **kw):
-    self.checkWorklist(self.cash_movement)
-
 
   def test_01_ERP5BankingCashMovement(self, quiet=QUIET, run=RUN_ALL_TEST):
     """
@@ -651,18 +648,14 @@ class TestERP5BankingCashMovement(TestERP5BankingMixin, ERP5TypeTestCase):
                     + 'CreateValidLine2 CheckTotal ' \
                     + 'CheckInitialInventory ' \
                     + 'CreateInvalidLine ' \
-                    + 'Tic CheckWorklist ' \
                     + 'TryConfirmCashMovementWithBadInventory ' \
                     + 'DelInvalidLine Tic CheckTotal ' \
                     + 'ConfirmCashMovement ' \
                     + 'ResetSourceInventory Tic ' \
-                    + 'Tic CheckWorklist ' \
                     + 'StartCashMovementFails DeleteResetInventory Tic ' \
                     + 'StartCashMovement ' \
-                    + 'Tic CheckWorklist ' \
                     + 'CheckSourceDebitStarted CheckDestinationCreditStarted ' \
                     + 'StopCashMovement ' \
-                    + 'Tic CheckWorklist ' \
                     + 'DeliverCashMovement ' \
                     + 'CheckSourceDebit CheckDestinationCredit '
 
@@ -677,15 +670,11 @@ class TestERP5BankingCashMovement(TestERP5BankingMixin, ERP5TypeTestCase):
                     + 'CreateValidLine2 CheckTotal ' \
                     + 'CheckCurrencyHandoverInitialInventory ' \
                     + 'Tic CheckTotal ' \
-                    + 'Tic CheckWorklist ' \
                     + 'ConfirmCashMovement ' \
-                    + 'Tic CheckWorklist ' \
                     + 'StartCashMovement ' \
                     + 'CheckCurrencyHandoverSourceDebitStarted ' \
                     + 'CheckDestinationHasNotChanged ' \
-                    + 'Tic CheckWorklist ' \
                     + 'StopCashMovement ' \
-                    + 'Tic CheckWorklist ' \
                     + 'DeliverCashMovement ' \
                     + 'CheckCurrencyHandoverSourceDebit CheckDestinationHasNotChanged '
 

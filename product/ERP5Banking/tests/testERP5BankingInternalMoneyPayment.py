@@ -263,9 +263,6 @@ class TestERP5BankingInternalMoneyPayment(TestERP5BankingMixin, ERP5TypeTestCase
     """
     self.internal_money_payment_module.deleteContent('internal_money_payment_1')
 
-  def stepCheckWorklist(self, **kw):
-    self.checkWorklist(self.internal_money_payment)
-
   ##################################
   ##  Tests
   ##################################
@@ -280,7 +277,6 @@ class TestERP5BankingInternalMoneyPayment(TestERP5BankingMixin, ERP5TypeTestCase
     sequence_string = 'Tic CheckObjects Tic CheckInitialInventory ' \
                     + 'CreateInternalMoneyPayment ' \
                     + 'InputCashDetails  Tic ' \
-                    + 'Tic CheckWorklist ' \
                     + 'DeliverInternalMoneyPayment Tic ' \
                     + 'CheckFinalInventory'
     sequence_list.addSequenceString(sequence_string)

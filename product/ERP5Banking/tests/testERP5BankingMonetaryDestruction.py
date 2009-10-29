@@ -1000,9 +1000,6 @@ class TestERP5BankingMonetaryDestruction(TestERP5BankingMixin, ERP5TypeTestCase)
               'monetary_destruction_workflow','deliver_action')
     self.failUnless(message.find('Insufficient balance')>=0)
 
-  def stepCheckWorklist(self, **kw):
-    self.checkWorklist(self.monetary_destruction)
-
   ##################################
   ##  Tests
   ##################################
@@ -1021,7 +1018,6 @@ class TestERP5BankingMonetaryDestruction(TestERP5BankingMixin, ERP5TypeTestCase)
                     + 'CreateValidLineForAuxiliaire2 CheckTotal ' \
                     + 'CheckInitialInventoryForAuxiliaire ' \
                     + 'SetMonetaryDestructionSourceTotalAssetPrice ' \
-                    + 'Tic CheckWorklist ' \
                     + 'PlannedMonetaryDestruction Tic ' \
                     + 'CheckSourceDebitPlannedForAuxiliaire ' \
                     + 'StartMonetaryDestruction Tic ' \
@@ -1042,13 +1038,11 @@ class TestERP5BankingMonetaryDestruction(TestERP5BankingMixin, ERP5TypeTestCase)
                     + 'TryPlannedMonetaryDestructionWithBadInventory ' \
                     + 'DelInvalidLine Tic CheckTotal ' \
                     + 'SetMonetaryDestructionSourceTotalAssetPrice ' \
-                    + 'Tic CheckWorklist ' \
                     + 'PlannedMonetaryDestruction Tic ' \
                     + 'CheckSourceDebitPlanned ' \
                     + 'ResetInventory Tic ' \
                     + 'ValidateFails ' \
                     + 'DeleteResetInventory ' \
-                    + 'Tic CheckWorklist ' \
                     + 'ValidateMonetaryDestruction Tic ' \
                     + 'CheckSourceDebit ' \
                     + 'DelMonetaryDestruction Tic'

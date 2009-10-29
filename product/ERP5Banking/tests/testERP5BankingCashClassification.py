@@ -700,10 +700,7 @@ class TestERP5BankingCashClassification(TestERP5BankingMixin, ERP5TypeTestCase):
     self.assertEqual(self.simulation_tool.getFutureInventory(node=self.encaisse_aux_bm.getRelativeUrl(), resource = self.billet_5000.getRelativeUrl()), 24.0)
     # check we have 10 coins of 100
     self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.encaisse_aux_externe.getRelativeUrl(), resource = self.billet_100.getRelativeUrl()), 10.0)
-    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.encaisse_aux_externe.getRelativeUrl(), resource = self.billet_100.getRelativeUrl()), 10.0)
-
-  def stepCheckWorklist(self, **kw):
-    self.checkWorklist(self.cash_sorting)
+    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.encaisse_aux_externe.getRelativeUrl(), resource = self.billet_100.getRelativeUrl()), 10.0
 
   ##################################
   ##  Tests
@@ -725,9 +722,7 @@ class TestERP5BankingCashClassification(TestERP5BankingMixin, ERP5TypeTestCase):
                     + 'CreateValidOutgoingLineForMixed ' \
                     + 'Tic CheckTotal ' \
                     + 'CheckSource CheckDestination ' \
-                    + 'Tic CheckWorklist ' \
                     + 'ConfirmCashSorting Tic ' \
-                    + 'Tic CheckWorklist ' \
                     + 'CheckSourceDebitPlanned CheckDestinationCreditPlanned ' \
                     + 'DeliverCashSorting Tic ' \
                     + 'CheckSourceDebit CheckDestinationCredit '

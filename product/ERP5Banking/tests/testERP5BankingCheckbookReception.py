@@ -441,9 +441,6 @@ class TestERP5BankingCheckbookReception(TestERP5BankingMixin, ERP5TypeTestCase):
     check = checkbook.objectValues()[0]
     self.assertEqual(check.getSimulationState(), 'confirmed')
 
-  def stepCheckWorklist(self, **kw):
-    self.checkWorklist(self.checkbook_reception)
-
   ##################################
   ##  Tests
   ##################################
@@ -458,9 +455,7 @@ class TestERP5BankingCheckbookReception(TestERP5BankingMixin, ERP5TypeTestCase):
     sequence_string = 'Tic CheckObjects Tic CheckInitialCheckbookInventory ' \
                     + 'CreateCheckbookReception Tic ' \
                     + 'CreateCheckAndCheckbookLineList Tic ' \
-                    + 'CheckWorklist Tic ' \
                     + 'ConfirmCheckbookReception Tic ' \
-                    + 'CheckWorklist Tic ' \
                     + 'DeliverCheckbookReception Tic ' \
                     + 'CheckItemsCreated  ' \
                     + 'CheckFinalCheckbookInventory'

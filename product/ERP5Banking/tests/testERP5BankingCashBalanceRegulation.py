@@ -721,9 +721,6 @@ class TestERP5BankingCashBalanceRegulation(TestERP5BankingMixin, ERP5TypeTestCas
 
 
 
-  def stepCheckWorklist(self, **kw):
-    self.checkWorklist(self.cash_balance_regulation)
-
   def stepDelCashBalanceRegulation(self, sequence=None, sequence_list=None, **kwd):
     """
     Delete the invalid vault_transfer line previously create
@@ -755,7 +752,6 @@ class TestERP5BankingCashBalanceRegulation(TestERP5BankingMixin, ERP5TypeTestCas
                     + 'CreateValidOutgoingLine ' \
                     + 'Tic CheckTotal ' \
                     + 'CheckInitialInventory ' \
-                    + 'Tic CheckWorklist ' \
                     + 'DeliverCashBalanceRegulation Tic ' \
                     + 'CheckFinalInventory'
     sequence_list.addSequenceString(sequence_string)
@@ -767,7 +763,6 @@ class TestERP5BankingCashBalanceRegulation(TestERP5BankingMixin, ERP5TypeTestCas
                     + 'CreateValidOutgoingLine ' \
                     + 'Tic CheckTotal ' \
                     + 'CheckInitialInventoryCaveau ' \
-                    + 'Tic CheckWorklist ' \
                     + 'DeliverCashBalanceRegulation Tic ' \
                     + 'CheckFinalInventoryCaveau'
     sequence_list.addSequenceString(sequence_caveau)

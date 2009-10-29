@@ -448,9 +448,6 @@ class TestERP5BankingCashToCurrencyPurchase(TestERP5BankingMixin, ERP5TypeTestCa
     """
     self.cash_to_currency_purchase_module.deleteContent('cash_to_currency_purchase_1')
 
-  def stepCheckWorklist(self, **kw):
-    self.checkWorklist(self.cash_to_currency_purchase)
-
   ##################################
   ##  Tests
   ##################################
@@ -468,7 +465,6 @@ class TestERP5BankingCashToCurrencyPurchase(TestERP5BankingMixin, ERP5TypeTestCa
                     + 'CreateValidIncomingLine CheckSubTotal ' \
                     + 'CreateValidOutgoingLine ' \
                     + 'Tic CheckTotal ' \
-                    + 'Tic CheckWorklist ' \
                     + 'DeliverCashToCurrencyPurchase Tic ' \
                     + 'CheckFinalInventoryGuichet_Entrante ' \
                     + 'CheckFinalInventoryGuichet_Sortante'

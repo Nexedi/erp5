@@ -453,9 +453,6 @@ class TestERP5BankingCheckDeposit(TestERP5BankingMixin, ERP5TypeTestCase):
     if hasattr(self, 'check_deposit'):
       self.check_deposit_module.manage_delObjects([self.check_deposit.getId(),])
 
-  def stepCheckWorklist(self, **kw):
-    self.checkWorklist(self.check_deposit)
-
   def test_01_ERP5BankingCheckDeposit(self, quiet=QUIET, run=RUN_ALL_TEST):
     """
     Define the sequence of step that will be play
@@ -465,12 +462,9 @@ class TestERP5BankingCheckDeposit(TestERP5BankingMixin, ERP5TypeTestCase):
     # define the sequence
     sequence_string1 = 'Tic CheckObjects Tic CheckInitialInventory ' \
                        + 'CreateCheckDepositOperation Tic ' \
-                       + 'CheckWorklist Tic ' \
                        + 'AddCheckOperationLine Tic ' \
                        + 'PlanCheckDepositOperation Tic ' \
-                       + 'CheckWorklist Tic ' \
                        + 'OrderCheckDepositOperation Tic ' \
-                       + 'CheckWorklist Tic ' \
                        + 'Tic DeliverCheckDepositOperation Tic ' \
                        + 'CheckBankAccountInventoryAfterCheckDepositDelivered'
     # one to test reject
@@ -494,16 +488,13 @@ class TestERP5BankingCheckDeposit(TestERP5BankingMixin, ERP5TypeTestCase):
     sequence_string4 = 'Tic ClearCheck ClearCheckDepositModule Tic '\
                        + 'Tic CheckObjects Tic CheckInitialInventory ' \
                        + 'CreateCheckDepositOperation Tic ' \
-                       + 'CheckWorklist Tic ' \
                        + 'AddCheckOperationLine Tic ' \
                        + 'AddSecondCheckOperationLine Tic ' \
                        + 'ModifyCheckOperationAmount Tic ' \
                        + 'TrySecondPlanCheckDepositOperation Tic ' \
                        + 'ModifyCheckOperationLineAmount Tic ' \
                        + 'SecondPlanCheckDepositOperation Tic ' \
-                       + 'CheckWorklist Tic ' \
                        + 'OrderCheckDepositOperation Tic ' \
-                       + 'CheckWorklist Tic ' \
                        + 'Tic DeliverCheckDepositOperation Tic ' \
                        + 'CheckSecondBankAccountInventoryAfterCheckDepositDelivered'
 
@@ -511,7 +502,6 @@ class TestERP5BankingCheckDeposit(TestERP5BankingMixin, ERP5TypeTestCase):
     sequence_string5 = 'Tic ClearCheck ClearCheckDepositModule Tic '\
                        + 'Tic CheckObjects Tic CheckInitialInventory ' \
                        + 'CreateCheckDepositOperation Tic ' \
-                       + 'CheckWorklist Tic ' \
                        + 'AddCheckOperationLine Tic ' \
                        + 'AddSecondCheckOperationLine Tic ' \
                        + 'ModifyCheckOperationAmount Tic ' \
@@ -519,7 +509,6 @@ class TestERP5BankingCheckDeposit(TestERP5BankingMixin, ERP5TypeTestCase):
                        + 'SendCheckDepositOperationToManualValidation Tic ' \
                        + 'AcceptCheckDepositOperation Tic ' \
                        + 'OrderCheckDepositOperation Tic ' \
-                       + 'CheckWorklist Tic ' \
                        + 'Tic DeliverCheckDepositOperation Tic ' \
                        + 'CheckThirdBankAccountInventoryAfterCheckDepositDelivered'
 
@@ -527,7 +516,6 @@ class TestERP5BankingCheckDeposit(TestERP5BankingMixin, ERP5TypeTestCase):
     sequence_string6 = 'Tic ClearCheck ClearCheckDepositModule Tic '\
                        + 'Tic CheckInitialInventory ' \
                        + 'CreateCheckDepositOperation SetCheckLess Tic ' \
-                       + 'CheckWorklist Tic ' \
                        + 'AddCheckOperationLine Tic ' \
                        + 'TrySecondPlanCheckDepositOperationWithAggregate'
 
@@ -535,7 +523,6 @@ class TestERP5BankingCheckDeposit(TestERP5BankingMixin, ERP5TypeTestCase):
     sequence_string7 = 'Tic ClearCheck ClearCheckDepositModule Tic '\
                        + 'Tic CheckInitialInventory ' \
                        + 'CreateCheckDepositOperation SetCheckLess Tic ' \
-                       + 'CheckWorklist Tic ' \
                        + 'AddCheckOperationLineWithNoAggregate Tic ' \
                        + 'PlanCheckDepositOperation Tic ' \
                        + 'OrderCheckDepositOperation Tic ' \

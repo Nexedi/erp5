@@ -409,9 +409,6 @@ class TestERP5BankingCashToCurrencySale(TestERP5BankingMixin, ERP5TypeTestCase):
               'cash_to_currency_sale_workflow','deliver_action')
     self.failUnless(message.find('Insufficient balance')>=0)
 
-  def stepCheckWorklist(self, **kw):
-    self.checkWorklist(self.cash_to_currency_sale)
-
   ##################################
   ##  Tests
   ##################################
@@ -431,8 +428,6 @@ class TestERP5BankingCashToCurrencySale(TestERP5BankingMixin, ERP5TypeTestCase):
                     + 'Tic CheckTotal ' \
                     + 'ResetSourceInventory Tic ' \
                     + 'DeliverCashToCurrencySaleFails Tic ' \
-                    + 'DeleteResetInventory Tic ' \
-                    + 'CheckWorklist Tic ' \
                     + 'DeliverCashToCurrencySale Tic ' \
                     + 'CheckFinalInventoryGuichet_Entrante ' \
                     + 'CheckFinalInventoryGuichet_Sortante' 

@@ -280,9 +280,6 @@ class TestERP5BankingCheckbookDelivery(TestERP5BankingCheckbookDeliveryMixin,
     self.failUnless(message.find('Sorry, the item with reference')>=0)
     self.failUnless(message.find('is not available any more')>=0)
 
-  def stepCheckWorklist(self, **kw):
-    self.checkWorklist(self.checkbook_delivery)
-
   ##################################
   ##  Tests
   ##################################
@@ -300,7 +297,6 @@ class TestERP5BankingCheckbookDelivery(TestERP5BankingCheckbookDeliveryMixin,
                     + 'ChangePreviousDeliveryDate Tic ' \
                     + 'DeliverCheckbookDeliveryFails Tic ' \
                     + 'PutBackPreviousDeliveryDate Tic ' \
-                    + 'CheckWorklist Tic ' \
                     + 'DeliverCheckbookDelivery Tic ' \
                     + 'CheckFinalCheckbookInventory'
     sequence_list.addSequenceString(sequence_string)
