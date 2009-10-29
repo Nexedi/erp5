@@ -332,14 +332,20 @@ def runUnitTestList(test_list, verbosity=1, debug=0):
   # Hack the profiler to run only specified test methods, and wrap results when
   # running in debug mode.
   if not dummy_test:
+    if debug:
+      class DebugTextTestRunner(backportUnittest.TextTestRunner):
+        def _makeResult(self):
+          result = super(DebugTextTestRunner, self)._makeResult()
+          return DebugTestResult(result)
+
+      TestRunner = DebugTextTestRunner
+
     test_method_list = os.environ.get('run_only', '').split(',')
 
     def wrapped_run(run_orig):
       # wrap the method that run the test to run test method only if its name
       # matches the run_only spec and to provide post mortem debugging facility
       def run(self, result=None):
-        if debug and result:
-          result = DebugTestResult(result)
         if not test_method_list:
           return run_orig(self, result)
         test_method_name = self.id().rsplit('.', 1)[-1]
