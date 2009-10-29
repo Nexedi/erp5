@@ -68,9 +68,7 @@
         <item>
             <key> <string>category_type</string> </key>
             <value>
-              <tuple>
-                <string>variation</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>
