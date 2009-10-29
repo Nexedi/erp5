@@ -977,13 +977,18 @@ class XMLSyncUtilsMixin(SyncCode):
         signature.setObjectId(object_id)
         subscriber.addSignature(signature)
       force = signature.getForce()
-      partial_data = '%s' % action.xpath('string(.//syncml:Item/syncml:Data/syncml:Partial)')
+      partial_node = action.find('.//%(uri)sItem/%(uri)sData/%(uri)sPartial' % {'uri': '{SYNCML:SYNCML1.2}'})
+      partial_data = partial_node is not None and partial_node.text or ''
       if not self.checkActionMoreData(action):
         data_subnode = None
-        if partial_data:
-          if signature.hasPartialXML():
+        if partial_node is not None:
+          if not partial_data:
+            data_subnode = signature.getPartialXML(default='')
+            signature.setPartialXML(None)
+          elif signature.hasPartialXML():
             signature.appendPartialXML(partial_data)
             data_subnode = signature.getPartialXML()
+            signature.setPartialXML(None)
           else:
             data_subnode = partial_data
           #LOG('applyActionList', DEBUG, 'data_subnode: %s' % data_subnode)
