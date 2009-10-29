@@ -190,9 +190,10 @@ class FilteredTestSuite(unittest.TestSuite):
 class ERP5TypeTestLoader(unittest.TestLoader):
   """Load test cases from the name passed on the command line.
   """
-  def __init__(self, test_patterns_list=None):
+  def __init__(self, test_pattern_list=None):
     super(ERP5TypeTestLoader, self).__init__()
-    self.test_patterns_list = test_patterns_list
+    if test_pattern_list is not None:
+      self.test_pattern_list = map(re.compile, test_pattern_list)
 
   def loadTestsFromName(self, name, module=None):
     """This method is here for compatibility with old style arguments.
@@ -223,8 +224,8 @@ class ERP5TypeTestLoader(unittest.TestLoader):
     for item in test_list:
       if isinstance(item, unittest.TestCase):
         test_method_name = item.id().rsplit('.', 1)[-1]
-        for valid_test_method_name_re in self.test_patterns_list:
-          if re.search(valid_test_method_name_re, test_method_name):
+        for valid_test_method_name_re in self.test_pattern_list:
+          if valid_test_method_name_re.search(test_method_name):
             filtered.append(item)
       elif isinstance(item, FilteredTestSuite):
         # has already been filtered, dont check it again
@@ -240,7 +241,7 @@ class ERP5TypeTestLoader(unittest.TestLoader):
   def suiteClass(self, test_list):
     """Constructs a Test Suite from test lists.
     Keep only tests matching commandline parameter --run_only"""
-    if self.test_patterns_list:
+    if hasattr(self, 'test_pattern_list'):
       test_list = self._filterTestList(test_list)
 
     return FilteredTestSuite(test_list)
