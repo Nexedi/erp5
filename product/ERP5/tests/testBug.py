@@ -515,6 +515,25 @@ class TestBug(ERP5TypeTestCase):
     cloned_bug_line = bug_line.Base_createCloneDocument(batch_mode=1)
     self.assertTrue(cloned_bug_line.getStartDate() > bug_line.getStartDate())
 
+  def test_07_Bug_BugLineSendFastInput(self):
+    bug_portal_type = 'Bug'
+    bug_line_portal_type = 'Bug Line'
+    module = self.portal.getDefaultModule(portal_type=bug_portal_type)
+    bug = module.newContent(portal_type=bug_portal_type)
+
+    text_content = 'text content'
+    title = 'title'
+
+    request = self.portal.REQUEST
+
+    request.set('text_content', text_content)
+    request.set('title', title)
+    bug_line = bug.Bug_doBugLineSendFastInputAction(batch_mode=1)
+
+    self.assertEqual(text_content, bug_line.getTextContent())
+    self.assertEqual(title, bug_line.getTitle())
+    self.assertEqual('delivered', bug_line.getSimulationState())
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestBug))
