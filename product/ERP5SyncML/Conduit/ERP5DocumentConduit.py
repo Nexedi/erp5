@@ -86,6 +86,7 @@ class ERP5DocumentConduit(ERP5Conduit):
     from copy import deepcopy
     xml_previous = deepcopy(previous_xml)
     #retrieve new data
+    node_to_remove_list = []
     for subnode in xml_xupdate:
       sub_xupdate = self.getSubObjectXupdate(subnode)
       attribute = sub_xupdate.attrib.get('select', None)
@@ -109,10 +110,7 @@ class ERP5DocumentConduit(ERP5Conduit):
             data_change[prop_id] = xml
           xml_xupdate.remove(subnode)
         elif subnode.xpath('name()') in self.XUPDATE_UPDATE:
-          #retrieve element in previous_xml
-          element = xml.xpath(request)[0]
-          element.text = subnode.text
-          data_change[prop_id] = xml
+          node_to_remove_list.extend(xml.xpath(request))
           xml_xupdate.remove(subnode)
       elif subnode.xpath('name()') in self.XUPDATE_INSERT_OR_ADD:
         if self.getSubObjectDepth(subnode[0]) == 0:
@@ -141,6 +139,8 @@ class ERP5DocumentConduit(ERP5Conduit):
               data_change[prop_id] = xml
               xml_xupdate.remove(subnode)
 
+    #Remove nodes at the end to avoid changing position of elements
+    [node.getparent().remove(node) for node in node_to_remove_list]
     #apply modification
     if len(data_change):
       args = {}
