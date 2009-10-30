@@ -97,6 +97,7 @@ Purchase Invoice Transaction | profile_view
 Purchase Invoice Transaction | source_asset
 Purchase Invoice Transaction | source_view
 Sale Invoice Transaction Line | view
+Sale Invoice Transaction | accounting_view
 Sale Invoice Transaction | add_sale_invoice_transaction_line
 Sale Invoice Transaction | convert_destination_price
 Sale Invoice Transaction | convert_source_price
@@ -109,4 +110,3 @@ Sale Invoice Transaction | document_list
 Sale Invoice Transaction | jump_to_related_payment
 Sale Invoice Transaction | profile_view
 Sale Invoice Transaction | source_asset
-Sale Invoice Transaction | view
