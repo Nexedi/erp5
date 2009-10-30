@@ -811,7 +811,7 @@ class Movement(XMLObject, Amount):
       Set the quantity
     """
     if source_debit in (None, ''):
-      return 0.0
+      return
     try:
       source_debit = float(source_debit)
     except TypeError:
@@ -825,7 +825,7 @@ class Movement(XMLObject, Amount):
       Set the quantity
     """
     if source_credit in (None, ''):
-      return 0.0
+      return
     try:
       source_credit = float(source_credit)
     except TypeError:
