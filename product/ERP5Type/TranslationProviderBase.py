@@ -58,34 +58,18 @@ class TranslationProviderBase(object):
     """
     property_domain_dict = {}
 
-    # get the property sheet list for the portal type
-    ps_list = [getattr(PropertySheet, p, None)
-                for p in self.getTypePropertySheetList()]
-    m = Products.ERP5Type._m
-    if m.has_key(self.factory):
-      klass = m[self.factory].klass
-      if klass is not None:
-        from Products.ERP5Type.Base import getClassPropertyList
-        ps_list += getClassPropertyList(klass)
-    # create TranslationInformation object for each property
-    for base in ps_list:
-      for prop in getattr(base, '_properties', ()):
-        prop_id = prop['id']
-        if prop.get('translatable') and prop_id not in property_domain_dict:
-          domain_name = prop.get('translation_domain')
-          property_domain_dict[prop_id] = TranslationInformation(prop_id,
-                                                                 domain_name)
+    for prop in self._getPropertyHolder()._properties:
+      prop_id = prop['id']
+      if prop.get('translatable') and prop_id not in property_domain_dict:
+        domain_name = prop.get('translation_domain')
+        property_domain_dict[prop_id] = TranslationInformation(prop_id,
+                                                               domain_name)
 
     original_property_domain_dict = getattr(aq_base(self),
                                             '_property_domain_dict', _MARKER)
-    original_property_domain_keys = original_property_domain_dict.keys()
-    property_domain_keys = property_domain_dict.keys()
-    property_domain_keys.sort()
-    original_property_domain_keys.sort()
-
     # Only update if required in order to prevent ZODB from growing
     if original_property_domain_dict is _MARKER or\
-          property_domain_keys != original_property_domain_keys:
+       sorted(property_domain_dict) != sorted(original_property_domain_dict):
       # Update existing dict
       property_domain_dict.update(original_property_domain_dict)
       # And store

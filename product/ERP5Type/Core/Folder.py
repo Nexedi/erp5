@@ -148,24 +148,15 @@ class FolderMixIn(ExtensionClass.Base):
           'portal_trash' not in container.getPhysicalPath():
         raise ValueError('Disallowed subobject type: %s' % portal_type)
 
-    # Use the factory even if the parent is already a temp object,
-    # like this we do not call the classic way, indeed, we do not
-    # need to call init script, security settings on temp objects.
-    if temp_object or temp_container:
-      type_info = pt.getTypeInfo(portal_type)
-      if not type_info.factory or not type_info.factory.startswith('add'):
-        raise ValueError('Product factory for %s is invalid: %s' %
-                         (portal_type, type_info.factory))
-      p = container.manage_addProduct[type_info.product]
-      m = getattr(p, 'newTemp' + type_info.factory[3:])
-      new_instance = m(new_id, container)
-      if hasattr(new_instance, '_setPortalTypeName'):
-        new_instance._setPortalTypeName(portal_type)
-    else:
-      pt.constructContent( type_name=portal_type,
+    type_info = pt.getTypeInfo(portal_type)
+    if type_info is None:
+      raise ValueError('No such content type: %s' % portal_type)
+
+    new_instance = type_info.constructInstance(
                            container=container,
                            id=new_id,
                            created_by_builder=created_by_builder,
+                           temp_object=temp_object or temp_container,
                            activate_kw=activate_kw,
                            reindex_kw=reindex_kw,
                            is_indexable=is_indexable
@@ -173,7 +164,6 @@ class FolderMixIn(ExtensionClass.Base):
       # TODO :the **kw makes it impossible to create content not based on
       # ERP5TypeInformation, because factory method often do not support
       # keywords arguments.
-      new_instance = container[new_id]
 
     if kw != {} : new_instance._edit(force_update=1, **kw)
     if immediate_reindex: new_instance.immediateReindexObject()

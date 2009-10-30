@@ -30,6 +30,7 @@ from Products.CMFCore.Expression import Expression
 from Products.CMFCore.exceptions import AccessControl_Unauthorized
 from Products.CMFCore.utils import _checkPermission
 from Products.ERP5Type import interfaces, Constraint, Permissions, PropertySheet
+from Products.ERP5Type.Base import getClassPropertyList
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 from Products.ERP5Type.Utils import deprecated, createExpressionContext
 from Products.ERP5Type.XMLObject import XMLObject
@@ -376,14 +377,24 @@ class ERP5TypeInformation(XMLObject,
         return default
 
     security.declarePublic('constructInstance')
-    def constructInstance( self, container, id,
-                           created_by_builder=0, *args, **kw ):
-        """
-        Build a "bare" instance of the appropriate type in
-        'container', using 'id' as its id.
-        Call the init_script for the portal_type.
-        Returns the object.
-        """
+    def constructInstance(self, container, id, created_by_builder=0,
+                          temp_object=0, *args, **kw ):
+      """
+      Build a "bare" instance of the appropriate type in
+      'container', using 'id' as its id.
+      Call the init_script for the portal_type.
+      Returns the object.
+      """
+      if temp_object:
+        if not self.factory or not self.factory.startswith('add'):
+          raise ValueError('Product factory for %s is invalid: %s'
+                            % (self.getId(), self.factory))
+        p = container.manage_addProduct[self.product]
+        m = getattr(p, 'newTemp' + self.factory[3:])
+        ob = m(id, container)
+        if hasattr(ob, '_setPortalTypeName'):
+          ob.portal_type = self.getId()
+      else:
         # This is part is copied from CMFCore/TypesTool/constructInstance
         # In case of temp object, we don't want to check security
         if (not (hasattr(container, 'isTempObject')
@@ -418,7 +429,12 @@ class ERP5TypeInformation(XMLObject,
           kw['created_by_builder'] = created_by_builder
           getattr(ob, init_script)(*args, **kw)
 
-        return ob
+      return ob
+
+    def _getPropertyHolder(self):
+      ob = self.constructInstance(self, '', temp_object=1)
+      ob._aq_dynamic('id')
+      return ob.aq_portal_type[ob._aq_key()]
 
     security.declarePrivate('updatePropertySheetDefinitionDict')
     def updatePropertySheetDefinitionDict(self, definition_dict):
@@ -451,61 +467,27 @@ class ERP5TypeInformation(XMLObject,
                               'getInstanceBaseCategoryList')
     def getInstanceBaseCategoryList(self):
       """ Return all base categories of the portal type """
-      # try to get categories from a temporary object if possible
-      module = self.getPortalObject().getDefaultModule(self.getId())
-      if module is not None:
-        return module.newContent(portal_type=self.getId(), temp_object=1).getBaseCategoryList()
-
-      # XXX The following does not return the list of all categories currently
-      #     (as implementation does not follow exactly the accessor generation,
-      #     like for Expression evaluation). Should be probably better to get
-      #     the list from property holder and not from property sheet
-      # get categories from portal type
-      base_category_set = set(self.getTypeBaseCategoryList())
-
-      # get categories from property sheet
-      ps_list = [getattr(PropertySheet, p, None)
-                 for p in self.getTypePropertySheetList()]
-      # from the property sheets defined on the class
-      m = Products.ERP5Type._m
-      if m.has_key(self.factory):
-        klass = m[self.factory].klass
-        if klass is not None:
-          from Products.ERP5Type.Base import getClassPropertyList
-          ps_list += getClassPropertyList(klass)
-
-      # XXX Can't return set to restricted code in Zope 2.8.
-      return list(base_category_set.union(category
-        for base in ps_list
-        for category in getattr(base, '_categories', ())))
+      return list(self._getPropertyHolder()._categories)
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getInstancePropertyAndBaseCategoryList')
     def getInstancePropertyAndBaseCategoryList(self):
       """Return all the properties and base categories of the portal type. """
-      return_set = set()
+      # PropertHolder._properties doesn't contain 'content' properties.
+      ob = self.constructInstance(self, '', temp_object=1)
+      property_list = list(getattr(ob.__class__, '_properties', []))
+      self.updatePropertySheetDefinitionDict({'_properties': property_list})
+      for property_sheet in getClassPropertyList(ob.__class__):
+        property_list += property_sheet._properties
 
-      # get the property sheet list for the portal type
-      ps_list = [getattr(PropertySheet, p, None)
-                 for p in self.getTypePropertySheetList()]
-      m = Products.ERP5Type._m
-      if m.has_key(self.factory):
-        klass = m[self.factory].klass
-        if klass is not None:
-          from Products.ERP5Type.Base import getClassPropertyList
-          ps_list += getClassPropertyList(klass)
-      # get all properties from the property sheet list
-      for base in ps_list:
-        property_list = getattr(base, '_properties', None)
-        if property_list:
-          for property in property_list:
-            if property['type'] == 'content':
-              for suffix in property['acquired_property_id']:
-                return_set.add(property['id'] + '_' + suffix)
-            else:
-              return_set.add(property['id'])
-      # get base categories
-      for category in self.getInstanceBaseCategoryList():
+      return_set = set()
+      for property in property_list:
+        if property['type'] == 'content':
+          for suffix in property['acquired_property_id']:
+            return_set.add(property['id'] + '_' + suffix)
+        else:
+          return_set.add(property['id'])
+      for category in ob.getBaseCategoryList():
         return_set.add(category)
         return_set.add(category + '_free_text')
 
@@ -517,22 +499,8 @@ class ERP5TypeInformation(XMLObject,
     def getInstancePropertyMap(self):
       """
       Returns the list of properties which are specific to the portal type.
-
-      We do this by creating a temp object at the root of the portal
-      and invoking propertyMap
       """
-      # Access the factory method for temp object by guessing it
-      # according to ERP5 naming conventions (not very nice)
-      factory_method_id = self.factory.replace('add', 'newTemp', 1)
-      if not factory_method_id.startswith('newTemp'):
-        raise
-      factory_method = getattr(Products.ERP5Type.Document, factory_method_id)
-      id = "some_very_unlikely_temp_object_id_which_should_not_exist"
-      portal = self.getPortalObject()
-      portal_ids = portal.objectIds()
-      while id in portal_ids:
-        id = id + "d"
-      return factory_method(portal, id).propertyMap()
+      return self.constructInstance(self, '', temp_object=1).propertyMap()
 
     def _edit(self, *args, **kw):
       """
