@@ -28,6 +28,7 @@
 ##############################################################################
 
 from AccessControl import ClassSecurityInfo
+from AccessControl.ZopeGuards import guarded_getattr
 from Products.Formulator.DummyField import fields
 from Products.Formulator import Widget, Validator
 from Products.Formulator.Errors import FormValidationError, ValidationError
@@ -55,12 +56,11 @@ class MatrixBoxWidget(Widget.Widget):
 
     """
     property_names = Widget.Widget.property_names +\
-                     ['cell_base_id', 'cell_portal_type',
-                      'lines', 'columns', 'tabs', 'getter_method',
+                     ['cell_base_id', 'cell_portal_type', 'lines', 'columns',
+                      'tabs', 'as_cell_range_script_id', 'getter_method',
+                      'editable_attributes', 'global_attributes',
                       'cell_getter_method',
-                      'editable_attributes' , 'global_attributes',
-                      'update_cell_range',
-                       ]
+                      'update_cell_range' ]
 
     default = fields.TextAreaField('default',
                                    title='Default',
@@ -70,6 +70,13 @@ class MatrixBoxWidget(Widget.Widget):
                                    width=20, height=3,
                                    required=0)
 
+    as_cell_range_script_id = fields.StringField('as_cell_range_script_id',
+                                 title='"As cell range" script id',
+                                 description=("""
+        Id of a script returning columns, lines and tabs. The script is passed
+        matrixbox=True as argument."""),
+                                 default='',
+                                 required=0)
     columns = fields.ListTextAreaField('columns',
                                  title="Columns",
                                  description=(
@@ -77,8 +84,8 @@ class MatrixBoxWidget(Widget.Widget):
       This should be a list of couples, 
       couple[0] is the variation, and couple[1] is the name displayed 
       to the user.
-      For example (('color/bleu','bleu'),('color/red','red')),
-      Deprecated"""),
+      For example (('color/bleu','bleu'),('color/red','red')).
+      Deprecated, use "As cell range" script id instead"""),
                                  default=[],
                                  required=0)
 
@@ -88,8 +95,8 @@ class MatrixBoxWidget(Widget.Widget):
       """This defines lines of the matrixbox. This should be a list of couples,
       couple[0] is the variation, and couple[1] is the name displayed 
       to the user.
-      For example (('size/baby/02','baby/02'),('size/baby/03','baby/03')), 
-      Deprecated"""),
+      For example (('size/baby/02','baby/02'),('size/baby/03','baby/03')).
+      Deprecated, use "As cell range" script id instead"""),
                                  default=[],
                                  required=0)
 
@@ -99,7 +106,7 @@ class MatrixBoxWidget(Widget.Widget):
       """This defines tabs. You can use it with the same way as Lines 
       and Columns,
       This is used only if you have more than 2 kinds of variations. 
-      Deprecated"""),
+      Deprecated, use "As cell range" script id instead"""),
                                  default=[],
                                  required=0)
 
@@ -194,9 +201,29 @@ class MatrixBoxWidget(Widget.Widget):
         form = field.aq_parent
         field_title = field.get_value('title')
         cell_base_id = field.get_value('cell_base_id')
-        lines = field.get_value('lines')
-        columns = field.get_value('columns')
-        tabs = field.get_value('tabs')
+        as_cell_range_script_id = field.get_value('as_cell_range_script_id')
+        if as_cell_range_script_id:
+          lines = []
+          columns = []
+          tabs = []
+          dimension_list = guarded_getattr(here,
+              as_cell_range_script_id)(matrixbox=True)
+          len_dimension_list = len(dimension_list)
+          if len_dimension_list:
+            if len_dimension_list == 1:
+              lines, = dimension_list
+            elif len_dimension_list == 2:
+              lines, columns = dimension_list
+            elif len_dimension_list >= 3:
+              lines, columns, tabs = dimension_list[:3]
+              if len_dimension_list > 3:
+                raise NotImplementedError(
+                        "Matrix box does not support %s dimensions" %
+                        len_dimension_list)
+        else:
+          lines = field.get_value('lines')
+          columns = field.get_value('columns')
+          tabs = field.get_value('tabs')
         field_errors = REQUEST.get('field_errors', {})
         context = here
         getter_method_id = field.get_value('getter_method')
@@ -392,9 +419,30 @@ class MatrixBoxValidator(Validator.Validator):
         # This is coppied from ERP5 Form
         here = getattr(form, 'aq_parent', REQUEST)
         cell_base_id = field.get_value('cell_base_id')
-        lines = field.get_value('lines')
-        columns = field.get_value('columns')
-        tabs = field.get_value('tabs')
+        as_cell_range_script_id = field.get_value('as_cell_range_script_id')
+        if as_cell_range_script_id:
+          lines = []
+          columns = []
+          tabs = []
+          dimension_list = guarded_getattr(here,
+              as_cell_range_script_id)(matrixbox=True)
+          len_dimension_list = len(dimension_list)
+          if len_dimension_list:
+            if len_dimension_list == 1:
+              lines, = dimension_list
+            elif len_dimension_list == 2:
+              lines, columns = dimension_list
+            elif len_dimension_list >= 3:
+              lines, columns, tabs = dimension_list[:3]
+              if len_dimension_list > 3:
+                raise NotImplementedError(
+                        "Matrix box does not support %s dimensions" %
+                        len_dimension_list)
+        else:
+          lines = field.get_value('lines')
+          columns = field.get_value('columns')
+          tabs = field.get_value('tabs')
+
         editable_attributes = field.get_value('editable_attributes')
         getter_method_id = field.get_value('getter_method')
         error_list = []
