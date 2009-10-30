@@ -1196,7 +1196,7 @@ class TestConstraint(PropertySheetTestCase):
     self.assertEquals([], constraint.checkConsistency(obj))
     # now add a 'local_property' property defined on a property sheet
     self._addProperty(obj.getPortalType(),
-                  '''{'id': 'local_property', 'type': 'string'}''')
+                      "{'id': 'local_property', 'type': 'string'}")
     constraint.fixConsistency(obj)
     self.assertEquals((), obj._local_properties)
     self.assertEquals('1', obj.getLocalProperty())
@@ -1216,7 +1216,7 @@ class TestConstraint(PropertySheetTestCase):
     #self.assertEquals([], constraint.checkConsistency(obj))
     # now add a 'local_property' property defined on a property sheet
     self._addProperty(obj.getPortalType(),
-                  '''{'id': 'local_property', 'type': 'float'}''')
+                      "{'id': 'local_property', 'type': 'float'}")
     constraint.fixConsistency(obj)
     self.assertEquals((), obj._local_properties)
     self.assertEquals(1.234, obj.getLocalProperty())
