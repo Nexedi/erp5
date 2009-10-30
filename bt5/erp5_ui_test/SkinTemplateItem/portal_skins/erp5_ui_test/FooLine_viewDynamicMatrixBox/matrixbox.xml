@@ -112,6 +112,10 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>as_cell_range_script_id</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>cell_base_id</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -125,9 +129,7 @@
                 </item>
                 <item>
                     <key> <string>columns</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>css_class</string> </key>
@@ -171,9 +173,7 @@
                 </item>
                 <item>
                     <key> <string>lines</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
-                    </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>tabs</string> </key>
@@ -197,6 +197,10 @@
                 <item>
                     <key> <string>alternate_name</string> </key>
                     <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>as_cell_range_script_id</string> </key>
+                    <value> <string>FooLine_asCellRange</string> </value>
                 </item>
                 <item>
                     <key> <string>cell_base_id</string> </key>
@@ -296,38 +300,6 @@
                 </item>
               </dictionary>
             </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <tuple>
-        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-        <tuple/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>python: context.FooLine_asCellRange(matrixbox=True)[1]</string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="3" aka="AAAAAAAAAAM=">
-    <pickle>
-      <tuple>
-        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-        <tuple/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>python: context.FooLine_asCellRange(matrixbox=True)[0]</string> </value>
         </item>
       </dictionary>
     </pickle>
