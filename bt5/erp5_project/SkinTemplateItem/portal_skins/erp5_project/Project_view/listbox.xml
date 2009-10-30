@@ -13,14 +13,14 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
                 <string>columns</string>
-                <string>sort</string>
-                <string>selection_name</string>
-                <string>portal_types</string>
                 <string>editable_columns</string>
-                <string>report_tree</string>
+                <string>portal_types</string>
                 <string>report_root_list</string>
+                <string>report_tree</string>
+                <string>selection_name</string>
+                <string>sort</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -163,6 +163,10 @@
                           <string>stop_date</string>
                           <string>End</string>
                         </tuple>
+                        <tuple>
+                          <string>int_index</string>
+                          <string>Index</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>
@@ -209,8 +213,8 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>id</string>
-                          <string>id</string>
+                          <string>int_index</string>
+                          <string>ASC</string>
                         </tuple>
                       </list>
                     </value>
