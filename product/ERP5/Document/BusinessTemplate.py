@@ -2551,10 +2551,14 @@ class ActionTemplateItem(ObjectTemplateItem):
     for id in keys:
       if  '|' in id:
         relative_url, value = id.split(' | ')
-        key = 'reference'
+        obj = p.unrestrictedTraverse(relative_url, None)
+        # Several tools still use CMF actions
+        if obj is not None:
+          is_new_action = obj.getParentId() == 'portal_types'
+          key = is_new_action and 'reference' or 'id'
       else:
         relative_url, key, value = self._splitPath(id)
-      obj = p.unrestrictedTraverse(relative_url, None)
+        obj = p.unrestrictedTraverse(relative_url, None)
       if obj is not None:
         action_list = obj.listActions()
         for index in range(len(action_list)):
