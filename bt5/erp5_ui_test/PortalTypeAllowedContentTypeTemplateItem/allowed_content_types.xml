@@ -1,7 +1,7 @@
 <allowed_content_type_list>
  <portal_type id="Bar Module">
-  <item>Foo</item>
   <item>Bar</item>
+  <item>Foo</item>
  </portal_type>
  <portal_type id="Foo">
   <item>Foo Line</item>
