@@ -80,7 +80,8 @@ class TestInvoiceMixin(TestPackingListMixin,
 
   def getBusinessTemplateList(self):
     return ('erp5_base', 'erp5_pdm', 'erp5_trade', 'erp5_accounting',
-            'erp5_invoicing', 'erp5_simplified_invoicing', 'erp5_apparel')
+            'erp5_invoicing', 'erp5_simplified_invoicing', 'erp5_apparel',
+            'erp5_project')
 
   def createCategories(self):
     """Create the categories for our test. """
@@ -217,6 +218,8 @@ class TestInvoiceMixin(TestPackingListMixin,
     self.stepCreateOrganisation1(sequence, **kw)
     self.stepCreateOrganisation2(sequence, **kw)
     self.stepCreateOrganisation3(sequence, **kw)
+    self.stepCreateProject1(sequence, **kw)
+    self.stepCreateProject2(sequence, **kw)
     vendor = sequence.get('organisation1')
     vendor.setRegion(self.default_region)
     vendor.validate()
@@ -1940,12 +1943,18 @@ class TestSaleInvoiceMixin(TestInvoiceMixin,
                                        invoice.getDestinationSection())
     self.assertEquals(packing_list.getSourceSection(), \
                                        invoice.getSourceSection())
+    self.assertEquals(packing_list.getDestinationDecision(), \
+                                       invoice.getDestinationDecision())
     self.assertEquals(packing_list.getSourceDecision(), \
                                        invoice.getSourceDecision())
     self.assertEquals(packing_list.getDestinationAdministration(), \
                                        invoice.getDestinationAdministration())
     self.assertEquals(packing_list.getSourceAdministration(), \
                                        invoice.getSourceAdministration())
+    self.assertEquals(packing_list.getDestinationProject(), \
+                                       invoice.getDestinationProject())
+    self.assertEquals(packing_list.getSourceProject(), \
+                                       invoice.getSourceProject())
     self.assertEquals(packing_list.getPriceCurrency(), \
                                        invoice.getPriceCurrency())
 
