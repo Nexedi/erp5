@@ -31,6 +31,8 @@ from Products.ERP5SyncML.Conduit.ERP5Conduit import ERP5Conduit
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions
 from Products.ERP5SyncML.SyncCode import SyncCode
+from ERP5Diff import ERP5Diff
+import re
 from lxml import etree
 parser = etree.XMLParser(remove_blank_text=True)
 
@@ -97,6 +99,9 @@ class ERP5DocumentConduit(ERP5Conduit):
         else:
           xml = xml_previous.xpath(path_prop_id)[0]
         request = prop_list[-1]
+        if getattr(ERP5Diff, '__version__', 0.0) <= 0.2:
+          #Old ERP5Diff, xpath position start from 0, so add +1 to be compliant
+          request = re.sub('(\d+)', lambda match:str(int(match.group(0))+1), request)
         if subnode.xpath('name()') in self.XUPDATE_DEL:
           node_to_remove_list = xml.xpath(request)
           if node_to_remove_list:
