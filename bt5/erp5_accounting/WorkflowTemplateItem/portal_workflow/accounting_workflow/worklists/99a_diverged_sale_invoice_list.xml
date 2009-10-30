@@ -21,7 +21,7 @@
             <key> <string>actbox_url</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-accounting_module/view?reset:int=1&local_roles=%(local_roles)s&portal_type=%(portal_type)s&causality_state=diverged
+accounting_module/view?reset:int=1&local_roles=%(local_roles)s&portal_type=%(portal_type)s&causality_state=diverged&simulation_state:list=planned&simulation_state:list=confirmed&simulation_state:list=started&simulation_state:list=stopped&simulation_state:list=delivered
 
 ]]></string> </value>
         </item>
@@ -96,6 +96,18 @@ accounting_module/view?reset:int=1&local_roles=%(local_roles)s&portal_type=%(por
                     <value>
                       <tuple>
                         <string>Sale Invoice Transaction</string>
+                      </tuple>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>simulation_state</string> </key>
+                    <value>
+                      <tuple>
+                        <string>planned</string>
+                        <string>confirmed</string>
+                        <string>started</string>
+                        <string>stopped</string>
+                        <string>delivered</string>
                       </tuple>
                     </value>
                 </item>
