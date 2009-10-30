@@ -2551,7 +2551,7 @@ class ActionTemplateItem(ObjectTemplateItem):
     for id in keys:
       if  '|' in id:
         relative_url, value = id.split(' | ')
-        key = 'id'
+        key = 'reference'
       else:
         relative_url, key, value = self._splitPath(id)
       obj = p.unrestrictedTraverse(relative_url, None)
@@ -2561,9 +2561,8 @@ class ActionTemplateItem(ObjectTemplateItem):
           if getattr(action_list[index], key) == value:
             obj.deleteActions(selections=(index,))
             break
-      else :
-        LOG('BusinessTemplate', 100,
-            'unable to uninstall action at %s, ignoring' % relative_url )
+      LOG('BusinessTemplate', 100,
+          'unable to uninstall action at %s, ignoring' % relative_url )
     BaseTemplateItem.uninstall(self, context, **kw)
 
 class PortalTypeRolesTemplateItem(BaseTemplateItem):
