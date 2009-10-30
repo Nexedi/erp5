@@ -426,6 +426,9 @@ class TestInvoice(TestInvoiceMixin):
                                     portal_type='Organisation',
                                     title='Other Entity',
                                     price_currency=currency.getRelativeUrl())
+    other_project = self.portal.project_module.newContent(
+                                    portal_type='Project',
+                                    title='Other Project')
     order.plan()
     transaction.commit()
     self.tic()
@@ -497,18 +500,18 @@ class TestInvoice(TestInvoiceMixin):
     self.assertEquals(other_entity,
             invoice_movement.getDestinationDecisionValue())
 
-    order_line.setSourceProjectValue(other_entity)
+    order_line.setSourceProjectValue(other_project)
     transaction.commit()
     self.tic()
     invoice_movement = invoice_applied_rule.contentValues()[0]
-    self.assertEquals(other_entity,
+    self.assertEquals(other_project,
                  invoice_movement.getSourceProjectValue())
 
-    order_line.setDestinationProjectValue(other_entity)
+    order_line.setDestinationProjectValue(other_project)
     transaction.commit()
     self.tic()
     invoice_movement = invoice_applied_rule.contentValues()[0]
-    self.assertEquals(other_entity,
+    self.assertEquals(other_project,
             invoice_movement.getDestinationProjectValue())
 
     order_line.setSourcePaymentValue(other_entity)
@@ -620,6 +623,9 @@ class TestInvoice(TestInvoiceMixin):
                                       portal_type='Organisation',
                                       title='Other Entity',
                                       default_address_region=self.default_region)
+    other_project = self.portal.project_module.newContent(
+                                      portal_type='Project',
+                                      title='Other Project')
     order.plan()
     transaction.commit()
     self.tic()
@@ -700,22 +706,22 @@ class TestInvoice(TestInvoiceMixin):
     self.assertEquals(other_entity,
             invoice_transaction_movement.getDestinationDecisionValue())
 
-    order_line.setSourceProjectValue(other_entity)
+    order_line.setSourceProjectValue(other_project)
     transaction.commit()
     self.tic()
     self.assertEquals(3, len(invoice_transaction_applied_rule))
     invoice_transaction_movement = getIncomeSimulationMovement(
                                         invoice_transaction_applied_rule)
-    self.assertEquals(other_entity,
+    self.assertEquals(other_project,
                  invoice_transaction_movement.getSourceProjectValue())
 
-    order_line.setDestinationProjectValue(other_entity)
+    order_line.setDestinationProjectValue(other_project)
     transaction.commit()
     self.tic()
     self.assertEquals(3, len(invoice_transaction_applied_rule))
     invoice_transaction_movement = getIncomeSimulationMovement(
                                         invoice_transaction_applied_rule)
-    self.assertEquals(other_entity,
+    self.assertEquals(other_project,
             invoice_transaction_movement.getDestinationProjectValue())
 
     order_line.setSourceFunctionValue(other_entity)
