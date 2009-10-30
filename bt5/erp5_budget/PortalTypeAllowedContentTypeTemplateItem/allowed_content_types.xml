@@ -1,14 +1,14 @@
 <allowed_content_type_list>
  <portal_type id="Budget">
-  <item>Budget Transfer Line</item>
   <item>Budget Line</item>
+  <item>Budget Transfer Line</item>
  </portal_type>
  <portal_type id="Budget Line">
   <item>Budget Cell</item>
  </portal_type>
  <portal_type id="Budget Model">
-  <item>Node Budget Variation</item>
   <item>Category Budget Variation</item>
+  <item>Node Budget Variation</item>
  </portal_type>
  <portal_type id="Budget Model Module">
   <item>Budget Model</item>
