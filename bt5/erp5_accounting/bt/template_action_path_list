@@ -11,8 +11,8 @@ Accounting Period | view
 Accounting Rule Cell Line | view
 Accounting Rule Cell | view
 Accounting Rule Cell | view_destination
+Accounting Transaction Line | destination_view
 Accounting Transaction Line | view
-Accounting Transaction Line | view_destination
 Accounting Transaction Module | account_statement_export
 Accounting Transaction Module | account_statement_report
 Accounting Transaction Module | accounting_line_export
@@ -80,8 +80,8 @@ Person | grouping_reference_fast_input
 Person | jump_to_accounting
 Person | transactions
 Preference | view_accounting
+Purchase Invoice Transaction Line | destination_view
 Purchase Invoice Transaction Line | view
-Purchase Invoice Transaction Line | view_destination
 Purchase Invoice Transaction | add_purchase_invoice_transaction_line
 Purchase Invoice Transaction | convert_destination_price
 Purchase Invoice Transaction | convert_source_price
@@ -89,13 +89,13 @@ Purchase Invoice Transaction | create_new_file
 Purchase Invoice Transaction | create_related_payment
 Purchase Invoice Transaction | create_reversal
 Purchase Invoice Transaction | destination_asset
+Purchase Invoice Transaction | destination_view
 Purchase Invoice Transaction | detail
 Purchase Invoice Transaction | document_list
 Purchase Invoice Transaction | jump_related_payment
 Purchase Invoice Transaction | profile_view
 Purchase Invoice Transaction | source_asset
-Purchase Invoice Transaction | view
-Purchase Invoice Transaction | view_source
+Purchase Invoice Transaction | source_view
 Sale Invoice Transaction Line | view
 Sale Invoice Transaction | add_sale_invoice_transaction_line
 Sale Invoice Transaction | convert_destination_price
