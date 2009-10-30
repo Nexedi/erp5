@@ -308,7 +308,7 @@ Hé Hé Hé!""", page.asText().strip())
     content = '<a href="${toto}">$titi</a>'
     asText_content = '$titi\n'
     substituted_content = '<a href="foo">bar</a>'
-    substituted_asText_content = 'bar'
+    substituted_asText_content = 'bar\n'
     mapping = dict(toto='foo', titi='bar')
 
     portal = self.getPortal()
