@@ -91,7 +91,7 @@
         </item>
         <item>
             <key> <string>render_type</string> </key>
-            <value> <string>asynchronous</string> </value>
+            <value> <string>synchronous</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
