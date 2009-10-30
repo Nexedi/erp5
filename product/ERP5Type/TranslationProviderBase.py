@@ -57,40 +57,24 @@ class TranslationProviderBase(object):
     Create the initial list of association between property and domain name
     """
     property_domain_dict = {}
-    ptype_object = self
-    # get the klass of the object based on the constructor document
-    m = Products.ERP5Type._m
-    ptype_name = ''.join(ptype_object.id.split(' '))
-    constructor = self.factory # This is safer than: 'add%s' %(ptype_name)
-    klass = None
-    for method, doc in m.items():
-      if method == constructor:
-        klass = doc.klass
-        break
+
     # get the property sheet list for the portal type
-    # from the list of property sheet defined on the portal type
-    ps_list = map(lambda p: getattr(PropertySheet, p, None),
-                  ptype_object.property_sheet_list)
-    ps_list = filter(lambda p: p is not None, ps_list)
-    # from the property sheets defined on the class
-    if klass is not None:
-      from Products.ERP5Type.Base import getClassPropertyList
-      ps_list = tuple(ps_list) + getClassPropertyList(klass)
-    # get all properties from the property sheet list
-    current_list = []
-    for base in ps_list:
-      if hasattr(base, '_properties'):
-        # XXX must check that property is translatable
-        ps_property = getattr(base, '_properties')
-        if type(ps_property) in (type(()), type([])):
-          current_list += ps_property
+    ps_list = [getattr(PropertySheet, p, None)
+                for p in self.getTypePropertySheetList()]
+    m = Products.ERP5Type._m
+    if m.has_key(self.factory):
+      klass = m[self.factory].klass
+      if klass is not None:
+        from Products.ERP5Type.Base import getClassPropertyList
+        ps_list += getClassPropertyList(klass)
     # create TranslationInformation object for each property
-    for prop in current_list:
-      if prop.get('translatable', 0):
+    for base in ps_list:
+      for prop in getattr(base, '_properties', ()):
         prop_id = prop['id']
-        if not property_domain_dict.has_key(prop_id):
-          domain_name = prop.get('translation_domain', None)
-          property_domain_dict[prop_id] = TranslationInformation(prop_id, domain_name)
+        if prop.get('translatable') and prop_id not in property_domain_dict:
+          domain_name = prop.get('translation_domain')
+          property_domain_dict[prop_id] = TranslationInformation(prop_id,
+                                                                 domain_name)
 
     original_property_domain_dict = getattr(aq_base(self),
                                             '_property_domain_dict', _MARKER)

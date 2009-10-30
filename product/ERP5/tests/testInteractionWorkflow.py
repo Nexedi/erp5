@@ -75,7 +75,7 @@ class TestInteractionWorkflow(ERP5TypeTestCase):
     Organisation = Products.ERP5Type.Document.Organisation.Organisation
     Organisation.doSomethingStupid = doSomethingStupid
     portal_type = self.getTypeTool()['Organisation']
-    portal_type.base_category_list = ['size']
+    portal_type._setTypeBaseCategoryList(['size'])
     organisation_module = self.getOrganisationModule()
     self.organisation = organisation_module.newContent(
                           portal_type = self.portal_type)

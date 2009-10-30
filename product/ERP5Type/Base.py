@@ -549,41 +549,29 @@ def initializePortalTypeDynamicProperties(self, klass, ptype, aq_key, portal):
       initializePortalTypeDynamicProperties(parent_object, parent_klass,
                                             parent_type, 
                                             parent_object._aq_key(), portal)
-    # Initiatise portal_type properties (XXX)
-    ptype_object = getattr(aq_base(portal.portal_types), ptype, None)
+
     prop_list = list(getattr(klass, '_properties', []))
     cat_list = list(getattr(klass, '_categories', []))
     constraint_list = list(getattr(klass, '_constraints', []))
-    if ptype_object is not None:
-      # Make sure this is an ERP5Type object
-      ps_list = [getattr(PropertySheet, p, None) for p in
-          ptype_object.property_sheet_list]
-      ps_list = [p for p in ps_list if p is not None]
-      # Always append the klass.property_sheets to this list (for compatibility)
-      # Because of the order we generate accessors, it is still possible
-      # to overload data access for some accessors
-      ps_list = tuple(ps_list) + getClassPropertyList(klass)
-      #LOG('ps_list',0, str(ps_list))
-    else:
-      ps_list = getClassPropertyList(klass)
-    for base in ps_list:
-      property_sheet_definition_dict = {
-        '_properties': prop_list,
-        '_categories': cat_list,
-        '_constraints': constraint_list
-      }
-      for ps_property_name, current_list in \
-                                    property_sheet_definition_dict.items():
-        if hasattr(base, ps_property_name):
-          ps_property = getattr(base, ps_property_name)
-          if isinstance(ps_property, (tuple, list)):
-            current_list += ps_property
-          else :
-            raise ValueError, "%s is not a list for %s" % (ps_property_name,
-                                                           base)
+    ps_definition_dict = {'_properties': prop_list,
+                          '_categories': cat_list,
+                          '_constraints': constraint_list}
 
+    # Initialize portal_type properties (XXX)
+    # Always do it before processing klass.property_sheets (for compatibility).
+    # Because of the order we generate accessors, it is still possible
+    # to overload data access for some accessors.
+    ptype_object = portal.portal_types._getOb(ptype, None)
     if ptype_object is not None:
-      cat_list += ptype_object.base_category_list
+      ptype_object.updatePropertySheetDefinitionDict(ps_definition_dict)
+
+    for base in getClassPropertyList(klass):
+      for list_name, current_list in ps_definition_dict.items():
+        try:
+          current_list += getattr(base, list_name, ())
+        except TypeError:
+          raise ValueError("%s is not a list for %s" % (list_name, base))
+
     prop_holder._portal_type = ptype
     prop_holder._properties = prop_list
     prop_holder._categories = cat_list

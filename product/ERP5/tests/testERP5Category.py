@@ -89,7 +89,7 @@ class TestERP5Category(ERP5TypeTestCase):
 
     # associate base categories on Organisation portal type
     portal_type = self.getTypeTool()[self.portal_type]
-    portal_type.base_category_list = [self.base_cat, self.base_cat2]
+    portal_type._setTypeBaseCategoryList([self.base_cat, self.base_cat2])
 
     # Reset aq dynamic
     _aq_reset()
@@ -322,8 +322,8 @@ class TestERP5Category(ERP5TypeTestCase):
     
     # associate the base category with our portal types
     ttool = self.getTypesTool()
-    ttool['Organisation'].base_category_list = ['test_aq_category']
-    ttool['Telephone'].base_category_list = ['test_aq_category']
+    ttool['Organisation']._setTypeBaseCategoryList(['test_aq_category'])
+    ttool['Telephone']._setTypeBaseCategoryList(['test_aq_category'])
 
     doc = self.organisation
     subdoc = doc['1']

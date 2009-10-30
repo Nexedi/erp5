@@ -197,19 +197,18 @@ class ResourceVariationTestCase(ERP5TypeTestCase):
 
     #adding to base categories of resources
     #for use setRequiredSizeList and setOptionColourList methods
-    self.portal.portal_types['Product'].base_category_list = [
+    self.portal.portal_types['Product']._setTypeBaseCategoryList([
                                             'required_size',
                                             'option_colour',
-                                            'individual_aspect']
-    self.portal.portal_types['Service'].base_category_list = [
+                                            'individual_aspect'])
+    self.portal.portal_types['Service']._setTypeBaseCategoryList([
                                             'required_size',
                                             'option_colour',
-                                            'individual_aspect']
-    self.portal.portal_types['Component'].base_category_list = [
+                                            'individual_aspect'])
+    self.portal.portal_types['Component']._setTypeBaseCategoryList([
                                             'required_size',
                                             'option_colour',
-                                            'individual_aspect']
-                                            
+                                            'individual_aspect'])
     transaction.commit()
     self.tic()
 

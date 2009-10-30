@@ -63,9 +63,6 @@ class PropertySheetTestCase(ERP5TypeTestCase):
     """Set up the fixture. """
     ERP5TypeTestCase.setUp(self)
     installRealClassTool(self.getPortal())
-    # keep a mapping type info name -> property sheet list, to remove them in
-    # tear down.
-    self._added_property_sheets = {}
 
   def tearDown(self):
     """Clean up """
@@ -75,14 +72,14 @@ class PropertySheetTestCase(ERP5TypeTestCase):
     # remove all property sheet we added to type informations
     for ti_name, psheet_list in self._added_property_sheets.items():
       ti = ttool.getTypeInfo(ti_name)
-      ps_list = ti.property_sheet_list
+      property_sheet_set = set(ti.getTypePropertySheetList())
       for psheet in psheet_list:
-        if psheet in ps_list:
-          ps_list.remove(psheet)
+        if psheet in property_sheet_set:
+          property_sheet_set.remove(psheet)
           # physically remove property sheet, otherwise invalid property sheet
           # could break next tests.
           removeLocalPropertySheet(psheet)
-      ti.property_sheet_list = ps_list
+      ti._setTypePropertySheetList(list(property_sheet_set))
     transaction.commit()
     _aq_reset()
     ERP5TypeTestCase.tearDown(self)
@@ -1232,10 +1229,9 @@ class TestPropertySheet:
       self._addProperty('Person', self.DEFAULT_ORGANISATION_TITLE_ACQUIRED_PROP)
       # add destination base category to Person TI
       person_ti = self.getTypesTool().getTypeInfo('Person')
-      if 'destination' not in person_ti.base_category_list:
-        person_ti.base_category_list = tuple(list(
-                self.getTypesTool().getTypeInfo('Person').base_category_list) +
-                ['destination', ])
+      base_category_list = person_ti.getTypeBaseCategoryList()
+      if 'destination' not in base_category_list:
+        person_ti._setTypeBaseCategoryList(base_category_list + ['destination'])
         _aq_reset()
 
       person = self.getPersonModule().newContent(id='1', portal_type='Person')
@@ -1265,11 +1261,11 @@ class TestPropertySheet:
       self._addProperty('Person', self.DEFAULT_ORGANISATION_TITLE_ACQUIRED_PROP)
       # add destination base category to Person TI
       person_ti = self.getTypesTool().getTypeInfo('Person')
-      if 'destination' not in person_ti.base_category_list:
-          person_ti.base_category_list = tuple(list(
-                self.getTypesTool().getTypeInfo('Person').base_category_list) +
-                ['destination', ])
-      
+      base_category_list = person_ti.getTypeBaseCategoryList()
+      if 'destination' not in base_category_list:
+        person_ti._setTypeBaseCategoryList(base_category_list + ['destination'])
+        _aq_reset()
+
       person = self.getPersonModule().newContent(id='1', portal_type='Person')
       another_person = self.getPersonModule().newContent(
                                         id='default_organisation',
@@ -2179,7 +2175,7 @@ class TestPropertySheet:
       ti = self.getTypesTool()['Person']
       self.assertFalse(hasattr(doc, 'getDestination'))
       ti.edit(type_base_category_list=
-        ti.getTypeBaseCategoryList(()) + ['destination'])
+        ti.getTypeBaseCategoryList() + ['destination'])
       self.assertTrue(hasattr(doc, 'getDestination'))
 
     def test_aq_reset_on_workflow_chain_change(self):

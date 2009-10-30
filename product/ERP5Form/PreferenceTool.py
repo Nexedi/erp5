@@ -68,37 +68,28 @@ def createPreferenceToolAccessorList(portal) :
     property sheets by looking at all registered property sheets
     and considering those which name ends with 'Preference'
   """
-  attr_list = []
-  typestool = getToolByName(portal, 'portal_types')
-  pref_portal_type = typestool.getTypeInfo('Preference')
+  property_list = []
 
-  # 'Dynamic' property sheets added through ZMI
-  zmi_property_sheet_list = []
+  # 'Dynamic' property sheets added by portal_type
+  pref_portal_type = portal.portal_types.getTypeInfo('Preference')
   if pref_portal_type is None:
     LOG('ERP5Form.PreferenceTool', PROBLEM,
-           'Preference type information is not installed.')
+        'Preference type information is not installed.')
   else:
-    for property_sheet in pref_portal_type.property_sheet_list :
-      try:
-        zmi_property_sheet_list.append(
-                    getattr(__import__(property_sheet), property_sheet))
-      except ImportError, e :
-        LOG('ERP5Form.PreferenceTool', PROBLEM,
-             'unable to import Property Sheet %s' % property_sheet, e)
+    pref_portal_type.updatePropertySheetDefinitionDict(
+      {'_properties': property_list})
 
   # 'Static' property sheets defined on the class
   # The Preference class should be imported from the common location
   # in ERP5Type since it could be overloaded in another product
   from Products.ERP5Type.Document.Preference import Preference
-  class_property_sheet_list = Preference.property_sheets
-  # We can now merge
-  for property_sheet in ( tuple(zmi_property_sheet_list) +
-                                class_property_sheet_list ) :
-    # then generate common method names
-    for prop in property_sheet._properties :
-      if not prop.get('preference', 0) :
-        # only properties marked as preference are used
-        continue
+  for property_sheet in Preference.property_sheets:
+    property_list += property_sheet._properties
+
+  # Generate common method names
+  for prop in property_list:
+    if prop.get('preference'):
+      # only properties marked as preference are used
       attribute = prop['id']
       attr_list = [ 'get%s' % convertToUpperCase(attribute)]
       if prop['type'] in list_types :

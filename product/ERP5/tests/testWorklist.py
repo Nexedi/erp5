@@ -150,12 +150,7 @@ class TestWorklist(ERP5TypeTestCase):
     return int(action_name[left_parenthesis_offset + 1:-1])
 
   def associatePropertySheet(self):
-    from Products.ERP5Type.Base import _aq_reset
-    ti = self.getTypesTool().getTypeInfo(self.checked_portal_type)
-    ti.property_sheet_list = list(ti.property_sheet_list) + \
-                                ['SortIndex']
-    # reset aq_dynamic cache
-    _aq_reset()
+    self._addPropertySheet(self.checked_portal_type, 'SortIndex')
 
   def addWorkflowCataloguedVariable(self, workflow_id, variable_id):
     variables = self.getWorkflowTool()[workflow_id].variables

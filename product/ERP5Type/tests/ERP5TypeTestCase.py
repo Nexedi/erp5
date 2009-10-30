@@ -422,6 +422,9 @@ class ERP5TypeTestCase(backportUnittest.TestCase, PortalTestCase):
       global current_app
       current_app = self.app
       self._updateConnectionStrings()
+      # keep a mapping type info name -> property sheet list, to remove them in
+      # tear down.
+      self._added_property_sheets = {}
 
     def afterSetUp(self):
       '''Called after setUp() has completed. This is
@@ -563,16 +566,15 @@ class ERP5TypeTestCase(backportUnittest.TestCase, PortalTestCase):
         class_tool.editPropertySheet(property_sheet_name, property_sheet_code)
         transaction.commit()
         class_tool.importPropertySheet(property_sheet_name)
-      
+
       # We set the property sheet on the portal type
       ti = self.getTypesTool().getTypeInfo(portal_type_name)
-      if property_sheet_name not in ti.property_sheet_list:
-        ti.property_sheet_list = list(ti.property_sheet_list) +\
-                                    [property_sheet_name]
+      property_sheet_set = set(ti.getTypePropertySheetList())
+      property_sheet_set.add(property_sheet_name)
+      ti._setTypePropertySheetList(list(property_sheet_set))
 
       # remember that we added a property sheet for tear down
-      if getattr(self, '_added_property_sheets', None) is not None:
-        self._added_property_sheets.setdefault(
+      self._added_property_sheets.setdefault(
                     portal_type_name, []).append(property_sheet_name)
       # reset aq_dynamic cache
       _aq_reset()

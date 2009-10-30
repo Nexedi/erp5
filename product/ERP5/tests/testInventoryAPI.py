@@ -2161,16 +2161,7 @@ class TestInventoryDocument(InventoryAPITestCase):
     does not allow such things
     """
     portal = self.getPortal()
-
-    portal_type_name = 'Inventory'
-    property_sheet_name = 'InventoryConstraint'
-    # We set the property sheet on the portal type
-    ti = self.getTypesTool().getTypeInfo(portal_type_name)
-    ti.property_sheet_list = list(ti.property_sheet_list) +\
-                                [property_sheet_name]
-    # reset aq_dynamic cache
-    _aq_reset()
-
+    self._addPropertySheet('Inventory', 'InventoryConstraint')
     try:
       inventory_module = portal.getDefaultModule(portal_type='Inventory')
       inventory = inventory_module.newContent(portal_type='Inventory')
@@ -2222,17 +2213,16 @@ class TestInventoryDocument(InventoryAPITestCase):
       self.assertTrue(len([x for x in workflow_error_message \
           if x.find('There is already an inventory')]))
     finally:
-      # remove all property sheet we added to type informations
+      # remove all property sheets we added to type informations
       ttool = self.getTypesTool()
-      ti = ttool.getTypeInfo(portal_type_name)
-      ps_list = ti.property_sheet_list
-      psheet_list = [property_sheet_name]
-      for psheet in psheet_list:
-        if psheet in ps_list:
-          ps_list.remove(psheet)
-      ti.property_sheet_list = ps_list
+      for ti_name, psheet_list in self._added_property_sheets.iteritems():
+        ti = ttool.getTypeInfo(ti_name)
+        property_sheet_set = set(ti.getTypePropertySheetList())
+        property_sheet_set.difference_update(psheet_list)
+        ti._setTypePropertySheetList(list(property_sheet_set))
       transaction.commit()
       _aq_reset()
+
   def test_15_InventoryAfterModificationInFuture(self):
     """
     Test inventory after adding a new movement in future 

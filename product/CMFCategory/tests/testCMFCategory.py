@@ -98,8 +98,9 @@ class TestCMFCategory(ERP5TypeTestCase):
     organisation_ti = self.getTypesTool().getTypeInfo('Organisation')
     organisation_ti.filter_content_types = 0
     # we also enable 'destination' category on organisations
-    self._organisation_categories = cat = organisation_ti.base_category_list
-    organisation_ti.base_category_list = tuple(list(cat) + ['destination'])
+    self._organisation_categories = organisation_ti.getTypeBaseCategoryList()
+    organisation_ti._setTypeBaseCategoryList(self._organisation_categories
+                                             + ['destination'])
 
     # Make persons.
     person_module = self.getPersonModule()

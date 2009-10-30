@@ -420,6 +420,33 @@ class ERP5TypeInformation(XMLObject,
 
         return ob
 
+    security.declarePrivate('updatePropertySheetDefinitionDict')
+    def updatePropertySheetDefinitionDict(self, definition_dict):
+      for property_sheet_name in self.getTypePropertySheetList():
+        base = getattr(PropertySheet, property_sheet_name, None)
+        if base is not None:
+          for list_name, property_list in definition_dict.items():
+            try:
+              property_list += getattr(base, list_name, ())
+            except TypeError:
+              raise ValueError("%s is not a list for %s" % (list_name, base))
+      if '_categories' in definition_dict:
+        definition_dict['_categories'] += self.getTypeBaseCategoryList()
+
+    # The following 2 methods are needed before there are generated.
+
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'getTypePropertySheetList')
+    def getTypePropertySheetList(self):
+      """Getter for 'type_property_sheet' property"""
+      return list(self.property_sheet_list)
+
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'getTypeBaseCategoryList')
+    def getTypeBaseCategoryList(self):
+      """Getter for 'type_base_category' property"""
+      return list(self.base_category_list)
+
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getInstanceBaseCategoryList')
     def getInstanceBaseCategoryList(self):
@@ -534,8 +561,8 @@ class ERP5TypeInformation(XMLObject,
                             self.getTypeFactoryMethodId(),
                             self.getTypeAddPermission(),
                             self.getTypeInitScriptId()]
-      search_source_list += self.getTypePropertySheetList(())
-      search_source_list += self.getTypeBaseCategoryList(())
+      search_source_list += self.getTypePropertySheetList()
+      search_source_list += self.getTypeBaseCategoryList()
       return ' '.join(filter(None, search_source_list))
 
     security.declarePrivate('getDefaultViewFor')
