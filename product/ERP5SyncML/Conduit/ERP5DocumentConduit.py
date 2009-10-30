@@ -80,9 +80,9 @@ class ERP5DocumentConduit(ERP5Conduit):
       simulate=None, reset=None):
     data_change = {}
     if previous_xml is not None:
-      previous_xml = etree.XML(previous_xml)
+      previous_xml = etree.XML(previous_xml, parser)
     else:
-      previous_xml = etree.XML(object.asXML())
+      previous_xml = etree.XML(object.asXML(), parser)
     from copy import deepcopy
     xml_previous = deepcopy(previous_xml)
     #retrieve new data
