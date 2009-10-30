@@ -139,6 +139,10 @@
                           <string>Requester</string>
                         </tuple>
                         <tuple>
+                          <string>destination_project</string>
+                          <string>Client Project</string>
+                        </tuple>
+                        <tuple>
                           <string>source_title</string>
                           <string>Assignee</string>
                         </tuple>
@@ -264,6 +268,10 @@
                         <tuple>
                           <string>destination_decision_title</string>
                           <string>Requester</string>
+                        </tuple>
+                        <tuple>
+                          <string>destination_project</string>
+                          <string>Client Project</string>
                         </tuple>
                         <tuple>
                           <string>source_title</string>
