@@ -127,12 +127,12 @@ class ERP5DocumentConduit(ERP5Conduit):
               for element in self.getXupdateElementList(subnode):
                 name_element = element.attrib.get('name', None)
                 if name_element:
+                  attrib_dict = {}
                   for sub_element in element:
                     if sub_element.xpath('name()') in 'xupdate:attribute':
-                      name_attribute = sub_element.attrib.get('name')
-                      value_attribute = sub_element.text
+                      attrib_dict[sub_element.attrib.get('name')] = sub_element.text
                   block = etree.SubElement(xml, name_element)
-                  block.set(name_attribute, value_attribute)
+                  block.attrib.update(attrib_dict)
                   #change structure in xupdate because is bad formed
                   value = etree.tostring(element).split('</')[1].split('>')[1]
                   block.text = value

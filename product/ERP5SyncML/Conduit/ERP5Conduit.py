@@ -792,7 +792,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
   security.declareProtected(Permissions.AccessContentsInformation,'getElementFromXupdate')
   def getElementFromXupdate(self, xml):
     """
-    from a xupdate:element returns the element as xml
+    return a fragment node with applied xupdate
     """
     if xml.xpath('name()') in self.XUPDATE_ELEMENT:
       new_node = Element(xml.attrib.get('name'), nsmap=xml.nsmap)
