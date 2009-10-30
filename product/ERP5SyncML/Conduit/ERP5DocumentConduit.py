@@ -133,9 +133,8 @@ class ERP5DocumentConduit(ERP5Conduit):
                       attrib_dict[sub_element.attrib.get('name')] = sub_element.text
                   block = etree.SubElement(xml, name_element)
                   block.attrib.update(attrib_dict)
-                  #change structure in xupdate because is bad formed
-                  value = etree.tostring(element).split('</')[1].split('>')[1]
-                  block.text = value
+                  if len(element):
+                    block.text = element[-1].tail
               data_change[prop_id] = xml
               xml_xupdate.remove(subnode)
 
