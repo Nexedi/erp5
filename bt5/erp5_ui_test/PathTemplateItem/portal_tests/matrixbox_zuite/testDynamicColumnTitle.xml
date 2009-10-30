@@ -43,12 +43,12 @@
       xmlns:metal="http://xml.zope.org/namespaces/metal">\n
 <head>\n
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">\n
-<title>Test MatrixBox Column Title</title>\n
+<title>Test Dynamic MatrixBox Column Title</title>\n
 </head>\n
 <body>\n
 <table cellpadding="1" cellspacing="1" border="1">\n
 <thead>\n
-<tr><td rowspan="1" colspan="3">Test MatrixBox Column Title</td></tr>\n
+<tr><td rowspan="1" colspan="3">Test Dynamic MatrixBox Column Title</td></tr>\n
 </thead><tbody>\n
 \n
 <tal:block metal:use-macro="here/MatrixBoxZuite_CommonTemplate/macros/init" />\n
@@ -74,29 +74,29 @@
 </tr>\n
 <tr>\n
   <td>open</td>\n
-  <td>${base_url}/foo_module/0/1/FooLine_viewMatrixBox</td>\n
+  <td>${base_url}/foo_module/0/1/FooLine_viewDynamicMatrixBox</td>\n
   <td></td>\n
 </tr>\n
 \n
 <tr>\n
   <td>verifyText</td>\n
   <td>//tr[@class="matrixbox_label_line"]/td[2]</td>\n
-  <td>One</td>\n
+  <td>Three</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
   <td>//tr[@class="matrixbox_label_line"]/td[3]</td>\n
-  <td>Two</td>\n
+  <td>Four</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
   <td>//tr[@class="matrixbox_label_line"]/../tr[2]/td</td>\n
-  <td>A</td>\n
+  <td>C</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
   <td>//tr[@class="matrixbox_label_line"]/../tr[3]/td</td>\n
-  <td>B</td>\n
+  <td>D</td>\n
 </tr>\n
 \n
 </tbody>\n
@@ -117,7 +117,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>testColumnTitle</string> </value>
+            <value> <string>testDynamicColumnTitle</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

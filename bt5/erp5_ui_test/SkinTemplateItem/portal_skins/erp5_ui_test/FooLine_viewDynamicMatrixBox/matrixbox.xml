@@ -116,12 +116,18 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>cell_getter_method</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>cell_portal_type</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>columns</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>css_class</string> </key>
@@ -165,7 +171,9 @@
                 </item>
                 <item>
                     <key> <string>lines</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>tabs</string> </key>
@@ -205,16 +213,7 @@
                 <item>
                     <key> <string>columns</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>one</string>
-                          <string>One</string>
-                        </tuple>
-                        <tuple>
-                          <string>two</string>
-                          <string>Two</string>
-                        </tuple>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -278,16 +277,7 @@
                 <item>
                     <key> <string>lines</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>a</string>
-                          <string>A</string>
-                        </tuple>
-                        <tuple>
-                          <string>b</string>
-                          <string>B</string>
-                        </tuple>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -306,6 +296,38 @@
                 </item>
               </dictionary>
             </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>python: context.FooLine_asCellRange(matrixbox=True)[1]</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <tuple>
+        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>python: context.FooLine_asCellRange(matrixbox=True)[0]</string> </value>
         </item>
       </dictionary>
     </pickle>

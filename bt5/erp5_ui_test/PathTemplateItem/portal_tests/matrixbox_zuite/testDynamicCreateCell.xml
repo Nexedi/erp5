@@ -43,12 +43,12 @@
       xmlns:metal="http://xml.zope.org/namespaces/metal">\n
 <head>\n
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">\n
-<title>Test MatrixBox Cell Creation</title>\n
+<title>Test Dynamic MatrixBox Cell Creation</title>\n
 </head>\n
 <body>\n
 <table cellpadding="1" cellspacing="1" border="1">\n
 <thead>\n
-<tr><td rowspan="1" colspan="3">Test MatrixBox Cell Creation</td></tr>\n
+<tr><td rowspan="1" colspan="3">Test Dynamic MatrixBox Cell Creation</td></tr>\n
 </thead><tbody>\n
 \n
 <tal:block metal:use-macro="here/MatrixBoxZuite_CommonTemplate/macros/init" />\n
@@ -74,7 +74,7 @@
 </tr>\n
 <tr>\n
   <td>open</td>\n
-  <td>${base_url}/foo_module/0/1/FooLine_viewMatrixBox</td>\n
+  <td>${base_url}/foo_module/0/1/FooLine_viewDynamicMatrixBox</td>\n
   <td></td>\n
 </tr>\n
 \n
@@ -146,7 +146,7 @@
 \n
 <tr>\n
   <td>open</td>\n
-  <td>${base_url}/foo_module/0/1/FooLine_viewMatrixBox</td>\n
+  <td>${base_url}/foo_module/0/1/FooLine_viewDynamicMatrixBox</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -209,7 +209,7 @@
 </tr>\n
 <tr>\n
   <td>verifyTextPresent</td>\n
-  <td>[\'a\', \'one\']</td>\n
+  <td>[\'c\', \'three\']</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -219,7 +219,7 @@
 </tr>\n
 <tr>\n
   <td>verifyTextPresent</td>\n
-  <td>[\'a\', \'two\']</td>\n
+  <td>[\'c\', \'four\']</td>\n
   <td></td>\n
 </tr>\n
 \n
@@ -266,7 +266,7 @@ The field must be in the \'bottom\' group for this to work.\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>testCreateCell</string> </value>
+            <value> <string>testDynamicCreateCell</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

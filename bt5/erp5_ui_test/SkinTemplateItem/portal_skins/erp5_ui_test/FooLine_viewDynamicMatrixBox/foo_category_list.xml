@@ -3,7 +3,7 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <global name="MatrixBox" module="Products.ERP5Form.MatrixBox"/>
+        <global name="LinesField" module="Products.Formulator.StandardFields"/>
         <tuple/>
       </tuple>
     </pickle>
@@ -11,7 +11,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>matrixbox</string> </value>
+            <value> <string>foo_category_list</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -20,6 +20,22 @@
                 <item>
                     <key> <string>external_validator_failed</string> </key>
                     <value> <string>The input failed the external validator.</string> </value>
+                </item>
+                <item>
+                    <key> <string>line_too_long</string> </key>
+                    <value> <string>A line was too long.</string> </value>
+                </item>
+                <item>
+                    <key> <string>required_not_found</string> </key>
+                    <value> <string>Input is required but no input given.</string> </value>
+                </item>
+                <item>
+                    <key> <string>too_long</string> </key>
+                    <value> <string>You entered too many characters.</string> </value>
+                </item>
+                <item>
+                    <key> <string>too_many_lines</string> </key>
+                    <value> <string>You entered too many lines.</string> </value>
                 </item>
               </dictionary>
             </value>
@@ -30,18 +46,6 @@
               <dictionary>
                 <item>
                     <key> <string>alternate_name</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>cell_base_id</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>cell_portal_type</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>columns</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -61,10 +65,6 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>editable_attributes</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>enabled</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -73,11 +73,11 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>getter_method</string> </key>
+                    <key> <string>extra</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>global_attributes</string> </key>
+                    <key> <string>height</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -85,11 +85,19 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>lines</string> </key>
+                    <key> <string>max_length</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>tabs</string> </key>
+                    <key> <string>max_linelength</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>max_lines</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>required</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -97,7 +105,19 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>update_cell_range</string> </key>
+                    <key> <string>unicode</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>view_separator</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>whitespace_preserve</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>width</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -112,18 +132,6 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>cell_base_id</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>cell_portal_type</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>columns</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>css_class</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -140,10 +148,6 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>editable_attributes</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>enabled</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -152,11 +156,11 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>getter_method</string> </key>
+                    <key> <string>extra</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>global_attributes</string> </key>
+                    <key> <string>height</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -164,11 +168,19 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>lines</string> </key>
+                    <key> <string>max_length</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>tabs</string> </key>
+                    <key> <string>max_linelength</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>max_lines</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>required</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -176,7 +188,19 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>update_cell_range</string> </key>
+                    <key> <string>unicode</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>view_separator</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>whitespace_preserve</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>width</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -191,39 +215,17 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>cell_base_id</string> </key>
-                    <value> <string>cell</string> </value>
-                </item>
-                <item>
-                    <key> <string>cell_getter_method</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>cell_portal_type</string> </key>
-                    <value> <string>Foo Line</string> </value>
-                </item>
-                <item>
-                    <key> <string>columns</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>one</string>
-                          <string>One</string>
-                        </tuple>
-                        <tuple>
-                          <string>two</string>
-                          <string>Two</string>
-                        </tuple>
-                      </list>
-                    </value>
-                </item>
-                <item>
                     <key> <string>css_class</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>default</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <list>
+                        <string>foo_category/a</string>
+                        <string>foo_category/b</string>
+                      </list>
+                    </value>
                 </item>
                 <item>
                     <key> <string>description</string> </key>
@@ -234,21 +236,6 @@
                     <value> <int>1</int> </value>
                 </item>
                 <item>
-                    <key> <string>editable_attributes</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>quantity</string>
-                          <string>quantity</string>
-                        </tuple>
-                        <tuple>
-                          <string>title</string>
-                          <string>title</string>
-                        </tuple>
-                      </list>
-                    </value>
-                </item>
-                <item>
                     <key> <string>enabled</string> </key>
                     <value> <int>1</int> </value>
                 </item>
@@ -257,52 +244,56 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>getter_method</string> </key>
+                    <key> <string>extra</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>global_attributes</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>foo_category_list</string>
-                          <string>foo_category_list</string>
-                        </tuple>
-                      </list>
-                    </value>
+                    <key> <string>height</string> </key>
+                    <value> <int>5</int> </value>
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
+                    <key> <string>max_length</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>max_linelength</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>max_lines</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>required</string> </key>
                     <value> <int>0</int> </value>
                 </item>
                 <item>
-                    <key> <string>lines</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>a</string>
-                          <string>A</string>
-                        </tuple>
-                        <tuple>
-                          <string>b</string>
-                          <string>B</string>
-                        </tuple>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>tabs</string> </key>
-                    <value>
-                      <list/>
-                    </value>
-                </item>
-                <item>
                     <key> <string>title</string> </key>
-                    <value> <string>matrixbox</string> </value>
+                    <value> <string>foo_category_list</string> </value>
                 </item>
                 <item>
-                    <key> <string>update_cell_range</string> </key>
-                    <value> <int>1</int> </value>
+                    <key> <string>unicode</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>view_separator</string> </key>
+                    <value> <string encoding="cdata"><![CDATA[
+
+<br />
+
+]]></string> </value>
+                </item>
+                <item>
+                    <key> <string>whitespace_preserve</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>width</string> </key>
+                    <value> <int>40</int> </value>
                 </item>
               </dictionary>
             </value>

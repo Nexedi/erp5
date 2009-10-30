@@ -117,7 +117,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>FooLine_viewMatrixBox</string> </value>
+            <value> <string>FooLine_viewDynamicMatrixBox</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
