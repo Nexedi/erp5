@@ -4,21 +4,21 @@
   <item>Invoice Line</item>
  </portal_type>
  <portal_type id="Invoice Transaction Rule">
-  <item>Category Divergence Tester</item>
   <item>Accounting Rule Cell</item>
+  <item>Category Divergence Tester</item>
+  <item>Predicate</item>
   <item>Property Divergence Tester</item>
   <item>Quantity Divergence Tester</item>
-  <item>Predicate</item>
  </portal_type>
  <portal_type id="Invoicing Rule">
-  <item>Property Divergence Tester</item>
   <item>Category Divergence Tester</item>
+  <item>Property Divergence Tester</item>
   <item>Quantity Divergence Tester</item>
  </portal_type>
  <portal_type id="Rule Tool">
+  <item>Invoice Transaction Rule</item>
   <item>Invoicing Rule</item>
   <item>Trade Model Rule</item>
-  <item>Invoice Transaction Rule</item>
  </portal_type>
  <portal_type id="Trade Model Rule">
   <item>Category Divergence Tester</item>
