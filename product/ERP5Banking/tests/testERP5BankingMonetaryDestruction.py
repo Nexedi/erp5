@@ -1042,7 +1042,7 @@ class TestERP5BankingMonetaryDestruction(TestERP5BankingMixin, ERP5TypeTestCase)
                     + 'CheckSourceDebitPlanned ' \
                     + 'ResetInventory Tic ' \
                     + 'ValidateFails ' \
-                    + 'DeleteResetInventory ' \
+                    + 'DeleteResetInventory Tic' \
                     + 'ValidateMonetaryDestruction Tic ' \
                     + 'CheckSourceDebit ' \
                     + 'DelMonetaryDestruction Tic'
