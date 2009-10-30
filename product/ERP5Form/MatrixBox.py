@@ -346,7 +346,7 @@ class MatrixBoxWidget(Widget.Widget):
                 if form.has_field(my_field_id):
                   my_field = form.get_field(my_field_id)
                   key = my_field.id + '_cell_%s_%s_%s' % (i,j,k)
-                  if cell != None:
+                  if cell is not None:
                     attribute_value = my_field.get_value('default',
                            cell=cell, cell_index=kw, cell_position = (i,j,k))
 
@@ -512,8 +512,7 @@ class MatrixBoxValidator(Validator.Validator):
                         attribute_value not in ('',None,(),[])) \
                         and not my_field.get_value('hidden'):
                       # Only validate modified values from visible fields
-                      result.setdefault(kw, {})
-                      result[kw][attribute_id] = value
+                      result.setdefault(kw, {})[attribute_id] = value
                     else:
                       if result.has_key(kw):
                         result[kw][attribute_id] = value
