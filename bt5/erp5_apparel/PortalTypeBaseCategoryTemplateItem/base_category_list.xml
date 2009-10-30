@@ -8,9 +8,13 @@
  <portal_type id="Apparel Component Variation">
   <item>collection</item>
  </portal_type>
+ <portal_type id="Apparel Fabric">
+  <item>cleaning_code</item>
+  <item>fabric_brand</item>
+ </portal_type>
  <portal_type id="Apparel Fabric Colour Variation">
-  <item>colour</item>
   <item>collection</item>
+  <item>colour</item>
  </portal_type>
  <portal_type id="Apparel Measurement">
   <item>measure</item>

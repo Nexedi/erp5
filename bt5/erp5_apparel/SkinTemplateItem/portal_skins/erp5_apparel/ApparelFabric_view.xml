@@ -113,6 +113,8 @@
                     <value>
                       <list>
                         <string>my_variation_category_list</string>
+                        <string>my_fabric_brand_list</string>
+                        <string>my_cleaning_code_list</string>
                         <string>my_comment</string>
                         <string>my_translated_validation_state_title</string>
                       </list>
