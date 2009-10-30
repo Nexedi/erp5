@@ -324,13 +324,11 @@ class TestERP5BankingStopPayment( TestERP5BankingCheckbookDeliveryMixin,
                     + 'CreateStopPayment Tic ' \
                     + 'SetStopPaymentDebit Tic ' \
                     + 'ConfirmStopPayment Tic ' \
-                    + 'CheckStopPaymentWorklist Tic ' \
                     + 'CheckLineCreated Tic ' \
                     + 'CheckConfirmedCheckbookInventory ' \
                     + 'StartStopPayment Tic ' \
                     + 'CheckCheckIsStopped Tic ' \
                     + 'DebitStopStopPayment Tic ' \
-                    + 'CheckStopPaymentWorklist Tic ' \
                     + 'DebitDeliverStopPayment Tic ' \
                     + 'CheckCheckIsConfirmed Tic ' \
                     + 'CheckInitialAndFinalCheckbookInventory '
