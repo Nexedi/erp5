@@ -146,12 +146,20 @@
                           <string>Supplier</string>
                         </tuple>
                         <tuple>
+                          <string>source_project_title</string>
+                          <string>Supplier Project</string>
+                        </tuple>
+                        <tuple>
                           <string>destination_title</string>
                           <string>Recipient or Beneficiary</string>
                         </tuple>
                         <tuple>
                           <string>destination_section_title</string>
                           <string>Client</string>
+                        </tuple>
+                        <tuple>
+                          <string>destination_project_title</string>
+                          <string>Client Project</string>
                         </tuple>
                         <tuple>
                           <string>delivery.stop_date</string>
@@ -250,6 +258,10 @@
                           <string>Supplier</string>
                         </tuple>
                         <tuple>
+                          <string>source_project_title</string>
+                          <string>Supplier Project</string>
+                        </tuple>
+                        <tuple>
                           <string>destination_title</string>
                           <string>Recipient or Beneficiary</string>
                         </tuple>
@@ -258,12 +270,16 @@
                           <string>Client</string>
                         </tuple>
                         <tuple>
-                          <string>delivery.stop_date</string>
-                          <string>Delivery Date</string>
+                          <string>destination_project_title</string>
+                          <string>Client Project</string>
                         </tuple>
                         <tuple>
                           <string>delivery.start_date</string>
                           <string>Shipping Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>delivery.stop_date</string>
+                          <string>Delivery Date</string>
                         </tuple>
                         <tuple>
                           <string>translated_simulation_state_title</string>
@@ -287,7 +303,7 @@
                         </tuple>
                         <tuple>
                           <string>specialise_title</string>
-                          <string>Purchase Trade Condition</string>
+                          <string>Sale Trade Condition</string>
                         </tuple>
                       </list>
                     </value>
