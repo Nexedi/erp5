@@ -1,7 +1,7 @@
 <workflow_chain>
  <chain>
   <type>Apparel Assortment</type>
-  <workflow>validation_workflow, edit_workflow</workflow>
+  <workflow>edit_workflow, validation_workflow</workflow>
  </chain>
  <chain>
   <type>Apparel Bath</type>
@@ -17,7 +17,7 @@
  </chain>
  <chain>
   <type>Apparel Component</type>
-  <workflow>validation_workflow, edit_workflow</workflow>
+  <workflow>edit_workflow, validation_workflow</workflow>
  </chain>
  <chain>
   <type>Apparel Consumption</type>

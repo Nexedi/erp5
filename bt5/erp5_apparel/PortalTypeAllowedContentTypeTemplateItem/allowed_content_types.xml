@@ -9,8 +9,8 @@
   <item>Apparel Bath</item>
  </portal_type>
  <portal_type id="Apparel Cloth">
-  <item>Mapped Value</item>
   <item>Apparel Technical Drawing</item>
+  <item>Mapped Value</item>
  </portal_type>
  <portal_type id="Apparel Cloth Module">
   <item>Apparel Cloth</item>
@@ -22,10 +22,10 @@
   <item>Apparel Colour Range</item>
  </portal_type>
  <portal_type id="Apparel Component">
-  <item>Purchase Supply Line</item>
-  <item>Sale Supply Line</item>
   <item>Apparel Component Variation</item>
   <item>Mapped Value</item>
+  <item>Purchase Supply Line</item>
+  <item>Sale Supply Line</item>
   <item>Supply Line</item>
  </portal_type>
  <portal_type id="Apparel Component Module">
@@ -38,12 +38,12 @@
   <item>Apparel Consumption</item>
  </portal_type>
  <portal_type id="Apparel Fabric">
-  <item>Sale Supply Line</item>
   <item>Apparel Fabric Colour Variation</item>
-  <item>Purchase Supply Line</item>
-  <item>Supply Line</item>
   <item>Mapped Value</item>
   <item>Measure</item>
+  <item>Purchase Supply Line</item>
+  <item>Sale Supply Line</item>
+  <item>Supply Line</item>
  </portal_type>
  <portal_type id="Apparel Fabric Item">
   <item>Apparel Fabric Item</item>
@@ -61,9 +61,9 @@
   <item>Apparel Measurement</item>
  </portal_type>
  <portal_type id="Apparel Model">
-  <item>Mapped Value</item>
   <item>Apparel Model Colour Variation</item>
   <item>Apparel Model Morphology Variation</item>
+  <item>Mapped Value</item>
   <item>Purchase Supply Line</item>
   <item>Sale Supply Line</item>
   <item>Supply Line</item>

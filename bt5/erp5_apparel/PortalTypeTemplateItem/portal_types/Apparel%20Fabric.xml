@@ -48,7 +48,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>      A apparel fabric\n
+            <value> <string>      A apparel fabric\r\n
 </string> </value>
         </item>
         <item>
@@ -82,7 +82,9 @@
         </item>
         <item>
             <key> <string>permission</string> </key>
-            <value> <string></string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>redirect_script</string> </key>
