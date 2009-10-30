@@ -1,14 +1,14 @@
 <allowed_content_type_list>
  <portal_type id="Business Process">
-  <item>Business State</item>
   <item>Business Path</item>
+  <item>Business State</item>
  </portal_type>
  <portal_type id="Business Process Module">
   <item>Business Process</item>
  </portal_type>
  <portal_type id="Container">
-  <item>Container Line</item>
   <item>Container</item>
+  <item>Container Line</item>
  </portal_type>
  <portal_type id="Container Line">
   <item>Container Cell</item>
@@ -17,9 +17,9 @@
   <item>First Causality Movement Group</item>
  </portal_type>
  <portal_type id="Delivery Rule">
-  <item>Quantity Divergence Tester</item>
   <item>Category Divergence Tester</item>
   <item>Property Divergence Tester</item>
+  <item>Quantity Divergence Tester</item>
  </portal_type>
  <portal_type id="Internal Packing List">
   <item>Internal Packing List Line</item>
@@ -40,8 +40,8 @@
   <item>Inventory</item>
  </portal_type>
  <portal_type id="Order Rule">
-  <item>Property Divergence Tester</item>
   <item>Category Divergence Tester</item>
+  <item>Property Divergence Tester</item>
   <item>Quantity Divergence Tester</item>
  </portal_type>
  <portal_type id="Preference">
@@ -53,8 +53,8 @@
   <item>Trade Model Line</item>
  </portal_type>
  <portal_type id="Purchase Order Line">
-  <item>Purchase Order Line</item>
   <item>Purchase Order Cell</item>
+  <item>Purchase Order Line</item>
  </portal_type>
  <portal_type id="Purchase Order Module">
   <item>Purchase Order</item>
@@ -70,15 +70,15 @@
  </portal_type>
  <portal_type id="Purchase Trade Condition">
   <item>Payment Condition</item>
-  <item>Trade Model Line</item>
   <item>Purchase Supply Line</item>
+  <item>Trade Model Line</item>
  </portal_type>
  <portal_type id="Purchase Trade Condition Module">
   <item>Purchase Trade Condition</item>
  </portal_type>
  <portal_type id="Returned Sale Packing List">
-  <item>Returned Sale Packing List Line</item>
   <item>Container</item>
+  <item>Returned Sale Packing List Line</item>
  </portal_type>
  <portal_type id="Returned Sale Packing List Line">
   <item>Returned Sale Packing List Cell</item>
@@ -87,24 +87,24 @@
   <item>Returned Sale Packing List</item>
  </portal_type>
  <portal_type id="Rule Tool">
-  <item>Order Rule</item>
   <item>Delivery Rule</item>
+  <item>Order Rule</item>
  </portal_type>
  <portal_type id="Sale Order">
-  <item>Trade Model Line</item>
-  <item>Sale Order Line</item>
   <item>Payment Condition</item>
+  <item>Sale Order Line</item>
+  <item>Trade Model Line</item>
  </portal_type>
  <portal_type id="Sale Order Line">
-  <item>Sale Order Line</item>
   <item>Sale Order Cell</item>
+  <item>Sale Order Line</item>
  </portal_type>
  <portal_type id="Sale Order Module">
   <item>Sale Order</item>
  </portal_type>
  <portal_type id="Sale Packing List">
-  <item>Sale Packing List Line</item>
   <item>Container</item>
+  <item>Sale Packing List Line</item>
  </portal_type>
  <portal_type id="Sale Packing List Line">
   <item>Sale Packing List Cell</item>
@@ -114,8 +114,8 @@
  </portal_type>
  <portal_type id="Sale Trade Condition">
   <item>Payment Condition</item>
-  <item>Trade Model Line</item>
   <item>Sale Supply Line</item>
+  <item>Trade Model Line</item>
  </portal_type>
  <portal_type id="Sale Trade Condition Module">
   <item>Sale Trade Condition</item>
