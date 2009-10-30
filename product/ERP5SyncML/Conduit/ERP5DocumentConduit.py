@@ -95,22 +95,20 @@ class ERP5DocumentConduit(ERP5Conduit):
         prop_list = attribute.split('/')
         prop_id = prop_list[1]
         path_prop_id = '//' + prop_id
-        if data_change.has_key(prop_id):
-          xml = data_change[prop_id]
-        else:
-          xml = xml_previous.xpath(path_prop_id)[0]
+        if prop_id not in data_change:
+          data_change[prop_id] =  xml_previous.xpath(path_prop_id)[0]
+        xml = data_change[prop_id]
         request = prop_list[-1]
         if getattr(ERP5Diff, '__version__', 0.0) <= 0.2:
           #Old ERP5Diff, xpath position start from 0, so add +1 to be compliant
           request = re.sub('(\d+)', lambda match:str(int(match.group(0))+1), request)
         if subnode.xpath('name()') in self.XUPDATE_DEL:
-          node_to_remove_list = xml.xpath(request)
-          if node_to_remove_list:
-            xml.remove(node_to_remove_list[0]) 
-            data_change[prop_id] = xml
+          node_to_remove_list.extend(xml.xpath(request))
           xml_xupdate.remove(subnode)
         elif subnode.xpath('name()') in self.XUPDATE_UPDATE:
-          node_to_remove_list.extend(xml.xpath(request))
+          #retrieve element in previous_xml
+          element = xml.xpath(request)[0]
+          element.text = subnode.text
           xml_xupdate.remove(subnode)
       elif subnode.xpath('name()') in self.XUPDATE_INSERT_OR_ADD:
         if self.getSubObjectDepth(subnode[0]) == 0:
@@ -120,10 +118,9 @@ class ERP5DocumentConduit(ERP5Conduit):
             prop_id = attribute.split('/')[2]
             if prop_id in self.data_type_tag_list:
               path_prop_id = '//' + prop_id
-              if data_change.has_key(prop_id):
-                xml = data_change[prop_id]
-              else:
-                xml = xml_previous.xpath(path_prop_id)[0]
+              if prop_id not in data_change:
+                data_change[prop_id] = xml_previous.xpath(path_prop_id)[0]
+              xml = data_change[prop_id]
               for element in self.getXupdateElementList(subnode):
                 name_element = element.attrib.get('name', None)
                 if name_element:
@@ -135,7 +132,6 @@ class ERP5DocumentConduit(ERP5Conduit):
                   block.attrib.update(attrib_dict)
                   if len(element):
                     block.text = element[-1].tail
-              data_change[prop_id] = xml
               xml_xupdate.remove(subnode)
 
     #Remove nodes at the end to avoid changing position of elements
@@ -143,8 +139,7 @@ class ERP5DocumentConduit(ERP5Conduit):
     #apply modification
     if len(data_change):
       args = {}
-      for key in data_change.keys():
-        node = data_change[key]
+      for key, node in data_change.iteritems():
         node.text = None
         data = self.convertXmlValue(node)
         args[key] = data
