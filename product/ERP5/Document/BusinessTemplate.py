@@ -2562,7 +2562,7 @@ class ActionTemplateItem(ObjectTemplateItem):
       if obj is not None:
         action_list = obj.listActions()
         for index in range(len(action_list)):
-          if getattr(action_list[index], key) == value:
+          if getattr(action_list[index], key, None) == value:
             obj.deleteActions(selections=(index,))
             break
       LOG('BusinessTemplate', 100,
