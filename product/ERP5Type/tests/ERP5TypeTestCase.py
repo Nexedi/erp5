@@ -409,6 +409,9 @@ class ERP5TypeTestCase(backportUnittest.TestCase, PortalTestCase):
             template = '%s.bt5' % template
         new_template_list.append((template,id))
 
+      # keep a mapping type info name -> property sheet list, to remove them in
+      # tear down.
+      self._added_property_sheets = {}
       light_install = self.enableLightInstall()
       create_activities = self.enableActivityTool()
       hot_reindexing = self.enableHotReindexing()
@@ -422,9 +425,6 @@ class ERP5TypeTestCase(backportUnittest.TestCase, PortalTestCase):
       global current_app
       current_app = self.app
       self._updateConnectionStrings()
-      # keep a mapping type info name -> property sheet list, to remove them in
-      # tear down.
-      self._added_property_sheets = {}
 
     def afterSetUp(self):
       '''Called after setUp() has completed. This is
