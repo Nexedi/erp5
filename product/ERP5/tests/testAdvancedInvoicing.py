@@ -127,7 +127,8 @@ class TestAdvancedInvoice(TestSaleInvoiceMixin, ERP5TypeTestCase):
   
   def getBusinessTemplateList(self):
     return ('erp5_base', 'erp5_pdm', 'erp5_trade', 'erp5_accounting',
-            'erp5_invoicing', 'erp5_advanced_invoicing', 'erp5_apparel')
+            'erp5_invoicing', 'erp5_advanced_invoicing', 'erp5_apparel',
+            'erp5_project')
 
   def stepStartRelatedInvoice(self, sequence=None, sequence_list=None, **kw):
     packing_list = sequence.get('packing_list')
