@@ -1264,7 +1264,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     object_id = sequence.get('object_ptype_id')
     object_pt = pt._getOb(object_id)
     action_id = sequence.get('first_action_id')
-    self.assertTrue(action_id in [x.getReference()
+    self.assertFalse(action_id in [x.getReference()
       for x in object_pt.getActionInformationList()])
 
   def stepCheckSecondActionExists(self, sequence=None, sequence_list=None, **kw):
@@ -1286,7 +1286,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     object_id = sequence.get('object_ptype_id')
     object_pt = pt._getOb(object_id)
     action_id = sequence.get('second_action_id')
-    self.assertTrue(action_id in [x.getReference()
+    self.assertFalse(action_id in [x.getReference()
       for x in object_pt.getActionInformationList()])
 
   def stepAddSecondActionToBusinessTemplate(self, sequence=None, sequence_list=None, **kw):
