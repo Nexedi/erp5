@@ -110,6 +110,8 @@ class TestNestedLineMixin(TestSaleInvoiceMixin):
                             'destination_decision',
                             'source_administration',
                             'destination_administration',
+                            'source_project',
+                            'destination_project',
                             'price_currency'),
       int_index=2)
     delivery_builder.newContent(
