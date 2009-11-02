@@ -586,10 +586,10 @@ msgid "Agents"
 msgstr "Mandataires"
 
 msgid "Aggregated BOM"
-msgstr "Composants indiqués sur le Modèle"
+msgstr "Composants définis sur la forme"
 
 msgid "Aggregated Industrial Process"
-msgstr "Explications données sur le Modèle"
+msgstr "Opérations définies sur la forme"
 
 msgid "Aggregation Level"
 msgstr "Niveau d'agrégation"
@@ -808,7 +808,7 @@ msgid "Apparel Model Module"
 msgstr "Module des modèles"
 
 msgid "Apparel Model Template"
-msgstr "Articles assemblés"
+msgstr "Modèle de référence"
 
 msgid "Apparel Models"
 msgstr "Modèles"
@@ -1224,11 +1224,11 @@ msgstr "Date de début "
 msgid "Beginning of this career step"
 msgstr "Début de carrière"
 
+msgid "Bill Of Material Description"
+msgstr "Détails de nomenclature"
+
 msgid "Bill of Materials and Operations"
 msgstr "Facture des matériaux et des opérations"
-
-msgid "Bill of material description"
-msgstr "Description des composants"
 
 msgid "Billable Client"
 msgstr "Client (facturer à)"
@@ -1267,7 +1267,7 @@ msgid "Branch Number"
 msgstr "Code guichet"
 
 msgid "Brand"
-msgstr "Vignette"
+msgstr "Marque"
 
 msgid "Brief description of the outcome of a project"
 msgstr "Une brève description des résultats du projet."
@@ -2151,6 +2151,9 @@ msgstr "Couleur"
 msgid "Colour Range Created."
 msgstr "Coloris ajouté"
 
+msgid "Colour Referential"
+msgstr "Couleur de référence"
+
 msgid "Colour Title"
 msgstr "Réf Coloris"
 
@@ -2160,11 +2163,8 @@ msgstr "Coloris"
 msgid "Colour Variations"
 msgstr "Coloris"
 
-msgid "Colour referential"
-msgstr "Couleur"
-
 msgid "Colours"
-msgstr "Coordonnés"
+msgstr "Couleurs"
 
 msgid "Column"
 msgstr "Colonne"
@@ -3785,7 +3785,7 @@ msgid "Drawing"
 msgstr "Dessin"
 
 msgid "Drawing Reference"
-msgstr "Réf dessin"
+msgstr "Référence dessin"
 
 msgid "Duplicate"
 msgstr "Dupliquer"
@@ -4960,10 +4960,7 @@ msgstr "Données techniques"
 msgid "Industrial Phase"
 msgstr "Phase industrielle"
 
-msgid "Industrial description"
-msgstr "Description"
-
-msgid "Industrial process description"
+msgid "Industrial Process Description"
 msgstr "Explications pour la fabrication"
 
 msgid "Ingested Documents"
@@ -5578,9 +5575,6 @@ msgstr "Critère max"
 msgid "Max. Delay (Day)"
 msgstr "Délai Max. (Jour)"
 
-msgid "Max. delay (day)"
-msgstr "Délai Max (jours)"
-
 msgid "Maximum user inactivity duration"
 msgstr "Durée maximale d'inactivité"
 
@@ -5694,9 +5688,6 @@ msgstr "Délai Min. (Jour)"
 
 msgid "Min. Flow"
 msgstr "Débit Minimum"
-
-msgid "Min. delay (day)"
-msgstr "Délai min (jours)"
 
 msgid "Min. flow"
 msgstr "Minimum de commande"
@@ -5873,7 +5864,7 @@ msgid "Net Total Price"
 msgstr "Montant Net"
 
 msgid "Net Width"
-msgstr "Laize des collections"
+msgstr "Largeur utile"
 
 msgid "Net Width (cm)"
 msgstr "Largeur utile (cm)"
@@ -7043,14 +7034,8 @@ msgstr "Montants convertis."
 msgid "Price for one unit."
 msgstr "Prix d'une unité."
 
-msgid "Price validity"
-msgstr "Date de validité"
-
 msgid "Priced Quantity"
 msgstr "Quantité correspondant au prix unitaire"
-
-msgid "Priced quantity"
-msgstr "Prix pour (Qté)"
 
 msgid "Pricing Interaction Workflow"
 msgstr "Workflow d'interaction des prix"
@@ -7612,9 +7597,6 @@ msgstr "Constantes"
 
 msgid "Raw Width (cm)"
 msgstr "Largeur brute (cm)"
-
-msgid "Raw width (cm)"
-msgstr "Laize commerciale (cm)"
 
 msgid "Re Assign Bug"
 msgstr "Réassigner le bogue"
