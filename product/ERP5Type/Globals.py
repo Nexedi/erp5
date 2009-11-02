@@ -68,7 +68,6 @@ DevelopmentMode = _cfg.debug_mode
 # backward compatibility
 INSTANCE_HOME = _cfg.instancehome
 SOFTWARE_HOME = _cfg.softwarehome
-ZOPE_HOME = _cfg.zopehome
 
 # don't tempt potential users by leaving these lying around
 del _cfg, _getConfiguration
