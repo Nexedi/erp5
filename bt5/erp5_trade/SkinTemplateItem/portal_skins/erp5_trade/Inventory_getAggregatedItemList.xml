@@ -58,7 +58,7 @@ from Products.ERP5Type.Utils import cartesianProduct\n
 from DateTime import DateTime\n
 portal = context.getPortalObject()\n
 request = portal.REQUEST\n
-at_date = request.form["at_date"].Date()\n
+#at_date = DateTime(request.form["at_date"].Date())\n
 at_date = DateTime().Date()\n
 \n
 tracking_parameters = {\n
@@ -66,25 +66,28 @@ tracking_parameters = {\n
     \'resource_uid\': context.getResourceUid(),\n
     \'section_uid\' : context.section_uid,\n
     \'at_date\': context.getStartDate(),\n
-    \'output\': 0,\n
+    \'output\': 1,\n
 }\n
 result_list = []\n
 item_dict ={}\n
 check_variation = bool(context.getVariationCategoryList())\n
+\n
 if check_variation==True and context.getPortalType()!=\'Simulation Movement\':\n
   acceptable_variation_category_list = \\\n
       cartesianProduct(context.getObject().getCellRange(base_id=\'movement\'))\n
-\n
-  for tracking_brain in portal.portal_simulation.getTrackingList(\n
+ \n
+  for tracking_brain in portal.portal_simulation.getCurrentTrackingList(\n
                             **tracking_parameters):\n
     item = tracking_brain.getObject()\n
-  \n
+    \n
+\n
     if check_variation and \\\n
       item.Item_getVariationCategoryList(at_date=context.getStartDate())\\\n
-      not in acceptable_variation_category_list:\n
+      !=context.getVariationCategoryList():\n
       continue\n
-    item_dict = "%s : %s"%(item.getTitle(),item.getQuantity(at_date=at_date))\n
+    item_dict = "%s : %s"%(item.getReference(),item.getQuantity(at_date=at_date))\n
     result_list.append(item_dict)\n
+\n
 return result_list\n
 </string> </value>
         </item>
@@ -137,7 +140,6 @@ return result_list\n
                             <string>context</string>
                             <string>portal</string>
                             <string>request</string>
-                            <string>_getitem_</string>
                             <string>tracking_parameters</string>
                             <string>result_list</string>
                             <string>item_dict</string>
