@@ -107,7 +107,8 @@ class Person:
     , 'type'                     : 'content'
     , 'portal_type'              : ( 'Address', )
     , 'acquired_property_id'     : ( 'text', 'street_address', 'city',
-                                     'zip_code', 'region', 'region_title')
+                                     'zip_code', 'region', 'region_title',
+                                     'prefecture')
     , 'acquisition_base_category': ( 'subordination', )
     , 'acquisition_portal_type'  : ( 'Organisation', )
     , 'acquisition_copy_value'   : 0
