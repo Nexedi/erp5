@@ -38,20 +38,20 @@ class ProfitAndLoss(CopyToTarget):
     on the parent applied rule.
   """
 
-  def solveMovement(self, movement, new_target=None):
+  def solve(self, simulation_movement):
     """
       Movement difference as a profit (ie. a quantity coming from nowhere)
       Accumulate into delivered movement
     """
-    delivery_line = movement.getDeliveryValue()
+    delivery_line = simulation_movement.getDeliveryValue()
     delivery_line_quantity = delivery_line.getQuantity()
     if delivery_line_quantity is not None:
-      target_quantity = delivery_line_quantity * movement.getDeliveryRatio()
-      added_quantity = movement.getQuantity() - target_quantity
-      movement.edit(profit_quantity=added_quantity)
+      target_quantity = delivery_line_quantity * simulation_movement.getDeliveryRatio()
+      added_quantity = simulation_movement.getQuantity() - target_quantity
+      simulation_movement.edit(profit_quantity=added_quantity)
     delivery_line.activate(
       after_path_and_method_id=(
-        movement.getPath(),
+        simulation_movement.getPath(),
         ['immediateReindexObject', 'recursiveImmediateReindexObject']
       )
     ).edit()
