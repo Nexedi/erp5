@@ -125,6 +125,14 @@
                           <string>Destination Reference</string>
                         </tuple>
                         <tuple>
+                          <string>source_project_title</string>
+                          <string>Supplier Project</string>
+                        </tuple>
+                        <tuple>
+                          <string>destination_project_title</string>
+                          <string>Client Project</string>
+                        </tuple>
+                        <tuple>
                           <string>creation_date</string>
                           <string>Creation Date</string>
                         </tuple>
@@ -188,14 +196,6 @@
                         <tuple>
                           <string>specific_reference</string>
                           <string>Transaction Reference</string>
-                        </tuple>
-                        <tuple>
-                          <string>source_project_title</string>
-                          <string>Supplier Project</string>
-                        </tuple>
-                        <tuple>
-                          <string>destination_project_title</string>
-                          <string>Client Project</string>
                         </tuple>
                         <tuple>
                           <string>translated_simulation_state_title</string>
