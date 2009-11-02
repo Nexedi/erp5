@@ -265,7 +265,7 @@ class SimulationTool(BaseTool):
           simulation_query = ComplexQuery(simulation_query, output_query,
                                           operator='OR')
       else:
-        simulation_query = '1'
+        simulation_query = None
       return simulation_query
 
     def _getSimulationStateDict(self, simulation_state=None, omit_transit=0,
@@ -481,6 +481,12 @@ class SimulationTool(BaseTool):
               column_id = '%s.%s' % (table, column_id)
             new_sort_on.append((column_id, sort_direction))
           new_kw['sort_on'] = tuple(new_sort_on)
+        
+        # Remove some internal parameters that does not have any meaning for
+        # catalog
+        new_kw.pop('ignore_group_by', None)
+        new_kw.pop('movement_list_mode', None)
+
         sql_kw.update(ctool.buildSQLQuery(**new_kw))
         return sql_kw
 
@@ -566,21 +572,21 @@ class SimulationTool(BaseTool):
       column_value_dict = DictMixIn()
 
       if omit_mirror_date:
-        date_dict = {'query':[], }
+        date_dict = {}
         if from_date :
-          date_dict['query'].append(from_date)
+          date_dict.setdefault('query', []).append(from_date)
           date_dict['range'] = 'min'
           if to_date :
-            date_dict['query'].append(to_date)
+            date_dict.setdefault('query', []).append(to_date)
             date_dict['range'] = 'minmax'
           elif at_date :
-            date_dict['query'].append(at_date)
+            date_dict.setdefault('query', []).append(at_date)
             date_dict['range'] = 'minngt'
         elif to_date :
-          date_dict['query'].append(to_date)
+          date_dict.setdefault('query', []).append(to_date)
           date_dict['range'] = 'max'
         elif at_date :
-          date_dict['query'].append(at_date)
+          date_dict.setdefault('query', []).append(at_date)
           date_dict['range'] = 'ngt'
         column_value_dict['date'] = date_dict
       else:
