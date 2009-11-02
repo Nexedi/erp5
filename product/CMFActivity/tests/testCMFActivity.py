@@ -35,7 +35,10 @@ from Products.CMFActivity.ActiveObject import INVOKE_ERROR_STATE,\
                                               VALIDATE_ERROR_STATE
 from Products.CMFActivity.Activity.Queue import VALIDATION_ERROR_DELAY
 from Products.CMFActivity.Errors import ActivityPendingError, ActivityFlushError
-from Products.ERP5Type.Document.Organisation import Organisation
+# This cannot be imported at top level because it doesn't exist until
+# Products.ERP5 has been initialized. We set it up as global and 
+#from Products.ERP5Type.Document.Organisation import Organisation
+Organisation = None
 from AccessControl.SecurityManagement import newSecurityManager
 from zLOG import LOG
 from ZODB.POSException import ConflictError
@@ -101,7 +104,11 @@ class TestCMFActivity(ERP5TypeTestCase):
       o1 = organisation_module.newContent(id=self.company_id)
     get_transaction().commit()
     self.tic()
-
+    # import it now that Products.ERP5 has been initialized
+    global Organisation
+    from Products.ERP5Type.Document.Organisation import Organisation as Org
+    Organisation = Org
+    
 
   def login(self, quiet=0, run=run_all_test):
     uf = self.getPortal().acl_users
