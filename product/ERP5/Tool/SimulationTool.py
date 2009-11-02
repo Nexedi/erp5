@@ -588,7 +588,8 @@ class SimulationTool(BaseTool):
         elif at_date :
           date_dict.setdefault('query', []).append(at_date)
           date_dict['range'] = 'ngt'
-        column_value_dict['date'] = date_dict
+        if date_dict:
+          column_value_dict['date'] = date_dict
       else:
         column_value_dict['date'] = {'query': [to_date], 'range': 'ngt'}
         column_value_dict['mirror_date'] = {'query': [from_date], 'range': 'nlt'}
