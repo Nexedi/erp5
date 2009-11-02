@@ -344,12 +344,20 @@
                           <string>Supplier</string>
                         </tuple>
                         <tuple>
+                          <string>source_project_title</string>
+                          <string>Supplier Project</string>
+                        </tuple>
+                        <tuple>
                           <string>destination_title</string>
                           <string>Recipient or Beneficiary</string>
                         </tuple>
                         <tuple>
                           <string>destination_section_title</string>
                           <string>Client</string>
+                        </tuple>
+                        <tuple>
+                          <string>destination_project_title</string>
+                          <string>Client Project</string>
                         </tuple>
                         <tuple>
                           <string>delivery.start_date</string>
