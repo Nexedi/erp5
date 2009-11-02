@@ -123,25 +123,17 @@ class TestFolder(ERP5TypeTestCase, LogInterceptor):
         obj = self.newContent()
         self.assertEquals(obj.getId(), id_generator_id_list[expected_length])
  
-    def _setAllowedContentTypesForFolderType(self, allowed_content_types):
+    def _setAllowedContentTypesForFolderType(self, allowed_content_type_list):
       """Set allowed content types for Folder portal type."""
-      folder_ti = self.getTypesTool()['Folder']
-      folder_ti.allowed_content_types = allowed_content_types
-      folder_ti.filter_content_types = True
-    
+      self.getTypesTool().Folder.edit(
+        type_allowed_content_type_list=allowed_content_type_list,
+        type_filter_content_type=True)
+
     def _assertAllowedContentTypes(self, obj, expected_allowed_content_types):
       """Asserts that allowed content types for obj are exactly what we
       have in expected_allowed_content_types."""
-      allowed_content_types_id_list = [x.getId() for
-                                       x in obj.allowedContentTypes()]
-      self.assertEquals(len(expected_allowed_content_types),
-                        len(allowed_content_types_id_list),
-                       'expected %s and actual %s have different length' % (
-                        expected_allowed_content_types,
-                        allowed_content_types_id_list
-                       ))
-      for portal_type_name in expected_allowed_content_types:
-        self.failUnless(portal_type_name in allowed_content_types_id_list)
+      self.assertEqual(sorted(expected_allowed_content_types),
+                       sorted(x.getId() for x in obj.allowedContentTypes()))
 
     def test_AllowedContentTypes(self):
       type_list = ['Folder', 'Category', 'Base Category']

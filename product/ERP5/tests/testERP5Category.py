@@ -37,7 +37,6 @@ class TestERP5Category(ERP5TypeTestCase):
   # Different variables used for this test
   run_all_test = 1
   quiet = 1
-  portal_type = 'Organisation'
   base_cat = 'abc'
   base_cat2 = 'efg'
   cat_list = [base_cat + '/1',base_cat + '/2']
@@ -88,21 +87,21 @@ class TestERP5Category(ERP5TypeTestCase):
     self.deep_cat2 = self.cat2['1']
 
     # associate base categories on Organisation portal type
-    portal_type = self.getTypeTool()[self.portal_type]
-    portal_type._setTypeBaseCategoryList([self.base_cat, self.base_cat2])
+    type_info = self.getTypeTool().Organisation
+    type_info._setTypeBaseCategoryList([self.base_cat, self.base_cat2])
 
     # Reset aq dynamic
     _aq_reset()
 
     organisation_module = self.getOrganisationModule()
     if not organisation_module.has_key('1'):
-      organisation_module.newContent(id='1', portal_type=self.portal_type)
+      organisation_module.newContent(id='1', portal_type='Organisation')
     self.organisation = organisation_module['1']
     if not self.organisation.has_key('1'):
       self.organisation.newContent(id='1', portal_type='Telephone')
     self.telephone = self.organisation['1']
     if not organisation_module.has_key('2'):
-      organisation_module.newContent(id='2', portal_type=self.portal_type)
+      organisation_module.newContent(id='2', portal_type='Organisation')
     self.organisation2 = organisation_module['2']
     if not self.organisation2.has_key('1'):
       self.organisation2.newContent(id='1', portal_type='Telephone')
@@ -129,14 +128,13 @@ class TestERP5Category(ERP5TypeTestCase):
 
     # We have no place to put a Predicate, we will put it in the
     # Organisation Module
-    portal = self.getPortal()
-    type_tool = self.getTypeTool()
-    module_type = type_tool['%s Module' % self.portal_type]
-    module_type.allowed_content_types += ('Mapped Value',)
-    module = self.getOrganisationModule()
-    if not module.has_key('predicate'):
-      module.newContent(id='predicate', portal_type='Mapped Value')
-    predicate = module['predicate']
+    module_type = organisation_module.getTypeInfo()
+    content_type_set = set(module_type.getTypeAllowedContentTypeList())
+    content_type_set.add('Mapped Value')
+    module_type._setTypeAllowedContentTypeList(tuple(content_type_set))
+    if not organisation_module.has_key('predicate'):
+      organisation_module.newContent(id='predicate', portal_type='Mapped Value')
+    predicate = organisation_module['predicate']
     predicate.setCriterion('quantity', identity=None, min=None, max=None)
     self.predicate = predicate
 

@@ -68,8 +68,9 @@ class TestNestedLineMixin(TestSaleInvoiceMixin):
 
   def _allowInvoiceLineContentTypeInInvoiceLine(self):
     invoice_line_type = self.portal.portal_types['Invoice Line']
-    if 'Invoice Line' not in invoice_line_type.allowed_content_types:
-      invoice_line_type.allowed_content_types += ('Invoice Line',)
+    content_type_set = set(invoice_line_type.getTypeAllowedContentTypeList())
+    content_type_set.add('Invoice Line')
+    invoice_line_type._setTypeAllowedContentTypeList(tuple(content_type_set))
 
   def stepGetRelatedInvoiceFromPackingList(self, sequence, **kw):
     packing_list = sequence.get('packing_list')

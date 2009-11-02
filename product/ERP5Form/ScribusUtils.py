@@ -405,9 +405,10 @@ class ManageModule:
                 , id = module_portal_type)
     # getting portal_type access to be able to modify attributes
     module_portal_type_value = portal_types[module_portal_type]
-    # set alowed content type
-    module_portal_type_value.allowed_content_types = (object_portal_type_id,)
-    module_portal_type_value.filter_content_types = 1
+    # set allowed content type
+    module_portal_type_value.edit(
+      type_allowed_content_type_list=(object_portal_type_id,),
+      type_filter_content_type=1)
     # adding usefull actions (in our case the view action)
     module_portal_type_value.newContent(portal_type='Action Information',
       reference="view",

@@ -78,7 +78,7 @@ def calculateStatistics():\n
   documents_groups = {}\n
   documents_owners = {}\n
   documents_classifications = {}\n
-  document_content_types = portal_types[\'Document Module\'].allowed_content_types\n
+  document_content_types = portal_types[\'Document Module\'].getTypeAllowedContentTypeList()\n
   all_documents = portal_catalog.searchResults(portal_type = document_content_types)\n
   total_documents = portal_catalog.countResults(portal_type = document_content_types)[0][0]\n
   total_documents_released = portal_catalog.countResults(portal_type = document_content_types,\n

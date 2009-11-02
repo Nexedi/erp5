@@ -58,11 +58,11 @@ types_tool = context.getPortalObject().portal_types\n
 movement_type_list = context.getPortalMovementTypeList()\n
 type_set = dict()\n
 \n
-for type_name in types_tool.getTypeInfo(context).allowed_content_types:\n
-  for line_type_name in types_tool.getTypeInfo(type_name).allowed_content_types:\n
+for type_name in types_tool.getTypeInfo(context).getTypeAllowedContentTypeList():\n
+  for line_type_name in types_tool.getTypeInfo(type_name).getTypeAllowedContentTypeList():\n
     if line_type_name in movement_type_list:\n
       type_set[line_type_name] = 1\n
-    for cell_type_name in types_tool.getTypeInfo(line_type_name).allowed_content_types:\n
+    for cell_type_name in types_tool.getTypeInfo(line_type_name).getTypeAllowedContentTypeList():\n
       if cell_type_name in movement_type_list:\n
         type_set[cell_type_name] = 1\n
 \n

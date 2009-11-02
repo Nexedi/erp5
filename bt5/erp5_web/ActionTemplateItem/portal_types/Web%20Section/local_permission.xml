@@ -95,7 +95,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>python: \'Role Definition\' in portal.portal_types[\'Web Section\'].allowed_content_types</string> </value>
+            <value> <string>python: \'Role Definition\' in portal.portal_types[\'Web Section\'].getTypeAllowedContentTypeList()</string> </value>
         </item>
       </dictionary>
     </pickle>

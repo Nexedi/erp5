@@ -63,7 +63,8 @@ class TestTemplate(ERP5TypeTestCase):
     portal_preferences.deleteContent(list(portal_preferences.objectIds()))
     transaction.commit()
     self.tic()
-    self.portal.portal_types['Preference'].allowed_content_types = ('Foo', 'Knowledge Pad')
+    self.portal.portal_types.Preference._setTypeAllowedContentTypeList(
+      ('Foo', 'Knowledge Pad'))
     self.portal.foo_module.manage_role(role_to_manage='Author',
                                 permissions=[Permissions.AddPortalContent,
                                              Permissions.CopyOrMove,

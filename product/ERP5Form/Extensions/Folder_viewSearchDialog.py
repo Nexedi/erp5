@@ -264,8 +264,8 @@ def getSearchDialog(self, REQUEST=None):
                             default_search_key=default_search_key)
 
   # TODO always add SearchableText ?
-  
-  allowed_content_types = types_tool.getTypeInfo(self).allowed_content_types
+
+  allowed_content_types = self.getTypeInfo().getTypeAllowedContentTypeList()
   # remember which workflow we already displayed
   workflow_dict = dict()
   # possible workflow states

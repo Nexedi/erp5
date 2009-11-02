@@ -1244,15 +1244,15 @@ class TestConstraint(PropertySheetTestCase):
     # this property suppose that we can add some Organisation inside
     # Organisation, so we temporary patch the type information.
     ti = self.getTypesTool().getTypeInfo(obj)
-    allowed_types = list(ti.allowed_content_types)
-    ti.allowed_content_types = allowed_types + ['Organisation']
+    allowed_types = ti.getTypeAllowedContentTypeList()
+    ti._setTypeAllowedContentTypeList(allowed_types + ['Organisation'])
     try:
       constraint.fixConsistency(obj)
       self.assertEquals('foo', obj.getDefaultOrganisationTitle())
       self.assertEquals('foo', obj.default_organisation.getTitle())
     finally:
-      ti.allowed_content_types = tuple(allowed_types)
-      
+      ti._setTypeAllowedContentTypeList(allowed_types)
+
   def test_PropertyTypeValidityFixLocalPropertiesForCategories(self):
     """Tests PropertyTypeValidity can repairs categories when this property
     is added on the class later.

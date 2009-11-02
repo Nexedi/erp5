@@ -56,9 +56,7 @@
             <value> <string>"""\n
 Get portal type list allowed in module through Types Tool\n
 """\n
-folder_portal_type = context.getPortalType()\n
-portal = context.getPortalObject()\n
-return portal.portal_types[folder_portal_type].allowed_content_types[:]\n
+return context.getTypeInfo().getTypeAllowedContentTypeList()\n
 </string> </value>
         </item>
         <item>
@@ -105,9 +103,6 @@ return portal.portal_types[folder_portal_type].allowed_content_types[:]\n
                           <tuple>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>folder_portal_type</string>
-                            <string>portal</string>
-                            <string>_getitem_</string>
                           </tuple>
                         </value>
                     </item>

@@ -74,11 +74,11 @@ class TestDomainTool(TestPredicateMixIn):
   def createData(self):
     # We have no place to put a Predicate, we will put it in a
     # Organisation Module
-    portal = self.getPortal()
-    type_tool = self.getTypeTool()
-    module_type = type_tool['Organisation Module']
-    module_type.allowed_content_types += ('Mapped Value',)
     organisation_module = self.getOrganisationModule()
+    module_type = organisation_module.getTypeInfo()
+    content_type_set = set(module_type.getTypeAllowedContentTypeList())
+    content_type_set.add('Mapped Value')
+    module_type._setTypeAllowedContentTypeList(tuple(content_type_set))
     if organisation_module.hasContent('1'):
       organisation_module.deleteContent('1')
     predicate = organisation_module.newContent(id='1',portal_type='Mapped Value')

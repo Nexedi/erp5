@@ -2449,10 +2449,10 @@ class TestPropertySheet:
                         'Test Add Permission Document')
       
       # allow this type info in Person Module
-      container_type_info = self.portal.portal_types.getTypeInfo('Person Module')
-      container_type_info.allowed_content_types = tuple(
-              container_type_info.allowed_content_types) + (
-              'Test Add Permission Document', )
+      container_type_info = self.getTypesTool().getTypeInfo('Person Module')
+      container_type_info._setTypeAllowedContentTypeList(
+        container_type_info.getTypeAllowedContentTypeList()
+        + ['Test Add Permission Document'])
 
       # by default this is empty, which implictly means "Add portal content",
       # the default permission
