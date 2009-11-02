@@ -771,6 +771,9 @@ msgstr "Tissus"
 msgid "Apparel Fabric Module"
 msgstr "Module des tissus"
 
+msgid "Apparel Fabric Template"
+msgstr "Tissu de référence"
+
 msgid "Apparel Fabric to validate"
 msgstr "Tissus à définir"
 
@@ -1988,6 +1991,9 @@ msgstr "Nettoyer les fichiers SVN non versionnés"
 
 msgid "Clean Up SVN Locks"
 msgstr "Nettoyer les cadenas SVN"
+
+msgid "Cleaning Code"
+msgstr "Codes d'entretien"
 
 msgid "Cleanup Descriptions"
 msgstr "Nettoyer les descriptions"
@@ -4279,6 +4285,9 @@ msgstr "Fax"
 msgid "Fax Message"
 msgstr "Fax"
 
+msgid "Feature"
+msgstr "Particularité"
+
 msgid "February"
 msgstr "Février"
 
@@ -4961,7 +4970,7 @@ msgid "Industrial Phase"
 msgstr "Phase industrielle"
 
 msgid "Industrial Process Description"
-msgstr "Explications pour la fabrication"
+msgstr "Détails de gamme opératoire"
 
 msgid "Ingested Documents"
 msgstr "Documents ingérés"
@@ -7035,7 +7044,7 @@ msgid "Price for one unit."
 msgstr "Prix d'une unité."
 
 msgid "Priced Quantity"
-msgstr "Quantité correspondant au prix unitaire"
+msgstr "Quantité correspondant au prix"
 
 msgid "Pricing Interaction Workflow"
 msgstr "Workflow d'interaction des prix"
@@ -7488,7 +7497,7 @@ msgid "Quality"
 msgstr "Qualité"
 
 msgid "Quality Reference"
-msgstr "Qualité"
+msgstr "Référence qualité"
 
 msgid "Quality reference"
 msgstr "Réf Qualité Support"
