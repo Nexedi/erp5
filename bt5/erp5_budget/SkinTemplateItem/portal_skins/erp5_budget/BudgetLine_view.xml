@@ -98,8 +98,8 @@
                     <value>
                       <list>
                         <string>my_title</string>
-                        <string>your_total_initial_budget</string>
                         <string>my_int_index</string>
+                        <string>your_total_initial_budget</string>
                       </list>
                     </value>
                 </item>
