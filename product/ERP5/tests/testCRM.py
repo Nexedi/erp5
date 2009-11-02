@@ -685,14 +685,13 @@ class TestCRMMailSend(ERP5TypeTestCase):
     last_message_1, last_message_2 = self.portal.MailHost._message_list[-2:]
     self.assertNotEquals((), last_message_1)
     self.assertNotEquals((), last_message_2)
-    # check last message 1
-    mfrom, mto, messageText = last_message_1
-    self.assertEquals('"Me" <me@erp5.org>', mfrom)
-    self.assertEquals(['"Recipient" <recipient@example.com>'], mto)
-    # check last message 2
-    mfrom, mto, messageText = last_message_2
-    self.assertEquals('"Me" <me@erp5.org>', mfrom)
-    self.assertEquals(['"Me" <me@erp5.org>'], mto)
+    # check last message 1 and last message 2 (the order is random)
+    # both should have 'From: Me'
+    self.assertEquals(['"Me" <me@erp5.org>', '"Me" <me@erp5.org>'],
+                      [x[0] for x in (last_message_1, last_message_2)])
+    # one should have 'To: Me' and the other should have 'To: Recipient'
+    self.assertEquals([['"Me" <me@erp5.org>'], ['"Recipient" <recipient@example.com>']],
+                      sorted([x[1] for x in (last_message_1, last_message_2)]))
 
   def test_MailFromMailMessageEventNoSendMail(self):
     # passing start_action transition on event workflow will send an email to the
