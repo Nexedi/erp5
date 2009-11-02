@@ -102,6 +102,10 @@
                           <string>Client</string>
                         </tuple>
                         <tuple>
+                          <string>destination_project</string>
+                          <string>Client Project</string>
+                        </tuple>
+                        <tuple>
                           <string>reference</string>
                           <string>Reference</string>
                         </tuple>
@@ -137,10 +141,6 @@
                         <tuple>
                           <string>destination_decision_title</string>
                           <string>Requester</string>
-                        </tuple>
-                        <tuple>
-                          <string>destination_project</string>
-                          <string>Client Project</string>
                         </tuple>
                         <tuple>
                           <string>source_title</string>
