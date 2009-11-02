@@ -65,7 +65,11 @@ except ImportError:
         # FIXME: Remove this check once we're using getUtility
         if ITranslationDomain.providedBy(translation_domain):
             return translation_domain.translate
-        return zope.i18n.translate
+        # Localizer above does not like the 'domain' keyword, but zope.i18n
+        # needs it.
+        def translate(**kw):
+          return zope.i18n.translate(domain=domain, **kw)
+        return translate
 
     def translate(self, domain, msgid, context=None, **kw):
         translate = self.getTranslateMethod(context, domain)
@@ -76,7 +80,7 @@ except ImportError:
         # MessageCatalog abides by the zope.i18n.interface definitions.
         # (Actually, it ignores the context).
         request = aq_get(context, 'REQUEST', None)
-        return translate(msgid=msgid, domain=domain, context=request, **kw)
+        return translate(msgid=msgid, context=request, **kw)
 
   getGlobalTranslationService = GlobalTranslationService
 
