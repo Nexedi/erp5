@@ -44,7 +44,9 @@ class TestBug(ERP5TypeTestCase):
   RUN_ALL_TEST = 1
   QUIET = 1
   person_portal_type = "Person" 
+  assignment_portal_type = "Assignment"
   project_portal_type = "Project"
+  bug_portal_type = "Bug"
   organisation_portal_type  = "Organisation"
 
   def getTitle(self):
@@ -114,19 +116,21 @@ class TestBug(ERP5TypeTestCase):
       assignment.open()
       transaction.commit()
       self.tic()
-      module_list = []
       portal_type_list = []
       for portal_type in (self.project_portal_type,
+                          self.bug_portal_type,
+                          self.person_portal_type,
+                          self.assignment_portal_type,
                           self.organisation_portal_type,):
-        module = portal.getDefaultModule(portal_type)
-        module_list.append(module)
         portal_type_list.append(portal_type)
-        portal_type_list.append(module.getPortalType())
+        module = portal.getDefaultModule(portal_type, None)
+        if module is not None:
+          portal_type_list.append(module.getPortalType())
 
       for portal_type in portal_type_list:
         ti = portal.portal_types[portal_type]
         ti.newContent(portal_type='Role Information',
-          role_name_list=('Auditor','Author','Assignee','Assignor','Manager'),
+          role_name_list=('Auditor','Author','Assignee','Assignor'),
           title='Dummy',
           role_base_category_script_id=
             'ERP5Type_getSecurityCategoryFromAssignment',
@@ -200,7 +204,7 @@ class TestBug(ERP5TypeTestCase):
     last_message = self.portal.MailHost._last_message
     self.assertNotEquals((), last_message)
     mfrom, mto, messageText = last_message
-    self.assertEquals('Portal Administrator <postmaster@localhost>', mfrom)
+    self.assertEquals('"dummy" <loggedperson@localhost>', mfrom)
     self.assertEquals(['person1@localhost'], mto)
     self.failUnless(bug.getTitle().replace(" ", "_") in messageText)
 
@@ -450,7 +454,8 @@ class TestBug(ERP5TypeTestCase):
     """
     if not run: return
     sequence_list = SequenceList()
-    step_list = [ 'stepCreateBug'
+    step_list = [ 'stepLoginUsualUser'
+                , 'stepCreateBug'
                 , 'stepCreateProject'
                 , 'stepCreatePerson1'
                 , 'stepCreatePerson2'
