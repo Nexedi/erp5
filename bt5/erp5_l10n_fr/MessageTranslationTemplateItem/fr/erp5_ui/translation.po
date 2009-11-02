@@ -9542,17 +9542,8 @@ msgstr "Réf Fournisseur"
 msgid "Supplier Reference"
 msgstr "Référence fournisseur"
 
-msgid "Supplier colour"
-msgstr "Coloris Fournisseur"
-
 msgid "Supplier must be defined"
 msgstr "Le fournisseur doit être défini"
-
-msgid "Supplier price"
-msgstr "Prix d'achat"
-
-msgid "Supplier reference"
-msgstr "Réf Fournisseur"
 
 msgid "Supplies"
 msgstr "Livraisons"
