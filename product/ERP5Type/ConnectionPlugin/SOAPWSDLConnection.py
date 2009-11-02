@@ -38,7 +38,7 @@ import threading
 
 class SOAPWSDLException(Exception):
 
-  __allow_access_to_unprotected_subobjects__ = True
+  __allow_access_to_unprotected_subobjects__ = 1
 
   def __init__(self, code, name, info):
     self.code = code
@@ -115,7 +115,7 @@ allow_class(HeaderAuthentication)
 
 class WSDLConnection(object):
 
-  __allow_access_to_unprotected_subobjects__ = True
+  __allow_access_to_unprotected_subobjects__ = 1
 
   def __init__(self, wsdl, credentials, service):
     self._wsdl = wsdl
@@ -138,7 +138,7 @@ class WSDLConnection(object):
 
 class PortWrapper(object):
 
-  __allow_access_to_unprotected_subobjects__ = True
+  __allow_access_to_unprotected_subobjects__ = 1
 
   def __init__(self, port):
     self._port = port
@@ -148,7 +148,7 @@ class PortWrapper(object):
 
 class MethodWrapper(object):
 
-  __allow_access_to_unprotected_subobjects__ = True
+  __allow_access_to_unprotected_subobjects__ = 1
 
   def __init__(self, method):
     self._method = method

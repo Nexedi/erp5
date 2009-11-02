@@ -39,7 +39,7 @@ class VirtualNode(object):
 
   This virtual document can be used in budget variations.
   """
-  __allow_access_to_unprotected_subobjects__ = True
+  __allow_access_to_unprotected_subobjects__ = 1
   def __init__(self, relative_url):
     """The Virtual Node will use the relative URL of the budget line for
     memberships.
