@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2008 Nexedi SA and Contributors. All Rights Reserved.
@@ -34,19 +35,14 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from AccessControl import getSecurityManager
 from AccessControl.SecurityManagement import newSecurityManager
 from zLOG import LOG
-from DateTime import DateTime
-from Products.CMFCore.tests.base.testcase import LogInterceptor
-from Testing.ZopeTestCase.PortalTestCase import PortalTestCase
-import ldap
 
-try:
-  from transaction import get as get_transaction
-except ImportError:
-  pass
+import transaction
 
-class TestERP5LdapCatalog(ERP5TypeTestCase, LogInterceptor):
+class TestERP5LdapCatalog(ERP5TypeTestCase):
   """
     Tests for ERP5 Ldap Catalog.
+  To bootstrap Ldap database:
+  run "ldapadd -c -x -h localhost -D "cn=test,dc=erp5,dc=org" -W -f bootstrap_erp5_ldap_catalog_test.ldif"
   """
 
   def getTitle(self):
@@ -56,8 +52,6 @@ class TestERP5LdapCatalog(ERP5TypeTestCase, LogInterceptor):
     return ('erp5_base', 'erp5_ldap_catalog',)
 
   # Different variables used for this test
-  run_all_test = 1
-  quiet = 0
   hostport = 'localhost:389'
   basedn = 'dc=erp5,dc=org'
   bind_as = 'cn=test,dc=erp5,dc=org'
@@ -76,7 +70,7 @@ class TestERP5LdapCatalog(ERP5TypeTestCase, LogInterceptor):
             self.bind_as,
             self.password,
             1)
-    get_transaction().commit()
+    transaction.commit()
     # make sure there is no message any more
     self.tic()
 
@@ -86,33 +80,21 @@ class TestERP5LdapCatalog(ERP5TypeTestCase, LogInterceptor):
                     self.getCategoryTool().region,
                     self.getCategoryTool().group ]:
       module.manage_delObjects(list(module.objectIds()))
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
-  def login(self):
-    uf = self.getPortal().acl_users
-    uf._doAddUser('test', '', ['Manager'], [])
-    user = uf.getUserById('test').__of__(uf)
-    newSecurityManager(None, user)
-
-  def test_01_HasEverything(self, quiet=quiet, run=run_all_test):
-    if not run: return
-    if not quiet:
-      ZopeTestCase._print('\nTest Has Everything ')
-      LOG('Testing... ', 0, 'testHasEverything')
+  def test_01_HasEverything(self):
+    """Test has everything
+    """
     self.assertTrue(self.getCategoryTool() is not None)
     self.assertTrue(self.getTypeTool() is not None)
     self.assertTrue(self.getLdapConnection() is not None)
     self.assertTrue(self.getCatalogTool() is not None)
 
-  def test_02_person_ldap_cataloging(self, quiet=quiet, run=run_all_test):
+  def test_02_person_ldap_cataloging(self):
     """
     Test Ldap Indexation
     """
-    if not run: return
-    if not quiet:
-      ZopeTestCase._print('\nTest Ldap Indexation ')
-      LOG('Testing... ', 0, 'test_02_person_ldap_cataloging')
     #Create 3 Persons
     for i in xrange(3):
       self.getPersonModule().newContent(portal_type='Person',
@@ -121,7 +103,7 @@ class TestERP5LdapCatalog(ERP5TypeTestCase, LogInterceptor):
                                         reference='foobar%s' % i,
                                         password='secret%s' % i,
                                         default_email_text='foo%s@bar.com' % i)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     #Check Indexation
     for p in self.getPersonModule().contentValues():
@@ -138,7 +120,7 @@ class TestERP5LdapCatalog(ERP5TypeTestCase, LogInterceptor):
       self.assertEqual(p.getPassword(), result_ldap.userPassword[0])
     #Clear Catalog
     self.getPortal().portal_catalog.erp5_mysql_innodb.manage_catalogClear()
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     #Check Catalog is cleared
     self.assertEqual(len(self.getPortal().z_ldap_search_person_list()), 0)
