@@ -1407,10 +1407,7 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn, 
         else:
           object_list = CMFHBTreeFolder.objectValues(self)
     else:
-      if self._tree is None:
-        object_list = []
-      else:
-        object_list = CMFBTreeFolder.objectValues(self, spec=spec)
+      object_list = CMFBTreeFolder.objectValues(self, spec=spec)
     if portal_type is not None:
       if type(portal_type) == type(''):
         portal_type = (portal_type,)

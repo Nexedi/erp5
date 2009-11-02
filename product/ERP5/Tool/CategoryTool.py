@@ -56,6 +56,8 @@ class CategoryTool(CopyContainer, CMFCategoryTool, BaseTool):
     # Declarative Security
     security = ClassSecurityInfo()
 
+    objectValues = BaseTool.objectValues
+
     # Filter content (ZMI))
     def filtered_meta_types(self, user=None):
         # Filters the list of available meta types.
