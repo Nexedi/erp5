@@ -44,6 +44,10 @@ class GeographicAddress:
             'description' : 'Zip code.',
             'type'        : 'string',
             'mode'        : 'w' },
+        {   'id'          : 'prefecture',
+            'description' : 'Prefecture.',
+            'type'        : 'string',
+            'mode'        : 'w' },
     )
 
     _categories = ( 'region', )
