@@ -92,7 +92,7 @@ base_id = \'movement\'\n
 \n
 for line in kw.get(\'listbox\'):\n
 \n
-  if line.has_key(\'listbox_key\') and (line[\'title\'] or line[\'reference\'] not in (\'\', None)):\n
+  if line.has_key(\'listbox_key\') and (line[\'reference\'] not in (\'\', None)):\n
     item = context.portal_catalog.getResultValue(\n
                                     portal_type=\'Item\',\n
                                     reference=line[\'reference\'])\n
