@@ -332,7 +332,7 @@ FROM\n
   , catalog as node, catalog as resource\n
 \n
 WHERE\n
-  1 = 1\n
+  <dtml-var stock_table_id>.uid = catalog.uid\n
 <dtml-if where_expression>\n
   AND <dtml-var where_expression>\n
 </dtml-if>\n
@@ -471,7 +471,7 @@ FROM\n
   , catalog as node, catalog as resource\n
 \n
 WHERE\n
-  1 = 1\n
+  <dtml-var stock_table_id>.uid = catalog.uid\n
 <dtml-if where_expression>\n
   AND <dtml-var where_expression>\n
 </dtml-if>\n
