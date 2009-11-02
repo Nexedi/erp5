@@ -647,6 +647,7 @@ precision</string> </value>
             <key> <string>src</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
+<dtml-let query="portal_catalog.buildSQLQuery(query=portal_catalog.getSecurityQuery())">\n
 SET @running_total_quantity := <dtml-var initial_running_total_quantity>,\n
     @running_total_price := <dtml-var initial_running_total_price>;\n
 <dtml-var sql_delimiter>\n
@@ -682,6 +683,11 @@ SELECT\n
   section.relative_url AS section_relative_url\n
 \n
 FROM\n
+  <dtml-in prefix="table" expr="query[\'from_table_list\']">\n
+    <dtml-if "table_key not in (\'stock\', \'catalog\')">\n
+      <dtml-var table_item> AS <dtml-var table_key>,\n
+    </dtml-if>\n
+  </dtml-in>\n
   stock\n
   <dtml-if section_filtered> INNER <dtml-else> LEFT </dtml-if>  \n
         JOIN catalog AS section ON (section.uid = stock.section_uid)\n
@@ -696,6 +702,9 @@ FROM\n
 \n
 WHERE\n
   1 = 1\n
+<dtml-if "query[\'where_expression\']">\n
+  AND <dtml-var "query[\'where_expression\']">\n
+</dtml-if>\n
 <dtml-if where_expression>\n
   AND <dtml-var where_expression>\n
 </dtml-if>\n
@@ -773,7 +782,7 @@ LIMIT\n
 </dtml-if>\n
 \n
 ) AS q1\n
-
+</dtml-let>
 
 ]]></string> </value>
         </item>
@@ -813,6 +822,7 @@ LIMIT\n
                         <key> <string>raw</string> </key>
                         <value> <string encoding="cdata"><![CDATA[
 
+<dtml-let query="portal_catalog.buildSQLQuery(query=portal_catalog.getSecurityQuery())">\n
 SET @running_total_quantity := <dtml-var initial_running_total_quantity>,\n
     @running_total_price := <dtml-var initial_running_total_price>;\n
 <dtml-var sql_delimiter>\n
@@ -848,6 +858,11 @@ SELECT\n
   section.relative_url AS section_relative_url\n
 \n
 FROM\n
+  <dtml-in prefix="table" expr="query[\'from_table_list\']">\n
+    <dtml-if "table_key not in (\'stock\', \'catalog\')">\n
+      <dtml-var table_item> AS <dtml-var table_key>,\n
+    </dtml-if>\n
+  </dtml-in>\n
   stock\n
   <dtml-if section_filtered> INNER <dtml-else> LEFT </dtml-if>  \n
         JOIN catalog AS section ON (section.uid = stock.section_uid)\n
@@ -862,6 +877,9 @@ FROM\n
 \n
 WHERE\n
   1 = 1\n
+<dtml-if "query[\'where_expression\']">\n
+  AND <dtml-var "query[\'where_expression\']">\n
+</dtml-if>\n
 <dtml-if where_expression>\n
   AND <dtml-var where_expression>\n
 </dtml-if>\n
@@ -939,7 +957,7 @@ LIMIT\n
 </dtml-if>\n
 \n
 ) AS q1\n
-
+</dtml-let>
 
 ]]></string> </value>
                     </item>
