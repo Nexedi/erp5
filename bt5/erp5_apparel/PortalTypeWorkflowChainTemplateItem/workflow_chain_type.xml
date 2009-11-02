@@ -17,7 +17,7 @@
  </chain>
  <chain>
   <type>Apparel Component</type>
-  <workflow>edit_workflow, validation_workflow</workflow>
+  <workflow>apparel_component_workflow, edit_workflow</workflow>
  </chain>
  <chain>
   <type>Apparel Consumption</type>
@@ -25,7 +25,7 @@
  </chain>
  <chain>
   <type>Apparel Fabric</type>
-  <workflow>edit_workflow, validation_workflow</workflow>
+  <workflow>apparel_component_workflow, edit_workflow</workflow>
  </chain>
  <chain>
   <type>Apparel Fabric Item</type>
