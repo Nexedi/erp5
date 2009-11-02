@@ -1737,7 +1737,8 @@ class TestTrackingList(InventoryAPITestCase):
     for date, location_dict in date_location_dict.iteritems():
       for param_id, location_uid in location_dict.iteritems():
         param_dict = {param_id: date}
-        uid_list = [x.node_uid for x in getTrackingList(aggregate_value=self.item, **param_dict)]
+        uid_list = [x.node_uid for x in getTrackingList(
+                            aggregate_uid=self.item.getUid(), **param_dict)]
         if location_uid is None:
           self.assertEqual(len(uid_list), 0)
         else:
