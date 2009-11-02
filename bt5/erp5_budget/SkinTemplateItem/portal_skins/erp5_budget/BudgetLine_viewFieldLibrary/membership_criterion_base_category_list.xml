@@ -303,18 +303,15 @@
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.Formulator.TALESField</string>
-          <string>TALESMethod</string>
-        </tuple>
-        <none/>
+        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>here/getVariationBaseCategoryList</string> </value>
+            <value> <string>python: context.getVariationBaseCategoryList() + context.getParentValue().getVariationBaseCategoryList() # XXX add resource ??</string> </value>
         </item>
       </dictionary>
     </pickle>

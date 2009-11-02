@@ -122,7 +122,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>cell/getCurrentBalance</string> </value>
+            <value> <string>python: cell.getCurrentBalance()  * context.BudgetLine_getConsumptionSign()</string> </value>
         </item>
       </dictionary>
     </pickle>

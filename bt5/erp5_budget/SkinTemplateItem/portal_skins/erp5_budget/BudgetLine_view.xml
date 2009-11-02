@@ -88,6 +88,8 @@
                       <list>
                         <string>matrixbox_membership_criterion_category_list</string>
                         <string>matrixbox_quantity</string>
+                        <string>matrixbox_destination_credit</string>
+                        <string>matrixbox_destination_debit</string>
                       </list>
                     </value>
                 </item>

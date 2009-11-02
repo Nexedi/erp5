@@ -150,14 +150,15 @@ for budget in budget_list:\n
                                 title=cell_name_dict[level_2_category])]\n
       \n
       for level_3_category in level_3_variation_category_list:\n
+        sign = budget_line.BudgetLine_getConsumptionSign()\n
         for cell in budget_line.getCellValueList():\n
           if not isVisibleCell(cell):\n
             continue\n
           if level_2_category in cell.getMembershipCriterionCategoryList() and\\\n
               level_3_category in cell.getMembershipCriterionCategoryList():\n
 \n
-            initial_budget = cell.getQuantity()\n
-            current_budget = cell.getCurrentBalance()\n
+            initial_budget = cell.getQuantity() * sign\n
+            current_budget = cell.getCurrentBalance() * sign\n
             engaged_budget = cell.getEngagedBudget()\n
             consumed_budget = cell.getConsumedBudget()\n
             available_budget = cell.getAvailableBudget()\n
@@ -316,6 +317,7 @@ return pformat(line_list)\n
                             <string>total_level_2_available_budget</string>
                             <string>level_2_line_list</string>
                             <string>level_3_category</string>
+                            <string>sign</string>
                             <string>cell</string>
                             <string>initial_budget</string>
                             <string>current_budget</string>

@@ -70,7 +70,9 @@ kw.setdefault(\'explanation_simulation_state\', context.getPortalReservedInvento
                                             + context.getPortalTransitInventoryStateList())\n
 \n
 # XXX use getBudgetConsumptionMethod ?\n
-return context.portal_simulation.getInventoryAssetPrice(src__=src__, **kw)\n
+if src__:\n
+  return context.portal_simulation.getInventoryAssetPrice(src__=src__, **kw)\n
+return (context.portal_simulation.getInventoryAssetPrice(**kw) or 0) * context.getParentValue().BudgetLine_getConsumptionSign()\n
 </string> </value>
         </item>
         <item>

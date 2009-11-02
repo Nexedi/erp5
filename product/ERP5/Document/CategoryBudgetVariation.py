@@ -168,12 +168,19 @@ class CategoryBudgetVariation(BudgetVariation):
   def initializeBudget(self, budget):
     """Initialize a budget.
     """
-    budget_variation_category_list =\
+    budget_variation_base_category_list =\
        list(budget.getVariationBaseCategoryList() or [])
+    budget_membership_criterion_base_category_list =\
+       list(budget.getMembershipCriterionBaseCategoryList() or [])
     base_category = self.getProperty('variation_base_category')
     if base_category:
-      budget_variation_category_list.append(base_category)
+      if base_category not in budget_variation_base_category_list:
+        budget_variation_base_category_list.append(base_category)
+      if base_category not in budget_membership_criterion_base_category_list:
+        budget_membership_criterion_base_category_list.append(base_category)
       budget.setVariationBaseCategoryList(
-              budget_variation_category_list)
+              budget_variation_base_category_list)
+      budget.setMembershipCriterionBaseCategoryList(
+              budget_membership_criterion_base_category_list)
 
 

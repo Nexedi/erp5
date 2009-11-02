@@ -30,13 +30,38 @@ from AccessControl import ClassSecurityInfo
 from AccessControl.ZopeGuards import guarded_getattr
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
 from Products.ERP5.Document.BudgetVariation import BudgetVariation
+from Products.ZSQLCatalog.SQLCatalog import Query, NegatedQuery
+from Products.ERP5Type.Message import translateString
+
+
+class VirtualNode(object):
+  """A Virtual Node for all Other Nodes.
+
+  This virtual document can be used in budget variations.
+  """
+  __allow_access_to_unprotected_subobjects__ = True
+  def __init__(self, relative_url):
+    """The Virtual Node will use the relative URL of the budget line for
+    memberships.
+    """
+    self.relative_url = relative_url
+
+  def getTitle(self):
+    return translateString('All Others')
+
+  def getRelativeUrl(self):
+    return self.relative_url
+
+  def getUid(self):
+    return -1L
 
 
 class NodeBudgetVariation(BudgetVariation):
   """ A budget variation for node
 
   A script will return the list of possible nodes, or they will be configured
-  explicitly on the budget variation.
+  explicitly on the budget variation. It is also possible to include a virtual
+  node for all others not selected nodes.
   """
   # Default Properties
   property_sheets = ( PropertySheet.Base
@@ -72,6 +97,9 @@ class NodeBudgetVariation(BudgetVariation):
     if node_select_method_id:
       return guarded_getattr(context, node_select_method_id)()
     # no script defined, used the explicitly selected values
+    if self.getProperty('include_virtual_other_node'):
+      return self.getAggregateValueList() + [
+                    VirtualNode(context.getRelativeUrl()), ]
     return self.getAggregateValueList()
 
   def _getNodeTitle(self, node):
@@ -105,6 +133,7 @@ class NodeBudgetVariation(BudgetVariation):
     base_category = self.getProperty('variation_base_category')
     if not base_category:
       return dict()
+    budget_line = budget_cell.getParentValue()
     for criterion_category in budget_cell.getMembershipCriterionCategoryList():
       if '/' not in criterion_category: # safe ...
         continue
@@ -113,6 +142,14 @@ class NodeBudgetVariation(BudgetVariation):
         if axis == 'movement':
           axis = 'default_%s' % base_category
         axis = '%s_uid' % axis
+        if node_url == budget_line.getRelativeUrl():
+          # This is the "All Other" virtual node
+          other_uid_list = []
+          for node in self._getNodeList(budget_line):
+            if '%s/%s' % (base_category, node.getRelativeUrl()) in\
+                                    budget_line.getVariationCategoryList():
+              other_uid_list.append(node.getUid())
+          return {axis: NegatedQuery(Query(**{axis: other_uid_list}))}
         return {axis:
                   self.getPortalObject().unrestrictedTraverse(node_url).getUid()}
 
@@ -161,12 +198,18 @@ class NodeBudgetVariation(BudgetVariation):
   def initializeBudget(self, budget):
     """Initialize a budget.
     """
-    budget_variation_category_list =\
+    budget_variation_base_category_list =\
        list(budget.getVariationBaseCategoryList() or [])
+    budget_membership_criterion_base_category_list =\
+       list(budget.getMembershipCriterionBaseCategoryList() or [])
     base_category = self.getProperty('variation_base_category')
     if base_category:
-      budget_variation_category_list.append(base_category)
+      if base_category not in budget_variation_base_category_list:
+        budget_variation_base_category_list.append(base_category)
+      if base_category not in budget_membership_criterion_base_category_list:
+        budget_membership_criterion_base_category_list.append(base_category)
       budget.setVariationBaseCategoryList(
-              budget_variation_category_list)
-
+              budget_variation_base_category_list)
+      budget.setMembershipCriterionBaseCategoryList(
+              budget_membership_criterion_base_category_list)
 

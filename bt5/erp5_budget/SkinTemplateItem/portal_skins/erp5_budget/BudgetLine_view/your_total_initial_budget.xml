@@ -13,10 +13,10 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
                 <string>default</string>
-                <string>precision</string>
                 <string>editable</string>
+                <string>precision</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -63,6 +63,10 @@
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
                     </value>
+                </item>
+                <item>
+                    <key> <string>editable</string> </key>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
@@ -138,7 +142,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: sum([cell.getQuantity() for cell in context.getCellValueList()])</string> </value>
+            <value> <string>python: sum([cell.getQuantity() for cell in context.getCellValueList()]) * context.BudgetLine_getConsumptionSign()</string> </value>
         </item>
       </dictionary>
     </pickle>

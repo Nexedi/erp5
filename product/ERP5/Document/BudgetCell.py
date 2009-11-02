@@ -32,9 +32,11 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
 from Products.ERP5.Document.Predicate import Predicate
 from Products.ERP5.Document.MetaNode import MetaNode
+from Products.ERP5.Document.Movement import Movement
 
-class BudgetCell(Predicate, MetaNode):
+class BudgetCell(Predicate, MetaNode, Movement):
     """ Budget Cell defines a cell of budget.
+    XXX This is not a Movement, but we need getDestinationCredit
     """
 
     # Default Properties
