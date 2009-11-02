@@ -53,14 +53,10 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>def sort_method(a, b):\n
-  return cmp(a.Account_getFormattedTitle(),\n
-             b.Account_getFormattedTitle())\n
-\n
-account_list = [a.getObject() for a in context.getPortalObject().account_module.searchFolder(\n
+            <value> <string>account_list = [a.getObject() for a in context.getPortalObject().account_module.searchFolder(\n
                validation_state=\'validated\')]\n
 \n
-account_list.sort(sort_method)\n
+account_list.sort(key=lambda account: account.Account_getFormattedTitle())\n
 return account_list\n
 </string> </value>
         </item>
@@ -98,7 +94,6 @@ return account_list\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>sort_method</string>
                             <string>append</string>
                             <string>$append0</string>
                             <string>_getiter_</string>
