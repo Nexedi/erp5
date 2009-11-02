@@ -1488,6 +1488,24 @@ class TestMovementHistoryList(InventoryAPITestCase):
     self.assertEquals(2, len(mvt_history_list))
     self.assertEquals(0, sum([r.total_quantity for r in mvt_history_list]))
  
+  def testSameNodeSameDatesSameSections(self):
+    getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
+    mvt = self._makeMovement( quantity=2,
+                              start_date=DateTime(),
+                              source_value=self.node,
+                              destination_value=self.node,
+                              source_section_value=self.section,
+                              destination_section_value=self.section,)
+    # For now, if you want to get movements from same node, same dates, same
+    # sections, you have to pass ignore_group_by=True to ignore default
+    # grouping.
+    mvt_history_list = getMovementHistoryList(
+                            ignore_group_by=True,
+                            node_uid=self.node.getUid(),
+                            section_uid=self.section.getUid())
+    self.assertEquals(2, len(mvt_history_list))
+    self.assertEquals(0, sum([r.total_quantity for r in mvt_history_list]))
+ 
   def testPrecision(self):
     # getMovementHistoryList supports a precision= argument to specify the
     # precision to round
