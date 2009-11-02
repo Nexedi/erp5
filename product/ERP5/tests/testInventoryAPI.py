@@ -111,6 +111,8 @@ class InventoryAPITestCase(ERP5TypeTestCase):
                                   portal_type='Bank Account')
     self.mirror_section = self._makeOrganisation(title='Mirror Section')
     self.mirror_node = self._makeOrganisation(title='Mirror Node')
+    self.project = self._makeProject(title='Project')
+    self.other_project = self._makeProject(title='Other Project')
     self.resource = self.getProductModule().newContent(
                                   title='Resource',
                                   portal_type='Product')
@@ -198,7 +200,8 @@ class InventoryAPITestCase(ERP5TypeTestCase):
     """ erp5_trade is required for transit_simulation_state
         erp5_apparel is required for item
     """
-    return ('erp5_base', 'erp5_pdm', 'erp5_dummy_movement', 'erp5_trade', 'erp5_apparel')
+    return ('erp5_base', 'erp5_pdm', 'erp5_dummy_movement', 'erp5_trade',
+            'erp5_apparel', 'erp5_project')
 
   # TODO: move this to a base class {{{
   @reindex
@@ -208,6 +211,14 @@ class InventoryAPITestCase(ERP5TypeTestCase):
           portal_type='Organisation',
           **kw)
     return org
+
+  @reindex
+  def _makeProject(self, **kw):
+    """Creates an project."""
+    prj = self.getPortal().project_module.newContent(
+          portal_type='Project',
+          **kw)
+    return prj
 
   @reindex
   def _makeSalePackingList(self, **kw):
@@ -442,25 +453,33 @@ class TestInventory(InventoryAPITestCase):
     """Tests inventory on project"""
     getInventory = self.getSimulationTool().getInventory
     self._makeMovement(quantity=100,
-                       destination_project_value=self.mirror_node)
+                       destination_project_value=self.project)
+    self._makeMovement(quantity=100,
+                       source_project_value=self.other_project)
     self.assertEquals(getInventory(
-                        project=self.mirror_node.getRelativeUrl()), 100)
+                        project=self.project.getRelativeUrl()), 100)
+    self.assertEquals(getInventory(
+                        project=self.other_project.getRelativeUrl()), -100)
 
   def test_ProjectUid(self):
     """Tests inventory on project uid"""
     getInventory = self.getSimulationTool().getInventory
     self._makeMovement(quantity=100,
-                       destination_project_value=self.mirror_node)
+                       destination_project_value=self.project)
+    self._makeMovement(quantity=100,
+                       source_project_value=self.other_project)
     self.assertEquals(getInventory(
-                        project_uid=self.mirror_node.getUid()), 100)
+                        project_uid=self.project.getUid()), 100)
+    self.assertEquals(getInventory(
+                        project_uid=self.other_project.getUid()), -100)
 
   def test_ProjectCategory(self):
     """Tests inventory on project category"""
     # this test uses unrealistic data
     getInventory = self.getSimulationTool().getInventory
-    self.mirror_node.setGroup('level1/level2')
+    self.project.setGroup('level1/level2')
     self._makeMovement(quantity=100,
-                       destination_project_value=self.mirror_node)
+                       destination_project_value=self.project)
     self.assertEquals(getInventory(
                         project_category='group/level1'), 100)
     self.assertEquals(getInventory(
@@ -470,9 +489,9 @@ class TestInventory(InventoryAPITestCase):
     """Tests inventory on project category strict membership"""
     # this test uses unrealistic data
     getInventory = self.getSimulationTool().getInventory
-    self.mirror_node.setGroup('level1/level2')
+    self.project.setGroup('level1/level2')
     self._makeMovement(quantity=100,
-                       destination_project_value=self.mirror_node)
+                       destination_project_value=self.project)
     self.assertEquals(getInventory(
                 project_category_strict_membership='group/level1'), 0)
     self.assertEquals(getInventory(
