@@ -5873,10 +5873,10 @@ msgid "Net Total Price"
 msgstr "Montant Net"
 
 msgid "Net Width"
-msgstr "Largeur utile"
+msgstr "Laize utile"
 
 msgid "Net Width (cm)"
-msgstr "Largeur utile (cm)"
+msgstr "Laize utile (cm)"
 
 msgid "Net payable"
 msgstr "Net à payer"
@@ -7605,7 +7605,7 @@ msgid "Ratio Settings"
 msgstr "Constantes"
 
 msgid "Raw Width (cm)"
-msgstr "Largeur brute (cm)"
+msgstr "Laize (cm)"
 
 msgid "Re Assign Bug"
 msgstr "Réassigner le bogue"
