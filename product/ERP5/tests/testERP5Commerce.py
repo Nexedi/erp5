@@ -31,7 +31,6 @@ import string
 import transaction
 import urllib
 
-from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import FileUpload
 
@@ -91,8 +90,6 @@ class TestCommerce(ERP5TypeTestCase):
   Product_getRelatedDescription
   Person_editPersonalInformation
   """
-
-  run_all_test = 1
 
   def getTitle(self):
     return "E-Commerce System"
