@@ -95,10 +95,10 @@
                         <string>my_title</string>
                         <string>my_quality_reference</string>
                         <string>my_drawing_reference</string>
-                        <string>my_apparel_fabric_template_title</string>
-                        <string>my_quantity_unit_list</string>
                         <string>my_resource</string>
                         <string>my_visual_pattern</string>
+                        <string>my_quantity_unit_list</string>
+                        <string>my_apparel_fabric_template_title</string>
                         <string>my_trade_description</string>
                         <string>my_colour_count</string>
                         <string>my_raw_width</string>

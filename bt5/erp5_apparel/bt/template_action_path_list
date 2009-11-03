@@ -53,6 +53,7 @@ Apparel Component | purchase_price_view
 Apparel Component | sale_price_view
 Apparel Component | view
 Apparel Component | view_composition
+Apparel Component | view_measure
 Apparel Consumption Module | csv_export
 Apparel Consumption Module | csv_import
 Apparel Consumption Module | list_ui
@@ -80,7 +81,7 @@ Apparel Fabric Module | search
 Apparel Fabric Module | sort_on
 Apparel Fabric Module | view
 Apparel Fabric Module | workflow_report
-Apparel Fabric | instructions_view
+Apparel Fabric | instruction_view
 Apparel Fabric | purchase_price_view
 Apparel Fabric | sale_price_view
 Apparel Fabric | view
