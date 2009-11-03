@@ -17,15 +17,15 @@
  </chain>
  <chain>
   <type>Task</type>
-  <workflow>task_workflow, edit_workflow, order_simulation_interaction_workflow</workflow>
+  <workflow>edit_workflow, order_simulation_interaction_workflow, task_workflow</workflow>
  </chain>
  <chain>
   <type>Task Line</type>
-  <workflow>order_movement_simulation_interaction_workflow, edit_workflow</workflow>
+  <workflow>edit_workflow, order_movement_simulation_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>Task Report</type>
-  <workflow>delivery_causality_workflow, delivery_simulation_interaction_workflow, delivery_causality_interaction_workflow, edit_workflow, task_report_workflow</workflow>
+  <workflow>delivery_causality_interaction_workflow, delivery_causality_workflow, delivery_simulation_interaction_workflow, edit_workflow, task_report_workflow</workflow>
  </chain>
  <chain>
   <type>Task Report Line</type>

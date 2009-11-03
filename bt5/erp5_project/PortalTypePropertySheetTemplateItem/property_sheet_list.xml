@@ -1,21 +1,21 @@
 <property_sheet_list>
  <portal_type id="Project Line">
-  <item>SortIndex</item>
-  <item>OutcomeDescription</item>
   <item>Amount</item>
+  <item>OutcomeDescription</item>
+  <item>SortIndex</item>
  </portal_type>
  <portal_type id="Project Milestone">
-  <item>SortIndex</item>
   <item>OutcomeDescription</item>
+  <item>SortIndex</item>
  </portal_type>
  <portal_type id="Requirement">
-  <item>XMLObject</item>
-  <item>Document</item>
-  <item>Folder</item>
   <item>Comment</item>
+  <item>Document</item>
   <item>DublinCore</item>
+  <item>Folder</item>
   <item>Reference</item>
   <item>SortIndex</item>
+  <item>XMLObject</item>
  </portal_type>
  <portal_type id="Requirement Document">
   <item>Reference</item>
