@@ -367,6 +367,8 @@ class FolderMixIn(ExtensionClass.Base):
     else:
       return None
 
+
+OFS_HANDLER = 0
 BTREE_HANDLER = 1
 HBTREE_HANDLER = 2
 
@@ -1386,38 +1388,31 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn, 
                    **kw):
     # Returns list of objects contained in this folder.
     #  (no docstring to prevent publishing)
-
     if meta_type is not None:
       spec = meta_type
-    # when an object inherits from Folder after it was instanciated, it lacks
-    # its BTreeFolder properties.
-#     if getattr(self, '_tree', None) is None:
-#       try:
-#         self._initBTrees()
-#       except AttributeError:
-#         from Products.BTreeFolder2.BTreeFolder2 import BTreeFolder2Base
-#         BTreeFolder2Base.__init__(self, self.getId())
-
-    if self._folder_handler == HBTREE_HANDLER:
-      if self._htree is None:
-        object_list = []
-      else:
-        if kw.has_key("base_id"):
-          object_list = CMFHBTreeFolder.objectValues(self, base_id=kw['base_id'])
-        else:
-          object_list = CMFHBTreeFolder.objectValues(self)
-    else:
+    if self._folder_handler == BTREE_HANDLER:
+      if self._tree is None:
+        return []
       object_list = CMFBTreeFolder.objectValues(self, spec=spec)
+    elif self._folder_handler == HBTREE_HANDLER:
+      if self._htree is None:
+        return []
+      if 'base_id' in kw:
+        object_list = CMFHBTreeFolder.objectValues(self, base_id=kw['base_id'])
+      else:
+        object_list = CMFHBTreeFolder.objectValues(self)
+    else:
+      object_list = map(self._getOb, self.objectIds(spec))
     if portal_type is not None:
-      if type(portal_type) == type(''):
+      if isinstance(portal_type, str):
         portal_type = (portal_type,)
       object_list = filter(lambda x: x.getPortalType() in portal_type,
                            object_list)
     if checked_permission is not None:
       checkPermission = getSecurityManager().checkPermission
-      object_list = [o for o in object_list if checkPermission(checked_permission, o)]
-    object_list = sortValueList(object_list, sort_on, sort_order, **kw)
-    return object_list
+      object_list = [o for o in object_list
+                       if checkPermission(checked_permission, o)]
+    return sortValueList(object_list, sort_on, sort_order, **kw)
 
   security.declareProtected( Permissions.AccessContentsInformation,
                              'contentValues' )

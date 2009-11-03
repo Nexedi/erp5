@@ -36,6 +36,7 @@ from AccessControl import ClassSecurityInfo
 from Acquisition import aq_base
 from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type import Permissions
+from Products.ERP5Type.Core.Folder import OFS_HANDLER
 from Products.ERP5Type.CopySupport import CopyContainer
 from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type.Cache import caching_instance_method
@@ -52,6 +53,7 @@ class CategoryTool(CopyContainer, CMFCategoryTool, BaseTool):
     meta_type       = 'ERP5 Categories'
     portal_type     = 'Category Tool'
     allowed_types   = ( 'ERP5 Base Category',)
+    _folder_handler = OFS_HANDLER
 
     # Declarative Security
     security = ClassSecurityInfo()
