@@ -58,6 +58,12 @@ class ActionInformation(XMLObject):
                     , PropertySheet.ActionInformation
                     )
 
+  def _setActionPermission(self, value):
+    # XXX IMO, List.Setter should not behave like List.ListSetter
+    #     This is a workaround so that a value like 'Modify portal content'
+    #     is not converted to ['Modify', 'portal', 'content'] -- jm
+    return self._setActionPermissionList((value,))
+
   def _setAction(self, value):
     """Overridden setter for 'action' to accept strings and clean null values
     """
