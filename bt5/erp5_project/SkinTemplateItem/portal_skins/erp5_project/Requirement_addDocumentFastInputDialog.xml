@@ -104,7 +104,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Requirement_addDocumentFastInput</string> </value>
+            <value> <string>Requirement_addDocumentFastInputDialog</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>

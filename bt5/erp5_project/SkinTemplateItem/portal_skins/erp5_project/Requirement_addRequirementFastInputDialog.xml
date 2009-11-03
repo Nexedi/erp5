@@ -38,7 +38,7 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string>ProjectLine_generateTasks</string> </value>
+            <value> <string>Requirement_generateRequirements</string> </value>
         </item>
         <item>
             <key> <string>encoding</string> </key>
@@ -52,7 +52,6 @@
             <key> <string>group_list</string> </key>
             <value>
               <list>
-                <string>left</string>
                 <string>bottom</string>
                 <string>hidden</string>
               </list>
@@ -74,18 +73,10 @@
                     <key> <string>hidden</string> </key>
                     <value>
                       <list>
-                        <string>listbox_task_title</string>
-                        <string>listbox_task_comment</string>
-                        <string>listbox_task_start_date</string>
-                        <string>listbox_task_stop_date</string>
-                        <string>listbox_task_requirement</string>
+                        <string>listbox_requirement_title</string>
+                        <string>listbox_sub_requirement_description</string>
+                        <string>listbox_sub_requirement_title</string>
                       </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>left</string> </key>
-                    <value>
-                      <list/>
                     </value>
                 </item>
               </dictionary>
@@ -93,7 +84,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ProjectLine_addTaskFastInput</string> </value>
+            <value> <string>Requirement_addRequirementsFastInputDialog</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -117,7 +108,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Add Tasks</string> </value>
+            <value> <string>Add Requirements</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>
