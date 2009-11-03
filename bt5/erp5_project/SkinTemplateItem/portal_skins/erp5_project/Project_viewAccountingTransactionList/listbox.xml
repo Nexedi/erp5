@@ -323,15 +323,15 @@
                       <list>
                         <tuple>
                           <string>debit</string>
-                          <string>Entity_statDebit</string>
+                          <string>Project_statDebit</string>
                         </tuple>
                         <tuple>
                           <string>credit</string>
-                          <string>Entity_statCredit</string>
+                          <string>Project_statCredit</string>
                         </tuple>
                         <tuple>
                           <string>total_price</string>
-                          <string>Entity_statBalance</string>
+                          <string>Project_statBalance</string>
                         </tuple>
                       </list>
                     </value>
