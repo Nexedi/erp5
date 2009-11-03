@@ -2,14 +2,10 @@ Person | jump_to_task
 Person | jump_to_task_report
 Project Cell | view
 Project Line | add_task_related
-Project Line | available_budget
 Project Line | constraint
-Project Line | consumed_budget
 Project Line | contents
 Project Line | create_new_file
-Project Line | current_budget
 Project Line | document_list
-Project Line | initial_budget
 Project Line | jump_to_related_sale_order_lines
 Project Line | jump_to_related_task
 Project Line | jump_to_related_task_report
@@ -76,7 +72,6 @@ Task Report Module | icalendar_export
 Task Report Module | planning_report
 Task Report Module | view
 Task Report Module | workflow_report
-Task Report | expense_view
 Task Report | jump_to_related_invoice
 Task Report | jump_to_related_task
 Task Report | payment_condition
