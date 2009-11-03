@@ -2270,19 +2270,23 @@ class TestInventoryDocument(InventoryAPITestCase):
       simulation_state='delivered')
     transaction.commit()
     self.tic()
-    inventory_kw={'node_uid': self.node_uid,
-                  'at_date': self.INVENTORY_DATE_3 +10}
-    value=self.INVENTORY_QUANTITY_3
+
+    def getCurrentInventoryPathList(resource, **kw):
+      # the brain is not a zsqlbrain instance here, so it does not
+      # have getPath().
+      return [x.path for x in resource.getCurrentInventoryList(**kw)]
    
     # use optimisation
-    self.assertEquals(True,movement in self.resource.getCurrentInventoryList(
-                                        from_date=movement.getStartDate(),
-                                         node_uid=self.node_uid))
+    self.assertTrue(movement.getPath() in getCurrentInventoryPathList(
+      self.resource,
+      node_uid=self.node_uid,
+      from_date=movement.getStartDate()))
+
     # without optimisation
-    self.assertEquals(True,movement in self.resource.getCurrentInventoryList(
-                                     optimisation__=False,
-                                     from_date=movement.getStartDate(),
-                                     node_uid=self.node_uid))
+    self.assertTrue(movement.getPath() in getCurrentInventoryPathList(
+      self.resource,
+      optimisation__=False,
+      from_date=movement.getStartDate()))
     
 class TestUnitConversion(InventoryAPITestCase):
   QUANTITY_UNIT_CATEGORIES = {
