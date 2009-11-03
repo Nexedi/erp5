@@ -23,7 +23,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>A Project Milestone</string> </value>
+            <value> <string>Use Project Milestone to define main steps of a project.</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>
@@ -45,11 +45,15 @@
         </item>
         <item>
             <key> <string>init_script</string> </key>
-            <value> <string></string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>permission</string> </key>
-            <value> <string></string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>redirect_script</string> </key>

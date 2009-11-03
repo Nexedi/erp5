@@ -23,7 +23,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>A Task Report Line</string> </value>
+            <value> <string>Use Task Report Line to detail different steps of task operations.</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>
@@ -47,11 +47,15 @@
         </item>
         <item>
             <key> <string>init_script</string> </key>
-            <value> <string></string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>permission</string> </key>
-            <value> <string></string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>title</string> </key>
