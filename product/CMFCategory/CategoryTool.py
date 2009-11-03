@@ -1591,9 +1591,9 @@ class CategoryTool( UniqueObject, Folder, Base ):
           return relative_url
         cache = getReadOnlyTransactionCache(self)
         if cache is not None:
-          key = ('resolveCategory', relative_url)
+          cache_key = ('resolveCategory', relative_url)
           try:
-            return cache[key]
+            return cache[cache_key]
           except KeyError:
             pass
 
@@ -1714,7 +1714,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
               'Could not access object %s' % relative_url)
 
         if cache is not None:
-          cache[key] = obj
+          cache[cache_key] = obj
 
         return obj
 
