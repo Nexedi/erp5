@@ -13,14 +13,15 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
+                <string>allow_creation</string>
+                <string>base_category</string>
+                <string>catalog_index</string>
+                <string>description</string>
+                <string>display_width</string>
+                <string>enabled</string>
+                <string>portal_type</string>
                 <string>title</string>
                 <string>width</string>
-                <string>display_width</string>
-                <string>base_category</string>
-                <string>portal_type</string>
-                <string>allow_creation</string>
-                <string>catalog_index</string>
-                <string>enabled</string>
               </list>
             </value>
         </item>
@@ -130,6 +131,10 @@
                 <item>
                     <key> <string>default_module</string> </key>
                     <value> <string>requirement</string> </value>
+                </item>
+                <item>
+                    <key> <string>description</string> </key>
+                    <value> <string>List of the specific needs to complete the task.</string> </value>
                 </item>
                 <item>
                     <key> <string>display_width</string> </key>

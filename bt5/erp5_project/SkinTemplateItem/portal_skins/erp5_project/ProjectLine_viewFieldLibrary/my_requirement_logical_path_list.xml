@@ -13,10 +13,11 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
                 <string>base_category</string>
-                <string>portal_type</string>
                 <string>catalog_index</string>
+                <string>description</string>
+                <string>portal_type</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -88,6 +89,10 @@
                 <item>
                     <key> <string>default_module</string> </key>
                     <value> <string>requirement</string> </value>
+                </item>
+                <item>
+                    <key> <string>description</string> </key>
+                    <value> <string>List of the specific needs to complete the project.</string> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>

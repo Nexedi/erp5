@@ -13,10 +13,11 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
                 <string>base_category</string>
-                <string>portal_type</string>
                 <string>catalog_index</string>
+                <string>description</string>
+                <string>portal_type</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -67,12 +68,6 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>items</string> </key>
-                    <value>
-                      <none/>
-                    </value>
-                </item>
-                <item>
                     <key> <string>target</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -94,6 +89,10 @@
                 <item>
                     <key> <string>default_module</string> </key>
                     <value> <string>task_module</string> </value>
+                </item>
+                <item>
+                    <key> <string>description</string> </key>
+                    <value> <string>The list of tasks that need to be fulfilled before this one is treated.</string> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>

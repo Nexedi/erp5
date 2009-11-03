@@ -13,12 +13,12 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>catalog_index</string>
-                <string>title</string>
-                <string>default_module</string>
-                <string>portal_type</string>
                 <string>base_category</string>
+                <string>catalog_index</string>
+                <string>description</string>
                 <string>height</string>
+                <string>portal_type</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -96,6 +96,10 @@
                 <item>
                     <key> <string>default_module</string> </key>
                     <value> <string>task_module</string> </value>
+                </item>
+                <item>
+                    <key> <string>description</string> </key>
+                    <value> <string>The list of project lines that need to be fulfilled before this one is treated.</string> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>

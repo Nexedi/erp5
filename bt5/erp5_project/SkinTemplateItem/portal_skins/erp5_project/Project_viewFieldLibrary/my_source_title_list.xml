@@ -13,10 +13,11 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
                 <string>base_category</string>
-                <string>portal_type</string>
                 <string>catalog_index</string>
+                <string>description</string>
+                <string>portal_type</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -88,6 +89,10 @@
                 <item>
                     <key> <string>default_module</string> </key>
                     <value> <string>person</string> </value>
+                </item>
+                <item>
+                    <key> <string>description</string> </key>
+                    <value> <string>The list of the resources involved in the project. Most of the time, it is a supplier\'s worker.</string> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>

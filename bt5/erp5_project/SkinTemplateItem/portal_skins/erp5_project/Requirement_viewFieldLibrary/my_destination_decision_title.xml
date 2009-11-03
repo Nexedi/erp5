@@ -13,10 +13,11 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>catalog_index</string>
-                <string>title</string>
-                <string>portal_type</string>
                 <string>base_category</string>
+                <string>catalog_index</string>
+                <string>description</string>
+                <string>portal_type</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -84,6 +85,10 @@
                 <item>
                     <key> <string>catalog_index</string> </key>
                     <value> <string>title</string> </value>
+                </item>
+                <item>
+                    <key> <string>description</string> </key>
+                    <value> <string>The person in charge of making all decision for this requirement.</string> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
