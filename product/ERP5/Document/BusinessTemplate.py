@@ -2864,10 +2864,16 @@ class ModuleTemplateItem(BaseTemplateItem):
             ptype = "list"
           else:
             ptype = "tuple"
+          role_list = list(perm[1])
+          # Skip if permission is not configured (i.e. no role at all
+          # with acquire permission, or Manager only without acquire
+          # permission).
+          if (not len(role_list) and ptype == 'list') or \
+                 (role_list == ['Manager'] and ptype == 'tuple'):
+            continue
+          role_list.sort()
           xml_data += "\n  <permission type='%s'>" %(ptype,)
           xml_data += '\n   <name>%s</name>' %(perm[0])
-          role_list = list(perm[1])
-          role_list.sort()
           for role in role_list:
             xml_data += '\n   <role>%s</role>' %(role)
           xml_data += '\n  </permission>'
@@ -2914,10 +2920,11 @@ class ModuleTemplateItem(BaseTemplateItem):
         else:
           module = portal.newContent(id=id, portal_type=str(mapping['portal_type']))
         module.setTitle(str(mapping['title']))
-        for name, role_list in list(mapping['permission_list']):
+        for name in valid_permissions.keys():
+          # By default, Manager only without acquire permission
+          role_list = dict(mapping['permission_list']).get(name, ('Manager',))
           acquire = (type(role_list) == type([]))
-          if name in valid_permissions:
-            module.manage_permission(name, roles=role_list, acquire=acquire)
+          module.manage_permission(name, roles=role_list, acquire=acquire)
 
   def _importFile(self, file_name, file):
     if not file_name.endswith('.xml'):
