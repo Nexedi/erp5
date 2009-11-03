@@ -3201,7 +3201,7 @@ class Base( CopyContainer,
           return history[0].get('time', None)
     if getattr(aq_base(self), 'CreationDate', None) is not None:
       return asDate(self.CreationDate())
-    return None
+    return None # JPS-XXX - try to find a way to return a creation date instead of None
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getModificationDate')
   def getModificationDate(self):
