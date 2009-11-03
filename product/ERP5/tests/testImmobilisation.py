@@ -121,18 +121,8 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
       self.getUserFolder()._doAddUser('manager', '', all_roles, [])
     self.login('manager')
     self.assignPASRolesToUser('test_user_1_', all_roles)
-    
-  
-  def checkUserFolderType(self, quiet=0, run=run_all_test):
-    """
-      Check the type of user folder to let the test working with both NuxUserGroup and PAS.
-    """
-    self.user_folder = self.getUserFolder()
-    self.PAS_installed = 0
-    if self.user_folder.meta_type == 'Pluggable Auth Service':
-      # we use PAS
-      self.PAS_installed = 1
-      
+
+
   def assignPASRolesToUser(self, user_name, role_list, quiet=0, run=run_all_test):
     """
       Assign a list of roles to one user with PAS.
@@ -163,20 +153,8 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
                                       , group             = user_data[3]
                                       , site              = user_data[4]
                                       )
-        if self.PAS_installed and len(user_roles) > 0:
-          # In the case of PAS, if we want global roles on user, we have to do it manually.
-          self.assignPASRolesToUser(user_login, user_roles)
-        elif not self.PAS_installed:
-          # The user_folder counterpart of the erp5 user must be
-          #   created manually in the case of NuxUserGroup.
-          self.user_folder.userFolderAddUser( name     = user_login
-                                            , password = ''
-                                            , roles    = user_roles
-                                            , domains  = []
-                                            )
-        # User assignment to security groups is also required, but is taken care of
-        #   by the assignment workflow when NuxUserGroup is used and
-        #   by ERP5Security PAS plugins in the context of PAS use.
+        # In the case of PAS, if we want global roles on user, we have to do it manually.
+        self.assignPASRolesToUser(user_login, user_roles)
         assignment.open()
         person.validate()
 
@@ -234,7 +212,6 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
     self.tic()
 
     self.workflow_tool = self.getWorkflowTool()
-    self.checkUserFolderType()
 
   def beforeTearDown(self):
     """

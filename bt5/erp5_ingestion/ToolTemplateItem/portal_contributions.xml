@@ -1461,12 +1461,6 @@
             </value>
         </item>
         <item>
-            <key> <string>__ac_local_group_roles__</string> </key>
-            <value>
-              <dictionary/>
-            </value>
-        </item>
-        <item>
             <key> <string>_count</string> </key>
             <value>
               <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>

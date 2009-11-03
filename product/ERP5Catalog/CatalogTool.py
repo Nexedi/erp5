@@ -35,7 +35,6 @@ from Products.ERP5Type.Cache import CachingMethod
 from AccessControl import ClassSecurityInfo, getSecurityManager
 from Products.CMFCore.CatalogTool import IndexableObjectWrapper as CMFCoreIndexableObjectWrapper
 from Products.CMFCore.utils import UniqueObject, _checkPermission, _getAuthenticatedUser, getToolByName
-from Products.CMFCore.utils import _mergedLocalRoles
 from Products.ERP5Type.Globals import InitializeClass, DTMLFile, package_home
 from Acquisition import aq_base, aq_inner, aq_parent, ImplicitAcquisitionWrapper
 from DateTime.DateTime import DateTime
@@ -49,6 +48,7 @@ from Products.CMFCore.Expression import Expression
 from Products.PageTemplates.Expressions import getEngine
 from MethodObject import Method
 
+from Products.ERP5Security import mergedLocalRoles
 from Products.ERP5Security.ERP5UserManager import SUPER_USER
 from Products.ERP5Type.Utils import sqlquote
 
@@ -57,41 +57,10 @@ import sys
 from zLOG import LOG, PROBLEM, WARNING, INFO
 import sets
 
-SECURITY_USING_NUX_USER_GROUPS, SECURITY_USING_PAS = range(2)
 ACQUIRE_PERMISSION_VALUE = []
-
-try:
-  from Products.PluggableAuthService import PluggableAuthService
-  PAS_meta_type = PluggableAuthService.PluggableAuthService.meta_type
-except ImportError:
-  PAS_meta_type = ''
-try:
-  from Products.ERP5Security import mergedLocalRoles as PAS_mergedLocalRoles
-except ImportError:
-  pass
-
-try:
-  from Products.NuxUserGroups import UserFolderWithGroups
-  NUG_meta_type = UserFolderWithGroups.meta_type
-except ImportError:
-  NUG_meta_type = ''
-try:
-  from Products.NuxUserGroups.CatalogToolWithGroups import mergedLocalRoles
-  from Products.NuxUserGroups.CatalogToolWithGroups import _getAllowedRolesAndUsers
-except ImportError:
-  pass
 
 from Persistence import Persistent
 from Acquisition import Implicit
-
-def getSecurityProduct(acl_users):
-  """returns the security used by the user folder passed.
-  (NuxUserGroup, ERP5Security, or None if anything else).
-  """
-  if acl_users.meta_type == PAS_meta_type:
-    return SECURITY_USING_PAS
-  elif acl_users.meta_type == NUG_meta_type:
-    return SECURITY_USING_NUX_USER_GROUPS
 
 
 class IndexableObjectWrapper(CMFCoreIndexableObjectWrapper):
@@ -118,17 +87,7 @@ class IndexableObjectWrapper(CMFCoreIndexableObjectWrapper):
       result_key = '_cache_result'
       if result_key not in self.__dict__:
         ob = self.__ob
-        security_product = getSecurityProduct(ob.acl_users)
-        withnuxgroups = security_product == SECURITY_USING_NUX_USER_GROUPS
-        withpas = security_product == SECURITY_USING_PAS
-
-        if withnuxgroups:
-          localroles = mergedLocalRoles(ob, withgroups=1)
-        elif withpas:
-          localroles = PAS_mergedLocalRoles(ob)
-        else:
-          # CMF
-          localroles = _mergedLocalRoles(ob)
+        localroles = mergedLocalRoles(ob)
         # For each group or user, we have a list of roles, this list
         # give in this order : [roles on object, roles acquired on the parent,
         # roles acquired on the parent of the parent....]
@@ -170,10 +129,7 @@ class IndexableObjectWrapper(CMFCoreIndexableObjectWrapper):
         user_role_dict = {}
         user_view_permission_role_dict = {}
         for user, roles in localroles.iteritems():
-          if withnuxgroups:
-            prefix = user
-          else:
-            prefix = 'user:' + user
+          prefix = 'user:' + user
           for role in roles:
             if (role in role_dict) and (getUserById(user) is not None):
               # If role is monovalued, check if key is a user.
@@ -408,8 +364,6 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
       return msg
         
     def _listAllowedRolesAndUsers(self, user):
-      security_product = getSecurityProduct(self.acl_users)
-      if security_product == SECURITY_USING_PAS:
         # We use ERP5Security PAS based authentication
         try:
           # check for proxy role in stack
@@ -436,10 +390,6 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
                 result.append('user:%s' % group)
         # end groups
         return result
-      elif security_product == SECURITY_USING_NUX_USER_GROUPS:
-        return _getAllowedRolesAndUsers(user)
-      else:
-        return CMFCoreCatalogTool._listAllowedRolesAndUsers(self, user)
 
     # Schema Management
     def editColumn(self, column_id, sql_definition, method_id, default_value, REQUEST=None, RESPONSE=None):

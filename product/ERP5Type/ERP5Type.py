@@ -35,21 +35,9 @@ from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 from Products.ERP5Type.Utils import deprecated, createExpressionContext
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.Cache import CachingMethod
+from Products.ERP5Security import ERP5UserManager
 
 ERP5TYPE_SECURITY_GROUP_ID_GENERATION_SCRIPT = 'ERP5Type_asSecurityGroupId'
-
-# Security uses ERP5Security by default
-try:
-  from Products.ERP5Security import ERP5UserManager
-except ImportError:
-  ERP5UserManager = None
-
-# If ERP5Security is not installed try NuxUserGroups
-if ERP5UserManager is None:
-  try:
-    from Products import NuxUserGroups
-  except ImportError:
-    NuxUserGroups = None
 
 from TranslationProviderBase import TranslationProviderBase
 
@@ -81,48 +69,23 @@ class LocalRoleAssignorMixIn(object):
         if owner:
           user_name = owner[1]
         else:
-          #FIXME We should check the type of the acl_users folder instead of
-          #      checking which product is installed.
-          if ERP5UserManager is not None:
-            # We use id for roles in ERP5Security
-            user_name = getSecurityManager().getUser().getId()
-          elif NuxUserGroups is not None:
-            user_name = getSecurityManager().getUser().getUserName()
-          else:
-            raise RuntimeError('Product "ERP5Security" was not found on your'
-              ' setup. Please install it to benefit from group-based security')
+          user_name = getSecurityManager().getUser().getId()
 
       group_id_role_dict = self.getLocalRolesFor(ob, user_name)
 
-      # Update role assignments to groups
-      if ERP5UserManager is not None: # Default implementation
-        # Clean old group roles
-        old_group_list = ob.get_local_roles()
-        ob.manage_delLocalRoles([x[0] for x in old_group_list])
-        # Save the owner
-        for group, role_list in old_group_list:
-          if 'Owner' in role_list:
-            group_id_role_dict.setdefault(group, set()).add('Owner')
-        # Assign new roles
-        for group, role_list in group_id_role_dict.iteritems():
-          if role_list:
-            ob.manage_addLocalRoles(group, role_list)
-      else: # NuxUserGroups implementation
-        # Clean old group roles
-        old_group_list = ob.get_local_group_roles()
-        # We duplicate role settings to mimic PAS
-        ob.manage_delLocalGroupRoles([x[0] for x in old_group_list])
-        ob.manage_delLocalRoles([x[0] for x in old_group_list])
-        # Save the owner
-        for group, role_list in old_group_list:
-          if 'Owner' in role_list:
-            group_id_role_dict.setdefault(group, set()).add('Owner')
-        # Assign new roles
-        for group, role_list in group_id_role_dict.iteritems():
-          # We duplicate role settings to mimic PAS
-          ob.manage_addLocalGroupRoles(group, role_list)
+      ## Update role assignments to groups
+      # Clean old group roles
+      old_group_list = ob.get_local_roles()
+      ob.manage_delLocalRoles([x[0] for x in old_group_list])
+      # Save the owner
+      for group, role_list in old_group_list:
+        if 'Owner' in role_list:
+          group_id_role_dict.setdefault(group, set()).add('Owner')
+      # Assign new roles
+      for group, role_list in group_id_role_dict.iteritems():
+        if role_list:
           ob.manage_addLocalRoles(group, role_list)
-      # Make sure that the object is reindexed
+      ## Make sure that the object is reindexed
       if reindex:
         ob.reindexObjectSecurity()
 

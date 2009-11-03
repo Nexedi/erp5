@@ -4468,36 +4468,21 @@ class LocalRolesTemplateItem(BaseTemplateItem):
       obj = p.unrestrictedTraverse(path.split('/', 1)[1])
       local_roles_dict = getattr(obj, '__ac_local_roles__',
                                         {}) or {}
-      group_local_roles_dict = getattr(obj, '__ac_local_group_roles__',
-                                        {}) or {}
-      self._objects[path] = (local_roles_dict, group_local_roles_dict)
+      self._objects[path] = (local_roles_dict, )
 
   # Function to generate XML Code Manually
   def generateXml(self, path=None):
-    local_roles_dict, group_local_roles_dict = self._objects[path]
-    local_roles_keys = local_roles_dict.keys()
-    group_local_roles_keys = group_local_roles_dict.keys()
-    local_roles_keys.sort()
-    group_local_roles_keys.sort()
+    local_roles_dict, = self._objects[path]
     # local roles
     xml_data = '<local_roles_item>'
     xml_data += '\n <local_roles>'
-    for key in local_roles_keys:
+    for key in sorted(local_roles_dict):
       xml_data += "\n  <role id='%s'>" %(key,)
       tuple = local_roles_dict[key]
       for item in tuple:
         xml_data += "\n   <item>%s</item>" %(item,)
       xml_data += '\n  </role>'
     xml_data += '\n </local_roles>'
-    # group local roles
-    xml_data += '\n <group_local_roles>'
-    for key in group_local_roles_keys:
-      xml_data += "\n  <role id='%s'>" %(key,)
-      tuple = group_local_roles_dict[key]
-      for item in tuple:
-        xml_data += '\n   <item>%s</item>' %(item,)
-      xml_data += '\n  </role>'
-    xml_data += '\n </group_local_roles>'
     xml_data += '\n</local_roles_item>'
     return xml_data
 
@@ -4538,20 +4523,7 @@ class LocalRolesTemplateItem(BaseTemplateItem):
       for item in item_list:
         item_type_list.append(str(item.childNodes[0].data))
       local_roles_dict[id] = item_type_list
-    # group local roles
-    group_local_roles = xml.getElementsByTagName('group_local_roles')[0]
-    local_roles_list = group_local_roles.getElementsByTagName('role')
-    group_local_roles_dict = {}
-    for role in local_roles_list:
-      id = role.getAttribute('id')
-      if isinstance(id, unicode):
-        id = id.encode('utf-8')
-      item_type_list = []
-      item_list = role.getElementsByTagName('item')
-      for item in item_list:
-        item_type_list.append(str(item.childNodes[0].data))
-      group_local_roles_dict[id] = item_type_list
-    self._objects['local_roles/'+file_name[:-4]] = (local_roles_dict, group_local_roles_dict)
+    self._objects['local_roles/'+file_name[:-4]] = (local_roles_dict, )
 
   def install(self, context, trashbin, **kw):
     update_dict = kw.get('object_to_update')
@@ -4565,9 +4537,8 @@ class LocalRolesTemplateItem(BaseTemplateItem):
             continue
         path = roles_path.split('/')[1:]
         obj = p.unrestrictedTraverse(path)
-        local_roles_dict, group_local_roles_dict = self._objects[roles_path]
+        local_roles_dict, = self._objects[roles_path]
         setattr(obj, '__ac_local_roles__', local_roles_dict)
-        setattr(obj, '__ac_local_group_roles__', group_local_roles_dict)
 
   def uninstall(self, context, **kw):
     p = context.getPortalObject()
@@ -4575,7 +4546,6 @@ class LocalRolesTemplateItem(BaseTemplateItem):
       path = roles_path.split('/')[1:]
       obj = p.unrestrictedTraverse(path)
       setattr(obj, '__ac_local_roles__', {})
-      setattr(obj, '__ac_local_group_roles__', {})
 
 class BusinessTemplate(XMLObject):
     """

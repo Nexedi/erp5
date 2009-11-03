@@ -1793,18 +1793,8 @@ class ERP5Generator(PortalGenerator):
       # Calling ERP5Site_reindexAll is useless.
 
   def setupUserFolder(self, p):
-    # We use if possible ERP5Security, then NuxUserGroups
-    try:
       from Products import ERP5Security
       from Products import PluggableAuthService
-    except ImportError:
-      ERP5Security = None
-      try:
-        import Products.NuxUserGroups
-        withnuxgroups = 1
-      except ImportError:
-        withnuxgroups = 0
-    if ERP5Security is not None:
       # Use Pluggable Auth Service instead of the standard acl_users.
       p.manage_addProduct['PluggableAuthService'].addPluggableAuthService()
       pas_dispatcher = p.acl_users.manage_addProduct['PluggableAuthService']
@@ -1842,12 +1832,6 @@ class ERP5Generator(PortalGenerator):
       p.acl_users.erp5_roles.manage_activateInterfaces(('IRolesPlugin',))
       p.acl_users.erp5_user_factory.manage_activateInterfaces(
                                         ('IUserFactoryPlugin',))
-    elif withnuxgroups:
-      # NuxUserGroups user folder
-      p.manage_addProduct['NuxUserGroups'].addUserFolderWithGroups()
-    else:
-      # Standard user folder
-      PortalGenerator.setupUserFolder(self, p)
 
   def setupPermissions(self, p):
     permission_dict = {

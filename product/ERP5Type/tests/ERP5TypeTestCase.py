@@ -123,7 +123,6 @@ ZopeTestCase.installProduct('PortalTransforms', quiet=install_product_quiet)
 ZopeTestCase.installProduct('MimetypesRegistry', quiet=install_product_quiet)
 
 # Security Stuff
-ZopeTestCase.installProduct('NuxUserGroups', quiet=install_product_quiet)
 ZopeTestCase.installProduct('PluggableAuthService', quiet=install_product_quiet)
 ZopeTestCase.installProduct('ERP5Security', quiet=install_product_quiet)
 

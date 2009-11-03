@@ -1914,16 +1914,13 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     """
     new_local_roles = {'ac':['Owner', 'Manager'],
                        'group_function': ['Auditor']}
-    new_local_group_roles = {'role:Authenticated':['Owner', 'Manager']}
     p = self.getPortal()
     module_id = sequence.get('module_id')
     module = p._getOb(module_id, None)
     self.failUnless(module is not None)
     module.__ac_local_roles__ = new_local_roles
-    module.__ac_local_group_roles__ = new_local_group_roles
     self.assertEquals(module.__ac_local_roles__, new_local_roles)
-    self.assertEquals(module.__ac_local_group_roles__, new_local_group_roles)
-    sequence.edit(local_roles=new_local_roles, local_group_roles=new_local_group_roles)
+    sequence.edit(local_roles=new_local_roles)
 
   def stepRemoveLocalRoles(self, sequence=None, sequence_list=None, **kw):
     """
@@ -1934,11 +1931,8 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     module = p._getOb(module_id, None)
     self.failUnless(module is not None)
     module.__ac_local_roles__ = {'someone_else': ['Associate']}
-    module.__ac_local_group_roles__ = {}
     new_local_roles = sequence.get('local_roles')
-    new_local_group_roles = sequence.get('local_group_roles')
     self.assertNotEquals(module.__ac_local_roles__, new_local_roles)
-    self.assertNotEquals(module.__ac_local_group_roles__, new_local_group_roles)
 
   def stepAddLocalRolesToBusinessTemplate(self, sequence=None, sequence_list=None, **kw):
     """
@@ -1954,26 +1948,22 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     Check presence of local roles
     """
     new_local_roles = sequence.get('local_roles')
-    new_local_group_roles = sequence.get('local_group_roles')
     p = self.getPortal()
     module_id = sequence.get('module_id')
     module = p._getOb(module_id, None)
     self.failUnless(module is not None)
     self.assertEquals(module.__ac_local_roles__, new_local_roles)
-    self.assertEquals(module.__ac_local_group_roles__, new_local_group_roles)
 
   def stepCheckLocalRolesRemoved(self, sequence=None, sequence_list=None, **kw):
     """
     Check non-presence of local roles
     """
     new_local_roles = sequence.get('local_roles')
-    new_local_group_roles = sequence.get('local_group_roles')
     p = self.getPortal()
     module_id = sequence.get('module_id')
     module = p._getOb(module_id, None)
     self.failUnless(module is not None)
     self.assertNotEquals(module.__ac_local_roles__, new_local_roles)
-    self.assertNotEquals(module.__ac_local_group_roles__, new_local_group_roles)
 
   # Document, Property Sheet, Extension And Test
   # they use the same class so only one test is required for them
