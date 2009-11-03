@@ -38,17 +38,7 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string>Requirement_generateRequirements</string> </value>
-        </item>
-        <item>
-            <key> <string>description</string> </key>
-            <value> <string></string> </value>
-        </item>
-        <item>
-            <key> <string>edit_order</string> </key>
-            <value>
-              <list/>
-            </value>
+            <value> <string>ProjectLine_generateTasks</string> </value>
         </item>
         <item>
             <key> <string>encoding</string> </key>
@@ -84,19 +74,18 @@
                     <key> <string>hidden</string> </key>
                     <value>
                       <list>
-                        <string>listbox_requirement_title</string>
-                        <string>listbox_sub_requirement_description</string>
-                        <string>listbox_sub_requirement_title</string>
+                        <string>listbox_task_title</string>
+                        <string>listbox_task_comment</string>
+                        <string>listbox_task_start_date</string>
+                        <string>listbox_task_stop_date</string>
+                        <string>listbox_task_requirement</string>
                       </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>left</string> </key>
                     <value>
-                      <list>
-                        <string>my_requirement_document_title</string>
-                        <string>my_requirement_document_description</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
               </dictionary>
@@ -104,7 +93,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Requirement_addDocumentFastInputDialog</string> </value>
+            <value> <string>ProjectLine_viewTaskFastInputDialog</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -128,7 +117,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Add Document with Requirements</string> </value>
+            <value> <string>Add Tasks</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>
