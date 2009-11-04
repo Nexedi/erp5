@@ -15,7 +15,7 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Apparel Component to Propose (%(count)s)</string> </value>
+            <value> <string>Apparel Component To Propose (%(count)s)</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
@@ -27,7 +27,7 @@ apparel_component_module/view?validation_state=draft&local_roles:list=Owner&rese
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Apparel Component to Propose</string> </value>
+            <value> <string>Apparel Component To Propose</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>

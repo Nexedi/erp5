@@ -15,7 +15,7 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Apparel Component to Approve (%(count)s)</string> </value>
+            <value> <string>Apparel Component To Approve (%(count)s)</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
