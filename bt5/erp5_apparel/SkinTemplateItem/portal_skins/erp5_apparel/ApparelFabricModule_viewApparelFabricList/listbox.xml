@@ -452,7 +452,7 @@
                           <string>Fabric Type</string>
                         </tuple>
                         <tuple>
-                          <string>visual_pattern_title</string>
+                          <string>visual_pattern_translated_title</string>
                           <string>Motive</string>
                         </tuple>
                         <tuple>
@@ -509,7 +509,7 @@
                           <string>Fabric Type</string>
                         </tuple>
                         <tuple>
-                          <string>visual_pattern</string>
+                          <string>visual_pattern_translated_title</string>
                           <string>Motive</string>
                         </tuple>
                         <tuple>
@@ -715,7 +715,7 @@
                           <string>Fabric Type</string>
                         </tuple>
                         <tuple>
-                          <string>visual_pattern_title</string>
+                          <string>visual_pattern_translated_title</string>
                           <string>Motive</string>
                         </tuple>
                         <tuple>
