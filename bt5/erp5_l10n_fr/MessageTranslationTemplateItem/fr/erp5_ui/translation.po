@@ -11169,6 +11169,12 @@ msgstr "N° TVA"
 msgid "VAT code"
 msgstr "N° TVA"
 
+msgid "Valid from"
+msgstr "Valide à partir du"
+
+msgid "Valid until"
+msgstr "Valide jusqu'au"
+
 msgid "Validate"
 msgstr "Valider"
 
