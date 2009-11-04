@@ -103,6 +103,7 @@ class TestTaskMixin:
                        stepCreateOrganisation \
                        stepCreateOrganisation \
                        stepCreateResource \
+                       stepCreateProject \
                        stepCreateSimpleTaskReport \
                        stepCreateCurrency \
                        stepFillTaskReportWithData \
@@ -280,6 +281,7 @@ class TestTaskMixin:
               destination_value=organisation2,
               destination_section_value=organisation2,
               source_project_value=project,
+              destination_project_value=project,
               description=self.task_description % task.getId(),
               start_date = self.datetime + 10,
               stop_date = self.datetime + 20,)
@@ -292,6 +294,7 @@ class TestTaskMixin:
     self.stepSetTaskValues(sequence=sequence, 
                            sequence_list=sequence_list, **kw)
     task = sequence.get('task')
+    project = sequence.get('project')
     resource = sequence.get('resource_list')[0]
     requirement = sequence.get('requirement')
     task.edit(task_line_resource_value = resource,
@@ -325,10 +328,13 @@ class TestTaskMixin:
     organisation_list = sequence.get('organisation_list')
     organisation1 = organisation_list[0]
     organisation2 = organisation_list[1]
+    project = sequence.get('project')
     task_report.edit(source_value=organisation1,
                  source_section_value=organisation1,
                  destination_value=organisation1,
                  destination_section_value=organisation2,
+                 source_project_value=project,
+                 destination_project_value=project,
                  start_date = self.datetime + 10,
                  stop_date = self.datetime + 20,)
     sequence.edit( task_report = task_report)
