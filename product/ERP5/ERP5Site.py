@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2001 Zope Corporation and Contributors. All Rights Reserved.
@@ -1056,6 +1057,14 @@ class ERP5Site(FolderMixIn, CMFSite):
     Return divergence tester types.
     """
     return self._getPortalGroupedTypeList('divergence_tester')
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getPortalTargetSolverTypeList')
+  def getPortalTargetSolverTypeList(self):
+    """
+    Return target solver types.
+    """
+    return self._getPortalGroupedTypeList('target_solver')
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getPortalCalendarPeriodTypeList')

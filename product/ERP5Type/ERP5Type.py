@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2001 Zope Corporation and Contributors. All Rights Reserved.
@@ -259,8 +260,10 @@ class ERP5TypeInformation(XMLObject,
       'document', 'web_document', 'file_document',
       'recent_document', 'my_document', 'template_document',
       'crawler_index',
+      # Solvers and simulation
+      'divergence_tester', 'target_solver', 
       # MRP
-      'divergence_tester', 'calendar_period',
+      'calendar_period',
       # Project
       'project',
       # budget
