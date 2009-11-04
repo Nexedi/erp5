@@ -739,7 +739,7 @@ msgid "Apparel Component Module"
 msgstr "Module des fournitures"
 
 msgid "Apparel Component Variation"
-msgstr "Coloris / variante"
+msgstr "Variante de fourniture"
 
 msgid "Apparel Components"
 msgstr "Fournitures"
@@ -756,11 +756,8 @@ msgstr "Tables de consommation"
 msgid "Apparel Fabric"
 msgstr "Tissu"
 
-msgid "Apparel Fabric Colour"
-msgstr "Coloris de tissu"
-
 msgid "Apparel Fabric Colour Variation"
-msgstr "Gamme coloris de tissu"
+msgstr "Coloris de tissu"
 
 msgid "Apparel Fabric Item Fast Input"
 msgstr "Saisie rapide des tissus"
@@ -2216,6 +2213,9 @@ msgstr "Liste des Fournitures"
 
 msgid "Component Module"
 msgstr "Module des fournitures"
+
+msgid "Component Type"
+msgstr "Type de fourniture"
 
 msgid "Component Variation"
 msgstr "Nom de la variante"
@@ -4269,6 +4269,12 @@ msgstr "Extraire"
 
 msgid "FAX"
 msgstr "Fax"
+
+msgid "Fabric Brand"
+msgstr "Marque du tissu"
+
+msgid "Fabric Type"
+msgstr "Type de tissu"
 
 msgid "Family"
 msgstr "Famille"
