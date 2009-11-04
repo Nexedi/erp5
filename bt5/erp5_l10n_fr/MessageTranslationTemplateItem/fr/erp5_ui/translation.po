@@ -757,7 +757,7 @@ msgid "Apparel Fabric"
 msgstr "Tissu"
 
 msgid "Apparel Fabric Colour Variation"
-msgstr "Coloris de tissu"
+msgstr "Coloris tissu"
 
 msgid "Apparel Fabric Item Fast Input"
 msgstr "Saisie rapide des tissus"
