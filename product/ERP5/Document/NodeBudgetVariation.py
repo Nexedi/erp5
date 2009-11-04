@@ -47,7 +47,7 @@ class VirtualNode(object):
     self.relative_url = relative_url
 
   def getTitle(self):
-    return translateString('All Others')
+    return str(translateString('All Others'))
 
   def getRelativeUrl(self):
     return self.relative_url
