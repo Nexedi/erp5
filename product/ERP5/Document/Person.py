@@ -125,6 +125,25 @@ class Person(XMLObject):
         return self.title
 
     security.declareProtected(Permissions.AccessContentsInformation,
+                              'getTranslatedTitle')
+    def getTranslatedTitle(self, **kw):
+      """
+        Returns the title if it exists or a combination of
+        first name and last name
+      """
+      if self.title == '':
+        name_list = []
+        if self.getTranslatedFirstName(**kw) not in (None, ''):
+          name_list.append(self.getTranslatedFirstName(**kw))
+        if self.getTranslatedMiddleName(**kw) not in (None, ''):
+          name_list.append(self.getTranslatedMiddleName(**kw))
+        if self.getTranslatedLastName(**kw) not in (None, ''):
+          name_list.append(self.getTranslatedLastName(**kw))
+        return ' '.join(name_list)
+      else:
+        return self.title
+
+    security.declareProtected(Permissions.AccessContentsInformation,
                               'title_or_id')
     def title_or_id(self):
       return self.getTitleOrId()

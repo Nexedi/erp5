@@ -47,6 +47,9 @@ class AqDynamicInteractor(Interactor):
     self.on(TransitionDefinition.setProperties).doAfter(self.resetAqDynamic)
     from Products.DCWorkflow.Variables import Variables
     self.on(Variables.setStateVar).doAfter(self.resetAqDynamic)
+    from Products.Localizer.Localizer import Localizer
+    self.on(Localizer.add_language).doAfter(self.resetAqDynamic)
+    self.on(Localizer.del_language).doAfter(self.resetAqDynamic)
 
   def resetAqDynamic(self, *args, **kw):
     """

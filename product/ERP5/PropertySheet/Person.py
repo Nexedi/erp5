@@ -39,16 +39,22 @@ class Person:
     , 'description': 'First name.'
     , 'type'       : 'string'
     , 'mode'       : 'w'
+    , 'translatable' : True
+    , 'translation_domain' : 'content_translation'
     },
     { 'id'         : 'last_name'
     , 'description': 'Last name.'
     , 'type'       : 'string'
     , 'mode'       : 'w'
+    , 'translatable' : True
+    , 'translation_domain' : 'content_translation'
     },
     { 'id'         : 'middle_name'
     , 'description': 'Middle name.'
     , 'type'       : 'string'
     , 'mode'       : 'w'
+    , 'translatable' : True
+    , 'translation_domain' : 'content_translation'
     },
     { 'id'         : 'birth_name'
     , 'description': 'Also called maiden name.'
@@ -77,6 +83,7 @@ class Person:
     , 'type'                     : 'content'
     , 'portal_type'              : ( 'Address', )
     , 'acquired_property_id'     : ( 'text', 'street_address', 'city',
+                                     'prefecture',
                                      'zip_code', 'region', 'region_title')
     , 'acquisition_copy_value'   : 0
     , 'acquisition_mask_value'   : 1
@@ -107,6 +114,7 @@ class Person:
     , 'type'                     : 'content'
     , 'portal_type'              : ( 'Address', )
     , 'acquired_property_id'     : ( 'text', 'street_address', 'city',
+                                     'prefecture',
                                      'zip_code', 'region', 'region_title',
                                      'prefecture')
     , 'acquisition_base_category': ( 'subordination', )
@@ -118,6 +126,8 @@ class Person:
     , 'acquisition_depends'      : None
     , 'alt_accessor_id'          : ( 'getCareerDefaultAddressValue', )
     , 'mode'                     : 'w'
+    , 'translation_acquired_property_id':('street_address', 'city',
+                                          'prefecture', )
     },
     { 'id'                       : 'telephone'
     , 'storage_id'               : 'default_telephone'
