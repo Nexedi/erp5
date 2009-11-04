@@ -359,7 +359,7 @@
                           <string>Apparel Fabric Template</string>
                         </tuple>
                         <tuple>
-                          <string>resource_title</string>
+                          <string>resource_translated_title</string>
                           <string>Fabric Type</string>
                         </tuple>
                         <tuple>
@@ -448,7 +448,7 @@
                           <string>Drawing Reference</string>
                         </tuple>
                         <tuple>
-                          <string>resource_title</string>
+                          <string>resource_translated_title</string>
                           <string>Fabric Type</string>
                         </tuple>
                         <tuple>
@@ -505,7 +505,7 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>resource</string>
+                          <string>resource_translated_title</string>
                           <string>Fabric Type</string>
                         </tuple>
                         <tuple>
@@ -653,7 +653,7 @@
                           <string>Drawing Reference</string>
                         </tuple>
                         <tuple>
-                          <string>resource_title</string>
+                          <string>resource_translated_title</string>
                           <string>Fabric Type</string>
                         </tuple>
                         <tuple>
@@ -711,7 +711,7 @@
                           <string>Drawing Reference</string>
                         </tuple>
                         <tuple>
-                          <string>resource_title</string>
+                          <string>resource_translated_title</string>
                           <string>Fabric Type</string>
                         </tuple>
                         <tuple>
