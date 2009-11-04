@@ -154,6 +154,7 @@ class CacheableAction(object):
   test_permission = None
 
   def __init__(self, **kw):
+    kw['title'] = kw['name'] # XXX compatibility
     for attr in 'action', 'icon', 'condition':
       expression = kw.pop(attr, None)
       setattr(self, attr, expression and Expression(expression))
