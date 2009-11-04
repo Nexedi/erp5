@@ -90,7 +90,7 @@ apparel_component_module/view?validation_state=draft&local_roles:list=Assignor&r
                     </value>
                 </item>
                 <item>
-                    <key> <string>simulation_state</string> </key>
+                    <key> <string>validation_state</string> </key>
                     <value>
                       <tuple>
                         <string>proposed</string>

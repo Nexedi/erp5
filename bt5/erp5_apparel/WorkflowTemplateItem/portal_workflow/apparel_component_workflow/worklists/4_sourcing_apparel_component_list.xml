@@ -21,7 +21,7 @@
             <key> <string>actbox_url</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-apparel_component_module/view?validation_state=draft&local_roles:list=Assignor&local_roles:list=Associate&reset=1
+apparel_component_module/view?validation_state=sourcing&local_roles:list=Assignor&local_roles:list=Associate&reset=1
 
 ]]></string> </value>
         </item>
@@ -91,7 +91,7 @@ apparel_component_module/view?validation_state=draft&local_roles:list=Assignor&l
                     </value>
                 </item>
                 <item>
-                    <key> <string>simulation_state</string> </key>
+                    <key> <string>validation_state</string> </key>
                     <value>
                       <tuple>
                         <string>sourcing</string>
