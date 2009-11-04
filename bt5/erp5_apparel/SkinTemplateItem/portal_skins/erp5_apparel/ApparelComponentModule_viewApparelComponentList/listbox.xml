@@ -351,8 +351,8 @@
                           <string>Supplier Reference</string>
                         </tuple>
                         <tuple>
-                          <string>resource</string>
-                          <string>Resource</string>
+                          <string>resource_title</string>
+                          <string>Component Type</string>
                         </tuple>
                         <tuple>
                           <string>base_weight</string>
@@ -436,8 +436,8 @@
                           <string>Supplier Reference</string>
                         </tuple>
                         <tuple>
-                          <string>resource</string>
-                          <string>Resource</string>
+                          <string>resource_title</string>
+                          <string>Component Type</string>
                         </tuple>
                         <tuple>
                           <string>base_weight</string>
@@ -629,8 +629,8 @@
                           <string>Supplier Reference</string>
                         </tuple>
                         <tuple>
-                          <string>resource</string>
-                          <string>Resource</string>
+                          <string>resource_title</string>
+                          <string>Component Type</string>
                         </tuple>
                         <tuple>
                           <string>translated_validation_state_title</string>
@@ -679,8 +679,8 @@
                           <string>Supplier Reference</string>
                         </tuple>
                         <tuple>
-                          <string>resource</string>
-                          <string>Resource</string>
+                          <string>resource_title</string>
+                          <string>Component Type</string>
                         </tuple>
                         <tuple>
                           <string>translated_validation_state_title</string>

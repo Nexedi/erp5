@@ -360,7 +360,7 @@
                         </tuple>
                         <tuple>
                           <string>resource_title</string>
-                          <string>Resource</string>
+                          <string>Fabric Type</string>
                         </tuple>
                         <tuple>
                           <string>visual_pattern_title</string>
@@ -449,7 +449,7 @@
                         </tuple>
                         <tuple>
                           <string>resource_title</string>
-                          <string>Resource</string>
+                          <string>Fabric Type</string>
                         </tuple>
                         <tuple>
                           <string>visual_pattern_title</string>
@@ -654,7 +654,7 @@
                         </tuple>
                         <tuple>
                           <string>resource_title</string>
-                          <string>Resource</string>
+                          <string>Fabric Type</string>
                         </tuple>
                         <tuple>
                           <string>visual_pattern_title</string>
@@ -712,7 +712,7 @@
                         </tuple>
                         <tuple>
                           <string>resource_title</string>
-                          <string>Resource</string>
+                          <string>Fabric Type</string>
                         </tuple>
                         <tuple>
                           <string>visual_pattern_title</string>
