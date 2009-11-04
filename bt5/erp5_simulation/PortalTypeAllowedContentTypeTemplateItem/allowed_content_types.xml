@@ -1,0 +1,16 @@
+<allowed_content_type_list>
+ <portal_type id="Solver Process">
+  <item>Production Reduction Solver</item>
+  <item>Quantity Split Solver</item>
+  <item>Resource Adoption Solver</item>
+  <item>Resource Replacement Solver</item>
+  <item>Solver Decision</item>
+ </portal_type>
+ <portal_type id="Solver Tool">
+  <item>Solver Process</item>
+ </portal_type>
+ <portal_type id="Solver Type">
+  <item>Action Information</item>
+  <item>Role Information</item>
+ </portal_type>
+</allowed_content_type_list>

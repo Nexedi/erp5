@@ -1,0 +1,24 @@
+Category Divergence Tester | configuration
+Category Divergence Tester | predicate
+Category Divergence Tester | view
+Float Divergence Tester | configuration
+Float Divergence Tester | predicate
+Float Divergence Tester | view
+Quantity Cancel Solver | configuration
+Quantity Cancel Solver | view
+Quantity Split Solver | configuration
+Quantity Split Solver | view
+Solver Decision | configuration
+Solver Decision | view
+Solver Process | target_solver
+Solver Process | view
+Solver Tool | view
+Solver Type | action_view
+Solver Type | role_view
+Solver Type | solver_view
+Solver Type | translation_view
+Solver Type | update_local_roles
+Solver Type | view
+String Divergence Tester | configuration
+String Divergence Tester | predicate
+String Divergence Tester | view

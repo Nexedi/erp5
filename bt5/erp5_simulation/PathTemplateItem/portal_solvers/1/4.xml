@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="SolverDecision" module="Products.ERP5Type.Document.SolverDecision"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string>Reduce quantity of line 1 to 6 (instead of 12) and distribute the reducation uniformly on the 4 explaning orders.</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>4</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Solver Decision</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
