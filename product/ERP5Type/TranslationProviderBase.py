@@ -24,6 +24,9 @@ from Acquisition import aq_base, Implicit
 
 import Products
 
+from Products.ERP5Type.Accessor import Translation
+from Products.CMFCore.utils import getToolByName
+
 from zLOG import LOG
 
 _MARKER = {}
@@ -86,6 +89,23 @@ class TranslationProviderBase(object):
     return dict((k, v.__of__(self))
                 for k, v in self._property_domain_dict.iteritems())
 
+  security.declarePublic('getContentTranslationDomainPropertyNameList')
+  def getContentTranslationDomainPropertyNameList(self):
+    result = []
+    for property_name, translation_information in self.getPropertyTranslationDomainDict().items():
+      if translation_information.getDomainName()==Translation.TRANSLATION_DOMAIN_CONTENT_TRANSLATION:
+        result.append(property_name)
+    return result
+
+  security.declarePublic('getTranslationDomainNameList')
+  def getTranslationDomainNameList(self):
+    return (['']+
+            [object_.id
+             for object_ in getToolByName(self, 'Localizer').objectValues()
+             if object_.meta_type=='MessageCatalog']+
+            [Translation.TRANSLATION_DOMAIN_CONTENT_TRANSLATION]
+            )
+
   #
   #   ZMI methods
   #
@@ -105,13 +125,13 @@ class TranslationProviderBase(object):
       t['domain_name'] = prop.getDomainName()
       translation_list.append(t)
 
-    # get list of Localizer catalog, add 'empty' one for no traduction
-    catalog = self.getPortalObject().Localizer.objectIds() + ['']
-
+    # get a list of message catalogs and add empty one for no traduction and
+    # add another for content translation.
+    translation_domain_list = self.getTranslationDomainNameList()
     return self._translation_form( self
                                    , REQUEST
                                    , translations = translation_list
-                                   , possible_domain_names=catalog
+                                   , possible_domain_names=translation_domain_list
                                    , management_view='Translation'
                                    , manage_tabs_message=manage_tabs_message
                                    )

@@ -211,6 +211,19 @@ def convertToUpperCase(key):
 
 UpperCase = convertToUpperCase
 
+def convertToLowerCase(key):
+  tmp = []
+  assert(key[0].isupper())
+  for i in key:
+    if i.isupper():
+      tmp.append('_')
+      tmp.append(i.lower())
+    else:
+      tmp.append(i)
+  return ''.join(tmp)
+LowerCase = convertToLowerCase
+
+
 def convertToMixedCase(key):
   """
     This function turns an attribute name into
@@ -919,6 +932,7 @@ def importLocalDocument(class_id, document_path = None):
       if not m.has_key(name): m[name] = []
       m[name].append(method)
     m[name+'__roles__']=pr
+  return document_class, constructors
 
 def initializeLocalRegistry(directory_name, import_local_method,
                             path_arg_name='path'):
@@ -1317,7 +1331,8 @@ def setDefaultProperties(property_holder, object=None, portal=None):
                         '%s_range_%s' % (prop['id'], value),
                         prop=range_prop,
                         read_permission=read_permission,
-                        write_permission=write_permission)
+                        write_permission=write_permission,
+                        portal=portal)
 
         # Create translation accesor, if translatable is set
         if prop.get('translatable', 0):
@@ -1325,8 +1340,15 @@ def setDefaultProperties(property_holder, object=None, portal=None):
           createTranslationAccessors(
                     property_holder,
                     'translated_%s' % (prop['id']),
+                    prop,
                     read_permission=read_permission,
                     write_permission=write_permission)
+          createTranslationLanguageAccessors(
+                    property_holder,
+                    prop,
+                    read_permission=read_permission,
+                    write_permission=write_permission,
+                    portal=portal)
           # make accessor to translation_domain
           # first create default one as a normal property
           txn_prop = {}
@@ -1340,7 +1362,8 @@ def setDefaultProperties(property_holder, object=None, portal=None):
                     '%s_%s' %(prop['id'], txn_prop['id']),
                     prop=txn_prop,
                     read_permission=read_permission,
-                    write_permission=write_permission)
+                    write_permission=write_permission,
+                    portal=portal)
           # then overload accesors getPropertyTranslationDomain
           if prop.has_key('translation_domain'):
             default = prop['translation_domain']
@@ -1349,6 +1372,7 @@ def setDefaultProperties(property_holder, object=None, portal=None):
           createTranslationAccessors(
                           property_holder,
                           '%s_translation_domain' % (prop['id']),
+                          prop,
                           read_permission=read_permission,
                           write_permission=write_permission,
                           default=default)
@@ -1357,7 +1381,8 @@ def setDefaultProperties(property_holder, object=None, portal=None):
                         prop['id'],
                         prop=prop,
                         read_permission=read_permission,
-                        write_permission=write_permission)
+                        write_permission=write_permission,
+                        portal=portal)
       else:
         raise TypeError, '"%s" is invalid type for propertysheet' % \
                                             prop['type']
@@ -1380,7 +1405,8 @@ def setDefaultProperties(property_holder, object=None, portal=None):
                         prop['id'],
                         prop=prop,
                         read_permission=Permissions.AccessContentsInformation,
-                        write_permission=Permissions.ModifyPortalContent)
+                        write_permission=Permissions.ModifyPortalContent,
+                        portal=portal)
 
       # Get read and write permission
       if portal is not None:
@@ -1508,7 +1534,8 @@ from Accessor import Base, List, Acquired, Content,\
 
 def createDefaultAccessors(property_holder, id, prop = None,
     read_permission=Permissions.AccessContentsInformation,
-    write_permission=Permissions.ModifyPortalContent):
+    write_permission=Permissions.ModifyPortalContent,
+    portal=None):
   """
     This function creates accessor and setter for a class
     and a property
@@ -1519,6 +1546,12 @@ def createDefaultAccessors(property_holder, id, prop = None,
 
     prop  -- the property definition of the property
   """
+  ######################################################
+  # Create Translation Acquired Accessors.
+  if prop.get('translation_acquired_property_id'):
+    createTranslationAcquiredPropertyAccessors(property_holder, prop,
+                                               portal=portal)
+
   ######################################################
   # Create Getters
   if prop.has_key('acquisition_base_category'):
@@ -2565,27 +2598,196 @@ def createRelatedValueAccessors(property_holder, id, read_permission=Permissions
           if accessor_name[0] != '_':
             BaseClass.security.declareProtected(read_permission, accessor_name)
 
-def createTranslationAccessors(property_holder, id,
+def createTranslationAcquiredPropertyAccessors(
+  property_holder,
+  property,
+  read_permission=Permissions.AccessContentsInformation,
+  write_permission=Permissions.ModifyPortalContent,
+  portal=None):
+  """Generate translation acquired property accessor to Base class"""
+  property = property.copy()
+  translation_acquired_property_id_list = []
+  accessor_dict_list = []
+
+  # Language Dependent Getter/Setter
+  for language in portal.Localizer.get_languages():
+    language_key = language.replace('-', '_')
+    for acquired_property_id in property['acquired_property_id']:
+      key = '%s_translated_%s' % (language_key, acquired_property_id)
+      capitalised_composed_id = UpperCase("%s_%s" % (property['id'], key))
+      accessor_args = (
+        property['type'],
+        property['portal_type'],
+        key,
+        property['acquisition_base_category'],
+        property['acquisition_portal_type'],
+        property['acquisition_accessor_id'],
+        property.get('acquisition_copy_value',0),
+        property.get('acquisition_mask_value',0),
+        property.get('acquisition_sync_value',0),
+        property.get('storage_id'),
+        property.get('alt_accessor_id'),
+        property.get('acquisition_object_id'),
+        (property['type'] in list_types or property.get('multivalued', 0)),
+        (property['type'] == 'tales'),
+        )
+
+      accessor_dict_list.append({'name':'get' + capitalised_composed_id,
+                                 'key': key,
+                                 'class':Translation.AcquiredPropertyGetter,
+                                 'argument':accessor_args,
+                                 'permission':read_permission})
+      accessor_dict_list.append({'name':'_baseGet' + capitalised_composed_id,
+                                 'key': key,
+                                 'class':Translation.AcquiredPropertyGetter,
+                                 'argument':accessor_args,
+                                 'permission':read_permission})
+      accessor_dict_list.append({'name': 'getDefault' + capitalised_composed_id,
+                                 'key': key,
+                                 'class': Translation.AcquiredPropertyGetter,
+                                 'argument': accessor_args,
+                                 'permission': read_permission})
+      accessor_dict_list.append({'name': 'set' + capitalised_composed_id,
+                                 'key': '_set' + capitalised_composed_id,
+                                 'class': Alias.Reindex,
+                                 'argument': (),
+                                 'permission': write_permission})
+      accessor_dict_list.append({'name': '_set' + capitalised_composed_id,
+                                 'key': key,
+                                 'class': AcquiredProperty.DefaultSetter,
+                                 'argument': accessor_args,
+                                 'permission': write_permission})
+      accessor_dict_list.append({'name': 'setDefault' + capitalised_composed_id,
+                                 'key': '_set' + capitalised_composed_id,
+                                 'class': Alias.Reindex,
+                                 'argument': (),
+                                 'permission': write_permission})
+
+  # Language Independent Getter
+  for acquired_property_id in property['acquired_property_id']:
+    if acquired_property_id in property.get('translation_acquired_property_id',()):
+      key = 'translated_%s' % acquired_property_id
+      capitalised_composed_id = UpperCase('%s_%s' % (property['id'], key))
+      accessor_args = (
+        property['type'],
+        property['portal_type'],
+        key,
+        property['acquisition_base_category'],
+        property['acquisition_portal_type'],
+        property['acquisition_accessor_id'],
+        property.get('acquisition_copy_value',0),
+        property.get('acquisition_mask_value',0),
+        property.get('acquisition_sync_value',0),
+        property.get('storage_id'),
+        property.get('alt_accessor_id'),
+        property.get('acquisition_object_id'),
+        (property['type'] in list_types or property.get('multivalued', 0)),
+        (property['type'] == 'tales'),
+        )
+
+      accessor_dict_list.append({'name': 'get' + capitalised_composed_id,
+                                 'key': key,
+                                 'class': Translation.AcquiredPropertyGetter,
+                                 'argument': accessor_args,
+                                 'permission': read_permission})
+      accessor_dict_list.append({'name': '_baseGet' + capitalised_composed_id,
+                                 'key': key,
+                                 'class': Translation.AcquiredPropertyGetter,
+                                 'argument': accessor_args,
+                                 'permission': read_permission})
+      accessor_dict_list.append({'name': 'getDefault' + capitalised_composed_id,
+                                 'key': key,
+                                 'class': Translation.AcquiredPropertyGetter,
+                                 'argument': accessor_args,
+                                 'permission': read_permission})
+
+  for accessor_dict in accessor_dict_list:
+    accessor_name = accessor_dict['name']
+    if getattr(property_holder, accessor_name, None) is None:
+      property_holder.registerAccessor(accessor_name, # id
+                                       accessor_dict['key'],
+                                       accessor_dict['class'],
+                                       accessor_dict['argument'])
+      property_holder.declareProtected(accessor_dict['permission'],
+                                       accessor_name)
+
+def createTranslationAccessors(property_holder, id, property,
     read_permission=Permissions.AccessContentsInformation,
     write_permission=Permissions.ModifyPortalContent, default=''):
   """
   Generate the translation accessor for a class and a property
   """
+  capitalised_id = UpperCase(id)
   if 'translated' in id:
-    accessor_name = 'get' + UpperCase(id)
+    accessor_name = 'get' + capitalised_id
+    private_accessor_name = '_baseGet' + capitalised_id
     if not hasattr(property_holder, accessor_name):
-      property_holder.registerAccessor(accessor_name, id, Translation.TranslatedPropertyGetter, ())
+      property_holder.registerAccessor(accessor_name,
+                                       id,
+                                       Translation.TranslatedPropertyGetter,
+                                       (property['id'], property['type'], None, default))
       property_holder.declareProtected(read_permission, accessor_name)
-    accessor_name = '_baseGet' + UpperCase(id)
-    if not hasattr(property_holder, accessor_name):
-      property_holder.registerAccessor(accessor_name, id, Translation.TranslatedPropertyGetter, ())
+    if not hasattr(property_holder, private_accessor_name):
+      property_holder.registerAccessor(private_accessor_name,
+                                       id,
+                                       Translation.TranslatedPropertyGetter,
+                                       (property['id'], property['type'], None, default))
 
   if 'translation_domain' in id:
     # Getter
-    accessor_name = 'get' + UpperCase(id)
-    property_holder.registerAccessor(accessor_name, id,
-        Translation.PropertyTranslationDomainGetter, ('string', default,))
+    accessor_name = 'get' + capitalised_id
+    property_holder.registerAccessor(accessor_name,
+                                     id,
+                                     Translation.PropertyTranslationDomainGetter,
+                                     ('string', default,))
     property_holder.declareProtected(read_permission, accessor_name)
+
+
+def createTranslationLanguageAccessors(property_holder, property,
+    read_permission=Permissions.AccessContentsInformation,
+    write_permission=Permissions.ModifyPortalContent, default='',
+    portal=None):
+  """
+  Generate translation language accessors
+  """
+  accessor_dict_list = []
+
+  for language in portal.Localizer.get_languages():
+    language_key = language.replace('-', '_')
+    composed_id = '%s_translated_%s' % (language_key, property['id'])
+    capitalised_compose_id = UpperCase(composed_id)
+
+    getter_accessor_args = (property['id'], property['type'], language, default)
+    accessor_dict_list.append({'name': 'get' + capitalised_compose_id,
+                               'class': Translation.TranslatedPropertyGetter,
+                               'argument': getter_accessor_args,
+                               'permission': read_permission})
+    accessor_dict_list.append({'name': '_baseGet' + capitalised_compose_id,
+                               'class': Translation.TranslatedPropertyGetter,
+                               'argument': getter_accessor_args,
+                               'permission': read_permission})
+
+    setter_accessor_args = (property['id'], property['type'], language)
+    accessor_dict_list.append({'name':'set' + capitalised_compose_id,
+                               'key': '_set' + capitalised_compose_id,
+                               'class': Alias.Reindex,
+                               'argument': (),
+                               'permission': write_permission})
+    setter_accessor_args = (property['id'], property['type'], language)
+    accessor_dict_list.append({'name': '_set' + capitalised_compose_id,
+                               'class': Translation.TranslationPropertySetter,
+                               'argument': setter_accessor_args,
+                               'permission': write_permission})
+
+  for accessor_dict in accessor_dict_list:
+    accessor_name = accessor_dict['name']
+    if getattr(property_holder, accessor_name, None) is None:
+      property_holder.registerAccessor(accessor_name,
+                                       accessor_dict.get('key', None),
+                                       accessor_dict['class'],
+                                       accessor_dict['argument'])
+      property_holder.declareProtected(accessor_dict['permission'],
+                                       accessor_name)
 
 
 #####################################################

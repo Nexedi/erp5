@@ -64,6 +64,7 @@ from Products.ERP5Type.Utils import createExpressionContext
 from Products.ERP5Type.Accessor.Accessor import Accessor
 from Products.ERP5Type.Accessor.TypeDefinition import list_types
 from Products.ERP5Type.Accessor import Base as BaseAccessor
+from Products.ERP5Type.mixin.property_translatable import PropertyTranslatableBuiltInDictMixIn
 from Products.ERP5Type.XMLExportImport import Base_asXML
 from Products.ERP5Type.Cache import CachingMethod, clearCache, getReadOnlyTransactionCache
 from Accessor import WorkflowState
@@ -711,7 +712,9 @@ class Base( CopyContainer,
             PortalContent,
             ActiveObject,
             OFS.History.Historical,
-            ERP5PropertyManager ):
+            ERP5PropertyManager,
+            PropertyTranslatableBuiltInDictMixIn
+            ):
   """
     This is the base class for all ERP5 Zope objects.
     It defines object attributes which are necessary to implement

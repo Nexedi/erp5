@@ -126,3 +126,128 @@ def cleanup_and_export(self, x, REQUEST=None, RESPONSE=None):
   return original_manage_export(self, x, REQUEST=REQUEST, RESPONSE=RESPONSE)
 MessageCatalog.manage_export = cleanup_and_export
 
+
+# Add a feature which allows users to be able to add a new language.
+#
+# Patch to LanguageManager.py
+#
+def get_languages_mapping(self):
+    """
+    Returns a list of dictionary, one for each objects language. The
+    dictionary contains the language code, its name and a boolean
+    value that tells wether the language is the default one or not.
+    """
+    return [ {'code': x,
+              'name': self.get_language_name(x),
+              'default': x == self._default_language}
+             for x in self._languages ]
+
+def get_language_name(self, id=None):
+    """
+    Returns the name of the given language code.
+
+    XXX Kept here for backwards compatibility only
+    """
+    if id is None:
+        id = self.get_default_language()
+    language_name = LanguageManager.i18n.get_language_name(id)
+    if language_name=='???':
+        return self.get_user_defined_language_name(id) or language_name
+    else:
+        return language_name
+
+# New method
+def get_user_defined_language_name(self, id=None):
+    """
+    Returns the name of the given user defined language code.
+    """
+    for language_dict in self.get_user_defined_languages():
+        if language_dict['code']==id:
+            return language_dict['name']
+
+def get_all_languages(self):
+    """
+    Returns all ISO languages, used by 'manage_languages'.
+    """
+    return LanguageManager.i18n.get_languages() + self.get_user_defined_languages()
+
+# New method
+def get_user_defined_languages(self):
+    user_define_language_dict_list = []
+    localizer = getattr(self, 'Localizer', None)
+    if localizer is not None:
+        for value in getattr(self, 'user_defined_languages', ()):
+            splitted_value = value.split(' ', 1)
+            if len(splitted_value)==2:
+                user_define_language_dict_list.append(
+                    {'name':splitted_value[0].strip(),
+                     'code':splitted_value[1].strip(),})
+    return user_define_language_dict_list
+
+# New method
+def _add_user_defined_language(self, language_name, language_code):
+    self.user_defined_languages = (
+        getattr(self, 'user_defined_languages', ())+
+        ('%s %s' % (language_name, language_code),)
+        )
+    self._p_changed = True
+
+# New method
+def _del_user_defined_language(self, language_code):
+    user_defined_languages = []
+    for language_dict in self.get_user_defined_languages():
+        if language_dict['code']!=language_code:
+            user_defined_languages.append('%s %s' %
+                                          (language_dict['name'],
+                                           language_dict['code']))
+    self.user_defined_languages = tuple(user_defined_languages)
+    self._p_changed = True
+
+from Products.Localizer import LanguageManager
+LanguageManager.LanguageManager.get_languages_mapping = get_languages_mapping
+LanguageManager.LanguageManager.get_language_name = get_language_name
+LanguageManager.LanguageManager.get_all_languages = get_all_languages
+LanguageManager.LanguageManager.get_user_defined_language_name = get_user_defined_language_name
+LanguageManager.LanguageManager.get_user_defined_languages = get_user_defined_languages
+LanguageManager.LanguageManager._add_user_defined_language = _add_user_defined_language
+LanguageManager.LanguageManager._del_user_defined_language = _del_user_defined_language
+LanguageManager.InitializeClass(LanguageManager.LanguageManager)
+
+#
+# Patch to Localizer.py
+#
+_properties = ({'id': 'title', 'type': 'string'},
+               {'id': 'accept_methods', 'type': 'tokens'},
+               {'id': 'user_defined_languages', 'type': 'lines'},)
+
+user_defined_languages = ()
+
+def get_languages_map(self):
+    """
+    Return a list of dictionaries, each dictionary has the language
+    id, its title and a boolean value to indicate wether it's the
+    user preferred language, for example:
+       [{'id': 'en', 'title': 'English', 'selected': 1}]
+     Used in changeLanguageForm.
+    """
+    # For now only LPM instances are considered to be containers of
+    # multilingual data.
+    try:
+        ob = self.getLocalPropertyManager()
+    except AttributeError:
+        ob = self
+
+    ob_language = ob.get_selected_language()
+    ob_languages = ob.get_available_languages()
+
+    langs = []
+    for x in ob_languages:
+        langs.append({'id': x, 'title': self.get_language_name(x),
+                      'selected': x == ob_language})
+    return langs
+
+from Products.Localizer import Localizer
+Localizer.Localizer._properties = _properties
+Localizer.Localizer.user_defined_languages = user_defined_languages
+Localizer.Localizer.get_languages_map = get_languages_map
+Localizer.InitializeClass(Localizer.Localizer)
