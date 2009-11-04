@@ -11,7 +11,7 @@
       <dictionary>
         <item>
             <key> <string>acquire_local_roles</string> </key>
-            <value> <int>0</int> </value>
+            <value> <int>1</int> </value>
         </item>
         <item>
             <key> <string>content_icon</string> </key>
@@ -23,8 +23,8 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>A bank account number holds a collection of numbers\n
-and codes (ex. SWIFT, RIB, etc.) which may be used to\n
+            <value> <string>A bank account number holds a collection of numbers\r\n
+and codes (ex. SWIFT, RIB, etc.) which may be used to\r\n
 identify a bank account.</string> </value>
         </item>
         <item>
@@ -47,11 +47,15 @@ identify a bank account.</string> </value>
         </item>
         <item>
             <key> <string>init_script</string> </key>
-            <value> <string></string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>permission</string> </key>
-            <value> <string></string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>title</string> </key>
