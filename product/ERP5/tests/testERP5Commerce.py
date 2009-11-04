@@ -58,10 +58,12 @@ if parameter_dict['METHOD'] == 'DoExpressCheckoutPayment':
 return {'ACK':'Failure'}
 """
 
+
 class TestCommerce(ERP5TypeTestCase):
   """
-  Todo : 
-  > Change name of all script, they are most of them never called on a SaleOrder
+  Todo:
+  > Change name of all script, most of them should not be called on a
+    SaleOrder.
   > Test SaleOrder_getShoppingCartItemList With include_shipping=True
   > implement Person_getApplicableDiscountList (actually just return None)
   > implement Person_getApplicableTaxList (actually always return a tax of 20%)
@@ -98,13 +100,12 @@ class TestCommerce(ERP5TypeTestCase):
     """
       Return the list of required business templates.
     """
-    return ('erp5_base', 
-            'erp5_web', 
-            'erp5_trade', 
-            'erp5_pdm', 
+    return ('erp5_base',
+            'erp5_web',
+            'erp5_trade',
+            'erp5_pdm',
             'erp5_commerce',)
 
-  
   def afterSetUp(self):
     uf = self.getPortal().acl_users
     uf._doAddUser('ivan', '', ['Manager'], [])
@@ -115,15 +116,15 @@ class TestCommerce(ERP5TypeTestCase):
     product_module = self.portal.product_module
     currency_module = self.portal.currency_module
     sale_order_module = self.portal.sale_order_module
-    currency_module.manage_permission('Access contents information', 
+    currency_module.manage_permission('Access contents information',
                                      roles=['Anonymous'], acquire=0)
-    product_module.manage_permission('Access contents information', 
+    product_module.manage_permission('Access contents information',
                                      roles=['Anonymous'], acquire=0)
-    sale_order_module.manage_permission('Access contents information', 
+    sale_order_module.manage_permission('Access contents information',
                                      roles=['Anonymous'], acquire=0)
 
     # create default currency (EUR)
-    currency = currency_module.newContent(portal_type='Currency', 
+    currency = currency_module.newContent(portal_type='Currency',
                                           id='EUR')
     currency.setTitle('EUR')
     currency.setReference('EUR')
@@ -147,21 +148,21 @@ class TestCommerce(ERP5TypeTestCase):
     product.publish()
 
     # create shipping which is actually a product
-    shipping = product_module.newContent(portal_type='Product', 
+    shipping = product_module.newContent(portal_type='Product',
                                          id='3')
     shipping.setSupplyLinePriceCurrency(currency.getRelativeUrl())
     shipping.setBasePrice(10.0)
     shipping.setProductLine('shipping')
     shipping.validate()
     shipping.publish()
-    
+
     # validate default order rule
     default_order_rule = self.portal.portal_rules.default_order_rule
     if default_order_rule.getValidationState() != 'validated':
       self.portal.portal_rules.default_order_rule.validate()
 
-    self.web_site = self.setupWebSite()
-    self.web_site.setProperty('ecommerce_base_currency', 
+    self.website = self.setupWebSite()
+    self.website.setProperty('ecommerce_base_currency',
                                             currency.getRelativeUrl())
 
     self.app.REQUEST.set('session_id', SESSION_ID)
@@ -211,7 +212,8 @@ class TestCommerce(ERP5TypeTestCase):
 
     # Set the assignment
     assignment = person.newContent(portal_type='Assignment')
-    assignment.edit(function='', destination_value= getattr(self, 'seller', None),
+    assignment.edit(function='',
+                    destination_value=getattr(self, 'seller', None),
                     start_date='1972-01-01', stop_date='2999-12-31',
                     group=group, destination_project=destination_project)
     assignment.open()
@@ -219,10 +221,11 @@ class TestCommerce(ERP5TypeTestCase):
     self.tic()
 
     #XXX: Security hack (lucas)
-    self.portal.acl_users.zodb_roles.assignRoleToPrincipal('Manager', reference)
+    self.portal.acl_users.zodb_roles.assignRoleToPrincipal('Manager',
+                                                           reference)
 
   def getDefaultProduct(self, id='1'):
-    """ 
+    """
       Get default product.
     """
     return self.getPortal().product_module[id]
@@ -232,22 +235,22 @@ class TestCommerce(ERP5TypeTestCase):
     portal_categories = self.portal.portal_categories
     if hasattr(portal_categories.product_line, 'ldlc'):
       portal_categories.product_line.manage_delObjects(['ldlc'])
-    ldlc = portal_categories.product_line.newContent(portal_type='Category', 
-                                                     id='ldlc', 
+    ldlc = portal_categories.product_line.newContent(portal_type='Category',
+                                                     id='ldlc',
                                                      title='LDLC')
-    laptop = ldlc.newContent(portal_type='Category', 
-                             id='laptop', 
+    laptop = ldlc.newContent(portal_type='Category',
+                             id='laptop',
                              title='Laptop')
 
-    netbook = laptop.newContent(portal_type='Category', 
-                                id='netbook', 
+    netbook = laptop.newContent(portal_type='Category',
+                                id='netbook',
                                 title='Netbook')
 
-    lcd = ldlc.newContent(portal_type='Category', 
-                          id='lcd', 
+    lcd = ldlc.newContent(portal_type='Category',
+                          id='lcd',
                           title='Lcd Screen')
-    mp3_player = ldlc.newContent(portal_type='Category', 
-                                 id='mp3', 
+    mp3_player = ldlc.newContent(portal_type='Category',
+                                 id='mp3',
                                  title='Mp3 Player')
     category_list.append(laptop)
     category_list.append(netbook)
@@ -272,11 +275,11 @@ class TestCommerce(ERP5TypeTestCase):
         supply_line.setDefaultResourceValue(product)
         supply_line.setPriceCurrency('currency_module/EUR')
         product_list.append(product)
-      
+
     for product in product_list:
       product.validate()
       product.publish()
-          
+
     ups = self.portal.product_module.newContent(portal_type='Product',
                                            title='UPS Shipping : 24h')
     ups.setQuantityUnit('unit/piece')
@@ -304,17 +307,17 @@ class TestCommerce(ERP5TypeTestCase):
     localizer = self.portal.Localizer
     for language in LANGUAGE_LIST:
       localizer.manage_addLanguage(language=language)
-      
+
     # create website
-    web_site = getattr(self.portal.web_site_module, 'web_site', None)
-    if web_site is None:
-      web_site = self.portal.web_site_module.newContent(portal_type='Web Site',
-                                                        id='web_site',
+    website = getattr(self.portal.web_site_module, 'website', None)
+    if website is None:
+      website = self.portal.web_site_module.newContent(portal_type='Web Site',
+                                                        id='website',
                                                         **kw)
       transaction.commit()
       self.tic()
 
-    web_site.WebSite_setupECommerceWebSite()
+    website.WebSite_setupECommerceWebSite()
     self.initialiseSupplyLine()
     transaction.commit()
     self.tic()
@@ -325,7 +328,7 @@ class TestCommerce(ERP5TypeTestCase):
                         reference='webmaster',
                         group=None)
 
-    return web_site
+    return website
 
   def createShoppingCartWithProductListAndShipping(self):
     """
@@ -333,9 +336,9 @@ class TestCommerce(ERP5TypeTestCase):
       some Products and select one Shipping.
     """
     default_product = self.getDefaultProduct()
-    self.web_site.Resource_addToShoppingCart(resource=default_product, 
+    self.website.Resource_addToShoppingCart(resource=default_product,
                                              quantity=1)
-  
+
     shopping_cart = self.portal.SaleOrder_getShoppingCart()
     shipping_list = self.portal.SaleOrder_getAvailableShippingResourceList()
     order_line = getattr(shopping_cart, 'shipping_method', None)
@@ -346,42 +349,42 @@ class TestCommerce(ERP5TypeTestCase):
     order_line.setQuantity(1)
     transaction.commit()
     self.tic()
-    
+
   def test_01_AddResourceToShoppingCart(self):
-    """ 
+    """
        Test adding an arbitrary resources to shopping cart.
     """
     default_product = self.getDefaultProduct()
-    
-    # set 'session_id' to simulate browser (cookie) environment 
+
+    # set 'session_id' to simulate browser (cookie) environment
     self.app.REQUEST.set('session_id', SESSION_ID)
-    self.assertEquals(SESSION_ID, self.web_site.SaleOrder_getShoppingCartId())
+    self.assertEquals(SESSION_ID, self.website.SaleOrder_getShoppingCartId())
 
     # check if the shopping cart is empty
-    self.assertTrue(self.web_site.SaleOrder_isShoppingCartEmpty())
+    self.assertTrue(self.website.SaleOrder_isShoppingCartEmpty())
 
     # add product to shopping cart
-    self.web_site.Resource_addToShoppingCart(default_product, 1)
+    self.website.Resource_addToShoppingCart(default_product, 1)
 
-    shoppping_cart_item_list = self.web_site.SaleOrder_getShoppingCartItemList()
+    shoppping_cart_item_list = self.website.SaleOrder_getShoppingCartItemList()
     self.assertEquals(1, len(shoppping_cart_item_list))
     self.assertEquals(1, shoppping_cart_item_list[0].getQuantity())
     self.assertEquals(shoppping_cart_item_list[0].getResource(), \
                                          default_product.getRelativeUrl())
-    self.assertFalse(self.web_site.SaleOrder_isShoppingCartEmpty())
-    
+    self.assertFalse(self.website.SaleOrder_isShoppingCartEmpty())
+
   def test_02_AddSameResourceToShoppingCart(self):
-    """ 
+    """
        Test adding same resource to shopping cart.
     """
     default_product = self.getDefaultProduct()
 
     # add in two steps same product and check that we do not create
     # new Sale Order Line but just increase quantity on existing one
-    self.web_site.Resource_addToShoppingCart(default_product, 1)
-    self.web_site.Resource_addToShoppingCart(default_product, 1)
+    self.website.Resource_addToShoppingCart(default_product, 1)
+    self.website.Resource_addToShoppingCart(default_product, 1)
 
-    shoppping_cart_item_list = self.web_site.SaleOrder_getShoppingCartItemList()
+    shoppping_cart_item_list = self.website.SaleOrder_getShoppingCartItemList()
 
     self.assertEquals(1, len(shoppping_cart_item_list))
     self.assertEquals(2, shoppping_cart_item_list[0].getQuantity())
@@ -389,17 +392,17 @@ class TestCommerce(ERP5TypeTestCase):
                                           default_product.getRelativeUrl())
 
   def test_03_AddDifferentResourceToShoppingCart(self):
-    """ 
+    """
        Test adding different resource to shopping cart.
     """
     default_product = self.getDefaultProduct()
     another_product = self.getDefaultProduct(id='2')
-    
+
     # add second diff product and check that we create new Sale Order Line
-    self.web_site.Resource_addToShoppingCart(default_product, 1)
-    self.web_site.Resource_addToShoppingCart(default_product, 1)
-    self.web_site.Resource_addToShoppingCart(another_product, 1)
-    shoppping_cart_item_list = self.web_site.SaleOrder_getShoppingCartItemList()
+    self.website.Resource_addToShoppingCart(default_product, 1)
+    self.website.Resource_addToShoppingCart(default_product, 1)
+    self.website.Resource_addToShoppingCart(another_product, 1)
+    shoppping_cart_item_list = self.website.SaleOrder_getShoppingCartItemList()
     self.assertEquals(2, len(shoppping_cart_item_list))
     self.assertEquals(2, shoppping_cart_item_list[0].getQuantity())
     self.assertEquals(1, shoppping_cart_item_list[1].getQuantity())
@@ -407,29 +410,28 @@ class TestCommerce(ERP5TypeTestCase):
                                           default_product.getRelativeUrl())
     self.assertEquals(shoppping_cart_item_list[1].getResource(), \
                                           another_product.getRelativeUrl())
-                      
-                      
+
   def test_04_CalculateTotaShoppingCartPrice(self):
-    """ 
+    """
        Test calculation shopping cart's total price.
     """
     default_product = self.getDefaultProduct()
     another_product = self.getDefaultProduct(id='2')
-    self.web_site.Resource_addToShoppingCart(default_product, 1)
-    self.web_site.Resource_addToShoppingCart(default_product, 1)
-    self.web_site.Resource_addToShoppingCart(another_product, 1)
+    self.website.Resource_addToShoppingCart(default_product, 1)
+    self.website.Resource_addToShoppingCart(default_product, 1)
+    self.website.Resource_addToShoppingCart(another_product, 1)
 
     shopping_cart = self.portal.SaleOrder_getShoppingCart()
     self.assertEquals(40.0, \
-         float(self.web_site.SaleOrder_getShoppingCartTotalPrice()))
+         float(self.website.SaleOrder_getShoppingCartTotalPrice()))
     # include taxes (by default it's 20%)
-    self.assertEquals(40.0*1.20, \
-         float(self.web_site.SaleOrder_getShoppingCartTotalPrice(
+    self.assertEquals(40.0 * 1.20, \
+         float(self.website.SaleOrder_getShoppingCartTotalPrice(
                                                         include_shipping=True,
                                                         include_taxes=True)))
     # no shipping selected yet so price should be the same
     self.assertEquals(40.0, \
-         float(self.web_site.SaleOrder_getShoppingCartTotalPrice(
+         float(self.website.SaleOrder_getShoppingCartTotalPrice(
                                          include_shipping=True)))
 
     # add shipping
@@ -439,73 +441,72 @@ class TestCommerce(ERP5TypeTestCase):
 
     # test price calculation only with shipping
     self.assertEquals(40.0 + 10.0, \
-                float(self.web_site.SaleOrder_getShoppingCartTotalPrice(
+                float(self.website.SaleOrder_getShoppingCartTotalPrice(
                                                       include_shipping=True)))
 
     # test price calculation shipping and taxes
-    self.assertEquals((40.0 + 10.0)*1.20, \
-                float(self.web_site.SaleOrder_getShoppingCartTotalPrice(
+    self.assertEquals((40.0 + 10.0) * 1.20, \
+                float(self.website.SaleOrder_getShoppingCartTotalPrice(
                                                       include_shipping=True,
                                                       include_taxes=True)))
-                                                                 
+
   def test_05_TestUpdateShoppingCart(self):
-    """ 
+    """
        Test update of shopping cart.
     """
     default_product = self.getDefaultProduct()
     another_product = self.getDefaultProduct(id='2')
     shipping = self.getDefaultProduct('3')
 
-    self.web_site.Resource_addToShoppingCart(default_product, quantity=1)
-    self.web_site.Resource_addToShoppingCart(another_product, quantity=1)
+    self.website.Resource_addToShoppingCart(default_product, quantity=1)
+    self.website.Resource_addToShoppingCart(another_product, quantity=1)
 
     shopping_cart = self.portal.SaleOrder_getShoppingCart()
     shipping_url = shipping.getRelativeUrl()
-    
+
     # increase shopping item number and set shipping
     self.portal.SaleOrder_editShoppingCart(field_my_buy_quantity=(2, 1,),
                                       field_my_shipping_method=shipping_url)
-    
+
     # test price calculation without shipping and without taxes
-    self.assertEquals((10.0*2 + 20.0*1)*1.0, \
-       float(self.web_site.SaleOrder_getShoppingCartTotalPrice(
+    self.assertEquals((10.0 * 2 + 20.0 * 1) * 1.0, \
+       float(self.website.SaleOrder_getShoppingCartTotalPrice(
                                                     include_shipping=False,
                                                     include_taxes=False)))
 
     # test price calculation with shipping and without taxes
-    self.assertEquals((10.0*2  + 20.0*1 + 10.0)*1.0, \
-         float(self.web_site.SaleOrder_getShoppingCartTotalPrice(
+    self.assertEquals((10.0 * 2 + 20.0 * 1 + 10.0) * 1.0, \
+         float(self.website.SaleOrder_getShoppingCartTotalPrice(
                                                     include_shipping=True,
                                                     include_taxes=False)))
     # test price calculation with shipping and with taxes
-    self.assertEquals((10.0*2 + 20.0*1 + 10.0)*1.20, \
-         float(self.web_site.SaleOrder_getShoppingCartTotalPrice(
+    self.assertEquals((10.0 * 2 + 20.0 * 1 + 10.0) * 1.20, \
+         float(self.website.SaleOrder_getShoppingCartTotalPrice(
                                                     include_shipping=True,
                                                     include_taxes=True)))
-    
+
     # delete shopping item
     self.portal.SaleOrder_deleteShoppingCartItem('1')
     self.assertEquals(1, \
-                      len(self.web_site.SaleOrder_getShoppingCartItemList()))
-                       
+                      len(self.website.SaleOrder_getShoppingCartItemList()))
+
     self.portal.SaleOrder_deleteShoppingCartItem('2')
     self.assertEquals(0, \
-                      len(self.web_site.SaleOrder_getShoppingCartItemList()))
+                      len(self.website.SaleOrder_getShoppingCartItemList()))
     self.assertEquals(0.0, \
-                   float(self.web_site.SaleOrder_getShoppingCartTotalPrice()))
+                   float(self.website.SaleOrder_getShoppingCartTotalPrice()))
 
   def test_06_TestClearShoppingCart(self):
-    """ 
+    """
        Test clear of shopping cart.
     """
     default_product = self.getDefaultProduct()
     self.createShoppingCartWithProductListAndShipping()
     transaction.commit()
     self.tic()
-    
-    shopping_cart = self.web_site.SaleOrder_getShoppingCart(action='reset')
-    self.assertEquals(0, len(self.web_site.SaleOrder_getShoppingCartItemList()))
 
+    shopping_cart = self.website.SaleOrder_getShoppingCart(action='reset')
+    self.assertEquals(0, len(self.website.SaleOrder_getShoppingCartItemList()))
 
   def test_07_SessionIDGeneration(self):
     """
@@ -527,24 +528,26 @@ class TestCommerce(ERP5TypeTestCase):
     """
       Test the Person_getApplicableTaxList script
     """
-    # XXX : actually the script is only in squeleton mode, only return a tax of 20%
-    self.assertEquals({'VAT': 20.0}, self.getPortal().Person_getApplicableTaxList())
+    # XXX : actually the script is only in squeleton mode,
+    # only return a tax of 20%
+    self.assertEquals({'VAT': 20.0},
+                          self.getPortal().Person_getApplicableTaxList())
 
   def test_09_paymentRedirect(self):
     """
       Test the SaleOrder_paymentRedirect script
     """
     default_product = self.getDefaultProduct()
-    self.web_site.Resource_addToShoppingCart(default_product, quantity=1)
+    self.website.Resource_addToShoppingCart(default_product, quantity=1)
     transaction.commit()
     self.tic()
 
     # the confirmation should not be possible if the user is not logged
     self.logout()
-    self.assertEquals(1, len(self.web_site.SaleOrder_getShoppingCartItemList()))
+    self.assertEquals(1, len(self.website.SaleOrder_getShoppingCartItemList()))
     self.portal.SaleOrder_paymentRedirect()
     self.assertTrue(urllib.quote("You need to create an account to " \
-                                 "continue. If you already have please login.") in 
+                              "continue. If you already have please login.") in
                     self.app.REQUEST.RESPONSE.getHeader('location'))
 
     # but it should work if the user is authenticated
@@ -558,54 +561,54 @@ class TestCommerce(ERP5TypeTestCase):
       Test the SaleOrder_deleteShoppingCartItem script
     """
     default_product = self.getDefaultProduct()
-    self.web_site.Resource_addToShoppingCart(default_product, quantity=1)
-    self.assertEquals(1, len(self.web_site.SaleOrder_getShoppingCartItemList()))
+    self.website.Resource_addToShoppingCart(default_product, quantity=1)
+    self.assertEquals(1, len(self.website.SaleOrder_getShoppingCartItemList()))
 
     # Trying to remove
     self.portal.SaleOrder_deleteShoppingCartItem()
-    self.assertTrue(urllib.quote("Please select an item.") in 
+    self.assertTrue(urllib.quote("Please select an item.") in
                                self.app.REQUEST.RESPONSE.getHeader('location'))
 
     # Check if the item still into the Shopping Cart
-    self.assertEquals(1, len(self.web_site.SaleOrder_getShoppingCartItemList()))
+    self.assertEquals(1, len(self.website.SaleOrder_getShoppingCartItemList()))
 
     # Remove the product from the Shopping Cart
     product_id = default_product.getId()
     self.portal.SaleOrder_deleteShoppingCartItem(
                                           field_my_order_line_id=product_id)
-   
+
     # Check if the Product have been removed sucessfully
     self.assertTrue(
               urllib.quote("Successfully removed from shopping cart.") in
                  self.app.REQUEST.RESPONSE.getHeader('location'))
 
     # Check if the Shopping Cart is empty
-    self.assertEquals(0, len(self.web_site.SaleOrder_getShoppingCartItemList()))
+    self.assertEquals(0, len(self.website.SaleOrder_getShoppingCartItemList()))
 
   def test_11_finalizeShopping(self):
     """
       Test the SaleOrder_finalizeShopping script
     """
     self.login('webmaster')
-    self.web_site.Resource_addToShoppingCart(self.getDefaultProduct(), 
+    self.website.Resource_addToShoppingCart(self.getDefaultProduct(),
                                            quantity=1)
-    self.web_site.Resource_addToShoppingCart(self.getDefaultProduct('2'), 
+    self.website.Resource_addToShoppingCart(self.getDefaultProduct('2'),
                                            quantity=1)
     transaction.commit()
     self.tic()
 
-    self.assertEquals(2, len(self.web_site.SaleOrder_getShoppingCartItemList()))
+    self.assertEquals(2, len(self.website.SaleOrder_getShoppingCartItemList()))
     self.assertEquals(0, len(self.portal.sale_order_module.contentValues()))
 
-    self.web_site.SaleOrder_finalizeShopping()
+    self.website.SaleOrder_finalizeShopping()
     transaction.commit()
     self.tic()
 
     sale_order_object_list = self.portal.sale_order_module.contentValues()
     self.assertEquals(1, len(sale_order_object_list))
     self.assertEquals(2, len(sale_order_object_list[0].contentValues()))
-    self.assertEquals(0, len(self.web_site.SaleOrder_getShoppingCartItemList()))
-    
+    self.assertEquals(0, len(self.website.SaleOrder_getShoppingCartItemList()))
+
   def test_12_getAvailableShippingResourceList(self):
     """
       Test the SaleOrder_getAvailableShippingResourceList script
@@ -620,7 +623,7 @@ class TestCommerce(ERP5TypeTestCase):
     self.tic()
     self.assertEquals(2,
                len(self.portal.SaleOrder_getAvailableShippingResourceList()))
-                                     
+
   def test_13_getFormatedData(self):
     """
       Test the datas formating scripts
@@ -632,9 +635,9 @@ class TestCommerce(ERP5TypeTestCase):
                                             price="10")
 
     self.assertEqual(
-          sale_order.getCreationDate().strftime('%a, %d %b %Y %H:%M %p'), 
+          sale_order.getCreationDate().strftime('%a, %d %b %Y %H:%M %p'),
                     sale_order.SaleOrder_getFormattedCreationDate())
-    self.assertEqual('%s %s' %('20.0', sale_order.getPriceCurrencyTitle()),
+    self.assertEqual('%s %s' % ('20.0', sale_order.getPriceCurrencyTitle()),
                            sale_order.SaleOrder_getFormattedTotalPrice())
 
   def test_14_getSelectedShippingResource(self):
@@ -642,13 +645,13 @@ class TestCommerce(ERP5TypeTestCase):
       Test the SaleOrder_getSelectedShippingResource script
     """
     default_product = self.getDefaultProduct()
-    self.web_site.Resource_addToShoppingCart(default_product, 1)
+    self.website.Resource_addToShoppingCart(default_product, 1)
     shopping_cart = self.portal.SaleOrder_getShoppingCart()
     shipping_list = self.portal.SaleOrder_getAvailableShippingResourceList()
 
     order_line = getattr(shopping_cart, 'shipping_method', None)
     if order_line is None:
-      order_line = shopping_cart.newContent(id='shipping_method', 
+      order_line = shopping_cart.newContent(id='shipping_method',
                                             portal_type='Sale Order Line')
 
     order_line.setResource(shipping_list[0].getRelativeUrl())
@@ -664,14 +667,14 @@ class TestCommerce(ERP5TypeTestCase):
       - WebSite_getShoppingCartDefaultCurrencySymbol
     """
     currency = self.portal.restrictedTraverse('currency_module/EUR')
-    self.assertEquals(currency, 
-                      self.web_site.WebSite_getShoppingCartDefaultCurrency())
-    
-    self.assertEquals(currency.getReference(), 
-                   self.web_site.WebSite_getShoppingCartDefaultCurrencyCode())
+    self.assertEquals(currency,
+                      self.website.WebSite_getShoppingCartDefaultCurrency())
+
+    self.assertEquals(currency.getReference(),
+                   self.website.WebSite_getShoppingCartDefaultCurrencyCode())
 
     self.assertEquals(currency.getShortTitle(),
-                 self.web_site.WebSite_getShoppingCartDefaultCurrencySymbol())
+                 self.website.WebSite_getShoppingCartDefaultCurrencySymbol())
 
   def test_16_simulatePaypalPayment(self):
     """
@@ -683,18 +686,19 @@ class TestCommerce(ERP5TypeTestCase):
     if method_id in custom_skin.objectIds():
       custom_skin.manage_delObjects([method_id])
     custom_skin.manage_addProduct['PythonScripts']\
-                   .manage_addPythonScript(id = method_id)
+                   .manage_addPythonScript(id=method_id)
+
     script = custom_skin[method_id]
-    script.ZPythonScript_edit('parameter_dict, nvp_url', 
+    script.ZPythonScript_edit('parameter_dict, nvp_url',
                                                   SIMULATE_PAYPAL_SERVER)
 
     self.portal.changeSkin('View')
-    
+
     #1 initialise a website
-    self.web_site.setProperty('ecommerce_paypal_username', 'user')
-    self.web_site.setProperty('ecommerce_paypal_password', 'pass')
-    self.web_site.setProperty('ecommerce_paypal_signature', 'signature')
-   
+    self.website.setProperty('ecommerce_paypal_username', 'user')
+    self.website.setProperty('ecommerce_paypal_password', 'pass')
+    self.website.setProperty('ecommerce_paypal_signature', 'signature')
+
     #2 login and activate a cart
     self.login('webmaster')
     request = self.app.REQUEST
@@ -704,34 +708,34 @@ class TestCommerce(ERP5TypeTestCase):
     self.createShoppingCartWithProductListAndShipping()
 
     #4 : paypal step 1 : get a new token
-    token = self.web_site.checkout.WebSection_getNewPaypalToken()    
+    token = self.website.checkout.WebSection_getNewPaypalToken()
     self.assertNotEquals(token, None)
 
     #5 : paypal step 2 : go to paypal and confirm this token
-    # PayerID is normaly set in the request when paypal 
+    # PayerID is normaly set in the request when paypal
     # redirect to the instance
     request.set('PayerID', 'THEPAYERID')
-    
+
     #6 : paypal step 3 : check if this token is confirmed by paypal
-    error = self.web_site.WebSection_checkPaypalIdentification()
+    error = self.website.WebSection_checkPaypalIdentification()
     self.assertEquals(error, None)
     self.assertTrue('/checkout' in request.RESPONSE.getHeader('location'))
-    
+
     #7 : paypal step 4 : validate the payment
-    self.assertEquals(1, 
-                       len(self.web_site.SaleOrder_getShoppingCartItemList()))
+    self.assertEquals(1,
+                       len(self.website.SaleOrder_getShoppingCartItemList()))
     self.assertEquals(0, len(self.portal.sale_order_module.contentValues()))
-    
-    self.web_site.WebSection_doPaypalPayment(token=token)
+
+    self.website.WebSection_doPaypalPayment(token=token)
     transaction.commit()
     self.tic()
-    
+
     #8 check if sale order created
-    self.assertEquals(0, len(self.web_site.SaleOrder_getShoppingCartItemList()))
+    self.assertEquals(0, len(self.website.SaleOrder_getShoppingCartItemList()))
     self.assertEquals(1, len(self.portal.sale_order_module.contentValues()))
 
     custom_skin.manage_delObjects([method_id])
-    
+
   def test_17_getProductListFromWebSection(self):
     """
       Test the  WebSection_getProductList script.
@@ -741,19 +745,19 @@ class TestCommerce(ERP5TypeTestCase):
     netbook_product = self.getDefaultProduct(id='2')
     netbook_product.setProductLine('ldlc/laptop')
 
-    self.web_site.WebSection_generateSectionFromCategory(
+    self.website.WebSection_generateSectionFromCategory(
                                               category='product_line/ldlc',
                                               section_id='product_section',
                                               depth=2)
     transaction.commit()
     self.tic()
 
-    self.assertEquals(14, 
-             len(self.web_site.product_section.WebSection_getProductList()))
-    self.assertEquals(8, 
-             len(self.web_site.product_section.laptop.WebSection_getProductList()))
+    self.assertEquals(14,
+             len(self.website.product_section.WebSection_getProductList()))
+    self.assertEquals(8,
+         len(self.website.product_section.laptop.WebSection_getProductList()))
 
-    netbook_section = self.web_site.product_section.laptop.netbook
+    netbook_section = self.website.product_section.laptop.netbook
     self.assertEquals(3, len(netbook_section.WebSection_getProductList()))
 
   def test_18_editShoppingCardWithABlankShippingMethod(self):
@@ -762,9 +766,9 @@ class TestCommerce(ERP5TypeTestCase):
       blank shipping method and it will not break.
     """
     default_product = self.getDefaultProduct()
-    self.web_site.Resource_addToShoppingCart(default_product, 1)
+    self.website.Resource_addToShoppingCart(default_product, 1)
 
-    shopping_cart = self.web_site.SaleOrder_getShoppingCart()
+    shopping_cart = self.website.SaleOrder_getShoppingCart()
     self.assertFalse(hasattr(shopping_cart, 'shipping_method'))
 
     self.portal.SaleOrder_editShoppingCart(field_my_shipping_method='')
@@ -779,30 +783,30 @@ class TestCommerce(ERP5TypeTestCase):
 
   def test_19_editShoppingCardWithShippingMethodWithoutPrice(self):
     """
-      This test must make sure that you can not edit the shopping cart 
+      This test must make sure that you can not edit the shopping cart
       selecting a shipping method without price.
     """
     default_product = self.getDefaultProduct(id='1')
-    self.web_site.Resource_addToShoppingCart(default_product, 1)
-    shopping_cart = self.web_site.SaleOrder_getShoppingCart()
+    self.website.Resource_addToShoppingCart(default_product, 1)
+    shopping_cart = self.website.SaleOrder_getShoppingCart()
 
     # add shipping
     shipping = self.getDefaultProduct('3')
-    shipping.setBasePrice(None) 
-    self.web_site.SaleOrder_editShoppingCart(
+    shipping.setBasePrice(None)
+    self.website.SaleOrder_editShoppingCart(
                      field_my_shipping_method=shipping.getRelativeUrl())
 
     self.assertEquals(10.0, \
-            float(self.web_site.SaleOrder_getShoppingCartTotalPrice(
+            float(self.website.SaleOrder_getShoppingCartTotalPrice(
                                                     include_shipping=True)))
 
   def test_20_getProductListFromWebSite(self):
     """
       Test the  WebSite_getProductList script.
     """
-    self.assertEquals(5, len(self.web_site.WebSite_getProductList()))
-    self.assertEquals(16, 
-               len(self.web_site.WebSite_getProductList(limit=1000)))
+    self.assertEquals(5, len(self.website.WebSite_getProductList()))
+    self.assertEquals(16,
+               len(self.website.WebSite_getProductList(limit=1000)))
 
   def test_21_AddResourceToShoppingCartWithAnonymousUser(self):
     """
@@ -811,7 +815,7 @@ class TestCommerce(ERP5TypeTestCase):
     # anonymous user
     self.logout()
     self.createShoppingCartWithProductListAndShipping()
-    shoppping_cart_item_list = self.web_site.SaleOrder_getShoppingCartItemList()
+    shoppping_cart_item_list = self.website.SaleOrder_getShoppingCartItemList()
     self.assertEquals(1, len(shoppping_cart_item_list))
 
   def test_22_createShoppingCartWithAnonymousAndLogin(self):
@@ -830,11 +834,11 @@ class TestCommerce(ERP5TypeTestCase):
               password='secret',
               password_confirm='secret')
     for key, item in kw.items():
-      self.app.REQUEST.set('field_your_%s' %key, item)
-    self.web_site.WebSite_createWebSiteAccount('WebSite_viewRegistrationDialog')
+      self.app.REQUEST.set('field_your_%s' % key, item)
+    self.website.WebSite_createWebSiteAccount('WebSite_viewRegistrationDialog')
     transaction.commit()
     self.tic()
- 
+
     self.login('toto')
     self.portal.SaleOrder_paymentRedirect()
     self.assertTrue(urllib.quote("SaleOrder_viewConfirmAsWeb") in
@@ -846,11 +850,11 @@ class TestCommerce(ERP5TypeTestCase):
       for a given Authenticated Member it should return the person value.
     """
     self.logout()
-    person_object = self.web_site.SaleOrder_getShoppingCartCustomer()
+    person_object = self.website.SaleOrder_getShoppingCartCustomer()
     self.assertEquals(person_object, None)
 
     self.login('webmaster')
-    person_object = self.web_site.SaleOrder_getShoppingCartCustomer()
+    person_object = self.website.SaleOrder_getShoppingCartCustomer()
     self.assertNotEquals(person_object, None)
     self.assertEquals(person_object.getReference(), 'webmaster')
 
@@ -867,17 +871,17 @@ class TestCommerce(ERP5TypeTestCase):
 
     self.logout()
     product = self.getDefaultProduct()
-    self.assertTrue(product.getDefaultImageValue().getData() 
+    self.assertTrue(product.getDefaultImageValue().getData()
                                                  not in ('', None))
 
   def test_25_getSaleOrderModuleAbsoluteUrlWithAnonymousUser(self):
     """
       Anonymous User must have permission access Sale Order Module contents
-      information. 
+      information.
     """
     self.logout()
-    self.assertNotEquals(self.web_site.sale_order_module.absolute_url(), None)
- 
+    self.assertNotEquals(self.website.sale_order_module.absolute_url(), None)
+
   def test_26_getShoppingCartDefaultCurrencyWithAnonymousUser(self):
     """
       Anonymous User must have persmission to access Currency Module contents
@@ -888,16 +892,16 @@ class TestCommerce(ERP5TypeTestCase):
       - WebSite_getShoppingCartDefaultCurrencySymbol
     """
     self.logout()
-    currency_url = self.web_site.getLayoutProperty('ecommerce_base_currency')
+    currency_url = self.website.getLayoutProperty('ecommerce_base_currency')
     currency_object = self.portal.restrictedTraverse(currency_url)
-    self.assertEquals(currency_object, 
-                      self.web_site.WebSite_getShoppingCartDefaultCurrency())
-    
-    self.assertEquals(currency_object.getReference(), 
-                   self.web_site.WebSite_getShoppingCartDefaultCurrencyCode())
+    self.assertEquals(currency_object,
+                      self.website.WebSite_getShoppingCartDefaultCurrency())
+
+    self.assertEquals(currency_object.getReference(),
+                   self.website.WebSite_getShoppingCartDefaultCurrencyCode())
 
     self.assertEquals(currency_object.getShortTitle(),
-                 self.web_site.WebSite_getShoppingCartDefaultCurrencySymbol())
+                 self.website.WebSite_getShoppingCartDefaultCurrencySymbol())
 
   def test_27_ResourceGetShopUrl(self):
     """
@@ -915,20 +919,21 @@ class TestCommerce(ERP5TypeTestCase):
     """
     self.login('webmaster')
     comment = 'TESTING COMMENT'
-    self.web_site.Resource_addToShoppingCart(self.getDefaultProduct(), 
+    self.website.Resource_addToShoppingCart(self.getDefaultProduct(),
                                            quantity=1)
 
-    self.web_site.SaleOrder_paymentRedirect(field_my_comment=comment)
-    self.web_site.SaleOrder_finalizeShopping()
+    self.website.SaleOrder_paymentRedirect(field_my_comment=comment)
+    self.website.SaleOrder_finalizeShopping()
     transaction.commit()
     self.tic()
 
     sale_order_object_list = self.portal.sale_order_module.contentValues()
     self.assertEquals(comment, sale_order_object_list[0].getComment())
- 
+
 import unittest
+
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestCommerce))
   return suite
-
