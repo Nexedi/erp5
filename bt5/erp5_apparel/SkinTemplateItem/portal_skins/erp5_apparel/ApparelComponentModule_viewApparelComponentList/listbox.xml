@@ -371,10 +371,6 @@
                           <string>Height (cm)</string>
                         </tuple>
                         <tuple>
-                          <string>lenght_quantity</string>
-                          <string>Lenght Quantity</string>
-                        </tuple>
-                        <tuple>
                           <string>colour_count</string>
                           <string>Colour Count</string>
                         </tuple>
@@ -454,10 +450,6 @@
                         <tuple>
                           <string>base_height</string>
                           <string>Height (cm)</string>
-                        </tuple>
-                        <tuple>
-                          <string>lenght_quantity</string>
-                          <string>Lenght Quantity</string>
                         </tuple>
                         <tuple>
                           <string>colour_count</string>
