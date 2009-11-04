@@ -378,7 +378,7 @@ class ERP5TypeInformation(XMLObject,
           # workflow and it is annoyning without security setted
           ob.portal_type = self.getId()
 
-        self.updateLocalRolesOnDocument(ob)
+        self.updateLocalRolesOnDocument(ob, reindex=False)
 
         # notify workflow after generating local roles, in order to prevent
         # Unauthorized error on transition's condition
