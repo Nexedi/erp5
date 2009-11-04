@@ -19,6 +19,7 @@ try:
 except ImportError:
   from Products.ERP5Type.patches.string import Template
 
+from itools import i18n
 from Products.ERP5Type.Message import Message
 from zLOG import LOG, ERROR
 
@@ -150,7 +151,7 @@ def get_language_name(self, id=None):
     """
     if id is None:
         id = self.get_default_language()
-    language_name = LanguageManager.i18n.get_language_name(id)
+    language_name = i18n.get_language_name(id)
     if language_name=='???':
         return self.get_user_defined_language_name(id) or language_name
     else:
@@ -169,7 +170,7 @@ def get_all_languages(self):
     """
     Returns all ISO languages, used by 'manage_languages'.
     """
-    return LanguageManager.i18n.get_languages() + self.get_user_defined_languages()
+    return i18n.get_languages() + self.get_user_defined_languages()
 
 # New method
 def get_user_defined_languages(self):
