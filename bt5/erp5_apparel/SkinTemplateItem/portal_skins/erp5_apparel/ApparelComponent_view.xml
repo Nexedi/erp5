@@ -56,6 +56,7 @@
                 <string>right</string>
                 <string>center</string>
                 <string>bottom</string>
+                <string>hidden</string>
               </list>
             </value>
         </item>
@@ -80,6 +81,14 @@
                     </value>
                 </item>
                 <item>
+                    <key> <string>hidden</string> </key>
+                    <value>
+                      <list>
+                        <string>listbox_thumbnail</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
                     <key> <string>left</string> </key>
                     <value>
                       <list>
@@ -92,7 +101,6 @@
                         <string>my_base_width</string>
                         <string>my_base_height</string>
                         <string>composition_title</string>
-                        <string>listbox_thumbnail</string>
                       </list>
                     </value>
                 </item>
