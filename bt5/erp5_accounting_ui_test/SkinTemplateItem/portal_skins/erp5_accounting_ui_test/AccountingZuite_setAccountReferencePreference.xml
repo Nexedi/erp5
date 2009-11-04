@@ -53,69 +53,10 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>portal = context.getPortalObject()\n
+            <value> <string>preference = context.portal_preferences.accounting_zuite_preference\n
+preference.edit(preferred_account_number_method=\'account_reference\')\n
 \n
-# validate rules\n
-for rule in portal.portal_rules.objectValues():\n
-  if rule.getValidationState() != \'validated\':\n
-    rule.validate()\n
-\n
-# open all accounts\n
-for account in portal.account_module.objectValues():\n
-  if account.getValidationState() != \'validated\':\n
-    account.validate()\n
-\n
-# validate third parties and set them a dummy region, because it\'s required\n
-for entity in ( portal.organisation_module.objectValues() +\n
-                portal.person_module.objectValues() ):\n
-  if entity.getValidationState() != \'validated\':\n
-    entity.setRegion(\'region\')\n
-    entity.validate()\n
-\n
-# create accounting periods ?\n
-# XXX\n
-\n
-# enable preference\n
-pref = portal.portal_preferences.accounting_zuite_preference\n
-if pref.owner_info()[\'id\'] != str(context.REQUEST.AUTHENTICATED_USER):\n
-  # we have to \'own\' the preference for the test\n
-  ptool = portal.portal_preferences\n
-  # pref.setId(\'old_accounting_zuite_preference\')\n
-  cb = ptool.manage_copyObjects([\'accounting_zuite_preference\'])\n
-  # FIXME: how could this work ???\n
-  ptool.manage_pasteObjects(cb)\n
-pref.edit(preferred_accounting_transaction_at_date=None)\n
-pref.edit(preferred_accounting_transaction_from_date=None)\n
-pref.edit(preferred_account_number_method=None)\n
-if pref.getPreferenceState() == \'disabled\':\n
-  pref.enable()\n
-\n
-# reset selections\n
-stool = context.getPortalObject().portal_selections\n
-for form in context.getPortalObject().portal_skins\\\n
-                    .erp5_accounting.objectValues(spec=(\'ERP5 Form\',)):\n
-  listbox = getattr(form, \'listbox\', None)\n
-  if listbox is not None:\n
-    stool.setSelectionFor(listbox.get_value(\'selection_name\'), None)\n
-# also reset common selections\n
-stool.setSelectionFor(\'person_selection\', None)\n
-stool.setSelectionFor(\'organisation_selection\', None)\n
-stool.setSelectionFor(\'grouping_reference_fast_input_selection\', None)\n
-stool.setSelectionFor(\'accounting_transaction_module_grouping_reference_fast_input\', None)\n
-stool.setSelectionFor(\'entity_transaction_selection\', None)\n
-stool.setSelectionFor(\'account_module_selection\', None)\n
-\n
-# set sort order on account module\n
-stool.setSelectionParamsFor(\'account_module_selection\', dict()) # (this recreates selection)\n
-stool.setSelectionSortOrder(\'account_module_selection\', sort_on=((\'preferred_gap_id\', \'ascending\'),))\n
-\n
-# delete the "dummy account" we create in test_account_gap_parallel_list_field\n
-dummy_account_list = portal.account_module.searchFolder(\n
-                                        title=\'Dummy Account for UI Test\')\n
-if dummy_account_list:\n
-  portal.account_module.manage_delObjects([dummy_account_list[0].getId()])\n
-\n
-return "Reset Successfully."\n
+return "Preference Set"\n
 </string> </value>
         </item>
         <item>
@@ -154,23 +95,7 @@ return "Reset Successfully."\n
                           <tuple>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>portal</string>
-                            <string>_getiter_</string>
-                            <string>rule</string>
-                            <string>account</string>
-                            <string>entity</string>
-                            <string>pref</string>
-                            <string>_getitem_</string>
-                            <string>str</string>
-                            <string>ptool</string>
-                            <string>cb</string>
-                            <string>None</string>
-                            <string>stool</string>
-                            <string>form</string>
-                            <string>getattr</string>
-                            <string>listbox</string>
-                            <string>dict</string>
-                            <string>dummy_account_list</string>
+                            <string>preference</string>
                           </tuple>
                         </value>
                     </item>
@@ -187,7 +112,7 @@ return "Reset Successfully."\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>AccountingZuite_reset</string> </value>
+            <value> <string>AccountingZuite_setAccountReferencePreference</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
