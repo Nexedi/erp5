@@ -55,6 +55,7 @@
             <key> <string>_body</string> </key>
             <value> <string># this script is used to display a small text in the main form corresponding to the composition\n
 # it return something like "3.0 % Polyamide, 5.0 % Elasthanne"\n
+translateString = context.Base_translateString\n
 \n
 title_list = []\n
 cell_list = []\n
@@ -62,7 +63,7 @@ poly_list = context.ApparelFabric_asCellRange(matrixbox=1)[0]\n
 for cat, title in poly_list:\n
   cell = context.getCell(cat, base_id=\'composition\')\n
   if cell is not None:\n
-    cell_list.append({\'quantity\':cell.getQuantity(), \'title\':title})\n
+    cell_list.append({\'quantity\':cell.getQuantity(), \'title\':translateString(catalog=\'content\', msg=title)})\n
 \n
 # sort by quantity\n
 cell_list.sort(key=lambda x: x[\'quantity\'], reverse=True)\n
@@ -109,11 +110,12 @@ return final_text\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>translateString</string>
                             <string>title_list</string>
                             <string>cell_list</string>
                             <string>_getitem_</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
                             <string>poly_list</string>
                             <string>_getiter_</string>
                             <string>cat</string>
