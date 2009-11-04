@@ -14,6 +14,12 @@
             <value> <int>3</int> </value>
         </item>
         <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>_bind_names</string> </key>
             <value>
               <object>
@@ -99,7 +105,7 @@ def isVisibleCell(cell):\n
 \n
 \n
 for budget in budget_list:\n
-  for budget_line in budget.contentValues():\n
+  for budget_line in budget.contentValues(sort_on=((\'int_index\', \'asc\'),)):\n
     total_level_1_initial_budget = 0\n
     total_level_1_current_budget = 0\n
     total_level_1_engaged_budget = 0\n
@@ -133,11 +139,22 @@ for budget in budget_list:\n
 \n
     # we use BudgetLine_asCellRange to get cell names, and have a default value\n
     # for "virtual level 2"\n
+    title = budget_line.getTitle().decode(\'utf8\')\n
     cell_name_dict = {budget_line.getResource(base=1):\n
                           budget_line.getTitle().decode(\'utf8\')}\n
+    cell_style_dict = {budget_line.getResource(base=1): \'Level2\'}\n
     for cell_range_list in budget_line.BudgetLine_asCellRange(matrixbox=1):\n
       for category, title in cell_range_list:\n
-        cell_name_dict[category] = title.decode(\'utf8\')\n
+        cell_name_dict[category] = title.decode(\'utf8\').replace(u\'\\xA0\', \'\')\n
+        depth = (title.count(\'\\xA0\') / 4.) or title.count(\'/\')\n
+        if depth == 1:\n
+          cell_style_dict[category] = \'Level2.1\'\n
+        elif depth == 2:\n
+          cell_style_dict[category] = \'Level2.2\'\n
+        elif depth == 3:\n
+          cell_style_dict[category] = \'Level2.3\'\n
+        else:\n
+          cell_style_dict[category] = \'Level2\'\n
 \n
     for level_2_category in level_2_variation_category_list:\n
 \n
@@ -147,7 +164,8 @@ for budget in budget_list:\n
       total_level_2_consumed_budget = 0\n
       total_level_2_available_budget = 0\n
       level_2_line_list = [dict(is_level_2=1,\n
-                                title=cell_name_dict[level_2_category])]\n
+                                title=cell_name_dict[level_2_category],\n
+                                style=cell_style_dict[level_2_category])]\n
       \n
       for level_3_category in level_3_variation_category_list:\n
         sign = budget_line.BudgetLine_getConsumptionSign()\n
@@ -214,8 +232,7 @@ for budget in budget_list:\n
                             consumed_budget=total_level_1_consumed_budget,\n
                             available_budget=total_level_1_available_budget,\n
                             consumed_ratio=consumed_ratio))\n
-\n
-      \n
+     \n
   \n
 if line_list:\n
   line_list[-1][\'is_last_line\'] = 1\n
@@ -305,10 +322,12 @@ return pformat(line_list)\n
                             <string>$append0</string>
                             <string>x</string>
                             <string>level_3_variation_category_list</string>
-                            <string>cell_name_dict</string>
-                            <string>cell_range_list</string>
                             <string>title</string>
+                            <string>cell_name_dict</string>
+                            <string>cell_style_dict</string>
+                            <string>cell_range_list</string>
                             <string>_write_</string>
+                            <string>depth</string>
                             <string>level_2_category</string>
                             <string>total_level_2_initial_budget</string>
                             <string>total_level_2_current_budget</string>
