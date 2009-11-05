@@ -93,8 +93,8 @@
                     <value>
                       <list>
                         <string>my_title</string>
-                        <string>my_quality_reference</string>
-                        <string>my_drawing_reference</string>
+                        <string>my_reference</string>
+                        <string>my_purchase_supply_line_source_reference</string>
                         <string>my_resource</string>
                         <string>my_visual_pattern</string>
                         <string>my_quantity_unit_list</string>

@@ -613,18 +613,6 @@
                           <string>Description</string>
                         </tuple>
                         <tuple>
-                          <string>purchase_supply_line_source_title</string>
-                          <string>Supplier</string>
-                        </tuple>
-                        <tuple>
-                          <string>purchase_supply_line_source_reference</string>
-                          <string>Supplier Reference</string>
-                        </tuple>
-                        <tuple>
-                          <string>resource_translated_title</string>
-                          <string>Component Type</string>
-                        </tuple>
-                        <tuple>
                           <string>translated_validation_state_title</string>
                           <string>State</string>
                         </tuple>
@@ -661,18 +649,6 @@
                         <tuple>
                           <string>description</string>
                           <string>Description</string>
-                        </tuple>
-                        <tuple>
-                          <string>purchase_supply_line_source_title</string>
-                          <string>Supplier</string>
-                        </tuple>
-                        <tuple>
-                          <string>purchase_supply_line_source_reference</string>
-                          <string>Supplier Reference</string>
-                        </tuple>
-                        <tuple>
-                          <string>resource_translated_title</string>
-                          <string>Component Type</string>
                         </tuple>
                         <tuple>
                           <string>translated_validation_state_title</string>

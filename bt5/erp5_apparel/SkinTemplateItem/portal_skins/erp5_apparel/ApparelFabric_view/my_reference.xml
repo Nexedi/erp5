@@ -11,7 +11,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_quality_reference</string> </value>
+            <value> <string>my_reference</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -208,7 +208,7 @@
                 </item>
                 <item>
                     <key> <string>display_width</string> </key>
-                    <value> <int>20</int> </value>
+                    <value> <int>30</int> </value>
                 </item>
                 <item>
                     <key> <string>editable</string> </key>
@@ -240,7 +240,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Quality Reference</string> </value>
+                    <value> <string>Internal Reference</string> </value>
                 </item>
                 <item>
                     <key> <string>truncate</string> </key>

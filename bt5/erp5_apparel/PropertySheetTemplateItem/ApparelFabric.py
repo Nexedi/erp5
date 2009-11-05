@@ -45,14 +45,6 @@ class ApparelFabric:
             'description' : 'Number of colours',
             'type'        : 'int',
             'mode'        : 'w' },
-        {   'id'          : 'quality_reference',
-            'description' : 'The quality of the fabric characterize the support of the fabric',
-            'type'        : 'string',
-            'mode'        : 'w' },
-        {   'id'          : 'drawing_reference',
-            'description' : 'Drawing reference from the fabric supplier ',
-            'type'        : 'string',
-            'mode'        : 'w' },
         # Override default value XXX
         {   'id'          : 'p_variation_base_category',
             'description' : 'A list of base categories which define possible discrete variations. '\
