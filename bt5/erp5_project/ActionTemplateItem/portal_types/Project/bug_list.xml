@@ -35,7 +35,9 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>icon</string> </key>
@@ -95,7 +97,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>python:getattr(portal, \'bug_module\', None) is not None</string> </value>
+            <value> <string>python:portal.Base_checkPermission(\'bug_module\', \'View\')</string> </value>
         </item>
       </dictionary>
     </pickle>
