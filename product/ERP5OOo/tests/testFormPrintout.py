@@ -307,8 +307,8 @@ class TestFormPrintout(ERP5TypeTestCase):
     
     odf_document = foo_printout() 
     self.assertTrue(odf_document is not None)
-    test_output = open("/tmp/test_01_Paragraph_09_RangeReferenceWithSpan.odf", "w")
-    test_output.write(odf_document)
+    #test_output = open("/tmp/test_01_Paragraph_09_RangeReferenceWithSpan.odf", "w")
+    #test_output.write(odf_document)
     builder = OOoBuilder(odf_document)
     content_xml = builder.extract("content.xml")
     self.assertTrue(content_xml.find("ZZZ test here ZZZ") > 0)
