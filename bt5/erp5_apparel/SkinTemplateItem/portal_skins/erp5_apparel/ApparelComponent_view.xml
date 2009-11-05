@@ -93,6 +93,8 @@
                     <value>
                       <list>
                         <string>my_title</string>
+                        <string>my_reference</string>
+                        <string>my_purchase_supply_line_source_reference</string>
                         <string>my_resource</string>
                         <string>my_trade_description</string>
                         <string>my_quantity_unit_list</string>
@@ -101,8 +103,6 @@
                         <string>my_base_width</string>
                         <string>my_base_height</string>
                         <string>composition_title</string>
-                        <string>my_purchase_supply_line_source_reference</string>
-                        <string>my_reference</string>
                       </list>
                     </value>
                 </item>
