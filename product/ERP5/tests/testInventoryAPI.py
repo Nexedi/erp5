@@ -2275,18 +2275,17 @@ class TestInventoryDocument(InventoryAPITestCase):
       # the brain is not a zsqlbrain instance here, so it does not
       # have getPath().
       return [x.path for x in resource.getCurrentInventoryList(**kw)]
-   
+    
     # use optimisation
-    self.assertTrue(movement.getPath() in getCurrentInventoryPathList(
-      self.resource,
-      node_uid=self.node_uid,
-      from_date=movement.getStartDate()))
+    self.assertEquals(True,movement.getPath() in 
+                  [x.path for x in self.resource.getInventoryList(
+                                         mirror_uid=self.mirror_node.getUid())])
 
     # without optimisation
-    self.assertTrue(movement.getPath() in getCurrentInventoryPathList(
-      self.resource,
-      optimisation__=False,
-      from_date=movement.getStartDate()))
+    self.assertEquals(True,movement.getPath() in 
+                  [x.path for x in self.resource.getInventoryList(
+                                         optimisation__=False,
+                                         mirror_uid=self.mirror_node.getUid())])
     
 class TestUnitConversion(InventoryAPITestCase):
   QUANTITY_UNIT_CATEGORIES = {
