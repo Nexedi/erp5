@@ -347,6 +347,10 @@
                           <string>Supplier</string>
                         </tuple>
                         <tuple>
+                          <string>reference</string>
+                          <string>Internal Reference</string>
+                        </tuple>
+                        <tuple>
                           <string>purchase_supply_line_source_reference</string>
                           <string>Supplier Reference</string>
                         </tuple>
@@ -426,6 +430,10 @@
                         <tuple>
                           <string>purchase_supply_line_source_title</string>
                           <string>Supplier</string>
+                        </tuple>
+                        <tuple>
+                          <string>reference</string>
+                          <string>Internal Reference</string>
                         </tuple>
                         <tuple>
                           <string>purchase_supply_line_source_reference</string>
