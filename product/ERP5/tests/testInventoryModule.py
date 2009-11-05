@@ -4,10 +4,10 @@
 #          Sebastien Robin <seb@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
-# programmers who take the whole responsability of assessing all potential
+# programmers who take the whole responsibility of assessing all potential
 # consequences resulting from its eventual inadequacies and bugs
 # End users who are looking for a ready-to-use solution with commercial
-# garantees and support are strongly adviced to contract a Free Software
+# guarantees and support are strongly adviced to contract a Free Software
 # Service Company
 #
 # This program is Free Software; you can redistribute it and/or
@@ -28,7 +28,6 @@
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from DateTime import DateTime
-from zLOG import LOG
 from Products.ERP5Type.tests.Sequence import SequenceList
 from testOrder import TestOrderMixin
 
@@ -95,7 +94,7 @@ class TestInventoryModule(TestOrderMixin, ERP5TypeTestCase):
                       resource_value=sequence.get('resource'),
                       quantity=month*10)
       deliverPackingList(spl)
-      
+
       ipl = iplm.newContent(
                       portal_type='Internal Packing List',
                       source_value = sequence.get('organisation1'),
@@ -106,13 +105,12 @@ class TestInventoryModule(TestOrderMixin, ERP5TypeTestCase):
                       resource_value=sequence.get('resource'),
                       quantity=month*10)
       deliverPackingList(ipl)
-      
+
   def createInventory(self, start_date=None,
                                        sequence=None,**kw):
     """
     We will put default values for an inventory
     """
-    portal = self.getPortal()
     organisation =  sequence.get('organisation1')
     inventory = self.getInventoryModule().newContent()
     inventory.edit(start_date=start_date,
@@ -128,7 +126,6 @@ class TestInventoryModule(TestOrderMixin, ERP5TypeTestCase):
     """
     We will put default values for an inventory
     """
-    portal = self.getPortal()
     inventory = sequence.get('inventory_list')[-1]
     resource = sequence.get('resource_list')[-1]
     inventory_line = inventory.newContent(
@@ -142,9 +139,7 @@ class TestInventoryModule(TestOrderMixin, ERP5TypeTestCase):
     """
     We will put default values for an inventory
     """
-    portal = self.getPortal()
     date = DateTime(self.first_date_string)
-    LOG('stepCreateFirstNotVariatedInventory, date',0,date)
     quantity=self.default_quantity
     self.createInventory(start_date=date,sequence=sequence)
     self.createNotVariatedInventoryLine(sequence=sequence,
@@ -155,7 +150,6 @@ class TestInventoryModule(TestOrderMixin, ERP5TypeTestCase):
     """
     We will put default values for an inventory
     """
-    portal = self.getPortal()
     date = DateTime(self.second_date_string)
     quantity=self.default_quantity - 2
     self.createInventory(start_date=date,sequence=sequence)
@@ -171,7 +165,7 @@ class TestInventoryModule(TestOrderMixin, ERP5TypeTestCase):
     quantity=self.default_quantity
     inventory_line = self.second_inventory.objectValues()[0]
     inventory_line.edit(inventory=quantity)
-    
+
 
   def stepCheckFirstNotVariatedInventory(self, start_date=None,quantity=None,
                                              sequence=None,**kw):
@@ -188,10 +182,6 @@ class TestInventoryModule(TestOrderMixin, ERP5TypeTestCase):
     node_uid = sequence.get('organisation1').getUid()
     resource_url = sequence.get('resource').getRelativeUrl()
     date = DateTime(self.view_stock_date)
-    LOG('CheckSecondNotVariatedInventory', 0,
-        self.getSimulationTool().getInventory(node_uid=node_uid,
-                        resource=resource_url,
-                        to_date=date,src__=1))
     quantity = self.getSimulationTool().getInventory(node_uid=node_uid,
                         resource=resource_url,
                         to_date=date,simulation_state='delivered')
@@ -238,13 +228,12 @@ class TestInventoryModule(TestOrderMixin, ERP5TypeTestCase):
 
     sequence_list.play(self)
 
-  def createVariatedInventoryLine(self, sequence=None, sequence_list=None, 
+  def createVariatedInventoryLine(self, sequence=None, sequence_list=None,
                                  start_date=None, quantity=None, item_list=None,
                                  **kw):
     """
     We will put default values for an inventory
     """
-    portal = self.getPortal()
     inventory = sequence.get('inventory_list')[-1]
     resource = sequence.get('resource_list')[-1]
     inventory_line = inventory.newContent(
@@ -277,7 +266,6 @@ class TestInventoryModule(TestOrderMixin, ERP5TypeTestCase):
     """
     We will put default values for an inventory
     """
-    portal = self.getPortal()
     date = DateTime(self.first_date_string)
     inventory = self.createInventory(start_date=date,sequence=sequence)
     quantity = self.default_quantity
@@ -289,7 +277,6 @@ class TestInventoryModule(TestOrderMixin, ERP5TypeTestCase):
     """
     We will put default values for an inventory
     """
-    portal = self.getPortal()
     date = DateTime(self.second_date_string)
     inventory = self.createInventory(start_date=date,sequence=sequence)
     quantity = self.default_quantity - 10
@@ -395,7 +382,6 @@ class TestInventoryModule(TestOrderMixin, ERP5TypeTestCase):
     - size/Child/32 99    item1,item2
     - size/Child/34 100   item1,item2
     """
-    portal = self.getPortal()
     date = DateTime(self.first_date_string)
     inventory = self.createInventory(start_date=date,sequence=sequence)
     quantity = self.default_quantity
@@ -439,7 +425,7 @@ class TestInventoryModule(TestOrderMixin, ERP5TypeTestCase):
                         to_date=date,
                         sub_variation_text=sub_variation_text)
     self.assertEquals(total_quantity,quantity)
-  
+
   def stepCheckExplanationTextInInventoryList(self, start_date=None,
                                 quantity=None, sequence=None, **kw):
     """Tests getExplanationText from InventoryBrain
@@ -458,7 +444,7 @@ class TestInventoryModule(TestOrderMixin, ERP5TypeTestCase):
                                 'getExplanationText',
                                 0,
                                 'dummy_selection_name'), '')
-      
+
   def stepCreateSecondVariatedAggregatedInventory(self, sequence=None,
                                       sequence_list=None, **kw):
     """
@@ -468,7 +454,6 @@ class TestInventoryModule(TestOrderMixin, ERP5TypeTestCase):
     - size/Child/32 89    item1
     - size/Child/34 90    item1
     """
-    portal = self.getPortal()
     date = DateTime(self.second_date_string)
     inventory = self.createInventory(start_date=date,sequence=sequence)
     quantity = self.default_quantity - 10
@@ -563,4 +548,3 @@ class TestInventoryModule(TestOrderMixin, ERP5TypeTestCase):
     sequence_list.addSequenceString(sequence_string)
 
     sequence_list.play(self)
-
