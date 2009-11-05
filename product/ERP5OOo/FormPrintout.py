@@ -400,6 +400,10 @@ class ODFStrategy(Implicit):
 
     range reference example:
     <text:reference-mark-start text:name="week"/>Monday<text:reference-mark-end text:name="week"/>
+    or
+    <text:reference-mark-start text:name="my_title"/><text:span text:style-name="T1">title</text:span>
+    <text:reference-mark-end text:name="my_title"/>
+
     """
     field_value = self._renderField(field)
     value = self._toUnicodeString(field_value)
@@ -409,7 +413,12 @@ class ODFStrategy(Implicit):
       return element_tree
     target_node = reference_list[0]
     if not isinstance(field_value, list):
-      target_node.tail = value
+      next_node = target_node.getnext()
+      span_tag_name = '{%s}span' % element_tree.nsmap['text']
+      if next_node is not None and next_node.tag == span_tag_name:
+        next_node.text = value
+      else:
+        target_node.tail = value
       # clear text until 'reference-mark-end'
       for node in target_node.itersiblings():
         end_tag_name = '{%s}reference-mark-end' % element_tree.nsmap['text']
