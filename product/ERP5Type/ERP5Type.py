@@ -102,8 +102,10 @@ class LocalRoleAssignorMixIn(object):
     security.declarePrivate('getFilteredRoleListFor')
     def getFilteredRoleListFor(self, ob=None):
       """Return all role generators applicable to the object."""
-      ec = createExpressionContext(ob)
+      ec = None # createExpressionContext is slow so we call it only if needed
       for role in self.getRoleInformationList():
+        if ec is None:
+          ec = createExpressionContext(ob)
         if role.testCondition(ec):
           yield role
 
