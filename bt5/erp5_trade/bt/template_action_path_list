@@ -79,9 +79,7 @@ Purchase Trade Condition | view_payment
 Purchase Trade Condition | view_profile
 Purchase Trade Condition | view_trade_model_line_list
 Returned Sale Packing List Cell | view
-Returned Sale Packing List Line | line_profile
 Returned Sale Packing List Line | price_view
-Returned Sale Packing List Line | project
 Returned Sale Packing List Line | quantity_view
 Returned Sale Packing List Line | view
 Returned Sale Packing List Module | delivery_line_report
