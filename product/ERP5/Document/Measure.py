@@ -256,10 +256,10 @@ class Measure(XMLMatrix):
         # variation_category.
         variation_list = [(regex_list + [variation_category, '\n'],
                            variation_base_category_list + [variation_category])
+          for regex_list, variation_base_category_list in variation_list
           for variation_category in resource.getVariationCategoryList(
             base_category_list=(variation_base_category,),
-            omit_individual_variation=0)
-          for regex_list, variation_base_category_list in variation_list]
+            omit_individual_variation=0)]
       else:
         variation_base_category_regex = variation_base_category + '/[^\n]+\n'
         if variation_base_category in optional_variation_base_category_set:
