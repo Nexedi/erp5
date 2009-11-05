@@ -72,17 +72,15 @@ class LocalRoleAssignorMixIn(object):
       group_id_role_dict = self.getLocalRolesFor(ob, user_name)
 
       ## Update role assignments to groups
-      # Clean old group roles
-      old_group_list = ob.get_local_roles()
-      ob.manage_delLocalRoles([x[0] for x in old_group_list])
       # Save the owner
-      for group, role_list in old_group_list:
+      for group, role_list in (ob.__ac_local_roles__ or {}).iteritems():
         if 'Owner' in role_list:
           group_id_role_dict.setdefault(group, set()).add('Owner')
       # Assign new roles
+      ob.__ac_local_roles__ = ac_local_roles = {}
       for group, role_list in group_id_role_dict.iteritems():
         if role_list:
-          ob.manage_addLocalRoles(group, role_list)
+          ac_local_roles[group] = list(role_list)
       ## Make sure that the object is reindexed
       if reindex:
         ob.reindexObjectSecurity()
