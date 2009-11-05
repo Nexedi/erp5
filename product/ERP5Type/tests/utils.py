@@ -116,6 +116,8 @@ class DummyLocalizer:
   def get_supported_languages(self):
     return ('en', 'fr', 'pl')
 
+  get_languages = get_supported_languages
+
   def changeLanguage(self, lang):
     self.lang = lang
 
