@@ -426,6 +426,9 @@ msgstr "Calendrier Google"
 msgid "Google clock"
 msgstr "Horloge Google"
 
+msgid "Gram"
+msgstr "Gramme"
+
 msgid "Gross Salary"
 msgstr "Salaire Brut"
 
@@ -978,6 +981,9 @@ msgstr "Réunion au sujet des ventes"
 msgid "Sales Prospect"
 msgstr "Prospect à convaincre"
 
+msgid "Second"
+msgstr "Seconde"
+
 msgid "Selling, General and Administrative Expenses"
 msgstr "Frais généraux et administratifs"
 
@@ -1022,6 +1028,9 @@ msgstr "Entreprise individuelle"
 
 msgid "Sports and Recreational Equipment and Supplies and Accessories"
 msgstr "Equipements, fournitures, accessoires de sport et de loisirs"
+
+msgid "Square Centimeter"
+msgstr "Centimètre carré"
 
 msgid "Square Meter"
 msgstr "Mètre carré"
