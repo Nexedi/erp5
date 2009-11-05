@@ -215,7 +215,7 @@ class Measure(XMLMatrix):
     # For each variation axe (if variation_base_category in
     # measure_variation_base_category_list), we rebuild variation_list entirely
     # and its size is multiplied by the number of categories in this axe.
-    # For other varation base categories (variation_base_category not in
+    # For other variation base categories (variation_base_category not in
     # measure_variation_base_category_list), we simply
     # update variation_list to add 1 regex token to each regex list.
     #
