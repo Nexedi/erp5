@@ -160,6 +160,12 @@ else:
   else:
     zope_home = '/usr/lib/zope'
   software_home = os.path.join(zope_home, 'lib', 'python')
+  os.environ['SOFTWARE_HOME'] = software_home
+
+# SOFTWARE_HOME must be early in sys.path, otherwise some products will
+# import ImageFile from PIL instead of from Zope!
+if software_home not in sys.path:
+  sys.path.insert(0, software_home)
 
 # handle 'system global' instance and windows
 if WIN:
@@ -288,9 +294,15 @@ def runUnitTestList(test_list, verbosity=1, debug=0):
   os.environ.setdefault('EVENT_LOG_FILE', os.path.join(tests_home, 'zLOG.log'))
   os.environ.setdefault('EVENT_LOG_SEVERITY', '-300')
 
-  execfile(os.path.join(tests_framework_home, 'framework.py'),
-              dict(__name__='__main__'))
-  
+  import Testing
+  # the above import changes cfg.testinghome. Reset it to where our
+  # custom_zodb.py can be found. This must be done before importing
+  # ZopeTestCase below (Leo: I hate import side-effects with a passion).
+  import App.config
+  cfg = App.config.getConfiguration()
+  cfg.testinghome = instance_home
+  App.config.setConfiguration(cfg)
+
   if WIN:
     products_home = os.path.join(real_instance_home, 'Products')
     import Products
