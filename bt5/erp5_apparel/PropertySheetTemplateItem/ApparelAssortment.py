@@ -36,7 +36,7 @@ class ApparelAssortment:
 
   _properties = (
     { 'id'          : 'ean13_code',
-      'description' : 'The EAN 13 code of this apparel model',
+      'description' : 'The EAN-13 code of this apparel model',
       'type'        : 'string',
       'mode'        : 'w' },
     { 'id'          : 'apparel_size_title',

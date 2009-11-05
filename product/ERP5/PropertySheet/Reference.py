@@ -40,7 +40,7 @@ class Reference:
             'range'       : True,
             'mode'        : 'w' },
         {   'id'          : 'ean13_code',
-            'description' : 'The EAN 13 code of this document',
+            'description' : 'The EAN-13 code of this document',
             'type'        : 'string',
             'mode'        : 'w' },
         # WARNING: the naming is wrong because it conflicts with getSourceReference

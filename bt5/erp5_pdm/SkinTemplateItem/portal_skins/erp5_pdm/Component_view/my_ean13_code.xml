@@ -76,7 +76,7 @@
               <dictionary>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string>The EAN 13 code of this document</string> </value>
+                    <value> <string>The EAN-13 code of this document</string> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>

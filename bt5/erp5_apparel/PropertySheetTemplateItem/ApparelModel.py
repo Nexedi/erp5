@@ -80,7 +80,7 @@ class ApparelModel:
       'type'        : 'float',
       'mode'        : 'w' },
     { 'id'          : 'ean13_code',
-      'description' : 'The EAN 13 code of this apparel model',
+      'description' : 'The EAN-13 code of this apparel model',
       'type'        : 'string',
       'mode'        : 'w' },
     { 'id'          : 'quilting_time',
