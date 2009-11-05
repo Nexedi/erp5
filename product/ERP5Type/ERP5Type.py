@@ -55,10 +55,8 @@ class LocalRoleAssignorMixIn(object):
     zope.interface.implements(interfaces.ILocalRoleAssignor)
 
     security.declarePrivate('updateLocalRolesOnObject')
-    def updateLocalRolesOnDocument(self, *args, **kw):
-      return UnrestrictedMethod(self._updateLocalRolesOnDocument)(*args, **kw)
-
-    def _updateLocalRolesOnDocument(self, ob, user_name=None, reindex=True):
+    @UnrestrictedMethod
+    def updateLocalRolesOnDocument(self, ob, user_name=None, reindex=True):
       """
         Assign Local Roles to Groups on object 'ob', based on Portal Type Role
         Definitions and "ERP5 Role Definition" objects contained inside 'ob'.

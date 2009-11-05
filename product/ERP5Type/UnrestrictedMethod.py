@@ -48,13 +48,13 @@ class PrivilegedUser(UnrestrictedUser):
     """Get the ID of the user. This is disabled in UnrestrictedUser."""
     return self.getUserName()
 
-class UnrestrictedMethod(object):
-  """Callable object that bypasses all security checks.
+def UnrestrictedMethod(function):
+  """Decorator to bypass all security checks.
 
   This method is dangerous. Never use this, until you are 100% certain
   that you have no other way.
 
-  When a method is wrapped with an instance of this class, it will behave
+  When a function is wrapped with this decorator, it will behave
   in the same way as before, besides that all security checks pass through.
   This is required, for example, for the simulation to expand movements,
   regardless of the permissions given to a user.
@@ -66,10 +66,9 @@ class UnrestrictedMethod(object):
 
   This method is dangerous. Enough said. Be careful.
   """
-  def __init__(self, method):
-    self._m = method
+  return lambda *args, **kw: _unrestricted_apply(function, args, kw)
 
-  def __call__(self, *args, **kw):
+def _unrestricted_apply(function, args, kw):
     security_manager = getSecurityManager()
     user = security_manager.getUser()
     anonymous = (user.getUserName() == 'Anonymous User')
@@ -94,8 +93,7 @@ class UnrestrictedMethod(object):
                                   role_list, user.getDomains()).__of__(uf)
     newSecurityManager(None, super_user)
     try:
-      return self._m(*args, **kw)
+      return apply(function, args, kw)
     finally:
       # Make sure that the original user is back.
       setSecurityManager(security_manager)
-

@@ -79,7 +79,6 @@ from Products.CMFActivity.ActiveObject import ActiveObject
 from Products.ERP5Type.Accessor.Accessor import Accessor as Method
 from Products.ERP5Type.Accessor.TypeDefinition import asDate
 from Products.ERP5Type.Message import Message
-from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 
 from zope.interface import classImplementsOnly, implementedBy
 
