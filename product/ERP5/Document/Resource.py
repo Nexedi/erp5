@@ -874,15 +874,16 @@ class Resource(XMLMatrix, Variated):
       for measure in self.getMeasureList():
         metric_type = measure.getMetricType()
         if metric_type in metric_type_map:
-          metric_type_map[metric_type] = ()
+          metric_type_map[metric_type] = None
         else:
-          metric_type_map[metric_type] = measure.asCatalogRowList()
+          metric_type_map[metric_type] = measure
         if measure.getRelativeUrl() == default:
           quantity_unit = ''
 
       insert_list = []
-      for measure_list in metric_type_map.itervalues():
-        insert_list += measure_list
+      for measure in metric_type_map.itervalues():
+        if measure is not None:
+          insert_list += measure.asCatalogRowList()
 
       metric_type = quantity_unit.split('/', 1)[0]
       if metric_type and metric_type not in metric_type_map:
