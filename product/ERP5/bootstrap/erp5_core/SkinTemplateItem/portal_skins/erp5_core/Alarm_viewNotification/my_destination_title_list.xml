@@ -169,6 +169,14 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>proxy_listbox_ids</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>relation_form_id</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>relation_setter_id</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -325,6 +333,14 @@
                 </item>
                 <item>
                     <key> <string>portal_type</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>proxy_listbox_ids</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>relation_form_id</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -500,6 +516,14 @@
                         </tuple>
                       </list>
                     </value>
+                </item>
+                <item>
+                    <key> <string>proxy_listbox_ids</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>relation_form_id</string> </key>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>relation_setter_id</string> </key>
