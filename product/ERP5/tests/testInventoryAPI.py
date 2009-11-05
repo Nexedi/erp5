@@ -537,6 +537,50 @@ class TestInventory(InventoryAPITestCase):
     self.assertEquals(getInventory(
               payment_category_strict_membership=['product_line/level1']), 100)
 
+  def test_OwnershipInventoryByNode(self):
+    """Tests ownership inventory by node. """
+    getInventory = self.getSimulationTool().getInventory
+    self.assertEquals(getInventory(
+                        node_uid=self.node.getUid()), 0)
+    self.assertEquals(getInventory(
+                        node_uid=self.other_node.getUid()), 0)
+    # transfer quantity=100 from node to other_node.
+    self._makeMovement(quantity=100,
+                       source_value=self.node,
+                       destination_value=self.other_node)
+    transaction.commit()
+    self.tic()
+    self.assertEquals(getInventory(
+                        node_uid=self.node.getUid()), -100)
+    self.assertEquals(getInventory(
+                        node_uid=self.other_node.getUid()), 100)
+    self.assertEquals(getInventory(
+                        mirror_node_uid=self.node.getUid()), 100)
+    self.assertEquals(getInventory(
+                        mirror_node_uid=self.other_node.getUid()), -100)
+
+  def test_OwnershipInventoryBySection(self):
+    """Tests ownership inventory by section. """
+    getInventory = self.getSimulationTool().getInventory
+    self.assertEquals(getInventory(
+                        section_uid=self.section.getUid()), 0)
+    self.assertEquals(getInventory(
+                        section_uid=self.other_section.getUid()), 0)
+    # transfer quantity=100 from section to other_section.
+    self._makeMovement(quantity=100,
+                       source_section_value=self.section,
+                       destination_section_value=self.other_section)
+    transaction.commit()
+    self.tic()
+    self.assertEquals(getInventory(
+                        section_uid=self.section.getUid()), -100)
+    self.assertEquals(getInventory(
+                        section_uid=self.other_section.getUid()), 100)
+    self.assertEquals(getInventory(
+                        mirror_section_uid=self.section.getUid()), 100)
+    self.assertEquals(getInventory(
+                        mirror_section_uid=self.other_section.getUid()), -100)
+
   def test_SimulationState(self):
     """Tests inventory on simulation state. """
     getInventory = self.getSimulationTool().getInventory
