@@ -93,7 +93,9 @@ AQABAEMAAAB9AQAAAAA=</string> </value>
                          i18n:domain=\'ui\'\n
                          office:version="1.2"\n
                          tal:attributes="dummy python:request.RESPONSE.setHeader(\'Content-Type\', \'text/html;; charset=utf-8\')"\n
-                         tal:define="line_list here/Budget_getBudgetConsumptionReportData;\n
+                         tal:define="line_list_line_count here/Budget_getBudgetConsumptionReportData;\n
+                                     line_list python: line_list_line_count[0];\n
+                                     line_count python: line_list_line_count[1];\n
                                      date_renderer nocall:here/Base_viewFieldLibrary/my_date/render_pdf;\n
                                      start_date python:date_renderer(request.get(\'from_date\', here.getProperty(\'start_date_range_min\')));\n
                                      stop_date python:date_renderer(request.get(\'at_date\', here.getProperty(\'start_date_range_max\')));\n
@@ -107,10 +109,10 @@ AQABAEMAAAB9AQAAAAA=</string> </value>
  </office:font-face-decls>\n
  <office:automatic-styles>\n
   <style:style style:name="co1" style:family="table-column">\n
-   <style:table-column-properties fo:break-before="auto" style:column-width="0.676cm"/>\n
+   <style:table-column-properties fo:break-before="auto" style:column-width="10cm"/>\n
   </style:style>\n
   <style:style style:name="co2" style:family="table-column">\n
-   <style:table-column-properties fo:break-before="auto" style:column-width="10cm"/>\n
+   <style:table-column-properties fo:break-before="auto" style:column-width="2.7cm"/>\n
   </style:style>\n
   <style:style style:name="co3" style:family="table-column">\n
    <style:table-column-properties fo:break-before="auto" style:column-width="2.7cm"/>\n
@@ -252,7 +254,7 @@ AQABAEMAAAB9AQAAAAA=</string> </value>
  <office:body>\n
   <office:spreadsheet>\n
     <table:table table:name="Feuille1" table:style-name="ta1" table:print-ranges="Feuille1.A1:Feuille1.H11"\n
-                 tal:attributes="table:print-ranges python:\'Feuille1.A1:Feuille1.H%d\' % (7 + len(line_list))">\n
+                 tal:attributes="table:print-ranges python:\'Feuille1.A1:Feuille1.G%d\' % (6 + line_count)">\n
 \n
     <office:forms form:automatic-focus="false" form:apply-design-mode="false"/>\n
     <table:table-column table:style-name="co1" table:default-cell-style-name="ce2"/>\n
@@ -260,7 +262,7 @@ AQABAEMAAAB9AQAAAAA=</string> </value>
     <table:table-column table:style-name="co3" table:number-columns-repeated="6" table:default-cell-style-name="Default"/>\n
     <table:table-column table:style-name="co4" table:number-columns-repeated="1016" table:default-cell-style-name="Default"/>\n
     <table:table-row table:style-name="ro1">\n
-     <table:table-cell table:style-name="ce1" office:value-type="string" table:number-columns-spanned="8" table:number-rows-spanned="1">\n
+     <table:table-cell table:style-name="ce1" office:value-type="string" table:number-columns-spanned="7" table:number-rows-spanned="1">\n
       <text:p i18n:translate="">Budget Situation</text:p>\n
      </table:table-cell>\n
      <table:covered-table-cell/>\n
@@ -288,25 +290,32 @@ AQABAEMAAAB9AQAAAAA=</string> </value>
     <table:table-row table:style-name="ro2">\n
      <table:table-cell table:number-columns-repeated="1024"/>\n
     </table:table-row>\n
-    <table:table-row table:style-name="ro3">\n
-     <table:table-cell table:style-name="ce3" office:value-type="string" table:number-columns-spanned="2" table:number-rows-spanned="1">\n
-      <text:p i18n:translate="">Budget Name</text:p>\n
-     </table:table-cell>\n
-     <table:covered-table-cell table:style-name="ce8"/>\n
-     <table:table-cell table:style-name="ce8" office:value-type="string">\n
-      <text:p i18n:translate="">Initial Budget</text:p>\n
-     </table:table-cell>\n
-     <table:table-cell table:style-name="ce8" office:value-type="string">\n
-      <text:p i18n:translate="">Current Budget</text:p>\n
+\n
+    <tal:block tal:repeat="line line_list">\n
+\n
+      <table:table-row table:style-name="ro3" tal:condition="line/is_budget | nothing">\n
+     <table:table-cell table:style-name="ce3" office:value-type="string">\n
+       <text:p tal:content="line/title">Budget Name</text:p>\n
      </table:table-cell>\n
      <table:table-cell table:style-name="ce8" office:value-type="string">\n
-      <text:p i18n:translate="">Engaged Budget</text:p>\n
+       <text:p i18n:translate="" tal:condition="not: line/resource_title">Initial Budget</text:p>\n
+       <text:p i18n:translate="" tal:condition="line/resource_title">Initial Budget (<i18n:block i18n:name="resource_title" tal:content="line/resource_title"/>)</text:p>\n
      </table:table-cell>\n
      <table:table-cell table:style-name="ce8" office:value-type="string">\n
-      <text:p i18n:translate="">Consumed Budget</text:p>\n
+      <text:p i18n:translate="" tal:condition="not: line/resource_title">Current Budget</text:p>\n
+       <text:p i18n:translate="" tal:condition="line/resource_title">Current Budget (<i18n:block i18n:name="resource_title" tal:content="line/resource_title"/>)</text:p>\n
      </table:table-cell>\n
      <table:table-cell table:style-name="ce8" office:value-type="string">\n
-       <text:p i18n:translate="">Available Budget</text:p>\n
+      <text:p i18n:translate="" tal:condition="not: line/resource_title">Engaged Budget</text:p>\n
+       <text:p i18n:translate="" tal:condition="line/resource_title">Engaged Budget (<i18n:block i18n:name="resource_title" tal:content="line/resource_title"/>)</text:p>\n
+     </table:table-cell>\n
+     <table:table-cell table:style-name="ce8" office:value-type="string">\n
+      <text:p i18n:translate="" tal:condition="not: line/resource_title">Consumed Budget</text:p>\n
+       <text:p i18n:translate="" tal:condition="line/resource_title">Consumed Budget (<i18n:block i18n:name="resource_title" tal:content="line/resource_title"/>)</text:p>\n
+     </table:table-cell>\n
+     <table:table-cell table:style-name="ce8" office:value-type="string">\n
+       <text:p i18n:translate="" tal:condition="not: line/resource_title">Available Budget</text:p>\n
+       <text:p i18n:translate="" tal:condition="line/resource_title">Available Budget (<i18n:block i18n:name="resource_title" tal:content="line/resource_title"/>)</text:p>\n
      </table:table-cell>\n
      <table:table-cell table:style-name="ce8" office:value-type="string">\n
       <text:p i18n:translate="">Percentage Realized</text:p>\n
@@ -315,137 +324,93 @@ AQABAEMAAAB9AQAAAAA=</string> </value>
      <table:table-cell table:number-columns-repeated="768"/>\n
     </table:table-row>\n
 \n
-    <tal:block tal:repeat="line line_list">\n
 \n
     <table:table-row table:style-name="Level1" tal:condition="line/is_level_1 | nothing">\n
      <table:table-cell table:style-name="Level1Cell1" office:value-type="string">\n
        <text:p tal:content="line/title">$level1</text:p>\n
      </table:table-cell>\n
-     <table:table-cell table:style-name="Level1" table:number-columns-repeated="7"/>\n
+     <table:table-cell table:style-name="Level1" office:value-type="float" office:value="1"  tal:attributes="office:value line/initial_budget">\n
+      <text:p>1</text:p>\n
+     </table:table-cell>\n
+     <table:table-cell table:style-name="Level1" office:value-type="float" office:value="2" tal:attributes="office:value line/current_budget">\n
+      <text:p>2</text:p>\n
+     </table:table-cell>\n
+     <table:table-cell table:style-name="Level1" office:value-type="float" office:value="3" tal:attributes="office:value line/engaged_budget">\n
+      <text:p>3</text:p>\n
+     </table:table-cell>\n
+     <table:table-cell table:style-name="Level1" office:value-type="float" office:value="4" tal:attributes="office:value line/consumed_budget">\n
+      <text:p>4</text:p>\n
+     </table:table-cell>\n
+     <table:table-cell table:style-name="Level1" office:value-type="float" office:value="5" tal:attributes="office:value line/available_budget">\n
+      <text:p>5</text:p>\n
+     </table:table-cell>\n
+     <table:table-cell table:style-name="Level1" office:value-type="percentage" office:value="0.06" tal:attributes="office:value line/consumed_ratio">\n
+      <text:p>6,00%</text:p>\n
+     </table:table-cell>\n
      <table:table-cell table:number-columns-repeated="768"/>\n
     </table:table-row>\n
 \n
     <table:table-row table:style-name="Level2" \n
-                     tal:condition="line/is_level_2 | nothing"\n
-                     tal:define="style python:line.get(\'style\', \'Level2\')">\n
-     <table:table-cell table:style-name="Level2Cell1"\n
-                       tal:attributes="table:style-name string:${style}Cell1"/>\n
-     <table:table-cell table:style-name="Level2" office:value-type="string"\n
-                       tal:attributes="table:style-name style">\n
-      <text:p tal:content="line/title">$level 2</text:p>\n
-     </table:table-cell>\n
-     <table:table-cell table:style-name="Level2" table:number-columns-repeated="6"\n
-                       tal:attributes="table:style-name style"/>\n
-     <table:table-cell table:number-columns-repeated="768"/>\n
+                     tal:condition="line/is_level_2 | nothing">\n
+     <tal:block tal:define="style python:line.get(\'style\', \'Level2\')">\n
+       <table:table-cell table:style-name="Level2Cell1"\n
+                         tal:attributes="table:style-name string:${style}Cell1">\n
+        <text:p tal:content="line/title">$level 2</text:p>\n
+       </table:table-cell>\n
+         <table:table-cell table:style-name="ce18" office:value-type="float" office:value="1"  tal:attributes="office:value line/initial_budget; table:style-name style">\n
+          <text:p>1</text:p>\n
+         </table:table-cell>\n
+         <table:table-cell table:style-name="ce18" office:value-type="float" office:value="2" tal:attributes="office:value line/current_budget; table:style-name style">\n
+          <text:p>2</text:p>\n
+         </table:table-cell>\n
+         <table:table-cell table:style-name="ce18" office:value-type="float" office:value="3" tal:attributes="office:value line/engaged_budget; table:style-name style">\n
+          <text:p>3</text:p>\n
+         </table:table-cell>\n
+         <table:table-cell table:style-name="ce18" office:value-type="float" office:value="4" tal:attributes="office:value line/consumed_budget; table:style-name style">\n
+          <text:p>4</text:p>\n
+         </table:table-cell>\n
+         <table:table-cell table:style-name="ce18" office:value-type="float" office:value="5" tal:attributes="office:value line/available_budget; table:style-name style">\n
+          <text:p>5</text:p>\n
+         </table:table-cell>\n
+         <table:table-cell table:style-name="ce23" office:value-type="percentage" office:value="0.06"  tal:attributes="office:value line/consumed_ratio; table:style-name style">\n
+           <text:p>6,00%</text:p>\n
+         </table:table-cell>\n
+       <table:table-cell table:number-columns-repeated="768"/>\n
+     </tal:block>\n
     </table:table-row>\n
-\n
-    <table:table-row table:style-name="Level3" tal:condition="line/is_level_3 | nothing">\n
-     <table:table-cell table:style-name="Level3Cell1"/>\n
-     <table:table-cell table:style-name="Level3" office:value-type="string">\n
-       <text:p><text:s text:c="3"/><tal:block tal:replace="line/title"/></text:p>\n
-     </table:table-cell>\n
-     <table:table-cell table:style-name="Level3" office:value-type="float" office:value="1"  tal:attributes="office:value line/initial_budget">\n
-      <text:p>1</text:p>\n
-     </table:table-cell>\n
-     <table:table-cell table:style-name="Level3" office:value-type="float" office:value="2" tal:attributes="office:value line/current_budget">\n
-      <text:p>2</text:p>\n
-     </table:table-cell>\n
-     <table:table-cell table:style-name="Level3" office:value-type="float" office:value="3" tal:attributes="office:value line/engaged_budget">\n
-      <text:p>3</text:p>\n
-     </table:table-cell>\n
-     <table:table-cell table:style-name="Level3" office:value-type="float" office:value="4" tal:attributes="office:value line/consumed_budget">\n
-      <text:p>4</text:p>\n
-     </table:table-cell>\n
-     <table:table-cell table:style-name="Level3" office:value-type="float" office:value="5" tal:attributes="office:value line/available_budget">\n
-      <text:p>5</text:p>\n
-     </table:table-cell>\n
-     <table:table-cell table:style-name="Level3" office:value-type="percentage" office:value="0.06"  tal:attributes="office:value line/consumed_ratio">\n
-      <text:p>6,00%</text:p>\n
-     </table:table-cell>\n
-     <table:table-cell table:number-columns-repeated="1016"/>\n
-    </table:table-row>\n
-\n
-    <table:table-row table:style-name="ro5" tal:condition="line/is_total_level_2 | nothing">\n
-     <table:table-cell table:style-name="ce6"/>\n
-     <table:table-cell table:style-name="ce12" office:value-type="string">\n
-       <text:p>TOTAL <tal:block tal:replace="line/title"/></text:p>\n
-     </table:table-cell>\n
-     <table:table-cell table:style-name="ce18" office:value-type="float" office:value="1"  tal:attributes="office:value line/initial_budget">\n
-      <text:p>1</text:p>\n
-     </table:table-cell>\n
-     <table:table-cell table:style-name="ce18" office:value-type="float" office:value="2" tal:attributes="office:value line/current_budget">\n
-      <text:p>2</text:p>\n
-     </table:table-cell>\n
-     <table:table-cell table:style-name="ce18" office:value-type="float" office:value="3" tal:attributes="office:value line/engaged_budget">\n
-      <text:p>3</text:p>\n
-     </table:table-cell>\n
-     <table:table-cell table:style-name="ce18" office:value-type="float" office:value="4" tal:attributes="office:value line/consumed_budget">\n
-      <text:p>4</text:p>\n
-     </table:table-cell>\n
-     <table:table-cell table:style-name="ce18" office:value-type="float" office:value="5" tal:attributes="office:value line/available_budget">\n
-      <text:p>5</text:p>\n
-     </table:table-cell>\n
-     <table:table-cell table:style-name="ce23" office:value-type="percentage" office:value="0.06"  tal:attributes="office:value line/consumed_ratio">\n
-      <text:p>6,00%</text:p>\n
-     </table:table-cell>\n
-     <table:table-cell table:style-name="ce27" table:number-columns-repeated="1016"/>\n
-    </table:table-row>\n
-\n
-\n
-    <table:table-row table:style-name="ro5" tal:condition="python: line.get(\'is_total_level_1\') and not line.get(\'is_last_line\')">\n
-     <table:table-cell table:style-name="ce7"/>\n
-     <table:table-cell table:style-name="ce13" office:value-type="string">\n
-       <text:p>TOTAL <tal:block tal:replace="line/title"/></text:p>\n
-     </table:table-cell>\n
-     <table:table-cell table:style-name="ce15" office:value-type="float" office:value="1"  tal:attributes="office:value line/initial_budget">\n
-      <text:p>1</text:p>\n
-     </table:table-cell>\n
-     <table:table-cell table:style-name="ce15" office:value-type="float" office:value="2" tal:attributes="office:value line/current_budget">\n
-      <text:p>2</text:p>\n
-     </table:table-cell>\n
-     <table:table-cell table:style-name="ce15" office:value-type="float" office:value="3" tal:attributes="office:value line/engaged_budget">\n
-      <text:p>3</text:p>\n
-     </table:table-cell>\n
-     <table:table-cell table:style-name="ce15" office:value-type="float" office:value="4" tal:attributes="office:value line/consumed_budget">\n
-      <text:p>4</text:p>\n
-     </table:table-cell>\n
-     <table:table-cell table:style-name="ce15" office:value-type="float" office:value="5" tal:attributes="office:value line/available_budget">\n
-      <text:p>5</text:p>\n
-     </table:table-cell>\n
-     <table:table-cell table:style-name="ce24" office:value-type="percentage" office:value="0.06" tal:attributes="office:value line/consumed_ratio">\n
-      <text:p>6,00%</text:p>\n
-     </table:table-cell>\n
-     <table:table-cell table:style-name="ce26" table:number-columns-repeated="248"/>\n
-     <table:table-cell table:number-columns-repeated="768"/>\n
-    </table:table-row>\n
-\n
-\n
-    <table:table-row table:style-name="ro4" tal:condition="line/is_last_line | nothing">\n
-     <table:table-cell table:style-name="ce7"/>\n
-     <table:table-cell table:style-name="ce13" office:value-type="string">\n
-       <text:p>TOTAL <tal:block tal:replace="line/title"/></text:p>\n
-     </table:table-cell>\n
-     <table:table-cell table:style-name="ce15" office:value-type="float" office:value="1"  tal:attributes="office:value line/initial_budget">\n
-      <text:p>1</text:p>\n
-     </table:table-cell>\n
-     <table:table-cell table:style-name="ce15" office:value-type="float" office:value="2" tal:attributes="office:value line/current_budget">\n
-      <text:p>2</text:p>\n
-     </table:table-cell>\n
-     <table:table-cell table:style-name="ce15" office:value-type="float" office:value="3" tal:attributes="office:value line/engaged_budget">\n
-      <text:p>3</text:p>\n
-     </table:table-cell>\n
-     <table:table-cell table:style-name="ce15" office:value-type="float" office:value="4" tal:attributes="office:value line/consumed_budget">\n
-      <text:p>4</text:p>\n
-     </table:table-cell>\n
-     <table:table-cell table:style-name="ce15" office:value-type="float" office:value="5" tal:attributes="office:value line/available_budget">\n
-      <text:p>5</text:p>\n
-     </table:table-cell>\n
-     <table:table-cell table:style-name="ce24" office:value-type="percentage" office:value="0.06"  tal:attributes="office:value line/consumed_ratio">\n
-      <text:p>6,00%</text:p>\n
-     </table:table-cell>\n
-     <table:table-cell table:style-name="ce26" table:number-columns-repeated="248"/>\n
-     <table:table-cell table:number-columns-repeated="768"/>\n
-    </table:table-row>\n
+  \n
+    <tal:block tal:condition="python: same_type(line, [])">\n
+      <table:table-row-group table:display="false">\n
+        <tal:block tal:repeat="subline line">\n
+          <table:table-row table:style-name="Level3" \n
+            tal:attributes="table:visibility python: repeat[\'subline\'].first and \'collapse\' or None"\n
+            tal:condition="subline/is_level_3 | nothing">\n
+         <table:table-cell table:style-name="Level3Cell1" office:value-type="string">\n
+           <text:p><tal:block tal:replace="subline/title"/></text:p>\n
+         </table:table-cell>\n
+         <table:table-cell table:style-name="Level3" office:value-type="float" office:value="1"  tal:attributes="office:value subline/initial_budget">\n
+          <text:p>1</text:p>\n
+         </table:table-cell>\n
+         <table:table-cell table:style-name="Level3" office:value-type="float" office:value="2" tal:attributes="office:value subline/current_budget">\n
+          <text:p>2</text:p>\n
+         </table:table-cell>\n
+         <table:table-cell table:style-name="Level3" office:value-type="float" office:value="3" tal:attributes="office:value subline/engaged_budget">\n
+          <text:p>3</text:p>\n
+         </table:table-cell>\n
+         <table:table-cell table:style-name="Level3" office:value-type="float" office:value="4" tal:attributes="office:value subline/consumed_budget">\n
+          <text:p>4</text:p>\n
+         </table:table-cell>\n
+         <table:table-cell table:style-name="Level3" office:value-type="float" office:value="5" tal:attributes="office:value subline/available_budget">\n
+          <text:p>5</text:p>\n
+         </table:table-cell>\n
+         <table:table-cell table:style-name="Level3" office:value-type="percentage" office:value="0.06"  tal:attributes="office:value subline/consumed_ratio">\n
+          <text:p>6,00%</text:p>\n
+         </table:table-cell>\n
+         <table:table-cell table:number-columns-repeated="1016"/>\n
+        </table:table-row>\n
+      </tal:block>\n
+      </table:table-row-group>\n
+    </tal:block>\n
 \n
   </tal:block>\n
    </table:table>\n
