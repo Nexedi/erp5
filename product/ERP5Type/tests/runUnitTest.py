@@ -121,17 +121,25 @@ def initializeInstanceHome(tests_framework_home,
       shutil.copy(src, dst)
     else:
       os.symlink(src, dst)
-  # add some paths where we can find copyzopeskel
-  sys.path.append(os.path.join(zope_home, "bin"))
-  sys.path.append(os.path.join(zope_home, "utilities"))
-  import copyzopeskel
   kw = {
     "PYTHON":sys.executable,
     "INSTANCE_HOME": instance_home,
     "SOFTWARE_HOME": software_home,
-    "ZOPE_HOME": zope_home,
     }
-  skelsrc = os.path.abspath(os.path.join(os.path.dirname(__file__), "skel"))
+  try:
+    # attempt to import copyzopeskel from its new home on Zope 2.12
+    from Zope2.utilities import copyzopeskel
+    # and use the 2.12 version of our skeleton
+    skeldir = 'skel2.12'
+    kw['ZOPE_SCRIPTS'] = os.environ['ZOPE_SCRIPTS']
+  except ImportError:
+    # add some paths where we can find copyzopeskel
+    sys.path.append(os.path.join(zope_home, "bin"))
+    sys.path.append(os.path.join(zope_home, "utilities"))
+    import copyzopeskel
+    kw['ZOPE_HOME'] = zope_home
+    skeldir = 'skel'
+  skelsrc = os.path.abspath(os.path.join(os.path.dirname(__file__), skeldir))
   copyzopeskel.copyskel(skelsrc, instance_home, None, None, **kw)
 
 # site specific variables
@@ -310,6 +318,9 @@ def runUnitTestList(test_list, verbosity=1, debug=0):
   else:
     products_home = os.path.join(instance_home, 'Products')
 
+  # The following un-monkey-patch is only required for Zope 2.8.
+  # On Zope 2.12, import_products() is called by ERP5TestCase before it is
+  # patched by the layer.setUp() call.
   import OFS.Application
   import_products = OFS.Application.import_products
   from Testing import ZopeTestCase # This will import custom_zodb.py
@@ -326,7 +337,13 @@ def runUnitTestList(test_list, verbosity=1, debug=0):
     section = SectionValue({'dateformat': '%Y-%m-%d %H:%M:%S',
                             'format': '%(asctime)s %(levelname)s %(name)s %(message)s',
                             'level': logging.INFO,
-                            'path': os.environ['EVENT_LOG_FILE']},
+                            'path': os.environ['EVENT_LOG_FILE'],
+                            'max_size': None,
+                            'old_files': None,
+                            'when': None,
+                            'interval': None,
+                            'formatter': None,
+                            },
                            None, None)
     section.handlers = [FileHandlerFactory(section)]
     eventlog = EventLogFactory(section)
@@ -336,8 +353,6 @@ def runUnitTestList(test_list, verbosity=1, debug=0):
   except ImportError:
     pass
   
-  TestRunner = backportUnittest.TextTestRunner
-
   # allow unit tests of our Products or business templates to be reached.
   from glob import glob
   product_test_list = glob(os.path.join(products_home, '*', 'tests'))
@@ -366,6 +381,9 @@ def runUnitTestList(test_list, verbosity=1, debug=0):
   save = int(os.environ.get('erp5_save_data_fs', 0))
   dummy_test = save and (int(os.environ.get('update_business_templates', 0))
                          or not int(os.environ.get('erp5_load_data_fs', 0)))
+  
+  TestRunner = backportUnittest.TextTestRunner
+
   if dummy_test:
     # Skip all tests in save mode and monkeypatch PortalTestCase.setUp
     # to skip beforeSetUp and afterSetUp. Also patch unittest.makeSuite,
@@ -382,7 +400,7 @@ def runUnitTestList(test_list, verbosity=1, debug=0):
     # Hack the profiler to run only specified test methods, and wrap results when
     # running in debug mode.
     if debug:
-      class DebugTextTestRunner(backportUnittest.TextTestRunner):
+      class DebugTextTestRunner(TestRunner):
         def _makeResult(self):
           result = super(DebugTextTestRunner, self)._makeResult()
           return DebugTestResult(result)
@@ -396,6 +414,18 @@ def runUnitTestList(test_list, verbosity=1, debug=0):
 
   # change current directory to the test home, to create zLOG.log in this dir.
   os.chdir(tests_home)
+  try:
+    from Testing.ZopeTestCase import layer
+  except ImportError:
+    #  Zope 2.8, no need to set-up the ZopeLite layer
+    pass
+  else:
+    # Since we're not using the zope.testing testrunner, we need to set up
+    # the layer ourselves
+    # FIXME: We should start using Zope layers. Our setup will probably
+    # be faster and we could drop most of this code we currently maintain
+    # ourselves
+    layer.ZopeLite.setUp()
   result = TestRunner(verbosity=verbosity).run(suite)
 
   if save:
@@ -508,8 +538,13 @@ def main():
   result = runUnitTestList(test_list=test_list,
                            verbosity=verbosity,
                            debug=debug)
-  from Testing.ZopeTestCase import profiler
-  profiler.print_stats()
+  try:
+    from Testing.ZopeTestCase import profiler
+  except ImportError:
+    if os.environ.get('PROFILE_TESTS') == '1':
+      print "Profiler support is not available from ZopeTestCase in Zope 2.12"
+  else:
+    profiler.print_stats()
   sys.exit(len(result.failures) + len(result.errors))
 
 if __name__ == '__main__':

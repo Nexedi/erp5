@@ -65,6 +65,21 @@ ZopeTestCase.installProduct('MailHost', quiet=install_product_quiet)
 ZopeTestCase.installProduct('PageTemplates', quiet=install_product_quiet)
 ZopeTestCase.installProduct('PythonScripts', quiet=install_product_quiet)
 ZopeTestCase.installProduct('ExternalMethod', quiet=install_product_quiet)
+
+try:
+  from Testing.ZopeTestCase.layer import onsetup
+  # On Zope 2.12, installProduct() is a delayed call, so imports that depend on
+  # products being "initialize"d should only be called "on setup". The
+  # decorator above delays calls to the decorated function until after Product
+  # initialization.
+  # Also, we need Five to wire all our CMF dependencies.
+  ZopeTestCase.installProduct('Five', quiet=install_product_quiet)
+except ImportError:
+  # On Zope 2.8 the call does not have to be delayed as product installation
+  # happens immediately
+  def onsetup(decorated):
+    return decorated
+
 try:
   # Workaround iHotFix patch that doesn't work with
   # ZopeTestCase REQUESTs
@@ -227,7 +242,7 @@ class ERP5TypeTestCase(backportUnittest.TestCase, PortalTestCase):
 
     def shortDescription(self):
       description = str(self)
-      doc = self._TestCase__testMethodDoc
+      doc = self._testMethodDoc
       if doc and doc.split("\n")[0].strip():
         description += ', ' + doc.split("\n")[0].strip()
       return description
@@ -269,7 +284,11 @@ class ERP5TypeTestCase(backportUnittest.TestCase, PortalTestCase):
     def getPortal(self):
       """Returns the portal object, i.e. the "fixture root".
       """
-      return self.app[self.getPortalName()]
+      portal = self.app[self.getPortalName()]
+      # FIXME: Try not to run this call below so often by moving it somewhere
+      # where it is called exactly once per test.
+      portal.setupCurrentSkin(portal.REQUEST)
+      return portal
 
     getPortalObject = getPortal
 
@@ -321,7 +340,7 @@ class ERP5TypeTestCase(backportUnittest.TestCase, PortalTestCase):
       self.setUp = self._decorate_setUp(self.setUp)
       self.tearDown = self._decorate_tearDown(self.tearDown)
 
-      test_name = self._TestCase__testMethodName
+      test_name = self._testMethodName
       test_method = getattr(self, test_name)
       setattr(self, test_name, self._decorate_testRun(test_method))
 
@@ -334,6 +353,8 @@ class ERP5TypeTestCase(backportUnittest.TestCase, PortalTestCase):
       # This is a workaround for the overwriting problem in Testing/__init__.py
       # in Zope.  So this overwrites them again to revert the changes made by
       # Testing.
+      # XXX: Leo: Is this still true? We need to reevaluate how we get 
+      # information from our environment.
       try:
         import App.config
       except ImportError:
@@ -773,6 +794,10 @@ class ERP5TypeTestCase(backportUnittest.TestCase, PortalTestCase):
               transaction.commit()
             self.portal = portal
 
+            # Make sure skins are correctly set-up (it's not implicitly set up
+            # by Acquisition on Zope 2.12 as it is on 2.8)
+            portal.setupCurrentSkin(portal.REQUEST)
+
             if len(setup_done) == 1: # make sure it is run only once
               try:
                 from Products import DeadlockDebugger
@@ -1086,6 +1111,7 @@ def dummy_tearDown(self):
   '''
   self._clear(1)
 
+@onsetup
 def optimize():
   '''Significantly reduces portal creation time.'''
   def __init__(self, text):
@@ -1125,7 +1151,7 @@ def optimize():
 
 optimize()
 
-
+@onsetup
 def fortify():
   '''Add some extra checks that we don't have at runtime, not to slow down the
   system.
