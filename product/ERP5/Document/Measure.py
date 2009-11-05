@@ -254,7 +254,7 @@ class Measure(XMLMatrix):
         # variation_list is multiplied by len(getVariationCategoryList).
         # The lists of each pairs in variation_list get one more element:
         # variation_category.
-        variation_list = [(regex_list + [variation_category + '\n'],
+        variation_list = [(regex_list + [variation_category, '\n'],
                            variation_base_category_list + [variation_category])
           for variation_category in resource.getVariationCategoryList(
             base_category_list=(variation_base_category,),
