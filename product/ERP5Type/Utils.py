@@ -175,11 +175,13 @@ def sortValueList(value_list, sort_on=None, sort_order=None, **kw):
 # Logging
 #####################################################
 
-def _showwarning(message, category, filename, lineno, file=None):
+def _showwarning(message, category, filename, lineno, file=None, line=None):
   if file is None:
     LOG("%s:%u %s: %s" % (filename, lineno, category.__name__, message),
         WARNING, '')
   else:
+    # BACK: In Python 2.6 we need to pass along the "line" parameter to 
+    # formatwarning(). For now we don't to keep backward compat with Python 2.4 
     file.write(warnings.formatwarning(message, category, filename, lineno))
 warnings.showwarning = _showwarning
 
