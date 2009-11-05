@@ -83,11 +83,19 @@ def expectedFailure(func):
     return wrapper
 
 class TestCase(unittest.TestCase):
-    """We only redefine here the run() method, and add a skipTest()
-    method.
+    """We redefine here the run() method, and add a skipTest() method.
+
+    We also provide forward-compatible ._testMethodName and ._testMethodDoc
+    properties smooth over differences between Python 2.4 and 2.5+.
     """
 
     failureException = AssertionError
+
+    if sys.version_info < (2, 5):
+      # BACK: in Python 2.5, __testMethodName becomes _testMethodName.
+      # Same for __testMethodDoc
+      _testMethodName = property(lambda self: self.__testMethodName)
+      _testMethodDoc = property(lambda self: self.__testMethodDoc)
 
     def run(self, result=None):
         import pdb
@@ -112,8 +120,7 @@ class TestCase(unittest.TestCase):
             finally:
                 result.stopTest(self)
             return
-        # BACK: __testMethodName became _testMethodName in 2.7
-        testMethod = getattr(self, self.__testMethodName)
+        testMethod = getattr(self, self._testMethodName)
         try:
             success = False
             try:
