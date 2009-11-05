@@ -79,6 +79,7 @@ class ActiveProcess(Base):
   property_sheets = ( PropertySheet.Base
                     , PropertySheet.SimpleItem
                     , PropertySheet.Folder
+                    , PropertySheet.CategoryCore
                     , PropertySheet.ActiveProcess )
 
   # Declarative constructors
