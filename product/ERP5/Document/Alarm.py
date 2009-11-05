@@ -449,12 +449,23 @@ class Alarm(XMLObject, PeriodicityMixin):
     # Grab real latest result. Otherwise, we would check n-1 execution as n is
     # still considered running, and its result would be skipped.
     active_process = self.getLastActiveProcess(include_active=include_active)
-    if self.sense(process=active_process):
+    sense_result = self.sense(process=active_process)
+    if not sense_result and notification_mode != 'always':
+        return
+
+    # If a notification method is specified explicitly, call it instead of
+    # using the default notification.
+    method_id = self.getNotificationMethodId()
+    if method_id:
+      getattr(self, method_id)(process=active_process,
+                               sense_result=sense_result)
+      return
+
+    if sense_result:
       prefix = 'ERROR'
     else:
-      if notification_mode != 'always':
-        return
       prefix = 'INFO'
+
     notification_tool = getToolByName(self, 'portal_notifications')
     candidate_list = self.getDestinationValueList()
     if not candidate_list:

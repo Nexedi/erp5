@@ -50,6 +50,10 @@ class Alarm:
             'description' : 'the method used to solve problems if any.',
             'type'        : 'string',
             'mode'        : 'w' },
+        {   'id'          : 'notification_method_id',
+            'description' : 'the method used to notify results.',
+            'type'        : 'string',
+            'mode'        : 'w' },
         {   'id'          : 'alarm_notification_mode',
             'description' : 'defines the notification mode of an Alarm.'
                             'Never, on sense or always.',
