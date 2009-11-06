@@ -72,3 +72,61 @@ class SolverProcess(XMLObject, ActiveProcess):
                     , PropertySheet.CategoryCore
                     , PropertySheet.DublinCore
                     )
+
+  def buildTargetSolverList(self):
+    """
+      Builds target solvers from solver decisions
+    """
+    solver_dict = {}
+    movement_dict = {}
+    types_tool = context.portal_types
+
+    # First create a mapping between delivery movements and solvers
+    #   in order to know for each movements which solvers are needed
+    #   and which parameters with
+    for decision in context.contentValues(portal_type="Solver Decision"):
+      solver = decision.getSolverValue()
+      solver_type = solver.getId() # ex. Postpone Production Solver
+      solver_conviguration_dict = decision.getConfigurationPropertyDict()
+      solver_conviguration_key = solver_conviguration_dict.items()
+      for movement in decision.getDeliveryValueList():
+        # Detect incompatibilities
+        movement_solver_dict = movement_dict.setdefault(movement.getRelativeUrl(), {})
+        movement_solver_configuration_dict = movement_solver_dict.setdefault(solver_type, {})
+        movement_solver_configuration_dict[solver_key] = None
+
+    # Second, make sure solvers do not conflict and configuration is valid
+    for movement_url, movement_solver_dict in movement_dict.items():
+      for solver_type, movement_solver_configuration_dict in movement_solver_dict.items():
+        solver = types_tool[solver_type]
+        for other_solver in movement_solver_dict.keys():
+          if solver.conflictsWithSolver(other_solver):
+            raise "Solver %s conflicts with solver %s on movement %s" % (solver_type, other_solver, movement_url)
+        # Make sure multiple configuration are possible
+        try:
+          # Solver key contains only those properties which differentiate
+          # solvers (ex. there should be only Production Reduction Solver)
+          solver_key = solver.reduceConfigurationList(movement_solver_configuration_dict.keys())
+        except:
+          raise
+        solver_key_dict = solver_dict.setdefault(solver_type, {})
+        solver_movement_dict = solver_key_dict.setdefault(solver_key, {})
+        solver_movement_dict[movement_url] = movement_solver_configuration_dict.keys()
+
+    # Third, build target solvers
+    for portal_type, solver_key_dict in solver_dict.items():
+      for solver_key, solver_movement_dict in solver_key_dict.items():
+         solver_instance = self.newContent(portal_type=solver_type)
+         solver_instance._setDeliveryList(solver_movement_dict.keys())
+         for movement_url, configuration_list:
+           for configuration_kw in configuration_list:
+            solver_instance.updateConfiguration(**configuration_kw)
+
+  # Solver Process Workflow Interface 
+  #  NOTE: how can we consider that a workflow defines or provides an interface ?
+  def solve(self):
+    """
+      Start solving
+    """
+    for solver in self.contentValues(portal_type=self.getPortalObject().getPortalTargetSolverTypeList()):
+      solver.activate(active_process=self).solve()

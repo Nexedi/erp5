@@ -55,3 +55,19 @@ class QuantitySplitSolver(XMLObject):
                     , PropertySheet.DublinCore
                     , PropertySheet.Arrow
                     )
+  # Implementation
+  def solve(self):
+    """
+    """
+    delivery_solver = self.portal_solvers.buildDeliverySolver(self.getDeliverySolver())
+    for delivery_line in self.getDeliveryValueList(): 
+      decision_quantity = delivery_line.getQuantity()
+      simulation_movement_list = self.getDeliveryRelatedValueList()
+      # Update the quantity using delivery solver algorithm
+      split_list = delivery_solver.solve(simulation_movement_list, decision_quantity)
+      # Create split movements
+      for (simulation_movement, split_quantity) in split_list:
+        new_movement = simulation_movement.copy() # Copy at same level
+        new_movement._setQuantity(split_quantity)
+        new_movement._setStartDate(self.getStartDate())
+        new_movement._setStopDate(self.getStopDate())

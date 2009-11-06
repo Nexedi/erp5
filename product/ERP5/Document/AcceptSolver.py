@@ -53,3 +53,18 @@ class AcceptSolver(XMLObject):
                     , PropertySheet.CategoryCore
                     , PropertySheet.DublinCore
                     )
+
+  # Implementation
+  def solve(self):
+    """
+    """
+    # Adopt new property, keep the original one recorded
+    solved_property = self.getPortalTypeValue().getTestedProperty()
+    for movement in self.getDeliveryValueList():
+      new_value = movement.getProperty(solved_property)
+      for simulation_movement in movement.getDeliveryRelatedValueList():
+        if not simulation_movement.isPropertyRecorded(solved_property):
+          simulation_movement.recordProperty(solved_property)
+        solved_property.setProperty(solved_property, new_value)
+    # Finish solving
+    self.succeed()

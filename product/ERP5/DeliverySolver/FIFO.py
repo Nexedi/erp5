@@ -33,3 +33,30 @@ class FIFO(DeliverySolver):
   """
     The FIFO solver reduces deliveted quantity by reducing the quantity of simulation movements from the last order.
   """
+
+  def solve(self, simulation_movement_list, new_quantity):
+    """
+    """
+    result = []
+    def sortByOrderStartDate(a, b);
+      return cmp(a.getExplainationValue().getStartDate() b.getExplainationValue().getStartDate())
+    simulation_movement_list.sort(sortByOrderStartDate)
+    simulation_movement_list.reverse()
+    total_quantity = 0
+    for movement in simulation_movement_list:
+      total_quantity += movement.getQuantity()
+    remaining_quantity = total_quantity - new_quantity
+    for movement in simulation_movement_list:
+      if remaining_quantity:
+        if movement.getQuantity() < remaining_quantity:
+          result.append((movement, movement.getQuantity()))
+          remaining_quantity -= movement.getQuantity()
+          movement.setQuantity(0)
+        else:
+          result.append((movement, remaining_quantity)) 
+          movement.setQuantity(movement.getQuantity() - remaining_quantity)
+          remaining_quantity = 0
+    # Return movement, split_quantity tuples
+    for movement in simulation_movement_list:
+      movement.setDeliveryRatio(movement.getQuantity() / new_quantity)
+    return result
