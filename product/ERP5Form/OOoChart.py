@@ -55,6 +55,8 @@ class OOoChartWidget(Widget.Widget):
 
   property_names = list(Widget.Widget.property_names)
 
+  # XXX The description says it's not used
+  #     but removing 'default' breaks ODT/ODS rendering ...
   default = fields.StringField(
                               'default',
                               title='Default',
