@@ -122,8 +122,12 @@ class AlarmTool(BaseTool):
         alarm_date={'query':now,'range':'ngt'}
       )
       # check again the alarm date in case the alarm was not yet reindexed
-      alarm_list = [x.getObject() for x in catalog_search \
-          if x.getObject().getAlarmDate()<=now]
+      alarm_list = []
+      for x in catalog_search:
+        alarm = x.getObject()
+        alarm_date = alarm.getAlarmDate()
+        if alarm_date is not None and alarm_date <= now:
+          alarm_list.append(alarm)
     else:
       catalog_search = self.portal_catalog.unrestrictedSearchResults(
         portal_type = self.getPortalAlarmTypeList()
