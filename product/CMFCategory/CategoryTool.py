@@ -865,7 +865,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
 
       return result
 
-    def _filterCategoryListByPermission(self, category_list, permission):
+    def _filterCategoryListByPermission(self, base_category, base, category_list, permission):
       """This method returns a category list filtered by a permission.
       If the permission is None, returns a passed list as it is.
       """
@@ -877,7 +877,11 @@ class CategoryTool( UniqueObject, Folder, Base ):
       append = new_category_list.append
       for category in category_list:
         try:
-          value = resolveCategory(category)
+          if base:
+            category_path = category
+          else:
+            category_path = '%s/%s' % (base_category, category)
+          value = resolveCategory(category_path)
           if checkPermission(permission, value):
             append(category)
         except Unauthorized:
@@ -974,7 +978,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
                 not base_category_value.getAcquisitionAppendValue() and \
                 result:
           # If acquisition masks and we do not append values, then we must return now
-          return self._filterCategoryListByPermission(result, checked_permission)
+          return self._filterCategoryListByPermission(base_category, base, result, checked_permission)
         # First we look at local ids
         for object_id in base_category_value.getAcquisitionObjectIdList():
           try:
@@ -998,7 +1002,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
               # If acquisition appends, then we must append to the result
               result.extend(new_result)
             elif new_result:
-              return self._filterCategoryListByPermission(new_result, checked_permission) # Found enough information to return
+              return self._filterCategoryListByPermission(base_category, base, new_result, checked_permission) # Found enough information to return
         # Next we look at references
         #LOG("Get Acquired BC", 0, base_category_value.getAcquisitionBaseCategoryList())
         acquisition_base_category_list = base_category_value.getAcquisitionBaseCategoryList()
@@ -1075,7 +1079,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
                       self.setCategoryMembership( context, base_category, new_result,
                                     spec=spec, filter=filter, portal_type=portal_type, base=base )
                     # We found it, we can return
-                    return self._filterCategoryListByPermission(new_result, checked_permission)
+                    return self._filterCategoryListByPermission(base_category, base, new_result, checked_permission)
 
 
           if (getattr(base_category_value, 'acquisition_copy_value', False) or \
@@ -1115,7 +1119,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
                   result.append(category_value.getRelativeUrl())
       # WE MUST IMPLEMENT HERE THE REST OF THE SEMANTICS
       #LOG("Get Acquired Category Result ",0,str(result))
-      return self._filterCategoryListByPermission(result, checked_permission)
+      return self._filterCategoryListByPermission(base_category, base, result, checked_permission)
 
     security.declareProtected( Permissions.AccessContentsInformation,
                                                'getAcquiredCategoryMembershipList' )
