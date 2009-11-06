@@ -59,6 +59,7 @@ params = selection.getParams()\n
 readItemList = params.get(\'rss_read_item:list\', {})\n
 readItemList[item]=\'\'\n
 params[\'rss_read_item:list\'] = readItemList\n
+portal_selection.setSelectionParamsFor(selection_name, {\'rss_read_item:list\':params[\'rss_read_item:list\']})\n
 </string> </value>
         </item>
         <item>
@@ -105,6 +106,7 @@ params[\'rss_read_item:list\'] = readItemList\n
                             <string>params</string>
                             <string>readItemList</string>
                             <string>_write_</string>
+                            <string>_getitem_</string>
                           </tuple>
                         </value>
                     </item>

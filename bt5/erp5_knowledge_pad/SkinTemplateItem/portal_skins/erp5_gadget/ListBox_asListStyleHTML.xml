@@ -48,13 +48,12 @@
                        line_start python: here.getLineStart();\n
                        real_context here/getContext;\n
                        context_url real_context/absolute_url;\n
-                       box_relative_url python: request.get(\'box_relative_url\', \'\');\n
                        line_list here/query;\n
                        selection_params python: here.getSelection().getParams();\n
                        read_item_list python:selection_params.get(\'rss_read_item:list\', {});\n
                        read_items_count python:len(read_item_list);\n
-                       rss_title python:request.get(\'rss_title\',\'\');\n
-                       rss_link python:request.get(\'rss_link\',None);\n
+                       rss_title here/getTitle;\n
+                       rss_link here/getListActionUrl;\n
                        rss_logo python:request.get(\'rss_logo\',None);\n
                        search_text python: selection_params.get(\'search_text\', \'\');\n
                        show_select_column       here/showSelectColumn;\n
@@ -76,6 +75,7 @@
                        dom_id python: request.get(\'dom_id\',None) or box_id;\n
                        is_gadget_mode request/is_gadget_mode | nothing;\n
                        list_style python:request.get(\'list_style\', None);\n
+                       field_key_list python:[\'field_title\',\'field_date\',\'field_content\',\'field_img\',\'field_link\',\'field_others_links\',\'field_md5\',\'field_sender\'];\n
                        dummy python: context.REQUEST.RESPONSE.setHeader(\'Content-Type\', \n
                                                                         \'text/html;; charset=utf-8\');"\n
            metal:define-macro="main">\n
@@ -140,40 +140,48 @@
 \n
           <ul>\n
             <tal:block tal:repeat="line line_list">\n
-              <li tal:define="value line/getBrain"\n
-                  tal:attributes="id python: (getattr(value,\'field_img\',None) and  \'with_img\') or \'\';">\n
+              <li tal:define="value_dict python:{}.fromkeys(field_key_list);\n
+                              html_dict python:{}.fromkeys(field_key_list);\n
+                              empty python:value_dict.update(zip(here.getColumnAliasList(), [i[0] for i in line.getValueList()]));\n
+                              empty python:html_dict.update(zip(here.getColumnAliasList(), [i[0] for i in line.render()]));"\n
+                  tal:attributes="id python:(value_dict[\'field_img\'] and \'with_img\') or \'\';">\n
                 <input tal:condition="not: repeat/line/index"\n
                        type="hidden" value="1" name="listbox_uid:list"\n
                        tal:attributes="value python: line.getUid() or \'\';\n
                                        name string:${field_id}_uid:list" />\n
-                <img alt="" width="87" class="left" tal:condition="python: getattr(value,\'field_img\',None)" tal:attributes="src python: value.field_img[0]"/>\n
-                <div onmouseover="this.style.backgroundColor=\'#ECECEC\';" \n
+                <div onmouseover="this.style.backgroundColor=\'#ECECEC\';"\n
                      onmouseout="this.style.backgroundColor=\'inherit\';"\n
-                     tal:attributes="id python: (getattr(value,\'field_img\',None) and  \'title_img\') or \'title\';\n
-                                     class python:value.field_md5 in read_item_list and \'read\' or \'\';\n
-                                     title python:getattr(value,\'field_sender\',\'\');\n
-                                     onclick python:\'if(this.className!=\\\'read\\\'){MochiKit.Async.doSimpleXMLHttpRequest(\\\'Base_setRssItemReadInSelection\\\', {\\\'selection_name\\\':\\\'\'+selection_name+\'\\\',\\\'item\\\':\\\'\'+value.field_md5+\'\\\'});;this.className=\\\'read\\\';;\'+real_context.KnowledgePad_generateAjaxCall(context_url+\'/\'+\'Base_formatRssTitleWithUnreadItemCount\',box,\'rss_title_\'+box.getId(),{\'rss_title\':rss_title,\'total_line\':total_line,\'selection_name\':selection_name})+\'}toggle(\\\'description_\'+box.getId()+\'_\'+str(repeat[\'line\'].index)+\'\\\');;\'">\n
-                  <span tal:content="value/field_title">value</span>\n
-                  <span tal:condition="python:getattr(value,\'field_date\',None)" class="transparent" tal:content="python: \' - \'+str(getattr(value,\'field_date\',\'\'))">value</span>\n
+                     tal:attributes="class python:value_dict[\'field_md5\'] in read_item_list and \'read\' or \'\';\n
+                                     title python:value_dict[\'field_sender\'];\n
+                                     onclick python:\'if(this.className!=\\\'read\\\'){MochiKit.Async.doSimpleXMLHttpRequest(\\\'Base_setRssItemReadInSelection\\\', {\\\'selection_name\\\':\\\'\'+selection_name+\'\\\',\\\'item\\\':\\\'\'+ \'%s\' % value_dict[\'field_md5\']+\'\\\'});;this.className=\\\'read\\\';;\'+real_context.KnowledgePad_generateAjaxCall(\'%s/Base_formatRssTitleWithUnreadItemCount\' % context_url,box,\'rss_title_\'+box.getId(),{\'rss_title\':rss_title,\'total_line\':total_line,\'selection_name\':selection_name})+\'}toggle(\\\'description_\'+box.getId()+\'_\'+str(repeat[\'line\'].index)+\'\\\');;\'">\n
+                   <tal:block tal:condition="python:value_dict[\'field_img\']"\n
+                             tal:content="structure python:html_dict[\'field_img\']">image</tal:block>\n
+                  <a><span tal:content="python:value_dict[\'field_title\']">title</span>\n
+                  <span tal:attributes="class string: transparent;"\n
+                        tal:condition="python:value_dict[\'field_date\']"\n
+                        tal:content="structure python:\' - %s\' % html_dict[\'field_date\']">date</span></a>\n
                 </div>\n
                 <p class="clear"></p>\n
                 <div tal:attributes="id python:\'description_\'+box.getId()+\'_\'+str(repeat[\'line\'].index)"\n
                      class="content"\n
                      style="display:none;">\n
-                  <p tal:condition="python:getattr(value,\'field_content\',None)" tal:content="structure python: getattr(value,\'field_content\',\'\')"/>\n
+                  <p tal:condition="python:value_dict[\'field_content\']"\n
+                     tal:content="structure python:value_dict[\'field_content\']"/>\n
                   <div id="others_links">\n
-                    <tal:block tal:repeat="other_link python: getattr(value,\'field_others_links\',[])">\n
+                    <tal:block tal:repeat="other_link python:value_dict[\'field_others_links\']">\n
                       <a tal:content="structure other_link" />\n
                       <br/>\n
                     </tal:block>\n
                   </div>\n
-                  <tal:block tal:condition="python:len(getattr(value,\'field_img\',[]))>1">\n
-                   <img tal:repeat="img python:getattr(value,\'field_img\',[])[1:]"\n
+                  <!-- XXX: See for mutli-image\n
+                  <tal:block tal:condition="python: len(value_dict[\'field_img\']) > 1">\n
+                   <img tal:repeat="img python: value_dict[\'field_img\'][1:]"\n
                         tal:attributes="src img; alt python:\'\'"/>\n
                     <br/>\n
                   </tal:block>\n
-                  <a tal:condition="python:getattr(value,\'field_link\',None)" tal:attributes="href value/field_link;target string:_blank">Show original item</a>\n
-\n
+                  -->\n
+                  <a tal:condition="python:value_dict[\'field_link\']"\n
+                     tal:attributes="target string: _blank; href python:value_dict[\'field_link\']">Show original item</a>\n
                 </div>\n
               </li>\n
             </tal:block>\n

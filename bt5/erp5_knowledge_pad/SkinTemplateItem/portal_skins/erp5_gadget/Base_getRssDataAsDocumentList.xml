@@ -58,8 +58,17 @@ box_relative_url = kw.get(\'box_relative_url\')\n
 selection_name = kw.get(\'list_selection_name\')\n
 portal_selection = getattr(context,\'portal_selections\')\n
 selection = portal_selection.getSelectionFor(selection_name)\n
-box = context.restrictedTraverse(box_relative_url);\n
-preferences = box.KnowledgeBox_getDefaultPreferencesDict()\n
+\n
+# XXX: This test has been added because currently the "Asynchronous" mode is\n
+# the only one supported by gadgets which uses the page templates\n
+# ListBox_asListStyleHTML.\n
+# More investigation are required to fix this bug\n
+if box_relative_url:\n
+  box = context.restrictedTraverse(box_relative_url)\n
+  preferences = box.KnowledgeBox_getDefaultPreferencesDict()\n
+else:\n
+  preferences = {}\n
+\n
 feed_url = str(preferences.get(\'preferred_rss_feed\',\'\'))\n
 username = str(preferences.get(\'preferred_username\',\'\'))\n
 password = str(preferences.get(\'preferred_password\',\'\'))\n
