@@ -2,6 +2,7 @@ from Products.ERP5Type.Globals import get_request
 from Acquisition import aq_base
 from Products.ERP5Type.Globals import PersistentMapping
 from Products.CMFCore.utils import getToolByName
+import transaction
 
 
 def fixProductNames(self, REQUEST=None):
@@ -69,7 +70,7 @@ def updateBalanceTransactionClass(self):
     obj = obj.getObject()
     #print 'updating', obj, 'with class', BalanceTransaction
     changeObjectClass(module, obj.getId(), BalanceTransaction)
-    get_transaction().commit(1)
+    transaction.savepoint(optimistic=True)
 
     newobj = getattr(module, obj.getId())
     reverseSourceAndDestination(newobj)

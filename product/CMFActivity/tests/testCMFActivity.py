@@ -312,11 +312,11 @@ class TestCMFActivity(ERP5TypeTestCase):
     portal = self.getPortal()
     def DeferredSetTitle(self,value,commit_sub=0):
       if commit_sub:
-        get_transaction().commit(1)
+        get_transaction().savepoint(optimistic=True)
       self.activate(activity=second or activity,priority=4)._setTitle(value)
     def DeferredSetDescription(self,value,commit_sub=0):
       if commit_sub:
-        get_transaction().commit(1)
+        get_transaction().savepoint(optimistic=True)
       self.activate(activity=second or activity,priority=4)._setDescription(value)
     from Products.ERP5Type.Document.Organisation import Organisation
     Organisation.DeferredSetTitle = DeferredSetTitle

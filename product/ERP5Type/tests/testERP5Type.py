@@ -561,7 +561,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
         folder.newContent(portal_type='Organisation', id=id_)
       # commit a subtransaction, so that we can rename objecs (see
       # OFS.ObjectManager._getCopy)
-      transaction.commit(1)
+      transaction.savepoint(optimistic=True)
 
       for obj in folder.objectValues():
         new_id = '%s_new' % obj.getId()

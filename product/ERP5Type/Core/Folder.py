@@ -1026,7 +1026,7 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn, 
           update_list += method_message
         update_list += test_after(o,REQUEST=REQUEST)
       # And commit subtransaction
-      #transaction.commit(1)
+      #transaction.savepoint(optimistic=True)
       transaction.commit() # we may use commit(1) some day XXX
       # Recursively call recursiveApply if o has a recursiveApply method (not acquired)
       obase = aq_base(o)
@@ -1262,7 +1262,7 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn, 
       btree_ok = self._cleanup()
       if not btree_ok:
         # We must commit if we want to keep on recursing
-        transaction.commit(1)
+        transaction.savepoint(optimistic=True)
         error_list += [(self.getRelativeUrl(), 'BTree Inconsistency',
                        199, '(fixed)')]
     # Call superclass
@@ -1270,7 +1270,7 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn, 
     # We must commit before listing folder contents
     # in case we erased some data
     if fixit:
-      transaction.commit(1)
+      transaction.savepoint(optimistic=True)
     # Then check the consistency on all sub objects
     for obj in self.contentValues():
       if fixit:

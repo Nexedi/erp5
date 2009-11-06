@@ -315,7 +315,7 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
                                     uids=uid_list,
                                     md5_object_uid_list=md5_string)
     self.assert_('Deleted.' in redirect, redirect)
-    transaction.commit(1)
+    transaction.savepoint(optimistic=True)
     self.assertEquals(len(module.objectValues()), 0)
 
   def test_Folder_delete_related_object(self):
@@ -339,7 +339,7 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
                                     uids=uid_list,
                                     md5_object_uid_list=md5_string)
     self.assert_('Sorry, 1 item is in use.' in redirect, redirect)
-    transaction.commit(1)
+    transaction.savepoint(optimistic=True)
     self.assertEquals(len(module.objectValues()), 2)
 
 
@@ -368,7 +368,7 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
                                     uids=uid_list,
                                     md5_object_uid_list=md5_string)
     self.assert_('Sorry, 1 item is in use.' in redirect, redirect)
-    transaction.commit(1)
+    transaction.savepoint(optimistic=True)
     self.assertEquals(len(module.objectValues()), 2)
 
 

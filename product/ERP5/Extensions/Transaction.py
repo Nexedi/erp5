@@ -1,14 +1,9 @@
-# def this_transaction():
-#     return get_transaction()
-# 
-# def commit_transaction():
-#     get_transaction().commit()
+import transaction
 
 def abort_transaction():
-    get_transaction().abort()
-
-# def abort_subtransaction():
-#     get_transaction().abort(1)
-# 
-# def commit_subtransaction():
-#     get_transaction().commit(1)
+    # FIXME: aborting a transaction means it could be commited later on. The
+    # transaction should be doom()ed instead, but transaction.doom() is not
+    # available on Zope 2.8. We should provide our own doom() implementation
+    # which raises an exception on pre-commit-hook, which does exist
+    # in Zope 2.8
+    transaction.abort()
