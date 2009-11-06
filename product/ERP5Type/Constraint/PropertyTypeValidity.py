@@ -31,10 +31,7 @@
 from Constraint import Constraint
 from DateTime import DateTime
 
-try:
-  boolean_types = (int, bool)
-except NameError:
-  boolean_types = (int, )
+boolean_types = (int, bool)
 
 class PropertyTypeValidity(Constraint):
   """
