@@ -79,12 +79,12 @@ class SolverProcess(XMLObject, ActiveProcess):
     """
     solver_dict = {}
     movement_dict = {}
-    types_tool = context.portal_types
+    types_tool = self.portal_types
 
     # First create a mapping between delivery movements and solvers
     #   in order to know for each movements which solvers are needed
     #   and which parameters with
-    for decision in context.contentValues(portal_type="Solver Decision"):
+    for decision in self.contentValues(portal_type="Solver Decision"):
       solver = decision.getSolverValue()
       solver_type = solver.getId() # ex. Postpone Production Solver
       solver_conviguration_dict = decision.getConfigurationPropertyDict()
@@ -118,7 +118,7 @@ class SolverProcess(XMLObject, ActiveProcess):
       for solver_key, solver_movement_dict in solver_key_dict.items():
          solver_instance = self.newContent(portal_type=solver_type)
          solver_instance._setDeliveryList(solver_movement_dict.keys())
-         for movement_url, configuration_list:
+         for movement_url, configuration_list in solver_movement_dict.iteritems():
            for configuration_kw in configuration_list:
             solver_instance.updateConfiguration(**configuration_kw)
 
