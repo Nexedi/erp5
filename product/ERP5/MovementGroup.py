@@ -362,7 +362,7 @@ class FakeMovement:
         movement.edit(delivery_ratio=quantity*delivery_ratio/total_quantity)
     else:
       # Distribute equally ratio to all movement
-      mvt_ratio = 1 / len(self.__movement_list)
+      mvt_ratio = 1. / len(self.__movement_list)
       for movement in self.__movement_list:
         movement.edit(delivery_ratio=mvt_ratio)
 
