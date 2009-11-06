@@ -3,6 +3,7 @@ import os
 import sys
 import pdb
 import re
+import time
 import getopt
 import unittest
 import shutil
@@ -302,6 +303,9 @@ def runUnitTestList(test_list, verbosity=1, debug=0):
   os.environ.setdefault('EVENT_LOG_FILE', os.path.join(tests_home, 'zLOG.log'))
   os.environ.setdefault('EVENT_LOG_SEVERITY', '-300')
 
+  print "Loading Zope ...",
+  _start = time.time()
+
   import Testing
   # the above import changes cfg.testinghome. Reset it to where our
   # custom_zodb.py can be found. This must be done before importing
@@ -426,6 +430,8 @@ def runUnitTestList(test_list, verbosity=1, debug=0):
     # be faster and we could drop most of this code we currently maintain
     # ourselves
     layer.ZopeLite.setUp()
+
+  print 'done (%.3fs)' % (time.time() - _start),
   result = TestRunner(verbosity=verbosity).run(suite)
 
   if save:

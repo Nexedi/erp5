@@ -15,12 +15,12 @@ save = int(os.environ.get('erp5_save_data_fs', 0))
 if load:
   dump_sql = os.path.join(instance_home, 'dump.sql')
   if os.path.exists(dump_sql):
-    print "Restoring MySQL database ... ",
+    print "Restoring MySQL database ...",
     ret = os.system("mysql %s < %s" % (getMySQLArguments(), dump_sql))
     assert not ret
   else:
     os.environ['erp5_tests_recreate_catalog'] = '1'
-  print "Restoring static files ... ",
+  print "Restoring static files ...",
   for dir in ('Constraint', 'Document', 'PropertySheet', 'Extensions'):
     if os.path.exists(os.path.join(instance_home, '%s.bak' % dir)):
       full_path = os.path.join(instance_home, dir)
@@ -28,7 +28,7 @@ if load:
       shutil.copytree(os.path.join(instance_home, '%s.bak' % dir),
                       full_path, symlinks=True)
 else:
-  print "Cleaning static files at %s ... " % instance_home,
+  print "Cleaning static files ...",
   for dir in ('Constraint', 'Document', 'PropertySheet', 'Extensions'):
     full_path = os.path.join(instance_home, dir)
     if os.path.exists(full_path):
@@ -45,3 +45,4 @@ elif load:
 else:
   Storage = DemoStorage()
 
+print "Instance at %r loaded ..." % instance_home,
