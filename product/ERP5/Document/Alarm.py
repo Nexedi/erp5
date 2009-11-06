@@ -151,13 +151,16 @@ class PeriodicityMixin:
     Ex: here, we use minute as smaller duration.
     On CalendarPeriod, day is the smaller duration.
     """
+    periodicity_stop_date = self.getPeriodicityStopDate()
     if next_start_date is None:
       next_start_date = current_date
-    if next_start_date > current_date:
-      return
+    if next_start_date > current_date \
+          or (periodicity_stop_date is not None \
+              and next_start_date >= periodicity_stop_date):
+      return None
     else:
       # Make sure the old date is not too far away
-      day_count = int(current_date-next_start_date)
+      day_count = int(current_date - next_start_date)
       next_start_date = next_start_date + day_count
 
     previous_date = next_start_date
@@ -544,38 +547,61 @@ Alarm Tool Node: %s
 
   security.declareProtected(Permissions.ModifyPortalContent, 'setNextAlarmDate')
   def setNextAlarmDate(self, current_date=None):
+    """Save the next alarm date.
     """
-    Save the next alarm date
-    """
-    if self.getPeriodicityStartDate() is None:
-      return
-    next_start_date = self.getAlarmDate()
-    if current_date is None:
-      # This is usefull to set the current date as parameter for
-      # unit testing, by default it should be now
-      current_date = DateTime()
-
-    next_start_date = self.getNextPeriodicalDate(current_date, 
-                                            next_start_date=next_start_date)
-    if next_start_date is not None:
-      self.Alarm_zUpdateAlarmDate(uid=self.getUid(), 
-                                  alarm_date=next_start_date)
+    alarm_date = self.getAlarmDate()
+    if alarm_date is not None:
+      if current_date is None:
+        # This is usefull to set the current date as parameter for
+        # unit testing, by default it should be now
+        current_date = DateTime()
+      alarm_date = self.getNextPeriodicalDate(current_date, 
+                                              next_start_date=alarm_date)
+    self.Alarm_zUpdateAlarmDate(uid=self.getUid(), alarm_date=alarm_date)
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getAlarmDate')
   def getAlarmDate(self):
+    """Obtain the next alarm date.
+    
+    Return a DateTime object which specifies when this alarm should
+    be invoked at next time. The return value can be None when it should
+    not be invoked automatically.
+
+    By definition, if periodicity start date is not defined (i.e. None),
+    their is no valid time range, so return None. If periodicity stop
+    date is not defined (i.e. None), assume that this alarm will be
+    effective forever. Otherwise, if a date exceeds the periodicity stop
+    date, return None, as it is not effective any longer.
     """
-    returns something like ['Sunday','Monday',...]
-    """
-    alarm_date=None
-    # No periodicity start date, return None
-    if self.getPeriodicityStartDate() is not None:
+    alarm_date = None
+    enabled = self.getEnabled()
+    periodicity_start_date = self.getPeriodicityStartDate()
+    if enabled and periodicity_start_date is not None:
+      # Respect what is stored in the catalog.
       result_list = self.Alarm_zGetAlarmDate(uid=self.getUid())
-      if len(result_list)==1:
+      if len(result_list) == 1:
         alarm_date = result_list[0].alarm_date
-        periodicity_start_date = self.getPeriodicityStartDate()
-        if alarm_date < periodicity_start_date:
+        # But if the catalog does not have a valid one, replace it
+        # with the start date.
+        if alarm_date is None or alarm_date < periodicity_start_date:
           alarm_date = periodicity_start_date
-        # convert the date to the user provided timezone
-        alarm_zone = periodicity_start_date.timezone()
-        alarm_date = alarm_date.toZone(alarm_zone)
+
+        # Check if it is valid.
+        periodicity_stop_date = self.getPeriodicityStopDate()
+        if periodicity_stop_date is not None \
+              and alarm_date >= periodicity_stop_date:
+          alarm_date = None
+        else:
+          # convert the date to the user provided timezone
+          alarm_zone = periodicity_start_date.timezone()
+          alarm_date = alarm_date.toZone(alarm_zone)
     return alarm_date
+
+  # XXX there seem to be something which wants to call setters against
+  # alarm_date, but alarms do not want to store a date in ZODB.
+  security.declareProtected(Permissions.ModifyPortalContent, 'setAlarmDate')
+  def setAlarmDate(self, *args, **kw):
+    pass
+
+  def _setAlarmDate(self, *args, **kw):
+    pass
