@@ -58,6 +58,12 @@ class TestConstraint(PropertySheetTestCase):
     user = uf.getUserById('rc').__of__(uf)
     newSecurityManager(None, user)
 
+  def stepLoginAsAssignee(self, sequence=None, sequence_list=None, **kw):
+    uf = self.getPortal().acl_users
+    uf._doAddUser('member', '', ['Member', 'Assignee'], [])
+    user = uf.getUserById('member').__of__(uf)
+    newSecurityManager(None, user)
+
   def afterSetUp(self):
     self.login()
     self.portal = self.getPortal()
@@ -65,6 +71,7 @@ class TestConstraint(PropertySheetTestCase):
     self.createCategories()
 
   def beforeTearDown(self):
+    self.login()
     transaction.abort()
     module = self.portal.organisation_module
     module.manage_delObjects(list(module.objectIds()))
@@ -1431,6 +1438,22 @@ class TestConstraint(PropertySheetTestCase):
     message = consistency_message_list[0]
     self.assertEquals('Attribute title does not match',
                   str(message.getTranslatedMessage()))
+
+  def test_PropertyTypeValidityWithUnauthorizedCategory(self):
+    person = self.portal.person_module.newContent(portal_type='Person')
+    assignment = person.newContent(portal_type='Assignment')
+    self.assertEquals([], person.checkConsistency())
+    group3 = self.category_tool.restrictedTraverse(
+      'group/testGroup3', self.category_tool.group.newContent(
+      portal_type='Category',
+      id='testGroup3'))
+    group3.manage_permission('Access contents information', ['Manager'], 0)
+    assignment.setSourceValue(group3)
+    # Manager can access testGroup3
+    self.assertEquals([], person.checkConsistency())
+    self.stepLoginAsAssignee()
+    # Assignee cannot access testGroup3
+    self.assertEquals([], person.checkConsistency())
 
 def test_suite():
   suite = unittest.TestSuite()
