@@ -69,12 +69,12 @@ class TestAlarm(ERP5TypeTestCase):
   def afterSetUp(self):
     self.login()
 
-  def newAlarm(self):
+  def newAlarm(self, **kw):
     """
     Create an empty alarm
     """
     a_tool = self.getAlarmTool()
-    return a_tool.newContent()
+    return a_tool.newContent(**kw)
 
   def login(self, quiet=0, run=run_all_test):
     uf = self.getPortal().acl_users
@@ -107,7 +107,9 @@ class TestAlarm(ERP5TypeTestCase):
     now = DateTime()
     date = addToDate(now,day=1)
     alarm.setPeriodicityStartDate(date)
-    self.assertEquals(alarm.getAlarmDate(),date)
+    self.assertEquals(alarm.getAlarmDate(), None)
+    alarm.setEnabled(True)
+    self.assertEquals(alarm.getAlarmDate(), date)
     alarm.setNextAlarmDate(current_date=now) # This should not do change the alarm date
     self.assertEquals(alarm.getAlarmDate(),date)
 
@@ -117,15 +119,15 @@ class TestAlarm(ERP5TypeTestCase):
       message = 'Test Every Hour'
       ZopeTestCase._print('\n%s ' % message)
       LOG('Testing... ',0,message)
-    alarm = self.newAlarm()
+    alarm = self.newAlarm(enabled=True)
     now = DateTime()
-    date = addToDate(now,day=2)
+    date = addToDate(now, day=2)
     alarm.setPeriodicityStartDate(date)
     alarm.setPeriodicityHourFrequency(1)
     transaction.commit()
     self.tic()
     alarm.setNextAlarmDate(current_date=now)
-    self.assertEquals(alarm.getAlarmDate(),date)
+    self.assertEquals(alarm.getAlarmDate(), date)
     LOG(message + ' now :',0,now)
     now = addToDate(now,day=2)
     LOG(message + ' now :',0,now)
@@ -143,7 +145,7 @@ class TestAlarm(ERP5TypeTestCase):
       message = 'Test Every 3 Hours'
       ZopeTestCase._print('\n%s ' % message)
       LOG('Testing... ',0,message)
-    alarm = self.newAlarm()
+    alarm = self.newAlarm(enabled=True)
     now = DateTime().toZone('UTC')
     hour_to_remove = now.hour() % 3
     now = addToDate(now,hour=-hour_to_remove)
@@ -177,7 +179,7 @@ class TestAlarm(ERP5TypeTestCase):
     right_second_date = DateTime(self.date_format % (2006,10,6,21,00,00))
     right_third_date = DateTime(self.date_format  % (2006,10,7,06,00,00))
     right_fourth_date = DateTime(self.date_format % (2006,10,7,10,00,00))
-    alarm = self.newAlarm()
+    alarm = self.newAlarm(enabled=True)
     hour_list = (6,10,15,21)
     alarm.setPeriodicityStartDate(now)
     alarm.setPeriodicityHourList(hour_list)
@@ -202,7 +204,7 @@ class TestAlarm(ERP5TypeTestCase):
     right_first_date = DateTime(self.date_format  % (2006,10,6,10,00,00))
     right_second_date = DateTime(self.date_format % (2006,10,7,10,00,00))
     right_third_date = DateTime(self.date_format  % (2006,10,8,10,00,00))
-    alarm = self.newAlarm()
+    alarm = self.newAlarm(enabled=True)
     alarm.setPeriodicityStartDate(now)
     alarm.setPeriodicityDayFrequency(1)
     alarm.setPeriodicityHourList((10,))
@@ -226,7 +228,7 @@ class TestAlarm(ERP5TypeTestCase):
     right_second_date = DateTime(self.date_format  % (2006,10,6,15,00,00))
     right_third_date = DateTime(self.date_format  % (2006,10,6,17,00,00))
     right_fourth_date = DateTime(self.date_format  % (2006,10,9,14,00,00))
-    alarm = self.newAlarm()
+    alarm = self.newAlarm(enabled=True)
     alarm.setPeriodicityStartDate(right_first_date)
     alarm.setPeriodicityDayFrequency(3)
     alarm.setPeriodicityHourList((14,15,17))
@@ -253,7 +255,7 @@ class TestAlarm(ERP5TypeTestCase):
     right_third_date = DateTime(self.date_format  % (2006,10,8,15,00,00))
     right_fourth_date = DateTime(self.date_format  % (2006,10,8,17,00,00))
     right_fifth_date = DateTime(self.date_format  % (2006,10,12,14,00,00))
-    alarm = self.newAlarm()
+    alarm = self.newAlarm(enabled=True)
     alarm.setPeriodicityStartDate(right_first_date)
     alarm.setPeriodicityDayFrequency(4)
     alarm.setPeriodicityHourList((14,15,17))
@@ -282,7 +284,7 @@ class TestAlarm(ERP5TypeTestCase):
     right_third_date = DateTime(self.date_format  % (2006,9,29,15,00,00))
     right_fourth_date = DateTime(self.date_format  % (2006,10,2,6,00,00))
     right_fifth_date = DateTime(self.date_format  % (2006,10,2,15,00,00))
-    alarm = self.newAlarm()
+    alarm = self.newAlarm(enabled=True)
     transaction.commit()
     self.tic()
     alarm.setPeriodicityStartDate(right_first_date)
@@ -312,7 +314,7 @@ class TestAlarm(ERP5TypeTestCase):
     right_second_date = DateTime(self.date_format  % (2006,10,01,14,00,00))
     right_third_date = DateTime(self.date_format  % (2006,10,15,12,00,00))
     right_fourth_date = DateTime(self.date_format  % (2006,10,15,14,00,00))
-    alarm = self.newAlarm()
+    alarm = self.newAlarm(enabled=True)
     alarm.setPeriodicityStartDate(right_first_date)
     alarm.setPeriodicityMonthDayList((1,15))
     alarm.setPeriodicityHourList((12,14))
@@ -331,7 +333,7 @@ class TestAlarm(ERP5TypeTestCase):
     right_first_date = DateTime(self.date_format  % (2006,10,01,6,00,00))
     right_second_date = DateTime(self.date_format  % (2006,12,01,6,00,00))
     right_third_date = DateTime(self.date_format  % (2007,2,01,6,00,00))
-    alarm = self.newAlarm()
+    alarm = self.newAlarm(enabled=True)
     alarm.setPeriodicityStartDate(right_first_date)
     alarm.setPeriodicityMonthDayList((1,))
     alarm.setPeriodicityMonthFrequency(2)
@@ -351,7 +353,7 @@ class TestAlarm(ERP5TypeTestCase):
     right_second_date = DateTime(self.date_format  % (2006,10,9,6,00,00))
     right_third_date = DateTime(self.date_format  % (2006,10,10,6,00,00))
     right_fourth_date = DateTime(self.date_format  % (2006,10,11,6,00,00))
-    alarm = self.newAlarm()
+    alarm = self.newAlarm(enabled=True)
     alarm.setPeriodicityStartDate(right_first_date)
     alarm.setPeriodicityHourList((6,))
     alarm.setPeriodicityWeekList((41,43))
@@ -365,7 +367,7 @@ class TestAlarm(ERP5TypeTestCase):
       message = 'Test Every 5 Minutes'
       ZopeTestCase._print('\n%s ' % message)
       LOG('Testing... ',0,message)
-    alarm = self.newAlarm()
+    alarm = self.newAlarm(enabled=True)
     now = DateTime()
     minute_to_remove = now.minute() % 5
     now = addToDate(now,minute=-minute_to_remove)
@@ -393,7 +395,7 @@ class TestAlarm(ERP5TypeTestCase):
       message = 'Test Every Minute'
       ZopeTestCase._print('\n%s ' % message)
       LOG('Testing... ',0,message)
-    alarm = self.newAlarm()
+    alarm = self.newAlarm(enabled=True)
     now = DateTime()
     date = addToDate(now,hour=2)
     alarm.setPeriodicityStartDate(now)
@@ -409,7 +411,7 @@ class TestAlarm(ERP5TypeTestCase):
       message = 'Test New Active Process'
       ZopeTestCase._print('\n%s ' % message)
       LOG('Testing... ',0,message)
-    alarm = self.newAlarm()
+    alarm = self.newAlarm(enabled=True)
     active_process = alarm.newActiveProcess()
     self.assertEquals('Active Process', active_process.getPortalType())
     self.assertEquals(alarm, active_process.getCausalityValue())
@@ -431,7 +433,7 @@ class TestAlarm(ERP5TypeTestCase):
       # Make the sense method fail
       skin_folder[sense_method_id].ZPythonScript_edit('*args,**kw', 'raise Exception')
       del skin_folder
-      alarm = self.newAlarm()
+      alarm = self.newAlarm(enabled=True)
       transaction.commit()
       self.tic()
       now = DateTime()
@@ -476,7 +478,7 @@ class TestAlarm(ERP5TypeTestCase):
       message = 'Test Uncatalog'
       ZopeTestCase._print('\n%s ' % message)
       LOG('Testing... ', 0, message)
-    alarm = self.newAlarm()
+    alarm = self.newAlarm(enabled=True)
     transaction.commit()
     self.tic()
 
@@ -534,14 +536,18 @@ class TestAlarm(ERP5TypeTestCase):
     alarm_tool = self.getPortal().portal_alarms
     # Nothing should happens yet
     alarm_tool.tic()
+    transaction.commit()
+    self.tic()
     self.assertTrue(alarm.getDescription() in (None, ''))
     now = DateTime()
-    date = addToDate(now, day=1)
+    date = addToDate(now, day=-1)
     alarm.setPeriodicityStartDate(date)
     alarm.setPeriodicityMinuteFrequency(1)
     transaction.commit()
     self.tic()
     alarm_tool.tic()
+    transaction.commit()
+    self.tic()
     self.assertEquals(alarm.getDescription(), 'a')
 
   def test_18_alarm_activities_execution_order(self, quiet=0, run=run_all_test):
@@ -696,7 +702,7 @@ class TestAlarm(ERP5TypeTestCase):
       message = 'Test undefined PeriodicityStartDate'
       ZopeTestCase._print('\n%s ' % message)
       LOG('Testing... ',0,message)
-    alarm = self.newAlarm()
+    alarm = self.newAlarm(enabled=True)
     # Test sanity check.
     self.assertEqual(alarm.getPeriodicityStartDate(), None)
     # Actual test.
