@@ -457,6 +457,7 @@ class DocumentConstructor(Method):
       if kw: o._edit(force_update=1, **kw)
       if REQUEST is not None:
         REQUEST['RESPONSE'].redirect( 'manage_main' )
+      return o
 
 class TempDocumentConstructor(DocumentConstructor):
 
@@ -480,9 +481,8 @@ class TempDocumentConstructor(DocumentConstructor):
 
       self.klass = TempDocument
 
-    def __call__(self, folder, id, REQUEST=None, **kw):
-      # CMF constructInstance is never used to build temp objects
-      # so we never return the id.
+    def __call__(self, folder, id, REQUEST=None,
+                 activate_kw=None, is_indexable=None, reindex_kw=None, **kw):
       o = self.klass(id)
       if folder.isTempObject():
         folder._setObject(id, o)

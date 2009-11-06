@@ -299,45 +299,48 @@ class ERP5TypeInformation(XMLObject,
         """
         return default
 
-    #
-    #   Agent methods
-    #
-    def _queryFactoryMethod(self, container, default=None):
+    # The following 2 methods should not be used.
+    _getFactoryMethod = deprecated(FactoryTypeInformation._getFactoryMethod)
+    _constructInstance = deprecated(FactoryTypeInformation._constructInstance)
 
-        if not self.product or not self.factory or container is None:
-            return default
+    def _queryFactoryMethod(self, container, temp_object=0):
+      product = self.product
+      factory = self.factory
+      if not product or not factory:
+        return ValueError('Product factory for %s was undefined'
+                          % self.getId())
+      try:
+        p = container.manage_addProduct[product]
+      except AttributeError:
+        pass
+      else:
+        if temp_object:
+          factory = factory[:3] == 'add' and 'newTemp' + factory[3:] or ''
+        m = getattr(p, factory, None)
+        if m is None:
+          return ValueError('Product factory for %s was invalid'
+                            % self.getId())
+        if temp_object:
+          return m
+        permission = self.permission
+        if permission:
+          if _checkPermission(permission, container):
+            return m
+        else:
+          try:
+            # validate() can either raise Unauthorized or return 0 to
+            # mean unauthorized.
+            if getSecurityManager().validate(p, p, factory, m):
+              return m
+          except zExceptions_Unauthorized, e:
+            return e
+      return AccessControl_Unauthorized('Cannot create %s' % self.getId())
 
-        # In case we aren't wrapped.
-        dispatcher = getattr(container, 'manage_addProduct', None)
-
-        if dispatcher is None:
-            return default
-
-        try:
-            p = dispatcher[self.product]
-        except AttributeError:
-            LOG('Types Tool', ERROR, '_queryFactoryMethod raised an exception',
-                error=exc_info())
-            return default
-
-        m = getattr(p, self.factory, None)
-
-        if m is not None:
-            try:
-                # validate() can either raise Unauthorized or return 0 to
-                # mean unauthorized.
-                permission = self.permission
-                if permission:
-                  if _checkPermission(permission, container):
-                    return m
-                  else:
-                    return default
-                elif getSecurityManager().validate(p, p, self.factory, m):
-                  return m
-            except zExceptions_Unauthorized:  # Catch *all* Unauths!
-                pass
-
-        return default
+    security.declarePublic('isConstructionAllowed')
+    def isConstructionAllowed(self, container):
+      """Test if user is allowed to create an instance in the given container
+      """
+      return not isinstance(self._queryFactoryMethod(container), Exception)
 
     security.declarePublic('constructInstance')
     def constructInstance(self, container, id, created_by_builder=0,
@@ -348,34 +351,20 @@ class ERP5TypeInformation(XMLObject,
       Call the init_script for the portal_type.
       Returns the object.
       """
-      if temp_object:
-        if not self.factory or not self.factory.startswith('add'):
-          raise ValueError('Product factory for %s is invalid: %s'
-                            % (self.getId(), self.factory))
-        p = container.manage_addProduct[self.product]
-        m = getattr(p, 'newTemp' + self.factory[3:])
-        ob = m(id, container)
-        if hasattr(ob, '_setPortalTypeName'):
-          ob.portal_type = self.getId()
-      else:
-        # This is part is copied from CMFCore/TypesTool/constructInstance
-        # In case of temp object, we don't want to check security
-        if (not (hasattr(container, 'isTempObject')
-                 and container.isTempObject())
-            and not self.isConstructionAllowed(container)):
-          raise AccessControl_Unauthorized('Cannot create %s' % self.getId())
+      m = self._queryFactoryMethod(container, temp_object)
+      if isinstance(m, Exception):
+        raise m
+      ob = m(id, **kw)
 
-        # Then keep on the construction process
-        ob = self._constructInstance(container, id, *args, **kw)
+      # Portal type has to be set before setting other attributes
+      # in order to initialize aq_dynamic
+      if hasattr(ob, '_setPortalTypeName'):
+        #ob._setPortalTypeName(self.getId())
+        # XXX rafael: if we use _set because it is trigger by interaction
+        # workflow and it is annoyning without security setted
+        ob.portal_type = self.getId()
 
-        # Portal type has to be set before setting other attributes
-        # in order to initialize aq_dynamic
-        if hasattr(ob, '_setPortalTypeName'):
-          #ob._setPortalTypeName(self.getId())
-          # XXX rafael: if we use _set because it is trigger by interaction
-          # workflow and it is annoyning without security setted
-          ob.portal_type = self.getId()
-
+      if not temp_object:
         self.updateLocalRolesOnDocument(ob, reindex=False)
 
         # notify workflow after generating local roles, in order to prevent
