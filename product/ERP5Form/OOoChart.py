@@ -55,8 +55,12 @@ class OOoChartWidget(Widget.Widget):
 
   property_names = list(Widget.Widget.property_names)
 
-  # Default has no meaning in OOoChart.
-  property_names.remove('default')
+  default = fields.StringField(
+                              'default',
+                              title='Default',
+                              description=("A default value (not used)."),
+                              default="",
+                              required=0)
 
   listbox_form_id = fields.StringField(
                               'listbox_form_id',
