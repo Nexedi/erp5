@@ -59,8 +59,8 @@ pref = sci[\'object\']\n
 portal = sci.getPortal()\n
 LOG = lambda msg: pref.log("PreferenceWorkflow.disableOtherPreferences on %s"%pref, msg)\n
 \n
-# deactivate all other preferences of the same level \n
-for p in portal.portal_preferences.searchFolder(spec=(\'ERP5 Preference\',)) :\n
+# deactivate all other preferences of the same level that the user can view\n
+for p in portal.portal_preferences.searchFolder():\n
   p = p.getObject()\n
   try :\n
     if portal.portal_membership.getAuthenticatedMember().allowed(p, [\'Owner\', ]) :\n
