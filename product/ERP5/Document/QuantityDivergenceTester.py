@@ -104,8 +104,28 @@ class QuantityDivergenceTester(PropertyDivergenceTester):
       if delivery_ratio == 0 and quantity > 0:
         return [message]
 
-    if not self.compare(d_quantity, quantity):
-      return [message]
+    if d_quantity != 0.0:
+      if not self.compare(d_quantity, quantity):
+        return [message]
+    else:
+      # A delivery quantity of 0 is an exceptional case that we cannot really
+      # handle with the current approach of delivery ratio.
+      d_quantity = delivery.getQuantity()
+      quantity = sum([m.getCorrectedQuantity() for m in
+        delivery.getDeliveryRelatedValueList(
+          portal_type='Simulation Movement')])
+
+      if not self.compare(d_quantity, quantity):
+        return [DivergenceMessage(
+                     object_relative_url= delivery.getRelativeUrl(),
+                     divergence_scope='quantity',
+                     simulation_movement = simulation_movement,
+                     decision_value = d_quantity ,
+                     prevision_value = quantity,
+                     tested_property='quantity',
+                     message='Quantity',
+                     **extra_parameters)]
+      
     return []
 
   def compare(self, x, y):
