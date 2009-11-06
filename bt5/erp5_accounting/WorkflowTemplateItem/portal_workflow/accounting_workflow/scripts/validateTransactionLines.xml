@@ -67,8 +67,6 @@ bank_account_portal_type = portal.getPortalPaymentNodeTypeList()\n
 section_portal_type_list = [\'Person\', \'Organisation\']\n
 invalid_state_list = [\'invalidated\', \'deleted\']\n
 \n
-N_ = lambda msg, **kw: Message(\'erp5_ui\', msg, **kw)\n
-\n
 # first of all, validate the transaction itself\n
 container.validateTransaction(state_change)\n
 \n
@@ -213,7 +211,6 @@ transaction.AccountingTransaction_deleteEmptyLines(redirect=0)\n
                             <string>bank_account_portal_type</string>
                             <string>section_portal_type_list</string>
                             <string>invalid_state_list</string>
-                            <string>N_</string>
                             <string>container</string>
                             <string>_getiter_</string>
                             <string>dict</string>
