@@ -365,15 +365,13 @@ class ERP5TypeInformation(XMLObject,
         ob.portal_type = self.getId()
 
       if not temp_object:
+        # Do not reindex object because it's already done by manage_afterAdd
         self.updateLocalRolesOnDocument(ob, reindex=False)
 
         # notify workflow after generating local roles, in order to prevent
         # Unauthorized error on transition's condition
         if hasattr(aq_base(ob), 'notifyWorkflowCreated'):
           ob.notifyWorkflowCreated()
-
-        # Reindex the object at the end
-        ob.reindexObject()
 
         init_script = self.getTypeInitScriptId()
         if init_script:
