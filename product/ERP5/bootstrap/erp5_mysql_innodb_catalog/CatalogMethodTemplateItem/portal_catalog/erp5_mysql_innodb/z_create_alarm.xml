@@ -94,7 +94,7 @@
 #\n
 CREATE TABLE `alarm` (\n
   `uid` BIGINT UNSIGNED NOT NULL,\n
-  `alarm_date` datetime default \'2006-01-01\',\n
+  `alarm_date` DATETIME,\n
   PRIMARY KEY  (`uid`)\n
 ) TYPE=InnoDB;\n
 </string> </value>
@@ -139,7 +139,7 @@ CREATE TABLE `alarm` (\n
 #\n
 CREATE TABLE `alarm` (\n
   `uid` BIGINT UNSIGNED NOT NULL,\n
-  `alarm_date` datetime default \'2006-01-01\',\n
+  `alarm_date` DATETIME,\n
   PRIMARY KEY  (`uid`)\n
 ) TYPE=InnoDB;\n
 </string> </value>
