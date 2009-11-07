@@ -54,3 +54,7 @@ class AdoptSolver(XMLObject):
                     , PropertySheet.DublinCore
                     )
 
+  # Declarative interfaces
+  zope.interface.implements(interfaces.ISolver,
+                            interfaces.IConfigurable,
+                           )
