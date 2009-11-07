@@ -7,6 +7,18 @@
 
 __version__ = '0.3.0'
 
+import base64
+import md5
+import os
+import re
+import sys
+import time
+import traceback
+from cStringIO import StringIO
+from cPickle import dumps
+from glob import glob
+from urllib import urlretrieve
+
 # XXX make sure that get_request works.
 current_app = None
 import Products.ERP5Type.Utils
@@ -163,7 +175,6 @@ ZopeTestCase.installProduct('ParsedXML', quiet=install_product_quiet)
 # Install everything else which looks like related to ERP5
 from OFS.Application import get_products
 from App.config import getConfiguration
-import os
 
 instancehome = getConfiguration().instancehome
 for priority, product_name, index, product_dir in get_products():
@@ -177,14 +188,6 @@ for priority, product_name, index, product_dir in get_products():
 from AccessControl.SecurityManagement import newSecurityManager, noSecurityManager
 
 from Acquisition import aq_base
-import time
-import md5
-import traceback
-import os
-from cStringIO import StringIO
-from urllib import urlretrieve
-from glob import glob
-import sys, re, base64
 
 portal_name = 'erp5_portal'
 
@@ -949,7 +952,6 @@ class ERP5TypeTestCase(backportUnittest.TestCase, PortalTestCase):
                 request_method='GET', stdin=None, handle_errors=True):
         '''Publishes the object at 'path' returning a response object.'''
 
-        from StringIO import StringIO
         from ZPublisher.Response import Response
         from ZPublisher.Test import publish_module
 
@@ -1157,7 +1159,6 @@ def fortify():
   system.
   '''
   # check that we don't store persistent objects in cache
-  from pickle import dumps
   from Products.ERP5Type.CachePlugins.BaseCache import CacheEntry
   CacheEntry__init__ = CacheEntry.__init__
   def __init__(self, value, *args, **kw):
