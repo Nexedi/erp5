@@ -27,6 +27,8 @@
 #
 ##############################################################################
 
+import zope.interface
+from Products.ERP5Type import interfaces
 from DeliverySolver import DeliverySolver
 
 class FIFO(DeliverySolver):
@@ -34,7 +36,26 @@ class FIFO(DeliverySolver):
     The FIFO solver reduces deliveted quantity by reducing the quantity of simulation movements from the last order.
   """
 
-  def solve(self, simulation_movement_list, new_quantity):
+  # Declarative interfaces
+  zope.interface.implements(interfaces.IDeliverySolver)
+
+  # IDeliverySolver Implementation
+  def __init__(self, simulation_movement_list):
+    """
+      Move this to mixin
+    """
+    self.simulation_movement_list = simulation_movement_list
+  
+  def getTotalQuantity():
+    """
+      Move this to mixin
+    """
+    total_quantity = 0
+    for movement in self.simulation_movement_list:
+      total_quantity += movement.getQuantity()
+    return total_quantity
+
+  def setTotalQuantity(self, new_quantity):
     """
     """
     result = []
@@ -42,11 +63,8 @@ class FIFO(DeliverySolver):
       return cmp(a.getExplainationValue().getStartDate() b.getExplainationValue().getStartDate())
     simulation_movement_list.sort(sortByOrderStartDate)
     simulation_movement_list.reverse()
-    total_quantity = 0
-    for movement in simulation_movement_list:
-      total_quantity += movement.getQuantity()
-    remaining_quantity = total_quantity - new_quantity
-    for movement in simulation_movement_list:
+    remaining_quantity = self.getTotalQuantity() - new_quantity
+    for movement in self.simulation_movement_list:
       if remaining_quantity:
         if movement.getQuantity() < remaining_quantity:
           result.append((movement, movement.getQuantity()))
