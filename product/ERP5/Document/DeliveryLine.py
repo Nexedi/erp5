@@ -68,7 +68,7 @@ class DeliveryLine(Movement, XMLObject, XMLMatrix, Variated,
                       , PropertySheet.SortIndex
                       )
 
-    zope.interface.implements(interfaces.IDivergenceSolver,)
+    #zope.interface.implements(interfaces.IDivergenceSolver,)
 
     # Multiple inheritance definition
     updateRelatedContent = XMLMatrix.updateRelatedContent
