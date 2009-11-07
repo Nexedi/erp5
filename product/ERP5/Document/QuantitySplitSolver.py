@@ -30,7 +30,7 @@
 import zope.interface
 from AccessControl import ClassSecurityInfo
 from Products.CMFCore.utils import getToolByName
-from Products.ERP5Type import Permissions, PropertySheet
+from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.XMLObject import XMLObject
 
 class QuantitySplitSolver(XMLObject):
@@ -55,16 +55,21 @@ class QuantitySplitSolver(XMLObject):
                     , PropertySheet.DublinCore
                     , PropertySheet.Arrow
                     )
-  # Implementation
+  # Declarative interfaces
+  zope.interface.implements(interfaces.ISolver,
+                            interfaces.IConfigurable,
+                           )
+
+  # ISolver Implementation
   def solve(self):
     """
-    """
-    delivery_solver = self.portal_solvers.buildDeliverySolver(self.getDeliverySolver())
+    """    
     for delivery_line in self.getDeliveryValueList(): 
       decision_quantity = delivery_line.getQuantity()
       simulation_movement_list = self.getDeliveryRelatedValueList()
+      delivery_solver = self.portal_solvers.newDeliverySolver(self.getDeliverySolver(), simulation_movement_list)
       # Update the quantity using delivery solver algorithm
-      split_list = delivery_solver.solve(simulation_movement_list, decision_quantity)
+      split_list = delivery_solver.setTotalQuantity(decision_quantity)
       # Create split movements
       for (simulation_movement, split_quantity) in split_list:
         new_movement = simulation_movement.copy() # Copy at same level
