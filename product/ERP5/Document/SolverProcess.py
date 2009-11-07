@@ -30,7 +30,7 @@
 import zope.interface
 from AccessControl import ClassSecurityInfo
 from Products.CMFCore.utils import getToolByName
-from Products.ERP5Type import Permissions, PropertySheet
+from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.CMFActivity.ActiveProcess import ActiveProcess
 
@@ -73,6 +73,12 @@ class SolverProcess(XMLObject, ActiveProcess):
                     , PropertySheet.DublinCore
                     )
 
+  # Declarative interfaces
+  zope.interface.implements(interfaces.ISolver,
+                            interfaces.IConfigurable,
+                           )
+
+  # Implementation
   def buildTargetSolverList(self):
     """
       Builds target solvers from solver decisions
@@ -122,6 +128,7 @@ class SolverProcess(XMLObject, ActiveProcess):
            for configuration_kw in configuration_list:
             solver_instance.updateConfiguration(**configuration_kw)
 
+  # ISolver implementation
   # Solver Process Workflow Interface 
   #  NOTE: how can we consider that a workflow defines or provides an interface ?
   def solve(self):
