@@ -30,6 +30,46 @@
 from zope.interface import Interface
 
 class ITargetSolver(Interface):
-  """Solves changes of properties up to simulation tree with taking proper decisions"""
-  # placeholder to define
-  pass
+  """Target Solver interface specification
+
+  This interface must be implemented by all target solvers
+  which are used to solve divergences in ERP5 simulation. Documents
+  which implemet ITargetSolver provide a solve method.
+
+  Besides ITargetSolver static interface definition, target solvers
+  must support IDeliveryGetter to access simulation movements to solve.
+
+  TODO-XXX: 
+    - find a way to make static interfaces inherit from
+      dynamic interfaces in ERP5 (ex. solver process workflow)
+    - IDeliveryGetter is not appropriate name / interface
+    - find a way to define at which level to solve divergences
+      (ex. line, delivery)
+  """
+  def solve():
+    """
+    Start the solving process (and trigger the workflow method
+    in solver_process_workflow). At the end the solving process,
+    appropriate methods of the solver_process_workflow must be invoked
+    (ex. succeed, fail, abort).
+    """
+
+  def isSolving():
+    """
+    Returns True if the solver processing in ongoing. False else.
+    """
+
+  def isSolved():
+    """
+    Returns True if all divergences are solved, False else.
+    """
+
+  def isFailed():
+    """
+    Returns True if divergence resolution fails. False else.
+    """
+
+  def isAborted():
+    """
+    Returns True if divergence resolution was aborted. False else.
+    """
