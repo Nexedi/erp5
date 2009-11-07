@@ -34,6 +34,7 @@ from Persistence import Persistent
 
 class DivergenceSolutionDecision(Persistent):
   """Decision class
+    XXX-JPS DivergenceResolutionDecision ?
 
     Represent decision took during solving divergence between reality and
     simulation
@@ -61,7 +62,7 @@ class DivergenceSolutionDecision(Persistent):
       string representing took decision:
         * accept
         * adopt
-        * split
+        * split[**** why noy solve JPS-XXX)
 
     delivery_solver_name
       delivery solver used during taking decision
@@ -73,7 +74,7 @@ class DivergenceSolutionDecision(Persistent):
       If set, property on decision overrides
 
     split_kw
-      Dictionary passed to TargetSolver in case of splitting.
+      Dictionary passed to TargetSolver in case of splitting. JPS-XXX why only for split
   """
   meta_type = "DivergenceSolutionDecision"
   security = ClassSecurityInfo()
