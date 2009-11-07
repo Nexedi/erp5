@@ -27,11 +27,13 @@
 #
 ##############################################################################
 
+import zope.interface
+
 from Products.CMFCore.utils import getToolByName
 
 from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass, DTMLFile
-from Products.ERP5Type import Permissions
+from Products.ERP5Type import Permissions, interfaces
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 
 from Products.ERP5 import _dtmldir
@@ -39,46 +41,68 @@ from Products.ERP5 import _dtmldir
 from zLOG import LOG
 
 class SolverTool(BaseTool):
+  """
+    The SolverTool provides API to find out which solver can
+    be applied in which case and contains SolverProcess instances
+    which are used to keep track of solver decisions, solver
+    history and global optimisation.
+
+    NOTE: this class is experimental and is subject to be removed
+  """
+  id = 'portal_solvers'
+  meta_type = 'ERP5 Solver Tool'
+  portal_type = 'Solver Tool'
+  allowed_types = ( 'ERP5 Solver Process', )
+
+  # Declarative Security
+  security = ClassSecurityInfo()
+
+  #
+  #   ZMI methods
+  #
+  security.declareProtected( Permissions.ManagePortal, 'manage_overview' )
+  manage_overview = DTMLFile( 'explainSolverTool', _dtmldir )
+
+  # Declarative interfaces
+  zope.interface.implements(interfaces.IDeliverySolverFactory,
+                           )
+
+  # Implementation
+  def filtered_meta_types(self, user=None):
+    # Filters the list of available meta types.
+    all = SolverTool.inheritedAttribute('filtered_meta_types')(self)
+    meta_types = []
+    for meta_type in self.all_meta_types():
+      if meta_type['name'] in self.allowed_types:
+        meta_types.append(meta_type)
+    return meta_types
+
+  def tpValues(self) :
+    """ show the content in the left pane of the ZMI """
+    return self.objectValues()
+
+  # ISolverTool implementation
+  def newDeliverySolver(self, class_name, movement_list):
     """
-      The SolverTool provides API to find out which solver can
-      be applied in which case and contains SolverProcess instances
-      which are used to keep track of solver decisions, solver
-      history and global optimisation.
-
-      NOTE: this class is experimental and is subject to be removed
     """
-    id = 'portal_solvers'
-    meta_type = 'ERP5 Solver Tool'
-    portal_type = 'Solver Tool'
-    allowed_types = ( 'ERP5 Solver Process', )
+    raise NotImplementedError
 
-    # Declarative Security
-    security = ClassSecurityInfo()
+  def getDeliverySolverClassNameList(self):
+    """
+    """
+    raise NotImplementedError
 
-    #
-    #   ZMI methods
-    #
-    security.declareProtected( Permissions.ManagePortal, 'manage_overview' )
-    manage_overview = DTMLFile( 'explainSolverTool', _dtmldir )
+  def getDeliverySolverTranslatedItemList(self, class_name_list=None):
+    """
+    """
+    raise NotImplementedError
 
-    def filtered_meta_types(self, user=None):
-      # Filters the list of available meta types.
-      all = SolverTool.inheritedAttribute('filtered_meta_types')(self)
-      meta_types = []
-      for meta_type in self.all_meta_types():
-        if meta_type['name'] in self.allowed_types:
-          meta_types.append(meta_type)
-      return meta_types
+  def getDeliverySolverTranslatedTitle(self, class_name):
+    """
+    """
+    raise NotImplementedError
 
-    def tpValues(self) :
-      """ show the content in the left pane of the ZMI """
-      return self.objectValues()
-
-    def buildSolvedSimulationMovement(self, movement):
-      """
-      Builds a Temp Simulation Movement 
-
-      Update a given simulation movement which has been
-      affected by the SolverProcess 
-      """
-
+  def getDeliverySolverTranslatedDescription(self, class_name):
+    """
+    """
+    raise NotImplementedError

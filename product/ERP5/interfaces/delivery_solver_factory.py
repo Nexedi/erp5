@@ -29,10 +29,10 @@
 
 from zope.interface import Interface
 
-class ISolverTool(Interface):
-  """Solver Tool interface specification
+class IDeliverySolverFactory(Interface):
+  """Delivery Solver Factory interface specification
 
-  Solver Tool provides methods to create delivery
+  IDeliverySolverFactory provides methods to create delivery
   solver instances and retrieve metadata related to delivery
   solvers.
 
