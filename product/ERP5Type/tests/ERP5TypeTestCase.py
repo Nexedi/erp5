@@ -8,9 +8,12 @@
 __version__ = '0.3.0'
 
 import base64
+import errno
 import md5
 import os
+import random
 import re
+import socket
 import sys
 import time
 import traceback
@@ -721,6 +724,37 @@ class ERP5TypeTestCase(backportUnittest.TestCase, PortalTestCase):
       self.assertEqual(object.getSimulationState(), reference_workflow_state)
       return workflow_error_message
 
+    def startZServer(self):
+      """Starts an HTTP ZServer thread."""
+      from Testing.ZopeTestCase import threadutils, utils
+      if utils._Z2HOST is None:
+        randint = random.Random(hash(os.environ['INSTANCE_HOME'])).randint
+        def zserverRunner():
+          try:
+            threadutils.zserverRunner(utils._Z2HOST, utils._Z2PORT)
+          except socket.error, e:
+            if e.args[0] != errno.EADDRINUSE:
+              raise
+            utils._Z2HOST = None
+        from ZServer import setNumberOfThreads
+        setNumberOfThreads(1)
+        port_list = []
+        for i in range(3):
+          utils._Z2HOST = '127.0.0.1'
+          utils._Z2PORT = randint(55000, 55500)
+          t = threadutils.QuietThread(target=zserverRunner)
+          t.setDaemon(1)
+          t.start()
+          time.sleep(0.1)
+          if utils._Z2HOST:
+            ZopeTestCase._print("Running ZServer on port %i\n" % utils._Z2PORT)
+            break
+          port_list.append(str(utils._Z2PORT))
+        else:
+          ZopeTestCase._print("Can't find free port to start ZServer"
+                              " (tried ports %s)\n" % ', '.join(port_list))
+      return utils._Z2HOST, utils._Z2PORT
+
     def setUpERP5Site(self,
                      business_template_list=(),
                      app=None,
@@ -806,9 +840,7 @@ class ERP5TypeTestCase(backportUnittest.TestCase, PortalTestCase):
                 from Products import DeadlockDebugger
               except ImportError:
                 pass
-              from Testing.ZopeTestCase.utils import startZServer
-              ZopeTestCase._print('Running ZServer on port %i\n'
-                                  % startZServer()[1])
+              self.startZServer()
 
             self._updateConnectionStrings()
             self._recreateCatalog()
