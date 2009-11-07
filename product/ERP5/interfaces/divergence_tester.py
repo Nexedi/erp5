@@ -67,7 +67,7 @@ class IDivergenceTester(Interface):
     
   def explain(simulation_movement):
     """
-    Returns a list of messages which explain the nature of
+    Returns a single message which explain the nature of
     the divergence of simulation_movement with its related
     delivery movement.
 
@@ -75,6 +75,11 @@ class IDivergenceTester(Interface):
     the recorded properties instead of the native ones.
 
     simulation_movement -- a simulation movement
+
+    NOTE: this approach is incompatible with previous
+    API which was returning a list.
+
+    NOTE: should we provide compatibility here ?
     """
 
   def generateHashKey(movement):
