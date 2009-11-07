@@ -79,3 +79,7 @@ class SolverDecision(XMLObject):
                     , PropertySheet.DublinCore
                     , PropertySheet.SolverSelection
                     )
+
+  # Declarative interfaces
+  zope.interface.implements(interfaces.IConfigurable,
+                           )
