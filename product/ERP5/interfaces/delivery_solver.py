@@ -30,7 +30,35 @@
 from zope.interface import Interface
 
 class IDeliverySolver(Interface):
-  """Solves quantity values between delivery line and related simulation movements"""
-  # placeholder to define
-  pass
+  """Delivery Solver interface specification
 
+  This interface must be implemented by all delivery solvers
+  which are used to solve quantity related divergences in ERP5 simulation. 
+  Delivery solvers are usually built by SolverTool and invoked by target solvers.
+
+  Delivery solvers are initialised with a list of simulation movements
+  and provide methods (setQuantity, getQuantity) to manipulate the total
+  quantity of movements.
+  """
+  
+  def __init__(movement_list):
+    """
+    Initialises the delivery solver.
+
+    movement_list -- a list of simulation movement on which delivery solver operates
+    """
+
+  def getTotalQuantity():
+    """
+    Return the total quantity by summing the quantity of each simulation
+    movement.
+    """
+
+  def setTotalQuantity(quantity):
+    """
+    Sets the total quantity of simulation movements by increasing or reducing
+    the quantity and ratio of each simulation movement. This method
+    implements the solver specific algorith (ex. FIFO, LIFO, average, least cost)
+
+    NOTE: is this the right place to update delivery ratio ?
+    """
