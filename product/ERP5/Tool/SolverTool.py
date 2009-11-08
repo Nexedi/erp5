@@ -65,6 +65,7 @@ class SolverTool(BaseTool):
 
   # Declarative interfaces
   zope.interface.implements(interfaces.IDeliverySolverFactory,
+                            interfaces.IDivergenceController,
                            )
 
   # Implementation
@@ -81,7 +82,7 @@ class SolverTool(BaseTool):
     """ show the content in the left pane of the ZMI """
     return self.objectValues()
 
-  # ISolverTool implementation
+  # IDeliverySolverFactory implementation
   def newDeliverySolver(self, class_name, movement_list):
     """
     """
@@ -106,3 +107,154 @@ class SolverTool(BaseTool):
     """
     """
     raise NotImplementedError
+
+  # IDivergenceController implementation
+  def isDivergent(self, delivery_or_movement=None):
+    """
+    Returns True if any of the movements provided 
+    in delivery_or_movement is divergent
+
+    delivery_or_movement -- a movement, a delivery, 
+                            or a list thereof
+    """
+
+  def newSolverProcess(self, delivery_or_movement=None):
+    """
+    Builds a new solver process from the divergence
+    analaysis of delivery_or_movement. All movements
+    which are not divergence are placed in a Solver
+    Decision with no Divergence Tester specified.
+
+    delivery_or_movement -- a movement, a delivery, 
+                            or a list thereof
+    """
+    # Do not create a new solver process if no divergence
+    if not self.isDivergent(delivery_or_movement=delivery_or_movement):
+      return None
+
+    # We suppose here that delivery_or_movement is a list of
+    # delivery lines. Let group decisions in such way
+    # that a single decision is created per divergence tester instance
+    # and per application level list
+    solver_decision_dict = {}
+    if movement in delivery_or_movement:
+      for simulation_movement in movement.getDeliveryRelatedValueList():
+        simulation_movemet_url = simulation_movement.getRelativeUrl()
+        for divergence_tester in simulation_movement.getParentValue().getDivergenceTesterValueList():
+          application_list = map(lambda x:x.getRelativeUrl(), 
+                 self.getSolverDecisionApplicationValueList(simulation_movement, divergence_tester))
+          application_list.sort()
+          solver_decision_key = (divergence_tester.getRelativeUrl(), application_list)
+          movement_dict = solver_decision_dict.setdefaults(solver_decision_key, {})
+          movement_dict[simulation_movemet_url] = None
+
+    # Now build the solver process instances based on the previous
+    # grouping
+    new_solver = self.newContent(portal_type='Solver Process')
+    for solver_decision_key, movement_dict in solver_decision_dict.items():
+      new_decision = self.newContent(portal_type='Solver Decision')
+      new_decision._setDeliveryList(movement_url.keys(p))
+      new_decision._setSolver(solver_decision_key[0])
+      # No need to set application_list or....?
+
+  def getSolverProcessValueList(self, delivery_or_movement=None, validation_state=None):
+    """
+    Returns the list of solver processes which are
+    are in a given state and which apply to delivery_or_movement.
+    This method is useful to find applicable solver processes
+    for a delivery.
+
+    delivery_or_movement -- a movement, a delivery, 
+                            or a list thereof
+
+    validation_state -- a state of a list of states
+                        to filter the result
+    """
+
+  def getSolverDecisionValueList(self, delivery_or_movement=None, validation_state=None):
+    """
+    Returns the list of solver decisions which apply
+    to a given movement.
+
+    delivery_or_movement -- a movement, a simulation movement, a delivery, 
+                            or a list thereof
+
+    validation_state -- a state of a list of states
+                        to filter the result
+    """
+
+  def getSolverDecisionApplicationValueList(self, movement, divergence_tester=None):
+    """
+    Returns the list of documents at which a given divergence resolution
+    can be resolved at. For example, in most cases, date divergences can
+    only be resolved at delivery level whereas quantities are usually
+    resolved at cell level.
+
+    The result of this method is a list of ERP5 documents.
+
+    NOTE: renaming probably required. I do not like this name nor the one
+    of the interface definition.
+    """
+    # Short Term Implementation Approach
+    return self.SolverTool_getSolverDecisionApplicationValueList(movement, divergence_tester)
+
+    # Alternate short Term Implementation Approach
+    return divergence_tester.getTypeBasedMethod('getSolverDecisionApplicationValueList')( 
+                                                movement, divergence_tester)
+
+    # Alternate short Term Implementation Approach
+    test_property = divergence_tester.getTestedProperty()
+    application_value = movement
+    while not application_value.hasProperty(test_property):
+      application_value = application_value.getParentValue()
+    return application_value
+
+    # Mid-term implementation (we suppose movement is a delivery)
+    # use delivery builders to find out at which level the given
+    # property can be modified
+    test_property = divergence_tester.getTestedProperty()
+    application_value_level = {}
+    for simulation_movement in movement.getDeliveryRelatedValueList():
+      business_path = simulation_movement.getCausalityValue()
+      for delivery_builder in business_path.getDeliveryBuilderValueList():
+        for movement_group in delivery_builder.contentValues(): # filter missing
+          if test_property in movement_group.getTestedPropertyList():
+            application_value_level[movement_group.getCollectGroupOrder()] = None
+    result = []
+    # Delivery level
+    if 'delivery' in application_value_level:
+      result.append(movement.getDeliveryValue())
+    # Line level
+    if 'line' in application_value_level and not movement.isLine():
+      result.append(movement)
+    elif 'line' in application_value_level and not movement.isLine():
+      result.append(movement.getParentValue())
+    # Cell level
+    if 'cell' in application_value_level and movement.isCell():
+      result.append(movement)
+    # Group of lines level (we try to find the most appropriate enclosing group)
+    if 'group' in application_value_level:
+      application_value = movement
+      while not application_value.hasProperty(test_property):
+        application_value = application_value.getParentValue()
+      if application_value not in result: result.append(application_value)
+    # Group of lines level (we try to find the most appropriate enclosing group)
+    if 'all_group' in application_value_level:
+      application_value = movement
+      while not application_value.hasProperty(test_property):
+        application_value = application_value.getParentValue()
+        if application_value not in result: result.append(application_value)
+    return result
+
+    # Longer-term implementation (we suppose movement is a delivery)
+    # use delivery builders to find out at which level the given
+    # property can be modified
+    test_property = divergence_tester.getTestedProperty()
+    application_value_level = {}
+    for simulation_movement in movement.getDeliveryRelatedValueList():
+      business_path = simulation_movement.getCausalityValue()
+      for delivery_builder in business_path.getDeliveryBuilderValueList():
+        for property_group in delivery_builder.contentValues(portal_type="Property group"):
+          if test_property in property_group.getTestedPropertyList():
+            application_value_level[property_group.getCollectGroupOrder()] = None
+    # etc. same
