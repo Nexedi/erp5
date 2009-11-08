@@ -21,7 +21,7 @@ Options:
   --email_to_address=STRING  send results to this address by email (defaults to
                              erp5-report@erp5.org)
   --smtp_host=hostname       specify SMTP server
-  -s, --stdout               prints the results on stdout instead of sending
+  -s, --stdout               print the results on stdout instead of sending
                              results by email (unless email_to_address is also
                              passed explictly)
   -d, --debug                run firefox on current DISPLAY instead of on Xvfb
