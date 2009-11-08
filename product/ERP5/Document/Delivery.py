@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2002-2009 Nexedi SA and Contributors. All Rights Reserved.
@@ -27,10 +28,12 @@
 #
 ##############################################################################
 
+import zope.interface
+
 from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type.Base import WorkflowMethod
 from AccessControl import ClassSecurityInfo
-from Products.ERP5Type import Permissions, PropertySheet
+from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5.Document.ImmobilisationDelivery import ImmobilisationDelivery
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
@@ -66,6 +69,9 @@ class Delivery(XMLObject, ImmobilisationDelivery):
                       , PropertySheet.Reference
                       , PropertySheet.Price
                       )
+
+    # Declarative interfaces
+    zope.interface.implements(interfaces.IDivergenceController,)
 
     security.declareProtected(Permissions.AccessContentsInformation, 'isAccountable')
     def isAccountable(self):
@@ -865,6 +871,11 @@ class Delivery(XMLObject, ImmobilisationDelivery):
     def getBuilderList(self):
       """Returns appropriate builder list."""
       return self._getTypeBasedMethod('getBuilderList')()
+      # XXX - quite a hack, since no way to know...
+      #       propper implementation should use business path definition
+      #       however, the real question is "is this really necessary"
+      #       since the main purpose of this method is superceded
+      #       by IDivergenceController
 
     def getRuleReference(self):
       """Returns an appropriate rule reference."""

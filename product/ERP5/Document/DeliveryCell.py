@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2002, 2004 Nexedi SARL and Contributors. All Rights Reserved.
@@ -26,6 +27,8 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
 ##############################################################################
+
+import zope.interface
 
 from Products.ERP5Type.Globals import InitializeClass, PersistentMapping
 from AccessControl import ClassSecurityInfo
@@ -69,6 +72,8 @@ class DeliveryCell(MappedValue, Movement, ImmobilisationMovement):
                       , PropertySheet.ItemAggregation
                       )
 
+    # Declarative interfaces
+    zope.interface.implements(interfaces.IDivergenceController,)
     
     # MatrixBox methods      
     security.declareProtected( Permissions.AccessContentsInformation,
