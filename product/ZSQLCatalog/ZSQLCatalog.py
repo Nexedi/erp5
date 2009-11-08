@@ -716,8 +716,8 @@ class ZCatalog(Folder, Persistent, Implicit):
     archive_list = []
     portal_archives = getattr(self, 'portal_archives', None)
     if portal_archives is not None:
-      if len(self.portal_archives):
-        archive_list = self.portal_archives.getArchiveList()
+      if len(portal_archives):
+        archive_list = portal_archives.getArchiveList()
 
     catalog_dict = {}
 
