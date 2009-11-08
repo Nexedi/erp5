@@ -706,7 +706,6 @@ class ZCatalog(Folder, Persistent, Implicit):
     """Catalog a list of objects.
     """
     catalog = self.getSQLCatalog(sql_catalog_id)
-    default_catalog = self.getSQLCatalog()
     hot_reindexing = (self.hot_reindexing_state is not None) and \
                      (catalog is not None) and \
                      (self.source_sql_catalog_id == catalog.id)
@@ -715,7 +714,8 @@ class ZCatalog(Folder, Persistent, Implicit):
     failed_object_list = []
     url_list = []
     archive_list = []
-    if getattr(self, "portal_archives", None) is not None:
+    portal_archives = getattr(self, 'portal_archives', None)
+    if portal_archives is not None:
       if len(self.portal_archives):
         archive_list = self.portal_archives.getArchiveList()
 
@@ -743,6 +743,12 @@ class ZCatalog(Folder, Persistent, Implicit):
         except KeyError:
           continue
         archive_obj_list.append(archive)
+
+    archive_enabled = (not disable_archive) \
+            and (archiving or (archive_obj_list and sql_catalog_id is None))
+    if archive_enabled:
+      default_catalog = self.getSQLCatalog()
+
     # Construct list of object to catalogged
     for obj in object_list:
       if hot_reindexing:
@@ -756,9 +762,9 @@ class ZCatalog(Folder, Persistent, Implicit):
         url = '/'.join(url())
         url_list.append(url)
         
-      goto_current_catalog = 0
       # either we are doing archiving, either we have used archive without a catalog specified
-      if (not disable_archive) and (archiving or (len(archive_obj_list) > 0 and sql_catalog_id is None)):
+      if archive_enabled:
+        goto_current_catalog = 0
         # check in which archive object must go if we defined archive
         catalog_id = None
         for archive in archive_obj_list:
@@ -787,7 +793,7 @@ class ZCatalog(Folder, Persistent, Implicit):
         wrapped_object_list.append(wrap_obj)
 
     # run activity or execute for each archive depending on priority
-    if len(catalog_dict):
+    if catalog_dict:
       for catalog_id in catalog_dict.keys():
         if goto_current_catalog and catalog_id == default_catalog.id:
           # if we reindex in current catalog, do not relaunch an activity for this
@@ -822,7 +828,7 @@ class ZCatalog(Folder, Persistent, Implicit):
                                  {'priority': d['priority']}, disable_archive=1, **kw)
     
     if catalog is not None:
-      if len(wrapped_object_list):
+      if wrapped_object_list:
         catalog.catalogObjectList(wrapped_object_list, **kw)
       if hot_reindexing:
         destination_catalog = self.getSQLCatalog(self.destination_sql_catalog_id)
@@ -830,11 +836,10 @@ class ZCatalog(Folder, Persistent, Implicit):
           if self.hot_reindexing_state == HOT_REINDEXING_RECORDING_STATE:
             destination_catalog.recordObjectList(url_list, 1)
           else:
-            if len(wrapped_object_list):
+            if wrapped_object_list:
               destination_catalog.catalogObjectList(wrapped_object_list,**kw)
 
     object_list[:] = failed_object_list[:]
-          
 
   def uncatalog_object(self, uid=None,path=None, sql_catalog_id=None):
     """ wrapper around catalog """
