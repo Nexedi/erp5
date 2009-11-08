@@ -1,3 +1,6 @@
+2009-11-08 Rafael
+* added Script for getMessageList from DummyMailHost
+
 2009-04-20 Kazuhiko
 * add Zuite_CommonTemplate that should a common template for all functional tests.
 * add TestTool_getSkinName and TestTool_setSkinNameCookie so as to unify functional tests for normal skin and mobile skin.
