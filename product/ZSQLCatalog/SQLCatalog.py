@@ -1383,11 +1383,13 @@ class Catalog(Folder,
       if not disable_cache:
         enableReadOnlyTransactionCache(self)
 
+      filter_dict = self.filter_dict
+      isMethodFiltered = self.isMethodFiltered
       for method_name in method_id_list:
-        kw = {}
-        if self.isMethodFiltered(method_name):
+        if isMethodFiltered(method_name):
           catalogged_object_list = []
-          filter = self.filter_dict[method_name]
+          append = catalogged_object_list.append
+          filter = filter_dict[method_name]
           type_set = frozenset(filter['type']) or None
           expression = filter['expression_instance']
           expression_cache_key_list = filter.get('expression_cache_key', '').split()
@@ -1405,7 +1407,7 @@ class Catalog(Folder,
                 # objects but we could also use over multiple transactions
                 # if this can improve performance significantly
                 try:
-                  cache_key = map(lambda key: object.getProperty(key, None), expression_cache_key_list)
+                  cache_key = (object.getProperty(key, None) for key in expression_cache_key_list)
                     # ZZZ - we could find a way to compute this once only
                   cache_key = (method_name, tuple(cache_key))
                   result = expression_result_cache[cache_key]
@@ -1427,7 +1429,7 @@ class Catalog(Folder,
                 expression_result_cache[cache_key] = result
               if not result:
                 continue
-            catalogged_object_list.append(object)
+            append(object)
         else:
           catalogged_object_list = object_list
 
@@ -1444,12 +1446,14 @@ class Catalog(Folder,
             method.func_code.co_varnames[:method.func_code.co_argcount]
         else:
           arguments = []
+        kw = {}
         for arg in arguments:
           value_list = []
           append = value_list.append
           for object in catalogged_object_list:
+            argument_cache_key = (object.uid, arg)
             try:
-              value = argument_cache[(object.uid, arg)]
+              value = argument_cache[argument_cache_key]
             except KeyError:
               try:
                 value = getattr(object, arg, None)
@@ -1462,7 +1466,7 @@ class Catalog(Folder,
                     (arg, object), error=sys.exc_info())
                 value = None
               if not disable_cache:
-                argument_cache[(object.uid, arg)] = value
+                argument_cache[argument_cache_key] = value
             append(value)
           kw[arg] = value_list
 
