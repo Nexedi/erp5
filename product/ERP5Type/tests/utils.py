@@ -65,6 +65,9 @@ class DummyMailHost(MailHost):
     self._previous_message = self._last_message
     self._last_message = (mfrom, mto, messageText)
     self._message_list.append(self._last_message)
+  def getMessageList(self):
+    """ Return message list"""
+    return self._message_list
 
 class DummyTranslationService:
   """A dummy translation service where you can access translated msgids and
