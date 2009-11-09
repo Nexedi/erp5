@@ -32,7 +32,7 @@
             <value>
               <tuple>
                 <string>FIFO Solver</string>
-                <string>FILO Solver</string>
+                <string>LIFO Solver</string>
               </tuple>
             </value>
         </item>

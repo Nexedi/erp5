@@ -355,7 +355,7 @@ class Movement(XMLObject, Amount):
 
       For outgoing quantities, it is the responsability of database
       to calculate asset prices based on calculation rules (FIFO,
-      FILO, AVERAGE, etc.).
+      LIFO, AVERAGE, etc.).
     """
     # This is what we use for accounting
     result = self.getSourceTotalAssetPrice()

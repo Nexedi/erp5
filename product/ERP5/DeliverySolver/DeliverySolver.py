@@ -40,7 +40,7 @@ class DeliverySolver:
     Can be used to:
 
      * distribute
-     * queue (FIFO, FILO, ...)
+     * queue (FIFO, LIFO, ...)
      * etc
   """
 

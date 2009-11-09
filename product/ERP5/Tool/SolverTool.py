@@ -95,7 +95,7 @@ class SolverTool(BaseTool):
     """
     # XXX Hardcoded for now. We need a new registration system for
     # delivery solvers.
-    return ['FIFO', 'FILO', 'MinPrice',]
+    return ['FIFO', 'LIFO', 'MinPrice',]
 
   def getDeliverySolverTranslatedItemList(self, class_name_list=None):
     """

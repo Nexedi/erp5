@@ -78,7 +78,7 @@
         </item>
         <item>
             <key> <string>delivery_solver</string> </key>
-            <value> <string>FILO Solver</string> </value>
+            <value> <string>LIFO Solver</string> </value>
         </item>
         <item>
             <key> <string>delivery_solver_id</string> </key>

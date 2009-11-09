@@ -32,16 +32,16 @@ from Products.ERP5Type import interfaces
 
 from FIFO import FIFO
 
-class FILO(FIFO):
+class LIFO(FIFO):
   """
-  The FILO solver reduces deliveted quantity by reducing the quantity of
+  The LIFO solver reduces deliveted quantity by reducing the quantity of
   simulation movements from the first order.
   """
 
   # Declarative interfaces
   zope.interface.implements(interfaces.IDeliverySolver)
 
-  title = 'FILO Solver'
+  title = 'LIFO Solver'
 
   def _getSimulationMovementList(self):
     """
