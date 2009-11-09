@@ -61,7 +61,7 @@
   the instance spam mailing lists during the \n
   Functional Tests.\n
 """\n
-if getattr("context.MailHost", "getMessageList", None) is None:\n
+if getattr(context.MailHost, "getMessageList", None) is None:\n
   return "ERROR: MailHost is not a DummyMailHost"\n
 \n
 for mail in context.MailHost.getMessageList():\n
@@ -110,10 +110,10 @@ return printed\n
                             <string>_print_</string>
                             <string>_print</string>
                             <string>getattr</string>
-                            <string>None</string>
-                            <string>_getiter_</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>None</string>
+                            <string>_getiter_</string>
                             <string>mail</string>
                             <string>part</string>
                           </tuple>
