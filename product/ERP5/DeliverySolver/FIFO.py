@@ -63,9 +63,6 @@ class FIFO(DeliverySolver):
     """
     result = []
     simulation_movement_list = self._getSimulationMovementList()
-    if len(simulation_movement_list):
-      simulation_movement_list.sort(
-        key=lambda x:x.getExplainationValue().getStartDate(), reverse=True)
     remaining_quantity = self.getTotalQuantity() - new_quantity
     for movement in simulation_movement_list:
       if remaining_quantity:
