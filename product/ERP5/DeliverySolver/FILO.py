@@ -27,11 +27,26 @@
 #
 ##############################################################################
 
+import zope.interface
+from Products.ERP5Type import interfaces
 
-from DeliverySolver import DeliverySolver
+from FIFO import FIFO
 
-class FILO(DeliverySolver):
+class FILO(FIFO):
   """
-    The FILO solver reduces deliveted quantity by reducing the quantity of simulation movements from the first order.
+  The FILO solver reduces deliveted quantity by reducing the quantity of
+  simulation movements from the first order.
   """
 
+  # Declarative interfaces
+  zope.interface.implements(interfaces.IDeliverySolver)
+
+  def _getSimulationMovementList(self):
+    """
+    Returns a list of simulation movement sorted from the first order.
+    """
+    simulation_movement_list = self.simulation_movement_list[:]
+    if len(simulation_movement_list):
+      simulation_movement_list.sort(
+        key=lambda x:x.getExplainationValue().getStartDate())
+    return simulation_movement_list
