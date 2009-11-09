@@ -3187,9 +3187,6 @@ class Base( CopyContainer,
   def Description(self):
     return self.getDescription('')
 
-  def Contributors(self):
-    return self.getContributorList('')
-
   def EffectiveDate(self):
     return self.getEffectiveDate('None')
 
