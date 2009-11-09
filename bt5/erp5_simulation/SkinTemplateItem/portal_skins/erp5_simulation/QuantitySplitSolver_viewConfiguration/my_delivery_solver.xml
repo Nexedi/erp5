@@ -275,7 +275,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:zip(here.getPortalDeliverySolverTypeList(),here.getPortalDeliverySolverTypeList())</string> </value>
+            <value> <string>python:here.getPortalObject().portal_solvers.getDeliverySolverTranslatedItemList()</string> </value>
         </item>
       </dictionary>
     </pickle>
