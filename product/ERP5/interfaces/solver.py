@@ -34,9 +34,9 @@ class ISolver(Interface):
 
   This interface must be implemented by all target solvers
   which are used to solve divergences in ERP5 simulation. Documents
-  which implement ITargetSolver provide a solve method.
+  which implement ISolver provide a solve method.
 
-  Besides ITargetSolver static interface definition, target solvers
+  Besides ISolver static interface definition, target solvers
   must support IDeliveryGetter to access simulation movements to solve.
 
   TODO-XXX: 
