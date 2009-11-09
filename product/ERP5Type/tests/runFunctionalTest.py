@@ -50,6 +50,7 @@ email_to_address = 'erp5-report@erp5.org'
 smtp_host = ''
 email_subject = 'ERP5'
 run_only=''
+portal_url = ''
 
 tests_framework_home = os.path.dirname(os.path.abspath(__file__))
 # handle 'system global' instance
@@ -125,9 +126,19 @@ def parseArgs():
 
   portal_url = "http://%s:%d/%s" % (host, port, portal_name)
 
+def openUrl(url):
+  f = urllib2.urlopen(url)
+  file_content = f.read()
+  f.close()
+  return file_content
+
+
 def main():
   setPreference()
   unsubscribeFromTimerService()
+  launchFuntionalTest()
+
+def launchFuntionalTest():
   status = getStatus()
   xvfb_pid = None
   firefox_pid = None
@@ -224,6 +235,7 @@ def runFirefox():
   else:
     # Zelenium 0.8+ or later
     url_string = "%s/portal_tests/core/TestRunner.html?test=../test_suite_html&auto=on&resultsUrl=%s/portal_tests/postResults&__ac_name=%s&__ac_password=%s" % (portal_url, portal_url, user, password)
+
   if run_only:
     url_string = url_string.replace('/portal_tests/', '/portal_tests/%s/' % run_only, 1)
   pid = os.spawnlp(os.P_NOWAIT, "firefox", "firefox", "-profile", profile_dir,
@@ -234,8 +246,8 @@ def runFirefox():
 
 def getStatus():
   try:
-    status = urllib2.urlopen('%s/portal_tests/TestTool_getResults'
-                             % portal_url).read()
+    status = openUrl('%s/portal_tests/TestTool_getResults'
+                             % (portal_url))
   except urllib2.HTTPError, e:
     if e.msg == "No Content" :
       status = ""
@@ -257,7 +269,7 @@ def sendResult():
   global email_subject
   result_uri = urllib2.urlopen('%s/portal_tests/TestTool_getResults' % portal_url).readline()
   print result_uri
-  file_content = urllib2.urlopen(result_uri).read()
+  file_content = openUrl(result_uri)
   passes_re = re.compile('<th[^>]*>Tests passed</th>\n\s*<td[^>]*>([^<]*)')
   failures_re = re.compile('<th[^>]*>Tests failed</th>\n\s*<td[^>]*>([^<]*)')
   image_re = re.compile('<img[^>]*?>')
