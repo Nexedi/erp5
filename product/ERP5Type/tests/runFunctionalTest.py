@@ -31,9 +31,10 @@ Options:
                              URLs will start with:
                                  http://${host}:${port}/${portal_name}/
   --run_only=STRING          run only specified test suite (should be only one)
+  --email_subject            the email subject to be sent 
 Notes:
   * You need to prepepare first test environment by using following command:
-  ./runUnitTest.py --save prepareFunctionalTest.py                           
+  ./runUnitTest.py --save prepareFunctionalTest.py
 """
 
 
@@ -47,6 +48,7 @@ stdout = 0
 debug = 0
 email_to_address = 'erp5-report@erp5.org'
 smtp_host = ''
+email_subject = 'ERP5'
 run_only=''
 
 tests_framework_home = os.path.dirname(os.path.abspath(__file__))
@@ -83,11 +85,13 @@ def parseArgs():
   global portal_name
   global portal_url
   global run_only
+  global email_subject
   try:
     opts, args = getopt.getopt(sys.argv[1:],
           "hsd", ["help", "stdout", "debug",
-                 "email_to_address=", "host=", "port=", "portal_name=", "run_only=",
-                 "smtp_host="] )
+                 "email_to_address=", "host=", "port=", 
+                 "portal_name=", "run_only=",
+                 "email_subject=", "smtp_host="] )
   except getopt.GetoptError, msg:
     usage(sys.stderr, msg)
     sys.exit(2)
@@ -113,6 +117,8 @@ def parseArgs():
       portal_name = arg
     elif opt == "--run_only":
       run_only = arg
+    elif opt == "--email_subject":
+      email_subject = arg
 
   if not stdout:
     send_mail = 1
@@ -248,6 +254,7 @@ def unsubscribeFromTimerService():
                   (portal_url, user, password))
 
 def sendResult():
+  global email_subject
   result_uri = urllib2.urlopen('%s/portal_tests/TestTool_getResults' % portal_url).readline()
   print result_uri
   file_content = urllib2.urlopen(result_uri).read()
@@ -258,7 +265,6 @@ def sendResult():
   result_re = re.compile('<div style="padding-top: 10px;">\s*<p>\s*'
                         '<img.*?</div>\s.*?</div>\s*', re.S)
   error_result_re = re.compile('.*(?:error.gif|title status_failed).*', re.S)
-
   passes = passes_re.search(file_content).group(1)
   failures = failures_re.search(file_content).group(1)
   error_titles = [re.compile('\s+').sub(' ', x).strip()
@@ -266,8 +272,8 @@ def sendResult():
   os.chdir('%s/Products/ERP5' % instance_home)
   revision = pysvn.Client().info('.').revision.number
 
-  subject = "ERP5 r%s: Functional Tests, %s Passes, %s Failures" \
-                                          % (revision, passes, failures)
+  subject = "%s r%s: Functional Tests, %s Passes, %s Failures" \
+              % (email_subject, revision, passes, failures)
   summary = """
 Test Summary
 
