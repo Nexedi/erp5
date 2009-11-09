@@ -2727,7 +2727,7 @@ class Base( CopyContainer,
       try:
         self._checkConsistency(fixit=fixit)
       except Unauthorized:
-        error_list = getUnauthorizedErrorMessage(self)
+        error_list = [getUnauthorizedErrorMessage(self)]
 
     # We are looking inside all instances in constraints, then we check
     # the consistency for all of them
