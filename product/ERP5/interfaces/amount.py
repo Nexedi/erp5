@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2009 Nexedi SARL and Contributors. All Rights Reserved.
@@ -31,117 +32,171 @@ Products.ERP5.interfaces.amount
 
 from zope.interface import Interface
 
-class IAmount(Interface):
-  """Amount interface specification
+class IAmountCore(Interface):
+  """Amount Core interface specification
 
-    An amount represents a quantity of a given resource
-    in a given quantity unit. Optional efficiency can be
-    specified in order to represent a loss ratio to take
-    into account in calculations. Loss ratio is normally
-    used only in Path.
-
-    The Amount interface is useful each time
-    we need to add or substract amounts of resources
-    independently of a movement. This is the case for example
-    for all Transformation related classes.
-
-    Equations:
-      net_quantity = quantity * efficiency
-
-    TODO:
-      1. make sure getTotalPrice has or does not
-         have extra parameters (ex. rounding)
-      2. remove profit_quantity everywhere
-      3. remove target_quantity everywhere
-      4. consider how to make Interface compatible
-         with accessor generation (ex. getResource,
-         getQuantity, etc.)
-      5. consider creating an IPriceable interface
-         which is common to deliveries and amounts
+  IAmountCore defines the minimal set of getters required
+  to implement an amount.
   """
-
-  # Core API
   def getQuantity():
     """
-      Returns the quantity of the resource
-      in the unit specified by the Amount
+    Returns the quantity of the resource
+    in the unit specified by the Amount
+
+    NOTE: declaration is redundant with IAmountGetter
     """
 
   def getResource():
     """
-      Returns the resource category relative URL
-      of the Amount
+    Returns the resource category relative URL
+    of the Amount
+
+    NOTE: declaration is redundant with IAmountGetter
     """
 
   def getQuantityUnit():
     """
-      Returns the quantity unit category relative URL
-      of the Amount
+    Returns the quantity unit category relative URL
+    of the Amount
+
+    NOTE: declaration is redundant with IAmountGetter
     """
 
   def isCancellationAmount():
     """
-      A cancellation amount must be interpreted
-      reversely wrt. to the sign of quantity.
+    A cancellation amount must be interpreted
+    reversely wrt. to the sign of quantity.
 
-      For example, a negative credit for a cancellation
-      amount is a negative credit, not a positive
-      debit.
+    For example, a negative credit for a cancellation
+    amount is a negative credit, not a positive
+    debit.
 
-      A negative production quantity for a cancellation
-      amount is a cancelled production, not
-      a consumption
+    A negative production quantity for a cancellation
+    amount is a cancelled production, not
+    a consumption
+
+    NOTE: declaration is redundant with IAmountGetter
     """
 
-  # Net Quantity API
   def getEfficiency():
     """
-      Returns the ratio of loss for the given amount. This
-      is only used in Path such as Transformation. In other
-      words, efficiency of movements is always 100%.
+    Returns the ratio of loss for the given amount. This
+    is only used in Path such as Transformation. In other
+    words, efficiency of movements is always 100%.
+
+    NOTE: declaration is redundant with IAmountGetter
     """
 
-  def getNetQuantity():
-    """
-      Returns the quantity multiplied by the efficiency ratio.
-    """
-
-  # Price API
-  def getPrice():
-    """
-      Returns the unit price of the resource
-    """
-  
-  def getTotalPrice():
-    """
-      Returns total price ie. the unit price of the resource
-      multiplied by the quantity.
-    """
-
-  # Conversion API
-  def getConvertedQuantity():
-    """
-      Returns the quantity of the resource converted in the
-      management unit of the resource.
-    """
-
-  def getNetConvertedQuantity():
-    """
-      Returns the net quantity of the resource converted in the
-      management unit of the resource.
-    """
-
-  # Transformation API
   def getBaseContributionList():
-    """The list of bases this amount contributes to. 
+    """
+    The list of bases this amount contributes to. 
+
+    XXX: explain better
     """
 
   def getBaseApplicationList():
-    """The list of bases this amount has been applied on. Only set if the
+    """
+    The list of bases this amount has been applied on. Only set if the
     amount comes from a transformation.
+
+    XXX: explain better
     """
 
-  # Make it possible to add amounts
+class IAmountConversion(Interface):
+  """Amount Conversion interface specification
+
+  IAmountConversion defines methods which can be used
+  to convert an amount from one quantity unit and to another,
+  taking into account efficiency.
+  """
+
+  def getNetQuantity():
+    """
+    Take into account efficiency in quantity. This is
+    only useful in Path which define a loss ratio, such
+    as Transformation. 
+
+    Formula:
+      net_quantity = quantity / efficiency
+    """
+
+  def getConvertedQuantity(quantity_unit=None, measure=None):
+    """
+    Returns the quantity of the resource converted in the
+    default management unit of the resource.
+
+    quantity_unit -- optional quantity unit to use
+                     for conversion.
+
+    measure -- optional quantity unit to use
+               for conversion.
+    """
+
+  def getNetConvertedQuantity(quantity_unit=None, measure=None):
+    """
+    Returns the net quantity of the resource converted in the
+    default management unit of the resource.
+
+    quantity_unit -- optional quantity unit to use
+                     for conversion.
+
+    measure -- optional quantity unit to use
+               for conversion.
+    """
+
+class IAmountPrice(Interface):
+  """Amount Price interface specification
+
+  IAmountPrice defines methods to compute total price
+  and unit price of a resource, taking into account 
+  contributions and roundings.
+  """
+  def getPrice():
+    """
+    Returns the input unit price of the resource
+
+    NOTE: redundant with IPriceGetter
+    """
+
+  def getUnitPrice(base_contribution=None, rounding=False):
+    """
+    Returns the unit price of the resource, taking into 
+    account rounding and contributions (ex. taxes).
+
+    base_contribution -- optional base_contribution.
+                If defined, a complex process is launched
+                to add or remove to the price various amounts
+                calculated from applicable trade models if 
+                any.
+                
+    rounding -- optional rounding parameter. If set to True,
+                find and applies appropriate rounding model.
+    """
+
+  def getTotalPrice(base_contribution=None, rounding=False):
+    """
+    Returns total price ie. the unit price of the resource
+    multiplied by the quantity, taking into 
+    account rounding and contributions (ex. taxes).
+
+    base_contribution -- optional base_contribution.
+                If defined, a complex process is launched
+                to add or remove to the price various amounts
+                calculated from applicable trade models if 
+                any.
+                
+    rounding -- optional rounding parameter. If set to True,
+                find and applies appropriate rounding model.
+    """
+
+class IAmountArithmetic(Interface):
+  """Amount Arithmetic interface specification
+
+  IAmountArithmetic defines methods to add, substract,
+  multiply or device amounts of resources. No rounding
+  should happen. All amounts should be converted to 
+  the default management unit using getNetConvertedQuantity.
+  """
   def __add__(value):
     """Add an amount to another amount
 
@@ -165,3 +220,26 @@ class IAmount(Interface):
 
       'value' is a float
     """
+
+class IAmount(IAmountCore, IAmountConversion, IAmountPrice, IAmountArithmetic):
+  """Amount interface specification
+
+    An amount represents a quantity of a given resource
+    in a given quantity unit. Optional efficiency can be
+    specified in order to represent a loss ratio to take
+    into account in calculations. Loss ratio is normally
+    used only in Path.
+
+    The Amount interface is useful each time
+    one needs to add or substract amounts of resources
+    independently of a movement. This is the case for example
+    for all Transformation related classes.
+
+    TODO-XXX:
+      1. Try to merge IAmountPrice and IPriceable
+         interface (used for deliveried)
+      2. remove profit_quantity and target_quantity everywhere
+      3. consider how to make Interface compatible
+         with accessor generation (ex. getResource,
+         getQuantity, etc.)
+  """
