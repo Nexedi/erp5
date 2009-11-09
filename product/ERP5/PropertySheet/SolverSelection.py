@@ -48,3 +48,5 @@ class SolverSelection:
        'default'     : (),
        'mode'        : 'w' },
   )
+
+  _categories = ('solver',)
