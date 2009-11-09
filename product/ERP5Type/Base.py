@@ -42,7 +42,7 @@ from Acquisition import aq_base, aq_inner, aq_acquire, aq_chain
 import OFS.History
 from OFS.SimpleItem import SimpleItem
 from OFS.PropertyManager import PropertyManager
-from zExceptions import NotFound
+from zExceptions import NotFound, Unauthorized
 
 from ZopePatch import ERP5PropertyManager
 
@@ -79,6 +79,8 @@ from Products.CMFActivity.ActiveObject import ActiveObject
 from Products.ERP5Type.Accessor.Accessor import Accessor as Method
 from Products.ERP5Type.Accessor.TypeDefinition import asDate
 from Products.ERP5Type.Message import Message
+from Products.ERP5Type.ConsistencyMessage import ConsistencyMessage
+from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 
 from zope.interface import classImplementsOnly, implementedBy
 
@@ -2712,16 +2714,41 @@ class Base( CopyContainer,
     This method looks the constraints defined inside the propertySheets then
     check each of them
 
+    Here, we try to check consistency without security, because
+    consistency should not depend on the user. But if the user does not
+    have enough permission, the detail of the error should be hidden.
     """
-    error_list = self._checkConsistency(fixit = fixit)
+    def getUnauthorizedErrorMessage(constraint):
+      return ConsistencyMessage(constraint,
+                                object_relative_url=self.getRelativeUrl(),
+                                message='There is something wrong.')
+    error_list = UnrestrictedMethod(self._checkConsistency)(fixit=fixit)
+    if len(error_list) > 0:
+      try:
+        self._checkConsistency(fixit=fixit)
+      except Unauthorized:
+        error_list = getUnauthorizedErrorMessage(self)
+
     # We are looking inside all instances in constraints, then we check
     # the consistency for all of them
 
     for constraint_instance in self.constraints:
       if fixit:
-        error_list += constraint_instance.fixConsistency(self)
+        error_list2 = UnrestrictedMethod(
+          constraint_instance.fixConsistency)(self)
       else:
-        error_list += constraint_instance.checkConsistency(self)
+        error_list2 = UnrestrictedMethod(
+          constraint_instance.checkConsistency)(self)
+      if len(error_list2) > 0:
+        try:
+          if fixit:
+            constraint_instance.fixConsistency(self)
+          else:
+            constraint_instance.checkConsistency(self)
+        except Unauthorized:
+          error_list.append(getUnauthorizedErrorMessage(constraint_instance))
+        else:
+          error_list += error_list2
 
     if fixit and len(error_list) > 0:
       self.reindexObject()
