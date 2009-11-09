@@ -34,8 +34,7 @@ import os
 import transaction
 import Products.ERP5Type
 from Products.MailHost.MailHost import MailHost
-from zLOG import LOG
-
+from email import message_from_string
 import backportUnittest
 
 class FileUpload(file):
@@ -62,8 +61,13 @@ class DummyMailHost(MailHost):
   _message_list = []
   def _send( self, mfrom, mto, messageText ):
     """Record message in _last_message."""
+    message_text = messageText
+    for part in message_from_string(messageText).walk():
+      if part.get_content_type() in ['text/plain', 'text/html' ] \
+             and not part.is_multipart():
+        message_text = part.get_payload(decode=1)
     self._previous_message = self._last_message
-    self._last_message = (mfrom, mto, messageText)
+    self._last_message = (mfrom, mto, message_text)
     self._message_list.append(self._last_message)
   def getMessageList(self):
     """ Return message list"""
