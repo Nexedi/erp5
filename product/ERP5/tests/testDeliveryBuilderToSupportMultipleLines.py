@@ -63,10 +63,8 @@ class TestNestedLineMixin(TestSaleInvoiceMixin):
     # Necessary to allow Invoice Line to be included in Invoice Line.
     self.allowInvoiceLineContentTypeInInvoiceLine()
 
+  @UnrestrictedMethod
   def allowInvoiceLineContentTypeInInvoiceLine(self):
-    return UnrestrictedMethod(self._allowInvoiceLineContentTypeInInvoiceLine)()
-
-  def _allowInvoiceLineContentTypeInInvoiceLine(self):
     invoice_line_type = self.portal.portal_types['Invoice Line']
     content_type_set = set(invoice_line_type.getTypeAllowedContentTypeList())
     content_type_set.add('Invoice Line')
@@ -82,10 +80,8 @@ class TestNestedLineMixin(TestSaleInvoiceMixin):
   def stepUpdateBuilderForMultipleLineList(self, **kw):
     self.updateBuilderForMultipleLineList()
 
+  @UnrestrictedMethod
   def updateBuilderForMultipleLineList(self):
-    return UnrestrictedMethod(self._updateBuilderForMultipleLineList)()
-
-  def _updateBuilderForMultipleLineList(self):
     delivery_builder = getattr(self.portal.portal_deliveries, self.delivery_builder_id)
 
     delivery_builder.deleteContent(delivery_builder.contentIds())

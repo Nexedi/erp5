@@ -79,13 +79,10 @@ class TestConversionInSimulation(AccountingTestCase,ERP5TypeTestCase):
       ('receivable', 'customer', 'supplier', -1.0 - vat_rate),
       ('collected_vat', 'receivable_vat', 'refundable_vat', vat_rate),
       )
-   
-		 
+
+  @UnrestrictedMethod
   def createCategories(self):
     """Create the categories for our test. """
-    return UnrestrictedMethod(self._createCategories)()
-  def _createCategories(self):
-    # create categories
     for cat_string in self.getNeededCategoryList() :
       base_cat = cat_string.split("/")[0]
       path = self.getPortal().portal_categories[base_cat]
@@ -173,11 +170,9 @@ class TestConversionInSimulation(AccountingTestCase,ERP5TypeTestCase):
 	    'erp5_invoicing',
             'erp5_simplified_invoicing'
             )
-  def createInvoiceTransactionRule(self, resource=None):
-    return UnrestrictedMethod(
-        self._createSaleInvoiceTransactionRule)(resource=resource)
 
-  def _createSaleInvoiceTransactionRule(self, resource=None):
+  @UnrestrictedMethod
+  def createInvoiceTransactionRule(self, resource=None):
     """Create a sale invoice transaction rule with only one cell for
     product_line/apparel and default_region
     The accounting rule cell will have the provided resource, but this his more

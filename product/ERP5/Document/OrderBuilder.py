@@ -150,7 +150,8 @@ class OrderBuilder(XMLObject, Amount, Predicate):
       delivery_module = getattr(self.getPortalObject(), self.getDeliveryModule())
       getattr(delivery_module, delivery_module_before_building_script_id)()
 
-  def searchMovementList(self, *args, **kw):
+  @UnrestrictedMethod
+  def searchMovementList(self, applied_rule_uid=None, **kw):
     """
       Defines how to query all Simulation Movements which meet certain
       criteria (including the above path path definition).
@@ -159,11 +160,6 @@ class OrderBuilder(XMLObject, Amount, Predicate):
       Then, call script simulation_select_method to restrict
       movement_list.
     """
-    searchMovementList = UnrestrictedMethod(self._searchMovementList)
-    return searchMovementList(*args, **kw)
-
-  def _searchMovementList(self, applied_rule_uid=None,**kw):
-    """This method is wrapped by UnrestrictedMethod."""
     from Products.ERP5Type.Document import newTempMovement
     movement_list = []
     for attribute, method in [('node_uid', 'getDestinationUid'),
@@ -290,16 +286,13 @@ class OrderBuilder(XMLObject, Amount, Predicate):
           break
     return instance, property_dict
 
-  def buildDeliveryList(self, *args, **kw):
+  @UnrestrictedMethod
+  def buildDeliveryList(self, movement_group_node,
+                        delivery_relative_url_list=None,
+                        movement_list=None, **kw):
     """
       Build deliveries from a list of movements
     """
-    buildDeliveryList = UnrestrictedMethod(self._buildDeliveryList)
-    return buildDeliveryList(*args, **kw)
-
-  def _buildDeliveryList(self, movement_group_node, delivery_relative_url_list=None,
-                         movement_list=None,**kw):
-    """This method is wrapped by UnrestrictedMethod."""
     # Parameter initialization
     if delivery_relative_url_list is None:
       delivery_relative_url_list = []
@@ -686,17 +679,10 @@ class OrderBuilder(XMLObject, Amount, Predicate):
       delivery_movement._edit(force_update=1, **property_dict)
       simulation_movement.edit(delivery_ratio=1)
 
-  def callAfterBuildingScript(self, *args, **kw):
+  @UnrestrictedMethod
+  def callAfterBuildingScript(self, delivery_list, movement_list=None, **kw):
     """
       Call script on each delivery built.
-    """
-    callAfterBuildingScript = UnrestrictedMethod(self._callAfterBuildingScript)
-    return callAfterBuildingScript(*args, **kw)
-
-  def _callAfterBuildingScript(self, delivery_list, movement_list=None, **kw):
-    """
-      Call script on each delivery built.
-      This method is wrapped by UnrestrictedMethod.
     """
     if not len(delivery_list):
       return

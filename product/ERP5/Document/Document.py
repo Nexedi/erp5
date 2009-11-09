@@ -45,7 +45,7 @@ from Products.ERP5Type.ExtensibleTraversable import ExtensibleTraversableMixIn
 from Products.ERP5Type.Cache import getReadOnlyTransactionCache
 from Products.ERP5.Document.Url import UrlMixIn
 from Products.ERP5.Tool.ContributionTool import MAX_REPEAT
-from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
+from Products.ERP5Type.UnrestrictedMethod import unrestricted_apply
 from Products.ZSQLCatalog.SQLCatalog import SQLQuery
 from AccessControl import Unauthorized
 import zope.interface
@@ -195,8 +195,7 @@ class PermanentURLMixIn(ExtensibleTraversableMixIn):
     # but we may ask him to login if such a document exists
     isAuthorizationForced = getattr(self, 'isAuthorizationForced', None)
     if isAuthorizationForced is not None and isAuthorizationForced():
-      getDocumentValue = UnrestrictedMethod(self.getDocumentValue)
-      if getDocumentValue(name=name, portal=portal) is not None:
+      if unrestricted_apply(self.getDocumentValue, (name, portal)) is not None:
         # force user to login as specified in Web Section
         raise Unauthorized
 

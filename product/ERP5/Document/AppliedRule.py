@@ -85,6 +85,7 @@ class AppliedRule(XMLObject):
       return self.getSpecialiseValue().isAccountable(movement)
 
     security.declareProtected(Permissions.ModifyPortalContent, 'expand')
+    @UnrestrictedMethod
     def expand(self, **kw):
       """
         Expands the current movement downward.
@@ -94,10 +95,6 @@ class AppliedRule(XMLObject):
         An applied rule can be expanded only if its parent movement
         is expanded.
       """
-      expand = UnrestrictedMethod(self._expand)
-      return expand(**kw)
-
-    def _expand(self, **kw):
       tv = getTransactionalVariable(self)
       cache = tv.setdefault(TREE_DELIVERED_CACHE_KEY, {})
       cache_enabled = cache.get(TREE_DELIVERED_CACHE_ENABLED, 0)

@@ -348,16 +348,13 @@ class Delivery(XMLObject, ImmobilisationDelivery):
          divergence_list.extend(movement.getDivergenceList())
       return divergence_list
 
+    @UnrestrictedMethod
     def updateCausalityState(self, **kw):
       """
       This is often called as an activity, it will check if the
       deliver is convergent, and if so it will put the delivery
       in a solved state, if not convergent in a diverged state
       """
-      updateCausalityState = UnrestrictedMethod(self._updateCausalityState)
-      return updateCausalityState(**kw)
-
-    def _updateCausalityState(self, **kw):
       if getattr(self, 'diverge', None) is not None \
             and getattr(self, 'converge', None) is not None:
         if self.isDivergent(**kw):
@@ -667,7 +664,9 @@ class Delivery(XMLObject, ImmobilisationDelivery):
 
     ##########################################################################
     # Applied Rule stuff
-    def updateAppliedRule(self, *args, **kw):
+    @UnrestrictedMethod
+    def updateAppliedRule(self, rule_reference=None, rule_id=None, force=0,
+                          **kw):
       """
       Create a new Applied Rule if none is related, or call expand
       on the existing one.
@@ -675,11 +674,6 @@ class Delivery(XMLObject, ImmobilisationDelivery):
       The chosen applied rule will be the validated rule with reference ==
       rule_reference, and the higher version number.
       """
-      updateAppliedRule = UnrestrictedMethod(self._updateAppliedRule)
-      return updateAppliedRule(*args, **kw)
-
-    def _updateAppliedRule(self, rule_reference=None, rule_id=None, force=0,
-                           **kw):
       if rule_id is not None:
         from warnings import warn
         warn('rule_id to updateAppliedRule is deprecated; use rule_reference instead',
@@ -752,16 +746,13 @@ class Delivery(XMLObject, ImmobilisationDelivery):
           activate_kw=activate_kw, **kw)
 
     security.declareProtected(Permissions.ModifyPortalContent, 'expand')
-    def expand(self, *args,**kw):
+    @UnrestrictedMethod
+    def expand(self, applied_rule_id=None, force=0, activate_kw=None,**kw):
       """
         Reexpand applied rule
 
         Also reexpand all rules related to movements
       """
-      expand = UnrestrictedMethod(self._expand)
-      return expand(*args, **kw)
-
-    def _expand(self, applied_rule_id=None, force=0, activate_kw=None,**kw):
       excluded_rule_path_list = []
       if applied_rule_id is not None:
         my_applied_rule = self.portal_simulation.get(applied_rule_id, None)

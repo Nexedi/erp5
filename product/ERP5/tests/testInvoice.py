@@ -83,12 +83,9 @@ class TestInvoiceMixin(TestPackingListMixin,
             'erp5_invoicing', 'erp5_simplified_invoicing', 'erp5_apparel',
             'erp5_project')
 
+  @UnrestrictedMethod
   def createCategories(self):
     """Create the categories for our test. """
-    return UnrestrictedMethod(self._createCategories)()
-
-  def _createCategories(self):
-    # create categories
     for cat_string in self.getNeededCategoryList() :
       base_cat = cat_string.split("/")[0]
       path = self.getPortal().portal_categories[base_cat]
@@ -151,11 +148,8 @@ class TestInvoiceMixin(TestPackingListMixin,
     """Create the rule for accounting. """
     self.createInvoiceTransactionRule(resource=sequence.get('resource'))
 
+  @UnrestrictedMethod
   def createInvoiceTransactionRule(self, resource=None):
-    return UnrestrictedMethod(
-        self._createSaleInvoiceTransactionRule)(resource=resource)
-
-  def _createSaleInvoiceTransactionRule(self, resource=None):
     """Create a sale invoice transaction rule with only one cell for
     product_line/apparel and default_region
     The accounting rule cell will have the provided resource, but this his more
@@ -2499,16 +2493,13 @@ class TestSaleInvoice(TestSaleInvoiceMixin, TestInvoice, ERP5TypeTestCase):
 
   # fix inheritance
   login = TestInvoiceMixin.login
-  createCategories = TestInvoiceMixin.createCategories
 
-
-  def _createCategories(self):
+  @UnrestrictedMethod
+  def createCategories(self):
     TestPackingListMixin.createCategories(self)
-    TestInvoiceMixin._createCategories(self)
+    TestInvoiceMixin.createCategories(self)
 
   getNeededCategoryList = TestInvoiceMixin.getNeededCategoryList
-  
-  
 
   def test_01_SimpleInvoice(self, quiet=quiet):
     """

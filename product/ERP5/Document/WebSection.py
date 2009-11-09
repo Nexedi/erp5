@@ -33,7 +33,7 @@ from Products.ERP5.Document.Domain import Domain
 from Products.ERP5.Document.Document import PermanentURLMixIn
 from Acquisition import ImplicitAcquisitionWrapper, aq_base, aq_inner
 from Products.ERP5Type.Base import TempBase
-from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
+from Products.ERP5Type.UnrestrictedMethod import unrestricted_apply
 from AccessControl import Unauthorized
 from zLOG import LOG, WARNING
 import sys
@@ -183,8 +183,7 @@ class WebSection(Domain, PermanentURLMixIn):
             # but we may ask him to login if such a document exists
             isAuthorizationForced = getattr(self, 'isAuthorizationForced', None)
             if isAuthorizationForced is not None and isAuthorizationForced():
-              getDefaultDocumentValue = UnrestrictedMethod(self.getDefaultDocumentValue)
-              if getDefaultDocumentValue() is not None:
+              if unrestricted_apply(self.getDefaultDocumentValue) is not None:
                 # force user to login as specified in Web Section
                 raise Unauthorized
           if document is not None and document.getReference() is not None:

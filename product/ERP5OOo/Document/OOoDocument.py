@@ -44,7 +44,6 @@ from Products.CMFCore.utils import getToolByName, _setCacheHeaders,\
     _ViewEmulator
 from Products.ERP5Type import Permissions, PropertySheet, Constraint
 from Products.ERP5Type.Cache import CachingMethod
-from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 from Products.ERP5.Document.File import File
 from Products.ERP5.Document.Document import PermanentURLMixIn
 from Products.ERP5.Document.Document import ConversionError

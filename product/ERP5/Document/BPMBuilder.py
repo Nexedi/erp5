@@ -137,16 +137,12 @@ class BPMBuilder(Alarm):
     if self.isAlarmNotificationMode():
       self.activate(after_tag=tag).notify(include_active=True)
 
-  def searchMovementList(self, *args, **kw):
+  @UnrestrictedMethod
+  def searchMovementList(self, **kw):
     """
       defines how to query all input movements which meet certain criteria
       First, select movement matching to criteria define on Builder
     """
-    searchMovementList = UnrestrictedMethod(self._searchMovementList)
-    return searchMovementList(*args, **kw)
-
-  def _searchMovementList(self, **kw):
-    """This method is wrapped by UnrestrictedMethod."""
     input_movement_value_list = []
     # We only search Simulation Movement - Luke do not know why...
     kw['portal_type'] = 'Simulation Movement' # blah!
@@ -305,16 +301,13 @@ class BPMBuilder(Alarm):
           break
     return instance, property_dict
 
-  def buildDeliveryList(self, *args, **kw):
+  @UnrestrictedMethod
+  def buildDeliveryList(self, movement_group_node,
+                        delivery_relative_url_list=None,
+                        movement_list=None, **kw):
     """
       Build deliveries from a list of movements
     """
-    buildDeliveryList = UnrestrictedMethod(self._buildDeliveryList)
-    return buildDeliveryList(*args, **kw)
-
-  def _buildDeliveryList(self, movement_group_node, delivery_relative_url_list=None,
-                         movement_list=None,**kw):
-    """This method is wrapped by UnrestrictedMethod. XXX do docstring which have a sense"""
     # Parameter initialization
     if delivery_relative_url_list is None:
       delivery_relative_url_list = []
@@ -676,17 +669,10 @@ class BPMBuilder(Alarm):
                             update_existing_movement=update_existing_movement,
                             force_update=force_update, activate_kw=activate_kw)
 
-  def callAfterBuildingScript(self, *args, **kw):
+  @UnrestrictedMethod
+  def callAfterBuildingScript(self, delivery_list, movement_list=None, **kw):
     """
       Call script on each delivery built.
-    """
-    callAfterBuildingScript = UnrestrictedMethod(self._callAfterBuildingScript)
-    return callAfterBuildingScript(*args, **kw)
-
-  def _callAfterBuildingScript(self, delivery_list, movement_list=None, **kw):
-    """
-      Call script on each delivery built.
-      This method is wrapped by UnrestrictedMethod.
     """
     if not len(delivery_list):
       return

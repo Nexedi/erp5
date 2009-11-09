@@ -98,7 +98,8 @@ class DeliveryBuilder(OrderBuilder):
     """
     pass
 
-  def searchMovementList(self, *args, **kw):
+  @UnrestrictedMethod
+  def searchMovementList(self, applied_rule_uid=None, **kw):
     """
       defines how to query all Simulation Movements which meet certain criteria
       (including the above path path definition).
@@ -106,11 +107,6 @@ class DeliveryBuilder(OrderBuilder):
       First, select movement matching to criteria define on DeliveryBuilder
       Then, call script simulation_select_method to restrict movement_list
     """
-    searchMovementList = UnrestrictedMethod(self._searchMovementList)
-    return searchMovementList(*args, **kw)
-
-  def _searchMovementList(self, applied_rule_uid=None,**kw):
-    """This method is wrapped by UnrestrictedMethod."""
     movement_list = []
     # We only search Simulation Movement
     kw['portal_type'] = 'Simulation Movement'
@@ -180,16 +176,13 @@ class DeliveryBuilder(OrderBuilder):
       delivery_relative_url,
       divergence_to_adopt_list=divergence_to_adopt_list)
 
-  def solveDeliveryGroupDivergence(self, *args, **kw):
+  @UnrestrictedMethod
+  def solveDeliveryGroupDivergence(self, delivery_relative_url,
+                                   property_dict=None):
     """
       solve each divergence according to users decision (accept, adopt
       or do nothing).
     """
-    solveDeliveryGroupDivergence = UnrestrictedMethod(self._solveDeliveryGroupDivergence)
-    return solveDeliveryGroupDivergence(*args, **kw)
-
-  def _solveDeliveryGroupDivergence(self, delivery_relative_url,
-                                    property_dict=None):
     if property_dict in (None, {}):
       return
     delivery = self.getPortalObject().restrictedTraverse(delivery_relative_url)
@@ -217,18 +210,14 @@ class DeliveryBuilder(OrderBuilder):
     self._solveDivergence(delivery_relative_url,
                           divergence_to_accept_list=divergence_to_accept_list)
 
-  def solveDivergence(self, *args, **kw):
-    """
-      solve each divergence according to users decision (accept, adopt
-      or do nothing).
-    """
-    solveDivergence = UnrestrictedMethod(self._solveDivergence)
-    return solveDivergence(*args, **kw)
-
   def _solveDivergence(self, delivery_relative_url,
                        divergence_to_accept_list=None,
                        divergence_to_adopt_list=None,
                        **kw):
+    """
+      solve each divergence according to users decision (accept, adopt
+      or do nothing).
+    """
     # We have to get a delivery, else, raise a Error
     delivery = self.getPortalObject().restrictedTraverse(delivery_relative_url)
 
@@ -328,3 +317,5 @@ class DeliveryBuilder(OrderBuilder):
     self.callAfterBuildingScript(new_delivery_list, simulation_movement_list)
 
     return delivery_list
+
+  solveDivergence = UnrestrictedMethod(_solveDivergence)
