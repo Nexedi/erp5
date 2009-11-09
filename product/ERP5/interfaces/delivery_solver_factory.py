@@ -5,10 +5,10 @@
 #                    Jean-Paul Smets-Solanes <jp@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
-# programmers who take the whole responsability of assessing all potential
+# programmers who take the whole responsibility of assessing all potential
 # consequences resulting from its eventual inadequacies and bugs
 # End users who are looking for a ready-to-use solution with commercial
-# garantees and support are strongly adviced to contract a Free Software
+# guarantees and support are strongly adviced to contract a Free Software
 # Service Company
 #
 # This program is Free Software; you can redistribute it and/or
@@ -39,7 +39,7 @@ class IDeliverySolverFactory(Interface):
   NOTE:
     - wouldn't it be better to use ERP5 document
       classes for delivery solvers.
-      (only meaningful reason: use activities to 
+      (only meaningful reason: use activities to
       setTotalQuantity on 10,000+ movements)
   """
 
@@ -49,7 +49,7 @@ class IDeliverySolverFactory(Interface):
     class_name and with appropriate parameters.
 
     class_name -- the class name of the delivery solver.
-    
+
     movement_list -- movements to initialise the instance with
     """
 
@@ -64,7 +64,7 @@ class IDeliverySolverFactory(Interface):
     delivery solvers. Use this method to fill listfields in user interface
     forms.
 
-    class_name_list -- optionnal parameter to filter results only
+    class_name_list -- optional parameter to filter results only
                        with provided class names
     """
 
