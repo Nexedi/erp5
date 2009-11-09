@@ -865,10 +865,6 @@ class Resource(XMLMatrix, Variated):
       if quantity_unit_value is None:
         return ()
 
-      quantity_unit = quantity_unit_value.getCategoryRelativeUrl()
-      default = self.getDefaultMeasure(quantity_unit)
-      if default is not None:
-        default = default.getRelativeUrl()
       metric_type_map = {} # duplicate metric_type are not valid
 
       for measure in self.getMeasureList():
@@ -877,24 +873,24 @@ class Resource(XMLMatrix, Variated):
           metric_type_map[metric_type] = None
         else:
           metric_type_map[metric_type] = measure
-        if measure.getRelativeUrl() == default:
-          quantity_unit = ''
 
       insert_list = []
       for measure in metric_type_map.itervalues():
         if measure is not None:
           insert_list += measure.asCatalogRowList()
 
-      metric_type = quantity_unit.split('/', 1)[0]
-      if metric_type and metric_type not in metric_type_map:
-        # At this point, we know there is no default measure and we must add
-        # a row for the management unit, with the resource's uid as uid, and
-        # a generic metric_type.
-        quantity = quantity_unit_value.getProperty('quantity')
-        metric_type_uid = self.getPortalObject().portal_categories \
-                              .getCategoryUid(metric_type, 'metric_type')
-        if quantity and metric_type_uid:
-          uid = self.getUid()
-          insert_list += (uid, uid, '^', metric_type_uid, float(quantity)),
+      quantity_unit = quantity_unit_value.getCategoryRelativeUrl()
+      if self.getDefaultMeasure(quantity_unit) is None:
+          metric_type = quantity_unit.split('/', 1)[0]
+          if metric_type and metric_type not in metric_type_map:
+            # At this point, we know there is no default measure and we must add
+            # a row for the management unit, with the resource's uid as uid, and
+            # a generic metric_type.
+            quantity = quantity_unit_value.getProperty('quantity')
+            metric_type_uid = self.getPortalObject().portal_categories \
+                                  .getCategoryUid(metric_type, 'metric_type')
+            if quantity and metric_type_uid:
+              uid = self.getUid()
+              insert_list += (uid, uid, '^', metric_type_uid, float(quantity)),
 
       return insert_list
