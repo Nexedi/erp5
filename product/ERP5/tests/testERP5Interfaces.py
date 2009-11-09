@@ -37,7 +37,6 @@ implements_tuple_list = [
   (('Products.ERP5Type.Document.BusinessPath','BusinessPath'), 'IArrowBase'),
   (('Products.ERP5Type.Document.BusinessPath','BusinessPath'), 'IBusinessPath'),
   (('Products.ERP5Type.Document.BusinessPath','BusinessPath'), 'ICategoryAccessProvider'),
-  (('Products.ERP5Type.Document.DeliveryLine', 'DeliveryLine'), 'IDivergenceSolver'),
   (('Products.ERP5Type.Document.TradeCondition','TradeCondition'), 'ITransformation'),
   (('Products.ERP5Type.Document.TradeModelCell','TradeModelCell'), 'ITransformation'),
   (('Products.ERP5Type.Document.TradeModelCell','TradeModelCell'), 'IVariated'),
