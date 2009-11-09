@@ -66,9 +66,18 @@ def UnrestrictedMethod(function):
 
   This method is dangerous. Enough said. Be careful.
   """
-  return lambda *args, **kw: _unrestricted_apply(function, args, kw)
+  wrapper = lambda *args, **kw: unrestricted_apply(function, args, kw)
+  wrapper.__doc__ = function.__doc__
+  wrapper.__name__ = function.__name__
+  return wrapper
 
-def _unrestricted_apply(function, args, kw):
+def unrestricted_apply(function, args=(), kw={}):
+    """Function to bypass all security checks
+
+    This function is as dangerous as 'UnrestrictedMethod' decorator. Read its
+    docstring for more information. Never use this, until you are 100% certain
+    that you have no other way.
+    """
     security_manager = getSecurityManager()
     user = security_manager.getUser()
     anonymous = (user.getUserName() == 'Anonymous User')
