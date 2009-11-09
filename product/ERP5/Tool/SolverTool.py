@@ -35,6 +35,8 @@ from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass, DTMLFile
 from Products.ERP5Type import Permissions, interfaces
 from Products.ERP5Type.Tool.BaseTool import BaseTool
+from Products.ERP5Type.Message import translateString
+from Products.ERP5 import DeliverySolver
 
 from Products.ERP5 import _dtmldir
 
@@ -91,22 +93,30 @@ class SolverTool(BaseTool):
   def getDeliverySolverClassNameList(self):
     """
     """
-    raise NotImplementedError
+    # XXX Hardcoded for now. We need a new registration system for
+    # delivery solvers.
+    return ['FIFO', 'FILO',]
 
   def getDeliverySolverTranslatedItemList(self, class_name_list=None):
     """
     """
-    raise NotImplementedError
+    return [(x, self.getDeliverySolverTranslatedTitle(x)) \
+            for x in self.getDeliverySolverClassNameList() \
+            if class_name_list is None or x in class_name_list]
 
   def getDeliverySolverTranslatedTitle(self, class_name):
     """
     """
-    raise NotImplementedError
+    __import__('%s.%s' % (DeliverySolver.__name__, class_name))
+    return translateString(
+      getattr(getattr(DeliverySolver, class_name), class_name).title)
 
   def getDeliverySolverTranslatedDescription(self, class_name):
     """
     """
-    raise NotImplementedError
+    __import__('%s.%s' % (DeliverySolver.__name__, class_name))
+    return translateString(
+      getattr(getattr(DeliverySolver, class_name), class_name).__doc__)
 
   # IDivergenceController implementation
   def isDivergent(self, delivery_or_movement=None):
