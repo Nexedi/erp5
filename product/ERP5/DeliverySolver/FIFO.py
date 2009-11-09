@@ -33,7 +33,8 @@ from DeliverySolver import DeliverySolver
 
 class FIFO(DeliverySolver):
   """
-    The FIFO solver reduces deliveted quantity by reducing the quantity of simulation movements from the last order.
+  The FIFO solver reduces deliveted quantity by reducing the quantity of
+  simulation movements from the last order.
   """
 
   # Declarative interfaces
@@ -45,8 +46,8 @@ class FIFO(DeliverySolver):
       Move this to mixin
     """
     self.simulation_movement_list = simulation_movement_list
-  
-  def getTotalQuantity():
+
+  def getTotalQuantity(self):
     """
       Move this to mixin
     """
@@ -59,22 +60,33 @@ class FIFO(DeliverySolver):
     """
     """
     result = []
-    def sortByOrderStartDate(a, b);
-      return cmp(a.getExplainationValue().getStartDate() b.getExplainationValue().getStartDate())
-    simulation_movement_list.sort(sortByOrderStartDate)
-    simulation_movement_list.reverse()
+    simulation_movement_list = self._getSimulationMovementList()
+    if len(simulation_movement_list):
+      simulation_movement_list.sort(
+        key=lambda x:x.getExplainationValue().getStartDate(), reverse=True)
     remaining_quantity = self.getTotalQuantity() - new_quantity
-    for movement in self.simulation_movement_list:
+    for movement in simulation_movement_list:
       if remaining_quantity:
-        if movement.getQuantity() < remaining_quantity:
-          result.append((movement, movement.getQuantity()))
-          remaining_quantity -= movement.getQuantity()
+        quantity = movement.getQuantity()
+        if quantity < remaining_quantity:
+          result.append((movement, quantity))
+          remaining_quantity -= quantity
           movement.setQuantity(0)
         else:
-          result.append((movement, remaining_quantity)) 
-          movement.setQuantity(movement.getQuantity() - remaining_quantity)
+          result.append((movement, remaining_quantity))
+          movement.setQuantity(quantity - remaining_quantity)
           remaining_quantity = 0
     # Return movement, split_quantity tuples
     for movement in simulation_movement_list:
       movement.setDeliveryRatio(movement.getQuantity() / new_quantity)
     return result
+
+  def _getSimulationMovementList(self):
+    """
+    Returns a list of simulation movement sorted from the last order.
+    """
+    simulation_movement_list = self.simulation_movement_list[:]
+    if len(simulation_movement_list):
+      simulation_movement_list.sort(
+        key=lambda x:x.getExplainationValue().getStartDate(), reverse=True)
+    return simulation_movement_list
