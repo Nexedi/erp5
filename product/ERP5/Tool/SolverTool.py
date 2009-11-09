@@ -137,7 +137,7 @@ class SolverTool(BaseTool):
     # that a single decision is created per divergence tester instance
     # and per application level list
     solver_decision_dict = {}
-    if movement in delivery_or_movement:
+    for movement in delivery_or_movement:
       for simulation_movement in movement.getDeliveryRelatedValueList():
         simulation_movemet_url = simulation_movement.getRelativeUrl()
         for divergence_tester in simulation_movement.getParentValue().getDivergenceTesterValueList():
@@ -153,7 +153,7 @@ class SolverTool(BaseTool):
     new_solver = self.newContent(portal_type='Solver Process')
     for solver_decision_key, movement_dict in solver_decision_dict.items():
       new_decision = self.newContent(portal_type='Solver Decision')
-      new_decision._setDeliveryList(movement_url.keys(p))
+      new_decision._setDeliveryList(movement_dict.keys())
       new_decision._setSolver(solver_decision_key[0])
       # No need to set application_list or....?
 
