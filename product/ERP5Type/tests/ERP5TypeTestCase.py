@@ -275,7 +275,7 @@ class ERP5TypeTestCase(backportUnittest.TestCase, PortalTestCase):
         Return the name of a portal for this test case.
         This is necessary for each test case to use a different portal built by
         different business templates.
-        The test runner can set `erp5_tests_portal_id` environnement variable
+        The test runner can set `erp5_tests_portal_id` environment variable
         to force a portal id.
       """
       forced_portal_id = os.environ.get('erp5_tests_portal_id')
