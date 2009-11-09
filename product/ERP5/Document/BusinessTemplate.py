@@ -4479,7 +4479,7 @@ class LocalRolesTemplateItem(BaseTemplateItem):
 
   # Function to generate XML Code Manually
   def generateXml(self, path=None):
-    local_roles_dict, = self._objects[path]
+    local_roles_dict = self._objects[path][0]
     # local roles
     xml_data = '<local_roles_item>'
     xml_data += '\n <local_roles>'
@@ -4544,7 +4544,7 @@ class LocalRolesTemplateItem(BaseTemplateItem):
             continue
         path = roles_path.split('/')[1:]
         obj = p.unrestrictedTraverse(path)
-        local_roles_dict, = self._objects[roles_path]
+        local_roles_dict = self._objects[roles_path][0]
         setattr(obj, '__ac_local_roles__', local_roles_dict)
 
   def uninstall(self, context, **kw):
