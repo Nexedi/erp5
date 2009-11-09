@@ -100,7 +100,7 @@ class SolverTool(BaseTool):
   def getDeliverySolverTranslatedItemList(self, class_name_list=None):
     """
     """
-    return [(x, self.getDeliverySolverTranslatedTitle(x)) \
+    return [(self.getDeliverySolverTranslatedTitle(x), x) \
             for x in self.getDeliverySolverClassNameList() \
             if class_name_list is None or x in class_name_list]
 

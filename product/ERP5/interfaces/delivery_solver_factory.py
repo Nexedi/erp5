@@ -60,7 +60,7 @@ class IDeliverySolverFactory(Interface):
 
   def getDeliverySolverTranslatedItemList(class_name_list=None):
     """
-    Return the list of class names and translated titles of available
+    Return the list of translated titles and class names of available
     delivery solvers. Use this method to fill listfields in user interface
     forms.
 
