@@ -1449,11 +1449,22 @@ class TestConstraint(PropertySheetTestCase):
       id='testGroup3'))
     group3.manage_permission('Access contents information', ['Manager'], 0)
     assignment.setSourceValue(group3)
-    # Manager can access testGroup3
-    self.assertEquals([], person.checkConsistency())
+    # modify title attribute directly to violate PropertyTypeValidity
+    # constraint.
+    group3.title=123
+    # Manager can access testGroup3, so full information is included in
+    # the error message.
+    error_list = person.checkConsistency()
+    self.assertEquals(1, len(error_list))
+    self.assertEquals("Attribute source_title should be of type string but is of type <type 'int'>",
+                      str(error_list[0].getMessage()))
     self.stepLoginAsAssignee()
-    # Assignee cannot access testGroup3
-    self.assertEquals([], person.checkConsistency())
+    # Assignee cannot access testGroup3, so full information is not
+    # included in the error message.
+    error_list = person.checkConsistency()
+    self.assertEquals(1, len(error_list))
+    self.assertNotEquals("Attribute source_title should be of type string but is of type <type 'int'>",
+                         str(error_list[0].getMessage()))
 
 def test_suite():
   suite = unittest.TestSuite()
