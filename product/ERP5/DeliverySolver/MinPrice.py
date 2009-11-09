@@ -27,11 +27,52 @@
 #
 ##############################################################################
 
+import zope.interface
+from Products.ERP5Type import interfaces
 
-from DeliverySolver import DeliverySolver
+from FIFO import FIFO
 
-class MinPrice(DeliverySolver):
+class MinPrice(FIFO):
   """
-    The MinPrice deliver solver distributes quantity in order to minimise price.
+  The MinPrice deliver solver distributes quantity in order to minimise
+  price.
   """
+  # Declarative interfaces
+  zope.interface.implements(interfaces.IDeliverySolver)
 
+  title = 'MinPrice Solver'
+
+  def setTotalQuantity(self, new_quantity):
+    """
+    """
+    result = []
+    simulation_movement_list = self._getSimulationMovementList()
+    remaining_quantity = self.getTotalQuantity() - new_quantity
+    if remaining_quantity > 0:
+      # In case of reducing the quantity, we should start from the more
+      # expensive price.
+      simulation_movement_list.reverse()
+    for movement in simulation_movement_list:
+      if remaining_quantity:
+        quantity = movement.getQuantity()
+        if quantity < remaining_quantity:
+          result.append((movement, quantity))
+          remaining_quantity -= quantity
+          movement.setQuantity(0)
+        else:
+          result.append((movement, remaining_quantity))
+          movement.setQuantity(quantity - remaining_quantity)
+          remaining_quantity = 0
+    # Return movement, split_quantity tuples
+    for movement in simulation_movement_list:
+      movement.setDeliveryRatio(movement.getQuantity() / new_quantity)
+    return result
+
+  def _getSimulationMovementList(self):
+    """
+    Returns a list of simulation movement sorted from the lower price.
+    """
+    simulation_movement_list = self.simulation_movement_list[:]
+    if len(simulation_movement_list):
+      simulation_movement_list.sort(key=lambda x:x.getPrice())
+    return simulation_movement_list
