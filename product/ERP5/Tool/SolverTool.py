@@ -100,9 +100,10 @@ class SolverTool(BaseTool):
   def getDeliverySolverTranslatedItemList(self, class_name_list=None):
     """
     """
-    return [(self.getDeliverySolverTranslatedTitle(x), x) \
-            for x in self.getDeliverySolverClassNameList() \
-            if class_name_list is None or x in class_name_list]
+    return sorted([(self.getDeliverySolverTranslatedTitle(x), x) \
+                   for x in self.getDeliverySolverClassNameList() \
+                   if class_name_list is None or x in class_name_list],
+                  key=lambda x:str(x[0]))
 
   def getDeliverySolverTranslatedTitle(self, class_name):
     """
