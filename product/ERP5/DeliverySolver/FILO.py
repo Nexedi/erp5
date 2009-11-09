@@ -41,6 +41,8 @@ class FILO(FIFO):
   # Declarative interfaces
   zope.interface.implements(interfaces.IDeliverySolver)
 
+  title = 'FILO Solver'
+
   def _getSimulationMovementList(self):
     """
     Returns a list of simulation movement sorted from the first order.

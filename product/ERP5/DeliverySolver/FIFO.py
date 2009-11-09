@@ -40,6 +40,8 @@ class FIFO(DeliverySolver):
   # Declarative interfaces
   zope.interface.implements(interfaces.IDeliverySolver)
 
+  title = 'FIFO Solver'
+
   # IDeliverySolver Implementation
   def __init__(self, simulation_movement_list):
     """

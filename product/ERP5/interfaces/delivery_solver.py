@@ -27,7 +27,7 @@
 #
 ##############################################################################
 
-from zope.interface import Interface
+from zope.interface import Interface, Attribute
 
 class IDeliverySolver(Interface):
   """Delivery Solver interface specification
@@ -49,6 +49,8 @@ class IDeliverySolver(Interface):
     movement_list -- a list of simulation movement on which delivery
     solver operates
     """
+
+  title = Attribute('The title of the delivery solver.')
 
   def getTotalQuantity():
     """
