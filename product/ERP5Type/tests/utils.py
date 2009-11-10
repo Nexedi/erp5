@@ -61,16 +61,21 @@ class DummyMailHost(MailHost):
   _message_list = []
   def _send( self, mfrom, mto, messageText ):
     """Record message in _last_message."""
+    self._previous_message = self._last_message
+    self._last_message = (mfrom, mto, messageText)
+    self._message_list.append(self._last_message)
+  def _decodeMessage(self, messageText):
+    """ Decode message"""
     message_text = messageText
     for part in message_from_string(messageText).walk():
       if part.get_content_type() in ['text/plain', 'text/html' ] \
-             and not part.is_multipart():
+                  and not part.is_multipart():
         message_text = part.get_payload(decode=1)
-    self._previous_message = self._last_message
-    self._last_message = (mfrom, mto, message_text)
-    self._message_list.append(self._last_message)
-  def getMessageList(self):
+    return message_text
+  def getMessageList(self, decode=True):
     """ Return message list"""
+    if decode:
+      return [ (m[0], m[1], self._decodeMessage(m[2])) for m in self._message_list]
     return self._message_list
 
 class DummyTranslationService:
