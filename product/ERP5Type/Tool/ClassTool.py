@@ -22,7 +22,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 #
 ##############################################################################
 
@@ -163,10 +163,10 @@ if allowClassTool():
       """
       id = 'portal_classes'
       meta_type = 'ERP5 Class Tool'
-  
+
       # Declarative Security
       security = ClassSecurityInfo()
-  
+
       #
       #   ZMI methods
       #
@@ -194,40 +194,40 @@ if allowClassTool():
                           ,
                           )
                       + tuple (
-                          filter(lambda a: a['label'] not in ('Contents', 'View'), 
+                          filter(lambda a: a['label'] not in ('Contents', 'View'),
                                                         Folder.manage_options))
                       )
-  
+
       security.declareProtected( Permissions.ManagePortal, 'manage_overview' )
       manage_overview = DTMLFile( 'explainClassTool', _dtmldir )
-  
+
       security.declareProtected( Permissions.ManagePortal, 'manage_viewPropertySheetList' )
       manage_viewPropertySheetList = DTMLFile( 'viewPropertySheetList', _dtmldir )
-  
+
       security.declareProtected( Permissions.ManagePortal, 'manage_viewDocumentList' )
       manage_viewDocumentList = DTMLFile( 'viewDocumentList', _dtmldir )
-  
+
       security.declareProtected( Permissions.ManagePortal, 'manage_viewExtensionList' )
       manage_viewExtensionList = DTMLFile( 'viewExtensionList', _dtmldir )
-  
+
       security.declareProtected( Permissions.ManagePortal, 'manage_viewTestList' )
       manage_viewTestList = DTMLFile( 'viewTestList', _dtmldir )
-  
+
       security.declareProtected( Permissions.ManagePortal, 'manage_viewConstraintList' )
       manage_viewConstraintList = DTMLFile( 'viewConstraintList', _dtmldir )
-  
+
       security.declareProtected( Permissions.ManagePortal, 'manage_editDocumentForm' )
       manage_editDocumentForm = DTMLFile( 'editDocumentForm', _dtmldir )
-  
+
       security.declareProtected( Permissions.ManagePortal, 'manage_editExtensionForm' )
       manage_editExtensionForm = DTMLFile( 'editExtensionForm', _dtmldir )
-  
+
       security.declareProtected( Permissions.ManagePortal, 'manage_editTestForm' )
       manage_editTestForm = DTMLFile( 'editTestForm', _dtmldir )
-  
+
       security.declareProtected( Permissions.ManagePortal, 'manage_editConstraintForm' )
       manage_editConstraintForm = DTMLFile( 'editConstraintForm', _dtmldir )
-  
+
       security.declareProtected( Permissions.ManagePortal, 'manage_editPropertySheetForm' )
       manage_editPropertySheetForm = DTMLFile( 'editPropertySheetForm', _dtmldir )
 
@@ -243,56 +243,56 @@ if allowClassTool():
           from zLOG import LOG
           LOG('_clearCache', 0, str(name))
           database[name].manage_minimize()
-      
+
       security.declareProtected( Permissions.ManagePortal, 'getLocalPropertySheetList' )
       def getLocalPropertySheetList(self):
         """
           Return a list of PropertySheet id which can be modified through the web
         """
         return getLocalPropertySheetList()
-  
+
       security.declareProtected( Permissions.ManagePortal, 'getLocalExtensionList' )
       def getLocalExtensionList(self):
         """
           Return a list of Extension id which can be modified through the web
         """
         return getLocalExtensionList()
-  
+
       security.declareProtected( Permissions.ManagePortal, 'getLocalTestList' )
       def getLocalTestList(self):
         """
           Return a list of Test id which can be modified through the web
         """
         return getLocalTestList()
-  
+
       security.declareProtected( Permissions.ManagePortal, 'getLocalConstraintList' )
       def getLocalConstraintList(self):
         """
           Return a list of Constraint id which can be modified through the web
         """
         return getLocalConstraintList()
-  
+
       security.declareProtected( Permissions.ManagePortal, 'getLocalDocumentList' )
       def getLocalDocumentList(self):
         """
           Return a list of Document id which can be modified through the web
         """
         return getLocalDocumentList()
-  
+
       security.declareProtected( Permissions.ManagePortal, 'getProductDocumentPathList' )
       def getProductDocumentPathList(self):
         """
           Return a list of Document id which can be modified through the web
         """
         return getProductDocumentPathList()
-  
+
       security.declareProtected( Permissions.ManagePortal, 'getDocumentText' )
       def getDocumentText(self, class_id):
         """
           Updates a Document with a new text
         """
         return readLocalDocument(class_id)
-  
+
       security.declareProtected( Permissions.ManageExtensions, 'newDocument' )
       def newDocument(self, class_id, REQUEST=None):
         """
@@ -322,7 +322,7 @@ if allowClassTool():
 #
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 #
 ##############################################################################
 
@@ -351,7 +351,7 @@ class %s(XMLObject):
         self.writeLocalDocument(class_id, text)
         if REQUEST is not None:
           REQUEST.RESPONSE.redirect('%s/manage_editDocumentForm?class_id=%s&message=Document+Created' % (self.absolute_url(), class_id))
-  
+
       security.declareProtected( Permissions.ManageExtensions, 'editDocument' )
       def editDocument(self, class_id, text, REQUEST=None):
         """
@@ -361,7 +361,7 @@ class %s(XMLObject):
         self.writeLocalDocument(class_id, text, create=0)
         if REQUEST is not None:
           REQUEST.RESPONSE.redirect('%s/manage_editDocumentForm?class_id=%s&message=Document+Saved' % (self.absolute_url(), class_id))
-  
+
       security.declareProtected( Permissions.ManageExtensions, 'importDocument' )
       def importDocument(self, class_id, class_path=None, REQUEST=None):
         """
@@ -371,22 +371,22 @@ class %s(XMLObject):
         local_product = self.Control_Panel.Products.ERP5Type
         app = local_product._p_jar.root()['Application']
         importLocalDocument(class_id, document_path=class_path)
-        
+
         # Clear object cache and reset _aq_dynamic after reload
         self._clearCache()
         _aq_reset()
-        
+
         if REQUEST is not None and class_path is None:
           REQUEST.RESPONSE.redirect('%s/manage_editDocumentForm?class_id=%s&message=Document+Reloaded+Successfully' % (self.absolute_url(), class_id))
-  
-  
+
+
       security.declareProtected( Permissions.ManagePortal, 'getPropertySheetText' )
       def getPropertySheetText(self, class_id):
         """
           Updates a PropertySheet with a new text
         """
         return readLocalPropertySheet(class_id)
-  
+
       security.declareProtected( Permissions.ManageExtensions, 'newPropertySheet' )
       def newPropertySheet(self, class_id, REQUEST=None):
         """
@@ -398,10 +398,10 @@ class %s(XMLObject):
 # %s
 #
 # WARNING: This program as such is intended to be used by professional
-# programmers who take the whole responsability of assessing all potential
+# programmers who take the whole responsibility of assessing all potential
 # consequences resulting from its eventual inadequacies and bugs
 # End users who are looking for a ready-to-use solution with commercial
-# garantees and support are strongly adviced to contract a Free Software
+# guarantees and support are strongly adviced to contract a Free Software
 # Service Company
 #
 # This program is Free Software; you can redistribute it and/or
@@ -416,7 +416,7 @@ class %s(XMLObject):
 #
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 #
 ##############################################################################
 
@@ -431,13 +431,13 @@ class %s:
             'type'        : 'string',
             'mode'        : '' },
     )
-  
+
 
 """ % (COPYRIGHT, class_id, class_id)
         self.writeLocalPropertySheet(class_id, text)
         if REQUEST is not None:
           REQUEST.RESPONSE.redirect('%s/manage_editPropertySheetForm?class_id=%s&message=PropertySheet+Created' % (self.absolute_url(), class_id))
-  
+
       security.declareProtected( Permissions.ManageExtensions, 'editPropertySheet' )
       def editPropertySheet(self, class_id, text, REQUEST=None):
         """
@@ -447,7 +447,7 @@ class %s:
         self.writeLocalPropertySheet(class_id, text, create=0)
         if REQUEST is not None:
           REQUEST.RESPONSE.redirect('%s/manage_editPropertySheetForm?class_id=%s&message=PropertySheet+Saved' % (self.absolute_url(), class_id))
-  
+
       security.declareProtected( Permissions.ManageExtensions, 'importPropertySheet' )
       def importPropertySheet(self, class_id, REQUEST=None):
         """
@@ -460,17 +460,17 @@ class %s:
         # Reset _aq_dynamic after reload
         # There is no need to reset the cache in this case because
         # XXX it is not sure however that class defined propertysheets will be updated
-        _aq_reset() 
+        _aq_reset()
         if REQUEST is not None:
           REQUEST.RESPONSE.redirect('%s/manage_editPropertySheetForm?class_id=%s&message=PropertySheet+Reloaded+Successfully' % (self.absolute_url(), class_id))
-  
+
       security.declareProtected( Permissions.ManagePortal, 'getExtensionText' )
       def getExtensionText(self, class_id):
         """
           Updates a Extension with a new text
         """
         return readLocalExtension(class_id)
-  
+
       security.declareProtected( Permissions.ManageExtensions, 'newExtension' )
       def newExtension(self, class_id, REQUEST=None):
         """
@@ -482,10 +482,10 @@ class %s:
 # %s
 #
 # WARNING: This program as such is intended to be used by professional
-# programmers who take the whole responsability of assessing all potential
+# programmers who take the whole responsibility of assessing all potential
 # consequences resulting from its eventual inadequacies and bugs
 # End users who are looking for a ready-to-use solution with commercial
-# garantees and support are strongly adviced to contract a Free Software
+# guarantees and support are strongly adviced to contract a Free Software
 # Service Company
 #
 # This program is Free Software; you can redistribute it and/or
@@ -500,7 +500,7 @@ class %s:
 #
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 #
 ##############################################################################
 
@@ -510,7 +510,7 @@ def myExtensionMethod(self, param=None):
         self.writeLocalExtension(class_id, text)
         if REQUEST is not None:
           REQUEST.RESPONSE.redirect('%s/manage_editExtensionForm?class_id=%s&message=Extension+Created' % (self.absolute_url(), class_id))
-  
+
       security.declareProtected( Permissions.ManageExtensions, 'editExtension' )
       def editExtension(self, class_id, text, REQUEST=None):
         """
@@ -520,14 +520,14 @@ def myExtensionMethod(self, param=None):
         self.writeLocalExtension(class_id, text, create=0)
         if REQUEST is not None:
           REQUEST.RESPONSE.redirect('%s/manage_editExtensionForm?class_id=%s&message=Extension+Saved' % (self.absolute_url(), class_id))
-  
+
       security.declareProtected( Permissions.ManagePortal, 'getTestText' )
       def getTestText(self, class_id):
         """
           Updates a Test with a new text
         """
         return readLocalTest(class_id)
-  
+
       security.declareProtected( Permissions.ManageExtensions, 'newTest' )
       def newTest(self, class_id, REQUEST=None):
         """
@@ -539,10 +539,10 @@ def myExtensionMethod(self, param=None):
 # %s
 #
 # WARNING: This program as such is intended to be used by professional
-# programmers who take the whole responsability of assessing all potential
+# programmers who take the whole responsibility of assessing all potential
 # consequences resulting from its eventual inadequacies and bugs
 # End users who are looking for a ready-to-use solution with commercial
-# garantees and support are strongly adviced to contract a Free Software
+# guarantees and support are strongly adviced to contract a Free Software
 # Service Company
 #
 # This program is Free Software; you can redistribute it and/or
@@ -557,7 +557,7 @@ def myExtensionMethod(self, param=None):
 #
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 #
 ##############################################################################
 
@@ -587,7 +587,7 @@ class Test(ERP5TypeTestCase):
   def test_01_sampleTest(self):
     """
     A Sample Test
-    
+
     For the method to be called during the test,
     its name must start with 'test'.
     The '_01_' part of the name is not mandatory,
@@ -600,7 +600,7 @@ class Test(ERP5TypeTestCase):
         self.writeLocalTest(class_id, text)
         if REQUEST is not None:
           REQUEST.RESPONSE.redirect('%s/manage_editTestForm?class_id=%s&message=Test+Created' % (self.absolute_url(), class_id))
-  
+
       security.declareProtected( Permissions.ManageExtensions, 'editTest' )
       def editTest(self, class_id, text, REQUEST=None):
         """
@@ -610,19 +610,19 @@ class Test(ERP5TypeTestCase):
         self.writeLocalTest(class_id, text, create=0)
         if REQUEST is not None:
           REQUEST.RESPONSE.redirect('%s/manage_editTestForm?class_id=%s&message=Test+Saved' % (self.absolute_url(), class_id))
-  
+
       security.declareProtected( Permissions.ManagePortal, 'getConstraintText' )
       def getConstraintText(self, class_id):
         """
           Updates a Constraint with a new text
         """
         return readLocalConstraint(class_id)
-  
+
       security.declareProtected( Permissions.ManageExtensions, 'newConstraint' )
       def newConstraint(self, class_id, REQUEST=None):
         """
           Updates a Constraint with a new text
-        """        
+        """
         if class_id == '':
           if REQUEST is not None:
             REQUEST.RESPONSE.redirect('%s/manage_viewConstraintList?message=You+must+specify+a+class+name' % (self.absolute_url(),))
@@ -633,10 +633,10 @@ class Test(ERP5TypeTestCase):
 # %s
 #
 # WARNING: This program as such is intended to be used by professional
-# programmers who take the whole responsability of assessing all potential
+# programmers who take the whole responsibility of assessing all potential
 # consequences resulting from its eventual inadequacies and bugs
 # End users who are looking for a ready-to-use solution with commercial
-# garantees and support are strongly adviced to contract a Free Software
+# guarantees and support are strongly adviced to contract a Free Software
 # Service Company
 #
 # This program is Free Software; you can redistribute it and/or
@@ -651,7 +651,7 @@ class Test(ERP5TypeTestCase):
 #
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 #
 ##############################################################################
 
@@ -665,14 +665,14 @@ class %s(Constraint):
     def checkConsistency(self, obj, fixit = 0):
       \"\"\"
         Implement here the consistency checker
-        whenever fixit is not 0, object data should be updated to 
+        whenever fixit is not 0, object data should be updated to
         satisfy the constraint
       \"\"\"
 
       errors = []
-      
+
       # Do the job here
-      
+
       return errors
 """ % (COPYRIGHT, class_id)
         self.writeLocalConstraint(class_id, text)
@@ -701,7 +701,7 @@ class %s(Constraint):
         # Reset _aq_dynamic after reload
         # There is no need to reset the cache in this case because
         # XXX it is not sure however that class defined propertysheets will be updated
-        _aq_reset() 
+        _aq_reset()
         if REQUEST is not None:
           REQUEST.RESPONSE.redirect('%s/manage_editConstraintForm?class_id=%s&message=Constraint+Reloaded+Successfully' % (self.absolute_url(), class_id))
 
@@ -719,7 +719,7 @@ class %s(Constraint):
                     '%s/manage_viewProductGeneration?manage_tabs_message=%s' %
                     (self.absolute_url(), message.replace(' ', '+')))
           raise BadRequest(message)
-        
+
         # Ensure that Products exists.
         product_path = os.path.join(getConfiguration().instancehome, 'Products')
         if not os.path.exists(product_path):
@@ -774,13 +774,12 @@ class %s(Constraint):
 ##############################################################################
 #
 # %s
-#                    Yoshinori Okuji <yo@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
-# programmers who take the whole responsability of assessing all potential
+# programmers who take the whole responsibility of assessing all potential
 # consequences resulting from its eventual inadequacies and bugs
 # End users who are looking for a ready-to-use solution with commercial
-# garantees and support are strongly adviced to contract a Free Software
+# guarantees and support are strongly adviced to contract a Free Software
 # Service Company
 #
 # This program is Free Software; you can redistribute it and/or
@@ -795,7 +794,7 @@ class %s(Constraint):
 #
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 #
 ##############################################################################
 """
@@ -922,31 +921,31 @@ def initialize( context ):
       security.declareProtected( Permissions.ManageExtensions, 'writeLocalPropertySheet' )
       def writeLocalPropertySheet(self, class_id, text, create=1):
         self._createTemporaryInstanceHome()
-        writeLocalPropertySheet(class_id, text, create=create, 
+        writeLocalPropertySheet(class_id, text, create=create,
                                 instance_home=self._v_instance_home.getPath())
 
       security.declareProtected( Permissions.ManageExtensions, 'writeLocalExtension' )
       def writeLocalExtension(self, class_id, text, create=1):
         self._createTemporaryInstanceHome()
-        writeLocalExtension(class_id, text, create=create, 
+        writeLocalExtension(class_id, text, create=create,
                             instance_home=self._v_instance_home.getPath())
 
       security.declareProtected( Permissions.ManageExtensions, 'writeLocalTest' )
       def writeLocalTest(self, class_id, text, create=1):
         self._createTemporaryInstanceHome()
-        writeLocalTest(class_id, text, create=create, 
+        writeLocalTest(class_id, text, create=create,
                        instance_home=self._v_instance_home.getPath())
 
       security.declareProtected( Permissions.ManageExtensions, 'writeLocalDocument' )
       def writeLocalDocument(self, class_id, text, create=1):
         self._createTemporaryInstanceHome()
-        writeLocalDocument(class_id, text, create=create, 
+        writeLocalDocument(class_id, text, create=create,
                            instance_home=self._v_instance_home.getPath())
 
       security.declareProtected( Permissions.ManageExtensions, 'writeLocalConstraint' )
       def writeLocalConstraint(self, class_id, text, create=1):
         self._createTemporaryInstanceHome()
-        writeLocalConstraint(class_id, text, create=create, 
+        writeLocalConstraint(class_id, text, create=create,
                              instance_home=self._v_instance_home.getPath())
 
 else:
