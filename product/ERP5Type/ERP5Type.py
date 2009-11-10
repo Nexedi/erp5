@@ -29,7 +29,7 @@ import Products
 from Products.CMFCore.TypesTool import FactoryTypeInformation
 from Products.CMFCore.Expression import Expression
 from Products.CMFCore.exceptions import AccessControl_Unauthorized
-from Products.CMFCore.utils import _checkPermission
+from Products.CMFCore.utils import _checkPermission, getToolByName
 from Products.ERP5Type import interfaces, Constraint, Permissions, PropertySheet
 from Products.ERP5Type.Base import getClassPropertyList
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
@@ -370,8 +370,10 @@ class ERP5TypeInformation(XMLObject,
 
         # notify workflow after generating local roles, in order to prevent
         # Unauthorized error on transition's condition
-        if hasattr(aq_base(ob), 'notifyWorkflowCreated'):
-          ob.notifyWorkflowCreated()
+        workflow_tool = getToolByName(self, 'portal_workflow', None)
+        if workflow_tool is not None:
+          for workflow in workflow_tool.getWorkflowsFor(ob):
+            workflow.notifyCreated(ob)
 
         init_script = self.getTypeInitScriptId()
         if init_script:

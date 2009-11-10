@@ -782,3 +782,6 @@ def WorkflowTool_isTransitionPossible(self, ob, transition_id, wf_id=None):
     return 0
 
 WorkflowTool.isTransitionPossible = WorkflowTool_isTransitionPossible
+
+WorkflowTool._reindexWorkflowVariables = lambda self, ob: \
+  hasattr(aq_base(ob), 'reindexObjectSecurity') and ob.reindexObjectSecurity()
