@@ -33,7 +33,7 @@ Products.ERP5.interfaces.amount
 from zope.interface import Interface
 
 class IAmountCore(Interface):
-  """Amount Core interface specification
+  """Amount Core private interface specification
 
   IAmountCore defines the minimal set of getters required
   to implement an amount.
@@ -103,7 +103,7 @@ class IAmountCore(Interface):
     """
 
 class IAmountConversion(Interface):
-  """Amount Conversion interface specification
+  """Amount Conversion private interface specification
 
   IAmountConversion defines methods which can be used
   to convert an amount from one quantity unit and to another,
@@ -145,7 +145,7 @@ class IAmountConversion(Interface):
     """
 
 class IAmountPrice(Interface):
-  """Amount Price interface specification
+  """Amount Price private interface specification
 
   IAmountPrice defines methods to compute total price
   and unit price of a resource, taking into account 
@@ -190,7 +190,7 @@ class IAmountPrice(Interface):
     """
 
 class IAmountArithmetic(Interface):
-  """Amount Arithmetic interface specification
+  """Amount Arithmetic private interface specification
 
   IAmountArithmetic defines methods to add, substract,
   multiply or device amounts of resources. No rounding
