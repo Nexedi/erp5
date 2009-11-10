@@ -208,6 +208,8 @@ class TestPerformance(ERP5TypeTestCase, LogInterceptor):
       view_result = {}
       tic_result = {}
       add_result = {}
+      # call view once to fill caches
+      self.bar_module.BarModule_viewBarList()
       # add object in bar module
       for i in xrange(10):
           def add():
@@ -229,8 +231,6 @@ class TestPerformance(ERP5TypeTestCase, LogInterceptor):
               self.tic()
           after_tic = time()
           gc.collect()
-          # call view once to fill caches
-          self.bar_module.BarModule_viewBarList()
           before_form = time()
           for x in xrange(100):
             self.bar_module.BarModule_viewBarList()
