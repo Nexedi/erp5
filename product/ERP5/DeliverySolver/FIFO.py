@@ -33,7 +33,7 @@ from DeliverySolver import DeliverySolver
 
 class FIFO(DeliverySolver):
   """
-  The FIFO solver reduces deliveted quantity by reducing the quantity of
+  The FIFO solver reduces delivered quantity by reducing the quantity of
   simulation movements from the last order.
   """
 
