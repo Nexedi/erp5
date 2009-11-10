@@ -48,13 +48,13 @@ MIN_OBJECT_PROXYFIELD_VIEW=0.225
 MAX_OBJECT_PROXYFIELD_VIEW=0.228
 #CURRENT_MIN_OBJECT_VIEW=0.1220
 #CURRENT_MAX_OBJECT_VIEW=0.1280
-MIN_MODULE_VIEW=0.154
-MAX_MODULE_VIEW=0.158
+MIN_MODULE_VIEW=0.147
+MAX_MODULE_VIEW=0.151
 MIN_OBJECT_CREATION=0.0088
 MAX_OBJECT_CREATION=0.0091
 MIN_TIC=0.0522
 MAX_TIC=0.0560
-LISTBOX_COEF=0.00095
+LISTBOX_COEF=0.00169
 # Change history
 # 2009-11-10
 #  temporary increase threashold for view & tic to notice future regressions
@@ -65,9 +65,9 @@ LISTBOX_COEF=0.00095
 #  too fast by the result of optimisation
 #   MIN_OBJECT_CREATION : 0.0090 -> 0.0088
 #   MAX_OBJECT_CREATION : 0.0110 -> 0.0091
-#   MIN_MODULE_VIEW : 0.149 -> 0.154
-#   MAX_MODULE_VIEW : 0.189 -> 0.158
-#   LISTBOX_COEF : 0.001725 -> 0.00095
+#   MIN_MODULE_VIEW : 0.149 -> 0.147
+#   MAX_MODULE_VIEW : 0.189 -> 0.151
+#   LISTBOX_COEF : 0.001725 -> 0.00169
 # 2009-10-23
 #  too fast by the result of optimisation
 #   MIN_OBJECT_MANY_LINES_VIEW : 0.300 -> 0.285
@@ -229,6 +229,8 @@ class TestPerformance(ERP5TypeTestCase, LogInterceptor):
               self.tic()
           after_tic = time()
           gc.collect()
+          # call view once to fill caches
+          self.bar_module.BarModule_viewBarList()
           before_form = time()
           for x in xrange(100):
             self.bar_module.BarModule_viewBarList()
