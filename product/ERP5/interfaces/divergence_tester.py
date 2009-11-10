@@ -6,10 +6,10 @@
 #                    Rafael Monnerat <rafael@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
-# programmers who take the whole responsability of assessing all potential
+# programmers who take the whole responsibility of assessing all potential
 # consequences resulting from its eventual inadequacies and bugs
 # End users who are looking for a ready-to-use solution with commercial
-# garantees and support are strongly adviced to contract a Free Software
+# guarantees and support are strongly adviced to contract a Free Software
 # Service Company
 #
 # This program is Free Software; you can redistribute it and/or
@@ -24,7 +24,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 #
 ##############################################################################
 """
@@ -36,15 +36,15 @@ from zope.interface import Interface
 class IDivergenceTester(Interface):
   """
   Divergence Tester interface specification
- 
+
   All divergence testers in ERP5 must implement IDivergenceTester.
   IDivergenceTester provides methods to test simulation movements
-  divergence with related delivery movements. A list of 
+  divergence with related delivery movements. A list of
   explanation messages can be generated if needed, and used
   to help users understand why a given delivery line and its related
   simulation movements are divergent.
 
-  IDivergenceTester also provides methods to match movements 
+  IDivergenceTester also provides methods to match movements
   each other, based on comparison and hash keys. Movement matching
   is required by Rules to decide which simulation movements should
   be updated, deleted, or compensated.
@@ -56,7 +56,7 @@ class IDivergenceTester(Interface):
 
   def test(simulation_movement):
     """
-    Tests if simulation_movement is divergent. Returnn False (0) 
+    Tests if simulation_movement is divergent. Returns False (0)
     or True (1).
 
     If decision_movement is a simulation movement, use
@@ -64,7 +64,7 @@ class IDivergenceTester(Interface):
 
     simulation_movement -- a simulation movement
     """
-    
+
   def explain(simulation_movement):
     """
     Returns a single message which explain the nature of
@@ -97,7 +97,7 @@ class IDivergenceTester(Interface):
   def compare(prevision_movement, decision_movement):
     """
     Returns True if simulation_movement and delivery_movement
-    match. Returns False else. The method is asymetric and
+    match. Returns False else. The method is asymmetric and
     the order of parameter matters. For example, a sourcing
     rule may use a tester which makes sure that movements are
     delivered no sooner than 2 weeks before production but
@@ -114,8 +114,8 @@ class IDivergenceTester(Interface):
   def update(prevision_movement, decision_movement):
     """
     Updates decision_movement with properties from
-    prevision_movement so that next call to 
-    compare returns True. This method is normally 
+    prevision_movement so that next call to
+    compare returns True. This method is normally
     invoked to copy properties from simulation movements
     to delivery movements. It is also invoked to copy
     properties from temp simulation movements of
@@ -129,10 +129,10 @@ class IDivergenceTester(Interface):
 
     decision_movement -- a delivery movement (decision)
 
-    NOTE: recorded (forced) properties are not updated by 
+    NOTE: recorded (forced) properties are not updated by
     expand.
 
-    NOTE2: it is still unkown how to update properties from
+    NOTE2: it is still unknown how to update properties from
     a simulation movement to the relevant level of
     delivery / line / cell.
     """
@@ -143,7 +143,7 @@ class IDivergenceTester(Interface):
     from the related delivery movement to simulation_movement.
 
     NOTE: the future existence of this method is still unknown
-    because it is likely to be implemented in TargetSolver 
+    because it is likely to be implemented in TargetSolver
     instead.
     """
 
@@ -153,6 +153,6 @@ class IDivergenceTester(Interface):
     from simulation_movement to the related delivery movement
 
     NOTE: the future existence of this method is still unknown
-    because it is likely to be implemented in TargetSolver 
+    because it is likely to be implemented in TargetSolver
     instead.
     """
