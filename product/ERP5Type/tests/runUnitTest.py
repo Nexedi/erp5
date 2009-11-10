@@ -291,10 +291,11 @@ class DebugTestResult:
   def __getattr__(self, attr):
     return getattr(self.result, attr)
 
+_print = sys.stderr.write
 
 def runUnitTestList(test_list, verbosity=1, debug=0):
   if not test_list:
-    print "No test to run, exiting immediately."
+    _print("No test to run, exiting immediately.\n")
     return
   os.environ.setdefault('INSTANCE_HOME', instance_home)
   os.environ.setdefault('SOFTWARE_HOME', software_home)
@@ -303,7 +304,7 @@ def runUnitTestList(test_list, verbosity=1, debug=0):
   os.environ.setdefault('EVENT_LOG_FILE', os.path.join(tests_home, 'zLOG.log'))
   os.environ.setdefault('EVENT_LOG_SEVERITY', '-300')
 
-  print "Loading Zope ...",
+  _print("Loading Zope ... ")
   _start = time.time()
 
   import Testing
@@ -431,7 +432,7 @@ def runUnitTestList(test_list, verbosity=1, debug=0):
     # ourselves
     layer.ZopeLite.setUp()
 
-  print 'done (%.3fs)' % (time.time() - _start),
+  _print('done (%.3fs)' % (time.time() - _start))
   result = TestRunner(verbosity=verbosity).run(suite)
 
   if save:
@@ -442,10 +443,10 @@ def runUnitTestList(test_list, verbosity=1, debug=0):
     command = 'mysqldump %s > %s' % (getMySQLArguments(),
                                      os.path.join(instance_home, 'dump.sql'))
     if verbosity:
-      print('Dumping MySQL database with %s... ' % command)
+      _print('Dumping MySQL database with %s...\n' % command)
     os.system(command)
     if verbosity:
-      print('Dumping static files... ')
+      _print('Dumping static files...\n')
     for static_dir in 'Constraint', 'Document', 'Extensions', 'PropertySheet':
       static_dir = os.path.join(instance_home, static_dir)
       try:
@@ -538,7 +539,7 @@ def main():
 
   test_list = args
   if not test_list:
-    print "No test to run, exiting immediately."
+    _print("No test to run, exiting immediately.\n")
     sys.exit(1)
 
   result = runUnitTestList(test_list=test_list,
@@ -548,7 +549,7 @@ def main():
     from Testing.ZopeTestCase import profiler
   except ImportError:
     if os.environ.get('PROFILE_TESTS') == '1':
-      print "Profiler support is not available from ZopeTestCase in Zope 2.12"
+      _print("Profiler support is not available from ZopeTestCase in Zope 2.12\n")
   else:
     profiler.print_stats()
   sys.exit(len(result.failures) + len(result.errors))
