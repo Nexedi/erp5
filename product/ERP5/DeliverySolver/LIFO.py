@@ -47,8 +47,9 @@ class LIFO(FIFO):
     """
     Returns a list of simulation movement sorted from the first order.
     """
-    simulation_movement_list = self.simulation_movement_list[:]
+    simulation_movement_list = self.simulation_movement_list
     if len(simulation_movement_list) > 1:
-      simulation_movement_list.sort(
+      return sorted(simulation_movement_list,
         key=lambda x:x.getExplainationValue().getStartDate())
-    return simulation_movement_list
+    else:
+      return simulation_movement_list
