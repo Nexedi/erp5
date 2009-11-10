@@ -61,13 +61,13 @@ from cStringIO import StringIO
 from copy import deepcopy
 from zExceptions import BadRequest
 import OFS.XMLExportImport
+from Products.ERP5Type.patches.ppml import importXML
 customImporters={
-    XMLExportImport.magic: XMLExportImport.importXML,
+    XMLExportImport.magic: importXML,
     }
 
 from zLOG import LOG, WARNING, PROBLEM
 from warnings import warn
-from OFS.ObjectManager import customImporters
 from gzip import GzipFile
 from xml.dom.minidom import parse
 from xml.sax.saxutils import escape
@@ -699,6 +699,8 @@ class ObjectTemplateItem(BaseTemplateItem):
       else:
         obj = connection.importFile(file_obj, customImporters=customImporters)
     else:
+      # FIXME: Why not use the importXML function directly? Are there any BT5s
+      # with actual .zexp files on the wild?
       obj = connection.importFile(file_obj, customImporters=customImporters)
     self.removeProperties(obj)
     self._objects[file_name[:-4]] = obj

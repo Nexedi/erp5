@@ -771,8 +771,41 @@ class xmlPickler(NoBlanks, xyap):
         'persistent': save_persis,
         }
 
+# FIXME: Leo: Do we still need to replace ppml.xmlPickler now that we're
+# using our own xmlPickler in our own importXML function below? Do we support
+# any other use of xmlPickler except for Business Template export/import?
 ppml.xmlPickler = xmlPickler
 
 class Tuple(Sequence): pass
 
 ppml.Tuple = Tuple
+
+# not a patch, but imported and used directly by
+# Products.ERP5.Document.BusinessTemplate. It is a copy of
+# from OFS.XMLExportImport.importXML from Zope 2.12
+def importXML(jar, file, clue=''):
+    from OFS.XMLExportImport import save_record, save_zopedata, start_zopedata
+    from tempfile import TemporaryFile
+    import xml.parsers.expat
+    if type(file) is str:
+        file=open(file, 'rb')
+    outfile=TemporaryFile()
+    data=file.read()
+    F=xmlPickler()
+    F.end_handlers['record'] = save_record
+    F.end_handlers['ZopeData'] = save_zopedata
+    F.start_handlers['ZopeData'] = start_zopedata
+    F.binary=1
+    F.file=outfile
+    # Our BTs XML files don't declare encoding but have accented chars in them
+    # So we have to declare an encoding but not use unicode, so the unpickler
+    # can deal with the utf-8 strings directly
+    p=xml.parsers.expat.ParserCreate('utf-8')
+    p.returns_unicode = False
+
+    p.CharacterDataHandler=F.handle_data
+    p.StartElementHandler=F.unknown_starttag
+    p.EndElementHandler=F.unknown_endtag
+    r=p.Parse(data)
+    outfile.seek(0)
+    return jar.importFile(outfile,clue)
