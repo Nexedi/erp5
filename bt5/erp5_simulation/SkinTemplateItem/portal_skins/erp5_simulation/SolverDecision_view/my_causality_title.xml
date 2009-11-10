@@ -562,7 +562,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>here/getPortalDivergenceTesterTypeList</string> </value>
+            <value> <string>python:[(x, x) for x in here.getPortalDivergenceTesterTypeList()]</string> </value>
         </item>
       </dictionary>
     </pickle>
