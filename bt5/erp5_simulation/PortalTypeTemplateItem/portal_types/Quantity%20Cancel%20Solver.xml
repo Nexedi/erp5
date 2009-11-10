@@ -22,6 +22,10 @@
             </value>
         </item>
         <item>
+            <key> <string>configuration_form_id</string> </key>
+            <value> <string>QuantityCancelSolver_viewConfiguration</string> </value>
+        </item>
+        <item>
             <key> <string>configuration_property_list</string> </key>
             <value>
               <tuple/>
@@ -74,10 +78,6 @@
         <item>
             <key> <string>solver_action_title</string> </key>
             <value> <string>Cancel Quantity</string> </value>
-        </item>
-        <item>
-            <key> <string>configuration_form_id</string> </key>
-            <value> <string>QuantityCancelSolver_viewConfiguration</string> </value>
         </item>
       </dictionary>
     </pickle>

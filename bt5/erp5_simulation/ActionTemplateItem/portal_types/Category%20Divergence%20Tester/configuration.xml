@@ -19,8 +19,8 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>portal_types/Trade Quantity Divergence Tester/1</string>
                 <string>action_type/object_view</string>
+                <string>portal_types/Trade Quantity Divergence Tester/1</string>
                 <string>portal_types/Float Divergence Tester/2</string>
               </tuple>
             </value>

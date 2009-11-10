@@ -43,7 +43,7 @@
         <item>
             <key> <string>description</string> </key>
             <value> <string>A Solver Decision defines which delivery movements are solved using which solvers. Solver Dcision will support all property sheets which are supported also by a Target Solver, so that it can hold decision information.\r\n
-  </string> </value>
+</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>

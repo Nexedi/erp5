@@ -22,6 +22,10 @@
             </value>
         </item>
         <item>
+            <key> <string>configuration_form_id</string> </key>
+            <value> <string>ResourceReplacementSolver_viewConfiguration</string> </value>
+        </item>
+        <item>
             <key> <string>description</string> </key>
             <value> <string>The Resource Replacement Solver forces the source of delivery related simulation movements to the resource value of the delivery movement, yet preserving its original value as a recordable property.</string> </value>
         </item>
@@ -60,10 +64,6 @@
         <item>
             <key> <string>solver_action_title</string> </key>
             <value> <string>Replace Resource</string> </value>
-        </item>
-        <item>
-            <key> <string>configuration_form_id</string> </key>
-            <value> <string>ResourceReplacementSolver_viewConfiguration</string> </value>
         </item>
       </dictionary>
     </pickle>

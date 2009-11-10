@@ -22,6 +22,10 @@
             </value>
         </item>
         <item>
+            <key> <string>configuration_form_id</string> </key>
+            <value> <string>QuantitySplit_viewConfiguration</string> </value>
+        </item>
+        <item>
             <key> <string>description</string> </key>
             <value> <string>The Production Reduction Solver reduces the production in order to comply with the reduced amount of sourced goods at the workshop.</string> </value>
         </item>
@@ -60,10 +64,6 @@
         <item>
             <key> <string>solver_action_title</string> </key>
             <value> <string>Split and Differ</string> </value>
-        </item>
-        <item>
-            <key> <string>configuration_form_id</string> </key>
-            <value> <string>QuantitySplit_viewConfiguration</string> </value>
         </item>
       </dictionary>
     </pickle>

@@ -24,6 +24,10 @@
             </value>
         </item>
         <item>
+            <key> <string>configuration_form_id</string> </key>
+            <value> <string>ResourceReplacementSolver_viewConfiguration</string> </value>
+        </item>
+        <item>
             <key> <string>description</string> </key>
             <value> <string>The resource adoption solver resets the resource value of the delivery movement to the resource value of simulation. It eventually splits the movement and triggers rebuild in case multiple resources exist in the simulation.</string> </value>
         </item>
@@ -62,10 +66,6 @@
         <item>
             <key> <string>solver_action_title</string> </key>
             <value> <string>Replace Resource</string> </value>
-        </item>
-        <item>
-            <key> <string>configuration_form_id</string> </key>
-            <value> <string>ResourceReplacementSolver_viewConfiguration</string> </value>
         </item>
       </dictionary>
     </pickle>
