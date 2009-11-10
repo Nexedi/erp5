@@ -29,19 +29,75 @@
 """
 Products.ERP5.interfaces.movement
 """
-
+from Products.ERP5Type import PropertySheet
 from Products.ERP5.interfaces.amount import IAmount
 from Products.ERP5.interfaces.arrow_base import IArrowBase
 
+class IAssetMovement(IAmount):
+  """Asset Movement private interface specification
 
-class IMovement(IAmount, IArrowBase):
-  """Movement interface specification
+  Asset movements are use to represent the asset 
+  value of a movement of resources leaving a 
+  source and reach a destination. 
+  """
+  # We must a find a way to use property sheets in or as interfaces
+  # property_sheets = (PropertySheet.Price, )
 
-  A movement represents an amount of resources which 
-  is moved along an Arrow (source and destination).
+  def getSourceAssetPrice():
+    """
+    Return the asset price for the source section,
+    usually the price of the movement converted to
+    the currency of the source section using the currency
+    rate of the day. If no price is defined, an internal
+    price may be looked up. It is also possible for
+    a movement to have 'None' source asset price,
+    for example for a movement with positive quantity
+    going from one warehouse to another warehouse of
+    the same company.
+    """
 
-  Equations:
-    Production/Consumption
+  def getDestinationAssetPrice():
+    """
+    Return the asset price for the destination section,
+    usually the price of the movement converted to
+    the currency of the destination section using the currency
+    rate of the day. If no price is defined, an internal
+    price may be looked up first. It is also possible for
+    a movement to have 'None' destination asset price,
+    for example for a movement with negative quantity
+    going from one warehouse to another warehouse of
+    the same company.
+    """
+
+  def getSourceInventoriatedTotalAssetPrice():
+    """
+    Returns the total asset price for the source section, either
+    defined explicitely by the source_asset_price property
+    (as in accounting) or by calling getSourceAssetPrice and
+    multiplying it by the quantity. If no asset price
+    is defined, return None. Asset calculation methods
+    (SimulationTool.getInventoryAssetPrice) interprete
+    None using FIFO, FILO or Average algorithm.
+    """
+
+  def getDestinationInventoriatedTotalAssetPrice():
+    """
+    Returns the total asset price for the destination section, either
+    defined explicitely by the destination_asset_price property
+    (as in accounting) or by calling getDestinationAssetPrice and
+    multiplying it by the quantity. If no asset price
+    is defined, return None. Asset calculation methods
+    (SimulationTool.getInventoryAssetPrice) interprete
+    None using FIFO, FILO or Average algorithm.
+    """
+
+class IProductionMovement(IAmount):
+  """Production Movement private interface specification
+
+  Production movements have a source or a destination equal
+  to None. They are used to represent productions or
+  consumptions or resources according to the following
+  specification:
 
     (A -> B)
       production_quantity means nothing
@@ -64,6 +120,24 @@ class IMovement(IAmount, IArrowBase):
     if quantity < 0
       consumption_quantity = - quantity 
       production_quantity = 0
+  """
+  def getConsumptionQuantity():
+    """
+    Returns the consumed quantity during production
+    """
+
+  def getProductionQuantity():
+    """
+    Returns the produced quantity during production
+    """
+
+class IAccountingMovement(IAssetMovement):
+  """
+  Accounting Movement private interface specification
+
+  The notion of debit and credit is used in accounting
+  instead of signed quantity. The following calculation
+  rules apply:
 
     Credit/Debit
 
@@ -79,92 +153,91 @@ class IMovement(IAmount, IArrowBase):
       destination_credit = - quantity
       destination_debit = quantity
 
-    TODO:
-      1. finish equations (for asset price)
-      2. clarify asset value application for multi
-         currency accunting
-      3. clarify the use of asset price in ERP5
-         (accounting and outside) since we no 
-         longer store asset price on non accounting
-         movements
   """
-  # Helper API for Production
-  def getConsumptionQuantity():
-    """Returns the consumed quantity during
-    production
-    """
-
-  def getProductionQuantity():
-    """Returns the produced quantity during
-    production
-    """
-
-  # Helper methods for asset value calculation
-  def getSourceAssetPrice():
-    """Returns the asset price on the source, if defined
-    XXX - it is unclear if we still use this
-    """
-
-  def getDestinationAssetPrice():
-    """Returns the asset price on the destination, if defined
-    XXX - it is unclear if we still use this
-    """
-
-  def getSourceInventoriatedTotalAssetPrice():
-    """Returns the total asset price for the source, if defined
-    """
-
-  def getDestinationInventoriatedTotalAssetPrice():
-    """Returns the total asset price for the destination, if defined
-    """
+  # We must a find a way to use property sheets in or as interfaces
+  # property_sheets = (PropertySheet.Price, )
 
   # Helper methods for single currency Accounting (debit / credit)
   def getSourceDebit():
-    """Returns the source debit in the transaction currency
+    """
+    Returns the source debit in the transaction currency
     """
 
   def getSourceCredit():
-    """Returns the source credit in the transaction currency
+    """
+    Returns the source credit in the transaction currency
     """
 
   def getDestinationDebit():
-    """Returns the destination debit in the transaction currency
+    """
+    Returns the destination debit in the transaction currency
     """
 
   def getDestinationCredit():
-    """Returns the destination credit in the transaction currency
+    """
+    Returns the destination credit in the transaction currency
     """
 
   # Helper methods for multi currency Accounting (debit / credit)
   def getSourceAssetDebit():
-    """Returns the source debit in the source management currency
+    """
+    Returns the source debit in the source section management currency
+    based on the source_total_asset price property
     """
 
   def getSourceAssetCredit():
-    """Returns the source credit in the source management currency
+    """
+    Returns the source credit in the source section management currency
+    based on the source_total_asset price property
     """
 
   def getDestinationAssetDebit():
-    """Returns the destination debit in the destination management currency
+    """
+    Returns the destination debit in the destination section management currency
+    based on the destination_total_asset price property
     """
 
   def getDestinationAssetCredit():
-    """Returns the destination credit in the destination management currency
+    """
+    Returns the destination credit in the destination section management currency
+    based on the destination_total_asset price property
     """
 
+  # The following is really unclear - 
+  #   It uses getSourceInventoriatedTotalAssetPrice instead of
+  #   of getSourceInventoriatedTotalAssetPrice instead of getSourceTotalAssetPrice
+  #   I can only see one purpose: presentation of reports in predictive accounting
+  #   ie. in transactions generated by simulation which do not yet have
+  #   well defined source_total_asset/destination_total_asset
   def getSourceInventoriatedTotalAssetDebit():
-    """Unclear - XXX
+    """
+    Unclear - XXX
     """
 
   def getSourceInventoriatedTotalAssetCredit():
-    """Unclear - XXX
+    """
+    Unclear - XXX
     """
 
   def getDestinationInventoriatedTotalAssetDebit():
-    """Unclear - XXX
+    """
+    Unclear - XXX
     """
 
   def getDestinationInventoriatedTotalAssetCredit():
-    """Unclear - XXX
+    """
+    Unclear - XXX
     """
 
+class IMovement(IProductionMovement, IArrowBase):
+  """Movement interface specification
+
+  A movement represents an amount of resources which 
+  is moved along an Arrow (source and destination)
+  from a source A to a destination B. 
+  """
+  def isMovement():
+    """
+    Returns True if this movement should be indexed in the
+    stock table of the catalog, False else.
+    """
