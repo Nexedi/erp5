@@ -314,6 +314,7 @@ def runUnitTestList(test_list, verbosity=1, debug=0):
   import App.config
   cfg = App.config.getConfiguration()
   cfg.testinghome = instance_home
+  cfg.instancehome = instance_home
   App.config.setConfiguration(cfg)
 
   if WIN:
