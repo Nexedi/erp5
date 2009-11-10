@@ -96,6 +96,7 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
+                        <string>my_title</string>
                         <string>my_preferred_width</string>
                         <string>my_preferred_height</string>
                       </list>
