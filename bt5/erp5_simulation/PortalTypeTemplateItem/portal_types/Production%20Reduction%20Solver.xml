@@ -62,7 +62,7 @@
             <value> <string>Split and Differ</string> </value>
         </item>
         <item>
-            <key> <string>solver_configuration_form_id</string> </key>
+            <key> <string>configuration_form_id</string> </key>
             <value> <string>QuantitySplit_viewConfiguration</string> </value>
         </item>
       </dictionary>

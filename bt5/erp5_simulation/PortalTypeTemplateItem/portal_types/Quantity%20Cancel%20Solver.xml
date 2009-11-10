@@ -76,7 +76,7 @@
             <value> <string>Cancel Quantity</string> </value>
         </item>
         <item>
-            <key> <string>solver_configuration_form_id</string> </key>
+            <key> <string>configuration_form_id</string> </key>
             <value> <string>QuantityCancelSolver_viewConfiguration</string> </value>
         </item>
       </dictionary>

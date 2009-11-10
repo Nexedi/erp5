@@ -96,7 +96,7 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>my_solver_configuration_form_id</string>
+                        <string>my_configuration_form_id</string>
                         <string>my_solver_action_title</string>
                         <string>my_configuration_property_list</string>
                         <string>my_line_grouping</string>

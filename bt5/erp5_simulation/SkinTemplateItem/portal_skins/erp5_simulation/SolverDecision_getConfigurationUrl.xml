@@ -63,7 +63,7 @@ if not solver:\n
 \n
 solver = context.getSolverValue()\n
 \n
-return "%s/%s" % (context.absolute_url(), solver.getProperty(\'solver_configuration_form_id\')) # Replace solver_configuration_form_id with accessor\n
+return "%s/%s" % (context.absolute_url(), solver.getProperty(\'configuration_form_id\')) # Replace configuration_form_id with accessor\n
 </string> </value>
         </item>
         <item>

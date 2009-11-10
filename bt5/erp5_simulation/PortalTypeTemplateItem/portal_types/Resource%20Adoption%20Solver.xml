@@ -64,7 +64,7 @@
             <value> <string>Replace Resource</string> </value>
         </item>
         <item>
-            <key> <string>solver_configuration_form_id</string> </key>
+            <key> <string>configuration_form_id</string> </key>
             <value> <string>ResourceReplacementSolver_viewConfiguration</string> </value>
         </item>
       </dictionary>
