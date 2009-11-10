@@ -727,15 +727,11 @@ class Catalog(Folder,
       and to assign security only to root document
     """
     # Get security information
-    allowed_roles_and_users = wrapped_object.allowedRolesAndUsers()
-    # Sort it
-    allowed_roles_and_users = list(allowed_roles_and_users)
-    allowed_roles_and_users.sort()
-    allowed_roles_and_users = tuple(allowed_roles_and_users)
+    allowed_roles_and_users = tuple(wrapped_object.allowedRolesAndUsers())
     # Make sure no duplicates
     if getattr(aq_base(self), 'security_uid_dict', None) is None:
       self._clearSecurityCache()
-    if self.security_uid_dict.has_key(allowed_roles_and_users):
+    elif self.security_uid_dict.has_key(allowed_roles_and_users):
       return (self.security_uid_dict[allowed_roles_and_users], None)
     # If the id_tool is there, it is better to use it, it allows
     # to create many new security uids by the same time

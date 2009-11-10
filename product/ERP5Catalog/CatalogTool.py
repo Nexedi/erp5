@@ -33,7 +33,6 @@ from Products.ZSQLCatalog.SQLCatalog import Query, ComplexQuery
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.Cache import CachingMethod
 from AccessControl import ClassSecurityInfo, getSecurityManager
-from Products.CMFCore.CatalogTool import IndexableObjectWrapper as CMFCoreIndexableObjectWrapper
 from Products.CMFCore.utils import UniqueObject, _checkPermission, _getAuthenticatedUser, getToolByName
 from Products.ERP5Type.Globals import InitializeClass, DTMLFile, package_home
 from Acquisition import aq_base, aq_inner, aq_parent, ImplicitAcquisitionWrapper
@@ -55,7 +54,6 @@ from Products.ERP5Type.Utils import sqlquote
 import os, time, urllib, warnings
 import sys
 from zLOG import LOG, PROBLEM, WARNING, INFO
-import sets
 
 ACQUIRE_PERMISSION_VALUE = []
 
@@ -63,41 +61,32 @@ from Persistence import Persistent
 from Acquisition import Implicit
 
 
-class IndexableObjectWrapper(CMFCoreIndexableObjectWrapper):
+class IndexableObjectWrapper(object):
 
-    def __init__(self, vars, ob):
-        # sigh... CMFCoreIndexableObjectWrapper changed signature between
-        # CMF 1.5 and 2.x. The new signature is (self, ob, catalog), and the
-        # 'vars' calculation is done by __init__ itself
-        # FIXME, we should consider taking a page from the CMFCore parent and
-        # move the 'vars' logic here. We would be actually making use of the
-        # 'catalog' parameter, instead of just using it to fetch
-        # portal_workflow.
-        self.__vars = vars
+    def __init__(self, ob):
         self.__ob = ob
 
-    def __setattr__(self, name, value):
-      # We need to update the uid during the cataloging process
-      if name == 'uid':
-        setattr(self.__ob, name, value)
-      else:
-        self.__dict__[name] = value
+    def __getattr__(self, name):
+        return getattr(self.__ob, name)
+
+    # We need to update the uid during the cataloging process
+    uid = property(lambda self: self.__ob.uid,
+                   lambda self, value: setattr(self.__ob, 'uid', value))
 
     def _getSecurityParameterList(self):
-      result_key = '_cache_result'
-      if result_key not in self.__dict__:
+      result = self.__dict__.get('_cache_result', None)
+      if result is None:
         ob = self.__ob
-        localroles = mergedLocalRoles(ob)
         # For each group or user, we have a list of roles, this list
         # give in this order : [roles on object, roles acquired on the parent,
         # roles acquired on the parent of the parent....]
         # So if we have ['-Author','Author'] we should remove the role 'Author'
         # but if we have ['Author','-Author'] we have to keep the role 'Author'
-        flat_localroles = {}
-        skip_role_set = sets.Set()
+        localroles = {}
+        skip_role_set = set()
         skip_role = skip_role_set.add
         clear_skip_role = skip_role_set.clear
-        for key, role_list in localroles.iteritems():
+        for key, role_list in mergedLocalRoles(ob).iteritems():
           new_role_list = []
           new_role = new_role_list.append
           clear_skip_role()
@@ -107,10 +96,9 @@ class IndexableObjectWrapper(CMFCoreIndexableObjectWrapper):
             elif role not in skip_role_set:
               new_role(role)
           if len(new_role_list)>0:
-            flat_localroles[key] = new_role_list
-        localroles = flat_localroles
+            localroles[key] = new_role_list
 
-        portal = self.getPortalObject()
+        portal = ob.getPortalObject()
         role_dict = dict(portal.portal_catalog.getSQLCatalog().\
                                               getSQLCatalogRoleKeysList())
         getUserById = portal.acl_users.getUserById
@@ -121,7 +109,7 @@ class IndexableObjectWrapper(CMFCoreIndexableObjectWrapper):
         #   user:<user_id>
         #   user:<user_id>:<role_id>
         # A line must not be present twice in final result.
-        allowed = sets.Set(rolesForPermissionOn('View', ob))
+        allowed = set(rolesForPermissionOn('View', ob))
         # XXX Owner is hardcoded, in order to prevent searching for user on the
         # site root.
         allowed.discard('Owner')
@@ -141,13 +129,9 @@ class IndexableObjectWrapper(CMFCoreIndexableObjectWrapper):
               add(prefix)
               add(prefix + ':' + role)
 
-        # __setattr__ explicitely set the parameter on the wrapper
-        setattr(self, result_key, 
-                (list(allowed), user_role_dict, 
-                 user_view_permission_role_dict))
-
-      # Return expected value
-      return self.__dict__[result_key]
+        self._cache_result = result = (sorted(allowed), user_role_dict,
+                                       user_view_permission_role_dict)
+      return result
 
     def allowedRolesAndUsers(self):
       """
@@ -740,17 +724,15 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
           LOG('wrapObject', 0, 'Warning: catalog is not available')
           return (None, None)
 
+        document_object = aq_inner(object)
+        w = IndexableObjectWrapper(document_object)
+
         wf = getToolByName(self, 'portal_workflow')
         if wf is not None:
-          vars = wf.getCatalogVariablesFor(object)
-        else:
-          vars = {}
-        #LOG('catalog_object vars', 0, str(vars))
+          w.__dict__.update(wf.getCatalogVariablesFor(object))
 
         # Find the parent definition for security
-        document_object = aq_inner(object)
         is_acquired = 0
-        w = IndexableObjectWrapper(vars, document_object)
         while getattr(document_object, 'isRADContent', 0):
           # This condition tells which object should acquire 
           # from their parent.
@@ -762,21 +744,18 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
           else:
             break
         if is_acquired:
-          document_w = IndexableObjectWrapper({}, document_object)
+          document_w = IndexableObjectWrapper(document_object)
         else:
           document_w = w
 
         (security_uid, optimised_roles_and_users) = catalog.getSecurityUid(document_w)
         #LOG('catalog_object optimised_roles_and_users', 0, str(optimised_roles_and_users))
         # XXX we should build vars begore building the wrapper
-        if optimised_roles_and_users is not None:
-          vars['optimised_roles_and_users'] = optimised_roles_and_users
-        else:
-          vars['optimised_roles_and_users'] = None
+        w.optimised_roles_and_users = optimised_roles_and_users
         predicate_property_dict = catalog.getPredicatePropertyDict(object)
         if predicate_property_dict is not None:
-          vars['predicate_property_dict'] = predicate_property_dict
-        vars['security_uid'] = security_uid
+          w.predicate_property_dict = predicate_property_dict
+        w.security_uid = security_uid
 
         return ImplicitAcquisitionWrapper(w, aq_parent(document_object))
 
