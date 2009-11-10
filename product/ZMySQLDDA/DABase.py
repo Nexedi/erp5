@@ -89,7 +89,6 @@ __version__='$Revision: 1.5 $'[11:-2]
 
 import Shared.DC.ZRDB.Connection, sys
 from App.special_dtml import HTMLFile
-from ImageFile import ImageFile
 from ExtensionClass import Base
 import Acquisition
 
