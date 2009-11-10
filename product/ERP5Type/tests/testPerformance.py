@@ -52,7 +52,7 @@ MIN_MODULE_VIEW=0.147
 MAX_MODULE_VIEW=0.151
 MIN_OBJECT_CREATION=0.0088
 MAX_OBJECT_CREATION=0.0091
-MIN_TIC=0.0522
+MIN_TIC=0.0500
 MAX_TIC=0.0560
 LISTBOX_COEF=0.00169
 # Change history
@@ -60,7 +60,7 @@ LISTBOX_COEF=0.00169
 #  temporary increase threashold for view & tic to notice future regressions
 #   MIN_OBJECT_VIEW : 0.132 -> 0.142
 #   MAX_OBJECT_VIEW : 0.138 -> 0.144
-#   MIN_TIC : 0.0345 -> 0.0522
+#   MIN_TIC : 0.0345 -> 0.0500
 #   MAX_TIC : 0.0395 -> 0.0560
 #  too fast by the result of optimisation
 #   MIN_OBJECT_CREATION : 0.0090 -> 0.0088
