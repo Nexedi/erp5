@@ -73,6 +73,6 @@ class MinPrice(FIFO):
     Returns a list of simulation movement sorted from the lower price.
     """
     simulation_movement_list = self.simulation_movement_list[:]
-    if len(simulation_movement_list):
+    if len(simulation_movement_list) > 1:
       simulation_movement_list.sort(key=lambda x:x.getPrice())
     return simulation_movement_list
