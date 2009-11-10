@@ -34,7 +34,7 @@ from FIFO import FIFO
 
 class LIFO(FIFO):
   """
-  The LIFO solver reduces deliveted quantity by reducing the quantity of
+  The LIFO solver reduces delivered quantity by reducing the quantity of
   simulation movements from the first order.
   """
 
