@@ -43,6 +43,7 @@ from Acquisition import aq_base
 
 from Products.ERP5.Document.AppliedRule import TREE_DELIVERED_CACHE_KEY, TREE_DELIVERED_CACHE_ENABLED
 from Products.ERP5Type.patches.WorkflowTool import WorkflowHistoryList
+from Products.ERP5.mixin.property_recordable import PropertyRecordableMixin
 
 # XXX Do we need to create groups ? (ie. confirm group include confirmed, getting_ready and ready
 
@@ -61,7 +62,7 @@ parent_to_movement_simulation_state = {
   'invoiced'         : 'planned',
 }
 
-class SimulationMovement(Movement):
+class SimulationMovement(Movement, PropertyRecordableMixin):
   """
       Simulation movements belong to a simulation workflow which includes
       the following steps
@@ -103,9 +104,6 @@ class SimulationMovement(Movement):
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-  # Declarative interfaces
-  zope.interface.implements(interfaces.IPropertyRecordable,)
-
   # Declarative properties
   property_sheets = ( PropertySheet.Base
                     , PropertySheet.SimpleItem
@@ -120,6 +118,7 @@ class SimulationMovement(Movement):
                     , PropertySheet.AppliedRule
                     , PropertySheet.ItemAggregation
                     , PropertySheet.Reference
+                    , PropertySheet.PropertyRecordable
                     )
 
   def tpValues(self) :
