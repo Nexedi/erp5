@@ -39,37 +39,43 @@ import os, hotshot
 
 # Define variable to chek if performance are good or not
 # XXX These variable are specific to the testing environment
-# (which has 31645.6 pystones/second)
-MIN_OBJECT_VIEW=0.132
-MAX_OBJECT_VIEW=0.138
-MIN_OBJECT_MANY_LINES_VIEW=0.285
-MAX_OBJECT_MANY_LINES_VIEW=0.305
-MIN_OBJECT_PROXYFIELD_VIEW=0.215
-MAX_OBJECT_PROXYFIELD_VIEW=0.235
+#     (pytstone results: min: < 35373.2 - mean: ~ 35990.7 - max: > 36589.8)
+MIN_OBJECT_VIEW=0.142
+MAX_OBJECT_VIEW=0.144
+MIN_OBJECT_MANY_LINES_VIEW=0.290
+MAX_OBJECT_MANY_LINES_VIEW=0.293
+MIN_OBJECT_PROXYFIELD_VIEW=0.225
+MAX_OBJECT_PROXYFIELD_VIEW=0.228
 #CURRENT_MIN_OBJECT_VIEW=0.1220
 #CURRENT_MAX_OBJECT_VIEW=0.1280
-MIN_MODULE_VIEW=0.147
-MAX_MODULE_VIEW=0.187
-MIN_OBJECT_CREATION=0.0085
-MAX_OBJECT_CREATION=0.0105
-MIN_TIC=0.0345
-MAX_TIC=0.0395
-LISTBOX_COEF=0.001725
+MIN_MODULE_VIEW=0.154
+MAX_MODULE_VIEW=0.158
+MIN_OBJECT_CREATION=0.0088
+MAX_OBJECT_CREATION=0.0091
+MIN_TIC=0.0522
+MAX_TIC=0.0560
+LISTBOX_COEF=0.00095
 # Change history
-# 2009-11-09
-# too fast by the result of optimisation
-# MIN_OBJECT_CREATION : 0.0090 -> 0.0085
-# MAX_OBJECT_CREATION : 0.0110 -> 0.0105
-# MIN_MODULE_VIEW : 0.149 -> 0.147
-# MAX_MODULE_VIEW : 0.189 -> 0.187
+# 2009-11-10
+#  temporary increase threashold for view & tic to notice future regressions
+#   MIN_OBJECT_VIEW : 0.132 -> 0.142
+#   MAX_OBJECT_VIEW : 0.138 -> 0.144
+#   MIN_TIC : 0.0345 -> 0.0522
+#   MAX_TIC : 0.0395 -> 0.0560
+#  too fast by the result of optimisation
+#   MIN_OBJECT_CREATION : 0.0090 -> 0.0088
+#   MAX_OBJECT_CREATION : 0.0110 -> 0.0091
+#   MIN_MODULE_VIEW : 0.149 -> 0.154
+#   MAX_MODULE_VIEW : 0.189 -> 0.158
+#   LISTBOX_COEF : 0.001725 -> 0.00095
 # 2009-10-23
-# too fast by the result of optimisation
-# MIN_OBJECT_MANY_LINES_VIEW : 0.300 -> 0.285
-# MAX_OBJECT_MANY_LINES_VIEW : 0.320 -> 0.305
-# too fast by modifying the pagination renderer
-# MIN_MODULE_VIEW : 0.155 -> 0.149
-# MAX_MODULE_VIEW : 0.195 -> 0.189
-# LISTBOX_COEF : 0.02472 -> 0.001725
+#  too fast by the result of optimisation
+#   MIN_OBJECT_MANY_LINES_VIEW : 0.300 -> 0.285
+#   MAX_OBJECT_MANY_LINES_VIEW : 0.320 -> 0.305
+#  too fast by modifying the pagination renderer
+#   MIN_MODULE_VIEW : 0.155 -> 0.149
+#   MAX_MODULE_VIEW : 0.195 -> 0.189
+#   LISTBOX_COEF : 0.02472 -> 0.001725
 DO_TEST = 1
 
 # set 1 to get hotshot profiler's result (unit_test/tests/<func_name>)
