@@ -93,7 +93,7 @@
                     <value>
                       <list>
                         <string>listbox_delivery_solver</string>
-                        <string>listbox_target_solver</string>
+                        <string>listbox_solver</string>
                       </list>
                     </value>
                 </item>

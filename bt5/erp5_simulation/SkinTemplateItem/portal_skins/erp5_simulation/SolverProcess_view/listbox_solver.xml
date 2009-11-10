@@ -11,7 +11,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>listbox_target_solver</string> </value>
+            <value> <string>listbox_solver</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -157,7 +157,9 @@
                 </item>
                 <item>
                     <key> <string>items</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>required</string> </key>
@@ -255,7 +257,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>decisions_delivery_solver</string> </value>
+                    <value> <string>Target Solver</string> </value>
                 </item>
                 <item>
                     <key> <string>unicode</string> </key>
@@ -267,6 +269,22 @@
                 </item>
               </dictionary>
             </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>python:zip(cell.getCausalityValue().getSolverTitleList(), cell.getCausalityValue().getSolverList())</string> </value>
         </item>
       </dictionary>
     </pickle>

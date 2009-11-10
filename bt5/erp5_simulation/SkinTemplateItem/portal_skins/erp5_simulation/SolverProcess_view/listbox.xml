@@ -377,7 +377,7 @@
                           <string>Delivery Solver</string>
                         </tuple>
                         <tuple>
-                          <string>target_solver</string>
+                          <string>solver</string>
                           <string>Target Solver</string>
                         </tuple>
                         <tuple>
@@ -428,7 +428,7 @@
                           <string>Delivery Solver</string>
                         </tuple>
                         <tuple>
-                          <string>target_solver</string>
+                          <string>solver</string>
                           <string>Target Solver</string>
                         </tuple>
                       </list>
