@@ -60,6 +60,16 @@ class FlowCapacity:
       'type'        : 'float',
       'default'     : 0.0,
       'mode'        : 'w' },
+    { 'id'          : 'min_stock',
+      'description' : """The minimal stock quantity of a resource.""",
+      'type'        : 'float',
+      'default'     : 0.0,
+      'mode'        : 'w' },
+    { 'id'          : 'max_stock',
+      'description' : """The maximal stock quantity of a resource.""",
+      'type'        : 'float',
+      'default'     : 0.0,
+      'mode'        : 'w' },
   )
 
   _categories = ('quantity_unit',)
