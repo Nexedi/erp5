@@ -106,8 +106,8 @@ def Base_asXML(object, root=None):
             data_encoded = standard_b64encode(content)
             block = SubElement(sub_object, 'block_data')
             block.text = data_encoded
-        else: 
-          raise "XMLExportImport failed, the data is undefined"
+        else:
+          raise ValueError("XMLExportImport failed, the data is undefined")
       elif prop_type in ('lines', 'tokens',):
         # Use CDATA node to not be taken into account by erp5diff 
         value = [word.decode('utf-8').encode('ascii','xmlcharrefreplace')\

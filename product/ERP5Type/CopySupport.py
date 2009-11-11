@@ -13,6 +13,7 @@
 ##############################################################################
 
 from OFS import Moniker
+from zExceptions import BadRequest
 from AccessControl import ClassSecurityInfo, getSecurityManager
 from AccessControl.Permission import Permission
 from OFS.ObjectManager import ObjectManager
@@ -225,7 +226,7 @@ class CopyContainer:
           id = ob.id
           v=container._getOb(id, self)
           if v is self:
-              raise 'BadRequest', '%s does not exist' % ids[-1]
+              raise BadRequest('%s does not exist' % ids[-1])
           container._delObject(id)
           del uids[-1]
       if REQUEST is not None:
