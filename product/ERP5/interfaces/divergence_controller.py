@@ -51,7 +51,16 @@ class IDivergenceController(Interface):
   def isDivergent(self, movement=None):
     """
     Returns True if any of the movements provided 
-    in delivery_or_movement is divergent.
+    in delivery_or_movement is divergent. Else return False.
+
+    movement -- a movement, a delivery, a simulation movement,
+                or a list thereof
+    """
+
+  def isConvergent(self, movement=None):
+    """
+    Returns False if any of the movements provided 
+    in delivery_or_movement is divergent. Else return True.
 
     movement -- a movement, a delivery, a simulation movement,
                 or a list thereof
