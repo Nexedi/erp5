@@ -28,12 +28,11 @@
 #
 ##############################################################################
 
-from zope.interface import Interface
 from zope.schema.interfaces import ISequence
 
 class IAggregatedAmountList(ISequence):
-  """An Aggregated Amount List is a list of amounts aggregated together.
-
-  It is a sequence of objects implementing IAmount interface.
+  """Aggregated amount list interface specification
+  
+   A sequence of objects implementing IAmount interface.
   """
 
