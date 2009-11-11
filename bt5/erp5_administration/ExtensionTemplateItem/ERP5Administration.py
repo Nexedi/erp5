@@ -59,3 +59,34 @@ def checkFolderHandler(self, fixit=0, **kw):
     error_list.append(message)
     LOG('checkFolderHandler', INFO, message)
   return error_list
+
+
+def MessageCatalog_getMessageDict(self):
+  """
+    Get Localizer's MessageCatalog instance messages.
+  """
+  d = {}
+  for k,v in self._messages.iteritems():
+    d[k] = v
+  return d
+
+def MessageCatalog_getNotTranslatedMessageDict(self):
+  """
+    Get Localizer's MessageCatalog instance messages that are NOT translated.
+  """
+  not_translated_message_dict = {}
+  messages = MessageCatalog_getMessageDict(self)
+  for k,v in messages.iteritems():
+    if not len(v):
+      not_translated_message_dict[k] = v
+  return not_translated_message_dict
+
+def MessageCatalog_deleteNotTranslatedMessageDict(self):
+  """
+    Delete from  Localizer's MessageCatalog instance messages that are NOT translated.
+  """
+  not_translated_message_dict = MessageCatalog_getNotTranslatedMessageDict(self)
+  for k,v in not_translated_message_dict.iteritems():
+    # delete message from dict
+    del(self._messages[k])
+  return len(not_translated_message_dict.keys())
