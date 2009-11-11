@@ -65,10 +65,10 @@ if field_my_comment is not None:\n
 \n
 if isAnon:\n
   # create first an account for user\n
+  web_site = context.getWebSiteValue()\n
   msg = translateString("You need to create an account to continue. If you already have please login.")\n
-  context.Base_redirect(\'WebSite_viewRegistrationDialog\', \\\n
-                      keep_items={\'editable_mode\': 0,\n
-                                  \'portal_status_message\': msg})\n
+  web_site.Base_redirect(\'register\', \\\n
+                      keep_items={\'portal_status_message\': msg})\n
   return\n
 \n
 if field_my_payment_mode is None:\n
@@ -139,6 +139,7 @@ return\n
                             <string>translateString</string>
                             <string>None</string>
                             <string>shopping_cart</string>
+                            <string>web_site</string>
                             <string>msg</string>
                             <string>dict</string>
                           </tuple>

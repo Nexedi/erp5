@@ -77,15 +77,16 @@
 ">\n
 \n
 .main_content h2 {margin:0px;}\n
+.main_content h3 {font-size:120% !important; color:#FF0000;}\n
 div.portal_status_message h3 {margin:0px;}\n
 \n
 #fieldset_left {padding:10px;}\n
 #fieldset_left div.field {margin-top:5px; margin-bottom: 10px;}\n
-#fieldset_left label {font-size: 120% !important; color:#505050; float:left;  width: <tal:block tal:replace="python: main_content_width / 5"/>px;}\n
+#fieldset_left label {width: 135px !important; font-size: 120% !important; color:#505050; float:left;  width: <tal:block tal:replace="python: main_content_width / 5"/>px;}\n
 #fieldset_left label a {display:none;}\n
 #fieldset_right {padding:10px;}\n
 #fieldset_right div.field {margin-top:5px; margin-bottom: 10px;}\n
-#fieldset_right label {font-size: 120% !important; color:#505050; float:left; width:<tal:block tal:replace="python: main_content_width / 5"/>px;}\n
+#fieldset_right label {width: 135px !important; font-size: 120% !important; color:#505050; float:left; width:<tal:block tal:replace="python: main_content_width / 5"/>px;}\n
 #fieldset_right label a {display:none;}\n
 #fieldset_center {padding:10px;}\n
 #fieldset_center div.field {margin-top:5px; margin-bottom: 10px;}\n

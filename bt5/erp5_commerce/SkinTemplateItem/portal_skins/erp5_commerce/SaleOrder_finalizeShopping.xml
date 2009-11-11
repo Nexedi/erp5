@@ -204,10 +204,9 @@ customer = context.SaleOrder_getShoppingCartCustomer()\n
 \n
 if isAnon:\n
   # create first an account for user\n
-  msg = translateString("You need to create an account to continue If you already have please login.")\n
-  context.Base_redirect(\'WebSite_viewRegistrationDialog\', \\\n
-                        keep_items={\'portal_status_message\': msg,\n
-                                    \'editable_mode\': 1})\n
+  msg = translateString("You need to create an account to continue. If you already have please login.")\n
+  web_site.Base_redirect(\'register\', \\\n
+                      keep_items={\'portal_status_message\': msg})\n
   return\n
 \n
 # XXX: Implement check if payment is sucessfull\n

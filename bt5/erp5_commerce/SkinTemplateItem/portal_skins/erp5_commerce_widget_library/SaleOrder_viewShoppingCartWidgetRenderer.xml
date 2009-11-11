@@ -94,12 +94,6 @@
                 <span tal:replace="python: here.Base_translateString(\'Shopping Cart\')"/>\n
              </a>\n
            </div>\n
-           <div class="cart_right">\n
-             <a class="articlelink"\n
-                tal:attributes="href python: \'%s/%s\' % (web_site.absolute_url(), web_site.getLayoutProperty(\'ecommerce_checkout_section_id\', \'\'))">\n
-               <span tal:replace="python: here.Base_translateString(\'Checkout\')"/>\n
-             </a>\n
-           </div>\n
         </td>\n
     </tr>\n
   </tal:block>\n

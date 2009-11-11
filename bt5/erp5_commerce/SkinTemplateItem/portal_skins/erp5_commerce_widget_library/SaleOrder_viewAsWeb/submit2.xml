@@ -11,7 +11,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>submit</string> </value>
+            <value> <string>submit2</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -56,10 +56,6 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>image</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>name</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -96,7 +92,9 @@
                 </item>
                 <item>
                     <key> <string>enabled</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>extra</string> </key>
@@ -104,9 +102,7 @@
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>image</string> </key>
@@ -133,11 +129,11 @@
                 </item>
                 <item>
                     <key> <string>css_class</string> </key>
-                    <value> <string>hiddenLabel</string> </value>
+                    <value> <string>hiddenLabel shopping_cart_renderer_submit</string> </value>
                 </item>
                 <item>
                     <key> <string>default</string> </key>
-                    <value> <string>Proceed to Payment</string> </value>
+                    <value> <string>Update</string> </value>
                 </item>
                 <item>
                     <key> <string>description</string> </key>
@@ -165,11 +161,11 @@
                 </item>
                 <item>
                     <key> <string>name</string> </key>
-                    <value> <string>SaleOrder_paymentRedirect:method</string> </value>
+                    <value> <string>SaleOrder_editShoppingCart:method</string> </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Pay Button</string> </value>
+                    <value> <string>Update</string> </value>
                 </item>
               </dictionary>
             </value>
@@ -188,7 +184,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>not: here/SaleOrder_isConsistent</string> </value>
+            <value> <string>python: not here.SaleOrder_isShoppingCartEmpty()</string> </value>
         </item>
       </dictionary>
     </pickle>

@@ -11,7 +11,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>shopping_cart</string> </value>
+            <value> <string>customer</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -163,7 +163,9 @@
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>max_length</string> </key>
@@ -214,7 +216,7 @@
                 </item>
                 <item>
                     <key> <string>css_class</string> </key>
-                    <value> <string>hiddenLabel shopping_cart_renderer</string> </value>
+                    <value> <string>hiddenLabel</string> </value>
                 </item>
                 <item>
                     <key> <string>default</string> </key>
@@ -270,7 +272,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Shopping Cart</string> </value>
+                    <value> <string>Customer Information</string> </value>
                 </item>
                 <item>
                     <key> <string>unicode</string> </key>
@@ -301,7 +303,23 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>here/SaleOrder_viewShoppingCartRenderer</string> </value>
+            <value> <string>here/SaleOrder_viewCustomerRenderer</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <tuple>
+        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>not: here/SaleOrder_isConsistent</string> </value>
         </item>
       </dictionary>
     </pickle>

@@ -137,7 +137,7 @@
                 </item>
                 <item>
                     <key> <string>default</string> </key>
-                    <value> <string>Buy</string> </value>
+                    <value> <string>Proceed to Payment</string> </value>
                 </item>
                 <item>
                     <key> <string>description</string> </key>
