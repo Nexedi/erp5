@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2009 Nexedi SARL and Contributors. All Rights Reserved.
@@ -29,97 +30,61 @@
 Products.ERP5.interfaces.simulation_movement
 """
 
-from zope.interface import Interface
+from Products.ERP5.interfaces.property_recordable import IPropertyRecordable
+from Products.ERP5.interfaces.movement import IMovement
+from Products.ERP5.interfaces.divergence_controller import IDivergenceController
+from Products.ERP5.interfaces.business_completable import IBusinessCompletable
 
-class ISimulationMovement(Interface):
+class ISimulationMovement(IMovement, IPropertyRecordable, IDivergenceController, IBusinessCompletable):
   """Simulation Movement interface specification
 
-    The SimulationMovement interface introduces the option
-    to define quantity errors between the simulation
-    and the delivered reality.
+  The ISimulationMovement interface introduces in addition
+  to IMovement the possibility to record properties by
+  inheriting IPropertyRecordable, and to track rounding
+  or non linearities of quantity at build time.
 
-    In short: parent applied rules use the Movement
-    API to define quantity. Child applied rules
-    should use the Delivered API to access appropriate
-    quantity values which are take into account the
-    delivery_error.
-
-    DeliverySolver either solve divergence by
-    setting the delivery_error (then no target
-    solver needed, at least for quantity) or
-    by changing the quantity (then TargetSolver
-    is needed to backtrack the quantity).
-
-    Equation:
+  The main equation to consider is:
       quantity(SM) + delivery_error (SM) =
         quantity(DL) * delivery_ratio(SM)
- 
-    TODO:
-      1. unclear API remaining
- """
+  where SM is a simulation movement and DL a delivery line.
 
-  # Delivery API
+  During the expand process, parent applied rules 
+  may define the quantity of the simulation movement,
+  but not the delivery_error. 
+
+  During the build process, delivery_error can be used
+  to store on the simulation movement amounts related
+  to rounding or to floating point precision errors.
+
+  During the expand process, child applied rules
+  use getDeliveryQuantity rather than getQuantity.
+
+  Solving quantity divergences can thus be obtained either
+  by changing quantity (which then needs to backtracking)
+  or by changing delivert_error (no backtracking needed)
+  """
   def getDeliveryRatio():
     """
-      Returns ratio to apply on the quantity
-      property of the corresponding delivery
-      to obtain the current quantity
+    Returns ratio to apply on the quantity
+    property of the corresponding delivery
+    to obtain the current quantity
+
+    NOTE: redundant with Simulation Property Sheet
     """
 
   def getDeliveryError():
     """
-      Returns correction to make the match
-      between delivery quantity and simulation
-      quantity consistent
+    Returns correction to make the match
+    between delivery quantity and simulation
+    quantity consistent
+
+    NOTE: redundant with Simulation Property Sheet
     """
 
   def getDeliveryQuantity():
     """
-      Returns quantity which was actually shipped, taking
-      into account the errors of the simulation fixed by
-      the delivery
-
+    Returns quantity which was actually shipped, taking
+    into account the errors of the simulation fixed by
+    the delivery:
       quantity + delivery_error
     """
-
-  def getDeliveryConvertedQuantity():
-    """XXX - unclear
-    """
-
-  # Divergence API
-  def isConvergent():
-    """Tells whether the simulation movement is convergent
-      or not, with related delivery
-    """
-
-  def isDivergent():
-    """Tells whether the simulation movement is divergent
-      or not, with related delivery
-    """
-
-  def getDivergenceList():
-    """Returns a list of divergences using DivergenceMessage class
-    """
-
-  def isFrozen():
-    """Tells whether the simulation movement is frozen.
-    By default, looks up the related Business Process Path
-    and tells if the simulation state is part of frozen
-    states.
-
-    Frozen simulation movement cannot be modified by expanding.
-    """
-
-  def isCompleted():
-    """Tells whether the simulation movement is completed.
-    By default, looks up the related Business Process Path
-    and tells if the simulation state is part of completed
-    states.
-
-    Completed simulation movement allow to move to next step of Business Process
-    """
-
-  def isSimulated():
-    """XXX - unclear
-    """
-
