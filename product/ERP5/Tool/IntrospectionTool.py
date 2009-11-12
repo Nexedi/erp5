@@ -404,7 +404,7 @@ class IntrospectionTool(LogMixin, BaseTool):
     # XXX (rafael) it better use (and extend if needed) the portal_subversions.
     if self.getSystemSignatureDict()["pysvn"] is None:
       raise 
-    raise NotImplemented 
+    raise NotImplementedError 
 
   #
   #   Library signature

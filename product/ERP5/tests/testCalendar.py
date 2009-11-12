@@ -682,7 +682,7 @@ class TestCalendar(ERP5ReportTestCase):
     Test getCapacityAvailability
     """
     if not run: return
-    raise NotImplemented
+    raise NotImplementedError
 
     # Test that calendar group increase time availability
     sequence_list = SequenceList()
