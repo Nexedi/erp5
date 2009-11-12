@@ -167,20 +167,19 @@ try:
     if not isinstance(action, dict):
       # ivan
       if self.data.get('icon') is not None:
-        self.data['icon'] = self._getIcon
+        def getIcon(ec=ec):
+          # On CMF 2.2 the ec parameter is not passed.
+          icon_expression_obj = action._getIconObject()
+          if icon_expression_obj not in ('',  None):
+            return icon_expression_obj(ec)
+        self.data['icon'] = getIcon
         self._lazy_keys.append('icon')
       else:
         self.data['icon'] = ''
-      # put back 'name' if it's not there. CMF 2.x removes it.
-      self.data['name'] = self.data['title']
-
-  def _getIcon(self):
-    # ivan
-    icon_expression_obj = self._action._getIconObject()
-    if icon_expression_obj not in ('',  None):
-      return icon_expression_obj(self._ec)
+    # put back 'name' if it's not there. CMF 2.x removes it.
+    self.data['name'] = self['title']
 
   ActionInfo.__init__ = __init__
-  ActionInfo._getIcon = _getIcon
+
 except ImportError:
   pass
