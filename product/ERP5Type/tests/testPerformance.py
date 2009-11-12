@@ -39,39 +39,40 @@ import os, hotshot
 
 # Define variable to chek if performance are good or not
 # XXX These variable are specific to the testing environment
-#     (pytstone results: min: < 35373.2 - mean: ~ 35990.7 - max: > 36589.8)
+#     (pystone results: min: < 35373.2 - mean: ~ 35990.7 - max: > 36589.8)
+                                    # Smallest values
 MIN_OBJECT_VIEW=0.142
-MAX_OBJECT_VIEW=0.144
-MIN_OBJECT_MANY_LINES_VIEW=0.290
+MAX_OBJECT_VIEW=0.144               # 0.122
+MIN_OBJECT_MANY_LINES_VIEW=0.289
 MAX_OBJECT_MANY_LINES_VIEW=0.293
 MIN_OBJECT_PROXYFIELD_VIEW=0.225
-MAX_OBJECT_PROXYFIELD_VIEW=0.228
+MAX_OBJECT_PROXYFIELD_VIEW=0.228    # 0.220
 #CURRENT_MIN_OBJECT_VIEW=0.1220
 #CURRENT_MAX_OBJECT_VIEW=0.1280
 MIN_MODULE_VIEW=0.147
 MAX_MODULE_VIEW=0.151
-MIN_OBJECT_CREATION=0.0088
-MAX_OBJECT_CREATION=0.0091
-MIN_TIC=0.0500
-MAX_TIC=0.0560
+MIN_TIC=0.0333                      # 0.0260
+MAX_TIC=0.0355
+MIN_OBJECT_CREATION=0.0071
+MAX_OBJECT_CREATION=0.0077
 LISTBOX_COEF=0.00169
 # Change history
-# 2009-11-10
-#  temporary increase threashold for view & tic to notice future regressions
+# 2009-11-12
+#  temporary increase threashold for view to notice future regressions
 #   MIN_OBJECT_VIEW : 0.132 -> 0.142
 #   MAX_OBJECT_VIEW : 0.138 -> 0.144
-#   MIN_TIC : 0.0345 -> 0.0500
-#   MAX_TIC : 0.0395 -> 0.0560
 #  too fast by the result of optimisation
-#   MIN_OBJECT_CREATION : 0.0090 -> 0.0088
-#   MAX_OBJECT_CREATION : 0.0110 -> 0.0091
+#   MIN_OBJECT_CREATION : 0.0090 -> 0.0071
+#   MAX_OBJECT_CREATION : 0.0110 -> 0.0077
+#   MIN_TIC : 0.0345 -> 0.0333
+#   MAX_TIC : 0.0395 -> 0.0355
 #   MIN_MODULE_VIEW : 0.149 -> 0.147
 #   MAX_MODULE_VIEW : 0.189 -> 0.151
 #   LISTBOX_COEF : 0.001725 -> 0.00169
 # 2009-10-23
 #  too fast by the result of optimisation
-#   MIN_OBJECT_MANY_LINES_VIEW : 0.300 -> 0.285
-#   MAX_OBJECT_MANY_LINES_VIEW : 0.320 -> 0.305
+#   MIN_OBJECT_MANY_LINES_VIEW : 0.300 -> 0.289
+#   MAX_OBJECT_MANY_LINES_VIEW : 0.320 -> 0.293
 #  too fast by modifying the pagination renderer
 #   MIN_MODULE_VIEW : 0.155 -> 0.149
 #   MAX_MODULE_VIEW : 0.195 -> 0.189
