@@ -114,6 +114,9 @@
                         <string>my_internal_supply_line_min_delay</string>
                         <string>my_internal_supply_line_max_delay</string>
                         <string>my_internal_supply_line_min_flow</string>
+                        <string>my_internal_supply_line_max_flow</string>
+                        <string>my_internal_supply_line_min_stock</string>
+                        <string>my_internal_supply_line_max_stock</string>
                       </list>
                     </value>
                 </item>

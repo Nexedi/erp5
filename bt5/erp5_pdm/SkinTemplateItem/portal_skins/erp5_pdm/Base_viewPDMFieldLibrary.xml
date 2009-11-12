@@ -144,6 +144,9 @@
                         <string>my_resource_internal_quantity_step_list</string>
                         <string>my_destination_reference</string>
                         <string>my_source_reference</string>
+                        <string>my_max_flow</string>
+                        <string>my_max_stock</string>
+                        <string>my_min_stock</string>
                       </list>
                     </value>
                 </item>
