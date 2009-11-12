@@ -273,7 +273,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:cell.getPermanentURL(cell)</string> </value>
+            <value> <string>python:cell.WebSection_getPermanentURLView(cell)</string> </value>
         </item>
       </dictionary>
     </pickle>
