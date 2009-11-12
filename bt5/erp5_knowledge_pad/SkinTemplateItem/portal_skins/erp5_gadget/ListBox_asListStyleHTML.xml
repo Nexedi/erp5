@@ -127,7 +127,7 @@
 \n
           <!-- Refresh -->\n
 \n
-            <a class="right" tal:attributes="onclick python:real_context.KnowledgePad_generateAjaxCall(context_url+\'/\'+form_id,box,box_id)"><img alt="" tal:attributes="onload python:\'if(\\\'\'+rss_title.replace(\'\\\'\',\'\')+\'\\\'==\\\'Please enter a valid Rss or Atom url in the edit form\\\'){showElement(\\\'edit_form_\'+box.getId()+\'\\\');;}\'" src="refresh.png"/></a>\n
+          <a class="right" tal:attributes="onclick python:real_context.KnowledgePad_generateAjaxCall(context_url+\'/\'+form_id,box,box_id, {}, 1)"><img alt="" tal:attributes="onload python:\'if(\\\'\'+rss_title.replace(\'\\\'\',\'\')+\'\\\'==\\\'Please enter a valid Rss or Atom url in the edit form\\\'){showElement(\\\'edit_form_\'+box.getId()+\'\\\');;}\'" src="refresh.png"/></a>\n
 \n
           <!-- Feed Title -->\n
 \n
