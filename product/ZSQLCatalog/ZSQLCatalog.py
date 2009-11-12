@@ -839,7 +839,7 @@ class ZCatalog(Folder, Persistent, Implicit):
             if wrapped_object_list:
               destination_catalog.catalogObjectList(wrapped_object_list,**kw)
 
-    object_list[:] = failed_object_list[:]
+    object_list[:] = failed_object_list
 
   def uncatalog_object(self, uid=None,path=None, sql_catalog_id=None):
     """ wrapper around catalog """

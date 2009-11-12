@@ -1291,30 +1291,24 @@ class Catalog(Folder,
     assigned_uid_dict = {}
 
     for object in object_list:
-      if getattr(aq_base(object), 'uid', None) is None:
+      uid = getattr(aq_base(object), 'uid', None)
+      # Several Tool objects have uid=0 (not 0L) from the beginning, but
+      # we need an unique uid for each object.
+      if uid is None or isinstance(uid, int) and uid == 0:
         try:
           object.uid = self.newUid()
         except ConflictError:
           raise
         except:
           raise RuntimeError, 'could not set missing uid for %r' % (object,)
-      elif isinstance(object.uid, int) and object.uid == 0:
-        # Several Tool objects have uid=0 (not 0L) from the beginning, but
-        # we need an unique uid for each object.
-        object.uid = self.newUid()
       elif check_uid:
-        uid = object.uid
         if uid in assigned_uid_dict:
           raise ValueError('uid of %r is %r and '
               'is already assigned to %s in catalog !!! This can be fatal.' %
               (object, uid, assigned_uid_dict[uid]))
 
         path = object.getPath()
-        index = path_uid_dict.get(path, None)
-        try:
-          index = long(index)
-        except TypeError:
-          index = None
+        index = path_uid_dict.get(path)
         if index is not None:
           if index < 0:
             raise CatalogError, 'A negative uid %d is used for %s. Your catalog is broken. Recreate your catalog.' % (index, path)
@@ -1333,9 +1327,9 @@ class Catalog(Folder,
           #LOG('catalogObject', 0, 'uid = %r, catalog_path = %r' % (uid, catalog_path))
           if catalog_path == "reserved":
             # Reserved line in catalog table
-            klass = self.__class__
+            lock = self.__class__._reserved_uid_lock
             try:
-              klass._reserved_uid_lock.acquire()
+              lock.acquire()
               uid_buffer = self.getUIDBuffer()
               if uid_buffer is not None:
                 # This is the case where:
@@ -1351,7 +1345,7 @@ class Catalog(Folder,
                 except ValueError:
                   pass
             finally:
-              klass._reserved_uid_lock.release()
+              lock.release()
           elif catalog_path is not None:
             # An uid conflict happened... Why?
             # can be due to path length
