@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
@@ -490,7 +491,8 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn, 
     # we may want to change all objects ids before migrating to new folder type
     # set new id generator here so that object created while migration
     # got a right id
-    self.setIdGenerator(new_generate_id_method)
+    if new_generate_id_method is not None:
+      self.setIdGenerator(new_generate_id_method)
     if migration_generate_id_method not in (None, ''):
       tag = "%s/%s/migrate" %(self.getId(),migration_generate_id_method) 
       id_list  = list(self.objectIds())
