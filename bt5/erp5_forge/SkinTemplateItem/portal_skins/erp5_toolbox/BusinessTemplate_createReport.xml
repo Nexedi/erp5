@@ -129,9 +129,9 @@ dialog.your_deferred_style.manage_edit_xmlrpc(\n
 # Associate the dialog with type information\n
 type_information = portal.portal_types.getTypeInfo(portal_type)\n
 max_priority = 0\n
-action_list = type_information.listActions()\n
+action_list = type_information.contentValues(portal_type=\'Action Information\')\n
 if action_list:\n
-  max_priority = max([ai.getPriority() for ai in action_list])\n
+  max_priority = max([ai.getFloatIndex() or 0 for ai in action_list])\n
   \n
 type_information.addAction(\n
     action_id,\n
