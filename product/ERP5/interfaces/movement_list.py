@@ -28,10 +28,10 @@
 #
 ##############################################################################
 
-from Products.ERP5.interfaces.aggregated_amount_list import IAggregatedAmountList
+from Products.ERP5.interfaces.amount_list import IAmountList
 
-class IAggregatedMovementList(IAggregatedAmountList):
-  """Aggregated movement list interface specification
+class IMovementList(IAmountList):
+  """Movement list interface specification
   
    A sequence of objects implementing IMovement interface.
   """

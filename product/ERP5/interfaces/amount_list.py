@@ -30,8 +30,8 @@
 
 from zope.schema.interfaces import ISequence
 
-class IAggregatedAmountList(ISequence):
-  """Aggregated amount list interface specification
+class IAmountList(ISequence):
+  """Amount list interface specification
   
    A sequence of objects implementing IAmount interface.
   """
