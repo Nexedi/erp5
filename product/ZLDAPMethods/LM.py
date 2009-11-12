@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # core of LDAP Filter Methods.
 
 
@@ -180,6 +181,9 @@ _ldapScopes = { "ONELEVEL": ldap.SCOPE_ONELEVEL,
                 "SUBTREE": ldap.SCOPE_SUBTREE,
                 "BASE": ldap.SCOPE_BASE }
 
+class LDAPError(Exception):
+  pass
+
 class LDAPMethod(Aqueduct.BaseQuery,
     Acquisition.Implicit,
     Globals.Persistent,
@@ -319,7 +323,7 @@ class LDAPMethod(Aqueduct.BaseQuery,
                 else: REQUEST={}
         c = self._getConn()
         if not c:
-            raise "LDAPError", "LDAP Connection not open"
+            raise LDAPError('LDAP Connection not open')
 
         if getattr(self, 'aq_parent', None) is not None:
             p = self.aq_parent
@@ -452,7 +456,7 @@ class LDIFMethod(LDAPMethod):
         else: REQUEST={}
     c = self._connection().GetConnection()
     if not c:
-      raise "LDAPError", "LDAP Connection not open"
+      raise LDAPError('LDAP Connection not open')
 
     if hasattr(self, 'aq_parent'):
       p = self.aq_parent
