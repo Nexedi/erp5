@@ -1,3 +1,6 @@
+2009-11-12 tatuya
+* add the variation views of FlowCapacity for SupplyLine. Note that they have not connected to the actions.
+
 2009-10-22 Kazuhiko
 add Internal Supply.
 
