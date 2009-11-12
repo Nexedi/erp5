@@ -59,6 +59,8 @@
   better for cache).\n
 """\n
 permanent_url = context.WebSection_getPermanentURL(document)\n
+\n
+# for web page, foo and foo/view are completely same\n
 if portal_type == \'Web Page\':\n
   return permanent_url\n
 else:\n
@@ -120,7 +122,7 @@ else:\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>WebSection_getPermanentURLView</string> </value>
+            <value> <string>WebSection_getPermanentURLForView</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
