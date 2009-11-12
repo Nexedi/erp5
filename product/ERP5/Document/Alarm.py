@@ -287,7 +287,7 @@ class Alarm(XMLObject, PeriodicityMixin):
     return self.hasActivity(only_valid=1)
 
   security.declareProtected(Permissions.AccessContentsInformation, 'activeSense')
-  def activeSense(self, fixit=0):
+  def activeSense(self, fixit=0, params=None):
     """
     This method launches the sensing process as activities.
     It is intended to launch a very long process made
@@ -326,15 +326,18 @@ class Alarm(XMLObject, PeriodicityMixin):
         kw = {}
         method = getattr(self, method_id)
         name_list = method.func_code.co_varnames
-        if 'fixit' in name_list or (method.func_defaults is not None
+        if 'params' in name_list or (method.func_defaults is not None
           and len(method.func_defaults) < len(name_list)):
+          # New New API
+          getattr(self.activate(tag=tag), method_id)(fixit=fixit, tag=tag, params=params)
+        elif 'fixit' in name_list:
           # New API - also if variable number of named parameters
           getattr(self.activate(tag=tag), method_id)(fixit=fixit, tag=tag)
         else:
           # Old API
           getattr(self.activate(tag=tag), method_id)()
         if self.isAlarmNotificationMode():
-          self.activate(after_tag=tag).notify(include_active=True)
+          self.activate(after_tag=tag).notify(include_active=True, params=params)
     finally:
       # Restore the original user.
       setSecurityManager(sm)
@@ -439,7 +442,7 @@ class Alarm(XMLObject, PeriodicityMixin):
     return self.activeSense(fixit=1)
 
   security.declareProtected(Permissions.ManagePortal, 'notify')
-  def notify(self, include_active=False):
+  def notify(self, include_active=False, params=None):
     """
     This method is called to notify people that some alarm has
     been sensed. Notification consists of sending an email
@@ -461,7 +464,8 @@ class Alarm(XMLObject, PeriodicityMixin):
     method_id = self.getNotificationMethodId()
     if method_id:
       getattr(self, method_id)(process=active_process,
-                               sense_result=sense_result)
+                               sense_result=sense_result,
+                               params=params)
       return
 
     if sense_result:
