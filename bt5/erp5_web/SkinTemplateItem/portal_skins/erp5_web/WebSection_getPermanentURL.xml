@@ -110,12 +110,7 @@ if document.getValidationState() not in validation_state:\n
   return document.absolute_url()\n
 \n
 # Return the URL\n
-# XXX we need to add \'/view\' in web view\'s permanent URL for non-Web Page documents.\n
-# If we change the behaviour of index_html() to same as view(), we can remove \'/view\'. \n
-if portal_type == \'Web Page\':\n
-  return "%s/%s" % (context.absolute_url(), reference)\n
-else:\n
-  return "%s/%s/view" % (context.absolute_url(), reference)\n
+return "%s/%s" % (context.absolute_url(), reference)\n
 </string> </value>
         </item>
         <item>
