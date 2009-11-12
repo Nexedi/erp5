@@ -64,12 +64,14 @@
 if getattr(context.MailHost, "getMessageList", None) is None:\n
   return "ERROR: MailHost is not a DummyMailHost"\n
 \n
-for mail in context.MailHost.getMessageList():\n
+message_list = context.MailHost.getMessageList()\n
+for mail in message_list:\n
   for part in mail:\n
     print part\n
   print "="*79\n
   print ""  \n
-  \n
+\n
+print "Total messages: %s" %len(message_list)\n
 return printed\n
 </string> </value>
         </item>
@@ -113,9 +115,11 @@ return printed\n
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>None</string>
+                            <string>message_list</string>
                             <string>_getiter_</string>
                             <string>mail</string>
                             <string>part</string>
+                            <string>len</string>
                           </tuple>
                         </value>
                     </item>
