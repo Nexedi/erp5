@@ -66,7 +66,9 @@ class DefaultSupply:
                                   'start_date_range_min',
                                   'comment', 'source_reference',
                                   'p_variation_base_category_list',
-                                  'destination_account'),
+                                  'destination_account',
+                                  'min_delay', 'max_delay', 'min_flow', 'max_flow',
+                                  'min_stock', 'max_stock'),
             'mode'        : 'w' },
         # Define default purchase supply line
         {   'id'          : 'purchase_supply_line',
@@ -85,7 +87,9 @@ class DefaultSupply:
                                   'start_date_range_min',
                                   'comment', 'source_reference',
                                   'p_variation_base_category_list',
-                                  'destination_account'),
+                                  'destination_account',
+                                  'min_delay', 'max_delay', 'min_flow', 'max_flow',
+                                  'min_stock', 'max_stock'),
             'mode'        : 'w' },
         # Define default sale supply line
         {   'id'          : 'sale_supply_line',
@@ -104,7 +108,9 @@ class DefaultSupply:
                                   'start_date_range_min',
                                   'comment', 'destination_reference',
                                   'p_variation_base_category_list',
-                                  'source_account'),
+                                  'source_account',
+                                  'min_delay', 'max_delay', 'min_flow', 'max_flow',
+                                  'min_stock', 'max_stock'),
             'mode'        : 'w' },
        )
 
