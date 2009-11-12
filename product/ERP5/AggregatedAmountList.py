@@ -42,7 +42,7 @@ class AggregatedAmountList(UserList):
     Temporary object needed to aggregate Amount value
     And to calculate some report or total value
   """
-  zope.interface.implements(IAggregatedAmountList)
+  zope.interface.implements(IAmountList)
 
   meta_type = "AggregatedAmountList"
   security = ClassSecurityInfo()
