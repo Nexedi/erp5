@@ -147,8 +147,6 @@
                         <string>my_max_flow</string>
                         <string>my_max_stock</string>
                         <string>my_min_stock</string>
-                        <string>my_quantity</string>
-                        <string>my_category</string>
                       </list>
                     </value>
                 </item>
