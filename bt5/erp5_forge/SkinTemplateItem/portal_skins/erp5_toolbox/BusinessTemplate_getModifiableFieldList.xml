@@ -145,9 +145,8 @@ for skin_folder_id in context.getTemplateSkinIdList():\n
               else:\n
                 template_form_id = field.get_value(\'form_id\')\n
                 if template_form_id not in (\n
-                  \'Base_viewDialogFieldLibrary\',\n
                   \'Base_viewFieldLibrary\',\n
-                  \'Base_viewReportFieldLibrary\',\n
+                  field_library_id\n
                   ):\n
                   modified_object_dict[field_path] = \'2_unproxify_field\'\n
             else:\n
