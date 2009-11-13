@@ -61,6 +61,7 @@ action_title_item_list = [\n
   [\'0_keep_non_proxy_field\', \'To be proxified\'],\n
   [\'0_keep_dead_proxy_field\', \'Dead Proxy Field\'],\n
   [\'0_check_delegated_value\', \'Check Delegated Values\'],\n
+  [\'0_unused_proxy_field\', \'Unused Proxy Field\'],\n
   [\'1_create_form\', \'Create Form\'],\n
   [\'2_unproxify_field\', \'Unproxify Field\'],\n
   [\'4_delete_form\', \'Delete Old Field Library\'],\n
@@ -83,10 +84,9 @@ def calculateFieldLibraryID(id):\n
 \n
 def getForm(skin_folder, form_id):\n
   try:\n
-    form = skin_folder[form_id]\n
+    return skin_folder[form_id]\n
   except KeyError:\n
-    form = None\n
-  return form\n
+    return None\n
 \n
 bt_title = context.getTitle()\n
 field_library_id = calculateFieldLibraryID(bt_title)\n
@@ -98,11 +98,41 @@ if skin_id_list:\n
     main_skin_id = bt_title\n
   elif skin_id_list:\n
     main_skin_id = skin_id_list[0]\n
-  field_library = getForm(context.portal_skins[main_skin_id], field_library_id)\n
-  if field_library is None:\n
+  form_path = \'%s/%s\' % (main_skin_id, field_library_id)\n
+  form = getForm(context.portal_skins[main_skin_id], field_library_id)\n
+  if form is None:\n
     # Field library has to be created\n
-    modified_object_dict[\'%s/%s\' % (skin_folder_id, field_library_id)] = \\\n
-                                                              \'1_create_form\'\n
+    modified_object_dict[form_path] = \'1_create_form\'\n
+  else:\n
+    field_library_dict = dict((\'%s/%s\' % (form_path, field.getId()), [])\n
+                              for field in form.objectValues())\n
+    # Check that proxy field are proxified to erp5_core\n
+    for field in form.objectValues():\n
+      # XXX Should check if this field is used as a template\n
+      field_path = \'%s/%s\' % (form_path, field.getId())\n
+      if field.meta_type == \'ProxyField\':\n
+        template_form_id = field.get_value(\'form_id\')\n
+        template_id = \'%s/%s\' % (template_form_id,\n
+                                  field.get_value(\'field_id\'))\n
+        if field.getTemplateField() is None:\n
+          modified_object_dict[field_path] = (\'0_keep_dead_proxy_field\',\n
+                                              template_id)\n
+        else:\n
+          if template_form_id == field_library_id:\n
+            field_library_dict[\'%s/%s\' % (main_skin_id, template_id)] \\\n
+            .append(field_path)\n
+          if template_form_id not in (\'Base_viewFieldLibrary\',\n
+                                      field_library_id):\n
+            modified_object_dict[field_path] = (\'2_unproxify_field\',\n
+                                                template_id)\n
+          elif field.delegated_list:\n
+            # Found some delegated list\n
+            modified_object_dict[field_path] = (\'0_check_delegated_value\',\n
+                                                template_id)\n
+      else:\n
+        # Do not force proxification of field library field.\n
+        # The nice developper probably have a good reason not to do it.\n
+        modified_object_dict[field_path] = \'0_keep_non_proxy_field\'\n
 \n
 for skin_folder_id in skin_id_list:\n
   skin_folder = context.portal_skins[skin_folder_id]\n
@@ -135,63 +165,39 @@ for skin_folder_id in skin_id_list:\n
         else:\n
           raise KeyError, \'Unexpected form handling %s for %s\' % \\\n
               (modified_object_dict[form_path], form_path)\n
-      else:\n
-\n
-        if form_id == field_library_id:\n
-          # Check that proxy field are proxified to erp5_base or erp5_core\n
-          for field in form.objectValues():\n
-            # XXX Should check if this field is used as a template\n
-            field_path = \'%s/%s/%s\' % (skin_folder_id, form_id, field.getId())\n
-            if field.meta_type == \'ProxyField\':\n
-              template_form_id = field.get_value(\'form_id\')\n
-              template_id = \'%s/%s\' % (template_form_id,\n
-                                       field.get_value(\'field_id\'))\n
-              if field.getTemplateField() is None:\n
-                modified_object_dict[field_path] = (\'0_keep_dead_proxy_field\',\n
+      elif form_id != field_library_id:\n
+        # Check that proxy field are proxified to field library\n
+        for field in form.objectValues():\n
+          field_path = \'%s/%s/%s\' % (skin_folder_id, form_id, field.getId())\n
+          if field.meta_type == \'ProxyField\':\n
+            template_form_id = field.get_value(\'form_id\')\n
+            template_id = \'%s/%s\' % (template_form_id,\n
+                                      field.get_value(\'field_id\'))\n
+            if field.getTemplateField() is None:\n
+              modified_object_dict[field_path] = (\'0_keep_dead_proxy_field\',\n
+                                                  template_id)\n
+            else:\n
+              # XXX Only consider standard bt5 for now\n
+              if template_form_id != field_library_id:\n
+                modified_object_dict[field_path] = (\'2_unproxify_field\',\n
                                                     template_id)\n
+                # XXX Should proxify to a library\'s field\n
               else:\n
-                if template_form_id not in (\n
-                  \'Base_viewFieldLibrary\',\n
-                  field_library_id\n
-                  ):\n
-                  modified_object_dict[field_path] = (\'2_unproxify_field\',\n
-                                                      template_id)\n
-                elif field.delegated_list:\n
+                field_library_dict[\'%s/%s\' % (main_skin_id, template_id)] \\\n
+                .append(field_path)\n
+                # Check that there is no delegated values\n
+                if field.delegated_list:\n
                   # Found some delegated list\n
                   modified_object_dict[field_path] = (\n
                     \'0_check_delegated_value\', template_id)\n
-            else:\n
-              # Do not force proxification of field library field.\n
-              # The nice developper probably have a good reason not to do it.\n
-              modified_object_dict[field_path] = \'0_keep_non_proxy_field\'\n
-        else:\n
-          # Check that proxy field are proxified to field library\n
-          for field in form.objectValues():\n
-            field_path = \'%s/%s/%s\' % (skin_folder_id, form_id, field.getId())\n
-            if field.meta_type == \'ProxyField\':\n
-              template_form_id = field.get_value(\'form_id\')\n
-              template_id = \'%s/%s\' % (template_form_id,\n
-                                       field.get_value(\'field_id\'))\n
-              if field.getTemplateField() is None:\n
-                modified_object_dict[field_path] = (\'0_keep_dead_proxy_field\',\n
-                                                    template_id)\n
-              else:\n
-                # XXX Only consider standard bt5 for now\n
-                template_form_path = \'%s/%s\' % (skin_folder_id, template_form_id)\n
-                if template_form_id != field_library_id:\n
-                  modified_object_dict[field_path] = (\'2_unproxify_field\',\n
-                                                      template_id)\n
-                  # XXX Should proxify to a library\'s field\n
-                else:\n
-                  # Check that there is no delegated values\n
-                  if field.delegated_list:\n
-                    # Found some delegated list\n
-                    modified_object_dict[field_path] = (\n
-                      \'0_check_delegated_value\', template_id)\n
-            else:\n
-              # Do not force proxification of field.\n
-              # The nice developper probably have a good reason not to do it.\n
-              modified_object_dict[field_path] = \'0_keep_non_proxy_field\'\n
+          else:\n
+            # Do not force proxification of field.\n
+            # The nice developper probably have a good reason not to do it.\n
+            modified_object_dict[field_path] = \'0_keep_non_proxy_field\'\n
+\n
+for field_path, proxy_field_list in field_library_dict.items():\n
+  if not proxy_field_list:\n
+    modified_object_dict[field_path] = \'0_unused_proxy_field\'\n
 \n
 i = 0\n
 for key, value in modified_object_dict.items():\n
@@ -272,23 +278,23 @@ return field_list\n
                             <string>skin_id_list</string>
                             <string>main_skin_id</string>
                             <string>_getitem_</string>
-                            <string>field_library</string>
+                            <string>form_path</string>
+                            <string>form</string>
                             <string>None</string>
                             <string>_write_</string>
-                            <string>skin_folder_id</string>
                             <string>_getiter_</string>
-                            <string>skin_folder</string>
-                            <string>object_id</string>
-                            <string>obj</string>
-                            <string>KeyError</string>
-                            <string>form</string>
-                            <string>form_id</string>
-                            <string>form_path</string>
+                            <string>field_library_dict</string>
                             <string>field</string>
                             <string>field_path</string>
                             <string>template_form_id</string>
                             <string>template_id</string>
-                            <string>template_form_path</string>
+                            <string>skin_folder_id</string>
+                            <string>skin_folder</string>
+                            <string>object_id</string>
+                            <string>obj</string>
+                            <string>KeyError</string>
+                            <string>form_id</string>
+                            <string>proxy_field_list</string>
                             <string>i</string>
                             <string>key</string>
                             <string>value</string>
