@@ -51,9 +51,6 @@ class FloatDivergenceTester(Predicate):
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-  # Declarative interfaces
-  zope.interface.implements( interfaces.IDivergenceTester, )
-
   # Declarative properties
   property_sheets = (   PropertySheet.Base
                       , PropertySheet.XMLObject
@@ -62,6 +59,9 @@ class FloatDivergenceTester(Predicate):
                       , PropertySheet.DivergenceTester
                       , PropertySheet.SolverSelection
                      )
+
+  # Declarative interfaces
+  zope.interface.implements( interfaces.IDivergenceTester, )
 
   def test(self, simulation_movement):
     """
