@@ -138,6 +138,11 @@
                         <string>your_simulation_state</string>
                         <string>your_target_language</string>
                         <string>your_title</string>
+                        <string>your_report_at_date</string>
+                        <string>your_report_from_date</string>
+                        <string>your_percentage</string>
+                        <string>your_reportbox</string>
+                        <string>your_report_section_category</string>
                       </list>
                     </value>
                 </item>
