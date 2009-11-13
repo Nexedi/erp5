@@ -75,16 +75,12 @@ field_library_id_dict = {\n
 \n
 modified_object_dict = {}\n
 \n
-def calculateFieldLibraryID(skin_folder_id):\n
+def calculateFieldLibraryID(id):\n
   # For each skin folder, there could be at most one Field Library\n
   # The field library name could be automatically calculated or hardcoded in\n
   # the script\n
-  if field_library_id_dict.has_key(skin_folder_id):\n
-    field_library_id = field_library_id_dict[skin_folder_id]\n
-  else:\n
-    field_library_id = \'Base_view%sFieldLibrary\' % \\\n
-      \'\'.join([x.capitalize() for x in skin_folder_id.split(\'_\')[1:]])\n
-  return field_library_id\n
+  return field_library_id_dict.get(id) or \'Base_view%sFieldLibrary\' % \\\n
+      \'\'.join([x.capitalize() for x in id.split(\'_\')[1:]])\n
 \n
 def getForm(skin_folder, form_id):\n
   try:\n
@@ -93,16 +89,24 @@ def getForm(skin_folder, form_id):\n
     form = None\n
   return form\n
 \n
-for skin_folder_id in context.getTemplateSkinIdList():\n
-  skin_folder = getattr(context.portal_skins, skin_folder_id)\n
-  field_library_id = calculateFieldLibraryID(skin_folder_id)\n
-  field_library = getForm(skin_folder, field_library_id)\n
+bt_title = context.getTitle()\n
+field_library_id = calculateFieldLibraryID(bt_title)\n
 \n
-  # Check if the Field Library exists\n
+# Check if the Field Library exists\n
+skin_id_list = context.getTemplateSkinIdList()\n
+if skin_id_list:\n
+  if bt_title in skin_id_list:\n
+    main_skin_id = bt_title\n
+  elif skin_id_list:\n
+    main_skin_id = skin_id_list[0]\n
+  field_library = getForm(context.portal_skins[main_skin_id], field_library_id)\n
   if field_library is None:\n
     # Field library has to be created\n
     modified_object_dict[\'%s/%s\' % (skin_folder_id, field_library_id)] = \\\n
                                                               \'1_create_form\'\n
+\n
+for skin_folder_id in skin_id_list:\n
+  skin_folder = context.portal_skins[skin_folder_id]\n
 \n
   # Find old field library to delete\n
   for object_id in skin_folder.objectIds():\n
@@ -258,23 +262,25 @@ return field_list\n
                             <string>modified_object_dict</string>
                             <string>calculateFieldLibraryID</string>
                             <string>getForm</string>
-                            <string>_getiter_</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>skin_folder_id</string>
-                            <string>getattr</string>
-                            <string>skin_folder</string>
+                            <string>bt_title</string>
                             <string>field_library_id</string>
+                            <string>skin_id_list</string>
+                            <string>main_skin_id</string>
+                            <string>_getitem_</string>
                             <string>field_library</string>
                             <string>None</string>
                             <string>_write_</string>
+                            <string>skin_folder_id</string>
+                            <string>_getiter_</string>
+                            <string>skin_folder</string>
                             <string>object_id</string>
                             <string>obj</string>
                             <string>KeyError</string>
                             <string>form</string>
                             <string>form_id</string>
                             <string>form_path</string>
-                            <string>_getitem_</string>
                             <string>field</string>
                             <string>field_path</string>
                             <string>template_form_id</string>
