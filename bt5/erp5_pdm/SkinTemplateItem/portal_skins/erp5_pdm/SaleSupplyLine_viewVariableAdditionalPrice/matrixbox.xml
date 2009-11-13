@@ -220,6 +220,10 @@
                     <value> <string>path_optional_variable_additional_price</string> </value>
                 </item>
                 <item>
+                    <key> <string>cell_getter_method</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>cell_portal_type</string> </key>
                     <value> <string>Sale Supply Cell</string> </value>
                 </item>
