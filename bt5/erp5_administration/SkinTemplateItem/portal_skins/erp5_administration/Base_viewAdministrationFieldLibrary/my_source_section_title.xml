@@ -13,15 +13,14 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>editable</string>
-                <string>portal_type</string>
                 <string>title</string>
+                <string>portal_type</string>
               </list>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_order</string> </value>
+            <value> <string>my_source_section_title</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -58,10 +57,6 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>editable</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -79,10 +74,6 @@
                     <key> <string>target</string> </key>
                     <value> <string></string> </value>
                 </item>
-                <item>
-                    <key> <string>title</string> </key>
-                    <value> <string></string> </value>
-                </item>
               </dictionary>
             </value>
         </item>
@@ -90,10 +81,6 @@
             <key> <string>values</string> </key>
             <value>
               <dictionary>
-                <item>
-                    <key> <string>editable</string> </key>
-                    <value> <int>0</int> </value>
-                </item>
                 <item>
                     <key> <string>field_id</string> </key>
                     <value> <string>my_relation_field</string> </value>
@@ -119,7 +106,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Order</string> </value>
+                    <value> <string>Source Section</string> </value>
                 </item>
               </dictionary>
             </value>
@@ -138,7 +125,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: [(x, \'\') for x in here.getPortalOrderMovementTypeList()]</string> </value>
+            <value> <string>python: [(x, \'\') for x in here.getPortalNodeTypeList()]</string> </value>
         </item>
       </dictionary>
     </pickle>

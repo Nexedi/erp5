@@ -14,14 +14,13 @@
             <value>
               <list>
                 <string>title</string>
-                <string>default</string>
-                <string>editable</string>
+                <string>portal_type</string>
               </list>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_categories_list</string> </value>
+            <value> <string>my_causality_title</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -58,16 +57,6 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>default</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>editable</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -76,11 +65,13 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>target</string> </key>
-                    <value> <string></string> </value>
+                    <key> <string>portal_type</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
                 </item>
                 <item>
-                    <key> <string>title</string> </key>
+                    <key> <string>target</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -91,22 +82,23 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>default</string> </key>
-                    <value>
-                      <list/>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>editable</string> </key>
-                    <value> <int>0</int> </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_lines_field</string> </value>
+                    <value> <string>my_relation_field</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string>Base_viewFieldLibrary</string> </value>
+                </item>
+                <item>
+                    <key> <string>portal_type</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>(tales)</string>
+                          <string></string>
+                        </tuple>
+                      </list>
+                    </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
@@ -114,7 +106,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Categories</string> </value>
+                    <value> <string>Causality</string> </value>
                 </item>
               </dictionary>
             </value>
@@ -133,7 +125,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>here/Base_getSortedCategoriesList</string> </value>
+            <value> <string>python: [(x, \'\') for x in here.getPortalObject().portal_types.objectIds()]</string> </value>
         </item>
       </dictionary>
     </pickle>

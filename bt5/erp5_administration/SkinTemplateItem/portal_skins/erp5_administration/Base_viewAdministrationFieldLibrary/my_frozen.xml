@@ -15,13 +15,12 @@
               <list>
                 <string>title</string>
                 <string>default</string>
-                <string>editable</string>
               </list>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_categories_list</string> </value>
+            <value> <string>my_frozen</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -64,10 +63,6 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>editable</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -79,10 +74,6 @@
                     <key> <string>target</string> </key>
                     <value> <string></string> </value>
                 </item>
-                <item>
-                    <key> <string>title</string> </key>
-                    <value> <string></string> </value>
-                </item>
               </dictionary>
             </value>
         </item>
@@ -91,18 +82,8 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>default</string> </key>
-                    <value>
-                      <list/>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>editable</string> </key>
-                    <value> <int>0</int> </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_lines_field</string> </value>
+                    <value> <string>my_integer_value</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
@@ -114,7 +95,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Categories</string> </value>
+                    <value> <string>Frozen</string> </value>
                 </item>
               </dictionary>
             </value>
@@ -133,7 +114,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>here/Base_getSortedCategoriesList</string> </value>
+            <value> <string>python: here.isFrozen() and 1 or 0</string> </value>
         </item>
       </dictionary>
     </pickle>

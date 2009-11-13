@@ -13,13 +13,13 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>selection_name</string>
+                <string>title</string>
               </list>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_recursive_subobject_listbox</string> </value>
+            <value> <string>my_stop_date</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -76,19 +76,19 @@
               <dictionary>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_recursive_subobject_listbox</string> </value>
+                    <value> <string>my_date</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>SimulationMovement_viewFieldLibrary</string> </value>
-                </item>
-                <item>
-                    <key> <string>selection_name</string> </key>
-                    <value> <string>applied_rule_view_field_library_selection</string> </value>
+                    <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value> <string>Stop Date</string> </value>
                 </item>
               </dictionary>
             </value>

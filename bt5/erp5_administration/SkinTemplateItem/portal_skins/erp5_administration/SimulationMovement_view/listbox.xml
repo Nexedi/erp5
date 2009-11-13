@@ -14,6 +14,7 @@
             <value>
               <list>
                 <string>selection_name</string>
+                <string>list_method</string>
               </list>
             </value>
         </item>
@@ -76,11 +77,17 @@
               <dictionary>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_recursive_subobject_listbox</string> </value>
+                    <value> <string>applied_rule_listbox</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>SimulationMovement_viewFieldLibrary</string> </value>
+                    <value> <string>Base_viewAdministrationFieldLibrary</string> </value>
+                </item>
+                <item>
+                    <key> <string>list_method</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>
@@ -92,6 +99,22 @@
                 </item>
               </dictionary>
             </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <global name="Method" module="Products.Formulator.MethodField"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>method_name</string> </key>
+            <value> <string>searchFolder</string> </value>
         </item>
       </dictionary>
     </pickle>
