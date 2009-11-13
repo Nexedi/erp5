@@ -148,6 +148,7 @@
                         <string>my_max_stock</string>
                         <string>my_min_stock</string>
                         <string>my_quantity</string>
+                        <string>my_reference</string>
                       </list>
                     </value>
                 </item>
