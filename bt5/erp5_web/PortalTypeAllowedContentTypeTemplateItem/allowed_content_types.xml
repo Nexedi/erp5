@@ -7,16 +7,16 @@
   <item>Web Page</item>
  </portal_type>
  <portal_type id="Web Section">
-  <item>Web Section</item>
   <item>File</item>
-  <item>Role Definition</item>
   <item>Image</item>
+  <item>Role Definition</item>
+  <item>Web Section</item>
  </portal_type>
  <portal_type id="Web Site">
+  <item>File</item>
+  <item>Image</item>
   <item>Role Definition</item>
   <item>Web Section</item>
-  <item>Image</item>
-  <item>File</item>
  </portal_type>
  <portal_type id="Web Site Module">
   <item>Web Site</item>
