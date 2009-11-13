@@ -147,6 +147,11 @@
                         <string>my_reference</string>
                         <string>your_landscape</string>
                         <string>your_print_mode</string>
+                        <string>your_list_field</string>
+                        <string>your_float_field</string>
+                        <string>your_file_field</string>
+                        <string>your_checkbox</string>
+                        <string>your_string_field</string>
                       </list>
                     </value>
                 </item>
