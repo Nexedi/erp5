@@ -124,6 +124,20 @@
                         <string>my_input_button_field</string>
                         <string>my_text_content</string>
                         <string>my_editor_field</string>
+                        <string>your_at_date</string>
+                        <string>your_category</string>
+                        <string>your_category_list</string>
+                        <string>your_date</string>
+                        <string>your_deferred_style</string>
+                        <string>your_format</string>
+                        <string>your_from_date</string>
+                        <string>your_money_quantity</string>
+                        <string>your_portal_skin</string>
+                        <string>your_quantity</string>
+                        <string>your_section_category</string>
+                        <string>your_simulation_state</string>
+                        <string>your_target_language</string>
+                        <string>your_title</string>
                       </list>
                     </value>
                 </item>
