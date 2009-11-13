@@ -752,7 +752,6 @@ class ERP5Form(ZMIForm, ZopePageTemplate):
           if folder_id in template_skin_id_list:
             for skin_folder_id in template_skin_id_list:
               iterate(getattr(skins_tool, skin_folder_id))
-              break
         iterate(skins_tool.erp5_core)
         return form_list
 
