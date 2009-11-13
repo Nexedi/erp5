@@ -27,26 +27,34 @@
 #
 ##############################################################################
 
+from Products.CMFCore.Expression import Expression
 
 class SolverSelection:
   """
     Solver Selection provides provides properties to 
-    store a selection of solver portal types. It uses
-    for now lines property type but will later use 
-    categories (since portal types are portal types).
+    store a selection of solver portal types.
   """
 
   _properties = (
-    {  'id'          : 'delivery_solver',
-       'description' : 'Applicable Deliver Solver Portal Types',
-       'type'        : 'lines',
-       'default'     : (),
-       'mode'        : 'w' },
-    {  'id'          : 'target_solver',
-       'description' : 'Applicable Target Solver Portal Types',
-       'type'        : 'lines',
-       'default'     : (),
-       'mode'        : 'w' },
+    # XXX - this can not work and must be moved to MixIn (pt of pt)
+    {   'id'          : 'delivery_solver_id',
+        'description' : 'The ID the delivery solver which is selected',
+        'type'        : 'string',
+        'acquisition_base_category'     : ('solver',),
+        'acquisition_portal_type'       : Expression('python:portal.getPortalDeliverySolverTypeList()'),
+        'acquisition_copy_value'        : 0,
+        'acquisition_accessor_id'       : 'getId',
+        'acquisition_depends'           : None,
+        'mode'        : 'r' },
+    {   'id'          : 'target_solver_id',
+        'description' : 'The title of the source organisation of this movement',
+        'type'        : 'string',
+        'acquisition_base_category'     : ('solver',),
+        'acquisition_portal_type'       : Expression('python:portal.getPortalTargetSolverTypeList()'),
+        'acquisition_copy_value'        : 0,
+        'acquisition_accessor_id'       : 'getId',
+        'acquisition_depends'           : None,
+        'mode'        : 'r' },
   )
 
   _categories = ('solver',)
