@@ -3,15 +3,15 @@
   <item>Campaign</item>
  </portal_type>
  <portal_type id="Event Module">
-  <item>Visit</item>
-  <item>Web Message</item>
+  <item>Acknowledgement</item>
+  <item>Fax Message</item>
   <item>Letter</item>
+  <item>Mail Message</item>
   <item>Note</item>
   <item>Phone Call</item>
   <item>Site Message</item>
-  <item>Mail Message</item>
-  <item>Acknowledgement</item>
-  <item>Fax Message</item>
+  <item>Visit</item>
+  <item>Web Message</item>
  </portal_type>
  <portal_type id="Meeting Module">
   <item>Meeting</item>
