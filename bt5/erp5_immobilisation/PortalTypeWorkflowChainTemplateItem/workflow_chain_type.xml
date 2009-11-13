@@ -1,15 +1,15 @@
 <workflow_chain>
  <chain>
   <type>Amortisation Rule</type>
-  <workflow>rule_validation_workflow, edit_workflow</workflow>
+  <workflow>edit_workflow, rule_validation_workflow</workflow>
  </chain>
  <chain>
   <type>Amortisation Transaction</type>
-  <workflow>delivery_causality_interaction_workflow, amortisation_transaction_causality_workflow, accounting_workflow, delivery_simulation_interaction_workflow, edit_workflow</workflow>
+  <workflow>accounting_workflow, amortisation_transaction_causality_workflow, delivery_causality_interaction_workflow, delivery_simulation_interaction_workflow, edit_workflow</workflow>
  </chain>
  <chain>
   <type>Amortisation Transaction Line</type>
-  <workflow>delivery_movement_simulation_interaction_workflow, edit_workflow, delivery_movement_causality_interaction_workflow</workflow>
+  <workflow>delivery_movement_causality_interaction_workflow, delivery_movement_simulation_interaction_workflow, edit_workflow</workflow>
  </chain>
  <chain>
   <type>Delivery Cell</type>
@@ -17,7 +17,7 @@
  </chain>
  <chain>
   <type>Immobilisation</type>
-  <workflow>immobilisation_delivery_workflow, immobilisation_workflow, immobilisation_movement_interaction_workflow, edit_workflow</workflow>
+  <workflow>edit_workflow, immobilisation_delivery_workflow, immobilisation_movement_interaction_workflow, immobilisation_workflow</workflow>
  </chain>
  <chain>
   <type>Immobilisation Line</type>
@@ -25,7 +25,7 @@
  </chain>
  <chain>
   <type>Internal Packing List</type>
-  <workflow>immobilisation_workflow, immobilisation_movement_interaction_workflow</workflow>
+  <workflow>immobilisation_movement_interaction_workflow, immobilisation_workflow</workflow>
  </chain>
  <chain>
   <type>Internal Packing List Line</type>
@@ -33,7 +33,7 @@
  </chain>
  <chain>
   <type>Inventory</type>
-  <workflow>immobilisation_workflow, immobilisation_movement_interaction_workflow</workflow>
+  <workflow>immobilisation_movement_interaction_workflow, immobilisation_workflow</workflow>
  </chain>
  <chain>
   <type>Inventory Cell</type>

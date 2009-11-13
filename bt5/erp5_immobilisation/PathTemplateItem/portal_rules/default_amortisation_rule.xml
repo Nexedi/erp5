@@ -89,7 +89,16 @@
       <global name="OOBTree" module="BTrees._OOBTree"/>
     </pickle>
     <pickle>
-      <none/>
+      <tuple>
+        <tuple>
+          <tuple>
+            <tuple>
+              <string>ERP5 Divergence Tester</string>
+              <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
+            </tuple>
+          </tuple>
+        </tuple>
+      </tuple>
     </pickle>
   </record>
   <record id="4" aka="AAAAAAAAAAQ=">
@@ -98,6 +107,23 @@
     </pickle>
     <pickle>
       <none/>
+    </pickle>
+  </record>
+  <record id="5" aka="AAAAAAAAAAU=">
+    <pickle>
+      <global name="OIBTree" module="BTrees._OIBTree"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <tuple>
+          <tuple>
+            <tuple>
+              <string>default_quantity_tester</string>
+              <int>1</int>
+            </tuple>
+          </tuple>
+        </tuple>
+      </tuple>
     </pickle>
   </record>
 </ZopeData>
