@@ -3,7 +3,6 @@ Accounting Transaction Module | select_items_to_build_amortisation_transactions
 Amortisation Rule | view
 Amortisation Transaction Line | view
 Amortisation Transaction | causality_report
-Amortisation Transaction | details
 Amortisation Transaction | jump_causality_items
 Amortisation Transaction | view
 Delivery Cell | eu_linear_amortisation_method_view_details
