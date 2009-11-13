@@ -69,6 +69,8 @@ action_title_dict = dict(action_title_item_list)\n
 \n
 field_library_id_dict = {\n
   \'erp5_pdm\': \'Base_viewPDMFieldLibrary\',\n
+  \'erp5_crm\': \'Base_viewCRMFieldLibrary\',\n
+  \'erp5_mrp\': \'Base_viewMRPFieldLibrary\',\n
 }\n
 \n
 modified_object_dict = {}\n
