@@ -1,3 +1,6 @@
+2009-11-12 Kazuhiko
+* remove 'size' base category because it is already included in erp5_core.
+
 2009-11-12 tatuya
 * add the variation views of FlowCapacity for SupplyLine. Note that they have not connected to the actions.
 * Add FlowCapacity properties to the SupplyLine views.
