@@ -13,14 +13,13 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>default</string>
                 <string>title</string>
               </list>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>your_update_destination_sql_catalog</string> </value>
+            <value> <string>my_archive_title</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -76,16 +75,12 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>default</string> </key>
-                    <value> <int>1</int> </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>your_update_sql_catalog</string> </value>
+                    <value> <string>my_list_field</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Base_viewArchiveFieldLibrary</string> </value>
+                    <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
@@ -93,7 +88,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Update Destination Catalog</string> </value>
+                    <value> <string>Archive</string> </value>
                 </item>
               </dictionary>
             </value>
