@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2006 Nexedi SARL and Contributors. All Rights Reserved.
@@ -77,6 +78,8 @@ class QuantityDivergenceTester(PropertyDivergenceTester):
          decision_title=repr(d_quantity),
          prevision_title=repr(quantity),)
 
+    # XXX - JPS - it would be much better not to create the message
+    #             if we do not later use it (by isDivergent)
     message = DivergenceMessage(object_relative_url= delivery.getRelativeUrl(),
                  divergence_scope='quantity',
                  simulation_movement = simulation_movement,
