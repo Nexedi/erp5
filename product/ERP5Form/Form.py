@@ -748,8 +748,9 @@ class ERP5Form(ZMIForm, ZopePageTemplate):
         folder_id = self.aq_parent.id
         # Find a business template which manages the context skin folder.
         for template in self.portal_templates.getInstalledBusinessTemplateList():
-          if folder_id in template.getTemplateSkinIdList():
-            for skin_folder_id in template.getTemplateSkinIdList():
+          template_skin_id_list = template.getTemplateSkinIdList()
+          if folder_id in template_skin_id_list:
+            for skin_folder_id in template_skin_id_list:
               iterate(getattr(skins_tool, skin_folder_id))
               break
         iterate(skins_tool.erp5_core)
