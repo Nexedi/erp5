@@ -759,8 +759,13 @@ class ERP5Form(ZMIForm, ZopePageTemplate):
     def getProxyableFieldList(self, field, form_field_list=None):
         """"""
         def extract_keyword(name):
-            return [i for i in name.split('_') if not i in \
+            keyword_list = [i for i in name.split('_') if not i in \
                     ('my', 'default', 'listbox')]
+            if len(keyword_list) == 0:
+              # This means that the name is one of the exception keywords,
+              # so we have to keep it
+              keyword_list = [name]
+            return keyword_list
 
         def check_keyword_list(name, keyword_list):
             count = 0
