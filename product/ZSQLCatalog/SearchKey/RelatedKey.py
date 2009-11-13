@@ -158,12 +158,26 @@ class RelatedKey(SearchKey):
         Ignored.
     """
     related_key = getattr(sql_catalog, self.related_key_id)
-    table_alias_dict = dict(
-      [('table_%s' % (x, ), column_map.getTableAlias(self.table_list[x], group=column_map.getRelatedKeyGroup(x, group)))
-       for x in xrange(len(self.table_list) - 1)])
-    x = len(table_alias_dict)
-    assert x == len(self.table_list) - 1
-    table_alias_dict['table_%s' % (x, )] = column_map.getTableAlias(self.table_list[x], group=group)
+
+    # related key is defined in catalog
+    related_table_list, destination_table = self.table_list[:-1], self.table_list[-1]
+
+    # method caching
+    getTableAlias = column_map.getTableAlias
+    getRelatedKeyGroup = column_map.getRelatedKeyGroup
+
+    # table aliases for related tables
+    table_alias_list = [(getTableAlias(related_table, group=getRelatedKeyGroup(index, group)), related_table)
+                        for (index, related_table) in enumerate(related_table_list)]
+    # table alias for destination table
+    table_alias_list.append((getTableAlias(destination_table, group=group), destination_table))
+
+    # map aliases to use in ZSQLMethod.
+    table_alias_dict = dict(('table_%s' % (index, ), table_alias[0])
+                            for (index, table_alias) in enumerate(table_alias_list))
+
+    assert len(table_alias_list) == len(table_alias_dict)
+
     rendered_related_key = related_key(
       query_table=column_map.getCatalogTableAlias(),
       src__=1,
