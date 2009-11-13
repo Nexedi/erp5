@@ -126,16 +126,14 @@ for budget in budget_list:\n
           variation_axis_list.append(possible_axis)\n
           break\n
     \n
+    budget_line_cell_range = budget_line.BudgetLine_asCellRange()\n
     if len(variation_axis_list) == 1:\n
       # if there\'s only one dimension, we add a virtual level 2, to keep the\n
       # same structure\n
       level_2_variation_category_list = [budget_line.getResource(base=1)]\n
-      level_3_variation_category_list = [x for x in\n
-          budget_line.getVariationCategoryList() if\n
-          x.startswith(variation_axis_list[0])]\n
+      level_3_variation_category_list = budget_line.getCellRange()[0]\n
     else:\n
       budget_line_vcl = budget_line.getVariationCategoryList()\n
-      budget_line_cell_range = budget_line.BudgetLine_asCellRange()\n
       \n
       level_2_variation_category_list = budget_line.getCellRange()[0]\n
       level_3_variation_category_list = budget_line.getCellRange()[1]\n
@@ -181,6 +179,8 @@ for budget in budget_list:\n
     if cell_depth_dict:\n
       higher_depth = min(cell_depth_dict.values())\n
 \n
+    sign = budget_line.BudgetLine_getConsumptionSign()\n
+\n
     for level_2_category in level_2_variation_category_list:\n
 \n
       total_level_2_initial_budget = 0\n
@@ -195,22 +195,29 @@ for budget in budget_list:\n
       is_higher_level2 = cell_depth_dict[level_2_category] == higher_depth\n
 \n
       for level_3_category in level_3_variation_category_list:\n
-        sign = budget_line.BudgetLine_getConsumptionSign()\n
-\n
-        for cell_key in cartesianProduct(budget_line.BudgetLine_asCellRange()):\n
+        for cell_key in cartesianProduct(budget_line_cell_range):\n
           cell = budget_line.getCell(*cell_key)\n
-          if not isVisibleCell(cell):\n
+          if cell is None or not isVisibleCell(cell):\n
             continue\n
-          if level_2_category in cell.getMembershipCriterionCategoryList() and\\\n
-              level_3_category in cell.getMembershipCriterionCategoryList():\n
-\n
+          if level_3_category in cell_key and (\n
+               level_2_category in cell_key or\n
+               len(variation_axis_list) == 1):\n
             initial_budget = cell.getQuantity() * sign\n
-            current_budget = cell.getCurrentBalance() * sign\n
+\n
+            # XXX don\'t calculate current balance unless we use budget\n
+            # transactions\n
+            current_budget = initial_budget #cell.getCurrentBalance() * sign\n
+\n
             engaged_budget = cell.getEngagedBudget()\n
+\n
+            # XXX stupid optimisation that may not always be true: \n
+            # if there\'s no engaged budget, there\'s no consumed budget\n
             if engaged_budget:\n
-              # XXX stupid optimisation that may not always be true\n
               consumed_budget = cell.getConsumedBudget()\n
-              available_budget = cell.getAvailableBudget()\n
+              # XXX calculate manually getAvailableBudget, because it calls\n
+              # getEngagedBudget again\n
+              # available_budget = cell.getAvailableBudget()\n
+              available_budget = current_budget - engaged_budget\n
             else:\n
               consumed_budget = 0\n
               available_budget = current_budget\n
@@ -224,6 +231,7 @@ for budget in budget_list:\n
             consumed_ratio = 0\n
             if current_budget:\n
               consumed_ratio = consumed_budget / current_budget\n
+\n
             level_2_line_list.append(dict(title=cell_name_dict[level_3_category],\n
                                           is_level_3=True,\n
                                           initial_budget=initial_budget,\n
@@ -360,14 +368,11 @@ return pformat(line_list)\n
                             <string>variation_axis_list</string>
                             <string>possible_axis</string>
                             <string>cell_range</string>
+                            <string>budget_line_cell_range</string>
                             <string>len</string>
                             <string>level_2_variation_category_list</string>
-                            <string>append</string>
-                            <string>$append0</string>
-                            <string>x</string>
                             <string>level_3_variation_category_list</string>
                             <string>budget_line_vcl</string>
-                            <string>budget_line_cell_range</string>
                             <string>title</string>
                             <string>cell_name_dict</string>
                             <string>cell_style_dict</string>
@@ -379,6 +384,7 @@ return pformat(line_list)\n
                             <string>_write_</string>
                             <string>depth</string>
                             <string>higher_depth</string>
+                            <string>sign</string>
                             <string>level_2_category</string>
                             <string>total_level_2_initial_budget</string>
                             <string>total_level_2_current_budget</string>
@@ -388,10 +394,10 @@ return pformat(line_list)\n
                             <string>level_2_line_list</string>
                             <string>is_higher_level2</string>
                             <string>level_3_category</string>
-                            <string>sign</string>
                             <string>cell_key</string>
                             <string>_apply_</string>
                             <string>cell</string>
+                            <string>None</string>
                             <string>initial_budget</string>
                             <string>current_budget</string>
                             <string>engaged_budget</string>
