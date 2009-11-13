@@ -12,11 +12,7 @@
         <item>
             <key> <string>delegated_list</string> </key>
             <value>
-              <list>
-                <string>first_item</string>
-                <string>title</string>
-                <string>items</string>
-              </list>
+              <list/>
             </value>
         </item>
         <item>
@@ -78,82 +74,15 @@
               <dictionary>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_category</string> </value>
-                </item>
-                <item>
-                    <key> <string>first_item</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <string>my_coding_type</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Base_viewFieldLibrary</string> </value>
-                </item>
-                <item>
-                    <key> <string>items</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>code 128</string>
-                          <string>code128</string>
-                        </tuple>
-                        <tuple>
-                          <string>EAN</string>
-                          <string>EAN</string>
-                        </tuple>
-                        <tuple>
-                          <string>UPC</string>
-                          <string>UPC</string>
-                        </tuple>
-                        <tuple>
-                          <string>ISBN</string>
-                          <string>ISBN</string>
-                        </tuple>
-                        <tuple>
-                          <string>code 128-B</string>
-                          <string>code128-B</string>
-                        </tuple>
-                        <tuple>
-                          <string>code 128-C</string>
-                          <string>code128-C</string>
-                        </tuple>
-                        <tuple>
-                          <string>code 128 raw</string>
-                          <string>code128raw</string>
-                        </tuple>
-                        <tuple>
-                          <string>code 39</string>
-                          <string>code39</string>
-                        </tuple>
-                        <tuple>
-                          <string>interleaved 2 of 5</string>
-                          <string>interleaved2of5</string>
-                        </tuple>
-                        <tuple>
-                          <string>Codabar</string>
-                          <string>Codabar</string>
-                        </tuple>
-                        <tuple>
-                          <string>Plessey</string>
-                          <string>Plessey</string>
-                        </tuple>
-                        <tuple>
-                          <string>MSI</string>
-                          <string>MSI</string>
-                        </tuple>
-                        <tuple>
-                          <string>code 93</string>
-                          <string>code93</string>
-                        </tuple>
-                      </list>
-                    </value>
+                    <value> <string>Base_viewBarcodeFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
-                </item>
-                <item>
-                    <key> <string>title</string> </key>
-                    <value> <string>Encoding Barcode</string> </value>
                 </item>
               </dictionary>
             </value>

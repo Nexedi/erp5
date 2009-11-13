@@ -12,12 +12,16 @@
         <item>
             <key> <string>delegated_list</string> </key>
             <value>
-              <list/>
+              <list>
+                <string>default</string>
+                <string>display_width</string>
+                <string>title</string>
+              </list>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>your_input_list</string> </value>
+            <value> <string>your_sheet_number</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -73,8 +77,16 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>default</string> </key>
+                    <value> <string>1</string> </value>
+                </item>
+                <item>
+                    <key> <string>display_width</string> </key>
+                    <value> <int>10</int> </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>your_input_list</string> </value>
+                    <value> <string>my_integer_value</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
@@ -83,6 +95,10 @@
                 <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value> <string>Sheets Number</string> </value>
                 </item>
               </dictionary>
             </value>
