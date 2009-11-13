@@ -145,6 +145,8 @@
                         <string>your_report_section_category</string>
                         <string>my_int_index</string>
                         <string>my_reference</string>
+                        <string>your_landscape</string>
+                        <string>your_print_mode</string>
                       </list>
                     </value>
                 </item>
@@ -153,6 +155,7 @@
                     <value>
                       <list>
                         <string>your_graph</string>
+                        <string>my_thumbnail</string>
                       </list>
                     </value>
                 </item>
