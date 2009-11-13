@@ -107,7 +107,7 @@ for skin_folder_id in context.getTemplateSkinIdList():\n
   # Find old field library to delete\n
   for object_id in skin_folder.objectIds():\n
     if (object_id.endswith(\'FieldLibrary\') and \\\n
-        (object_id != field_library_id)):\n
+        (object_id not in (field_library_id, \'Base_viewFieldLibrary\'))):\n
       obj = getForm(skin_folder, object_id)\n
       if obj is None:\n
         raise KeyError, \'%s/%s\' % (skin_folder_id, object_id)\n
