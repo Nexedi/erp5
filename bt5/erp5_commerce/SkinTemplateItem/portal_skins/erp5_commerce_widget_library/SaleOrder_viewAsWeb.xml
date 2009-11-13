@@ -86,12 +86,12 @@
                         <string>shopping_cart</string>
                         <string>my_shipping_method</string>
                         <string>my_payment_mode</string>
-                        <string>submit2</string>
+                        <string>submit_update</string>
                         <string>customer</string>
                         <string>discounts</string>
                         <string>comment</string>
                         <string>my_comment</string>
-                        <string>submit</string>
+                        <string>submit_payment</string>
                       </list>
                     </value>
                 </item>
