@@ -75,16 +75,12 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>description</string> </key>
-                    <value> <string>Format of the event content</string> </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string>my_text_format</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Event_viewFieldLibrary</string> </value>
+                    <value> <string>Base_viewCRMFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>

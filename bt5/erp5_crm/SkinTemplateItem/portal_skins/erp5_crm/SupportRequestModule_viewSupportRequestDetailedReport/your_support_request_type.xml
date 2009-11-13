@@ -74,11 +74,11 @@
               <dictionary>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>your_support_request_type</string> </value>
+                    <value> <string>your_report_support_request_type</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Ticket_viewReportFieldLibrary</string> </value>
+                    <value> <string>Base_viewCRMFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
