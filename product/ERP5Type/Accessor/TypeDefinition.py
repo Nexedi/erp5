@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2002-2003 Nexedi SARL and Contributors. All Rights Reserved.
@@ -181,7 +182,10 @@ type_definition = {
                              'default' : None,
                              'isList'  : 0,
                            },
-                           # Used for converted documents (ex: data)
+                           # Data content is used for properties
+                           # which intention is store large data
+                           # such as files of BLOBs. It uses pdata
+                           # structure.
     'data'               : { 'cast'    : identity,
                              'null'    : ('', 'None', None,),
                              'default' : None,
