@@ -12,16 +12,12 @@
         <item>
             <key> <string>delegated_list</string> </key>
             <value>
-              <list>
-                <string>date_only</string>
-                <string>editable</string>
-                <string>title</string>
-              </list>
+              <list/>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>listbox_creation_date</string> </value>
+            <value> <string>listbox_date</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -77,16 +73,8 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>date_only</string> </key>
-                    <value> <int>1</int> </value>
-                </item>
-                <item>
-                    <key> <string>editable</string> </key>
-                    <value> <int>0</int> </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>listbox_date</string> </value>
+                    <value> <string>my_date</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
@@ -95,10 +83,6 @@
                 <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
-                </item>
-                <item>
-                    <key> <string>title</string> </key>
-                    <value> <string>listbox_creation_date</string> </value>
                 </item>
               </dictionary>
             </value>
