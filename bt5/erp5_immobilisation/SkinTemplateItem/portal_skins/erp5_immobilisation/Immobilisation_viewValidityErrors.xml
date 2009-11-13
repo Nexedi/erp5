@@ -80,7 +80,7 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>validity_errors</string>
+                        <string>your_validity_errors</string>
                       </list>
                     </value>
                 </item>

@@ -59,12 +59,10 @@
 amortisation_method_list = context.Immobilisation_getAmortisationMethodList()\n
 \n
 for method in amortisation_method_list:\n
-  #For BCEAO we use only linear Amortisation Method or no_amortisation\n
   id = method[1].getId()\n
-  if id in [\'linear\',\'no_amortisation\']:\n
-    display = method[1].title or id\n
-    display = context.Base_translateString(display, \'content\')\n
-    return_list.append( (\'(%s) %s\' % (method[0], display), \'%s/%s\' % (method[0], id) ) )\n
+  display = method[1].title or id\n
+  display = context.Base_translateString(display, \'content\')\n
+  return_list.append( (\'(%s) %s\' % (method[0], display), \'%s/%s\' % (method[0], id) ) )\n
     \n
 return [(context.Base_translateString(\'Default Amortisation Data\'),\'\')] + return_list\n
 </string> </value>

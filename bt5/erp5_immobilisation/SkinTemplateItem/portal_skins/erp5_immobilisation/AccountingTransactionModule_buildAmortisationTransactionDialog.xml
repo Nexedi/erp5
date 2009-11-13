@@ -79,8 +79,8 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>my_at_date</string>
-                        <string>my_item_uid_list</string>
+                        <string>your_at_date</string>
+                        <string>your_item_uid_list</string>
                       </list>
                     </value>
                 </item>
@@ -88,7 +88,7 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
-                        <string>item_title_list</string>
+                        <string>your_item_title_list</string>
                       </list>
                     </value>
                 </item>

@@ -86,7 +86,6 @@
                         <string>listbox_destination</string>
                         <string>listbox_source_credit</string>
                         <string>listbox_source_debit</string>
-                        <string>listbox_title</string>
                       </list>
                     </value>
                 </item>
@@ -100,6 +99,7 @@
                         <string>my_destination_section_title</string>
                         <string>my_reference</string>
                         <string>my_resource</string>
+                        <string>my_stop_date</string>
                       </list>
                     </value>
                 </item>
@@ -109,7 +109,7 @@
                       <list>
                         <string>my_start_date</string>
                         <string>my_description</string>
-                        <string>simulation_state</string>
+                        <string>my_translated_simulation_state_title</string>
                         <string>my_destination_reference</string>
                       </list>
                     </value>
