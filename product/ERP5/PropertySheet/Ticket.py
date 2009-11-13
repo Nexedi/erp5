@@ -38,4 +38,4 @@ class Ticket:
       'mode'        : 'w' },
   )
 
-  _categories = ('specialise', )
+  _categories = ('specialise', ) # Tickets can specialise a trade condition
