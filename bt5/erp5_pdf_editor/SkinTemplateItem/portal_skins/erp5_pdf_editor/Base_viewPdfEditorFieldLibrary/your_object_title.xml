@@ -12,12 +12,15 @@
         <item>
             <key> <string>delegated_list</string> </key>
             <value>
-              <list/>
+              <list>
+                <string>required</string>
+                <string>display_width</string>
+              </list>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>import_scribus_file</string> </value>
+            <value> <string>your_object_title</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -73,12 +76,20 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>display_width</string> </key>
+                    <value> <int>20</int> </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>your_import_scribus_file</string> </value>
+                    <value> <string>your_title</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Base_viewPdfEditorFieldLibrary</string> </value>
+                    <value> <string>Base_viewFieldLibrary</string> </value>
+                </item>
+                <item>
+                    <key> <string>required</string> </key>
+                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
