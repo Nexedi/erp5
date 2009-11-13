@@ -1,0 +1,62 @@
+#!/bin/sh
+# Small wait script based on watch_activities scripts.
+
+# The goal is keep running until the activities.
+
+
+function show_help ( )
+{
+  script_name=`basename $0`
+  echo """
+  Usage:
+    $script_name <mysql_opt> [interval seconds] [timeout in seconds]
+  Interval is default 5.
+  Timeout default is 600 seconds.
+  mysql_opt are default mysql command line options.
+  Put them in quotes if more than one option is passed.
+
+  Typical usage:
+    $script_name erp5
+    $script_name \"-h remotehost -u user erp5remote\" 3
+  """
+}
+
+MYSQL_OPT=$1
+INTERVAL=$2
+TIMEOUT=$3
+
+if [ "$MYSQL_OPT" == "" ] ; then
+  show_help
+  exit 1
+fi
+
+if [ "$INTERVAL" == "" ] ; then
+  INTERVAL=5
+fi
+if [ "$TIMEOUT" == "" ] ; then
+  INTERVAL=600
+fi
+
+TIME=0
+
+while true
+do
+    SELECT="SELECT count(*) AS message_count FROM message;"
+    VALUE=`echo $SELECT | mysql $MYSQL_OPT | grep -v message`
+    if [ "$VALUE" == "0" ]
+    then
+      SELECT="SELECT count(*) AS message_count FROM message_queue;"
+      VALUE=`echo $SELECT | mysql $MYSQL_OPT | grep -v message`
+      if [ "$VALUE" == "0" ]
+      then 
+         exit 0
+      fi
+    fi
+    sleep $INTERVAL;
+    TIME="`expr $TIME + $INTERVAL`"
+    if [ $TIME -gt $TIMEOUT ]
+    then
+        echo "Timeout"
+        exit 1
+    fi
+done
