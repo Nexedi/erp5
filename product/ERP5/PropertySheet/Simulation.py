@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
@@ -74,5 +75,5 @@ class Simulation:
             'mode'        : 'w' },
   )
 
-  _categories = ('order', 'delivery','delivery_mode','incoterm')
+  _categories = ('order', 'delivery', 'delivery_mode', 'incoterm')
 
