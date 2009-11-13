@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #############################################################################
 #
 # Copyright (c) 2006-2008 Nexedi SA and Contributors. All Rights Reserved.
@@ -29,12 +30,13 @@
 import zope.interface
 from AccessControl import ClassSecurityInfo
 
+from Products.ERP5.Document.Predicate import Predicate
 from Products.ERP5Type.DivergenceMessage import DivergenceMessage
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5.Document.PropertyDivergenceTester import \
                                                PropertyDivergenceTester
 
-class CategoryDivergenceTester(PropertyDivergenceTester):
+class CategoryDivergenceTester(Predicate):
   """
   The purpose of this divergence tester is to check the
   consistency between delivery movement and simulation movement
@@ -54,8 +56,13 @@ class CategoryDivergenceTester(PropertyDivergenceTester):
   zope.interface.implements( interfaces.IDivergenceTester, )
 
   # Declarative properties
-  property_sheets = PropertyDivergenceTester.property_sheets
-
+  property_sheets = (   PropertySheet.Base
+                      , PropertySheet.XMLObject
+                      , PropertySheet.CategoryCore
+                      , PropertySheet.DublinCore
+                      , PropertySheet.DivergenceTester
+                      , PropertySheet.SolverSelection
+                     )
 
   def explain(self, simulation_movement):
     """
