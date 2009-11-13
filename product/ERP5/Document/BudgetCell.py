@@ -92,14 +92,16 @@ class BudgetCell(Predicate, MetaNode, Movement):
         kw['resource_uid'] = resource.getUid()
       if at_date:
         kw['at_date'] = at_date
-      return self.portal_simulation.getCurrentInventory(**kw)
+      sign = self.getParentValue().BudgetLine_getConsumptionSign()
+      return sign * self.portal_simulation.getCurrentInventory(**kw)
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getCurrentBalance')
     def getCurrentBalance(self, at_date=None):
       """
       Returns current balance
       """
-      return self.getQuantity(0.0) + self.getCurrentInventory(at_date=at_date)
+      sign = self.getParentValue().BudgetLine_getConsumptionSign()
+      return sign * self.getQuantity(0.0) + self.getCurrentInventory(at_date=at_date)
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getConsumedBudget')
     def getConsumedBudget(self, src__=0):
