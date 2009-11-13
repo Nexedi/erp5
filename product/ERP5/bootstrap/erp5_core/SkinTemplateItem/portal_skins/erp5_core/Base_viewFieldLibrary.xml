@@ -143,6 +143,8 @@
                         <string>your_percentage</string>
                         <string>your_reportbox</string>
                         <string>your_report_section_category</string>
+                        <string>my_int_index</string>
+                        <string>my_reference</string>
                       </list>
                     </value>
                 </item>
