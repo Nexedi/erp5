@@ -50,7 +50,7 @@ class TradeModelCell(TradeModelLine, MappedValue):
     # Declarative interfaces
     #    interfaces.IVariated as soon as interfaces.IVariated will be zope3
     zope.interface.implements(
-        interfaces.ITransformation
+        interfaces.IAmountGenerator
     )
 
     # Declarative properties

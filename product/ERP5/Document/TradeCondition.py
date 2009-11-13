@@ -76,7 +76,9 @@ class TradeCondition(Path, Transformation, XMLMatrix):
                       , PropertySheet.Order
                       )
 
-    zope.interface.implements(interfaces.ITransformation)
+    zope.interface.implements(interfaces.IAmountGenerator,
+                              interfaces.IMovementGenerator,
+                              interfaces.IMovementCollectionUpdater,)
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'updateAggregatedAmountList')

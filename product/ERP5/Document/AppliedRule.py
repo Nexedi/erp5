@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
@@ -25,6 +26,8 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
 ##############################################################################
+
+import zope.interface
 
 from AccessControl import ClassSecurityInfo
 from Products.CMFCore.utils import getToolByName
@@ -73,6 +76,9 @@ class AppliedRule(XMLObject):
                       , PropertySheet.CategoryCore
                       , PropertySheet.AppliedRule
                       )
+
+    # Declarative interfaces
+    zope.interface.implements(interfaces.IMovementCollection,)
 
     def tpValues(self) :
       """ show the content in the left pane of the ZMI """

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2002, 2004 Nexedi SARL and Contributors. All Rights Reserved.
@@ -78,7 +79,7 @@ class TransformedResource(Predicate, XMLObject, XMLMatrix, Amount):
                       )
 
     # Declarative interfaces
-    zope.interface.implements( interfaces.ITransformation )
+    zope.interface.implements(interfaces.IAmountGenerator,)
 
     ### Variation matrix definition
     #

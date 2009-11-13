@@ -56,7 +56,7 @@ class TradeModelLine(Predicate, XMLMatrix, Amount):
 
   # Declarative interfaces
   zope.interface.implements(
-      interfaces.ITransformation,
+      interfaces.IAmountGenerator,
       interfaces.IVariated
   )
 

@@ -83,7 +83,7 @@ class Transformation(XMLObject, Predicate, Variated):
 
     # Declarative interfaces
     zope.interface.implements(interfaces.IVariated, 
-                              interfaces.ITransformation
+                              interfaces.IAmountGenerator
                               )
 
 
