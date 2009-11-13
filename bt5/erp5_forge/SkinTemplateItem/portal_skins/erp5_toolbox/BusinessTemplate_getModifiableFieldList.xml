@@ -76,7 +76,6 @@ field_library_id_dict = {\n
 modified_object_dict = {}\n
 \n
 def calculateFieldLibraryID(id):\n
-  # For each skin folder, there could be at most one Field Library\n
   # The field library name could be automatically calculated or hardcoded in\n
   # the script\n
   return field_library_id_dict.get(id) or \'Base_view%sFieldLibrary\' % \\\n
@@ -157,6 +156,10 @@ for skin_folder_id in skin_id_list:\n
                   ):\n
                   modified_object_dict[field_path] = (\'2_unproxify_field\',\n
                                                       template_id)\n
+                elif field.delegated_list:\n
+                  # Found some delegated list\n
+                  modified_object_dict[field_path] = (\n
+                    \'0_check_delegated_value\', template_id)\n
             else:\n
               # Do not force proxification of field library field.\n
               # The nice developper probably have a good reason not to do it.\n
