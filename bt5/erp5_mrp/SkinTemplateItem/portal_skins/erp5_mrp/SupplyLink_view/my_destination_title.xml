@@ -12,9 +12,7 @@
         <item>
             <key> <string>delegated_list</string> </key>
             <value>
-              <list>
-                <string>portal_type</string>
-              </list>
+              <list/>
             </value>
         </item>
         <item>
@@ -64,10 +62,6 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>portal_type</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>target</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -80,22 +74,11 @@
               <dictionary>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_destination_title</string> </value>
+                    <value> <string>my_supply_link_destination_title</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>SupplyLink_viewFieldLibrary</string> </value>
-                </item>
-                <item>
-                    <key> <string>portal_type</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>Supply Node</string>
-                          <string>Supply Node</string>
-                        </tuple>
-                      </list>
-                    </value>
+                    <value> <string>Base_viewMRPFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
