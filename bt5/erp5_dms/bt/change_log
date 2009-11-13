@@ -1,3 +1,6 @@
+2009-11-12 Kazuhiko
+* remove 'similar' base category because it is already included in erp5_web.
+
 2009-10-16 rafael
 * Update for the changes of new portal types of portal types.
 
