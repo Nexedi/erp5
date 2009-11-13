@@ -894,7 +894,8 @@ class ERP5Form(ZMIForm, ZopePageTemplate):
       """
       Return ProxyFields
       """
-      return [f for f in self.objectValues() if f.meta_type == 'ProxyField']
+      return sorted([f for f in self.objectValues() \
+          if f.meta_type == 'ProxyField'], key = lambda x: x.id)
 
     security.declareProtected('Change Formulator Forms', 'proxifyField')
     def proxifyField(self, field_dict=None, force_delegate=False,
