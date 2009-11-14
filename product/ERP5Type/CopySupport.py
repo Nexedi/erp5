@@ -72,7 +72,7 @@ class CopyContainer:
           ids=[uids]
       oblist=[]
       for uid in uids:
-          ob=self.portal_catalog.getObject(uid)
+          ob=self.getPortalObject().portal_catalog.getObject(uid)
           if not ob.cb_isCopyable():
               raise CopyError, eNotSupported % uid
           m=Moniker.Moniker(ob)
@@ -187,7 +187,7 @@ class CopyContainer:
           ids=[uids]
       oblist=[]
       for uid in uids:
-          ob=self.portal_catalog.getObject(uid)
+          ob=self.getPortalObject().portal_catalog.getObject(uid)
           if not ob.cb_isMoveable():
               raise CopyError, eNotSupported % id
           m=Moniker.Moniker(ob)
@@ -221,7 +221,7 @@ class CopyContainer:
                  action ='./manage_main',)
       while uids:
           uid=uids[-1]
-          ob=self.portal_catalog.getObject(uid)
+          ob=self.getPortalObject().portal_catalog.getObject(uid)
           container = ob.aq_inner.aq_parent
           id = ob.id
           v=container._getOb(id, self)
@@ -243,7 +243,7 @@ class CopyContainer:
     self_base = aq_base(self)
     #LOG("After Clone ",0, "self:%s item:%s" % (repr(self), repr(item)))
     #LOG("After Clone ",0, "self:%s item:%s" % (repr(self), repr(self.getPortalObject().objectIds())))
-    portal_catalog = getToolByName(self, 'portal_catalog')
+    portal_catalog = getToolByName(self.getPortalObject(), 'portal_catalog')
     self_base.uid = portal_catalog.newUid()
 
     # Give the Owner local role to the current user, zope only does this if no
@@ -348,7 +348,7 @@ class CopyContainer:
           Unindex the object from the portal catalog.
       """
       if self.isIndexable:
-        catalog = getToolByName(self, 'portal_catalog', None)
+        catalog = getToolByName(self.getPortalObject(), 'portal_catalog', None)
         if catalog is not None:
           # Make sure there is not activity for this object
           self.flushActivity(invoke=0)
@@ -388,7 +388,7 @@ class CopyContainer:
           # Update the modification date.
           if getattr(aq_base(self), 'notifyModified', _marker) is not _marker:
               self.notifyModified()
-      catalog = getToolByName(self, 'portal_catalog', None)
+      catalog = getToolByName(self.getPortalObject(), 'portal_catalog', None)
       if catalog is not None:
           catalog.moveObject(self, idxs=idxs)
 
@@ -499,7 +499,7 @@ class CopyContainer:
 
   def _postDuplicate(self):
     self_base = aq_base(self)
-    portal_catalog = getToolByName(self, 'portal_catalog')
+    portal_catalog = getToolByName(self.getPortalObject(), 'portal_catalog')
     self_base.uid = portal_catalog.newUid()
 
     # Give the Owner local role to the current user, zope only does this if no

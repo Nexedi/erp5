@@ -1922,7 +1922,7 @@ class Base( CopyContainer,
     """
       Returns the url of an object relative to the portal site.
     """
-    return self.portal_url.getRelativeUrl(self)
+    return self.getPortalObject().portal_url.getRelativeUrl(self)
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getAbsoluteUrl')
@@ -3212,7 +3212,7 @@ class Base( CopyContainer,
       Returns the creation date of the document based on workflow information
     """
     # Check if edit_workflow defined
-    portal_workflow = getToolByName(self, 'portal_workflow')
+    portal_workflow = getToolByName(self.getPortalObject(), 'portal_workflow')
     wf = portal_workflow.getWorkflowById('edit_workflow')
     wf_list = list(portal_workflow.getWorkflowsFor(self))
     if wf is not None: wf_list = [wf] + wf_list
@@ -3238,7 +3238,7 @@ class Base( CopyContainer,
       variable on the workflow which is an alias to time.
     """
     # Check if edit_workflow defined
-    portal_workflow = getToolByName(self, 'portal_workflow')
+    portal_workflow = getToolByName(self.getPortalObject(), 'portal_workflow')
     wf = portal_workflow.getWorkflowById('edit_workflow')
     wf_list = list(portal_workflow.getWorkflowsFor(self))
     if wf is not None:

@@ -370,7 +370,7 @@ class ERP5TypeInformation(XMLObject,
 
         # notify workflow after generating local roles, in order to prevent
         # Unauthorized error on transition's condition
-        workflow_tool = getToolByName(self, 'portal_workflow', None)
+        workflow_tool = getToolByName(self.getPortalObject(), 'portal_workflow', None)
         if workflow_tool is not None:
           for workflow in workflow_tool.getWorkflowsFor(ob):
             workflow.notifyCreated(ob)
