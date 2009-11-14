@@ -424,7 +424,7 @@ class Method:
 
   def __call__(self, *args, **kw):
     m = Message(self.__passive_self, self.__active_process, self.__kw, self.__method_id, args, kw)
-    portal_activities = self.__passive_self.portal_activities
+    portal_activities = self.__passive_self.getPortalObject().portal_activities
     if portal_activities.activity_tracking:
       activity_tracking_logger.info('queuing message: activity=%s, object_path=%s, method_id=%s, args=%s, kw=%s, activity_kw=%s, user_name=%s' % (self.__activity, '/'.join(m.object_path), m.method_id, m.args, m.kw, m.activity_kw, m.user_name))
     activity_dict[self.__activity].queueMessage(portal_activities, m)

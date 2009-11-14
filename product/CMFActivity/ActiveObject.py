@@ -126,7 +126,7 @@ class ActiveObject(ExtensionClass.Base):
 
   security.declareProtected( permissions.ModifyPortalContent, 'flushActivity' )
   def flushActivity(self, invoke=0, **kw):
-    activity_tool = getToolByName(self, 'portal_activities', None)
+    activity_tool = getToolByName(self.getPortalObject(), 'portal_activities', None)
     if activity_tool is None:
       return # Do nothing if no portal_activities
     # flush all activities related to this object
@@ -146,7 +146,7 @@ class ActiveObject(ExtensionClass.Base):
   def hasActivity(self, **kw):
     """Tells if there is pending activities for this object.
     """
-    activity_tool = getToolByName(self, 'portal_activities', None)
+    activity_tool = getToolByName(self.getPortalObject(), 'portal_activities', None)
     if activity_tool is None:
       return 0 # Do nothing if no portal_activities
     return activity_tool.hasActivity(self, **kw)
@@ -165,7 +165,7 @@ class ActiveObject(ExtensionClass.Base):
 
   security.declareProtected( permissions.View, 'getActiveProcess' )
   def getActiveProcess(self):
-    activity_tool = getToolByName(self, 'portal_activities', None)
+    activity_tool = getToolByName(self.getPortalObject(), 'portal_activities', None)
     if activity_tool is None:
       return None # Do nothing if no portal_activities
     return activity_tool.getActiveProcess()
