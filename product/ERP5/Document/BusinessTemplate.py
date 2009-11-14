@@ -142,7 +142,7 @@ def getChainByType(context):
   This is only useful in order to use
   portal_workflow.manage_changeWorkflows
   """
-  pw = context.portal_workflow
+  pw = context.getPortalObject().portal_workflow
   cbt = pw._chains_by_type
   ti = pw._listTypeInfo()
   types_info = []
@@ -5184,7 +5184,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       """
         Returns the current state in installation
       """
-      portal_workflow = getToolByName(self, 'portal_workflow')
+      portal_workflow = getToolByName(self.getPortalObject(), 'portal_workflow')
       wf = portal_workflow.getWorkflowById(
                            'business_template_installation_workflow')
       return wf._getWorkflowStateOf(self, id_only=id_only )
