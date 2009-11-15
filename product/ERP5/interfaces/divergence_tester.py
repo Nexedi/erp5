@@ -111,6 +111,16 @@ class IDivergenceTester(Interface):
     decision_movement -- a delivery movement (decision)
     """
 
+  def getUpdatablePropertyDict(prevision_movement, decision_movement):
+    """
+    Returns a list of properties to update on decision_movement
+    prevision_movement so that next call to compare returns True.
+
+    prevision_movement -- a simulation movement (prevision)
+
+    decision_movement -- a delivery movement (decision)
+    """
+
   def update(prevision_movement, decision_movement):
     """
     Updates decision_movement with properties from
