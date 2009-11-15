@@ -79,6 +79,12 @@ class SolverDecision(XMLObject):
                     , PropertySheet.DublinCore
                     , PropertySheet.SolverSelection
                     )
+  # XXX-JPS missing property sheet or categories to specify 
+  #   delivery -> the delivery lines which are solved by the decision
+  #   (default)delivery or solver_application or order -> the object of application of resolution
+  #         ie. a specified delivery, a specified delivery line, etc.
+  #         (delivery should be enough)
+  #   all property sheets of target solvers (with their configuration properties)
 
   # Declarative interfaces
   zope.interface.implements(interfaces.IConfigurable,
