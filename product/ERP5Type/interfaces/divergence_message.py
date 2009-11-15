@@ -33,7 +33,19 @@ from zope.interface import Interface
 
 class IDivergenceMessage(Interface):
   def getMovementGroup():
-    """Returns movement group of a builder which was responsible for generating tested_property"""
+    """Returns movement group of a builder which was
+    responsible for generating tested_property.
+
+    XXX-JPS - REFACTOR NEEDED
+
+    Issue 1:
+      This is wrong since multiple builders can be used to 
+      build a single Delivery. Moreover, what is used for grouping
+      and what is used to set properties can be different.
+
+    Issue 2:
+      This class is related to ERP5 and not to ERP5Type
+    """
 
   def getCollectOrderGroup():
     """Wraps and canonises result of Movement Groups' getCollectOrderGroup getter"""
