@@ -33,7 +33,13 @@ Products.ERP5.interfaces.business_buildable
 from zope.interface import Interface
 
 class IBusinessBuildable(Interface):
-  """Business Buildable interface specification"""
+  """Business Buildable interface specification
+
+  This interface is implemented by Business Path as part
+  of Business Process management. It can be used to
+  check which path in a business process can be built
+  and to trigger the build process for a given path.
+  """
 
   def isBuildable(explanation):
     """Returns True if any of the related Simulation Movement
@@ -50,12 +56,13 @@ class IBusinessBuildable(Interface):
     'explanation' is the Order or Item or Document which is the
     cause of a root applied rule in the simulation
 
-    FIXME/JPS: Not sure if this will exist some day XXX
+    NOTE (JPS): It is not sure whether this method will ever
+    be used.
     """
 
   def build(explanation):
     """Builds all related movements in the simulation
-    using the builders of Business Path
+    using the builders defined on the Business Path
 
     'explanation' is the Order or Item or Document which is the
     cause of a root applied rule in the simulation

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2009 Nexedi SA and Contributors. All Rights Reserved.
@@ -34,11 +35,16 @@ from zope.interface import Interface
 class IBusinessCompletable(Interface):
   """Business Completable interface specification
 
-  Business states and path can be completed or partially completed.
+  This interface is implemented by Business Path and Business
+  States as part of Business Process Management. It can be
+  used to check whether a path or a state is completed, or
+  partially completed.
+
+  TODO: make sure interface can support simulation movements
   """
   def isCompleted(explanation):
     """True if all related simulation movements for this explanation
-    document are delivered and in simulation state which is considered
+    document are delivered and in a simulation state which is considered
     as finished.
 
     Completed means that it is possible to move to next step of Business Process
@@ -55,6 +61,9 @@ class IBusinessCompletable(Interface):
     are frozen.
 
     Frozen means that simulation movement cannot be modified.
+
+    NOTE: simulation movements can be frozen (ex. in stopped state) but
+    not yet completed (ex. in delivered state).
     """
 
   def getExpectedCompletionDate(task):
@@ -75,10 +84,9 @@ class IBusinessCompletable(Interface):
     """
 
   def getRemainingTradePhaseList(explanation, trade_phase_list=None):
-    """
-      Returns the list of remaining trade phases which to be done on the
-      explanation.
+    """Returns the list of remaining trade phases which to be done on the
+    explanation.
 
-      trade_phase_list -- if provided, the result is filtered by it after
-                          being collected
+    trade_phase_list -- if provided, the result is filtered by it after
+                        being collected
     """
