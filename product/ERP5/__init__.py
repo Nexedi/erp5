@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
@@ -48,7 +49,7 @@ from Tool import CategoryTool, SimulationTool, RuleTool, IdTool, TemplateTool,\
                  TestTool, DomainTool, AlarmTool, OrderTool, DeliveryTool,\
                  TrashTool, ContributionTool, NotificationTool, PasswordTool,\
                  GadgetTool, ContributionRegistryTool, IntrospectionTool,\
-                 AcknowledgementTool
+                 AcknowledgementTool, SolverTool, ConversionTool
 import ERP5Site
 object_classes = ( ERP5Site.ERP5Site,
                  )
@@ -70,6 +71,8 @@ portal_tools = ( CategoryTool.CategoryTool,
                  ContributionRegistryTool.ContributionRegistryTool,
                  IntrospectionTool.IntrospectionTool,
                  AcknowledgementTool.AcknowledgementTool,
+                 SolverTool.SolverTool,
+                 ConversionTool.ConversionTool,
                 )
 content_classes = ()
 content_constructors = ()
@@ -105,4 +108,3 @@ def initialize( context ):
 # backward compatibility names
 XML = None
 UI = None
-
