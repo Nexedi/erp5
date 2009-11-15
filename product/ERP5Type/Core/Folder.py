@@ -1161,6 +1161,10 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn, 
         # It will be less efficient in this case. We also do not
         # use this heuristic whenever activate_kw is defined
         self._reindexObject(**kw)
+        # XXX-JPS: Here, we could invoke Folder_reindexAll instead, like this:
+        #   self.Folder_reindexAll()
+        #   return
+        # this shows that both methods should be merged.
         for c in self.objectValues():
           if getattr(aq_base(c),
                     'recursiveReindexObject', None) is not None:
