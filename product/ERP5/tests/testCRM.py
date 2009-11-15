@@ -416,7 +416,7 @@ class TestCRMMailIngestion(ERP5TypeTestCase):
     self.assertEquals('message/rfc822', event.getContentType())
   
   def test_title(self):
-    # tite is found automatically, based on the Subject: header in the mail
+    # title is found automatically, based on the Subject: header in the mail
     event = self._ingestMail('simple')
     self.assertEquals('Simple Mail Test', event.getTitle())
     self.assertEquals('Simple Mail Test', event.getTitleOrId())
