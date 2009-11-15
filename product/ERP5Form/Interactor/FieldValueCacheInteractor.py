@@ -47,13 +47,10 @@ class FieldValueCacheInteractor(Interactor):
     self.on(ProxyField.manage_tales).doAfter(self.purgeFieldValueCache)
     self.on(ZMIForm.manage_renameObject).doAfter(self.purgeFieldValueCache)
 
-  def uninstall(self):
-    """
-      Uninstall interactions
-    """
-
   def purgeFieldValueCache(self, method_call_object):
     """
+      Interaction method (defined at the Interactor level).
+      Make sure all field value caches are purged
     """
     from Products.ERP5Form import Form, ProxyField
     Form.purgeFieldValueCache()
