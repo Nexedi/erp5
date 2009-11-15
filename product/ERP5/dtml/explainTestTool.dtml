@@ -1,7 +1,6 @@
 <dtml-var manage_page_header>
 <dtml-var manage_tabs>
 
-<h3>Explain Test Tool</h3>
 <p>
 Test Tool is a store of functional test suites.
 The purpose of this tool is to help running test suites automatically.
