@@ -61,5 +61,7 @@ class IMovementCollectionDiff(Interface):
   def getMovementPropertyDict(movement):
     """
     Returns a dict of all properties and values
-    to update an existing movement.
+    to update an existing movement or to 
+    create a new movement.
     """
+ 
