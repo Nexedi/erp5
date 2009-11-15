@@ -115,13 +115,24 @@ class InteractorSource:
 
 class Interactor:
   """
-    Interactor base class. 
+  Interactor base class. 
+
+  TODO:
+    - implement uninstall in a generic way
+      at the Interactor base class level
   """
 
   def install(self):
+    """
+    Install the interactions. This method must be subclassed.
+    """
     raise NotImplementedError
   
   def uninstall(self):
+    """
+    Uninstall the interactions. Default implementation is provided
+    by Interactor base class.
+    """
     raise NotImplementedError
   
   # Interaction implementation
