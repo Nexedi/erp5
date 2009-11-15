@@ -137,3 +137,50 @@ class SolverProcess(XMLObject, ActiveProcess):
     """
     for solver in self.contentValues(portal_type=self.getPortalObject().getPortalTargetSolverTypeList()):
       solver.activate(active_process=self).solve()
+
+
+  # API
+  def isSolverDecisionListConsistent(self):
+    """
+    Returns True is the Solver Process decisions do not 
+    need to be rebuilt, False else. This method can be
+    invoked before invoking buildSolverDecisionList if
+    this helps reducing CPU time.
+    """
+
+  def buildSolverDecisionList(self, delivery_or_movement=None):
+    """
+    Build (or rebuild) the solver decisions in the solver process
+
+    delivery_or_movement -- a movement, a delivery, 
+                            or a list thereof
+    """
+    if delivery_or_movement is None:
+      raise NotImplementedError
+      # Gather all delivery lines already found
+      # in already built solvers
+
+    # We suppose here that delivery_or_movement is a list of
+    # delivery lines. Let group decisions in such way
+    # that a single decision is created per divergence tester instance
+    # and per application level list
+    solver_decision_dict = {}
+    for movement in delivery_or_movement:
+      for simulation_movement in movement.getDeliveryRelatedValueList():
+        simulation_movemet_url = simulation_movement.getRelativeUrl()
+        for divergence_tester in simulation_movement.getParentValue().getDivergenceTesterValueList():
+          application_list = map(lambda x:x.getRelativeUrl(), 
+                 self.getSolverDecisionApplicationValueList(simulation_movement, divergence_tester))
+          application_list.sort()
+          solver_decision_key = (divergence_tester.getRelativeUrl(), application_list)
+          movement_dict = solver_decision_dict.setdefaults(solver_decision_key, {})
+          movement_dict[simulation_movemet_url] = None
+
+    # Now build the solver decision instances based on the previous
+    # grouping
+    #  XXX-JPS: pseudocode for update (ie. rebuild) is not present
+    for solver_decision_key, movement_dict in solver_decision_dict.items():
+      new_decision = self.newContent(portal_type='Solver Decision')
+      new_decision._setDeliveryList(movement_dict.keys())
+      new_decision._setSolver(solver_decision_key[0])
+      # No need to set application_list or....?

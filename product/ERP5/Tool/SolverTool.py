@@ -143,30 +143,11 @@ class SolverTool(BaseTool):
     if not self.isDivergent(delivery_or_movement=delivery_or_movement):
       return None
 
-    # We suppose here that delivery_or_movement is a list of
-    # delivery lines. Let group decisions in such way
-    # that a single decision is created per divergence tester instance
-    # and per application level list
-    solver_decision_dict = {}
-    for movement in delivery_or_movement:
-      for simulation_movement in movement.getDeliveryRelatedValueList():
-        simulation_movemet_url = simulation_movement.getRelativeUrl()
-        for divergence_tester in simulation_movement.getParentValue().getDivergenceTesterValueList():
-          application_list = map(lambda x:x.getRelativeUrl(), 
-                 self.getSolverDecisionApplicationValueList(simulation_movement, divergence_tester))
-          application_list.sort()
-          solver_decision_key = (divergence_tester.getRelativeUrl(), application_list)
-          movement_dict = solver_decision_dict.setdefaults(solver_decision_key, {})
-          movement_dict[simulation_movemet_url] = None
-
-    # Now build the solver process instances based on the previous
-    # grouping
+    # Create an empty solver process
     new_solver = self.newContent(portal_type='Solver Process')
-    for solver_decision_key, movement_dict in solver_decision_dict.items():
-      new_decision = self.newContent(portal_type='Solver Decision')
-      new_decision._setDeliveryList(movement_dict.keys())
-      new_decision._setSolver(solver_decision_key[0])
-      # No need to set application_list or....?
+    # And build decisions
+    new_solver.updateSolverDecision(delivery_or_movement=delivery_or_movement)
+    return new_solver
 
   def getSolverProcessValueList(self, delivery_or_movement=None, validation_state=None):
     """
