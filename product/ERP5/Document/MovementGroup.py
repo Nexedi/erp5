@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2008 Nexedi SA and Contributors. All Rights Reserved.
@@ -32,8 +33,27 @@ import zope.interface
 
 class MovementGroup(XMLObject):
   """
-  The purpose of MovementGroup is to define how movements are grouped,
-  and how values are updated from simulation movements.
+  The purpose of MovementGroup is to define how movements
+  are grouped.
+
+  REACTORING NEEDED: XXX-JPS
+  - the initial docstring was stating that MovementGroup is
+    used to know how values are updated from simulation movements
+    (to delivery lines). This was wrong because one delivery line
+    can be built out of multiple simulation movements through
+    differen builders using different movement groups
+
+  - moreover, we need to have something to represent at which 
+    level movement properties should be stored (ex. in Task 
+    Report). PropertyGroup could be the name.
+
+  - it is true that during divergence resolution, it will be useful
+    to check on PropertyGroup at which level a property can be
+    set (ex. cell, line, group of lines, delivery) in order to
+    show the appropriate user interface choice to the users. 
+    This will be achieved by making a union of all PropertyGroup
+    of all business path of all simulation movements involved
+    in delivery movements to resolve
   """
   meta_type = 'ERP5 Movement Group'
   portal_type = 'Movement Group'
