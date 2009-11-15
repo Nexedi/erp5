@@ -30,6 +30,12 @@ import zope.interface
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, interfaces
 
+def _compare(tester_list, prevision_movement, decision_movement):
+  for tester in tester_list:
+    if not tester.compare(prevision_movement, decision_movement):
+      return False
+  return True
+
 class RuleMixin:
   """
   Provides generic methods and helper methods to implement
@@ -135,10 +141,46 @@ class RuleMixin:
       tester_key = tuple(tester_key)
       prevision_movement_dict.setdefaults(tester_key, []).append(movement)
 
-    # Build the diff
-    movement_collection_diff = self._buildMovementCollectionDiff(tester_list,
-                                                                 decision_movement_dict,
-                                                                 prevision_movement_dict,)
+    # Prepare a mapping between prevision and decision
+    #   The prevision_to_decision_map is a list of tuples
+    #   of the form (prevision_movement_dict, list of decision_movement)
+    prevision_to_decision_map = []
+
+    # First find out all existing (decision) movements which belong to no group
+    no_group_list = []
+    for tester_key in decision_movement_dict.keys():
+      if prevision_movement_dict.has_key(tester_key):
+        for decision_movement in decision_movement_dict[tester_key]:
+          no_match = True
+          for prevision_movement in prevision_movement_dict[tester_key]:
+            # Check if this movement belongs to an existing group
+            if _compare(tester_list, prevision_movement, decision_movement):
+              no_match = False
+              break
+          if no_match:
+            # There is no matching. 
+            # So, let us add the decision movements to no_group_list
+            no_group_list.append(decision_movement)
+      else:
+        # The tester key does not even exist.
+        # So, let us add all decision movements to no_group_list
+        no_group_list.extend(decision_movement_dict[tester_key])
+    prevision_to_decision_map.append((None, no_group_list))
+
+    # Second, let us create small groups of movements
+    for tester_key in prevision_movement_dict.keys():
+      for prevision_movement in prevision_movement_dict[tester_key]:
+        map_list = []
+        for decision_movement in decision_movement_dict.get(tester_key, ()):
+          if _compare(tester_list, prevision_movement, decision_movement):
+            map_list.append(decision_movement)
+        prevision_to_decision_map.append((prevision_movement, map_list))
+
+    # Third, time to create the diff    
+    movement_collection_diff = MovementCollectionDiff()
+    for (prevision_movement, decision_movement_list) in prevision_to_decision_map:
+      self._extendMovementCollectionDiff(movement_collection_diff, prevision_movement,
+                                         decision_movement_list)
 
     # Return result
     return movement_collection_diff
@@ -189,6 +231,16 @@ class RuleMixin:
     """
     raise NotImplementedError
 
+  def _getDivergenceTesterList(self, exclude_quantity=True):
+    """
+    Return the applicable divergence testers which must 
+    be used to test movement divergence.
+ 
+    exclude_quantity -- if set to true, do not consider 
+                        quantity divergence testers
+    """
+    raise NotImplementedError
+
   def _getMatchingTesterList(self):
     """
     Return the applicable divergence testers which must 
@@ -199,77 +251,110 @@ class RuleMixin:
 
   def _getQuantityTesterList(self):
     """
-    Return the applicable divergence testers which must 
-    be used to match movements and build the diff (ie.
-    not all divergence testers of the Rule)
+    Return the applicable quantity divergence testers.
     """
     raise NotImplementedError
 
-  def _buildMovementCollectionDiff(self, tester_list,
-                     decision_movement_dict, prevision_movement_dict):
+  def _newProfitAndLossMovement(self, prevision_movement):
     """
-    Build the diff of movements, based on the rule policy
-    which must take into account for example the risk
-    of theft. This is the most important method to override.
+    Returns a new temp simulation movement which can
+    be used to represent a profit or loss in relation
+    with prevision_movement
 
-    NOTE: XXX-JPS there is probably a way to make parts of this generic
-    and make implementation even easier and simpler.
+    prevision_movement -- a simulation movement
+    """
+
+  def _extendMovementCollectionDiff(self, movement_collection_diff,
+                                    prevision_movement, decision_movement_list):
+    """
+    Compares a prevision_movement to decision_movement_list which
+    are part of the matching group and updates movement_collection_diff
+    accordingly
     """
     raise NotImplementedError
-    # Sample implementation bellow
-    def _compare(tester_list, prevision_movement, decision_movement):
-      for tester in tester_list:
-        if not tester.compare(prevision_movement, decision_movement):
-          return False
-      return True
-
-    # Find movements to add or compensate (all updates go through compensate)
-    new_movement_list = []
-    compensation_movement_list = []
-    for tester_key in prevision_movement_dict.keys():
-      if decision_movement_dict.has_key(tester_key):
-        # We have found now a small group of movements with same key
-        #  we can now start comparing
-        for prevision_movement in prevision_movement_dict[tester_key]:
-          prevision_quantity = prevision_movement.getQuantity()
-          decision_quantity = 0.0
-          compare_movement = None
-          for decision_movement in decision_movement_dict[tester_key]:
-            if  _compare(tester_list, prevision_movement, decision_movement):
-              decision_quantity += decision_movement.getQuantity()
-              compare_movement = decision_movement
-          # Test globaly
-          if compare_movement is None:
-            new_movement_list.append(prevision_movement)
-          else:
-            # Build a fake movement with total quantity
-            compare_movement = compare_movement.asContext(quantity=decision_quantity)
-            # And compare it to the expected quantity
-            if not _compare(self._getQuantityTesterList(), prevision_movement, compare_movement):
-              # Find any movement which is no frozen and update
-              updated_movement = None
-              for decision_movement in decision_movement_dict[tester_key]:
-                if not decision_movement.isFrozen():
-                  updated_movement = decision_movement
-                  decision_movement.setQuantity(prevision_quantity-decision_quantity)
-                  break
-              if updated_movement is not None:
-                updatable_list.append(decision_movement, {})
-              else:
-                # Else compensate
-                compensation_movement_list.append(compare_movement.asContext(
-                                     quantity=prevision_quantity-decision_quantity))
-      else;
-        new_movement_list.extend(prevision_movement_dict[tester_key])
-
-    # Find movements to delete or cancel by compensating
-    for tester_key in decision_movement_dict.keys():
-      if prevision_movement_dict.has_key(tester_key):
-        for movement in decision_movement_dict[tester_key]:
-          quantity = 0
-          for decision_movement in decision_movement_dict[tester_key]:
-            pass
+    # Sample implementation - but it actually looks very generic
+    # Case 1: movements which are not needed
+    if prevision_movement is None:
+      # decision_movement_list contains simulation movements which must
+      # be deleted
+      for decision_movement in decision_movement_list:
+        if decision_movement.isDeletable(): # If not frozen and all children are deletable
+          # Delete deletable
+          movement_collection_diff.addDeletableMovement(decision_movement)
+        else:
+          # Compensate non deletable
+          new_movement = decision_movement.asContext(quantity=-decision_movement.getQuantity())
+          movement_collection_diff.addNewMovement(new_movement)
+      return
+    # Case 2: movements which are needed but may need update or compensation_movement_list
+    #  let us imagine the case of a forward rule
+    #  ie. what comes in must either go out or has been lost
+    divergence_tester_list = self._getDivergenceTesterList()
+    profit_tester_list = self._getDivergenceTesterList()
+    quantity_tester_list = self._getQuantityTesterList()
+    compensated_quantity = 0.0
+    updatable_movement = None
+    not_completed_movement = None
+    updatable_compensation_movement = None
+    prevision_quantity = prevision_movement.getQuantity()
+    decision_quantity = 0.0
+    # First, we update all properties (exc. quantity) which could be divergent
+    # and if we can not, we compensate them
+    for decision_movement in decision_movement_list:
+      decision_quantity += decision_movement.getQuantity()
+      if self._isProfitAndLossMovement(decision_movement):
+        if decision_movement.isFrozen():
+          # Record not completed movements
+          if not_completed_movement is None and not decision_movement.isCompleted():
+            not_completed_movement = decision_movement
+          # Frozen must be compensated          
+          if not _compare(profit_tester_list, prevision_movement, decision_movement):
+            new_movement = decision_movement.asContext(quantity=-decision_movement.getQuantity())
+            movement_collection_diff.addNewMovement(new_movement)
+            compensated_quantity += decision_movement.getQuantity()
+        else:
+          updatable_compensation_movement = decision_movement
+          # Not Frozen can be updated
+          kw = {}
+          for tester in profit_tester_list:
+            if tester.compare(prevision_movement, decision_movement):
+              kw.update(tester.getUpdatablePropertyDict(prevision_movement, decision_movement))
+          if kw:
+            movement_collection_diff.addUpdatableMovement(decision_movement, kw)
       else:
-        # The movement is no longer present
-        for movement in decision_movement_dict[tester_key]:
-          
+        if decision_movement.isFrozen():
+          # Frozen must be compensated          
+          if not _compare(divergence_tester_list, prevision_movement, decision_movement):
+            new_movement = decision_movement.asContext(quantity=-decision_movement.getQuantity())
+            movement_collection_diff.addNewMovement(new_movement)
+            compensated_quantity += decision_movement.getQuantity()
+        else:
+          updatable_movement = decision_movement
+          # Not Frozen can be updated
+          kw = {}
+          for tester in divergence_tester_list:
+            if tester.compare(prevision_movement, decision_movement):
+              kw.update(tester.getUpdatablePropertyDict(prevision_movement, decision_movement))
+          if kw:
+            movement_collection_diff.addUpdatableMovement(decision_movement, kw)
+    # Second, we calculate if the total quantity is the same on both sides
+    # after compensation
+    quantity_movement = prevision_movement.asContext(quantity=decision_quantity-compensated_quantity)
+    if not _compare(quantity_tester_list, prevision_movement, quantity_movement):
+      missing_quantity = prevision_quantity - decision_quantity + compensated_quantity
+      if updatable_movement is not None:
+        # If an updatable movement still exists, we update it
+        updatable_movement.setQuantity(updatable_movement.getQuantity() + missing_quantity)
+      elif not_completed_movement is not None:
+        # It is still possible to add a new movement some movements are not completed
+        new_movement = prevision_movement.asContext(quantity=missing_quantity)
+        movement_collection_diff.addNewMovement(new_movement)
+      elif updatable_compensation_movement is not None:
+        # If not, it means that all movements are completed
+        # but we can still update a profit and loss movement_collection_diff
+        updatable_compensation_movement.setQuantity(updatable_compensation_movement.getQuantity() 
+                                                  + missing_quantity)
+      else:
+        # We must create a profit and loss movement
+        new_movement = self._newProfitAndLossMovement(prevision_movement)
+        movement_collection_diff.addNewMovement(new_movement)
