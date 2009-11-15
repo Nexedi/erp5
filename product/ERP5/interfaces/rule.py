@@ -29,22 +29,43 @@
 """
 Products.ERP5.interfaces.rule
 """
+from Products.ERP5.interfaces.movement_collection_updater import IMovementCollectionUpdater
 
-from zope.interface import Interface
-
-class IRule(Interface):
-  """A Rule describes transformations of documents.
+class IRule(IMovementCollectionUpdater):
+  """Rule interface specification
+  
+  Documents which implement IRule can be used to
+  expand applied rules in ERP5 simulation.
   """
-
-  def constructNewAppliedRule(context):
-    """Create a new applied rule in the context.
+  def constructNewAppliedRule(self, context, id=None, 
+                                    activate_kw=None, **kw):
+    """
+    Create a new applied rule in the context.
 
     An applied rule is an instanciation of a Rule. The applied rule is
     linked to the Rule through the `specialise` relation.
+
+    context -- usually, a parent simulation movement of the
+               newly created applied rule
+
+    activate_kw -- activity parameters, required to control
+                   activity constraints
+
+    kw -- XXX-JPS probably wrong interface specification
     """
 
-  def expand(applied_rule):
-    """Expand this applied rule to create new documents inside the
+  def expand(applied_rule, **kw):
+    """
+    Expand this applied rule to create new documents inside the
     applied rule.
-    """
 
+    At expand time, we must replace or compensate certain
+    properties. However, if some properties were overwriten
+    by a decision (ie. a resource if changed), then we
+    should not try to compensate such a decision. The principles
+    of compensation are implemented through
+    IMovementCollectionUpdater API
+
+    kw -- XXX-JPS probably wrong interface specification
+          activate_kw should probably be defined explicitely here
+    """
