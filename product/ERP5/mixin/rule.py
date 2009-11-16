@@ -39,7 +39,7 @@ def _compare(tester_list, prevision_movement, decision_movement):
 class RuleMixin:
   """
   Provides generic methods and helper methods to implement
-  IRule and 
+  IRule and IMovementCollectionUpdater.
   """
   # Declarative security
   security = ClassSecurityInfo()
@@ -50,12 +50,12 @@ class RuleMixin:
                             interfaces.IMovementCollectionUpdater,)
 
   # Implementation of IRule
-  def constructNewAppliedRule(self, context, id=None, 
+  def constructNewAppliedRule(self, context, id=None,
                               activate_kw=None, **kw):
     """
     Create a new applied rule in the context.
 
-    An applied rule is an instanciation of a Rule. The applied rule is
+    An applied rule is an instantiation of a Rule. The applied rule is
     linked to the Rule through the `specialise` relation. The newly
     created rule should thus point to self.
 
@@ -83,17 +83,17 @@ class RuleMixin:
     applied rule.
 
     At expand time, we must replace or compensate certain
-    properties. However, if some properties were overwriten
+    properties. However, if some properties were overwritten
     by a decision (ie. a resource if changed), then we
     should not try to compensate such a decision.
     """
     # Update movements
     #  NOTE-JPS: it is OK to make rounding a standard parameter of rules
-    #            altough rounding in simulation is not recommended at all
+    #            although rounding in simulation is not recommended at all
     self.updateMovementCollection(applied_rule, movement_generator=self._geMovementGenerator())
     # And forward expand
     for movement in applied_rule.getMovementList():
-      movement.expand(**kw)      
+      movement.expand(**kw)
 
   # Implementation of IMovementCollectionUpdater
   def getMovementCollectionDiff(self, context, rounding=False, movement_generator=None):
@@ -106,7 +106,7 @@ class RuleMixin:
                an IMovementList or an IMovement
 
     movement_generator -- an optional IMovementGenerator
-                          (if not specified, a context implicit 
+                          (if not specified, a context implicit
                           IMovementGenerator will be used)
     """
     # We suppose here that we have an IMovementCollection in hand
@@ -158,7 +158,7 @@ class RuleMixin:
               no_match = False
               break
           if no_match:
-            # There is no matching. 
+            # There is no matching.
             # So, let us add the decision movements to no_group_list
             no_group_list.append(decision_movement)
       else:
@@ -176,7 +176,7 @@ class RuleMixin:
             map_list.append(decision_movement)
         prevision_to_decision_map.append((prevision_movement, map_list))
 
-    # Third, time to create the diff    
+    # Third, time to create the diff
     movement_collection_diff = MovementCollectionDiff()
     for (prevision_movement, decision_movement_list) in prevision_to_decision_map:
       self._extendMovementCollectionDiff(movement_collection_diff, prevision_movement,
@@ -184,20 +184,20 @@ class RuleMixin:
 
     # Return result
     return movement_collection_diff
-                  
+
   def updateMovementCollection(self, context, rounding=False, movement_generator=None):
     """
-    Invoke getMovementCollectionDiff and update context with 
+    Invoke getMovementCollectionDiff and update context with
     the resulting IMovementCollectionDiff.
 
     context -- an IMovementCollection usually, possibly
                an IMovementList or an IMovement
 
     movement_generator -- an optional IMovementGenerator
-                          (if not specified, a context implicit 
+                          (if not specified, a context implicit
                           IMovementGenerator will be used)
     """
-    movement_diff = self.getMovementCollectionDiff(context, 
+    movement_diff = self.getMovementCollectionDiff(context,
                  rounding=rounding, movement_generator=movement_generator)
 
     # Apply Diff
@@ -207,11 +207,11 @@ class RuleMixin:
       kw = movement_diff.getMovementPropertyDict(movement)
       movement.edit(**kw)
     for movement in movement_diff.getNewMovementList():
-      # This cas is easy, cause it is an applied rule
+      # This case is easy, because it is an applied rule
       kw = movement_diff.getMovementPropertyDict(movement)
       movement = context.newContent(portal_type='Simulation Movement')
       movement.edit(**kw)
-      
+
   # Placeholder for methods to override
   def _geMovementGenerator(self):
     """
@@ -233,17 +233,17 @@ class RuleMixin:
 
   def _getDivergenceTesterList(self, exclude_quantity=True):
     """
-    Return the applicable divergence testers which must 
+    Return the applicable divergence testers which must
     be used to test movement divergence.
- 
-    exclude_quantity -- if set to true, do not consider 
+
+    exclude_quantity -- if set to true, do not consider
                         quantity divergence testers
     """
     raise NotImplementedError
 
   def _getMatchingTesterList(self):
     """
-    Return the applicable divergence testers which must 
+    Return the applicable divergence testers which must
     be used to match movements and build the diff (ie.
     not all divergence testers of the Rule)
     """
@@ -307,7 +307,7 @@ class RuleMixin:
           # Record not completed movements
           if not_completed_movement is None and not decision_movement.isCompleted():
             not_completed_movement = decision_movement
-          # Frozen must be compensated          
+          # Frozen must be compensated
           if not _compare(profit_tester_list, prevision_movement, decision_movement):
             new_movement = decision_movement.asContext(quantity=-decision_movement.getQuantity())
             movement_collection_diff.addNewMovement(new_movement)
@@ -323,7 +323,7 @@ class RuleMixin:
             movement_collection_diff.addUpdatableMovement(decision_movement, kw)
       else:
         if decision_movement.isFrozen():
-          # Frozen must be compensated          
+          # Frozen must be compensated
           if not _compare(divergence_tester_list, prevision_movement, decision_movement):
             new_movement = decision_movement.asContext(quantity=-decision_movement.getQuantity())
             movement_collection_diff.addNewMovement(new_movement)
@@ -352,7 +352,7 @@ class RuleMixin:
       elif updatable_compensation_movement is not None:
         # If not, it means that all movements are completed
         # but we can still update a profit and loss movement_collection_diff
-        updatable_compensation_movement.setQuantity(updatable_compensation_movement.getQuantity() 
+        updatable_compensation_movement.setQuantity(updatable_compensation_movement.getQuantity()
                                                   + missing_quantity)
       else:
         # We must create a profit and loss movement
