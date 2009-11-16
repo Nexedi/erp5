@@ -94,7 +94,12 @@ class FloatDivergenceTester(Predicate):
     tested_property = self.getTestedProperty()
     delivery_mvt = simulation_movement.getDeliveryValue()
     delivery_mvt_property = delivery_mvt.getProperty(tested_property)
-    simulation_mvt_property = simulation_movement.getProperty(tested_property)
+    if simulation_movement.isPropertyRecorded(tested_property):
+      simulation_mvt_property = simulation_movement.getRecordedProperty(tested_property)
+      if isinstance(simulation_mvt_property, (list, tuple)):
+        simulation_mvt_property = simulation_mvt_property[0]
+    else:
+      simulation_mvt_property = simulation_movement.getProperty(tested_property)
 
     def getErrorMessage(message, mapping):
       return DivergenceMessage(
