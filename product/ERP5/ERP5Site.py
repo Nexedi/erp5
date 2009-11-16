@@ -1067,6 +1067,14 @@ class ERP5Site(FolderMixIn, CMFSite):
     return self._getPortalGroupedTypeList('target_solver')
 
   security.declareProtected(Permissions.AccessContentsInformation,
+                            'getPortalDeliverySolverTypeList')
+  def getPortalDeliverySolverTypeList(self):
+    """
+    Return delivery solver types.
+    """
+    return self._getPortalGroupedTypeList('delivery_solver')
+
+  security.declareProtected(Permissions.AccessContentsInformation,
                             'getPortalCalendarPeriodTypeList')
   def getPortalCalendarPeriodTypeList(self):
     """
