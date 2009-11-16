@@ -29,6 +29,7 @@
 import zope.interface
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, interfaces
+from Products.ERP5.Document.Amount import Amount
 
 class AmountGeneratorMixin:
   """
@@ -44,16 +45,16 @@ class AmountGeneratorMixin:
   # Declarative interfaces
   zope.interface.implements(interfaces.IAmountGenerator,)
 
-  # Declarative interfaces
   security.declareProtected(Permissions.AccessContentsInformation, 'getAggregatedAmountList')
   def getAggregatedAmountList(self, context, movement_list=None, rounding=False):
     """
     NOTE: very draft placeholder
     """
     # Generic Transformation Algorithm
-    #  the same algorith should apply to payroll, taxes and MRP transformations
+    #   the same algorithm should be applied to payroll, taxes and MRP
+    #   transformations
 
-    # Set the common arbitrary base amounts in a dictionnary
+    # Set the common arbitrary base amounts in a dictionary
     base_amount = {
       'delivery': 1,
       'employee': 100,
@@ -80,7 +81,8 @@ class AmountGeneratorMixin:
         ton=(line.getQuantityUnit() == 'ton') * line.getQuantity(),
         # more base applications could be set here
       ))
-      # Feed the result with trade model (wihch must be ordered through constraint resolution)
+      # Feed the result with trade model (which must be ordered through
+      # constraint resolution)
       for trade_model_line in trade_model.contentValues(portal_type="Trade Model Line"):
         if trade_model_line.getResource():
           # This line has a resource, it is an output line
@@ -100,16 +102,16 @@ class AmountGeneratorMixin:
           ungrouped_result.append(amount)
         else:
           # This line has a no resource, it is an intermediate line
-          value = base_amount[trade_model_line.getBaseApplication()] 
-                  *(trade_model_line.getQuantity() or 1.0)
+          value = base_amount[trade_model_line.getBaseApplication()] * \
+                  (trade_model_line.getQuantity() or 1.0) * \
+                  (trade_model_line.getPrice() or 1.0)
                   # Quantity is used as a multiplier
-                  *(trade_model_line.getPrice() or 1.0)
                   # Price is used as a ratio (also a kind of multiplier)
           for key in trade_model_line.getBaseContribution():
             base_amount[key] += value
-          
-    # Compute the grouped result - It is still unkonwn if grouping should happen
-    #   here and in which way - XXX
+
+    # Compute the grouped result - It is still unknown if grouping
+    # should happen here and in which way - XXX
     grouped_result = SomeMovementGroup(ungrouped_result)
 
     # Return result
