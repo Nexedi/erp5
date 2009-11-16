@@ -10,12 +10,6 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>delegated_list</string> </key>
-            <value>
-              <list/>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>listbox_deliverable</string> </value>
         </item>
@@ -74,11 +68,11 @@
               <dictionary>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>listbox_deliverable</string> </value>
+                    <value> <string>my_deliverable</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Base_viewMRPFieldLibrary</string> </value>
+                    <value> <string>SupplyLink_viewFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>

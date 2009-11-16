@@ -13,12 +13,12 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>sort</string>
                 <string>title</string>
+                <string>columns</string>
                 <string>all_columns</string>
+                <string>sort</string>
                 <string>selection_name</string>
                 <string>portal_types</string>
-                <string>columns</string>
               </list>
             </value>
         </item>
@@ -131,7 +131,7 @@
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Base_viewMRPFieldLibrary</string> </value>
+                    <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>portal_types</string> </key>
