@@ -237,8 +237,8 @@ else:\n
   if field_my_shipping_method in [\'\', None] and order_line is not None:\n
     shopping_cart.manage_delObjects(order_line.getId())\n
 \n
-context.Base_redirect(\'SaleOrder_viewAsWeb\', \\\n
-                       keep_items={\'portal_status_message\': translateString("Your cart was successfuly updated.", mapping = dict())})\n
+context.SaleOrder_paymentRedirect(field_my_comment, field_my_payment_mode)\n
+return\n
 
 
 ]]></string> </value>
@@ -251,7 +251,7 @@ context.Base_redirect(\'SaleOrder_viewAsWeb\', \\\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>field_my_buy_quantity=None, field_my_shipping_method=None</string> </value>
+            <value> <string>field_my_buy_quantity=None, field_my_shipping_method=None, field_my_comment=None, field_my_payment_mode=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>
@@ -280,7 +280,7 @@ context.Base_redirect(\'SaleOrder_viewAsWeb\', \\\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>2</int> </value>
+                        <value> <int>4</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -288,6 +288,9 @@ context.Base_redirect(\'SaleOrder_viewAsWeb\', \\\n
                           <tuple>
                             <string>field_my_buy_quantity</string>
                             <string>field_my_shipping_method</string>
+                            <string>field_my_comment</string>
+                            <string>field_my_payment_mode</string>
+                            <string>kw</string>
                             <string>Products.ERP5Type.Document</string>
                             <string>newTempOrderLine</string>
                             <string>_getattr_</string>
@@ -313,7 +316,6 @@ context.Base_redirect(\'SaleOrder_viewAsWeb\', \\\n
                             <string>_inplacevar_</string>
                             <string>getattr</string>
                             <string>shipping</string>
-                            <string>dict</string>
                           </tuple>
                         </value>
                     </item>
@@ -326,6 +328,8 @@ context.Base_redirect(\'SaleOrder_viewAsWeb\', \\\n
             <key> <string>func_defaults</string> </key>
             <value>
               <tuple>
+                <none/>
+                <none/>
                 <none/>
                 <none/>
               </tuple>

@@ -133,7 +133,7 @@
                 </item>
                 <item>
                     <key> <string>css_class</string> </key>
-                    <value> <string>hiddenLabel</string> </value>
+                    <value> <string>hiddenLabel shopping_cart_renderer_submit</string> </value>
                 </item>
                 <item>
                     <key> <string>default</string> </key>
@@ -165,7 +165,7 @@
                 </item>
                 <item>
                     <key> <string>name</string> </key>
-                    <value> <string>SaleOrder_paymentRedirect:method</string> </value>
+                    <value> <string>SaleOrder_editShoppingCart:method</string> </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>
