@@ -88,3 +88,9 @@ class ISimulationMovement(IMovement, IPropertyRecordable, IDivergenceController,
     the delivery:
       quantity + delivery_error
     """
+
+  def isDeletable():
+    """
+    Returns True is this simumlation can be deleted, False
+    else.
+    """
