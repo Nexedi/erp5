@@ -36,25 +36,8 @@ class SolverSelection:
   """
 
   _properties = (
-    # XXX - this can not work and must be moved to MixIn (pt of pt)
-    {   'id'          : 'delivery_solver_id',
-        'description' : 'The ID the delivery solver which is selected',
-        'type'        : 'string',
-        'acquisition_base_category'     : ('solver',),
-        'acquisition_portal_type'       : Expression('python:portal.getPortalDeliverySolverTypeList()'),
-        'acquisition_copy_value'        : 0,
-        'acquisition_accessor_id'       : 'getId',
-        'acquisition_depends'           : None,
-        'mode'        : 'r' },
-    {   'id'          : 'target_solver_id',
-        'description' : 'The title of the source organisation of this movement',
-        'type'        : 'string',
-        'acquisition_base_category'     : ('solver',),
-        'acquisition_portal_type'       : Expression('python:portal.getPortalTargetSolverTypeList()'),
-        'acquisition_copy_value'        : 0,
-        'acquisition_accessor_id'       : 'getId',
-        'acquisition_depends'           : None,
-        'mode'        : 'r' },
+    # XXX - Not sure if anything else needed.
+    
   )
 
   _categories = ('solver',)
