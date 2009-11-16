@@ -138,7 +138,7 @@ else:\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>clone=1, form_id, web_mode=0, editable_mode=0, batch_mode=0</string> </value>
+            <value> <string>clone=1, form_id=\'view\', web_mode=0, editable_mode=0, batch_mode=0</string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>
@@ -215,7 +215,7 @@ else:\n
             <value>
               <tuple>
                 <int>1</int>
-                <none/>
+                <string>view</string>
                 <int>0</int>
                 <int>0</int>
                 <int>0</int>
