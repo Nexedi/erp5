@@ -28,6 +28,8 @@
 
 import zope.interface
 from AccessControl import ClassSecurityInfo
+from Acquisition import aq_base
+from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type import Permissions, interfaces
 
 def _compare(tester_list, prevision_movement, decision_movement):
