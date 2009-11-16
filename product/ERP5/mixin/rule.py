@@ -90,7 +90,7 @@ class RuleMixin:
     # Update movements
     #  NOTE-JPS: it is OK to make rounding a standard parameter of rules
     #            although rounding in simulation is not recommended at all
-    self.updateMovementCollection(applied_rule, movement_generator=self._geMovementGenerator())
+    self.updateMovementCollection(applied_rule, movement_generator=self._getMovementGenerator())
     # And forward expand
     for movement in applied_rule.getMovementList():
       movement.expand(**kw)
@@ -111,8 +111,8 @@ class RuleMixin:
     """
     # We suppose here that we have an IMovementCollection in hand
     decision_movement_list = context.getMovementList()
-    prevision_movement_list = movement_generator(self._geMovementGeneratorContext(),
-            movement_list=self._geMovementGeneratorMovementList(), rounding=rounding)
+    prevision_movement_list = movement_generator(self._getMovementGeneratorContext(),
+            movement_list=self._getMovementGeneratorMovementList(), rounding=rounding)
 
     # Get divergence testers
     tester_list = self._getMatchingTesterList()
@@ -213,19 +213,19 @@ class RuleMixin:
       movement.edit(**kw)
 
   # Placeholder for methods to override
-  def _geMovementGenerator(self):
+  def _getMovementGenerator(self):
     """
     Return the movement generator to use in the expand process
     """
     raise NotImplementedError
 
-  def _geMovementGeneratorContext(self):
+  def _getMovementGeneratorContext(self):
     """
     Return the movement generator context to use for expand
     """
     raise NotImplementedError
 
-  def _geMovementGeneratorMovementList(self):
+  def _getMovementGeneratorMovementList(self):
     """
     Return the movement lists to provide to the movement generator
     """
