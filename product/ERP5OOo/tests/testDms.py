@@ -45,9 +45,6 @@
   These are subject to another suite "testIngestion".
 """
 
-# XXX test_02 works only with oood on
-# XXX test_03 and test_04 work only WITHOUT oood (because of a known bug in erp5_dms)
-
 import unittest
 import time
 import StringIO
