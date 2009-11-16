@@ -46,10 +46,20 @@ class IMovementCollectionDiff(Interface):
     to be deleted.
     """
 
+  def addDeletableMovement(movement):
+    """
+    Add a deletable movement to the diff definition
+    """
+
   def getNewMovementList():
     """
     Returns a list temp movements which represent new
     movements to add to an existing IMovementCollection.
+    """
+
+  def addNewMovement(movement):
+    """
+    Add a new movement to the diff definition
     """
 
   def getUpdatableMovementList():
@@ -63,5 +73,12 @@ class IMovementCollectionDiff(Interface):
     Returns a dict of all properties and values
     to update an existing movement or to 
     create a new movement.
+    """
+
+  def addUpdatableMovement(movement, property_dict):
+    """
+    Add an updatable movement to the diff definition
+
+    property_dict -- properties to update     
     """
  
