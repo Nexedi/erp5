@@ -40,22 +40,25 @@ import os, hotshot
 # Define variable to chek if performance are good or not
 # XXX These variable are specific to the testing environment
 #     (pystone results: min: < 35373.2 - mean: ~ 35990.7 - max: > 36589.8)
-                                    # Smallest values
-MIN_OBJECT_VIEW=0.142
-MAX_OBJECT_VIEW=0.144               # 0.122
-MIN_OBJECT_MANY_LINES_VIEW=0.288
-MAX_OBJECT_MANY_LINES_VIEW=0.292
-MIN_OBJECT_PROXYFIELD_VIEW=0.225
-MAX_OBJECT_PROXYFIELD_VIEW=0.228    # 0.220
+# Historical values are here to remember what was original values on this
+# specific testing environment. We must always try to stay below max
+# historical values.
+                                    # Smallest values   Historical values
+MIN_OBJECT_VIEW=0.142               #                   0.112
+MAX_OBJECT_VIEW=0.144               # 0.122             0.120
+MIN_OBJECT_MANY_LINES_VIEW=0.288    #                   0.274
+MAX_OBJECT_MANY_LINES_VIEW=0.292    #                   0.294
+MIN_OBJECT_PROXYFIELD_VIEW=0.225    #                   0.199
+MAX_OBJECT_PROXYFIELD_VIEW=0.228    # 0.220             0.220
 #CURRENT_MIN_OBJECT_VIEW=0.1220
 #CURRENT_MAX_OBJECT_VIEW=0.1280
-MIN_MODULE_VIEW=0.147
-MAX_MODULE_VIEW=0.150
-MIN_TIC=0.0329                      # 0.0260
-MAX_TIC=0.0350
-MIN_OBJECT_CREATION=0.0068
-MAX_OBJECT_CREATION=0.0073
-LISTBOX_COEF=0.00169
+MIN_MODULE_VIEW=0.147               #                   0.125
+MAX_MODULE_VIEW=0.150               #                   0.175
+MIN_TIC=0.0329                      # 0.0260            0.260
+MAX_TIC=0.0350                      #                   0.343
+MIN_OBJECT_CREATION=0.0068          #                   0.0070
+MAX_OBJECT_CREATION=0.0073          #                   0.0082
+LISTBOX_COEF=0.00169                #                   0.02472
 # Change history
 # 2009-11-16
 #   MIN_OBJECT_CREATION : 0.0071 -> 0.0068
