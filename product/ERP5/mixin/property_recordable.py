@@ -29,6 +29,7 @@
 import zope.interface
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, interfaces
+from Products.ERP5Type.Globals import PersistentMapping
 
 class PropertyRecordableMixin:
   """
@@ -58,7 +59,7 @@ class PropertyRecordableMixin:
 
     id -- ID of the property
     """
-    recorded_property_dict = self.getRecordedPropertyDict({})
+    recorded_property_dict = self._getRecordedPropertyDict()
     # XXX it is better to use getPropertyList only for list type
     # properties or categories.
     recorded_property_dict[id] = self.getPropertyList(id)
@@ -71,7 +72,7 @@ class PropertyRecordableMixin:
     Clears a previously recorded property from
     the property record.
     """
-    recorded_property_dict = self.getRecordedPropertyDict({})
+    recorded_property_dict = self._getRecordedPropertyDict()
     try:
       del(recorded_property_dict[id])
     except KeyError:
@@ -86,7 +87,7 @@ class PropertyRecordableMixin:
     Returns the list of property IDs which have
     been recorded.
     """
-    return (self.getRecordedPropertyDict({}).keys())
+    return (self._getRecordedPropertyDict().keys())
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'isPropertyRecorded')
@@ -97,7 +98,7 @@ class PropertyRecordableMixin:
 
     id -- ID of the property
     """
-    return self.getRecordedPropertyDict({}).has_key(id)
+    return self._getRecordedPropertyDict().has_key(id)
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getRecordedProperty')
@@ -107,7 +108,7 @@ class PropertyRecordableMixin:
 
     id -- ID of the property
     """
-    return self.getRecordedPropertyDict({})[id]
+    return self._getRecordedPropertyDict()[id]
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'asRecordedContext')
@@ -117,5 +118,10 @@ class PropertyRecordableMixin:
     which recorded properties in its context.
     """
     context = self.asContext()
-    context.edit(**self.getRecordedPropertyDict({}))
+    context.edit(**self._getRecordedPropertyDict())
     return context
+
+  def self._getRecordedPropertyDict(self):
+    if getattr(aq_base(self), '_recorded_property_dict', None) is None:
+      self._recorded_property_dict = PersistentMapping()
+    return self._recorded_property_dict

@@ -118,7 +118,6 @@ class SimulationMovement(Movement, PropertyRecordableMixin):
                     , PropertySheet.AppliedRule
                     , PropertySheet.ItemAggregation
                     , PropertySheet.Reference
-                    , PropertySheet.PropertyRecordable
                     )
 
   def tpValues(self) :
