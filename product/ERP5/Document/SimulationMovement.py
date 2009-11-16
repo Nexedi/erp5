@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
@@ -119,6 +120,9 @@ class SimulationMovement(Movement, PropertyRecordableMixin):
                     , PropertySheet.ItemAggregation
                     , PropertySheet.Reference
                     )
+
+  # Declarative interfaces
+  zope.interface.implements(interfaces.IPropertyRecordable, )
 
   def tpValues(self) :
     """ show the content in the left pane of the ZMI """
@@ -450,6 +454,11 @@ class SimulationMovement(Movement, PropertyRecordableMixin):
     """
     Returns the quantity property deducted by the possible profit_quantity and
     taking into account delivery error
+
+    NOTE: XXX-JPS This method should not use profit_quantity. Profit and loss
+          quantities are now only handled through explicit movements.
+          Look are invocations of _isProfitAndLossMovement in
+          ERP5.mixin.rule to understand how.
     """
     quantity = self.getQuantity()
     profit_quantity = self.getProfitQuantity() or 0
@@ -612,3 +621,42 @@ class SimulationMovement(Movement, PropertyRecordableMixin):
           return True
         return False
     return False
+
+  def getSolverProcessValueList(self, movement=None, validation_state=None):
+    """
+    Returns the list of solver processes which are
+    are in a given state and which apply to delivery_or_movement.
+    This method is useful to find applicable solver processes
+    for a delivery.
+
+    movement -- not applicable
+
+    validation_state -- a state of a list of states
+                        to filter the result
+    """
+    raise NotImplementedError
+
+  def getSolverDecisionValueList(self, movement=None, validation_state=None):
+    """
+    Returns the list of solver decisions which apply
+    to a given movement.
+
+    movement -- not applicable
+
+    validation_state -- a state of a list of states
+                        to filter the result
+    """
+    raise NotImplementedError
+
+  def getSolvedPropertyApplicationValueList(self, movement=None, divergence_tester=None):
+    """
+    Returns the list of documents at which a given divergence resolution
+    can be resolved at. For example, in most cases, date divergences can
+    only be resolved at delivery level whereas quantities are usually
+    resolved at cell level.
+
+    The result of this method is a list of ERP5 documents.
+
+    movement -- not applicable
+    """
+    raise NotImplementedError
