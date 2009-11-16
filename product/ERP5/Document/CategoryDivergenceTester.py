@@ -30,13 +30,12 @@
 import zope.interface
 from AccessControl import ClassSecurityInfo
 
-from Products.ERP5.Document.Predicate import Predicate
 from Products.ERP5Type.DivergenceMessage import DivergenceMessage
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5.Document.PropertyDivergenceTester import \
                                                PropertyDivergenceTester
 
-class CategoryDivergenceTester(Predicate):
+class CategoryDivergenceTester(PropertyDivergenceTester):
   """
   The purpose of this divergence tester is to check the
   consistency between delivery movement and simulation movement

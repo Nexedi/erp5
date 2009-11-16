@@ -30,16 +30,20 @@
 import zope.interface
 from AccessControl import ClassSecurityInfo
 
-from Products.ERP5Type.XMLObject import XMLObject
-
+from Products.ERP5.Document.Predicate import Predicate
 from Products.ERP5Type.DivergenceMessage import DivergenceMessage
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 
-class PropertyDivergenceTester(XMLObject):
+class PropertyDivergenceTester(Predicate):
   """
   The purpose of this divergence tester is to check the
   consistency between delivery movement and simulation movement
   for some specific properties.
+
+  NOTE: PropertyDivergenceTester will be phased out 
+        and replaced, if needed, by a mixin. Divergence 
+        Testers should be Float, String and Category
+        DivergenceTester
   """
   meta_type = 'ERP5 Property Divergence Tester'
   portal_type = 'Property Divergence Tester'
