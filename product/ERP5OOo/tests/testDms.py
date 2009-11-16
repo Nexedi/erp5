@@ -50,7 +50,10 @@
 
 import unittest
 import time
+import StringIO
+from cgi import FieldStorage
 
+import ZPublisher.HTTPRequest
 import transaction
 from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
@@ -122,7 +125,7 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
     default_pref.setPreferredDocumentReferenceRegularExpression(REFERENCE_REGULAR_EXPRESSION)
     if default_pref.getPreferenceState() != 'global':
       default_pref.enable()
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
   def getDocumentModule(self):
@@ -831,6 +834,56 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.assertRaises(NotConvertedError, document.getSearchableText)
     self.assertEquals('This document is not converted yet.', 
                       document.Base_showFoundText())
+
+  def test_Base_createNewFile(self):
+    context = self.portal.person_module.newContent(portal_type='Person')
+    ret = context.Base_createNewFile(portal_type=None,
+                               title=None,
+                               reference=None,
+                               short_title=None,
+                               language=None,
+                               version=None,
+                               description=None,
+                               file=makeFileUpload('TEST-en-002.odt'))
+    self.assertTrue(ret.endswith(
+      '?portal_status_message=Text%20created%20successfully.'), ret)
+    transaction.commit()
+    self.tic()
+    document_list = context.getFollowUpRelatedValueList()
+    self.assertEquals(1, len(document_list))
+    document = document_list[0]
+    self.assertEquals('converted', document.getExternalProcessingState())
+    self.assertEquals('Text', document.getPortalType())
+    self.assertEquals('title', document.getTitle())
+
+  def test_Base_createNewFile_empty(self):
+    context = self.portal.person_module.newContent(portal_type='Person')
+    empty_file_upload = ZPublisher.HTTPRequest.FileUpload(FieldStorage(
+                            fp=StringIO.StringIO(),
+                            environ=dict(REQUEST_METHOD='PUT'),
+                            headers={"content-disposition":
+                              "attachment; filename=empty;"}))
+
+    ret = context.Base_createNewFile(portal_type=None,
+                               title=None,
+                               reference=None,
+                               short_title=None,
+                               language=None,
+                               version=None,
+                               description=None,
+                               file=empty_file_upload)
+    
+    self.assertTrue(ret.endswith(
+      '?portal_status_message=File%20created%20successfully.'), ret)
+    transaction.commit()
+    self.tic()
+    document_list = context.getFollowUpRelatedValueList()
+    self.assertEquals(1, len(document_list))
+    document = document_list[0]
+    self.assertEquals('empty', document.getExternalProcessingState())
+    self.assertEquals('File', document.getPortalType())
+
+
 
 class TestDocumentWithSecurity(ERP5TypeTestCase):
 
