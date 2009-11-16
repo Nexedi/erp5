@@ -348,7 +348,7 @@ class CopyContainer:
           Unindex the object from the portal catalog.
       """
       if self.isIndexable:
-        catalog = getToolByName(self.getPortalObject(), 'portal_catalog', None)
+        catalog = getToolByName(self, 'portal_catalog', None)
         if catalog is not None:
           # Make sure there is not activity for this object
           self.flushActivity(invoke=0)
