@@ -48,7 +48,7 @@ class IDivergenceController(Interface):
   applicable divergences are considered.
   """
 
-  def isDivergent(self, movement=None):
+  def isDivergent(movement=None):
     """
     Returns True if any of the movements provided 
     in delivery_or_movement is divergent. Else return False.
@@ -57,7 +57,7 @@ class IDivergenceController(Interface):
                 or a list thereof
     """
 
-  def isConvergent(self, movement=None):
+  def isConvergent(movement=None):
     """
     Returns False if any of the movements provided 
     in delivery_or_movement is divergent. Else return True.
@@ -66,7 +66,7 @@ class IDivergenceController(Interface):
                 or a list thereof
     """
 
-  def newSolverProcess(self, movement=None):
+  def newSolverProcess(movement=None):
     """
     Builds a new solver process from the divergence
     analaysis of delivery_or_movement. All movements
@@ -77,7 +77,7 @@ class IDivergenceController(Interface):
                 or a list thereof
     """
 
-  def getSolverProcessValueList(self, movement=None, validation_state=None):
+  def getSolverProcessValueList(movement=None, validation_state=None):
     """
     Returns the list of solver processes which are
     are in a given state and which apply to delivery_or_movement.
@@ -91,7 +91,7 @@ class IDivergenceController(Interface):
                         to filter the result
     """
 
-  def getSolverDecisionValueList(self, movement=None, validation_state=None):
+  def getSolverDecisionValueList(movement=None, validation_state=None):
     """
     Returns the list of solver decisions which apply
     to a given movement.
@@ -103,7 +103,7 @@ class IDivergenceController(Interface):
                         to filter the result
     """
 
-  def getSolvedPropertyApplicationValueList(self, movement=None, divergence_tester=None):
+  def getSolvedPropertyApplicationValueList(movement=None, divergence_tester=None):
     """
     Returns the list of documents at which a given divergence resolution
     can be resolved at. For example, in most cases, date divergences can
@@ -114,4 +114,7 @@ class IDivergenceController(Interface):
 
     movement -- a movement, a delivery, a simulation movement,
                 or a list thereof
+
+    divergence_tester -- a divergence tester which creates a divergence
+                         on movement
     """
