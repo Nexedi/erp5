@@ -121,7 +121,7 @@ class PropertyRecordableMixin:
     context.edit(**self._getRecordedPropertyDict())
     return context
 
-  def self._getRecordedPropertyDict(self):
+  def _getRecordedPropertyDict(self):
     if getattr(aq_base(self), '_recorded_property_dict', None) is None:
       self._recorded_property_dict = PersistentMapping()
     return self._recorded_property_dict
