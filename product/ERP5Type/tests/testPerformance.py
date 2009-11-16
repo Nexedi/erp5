@@ -43,22 +43,22 @@ import os, hotshot
 # Historical values are here to remember what was original values on this
 # specific testing environment. We must always try to stay below max
 # historical values.
-                                    # Smallest values   Historical values
-MIN_OBJECT_VIEW=0.142               #                   0.112
-MAX_OBJECT_VIEW=0.144               # 0.122             0.120
-MIN_OBJECT_MANY_LINES_VIEW=0.288    #                   0.274
-MAX_OBJECT_MANY_LINES_VIEW=0.292    #                   0.294
-MIN_OBJECT_PROXYFIELD_VIEW=0.225    #                   0.199
-MAX_OBJECT_PROXYFIELD_VIEW=0.228    # 0.220             0.220
+                                    # Historical values
+MIN_OBJECT_VIEW=0.142               # 0.112
+MAX_OBJECT_VIEW=0.144               # 0.120
+MIN_OBJECT_MANY_LINES_VIEW=0.288    # 0.274
+MAX_OBJECT_MANY_LINES_VIEW=0.292    # 0.294
+MIN_OBJECT_PROXYFIELD_VIEW=0.225    # 0.199
+MAX_OBJECT_PROXYFIELD_VIEW=0.228    # 0.220
 #CURRENT_MIN_OBJECT_VIEW=0.1220
 #CURRENT_MAX_OBJECT_VIEW=0.1280
-MIN_MODULE_VIEW=0.147               #                   0.125
-MAX_MODULE_VIEW=0.150               #                   0.175
-MIN_TIC=0.0329                      # 0.0260            0.260
-MAX_TIC=0.0350                      #                   0.343
-MIN_OBJECT_CREATION=0.0068          #                   0.0070
-MAX_OBJECT_CREATION=0.0073          #                   0.0082
-LISTBOX_COEF=0.00169                #                   0.02472
+MIN_MODULE_VIEW=0.147               # 0.125
+MAX_MODULE_VIEW=0.150               # 0.175
+MIN_TIC=0.0329                      # 0.260
+MAX_TIC=0.0350                      # 0.343
+MIN_OBJECT_CREATION=0.0068          # 0.0070
+MAX_OBJECT_CREATION=0.0073          # 0.0082
+LISTBOX_COEF=0.00169                # 0.02472
 # Change history
 # 2009-11-16
 #   MIN_OBJECT_CREATION : 0.0071 -> 0.0068
