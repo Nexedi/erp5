@@ -31,6 +31,7 @@ from AccessControl import ClassSecurityInfo
 from Acquisition import aq_base
 from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type import Permissions, interfaces
+from Products.ERP5.MovementCollectionDiff import MovementCollectionDiff
 
 def _compare(tester_list, prevision_movement, decision_movement):
   for tester in tester_list:
