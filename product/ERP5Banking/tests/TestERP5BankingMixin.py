@@ -582,15 +582,17 @@ class TestERP5BankingMixin(ERP5TypeTestCase):
         function='banking')
       site_reference = site_reference_from_codification_dict.get(codification)
       if site_reference is not None:
-        bank_account = organisation.newContent(
-          portal_type='Bank Account',
+        self.createBankAccount(
+          person=organisation,
+          account_id='account_%s' % (codification, ),
+          currency=self.currency_1,
+          amount=0,
           bank_country_code=site_reference[0],
           bank_code=site_reference[1],
           branch=site_reference[2],
           bank_account_number=site_reference[3],
-          bank_account_key=site_reference[4], # XXX: Should be computed from other parts of site_reference
+          bank_account_key=site_reference[4],
         )
-        bank_account.validate()
 
     self.vault_type_base_category = getattr(self.category_tool, 'vault_type')
     site_vault_type = self.vault_type_base_category.newContent(id='site')
