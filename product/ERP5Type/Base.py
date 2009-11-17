@@ -3734,12 +3734,16 @@ except ImportError:
   # We're on CMF 1.5 where the IContentish is not yet bridged as a Zope3
   # interface, so no need to worry about events here. Remove this "try:" once
   # we abandon Zope 2.8
-  pass
+  def removeIContentishInterface(cls):
+    pass
 else:
   # suppress CMFCore event machinery from trying to reindex us through events
   # by removing Products.CMFCore.interfaces.IContentish interface.
   # We reindex ourselves in manage_afterAdd thank you very much.
-  classImplementsOnly(Base, implementedBy(Base) - IContentish)
+  def removeIContentishInterface(cls):
+    classImplementsOnly(cls, implementedBy(cls) - IContentish)
+
+removeIContentishInterface(Base)
 
 class TempBase(Base):
   """
