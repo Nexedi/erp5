@@ -36,7 +36,7 @@ from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
 from Products.ERP5Type.Cache import CachingMethod
 from Products.ERP5.Document.Document import Document
 from Products.ERP5.Document.Document import ConversionError
-from Products.ERP5Type.Base import Base
+from Products.ERP5Type.Base import Base, removeIContentishInterface
 from Products.CMFDefault.File import File as CMFFile
 from zLOG import LOG
 from DateTime import DateTime
@@ -226,4 +226,7 @@ class File(Document, CMFFile, CachedConvertableMixin):
       content = str(content)
 
     return (mime_type, content)
+
+# CMFFile also brings the IContentishInterface on CMF 2.2, remove it.
+removeIContentishInterface(File)
 
