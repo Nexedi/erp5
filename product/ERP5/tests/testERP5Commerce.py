@@ -545,7 +545,7 @@ class TestCommerce(ERP5TypeTestCase):
     # the confirmation should not be possible if the user is not logged
     self.logout()
     self.assertEquals(1, len(self.website.SaleOrder_getShoppingCartItemList()))
-    self.portal.SaleOrder_paymentRedirect()
+    self.website.SaleOrder_paymentRedirect()
     self.assertTrue(urllib.quote("You need to create an account to " \
                               "continue. If you already have please login.") in
                     self.app.REQUEST.RESPONSE.getHeader('location'))
@@ -553,7 +553,7 @@ class TestCommerce(ERP5TypeTestCase):
     # but it should work if the user is authenticated
     self.login('customer')
     self.portal.SaleOrder_paymentRedirect()
-    self.assertTrue(urllib.quote("SaleOrder_viewConfirmAsWeb") in
+    self.assertTrue(urllib.quote("SaleOrder_viewAsWeb") in
                     self.app.REQUEST.RESPONSE.getHeader('location'))
 
   def test_10_deleteShoppingCartItem(self):
@@ -708,7 +708,7 @@ class TestCommerce(ERP5TypeTestCase):
     self.createShoppingCartWithProductListAndShipping()
 
     #4 : paypal step 1 : get a new token
-    token = self.website.checkout.WebSection_getNewPaypalToken()
+    token = self.website.cart.WebSection_getNewPaypalToken()
     self.assertNotEquals(token, None)
 
     #5 : paypal step 2 : go to paypal and confirm this token
@@ -719,7 +719,7 @@ class TestCommerce(ERP5TypeTestCase):
     #6 : paypal step 3 : check if this token is confirmed by paypal
     error = self.website.WebSection_checkPaypalIdentification()
     self.assertEquals(error, None)
-    self.assertTrue('/checkout' in request.RESPONSE.getHeader('location'))
+    self.assertTrue('/cart' in request.RESPONSE.getHeader('location'))
 
     #7 : paypal step 4 : validate the payment
     self.assertEquals(1,
@@ -841,7 +841,7 @@ class TestCommerce(ERP5TypeTestCase):
 
     self.login('toto')
     self.portal.SaleOrder_paymentRedirect()
-    self.assertTrue(urllib.quote("SaleOrder_viewConfirmAsWeb") in
+    self.assertTrue(urllib.quote("SaleOrder_viewAsWeb") in
                     self.app.REQUEST.RESPONSE.getHeader('location'))
 
   def test_23_getShoppingCartCustomer(self):
