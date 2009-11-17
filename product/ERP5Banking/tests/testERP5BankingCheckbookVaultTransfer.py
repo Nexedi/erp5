@@ -183,7 +183,6 @@ class TestERP5BankingCheckbookVaultTransfer(TestERP5BankingCheckbookVaultTransfe
     self.createFunctionGroupSiteCategory()
     self.createCheckAndCheckbookModel()
     self.destination_site = self.paris
-    self.createBanknotesAndCoins()
     self.reception_destination_site = self.paris
     self.source_site = self.paris.caveau
     self.destination_site = self.paris.surface

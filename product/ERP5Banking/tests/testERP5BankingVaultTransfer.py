@@ -122,9 +122,6 @@ class TestERP5BankingVaultTransfer(TestERP5BankingMixin):
     # create categories
     self.createFunctionGroupSiteCategory()
 
-    # create resources
-    self.createBanknotesAndCoins()
-
     # Before the test, we need to input the inventory
 
     inventory_dict_line_1 = {'id' : 'inventory_line_1',

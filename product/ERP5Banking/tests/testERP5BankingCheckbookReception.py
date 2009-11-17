@@ -80,7 +80,6 @@ class TestERP5BankingCheckbookReception(TestERP5BankingMixin):
 
     self.createManagerAndLogin()
     self.createFunctionGroupSiteCategory()
-    self.createBanknotesAndCoins()
     self.traveler_check_model = self.createTravelerCheckModel('traveler_check_model')
     self.createCheckAndCheckbookModel()
     self.reception = self.paris.caveau.auxiliaire.encaisse_des_billets_et_monnaies

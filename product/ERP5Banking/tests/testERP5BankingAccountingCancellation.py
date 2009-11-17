@@ -87,9 +87,6 @@ class TestERP5BankingAccountingCancellation(TestERP5BankingMixin):
 
     self.createFunctionGroupSiteCategory(site_list=['paris'])
 
-    # Create currencies
-    self.createBanknotesAndCoins()
-
     self.stepTic()
     # create a person and a bank account
     self.person_1 = self.createPerson(id='person_1',

@@ -76,8 +76,6 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin):
     self.createManagerAndLogin()
     # create categories
     self.createFunctionGroupSiteCategory(site_list = ['siege', 'paris'])
-    # create resources
-    self.createBanknotesAndCoins()
     # Before the test, we need to input the inventory
     inventory_dict_line_1 = {'id' : 'inventory_line_1',
                              'resource': self.billet_10000,

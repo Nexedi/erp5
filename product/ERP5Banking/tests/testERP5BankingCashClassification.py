@@ -77,7 +77,6 @@ class TestERP5BankingCashClassification(TestERP5BankingMixin):
     self.createManagerAndLogin()
 
     self.createFunctionGroupSiteCategory(site_list=('paris',))
-    self.createBanknotesAndCoins()
 
 
     inventory_dict_line_1 = {'id' : 'inventory_line_1',

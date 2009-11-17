@@ -78,7 +78,6 @@ class TestERP5BankingInventory(TestERP5BankingMixin):
 
     self.createManagerAndLogin()
     self.createFunctionGroupSiteCategory()
-    self.createBanknotesAndCoins()
     # do everything as manager, as no roles are defined for inventory
 
 

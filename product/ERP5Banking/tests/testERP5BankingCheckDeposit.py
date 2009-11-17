@@ -81,8 +81,6 @@ class TestERP5BankingCheckDeposit(TestERP5BankingMixin):
     self.createManagerAndLogin()
     # create categories
     self.createFunctionGroupSiteCategory(site_list=['paris',])
-    # create resources
-    self.createBanknotesAndCoins()
     # define the user, a site is needed for accouting event
     self.checkUserFolderType()
     self.organisation = self.organisation_module.newContent(id='baobab_org', portal_type='Organisation',

@@ -99,7 +99,6 @@ class TestERP5BankingCashToCurrencyPurchase(TestERP5BankingMixin):
     self.createManagerAndLogin()
 
     self.createFunctionGroupSiteCategory()
-    self.createBanknotesAndCoins()
 
     """
     Windows to create the BANKNOTES of 10 000 and 5000, coins 200.

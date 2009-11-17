@@ -86,7 +86,6 @@ class TestERP5BankingForeignCashReception(TestERP5BankingMixin):
 
     self.createManagerAndLogin()
     self.createFunctionGroupSiteCategory()
-    self.createBanknotesAndCoins()
     self.reception = self.paris.caveau.auxiliaire.encaisse_des_devises.usd
     self.checkUserFolderType()
     self.organisation = self.organisation_module.newContent(id='baobab_org', portal_type='Organisation',

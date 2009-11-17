@@ -77,8 +77,6 @@ class TestERP5BankingClassificationSurvey(TestERP5BankingMixin):
     self.createManagerAndLogin()
 
     self.createFunctionGroupSiteCategory()
-    self.createBanknotesAndCoins()
-
 
     inventory_dict_line_1 = {'id' : 'inventory_line_1',
                              'resource': self.billet_10000,

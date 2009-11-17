@@ -84,7 +84,6 @@ class TestERP5BankingCheckbookDeliveryMixin(TestERP5BankingMixin):
     self.createManagerAndLogin()
     self.createFunctionGroupSiteCategory()
     self.createCheckAndCheckbookModel()
-    self.createBanknotesAndCoins()
     self.vault_transfer_source_site = self.paris.caveau
     self.vault_transfer_destination_site = self.paris.surface
     self.source_site = self.paris.surface.caisse_courante

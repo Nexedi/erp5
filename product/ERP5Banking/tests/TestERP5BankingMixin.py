@@ -333,7 +333,7 @@ class TestERP5BankingMixin(ERP5TypeTestCase):
 
       
 
-  def createBanknotesAndCoins(self):
+  def _createBanknotesAndCoins(self):
     """
     Create some banknotes and coins
     """
@@ -487,6 +487,9 @@ class TestERP5BankingMixin(ERP5TypeTestCase):
     """
     if site_list is None:
       site_list = ["paris", 'madrid', 'siege']
+
+    self._createBanknotesAndCoins()
+
     # add category unit in quantity_unit which is the unit that will be used for banknotes and coins
     self.variation_base_category = getattr(self.category_tool, 'quantity_unit')
     self.unit = self.variation_base_category.newContent(id='unit', title='Unit')

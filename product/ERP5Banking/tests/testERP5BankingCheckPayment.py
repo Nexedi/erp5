@@ -80,7 +80,6 @@ class TestERP5BankingCheckPaymentMixin(TestERP5BankingMixin):
     self.variation_list = ('variation/1992', 'variation/2003')
 
     self.createFunctionGroupSiteCategory(site_list=['paris'])
-    self.createBanknotesAndCoins()
 
     # Before the test, we need to input the inventory
     inventory_dict_line_1 = {'id' : 'inventory_line_1',

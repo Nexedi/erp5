@@ -82,7 +82,6 @@ class TestERP5BankingCheckbookMovement(TestERP5BankingCheckbookVaultTransferMixi
     self.createManagerAndLogin()
     self.createFunctionGroupSiteCategory(site_list=['paris','madrid'])
     self.createCheckAndCheckbookModel()
-    self.createBanknotesAndCoins()
     self.reception_destination_site = self.paris
     self.source_site = self.paris
     self.destination_site = self.madrid

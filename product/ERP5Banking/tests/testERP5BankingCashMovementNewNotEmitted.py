@@ -80,9 +80,6 @@ class TestERP5BankingCashMovementNewNotEmitted(TestERP5BankingMonetaryReceptionM
     # create categories
     self.createFunctionGroupSiteCategory(site_list=['paris','madrid'])
 
-    # create resources
-    self.createBanknotesAndCoins()
-
     # Before the test, we need to input the inventory
 
     self.vault_source = self.paris.caveau.serre.encaisse_des_billets_neufs_non_emis_en_transit_allant_a.madrid
