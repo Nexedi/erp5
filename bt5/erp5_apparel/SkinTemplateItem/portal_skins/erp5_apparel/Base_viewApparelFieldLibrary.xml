@@ -129,6 +129,8 @@
                         <string>my_relation_field</string>
                         <string>my_checkbox</string>
                         <string>my_portal_variation_base_category_list</string>
+                        <string>composition_title</string>
+                        <string>my_percent</string>
                       </list>
                     </value>
                 </item>
