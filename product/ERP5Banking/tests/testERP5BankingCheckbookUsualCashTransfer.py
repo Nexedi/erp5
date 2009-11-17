@@ -29,12 +29,10 @@
 
 # import requested python module
 import os
-from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.DCWorkflow.DCWorkflow import Unauthorized, ValidationFailed
 from Products.ERP5Banking.tests.testERP5BankingCheckbookVaultTransfer \
      import TestERP5BankingCheckbookVaultTransferMixin
-from Products.ERP5Banking.tests.TestERP5BankingMixin import TestERP5BankingMixin
 from DateTime import DateTime
 from zLOG import LOG
 
@@ -106,8 +104,7 @@ class TestERP5BankingCheckbookUsualCashTransferMixin(
     self.workflow_tool.doActionFor(self.checkbook_vault_transfer, 'deliver_action', 
                                    wf_id='checkbook_vault_transfer_workflow')
 
-class TestERP5BankingCheckbookUsualCashTransfer(TestERP5BankingCheckbookUsualCashTransferMixin,
-                                                TestERP5BankingMixin, ERP5TypeTestCase):
+class TestERP5BankingCheckbookUsualCashTransfer(TestERP5BankingCheckbookUsualCashTransferMixin):
   """
     This class is a unit test to check the module of Cash Transfer
 

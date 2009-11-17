@@ -29,16 +29,14 @@
 
 # import requested python module
 import os
-from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.DCWorkflow.DCWorkflow import Unauthorized, ValidationFailed
 from Products.ERP5Banking.tests.testERP5BankingCheckbookVaultTransfer \
      import TestERP5BankingCheckbookVaultTransferMixin
 from Products.ERP5Banking.tests.testERP5BankingCheckbookUsualCashTransfer \
      import TestERP5BankingCheckbookUsualCashTransferMixin
-from Products.ERP5Banking.tests.TestERP5BankingMixin import TestERP5BankingMixin
 from Products.ERP5Banking.tests.testERP5BankingCheckbookDelivery \
-     import TestERP5BankingCheckbookDelivery, TestERP5BankingCheckbookDeliveryMixin
+     import TestERP5BankingCheckbookDeliveryMixin
 from DateTime import DateTime
 from zLOG import LOG
 
@@ -53,8 +51,7 @@ if __name__ == '__main__':
 
 class TestERP5BankingStopPayment( TestERP5BankingCheckbookDeliveryMixin,
                                   TestERP5BankingCheckbookUsualCashTransferMixin,
-                                  TestERP5BankingCheckbookVaultTransferMixin,
-                                       TestERP5BankingMixin, ERP5TypeTestCase):
+                                  TestERP5BankingCheckbookVaultTransferMixin):
   """
     This class is a unit test to check the module of Stop Payment
   """

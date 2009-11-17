@@ -32,10 +32,8 @@ import os
 from zLOG import LOG
 from DateTime import DateTime
 from Products.CMFCore.utils import getToolByName
-from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.DCWorkflow.DCWorkflow import Unauthorized, ValidationFailed
-from Products.ERP5Banking.tests.TestERP5BankingMixin import TestERP5BankingMixin
 from Products.ERP5Banking.tests.testERP5BankingCheckPayment \
       import TestERP5BankingCheckPaymentMixin
 from Products.ERP5Banking.tests.testERP5BankingMoneyDeposit \
@@ -53,9 +51,7 @@ if __name__ == '__main__':
 
 
 class TestERP5BankingAvailableInventory(TestERP5BankingCheckPaymentMixin,
-                                        TestERP5BankingMoneyDepositMixin,
-                                        TestERP5BankingMixin,
-                                        ERP5TypeTestCase):
+                                        TestERP5BankingMoneyDepositMixin):
   """
   Unit test class in order to make sure that it is not possible
   to debit two times the same account if the amount on the account is

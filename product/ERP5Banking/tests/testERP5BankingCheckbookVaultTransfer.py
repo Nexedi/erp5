@@ -29,7 +29,6 @@
 
 # import requested python module
 import os
-from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.DCWorkflow.DCWorkflow import Unauthorized, ValidationFailed
 from Products.ERP5Banking.tests.TestERP5BankingMixin import TestERP5BankingMixin
@@ -43,7 +42,7 @@ os.environ['EVENT_LOG_SEVERITY'] = '-300'
 if __name__ == '__main__':
   execfile(os.path.join(sys.path[0], 'framework.py'))
 
-class TestERP5BankingCheckbookVaultTransferMixin:
+class TestERP5BankingCheckbookVaultTransferMixin(TestERP5BankingMixin):
 
   def createCheckbookReception(self, sequence=None, sequence_list=None, **kwd):
     """
@@ -145,8 +144,7 @@ class TestERP5BankingCheckbookVaultTransferMixin:
     """
     self.previous_delivery.edit(start_date=self.previous_date)
 
-class TestERP5BankingCheckbookVaultTransfer(TestERP5BankingCheckbookVaultTransferMixin,
-                                              TestERP5BankingMixin, ERP5TypeTestCase):
+class TestERP5BankingCheckbookVaultTransfer(TestERP5BankingCheckbookVaultTransferMixin):
   """
     This class is a unit test to check the module of Cash Transfer
 

@@ -28,7 +28,7 @@
 
 from DateTime import DateTime
 from zLOG import LOG
-
+from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 
 def isSameSet(a, b):
   for i in a:
@@ -39,7 +39,7 @@ def isSameSet(a, b):
       return False
   return len(a) == len(b)
 
-class TestERP5BankingMixin:
+class TestERP5BankingMixin(ERP5TypeTestCase):
   """
   Mixin class for unit test of banking operations
   """

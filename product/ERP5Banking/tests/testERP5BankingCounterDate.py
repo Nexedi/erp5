@@ -32,7 +32,6 @@ import os
 from zLOG import LOG
 from DateTime import DateTime
 from Testing import ZopeTestCase
-from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.DCWorkflow.DCWorkflow import ValidationFailed
 from Products.ERP5Banking.tests.TestERP5BankingMixin import TestERP5BankingMixin
 #from Products.ERP5Banking.tests.testERP5BankingCheckPayment \
@@ -48,8 +47,7 @@ os.environ['EVENT_LOG_SEVERITY'] = '-300'
 if __name__ == '__main__':
   execfile(os.path.join(sys.path[0], 'framework.py'))
 
-class TestERP5BankingCounterDate(TestERP5BankingMixin,
-                                  ERP5TypeTestCase):
+class TestERP5BankingCounterDate(TestERP5BankingMixin):
   RUN_ALL_TEST = 1 # we want to run all test
   QUIET = 0 # we don't want the test to be quiet
 

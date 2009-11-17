@@ -32,7 +32,6 @@ import os
 from zLOG import LOG
 from DateTime import DateTime
 from Products.CMFCore.utils import getToolByName
-from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.DCWorkflow.DCWorkflow import Unauthorized, ValidationFailed
 from Products.ERP5Banking.tests.TestERP5BankingMixin import TestERP5BankingMixin
@@ -47,7 +46,7 @@ if __name__ == '__main__':
   execfile(os.path.join(sys.path[0], 'framework.py'))
 
 
-class TestERP5BankingCheckPaymentMixin:
+class TestERP5BankingCheckPaymentMixin(TestERP5BankingMixin):
   """
   Unit test class for the check payment module
   """
@@ -526,8 +525,7 @@ class TestERP5BankingCheckPaymentMixin:
     self.assertEquals(check.getSimulationState(), 'delivered')
     self.assertEquals(self.check_1.getSimulationState(), 'confirmed')
 
-class TestERP5BankingCheckPayment(TestERP5BankingCheckPaymentMixin,
-                                  TestERP5BankingMixin, ERP5TypeTestCase):
+class TestERP5BankingCheckPayment(TestERP5BankingCheckPaymentMixin):
 
   # pseudo constants
   RUN_ALL_TEST = 1 # we want to run all test

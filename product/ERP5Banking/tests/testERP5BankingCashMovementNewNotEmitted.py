@@ -29,10 +29,8 @@
 
 # import requested python module
 import os
-from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.DCWorkflow.DCWorkflow import Unauthorized, ValidationFailed
-from Products.ERP5Banking.tests.TestERP5BankingMixin import TestERP5BankingMixin
 from Products.ERP5Banking.tests.testERP5BankingMonetaryIssue import TestERP5BankingMonetaryReceptionMixin
 from DateTime import DateTime
 
@@ -46,8 +44,7 @@ if __name__ == '__main__':
   execfile(os.path.join(sys.path[0], 'framework.py'))
 
 
-class TestERP5BankingCashMovementNewNotEmitted(TestERP5BankingMonetaryReceptionMixin,
-                                               TestERP5BankingMixin, ERP5TypeTestCase):
+class TestERP5BankingCashMovementNewNotEmitted(TestERP5BankingMonetaryReceptionMixin):
   """
     This class is a unit test to check the module of Cash Movement New Not Emitted
   """

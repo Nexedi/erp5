@@ -29,7 +29,6 @@
 
 # import requested python module
 import os
-from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.DCWorkflow.DCWorkflow import Unauthorized, ValidationFailed
 from Products.ERP5Banking.tests.TestERP5BankingMixin import TestERP5BankingMixin
@@ -45,7 +44,7 @@ if __name__ == '__main__':
 
 
 
-class TestERP5BankingForeignCashReception(TestERP5BankingMixin, ERP5TypeTestCase):
+class TestERP5BankingForeignCashReception(TestERP5BankingMixin):
   """
     This class is a unit test to check the module of Cash Transfer
 

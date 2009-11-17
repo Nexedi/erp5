@@ -29,7 +29,6 @@
 
 # import requested python module
 import os
-from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.DCWorkflow.DCWorkflow import Unauthorized, ValidationFailed
 from Products.ERP5Banking.tests.TestERP5BankingMixin import TestERP5BankingMixin
@@ -45,7 +44,7 @@ if __name__ == '__main__':
 
 
 
-class TestERP5BankingMoneyDepositMixin:
+class TestERP5BankingMoneyDepositMixin(TestERP5BankingMixin):
   
 
 
@@ -317,8 +316,7 @@ class TestERP5BankingMoneyDepositMixin:
   ##  Tests
   ##################################
 
-class TestERP5BankingMoneyDeposit(TestERP5BankingMoneyDepositMixin,
-                                  TestERP5BankingMixin, ERP5TypeTestCase):
+class TestERP5BankingMoneyDeposit(TestERP5BankingMoneyDepositMixin):
 
   # pseudo constants
   RUN_ALL_TEST = 1 # we want to run all test

@@ -29,14 +29,12 @@
 
 # import requested python module
 import os
-from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.DCWorkflow.DCWorkflow import Unauthorized, ValidationFailed
 from Products.ERP5Banking.tests.testERP5BankingCheckbookUsualCashTransfer \
      import TestERP5BankingCheckbookUsualCashTransferMixin
 from Products.ERP5Banking.tests.testERP5BankingTravelerCheckSale \
      import TestERP5BankingTravelerCheckSaleMixin
-from Products.ERP5Banking.tests.TestERP5BankingMixin import TestERP5BankingMixin
 from DateTime import DateTime
 from zLOG import LOG
 
@@ -50,8 +48,7 @@ if __name__ == '__main__':
   execfile(os.path.join(sys.path[0], 'framework.py'))
 
 class TestERP5BankingTravelerCheckPurchase(TestERP5BankingCheckbookUsualCashTransferMixin,
-                                       TestERP5BankingTravelerCheckSaleMixin,
-                                       TestERP5BankingMixin, ERP5TypeTestCase):
+                                       TestERP5BankingTravelerCheckSaleMixin):
   """
     This class is a unit test to check the module of Cash Transfer
 

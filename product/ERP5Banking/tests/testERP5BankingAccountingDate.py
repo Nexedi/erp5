@@ -27,7 +27,6 @@
 ##############################################################################
 
 from DateTime import DateTime
-from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.ERP5Banking.tests.TestERP5BankingMixin import TestERP5BankingMixin
 from Products.DCWorkflow.DCWorkflow import Unauthorized, ValidationFailed
@@ -35,7 +34,7 @@ from Products.DCWorkflow.DCWorkflow import Unauthorized, ValidationFailed
 QUIET = False
 RUN_ALL_TEST = True
 
-class TestERP5BankingAccountingDate(TestERP5BankingMixin, ERP5TypeTestCase):
+class TestERP5BankingAccountingDate(TestERP5BankingMixin):
   """
     Unit test Accounting Date definition and utility script.
   """

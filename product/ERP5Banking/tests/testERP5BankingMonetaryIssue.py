@@ -29,7 +29,6 @@
 
 # import requested python module
 import os
-from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.DCWorkflow.DCWorkflow import Unauthorized, ValidationFailed
 from Products.ERP5Banking.tests.TestERP5BankingMixin import TestERP5BankingMixin
@@ -45,7 +44,7 @@ if __name__ == '__main__':
   execfile(os.path.join(sys.path[0], 'framework.py'))
 
 
-class TestERP5BankingMonetaryReceptionMixin:
+class TestERP5BankingMonetaryReceptionMixin(TestERP5BankingMixin):
 
   def stepCreateMonetaryReception(self, sequence=None, sequence_list=None, **kw):
     """
@@ -107,7 +106,7 @@ class TestERP5BankingMonetaryReceptionMixin:
     self.assertEqual(len(self.simulation_tool.getFutureTrackingList(at_date=self.current_date, node=self.reception.getRelativeUrl())), 2)
 
 
-class TestERP5BankingMonetaryIssue(TestERP5BankingMonetaryReceptionMixin, TestERP5BankingMixin, ERP5TypeTestCase):
+class TestERP5BankingMonetaryIssue(TestERP5BankingMonetaryReceptionMixin):
   """
     This class is a unit test to check the module of Monetary Issue
 
