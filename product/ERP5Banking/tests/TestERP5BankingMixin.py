@@ -488,8 +488,6 @@ class TestERP5BankingMixin(ERP5TypeTestCase):
     if site_list is None:
       site_list = ["paris", 'madrid', 'siege']
 
-    self._createBanknotesAndCoins()
-
     # add category unit in quantity_unit which is the unit that will be used for banknotes and coins
     self.variation_base_category = getattr(self.category_tool, 'quantity_unit')
     self.unit = self.variation_base_category.newContent(id='unit', title='Unit')
@@ -552,6 +550,9 @@ class TestERP5BankingMixin(ERP5TypeTestCase):
     self.madrid = self.testsite.newContent(id='madrid', portal_type='Category', codification='S10',  vault_type='site')
     self.siege = self.site_base_category.newContent(id='siege', portal_type='Category', codification='HQ1',  vault_type='site')
     created_site_list = [self.paris, self.madrid, self.siege]
+
+    self._createBanknotesAndCoins()
+
     if len(site_list) != 0:
       for site in site_list:
         if isinstance(site, tuple):
