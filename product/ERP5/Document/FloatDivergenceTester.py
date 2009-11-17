@@ -91,93 +91,21 @@ class FloatDivergenceTester(Predicate):
 
     NOTE: should we provide compatibility here ?
     """
-    tested_property = self.getTestedProperty()
-    delivery_mvt = simulation_movement.getDeliveryValue()
-    delivery_mvt_property = delivery_mvt.getProperty(tested_property)
-    if simulation_movement.isPropertyRecorded(tested_property):
-      simulation_mvt_property = simulation_movement.getRecordedProperty(tested_property)
-      if isinstance(simulation_mvt_property, (list, tuple)):
-        simulation_mvt_property = simulation_mvt_property[0]
+    delivery_movement = simulation_movement.getDeliveryValue()
+    compare_result = self._compare(simulation_movement, delivery_movement)
+    if compare_result is None:
+      return None
     else:
-      simulation_mvt_property = simulation_movement.getProperty(tested_property)
-
-    def getErrorMessage(message, mapping):
+      prevision_value, decision_value, message, mapping = compare_result
       return DivergenceMessage(
-        # XXX do we still need divergence_scope ?
-        divergence_scope='property',
-        object_relative_url=delivery_mvt.getRelativeUrl(),
+        object_relative_url=delivery_movement.getRelativeUrl(),
         simulation_movement=simulation_movement,
-        decision_value=delivery_mvt_property,
-        prevision_value=simulation_mvt_property,
-        tested_property=tested_property,
+        decision_value=decision_value,
+        prevision_value=prevision_value,
+        tested_property=self.getTestedProperty(),
         message=message,
         mapping=mapping
         )
-
-    delta = delivery_mvt_property - simulation_mvt_property
-    # XXX we should use appropriate property sheets and getter methods
-    # for these properties.
-    absolute_tolerance_min = self.getProperty('quantity_range_min') or \
-                             self.getProperty('quantity')
-    if absolute_tolerance_min is not None and \
-       delta < absolute_tolerance_min:
-      return getErrorMessage(
-        'The difference of ${prperty_name} between decision and prevision is less than ${value}.',
-        dict(property_name=tested_property,
-             value=absolute_tolerance_min))
-    absolute_tolerance_max = self.getProperty('quantity_range_max') or \
-                             self.getProperty('quantity')
-    if absolute_tolerance_max is not None and \
-       delta > absolute_tolerance_max:
-      return getErrorMessage(
-        'The difference of ${prperty_name} between decision and prevision is larger than ${value}.',
-        dict(property_name=tested_property,
-             value=absolute_tolerance_max))
-
-    tolerance_base = self.getProperty('tolerance_base')
-    if tolerance_base == 'currency_precision':
-      try:
-        precision = simulation_movement.getSectionValue().getPriceCurrencyValue().getQuantityPrecision()
-        base = 10 ** -precision
-      except AttributeError:
-        base = None
-    elif tolerance_base == 'quantity':
-      base = simulation_mvt_property
-    else:
-      base = None
-    if base is not None:
-      relative_tolerance_min = self.getProperty('tolerance_range_min') or \
-                               self.getProperty('tolerance')
-      if relative_tolerance_min is not None and \
-             delta < relative_tolerance_min * base:
-        if tolerance_base == 'price_currency':
-          return getErrorMessage(
-            'The difference of ${prperty_name} between decision and prevision is less than ${value} times of the currency precision.',
-            dict(property_name=tested_property,
-                 value=relative_tolerance_min))
-        else:
-          return getErrorMessage(
-            'The difference of ${prperty_name} between decision and prevision is less than ${value} times of the prevision value.',
-            dict(property_name=tested_property,
-                 value=relative_tolerance_min))
-      relative_tolerance_max = self.getProperty('tolerance_range_max') or \
-                               self.getProperty('tolerance')
-      if relative_tolerance_max is not None and \
-             delta < relative_tolerance_max * base:
-        if tolerance_base == 'price_currency':
-          return getErrorMessage(
-            'The difference of ${prperty_name} between decision and prevision is less than ${value} times of the currency precision.',
-            dict(property_name=tested_property,
-                 value=relative_tolerance_max))
-        else:
-          return getErrorMessage(
-            'The difference of ${prperty_name} between decision and prevision is less than ${value} times of the prevision value.',
-            dict(property_name=tested_property,
-                 value=relative_tolerance_max))
-    # XXX the followings are not treated yet:
-    # * decimal_alignment_enabled
-    # * decimal_rounding_option
-    # * decimal_exponent
 
   def generateHashKey(self, movement):
     """
@@ -208,7 +136,93 @@ class FloatDivergenceTester(Predicate):
 
     decision_movement -- a delivery movement (decision)
     """
-    raise NotImplementedError
+    return (self._compare(prevision_movement, decision_movement) is None)
+
+  def _compare(self, prevision_movement, decision_movement):
+    """
+    If prevision_movement and decision_movement dont match, it returns a
+    list : (prevision_value, decision_value, message, mapping)
+    """
+    tested_property = self.getTestedProperty()
+    decision_value = decision_movement.getProperty(tested_property)
+    if prevision_movement.isPropertyRecorded(tested_property):
+      prevision_value = prevision_movement.getRecordedProperty(tested_property)
+      if isinstance(prevision_value, (list, tuple)):
+        prevision_value = prevision_value[0]
+    else:
+      prevision_value = prevision_movement.getProperty(tested_property)
+
+    delta = decision_value - prevision_value
+    # XXX we should use appropriate property sheets and getter methods
+    # for these properties.
+    absolute_tolerance_min = self.getProperty('quantity_range_min') or \
+                             self.getProperty('quantity')
+    if absolute_tolerance_min is not None and \
+       delta < absolute_tolerance_min:
+      return (
+        prevision_value, decision_value,
+        'The difference of ${prperty_name} between decision and prevision is less than ${value}.',
+        dict(property_name=tested_property,
+             value=absolute_tolerance_min))
+    absolute_tolerance_max = self.getProperty('quantity_range_max') or \
+                             self.getProperty('quantity')
+    if absolute_tolerance_max is not None and \
+       delta > absolute_tolerance_max:
+      return (
+        prevision_value, decision_value,
+        'The difference of ${prperty_name} between decision and prevision is larger than ${value}.',
+        dict(property_name=tested_property,
+             value=absolute_tolerance_max))
+
+    tolerance_base = self.getProperty('tolerance_base')
+    if tolerance_base == 'currency_precision':
+      try:
+        precision = prevision_movement.getSectionValue().getPriceCurrencyValue().getQuantityPrecision()
+        base = 10 ** -precision
+      except AttributeError:
+        base = None
+    elif tolerance_base == 'quantity':
+      base = prevision_value
+    else:
+      base = None
+    if base is not None:
+      relative_tolerance_min = self.getProperty('tolerance_range_min') or \
+                               self.getProperty('tolerance')
+      if relative_tolerance_min is not None and \
+             delta < relative_tolerance_min * base:
+        if tolerance_base == 'price_currency':
+          return (
+            prevision_value, decision_value,
+            'The difference of ${prperty_name} between decision and prevision is less than ${value} times of the currency precision.',
+            dict(property_name=tested_property,
+                 value=relative_tolerance_min))
+        else:
+          return (
+            prevision_value, decision_value,
+            'The difference of ${prperty_name} between decision and prevision is less than ${value} times of the prevision value.',
+            dict(property_name=tested_property,
+                 value=relative_tolerance_min))
+      relative_tolerance_max = self.getProperty('tolerance_range_max') or \
+                               self.getProperty('tolerance')
+      if relative_tolerance_max is not None and \
+             delta < relative_tolerance_max * base:
+        if tolerance_base == 'price_currency':
+          return (
+            prevision_value, decision_value,
+            'The difference of ${prperty_name} between decision and prevision is less than ${value} times of the currency precision.',
+            dict(property_name=tested_property,
+                 value=relative_tolerance_max))
+        else:
+          return (
+            prevision_value, decision_value,
+            'The difference of ${prperty_name} between decision and prevision is less than ${value} times of the prevision value.',
+            dict(property_name=tested_property,
+                 value=relative_tolerance_max))
+    return None
+    # XXX the followings are not treated yet:
+    # * decimal_alignment_enabled
+    # * decimal_rounding_option
+    # * decimal_exponent
 
   def update(self, prevision_movement, decision_movement):
     """
