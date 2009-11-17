@@ -28,6 +28,7 @@
 
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions
+from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 
 from Products.ERP5Type.XMLObject import XMLObject
 
@@ -44,8 +45,7 @@ class DomainGenerator(XMLObject):
     """
     meta_type='ERP5 Domain Generator'
     portal_type='Domain Generator'
-    isPortalContent = 0
-    isRADContent = 1
+    isPortalContent = ConstantGetter('isPortalContent', value=False)
     icon = None
 
     security = ClassSecurityInfo()

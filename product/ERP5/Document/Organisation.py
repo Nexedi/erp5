@@ -54,8 +54,6 @@ class Organisation(XMLObject):
     meta_type = 'ERP5 Organisation'
     portal_type = 'Organisation'
     add_permission = Permissions.AddPortalContent
-    isPortalContent = 1
-    isRADContent = 1
 
     # Declarative security
     security = ClassSecurityInfo()

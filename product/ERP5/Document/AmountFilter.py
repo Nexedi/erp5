@@ -56,8 +56,6 @@ class AmountFilter(MappedValue, Amount):
     meta_type = 'ERP5 Amount Filter'
     portal_type = 'Amount Filter'
     add_permission = Permissions.AddPortalContent
-    isPortalContent = 1
-    isRADContent = 1
 
     # Declarative security
     security = ClassSecurityInfo()

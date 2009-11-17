@@ -54,8 +54,6 @@ class BudgetTransferLine(SupplyLine):
     meta_type='ERP5 Budget Transfer Line'
     portal_type='Budget Transfer Line'
     add_permission = Permissions.AddPortalContent
-    isPortalContent = 1
-    isRADContent = 1
 
     # Declarative security
     security = ClassSecurityInfo()

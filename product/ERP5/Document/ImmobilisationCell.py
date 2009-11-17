@@ -46,9 +46,6 @@ class ImmobilisationCell(Movement, XMLObject, ImmobilisationMovement):
   meta_type = 'ERP5 Immobilisation Cell'
   portal_type = 'Immobilisation Cell'
   add_permission = Permissions.AddPortalContent
-  isPortalContent = 1
-  isRADContent = 1
-  isMovement = 1
   isAccountable = 0 # It should not be indexed in stock table
 
   # Declarative security

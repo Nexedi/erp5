@@ -43,8 +43,6 @@ class CashDeliveryCell(BaobabMixin, DeliveryCell):
   meta_type = 'ERP5Banking Cash Delivery Cell'
   portal_type = 'Cash Delivery Cell'
   add_permission = Permissions.AddPortalContent
-  isPortalContent = 1
-  isRADContent = 1
 
   # Declarative security
   security = ClassSecurityInfo()

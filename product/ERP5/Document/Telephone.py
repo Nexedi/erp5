@@ -54,8 +54,6 @@ class Telephone(Coordinate, Base):
   meta_type = 'ERP5 Telephone'
   portal_type = 'Telephone'
   add_permission = Permissions.AddPortalContent
-  isPortalContent = 1
-  isRADContent = 1
 
   # Declarative security
   security = ClassSecurityInfo()

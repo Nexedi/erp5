@@ -43,8 +43,6 @@ class PaySheetModelLine(TradeModelLine):
   meta_type = 'ERP5 Pay Sheet Model Line'
   portal_type = 'Pay Sheet Model Line'
   add_permission = Permissions.AddPortalContent
-  isPortalContent = 1
-  isRADContent = 1
 
   # Declarative security
   security = ClassSecurityInfo()

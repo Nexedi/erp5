@@ -40,8 +40,6 @@ class Machine(Item):
     meta_type = 'ERP5 Machine'
     portal_type = 'Machine'
     add_permission = Permissions.AddPortalContent
-    isPortalContent = 1
-    isRADContent = 1
 
     # Declarative security
     security = ClassSecurityInfo()

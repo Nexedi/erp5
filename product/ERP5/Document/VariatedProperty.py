@@ -51,8 +51,6 @@ class VariatedProperty(XMLObject, XMLMatrix):
     meta_type = 'ERP5 Variated Property'
     portal_type = 'Variated Property'
     add_permission = Permissions.AddPortalContent
-    isPortalContent = 1
-    isRADContent = 1
 
     # Declarative security
     security = ClassSecurityInfo()

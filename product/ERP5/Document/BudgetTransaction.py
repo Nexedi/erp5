@@ -54,8 +54,6 @@ class BudgetTransaction(DeliveryLine):
     meta_type='ERP5 Budget Transaction'
     portal_type='Budget Transaction'    
     add_permission = Permissions.AddPortalContent
-    isPortalContent = 1
-    isRADContent = 1
 
     # Declarative security
     security = ClassSecurityInfo()

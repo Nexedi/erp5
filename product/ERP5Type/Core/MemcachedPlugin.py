@@ -40,8 +40,6 @@ class MemcachedPlugin(XMLObject):
 
   meta_type = 'ERP5 Memcached Plugin'
   portal_type = 'Memcached Plugin'
-  isPortalContent = 1
-  isRADContent = 1
 
   allowed_types = ()
 

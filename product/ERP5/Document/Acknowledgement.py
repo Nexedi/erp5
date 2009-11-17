@@ -28,6 +28,7 @@
 ##############################################################################
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
+from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 
 from Products.ERP5.Document.EmailDocument import EmailDocumentProxyMixin
 from Products.ERP5.Document.Event import Event
@@ -54,9 +55,7 @@ class Acknowledgement(EmailDocumentProxyMixin, Event):
   meta_type = 'ERP5 Acknowledgement'
   portal_type = 'Acknowledgement'
   add_permission = Permissions.AddPortalContent
-  isPortalContent = 1
-  isRADContent = 1
-  isDelivery = 1
+  isDelivery = ConstantGetter('isDelivery', value=True)
 
   # Declarative security
   security = ClassSecurityInfo()

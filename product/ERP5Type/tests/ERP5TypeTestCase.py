@@ -53,6 +53,7 @@ from Testing.ZopeTestCase.PortalTestCase import PortalTestCase, user_name
 from Products.CMFCore.utils import getToolByName
 from Products.DCWorkflow.DCWorkflow import ValidationFailed
 from Products.ERP5Type.Base import _aq_reset
+from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from zLOG import LOG, DEBUG
 
 import backportUnittest
@@ -1176,12 +1177,14 @@ def optimize():
       self._filepath = self.get_filepath()
   PythonScript._makeFunction = _makeFunction
 
-  # Do not reindex portal types sub objects
+  # Do not reindex portal types sub objects by default
   # We will probably disable reindexing for other types later
-  from Products.ERP5Type.Document.RoleInformation import RoleInformation
-  RoleInformation.isIndexable = 0
-  from Products.ERP5Type.Document.ActionInformation import ActionInformation
-  ActionInformation.isIndexable = 0
+  full_indexing_set = set(os.environ.get('enable_full_indexing', '').split(','))
+  if not 'portal_types' in full_indexing_set:
+    from Products.ERP5Type.Document.RoleInformation import RoleInformation
+    RoleInformation.isIndexable = ConstantGetter('isIndexable', value=False)
+    from Products.ERP5Type.Document.ActionInformation import ActionInformation
+    ActionInformation.isIndexable = ConstantGetter('isIndexable', value=False)
 
 optimize()
 

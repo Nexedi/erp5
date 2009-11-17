@@ -40,8 +40,6 @@ class Binder(Folder, Document):
 
   meta_type = 'ERP5 Binder'
   portal_type = 'Binder'
-  isPortalContent = 1
-  isRADContent = 1
 
   # Declarative security
   security = ClassSecurityInfo()

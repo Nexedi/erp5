@@ -58,8 +58,6 @@ class ImmobilisationDelivery(XMLObject):
     meta_type = 'ERP5 Immobilisation Delivery'
     portal_type = 'Immobilisation Delivery'
     add_permission = Permissions.AddPortalContent
-    isPortalContent = 1
-    isRADContent = 1
 
     # Declarative security
     security = ClassSecurityInfo()

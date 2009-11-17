@@ -50,8 +50,6 @@ class CategoryBudgetVariation(BudgetVariation):
   meta_type = 'ERP5 Category Budget Variation'
   portal_type = 'Category Budget Variation'
   add_permission = Permissions.AddPortalContent
-  isPortalContent = 1
-  isRADContent = 1
 
   # Declarative security
   security = ClassSecurityInfo()

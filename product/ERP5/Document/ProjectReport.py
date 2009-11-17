@@ -49,8 +49,6 @@ class ProjectReport(Delivery):
     meta_type = 'ERP5 Project Report'
     portal_type = 'Project Report'
     add_permission = Permissions.AddPortalContent
-    isPortalContent = 1
-    isRADContent = 1
 
     # Declarative security
     security = ClassSecurityInfo()

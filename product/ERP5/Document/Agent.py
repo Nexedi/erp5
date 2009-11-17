@@ -42,8 +42,6 @@ class Agent(Folder, Image):
   # CMF Type Definition
   meta_type = 'ERP5 Agent'
   portal_type = 'Agent'
-  isPortalContent = 1
-  isRADContent = 1
 
   # Declarative security
   security = ClassSecurityInfo()

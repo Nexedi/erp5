@@ -32,6 +32,7 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5.Document.MetaNode import MetaNode
 from Products.ERP5.Document.MetaResource import MetaResource
 from Products.ERP5Type import interfaces, Permissions, PropertySheet
+from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from Products.ERP5Type.Base import Base
 from Products.ERP5.Document.Predicate import Predicate
 
@@ -93,9 +94,7 @@ class Category(CMFCategory, Predicate, MetaNode, MetaResource):
 
     meta_type='ERP5 Category'
     portal_type='Category' # may be useful in the future...
-    isPortalContent = 1
-    isRADContent = 1
-    isCategory = 1
+    isCategory = ConstantGetter('isCategory', value=True)
     allowed_types = ('ERP5 Category', )
 
     # Declarative security

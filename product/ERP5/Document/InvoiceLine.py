@@ -48,8 +48,6 @@ class InvoiceLine(DeliveryLine):
     meta_type = 'ERP5 Invoice Line'
     portal_type = 'Invoice Line'
     add_permission = Permissions.AddPortalContent
-    isPortalContent = 1
-    isRADContent = 1
 
     # Declarative security
     security = ClassSecurityInfo()

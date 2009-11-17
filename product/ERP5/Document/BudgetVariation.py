@@ -55,8 +55,6 @@ class BudgetVariation(Predicate):
   meta_type='ERP5 Budget Variation'
   portal_type='Budget Variation'
   add_permission = Permissions.AddPortalContent
-  isPortalContent = 1
-  isRADContent = 1
 
   # Declarative security
   security = ClassSecurityInfo()

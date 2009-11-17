@@ -31,6 +31,7 @@ from Products.ERP5Type.Globals import InitializeClass, PersistentMapping
 from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
+from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from Products.ERP5.Document.Delivery import Delivery
 
 class OpenOrder(Delivery):
@@ -39,7 +40,7 @@ class OpenOrder(Delivery):
   """
   meta_type = 'ERP5 Open Order'
   portal_type = 'Open Order'
-  isPredicate = 1 # XXX - Why ?
+  isPredicate = ConstantGetter('isPredicate', value=True) # XXX - Why ?
 
   # Declarative security
   security = ClassSecurityInfo()

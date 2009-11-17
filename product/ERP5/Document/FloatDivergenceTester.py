@@ -44,8 +44,6 @@ class FloatDivergenceTester(Predicate):
   meta_type = 'ERP5 Float Divergence Tester'
   portal_type = 'Float Divergence Tester'
   add_permission = Permissions.AddPortalContent
-  isPortalContent = 1
-  isRADContent = 1
 
   # Declarative security
   security = ClassSecurityInfo()

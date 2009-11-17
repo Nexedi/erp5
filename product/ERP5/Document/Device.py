@@ -40,8 +40,6 @@ class Device(Item):
     meta_type = 'ERP5 Device'
     portal_type = 'Device'
     add_permission = Permissions.AddPortalContent
-    isPortalContent = 1
-    isRADContent = 1
 
     # Declarative security
     security = ClassSecurityInfo()

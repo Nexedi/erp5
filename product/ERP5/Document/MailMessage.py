@@ -55,8 +55,6 @@ class MailMessage(Event):
   meta_type       = 'ERP5 Mail Message'
   portal_type     = 'Mail Message'
   add_permission  = Permissions.AddPortalContent
-  isPortalContent = 1
-  isRADContent    = 1
 
   # Declarative security
   security = ClassSecurityInfo()

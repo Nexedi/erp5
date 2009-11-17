@@ -37,8 +37,6 @@ class Invoice(AccountingTransaction):
     meta_type = 'ERP5 Invoice'
     portal_type = 'Invoice'
     add_permission = Permissions.AddPortalContent
-    isPortalContent = 1
-    isRADContent = 1
 
     # Declarative security
     security = ClassSecurityInfo()

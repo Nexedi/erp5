@@ -50,8 +50,6 @@ class Preference( Folder ):
   meta_type       = 'ERP5 Preference'
   portal_type     = 'Preference'
   add_permission  = Permissions.AddPortalContent
-  isPortalContent = 1
-  isRADContent    = 1
   
   # Declarative properties
   property_sheets = \

@@ -30,6 +30,7 @@
 from AccessControl import ClassSecurityInfo
 from ZPublisher.HTTPRequest import FileUpload
 from Globals import InitializeClass, DTMLFile
+from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type import Permissions
 from Products.ERP5Wizard import _dtmldir
@@ -169,8 +170,7 @@ class WizardTool(BaseTool):
   id = 'portal_wizard'
   meta_type = 'ERP5 Wizard Tool'
   portal_type = 'Wizard Tool'
-  isPortalContent = 1 
-  isRADContent = 1
+  isPortalContent = ConstantGetter('isPortalContent', value=True)
   property_sheets = ()
   security = ClassSecurityInfo()
   security.declareProtected(Permissions.ManagePortal, 'manage_overview')

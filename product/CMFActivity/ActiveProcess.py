@@ -63,8 +63,6 @@ class ActiveProcess(Base):
 
   meta_type = 'CMF Active Process'
   portal_type = 'Active Process'
-  isPortalContent = 0 
-  isRADContent = 1
   icon = None
 
   # Declarative security

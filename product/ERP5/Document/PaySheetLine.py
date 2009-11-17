@@ -42,8 +42,6 @@ class PaySheetLine(InvoiceLine):
     meta_type = 'ERP5 Pay Sheet Line'
     portal_type = 'Pay Sheet Line'
     add_permission = Permissions.AddPortalContent
-    isPortalContent = 1
-    isRADContent = 1
 
     # Declarative security
     security = ClassSecurityInfo()

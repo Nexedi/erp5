@@ -32,6 +32,7 @@ from SyncCode import SyncCode
 from AccessControl import ClassSecurityInfo
 from Products.CMFCore.utils import getToolByName
 from Acquisition import Implicit, aq_base
+from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from Products.ERP5Type.Core.Folder import Folder
 from Products.ERP5Type.Base import Base
 from Products.ERP5Type import Permissions
@@ -97,10 +98,8 @@ class Subscription(Folder, XMLSyncUtils, File):
 
   meta_type = 'ERP5 Subscription'
   portal_type = 'SyncML Subscription' # may be useful in the future...
-  isPortalContent = 1
-  isRADContent = 1
   icon = None
-  isIndexable = 0
+  isIndexable = ConstantGetter('isIndexable', value=False)
   user = None
 
   # Declarative properties

@@ -68,9 +68,6 @@ class Rule(Predicate, XMLObject):
   meta_type = 'ERP5 Rule'
   portal_type = 'Rule'
   add_permission = Permissions.AddPortalContent
-  isPortalContent = 1
-  isRADContent = 1
-  isPredicate = 1
 
   # Declarative security
   security = ClassSecurityInfo()

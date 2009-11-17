@@ -29,6 +29,7 @@
 from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
+from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from Products.ERP5.Document.Movement import Movement
 from Products.ERP5.Document.Project import Project
 
@@ -57,9 +58,7 @@ class Ticket(Movement, Project):
     meta_type = 'ERP5 Ticket'
     portal_type = 'Ticket'
     add_permission = Permissions.AddPortalContent
-    isPortalContent = 1
-    isRADContent = 1
-    isDelivery = 1
+    isDelivery = ConstantGetter('isDelivery', value=True)
 
     # Declarative security
     security = ClassSecurityInfo()

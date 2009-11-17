@@ -44,8 +44,6 @@ class PredicateMatrix(XMLMatrix):
   meta_type = 'ERP5 Predicate Matrix'
   portal_type = 'Predicate Matrix'
   add_permission = Permissions.AddPortalContent
-  isPortalContent = 1
-  isRADContent = 1
   predicate_matrix_base_id = "movement"
 
   # Declarative security

@@ -40,9 +40,6 @@ class OpenOrderLine(SupplyLine):
     meta_type = 'ERP5 Open Order Line'
     portal_type = 'Open Order Line'
     add_permission = Permissions.AddPortalContent
-    isPortalContent = 1
-    isRADContent = 1
-    isPredicate = 1
 
     # Declarative security
     security = ClassSecurityInfo()

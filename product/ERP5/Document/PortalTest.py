@@ -43,8 +43,6 @@ class PortalTest(MappedValue, XMLMatrix):
     meta_type = 'ERP5 Portal Test'
     portal_type = 'Portal Test'
     add_permission = Permissions.AddPortalContent
-    isPortalContent = 1
-    isRADContent = 1
 
     # Declarative security
     security = ClassSecurityInfo()

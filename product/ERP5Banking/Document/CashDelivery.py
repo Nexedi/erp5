@@ -38,8 +38,6 @@ class CashDelivery(BankingOperation):
   meta_type = 'ERP5Banking Cash Delivery'
   portal_type = 'Cash Delivery'
   add_permission = Permissions.AddPortalContent
-  isPortalContent = 1
-  isRADContent = 1
 
   # Declarative security
   security = ClassSecurityInfo()

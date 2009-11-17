@@ -37,8 +37,6 @@ class RoleDefinition(XMLObject):
     # CMF Type Definition
     meta_type = 'ERP5 Role Definition'
     portal_type = 'Role Definition'
-    isPortalContent = 1
-    isRADContent = 1
     add_permission = Permissions.ChangeLocalRoles
 
     # Declarative security

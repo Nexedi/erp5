@@ -33,6 +33,7 @@ from Products.ERP5Type import Permissions
 from Products.ERP5Type.Core.Folder import Folder
 from Products.ERP5Type.Utils import cartesianProduct
 from Products.ERP5Type.Base import TempBase
+from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 
 from zLOG import LOG
 from string import join, replace
@@ -302,9 +303,10 @@ class XMLMatrix(Folder):
           #o.immediateReindexObject() # STILL A PROBLEM -> getUidForPath XXX
 
           if object_id not in new_object_id_list: # do not unindex a new object
-            o.isIndexable = 1
+            o.isIndexable = ConstantGetter('isIndexable', value=True)
             o.unindexObject(path='%s/%s' % (self.getUrl() , object_id))
-            o.isIndexable = 0 # unindexed already forced
+            # unindexed already forced
+            o.isIndexable = ConstantGetter('isIndexable', value=False)
           self._delObject('temp_' + object_id) # object will be removed
                                                # from catalog automaticaly
       # We don't need the old index any more, we
@@ -430,10 +432,10 @@ class XMLMatrix(Folder):
           if cell is not None:
             new_id = old_id + appended_id
             self._delObject(old_id)
-            cell.isIndexable = 0
+            cell.isIndexable = ConstantGetter('isIndexable', value=False)
             cell.id = new_id
             self._setObject(new_id, aq_base(cell))
-            cell.isIndexable = 1
+            cell.isIndexable = ConstantGetter('isIndexable', value=True)
             cell.reindexObject()
             #cell.unindexObject(path='%s/%s' % (self.getUrl(), old_id))
       elif len(current_range) > len(kw):
@@ -444,10 +446,10 @@ class XMLMatrix(Folder):
           if cell is not None:
             new_id = old_id[:-removed_id_len]
             self._delObject(old_id)
-            cell.isIndexable = 0
+            cell.isIndexable = ConstantGetter('isIndexable', value=False)
             cell.id = new_id
             self._setObject(new_id, aq_base(cell))
-            cell.isIndexable = 1
+            cell.isIndexable = ConstantGetter('isIndexable', value=True)
             cell.reindexObject()
             #cell.unindexObject(path='%s/%s' % (self.getUrl(), old_id))
 
@@ -751,7 +753,7 @@ class TempXMLMatrix(XMLMatrix):
     If we need Base services (categories, edit, etc) in temporary objects
     we shoud used TempBase
   """
-  isIndexable = 0
+  isIndexable = ConstantGetter('isIndexable', value=False)
 
   def newCellContent(self, id):
     """

@@ -50,8 +50,6 @@ class Path(MappedValue):
   meta_type = 'ERP5 Path'
   portal_type = 'Path'
   add_permission = Permissions.AddPortalContent
-  isPortalContent = 1
-  isRADContent = 1
 
   # Declarative security
   security = ClassSecurityInfo()

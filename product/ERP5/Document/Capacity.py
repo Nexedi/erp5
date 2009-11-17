@@ -32,6 +32,7 @@ from AccessControl import ClassSecurityInfo
 from Products.CMFCore.utils import getToolByName
 
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
+from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from Products.ERP5Type.XMLObject import XMLObject
 
 
@@ -41,7 +42,7 @@ class Capacity(XMLObject):
     """
     meta_type = 'ERP5 Capacity'
     
-    isCapacity = 1
+    isCapacity = ConstantGetter('isCapacity', value=True)
 
     # Declarative security
     security = ClassSecurityInfo()

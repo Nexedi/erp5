@@ -41,6 +41,7 @@ from zLOG import LOG, INFO
 from Products.CMFCore.Expression import Expression
 from Products.CMFCore.tests.base.testcase import LogInterceptor
 from Products.CMFCore.WorkflowCore import WorkflowException
+from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from Products.ERP5Type.Base import _aq_reset
 from Products.ERP5Type.tests.utils import installRealClassTool
 from Products.ERP5Type.Utils import removeLocalPropertySheet
@@ -2600,6 +2601,48 @@ class TestPropertySheet:
       person.validate()
       self.assertRaises(WorkflowException, person.validate)
 
+    def test_PropertyConstantGetter(self):
+      """
+      Check the boolean constant getter. Make sure
+      it works both like a property and a method
+      """
+      person = self.getPersonModule().newContent(portal_type='Person')
+      person.foo = ConstantGetter('foo', value=False)
+      self.assertFalse(person.foo)
+      self.assertFalse(person.foo())
+      self.assertEqual(person.foo(), 0)
+      self.assertEqual(person.foo, 0)
+      person.foo = ConstantGetter('foo', value=True)
+      self.assertTrue(person.foo)
+      self.assertTrue(person.foo())
+      self.assertEqual(person.foo(), 1)
+      self.assertEqual(person.foo, 1)
+
+    def test_GroupTypeAccessors(self):
+      """
+      Check that we have automatic accessors in order to check
+      if the portal type of an instance is part of a group
+      """
+      person = self.getPersonModule().newContent(portal_type='Person')
+      method = getattr(person, 'isDeliveryType', None)
+      self.assertNotEquals(None, method)
+      self.assertEquals(0, method())
+      method = getattr(person, 'isNodeType', None)
+      self.assertNotEquals(None, method)
+      self.assertEquals(1, method())
+
+    def test_providesAccessors(self):
+      """
+      Check that we have automatic accessors in order to check
+      if an instance provices a particular interface
+      """
+      person = self.getPersonModule().newContent(portal_type='Person')
+      method = getattr(person, 'providesIMovement', None)
+      self.assertNotEquals(None, method)
+      self.assertEquals(False, method())
+      method = getattr(person, 'providesICategoryAccessProvider', None)
+      self.assertNotEquals(None, method)
+      self.assertTrue(method())
 
 class TestAccessControl(ERP5TypeTestCase):
   # Isolate test in a dedicaced class in order not to break other tests

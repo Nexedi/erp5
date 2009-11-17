@@ -43,8 +43,6 @@ class Archive(Predicate):
 
   meta_type = 'ERP5 Archive'
   portal_type = 'Archive'
-  isPortalContent = 1
-  isRADContent = 1
   
   # Declarative security
   security = ClassSecurityInfo()
@@ -59,6 +57,3 @@ class Archive(Predicate):
                     , PropertySheet.Archive
                     )
   
-  isIndexable = 1
-    
-

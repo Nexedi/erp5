@@ -50,8 +50,6 @@ class AmortisationRule(Rule):
     meta_type = 'ERP5 Amortisation Rule'
     portal_type = 'Amortisation Rule'
     add_permission = Permissions.AddPortalContent
-    isPortalContent = 1
-    isRADContent = 1
 
     # Declarative security
     security = ClassSecurityInfo()

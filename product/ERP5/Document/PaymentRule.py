@@ -44,8 +44,6 @@ class PaymentRule(Rule):
     meta_type = 'ERP5 Payment Rule'
     portal_type = 'Payment Rule'
     add_permission = Permissions.AddPortalContent
-    isPortalContent = 1
-    isRADContent = 1
 
     # Declarative security
     security = ClassSecurityInfo()

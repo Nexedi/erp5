@@ -45,8 +45,6 @@ class CashCurrency(Resource):
   meta_type = 'ERP5Banking Cash Currency'
   portal_type = 'Cash Currency'
   add_permission = Permissions.AddPortalContent
-  isPortalContent = 1
-  isRADContent = 1
 
   # Declarative security
   security = ClassSecurityInfo()

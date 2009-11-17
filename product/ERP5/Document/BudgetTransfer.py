@@ -53,8 +53,6 @@ class BudgetTransfer(Supply):
     meta_type='ERP5 Budget Transfer'
     portal_type='Budget Transfer'
     add_permission = Permissions.AddPortalContent
-    isPortalContent = 1
-    isRADContent = 1
 
     # Declarative security
     security = ClassSecurityInfo()

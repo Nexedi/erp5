@@ -50,8 +50,6 @@ class BankAccount(Folder, Coordinate, MetaNode):
     meta_type = 'ERP5 Bank Account'
     portal_type = 'Bank Account'
     add_permission = Permissions.AddPortalContent
-    isPortalContent = 1
-    isRADContent = 1
 
     # Declarative security
     security = ClassSecurityInfo()

@@ -36,6 +36,7 @@ from Products.CMFCore.utils import getToolByName
 
 from Products.ERP5Type import Permissions
 from Products.ERP5Type import PropertySheet
+from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from Products.ERP5Type.Core.Folder import Folder
 from Products.CMFCategory.Renderer import Renderer
 from Products.ERP5Type.Utils import sortValueList
@@ -117,9 +118,7 @@ class Category(Folder):
 
     meta_type='CMF Category'
     portal_type='Category' # may be useful in the future...
-    isPortalContent = 1
-    isRADContent = 1
-    isCategory = 1
+    isCategory = ConstantGetter('isCategory', value=True)
     icon = None
 
     allowed_types = (
@@ -778,9 +777,7 @@ class BaseCategory(Category):
     """
     meta_type='CMF Base Category'
     portal_type='Base Category' # maybe useful some day
-    isPortalContent = 1
-    isRADContent = 1
-    isBaseCategory = 1
+    isBaseCategory = ConstantGetter('isBaseCategory', value=True)
 
     constructors =   (manage_addBaseCategoryForm, addBaseCategory)
 

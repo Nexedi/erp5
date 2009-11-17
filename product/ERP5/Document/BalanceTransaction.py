@@ -84,9 +84,6 @@ class BalanceTransaction(AccountingTransaction, Inventory):
   meta_type = 'ERP5 Balance Transaction'
   portal_type = 'Balance Transaction'
   add_permission = Permissions.AddPortalContent
-  isPortalContent = 1
-  isRADContent = 1
-  isDelivery = 1
     
   #zope.interface.implements( interfaces.Inventory, )
 

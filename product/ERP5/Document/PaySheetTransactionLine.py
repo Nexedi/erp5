@@ -39,8 +39,6 @@ class PaySheetTransactionLine(AccountingTransactionLine):
   meta_type = 'ERP5 Pay Sheet Transaction Line'
   portal_type = 'Pay Sheet Transaction Line'
   add_permission = Permissions.AddERP5Content
-  isPortalContent = 1
-  isRADContent = 1
 
   # Declarative security
   security = ClassSecurityInfo()

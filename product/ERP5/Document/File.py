@@ -73,8 +73,6 @@ class File(Document, CMFFile, CachedConvertableMixin):
   meta_type = 'ERP5 File'
   portal_type = 'File'
   add_permission = Permissions.AddPortalContent
-  isPortalContent = 1
-  isRADContent = 1
 
   # Declarative security
   security = ClassSecurityInfo()

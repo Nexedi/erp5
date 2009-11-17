@@ -52,8 +52,6 @@ class BudgetModel(Predicate):
   meta_type = 'ERP5 Budget Model'
   portal_type = 'Budget Model'
   add_permission = Permissions.AddPortalContent
-  isPortalContent = 1
-  isRADContent = 1
 
   # Declarative security
   security = ClassSecurityInfo()

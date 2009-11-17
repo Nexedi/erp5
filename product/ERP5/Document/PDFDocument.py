@@ -49,8 +49,6 @@ class PDFDocument(Image, CachedConvertableMixin):
   # CMF Type Definition
   meta_type = 'ERP5 PDF Document'
   portal_type = 'PDF'
-  isPortalContent = 1
-  isRADContent = 1
 
   # Declarative security
   security = ClassSecurityInfo()

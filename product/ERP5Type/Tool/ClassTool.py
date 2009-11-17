@@ -335,8 +335,6 @@ class %s(XMLObject):
     # CMF Type Definition
     meta_type = 'MYPROJECT Template Document'
     portal_type = 'Template Document'
-    isPortalContent = 1
-    isRADContent = 1
 
     # Declarative security
     security = ClassSecurityInfo()

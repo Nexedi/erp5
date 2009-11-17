@@ -38,8 +38,6 @@ class Assignment(Path):
     meta_type = 'ERP5 Assignment'
     portal_type = 'Assignment'
     add_permission = Permissions.AddPortalContent
-    isPortalContent = 1
-    isRADContent = 1
 
     # Declarative security
     security = ClassSecurityInfo()

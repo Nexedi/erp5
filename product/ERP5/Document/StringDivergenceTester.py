@@ -44,8 +44,6 @@ class StringDivergenceTester(Predicate):
   meta_type = 'ERP5 String Divergence Tester'
   portal_type = 'String Divergence Tester'
   add_permission = Permissions.AddPortalContent
-  isPortalContent = 1
-  isRADContent = 1
 
   # Declarative security
   security = ClassSecurityInfo()

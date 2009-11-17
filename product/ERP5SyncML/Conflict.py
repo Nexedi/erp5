@@ -33,6 +33,7 @@ from SyncCode import SyncCode
 from AccessControl import ClassSecurityInfo
 from Products.CMFCore.utils import getToolByName
 from Acquisition import Implicit, aq_base
+from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from Products.ERP5Type.Core.Folder import Folder
 from Products.ERP5Type.Base import Base
 from Products.ERP5Type import Permissions
@@ -52,8 +53,8 @@ class Conflict(SyncCode, Base):
     subscriber_value : the value sent by the remote box
 
   """
-  isIndexable = 0
-  isPortalContent = 0 # Make sure RAD generated accessors at the class level
+  isIndexable = ConstantGetter('isIndexable', value=False)
+  # Make sure RAD generated accessors at the class level
 
   def __init__(self, object_path=None, keyword=None, xupdate=None, 
       publisher_value=None, subscriber_value=None, subscriber=None):

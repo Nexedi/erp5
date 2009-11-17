@@ -39,8 +39,6 @@ class CheckOperationLine(BaobabMixin, DeliveryLine):
   meta_type = 'ERP5Banking Check Operation Line'
   portal_type = 'Cash Operation Line'
   add_permission = Permissions.AddPortalContent
-  isPortalContent = 1
-  isRADContent = 1
 
   # Declarative security
   security = ClassSecurityInfo()

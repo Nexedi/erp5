@@ -39,8 +39,6 @@ class AgentPrivilege(XMLObject):
     # CMF Type Definition
     meta_type = 'ERP5 Agent Privilege'
     portal_type = 'Agent Privilege'
-    isPortalContent = 1
-    isRADContent = 1
 
     # Declarative security
     security = ClassSecurityInfo()

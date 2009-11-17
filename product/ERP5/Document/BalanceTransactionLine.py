@@ -29,6 +29,7 @@
 from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
+from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from Products.ERP5.Document.AccountingTransactionLine import \
                       AccountingTransactionLine
 from Products.ERP5.Document.InventoryLine import InventoryLine
@@ -42,9 +43,7 @@ class BalanceTransactionLine(AccountingTransactionLine, InventoryLine):
   meta_type = 'ERP5 Balance Transaction Line'
   portal_type = 'Balance Transaction Line'
   add_permission = Permissions.AddPortalContent
-  isPortalContent = 1
-  isRADContent = 1
-  isIndexable = 0
+  isIndexable = ConstantGetter('isIndexable', value=False)
 
   # Declarative security
   security = ClassSecurityInfo()

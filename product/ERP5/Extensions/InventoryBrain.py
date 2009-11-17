@@ -235,9 +235,9 @@ class InventoryListBrain(ZSQLBrain):
 
     # default case, if it's a movement, return link to the explanation of this
     # movement.
-    o = self.getObject()
-    if getattr(o, 'isMovement', 0):
-      explanation = o.getExplanationValue()
+    document = self.getObject()
+    if document.isMovement():
+      explanation = document.getExplanationValue()
       if explanation is not None:
         return '%s/%s/view' % (
                 self.portal_url.getPortalObject().absolute_url(),

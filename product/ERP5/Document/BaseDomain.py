@@ -44,8 +44,6 @@ class BaseDomain(Domain):
   meta_type = 'ERP5 Base Domain'
   portal_type = 'Base Domain'
   add_permission = Permissions.AddPortalContent
-  isPortalContent = 1
-  isRADContent = 1
 
   # Declarative security
   security = ClassSecurityInfo()

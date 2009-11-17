@@ -42,8 +42,6 @@ class Variation(XMLObject):
     meta_type = 'ERP5 Variation'
     portal_type = 'Variation'
     add_permission = Permissions.AddPortalContent
-    isPortalContent = 1
-    isRADContent = 1
 
     # Declarative security
     security = ClassSecurityInfo()

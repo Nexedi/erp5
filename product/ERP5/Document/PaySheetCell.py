@@ -39,10 +39,7 @@ class PaySheetCell(InvoiceCell):
     meta_type = 'ERP5 Pay Sheet Cell'
     portal_type = 'Pay Sheet Cell'
     add_permission = Permissions.AddPortalContent
-    isPortalContent = 1
-    isRADContent = 1
     isCell = 1
-    isMovement = 1
 
     # Declarative security
     security = ClassSecurityInfo()

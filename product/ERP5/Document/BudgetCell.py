@@ -60,8 +60,6 @@ class BudgetCell(Predicate, MetaNode, Movement):
     meta_type='ERP5 Budget Cell'
     portal_type='Budget Cell'    
     add_permission = Permissions.AddPortalContent
-    isPortalContent = 1
-    isRADContent = 1
 
     # Declarative security
     security = ClassSecurityInfo()

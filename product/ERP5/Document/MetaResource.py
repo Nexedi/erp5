@@ -41,8 +41,6 @@ class MetaResource(Resource):
     meta_type = 'ERP5 MetaResource'
     portal_type = 'MetaResource'
     add_permission = Permissions.AddPortalContent
-    isPortalContent = 1
-    isRADContent = 1
 
     # Declarative security
     security = ClassSecurityInfo()

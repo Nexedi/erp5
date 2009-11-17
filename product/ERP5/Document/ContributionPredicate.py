@@ -41,9 +41,6 @@ class ContributionPredicate(Predicate, XMLObject):
   meta_type = 'ERP5 Contribution Predicate'
   portal_type = 'Contribution Predicate'
   add_permission = Permissions.AddPortalContent
-  isPortalContent = 1
-  isRADContent = 1
-  isPredicate = 1
 
   # Declarative security
   security = ClassSecurityInfo()

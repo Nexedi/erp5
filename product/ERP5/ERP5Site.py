@@ -28,6 +28,8 @@ from Products.ERP5Type import Permissions, PropertySheet, Constraint
 from Products.ERP5Type.Core.Folder import FolderMixIn
 from Acquisition import aq_base, aq_parent, aq_inner, aq_acquire
 from Products.ERP5Type import allowClassTool
+from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
+from Products.ERP5Type.Cache import caching_instance_method
 from Products.ERP5Type.Cache import CachingMethod
 from Products.ERP5Type.ERP5Type import ERP5TypeInformation
 from Products.ERP5.Document.BusinessTemplate import BusinessTemplate
@@ -187,7 +189,8 @@ class ERP5Site(FolderMixIn, CMFSite):
   uid = 0
   last_id = 0
   icon = 'portal.gif'
-  isIndexable = 1 # Default value, prevents error during upgrade
+  # Default value, prevents error during upgrade
+  isIndexable = ConstantGetter('isIndexable', value=True)
 
   _properties = (
       { 'id':'title',
@@ -427,11 +430,14 @@ class ERP5Site(FolderMixIn, CMFSite):
     # Fall back to the default.
     return getattr(ERP5Defaults, id, None)
 
-  def _getPortalGroupedTypeList(self, group):
+  def _getPortalGroupedTypeList(self, group, enable_sort=True):
     """
     Return a list of portal types classified to a specific group.
     The result is sorted by language (using the user language
     as default)
+
+    Enable_sort parameter was added in order to allows looking groups
+    of portal type without sorting. This is better for performance
     """
     def getTypeList(group):
       type_list = []
@@ -439,7 +445,10 @@ class ERP5Site(FolderMixIn, CMFSite):
         if group in getattr(pt, 'group_list', ()):
           type_list.append(pt.getId())
 
-      if len(type_list) >= 2:
+      if enable_sort and len(type_list) >= 2:
+        # XXX (Seb), this code must be moved in another place.
+        # It is inefficient to always sort here for some particular
+        # needs of the user interface
         translate = localizer_tool.translate
         type_list.sort(key=lambda x:translate('ui', x))
       return tuple(type_list)
@@ -449,11 +458,22 @@ class ERP5Site(FolderMixIn, CMFSite):
     # language should be cached in Transaction Cache if performance issue
 
     getTypeList = CachingMethod(getTypeList,
-                                id=(('_getPortalGroupedTypeList', language), group),
-                                cache_factory='erp5_content_medium')
+                                id=(('_getPortalGroupedTypeList', language), group,
+                                    enable_sort),
+                                cache_factory='erp5_content_medium',
+                                )
 
     return getTypeList(group) # Although this method is called get*List, it
                               # returns a tuple - renaming to be considered
+
+  @caching_instance_method(id='ERP5Site._getPortalGroupedTypeSet',
+     cache_factory='erp5_content_long')
+  def _getPortalGroupedTypeSet(self, group):
+    """
+    Same as _getPortalGroupedTypeList, but returns a set, better for
+    performance when looking for matching portal types
+    """
+    return set(self._getPortalGroupedTypeList(group, enable_sort=False))
 
   def _getPortalGroupedCategoryList(self, group):
     """
@@ -1425,7 +1445,7 @@ class ERP5Generator(PortalGenerator):
     portal = self.klass(id=id)
     # Make sure reindex will not be called until business templates
     # will be installed
-    setattr(portal, 'isIndexable', 0)
+    setattr(portal, 'isIndexable', ConstantGetter('isIndexable', value=False))
     parent._setObject(id, portal)
     # Return the fully wrapped object.
     p = parent.this()._getOb(id)
@@ -1792,7 +1812,7 @@ class ERP5Generator(PortalGenerator):
     # When no SQL connection was define on the site,
     # we don't want to make it crash
     if p.erp5_sql_connection_type is not None:
-      setattr(p, 'isIndexable', 1)
+      setattr(p, 'isIndexable', ConstantGetter('isIndexable', value=True))
       portal_catalog = p.portal_catalog
       # Clear portal ids sql table, like this we do not take
       # ids for a previously created web site

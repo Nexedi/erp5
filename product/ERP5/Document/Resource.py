@@ -51,8 +51,6 @@ class Resource(XMLMatrix, Variated):
     meta_type = 'ERP5 Resource'
     portal_type = 'Resource'
     add_permission = Permissions.AddPortalContent
-    isPortalContent = 1
-    isRADContent = 1
 
     # Declarative security
     security = ClassSecurityInfo()

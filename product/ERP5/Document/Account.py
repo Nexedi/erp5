@@ -67,8 +67,6 @@ class Account(XMLObject):
     meta_type = 'ERP5 Account'
     portal_type = 'Account'
     add_permission = Permissions.AddPortalContent
-    isPortalContent = 1
-    isRADContent = 1
 
     # Declarative security
     security = ClassSecurityInfo()

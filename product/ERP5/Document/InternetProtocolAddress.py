@@ -44,8 +44,6 @@ class InternetProtocolAddress(Base, Coordinate):
   meta_type = 'ERP5 Internet Protocol Address'
   portal_type = 'Internet Protocol Address'
   add_permission = Permissions.AddPortalContent
-  isPortalContent = 1
-  isRADContent = 1
 
   # Declarative security
   security = ClassSecurityInfo()

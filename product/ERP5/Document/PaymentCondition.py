@@ -40,8 +40,6 @@ class PaymentCondition(XMLObject):
     meta_type = 'ERP5 Payment Condition'
     portal_type = 'Payment Condition'
     add_permission = Permissions.AddPortalContent
-    isPortalContent = 1
-    isRADContent = 1
 
     # Declarative security
     security = ClassSecurityInfo()

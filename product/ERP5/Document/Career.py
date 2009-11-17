@@ -42,8 +42,6 @@ class Career(Path):
     meta_type = 'ERP5 Career'
     portal_type = 'Career'
     add_permission = Permissions.AddPortalContent
-    isPortalContent = 1
-    isRADContent = 1
 
     # Declarative security
     security = ClassSecurityInfo()

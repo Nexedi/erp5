@@ -195,8 +195,6 @@ class ERP5TypeInformation(XMLObject,
 
     portal_type = 'Base Type'
     meta_type = 'ERP5 Base Type'
-    isPortalContent = 1
-    isRADContent = 1
 
     security = ClassSecurityInfo()
     security.declareObjectProtected(Permissions.AccessContentsInformation)

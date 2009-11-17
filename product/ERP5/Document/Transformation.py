@@ -56,8 +56,6 @@ class Transformation(XMLObject, Predicate, Variated):
       Matrixbox must be rewrite for a clean implementation of n base category
 
     """
-    isMovement = 1 # XXX very stupid, but for doing a test on catalog
-
     meta_type = 'ERP5 Transformation'
     portal_type = 'Transformation'
 

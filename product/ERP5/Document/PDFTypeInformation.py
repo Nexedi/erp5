@@ -40,8 +40,6 @@ class PDFTypeInformation(ERP5TypeInformation):
   # CMF Type Definition
   meta_type = 'ERP5 PDF Type Information'
   portal_type = 'PDF Type'
-  isPortalContent = 1
-  isRADContent = 1
 
   # Declarative security
   security = ClassSecurityInfo()

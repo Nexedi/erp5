@@ -40,8 +40,6 @@ class DistributedRamCache(XMLObject):
 
   meta_type = 'ERP5 Distributed Ram Cache'
   portal_type = 'Distributed Ram Cache'
-  isPortalContent = 1
-  isRADContent = 1
 
   allowed_types = ()
 

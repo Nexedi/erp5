@@ -175,9 +175,6 @@ class Movement(XMLObject, Amount):
   meta_type = 'ERP5 Movement'
   portal_type = 'Movement'
   add_permission = Permissions.AddPortalContent
-  isPortalContent = 1
-  isRADContent = 1
-  isMovement = 1
 
   # Declarative security
   security = ClassSecurityInfo()
@@ -197,6 +194,10 @@ class Movement(XMLObject, Amount):
                     , PropertySheet.Movement
                     , PropertySheet.Price
                     )
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'isMovement')
+  def isMovement(self):
+    return 1
 
   # Pricing methods
   # _getPrice is defined in the order / delivery

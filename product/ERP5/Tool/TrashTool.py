@@ -28,6 +28,7 @@
 
 
 from AccessControl import ClassSecurityInfo
+from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from Products.ERP5Type.Globals import InitializeClass, DTMLFile
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type import Permissions
@@ -101,7 +102,7 @@ class TrashTool(BaseTool):
           copy.seek(0)
           backup = connection.importFile(copy)
           try:
-            backup.isIndexable = 0
+            backup.isIndexable = ConstantGetter('isIndexable', value=False)
             backup_object_container._setObject(object_id, backup)
           except AttributeError:
             # XXX we can go here due to formulator because attribute field_added

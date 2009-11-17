@@ -137,8 +137,6 @@ class %(class_name)s(Node, XMLObject):
   meta_type       = 'ERP5 %(portal_type_name)s'
   portal_type     = '%(portal_type_name)s'
   add_permission  = Permissions.AddPortalContent
-  isPortalContent = 1
-  isRADContent    = 1
 
   # Declarative Security
   security = ClassSecurityInfo()

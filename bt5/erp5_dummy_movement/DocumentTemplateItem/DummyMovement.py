@@ -37,9 +37,6 @@ class DummyMovement(Movement):
   meta_type = 'ERP5 Dummy Movement'
   portal_type = 'Dummy Movement'
   add_permission = Permissions.AddPortalContent
-  isPortalContent = 1
-  isRADContent = 1
-  isMovement = 1
 
   # Declarative security
   security = ClassSecurityInfo()

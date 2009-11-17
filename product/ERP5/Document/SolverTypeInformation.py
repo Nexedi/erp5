@@ -40,8 +40,6 @@ class SolverTypeInformation(ERP5TypeInformation):
   # CMF Type Definition
   meta_type = 'ERP5 Solver Type Information'
   portal_type = 'Solver Type'
-  isPortalContent = 1
-  isRADContent = 1
 
   # Declarative security
   security = ClassSecurityInfo()

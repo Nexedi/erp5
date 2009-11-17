@@ -42,9 +42,6 @@ class SaleOpportunity(Ticket):
     meta_type = 'ERP5 Sale Opportunity'
     portal_type = 'Sale Opportunity'
     add_permission = Permissions.AddPortalContent
-    isPortalContent = 1
-    isRADContent = 1
-    isDelivery = 1
 
     # Declarative security
     security = ClassSecurityInfo()

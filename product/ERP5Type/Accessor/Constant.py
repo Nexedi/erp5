@@ -1,8 +1,8 @@
-# -*- coding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2007 Nexedi SA and Contributors. All Rights Reserved.
+# Copyright (c) 2002-2009 Nexedi SARL and Contributors. All Rights Reserved.
 #                    Jean-Paul Smets-Solanes <jp@nexedi.com>
+#                    Sebastien Robin <seb@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -32,34 +32,19 @@ from Accessor import Accessor
 # Creation of default constructor
 class func_code: pass
 
-class Getter(Accessor):
+class PropertyGetter:
   """
-  Returns a constant value, either by method call
-  or through type cast (ex. boolean, int, float).
-  This method can be useful to turn existing constant
-  properties of classes into methods, yet retaining 
-  compatibility.
-
-  TODO:
-  - make unit test
+  This is class is mostly used in order to handle compatibility
+  issues when we wish to make a property a method. For instance,
+  we would like to change from isIndexable=1 to a method isIndexable().
   """
-  _need__name__=1
 
-  # Generic Definition of Method Object
-  # This is required to call the method form the Web
-  # More information at http://www.zope.org/Members/htrd/howto/FunctionTemplate
-  func_code = func_code()
-  func_code.co_varnames = ('self', )
-  func_code.co_argcount = 1
-  func_defaults = ()
-
-  def __init__(self, id, accessor_id, value):
+  def __init__(self, id, value=None):
     self._id = id
     self.__name__ = id
-    self._accessor_id = accessor_id
     self.value = value
 
-  def __call__(self, instance):
+  def __call__(self):
     return self.value
 
   def __nonzero__(self):
@@ -70,3 +55,40 @@ class Getter(Accessor):
 
   def __float__(self):
     return float(self.value)
+
+  # following methods are used for < > == !⁼ , etc
+  def __eq__(self, other):
+    return int(self.value) == int(other)
+
+  def __ne__(self, other):
+    return int(self.value) != int(other)
+
+  def __cmp__(self, other):
+    return cmp(int(self.value), int(other))
+
+class Getter(Accessor):
+  """
+  Returns a constant value, either by method call
+  or through type cast (ex. boolean, int, float).
+  This method can be useful to turn existing constant
+  properties of classes into methods, yet retaining 
+  compatibility.
+  """
+  _need__name__ = 1
+
+  # Generic Definition of Method Object
+  # This is required to call the method form the Web
+  # More information at http://www.zope.org/Members/htrd/howto/FunctionTemplate
+  func_code = func_code()
+  func_code.co_varnames = ('self', )
+  func_code.co_argcount = 1
+  func_defaults = ()
+
+  def __init__(self, id, key, value=None):
+    self._id = id
+    self._key = key
+    self.__name__ = id
+    self.value = value
+
+  def __call__(self, instance):
+    return self.value

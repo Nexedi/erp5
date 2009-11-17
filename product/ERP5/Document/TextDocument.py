@@ -71,9 +71,6 @@ class TextDocument(Document, TextContent):
     meta_type = 'ERP5 Text Document'
     portal_type = 'Text Document'
     add_permission = Permissions.AddPortalContent
-    isPortalContent = 1
-    isRADContent = 1
-    isDocument = 1
 
     # Declarative security
     security = ClassSecurityInfo()

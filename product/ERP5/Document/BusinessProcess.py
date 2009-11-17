@@ -48,7 +48,6 @@ class BusinessProcess(Path, XMLObject):
   """
   meta_type = 'ERP5 Business Process'
   portal_type = 'Business Process'
-  isPredicate = 1
 
   # Declarative security
   security = ClassSecurityInfo()

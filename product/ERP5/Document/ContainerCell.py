@@ -44,7 +44,6 @@ class ContainerCell(DeliveryCell):
     meta_type = 'ERP5 Container Cell'
     portal_type = 'Container Cell'
     isCell = 1
-    isMovement = 1
 
     # Declarative security
     security = ClassSecurityInfo()

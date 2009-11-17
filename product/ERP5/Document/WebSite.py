@@ -140,8 +140,6 @@ class WebSite(WebSection):
     # CMF Type Definition
     meta_type       = 'ERP5 Web Site'
     portal_type     = 'Web Site'
-    isPortalContent = 1
-    isRADContent    = 1
 
     # Declarative security
     security = ClassSecurityInfo()

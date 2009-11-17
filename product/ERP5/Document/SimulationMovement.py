@@ -99,7 +99,6 @@ class SimulationMovement(Movement, PropertyRecordableMixin):
   """
   meta_type = 'ERP5 Simulation Movement'
   portal_type = 'Simulation Movement'
-  isMovement = 1
 
   # Declarative security
   security = ClassSecurityInfo()

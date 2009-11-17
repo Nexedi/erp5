@@ -31,6 +31,7 @@ import re, types
 from DateTime import DateTime
 from Products.ERP5Type.Globals import get_request
 from AccessControl import ClassSecurityInfo, Unauthorized
+from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from Products.ERP5Type.Base import WorkflowMethod
 from Products.CMFCore.utils import getToolByName, _checkPermission
 from Products.CMFCore.utils import _setCacheHeaders, _ViewEmulator
@@ -135,10 +136,8 @@ class EmailDocument(File, TextDocument):
   meta_type = 'ERP5 Email Document'
   portal_type = 'Email Document'
   add_permission = Permissions.AddPortalContent
-  isPortalContent = 1
-  isRADContent = 1
-  isDocument = 1
-  isDelivery = 1 # XXX must be removed later - only event is a delivery
+  # XXX must be removed later - only event is a delivery
+  isDelivery = ConstantGetter('isDelivery', value=True)
 
   # Declarative security
   security = ClassSecurityInfo()

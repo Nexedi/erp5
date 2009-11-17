@@ -121,8 +121,6 @@ class OOoDocument(PermanentURLMixIn, File, CachedConvertableMixin):
   # CMF Type Definition
   meta_type = 'ERP5 OOo Document'
   portal_type = 'OOo Document'
-  isPortalContent = 1
-  isRADContent = 1
 
   searchable_property_list = ('asText', 'title', 'description', 'id', 'reference',
                               'version', 'short_title',

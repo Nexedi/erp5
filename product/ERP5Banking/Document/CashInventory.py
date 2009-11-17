@@ -39,9 +39,6 @@ class CashInventory(Inventory, BankingOperation):
     # CMF Type Definition
     meta_type = 'ERP5Banking Cash Inventory'
     portal_type = 'Cash Inventory'
-    isPortalContent = 1
-    isRADContent = 1
-    isDelivery = 1
 
     # Declarative security
     security = ClassSecurityInfo()

@@ -44,9 +44,6 @@ class AccountingTransaction(Delivery):
     meta_type = 'ERP5 Accounting Transaction'
     portal_type = 'Accounting Transaction'
     add_permission = Permissions.AddPortalContent
-    isPortalContent = 1
-    isRADContent = 1
-    isDelivery = 1
 
     # Declarative security
     security = ClassSecurityInfo()

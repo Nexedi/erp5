@@ -43,10 +43,7 @@ class InvoiceCell(DeliveryCell):
     meta_type = 'ERP5 Invoice Cell'
     portal_type = 'Invoice Cell'
     add_permission = Permissions.AddPortalContent
-    isPortalContent = 1
-    isRADContent = 1
     isCell = 1
-    isMovement = 1
 
     # Declarative security
     security = ClassSecurityInfo()

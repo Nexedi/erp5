@@ -39,8 +39,6 @@ class AcceptSolver(XMLObject):
   meta_type = 'ERP5 Accept Solver'
   portal_type = 'Accept Solver'
   add_permission = Permissions.AddPortalContent
-  isPortalContent = 1
-  isRADContent = 1
   isIndexable = 0 # We do not want to fill the catalog with objects on which we need no reporting
 
   # Declarative security

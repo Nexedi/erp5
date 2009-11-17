@@ -55,8 +55,6 @@ class Wiki( Document ):
     meta_type='ERP5 Wiki'
     portal_type='Wiki'
     add_permission = Permissions.AddPortalContent
-    isPortalContent = 1
-    isRADContent = 1
 
     # Declarative security
     security = ClassSecurityInfo()

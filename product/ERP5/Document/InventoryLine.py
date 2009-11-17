@@ -32,6 +32,7 @@ from Acquisition import aq_base
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5.Document.DeliveryLine import DeliveryLine
 from Products.ERP5.Document.Movement import Movement
+from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 
 from zLOG import LOG
 
@@ -43,9 +44,7 @@ class InventoryLine(DeliveryLine):
     meta_type = 'ERP5 Inventory Line'
     portal_type = 'Inventory Line'
     add_permission = Permissions.AddPortalContent
-    isPortalContent = 1
-    isRADContent = 1
-    isInventoryMovement = 1
+    isInventoryMovement = ConstantGetter('isInventoryMovement', value=True)
 
     # Declarative security
     security = ClassSecurityInfo()

@@ -28,6 +28,7 @@
 
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
+from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from Products.ERP5.Document.Delivery import Delivery
 from Acquisition import aq_base
 from zLOG import LOG
@@ -39,10 +40,7 @@ class Inventory(Delivery):
   # CMF Type Definition
   meta_type = 'ERP5 Inventory'
   portal_type = 'Inventory'
-  isPortalContent = 1
-  isRADContent = 1
-  isDelivery = 1
-  isInventory = 1
+  isInventory = ConstantGetter('isInventory', value=True)
 
   # Declarative security
   security = ClassSecurityInfo()

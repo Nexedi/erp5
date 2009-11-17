@@ -40,8 +40,6 @@ class RamCache(XMLObject):
   """
   meta_type = 'ERP5 Ram Cache'
   portal_type = 'Ram Cache'
-  isPortalContent = 1
-  isRADContent = 1
   allowed_types = ()
     
   security = ClassSecurityInfo()

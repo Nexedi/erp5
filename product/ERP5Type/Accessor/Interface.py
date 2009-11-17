@@ -1,7 +1,7 @@
 ##############################################################################
 #
-# Copyright (c) 2008 Nexedi SA and Contributors. All Rights Reserved.
-#                    Yusei TAHARA <yusei@nexedi.com>
+# Copyright (c) 2002-2009 Nexedi SARL and Contributors. All Rights Reserved.
+#                    Sebastien Robin <seb@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -26,33 +26,29 @@
 #
 ##############################################################################
 
-from AccessControl import ClassSecurityInfo
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
-from Products.ERP5.Document.Machine import Machine
+from Accessor import Accessor
 
+# Creation of default constructor
+class func_code: pass
 
-class Computer(Machine):
+class Getter(Accessor):
   """
-  This class represents a computer like personal computer, printer, router.
+  This getter will calls the provides method. This allows
+  lazy evaluation of the interface list provided by every portal type
   """
+  _need__name__ = 1
 
-  meta_type = 'ERP5 Computer'
-  portal_type = 'Computer'
-  add_permission = Permissions.AddPortalContent
+  # Generic Definition of Method Object
+  # This is required to call the method form the Web
+  # More information at http://www.zope.org/Members/htrd/howto/FunctionTemplate
+  func_code = func_code()
+  func_code.co_varnames = ('self', )
+  func_code.co_argcount = 1
+  func_defaults = ()
 
-  # Declarative security
-  security = ClassSecurityInfo()
-  security.declareObjectProtected(Permissions.AccessContentsInformation)
+  def __init__(self, id, key):
+    self._id = id
+    self._key = key
 
-  # Declarative properties
-  property_sheets = ( PropertySheet.Base
-                      , PropertySheet.XMLObject
-                      , PropertySheet.CategoryCore
-                      , PropertySheet.DublinCore
-                      , PropertySheet.Item
-                      , PropertySheet.Amount
-                      , PropertySheet.Computer
-                      , PropertySheet.Mapping
-                      , PropertySheet.Task
-                      , PropertySheet.Reference
-                      )
+  def __call__(self, instance):
+    return instance.provides(self._key)

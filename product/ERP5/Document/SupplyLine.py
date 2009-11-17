@@ -29,6 +29,7 @@
 
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
+from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from Products.ERP5Type.XMLMatrix import XMLMatrix
 from Products.ERP5.Document.DeliveryLine import DeliveryLine
 from Products.ERP5.Document.Path import Path
@@ -43,9 +44,7 @@ class SupplyLine(DeliveryLine, Path):
     meta_type = 'ERP5 Supply Line'
     portal_type = 'Supply Line'
     add_permission = Permissions.AddPortalContent
-    isPortalContent = 1
-    isRADContent = 1
-    isPredicate = 1
+    isPredicate = ConstantGetter('isPredicate', value=True)
 
     # Declarative security
     security = ClassSecurityInfo()

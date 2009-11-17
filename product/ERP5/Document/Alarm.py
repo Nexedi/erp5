@@ -256,8 +256,6 @@ class Alarm(XMLObject, PeriodicityMixin):
   meta_type = 'ERP5 Alarm'
   portal_type = 'Alarm'
   add_permission = Permissions.AddPortalContent
-  isPortalContent = 1
-  isRADContent = 1
 
   # Declarative security
   security = ClassSecurityInfo()

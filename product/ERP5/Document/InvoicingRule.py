@@ -42,8 +42,6 @@ class InvoicingRule(Rule):
   meta_type = 'ERP5 Invoicing Rule'
   portal_type = 'Invoicing Rule'
   add_permission = Permissions.AddPortalContent
-  isPortalContent = 1
-  isRADContent = 1
 
   # Declarative security
   security = ClassSecurityInfo()

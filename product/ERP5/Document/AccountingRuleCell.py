@@ -59,9 +59,6 @@ An AccountingRuleCell object allows to add SaleInvoiceTransactionLines into a Ma
     meta_type = 'ERP5 Accounting Rule Cell'
     portal_type = 'Accounting Rule Cell'
     add_permission = Permissions.AddPortalContent
-    isPortalContent = 1
-    isRADContent = 1
-    isDelivery = 1
 
     # Declarative security
     security = ClassSecurityInfo()

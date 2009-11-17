@@ -43,8 +43,6 @@ class SupplyRule(MappedValue, XMLMatrix):
     meta_type = 'ERP5 Supply Rule'
     portal_type = 'Supply Rule'
     add_permission = Permissions.AddPortalContent
-    isPortalContent = 1
-    isRADContent = 1
 
     # Declarative security
     security = ClassSecurityInfo()

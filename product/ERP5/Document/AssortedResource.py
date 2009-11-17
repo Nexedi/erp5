@@ -115,8 +115,6 @@ class AssortedResource(TransformedResource):
     meta_type = 'ERP5 Assorted Resource'
     portal_type = 'Assorted Resource'
     add_permission = Permissions.AddPortalContent
-    isPortalContent = 1
-    isRADContent = 1
 
     # Declarative security
     security = ClassSecurityInfo()

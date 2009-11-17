@@ -30,6 +30,7 @@ from Acquisition import aq_base
 from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
+from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 
 from Products.ERP5.Document.DeliveryCell import DeliveryCell
 
@@ -43,10 +44,7 @@ class InventoryCell(DeliveryCell):
     meta_type = 'ERP5 Inventory Cell'
     portal_type = 'Inventory Cell'
     add_permission = Permissions.AddPortalContent
-    isPortalContent = 1
-    isRADContent = 1
-    isMovement = 1
-    isInventoryMovement = 1
+    isInventoryMovement = ConstantGetter('isInventoryMovement', value=True)
 
     # Declarative security
     security = ClassSecurityInfo()

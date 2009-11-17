@@ -44,8 +44,6 @@ class ActionInformation(XMLObject):
   meta_type = 'ERP5 Action Information'
   portal_type = 'Action Information'
   add_permission = Permissions.AddPortalContent
-  isPortalContent = 1
-  isRADContent = 1
   icon = None # Override DynamicType.icon from CMFCore
 
   # Declarative security

@@ -143,8 +143,6 @@ class Url(Coordinate, Base, UrlMixIn):
   meta_type = 'ERP5 Url'
   portal_type = 'Url'
   add_permission = Permissions.AddPortalContent
-  isPortalContent = 1
-  isRADContent = 1
 
   # Declarative security
   security = ClassSecurityInfo()

@@ -74,8 +74,6 @@ class Domain(Predicate, MetaNode, MetaResource):
   meta_type = 'ERP5 Domain'
   portal_type = 'Domain'
   add_permission = Permissions.AddPortalContent
-  isPortalContent = 1
-  isRADContent = 1
 
   # Declarative security
   security = ClassSecurityInfo()

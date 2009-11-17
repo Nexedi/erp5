@@ -77,8 +77,6 @@ class WebSection(Domain, PermanentURLMixIn):
     # CMF Type Definition
     meta_type = 'ERP5 Web Section'
     portal_type = 'Web Section'
-    isPortalContent = 1
-    isRADContent = 1
 
     # Declarative security
     security = ClassSecurityInfo()

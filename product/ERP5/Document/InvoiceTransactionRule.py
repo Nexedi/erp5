@@ -45,8 +45,6 @@ class InvoiceTransactionRule(Rule, PredicateMatrix):
   meta_type = 'ERP5 Invoice Transaction Rule'
   portal_type = 'Invoice Transaction Rule'
   add_permission = Permissions.AddPortalContent
-  isPortalContent = 1
-  isRADContent = 1
   
   # Declarative security
   security = ClassSecurityInfo()

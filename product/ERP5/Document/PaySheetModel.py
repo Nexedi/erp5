@@ -42,7 +42,6 @@ class PaySheetModel(TradeCondition):
   meta_type = 'ERP5 Pay Sheet Model'
   portal_type = 'Pay Sheet Model'
   model_line_portal_type_list = 'Pay Sheet Model Line'
-  isPredicate = 1
 
   # Declarative security
   security = ClassSecurityInfo()

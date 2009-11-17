@@ -65,7 +65,6 @@ class BusinessPath(Path):
   """
   meta_type = 'ERP5 Business Path'
   portal_type = 'Business Path'
-  isPredicate = 1
 
   # Declarative security
   security = ClassSecurityInfo()

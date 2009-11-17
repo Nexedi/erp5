@@ -53,7 +53,6 @@ class DeliveryCell(MappedValue, Movement, ImmobilisationMovement):
     meta_type = 'ERP5 Delivery Cell'
     portal_type = 'Delivery Cell'
     isCell = 1
-    isMovement = 1
 
     # Declarative security
     security = ClassSecurityInfo()
@@ -179,3 +178,8 @@ class DeliveryCell(MappedValue, Movement, ImmobilisationMovement):
         parent = parent.getParentValue()
         if parent is not None:
           parent.updateSimulationDeliveryProperties(movement_list, self)
+
+    security.declareProtected(Permissions.AccessContentsInformation, 'isMovement')
+    def isMovement(self):
+      return 1
+

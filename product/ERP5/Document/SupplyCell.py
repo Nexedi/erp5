@@ -46,8 +46,6 @@ class SupplyCell(Predicate, DeliveryCell, Path):
     meta_type = 'ERP5 Supply Cell'
     portal_type = 'Supply Cell'
     add_permission = Permissions.AddPortalContent
-    isPortalContent = 1
-    isRADContent = 1
 
     # Declarative security
     security = ClassSecurityInfo()

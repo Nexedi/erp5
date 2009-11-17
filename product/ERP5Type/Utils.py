@@ -36,6 +36,8 @@ import warnings
 from md5 import new as md5_new
 from sha import new as sha_new
 
+from zope.interface import implementedBy
+
 from Products.ERP5Type.Globals import package_home
 from Products.ERP5Type.Globals import DevelopmentMode
 from Acquisition import aq_base
@@ -59,6 +61,10 @@ from Products.ZCatalog.Lazy import LazyMap
 from Products.ERP5Type import Permissions
 from Products.ERP5Type import Constraint
 
+from Products.ERP5Type.Accessor.Constant import PropertyGetter as \
+    PropertyConstantGetter
+from Products.ERP5Type.Accessor.Constant import Getter as ConstantGetter
+from Products.ERP5Type.Accessor.Interface import Getter as InterfaceGetter
 from Products.ERP5Type.Cache import getReadOnlyTransactionCache
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 from zLOG import LOG, BLATHER, PROBLEM, WARNING
@@ -393,6 +399,13 @@ def updateGlobals(this_module, global_hook,
         # Do not consider private keys
         if key[0:2] != '__':
           setattr(Permissions, key, getattr(permissions_module, key))
+  else:
+    # We have to parse interface list in order to generate some accessors
+    # even if we are on the ERP5Type product
+    path, module_id_list = getModuleIdList(product_path, 'interfaces')
+    import_method = importLocalInterface
+    for module_id in module_id_list:
+      import_method(module_id, path=path, is_erp5_type=is_erp5_type)
 
   # Return core document_class list (for ERP5Type only)
   # this was introduced to permit overriding ERP5Type Document classes
@@ -464,7 +477,7 @@ class TempDocumentConstructor(DocumentConstructor):
     def __init__(self, klass):
       # Create a new class to set permissions specific to temporary objects.
       class TempDocument(klass):
-        isTempDocument = 1
+        isTempDocument = PropertyConstantGetter('isTempDocument', value=True)
         __roles__ = None
 
       # Replace some attributes.
@@ -568,7 +581,7 @@ def registerBaseCategories(property_sheet):
   for bc in category_list :
     base_category_dict[bc] = 1
 
-def importLocalInterface(module_id, path = None):
+def importLocalInterface(module_id, path = None, is_erp5_type=False):
   if path is None:
     instance_home = getConfiguration().instancehome
     path = os.path.join(instance_home, "interfaces")
@@ -576,9 +589,18 @@ def importLocalInterface(module_id, path = None):
   f = open(path)
   try:
     class_id = "I" + convertToUpperCase(module_id)
-    module = imp.load_source(class_id, path, f)
-    import Products.ERP5Type.interfaces
-    setattr(Products.ERP5Type.interfaces, class_id, getattr(module, class_id))
+    if not is_erp5_type:
+      module = imp.load_source(class_id, path, f)
+      import Products.ERP5Type.interfaces
+      setattr(Products.ERP5Type.interfaces, class_id, getattr(module, class_id))
+
+    # Create interface getter
+    accessor_name = 'provides' + class_id
+    accessor = InterfaceGetter(accessor_name, class_id)
+    setattr(BaseClass, accessor_name, accessor)
+    BaseClass.security.declareProtected(
+                Permissions.AccessContentsInformation, accessor_name)
+
   finally:
     f.close()
 
@@ -804,7 +826,8 @@ def setDefaultClassProperties(property_holder):
   """Initialize default properties for ERP5Type Documents.
   """
   if not property_holder.__dict__.has_key('isPortalContent'):
-    property_holder.isPortalContent = 1
+    property_holder.isPortalContent = PropertyConstantGetter('isPortalContent',
+                                                     value=True)
   if not property_holder.__dict__.has_key('isRADContent'):
     property_holder.isRADContent = 1
   if not property_holder.__dict__.has_key('add_permission'):
@@ -934,6 +957,7 @@ def importLocalDocument(class_id, document_path = None):
       if not m.has_key(name): m[name] = []
       m[name].append(method)
     m[name+'__roles__']=pr
+
   return document_class, constructors
 
 def initializeLocalRegistry(directory_name, import_local_method,
@@ -1525,6 +1549,29 @@ def setDefaultProperties(property_holder, object=None, portal=None):
           raise TypeError, '"%s" is invalid type for propertysheet' % \
                                           prop['type']
 
+    # Create for every portal type group an accessor (like isPortalDeliveryType)
+    # In the future, this should probalby use categories
+    if portal is not None: # we can not do anything without portal
+      # import lately in order to avoid circular dependency
+      from Products.ERP5Type.ERP5Type import ERP5TypeInformation
+      portal_type = object.portal_type
+      for group in ERP5TypeInformation.defined_group_list:
+        value = portal_type in portal._getPortalGroupedTypeSet(group)
+        prop = {
+           'id'          : group,
+           'description' : "accessor to know the membership of portal group %s" \
+               % group,
+           'type'        : 'group_type',
+           'default'     : value,
+           'group_type' : group,
+           }
+        createDefaultAccessors(
+            property_holder,
+            prop['id'],
+            prop=prop,
+            read_permission=Permissions.AccessContentsInformation,
+            portal=portal)
+
 #####################################################
 # Accessor initialization
 #####################################################
@@ -1553,6 +1600,13 @@ def createDefaultAccessors(property_holder, id, prop = None,
   if prop.get('translation_acquired_property_id'):
     createTranslationAcquiredPropertyAccessors(property_holder, prop,
                                                portal=portal)
+
+  ######################################################
+  # Create Portal Category Type Accessors.
+  if prop.get('group_type'):
+    createGroupTypeAccessors(property_holder, prop,
+                             read_permission=read_permission,
+                             portal=portal)
 
   ######################################################
   # Create Getters
@@ -2599,6 +2653,22 @@ def createRelatedValueAccessors(property_holder, id, read_permission=Permissions
           # Declare the security of method which doesn't start with _
           if accessor_name[0] != '_':
             BaseClass.security.declareProtected(read_permission, accessor_name)
+
+def createGroupTypeAccessors(property_holder, prop,
+  read_permission=None, portal=None):
+  """
+  Generate accessors that allows to know if we belongs to a particular
+  group of portal types
+  """
+  # Getter
+  group = prop['group_type']
+  accessor_name = 'is' + UpperCase(group) + 'Type'
+  value = prop['default']
+  accessor_args = (value,)
+  if not hasattr(property_holder, accessor_name):
+    property_holder.registerAccessor(accessor_name, id, ConstantGetter,
+                                     accessor_args)
+    property_holder.declareProtected(read_permission, accessor_name)
 
 def createTranslationAcquiredPropertyAccessors(
   property_holder,

@@ -74,9 +74,6 @@ class PeriodicityLine(Path, PeriodicityLineMixin):
   meta_type = 'ERP5 Periodicity Line'
   portal_type = 'Periodicity Line'
   add_permission = Permissions.AddPortalContent
-  isPortalContent = 1
-  isRADContent = 1
-  isPredicate = 1
 
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)

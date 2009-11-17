@@ -40,8 +40,6 @@ class SubscriptionItem(Item):
   """
   meta_type = 'ERP5 Subscription Item'
   portal_type = 'Subscription Item'
-  isPortalContent = 1
-  isRADContent = 1
 
   # Declarative security
   security = ClassSecurityInfo()

@@ -39,7 +39,6 @@ class PaySheetModelSlice(DeliveryCell):
     meta_type = 'ERP5 Pay Sheet Model Slice'
     portal_type = 'Pay Sheet Model Slice'
     isCell = 1
-    isMovement = 1
 
     # Declarative security
     security = ClassSecurityInfo()

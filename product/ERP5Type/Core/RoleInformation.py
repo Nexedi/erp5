@@ -53,8 +53,6 @@ class RoleInformation(XMLObject):
   meta_type = 'ERP5 Role Information'
   portal_type = 'Role Information'
   add_permission = Permissions.AddPortalContent
-  isPortalContent = 1
-  isRADContent = 1
 
   security = ClassSecurityInfo()
   security.declareObjectProtected(AccessContentsInformation)

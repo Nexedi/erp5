@@ -35,6 +35,7 @@ from Acquisition import aq_base, aq_inner
 from Products.CMFCore.utils import getToolByName
 
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
+from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from Products.ERP5Type.Core.Folder import Folder
 from Products.ERP5Type.Document import newTempBase
 from Products.ERP5Type.XMLObject import XMLObject
@@ -68,9 +69,7 @@ class Predicate(XMLObject, Folder):
   meta_type = 'ERP5 Predicate'
   portal_type = 'Predicate'
   add_permission = Permissions.AddPortalContent
-  isPortalContent = 1
-  isRADContent = 1
-  isPredicate = 1
+  isPredicate = ConstantGetter('isPredicate', value=True)
 
   # Declarative security
   security = ClassSecurityInfo()

@@ -41,7 +41,6 @@ class Order(Delivery):
     # CMF Type Definition
     meta_type = 'ERP5 Order'
     portal_type = 'Order'
-    isDelivery = 1
 
     # Declarative security
     security = ClassSecurityInfo()

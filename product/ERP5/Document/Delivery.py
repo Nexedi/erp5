@@ -34,6 +34,7 @@ from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type.Base import WorkflowMethod
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
+from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5.Document.ImmobilisationDelivery import ImmobilisationDelivery
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
@@ -49,9 +50,7 @@ class Delivery(XMLObject, ImmobilisationDelivery):
     # CMF Type Definition
     meta_type = 'ERP5 Delivery'
     portal_type = 'Delivery'
-    isPortalContent = 1
-    isRADContent = 1
-    isDelivery = 1
+    isDelivery = ConstantGetter('isDelivery', value=True)
 
     # Declarative security
     security = ClassSecurityInfo()

@@ -404,8 +404,6 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn, 
   meta_type = 'ERP5 Folder'
   portal_type = 'Folder'
   add_permission = Permissions.AddPortalContent
-  isPortalContent = 1
-  isRADContent = 1
 
   # Overload _properties define in OFS/Folder
   # _properties=({'id':'title', 'type': 'string','mode':'wd'},)

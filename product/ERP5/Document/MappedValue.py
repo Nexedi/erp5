@@ -58,8 +58,6 @@ class MappedValue(Predicate, Amount):
   meta_type = 'ERP5 Mapped Value'
   portal_type = 'Mapped Value'
   add_permission = Permissions.AddPortalContent
-  isPortalContent = 1
-  isRADContent = 1
 
   # Declarative security
   security = ClassSecurityInfo()

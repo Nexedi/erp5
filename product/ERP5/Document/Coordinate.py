@@ -77,8 +77,6 @@ class Coordinate(Base):
     meta_type = 'ERP5 Coordinate'
     portal_type = 'Coordinate'
     add_permission = Permissions.AddPortalContent
-    isPortalContent = 1
-    isRADContent = 1
     
     # Declarative interface
     zope.interface.implements(interfaces.ICoordinate, )

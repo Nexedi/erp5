@@ -41,8 +41,6 @@ class DependentCapacity(Capacity):
     meta_type = 'ERP5 Dependent Capacity'
     portal_type = 'Dependent Capacity'
     add_permission = Permissions.AddPortalContent
-    isPortalContent = 1
-    isRADContent = 1
 
     # Declarative security
     security = ClassSecurityInfo()

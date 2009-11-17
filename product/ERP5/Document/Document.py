@@ -33,6 +33,7 @@ from zLOG import LOG
 from AccessControl import ClassSecurityInfo, getSecurityManager
 from AccessControl.SecurityManagement import newSecurityManager, setSecurityManager
 from Acquisition import aq_base
+from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from Products.ERP5Type.Globals import get_request
 from Products.CMFCore.utils import getToolByName, _checkPermission
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
@@ -489,9 +490,7 @@ class Document(PermanentURLMixIn, XMLObject, UrlMixIn, CachedConvertableMixin, S
   meta_type = 'ERP5 Document'
   portal_type = 'Document'
   add_permission = Permissions.AddPortalContent
-  isPortalContent = 1
-  isRADContent = 1
-  isDocument = 1
+  isDocument = ConstantGetter('isDocument', value=True)
   __dav_collection__=0
 
   zope.interface.implements(interfaces.IConvertable,

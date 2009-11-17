@@ -85,8 +85,6 @@ class Image(File, OFSImage):
   # CMF Type Definition
   meta_type = 'ERP5 Image'
   portal_type = 'Image'
-  isPortalContent = 1
-  isRADContent = 1
 
   # Default attribute values
   width = 0

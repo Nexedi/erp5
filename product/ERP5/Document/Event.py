@@ -29,6 +29,7 @@
 from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type import Permissions, PropertySheet
+from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from Products.ERP5.Document.Movement import Movement
 from Products.ERP5.Document.EmailDocument import EmailDocument
 
@@ -103,10 +104,7 @@ class Event(EmailDocument, Movement, AcknowledgeableMixin):
 
   meta_type = 'ERP5 Event'
   portal_type = 'Event'
-  isPortalContent = 1
-  isRADContent = 1
-  isDelivery = 1
-  isMovement = 1
+  isDelivery = ConstantGetter('isDelivery', value=True)
 
   # Declarative security
   security = ClassSecurityInfo()

@@ -43,8 +43,6 @@ class SetPricing(MappedValue, XMLMatrix):
     meta_type = 'ERP5 Set Pricing'
     portal_type = 'Set Pricing'
     add_permission = Permissions.AddPortalContent
-    isPortalContent = 1
-    isRADContent = 1
 
     # Declarative security
     security = ClassSecurityInfo()

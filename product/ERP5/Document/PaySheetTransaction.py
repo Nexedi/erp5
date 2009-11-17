@@ -41,8 +41,6 @@ class PaySheetTransaction(Invoice):
   meta_type = 'ERP5 Pay Sheet Transaction'
   portal_type = 'Pay Sheet Transaction'
   add_permission = Permissions.AddPortalContent
-  isPortalContent = 1
-  isRADContent = 1
 
   # Declarative security
   security = ClassSecurityInfo()

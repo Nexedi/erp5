@@ -38,8 +38,6 @@ class CalendarException(XMLObject):
   # CMF Type Definition
   meta_type = 'ERP5 Calendar Exception'
   portal_type = 'Calendar Exception'
-  isPortalContent = 1
-  isRADContent = 1
 
   # Declarative security
   security = ClassSecurityInfo()

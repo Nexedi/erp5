@@ -41,9 +41,6 @@ class Supply(Path, XMLObject):
     # CMF Type Definition
     meta_type = 'ERP5 Supply'
     portal_type = 'Supply'
-    isPortalContent = 1
-    isRADContent = 1
-    isPredicate = 1
 
     # Declarative security
     security = ClassSecurityInfo()

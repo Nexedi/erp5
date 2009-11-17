@@ -63,7 +63,6 @@ class PackingList(Delivery):
     meta_type = 'ERP5 Packing List'
     portal_type = 'Packing List'
     add_permission = Permissions.AddPortalContent
-    isDelivery = 1
 
     # Declarative security
     security = ClassSecurityInfo()

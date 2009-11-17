@@ -30,6 +30,7 @@ from Products.CMFCategory.Category import BaseCategory as CMFBaseCategory
 from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type import interfaces, Permissions, PropertySheet
+from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.Base import _aq_reset
 
@@ -43,9 +44,7 @@ class BaseCategory(CMFBaseCategory, XMLObject):
     """
     meta_type='ERP5 Base Category'
     portal_type='Base Category' # maybe useful some day
-    isPortalContent = 1
-    isRADContent = 1
-    isCategory = 1
+    isCategory = ConstantGetter('isCategory', value=True)
     allowed_types = ('ERP5 Category', )
 
     # Declarative security

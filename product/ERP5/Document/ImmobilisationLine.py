@@ -47,9 +47,6 @@ class ImmobilisationLine(Movement, XMLObject, ImmobilisationMovement, DeliveryLi
   meta_type = 'ERP5 Immobilisation Line'
   portal_type = 'Immobilisation Line'
   add_permission = Permissions.AddPortalContent
-  isPortalContent = 1
-  isRADContent = 1
-  isMovement = 1
   isAccountable = 0 # It should not be indexed in stock table
 
   # Declarative security

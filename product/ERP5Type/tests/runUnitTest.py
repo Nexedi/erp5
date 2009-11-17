@@ -68,6 +68,12 @@ Options:
                              you don't want to update them all. You can give a list
                              delimited with commas (e.g. erp5_core,erp5_xhtml_style).
                              This can be regular expressions. 
+
+  --enable_full_indexing=STRING
+                             By default, unit test do not reindex everything
+                             for performance reasons. Provide list of documents
+                             (delimited with comas) for which we want to force
+                             indexing. This can only be for now 'portal_types'
 """
 
 def getUnitTestFile():
@@ -478,6 +484,7 @@ def main():
         "save",
         "load",
         "email_from_address=",
+        "enable_full_indexing=",
         "run_only=",
         "update_only=",
         "update_business_templates"] )
@@ -524,6 +531,9 @@ def main():
       os.environ["cmf_activity_sql_connection_string"] = arg
     elif opt == "--email_from_address":
       os.environ["email_from_address"] = arg
+    elif opt == "--enable_full_indexing":
+      # Here we disable optimisations related to indexing
+      os.environ["enable_full_indexing"] = arg
     elif opt == "--save":
       os.environ["erp5_save_data_fs"] = "1"
     elif opt == "--load":

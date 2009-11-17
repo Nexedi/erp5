@@ -45,8 +45,6 @@ class BankingOperation(BaobabMixin, AccountingTransaction):
   # CMF Type Definition
   meta_type = 'ERP5Banking Banking Operation'
   portal_type = 'Banking Operation'
-  isPortalContent = 1
-  isRADContent = 1
 
   # Declarative security
   security = ClassSecurityInfo()

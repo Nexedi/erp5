@@ -41,7 +41,6 @@ class ProductionReportCell(DeliveryCell):
 
     meta_type = 'ERP5 Production Report Cell'
     portal_type = 'Production Report Cell'
-    isMovement = 1
 
     # Declarative security
     security = ClassSecurityInfo()

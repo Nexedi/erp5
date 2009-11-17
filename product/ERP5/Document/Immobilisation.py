@@ -41,7 +41,7 @@ from Products.ERP5.Document.Delivery import Delivery
 from string import capitalize
 from zLOG import LOG
 
-class Immobilisation(XMLObject, Delivery):
+class Immobilisation(Delivery, XMLObject):
   """
     An Immobilisation object holds the information about
     an accounting immobilisation (in order to amortise an object)
@@ -53,10 +53,6 @@ class Immobilisation(XMLObject, Delivery):
   meta_type = 'ERP5 Immobilisation'
   portal_type = 'Immobilisation'
   add_permission = Permissions.AddPortalContent
-  isPortalContent = 1
-  isRADContent = 1
-  isDelivery = 1
-  isMovement = 0
 
   # Declarative security
   security = ClassSecurityInfo()

@@ -45,8 +45,6 @@ class AnnotationLine(PaySheetLine):
     meta_type = 'ERP5 Annotation Line'
     portal_type = 'Annotation Line'
     add_permission = Permissions.AddPortalContent
-    isPortalContent = 1
-    isRADContent = 1
 
     # Declarative security
     security = ClassSecurityInfo()

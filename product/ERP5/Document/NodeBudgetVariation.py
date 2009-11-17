@@ -77,8 +77,6 @@ class NodeBudgetVariation(BudgetVariation):
   meta_type = 'ERP5 Node Budget Variation'
   portal_type = 'Node Budget Variation'
   add_permission = Permissions.AddPortalContent
-  isPortalContent = 1
-  isRADContent = 1
 
   # Declarative security
   security = ClassSecurityInfo()

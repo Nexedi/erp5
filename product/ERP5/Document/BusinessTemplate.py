@@ -33,6 +33,7 @@ from Products.ERP5Type.Globals import Persistent, PersistentMapping
 from Acquisition import Implicit, aq_base
 from AccessControl import ClassSecurityInfo
 from Products.CMFCore.utils import getToolByName
+from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from Products.ERP5Type.Base import WorkflowMethod, _aq_reset
 from Products.ERP5Type.Utils import readLocalDocument, \
                                     writeLocalDocument, \
@@ -919,7 +920,7 @@ class ObjectTemplateItem(BaseTemplateItem):
           # manage_afterClone in order to not call recursiveReindex, this is
           # useless because we will already reindex every created object, so
           # we avoid duplication of reindexation
-          obj.isIndexable = 0
+          obj.isIndexable = ConstantGetter('isIndexable', value=False)
           obj.manage_afterClone(obj)
           del obj.isIndexable
           if getattr(aq_base(obj), 'reindexObject', None) is not None:
@@ -4615,8 +4616,6 @@ class BusinessTemplate(XMLObject):
     meta_type = 'ERP5 Business Template'
     portal_type = 'Business Template'
     add_permission = Permissions.AddPortalContent
-    isPortalContent = 1
-    isRADContent = 1
 
     # Declarative security
     security = ClassSecurityInfo()

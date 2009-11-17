@@ -62,6 +62,7 @@ from Products.ERP5Type.Utils import UpperCase
 from Products.ERP5Type.Utils import convertToUpperCase, convertToMixedCase
 from Products.ERP5Type.Utils import createExpressionContext
 from Products.ERP5Type.Accessor.Accessor import Accessor
+from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from Products.ERP5Type.Accessor.TypeDefinition import list_types
 from Products.ERP5Type.Accessor import Base as BaseAccessor
 from Products.ERP5Type.mixin.property_translatable import PropertyTranslatableBuiltInDictMixIn
@@ -742,20 +743,20 @@ class Base( CopyContainer,
   meta_type = 'ERP5 Base Object'
   portal_type = 'Base Object'
   #_local_properties = () # no need since getattr
-  isPortalContent = 1 # All those attributes should become a methods
   isRADContent = 1    #
-  isCapacity = 0      #
-  isCategory = 0      #
-  isBaseCategory = 0  #
-  isInventoryMovement = 0      #
-  isMovement = 0      #
-  isDelivery = 0      #
-  isInventory = 0     #
-  isIndexable = 1     # If set to 0, reindexing will not happen (useful for optimization)
-  isPredicate = 0     #
-  isTemplate = 0      #
-  isDocument = 0      #
-  isTempDocument = 0  # If set to 0, instances are temporary.
+  isPortalContent = ConstantGetter('isPortalContent', value=True)
+  isCapacity = ConstantGetter('isCapacity', value=False)
+  isCategory = ConstantGetter('isCategory', value=False)
+  isBaseCategory = ConstantGetter('isBaseCategory', value=False)
+  isInventoryMovement = ConstantGetter('isInventoryMovement', value=False)
+  isDelivery = ConstantGetter('isDelivery', value=False)
+  isInventory = ConstantGetter('isInventory', value=False)
+  # If set to 0, reindexing will not happen (useful for optimization)
+  isIndexable = ConstantGetter('isIndexable', value=True)
+  isPredicate = ConstantGetter('isPredicate', value=False)
+  isTemplate = ConstantGetter('isTemplate', value=False)
+  isDocument = ConstantGetter('isDocument', value=False)
+  isTempDocument = ConstantGetter('isTempDocument', value=False)
 
   # Dynamic method acquisition system (code generation)
   aq_method_generated = {}
@@ -789,6 +790,11 @@ class Base( CopyContainer,
                      CMFCatalogAware.manage_options
                    )
 
+  # Place for all is... method
+  security.declareProtected(Permissions.AccessContentsInformation, 'isMovement')
+  def isMovement(self):
+    return 0
+
   security.declareProtected( Permissions.ModifyPortalContent, 'setTitle' )
   def setTitle(self, value):
     """ sets the title. (and then reindexObject)"""
@@ -810,6 +816,18 @@ class Base( CopyContainer,
     """
     """
     initializeClassDynamicProperties(self, self.__class__)
+
+  security.declareProtected( Permissions.AccessContentsInformation, 'provides' )
+  def provides(self, interface_name):
+    """
+    Check if the current class provides a particular interface
+    """
+    result = False
+    for interface in implementedBy(self.__class__):
+      if interface.getName() == interface_name:
+        result = True
+        break
+    return result
 
   def _aq_key(self):
     return (self.portal_type, self.__class__)
@@ -3351,8 +3369,8 @@ class Base( CopyContainer,
     catalog = getToolByName(self, 'portal_catalog', None)
     if catalog is not None:
        catalog.unindexObject(self, uid=self.getUid())
-    self.isIndexable = 0
-    self.isTemplate = 1
+    self.isIndexable = ConstantGetter('isIndexable', value=False)
+    self.isTemplate = ConstantGetter('isTemplate', value=True)
     # XXX reset security here
 
   security.declareProtected(Permissions.ModifyPortalContent,'makeTemplateInstance')
@@ -3750,8 +3768,8 @@ class TempBase(Base):
     If we need Base services (categories, edit, etc) in temporary objects
     we shoud used TempBase
   """
-  isIndexable = 0
-  isTempDocument = 1
+  isIndexable = ConstantGetter('isIndexable', value=False)
+  isTempDocument = ConstantGetter('isTempDocument', value=True)
 
   # Declarative security
   security = ClassSecurityInfo()

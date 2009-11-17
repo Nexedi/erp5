@@ -57,8 +57,6 @@ class Item(XMLObject, Amount, ImmobilisableItem):
     meta_type = 'ERP5 Item'
     portal_type = 'Item'
     add_permission = Permissions.AddPortalContent
-    isPortalContent = 1
-    isRADContent = 1
 
     # Declarative security
     security = ClassSecurityInfo()

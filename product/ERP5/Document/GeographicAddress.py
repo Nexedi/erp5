@@ -50,8 +50,6 @@ class GeographicAddress(Coordinate, Base):
     meta_type = 'ERP5 Geographic Address'
     portal_type = 'Address'
     add_permission = Permissions.AddPortalContent
-    isPortalContent = 1
-    isRADContent = 1
 
     # Declarative security
     security = ClassSecurityInfo()

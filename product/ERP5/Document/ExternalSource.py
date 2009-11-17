@@ -97,8 +97,6 @@ class ExternalSource(XMLObject, UrlMixIn, UpdateMixIn):
   # CMF Type Definition
   meta_type = 'ERP5 External Source'
   portal_type = 'External Source'
-  isPortalContent = 1
-  isRADContent = 1
 
   # Declarative security
   security = ClassSecurityInfo()

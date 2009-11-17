@@ -58,7 +58,6 @@ class TradeCondition(Path, Transformation, XMLMatrix):
     meta_type = 'ERP5 Trade Condition'
     portal_type = 'Trade Condition'
     model_line_portal_type_list = ('Trade Model Line',)
-    isPredicate = 1
 
     # Declarative security
     security = ClassSecurityInfo()

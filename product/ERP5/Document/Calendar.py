@@ -37,8 +37,6 @@ class Calendar(Delivery):
     # CMF Type Definition
     meta_type = 'ERP5 Calendar'
     portal_type = 'Calendar'
-    isPortalContent = 1
-    isRADContent = 1
 
     # Declarative security
     security = ClassSecurityInfo()

@@ -41,7 +41,6 @@ class ProductionReport(Delivery):
     # CMF Type Definition
     meta_type = 'ERP5 Production Report'
     portal_type = 'Production Report'
-    isDelivery = 1
 
     # Declarative security
     security = ClassSecurityInfo()

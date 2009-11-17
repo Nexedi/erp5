@@ -33,6 +33,7 @@ from SyncCode import SyncCode
 from AccessControl import ClassSecurityInfo
 from Products.CMFCore.utils import getToolByName
 from Acquisition import Implicit, aq_base
+from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from Products.ERP5Type.Core.Folder import Folder
 from Products.ERP5Type.Base import Base
 from Products.ERP5Type import Permissions
@@ -57,8 +58,8 @@ class Signature(Folder, SyncCode, File):
         only needed on the server.
     xml -- the xml of the object at the time where it was synchronized
   """
-  isIndexable = 0
-  isPortalContent = 0 # Make sure RAD generated accessors at the class level
+  isIndexable = ConstantGetter('isIndexable', value=False)
+  # Make sure RAD generated accessors at the class level
 
   # Constructor
   def __init__(self,

@@ -54,8 +54,6 @@ class XMLObject( Folder ):
     """
     meta_type = 'ERP5 XML Object'
     portal_type = 'XML Object'
-    isPortalContent = 1
-    isRADContent = 1
 
     # The only declarative factory_type_information in ERP5
     factory_type_information = \

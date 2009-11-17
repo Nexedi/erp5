@@ -39,8 +39,6 @@ class OpenOrderCell(SupplyCell):
     meta_type = 'ERP5 Open Order Cell'
     portal_type = 'Open Order Cell'
     add_permission = Permissions.AddPortalContent
-    isPortalContent = 1
-    isRADContent = 1
 
     # Declarative security
     security = ClassSecurityInfo()
