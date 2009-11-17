@@ -63,7 +63,7 @@ class FloatDivergenceTester(Predicate):
   # Declarative interfaces
   zope.interface.implements( interfaces.IDivergenceTester, )
 
-  def test(self, simulation_movement):
+  def testDivergence(self, simulation_movement):
     """
     Tests if simulation_movement is divergent. Returns False (0)
     or True (1).

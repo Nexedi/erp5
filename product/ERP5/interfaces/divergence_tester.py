@@ -54,7 +54,9 @@ class IDivergenceTester(Interface):
   simulation.
   """
 
-  def test(simulation_movement):
+  # since we aldeary have test() in Predicate class, we use a different
+  # method name to test a divergence.
+  def testDivergence(simulation_movement):
     """
     Tests if simulation_movement is divergent. Returns False (0)
     or True (1).
