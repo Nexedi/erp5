@@ -15,6 +15,7 @@
               <list>
                 <string>base_category</string>
                 <string>portal_type</string>
+                <string>proxy_listbox_ids</string>
                 <string>title</string>
               </list>
             </value>
@@ -107,6 +108,17 @@
                         <tuple>
                           <string>Apparel Fabric</string>
                           <string>apparel_fabric_module</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>proxy_listbox_ids</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>ApparelFabricModule_viewApparelFabricList/listbox</string>
+                          <string>Apparel Fabric</string>
                         </tuple>
                       </list>
                     </value>
