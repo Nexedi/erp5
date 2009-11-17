@@ -237,8 +237,7 @@ else:\n
   if field_my_shipping_method in [\'\', None] and order_line is not None:\n
     shopping_cart.manage_delObjects(order_line.getId())\n
 \n
-context.SaleOrder_paymentRedirect(field_my_comment, field_my_payment_mode)\n
-return\n
+return context.SaleOrder_paymentRedirect(field_my_comment, field_my_payment_mode)\n
 
 
 ]]></string> </value>

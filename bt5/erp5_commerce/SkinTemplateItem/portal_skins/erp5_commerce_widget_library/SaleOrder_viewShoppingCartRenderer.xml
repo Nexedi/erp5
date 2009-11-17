@@ -48,6 +48,9 @@
   <h2>\n
     <span tal:replace="python: here.Base_translateString(\'My shopping cart\')"/>\n
   </h2>\n
+  <h6>\n
+    <span tal:replace="python: web_site.WebSite_getShoppingCartCheckoutStep()"/>\n
+  </h6>\n
   <tal:block tal:condition = "empty_cart"> \n
     <h3><span tal:replace="python: here.Base_translateString(\'Your shopping cart is empty.\')"/></h3><br/>\n
   </tal:block>\n
@@ -116,7 +119,9 @@
               <b><span tal:replace="python: \'%s %s\' % (shipping_obj.getPrice(), currency_code)"/></b>\n
             </tal:block>\n
             <tal:block tal:condition="python: shipping is None">\n
-                <span tal:replace="python: here.Base_translateString(\'Your current cart selection requires shipping.\')"/><br/>\n
+                <b>\n
+                  <span tal:replace="python: here.Base_translateString(\'Your current cart selection requires shipping.\')"/><br/>\n
+                </b>\n
             </tal:block>\n
          </td>\n
       </tr>\n

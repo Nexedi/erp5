@@ -53,15 +53,28 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>step = context.REQUEST.get(\'step\', None)\n
+            <value> <string>""" \n
+  Return the current step for checkout procedure that will be displayed on Shopping Cart page.\n
+"""\n
+web_site = context.getWebSiteValue()\n
+shopping_cart = web_site.SaleOrder_getShoppingCart()\n
+empty_cart = shopping_cart.SaleOrder_isShoppingCartEmpty()\n
+is_consistent = shopping_cart.SaleOrder_isConsistent()\n
+is_anonymous = context.portal_membership.isAnonymousUser()\n
 \n
-if step is None:\n
-  return context.SaleOrder_viewConfirmAsWeb()\n
+if empty_cart:\n
+  return context.Base_translateString(\'Add a product to your Shopping Cart.\')\n
 \n
-if context.request.get(\'plop\', None) is not None:\n
-  context.REQUEST.set(\'step\', 2)\n
-  person_object = context.getWebSiteValue().SaleOrder_getShoppingCartCustomer()\n
-  return context.getWebSectionValue().restrictedTraverse(person_object.getRelativeUrl()).Person_viewAsWeb(context.REQUEST)\n
+if not is_consistent:\n
+  return context.Base_translateString(\'Select a Shipping Service.\')\n
+\n
+if is_consistent and is_anonymous:\n
+  return context.Base_translateString(\'Please, you must login to proceed.\')\n
+\n
+if is_consistent and not is_anonymous:\n
+  return context.Base_translateString(\'Select your billing address.\')\n
+\n
+return\n
 </string> </value>
         </item>
         <item>
@@ -73,6 +86,12 @@ if context.request.get(\'plop\', None) is not None:\n
         <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple/>
+            </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -100,9 +119,11 @@ if context.request.get(\'plop\', None) is not None:\n
                           <tuple>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>None</string>
-                            <string>step</string>
-                            <string>person_object</string>
+                            <string>web_site</string>
+                            <string>shopping_cart</string>
+                            <string>empty_cart</string>
+                            <string>is_consistent</string>
+                            <string>is_anonymous</string>
                           </tuple>
                         </value>
                     </item>
@@ -119,7 +140,11 @@ if context.request.get(\'plop\', None) is not None:\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>WebSection_checkoutProcedure</string> </value>
+            <value> <string>WebSite_getShoppingCartCheckoutStep</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Get current Shopping Cart step for checkout procedure.</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

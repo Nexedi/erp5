@@ -48,8 +48,10 @@
   <tal:block tal:condition="python: shipping is None">\n
     <h3> <span tal:replace="python: here.Base_translateString(\'You have not selected shipping\')"/></h3>\n
     <p> \n
-      <span tal:replace="python: here.Base_translateString(\'Your current cart selection requires shipping. Please select shipping from\')"/>\n
-      <a tal:attributes="href python: \'%s/cart\' % web_site.absolute_url()">here</a>.\n
+      <strong>\n
+        <span tal:replace="python: here.Base_translateString(\'Your current cart selection requires shipping. Please select shipping from\')"/>\n
+        <a tal:attributes="href python: \'%s/cart\' % web_site.absolute_url()">here</a>.\n
+      </strong>\n
     </p>\n
   </tal:block>\n
 \n

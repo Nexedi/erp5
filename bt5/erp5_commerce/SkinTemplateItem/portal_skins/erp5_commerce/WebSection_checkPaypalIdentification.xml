@@ -66,8 +66,8 @@ if parameter_dict[\'ACK\'] != \'Success\':\n
 if parameter_dict[\'PAYERID\'] != payer_id:\n
   return "Identification failed.2 : %s" % parameter_dict[\'PAYERID\']\n
 \n
-context.ERP5Site_redirect(\'%s/checkout\' % context.getWebSiteValue().absolute_url(), \\\n
-                          keep_items={\'portal_status_message\':translateString("Your paypal account is authentificated.", mapping = dict()),\n
+context.Base_redirect(\'SaleOrder_viewAsWeb\', \\\n
+                       keep_items={\'portal_status_message\':translateString("Your paypal account is authentificated.", mapping = dict()),\n
                                       \'token\':token})\n
 </string> </value>
         </item>

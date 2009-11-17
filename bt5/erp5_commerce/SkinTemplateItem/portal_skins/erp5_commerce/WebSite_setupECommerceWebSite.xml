@@ -61,19 +61,17 @@ if (context.getPortalType() != \'Web Site\'):\n
                                        })\n
 \n
 # creation the default sections\n
-object_id_list = [\'cart\', \'checkout\', \'account\', \'register\']\n
+object_id_list = [\'cart\', \'account\', \'register\']\n
 for id in object_id_list:\n
   if id in context.objectIds():\n
     context.manage_delObjects([id])\n
 \n
 cart_section = context.newContent(portal_type=\'Web Section\', title=\'Cart\', id=\'cart\')\n
-checkout_section = context.newContent(portal_type=\'Web Section\', title=\'Checkout\', id=\'checkout\')\n
 account_section = context.newContent(portal_type=\'Web Section\', title=\'My account\', id=\'account\')\n
 register_section = context.newContent(portal_type=\'Web Section\', title=\'Register\', id=\'register\')\n
 \n
 # make some visible by default\n
 cart_section.setVisible(True)\n
-checkout_section.setVisible(True)\n
 \n
 # setup site properties\n
 context.setContainerLayout(\'erp5_web_multiflex5_commerce_layout\')\n
@@ -87,9 +85,6 @@ context.setProperty(\'layout_additional_css\', \'mf54_commerce.css\')\n
 cart_section.setCustomRenderMethodId(\'SaleOrder_viewAsWeb\')\n
 cart_section.setProperty(\'ecommerce_default_content\', True)\n
 cart_section.setProperty(\'ecommerce_product_list\', False)\n
-checkout_section.setCustomRenderMethodId(\'SaleOrder_viewConfirmAsWeb\')\n
-checkout_section.setProperty(\'ecommerce_default_content\', True)\n
-checkout_section.setProperty(\'ecommerce_product_list\', False)\n
 account_section.setCustomRenderMethodId(\'WebSection_viewCurrentPersonAsWeb\')\n
 account_section.setProperty(\'ecommerce_default_content\', True)\n
 account_section.setProperty(\'ecommerce_product_list\', False)\n
@@ -144,7 +139,6 @@ context.Base_redirect(\'\', keep_items={\n
                             <string>_getiter_</string>
                             <string>id</string>
                             <string>cart_section</string>
-                            <string>checkout_section</string>
                             <string>account_section</string>
                             <string>register_section</string>
                             <string>True</string>

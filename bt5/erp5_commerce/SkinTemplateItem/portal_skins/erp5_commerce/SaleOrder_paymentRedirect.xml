@@ -84,7 +84,6 @@ else:\n
 \n
 context.Base_redirect(\'SaleOrder_viewAsWeb\', \\\n
                         keep_items={\'portal_status_message\': msg})\n
-return\n
 </string> </value>
         </item>
         <item>
