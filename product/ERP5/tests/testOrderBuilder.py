@@ -194,7 +194,7 @@ class TestOrderBuilderMixin(TestOrderMixin):
     order_cell_list = order_line.contentValues(filter={'portal_type':self.order_cell_portal_type})
     self.assertEquals(
       len(order_cell_list),
-      len(self.wanted_quantity_matrix.itervalues())
+      len(self.wanted_quantity_matrix.values())
     )
 
     for order_cell in order_cell_list:
