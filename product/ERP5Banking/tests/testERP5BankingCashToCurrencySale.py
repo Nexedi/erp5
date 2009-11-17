@@ -428,6 +428,7 @@ class TestERP5BankingCashToCurrencySale(TestERP5BankingMixin, ERP5TypeTestCase):
                     + 'Tic CheckTotal ' \
                     + 'ResetSourceInventory Tic ' \
                     + 'DeliverCashToCurrencySaleFails Tic ' \
+                    + 'DeleteResetInventory Tic ' \
                     + 'DeliverCashToCurrencySale Tic ' \
                     + 'CheckFinalInventoryGuichet_Entrante ' \
                     + 'CheckFinalInventoryGuichet_Sortante' 
