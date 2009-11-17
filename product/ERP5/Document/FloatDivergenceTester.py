@@ -118,7 +118,7 @@ class FloatDivergenceTester(Predicate):
     If decision_movement is a simulation movement, use
     the recorded properties instead of the native ones.
     """
-    raise NotImplementedError
+    return '%s/%s' % (self.getPortalType(), self.getTestedProperty())
 
   def compare(self, prevision_movement, decision_movement):
     """
