@@ -76,7 +76,7 @@
                       <list>
                         <string>my_title</string>
                         <string>my_source_reference</string>
-                        <string>Image_view</string>
+                        <string>my_thumbnail</string>
                         <string>my_file</string>
                       </list>
                     </value>

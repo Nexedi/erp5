@@ -83,7 +83,7 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
-                        <string>Image_view</string>
+                        <string>my_thumbnail</string>
                         <string>my_file</string>
                       </list>
                     </value>
