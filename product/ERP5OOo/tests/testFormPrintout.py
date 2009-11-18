@@ -31,6 +31,7 @@ import unittest
 import transaction
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import createZODBPythonScript
+from Products.MimetypesRegistry.mime_types.magic import guessMime
 from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5OOo.OOoUtils import OOoBuilder
 from Products.ERP5OOo.tests.utils import Validator
@@ -53,6 +54,7 @@ class TestFormPrintout(ERP5TypeTestCase):
 
   def afterSetUp(self):
     self.login()
+    self.setSystemPreference()
     foo_file_path = os.path.join(os.path.dirname(__file__),
                                 'test_document',
                                 'Foo_001.odt')
@@ -126,6 +128,15 @@ class TestFormPrintout(ERP5TypeTestCase):
     user = uf.getUserById('tatuya').__of__(uf)
     newSecurityManager(None, user)
 
+  def setSystemPreference(self):
+    default_pref = self.portal.portal_preferences.default_site_preference
+    default_pref.setPreferredOoodocServerAddress('127.0.0.1')
+    default_pref.setPreferredOoodocServerPortNumber('8008')
+    #default_pref.setPreferredConversionCacheFactory('document_cache_factory')
+    if default_pref.getPreferenceState() != 'global':
+      default_pref.enable()
+
+ 
   def _validate(self, odf_file_data):
     error_list = self.validator.validate(odf_file_data)
     if error_list:
@@ -315,7 +326,6 @@ class TestFormPrintout(ERP5TypeTestCase):
     self.assertTrue(content_xml.find("test title") < 0)
     self._validate(odf_document)
 
-   
   def test_02_Table_01_Normal(self, run=run_all_test):
     """To test listbox and ODF table mapping
     
@@ -1159,6 +1169,28 @@ return []
     self.assertTrue(content_xml.find('<draw:image xlink:href') < 0)
     self._validate(odf_document)
     
+  def test_08_OOoConversion(self, run=run_all_test):
+    """test ooo conversion"""
+    if not run: return
+    foo_printout = self.portal.foo_module.test1.Foo_viewAsPrintout
+    foo_form = self.portal.foo_module.test1.Foo_view
+    if foo_form._getOb("my_test_title", None) is None:
+      foo_form.manage_addField('my_test_title', 'test title', 'StringField')
+    test_title = foo_form.my_test_title
+    test_title.values['default'] = 'ZZZ test here ZZZ'
+  
+    self.portal.REQUEST.set('format', 'pdf')
+    printout = foo_printout(REQUEST=self.portal.REQUEST) 
+    #test_output = open("/tmp/test_99_OOoConversion.pdf", "w")
+    #test_output.write(printout.data)
+    self.assertEqual('application/pdf', guessMime(printout.data))
+
+    self.portal.REQUEST.set('format', 'doc')
+    printout = foo_printout(REQUEST=self.portal.REQUEST) 
+    #test_output = open("/tmp/test_99_OOoConversion.doc", "w")
+    #test_output.write(printout.data)
+    self.assertEqual('application/msword', guessMime(printout.data))
+
 
 def test_suite():
   suite = unittest.TestSuite()

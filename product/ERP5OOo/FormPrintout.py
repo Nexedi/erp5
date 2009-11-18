@@ -186,11 +186,10 @@ class FormPrintout(Implicit, Persistent, RoleManager, Item):
     content_type = printout_template.content_type
     self.strategy = self._createStrategy(content_type)
     printout = self.strategy.render(extra_context=extra_context)
-    if REQUEST is not None:
-      REQUEST.RESPONSE.setHeader('Content-Type','%s; charset=utf-8' % content_type)
-      REQUEST.RESPONSE.setHeader('Content-disposition',
-                                 'inline;filename="%s%s"' % (self.title_or_id(), guess_extension(content_type)))
-    return printout
+    return self._oooConvertByFormat(printout,
+                                    content_type=content_type, 
+                                    extra_context=extra_context,
+                                    REQUEST=REQUEST)
 
   security.declareProtected('View', '__call__')
   __call__ = index_html
@@ -213,6 +212,40 @@ class FormPrintout(Implicit, Persistent, RoleManager, Item):
     if guess_extension(content_type) == '.odt':
       return ODTStrategy()
     raise ValueError, 'Do not support the template type:%s' % content_type
+
+  def _oooConvertByFormat(self, printout, content_type=None, extra_context={}, REQUEST=None):
+    """
+    Convert the ODF document into the given format.
+
+    Keyword arguments:
+    printout -- ODF document
+    content_type -- the content type of the printout
+    extra_context -- extra_context including a format
+    REQUEST -- Request object
+    """
+    options = extra_context.get('options', {})
+    format = None
+    if REQUEST is not None:
+      format = options.get('format', REQUEST.get('format', None))
+    if format is None:
+      if REQUEST is not None:
+        REQUEST.RESPONSE.setHeader('Content-Type','%s; charset=utf-8' % content_type)
+        REQUEST.RESPONSE.setHeader('Content-disposition',
+                                   'inline;filename="%s%s"' % (self.title_or_id(), guess_extension(content_type)))
+      return printout
+    from Products.ERP5Type.Document import newTempOOoDocument
+    tmp_ooo = newTempOOoDocument(self, self.title_or_id())
+    tmp_ooo.edit(base_data=printout,
+                 fname=self.title_or_id(),
+                 source_reference=self.title_or_id(),
+                 base_content_type=content_type)
+    tmp_ooo.oo_data = printout
+    mime, data = tmp_ooo.convert(format)
+    if REQUEST is not None:
+      REQUEST.RESPONSE.setHeader('Content-type', mime)
+      REQUEST.RESPONSE.setHeader('Content-disposition',
+          'attachment;filename="%s.%s"' % (self.title_or_id(), format))
+    return data
 
 InitializeClass(FormPrintout)
 
