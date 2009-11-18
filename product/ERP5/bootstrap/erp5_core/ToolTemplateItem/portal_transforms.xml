@@ -13118,7 +13118,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>daniele</string> </key>
+                    <key> <string>zope</string> </key>
                     <value>
                       <list>
                         <string>Owner</string>
@@ -13223,7 +13223,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>daniele</string> </key>
+                    <key> <string>zope</string> </key>
                     <value>
                       <list>
                         <string>Owner</string>
@@ -13328,7 +13328,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>daniele</string> </key>
+                    <key> <string>zope</string> </key>
                     <value>
                       <list>
                         <string>Owner</string>
@@ -13433,7 +13433,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>daniele</string> </key>
+                    <key> <string>zope</string> </key>
                     <value>
                       <list>
                         <string>Owner</string>
@@ -13530,7 +13530,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>daniele</string> </key>
+                    <key> <string>zope</string> </key>
                     <value>
                       <list>
                         <string>Owner</string>
@@ -13631,7 +13631,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>daniele</string> </key>
+                    <key> <string>zope</string> </key>
                     <value>
                       <list>
                         <string>Owner</string>
@@ -13732,7 +13732,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>daniele</string> </key>
+                    <key> <string>zope</string> </key>
                     <value>
                       <list>
                         <string>Owner</string>
@@ -13833,7 +13833,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>daniele</string> </key>
+                    <key> <string>zope</string> </key>
                     <value>
                       <list>
                         <string>Owner</string>
@@ -13940,7 +13940,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>daniele</string> </key>
+                    <key> <string>zope</string> </key>
                     <value>
                       <list>
                         <string>Owner</string>
@@ -14047,7 +14047,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>daniele</string> </key>
+                    <key> <string>zope</string> </key>
                     <value>
                       <list>
                         <string>Owner</string>
@@ -14154,7 +14154,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>daniele</string> </key>
+                    <key> <string>zope</string> </key>
                     <value>
                       <list>
                         <string>Owner</string>
@@ -14261,7 +14261,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>daniele</string> </key>
+                    <key> <string>zope</string> </key>
                     <value>
                       <list>
                         <string>Owner</string>
@@ -14368,7 +14368,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>daniele</string> </key>
+                    <key> <string>zope</string> </key>
                     <value>
                       <list>
                         <string>Owner</string>
@@ -14475,7 +14475,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>daniele</string> </key>
+                    <key> <string>zope</string> </key>
                     <value>
                       <list>
                         <string>Owner</string>
@@ -14681,7 +14681,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>daniele</string> </key>
+                    <key> <string>zope</string> </key>
                     <value>
                       <list>
                         <string>Owner</string>
@@ -14782,7 +14782,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>daniele</string> </key>
+                    <key> <string>zope</string> </key>
                     <value>
                       <list>
                         <string>Owner</string>
@@ -14889,7 +14889,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>daniele</string> </key>
+                    <key> <string>zope</string> </key>
                     <value>
                       <list>
                         <string>Owner</string>
@@ -14957,7 +14957,7 @@
         </item>
         <item>
             <key> <string>module</string> </key>
-            <value> <string>Products.ERP5Type.patches.transforms.html_to_text</string> </value>
+            <value> <string>Products.PortalTransforms.transforms.html_to_text</string> </value>
         </item>
         <item>
             <key> <string>output</string> </key>
@@ -14996,7 +14996,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>daniele</string> </key>
+                    <key> <string>zope</string> </key>
                     <value>
                       <list>
                         <string>Owner</string>
@@ -15103,7 +15103,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>daniele</string> </key>
+                    <key> <string>zope</string> </key>
                     <value>
                       <list>
                         <string>Owner</string>
@@ -15204,7 +15204,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>daniele</string> </key>
+                    <key> <string>zope</string> </key>
                     <value>
                       <list>
                         <string>Owner</string>
@@ -15373,7 +15373,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>daniele</string> </key>
+                    <key> <string>zope</string> </key>
                     <value>
                       <list>
                         <string>Owner</string>
@@ -15494,7 +15494,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>daniele</string> </key>
+                    <key> <string>zope</string> </key>
                     <value>
                       <list>
                         <string>Owner</string>
@@ -15601,7 +15601,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>daniele</string> </key>
+                    <key> <string>zope</string> </key>
                     <value>
                       <list>
                         <string>Owner</string>
@@ -15829,7 +15829,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>daniele</string> </key>
+                    <key> <string>zope</string> </key>
                     <value>
                       <list>
                         <string>Owner</string>
@@ -15960,7 +15960,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>daniele</string> </key>
+                    <key> <string>zope</string> </key>
                     <value>
                       <list>
                         <string>Owner</string>

@@ -54,6 +54,7 @@
               <list>
                 <string>left</string>
                 <string>right</string>
+                <string>center</string>
               </list>
             </value>
         </item>
@@ -62,11 +63,20 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>center</string> </key>
+                    <value>
+                      <list>
+                        <string>my_description</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
                     <key> <string>left</string> </key>
                     <value>
                       <list>
                         <string>my_title</string>
-                        <string>my_description</string>
+                        <string>my_priority</string>
+                        <string>my_translated_preference_state_title</string>
                       </list>
                     </value>
                 </item>
@@ -74,10 +84,12 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
-                        <string>my_priority</string>
                         <string>my_preferred_section_category</string>
                         <string>my_preferred_section</string>
-                        <string>my_translated_preference_state_title</string>
+                        <string>my_preferred_date_order</string>
+                        <string>my_preferred_float_number_style</string>
+                        <string>my_preferred_money_quantity_size</string>
+                        <string>my_preferred_user_interface_language_list</string>
                       </list>
                     </value>
                 </item>
