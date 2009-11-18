@@ -2838,32 +2838,29 @@ class ModuleTemplateItem(BaseTemplateItem):
   def build(self, context, **kw):
     BaseTemplateItem.build(self, context, **kw)
     p = context.getPortalObject()
-    for id in self._archive.keys():
-      module = p.unrestrictedTraverse(id)
-      dict = {}
-      dict['id'] = module.getId()
-      dict['title'] = module.getTitle()
-      dict['portal_type'] = module.getPortalType()
+    for module_id in self._archive.keys():
+      module = p.unrestrictedTraverse(module_id)
+      mapping = {}
+      mapping['id'] = module.getId()
+      mapping['title'] = module.getTitle()
+      mapping['portal_type'] = module.getPortalType()
       permission_list = []
-      # use show permission
-      dict['permission_list'] = module.showPermissions()
-      self._objects[id] = dict
+      mapping['permission_list'] = module.showPermissions()
+      self._objects[module_id] = mapping
 
   # Function to generate XML Code Manually
   def generateXml(self, path=None):
     dict = self._objects[path]
-    xml_data = '<module>'
-    # sort key
+    xml_data = ['<module>']
     keys = dict.keys()
-    keys.sort()
-    for key in keys:
-      if key =='permission_list':
+    for key in sorted(keys):
+      if key == 'permission_list':
         # separe permission dict into xml
-        xml_data += '\n <%s>' %(key,)
+        xml_data.append(' <%s>' % (key, ))
         permission_list = dict[key]
         for perm in permission_list:
           # the type of the permission defined if we use acquired or not
-          if type(perm[1]) == type([]):
+          if isinstance(perm[1], list):
             ptype = "list"
           else:
             ptype = "tuple"
@@ -2871,32 +2868,32 @@ class ModuleTemplateItem(BaseTemplateItem):
           # Skip if permission is not configured (i.e. no role at all
           # with acquire permission, or Manager only without acquire
           # permission).
-          if (not len(role_list) and ptype == 'list') or \
+          if (len(role_list) == 0 and ptype == 'list') or \
                  (role_list == ['Manager'] and ptype == 'tuple'):
             continue
           role_list.sort()
-          xml_data += "\n  <permission type='%s'>" %(ptype,)
-          xml_data += '\n   <name>%s</name>' %(perm[0])
+          xml_data.append("  <permission type='%s'>" % (ptype, ))
+          xml_data.append('   <name>%s</name>' % (perm[0], ))
           for role in role_list:
-            xml_data += '\n   <role>%s</role>' %(role)
-          xml_data += '\n  </permission>'
-        xml_data += '\n </%s>' %(key,)
+            xml_data.append('   <role>%s</role>' % (role, ))
+          xml_data.append('  </permission>')
+        xml_data.append(' </%s>' % (key, ))
       else:
-        xml_data += '\n <%s>%s</%s>' %(key, dict[key], key)
-    xml_data += '\n</module>'
-    return xml_data
+        xml_data.append(' <%s>%s</%s>' % (key, dict[key], key))
+    xml_data.append('</module>')
+    return '\n'.join(xml_data)
 
   def export(self, context, bta, **kw):
-    if len(self._objects.keys()) == 0:
+    if len(self._objects) == 0:
       return
     path = os.path.join(bta.path, self.__class__.__name__)
     bta.addFolder(path)
     keys = self._objects.keys()
     keys.sort()
-    for id in keys:
+    for key in keys:
       # export modules one by one
-      xml_data = self.generateXml(path=id)
-      bta.addObject(obj=xml_data, name=id, path=path)
+      xml_data = self.generateXml(path=key)
+      bta.addObject(obj=xml_data, name=key, path=path)
 
   def install(self, context, trashbin, **kw):
     portal = context.getPortalObject()
@@ -2909,35 +2906,36 @@ class ModuleTemplateItem(BaseTemplateItem):
 
     valid_permissions = dict.fromkeys([x[0] for x in
                                        context.ac_inherited_permissions(all=1)])
-    for id in items.keys():
-      if update_dict.has_key(id) or force:
+    for path, mapping in items.iteritems():
+      if update_dict.has_key(path) or force:
         if not force:
-          action = update_dict[id]
+          action = update_dict[path]
           if action == 'nothing':
             continue
-        mapping = items[id]
-        path, id = posixpath.split(id)
-        if id in portal.objectIds():
-          module = portal._getOb(id)
-          module.portal_type = str(mapping['portal_type'])
+        path, module_id = posixpath.split(path)
+        portal_type = str(mapping['portal_type'])
+        module = portal._getOb(module_id)
+        if module is not None:
+          module.portal_type = portal_type
         else:
-          module = portal.newContent(id=id, portal_type=str(mapping['portal_type']))
+          module = portal.newContent(id=module_id, portal_type=portal_type)
         module.setTitle(str(mapping['title']))
-        for name in valid_permissions.keys():
+        permission_dict = dict(mapping['permission_list'])
+        for name in valid_permissions.iterkeys():
           # By default, Manager only without acquire permission
-          role_list = dict(mapping['permission_list']).get(name, ('Manager',))
-          acquire = (type(role_list) == type([]))
+          role_list = permission_dict.get(name, ('Manager',))
+          acquire = isinstance(role_list, list)
           module.manage_permission(name, roles=role_list, acquire=acquire)
 
   def _importFile(self, file_name, file):
     if not file_name.endswith('.xml'):
       LOG('Business Template', 0, 'Skipping file "%s"' % (file_name, ))
       return
-    dict = {}
+    mapping = {}
     xml = parse(file)
-    for id in ('portal_type', 'id', 'title', 'permission_list'):
-      elt = xml.getElementsByTagName(id)[0]
-      if id == 'permission_list':
+    for key in ('portal_type', 'id', 'title', 'permission_list'):
+      elt = xml.getElementsByTagName(key)[0]
+      if key == 'permission_list':
         plist = []
         perm_list = elt.getElementsByTagName('permission')
         for perm in perm_list:
@@ -2951,20 +2949,20 @@ class ModuleTemplateItem(BaseTemplateItem):
             role_node = role.childNodes[0]
             role = role_node.data
             rlist.append(str(role))
-          if perm_type == "list" or perm_type is None:
+          if perm_type == 'list' or perm_type is None:
             perm_tuple = (str(name), list(rlist))
           else:
             perm_tuple = (str(name), tuple(rlist))
           plist.append(perm_tuple)
-        dict[id] = plist
+        mapping[key] = plist
       else:
         node_list = elt.childNodes
         if len(node_list) == 0:
-          value=''
+          value = ''
         else:
           value = node_list[0].data
-        dict[id] = str(value)
-    self._objects[file_name[:-4]] = dict
+        mapping[key] = str(value)
+    self._objects[file_name[:-4]] = mapping
 
   def uninstall(self, context, **kw):
     trash = kw.get('trash', 0)
@@ -2978,13 +2976,13 @@ class ModuleTemplateItem(BaseTemplateItem):
       keys = [object_path]
     p = context.getPortalObject()
     id_list = p.objectIds()
-    for id in keys:
-      if id in id_list:
+    for key in keys:
+      if key in id_list:
         try:
           if trash and trashbin is not None:
-            container_path = id.split('/')
-            self.portal_trash.backupObject(trashbin, container_path, id, save=1, keep_subobjects=1)
-          p.manage_delObjects([id])
+            container_path = key.split('/')
+            self.portal_trash.backupObject(trashbin, container_path, key, save=1, keep_subobjects=1)
+          p.manage_delObjects([key])
         except NotFound:
           pass
     BaseTemplateItem.uninstall(self, context, **kw)
