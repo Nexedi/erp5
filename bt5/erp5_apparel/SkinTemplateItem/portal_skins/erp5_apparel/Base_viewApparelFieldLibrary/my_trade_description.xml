@@ -13,16 +13,14 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>base_category</string>
-                <string>portal_type</string>
-                <string>proxy_listbox_ids</string>
+                <string>enabled</string>
                 <string>title</string>
               </list>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_apparel_size_title</string> </value>
+            <value> <string>my_trade_description</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -78,38 +76,16 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>base_category</string> </key>
-                    <value> <string>specialise</string> </value>
+                    <key> <string>enabled</string> </key>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_relation_field</string> </value>
+                    <value> <string>my_string_field</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string>Base_viewApparelFieldLibrary</string> </value>
-                </item>
-                <item>
-                    <key> <string>portal_type</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>Apparel Size</string>
-                          <string>Apparel Size</string>
-                        </tuple>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>proxy_listbox_ids</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>ApparelSizeModule_viewApparelSizeList/listbox</string>
-                          <string>Apparel Sizes</string>
-                        </tuple>
-                      </list>
-                    </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
@@ -117,7 +93,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Apparel Size</string> </value>
+                    <value> <string>Trade Description</string> </value>
                 </item>
               </dictionary>
             </value>

@@ -15,6 +15,7 @@
               <list>
                 <string>base_category</string>
                 <string>portal_type</string>
+                <string>proxy_listbox_ids</string>
                 <string>title</string>
               </list>
             </value>
@@ -95,6 +96,17 @@
                         <tuple>
                           <string>Apparel Shape</string>
                           <string>Apparel Shape</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>proxy_listbox_ids</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>ApparelShapeModule_viewApparelShapeList/listbox</string>
+                          <string>Apparel Shapes</string>
                         </tuple>
                       </list>
                     </value>

@@ -13,8 +13,8 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>base_category</string>
                 <string>portal_type</string>
+                <string>proxy_listbox_ids</string>
                 <string>title</string>
               </list>
             </value>
@@ -77,10 +77,6 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>base_category</string> </key>
-                    <value> <string>resource</string> </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string>my_relation_field</string> </value>
                 </item>
@@ -95,6 +91,17 @@
                         <tuple>
                           <string>Apparel Fabric</string>
                           <string>Apparel Fabric</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>proxy_listbox_ids</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>ApparelFabricModule_viewApparelFabricList/listbox</string>
+                          <string>Apparel Fabrics</string>
                         </tuple>
                       </list>
                     </value>

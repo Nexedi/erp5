@@ -13,15 +13,14 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>display_width</string>
                 <string>title</string>
-                <string>default</string>
+                <string>items</string>
               </list>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>matrixbox_size</string> </value>
+            <value> <string>my_quantity_unit_list</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -58,12 +57,6 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>default</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -72,7 +65,17 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>items</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
+                </item>
+                <item>
                     <key> <string>target</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -83,16 +86,18 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>display_width</string> </key>
-                    <value> <int>20</int> </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_string_field</string> </value>
+                    <value> <string>my_category_list</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Base_viewApparelFieldLibrary</string> </value>
+                    <value> <string>Base_viewFieldLibrary</string> </value>
+                </item>
+                <item>
+                    <key> <string>items</string> </key>
+                    <value>
+                      <list/>
+                    </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
@@ -100,7 +105,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>matrixbox_size</string> </value>
+                    <value> <string>Quantity Unit</string> </value>
                 </item>
               </dictionary>
             </value>
@@ -119,7 +124,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: cell.getProperty(\'size\')</string> </value>
+            <value> <string>python: getattr(here.portal_categories[field.getId().replace(\'my_\', \'\', 1).replace(\'_list\', \'\')], preferences.getPreference(\'preferred_category_child_item_list_method_id\', \'getCategoryChildCompactLogicalPathItemList\'))(local_sort_id=(\'int_index\', \'translated_title\'), checked_permission=\'View\', filter_node=1)</string> </value>
         </item>
       </dictionary>
     </pickle>

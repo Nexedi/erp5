@@ -76,7 +76,7 @@
               <dictionary>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_string_field</string> </value>
+                    <value> <string>my_trade_description</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
