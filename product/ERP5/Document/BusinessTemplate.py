@@ -2846,18 +2846,19 @@ class ModuleTemplateItem(BaseTemplateItem):
       mapping['portal_type'] = module.getPortalType()
       permission_list = []
       mapping['permission_list'] = module.showPermissions()
+      mapping['category_list'] = module.getCategoryList()
       self._objects[module_id] = mapping
 
   # Function to generate XML Code Manually
   def generateXml(self, path=None):
-    dict = self._objects[path]
+    mapping = self._objects[path]
     xml_data = ['<module>']
-    keys = dict.keys()
+    keys = mapping.keys()
     for key in sorted(keys):
       if key == 'permission_list':
         # separe permission dict into xml
         xml_data.append(' <%s>' % (key, ))
-        permission_list = dict[key]
+        permission_list = mapping[key]
         for perm in permission_list:
           # the type of the permission defined if we use acquired or not
           if isinstance(perm[1], list):
@@ -2878,8 +2879,16 @@ class ModuleTemplateItem(BaseTemplateItem):
             xml_data.append('   <role>%s</role>' % (role, ))
           xml_data.append('  </permission>')
         xml_data.append(' </%s>' % (key, ))
+      elif key == 'category_list':
+        category_list = mapping[key]
+        if not category_list:
+          continue
+        xml_data.append(' <%s>' % (key, ))
+        for category in category_list:
+          xml_data.append('  <category>%s</category>' % (category, ))
+        xml_data.append(' </%s>' % (key, ))
       else:
-        xml_data.append(' <%s>%s</%s>' % (key, dict[key], key))
+        xml_data.append(' <%s>%s</%s>' % (key, mapping[key], key))
     xml_data.append('</module>')
     return '\n'.join(xml_data)
 
@@ -2926,6 +2935,8 @@ class ModuleTemplateItem(BaseTemplateItem):
           role_list = permission_dict.get(name, ('Manager',))
           acquire = isinstance(role_list, list)
           module.manage_permission(name, roles=role_list, acquire=acquire)
+        if 'category_list' in mapping:
+          module.setCategoryList(mapping['category_list'])
 
   def _importFile(self, file_name, file):
     if not file_name.endswith('.xml'):
@@ -2962,6 +2973,20 @@ class ModuleTemplateItem(BaseTemplateItem):
         else:
           value = node_list[0].data
         mapping[key] = str(value)
+
+    category_list = []
+    try:
+      elt = xml.getElementsByTagName('category_list')[0]
+    except IndexError:
+      pass
+    else:
+      category_element_list = elt.getElementsByTagName('category')
+      for category_element in category_element_list:
+        category_node = category_element.childNodes[0]
+        category = str(category_node.data)
+        category_list.append(category)
+    mapping['category_list'] = category_list
+
     self._objects[file_name[:-4]] = mapping
 
   def uninstall(self, context, **kw):
