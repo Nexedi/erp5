@@ -56,7 +56,7 @@ class PropertyGetter:
   def __float__(self):
     return float(self.value)
 
-  # following methods are used for < > == !⁼ , etc
+  # following methods are used for < > == != , etc
   def __eq__(self, other):
     return int(self.value) == int(other)
 
