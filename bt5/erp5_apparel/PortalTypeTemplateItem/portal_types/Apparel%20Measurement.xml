@@ -38,7 +38,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>     XXX  A matrix which provides default mesure_code and mesure_name\n
+            <value> <string>     XXX  A matrix which provides default mesure_code and mesure_name\r\n
 </string> </value>
         </item>
         <item>
@@ -55,7 +55,15 @@
         </item>
         <item>
             <key> <string>init_script</string> </key>
-            <value> <string></string> </value>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>permission</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>title</string> </key>

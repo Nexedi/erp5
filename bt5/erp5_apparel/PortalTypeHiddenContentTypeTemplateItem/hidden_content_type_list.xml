@@ -1,4 +1,7 @@
 <hidden_content_type_list>
+ <portal_type id="Apparel Cloth">
+  <item>Mapped Value</item>
+ </portal_type>
  <portal_type id="Apparel Component">
   <item>Mapped Value</item>
   <item>Purchase Supply Line</item>
@@ -13,6 +16,9 @@
   <item>Purchase Supply Line</item>
   <item>Sale Supply Line</item>
   <item>Supply Line</item>
+ </portal_type>
+ <portal_type id="Apparel Measurement">
+  <item>Mapped Value</item>
  </portal_type>
  <portal_type id="Apparel Model">
   <item>Mapped Value</item>
