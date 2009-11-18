@@ -54,9 +54,4 @@ class Getter(Accessor):
     self._key = key
 
   def __call__(self, instance):
-    value = self._value
-    if value is None:
-      # Store the value for performance
-      value = instance.provides(self._key)
-      self._value = value
-    return value
+    return instance.provides(self._key)
