@@ -48,5 +48,10 @@ class LocalizationPreference:
       'type'        : 'string',
       'preference'  : 1,
       'mode'        : 'w'},
+    { 'id'          : 'preferred_user_interface_language',
+      'description' : 'A list of languages displayed in the user interface.',
+      'type'        : 'tokens',
+      'preference'  : 1,
+      'mode'        : 'w'},
   )
 
