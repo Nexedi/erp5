@@ -83,7 +83,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>CategoryMembershipDivergenceTester_viewConfiguration</string> </value>
+            <value> <string>StringDivergenceTester_viewConfiguration</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -91,7 +91,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>CategoryMembershipDivergenceTester_viewConfiguration</string> </value>
+            <value> <string>StringDivergenceTester_viewConfiguration</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
