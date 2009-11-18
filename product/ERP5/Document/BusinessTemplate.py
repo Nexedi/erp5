@@ -787,6 +787,23 @@ class ObjectTemplateItem(BaseTemplateItem):
     """
     pass
 
+  def setSafeReindexationMode(self, context):
+    """
+      Postpone indexations after unindexations.
+      This avoids alarming error messages about a single uid being used
+      by "deleted" path and reindexed object. This can happen here for
+      objects on which the uid was restored: previous object was deleted,
+      hence the "deleted" path, and new object does have the same uid.
+    """
+    original_reindex_parameters = context.getPlacelessDefaultReindexParameters()
+    if original_reindex_parameters is None:
+      original_reindex_parameters = {}
+    activate_kw = original_reindex_parameters.get('activate_kw', {}).copy()
+    activate_kw['after_method_id'] = 'unindexObject'
+    context.setPlacelessDefaultReindexParameters(activate_kw=activate_kw, \
+                                                 **original_reindex_parameters)
+    return original_reindex_parameters
+
   def install(self, context, trashbin, **kw):
     self.beforeInstall()
     update_dict = kw.get('object_to_update')
@@ -817,17 +834,8 @@ class ObjectTemplateItem(BaseTemplateItem):
       # sort to add objects before their subobjects
       keys = self._objects.keys()
       keys.sort()
-      # Postpone indexations after unindexations.
-      # This avoids alarming error messages about a single uid being used
-      # by "deleted" path and reindexed object. This can happen here for
-      # objects on which the uid was restored: previous object was deleted,
-      # hence the "deleted" path, and new object does have the same uid.
-      original_reindex_parameters = context.getPlacelessDefaultReindexParameters()
-      if original_reindex_parameters is None:
-        original_reindex_parameters = {}
-      activate_kw = original_reindex_parameters.get('activate_kw', {}).copy()
-      activate_kw['after_method_id'] = 'unindexObject'
-      context.setPlacelessDefaultReindexParameters(activate_kw=activate_kw, **original_reindex_parameters)
+      # set safe activities execution order
+      original_reindex_parameters = self.setSafeReindexationMode(context)
       for path in keys:
         if update_dict.has_key(path) or force:
           # get action for the oject
@@ -1036,7 +1044,7 @@ class ObjectTemplateItem(BaseTemplateItem):
                 group_value_list.remove(widget_id)
           # now set new group object
           obj.groups = new_groups_dict
-      # Remove after_method_id
+      # restore previous activities execution order
       context.setPlacelessDefaultReindexParameters(**original_reindex_parameters)
     else:
       # for old business template format
@@ -1236,11 +1244,15 @@ class PreferenceTemplateItem(PathTemplateItem):
       pref = portal.unrestrictedTraverse(object_path)
       # XXX getPreferenceState is a bad name
       if pref.getPreferenceState() == 'disabled':
+        # set safe activities execution order
+        original_reindex_parameters = self.setSafeReindexationMode(context)
         portal.portal_workflow.doActionFor(
                       pref,
                       'enable_action',
                       comment="Initialized during Business Template " \
                               "installation.")
+        # restore previous activities execution order
+        context.setPlacelessDefaultReindexParameters(**original_reindex_parameters) 
 
 class CategoryTemplateItem(ObjectTemplateItem):
 
