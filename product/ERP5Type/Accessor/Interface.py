@@ -46,10 +46,12 @@ class Getter(Accessor):
   func_code.co_argcount = 1
   func_defaults = ()
 
+  # default values
+  _value = None
+
   def __init__(self, id, key):
     self._id = id
     self._key = key
-    self._value = None
 
   def __call__(self, instance):
     value = self._value
