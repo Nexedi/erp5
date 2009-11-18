@@ -1603,14 +1603,14 @@ def createDefaultAccessors(property_holder, id, prop = None,
 
   ######################################################
   # Create Portal Category Type Accessors.
-  if prop.get('group_type'):
+  if prop['type'] == 'group_type':
     createGroupTypeAccessors(property_holder, prop,
                              read_permission=read_permission,
                              portal=portal)
 
   ######################################################
   # Create Getters
-  if prop.has_key('acquisition_base_category'):
+  elif prop.has_key('acquisition_base_category'):
     # Create getters for an acquired property
     # XXXX Missing Boolean accessor
     accessor_args = (
@@ -1880,7 +1880,10 @@ def createDefaultAccessors(property_holder, id, prop = None,
       property_holder.registerAccessor(accessor_name, id, Base.Getter, accessor_args)
   ######################################################
   # Create Setters
-  if prop['type'] in list_types or prop.get('multivalued', 0):
+  if prop['type'] == 'group_type':
+    # No setter
+    pass
+  elif prop['type'] in list_types or prop.get('multivalued', 0):
     # Create setters for a list property by aliasing
     setter_name = 'set' + UpperCase(id)
     if not hasattr(property_holder, setter_name):
@@ -1996,7 +1999,10 @@ def createDefaultAccessors(property_holder, id, prop = None,
       property_holder.registerAccessor(setter_name, id, Base.Setter, accessor_args)
   ######################################################
   # Create testers
-  if prop['type'] == 'content':
+  if prop['type'] == 'group_type':
+    # No testters
+    pass
+  elif prop['type'] == 'content':
     # XXX This approach is wrong because testers for all properties
     # should be created upfront rather than on demand
     accessor_args = (prop['type'], prop.get('storage_id'))
