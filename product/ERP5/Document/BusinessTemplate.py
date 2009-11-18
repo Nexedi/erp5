@@ -2914,7 +2914,7 @@ class ModuleTemplateItem(BaseTemplateItem):
             continue
         path, module_id = posixpath.split(path)
         portal_type = str(mapping['portal_type'])
-        module = portal._getOb(module_id)
+        module = portal._getOb(module_id, None)
         if module is not None:
           module.portal_type = portal_type
         else:
