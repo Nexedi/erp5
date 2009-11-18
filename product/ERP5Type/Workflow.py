@@ -71,8 +71,8 @@ except ImportError:
 manage_addWorkflowFormDtml = HTMLFile('dtml/addWorkflow', globals())
 
 def _generateWorkflowConstructors(factory_info):
-  """ Generate a "manage_addWorkflow_?" and "manage_addWorkflowForm_?" methods
-  specific for each workflow factory. """
+  """ Generate a "addWorkflow_?" and "addWorkflowForm_?" methods specific for
+  each workflow factory. """
 
   FACTORY_FORM_PREFIX = 'addWorkflowForm_'
   FACTORY_ACTION_PREFIX = 'addWorkflow_'
@@ -97,7 +97,7 @@ def _generateWorkflowConstructors(factory_info):
     """
     # we could have just used the factory from factory_info here, but we use
     # addWorkflowByType to exercise it.
-    addWorkflowByType(dispatcher, workflow_factory_id, workflow_id)
+    workflow = addWorkflowByType(dispatcher, workflow_factory_id, workflow_id)
     if REQUEST is not None:
       return REQUEST.response.redirect(dispatcher.DestinationURL() +
                                        "/manage_main")
