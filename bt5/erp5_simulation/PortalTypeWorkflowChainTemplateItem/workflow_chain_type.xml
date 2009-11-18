@@ -1,6 +1,6 @@
 <workflow_chain>
  <chain>
-  <type>Category Divergence Tester</type>
+  <type>Category Membership Divergence Tester</type>
   <workflow>edit_workflow</workflow>
  </chain>
  <chain>
