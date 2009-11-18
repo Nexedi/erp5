@@ -29,6 +29,9 @@ from types import StringType
 from types import DictionaryType
 from OFS import XMLExportImport
 
+from logging import getLogger
+log = getLogger(__name__)
+
 # Jython has PyStringMap; it's a dict subclass with string keys
 try:
     from org.python.core import PyStringMap
@@ -125,7 +128,9 @@ def exportXML(jar, oid, file=None):
     #id_mapping = ppml.IdentityMapping()
     write=file.write
     write('<?xml version="1.0"?>\012<ZopeData>\012')
-    version=jar._version
+    # Versions are ignored, but some 'load()' implementations require them
+    # FIXME: remove 'version' when TmpStore.load() on ZODB stops asking for it.
+    version=''
     ref=referencesf
     oids=[oid]
     done_oids={}
@@ -140,7 +145,10 @@ def exportXML(jar, oid, file=None):
         if done(oid): continue
         done_oids[oid]=1
         try: p, serial = load(oid, version)
-        except: pass # Ick, a broken reference
+        except:
+            # Ick, a broken reference
+            log.error('exportXML: could not load oid %r' % oid,
+                      exc_info=True)
         else:
             o, p = reorderPickle(jar, p)
             reordered_pickle.append((oid, o, p))
@@ -159,6 +167,8 @@ def exportXML(jar, oid, file=None):
                     o, p = reorderPickle(jar, p)
                     new_oidict[oid] = getattr(o, 'id', None)
                 except:
+                    log.error('exportXML: could not load oid %r' % oid,
+                              exc_info=True)
                     new_oidict[oid] = None # Ick, a broken reference
             new_oids.sort(key=lambda x: new_oidict[x])
             # Build new sorted oids
