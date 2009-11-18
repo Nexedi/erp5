@@ -51,6 +51,7 @@ class LocalizationPreference:
     { 'id'          : 'preferred_user_interface_language',
       'description' : 'A list of languages displayed in the user interface.',
       'type'        : 'tokens',
+      'default'     : (),
       'preference'  : 1,
       'mode'        : 'w'},
   )
