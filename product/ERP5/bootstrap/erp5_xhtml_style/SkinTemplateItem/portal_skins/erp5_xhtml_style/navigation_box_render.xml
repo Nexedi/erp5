@@ -42,7 +42,8 @@
 <tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"\n
            xmlns:metal="http://xml.zope.org/namespaces/metal"\n
            xmlns:i18n="http://xml.zope.org/namespaces/i18n">\n
-  <tal:block tal:define="actions python: here.getPortalObject().portal_actions.listFilteredActionsFor(here)">\n
+  <tal:block tal:define="portal here/getPortalObject;\n
+                         actions python:portal.portal_actions.listFilteredActionsFor(here)">\n
     <span class="first">\n
       <span id="favourites">\n
         <select name="select_favorite"\n
@@ -102,14 +103,18 @@
     <span class="second">\n
       <span id="language">\n
         <select name="select_language"\n
+                tal:define="language_list python:portal.portal_preferences.getPreference(\'preferred_user_interface_language_list\', None)"\n
                 onChange="submitAction(this.form,\'Base_doLanguage\')">\n
           <option value=""\n
                   i18n:translate="" i18n:domain="ui">My Language</option>\n
-          <option tal:repeat="language python: here.Localizer.get_languages_map()"\n
+          <tal:block tal:repeat="language python:portal.Localizer.get_languages_map()">\n
+          <option \n
+                  tal:condition="python:not language_list or language[\'id\'] in language_list"\n
                   tal:omit-tag="nothing"\n
                   tal:attributes="value language/id;\n
                   selected python: language[\'selected\'] and \'selected\' or nothing;"\n
                   tal:content="python: here.Localizer.erp5_ui.gettext(language[\'title\'], lang=language[\'id\'])" />\n
+          </tal:block>\n
         </select>\n
         <button type="submit" name="Base_doLanguage:method" title="Select Language"\n
                 i18n:attributes="title" i18n:domain="ui">\n

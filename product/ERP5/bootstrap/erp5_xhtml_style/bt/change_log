@@ -1,3 +1,6 @@
+2009-11-19 yo
+* Use preferred user interface languages to choose which languages should be displayed in the navigation box. If not defined, display all.
+
 2009-08-12 Jerome
 * add an onbeforeunload event to warn the user when he is about to leave the page without saving.
 
