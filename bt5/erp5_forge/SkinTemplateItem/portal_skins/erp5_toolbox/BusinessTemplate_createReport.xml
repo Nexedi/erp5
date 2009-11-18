@@ -288,7 +288,7 @@ return context.Base_redirect(form_id,\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>form_id=\'view\', portal_type, report_name, skin_folder, use_from_date_at_date</string> </value>
+            <value> <string>form_id=\'view\', portal_type=None, report_name=None, skin_folder=None, use_from_date_at_date=None</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -362,6 +362,7 @@ return context.Base_redirect(form_id,\n
             <value>
               <tuple>
                 <string>view</string>
+                <none/>
                 <none/>
                 <none/>
                 <none/>

@@ -99,7 +99,7 @@ return result_list\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>at_date=None, site=None,positive_stock,negative_stock,zero_stock, **kw</string> </value>
+            <value> <string>at_date=None, site=None, positive_stock=None, negative_stock=None, zero_stock=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>

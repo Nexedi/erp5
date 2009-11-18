@@ -1,3 +1,6 @@
+2009-11-18 yusei
+* Fix wrong python script parameter.
+
 2009-11-10 tatuya
 * Fix Sale and PurchaseOrder_view/listbox_quantity_unit  to show empty drop-down list if the line does not have any resource. This fix makes Delivery and Line  consistence of quantity_unit displaying.
 
