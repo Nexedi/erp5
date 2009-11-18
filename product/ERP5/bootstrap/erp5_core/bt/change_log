@@ -1,3 +1,6 @@
+2009-11-18 yo
+* Move localization-related preferences to General from UI.
+
 2009-11-13 Tatuya
 * Fix the domain name listbox on Tranlsation tab in Portal Type Information to show the content_translation domain.
 
