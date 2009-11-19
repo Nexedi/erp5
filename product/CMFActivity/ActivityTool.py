@@ -276,10 +276,10 @@ class Message:
     else:
       try:
         old_security_manager = getSecurityManager()
-        # Change user if required (TO BE DONE)
-        # We will change the user only in order to execute this method
-        user = self.changeUser(self.user_name, activity_tool)
         try:
+          # Change user if required (TO BE DONE)
+          # We will change the user only in order to execute this method
+          self.changeUser(self.user_name, activity_tool)
           try:
             # XXX: There is no check to see if user is allowed to access
             # that method !
@@ -351,17 +351,16 @@ Exception: %s %s
   def reactivate(self, activity_tool, activity=DEFAULT_ACTIVITY):
     # Reactivate the original object.
     obj= self.getObject(activity_tool)
-    # Change user if required (TO BE DONE)
-    # We will change the user only in order to execute this method
-    current_user = str(_getAuthenticatedUser(self))
-    user = self.changeUser(self.user_name, activity_tool)
+    old_security_manager = getSecurityManager()
     try:
+      # Change user if required (TO BE DONE)
+      # We will change the user only in order to execute this method
+      user = self.changeUser(self.user_name, activity_tool)
       active_obj = obj.activate(activity=activity, **self.activity_kw)
       getattr(active_obj, self.method_id)(*self.args, **self.kw)
     finally:
       # Use again the previous user
-      if user is not None:
-        self.changeUser(current_user, activity_tool)
+      setSecurityManager(old_security_manager)
 
   def setExecutionState(self, is_executed, exc_info=None, log=True, context=None):
     """
