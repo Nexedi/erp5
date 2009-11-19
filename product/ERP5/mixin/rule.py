@@ -242,7 +242,12 @@ class RuleMixin:
     exclude_quantity -- if set to true, do not consider
                         quantity divergence testers
     """
-    raise NotImplementedError
+    tester_list = self.objectValues(
+      portal_type=self.getPortalDivergenceTesterTypeList())
+    if exclude_quantity:
+      return [x for x in tester_list if x.getTestedProperty() != 'quantity']
+    else:
+      return tester_list
 
   def _getMatchingTesterList(self):
     """
@@ -256,7 +261,9 @@ class RuleMixin:
     """
     Return the applicable quantity divergence testers.
     """
-    raise NotImplementedError
+    tester_list = self.objectValues(
+      portal_type=self.getPortalDivergenceTesterTypeList())
+    return [x for x in tester_list if x.getTestedProperty() == 'quantity']
 
   def _newProfitAndLossMovement(self, prevision_movement):
     """
@@ -266,6 +273,7 @@ class RuleMixin:
 
     prevision_movement -- a simulation movement
     """
+    raise NotImplementedError
 
   def _extendMovementCollectionDiff(self, movement_collection_diff,
                                     prevision_movement, decision_movement_list):
