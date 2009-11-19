@@ -492,6 +492,8 @@ class TestERP5BankingMixin(ERP5TypeTestCase):
     self.variation_base_category = getattr(self.category_tool, 'quantity_unit')
     self.unit = self.variation_base_category.newContent(id='unit', title='Unit')
 
+    self.category_tool.role.newContent(id='internal', portal_type='Category')
+
     # add category for currency_exchange_type
     self.currency_exchange_type = getattr(self.category_tool,'currency_exchange_type')
     self.currency_exchange_type.newContent(id='sale')
@@ -583,6 +585,7 @@ class TestERP5BankingMixin(ERP5TypeTestCase):
         site=site.getRelativeUrl(),
         region=site_region_from_codification_dict.get(codification),
         group='baobab',
+        role='internal',
         function='banking')
       site_reference = site_reference_from_codification_dict.get(codification)
       if site_reference is not None:
