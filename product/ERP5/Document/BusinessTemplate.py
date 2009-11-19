@@ -4427,6 +4427,9 @@ class MessageTranslationTemplateItem(BaseTemplateItem):
       path = posixpath.join(lang, catalog)
       mc = localizer._getOb(catalog)
       self._objects[path] = mc.manage_export(lang)
+      if lang not in self._objects:
+        name = localizer.get_language_name(lang)
+        self._objects[lang] = name
 
   def preinstall(self, context, installed_bt, **kw):
     modified_object_list = {}
@@ -4453,28 +4456,49 @@ class MessageTranslationTemplateItem(BaseTemplateItem):
     update_dict = kw.get('object_to_update')
     force = kw.get('force')
     if context.getTemplateFormatVersion() == 1:
-      for path, po in self._objects.items():
-        if update_dict.has_key(path) or force:
+      for key in sorted(self._objects.keys()):
+        if update_dict.has_key(key) or force:
           if not force:
-            action = update_dict[path]
+            action = update_dict[key]
             if action == 'nothing':
               continue
-          path = path.split('/')
-          if len(path) == 2:
+          path = key.split('/')
+          if len(path) == 1:
+            lang = path[0]
+            catalog = None
+          elif len(path) == 2:
             lang = path[0]
             catalog = path[1]
           else:
             lang = path[-3]
             catalog = path[-2]
-          if lang not in localizer.get_languages():
-            localizer.manage_addLanguage(lang)
-          mc = localizer._getOb(catalog)
-          if lang not in mc.get_languages():
-            mc.manage_addLanguage(lang)
-          mc.manage_import(lang, po)
+
+          if catalog is None:
+            name = self._objects[key]
+            for lang_dict in localizer.get_all_languages():
+              if lang_dict['code'] == lang:
+                # When the Localizer has the language as a user-defined
+                # language, make sure that the name is updated.
+                old_name = localizer.get_user_defined_language_name(lang)
+                if old_name is not None and old_name != name:
+                  localizer._del_user_defined_language(lang)
+                  localizer._add_user_defined_language(name, lang)
+                break
+            else:
+              # if the Localizer does not know the language code, it must be
+              # defined as a user-defined language.
+              localizer._add_user_defined_language(name, lang)
+          else:
+            po = self._objects[key]
+            if lang not in localizer.get_languages():
+              localizer.manage_addLanguage(lang)
+            mc = localizer._getOb(catalog)
+            if lang not in mc.get_languages():
+              mc.manage_addLanguage(lang)
+            mc.manage_import(lang, po)
     else:
       BaseTemplateItem.install(self, context, trashbin, **kw)
-      for lang, catalogs in self._archive.items():
+      for lang, catalogs in self._archive.iteritems():
         if lang not in localizer.get_languages():
           localizer.manage_addLanguage(lang)
         for catalog, po in catalogs.items():
@@ -4484,22 +4508,35 @@ class MessageTranslationTemplateItem(BaseTemplateItem):
           mc.manage_import(lang, po)
 
   def export(self, context, bta, **kw):
-    if len(self._objects.keys()) == 0:
+    if len(self._objects) == 0:
       return
     root_path = os.path.join(bta.path, self.__class__.__name__)
     bta.addFolder(name=root_path)
-    for key in self._objects.keys():
-      obj = self._objects[key]
+    for key, obj in self._objects.iteritems():
       path = os.path.join(root_path, key)
       bta.addFolder(name=path)
-      f = open(path+os.sep+'translation.po', 'wb')
-      f.write(str(obj))
-      f.close()
+      if '/' in key:
+        bta.addObject(obj, os.path.join(path, 'translation'), ext='.po')
+      else:
+        xml_data = ['<language>']
+        xml_data.append(' <code>%s</code>' % (escape(key), ))
+        xml_data.append(' <name>%s</name>' % (escape(obj), ))
+        xml_data.append('</language>')
+        bta.addObject('\n'.join(xml_data), os.path.join(path, 'language'))
 
   def _importFile(self, file_name, file):
-    if posixpath.split(file_name)[1] == 'translation.po':
+    name = posixpath.split(file_name)[1]
+    if name == 'translation.po':
       text = file.read()
       self._objects[file_name[:-3]] = text
+    elif name == 'language.xml':
+      xml = parse(file)
+      language_element = xml.getElementsByTagName('language')[0]
+      name_element = language_element.getElementsByTagName('name')[0]
+      name = str(name_element.childNodes[0].data)
+      code_element = language_element.getElementsByTagName('code')[0]
+      code = str(code_element.childNodes[0].data)
+      self._objects[code] = name
 
 class LocalRolesTemplateItem(BaseTemplateItem):
 
