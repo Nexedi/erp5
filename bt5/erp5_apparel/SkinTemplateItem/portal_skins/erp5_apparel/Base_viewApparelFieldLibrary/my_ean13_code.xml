@@ -98,7 +98,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Gencod</string> </value>
+                    <value> <string>EAN-13 Code</string> </value>
                 </item>
               </dictionary>
             </value>
