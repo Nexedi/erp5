@@ -13,10 +13,11 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
-                <string>portal_type</string>
                 <string>allow_creation</string>
+                <string>description</string>
                 <string>enabled</string>
+                <string>portal_type</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -95,7 +96,7 @@
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string>The accountable project on the client side.</string> </value>
+                    <value> <string>The project to which this transaction is related to on the client side.</string> </value>
                 </item>
                 <item>
                     <key> <string>enabled</string> </key>

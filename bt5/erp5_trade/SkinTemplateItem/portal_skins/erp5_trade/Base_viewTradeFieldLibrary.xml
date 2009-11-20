@@ -85,7 +85,10 @@
                 <item>
                     <key> <string>left</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>my_destination_carrier_title</string>
+                        <string>my_source_carrier_title</string>
+                      </list>
                     </value>
                 </item>
                 <item>

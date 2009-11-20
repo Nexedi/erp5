@@ -149,6 +149,8 @@
                         <string>my_min_stock</string>
                         <string>my_quantity</string>
                         <string>my_reference</string>
+                        <string>my_destination_carrier_title</string>
+                        <string>my_source_carrier_title</string>
                       </list>
                     </value>
                 </item>
