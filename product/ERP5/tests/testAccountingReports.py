@@ -2615,6 +2615,76 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     if err_list:
       self.fail(''.join(err_list))
 
+  def testOtherPartiesReport(self):
+    # Other parties report
+    account_module = self.portal.account_module
+    t1 = self._makeOne(
+              portal_type='Accounting Transaction',
+              title='Transaction 1',
+              source_reference='1',
+              simulation_state='delivered',
+              destination_section_value=self.organisation_module.client_1,
+              start_date=DateTime(2006, 2, 1),
+              lines=(dict(source_value=account_module.receivable,
+                          source_debit=100.0),
+                     dict(source_value=account_module.goods_sales,
+                          source_credit=100.0)))
+    
+    t2 = self._makeOne(
+              portal_type='Accounting Transaction',
+              title='Transaction 2',
+              source_reference='2',
+              simulation_state='delivered',
+              destination_section_value=self.organisation_module.client_1,
+              start_date=DateTime(2006, 2, 1, 0, 1),
+              lines=(dict(source_value=account_module.payable,
+                          source_debit=200.0),
+                     dict(source_value=account_module.goods_sales,
+                          source_credit=200.0)))
+
+    request_form = self.portal.REQUEST.form
+    request_form['at_date'] = DateTime(2006, 2, 1)
+    request_form['section_category'] = 'group/demo_group'
+    request_form['simulation_state'] = ['delivered']
+    request_form['omit_balanced_accounts'] = False
+    request_form['omit_grouped_references'] = True
+    
+    report_section_list = self.getReportSectionList(
+                               self.portal.accounting_module,
+                               'AccountModule_viewOtherPartiesReport')
+    self.assertEquals(1, len(report_section_list))
+    self.assertEquals(report_section_list[0].getTitle(),
+                      self.organisation_module.client_1.getTitle())
+
+    line_list = self.getListBoxLineList(report_section_list[0])
+    data_line_list = [l for l in line_list if l.isDataLine()]
+    self.assertEquals(2, len(data_line_list))
+
+    self.checkLineProperties(data_line_list[0],
+          Movement_getExplanationTitle='Transaction 1',
+          Movement_getExplanationTranslatedPortalType='Accounting Transaction',
+          Movement_getNodeGapId='41',
+          credit=0,
+          debit=100,
+          date=DateTime('2006/02/01'),
+          getTranslatedSimulationStateTitle='Closed',
+          running_total_price=100.0)
+
+    self.checkLineProperties(data_line_list[1],
+          Movement_getExplanationTitle='Transaction 2',
+          Movement_getExplanationTranslatedPortalType='Accounting Transaction',
+          Movement_getNodeGapId='40',
+          credit=0,
+          debit=200,
+          date=DateTime(2006, 2, 1, 0, 1),
+          getTranslatedSimulationStateTitle='Closed',
+          running_total_price=300.0)
+
+    self.assertTrue(line_list[-1].isStatLine())
+    self.checkLineProperties(line_list[-1],
+          credit=0,
+          debit=300,)
+
 
 def test_suite():
   suite = unittest.TestSuite()
