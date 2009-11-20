@@ -1032,7 +1032,7 @@ return foo_list
     foo2_view = custom.Foo2_view
     foo2_view.manage_addField('your_report_box1', 'Your Report Box', 'ReportBox')
     your_report_box1 = foo2_view.your_report_box1
-    your_report_box1.report_method = 'FooReport_getReportSectionList'
+    your_report_box1._edit({'report_method':'FooReport_getReportSectionList'})
 
     createZODBPythonScript(
       self.portal.portal_skins.custom,
