@@ -371,7 +371,7 @@ class ODFStrategy(Implicit):
                                             ooo_builder=ooo_builder,
                                             iteration_index=iteration_index)
       elif isinstance(field, ReportBox):
-         report_method = getattr(field, field.report_method, None)
+         report_method = getattr(field, field.get_value('report_method'), None)
          element_tree = self._replaceXmlByReportSection(element_tree=element_tree,
                                                         extra_context=extra_context,
                                                         report_method=report_method,
