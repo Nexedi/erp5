@@ -29,7 +29,7 @@
 from Products.PythonScripts.standard import Object
 
 
-def getDocumentGroupByWorkflowStateList(self, **kw):
+def getDocumentGroupByWorkflowStateList(self, form_id='', **kw):
   """This returns the list of all "document groups", ie document of the same
   portal type, in the same workflow state.
   
@@ -53,6 +53,12 @@ def getDocumentGroupByWorkflowStateList(self, **kw):
   
   selection_name = request['selection_name']
 
+  list_method_name = 'searchFolder'
+  form = getattr(portal, form_id)
+  listbox = getattr(form, 'listbox', None)
+  if listbox is not None:
+    list_method_name = listbox.get_value('list_method').method_name
+
   # guess all column name from catalog schema
   possible_state_list = [column_name for column_name in
        self.getPortalObject().portal_catalog.getSQLCatalog().getColumnMap() if
@@ -73,10 +79,10 @@ def getDocumentGroupByWorkflowStateList(self, **kw):
       selection_params['group_by'] = ('catalog.portal_type',
                                       'catalog.%s' % workflow_state)
       selection_params['select_expression'] = (
-          'count(catalog.uid) as count, catalog.portal_type, catalog.%s'
+          'catalog.path, count(catalog.uid) as count, catalog.portal_type, catalog.%s'
             % workflow_state)
       
-      for brain in self.searchFolder(**selection_params):
+      for brain in getattr(self, list_method_name)(**selection_params):
         doc = brain.getObject()
         for workflow in wf_tool.getWorkflowsFor(doc):
           state_var = workflow.variables.getStateVar()
