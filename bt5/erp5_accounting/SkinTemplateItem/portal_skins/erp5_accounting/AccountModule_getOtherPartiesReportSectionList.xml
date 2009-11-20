@@ -76,6 +76,7 @@ if role_filter_list == [\'\'] :\n
   role_filter_list = None\n
 if role_filter_list:\n
   role_filter_list = [\'role/%s\' % r for r in role_filter_list]\n
+  \n
 \n
 result = []\n
 \n
@@ -83,7 +84,6 @@ params =  {\n
     \'at_date\'                     : at_date\n
   , \'section_category\': section_category\n
   , \'simulation_state\': simulation_state\n
-  , \'report_depth\'                : 5\n
   #, \'where_expression\'            : " section.portal_type = \'Organisation\' "\n
 }\n
 \n
@@ -109,38 +109,23 @@ entity_columns = [\n
                        (\'running_total_price\', \'Balance\'),\n
 ]\n
 \n
-# build a list of all accounts which _strictly_ belongs to categories \n
-# receivable or payable, to prepare parameter to the getInventory which\n
-# will tell wether this third party account is balanced or not.\n
-valid_node_uids = []\n
-if omit_balanced_accounts :\n
-  for account in portal.portal_categories.resolveCategory(\n
-                    \'account_type/asset/receivable\'\n
-                ).getAccountTypeRelatedValueList(\n
-                    strict_membership=1,\n
-                    portal_type=\'Account\'):\n
-    if not gap_root or account.isMemberOf(gap_root):\n
-      valid_node_uids.append(account.getUid())\n
-  for account in portal.portal_categories.resolveCategory(\n
-                    \'account_type/liability/payable\'\n
-                ).getAccountTypeRelatedValueList(\n
-                    strict_membership=1,\n
-                    portal_type=\'Account\'):\n
-    if not gap_root or account.isMemberOf(gap_root):\n
-      valid_node_uids.append(account.getUid())\n
-\n
 if not params[\'hide_grouping\']  :\n
   entity_columns.append((\'grouping_reference\',\n
                          \'Grouping Reference\'))\n
 \n
-for party in context.Account_zDistinctSectionList():\n
+\n
+# TODO: this can be a simple getInventoryList with mirror section category\n
+# (role)\n
+for party in context.Account_zDistinctSectionList(\n
+                              section_category=section_category,\n
+                              at_date=at_date):\n
   o = party.getObject()\n
-  keep_this_one = 1\n
+  keep_this_one = True\n
   if role_filter_list:\n
-    keep_this_one = 0\n
+    keep_this_one = False\n
     for role in role_filter_list:\n
       if o.isMemberOf(role):\n
-        keep_this_one = 1\n
+        keep_this_one = True\n
 \n
   if not keep_this_one:\n
     continue\n
@@ -150,8 +135,11 @@ for party in context.Account_zDistinctSectionList():\n
         # don\'t show entities belonging to the group we are reporting\n
     if omit_balanced_accounts and (\n
             simulation_tool.getInventoryAssetPrice(\n
-                    mirror_section_uid=o.uid,\n
-                    node_uid=valid_node_uids, **params) == 0):\n
+                    mirror_section_uid=party.uid,\n
+                    strict_node_category=(\n
+                          \'account_type/asset/receivable\',\n
+                          # TODO: don\'t compare floats for equality ...\n
+                          \'account_type/liability/payable\')) == 0.):\n
       pass\n
     else:\n
       title = o.getTitle()\n
@@ -162,9 +150,9 @@ for party in context.Account_zDistinctSectionList():\n
                                level=1,\n
                                path=o.getPhysicalPath(),\n
                                form_id=\'Entity_viewAccountingTransactionList\',\n
-                               selection_name = \'other_parties_report_selection\',\n
-                               selection_params = params,\n
-                               selection_columns = entity_columns,\n
+                               selection_name=\'other_parties_report_selection\',\n
+                               selection_params=params,\n
+                               selection_columns=entity_columns,\n
                                selection_sort_order=[(\'stock.date\', \'ascending\'),\n
                                                       (\'stock.uid\', \'ascending\'),],))\n
 \n
@@ -240,13 +228,11 @@ return result\n
                             <string>portal</string>
                             <string>simulation_tool</string>
                             <string>entity_columns</string>
-                            <string>valid_node_uids</string>
-                            <string>account</string>
                             <string>party</string>
                             <string>o</string>
                             <string>keep_this_one</string>
+                            <string>False</string>
                             <string>role</string>
-                            <string>_apply_</string>
                             <string>title</string>
                             <string>_inplacevar_</string>
                           </tuple>
