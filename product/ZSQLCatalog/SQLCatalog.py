@@ -2253,6 +2253,7 @@ class Catalog(Folder,
     kw['where_expression'] = query['where_expression']
     kw['sort_on'] = query['order_by_expression']
     kw['from_table_list'] = query['from_table_list']
+    kw['valid_from_table_list'] = query['valid_from_table_list']
     kw['from_expression'] = query['from_expression']
     kw['limit_expression'] = query['limit_expression']
     kw['select_expression'] = query['select_expression']

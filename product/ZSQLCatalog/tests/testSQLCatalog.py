@@ -34,6 +34,7 @@ from Products.ZSQLCatalog.SQLCatalog import ComplexQuery
 from Products.ZSQLCatalog.SQLCatalog import SimpleQuery
 from Products.ZSQLCatalog.Query.EntireQuery import EntireQuery
 from Products.ZSQLCatalog.Query.RelatedQuery import RelatedQuery
+from Products.ZSQLCatalog.Query.SubCatalogQuery import SubCatalogQuery
 from DateTime import DateTime
 
 class ReferenceQuery:
@@ -119,6 +120,8 @@ class ReferenceQuery:
              self.args[0] == other.query
     elif isinstance(other, RelatedQuery):
       return self == other.join_condition
+    elif isinstance(other, SubCatalogQuery):
+      return self == other.query
     elif isinstance(other, Query):
       return self == other.wrapped_query
     else:
@@ -138,8 +141,9 @@ class RelatedReferenceQuery:
     self.subquery = reference_subquery
 
   def __eq__(self, other):
-    return isinstance(other, RelatedQuery) and \
-           self.subquery == other.join_condition
+    return isinstance(other, SubCatalogQuery) and \
+           isinstance(other.query, RelatedQuery) and \
+           self.subquery == other.query.join_condition
 
   def __repr__(self):
     return '<%s %r>' % (self.__class__.__name__, self.subquery)
