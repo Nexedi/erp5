@@ -53,35 +53,21 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-# You can use this script to jump to accounting module without making the URL longer.\n
-# Like \'erp5/organisation/purchase_order/accounting/view\'.\n
-#\n
-# Usage: .../Base_jumpToAccountingTransaction?from_entity=1\n
+            <value> <string># Usage: .../Base_jumpToAccountingTransaction?from_entity=1\n
 #\n
 # Use from_account to display only transaction related to the account you come from, and from_entity if you come from an organisation or person\n
 \n
-request=context.REQUEST\n
-\n
-redirect_url = \'%s/accounting_module/view\' % context.getPortalObject().absolute_url()\n
-\n
-separator = \'?\'\n
+redirect_kw = dict(reset=1,\n
+                   ignore_hide_rows=True)\n
 \n
 if from_account:\n
-  redirect_url += \'%snode:list=%s\' % (separator, context.getRelativeUrl())\n
-  separator = \'&\'\n
-\n
+  redirect_kw[\'node\'] = [context.getRelativeUrl()]\n
 elif from_entity:\n
-  redirect_url += \'%sentity=%s\' % (separator, context.getRelativeUrl())\n
-  separator = \'&\'\n
+  redirect_kw[\'entity\'] = context.getRelativeUrl()\n
 \n
-redirect_url += \'%sreset=1\' % separator\n
-\n
-request[ \'RESPONSE\' ].redirect( redirect_url )\n
-
-
-]]></string> </value>
+return context.getPortalObject().accounting_module.Base_redirect(\n
+              \'view\', keep_items=redirect_kw)\n
+</string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -119,13 +105,12 @@ request[ \'RESPONSE\' ].redirect( redirect_url )\n
                           <tuple>
                             <string>from_account</string>
                             <string>from_entity</string>
+                            <string>dict</string>
+                            <string>True</string>
+                            <string>redirect_kw</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>request</string>
-                            <string>redirect_url</string>
-                            <string>separator</string>
-                            <string>_inplacevar_</string>
-                            <string>_getitem_</string>
+                            <string>_write_</string>
                           </tuple>
                         </value>
                     </item>
