@@ -91,6 +91,7 @@ def getForm(skin_folder, form_id):\n
 bt_title = context.getTitle()\n
 field_library_id = calculateFieldLibraryID(bt_title)\n
 \n
+field_library_dict = {}\n
 # Check if the Field Library exists\n
 skin_id_list = context.getTemplateSkinIdList()\n
 if skin_id_list:\n
@@ -275,6 +276,7 @@ return field_list\n
                             <string>context</string>
                             <string>bt_title</string>
                             <string>field_library_id</string>
+                            <string>field_library_dict</string>
                             <string>skin_id_list</string>
                             <string>main_skin_id</string>
                             <string>_getitem_</string>
@@ -283,7 +285,6 @@ return field_list\n
                             <string>None</string>
                             <string>_write_</string>
                             <string>_getiter_</string>
-                            <string>field_library_dict</string>
                             <string>field</string>
                             <string>field_path</string>
                             <string>template_form_id</string>
