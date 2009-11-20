@@ -38,17 +38,7 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string>Base_edit</string> </value>
-        </item>
-        <item>
-            <key> <string>description</string> </key>
             <value> <string></string> </value>
-        </item>
-        <item>
-            <key> <string>edit_order</string> </key>
-            <value>
-              <list/>
-            </value>
         </item>
         <item>
             <key> <string>encoding</string> </key>
@@ -64,6 +54,9 @@
               <list>
                 <string>left</string>
                 <string>right</string>
+                <string>center</string>
+                <string>bottom</string>
+                <string>hidden</string>
               </list>
             </value>
         </item>
@@ -72,33 +65,40 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>bottom</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>center</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>hidden</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>my_source_section_title</string>
-                        <string>my_source_title</string>
-                        <string>my_source_decision_title</string>
-                        <string>my_source_administration_title</string>
-                        <string>my_source_payment</string>
-                        <string>my_source_project_title</string>
-                        <string>my_source_reference</string>
+                        <string>my_destination_carrier_title</string>
                         <string>my_source_carrier_title</string>
+                        <string>my_destination_payment</string>
+                        <string>my_source_payment</string>
+                        <string>my_destination_reference</string>
+                        <string>my_source_reference</string>
                       </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>right</string> </key>
                     <value>
-                      <list>
-                        <string>my_destination_section_title</string>
-                        <string>my_destination_title</string>
-                        <string>my_destination_decision_title</string>
-                        <string>my_destination_administration_title</string>
-                        <string>my_destination_payment</string>
-                        <string>my_destination_project_title</string>
-                        <string>my_destination_reference</string>
-                        <string>my_destination_carrier_title</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
               </dictionary>
@@ -106,7 +106,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Task_viewProfile</string> </value>
+            <value> <string>Base_viewProjectFieldLibrary</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -114,15 +114,11 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>Task_viewProfile</string> </value>
-        </item>
-        <item>
-            <key> <string>pt</string> </key>
-            <value> <string>form_view</string> </value>
+            <value> <string>Base_viewProjectFieldLibrary</string> </value>
         </item>
         <item>
             <key> <string>row_length</string> </key>
-            <value> <int>2</int> </value>
+            <value> <int>4</int> </value>
         </item>
         <item>
             <key> <string>stored_encoding</string> </key>
@@ -130,19 +126,11 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Profile</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>
             <value> <int>0</int> </value>
-        </item>
-        <item>
-            <key> <string>update_action</string> </key>
-            <value> <string></string> </value>
-        </item>
-        <item>
-            <key> <string>update_action_title</string> </key>
-            <value> <string></string> </value>
         </item>
       </dictionary>
     </pickle>
