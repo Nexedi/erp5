@@ -148,7 +148,7 @@
                                 </value>
                             </item>
                             <item>
-                                <key> <string>no_limit</string> </key>
+                                <key> <string>group_by</string> </key>
                                 <value>
                                   <dictionary/>
                                 </value>
@@ -341,7 +341,7 @@
                             <string>count</string>
                             <string>transaction_uid</string>
                             <string>specific_reference</string>
-                            <string>no_limit</string>
+                            <string>group_by</string>
                             <string>search_result_keys</string>
                             <string>delivery_mirror_section_title</string>
                             <string>source_section_where_expression</string>
@@ -386,7 +386,7 @@ section_category=""\r\n
 count=""\r\n
 transaction_uid=""\r\n
 specific_reference\r\n
-no_limit\r\n
+group_by\r\n
 search_result_keys=\'\'\r\n
 delivery_mirror_section_title=""\r\n
 source_section_where_expression\r\n
@@ -450,6 +450,8 @@ destination_section_where_expression</string> </value>
       <dtml-elif count>\n
         COUNT(DISTINCT catalog.uid) AS count\n
       <dtml-else>\n
+        <dtml-if select_expression><dtml-var select_expression>\n
+        <dtml-else>\n
         DISTINCT\n
         <dtml-in "search_result_keys">\n
           <dtml-unless sequence-start>,</dtml-unless>\n
@@ -457,7 +459,7 @@ destination_section_where_expression</string> </value>
         </dtml-in>\n
         , delivery.start_date as operation_date\n
         , \'source\' as section_mark\n
-        <dtml-if select_expression><dtml-var select_expression> </dtml-if>\n
+        </dtml-if>\n
       </dtml-if>\n
     \n
     FROM\n
@@ -600,8 +602,6 @@ destination_section_where_expression</string> </value>
       </dtml-if>\n
       <dtml-if "query[\'limit_expression\']">\n
         LIMIT <dtml-var "query[\'limit_expression\']">\n
-      <dtml-else>\n
-        <dtml-unless no_limit>LIMIT 1000</dtml-unless>\n
       </dtml-if>\n
     </dtml-unless>\n
 \n
@@ -625,10 +625,14 @@ destination_section_where_expression</string> </value>
         <dtml-elif count>\n
           SELECT COUNT(DISTINCT uid) AS count FROM (\n
         <dtml-else>\n
-          SELECT main.*,\n
-          ( SELECT title FROM catalog as mirror_catalog WHERE mirror_catalog.uid=main.delivery_mirror_section_uid ) AS delivery_mirror_section_title,\n
-          ( SELECT IFNULL(SUM(stock.total_price), 0) FROM stock, catalog AS child WHERE child.uid = stock.uid AND child.parent_uid = main.uid AND stock.section_uid=main.category_uid AND stock.total_price > 0 AND <dtml-sqltest accounting_movement_list type=string column=child.portal_type op=eq multiple>) AS debit,\n
-          ( SELECT IFNULL(-SUM(stock.total_price), 0) FROM stock, catalog AS child WHERE child.uid = stock.uid AND child.parent_uid = main.uid AND stock.section_uid=main.category_uid AND stock.total_price < 0 AND <dtml-sqltest accounting_movement_list type=string column=child.portal_type op=eq multiple>) AS credit\n
+          SELECT\n
+          <dtml-if select_expression><dtml-var select_expression>\n
+          <dtml-else>\n
+           catalog.*,\n
+          ( SELECT title FROM catalog as mirror_catalog WHERE mirror_catalog.uid=catalog.delivery_mirror_section_uid ) AS delivery_mirror_section_title,\n
+          ( SELECT IFNULL(SUM(stock.total_price), 0) FROM stock, catalog AS child WHERE child.uid = stock.uid AND child.parent_uid = catalog.uid AND stock.section_uid=catalog.category_uid AND stock.total_price > 0 AND <dtml-sqltest accounting_movement_list type=string column=child.portal_type op=eq multiple>) AS debit,\n
+          ( SELECT IFNULL(-SUM(stock.total_price), 0) FROM stock, catalog AS child WHERE child.uid = stock.uid AND child.parent_uid = catalog.uid AND stock.section_uid=catalog.category_uid AND stock.total_price < 0 AND <dtml-sqltest accounting_movement_list type=string column=child.portal_type op=eq multiple>) AS credit\n
+          </dtml-if>\n
           FROM (\n
            SELECT *\n
            FROM (\n
@@ -650,14 +654,11 @@ destination_section_where_expression</string> </value>
             catalog.uid\n
           <dtml-else>\n
             DISTINCT\n
-            <dtml-in "search_result_keys">\n
-              <dtml-unless sequence-start>,</dtml-unless>\n
-              <dtml-var sequence-item>\n
-            </dtml-in>\n
-            , delivery.start_date as operation_date\n
+            delivery.start_date as operation_date\n
             , delivery.destination_section_uid as delivery_mirror_section_uid\n
             , \'source\' as section_mark\n
             , catalog.source_reference as specific_reference\n
+            , catalog.*\n
             <dtml-if "section_category">, category.uid as category_uid</dtml-if>\n
             <dtml-if "not (stat or count) and query[\'order_by_expression\']">\n
               <dtml-let order_column="query[\'order_by_expression\'].split(\' \')[0]">\n
@@ -666,7 +667,6 @@ destination_section_where_expression</string> </value>
                 </dtml-if>\n
               </dtml-let>\n
             </dtml-if>\n
-            <dtml-if select_expression><dtml-var select_expression> </dtml-if>\n
           </dtml-if>\n
         \n
         FROM\n
@@ -835,14 +835,11 @@ UNION\n
             catalog.uid\n
           <dtml-else>\n
             DISTINCT\n
-            <dtml-in "search_result_keys">\n
-              <dtml-unless sequence-start>,</dtml-unless>\n
-              <dtml-var sequence-item>\n
-            </dtml-in>\n
-            , delivery.stop_date as operation_date\n
+            delivery.stop_date as operation_date\n
             , delivery.source_section_uid as delivery_mirror_section_uid\n
             , \'destination\' as section_mark\n
             , catalog.destination_reference as specific_reference\n
+            , catalog.*\n
             <dtml-if "section_category">, category.uid as category_uid</dtml-if>\n
             <dtml-if "not (stat or count) and query[\'order_by_expression\']">\n
               <dtml-let order_column="query[\'order_by_expression\'].split(\' \')[0]">\n
@@ -851,7 +848,6 @@ UNION\n
                 </dtml-if>\n
               </dtml-let>\n
             </dtml-if>\n
-            <dtml-if select_expression><dtml-var select_expression> </dtml-if>\n
           </dtml-if>\n
         \n
         FROM\n
@@ -1017,16 +1013,18 @@ UNION\n
         </dtml-if>\n
 \n
         <dtml-if "not (stat or count)">\n
-            GROUP BY uid\n
+          GROUP BY uid\n
           <dtml-if "query[\'order_by_expression\']">\n
             ORDER BY <dtml-var "query[\'order_by_expression\'].split(\'.\')[-1]">\n
           </dtml-if>\n
           <dtml-if "query[\'limit_expression\']">\n
             LIMIT <dtml-var "query[\'limit_expression\']">\n
-          <dtml-else>\n
-            <dtml-unless no_limit>LIMIT 1000</dtml-unless>\n
           </dtml-if>\n
-        ) as main\n
+        ) as catalog\n
+          <dtml-if expr="query[\'group_by_expression\']">\n
+             GROUP BY <dtml-var expr="query[\'group_by_expression\']">\n
+          </dtml-if>\n
+\n
         </dtml-if>\n
 \n
 </dtml-if>\n
@@ -1097,6 +1095,8 @@ UNION\n
       <dtml-elif count>\n
         COUNT(DISTINCT catalog.uid) AS count\n
       <dtml-else>\n
+        <dtml-if select_expression><dtml-var select_expression>\n
+        <dtml-else>\n
         DISTINCT\n
         <dtml-in "search_result_keys">\n
           <dtml-unless sequence-start>,</dtml-unless>\n
@@ -1104,7 +1104,7 @@ UNION\n
         </dtml-in>\n
         , delivery.start_date as operation_date\n
         , \'source\' as section_mark\n
-        <dtml-if select_expression><dtml-var select_expression> </dtml-if>\n
+        </dtml-if>\n
       </dtml-if>\n
     \n
     FROM\n
@@ -1247,8 +1247,6 @@ UNION\n
       </dtml-if>\n
       <dtml-if "query[\'limit_expression\']">\n
         LIMIT <dtml-var "query[\'limit_expression\']">\n
-      <dtml-else>\n
-        <dtml-unless no_limit>LIMIT 1000</dtml-unless>\n
       </dtml-if>\n
     </dtml-unless>\n
 \n
@@ -1272,10 +1270,14 @@ UNION\n
         <dtml-elif count>\n
           SELECT COUNT(DISTINCT uid) AS count FROM (\n
         <dtml-else>\n
-          SELECT main.*,\n
-          ( SELECT title FROM catalog as mirror_catalog WHERE mirror_catalog.uid=main.delivery_mirror_section_uid ) AS delivery_mirror_section_title,\n
-          ( SELECT IFNULL(SUM(stock.total_price), 0) FROM stock, catalog AS child WHERE child.uid = stock.uid AND child.parent_uid = main.uid AND stock.section_uid=main.category_uid AND stock.total_price > 0 AND <dtml-sqltest accounting_movement_list type=string column=child.portal_type op=eq multiple>) AS debit,\n
-          ( SELECT IFNULL(-SUM(stock.total_price), 0) FROM stock, catalog AS child WHERE child.uid = stock.uid AND child.parent_uid = main.uid AND stock.section_uid=main.category_uid AND stock.total_price < 0 AND <dtml-sqltest accounting_movement_list type=string column=child.portal_type op=eq multiple>) AS credit\n
+          SELECT\n
+          <dtml-if select_expression><dtml-var select_expression>\n
+          <dtml-else>\n
+           catalog.*,\n
+          ( SELECT title FROM catalog as mirror_catalog WHERE mirror_catalog.uid=catalog.delivery_mirror_section_uid ) AS delivery_mirror_section_title,\n
+          ( SELECT IFNULL(SUM(stock.total_price), 0) FROM stock, catalog AS child WHERE child.uid = stock.uid AND child.parent_uid = catalog.uid AND stock.section_uid=catalog.category_uid AND stock.total_price > 0 AND <dtml-sqltest accounting_movement_list type=string column=child.portal_type op=eq multiple>) AS debit,\n
+          ( SELECT IFNULL(-SUM(stock.total_price), 0) FROM stock, catalog AS child WHERE child.uid = stock.uid AND child.parent_uid = catalog.uid AND stock.section_uid=catalog.category_uid AND stock.total_price < 0 AND <dtml-sqltest accounting_movement_list type=string column=child.portal_type op=eq multiple>) AS credit\n
+          </dtml-if>\n
           FROM (\n
            SELECT *\n
            FROM (\n
@@ -1297,14 +1299,11 @@ UNION\n
             catalog.uid\n
           <dtml-else>\n
             DISTINCT\n
-            <dtml-in "search_result_keys">\n
-              <dtml-unless sequence-start>,</dtml-unless>\n
-              <dtml-var sequence-item>\n
-            </dtml-in>\n
-            , delivery.start_date as operation_date\n
+            delivery.start_date as operation_date\n
             , delivery.destination_section_uid as delivery_mirror_section_uid\n
             , \'source\' as section_mark\n
             , catalog.source_reference as specific_reference\n
+            , catalog.*\n
             <dtml-if "section_category">, category.uid as category_uid</dtml-if>\n
             <dtml-if "not (stat or count) and query[\'order_by_expression\']">\n
               <dtml-let order_column="query[\'order_by_expression\'].split(\' \')[0]">\n
@@ -1313,7 +1312,6 @@ UNION\n
                 </dtml-if>\n
               </dtml-let>\n
             </dtml-if>\n
-            <dtml-if select_expression><dtml-var select_expression> </dtml-if>\n
           </dtml-if>\n
         \n
         FROM\n
@@ -1482,14 +1480,11 @@ UNION\n
             catalog.uid\n
           <dtml-else>\n
             DISTINCT\n
-            <dtml-in "search_result_keys">\n
-              <dtml-unless sequence-start>,</dtml-unless>\n
-              <dtml-var sequence-item>\n
-            </dtml-in>\n
-            , delivery.stop_date as operation_date\n
+            delivery.stop_date as operation_date\n
             , delivery.source_section_uid as delivery_mirror_section_uid\n
             , \'destination\' as section_mark\n
             , catalog.destination_reference as specific_reference\n
+            , catalog.*\n
             <dtml-if "section_category">, category.uid as category_uid</dtml-if>\n
             <dtml-if "not (stat or count) and query[\'order_by_expression\']">\n
               <dtml-let order_column="query[\'order_by_expression\'].split(\' \')[0]">\n
@@ -1498,7 +1493,6 @@ UNION\n
                 </dtml-if>\n
               </dtml-let>\n
             </dtml-if>\n
-            <dtml-if select_expression><dtml-var select_expression> </dtml-if>\n
           </dtml-if>\n
         \n
         FROM\n
@@ -1664,16 +1658,18 @@ UNION\n
         </dtml-if>\n
 \n
         <dtml-if "not (stat or count)">\n
-            GROUP BY uid\n
+          GROUP BY uid\n
           <dtml-if "query[\'order_by_expression\']">\n
             ORDER BY <dtml-var "query[\'order_by_expression\'].split(\'.\')[-1]">\n
           </dtml-if>\n
           <dtml-if "query[\'limit_expression\']">\n
             LIMIT <dtml-var "query[\'limit_expression\']">\n
-          <dtml-else>\n
-            <dtml-unless no_limit>LIMIT 1000</dtml-unless>\n
           </dtml-if>\n
-        ) as main\n
+        ) as catalog\n
+          <dtml-if expr="query[\'group_by_expression\']">\n
+             GROUP BY <dtml-var expr="query[\'group_by_expression\']">\n
+          </dtml-if>\n
+\n
         </dtml-if>\n
 \n
 </dtml-if>\n

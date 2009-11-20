@@ -94,15 +94,15 @@ if params.get(\'operation_date\', {}).get(\'query\'):\n
 # as a catalog.parent_uid filter with SimulationTool.getMovementList.\n
 # In this example, you can use side independant inventory API with \n
 # accounting module selection. see erp5_accounting_l10n_fr_m9 for an example.\n
+# ... XXX no this is deprecated\n
 src__ = context.REQUEST.other.get(\'src__\', 0)\n
-no_limit = context.REQUEST.other.get(\'no_limit\', 0)\n
 search_result_keys = context.REQUEST.other.get(\'search_result_keys\', None)\n
 \n
 return context.AccountingTransactionModule_zGetAccountingTransactionList( \n
                             selection_params=params,\n
                             src__=src__,\n
                             search_result_keys=search_result_keys,\n
-                            no_limit=no_limit, **params)\n
+                            **params)\n
 
 
 ]]></string> </value>
@@ -149,7 +149,6 @@ return context.AccountingTransactionModule_zGetAccountingTransactionList( \n
                             <string>_getitem_</string>
                             <string>_apply_</string>
                             <string>src__</string>
-                            <string>no_limit</string>
                             <string>None</string>
                             <string>search_result_keys</string>
                           </tuple>
