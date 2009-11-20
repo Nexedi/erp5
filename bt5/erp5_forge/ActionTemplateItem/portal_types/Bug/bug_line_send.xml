@@ -49,24 +49,7 @@
             <key> <string>permissions</string> </key>
             <value>
               <tuple>
-                <string>A</string>
-                <string>d</string>
-                <string>d</string>
-                <string> </string>
-                <string>p</string>
-                <string>o</string>
-                <string>r</string>
-                <string>t</string>
-                <string>a</string>
-                <string>l</string>
-                <string> </string>
-                <string>c</string>
-                <string>o</string>
-                <string>n</string>
-                <string>t</string>
-                <string>e</string>
-                <string>n</string>
-                <string>t</string>
+                <string>Add portal content</string>
               </tuple>
             </value>
         </item>
