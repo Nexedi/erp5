@@ -15,7 +15,7 @@
         </item>
         <item>
             <key> <string>_module</string> </key>
-            <value> <string>proxy_field_util</string> </value>
+            <value> <string>ProxyFieldUtils</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
