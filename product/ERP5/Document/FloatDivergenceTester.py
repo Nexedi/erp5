@@ -102,8 +102,7 @@ class FloatDivergenceTester(Predicate, DivergenceTesterMixin):
     tolerance_base = self.getProperty('tolerance_base')
     if tolerance_base == 'currency_precision':
       try:
-        precision = prevision_movement.getSectionValue().getPriceCurrencyValue().getQuantityPrecision()
-        base = 10 ** -precision
+        base = prevision_movement.getSectionValue().getPriceCurrencyValue().getBaseUnitQuantity()
       except AttributeError:
         base = None
     elif tolerance_base == 'quantity':
