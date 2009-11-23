@@ -39,3 +39,56 @@ class MovementCollectionDiff(object):
   """
   # Declarative interfaces
   zope.interface.implements(interfaces.IMovementCollectionDiff,)
+
+  def __init__(self):
+    self._deletable_movement_list = []
+    self._new_movement_list = []
+    self._updatable_movement_list = []
+
+  def getDeletableMovementList(self):
+    """
+    Returns the list of movements which need
+    to be deleted.
+    """
+    return self._deletable_movement_list
+
+  def addDeletableMovement(self, movement):
+    """
+    Add a deletable movement to the diff definition
+    """
+    self._deletable_movement_list.append(movement)
+
+  def getNewMovementList(self):
+    """
+    Returns a list temp movements which represent new
+    movements to add to an existing IMovementCollection.
+    """
+    return self._new_movement_list
+
+  def addNewMovement(self, movement):
+    """
+    Add a new movement to the diff definition
+    """
+    self._new_movement_list.append(movement)
+
+  def getUpdatableMovementList(self):
+    """
+    Returns the list of movements which need
+    to be updated.
+    """
+    return self._updatable_movement_list
+
+  def getMovementPropertyDict(self, movement):
+    """
+    Returns a dict of all properties and values
+    to update an existing movement or to
+    create a new movement.
+    """
+
+  def addUpdatableMovement(self, movement, property_dict):
+    """
+    Add an updatable movement to the diff definition
+
+    property_dict -- properties to update
+    """
+    self._updatable_movement_list.append(movement)
