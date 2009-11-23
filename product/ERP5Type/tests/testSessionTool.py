@@ -30,7 +30,6 @@ import unittest
 
 from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from Products.ERP5Type.Document import newTempOrder
 from AccessControl.SecurityManagement import newSecurityManager
 from zLOG import LOG
 from Products.ERP5Type.tests.Sequence import SequenceList
@@ -115,6 +114,7 @@ class TestSessionTool(ERP5TypeTestCase):
 
   def stepTestAcquisitionRamSessionStorage(self, sequence=None, \
                                            sequence_list=None, **kw):
+    from Products.ERP5Type.Document import newTempOrder
     portal_sessions =  self.getPortal().portal_sessions
     session = portal_sessions.newContent(
                       self.session_id, \
