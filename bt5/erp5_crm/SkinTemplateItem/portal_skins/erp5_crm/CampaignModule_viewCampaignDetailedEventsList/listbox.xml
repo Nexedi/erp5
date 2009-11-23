@@ -13,11 +13,12 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>editable_columns</string>
-                <string>title</string>
-                <string>selection_name</string>
-                <string>list_method</string>
                 <string>columns</string>
+                <string>default_params</string>
+                <string>editable_columns</string>
+                <string>list_method</string>
+                <string>selection_name</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -119,6 +120,12 @@
                           <string>State</string>
                         </tuple>
                       </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>default_params</string> </key>
+                    <value>
+                      <list/>
                     </value>
                 </item>
                 <item>
