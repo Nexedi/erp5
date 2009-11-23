@@ -136,7 +136,7 @@ for party in context.Account_zDistinctSectionList(\n
     if omit_balanced_accounts and (\n
             simulation_tool.getInventoryAssetPrice(\n
                     mirror_section_uid=party.uid,\n
-                    strict_node_category=(\n
+                    node_category_strict_membership=(\n
                           \'account_type/asset/receivable\',\n
                           # TODO: don\'t compare floats for equality ...\n
                           \'account_type/liability/payable\')) == 0.):\n
