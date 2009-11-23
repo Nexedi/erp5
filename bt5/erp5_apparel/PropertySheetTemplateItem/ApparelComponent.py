@@ -37,14 +37,6 @@ class ApparelComponent:
             'description' : 'Number of colours',
             'type'        : 'int',
             'mode'        : 'w' },
-        # Override default value XXX
-        {   'id'          : 'p_variation_base_category',
-            'description' : 'A list of base categories which define possible discrete variations. '\
-                            'Price ranges are stored as category membership. '\
-                            '(prev. variation_category_list).',
-            'type'        : 'lines',
-            'default'     : ['variation'],
-            'mode'        : 'w' },
     )
 
     _categories = ( 'composition', 'visual_pattern', 'resource' )

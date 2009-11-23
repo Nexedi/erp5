@@ -45,14 +45,6 @@ class ApparelFabric:
             'description' : 'Number of colours',
             'type'        : 'int',
             'mode'        : 'w' },
-        # Override default value XXX
-        {   'id'          : 'p_variation_base_category',
-            'description' : 'A list of base categories which define possible discrete variations. '\
-                            'Price ranges are stored as category membership. '\
-                            '(prev. variation_category_list).',
-            'type'        : 'lines',
-            'default'     : ['colour'],
-            'mode'        : 'w' },
         {   'id'          : 'default_apparel_fabric_colour_variation',
             'description' : 'The default colour variation for this fabric',
             'type'        : 'content',
