@@ -1362,21 +1362,6 @@ class PortalGenerator:
         reg.getPredicate( 'file' ).edit( major="application", minor="" )
         reg.assignTypeName( 'file', 'File' )
 
-    def setupWorkflow(self, p):
-        wftool = getToolByName(p, 'portal_workflow', None)
-        if wftool is None:
-            return
-        try:
-            from Products.DCWorkflow.Default \
-                    import createDefaultWorkflowClassic
-        except ImportError:
-            return
-        id = 'default_workflow'
-        wftool._setObject( id, createDefaultWorkflowClassic(id) )
-
-        #   These objects don't participate in workflow by default.
-        wftool.setChainForPortalTypes( ('Folder', 'Topic'), () )
-
     def setup(self, p, create_userfolder):
         from Products.CMFTopic import Topic
         self.setupTools(p)
