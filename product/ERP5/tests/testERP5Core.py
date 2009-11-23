@@ -33,8 +33,6 @@ import md5
 import transaction
 from AccessControl.SecurityManagement import newSecurityManager
 from Testing import ZopeTestCase
-from Products.PageTemplates.GlobalTranslationService import \
-                                      setGlobalTranslationService
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import DummyTranslationService
@@ -194,6 +192,8 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
   def test_allowed_content_types_translated(self):
     """Tests allowed content types from the action menu are translated"""
     translation_service = DummyTranslationService()
+    from Products.PageTemplates.GlobalTranslationService import \
+                                      setGlobalTranslationService
     setGlobalTranslationService(translation_service)
     # assumes that we can add Business Template in template tool
     response = self.publish('%s/portal_templates/view' %
@@ -208,6 +208,8 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
   def test_jump_action_translated(self):
     """Tests jump actions are translated"""
     translation_service = DummyTranslationService()
+    from Products.PageTemplates.GlobalTranslationService import \
+                                      setGlobalTranslationService
     setGlobalTranslationService(translation_service)
     # adds a new jump action to Template Tool portal type
     self.getTypesTool().getTypeInfo('Template Tool').newContent(
