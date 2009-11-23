@@ -174,8 +174,7 @@ class EntireQuery(object):
       select_dict=self.final_select_dict,
       limit=self.limit,
       where_expression_operator='and',
-      sql_expression_list=self.sql_expression_list,
-      ignoreing_table_alias_list=column_map.getIgnoreingTableAliasList())
+      sql_expression_list=self.sql_expression_list)
 
 verifyClass(IEntireQuery, EntireQuery)
 

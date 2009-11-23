@@ -32,12 +32,13 @@ from SearchKey import SearchKey
 from Products.ZSQLCatalog.Query.Query import Query
 from Products.ZSQLCatalog.Query.RelatedQuery import RelatedQuery
 from Products.ZSQLCatalog.Query.SQLQuery import SQLQuery
-from Products.ZSQLCatalog.Query.SubCatalogQuery import SubCatalogQuery
 from Products.ZSQLCatalog.SQLExpression import SQLExpression
 from Products.ZSQLCatalog.interfaces.search_key import IRelatedKey
 from zope.interface.verify import verifyClass
 from zope.interface import implements
 from Products.ZSQLCatalog.SQLCatalog import profiler_decorator
+
+BACKWARD_COMPATIBILITY = True
 
 class RelatedKey(SearchKey):
   """
@@ -107,8 +108,8 @@ class RelatedKey(SearchKey):
     if isinstance(search_value, Query):
       search_value.setGroup(self.getColumn())
     join_condition = search_value
-    return SubCatalogQuery(RelatedQuery(search_key=self,
-                                        join_condition=join_condition))
+    return RelatedQuery(search_key=self,
+                        join_condition=join_condition)
 
   @profiler_decorator
   def registerColumnMap(self, column_map, table_alias_list=None):
@@ -125,7 +126,6 @@ class RelatedKey(SearchKey):
       table_name = self.table_list[table_position]
       local_group = column_map.registerRelatedKeyColumn(related_column, table_position, group)
       column_map.registerTable(table_name, group=local_group)
-      column_map.ignoreTableJoin(table_name, group=local_group)
       if table_alias_list is not None:
         # Pre-resolve all tables with given aliases
         given_name, given_alias = table_alias_list[table_position]
@@ -133,7 +133,6 @@ class RelatedKey(SearchKey):
         column_map.resolveTable(table_name, given_alias, group=local_group)
     table_name = self.table_list[-1]
     column_map.registerTable(table_name, group=group)
-    column_map.ignoreTableJoin(table_name, group=group)
     if table_alias_list is not None:
       given_name, given_alias = table_alias_list[-1]
       assert table_name == given_name
@@ -183,9 +182,36 @@ class RelatedKey(SearchKey):
       query_table=column_map.getCatalogTableAlias(),
       src__=1,
       **table_alias_dict)
-    return SQLExpression(self,
-                         where_expression=rendered_related_key,
-                         table_alias_dict=dict(table_alias_list))
+    # Important:
+    # Former catalog separated join condition from related query.
+    # Example:
+    #   ComplexQuery(Query(title="foo"),
+    #                Query(subordination_title="bar")
+    #                , operator='OR')
+    # Former catalog rendering (truncated where-expression):
+    #   AND ((catalog.title LIKE '%foo%') OR
+    #        (related_catalog_1.title LIKE '%bar%'))
+    #   AND (related_catalog_1.uid = related_category_0.category_uid AND
+    #        related_category_0.base_category_uid = 873 AND
+    #        related_category_0.uid = catalog.uid)
+    # As you can see, the part of the query joining the tables is *out* of the
+    # OR expression, and therefor applies to the entire query.
+    # This was done on purpose, because doing otherwise gives very poor
+    # performances (on a simple data set, similar query can take *minutes* to
+    # execute - as of MySQL 5.x).
+    # Doing the same way as the former catalog is required for backward
+    # compatibility, until a decent alternative is found (like spliting the
+    # "OR" expression into ensemblist operations at query level).
+    # Note that doing this has a side effect on result list, as objects
+    # lacking a relation will never appear in the result.
+    if BACKWARD_COMPATIBILITY:
+      # XXX: Calling a private-ish method on column_map.
+      # This should never happen. It should be removed as soon as an
+      # alternative exists.
+      column_map._addJoinQuery(SQLQuery(rendered_related_key))
+      return None
+    else:
+      return SQLExpression(self, where_expression=rendered_related_key)
 
 verifyClass(IRelatedKey, RelatedKey)
 

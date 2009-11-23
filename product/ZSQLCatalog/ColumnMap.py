@@ -82,7 +82,6 @@ class ColumnMap(object):
     # Entries: column name
     self.column_ignore_set = set()
     self.join_table_set = set()
-    self.ignore_table_join_set = set()
     self.straight_join_table_list = []
     self.left_join_table_list = []
     self.join_query_list = []
@@ -499,19 +498,6 @@ class ColumnMap(object):
         self.registerColumn('uid')
         self.resolveColumn('uid', catalog_table)
       self.join_table_set.add((group, table_name))
-
-  def getIgnoreingTableAliasList(self):
-    return [self.getTableAlias(table_name, group=group)
-            for (group, table_name) in self.ignore_table_join_set]
-
-  @profiler_decorator
-  def ignoreTableJoin(self, table_name, group=DEFAULT_GROUP_ID):
-    """
-      Add a table, which is already or will be joined in anywhere,
-      to be ignored to join.
-      This values will be referred by EntireQuery.
-    """
-    self.ignore_table_join_set.add((group, table_name))
 
   def getJoinTableAliasList(self):
     return [self.getTableAlias(table_name, group=group)

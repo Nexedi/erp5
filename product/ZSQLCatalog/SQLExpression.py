@@ -72,8 +72,7 @@ class SQLExpression(object):
                select_dict=None,
                limit=None,
                from_expression=None,
-               can_merge_select_dict=False,
-               ignoreing_table_alias_list=()):
+               can_merge_select_dict=False):
     if DEBUG:
       self.query = query
     self.table_alias_dict = defaultDict(table_alias_dict)
@@ -109,7 +108,6 @@ class SQLExpression(object):
     if from_expression is not None:
       LOG('SQLExpression', 0, 'Providing a from_expression is deprecated.')
     self.from_expression = from_expression
-    self.ignoreing_table_alias_list = ignoreing_table_alias_list
 
   @profiler_decorator
   def getTableAliasDict(self):
@@ -350,15 +348,9 @@ class SQLExpression(object):
   def asSQLExpressionDict(self):
     table_alias_dict = self.getTableAliasDict()
     from_table_list = []
-    valid_from_table_list = []
-    # method caching
     append = from_table_list.append
-    append_valid = valid_from_table_list.append
     for alias, table in table_alias_dict.iteritems():
-      formatted_table_alias = (SQL_TABLE_FORMAT % (alias, ), SQL_TABLE_FORMAT % (table, ))
-      append(formatted_table_alias)
-      if alias not in self.ignoreing_table_alias_list:
-        append_valid(formatted_table_alias)
+      append((SQL_TABLE_FORMAT % (alias, ), SQL_TABLE_FORMAT % (table, )))
     from_expression_dict = self.getFromExpression()
     if from_expression_dict is not None:
       from_expression = SQL_LIST_SEPARATOR.join(
@@ -370,7 +362,6 @@ class SQLExpression(object):
       'where_expression': self.getWhereExpression(),
       'order_by_expression': self.getOrderByExpression(),
       'from_table_list': from_table_list,
-      'valid_from_table_list': valid_from_table_list,
       'from_expression': from_expression,
       'limit_expression': self.getLimitExpression(),
       'select_expression': self.getSelectExpression(),
