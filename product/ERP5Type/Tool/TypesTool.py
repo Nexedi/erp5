@@ -59,10 +59,47 @@ class TypesTool(BaseTool, CMFCore_TypesTool.TypesTool):
         return None
     return self._getOb(portal_type, None)
 
+  security.declareProtected(Permissions.AddPortalContent, 'listDefaultTypeInformation')
+  def listDefaultTypeInformation(self):
+      # FIXME: This method is only used by manage_addTypeInformation below, and
+      # should be removed when that method starts raising NotImplementedError.
+      #
+      # Scans for factory_type_information attributes
+      # of all products and factory dispatchers within products.
+      import Products
+      res = []
+      products = self.aq_acquire('_getProducts')()
+      for product in products.objectValues():
+          product_id = product.getId()
+
+          if hasattr(aq_base(product), 'factory_type_information'):
+              ftis = product.factory_type_information
+          else:
+              package = getattr(Products, product_id, None)
+              dispatcher = getattr(package, '__FactoryDispatcher__', None)
+              ftis = getattr(dispatcher, 'factory_type_information', None)
+
+          if ftis is not None:
+              if callable(ftis):
+                  ftis = ftis()
+
+              for fti in ftis:
+                  mt = fti.get('meta_type', None)
+                  id = fti.get('id', '')
+
+                  if mt:
+                      p_id = '%s: %s (%s)' % (product_id, id, mt)
+                      res.append( (p_id, fti) )
+
+      return res
+
+
   security.declareProtected(Permissions.AddPortalContent,
                             'manage_addTypeInformation')
   def manage_addTypeInformation(self, add_meta_type, id=None,
                                 typeinfo_name=None, RESPONSE=None):
+    # FIXME: This method is deprecated and should be reimplemented as a blocker
+    # i.e. a method that always raises a NotImplementedError
     """
     Create a TypeInformation in self.
 
