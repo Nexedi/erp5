@@ -55,11 +55,4 @@ class TelephonePreference:
       'mode'        : 'w',
       'default'     : '',
     },
-    { 'id'          : 'preferred_telephone_default_region',
-      'description' : 'The default region.',
-      'type'        : 'string',
-      'preference'  : 1,
-      'mode'        : 'w',
-      'default'     : '',
-    },
     )
