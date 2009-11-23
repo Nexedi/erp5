@@ -930,7 +930,7 @@ class ERP5TypeTestCase(backportUnittest.TestCase, PortalTestCase):
             noSecurityManager()
             if not quiet:
               ZopeTestCase._print('done (%.3fs)\n' % (time.time()-_start,))
-              ZopeTestCase._print('Ran Unit test of %s\n' % title)
+              ZopeTestCase._print('Running Unit tests of %s\n' % title)
           except:
             transaction.abort()
             raise
