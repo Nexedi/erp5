@@ -312,7 +312,8 @@ class RuleMixin:
     # First, we update all properties (exc. quantity) which could be divergent
     # and if we can not, we compensate them
     for decision_movement in decision_movement_list:
-      decision_quantity += decision_movement.getQuantity()
+      decision_movement_quantity = decision_movement.getQuantity()
+      decision_quantity += decision_movement_quantity
       if self._isProfitAndLossMovement(decision_movement):
         if decision_movement.isFrozen():
           # Record not completed movements
@@ -320,9 +321,9 @@ class RuleMixin:
             not_completed_movement = decision_movement
           # Frozen must be compensated
           if not _compare(profit_tester_list, prevision_movement, decision_movement):
-            new_movement = decision_movement.asContext(quantity=-decision_movement.getQuantity())
+            new_movement = decision_movement.asContext(quantity=-decision_movement_quantity)
             movement_collection_diff.addNewMovement(new_movement)
-            compensated_quantity += decision_movement.getQuantity()
+            compensated_quantity += decision_movement_quantity
         else:
           updatable_compensation_movement = decision_movement
           # Not Frozen can be updated
@@ -336,9 +337,9 @@ class RuleMixin:
         if decision_movement.isFrozen():
           # Frozen must be compensated
           if not _compare(divergence_tester_list, prevision_movement, decision_movement):
-            new_movement = decision_movement.asContext(quantity=-decision_movement.getQuantity())
+            new_movement = decision_movement.asContext(quantity=-decision_movement_quantity)
             movement_collection_diff.addNewMovement(new_movement)
-            compensated_quantity += decision_movement.getQuantity()
+            compensated_quantity += decision_movement_quantity
         else:
           updatable_movement = decision_movement
           # Not Frozen can be updated
