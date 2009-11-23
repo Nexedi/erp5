@@ -55,19 +55,6 @@ dQEAAAAA</string> </value>
   <tal:block metal:use-macro="here/style_macros/macros/style_macro"/>\n
 <office:body>\n
   <office:spreadsheet>\n
-    <!-- calculate max column len -->\n
-    <tal:block tal:define="field_list python:form.get_fields_in_group(\'bottom\')">\n
-      <tal:block tal:define="global column_len python:3"/>\n
-      <tal:block tal:condition=\'field_list\'>\n
-        <tal:block tal:define="field python:field_list[0]">\n
-          <tal:block tal:condition="python:field.meta_type == \'ListBox\' or (field.meta_type == \'ProxyField\' and field.getRecursiveTemplateField().meta_type == \'ListBox\')">\n
-            <tal:block tal:define="column_list python: field.get_value(\'columns\');\n
-                                   global column_len python: len(column_list)" />\n
-          </tal:block>\n
-        </tal:block>\n
-      </tal:block>\n
-    </tal:block>\n
-\n
     <table:table table:style-name=\'ta1\' table:print=\'false\' tal:attributes="table:name python: unicode(here.getTitle(), \'utf-8\')" i18n:attributes="table:name">\n
       <!-- at least one table-column element is required for ODF to validate -->\n
       <table:table-column\n
@@ -75,6 +62,29 @@ dQEAAAAA</string> </value>
             table:default-cell-style-name=\'report-column-title\'/>\n
 \n
       <tal:block metal:define-macro="form_layout">\n
+\n
+    <!-- if we have other fields to display, calculate max column len, which will be used later to make standard fields (ie. not listbox) using covered cells -->\n
+    <tal:block tal:condition="python: len(form.get_fields()) &gt; 1">\n
+      <tal:block tal:condition="report_item | nothing">\n
+        <tal:block tal:define="global column_len python: report_item.selection_columns and len(report_item.selection_columns) or 0;"/>\n
+      </tal:block>\n
+    <tal:block>\n
+      <tal:block tal:condition="not: column_len | nothing"\n
+                 tal:define="field_list python:form.get_fields_in_group(\'bottom\')"> \n
+        <tal:block tal:define="global column_len python: 5"/>\n
+        <!-- This default is used for the ERP5 Report itself, which often does not contain a listbox directly -->\n
+        <tal:block tal:condition=\'field_list\'>\n
+          <tal:block tal:define="field python:field_list[0]">\n
+            <tal:block tal:condition="python:field.meta_type == \'ListBox\' or (field.meta_type == \'ProxyField\' and field.getRecursiveTemplateField().meta_type == \'ListBox\')">\n
+              <tal:block tal:define="column_list python: field.get_value(\'columns\');\n
+                                     global column_len python: len(column_list)" />\n
+            </tal:block>\n
+          </tal:block>\n
+        </tal:block>\n
+      </tal:block>\n
+    </tal:block>\n
+    </tal:block>\n
+\n
         <tal:block tal:define="dummy python: request.set(\'here\', here)">\n
           <tal:block tal:repeat="group python: [g for g in form.get_groups() if g not in (\'bottom\', \'hidden\')]">\n
             <tal:block tal:define="field_list python: form.get_fields_in_group(group)">\n
@@ -147,7 +157,7 @@ dQEAAAAA</string> </value>
       </tal:block>\n
     </tal:block>\n
 \n
-   <tal:block tal:repeat="group python: [g for g in form.get_groups() if g not in ( \'hidden\')]">\n
+   <tal:block tal:repeat="group python: [g for g in form.get_groups() if g not in (\'hidden\', )]">\n
       <tal:block tal:define="field_list python: form.get_fields_in_group(group)">\n
         <tal:block tal:condition="python: field_list not in [None, []]">\n
 \n

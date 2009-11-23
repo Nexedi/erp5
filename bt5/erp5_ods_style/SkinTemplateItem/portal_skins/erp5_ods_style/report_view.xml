@@ -53,9 +53,7 @@
       <tal:block tal:define="rendered_report_item_list rendered_report_item_list | python:[];\n
                              report_item_list python: rendered_report_item_list or [];\n
                              dummy python: request.set(\'here\', here);\n
-                             global sheet_per_reportsection python: int(request.get(\'sheet_per_report_section\', 0));\n
-                             global column_len python: 5">\n
-                             <!-- TODO: calculate column_len based on the first listbox (or selection_column if exists)-->\n
+                             global sheet_per_reportsection python: int(request.get(\'sheet_per_report_section\', 0));">\n
         <tal:block tal:condition="not: report_item_list">\n
           <tal:block tal:condition="python: form.meta_type == \'ERP5 Report\'">\n
             <tal:block tal:define="dummy python: report_item_list.extend(report_method())" />\n
