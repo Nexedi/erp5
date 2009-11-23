@@ -34,7 +34,7 @@ if [ "$INTERVAL" == "" ] ; then
   INTERVAL=5
 fi
 if [ "$TIMEOUT" == "" ] ; then
-  INTERVAL=600
+  TIMEOUT=600
 fi
 
 TIME=0
