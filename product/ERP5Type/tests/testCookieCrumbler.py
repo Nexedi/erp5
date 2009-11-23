@@ -27,8 +27,12 @@ from ZPublisher.HTTPResponse import HTTPResponse
 from Products.CMFCore.CookieCrumbler \
      import CookieCrumbler, manage_addCC, Redirect
 
-from Products.CMFCore.tests.testCookieCrumbler import makerequest
-from Products.CMFCore.tests.testCookieCrumbler import CookieCrumblerTests
+try:
+  from Products.CMFCore.tests.testCookieCrumbler import makerequest
+  from Products.CMFCore.tests.testCookieCrumbler import CookieCrumblerTests
+except ImportError:
+  from Products.CMFCore.tests.test_CookieCrumbler import makerequest
+  from Products.CMFCore.tests.test_CookieCrumbler import CookieCrumblerTests
 
 class ERP5CookieCrumblerTests (CookieCrumblerTests):
   """ Modify original CMFCore Cookie Crumbler unit test to test long login """
