@@ -1,3 +1,18 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR Free Software Foundation, Inc.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"PO-Revision-Date: 2009-11-23 14:16+0100\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
 msgid ""
 msgstr ""
 "Project-Id-Version: ERP5 Localized Interface\n"
@@ -1238,6 +1253,9 @@ msgstr "外貨換算貸方"
 
 msgid "Converted Debit"
 msgstr "外貨換算借方"
+
+msgid "Converted [state in processing_status_workflow]"
+msgstr "変換済み"
 
 msgid "Converted quantity"
 msgstr "変換済みの数量"
