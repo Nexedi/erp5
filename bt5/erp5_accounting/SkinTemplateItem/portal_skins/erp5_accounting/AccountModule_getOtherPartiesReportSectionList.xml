@@ -135,11 +135,15 @@ for party in context.Account_zDistinctSectionList(\n
         # don\'t show entities belonging to the group we are reporting\n
     if omit_balanced_accounts and (\n
             simulation_tool.getInventoryAssetPrice(\n
+                    section_category=section_category,\n
+                    at_date=at_date,\n
+                    simulation_state=simulation_state,\n
                     mirror_section_uid=party.uid,\n
                     node_category_strict_membership=(\n
                           \'account_type/asset/receivable\',\n
-                          # TODO: don\'t compare floats for equality ...\n
-                          \'account_type/liability/payable\')) == 0.):\n
+                          \'account_type/liability/payable\'),\n
+                    # TODO: don\'t compare floats for equality ...\n
+                    ) == 0.):\n
       pass\n
     else:\n
       title = o.getTitle()\n
