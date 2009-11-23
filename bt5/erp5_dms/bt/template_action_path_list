@@ -11,7 +11,6 @@ Drawing | convert
 Drawing | create_snapshot
 Drawing | download
 Drawing | download_ooo
-Drawing | download_snapshot
 Drawing | export
 Drawing | file_upload
 Drawing | html_view
@@ -71,7 +70,6 @@ Presentation | convert
 Presentation | create_snapshot
 Presentation | download
 Presentation | download_ooo
-Presentation | download_snapshot
 Presentation | export
 Presentation | file_upload
 Presentation | html_view
@@ -94,7 +92,6 @@ Spreadsheet | convert
 Spreadsheet | create_snapshot
 Spreadsheet | download
 Spreadsheet | download_ooo
-Spreadsheet | download_snapshot
 Spreadsheet | export
 Spreadsheet | file_upload
 Spreadsheet | html_view
@@ -114,7 +111,6 @@ System Preference | dms_preference
 Text | create_snapshot
 Text | download
 Text | download_ooo
-Text | download_snapshot
 Text | export
 Text | file_upload
 Text | html_view
