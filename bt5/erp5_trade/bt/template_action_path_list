@@ -12,6 +12,7 @@ Delivery Cell | view
 Delivery Rule | view
 First Causality Movement Group | view
 Internal Packing List Cell | view
+Internal Packing List Line | profile_view
 Internal Packing List Line | quantity_view
 Internal Packing List Line | view
 Internal Packing List Line | view_price
@@ -42,6 +43,7 @@ Person | jump_to_sale_order
 Person | jump_to_sale_packing_list
 Purchase Order Cell | view
 Purchase Order Line | price_view
+Purchase Order Line | profile_view
 Purchase Order Line | quantity_view
 Purchase Order Line | view
 Purchase Order Line | view_trade_model
@@ -61,6 +63,7 @@ Purchase Order | view_trade_model_line_list
 Purchase Packing List Cell | apparel_fabric_item_fast_input
 Purchase Packing List Cell | view
 Purchase Packing List Line | apparel_fabric_item_fast_input
+Purchase Packing List Line | profile_view
 Purchase Packing List Line | quantity_view
 Purchase Packing List Line | view
 Purchase Packing List Line | view_price
@@ -80,6 +83,7 @@ Purchase Trade Condition | view_profile
 Purchase Trade Condition | view_trade_model_line_list
 Returned Sale Packing List Cell | view
 Returned Sale Packing List Line | price_view
+Returned Sale Packing List Line | profile_view
 Returned Sale Packing List Line | quantity_view
 Returned Sale Packing List Line | view
 Returned Sale Packing List Module | delivery_line_report
@@ -91,6 +95,7 @@ Returned Sale Packing List | view
 Returned Sale Packing List | view_stock
 Sale Order Cell | view
 Sale Order Line | price_view
+Sale Order Line | profile_view
 Sale Order Line | quantity_view
 Sale Order Line | view
 Sale Order Line | view_trade_model
@@ -114,6 +119,7 @@ Sale Order | view_trade_model
 Sale Order | view_trade_model_line_list
 Sale Packing List Cell | view
 Sale Packing List Line | price_view
+Sale Packing List Line | profile_view
 Sale Packing List Line | quantity_view
 Sale Packing List Line | view
 Sale Packing List Module | delivery_line_report
