@@ -41,7 +41,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>line_profile</string> </value>
+            <value> <string>profile_view</string> </value>
         </item>
         <item>
             <key> <string>permissions</string> </key>
@@ -77,7 +77,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/TradeLine_viewProfile</string> </value>
+            <value> <string>string:${object_url}/SaleOrderLine_viewProfile</string> </value>
         </item>
       </dictionary>
     </pickle>
