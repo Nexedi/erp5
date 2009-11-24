@@ -104,9 +104,6 @@ if builder_by_ptype.has_key(delivery_portal_type) :\n
 \n
 \n
   # build accounting lines\n
-  method_id_list = (\'expand\', \'edit\', \'updateAppliedRule\', \'Delivery_updateAppliedRule\',\n
-                    \'immediateReindexObject\', \'recursiveImmediateReindexObject\')\n
-\n
   explanation_uid_list = [delivery.getUid(), ]\n
   packing_list = delivery.getCausalityValue(\n
                              portal_type=(\'Sale Packing List\',\n
@@ -119,24 +116,34 @@ if builder_by_ptype.has_key(delivery_portal_type) :\n
     if order is not None:\n
       explanation_uid_list.append(order.getUid())\n
 \n
-\n
-  tag = \'invoice_transaction_build_%s\' % delivery.getRelativeUrl()\n
+  build_trade_model_tag = \'invoice_transaction_build_trade_model_%s\' % \\\n
+                                 delivery.getRelativeUrl()\n
+  build_accounting_tag = \'invoice_transaction_build_accounting_%s\' % delivery.getRelativeUrl()\n
+  update_applied_rule_tag = \'%s_updateAppliedRule\' % delivery.getPath()\n
   builder.activate(\n
       activity=\'SQLQueue\',\n
-      after_path_and_method_id=(delivery.getPath(), method_id_list),\n
-      after_tag=delivery.getPath() + \'_updateAppliedRule\',\n
-      tag=tag,\n
-      activate_kw=dict(tag=tag)).build(activate_kw=dict(tag=tag),\n
-                                       explanation_uid=explanation_uid_list)\n
+      after_tag=(update_applied_rule_tag,\n
+                 build_trade_model_tag,),\n
+      tag=build_accounting_tag,\n
+      activate_kw=dict(tag=build_accounting_tag)).build(\n
+                      activate_kw=dict(tag=build_accounting_tag),\n
+                      explanation_uid=explanation_uid_list)\n
 \n
   # build related payment transactions\n
   portal_deliveries.payment_transaction_builder.activate(\n
-                              activity=\'SQLQueue\',\n
-                              after_method_id=method_id_list).build(explanation_uid=explanation_uid_list)\n
+                      activity=\'SQLQueue\',\n
+                      after_tag=( build_trade_model_tag,\n
+                                  update_applied_rule_tag,\n
+                                  build_accounting_tag, ),\n
+                      ).build(\n
+                          explanation_uid=explanation_uid_list)\n
 \n
   # set the object in building state.\n
   delivery.startBuilding()\n
-  delivery.activate(after_tag=tag).updateCausalityState()\n
+  delivery.activate(after_tag=(\n
+                      build_trade_model_tag,\n
+                      build_accounting_tag,)\n
+                      ).updateCausalityState()\n
 </string> </value>
         </item>
         <item>
@@ -190,11 +197,12 @@ if builder_by_ptype.has_key(delivery_portal_type) :\n
                             <string>previous_tag</string>
                             <string>expand_tag</string>
                             <string>activate_kw</string>
-                            <string>method_id_list</string>
                             <string>explanation_uid_list</string>
                             <string>packing_list</string>
                             <string>order</string>
-                            <string>tag</string>
+                            <string>build_trade_model_tag</string>
+                            <string>build_accounting_tag</string>
+                            <string>update_applied_rule_tag</string>
                             <string>dict</string>
                           </tuple>
                         </value>

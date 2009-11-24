@@ -71,8 +71,9 @@ builder = getattr(portal_deliveries,\n
                   builder_by_portal_type[delivery_portal_type],\n
                   None)\n
 \n
-update_applied_rule_tag = \'invoice_update_applied_rule_%s\' % delivery.getRelativeUrl()\n
+update_applied_rule_tag = \'%s_updateAppliedRule\' % delivery.getPath()\n
 build_tag = \'invoice_transaction_build_trade_model_%s\' % delivery.getRelativeUrl()\n
+build_accounting_tag = \'invoice_transaction_build_accounting_%s\' % delivery.getRelativeUrl()\n
 \n
 delivery.Delivery_updateAppliedRule(activate_kw=dict(tag=update_applied_rule_tag))\n
 \n
@@ -94,11 +95,11 @@ if builder is not None:\n
       after_tag=update_applied_rule_tag,\n
       tag=build_tag,\n
       activate_kw=dict(tag=build_tag)).build(activate_kw=dict(tag=build_tag),\n
-                                        explanation_uid=explanation_uid_list)\n
+                                             explanation_uid=explanation_uid_list)\n
 \n
   # set the object in building state.\n
   delivery.startBuilding()\n
-  delivery.activate(after_tag=build_tag).updateCausalityState()\n
+  delivery.activate(after_tag=(build_tag, build_accounting_tag)).updateCausalityState()\n
 </string> </value>
         </item>
         <item>
@@ -147,6 +148,7 @@ if builder is not None:\n
                             <string>builder</string>
                             <string>update_applied_rule_tag</string>
                             <string>build_tag</string>
+                            <string>build_accounting_tag</string>
                             <string>dict</string>
                             <string>explanation_uid_list</string>
                             <string>packing_list</string>
