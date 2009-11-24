@@ -2772,9 +2772,14 @@ class TestTransactions(AccountingTestCase):
                         organisation1.getRelativeUrl())],
                        self.portal.Account_getDestinationSectionItemList())
 
-class TestAccountingWithSequences(AccountingTestCase):
+class TestAccountingWithSequences(ERP5TypeTestCase):
   """The first test for Accounting
   """
+
+  def getBusinessTemplateList(self):
+    """Returns list of BT to be installed."""
+    return ('erp5_base', 'erp5_pdm', 'erp5_trade', 'erp5_accounting', )
+
   def getAccountingModule(self):
     return getattr(self.getPortal(), 'accounting_module',
            getattr(self.getPortal(), 'accounting', None))
@@ -2829,7 +2834,6 @@ class TestAccountingWithSequences(AccountingTestCase):
          priority=Priority.USER )
     self.workflow_tool.doActionFor(self.pref, 'enable_action')
 
-    self.login()
 
   def beforeTearDown(self):
     """Cleanup for next test.
@@ -2852,14 +2856,6 @@ class TestAccountingWithSequences(AccountingTestCase):
 
     transaction.commit()
     self.tic()
-
-  def login(self) :
-    """sets the security manager"""
-    uf = self.getPortal().acl_users
-    uf._doAddUser('alex', '', ['Member', 'Assignee', 'Assignor',
-                               'Auditor', 'Author', 'Manager'], [])
-    user = uf.getUserById('alex').__of__(uf)
-    newSecurityManager(None, user)
   
   def createCategories(self):
     """Create the categories for our test. """
