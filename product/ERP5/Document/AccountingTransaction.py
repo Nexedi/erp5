@@ -77,9 +77,9 @@ class AccountingTransaction(Delivery):
                 getPreferredAccountingTransactionSectionCategory()
         if preferred_section_category:
           if section.getPortalType() == 'Person':
-            return 0
+            return False
           return section.isMemberOf(preferred_section_category)
-      return 0
+      return False
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'hasDestinationSectionAccounting')
@@ -94,9 +94,9 @@ class AccountingTransaction(Delivery):
                 getPreferredAccountingTransactionSectionCategory()
         if preferred_section_category:
           if section.getPortalType() == 'Person':
-            return 0
+            return False
           return section.isMemberOf(preferred_section_category)
-      return 0
+      return False
     
     security.declareProtected(Permissions.AccessContentsInformation,
                               'SearchableText')
