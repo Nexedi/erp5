@@ -76,7 +76,6 @@
                       <list>
                         <string>my_title</string>
                         <string>my_priority</string>
-                        <string>my_translated_preference_state_title</string>
                       </list>
                     </value>
                 </item>
@@ -90,6 +89,7 @@
                         <string>my_preferred_float_number_style</string>
                         <string>my_preferred_money_quantity_size</string>
                         <string>my_preferred_user_interface_language_list</string>
+                        <string>my_translated_preference_state_title</string>
                       </list>
                     </value>
                 </item>
