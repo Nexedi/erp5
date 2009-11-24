@@ -72,7 +72,6 @@ class Movement:
             'acquisition_copy_value'        : 0,
             'acquisition_accessor_id'       : 'getRelativeUrl',
             'acquisition_depends'           : None,
-            'alt_accessor_id'               : ('_categoryGetOrderRelativeUrl', ),
             'mode'        : 'w' },
         {   'id'          : 'grouping_reference',
             'description' : 'A reference which allows to unify multiple objects',

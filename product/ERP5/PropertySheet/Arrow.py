@@ -46,7 +46,6 @@ class Arrow:
             'acquisition_copy_value'        : 0,
             'acquisition_accessor_id'       : 'getRelativeUrl',
             'acquisition_depends'           : None,
-            'alt_accessor_id'               : ('_categoryGetSourceRelativeUrl', ),
             'mode'        : 'w' },
         {   'id'          : 'source_person_title',
             'description' : 'The title of the source person of this movement',
@@ -75,7 +74,6 @@ class Arrow:
             'acquisition_copy_value'        : 0,
             'acquisition_accessor_id'       : 'getRelativeUrl',
             'acquisition_depends'           : None,
-            'alt_accessor_id'               : ('_categoryGetDestinationRelativeUrl', ),
             'mode'        : 'w' },
         {   'id'          : 'destination_person_title',
             'description' : 'The title of the destination person of this movement',
@@ -104,7 +102,6 @@ class Arrow:
             'acquisition_copy_value'        : 0,
             'acquisition_accessor_id'       : 'getRelativeUrl',
             'acquisition_depends'           : None,
-            'alt_accessor_id'               : ('_categoryGetSourceDecisionRelativeUrl', ),
             'mode'        : 'w' },
         # Destination decision reference
         {   'id'          : 'destination_decision_relative_url',
@@ -115,7 +112,6 @@ class Arrow:
             'acquisition_copy_value'        : 0,
             'acquisition_accessor_id'       : 'getRelativeUrl',
             'acquisition_depends'           : None,
-            'alt_accessor_id'               : ('_categoryGetDestinationDecisionRelativeUrl', ),
             'mode'        : 'w' },
         # Source section reference
         {   'id'          : 'source_section_relative_url',
@@ -126,7 +122,6 @@ class Arrow:
             'acquisition_copy_value'        : 0,
             'acquisition_accessor_id'       : 'getRelativeUrl',
             'acquisition_depends'           : None,
-            'alt_accessor_id'               : ('_categoryGetSourceSectionRelativeUrl', ),
             'mode'        : 'w' },
         # Destination section reference
         {   'id'          : 'destination_section_relative_url',
@@ -137,7 +132,6 @@ class Arrow:
             'acquisition_copy_value'        : 0,
             'acquisition_accessor_id'       : 'getRelativeUrl',
             'acquisition_depends'           : None,
-            'alt_accessor_id'               : ('_categoryGetDestinationSectionRelativeUrl', ),
             'mode'        : 'w' },
         # Source administration reference
         {   'id'          : 'source_administration_relative_url',
@@ -148,7 +142,6 @@ class Arrow:
             'acquisition_copy_value'        : 0,
             'acquisition_accessor_id'       : 'getRelativeUrl',
             'acquisition_depends'           : None,
-            'alt_accessor_id'               : ('_categoryGetSourceAdministrationRelativeUrl', ),
             'mode'        : 'w' },
         # Destination administration reference
         {   'id'          : 'destination_administration_relative_url',
@@ -158,7 +151,6 @@ class Arrow:
             'acquisition_portal_type'       : Expression('python: portal.getPortalNodeTypeList()'),
             'acquisition_copy_value'        : 0,
             'acquisition_accessor_id'       : 'getRelativeUrl',
-            'alt_accessor_id'               : ('_categoryGetDestinationAdministrationRelativeUrl', ),
             'acquisition_depends'           : None,
             'mode'        : 'w' },
         # Source payment reference
@@ -170,7 +162,6 @@ class Arrow:
             'acquisition_copy_value'        : 0,
             'acquisition_accessor_id'       : 'getRelativeUrl',
             'acquisition_depends'           : None,
-            'alt_accessor_id'               : ('_categoryGetSourcePaymentRelativeUrl', ),
             'mode'        : 'w' },
         # Destination payment reference
         {   'id'          : 'destination_payment_relative_url',
@@ -181,7 +172,6 @@ class Arrow:
             'acquisition_copy_value'        : 0,
             'acquisition_accessor_id'       : 'getRelativeUrl',
             'acquisition_depends'           : None,
-            'alt_accessor_id'               : ('_categoryGetDestinationPaymentRelativeUrl', ),
             'mode'        : 'w' },
         # more properties to make the difference between person and organisation
         {   'id'          : 'destination_decision_person_title',
@@ -229,7 +219,6 @@ class Arrow:
             'acquisition_copy_value'        : 0,
             'acquisition_accessor_id'       : 'getRelativeUrl',
             'acquisition_depends'           : None,
-            'alt_accessor_id'               : ('_categoryGetSourceProjectRelativeUrl', ),
             'mode'        : 'w' },
         # Destination trade reference
         {   'id'          : 'destination_trade_relative_url',
@@ -240,7 +229,6 @@ class Arrow:
             'acquisition_copy_value'        : 0,
             'acquisition_accessor_id'       : 'getRelativeUrl',
             'acquisition_depends'           : None,
-            'alt_accessor_id'               : ('_categoryGetDestinationProjectRelativeUrl', ),
             'mode'        : 'w' },
         # Source project reference
         {   'id'          : 'source_project_relative_url',
@@ -251,7 +239,6 @@ class Arrow:
             'acquisition_copy_value'        : 0,
             'acquisition_accessor_id'       : 'getRelativeUrl',
             'acquisition_depends'           : None,
-            'alt_accessor_id'               : ('_categoryGetSourceProjectRelativeUrl', ),
             'mode'        : 'w' },
         # Destination project reference
         {   'id'          : 'destination_project_relative_url',
@@ -262,7 +249,6 @@ class Arrow:
             'acquisition_copy_value'        : 0,
             'acquisition_accessor_id'       : 'getRelativeUrl',
             'acquisition_depends'           : None,
-            'alt_accessor_id'               : ('_categoryGetDestinationProjectRelativeUrl', ),
             'mode'        : 'w' },
         # Source function reference
         {   'id'          : 'source_function_relative_url',
@@ -273,7 +259,6 @@ class Arrow:
             'acquisition_copy_value'        : 0,
             'acquisition_accessor_id'       : 'getRelativeUrl',
             'acquisition_depends'           : None,
-            'alt_accessor_id'               : ('_categoryGetSourceFunctionRelativeUrl', ),
             'mode'        : 'w' },
         # Destination function reference
         {   'id'          : 'destination_function_relative_url',
@@ -284,7 +269,6 @@ class Arrow:
             'acquisition_copy_value'        : 0,
             'acquisition_accessor_id'       : 'getRelativeUrl',
             'acquisition_depends'           : None,
-            'alt_accessor_id'               : ('_categoryGetDestinationFunctionRelativeUrl', ),
             'mode'        : 'w' },
         # Source transport reference
         {   'id'          : 'source_transport_relative_url',
@@ -295,7 +279,6 @@ class Arrow:
             'acquisition_copy_value'        : 0,
             'acquisition_accessor_id'       : 'getRelativeUrl',
             'acquisition_depends'           : None,
-            'alt_accessor_id'               : ('_categoryGetSourceTransportRelativeUrl', ),
             'mode'        : 'w' },
         # Destination transport reference
         {   'id'          : 'destination_transport_relative_url',
@@ -306,7 +289,6 @@ class Arrow:
             'acquisition_copy_value'        : 0,
             'acquisition_accessor_id'       : 'getRelativeUrl',
             'acquisition_depends'           : None,
-            'alt_accessor_id'               : ('_categoryGetDestinationTransportRelativeUrl', ),
             'mode'        : 'w' },
         # Source advice, use for the consultant who helps taking the decision
         {   'id'          : 'source_advice_relative_url',
@@ -318,7 +300,6 @@ class Arrow:
             'acquisition_copy_value'        : 0,
             'acquisition_accessor_id'       : 'getRelativeUrl',
             'acquisition_depends'           : None,
-            'alt_accessor_id'               : ('_categoryGetSourceAdviceRelativeUrl', ),
             'mode'        : 'w' },
         # Destination advice
         {   'id'          : 'destination_advice_relative_url',
@@ -330,7 +311,6 @@ class Arrow:
             'acquisition_copy_value'        : 0,
             'acquisition_accessor_id'       : 'getRelativeUrl',
             'acquisition_depends'           : None,
-            'alt_accessor_id'               : ('_categoryGetDestinationAdviceRelativeUrl', ),
             'mode'        : 'w' },
    )
 
