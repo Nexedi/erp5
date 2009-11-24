@@ -76,13 +76,15 @@ if destination_section_value is not None \\\n
   destination_section = destination_section_value.getRelativeUrl()\n
 \n
 id_generator = state_change.getPortal().portal_ids.generateNewLengthId\n
+previous_id_getter = state_change.getPortal().portal_ids.getLastGeneratedId\n
 \n
 # Invoice Reference is automatically filled only for Sale Invoice Transaction.\n
 if transaction.getPortalType() == \'Sale Invoice Transaction\':\n
   if not transaction.getReference():\n
     invoice_id_group = (\'accounting\', \'invoice\', source_section)\n
     invoice_reference = id_generator(id_group=invoice_id_group,\n
-                                     default=1)\n
+                                     default=previous_id_getter(invoice_id_group,\n
+                                                                default=0) + 1)\n
     transaction.setReference(invoice_reference)\n
 \n
 \n
@@ -95,7 +97,9 @@ if not transaction.getSourceReference():\n
   if not period_code:\n
     period_code = str(transaction.getStartDate().year())\n
   source_id_group = (\'accounting\', \'section\', source_section, period_code)\n
-  source_reference = id_generator(id_group=source_id_group, default=1)\n
+  source_reference = id_generator(id_group=source_id_group,\n
+                                  default=previous_id_getter(source_id_group,\n
+                                                             default=0) + 1)\n
   transaction.setSourceReference(\'%s-%s\' % (period_code, source_reference))\n
 \n
 if not transaction.getDestinationReference():\n
@@ -106,7 +110,9 @@ if not transaction.getDestinationReference():\n
   if not period_code:\n
     period_code = str(transaction.getStopDate().year())\n
   destination_id_group = (\'accounting\', \'section\', destination_section, period_code)\n
-  destination_reference = id_generator(id_group=destination_id_group, default=1)\n
+  destination_reference = id_generator(id_group=destination_id_group,\n
+                                       default=previous_id_getter(destination_id_group,\n
+                                                                  default=0) + 1)\n
   transaction.setDestinationReference(\'%s-%s\' % (period_code, destination_reference))\n
 </string> </value>
         </item>
@@ -162,6 +168,7 @@ if not transaction.getDestinationReference():\n
                             <string>destination_section</string>
                             <string>destination_section_value</string>
                             <string>id_generator</string>
+                            <string>previous_id_getter</string>
                             <string>invoice_id_group</string>
                             <string>invoice_reference</string>
                             <string>period</string>

@@ -141,9 +141,13 @@ for (node, section, mirror_section), line_info_list in lines_per_node.items():\n
   if default_currency is not None:\n
     total_price = round(total_price, default_currency.getQuantityPrecision())\n
   if total_price == 0 or allow_grouping_with_different_quantity:\n
-    # get a grouping reference id\n
-    grouping_reference = portal.portal_ids.generateNewId(\n
-          (\'grouping_reference\', node, section, mirror_section))\n
+    id_group = (\'grouping_reference\', node, section, mirror_section)\n
+    # before, we where using generateNewId, we are now using generateNewLengthId which\n
+    # is using another storage. Get the last value generated with generateNewId and use it as default.\n
+    previous_default = context.portal_ids.getLastGeneratedId(id_group=id_group, default=0)\n
+    grouping_reference = portal.portal_ids.generateNewLengthId(\n
+                                                  id_group=id_group,\n
+                                                  default=previous_default + 1)\n
     \n
     # convert from int to letters\n
     string_reference = int2letter(grouping_reference)\n
@@ -224,6 +228,8 @@ return changed_lines\n
                             <string>default_currency</string>
                             <string>section_obj</string>
                             <string>round</string>
+                            <string>id_group</string>
+                            <string>previous_default</string>
                             <string>grouping_reference</string>
                             <string>string_reference</string>
                             <string>line_obj</string>
