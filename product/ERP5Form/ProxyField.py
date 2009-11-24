@@ -54,6 +54,9 @@ from Products.Formulator.TALESField import TALESMethod
 from Products.ERP5Form.Form import StaticValue, TALESValue, OverrideValue, DefaultValue, EditableValue
 from Products.ERP5Form.Form import copyMethod, isCacheable
 
+from Products.CMFCore.Skinnable import SKINDATA
+from thread import get_ident
+
 _USE_ORIGINAL_GET_VALUE_MARKER = []
 
 _field_value_cache = {}
@@ -423,15 +426,54 @@ class ProxyField(ZMIField):
 
     form = self.aq_parent
     object = form.aq_parent
-    try:
-      proxy_form = getattr(object, self.get_value('form_id'))
-      proxy_field = aq_base(getattr(proxy_form, self.get_value('field_id')))
+
+    form_id = self.get_value('form_id')
+    proxy_field = None
+    form_id_with_skin_folder_name_flag = False
+    if '/' in form_id:
+      # If a / is in the form_id, it means that skin_folder is explicitly
+      # defined. If so, prevent acquisition to get the form.
+      form_id_with_skin_folder_name_flag = True
+      proxy_form = aq_base(object.portal_skins).unrestrictedTraverse(form_id, None)
+    else:
+      proxy_form = getattr(object, form_id, None)
+
+    if (proxy_form is not None):
+      field_id = self.get_value('field_id')
+      try:
+        proxy_field = aq_base(getattr(proxy_form, field_id))
+      except (AttributeError, TypeError):
+        proxy_field = None
+
+        if form_id_with_skin_folder_name_flag is False:
+          # Try to get the field from another field library with a lower
+          # priority.
+          # This should return no field if the skin folder name is defined in
+          # form_id.
+          skin_info = SKINDATA.get(get_ident())
+
+          if skin_info is not None:
+            skin_selection_name, ignore, resolve = skin_info
+            portal_skins = aq_base(self.portal_skins)
+
+            selection_dict = portal_skins._getSelections()
+            candidate_folder_id_list = selection_dict[skin_selection_name].split(',')
+
+            for candidate_folder_id in candidate_folder_id_list:
+              candidate_folder = getattr(portal_skins, candidate_folder_id, None)
+              if candidate_folder is not None:
+                proxy_form = getattr(candidate_folder, form_id, None)
+                if proxy_form is not None:
+                  proxy_field = getattr(proxy_form, field_id, None)
+                  if proxy_field is not None:
+                    break
+
+    if proxy_field is not None:
       proxy_field = proxy_field.__of__(form)
-    except (AttributeError, TypeError):
+    else:
       LOG('ProxyField', WARNING, 
           'Could not get a field from a proxy field %s in %s' % \
               (self.id, object.id))
-      proxy_field = None
     if cache is True:
       self._setTemplateFieldCache(proxy_field)
     return proxy_field
