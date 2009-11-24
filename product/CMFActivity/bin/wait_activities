@@ -41,16 +41,10 @@ TIME=0
 
 while true
 do
-    SELECT="SELECT count(*) AS message_count FROM message;"
-    VALUE=`echo $SELECT | mysql $MYSQL_OPT | grep -v message`
-    if [ "$VALUE" == "0" ]
-    then
-      SELECT="SELECT count(*) AS message_count FROM message_queue;"
-      VALUE=`echo $SELECT | mysql $MYSQL_OPT | grep -v message`
-      if [ "$VALUE" == "0" ]
-      then 
-         exit 0
-      fi
+    MESSAGE_VALUE=`echo "SELECT count(*) AS message_count FROM message;" | mysql $MYSQL_OPT | grep -v message`
+    MESSAGE_QUEUE_VALUE=`echo "SELECT count(*) AS message_count FROM message_queue;" | mysql $MYSQL_OPT | grep -v message`
+    if [ "$MESSAGE_VALUE" == "0" -a "$MESSAGE_QUEUE_VALUE" == 0 ] ; then
+      exit 0
     fi
     sleep $INTERVAL;
     TIME="`expr $TIME + $INTERVAL`"
