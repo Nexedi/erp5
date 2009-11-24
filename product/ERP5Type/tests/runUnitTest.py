@@ -166,10 +166,10 @@ else:
     erp5_home = os.path.sep.join(
         tests_framework_home.split(os.path.sep)[:-4])
     zope_home = os.path.join(erp5_home, 'Zope')
-  elif os.path.isdir('/usr/lib64/zope/lib/python'):
-    zope_home = '/usr/lib64/zope'
   elif os.path.isdir('/usr/lib/erp5/lib/python'):
     zope_home = '/usr/lib/erp5'
+  elif os.path.isdir('/usr/lib64/zope/lib/python'):
+    zope_home = '/usr/lib64/zope'
   elif os.path.isdir('/usr/lib/zope2.8/lib/python'):
     zope_home = '/usr/lib/zope2.8'
   else:
