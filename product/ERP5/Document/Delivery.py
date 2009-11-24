@@ -718,7 +718,8 @@ class Delivery(XMLObject, ImmobilisationDelivery):
           portal_rules = getToolByName(self, 'portal_rules')
           portal_simulation = getToolByName(self, 'portal_simulation')
           my_applied_rule = portal_rules[rule_id].\
-              constructNewAppliedRule(portal_simulation)
+              constructNewAppliedRule(portal_simulation,
+                                      activate_kw=activate_kw)
           # Set causality
           my_applied_rule.setCausalityValue(self)
           # We must make sure this rule is indexed
