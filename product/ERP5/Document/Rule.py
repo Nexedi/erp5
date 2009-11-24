@@ -30,7 +30,6 @@
 
 import zope.interface
 from AccessControl import ClassSecurityInfo
-from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5.Document.Predicate import Predicate
@@ -109,7 +108,6 @@ class Rule(Predicate, XMLObject):
       Creates a new applied rule which points to self
     """
     # XXX Parameter **kw is useless, so, we should remove it
-    portal_types = getToolByName(self, 'portal_types')
     if id is None:
       id = context.generateNewId()
     if getattr(aq_base(context), id, None) is None:
