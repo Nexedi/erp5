@@ -81,11 +81,24 @@ class TestInteractionWorkflow(ERP5TypeTestCase):
                           portal_type = self.portal_type)
     self.organisation.immediateReindexObject()
 
+  def _createInteractionWorkflowWithId(self, wf_id):
+    wf_tool = self.getWorkflowTool()
+    # BACKWARD: CMF 1.8. Remove when we move to CMF 2.2
+    manage_addWorkflow = getattr(wf_tool, 'manage_addWorkflow', None)
+    if manage_addWorkflow is not None:
+      wf_type = "interaction_workflow (Web-configurable interaction workflow)"
+      manage_addWorkflow(workflow_type=wf_type, id=wf_id)
+      return wf_tool[wf_id]
+    else:
+      # On CMF 2.2, only this part should remain
+      dispatcher = wf_tool.manage_addProduct['ERP5Type']
+      return dispatcher.addWorkflow_interaction_workflow(wf_id)
+
   def createInteractionWorkflow(self):
     id = 'test_workflow'
     wf_type = "interaction_workflow (Web-configurable interaction workflow)"
     if getattr(self.getWorkflowTool(), id, None) is None:
-      self.getWorkflowTool().manage_addWorkflow(workflow_type=wf_type,id=id)
+      self._createInteractionWorkflowWithId(id)
     wf = self.getWorkflowTool()[id]
     self.wf = wf
     if getattr(wf.scripts, 'afterEdit', None) is None:
@@ -102,8 +115,7 @@ class TestInteractionWorkflow(ERP5TypeTestCase):
   def createInteractionWorkflowWithTwoInteractions(self):
     id = 'test_workflow'
     wf_type = "interaction_workflow (Web-configurable interaction workflow)"
-    self.getWorkflowTool().manage_addWorkflow(workflow_type=wf_type,id=id)
-    wf = self.getWorkflowTool()[id]
+    wf = self._createInteractionWorkflowWithId(id)
     self.wf = wf
     wf.scripts.manage_addProduct['PythonScripts']\
                   .manage_addPythonScript(id='afterEditA')
