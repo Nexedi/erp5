@@ -413,7 +413,6 @@ class ODFStrategy(Implicit):
     if len(reference_list) > 0:
       target_node = reference_list[0]
       paragraph_node = reference_list[0].getparent()
-      parent_node = paragraph_node.getparent()
       if not isinstance(field_value, list):
         # remove such a "bbb": <text:p>aaa<text:line-break/>bbb</text:p>
         for child in paragraph_node.getchildren():
