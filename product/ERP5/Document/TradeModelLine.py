@@ -35,6 +35,8 @@ from Products.ERP5.Document.Amount import Amount
 from Products.ERP5.Document.Predicate import Predicate
 from Products.ERP5.AggregatedAmountList import AggregatedAmountList
 from Products.ERP5.Document.TradeCondition import TradeCondition
+from Products.ERP5.PropertySheet.TradeModelLine import (TARGET_LEVEL_MOVEMENT,
+                                                        TARGET_LEVEL_DELIVERY)
 import zope.interface
 
 def isMovement(document):
@@ -101,11 +103,24 @@ class TradeModelLine(Predicate, XMLMatrix, Amount):
                                                        script_name
     return script
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'test')
+  def test(self, context, tested_base_category_list=None, strict_membership=0,
+           **kw):
+    result = TradeModelLine.inheritedAttribute('test')(
+      self, context, tested_base_category_list, strict_membership, **kw)
+
+    if result and self.getTargetLevel():
+      # If Trade Model Line is set to delivery level, then do nothing
+      # at movement level.
+      if self.getTargetLevel()==TARGET_LEVEL_DELIVERY and not context.isDelivery():
+        return False
+    return result
+
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getAggregatedAmountList')
-  def getAggregatedAmountList(self, context, movement_list = None,
-      current_aggregated_amount_list = None, base_id='movement', **kw):
-    from Products.ERP5Type.Document import newTempSimulationMovement
+  def getAggregatedAmountList(self, context, movement_list=None,
+      current_aggregated_amount_list=None, base_id='movement',
+      rounding=False, **kw):
 
     # test with predicate if this model line could be applied
     if not self.test(context):
@@ -134,13 +149,37 @@ class TradeModelLine(Predicate, XMLMatrix, Amount):
           if not movement.getBaseApplication():
             movement_list.append(movement)
 
+    if self.getTargetLevel()==TARGET_LEVEL_MOVEMENT:
+      # movement level trade model is applied to each movement and
+      # generate result par movement.
+      result = []
+      for movement in movement_list:
+        result.extend(self._getAggregatedAmountList(
+          context, [movement], current_aggregated_amount_list,
+          base_id, rounding, **kw))
+      return result
+    else:
+      return self._getAggregatedAmountList(
+        context, movement_list, current_aggregated_amount_list,
+        base_id, rounding, **kw)
+
+  def _getAggregatedAmountList(self, context, movement_list=None,
+                               current_aggregated_amount_list=None,
+                               base_id='movement', rounding=False, **kw):
+    from Products.ERP5Type.Document import newTempSimulationMovement
+
     aggregated_amount_list = AggregatedAmountList()
     base_application_list = self.getBaseApplicationList()
 
     self_id = self.getParentValue().getId() + '_' + self.getId()
 
-    tmp_movement_list = [q for q in current_aggregated_amount_list \
-        if q.getReference() == self.getReference()]
+    # Make tmp movement list only when trade model line is not set to movement level.
+    tmp_movement_list = []
+    if self.getTargetLevel()!=TARGET_LEVEL_MOVEMENT:
+      tmp_movement_list = [processed_movement
+                           for processed_movement in current_aggregated_amount_list
+                           if processed_movement.getReference() == self.getReference()]
+
     if len(tmp_movement_list) > 0:
       update = 1
     else:
@@ -201,6 +240,8 @@ class TradeModelLine(Predicate, XMLMatrix, Amount):
         'stop_date': context.getStopDate(),
         'create_line': self.isCreateLine(),
         'trade_phase_list': self.getTradePhaseList(),
+        'causality_list': [movement.getRelativeUrl()
+                           for movement in movement_list],
       }
       common_params.update(property_dict)
 

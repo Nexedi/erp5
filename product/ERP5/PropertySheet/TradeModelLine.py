@@ -26,6 +26,14 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
 ##############################################################################
+from AccessControl import ModuleSecurityInfo
+
+TARGET_LEVEL_DELIVERY = 'DELIVERY'
+TARGET_LEVEL_MOVEMENT = 'MOVEMENT'
+
+ModuleSecurityInfo('Products.ERP5.PropertySheet.TradeModelLine').declarePublic(
+  'TARGET_LEVEL_DELIVERY', 'TARGET_LEVEL_MOVEMENT')
+
 
 class TradeModelLine:
   """
@@ -44,6 +52,27 @@ class TradeModelLine:
                       'script will be used for calculation',
       'type'        : 'string',
       'mode'        : 'w',
+    },
+    { 'id'          : 'target_level',
+      'description' : 'Target level defines how trade model line is applied to '
+                      'what(a set of movement or a movement). If target level '
+                      'is `delivery`, then this is applied only at delivery '
+                      'level(for example, VAT to total price of order). And if '
+                      'target level is `movement`, then this is applied to one '
+                      'movement and result will not be summed up(for example, '
+                      'VAT to each order line). If target level is neither '
+                      'delivery nor movement, this is applied to anything '
+                      'without restriction.',
+      'type'        : 'selection',
+      'select_variable' : 'getTargetLevelSelectionList',
+      'mode'        : 'w',
+      'default'     : None,
+    },
+    { 'id'          : 'target_level_selection',
+      'description' : 'List of possible values for target_level property',
+      'type'        : 'tokens',
+      'mode'        : '',
+      'default'     : [TARGET_LEVEL_DELIVERY, TARGET_LEVEL_MOVEMENT],
     },
   )
 

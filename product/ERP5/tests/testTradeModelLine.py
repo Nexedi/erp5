@@ -2386,6 +2386,107 @@ class TestTradeModelLine(TestTradeModelLineMixin):
                       self.expense_account)
     self.assertEquals(1000, income_movement.getSourceCredit())
 
+  def test_tradeModelLineWithTargetLevelSetting(self):
+    """
+      Test that target level setting can specify a target of trade model line
+      and trade model line can works with appropriate context(delivery or
+      movement) only.
+    """
+    from Products.ERP5.PropertySheet.TradeModelLine import (
+      TARGET_LEVEL_MOVEMENT,
+      TARGET_LEVEL_DELIVERY)
+
+    trade_condition = self.createTradeCondition()
+    # create a model line and set target level to `delivery`.
+    tax = self.createTradeModelLine(trade_condition,
+                                    reference='TAX',
+                                    base_application_list=['base_amount/taxable'],
+                                    base_contribution_list=['base_amount/total_tax'])
+    tax.edit(price=0.05, target_level=TARGET_LEVEL_DELIVERY)
+
+    # create an order.
+    resource_A = self.createResource('Product', title='A')
+    resource_B = self.createResource('Product', title='B')
+    order = self.createOrder()
+    order.setSpecialiseValue(trade_condition)
+    order_line_1 = order.newContent(portal_type=self.order_line_portal_type,
+                                    price=1000, quantity=1,
+                                    resource_value=resource_A,
+                                    base_contribution_list=['base_amount/taxable'])
+    order_line_2 = order.newContent(portal_type=self.order_line_portal_type,
+                                    price=500, quantity=1,
+                                    resource_value=resource_B,
+                                    base_contribution_list=['base_amount/taxable'])
+    amount_list = trade_condition.getAggregatedAmountList(order)
+    self.assertEqual(1, len(amount_list))
+    self.assertEqual(set([order_line_1, order_line_2]),
+                     set(amount_list[0].getCausalityValueList()))
+    self.assertEqual(75.0, amount_list[0].getTotalPrice())
+
+    # change target level to `movement`.
+    tax.edit(target_level=TARGET_LEVEL_MOVEMENT)
+    amount_list = trade_condition.getAggregatedAmountList(order)
+    self.assertEqual(2, len(amount_list))
+    self.assertEqual(1,
+                     len([1 for amount in amount_list
+                          if amount.getCausalityValueList() == [order_line_1]]))
+    self.assertEqual(1,
+                     len([1 for amount in amount_list
+                          if amount.getCausalityValueList() == [order_line_2]]))
+    # check getAggregatedAmountList result of order line.
+    amount_list = trade_condition.getAggregatedAmountList(order_line_1)
+    self.assertEqual(1, len(amount_list))
+    self.assertEqual([order_line_1], amount_list[0].getCausalityValueList())
+    amount_list = trade_condition.getAggregatedAmountList(order_line_2)
+    self.assertEqual(1, len(amount_list))
+    self.assertEqual([order_line_2], amount_list[0].getCausalityValueList())
+
+    # create other trade model lines.
+    # for movement
+    extra_fee = self.createTradeModelLine(trade_condition,
+                                          reference='EXTRA_FEE_A',
+                                          base_contribution_list=['base_amount/total'])
+    extra_fee.edit(quantity=100, price=1, target_level=TARGET_LEVEL_MOVEMENT)
+    # for delivery level
+    discount = self.createTradeModelLine(trade_condition,
+                                         reference='DISCOUNT_B',
+                                         base_contribution_list=['base_amount/total'],)
+    discount.edit(quantity=10, price=-1, target_level=TARGET_LEVEL_DELIVERY)
+
+    def getTotalAmount(amount_list):
+      result = 0
+      for amount in amount_list:
+        if amount.getBaseContribution() in ('base_amount/total', 'base_amount/total_tax'):
+          result += amount.getTotalPrice()
+      return result
+
+    amount_list = trade_condition.getAggregatedAmountList(order)
+    self.assertEqual(5, len(amount_list))
+    self.assertEqual(100 + 100 - 10 + 1000*0.05 + 500*0.05,
+                     getTotalAmount(amount_list))
+
+    # Make sure that getAggregatedAmountList of movement uses movement
+    # level trade model line only.
+    amount_list = trade_condition.getAggregatedAmountList(order_line_1)
+    self.assertEqual(2, len(amount_list))
+    self.assertEqual([order_line_1],
+                     amount_list[0].getCausalityValueList())
+    self.assertEqual([order_line_1],
+                     amount_list[1].getCausalityValueList())
+    amount_list = trade_condition.getAggregatedAmountList(order_line_2)
+    self.assertEqual(2, len(amount_list))
+    self.assertEqual([order_line_2],
+                     amount_list[0].getCausalityValueList())
+    self.assertEqual([order_line_2],
+                     amount_list[1].getCausalityValueList())
+
+    # Change target level
+    extra_fee.edit(target_level=TARGET_LEVEL_DELIVERY)
+    tax.edit(target_level=TARGET_LEVEL_DELIVERY)
+    amount_list = trade_condition.getAggregatedAmountList(order)
+    self.assertEqual(3, len(amount_list))
+    self.assertEqual(100 - 10 + 1500*0.05,
+                     getTotalAmount(amount_list))
 
 class TestTradeModelLineSale(TestTradeModelLine):
   invoice_portal_type = 'Sale Invoice Transaction'
