@@ -258,15 +258,13 @@ class SelectionTool( BaseTool, UniqueObject, SimpleItem ):
       """
         Returns the params in the selection
       """
-      if params is None: params = {}
+      if params is None:
+        params = {}
       selection = self.getSelectionFor(selection_name, REQUEST=REQUEST)
       if selection is not None:
-        if len(selection.params) > 0:
+        if selection.params:
           return selection.getParams()
-        else:
-          return params
-      else:
-        return params
+      return params
 
     # backward compatibility
     security.declareProtected(ERP5Permissions.View, 'getSelectionParams')

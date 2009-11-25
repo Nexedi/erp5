@@ -257,12 +257,9 @@ class Selection(Acquisition.Implicit, Traversable, Persistent):
         """
           Get a dictionary of parameters in this selection.
         """
-        #LOG('getParams',0,'params: %s' % str(self.params))
-        if self.params is None:
+        if not isinstance(self.params, dict):
           self.params = {}
-        if type(self.params) != type({}):
-          self.params = {}
-        return self.params
+        return self.params.copy()
 
     security.declarePublic('getSortOrder')
     def getSortOrder(self):
