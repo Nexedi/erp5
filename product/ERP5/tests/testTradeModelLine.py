@@ -2400,7 +2400,7 @@ class TestTradeModelLine(TestTradeModelLineMixin):
     # create a model line and set target level to `delivery`.
     tax = self.createTradeModelLine(trade_condition,
                                     reference='TAX',
-                                    base_application_list=['base_amount/taxable'],
+                                    base_application_list=['base_amount/tax'],
                                     base_contribution_list=['base_amount/total_tax'])
     tax.edit(price=0.05, target_level=TARGET_LEVEL_DELIVERY)
 
@@ -2412,11 +2412,11 @@ class TestTradeModelLine(TestTradeModelLineMixin):
     order_line_1 = order.newContent(portal_type=self.order_line_portal_type,
                                     price=1000, quantity=1,
                                     resource_value=resource_A,
-                                    base_contribution_list=['base_amount/taxable'])
+                                    base_contribution_list=['base_amount/tax'])
     order_line_2 = order.newContent(portal_type=self.order_line_portal_type,
                                     price=500, quantity=1,
                                     resource_value=resource_B,
-                                    base_contribution_list=['base_amount/taxable'])
+                                    base_contribution_list=['base_amount/tax'])
     amount_list = trade_condition.getAggregatedAmountList(order)
     self.assertEqual(1, len(amount_list))
     self.assertEqual(set([order_line_1, order_line_2]),
