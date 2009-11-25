@@ -36,7 +36,8 @@ from AccessControl.SecurityManagement import newSecurityManager
 from zLOG import LOG
 from DateTime import DateTime
 from Products.CMFCore.tests.base.testcase import LogInterceptor
-from Products.ERP5Type.tests.utils import createZODBPythonScript, todo_erp5
+from Products.ERP5Type.tests.utils import createZODBPythonScript, todo_erp5, \
+                                          getExtraSqlConnectionStringList
 from Products.ZSQLCatalog.ZSQLCatalog import HOT_REINDEXING_FINISHED_STATE,\
       HOT_REINDEXING_RECORDING_STATE, HOT_REINDEXING_DOUBLE_INDEXING_STATE
 from Products.CMFActivity.Errors import ActivityFlushError
@@ -1467,7 +1468,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     portal = self.getPortal()
     self.original_connection_id = 'erp5_sql_connection'
     self.new_connection_id = 'erp5_sql_connection2'
-    new_connection_string = 'test2 test2'
+    new_connection_string = getExtraSqlConnectionStringList()[0]
 
     # Skip this test if default connection string is not "test test".
     original_connection = getattr(portal, self.original_connection_id)

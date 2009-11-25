@@ -37,7 +37,8 @@ from zLOG import LOG
 from DateTime import DateTime
 from Products.CMFCore.tests.base.testcase import LogInterceptor
 from Testing.ZopeTestCase.PortalTestCase import PortalTestCase
-from Products.ERP5Type.tests.utils import createZODBPythonScript
+from Products.ERP5Type.tests.utils import createZODBPythonScript, \
+                                          getExtraSqlConnectionStringList
 from Products.ZSQLCatalog.ZSQLCatalog import HOT_REINDEXING_FINISHED_STATE,\
       HOT_REINDEXING_RECORDING_STATE, HOT_REINDEXING_DOUBLE_INDEXING_STATE
 from Products.CMFActivity.Errors import ActivityFlushError
@@ -168,27 +169,28 @@ class TestArchive(InventoryAPITestCase):
     
     # Create new connectors for destination
     self.new_connection_id = 'erp5_sql_connection1'
+    db1, db2 = getExtraSqlConnectionStringList()[:2]
     portal.manage_addZMySQLConnection(self.new_connection_id,'',
-                                      'test2 test2')
+                                      db1)
     new_connection = portal[self.new_connection_id]
     new_connection.manage_open_connection()
     # the deferred one
     self.new_deferred_connection_id = 'erp5_sql_connection2'
     portal.manage_addZMySQLConnection(self.new_deferred_connection_id,'',
-                                      'test2 test2')
+                                      db1)
     new_deferred_connection = portal[self.new_deferred_connection_id]
     new_deferred_connection.manage_open_connection()
 
     # Create new connectors for archive
     self.archive_connection_id = 'erp5_sql_connection3'
     portal.manage_addZMySQLConnection(self.archive_connection_id,'',
-                                      'test3 test3')
+                                      db2)
     archive_connection = portal[self.archive_connection_id]
     archive_connection.manage_open_connection()
     # the deferred one
     self.archive_deferred_connection_id = 'erp5_sql_connection4'
     portal.manage_addZMySQLConnection(self.archive_deferred_connection_id,'',
-                                      'test3 test3')
+                                      db2)
     archive_deferred_connection = portal[self.archive_deferred_connection_id]
     archive_deferred_connection.manage_open_connection()
 

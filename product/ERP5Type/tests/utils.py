@@ -237,6 +237,12 @@ def getMySQLArguments():
 
   return '-u %s %s %s %s' % (user, password, host, db)
 
+def getExtraSqlConnectionStringList():
+  """Return list of extra available SQL connection string
+  """
+  return os.environ.get('extra_sql_connection_string_list',
+                        'test2 test2:test3 test3').split(':')
+
 # decorators
 class reindex(object):
   """Decorator to commit transaction and flush activities after the method is
