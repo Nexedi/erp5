@@ -166,15 +166,15 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Simple Google Calendar</string> </value>
+            <value> <string>Simple Google Search</string> </value>
         </item>
         <item>
             <key> <string>edit_form_id</string> </key>
-            <value> <string>ERP5Site_viewGoogleCalendarGadgetPreferenceDialog</string> </value>
+            <value> <string>ERP5Site_viewGoogleSearchGadgetPreferenceDialog</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>google_calendar</string> </value>
+            <value> <string>google_search</string> </value>
         </item>
         <item>
             <key> <string>image_id</string> </key>
@@ -194,15 +194,15 @@
         </item>
         <item>
             <key> <string>preferred_height</string> </key>
-            <value> <int>200</int> </value>
+            <value> <int>77</int> </value>
         </item>
         <item>
             <key> <string>preferred_title</string> </key>
-            <value> <string>Google Calendar</string> </value>
+            <value> <string>Google Search</string> </value>
         </item>
         <item>
             <key> <string>preferred_width</string> </key>
-            <value> <int>200</int> </value>
+            <value> <int>280</int> </value>
         </item>
         <item>
             <key> <string>render_type</string> </key>
@@ -210,7 +210,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Google Calendar</string> </value>
+            <value> <string>Google Search</string> </value>
         </item>
         <item>
             <key> <string>type</string> </key>
@@ -218,7 +218,7 @@
         </item>
         <item>
             <key> <string>view_form_id</string> </key>
-            <value> <string>ERP5Site_viewGoogleCalendarGadget</string> </value>
+            <value> <string>ERP5Site_viewGoogleSearchGadget</string> </value>
         </item>
       </dictionary>
     </pickle>

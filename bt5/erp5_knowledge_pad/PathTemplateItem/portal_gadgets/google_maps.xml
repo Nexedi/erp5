@@ -132,6 +132,46 @@
                 <dictionary>
                   <item>
                       <key> <string>id</string> </key>
+                      <value> <string>preferred_location</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>preferred_language</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>preferred_large_map</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>int</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>preferred_kml</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>int</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
                       <value> <string>preferred_title</string> </value>
                   </item>
                   <item>
@@ -166,15 +206,15 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Simple Google Calendar</string> </value>
+            <value> <string>Google Maps</string> </value>
         </item>
         <item>
             <key> <string>edit_form_id</string> </key>
-            <value> <string>ERP5Site_viewGoogleCalendarGadgetPreferenceDialog</string> </value>
+            <value> <string>ERP5Site_viewGoogleMapsGadgetPreferenceDialog</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>google_calendar</string> </value>
+            <value> <string>google_maps</string> </value>
         </item>
         <item>
             <key> <string>image_id</string> </key>
@@ -194,15 +234,31 @@
         </item>
         <item>
             <key> <string>preferred_height</string> </key>
-            <value> <int>200</int> </value>
+            <value> <int>335</int> </value>
+        </item>
+        <item>
+            <key> <string>preferred_kml</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>preferred_language</string> </key>
+            <value> <string>default language</string> </value>
+        </item>
+        <item>
+            <key> <string>preferred_large_map</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>preferred_location</string> </key>
+            <value> <string>Lille, France</string> </value>
         </item>
         <item>
             <key> <string>preferred_title</string> </key>
-            <value> <string>Google Calendar</string> </value>
+            <value> <string>Google Maps</string> </value>
         </item>
         <item>
             <key> <string>preferred_width</string> </key>
-            <value> <int>200</int> </value>
+            <value> <int>318</int> </value>
         </item>
         <item>
             <key> <string>render_type</string> </key>
@@ -210,7 +266,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Google Calendar</string> </value>
+            <value> <string>Google Maps</string> </value>
         </item>
         <item>
             <key> <string>type</string> </key>
@@ -218,7 +274,7 @@
         </item>
         <item>
             <key> <string>view_form_id</string> </key>
-            <value> <string>ERP5Site_viewGoogleCalendarGadget</string> </value>
+            <value> <string>ERP5Site_viewGoogleMapsGadget</string> </value>
         </item>
       </dictionary>
     </pickle>

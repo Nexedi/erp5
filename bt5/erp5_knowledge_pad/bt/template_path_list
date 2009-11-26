@@ -11,3 +11,7 @@ portal_gadgets/erp5_worklists
 portal_gadgets/erp5_worklists/**
 portal_gadgets/google_calendar
 portal_gadgets/google_calendar/**
+portal_gadgets/google_maps
+portal_gadgets/google_maps/**
+portal_gadgets/google_search
+portal_gadgets/google_search/**
