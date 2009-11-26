@@ -2488,6 +2488,170 @@ class TestTradeModelLine(TestTradeModelLineMixin):
     self.assertEqual(100 - 10 + 1500*0.05,
                      getTotalAmount(amount_list))
 
+  def test_tradeModelLineWithRounding(self):
+    """
+      Test if trade model line works with rounding.
+    """
+    from Products.ERP5.PropertySheet.TradeModelLine import (
+      TARGET_LEVEL_MOVEMENT,
+      TARGET_LEVEL_DELIVERY)
+
+    trade_condition = self.createTradeCondition()
+    # create a model line and set target level to `delivery`
+    tax = self.createTradeModelLine(trade_condition,
+                                    reference='TAX',
+                                    base_application_list=['base_amount/tax'],
+                                    base_contribution_list=['base_amount/total_tax'])
+    tax.edit(price=0.05, target_level=TARGET_LEVEL_DELIVERY)
+
+    # create a rounding model for tax
+    rounding_model = self.portal.portal_roundings.newContent(portal_type='Rounding Model')
+    rounding_model.setDecimalRoundingOption('ROUND_DOWN')
+    rounding_model.setDecimalExponent('1')
+    rounding_model.setRoundedPropertyId('total_price')
+    rounding_model._setMembershipCriterionCategoryList(['base_contribution/base_amount/total_tax'])
+    rounding_model._setMembershipCriterionBaseCategoryList(['base_contribution'])
+    rounding_model.validate()
+
+    # create an order
+    resource_A = self.createResource('Product', title='A')
+    resource_B = self.createResource('Product', title='B')
+    order = self.createOrder()
+    order.setSpecialiseValue(trade_condition)
+    order_line_1 = order.newContent(portal_type=self.order_line_portal_type,
+                                    price=3333, quantity=1,
+                                    resource_value=resource_A,
+                                    base_contribution_list=['base_amount/tax'])
+    order_line_2 = order.newContent(portal_type=self.order_line_portal_type,
+                                    price=171, quantity=1,
+                                    resource_value=resource_B,
+                                    base_contribution_list=['base_amount/tax'])
+
+    transaction.commit()
+    self.tic()
+
+    # check the result without rounding
+    amount_list = trade_condition.getAggregatedAmountList(order, rounding=False)
+    self.assertEqual(1, len(amount_list))
+    self.assertEqual(set([order_line_1, order_line_2]),
+                     set(amount_list[0].getCausalityValueList()))
+    self.assertEqual((3333+171)*0.05, amount_list[0].getTotalPrice())
+    # check the result with rounding
+    amount_list = trade_condition.getAggregatedAmountList(order, rounding=True)
+    self.assertEqual(1, len(amount_list))
+    self.assertEqual(set([order_line_1, order_line_2]),
+                     set(amount_list[0].getCausalityValueList()))
+    self.assertEqual(175, amount_list[0].getTotalPrice())
+
+    # change tax trade model line to `movement` level
+    tax.edit(target_level=TARGET_LEVEL_MOVEMENT)
+
+    def getTotalAmount(amount_list):
+      result = 0
+      for amount in amount_list:
+        if amount.getBaseContribution() in ('base_amount/total', 'base_amount/total_tax'):
+          result += amount.getTotalPrice()
+      return result
+
+    # check the result without rounding
+    amount_list = trade_condition.getAggregatedAmountList(order, rounding=False)
+    self.assertEqual(2, len(amount_list))
+    self.assertEqual(3333*0.05+171*0.05, getTotalAmount(amount_list))
+    # check the result with rounding
+    amount_list = trade_condition.getAggregatedAmountList(order, rounding=True)
+    self.assertEqual(2, len(amount_list))
+    self.assertEqual(174, getTotalAmount(amount_list))
+
+    # check getAggregatedAmountList result of each movement
+    # order line 1
+    amount_list = trade_condition.getAggregatedAmountList(order_line_1,
+                                                          rounding=False)
+    self.assertEqual(1, len(amount_list))
+    self.assertEqual(3333*0.05, amount_list[0].getTotalPrice())
+    amount_list = trade_condition.getAggregatedAmountList(order_line_1,
+                                                          rounding=True)
+    self.assertEqual(1, len(amount_list))
+    self.assertEqual(166, amount_list[0].getTotalPrice())
+    # order line 2
+    amount_list = trade_condition.getAggregatedAmountList(order_line_2,
+                                                          rounding=False)
+    self.assertEqual(1, len(amount_list))
+    self.assertEqual(171*0.05, amount_list[0].getTotalPrice())
+    amount_list = trade_condition.getAggregatedAmountList(order_line_2,
+                                                          rounding=True)
+    self.assertEqual(1, len(amount_list))
+    self.assertEqual(8, amount_list[0].getTotalPrice())
+
+    # change rounding model definition
+    rounding_model.setDecimalRoundingOption('ROUND_UP')
+    rounding_model.setDecimalExponent('1')
+    rounding_model.setRoundedPropertyIdList(['total_price', 'quantity'])
+
+    # change quantity
+    order_line_1.edit(quantity=3.3333)
+
+    transaction.commit()
+    self.tic()
+
+    # check the result without rounding
+    amount_list = trade_condition.getAggregatedAmountList(order, rounding=False)
+    self.assertEqual(2, len(amount_list))
+    self.assertEqual(3.3333*3333*0.05+171*0.05, getTotalAmount(amount_list))
+    # check the result with rounding
+    # both quantity and total price will be rounded so that the expression
+    # should be "round_up(round_up(3.3333 * 3333) * 0.05) + round_up(round_up
+    # (1* 171) * 0.05)"
+    amount_list = trade_condition.getAggregatedAmountList(order, rounding=True)
+    self.assertEqual(2, len(amount_list))
+    self.assertEqual(565, getTotalAmount(amount_list))
+
+    # create a rounding model to round quantity property of order line
+    rounding_model_for_quantity = self.portal.portal_roundings.newContent(portal_type='Rounding Model')
+    rounding_model_for_quantity.setDecimalRoundingOption('ROUND_DOWN')
+    rounding_model_for_quantity.setDecimalExponent('1')
+    rounding_model_for_quantity.setRoundedPropertyId('quantity')
+    rounding_model_for_quantity._setMembershipCriterionCategoryList(['base_contribution/base_amount/tax'])
+    rounding_model_for_quantity._setMembershipCriterionBaseCategoryList(['base_contribution'])
+    rounding_model_for_quantity.validate()
+
+    transaction.commit()
+    self.tic()
+
+    amount_list = trade_condition.getAggregatedAmountList(order, rounding=True)
+    # The expression should be "round_up(round_up(round_down(3.3333) * 3333)
+    # * 0.05) + round_up(round_up(round_down(1) * 171) * 0.05)"
+    self.assertEqual(2, len(amount_list))
+    self.assertEqual(509, getTotalAmount(amount_list))
+
+    # create a rounding model to round price property of order line
+    rounding_model_for_price = self.portal.portal_roundings.newContent(portal_type='Rounding Model')
+    rounding_model_for_price.setDecimalRoundingOption('ROUND_UP')
+    rounding_model_for_price.setDecimalExponent('0.1')
+    rounding_model_for_price.setRoundedPropertyId('price')
+    rounding_model_for_price._setMembershipCriterionCategoryList(['base_contribution/base_amount/tax'])
+    rounding_model_for_price._setMembershipCriterionBaseCategoryList(['base_contribution'])
+    rounding_model_for_price.validate()
+
+    # change price
+    order_line_2.edit(price=171.1234)
+    # invalidate rounding model for total price
+    rounding_model.invalidate()
+
+    transaction.commit()
+    self.tic()
+
+    # check the result without rounding
+    amount_list = trade_condition.getAggregatedAmountList(order, rounding=False)
+    self.assertEqual(2, len(amount_list))
+    self.assertEqual(3.3333*3333*0.05+171.1234*0.05, getTotalAmount(amount_list))
+    # check the result with rounding
+    amount_list = trade_condition.getAggregatedAmountList(order, rounding=True)
+    # The expression should be "round_down(3.3333) * round_up(3333) * 0.05 +
+    # round_down(1) * round_up(171.1234) * 0.05"
+    self.assertEqual(2, len(amount_list))
+    self.assertEqual(508.51000000000005, getTotalAmount(amount_list))
+
+
 class TestTradeModelLineSale(TestTradeModelLine):
   invoice_portal_type = 'Sale Invoice Transaction'
   invoice_line_portal_type = 'Invoice Line'
