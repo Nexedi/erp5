@@ -108,6 +108,7 @@
                         <string>my_price</string>
                         <string>my_quantity</string>
                         <string>my_efficiency</string>
+                        <string>my_target_level</string>
                       </list>
                     </value>
                 </item>
