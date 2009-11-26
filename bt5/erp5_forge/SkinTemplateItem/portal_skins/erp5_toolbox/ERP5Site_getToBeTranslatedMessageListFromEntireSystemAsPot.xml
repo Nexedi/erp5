@@ -60,6 +60,7 @@ def add_message(message, comment):\n
   \n
   if not message:\n
     return\n
+  message = message.decode(\'utf-8\')\n
   if message in message_dict:\n
     comment_list = message_dict[message]\n
   else:\n
@@ -122,17 +123,19 @@ for message, path in context.Base_findMessageListFromPythonInProduct(FUNC_NAME_L
   add_message(message, path)\n
 \n
 #\n
-# ERP5 Form title\n
+# ERP5 Form title, Field title and editable Field description\n
 #\n
 for i in form_list:\n
-  if (i.getId().endswith(\'_viewFieldLibrary\') or\n
-      i.getId().endswith(\'_viewDialogFieldLibrary\') or\n
-      i.getId().endswith(\'_viewReportFieldLibrary\') or\n
-      i.getId().endswith(\'_FieldLibrary\')\n
-      ):\n
+  if (i.getId().endswith(\'FieldLibrary\')):\n
     continue\n
   add_message(i.title, portal_url.getRelativeContentURL(i))\n
-\n
+  for group, list in i.groups.items():\n
+    if group == \'hidden\':\n
+      continue\n
+    for j in (i[x] for x in list):\n
+      add_message(j.get_value(\'title\'), portal_url.getRelativeContentURL(j))\n
+      if j.get_value(\'editable\'):\n
+        add_message(j.get_value(\'description\'), portal_url.getRelativeContentURL(j))\n
 \n
 #\n
 # ListBox title, columns\n
@@ -215,6 +218,10 @@ def format(string):\n
   else:\n
     return \'\\n\'.join([\'""\']+[format(i) for i in line_list])\n
 \n
+print \'\'\'msgid ""\n
+msgstr "Content-Type: text/plain; charset=UTF-8"\n
+\n
+\'\'\'\n
 \n
 MESSAGE_TEMPLATE = \'\'\'\\\n
 %s\n
@@ -295,6 +302,9 @@ return printed\n
                             <string>m</string>
                             <string>message</string>
                             <string>path</string>
+                            <string>group</string>
+                            <string>list</string>
+                            <string>j</string>
                             <string>value</string>
                             <string>label</string>
                             <string>Base_findStaticTranslationText</string>
