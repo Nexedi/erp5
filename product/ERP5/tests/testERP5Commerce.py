@@ -720,7 +720,9 @@ class TestCommerce(ERP5TypeTestCase):
     #6 : paypal step 3 : check if this token is confirmed by paypal
     error = self.website.WebSection_checkPaypalIdentification()
     self.assertEquals(error, None)
-    self.assertTrue('/cart' in request.RESPONSE.getHeader('location'))
+
+    url_location = request.RESPONSE.getHeader('location')
+    self.assertTrue('/SaleOrder_viewAsWeb' in url_location)
 
     #7 : paypal step 4 : validate the payment
     self.assertEquals(1,
