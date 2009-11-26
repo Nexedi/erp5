@@ -1,3 +1,6 @@
+2009-11-26 yusei
+* Update xml format. xmlPickler has changed the behavior.
+
 2009-10-16 yusei
 * Update for the changes of new portal types of portal types.
 

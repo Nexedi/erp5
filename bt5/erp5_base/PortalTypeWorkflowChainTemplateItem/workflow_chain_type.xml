@@ -9,11 +9,11 @@
  </chain>
  <chain>
   <type>Assignment</type>
-  <workflow>edit_workflow, assignment_workflow</workflow>
+  <workflow>assignment_workflow, edit_workflow</workflow>
  </chain>
  <chain>
   <type>Bank Account</type>
-  <workflow>validation_workflow, edit_workflow</workflow>
+  <workflow>edit_workflow, validation_workflow</workflow>
  </chain>
  <chain>
   <type>Career</type>
@@ -33,11 +33,11 @@
  </chain>
  <chain>
   <type>Currency</type>
-  <workflow>validation_workflow, edit_workflow</workflow>
+  <workflow>edit_workflow, validation_workflow</workflow>
  </chain>
  <chain>
   <type>Currency Exchange Line</type>
-  <workflow>validation_workflow, currency_exchange_line_interaction_workflow, edit_workflow</workflow>
+  <workflow>currency_exchange_line_interaction_workflow, edit_workflow, validation_workflow</workflow>
  </chain>
  <chain>
   <type>Email</type>
@@ -85,7 +85,7 @@
  </chain>
  <chain>
   <type>Role Definition</type>
-  <workflow>local_permission_interaction_workflow, edit_workflow</workflow>
+  <workflow>edit_workflow, local_permission_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>Simulation Movement</type>
