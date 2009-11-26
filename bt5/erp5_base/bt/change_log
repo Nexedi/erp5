@@ -1,4 +1,7 @@
 2009-11-26 yusei
+* Add Rounding Tool and Rounding Model which provide generic rounding functionality.
+
+2009-11-26 yusei
 * Update xml format. xmlPickler has changed the behavior.
 
 2009-10-16 yusei

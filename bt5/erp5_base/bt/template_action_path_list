@@ -76,6 +76,9 @@ Query | view
 Requirement Movement Group | view
 Role Definition | view
 Root Applied Rule Causality Movement Group | view
+Rounding Model | predicate_view
+Rounding Model | view
+Rounding Tool | view
 Split Movement Group | view
 Tax Line Delivery Movement Group | view
 Telephone | change_function
