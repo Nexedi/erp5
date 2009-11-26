@@ -29,6 +29,7 @@
 ##############################################################################
 
 from AccessControl import ClassSecurityInfo
+from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.XMLMatrix import XMLMatrix
 from Products.ERP5.Document.Amount import Amount
@@ -168,6 +169,14 @@ class TradeModelLine(Predicate, XMLMatrix, Amount):
                                base_id='movement', rounding=False, **kw):
     from Products.ERP5Type.Document import newTempSimulationMovement
 
+    # Define rounding stuff
+    portal_roundings = getToolByName(self, 'portal_roundings', None)
+
+    # ROUNDING
+    if rounding:
+      movement_list = [portal_roundings.getRoundingProxy(movement, context=self)
+                       for movement in movement_list]
+
     aggregated_amount_list = AggregatedAmountList()
     base_application_list = self.getBaseApplicationList()
 
@@ -247,6 +256,7 @@ class TradeModelLine(Predicate, XMLMatrix, Amount):
 
       update = 0
       base_category_list = self.getVariationBaseCategoryList()
+      
       # get cells categories cartesian product
       cell_key_list = self.getCellKeyList(base_id='movement')
       if len(cell_key_list) > 0:
@@ -260,6 +270,17 @@ class TradeModelLine(Predicate, XMLMatrix, Amount):
                                                       cell_coordinates))
           tmp_movement = newTempSimulationMovement(self.getPortalObject(),
               self_id)
+
+          # ROUNDING
+          if rounding:
+            # Once tmp_movement is replaced with the proxy, then the proxy
+            # object returns rounded value.
+            # For example, if rounding model is defined as
+            # rounded_property_id='total_price', then proxied
+            # tmp_movement.getTotalPrice() returns rounded result.
+            # If rounded_property_id='quantity', then
+            # tmp_movement.getQuantity() will be rounded.
+            tmp_movement = portal_roundings.getRoundingProxy(tmp_movement, context=self)
           tmp_movement.edit(
               variation_base_category_list = cell.getVariationBaseCategoryList(),
               variation_category_list = cell.getVariationCategoryList(),
@@ -275,6 +296,12 @@ class TradeModelLine(Predicate, XMLMatrix, Amount):
           price = self.getPrice(),
           **common_params
         )
+
+        # ROUNDING
+        if rounding:
+          # Replace temporary movement with rounding proxy so that target
+          # property value will be rounded.
+          tmp_movement = portal_roundings.getRoundingProxy(tmp_movement, context=self)
         tmp_movement_list.append(tmp_movement)
     modified = 0
     for tmp_movement in tmp_movement_list:

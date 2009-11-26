@@ -42,7 +42,7 @@ class RoundingModel(DecimalOption):
     },
     { 'id'          : 'rounded_property_id',
       'description' : 'The property name which value is rounded. Note that some property is virtual, like total_price.',
-      'type'        : 'string',
+      'type'        : 'tokens',
       'mode'        : 'w',
       'default'     : None,
     },
