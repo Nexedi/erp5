@@ -60,10 +60,15 @@ if budget_model is not None:\n
   kw = budget_model.getInventoryQueryDict(context)\n
 \n
 kw.setdefault(\'from_date\', budget.getStartDateRangeMin())\n
-at_date = budget.getStartDateRangeMax()\n
+start_date_range_max = budget.getStartDateRangeMax()\n
+if start_date_range_max:\n
+  start_date_range_max = start_date_range_max.latestTime()\n
+kw.setdefault(\'at_date\', start_date_range_max)\n
+\n
+if from_date:\n
+  kw[\'from_date\'] = from_date\n
 if at_date:\n
-  at_date = at_date.latestTime()\n
-kw.setdefault(\'at_date\', at_date)\n
+  kw[\'at_date\'] = at_date\n
 \n
 kw.setdefault(\'explanation_simulation_state\', context.getPortalReservedInventoryStateList() \\\n
                                             + context.getPortalCurrentInventoryStateList() \\\n
@@ -83,7 +88,7 @@ return (context.portal_simulation.getInventoryAssetPrice(**kw) or 0) * context.g
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>src__=0</string> </value>
+            <value> <string>src__=0, from_date=None, at_date=None</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -103,13 +108,15 @@ return (context.portal_simulation.getInventoryAssetPrice(**kw) or 0) * context.g
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>3</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
                             <string>src__</string>
+                            <string>from_date</string>
+                            <string>at_date</string>
                             <string>dict</string>
                             <string>kw</string>
                             <string>_getattr_</string>
@@ -117,7 +124,8 @@ return (context.portal_simulation.getInventoryAssetPrice(**kw) or 0) * context.g
                             <string>budget</string>
                             <string>budget_model</string>
                             <string>None</string>
-                            <string>at_date</string>
+                            <string>start_date_range_max</string>
+                            <string>_write_</string>
                             <string>_apply_</string>
                           </tuple>
                         </value>
@@ -132,6 +140,8 @@ return (context.portal_simulation.getInventoryAssetPrice(**kw) or 0) * context.g
             <value>
               <tuple>
                 <int>0</int>
+                <none/>
+                <none/>
               </tuple>
             </value>
         </item>
