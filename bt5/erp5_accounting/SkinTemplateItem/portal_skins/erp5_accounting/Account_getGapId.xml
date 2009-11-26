@@ -61,7 +61,7 @@ preference_tool = context.getPortalObject().portal_preferences\n
 \n
 number_method = preference_tool.getPreferredAccountNumberMethod()\n
 \n
-if number_method == \'account_reference\':\n
+if number_method == \'account_reference\' and not gap_root:\n
   reference = context.getReference()\n
   if reference:\n
     return reference\n
