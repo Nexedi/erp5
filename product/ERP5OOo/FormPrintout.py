@@ -93,11 +93,9 @@ def add_and_edit(self, id, REQUEST):
 class FormPrintout(Implicit, Persistent, RoleManager, Item):
   """Form Printout
 
-  The Form Printout enables to create a ODF document.
-
-  The Form Printout receives an ERP5 form name, and a template name.
-  Using their parameters, the Form Printout genereate a ODF document,
-  a form as a ODF document content, and a template as a document layout.
+  FormPrintout is one of a reporting system in ERP5. 
+  It enables to create a Printout, using an Open Document Format(ODF) 
+  document as its design, an ERP5Form as its contents. 
 
   WARNING: The Form Printout currently supports only ODT format document.
 
@@ -299,6 +297,9 @@ class ODFStrategy(Implicit):
     return ooo
 
   def _replaceContentXml(self, ooo_builder=None, extra_context=None):
+    """
+    Replace the content.xml in an ODF document using an ERP5Form data.
+    """
     content_xml = ooo_builder.extract('content.xml')
     # mapping ERP5Form to ODF
     form = extra_context['form']
@@ -327,7 +328,7 @@ class ODFStrategy(Implicit):
   # this method not supported yet
   def _replaceStylesXml(self, ooo_builder=None, extra_context=None):
     """
-    replacing styles.xml file in a ODF document
+    Replace the styles.xml file in an ODF document.
     """
     styles_xml = ooo_builder.extract('styles.xml')
     form = extra_context['form']
@@ -346,12 +347,23 @@ class ODFStrategy(Implicit):
   # this method not implemented yet
   def _replaceMetaXml(self, ooo_builder=None, extra_context=None):
     """
-    replacing meta.xml file in a ODF document
+    Replace meta.xml file in an ODF document.
     """
     return ooo_builder
 
   def _replaceXmlByForm(self, element_tree=None, form=None, here=None,
                            extra_context=None, ooo_builder=None, iteration_index=0):
+    """
+    Replace an element_tree object using an ERP5 form.
+
+    Keyword arguments:
+    element_tree -- the element_tree of a XML file in an ODF document.
+    form -- an ERP5 form
+    here -- called context
+    extra_context -- extra_context
+    ooo_builder -- the OOoBuilder object which have an ODF document.
+    iteration_index -- the index which is used when iterating the group of items using ReportSection.
+    """
     field_list = form.get_fields(include_disabled=1) 
     REQUEST = get_request()
     for (count, field) in enumerate(field_list):
@@ -399,7 +411,7 @@ class ODFStrategy(Implicit):
     return field.render_pdf(field.get_value('default'))
 
   def _replaceNodeViaPointReference(self, element_tree=None, field=None, iteration_index=0):
-    """replace via ODF point reference
+    """Replace text node via an ODF point reference.
     
     point reference example:
      <text:reference-mark text:name="invoice-date"/>
@@ -428,8 +440,8 @@ class ODFStrategy(Implicit):
     return element_tree
   
   def _replaceNodeViaRangeReference(self, element_tree=None, field=None, iteration_index=0):
-    """replace via ODF range reference
-
+    """Replace text node via an ODF ranged reference.
+    
     range reference example:
     <text:reference-mark-start text:name="week"/>Monday<text:reference-mark-end text:name="week"/>
     or
@@ -469,8 +481,12 @@ class ODFStrategy(Implicit):
     return element_tree
 
   def _appendParagraphsWithLineList(self, target_node=None, line_list=None):
-    """create paragraphs 
-    
+    """Create paragraphs using an ERP5 Form line list.
+   
+    Keyword arguments:
+    target_node -- target text node which is marked by an ODF reference. 
+    line_list -- an ERP5 Form line list 
+
     example:
     --
     first line
@@ -502,6 +518,15 @@ class ODFStrategy(Implicit):
   def _replaceXmlByReportSection(self, element_tree=None, extra_context=None, 
                                  report_method=None, base_name=None, 
                                  ooo_builder=None):
+    """
+    Replace xml using ERP5Report ReportSection.
+    Keyword arguments:
+    element_tree -- the element tree object which have an xml document in an ODF document.
+    extra_context -- the extra context
+    report_method -- the report method object which is used in an ReportBox 
+    base_name -- the name of a ReportBox field which is used to specify the target 
+    ooo_builder -- the OOo Builder object which has ODF document.
+    """
     if report_method is None:
       return element_tree
     report_section_list = report_method()
@@ -610,6 +635,12 @@ class ODFStrategy(Implicit):
                            extra_context=None,
                            ooo_builder=None,
                            iteration_index=0):
+    """
+    Replace an ODF frame using an ERP5Form form box field.
+   
+    Note: This method is incompleted yet. This function is intended to
+    make an frame hide/show. But it has not such a feature currently. 
+    """
     field_id = field.id
     enabled = field.get_value('enabled')
     draw_xpath = '//draw:frame[@draw:name="%s"]/draw:text-box/*' % field_id
@@ -640,6 +671,9 @@ class ODFStrategy(Implicit):
                               image_field=None,
                               ooo_builder=None,
                               iteration_index=0):
+    """
+    Replace an ODF draw:frame using an ERP5Form image field.
+    """
     alt = image_field.get_value('description') or image_field.get_value('title')
     image_xpath = '//draw:frame[@draw:name="%s"]/*' % image_field.id
     image_list = element_tree.xpath(image_xpath, namespaces=element_tree.nsmap)
@@ -722,6 +756,9 @@ class ODFStrategy(Implicit):
                             listbox=None,
                             REQUEST=None,
                             iteration_index=0):
+    """
+    Append a ODF table using an ERP5 Form listbox.
+    """
     table_id = listbox.id
     table_xpath = '//table:table[@table:name="%s"]' % table_id
     # this list should be one item list
@@ -796,6 +833,9 @@ class ODFStrategy(Implicit):
     return element_tree
 
   def _copyRowStyle(self, table_row_list=[], has_header_rows=False):
+    """
+    Copy ODF table row styles.
+    """
     def removeOfficeAttribute(row):
       if row is None or has_header_rows: return
       odf_cell_list = row.findall("{%s}table-cell" % row.nsmap['table'])
