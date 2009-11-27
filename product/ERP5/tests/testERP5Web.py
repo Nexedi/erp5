@@ -206,6 +206,9 @@ class TestERP5Web(ERP5TypeTestCase, ZopeTestCase.Functional):
       ZopeTestCase._print(message)
     # disable portal_transforms cache
     self.portal.portal_transforms.max_sec_in_cache=-1
+    # use w3m dump explicitly
+    self.portal.portal_transforms.manage_addPolicy(output_mimetype='text/plain',
+                                                   required_transforms=['w3m_dump'])
     page = self.web_page_module.newContent(portal_type='Web Page')
     page.edit(text_content='<p>Hé Hé Hé!</p>')
     transaction.commit()
