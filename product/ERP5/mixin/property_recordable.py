@@ -64,7 +64,6 @@ class PropertyRecordableMixin:
     # XXX it is better to use getPropertyList only for list type
     # properties or categories.
     recorded_property_dict[id] = self.getPropertyList(id)
-    self.setRecordedPropertyDict(recorded_property_dict)
 
   security.declareProtected(Permissions.ModifyPortalContent,
                             'clearRecordedProperty')
@@ -78,8 +77,6 @@ class PropertyRecordableMixin:
       del(recorded_property_dict[id])
     except KeyError:
       pass
-    else:
-      self.setRecordedPropertyDict(recorded_property_dict)
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getRecordedPropertyIdList')
