@@ -60,10 +60,21 @@ class PropertyRecordableMixin:
 
     id -- ID of the property
     """
+    try:
+      property_info = [x for x in self.getPropertyMap() \
+                       if x['id'] == id][0]
+    except IndexError:
+      if id in self.getBaseCategoryList():
+        value = self.getPropertyList(id)
+      else: # should be local property
+        value = self.getProperty(id)
+    else:
+      if x['type'] in list_types:
+        value = self.getPropertyList(id)
+      else:
+        value = self.getProperty(id)
     recorded_property_dict = self._getRecordedPropertyDict()
-    # XXX it is better to use getPropertyList only for list type
-    # properties or categories.
-    recorded_property_dict[id] = self.getPropertyList(id)
+    recorded_property_dict[id] = value
 
   security.declareProtected(Permissions.ModifyPortalContent,
                             'clearRecordedProperty')
