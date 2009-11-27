@@ -333,6 +333,15 @@ class TestUserManagement(ERP5TypeTestCase):
 
     self._assertUserDoesNotExists('the_user', 'secret')
 
+  def test_ReallyDeletedPersonIsNotUser(self):
+    p = self._makePerson(reference='the_user', password='secret')
+    self._assertUserExists('the_user', 'secret')
+
+    p.getParentValue().deleteContent(p.getId())
+    transaction.commit()
+
+    self._assertUserDoesNotExists('the_user', 'secret')
+
   def test_InvalidatedPersonIsUser(self):
     p = self._makePerson(reference='the_user', password='secret')
     self._assertUserExists('the_user', 'secret')
