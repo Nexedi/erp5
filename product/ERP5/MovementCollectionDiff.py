@@ -28,6 +28,7 @@
 
 import zope.interface
 from Products.ERP5Type import interfaces
+from Products.ERP5Type.Accessor.TypeDefinition import list_types
 
 class MovementCollectionDiff(object):
   """
@@ -44,6 +45,7 @@ class MovementCollectionDiff(object):
     self._deletable_movement_list = []
     self._new_movement_list = []
     self._updatable_movement_list = []
+    self._property_dict_dict = {}
 
   def getDeletableMovementList(self):
     """
@@ -84,6 +86,12 @@ class MovementCollectionDiff(object):
     to update an existing movement or to
     create a new movement.
     """
+    property_dict = self._property_dict.get(movement)
+    if property_dict is None:
+      # movement should be 'New Movement'
+      return self._getPropertyAndCategoryList(movement)
+    else:
+      return property_dict
 
   def addUpdatableMovement(self, movement, property_dict):
     """
@@ -92,3 +100,53 @@ class MovementCollectionDiff(object):
     property_dict -- properties to update
     """
     self._updatable_movement_list.append(movement)
+    self._property_dict[movement] = property_dict
+
+  def _getPropertyAndCategoryList(self, movement):
+    """
+    Returns a dict that includes all property values, based on property
+    sheet configuration and all category values.
+    """
+    property_map = movement.getPropertyMap()
+    bad_property_list = ['id', 'uid', 'categories_list', 'int_index']
+    # we don't want acquired properties without acquisition_mask_value
+    for x in property_map:
+      if x.has_key('acquisition_base_category') and not x.get('acquisition_mask_value', 0):
+        bad_property_list.append(x['id'])
+
+    default_value_dict = dict([(x['id'], x.get('default', None)) \
+                               for x in property_map])
+    getPropertyList = movement.getPropertyList
+    getProperty = movement.getProperty
+    getter_list_type_dict = {
+      True:getPropertyList,
+      False:getProperty
+      }
+    getter_dict = dict([(x['id'],
+                         getter_list_type_dict[x['type'] in list_types and not x['id'].endswith('_list')]) \
+                        for x in property_map])
+
+    def filter_property_func(x):
+      key, value = x
+      if key in bad_property_list:
+        return False
+      default = default_value_dict[key]
+      if value == default:
+        return False
+      if isinstance(value, (list, tuple)) and \
+           isinstance(default, (list, tuple)) and \
+           tuple(value) == tuple(default):
+        return False
+      return True
+
+    property_dict = dict(filter(filter_property_func,
+                                [(x, getter_dict[x](x)) for x in \
+                                movement.getPropertyIdList()]))
+
+    def filter_category_func(x):
+      return len(x[1]) != 0
+
+    property_dict.update(dict(filter(filter_category_func,
+                                     [(x, getPropertyList(x)) for x in \
+                                      movement.getBaseCategoryList()])))
+    return property_dict
