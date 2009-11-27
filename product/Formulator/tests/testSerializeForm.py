@@ -357,10 +357,12 @@ class SerializeTestCase(unittest.TestCase):
             # XXX test if values are the same
             self.assertEquals(field.values, field2.values)
             # test if default renderings are the same
-            self.assertEquals(field.render(), field2.render())
+            self.assertEquals(field.render(REQUEST=request),
+                              field2.render(REQUEST=request))
 
         # brute force compare ...
-        self.assertEquals(form.render(), form2.render())
+        self.assertEquals(form.render(REQUEST=request),
+                          form2.render(REQUEST=request))
         request.clear()
         request['field_int_field'] = '42'
         request['field_float_field'] = '2.71828'
