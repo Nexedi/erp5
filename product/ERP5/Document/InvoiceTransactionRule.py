@@ -45,7 +45,7 @@ class InvoiceTransactionRule(Rule, PredicateMatrix):
   meta_type = 'ERP5 Invoice Transaction Rule'
   portal_type = 'Invoice Transaction Rule'
   add_permission = Permissions.AddPortalContent
-  
+
   # Declarative security
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
@@ -152,7 +152,7 @@ class InvoiceTransactionRule(Rule, PredicateMatrix):
     These previsions are acrually returned as dictionaries.
     """
     if self._isBPM():
-      return self._generatePrevisionListBPM(applied_rule, *kw)
+      return self._generatePrevisionListBPM(applied_rule, **kw)
     prevision_list = []
     context_movement = applied_rule.getParentValue()
 
@@ -267,7 +267,7 @@ class InvoiceTransactionRule(Rule, PredicateMatrix):
 
     for movement_id in delete_list:
       applied_rule._delObject(movement_id)
-      
+
     for movement, prop_dict in modify_dict.items():
       applied_rule[movement].edit(**prop_dict)
 
@@ -315,10 +315,10 @@ class InvoiceTransactionRule(Rule, PredicateMatrix):
             new_mvmt.setSourceTotalAssetPrice(round(
        source_exchange_ratio*applied_rule.getParentValue().getTotalPrice(),
             precision))
-      
+
     # Pass to base class
     Rule.expand(self, applied_rule, force=force, **kw)
-  
+
   # Matrix related
   security.declareProtected( Permissions.ModifyPortalContent,
                               'newCellContent' )
@@ -329,7 +329,7 @@ class InvoiceTransactionRule(Rule, PredicateMatrix):
     self.invokeFactory(type_name=portal_type, id=id)
     new_cell = self.get(id)
     return new_cell
-  
+
   security.declareProtected(Permissions.ModifyPortalContent, 'solve')
   def solve(self, applied_rule, solution_list):
     """
@@ -359,13 +359,13 @@ class InvoiceTransactionRule(Rule, PredicateMatrix):
 #     """
 #       Returns 1 if divergent rule
 #     """
-# 
+#
 #   security.declareProtected(Permissions.View, 'getDivergenceList')
 #   def getDivergenceList(self, applied_rule):
 #     """
 #       Returns a list Divergence descriptors
 #     """
-# 
+#
 #   security.declareProtected(Permissions.View, 'getSolverList')
 #   def getSolverList(self, applied_rule):
 #     """
