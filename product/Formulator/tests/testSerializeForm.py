@@ -393,8 +393,8 @@ class SerializeTestCase(unittest.TestCase):
         self.assertEquals(42, result2['int_field'])
         self.assertEquals(2.71828, result2['float_field'])
 
-	# check link field timeout value
-	self.assertEquals(link_field.get_value('check_timeout'),
+        # check link field timeout value
+        self.assertEquals(link_field.get_value('check_timeout'),
                           form2.link_field.get_value('check_timeout'))
 
         # XXX not tested: equal form validation failure on invalid input
