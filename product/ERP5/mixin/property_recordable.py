@@ -31,6 +31,7 @@ from AccessControl import ClassSecurityInfo
 from Acquisition import aq_base
 from Products.ERP5Type import Permissions, interfaces
 from Products.ERP5Type.Globals import PersistentMapping
+from Products.ERP5Type.Accessor.TypeDefinition import list_types
 
 class PropertyRecordableMixin:
   """
