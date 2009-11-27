@@ -68,8 +68,6 @@ class CategoryMembershipDivergenceTester(Predicate, DivergenceTesterMixin):
     decision_value = decision_movement.getPropertyList(tested_property)
     if prevision_movement.isPropertyRecorded(tested_property):
       prevision_value = prevision_movement.getRecordedProperty(tested_property)
-      if not isinstance(prevision_value, (list, tuple)):
-        prevision_value = [prevision_value]
     else:
       prevision_value = prevision_movement.getPropertyList(tested_property)
 

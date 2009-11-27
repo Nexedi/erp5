@@ -72,8 +72,6 @@ class FloatDivergenceTester(Predicate, DivergenceTesterMixin):
       decision_value *= prevision_movement.getDeliveryRatio()
     if prevision_movement.isPropertyRecorded(tested_property):
       prevision_value = prevision_movement.getRecordedProperty(tested_property)
-      if isinstance(prevision_value, (list, tuple)):
-        prevision_value = prevision_value[0]
     else:
       prevision_value = prevision_movement.getProperty(tested_property)
 
