@@ -59,10 +59,9 @@ transaction = sci[\'object\']\n
 for line in transaction.getMovementList(\n
    portal_type=sci.getPortal().getPortalAccountingMovementTypeList()):\n
   if line.getGroupingReference():\n
-    line.activate(after_path_and_method_id=(\n
-                  (transaction.getPath(), (\'recursiveImmediateReindexObject\', \'immediateReindexObject\')),\n
-                  (line.getPath(), (\'recursiveImmediateReindexObject\', \'immediateReindexObject\')),),\n
-    ).AccountingTransactionLine_resetGroupingReference()\n
+    line.activate(\n
+       after_tag=\'accounting_grouping_reference\'\n
+       ).AccountingTransactionLine_resetGroupingReference()\n
 </string> </value>
         </item>
         <item>

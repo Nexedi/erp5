@@ -155,6 +155,7 @@ for (node, section, mirror_section), line_info_list in lines_per_node.items():\n
     for line in line_info_list:\n
       line_obj = portal.restrictedTraverse(line[\'path\'])\n
       line_obj.setGroupingReference(string_reference)\n
+      line_obj.reindexObject(activate_kw=dict(tag=\'accounting_grouping_reference\'))\n
       changed_lines.append(line[\'path\'])\n
 \n
 return changed_lines\n
