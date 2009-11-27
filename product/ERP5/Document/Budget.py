@@ -55,6 +55,8 @@ class Budget(Predicate, Variated):
                       , PropertySheet.Budget
                       , PropertySheet.Path
                       , PropertySheet.VariationRange
+                      , PropertySheet.Reference
+                      , PropertySheet.Version
                       )
 
     # CMF Type Definition
