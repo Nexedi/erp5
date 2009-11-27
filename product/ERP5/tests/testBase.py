@@ -38,6 +38,7 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5Type.tests.Sequence import SequenceList
 from zExceptions import BadRequest
+from Products.ERP5Type.tests.backportUnittest import skip
 from Products.ERP5Type.Tool.ClassTool import _aq_reset
 
 class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
@@ -1137,6 +1138,8 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.assertEquals(1, len(self.getPortal().portal_catalog(
       translated_portal_type='Person', title='translate_table_test')))
 
+  @skip("isIndexable is not designed to work like tested here, this test \
+      must be rewritten once we know how to handle correctly templates")
   def test_NonIndexable(self):
     """check if a document is not indexed where we set isIndexable=0 in the same transaction of newContent().
     """
@@ -1147,6 +1150,8 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.assertFalse(person.isIndexable)
     self.assertEquals(0, len(self.portal.portal_catalog(uid=person.getUid())))
 
+  @skip("isIndexable is not designed to work like tested here, this test \
+      must be rewritten once we know how to handle correctly templates")
   def test_NonIndexable2(self):
     """check if a document is not indexed where we call edit() and set isIndexable=0 after it is already indexed.
     """
@@ -1165,6 +1170,8 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.assertFalse(person.isIndexable)
     self.assertEquals(0, len(self.portal.portal_catalog(uid=person.getUid())))
 
+  @skip("isIndexable is not designed to work like tested here, this test \
+      must be rewritten once we know how to handle correctly templates")
   def test_NonIndexable3(self):
     """check if a document is not indexed where we set isIndexable=0 and call edit() after it is already indexed.
     """
