@@ -92,6 +92,14 @@
                     <value>
                       <list>
                         <tuple>
+                          <string>reference</string>
+                          <string>Reference</string>
+                        </tuple>
+                        <tuple>
+                          <string>version</string>
+                          <string>Version</string>
+                        </tuple>
+                        <tuple>
                           <string>budget_type_title</string>
                           <string>Budget Type</string>
                         </tuple>
@@ -217,6 +225,14 @@
                           <string>Budget</string>
                         </tuple>
                         <tuple>
+                          <string>reference</string>
+                          <string>Reference</string>
+                        </tuple>
+                        <tuple>
+                          <string>version</string>
+                          <string>Version</string>
+                        </tuple>
+                        <tuple>
                           <string>start_date_range_min</string>
                           <string>Begin Date</string>
                         </tuple>
@@ -258,6 +274,14 @@
                         <tuple>
                           <string>title</string>
                           <string>Budget</string>
+                        </tuple>
+                        <tuple>
+                          <string>reference</string>
+                          <string>Reference</string>
+                        </tuple>
+                        <tuple>
+                          <string>version</string>
+                          <string>Version</string>
                         </tuple>
                         <tuple>
                           <string>start_date_range_min</string>
