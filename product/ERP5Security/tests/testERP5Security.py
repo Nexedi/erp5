@@ -333,6 +333,16 @@ class TestUserManagement(ERP5TypeTestCase):
 
     self._assertUserDoesNotExists('the_user', 'secret')
 
+  def test_InvalidatedPersonIsNotUser(self):
+    p = self._makePerson(reference='the_user', password='secret')
+    self._assertUserExists('the_user', 'secret')
+
+    p.validate()
+    p.invalidate()
+    transaction.commit()
+
+    self._assertUserDoesNotExists('the_user', 'secret')
+
 class TestLocalRoleManagement(ERP5TypeTestCase):
   """Tests Local Role Management with ERP5Security.
 
