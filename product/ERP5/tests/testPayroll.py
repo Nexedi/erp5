@@ -1703,6 +1703,7 @@ class TestPayrollMixin(ERP5ReportTestCase, TestTradeModelLineMixin):
     labour = sequence.get('labour_service_output')
     line = model.newContent(
           id='line',
+          reference='zero_price_line',
           portal_type='Pay Sheet Model Line',
           resource_value=labour,
           base_contribution_list=['base_amount/base_salary',
