@@ -160,8 +160,12 @@ class TestXHTML(ERP5TypeTestCase):
                   obj_metatypes=['ProxyField'], search_sub=1):
           template_field = field.getTemplateField(cache=False)
           if template_field is None:
-            error_list.append((skin_name, field_path, field.get_value('form_id'),
-                               field.get_value('field_id')))
+            # Base_viewRelatedObjectListBase (used for proxy listbox ids on
+            # relation fields) is an exception, the proxy field has no target
+            # by default.
+            if field_path != 'Base_viewRelatedObjectListBase/listbox':
+              error_list.append((skin_name, field_path, field.get_value('form_id'),
+                                 field.get_value('field_id')))
 
     if error_list:
       message = '\nDead proxy field list\n'
