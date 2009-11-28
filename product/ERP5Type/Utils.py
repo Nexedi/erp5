@@ -33,8 +33,14 @@ import re
 import string
 import time
 import warnings
-from md5 import new as md5_new
-from sha import new as sha_new
+try:
+  # Python 2.5 or later
+  from hashlib import md5 as md5_new
+  from hashlib import sha1 as sha_new
+except ImportError:
+  # Python 2.4
+  from md5 import new as md5_new
+  from sha import new as sha_new
 
 from zope.interface import implementedBy
 
