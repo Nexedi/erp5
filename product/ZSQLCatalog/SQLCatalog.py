@@ -40,7 +40,10 @@ from cStringIO import StringIO
 from xml.dom.minidom import parse
 from xml.sax.saxutils import escape, quoteattr
 import os
-import md5
+try:
+    from hashlib import md5
+except ImportError:
+    from md5 import md5
 
 from interfaces.query_catalog import ISearchKeyCatalog
 from zope.interface.verify import verifyClass
@@ -1039,7 +1042,7 @@ class Catalog(Folder,
           random_factor_list.append(os.getloadavg())
         except (OSError, AttributeError): # AttributeError is required under cygwin
           pass
-        instance_id = md5.new(str(random_factor_list)).hexdigest()
+        instance_id = md5(str(random_factor_list)).hexdigest()
         uid_list = [x.uid for x in method(count = UID_BUFFER_SIZE, instance_id = instance_id) if x.uid != 0]
       uid_buffer.extend(uid_list)
 
