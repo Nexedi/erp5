@@ -176,6 +176,7 @@ class TestOpenOrder(ERP5TypeTestCase):
     """
     Make sure that periodicity line can generate correct schedule.
     """
+    self.fail('Test disabled because it freezes')
     # This across Summer time period, if server's timezone uses it.
     self.assertEqual(self.portal.sale_trade_condition_module.main_trade_condition.internet_connection_periodicity_line.getDatePeriodList(
       DateTime(2008,1,15), DateTime(2008,12,1)),
