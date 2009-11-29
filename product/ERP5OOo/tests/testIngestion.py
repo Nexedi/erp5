@@ -113,6 +113,13 @@ class TestIngestion(ERP5TypeTestCase):
     self.setTools()
 
   def beforeTearDown(self):
+    activity_tool = self.portal.portal_activities
+    activity_status = set(m.processing_node < -1
+                          for m in activity_tool.getMessageList())
+    if True in activity_status:
+      activity_tool.manageClearActivities()
+    else:
+      assert not activity_status
     self.portal.portal_caches.clearAllCache()
 
   def setSystemPreference(self):
@@ -1197,6 +1204,7 @@ class TestIngestion(ERP5TypeTestCase):
     step_list = [ 'stepCleanUp'
                  ,'stepCreatePDFDocument'
                  ,'stepExportPDF'
+                 ,'stepTic'
                 ]
     self.playSequence(step_list, quiet)
 
@@ -1231,6 +1239,7 @@ class TestIngestion(ERP5TypeTestCase):
                  ,'stepDeleteSnapshot'
                  ,'stepCheckHasNoSnapshot'
                  ,'stepCreateSnapshot'
+                 ,'stepTic'
                 ]
     self.playSequence(step_list, quiet)
 

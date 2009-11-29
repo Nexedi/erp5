@@ -141,17 +141,22 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
       Do some stuff after each test:
       - clear document module
     """
+    transaction.abort()
+    activity_tool = self.portal.portal_activities
+    activity_status = set(m.processing_node < -1
+                          for m in activity_tool.getMessageList())
+    if True in activity_status:
+      activity_tool.manageClearActivities()
+    else:
+      assert not activity_status
     self.clearDocumentModule()
 
   def clearDocumentModule(self):
     """
       Remove everything after each run
     """
-    transaction.abort()
-    self.tic()
     doc_module = self.getDocumentModule()
-    ids = [i for i in doc_module.objectIds()]
-    doc_module.manage_delObjects(ids)
+    doc_module.manage_delObjects(list(doc_module.objectIds()))
     transaction.commit()
     self.tic()
 
@@ -582,6 +587,7 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
                       response.headers['content-type'])
     self.assertEquals('attachment; filename="import_data_list.ods"',
                       response.headers['content-disposition'])
+    self.tic()
 
   def test_Member_download_pdf_format(self):
     # tests that members can download OOo documents in pdf format (at least in
