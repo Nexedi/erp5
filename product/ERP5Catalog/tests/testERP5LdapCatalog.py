@@ -41,8 +41,17 @@ import transaction
 class TestERP5LdapCatalog(ERP5TypeTestCase):
   """
     Tests for ERP5 Ldap Catalog.
-  To bootstrap Ldap database:
-  run "ldapadd -c -x -h localhost -D "cn=test,dc=erp5,dc=org" -W -f bootstrap_erp5_ldap_catalog_test.ldif"
+
+  To setup LDAP server (on Mandriva):
+  1. install openldap-clients, openldap-servers
+  2. change following options in /etc/openldap/slapd.conf:
+    suffix          "dc=erp5,dc=org"
+    rootdn          "cn=test,dc=erp5,dc=org"
+    rootpw          test
+  3. (re)start ldap
+  4. bootstrap with the following command from this directory :
+    ldapadd -c -x -h localhost -D "cn=test,dc=erp5,dc=org" -W -f \
+      bootstrap_erp5_ldap_catalog_test.ldif
   """
 
   def getTitle(self):
