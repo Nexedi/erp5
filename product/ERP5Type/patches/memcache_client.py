@@ -21,7 +21,7 @@ try:
   import memcache
 except ImportError:
   memcache = None
-if memcache is not None:
+if memcache is not None and memcache.__version__ < '1.45':
   Client = memcache.Client
   SERVER_MAX_KEY_LENGTH = memcache.SERVER_MAX_KEY_LENGTH
   SERVER_MAX_VALUE_LENGTH = memcache.SERVER_MAX_VALUE_LENGTH
