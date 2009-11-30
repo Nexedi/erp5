@@ -38,24 +38,24 @@ import zope.interface
 
 class BusinessPath(Path):
   """
-    The BusinessPath class embeds all information related to 
+    The BusinessPath class embeds all information related to
     lead times and parties involved at a given phase of a business
     process.
 
     BusinessPath are also used as helper to build deliveries from
-    buildable movements. 
-    
+    buildable movements.
+
     The idea is to invoke isBuildable() on the collected simulation
     movements (which are orphan) during build "after select" process
 
     Here is the typical code of an alarm in charge of the building process::
-    
+
       builder = portal_deliveries.a_delivery_builder
       for business_path in builder.getDeliveryBuilderRelatedValueList():
         builder.build(causality_uid=business_path.getUid(),) # Select movements
 
       Pros: global select is possible by not providing a causality_uid
-      Cons: global select retrieves long lists of orphan movements which 
+      Cons: global select retrieves long lists of orphan movements which
               are not yet buildable
             the build process could be rather slow or require activities
 
@@ -224,7 +224,8 @@ class BusinessPath(Path):
     #      that documents are sequenced like simulation movements, which
     #      is wrong
     for found_explanation in explanation.getCausalityRelatedValueList(
-        portal_type=self.getPortalDeliveryTypeList()):
+        portal_type=self.getPortalDeliveryTypeList()) + \
+        explanation.getCausalityValueList():
       explanation_uid_list.extend(self._getExplanationUidList(
         found_explanation))
     return explanation_uid_list
