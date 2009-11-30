@@ -99,10 +99,11 @@ class BPMBuilder(Alarm):
     self.callBeforeBuildingScript()
     # Select movements
     if input_movement_list is None:
-      business_path_value_list = self.getRelatedBusinessPathValueList()
-      if len(business_path_value_list) > 0:
-        # use only Business Path related movements
-        select_method_dict['causality_uid'] = [q.getUid() for q in business_path_value_list]
+      if not select_method_dict.has_key('causality_uid'):
+        business_path_value_list = self.getRelatedBusinessPathValueList()
+        if len(business_path_value_list) > 0:
+          # use only Business Path related movements
+          select_method_dict['causality_uid'] = [q.getUid() for q in business_path_value_list]
       # do search
       input_movement_value_list = self.searchMovementList(
         delivery_relative_url_list=existing_delivery_list,
