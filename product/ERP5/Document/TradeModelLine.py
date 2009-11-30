@@ -249,8 +249,6 @@ class TradeModelLine(Predicate, XMLMatrix, Amount):
         'stop_date': context.getStopDate(),
         'create_line': self.isCreateLine(),
         'trade_phase_list': self.getTradePhaseList(),
-        'causality_list': [movement.getRelativeUrl()
-                           for movement in movement_list],
       }
       common_params.update(property_dict)
 
@@ -304,6 +302,7 @@ class TradeModelLine(Predicate, XMLMatrix, Amount):
           tmp_movement = portal_roundings.getRoundingProxy(tmp_movement, context=self)
         tmp_movement_list.append(tmp_movement)
     modified = 0
+    aggregated_movement_list = []
     for tmp_movement in tmp_movement_list:
       if len(self.getVariationCategoryList()) == 0 and \
           self.getQuantity(None) is None or \
@@ -326,6 +325,9 @@ class TradeModelLine(Predicate, XMLMatrix, Amount):
             quantity = tmp_movement.getQuantity(0.0)
             modified = 1
             tmp_movement.setQuantity(quantity + movement.getTotalPrice())
+            aggregated_movement_list.append(movement)
+        if aggregated_movement_list:
+          tmp_movement.setCausalityValueList(aggregated_movement_list)
 
       else:
         # if the quantity is defined, use it
@@ -337,9 +339,24 @@ class TradeModelLine(Predicate, XMLMatrix, Amount):
       # if a calculation script is defined, use it
       calculation_script = self.getCalculationScript(context)
       if calculation_script is not None:
-        tmp_movement = calculation_script(
-            current_aggregated_amount_list=movement_list,
-            current_movement=tmp_movement)
+        if (calculation_script.func_code.co_argcount==2 and
+            calculation_script.func_code.co_varnames[:2]==('current_aggregated_amount_list',
+                                                           'current_movement')):
+          # backward compatibility
+          tmp_movement = calculation_script(
+              current_aggregated_amount_list=movement_list,
+              current_movement=tmp_movement)
+        else:
+          tmp_movement = calculation_script(
+              current_aggregated_amount_list=movement_list,
+              current_movement=tmp_movement,
+              aggregated_movement_list=aggregated_movement_list)
+        if tmp_movement is None:
+          # Do nothing
+          return aggregated_amount_list
+        if rounding:
+          tmp_movement = portal_roundings.getRoundingProxy(
+            tmp_movement, context=self)
 
       # check if slices are used
       salary_range_list = tmp_movement.getVariationCategoryList(
