@@ -41,12 +41,8 @@ import transaction
 
 from Products.ERP5.tests.testBPMCore import TestBPMMixin
 from Products.ERP5.DivergenceSolutionDecision import DivergenceSolutionDecision
-from Products.ERP5Type.tests.backportUnittest import skip
 
 from DateTime import DateTime
-
-BPMEVALUATIONEXPLANATION = "testBPMEvaluation are part of experimental work," \
-    " so its failures are acceptable"
 
 class TestBPMEvaluationMixin(TestBPMMixin):
   node_portal_type = 'Organisation'
@@ -424,8 +420,6 @@ class TestBPMEvaluationDifferentProcessMixin:
 
 class GenericRuleTestsMixin:
   """Tests which are generic for BPMised Order, Delivery and Invoice Rule"""
-
-  @skip(BPMEVALUATIONEXPLANATION)
   def test_transition(self):
     self.order_line = self._createRootDocumentLine(
       resource_value = self._createProduct(), quantity = 10, price = 5)
@@ -469,7 +463,6 @@ class GenericRuleTestsMixin:
 
     self._checkBPMSimulation()
 
-  @skip(BPMEVALUATIONEXPLANATION)
   def test_transition_split(self):
     self.order_line = self._createRootDocumentLine(
       resource_value = self._createProduct(), quantity = 10, price = 5)
@@ -487,7 +480,6 @@ class GenericRuleTestsMixin:
     self.stepTic()
     self._checkBPMSimulation()
 
-  @skip(BPMEVALUATIONEXPLANATION)
   def test_transition_split_line_add(self):
     self.test_transition_split()
     self.order_line_2 = self._createRootDocumentLine(
@@ -495,7 +487,6 @@ class GenericRuleTestsMixin:
     self.stepTic()
     self._checkBPMSimulation()
 
-  @skip(BPMEVALUATIONEXPLANATION)
   def test_transition_split_line_add_split(self):
     self.test_transition_split_line_add()
 
@@ -508,14 +499,12 @@ class GenericRuleTestsMixin:
     self.stepTic()
     self._checkBPMSimulation()
 
-  @skip(BPMEVALUATIONEXPLANATION)
   def test_transition_line_edit(self):
     self.test_transition()
     self.order_line.edit(quantity = 8, price = 6)
     self.stepTic()
     self._checkBPMSimulation()
 
-  @skip(BPMEVALUATIONEXPLANATION)
   def test_transition_line_edit_add(self):
     self.test_transition_line_edit()
     self.order_line_2 = self._createRootDocumentLine(
@@ -523,7 +512,6 @@ class GenericRuleTestsMixin:
     self.stepTic()
     self._checkBPMSimulation()
 
-  @skip(BPMEVALUATIONEXPLANATION)
   def test_transition_line_edit_add_many_transactions(self):
     self.test_transition_line_edit()
     self.order_line_9 = self._createRootDocumentLine()
@@ -546,7 +534,6 @@ class GenericRuleTestsMixin:
     self.stepTic()
     self._checkBPMSimulation()
 
-  @skip(BPMEVALUATIONEXPLANATION)
   def test_transition_line_edit_add_same_resource(self):
     self.test_transition_line_edit()
     resource = self.order_line.getResourceValue()
@@ -555,7 +542,6 @@ class GenericRuleTestsMixin:
     self.stepTic()
     self._checkBPMSimulation()
 
-  @skip(BPMEVALUATIONEXPLANATION)
   def test_transition_line_edit_add_same_resource_edit_again(self):
     self.test_transition_line_edit_add_same_resource()
 
@@ -572,7 +558,6 @@ class TestOrder(TestBPMEvaluationMixin, GenericRuleTestsMixin):
   def _doFirstTransition(self, document):
     document.plan()
 
-  @skip(BPMEVALUATIONEXPLANATION)
   def test_confirming(self):
     self.order_line = self._createRootDocumentLine(
       resource_value = self._createProduct(), quantity = 10, price = 5)
@@ -617,7 +602,6 @@ class TestPackingList(TestBPMEvaluationMixin, GenericRuleTestsMixin):
   def _doFirstTransition(self, document):
     document.confirm()
 
-  @skip(BPMEVALUATIONEXPLANATION)
   def test_starting(self):
     self.delivery_line = self._createRootDocumentLine(
       resource_value = self._createProduct(), quantity = 10, price = 5)
@@ -668,7 +652,6 @@ class TestInvoiceDefaultProcess(TestInvoice,
 
 class TestOrderDifferentProcess(TestOrder,
     TestBPMEvaluationDifferentProcessMixin):
-  @skip(BPMEVALUATIONEXPLANATION)
   def test_confirming(self):
     # in current BPM configuration nothing shall be built
     # as soon as test business process will be finished, it shall built proper
@@ -691,7 +674,6 @@ class TestOrderDifferentProcess(TestOrder,
 
 class TestPackingListDifferentProcess(TestPackingList,
     TestBPMEvaluationDifferentProcessMixin):
-  @skip(BPMEVALUATIONEXPLANATION)
   def test_starting(self):
     self.delivery_line = self._createRootDocumentLine(
       resource_value = self._createProduct(), quantity = 10, price = 5)
@@ -783,7 +765,6 @@ class TestDivergenceSolving(TestBPMEvaluationMixin,
     self.assertEqual(self.simulation_movement,
         self.divergence.simulation_movement)
 
-  @skip(BPMEVALUATIONEXPLANATION)
   def test_divergence_adopt(self):
     decision = DivergenceSolutionDecision(self.divergence, 'adopt')
     self.movement.solve([decision])
@@ -807,7 +788,6 @@ class TestDivergenceSolving(TestBPMEvaluationMixin,
     self.assertEqual(self.quantity, self.simulation_movement.getQuantity())
     self.assertEqual('solved', self.packing_list.getCausalityState())
 
-  @skip(BPMEVALUATIONEXPLANATION)
   def test_divergence_accept(self):
     decision = DivergenceSolutionDecision(self.divergence, 'accept',
         'Distribute', 'CopyAndPropagate')
@@ -834,7 +814,6 @@ class TestDivergenceSolving(TestBPMEvaluationMixin,
     self.assertEqual(self.quantity, self.simulation_movement.getQuantity())
     self.assertEqual('diverged', self.packing_list.getCausalityState())
 
-  @skip(BPMEVALUATIONEXPLANATION)
   def test_divergence_accept_force(self):
     decision = DivergenceSolutionDecision(self.divergence, 'accept',
         'Distribute', 'CopyAndPropagate', True)
@@ -862,7 +841,6 @@ class TestDivergenceSolving(TestBPMEvaluationMixin,
         self.simulation_movement.getQuantity())
     self.assertEqual('solved', self.packing_list.getCausalityState())
 
-  @skip(BPMEVALUATIONEXPLANATION)
   def test_divergence_split(self):
     split_kw = {}
     split_kw.update(start_date = DateTime(), stop_date = DateTime())
