@@ -70,16 +70,4 @@ class Transformation:
       'acquisition_accessor_id'   : 'getTitle',
       'acquisition_depends'       : None,
       'mode'        : 'w' },
-
-    { 'id'          : 'resource_title',
-      'description' : "Title of the resource",
-      'type'        : 'string',
-      'acquisition_base_category' : ('resource',),
-      'acquisition_portal_type'   : (),
-      'acquisition_copy_value'    : 0,
-      'acquisition_mask_value'    : 0,
-      'acquisition_sync_value'    : 0,
-      'acquisition_accessor_id'   : 'getTitle',
-      'acquisition_depends'       : None,
-      'mode'        : 'w' },
 )
