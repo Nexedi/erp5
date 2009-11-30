@@ -220,6 +220,9 @@ class BusinessPath(Path):
   def _getExplanationUidList(self, explanation):
     """Helper method to fetch really explanation related movements"""
     explanation_uid_list = [explanation.getUid()]
+    # XXX: getCausalityRelatedValueList is oversimplification, assumes
+    #      that documents are sequenced like simulation movements, which
+    #      is wrong
     for found_explanation in explanation.getCausalityRelatedValueList(
         portal_type=self.getPortalDeliveryTypeList()):
       explanation_uid_list.extend(self._getExplanationUidList(
