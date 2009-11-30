@@ -82,14 +82,6 @@ apparel_model_module/view?validation_state=analysed&local_roles:list=Assignor&re
             <value>
               <dictionary>
                 <item>
-                    <key> <string>portal_type</string> </key>
-                    <value>
-                      <tuple>
-                        <string>Apparel Model</string>
-                      </tuple>
-                    </value>
-                </item>
-                <item>
                     <key> <string>simulation_state</string> </key>
                     <value>
                       <tuple>

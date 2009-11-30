@@ -31,8 +31,8 @@
             <key> <string>transitions</string> </key>
             <value>
               <tuple>
-                <string>price</string>
-                <string>price_action</string>
+                <string>validate_pricing</string>
+                <string>validate_pricing_action</string>
               </tuple>
             </value>
         </item>

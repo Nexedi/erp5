@@ -19,11 +19,11 @@
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
-            <value> <string>%(content_url)s/BaseWorkflow_viewWorkflowActionDialog?workflow_action=price_action</string> </value>
+            <value> <string>%(content_url)s/BaseWorkflow_viewWorkflowActionDialog?workflow_action=validate_pricing_action</string> </value>
         </item>
         <item>
             <key> <string>after_script_name</string> </key>
-            <value> <string>price</string> </value>
+            <value> <string>validate_pricing</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -37,7 +37,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>price_action</string> </value>
+            <value> <string>validate_pricing_action</string> </value>
         </item>
         <item>
             <key> <string>new_state_id</string> </key>
@@ -49,7 +49,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Price Action</string> </value>
+            <value> <string>Validate Pricing Action</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>

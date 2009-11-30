@@ -83,14 +83,6 @@ apparel_model_module/view?validation_state=designed&local_roles:list=Assignor&lo
             <value>
               <dictionary>
                 <item>
-                    <key> <string>portal_type</string> </key>
-                    <value>
-                      <tuple>
-                        <string>Apparel Model</string>
-                      </tuple>
-                    </value>
-                </item>
-                <item>
                     <key> <string>simulation_state</string> </key>
                     <value>
                       <tuple>
