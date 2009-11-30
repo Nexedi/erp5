@@ -85,9 +85,10 @@ class TestResource(ERP5TypeTestCase):
       if preference.getPreferenceState() == 'disabled':
         preference.enable()
 
-    preference.setPreferredApparelModelVariationBaseCategoryList(('colour', 'size', 'morphology', 'industrial_phase',))
+    preference.setPreferredApparelModelVariationBaseCategoryList(('size', 'industrial_phase',))
     preference.setPreferredApparelClothVariationBaseCategoryList(('size',))
     preference.setPreferredApparelComponentVariationBaseCategoryList(('variation',))
+    preference.setPreferredApparelModelIndividualVariationBaseCategoryList(('morphology', 'colour',))
     if preference.getPreferenceState() == 'disabled':
       preference.enable()
     transaction.commit()

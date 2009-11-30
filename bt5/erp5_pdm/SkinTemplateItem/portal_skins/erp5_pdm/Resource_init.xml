@@ -57,12 +57,12 @@
 \n
 base = context.portal_preferences.getPreference(\'preferred_%s_variation_base_category_list\' % portal_type)\n
 optional = context.portal_preferences.getPreference(\'preferred_%s_optional_variation_base_category_list\' % portal_type)\n
-individual = context.portal_preferences.getPreference(\'preferred_%s_individual_variation_base_category\' % portal_type)\n
+individual = context.portal_preferences.getPreference(\'preferred_%s_individual_variation_base_category_list\' % portal_type)\n
 \n
 if individual:\n
   context.edit(variation_base_category_list=base,\n
       optional_variation_base_category_list=optional,\n
-      individual_variation_base_category=individual)\n
+      individual_variation_base_category_list=individual)\n
 else:\n
   context.edit(variation_base_category_list=base,\n
       optional_variation_base_category_list=optional)\n
