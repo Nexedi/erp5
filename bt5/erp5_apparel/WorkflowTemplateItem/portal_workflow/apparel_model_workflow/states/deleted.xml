@@ -11,11 +11,11 @@
       <dictionary>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Model which is ready to be sold to customers. Its price, transformation, pattern are OK.</string> </value>
+            <value> <string>Deleted model</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>validated</string> </value>
+            <value> <string>deleted</string> </value>
         </item>
         <item>
             <key> <string>permission_roles</string> </key>
@@ -25,15 +25,12 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Validated</string> </value>
+            <value> <string>Delete</string> </value>
         </item>
         <item>
             <key> <string>transitions</string> </key>
             <value>
-              <tuple>
-                <string>invalidate</string>
-                <string>invalidate_action</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>
@@ -62,10 +59,6 @@
                     <key> <string>Access contents information</string> </key>
                     <value>
                       <tuple>
-                        <string>Assignee</string>
-                        <string>Assignor</string>
-                        <string>Associate</string>
-                        <string>Auditor</string>
                         <string>Manager</string>
                       </tuple>
                     </value>
@@ -74,9 +67,6 @@
                     <key> <string>Add portal content</string> </key>
                     <value>
                       <tuple>
-                        <string>Assignee</string>
-                        <string>Assignor</string>
-                        <string>Associate</string>
                         <string>Manager</string>
                       </tuple>
                     </value>
@@ -85,9 +75,6 @@
                     <key> <string>Delete objects</string> </key>
                     <value>
                       <tuple>
-                        <string>Assignee</string>
-                        <string>Assignor</string>
-                        <string>Associate</string>
                         <string>Manager</string>
                       </tuple>
                     </value>
@@ -96,9 +83,6 @@
                     <key> <string>Modify portal content</string> </key>
                     <value>
                       <tuple>
-                        <string>Assignee</string>
-                        <string>Assignor</string>
-                        <string>Associate</string>
                         <string>Manager</string>
                       </tuple>
                     </value>
@@ -107,10 +91,6 @@
                     <key> <string>View</string> </key>
                     <value>
                       <tuple>
-                        <string>Assignee</string>
-                        <string>Assignor</string>
-                        <string>Associate</string>
-                        <string>Auditor</string>
                         <string>Manager</string>
                       </tuple>
                     </value>

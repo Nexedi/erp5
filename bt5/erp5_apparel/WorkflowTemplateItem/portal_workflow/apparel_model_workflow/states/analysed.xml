@@ -11,11 +11,11 @@
       <dictionary>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Model which is ready to be sold to customers. Its price, transformation, pattern are OK.</string> </value>
+            <value> <string>Model which bill of materials and bill of operations have been established</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>validated</string> </value>
+            <value> <string>analysed</string> </value>
         </item>
         <item>
             <key> <string>permission_roles</string> </key>
@@ -25,14 +25,14 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Validated</string> </value>
+            <value> <string>Analysed</string> </value>
         </item>
         <item>
             <key> <string>transitions</string> </key>
             <value>
               <tuple>
-                <string>invalidate</string>
-                <string>invalidate_action</string>
+                <string>price</string>
+                <string>price_action</string>
               </tuple>
             </value>
         </item>

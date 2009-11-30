@@ -15,37 +15,33 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Propose</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
-            <value> <string>%(content_url)s/BaseWorkflow_viewWorkflowActionDialog?workflow_action=propose_action</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>after_script_name</string> </key>
-            <value> <string>propose</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-Propose a new model to the R&D office or project manager
-
-]]></string> </value>
+            <value> <string>Ask for a complete model analyse that should lead to definition of the complete bill of materials and bill of operations</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+              <none/>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>propose_action</string> </value>
+            <value> <string>ask_for_analyse</string> </value>
         </item>
         <item>
             <key> <string>new_state_id</string> </key>
-            <value> <string></string> </value>
+            <value> <string>approved</string> </value>
         </item>
         <item>
             <key> <string>script_name</string> </key>
@@ -53,32 +49,11 @@ Propose a new model to the R&D office or project manager
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Propose Action</string> </value>
+            <value> <string>Ask For Analyse</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>
-            <value> <int>1</int> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <tuple>
-        <global name="Guard" module="Products.DCWorkflow.Guard"/>
-        <tuple/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>roles</string> </key>
-            <value>
-              <tuple>
-                <string>Assignee</string>
-                <string>Assignor</string>
-              </tuple>
-            </value>
+            <value> <int>2</int> </value>
         </item>
       </dictionary>
     </pickle>
