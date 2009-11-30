@@ -35,30 +35,4 @@ class Delivery:
         Delivery objects usually have a causality.
     """
 
-    _properties = (
-    { 'id'          : 'causality_id',
-      'description' : 'ids of the documents which are in causality relation with delivery',
-      'type'        : 'lines',
-      'override'    : 1,
-      'acquisition_base_category' : ('causality',),
-      'acquisition_portal_type'   : Expression('python: portal.getPortalOrderTypeList() + portal.getPortalDeliveryTypeList()'),
-      'acquisition_copy_value'    : 0,
-      'acquisition_mask_value'    : 0,
-      'acquisition_accessor_id'   : 'getId',
-      'acquisition_depends'       : None,
-      'mode'        : 'w' },
-    { 'id'          : 'causality_title',
-      'description' : 'titles of the documents which are in causality relation with delivery',
-      'type'        : 'lines',
-      'override'    : 1,
-      'acquisition_base_category' : ('causality',),
-      'acquisition_portal_type'   : Expression('python: portal.getPortalOrderTypeList() + portal.getPortalDeliveryTypeList()'),
-      'acquisition_copy_value'    : 0,
-      'acquisition_mask_value'    : 0,
-      'acquisition_accessor_id'   : 'getTitle',
-      'acquisition_depends'       : None,
-      'mode'        : 'w' },
-    )
-
     _categories = ( 'causality', 'incoterm', 'delivery_mode')
-
