@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-# -*- coding: utf-8 -*-
 # Copyright (c) 2009 Nexedi SA and Contributors. All Rights Reserved.
 #                    Mohamadou Mbengue <mmbengue@gmail.com>
 #
@@ -44,23 +43,6 @@ import transaction
 
 person_current_id = 1
 
-def shout(msg):
-  msg = str(msg)
-  ZopeTestCase._print('\n ' + msg)
-  LOG('Testing... ', 0, msg)
-
-def unpackData(data):
-  """
-  Unpack Pdata into string
-  """
-  if isinstance(data, str):
-    return data
-  else:
-    data_list = []
-    while data is not None:
-      data_list.append(data.data)
-      data = data.next
-    return ''.join(data_list)
 
 class FileUploadTest(file):
 
@@ -171,7 +153,7 @@ class TestOOoImport(ERP5TypeTestCase):
     user_name = 'bartek'
     user_folder = self.portal.acl_users
     user_folder._doAddUser(user_name, '', ['Manager', 'Owner', 'Assignor',
-                               	           'Associate', 'Auditor', 'Author'], [])
+                                           'Associate', 'Auditor', 'Author'], [])
     user = user_folder.getUserById(user_name).__of__(user_folder)
     newSecurityManager(None, user)
 
@@ -245,6 +227,12 @@ class TestOOoImport(ERP5TypeTestCase):
     self.assertEqual(
       sorted(['director' for i in range(num)]),
       sorted([person_list[i].getFunction() for i in range(num)]))
+    self.assertEqual(
+      sorted(['europe/france' for i in range(num)]),
+      sorted([person_list[i].getRegion() for i in range(num)]))
+    self.assertEqual(
+      sorted(['France' for i in range(num)]),
+      sorted([person_list[i].getRegionTitle() for i in range(num)]))
     person_current_id = person_current_id+num
 
   def stepCheckAuthorImportedPersonList(self, sequence=None, sequence_list=None, **kw):
@@ -386,6 +374,15 @@ class TestOOoImport(ERP5TypeTestCase):
 
   def stepImportFileWithCategory(self, sequence=None, sequence_list=None, **kw):
     f = makeFileUpload('import_data_with_categories.ods')
+    # create some regions
+    region = self.portal.portal_categories.region
+    europe = region.newContent(portal_type='Category',
+                      title='Europe',
+                      id='europe')
+    europe.newContent(portal_type='Category',
+                      title='France',
+                      id='france')
+
     person_module = self.getPortal().person_module
     #purge existing persons
     person_module.manage_delObjects([id for id in person_module.getObjectIds()])
@@ -398,7 +395,9 @@ class TestOOoImport(ERP5TypeTestCase):
     { 'listbox_key': '003',
       'portal_type_property_list':'Person.gender'},
     { 'listbox_key': '004',
-      'portal_type_property_list':'Person.function'}
+      'portal_type_property_list':'Person.function'},
+    { 'listbox_key': '005',
+      'portal_type_property_list':'Person.region'}
     )
     person_module.Base_importFile(import_file=f, listbox=listbox)
 
