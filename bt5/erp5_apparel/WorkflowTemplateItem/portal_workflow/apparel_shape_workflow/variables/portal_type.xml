@@ -12,7 +12,7 @@
         <item>
             <key> <string>default_expr</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+              <none/>
             </value>
         </item>
         <item>
@@ -44,25 +44,6 @@
         <item>
             <key> <string>update_always</string> </key>
             <value> <int>0</int> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <tuple>
-        <tuple>
-          <string>Products.CMFCore.Expression</string>
-          <string>Expression</string>
-        </tuple>
-        <none/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>text</string> </key>
-            <value> <string>python: state_change[\'object\'].getPortalType()</string> </value>
         </item>
       </dictionary>
     </pickle>

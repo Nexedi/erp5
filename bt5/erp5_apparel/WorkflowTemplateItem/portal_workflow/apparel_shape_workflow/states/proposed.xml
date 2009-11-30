@@ -11,11 +11,11 @@
       <dictionary>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Shape or Color Range that has just been created</string> </value>
+            <value> <string>Shape or Color Range that has been proposed by the designer (validation pending)</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>draft</string> </value>
+            <value> <string>proposed</string> </value>
         </item>
         <item>
             <key> <string>permission_roles</string> </key>
@@ -25,16 +25,14 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Draft</string> </value>
+            <value> <string>Proposed</string> </value>
         </item>
         <item>
             <key> <string>transitions</string> </key>
             <value>
               <tuple>
-                <string>delete</string>
-                <string>delete_action</string>
-                <string>propose</string>
-                <string>propose_action</string>
+                <string>invalidate</string>
+                <string>invalidate_action</string>
                 <string>validate</string>
                 <string>validate_action</string>
               </tuple>
@@ -71,7 +69,6 @@
                         <string>Associate</string>
                         <string>Auditor</string>
                         <string>Manager</string>
-                        <string>Owner</string>
                       </tuple>
                     </value>
                 </item>
@@ -83,7 +80,6 @@
                         <string>Assignor</string>
                         <string>Associate</string>
                         <string>Manager</string>
-                        <string>Owner</string>
                       </tuple>
                     </value>
                 </item>
@@ -95,7 +91,6 @@
                         <string>Assignor</string>
                         <string>Associate</string>
                         <string>Manager</string>
-                        <string>Owner</string>
                       </tuple>
                     </value>
                 </item>
@@ -108,7 +103,6 @@
                         <string>Associate</string>
                         <string>Auditor</string>
                         <string>Manager</string>
-                        <string>Owner</string>
                       </tuple>
                     </value>
                 </item>

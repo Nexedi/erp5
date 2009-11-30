@@ -15,34 +15,34 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Apparel Shape to validate (%(count)s)</string> </value>
+            <value> <string>Apparel Color Ranges To Validate (%(count)s)</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-apparel_shape_module?validation_state=developed&reset=1
+apparel_colour_range_module/view?validation_state=proposed&local_roles:list=Assignor&reset=1
 
 ]]></string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Apparel Color Ranges To Validate</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
             <value>
-              <none/>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>d_developed</string> </value>
+            <value> <string>4_proposed_color_range_list</string> </value>
         </item>
         <item>
             <key> <string>var_matches</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
             </value>
         </item>
       </dictionary>
@@ -51,24 +51,41 @@ apparel_shape_module?validation_state=developed&reset=1
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Persistence</string>
-          <string>PersistentMapping</string>
-        </tuple>
-        <none/>
+        <global name="Guard" module="Products.DCWorkflow.Guard"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_container</string> </key>
+            <key> <string>roles</string> </key>
+            <value>
+              <tuple>
+                <string>Assignor</string>
+              </tuple>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <tuple>
+        <global name="PersistentMapping" module="Persistence.mapping"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
             <value>
               <dictionary>
                 <item>
                     <key> <string>portal_type</string> </key>
                     <value>
                       <tuple>
-                        <string>Apparel Shape</string>
+                        <string>Apparel Colour Range</string>
                       </tuple>
                     </value>
                 </item>
@@ -76,7 +93,7 @@ apparel_shape_module?validation_state=developed&reset=1
                     <key> <string>validation_state</string> </key>
                     <value>
                       <tuple>
-                        <string>developed</string>
+                        <string>proposed</string>
                       </tuple>
                     </value>
                 </item>

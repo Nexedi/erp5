@@ -27,7 +27,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Propose a new Shape or Color Range to the product line manager and to the marketing </string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
@@ -37,11 +37,11 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>design</string> </value>
+            <value> <string>propose</string> </value>
         </item>
         <item>
             <key> <string>new_state_id</string> </key>
-            <value> <string>designed</string> </value>
+            <value> <string>proposed</string> </value>
         </item>
         <item>
             <key> <string>script_name</string> </key>
@@ -49,7 +49,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Propose</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>

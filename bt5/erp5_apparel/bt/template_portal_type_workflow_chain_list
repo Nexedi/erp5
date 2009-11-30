@@ -3,6 +3,8 @@ Apparel Assortment | validation_workflow
 Apparel Bath | edit_workflow
 Apparel Bath | validation_workflow
 Apparel Cloth | apparel_cloth_workflow
+Apparel Cloth | edit_workflow
+Apparel Colour Range | apparel_shape_workflow
 Apparel Colour Range | edit_workflow
 Apparel Colour Range | validation_workflow
 Apparel Component | apparel_component_workflow
@@ -16,6 +18,8 @@ Apparel Fabric | edit_workflow
 Apparel Measurement | edit_workflow
 Apparel Measurement | validation_workflow
 Apparel Model | apparel_model_workflow
+Apparel Model | edit_workflow
 Apparel Shape | apparel_shape_workflow
+Apparel Shape | edit_workflow
 Apparel Size | edit_workflow
 Apparel Size | validation_workflow
