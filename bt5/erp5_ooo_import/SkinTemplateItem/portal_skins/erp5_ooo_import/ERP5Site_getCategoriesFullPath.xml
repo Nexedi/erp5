@@ -53,44 +53,37 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-# get a dict like {\'religion\': \'MRD\', \'gender\': \'M\'} and returns {\'religion\': \'MSM/MRD\', gender: \'male\'} so that \n
-# we can call an edit(category_dict) directly on the object it browse recursively the subcategories of the \n
-# category (key in the dict) and find a matching reference or title.\n
-# Christophe Dumez <christophe@nexedi.com>\n
+            <value> <string>"""Guess the path of categories, taking as input a mapping {base_category:\n
+category}, where category can be the relative_url, the title or the reference\n
+of the category\n
+"""\n
 \n
-#def getMatchingCategoryUsingCodification(root_category, codification):\n
-#  sub_cat_list = root_category.objectValues()\n
-#  for sub_cat in sub_cat_list:\n
-#    if sub_cat.getCodification() == codification:\n
-#      return sub_cat\n
-#    matching_cat = getMatchingCategoryUsingCodification(sub_cat, codification)\n
-#    if matching_cat is not None:\n
-#      return matching_cat\n
-\n
+from Products.ZSQLCatalog.SQLCatalog import Query, ComplexQuery\n
+portal = context.getPortalObject()\n
 result_dict = {}\n
-for category_name in category_dict.keys():\n
-  subcat_code = category_dict[category_name]\n
-  category_object = context.getPortalObject().portal_categories[category_name]\n
-  result_list = context.portal_catalog(portal_type=\'Category\', reference=\'=\'+str(subcat_code), relative_url=category_name+\'%\')\n
-  if len(result_list) != 0:\n
-    result_cat_fullpath = \'/\'.join(result_list[0].getRelativeUrl().split(\'/\')[1:])\n
-    result_dict[category_name]=result_cat_fullpath\n
-  else:\n
-    result_list = context.portal_catalog(portal_type=\'Category\', title=\'=\'+str(subcat_code), relative_url=category_name+\'%\')\n
-    if len(result_list) != 0:\n
-      result_cat_fullpath = \'/\'.join(result_list[0].getRelativeUrl().split(\'/\')[1:])\n
-      result_dict[category_name]=result_cat_fullpath\n
-  #result_cat = getMatchingCategoryUsingCodification(root_category=category_object, codification=subcat_code)\n
-  #if result_cat is not None:\n
-  #  result_cat_fullpath = \'/\'.join(result_cat.getPath().split(\'/\')[4:])\n
-  #  result_dict[category_name]=result_cat_fullpath\n
+\n
+for base_category_name, category in category_dict.items():\n
+  category_object = \\\n
+    context.getPortalObject().portal_categories[base_category_name]\n
+  \n
+  category_value = category_object.restrictedTraverse(category, None)\n
+  if category_value is None:\n
+    query = ComplexQuery(\n
+                ComplexQuery(Query(title=category,\n
+                               key=\'ExactMatch\'),\n
+                         Query(reference=category,\n
+                               key=\'ExactMatch\'),\n
+                         operator=\'OR\'),\n
+                ComplexQuery(Query(relative_url=\'%s/%%\' % base_category_name)))\n
+    category_value = portal.portal_catalog.getResultValue(query=query)\n
+\n
+  if category_value is not None:\n
+    # remove base category from relative_url\n
+    result_dict[base_category_name] = \\\n
+      category_value.getRelativeUrl().split(\'/\', 1)[1]\n
 \n
 return result_dict\n
-
-
-]]></string> </value>
+</string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -127,18 +120,21 @@ return result_dict\n
                         <value>
                           <tuple>
                             <string>category_dict</string>
+                            <string>Products.ZSQLCatalog.SQLCatalog</string>
+                            <string>Query</string>
+                            <string>ComplexQuery</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>portal</string>
                             <string>result_dict</string>
                             <string>_getiter_</string>
-                            <string>_getattr_</string>
-                            <string>category_name</string>
+                            <string>base_category_name</string>
+                            <string>category</string>
                             <string>_getitem_</string>
-                            <string>subcat_code</string>
-                            <string>context</string>
                             <string>category_object</string>
-                            <string>str</string>
-                            <string>result_list</string>
-                            <string>len</string>
-                            <string>result_cat_fullpath</string>
+                            <string>None</string>
+                            <string>category_value</string>
+                            <string>query</string>
                             <string>_write_</string>
                           </tuple>
                         </value>

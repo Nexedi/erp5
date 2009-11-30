@@ -161,7 +161,9 @@ else:\n
 \n
   if not success:\n
     # Delete the object if error occurs\n
+    # FIXME: maybe this should be an option ?\n
     container.manage_delObjects([new_object.getId()])\n
+\n
   return {\n
     \'message\': translated_msg,\n
     \'object_url\': new_object.getRelativeUrl(),\n

@@ -222,7 +222,7 @@ else:\n
       if imported_line_property_dict not in [{}, None]:\n
         tag = "OOo_import_%s" % active_process_value.getId()\n
         portal_type = mapping[spreadsheet_name][0]\n
-        active_process = context.activate(tag=tag,\n
+        active_object = context.activate(tag=tag,\n
                          priority=1,\n
                          activity="SQLQueue",\n
                          active_process=active_process_path)\n
@@ -230,7 +230,7 @@ else:\n
         if getattr(context, import_file_line_script, None) is None:\n
           raise AttributeError, \'specified script "%s" does not exists\' % import_file_line_script\n
 \n
-        getattr(active_process, import_file_line_script)(context.getRelativeUrl(),\n
+        getattr(active_object, import_file_line_script)(context.getRelativeUrl(),\n
                 portal_type,\n
                 imported_line_property_dict,\n
                 active_process=active_process_path)\n
@@ -349,7 +349,7 @@ raise NotImplementedError\n
                             <string>property_value</string>
                             <string>property_id</string>
                             <string>tag</string>
-                            <string>active_process</string>
+                            <string>active_object</string>
                             <string>NotImplementedError</string>
                           </tuple>
                         </value>
