@@ -654,6 +654,9 @@ msgstr "Un email vous a été envoyé"
 msgid "An exclusive global discount ratio. This discount ratio is exclusive of any other discount."
 msgstr "Taux de remise exclusif de toute autre remise."
 
+msgid "Analysed"
+msgstr "Analysé"
+
 msgid "Annotation Function"
 msgstr "Fonction de l'annotation"
 
@@ -813,6 +816,9 @@ msgstr "Modèle de référence"
 msgid "Apparel Models"
 msgstr "Modèles"
 
+msgid "Apparel Models To Propose"
+msgstr "Modèle à proposer"
+
 msgid "Apparel Shape"
 msgstr "Forme"
 
@@ -909,6 +915,9 @@ msgstr "Autorisation demandée"
 msgid "Approve"
 msgstr "Approuver"
 
+msgid "Approved"
+msgstr "Approuvé"
+
 msgid "April"
 msgstr "Avril"
 
@@ -947,6 +956,18 @@ msgstr "Produits Finis"
 
 msgid "Ascending"
 msgstr "Croissant"
+
+msgid "Ask For Analyse"
+msgstr "Demander l'analyse"
+
+msgid "Ask For Modeling"
+msgstr "Demander l'étude de modélisme"
+
+msgid "Ask For Prototyping "
+msgstr "Demander le prototypage"
+
+msgid "Ask For Quotation"
+msgstr "Demander la cotation"
 
 msgid "Ask for More Details"
 msgstr "Demander plus de précisions"
@@ -3358,6 +3379,9 @@ msgstr "Descriptions nettoyées"
 msgid "Designation"
 msgstr "Désignation"
 
+msgid "Designed"
+msgstr "Mis au point"
+
 msgid "Destination"
 msgstr "Destination"
 
@@ -5737,6 +5761,9 @@ msgstr "Ligne de modèle"
 msgid "Model Line Calculation Script"
 msgstr "Script de calcul"
 
+msgid "Modeling"
+msgstr "Etude Modélisme"
+
 msgid "Modification Date"
 msgstr "Date de modification"
 
@@ -7052,6 +7079,9 @@ msgstr "Montants convertis."
 msgid "Price for one unit."
 msgstr "Prix d'une unité."
 
+msgid "Priced"
+msgstr "Tarifé"
+
 msgid "Priced Quantity"
 msgstr "Quantité correspondant au prix"
 
@@ -7267,6 +7297,9 @@ msgstr "Protégé"
 
 msgid "Protocol"
 msgstr "Protocole"
+
+msgid "Prototyping"
+msgstr "Prototypage"
 
 msgid "Provision"
 msgstr "Provision"
@@ -7598,6 +7631,9 @@ msgstr "Recherche rapide"
 msgid "Quote Original Message"
 msgstr "Citer le message d'origine"
 
+msgid "Quoting"
+msgstr "Cotation"
+
 msgid "RSS Feed"
 msgstr "Flux RSS"
 
@@ -7777,6 +7813,12 @@ msgstr "Références"
 
 msgid "Refundable VAT"
 msgstr "TVA déductible"
+
+msgid "Refuse"
+msgstr "Refuser"
+
+msgid "Refused"
+msgstr "Refusé"
 
 msgid "Refusing to process more than 1000 objects, check your selection."
 msgstr "Refus de traiter plus de 1000 documents, vérifiez votre sélection."
@@ -11208,6 +11250,9 @@ msgstr "Valider (action)"
 msgid "Validate Action [transition in validation_workflow]"
 msgstr "Valider (action)"
 
+msgid "Validate Analysis"
+msgstr "Valider l'analyse"
+
 msgid "Validate Budget"
 msgstr "Valider le budget"
 
@@ -11231,6 +11276,12 @@ msgstr "Valider le message"
 
 msgid "Validate Message [transition in notification_message_workflow]"
 msgstr "Valider le message"
+
+msgid "Validate Modeling"
+msgstr "Valider le modélisme"
+
+msgid "Validate Pricing"
+msgstr "Valider le prix"
 
 msgid "Validate Transaction"
 msgstr "Valider le brouillard"
