@@ -7241,6 +7241,12 @@ msgstr "Nom de la propriété"
 msgid "Property Tester"
 msgstr "Testeur de propriété"
 
+msgid "Propose"
+msgstr "Proposer"
+
+msgid "Proposed"
+msgstr "Proposé"
+
 msgid "Prospect Contacted"
 msgstr "Prospect contacté"
 
