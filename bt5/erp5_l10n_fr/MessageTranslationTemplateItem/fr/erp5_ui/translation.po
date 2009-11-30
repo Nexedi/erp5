@@ -8349,7 +8349,7 @@ msgid "Returned Sale Packing Lists"
 msgstr "Livraisons de ventes retournées"
 
 msgid "Reversal Transaction for ${specific_reference} created."
-msgstr "La contrepassation de ${specific_reference} a été créée."
+msgstr "La contrepassation de l'écriture ${specific_reference} a été créée."
 
 msgid "Reversal Transaction for ${title}"
 msgstr "Contrepassation de ${title}"
