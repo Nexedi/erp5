@@ -79,10 +79,10 @@ for line in listbox:\n
      cell = result[int(line_id)-1]\n
      cell.setResourceValue(product)    \n
      line["quantity_unit"] = cell.getQuantityUnit()\n
-     line["resource_relative_url"] = cell.getResourceRelativeUrl()\n
-     request.form["field_listbox_resource_relative_url_new_%s"%line_id]=cell.getResourceRelativeUrl()\n
-     kw["field_listbox_resource_relative_url_new_%s"%line_id]=cell.getResourceRelativeUrl()\n
-     request.set("field_listbox_resource_relative_url_new_%s"%line_id,cell.getResourceRelativeUrl())\n
+     line["resource_relative_url"] = cell.getResource()\n
+     request.form["field_listbox_resource_relative_url_new_%s"%line_id]=cell.getResource()\n
+     kw["field_listbox_resource_relative_url_new_%s"%line_id]=cell.getResource()\n
+     request.set("field_listbox_resource_relative_url_new_%s"%line_id,cell.getResource())\n
      request.form["field_listbox_reference_new_%s"%line_id] = product.getReference() or \'\'\n
      request.form["field_listbox_title_new_%s"%line_id] = product.getTitle()\n
      request.form["field_listbox_quantity_unit_new_%s"%line_id] = cell.getQuantityUnit()\n

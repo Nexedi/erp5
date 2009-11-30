@@ -109,5 +109,5 @@ class EmploymentContract(SubscriptionItem):
                 destination_section = employer,
                 quantity = self.getQuantity(),
                 quantity_unit = self.getQuantityUnit(),
-                resource = self.getResourceRelativeUrl()
+                resource = self.getResource()
                 )

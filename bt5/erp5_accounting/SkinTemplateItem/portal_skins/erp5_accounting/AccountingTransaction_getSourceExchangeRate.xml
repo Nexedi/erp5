@@ -54,7 +54,7 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>currency = context.getResourceValue()\n
-exchange_ratio = currency.getPrice(context=context.asContext(categories=[\'resource/%s\' % context.getResourceRelativeUrl(), \n
+exchange_ratio = currency.getPrice(context=context.asContext(categories=[\'resource/%s\' % context.getResource(), \n
                                      \'price_currency/currency_module/%s\' % context.getSourceSectionValue().getPriceCurrencyId()],\n
                                       start_date=context.getStartDate()))\n
 return exchange_ratio\n

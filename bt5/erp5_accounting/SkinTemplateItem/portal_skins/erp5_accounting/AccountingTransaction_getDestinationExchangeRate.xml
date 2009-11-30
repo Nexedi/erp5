@@ -59,7 +59,7 @@ in the conversion of the destination price\n
 """\n
 \n
 currency = context.getResourceValue()\n
-exchange_ratio = currency.getPrice(context=context.asContext(categories=[\'resource/%s\' % context.getResourceRelativeUrl(), \n
+exchange_ratio = currency.getPrice(context=context.asContext(categories=[\'resource/%s\' % context.getResource(), \n
                                      \'price_currency/currency_module/%s\' % context.getDestinationSectionValue().getPriceCurrencyId()],\n
                                       start_date=context.getStopDate()))\n
 return exchange_ratio\n

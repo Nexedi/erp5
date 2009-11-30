@@ -77,7 +77,7 @@ for line in line_list:\n
   else:\n
    currency = line.getResourceValue()\n
    exchange_ratio = currency.getPrice(context=line.asContext(\n
-                          categories=[\'resource/%s\' % line.getResourceRelativeUrl(), \n
+                          categories=[\'resource/%s\' % line.getResource(), \n
                                 \'price_currency/currency_module/%s\' %\n
                       line.getSourceSectionValue().getPriceCurrencyId()],\n
                       start_date=line.getStartDate()))\n
