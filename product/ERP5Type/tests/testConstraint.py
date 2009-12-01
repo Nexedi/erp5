@@ -1442,6 +1442,19 @@ class TestConstraint(PropertySheetTestCase):
   def test_PropertyTypeValidityWithUnauthorizedCategory(self):
     person = self.portal.person_module.newContent(portal_type='Person')
     assignment = person.newContent(portal_type='Assignment')
+    # add a source_title property on Assignment.
+    self._addPropertySheet('Assignment',
+      property_sheet_code=\
+      '''class TestPropertySheet:
+          _properties = (
+           {'id':'source_title',
+            'description':'The title of the source of this movement',
+            'type':'string',
+            'acquisition_base_category':('source',),
+            'acquisition_portal_type':('Category'),
+            'acquisition_accessor_id':'getTitle',
+            'mode':''},)
+      ''')
     self.assertEquals([], person.checkConsistency())
     group3 = self.category_tool.restrictedTraverse(
       'group/testGroup3', self.category_tool.group.newContent(
