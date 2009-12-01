@@ -57,7 +57,7 @@ class RoundingModel(Predicate):
     Return rounded value.
     """
     if self.getRoundingMethodId() is not None:
-      rounding_method = getattr(self, 'RoundingModel_%s' % self.getRoundingMethodId(), None)
+      rounding_method = getattr(self, self.getRoundingMethodId(), None)
       if rounding_method is None:
         raise ValueError, 'Rounding method (%s) was not found.'
     else:
