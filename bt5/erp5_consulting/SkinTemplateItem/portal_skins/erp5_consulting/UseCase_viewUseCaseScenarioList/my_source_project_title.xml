@@ -392,7 +392,7 @@
                 </item>
                 <item>
                     <key> <string>catalog_index</string> </key>
-                    <value> <string>portal_catalog</string> </value>
+                    <value> <string>title</string> </value>
                 </item>
                 <item>
                     <key> <string>columns</string> </key>
@@ -498,7 +498,12 @@
                 <item>
                     <key> <string>proxy_listbox_ids</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>ProjectModule_viewProjectList/listbox</string>
+                          <string>Projects</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
