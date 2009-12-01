@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2007 Nexedi SARL and Contributors. All Rights Reserved.
@@ -68,6 +69,7 @@ class TestProxify(unittest.TestCase):
     base_view.manage_addField('my_list_field', 'List Field', 'ListField')
     base_view.manage_addField('my_relation_string_field', 'Old Relation String Field', 'RelationStringField')
     base_view.manage_addField('my_gender', 'Gender', 'ListField')
+    base_view.manage_addField('my_custom_description', 'Description', 'TextAreaField')
     base_view.my_string_field.values['display_width'] = 30
     base_view.my_list_field.values['size'] = 1
     base_view.my_gender.values['items'] = [('Male', 'Male'), ('Female', 'Female')]
@@ -89,6 +91,7 @@ class TestProxify(unittest.TestCase):
     person_view = self.person_view = self.container.Person_view
     person_view.manage_addField('my_name', 'Name', 'StringField')
     person_view.manage_addField('my_default_region', 'Country', 'ListField')
+    person_view.manage_addField('my_custom_description', 'Description', 'TextAreaField')
     person_view.my_name.values['display_maxwidth'] = 20
     person_view.my_default_region.values['size'] = 1
     person_view.my_default_region.tales['items'] = TALESMethod('here/portal_categories/region/getCategoryChildTranslatedLogicalPathItemList')
@@ -97,6 +100,7 @@ class TestProxify(unittest.TestCase):
     person_view.my_career_subordination_title.values['base_category'] = 'subordination'
     person_view.my_career_subordination_title.values['portal_type'] = [('Organisation', 'Organisation')]
     person_view.my_career_subordination_title.values['proxy_listbox_ids'] = [('OrganisationModule_viewOrganisationList/listbox', 'Organisation')]
+    person_view.my_custom_description.values['editable'] = 0
 
     global request
     request = DummyRequest()
@@ -123,7 +127,7 @@ class TestProxify(unittest.TestCase):
     self.assertEqual(field.get_value('description'), 'Description')
 
     purgeFieldValueCache()
-    
+
     # ListField
     self.person_view.manage_addField('my_gender', 'Gender', 'ListField')
     self.person_view.proxifyField({'my_gender':'Base_view.my_gender'})
@@ -132,6 +136,16 @@ class TestProxify(unittest.TestCase):
     self.assertEqual(field.get_value('title'), 'Gender')
     self.assertEqual(field.is_delegated('items'), True)
     self.assertEqual(field.get_value('items'), [('Male', 'Male'), ('Female', 'Female')])
+
+    purgeFieldValueCache()
+    #Non editable fields
+    self.person_view.proxifyField({'my_custom_description': 'Base_view.my_custom_description'})
+    field = self.person_view.my_custom_description
+    self.assertEqual(field.is_delegated('title'), True)
+    self.assertEqual(field.get_value('title'), 'Description')
+    self.assertEqual(field.is_delegated('editable'), False)
+    self.assertEqual(field.get_value('editable'), 0)
+
 
   def test_multi_level_proxify(self):
     self.address_view.proxifyField({'my_region':'Base_view.my_list_field'})
