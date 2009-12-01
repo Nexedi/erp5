@@ -109,6 +109,8 @@
                         <string>my_quantity</string>
                         <string>my_efficiency</string>
                         <string>my_target_level</string>
+                        <string>my_calculation_script_id</string>
+                        <string>my_create_line</string>
                       </list>
                     </value>
                 </item>

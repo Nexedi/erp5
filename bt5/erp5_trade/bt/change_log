@@ -1,3 +1,8 @@
+2009-12-1 yusei
+* Add calculation script field and create line field to trade model line view.
+* Modify quantity field on trade model line view to display floating number only if quantity property has value and is not set to None.
+* Modify resource field on trade model line and allow users to choose Product document.
+
 2009-11-26 yusei
 * Add target level field to trade model line view.
 
