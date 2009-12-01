@@ -36,6 +36,7 @@ from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type.tests.utils import reindex
 
 from Products.ERP5.tests.testBPMCore import TestBPMMixin
+from Products.ERP5Type.tests.backportUnittest import skip
 
 class TestMRPMixin(TestBPMMixin):
   transformation_portal_type = 'Transformation'
@@ -252,6 +253,7 @@ class TestMRPMixin(TestBPMMixin):
 
 class TestMRPImplementation(TestMRPMixin, ERP5TypeTestCase):
   """the test for implementation"""
+  @skip('Unfinished experimental feature')
   def test_TransformationRule_getHeadProductionPathList(self):
     rule = self.portal.portal_rules.default_transformation_model_rule
 
@@ -328,6 +330,7 @@ class TestMRPImplementation(TestMRPMixin, ERP5TypeTestCase):
                                   movement.getQuantity())])
     self.assertEquals(expected_value_set, movement_value_set)
 
+  @skip('Unfinished experimental feature')
   def test_TransformationRule_expand_concurrent(self):
     business_process = self.createConcurrentBusinessProcess()
 
@@ -390,6 +393,7 @@ class TestMRPImplementation(TestMRPMixin, ERP5TypeTestCase):
                                   movement.getQuantity())])
     self.assertEquals(expected_value_set, movement_value_set)
 
+  @skip('Unfinished experimental feature')
   def test_TransformationRule_expand_reexpand(self):
     """
     test case of difference when any movement are frozen
@@ -456,6 +460,7 @@ class TestMRPImplementation(TestMRPMixin, ERP5TypeTestCase):
                                   movement.getQuantity())])
     self.assertEquals(expected_value_set, movement_value_set)
 
+  @skip('Unfinished experimental feature')
   def test_TransformationSourcingRule_expand(self):
     # mock order
     order = self.createDefaultOrder()
