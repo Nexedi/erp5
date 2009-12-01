@@ -34,6 +34,8 @@ from Products.ERP5.tests.testBPMCore import TestBPMMixin
 from Products.ERP5Type.tests.Sequence import SequenceList
 from DateTime import DateTime
 from Products.CMFCore.utils import getToolByName
+from Products.ERP5.PropertySheet.TradeModelLine import (TARGET_LEVEL_MOVEMENT,
+                                                        TARGET_LEVEL_DELIVERY)
 
 class TestTradeModelLineMixin(TestBPMMixin):
   """Provides methods to implementations sharing similar logic to Trade Model Lines"""
@@ -2392,10 +2394,6 @@ class TestTradeModelLine(TestTradeModelLineMixin):
       and trade model line can works with appropriate context(delivery or
       movement) only.
     """
-    from Products.ERP5.PropertySheet.TradeModelLine import (
-      TARGET_LEVEL_MOVEMENT,
-      TARGET_LEVEL_DELIVERY)
-
     trade_condition = self.createTradeCondition()
     # create a model line and set target level to `delivery`.
     tax = self.createTradeModelLine(trade_condition,
@@ -2467,18 +2465,30 @@ class TestTradeModelLine(TestTradeModelLineMixin):
 
     # Make sure that getAggregatedAmountList of movement uses movement
     # level trade model line only.
+    def getMovementFromAmountListByReference(amount_list, reference):
+      for amount in amount_list:
+        if amount.getReference()==reference:
+          return amount
     amount_list = trade_condition.getAggregatedAmountList(order_line_1)
     self.assertEqual(2, len(amount_list))
+    extra_fee_a_amount = getMovementFromAmountListByReference(amount_list,
+                                                              'EXTRA_FEE_A')
+    self.assertEqual([],
+                     extra_fee_a_amount.getCausalityValueList())
+    tax_amount = getMovementFromAmountListByReference(amount_list,
+                                                      'TAX')
     self.assertEqual([order_line_1],
-                     amount_list[0].getCausalityValueList())
-    self.assertEqual([order_line_1],
-                     amount_list[1].getCausalityValueList())
+                     tax_amount.getCausalityValueList())
     amount_list = trade_condition.getAggregatedAmountList(order_line_2)
     self.assertEqual(2, len(amount_list))
+    extra_fee_a_amount = getMovementFromAmountListByReference(amount_list,
+                                                              'EXTRA_FEE_A')
+    self.assertEqual([],
+                     extra_fee_a_amount.getCausalityValueList())
+    tax_amount = getMovementFromAmountListByReference(amount_list,
+                                                      'TAX')
     self.assertEqual([order_line_2],
-                     amount_list[0].getCausalityValueList())
-    self.assertEqual([order_line_2],
-                     amount_list[1].getCausalityValueList())
+                     tax_amount.getCausalityValueList())
 
     # Change target level
     extra_fee.edit(target_level=TARGET_LEVEL_DELIVERY)
