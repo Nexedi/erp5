@@ -604,10 +604,12 @@ class TestPropertySheet:
       )
 
 """
-      # We check that we raise exception when we associate the property sheet
+      self._addPropertySheet('Organisation', property_sheet_code=text)
+      folder = self.getOrganisationModule()
+      # We check that we raise exception when we create new object
       from Products.ERP5Type.Utils import ConstraintNotFound
-      self.assertRaises(ConstraintNotFound, self._addPropertySheet,
-                        'Organisation', property_sheet_code=text)
+      organisation =  self.assertRaises(ConstraintNotFound, folder.newContent,
+                                        portal_type='Organisation')
 
     def test_11_valueAccessor(self, quiet=quiet, run=run_all_test):
       """
