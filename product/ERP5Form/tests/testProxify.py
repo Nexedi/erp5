@@ -70,9 +70,12 @@ class TestProxify(unittest.TestCase):
     base_view.manage_addField('my_relation_string_field', 'Old Relation String Field', 'RelationStringField')
     base_view.manage_addField('my_gender', 'Gender', 'ListField')
     base_view.manage_addField('my_custom_description', 'Description', 'TextAreaField')
+    base_view.manage_addField('my_another_description', 'Description', 'TextAreaField')
     base_view.my_string_field.values['display_width'] = 30
     base_view.my_list_field.values['size'] = 1
     base_view.my_gender.values['items'] = [('Male', 'Male'), ('Female', 'Female')]
+    base_view.my_another_description.values['editable'] = 0
+
     # old instance does not have recently added properties.
     del base_view.my_relation_string_field.values['proxy_listbox_ids']
     del base_view.my_relation_string_field.values['relation_form_id']
@@ -92,6 +95,8 @@ class TestProxify(unittest.TestCase):
     person_view.manage_addField('my_name', 'Name', 'StringField')
     person_view.manage_addField('my_default_region', 'Country', 'ListField')
     person_view.manage_addField('my_custom_description', 'Description', 'TextAreaField')
+    person_view.manage_addField('my_custom_description2', 'Description', 'TextAreaField')
+    person_view.manage_addField('my_another_description', 'Description', 'TextAreaField')
     person_view.my_name.values['display_maxwidth'] = 20
     person_view.my_default_region.values['size'] = 1
     person_view.my_default_region.tales['items'] = TALESMethod('here/portal_categories/region/getCategoryChildTranslatedLogicalPathItemList')
@@ -101,6 +106,7 @@ class TestProxify(unittest.TestCase):
     person_view.my_career_subordination_title.values['portal_type'] = [('Organisation', 'Organisation')]
     person_view.my_career_subordination_title.values['proxy_listbox_ids'] = [('OrganisationModule_viewOrganisationList/listbox', 'Organisation')]
     person_view.my_custom_description.values['editable'] = 0
+    person_view.my_another_description.values['editable'] = 0
 
     global request
     request = DummyRequest()
@@ -138,13 +144,6 @@ class TestProxify(unittest.TestCase):
     self.assertEqual(field.get_value('items'), [('Male', 'Male'), ('Female', 'Female')])
 
     purgeFieldValueCache()
-    #Non editable fields
-    self.person_view.proxifyField({'my_custom_description': 'Base_view.my_custom_description'})
-    field = self.person_view.my_custom_description
-    self.assertEqual(field.is_delegated('title'), True)
-    self.assertEqual(field.get_value('title'), 'Description')
-    self.assertEqual(field.is_delegated('editable'), False)
-    self.assertEqual(field.get_value('editable'), 0)
 
 
   def test_multi_level_proxify(self):
@@ -188,6 +187,30 @@ class TestProxify(unittest.TestCase):
     self.assertEqual(field.is_delegated('size'), True)
     self.assertEqual(field.is_delegated('enabled'), True)
     self.assertEqual(field.is_delegated('description'), True)
+
+  def test_keep_empty_value(self):
+    #Non editable fields
+    self.person_view.proxifyField({'my_custom_description': 'Base_view.my_custom_description',
+                                   'my_custom_description2': 'Base_view.my_custom_description',
+                                   'my_another_description': 'Base_view.my_another_description'},
+                                  keep_empty_value=True)
+    field = self.person_view.my_custom_description
+    self.assertEqual(field.is_delegated('title'), True)
+    self.assertEqual(field.get_value('title'), 'Description')
+    self.assertEqual(field.is_delegated('editable'), False)
+    self.assertEqual(field.get_value('editable'), 0)
+
+    field = self.person_view.my_custom_description2
+    self.assertEqual(field.is_delegated('title'), True)
+    self.assertEqual(field.get_value('title'), 'Description')
+    self.assertEqual(field.is_delegated('editable'), True)
+    self.assertEqual(field.get_value('editable'), 1)
+
+    field = self.person_view.my_another_description
+    self.assertEqual(field.is_delegated('title'), True)
+    self.assertEqual(field.get_value('title'), 'Description')
+    self.assertEqual(field.is_delegated('editable'), True)
+    self.assertEqual(field.get_value('editable'), 0)
 
   def test_unproxify(self):
     #Proxify First
