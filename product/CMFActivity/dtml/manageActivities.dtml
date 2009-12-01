@@ -51,7 +51,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
     <th align="left" valign="top">Processing Node</th>
     <th align="left" valign="top">Priority</th>
     <th align="left" valign="top">Processing</th>
-    <th align="left" valign="top">Call traceback</th>
+    <th align="left" valign="top">Call Traceback</th>
   </tr>
   <dtml-in expr="getMessageList(include_processing=1)">
     <dtml-let path="'/'.join(object_path)">
@@ -65,7 +65,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
         <td align="left" valign="top"><dtml-var uid>
           <dtml-var expr="{'SQLDict':'(dict)','SQLQueue':'(queue)'}[activity]">
         </td>
-        <td align="left" valign="top"><a href="&dtml-path;"><dtml-var path></a></td>
+        <td align="left" valign="top"><a href="<dtml-var expr="REQUEST.physicalPathToURL(path)">"><dtml-var path></a></td>
         <td align="left" valign="top"><dtml-var method_id></td>
         <td align="left" valign="top">
           <dtml-if activity_kw><dtml-var expr="_.repr(activity_kw)[1:-1]" html_quote>
