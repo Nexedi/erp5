@@ -407,8 +407,6 @@ class TestERP5BankingCashMovement(TestERP5BankingMixin):
     self.assertEqual(state, 'empty')
     # get workflow history
     workflow_history = self.workflow_tool.getInfoFor(ob=self.cash_movement, name='history', wf_id='cash_movement_workflow')
-    # check its len is 2
-    #self.assertEqual(len(workflow_history), 2)
     # check we get an "Insufficient balance" message in the workflow history because of the invalid line
     msg = '%s' % (workflow_history[-1]['error_message'], )
     self.assertTrue('Insufficient balance' in msg, msg)
