@@ -7,6 +7,17 @@ from cgi import escape
 import types
 from DocumentTemplate.ustr import ustr
 from urlparse import urljoin
+from lxml import etree
+from lxml.etree import Element
+
+
+
+DRAW_URI = 'urn:oasis:names:tc:opendocument:xmlns:drawing:1.0'
+TEXT_URI = 'urn:oasis:names:tc:opendocument:xmlns:text:1.0'
+NSMAP = {
+          'draw': DRAW_URI,
+          'text': TEXT_URI
+        }
 
 class Widget:
   """A field widget that knows how to display itself as HTML.
@@ -156,6 +167,18 @@ class Widget:
     """
     return None
 
+  def render_odg(self, field, value, as_string=True, attr_dict=None,
+      REQUEST=None, render_prefix=None):
+    """
+      Default render odg for widget - to be overwritten in field classes.
+      Return a field value rendered in odg format.
+      as_string is True (default) the returned value is a string (xml
+      reprensation of the node), if it's False, the value returned is the node
+      object.
+      attr_dict can be used for additional parameters (like style).
+    """
+    return None
+
 class TextWidget(Widget):
   """Text widget
   """
@@ -232,6 +255,33 @@ class TextWidget(Widget):
       # except for editor field
       return "<span class='%s'>%s</span>" % (css_class, value)
     return value
+
+  def render_odg(self, field, value=None, as_string=True, attr_dict=None, REQUEST=None, render_prefix=None):
+    """
+      Return a field value rendered in odg format.
+      as_string is True (default) the returned value is a string (xml
+      reprensation of the node), if it's False, the value returned is the node
+      object.
+      attr_dict can be used for additional parameters (like style).
+    """
+    if attr_dict is None:
+      attr_dict = {}
+
+    draw_node = Element('{%s}%s' % (DRAW_URI, 'text-box'),
+        nsmap=NSMAP)
+    text_node = Element('{%s}%s' % (TEXT_URI, 'p'),
+        nsmap=NSMAP)
+
+    draw_node.append(text_node)
+
+    # get the field value
+    new_text_value = field.get_value('default')
+    text_node.text = new_text_value
+    text_node.attrib.update(attr_dict)
+
+    if as_string:
+      return etree.tostring(draw_node)
+    return draw_node
 
 TextWidgetInstance = TextWidget()
 
