@@ -167,6 +167,22 @@ class Widget:
     """
     return None
 
+  def render_odt(self, field, as_string, attr_dict=None):
+    """
+      Return a field value rendered in odt format.
+      - as_string return value as string or as xml object
+      - attr_dict can be used for additional attributes (like style).
+    """
+    if attr_dict is None:
+      attr_dict = {}
+    text_node = Element('{%s}%s' % (TEXT_URI, 'p'), nsmap=NSMAP)
+    # get the field value
+    text_node.text = field.get_value('default').decode('utf-8')
+    text_node.attrib.update(attr_dict)
+    if as_string:
+      return etree.tostring(text_node)
+    return text_node
+
   def render_odg(self, field, value, as_string=True, attr_dict=None,
       REQUEST=None, render_prefix=None):
     """
@@ -1182,6 +1198,22 @@ class DateTimeWidget(Widget):
 
   def render_pdf(self, field, value, render_prefix=None):
     return self.format_value(field, value, mode='pdf')
+
+  def render_odt(self, field, as_string, attr_dict=None):
+    """
+      Return a field value rendered in odt format.
+      - as_string return value as string or as xml object
+      - attr_dict can be used for additional attributes (like style).
+    """
+    if attr_dict is None:
+      attr_dict = {}
+    text_node = Element('{%s}%s' % (TEXT_URI, 'p'), nsmap=NSMAP)
+    # get the field value
+    text_node.text = self.format_value(field, field.get_value('default'), mode='pdf').decode('utf-8')
+    text_node.attrib.update(attr_dict)
+    if as_string:
+      return etree.tostring(text_node)
+    return text_node
 
 DateTimeWidgetInstance = DateTimeWidget()
 
