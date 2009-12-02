@@ -222,11 +222,11 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>resource_translated_title</string>
+                          <string>resource</string>
                           <string>Fabric Type</string>
                         </tuple>
                         <tuple>
-                          <string>visual_pattern_translated_title</string>
+                          <string>visual_pattern</string>
                           <string>Motive</string>
                         </tuple>
                         <tuple>
