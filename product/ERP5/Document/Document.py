@@ -919,7 +919,6 @@ class Document(PermanentURLMixIn, XMLObject, UrlMixIn, CachedConvertableMixin, S
         if existing_document.getPortalType() != self.getPortalType():
           raise ValueError, "[DMS] Ingestion may not change the type of an existing document"
         elif not _checkPermission(Permissions.ModifyPortalContent, existing_document):
-          self.setUniqueReference(suffix='unauthorized')
           raise Unauthorized, "[DMS] You are not allowed to update the existing document which has the same coordinates (id %s)" % existing_document.getId()
         else:
           update_kw = {}
