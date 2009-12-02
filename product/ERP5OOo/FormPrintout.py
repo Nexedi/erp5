@@ -209,7 +209,9 @@ class FormPrintout(Implicit, Persistent, RoleManager, Item):
   def _createStrategy(slef, content_type=''):
     if guess_extension(content_type) == '.odt':
       return ODTStrategy()
-    raise ValueError, 'Do not support the template type:%s' % content_type
+    if guess_extension(content_type) == '.odg':
+      return ODGStrategy()
+    raise ValueError, 'Template type: %s is not supported' % content_type
 
   def _oooConvertByFormat(self, printout, content_type=None, extra_context={}, REQUEST=None):
     """
@@ -1042,3 +1044,27 @@ class ODFStrategy(Implicit):
 class ODTStrategy(ODFStrategy):
   """ODTStrategy create a ODT Document from a form and a ODT template"""
   pass
+
+class ODGStrategy(ODFStrategy):
+  """ODGStrategy create a ODG Document from a form and a ODG template"""
+
+  def _replaceXmlByForm(self, element_tree=None, form=None, here=None,
+                           extra_context=None, ooo_builder=None, iteration_index=0):
+
+    field_list = form.get_fields(include_disabled=1)
+    REQUEST = get_request()
+    for (count, field) in enumerate(field_list):
+      field_value = self._renderField(field)
+      value = self._toUnicodeString(field_value)
+      text_xpath = '//draw:frame[@draw:name="%s"]/*' % field.id
+      node_list = element_tree.xpath(text_xpath, namespaces=element_tree.nsmap)
+      if len(node_list) is 0:
+        return element_tree
+
+      new_node = field.widget.render_odg(field, as_string=False)
+      for node in node_list:
+        if new_node is not None:
+          parent_node = node.getparent()
+          parent_node.replace(node, new_node)
+
+      return element_tree
