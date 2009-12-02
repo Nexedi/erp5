@@ -2780,14 +2780,6 @@ class TestAccountingWithSequences(ERP5TypeTestCase):
     """Returns list of BT to be installed."""
     return ('erp5_base', 'erp5_pdm', 'erp5_trade', 'erp5_accounting', )
 
-  def getAccountingModule(self):
-    return getattr(self.getPortal(), 'accounting_module',
-           getattr(self.getPortal(), 'accounting', None))
-  
-  def getAccountModule(self) :
-    return getattr(self.getPortal(), 'account_module',
-           getattr(self.getPortal(), 'account', None))
-  
   # XXX
   def playSequence(self, sequence_string, quiet=1) :
     sequence_list = SequenceList()
@@ -3002,39 +2994,37 @@ class TestAccountingWithSequences(ERP5TypeTestCase):
 
   def stepCreateCurrencies(self, sequence, **kw) :
     """Create some currencies. """
-    # TODO: remove
     sequence.edit(EUR=self.EUR, USD=self.USD, YEN=self.YEN)
   
   def createAccounts(self):
     """Create some accounts.
     """
-    receivable = self.receivable_account = self.getAccountModule().newContent(
+    account_module = self.portal.account_module
+    receivable = self.receivable_account = account_module.newContent(
           title = 'receivable',
           portal_type = self.account_portal_type,
           account_type = 'asset/receivable' )
-    payable = self.payable_account = self.getAccountModule().newContent(
+    payable = self.payable_account = account_module.newContent(
           title = 'payable',
           portal_type = self.account_portal_type,
           account_type = 'liability/payable' )
-    expense = self.expense_account = self.getAccountModule().newContent(
+    expense = self.expense_account = account_module.newContent(
           title = 'expense',
           portal_type = self.account_portal_type,
           account_type = 'expense' )
-    income = self.income_account = self.getAccountModule().newContent(
+    income = self.income_account = account_module.newContent(
           title = 'income',
           portal_type = self.account_portal_type,
           account_type = 'income' )
-    collected_vat = self.collected_vat_account = self\
-                                        .getAccountModule().newContent(
+    collected_vat = self.collected_vat_account = account_module.newContent(
           title = 'collected_vat',
           portal_type = self.account_portal_type,
           account_type = 'liability/payable/collected_vat' )
-    refundable_vat = self.refundable_vat_account = self\
-                                        .getAccountModule().newContent(
+    refundable_vat = self.refundable_vat_account = account_module.newContent(
           title = 'refundable_vat',
           portal_type = self.account_portal_type,
           account_type = 'asset/receivable/refundable_vat' )
-    bank = self.bank_account = self.getAccountModule().newContent(
+    bank = self.bank_account = self.account_module.newContent(
           title = 'bank',
           portal_type = self.account_portal_type,
           account_type = 'asset/cash/bank')
@@ -3065,7 +3055,6 @@ class TestAccountingWithSequences(ERP5TypeTestCase):
 
   def stepCreateAccounts(self, sequence, **kw) :
     """Create necessary accounts. """
-    # XXX remove me !  
     sequence.edit( receivable_account=self.receivable_account,
                    payable_account=self.payable_account,
                    expense_account=self.expense_account,
@@ -3129,7 +3118,7 @@ class TestAccountingWithSequences(ERP5TypeTestCase):
     for invoice_prop in invoice_prop_list :
       i += 1
       date = date_list[i % len(date_list)]
-      invoice = self.getAccountingModule().newContent(
+      invoice = self.portal.accounting_module.newContent(
           portal_type = self.sale_invoice_portal_type,
           source_section_value = sequence.get('vendor'),
           source_value = sequence.get('vendor'),
@@ -3169,7 +3158,7 @@ class TestAccountingWithSequences(ERP5TypeTestCase):
                       portal_type = 'Organisation' )
     other_destination = self.getOrganisationModule().newContent(
                       portal_type = 'Organisation' )
-    invoice = self.getAccountingModule().newContent(
+    invoice = self.portal.accounting_module.newContent(
         portal_type = self.sale_invoice_portal_type,
         source_section_value = other_source,
         source_value = other_source,
@@ -3387,7 +3376,7 @@ class TestAccountingWithSequences(ERP5TypeTestCase):
       kw['stop_date'] = stop_date
 
     # create the transaction.
-    accounting_transaction = self.getAccountingModule().newContent(
+    accounting_transaction = self.portal.accounting_module.newContent(
       portal_type=portal_type,
       start_date=kw['start_date'],
       stop_date=kw['stop_date'],
@@ -3769,7 +3758,7 @@ class TestAccountingWithSequences(ERP5TypeTestCase):
                       lines_count - empty_lines_count)
     
     # we don't remove empty lines if there is only empty lines
-    accounting_transaction = self.getAccountingModule().newContent(
+    accounting_transaction = self.portal.accounting_module.newContent(
                       portal_type=self.accounting_transaction_portal_type,
                       created_by_builder=1)
     for i in range(3):
