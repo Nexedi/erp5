@@ -114,8 +114,9 @@ class RuleMixin:
     """
     # We suppose here that we have an IMovementCollection in hand
     decision_movement_list = context.getMovementList()
-    prevision_movement_list = movement_generator(self._getMovementGeneratorContext(),
-            movement_list=self._getMovementGeneratorMovementList(), rounding=rounding)
+    prevision_movement_list = movement_generator.getAggregatedMovementList(
+      self._getMovementGeneratorContext(context),
+      movement_list=self._getMovementGeneratorMovementList(), rounding=rounding)
 
     # Get divergence testers
     tester_list = self._getMatchingTesterList()
