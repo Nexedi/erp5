@@ -428,7 +428,7 @@ class ERP5TypeInformation(XMLObject,
       property_list = list(getattr(ob.__class__, '_properties', []))
       self.updatePropertySheetDefinitionDict({'_properties': property_list})
       for property_sheet in getClassPropertyList(ob.__class__):
-        property_list += property_sheet._properties
+        property_list += getattr(property_sheet, '_properties', () )
 
       return_set = set()
       for property in property_list:
