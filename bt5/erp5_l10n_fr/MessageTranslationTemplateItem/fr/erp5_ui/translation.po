@@ -720,6 +720,9 @@ msgstr "Vêtements à définir"
 msgid "Apparel Clothes"
 msgstr "Vêtements"
 
+msgid "Apparel Color Range Variation"
+msgstr "Coloris de gamme"
+
 msgid "Apparel Colour Range"
 msgstr "Gamme matière"
 
@@ -796,7 +799,7 @@ msgid "Apparel Model"
 msgstr "Modèle"
 
 msgid "Apparel Model Colour Variation"
-msgstr "Coloris"
+msgstr "Variante coloris"
 
 msgid "Apparel Model Colour Variation already exists with this price. Check your line."
 msgstr "Cette référence a déjà été saisie au même prix !"
@@ -809,6 +812,9 @@ msgstr "Modèles"
 
 msgid "Apparel Model Module"
 msgstr "Module des modèles"
+
+msgid "Apparel Model Morphology Variation"
+msgstr "Variante morphologie"
 
 msgid "Apparel Model Template"
 msgstr "Modèle de référence"
@@ -963,7 +969,7 @@ msgstr "Demander l'analyse"
 msgid "Ask For Modeling"
 msgstr "Demander l'étude de modélisme"
 
-msgid "Ask For Prototyping "
+msgid "Ask For Prototyping"
 msgstr "Demander le prototypage"
 
 msgid "Ask For Quotation"
