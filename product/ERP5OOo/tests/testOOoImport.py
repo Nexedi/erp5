@@ -455,6 +455,15 @@ class TestOOoImport(ERP5TypeTestCase):
     organisation_module.Base_importFile(import_file=f, listbox=listbox)
 
   def stepAuthorImportFile(self, sequence=None, sequence_list=None, **kw):
+    # create some regions
+    region = self.portal.portal_categories.region
+    europe = region.newContent(portal_type='Category',
+                      title='Europe',
+                      id='europe')
+    europe.newContent(portal_type='Category',
+                      title='France',
+                      id='france')
+
     user_name = 'author'
     user_folder = self.portal.acl_users
     user_folder._doAddUser(user_name, '', ['Author', 'Member'], [])
@@ -474,7 +483,9 @@ class TestOOoImport(ERP5TypeTestCase):
     { 'listbox_key': '003',
       'portal_type_property_list':'Person.gender'},
     { 'listbox_key': '004',
-      'portal_type_property_list':'Person.function'}
+      'portal_type_property_list':'Person.function'},
+    { 'listbox_key': '005',
+      'portal_type_property_list':'Person.region'}
     )
     person_module.Base_importFile(import_file=f, listbox=listbox)
 
