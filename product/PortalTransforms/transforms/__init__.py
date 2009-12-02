@@ -36,7 +36,7 @@ modules = [
     'image_to_tiff',  # transforms any image to a TIFF image
     'image_to_bmp',   # transforms any image to a BMP image
     'lynx_dump',      # lynx -dump
-    'w3m dump',
+    'w3m_dump',
     'python',         # python source files, no dependancies
     'identity',       # identity transform, no dependancies
     ]
