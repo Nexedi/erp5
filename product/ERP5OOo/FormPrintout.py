@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2009 Nexedi KK and Contributors. All Rights Reserved.
@@ -128,7 +129,7 @@ class FormPrintout(Implicit, Persistent, RoleManager, Item):
   manage_options = ((
     {'label':'Edit', 'action':'manage_editFormPrintout'},
     {'label':'View', 'action': '' }, ) + Item.manage_options)
-  
+
   security.declareProtected('View management screens', 'manage_editFormPrintout')
   manage_editFormPrintout = PageTemplateFile('www/FormPrintout_manageEdit', globals(),
                                              __name__='manage_editFormPrintout')
@@ -137,7 +138,7 @@ class FormPrintout(Implicit, Persistent, RoleManager, Item):
   # alias definition to do 'add_and_edit'
   security.declareProtected('View management screens', 'manage_main')
   manage_main = manage_editFormPrintout
-  
+
   # default attributes
   template = None
   form_name = None
@@ -159,7 +160,7 @@ class FormPrintout(Implicit, Persistent, RoleManager, Item):
   security.declareProtected('View', 'index_html')
   def index_html(self, icon=0, preview=0, width=None, height=None, REQUEST=None):
     """Render and view a printout document."""
-    
+
     obj = getattr(self, 'aq_parent', None)
     if obj is not None:
       container = obj.aq_inner.aq_parent
@@ -191,7 +192,7 @@ class FormPrintout(Implicit, Persistent, RoleManager, Item):
 
   security.declareProtected('View', '__call__')
   __call__ = index_html
-                
+
   security.declareProtected('Manage properties', 'doSettings')
   def doSettings(self, REQUEST, title='', form_name='', template=''):
     """Change title, form_name, template."""
@@ -253,7 +254,7 @@ class ODFStrategy(Implicit):
   """ODFStrategy creates a ODF Document. """
 
   odf_existent_name_list = []
-  
+
   def render(self, extra_context={}):
     """Render a odf document, form as a content, template as a template.
 
@@ -284,7 +285,7 @@ class ODFStrategy(Implicit):
     # Create a new builder instance
     ooo_builder = OOoBuilder(ooo_document)
     self.odf_existent_name_list = ooo_builder.getNameList()
-    
+
     # content.xml
     ooo_builder = self._replaceContentXml(ooo_builder=ooo_builder, extra_context=extra_context)
     # styles.xml
@@ -322,7 +323,7 @@ class ODFStrategy(Implicit):
                                                            base_name=base_name,
                                                            ooo_builder=ooo_builder)
     content_xml = etree.tostring(content_element_tree, encoding='utf-8')
- 
+
     # Replace content.xml in master openoffice template
     ooo_builder.replace('content.xml', content_xml)
     return ooo_builder
@@ -406,7 +407,7 @@ class ODFStrategy(Implicit):
     element_tree = self._replaceNodeViaRangeReference(element_tree=element_tree, field=field)
     element_tree = self._replaceNodeViaPointReference(element_tree=element_tree, field=field)
     return element_tree
-  
+
   def _renderField(self, field):
     # XXX It looks ugly to use render_pdf to extract text. Probably
     # it should be renamed to render_text.
@@ -414,7 +415,7 @@ class ODFStrategy(Implicit):
 
   def _replaceNodeViaPointReference(self, element_tree=None, field=None, iteration_index=0):
     """Replace text node via an ODF point reference.
-    
+
     point reference example:
      <text:reference-mark text:name="invoice-date"/>
     """
@@ -440,10 +441,10 @@ class ODFStrategy(Implicit):
                                xpath=reference_xpath,
                                element_tree=element_tree)
     return element_tree
-  
+
   def _replaceNodeViaRangeReference(self, element_tree=None, field=None, iteration_index=0):
     """Replace text node via an ODF ranged reference.
-    
+
     range reference example:
     <text:reference-mark-start text:name="week"/>Monday<text:reference-mark-end text:name="week"/>
     or
@@ -484,7 +485,7 @@ class ODFStrategy(Implicit):
 
   def _appendParagraphsWithLineList(self, target_node=None, line_list=None):
     """Create paragraphs using an ERP5 Form line list.
-   
+
     Keyword arguments:
     target_node -- target text node which is marked by an ODF reference. 
     line_list -- an ERP5 Form line list 
@@ -516,7 +517,7 @@ class ODFStrategy(Implicit):
     for (index, paragraph) in enumerate(paragraph_list):
       parent_node.insert(paragraph_node_index, paragraph)
       paragraph_node_index = paragraph_node_index + 1
-      
+
   def _replaceXmlByReportSection(self, element_tree=None, extra_context=None, 
                                  report_method=None, base_name=None, 
                                  ooo_builder=None):
@@ -548,7 +549,7 @@ class ODFStrategy(Implicit):
       here = report_item.getObject(portal_object)
       form_id = report_item.getFormId()
       form = getattr(here, form_id)
-      
+
       target_element_tree = deepcopy(temporary_element_tree)
       # remove original target in the ODF template 
       if index is 0:
@@ -599,9 +600,9 @@ class ODFStrategy(Implicit):
     if len(report_section_list) is 0:
       office_body.remove(original_target)
       return None  
-   
+
     return (target_xpath, original_target)
-  
+
   def _setUniqueElementName(self, base_name='', iteration_index=0, xpath='', element_tree=None):
     """create a unique element name and set it to the element tree
 
@@ -629,7 +630,7 @@ class ODFStrategy(Implicit):
     name_attribute = getNameAttribute(target_element)
     if name_attribute is not None:
       target_element.set(name_attribute, odf_element_name)
- 
+
   def _replaceXmlByFormbox(self,
                            element_tree=None,
                            field=None,
@@ -751,8 +752,8 @@ class ODFStrategy(Implicit):
     elif resize_h < h:
       h = resize_h
     return (str(w) + unit, str(h) + unit)
-   
-  
+
+
   def _appendTableByListbox(self,
                             element_tree=None, 
                             listbox=None,
@@ -831,7 +832,7 @@ class ODFStrategy(Implicit):
                                xpath=table_xpath,
                                element_tree=newtable)
     parent_paragraph.insert(target_index, newtable)
- 
+
     return element_tree
 
   def _copyRowStyle(self, table_row_list=[], has_header_rows=False):
@@ -843,7 +844,7 @@ class ODFStrategy(Implicit):
       odf_cell_list = row.findall("{%s}table-cell" % row.nsmap['table'])
       for odf_cell in odf_cell_list:
         self._removeColumnValue(odf_cell)
-          
+
     row_top = None
     row_middle = None
     row_bottom = None
@@ -879,7 +880,7 @@ class ODFStrategy(Implicit):
         name = reference_element.attrib['{%s}name' % table_row.nsmap['text']]
         style_name_row_dictionary[name] = deepcopy(table_row)
     return style_name_row_dictionary
-    
+
   def _updateColumnValue(self, row=None, listbox_column_list=[]):
     odf_cell_list = row.findall("{%s}table-cell" % row.nsmap['table'])
     odf_cell_list_size = len(odf_cell_list)
@@ -941,7 +942,7 @@ class ODFStrategy(Implicit):
 
   def _valueAsOdfXmlElement(self, value=None, element_tree=None):
     """values as ODF XML element
-    
+
     replacing:
       \t -> tabs
       \n -> line-breaks
@@ -964,7 +965,7 @@ class ODFStrategy(Implicit):
     template = '<text:p xmlns:text="%s">%s</text:p>'
     fragment_element_tree = etree.XML(template % (text_namespace, translated_value))
     return fragment_element_tree
-  
+
   def _removeColumnValue(self, column):
     # to eliminate a default value, remove "office:*" attributes.
     # if remaining these attribetes, the column shows its default value,
@@ -999,7 +1000,7 @@ class ODFStrategy(Implicit):
       if key.endswith('style-name'):
         return (key, attrib[key])
     return None
-  
+
   def _getColumnValueAttribute(self, column):
     attrib = column.attrib
     for key in attrib.keys():
