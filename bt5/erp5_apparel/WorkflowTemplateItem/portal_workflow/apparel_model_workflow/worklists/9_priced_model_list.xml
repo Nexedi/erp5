@@ -82,7 +82,7 @@ apparel_model_module/view?validation_state=priced&local_roles:list=Assignor&rese
             <value>
               <dictionary>
                 <item>
-                    <key> <string>simulation_state</string> </key>
+                    <key> <string>validation_state</string> </key>
                     <value>
                       <tuple>
                         <string>priced</string>

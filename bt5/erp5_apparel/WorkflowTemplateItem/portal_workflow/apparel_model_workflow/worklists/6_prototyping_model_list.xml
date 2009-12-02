@@ -83,7 +83,7 @@ apparel_model_module/view?validation_state=prototyping&local_roles:list=Assignor
             <value>
               <dictionary>
                 <item>
-                    <key> <string>simulation_state</string> </key>
+                    <key> <string>validation_state</string> </key>
                     <value>
                       <tuple>
                         <string>prototyping</string>
