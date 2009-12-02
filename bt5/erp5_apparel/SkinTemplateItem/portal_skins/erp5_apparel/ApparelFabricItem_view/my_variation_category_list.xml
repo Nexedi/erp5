@@ -154,6 +154,10 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>first_item</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>hash_script_id</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -360,18 +364,15 @@
   <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.Formulator.TALESField</string>
-          <string>TALESMethod</string>
-        </tuple>
-        <none/>
+        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.getVariationRangeCategoryItemList()</string> </value>
+            <value> <string>python: here.getVariationRangeCategoryItemList(display_base_category=0, omit_individual_variation=1, display_method_id=preferences.getPreference(\'preferred_category_child_item_list_method_id\', \'getCategoryChildCompactLogicalPathItemList\'))</string> </value>
         </item>
       </dictionary>
     </pickle>

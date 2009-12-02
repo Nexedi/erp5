@@ -13,9 +13,9 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
+                <string>items</string>
                 <string>size</string>
                 <string>title</string>
-                <string>items</string>
               </list>
             </value>
         </item>
@@ -72,7 +72,15 @@
                     </value>
                 </item>
                 <item>
+                    <key> <string>size</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>target</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -89,6 +97,12 @@
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string>Base_viewApparelFieldLibrary</string> </value>
+                </item>
+                <item>
+                    <key> <string>items</string> </key>
+                    <value>
+                      <list/>
+                    </value>
                 </item>
                 <item>
                     <key> <string>size</string> </key>
@@ -119,7 +133,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>here/getVariationRangeCategoryItemList</string> </value>
+            <value> <string>python: here.getVariationRangeCategoryItemList(display_base_category=0, omit_individual_variation=1, display_method_id=preferences.getPreference(\'preferred_category_child_item_list_method_id\', \'getCategoryChildCompactLogicalPathItemList\'))</string> </value>
         </item>
       </dictionary>
     </pickle>
