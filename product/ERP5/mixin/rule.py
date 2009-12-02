@@ -132,7 +132,7 @@ class RuleMixin:
         else:
           tester_key.append(None)
       tester_key = tuple(tester_key)
-      decision_movement_dict.setdefaults(tester_key, []).append(movement)
+      decision_movement_dict.setdefault(tester_key, []).append(movement)
     prevision_movement_dict = {}
     for movement in prevision_movement_list:
       tester_key = []
@@ -142,7 +142,7 @@ class RuleMixin:
         else:
           tester_key.append(None)
       tester_key = tuple(tester_key)
-      prevision_movement_dict.setdefaults(tester_key, []).append(movement)
+      prevision_movement_dict.setdefault(tester_key, []).append(movement)
 
     # Prepare a mapping between prevision and decision
     #   The prevision_to_decision_map is a list of tuples
