@@ -1601,6 +1601,7 @@ def createDefaultAccessors(property_holder, id, prop = None,
 
     prop  -- the property definition of the property
   """
+  override = prop.get('override',0)
   ######################################################
   # Create Translation Acquired Accessors.
   if prop.get('translation_acquired_property_id'):
@@ -1636,62 +1637,62 @@ def createDefaultAccessors(property_holder, id, prop = None,
                 )
     # Base Getter
     accessor_name = 'get' + UpperCase(id)
-    if not hasattr(property_holder, accessor_name) or prop.get('override',0):
+    if not hasattr(property_holder, accessor_name) or override:
       property_holder.registerAccessor(accessor_name, id, Acquired.DefaultGetter, accessor_args)
       property_holder.declareProtected( read_permission, accessor_name )
     accessor_name = '_baseGet' + UpperCase(id)
-    if not hasattr(property_holder, accessor_name) or prop.get('override',0):
+    if not hasattr(property_holder, accessor_name) or override:
       property_holder.registerAccessor(accessor_name, id, Acquired.DefaultGetter, accessor_args)
     # Default Getter
     accessor_name = 'getDefault' + UpperCase(id)
-    if not hasattr(property_holder, accessor_name) or prop.get('override',0):
+    if not hasattr(property_holder, accessor_name) or override:
       property_holder.registerAccessor(accessor_name, id, Acquired.DefaultGetter, accessor_args)
       property_holder.declareProtected( read_permission, accessor_name )
     accessor_name = '_baseGetDefault' + UpperCase(id)
-    if not hasattr(property_holder, accessor_name) or prop.get('override',0):
+    if not hasattr(property_holder, accessor_name) or override:
       property_holder.registerAccessor(accessor_name, id, Acquired.DefaultGetter, accessor_args)
     # List Getter
     if prop['type'] in list_types or prop.get('multivalued', 0):
       accessor_name = 'get' + UpperCase(id) + 'List'
-      if not hasattr(property_holder, accessor_name) or prop.get('override',0):
+      if not hasattr(property_holder, accessor_name) or override:
         property_holder.registerAccessor(accessor_name, id, Acquired.ListGetter, accessor_args)
         property_holder.declareProtected( read_permission, accessor_name )
       accessor_name = '_baseGet' + UpperCase(id) + 'List'
-      if not hasattr(property_holder, accessor_name) or prop.get('override',0):
+      if not hasattr(property_holder, accessor_name) or override:
         property_holder.registerAccessor(accessor_name, id, Acquired.ListGetter, accessor_args)
       # Set Getter
       accessor_name = 'get' + UpperCase(id) + 'Set'
-      if not hasattr(property_holder, accessor_name) or prop.get('override',0):
+      if not hasattr(property_holder, accessor_name) or override:
         property_holder.registerAccessor(accessor_name, id, Acquired.SetGetter, accessor_args)
         property_holder.declareProtected( read_permission, accessor_name )
       accessor_name = '_baseGet' + UpperCase(id) + 'Set'
-      if not hasattr(property_holder, accessor_name) or prop.get('override',0):
+      if not hasattr(property_holder, accessor_name) or override:
         property_holder.registerAccessor(accessor_name, id, Acquired.SetGetter, accessor_args)
     if prop['type'] == 'content':
       #LOG('Value Object Accessor', 0, prop['id'])
       # Base Getter
       accessor_name = 'get' + UpperCase(id) + 'Value'
-      if not hasattr(property_holder, accessor_name) or prop.get('override',0):
+      if not hasattr(property_holder, accessor_name) or override:
         property_holder.registerAccessor(accessor_name, id, Acquired.DefaultGetter, accessor_args)
         property_holder.declareProtected( read_permission, accessor_name )
       accessor_name = '_baseGet' + UpperCase(id) + 'Value'
-      if not hasattr(property_holder, accessor_name) or prop.get('override',0):
+      if not hasattr(property_holder, accessor_name) or override:
         property_holder.registerAccessor(accessor_name, id, Acquired.DefaultGetter, accessor_args)
       # Default Getter
       accessor_name = 'getDefault' + UpperCase(id) + 'Value'
-      if not hasattr(property_holder, accessor_name) or prop.get('override',0):
+      if not hasattr(property_holder, accessor_name) or override:
         property_holder.registerAccessor(accessor_name, id, Acquired.DefaultGetter, accessor_args)
         property_holder.declareProtected( read_permission, accessor_name )
       accessor_name = '_baseGetDefault' + UpperCase(id) + 'Value'
-      if not hasattr(property_holder, accessor_name) or prop.get('override',0):
+      if not hasattr(property_holder, accessor_name) or override:
         property_holder.registerAccessor(accessor_name, id, Acquired.DefaultGetter, accessor_args)
       # List Getter
       accessor_name = 'get' + UpperCase(id) + 'ValueList'
-      if not hasattr(property_holder, accessor_name) or prop.get('override',0):
+      if not hasattr(property_holder, accessor_name) or override:
         property_holder.registerAccessor(accessor_name, id, Acquired.ListGetter, accessor_args)
         property_holder.declareProtected( read_permission, accessor_name )
       accessor_name = '_baseGet' + UpperCase(id) + 'ValueList'
-      if not hasattr(property_holder, accessor_name) or prop.get('override',0):
+      if not hasattr(property_holder, accessor_name) or override:
         property_holder.registerAccessor(accessor_name, id, Acquired.ListGetter, accessor_args)
       # AcquiredProperty Getters
       if prop.has_key('acquired_property_id'):
@@ -1717,43 +1718,43 @@ def createDefaultAccessors(property_holder, id, prop = None,
                 (prop['type'] in list_types or prop.get('multivalued', 0)),
                 (prop['type'] == 'tales')
                 )
-          if not hasattr(property_holder, accessor_name) or prop.get('override',0):
+          if not hasattr(property_holder, accessor_name) or override:
             property_holder.registerAccessor(accessor_name, composed_id, AcquiredProperty.Getter, accessor_args)
             property_holder.declareProtected( read_permission, accessor_name )
           accessor_name = '_baseGet' + UpperCase(composed_id)
-          if not hasattr(property_holder, accessor_name) or prop.get('override',0):
+          if not hasattr(property_holder, accessor_name) or override:
             property_holder.registerAccessor(accessor_name, composed_id, AcquiredProperty.Getter, accessor_args)
           # Default Getter
           accessor_name = 'getDefault' + UpperCase(composed_id)
-          if not hasattr(property_holder, accessor_name) or prop.get('override',0):
+          if not hasattr(property_holder, accessor_name) or override:
             property_holder.registerAccessor(accessor_name, composed_id, AcquiredProperty.DefaultGetter, accessor_args)
             property_holder.declareProtected( read_permission, accessor_name )
           accessor_name = '_baseGetDefault' + UpperCase(composed_id)
-          if not hasattr(property_holder, accessor_name) or prop.get('override',0):
+          if not hasattr(property_holder, accessor_name) or override:
             property_holder.registerAccessor(accessor_name, composed_id, AcquiredProperty.DefaultGetter, accessor_args)
           # List Getter
           ################# NOT YET
           # Setter
           accessor_name = 'set' + UpperCase(composed_id)
-          if not hasattr(property_holder, accessor_name) or prop.get('override',0):
+          if not hasattr(property_holder, accessor_name) or override:
             property_holder.registerAccessor(accessor_name, '_' + accessor_name, Alias.Reindex, ())
             property_holder.declareProtected( write_permission, accessor_name )
           accessor_name = '_set' + UpperCase(composed_id)
-          if not hasattr(property_holder, accessor_name) or prop.get('override',0):
+          if not hasattr(property_holder, accessor_name) or override:
             property_holder.registerAccessor(accessor_name, composed_id, AcquiredProperty.Setter, accessor_args)
           accessor_name = '_baseSet' + UpperCase(composed_id)
-          if not hasattr(property_holder, accessor_name) or prop.get('override',0):
+          if not hasattr(property_holder, accessor_name) or override:
             property_holder.registerAccessor(accessor_name, composed_id, AcquiredProperty.Setter, accessor_args)
           # Default Setter
           accessor_name = 'setDefault' + UpperCase(composed_id)
-          if not hasattr(property_holder, accessor_name) or prop.get('override',0):
+          if not hasattr(property_holder, accessor_name) or override:
             property_holder.registerAccessor(accessor_name, '_' + accessor_name, Alias.Reindex, ())
             property_holder.declareProtected( write_permission, accessor_name )
           accessor_name = '_setDefault' + UpperCase(composed_id)
-          if not hasattr(property_holder, accessor_name) or prop.get('override',0):
+          if not hasattr(property_holder, accessor_name) or override:
             property_holder.registerAccessor(accessor_name, composed_id, AcquiredProperty.DefaultSetter, accessor_args)
           accessor_name = '_baseSetDefault' + UpperCase(composed_id)
-          if not hasattr(property_holder, accessor_name) or prop.get('override',0):
+          if not hasattr(property_holder, accessor_name) or override:
             property_holder.registerAccessor(accessor_name, composed_id, AcquiredProperty.DefaultSetter, accessor_args)
           # List Getter
           ################# NOT YET
@@ -1766,110 +1767,110 @@ def createDefaultAccessors(property_holder, id, prop = None,
     accessor_args = (prop['type'], prop.get('default'), prop.get('storage_id'))
     # Create getters for a list property
     accessor_name = 'get' + UpperCase(id)
-    if not hasattr(property_holder, accessor_name) or prop.get('override',0):
+    if not hasattr(property_holder, accessor_name) or override:
       property_holder.registerAccessor(accessor_name, id, List.Getter, accessor_args)
       property_holder.declareProtected( read_permission, accessor_name )
     accessor_name = '_baseGet' + UpperCase(id)
-    if not hasattr(property_holder, accessor_name) or prop.get('override',0):
+    if not hasattr(property_holder, accessor_name) or override:
       property_holder.registerAccessor(accessor_name, id, List.Getter, accessor_args)
     accessor_name = 'getDefault' + UpperCase(id)
-    if not hasattr(property_holder, accessor_name) or prop.get('override',0):
+    if not hasattr(property_holder, accessor_name) or override:
       property_holder.registerAccessor(accessor_name, id, List.DefaultGetter, accessor_args)
       property_holder.declareProtected( read_permission, accessor_name )
     accessor_name = '_baseGetDefault' + UpperCase(id)
-    if not hasattr(property_holder, accessor_name) or prop.get('override',0):
+    if not hasattr(property_holder, accessor_name) or override:
       property_holder.registerAccessor(accessor_name, id, List.DefaultGetter, accessor_args)
     accessor_name = 'get' + UpperCase(id) + 'List'
-    if not hasattr(property_holder, accessor_name) or prop.get('override',0):
+    if not hasattr(property_holder, accessor_name) or override:
       property_holder.registerAccessor(accessor_name, id, List.ListGetter, accessor_args)
       property_holder.declareProtected( read_permission, accessor_name )
     accessor_name = '_baseGet' + UpperCase(id) + 'List'
-    if not hasattr(property_holder, accessor_name) or prop.get('override',0):
+    if not hasattr(property_holder, accessor_name) or override:
       property_holder.registerAccessor(accessor_name, id, List.ListGetter, accessor_args)
     accessor_name = 'get' + UpperCase(id) + 'Set'
-    if not hasattr(property_holder, accessor_name) or prop.get('override',0):
+    if not hasattr(property_holder, accessor_name) or override:
       property_holder.registerAccessor(accessor_name, id, List.SetGetter, accessor_args)
       property_holder.declareProtected( read_permission, accessor_name )
     accessor_name = '_baseGet' + UpperCase(id) + 'Set'
-    if not hasattr(property_holder, accessor_name) or prop.get('override',0):
+    if not hasattr(property_holder, accessor_name) or override:
       property_holder.registerAccessor(accessor_name, id, List.SetGetter, accessor_args)
   elif prop['type'] == 'content':
     accessor_args = (prop['type'], prop.get('portal_type'), prop.get('storage_id'))
     # Create getters for a list property
     accessor_name = 'get' + UpperCase(id)
-    if not hasattr(property_holder, accessor_name) or prop.get('override',0):
+    if not hasattr(property_holder, accessor_name) or override:
       property_holder.registerAccessor(accessor_name, id, Content.Getter, accessor_args)
       property_holder.declareProtected( read_permission, accessor_name )
     accessor_name = '_baseGet' + UpperCase(id)
-    if not hasattr(property_holder, accessor_name) or prop.get('override',0):
+    if not hasattr(property_holder, accessor_name) or override:
       property_holder.registerAccessor(accessor_name, id, Content.Getter, accessor_args)
     accessor_name = 'getDefault' + UpperCase(id)
-    if not hasattr(property_holder, accessor_name) or prop.get('override',0):
+    if not hasattr(property_holder, accessor_name) or override:
       property_holder.registerAccessor(accessor_name, id, Content.DefaultGetter, accessor_args)
       property_holder.declareProtected( read_permission, accessor_name )
     accessor_name = '_baseGetDefault' + UpperCase(id)
-    if not hasattr(property_holder, accessor_name) or prop.get('override',0):
+    if not hasattr(property_holder, accessor_name) or override:
       property_holder.registerAccessor(accessor_name, id, Content.DefaultGetter, accessor_args)
     accessor_name = 'get' + UpperCase(id) + 'List'
-    if not hasattr(property_holder, accessor_name) or prop.get('override',0):
+    if not hasattr(property_holder, accessor_name) or override:
       property_holder.registerAccessor(accessor_name, id, Content.ListGetter, accessor_args)
       property_holder.declareProtected( read_permission, accessor_name )
     accessor_name = '_baseGet' + UpperCase(id) + 'List'
-    if not hasattr(property_holder, accessor_name) or prop.get('override',0):
+    if not hasattr(property_holder, accessor_name) or override:
       property_holder.registerAccessor(accessor_name, id, Content.ListGetter, accessor_args)
     # Create value getters for a list property
     accessor_name = 'get' + UpperCase(id) + 'Value'
-    if not hasattr(property_holder, accessor_name) or prop.get('override',0):
+    if not hasattr(property_holder, accessor_name) or override:
       property_holder.registerAccessor(accessor_name, id, Content.ValueGetter, accessor_args)
       property_holder.declareProtected( read_permission, accessor_name )
     accessor_name = '_baseGet' + UpperCase(id) + 'Value'
-    if not hasattr(property_holder, accessor_name) or prop.get('override',0):
+    if not hasattr(property_holder, accessor_name) or override:
       property_holder.registerAccessor(accessor_name, id, Content.ValueGetter, accessor_args)
     accessor_name = 'getDefault' + UpperCase(id) + 'Value'
-    if not hasattr(property_holder, accessor_name) or prop.get('override',0):
+    if not hasattr(property_holder, accessor_name) or override:
       property_holder.registerAccessor(accessor_name, id, Content.DefaultValueGetter, accessor_args)
       property_holder.declareProtected( read_permission, accessor_name )
     accessor_name = '_baseGetDefault' + UpperCase(id) + 'Value'
-    if not hasattr(property_holder, accessor_name) or prop.get('override',0):
+    if not hasattr(property_holder, accessor_name) or override:
       property_holder.registerAccessor(accessor_name, id, Content.DefaultValueGetter, accessor_args)
     accessor_name = 'get' + UpperCase(id) + 'ValueList'
-    if not hasattr(property_holder, accessor_name) or prop.get('override',0):
+    if not hasattr(property_holder, accessor_name) or override:
       property_holder.registerAccessor(accessor_name, id, Content.ValueListGetter, accessor_args)
       property_holder.declareProtected( read_permission, accessor_name )
     accessor_name = '_baseGet' + UpperCase(id) + 'ValueList'
-    if not hasattr(property_holder, accessor_name) or prop.get('override',0):
+    if not hasattr(property_holder, accessor_name) or override:
       property_holder.registerAccessor(accessor_name, id, Content.ValueListGetter, accessor_args)
     if prop.has_key('acquired_property_id'):
       for aq_id in prop['acquired_property_id']:
         for composed_id in ("%s_%s" % (id, aq_id), "default_%s_%s" % (id, aq_id)) :
           accessor_name = 'get' + UpperCase(composed_id)
           accessor_args = (prop['type'], aq_id, prop.get('portal_type'), prop.get('storage_id'))
-          if not hasattr(property_holder, accessor_name) or prop.get('override',0):
+          if not hasattr(property_holder, accessor_name) or override:
             property_holder.registerAccessor(accessor_name, composed_id, ContentProperty.Getter, accessor_args)
             property_holder.declareProtected( read_permission, accessor_name )
           accessor_name = 'get' + UpperCase(composed_id) + 'List'
           list_accessor_args = (prop['type'], aq_id + '_list', prop.get('portal_type'), prop.get('storage_id'))
-          if not hasattr(property_holder, accessor_name) or prop.get('override',0):
+          if not hasattr(property_holder, accessor_name) or override:
             property_holder.registerAccessor(accessor_name, composed_id + '_list', 
                                              ContentProperty.Getter, list_accessor_args)
             property_holder.declareProtected( read_permission, accessor_name )
           # No default getter YET XXXXXXXXXXXXXX
           # No list getter YET XXXXXXXXXXXXXX
           accessor_name = '_set' + UpperCase(composed_id)
-          if not hasattr(property_holder, accessor_name) or prop.get('override',0):
+          if not hasattr(property_holder, accessor_name) or override:
             property_holder.registerAccessor(accessor_name, composed_id, ContentProperty.Setter, accessor_args)
             property_holder.declareProtected( write_permission, accessor_name )
           accessor_name = '_set' + UpperCase(composed_id) + 'List'
-          if not hasattr(property_holder, accessor_name) or prop.get('override',0):
+          if not hasattr(property_holder, accessor_name) or override:
             property_holder.registerAccessor(accessor_name, composed_id + '_list', 
                                              ContentProperty.Setter, list_accessor_args)
             property_holder.declareProtected( write_permission, accessor_name )
           accessor_name = 'set' + UpperCase(composed_id)
-          if not hasattr(property_holder, accessor_name) or prop.get('override',0):
+          if not hasattr(property_holder, accessor_name) or override:
             property_holder.registerAccessor(accessor_name, '_' + accessor_name, Alias.Reindex, ())
             property_holder.declareProtected( write_permission, accessor_name )
           accessor_name = 'set' + UpperCase(composed_id) + 'List'
-          if not hasattr(property_holder, accessor_name) or prop.get('override',0):
+          if not hasattr(property_holder, accessor_name) or override:
             property_holder.registerAccessor(accessor_name, '_' + accessor_name, Alias.Reindex, ())
             property_holder.declareProtected( write_permission, accessor_name )
           # No default getter YET XXXXXXXXXXXXXX
@@ -1878,11 +1879,11 @@ def createDefaultAccessors(property_holder, id, prop = None,
     accessor_args = (prop['type'], prop.get('default'), prop.get('storage_id'))
     # Create getters for a simple property
     accessor_name = 'get' + UpperCase(id)
-    if not hasattr(property_holder, accessor_name) or prop.get('override',0):
+    if not hasattr(property_holder, accessor_name) or override:
       property_holder.registerAccessor(accessor_name, id, Base.Getter, accessor_args)
       property_holder.declareProtected( read_permission, accessor_name )
     accessor_name = '_baseGet' + UpperCase(id)
-    if not hasattr(property_holder, accessor_name) or prop.get('override',0):
+    if not hasattr(property_holder, accessor_name) or override:
       property_holder.registerAccessor(accessor_name, id, Base.Getter, accessor_args)
   ######################################################
   # Create Setters
