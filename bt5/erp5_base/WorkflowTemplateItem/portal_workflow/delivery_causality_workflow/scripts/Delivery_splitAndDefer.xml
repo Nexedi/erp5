@@ -60,6 +60,7 @@ start_date = state_change[\'kwargs\'][\'start_date\']\n
 stop_date = state_change[\'kwargs\'][\'stop_date\']\n
 \n
 if not len(split_movement_list):\n
+  delivery.updateCausalityState()\n
   return\n
 \n
 tag = delivery.getPath() + \'_split\'\n
@@ -72,7 +73,8 @@ for movement in split_movement_list:\n
     movement, None, \'SplitAndDefer\', start_date=start_date,\n
     stop_date=stop_date, activate_kw={\'tag\':tag})\n
 \n
-delivery.activate().updateCausalityState()\n
+delivery.activate(after_tag=tag).updateCausalityState()\n
+\n
 # Create delivery\n
 explanation_uid_list = []\n
 object = delivery\n
@@ -84,7 +86,7 @@ previous_tag = None\n
 for delivery_builder in delivery.getBuilderList():\n
   this_builder_tag = \'%s_split_%s\' % (delivery.getPath(),\n
                                       delivery_builder.getId())\n
-  after_tag = [tag]\n
+  all_tag_list.append(this_builder_tag)\n
   if previous_tag:\n
     after_tag.append(previous_tag)\n
   delivery_builder.activate(activity=\'SQLQueue\',\n
@@ -145,6 +147,7 @@ for delivery_builder in delivery.getBuilderList():\n
                             <string>previous_tag</string>
                             <string>delivery_builder</string>
                             <string>this_builder_tag</string>
+                            <string>all_tag_list</string>
                             <string>after_tag</string>
                           </tuple>
                         </value>
