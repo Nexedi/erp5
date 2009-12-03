@@ -53,8 +53,8 @@ class TestResource(ERP5TypeTestCase):
   purchase_supply_line_portal_type = 'Purchase Supply Line'
   internal_supply_line_portal_type = 'Internal Supply Line'
   sale_supply_cell_portal_type = 'Sale Supply Cell'
-  variation_base_category_list = ['colour', 'size', 'morphology',
-                                  'industrial_phase']
+  variation_base_category_list = ['size', 'industrial_phase', 'colour',
+                                  'morphology']
   size_list = ['size/Child','size/Man']
   variation_property_list = []
 
@@ -88,7 +88,7 @@ class TestResource(ERP5TypeTestCase):
     preference.setPreferredApparelModelVariationBaseCategoryList(('size', 'industrial_phase',))
     preference.setPreferredApparelClothVariationBaseCategoryList(('size',))
     preference.setPreferredApparelComponentVariationBaseCategoryList(('variation',))
-    preference.setPreferredApparelModelIndividualVariationBaseCategoryList(('morphology', 'colour',))
+    preference.setPreferredApparelModelIndividualVariationBaseCategoryList(('colour', 'morphology'))
     if preference.getPreferenceState() == 'disabled':
       preference.enable()
     transaction.commit()

@@ -79,9 +79,11 @@ class TestOrderMixin:
       if preference.getPreferenceState() == 'disabled':
         preference.enable()
 
-    preference.setPreferredApparelModelVariationBaseCategoryList(('colour', 'size', 'morphology', 'industrial_phase',))
+    preference.setPreferredApparelModelVariationBaseCategoryList(('size', 'industrial_phase',))
     preference.setPreferredApparelClothVariationBaseCategoryList(('size',))
     preference.setPreferredApparelComponentVariationBaseCategoryList(('variation',))
+    preference.setPreferredApparelModelIndividualVariationBaseCategoryList(('colour', 'morphology'))
+
     if preference.getPreferenceState() == 'disabled':
       preference.enable()
     transaction.commit()
