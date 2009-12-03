@@ -288,9 +288,9 @@ class ODFStrategy(Implicit):
     self.odf_existent_name_list = ooo_builder.getNameList()
 
     # content.xml
-    ooo_builder = self._replaceContentXml(ooo_builder=ooo_builder, extra_context=extra_context)
+    self._replaceContentXml(ooo_builder, extra_context)
     # styles.xml
-    ooo_builder = self._replaceStylesXml(ooo_builder=ooo_builder, extra_context=extra_context)
+    self._replaceStylesXml(ooo_builder, extra_context)
     # meta.xml is not supported yet
     # ooo_builder = self._replaceMetaXml(ooo_builder=ooo_builder, extra_context=extra_context)
 
@@ -300,7 +300,7 @@ class ODFStrategy(Implicit):
     ooo = ooo_builder.render(name=odf_template.title or odf_template.id)
     return ooo
 
-  def _replaceContentXml(self, ooo_builder=None, extra_context=None):
+  def _replaceContentXml(self, ooo_builder, extra_context):
     """
     Replace the content.xml in an ODF document using an ERP5Form data.
     """
@@ -310,27 +310,20 @@ class ODFStrategy(Implicit):
     here = getattr(self, 'aq_parent', None)
 
     content_element_tree = etree.XML(content_xml)
-    content_element_tree = self._replaceXmlByForm(element_tree=content_element_tree,
-                                                  form=form,
-                                                  here=here,
-                                                  extra_context=extra_context,
-                                                  ooo_builder=ooo_builder)
+    self._replaceXmlByForm(content_element_tree, form, here, extra_context,
+                           ooo_builder)
     # mapping ERP5Report report method to ODF
     report_method=extra_context.get('report_method')
-    base_name = (report_method is not None) and report_method.__name__ or None 
-    content_element_tree = self._replaceXmlByReportSection(element_tree=content_element_tree,
-                                                           extra_context=extra_context,
-                                                           report_method=report_method,
-                                                           base_name=base_name,
-                                                           ooo_builder=ooo_builder)
-    content_xml = etree.tostring(content_element_tree, encoding='utf-8')
+    base_name = getattr(report_method, '__name__', None)
+    self._replaceXmlByReportSection(content_element_tree, extra_context,
+                                    report_method, base_name, ooo_builder)
 
+    content_xml = etree.tostring(content_element_tree, encoding='utf-8')
     # Replace content.xml in master openoffice template
     ooo_builder.replace('content.xml', content_xml)
-    return ooo_builder
 
   # this method not supported yet
-  def _replaceStylesXml(self, ooo_builder=None, extra_context=None):
+  def _replaceStylesXml(self, ooo_builder, extra_context):
     """
     Replace the styles.xml file in an ODF document.
     """
@@ -338,25 +331,21 @@ class ODFStrategy(Implicit):
     form = extra_context['form']
     here = getattr(self, 'aq_parent', None)
     styles_element_tree = etree.XML(styles_xml)
-    styles_element_tree = self._replaceXmlByForm(element_tree=styles_element_tree,
-                                                 form=form,
-                                                 here=here,
-                                                 extra_context=extra_context,
-                                                 ooo_builder=ooo_builder)
+    self._replaceXmlByForm(styles_element_tree, form, here, extra_context,
+                           ooo_builder)
     styles_xml = etree.tostring(styles_element_tree, encoding='utf-8')
 
     ooo_builder.replace('styles.xml', styles_xml)
-    return ooo_builder
 
   # this method not implemented yet
-  def _replaceMetaXml(self, ooo_builder=None, extra_context=None):
+  def _replaceMetaXml(self, ooo_builder, extra_context):
     """
     Replace meta.xml file in an ODF document.
     """
     return ooo_builder
 
-  def _replaceXmlByForm(self, element_tree=None, form=None, here=None,
-                           extra_context=None, ooo_builder=None, iteration_index=0):
+  def _replaceXmlByForm(self, element_tree, form, here, extra_context,
+                        ooo_builder, iteration_index=0):
     """
     Replace an element_tree object using an ERP5 form.
 
@@ -372,9 +361,8 @@ class ODFStrategy(Implicit):
     """
     raise NotImplementedError
 
-  def _replaceXmlByReportSection(self, element_tree=None, extra_context=None, 
-                                 report_method=None, base_name=None, 
-                                 ooo_builder=None):
+  def _replaceXmlByReportSection(self, element_tree, extra_context, report_method,
+                                 base_name, ooo_builder):
     """
     Replace xml using ERP5Report ReportSection.
     Keyword arguments:
@@ -385,7 +373,7 @@ class ODFStrategy(Implicit):
     ooo_builder -- the OOo Builder object which has ODF document.
     """
     if report_method is None:
-      return element_tree
+      return
     report_section_list = report_method()
     portal_object = self.getPortalObject()
 
@@ -393,7 +381,7 @@ class ODFStrategy(Implicit):
                                              report_section_list=report_section_list,
                                              element_tree=element_tree)
     if target_tuple is None:
-      return element_tree
+      return
     target_xpath, original_target = target_tuple
     office_body = original_target.getparent()
     target_index = office_body.index(original_target)
@@ -406,7 +394,7 @@ class ODFStrategy(Implicit):
 
       target_element_tree = deepcopy(temporary_element_tree)
       # remove original target in the ODF template 
-      if index is 0:
+      if index == 0:
         office_body.remove(original_target)
       else:
         self._setUniqueElementName(base_name=base_name,
@@ -414,16 +402,11 @@ class ODFStrategy(Implicit):
                                    xpath=target_xpath,
                                    element_tree=target_element_tree)
 
-      target_element_tree = self._replaceXmlByForm(element_tree=target_element_tree,
-                                                   form=form,
-                                                   here=here,
-                                                   extra_context=extra_context,
-                                                   ooo_builder=ooo_builder,
-                                                   iteration_index=index)
+      self._replaceXmlByForm(target_element_tree, form, here, extra_context,
+                             ooo_builder, iteration_index=index)
       office_body.insert(target_index, target_element_tree)
       target_index += 1
       report_item.popReport(portal_object, render_prefix=None)
-    return element_tree
 
   def _pickUpTargetSection(self, base_name='', report_section_list=[], element_tree=None):
     """pick up a ODF target object to iterate ReportSection
@@ -466,11 +449,9 @@ class ODFStrategy(Implicit):
     xpath -- xpath expression which was used to search the element
     element_tree -- element tree
     """
-    if iteration_index is 0:
+    if iteration_index == 0:
       return
-    def getNameAttribute(target_element=None):
-      if target_element is None:
-        return None
+    def getNameAttribute(target_element):
       attrib = target_element.attrib
       for key in attrib.keys():
         if key.endswith("}name"):
@@ -478,23 +459,18 @@ class ODFStrategy(Implicit):
       return None
     odf_element_name =  "%s_%s" % (base_name, iteration_index)
     result_list = element_tree.xpath(xpath, namespaces=element_tree.nsmap)
-    if len(result_list) is 0:
+    if not result_list:
       return
     target_element = result_list[0]
     name_attribute = getNameAttribute(target_element)
     if name_attribute is not None:
       target_element.set(name_attribute, odf_element_name)
 
-  def _replaceXmlByFormbox(self,
-                           element_tree=None,
-                           field=None,
-                           form=None,
-                           extra_context=None,
-                           ooo_builder=None,
-                           iteration_index=0):
+  def _replaceXmlByFormbox(self, element_tree, field, form, extra_context,
+                           ooo_builder, iteration_index=0):
     """
     Replace an ODF frame using an ERP5Form form box field.
-   
+
     Note: This method is incompleted yet. This function is intended to
     make an frame hide/show. But it has not such a feature currently. 
     """
@@ -502,40 +478,28 @@ class ODFStrategy(Implicit):
     enabled = field.get_value('enabled')
     draw_xpath = '//draw:frame[@draw:name="%s"]/draw:text-box/*' % field_id
     text_list = element_tree.xpath(draw_xpath, namespaces=element_tree.nsmap)
-    if len(text_list) == 0:
-      return element_tree
+    if not text_list:
+      return
     target_element = text_list[0]
     frame_paragraph = target_element.getparent()
     office_body = frame_paragraph.getparent()
     if not enabled:
       office_body.remove(frame_paragraph)
-      return element_tree
+      return
     # set when using report section
-    self._setUniqueElementName(base_name=field_id,
-                               iteration_index=iteration_index,
-                               xpath=draw_xpath,
-                               element_tree=element_tree)
-    self._replaceXmlByForm(element_tree=frame_paragraph,
-                           form=form,
-                           here=extra_context['here'],
-                           extra_context=extra_context,
-                           ooo_builder=ooo_builder,
-                           iteration_index=iteration_index)
-    return element_tree
+    self._setUniqueElementName(field_id, iteration_index, draw_xpath, element_tree)
+    self._replaceXmlByForm(frame_paragraph, form, extra_context['here'], extra_context,
+                           ooo_builder, iteration_index=iteration_index)
 
-  def _replaceXmlByImageField(self,
-                              element_tree=None,
-                              image_field=None,
-                              ooo_builder=None,
-                              iteration_index=0):
+  def _replaceXmlByImageField(self, element_tree, image_field, ooo_builder, iteration_index=0):
     """
     Replace an ODF draw:frame using an ERP5Form image field.
     """
     alt = image_field.get_value('description') or image_field.get_value('title')
     image_xpath = '//draw:frame[@draw:name="%s"]/*' % image_field.id
     image_list = element_tree.xpath(image_xpath, namespaces=element_tree.nsmap)
-    if len(image_list) is 0:
-      return element_tree
+    if not image_list:
+      return
     path = image_field.get_value('default')
     image_node = image_list[0]
     image_frame = image_node.getparent()
@@ -546,7 +510,7 @@ class ODFStrategy(Implicit):
     if picture_data is None:
       image_frame = image_node.getparent()
       image_frame.remove(image_node)
-      return element_tree
+      return
     picture_type = picture.getContentType()
     picture_path = self._createOdfUniqueFileName(path=path, picture_type=picture_type)
     ooo_builder.addFileEntry(picture_path, media_type=picture_type, content=picture_data)
@@ -555,11 +519,7 @@ class ODFStrategy(Implicit):
     image_frame.set('{%s}width' % element_tree.nsmap['svg'], picture_size[0])
     image_frame.set('{%s}height' % element_tree.nsmap['svg'], picture_size[1])
     # set when using report section
-    self._setUniqueElementName(base_name=image_field.id,
-                               iteration_index=iteration_index,
-                               xpath=image_xpath,
-                               element_tree=element_tree)
-    return element_tree
+    self._setUniqueElementName(image_field.id, iteration_index, image_xpath, element_tree)
 
   def _createOdfUniqueFileName(self, path='', picture_type=''):
     extension = guess_extension(picture_type)
@@ -608,11 +568,7 @@ class ODFStrategy(Implicit):
     return (str(w) + unit, str(h) + unit)
 
 
-  def _appendTableByListbox(self,
-                            element_tree=None, 
-                            listbox=None,
-                            REQUEST=None,
-                            iteration_index=0):
+  def _appendTableByListbox(self, element_tree, listbox, REQUEST, iteration_index=0):
     """
     Append a ODF table using an ERP5 Form listbox.
     """
@@ -620,7 +576,7 @@ class ODFStrategy(Implicit):
     table_xpath = '//table:table[@table:name="%s"]' % table_id
     # this list should be one item list
     target_table_list = element_tree.xpath(table_xpath, namespaces=element_tree.nsmap)
-    if len(target_table_list) is 0:
+    if not target_table_list:
       return element_tree
 
     target_table = target_table_list[0]
@@ -660,7 +616,7 @@ class ODFStrategy(Implicit):
         row = deepcopy(row_top)
         row = self._updateColumnValue(row, listbox_column_list)
         newtable.append(row)
-        is_top = False       
+        is_top = False
       elif listboxline.isDataLine() and is_top:
         if style_name_row_dictionary.has_key(row_style_name):
           row = deepcopy(style_name_row_dictionary[row_style_name])
@@ -681,18 +637,15 @@ class ODFStrategy(Implicit):
         row = self._updateColumnValue(row, listbox_column_list)
         newtable.append(row)
 
-    self._setUniqueElementName(base_name=table_id,
-                               iteration_index=iteration_index,
-                               xpath=table_xpath,
-                               element_tree=newtable)
+    self._setUniqueElementName(table_id, iteration_index, table_xpath, newtable)
     parent_paragraph.insert(target_index, newtable)
 
-    return element_tree
-
-  def _copyRowStyle(self, table_row_list=[], has_header_rows=False):
+  def _copyRowStyle(self, table_row_list=None, has_header_rows=False):
     """
     Copy ODF table row styles.
     """
+    if table_row_list is None:
+      table_row_list = []
     def removeOfficeAttribute(row):
       if row is None or has_header_rows: return
       odf_cell_list = row.findall("{%s}table-cell" % row.nsmap['table'])
@@ -901,8 +854,8 @@ class ODTStrategy(ODFStrategy):
 
   _style_attribute_name = '{urn:oasis:names:tc:opendocument:xmlns:text:1.0}style-name'
 
-  def _replaceXmlByForm(self, element_tree=None, form=None, here=None,
-                           extra_context=None, ooo_builder=None, iteration_index=0):
+  def _replaceXmlByForm(self, element_tree, form, here, extra_context,
+                        ooo_builder, iteration_index=0):
     """
     Replace an element_tree object using an ERP5 form.
 
@@ -918,50 +871,37 @@ class ODTStrategy(ODFStrategy):
     REQUEST = here.REQUEST
     for (count, field) in enumerate(field_list):
       if isinstance(field, ListBox):
-        element_tree = self._appendTableByListbox(element_tree=element_tree,
-                                                  listbox=field,
-                                                  REQUEST=REQUEST,
-                                                  iteration_index=iteration_index)
+        self._appendTableByListbox(element_tree, field, REQUEST,
+                                   iteration_index=iteration_index)
       elif isinstance(field, FormBox):
         if not hasattr(here, field.get_value('formbox_target_id')):
           continue
         sub_form = getattr(here, field.get_value('formbox_target_id'))
-        content = self._replaceXmlByFormbox(element_tree=element_tree,
-                                            field=field,
-                                            form=sub_form,
-                                            extra_context=extra_context,
-                                            ooo_builder=ooo_builder,
+        content = self._replaceXmlByFormbox(element_tree, field, sub_form,
+                                            extra_context, ooo_builder,
                                             iteration_index=iteration_index)
       elif isinstance(field, ReportBox):
          report_method = getattr(field, field.get_value('report_method'), None)
-         element_tree = self._replaceXmlByReportSection(element_tree=element_tree,
-                                                        extra_context=extra_context,
-                                                        report_method=report_method,
-                                                        base_name=field.id,
-                                                        ooo_builder=ooo_builder)
+         self._replaceXmlByReportSection(element_tree, extra_context,
+                                         report_method, field.id, ooo_builder)
       elif isinstance(field, ImageField):
-        element_tree = self._replaceXmlByImageField(element_tree=element_tree,
-                                                    image_field=field,
-                                                    ooo_builder=ooo_builder,
-                                                    iteration_index=iteration_index)
+        self._replaceXmlByImageField(element_tree, field,
+                                     ooo_builder, iteration_index=iteration_index)
       else:
-        element_tree = self._replaceNodeViaReference(element_tree=element_tree,
-                                                     field=field, iteration_index=iteration_index)
-    return element_tree
+        self._replaceNodeViaReference(element_tree, field)
 
-  def _replaceNodeViaReference(self, element_tree=None, field=None, iteration_index=0):
+  def _replaceNodeViaReference(self, element_tree, field):
     """replace nodes (e.g. paragraphs) via ODF reference"""
     self._replaceNodeViaRangeReference(element_tree=element_tree, field=field)
     self._replaceNodeViaPointReference(element_tree=element_tree, field=field)
     self._replaceNodeViaFormName(element_tree, field)
-    return element_tree
 
   def _renderField(self, field):
     # XXX It looks ugly to use render_pdf to extract text. Probably
     # it should be renamed to render_text.
     return field.render_pdf(field.get_value('default'))
 
-  def _replaceNodeViaPointReference(self, element_tree=None, field=None, iteration_index=0):
+  def _replaceNodeViaPointReference(self, element_tree, field, iteration_index=0):
     """Replace text node via an ODF point reference.
 
     point reference example:
@@ -1034,8 +974,7 @@ class ODTStrategy(ODFStrategy):
 class ODGStrategy(ODFStrategy):
   """ODGStrategy create a ODG Document from a form and a ODG template"""
 
-  def _replaceXmlByForm(self, element_tree=None, form=None, here=None,
-                           extra_context=None, ooo_builder=None, iteration_index=0):
+  def _replaceXmlByForm(self, element_tree, form, here, extra_context, ooo_builder, iteration_index=0):
 
     field_list = form.get_fields(include_disabled=1)
     REQUEST = here.REQUEST
@@ -1049,4 +988,3 @@ class ODGStrategy(ODFStrategy):
       for node in node_list:
         parent_node = node.getparent().replace(node, new_node)
 
-    return element_tree
