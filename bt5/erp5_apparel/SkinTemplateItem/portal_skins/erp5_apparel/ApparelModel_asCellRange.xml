@@ -107,7 +107,7 @@ return cell_range\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>matrixbox=0, display_base_category=1</string> </value>
+            <value> <string>matrixbox=0, display_base_category=1, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -135,6 +135,7 @@ return cell_range\n
                           <tuple>
                             <string>matrixbox</string>
                             <string>display_base_category</string>
+                            <string>kw</string>
                             <string>cell_range</string>
                             <string>_getattr_</string>
                             <string>context</string>
