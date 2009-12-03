@@ -2529,8 +2529,11 @@ msgstr "Coordonnées"
 msgid "Copy"
 msgstr "Copier"
 
+msgid "Copy Apparel Colour Range Composition"
+msgstr "Copier la composition de la gamme"
+
 msgid "Copy Apparel Colour Range Variation"
-msgstr "Copier la gammes de coloris"
+msgstr "Copier les coloris de la gamme"
 
 msgid "Copy or cut one or more items to paste first."
 msgstr "Copier ou couper un ou plusieurs objets pour coller en premier"
