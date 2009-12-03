@@ -36,6 +36,7 @@ from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.PsycoWrapper import psyco
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
+from Products.ERP5.Document.Rule import Rule
 
 from zLOG import LOG
 
@@ -278,3 +279,10 @@ class AppliedRule(XMLObject):
       else:
         return getTreeDelivered(self)
 
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'getMovementList')
+    def getMovementList(self, portal_type=None, **kw):
+      """
+       Return a list of movements.
+      """
+      return self.objectValues(portal_type=Rule.movement_type)
