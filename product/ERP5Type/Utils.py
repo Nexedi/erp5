@@ -42,8 +42,6 @@ except ImportError:
   from md5 import new as md5_new
   from sha import new as sha_new
 
-from zope.interface import implementedBy
-
 from Products.ERP5Type.Globals import package_home
 from Products.ERP5Type.Globals import DevelopmentMode
 from Acquisition import aq_base
@@ -74,8 +72,6 @@ from Products.ERP5Type.Accessor.Interface import Getter as InterfaceGetter
 from Products.ERP5Type.Cache import getReadOnlyTransactionCache
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 from zLOG import LOG, BLATHER, PROBLEM, WARNING
-
-from AccessControl.SecurityManagement import newSecurityManager, getSecurityManager
 
 #####################################################
 # Avoid importing from (possibly unpatched) Globals
@@ -192,8 +188,8 @@ def _showwarning(message, category, filename, lineno, file=None, line=None):
     LOG("%s:%u %s: %s" % (filename, lineno, category.__name__, message),
         WARNING, '')
   else:
-    # BACK: In Python 2.6 we need to pass along the "line" parameter to 
-    # formatwarning(). For now we don't to keep backward compat with Python 2.4 
+    # BACK: In Python 2.6 we need to pass along the "line" parameter to
+    # formatwarning(). For now we don't to keep backward compat with Python 2.4
     file.write(warnings.formatwarning(message, category, filename, lineno))
 warnings.showwarning = _showwarning
 
@@ -302,9 +298,6 @@ def uidToValue(list):
 
 
 def referenceToPath(list):
-  pass
-
-def pathToUid(list):
   pass
 
 # Path
@@ -437,12 +430,7 @@ def updateGlobals(this_module, global_hook,
 
 import imp
 
-# Zope 2.6.x does not have App.Config
-try:
-  from App.config import getConfiguration
-except ImportError:
-  getConfiguration = None
-  pass
+from App.config import getConfiguration
 
 from Products.ERP5Type.Globals import InitializeClass
 from Accessor.Base import func_code
@@ -465,7 +453,7 @@ class DocumentConstructor(Method):
       if activate_kw is not None:
         o.__of__(folder).setDefaultActivateParameters(**activate_kw)
       if reindex_kw is not None:
-        o.__of__(folder).setDefaultReindexParameters(**reindex_kw)        
+        o.__of__(folder).setDefaultReindexParameters(**reindex_kw)
       if is_indexable is not None:
         o.isIndexable = is_indexable
       folder._setObject(id, o)
@@ -551,7 +539,7 @@ def writeLocalPropertySheet(class_id, text, create=1, instance_home=None):
   path = os.path.join(instance_home, "PropertySheet")
   if not os.path.exists(path):
     os.mkdir(path)
-    LOG('ERP5Type', WARNING, 'Created missing but required directory: %s' %path)  
+    LOG('ERP5Type', WARNING, 'Created missing but required directory: %s' %path)
   path = os.path.join(path, "%s.py" % class_id)
   if create:
     if os.path.exists(path):
@@ -871,7 +859,6 @@ def importLocalDocument(class_id, document_path = None):
   """
   import Products.ERP5Type.Document
   import Permissions
-  import Products
 
   if document_path is None:
     instance_home = getConfiguration().instancehome
@@ -879,7 +866,7 @@ def importLocalDocument(class_id, document_path = None):
   else:
     path = document_path
   path = os.path.join(path, "%s.py" % class_id)
-  
+
   # Import Document Class and Initialize it
   f = open(path)
   try:
@@ -901,7 +888,6 @@ def importLocalDocument(class_id, document_path = None):
 
   # Temp documents are created as standard classes with a different constructor
   # which patches some methods are the instance level to prevent reindexing
-  from Products.ERP5Type import product_path as erp5_product_path
   temp_document_constructor = TempDocumentConstructor(document_class)
   temp_document_constructor_name = "newTemp%s" % class_id
   temp_document_constructor.__name__ = temp_document_constructor_name
@@ -988,7 +974,7 @@ def initializeLocalRegistry(directory_name, import_local_method,
           # XXX Arg are not consistent
           import_local_method(module_name, **{path_arg_name: document_path})
           LOG('ERP5Type', BLATHER,
-              'Added local %s to ERP5Type repository: %s (%s)' 
+              'Added local %s to ERP5Type repository: %s (%s)'
               % (directory_name, module_name, document_path))
         except Exception, e:
           if DevelopmentMode:
@@ -1851,7 +1837,7 @@ def createDefaultAccessors(property_holder, id, prop = None,
           accessor_name = 'get' + UpperCase(composed_id) + 'List'
           list_accessor_args = (prop['type'], aq_id + '_list', prop.get('portal_type'), prop.get('storage_id'))
           if not hasattr(property_holder, accessor_name) or override:
-            property_holder.registerAccessor(accessor_name, composed_id + '_list', 
+            property_holder.registerAccessor(accessor_name, composed_id + '_list',
                                              ContentProperty.Getter, list_accessor_args)
             property_holder.declareProtected( read_permission, accessor_name )
           # No default getter YET XXXXXXXXXXXXXX
@@ -1862,7 +1848,7 @@ def createDefaultAccessors(property_holder, id, prop = None,
             property_holder.declareProtected( write_permission, accessor_name )
           accessor_name = '_set' + UpperCase(composed_id) + 'List'
           if not hasattr(property_holder, accessor_name) or override:
-            property_holder.registerAccessor(accessor_name, composed_id + '_list', 
+            property_holder.registerAccessor(accessor_name, composed_id + '_list',
                                              ContentProperty.Setter, list_accessor_args)
             property_holder.declareProtected( write_permission, accessor_name )
           accessor_name = 'set' + UpperCase(composed_id)
