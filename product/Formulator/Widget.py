@@ -9,15 +9,22 @@ from DocumentTemplate.ustr import ustr
 from urlparse import urljoin
 from lxml import etree
 from lxml.etree import Element, SubElement
+from lxml.builder import ElementMaker
 import re
-
 
 DRAW_URI = 'urn:oasis:names:tc:opendocument:xmlns:drawing:1.0'
 TEXT_URI = 'urn:oasis:names:tc:opendocument:xmlns:text:1.0'
+FORM_URI = 'urn:oasis:names:tc:opendocument:xmlns:form:1.0'
+OFFICE_URI = 'urn:oasis:names:tc:opendocument:xmlns:office:1.0'
+
 NSMAP = {
           'draw': DRAW_URI,
-          'text': TEXT_URI
+          'text': TEXT_URI,
+          'form': FORM_URI,
+          'office': OFFICE_URI,
         }
+
+EForm = ElementMaker(namespace=FORM_URI, nsmap=NSMAP)
 
 class Widget:
   """A field widget that knows how to display itself as HTML.
@@ -382,6 +389,44 @@ class CheckBoxWidget(Widget):
                             css_class=field.get_value('css_class'),
                             extra=field.get_value('extra'),
                             disabled='disabled')
+
+  def render_odt(self, field, as_string, local_name, attr_dict=None):
+    """
+    <form:checkbox form:name="is_accepted"
+                   form:control-implementation="ooo:com.sun.star.form.component.CheckBox"
+                   checkbox form:current-state="checked"
+                   form:id="control1"
+                   form:image-position="center">
+      <form:properties>
+        <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="com.sun.star.form.control.CheckBox"/>
+        <form:property form:property-name="SecondaryRefValue" office:value-type="string" office:string-value=""/>
+      </form:properties>
+    </form:checkbox>
+    """
+    if attr_dict is None:
+      attr_dict = {}
+    form_node = EForm.checkbox(
+                  EForm.properties(
+                    EForm.property(**{'{%s}property-name' % FORM_URI: 'DefaultControl',
+                                      '{%s}value-type' % OFFICE_URI: 'string',
+                                      '{%s}string-value' % OFFICE_URI: 'com.sun.star.form.control.CheckBox'}),
+                    EForm.property(**{'{%s}property-name' % FORM_URI: 'SecondaryRefValue',
+                                      '{%s}value-type' % OFFICE_URI: 'string',
+                                      '{%s}string-value' % OFFICE_URI: ''}),
+                  )
+                )
+
+    checked = field.get_value('default')
+    current_state_attribute_name = '{%s}current-state'% FORM_URI
+    if checked:
+      attr_dict.update({current_state_attribute_name: 'checked'})
+    elif attr_dict.has_key(current_state_attribute_name):
+      del attr_dict[current_state_attribute_name]
+    form_node.attrib.update(attr_dict)
+    if as_string:
+      return etree.tostring(form_node)
+    return form_node
+
 CheckBoxWidgetInstance = CheckBoxWidget()
 
 class TextAreaWidget(Widget):
