@@ -78,28 +78,34 @@ class TestERP5BankingCashMovementNewNotEmitted(TestERP5BankingMonetaryReceptionM
     self.createManagerAndLogin()
     self.current_date = DateTime()
     # create categories
-    self.createFunctionGroupSiteCategory(site_list=['paris','madrid'])
+    sites = self.createFunctionGroupSiteCategory(site_list=[
+        ('france', 'P00', 'testsite/principale'),
+        ('spain', 'S00', 'testsite/principale'),
+    ])
+    self.france, self.spain = sites[-2:]
 
     # Before the test, we need to input the inventory
 
-    self.vault_source = self.paris.caveau.serre.encaisse_des_billets_neufs_non_emis_en_transit_allant_a.madrid
-    self.vault_destination = self.madrid.caveau.serre.encaisse_des_billets_neufs_non_emis
+    self.vault_source = self.france.caveau.serre.encaisse_des_billets_neufs_non_emis_en_transit_allant_a.spain
+    self.vault_destination = self.spain.caveau.serre.encaisse_des_billets_neufs_non_emis
     self.reception_site = self.reception = self.vault_source
     self.destination_site = self.vault_destination
     # Create an Organisation that will be used for users assignment
     self.checkUserFolderType()
     self.organisation = self.organisation_module.newContent(id='baobab_org', portal_type='Organisation',
-                          function='banking', group='baobab',  site='testsite/paris')
+                          function='banking', group='baobab',
+                          site='testsite/principale/france')
     # define the user
     user_dict = {
-        'super_user' : [['Manager'], self.organisation, 'banking/comptable', 'baobab', 'testsite/paris/surface/banque_interne/guichet_1']
+        'super_user' : [['Manager'], self.organisation, 'banking/comptable',
+            'baobab', 'testsite/principale/france/surface/banque_interne/guichet_1']
       }
     # call method to create this user
     self.createERP5Users(user_dict)
     self.logout()
     self.login('super_user')
-    self.openCounterDate(site=self.paris)
-    self.openCounterDate(site=self.madrid, id='counter_date_2')
+    self.openCounterDate(site=self.france)
+    self.openCounterDate(site=self.spain, id='counter_date_2')
 
   def stepCheckObjects(self, sequence=None, sequence_list=None, **kwd):
     self.checkResourceCreated()
@@ -112,7 +118,7 @@ class TestERP5BankingCashMovementNewNotEmitted(TestERP5BankingMonetaryReceptionM
       id='cash_movement_1',
       portal_type='Cash Movement New Not Emitted', 
       source=self.vault_source.getRelativeUrl(),
-      destination_section_value=self.madrid,
+      destination_section_value=self.spain,
       description='test',
       start_date=self.date,
       source_total_asset_price=2000000.0)
@@ -120,8 +126,10 @@ class TestERP5BankingCashMovementNewNotEmitted(TestERP5BankingMonetaryReceptionM
     self.assertEqual(len(self.cash_movement_module.objectValues()), 1)
     self.cash_movement = getattr(self.cash_movement_module, 'cash_movement_1')
     self.assertEqual(self.cash_movement.getPortalType(), 'Cash Movement New Not Emitted')
-    self.assertEqual(self.cash_movement.getDestinationSection(), 'site/testsite/madrid')
-    self.assertEqual(self.cash_movement.getBaobabSource(), 'site/testsite/paris/caveau/serre/encaisse_des_billets_neufs_non_emis_en_transit_allant_a/madrid')
+    self.assertEqual(self.cash_movement.getDestinationSection(),
+            'site/testsite/principale/spain')
+    self.assertEqual(self.cash_movement.getBaobabSource(),
+            'site/testsite/principale/france/caveau/serre/encaisse_des_billets_neufs_non_emis_en_transit_allant_a/spain')
     self.setDocumentSourceReference(self.cash_movement)
 
 
@@ -167,7 +175,8 @@ class TestERP5BankingCashMovementNewNotEmitted(TestERP5BankingMonetaryReceptionM
 
     self.stepTic()
     self.assertEqual(len(self.cash_movement.objectValues()), 3)
-    self.assertEqual(self.cash_movement.getBaobabDestination(), 'site/testsite/madrid/caveau/serre/encaisse_des_billets_neufs_non_emis')
+    self.assertEqual(self.cash_movement.getBaobabDestination(),
+            'site/testsite/principale/spain/caveau/serre/encaisse_des_billets_neufs_non_emis')
 
   def stepStopDocument(self, sequence=None, sequence_list=None, **kwd):
     """
