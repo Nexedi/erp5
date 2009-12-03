@@ -95,8 +95,6 @@ class StringDivergenceTester(Predicate, DivergenceTesterMixin):
     tested_property = self.getTestedProperty()
     if prevision_movement.isPropertyRecorded(tested_property):
       prevision_value = prevision_movement.getRecordedProperty(tested_property)
-      if isinstance(prevision_value, (list, tuple)):
-        prevision_value = prevision_value[0]
     else:
       prevision_value = prevision_movement.getProperty(tested_property)
     return {tested_property:prevision_value}
