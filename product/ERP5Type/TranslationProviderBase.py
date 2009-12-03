@@ -145,6 +145,9 @@ class TranslationProviderBase(object):
     if properties is None:
       properties = REQUEST
 
+    # PropertySheet might be changed.
+    self.updateInitialPropertyTranslationDomainDict()
+
     property_domain_dict = self.getPropertyTranslationDomainDict()
     for prop_name in property_domain_dict.keys():
       new_domain_name = properties.get(prop_name)
