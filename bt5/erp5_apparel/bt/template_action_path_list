@@ -121,7 +121,6 @@ Apparel Model | purchase_price_view
 Apparel Model | sale_price_view
 Apparel Model | view
 Apparel Model | view_composition
-Apparel Model | view_variated_reference_list
 Apparel Shape Module | csv_export
 Apparel Shape Module | csv_import
 Apparel Shape Module | list_ui

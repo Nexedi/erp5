@@ -87,6 +87,8 @@
                         <string>my_bill_of_material_description</string>
                         <string>aggregated_industrial_process</string>
                         <string>my_industrial_process_description</string>
+                        <string>my_apparel_size_title</string>
+                        <string>my_apparel_measurement_title</string>
                       </list>
                     </value>
                 </item>
