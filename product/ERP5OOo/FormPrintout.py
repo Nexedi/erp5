@@ -419,24 +419,24 @@ class ODFStrategy(Implicit):
     # <text:section text:style-name="Sect2" text:name="Section2">
     section_xpath = '//text:section[@text:name="%s"]' % base_name
     section_list = element_tree.xpath(section_xpath, namespaces=element_tree.nsmap)
-    if len(frame_list) is 0 and len(section_list) is 0:
-      return None
+    if not frame_list and not section_list:
+      return
 
     office_body = None
     original_target = None
     target_xpath = ''
-    if len(frame_list) > 0:
+    if frame_list:
       frame = frame_list[0]
       original_target = frame.getparent()
       target_xpath = frame_xpath
-    elif len(section_list) > 0:
+    elif section_list:
       original_target = section_list[0]
       target_xpath = section_xpath
     office_body = original_target.getparent()
     # remove if no report section
-    if len(report_section_list) is 0:
+    if not report_section_list:
       office_body.remove(original_target)
-      return None  
+      return
 
     return (target_xpath, original_target)
 
@@ -463,7 +463,7 @@ class ODFStrategy(Implicit):
       return
     target_element = result_list[0]
     name_attribute = getNameAttribute(target_element)
-    if name_attribute is not None:
+    if name_attribute:
       target_element.set(name_attribute, odf_element_name)
 
   def _replaceXmlByFormbox(self, element_tree, field, form, extra_context,
@@ -655,36 +655,36 @@ class ODFStrategy(Implicit):
     row_top = None
     row_middle = None
     row_bottom = None
-    if len(table_row_list) > 0:
-      if len(table_row_list) is 1:
-        row_top = deepcopy(table_row_list[0])
-        row_middle = deepcopy(table_row_list[0])
-        row_bottom = deepcopy(table_row_list[0])
-      elif len(table_row_list) is 2 and has_header_rows:
-        row_top = deepcopy(table_row_list[0])
-        row_middle = deepcopy(table_row_list[0])
-        row_bottom = deepcopy(table_row_list[-1])
-      elif len(table_row_list) is 2 and not has_header_rows:
-        row_top = deepcopy(table_row_list[0])
-        row_middle = deepcopy(table_row_list[1])
-        row_bottom = deepcopy(table_row_list[-1])
-      elif len(table_row_list) >= 2:
-        row_top = deepcopy(table_row_list[0])
-        row_middle = deepcopy(table_row_list[1])
-        row_bottom = deepcopy(table_row_list[-1])
+    len_table_row_list = len(table_row_list)
+    if len_table_row_list == 1:
+      row_top = deepcopy(table_row_list[0])
+      row_middle = deepcopy(table_row_list[0])
+      row_bottom = deepcopy(table_row_list[0])
+    elif len_table_row_list == 2 and has_header_rows:
+      row_top = deepcopy(table_row_list[0])
+      row_middle = deepcopy(table_row_list[0])
+      row_bottom = deepcopy(table_row_list[-1])
+    elif len_table_row_list == 2 and not has_header_rows:
+      row_top = deepcopy(table_row_list[0])
+      row_middle = deepcopy(table_row_list[1])
+      row_bottom = deepcopy(table_row_list[-1])
+    elif len_table_row_list >= 2:
+      row_top = deepcopy(table_row_list[0])
+      row_middle = deepcopy(table_row_list[1])
+      row_bottom = deepcopy(table_row_list[-1])
 
     # remove office attribute if create a new header row 
     removeOfficeAttribute(row_top)
     return (row_top, row_middle, row_bottom)
 
 
-  def _createStyleNameRowDictionary(self, table_row_list=[]):
+  def _createStyleNameRowDictionary(self, table_row_list):
     """create stylename and table row dictionary if a style name reference is set"""
     style_name_row_dictionary = {}
     for table_row in table_row_list:
-      reference_element = table_row.find('.//*[@{%s}name]' % table_row.nsmap['text'])
+      reference_element = table_row.find('.//*[@%s]' % self._name_attribute_name)
       if reference_element is not None:
-        name = reference_element.attrib['{%s}name' % table_row.nsmap['text']]
+        name = reference_element.attrib[self._name_attribute_name]
         style_name_row_dictionary[name] = deepcopy(table_row)
     return style_name_row_dictionary
 
@@ -699,7 +699,7 @@ class ODFStrategy(Implicit):
       self._setColumnValue(column, value)
     return row
 
-  def _updateColumnStatValue(self, row=None, listbox_column_list=[], row_middle=None):
+  def _updateColumnStatValue(self, row, listbox_column_list, row_middle):
     """stat line is capable of column span setting"""
     if row_middle is None:
       return row
@@ -723,8 +723,7 @@ class ODFStrategy(Implicit):
     if value is None:
       self._removeColumnValue(column)
     column_value, table_content = self._translateValueIntoColumnContent(value, column)
-    for child in column.getchildren():
-      column.remove(child)
+    [column.remove(child) for child in column]
     if table_content is not None:
       column.append(table_content)
     value_attribute = self._getColumnValueAttribute(column)
@@ -734,16 +733,15 @@ class ODFStrategy(Implicit):
   def _translateValueIntoColumnContent(self, value, column):
     """translate a value as a table content"""
     table_content = None
-    column_children = column.getchildren()
-    if len(column_children) > 0:
-      table_content = deepcopy(column_children[0])
+    if len(column):
+      table_content = deepcopy(column[0])
     # create a tempolaly etree object to generate a content paragraph
     fragment = self._valueAsOdfXmlElement(value=value, element_tree=column)
     column_value = None
     if table_content is not None:
       table_content.text = fragment.text
-      for element in fragment.getchildren():
-        table_content.append(element)
+      for element in fragment:
+        table_content.append(deepcopy(element))
       column_value = " ".join([x for x in table_content.itertext()])
     return (column_value, table_content)
 
@@ -781,10 +779,8 @@ class ODFStrategy(Implicit):
     for key in attrib.keys():
       if key.startswith("{%s}" % column.nsmap['office']):
         del attrib[key]
-    column.text = ''
-    column_children = column.getchildren()
-    for child in column_children:
-      column.remove(child)
+    column.text = None
+    [column.remove(child) for child in column]
 
   def _clearColumnValue(self, column):
     attrib = column.attrib
@@ -792,21 +788,13 @@ class ODFStrategy(Implicit):
       value_attribute = self._getColumnValueAttribute(column)
       if value_attribute is not None:
         column.set(value_attribute, '')
-    column.text = ''
-    column_children = column.getchildren()
-    for child in column_children:
+    column.text = None
+    for child in column:
       # clear data except style
-      style_attribute_tuple = self._getStyleAttributeTuple(child)
+      style_value = child.attrib.get(self._name_attribute_name)
       child.clear()
-      if style_attribute_tuple is not None:
-        child.set(style_attribute_tuple[0], style_attribute_tuple[1])
-
-  def _getStyleAttributeTuple(self, element):
-    attrib = element.attrib
-    for key in attrib.keys():
-      if key.endswith('style-name'):
-        return (key, attrib[key])
-    return None
+      if style_value:
+        child.set(self._name_attribute_name, style_value)
 
   def _getColumnValueAttribute(self, column):
     attrib = column.attrib
@@ -853,6 +841,7 @@ class ODTStrategy(ODFStrategy):
   """ODTStrategy create a ODT Document from a form and a ODT template"""
 
   _style_attribute_name = '{urn:oasis:names:tc:opendocument:xmlns:text:1.0}style-name'
+  _name_attribute_name = '{urn:oasis:names:tc:opendocument:xmlns:text:1.0}name'
 
   def _replaceXmlByForm(self, element_tree, form, here, extra_context,
                         ooo_builder, iteration_index=0):
