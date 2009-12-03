@@ -8,8 +8,8 @@ import types
 from DocumentTemplate.ustr import ustr
 from urlparse import urljoin
 from lxml import etree
-from lxml.etree import Element
-
+from lxml.etree import Element, SubElement
+import re
 
 
 DRAW_URI = 'urn:oasis:names:tc:opendocument:xmlns:drawing:1.0'
@@ -167,7 +167,7 @@ class Widget:
     """
     return None
 
-  def render_odt(self, field, as_string, attr_dict=None):
+  def render_odt(self, field, as_string, local_name, attr_dict=None):
     """
       Return a field value rendered in odt format.
       - as_string return value as string or as xml object
@@ -175,7 +175,7 @@ class Widget:
     """
     if attr_dict is None:
       attr_dict = {}
-    text_node = Element('{%s}%s' % (TEXT_URI, 'p'), nsmap=NSMAP)
+    text_node = Element('{%s}%s' % (TEXT_URI, local_name), nsmap=NSMAP)
     # get the field value
     text_node.text = field.get_value('default').decode('utf-8')
     text_node.attrib.update(attr_dict)
@@ -428,6 +428,28 @@ class TextAreaWidget(Widget):
         if value is None:
           return ''
         return value
+
+    def render_odt(self, field, as_string, local_name, attr_dict=None):
+        if attr_dict is None:
+            attr_dict = {}
+        text_node = Element('{%s}%s' % (TEXT_URI, local_name), nsmap=NSMAP)
+        value =  field.get_value('default').decode('utf-8')
+        value.replace('\r', '')
+        def replaceCharsByNode(match_object):
+            #global text_node
+            if match_object.group(1) is None:
+                text_node.text = match_object.group(2)
+            if match_object.group(1) == '\n':
+                line_break = SubElement(text_node, '{%s}%s' % (TEXT_URI, 'line-break'))
+                line_break.tail = match_object.group(2)
+            if match_object.group(1) == '\t':
+                line_break = SubElement(text_node, '{%s}%s' % (TEXT_URI, 'tab'))
+                line_break.tail = match_object.group(2)
+        re.sub('([\n\t])?([^\n\t]*)', replaceCharsByNode, value)
+        text_node.attrib.update(attr_dict)
+        if as_string:
+            return etree.tostring(text_node)
+        return text_node
 
 TextAreaWidgetInstance = TextAreaWidget()
 
@@ -1199,7 +1221,7 @@ class DateTimeWidget(Widget):
   def render_pdf(self, field, value, render_prefix=None):
     return self.format_value(field, value, mode='pdf')
 
-  def render_odt(self, field, as_string, attr_dict=None):
+  def render_odt(self, field, as_string, local_name, attr_dict=None):
     """
       Return a field value rendered in odt format.
       - as_string return value as string or as xml object
@@ -1207,7 +1229,7 @@ class DateTimeWidget(Widget):
     """
     if attr_dict is None:
       attr_dict = {}
-    text_node = Element('{%s}%s' % (TEXT_URI, 'p'), nsmap=NSMAP)
+    text_node = Element('{%s}%s' % (TEXT_URI, local_name), nsmap=NSMAP)
     # get the field value
     text_node.text = self.format_value(field, field.get_value('default'), mode='pdf').decode('utf-8')
     text_node.attrib.update(attr_dict)
@@ -1517,6 +1539,17 @@ class FloatWidget(TextWidget):
     return {'query': value,
             'format': format,
             'type': 'float'}
+
+  def render_odt(self, field, as_string, local_name, attr_dict=None):
+    if attr_dict is None:
+      attr_dict = {}
+    text_node = Element('{%s}%s' % (TEXT_URI, local_name), nsmap=NSMAP)
+    # get the field value
+    text_node.text = self.format_value(field, field.get_value('default')).decode('utf-8')
+    text_node.attrib.update(attr_dict)
+    if as_string:
+      return etree.tostring(text_node)
+    return text_node
 
 FloatWidgetInstance = FloatWidget()
 
