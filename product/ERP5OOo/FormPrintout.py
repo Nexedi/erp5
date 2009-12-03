@@ -366,157 +366,10 @@ class ODFStrategy(Implicit):
     extra_context -- extra_context
     ooo_builder -- the OOoBuilder object which have an ODF document.
     iteration_index -- the index which is used when iterating the group of items using ReportSection.
+
+    Need to be overloaded in OD?Strategy Class
     """
-    field_list = form.get_fields(include_disabled=1) 
-    REQUEST = get_request()
-    for (count, field) in enumerate(field_list):
-      if isinstance(field, ListBox):
-        element_tree = self._appendTableByListbox(element_tree=element_tree,
-                                                  listbox=field,
-                                                  REQUEST=REQUEST,
-                                                  iteration_index=iteration_index)
-      elif isinstance(field, FormBox):
-        if not hasattr(here, field.get_value('formbox_target_id')):
-          continue
-        sub_form = getattr(here, field.get_value('formbox_target_id'))
-        content = self._replaceXmlByFormbox(element_tree=element_tree,
-                                            field=field,
-                                            form=sub_form,
-                                            extra_context=extra_context,
-                                            ooo_builder=ooo_builder,
-                                            iteration_index=iteration_index)
-      elif isinstance(field, ReportBox):
-         report_method = getattr(field, field.get_value('report_method'), None)
-         element_tree = self._replaceXmlByReportSection(element_tree=element_tree,
-                                                        extra_context=extra_context,
-                                                        report_method=report_method,
-                                                        base_name=field.id,
-                                                        ooo_builder=ooo_builder)
-      elif isinstance(field, ImageField):
-        element_tree = self._replaceXmlByImageField(element_tree=element_tree,
-                                                    image_field=field,
-                                                    ooo_builder=ooo_builder,
-                                                    iteration_index=iteration_index)
-      else:
-        element_tree = self._replaceNodeViaReference(element_tree=element_tree,
-                                                     field=field, iteration_index=iteration_index)
-    return element_tree
-
-  def _replaceNodeViaReference(self, element_tree=None, field=None, iteration_index=0):
-    """replace nodes (e.g. paragraphs) via ODF reference"""
-    element_tree = self._replaceNodeViaRangeReference(element_tree=element_tree, field=field)
-    element_tree = self._replaceNodeViaPointReference(element_tree=element_tree, field=field)
-    return element_tree
-
-  def _renderField(self, field):
-    # XXX It looks ugly to use render_pdf to extract text. Probably
-    # it should be renamed to render_text.
-    return field.render_pdf(field.get_value('default'))
-
-  def _replaceNodeViaPointReference(self, element_tree=None, field=None, iteration_index=0):
-    """Replace text node via an ODF point reference.
-
-    point reference example:
-     <text:reference-mark text:name="invoice-date"/>
-    """
-    field_id = field.id
-    field_value = self._renderField(field)
-    value = self._toUnicodeString(field_value)
-    # text:reference-mark text:name="invoice-date"
-    reference_xpath = '//text:reference-mark[@text:name="%s"]' % field_id
-    reference_list = element_tree.xpath(reference_xpath, namespaces=element_tree.nsmap)
-    if len(reference_list) > 0:
-      target_node = reference_list[0]
-      paragraph_node = reference_list[0].getparent()
-      if not isinstance(field_value, list):
-        # remove such a "bbb": <text:p>aaa<text:line-break/>bbb</text:p>
-        for child in paragraph_node.getchildren():
-          child.tail = ''
-        paragraph_node.text = value
-      else:
-        self._appendParagraphsWithLineList(target_node=target_node, line_list=field_value)
-    # set when using report section
-    self._setUniqueElementName(base_name=field.id,
-                               iteration_index=iteration_index,
-                               xpath=reference_xpath,
-                               element_tree=element_tree)
-    return element_tree
-
-  def _replaceNodeViaRangeReference(self, element_tree=None, field=None, iteration_index=0):
-    """Replace text node via an ODF ranged reference.
-
-    range reference example:
-    <text:reference-mark-start text:name="week"/>Monday<text:reference-mark-end text:name="week"/>
-    or
-    <text:reference-mark-start text:name="my_title"/><text:span text:style-name="T1">title</text:span>
-    <text:reference-mark-end text:name="my_title"/>
-
-    """
-    field_value = self._renderField(field)
-    value = self._toUnicodeString(field_value)
-    range_reference_xpath = '//text:reference-mark-start[@text:name="%s"]' % field.id
-    reference_list = element_tree.xpath(range_reference_xpath, namespaces=element_tree.nsmap)
-    if len(reference_list) is 0:
-      return element_tree
-    target_node = reference_list[0]
-    if not isinstance(field_value, list):
-      next_node = target_node.getnext()
-      span_tag_name = '{%s}span' % element_tree.nsmap['text']
-      if next_node is not None and next_node.tag == span_tag_name:
-        next_node.text = value
-      else:
-        target_node.tail = value
-      # clear text until 'reference-mark-end'
-      for node in target_node.itersiblings():
-        end_tag_name = '{%s}reference-mark-end' % element_tree.nsmap['text']
-        name_attribute = '{%s}name' % element_tree.nsmap['text']
-        if node.tag == end_tag_name and node.get(name_attribute) == field.id:
-          break
-        node.tail = ''
-    else:
-      self._appendParagraphsWithLineList(target_node=target_node, line_list=field_value)
-
-    # set when using report section
-    self._setUniqueElementName(base_name=field.id,
-                               iteration_index=iteration_index,
-                               xpath=range_reference_xpath,
-                               element_tree=element_tree)
-    return element_tree
-
-  def _appendParagraphsWithLineList(self, target_node=None, line_list=None):
-    """Create paragraphs using an ERP5 Form line list.
-
-    Keyword arguments:
-    target_node -- target text node which is marked by an ODF reference. 
-    line_list -- an ERP5 Form line list 
-
-    example:
-    --
-    first line
-    second line
-    --
-    <p:text>
-    first line
-    </p:text>
-    <p:text>
-    second line
-    </p:text>
-    """
-    paragraph_node = target_node.getparent()
-    parent_node = paragraph_node.getparent()
-    paragraph_list = []
-    for line in line_list:
-      p = deepcopy(paragraph_node)
-      for child in p.getchildren():
-        child.tail = ''
-      value = self._toUnicodeString(line)
-      p.text = value
-      paragraph_list.append(p)
-    paragraph_node_index = parent_node.index(paragraph_node)
-    parent_node.remove(paragraph_node)
-    for (index, paragraph) in enumerate(paragraph_list):
-      parent_node.insert(paragraph_node_index, paragraph)
-      paragraph_node_index = paragraph_node_index + 1
+    raise NotImplementedError
 
   def _replaceXmlByReportSection(self, element_tree=None, extra_context=None, 
                                  report_method=None, base_name=None, 
@@ -1044,7 +897,169 @@ class ODFStrategy(Implicit):
 
 class ODTStrategy(ODFStrategy):
   """ODTStrategy create a ODT Document from a form and a ODT template"""
-  pass
+  def _replaceXmlByForm(self, element_tree=None, form=None, here=None,
+                           extra_context=None, ooo_builder=None, iteration_index=0):
+    """
+    Replace an element_tree object using an ERP5 form.
+
+    Keyword arguments:
+    element_tree -- the element_tree of a XML file in an ODF document.
+    form -- an ERP5 form
+    here -- called context
+    extra_context -- extra_context
+    ooo_builder -- the OOoBuilder object which have an ODF document.
+    iteration_index -- the index which is used when iterating the group of items using ReportSection.
+    """
+    field_list = form.get_fields(include_disabled=1) 
+    REQUEST = get_request()
+    for (count, field) in enumerate(field_list):
+      if isinstance(field, ListBox):
+        element_tree = self._appendTableByListbox(element_tree=element_tree,
+                                                  listbox=field,
+                                                  REQUEST=REQUEST,
+                                                  iteration_index=iteration_index)
+      elif isinstance(field, FormBox):
+        if not hasattr(here, field.get_value('formbox_target_id')):
+          continue
+        sub_form = getattr(here, field.get_value('formbox_target_id'))
+        content = self._replaceXmlByFormbox(element_tree=element_tree,
+                                            field=field,
+                                            form=sub_form,
+                                            extra_context=extra_context,
+                                            ooo_builder=ooo_builder,
+                                            iteration_index=iteration_index)
+      elif isinstance(field, ReportBox):
+         report_method = getattr(field, field.get_value('report_method'), None)
+         element_tree = self._replaceXmlByReportSection(element_tree=element_tree,
+                                                        extra_context=extra_context,
+                                                        report_method=report_method,
+                                                        base_name=field.id,
+                                                        ooo_builder=ooo_builder)
+      elif isinstance(field, ImageField):
+        element_tree = self._replaceXmlByImageField(element_tree=element_tree,
+                                                    image_field=field,
+                                                    ooo_builder=ooo_builder,
+                                                    iteration_index=iteration_index)
+      else:
+        element_tree = self._replaceNodeViaReference(element_tree=element_tree,
+                                                     field=field, iteration_index=iteration_index)
+    return element_tree
+
+  def _replaceNodeViaReference(self, element_tree=None, field=None, iteration_index=0):
+    """replace nodes (e.g. paragraphs) via ODF reference"""
+    element_tree = self._replaceNodeViaRangeReference(element_tree=element_tree, field=field)
+    element_tree = self._replaceNodeViaPointReference(element_tree=element_tree, field=field)
+    return element_tree
+
+  def _renderField(self, field):
+    # XXX It looks ugly to use render_pdf to extract text. Probably
+    # it should be renamed to render_text.
+    return field.render_pdf(field.get_value('default'))
+
+  def _replaceNodeViaPointReference(self, element_tree=None, field=None, iteration_index=0):
+    """Replace text node via an ODF point reference.
+
+    point reference example:
+     <text:reference-mark text:name="invoice-date"/>
+    """
+    field_id = field.id
+    field_value = self._renderField(field)
+    value = self._toUnicodeString(field_value)
+    # text:reference-mark text:name="invoice-date"
+    reference_xpath = '//text:reference-mark[@text:name="%s"]' % field_id
+    reference_list = element_tree.xpath(reference_xpath, namespaces=element_tree.nsmap)
+    if len(reference_list) > 0:
+      target_node = reference_list[0]
+      paragraph_node = reference_list[0].getparent()
+      if not isinstance(field_value, list):
+        # remove such a "bbb": <text:p>aaa<text:line-break/>bbb</text:p>
+        for child in paragraph_node.getchildren():
+          child.tail = ''
+        paragraph_node.text = value
+      else:
+        self._appendParagraphsWithLineList(target_node=target_node, line_list=field_value)
+    # set when using report section
+    self._setUniqueElementName(base_name=field.id,
+                               iteration_index=iteration_index,
+                               xpath=reference_xpath,
+                               element_tree=element_tree)
+    return element_tree
+
+  def _replaceNodeViaRangeReference(self, element_tree=None, field=None, iteration_index=0):
+    """Replace text node via an ODF ranged reference.
+
+    range reference example:
+    <text:reference-mark-start text:name="week"/>Monday<text:reference-mark-end text:name="week"/>
+    or
+    <text:reference-mark-start text:name="my_title"/><text:span text:style-name="T1">title</text:span>
+    <text:reference-mark-end text:name="my_title"/>
+
+    """
+    field_value = self._renderField(field)
+    value = self._toUnicodeString(field_value)
+    range_reference_xpath = '//text:reference-mark-start[@text:name="%s"]' % field.id
+    reference_list = element_tree.xpath(range_reference_xpath, namespaces=element_tree.nsmap)
+    if len(reference_list) is 0:
+      return element_tree
+    target_node = reference_list[0]
+    if not isinstance(field_value, list):
+      next_node = target_node.getnext()
+      span_tag_name = '{%s}span' % element_tree.nsmap['text']
+      if next_node is not None and next_node.tag == span_tag_name:
+        next_node.text = value
+      else:
+        target_node.tail = value
+      # clear text until 'reference-mark-end'
+      for node in target_node.itersiblings():
+        end_tag_name = '{%s}reference-mark-end' % element_tree.nsmap['text']
+        name_attribute = '{%s}name' % element_tree.nsmap['text']
+        if node.tag == end_tag_name and node.get(name_attribute) == field.id:
+          break
+        node.tail = ''
+    else:
+      self._appendParagraphsWithLineList(target_node=target_node, line_list=field_value)
+
+    # set when using report section
+    self._setUniqueElementName(base_name=field.id,
+                               iteration_index=iteration_index,
+                               xpath=range_reference_xpath,
+                               element_tree=element_tree)
+    return element_tree
+
+  def _appendParagraphsWithLineList(self, target_node=None, line_list=None):
+    """Create paragraphs using an ERP5 Form line list.
+
+    Keyword arguments:
+    target_node -- target text node which is marked by an ODF reference. 
+    line_list -- an ERP5 Form line list 
+
+    example:
+    --
+    first line
+    second line
+    --
+    <p:text>
+    first line
+    </p:text>
+    <p:text>
+    second line
+    </p:text>
+    """
+    paragraph_node = target_node.getparent()
+    parent_node = paragraph_node.getparent()
+    paragraph_list = []
+    for line in line_list:
+      p = deepcopy(paragraph_node)
+      for child in p.getchildren():
+        child.tail = ''
+      value = self._toUnicodeString(line)
+      p.text = value
+      paragraph_list.append(p)
+    paragraph_node_index = parent_node.index(paragraph_node)
+    parent_node.remove(paragraph_node)
+    for (index, paragraph) in enumerate(paragraph_list):
+      parent_node.insert(paragraph_node_index, paragraph)
+      paragraph_node_index = paragraph_node_index + 1
 
 class ODGStrategy(ODFStrategy):
   """ODGStrategy create a ODG Document from a form and a ODG template"""
