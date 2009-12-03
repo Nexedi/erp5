@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 # -*- coding: utf-8 -*-
 # Copyright (c) 2009 Nexedi KK and Contributors. All Rights Reserved.
@@ -283,11 +284,7 @@ class TestFormPrintout(ERP5TypeTestCase):
     builder = OOoBuilder(odf_document)
     content_xml = builder.extract("content.xml")
     content = etree.XML(content_xml)
-    number_xpath = '//text:reference-mark[@text:name="number"]' 
-    number_reference = content.xpath(number_xpath, namespaces=content.nsmap)
-    self.assertTrue(len(number_reference) > 0)
-    number_paragraph = number_reference[0].getparent()
-    self.assertEqual(number_paragraph.text, "543 210.0")
+    self.assertTrue(content.xpath('//text:p = "543 210.0"', namespaces=content.nsmap))
     self._validate(odf_document)
     
     # change format
@@ -297,11 +294,7 @@ class TestFormPrintout(ERP5TypeTestCase):
     builder = OOoBuilder(odf_document)
     content_xml = builder.extract("content.xml")
     content = etree.XML(content_xml)
-    number_xpath = '//text:reference-mark[@text:name="number"]' 
-    number_reference = content.xpath(number_xpath, namespaces=content.nsmap)
-    self.assertTrue(len(number_reference) > 0)
-    number_paragraph = number_reference[0].getparent()
-    self.assertEqual(number_paragraph.text, "543210.0")
+    self.assertTrue(content.xpath('//text:p = "543210.0"', namespaces=content.nsmap))
     
     self._validate(odf_document)
 
