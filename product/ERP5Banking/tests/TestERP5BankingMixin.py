@@ -546,7 +546,7 @@ class TestERP5BankingMixin(ERP5TypeTestCase):
     site_region_from_codification_dict = {
       'P10': 'france',
       'S10': 'spain',
-      'P11': 'france',
+      'HQ1': 'france',
     }
     self.paris = self.testsite.newContent(id='paris', portal_type='Category', codification='P10',  vault_type='site')
     self.madrid = self.testsite.newContent(id='madrid', portal_type='Category', codification='S10',  vault_type='site')
