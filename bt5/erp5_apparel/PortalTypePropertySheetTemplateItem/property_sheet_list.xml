@@ -20,9 +20,6 @@
  <portal_type id="Apparel Consumption">
   <item>ApparelConsumption</item>
  </portal_type>
- <portal_type id="Apparel Fabric Colour Variation">
-  <item>ApparelFabricColourVariation</item>
- </portal_type>
  <portal_type id="Apparel Model Colour Variation">
   <item>ApparelModelColourVariation</item>
  </portal_type>

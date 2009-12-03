@@ -42,10 +42,10 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>      A apparel colour range\n
-      \n
-      It is considered here as a resource because planification can\n
-      eventually consider the sales of a certain quantity of items of a given ApparelColourRange\n
+            <value> <string>      A apparel colour range\r\n
+      \r\n
+      It is considered here as a resource because planification can\r\n
+      eventually consider the sales of a certain quantity of items of a given ApparelColourRange\r\n
 </string> </value>
         </item>
         <item>
@@ -68,11 +68,13 @@
         </item>
         <item>
             <key> <string>init_script</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Resource_init</string> </value>
         </item>
         <item>
             <key> <string>permission</string> </key>
-            <value> <string></string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>title</string> </key>
