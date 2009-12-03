@@ -86,7 +86,7 @@ previous_tag = None\n
 for delivery_builder in delivery.getBuilderList():\n
   this_builder_tag = \'%s_split_%s\' % (delivery.getPath(),\n
                                       delivery_builder.getId())\n
-  all_tag_list.append(this_builder_tag)\n
+  after_tag = [tag]\n
   if previous_tag:\n
     after_tag.append(previous_tag)\n
   delivery_builder.activate(activity=\'SQLQueue\',\n
@@ -147,7 +147,6 @@ for delivery_builder in delivery.getBuilderList():\n
                             <string>previous_tag</string>
                             <string>delivery_builder</string>
                             <string>this_builder_tag</string>
-                            <string>all_tag_list</string>
                             <string>after_tag</string>
                           </tuple>
                         </value>
