@@ -78,6 +78,7 @@
                         <string>my_source_reference</string>
                         <string>my_thumbnail</string>
                         <string>my_file</string>
+                        <string>my_variation_base_category</string>
                       </list>
                     </value>
                 </item>
