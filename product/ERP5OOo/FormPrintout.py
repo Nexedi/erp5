@@ -915,7 +915,7 @@ class ODTStrategy(ODFStrategy):
     iteration_index -- the index which is used when iterating the group of items using ReportSection.
     """
     field_list = form.get_fields(include_disabled=1) 
-    REQUEST = get_request()
+    REQUEST = here.REQUEST
     for (count, field) in enumerate(field_list):
       if isinstance(field, ListBox):
         element_tree = self._appendTableByListbox(element_tree=element_tree,
@@ -951,8 +951,8 @@ class ODTStrategy(ODFStrategy):
 
   def _replaceNodeViaReference(self, element_tree=None, field=None, iteration_index=0):
     """replace nodes (e.g. paragraphs) via ODF reference"""
-    element_tree = self._replaceNodeViaRangeReference(element_tree=element_tree, field=field)
-    element_tree = self._replaceNodeViaPointReference(element_tree=element_tree, field=field)
+    self._replaceNodeViaRangeReference(element_tree=element_tree, field=field)
+    self._replaceNodeViaPointReference(element_tree=element_tree, field=field)
     self._replaceNodeViaFormName(element_tree, field)
     return element_tree
 
@@ -983,7 +983,6 @@ class ODTStrategy(ODFStrategy):
                                iteration_index=iteration_index,
                                xpath=reference_xpath,
                                element_tree=element_tree)
-    return element_tree
 
   def _replaceNodeViaRangeReference(self, element_tree=None, field=None, iteration_index=0):
     """Replace text node via an ODF ranged reference.
@@ -1018,14 +1017,6 @@ class ODTStrategy(ODFStrategy):
                                iteration_index=iteration_index,
                                xpath=range_reference_xpath,
                                element_tree=element_tree)
-    return element_tree
-
-    # set when using report section
-    self._setUniqueElementName(base_name=field.id,
-                               iteration_index=iteration_index,
-                               xpath=range_reference_xpath,
-                               element_tree=element_tree)
-    return element_tree
 
   def _replaceNodeViaFormName(self, element_tree, field, iteration_index=0):
     """
