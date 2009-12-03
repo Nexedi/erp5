@@ -214,7 +214,7 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>resource_translated_title</string>
+                          <string>resource</string>
                           <string>Component Type</string>
                         </tuple>
                         <tuple>
