@@ -627,6 +627,7 @@ class TestERP5BankingMixin(ERP5TypeTestCase):
     salle_tri = surface_vault_type.newContent('salle_tri')
       
     if not no_site:
+      destination_site_list = [x.getId() for x in created_site_list]
       for c in created_site_list: #self.testsite.getCategoryChildValueList():
         # create bank structure for each agency
         site = c.getId()
@@ -665,7 +666,7 @@ class TestERP5BankingMixin(ERP5TypeTestCase):
         for ss in ['encaisse_des_billets_et_monnaies', 'encaisse_des_billets_recus_pour_ventilation', 'encaisse_des_differences', 'encaisse_des_externes']:
           ss =  salle_tri.newContent(id='%s' %(ss,), portal_type='Category', codification='',  vault_type='site/surface/salle_tri')
           if 'ventilation' in ss.getId():
-            for country in ['madrid', 'paris']:
+            for country in destination_site_list:
               if country[0] != c.getCodification()[0]:
                 ss.newContent(id='%s' %(country,), portal_type='Category', codification='',  vault_type='site/caveau/%s' %(s.getId(),))
         # caveau
@@ -676,7 +677,7 @@ class TestERP5BankingMixin(ERP5TypeTestCase):
             for ss in ['encaisse_des_billets_neufs_non_emis', 'encaisse_des_billets_retires_de_la_circulation','encaisse_des_billets_detruits','encaisse_des_billets_neufs_non_emis_en_transit_allant_a']:
               ss =  s.newContent(id='%s' %(ss,), portal_type='Category', codification='',  vault_type='site/caveau/%s' %(s.getId(),))
               if 'transit' in ss.getId():
-                for country in ['madrid', 'paris']:
+                for country in destination_site_list:
                   if country[0] != c.getCodification()[0]:
                     ss.newContent(id='%s' %(country,), portal_type='Category', codification='',  vault_type='site/caveau/%s' %(s.getId(),))
 
@@ -685,7 +686,7 @@ class TestERP5BankingMixin(ERP5TypeTestCase):
                        'encaisse_des_billets_recus_pour_ventilation','encaisse_des_devises']:
               ss =  s.newContent(id='%s' %(ss,), portal_type='Category', codification='',  vault_type='site/caveau/%s' %(s.getId(),))
               if 'ventilation' in ss.getId():
-                for country in ['madrid', 'paris']:
+                for country in destination_site_list:
                   if country[0] != c.getCodification()[0]:
                     ss.newContent(id='%s' %(country,), portal_type='Category', codification='',  vault_type='site/caveau/%s' %(s.getId(),))
               if 'devises' in ss.getId():
