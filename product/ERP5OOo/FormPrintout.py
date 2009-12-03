@@ -36,7 +36,7 @@ from Products.ERP5Form.ImageField import ImageField
 from Products.ERP5OOo.OOoUtils import OOoBuilder
 from Products.CMFCore.exceptions import AccessControl_Unauthorized
 from Acquisition import Implicit, aq_base
-from Products.ERP5Type.Globals import InitializeClass, DTMLFile, Persistent, get_request
+from Products.ERP5Type.Globals import InitializeClass, DTMLFile, Persistent
 from AccessControl import ClassSecurityInfo
 from AccessControl.Role import RoleManager
 from OFS.SimpleItem import Item
@@ -915,7 +915,7 @@ class ODTStrategy(ODFStrategy):
     iteration_index -- the index which is used when iterating the group of items using ReportSection.
     """
     field_list = form.get_fields(include_disabled=1) 
-    REQUEST = get_request()
+    REQUEST = here.REQUEST
     for (count, field) in enumerate(field_list):
       if isinstance(field, ListBox):
         element_tree = self._appendTableByListbox(element_tree=element_tree,
@@ -1038,7 +1038,7 @@ class ODGStrategy(ODFStrategy):
                            extra_context=None, ooo_builder=None, iteration_index=0):
 
     field_list = form.get_fields(include_disabled=1)
-    REQUEST = get_request()
+    REQUEST = here.REQUEST
     for (count, field) in enumerate(field_list):
       field_value = self._renderField(field)
       value = self._toUnicodeString(field_value)
