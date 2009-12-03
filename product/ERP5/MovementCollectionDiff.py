@@ -86,7 +86,7 @@ class MovementCollectionDiff(object):
     to update an existing movement or to
     create a new movement.
     """
-    property_dict = self._property_dict.get(movement)
+    property_dict = self._property_dict_dict.get(movement)
     if property_dict is None:
       # movement should be 'New Movement'
       return self._getPropertyAndCategoryList(movement)
@@ -100,7 +100,7 @@ class MovementCollectionDiff(object):
     property_dict -- properties to update
     """
     self._updatable_movement_list.append(movement)
-    self._property_dict[movement] = property_dict
+    self._property_dict_dict[movement] = property_dict
 
   def _getPropertyAndCategoryList(self, movement):
     """
