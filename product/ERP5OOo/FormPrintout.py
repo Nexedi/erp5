@@ -43,6 +43,7 @@ from OFS.SimpleItem import Item
 from urllib import quote, quote_plus
 from copy import deepcopy
 from lxml import etree
+from lxml.etree import _Element, _ElementStringResult
 from zLOG import LOG, DEBUG, INFO, WARNING
 from mimetypes import guess_extension
 from DateTime import DateTime
@@ -897,6 +898,9 @@ class ODFStrategy(Implicit):
 
 class ODTStrategy(ODFStrategy):
   """ODTStrategy create a ODT Document from a form and a ODT template"""
+
+  _style_attribute_name = '{urn:oasis:names:tc:opendocument:xmlns:text:1.0}style-name'
+
   def _replaceXmlByForm(self, element_tree=None, form=None, here=None,
                            extra_context=None, ooo_builder=None, iteration_index=0):
     """
@@ -963,21 +967,16 @@ class ODTStrategy(ODFStrategy):
      <text:reference-mark text:name="invoice-date"/>
     """
     field_id = field.id
-    field_value = self._renderField(field)
-    value = self._toUnicodeString(field_value)
-    # text:reference-mark text:name="invoice-date"
     reference_xpath = '//text:reference-mark[@text:name="%s"]' % field_id
     reference_list = element_tree.xpath(reference_xpath, namespaces=element_tree.nsmap)
-    if len(reference_list) > 0:
-      target_node = reference_list[0]
-      paragraph_node = reference_list[0].getparent()
-      if not isinstance(field_value, list):
-        # remove such a "bbb": <text:p>aaa<text:line-break/>bbb</text:p>
-        for child in paragraph_node.getchildren():
-          child.tail = ''
-        paragraph_node.text = value
-      else:
-        self._appendParagraphsWithLineList(target_node=target_node, line_list=field_value)
+    for target_node in reference_list:
+      node_to_replace = target_node.xpath('ancestor::text:p[1]', namespaces=element_tree.nsmap)[0]
+      attr_dict = {}
+      style_value = node_to_replace.attrib.get(self._style_attribute_name)
+      if style_value:
+        attr_dict.update({self._style_attribute_name: style_value})
+      new_node = field.render_odt(attr_dict=attr_dict)
+      node_to_replace.getparent().replace(node_to_replace, new_node)
     # set when using report section
     self._setUniqueElementName(base_name=field.id,
                                iteration_index=iteration_index,
@@ -991,34 +990,28 @@ class ODTStrategy(ODFStrategy):
     range reference example:
     <text:reference-mark-start text:name="week"/>Monday<text:reference-mark-end text:name="week"/>
     or
-    <text:reference-mark-start text:name="my_title"/><text:span text:style-name="T1">title</text:span>
+    <text:reference-mark-start text:name="my_title"/>
+      <text:span text:style-name="T1">title</text:span>
     <text:reference-mark-end text:name="my_title"/>
 
     """
-    field_value = self._renderField(field)
-    value = self._toUnicodeString(field_value)
-    range_reference_xpath = '//text:reference-mark-start[@text:name="%s"]' % field.id
+    field_id = field.id
+    range_reference_xpath = '//text:reference-mark-start[@text:name="%s"]/'\
+                            'following-sibling::*[node()/'\
+                            'following::text:reference-mark-end[@text:name="%s"]]' % (field_id, field_id)
     reference_list = element_tree.xpath(range_reference_xpath, namespaces=element_tree.nsmap)
-    if len(reference_list) is 0:
+    if not reference_list:
       return element_tree
-    target_node = reference_list[0]
-    if not isinstance(field_value, list):
-      next_node = target_node.getnext()
-      span_tag_name = '{%s}span' % element_tree.nsmap['text']
-      if next_node is not None and next_node.tag == span_tag_name:
-        next_node.text = value
-      else:
-        target_node.tail = value
-      # clear text until 'reference-mark-end'
-      for node in target_node.itersiblings():
-        end_tag_name = '{%s}reference-mark-end' % element_tree.nsmap['text']
-        name_attribute = '{%s}name' % element_tree.nsmap['text']
-        if node.tag == end_tag_name and node.get(name_attribute) == field.id:
-          break
-        node.tail = ''
-    else:
-      self._appendParagraphsWithLineList(target_node=target_node, line_list=field_value)
+    parent_node_xpath = '//text:reference-mark-start[@text:name="%s"]/parent::*[1]' % field_id
+    parent_node = element_tree.xpath(parent_node_xpath, namespaces=element_tree.nsmap)[0]
+    text_reference_position = int(parent_node.xpath('count(preceding-sibling::text:reference-mark-start)', namespaces=element_tree.nsmap))
 
+    #Delete all contents between <text:reference-mark-start/> and <text:reference-mark-end/>
+    #Try to fetch style-name
+    attr_dict = {}
+    [(attr_dict.update(target_node.attrib), parent_node.remove(target_node)) for target_node in reference_list]
+    new_node = field.render_odt(local_name='span', attr_dict=attr_dict)
+    parent_node.insert(text_reference_position+1, new_node)
     # set when using report section
     self._setUniqueElementName(base_name=field.id,
                                iteration_index=iteration_index,
@@ -1026,40 +1019,12 @@ class ODTStrategy(ODFStrategy):
                                element_tree=element_tree)
     return element_tree
 
-  def _appendParagraphsWithLineList(self, target_node=None, line_list=None):
-    """Create paragraphs using an ERP5 Form line list.
-
-    Keyword arguments:
-    target_node -- target text node which is marked by an ODF reference. 
-    line_list -- an ERP5 Form line list 
-
-    example:
-    --
-    first line
-    second line
-    --
-    <p:text>
-    first line
-    </p:text>
-    <p:text>
-    second line
-    </p:text>
-    """
-    paragraph_node = target_node.getparent()
-    parent_node = paragraph_node.getparent()
-    paragraph_list = []
-    for line in line_list:
-      p = deepcopy(paragraph_node)
-      for child in p.getchildren():
-        child.tail = ''
-      value = self._toUnicodeString(line)
-      p.text = value
-      paragraph_list.append(p)
-    paragraph_node_index = parent_node.index(paragraph_node)
-    parent_node.remove(paragraph_node)
-    for (index, paragraph) in enumerate(paragraph_list):
-      parent_node.insert(paragraph_node_index, paragraph)
-      paragraph_node_index = paragraph_node_index + 1
+    # set when using report section
+    self._setUniqueElementName(base_name=field.id,
+                               iteration_index=iteration_index,
+                               xpath=range_reference_xpath,
+                               element_tree=element_tree)
+    return element_tree
 
 class ODGStrategy(ODFStrategy):
   """ODGStrategy create a ODG Document from a form and a ODG template"""
