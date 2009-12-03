@@ -1040,17 +1040,13 @@ class ODGStrategy(ODFStrategy):
     field_list = form.get_fields(include_disabled=1)
     REQUEST = here.REQUEST
     for (count, field) in enumerate(field_list):
-      field_value = self._renderField(field)
-      value = self._toUnicodeString(field_value)
       text_xpath = '//draw:frame[@draw:name="%s"]/*' % field.id
       node_list = element_tree.xpath(text_xpath, namespaces=element_tree.nsmap)
-      if len(node_list) is 0:
-        return element_tree
+      if not node_list:
+        continue
 
-      new_node = field.widget.render_odg(field, as_string=False)
+      new_node = field.widget.render_odg(field, as_string=False)#XXXrender_odg should be called on field, not on widget
       for node in node_list:
-        if new_node is not None:
-          parent_node = node.getparent()
-          parent_node.replace(node, new_node)
+        parent_node = node.getparent().replace(node, new_node)
 
-      return element_tree
+    return element_tree
