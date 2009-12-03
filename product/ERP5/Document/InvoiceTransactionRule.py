@@ -323,12 +323,9 @@ class InvoiceTransactionRule(Rule, PredicateMatrix):
   security.declareProtected( Permissions.ModifyPortalContent,
                               'newCellContent' )
   def newCellContent(self, id, portal_type='Accounting Rule Cell', **kw):
+    """Overriden to specify default portal type
     """
-      Creates a new Cell.
-    """
-    self.invokeFactory(type_name=portal_type, id=id)
-    new_cell = self.get(id)
-    return new_cell
+    return self.newContent(id=id, portal_type=portal_type, **kw)
 
   security.declareProtected(Permissions.ModifyPortalContent, 'solve')
   def solve(self, applied_rule, solution_list):

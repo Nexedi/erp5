@@ -442,11 +442,9 @@ class AssortedResource(TransformedResource):
 
     security.declareProtected( Permissions.ModifyPortalContent, 'newCellContent' )
     def newCellContent(self, id, portal_type='Set Mapped Value', **kw):
+      """Overriden to specify default portal type
       """
-          This method can be overriden
-      """
-      self.invokeFactory(type_name=portal_type, id=id)
-      return self.get(id)
+      return self.newContent(id=id, portal_type=portal_type, **kw)
 
     security.declarePrivate('_checkConsistency')
     def _checkConsistency(self, fixit=0):

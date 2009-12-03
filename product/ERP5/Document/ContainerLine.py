@@ -69,11 +69,9 @@ class ContainerLine(DeliveryLine):
     # Cell Related
     security.declareProtected( Permissions.ModifyPortalContent, 'newCellContent' )
     def newCellContent(self, id, portal_type='Container Cell', **kw):
+      """Overriden to specify default portal type
       """
-          This method can be overriden
-      """
-      self.invokeFactory(type_name=portal_type, id=id)
-      return self.get(id)
+      return self.newContent(id=id, portal_type=portal_type, **kw)
 
     security.declareProtected(Permissions.AccessContentsInformation, 'isAccountable')
     def isAccountable(self):

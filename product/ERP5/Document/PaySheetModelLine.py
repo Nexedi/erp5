@@ -67,9 +67,6 @@ class PaySheetModelLine(TradeModelLine):
   security.declareProtected(Permissions.ModifyPortalContent,
                             'newCellContent' )
   def newCellContent(self, id, portal_type='Pay Sheet Model Cell', **kw):
+    """Overriden to specify default portal type
     """
-      Used to be able to create Pay Sheet Model Cell. (portal_type of cells is
-      hardcoded in inheritated classes, so we have to overload this method)
-    """
-    self.invokeFactory(type_name=portal_type,id=id)
-    return self.get(id)
+    return self.newContent(id=id, portal_type=portal_type, **kw)
