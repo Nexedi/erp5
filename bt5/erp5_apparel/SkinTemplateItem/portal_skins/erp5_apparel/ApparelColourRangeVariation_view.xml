@@ -94,6 +94,7 @@
                     <value>
                       <list>
                         <string>my_title</string>
+                        <string>my_variation_base_category</string>
                       </list>
                     </value>
                 </item>
