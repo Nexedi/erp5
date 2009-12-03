@@ -131,7 +131,7 @@
                         </tuple>
                         <tuple>
                           <string>segment</string>
-                          <string>Eip</string>
+                          <string>Segment</string>
                         </tuple>
                       </list>
                     </value>
