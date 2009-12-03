@@ -953,6 +953,7 @@ class ODTStrategy(ODFStrategy):
     """replace nodes (e.g. paragraphs) via ODF reference"""
     element_tree = self._replaceNodeViaRangeReference(element_tree=element_tree, field=field)
     element_tree = self._replaceNodeViaPointReference(element_tree=element_tree, field=field)
+    self._replaceNodeViaFormName(element_tree, field)
     return element_tree
 
   def _renderField(self, field):
@@ -1025,6 +1026,19 @@ class ODTStrategy(ODFStrategy):
                                xpath=range_reference_xpath,
                                element_tree=element_tree)
     return element_tree
+
+  def _replaceNodeViaFormName(self, element_tree, field, iteration_index=0):
+    """
+    Used to replace field in ODT document like checkboxes
+    """
+    field_id = field.id
+    reference_xpath = '//*[@form:name = "%s"]' % field_id
+    reference_list = element_tree.xpath(reference_xpath, namespaces=element_tree.nsmap)
+    for target_node in reference_list:
+      attr_dict = {}
+      attr_dict.update(target_node.attrib)
+      new_node = field.render_odt(attr_dict=attr_dict)
+      target_node.getparent().replace(target_node, new_node)
 
 class ODGStrategy(ODFStrategy):
   """ODGStrategy create a ODG Document from a form and a ODG template"""
