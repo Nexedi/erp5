@@ -915,7 +915,7 @@ class ODTStrategy(ODFStrategy):
     iteration_index -- the index which is used when iterating the group of items using ReportSection.
     """
     field_list = form.get_fields(include_disabled=1) 
-    REQUEST = here.REQUEST
+    REQUEST = get_request()
     for (count, field) in enumerate(field_list):
       if isinstance(field, ListBox):
         element_tree = self._appendTableByListbox(element_tree=element_tree,
