@@ -58,6 +58,9 @@ from Products.ERP5Type.Document import newTempBase\n
 from Products.ERP5Type.Document import newTempMappedValue\n
 from Products.ERP5Type.Utils import getTranslationStringWithContext\n
 \n
+from AccessControl import getSecurityManager\n
+\n
+can_view_history = getSecurityManager().getUser().has_permission(\'View History\', context)\n
 \n
 marker = []\n
 result = []\n
@@ -100,6 +103,8 @@ for workflow_item in workflow_item_list:\n
   o = newTempBase(portal_object, str(i))\n
   i += 1\n
   for key, value in workflow_item.items():\n
+    if key == \'serial\' and not can_view_history:\n
+      continue\n
     # XXX Compatibility\n
     for compatibility_name in [\'building_\', \'installation_\']:\n
       if key.startswith(compatibility_name):\n
@@ -135,7 +140,7 @@ for workflow_item in workflow_item_list:\n
     o.setProperty(key, value)\n
  \n
   # record current serial as "next serial" for the previous revision\n
-  if next_serial is not None:\n
+  if next_serial is not None and can_view_history:\n
     previous_obj.setProperty(\'next_serial\', o.serial)\n
   next_serial = getattr(o, \'serial\', None)\n
   previous_obj = o\n
@@ -207,6 +212,9 @@ return result\n
                             <string>newTempMappedValue</string>
                             <string>Products.ERP5Type.Utils</string>
                             <string>getTranslationStringWithContext</string>
+                            <string>AccessControl</string>
+                            <string>getSecurityManager</string>
+                            <string>can_view_history</string>
                             <string>marker</string>
                             <string>result</string>
                             <string>i</string>
