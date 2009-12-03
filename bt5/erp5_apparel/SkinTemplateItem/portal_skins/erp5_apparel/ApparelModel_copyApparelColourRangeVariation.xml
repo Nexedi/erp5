@@ -73,7 +73,8 @@ else:\n
       context.activate(activity=\'SQLQueue\').newContent(\n
         portal_type = \'Apparel Model Colour Variation\',\n
         title = apparel_colour_range_variation.getTitle(),\n
-        description = apparel_colour_range_variation.getDescription()\n
+        description = apparel_colour_range_variation.getDescription(),\n
+        destination_reference = apparel_colour_range_variation.getDestinationReference()\n
       )\n
 \n
   if count != 0:\n
