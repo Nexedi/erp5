@@ -109,7 +109,12 @@ class TestERP5BankingMonetaryDestruction(TestERP5BankingMixin):
     self.createManagerAndLogin()
 
     # create categories
-    self.createFunctionGroupSiteCategory(site_list=['paris','madrid', ('lyon', 'P11', 'testsite/auxiliaire')])
+    self.createFunctionGroupSiteCategory(site_list=[
+      'paris',
+      'madrid', 
+      ('lyon', 'P11', 'testsite/auxiliaire', 
+        ('FR', '000', '11113', '000000000000', '16'), 'france'),
+    ])
 
     # Before the test, we need to input the inventory
     
