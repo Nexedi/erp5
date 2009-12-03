@@ -279,6 +279,22 @@ class TestPackingListMixin(TestOrderMixin):
       stop_date=self.datetime + 25,
       **kw)
 
+  def stepSplitAndDeferDoNothingPackingList(self, sequence=None, sequence_list=None, **kw):
+    """
+      Do the split and defer action, but choose "do nothing" for divergences
+    """
+    packing_list = sequence.get('packing_list')
+    kw = {'listbox':[
+      {'listbox_key':line.getRelativeUrl(),
+       'choice':'ignore'} for line in packing_list.getMovementList() \
+      if line.isDivergent()]}
+    self.portal.portal_workflow.doActionFor(
+      packing_list,
+      'split_and_defer_action',
+      start_date=self.datetime + 15,
+      stop_date=self.datetime + 25,
+      **kw)
+
   def stepCheckPackingListSplitted(self, sequence=None, sequence_list=None, **kw):
     """
       Test if packing list was splitted
@@ -1293,6 +1309,31 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
 
     sequence_list.play(self, quiet=quiet)
 
+  def test_SplitAndDeferDoNothing(self, quiet=quiet, run=run_all_test):
+    """
+    Use split & defer to solve a divergence, but choose do nothing for all
+    lines.
+    """
+    if not run: return
+    sequence_list = SequenceList()
+
+    # Test with a simply order without cell
+    sequence_string = self.default_sequence + '\
+                      stepIncreasePackingListLineQuantity \
+                      stepCheckPackingListIsCalculating \
+                      stepTic \
+                      stepCheckPackingListIsDiverged \
+                      stepSplitAndDeferDoNothingPackingList \
+                      stepTic \
+                      stepCheckPackingListIsDiverged \
+                      stepCheckPackingListIsDivergent \
+                      stepCheckPackingListNotSolved \
+                      '
+    sequence_list.addSequenceString(sequence_string)
+
+    sequence_list.play(self, quiet=quiet)
+
+
   def test_12_PackingListLineChangeResource(self, quiet=quiet, run=run_all_test):
     """
     Test if delivery diverged when we change the resource.
@@ -1425,6 +1466,7 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
     self.tic()
     self.assertEqual('cancelled', packing_list.getSimulationState())
     self.assertEqual('cancelled', simulation_movement.getSimulationState())
+
 
 class TestPurchasePackingListMixin(TestPackingListMixin):
   """Mixing class with steps to test purchase packing lists.
