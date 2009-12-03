@@ -118,6 +118,9 @@
                         <string>my_preferred_apparel_fabric_variation_base_category_list</string>
                         <string>my_preferred_apparel_fabric_optional_variation_base_category_list</string>
                         <string>my_preferred_apparel_fabric_individual_variation_base_category_list</string>
+                        <string>my_preferred_apparel_colour_range_individual_variation_base_category_list</string>
+                        <string>my_preferred_apparel_colour_range_optional_variation_base_category_list</string>
+                        <string>my_preferred_apparel_colour_range_variation_base_category_list</string>
                       </list>
                     </value>
                 </item>
