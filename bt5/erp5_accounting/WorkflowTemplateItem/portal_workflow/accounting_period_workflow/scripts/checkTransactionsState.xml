@@ -69,12 +69,19 @@ section = period.getParentValue()\n
 while section.getPortalType() == period.getPortalType():\n
   section = section.getParentValue()\n
 \n
+section_category = section.getGroup(base=True)\n
+if not section_category:\n
+  raise ValidationFailed, translateString("This Organisation must be member of a Group")\n
+\n
+section_uid = portal.Base_getSectionUidListForSectionCategory(section_category)\n
+\n
 movement_list = portal.portal_simulation.getMovementHistoryList(\n
-      section_uid=section.getUid(),\n
+      section_uid=section_uid,\n
       from_date=period.getStartDate().earliestTime(),\n
       at_date=period.getStopDate().latestTime(),\n
       simulation_state=invalid_simulation_state_list,\n
-      portal_type=portal.getPortalAccountingMovementTypeList(),)\n
+      portal_type=portal.getPortalAccountingMovementTypeList(),\n
+      limit=1)\n
 \n
 if movement_list:\n
   raise ValidationFailed, translateString(\n
@@ -133,6 +140,9 @@ if movement_list:\n
                             <string>state</string>
                             <string>invalid_simulation_state_list</string>
                             <string>section</string>
+                            <string>True</string>
+                            <string>section_category</string>
+                            <string>section_uid</string>
                             <string>movement_list</string>
                           </tuple>
                         </value>
