@@ -423,11 +423,18 @@ class SimulationTool(BaseTool):
         new_kw = new_kw.copy()
         # Some columns cannot be found automatically, prepend table name to
         # avoid ambiguities.
+
         # Group-by expression
         group_by = new_kw.pop('group_by', [])
-        if len(group_by):
-          new_kw['group_by_expression'] = ', '.join(['%s.%s' % (table, x) \
-                                                     for x in group_by])
+        column_group_by = new_kw.pop('column_group_by', [])
+        if column_group_by:
+          group_by.extend(['%s.%s' % (table, x) for x in column_group_by])
+        related_key_group_by = new_kw.pop('related_key_group_by', [])
+        if related_key_group_by:
+          group_by.extend(['%s_%s' % (table, x) for x in related_key_group_by])
+        if group_by:
+          new_kw['group_by'] = group_by
+
         # Column values
         column_value_dict = new_kw.pop('column_value_dict', {})
         for key, value in column_value_dict.iteritems():
@@ -531,12 +538,16 @@ class SimulationTool(BaseTool):
         group_by_node=0,
         group_by_mirror_node=0,
         group_by_section=0,
+        group_by_section_category=0,
+        group_by_section_category_strict_membership=0,
         group_by_mirror_section=0,
         group_by_payment=0,
         group_by_sub_variation=0,
         group_by_variation=0,
         group_by_movement=0,
         group_by_resource=0,
+        group_by_project=0,
+        group_by_function=0,
         group_by_date=0,
         # sort_on
         sort_on=None,
@@ -703,30 +714,45 @@ class SimulationTool(BaseTool):
                       ['catalog.uid=%s' % uid for uid in uid_list])
 
       # build the group by expression
-      group_by_expression_list = []
+      column_group_by_expression_list = []
+      related_key_group_by_expression_list = []
       if group_by_node:
-        group_by_expression_list.append('node_uid')
+        column_group_by_expression_list.append('node_uid')
       if group_by_mirror_node:
-        group_by_expression_list.append('mirror_node_uid')
+        column_group_by_expression_list.append('mirror_node_uid')
       if group_by_section:
-        group_by_expression_list.append('section_uid')
+        column_group_by_expression_list.append('section_uid')
       if group_by_mirror_section:
-        group_by_expression_list.append('mirror_section_uid')
+        column_group_by_expression_list.append('mirror_section_uid')
       if group_by_payment:
-        group_by_expression_list.append('payment_uid')
+        column_group_by_expression_list.append('payment_uid')
       if group_by_sub_variation:
-        group_by_expression_list.append('sub_variation_text')
+        column_group_by_expression_list.append('sub_variation_text')
       if group_by_variation:
-        group_by_expression_list.append('variation_text')
+        column_group_by_expression_list.append('variation_text')
       if group_by_movement:
-        group_by_expression_list.append('uid')
+        column_group_by_expression_list.append('uid')
       if group_by_resource:
-        group_by_expression_list.append('resource_uid')
+        column_group_by_expression_list.append('resource_uid')
+      if group_by_project:
+        column_group_by_expression_list.append('project_uid')
+      if group_by_function:
+        column_group_by_expression_list.append('function_uid')
       if group_by_date:
-        group_by_expression_list.append('date')
-      if group_by_expression_list:
-        new_kw['group_by'] = group_by_expression_list
-      return sql_kw, new_kw 
+        column_group_by_expression_list.append('date')
+
+      if column_group_by_expression_list:
+        new_kw['column_group_by'] = column_group_by_expression_list
+
+      if group_by_section_category:
+        related_key_group_by_expression_list.append('section_category_uid')
+      if group_by_section_category_strict_membership:
+        related_key_group_by_expression_list.append(
+            'section_category_strict_membership_uid')
+      if related_key_group_by_expression_list:
+        new_kw['related_key_group_by'] = related_key_group_by_expression_list
+
+      return sql_kw, new_kw
 
     #######################################################
     # Inventory management
@@ -901,9 +927,12 @@ class SimulationTool(BaseTool):
     def _getDefaultGroupByParameters(self, ignore_group_by=0, 
         group_by_node=0, group_by_mirror_node=0,
         group_by_section=0, group_by_mirror_section=0,
-        group_by_payment=0,
+        group_by_payment=0, group_by_project=0,
+        group_by_function=0,
         group_by_variation=0, group_by_sub_variation=0,
         group_by_movement=0, group_by_date=0,
+        group_by_section_category=0,
+        group_by_section_category_strict_membership=0,
         group_by_resource=None,
         movement_list_mode=0,
         **ignored):
@@ -925,9 +954,11 @@ class SimulationTool(BaseTool):
       new_group_by_dict = {}
       if not ignore_group_by:
         if group_by_node or group_by_mirror_node or group_by_section or \
+           group_by_project or group_by_function or \
            group_by_mirror_section or group_by_payment or \
            group_by_sub_variation or group_by_variation or \
-           group_by_movement or group_by_date:
+           group_by_movement or group_by_date or group_by_section_category or\
+           group_by_section_category_strict_membership:
           if group_by_resource is None:
             group_by_resource = 1
           new_group_by_dict['group_by_resource'] = group_by_resource
@@ -1009,7 +1040,8 @@ class SimulationTool(BaseTool):
           AVAILABLE_CRITERIONS_IN_INVENTORY_TABLE = ['node_uid',
                                                      'section_uid',
                                                      'payment_uid']
-          group_by_list = query_generator_kw.get('group_by', [])
+          # Only column group by are supported in full inventories
+          group_by_list = query_generator_kw.get('column_group_by', [])
           column_value_dict = query_generator_kw.get('column_value_dict', {})
           new_group_by_list = []
           new_column_value_dict = {}
@@ -1166,10 +1198,10 @@ class SimulationTool(BaseTool):
                 sql_source_list.extend((initial_inventory_line_list,
                                         delta_inventory_line_list))
               else:
-                if 'group_by' in new_kw:
+                if 'column_group_by' in new_kw:
                   group_by_id_list = []
                   group_by_id_list_append = group_by_id_list.append
-                  for group_by_id in new_kw['group_by']:
+                  for group_by_id in new_kw['column_group_by']:
                     if group_by_id == 'uid':
                       group_by_id_list_append('stock_uid')
                     else:

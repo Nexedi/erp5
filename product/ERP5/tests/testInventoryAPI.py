@@ -856,7 +856,54 @@ class TestInventoryList(InventoryAPITestCase):
                   self.other_node.getRelativeUrl()][0].inventory, 100)
     self.assertEquals([r for r in inventory_list if r.section_relative_url is
                   None][0].inventory, 100)
-  
+
+  def test_GroupBySectionCategory(self):
+    getInventoryList = self.getSimulationTool().getInventoryList
+    self.section.setGroup('level1')
+    self.other_section.setGroup('level1')
+    m1 = self._makeMovement(quantity=2)
+    m2 = self._makeMovement(destination_section_value=self.other_section, quantity=3)
+
+    inventory_list = getInventoryList(node_uid=self.node.getUid(),
+                                      section_category='group/level1',
+                                      group_by_section_category=1)
+    self.assertEquals(1, len(inventory_list))
+    self.assertEquals(3+2, inventory_list[0].inventory)
+
+  def test_GroupByFunction(self):
+    getInventoryList = self.getSimulationTool().getInventoryList
+    function1 = self.portal.portal_categories.restrictedTraverse(
+                                      'function/function1')
+    function2 = self.portal.portal_categories.restrictedTraverse(
+                                      'function/function1/function2')
+    self._makeMovement(quantity=2,
+                       destination_function_value=function1,)
+    self._makeMovement(quantity=3,
+                       destination_function_value=function2,)
+
+    inventory_list = getInventoryList(node_uid=self.node.getUid(),
+                                      group_by_function=1)
+    self.assertEquals(2, len(inventory_list))
+    self.assertEquals([r for r in inventory_list if r.function_uid ==
+      function1.getUid()][0].inventory, 2)
+    self.assertEquals([r for r in inventory_list if r.function_uid ==
+      function2.getUid()][0].inventory, 3)
+
+  def test_GroupByProject(self):
+    getInventoryList = self.getSimulationTool().getInventoryList
+    self._makeMovement(quantity=2,
+                       destination_project_value=self.project,)
+    self._makeMovement(quantity=3,
+                       destination_project_value=self.other_project,)
+
+    inventory_list = getInventoryList(node_uid=self.node.getUid(),
+                                      group_by_project=1)
+    self.assertEquals(2, len(inventory_list))
+    self.assertEquals([r for r in inventory_list if r.project_uid ==
+      self.project.getUid()][0].inventory, 2)
+    self.assertEquals([r for r in inventory_list if r.project_uid ==
+      self.other_project.getUid()][0].inventory, 3)
+
   def test_GroupByResource(self):
     getInventoryList = self.getSimulationTool().getInventoryList
     self._makeMovement(quantity=100)
