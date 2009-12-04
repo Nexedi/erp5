@@ -486,6 +486,7 @@ class BPMBuilder(Alarm):
             portal_type=self.getDeliveryLinePortalType(),
             id=new_delivery_line_id,
             variation_category_list=[],
+            created_by_builder=1,
             activate_kw=activate_kw)
         else:
           # from duplicated original line
