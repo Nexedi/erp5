@@ -169,7 +169,8 @@ class RuleMixin:
         # The tester key does not even exist.
         # So, let us add all decision movements to no_group_list
         no_group_list.extend(decision_movement_dict[tester_key])
-    prevision_to_decision_map.append((None, no_group_list))
+    if len(no_group_list) > 0:
+      prevision_to_decision_map.append((None, no_group_list))
 
     # Second, let us create small groups of movements
     for tester_key in prevision_movement_dict.keys():
