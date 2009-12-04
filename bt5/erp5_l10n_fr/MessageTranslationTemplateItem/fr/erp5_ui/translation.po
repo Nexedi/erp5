@@ -735,6 +735,9 @@ msgstr "Module des gammes matières"
 msgid "Apparel Colour Range Variation"
 msgstr "Gammes coloris"
 
+msgid "Apparel Colour Range Variation Line"
+msgstr "Ligne de gamme de matière"
+
 msgid "Apparel Colour Ranges"
 msgstr "Gammes matières"
 
