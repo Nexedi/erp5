@@ -562,6 +562,9 @@ class ERP5TypeTestCase(backportUnittest.TestCase, PortalTestCase):
     def getArchiveTool(self):
       return getattr(self.getPortal(), 'portal_archives', None)
 
+    def getCacheTool(self):
+      return getattr(self.getPortal(), 'portal_caches', None)
+
     def getOrganisationModule(self):
       return getattr(self.getPortal(), 'organisation_module',
           getattr(self.getPortal(), 'organisation', None))
