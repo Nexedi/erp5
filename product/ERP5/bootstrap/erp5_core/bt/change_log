@@ -1,3 +1,7 @@
+2009-12-04 jm
+* Allow use of ParallelListFields in ListBox cells. Fields using
+  Base_hashCategoryList requires ERP5Form to be up-to-date.
+
 2009-11-18 yo
 * Move localization-related preferences to General from UI.
 

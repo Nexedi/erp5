@@ -51,7 +51,7 @@ class ParallelListWidget(Widget.MultiListWidget,
       Separation of items list is made with a Hash Script, which take 
       the items list in input, and return a list of dictionnaries.
 
-      Each dictionnary describes a (Multi)Listfield.
+      Each dictionnary describes a (Multi)ListField.
       The keys are:
         - key: 
             default: default
@@ -134,18 +134,17 @@ class ParallelListWidget(Widget.MultiListWidget,
       REQUEST.set(KEYWORD % 'default', "")
       REQUEST.set(KEYWORD % 'first_item', 0)
       REQUEST.set(KEYWORD % 'items', sub_field_property_dict['item_list'])
+      sub_widget = self.sub_widget[sub_field_property_dict['field_type']]
       if sub_field_property_dict.get('editable', 1):
-        result = self.sub_widget[sub_field_property_dict['field_type']].render(
-                field,
-                field.generate_subfield_key(sub_field_property_dict['key'],
-                                            key=key),
-                sub_field_property_dict['value'],
-                REQUEST=REQUEST)
+        result = sub_widget.render(field,
+                                   field.generate_subfield_key(
+                                     sub_field_property_dict['key'], key=key),
+                                   sub_field_property_dict['value'],
+                                   REQUEST=REQUEST)
       else:
-        result = self.sub_widget[sub_field_property_dict['field_type']].render_view(
-                field,
-                sub_field_property_dict['value'],
-                REQUEST)
+        result = sub_widget.render_view(field,
+                                        sub_field_property_dict['value'],
+                                        REQUEST)
       for parameter in ('title', 'required', 'size', 'default', 'first_item',
                         'items'):
         # As it doesn't seem possible to delete value in the REQUEST,
@@ -155,63 +154,47 @@ class ParallelListWidget(Widget.MultiListWidget,
 
 class ParallelListValidator(Validator.MultiSelectionValidator):
 
-  property_names = Validator.MultiSelectionValidator.property_names 
+  property_names = Validator.MultiSelectionValidator.property_names
 
-  def __init__(self):
-    """
-    Generate some subvalidator used for rendering.
-    """
-    self.sub_validator = {
-      'ListField': Validator.SelectionValidatorInstance,
-      'MultiListField': Validator.MultiSelectionValidatorInstance,
-    }
+  sub_validator = {
+    'ListField': Validator.SelectionValidatorInstance,
+    'MultiListField': Validator.MultiSelectionValidatorInstance,
+  }
 
-  def validate(self, field, key, REQUEST):    
-
+  def validate(self, field, key, REQUEST):
     result_list = []
-    hash_list = generateSubForm(field, field.get_value('default'), REQUEST)
-    is_sub_field_required = 0
+    hash_list = generateSubForm(field, (), REQUEST)
     for sub_field_property_dict in hash_list:
-      try:
-        sub_result_list = self.validate_sub_field(
-                                  field,
-                                  field.generate_subfield_key(
-                                      sub_field_property_dict['key'], 
-                                      validation=1, key=key),
-                                  REQUEST,
-                                  sub_field_property_dict)
-        if not isinstance(sub_result_list, (list, tuple)):
-          sub_result_list = [sub_result_list]
-        else:
-          sub_result_list = list(sub_result_list)
-        result_list.extend(sub_result_list)
-      except ValidationError:
-        is_sub_field_required = 1
-    
-    if result_list == []:
-      if field.get_value('required'):
-        self.raise_error('required_not_found', field)
-    else:
-      if is_sub_field_required:
-        self.raise_error('required_not_found', field)
+      id = field.generate_subfield_key(sub_field_property_dict['key'],
+                                       validation=1, key=key)
+      sub_result_list = self.validate_sub_field(field, id, REQUEST,
+                                                sub_field_property_dict)
+      if not isinstance(sub_result_list, (list, tuple)):
+        sub_result_list = [sub_result_list]
+      result_list.extend(sub_result_list)
     return result_list
 
   def validate_sub_field(self, field, id, REQUEST, sub_field_property_dict):
     """
     Validates a subfield (as part of field validation).
     """
-    for parameter in ('title', 'required', 'size'):
-      REQUEST.set(KEYWORD % parameter, sub_field_property_dict[parameter])
-    REQUEST.set(KEYWORD % 'default', "")
-    REQUEST.set(KEYWORD % 'items', sub_field_property_dict['item_list'])
-    result = self.sub_validator[sub_field_property_dict['field_type']].validate(
-        field, id, REQUEST)
-    for parameter in ('title', 'required', 'size', 'default', 'first_item',
-                      'items'):
-      # As it doesn't seem possible to delete value in the REQUEST,
-      # use a marker
-      REQUEST.set(KEYWORD % parameter, MARKER)
-    return result
+    try:
+      for parameter in ('title', 'required', 'size'):
+        REQUEST.set(KEYWORD % parameter, sub_field_property_dict[parameter])
+      REQUEST.set(KEYWORD % 'default', "")
+      REQUEST.set(KEYWORD % 'items', sub_field_property_dict['item_list'])
+      field_type = sub_field_property_dict['field_type']
+      if id[-5:] == ':list':
+        id = id[:-5]
+        field_type = 'Multi' + field_type
+        REQUEST.set(id, [x for x in REQUEST.get(id, ()) if x != ''])
+      return self.sub_validator[field_type].validate(field, id, REQUEST)
+    finally:
+      for parameter in ('title', 'required', 'size', 'default', 'first_item',
+                        'items'):
+        # As it doesn't seem possible to delete value in the REQUEST,
+        # use a marker
+        REQUEST.set(KEYWORD % parameter, MARKER)
 
 ParallelListWidgetInstance = ParallelListWidget()
 ParallelListFieldValidatorInstance = ParallelListValidator()
@@ -240,8 +223,8 @@ class ParallelListField(ZMIField):
     return result
 
 def generateSubForm(self, value, REQUEST):
-  item_list = [x for x in self.get_value('items') \
-               if x not in (('',''), ['',''])]
+  item_list = [x for x in self.get_value('items', REQUEST)
+                 if x[0] != '' and x[1]]
 
   value_list = value
   if not isinstance(value_list, (list, tuple)):
@@ -249,37 +232,27 @@ def generateSubForm(self, value, REQUEST):
 
   empty_sub_field_property_dict = {
     'key': 'default',
-    'title': self.get_value('title'),
-    'required': 0,
     'field_type': 'MultiListField',
     'item_list': [],
     'value': [],
     'is_right_display': 0,
-    'size': 5,
-    'editable' : self.get_value('editable', REQUEST=REQUEST)
   }
+  for property in 'title', 'size', 'required', 'editable':
+    empty_sub_field_property_dict[property] = self.get_value(property, REQUEST)
 
-  hash_list = []
-  hash_script_id = self.get_value('hash_script_id')
-  if hash_script_id not in [None, '']:
-    script = getattr(self, hash_script_id)
-    script_hash_list = script(
+  hash_script_id = self.get_value('hash_script_id', REQUEST)
+  if hash_script_id:
+    return getattr(self, hash_script_id)(
             item_list,
             value_list,
             default_sub_field_property_dict=empty_sub_field_property_dict,
             is_right_display=0)
-    hash_list.extend(script_hash_list)
   else:
     # No hash_script founded, generate a little hash_script 
     # to display only a MultiListField
-    default_sub_field_property_dict = empty_sub_field_property_dict.copy()
-    default_sub_field_property_dict.update({
-        'item_list': item_list,
-        'value': value_list,
-    })
-    hash_list.append(default_sub_field_property_dict)
-  return hash_list
-
+    empty_sub_field_property_dict['item_list'] = item_list
+    empty_sub_field_property_dict['value'] = value_list
+    return [empty_sub_field_property_dict]
 
 # Register get_value
 from Products.ERP5Form.ProxyField import registerOriginalGetValueClassAndArgument

@@ -2317,46 +2317,24 @@ class ListBoxHTMLRendererLine(ListBoxRendererLine):
         else:
           error_message = u''
 
-        if getattr(brain, 'asContext', None) is not None:
-          # We needed a way to pass the current line object (ie. brain)
-          # to the field which is being displayed. Since the
-          # render_view API did not permit this, we pass the line object
-          # as the REQUEST. But this has side effects since it breaks
-          # many possibilities. Therefore, the trick is to wrap
-          # the REQUEST into the brain. In addition, the define a
-          # cell property on the request itself so that forms may
-          # use the 'cell' value (refer to get_value method in Form.py)
-          cell_request = brain.asContext( REQUEST = request
-                                        , form    = request.form
-                                        , cell    = brain
-                                        )
-          if editable_field.get_value('enabled', REQUEST=cell_request):
-            cell_html = editable_field.render( \
-                              value   = display_value
-                            , REQUEST = cell_request
-                            , key     = key
-                            )
-          else:
-            cell_html = ''
+        # We need a way to pass the current line object (ie. brain) to the
+        # field which is being displayed. Since the render_view API did not
+        # permit this, we use the 'cell' value to pass the line object.
+        request.set('cell', brain)
+        enabled = editable_field.get_value('enabled', REQUEST=request)
+        if enabled:
+          cell_html = editable_field.render(value=display_value,
+                                            REQUEST=request,
+                                            key=key)
+          if isinstance(cell_html, str):
+            cell_html = unicode(cell_html, encoding)
         else:
-          # If the brain does not support asContext (eg. it is None), no way
-          request.cell = self.getObject()
-          cell_request = brain
-          if editable_field.get_value('enabled', REQUEST=cell_request):
-            cell_html = editable_field.render( value   = display_value
-                                             , REQUEST = cell_request
-                                             , key     = key
-                                             )
-          else:
-            cell_html = ''
-
-        if isinstance(cell_html, str):
-          cell_html = unicode(cell_html, encoding)
+          cell_html = u''
 
         if url is None:
           html = cell_html + error_message
         else:
-          if editable_field.get_value('editable', REQUEST=cell_request):
+          if enabled:
             html = u'%s' % cell_html
           else:
             html = u'<a href="%s">%s</a>' % (url, cell_html)
