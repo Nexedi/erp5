@@ -87,9 +87,9 @@ class AccountingTestCase(ERP5TypeTestCase):
     * `self.section` an organisation using EUR as default currency, without any
     openned accounting period by default. This organisation is member of
     group/demo_group/sub1
-    * `self.master_section` an using EUR as default currency, without any
+    * `self.main_section` an using EUR as default currency, without any
     openned accounting period by default. This organisation is member of
-    group/demo_group. Both self.master_section and self.section are in the same
+    group/demo_group. Both self.main_section and self.section are in the same
     company from accounting point of view.
     * self.client_1, self.client_2 & self.supplier, some other organisations
   
@@ -1497,6 +1497,73 @@ class TestClosingPeriod(AccountingTestCase):
                               balance_transaction.getMovementList()
                               if m.getDestinationValue() == pl_account]))
 
+  def test_MultipleSection(self):
+    """
+    """
+    period = self.main_section.newContent(portal_type='Accounting Period')
+    period.setStartDate(DateTime(2006, 1, 1))
+    period.setStopDate(DateTime(2006, 12, 31))
+    period.start()
+    
+    transaction_main = self._makeOne(
+        start_date=DateTime(2006, 1, 2),
+        portal_type='Purchase Invoice Transaction',
+        destination_section_value=self.main_section,
+        source_section_value=self.organisation_module.client_1,
+        simulation_state='delivered',
+        lines=(dict(destination_value=self.account_module.goods_purchase,
+                    destination_debit=30),
+               dict(destination_value=self.account_module.payable,
+                    destination_credit=30)))
+
+    transaction_section = self._makeOne(
+        start_date=DateTime(2006, 1, 2),
+        portal_type='Purchase Invoice Transaction',
+        destination_section_value=self.section,
+        source_section_value=self.organisation_module.client_1,
+        simulation_state='stopped',
+        lines=(dict(destination_value=self.account_module.goods_purchase,
+                    destination_debit=20),
+               dict(destination_value=self.account_module.payable,
+                    destination_credit=20)))
+
+    # transaction_section is just stopped, so stopping the period is refused.
+    self.assertRaises(ValidationFailed,
+                      self.portal.portal_workflow.doActionFor,
+                      period,
+                      'stop_action')
+
+    transaction_section.deliver()
+    transaction.commit()
+    self.tic()
+
+    self.portal.portal_workflow.doActionFor(period, 'stop_action')
+    
+    pl = self.portal.account_module.newContent(
+              portal_type='Account',
+              account_type='equity')
+
+    period.AccountingPeriod_createBalanceTransaction(
+                             profit_and_loss_account=pl.getRelativeUrl())
+    
+    created_balance_transaction_list = self.portal.accounting_module.contentValues(
+                                    portal_type='Balance Transaction')
+    self.assertEquals(2, len(created_balance_transaction_list))
+
+    main_section_balance_transaction = [bt for bt in
+        created_balance_transaction_list if bt.getDestinationSectionValue() ==
+        self.main_section][0]
+    self.assertEquals(2, len(main_section_balance_transaction.getMovementList()))
+    self.assertEquals([], main_section_balance_transaction.checkConsistency())
+
+    section_balance_transaction = [bt for bt in
+        created_balance_transaction_list if bt.getDestinationSectionValue() ==
+        self.section][0]
+    self.assertEquals(2, len(section_balance_transaction.getMovementList()))
+    self.assertEquals([], section_balance_transaction.checkConsistency())
+
+    transaction.commit()
+    self.tic()
 
   def test_SecondAccountingPeriod(self):
     """Tests having two accounting periods.
