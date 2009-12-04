@@ -54,4 +54,5 @@ class Variation(XMLObject):
                       , PropertySheet.Price
                       , PropertySheet.Variation
                       , PropertySheet.VariationRange
+                      , PropertySheet.Reference
                       )
