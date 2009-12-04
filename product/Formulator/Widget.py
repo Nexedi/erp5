@@ -1276,7 +1276,10 @@ class DateTimeWidget(Widget):
       attr_dict = {}
     text_node = Element('{%s}%s' % (TEXT_URI, local_name), nsmap=NSMAP)
     # get the field value
-    text_node.text = self.format_value(field, field.get_value('default'), mode='pdf').decode('utf-8')
+    value = field.get_value('default')
+    if not value and field.get_value('default_now'):
+      value = DateTime()
+    text_node.text = self.format_value(field, value, mode='pdf').decode('utf-8')
     text_node.attrib.update(attr_dict)
     if as_string:
       return etree.tostring(text_node)
