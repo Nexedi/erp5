@@ -311,7 +311,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: context.getVariationBaseCategoryList() + context.getParentValue().getVariationBaseCategoryList() # XXX add resource ??</string> </value>
+            <value> <string>python: context.getVariationBaseCategoryList() # XXX add resource ??</string> </value>
         </item>
       </dictionary>
     </pickle>
