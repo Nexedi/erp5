@@ -284,7 +284,6 @@ class RuleMixin:
     are part of the matching group and updates movement_collection_diff
     accordingly
     """
-    raise NotImplementedError
     # Sample implementation - but it actually looks very generic
     # Case 1: movements which are not needed
     if prevision_movement is None:
@@ -299,7 +298,12 @@ class RuleMixin:
           new_movement = decision_movement.asContext(quantity=-decision_movement.getQuantity())
           movement_collection_diff.addNewMovement(new_movement)
       return
-    # Case 2: movements which are needed but may need update or compensation_movement_list
+    # Case 2: movements which should be added
+    elif len(decision_movement_list) == 0:
+      # if decision_movement_list is empty, we can just create a new one.
+      movement_collection_diff.addNewMovement(prevision_movement)
+      return
+    # Case 3: movements which are needed but may need update or compensation_movement_list
     #  let us imagine the case of a forward rule
     #  ie. what comes in must either go out or has been lost
     divergence_tester_list = self._getDivergenceTesterList()
