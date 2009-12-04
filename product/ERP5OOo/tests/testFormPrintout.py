@@ -1202,8 +1202,8 @@ return []
     if foo_form._getOb(field_name, None) is None:
       foo_form.manage_addField(field_name, 'CheckBox', 'CheckBoxField')
     checkbox = getattr(foo_form, field_name)
-    checkbox.values['default'] = 1
 
+    checkbox.values['default'] = 1
     odf_document = foo_printout()
     builder = OOoBuilder(odf_document)
     content_xml = builder.extract("content.xml")
@@ -1211,6 +1211,13 @@ return []
     node = document_tree.xpath('//form:checkbox[@form:name = "%s"]' % field_name, namespaces=document_tree.nsmap)[0]
     self.assertTrue(node.get('{%s}current-state' % document_tree.nsmap['form']))
 
+    checkbox.values['default'] = 0
+    odf_document = foo_printout()
+    builder = OOoBuilder(odf_document)
+    content_xml = builder.extract("content.xml")
+    document_tree = etree.XML(content_xml)
+    node = document_tree.xpath('//form:checkbox[@form:name = "%s"]' % field_name, namespaces=document_tree.nsmap)[0]
+    self.assertFalse(node.get('{%s}current-state' % document_tree.nsmap['form']))
 
 def test_suite():
   suite = unittest.TestSuite()
