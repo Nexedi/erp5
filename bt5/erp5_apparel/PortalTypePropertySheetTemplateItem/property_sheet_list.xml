@@ -7,6 +7,7 @@
   <item>Reference</item>
  </portal_type>
  <portal_type id="Apparel Colour Range Variation">
+  <item>ApparelColourRangeVariation</item>
   <item>TransformedResource</item>
  </portal_type>
  <portal_type id="Apparel Component">
