@@ -9,6 +9,7 @@ ApparelLabel
 ApparelAssortment
 ApparelFabricColourVariation
 ApparelModelColourVariation
+ApparelColourRangeVariation
 ApparelComponentVariation
 ApparelSize
 ApparelPreference
