@@ -67,11 +67,15 @@ class TestFormPrintout(ERP5TypeTestCase):
                                   'Foo_003.odt') 
     foo4_file_path = os.path.join(os.path.dirname(__file__),
                                   'test_document',
-                                  'Foo_004.odt') 
+                                  'Foo_004.odt')
+    foo5_file_path = os.path.join(os.path.dirname(__file__),
+                                  'test_document',
+                                  'Foo_005.odt')
     foo_file = open(foo_file_path, 'rb')
     foo2_file = open(foo2_file_path, 'rb')
     foo3_file = open(foo3_file_path, 'rb')
     foo4_file = open(foo4_file_path, 'rb')
+    foo5_file = open(foo5_file_path, 'rb')
     custom = self.portal.portal_skins.custom
     addStyleSheet = custom.manage_addProduct['OFSP'].manage_addFile
     if custom._getOb('Foo_getODTStyleSheet', None) is None:
@@ -85,6 +89,9 @@ class TestFormPrintout(ERP5TypeTestCase):
                     precondition='', content_type = 'application/vnd.oasis.opendocument.text')
     if custom._getOb('Foo4_getODTStyleSheet', None) is None:
       addStyleSheet(id='Foo4_getODTStyleSheet', file=foo4_file, title='',
+                    precondition='', content_type = 'application/vnd.oasis.opendocument.text')
+    if custom._getOb('Foo5_getODTStyleSheet', None) is None:
+      addStyleSheet(id='Foo5_getODTStyleSheet', file=foo5_file, title='',
                     precondition='', content_type = 'application/vnd.oasis.opendocument.text')
     erp5OOo = custom.manage_addProduct['ERP5OOo']
     addOOoTemplate = erp5OOo.addOOoTemplate
@@ -105,6 +112,9 @@ class TestFormPrintout(ERP5TypeTestCase):
     if custom._getOb('FooReport_viewAsPrintout', None) is None:
       erp5OOo.addFormPrintout(id='FooReport_viewAsPrintout',
                               title='')
+    if custom._getOb('Foo5_viewAsPrintout', None) is None:
+      erp5OOo.addFormPrintout(id='Foo5_viewAsPrintout', title='',
+                              form_name='Foo_view', template='Foo5_getODTStyleSheet')
 
     ## append 'test1' data to a listbox
     foo_module = self.portal.foo_module
@@ -1183,6 +1193,23 @@ return []
     #test_output = open("/tmp/test_99_OOoConversion.doc", "w")
     #test_output.write(printout.data)
     self.assertEqual('application/msword', guessMime(printout.data))
+
+  def test_09_FieldReplacement(self, run=run_all_test):
+    """test field in ODF Documents"""
+    foo_printout = self.portal.foo_module.test1.Foo5_viewAsPrintout
+    foo_form = self.portal.foo_module.test1.Foo_view
+    field_name = 'your_checkbox'
+    if foo_form._getOb(field_name, None) is None:
+      foo_form.manage_addField(field_name, 'CheckBox', 'CheckBoxField')
+    checkbox = getattr(foo_form, field_name)
+    checkbox.values['default'] = 1
+
+    odf_document = foo_printout()
+    builder = OOoBuilder(odf_document)
+    content_xml = builder.extract("content.xml")
+    document_tree = etree.XML(content_xml)
+    node = document_tree.xpath('//form:checkbox[@form:name = "%s"]' % field_name, namespaces=document_tree.nsmap)[0]
+    self.assertTrue(node.get('{%s}current-state' % document_tree.nsmap['form']))
 
 
 def test_suite():
