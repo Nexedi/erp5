@@ -933,7 +933,7 @@ class ODTStrategy(ODFStrategy):
       return element_tree
     parent_node_xpath = '//text:reference-mark-start[@text:name="%s"]/parent::*[1]' % field_id
     parent_node = element_tree.xpath(parent_node_xpath, namespaces=element_tree.nsmap)[0]
-    text_reference_position = int(parent_node.xpath('count(preceding-sibling::text:reference-mark-start)', namespaces=element_tree.nsmap))
+    text_reference_position = int(parent_node.xpath('count(text:reference-mark-start/preceding-sibling::*)', namespaces=element_tree.nsmap))
 
     #Delete all contents between <text:reference-mark-start/> and <text:reference-mark-end/>
     #Try to fetch style-name
