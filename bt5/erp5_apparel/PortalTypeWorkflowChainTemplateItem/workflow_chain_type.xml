@@ -13,7 +13,7 @@
  </chain>
  <chain>
   <type>Apparel Colour Range</type>
-  <workflow>apparel_shape_workflow, edit_workflow, validation_workflow</workflow>
+  <workflow>apparel_shape_workflow, edit_workflow</workflow>
  </chain>
  <chain>
   <type>Apparel Component</type>
