@@ -89,6 +89,9 @@
                         <string>listbox</string>
                         <string>listbox_purchase_supply_line_source_title</string>
                         <string>listbox_thumbnail</string>
+                        <string>listbox_parent_reference</string>
+                        <string>listbox_parent_purchase_supply_line_source_reference</string>
+                        <string>listbox_parent_purchase_supply_line_source_title</string>
                       </list>
                     </value>
                 </item>
