@@ -21,6 +21,9 @@
  <portal_type id="Apparel Colour Range Module">
   <item>Apparel Colour Range</item>
  </portal_type>
+ <portal_type id="Apparel Colour Range Variation">
+  <item>Apparel Colour Range Variation Line</item>
+ </portal_type>
  <portal_type id="Apparel Component">
   <item>Apparel Component Variation</item>
   <item>Mapped Value</item>
