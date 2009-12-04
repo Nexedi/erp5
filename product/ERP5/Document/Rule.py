@@ -216,7 +216,10 @@ class Rule(Predicate, XMLObject):
     for divergence_tester in self.contentValues(
                portal_type=self.getPortalDivergenceTesterTypeList()):
       result = divergence_tester.explain(sim_mvt)
-      result_list.extend(result)
+      if isinstance(result, (list, tuple)): # for compatibility
+        result_list.extend(result)
+      elif result is not None:
+        result_list.append(result)
     return result_list
 
   # XXX getSolverList is not part of the API and should be removed.
