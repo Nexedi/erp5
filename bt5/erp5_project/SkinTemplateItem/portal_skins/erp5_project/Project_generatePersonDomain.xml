@@ -59,25 +59,22 @@ object_path = request.get(\'object_path\')\n
 if object_path is None:\n
   object_path = context.REQUEST.get(\'URL1\').split(\'/\')[-1]\n
 \n
-search_path = \'\'.join(["%project_module/", object_path,"%"])\n
+real_context = context.restrictedTraverse(object_path)\n
 \n
 if depth == 0:\n
-  category_list = []\n
-  for line in context.portal_catalog(path=search_path ):\n
-     category_list.extend([ i for i in line.getObject().getSourceValueList() if i not in category_list])\n
-\n
-\n
+  category_list = context.portal_catalog(\n
+    source_related_relative_url=(real_context.getRelativeUrl(), \'%s/%%\' % real_context.getRelativeUrl()),\n
+  )\n
 else:\n
   return domain_list\n
 \n
 for category in category_list:\n
-  domain = parent.generateTempDomain(id = \'sub\' + category.getId() )\n
-  domain.edit(title = category.getTitle(),\n
-              membership_criterion_base_category = (\'source\', ), \n
-              membership_criterion_category = (category.getRelativeUrl(),),\n
-              domain_generator_method_id = script.id,\n
+  domain = parent.generateTempDomain(id=\'sub%s\' % category.getId())\n
+  domain.edit(title=category.getTitle(),\n
+              membership_criterion_base_category=(\'source\',), \n
+              membership_criterion_category=(category.getRelativeUrl(),),\n
+              domain_generator_method_id=script.id,\n
               uid = category.getUid())\n
-                \n
   domain_list.append(domain)\n
 \n
 return domain_list\n
@@ -127,13 +124,9 @@ return domain_list\n
                             <string>object_path</string>
                             <string>None</string>
                             <string>_getitem_</string>
-                            <string>search_path</string>
+                            <string>real_context</string>
                             <string>category_list</string>
                             <string>_getiter_</string>
-                            <string>line</string>
-                            <string>append</string>
-                            <string>$append0</string>
-                            <string>i</string>
                             <string>category</string>
                             <string>domain</string>
                             <string>script</string>

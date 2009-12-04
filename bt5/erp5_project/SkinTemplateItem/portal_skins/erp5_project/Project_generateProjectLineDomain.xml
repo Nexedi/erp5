@@ -67,7 +67,6 @@ domain_list = []\n
 \n
 if depth == 0:\n
   category_list = [context.project_module.restrictedTraverse(object_path)]\n
-  \n
 else:\n
   category_list = []\n
   parent_category_list = parent.getMembershipCriterionCategoryList()\n
@@ -80,7 +79,7 @@ for category in category_list:\n
   domain = parent.generateTempDomain(id = \'%s_%s\' % (depth, i))\n
   domain.edit(title = category.getTitle(),\n
               membership_criterion_base_category = (\'source_project\', ), \n
-              membership_criterion_category = (category.getRelativeUrl(),),\n
+              membership_criterion_category = (category.getRelativeUrl(), ),\n
               domain_generator_method_id = script.id,\n
               uid = category.getUid())\n
   i += 1\n

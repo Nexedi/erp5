@@ -13,10 +13,10 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
-                <string>report_root_list</string>
-                <string>portal_types</string>
                 <string>list_method</string>
+                <string>portal_types</string>
+                <string>report_root_list</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -118,6 +118,14 @@
                     <key> <string>report_root_list</string> </key>
                     <value>
                       <list>
+                        <tuple>
+                          <string>task_module_domain</string>
+                          <string>Task</string>
+                        </tuple>
+                        <tuple>
+                          <string>task_report_module_domain</string>
+                          <string>Task Report</string>
+                        </tuple>
                         <tuple>
                           <string>parent</string>
                           <string>Project Line</string>

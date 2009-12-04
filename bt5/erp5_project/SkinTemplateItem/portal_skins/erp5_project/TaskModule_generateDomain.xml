@@ -57,29 +57,17 @@
 domain_list = []\n
 \n
 if depth == 0:\n
-  category_list = [ context.task_module.getObject() ]  \n
+  module = context.task_module\n
 \n
-# XXX this is usefull but Breaks the edition\n
-#elif depth == 1:\n
-#    category_list = context.portal_selections.getSelectionValueList(context=context,\n
-#                                                                        selection_name= \'task_report_selection\')\n
-\n
-\n
+  domain = parent.generateTempDomain(id=\'sub%s\' % module.getId())\n
+  domain.edit(title=module.getTitle(),\n
+              membership_criterion_base_category=(\'parent\', ), \n
+              membership_criterion_category=(module.getRelativeUrl(),),\n
+              domain_generator_method_id=script.id,\n
+              uid=module.getUid())\n
+  return [domain]\n
 else:\n
-  return domain_list\n
-\n
-for category in category_list:\n
-  domain = parent.generateTempDomain(id = \'sub\' + category.getId() )\n
-  domain.edit(title = category.getTitle(),\n
-              membership_criterion_base_category = (\'parent\', ), \n
-              membership_criterion_category = (category.getRelativeUrl(),),\n
-              domain_generator_method_id = script.id,\n
-              uid = category.getUid())\n
-                \n
-  domain_list.append(domain)\n
-#from Products.ERP5Type.Log import log\n
-#log("%s on %s" % (script.getId(), context.getPath()), "%d objects domain" %  len(domain_list))\n
-return domain_list\n
+  return []\n
 </string> </value>
         </item>
         <item>
@@ -123,9 +111,7 @@ return domain_list\n
                             <string>context</string>
                             <string>request</string>
                             <string>domain_list</string>
-                            <string>category_list</string>
-                            <string>_getiter_</string>
-                            <string>category</string>
+                            <string>module</string>
                             <string>domain</string>
                             <string>script</string>
                           </tuple>
