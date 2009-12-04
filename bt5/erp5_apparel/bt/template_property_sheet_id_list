@@ -8,9 +8,9 @@ ApparelModel
 ApparelLabel
 ApparelAssortment
 ApparelFabricColourVariation
-ApparelModelColourVariation
-ApparelColourRangeVariation
+ApparelColourRangeVariationLine
 ApparelComponentVariation
+ApparelModelColourVariation
 ApparelSize
 ApparelPreference
 ApparelColourRange

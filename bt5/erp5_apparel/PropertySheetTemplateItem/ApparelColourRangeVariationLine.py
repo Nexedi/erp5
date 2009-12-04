@@ -1,9 +1,7 @@
 ##############################################################################
 #
-# Copyright (c) 2002 Coramy SAS and Contributors. All Rights Reserved.
-#          Thierry Faucher <Thierry_Faucher@coramy.com>
-# Copyright (c) 2004 - 2009 Nexedi SA and Contributors. All Rights Reserved.
-#          Romain Courteaud <romain@nexedi.com>
+# Copyright (c) 2002-2009 Nexedi SA and Contributors. All Rights Reserved.
+#          Fabien Morin <fabien@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -30,15 +28,15 @@
 
 
 
-class ApparelColourRangeVariation:
+class ApparelColourRangeVariationLine:
   """
-    ApparelColourRangeVariation properties and categories
+    ApparelColourRangeVariationLine properties and categories
   """
 
   _properties = (
-  {   'id'          : 'apparel_fabric_colour_variation_title', 
+  {   'id'          : 'apparel_fabric_colour_variation_title',
       'description' : 'Title of the apparel fabric colour variation',
-      'type'        : 'lines',
+      'type'        : 'string',
       'acquisition_base_category' : ('specialise',),
       'acquisition_portal_type'   : ('Apparel Fabric Colour Variation',),
       'acquisition_copy_value'    : 0,

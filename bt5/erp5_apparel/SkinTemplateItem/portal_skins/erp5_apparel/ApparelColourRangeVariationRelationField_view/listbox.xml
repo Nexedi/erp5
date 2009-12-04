@@ -15,6 +15,7 @@
               <list>
                 <string>all_columns</string>
                 <string>columns</string>
+                <string>domain_root_list</string>
                 <string>domain_tree</string>
                 <string>editable_columns</string>
                 <string>list_method</string>
@@ -89,31 +90,27 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>int_index</string>
-                          <string>Sort Index</string>
-                        </tuple>
-                        <tuple>
-                          <string>specialise_title</string>
+                          <string>title</string>
                           <string>Colour Variation</string>
                         </tuple>
                         <tuple>
-                          <string>specialise_source_reference</string>
+                          <string>source_reference</string>
                           <string>Supplier Colour</string>
                         </tuple>
                         <tuple>
-                          <string>specialise_parent_title</string>
+                          <string>parent_title</string>
                           <string>Apparel Fabric</string>
                         </tuple>
                         <tuple>
-                          <string>specialise_purchase_supply_line_source_title</string>
+                          <string>purchase_supply_line_source_title</string>
                           <string>Supplier</string>
                         </tuple>
                         <tuple>
-                          <string>specialise_description</string>
+                          <string>description</string>
                           <string>Description</string>
                         </tuple>
                         <tuple>
-                          <string>specialise_thumbnail</string>
+                          <string>thumbnail</string>
                           <string>Thumbnail</string>
                         </tuple>
                       </list>
@@ -124,32 +121,43 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>int_index</string>
-                          <string>Sort Index</string>
-                        </tuple>
-                        <tuple>
-                          <string>specialise_title</string>
+                          <string>title</string>
                           <string>Colour Variation</string>
                         </tuple>
                         <tuple>
-                          <string>specialise_source_reference</string>
+                          <string>source_reference</string>
                           <string>Supplier Colour</string>
                         </tuple>
                         <tuple>
-                          <string>specialise_parent_title</string>
+                          <string>parent_title</string>
                           <string>Apparel Fabric</string>
                         </tuple>
                         <tuple>
-                          <string>specialise_purchase_supply_line_source_title</string>
+                          <string>purchase_supply_line_source_title</string>
                           <string>Supplier</string>
                         </tuple>
                         <tuple>
-                          <string>specialise_description</string>
+                          <string>description</string>
                           <string>Description</string>
                         </tuple>
                         <tuple>
-                          <string>specialise_thumbnail</string>
+                          <string>thumbnail</string>
                           <string>Thumbnail</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>domain_root_list</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>collection</string>
+                          <string>Collection</string>
+                        </tuple>
+                        <tuple>
+                          <string>colour</string>
+                          <string>Colour Referential</string>
                         </tuple>
                       </list>
                     </value>
@@ -163,19 +171,7 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>int_index</string>
-                          <string>Sort Index</string>
-                        </tuple>
-                        <tuple>
-                          <string>specialise_title</string>
-                          <string>Colour Variation</string>
-                        </tuple>
-                        <tuple>
-                          <string>specialise_purchase_supply_line_source_title</string>
-                          <string>Supplier</string>
-                        </tuple>
-                        <tuple>
-                          <string>specialise_thumbnail</string>
+                          <string>thumbnail</string>
                           <string>Thumbnail</string>
                         </tuple>
                       </list>
@@ -200,8 +196,8 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>Apparel Colour Range Variation Line</string>
-                          <string>Apparel Colour Range Variation Line</string>
+                          <string>Apparel Fabric Colour Variation</string>
+                          <string>Apparel Fabric Colour Variation</string>
                         </tuple>
                       </list>
                     </value>
@@ -211,31 +207,27 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>int_index</string>
-                          <string>Sort Index</string>
-                        </tuple>
-                        <tuple>
-                          <string>specialise_title</string>
+                          <string>title</string>
                           <string>Colour Variation</string>
                         </tuple>
                         <tuple>
-                          <string>specialise_source_reference</string>
+                          <string>source_reference</string>
                           <string>Supplier Colour</string>
                         </tuple>
                         <tuple>
-                          <string>specialise_parent_title</string>
+                          <string>parent_title</string>
                           <string>Apparel Fabric</string>
                         </tuple>
                         <tuple>
-                          <string>specialise_purchase_supply_line_source_title</string>
+                          <string>purchase_supply_line_source_title</string>
                           <string>Supplier</string>
                         </tuple>
                         <tuple>
-                          <string>specialise_description</string>
+                          <string>description</string>
                           <string>Description</string>
                         </tuple>
                         <tuple>
-                          <string>specialise_thumbnail</string>
+                          <string>thumbnail</string>
                           <string>Thumbnail</string>
                         </tuple>
                       </list>
@@ -243,15 +235,15 @@
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>
-                    <value> <string>apparel_fabric_apparel_fabric_colour_variation_line_selection</string> </value>
+                    <value> <string>apparel_fabric_apparel_fabric_colour_variation_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>sort</string> </key>
                     <value>
                       <list>
                         <tuple>
-                          <string>int_index</string>
-                          <string>Sort Index</string>
+                          <string>title</string>
+                          <string>Colour Variation</string>
                         </tuple>
                       </list>
                     </value>
@@ -261,31 +253,27 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>int_index</string>
-                          <string>Sort Index</string>
-                        </tuple>
-                        <tuple>
-                          <string>specialise_title</string>
+                          <string>title</string>
                           <string>Colour Variation</string>
                         </tuple>
                         <tuple>
-                          <string>specialise_source_reference</string>
+                          <string>source_reference</string>
                           <string>Supplier Colour</string>
                         </tuple>
                         <tuple>
-                          <string>specialise_parent_title</string>
+                          <string>parent_title</string>
                           <string>Apparel Fabric</string>
                         </tuple>
                         <tuple>
-                          <string>specialise_purchase_supply_line_source_title</string>
+                          <string>purchase_supply_line_source_title</string>
                           <string>Supplier</string>
                         </tuple>
                         <tuple>
-                          <string>specialise_description</string>
+                          <string>description</string>
                           <string>Description</string>
                         </tuple>
                         <tuple>
-                          <string>specialise_thumbnail</string>
+                          <string>thumbnail</string>
                           <string>Thumbnail</string>
                         </tuple>
                       </list>
@@ -316,7 +304,7 @@
       <dictionary>
         <item>
             <key> <string>method_name</string> </key>
-            <value> <string>contentValues</string> </value>
+            <value> <string>getSpecialiseValueList</string> </value>
         </item>
       </dictionary>
     </pickle>
