@@ -238,9 +238,10 @@ def generateSubForm(self, value, REQUEST):
     'is_right_display': 0,
   }
   for property in 'title', 'size', 'required', 'editable':
-    empty_sub_field_property_dict[property] = self.get_value(property, REQUEST)
+    empty_sub_field_property_dict[property] = self.get_value(property,
+                                                             REQUEST=REQUEST)
 
-  hash_script_id = self.get_value('hash_script_id', REQUEST)
+  hash_script_id = self.get_value('hash_script_id', REQUEST=REQUEST)
   if hash_script_id:
     return getattr(self, hash_script_id)(
             item_list,
