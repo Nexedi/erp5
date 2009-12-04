@@ -881,8 +881,8 @@ class ODTStrategy(ODFStrategy):
 
   def _replaceNodeViaReference(self, element_tree, field):
     """replace nodes (e.g. paragraphs) via ODF reference"""
-    self._replaceNodeViaRangeReference(element_tree=element_tree, field=field)
-    self._replaceNodeViaPointReference(element_tree=element_tree, field=field)
+    self._replaceNodeViaRangeReference(element_tree, field)
+    self._replaceNodeViaPointReference(element_tree, field)
     self._replaceNodeViaFormName(element_tree, field)
 
   def _renderField(self, field):
@@ -913,7 +913,7 @@ class ODTStrategy(ODFStrategy):
                                xpath=reference_xpath,
                                element_tree=element_tree)
 
-  def _replaceNodeViaRangeReference(self, element_tree=None, field=None, iteration_index=0):
+  def _replaceNodeViaRangeReference(self, element_tree, field, iteration_index=0):
     """Replace text node via an ODF ranged reference.
 
     range reference example:
