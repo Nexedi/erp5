@@ -65,11 +65,11 @@ class CategoryMembershipDivergenceTester(Predicate, DivergenceTesterMixin):
     list : (prevision_value, decision_value, message, mapping)
     """
     tested_property = self.getTestedProperty()
-    decision_value = decision_movement.getPropertyList(tested_property)
-    if prevision_movement.isPropertyRecorded(tested_property):
-      prevision_value = prevision_movement.getRecordedProperty(tested_property)
+    if getattr(decision_movement, 'isPropertyRecorded', lambda:False)():
+      decision_value = decision_movement.getRecordedProperty(tested_property)
     else:
-      prevision_value = prevision_movement.getPropertyList(tested_property)
+      decision_value = decision_movement.getPropertyList(tested_property)
+    prevision_value = prevision_movement.getPropertyList(tested_property)
 
     # XXX do we have configurable parameter for this divergence tester ?
     # like ambiguity...
@@ -90,10 +90,7 @@ class CategoryMembershipDivergenceTester(Predicate, DivergenceTesterMixin):
     decision_movement -- a delivery movement (decision)
     """
     tested_property = self.getTestedProperty()
-    if prevision_movement.isPropertyRecorded(tested_property):
-      prevision_value = prevision_movement.getRecordedProperty(tested_property)
-    else:
-      prevision_value = prevision_movement.getPropertyList(tested_property)
+    prevision_value = prevision_movement.getPropertyList(tested_property)
     return {tested_property:prevision_value}
 
   def accept(self, simulation_movement):
