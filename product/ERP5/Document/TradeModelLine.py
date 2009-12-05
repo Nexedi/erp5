@@ -262,7 +262,7 @@ class TradeModelLine(Predicate, XMLMatrix, Amount):
         for cell_coordinates in cell_key_list:
           cell = self.getCell(base_id=base_id, *cell_coordinates)
           if cell is None:
-            raise ValueError("Line '%s' (%s) can't find the cell corresponding"+
+            raise ValueError("Line '%s' (%s) can't find the cell corresponding"
                 " to those cells coordinates : %s" % (self.getTitle(),
                                                       self.getRelativeUrl(),
                                                       cell_coordinates))
@@ -369,9 +369,9 @@ class TradeModelLine(Predicate, XMLMatrix, Amount):
                                              # the paysheet
         cell = model.getCell(salary_range)
         if cell is None:
-          raise ValueError("Line '%s' (%s) can't find the cell corresponding"+\
+          raise ValueError("Line '%s' (%s) can't find the cell corresponding"
               " to those cells coordinates : %s" % (self.getTitle(),
-                                                    self.getRelativeUlr(),
+                                                    self.getRelativeUrl(),
                                                     salary_range))
         model_slice_min = cell.getQuantityRangeMin()
         model_slice_max = cell.getQuantityRangeMax()
