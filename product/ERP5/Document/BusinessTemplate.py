@@ -79,6 +79,19 @@ from difflib import unified_diff
 import posixpath
 import transaction
 
+import gdbm
+import threading
+
+CACHE_DATABASE_PATH = None
+try:
+  if int(os.getenv('ERP5_BT5_CACHE', 0)):
+    from App.config import getConfiguration
+    instancehome = getConfiguration().instancehome
+    CACHE_DATABASE_PATH = os.path.join(instancehome, 'bt5cache.db')
+except TypeError:
+  pass
+cache_database = threading.local()
+
 # those attributes from CatalogMethodTemplateItem are kept for
 # backward compatibility
 catalog_method_list = ('_is_catalog_list_method_archive',
@@ -352,16 +365,26 @@ class BusinessTemplateFolder(BusinessTemplateArchive):
     class_name = item.__class__.__name__
     root_path_len = self.root_path_len
     prefix_len = root_path_len + len(class_name) + len(os.sep)
-    for file_path in self.file_list_dict.get(class_name, ()):
-      if os.path.isfile(file_path):
-        file = open(file_path, 'rb')
-        try:
-          file_name = file_path[prefix_len:]
-          if '%' in file_name:
-            file_name = unquote(file_name)
-          item._importFile(file_name, file)
-        finally:
-          file.close()
+    if CACHE_DATABASE_PATH:
+      try:
+        cache_database.db = gdbm.open(CACHE_DATABASE_PATH, 'cf')
+      except gdbm.error:
+        cache_database.db = gdbm.open(CACHE_DATABASE_PATH, 'nf')
+    try:
+      for file_path in self.file_list_dict.get(class_name, ()):
+        if os.path.isfile(file_path):
+          file = open(file_path, 'rb')
+          try:
+            file_name = file_path[prefix_len:]
+            if '%' in file_name:
+              file_name = unquote(file_name)
+            item._importFile(file_name, file)
+          finally:
+            file.close()
+    finally:
+      if hasattr(cache_database, 'db'):
+        cache_database.db.close()
+        del cache_database.db
 
 class BusinessTemplateTarball(BusinessTemplateArchive):
   """
@@ -650,41 +673,70 @@ class ObjectTemplateItem(BaseTemplateItem):
       obj.wl_clearLocks()
 
   def _compileXML(self, file):
-      name, ext = os.path.splitext(file.name)
-      compiled_file = name + '.zexp'
-      if not os.path.exists(compiled_file) or os.path.getmtime(file.name) > os.path.getmtime(compiled_file):
-          LOG('Business Template', 0, 'Compiling %s to %s...' % (file.name, compiled_file))
-          try:
-              from Shared.DC.xml import ppml
-              from OFS.XMLExportImport import start_zopedata, save_record, save_zopedata
-              import pyexpat
-              outfile=open(compiled_file, 'wb')
-              try:
-                  data=file.read()
-                  F=ppml.xmlPickler()
-                  F.end_handlers['record'] = save_record
-                  F.end_handlers['ZopeData'] = save_zopedata
-                  F.start_handlers['ZopeData'] = start_zopedata
-                  F.binary=1
-                  F.file=outfile
-                  p=pyexpat.ParserCreate()
-                  p.CharacterDataHandler=F.handle_data
-                  p.StartElementHandler=F.unknown_starttag
-                  p.EndElementHandler=F.unknown_endtag
-                  r=p.Parse(data)
-              finally:
-                  outfile.close()
-          except:
-              if os.path.exists(compiled_file):
-                  os.remove(compiled_file)
-              raise
-      return open(compiled_file)
+    # This method converts XML to ZEXP. Because the conversion
+    # is quite heavy, a persistent cache database is used to
+    # store ZEXP, so the second run wouldn't have to re-generate
+    # identical data again.
+    #
+    # For now, a pair of the path to an XML file and its modification time
+    # are used as a unique key. In theory, a checksum of the content could
+    # be used instead, and it could be more reliable, as modification time
+    # might not be updated in some insane filesystems correctly. However,
+    # in practice, checksums consume a lot of CPU time, so when the cache
+    # does not hit, the increased overhead is significant. In addition, it
+    # does rarely happen that two XML files in Business Templates contain
+    # the same data, so it may not be expected to have more cache hits
+    # with this approach.
+    #
+    # The disadvantage is that this wouldn't work with the archive format,
+    # because each entry in an archive does not have a mtime in itself.
+    # However, the plan is to have an archive to retain ZEXP directly
+    # instead of XML, so the idea of caching would be completely useless
+    # with the archive format.
+    name = file.name
+    mtime = os.path.getmtime(file.name)
+    key = '%s:%s' % (name, mtime)
+
+    try:
+      return StringIO(cache_database.db[key])
+    except:
+      pass
+
+    #LOG('Business Template', 0, 'Compiling %s...' % (name,))
+    from Shared.DC.xml import ppml
+    from OFS.XMLExportImport import start_zopedata, save_record, save_zopedata
+    import xml.parsers.expat
+    outfile=StringIO()
+    try:
+      data=file.read()
+      F=ppml.xmlPickler()
+      F.end_handlers['record'] = save_record
+      F.end_handlers['ZopeData'] = save_zopedata
+      F.start_handlers['ZopeData'] = start_zopedata
+      F.binary=1
+      F.file=outfile
+      p=xml.parsers.expat.ParserCreate('utf-8')
+      p.returns_unicode = False
+      p.CharacterDataHandler=F.handle_data
+      p.StartElementHandler=F.unknown_starttag
+      p.EndElementHandler=F.unknown_endtag
+      r=p.Parse(data)
+
+      try:
+        cache_database.db[key] = outfile.getvalue()
+      except:
+        pass
+
+      outfile.seek(0)
+      return outfile
+    except:
+      outfile.close()
+      raise
 
   def _importFile(self, file_name, file_obj):
     # import xml file
     if not file_name.endswith('.xml'):
-      if not file_name.endswith('.zexp'):
-        LOG('Business Template', 0, 'Skipping file "%s"' % (file_name, ))
+      LOG('Business Template', 0, 'Skipping file "%s"' % (file_name, ))
       return
     obj = self
     connection = None
@@ -692,13 +744,8 @@ class ObjectTemplateItem(BaseTemplateItem):
       obj=obj.aq_parent
       connection=obj._p_jar
     __traceback_info__ = 'Importing %s' % file_name
-    # The pre-compilation hack is disabled, because the design is not
-    # nice. Do not enable it without yo's approval.
-    if 0:
-      if isinstance(file_obj, file):
-        obj = connection.importFile(self._compileXML(file_obj))
-      else:
-        obj = connection.importFile(file_obj, customImporters=customImporters)
+    if hasattr(cache_database, 'db') and isinstance(file_obj, file):
+      obj = connection.importFile(self._compileXML(file_obj))
     else:
       # FIXME: Why not use the importXML function directly? Are there any BT5s
       # with actual .zexp files on the wild?
@@ -1506,8 +1553,7 @@ class RegisteredSkinSelectionTemplateItem(BaseTemplateItem):
 
   def _importFile(self, file_name, file):
     if not file_name.endswith('.xml'):
-      if not file_name.endswith('.zexp'):
-        LOG('Business Template', 0, 'Skipping file "%s"' % (file_name, ))
+      LOG('Business Template', 0, 'Skipping file "%s"' % (file_name, ))
       return
     # import workflow chain for portal_type
     skin_selection_dict = {}
@@ -1863,8 +1909,7 @@ class PortalTypeWorkflowChainTemplateItem(BaseTemplateItem):
 
   def _importFile(self, file_name, file):
     if not file_name.endswith('.xml'):
-      if not file_name.endswith('.zexp'):
-        LOG('Business Template', 0, 'Skipping file "%s"' % (file_name, ))
+      LOG('Business Template', 0, 'Skipping file "%s"' % (file_name, ))
       return
     # import workflow chain for portal_type
     dict = {}
@@ -1975,8 +2020,7 @@ class PortalTypeAllowedContentTypeTemplateItem(BaseTemplateItem):
 
   def _importFile(self, file_name, file):
     if not file_name.endswith('.xml'):
-      if not file_name.endswith('.zexp'):
-        LOG('Business Template', 0, 'Skipping file "%s"' % (file_name, ))
+      LOG('Business Template', 0, 'Skipping file "%s"' % (file_name, ))
       return
     path, name = posixpath.split(file_name)
     xml = parse(file)
@@ -2748,8 +2792,7 @@ class SitePropertyTemplateItem(BaseTemplateItem):
   def _importFile(self, file_name, file):
     # recreate list of site property from xml file
     if not file_name.endswith('.xml'):
-      if not file_name.endswith('.zexp'):
-        LOG('Business Template', 0, 'Skipping file "%s"' % (file_name, ))
+      LOG('Business Template', 0, 'Skipping file "%s"' % (file_name, ))
       return
     xml = parse(file)
     property_list = xml.getElementsByTagName('property')
@@ -3219,8 +3262,7 @@ class RoleTemplateItem(BaseTemplateItem):
 
   def _importFile(self, file_name, file):
     if not file_name.endswith('.xml'):
-      if not file_name.endswith('.zexp'):
-        LOG('Business Template', 0, 'Skipping file "%s"' % (file_name, ))
+      LOG('Business Template', 0, 'Skipping file "%s"' % (file_name, ))
       return
     xml = parse(file)
     role_list = xml.getElementsByTagName('role')
