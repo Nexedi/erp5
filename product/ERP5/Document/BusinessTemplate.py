@@ -4530,6 +4530,8 @@ class MessageTranslationTemplateItem(BaseTemplateItem):
               # if the Localizer does not know the language code, it must be
               # defined as a user-defined language.
               localizer._add_user_defined_language(name, lang)
+            if lang not in localizer.get_languages():
+              localizer.manage_addLanguage(lang)
           else:
             po = self._objects[key]
             if lang not in localizer.get_languages():
