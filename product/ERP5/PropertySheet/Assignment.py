@@ -46,10 +46,17 @@ class Assignment(Path):
     , 'type'        : 'string'
     , 'mode'        : 'w'
     },
+    { 'id'          : 'career_end_reason'
+    , 'description' : 'An explanation why the career ends'
+    , 'type'        : 'text'
+    , 'mode'        : 'w'
+    },
+
   )
 
   _categories = ( # Career categories
                   'grade', 'role', 'skill', 'subordination', 'salary_level', 'product_line'
+                , 'career_start_mode', 'career_end_mode',
                   # Assignment and Career categories
                 , 'group', 'site', 'function', 'activity'
                 )
