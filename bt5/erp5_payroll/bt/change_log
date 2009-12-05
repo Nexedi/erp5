@@ -1,3 +1,6 @@
+2009-12-5 yusei
+* Fix PaySheetTransaction_getODTDataDict. Make print pay slip works without pay sheet model.
+
 2009-10-16 yusei
 * Update for the changes of new portal types of portal types.
 

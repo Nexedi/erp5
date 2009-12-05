@@ -56,8 +56,12 @@
             <value> <string encoding="cdata"><![CDATA[
 
 translateString = context.Base_translateString\n
-model = context.getSpecialiseValue().getEffectiveModel(\\\n
-   start_date=context.getStartDate(), stop_date=context.getStopDate())\n
+specialise_value = context.getSpecialiseValue()\n
+\n
+#XXX `model` is not used.\n
+model = None\n
+if specialise_value is not None:\n
+  model = specialise_value.getEffectiveModel(start_date=context.getStartDate(), stop_date=context.getStopDate())\n
 \n
 def getFieldAsString(field):\n
   return \', \'.join(getFieldAsLineList(field))\n
@@ -148,23 +152,24 @@ def getPaymentConditionText(order):\n
 \n
 def getSocialOrganisationValue():\n
   model = context.getSpecialiseValue()\n
-  business_process_list = model.findSpecialiseValueList(\\\n
-            context=context, portal_type_list=[\'Business Process\'])\n
-  business_process = None\n
-  if len(business_process_list):\n
-    # XXX currently, is too complicated to use more than\n
-    # one Business Process, so the first (which is the nearest from the\n
-    # delivery) is took\n
-    business_process = business_process_list[0]\n
-    business_path_list = business_process.getPathValueList(trade_phase=\\\n
-        \'payroll/invoicing/social_security\')\n
-    if len(business_path_list) > 1:\n
-      raise NotImplementedError, \'For now, it can not support more \'\\\n
-            \'than one business_path with same trade_phase. \'\\\n
-            \'%s have same trade_phase\' % repr(business_path_list)\n
-    if len(business_path_list) == 1:\n
-      business_path = business_path_list[0]\n
-      return business_path.getSourceSectionValue()\n
+  if model is not None:\n
+    business_process_list = model.findSpecialiseValueList(\\\n
+              context=context, portal_type_list=[\'Business Process\'])\n
+    business_process = None\n
+    if len(business_process_list):\n
+      # XXX currently, is too complicated to use more than\n
+      # one Business Process, so the first (which is the nearest from the\n
+      # delivery) is took\n
+      business_process = business_process_list[0]\n
+      business_path_list = business_process.getPathValueList(trade_phase=\\\n
+          \'payroll/invoicing/social_security\')\n
+      if len(business_path_list) > 1:\n
+        raise NotImplementedError, \'For now, it can not support more \'\\\n
+              \'than one business_path with same trade_phase. \'\\\n
+              \'%s have same trade_phase\' % repr(business_path_list)\n
+      if len(business_path_list) == 1:\n
+        business_path = business_path_list[0]\n
+        return business_path.getSourceSectionValue()\n
 \n
   return None\n
 \n
@@ -429,6 +434,8 @@ return unicodeDict(data_dict)\n
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>translateString</string>
+                            <string>specialise_value</string>
+                            <string>None</string>
                             <string>model</string>
                             <string>getFieldAsLineList</string>
                             <string>getFieldAsString</string>
@@ -453,7 +460,6 @@ return unicodeDict(data_dict)\n
                             <string>inch_cm_ratio</string>
                             <string>EmptyOrganisation</string>
                             <string>source</string>
-                            <string>None</string>
                             <string>destination</string>
                             <string>source_section</string>
                             <string>destination_section</string>
