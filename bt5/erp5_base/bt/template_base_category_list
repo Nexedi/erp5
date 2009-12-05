@@ -1,6 +1,8 @@
 agent
 agent_privilege
 bank_account_type
+career_end_mode
+career_start_mode
 collect_order_group
 currency_exchange_type
 delivery_builder

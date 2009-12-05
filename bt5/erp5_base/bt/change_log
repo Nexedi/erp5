@@ -1,3 +1,6 @@
+2009-12-5 yusei
+* Extend career document. Now it can deal with career begin/end mode and career end reason.
+
 2009-11-26 yusei
 * Add Rounding Tool and Rounding Model which provide generic rounding functionality.
 
