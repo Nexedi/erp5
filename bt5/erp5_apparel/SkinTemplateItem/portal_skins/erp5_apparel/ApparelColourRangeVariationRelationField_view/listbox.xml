@@ -202,7 +202,7 @@
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>
-                    <value> <string>apparel_fabric_apparel_fabric_colour_variation_selection</string> </value>
+                    <value> <string>relation_field_apparel_fabric_colour_variation_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>sort</string> </key>
