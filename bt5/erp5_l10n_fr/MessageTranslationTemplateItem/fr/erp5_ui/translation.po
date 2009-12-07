@@ -6010,6 +6010,9 @@ msgstr "Pas de compte en banque pour l'organisation courante"
 msgid "No divergence found."
 msgstr "Pas de divergence trouvée."
 
+msgid "No composition found."
+msgstr "Pas de composition trouvée."
+
 msgid "No exchange ratio found."
 msgstr "Pas de taux de change trouvé."
 
