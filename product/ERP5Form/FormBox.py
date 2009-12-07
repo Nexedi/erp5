@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2002-2006 Nexedi SARL and Contributors. All Rights Reserved.
@@ -85,6 +86,14 @@ class FormBoxWidget(Widget.Widget):
     "A default value (not used)."),
                                 default="",
                                 required=0)
+
+  css_class = fields.StringField('css_class',
+                                  title='CSS class',
+                                  description=(
+      "The CSS class of the field. This can be used to style your "
+      "formulator fields using cascading style sheets. Not required."),
+                                  default="invisible",
+                                  required=0)
 
   def render(self, field, key, value, REQUEST, render_prefix=None):
     """
