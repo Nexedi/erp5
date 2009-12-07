@@ -16,6 +16,7 @@ from Products.ERP5Type.Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 from Products.CMFCore.Expression import Expression
 from Products.ERP5Type import _dtmldir
+from Products.ERP5Type.Cache import CachingMethod
 
 from Permissions import AccessContentsInformation, ManagePortal, ModifyPortalContent
 from OFS.SimpleItem import SimpleItem
@@ -57,7 +58,8 @@ class TranslationProviderBase(object):
   security.declarePrivate('updateInitialPropertyTranslationDomainDict')
   def updateInitialPropertyTranslationDomainDict(self):
     """
-    Create the initial list of association between property and domain name
+    Updates the list of association between property and domain name.
+    This method must be called anytime new translatable properties are added.
     """
     property_domain_dict = {}
 
@@ -78,14 +80,19 @@ class TranslationProviderBase(object):
       # And store
       self._property_domain_dict = property_domain_dict
 
-  security.declareProtected(AccessContentsInformation, 'getPropertyTranslationDomainDict')
+  security.declareProtected(AccessContentsInformation,
+                            'getPropertyTranslationDomainDict')
   def getPropertyTranslationDomainDict(self):
     """
-    Return all the translation defined by a provider.
+    Return all translations defined by a provider.
     """
-    # initialize if needed
-    if getattr(self, '_property_domain_dict', None) is None:
+    # From time to time we'll update property translation domain dict.
+    def _updatePropertyTranslationDomainDict():
       self.updateInitialPropertyTranslationDomainDict()
+    CachingMethod(_updatePropertyTranslationDomainDict,
+      id='%s._updateInitialPropertyTranslationDomainDict' % self.getId(),
+      cache_factory='erp5_ui_long')()
+
     return dict((k, v.__of__(self))
                 for k, v in self._property_domain_dict.iteritems())
 
