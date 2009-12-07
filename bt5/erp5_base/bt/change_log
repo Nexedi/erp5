@@ -1,3 +1,6 @@
+2009-12-7 yusei
+* Remove previous extension(career begin/end mode and career end reason). Since they are not generic enough. they might be in a localisation business template or somewhere else.
+
 2009-12-5 yusei
 * Extend career document. Now it can deal with career begin/end mode and career end reason.
 
