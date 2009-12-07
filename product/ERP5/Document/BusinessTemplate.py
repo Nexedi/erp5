@@ -799,7 +799,7 @@ class ObjectTemplateItem(BaseTemplateItem):
         subobjects_dict[subobject_id] = subobject_copy
       return subobjects_dict
     # XXX btsave is for backward compatibility
-    if action == 'backup' or action == 'btsave':
+    if action == 'backup' or action == 'btsave' or action == 'save_and_remove':
       subobjects_dict = self.portal_trash.backupObject(trashbin, container_path, object_id, save=1, **kw)
     elif action == 'install':
       subobjects_dict = self.portal_trash.backupObject(trashbin, container_path, object_id, save=0, **kw)
