@@ -1,0 +1,3 @@
+2009-12-7 yusei
+* Initial commit.
+* Add career start/end mode category and career_end_reason property to Career portal type.
