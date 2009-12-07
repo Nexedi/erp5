@@ -2169,6 +2169,17 @@ class TestPropertySheet:
       self.assertEquals('foo', doc.getTranslatedDummy())
       self.assertEquals(['foo'], self.portal.Localizer.default._translated)
 
+      # if domain is empty, no translation is performed
+      doc = self.portal.person_module.newContent(portal_type='Person')
+      self.portal.Localizer = DummyLocalizer()
+      self.portal.portal_types.Person.changeTranslations(
+                                    dict(dummy=None))
+      doc.setDummy('foo')
+      self.assertFalse(doc.getDummyTranslationDomain())
+      self.assertEquals('foo', doc.getTranslatedDummy())
+      self.assertEquals([], self.portal.Localizer.erp5_ui._translated)
+
+
     # _aq_reset should be called implicitly when the system configuration
     # changes:
     def test_aq_reset_on_portal_types_properties_change(self):
