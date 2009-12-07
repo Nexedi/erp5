@@ -23,8 +23,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>TODO:\r\n
- changing a membership must be "recursive" (or budget line/cell membership method should dynamically read from their parent)</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>groups</string> </key>
