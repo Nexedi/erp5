@@ -235,20 +235,14 @@ class RuleMixin:
     """
     raise NotImplementedError
 
-  def _getDivergenceTesterList(self, exclude_quantity=True):
+  def _getDivergenceTesterList(self):
     """
     Return the applicable divergence testers which must
-    be used to test movement divergence.
-
-    exclude_quantity -- if set to true, do not consider
-                        quantity divergence testers
+    be used to test movement divergence. (ie. not all
+    divergence testers of the Rule)
     """
-    tester_list = self.objectValues(
-      portal_type=self.getPortalDivergenceTesterTypeList())
-    if exclude_quantity:
-      return [x for x in tester_list if x.getTestedProperty() != 'quantity']
-    else:
-      return tester_list
+    return filter(lambda x:x.isTestingProvider(), self.objectValues(
+      portal_type=self.getPortalDivergenceTesterTypeList()))
 
   def _getMatchingTesterList(self):
     """
@@ -256,7 +250,8 @@ class RuleMixin:
     be used to match movements and build the diff (ie.
     not all divergence testers of the Rule)
     """
-    raise NotImplementedError
+    return filter(lambda x:x.isMatchingProvider(), self.objectValues(
+      portal_type=self.getPortalDivergenceTesterTypeList()))
 
   def _getQuantityTesterList(self):
     """
