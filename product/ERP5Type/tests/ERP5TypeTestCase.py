@@ -21,6 +21,7 @@ from cStringIO import StringIO
 from cPickle import dumps
 from glob import glob
 from urllib import urlretrieve
+from warnings import warn
 
 # XXX make sure that get_request works.
 current_app = None
@@ -689,13 +690,20 @@ class ERP5TypeTestCase(backportUnittest.TestCase, PortalTestCase):
                                                     **person_kw)
       return person
 
-    def createUserAssignement(self, user, assignment_kw):
+    def createUserAssignment(self, user, assignment_kw):
       """
         Create an assignment to user.
       """
       assignment = user.newContent(portal_type='Assignment', **assignment_kw)
       assignment.open()
       return assignment
+
+    def createUserAssignement(self, user, assignment_kw):
+      # BBB
+      warn('createUserAssignement is deprecated;'
+           'Use createUserAssignment instead',
+           DeprecationWarning)
+      return self.createUserAssignment(user, assignment_kw)
 
     def failIfDifferentSet(self, a, b, msg=""):
       if not msg:
