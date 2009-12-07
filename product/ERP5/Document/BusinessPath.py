@@ -100,9 +100,19 @@ class BusinessPath(Path):
       of this Arrow
     """
     # Naive implementation - we must use category groups instead - XXX
-    return ('source', 'source_section', 'source_payment', 'source_project',
-        'source_administration', 'source_project', 'source_function',
-        'source_payment', 'source_account')
+    return ('source',
+            'source_account',
+            'source_administration',
+            'source_advice',
+            'source_carrier',
+            'source_decision',
+            'source_function',
+            'source_payment',
+            'source_project',
+            'source_referral',
+            'source_section',
+            'source_trade',
+            'source_transport')
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getDestinationArrowBaseCategoryList')
@@ -112,9 +122,19 @@ class BusinessPath(Path):
       of this Arrow
     """
     # Naive implementation - we must use category groups instead - XXX
-    return ('destination', 'destination_section', 'destination_payment', 'destination_project',
-        'destination_administration', 'destination_project', 'destination_function',
-        'destination_payment', 'destination_account')
+    return ('destination',
+            'destination_account',
+            'destination_administration',
+            'destination_advice',
+            'destination_carrier',
+            'destination_decision',
+            'destination_function',
+            'destination_payment',
+            'destination_project',
+            'destination_referral',
+            'destination_section',
+            'destination_trade',
+            'destination_transport')
 
   # ICategoryAccessProvider overridden methods
   def _getCategoryMembershipList(self, category, **kw):
