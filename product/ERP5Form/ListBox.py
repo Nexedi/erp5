@@ -2612,7 +2612,7 @@ class ListBoxValidator(Validator.Validator):
                 my_field = form.get_field(my_field_id)
                 key = 'field_' + my_field.id + '_%s' % o.uid
                 error_result_key = my_field.id + '_%s' % o.uid
-                REQUEST.cell = o
+                REQUEST.set('cell', o)
                 try:
                   value = my_field._validate_helper(key, REQUEST) # We need cell
                   # Here we set the property
@@ -2651,7 +2651,7 @@ class ListBoxValidator(Validator.Validator):
               my_field_id = '%s_%s' % (field.id, alias)
               if form.has_field( my_field_id ):
                 my_field = form.get_field(my_field_id)
-                REQUEST.cell = o
+                REQUEST.set('cell', o)
                 if my_field.get_value('editable', REQUEST=REQUEST) and field.need_validate(REQUEST):
                   key = 'field_%s_%s' % (my_field.id, o.uid)
                   error_result_key = '%s_%s' % (my_field.id, o.uid)
@@ -2697,7 +2697,7 @@ class ListBoxValidator(Validator.Validator):
                 my_field_id = '%s_%s' % (field.id, alias)
                 if form.has_field( my_field_id ):
                   my_field = form.get_field(my_field_id)
-                  REQUEST.cell = o # We need cell
+                  REQUEST.set('cell', o) # We need cell
                   if my_field.get_value('editable', REQUEST=REQUEST) and field.need_validate(REQUEST):
                     tales_expr = my_field.tales.get('default', "")
                     key = 'field_' + my_field.id + '_%s' % o.uid
