@@ -276,6 +276,12 @@ class RuleMixin:
     """
     raise NotImplementedError
 
+  def _isProfitAndLossMovement(movement):
+    """
+    Returns True if movement is a profit and loss movement.
+    """
+    raise NotImplementedError
+
   def _extendMovementCollectionDiff(self, movement_collection_diff,
                                     prevision_movement, decision_movement_list):
     """
