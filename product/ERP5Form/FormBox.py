@@ -87,14 +87,6 @@ class FormBoxWidget(Widget.Widget):
                                 default="",
                                 required=0)
 
-  css_class = fields.StringField('css_class',
-                                  title='CSS class',
-                                  description=(
-      "The CSS class of the field. This can be used to style your "
-      "formulator fields using cascading style sheets. Not required."),
-                                  default="invisible",
-                                  required=0)
-
   def render(self, field, key, value, REQUEST, render_prefix=None):
     """
         Render a form in a field
