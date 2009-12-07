@@ -28,10 +28,8 @@
 #
 ##############################################################################
 
-from Products.ERP5Type.Globals import InitializeClass, PersistentMapping
 from AccessControl import ClassSecurityInfo
-
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
+from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5.Document.Path import Path
 
@@ -84,17 +82,15 @@ class BusinessProcess(Path, XMLObject):
     """
     # Naive implementation to redo XXX using contentValues
     if trade_phase is None:
-      trade_phase=[]
-    if not isinstance(trade_phase, (list, tuple)):
+      trade_phase = []
+    elif not isinstance(trade_phase, (list, tuple)):
       trade_phase = (trade_phase,)
     result = []
     if len(trade_phase) == 0:
-      return self.contentValues(portal_type="Business Path")
-    for document in self.contentValues(portal_type="Business Path"):
-      for phase in trade_phase:
-        if document.isMemberOf('trade_phase/' + phase): # XXX - not so good, use filter if possible
-          result.append(document)
-          break
+      return self.objectValues(portal_type="Business Path")
+    for document in self.objectValues(portal_type="Business Path"):
+      if document.getTradePhase() in trade_phase:
+        result.append(document)
     return result
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getStateValueList')
