@@ -98,7 +98,7 @@ class IDivergenceTester(Interface):
 
   def compare(prevision_movement, decision_movement):
     """
-    Returns True if simulation_movement and delivery_movement
+    Returns True if prevision_movement and delivery_movement
     match. Returns False else. The method is asymmetric and
     the order of parameter matters. For example, a sourcing
     rule may use a tester which makes sure that movements are
@@ -108,9 +108,10 @@ class IDivergenceTester(Interface):
     If decision_movement is a simulation movement, use
     the recorded properties instead of the native ones.
 
-    prevision_movement -- a simulation movement (prevision)
-
-    decision_movement -- a delivery movement (decision)
+    This method is used in three cases:
+    * an applied rule containted movement vs. a generated movement list
+    * a delivery containted movement vs. a generated movement list
+    * a delivery containted movement vs. an applied rule containted movement
     """
 
   def getUpdatablePropertyDict(prevision_movement, decision_movement):
