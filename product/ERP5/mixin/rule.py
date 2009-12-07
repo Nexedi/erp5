@@ -214,8 +214,7 @@ class RuleMixin:
     for movement in movement_diff.getNewMovementList():
       # This case is easy, because it is an applied rule
       kw = movement_diff.getMovementPropertyDict(movement)
-      movement = context.newContent(portal_type='Simulation Movement')
-      movement.edit(**kw)
+      movement = context.newContent(portal_type='Simulation Movement', **kw)
 
   # Placeholder for methods to override
   def _getMovementGenerator(self):
