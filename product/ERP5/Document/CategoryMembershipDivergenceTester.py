@@ -65,7 +65,8 @@ class CategoryMembershipDivergenceTester(Predicate, DivergenceTesterMixin):
     list : (prevision_value, decision_value, message, mapping)
     """
     tested_property = self.getTestedProperty()
-    if getattr(decision_movement, 'isPropertyRecorded', lambda:False)():
+    if getattr(decision_movement, 'isPropertyRecorded',
+               lambda x:False)(tested_property):
       decision_value = decision_movement.getRecordedProperty(tested_property)
     else:
       decision_value = decision_movement.getPropertyList(tested_property)
