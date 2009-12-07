@@ -53,7 +53,9 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>"""Get the report sections for account statement.\n
+            <value> <string encoding="cdata"><![CDATA[
+
+"""Get the report sections for account statement.\n
 Account is the combination of :\n
    - node (the Account in account module)\n
    - mirror_section (the Entity in organisation / person module)\n
@@ -120,7 +122,18 @@ if parent_portal_type:\n
   params[\'parent_portal_type\'] = parent_portal_type\n
 \n
 \n
-selection_columns = [\n
+if len(section_uid) > 1:\n
+  selection_columns = [\n
+    (\'Movement_getSpecificReference\', \'Transaction Reference\'),\n
+    (\'date\', \'Date\'),\n
+    (\'Movement_getExplanationTitle\', \'Accounting Transaction Title\'),\n
+    (\'section_title\', \'Section\'),\n
+    (\'Movement_getMirrorSectionTitle\', \'Third Party\'),\n
+    (\'debit\', \'Debit\'),\n
+    (\'credit\', \'Credit\'),\n
+    (\'running_total_price\', \'Net\'),]\n
+else:\n
+  selection_columns = [\n
     (\'Movement_getSpecificReference\', \'Transaction Reference\'),\n
     (\'date\', \'Date\'),\n
     (\'Movement_getExplanationTitle\', \'Accounting Transaction Title\'),\n
@@ -164,7 +177,9 @@ report_section_list.append(\n
                         (\'stock.uid\', \'ascending\')],))\n
 \n
 return report_section_list\n
-</string> </value>
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -229,6 +244,7 @@ return report_section_list\n
                             <string>dict</string>
                             <string>params</string>
                             <string>_write_</string>
+                            <string>len</string>
                             <string>selection_columns</string>
                             <string>report_section_list</string>
                           </tuple>
