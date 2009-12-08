@@ -294,7 +294,7 @@ class TestFormPrintout(ERP5TypeTestCase):
     builder = OOoBuilder(odf_document)
     content_xml = builder.extract("content.xml")
     content = etree.XML(content_xml)
-    self.assertTrue(content.xpath('//text:p = "543 210.0"', namespaces=content.nsmap))
+    self.assertTrue(content.xpath('//text:p[text() = "543 210.0"]', namespaces=content.nsmap))
     self._validate(odf_document)
     
     # change format
