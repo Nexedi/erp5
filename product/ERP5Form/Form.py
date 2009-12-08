@@ -176,9 +176,9 @@ class TALESValue(StaticValue):
     # This allows to pass some pointer to the local object
     # through the REQUEST parameter. Not very clean.
     # Used by ListBox to render different items in a list
-    if kw.has_key('REQUEST') and kw.get('cell', None) is None:
-      if getattr(kw['REQUEST'],'cell', None) is not None:
-        kw['cell'] = getattr(kw['REQUEST'],'cell')
+    if kw.get('REQUEST', None) is not None and kw.get('cell', None) is None:
+      if getattr(kw['REQUEST'], 'cell', None) is not None:
+        kw['cell'] = getattr(kw['REQUEST'], 'cell')
       else:
         kw['cell'] = kw['REQUEST']
     elif kw.get('cell', None) is None:
