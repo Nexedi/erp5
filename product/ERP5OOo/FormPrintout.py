@@ -934,8 +934,9 @@ class ODTStrategy(ODFStrategy):
     if not reference_list:
       return element_tree
     referenced_node = reference_list[0]
+    referenced_node.tail = None
     parent_node = referenced_node.getparent()
-    text_reference_position = int(parent_node.xpath('count(text:reference-mark-start/preceding-sibling::*)', namespaces=element_tree.nsmap))
+    text_reference_position = parent_node.index(referenced_node)
 
     #Delete all contents between <text:reference-mark-start/> and <text:reference-mark-end/>
     #Try to fetch style-name
