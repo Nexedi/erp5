@@ -916,6 +916,65 @@ Hé Hé Hé!""", page.asText().strip())
     self.assertEquals(websection_relative_url_fr,
                       webpage_module_fr.getWebSectionValue().absolute_url(relative=1))
 
+  def test_13_DocumentCache(self, quiet=quiet, run=run_all_test):
+    """
+      Test that when a document is modified, it can be accessed throug a
+      web_site, a web_section or wathever and display the last content (not an
+      old cache value of the document).
+    """
+    if not run: return
+    if not quiet:
+      message = '\ntest_13_DocumentCache'
+      ZopeTestCase._print(message)
+
+    portal = self.getPortal()
+    request = portal.REQUEST
+    request['PARENTS'] = [self.app]
+    # use w3m dump explicitly
+    self.portal.portal_transforms.manage_addPolicy(output_mimetype='text/plain',
+                                                   required_transforms=['w3m_dump'])
+    website = self.setupWebSite()
+    web_section_portal_type = 'Web Section'
+    web_section = website.newContent(portal_type=web_section_portal_type)
+
+    content = '<p>initial text</p>'
+    new_content = '<p>modified text<p>'
+    document = portal.web_page_module.newContent(portal_type='Web Page',
+            id='document_cache',
+            reference='NXD-Document.Cache',
+            text_content=content)
+    document.publish()
+    transaction.commit()
+    self.tic()
+    self.assertEquals(document.asText().strip(), 'initial text')
+
+    # Throug the web_site.
+    path = website.absolute_url_path() + '/NXD-Document.Cache'
+    self.assertNotEquals(request.traverse(path)(REQUEST=request.REQUEST,
+      RESPONSE=request.RESPONSE).find(content), -1)
+
+    # Throug a web_section.
+    path = web_section.absolute_url_path() + '/NXD-Document.Cache'
+    self.assertNotEquals(request.traverse(path)(REQUEST=request.REQUEST,
+      RESPONSE=request.RESPONSE).find(content), -1)
+
+    # modified the web_page content
+    document.edit(text_content=new_content)
+    self.assertEquals(document.asText().strip(), 'modified text')
+    transaction.commit()
+    self.tic()
+
+    # check the cache don't send again the old content
+    # Throug the web_site.
+    path = website.absolute_url_path() + '/NXD-Document.Cache'
+    self.assertNotEquals(request.traverse(path)(REQUEST=request.REQUEST,
+      RESPONSE=request.RESPONSE).find(new_content), -1)
+
+    # Throug a web_section.
+    path = web_section.absolute_url_path() + '/NXD-Document.Cache'
+    self.assertNotEquals(request.traverse(path)(REQUEST=request.REQUEST,
+      RESPONSE=request.RESPONSE).find(new_content), -1)
+
 class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
   """
   Test for erp5_web with simple security.
