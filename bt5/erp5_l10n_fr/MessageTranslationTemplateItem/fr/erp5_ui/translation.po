@@ -831,11 +831,35 @@ msgstr "Variante morphologie"
 msgid "Apparel Model Template"
 msgstr "Modèle de référence"
 
+msgid "Apparel Model To Design"
+msgstr "Modèles à mettre au point"
+
+msgid "Apparel Model To Price"
+msgstr "Modèles à tarifer"
+
+msgid "Apparel Model To Prototype"
+msgstr "Modèles à prototyper"
+
 msgid "Apparel Models"
 msgstr "Modèles"
 
+msgid "Apparel Models To Analyse"
+msgstr "Modèles à analyser"
+
 msgid "Apparel Models To Propose"
-msgstr "Modèle à proposer"
+msgstr "Modèles à proposer"
+
+msgid "Apparel Models To Quote"
+msgstr "Modèles à coter"
+
+msgid "Apparel Models To Review"
+msgstr "Modèles à revoir"
+
+msgid "Apparel Models To Study"
+msgstr "Modèles à étudier"
+
+msgid "Apparel Models To Validate"
+msgstr "Modèles à valider"
 
 msgid "Apparel Shape"
 msgstr "Forme"
@@ -6730,6 +6754,9 @@ msgstr "En attente"
 
 msgid "Pending [state in event_workflow]"
 msgstr "En attente"
+
+msgid "Pending prototypes"
+msgstr "Prototypage en cours"
 
 msgid "People"
 msgstr "Personnes"
