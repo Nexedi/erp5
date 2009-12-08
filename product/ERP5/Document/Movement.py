@@ -216,7 +216,7 @@ class Movement(XMLObject, Amount):
                                         self.getVariationCategoryList())
       return price
 
-  def _getTotalPrice(self, default=None, context=None, fast=0):
+  def _getTotalPrice(self, default=None, context=None, fast=0, **kw):
     price = self.getPrice(context=context)
     quantity = self.getQuantity()
     if isinstance(price, (int, float)) and \
