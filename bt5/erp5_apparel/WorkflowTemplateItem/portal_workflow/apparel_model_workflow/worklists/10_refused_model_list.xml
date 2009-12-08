@@ -15,7 +15,7 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Models To Review (%(count)s)</string> </value>
+            <value> <string>Apparel Models To Review (%(count)s)</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
@@ -27,7 +27,7 @@ apparel_model_module/view?validation_state=refused&local_roles:list=Assignor&res
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Models To Review</string> </value>
+            <value> <string>Apparel Models To Review</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>

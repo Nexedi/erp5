@@ -15,7 +15,7 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Models To Analyse (%(count)s)</string> </value>
+            <value> <string>Apparel Models To Analyse (%(count)s)</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
@@ -27,7 +27,7 @@ apparel_model_module/view?validation_state=approved&local_roles:list=Assignee&re
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Models To Analyse</string> </value>
+            <value> <string>Apparel Models To Analyse</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
