@@ -761,12 +761,12 @@ class TestOrderMixin:
     """
       Test if simulation is matching order
     """
-    self.checkOrderRuleSimulation(rule_id = 'default_order_rule', sequence=sequence, \
+    self.checkOrderRuleSimulation(rule_reference='default_order_rule', sequence=sequence, \
         sequence_list=sequence_list, **kw)
 
-  def checkOrderRuleSimulation(self, rule_id, sequence=None, sequence_list=None, **kw):
+  def checkOrderRuleSimulation(self, rule_reference, sequence=None, sequence_list=None, **kw):
     """
-      Test if simulation is matching order, be sure that rule_id is used
+      Test if simulation is matching order, be sure that rule_reference is used
       to expand simulation for order
     """
     order = sequence.get('order')
@@ -787,10 +787,10 @@ class TestOrderMixin:
       self.failUnless(order_state, \
                       applied_rule.getLastExpandSimulationState())
 
-      # Test if applied rule has a specialise value with passed rule_id
+      # Test if applied rule has a specialise value with passed rule_reference
       portal_rules = getToolByName(order, 'portal_rules')
-      self.assertEquals(getattr(portal_rules,rule_id), \
-                        applied_rule.getSpecialiseValue())
+      self.assertEquals(rule_reference,
+                        applied_rule.getSpecialiseReference())
 
       simulation_movement_list = applied_rule.objectValues()
       sequence.edit(simulation_movement_list=simulation_movement_list)
