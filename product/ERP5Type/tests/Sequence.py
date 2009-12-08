@@ -97,19 +97,23 @@ class Step:
 
 class Sequence:
 
-  def __init__(self):
+  def __init__(self, context=None):
     self._step_list = []
     self._dict = {}
+    self._played_index = 0
+    self._context = context
 
   def play(self, context, sequence=None, sequence_number=0, quiet=0):
     if not quiet:
-      ZopeTestCase._print('\nStarting New Sequence %i... ' % sequence_number)
-      LOG('Sequence.play', 0, 'Starting New Sequence %i... ' % sequence_number)
+      if self._played_index == 0:
+        ZopeTestCase._print('\nStarting New Sequence %i... ' % sequence_number)
+        LOG('Sequence.play', 0, 'Starting New Sequence %i... ' % sequence_number)
     if sequence is None:
-      for idx, step in enumerate(self._step_list):
+      for idx, step in enumerate(self._step_list[self._played_index:]):
         step.play(context, sequence=self, quiet=quiet)
         # commit transaction after each step
         transaction.commit()
+      self._played_index = len(self._step_list)
 
   def addStep(self,method_name,required=1,max_replay=1):
     new_step = Step(method_name=method_name,
@@ -128,6 +132,32 @@ class Sequence:
   def setdefault(self, key, default=None):
     return self._dict.setdefault(key, default)
 
+  def __call__(self, sequence_string, sequence_number=0, quiet=0):
+    """
+    add some steps and directly runs them, this allows to easily write
+    such code when sequence are unable to handle too complex cases :
+
+      sequence('CreateFoo Tic')
+      [some code not using sequences]
+      sequence('CreateBar Tic')
+    """
+    self.setSequenceString(sequence_string)
+    if self._context is None:
+      raise ValueError('context must be initialized when sequence directly called')
+    self.play(self._context, sequence_number=sequence_number, quiet=quiet)
+
+  def setSequenceString(self, sequence_string):
+    sequence_string = re.subn("#.*\n", "\n", sequence_string)[0]
+    step_list = sequence_string.split()
+    self.setSequenceStringList(step_list)
+
+  def setSequenceStringList(self, step_list):
+    for step in step_list:
+      if step != '':
+        if step.startswith('step'):
+          step = step[4:]
+        self.addStep(step)
+
 class SequenceList:
 
   def __init__(self):
@@ -144,18 +174,14 @@ class SequenceList:
     returns the sequence for those steps.
     """
     # remove comments in sequence strings
-    sequence_string = re.subn("#.*\n", "\n", sequence_string)[0]
-    step_list = sequence_string.split()
-    return self.addSequenceStringList(step_list)
+    sequence = Sequence()
+    sequence.setSequenceString(sequence_string)
+    self.addSequence(sequence)
+    return sequence
 
   def addSequenceStringList(self, step_list):
-    step_list
     sequence = Sequence()
-    for step in step_list:
-      if step != '':
-        if step.startswith('step'):
-          step = step[4:]
-        sequence.addStep(step)
+    sequence.setSequenceStringList(step_list)
     self.addSequence(sequence)
     return sequence
 
