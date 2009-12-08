@@ -60,8 +60,7 @@ form = context\n
 request = context.REQUEST\n
 report_section_list = []\n
 portal = context.getPortalObject()\n
-selection_name=request.form.get(\'selection_name\', None)\n
-\n
+selection_name = request.get(\'selection_name\', None)\n
 \n
 def getReportSectionListForObject(doc):\n
   """ Get all possible report section for object. """\n
@@ -92,7 +91,7 @@ if selection_name is not None:\n
     for doc in portal.portal_selections.callSelectionFor(selection_name, context=form):\n
       report_section_list.extend(getReportSectionListForObject(doc))\n
 else:\n
-  # get only current (context) document \n
+  # get only current (context) document\n
   report_section_list.extend(getReportSectionListForObject(context))\n
 \n
 return report_section_list\n
