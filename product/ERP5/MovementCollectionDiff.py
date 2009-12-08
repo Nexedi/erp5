@@ -27,6 +27,7 @@
 ##############################################################################
 
 import zope.interface
+from Acquisition import aq_base
 from Products.ERP5Type import interfaces
 from Products.ERP5Type.Accessor.TypeDefinition import list_types
 
@@ -149,4 +150,8 @@ class MovementCollectionDiff(object):
     property_dict.update(dict(filter(filter_category_func,
                                      [(x, getPropertyList(x)) for x in \
                                       movement.getBaseCategoryList()])))
+    # update order category if exist
+    order = getattr(aq_base(movement), 'order', None)
+    if order is not None:
+      property_dict['order'] = order
     return property_dict
