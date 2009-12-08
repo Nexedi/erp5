@@ -595,11 +595,8 @@ class ODFStrategy(Implicit):
     style_name_row_dictionary = self._createStyleNameRowDictionary(table_row_list)
     # clear original table 
     parent_paragraph = target_table.getparent()
-    target_index = parent_paragraph.index(target_table)
-    parent_paragraph.remove(target_table)
     # clear rows 
-    for table_row in table_row_list:
-      newtable.remove(table_row)
+    [newtable.remove(table_row) for table_row in table_row_list]
 
     listboxline_list = listbox.get_value('default',
                                          render_format='list',
@@ -614,15 +611,12 @@ class ODFStrategy(Implicit):
       row_style_name = listboxline.getRowCSSClassName()
       if listboxline.isTitleLine() and not has_header_rows:
         row = deepcopy(row_top)
-        row = self._updateColumnValue(row, listbox_column_list)
+        self._updateColumnValue(row, listbox_column_list)
         newtable.append(row)
         is_top = False
       elif listboxline.isDataLine() and is_top:
-        if style_name_row_dictionary.has_key(row_style_name):
-          row = deepcopy(style_name_row_dictionary[row_style_name])
-        else:
-          row = deepcopy(row_top)
-        row = self._updateColumnValue(row, listbox_column_list)
+        row = deepcopy(style_name_row_dictionary.get(row_style_name, row_top))
+        self._updateColumnValue(row, listbox_column_list)
         newtable.append(row)
         is_top = False
       elif listboxline.isStatLine() or (index is last_index and listboxline.isDataLine()):
@@ -630,15 +624,12 @@ class ODFStrategy(Implicit):
         row = self._updateColumnStatValue(row, listbox_column_list, row_middle)
         newtable.append(row)
       elif index > 0 and listboxline.isDataLine():
-        if style_name_row_dictionary.has_key(row_style_name):
-          row = deepcopy(style_name_row_dictionary[row_style_name])
-        else:
-          row = deepcopy(row_middle)
-        row = self._updateColumnValue(row, listbox_column_list)
+        row = deepcopy(style_name_row_dictionary.get(row_style_name, row_middle))
+        self._updateColumnValue(row, listbox_column_list)
         newtable.append(row)
 
     self._setUniqueElementName(table_id, iteration_index, table_xpath, newtable)
-    parent_paragraph.insert(target_index, newtable)
+    parent_paragraph.replace(target_table, newtable)
 
   def _copyRowStyle(self, table_row_list=None, has_header_rows=False):
     """
@@ -688,7 +679,7 @@ class ODFStrategy(Implicit):
         style_name_row_dictionary[name] = deepcopy(table_row)
     return style_name_row_dictionary
 
-  def _updateColumnValue(self, row=None, listbox_column_list=[]):
+  def _updateColumnValue(self, row, listbox_column_list):
     odf_cell_list = row.findall("{%s}table-cell" % row.nsmap['table'])
     odf_cell_list_size = len(odf_cell_list)
     listbox_column_size = len(listbox_column_list)
@@ -697,7 +688,6 @@ class ODFStrategy(Implicit):
         break
       value = listbox_column_list[column_index][1]
       self._setColumnValue(column, value)
-    return row
 
   def _updateColumnStatValue(self, row, listbox_column_list, row_middle):
     """stat line is capable of column span setting"""
@@ -741,8 +731,8 @@ class ODFStrategy(Implicit):
     if table_content is not None:
       table_content.text = fragment.text
       for element in fragment:
-        table_content.append(deepcopy(element))
-      column_value = " ".join([x for x in table_content.itertext()])
+        table_content.append(element)
+      column_value = " ".join(table_content.itertext())
     return (column_value, table_content)
 
   def _valueAsOdfXmlElement(self, value=None, element_tree=None):
