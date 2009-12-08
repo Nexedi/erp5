@@ -1509,6 +1509,29 @@ class TestTradeModelLine(TestTradeModelLineMixin):
       trade_condition_1.getTradeModelLineComposedList(context=order)
     )
 
+  def test_simpleGetTradeModelLineComposedList(self):
+    """
+    Test list of contribution/application relation is well sorted in a simple case
+    where we create trade model line in a wrong order in comparison to application relation
+    We have a contribution graph like this A ---> C ---> B so final order must be A, C, B
+    """
+    trade_condition = self.createTradeCondition()
+    A = self.createTradeModelLine(trade_condition, reference='A', id=1,
+        base_contribution_list=['base_amount/total'])
+
+    B = self.createTradeModelLine(trade_condition, reference='B', id=2,
+        base_contribution_list=['base_amount/total_amount'],
+        base_application_list=['base_amount/total_tax'])
+
+    C = self.createTradeModelLine(trade_condition, reference='C', id=3,
+        base_contribution_list=['base_amount/total_tax'],
+        base_application_list=['base_amount/total'])
+    trade_model_line_list = trade_condition.getTradeModelLineComposedList()
+
+    self.assertEquals([q.getReference() for q in trade_model_line_list],
+        [q.getReference() for q in [A, C, B,]])
+
+
   def test_getTradeModelLineComposedList(self):
     """Test that list of contribution/application relations is sorted to do easy traversal
 
