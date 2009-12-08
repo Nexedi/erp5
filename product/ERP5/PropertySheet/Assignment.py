@@ -56,7 +56,6 @@ class Assignment(Path):
 
   _categories = ( # Career categories
                   'grade', 'role', 'skill', 'subordination', 'salary_level', 'product_line'
-                , 'career_start_mode', 'career_end_mode'
                   # Assignment and Career categories
                 , 'group', 'site', 'function', 'activity'
                 )
