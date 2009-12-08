@@ -585,7 +585,7 @@ class ODFStrategy(Implicit):
     table_header_rows_xpath = '%s/table:table-header-rows' % table_xpath
     table_row_xpath = '%s/table:table-row' % table_xpath
     table_header_rows_list = newtable.xpath(table_header_rows_xpath,  namespaces=element_tree.nsmap)
-    table_row_list = newtable.xpath(table_row_xpath,  namespaces=element_tree.nsmap)
+    table_row_list = newtable.xpath(table_row_xpath, namespaces=element_tree.nsmap)
 
     # copy row styles from ODF Document
     has_header_rows = len(table_header_rows_list) > 0
@@ -621,7 +621,7 @@ class ODFStrategy(Implicit):
         is_top = False
       elif listboxline.isStatLine() or (index is last_index and listboxline.isDataLine()):
         row = deepcopy(row_bottom)
-        row = self._updateColumnStatValue(row, listbox_column_list, row_middle)
+        self._updateColumnStatValue(row, listbox_column_list, row_middle)
         newtable.append(row)
       elif index > 0 and listboxline.isDataLine():
         row = deepcopy(style_name_row_dictionary.get(row_style_name, row_middle))
@@ -692,7 +692,7 @@ class ODFStrategy(Implicit):
   def _updateColumnStatValue(self, row, listbox_column_list, row_middle):
     """stat line is capable of column span setting"""
     if row_middle is None:
-      return row
+      return
     odf_cell_list = row.findall("{%s}table-cell" % row.nsmap['table'])
     odf_column_span_list = self._getOdfColumnSpanList(row_middle)
     listbox_column_size = len(listbox_column_list)
@@ -706,7 +706,6 @@ class ODFStrategy(Implicit):
       listbox_column_index = self._nextListboxColumnIndex(column_span,
                                                           listbox_column_index,
                                                           odf_column_span_list)
-    return row
 
   def _setColumnValue(self, column, value):
     self._clearColumnValue(column)
@@ -795,10 +794,7 @@ class ODFStrategy(Implicit):
 
   def _getColumnSpanSize(self, column=None):
     span_attribute = "{%s}number-columns-spanned" % column.nsmap['table']
-    column_span = 1
-    if column.attrib.has_key(span_attribute):
-      column_span = int(column.attrib[span_attribute])
-    return column_span
+    return int(column.attrib.get(span_attribute, 1))
 
   def _nextListboxColumnIndex(self, span=0, current_index=0, column_span_list=[]):
     hops = 0
