@@ -53,33 +53,48 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>cell_id_list = []\n
-colour_range = context.getSpecialiseValue(portal_type=\'Apparel Colour Range\')\n
-if colour_range is not None and len(colour_range.contentValues(portal_type=\'Apparel Colour Range Variation\')) != 0:\n
-  colour_variation = colour_range.contentValues(portal_type=\'Apparel Colour Range Variation\')[0]\n
-  apparel_fabric_colour_variation = colour_variation.getSpecialiseValue(portal_type=\'Apparel Fabric Colour Variation\')\n
-  if apparel_fabric_colour_variation is not None:\n
-    fabric = apparel_fabric_colour_variation.getParentValue()\n
-    composition_list = fabric.getCompositionList()\n
-    # get cells\n
-    poly_list = fabric.ApparelFabric_asCellRange(matrixbox=1)[0]\n
-    for cat, title in poly_list:\n
-      cell = fabric.getCell(cat, base_id=\'composition\')\n
-      if cell is not None:\n
-        cell_id_list.append(cell.getId())\n
+            <value> <string>\'\'\'\n
+This script is used to copy composition from a related Apparel Fabric Colour\n
+Variation to the current object.\n
+\'\'\'\n
 \n
-if len(cell_id_list):\n
-  copy_data = fabric.manage_copyObjects(cell_id_list)\n
-  context.manage_pasteObjects(copy_data)\n
-  context.setCompositionList(composition_list)\n
-  msg = \'%s %s\' % (len(cell_id_list), context.Base_translateString(\'Composition Pasted.\'))\n
-else:\n
-  msg = \'No Composition found\'\n
+cell_id_list = []\n
+msg = context.Base_translateString(\'No Composition found.\')\n
+colour_range = context.getSpecialiseValue(portal_type=\'Apparel Colour Range\')\n
+if colour_range is None:\n
+  msg = context.Base_translateString(\'Apparel Colour Range must be defined\')\n
+\n
+elif len(colour_range.contentValues(portal_type=\'Apparel Colour Range Variation\')) != 0:\n
+  colour_variation = colour_range.contentValues(portal_type=\'Apparel Colour Range Variation\')[0]\n
+  variation_line_list = colour_variation.contentValues(portal_type="Apparel Colour Range Variation Line",\n
+    sort_on=\'int_index\')\n
+  if len(variation_line_list):\n
+    # the first one is the most important one\n
+    # take composition only from the first one\n
+    variation_line = variation_line_list[0]\n
+    apparel_fabric_colour_variation = variation_line.getSpecialiseValue(portal_type=\'Apparel Fabric Colour Variation\')\n
+    if apparel_fabric_colour_variation is not None:\n
+      fabric = apparel_fabric_colour_variation.getParentValue()\n
+      composition_list = fabric.getCompositionList()\n
+      # get cells\n
+      poly_list = fabric.ApparelFabric_asCellRange(matrixbox=1)[0]\n
+      context.setCompositionList(composition_list)\n
+      #context.setVariationBaseCategoryList([\'composition\',])\n
+      context.setCellRange(base_id=\'composition\', *context.ApparelFabric_asCellRange(matrixbox=False))\n
+\n
+      for cat, title in poly_list:\n
+        cell = fabric.getCell(cat, base_id=\'composition\')\n
+        if cell is not None:\n
+          new_cell = context.newCell(cat, base_id=\'composition\',\n
+                                      portal_type=\'Mapped Value\')\n
+          new_cell.setQuantity(cell.getQuantity())\n
+      if len(poly_list):\n
+        msg = \'%s %s\' % (len(poly_list), context.Base_translateString(\'Items pasted.\'))\n
+      else:\n
+        msg = context.Base_translateString(\'No Composition found.\')\n
 \n
 return context.Base_redirect(form_id=form_id,\n
-                      keep_items = dict(portal_status_message=msg,\n
-                      editable_mode = context.REQUEST.get(\'editable_mode\', 0)))\n
-return msg\n
+                      keep_items = dict(portal_status_message=msg))\n
 </string> </value>
         </item>
         <item>
@@ -120,21 +135,25 @@ return msg\n
                             <string>cell_id_list</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>msg</string>
                             <string>colour_range</string>
                             <string>None</string>
                             <string>len</string>
                             <string>_getitem_</string>
                             <string>colour_variation</string>
+                            <string>variation_line_list</string>
+                            <string>variation_line</string>
                             <string>apparel_fabric_colour_variation</string>
                             <string>fabric</string>
                             <string>composition_list</string>
                             <string>poly_list</string>
+                            <string>_apply_</string>
+                            <string>False</string>
                             <string>_getiter_</string>
                             <string>cat</string>
                             <string>title</string>
                             <string>cell</string>
-                            <string>copy_data</string>
-                            <string>msg</string>
+                            <string>new_cell</string>
                             <string>dict</string>
                           </tuple>
                         </value>

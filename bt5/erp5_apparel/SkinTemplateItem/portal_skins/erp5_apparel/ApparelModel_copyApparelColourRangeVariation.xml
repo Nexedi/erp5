@@ -55,9 +55,10 @@
             <key> <string>_body</string> </key>
             <value> <string>request = context.REQUEST\n
 apparel_colour_range = context.getSpecialiseValue(portal_type=(\'Apparel Colour Range\',))\n
+msg = context.Base_translateString(\'No Apparel Model Colour Variation found.\')\n
 \n
 if apparel_colour_range is None:\n
-  msg = \'No Apparel Colour Range defined.\'\n
+  msg = context.Base_translateString(\'Apparel Colour Range must be defined.\')\n
 else:\n
   apparel_colour_range_variation_list = map( lambda x: x.getObject(), apparel_colour_range.searchFolder(portal_type=(\'Apparel Colour Range Variation\',)))\n
 \n
@@ -65,7 +66,6 @@ else:\n
   apparel_model_colour_variation_title_list = map( lambda x: x.getObject().getTitle(), apparel_model_colour_variation_list)\n
 \n
   count = 0\n
-\n
   for apparel_colour_range_variation in apparel_colour_range_variation_list:\n
     if apparel_colour_range_variation.getTitle() not in apparel_model_colour_variation_title_list:\n
       count += 1\n
@@ -78,9 +78,7 @@ else:\n
       )\n
 \n
   if count != 0:\n
-    msg = \'Creating %s Apparel Model Colour Variation.\' % count\n
-  else:\n
-    msg = \'No new Apparel Colour Range Variation defined.\'\n
+    msg = \'%s %s\' % (count, context.Base_translateString(\'Items created.\'))\n
 \n
 context.Base_redirect(form_id=form_id,\n
                       keep_items=dict(portal_status_message=msg))\n
@@ -125,8 +123,8 @@ context.Base_redirect(form_id=form_id,\n
                             <string>context</string>
                             <string>request</string>
                             <string>apparel_colour_range</string>
-                            <string>None</string>
                             <string>msg</string>
+                            <string>None</string>
                             <string>map</string>
                             <string>apparel_colour_range_variation_list</string>
                             <string>apparel_model_colour_variation_list</string>
