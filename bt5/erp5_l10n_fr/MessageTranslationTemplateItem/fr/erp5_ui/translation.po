@@ -9,6 +9,12 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
+msgid "${count} Apparel Colour Range Variations created."
+msgstr "${count} coloris de gamme créés."
+
+msgid "${count} Compositions created."
+msgstr "${count} compositions créées."
+
 msgid "${count} documents created successfully."
 msgstr "${count} documents créés avec succès."
 
@@ -737,6 +743,9 @@ msgstr "Gammes coloris"
 
 msgid "Apparel Colour Range Variation Line"
 msgstr "Ligne de gamme de matière"
+
+msgid "Apparel Colour Range must be defined."
+msgstr "La gamme matière doit être définie."
 
 msgid "Apparel Colour Ranges"
 msgstr "Gammes matières"
@@ -6007,11 +6016,11 @@ msgstr "Conditions de vente non définies."
 msgid "No bank account for current organisation."
 msgstr "Pas de compte en banque pour l'organisation courante"
 
-msgid "No divergence found."
-msgstr "Pas de divergence trouvée."
-
 msgid "No composition found."
 msgstr "Pas de composition trouvée."
+
+msgid "No divergence found."
+msgstr "Pas de divergence trouvée."
 
 msgid "No exchange ratio found."
 msgstr "Pas de taux de change trouvé."
