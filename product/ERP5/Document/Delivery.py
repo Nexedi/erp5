@@ -40,7 +40,6 @@ from Products.ERP5.Document.ImmobilisationDelivery import ImmobilisationDelivery
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 
 from zLOG import LOG, PROBLEM
-from zExceptions import NotFound
 
 class Delivery(XMLObject, ImmobilisationDelivery):
     """
@@ -695,7 +694,7 @@ class Delivery(XMLObject, ImmobilisationDelivery):
       if len(res) > 0:
         rule_id = res[0].getId()
       else:
-        raise NotFound('No such rule as %r is found' % (rule_reference,))
+        raise ValueError, 'No such rule as %r is found' % rule_reference
 
       self._createAppliedRule(rule_id, force=force, **kw)
 
