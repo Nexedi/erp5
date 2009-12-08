@@ -198,7 +198,8 @@ SELECT \n
   CASE WHEN @result < 0 THEN\n
     0\n
   ELSE\n
-    @result\n
+    <dtml-comment>CAST to num explicitly otherwise it may be treated as binary in MySQL-5.0.x</dtml-comment>\n
+    0 + @result\n
   END AS total_quantity,\n
 \n
   <dtml-sqlvar expr="from_date" type="datetime"> AS from_date,\n
@@ -345,7 +346,8 @@ SELECT \n
   CASE WHEN @result < 0 THEN\n
     0\n
   ELSE\n
-    @result\n
+    <dtml-comment>CAST to num explicitly otherwise it may be treated as binary in MySQL-5.0.x</dtml-comment>\n
+    0 + @result\n
   END AS total_quantity,\n
 \n
   <dtml-sqlvar expr="from_date" type="datetime"> AS from_date,\n
