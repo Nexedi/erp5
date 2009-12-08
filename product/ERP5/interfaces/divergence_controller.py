@@ -66,6 +66,15 @@ class IDivergenceController(Interface):
                 or a list thereof
     """
 
+  def getDivergenceList(self, movement=None):
+    """
+    Returns a list of divergences of the movements provided
+    in delivery_or_movement.
+
+    movement -- a movement, a delivery, a simulation movement,
+                or a list thereof
+    """
+
   def newSolverProcess(movement=None):
     """
     Builds a new solver process from the divergence
