@@ -925,20 +925,22 @@ class ODTStrategy(ODFStrategy):
 
     """
     field_id = field.id
-    range_reference_xpath = '//text:reference-mark-start[@text:name="%s"]/'\
+    range_reference_xpath = '//text:reference-mark-start[@text:name="%s"]' % (field_id,)
+    node_to_remove_list_xpath = '//text:reference-mark-start[@text:name="%s"]/'\
                             'following-sibling::*[node()/'\
                             'following::text:reference-mark-end[@text:name="%s"]]' % (field_id, field_id)
+    node_to_remove_list = element_tree.xpath(node_to_remove_list_xpath, namespaces=element_tree.nsmap)
     reference_list = element_tree.xpath(range_reference_xpath, namespaces=element_tree.nsmap)
     if not reference_list:
       return element_tree
-    parent_node_xpath = '//text:reference-mark-start[@text:name="%s"]/parent::*[1]' % field_id
-    parent_node = element_tree.xpath(parent_node_xpath, namespaces=element_tree.nsmap)[0]
+    referenced_node = reference_list[0]
+    parent_node = referenced_node.getparent()
     text_reference_position = int(parent_node.xpath('count(text:reference-mark-start/preceding-sibling::*)', namespaces=element_tree.nsmap))
 
     #Delete all contents between <text:reference-mark-start/> and <text:reference-mark-end/>
     #Try to fetch style-name
     attr_dict = {}
-    [(attr_dict.update(target_node.attrib), parent_node.remove(target_node)) for target_node in reference_list]
+    [(attr_dict.update(target_node.attrib), parent_node.remove(target_node)) for target_node in node_to_remove_list]
     new_node = field.render_odt(local_name='span', attr_dict=attr_dict)
     parent_node.insert(text_reference_position+1, new_node)
     # set when using report section
