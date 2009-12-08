@@ -5,10 +5,10 @@
 #                    Jean-Paul Smets-Solanes <jp@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
-# programmers who take the whole responsability of assessing all potential
+# programmers who take the whole responsibility of assessing all potential
 # consequences resulting from its eventual inadequacies and bugs
 # End users who are looking for a ready-to-use solution with commercial
-# garantees and support are strongly adviced to contract a Free Software
+# guarantees and support are strongly adviced to contract a Free Software
 # Service Company
 #
 # This program is Free Software; you can redistribute it and/or
@@ -23,7 +23,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 #
 ##############################################################################
 
@@ -32,17 +32,17 @@ from zope.interface import Interface
 class IDivergenceController(Interface):
   """Divergence Controller interface specification
 
-  IDivergenceController provides methods to create new 
+  IDivergenceController provides methods to create new
   solver processes based on the current divergence of
-  deliveries, movements, simumlation movements.
+  deliveries, movements, simulation movements.
 
-  IDivergenceController must be provided by 
+  IDivergenceController must be provided by
   movements, deliveries and by the SolverTool.
   Actual implementation should be handled by SolverTool.
 
-  Whenever movement is not provided, IDivergenceController 
-  instances should use the most appropriate document 
-  such as self for a delivery movement. 
+  Whenever movement is not provided, IDivergenceController
+  instances should use the most appropriate document
+  such as self for a delivery movement.
 
   Whenever divergence_tester is not provided, all
   applicable divergences are considered.
@@ -50,7 +50,7 @@ class IDivergenceController(Interface):
 
   def isDivergent(movement=None):
     """
-    Returns True if any of the movements provided 
+    Returns True if any of the movements provided
     in delivery_or_movement is divergent. Else return False.
 
     movement -- a movement, a delivery, a simulation movement,
@@ -59,7 +59,7 @@ class IDivergenceController(Interface):
 
   def isConvergent(movement=None):
     """
-    Returns False if any of the movements provided 
+    Returns False if any of the movements provided
     in delivery_or_movement is divergent. Else return True.
 
     movement -- a movement, a delivery, a simulation movement,
@@ -69,7 +69,7 @@ class IDivergenceController(Interface):
   def newSolverProcess(movement=None):
     """
     Builds a new solver process from the divergence
-    analaysis of delivery_or_movement. All movements
+    analysis of delivery_or_movement. All movements
     which are not divergence are placed in a Solver
     Decision with no Divergence Tester specified.
 
