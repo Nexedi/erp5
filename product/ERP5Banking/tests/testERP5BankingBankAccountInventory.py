@@ -53,15 +53,6 @@ class TestERP5BankingInventory(TestERP5BankingMixin):
   RUN_ALL_TEST = 1
   QUIET = 0
 
-  def getBusinessTemplateList(self):
-    """
-    """
-    return ('erp5_base',
-            'erp5_trade',
-            'erp5_accounting',
-            'erp5_banking_core',
-            'erp5_banking_inventory',)
-
   def getTitle(self):
     """
       Return the title of the test
