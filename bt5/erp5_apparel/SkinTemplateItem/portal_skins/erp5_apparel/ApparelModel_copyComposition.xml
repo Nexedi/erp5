@@ -89,7 +89,7 @@ elif len(colour_range.contentValues(portal_type=\'Apparel Colour Range Variation
                                       portal_type=\'Mapped Value\')\n
           new_cell.setQuantity(cell.getQuantity())\n
       if len(poly_list):\n
-        msg = context.Base_translateString(\'${count} Composition created.\',\n
+        msg = context.Base_translateString(\'${count} Compositions created.\',\n
             mapping={\'count\': len(poly_list)})\n
 \n
 return context.Base_redirect(form_id=form_id,\n

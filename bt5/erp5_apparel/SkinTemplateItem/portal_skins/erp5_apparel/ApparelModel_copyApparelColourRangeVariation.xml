@@ -78,7 +78,7 @@ else:\n
       )\n
 \n
   if count != 0:\n
-    msg = context.Base_translateString(\'${count} Apparel Colour Range Variation created.\',\n
+    msg = context.Base_translateString(\'${count} Apparel Colour Range Variations created.\',\n
         mapping={\'count\': count})\n
 \n
 context.Base_redirect(form_id=form_id,\n
