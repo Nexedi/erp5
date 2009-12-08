@@ -6010,6 +6010,9 @@ msgstr "Pas de ${portal_type} lié."
 msgid "No ${portal_type} related."
 msgstr "Pas de ${portal_type} correspondant."
 
+msgid "No Apparel Model Colour Variation found."
+msgstr "Pas de coloris de gamme trouvé."
+
 msgid "No Trade Condition."
 msgstr "Conditions de vente non définies."
 
