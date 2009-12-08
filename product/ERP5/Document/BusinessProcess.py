@@ -88,8 +88,9 @@ class BusinessProcess(Path, XMLObject):
     result = []
     if len(trade_phase) == 0:
       return self.objectValues(portal_type="Business Path")
+    trade_phase = set(trade_phase)
     for document in self.objectValues(portal_type="Business Path"):
-      if document.getTradePhase() in trade_phase:
+      if trade_phase.intersection(document.getTradePhaseList()):
         result.append(document)
     return result
 
