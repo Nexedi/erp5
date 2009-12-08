@@ -67,7 +67,6 @@ class FloatDivergenceTester(Predicate, DivergenceTesterMixin):
     list : (prevision_value, decision_value, message, mapping)
     """
     tested_property = self.getTestedProperty()
-    print (tested_property, prevision_movement, decision_movement)
     if getattr(decision_movement, 'isPropertyRecorded',
                lambda x:False)(tested_property):
       decision_value = decision_movement.getRecordedProperty(tested_property)
