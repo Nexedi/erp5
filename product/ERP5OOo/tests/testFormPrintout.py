@@ -270,9 +270,13 @@ class TestFormPrintout(ERP5TypeTestCase):
     #test_output.write(odf_document)
     builder = OOoBuilder(odf_document)
     content_xml = builder.extract("content.xml")
-    self.assertTrue(content_xml.find("line1") > 0)
-    self.assertTrue(content_xml.find("line2") > 0)
-    self.assertTrue(content_xml.find("line2") > content_xml.find("line1"))
+    content_tree = etree.XML(content_xml)
+    span_list = content_tree.xpath('//text:reference-mark-start[@text:name="week"]/following-sibling::text:span',
+                                   namespaces=content_tree.nsmap)
+    self.assertEquals(1, len(span_list))
+    span = span_list[0]
+    self.assertEquals('line1', span.text)
+    self.assertEquals('line2', span[0].tail)
     self._validate(odf_document)
 
   def test_01_Paragraph_08_Field_Format(self, run=run_all_test):
