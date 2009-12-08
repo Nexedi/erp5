@@ -42,7 +42,7 @@ class DivergenceTester:
     {  'id'          : 'testing_provider',
        'description' : 'Defines whether a divergence tester acts as a testing provider.',
        'type'        : 'boolean',
-       'default'     : 0,
+       'default'     : 1,
        'mode'        : 'rw' },
     {  'id'          : 'matching_provider',
        'description' : 'Defines whether a divergence tester acts as a matching provider.',
