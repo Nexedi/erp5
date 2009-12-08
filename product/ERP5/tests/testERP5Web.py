@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 # -*- coding: utf-8 -*-
 #
@@ -1493,9 +1494,100 @@ class TestERP5WebCategoryPublicationWorkflow(ERP5TypeTestCase):
     self.doActionFor(self.category, 'expire_action')
     self.assertEqual('expired_published', self.category.getValidationState())
 
+class TestERP5WebCachingPolicy(TestERP5Web):
+  """
+  Test Caching policy with different User Preferences
+  """
+
+  def getTitle(self):
+    return "Web Caching Policy"
+
+  def createLocalUser(self, name, role_list):
+    user_folder = self.getPortal().acl_users
+    user_folder._doAddUser(name, name, role_list, [])
+
+  def afterSetUp(self):
+    self.web_page_module = self.portal.web_page_module
+    self.web_site_module = self.portal.web_site_module
+    self.portal.Localizer.manage_changeDefaultLang(language='en')
+    self.createLocalUser('admin', ['Manager'])
+    user = self.createUser('erp5user')
+    self.createUserAssignement(user, {})
+    user = self.createUser('webmaster')
+    self.createUserAssignement(user, {})
+    transaction.commit()
+    self.tic()
+    if getattr(self.getPreferenceTool(), 'admin', None) is None:
+      self.login('admin')
+      pref = self.getPreferenceTool().newContent(portal_type='Preference',
+                                                 id='admin',
+                                                 preferred_html_style_developper_mode=True)
+      pref.enable()
+    if getattr(self.getPreferenceTool(), 'webmaster', None) is None:
+      self.login('webmaster')
+      pref = self.getPreferenceTool().newContent(portal_type='Preference',
+                                                 id='webmaster',
+                                                 preferred_html_style_translator_mode=True)
+      pref.enable()
+    if getattr(self.getPreferenceTool(), 'erp5user', None) is None:
+      self.login('erp5user')
+      pref = self.getPreferenceTool().newContent(portal_type='Preference',
+                                                 id='erp5user')
+      pref.enable()
+    self.login()
+    transaction.commit()
+    self.tic()
+
+  def clearModule(self, module):
+    module.manage_delObjects(list(module.objectIds()))
+    transaction.commit()
+    self.tic()
+
+  def beforeTearDown(self):
+    self.clearModule(self.portal.web_site_module)
+    self.clearModule(self.portal.web_page_module)
+
+  def test_01_AccessWebSiteForWithDifferentUserPreferences(self):
+    """
+    """
+    web_site = self.setupWebSite()
+    websection = self.setupWebSection()
+    page_reference = 'default-webpage'
+    webpage_list = self.setupWebSitePages(prefix=page_reference)
+    # set default web page for section
+    self.login('admin')
+    self.assertTrue(self.getPreferenceTool().getPreferredHtmlStyleDevelopperMode())
+    self.login('webmaster')
+    self.assertTrue(self.getPreferenceTool().getPreferredHtmlStyleTranslatorMode())
+    self.login('erp5user')
+    self.assertFalse(self.getPreferenceTool().getPreferredHtmlStyleDevelopperMode())
+    self.assertFalse(self.getPreferenceTool().getPreferredHtmlStyleTranslatorMode())
+    #
+    self.portal.REQUEST.set('ignore_layout', 0)
+    response = self.publish('%s/%s' % (self.portal.getId(), websection.getRelativeUrl()), 'admin:admin')
+    self.assertTrue('manage_main' in response.getBody())
+    self.assertTrue('manage_messages' not in response.getBody())
+    transaction.commit()
+    #
+    response = self.publish('%s/%s' % (self.portal.getId(), websection.getRelativeUrl()), 'webmaster:webmaster')
+    self.assertTrue('manage_main' not in response.getBody())
+    self.assertTrue('manage_messages' in response.getBody())
+    transaction.commit()
+    #
+    response = self.publish('%s/%s' % (self.portal.getId(), websection.getRelativeUrl()), 'erp5user:erp5user')
+    self.assertTrue('manage_main' not in response.getBody())
+    self.assertTrue('manage_messages' not in response.getBody())
+    #anonymous user doesn't exists
+    response = self.publish('%s/%s' % (self.portal.getId(), websection.getRelativeUrl()), 'anonymous:anonymous')
+    self.assertTrue('manage_main' not in response.getBody())
+    self.assertTrue('manage_messages' not in response.getBody())
+    transaction.commit()
+
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestERP5Web))
   suite.addTest(unittest.makeSuite(TestERP5WebWithSimpleSecurity))
   suite.addTest(unittest.makeSuite(TestERP5WebCategoryPublicationWorkflow))
+  suite.addTest(unittest.makeSuite(TestERP5WebCachingPolicy))
   return suite
