@@ -478,7 +478,12 @@ class TextAreaWidget(Widget):
         if attr_dict is None:
             attr_dict = {}
         text_node = Element('{%s}%s' % (TEXT_URI, local_name), nsmap=NSMAP)
-        value =  field.get_value('default').decode('utf-8')
+        value =  field.get_value('default')
+        if isinstance(value, (str, unicode)):
+          if isinstance(value, str):
+            value = value.decode('utf-8')
+          value = [value]
+        value = '\n'.join(value)
         value.replace('\r', '')
         def replaceCharsByNode(match_object):
             #global text_node
