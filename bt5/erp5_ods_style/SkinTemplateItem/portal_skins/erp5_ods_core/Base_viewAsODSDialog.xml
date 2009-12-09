@@ -71,6 +71,7 @@
                         <string>your_format</string>
                         <string>your_print_mode</string>
                         <string>your_target_language</string>
+                        <string>your_deferred_style</string>
                       </list>
                     </value>
                 </item>
