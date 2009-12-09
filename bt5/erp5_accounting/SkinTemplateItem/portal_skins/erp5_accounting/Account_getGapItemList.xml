@@ -61,11 +61,10 @@ categories from all available GAP.\n
 """\n
 \n
 display_cache = {}\n
-\n
 def display(x):\n
   if x not in display_cache:\n
     gap_id = x.getReference() or x.getId()\n
-    display_cache[x] = \'%s - %s\' % (gap_id, x.getTitle())\n
+    display_cache[x] = \'%s - %s\' % (gap_id, x.getShortTitle() or x.getTitle())\n
   return display_cache[x]\n
 \n
 def sort(x,y):\n
