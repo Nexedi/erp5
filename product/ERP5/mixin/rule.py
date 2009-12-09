@@ -52,6 +52,9 @@ class RuleMixin:
   zope.interface.implements(interfaces.IRule,
                             interfaces.IMovementCollectionUpdater,)
 
+  # Portal Type of created children
+  movement_type = 'Simulation Movement'
+
   # Implementation of IRule
   def constructNewAppliedRule(self, context, id=None,
                               activate_kw=None, **kw):
@@ -214,7 +217,7 @@ class RuleMixin:
     for movement in movement_diff.getNewMovementList():
       # This case is easy, because it is an applied rule
       kw = movement_diff.getMovementPropertyDict(movement)
-      movement = context.newContent(portal_type='Simulation Movement', **kw)
+      movement = context.newContent(portal_type=self.movement_type, **kw)
 
   # Placeholder for methods to override
   def _getMovementGenerator(self):
