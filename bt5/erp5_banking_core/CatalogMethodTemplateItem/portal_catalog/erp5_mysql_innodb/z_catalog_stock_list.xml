@@ -341,7 +341,7 @@ VALUES\n
   <dtml-sqlvar expr="row_item[7]" type="int" optional>,\n
   <dtml-sqlvar expr="row_item[8]" type="int">, \n
   <dtml-sqlvar expr="row_item[9]" type="float" optional>,\n
-  <dtml-sqlvar expr="row_item[10]" type="int">, \n
+  <dtml-sqlvar expr="row_item[10]" type="int" optional>,\n
   <dtml-sqlvar expr="row_item[11]" type="datetime" optional>,\n
   <dtml-sqlvar expr="row_item[12]" type="float" optional>,\n
   <dtml-sqlvar expr="row_item[13]" type="string" optional>,\n
@@ -465,7 +465,7 @@ VALUES\n
   <dtml-sqlvar expr="row_item[7]" type="int" optional>,\n
   <dtml-sqlvar expr="row_item[8]" type="int">, \n
   <dtml-sqlvar expr="row_item[9]" type="float" optional>,\n
-  <dtml-sqlvar expr="row_item[10]" type="int">, \n
+  <dtml-sqlvar expr="row_item[10]" type="int" optional>,\n
   <dtml-sqlvar expr="row_item[11]" type="datetime" optional>,\n
   <dtml-sqlvar expr="row_item[12]" type="float" optional>,\n
   <dtml-sqlvar expr="row_item[13]" type="string" optional>,\n
