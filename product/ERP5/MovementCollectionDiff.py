@@ -103,55 +103,51 @@ class MovementCollectionDiff(object):
     self._updatable_movement_list.append(movement)
     self._property_dict_dict[movement] = property_dict
 
-  def _getPropertyAndCategoryList(self, movement):
-    """
-    Returns a dict that includes all property values, based on property
-    sheet configuration and all category values.
-    """
-    property_map = movement.getPropertyMap()
-    bad_property_list = ['id', 'uid', 'categories_list', 'int_index']
-    # we don't want acquired properties without acquisition_mask_value
-    for x in property_map:
-      if x.has_key('acquisition_base_category') and not x.get('acquisition_mask_value', 0):
-        bad_property_list.append(x['id'])
+def _getPropertyAndCategoryList(document):
+  """
+  Returns a dict that includes all property values, based on property
+  sheet configuration and all category values.
+  """
+  property_map = document.getPropertyMap()
+  bad_property_list = ['id', 'uid', 'categories_list', 'int_index']
+  # we don't want acquired properties without acquisition_mask_value
+  for x in property_map:
+    if x.has_key('acquisition_base_category') and not x.get('acquisition_mask_value', 0):
+      bad_property_list.append(x['id'])
 
-    default_value_dict = dict([(x['id'], x.get('default', None)) \
-                               for x in property_map])
-    getPropertyList = movement.getPropertyList
-    getProperty = movement.getProperty
-    getter_list_type_dict = {
-      True:getPropertyList,
-      False:getProperty
-      }
-    getter_dict = dict([(x['id'],
-                         getter_list_type_dict[x['type'] in list_types and not x['id'].endswith('_list')]) \
-                        for x in property_map])
+  default_value_dict = dict([(x['id'], x.get('default', None)) \
+                             for x in property_map])
+  getPropertyList = document.getPropertyList
+  getProperty = document.getProperty
+  getter_list_type_dict = {
+    True:getPropertyList,
+    False:getProperty
+    }
+  getter_dict = dict([(x['id'],
+                       getter_list_type_dict[x['type'] in list_types and not x['id'].endswith('_list')]) \
+                      for x in property_map])
 
-    def filter_property_func(x):
-      key, value = x
-      if key in bad_property_list:
-        return False
-      default = default_value_dict[key]
-      if value == default:
-        return False
-      if isinstance(value, (list, tuple)) and \
-           isinstance(default, (list, tuple)) and \
-           tuple(value) == tuple(default):
-        return False
-      return True
+  def filter_property_func(x):
+    key, value = x
+    if key in bad_property_list:
+      return False
+    default = default_value_dict[key]
+    if value == default:
+      return False
+    if isinstance(value, (list, tuple)) and \
+         isinstance(default, (list, tuple)) and \
+         tuple(value) == tuple(default):
+      return False
+    return True
 
-    property_dict = dict(filter(filter_property_func,
-                                [(x, getter_dict[x](x)) for x in \
-                                movement.getPropertyIdList()]))
+  property_dict = dict(filter(filter_property_func,
+                              [(x, getter_dict[x](x)) for x in \
+                              document.getPropertyIdList()]))
 
-    def filter_category_func(x):
-      return len(x[1]) != 0
+  def filter_category_func(x):
+    return len(x[1]) != 0
 
-    property_dict.update(dict(filter(filter_category_func,
-                                     [(x, getPropertyList(x)) for x in \
-                                      movement.getBaseCategoryList()])))
-    # update order category if exist
-    order = getattr(aq_base(movement), 'order', None)
-    if order is not None:
-      property_dict['order'] = order
-    return property_dict
+  property_dict.update(dict(filter(filter_category_func,
+                                   [(x, getPropertyList(x)) for x in \
+                                    document.getBaseCategoryList()])))
+  return property_dict
