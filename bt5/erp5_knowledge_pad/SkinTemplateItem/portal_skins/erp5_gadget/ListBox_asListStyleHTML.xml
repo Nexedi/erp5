@@ -75,6 +75,7 @@
                        box python: real_context.restrictedTraverse(box_relative_url); \n
                        box_id python: \'visual_\'+box.getId();\n
                        dom_id python: request.get(\'dom_id\',None) or box_id;\n
+                       display_links_content box/isExpandLinksContentByDefault;\n
                        is_gadget_mode request/is_gadget_mode | nothing;\n
                        list_style python:request.get(\'list_style\', None);\n
                        value_dict python: {\'field_title\':None, \'field_date\': None, \'field_content\':None,\'field_img\':None,\'field_link\':None,\'field_others_links\':None,\'field_md5\':None,\'field_sender\':None};\n
@@ -129,18 +130,18 @@
 \n
           <!-- Refresh -->\n
 \n
-          <a class="right" tal:attributes="onclick python:real_context.KnowledgePad_generateAjaxCall(context_url+\'/\'+form_id,box,box_id, {}, 1)"><img alt="" tal:attributes="onload python:\'if(\\\'\'+rss_title.replace(\'\\\'\',\'\')+\'\\\'==\\\'Please enter a valid Rss or Atom url in the edit form\\\'){showElement(\\\'edit_form_\'+box.getId()+\'\\\');;}\'" src="refresh.png"/></a>\n
+          <a class="right" tal:attributes="onclick python:real_context.KnowledgePad_generateAjaxCall(context_url+\'/\'+form_id,box,box_id, {}, 1)"><img alt="" tal:attributes="onload python:\'if(\\\'\'+rss_title.replace(\'\\\'\',\'\')+\'\\\'==\\\'Please enter a valid Rss or Atom url in the edit form\\\'){showElement(\\\'edit_form_\'+box_id+\'\\\');;}\'" src="refresh.png"/></a>\n
 \n
           <!-- Feed Title -->\n
 \n
               <tal:block tal:condition="anonymous">\n
                 <a class="title"\n
-                   tal:attributes="href rss_link; target string:_blank; id python:\'rss_title_\'+box.getId()"\n
+                   tal:attributes="href rss_link; target string:_blank; id python:\'rss_title_\'+box_id"\n
                    tal:content="rss_title"/>\n
               </tal:block>\n
               <tal:block tal:condition="not: anonymous">\n
                 <a class="title"\n
-                   tal:attributes="href rss_link; target string:_blank; id python:\'rss_title_\'+box.getId()"\n
+                   tal:attributes="href rss_link; target string:_blank; id python:\'rss_title_\'+box_id"\n
                    tal:content="python:real_context.Base_formatRssTitleWithUnreadItemCount(rss_title=rss_title,selection_name=selection_name,total_line=total_line)"/>\n
               </tal:block>\n
 \n
@@ -162,7 +163,7 @@
                        onmouseout="this.style.backgroundColor=\'inherit\';"\n
                        tal:attributes="class python:value_dict[\'field_md5\'] in read_item_list and \'read\' or \'\';\n
                                        title python:value_dict[\'field_sender\'];\n
-                                       onclick python:\'if(this.className!=\\\'read\\\')toggle(\\\'description_\'+box.getId()+\'_\'+str(repeat[\'line\'].index)+\'\\\');;\'">\n
+                                       onclick python:\'toggle(\\\'description_\'+box_id+\'_\'+str(repeat[\'line\'].index)+\'\\\');;\'">\n
                      <tal:block tal:condition="python:value_dict[\'field_img\']"\n
                                tal:content="structure python:html_dict[\'field_img\']">image</tal:block>\n
                     <a><span tal:content="python:value_dict[\'field_title\']">title</span>\n
@@ -176,7 +177,7 @@
                        onmouseout="this.style.backgroundColor=\'inherit\';"\n
                        tal:attributes="class python:value_dict[\'field_md5\'] in read_item_list and \'read\' or \'\';\n
                                        title python:value_dict[\'field_sender\'];\n
-                                       onclick python:\'if(this.className!=\\\'read\\\'){MochiKit.Async.doSimpleXMLHttpRequest(\\\'Base_setRssItemReadInSelection\\\', {\\\'selection_name\\\':\\\'\'+selection_name+\'\\\',\\\'item\\\':\\\'\'+ \'%s\' % value_dict[\'field_md5\']+\'\\\'});;this.className=\\\'read\\\';;\'+real_context.KnowledgePad_generateAjaxCall(\'%s/Base_formatRssTitleWithUnreadItemCount\' % context_url,box,\'rss_title_\'+box.getId(),{\'rss_title\':rss_title,\'total_line\':total_line,\'selection_name\':selection_name}, 1)+\'}toggle(\\\'description_\'+box.getId()+\'_\'+str(repeat[\'line\'].index)+\'\\\');;\'">\n
+                                       onclick python:\'if(this.className!=\\\'read\\\'){MochiKit.Async.doSimpleXMLHttpRequest(\\\'Base_setRssItemReadInSelection\\\', {\\\'selection_name\\\':\\\'\'+selection_name+\'\\\',\\\'item\\\':\\\'\'+ \'%s\' % value_dict[\'field_md5\']+\'\\\'});;this.className=\\\'read\\\';;\'+real_context.KnowledgePad_generateAjaxCall(\'%s/Base_formatRssTitleWithUnreadItemCount\' % context_url,box,\'rss_title_\'+box_id,{\'rss_title\':rss_title,\'total_line\':total_line,\'selection_name\':selection_name}, 1)+\'}toggle(\\\'description_\'+box_id+\'_\'+str(repeat[\'line\'].index)+\'\\\');;\'">\n
                      <tal:block tal:condition="python:value_dict[\'field_img\']"\n
                                tal:content="structure python:html_dict[\'field_img\']">image</tal:block>\n
                     <a><span tal:content="python:value_dict[\'field_title\']">title</span>\n
@@ -186,9 +187,9 @@
                   </div>\n
                 </tal:block>\n
                 <p class="clear"></p>\n
-                <div tal:attributes="id python:\'description_\'+box.getId()+\'_\'+str(repeat[\'line\'].index)"\n
-                     class="content"\n
-                     style="display:none;">\n
+                <div tal:attributes="id python:\'description_\'+box_id+\'_\'+str(repeat[\'line\'].index);\n
+                  style python: display_links_content and \'display:block\' or \'display:none\';"\n
+                  class="content">\n
                   <p tal:condition="python:value_dict[\'field_content\']"\n
                      tal:content="structure python:value_dict[\'field_content\']"/>\n
                   <div id="others_links">\n
