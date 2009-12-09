@@ -223,7 +223,7 @@ class RuleMixin:
     """
     raise NotImplementedError
 
-  def _getMovementGeneratorContext(self):
+  def _getMovementGeneratorContext(self, applied_rule):
     """
     Return the movement generator context to use for expand
     """
