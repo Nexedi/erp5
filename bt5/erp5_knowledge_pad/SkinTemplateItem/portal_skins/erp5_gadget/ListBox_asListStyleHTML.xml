@@ -49,6 +49,8 @@
                        real_context here/getContext;\n
                        context_url real_context/absolute_url;\n
                        line_list here/query;\n
+                       portal here/getPortalObject;\n
+                       anonymous portal/portal_membership/isAnonymousUser;\n
                        selection_params python: here.getSelection().getParams();\n
                        read_item_list python:selection_params.get(\'rss_read_item:list\', {});\n
                        read_items_count python:len(read_item_list);\n
@@ -131,9 +133,16 @@
 \n
           <!-- Feed Title -->\n
 \n
-              <a class="title"\n
-                 tal:attributes="href rss_link; target string:_blank; id python:\'rss_title_\'+box.getId()"\n
-                 tal:content="python:real_context.Base_formatRssTitleWithUnreadItemCount(rss_title=rss_title,selection_name=selection_name,total_line=total_line)"/>\n
+              <tal:block tal:condition="anonymous">\n
+                <a class="title"\n
+                   tal:attributes="href rss_link; target string:_blank; id python:\'rss_title_\'+box.getId()"\n
+                   tal:content="rss_title"/>\n
+              </tal:block>\n
+              <tal:block tal:condition="not: anonymous">\n
+                <a class="title"\n
+                   tal:attributes="href rss_link; target string:_blank; id python:\'rss_title_\'+box.getId()"\n
+                   tal:content="python:real_context.Base_formatRssTitleWithUnreadItemCount(rss_title=rss_title,selection_name=selection_name,total_line=total_line)"/>\n
+              </tal:block>\n
 \n
           <p class="clear"></p>\n
 \n
@@ -148,18 +157,34 @@
                        type="hidden" value="1" name="listbox_uid:list"\n
                        tal:attributes="value python: line.getUid() or \'\';\n
                                        name string:${field_id}_uid:list" />\n
-                <div onmouseover="this.style.backgroundColor=\'#ECECEC\';"\n
-                     onmouseout="this.style.backgroundColor=\'inherit\';"\n
-                     tal:attributes="class python:value_dict[\'field_md5\'] in read_item_list and \'read\' or \'\';\n
-                                     title python:value_dict[\'field_sender\'];\n
-                                     onclick python:\'if(this.className!=\\\'read\\\'){MochiKit.Async.doSimpleXMLHttpRequest(\\\'Base_setRssItemReadInSelection\\\', {\\\'selection_name\\\':\\\'\'+selection_name+\'\\\',\\\'item\\\':\\\'\'+ \'%s\' % value_dict[\'field_md5\']+\'\\\'});;this.className=\\\'read\\\';;\'+real_context.KnowledgePad_generateAjaxCall(\'%s/Base_formatRssTitleWithUnreadItemCount\' % context_url,box,\'rss_title_\'+box.getId(),{\'rss_title\':rss_title,\'total_line\':total_line,\'selection_name\':selection_name}, 1)+\'}toggle(\\\'description_\'+box.getId()+\'_\'+str(repeat[\'line\'].index)+\'\\\');;\'">\n
-                   <tal:block tal:condition="python:value_dict[\'field_img\']"\n
-                             tal:content="structure python:html_dict[\'field_img\']">image</tal:block>\n
-                  <a><span tal:content="python:value_dict[\'field_title\']">title</span>\n
-                  <span tal:attributes="class string: transparent;"\n
-                        tal:condition="python:value_dict[\'field_date\']"\n
-                        tal:content="structure python:\' - %s\' % html_dict[\'field_date\']">date</span></a>\n
-                </div>\n
+                <tal:block tal:condition="anonymous">\n
+                  <div onmouseover="this.style.backgroundColor=\'#ECECEC\';"\n
+                       onmouseout="this.style.backgroundColor=\'inherit\';"\n
+                       tal:attributes="class python:value_dict[\'field_md5\'] in read_item_list and \'read\' or \'\';\n
+                                       title python:value_dict[\'field_sender\'];\n
+                                       onclick python:\'if(this.className!=\\\'read\\\')toggle(\\\'description_\'+box.getId()+\'_\'+str(repeat[\'line\'].index)+\'\\\');;\'">\n
+                     <tal:block tal:condition="python:value_dict[\'field_img\']"\n
+                               tal:content="structure python:html_dict[\'field_img\']">image</tal:block>\n
+                    <a><span tal:content="python:value_dict[\'field_title\']">title</span>\n
+                    <span tal:attributes="class string: transparent;"\n
+                          tal:condition="python:value_dict[\'field_date\']"\n
+                          tal:content="structure python:\' - %s\' % html_dict[\'field_date\']">date</span></a>\n
+                  </div>\n
+                </tal:block>\n
+                <tal:block tal:condition="not: anonymous">\n
+                  <div onmouseover="this.style.backgroundColor=\'#ECECEC\';"\n
+                       onmouseout="this.style.backgroundColor=\'inherit\';"\n
+                       tal:attributes="class python:value_dict[\'field_md5\'] in read_item_list and \'read\' or \'\';\n
+                                       title python:value_dict[\'field_sender\'];\n
+                                       onclick python:\'if(this.className!=\\\'read\\\'){MochiKit.Async.doSimpleXMLHttpRequest(\\\'Base_setRssItemReadInSelection\\\', {\\\'selection_name\\\':\\\'\'+selection_name+\'\\\',\\\'item\\\':\\\'\'+ \'%s\' % value_dict[\'field_md5\']+\'\\\'});;this.className=\\\'read\\\';;\'+real_context.KnowledgePad_generateAjaxCall(\'%s/Base_formatRssTitleWithUnreadItemCount\' % context_url,box,\'rss_title_\'+box.getId(),{\'rss_title\':rss_title,\'total_line\':total_line,\'selection_name\':selection_name}, 1)+\'}toggle(\\\'description_\'+box.getId()+\'_\'+str(repeat[\'line\'].index)+\'\\\');;\'">\n
+                     <tal:block tal:condition="python:value_dict[\'field_img\']"\n
+                               tal:content="structure python:html_dict[\'field_img\']">image</tal:block>\n
+                    <a><span tal:content="python:value_dict[\'field_title\']">title</span>\n
+                    <span tal:attributes="class string: transparent;"\n
+                          tal:condition="python:value_dict[\'field_date\']"\n
+                          tal:content="structure python:\' - %s\' % html_dict[\'field_date\']">date</span></a>\n
+                  </div>\n
+                </tal:block>\n
                 <p class="clear"></p>\n
                 <div tal:attributes="id python:\'description_\'+box.getId()+\'_\'+str(repeat[\'line\'].index)"\n
                      class="content"\n
@@ -187,10 +212,12 @@
           </ul>\n
 \n
           <!-- Page navigation -->\n
-          <div class="pageNavigation" style="white-space: nowrap; vertical-align: middle; text-align: right;"\n
-              tal:attributes="colspan python: len(here.getSelectedColumnList()) + bool(show_select_column)">\n
-            <tal:block metal:use-macro="real_context/page_navigation_render/macros/page_navigation" />\n
-          </div>\n
+          <tal:block tal:condition="not: anonymous">\n
+            <div class="pageNavigation" style="white-space: nowrap; vertical-align: middle; text-align: right;"\n
+                tal:attributes="colspan python: len(here.getSelectedColumnList()) + bool(show_select_column)">\n
+              <tal:block metal:use-macro="real_context/page_navigation_render/macros/page_navigation" />\n
+            </div>\n
+          </tal:block>\n
 \n
           <br/>\n
           <img tal:condition="rss_logo" tal:attributes="src rss_logo" alt="" height="20" class="right"/>\n
