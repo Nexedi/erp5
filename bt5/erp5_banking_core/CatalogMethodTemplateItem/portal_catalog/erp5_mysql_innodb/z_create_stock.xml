@@ -97,6 +97,7 @@ CREATE TABLE `stock` (\n
   `mirror_node_uid` BIGINT UNSIGNED,\n
   `resource_uid` BIGINT UNSIGNED,\n
   `quantity` real ,\n
+  `is_cancellation` BOOLEAN, \n
   `date` datetime,\n
   `total_price` real ,\n
   `portal_type` VARCHAR(255),\n
@@ -169,6 +170,7 @@ CREATE TABLE `stock` (\n
   `mirror_node_uid` BIGINT UNSIGNED,\n
   `resource_uid` BIGINT UNSIGNED,\n
   `quantity` real ,\n
+  `is_cancellation` BOOLEAN,\n
   `date` datetime,\n
   `total_price` real ,\n
   `portal_type` VARCHAR(255),\n
