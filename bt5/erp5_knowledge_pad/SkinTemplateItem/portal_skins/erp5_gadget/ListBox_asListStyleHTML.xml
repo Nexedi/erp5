@@ -75,7 +75,6 @@
                        box python: real_context.restrictedTraverse(box_relative_url); \n
                        box_id python: \'visual_\'+box.getId();\n
                        dom_id python: request.get(\'dom_id\',None) or box_id;\n
-                       display_links_content box/isExpandLinksContentByDefault;\n
                        is_gadget_mode request/is_gadget_mode | nothing;\n
                        list_style python:request.get(\'list_style\', None);\n
                        value_dict python: {\'field_title\':None, \'field_date\': None, \'field_content\':None,\'field_img\':None,\'field_link\':None,\'field_others_links\':None,\'field_md5\':None,\'field_sender\':None};\n
@@ -187,9 +186,8 @@
                   </div>\n
                 </tal:block>\n
                 <p class="clear"></p>\n
-                <div tal:attributes="id python:\'description_\'+box_id+\'_\'+str(repeat[\'line\'].index);\n
-                  style python: display_links_content and \'display:block\' or \'display:none\';"\n
-                  class="content">\n
+                <div tal:attributes="id python:\'description_\'+box_id+\'_\'+str(repeat[\'line\'].index)"\n
+                     class="content" style="display:none;">\n
                   <p tal:condition="python:value_dict[\'field_content\']"\n
                      tal:content="structure python:value_dict[\'field_content\']"/>\n
                   <div id="others_links">\n
