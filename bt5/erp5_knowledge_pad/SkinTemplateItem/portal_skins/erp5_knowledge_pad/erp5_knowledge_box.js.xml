@@ -15,7 +15,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts41541110.71</string> </value>
+            <value> <string>ts60374556.81</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -23,7 +23,7 @@
         </item>
         <item>
             <key> <string>content_type</string> </key>
-            <value> <string>application/x-javascript</string> </value>
+            <value> <string>application/javascript</string> </value>
         </item>
         <item>
             <key> <string>data</string> </key>
@@ -162,8 +162,8 @@ function sendPreferencesToServer(form_dom_id, view_form_url, \n
   var url="KnowledgeBox_baseEdit";\n
   forEach(getElementsByTagAndClassName(\'input\', null, form_dom_id) , function (item) {\n
     if (item.type == "checkbox"){\n
-      if (item.checked){request_str+=item.name + \'=\'+item.value+\'&\';}\n
-      else {request_str+=item.name + \'=\';}}\n
+      if (item.checked){request_str+=item.name + \':boolean=True&\';}\n
+      else {request_str+=item.name + \':boolean=False&\';}}\n
     if (item.type == "radio"){\n
       if (item.checked){request_str+=item.name + \'=\'+item.value+\'&\';}}\n
     if (item.type == "text"){request_str+=item.name + \'=\' + item.value + \'&\';}\n
@@ -364,7 +364,8 @@ function initialize(){\n
 }\n
 \n
 // call function after load of document\n
-MochiKit.DOM.addLoadEvent(initialize);
+MochiKit.DOM.addLoadEvent(initialize);\n
+
 
 ]]></string> </value>
         </item>
@@ -374,7 +375,7 @@ MochiKit.DOM.addLoadEvent(initialize);
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>13306</int> </value>
+            <value> <int>13319</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
