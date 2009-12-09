@@ -192,7 +192,6 @@ class TradeCondition(Path, Transformation, XMLMatrix):
       # build a graph
       father_dict = {}
       child_dict = {}
-      root_line = []
       for line in trade_model_line_composed_list:
         father_dict.setdefault(line, [])
         for other_line in trade_model_line_composed_list:
@@ -214,7 +213,6 @@ class TradeCondition(Path, Transformation, XMLMatrix):
         # sort graph according to predecessors
         f = root_line_list[:]
         tmp = None
-        cpt = 0
         final_list = root_line_list[:]
         while len(f):
           tmp = f.pop(0)
