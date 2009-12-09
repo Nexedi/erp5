@@ -27,7 +27,6 @@
 ##############################################################################
 
 import zope.interface
-from Acquisition import aq_base
 from Products.ERP5Type import interfaces
 from Products.ERP5Type.Accessor.TypeDefinition import list_types
 
