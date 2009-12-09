@@ -89,8 +89,10 @@ class MovementCollectionDiff(object):
     """
     property_dict = self._property_dict_dict.get(movement)
     if property_dict is None:
-      # movement should be 'New Movement'
-      return self._getPropertyAndCategoryList(movement)
+      # movement should be 'Temporary Simulation Movement'
+      return dict([(x,y) for x,y in movement.__dict__.items() \
+                   if not x.startswith('_') and \
+                   not x in ('id', 'portal_type', 'uid')])
     else:
       return property_dict
 

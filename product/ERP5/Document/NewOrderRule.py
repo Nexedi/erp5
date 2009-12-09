@@ -34,6 +34,7 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5.Document.Predicate import Predicate
 from Products.ERP5.mixin.rule import RuleMixin
+from Products.ERP5.MovementCollectionDiff import _getPropertyAndCategoryList
 
 class NewOrderRule(RuleMixin, Predicate):
   """
@@ -106,8 +107,14 @@ class OrderRuleMovementGenerator(object):
                                 rounding=False):
     """Input movement list comes from order"""
     order = context.getDefaultCausalityValue()
-    if order is not None:
-      return [x.asContext(order=x.getRelativeUrl()) for x in order.getMovementList(
-        portal_type=order.getPortalOrderMovementTypeList())]
-    else:
-      return []
+    ret = []
+    for movement in order.getMovementList(
+      portal_type=order.getPortalOrderMovementTypeList()):
+      kw = _getPropertyAndCategoryList(movement)
+      simulation_movement = context.newContent(
+        portal_type=RuleMixin.movement_type,
+        temp_object=True,
+        order_value=movement,
+        **kw)
+      ret.append(simulation_movement)
+    return ret
