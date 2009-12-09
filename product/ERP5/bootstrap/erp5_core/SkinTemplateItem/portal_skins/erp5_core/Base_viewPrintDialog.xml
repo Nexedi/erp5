@@ -72,6 +72,7 @@
                         <string>your_landscape</string>
                         <string>your_target_language</string>
                         <string>your_print_mode</string>
+                        <string>your_deferred_style</string>
                       </list>
                     </value>
                 </item>
