@@ -38,7 +38,7 @@ class Form:
     # need to make settings form upgrade
     encoding = 'UTF-8'
     stored_encoding = 'ISO-8859-1'
-    unicode_mode = 0
+    unicode_mode = False
     
     # CONSTRUCTORS    
     def __init__(self, action, method, enctype, name,
@@ -91,11 +91,11 @@ class Form:
         field_list = groups[group]
         i = field_list.index(field_id)
         if i == 0:
-            return 0 # can't move further up, so we're done
+            return False # can't move further up, so we're done
         # swap fields, moving i up
         field_list[i], field_list[i - 1] = field_list[i - 1], field_list[i]
         self.groups = groups
-        return 1
+        return True
     
     security.declareProtected('Change Formulator Forms', 'move_field_down')
     def move_field_down(self, field_id, group):
@@ -103,20 +103,18 @@ class Form:
         field_list = groups[group]
         i = field_list.index(field_id)
         if i == len(field_list) - 1:
-            return 0 # can't move further down, so we're done
+            return False # can't move further down, so we're done
         # swap fields, moving i down
         field_list[i], field_list[i + 1] = field_list[i + 1], field_list[i]
         self.groups = groups
-        return 1
+        return True
 
     security.declareProtected('Change Formulator Forms', 'move_field_group')
     def move_field_group(self, field_ids, from_group, to_group):
         """Moves a fields from one group to the other.
         """
-        if len(field_ids) == 0:
-            return 0
-        if from_group == to_group:
-            return 0
+        if len(field_ids) == 0 or from_group == to_group:
+            return False
         groups = self.groups
         from_list = groups[from_group]
         to_list = groups[to_group]
@@ -125,7 +123,7 @@ class Form:
                 from_list.remove(field.id)
                 to_list.append(field.id)
         self.groups = groups
-        return 1
+        return True
     
     security.declareProtected('Change Formulator Forms', 'add_group')
     def add_group(self, group):
@@ -133,14 +131,14 @@ class Form:
         """
         groups = self.groups
         if groups.has_key(group):
-            return 0 # group already exists (NOTE: should we raise instead?)
+            return False # group already exists (NOTE: should we raise instead?)
         groups[group] = []
         # add the group to the bottom of the list of groups
         self.group_list.append(group)
         
         self.group_list = self.group_list
         self.groups = groups
-        return 1
+        return True
     
     security.declareProtected('Change Formulator Forms', 'remove_group')
     def remove_group(self, group):
@@ -148,9 +146,9 @@ class Form:
         """
         groups = self.groups
         if group == self.group_list[0]:
-            return 0 # can't remove first group
+            return False # can't remove first group
         if not groups.has_key(group):
-            return 0 # group does not exist (NOTE: should we raise instead?)
+            return False # group does not exist (NOTE: should we raise instead?)
         # move whatever is in the group now to the end of the first group
         groups[self.group_list[0]].extend(groups[group])
         # now remove the key
@@ -160,7 +158,7 @@ class Form:
         
         self.group_list = self.group_list
         self.groups = groups
-        return 1
+        return True
     
     security.declareProtected('Change Formulator Forms', 'rename_group')
     def rename_group(self, group, name):
@@ -169,16 +167,16 @@ class Form:
         group_list = self.group_list
         groups = self.groups
         if not groups.has_key(group):
-            return 0 # can't rename unexisting group
+            return False # can't rename unexisting group
         if groups.has_key(name):
-            return 0 # can't rename into existing name
+            return False # can't rename into existing name
         i = group_list.index(group)
         group_list[i] = name
         groups[name] = groups[group]
         del groups[group]
         self.group_list = group_list
         self.groups = groups
-        return 1
+        return True
 
     security.declareProtected('Change Formulator Forms', 'move_group_up')
     def move_group_up(self, group):
@@ -187,11 +185,11 @@ class Form:
         group_list = self.group_list
         i = group_list.index(group)
         if i == 1:
-            return 0 # can't move further up, so we're done
+            return False # can't move further up, so we're done
         # swap groups, moving i up
         group_list[i], group_list[i - 1] = group_list[i - 1], group_list[i]
         self.group_list = group_list
-        return 1
+        return True
     
     security.declareProtected('Change Formulator Forms', 'move_group_down')  
     def move_group_down(self, group):
@@ -200,24 +198,24 @@ class Form:
         group_list = self.group_list
         i = group_list.index(group)
         if i  == len(group_list) - 1:
-            return 0 # can't move further up, so we're done
+            return False # can't move further up, so we're done
         # swap groups, moving i down
         group_list[i], group_list[i + 1] = group_list[i + 1], group_list[i]
         self.group_list = group_list
-        return 1
+        return True
     
     # ACCESSORS
     security.declareProtected('View', 'get_fields')
-    def get_fields(self, include_disabled=0):
+    def get_fields(self, include_disabled=False):
         """Get all fields for all groups (in the display order).
         """
         result = []
-        for group in self.get_groups(include_empty=1):
+        for group in self.get_groups(include_empty=True):
             result.extend(self.get_fields_in_group(group, include_disabled))
         return result
 
     security.declareProtected('View', 'get_field_ids')
-    def get_field_ids(self, include_disabled=0):
+    def get_field_ids(self, include_disabled=False):
         """Get all the ids of the fields in the form.
         """
         result = []
@@ -226,7 +224,7 @@ class Form:
         return result
     
     security.declareProtected('View', 'get_fields_in_group')
-    def get_fields_in_group(self, group, include_disabled=0):
+    def get_fields_in_group(self, group, include_disabled=False):
         """Get all fields in a group (in the display order).
         """
         result = []
@@ -254,7 +252,7 @@ class Form:
         pass
     
     security.declareProtected('View', 'get_groups')
-    def get_groups(self, include_empty=0):
+    def get_groups(self, include_empty=False):
         """Get a list of all groups, in display order.
 
         If include_empty is false, suppress groups that do not have
@@ -283,7 +281,7 @@ class Form:
     def get_unicode_mode(self):
         """Get unicode mode information.
         """
-        return getattr(self, 'unicode_mode', 0)
+        return getattr(self, 'unicode_mode', False)
     
     security.declareProtected('View', 'render')
     def render(self, dict=None, REQUEST=None):
@@ -508,7 +506,7 @@ class BasicForm(Persistent, Acquisition.Implicit, Form):
        
     def __init__(self, action="", method="POST", enctype="", name="",
                  encoding="UTF-8", stored_encoding='ISO-8859-1',
-                 unicode_mode=0):
+                 unicode_mode=False):
         BasicForm.inheritedAttribute('__init__')(
             self, action, method, enctype,
             name, encoding, stored_encoding, unicode_mode)
@@ -543,17 +541,17 @@ class BasicForm(Persistent, Acquisition.Implicit, Form):
         self.fields = self.fields
 
     security.declareProtected('View', 'has_field')
-    def has_field(self, id, include_disabled=0):
+    def has_field(self, id, include_disabled=False):
         """Check whether the form has a field of a certain id.
         If disabled fields are not included, pretend they're not there.
         """
         field = self.fields.get(id, None)
         if field is None:
-            return 0
+            return False
         return include_disabled or field.get_value('enabled')
     
     security.declareProtected('View', 'get_field')
-    def get_field(self, id, include_disabled=0):
+    def get_field(self, id, include_disabled=False):
         """get a field of a certain id."""
         field = self.fields[id]
         if include_disabled or field.get_value('enabled'):
@@ -563,7 +561,7 @@ class BasicForm(Persistent, Acquisition.Implicit, Form):
     def _realize_fields(self):
         """Make the fields in this form actual fields, not just dummy fields.
         """
-        for field in self.get_fields(include_disabled=1):
+        for field in self.get_fields(include_disabled=True):
             if hasattr(field, 'get_real_field'):
                 field = field.get_real_field()
             self.fields[field.id] = field
@@ -578,25 +576,25 @@ def create_settings_form():
 
     title = fields.StringField('title',
                                title="Title",
-                               required=0,
+                               required=False,
                                default="")
     row_length = fields.IntegerField('row_length',
                                      title='Number of groups in row (in order tab)',
-                                     required=1,
+                                     required=True,
                                      default=4)
     name = fields.StringField('name',
                               title="Form name",
-                              required=0,
+                              required=False,
                               default="")
     action = fields.StringField('action',
                                 title='Form action',
-                                required=0,
+                                required=False,
                                 default="")
     method = fields.ListField('method',
                               title='Form method',
                               items=[('POST', 'POST'),
                                      ('GET', 'GET')],
-                              required=1,
+                              required=True,
                               size=1,
                               default='POST')
     enctype = fields.ListField('enctype',
@@ -606,23 +604,23 @@ def create_settings_form():
                                        'application/x-www-form-urlencoded'),
                                       ('multipart/form-data',
                                        'multipart/form-data')],
-                               required=0,
+                               required=False,
                                size=1,
                                default=None) 
 
     encoding = fields.StringField('encoding',
                                   title='Encoding of pages the form is in',
                                   default="UTF-8",
-                                  required=1)
+                                  required=True)
 
     stored_encoding = fields.StringField('stored_encoding',
                                       title='Encoding of form properties',
                                       default='ISO-8859-1',
-                                      required=1)
+                                      required=True)
     unicode_mode = fields.CheckBoxField('unicode_mode',
                                         title='Form properties are unicode',
-                                        default=0,
-                                        required=1)
+                                        default=False,
+                                        required=True)
     
     form.add_fields([title, row_length, name, action, method,
                      enctype, encoding, stored_encoding, unicode_mode])
@@ -659,7 +657,7 @@ class ZMIForm(ObjectManager, PropertyManager, RoleManager, Item, Form):
         Item.manage_options
         )
 
-    def __init__(self, id, title, unicode_mode=0):
+    def __init__(self, id, title, unicode_mode=False):
         """Initialize form.
         id    -- id of form
         title -- the title of the form
@@ -701,10 +699,10 @@ class ZMIForm(ObjectManager, PropertyManager, RoleManager, Item, Form):
         
         # Note - because a rename always keeps the same context, we
         # can just leave the ownership info unchanged.
-        self._setObject(new_id, ob, set_owner=0)
+        self._setObject(new_id, ob, set_owner=False)
 
         if REQUEST is not None:
-            return self.manage_main(self, REQUEST, update_menu=1)
+            return self.manage_main(self, REQUEST, update_menu=True)
         return None
 
     #security.declareProtected('View', 'get_fields_raw')
@@ -715,16 +713,16 @@ class ZMIForm(ObjectManager, PropertyManager, RoleManager, Item, Form):
     #                  self.objectValues())
 
     security.declareProtected('View', 'has_field')
-    def has_field(self, id, include_disabled=0):
+    def has_field(self, id, include_disabled=False):
         """Check whether the form has a field of a certain id.
         """
         field = self._getOb(id, None)
         if field is None or not hasattr(aq_base(field), 'is_field'):
-            return 0
+            return False
         return include_disabled or field.get_value('enabled')
     
     security.declareProtected('View', 'get_field')
-    def get_field(self, id, include_disabled=0):
+    def get_field(self, id, include_disabled=False):
         """Get a field of a certain id
         """
         field = self._getOb(id, None)
@@ -833,7 +831,7 @@ class ZMIForm(ObjectManager, PropertyManager, RoleManager, Item, Form):
         """Get the checked field_ids that we're operating on
         """
         field_ids = []
-        for field in self.get_fields_in_group(group, include_disabled=1):
+        for field in self.get_fields_in_group(group, include_disabled=True):
             if REQUEST.form.has_key(field.id):
                 field_ids.append(field.id)
         return field_ids
@@ -844,7 +842,7 @@ class ZMIForm(ObjectManager, PropertyManager, RoleManager, Item, Form):
         """Get the groups in rows (for the order screen).
         """
         row_length = self.row_length
-        groups = self.get_groups(include_empty=1)
+        groups = self.get_groups(include_empty=True)
         # get the amount of rows
         rows = len(groups) / row_length
         # if we would have extra groups not in a row, add a row
@@ -863,7 +861,7 @@ class ZMIForm(ObjectManager, PropertyManager, RoleManager, Item, Form):
         'order' screen user interface.
         """
         max = 0
-        for group in self.get_groups(include_empty=1):
+        for group in self.get_groups(include_empty=True):
             fields = self.get_fields_in_group(group)
             if len(fields) > max:
                 max = len(fields)
@@ -986,7 +984,7 @@ InitializeClass(ZMIForm)
         
 manage_addForm = DTMLFile("dtml/formAdd", globals())
 
-def manage_add(self, id, title="", unicode_mode=0, REQUEST=None):
+def manage_add(self, id, title="", unicode_mode=False, REQUEST=None):
     """Add form to folder.
     id     -- the id of the new form to add
     title  -- the title of the form to add
