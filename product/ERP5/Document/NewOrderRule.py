@@ -68,9 +68,6 @@ class NewOrderRule(RuleMixin, Predicate):
     PropertySheet.Rule
     )
 
-  # Portal Type of created children
-  movement_type = 'Simulation Movement'
-
   # XXX this method is missing in interface.
   def isOrderable(self, movement):
     return 1
@@ -80,25 +77,6 @@ class NewOrderRule(RuleMixin, Predicate):
     if movement.getSimulationState() in movement.getPortalDraftOrderStateList():
       return 0
     return 1
-
-  # XXX this method should be defined in the mixin or the base class.
-  security.declareProtected(Permissions.View, 'getDivergenceList')
-  def getDivergenceList(self, movement):
-    """
-    Returns a list of divergences of the movements provided
-    in delivery_or_movement.
-
-    movement -- a movement, a delivery, a simulation movement,
-                or a list thereof
-    """
-    result_list = []
-    for divergence_tester in self._getDivergenceTesterList():
-      result = divergence_tester.explain(movement)
-      if isinstance(result, (list, tuple)): # for compatibility
-        result_list.extend(result)
-      elif result is not None:
-        result_list.append(result)
-    return result_list
 
   def _getMovementGenerator(self):
     """
