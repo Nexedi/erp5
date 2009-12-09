@@ -82,7 +82,7 @@ class BPMBuilder(Alarm):
 
   security.declareProtected(Permissions.View, 'build')
   def build(self, tag=None, input_movement_list=None,
-        existing_delivery_list=None, select_method_dict=None, **kwargs):
+            existing_delivery_list=None, select_method_dict=None, **kwargs):
     """Builds document according to self configuration mixed with passed parameters
 
     Selecting parameters (like input movement list) might be passed directly
@@ -109,9 +109,13 @@ class BPMBuilder(Alarm):
         delivery_relative_url_list=existing_delivery_list,
         **select_method_dict)
     else:
-      # movements were passed directly
-      input_movement_value_list = [self.unrestrictedTraverse(relative_url) for
-          relative_url in input_movement_list]
+      # movements were passed directly either by url or by value
+      if isinstance(input_movement_list[0], str):
+        input_movement_value_list = [self.unrestrictedTraverse(relative_url) for
+                                     relative_url in input_movement_list]
+      else:
+        input_movement_value_list = input_movement_list
+        
     # Collect
     root_group_node = self.collectMovement(input_movement_value_list)
     # Build
