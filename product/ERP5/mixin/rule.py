@@ -50,6 +50,7 @@ class RuleMixin:
 
   # Declarative interfaces
   zope.interface.implements(interfaces.IRule,
+                            interfaces.IDivergenceController,
                             interfaces.IMovementCollectionUpdater,)
 
   # Portal Type of created children
@@ -100,6 +101,40 @@ class RuleMixin:
     # And forward expand
     for movement in applied_rule.getMovementList():
       movement.expand(**kw)
+
+  # Implementation of IDivergenceController
+  security.declareProtected( Permissions.AccessContentsInformation,
+                            'isDivergent')
+  def isDivergent(self, movement, ignore_list=[]):
+    """
+    Returns true if the Simulation Movement is divergent comparing to
+    the delivery value
+    """
+    delivery = movement.getDeliveryValue()
+    if delivery is None:
+      return False
+    if len(self.getDivergenceList(movement)) == 0:
+      return False
+    else:
+      return True
+
+  security.declareProtected(Permissions.View, 'getDivergenceList')
+  def getDivergenceList(self, movement):
+    """
+    Returns a list of divergences of the movements provided
+    in delivery_or_movement.
+
+    movement -- a movement, a delivery, a simulation movement,
+                or a list thereof
+    """
+    result_list = []
+    for divergence_tester in self._getDivergenceTesterList():
+      result = divergence_tester.explain(movement)
+      if isinstance(result, (list, tuple)): # for compatibility
+        result_list.extend(result)
+      elif result is not None:
+        result_list.append(result)
+    return result_list
 
   # Implementation of IMovementCollectionUpdater
   def getMovementCollectionDiff(self, context, rounding=False, movement_generator=None):
