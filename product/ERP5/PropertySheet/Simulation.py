@@ -71,6 +71,7 @@ class Simulation:
             'mode'        : 'w' },
         {   'id'          : 'delivery_error',
             'description' : 'correction to make the match between delivery quantity and simulation quantity consistent',
+            'default'     : 0.,
             'type'        : 'float',
             'mode'        : 'w' },
   )
