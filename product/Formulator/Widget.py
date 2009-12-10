@@ -190,12 +190,11 @@ class Widget:
       return etree.tostring(text_node)
     return text_node
 
-  def render_odg(self, field, value, as_string=True, attr_dict=None,
-      REQUEST=None, render_prefix=None):
+  def render_odg(self, field, as_string, local_name, attr_dict=None):
     """
       Default render odg for widget - to be overwritten in field classes.
       Return a field value rendered in odg format.
-      as_string is True (default) the returned value is a string (xml
+      if as_string is True (default) the returned value is a string (xml
       reprensation of the node), if it's False, the value returned is the node
       object.
       attr_dict can be used for additional parameters (like style).
@@ -279,29 +278,24 @@ class TextWidget(Widget):
       return "<span class='%s'>%s</span>" % (css_class, value)
     return value
 
-  def render_odg(self, field, value=None, as_string=True, attr_dict=None, REQUEST=None, render_prefix=None):
+  def render_odg(self, field, as_string, local_name, attr_dict=None):
     """
       Return a field value rendered in odg format.
-      as_string is True (default) the returned value is a string (xml
+      if as_string is True (default) the returned value is a string (xml
       reprensation of the node), if it's False, the value returned is the node
       object.
       attr_dict can be used for additional parameters (like style).
     """
     if attr_dict is None:
       attr_dict = {}
-
     draw_node = Element('{%s}%s' % (DRAW_URI, 'text-box'),
         nsmap=NSMAP)
-    text_node = Element('{%s}%s' % (TEXT_URI, 'p'),
+    text_node = Element('{%s}%s' % (TEXT_URI, local_name),
         nsmap=NSMAP)
-
     draw_node.append(text_node)
-
     # get the field value
-    new_text_value = field.get_value('default')
-    text_node.text = new_text_value
+    text_node.text = field.get_value('default').decode('utf-8')
     text_node.attrib.update(attr_dict)
-
     if as_string:
       return etree.tostring(draw_node)
     return draw_node
@@ -478,7 +472,7 @@ class TextAreaWidget(Widget):
         if attr_dict is None:
             attr_dict = {}
         text_node = Element('{%s}%s' % (TEXT_URI, local_name), nsmap=NSMAP)
-        value =  field.get_value('default')
+        value = field.get_value('default')
         if isinstance(value, (str, unicode)):
           if isinstance(value, str):
             value = value.decode('utf-8')

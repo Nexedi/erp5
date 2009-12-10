@@ -283,6 +283,10 @@ class Field:
     def render_odt(self, as_string=False, local_name='p', attr_dict=None):
       return self.widget.render_odt(self, as_string, local_name, attr_dict=attr_dict)
 
+    security.declareProtected('View', 'render_odg')
+    def render_odg(self, as_string=False, local_name='p', attr_dict=None):
+      return self.widget.render_odg(self, as_string, local_name, attr_dict=attr_dict)
+
     security.declareProtected('View', 'render_css')
     def render_css(self, REQUEST=None):
       """
