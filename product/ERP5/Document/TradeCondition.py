@@ -202,7 +202,7 @@ class TradeCondition(Path, Transformation, XMLMatrix):
             if base_application in other_line.getBaseContributionList():
               father_dict[line].append(other_line)
               child_dict[other_line].append(line)
-
+      final_list = []
       if len(father_dict):
         # find roots elements
         # XXX maybe this can be done while building the graph
