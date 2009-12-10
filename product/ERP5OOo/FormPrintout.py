@@ -957,5 +957,7 @@ class ODGStrategy(ODFStrategy):
       for target_node in node_list:
         attr_dict = {}
         attr_dict.update(target_node.attrib)
-        new_node = field.render_odt(attr_dict=attr_dict)
-        parent_node = target_node.getparent().replace(target_node, new_node)
+        new_node = field.render_odg(attr_dict=attr_dict)
+        if new_node is not None: # XXX None node exists because render_odg is
+                                 # not yet writed for all fields, but it should
+          parent_node = target_node.getparent().replace(target_node, new_node)
