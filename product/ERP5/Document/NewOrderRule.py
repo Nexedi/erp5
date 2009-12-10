@@ -107,6 +107,8 @@ class OrderRuleMovementGenerator(object):
                                 rounding=False):
     """Input movement list comes from order"""
     order = context.getDefaultCausalityValue()
+    if order is None:
+      return None
     ret = []
     for movement in order.getMovementList(
       portal_type=order.getPortalOrderMovementTypeList()):
