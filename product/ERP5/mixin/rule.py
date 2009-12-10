@@ -128,7 +128,8 @@ class RuleMixin:
                 or a list thereof
     """
     result_list = []
-    for divergence_tester in self._getDivergenceTesterList():
+    for divergence_tester in self._getDivergenceTesterList(
+      exclude_quantity=False):
       result = divergence_tester.explain(movement)
       if isinstance(result, (list, tuple)): # for compatibility
         result_list.extend(result)
