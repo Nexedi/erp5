@@ -28,6 +28,7 @@
 
 import unittest
 import sys
+from _mysql_exceptions import ProgrammingError
 
 from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
@@ -1323,18 +1324,24 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     self.assertEquals([ob],
         [x.getObject() for x in self.getCatalogTool()(
                 portal_type='Organisation', SearchableText='title')])
-    
-    # 'different' is not revelant, because it's found in more than 50% of
-    # records
-    self.assertEquals([],
-        [x.getObject for x in self.getCatalogTool()(
-                portal_type='Organisation', SearchableText='different')])
-    
-    # test countResults
     self.assertEquals(1, self.getCatalogTool().countResults(
               portal_type='Organisation', SearchableText='title')[0][0])
-    self.assertEquals(0, self.getCatalogTool().countResults(
-              portal_type='Organisation', SearchableText='different')[0][0])
+    
+    # 'different' is found in more than 50% of records
+    # MySQL ignores such a word, but Tritonn does not ignore.
+    try:
+      self.portal.erp5_sql_connection.manage_test('SHOW SENNA STATUS')
+    except ProgrammingError:
+      # MySQL
+      self.assertEquals([],
+          [x.getObject for x in self.getCatalogTool()(
+                  portal_type='Organisation', SearchableText='different')])
+      self.assertEquals(0, self.getCatalogTool().countResults(
+                portal_type='Organisation', SearchableText='different')[0][0])
+    else:
+      # Tritonn
+      self.assertEquals(10, self.getCatalogTool().countResults(
+                portal_type='Organisation', SearchableText='different')[0][0])
     
   def test_43_ManagePasteObject(self, quiet=quiet, run=run_all_test):
     if not run: return
