@@ -491,6 +491,8 @@ class TempDocumentConstructor(DocumentConstructor):
     def __call__(self, folder, id, REQUEST=None,
                  activate_kw=None, is_indexable=None, reindex_kw=None, **kw):
       o = self.klass(id)
+      # Use the real container instead of the factory dispatcher.
+      folder = folder.Destination()
       if folder.isTempObject():
         folder._setObject(id, o)
       o = o.__of__(folder)
