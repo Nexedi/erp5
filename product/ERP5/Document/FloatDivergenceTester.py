@@ -74,6 +74,16 @@ class FloatDivergenceTester(Predicate, DivergenceTesterMixin):
       decision_value = decision_movement.getProperty(tested_property)
     prevision_value = prevision_movement.getProperty(tested_property)
 
+    # use delivery_ratio if specified
+    if self.getProperty('use_delivery_ratio') and \
+        prevision_movement.getDelivery() == decision_movement.getRelativeUrl():
+      decision_value *= prevision_movement.getDeliveryRatio()
+
+    # XXX do we need to support order_ratio too?
+    if self.getProperty('use_order_ratio') and \
+        decision_movement.getOrder() == prevision_movement.getRelativeUrl():
+      prevision_value *= decision_movement.getOrderRatio()
+
     delta = decision_value - prevision_value
     # XXX we should use appropriate property sheets and getter methods
     # for these properties.
