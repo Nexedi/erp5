@@ -30,7 +30,7 @@
 
 from Products.ERP5Type.Document.BPMBuilder import BPMBuilder
 
-class OrderBuilder(BPMBuilder):
+class BPMOrderBuilder(BPMBuilder):
   # CMF Type Definition
-  meta_type = 'ERP5 Order Builder'
-  portal_type = 'Order Builder'
+  meta_type = 'ERP5 BPM Order Builder'
+  portal_type = 'BPM Order Builder'

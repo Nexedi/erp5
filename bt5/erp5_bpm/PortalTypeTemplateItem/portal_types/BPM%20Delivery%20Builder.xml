@@ -68,7 +68,7 @@
         </item>
         <item>
             <key> <string>content_meta_type</string> </key>
-            <value> <string>ERP5 Delivery Builder</string> </value>
+            <value> <string>ERP5 BPM Delivery Builder</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -106,7 +106,7 @@ to Simulation Movements related to a limited set of existing Deliveries.</string
         </item>
         <item>
             <key> <string>factory</string> </key>
-            <value> <string>addDeliveryBuilder</string> </value>
+            <value> <string>addBPMDeliveryBuilder</string> </value>
         </item>
         <item>
             <key> <string>filter_content_types</string> </key>
@@ -128,7 +128,7 @@ to Simulation Movements related to a limited set of existing Deliveries.</string
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Delivery Builder</string> </value>
+            <value> <string>BPM Delivery Builder</string> </value>
         </item>
         <item>
             <key> <string>init_script</string> </key>
