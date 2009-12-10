@@ -56,6 +56,11 @@ class TestFormPrintout(ERP5TypeTestCase):
   def afterSetUp(self):
     self.login()
     self.setSystemPreference()
+    # XML validator
+    v12schema_url = os.path.join(os.path.dirname(__file__),
+                                 'OpenDocument-schema-v1.2-draft9.rng')
+    self.validator = Validator(schema_url=v12schema_url)
+    
     foo_file_path = os.path.join(os.path.dirname(__file__),
                                 'test_document',
                                 'Foo_001.odt')
@@ -64,7 +69,7 @@ class TestFormPrintout(ERP5TypeTestCase):
                                   'Foo_002.odt')
     foo3_file_path = os.path.join(os.path.dirname(__file__),
                                   'test_document',
-                                  'Foo_003.odt') 
+                                  'Foo_003.odt')
     foo4_file_path = os.path.join(os.path.dirname(__file__),
                                   'test_document',
                                   'Foo_004.odt')
@@ -128,11 +133,6 @@ class TestFormPrintout(ERP5TypeTestCase):
     transaction.commit()
     self.tic()
 
-    # XML validator
-    v12schema_url = os.path.join(os.path.dirname(__file__),
-                                 'OpenDocument-schema-v1.2-draft9.rng') 
-    self.validator = Validator(schema_url=v12schema_url)
-    
   def login(self):
     uf = self.getPortal().acl_users
     uf._doAddUser('tatuya', '', ['Manager'], [])
@@ -153,6 +153,15 @@ class TestFormPrintout(ERP5TypeTestCase):
     if error_list:
       self.fail(''.join(error_list))
 
+  def _validateFromPrintout(self, document, printout_form):
+    '''validate test document before to modify it
+    '''
+    document_file = getattr(document, printout_form.template, None)
+    if document_file is not None:
+      return self._validate(document_file.data)
+    raise ValueError ('%s template not found for %s' % (printout_form.template,
+        document))
+
   def test_01_Paragraph(self, run=run_all_test):
     """
     mapping a field to a paragraph
@@ -170,6 +179,7 @@ class TestFormPrintout(ERP5TypeTestCase):
 
     # test target
     foo_printout = portal.foo_module.test1.Foo_viewAsPrintout
+    self._validateFromPrintout(portal.foo_module.test1, foo_printout)
 
     request = self.app.REQUEST
     # 1. Normal case: "my_title" field to the "my_title" reference in the ODF document
@@ -860,6 +870,7 @@ return report_section_list
                                    title='',
                                    form_name='FooReport_view',
                                    template='Foo2_getODTStyleSheet')
+    self._validateFromPrintout(test1, foo_report_printout)
     odf_document = foo_report_printout()
 
     #test_output = open("/tmp/test_04_Iteratoin.odf", "w")
@@ -964,6 +975,7 @@ return report_section_list
                                    title='',
                                    form_name='FooReport_view',
                                    template='Foo3_getODTStyleSheet')
+    self._validateFromPrintout(test1, foo_report_printout)
     odf_document = foo_report_printout()
 
     #test_output = open("/tmp/test_04_Iteratoin_02_Section_01.odf", "w")
@@ -1069,13 +1081,14 @@ return report_section_list
 
     # 01. normal case using ODF Section
     test1 = self.portal.foo_module.test1
-    request = self.app.REQUEST 
+    request = self.app.REQUEST
     request['here'] = test1
     foo_report_printout = test1.FooReport_viewAsPrintout
     foo_report_printout.doSettings(REQUEST=request,
                                    title='',
                                    form_name='Foo2_view',
                                    template='Foo4_getODTStyleSheet')
+    self._validateFromPrintout(test1, foo_report_printout)
     odf_document = foo_report_printout()
 
     # test_output = open("/tmp/test_04_Iteratoin_03_Section_01.odf", "w")
@@ -1207,6 +1220,7 @@ return []
   def test_09_FieldReplacement(self, run=run_all_test):
     """test field in ODF Documents"""
     foo_printout = self.portal.foo_module.test1.Foo5_viewAsPrintout
+    self._validateFromPrintout(self.portal.foo_module.test1, foo_printout)
     foo_form = self.portal.foo_module.test1.Foo_view
     field_name = 'your_checkbox'
     if foo_form._getOb(field_name, None) is None:
