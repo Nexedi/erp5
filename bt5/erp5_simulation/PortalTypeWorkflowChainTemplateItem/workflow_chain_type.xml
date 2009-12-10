@@ -4,8 +4,16 @@
   <workflow>edit_workflow</workflow>
  </chain>
  <chain>
+  <type>DateTime Divergence Tester</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
   <type>Float Divergence Tester</type>
   <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>New Order Rule</type>
+  <workflow>edit_workflow, rule_validation_workflow</workflow>
  </chain>
  <chain>
   <type>String Divergence Tester</type>

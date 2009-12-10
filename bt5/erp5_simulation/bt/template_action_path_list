@@ -1,9 +1,13 @@
 Category Membership Divergence Tester | configuration
 Category Membership Divergence Tester | predicate
 Category Membership Divergence Tester | view
+DateTime Divergence Tester | configuration
+DateTime Divergence Tester | predicate
+DateTime Divergence Tester | view
 Float Divergence Tester | configuration
 Float Divergence Tester | predicate
 Float Divergence Tester | view
+New Order Rule | view
 Quantity Cancel Solver | configuration
 Quantity Cancel Solver | view
 Quantity Split Solver | configuration
