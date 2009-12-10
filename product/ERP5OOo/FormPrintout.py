@@ -871,11 +871,6 @@ class ODTStrategy(ODFStrategy):
     self._replaceNodeViaPointReference(element_tree, field)
     self._replaceNodeViaFormName(element_tree, field)
 
-  def _renderField(self, field):
-    # XXX It looks ugly to use render_pdf to extract text. Probably
-    # it should be renamed to render_text.
-    return field.render_pdf(field.get_value('default'))
-
   def _replaceNodeViaPointReference(self, element_tree, field, iteration_index=0):
     """Replace text node via an ODF point reference.
 
@@ -952,17 +947,15 @@ class ODTStrategy(ODFStrategy):
 class ODGStrategy(ODFStrategy):
   """ODGStrategy create a ODG Document from a form and a ODG template"""
 
-  def _replaceXmlByForm(self, element_tree, form, here, extra_context, ooo_builder, iteration_index=0):
+  def _replaceXmlByForm(self, element_tree, form, here, extra_context,
+                        ooo_builder, iteration_index=0):
 
     field_list = form.get_fields(include_disabled=1)
-    REQUEST = here.REQUEST
     for (count, field) in enumerate(field_list):
       text_xpath = '//draw:frame[@draw:name="%s"]/*' % field.id
       node_list = element_tree.xpath(text_xpath, namespaces=element_tree.nsmap)
-      if not node_list:
-        continue
-
-      new_node = field.widget.render_odg(field, as_string=False)#XXXrender_odg should be called on field, not on widget
-      for node in node_list:
-        parent_node = node.getparent().replace(node, new_node)
-
+      for target_node in node_list:
+        attr_dict = {}
+        attr_dict.update(target_node.attrib)
+        new_node = field.render_odt(attr_dict=attr_dict)
+        parent_node = target_node.getparent().replace(target_node, new_node)
