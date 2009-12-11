@@ -288,14 +288,19 @@ class TextWidget(Widget):
     """
     if attr_dict is None:
       attr_dict = {}
-    draw_node = Element('{%s}%s' % (DRAW_URI, 'text-box'),
-        nsmap=NSMAP)
-    text_node = Element('{%s}%s' % (TEXT_URI, local_name),
-        nsmap=NSMAP)
-    draw_node.append(text_node)
+    draw_tag_name = '{%s}%s' % (DRAW_URI, 'text-box')
+    draw_node = Element(draw_tag_name, nsmap=NSMAP)
+    draw_node.attrib.update(attr_dict.get(draw_tag_name, {}))
+    text_p_tag_name = '{%s}%s' % (TEXT_URI, local_name)
+    text_p_node = Element(text_p_tag_name, nsmap=NSMAP)
+    text_p_node.attrib.update(attr_dict.get(text_p_tag_name, {}))
+    text_span_tag_name = '{%s}%s' % (TEXT_URI, 'span')
+    text_span_node =  Element(text_span_tag_name, nsmap=NSMAP)
+    text_span_node.attrib.update(attr_dict.get(text_span_tag_name, {}))
+    text_p_node.append(text_span_node)
+    draw_node.append(text_p_node)
     # get the field value
-    text_node.text = field.get_value('default').decode('utf-8')
-    text_node.attrib.update(attr_dict)
+    text_span_node.text = field.get_value('default').decode('utf-8')
     if as_string:
       return etree.tostring(draw_node)
     return draw_node
