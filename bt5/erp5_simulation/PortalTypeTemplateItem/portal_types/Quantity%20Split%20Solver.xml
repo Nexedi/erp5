@@ -16,9 +16,7 @@
         <item>
             <key> <string>categories</string> </key>
             <value>
-              <tuple>
-                <string>portal_types/Quantity Split Solver</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>
@@ -32,7 +30,7 @@
             </value>
         </item>
         <item>
-            <key> <string>delivery_solver_list</string> </key>
+            <key> <string>delivery_solver</string> </key>
             <value>
               <tuple>
                 <string>FIFO Solver</string>

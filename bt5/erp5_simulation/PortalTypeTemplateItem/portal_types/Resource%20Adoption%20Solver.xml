@@ -16,11 +16,7 @@
         <item>
             <key> <string>categories</string> </key>
             <value>
-              <tuple>
-                <string>portal_types/Resource Replacement Solver</string>
-                <string>portal_types/Resource Adoption Solver</string>
-                <string>portal_types/Resource Adoption Solver</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>
