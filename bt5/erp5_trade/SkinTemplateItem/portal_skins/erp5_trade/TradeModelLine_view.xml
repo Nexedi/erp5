@@ -121,6 +121,7 @@
                         <string>my_trade_phase</string>
                         <string>my_base_application_list</string>
                         <string>my_base_contribution_list</string>
+                        <string>my_use</string>
                       </list>
                     </value>
                 </item>

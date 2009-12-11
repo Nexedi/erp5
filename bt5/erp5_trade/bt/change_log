@@ -1,3 +1,6 @@
+2009-12-11 yusei
+* Add use category field to TradeModelLine_view.
+
 2009-12-1 yusei
 * Update title of TradeModelLine_view.my_resource_title. Now both product and service can be used.
 
