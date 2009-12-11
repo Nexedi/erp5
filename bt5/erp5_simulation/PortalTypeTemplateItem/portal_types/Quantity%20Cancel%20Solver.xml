@@ -23,7 +23,7 @@
         </item>
         <item>
             <key> <string>configuration_form_id</string> </key>
-            <value> <string>QuantityCancelSolver_viewConfiguration</string> </value>
+            <value> <string>Solver_viewConfiguration</string> </value>
         </item>
         <item>
             <key> <string>configuration_property_list</string> </key>
