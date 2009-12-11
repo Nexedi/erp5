@@ -61,6 +61,7 @@
 permanent_url = context.WebSection_getPermanentURL(document)\n
 \n
 # for web page, foo and foo/view are completely same\n
+portal_type = document.getPortalType()\n
 if portal_type == \'Web Page\':\n
   return permanent_url\n
 else:\n
