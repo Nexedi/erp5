@@ -144,7 +144,6 @@ class TestFormPrintoutAsODG(TestFormPrintout):
 
     request = self.app.REQUEST
     # 1. Normal case: "my_title" field to the "my_title" reference in the ODF document
-    self.portal.changeSkin('ODT')
     odf_document = foo_printout.index_html(REQUEST=request)
     self.assertTrue(odf_document is not None)
     builder = OOoBuilder(odf_document)
@@ -229,6 +228,69 @@ class TestFormPrintoutAsODG(TestFormPrintout):
     content_xml = builder.extract("content.xml")
     self.assertTrue(content_xml.find("Français test2") > 0)
     self._validate(odf_document)
+
+  def test_02_TextFieldWithMultiLines(self):
+    """
+    mapping a field containing many lines ('\n') to a textbox
+    """
+    portal = self.getPortal()
+
+    # add a description field in the form
+    foo_form = self.portal.foo_module.test1.Foo_view
+    if foo_form._getOb("my_description", None) is None:
+      foo_form.manage_addField('my_description', 'Description', 'TextAreaField')
+    foo_module = self.portal.foo_module
+    if foo_module._getOb('test1', None) is None:
+      foo_module.newContent(id='test1', portal_type='Foo')
+    test1 =  foo_module.test1
+    test1.setDescription('A text a bit more longer\n\nWith a newline !')
+    transaction.commit()
+    self.tic()
+
+    style_dict = {'{urn:oasis:names:tc:opendocument:xmlns:text:1.0}line-break': {},
+                  '{urn:oasis:names:tc:opendocument:xmlns:text:1.0}p': {},
+                  '{urn:oasis:names:tc:opendocument:xmlns:text:1.0}span':
+                    {'{urn:oasis:names:tc:opendocument:xmlns:text:1.0}style-name': 'T4'}
+                 }
+
+    # test target
+    foo_printout = portal.foo_module.test1.Foo_viewAsODGPrintout
+    original_file_content = self.getODFDocumentFromPrintout(foo_printout)
+    self._validate(original_file_content)
+
+    # extract content.xml from original odg document
+    original_doc_builder = OOoBuilder(original_file_content)
+    original_content_xml = original_doc_builder.extract("content.xml")
+    # get style of the title in the orignal test document
+    original_document_style_dict = self.getStyleDictFromFieldName(original_content_xml,
+        'my_description')
+
+    # check the style is good before the odg generation
+    self.assertEqual(original_document_style_dict, style_dict)
+
+    request = self.app.REQUEST
+    # 1. Normal case: "my_title" field to the "my_title" reference in the ODF document
+    odf_document = foo_printout.index_html(REQUEST=request)
+    self.assertTrue(odf_document is not None)
+    # validate the generated document
+    self._validate(odf_document)
+    builder = OOoBuilder(odf_document)
+    content_xml = builder.extract("content.xml")
+    content = etree.XML(content_xml)
+    final_document_style_dict = self.getStyleDictFromFieldName(content_xml,
+        'my_description')
+
+    # check the style is keept after the odg generation
+    self.assertEqual(final_document_style_dict, style_dict)
+
+    # check the two lines are prensent in the generated document
+    self.assertTrue(content_xml.find('A text a bit more longer') > 0)
+    self.assertTrue(content_xml.find('With a newline !') > 0)
+
+    # check there is two line-break in the element my_description
+    text_xpath = '//draw:frame[@draw:name="my_description"]//text:line-break'
+    node_list = content.xpath(text_xpath, namespaces=content.nsmap)
+    self.assertEqual(len(node_list), 2)
 
 def test_suite():
   suite = unittest.TestSuite()
