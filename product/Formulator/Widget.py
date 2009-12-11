@@ -199,7 +199,47 @@ class Widget:
       object.
       attr_dict can be used for additional parameters (like style).
     """
-    return None
+    if attr_dict is None:
+      attr_dict = {}
+
+    # get the field value
+    value = field.get_value('default')
+    if isinstance(value, (str, unicode)):
+      if isinstance(value, str):
+        value = value.decode('utf-8')
+      value = [value]
+    value = '\n'.join(value)
+    value.replace('\r', '')
+
+    draw_tag_name = '{%s}%s' % (DRAW_URI, 'text-box')
+    draw_node = Element(draw_tag_name, nsmap=NSMAP)
+    draw_node.attrib.update(attr_dict.get(draw_tag_name, {}))
+    text_p_tag_name = '{%s}%s' % (TEXT_URI, local_name)
+    text_p_node = Element(text_p_tag_name, nsmap=NSMAP)
+    text_p_node.attrib.update(attr_dict.get(text_p_tag_name, {}))
+    text_span_tag_name = '{%s}%s' % (TEXT_URI, 'span')
+    text_span_node =  Element(text_span_tag_name, nsmap=NSMAP)
+    text_span_node.attrib.update(attr_dict.get(text_span_tag_name, {}))
+    text_p_node.append(text_span_node)
+    draw_node.append(text_p_node)
+
+    # XXX copy from render_odt, need to be unified
+    def replaceCharsByNode(match_object):
+        #global text_span_node
+        if match_object.group(1) is None:
+            text_span_node.text = match_object.group(2)
+        if match_object.group(1) == '\n':
+            line_break = SubElement(text_span_node, '{%s}%s' % (TEXT_URI, 'line-break'))
+            line_break.tail = match_object.group(2)
+        if match_object.group(1) == '\t':
+            line_break = SubElement(text_span_node, '{%s}%s' % (TEXT_URI, 'tab'))
+            line_break.tail = match_object.group(2)
+    re.sub('([\n\t])?([^\n\t]*)', replaceCharsByNode, value)
+    #text_span_node.text = value
+    if as_string:
+      return etree.tostring(draw_node)
+    return draw_node
+
 
 class TextWidget(Widget):
   """Text widget
@@ -277,33 +317,6 @@ class TextWidget(Widget):
       # except for editor field
       return "<span class='%s'>%s</span>" % (css_class, value)
     return value
-
-  def render_odg(self, field, as_string, local_name, attr_dict=None):
-    """
-      Return a field value rendered in odg format.
-      if as_string is True (default) the returned value is a string (xml
-      reprensation of the node), if it's False, the value returned is the node
-      object.
-      attr_dict can be used for additional parameters (like style).
-    """
-    if attr_dict is None:
-      attr_dict = {}
-    draw_tag_name = '{%s}%s' % (DRAW_URI, 'text-box')
-    draw_node = Element(draw_tag_name, nsmap=NSMAP)
-    draw_node.attrib.update(attr_dict.get(draw_tag_name, {}))
-    text_p_tag_name = '{%s}%s' % (TEXT_URI, local_name)
-    text_p_node = Element(text_p_tag_name, nsmap=NSMAP)
-    text_p_node.attrib.update(attr_dict.get(text_p_tag_name, {}))
-    text_span_tag_name = '{%s}%s' % (TEXT_URI, 'span')
-    text_span_node =  Element(text_span_tag_name, nsmap=NSMAP)
-    text_span_node.attrib.update(attr_dict.get(text_span_tag_name, {}))
-    text_p_node.append(text_span_node)
-    draw_node.append(text_p_node)
-    # get the field value
-    text_span_node.text = field.get_value('default').decode('utf-8')
-    if as_string:
-      return etree.tostring(draw_node)
-    return draw_node
 
 TextWidgetInstance = TextWidget()
 
