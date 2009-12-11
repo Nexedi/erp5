@@ -37,9 +37,14 @@ from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5OOo.OOoUtils import OOoBuilder
 from Products.ERP5OOo.tests.utils import Validator
 from Products.ERP5Type.tests.utils import FileUpload
-from zLOG import LOG , INFO
+from StringIO import StringIO
 from lxml import etree
 import os
+
+# TODO : move code specific to ODT document to another file like
+# testFormPrintoutAsODT which inherite from this class.
+# This class should contain only common parts to all ODF type tests (odg, odt,
+# ods, ...).
 
 class TestFormPrintout(ERP5TypeTestCase):
   run_all_test = 1
@@ -146,21 +151,20 @@ class TestFormPrintout(ERP5TypeTestCase):
     #default_pref.setPreferredConversionCacheFactory('document_cache_factory')
     if default_pref.getPreferenceState() != 'global':
       default_pref.enable()
-
  
   def _validate(self, odf_file_data):
     error_list = self.validator.validate(odf_file_data)
     if error_list:
       self.fail(''.join(error_list))
 
-  def _validateFromPrintout(self, document, printout_form):
-    '''validate test document before to modify it
+  def getODFDocumentFromPrintout(self, printout_form):
+    '''return odf document from the printout
     '''
-    document_file = getattr(document, printout_form.template, None)
+    document_file = getattr(self.portal, printout_form.template, None)
+    document_file = StringIO(document_file).read()
     if document_file is not None:
-      return self._validate(document_file.data)
-    raise ValueError ('%s template not found for %s' % (printout_form.template,
-        document))
+      return document_file
+    raise ValueError ('%s template not found' % printout_form.template)
 
   def test_01_Paragraph(self, run=run_all_test):
     """
@@ -179,7 +183,7 @@ class TestFormPrintout(ERP5TypeTestCase):
 
     # test target
     foo_printout = portal.foo_module.test1.Foo_viewAsPrintout
-    self._validateFromPrintout(portal.foo_module.test1, foo_printout)
+    self._validate(self.getODFDocumentFromPrintout(foo_printout))
 
     request = self.app.REQUEST
     # 1. Normal case: "my_title" field to the "my_title" reference in the ODF document
@@ -870,7 +874,7 @@ return report_section_list
                                    title='',
                                    form_name='FooReport_view',
                                    template='Foo2_getODTStyleSheet')
-    self._validateFromPrintout(test1, foo_report_printout)
+    self._validate(self.getODFDocumentFromPrintout(foo_report_printout))
     odf_document = foo_report_printout()
 
     #test_output = open("/tmp/test_04_Iteratoin.odf", "w")
@@ -975,7 +979,7 @@ return report_section_list
                                    title='',
                                    form_name='FooReport_view',
                                    template='Foo3_getODTStyleSheet')
-    self._validateFromPrintout(test1, foo_report_printout)
+    self._validate(self.getODFDocumentFromPrintout(foo_report_printout))
     odf_document = foo_report_printout()
 
     #test_output = open("/tmp/test_04_Iteratoin_02_Section_01.odf", "w")
@@ -1088,7 +1092,7 @@ return report_section_list
                                    title='',
                                    form_name='Foo2_view',
                                    template='Foo4_getODTStyleSheet')
-    self._validateFromPrintout(test1, foo_report_printout)
+    self._validate(self.getODFDocumentFromPrintout(foo_report_printout))
     odf_document = foo_report_printout()
 
     # test_output = open("/tmp/test_04_Iteratoin_03_Section_01.odf", "w")
@@ -1220,7 +1224,7 @@ return []
   def test_09_FieldReplacement(self, run=run_all_test):
     """test field in ODF Documents"""
     foo_printout = self.portal.foo_module.test1.Foo5_viewAsPrintout
-    self._validateFromPrintout(self.portal.foo_module.test1, foo_printout)
+    self._validate(self.getODFDocumentFromPrintout(foo_printout))
     foo_form = self.portal.foo_module.test1.Foo_view
     field_name = 'your_checkbox'
     if foo_form._getOb(field_name, None) is None:
@@ -1229,6 +1233,7 @@ return []
 
     checkbox.values['default'] = 1
     odf_document = foo_printout()
+    self._validate(odf_document)
     builder = OOoBuilder(odf_document)
     content_xml = builder.extract("content.xml")
     document_tree = etree.XML(content_xml)
@@ -1237,6 +1242,7 @@ return []
 
     checkbox.values['default'] = 0
     odf_document = foo_printout()
+    self._validate(odf_document)
     builder = OOoBuilder(odf_document)
     content_xml = builder.extract("content.xml")
     document_tree = etree.XML(content_xml)
