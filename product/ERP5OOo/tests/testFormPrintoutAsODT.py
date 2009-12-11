@@ -34,11 +34,9 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5OOo.tests.testFormPrintout import TestFormPrintoutMixin
 from Products.ERP5Type.tests.utils import createZODBPythonScript
 from Products.MimetypesRegistry.mime_types.magic import guessMime
-from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5OOo.OOoUtils import OOoBuilder
 from Products.ERP5OOo.tests.utils import Validator
 from Products.ERP5Type.tests.utils import FileUpload
-from StringIO import StringIO
 from lxml import etree
 import os
 
@@ -190,10 +188,10 @@ class TestFormPrintoutAsODT(TestFormPrintoutMixin):
 
     ## 4. False case: does not set a ODF template
     self.assertTrue(foo_printout.template == 'Foo_getODTStyleSheet')
-    tmp_template = foo_printout.template 
+    tmp_template = foo_printout.template
     foo_printout.template = None
     # template == None, causes a ValueError 
-    try: 
+    try:
       foo_printout.index_html(REQUEST=request)
     except ValueError, e:
       # e -> 'Can not create a ODF Document without a odf_template'
@@ -216,7 +214,7 @@ class TestFormPrintoutAsODT(TestFormPrintoutMixin):
     
     # 5. Normal case: utf-8 string
     test1.setTitle("Français")
-    odf_document = foo_printout() 
+    odf_document = foo_printout()
     self.assertTrue(odf_document is not None)
     builder = OOoBuilder(odf_document)
     content_xml = builder.extract("content.xml")
@@ -225,7 +223,7 @@ class TestFormPrintoutAsODT(TestFormPrintoutMixin):
     
     # 6. Normal case: unicode string
     test1.setTitle(u'Français test2')
-    odf_document = foo_printout() 
+    odf_document = foo_printout()
     self.assertTrue(odf_document is not None)
     builder = OOoBuilder(odf_document)
     content_xml = builder.extract("content.xml")
@@ -243,7 +241,7 @@ class TestFormPrintoutAsODT(TestFormPrintoutMixin):
     week = foo_form.week
     week.values['default'] = ['line1', 'line2']
     
-    odf_document = foo_printout() 
+    odf_document = foo_printout()
     self.assertTrue(odf_document is not None)
     #test_output = open("/tmp/test_01_Paragraph_07_LinesField.odf", "w")
     #test_output.write(odf_document)
@@ -270,7 +268,7 @@ class TestFormPrintoutAsODT(TestFormPrintoutMixin):
     number.values['default'] = '543210'
     # set a float field format 
     number.values['input_style'] = '-1 234.5'
-    odf_document = foo_printout() 
+    odf_document = foo_printout()
     self.assertTrue(odf_document is not None)
     #test_output = open("/tmp/test_01_Paragraph_08_Filed_Format.odf", "w")
     #test_output.write(odf_document)
@@ -282,7 +280,7 @@ class TestFormPrintoutAsODT(TestFormPrintoutMixin):
     
     # change format
     number.values['input_style'] = '-1234.5'
-    odf_document = foo_printout() 
+    odf_document = foo_printout()
     self.assertTrue(odf_document is not None)
     builder = OOoBuilder(odf_document)
     content_xml = builder.extract("content.xml")
@@ -302,7 +300,7 @@ class TestFormPrintoutAsODT(TestFormPrintoutMixin):
     test_title = foo_form.my_test_title
     test_title.values['default'] = 'ZZZ test here ZZZ'
     
-    odf_document = foo_printout() 
+    odf_document = foo_printout()
     self.assertTrue(odf_document is not None)
     #test_output = open("/tmp/test_01_Paragraph_09_RangeReferenceWithSpan.odf", "w")
     #test_output.write(odf_document)
@@ -331,7 +329,7 @@ class TestFormPrintoutAsODT(TestFormPrintoutMixin):
     foo_printout = test1.Foo_viewAsPrintout
     foo_form = test1.Foo_view
     listbox = foo_form.listbox
-    request = self.app.REQUEST 
+    request = self.app.REQUEST
     request['here'] = test1
     
     # 1. Normal Case: ODF table last row is stat line
@@ -372,7 +370,7 @@ class TestFormPrintoutAsODT(TestFormPrintoutMixin):
     foo_printout = test1.Foo_viewAsPrintout
     foo_form = test1.Foo_view
     listbox = foo_form.listbox
-    request = self.app.REQUEST 
+    request = self.app.REQUEST
     request['here'] = test1
 
     test1.foo_1.setTitle('foo_title_2')
@@ -415,7 +413,7 @@ class TestFormPrintoutAsODT(TestFormPrintoutMixin):
     foo_printout = test1.Foo_viewAsPrintout
     foo_form = test1.Foo_view
     listbox = foo_form.listbox
-    request = self.app.REQUEST 
+    request = self.app.REQUEST
     request['here'] = test1
 
     test1.foo_1.setTitle('foo_title_3')
@@ -452,7 +450,7 @@ class TestFormPrintoutAsODT(TestFormPrintoutMixin):
     foo_printout = test1.Foo_viewAsPrintout
     foo_form = test1.Foo_view
     listbox = foo_form.listbox
-    request = self.app.REQUEST 
+    request = self.app.REQUEST
     request['here'] = test1
 
     test1.foo_1.setTitle('foo_title_4')
@@ -513,7 +511,7 @@ class TestFormPrintoutAsODT(TestFormPrintoutMixin):
     foo_printout = test1.Foo_viewAsPrintout
     foo_form = test1.Foo_view
     listbox = foo_form.listbox
-    request = self.app.REQUEST 
+    request = self.app.REQUEST
     request['here'] = test1
 
     foo_form.manage_renameObject('listbox', 'listbox2', REQUEST=request)
@@ -570,7 +568,7 @@ class TestFormPrintoutAsODT(TestFormPrintoutMixin):
     foo_printout = test1.Foo_viewAsPrintout
     foo_form = test1.Foo_view
     listbox = foo_form.listbox
-    request = self.app.REQUEST 
+    request = self.app.REQUEST
     request['here'] = test1
 
     foo_form.manage_renameObject('listbox', 'listbox3', REQUEST=request)
@@ -609,7 +607,7 @@ class TestFormPrintoutAsODT(TestFormPrintoutMixin):
     foo_printout = test1.Foo_viewAsPrintout
     foo_form = test1.Foo_view
     listbox = foo_form.listbox
-    request = self.app.REQUEST 
+    request = self.app.REQUEST
     request['here'] = test1
 
     test1.foo_1.setTitle('foo_title_7')
@@ -656,7 +654,7 @@ class TestFormPrintoutAsODT(TestFormPrintoutMixin):
     foo_printout = test1.Foo_viewAsPrintout
     foo_form = test1.Foo_view
     listbox = foo_form.listbox
-    request = self.app.REQUEST 
+    request = self.app.REQUEST
     request['here'] = test1
 
     test1.foo_1.setTitle('foo_title_8')
@@ -694,7 +692,7 @@ class TestFormPrintoutAsODT(TestFormPrintoutMixin):
     foo_printout = test1.Foo_viewAsPrintout
     foo_form = test1.Foo_view
     listbox = foo_form.listbox
-    request = self.app.REQUEST 
+    request = self.app.REQUEST
     request['here'] = test1
 
     for i in xrange(3, 7):
@@ -1134,7 +1132,7 @@ return []
     my_default_image_absolute_url.values['default'] = image.absolute_url_path()
 
     # 01: Normal
-    odf_document = foo_printout() 
+    odf_document = foo_printout()
     self.assertTrue(odf_document is not None)
     #test_output = open("/tmp/test_07_Image_01_Normal.odf", "w")
     #test_output.write(odf_document)
@@ -1154,7 +1152,7 @@ return []
 
     # 02: no image data
     my_default_image_absolute_url.values['default'] = ''
-    odf_document = foo_printout() 
+    odf_document = foo_printout()
     self.assertTrue(odf_document is not None)
     #test_output = open("/tmp/test_07_Image_02_NoData.odf", "w")
     #test_output.write(odf_document)
@@ -1175,13 +1173,13 @@ return []
     test_title.values['default'] = 'ZZZ test here ZZZ'
   
     self.portal.REQUEST.set('format', 'pdf')
-    printout = foo_printout(REQUEST=self.portal.REQUEST) 
+    printout = foo_printout(REQUEST=self.portal.REQUEST)
     #test_output = open("/tmp/test_99_OOoConversion.pdf", "w")
     #test_output.write(printout.data)
     self.assertEqual('application/pdf', guessMime(printout.data))
 
     self.portal.REQUEST.set('format', 'doc')
-    printout = foo_printout(REQUEST=self.portal.REQUEST) 
+    printout = foo_printout(REQUEST=self.portal.REQUEST)
     #test_output = open("/tmp/test_99_OOoConversion.doc", "w")
     #test_output.write(printout.data)
     self.assertEqual('application/msword', guessMime(printout.data))
