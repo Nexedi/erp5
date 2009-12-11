@@ -80,7 +80,7 @@ class StringDivergenceTester(Predicate, DivergenceTesterMixin):
     if decision_value != prevision_value:
       return (
         prevision_value, decision_value,
-        'The value of ${prperty_name} is different between decision and prevision.',
+        'The value of ${property_name} is different between decision and prevision.',
         dict(property_name=tested_property))
     return None
 

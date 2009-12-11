@@ -93,7 +93,7 @@ class FloatDivergenceTester(Predicate, DivergenceTesterMixin):
        delta < absolute_tolerance_min:
       return (
         prevision_value, decision_value,
-        'The difference of ${prperty_name} between decision and prevision is less than ${value}.',
+        'The difference of ${property_name} between decision and prevision is less than ${value}.',
         dict(property_name=tested_property,
              value=absolute_tolerance_min))
     absolute_tolerance_max = self.getProperty('quantity_range_max') or \
@@ -102,7 +102,7 @@ class FloatDivergenceTester(Predicate, DivergenceTesterMixin):
        delta > absolute_tolerance_max:
       return (
         prevision_value, decision_value,
-        'The difference of ${prperty_name} between decision and prevision is larger than ${value}.',
+        'The difference of ${property_name} between decision and prevision is larger than ${value}.',
         dict(property_name=tested_property,
              value=absolute_tolerance_max))
 
@@ -124,13 +124,13 @@ class FloatDivergenceTester(Predicate, DivergenceTesterMixin):
         if tolerance_base == 'price_currency':
           return (
             prevision_value, decision_value,
-            'The difference of ${prperty_name} between decision and prevision is less than ${value} times of the currency precision.',
+            'The difference of ${property_name} between decision and prevision is less than ${value} times of the currency precision.',
             dict(property_name=tested_property,
                  value=relative_tolerance_min))
         else:
           return (
             prevision_value, decision_value,
-            'The difference of ${prperty_name} between decision and prevision is less than ${value} times of the prevision value.',
+            'The difference of ${property_name} between decision and prevision is less than ${value} times of the prevision value.',
             dict(property_name=tested_property,
                  value=relative_tolerance_min))
       relative_tolerance_max = self.getProperty('tolerance_range_max') or \
@@ -140,13 +140,13 @@ class FloatDivergenceTester(Predicate, DivergenceTesterMixin):
         if tolerance_base == 'price_currency':
           return (
             prevision_value, decision_value,
-            'The difference of ${prperty_name} between decision and prevision is less than ${value} times of the currency precision.',
+            'The difference of ${property_name} between decision and prevision is less than ${value} times of the currency precision.',
             dict(property_name=tested_property,
                  value=relative_tolerance_max))
         else:
           return (
             prevision_value, decision_value,
-            'The difference of ${prperty_name} between decision and prevision is less than ${value} times of the prevision value.',
+            'The difference of ${property_name} between decision and prevision is less than ${value} times of the prevision value.',
             dict(property_name=tested_property,
                  value=relative_tolerance_max))
     return None

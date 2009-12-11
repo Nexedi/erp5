@@ -77,7 +77,7 @@ class CategoryMembershipDivergenceTester(Predicate, DivergenceTesterMixin):
     if sorted(decision_value) != sorted(prevision_value):
       return (
         prevision_value, decision_value,
-        'The values of ${prperty_name} category are different between decision and prevision.',
+        'The values of ${property_name} category are different between decision and prevision.',
         dict(property_name=tested_property))
     return None
 

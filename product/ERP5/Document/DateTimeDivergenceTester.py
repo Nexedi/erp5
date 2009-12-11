@@ -82,7 +82,7 @@ class DateTimeDivergenceTester(Predicate, DivergenceTesterMixin):
        delta < absolute_tolerance_min:
       return (
         prevision_value, decision_value,
-        'The difference of ${prperty_name} between decision and prevision is less than ${value}.',
+        'The difference of ${property_name} between decision and prevision is less than ${value}.',
         dict(property_name=tested_property,
              value=absolute_tolerance_min))
     absolute_tolerance_max = self.getProperty('quantity_range_max') or \
@@ -91,7 +91,7 @@ class DateTimeDivergenceTester(Predicate, DivergenceTesterMixin):
        delta > absolute_tolerance_max:
       return (
         prevision_value, decision_value,
-        'The difference of ${prperty_name} between decision and prevision is larger than ${value}.',
+        'The difference of ${property_name} between decision and prevision is larger than ${value}.',
         dict(property_name=tested_property,
              value=absolute_tolerance_max))
 
