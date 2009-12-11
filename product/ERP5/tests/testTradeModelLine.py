@@ -1441,7 +1441,7 @@ class TestTradeModelLine(TestTradeModelLineMixin):
 
       According to Depth-first search algorithm, result of this graph is:
       [trade_condition_1, trade_condition_2, trade_condition_3,
-      trade_condition_4]
+      trade_condition_4, trade_condition_5]
     '''
     trade_condition_1 = self.createTradeCondition()
     trade_condition_2 = self.createTradeCondition()
@@ -1452,12 +1452,12 @@ class TestTradeModelLine(TestTradeModelLineMixin):
       trade_condition_3))
     trade_condition_2.setSpecialiseValue(trade_condition_4)
 
-    speciliase_value_list = trade_condition_1.findSpecialiseValueList(
+    specialise_value_list = trade_condition_1.findSpecialiseValueList(
         context=trade_condition_1)
-    self.assertEquals(len(speciliase_value_list), 4)
+    self.assertEquals(len(specialise_value_list), 4)
     self.assertEquals(
       [trade_condition_1, trade_condition_2, trade_condition_3,
-       trade_condition_4], speciliase_value_list)
+       trade_condition_4], specialise_value_list)
 
   def test_TradeConditionTradeModelLineReferenceIsShadowingComposition(self):
     trade_condition_1 = self.createTradeCondition()
@@ -1512,7 +1512,7 @@ class TestTradeModelLine(TestTradeModelLineMixin):
   def test_simpleGetTradeModelLineComposedList(self):
     """
     Test list of contribution/application relation is well sorted in a simple case
-    where we create trade model line in a wrong order in comparison to application relation
+    where we create trade model line in a wrong order in comparison to application relations
     We have a contribution graph like this A ---> C ---> B so final order must be A, C, B
     """
     trade_condition = self.createTradeCondition()
