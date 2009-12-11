@@ -956,8 +956,8 @@ class ODGStrategy(ODFStrategy):
       node_list = element_tree.xpath(text_xpath, namespaces=element_tree.nsmap)
       for target_node in node_list:
         attr_dict = {}
-        attr_dict.update(target_node.attrib)
+        # store child style using their local-name as key
+        for descendant in target_node.iterdescendants():
+          attr_dict.setdefault(descendant.tag, {}).update(descendant.attrib)
         new_node = field.render_odg(attr_dict=attr_dict)
-        if new_node is not None: # XXX None node exists because render_odg is
-                                 # not yet writed for all fields, but it should
-          parent_node = target_node.getparent().replace(target_node, new_node)
+        parent_node = target_node.getparent().replace(target_node, new_node)
