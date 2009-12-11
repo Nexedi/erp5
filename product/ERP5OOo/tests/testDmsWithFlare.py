@@ -40,9 +40,8 @@ class TestDocumentWithFlare(TestDocument):
     return "DMS with Flare"
 
   def setSystemPreference(self):
-    default_pref = self.portal.portal_preferences.default_site_preference
-    default_pref.setPreferredConversionCacheFactory('dms_cache_factory')
-    TestDocument.setSystemPreference(self)
+    system_preference = TestDocument.setSystemPreference(self)
+    system_preference.setPreferredConversionCacheFactory('dms_cache_factory')
 
 def test_suite():
   suite = unittest.TestSuite()

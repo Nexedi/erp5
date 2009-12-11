@@ -122,8 +122,7 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
     default_pref.setPreferredDocumentReferenceRegularExpression(REFERENCE_REGULAR_EXPRESSION)
     if default_pref.getPreferenceState() != 'global':
       default_pref.enable()
-    transaction.commit()
-    self.tic()
+    return default_pref
 
   def getDocumentModule(self):
     return getattr(self.getPortal(),'document_module')
