@@ -47,5 +47,6 @@ class SolverTypeInformation(ERP5TypeInformation):
 
   # Default Properties
   property_sheets = ( PropertySheet.BaseType
+                    , PropertySheet.SolverType
                     , PropertySheet.Configurable
                     )
