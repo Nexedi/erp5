@@ -50,10 +50,7 @@
                        portal_url         python: site_root.absolute_url();\n
                        server_url         request/BASE0;\n
                        portal_path        python: portal_url.replace(server_url, \'\') + \'/\';\n
-                       isInFactory        python: test(\'/portal_factory\'in request.URLPATH0, 1, 0);\n
-                       isRegisteredFolder python: test(here.Title() and here.isPrincipiaFolderish, 1,0);\n
-                       isRegisteredPA     python: test(here.Title() and here.meta_type==\'PloneArticle\', 1,0);\n
-                       path_user          python: test(isInFactory or isRegisteredFolder or isRegisteredPA,request.URLPATH1,request.URLPATH2);\n
+                       path_user          here/getRelativeUrl;\n
                        cols               cols | python: 40;\n
                        rows               rows | python: 18;\n
                        editor_width       width | python: int(cols * 19.5);\n
@@ -68,7 +65,7 @@
   <script type="text/javascript" tal:content="structure string:\n
 &lt;!--\n
 var oFCKeditor      = new FCKeditor(\'${inputname}\');\n
-var pathUser        = \'${path_user}/\';\n
+var pathUser        = \'/${path_user}/\';\n
 oFCKeditor.BasePath = \'${portal_url}/\';\n
 oFCKeditor.Value    = \'${cleaninput}\';\n
 \n
