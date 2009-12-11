@@ -3,6 +3,7 @@
 # -*- coding: utf-8 -*-
 # Copyright (c) 2009 Nexedi KK and Contributors. All Rights Reserved.
 #                    Tatuya Kamada <tatuya@nexedi.com>
+#                    Fabien Morin <fabien@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsibility of assessing all potential
@@ -41,12 +42,41 @@ from StringIO import StringIO
 from lxml import etree
 import os
 
-# TODO : move code specific to ODT document to another file like
-# testFormPrintoutAsODT which inherite from this class.
-# This class should contain only common parts to all ODF type tests (odg, odt,
-# ods, ...).
+class TestFormPrintoutMixin(ERP5TypeTestCase):
+  run_all_test = 1
 
-class TestFormPrintout(ERP5TypeTestCase):
+  def getBusinessTemplateList(self):
+    return ('erp5_base', 'erp5_ui_test', 'erp5_odt_style')
+
+  def login(self):
+    uf = self.getPortal().acl_users
+    uf._doAddUser('zope', '', ['Manager'], [])
+    user = uf.getUserById('zope').__of__(uf)
+    newSecurityManager(None, user)
+
+  def setSystemPreference(self):
+    default_pref = self.portal.portal_preferences.default_site_preference
+    default_pref.setPreferredOoodocServerAddress('127.0.0.1')
+    default_pref.setPreferredOoodocServerPortNumber('8008')
+    #default_pref.setPreferredConversionCacheFactory('document_cache_factory')
+    if default_pref.getPreferenceState() != 'global':
+      default_pref.enable()
+
+  def _validate(self, odf_file_data):
+    error_list = self.validator.validate(odf_file_data)
+    if error_list:
+      self.fail(''.join(error_list))
+
+  def getODFDocumentFromPrintout(self, printout_form):
+    '''return odf document from the printout
+    '''
+    document_file = getattr(self.portal, printout_form.template, None)
+    document_file = StringIO(document_file).read()
+    if document_file is not None:
+      return document_file
+    raise ValueError ('%s template not found' % printout_form.template)
+
+class TestFormPrintout(TestFormPrintoutMixin):
   run_all_test = 1
 
   def getTitle(self):
@@ -54,9 +84,6 @@ class TestFormPrintout(ERP5TypeTestCase):
       Return the title of the current test set.
     """
     return "FormPrintout"
-
-  def getBusinessTemplateList(self):
-    return ('erp5_base', 'erp5_ui_test', 'erp5_odt_style')
 
   def afterSetUp(self):
     self.login()
@@ -137,34 +164,6 @@ class TestFormPrintout(ERP5TypeTestCase):
       test1.newContent("foo_2", portal_type='Foo Line')
     transaction.commit()
     self.tic()
-
-  def login(self):
-    uf = self.getPortal().acl_users
-    uf._doAddUser('tatuya', '', ['Manager'], [])
-    user = uf.getUserById('tatuya').__of__(uf)
-    newSecurityManager(None, user)
-
-  def setSystemPreference(self):
-    default_pref = self.portal.portal_preferences.default_site_preference
-    default_pref.setPreferredOoodocServerAddress('127.0.0.1')
-    default_pref.setPreferredOoodocServerPortNumber('8008')
-    #default_pref.setPreferredConversionCacheFactory('document_cache_factory')
-    if default_pref.getPreferenceState() != 'global':
-      default_pref.enable()
- 
-  def _validate(self, odf_file_data):
-    error_list = self.validator.validate(odf_file_data)
-    if error_list:
-      self.fail(''.join(error_list))
-
-  def getODFDocumentFromPrintout(self, printout_form):
-    '''return odf document from the printout
-    '''
-    document_file = getattr(self.portal, printout_form.template, None)
-    document_file = StringIO(document_file).read()
-    if document_file is not None:
-      return document_file
-    raise ValueError ('%s template not found' % printout_form.template)
 
   def test_01_Paragraph(self, run=run_all_test):
     """

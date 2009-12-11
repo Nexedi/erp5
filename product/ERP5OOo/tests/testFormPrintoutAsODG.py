@@ -30,13 +30,13 @@
 import unittest
 import transaction
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from Products.ERP5OOo.tests.testFormPrintout import TestFormPrintout
+from Products.ERP5OOo.tests.testFormPrintout import TestFormPrintoutMixin
 from Products.ERP5OOo.OOoUtils import OOoBuilder
 from Products.ERP5OOo.tests.utils import Validator
 from lxml import etree
 import os
 
-class TestFormPrintoutAsODG(TestFormPrintout):
+class TestFormPrintoutAsODG(TestFormPrintoutMixin):
   run_all_test = 1
 
   def getTitle(self):
@@ -123,8 +123,7 @@ class TestFormPrintoutAsODG(TestFormPrintout):
 
     style_dict = {'{urn:oasis:names:tc:opendocument:xmlns:text:1.0}span':
                     {'{urn:oasis:names:tc:opendocument:xmlns:text:1.0}style-name': 'T2'},
-                  '{urn:oasis:names:tc:opendocument:xmlns:text:1.0}p':
-                    {'{urn:oasis:names:tc:opendocument:xmlns:text:1.0}style-name': 'P2'}
+                  '{urn:oasis:names:tc:opendocument:xmlns:text:1.0}p': {}
                  }
 
     # test target
