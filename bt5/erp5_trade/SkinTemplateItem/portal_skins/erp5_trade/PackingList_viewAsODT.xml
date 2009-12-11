@@ -600,7 +600,8 @@ AAA=</string> </value>
                   <text:p text:style-name=\'Table_20_Contents\'/>\n
                 </table:table-cell>\n
               </table:table-row>\n
-              <table:table-row table:style-name=\'Tableau3.7\'>\n
+              <table:table-row table:style-name=\'Tableau3.7\'\n
+                  tal:attributes="table:style-name python: data_dict[\'description\'] and \'DynamicTableau3.7\' or \'EmptyTableau3.7\'">\n
                 <table:table-cell table:style-name=\'Tableau3.A7\' table:number-columns-spanned=\'5\' office:value-type=\'string\'>\n
                   <text:p text:style-name=\'P3\'><tal:block tal:repeat="line data_dict/description"><tal:block\n
                           tal:replace="line"/><text:line-break tal:condition="not:repeat/line/end"/></tal:block>\n
