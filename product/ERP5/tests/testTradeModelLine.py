@@ -1441,7 +1441,7 @@ class TestTradeModelLine(TestTradeModelLineMixin):
 
       According to Depth-first search algorithm, result of this graph is:
       [trade_condition_1, trade_condition_2, trade_condition_3,
-      trade_condition_4, trade_condition_5]
+      trade_condition_4]
     '''
     trade_condition_1 = self.createTradeCondition()
     trade_condition_2 = self.createTradeCondition()
@@ -1458,6 +1458,46 @@ class TestTradeModelLine(TestTradeModelLineMixin):
     self.assertEquals(
       [trade_condition_1, trade_condition_2, trade_condition_3,
        trade_condition_4], specialise_value_list)
+
+
+  def test_findSpecialiseValueListWithPortalType(self):
+    '''
+      check that findSpecialiseValueList is able to return all the inheritance
+      model tree using Depth-first search with a specific portal_type asked
+
+                                  trade_condition_1
+                                    /           \
+                                   /             \
+                                  /               \
+                       trade_condition_2       trade_condition_3
+                               |
+                               |
+                               |
+                        trade_condition_4
+                               |
+                               |
+                               |
+                        business_process
+                        
+    As only business_process will be a "Business Process" and we search for business process
+    the result must be [business_process]
+    '''
+    trade_condition_1 = self.createTradeCondition()
+    trade_condition_2 = self.createTradeCondition()
+    trade_condition_3 = self.createTradeCondition()
+    trade_condition_4 = self.createTradeCondition()
+    business_process = self.createBusinessProcess()
+    
+    trade_condition_1.setSpecialiseValueList((trade_condition_2,
+      trade_condition_3))
+    trade_condition_2.setSpecialiseValue(trade_condition_4)
+    trade_condition_4.setSpecialiseValue(business_process)
+    
+    specialise_value_list = trade_condition_1.findSpecialiseValueList(
+      portal_type_list = ['Business Process'],
+      context=trade_condition_1)
+    self.assertEquals(len(specialise_value_list), 1)
+    self.assertEquals([business_process,] , specialise_value_list)
 
   def test_TradeConditionTradeModelLineReferenceIsShadowingComposition(self):
     trade_condition_1 = self.createTradeCondition()
