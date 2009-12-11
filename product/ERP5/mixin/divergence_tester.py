@@ -84,6 +84,7 @@ class DivergenceTesterMixin:
         decision_value=decision_value,
         prevision_value=prevision_value,
         tested_property=self.getTestedProperty(),
+        tester_relative_url=self.getRelativeUrl(),
         message=message,
         mapping=mapping
         )
