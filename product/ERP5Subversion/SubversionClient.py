@@ -305,6 +305,15 @@ try:
       return diff
     
     def revert(self, path, recurse=False):
+      try:
+        depth = pysvn.depth.infinity
+      except AttributeError:
+        depth = None
+      if depth is not None:
+        try:
+          return self.client.revert(path, depth=depth)
+        except TypeError:
+          pass
       return self.client.revert(path, recurse)
     
     def switch(self, path, url):
