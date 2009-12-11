@@ -1,4 +1,7 @@
 2009-12-11 yusei
+* Display use category on trade model lines and aggregated amounts.
+
+2009-12-11 yusei
 * Add use category field to TradeModelLine_view.
 
 2009-12-1 yusei

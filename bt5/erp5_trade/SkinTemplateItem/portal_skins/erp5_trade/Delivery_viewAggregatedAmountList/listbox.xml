@@ -156,6 +156,10 @@
                           <string>base_application_title_list</string>
                           <string>Base Application</string>
                         </tuple>
+                        <tuple>
+                          <string>use_title_list</string>
+                          <string>Use</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>

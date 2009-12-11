@@ -13,17 +13,16 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>columns</string>
-                <string>editable_columns</string>
-                <string>portal_types</string>
-                <string>selection_name</string>
+                <string>default</string>
+                <string>display_width</string>
+                <string>editable</string>
                 <string>title</string>
               </list>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>listbox</string> </value>
+            <value> <string>listbox_use_title_list</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -60,6 +59,20 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>default</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>display_width</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>editable</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -69,6 +82,10 @@
                 </item>
                 <item>
                     <key> <string>target</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -79,81 +96,24 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>columns</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>title</string>
-                          <string>Title</string>
-                        </tuple>
-                        <tuple>
-                          <string>reference</string>
-                          <string>Reference</string>
-                        </tuple>
-                        <tuple>
-                          <string>resource_title</string>
-                          <string>Service</string>
-                        </tuple>
-                        <tuple>
-                          <string>price</string>
-                          <string>Price</string>
-                        </tuple>
-                        <tuple>
-                          <string>base_application_title_list</string>
-                          <string>Base Applications</string>
-                        </tuple>
-                        <tuple>
-                          <string>base_contribution_title_list</string>
-                          <string>Base Contributions</string>
-                        </tuple>
-                        <tuple>
-                          <string>use_title_list</string>
-                          <string>Use</string>
-                        </tuple>
-                        <tuple>
-                          <string>trade_phase_title</string>
-                          <string>Trade Phase</string>
-                        </tuple>
-                      </list>
-                    </value>
+                    <key> <string>default</string> </key>
+                    <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>editable_columns</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>price</string>
-                          <string>price</string>
-                        </tuple>
-                        <tuple>
-                          <string>reference</string>
-                          <string>reference</string>
-                        </tuple>
-                      </list>
-                    </value>
+                    <key> <string>display_width</string> </key>
+                    <value> <int>20</int> </value>
+                </item>
+                <item>
+                    <key> <string>editable</string> </key>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_view_mode_listbox</string> </value>
+                    <value> <string>my_string_field</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string>Base_viewFieldLibrary</string> </value>
-                </item>
-                <item>
-                    <key> <string>portal_types</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>Trade Model Line</string>
-                          <string>Trade Model Line</string>
-                        </tuple>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>selection_name</string> </key>
-                    <value> <string>trade_condition_view_trade_model_line_list_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
@@ -161,10 +121,26 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Trade Model Lines</string> </value>
+                    <value> <string>Use</string> </value>
                 </item>
               </dictionary>
             </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>python:\', \'.join(cell.getUseTitleList())</string> </value>
         </item>
       </dictionary>
     </pickle>

@@ -99,6 +99,7 @@
                         <string>listbox_base_application_title_list</string>
                         <string>listbox_quantity</string>
                         <string>listbox_base_contribution_title_list</string>
+                        <string>listbox_use_title_list</string>
                       </list>
                     </value>
                 </item>
