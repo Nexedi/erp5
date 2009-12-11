@@ -78,7 +78,6 @@ class SolverDecision(XMLObject):
                     , PropertySheet.SolverSelection
                     )
   # XXX-JPS missing property sheet or categories to specify 
-  #   delivery -> the delivery lines which are solved by the decision
   #   (default)delivery or solver_application or order -> the object of application of resolution
   #         ie. a specified delivery, a specified delivery line, etc.
   #         (delivery should be enough)

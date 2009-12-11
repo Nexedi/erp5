@@ -40,4 +40,4 @@ class SolverSelection:
     
   )
 
-  _categories = ('solver',)
+  _categories = ('causality', 'delivery', 'solver',)
