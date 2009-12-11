@@ -15,7 +15,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts45749270.37</string> </value>
+            <value> <string>ts60538662.54</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -561,7 +561,12 @@ DlgAboutInfo\t\t: "For further information go to",\r\n
 DlgDivGeneralTab\t: "General",\r\n
 DlgDivAdvancedTab\t: "Advanced",\r\n
 DlgDivStyle\t\t: "Style",\r\n
-DlgDivInlineStyle\t: "Inline Style"\r\n
+DlgDivInlineStyle\t: "Inline Style",\r\n
+\r\n
+ScaytTitle\t\t\t: "SCAYT",\t//MISSING\r\n
+ScaytTitleOptions\t: "Options",\t//MISSING\r\n
+ScaytTitleLangs\t\t: "Languages",\t//MISSING\r\n
+ScaytTitleAbout\t\t: "About"\t//MISSING\r\n
 };\r\n
 
 
@@ -573,7 +578,7 @@ DlgDivInlineStyle\t: "Inline Style"\r\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <long>17984</long> </value>
+            <value> <int>18145</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

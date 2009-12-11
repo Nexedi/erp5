@@ -15,7 +15,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts45749263.11</string> </value>
+            <value> <string>ts60538662.58</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -339,7 +339,7 @@ DlgTableCellSpace\t: "Odstęp pomiędzy komórkami",\r\n
 DlgTableCellPad\t\t: "Margines wewnętrzny komórek",\r\n
 DlgTableCaption\t\t: "Tytuł",\r\n
 DlgTableSummary\t\t: "Podsumowanie",\r\n
-DlgTableHeaders\t\t: "Headers",\t//MISSING\r\n
+DlgTableHeaders\t\t: "Nagłówki",\r\n
 DlgTableHeadersNone\t\t: "None",\t//MISSING\r\n
 DlgTableHeadersColumn\t: "First column",\t//MISSING\r\n
 DlgTableHeadersRow\t\t: "First Row",\t//MISSING\r\n
@@ -543,7 +543,7 @@ DlgDocMeCopy\t\t: "Prawa autorskie",\r\n
 DlgDocPreview\t\t: "Podgląd",\r\n
 \r\n
 // Templates Dialog\r\n
-Templates\t\t\t: "Sablony",\r\n
+Templates\t\t\t: "Szablony",\r\n
 DlgTemplatesTitle\t: "Szablony zawartości",\r\n
 DlgTemplatesSelMsg\t: "Wybierz szablon do otwarcia w edytorze<br>(obecna zawartość okna edytora zostanie utracona):",\r\n
 DlgTemplatesLoading\t: "Ładowanie listy szablonów. Proszę czekać...",\r\n
@@ -561,7 +561,12 @@ DlgAboutInfo\t\t: "Więcej informacji uzyskasz pod adresem",\r\n
 DlgDivGeneralTab\t: "General",\t//MISSING\r\n
 DlgDivAdvancedTab\t: "Advanced",\t//MISSING\r\n
 DlgDivStyle\t\t: "Style",\t//MISSING\r\n
-DlgDivInlineStyle\t: "Inline Style"\t//MISSING\r\n
+DlgDivInlineStyle\t: "Inline Style",\t//MISSING\r\n
+\r\n
+ScaytTitle\t\t\t: "SCAYT",\t//MISSING\r\n
+ScaytTitleOptions\t: "Options",\t//MISSING\r\n
+ScaytTitleLangs\t\t: "Languages",\t//MISSING\r\n
+ScaytTitleAbout\t\t: "About"\t//MISSING\r\n
 };\r\n
 
 
@@ -573,7 +578,7 @@ DlgDivInlineStyle\t: "Inline Style"\t//MISSING\r\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <long>19351</long> </value>
+            <value> <int>19506</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

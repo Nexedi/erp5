@@ -15,7 +15,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts45749265.71</string> </value>
+            <value> <string>ts60538662.6</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -104,9 +104,9 @@ BlockJustify\t\t: "Obojestranska poravnava",\r\n
 DecreaseIndent\t\t: "Zmanjšaj zamik",\r\n
 IncreaseIndent\t\t: "Povečaj zamik",\r\n
 Blockquote\t\t\t: "Citat",\r\n
-CreateDiv\t\t\t: "Create Div Container",\t//MISSING\r\n
-EditDiv\t\t\t\t: "Edit Div Container",\t//MISSING\r\n
-DeleteDiv\t\t\t: "Remove Div Container",\t//MISSING\r\n
+CreateDiv\t\t\t: "Ustvari Div element",\r\n
+EditDiv\t\t\t\t: "Uredi Div element",\r\n
+DeleteDiv\t\t\t: "Odstrani Div element",\r\n
 Undo\t\t\t\t: "Razveljavi",\r\n
 Redo\t\t\t\t: "Ponovi",\r\n
 NumberedListLbl\t\t: "Oštevilčen seznam",\r\n
@@ -192,7 +192,7 @@ UnknownToolbarSet\t: "Skupina orodnih vrstic \\"%1\\" ne obstoja",\r\n
 NoActiveX\t\t\t: "Varnostne nastavitve vašega brskalnika lahko omejijo delovanje nekaterih zmožnosti urejevalnika. Če ne želite zaznavati napak in sporočil o manjkajočih zmožnostih, omogočite možnost \\"Zaženi ActiveX kontrolnike in vtičnike\\".",\r\n
 BrowseServerBlocked : "Brskalnik virov se ne more odpreti. Prepričajte se, da je preprečevanje pojavnih oken onemogočeno.",\r\n
 DialogBlocked\t\t: "Pogovorno okno se ni moglo odpreti. Prepričajte se, da je preprečevanje pojavnih oken onemogočeno.",\r\n
-VisitLinkBlocked\t: "It was not possible to open a new window. Make sure all popup blockers are disabled.",\t//MISSING\r\n
+VisitLinkBlocked\t: "Pogovorno okno se ni moglo odpreti. Prepričajte se, da je preprečevanje pojavnih oken onemogočeno.",\r\n
 \r\n
 // Dialogs\r\n
 DlgBtnOK\t\t\t: "V redu",\r\n
@@ -339,11 +339,11 @@ DlgTableCellSpace\t: "Razmik med celicami",\r\n
 DlgTableCellPad\t\t: "Polnilo med celicami",\r\n
 DlgTableCaption\t\t: "Naslov",\r\n
 DlgTableSummary\t\t: "Povzetek",\r\n
-DlgTableHeaders\t\t: "Headers",\t//MISSING\r\n
-DlgTableHeadersNone\t\t: "None",\t//MISSING\r\n
-DlgTableHeadersColumn\t: "First column",\t//MISSING\r\n
-DlgTableHeadersRow\t\t: "First Row",\t//MISSING\r\n
-DlgTableHeadersBoth\t\t: "Both",\t//MISSING\r\n
+DlgTableHeaders\t\t: "Glava",\r\n
+DlgTableHeadersNone\t\t: "Brez",\r\n
+DlgTableHeadersColumn\t: "Prvi stolpec",\r\n
+DlgTableHeadersRow\t\t: "Prva vrstica",\r\n
+DlgTableHeadersBoth\t\t: "Oboje",\r\n
 \r\n
 // Table Cell Dialog\r\n
 DlgCellTitle\t\t: "Lastnosti celice",\r\n
@@ -366,9 +366,9 @@ DlgCellVerAlignTop\t: "Na vrh",\r\n
 DlgCellVerAlignMiddle\t: "V sredino",\r\n
 DlgCellVerAlignBottom\t: "Na dno",\r\n
 DlgCellVerAlignBaseline\t: "Na osnovno črto",\r\n
-DlgCellType\t\t: "Cell Type",\t//MISSING\r\n
-DlgCellTypeData\t\t: "Data",\t//MISSING\r\n
-DlgCellTypeHeader\t: "Header",\t//MISSING\r\n
+DlgCellType\t\t: "Tip celice",\r\n
+DlgCellTypeData\t\t: "Podatek",\r\n
+DlgCellTypeHeader\t: "Naslov",\r\n
 DlgCellRowSpan\t\t: "Spojenih vrstic (row-span)",\r\n
 DlgCellCollSpan\t\t: "Spojenih stolpcev (col-span)",\r\n
 DlgCellBackColor\t: "Barva ozadja",\r\n
@@ -558,10 +558,15 @@ DlgAboutVersion\t\t: "različica",\r\n
 DlgAboutInfo\t\t: "Za več informacij obiščite",\r\n
 \r\n
 // Div Dialog\r\n
-DlgDivGeneralTab\t: "General",\t//MISSING\r\n
-DlgDivAdvancedTab\t: "Advanced",\t//MISSING\r\n
-DlgDivStyle\t\t: "Style",\t//MISSING\r\n
-DlgDivInlineStyle\t: "Inline Style"\t//MISSING\r\n
+DlgDivGeneralTab\t: "Splošno",\r\n
+DlgDivAdvancedTab\t: "Napredno",\r\n
+DlgDivStyle\t\t: "Oblika",\r\n
+DlgDivInlineStyle\t: "Inline Style",\t//MISSING\r\n
+\r\n
+ScaytTitle\t\t\t: "SCAYT",\t//MISSING\r\n
+ScaytTitleOptions\t: "Options",\t//MISSING\r\n
+ScaytTitleLangs\t\t: "Languages",\t//MISSING\r\n
+ScaytTitleAbout\t\t: "About"\t//MISSING\r\n
 };\r\n
 
 
@@ -573,7 +578,7 @@ DlgDivInlineStyle\t: "Inline Style"\t//MISSING\r\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <long>18879</long> </value>
+            <value> <int>18913</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

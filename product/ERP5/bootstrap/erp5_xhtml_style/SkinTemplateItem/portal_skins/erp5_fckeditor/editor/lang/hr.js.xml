@@ -15,7 +15,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts45749257.99</string> </value>
+            <value> <string>ts60538662.56</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -561,7 +561,12 @@ DlgAboutInfo\t\t: "Za više informacija posjetite",\r\n
 DlgDivGeneralTab\t: "Općenito",\r\n
 DlgDivAdvancedTab\t: "Napredno",\r\n
 DlgDivStyle\t\t: "Stil",\r\n
-DlgDivInlineStyle\t: "Stil u redu"\r\n
+DlgDivInlineStyle\t: "Stil u redu",\r\n
+\r\n
+ScaytTitle\t\t\t: "SCAYT",\t//MISSING\r\n
+ScaytTitleOptions\t: "Options",\t//MISSING\r\n
+ScaytTitleLangs\t\t: "Languages",\t//MISSING\r\n
+ScaytTitleAbout\t\t: "About"\t//MISSING\r\n
 };\r\n
 
 
@@ -573,7 +578,7 @@ DlgDivInlineStyle\t: "Stil u redu"\r\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <long>18493</long> </value>
+            <value> <int>18654</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

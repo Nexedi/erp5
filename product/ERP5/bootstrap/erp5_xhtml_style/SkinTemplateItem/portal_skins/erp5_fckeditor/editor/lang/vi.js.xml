@@ -15,7 +15,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts45749268.5</string> </value>
+            <value> <string>ts60538662.6</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -561,7 +561,12 @@ DlgAboutInfo\t\t: "Để biết thêm thông tin, hãy truy cập",\r\n
 DlgDivGeneralTab\t: "Chung",\r\n
 DlgDivAdvancedTab\t: "Nâng cao",\r\n
 DlgDivStyle\t\t: "Kiểu Style",\r\n
-DlgDivInlineStyle\t: "Kiểu Style Trực tiếp"\r\n
+DlgDivInlineStyle\t: "Kiểu Style Trực tiếp",\r\n
+\r\n
+ScaytTitle\t\t\t: "SCAYT",\t//MISSING\r\n
+ScaytTitleOptions\t: "Options",\t//MISSING\r\n
+ScaytTitleLangs\t\t: "Languages",\t//MISSING\r\n
+ScaytTitleAbout\t\t: "About"\t//MISSING\r\n
 };\r\n
 
 
@@ -573,7 +578,7 @@ DlgDivInlineStyle\t: "Kiểu Style Trực tiếp"\r\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <long>20830</long> </value>
+            <value> <int>20991</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

@@ -15,7 +15,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts45749253.85</string> </value>
+            <value> <string>ts60538662.53</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -339,11 +339,11 @@ DlgTableCellSpace\t: "Vzdálenost buněk",\r\n
 DlgTableCellPad\t\t: "Odsazení obsahu",\r\n
 DlgTableCaption\t\t: "Popis",\r\n
 DlgTableSummary\t\t: "Souhrn",\r\n
-DlgTableHeaders\t\t: "Headers",\t//MISSING\r\n
-DlgTableHeadersNone\t\t: "None",\t//MISSING\r\n
-DlgTableHeadersColumn\t: "First column",\t//MISSING\r\n
-DlgTableHeadersRow\t\t: "First Row",\t//MISSING\r\n
-DlgTableHeadersBoth\t\t: "Both",\t//MISSING\r\n
+DlgTableHeaders\t\t: "Záhlaví",\r\n
+DlgTableHeadersNone\t\t: "Žádné",\r\n
+DlgTableHeadersColumn\t: "První sloupec",\r\n
+DlgTableHeadersRow\t\t: "První řádek",\r\n
+DlgTableHeadersBoth\t\t: "Oboje",\r\n
 \r\n
 // Table Cell Dialog\r\n
 DlgCellTitle\t\t: "Vlastnosti buňky",\r\n
@@ -366,9 +366,9 @@ DlgCellVerAlignTop\t: "Nahoru",\r\n
 DlgCellVerAlignMiddle\t: "Doprostřed",\r\n
 DlgCellVerAlignBottom\t: "Dolů",\r\n
 DlgCellVerAlignBaseline\t: "Na účaří",\r\n
-DlgCellType\t\t: "Cell Type",\t//MISSING\r\n
-DlgCellTypeData\t\t: "Data",\t//MISSING\r\n
-DlgCellTypeHeader\t: "Header",\t//MISSING\r\n
+DlgCellType\t\t: "Typ buňky",\r\n
+DlgCellTypeData\t\t: "Data",\r\n
+DlgCellTypeHeader\t: "Zálaví",\r\n
 DlgCellRowSpan\t\t: "Sloučené řádky",\r\n
 DlgCellCollSpan\t\t: "Sloučené sloupce",\r\n
 DlgCellBackColor\t: "Barva pozadí",\r\n
@@ -561,7 +561,12 @@ DlgAboutInfo\t\t: "Více informací získáte na",\r\n
 DlgDivGeneralTab\t: "Obecné",\r\n
 DlgDivAdvancedTab\t: "Rozšířené",\r\n
 DlgDivStyle\t\t: "Styl",\r\n
-DlgDivInlineStyle\t: "Vložený styl"\r\n
+DlgDivInlineStyle\t: "Vložený styl",\r\n
+\r\n
+ScaytTitle\t\t\t: "SCAYT",\t//MISSING\r\n
+ScaytTitleOptions\t: "Options",\t//MISSING\r\n
+ScaytTitleLangs\t\t: "Languages",\t//MISSING\r\n
+ScaytTitleAbout\t\t: "About"\t//MISSING\r\n
 };\r\n
 
 
@@ -573,7 +578,7 @@ DlgDivInlineStyle\t: "Vložený styl"\r\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <long>19210</long> </value>
+            <value> <int>19308</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

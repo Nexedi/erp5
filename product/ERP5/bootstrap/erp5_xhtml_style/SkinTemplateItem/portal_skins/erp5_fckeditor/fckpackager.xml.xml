@@ -15,7 +15,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts45749204.76</string> </value>
+            <value> <string>ts60538662.65</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -175,6 +175,7 @@
 \t\t\074File path="editor/_source/classes/fcktoolbarfontscombo.js" /\076\r\n
 \t\t\074File path="editor/_source/classes/fcktoolbarfontsizecombo.js" /\076\r\n
 \t\t\074File path="editor/_source/classes/fcktoolbarpanelbutton.js" /\076\r\n
+\t\t\074File path="editor/_source/internals/fckscayt.js" /\076\r\n
 \t\t\074File path="editor/_source/internals/fcktoolbaritems.js" /\076\r\n
 \t\t\074File path="editor/_source/classes/fcktoolbar.js" /\076\r\n
 \t\t\074File path="editor/_source/classes/fcktoolbarbreak_ie.js" /\076\r\n
@@ -271,6 +272,7 @@
 \t\t\074File path="editor/_source/classes/fcktoolbarfontscombo.js" /\076\r\n
 \t\t\074File path="editor/_source/classes/fcktoolbarfontsizecombo.js" /\076\r\n
 \t\t\074File path="editor/_source/classes/fcktoolbarpanelbutton.js" /\076\r\n
+\t\t\074File path="editor/_source/internals/fckscayt.js" /\076\r\n
 \t\t\074File path="editor/_source/internals/fcktoolbaritems.js" /\076\r\n
 \t\t\074File path="editor/_source/classes/fcktoolbar.js" /\076\r\n
 \t\t\074File path="editor/_source/classes/fcktoolbarbreak_gecko.js" /\076\r\n
@@ -297,7 +299,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <long>13201</long> </value>
+            <value> <int>13313</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

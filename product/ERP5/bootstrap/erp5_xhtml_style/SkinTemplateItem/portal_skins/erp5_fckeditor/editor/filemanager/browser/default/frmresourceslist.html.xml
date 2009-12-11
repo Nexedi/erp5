@@ -15,7 +15,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts49309338.53</string> </value>
+            <value> <string>ts60538662.39</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -120,7 +120,7 @@ function OpenFolder( folderPath )\r\n
 \r\n
 function OpenFile( fileUrl )\r\n
 {\r\n
-\twindow.top.opener.SetUrl( encodeURI( fileUrl ).replace( \'#\', \'%23\' ) ) ;\r\n
+\twindow.top.opener.SetUrl( fileUrl ) ;\r\n
 \twindow.top.close() ;\r\n
 \twindow.top.opener.focus() ;\r\n
 }\r\n
@@ -176,7 +176,7 @@ function GetFoldersAndFilesCallBack( fckXml )\r\n
 \r\n
 \t\t// Get the optional "url" attribute. If not available, build the url.\r\n
 \t\tvar oFileUrlAtt = oNodes[j].attributes.getNamedItem(\'url\') ;\r\n
-\t\tvar sFileUrl = oFileUrlAtt != null ? oFileUrlAtt.value : sCurrentFolderUrl + sFileName ;\r\n
+\t\tvar sFileUrl = oFileUrlAtt != null ? oFileUrlAtt.value : encodeURI( sCurrentFolderUrl + sFileName ).replace( /#/g, \'%23\' ) ;\r\n
 \r\n
 \t\toHtml.Append( oListManager.GetFileRowHtml( sFileName, sFileUrl, sFileSize ) ) ;\r\n
 \t}\r\n
@@ -208,7 +208,7 @@ window.onload = function()\r\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>5004</int> </value>
+            <value> <int>5005</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

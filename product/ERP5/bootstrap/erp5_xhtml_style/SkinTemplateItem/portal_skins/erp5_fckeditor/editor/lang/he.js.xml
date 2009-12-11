@@ -15,7 +15,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts45749257.12</string> </value>
+            <value> <string>ts60538662.56</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -561,7 +561,12 @@ DlgAboutInfo\t\t: "מידע נוסף ניתן למצוא כאן:",\r\n
 DlgDivGeneralTab\t: "כללי",\r\n
 DlgDivAdvancedTab\t: "מתקדם",\r\n
 DlgDivStyle\t\t: "סגנון",\r\n
-DlgDivInlineStyle\t: "סגנון בתוך השורה"\r\n
+DlgDivInlineStyle\t: "סגנון בתוך השורה",\r\n
+\r\n
+ScaytTitle\t\t\t: "SCAYT",\t//MISSING\r\n
+ScaytTitleOptions\t: "Options",\t//MISSING\r\n
+ScaytTitleLangs\t\t: "Languages",\t//MISSING\r\n
+ScaytTitleAbout\t\t: "About"\t//MISSING\r\n
 };\r\n
 
 
@@ -573,7 +578,7 @@ DlgDivInlineStyle\t: "סגנון בתוך השורה"\r\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <long>21236</long> </value>
+            <value> <int>21397</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

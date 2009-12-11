@@ -15,7 +15,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts49309338.52</string> </value>
+            <value> <string>ts60538662.38</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -170,7 +170,7 @@ function SelectBorderColor( color )\r\n
 \r\n
 function SelectColor( wich )\r\n
 {\r\n
-\toEditor.FCKDialog.OpenDialog( \'FCKDialog_Color\', oEditor.FCKLang.DlgColorTitle, \'dialog/fck_colorselector.html\', 410, 320, wich == \'Back\' ? SelectBackColor : SelectBorderColor, window ) ;\r\n
+\toEditor.FCKDialog.OpenDialog( \'FCKDialog_Color\', oEditor.FCKLang.DlgColorTitle, \'dialog/fck_colorselector.html\', 410, 320, wich == \'Back\' ? SelectBackColor : SelectBorderColor ) ;\r\n
 }\r\n
 \r\n
 \t</script>\r\n
@@ -255,8 +255,8 @@ function SelectColor( wich )\r\n
 \t\t\t\t\t\t\t\t\t <span fcklang="DlgCellType">Cell Type</span>:</td>\r\n
 \t\t\t\t\t\t\t\t\t<td colspan="2">\r\n
 \t\t\t\t\t\t\t\t\t\t&nbsp; <select id="selCellType">\r\n
-\t\t\t\t\t\t\t\t\t\t\t<option fcklang="DlgCellTypeData" value="td" />Data\r\n
-\t\t\t\t\t\t\t\t\t\t\t<option fcklang="DlgCellTypeHeader" value="th" />Header\r\n
+\t\t\t\t\t\t\t\t\t\t\t<option fcklang="DlgCellTypeData" value="td">Data</option>\r\n
+\t\t\t\t\t\t\t\t\t\t\t<option fcklang="DlgCellTypeHeader" value="th">Header</option>\r\n
 \t\t\t\t\t\t\t\t\t\t</select>\r\n
 \t\t\t\t\t\t\t\t</tr>\r\n
 \t\t\t\t\t\t\t\t<tr>\r\n
@@ -332,7 +332,7 @@ function SelectColor( wich )\r\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>9930</int> </value>
+            <value> <int>9936</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

@@ -15,7 +15,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts45749260.09</string> </value>
+            <value> <string>ts60538662.57</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -75,9 +75,9 @@ RemoveFormat\t\t: "Panaikinti formatą",\r\n
 InsertLinkLbl\t\t: "Nuoroda",\r\n
 InsertLink\t\t\t: "Įterpti/taisyti nuorodą",\r\n
 RemoveLink\t\t\t: "Panaikinti nuorodą",\r\n
-VisitLink\t\t\t: "Open Link",\t//MISSING\r\n
+VisitLink\t\t\t: "Atidaryti nuorodą",\r\n
 Anchor\t\t\t\t: "Įterpti/modifikuoti žymę",\r\n
-AnchorDelete\t\t: "Remove Anchor",\t//MISSING\r\n
+AnchorDelete\t\t: "Naikinti žymę",\r\n
 InsertImageLbl\t\t: "Vaizdas",\r\n
 InsertImage\t\t\t: "Įterpti/taisyti vaizdą",\r\n
 InsertFlashLbl\t\t: "Flash",\r\n
@@ -103,10 +103,10 @@ RightJustify\t\t: "Lygiuoti dešinę",\r\n
 BlockJustify\t\t: "Lygiuoti abi puses",\r\n
 DecreaseIndent\t\t: "Sumažinti įtrauką",\r\n
 IncreaseIndent\t\t: "Padidinti įtrauką",\r\n
-Blockquote\t\t\t: "Blockquote",\t//MISSING\r\n
-CreateDiv\t\t\t: "Create Div Container",\t//MISSING\r\n
-EditDiv\t\t\t\t: "Edit Div Container",\t//MISSING\r\n
-DeleteDiv\t\t\t: "Remove Div Container",\t//MISSING\r\n
+Blockquote\t\t\t: "Citata",\r\n
+CreateDiv\t\t\t: "Sukurti Div elementą",\r\n
+EditDiv\t\t\t\t: "Reaguoti Div elementą",\r\n
+DeleteDiv\t\t\t: "Šalinti Div elementą",\r\n
 Undo\t\t\t\t: "Atšaukti",\r\n
 Redo\t\t\t\t: "Atstatyti",\r\n
 NumberedListLbl\t\t: "Numeruotas sąrašas",\r\n
@@ -139,28 +139,28 @@ Button\t\t\t: "Mygtukas",\r\n
 SelectionField\t: "Atrankos laukas",\r\n
 ImageButton\t\t: "Vaizdinis mygtukas",\r\n
 \r\n
-FitWindow\t\t: "Maximize the editor size",\t//MISSING\r\n
-ShowBlocks\t\t: "Show Blocks",\t//MISSING\r\n
+FitWindow\t\t: "Padidinti redaktorių",\r\n
+ShowBlocks\t\t: "Rodyti blokus",\r\n
 \r\n
 // Context Menu\r\n
 EditLink\t\t\t: "Taisyti nuorodą",\r\n
-CellCM\t\t\t\t: "Cell",\t//MISSING\r\n
-RowCM\t\t\t\t: "Row",\t//MISSING\r\n
-ColumnCM\t\t\t: "Column",\t//MISSING\r\n
-InsertRowAfter\t\t: "Insert Row After",\t//MISSING\r\n
-InsertRowBefore\t\t: "Insert Row Before",\t//MISSING\r\n
+CellCM\t\t\t\t: "Langelis",\r\n
+RowCM\t\t\t\t: "Eilutė",\r\n
+ColumnCM\t\t\t: "Stulpelis",\r\n
+InsertRowAfter\t\t: "Įterpti eilutę po",\r\n
+InsertRowBefore\t\t: "Įterpti eilutę prieš",\r\n
 DeleteRows\t\t\t: "Šalinti eilutes",\r\n
-InsertColumnAfter\t: "Insert Column After",\t//MISSING\r\n
-InsertColumnBefore\t: "Insert Column Before",\t//MISSING\r\n
+InsertColumnAfter\t: "Įterpti stulpelį po",\r\n
+InsertColumnBefore\t: "Įterpti stulpelį prieš",\r\n
 DeleteColumns\t\t: "Šalinti stulpelius",\r\n
-InsertCellAfter\t\t: "Insert Cell After",\t//MISSING\r\n
-InsertCellBefore\t: "Insert Cell Before",\t//MISSING\r\n
+InsertCellAfter\t\t: "Įterpti langelį po",\r\n
+InsertCellBefore\t: "Įterpti langelį prieš",\r\n
 DeleteCells\t\t\t: "Šalinti langelius",\r\n
 MergeCells\t\t\t: "Sujungti langelius",\r\n
-MergeRight\t\t\t: "Merge Right",\t//MISSING\r\n
-MergeDown\t\t\t: "Merge Down",\t//MISSING\r\n
-HorizontalSplitCell\t: "Split Cell Horizontally",\t//MISSING\r\n
-VerticalSplitCell\t: "Split Cell Vertically",\t//MISSING\r\n
+MergeRight\t\t\t: "Sujungti su dešine",\r\n
+MergeDown\t\t\t: "Sujungti su apačia",\r\n
+HorizontalSplitCell\t: "Skaidyti langelį horizontaliai",\r\n
+VerticalSplitCell\t: "Skaidyti langelį vertikaliai",\r\n
 TableDelete\t\t\t: "Šalinti lentelę",\r\n
 CellProperties\t\t: "Langelio savybės",\r\n
 TableProperties\t\t: "Lentelės savybės",\r\n
@@ -192,7 +192,7 @@ UnknownToolbarSet\t: "Mygtukų juostos rinkinys \\"%1\\" neegzistuoja",\r\n
 NoActiveX\t\t\t: "Jūsų naršyklės saugumo nuostatos gali riboti kai kurias redaktoriaus savybes. Jūs turite aktyvuoti opciją \\"Run ActiveX controls and plug-ins\\". Kitu atveju Jums bus pranešama apie klaidas ir trūkstamas savybes.",\r\n
 BrowseServerBlocked : "Neįmanoma atidaryti naujo naršyklės lango. Įsitikinkite, kad iškylančių langų blokavimo programos neveiksnios.",\r\n
 DialogBlocked\t\t: "Neįmanoma atidaryti dialogo lango. Įsitikinkite, kad iškylančių langų blokavimo programos neveiksnios.",\r\n
-VisitLinkBlocked\t: "It was not possible to open a new window. Make sure all popup blockers are disabled.",\t//MISSING\r\n
+VisitLinkBlocked\t: "Neįmanoma atidaryti naujo lango. Įsitikinkite, kad iškylančių langų blokavimo programos neveiksnios.",\r\n
 \r\n
 // Dialogs\r\n
 DlgBtnOK\t\t\t: "OK",\r\n
@@ -307,7 +307,7 @@ DlgLnkPopTop\t\t: "Viršutinė pozicija",\r\n
 DlnLnkMsgNoUrl\t\t: "Prašome įvesti nuorodos URL",\r\n
 DlnLnkMsgNoEMail\t: "Prašome įvesti el.pašto adresą",\r\n
 DlnLnkMsgNoAnchor\t: "Prašome pasirinkti žymę",\r\n
-DlnLnkMsgInvPopName\t: "The popup name must begin with an alphabetic character and must not contain spaces",\t//MISSING\r\n
+DlnLnkMsgInvPopName\t: "Iššokančio lango pavadinimas privalo prasidėti lotyniška raide ir negali turėti tarpų",\r\n
 \r\n
 // Color Dialog\r\n
 DlgColorTitle\t\t: "Pasirinkite spalvą",\r\n
@@ -339,11 +339,11 @@ DlgTableCellSpace\t: "Tarpas tarp langelių",\r\n
 DlgTableCellPad\t\t: "Trapas nuo langelio rėmo iki teksto",\r\n
 DlgTableCaption\t\t: "Antraštė",\r\n
 DlgTableSummary\t\t: "Santrauka",\r\n
-DlgTableHeaders\t\t: "Headers",\t//MISSING\r\n
-DlgTableHeadersNone\t\t: "None",\t//MISSING\r\n
-DlgTableHeadersColumn\t: "First column",\t//MISSING\r\n
-DlgTableHeadersRow\t\t: "First Row",\t//MISSING\r\n
-DlgTableHeadersBoth\t\t: "Both",\t//MISSING\r\n
+DlgTableHeaders\t\t: "Antraštės",\r\n
+DlgTableHeadersNone\t\t: "Nėra",\r\n
+DlgTableHeadersColumn\t: "Pirmas stulpelis",\r\n
+DlgTableHeadersRow\t\t: "Pirma eilutė",\r\n
+DlgTableHeadersBoth\t\t: "Abu",\r\n
 \r\n
 // Table Cell Dialog\r\n
 DlgCellTitle\t\t: "Langelio savybės",\r\n
@@ -366,9 +366,9 @@ DlgCellVerAlignTop\t: "Viršų",\r\n
 DlgCellVerAlignMiddle\t: "Vidurį",\r\n
 DlgCellVerAlignBottom\t: "Apačią",\r\n
 DlgCellVerAlignBaseline\t: "Apatinę liniją",\r\n
-DlgCellType\t\t: "Cell Type",\t//MISSING\r\n
-DlgCellTypeData\t\t: "Data",\t//MISSING\r\n
-DlgCellTypeHeader\t: "Header",\t//MISSING\r\n
+DlgCellType\t\t: "Langelio tipas",\r\n
+DlgCellTypeData\t\t: "Duomenys",\r\n
+DlgCellTypeHeader\t: "Antraštė",\r\n
 DlgCellRowSpan\t\t: "Eilučių apjungimas",\r\n
 DlgCellCollSpan\t\t: "Stulpelių apjungimas",\r\n
 DlgCellBackColor\t: "Fono spalva",\r\n
@@ -376,7 +376,7 @@ DlgCellBorderColor\t: "Rėmelio spalva",\r\n
 DlgCellBtnSelect\t: "Pažymėti...",\r\n
 \r\n
 // Find and Replace Dialog\r\n
-DlgFindAndReplaceTitle\t: "Find and Replace",\t//MISSING\r\n
+DlgFindAndReplaceTitle\t: "Surasti ir pakeisti",\r\n
 \r\n
 // Find Dialog\r\n
 DlgFindTitle\t\t: "Paieška",\r\n
@@ -399,8 +399,8 @@ PasteErrorCopy\t: "Jūsų naršyklės saugumo nustatymai neleidžia redaktoriui 
 PasteAsText\t\t: "Įdėti kaip gryną tekstą",\r\n
 PasteFromWord\t: "Įdėti iš Word",\r\n
 \r\n
-DlgPasteMsg2\t: "Žemiau esančiame įvedimo lauke įdėkite tekstą, naudodami klaviatūrą (<STRONG>Ctrl+V</STRONG>) ir spūstelkite mygtuką <STRONG>OK</STRONG>.",\r\n
-DlgPasteSec\t\t: "Because of your browser security settings, the editor is not able to access your clipboard data directly. You are required to paste it again in this window.",\t//MISSING\r\n
+DlgPasteMsg2\t: "Žemiau esančiame įvedimo lauke įdėkite tekstą, naudodami klaviatūrą (<STRONG>Ctrl+V</STRONG>) ir paspauskite mygtuką <STRONG>OK</STRONG>.",\r\n
+DlgPasteSec\t\t: "Dėl jūsų naršyklės saugumo nustatymų, redaktorius negali tiesiogiai pasiekti laikinosios atminties. Jums reikia nukopijuoti dar kartą į šį langą.",\r\n
 DlgPasteIgnoreFont\t\t: "Ignoruoti šriftų nustatymus",\r\n
 DlgPasteRemoveStyles\t: "Pašalinti stilių nustatymus",\r\n
 \r\n
@@ -436,9 +436,9 @@ IeSpellDownload\t\t\t: "Rašybos tikrinimas neinstaliuotas. Ar Jūs norite jį d
 // Button Dialog\r\n
 DlgButtonText\t\t: "Tekstas (Reikšmė)",\r\n
 DlgButtonType\t\t: "Tipas",\r\n
-DlgButtonTypeBtn\t: "Button",\t//MISSING\r\n
-DlgButtonTypeSbm\t: "Submit",\t//MISSING\r\n
-DlgButtonTypeRst\t: "Reset",\t//MISSING\r\n
+DlgButtonTypeBtn\t: "Mygtukas",\r\n
+DlgButtonTypeSbm\t: "Siųsti",\r\n
+DlgButtonTypeRst\t: "Išvalyti",\r\n
 \r\n
 // Checkbox and Radio Button Dialogs\r\n
 DlgCheckboxName\t\t: "Vardas",\r\n
@@ -487,7 +487,7 @@ DlgHiddenValue\t: "Reikšmė",\r\n
 // Bulleted List Dialog\r\n
 BulletedListProp\t: "Suženklinto sąrašo savybės",\r\n
 NumberedListProp\t: "Numeruoto sąrašo savybės",\r\n
-DlgLstStart\t\t\t: "Start",\t//MISSING\r\n
+DlgLstStart\t\t\t: "Pradėti nuo",\r\n
 DlgLstType\t\t\t: "Tipas",\r\n
 DlgLstTypeCircle\t: "Apskritimas",\r\n
 DlgLstTypeDisc\t\t: "Diskas",\r\n
@@ -510,15 +510,15 @@ DlgDocLangDirLTR\t: "Iš kairės į dešinę (LTR)",\r\n
 DlgDocLangDirRTL\t: "Iš dešinės į kairę (RTL)",\r\n
 DlgDocLangCode\t\t: "Kalbos kodas",\r\n
 DlgDocCharSet\t\t: "Simbolių kodavimo lentelė",\r\n
-DlgDocCharSetCE\t\t: "Central European",\t//MISSING\r\n
-DlgDocCharSetCT\t\t: "Chinese Traditional (Big5)",\t//MISSING\r\n
-DlgDocCharSetCR\t\t: "Cyrillic",\t//MISSING\r\n
-DlgDocCharSetGR\t\t: "Greek",\t//MISSING\r\n
-DlgDocCharSetJP\t\t: "Japanese",\t//MISSING\r\n
-DlgDocCharSetKR\t\t: "Korean",\t//MISSING\r\n
-DlgDocCharSetTR\t\t: "Turkish",\t//MISSING\r\n
-DlgDocCharSetUN\t\t: "Unicode (UTF-8)",\t//MISSING\r\n
-DlgDocCharSetWE\t\t: "Western European",\t//MISSING\r\n
+DlgDocCharSetCE\t\t: "Centrinės Europos",\r\n
+DlgDocCharSetCT\t\t: "Tradicinės kinų (Big5)",\r\n
+DlgDocCharSetCR\t\t: "Kirilica",\r\n
+DlgDocCharSetGR\t\t: "Graikų",\r\n
+DlgDocCharSetJP\t\t: "Japonų",\r\n
+DlgDocCharSetKR\t\t: "Korėjiečių",\r\n
+DlgDocCharSetTR\t\t: "Turkų",\r\n
+DlgDocCharSetUN\t\t: "Unikodas (UTF-8)",\r\n
+DlgDocCharSetWE\t\t: "Vakarų Europos",\r\n
 DlgDocCharSetOther\t: "Kita simbolių kodavimo lentelė",\r\n
 \r\n
 DlgDocDocType\t\t: "Dokumento tipo antraštė",\r\n
@@ -548,20 +548,25 @@ DlgTemplatesTitle\t: "Turinio šablonai",\r\n
 DlgTemplatesSelMsg\t: "Pasirinkite norimą šabloną<br>(<b>Dėmesio!</b> esamas turinys bus prarastas):",\r\n
 DlgTemplatesLoading\t: "Įkeliamas šablonų sąrašas. Prašome palaukti...",\r\n
 DlgTemplatesNoTpl\t: "(Šablonų sąrašas tuščias)",\r\n
-DlgTemplatesReplace\t: "Replace actual contents",\t//MISSING\r\n
+DlgTemplatesReplace\t: "Pakeisti dabartinį turinį pasirinktu šablonu",\r\n
 \r\n
 // About Dialog\r\n
 DlgAboutAboutTab\t: "Apie",\r\n
 DlgAboutBrowserInfoTab\t: "Naršyklės informacija",\r\n
-DlgAboutLicenseTab\t: "License",\t//MISSING\r\n
+DlgAboutLicenseTab\t: "Licenzija",\r\n
 DlgAboutVersion\t\t: "versija",\r\n
 DlgAboutInfo\t\t: "Papildomą informaciją galima gauti",\r\n
 \r\n
 // Div Dialog\r\n
-DlgDivGeneralTab\t: "General",\t//MISSING\r\n
-DlgDivAdvancedTab\t: "Advanced",\t//MISSING\r\n
-DlgDivStyle\t\t: "Style",\t//MISSING\r\n
-DlgDivInlineStyle\t: "Inline Style"\t//MISSING\r\n
+DlgDivGeneralTab\t: "Bendros savybės",\r\n
+DlgDivAdvancedTab\t: "Papildomos savybės",\r\n
+DlgDivStyle\t\t: "Stilius",\r\n
+DlgDivInlineStyle\t: "Stilius kode",\r\n
+\r\n
+ScaytTitle\t\t\t: "SCAYT",\t//MISSING\r\n
+ScaytTitleOptions\t: "Options",\t//MISSING\r\n
+ScaytTitleLangs\t\t: "Languages",\t//MISSING\r\n
+ScaytTitleAbout\t\t: "About"\t//MISSING\r\n
 };\r\n
 
 
@@ -573,7 +578,7 @@ DlgDivInlineStyle\t: "Inline Style"\t//MISSING\r\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <long>20064</long> </value>
+            <value> <int>19915</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

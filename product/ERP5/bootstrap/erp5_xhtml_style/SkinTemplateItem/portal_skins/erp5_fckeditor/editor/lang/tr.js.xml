@@ -15,7 +15,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts45749267.32</string> </value>
+            <value> <string>ts60538662.6</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -561,7 +561,12 @@ DlgAboutInfo\t\t: "Daha fazla bilgi için:",\r\n
 DlgDivGeneralTab\t: "Genel",\r\n
 DlgDivAdvancedTab\t: "Gelişmiş",\r\n
 DlgDivStyle\t\t: "Sitil",\r\n
-DlgDivInlineStyle\t: "Satıriçi Sitil"\r\n
+DlgDivInlineStyle\t: "Satıriçi Sitil",\r\n
+\r\n
+ScaytTitle\t\t\t: "SCAYT",\t//MISSING\r\n
+ScaytTitleOptions\t: "Options",\t//MISSING\r\n
+ScaytTitleLangs\t\t: "Languages",\t//MISSING\r\n
+ScaytTitleAbout\t\t: "About"\t//MISSING\r\n
 };\r\n
 
 
@@ -573,7 +578,7 @@ DlgDivInlineStyle\t: "Satıriçi Sitil"\r\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <long>19125</long> </value>
+            <value> <int>19286</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

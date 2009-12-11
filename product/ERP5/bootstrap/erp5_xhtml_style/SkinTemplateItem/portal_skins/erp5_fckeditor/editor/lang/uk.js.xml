@@ -15,7 +15,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts45749267.86</string> </value>
+            <value> <string>ts60538662.6</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -561,7 +561,12 @@ DlgAboutInfo\t\t: "Додаткову інформацію дивіться на
 DlgDivGeneralTab\t: "Загальна",\r\n
 DlgDivAdvancedTab\t: "Розширена",\r\n
 DlgDivStyle\t\t: "Стиль",\r\n
-DlgDivInlineStyle\t: "Inline стиль"\r\n
+DlgDivInlineStyle\t: "Inline стиль",\r\n
+\r\n
+ScaytTitle\t\t\t: "SCAYT",\t//MISSING\r\n
+ScaytTitleOptions\t: "Options",\t//MISSING\r\n
+ScaytTitleLangs\t\t: "Languages",\t//MISSING\r\n
+ScaytTitleAbout\t\t: "About"\t//MISSING\r\n
 };\r\n
 
 
@@ -573,7 +578,7 @@ DlgDivInlineStyle\t: "Inline стиль"\r\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <long>25723</long> </value>
+            <value> <int>25884</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

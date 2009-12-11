@@ -1,3 +1,6 @@
+2009-12-11 Kazuhiko
+* update FCKeditor to 2.6.5.
+
 2009-11-19 yo
 * Use preferred user interface languages to choose which languages should be displayed in the navigation box. If not defined, display all.
 

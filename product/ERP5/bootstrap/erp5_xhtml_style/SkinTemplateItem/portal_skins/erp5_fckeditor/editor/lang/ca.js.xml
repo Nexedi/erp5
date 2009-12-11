@@ -15,7 +15,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts45749252.37</string> </value>
+            <value> <string>ts60538662.53</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -561,7 +561,12 @@ DlgAboutInfo\t\t: "Per a més informació aneu a",\r\n
 DlgDivGeneralTab\t: "General",\r\n
 DlgDivAdvancedTab\t: "Avançat",\r\n
 DlgDivStyle\t\t: "Estil",\r\n
-DlgDivInlineStyle\t: "Estil en línia"\r\n
+DlgDivInlineStyle\t: "Estil en línia",\r\n
+\r\n
+ScaytTitle\t\t\t: "SCAYT",\t//MISSING\r\n
+ScaytTitleOptions\t: "Options",\t//MISSING\r\n
+ScaytTitleLangs\t\t: "Languages",\t//MISSING\r\n
+ScaytTitleAbout\t\t: "About"\t//MISSING\r\n
 };\r\n
 
 
@@ -573,7 +578,7 @@ DlgDivInlineStyle\t: "Estil en línia"\r\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <long>19574</long> </value>
+            <value> <int>19735</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

@@ -15,7 +15,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts49309338.5</string> </value>
+            <value> <string>ts60538662.37</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -87,7 +87,7 @@ window.onload = function ()\r\n
 \t\t\t\'javascript:void( (function(){\' +\r\n
 \t\t\t\t\'document.open() ;\' +\r\n
 \t\t\t\t\'document.domain=\\\'\' + document.domain + \'\\\' ;\' +\r\n
-\t\t\t\t\'document.write(\\\'<html><head><script>window.onerror = function() { return true ; };<\\/script><\\/head><body><\\/body><\\/html>\\\') ;\' +\r\n
+\t\t\t\t\'document.write(\\\'<html><head><scr\' + \'ipt>window.onerror = function() { return true ; };<\\/script><\\/head><body><\\/body><\\/html>\\\') ;\' +\r\n
 \t\t\t\t\'document.close() ;\' +\r\n
 \t\t\t\t\'document.body.contentEditable = true ;\' +\r\n
 \t\t\t\t\'window.focus() ;\' +\r\n
@@ -104,7 +104,7 @@ window.onload = function ()\r\n
 \t\t\t// Avoid errors if the pasted content has any script that fails: #389\r\n
 \t\t\tvar oDoc = oFrame.contentWindow.document ;\r\n
 \t\t\toDoc.open() ;\r\n
-\t\t\toDoc.write(\'<html><head><script>window.onerror = function() { return true ; };<\\/script><\\/head><body><\\/body><\\/html>\') ;\r\n
+\t\t\toDoc.write(\'<html><head><scr\' + \'ipt>window.onerror = function() { return true ; };<\\/script><\\/head><body><\\/body><\\/html>\') ;\r\n
 \t\t\toDoc.close() ;\r\n
 \r\n
 \t\t\tif ( FCKBrowserInfo.IsIE )\r\n
@@ -225,11 +225,11 @@ function CleanWord( oNode, bIgnoreFont, bRemoveStyles )\r\n
 \thtml = html.replace( /\\s*mso-[^:]+:[^;"]+;?/gi, \'\' ) ;\r\n
 \r\n
 \t// Remove margin styles.\r\n
-\thtml = html.replace( /\\s*MARGIN: 0cm 0cm 0pt\\s*;/gi, \'\' ) ;\r\n
-\thtml = html.replace( /\\s*MARGIN: 0cm 0cm 0pt\\s*"/gi, "\\"" ) ;\r\n
+\thtml = html.replace( /\\s*MARGIN: 0(?:cm|in) 0(?:cm|in) 0pt\\s*;/gi, \'\' ) ;\r\n
+\thtml = html.replace( /\\s*MARGIN: 0(?:cm|in) 0(?:cm|in) 0pt\\s*"/gi, "\\"" ) ;\r\n
 \r\n
-\thtml = html.replace( /\\s*TEXT-INDENT: 0cm\\s*;/gi, \'\' ) ;\r\n
-\thtml = html.replace( /\\s*TEXT-INDENT: 0cm\\s*"/gi, "\\"" ) ;\r\n
+\thtml = html.replace( /\\s*TEXT-INDENT: 0(?:cm|in)\\s*;/gi, \'\' ) ;\r\n
+\thtml = html.replace( /\\s*TEXT-INDENT: 0(?:cm|in)\\s*"/gi, "\\"" ) ;\r\n
 \r\n
 \thtml = html.replace( /\\s*TEXT-ALIGN: [^\\s;]+;?"/gi, "\\"" ) ;\r\n
 \r\n
@@ -386,7 +386,7 @@ function CleanWord( oNode, bIgnoreFont, bRemoveStyles )\r\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>12291</int> </value>
+            <value> <int>12343</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

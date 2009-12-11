@@ -15,7 +15,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts45749258.56</string> </value>
+            <value> <string>ts60538662.57</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -561,7 +561,12 @@ DlgAboutInfo\t\t: "より詳しい情報はこちらで",\r\n
 DlgDivGeneralTab\t: "全般",\r\n
 DlgDivAdvancedTab\t: "高度な設定",\r\n
 DlgDivStyle\t\t: "スタイル",\r\n
-DlgDivInlineStyle\t: "インラインスタイル"\r\n
+DlgDivInlineStyle\t: "インラインスタイル",\r\n
+\r\n
+ScaytTitle\t\t\t: "SCAYT",\t//MISSING\r\n
+ScaytTitleOptions\t: "Options",\t//MISSING\r\n
+ScaytTitleLangs\t\t: "Languages",\t//MISSING\r\n
+ScaytTitleAbout\t\t: "About"\t//MISSING\r\n
 };\r\n
 
 
@@ -573,7 +578,7 @@ DlgDivInlineStyle\t: "インラインスタイル"\r\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <long>21278</long> </value>
+            <value> <int>21439</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

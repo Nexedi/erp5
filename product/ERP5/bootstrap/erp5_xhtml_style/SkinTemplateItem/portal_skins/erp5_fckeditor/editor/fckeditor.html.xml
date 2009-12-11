@@ -15,7 +15,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts49309338.52</string> </value>
+            <value> <string>ts60538662.39</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -296,16 +296,16 @@ function WaitForActive( editorInstance, newStatus )\r\n
 \t}\r\n
 }\r\n
 \r\n
-// Gecko browsers doesn\'t calculate well the IFRAME size so we must\r\n
+// Gecko and Webkit browsers don\'t calculate well the IFRAME size so we must\r\n
 // recalculate it every time the window size changes.\r\n
-if ( FCKBrowserInfo.IsGecko && !FCKBrowserInfo.IsOpera )\r\n
+if ( FCKBrowserInfo.IsGecko || FCKBrowserInfo.IsSafari )\r\n
 {\r\n
 \twindow.onresize = function( e )\r\n
 \t{\r\n
-\t\t// Running in Chrome makes the window receive the event including subframes.\r\n
+\t\t// Running in Firefox\'s chrome makes the window receive the event including subframes.\r\n
 \t\t// we care only about this window. Ticket #1642.\r\n
 \t\t// #2002: The originalTarget from the event can be the current document, the window, or the editing area.\r\n
-\t\tif ( e && e.originalTarget !== document && e.originalTarget !== window && (!e.originalTarget.ownerDocument || e.originalTarget.ownerDocument != document ))\r\n
+\t\tif ( e && e.originalTarget && e.originalTarget !== document && e.originalTarget !== window && (!e.originalTarget.ownerDocument || e.originalTarget.ownerDocument != document ))\r\n
 \t\t\treturn ;\r\n
 \r\n
 \t\tvar oCell = document.getElementById( \'xEditingArea\' ) ;\r\n
@@ -356,7 +356,7 @@ if ( FCKBrowserInfo.IsGecko && !FCKBrowserInfo.IsOpera )\r\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>12436</int> </value>
+            <value> <int>12475</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

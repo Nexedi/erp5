@@ -15,7 +15,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts45749269.56</string> </value>
+            <value> <string>ts60538662.61</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -561,7 +561,12 @@ DlgAboutInfo\t\t: "要获得更多信息请访问 ",\r\n
 DlgDivGeneralTab\t: "常规",\r\n
 DlgDivAdvancedTab\t: "高级",\r\n
 DlgDivStyle\t\t: "样式",\r\n
-DlgDivInlineStyle\t: "CSS 样式"\r\n
+DlgDivInlineStyle\t: "CSS 样式",\r\n
+\r\n
+ScaytTitle\t\t\t: "SCAYT",\t//MISSING\r\n
+ScaytTitleOptions\t: "Options",\t//MISSING\r\n
+ScaytTitleLangs\t\t: "Languages",\t//MISSING\r\n
+ScaytTitleAbout\t\t: "About"\t//MISSING\r\n
 };\r\n
 
 
@@ -573,7 +578,7 @@ DlgDivInlineStyle\t: "CSS 样式"\r\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <long>17648</long> </value>
+            <value> <int>17809</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

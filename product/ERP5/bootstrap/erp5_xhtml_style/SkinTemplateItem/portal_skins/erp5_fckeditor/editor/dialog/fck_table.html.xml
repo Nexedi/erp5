@@ -15,7 +15,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts49309338.52</string> </value>
+            <value> <string>ts60538662.38</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -186,28 +186,6 @@ function Ok()\r\n
 \tSetAttribute( table, \'cellSpacing\'\t, GetE(\'txtCellSpacing\').value ) ;\r\n
 \tSetAttribute( table, \'summary\'\t\t, GetE(\'txtSummary\').value ) ;\r\n
 \r\n
-\tvar eCaption = oEditor.FCKDomTools.GetFirstChild( table, \'CAPTION\' ) ;\r\n
-\r\n
-\tif ( document.getElementById(\'txtCaption\').value != \'\')\r\n
-\t{\r\n
-\t\tif ( !eCaption )\r\n
-\t\t{\r\n
-\t\t\teCaption = oDoc.createElement( \'CAPTION\' ) ;\r\n
-\t\t\ttable.insertBefore( eCaption, table.firstChild ) ;\r\n
-\t\t}\r\n
-\r\n
-\t\teCaption.innerHTML = document.getElementById(\'txtCaption\').value ;\r\n
-\t}\r\n
-\telse if ( bExists && eCaption )\r\n
-\t{\r\n
-\t\t// TODO: It causes an IE internal error if using removeChild or\r\n
-\t\t// table.deleteCaption() (see #505).\r\n
-\t\tif ( oEditor.FCKBrowserInfo.IsIE )\r\n
-\t\t\teCaption.innerHTML = \'\' ;\r\n
-\t\telse\r\n
-\t\t\teCaption.parentNode.removeChild( eCaption ) ;\r\n
-\t}\r\n
-\r\n
 \tvar headers = GetE(\'selHeaders\').value ;\r\n
 \tif ( bExists )\r\n
 \t{\r\n
@@ -336,6 +314,29 @@ function Ok()\r\n
 \t\t}\r\n
 \r\n
 \t\toEditor.FCK.InsertElement( table ) ;\r\n
+\t}\r\n
+\r\n
+\tvar eCaption = oEditor.FCKDomTools.GetFirstChild( table, \'CAPTION\' ) ;\r\n
+\r\n
+\tif ( eCaption && !oEditor.FCKBrowserInfo.IsIE )\r\n
+\t\teCaption.parentNode.removeChild( eCaption ) ;\r\n
+\r\n
+\tif ( document.getElementById(\'txtCaption\').value != \'\' )\r\n
+\t{\r\n
+\t\tif ( !eCaption || !oEditor.FCKBrowserInfo.IsIE )\r\n
+\t\t{\r\n
+\t\t\teCaption = oDoc.createElement( \'CAPTION\' ) ;\r\n
+\t\t\ttable.insertBefore( eCaption, table.firstChild ) ;\r\n
+\t\t}\r\n
+\r\n
+\t\teCaption.innerHTML = document.getElementById(\'txtCaption\').value ;\r\n
+\t}\r\n
+\telse if ( bExists && eCaption )\r\n
+\t{\r\n
+\t\t// TODO: It causes an IE internal error if using removeChild or\r\n
+\t\t// table.deleteCaption() (see #505).\r\n
+\t\tif ( oEditor.FCKBrowserInfo.IsIE )\r\n
+\t\t\teCaption.innerHTML = \'\' ;\r\n
 \t}\r\n
 \r\n
 \treturn true ;\r\n
@@ -478,7 +479,7 @@ function Ok()\r\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>14473</int> </value>
+            <value> <int>14549</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

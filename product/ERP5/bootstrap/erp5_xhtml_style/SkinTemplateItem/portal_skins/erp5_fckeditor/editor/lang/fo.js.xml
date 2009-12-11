@@ -15,7 +15,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts45749256.1</string> </value>
+            <value> <string>ts60538662.55</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -561,7 +561,12 @@ DlgAboutInfo\t\t: "Fyri fleiri upplýsingar, far til",\r\n
 DlgDivGeneralTab\t: "Generelt",\r\n
 DlgDivAdvancedTab\t: "Fjølbroytt",\r\n
 DlgDivStyle\t\t: "Typografi",\r\n
-DlgDivInlineStyle\t: "Inline typografi"\r\n
+DlgDivInlineStyle\t: "Inline typografi",\r\n
+\r\n
+ScaytTitle\t\t\t: "SCAYT",\t//MISSING\r\n
+ScaytTitleOptions\t: "Options",\t//MISSING\r\n
+ScaytTitleLangs\t\t: "Languages",\t//MISSING\r\n
+ScaytTitleAbout\t\t: "About"\t//MISSING\r\n
 };\r\n
 
 
@@ -573,7 +578,7 @@ DlgDivInlineStyle\t: "Inline typografi"\r\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <long>19132</long> </value>
+            <value> <int>19293</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
