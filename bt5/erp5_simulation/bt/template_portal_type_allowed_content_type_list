@@ -3,6 +3,8 @@ New Order Rule | DateTime Divergence Tester
 New Order Rule | Float Divergence Tester
 New Order Rule | String Divergence Tester
 Rule Tool | New Order Rule
+Solver Process | Accept Solver
+Solver Process | Adopt Solver
 Solver Process | Production Reduction Solver
 Solver Process | Quantity Split Solver
 Solver Process | Resource Adoption Solver
