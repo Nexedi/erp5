@@ -543,7 +543,16 @@
         <item>
             <key> <string>data</string> </key>
             <value>
-              <dictionary/>
+              <dictionary>
+                <item>
+                    <key> <string>text/plain</string> </key>
+                    <value>
+                      <tuple>
+                        <string>w3m_dump</string>
+                      </tuple>
+                    </value>
+                </item>
+              </dictionary>
             </value>
         </item>
       </dictionary>
