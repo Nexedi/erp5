@@ -13,8 +13,8 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>items</string>
                 <string>enabled</string>
+                <string>items</string>
               </list>
             </value>
         </item>
@@ -124,7 +124,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: cell.getQuantityUnitList()</string> </value>
+            <value> <string>python: [(x.getTranslatedLogicalPath(), x.getCategoryRelativeUrl(base=0)) for x in cell.getResourceValue().getQuantityUnitValueList()] or [(\'\', \'\')]</string> </value>
         </item>
       </dictionary>
     </pickle>
