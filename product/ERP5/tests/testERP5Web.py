@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
+# -*- coding: utf-8 -*-
 #
 # Copyright (c) 2004, 2005, 2006 Nexedi SARL and Contributors.
 # All Rights Reserved.
@@ -42,7 +43,7 @@ from Products.ERP5Type.tests.utils import createZODBPythonScript
 
 LANGUAGE_LIST = ('en', 'fr', 'de', 'bg',)
 
-class TestERP5Web(ERP5TypeTestCase):
+class TestERP5Web(ERP5TypeTestCase, ZopeTestCase.Functional):
   """Test for erp5_web business template.
   """
   run_all_test = 1
@@ -69,8 +70,8 @@ class TestERP5Web(ERP5TypeTestCase):
     uf._doAddUser(self.manager_username, self.manager_password, ['Manager'], [])
     self.login(self.manager_username)
 
-    self.web_page_module = self.portal.getDefaultModule('Web Page Module')
-    self.web_site_module = self.portal.getDefaultModule('Web Site Module')
+    self.web_page_module = self.portal.web_page_module
+    self.web_site_module = self.portal.web_site_module
     portal.Localizer.manage_changeDefaultLang(language = 'en')
     self.portal_id = self.portal.getId()
 
@@ -975,82 +976,6 @@ Hé Hé Hé!""", page.asText().strip())
     self.assertNotEquals(request.traverse(path)(REQUEST=request.REQUEST,
       RESPONSE=request.RESPONSE).find(new_content), -1)
 
-  def test_14_AccessWebSiteForWithDifferentUserPreferences(self):
-    """Check that Ram Cache Manager do not mix websection
-    rendering between users.
-    This test enable different preferences per users and check that
-    those preferences doesn't affect rendering for other users.
-    user          | preference
-
-    administrator | developper_mode activated
-    webeditor     | translator_mode activated
-    anonymous     | developper_mode & translator_mode disabled
-
-    The Signature used to detect enabled preferences in HTML Body are
-    manage_main for developper_mode
-    manage_messages for translator_mode
-    """
-    user = self.createUser('administrator')
-    self.createUserAssignement(user, {})
-    user = self.createUser('webeditor')
-    self.createUserAssignement(user, {})
-    transaction.commit()
-    self.tic()
-    preference_tool = self.getPreferenceTool()
-    isTransitionPossible = self.portal.portal_workflow.isTransitionPossible
-
-    #create or edit preference for administrator
-    administrator_preference = self.portal.portal_catalog.getResultValue(
-                                                 portal_type='Preference',
-                                                 owner='administrator')
-    if administrator_preference is None:
-      self.login('administrator')
-      administrator_preference = preference_tool.newContent(
-                                              portal_type='Preference')
-    if isTransitionPossible(administrator_preference, 'enable_action'):
-      administrator_preference.enable()
-
-    administrator_preference.setPreferredHtmlStyleDevelopperMode(True)
-    administrator_preference.setPreferredHtmlStyleTranslatorMode(False)
-
-    #create or edit preference for webeditor
-    webeditor_preference = self.portal.portal_catalog.getResultValue(
-                                                  portal_type='Preference',
-                                                  owner='webeditor')
-    if webeditor_preference is None:
-      self.login('webeditor')
-      webeditor_preference = preference_tool.newContent(
-                                              portal_type='Preference')
-    if isTransitionPossible(webeditor_preference, 'enable_action'):
-      webeditor_preference.enable()
-
-    webeditor_preference.setPreferredHtmlStyleDevelopperMode(False)
-    webeditor_preference.setPreferredHtmlStyleTranslatorMode(True)
-    self.login()
-    transaction.commit()
-    self.tic()
-
-    web_site = self.setupWebSite()
-    websection = self.setupWebSection()
-
-    websection_url = '%s/%s' % (self.portal.getId(), websection.getRelativeUrl())
-
-    #connect as administrator and check that only developper_mode is enable
-    response = self.publish(websection_url, 'administrator:administrator')
-    self.assertTrue('manage_main' in response.getBody())
-    self.assertTrue('manage_messages' not in response.getBody())
-
-    #connect as webeditor and check that only translator_mode is enable
-    response = self.publish(websection_url, 'webeditor:webeditor')
-    self.assertTrue('manage_main' not in response.getBody())
-    self.assertTrue('manage_messages' in response.getBody())
-
-    #anonymous user doesn't exists, check anonymous access without preferences
-    response = self.publish(websection_url, 'anonymous:anonymous')
-    self.assertTrue('manage_main' not in response.getBody())
-    self.assertTrue('manage_messages' not in response.getBody())
-
-
 class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
   """
   Test for erp5_web with simple security.
@@ -1569,9 +1494,100 @@ class TestERP5WebCategoryPublicationWorkflow(ERP5TypeTestCase):
     self.doActionFor(self.category, 'expire_action')
     self.assertEqual('expired_published', self.category.getValidationState())
 
+class TestERP5WebCachingPolicy(TestERP5Web):
+  """
+  Test Caching policy with different User Preferences
+  """
+
+  def getTitle(self):
+    return "Web Caching Policy"
+
+  def createLocalUser(self, name, role_list):
+    user_folder = self.getPortal().acl_users
+    user_folder._doAddUser(name, name, role_list, [])
+
+  def afterSetUp(self):
+    self.web_page_module = self.portal.web_page_module
+    self.web_site_module = self.portal.web_site_module
+    self.portal.Localizer.manage_changeDefaultLang(language='en')
+    self.createLocalUser('admin', ['Manager'])
+    user = self.createUser('erp5user')
+    self.createUserAssignement(user, {})
+    user = self.createUser('webmaster')
+    self.createUserAssignement(user, {})
+    transaction.commit()
+    self.tic()
+    if getattr(self.getPreferenceTool(), 'admin', None) is None:
+      self.login('admin')
+      pref = self.getPreferenceTool().newContent(portal_type='Preference',
+                                                 id='admin',
+                                                 preferred_html_style_developper_mode=True)
+      pref.enable()
+    if getattr(self.getPreferenceTool(), 'webmaster', None) is None:
+      self.login('webmaster')
+      pref = self.getPreferenceTool().newContent(portal_type='Preference',
+                                                 id='webmaster',
+                                                 preferred_html_style_translator_mode=True)
+      pref.enable()
+    if getattr(self.getPreferenceTool(), 'erp5user', None) is None:
+      self.login('erp5user')
+      pref = self.getPreferenceTool().newContent(portal_type='Preference',
+                                                 id='erp5user')
+      pref.enable()
+    self.login()
+    transaction.commit()
+    self.tic()
+
+  def clearModule(self, module):
+    module.manage_delObjects(list(module.objectIds()))
+    transaction.commit()
+    self.tic()
+
+  def beforeTearDown(self):
+    self.clearModule(self.portal.web_site_module)
+    self.clearModule(self.portal.web_page_module)
+
+  def test_01_AccessWebSiteForWithDifferentUserPreferences(self):
+    """
+    """
+    web_site = self.setupWebSite()
+    websection = self.setupWebSection()
+    page_reference = 'default-webpage'
+    webpage_list = self.setupWebSitePages(prefix=page_reference)
+    # set default web page for section
+    self.login('admin')
+    self.assertTrue(self.getPreferenceTool().getPreferredHtmlStyleDevelopperMode())
+    self.login('webmaster')
+    self.assertTrue(self.getPreferenceTool().getPreferredHtmlStyleTranslatorMode())
+    self.login('erp5user')
+    self.assertFalse(self.getPreferenceTool().getPreferredHtmlStyleDevelopperMode())
+    self.assertFalse(self.getPreferenceTool().getPreferredHtmlStyleTranslatorMode())
+    #
+    self.portal.REQUEST.set('ignore_layout', 0)
+    response = self.publish('%s/%s' % (self.portal.getId(), websection.getRelativeUrl()), 'admin:admin')
+    self.assertTrue('manage_main' in response.getBody())
+    self.assertTrue('manage_messages' not in response.getBody())
+    transaction.commit()
+    #
+    response = self.publish('%s/%s' % (self.portal.getId(), websection.getRelativeUrl()), 'webmaster:webmaster')
+    self.assertTrue('manage_main' not in response.getBody())
+    self.assertTrue('manage_messages' in response.getBody())
+    transaction.commit()
+    #
+    response = self.publish('%s/%s' % (self.portal.getId(), websection.getRelativeUrl()), 'erp5user:erp5user')
+    self.assertTrue('manage_main' not in response.getBody())
+    self.assertTrue('manage_messages' not in response.getBody())
+    #anonymous user doesn't exists
+    response = self.publish('%s/%s' % (self.portal.getId(), websection.getRelativeUrl()), 'anonymous:anonymous')
+    self.assertTrue('manage_main' not in response.getBody())
+    self.assertTrue('manage_messages' not in response.getBody())
+    transaction.commit()
+
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestERP5Web))
   suite.addTest(unittest.makeSuite(TestERP5WebWithSimpleSecurity))
   suite.addTest(unittest.makeSuite(TestERP5WebCategoryPublicationWorkflow))
+  suite.addTest(unittest.makeSuite(TestERP5WebCachingPolicy))
   return suite
