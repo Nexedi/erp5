@@ -823,8 +823,6 @@ class TestOrderMixin:
                           simulation_movement.getVariationCategoryList())
         # XXX Test acquisition
         self.checkAcquisition(simulation_movement, order_movement)
-        # Test other attributes
-        self.assertEquals(1, simulation_movement.deliverable)
 
   def modifyOrderState(self, transition_name, sequence=None,
                        sequence_list=None):
