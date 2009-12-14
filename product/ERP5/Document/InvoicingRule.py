@@ -85,7 +85,6 @@ class InvoicingRule(Rule):
         # XXX all this section will probably be removed once the simulation API
         # will be fully reviewed
         'destination_list': context_movement.getDestinationList(),
-        'destination': context_movement.getDestination(),
         'destination_section': context_movement.getDestinationSection(),
         'destination_decision': context_movement.getDestinationDecision(),
         'destination_administration': context_movement.getDestinationAdministration(),
