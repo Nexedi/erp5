@@ -269,7 +269,7 @@ class ERP5TypeInformation(XMLObject,
       # Movement Group
       'movement_group',
       # Different Aspects
-      'sales', 'purchase', 'internal'
+      'sale', 'purchase', 'internal'
     )
     group_list = ()
 
