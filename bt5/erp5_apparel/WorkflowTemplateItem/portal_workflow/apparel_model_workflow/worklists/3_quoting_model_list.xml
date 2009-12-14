@@ -21,7 +21,7 @@
             <key> <string>actbox_url</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-apparel_model_module/view?validation_state=quoting&local_roles:list=Assignor&reset=1
+apparel_model_module/view?validation_state=quoting&local_roles=%(local_roles)s&reset=1
 
 ]]></string> </value>
         </item>
@@ -62,6 +62,7 @@ apparel_model_module/view?validation_state=quoting&local_roles:list=Assignor&res
             <value>
               <tuple>
                 <string>Assignor</string>
+                <string>Associate</string>
               </tuple>
             </value>
         </item>

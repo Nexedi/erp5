@@ -21,7 +21,7 @@
             <key> <string>actbox_url</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-apparel_model_module/view?validation_state=draft&local_roles:list=Owner&reset=1
+apparel_model_module/view?validation_state=draft&local_roles=%(local_roles)s&reset=1
 
 ]]></string> </value>
         </item>
