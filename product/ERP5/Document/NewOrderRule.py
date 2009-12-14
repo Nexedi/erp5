@@ -105,7 +105,12 @@ class NewOrderRule(RuleMixin, Predicate):
 class OrderRuleMovementGenerator(object):
   def getAggregatedMovementList(self, context, movement_list=None,
                                 rounding=False):
-    """Input movement list comes from order"""
+    """
+    Input movement list comes from order
+
+    XXX This implementation is very primitive, and does not support BPM,
+    i.e. business paths are not taken into account.
+    """
     order = context.getDefaultCausalityValue()
     if order is None:
       return []
