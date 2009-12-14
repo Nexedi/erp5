@@ -41,7 +41,6 @@ from lxml import etree
 import os
 
 class TestFormPrintoutAsODT(TestFormPrintoutMixin):
-  run_all_test = 1
 
   def getTitle(self):
     """
@@ -56,7 +55,7 @@ class TestFormPrintoutAsODT(TestFormPrintoutMixin):
     v12schema_url = os.path.join(os.path.dirname(__file__),
                                  'OpenDocument-schema-v1.2-draft9.rng')
     self.validator = Validator(schema_url=v12schema_url)
-    
+
     foo_file_path = os.path.join(os.path.dirname(__file__),
                                 'test_document',
                                 'Foo_001.odt')
@@ -129,12 +128,10 @@ class TestFormPrintoutAsODT(TestFormPrintoutMixin):
     transaction.commit()
     self.tic()
 
-  def test_01_Paragraph(self, run=run_all_test):
+  def test_01_Paragraph(self):
     """
     mapping a field to a paragraph
     """
-    if not run: return
-    
     portal = self.getPortal()
     foo_module = self.portal.foo_module
     if foo_module._getOb('test1', None) is None:
@@ -161,7 +158,7 @@ class TestFormPrintoutAsODT(TestFormPrintoutMixin):
     self.assertEqual(request.RESPONSE.getHeader('content-disposition'),
                      'inline;filename="Foo_viewAsPrintout.odt"')
     self._validate(odf_document)
-    
+
     # 2. Normal case: change the field value and check again the ODF document
     test1.setTitle("Changed Title!")
     #foo_form.my_title.set_value('default', "Changed Title!")
@@ -171,8 +168,8 @@ class TestFormPrintoutAsODT(TestFormPrintoutMixin):
     content_xml = builder.extract("content.xml")
     self.assertTrue(content_xml.find("Changed Title!") > 0)
     self._validate(odf_document)
-    
-    # 3. False case: change the field name 
+
+    # 3. False case: change the field name
     test1.setTitle("you cannot find")
     # rename id 'my_title' to 'xxx_title', then does not match in the ODF document
     foo_form = portal.foo_module.test1.Foo_view
@@ -190,7 +187,7 @@ class TestFormPrintoutAsODT(TestFormPrintoutMixin):
     self.assertTrue(foo_printout.template == 'Foo_getODTStyleSheet')
     tmp_template = foo_printout.template
     foo_printout.template = None
-    # template == None, causes a ValueError 
+    # template == None, causes a ValueError
     try:
       foo_printout.index_html(REQUEST=request)
     except ValueError, e:
@@ -199,7 +196,7 @@ class TestFormPrintoutAsODT(TestFormPrintoutMixin):
 
     # put back
     foo_printout.template = tmp_template
-    
+
     # 5. Normal case: just call a FormPrintout object
     request.RESPONSE.setHeader('Content-Type', 'text/html')
     test1.setTitle("call!")
@@ -211,7 +208,7 @@ class TestFormPrintoutAsODT(TestFormPrintoutMixin):
     # when just call FormPrintout, it does not change content-type
     self.assertEqual(request.RESPONSE.getHeader('content-type'), 'text/html')
     self._validate(odf_document)
-    
+
     # 5. Normal case: utf-8 string
     test1.setTitle("Français")
     odf_document = foo_printout()
@@ -220,7 +217,7 @@ class TestFormPrintoutAsODT(TestFormPrintoutMixin):
     content_xml = builder.extract("content.xml")
     self.assertTrue(content_xml.find("Français") > 0)
     self._validate(odf_document)
-    
+
     # 6. Normal case: unicode string
     test1.setTitle(u'Français test2')
     odf_document = foo_printout()
@@ -230,17 +227,15 @@ class TestFormPrintoutAsODT(TestFormPrintoutMixin):
     self.assertTrue(content_xml.find("Français test2") > 0)
     self._validate(odf_document)
 
-  def test_01_Paragraph_07_LinesField(self, run=run_all_test):
+  def test_01_Paragraph_07_LinesField(self):
     """test LinesField into multi line"""
-    if not run: return
-
     foo_printout = self.portal.foo_module.test1.Foo_viewAsPrintout
     foo_form = self.portal.foo_module.test1.Foo_view
     if foo_form._getOb("week", None) is None:
       foo_form.manage_addField('week', 'week', 'LinesField')
     week = foo_form.week
     week.values['default'] = ['line1', 'line2']
-    
+
     odf_document = foo_printout()
     self.assertTrue(odf_document is not None)
     #test_output = open("/tmp/test_01_Paragraph_07_LinesField.odf", "w")
@@ -256,17 +251,15 @@ class TestFormPrintoutAsODT(TestFormPrintoutMixin):
     self.assertEquals('line2', span[0].tail)
     self._validate(odf_document)
 
-  def test_01_Paragraph_08_Field_Format(self, run=run_all_test):
+  def test_01_Paragraph_08_Field_Format(self):
     """test a field with format"""
-    if not run: return
-    
     foo_printout = self.portal.foo_module.test1.Foo_viewAsPrintout
     foo_form = self.portal.foo_module.test1.Foo_view
     if foo_form._getOb("number", None) is None:
       foo_form.manage_addField('number', 'number', 'FloatField')
     number = foo_form.number
     number.values['default'] = '543210'
-    # set a float field format 
+    # set a float field format
     number.values['input_style'] = '-1 234.5'
     odf_document = foo_printout()
     self.assertTrue(odf_document is not None)
@@ -277,7 +270,7 @@ class TestFormPrintoutAsODT(TestFormPrintoutMixin):
     content = etree.XML(content_xml)
     self.assertTrue(content.xpath('//text:p[text() = "543 210.0"]', namespaces=content.nsmap))
     self._validate(odf_document)
-    
+
     # change format
     number.values['input_style'] = '-1234.5'
     odf_document = foo_printout()
@@ -286,20 +279,18 @@ class TestFormPrintoutAsODT(TestFormPrintoutMixin):
     content_xml = builder.extract("content.xml")
     content = etree.XML(content_xml)
     self.assertTrue(content.xpath('//text:p = "543210.0"', namespaces=content.nsmap))
-    
+
     self._validate(odf_document)
 
-  def test_01_Paragraph_09_RangeReferenceWithSpan(self, run=run_all_test):
+  def test_01_Paragraph_09_RangeReferenceWithSpan(self):
     """test range reference and span setting"""
-    if not run: return
-
     foo_printout = self.portal.foo_module.test1.Foo_viewAsPrintout
     foo_form = self.portal.foo_module.test1.Foo_view
     if foo_form._getOb("my_test_title", None) is None:
       foo_form.manage_addField('my_test_title', 'test title', 'StringField')
     test_title = foo_form.my_test_title
     test_title.values['default'] = 'ZZZ test here ZZZ'
-    
+
     odf_document = foo_printout()
     self.assertTrue(odf_document is not None)
     #test_output = open("/tmp/test_01_Paragraph_09_RangeReferenceWithSpan.odf", "w")
@@ -310,11 +301,11 @@ class TestFormPrintoutAsODT(TestFormPrintoutMixin):
     self.assertTrue(content_xml.find("test title") < 0)
     self._validate(odf_document)
 
-  def test_02_Table_01_Normal(self, run=run_all_test):
+  def test_02_Table_01_Normal(self):
     """To test listbox and ODF table mapping
-    
+
      * Test Data Format
-    
+
      ODF table named 'listbox':
      +------------------------------+
      |  ID | Title | Quantity |Date |
@@ -331,7 +322,7 @@ class TestFormPrintoutAsODT(TestFormPrintoutMixin):
     listbox = foo_form.listbox
     request = self.app.REQUEST
     request['here'] = test1
-    
+
     # 1. Normal Case: ODF table last row is stat line
     test1.foo_1.setTitle('foo_title_1')
     message = listbox.ListBox_setPropertyList(
@@ -352,7 +343,7 @@ class TestFormPrintoutAsODT(TestFormPrintoutMixin):
     self.assertEqual(len(column_list), 4)
     self.assertTrue(listboxline_list[1].getColumnProperty('id') == "foo_1")
     self.assertTrue(listboxline_list[1].getColumnProperty('title') == "foo_title_1")
-    
+
     odf_document = foo_printout.index_html(REQUEST=request)
     #test_output = open("/tmp/test_02_01_Table.odf", "w")
     #test_output.write(odf_document)
@@ -361,10 +352,9 @@ class TestFormPrintoutAsODT(TestFormPrintoutMixin):
     content_xml = builder.extract("content.xml")
     self.assertTrue(content_xml.find("foo_title_1") > 0)
     self._validate(odf_document)
-    
-  def test_02_Table_02_SmallerThanListboxColumns(self, run=run_all_test):
+
+  def test_02_Table_02_SmallerThanListboxColumns(self):
     """2. Irregular case: listbox columns count smaller than table columns count"""
-    if not run: return 
     # test target
     test1 = self.portal.foo_module.test1
     foo_printout = test1.Foo_viewAsPrintout
@@ -391,7 +381,7 @@ class TestFormPrintoutAsODT(TestFormPrintoutMixin):
     self.assertTrue(listboxline_list[2].isDataLine())
     self.assertTrue(listboxline_list[3].isStatLine())
     self.assertTrue(listboxline_list[1].getColumnProperty('title') == "foo_title_2")
-    
+
     column_list = listboxline_list[0].getColumnPropertyList()
     self.assertEqual(len(column_list), 3)
 
@@ -405,9 +395,8 @@ class TestFormPrintoutAsODT(TestFormPrintoutMixin):
     self.assertTrue(content_xml.find("foo_title_2") > 0)
     self._validate(odf_document)
 
-  def test_02_Table_03_ListboxColumnsLargerThanTable(self, run=run_all_test):
+  def test_02_Table_03_ListboxColumnsLargerThanTable(self):
     """3. Irregular case: listbox columns count larger than table columns count"""
-    if not run: return 
     # test target
     test1 = self.portal.foo_module.test1
     foo_printout = test1.Foo_viewAsPrintout
@@ -429,7 +418,7 @@ class TestFormPrintoutAsODT(TestFormPrintoutMixin):
                                          REQUEST = request)
     self.assertEqual(len(listboxline_list), 4)
     self.assertTrue(listboxline_list[1].getColumnProperty('title') == "foo_title_3")
-    
+
     column_list = listboxline_list[0].getColumnPropertyList()
     self.assertEqual(len(column_list), 5)
     odf_document = foo_printout.index_html(REQUEST=request)
@@ -441,10 +430,9 @@ class TestFormPrintoutAsODT(TestFormPrintoutMixin):
     self.assertFalse(content_xml.find("foo_title_2") > 0)
     self.assertTrue(content_xml.find("foo_title_3") > 0)
     self._validate(odf_document)
-    
-  def test_02_Table_04_ListboxHasNotStat(self, run=run_all_test):
+
+  def test_02_Table_04_ListboxHasNotStat(self):
     """4. Irregular case: listbox has not a stat line, but table has a stat line"""
-    if not run: return 
     # test target
     test1 = self.portal.foo_module.test1
     foo_printout = test1.Foo_viewAsPrintout
@@ -482,7 +470,7 @@ class TestFormPrintoutAsODT(TestFormPrintoutMixin):
     table_row_xpath = '//table:table[@table:name="listbox"]/table:table-row'
     odf_table_rows = content.xpath(table_row_xpath, namespaces=content.nsmap)
     self.assertEqual(len(odf_table_rows), 2)
-    # to test copying ODF table cell styles 
+    # to test copying ODF table cell styles
     first_row = odf_table_rows[0]
     first_row_columns = first_row.getchildren()
     last_row = odf_table_rows[-1]
@@ -491,12 +479,12 @@ class TestFormPrintoutAsODT(TestFormPrintoutMixin):
     self.assertFalse(first_row_columns[0].attrib.has_key(span_attribute))
     self.assertEqual(int(last_row_columns[0].attrib[span_attribute]), 2)
     self._validate(odf_document)
-    
-  def test_02_Table_05_NormalSameLayout(self, run=run_all_test):
+
+  def test_02_Table_05_NormalSameLayout(self):
     """5. Normal case: the listobx and the ODF table are same layout
 
     * Test Data Format:
-    
+
      ODF table named 'listbox2'
      +-------------------------------+
      |  A    |   B   |   C   |   D   |
@@ -504,8 +492,6 @@ class TestFormPrintoutAsODT(TestFormPrintoutMixin):
      |       |       |       |       |
      +-------+-------+-------+-------+
     """
-    if not run: return
-
     # test target
     test1 = self.portal.foo_module.test1
     foo_printout = test1.Foo_viewAsPrintout
@@ -544,15 +530,14 @@ class TestFormPrintoutAsODT(TestFormPrintoutMixin):
     self.assertEquals(['foo_1', 'foo_title_5', 'foo_2', 'foo_2', '1234.5'], content_tree.xpath(xpath_result_expression, namespaces=content_tree.nsmap))
     self.assertFalse(content_xml.find("foo_title_4") > 0)
     self._validate(odf_document)
-    
+
     # put back the field name
     foo_form.manage_renameObject('listbox2', 'listbox', REQUEST=request)
 
-    
-  def test_02_Table_06_TableDoesNotHaveAHeader(self, run=run_all_test):
+  def test_02_Table_06_TableDoesNotHaveAHeader(self):
     """6. Normal case: ODF table does not have a header
      * Test Data format:
-    
+
      ODF table named 'listbox3'
      the table listbox3 has not table header.
      first row is a table content, too.
@@ -562,7 +547,6 @@ class TestFormPrintoutAsODT(TestFormPrintoutMixin):
      |       |       |       |       |
      +-------+-------+-------+-------+
     """
-    if not run: return 
     # test target
     test1 = self.portal.foo_module.test1
     foo_printout = test1.Foo_viewAsPrintout
@@ -585,7 +569,7 @@ class TestFormPrintoutAsODT(TestFormPrintoutMixin):
                                          REQUEST = request)
     self.assertEqual(len(listboxline_list), 4)
     self.assertTrue(listboxline_list[1].getColumnProperty('title') == "foo_title_6")
-    
+
     odf_document = foo_printout.index_html(REQUEST=request)
     #test_output = open("/tmp/test_02_06_Table.odf", "w")
     #test_output.write(odf_document)
@@ -595,13 +579,12 @@ class TestFormPrintoutAsODT(TestFormPrintoutMixin):
     self.assertFalse(content_xml.find("foo_title_5") > 0)
     self.assertTrue(content_xml.find("foo_title_6") > 0)
     self._validate(odf_document)
-    
+
     # put back the field name
     foo_form.manage_renameObject('listbox3', 'listbox', REQUEST=request)
 
-  def test_02_Table_07_CellFormat(self, run=run_all_test):
+  def test_02_Table_07_CellFormat(self):
     """7. Normal case: cell format cetting"""
-    if not run: return 
     # test target
     test1 = self.portal.foo_module.test1
     foo_printout = test1.Foo_viewAsPrintout
@@ -623,7 +606,7 @@ class TestFormPrintoutAsODT(TestFormPrintoutMixin):
                                          REQUEST = request)
     self.assertEqual(len(listboxline_list), 4)
     self.assertTrue(listboxline_list[1].getColumnProperty('title') == "foo_title_7")
-      
+
     odf_document = foo_printout.index_html(REQUEST=request)
     #test_output = open("/tmp/test_02_07_Table.odf", "w")
     #test_output.write(odf_document)
@@ -646,9 +629,8 @@ class TestFormPrintoutAsODT(TestFormPrintoutMixin):
     self.assertEqual(date_column.attrib[date_value_attrib], '2009-04-20')
     self._validate(odf_document)
 
-  def test_02_Table_08_Nodata(self, run=run_all_test):
+  def test_02_Table_08_Nodata(self):
     """8. Normal case: list box has no data"""
-    if not run: return 
     # test target
     test1 = self.portal.foo_module.test1
     foo_printout = test1.Foo_viewAsPrintout
@@ -665,7 +647,7 @@ class TestFormPrintoutAsODT(TestFormPrintoutMixin):
                                          REQUEST = request)
     # title line only
     self.assertEqual(len(listboxline_list), 1)
-      
+
     odf_document = foo_printout.index_html(REQUEST=request)
     #test_output = open("/tmp/test_02_08_Table.odf", "w")
     #test_output.write(odf_document)
@@ -680,13 +662,12 @@ class TestFormPrintoutAsODT(TestFormPrintoutMixin):
     self.assertEqual(len(odf_table_rows), 0)
     self._validate(odf_document)
 
-  def test_02_Table_09_StyleSetting(self, run=run_all_test):
+  def test_02_Table_09_StyleSetting(self):
     """ 9. Normal case: setting the style of the row.
-    
+
      * Test Data format:
      The table listbox4 has six rows which contains the reference of the row.
     """
-    if not run: return 
     # test target
     test1 = self.portal.foo_module.test1
     foo_printout = test1.Foo_viewAsPrintout
@@ -735,12 +716,12 @@ for n in xrange(6, 0, -1):
     builder = OOoBuilder(odf_document)
     content_xml = builder.extract("content.xml")
     self.assertTrue(content_xml.find("foo_title_9") > 0)
-    
+
     content = etree.XML(content_xml)
     table_row_xpath = '//table:table[@table:name="listbox4"]/table:table-row'
     table_row_list = content.xpath(table_row_xpath, namespaces=content.nsmap)
     self.assertEqual(len(table_row_list), 6)
-    
+
     line2 = table_row_list[1]
     line2_cell_list = line2.xpath('table:table-cell', namespaces=content.nsmap)
     self.assertEqual(len(line2_cell_list), 2)
@@ -762,25 +743,24 @@ for n in xrange(6, 0, -1):
     line5_cell1 = line5_cell_list[0]
     line5_cell1_span = line5_cell1.attrib[span_attribute_name]
     self.assertEqual(line5_cell1_span, "2")
-        
+
     self._validate(odf_document)
-    
+
     # put back the field name
     foo_form.manage_renameObject('listbox4', 'listbox', REQUEST=request)
     # delete the test objects
     test1.manage_delObjects(['foo_3','foo_4','foo_5','foo_6'])
 
-  def _test_03_Frame(self, run=run_all_test):
+  def _test_03_Frame(self):
     """
     Frame not tested yet
     """
     pass
 
-  def test_04_Iteration(self, run=run_all_test):
+  def test_04_Iteration(self):
     """
     Iteration using ERP5Report ReportSection test
     """
-    if not run: return
     # create test target
     custom = self.portal.portal_skins.custom
     erp5form = custom.manage_addProduct['ERP5Form']
@@ -829,7 +809,7 @@ report_section_list = [r1, r2]
 return report_section_list
 """
       )
-    
+
     # 01. normal case using Frame
     test1 = self.portal.foo_module.test1
     foo_report_printout = test1.FooReport_viewAsPrintout
@@ -855,7 +835,7 @@ return report_section_list
     self.assertEqual(len(frame1_list), 1)
 
     self._validate(odf_document)
-    
+
     # 02. no report section using frame
     custom.manage_delObjects(['FooReport_getReportSectionList'])
     createZODBPythonScript(
@@ -881,11 +861,10 @@ return []
     self._validate(odf_document)
 
 
-  def test_04_Iteration_02_Section(self, run=run_all_test):
+  def test_04_Iteration_02_Section(self):
     """
     Iteration using ERP5Report ReportSection and ODF Section test
     """
-    if not run: return
     # create test target
     custom = self.portal.portal_skins.custom
     erp5form = custom.manage_addProduct['ERP5Form']
@@ -960,7 +939,7 @@ return report_section_list
     self.assertEqual(len(section1_list), 1)
 
     self._validate(odf_document)
- 
+
     # 02. no report section and using ODF Section
     custom.manage_delObjects(['FooReport_getReportSectionList'])
     createZODBPythonScript(
@@ -985,16 +964,15 @@ return []
     self.assertEqual(len(section_list), 0)
     self._validate(odf_document)
 
-    
-  def test_04_Iteration_03_ReportBox_and_Section(self, run=run_all_test):
+
+  def test_04_Iteration_03_ReportBox_and_Section(self):
     """
     Iteration using ReportBox and ODF Section test
     """
-    if not run: return
     # create test target
     custom = self.portal.portal_skins.custom
     erp5form = custom.manage_addProduct['ERP5Form']
-  
+
     erp5form.addERP5Form(id='Foo_Box_view', title='Foo Box')
     foo_box_view = custom.Foo_Box_view
     foo_box_view.manage_addField('listbox_report', 'listbox report', 'ListBox')
@@ -1073,7 +1051,7 @@ return report_section_list
     self.assertEqual(len(section1_list), 1)
 
     self._validate(odf_document)
- 
+
     # 02. no report section and using ODF Section
     custom.manage_delObjects(['FooReport_getReportSectionList'])
     createZODBPythonScript(
@@ -1098,23 +1076,22 @@ return []
     self.assertEqual(len(section_list), 0)
     self._validate(odf_document)
 
-  def _test_05_Styles(self, run=run_all_test):
+  def _test_05_Styles(self):
     """
     styles.xml not tested yet
     """
     pass
 
-  def _test_06_Meta(self, run=run_all_test):
+  def _test_06_Meta(self):
     """
     meta.xml not supported yet
     """
     pass
 
-  def test_07_Image(self, run=run_all_test):
+  def test_07_Image(self):
     """
     Image mapping not tested yet
     """
-    if not run: return
     current_dir = os.path.dirname(__file__)
     parent_dir = os.path.dirname(current_dir)
     image_path = os.path.join(parent_dir,
@@ -1158,20 +1135,19 @@ return []
     #test_output.write(odf_document)
     builder = OOoBuilder(odf_document)
     content_xml = builder.extract("content.xml")
-    # confirming the image was removed 
+    # confirming the image was removed
     self.assertTrue(content_xml.find('<draw:image xlink:href') < 0)
     self._validate(odf_document)
-    
-  def test_08_OOoConversion(self, run=run_all_test):
+
+  def test_08_OOoConversion(self):
     """test ooo conversion"""
-    if not run: return
     foo_printout = self.portal.foo_module.test1.Foo_viewAsPrintout
     foo_form = self.portal.foo_module.test1.Foo_view
     if foo_form._getOb("my_test_title", None) is None:
       foo_form.manage_addField('my_test_title', 'test title', 'StringField')
     test_title = foo_form.my_test_title
     test_title.values['default'] = 'ZZZ test here ZZZ'
-  
+
     self.portal.REQUEST.set('format', 'pdf')
     printout = foo_printout(REQUEST=self.portal.REQUEST)
     #test_output = open("/tmp/test_99_OOoConversion.pdf", "w")
@@ -1184,7 +1160,7 @@ return []
     #test_output.write(printout.data)
     self.assertEqual('application/msword', guessMime(printout.data))
 
-  def test_09_FieldReplacement(self, run=run_all_test):
+  def test_09_FieldReplacement(self):
     """test field in ODF Documents"""
     foo_printout = self.portal.foo_module.test1.Foo5_viewAsPrintout
     self._validate(self.getODFDocumentFromPrintout(foo_printout))
