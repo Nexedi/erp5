@@ -130,23 +130,30 @@ class TradeCondition(Path, Transformation, XMLMatrix):
         specialise_value_list = context.getSpecialiseValueList()
         visited_trade_condition_list = context.getSpecialiseValueList(\
             portal_type=portal_type_list)
+
       while len(specialise_value_list) != 0:
         specialise = specialise_value_list.pop(0)
         try:
-          child_list = specialise.getSpecialiseValueList(\
+          # all children
+          child_specialised_value_list = specialise.getSpecialiseValueList()
+          # only children that match the portal_type given
+          child_visited_trade_condition_list = specialise.getSpecialiseValueList(\
               portal_type=portal_type_list)
         except AttributeError:
           # it is possible, that specialised object cannot be specialised
           # anymore
           continue
-        intersection = set(child_list).intersection(\
+        intersection = set(child_specialised_value_list).intersection(\
             set(visited_trade_condition_list))
-        for model in child_list:
+        for model in child_specialised_value_list:
+          # don't add model that have already been visited. This permit to
+          # visit all the tree and to prevent having circular dependency
           if model not in intersection:
-            # don't add model that are already been visited. This permit to
-            # visit all model tree, and to not have circular dependency
             specialise_value_list.append(model)
-            visited_trade_condition_list.append(model)
+            # only add those who matches the portal type given
+            if model in child_visited_trade_condition_list:
+              visited_trade_condition_list.append(model)
+
       return visited_trade_condition_list
 
     security.declareProtected(Permissions.AccessContentsInformation,
