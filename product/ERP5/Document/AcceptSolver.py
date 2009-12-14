@@ -59,15 +59,24 @@ class AcceptSolver(XMLObject):
   # ISolver Implementation
   def solve(self):
     """
+    Adopt new property to simulation movements, with keeping the
+    original one recorded.
     """
-    # Adopt new property, keep the original one recorded
-    solved_property = self.getPortalTypeValue().getTestedProperty()
+    solver_decision = self.getSolverRelatedValue()
+    divergence_tester = solver_decision.getCausalityValue()
+    solved_property = divergence_tester.getTestedProperty()
     for movement in self.getDeliveryValueList():
       new_value = movement.getProperty(solved_property)
       for simulation_movement in movement.getDeliveryRelatedValueList(
         portal_type='Simulation Movement'):
         if not simulation_movement.isPropertyRecorded(solved_property):
           simulation_movement.recordProperty(solved_property)
-        solved_property.setProperty(solved_property, new_value)
+        # XXX hard coded
+        if solved_property == 'quantity':
+          simulation_movement.setProperty(
+            solved_property,
+            new_value * simulation_movement.getDeliveryRatio())
+        else:
+          simulation_movement.setProperty(solved_property, new_value)
     # Finish solving
-    self.succeed()
+    # self.succeed()
