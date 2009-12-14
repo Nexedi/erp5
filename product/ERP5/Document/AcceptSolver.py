@@ -30,7 +30,7 @@
 import zope.interface
 from AccessControl import ClassSecurityInfo
 from Products.CMFCore.utils import getToolByName
-from Products.ERP5Type import Permissions, PropertySheet
+from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.XMLObject import XMLObject
 
 class AcceptSolver(XMLObject):
@@ -53,7 +53,10 @@ class AcceptSolver(XMLObject):
                     , PropertySheet.SolverSelection
                     )
 
-  # Implementation
+  # Declarative interfaces
+  zope.interface.implements(interfaces.ISolver,)
+
+  # ISolver Implementation
   def solve(self):
     """
     """
