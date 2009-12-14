@@ -63,7 +63,11 @@ if not solver:\n
 \n
 solver = context.getSolverValue()\n
 \n
-return "%s/%s" % (context.absolute_url(), solver.getConfigurationFormId())\n
+try:\n
+  return "%s/%s" % (context.absolute_url(), solver.getConfigurationFormId())\n
+except AttributeError:\n
+  # the solver is not configurable.\n
+  return False\n
 </string> </value>
         </item>
         <item>
@@ -104,6 +108,7 @@ return "%s/%s" % (context.absolute_url(), solver.getConfigurationFormId())\n
                             <string>context</string>
                             <string>solver</string>
                             <string>False</string>
+                            <string>AttributeError</string>
                           </tuple>
                         </value>
                     </item>
