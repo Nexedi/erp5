@@ -792,7 +792,8 @@ class Delivery(XMLObject, ImmobilisationDelivery):
       # we might use a zsql method, because it can be very slow
       for m in self.getMovementList():
         if m.isSimulated():
-          sim_movement_list = m.getDeliveryRelatedValueList()
+          sim_movement_list = m.getDeliveryRelatedValueList(
+              portal_type='Simulation Movement') # XXX hardcoded
           for sim_movement in sim_movement_list:
             if sim_movement.getRootAppliedRule().getPath() \
                 not in excluded_rule_path_list:

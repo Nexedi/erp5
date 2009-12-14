@@ -493,7 +493,8 @@ class Movement(XMLObject, Amount):
     Return a list of messages that contains the divergences 
     """
     divergence_list = [] 
-    for simulation_movement in self.getDeliveryRelatedValueList():
+    for simulation_movement in self.getDeliveryRelatedValueList(
+      portal_type='Simulation Movement'): # XXX hardcoded
       divergence_list.extend(simulation_movement.getDivergenceList())
 
     return divergence_list
