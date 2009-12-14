@@ -40,7 +40,7 @@
                 <string>accounting_transaction</string>
                 <string>delivery</string>
                 <string>invoice</string>
-                <string>sales</string>
+                <string>sale</string>
               </tuple>
             </value>
         </item>
