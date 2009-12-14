@@ -780,10 +780,10 @@ class ODFStrategy(Implicit):
     column.text = None
     for child in column:
       # clear data except style
-      style_value = child.attrib.get(self._name_attribute_name)
+      style_value = child.attrib.get(self._style_attribute_name)
       child.clear()
       if style_value:
-        child.set(self._name_attribute_name, style_value)
+        child.set(self._style_attribute_name, style_value)
 
   def _getColumnValueAttribute(self, column):
     attrib = column.attrib
