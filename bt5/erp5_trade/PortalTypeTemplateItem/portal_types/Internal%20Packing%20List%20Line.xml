@@ -48,7 +48,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>A Product object holds the information about\n
+            <value> <string>A Product object holds the information about\r\n
 a manufactured product, like a pen, a bicycle...</string> </value>
         </item>
         <item>
@@ -68,6 +68,7 @@ a manufactured product, like a pen, a bicycle...</string> </value>
             <value>
               <tuple>
                 <string>delivery_movement</string>
+                <string>internal</string>
               </tuple>
             </value>
         </item>
@@ -81,7 +82,9 @@ a manufactured product, like a pen, a bicycle...</string> </value>
         </item>
         <item>
             <key> <string>permission</string> </key>
-            <value> <string></string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>title</string> </key>

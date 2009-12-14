@@ -38,7 +38,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Folders allow to store a large number of documents (1,000,000 should not\n
+            <value> <string>Folders allow to store a large number of documents (1,000,000 should not\r\n
 be a problem).</string> </value>
         </item>
         <item>
@@ -54,6 +54,7 @@ be a problem).</string> </value>
             <value>
               <tuple>
                 <string>module</string>
+                <string>sales</string>
               </tuple>
             </value>
         </item>
@@ -63,7 +64,15 @@ be a problem).</string> </value>
         </item>
         <item>
             <key> <string>init_script</string> </key>
-            <value> <string></string> </value>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>permission</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>title</string> </key>

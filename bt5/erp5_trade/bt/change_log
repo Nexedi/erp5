@@ -1,4 +1,7 @@
 2009-12-14 yusei
+* Add new group type to each Sale/Purchase/Internal type informations.
+
+2009-12-14 yusei
 * Add use field to order line view and packing list line view.
 
 2009-12-12 yo

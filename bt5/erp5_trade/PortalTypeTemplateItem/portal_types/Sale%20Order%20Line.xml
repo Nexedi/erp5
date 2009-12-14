@@ -38,6 +38,7 @@
             <value>
               <tuple>
                 <string>order_movement</string>
+                <string>sales</string>
               </tuple>
             </value>
         </item>
@@ -51,7 +52,9 @@
         </item>
         <item>
             <key> <string>permission</string> </key>
-            <value> <string></string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>redirect_script</string> </key>
