@@ -50,6 +50,7 @@ class AcceptSolver(XMLObject):
                     , PropertySheet.XMLObject
                     , PropertySheet.CategoryCore
                     , PropertySheet.DublinCore
+                    , PropertySheet.SolverSelection
                     )
 
   # Implementation
