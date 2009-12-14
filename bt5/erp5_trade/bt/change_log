@@ -1,3 +1,6 @@
+2009-12-14 yusei
+* Add use field to order line view and packing list line view.
+
 2009-12-12 yo
 * Show translated logical paths instead of paths of quantity units in the Stock tab.
 

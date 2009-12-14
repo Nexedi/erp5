@@ -122,6 +122,7 @@
                         <string>my_base_contribution_list</string>
                         <string>my_destination_account</string>
                         <string>my_source_account</string>
+                        <string>my_use</string>
                       </list>
                     </value>
                 </item>
