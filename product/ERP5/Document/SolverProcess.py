@@ -182,3 +182,9 @@ class SolverProcess(XMLObject, ActiveProcess):
       new_decision._setDeliveryList(movement_dict.keys())
       new_decision._setSolver(solver_decision_key[0])
       # No need to set application_list or....?
+
+  def _generateRandomId(self):
+    # call ActiveProcess._generateRandomId() explicitly otherwise
+    # Folder._generateRandomId() will be called and it returns 'str' not
+    # 'int' id.
+    return ActiveProcess._generateRandomId(self)
