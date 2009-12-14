@@ -81,6 +81,10 @@ class InvoicingRule(Rule):
         'source_function': context_movement.getSourceFunction(),
         'source_payment': context_movement.getSourcePayment(),
         'source_account': context_movement.getSourceAccount(),
+        # this is required in order to have list of destination in the simulation
+        # XXX all this section will probably be removed once the simulation API
+        # will be fully reviewed
+        'destination_list': context_movement.getDestinationList(),
         'destination': context_movement.getDestination(),
         'destination_section': context_movement.getDestinationSection(),
         'destination_decision': context_movement.getDestinationDecision(),
