@@ -130,23 +130,30 @@ class TradeCondition(Path, Transformation, XMLMatrix):
         specialise_value_list = context.getSpecialiseValueList()
         visited_trade_condition_list = context.getSpecialiseValueList(\
             portal_type=portal_type_list)
+
       while len(specialise_value_list) != 0:
         specialise = specialise_value_list.pop(0)
         try:
-          child_list = specialise.getSpecialiseValueList(\
+          # all children
+          child_specialised_value_list = specialise.getSpecialiseValueList()
+          # only children that match the portal_type given
+          child_visited_trade_condition_list = specialise.getSpecialiseValueList(\
               portal_type=portal_type_list)
         except AttributeError:
           # it is possible, that specialised object cannot be specialised
           # anymore
           continue
-        intersection = set(child_list).intersection(\
+        intersection = set(child_specialised_value_list).intersection(\
             set(visited_trade_condition_list))
-        for model in child_list:
+        for model in child_specialised_value_list:
+          # don't add model that have already been visited. This permit to
+          # visit all the tree and to prevent having circular dependency
           if model not in intersection:
-            # don't add model that are already been visited. This permit to
-            # visit all model tree, and to not have circular dependency
             specialise_value_list.append(model)
-            visited_trade_condition_list.append(model)
+            # only add those who matches the portal type given
+            if model in child_visited_trade_condition_list:
+              visited_trade_condition_list.append(model)
+
       return visited_trade_condition_list
 
     security.declareProtected(Permissions.AccessContentsInformation,
@@ -288,10 +295,10 @@ class TradeCondition(Path, Transformation, XMLMatrix):
     security.declareProtected(Permissions.AccessContentsInformation,
         'getReferenceDict')
     def getReferenceDict(self, portal_type_list, property_list=None):
-      '''Return a dict containing all id's of the objects contained in
+      """Return a dict containing all id's of the objects contained in
       this model and corresponding to the given portal_type. The key of the dict
       are the reference (or id if no reference)
-      '''
+      """
       if property_list is None:
         property_list=[]
       reference_dict = {}
@@ -311,7 +318,7 @@ class TradeCondition(Path, Transformation, XMLMatrix):
         'findEffectiveSpecialiseValueList')
     def findEffectiveSpecialiseValueList(self, context, start_date=None,
         stop_date=None, portal_type_list=None, effective_model_list=None):
-      '''Return a list of effective specialised objects that is the
+      """Return a list of effective specialised objects that is the
       inheritance tree.
       An effective object is an object which have start_date and stop_date
       included to the range of the given parameters start_date and stop_date.
@@ -319,7 +326,7 @@ class TradeCondition(Path, Transformation, XMLMatrix):
       result is returned.
 
       This algorithm uses Breadth First Search.
-      '''
+      """
       if start_date is None and stop_date is None:
         # if dates are not defined, return findSpecialiseValueList result
         return self.findSpecialiseValueList(context=context)
@@ -360,7 +367,7 @@ class TradeCondition(Path, Transformation, XMLMatrix):
         for model in child_list:
           effective_model = model.getEffectiveModel(start_date=start_date,
               stop_date=stop_date)
-          if effective_model not in intersection:
+          if effective_model is not None and effective_model not in intersection:
             # don't add model that are already been visited. This permit to
             # visit all model tree, and to not have circular dependency
             effective_model_list.append(effective_model)
