@@ -56,7 +56,7 @@
             <key> <string>group_list</string> </key>
             <value>
               <tuple>
-                <string>sales</string>
+                <string>sale</string>
                 <string>supply</string>
               </tuple>
             </value>
