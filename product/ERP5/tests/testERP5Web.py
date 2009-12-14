@@ -993,7 +993,7 @@ Hé Hé Hé!""", page.asText().strip())
     preference_tool = self.getPreferenceTool()
     isTransitionPossible = self.portal.portal_workflow.isTransitionPossible
 
-    #create or edit preference for administrator
+    # create or edit preference for administrator
     administrator_preference = self.portal.portal_catalog.getResultValue(
                                                  portal_type='Preference',
                                                  owner='administrator')
@@ -1007,7 +1007,7 @@ Hé Hé Hé!""", page.asText().strip())
     administrator_preference.setPreferredHtmlStyleDevelopperMode(True)
     administrator_preference.setPreferredHtmlStyleTranslatorMode(False)
 
-    #create or edit preference for webeditor
+    # create or edit preference for webeditor
     webeditor_preference = self.portal.portal_catalog.getResultValue(
                                                   portal_type='Preference',
                                                   owner='webeditor')
@@ -1029,17 +1029,17 @@ Hé Hé Hé!""", page.asText().strip())
 
     websection_url = '%s/%s' % (self.portal.getId(), websection.getRelativeUrl())
 
-    #connect as administrator and check that only developper_mode is enable
+    # connect as administrator and check that only developper_mode is enable
     response = self.publish(websection_url, 'administrator:administrator')
     self.assertTrue('manage_main' in response.getBody())
     self.assertTrue('manage_messages' not in response.getBody())
 
-    #connect as webeditor and check that only translator_mode is enable
+    # connect as webeditor and check that only translator_mode is enable
     response = self.publish(websection_url, 'webeditor:webeditor')
     self.assertTrue('manage_main' not in response.getBody())
     self.assertTrue('manage_messages' in response.getBody())
 
-    #anonymous user doesn't exists, check anonymous access without preferences
+    # anonymous user doesn't exists, check anonymous access without preferences
     response = self.publish(websection_url, 'anonymous:anonymous')
     self.assertTrue('manage_main' not in response.getBody())
     self.assertTrue('manage_messages' not in response.getBody())
