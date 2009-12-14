@@ -1,3 +1,7 @@
+2009-12-14 yusei
+* Add sales group type to Sale Invoice Transaction.
+* Add purchase group type to Purchase Invoice Transaction.
+
 2009-10-16 yusei
 * Update for the changes of new portal types of portal types.
 
