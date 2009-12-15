@@ -105,15 +105,15 @@ class TestERP5SimulationMixin(TestPackingListMixin):
       new_order_rule.validate()
 
 class TestERP5Simulation(TestERP5SimulationMixin, TestPackingList):
-  def _addSolverProcess(self, divergence, solver_portal_type):
+  def _addSolverProcess(self, divergence, solver_portal_type, **kw):
     solver_tool = self.portal.portal_solvers
     # create a solver process
     solver_process = solver_tool.newContent(portal_type='Solver Process')
     # create a target solver
     solver = solver_process.newContent(
       portal_type=solver_portal_type,
-      delivery=divergence.getProperty('object_relative_url')
-      )
+      delivery=divergence.getProperty('object_relative_url'),
+      **kw)
     # create a solver decision
     solver_decision = solver_process.newContent(
       portal_type='Solver Decision',
@@ -145,6 +145,20 @@ class TestERP5Simulation(TestERP5SimulationMixin, TestPackingList):
     solver_process = self._addSolverProcess(resource_divergence,
                                             'Resource Accept Solver')
     # then call solve() on solver process
+    solver_process.solve()
+
+  def stepSplitAndDeferPackingList(self, sequence=None, sequence_list=None, **kw):
+    """
+      Do the split and defer action
+    """
+    packing_list = sequence.get('packing_list')
+    quantity_divergence = [x for x in packing_list.getDivergenceList() \
+                           if x.getProperty('tested_property') == 'quantity'][0]
+    kw = {'delivery_solver':'FIFO',
+          'start_date':self.datetime + 15,
+          'stop_date':self.datetime + 25}
+    solver_process = self._addSolverProcess(quantity_divergence,
+                                            'Quantity Split Solver', **kw)
     solver_process.solve()
 
 def test_suite():
