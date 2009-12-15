@@ -31,6 +31,11 @@ class SolverType:
     """
 
     _properties = (
+        { 'id':         'tested_property',
+          'type':       'string',
+          'mode':       'w',
+          'label':      'Property to be solved'
+         },
         { 'id':         'solver_action_title',
           'type':       'string',
           'mode':       'w',
