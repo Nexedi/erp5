@@ -52,7 +52,7 @@ class QuantitySplitSolver(XMLObject):
                     , PropertySheet.CategoryCore
                     , PropertySheet.DublinCore
                     , PropertySheet.Arrow
-                    , PropertySheet.SolverSelection
+                    , PropertySheet.TargetSolver
                     )
   # Declarative interfaces
   zope.interface.implements(interfaces.ISolver,

@@ -50,7 +50,7 @@ class AdoptSolver(XMLObject):
                     , PropertySheet.XMLObject
                     , PropertySheet.CategoryCore
                     , PropertySheet.DublinCore
-                    , PropertySheet.SolverSelection
+                    , PropertySheet.TargetSolver
                     )
 
   # Declarative interfaces
