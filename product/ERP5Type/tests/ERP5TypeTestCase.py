@@ -962,6 +962,14 @@ class ERP5TypeTestCase(backportUnittest.TestCase, PortalTestCase):
                             % title) # run_unit_test depends on this string.
         raise
 
+    def tearDown(self):
+      '''Tears down the fixture. Do not override,
+         use the hooks instead.
+      '''
+      # avoid backportUnittest.TestCase.tearDown inheritance and still allow
+      # "runUnitTest --save" to monkey-patch PortalTestCase.tearDown
+      return PortalTestCase.tearDown(self)
+
     def beforeClose(self):
       PortalTestCase.beforeClose(self)
       try:
