@@ -74,8 +74,16 @@ class TestXMLMatrix(ERP5TypeTestCase, LogInterceptor):
       order = module.newContent(id='1', portal_type='Purchase Order')
     self._catch_log_errors(ignored_level=PROBLEM)
 
+  portal_activities_backup = None
+
   def beforeTearDown(self):
     self._ignore_log_errors()
+    if self.portal_activities_backup is not None:
+      self.portal._setObject('portal_activities',
+                             self.portal_activities_backup)
+      get_transaction().commit()
+      del self.portal_activities_backup
+    return ERP5TypeTestCase.beforeTearDown(self)
 
 
   def test_01_RenameCellRange(self, quiet=quiet):
@@ -198,8 +206,7 @@ class TestXMLMatrix(ERP5TypeTestCase, LogInterceptor):
     portal = self.getPortal()
     module = portal.purchase_order_module
     if not active:
-      # FIXME: deleting portal_activities prevent from running another test
-      # after this one (because this methods commits the transaction)
+      self.portal_activities_backup = portal._getOb('portal_activities')
       portal._delObject('portal_activities')
       module.recursiveImmediateReindexObject()
     else:
