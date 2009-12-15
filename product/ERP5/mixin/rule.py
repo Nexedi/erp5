@@ -84,6 +84,14 @@ class RuleMixin:
                          activate_kw=activate_kw)
     return context.get(id)
 
+  def test(self, *args, **kw):
+    """
+    If no test method is defined, return False, to prevent infinite loop
+    """
+    if not self.getTestMethodId():
+      return False
+    return Predicate.test(self, *args, **kw)
+
   def expand(self, applied_rule, **kw):
     """
     Expand this applied rule to create new documents inside the
