@@ -973,10 +973,16 @@ class ERP5TypeTestCase(backportUnittest.TestCase, PortalTestCase):
     def beforeClose(self):
       PortalTestCase.beforeClose(self)
       try:
+        portal_activities = self.portal.portal_activities
+        # Drop remaining activities.
+        count = portal_activities.countMessage()
+        portal_activities.manageClearActivities()
+        if count:
+          LOG('Products.ERP5Type.tests.ERP5TypeTestCase.beforeClose', DEBUG,
+              'dropped %d left-over activity messages' % (count,))
         # portal_activities.process_timer automatically registers current node
         # (localhost:<random_port>). We must unregister it so that Data.fs can
         # be reused without reconfiguring portal_activities.
-        portal_activities = self.portal.portal_activities
         del portal_activities.distributingNode
         del portal_activities._nodes
         transaction.commit()
