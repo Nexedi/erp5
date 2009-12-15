@@ -105,6 +105,24 @@ class TestERP5SimulationMixin(TestPackingListMixin):
       new_order_rule.validate()
 
 class TestERP5Simulation(TestERP5SimulationMixin, TestPackingList):
+  def _addSolverProcess(self, divergence, solver_portal_type):
+    solver_tool = self.portal.portal_solvers
+    # create a solver process
+    solver_process = solver_tool.newContent(portal_type='Solver Process')
+    # create a target solver
+    solver = solver_process.newContent(
+      portal_type=solver_portal_type,
+      delivery=divergence.getProperty('object_relative_url')
+      )
+    # create a solver decision
+    solver_decision = solver_process.newContent(
+      portal_type='Solver Decision',
+      causality=divergence.getProperty('tester_relative_url'),
+      delivery=divergence.getProperty('object_relative_url'),
+      solver_value=solver,
+      )
+    return solver_process
+
   def stepAcceptDecisionQuantity(self,sequence=None, sequence_list=None, **kw):
     """
     Solve quantity divergence by using solver tool.
@@ -112,25 +130,20 @@ class TestERP5Simulation(TestERP5SimulationMixin, TestPackingList):
     packing_list = sequence.get('packing_list')
     quantity_divergence = [x for x in packing_list.getDivergenceList() \
                            if x.getProperty('tested_property') == 'quantity'][0]
-    solver_tool = self.portal.portal_solvers
-    # create a solver process
-    solver_process = solver_tool.newContent(portal_type='Solver Process')
-    # create a target solver
-    solver = solver_process.newContent(
-      portal_type='Accept Solver',
-      delivery=quantity_divergence.getProperty('object_relative_url')
-      )
-    # create a solver decision
-    solver_decision = solver_process.newContent(
-      portal_type='Solver Decision',
-      causality=quantity_divergence.getProperty('tester_relative_url'),
-      delivery=quantity_divergence.getProperty('object_relative_url'),
-      solver_value=solver,
-      )
-    # Solver Decision should be indexed to find the related Solver
-    # Decision document from a Target Solver document.
-    transaction.commit()
-    self.tic()
+    solver_process = self._addSolverProcess(quantity_divergence,
+                                            'Quantity Accept Solver')
+    # then call solve() on solver process
+    solver_process.solve()
+
+  def stepAcceptDecisionResource(self,sequence=None, sequence_list=None, **kw):
+    """
+    Solve quantity divergence by using solver tool.
+    """
+    packing_list = sequence.get('packing_list')
+    resource_divergence = [x for x in packing_list.getDivergenceList() \
+                           if x.getProperty('tested_property') == 'resource'][0]
+    solver_process = self._addSolverProcess(resource_divergence,
+                                            'Resource Accept Solver')
     # then call solve() on solver process
     solver_process.solve()
 
