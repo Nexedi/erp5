@@ -33,6 +33,8 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5OOo.tests.testFormPrintout import TestFormPrintoutMixin
 from Products.ERP5OOo.OOoUtils import OOoBuilder
 from Products.ERP5OOo.tests.utils import Validator
+from Products.ERP5Type.tests.utils import FileUpload
+from urllib import quote_plus
 from lxml import etree
 import os
 
@@ -290,6 +292,76 @@ class TestFormPrintoutAsODG(TestFormPrintoutMixin):
     text_xpath = '//draw:frame[@draw:name="my_description"]//text:line-break'
     node_list = content.xpath(text_xpath, namespaces=content.nsmap)
     self.assertEqual(len(node_list), 2)
+
+  def test_03_Image(self):
+    """
+    Mapping an ImageField to odg document.
+    Check it's possible to use an odg document to map an image with a
+    form.ImageField
+    """
+    # create a new person
+    person_module = self.portal.getDefaultModule('Person')
+    if person_module._getOb('person1', None) is None:
+      person_module.newContent(id='person1', portal_type='Person')
+    person1 =  person_module.person1
+
+    # add an image to this person
+    current_dir = os.path.dirname(__file__)
+    parent_dir = os.path.dirname(current_dir)
+    image_path = os.path.join(parent_dir, 'www', 'form_printout_icon.png')
+    file_data = FileUpload(image_path, 'rb')
+    image = person1.newContent(portal_type='Image')
+    image.edit(file=file_data)
+
+    foo_printout = image.Foo_viewAsODGPrintout
+    foo_form = image.Foo_view
+    # add an image_field to Foo_view if there is not
+    if foo_form._getOb("image_view", None) is None:
+      foo_form.manage_addField('image_view', 'logo', 'ImageField')
+    image_view_field = foo_form.image_view
+    # set the image on the field
+    image_view_field.values['default'] = image.absolute_url_path()
+
+    # 01 - Normal image mapping
+    odf_document = foo_printout()
+    self.assertTrue(odf_document is not None)
+    self._validate(odf_document)
+    builder = OOoBuilder(odf_document)
+    content_xml = builder.extract("content.xml")
+    self.assertTrue(content_xml.find('<draw:image xlink:href') > 0)
+    self.assertTrue(content_xml.find("Pictures/%s.png" % \
+      quote_plus(image.getPath())) > 0)
+
+    # check the image is in the odg file
+    try:
+      builder.extract("Pictures/%s.png" % quote_plus(image.getPath()))
+    except KeyError:
+      self.fail('image "Pictures/%s.png" not found in odg document' % \
+         image.getPath())
+
+    content = etree.XML(content_xml)
+    image_frame_xpath = '//draw:frame[@draw:name="image_view"]'
+    image_frame_list = content.xpath(image_frame_xpath, namespaces=content.nsmap)
+    self.assertTrue(len(image_frame_list) > 0)
+    image_frame = image_frame_list[0]
+    # Check the image size.
+    # as the test image (form_printout_icon.png) is a square, proportions
+    # should be keept, so heigh and width should be same and equal to the
+    # height of the original image in the original odf test document.
+    self.assertEqual(image_frame.attrib['{%s}height' % content.nsmap['svg']],
+                     '1.206cm')
+    self.assertEqual(image_frame.attrib['{%s}width' % content.nsmap['svg']],
+                     '1.206cm')
+
+    # 02: No image defined
+    image_view_field.values['default'] = ''
+    odf_document = foo_printout()
+    self.assertTrue(odf_document is not None)
+    builder = OOoBuilder(odf_document)
+    content_xml = builder.extract("content.xml")
+    # confirming the image was removed
+    self.assertTrue(content_xml.find('<draw:image xlink:href') < 0)
+    self._validate(odf_document)
 
 def test_suite():
   suite = unittest.TestSuite()
