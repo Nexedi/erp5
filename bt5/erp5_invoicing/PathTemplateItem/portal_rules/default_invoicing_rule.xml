@@ -40,8 +40,58 @@
             </value>
         </item>
         <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
             <key> <string>default_reference</string> </key>
             <value> <string>default_invoicing_rule</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>expandable_property</string> </key>
+            <value>
+              <tuple>
+                <string>source</string>
+                <string>source_section</string>
+                <string>source_decision</string>
+                <string>source_administration</string>
+                <string>source_project</string>
+                <string>source_function</string>
+                <string>source_payment</string>
+                <string>source_account</string>
+                <string>destination</string>
+                <string>destination_section</string>
+                <string>destination_decision</string>
+                <string>destination_administration</string>
+                <string>destination_project</string>
+                <string>destination_function</string>
+                <string>destination_payment</string>
+                <string>destination_account</string>
+                <string>start_date</string>
+                <string>stop_date</string>
+                <string>description</string>
+                <string>resource</string>
+                <string>variation_category_list</string>
+                <string>variation_property_dict</string>
+                <string>delivery_mode</string>
+                <string>incoterm</string>
+                <string>base_contribution_list</string>
+                <string>aggregate_list</string>
+                <string>quantity</string>
+                <string>quantity_unit</string>
+                <string>price</string>
+                <string>price_currency</string>
+                <string>efficiency</string>
+              </tuple>
+            </value>
         </item>
         <item>
             <key> <string>id</string> </key>
