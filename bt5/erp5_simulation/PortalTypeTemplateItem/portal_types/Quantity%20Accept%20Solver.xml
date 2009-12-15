@@ -45,7 +45,7 @@
         </item>
         <item>
             <key> <string>factory</string> </key>
-            <value> <string>addAdoptSolver</string> </value>
+            <value> <string>addAcceptSolver</string> </value>
         </item>
         <item>
             <key> <string>group_list</string> </key>
@@ -57,7 +57,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Adopt Solver</string> </value>
+            <value> <string>Quantity Accept Solver</string> </value>
         </item>
         <item>
             <key> <string>init_script</string> </key>
@@ -85,9 +85,11 @@
         </item>
         <item>
             <key> <string>solver_action_title</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>Accept new quantity</string> </value>
+        </item>
+        <item>
+            <key> <string>tested_property</string> </key>
+            <value> <string>quantity</string> </value>
         </item>
       </dictionary>
     </pickle>

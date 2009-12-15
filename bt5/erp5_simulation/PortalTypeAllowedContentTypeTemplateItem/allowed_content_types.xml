@@ -9,10 +9,10 @@
   <item>New Order Rule</item>
  </portal_type>
  <portal_type id="Solver Process">
-  <item>Accept Solver</item>
-  <item>Adopt Solver</item>
   <item>Production Reduction Solver</item>
+  <item>Quantity Accept Solver</item>
   <item>Quantity Split Solver</item>
+  <item>Resource Accept Solver</item>
   <item>Resource Adoption Solver</item>
   <item>Resource Replacement Solver</item>
   <item>Solver Decision</item>

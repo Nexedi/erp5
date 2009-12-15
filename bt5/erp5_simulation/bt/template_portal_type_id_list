@@ -1,10 +1,9 @@
-Accept Solver
-Adopt Solver
 Category Membership Divergence Tester
 DateTime Divergence Tester
 Float Divergence Tester
 New Order Rule
 Production Reduction Solver
+Quantity Accept Solver
 Quantity Cancel Solver
 Quantity Split Solver
 Resource Adoption Solver

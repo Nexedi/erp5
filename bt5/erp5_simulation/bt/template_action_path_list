@@ -1,7 +1,3 @@
-Accept Solver | configuration
-Accept Solver | view
-Adopt Solver | configuration
-Adopt Solver | view
 Category Membership Divergence Tester | configuration
 Category Membership Divergence Tester | predicate
 Category Membership Divergence Tester | view
@@ -12,6 +8,8 @@ Float Divergence Tester | configuration
 Float Divergence Tester | predicate
 Float Divergence Tester | view
 New Order Rule | view
+Quantity Accept Solver | configuration
+Quantity Accept Solver | view
 Quantity Cancel Solver | configuration
 Quantity Cancel Solver | view
 Quantity Split Solver | configuration
