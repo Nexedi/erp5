@@ -64,9 +64,7 @@ class SolverDecision(XMLObject):
   meta_type = 'ERP5 Solver Decision'
   portal_type = 'Solver Decision'
   add_permission = Permissions.AddPortalContent
-  # XXX we need to index Solver Decision so as to find the related Solver
-  # Decision document from a Target Solver document.
-  # isIndexable = 0 # We do not want to fill the catalog with objects on which we need no reporting
+  isIndexable = 0 # We do not want to fill the catalog with objects on which we need no reporting
 
   # Declarative security
   security = ClassSecurityInfo()

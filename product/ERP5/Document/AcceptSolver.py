@@ -66,8 +66,7 @@ class AcceptSolver(SolverMixin, XMLObject):
     solved_property = self._getPortalTypeValue().getTestedProperty()
     for movement in self.getDeliveryValueList():
       new_value = movement.getProperty(solved_property)
-      for simulation_movement in movement.getDeliveryRelatedValueList(
-        portal_type='Simulation Movement'):
+      for simulation_movement in movement.getDeliveryRelatedValueList():
         if not simulation_movement.isPropertyRecorded(solved_property):
           simulation_movement.recordProperty(solved_property)
         # XXX hard coded

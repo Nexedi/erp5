@@ -65,8 +65,7 @@ class QuantitySplitSolver(XMLObject):
     """    
     for delivery_line in self.getDeliveryValueList(): 
       decision_quantity = delivery_line.getQuantity()
-      simulation_movement_list = self.getDeliveryRelatedValueList(
-        portal_type='Simulation Movement')
+      simulation_movement_list = self.getDeliveryRelatedValueList()
       delivery_solver = self.portal_solvers.newDeliverySolver(self.getDeliverySolver(), simulation_movement_list)
       # Update the quantity using delivery solver algorithm
       split_list = delivery_solver.setTotalQuantity(decision_quantity)
