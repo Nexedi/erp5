@@ -65,13 +65,15 @@ class QuantitySplitSolver(XMLObject):
     """    
     for delivery_line in self.getDeliveryValueList(): 
       decision_quantity = delivery_line.getQuantity()
-      simulation_movement_list = self.getDeliveryRelatedValueList()
+      simulation_movement_list = delivery_line.getDeliveryRelatedValueList()
       delivery_solver = self.portal_solvers.newDeliverySolver(self.getDeliverySolver(), simulation_movement_list)
       # Update the quantity using delivery solver algorithm
       split_list = delivery_solver.setTotalQuantity(decision_quantity)
       # Create split movements
       for (simulation_movement, split_quantity) in split_list:
-        new_movement = simulation_movement.copy() # Copy at same level
+        new_movement = simulation_movement.Base_createCloneDocument(
+          batch_mode=True) # Copy at same level
+        new_movement._setDelivery(None)
         new_movement._setQuantity(split_quantity)
         new_movement._setStartDate(self.getStartDate())
         new_movement._setStopDate(self.getStopDate())
