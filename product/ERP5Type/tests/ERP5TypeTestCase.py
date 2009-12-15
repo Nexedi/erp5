@@ -30,6 +30,7 @@ from Products.ERP5Type import Globals
 
 # store a copy of the original method
 original_get_request = Globals.get_request
+convertToUpperCase = Products.ERP5Type.Utils.convertToUpperCase
 
 def get_request():
   if current_app is not None:
@@ -715,7 +716,8 @@ class ERP5TypeTestCase(backportUnittest.TestCase, PortalTestCase):
       self.assertEquals(len(a), len(b), msg)
     assertSameSet = failIfDifferentSet
 
-    def assertWorkflowTransitionFails(self, object, workflow_id, transition_id, error_message=None):
+    def assertWorkflowTransitionFails(self, object, workflow_id, transition_id,
+        error_message=None, state_variable='simulation_state'):
       """
         Check that passing given transition from given workflow on given object
         raises ValidationFailed.
@@ -726,14 +728,16 @@ class ERP5TypeTestCase(backportUnittest.TestCase, PortalTestCase):
       """
       workflow_tool = self.getWorkflowTool()
       reference_history_length = len(workflow_tool.getInfoFor(ob=object, name='history', wf_id=workflow_id))
-      reference_workflow_state = object.getSimulationState()
+      state_method = 'get' + convertToUpperCase(state_variable)
+      method = getattr(object, state_method, None)
+      reference_workflow_state = method()
       self.assertRaises(ValidationFailed, workflow_tool.doActionFor, object, transition_id, wf_id=workflow_id)
       workflow_history = workflow_tool.getInfoFor(ob=object, name='history', wf_id=workflow_id)
       self.assertEqual(len(workflow_history), reference_history_length + 1)
       workflow_error_message = str(workflow_history[-1]['error_message'])
       if error_message is not None:
         self.assertEqual(workflow_error_message, error_message)
-      self.assertEqual(object.getSimulationState(), reference_workflow_state)
+      self.assertEqual(method(), reference_workflow_state)
       return workflow_error_message
 
     def startZServer(self):
