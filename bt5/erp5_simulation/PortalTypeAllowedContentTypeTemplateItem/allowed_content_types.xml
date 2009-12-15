@@ -2,6 +2,7 @@
  <portal_type id="New Order Rule">
   <item>Category Membership Divergence Tester</item>
   <item>DateTime Divergence Tester</item>
+  <item>Dict Divergence Tester</item>
   <item>Float Divergence Tester</item>
   <item>String Divergence Tester</item>
  </portal_type>

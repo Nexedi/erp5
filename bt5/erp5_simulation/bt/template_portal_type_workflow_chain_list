@@ -1,5 +1,6 @@
 Category Membership Divergence Tester | edit_workflow
 DateTime Divergence Tester | edit_workflow
+Dict Divergence Tester | edit_workflow
 Float Divergence Tester | edit_workflow
 New Order Rule | edit_workflow
 New Order Rule | rule_validation_workflow
