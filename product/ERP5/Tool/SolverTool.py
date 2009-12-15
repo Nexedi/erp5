@@ -88,7 +88,9 @@ class SolverTool(BaseTool):
   def newDeliverySolver(self, class_name, movement_list):
     """
     """
-    raise NotImplementedError
+    __import__('%s.%s' % (DeliverySolver.__name__, class_name))
+    solver_class = getattr(getattr(DeliverySolver, class_name), class_name)
+    return solver_class(movement_list)
 
   def getDeliverySolverClassNameList(self):
     """
