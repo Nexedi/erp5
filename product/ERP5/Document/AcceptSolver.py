@@ -32,8 +32,9 @@ from AccessControl import ClassSecurityInfo
 from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.XMLObject import XMLObject
+from Products.ERP5.mixin.solver import SolverMixin
 
-class AcceptSolver(XMLObject):
+class AcceptSolver(SolverMixin, XMLObject):
   """
   """
   meta_type = 'ERP5 Accept Solver'
@@ -62,9 +63,7 @@ class AcceptSolver(XMLObject):
     Adopt new property to simulation movements, with keeping the
     original one recorded.
     """
-    solver_decision = self.getSolverRelatedValue()
-    divergence_tester = solver_decision.getCausalityValue()
-    solved_property = divergence_tester.getTestedProperty()
+    solved_property = self._getPortalTypeValue().getTestedProperty()
     for movement in self.getDeliveryValueList():
       new_value = movement.getProperty(solved_property)
       for simulation_movement in movement.getDeliveryRelatedValueList(

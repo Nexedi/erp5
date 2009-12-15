@@ -43,3 +43,6 @@ class SolverMixin:
   zope.interface.implements(interfaces.ISolver,)
 
   # Implementation of ISolver
+
+  def _getPortalTypeValue(self):
+    return self.getPortalObject().portal_types._getOb(self.getPortalType())
