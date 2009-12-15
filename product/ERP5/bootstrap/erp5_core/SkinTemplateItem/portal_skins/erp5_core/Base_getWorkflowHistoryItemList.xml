@@ -117,6 +117,8 @@ for workflow_item in workflow_item_list:\n
       else:\n
         value = wf_states.get(value, marker) and wf_states[value].id\n
     if key == \'action\':\n
+      # Store locally the id of action, usefull for merging action and transition\n
+      o.setProperty(\'action_id\', value)\n
       if value != \'\' and value is not None:\n
         if value == "\'edit\'":\n
           value = "edit"\n
