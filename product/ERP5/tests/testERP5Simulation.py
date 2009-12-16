@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2009 Nexedi SA and Contributors. All Rights Reserved.
@@ -53,7 +54,7 @@ class TestERP5SimulationMixin(TestPackingListMixin):
 
     # select New Order Rule in 'SaleOrder_selectMovement' script.
     script = self.portal.SaleOrder_selectMovement
-    script.write(script.read().replace("'Order Rule'", "'New Order Rule'"))
+    script.write(script.read().replace("'Order Rule'", "'New Order Rule'")) # XXX-JPS Hacky
 
     # create a New Order Rule document.
     portal_rules = self.portal.portal_rules
@@ -68,19 +69,19 @@ class TestERP5SimulationMixin(TestPackingListMixin):
                 'base_application',
                 'base_contribution',
                 'destination',
-                'destination_account',
-                'destination_function',
-                'destination_project',
-                'destination_section',
-                'price_currency',
-                'source',
-                'source_account',
-                'source_function',
-                'source_project',
-                'source_section',):
+                'destination_account', # XXX-JPS - Needed ?
+                'destination_function', # XXX-JPS - Needed ?
+                'destination_project', # XXX-JPS - Needed ?
+                'destination_section', 
+                'price_currency', # XXX-JPS - Needed ?
+                'source', 
+                'source_account', # XXX-JPS - Needed ?
+                'source_function', # XXX-JPS - Needed ?
+                'source_project', # XXX-JPS - Needed ?
+                'source_section',): 
         new_order_rule.newContent(
           portal_type='Category Membership Divergence Tester',
-          tested_property=i)
+          tested_property=i) # XXX-JPS put a title
       # create category divergence testers that is also used for matching
       for i in ('resource',
                 'variation_category',):
@@ -91,7 +92,7 @@ class TestERP5SimulationMixin(TestPackingListMixin):
       # create dict divergence testers that is also used for matching
       for i in ('variation_property_dict',):
         new_order_rule.newContent(
-          portal_type='Dict Divergence Tester',
+          portal_type='Dict Divergence Tester', # XXX-JPS - better to create Variation Divergence Tester and develop the concept of abstract variation
           tested_property=i,
           matching_provider=1)
       # create datetime divergence testers
@@ -104,7 +105,7 @@ class TestERP5SimulationMixin(TestPackingListMixin):
       # create float divergence testers
       for i in ('quantity',):
         new_order_rule.newContent(
-          portal_type='Float Divergence Tester',
+          portal_type='Float Divergence Tester', # XXX-JPS Quantity Divergence Tester ? (ie. quantity unit)
           tested_property=i,
           use_delivery_ratio=1,
           quantity=0)
@@ -113,13 +114,13 @@ class TestERP5SimulationMixin(TestPackingListMixin):
 class TestERP5Simulation(TestERP5SimulationMixin, TestPackingList):
   def _addSolverProcess(self, divergence, solver_portal_type, **kw):
     solver_tool = self.portal.portal_solvers
-    # create a solver process
-    solver_process = solver_tool.newContent(portal_type='Solver Process')
+    # create a solver process 
+    solver_process = solver_tool.newContent(portal_type='Solver Process') # XXX-JPS use newSolverProcess API
     # create a target solver
     solver = solver_process.newContent(
       portal_type=solver_portal_type,
-      delivery=divergence.getProperty('object_relative_url'),
-      **kw)
+      delivery=divergence.getProperty('object_relative_url'), # XXX-JPS Use persistent Divergence Tester - no getPropery
+      **kw)   # XXX-JPS use newSolverProcess API - not need to do by hand
     # create a solver decision
     solver_decision = solver_process.newContent(
       portal_type='Solver Decision',
@@ -135,7 +136,11 @@ class TestERP5Simulation(TestERP5SimulationMixin, TestPackingList):
     """
     packing_list = sequence.get('packing_list')
     quantity_divergence = [x for x in packing_list.getDivergenceList() \
-                           if x.getProperty('tested_property') == 'quantity'][0]
+                           if x.getProperty('tested_property') == 'quantity'][0] # XXX-JPS Why not getTestedProperty ?
+                                                                                 # Probably wrong API call
+    # XXX-JPS We do not need the divergence message anymore.
+    # since the divergence message == the divergence tester itself
+    # with its title, description, tested property, etc.
     solver_process = self._addSolverProcess(quantity_divergence,
                                             'Quantity Accept Solver')
     # then call solve() on solver process
