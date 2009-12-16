@@ -37,9 +37,7 @@
         <item>
             <key> <string>group_list</string> </key>
             <value>
-              <tuple>
-                <string>delivery_movement</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>
