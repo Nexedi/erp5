@@ -30,7 +30,17 @@
         <item>
             <key> <string>_range_criterion</string> </key>
             <value>
-              <dictionary/>
+              <dictionary>
+                <item>
+                    <key> <string>start_date</string> </key>
+                    <value>
+                      <tuple>
+                        <none/>
+                        <none/>
+                      </tuple>
+                    </value>
+                </item>
+              </dictionary>
             </value>
         </item>
         <item>
@@ -98,6 +108,16 @@
             <value> <string>default_invoicing_rule</string> </value>
         </item>
         <item>
+            <key> <string>matching_property</string> </key>
+            <value>
+              <tuple>
+                <string>resource_list</string>
+                <string>variation_category_list</string>
+                <string>variation_property_dict</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>portal_type</string> </key>
             <value> <string>Invoicing Rule</string> </value>
         </item>
@@ -111,7 +131,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Invoicing Rule</string> </value>
+            <value> <string>Default Invoicing Rule</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>

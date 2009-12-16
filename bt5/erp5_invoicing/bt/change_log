@@ -1,3 +1,6 @@
+2009-12-16 yusei
+* Set default matching properties to default invoicing rule and default invoice transaction rule for convenience.
+
 2009-12-15 yusei
 * Add default expandable properties to default invoicing rule.
 
