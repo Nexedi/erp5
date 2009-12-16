@@ -43,7 +43,7 @@ NSMAP = {
 
 class ImageFieldWidget(Widget.TextWidget):
     """ImageField widget.
-    
+
     Renders an HTML <img> element where the src is the 'default' field value.
     The 'description' field value is used as 'alt' attribute.
     The image size is calculated using 'image_display'.

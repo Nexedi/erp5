@@ -94,14 +94,14 @@ def add_and_edit(self, id, REQUEST):
 class FormPrintout(Implicit, Persistent, RoleManager, Item):
   """Form Printout
 
-  FormPrintout is one of a reporting system in ERP5. 
-  It enables to create a Printout, using an Open Document Format(ODF) 
-  document as its design, an ERP5Form as its contents. 
+  FormPrintout is one of a reporting system in ERP5.
+  It enables to create a Printout, using an Open Document Format(ODF)
+  document as its design, an ERP5Form as its contents.
 
   WARNING: The Form Printout currently supports only ODT format document.
 
   The functions status:
-  
+
   Fields -> Paragraphs:      supported
   ListBox -> Table:          supported
   Report Section
@@ -111,7 +111,7 @@ class FormPrintout(Implicit, Persistent, RoleManager, Item):
   styles.xml:                supported
   meta.xml:                  not supported yet
   """
-  
+
   meta_type = "ERP5 Form Printout"
   icon = "www/form_printout_icon.png"
 
@@ -186,7 +186,7 @@ class FormPrintout(Implicit, Persistent, RoleManager, Item):
     self.strategy = self._createStrategy(content_type)
     printout = self.strategy.render(extra_context=extra_context)
     return self._oooConvertByFormat(printout,
-                                    content_type=content_type, 
+                                    content_type=content_type,
                                     extra_context=extra_context,
                                     REQUEST=REQUEST)
 
@@ -368,8 +368,8 @@ class ODFStrategy(Implicit):
     Keyword arguments:
     element_tree -- the element tree object which have an xml document in an ODF document.
     extra_context -- the extra context
-    report_method -- the report method object which is used in an ReportBox 
-    base_name -- the name of a ReportBox field which is used to specify the target 
+    report_method -- the report method object which is used in an ReportBox
+    base_name -- the name of a ReportBox field which is used to specify the target
     ooo_builder -- the OOo Builder object which has ODF document.
     """
     if report_method is None:
@@ -472,7 +472,7 @@ class ODFStrategy(Implicit):
     Replace an ODF frame using an ERP5Form form box field.
 
     Note: This method is incompleted yet. This function is intended to
-    make an frame hide/show. But it has not such a feature currently. 
+    make an frame hide/show. But it has not such a feature currently.
     """
     field_id = field.id
     enabled = field.get_value('enabled')
@@ -595,14 +595,14 @@ class ODFStrategy(Implicit):
                                                            has_header_rows=has_header_rows)
     # create style-name and table-row dictionary if a reference name is set
     style_name_row_dictionary = self._createStyleNameRowDictionary(table_row_list)
-    # clear original table 
+    # clear original table
     parent_paragraph = target_table.getparent()
-    # clear rows 
+    # clear rows
     [newtable.remove(table_row) for table_row in table_row_list]
 
     listboxline_list = listbox.get_value('default',
                                          render_format='list',
-                                         REQUEST=REQUEST, 
+                                         REQUEST=REQUEST,
                                          render_prefix=None)
     # if ODF table has header rows, does not update the header rows
     # if does not have header rows, insert the listbox title line
@@ -666,7 +666,7 @@ class ODFStrategy(Implicit):
       row_middle = deepcopy(table_row_list[1])
       row_bottom = deepcopy(table_row_list[-1])
 
-    # remove office attribute if create a new header row 
+    # remove office attribute if create a new header row
     removeOfficeAttribute(row_top)
     return (row_top, row_middle, row_bottom)
 
@@ -844,7 +844,7 @@ class ODTStrategy(ODFStrategy):
     ooo_builder -- the OOoBuilder object which have an ODF document.
     iteration_index -- the index which is used when iterating the group of items using ReportSection.
     """
-    field_list = form.get_fields(include_disabled=1) 
+    field_list = form.get_fields(include_disabled=1)
     REQUEST = here.REQUEST
     for (count, field) in enumerate(field_list):
       if isinstance(field, ListBox):

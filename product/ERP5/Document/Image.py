@@ -160,7 +160,7 @@ class Image(File, OFSImage):
   security.declareProtected(Permissions.AccessContentsInformation, 'getWidth')
   def getWidth(self):
     """
-      Tries to get the width from the image data. 
+      Tries to get the width from the image data.
     """
     self._upradeImage()
     if self.get_size() and not self.width: self._update_image_info()
