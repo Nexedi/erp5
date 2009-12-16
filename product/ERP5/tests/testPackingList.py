@@ -516,6 +516,7 @@ class TestPackingListMixin(TestOrderMixin):
 #    self.assertEquals(len(simulation_line_list),1)
     for simulation_line in simulation_line_list:
       simulation_line.edit(quantity=self.default_quantity-1)
+      simulation_line.getOrderValue().edit(quantity=self.default_quantity-1)
 
   def stepModifySimulationLineQuantityForMergedLine(self,sequence=None, sequence_list=None, **kw):
     """
@@ -526,6 +527,7 @@ class TestPackingListMixin(TestOrderMixin):
     self.assertEquals(len(simulation_line_list),2)
     for simulation_line in simulation_line_list:
       simulation_line.edit(quantity=self.default_quantity-1)
+      simulation_line.getOrderValue().edit(quantity=self.default_quantity-1)
 
   def stepModifySimulationLineStartDate(self,sequence=None, sequence_list=None, **kw):
     """
@@ -536,6 +538,7 @@ class TestPackingListMixin(TestOrderMixin):
     resource_list = sequence.get('resource_list')
     for simulation_line in simulation_line_list:
       simulation_line.edit(start_date=self.datetime+15)
+      simulation_line.getOrderValue().edit(start_date=self.datetime+15)
 
   def stepModifyOneSimulationLineStartDate(self,sequence=None, sequence_list=None, **kw):
     """
@@ -546,6 +549,7 @@ class TestPackingListMixin(TestOrderMixin):
     resource_list = sequence.get('resource_list')
     self.assertEquals(len(simulation_line_list),len(resource_list))
     simulation_line_list[-1].edit(start_date=self.datetime+15)
+    simulation_line_list[-1].getOrderValue().edit(start_date=self.datetime+15)
 
   def stepModifySimulationLineResource(self,sequence=None, sequence_list=None, **kw):
     """
@@ -556,6 +560,7 @@ class TestPackingListMixin(TestOrderMixin):
     resource_list = sequence.get('resource_list')
     for simulation_line in simulation_line_list:
       simulation_line.edit(resource_value=resource_list[-1])
+      simulation_line.getOrderValue().edit(resource_value=resource_list[-1])
 
   def stepModifyOneSimulationLineResource(self,sequence=None, sequence_list=None, **kw):
     """
@@ -565,6 +570,7 @@ class TestPackingListMixin(TestOrderMixin):
     simulation_line_list = applied_rule.objectValues()
     resource_list = sequence.get('resource_list')
     simulation_line_list[-1].edit(resource_value=resource_list[-1])
+    simulation_line_list[-1].getOrderValue().edit(resource_value=resource_list[-1])
 
   def stepNewPackingListAdoptPrevisionQuantity(self,sequence=None, sequence_list=None, **kw):
     """
