@@ -43,7 +43,6 @@ from OFS.SimpleItem import Item
 from urllib import quote, quote_plus
 from copy import deepcopy
 from lxml import etree
-from lxml.etree import _Element, _ElementStringResult
 from zLOG import LOG, DEBUG, INFO, WARNING
 from mimetypes import guess_extension
 from DateTime import DateTime
@@ -270,7 +269,8 @@ class ODFStrategy(Implicit):
     if here is None:
       raise ValueError, 'Can not create a ODF Document without a parent acquisition context'
     form = extra_context['form']
-    if not extra_context.has_key('printout_template') or extra_context['printout_template'] is None:
+    if not extra_context.has_key('printout_template') or \
+        extra_context['printout_template'] is None:
       raise ValueError, 'Can not create a ODF Document without a printout template'
 
     odf_template = extra_context['printout_template']
@@ -281,7 +281,7 @@ class ODFStrategy(Implicit):
       ooo_document = odf_template.pt_render(here, extra_context=extra_context)
     else:
       # File object can be a template
-      ooo_document = odf_template 
+      ooo_document = odf_template
 
     # Create a new builder instance
     ooo_builder = OOoBuilder(ooo_document)
@@ -393,7 +393,7 @@ class ODFStrategy(Implicit):
       form = getattr(here, form_id)
 
       target_element_tree = deepcopy(temporary_element_tree)
-      # remove original target in the ODF template 
+      # remove original target in the ODF template
       if index == 0:
         office_body.remove(original_target)
       else:
@@ -514,21 +514,23 @@ class ODFStrategy(Implicit):
     picture_type = picture.getContentType()
     picture_path = self._createOdfUniqueFileName(path=path, picture_type=picture_type)
     ooo_builder.addFileEntry(picture_path, media_type=picture_type, content=picture_data)
-    picture_size = self._getPictureSize(picture, image_node)
+    width, height = self._getPictureSize(picture, image_node)
     image_node.set('{%s}href' % element_tree.nsmap['xlink'], picture_path)
-    image_frame.set('{%s}width' % element_tree.nsmap['svg'], picture_size[0])
-    image_frame.set('{%s}height' % element_tree.nsmap['svg'], picture_size[1])
+    image_frame.set('{%s}width' % element_tree.nsmap['svg'], width)
+    image_frame.set('{%s}height' % element_tree.nsmap['svg'], height)
     # set when using report section
     self._setUniqueElementName(image_field.id, iteration_index, image_xpath, element_tree)
 
   def _createOdfUniqueFileName(self, path='', picture_type=''):
     extension = guess_extension(picture_type)
-    picture_path = 'Pictures/%s%s' % (quote_plus(path), extension)     
+    # here, it's needed to use quote_plus to escape '/' caracters to make valid
+    # paths in the odf archive.
+    picture_path = 'Pictures/%s%s' % (quote_plus(path), extension)
     if picture_path not in self.odf_existent_name_list:
       return picture_path
     number = 0
     while True:
-      picture_path = 'Pictures/%s_%s%s' % (path, number, extension)
+      picture_path = 'Pictures/%s_%s%s' % (quote_plus(path), number, extension)
       if picture_path not in self.odf_existent_name_list:
         return picture_path
       number += 1
@@ -949,15 +951,22 @@ class ODGStrategy(ODFStrategy):
 
   def _replaceXmlByForm(self, element_tree, form, here, extra_context,
                         ooo_builder, iteration_index=0):
-
     field_list = form.get_fields(include_disabled=1)
     for (count, field) in enumerate(field_list):
-      text_xpath = '//draw:frame[@draw:name="%s"]/*' % field.id
+      text_xpath = '//draw:frame[@draw:name="%s"]' % field.id
       node_list = element_tree.xpath(text_xpath, namespaces=element_tree.nsmap)
+
       for target_node in node_list:
         attr_dict = {}
+        attr_dict.setdefault(target_node.tag, {}).update(target_node.attrib)
         # store child style using their local-name as key
         for descendant in target_node.iterdescendants():
           attr_dict.setdefault(descendant.tag, {}).update(descendant.attrib)
-        new_node = field.render_odg(attr_dict=attr_dict)
-        parent_node = target_node.getparent().replace(target_node, new_node)
+        # render the field in odg xml node format
+        new_node = field.render_odg(target_node=target_node, printout=self,
+            REQUEST=self.REQUEST, ooo_builder=ooo_builder, attr_dict=attr_dict)
+        if new_node is not None:
+          target_node.getparent().replace(target_node, new_node)
+        else:
+          # if the render return None, remove the node
+          target_node.getparent().remove(target_node)

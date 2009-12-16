@@ -80,6 +80,9 @@ class TestFormPrintoutAsODG(TestFormPrintoutMixin):
     if custom._getOb('Foo_viewAsODGPrintout', None) is None:
       erp5OOo.addFormPrintout(id='Foo_viewAsODGPrintout', title='',
                               form_name='Foo_view', template='Foo_getODGStyleSheet')
+    if custom._getOb('Foo_viewProxyFieldAsODGPrintout', None) is None:
+      erp5OOo.addFormPrintout(id='Foo_viewProxyFieldAsODGPrintout', title='',
+                              form_name='Foo_viewProxyField', template='Foo_getODGStyleSheet')
     if custom._getOb('FooReport_viewAsODGPrintout', None) is None:
       erp5OOo.addFormPrintout(id='FooReport_viewAsODGPrintout',
                               title='')
@@ -361,6 +364,126 @@ class TestFormPrintoutAsODG(TestFormPrintoutMixin):
     content_xml = builder.extract("content.xml")
     # confirming the image was removed
     self.assertTrue(content_xml.find('<draw:image xlink:href') < 0)
+    self._validate(odf_document)
+
+  def test_04_ProxyField(self):
+    """
+    Check it's possible to use an odg document to map proxyfields
+    """
+    portal = self.getPortal()
+    foo_module = self.portal.foo_module
+    if foo_module._getOb('test1', None) is None:
+      foo_module.newContent(id='test1', portal_type='Foo')
+    test1 =  foo_module.test1
+    test1.setTitle('Foo title!')
+    transaction.commit()
+    self.tic()
+
+    style_dict = {'{urn:oasis:names:tc:opendocument:xmlns:text:1.0}span':
+                    {'{urn:oasis:names:tc:opendocument:xmlns:text:1.0}style-name': 'T2'},
+                  '{urn:oasis:names:tc:opendocument:xmlns:text:1.0}p': {}
+                 }
+
+    # test target
+    foo_printout = portal.foo_module.test1.Foo_viewProxyFieldAsODGPrintout
+    original_file_content = self.getODFDocumentFromPrintout(foo_printout)
+    self._validate(original_file_content)
+
+    # extract content.xml from original odg document
+    original_doc_builder = OOoBuilder(original_file_content)
+    original_content_xml = original_doc_builder.extract("content.xml")
+    # get style of the title in the orignal test document
+    original_document_style_dict = self.getStyleDictFromFieldName(original_content_xml,
+        'my_title')
+
+    # check the style is good before the odg generation
+    self.assertEqual(original_document_style_dict, style_dict)
+
+    request = self.app.REQUEST
+    # 1. Normal case: "my_title" field to the "my_title" reference in the ODF document
+    odf_document = foo_printout.index_html(REQUEST=request)
+    self.assertTrue(odf_document is not None)
+    builder = OOoBuilder(odf_document)
+    content_xml = builder.extract("content.xml")
+    final_document_style_dict = self.getStyleDictFromFieldName(content_xml,
+        'my_title')
+
+    # check the style is keept after the odg generation
+    self.assertEqual(final_document_style_dict, style_dict)
+
+    self.assertTrue(content_xml.find("Foo title!") > 0)
+    self.assertEqual(request.RESPONSE.getHeader('content-type'),
+                     'application/vnd.oasis.opendocument.graphics; charset=utf-8')
+    self.assertEqual(request.RESPONSE.getHeader('content-disposition'),
+                     'inline;filename="Foo_viewProxyFieldAsODGPrintout.odg"')
+    self._validate(odf_document)
+
+    # 2. Normal case: change the field value and check again the ODF document
+    test1.setTitle("Changed Title!")
+    #foo_form.my_title.set_value('default', "Changed Title!")
+    odf_document = foo_printout.index_html(REQUEST=request)
+    self.assertTrue(odf_document is not None)
+    builder = OOoBuilder(odf_document)
+    content_xml = builder.extract("content.xml")
+    self.assertTrue(content_xml.find("Changed Title!") > 0)
+    self._validate(odf_document)
+
+    # 3. False case: change the field name
+    test1.setTitle("you cannot find")
+    # rename id 'my_title' to 'xxx_title', then does not match in the ODF document
+    foo_form = portal.foo_module.test1.Foo_viewProxyField
+    foo_form.manage_renameObject('my_title', 'xxx_title', REQUEST=request)
+    odf_document = foo_printout.index_html(REQUEST=request)
+    self.assertTrue(odf_document is not None)
+    builder = OOoBuilder(odf_document)
+    content_xml = builder.extract("content.xml")
+    self.assertFalse(content_xml.find("you cannot find") > 0)
+    self._validate(odf_document)
+    # put back
+    foo_form.manage_renameObject('xxx_title', 'my_title', REQUEST=request)
+
+    ## 4. False case: does not set a ODF template
+    self.assertTrue(foo_printout.template == 'Foo_getODGStyleSheet')
+    tmp_template = foo_printout.template
+    foo_printout.template = None
+    # template == None, causes a ValueError
+    try:
+      foo_printout.index_html(REQUEST=request)
+    except ValueError, e:
+      # e -> 'Can not create a ODF Document without a odf_template'
+      self.assertTrue(True)
+
+    # put back
+    foo_printout.template = tmp_template
+
+    # 5. Normal case: just call a FormPrintout object
+    request.RESPONSE.setHeader('Content-Type', 'text/html')
+    test1.setTitle("call!")
+    odf_document = foo_printout() # call
+    self.assertTrue(odf_document is not None)
+    builder = OOoBuilder(odf_document)
+    content_xml = builder.extract("content.xml")
+    self.assertTrue(content_xml.find("call!") > 0)
+    # when just call FormPrintout, it does not change content-type
+    self.assertEqual(request.RESPONSE.getHeader('content-type'), 'text/html')
+    self._validate(odf_document)
+
+    # 5. Normal case: utf-8 string
+    test1.setTitle("Français")
+    odf_document = foo_printout()
+    self.assertTrue(odf_document is not None)
+    builder = OOoBuilder(odf_document)
+    content_xml = builder.extract("content.xml")
+    self.assertTrue(content_xml.find("Français") > 0)
+    self._validate(odf_document)
+
+    # 6. Normal case: unicode string
+    test1.setTitle(u'Français test2')
+    odf_document = foo_printout()
+    self.assertTrue(odf_document is not None)
+    builder = OOoBuilder(odf_document)
+    content_xml = builder.extract("content.xml")
+    self.assertTrue(content_xml.find("Français test2") > 0)
     self._validate(odf_document)
 
 def test_suite():

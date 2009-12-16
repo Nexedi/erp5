@@ -190,10 +190,11 @@ class Widget:
       return etree.tostring(text_node)
     return text_node
 
-  def render_odg(self, field, as_string, local_name, attr_dict=None):
+  def render_odg(self, field, as_string, local_name, target_node=None,
+      printout=None, REQUEST=None, ooo_builder=None, attr_dict=None):
     """
       Default render odg for widget - to be overwritten in field classes.
-      Return a field value rendered in odg format.
+      Return a field node rendered in odg format.
       if as_string is True (default) the returned value is a string (xml
       reprensation of the node), if it's False, the value returned is the node
       object.
@@ -211,17 +212,25 @@ class Widget:
     value = '\n'.join(value)
     value.replace('\r', '')
 
+    draw_frame_tag_name = '{%s}%s' % (DRAW_URI, 'frame')
+    draw_frame_node = Element(draw_frame_tag_name, nsmap=NSMAP)
+    draw_frame_node.attrib.update(attr_dict.get(draw_frame_tag_name, {}))
+
     draw_tag_name = '{%s}%s' % (DRAW_URI, 'text-box')
     draw_node = Element(draw_tag_name, nsmap=NSMAP)
     draw_node.attrib.update(attr_dict.get(draw_tag_name, {}))
+
     text_p_tag_name = '{%s}%s' % (TEXT_URI, local_name)
     text_p_node = Element(text_p_tag_name, nsmap=NSMAP)
     text_p_node.attrib.update(attr_dict.get(text_p_tag_name, {}))
+
     text_span_tag_name = '{%s}%s' % (TEXT_URI, 'span')
     text_span_node =  Element(text_span_tag_name, nsmap=NSMAP)
     text_span_node.attrib.update(attr_dict.get(text_span_tag_name, {}))
+
     text_p_node.append(text_span_node)
     draw_node.append(text_p_node)
+    draw_frame_node.append(draw_node)
 
     # XXX copy from render_odt, need to be unified
     def replaceCharsByNode(match_object):
@@ -235,11 +244,9 @@ class Widget:
             line_break = SubElement(text_span_node, '{%s}%s' % (TEXT_URI, 'tab'))
             line_break.tail = match_object.group(2)
     re.sub('([\n\t])?([^\n\t]*)', replaceCharsByNode, value)
-    #text_span_node.text = value
     if as_string:
-      return etree.tostring(draw_node)
-    return draw_node
-
+      return etree.tostring(draw_frame_node)
+    return draw_frame_node
 
 class TextWidget(Widget):
   """Text widget

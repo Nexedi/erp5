@@ -1111,8 +1111,6 @@ return []
     # 01: Normal
     odf_document = foo_printout()
     self.assertTrue(odf_document is not None)
-    #test_output = open("/tmp/test_07_Image_01_Normal.odf", "w")
-    #test_output.write(odf_document)
     builder = OOoBuilder(odf_document)
     content_xml = builder.extract("content.xml")
     self.assertTrue(content_xml.find("test_image.png") > 0)
@@ -1131,8 +1129,6 @@ return []
     my_default_image_absolute_url.values['default'] = ''
     odf_document = foo_printout()
     self.assertTrue(odf_document is not None)
-    #test_output = open("/tmp/test_07_Image_02_NoData.odf", "w")
-    #test_output.write(odf_document)
     builder = OOoBuilder(odf_document)
     content_xml = builder.extract("content.xml")
     # confirming the image was removed
