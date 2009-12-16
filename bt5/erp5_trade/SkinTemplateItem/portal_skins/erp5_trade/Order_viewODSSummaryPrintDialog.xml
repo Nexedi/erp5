@@ -118,7 +118,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Print Order</string> </value>
+            <value> <string>Order Summary</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>
@@ -126,6 +126,10 @@
         </item>
         <item>
             <key> <string>update_action</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>update_action_title</string> </key>
             <value> <string></string> </value>
         </item>
       </dictionary>
