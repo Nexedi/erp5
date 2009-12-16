@@ -56,9 +56,7 @@
             <value> <string>def getSourceReference(line):\n
   category_list = line.getAcquiredCategoryList()\n
   portal_type_list = (\'Purchase Supply Line\',\n
-                      \'Purchase Supply Cell\',\n
-                      \'Sale Supply Line\',\n
-                      \'Sale Supply Cell\',)\n
+                      \'Purchase Supply Cell\',)\n
   tmp_context = line.asContext(context=line, categories=category_list)\n
   predicate_list = context.portal_domains.searchPredicateList(tmp_context, portal_type=portal_type_list)\n
   for predicate in predicate_list:\n
@@ -66,6 +64,24 @@
     if source_reference:\n
      return source_reference\n
   return \'\'\n
+\n
+def getDestinationReference(line):\n
+  category_list = line.getAcquiredCategoryList()\n
+  portal_type_list = (\'Sale Supply Line\',\n
+                      \'Sale Supply Cell\',)\n
+  tmp_context = line.asContext(context=line, categories=category_list)\n
+  predicate_list = context.portal_domains.searchPredicateList(tmp_context, portal_type=portal_type_list)\n
+  for predicate in predicate_list:\n
+    destination_reference = predicate.getDestinationReference()\n
+    if destination_reference:\n
+     return destination_reference\n
+  return \'\'\n
+\n
+#if context.getPortalType() in context.getPortalSaleTypeList():\n
+if \'Sale\' in context.getPortalType():\n
+  reference_method = getDestinationReference\n
+else:\n
+  reference_method = getSourceReference\n
 \n
 def getSubLineList(obj):\n
   sub_list = []\n
@@ -78,7 +94,7 @@ def getSubLineList(obj):\n
     sub_list.extend(getSubLineList(x))\n
   return sub_list\n
 \n
-return context.Delivery_getODTDataDict(getSourceReference, getSubLineList)\n
+return context.Delivery_getODTDataDict(reference_method, getSubLineList)\n
 </string> </value>
         </item>
         <item>
@@ -116,9 +132,11 @@ return context.Delivery_getODTDataDict(getSourceReference, getSubLineList)\n
                         <value>
                           <tuple>
                             <string>getSourceReference</string>
-                            <string>getSubLineList</string>
+                            <string>getDestinationReference</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>reference_method</string>
+                            <string>getSubLineList</string>
                           </tuple>
                         </value>
                     </item>
