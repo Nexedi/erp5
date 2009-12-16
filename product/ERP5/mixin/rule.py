@@ -171,25 +171,6 @@ class RuleMixin:
       self._getMovementGeneratorContext(context),
       movement_list=self._getMovementGeneratorMovementList(), rounding=rounding)
 
-    # Prepare a mapping between prevision and decision
-    #   The prevision_to_decision_map is a list of tuples
-    #   of the form (prevision_movement_dict, list of decision_movement)
-    prevision_to_decision_map = []
-
-    # XXX First we try to match by 'order' value if possible. # XXX-JPS implement as DivergenceTester, no ad-hoc here
-    matched_prevision_list = []
-    matched_decision_list = []
-    prevision_order_dict = dict(
-      (x.getOrder(), x) for x in prevision_movement_list)
-    for decision_movement in decision_movement_list:
-      prevision_movement = prevision_order_dict.get(
-        decision_movement.getOrder(), None)
-      if prevision_movement is not None:
-        prevision_to_decision_map.append(
-          (prevision_movement, [decision_movement]))
-        matched_prevision_list.append(prevision_movement)
-        matched_decision_list.append(decision_movement)
-
     # Get divergence testers
     tester_list = self._getMatchingTesterList()
     if len(tester_list) == 0:
@@ -198,8 +179,6 @@ class RuleMixin:
     # Create small groups of movements per hash keys
     decision_movement_dict = {}
     for movement in decision_movement_list:
-      if movement in matched_decision_list:
-        continue
       tester_key = []
       for tester in tester_list:
         if tester.test(movement):
@@ -210,8 +189,6 @@ class RuleMixin:
       decision_movement_dict.setdefault(tester_key, []).append(movement)
     prevision_movement_dict = {}
     for movement in prevision_movement_list:
-      if movement in matched_prevision_list:
-        continue
       tester_key = []
       for tester in tester_list:
         if tester.test(movement):
@@ -220,6 +197,11 @@ class RuleMixin:
           tester_key.append(None)
       tester_key = tuple(tester_key)
       prevision_movement_dict.setdefault(tester_key, []).append(movement)
+
+    # Prepare a mapping between prevision and decision
+    #   The prevision_to_decision_map is a list of tuples
+    #   of the form (prevision_movement_dict, list of decision_movement)
+    prevision_to_decision_map = []
 
     # First find out all existing (decision) movements which belong to no group
     no_group_list = []
