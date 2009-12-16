@@ -97,7 +97,7 @@ class SolverProcess(XMLObject, ActiveProcess):
         # Detect incompatibilities
         movement_solver_dict = movement_dict.setdefault(movement.getRelativeUrl(), {})
         movement_solver_configuration_dict = movement_solver_dict.setdefault(solver_type, {})
-        movement_solver_configuration_dict[solver_key] = None
+        movement_solver_configuration_dict[solver_conviguration_key] = None
 
     # Second, make sure solvers do not conflict and configuration is valid
     for movement_url, movement_solver_dict in movement_dict.items():
