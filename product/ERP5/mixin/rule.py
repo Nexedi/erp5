@@ -87,9 +87,15 @@ class RuleMixin:
   def test(self, *args, **kw):
     """
     If no test method is defined, return False, to prevent infinite loop
+
+    XXX-JPS - I do not understand why 
     """
     if not self.getTestMethodId():
-      return False
+      return False # XXX-JPS - if people are stupid are enough not to configfure predicates, 
+                   # it is not our role to be clever for them
+                   # Rules have a workflow - make sure applicable rule system works
+                   # if you wish, add a test here on workflow state to prevent using 
+                   # rules which are no longer applicable
     return Predicate.test(self, *args, **kw)
 
   def expand(self, applied_rule, **kw):
@@ -110,7 +116,7 @@ class RuleMixin:
     for movement in applied_rule.getMovementList():
       movement.expand(**kw)
 
-  # Implementation of IDivergenceController
+  # Implementation of IDivergenceController # XXX-JPS move to IDivergenceController only mixin for 
   security.declareProtected( Permissions.AccessContentsInformation,
                             'isDivergent')
   def isDivergent(self, movement, ignore_list=[]):
@@ -170,7 +176,7 @@ class RuleMixin:
     #   of the form (prevision_movement_dict, list of decision_movement)
     prevision_to_decision_map = []
 
-    # XXX First we try to match by 'order' value if possible.
+    # XXX First we try to match by 'order' value if possible. # XXX-JPS implement as DivergenceTester, no ad-hoc here
     matched_prevision_list = []
     matched_decision_list = []
     prevision_order_dict = dict(
@@ -243,7 +249,7 @@ class RuleMixin:
         map_list = []
         for decision_movement in decision_movement_dict.get(tester_key, ()):
           if _compare(tester_list, prevision_movement, decision_movement):
-            # XXX is it OK to have more than 2 decision_movements?
+            # XXX is it OK to have more than 2 decision_movements? # XXX-JPS - I think yes
             map_list.append(decision_movement)
         prevision_to_decision_map.append((prevision_movement, map_list))
 
@@ -311,7 +317,7 @@ class RuleMixin:
                          quantity divergence testers
      """
     if exclude_quantity:
-      return filter(lambda x:x.isTestingProvider() and \
+      return filter(lambda x:x.isTestingProvider() and \ # XXX-JPS name too generic - is it for divergence ? for somehting else ?
                     x.getTestedProperty() != 'quantity', self.objectValues(
         portal_type=self.getPortalDivergenceTesterTypeList()))
     else:
@@ -357,6 +363,14 @@ class RuleMixin:
     Compares a prevision_movement to decision_movement_list which
     are part of the matching group and updates movement_collection_diff
     accordingly
+
+    NOTE: this method API implicitely considers that each group of matching 
+    movements has 1 prevision_movement (aggregated) for N decision_movement
+    It implies that prevision_movement are "more" aggregated than 
+    decision_movement.
+
+    TODO:
+       - is this asumption appropriate ?
     """
     # Sample implementation - but it actually looks very generic
     # Case 1: movements which are not needed
@@ -425,8 +439,9 @@ class RuleMixin:
           # Not Frozen can be updated
           kw = {}
           for tester in divergence_tester_list:
-            if tester.compare(prevision_movement, decision_movement):
+            if tester.compare(prevision_movement, decision_movement): 
               kw.update(tester.getUpdatablePropertyDict(prevision_movement, decision_movement))
+              # XXX-JPS - there is a risk here that quanity is wrongly updated
           if kw:
             movement_collection_diff.addUpdatableMovement(decision_movement, kw)
     # Second, we calculate if the total quantity is the same on both sides
