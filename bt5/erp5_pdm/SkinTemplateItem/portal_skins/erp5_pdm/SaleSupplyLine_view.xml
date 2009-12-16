@@ -83,9 +83,7 @@
                 <item>
                     <key> <string>center</string> </key>
                     <value>
-                      <list>
-                        <string>my_comment</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -99,6 +97,7 @@
                     <value>
                       <list>
                         <string>my_resource_title</string>
+                        <string>my_destination_reference</string>
                         <string>my_priced_quantity</string>
                         <string>my_quantity_unit</string>
                         <string>my_price_currency</string>
@@ -118,6 +117,7 @@
                         <string>my_exclusive_discount_ratio</string>
                         <string>my_non_discountable_additional_price</string>
                         <string>my_surcharge_ratio</string>
+                        <string>my_comment</string>
                       </list>
                     </value>
                 </item>
