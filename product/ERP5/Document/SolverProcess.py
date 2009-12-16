@@ -158,15 +158,23 @@ class SolverProcess(XMLObject, ActiveProcess):
       # Gather all delivery lines already found
       # in already built solvers
 
-    # We suppose here that delivery_or_movement is a list of
+    if not isinstance(delivery_or_movement, (tuple, list)):
+      delivery_or_movement = [delivery_or_movement]
+    movement_list = []
+    for x in delivery_or_movement:
+      if x.getPortalType() not in \
+             self.getPortalObject().getPortalMovementTypeList():
+        movement_list.extend(x.getMovementList())
+
+    # We suppose here that movement_list is a list of
     # delivery lines. Let group decisions in such way
     # that a single decision is created per divergence tester instance
     # and per application level list
     solver_decision_dict = {}
-    for movement in delivery_or_movement:
+    for movement in movement_list:
       for simulation_movement in movement.getDeliveryRelatedValueList():
         simulation_movemet_url = simulation_movement.getRelativeUrl()
-        for divergence_tester in simulation_movement.getParentValue().getDivergenceTesterValueList():
+        for divergence_tester in simulation_movement.getParentValue().getSpecialiseValue()._getDivergenceTesterList():
           application_list = map(lambda x:x.getRelativeUrl(), 
                  self.getSolverDecisionApplicationValueList(simulation_movement, divergence_tester))
           application_list.sort()
