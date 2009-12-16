@@ -317,12 +317,11 @@ class RuleMixin:
                          quantity divergence testers
      """
     if exclude_quantity:
-      # XXX-JPS name too generic - is it for divergence ? for somehting else ?
-      return filter(lambda x:x.isTestingProvider() and \
+      return filter(lambda x:x.isDivergenceProvider() and \
                     x.getTestedProperty() != 'quantity', self.objectValues(
         portal_type=self.getPortalDivergenceTesterTypeList()))
     else:
-      return filter(lambda x:x.isTestingProvider(), self.objectValues(
+      return filter(lambda x:x.isDivergenceProvider(), self.objectValues(
         portal_type=self.getPortalDivergenceTesterTypeList()))
 
   def _getMatchingTesterList(self):
