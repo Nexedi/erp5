@@ -72,11 +72,7 @@
         <item>
             <key> <string>matching_property</string> </key>
             <value>
-              <tuple>
-                <string>resource_list</string>
-                <string>source_list</string>
-                <string>destination_list</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>
