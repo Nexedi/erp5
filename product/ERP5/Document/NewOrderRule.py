@@ -34,9 +34,11 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5.Document.Predicate import Predicate
 from Products.ERP5.mixin.rule import RuleMixin
+from Products.ERP5.mixin.movement_collection_updater import \
+     MovementCollectionUpdaterMixin
 from Products.ERP5.MovementCollectionDiff import _getPropertyAndCategoryList
 
-class NewOrderRule(RuleMixin, Predicate):
+class NewOrderRule(RuleMixin, MovementCollectionUpdaterMixin, Predicate):
   """
   Order Rule object make sure an Order in the simulation
   is consistent with the real order
