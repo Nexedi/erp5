@@ -106,6 +106,17 @@
             <value> <string>default_order_rule</string> </value>
         </item>
         <item>
+            <key> <string>matching_property</string> </key>
+            <value>
+              <tuple>
+                <string>order_list</string>
+                <string>resource_list</string>
+                <string>variation_category_list</string>
+                <string>variation_property_dict</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>portal_type</string> </key>
             <value> <string>Order Rule</string> </value>
         </item>
