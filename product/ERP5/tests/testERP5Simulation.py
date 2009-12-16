@@ -89,6 +89,13 @@ class TestERP5SimulationMixin(TestPackingListMixin):
           portal_type='Category Membership Divergence Tester',
           tested_property=i,
           matching_provider=1)
+      # create category divergence testers that is only used for matching
+      for i in ('order',):
+        new_order_rule.newContent(
+          portal_type='Category Membership Divergence Tester',
+          tested_property=i,
+          divergence_provider=0,
+          matching_provider=1)
       # create dict divergence testers that is also used for matching
       for i in ('variation_property_dict',):
         new_order_rule.newContent(
