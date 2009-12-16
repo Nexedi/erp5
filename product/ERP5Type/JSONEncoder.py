@@ -399,4 +399,7 @@ class JSONEncoder(object):
 __all__ = ['JSONEncoder']
 
 def encodeInJson(o):
- return JSONEncoder().encode(o) 
+  from warnings import warn
+  warn('Products.ERP5Type.JSONEncoder.encodeInJson is deprecated; use Products.ERP5Type.JSON.dumps instead.',
+       DeprecationWarning)
+  return JSONEncoder().encode(o) 

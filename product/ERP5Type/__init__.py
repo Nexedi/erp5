@@ -127,4 +127,4 @@ allow_module('Products.ERP5Type.Error')
 allow_module('Products.ERP5Type.JSONEncoder')
 allow_module('Products.ERP5Type.Log')
 allow_module('Products.ERP5Type.ConnectionPlugin.SOAPWSDLConnection')
-
+ModuleSecurityInfo('Products.ERP5Type.JSON').declarePublic('dumps', 'loads')
