@@ -108,12 +108,7 @@
         <item>
             <key> <string>matching_property</string> </key>
             <value>
-              <tuple>
-                <string>order_list</string>
-                <string>resource_list</string>
-                <string>variation_category_list</string>
-                <string>variation_property_dict</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>
