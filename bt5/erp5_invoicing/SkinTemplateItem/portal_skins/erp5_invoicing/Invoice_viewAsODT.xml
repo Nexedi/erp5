@@ -235,8 +235,12 @@ AAA=</string> </value>
     <style:style style:family=\'table-cell\' style:name=\'Tableau3.E7\'>\n
       <style:table-cell-properties fo:padding=\'0.097cm\' fo:border-right=\'0.018cm solid #000000\' fo:border-top=\'0.018cm solid #000000\' fo:border-left=\'none\' fo:border-bottom=\'none\' style:vertical-align=\'middle\'/>\n
     </style:style>\n
-    <style:style style:family=\'table-row\' style:name=\'Tableau3.8\'>\n
-      <style:table-row-properties style:row-height=\'1.499cm\'/>\n
+    <style:style style:family=\'table-row\' style:name=\'EmptyTableau3.8\'>\n
+      <style:table-row-properties style:row-height=\'1.499cm\'/> \n
+    </style:style>\n
+    <style:style style:family=\'table-row\' style:name=\'DynamicTableau3.8\'/>\n
+    <style:style style:family=\'table-cell\' style:name=\'Tableau3.A7\'>\n
+      <style:table-cell-properties fo:border-left=\'0.018cm solid #000000\' fo:border-right=\'0.018cm solid #000000\' fo:border-bottom=\'0.018cm solid #000000\' fo:padding=\'0.097cm\' fo:border-top=\'none\'/>\n
     </style:style>\n
     <style:style style:family=\'table-cell\' style:name=\'Tableau3.A8\'>\n
       <style:table-cell-properties fo:border-left=\'0.018cm solid #000000\' fo:border-right=\'0.018cm solid #000000\' fo:border-bottom=\'0.018cm solid #000000\' fo:padding=\'0.097cm\' fo:border-top=\'none\'/>\n
@@ -710,7 +714,8 @@ AAA=</string> </value>
                   <text:p text:style-name=\'Table_20_Contents\'/>\n
                 </table:table-cell>\n
               </table:table-row>\n
-              <table:table-row table:style-name=\'Tableau3.8\'>\n
+              <table:table-row table:style-name=\'Tableau3.8\'\n
+                  tal:attributes="table:style-name python: data_dict[\'description\'] and \'DynamicTableau3.8\' or \'EmptyTableau3.8\'">\n
                 <table:table-cell table:style-name=\'Tableau3.A8\' table:number-columns-spanned=\'5\' office:value-type=\'string\'>\n
                   <text:p text:style-name=\'P3\'><tal:block tal:repeat="line data_dict/description"><tal:block\n
                           tal:replace="line"/><text:line-break tal:condition="not:repeat/line/end"/></tal:block>\n
