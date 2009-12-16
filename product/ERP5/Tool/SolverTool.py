@@ -130,6 +130,12 @@ class SolverTool(BaseTool):
     delivery_or_movement -- a movement, a delivery, 
                             or a list thereof
     """
+    if not isinstance(delivery_or_movement, (tuple, list)):
+      delivery_or_movement = [delivery_or_movement]
+    for movement in delivery_or_movement:
+      if movement.isDivergent():
+        return True
+    return False
 
   def newSolverProcess(self, delivery_or_movement=None):
     """
