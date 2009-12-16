@@ -236,7 +236,6 @@ for k, v in kw.items() :\n
   if v not in (None, [], ()) :\n
     clean_kw[k] = kw[k]\n
 \n
-\n
 # Handle deferred style\n
 if clean_kw.get(\'deferred_style\', 0):\n
   clean_kw[\'deferred_portal_skin\'] = clean_kw.get(\'portal_skin\', None)\n
@@ -249,6 +248,7 @@ if clean_kw.get(\'deferred_style\', 0):\n
   if page_template != \'report_view\':\n
     # use simple wrapper\n
     clean_kw[\'deferred_style_dialog_method\'] = dialog_method\n
+    kw[\'deferred_style_dialog_method\'] = dialog_method\n
     request.set(\'deferred_style_dialog_method\', dialog_method)\n
     dialog_method = \'Base_activateSimpleView\'\n
 \n
