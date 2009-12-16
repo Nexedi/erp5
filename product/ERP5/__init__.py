@@ -96,7 +96,6 @@ def initialize( context ):
   
   # Allow some usefull classes and fonctions in TTW code
   ModuleSecurityInfo('ZODB.POSException').declarePublic('ConflictError')
-  ModuleSecurityInfo('pprint').declarePublic('pformat')
   ModuleSecurityInfo('zExceptions').declarePublic('BadRequest', 'NotFound',
                                                   'Redirect', 'Unauthorized')
   ModuleSecurityInfo('Products.CMFCore.WorkflowCore').declarePublic(
