@@ -78,6 +78,7 @@
                         <string>your_target_language</string>
                         <string>your_international_form</string>
                         <string>your_use_line_title</string>
+                        <string>your_deferred_style</string>
                       </list>
                     </value>
                 </item>

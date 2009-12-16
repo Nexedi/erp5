@@ -78,6 +78,7 @@
                         <string>your_target_language</string>
                         <string>your_quantity_unit_list</string>
                         <string>your_portal_skin</string>
+                        <string>your_deferred_style</string>
                       </list>
                     </value>
                 </item>
