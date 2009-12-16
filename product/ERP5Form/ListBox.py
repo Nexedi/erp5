@@ -721,7 +721,7 @@ class ListBoxRenderer:
       search_criterion = REQUEST.get(listbox_searchable_column_id, \
                                      selection_params.get(listbox_searchable_column_id, None))
       if search_criterion not in (None, "",) and not isinstance(search_criterion, dict):
-        # search criterion is usually input by user by UI, ignore created automated 
+        # search criterion is usually input by user by UI, ignore created automated
         # by listbox_xxx form fields selection parameters as they do not represent
         # user input but rather a developer formating definition in form
         return 0
@@ -821,7 +821,7 @@ class ListBoxRenderer:
     return name or None
 
   getRowCSSMethodName = lazyMethod(getRowCSSMethodName)
-  
+
   def getSelectionName(self):
     """Return the selection name.
     """
@@ -884,7 +884,7 @@ class ListBoxRenderer:
     return url_columns or []
 
   def getUntranslatableColumnList(self):
-    """Return the untranslatable columns. Make sure that it is an empty list, 
+    """Return the untranslatable columns. Make sure that it is an empty list,
     when not defined.
     """
     untranslatable_columns = self.field.get_value('untranslatable_columns')
@@ -1157,7 +1157,7 @@ class ListBoxRenderer:
     editable_field_id = '%s_%s' % (self.getUnprefixedId(), alias)
     if form.has_field(editable_field_id, include_disabled=1):
       return form.get_field(editable_field_id, include_disabled=1)
-    
+
     # if we are rendering a proxy field, also look for editable fields from the
     # template field's form.
     if self.field.has_value('form_id'):
@@ -1237,7 +1237,7 @@ class ListBoxRenderer:
     return row_css_method
 
   getRowCSSMethod = lazyMethod(getRowCSSMethod)
-  
+
   def getDomainSelection(self):
     """Return a DomainSelection object wrapped with the context.
     """
@@ -1518,7 +1518,7 @@ class ListBoxRenderer:
         value_list.append((None, None, None))
 
     return value_list
-  
+
   def getStatValueList(self):
     """Return a list of values, where each value is a tuple consisting of an original value and a processed value.
     A processed value is always an unicode object, and it may differ from the original value, for instance,
@@ -1966,7 +1966,7 @@ class ListBoxRendererLine:
     self.domain_title = domain_title
     self.render_prefix = render_prefix
     self.row_css_class_name = row_css_class_name
-    
+
   def getBrain(self):
     """Return the brain. This can be identical to a real object.
     """
@@ -2040,7 +2040,7 @@ class ListBoxRendererLine:
     """Return the css class name of a row.
     """
     return self.row_css_class_name
-  
+
   def getValueList(self):
     """Return the list of values corresponding to selected columns.
 
@@ -2133,7 +2133,7 @@ class ListBoxRendererLine:
                   property_id = sql[sql.rindex('.') + 1:]
                 except ValueError:
                   property_id = sql
-  
+
                 try:
                   original_value = obj.getProperty(property_id, _marker)
                   if original_value is _marker:
@@ -2803,7 +2803,7 @@ class ListBoxLine:
     self.column_dict = {}
     self.column_id_list = []
     self.row_css_class_name = ''
-    
+
   security.declarePublic('__getitem__')
   def __getitem__(self, column_id):
     return self.getColumnProperty(column_id)
@@ -3050,7 +3050,7 @@ class ListBoxLine:
     """Return the CSS class name of a row
     """
     return self.row_css_class_name
-  
+
 InitializeClass(ListBoxLine)
 allow_class(ListBoxLine)
 
