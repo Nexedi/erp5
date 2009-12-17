@@ -174,7 +174,9 @@ class SolverProcess(XMLObject, ActiveProcess):
     for movement in movement_list:
       for simulation_movement in movement.getDeliveryRelatedValueList():
         simulation_movemet_url = simulation_movement.getRelativeUrl()
-        for divergence_tester in simulation_movement.getParentValue().getSpecialiseValue()._getDivergenceTesterList():
+        for divergence_tester in simulation_movement.getParentValue().getSpecialiseValue()._getDivergenceTesterList(exclude_quantity=False):
+          if divergence_tester.compare(simulation_movement, movement):
+            continue
           application_list = map(lambda x:x.getRelativeUrl(), 
                  self.getSolverDecisionApplicationValueList(movement, divergence_tester))
           application_list.sort()
