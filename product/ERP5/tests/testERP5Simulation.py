@@ -119,50 +119,41 @@ class TestERP5SimulationMixin(TestPackingListMixin):
       new_order_rule.validate()
 
 class TestERP5Simulation(TestERP5SimulationMixin, TestPackingList):
-  def _addSolverProcess(self, divergence, solver_portal_type, **kw):
-    solver_tool = self.portal.portal_solvers
-    # create a solver process 
-    solver_process = solver_tool.newContent(portal_type='Solver Process') # XXX-JPS use newSolverProcess API
-    # create a target solver
-    solver = solver_process.newContent(
-      portal_type=solver_portal_type,
-      delivery=divergence.getProperty('object_relative_url'), # XXX-JPS Use persistent Divergence Tester - no getPropery
-      **kw)   # XXX-JPS use newSolverProcess API - not need to do by hand
-    # create a solver decision
-    solver_decision = solver_process.newContent(
-      portal_type='Solver Decision',
-      causality=divergence.getProperty('tester_relative_url'),
-      delivery=divergence.getProperty('object_relative_url'),
-      solver_value=solver,
-      )
-    return solver_process
-
   def stepAcceptDecisionQuantity(self,sequence=None, sequence_list=None, **kw):
     """
     Solve quantity divergence by using solver tool.
     """
     packing_list = sequence.get('packing_list')
-    quantity_divergence = [x for x in packing_list.getDivergenceList() \
-                           if x.getProperty('tested_property') == 'quantity'][0] # XXX-JPS Why not getTestedProperty ?
-                                                                                 # Probably wrong API call
+    solver_tool = self.portal.portal_solvers
+    solver_process = solver_tool.newSolverProcess(packing_list)
+    quantity_solver_decision = filter(
+      lambda x:x.getCausalityValue().getTestedProperty()=='quantity',
+      solver_process.contentValues())[0]
+    # create a target solver
+    solver = solver_process.newContent(
+      portal_type='Quantity Accept Solver',
+      delivery_list=quantity_solver_decision.getDeliveryList())
+    quantity_solver_decision.setSolverValue(solver)
+    solver_process.solve()
     # XXX-JPS We do not need the divergence message anymore.
     # since the divergence message == the divergence tester itself
     # with its title, description, tested property, etc.
-    solver_process = self._addSolverProcess(quantity_divergence,
-                                            'Quantity Accept Solver')
-    # then call solve() on solver process
-    solver_process.solve()
 
   def stepAcceptDecisionResource(self,sequence=None, sequence_list=None, **kw):
     """
     Solve quantity divergence by using solver tool.
     """
     packing_list = sequence.get('packing_list')
-    resource_divergence = [x for x in packing_list.getDivergenceList() \
-                           if x.getProperty('tested_property') == 'resource'][0]
-    solver_process = self._addSolverProcess(resource_divergence,
-                                            'Resource Accept Solver')
-    # then call solve() on solver process
+    solver_tool = self.portal.portal_solvers
+    solver_process = solver_tool.newSolverProcess(packing_list)
+    resource_solver_decision = filter(
+      lambda x:x.getCausalityValue().getTestedProperty()=='resource',
+      solver_process.contentValues())[0]
+    # create a target solver
+    solver = solver_process.newContent(
+      portal_type='Resource Accept Solver',
+      delivery_list=resource_solver_decision.getDeliveryList())
+    resource_solver_decision.setSolverValue(solver)
     solver_process.solve()
 
   def stepSplitAndDeferPackingList(self, sequence=None, sequence_list=None, **kw):
@@ -170,13 +161,20 @@ class TestERP5Simulation(TestERP5SimulationMixin, TestPackingList):
       Do the split and defer action
     """
     packing_list = sequence.get('packing_list')
-    quantity_divergence = [x for x in packing_list.getDivergenceList() \
-                           if x.getProperty('tested_property') == 'quantity'][0]
+    solver_tool = self.portal.portal_solvers
+    solver_process = solver_tool.newSolverProcess(packing_list)
+    quantity_solver_decision = filter(
+      lambda x:x.getCausalityValue().getTestedProperty()=='quantity',
+      solver_process.contentValues())[0]
+    # create a target solver
     kw = {'delivery_solver':'FIFO',
           'start_date':self.datetime + 15,
           'stop_date':self.datetime + 25}
-    solver_process = self._addSolverProcess(quantity_divergence,
-                                            'Quantity Split Solver', **kw)
+    solver = solver_process.newContent(
+      portal_type='Quantity Accept Solver',
+      delivery_list=quantity_solver_decision.getDeliveryList(),
+      **kw)
+    quantity_solver_decision.setSolverValue(solver)
     solver_process.solve()
 
 def test_suite():
