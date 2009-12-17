@@ -98,8 +98,6 @@ class FormPrintout(Implicit, Persistent, RoleManager, Item):
   It enables to create a Printout, using an Open Document Format(ODF)
   document as its design, an ERP5Form as its contents.
 
-  WARNING: The Form Printout currently supports only ODT format document.
-
   The functions status:
 
   Fields -> Paragraphs:      supported
