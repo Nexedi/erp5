@@ -92,7 +92,7 @@ class SolverProcess(XMLObject, ActiveProcess):
       solver = decision.getSolverValue()
       solver_type = solver.getId() # ex. Postpone Production Solver
       solver_conviguration_dict = decision.getConfigurationPropertyDict()
-      solver_conviguration_key = solver_conviguration_dict.items()
+      solver_conviguration_key = tuple(solver_conviguration_dict.items())
       for movement in decision.getDeliveryValueList():
         # Detect incompatibilities
         movement_solver_dict = movement_dict.setdefault(movement.getRelativeUrl(), {})
@@ -189,7 +189,7 @@ class SolverProcess(XMLObject, ActiveProcess):
     #  XXX-JPS: pseudocode for update (ie. rebuild) is not present
     for solver_decision_key, movement_dict in solver_decision_dict.items():
       new_decision = self.newContent(portal_type='Solver Decision')
-      new_decision._setDeliveryList(movement_dict.keys())
+      new_decision._setDeliveryList(solver_decision_key[1])
       new_decision._setCausality(solver_decision_key[0])
       # No need to set application_list or....?
 
