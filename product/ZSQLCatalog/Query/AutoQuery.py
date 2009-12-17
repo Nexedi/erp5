@@ -108,6 +108,8 @@ class AutoQuery(Query):
       query = sql_catalog.buildQuery(kw, operator=operator, ignore_empty_string=self.ignore_empty_string)
     if self.table_alias_list is not None:
       query.setTableAliasList(self.table_alias_list)
+    if query is None:
+      raise ValueError, '%r failed generating a query from its parameters.' % (self, )
     self.wrapped_query = query
 
   @profiler_decorator
@@ -136,7 +138,8 @@ class AutoQuery(Query):
 
   def __repr__(self):
     if self.wrapped_query is None:
-      result = '<%s(**%r) at %s>' % (self.__class__.__name__, self.kw, id(self))
+      result = '<%s(operator=%r, **%r) at %s>' % (self.__class__.__name__,
+        self.operator, self.kw, id(self))
     else:
       result = '<%s %r>' % (self.__class__.__name__, self.wrapped_query)
     return result
