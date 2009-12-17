@@ -32,8 +32,9 @@ from AccessControl import ClassSecurityInfo
 from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.XMLObject import XMLObject
+from Products.ERP5.mixin.configurable import ConfigurableMixin
 
-class SolverDecision(XMLObject):
+class SolverDecision(ConfigurableMixin, XMLObject):
   """
     The goal of Solver Decision is to record the fact that
     "the user decided to solve a list of divergent delivery lines
@@ -76,6 +77,7 @@ class SolverDecision(XMLObject):
                     , PropertySheet.CategoryCore
                     , PropertySheet.DublinCore
                     , PropertySheet.SolverSelection
+                    , PropertySheet.Configurable
                     )
   # XXX-JPS missing property sheet or categories to specify 
   #   (default)delivery or solver_application or order -> the object of application of resolution
