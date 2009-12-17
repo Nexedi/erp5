@@ -32,8 +32,10 @@ from AccessControl import ClassSecurityInfo
 from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.XMLObject import XMLObject
+from Products.ERP5.mixin.solver import SolverMixin
+from Products.ERP5.mixin.configurable import ConfigurableMixin
 
-class AdoptSolver(XMLObject):
+class AdoptSolver(SolverMixin, ConfigurableMixin, XMLObject):
   """
   """
   meta_type = 'ERP5 Adopt Solver'
