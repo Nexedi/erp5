@@ -115,6 +115,41 @@ class TestDeferredStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
     else:
       self.fail('Attachment not found in email')
 
+  def test_normal_form(self):
+    self.loginAsUser('bob')
+    # simulate a big request, for which Base_callDialogMethod will not issue a
+    # redirect
+    response = self.publish(
+        '/%s/person_module/pers/Base_callDialogMethod?deferred_portal_skin=%s&'
+        'dialog_method=Person_view&dialog_id=Person_view&'
+        'deferred_style:int=1&junk=%s'  % (self.portal.getId(),
+                                           self.skin,
+                                           'X' * 2000),
+        '%s:%s' % (self.username, self.password))
+    transaction.commit()
+    self.tic()
+    last_message = self.portal.MailHost._last_message
+    self.assertNotEquals((), last_message)
+    mfrom, mto, message_text = last_message
+    self.assertEquals('"%s" <%s>' % (self.first_name, self.recipient_email_address), mto[0])
+    mail_message = email.message_from_string(message_text)
+    for part in mail_message.walk():
+      content_type = part.get_content_type()
+      file_name = part.get_filename()
+      # "Person" is the title of Person_view form
+      if file_name == 'Person%s' % self.attachment_file_extension:
+        self.assertEquals(content_type, self.content_type)
+        self.assertEquals('attachment; filename="Person%s"' %
+                                self.attachment_file_extension,
+                          part.get('Content-Disposition'))
+        data = part.get_payload(decode=True)
+        error_list = Validator().validate(data)
+        if error_list:
+          self.fail(''.join(error_list))
+        break
+    else:
+      self.fail('Attachment not found in email')
+
 
 class TestODSDeferredStyle(TestDeferredStyle):
   skin = 'ODS'
