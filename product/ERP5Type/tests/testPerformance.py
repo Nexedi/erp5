@@ -34,7 +34,7 @@ import transaction
 from DateTime import DateTime
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from zLOG import LOG
-from Products.CMFCore.tests.base.testcase import LogInterceptor
+from Products.ERP5Type.tests.utils import LogInterceptor
 import os, hotshot
 
 # Define variable to chek if performance are good or not

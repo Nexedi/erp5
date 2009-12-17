@@ -30,8 +30,10 @@
 """
 
 import os
+import logging
 
 import transaction
+import zLOG
 import Products.ERP5Type
 from Products.MailHost.MailHost import MailHost
 from email import message_from_string
@@ -270,3 +272,68 @@ class reindex(object):
 # Test cases using this decorator must extend backportUnittest.TestCase
 todo_erp5 = backportUnittest.skip("TODO ERP5")
 
+class LogInterceptor:
+    '''Replacement for Products.CMFCore.tests.base.testcase.LogInterceptor
+
+    On CMF 1, LogInterceptor would bail if a log record with too high
+    severity would pass through, and it would monkey-patch zLOG.log_write to do
+    its job, meaning it would take on all Zope messages.
+    
+    The CMF 2 LogInterceptor plugs itself as a filter on the requested logger
+    (the root logger, by default), which meant it would only be called on
+    log records at that exact subsystem (not lower subsystems), and it no
+    longer raises AssertionError on messages with high severity.
+    
+    This replacement restore the original semantics while keeping close to the
+    new implementation, so it can act on both "zLOG" and "logging" calls.
+    '''
+    logged = None
+    installed = ()
+    level = 0
+
+    def _zLOGLSeverityToLoggingLevel(self, severity):
+        '''Given a zLOG severity, return a logging level
+        '''
+        # inspired by zLOG.EventLogger.log_write
+        from zLOG.EventLogger import zlog_to_pep282_severity_cache_get
+        from zLOG.EventLogger import zlog_to_pep282_severity
+        level = (zlog_to_pep282_severity_cache_get(severity) or
+                 zlog_to_pep282_severity(severity))
+        return level
+
+    def _catch_log_errors(self, ignored_level=zLOG.WARNING, subsystem=''):
+        if subsystem in self.installed:
+            raise ValueError, 'Already installed filter!'
+
+        root_logger = logging.getLogger(subsystem)
+        self.installed += (subsystem,)
+        self.level = self._zLOGLSeverityToLoggingLevel(ignored_level)
+        # attach to a handler instead of a logger, since logger filters are
+        # not always called. See http://bugs.python.org/issue7535
+        for handler in root_logger.handlers:
+          handler.addFilter(self)
+          break
+        else:
+          raise ValueError('No handlers to attach in logging subsystem %r' %
+                           subsystem or 'root')
+
+    def filter(self, record):
+        if record.levelno > self.level:
+            raise AssertionError("%s(%s): %s" % 
+                                 (record.name,
+                                  record.levelname,
+                                  record.getMessage()))
+        if self.logged is None:
+            self.logged = []
+        self.logged.append(record)
+        return False
+
+    def _ignore_log_errors(self, subsystem=''):
+
+        if subsystem not in self.installed:
+            return
+
+        root_logger = logging.getLogger(subsystem)
+        for handler in root_logger.handlers:
+            handler.removeFilter(self)
+        self.installed = tuple([s for s in self.installed if s != subsystem])

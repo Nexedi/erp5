@@ -35,7 +35,7 @@ from AccessControl import getSecurityManager
 from AccessControl.SecurityManagement import newSecurityManager
 from zLOG import LOG
 from DateTime import DateTime
-from Products.CMFCore.tests.base.testcase import LogInterceptor
+from Products.ERP5Type.tests.utils import LogInterceptor
 from Testing.ZopeTestCase.PortalTestCase import PortalTestCase
 from Products.ERP5Type.tests.utils import createZODBPythonScript, \
                                           getExtraSqlConnectionStringList

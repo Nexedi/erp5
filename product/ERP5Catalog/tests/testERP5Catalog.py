@@ -36,7 +36,7 @@ from AccessControl import getSecurityManager
 from AccessControl.SecurityManagement import newSecurityManager
 from zLOG import LOG
 from DateTime import DateTime
-from Products.CMFCore.tests.base.testcase import LogInterceptor
+from Products.ERP5Type.tests.utils import LogInterceptor
 from Products.ERP5Type.tests.utils import createZODBPythonScript, todo_erp5, \
                                           getExtraSqlConnectionStringList
 from Products.ZSQLCatalog.ZSQLCatalog import HOT_REINDEXING_FINISHED_STATE,\

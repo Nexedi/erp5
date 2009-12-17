@@ -39,7 +39,7 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import DummyLocalizer
 from zLOG import LOG, INFO
 from Products.CMFCore.Expression import Expression
-from Products.CMFCore.tests.base.testcase import LogInterceptor
+from Products.ERP5Type.tests.utils import LogInterceptor
 from Products.CMFCore.WorkflowCore import WorkflowException
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from Products.ERP5Type.Base import _aq_reset

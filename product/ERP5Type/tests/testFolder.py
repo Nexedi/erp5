@@ -30,7 +30,7 @@ import unittest
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from zLOG import LOG
-from Products.CMFCore.tests.base.testcase import LogInterceptor
+from Products.ERP5Type.tests.utils import LogInterceptor
 from Products.ERP5Type.tests.utils import createZODBPythonScript
 from Products.ERP5Type.ERP5Type import ERP5TypeInformation
 from Products.ERP5Type.Cache import clearCache

@@ -31,7 +31,7 @@ import unittest
 from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from zLOG import LOG
-from Products.CMFCore.tests.base.testcase import LogInterceptor
+from Products.ERP5Type.tests.utils import LogInterceptor
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 
 try:
