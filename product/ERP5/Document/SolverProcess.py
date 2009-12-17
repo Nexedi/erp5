@@ -176,10 +176,10 @@ class SolverProcess(XMLObject, ActiveProcess):
         simulation_movemet_url = simulation_movement.getRelativeUrl()
         for divergence_tester in simulation_movement.getParentValue().getSpecialiseValue()._getDivergenceTesterList():
           application_list = map(lambda x:x.getRelativeUrl(), 
-                 self.getSolverDecisionApplicationValueList(simulation_movement, divergence_tester))
+                 self.getSolverDecisionApplicationValueList(movement, divergence_tester))
           application_list.sort()
-          solver_decision_key = (divergence_tester.getRelativeUrl(), application_list)
-          movement_dict = solver_decision_dict.setdefaults(solver_decision_key, {})
+          solver_decision_key = (divergence_tester.getRelativeUrl(), tuple(application_list))
+          movement_dict = solver_decision_dict.setdefault(solver_decision_key, {})
           movement_dict[simulation_movemet_url] = None
 
     # Now build the solver decision instances based on the previous
