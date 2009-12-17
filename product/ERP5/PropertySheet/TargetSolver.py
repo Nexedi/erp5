@@ -30,24 +30,4 @@
 from Products.CMFCore.Expression import Expression
 
 class TargetSolver:
-  _properties = (
-        { 'id':         'delivery_solver',
-          'type':       'string',
-          'mode':       'w',
-          'label':      'Delivery Solver'
-         },
-        { 'id':         'start_date',
-          'description':'The date when a new movement starts',
-          'type':       'date',
-          'mode':       'w',
-          'label':      'Start Date'
-          },
-        { 'id':         'stop_date',
-          'description':'The date when a new movement stops',
-          'type':       'date',
-          'mode':       'w',
-          'label':      'Stop Date'
-          },
-  )
-
   _categories = ('delivery',)

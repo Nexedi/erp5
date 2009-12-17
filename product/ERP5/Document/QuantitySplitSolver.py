@@ -68,7 +68,9 @@ class QuantitySplitSolver(SolverMixin, ConfigurableMixin, XMLObject):
     for delivery_line in self.getDeliveryValueList(): 
       decision_quantity = delivery_line.getQuantity()
       simulation_movement_list = delivery_line.getDeliveryRelatedValueList()
-      delivery_solver = self.portal_solvers.newDeliverySolver(self.getDeliverySolver(), simulation_movement_list)
+      configuration_dict = self.getConfigurationPropertyDict()
+      delivery_solver = self.portal_solvers.newDeliverySolver(
+        configuration_dict['delivery_solver'], simulation_movement_list)
       # Update the quantity using delivery solver algorithm
       split_list = delivery_solver.setTotalQuantity(decision_quantity)
       # Create split movements
@@ -77,5 +79,5 @@ class QuantitySplitSolver(SolverMixin, ConfigurableMixin, XMLObject):
           batch_mode=True) # Copy at same level
         new_movement._setDelivery(None)
         new_movement._setQuantity(split_quantity)
-        new_movement._setStartDate(self.getStartDate())
-        new_movement._setStopDate(self.getStopDate())
+        new_movement._setStartDate(configuration_dict['start_date'])
+        new_movement._setStopDate(configuration_dict['stop_date'])
