@@ -196,18 +196,22 @@ class SolverTool(BaseTool):
     of the interface definition.
     """
     # Short Term Implementation Approach
+    test_property = divergence_tester.getTestedProperty()
+    application_value = movement
+    try:
+      while not application_value.hasProperty(test_property):
+        application_value = application_value.getParentValue()
+    except AttributeError:
+      # if missing, it should be in Delivery level ?
+      application_value = movement.getDeliveryValue()
+    return [application_value]
+
+    # Alternate short Term Implementation Approach
     return self.SolverTool_getSolverDecisionApplicationValueList(movement, divergence_tester)
 
     # Alternate short Term Implementation Approach
     return divergence_tester.getTypeBasedMethod('getSolverDecisionApplicationValueList')( 
                                                 movement, divergence_tester)
-
-    # Alternate short Term Implementation Approach
-    test_property = divergence_tester.getTestedProperty()
-    application_value = movement
-    while not application_value.hasProperty(test_property):
-      application_value = application_value.getParentValue()
-    return application_value
 
     # Mid-term implementation (we suppose movement is a delivery)
     # use delivery builders to find out at which level the given
