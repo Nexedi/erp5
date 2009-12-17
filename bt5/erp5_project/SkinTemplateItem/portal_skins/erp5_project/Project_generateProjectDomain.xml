@@ -64,14 +64,14 @@ here = context.REQUEST[\'here\']\n
 \n
 \n
 if depth == 0:\n
-  category_list = here.contentValues(portal_type=project_line_portal_type)\n
+  category_list = here.searchFolder(portal_type=project_line_portal_type, sort_on=((\'int_index\', \'ASC\')))\n
   \n
 else:\n
   category_list = []\n
   parent_category_list = parent.getMembershipCriterionCategoryList()\n
   for parent_category in parent_category_list:\n
     parent_category = \'/\'.join(parent_category.split(\'/\')[1:])\n
-    category_list.extend(context.restrictedTraverse(parent_category).contentValues(portal_type=project_line_portal_type))\n
+    category_list.extend([x for x in context.restrictedTraverse(parent_category).searchFolder(portal_type=project_line_portal_type, sort_on=((\'int_index\', \'ASC\')))])\n
 \n
 i = 0\n
 for category in category_list:\n
@@ -136,6 +136,9 @@ return domain_list\n
                             <string>parent_category_list</string>
                             <string>_getiter_</string>
                             <string>parent_category</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>x</string>
                             <string>i</string>
                             <string>category</string>
                             <string>domain</string>
