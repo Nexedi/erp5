@@ -357,7 +357,7 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>Divergence</string>
+                          <string>getCausalityTitle</string>
                           <string>Divergence</string>
                         </tuple>
                         <tuple>

@@ -275,7 +275,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:zip(here.getCausalityValue().getSolverTitleList(), here.getCausalityValue().getSolverList())</string> </value>
+            <value> <string>python:[(\'\', \'\')] + zip(here.getCausalityValue().getSolverTitleList(), here.getCausalityValue().getSolverList())</string> </value>
         </item>
       </dictionary>
     </pickle>
