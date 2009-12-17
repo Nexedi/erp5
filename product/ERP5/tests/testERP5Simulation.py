@@ -129,11 +129,9 @@ class TestERP5Simulation(TestERP5SimulationMixin, TestPackingList):
     quantity_solver_decision = filter(
       lambda x:x.getCausalityValue().getTestedProperty()=='quantity',
       solver_process.contentValues())[0]
-    # create a target solver
-    solver = solver_process.newContent(
-      portal_type='Quantity Accept Solver',
-      delivery_list=quantity_solver_decision.getDeliveryList())
-    quantity_solver_decision.setSolverValue(solver)
+    # use Quantity Accept Solver.
+    quantity_solver_decision.setSolverValue(self.portal.portal_types['Quantity Accept Solver'])
+    solver_process.buildTargetSolverList()
     solver_process.solve()
     # XXX-JPS We do not need the divergence message anymore.
     # since the divergence message == the divergence tester itself
@@ -149,11 +147,9 @@ class TestERP5Simulation(TestERP5SimulationMixin, TestPackingList):
     resource_solver_decision = filter(
       lambda x:x.getCausalityValue().getTestedProperty()=='resource',
       solver_process.contentValues())[0]
-    # create a target solver
-    solver = solver_process.newContent(
-      portal_type='Resource Accept Solver',
-      delivery_list=resource_solver_decision.getDeliveryList())
-    resource_solver_decision.setSolverValue(solver)
+    # use Resource Accept Solver.
+    resource_solver_decision.setSolverValue(self.portal.portal_types['Resource Accept Solver'])
+    solver_process.buildTargetSolverList()
     solver_process.solve()
 
   def stepSplitAndDeferPackingList(self, sequence=None, sequence_list=None, **kw):
@@ -166,16 +162,29 @@ class TestERP5Simulation(TestERP5SimulationMixin, TestPackingList):
     quantity_solver_decision = filter(
       lambda x:x.getCausalityValue().getTestedProperty()=='quantity',
       solver_process.contentValues())[0]
-    # create a target solver
+    # use Quantity Split Solver.
+    quantity_solver_decision.setSolverValue(self.portal.portal_types['Quantity Split Solver'])
+    # configure for Quantity Split Solver.
     kw = {'delivery_solver':'FIFO',
           'start_date':self.datetime + 15,
           'stop_date':self.datetime + 25}
-    solver = solver_process.newContent(
-      portal_type='Quantity Accept Solver',
-      delivery_list=quantity_solver_decision.getDeliveryList(),
-      **kw)
-    quantity_solver_decision.setSolverValue(solver)
+    quantity_solver_decision.updateConfiguration(**kw)
+    solver_process.buildTargetSolverList()
     solver_process.solve()
+    # build split deliveries manually. XXX ad-hoc
+    previous_tag = None
+    for delivery_builder in packing_list.getBuilderList():
+      this_builder_tag = '%s_split_%s' % (packing_list.getPath(),
+                                          delivery_builder.getId())
+      after_tag = []
+      if previous_tag:
+        after_tag.append(previous_tag)
+      delivery_builder.activate(
+        after_method_id=('solve',
+                         'immediateReindexObject',
+                         'recursiveImmediateReindexObject',), # XXX too brutal.
+        after_tag=after_tag,
+        ).build(explanation_uid=packing_list.getCausalityValue().getUid())
 
 def test_suite():
   suite = unittest.TestSuite()
