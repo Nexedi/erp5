@@ -50,3 +50,20 @@ class SolverTypeInformation(ERP5TypeInformation):
                     , PropertySheet.SolverType
                     , PropertySheet.Configurable
                     )
+
+  def conflictsWithSolver(self, other_solver):
+    """
+    Returns True if the solver conflicts with other_solver. False else.
+    """
+    # XXX real implementation is needed.
+    return False
+
+  def reduceConfigurationList(self, configuration_property_id_list):
+    """
+    Note: if one reduces production by 10% for one line and one reduces
+    production by 20% for another line or for the same line the total
+    reduction is 20% for both lines this is the goal of
+    reduceConfigurationList
+    """
+    # XXX real implementation is needed.
+    return configuration_property_id_list
