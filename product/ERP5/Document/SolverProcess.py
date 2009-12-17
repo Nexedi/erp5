@@ -110,7 +110,7 @@ class SolverProcess(XMLObject, ActiveProcess):
         try:
           # Solver key contains only those properties which differentiate
           # solvers (ex. there should be only Production Reduction Solver)
-          solver_key = solver.reduceConfigurationList(movement_solver_configuration_dict.keys())
+          solver_key = tuple(solver.reduceConfigurationList(movement_solver_configuration_dict.keys()))
         except:
           raise
         solver_key_dict = solver_dict.setdefault(solver_type, {})
@@ -124,7 +124,8 @@ class SolverProcess(XMLObject, ActiveProcess):
          solver_instance._setDeliveryList(solver_movement_dict.keys())
          for movement_url, configuration_list in solver_movement_dict.iteritems():
            for configuration_kw in configuration_list:
-            solver_instance.updateConfiguration(**configuration_kw)
+             if len(configuration_kw):
+               solver_instance.updateConfiguration(**dict(configuration_kw))
 
   # ISolver implementation
   # Solver Process Workflow Interface 
