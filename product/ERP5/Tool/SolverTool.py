@@ -197,6 +197,9 @@ class SolverTool(BaseTool):
     """
     # Short Term Implementation Approach
     test_property = divergence_tester.getTestedProperty()
+    # XXX hardcoded
+    if test_property == 'converted_quantity':
+      test_property = 'quantity'
     application_value = movement
     try:
       while not application_value.hasProperty(test_property):
