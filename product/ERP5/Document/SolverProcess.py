@@ -90,6 +90,9 @@ class SolverProcess(XMLObject, ActiveProcess):
     #   and which parameters with
     for decision in self.contentValues(portal_type="Solver Decision"):
       solver = decision.getSolverValue()
+      # do nothing if solver is not yet set.
+      if solver is None:
+        continue
       solver_type = solver.getId() # ex. Postpone Production Solver
       solver_conviguration_dict = decision.getConfigurationPropertyDict()
       solver_conviguration_key = tuple(solver_conviguration_dict.items())
