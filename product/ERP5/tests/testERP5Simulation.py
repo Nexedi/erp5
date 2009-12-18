@@ -43,12 +43,20 @@ class TestERP5SimulationMixin(TestPackingListMixin):
     TestPackingListMixin.afterSetUp(self, quiet, run)
     self.validateNewRules()
 
-  def validateNewRules(self):
-    portal_types = self.portal.portal_types
+  def beforeTearDown(self):
+    portal_rules = self.portal.portal_rules
+    for rule in portal_rules.objectValues(portal_type='New Order Rule'):
+      if rule.getValidationState() == 'validated':
+        rule.invalidate()
 
+  def validateNewRules(self):
     # create a New Order Rule document.
     portal_rules = self.portal.portal_rules
-    if portal_rules._getOb('new_order_rule', None) is None:
+    try:
+      new_order_rule = filter(
+        lambda x:x.title == 'New Default Order Rule',
+        portal_rules.objectValues(portal_type='New Order Rule'))[0]
+    except IndexError:
       new_order_rule = portal_rules.newContent(
         title='New Default Order Rule',
         portal_type='New Order Rule',
@@ -113,6 +121,7 @@ class TestERP5SimulationMixin(TestPackingListMixin):
           tested_property=i,
           use_delivery_ratio=1,
           quantity=0)
+    if new_order_rule.getValidationState() != 'validated':
       new_order_rule.validate()
 
 class TestERP5Simulation(TestERP5SimulationMixin, TestPackingList):
