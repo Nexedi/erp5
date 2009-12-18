@@ -23,11 +23,11 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Dict Divergence Testers can be used to test divergence of dict properties, with configuration caps equivalences. All configuration properties of divergence testers are stored at instance level in order to simplify their historization at rule level.</string> </value>
+            <value> <string>Variation Divergence Testers can be used to test divergence of dict properties, with configuration caps equivalences. All configuration properties of divergence testers are stored at instance level in order to simplify their historization at rule level.</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>
-            <value> <string>addDictDivergenceTester</string> </value>
+            <value> <string>addVariationDivergenceTester</string> </value>
         </item>
         <item>
             <key> <string>filter_content_types</string> </key>
@@ -43,7 +43,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Dict Divergence Tester</string> </value>
+            <value> <string>Variation Divergence Tester</string> </value>
         </item>
         <item>
             <key> <string>init_script</string> </key>

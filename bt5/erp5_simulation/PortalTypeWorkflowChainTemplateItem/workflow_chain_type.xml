@@ -8,7 +8,7 @@
   <workflow>edit_workflow</workflow>
  </chain>
  <chain>
-  <type>Dict Divergence Tester</type>
+  <type>Variation Divergence Tester</type>
   <workflow>edit_workflow</workflow>
  </chain>
  <chain>
