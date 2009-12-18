@@ -194,7 +194,7 @@ class OOoBuilder(Implicit):
     """
     count = self._image_count
     self._image_count += 1
-    name = "Picture/%s.%s" % (count, format)
+    name = "Pictures/%s.%s" % (count, format)
     self.replace(name, image)
     is_legacy = ('oasis.opendocument' not in self.getMimeType())
     return "%s%s" % (is_legacy and '#' or '', name,)
