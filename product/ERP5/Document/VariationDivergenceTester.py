@@ -33,7 +33,7 @@ from Products.ERP5.Document.Predicate import Predicate
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5.mixin.divergence_tester import DivergenceTesterMixin
 
-class DictDivergenceTester(Predicate, DivergenceTesterMixin):
+class VariationDivergenceTester(Predicate, DivergenceTesterMixin):
   """
   The purpose of this divergence tester is to check the
   consistency between delivery movement and simulation movement
@@ -59,27 +59,33 @@ class DictDivergenceTester(Predicate, DivergenceTesterMixin):
   # Declarative interfaces
   zope.interface.implements( interfaces.IDivergenceTester, )
 
-
   def _compare(self, prevision_movement, decision_movement):
     """
     If prevision_movement and decision_movement don't match, it returns a
     list : (prevision_value, decision_value, message, mapping)
     """
-    tested_property = self.getTestedProperty()
-    if getattr(decision_movement, 'isPropertyRecorded',
-               lambda x:False)(tested_property):
-      decision_value = decision_movement.getRecordedProperty(tested_property)
-    else:
-      decision_value = decision_movement.getProperty(tested_property)
-    prevision_value = prevision_movement.getProperty(tested_property)
+    for tested_property in ('variation_category_list',
+                            'variation_property_dict'):
+      if getattr(decision_movement, 'isPropertyRecorded',
+                 lambda x:False)(tested_property):
+        decision_value = decision_movement.getRecordedProperty(tested_property)
+      else:
+        decision_value = decision_movement.getProperty(tested_property)
+      prevision_value = prevision_movement.getProperty(tested_property)
 
-    # XXX do we have configurable parameter for this divergence tester ?
-    # like ambiguity...
-    if sorted(decision_value.items()) != sorted(prevision_value.items()):
-      return (
-        prevision_value, decision_value,
-        'The value of ${property_name} is different between decision and prevision.',
-        dict(property_name=tested_property))
+      if isinstance(prevision_value, (list, tuple)):
+        result = sorted(decision_value) == sorted(prevision_value)
+      elif isinstance(prevision_value, dict):
+        result = sorted(decision_value.items()) == \
+                 sorted(prevision_value.items())
+      else:
+        # should not happen
+        raise AttributeError, 'prevision and decision values of this divergence tester should be list, tuple or dict.'
+      if not result:
+        return (
+          prevision_value, decision_value,
+          'The value of ${property_name} is different between decision and prevision.',
+          dict(property_name=tested_property))
     return None
 
   def getUpdatablePropertyDict(self, prevision_movement, decision_movement):
@@ -91,9 +97,12 @@ class DictDivergenceTester(Predicate, DivergenceTesterMixin):
 
     decision_movement -- a delivery movement (decision)
     """
-    tested_property = self.getTestedProperty()
-    prevision_value = prevision_movement.getProperty(tested_property)
-    return {tested_property:prevision_value}
+    property_dict = {}
+    for tested_property in ('variation_category_list',
+                            'variation_property_dict'):
+      prevision_value = prevision_movement.getProperty(tested_property)
+      property_dict[tested_property] = prevision_value
+    return property_dict
 
   def accept(self, simulation_movement):
     """
