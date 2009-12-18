@@ -60,6 +60,7 @@ class TestERP5SimulationMixin(TestPackingListMixin):
     portal_rules = self.portal.portal_rules
     if portal_rules._getOb('new_order_rule', None) is None:
       new_order_rule = portal_rules.newContent(
+        title='New Default Order Rule',
         portal_type='New Order Rule',
         reference='default_order_rule',
         version=2,
@@ -80,18 +81,21 @@ class TestERP5SimulationMixin(TestPackingListMixin):
                 'source_project', # XXX-JPS - Needed ?
                 'source_section',): 
         new_order_rule.newContent(
+          title='%s divergence tester' % i,
           portal_type='Category Membership Divergence Tester',
-          tested_property=i) # XXX-JPS put a title
+          tested_property=i)
       # create category divergence testers that is also used for matching
       for i in ('resource',
                 'variation_category',):
         new_order_rule.newContent(
+          title='%s divergence tester' % i,
           portal_type='Category Membership Divergence Tester',
           tested_property=i,
           matching_provider=1)
       # create category divergence testers that is only used for matching
       for i in ('order',):
         new_order_rule.newContent(
+          title='%s divergence tester' % i,
           portal_type='Category Membership Divergence Tester',
           tested_property=i,
           divergence_provider=0,
@@ -99,6 +103,7 @@ class TestERP5SimulationMixin(TestPackingListMixin):
       # create dict divergence testers that is also used for matching
       for i in ('variation_property_dict',):
         new_order_rule.newContent(
+          title='%s divergence tester' % i,
           portal_type='Dict Divergence Tester', # XXX-JPS - better to create Variation Divergence Tester and develop the concept of abstract variation
           tested_property=i,
           matching_provider=1)
@@ -106,12 +111,14 @@ class TestERP5SimulationMixin(TestPackingListMixin):
       for i in ('start_date',
                 'stop_date',):
         new_order_rule.newContent(
+          title='%s divergence tester' % i,
           portal_type='DateTime Divergence Tester',
           tested_property=i,
           quantity=0)
       # create float divergence testers
       for i in ('quantity',):
         new_order_rule.newContent(
+          title='%s divergence tester' % i,
           portal_type='Float Divergence Tester', # XXX-JPS Quantity Divergence Tester ? (ie. quantity unit)
           tested_property=i,
           use_delivery_ratio=1,
