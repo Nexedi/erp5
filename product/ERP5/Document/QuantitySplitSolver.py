@@ -79,5 +79,9 @@ class QuantitySplitSolver(SolverMixin, ConfigurableMixin, XMLObject):
           batch_mode=True) # Copy at same level
         new_movement._setDelivery(None)
         new_movement._setQuantity(split_quantity)
-        new_movement._setStartDate(configuration_dict['start_date'])
-        new_movement._setStopDate(configuration_dict['stop_date'])
+        start_date = configuration_dict.get('start_date', None)
+        if start_date is not None:
+          new_movement._setStartDate(start_date)
+        stop_date = configuration_dict.get('stop_date', None)
+        if stop_date is not None:
+          new_movement._setStopDate(stop_date)
