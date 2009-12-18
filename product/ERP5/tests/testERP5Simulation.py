@@ -46,16 +46,6 @@ class TestERP5SimulationMixin(TestPackingListMixin):
   def validateNewRules(self):
     portal_types = self.portal.portal_types
 
-    # add New Order Rule in Rule Tool's allowed content types.
-    rule_tool_type = portal_types._getOb('Rule Tool')
-    if not 'New Order Rule' in rule_tool_type.getTypeAllowedContentTypeList():
-      rule_tool_type.edit(
-        type_allowed_content_type_list=rule_tool_type.getTypeAllowedContentTypeList() + ['New Order Rule'])
-
-    # select New Order Rule in 'SaleOrder_selectMovement' script.
-    script = self.portal.SaleOrder_selectMovement
-    script.write(script.read().replace("'Order Rule'", "'New Order Rule'")) # XXX-JPS Hacky
-
     # create a New Order Rule document.
     portal_rules = self.portal.portal_rules
     if portal_rules._getOb('new_order_rule', None) is None:
