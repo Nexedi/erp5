@@ -21,6 +21,7 @@
                         <string>ods</string>
                         <string>sdc</string>
                         <string>sxc</string>
+                        <string>xlsx</string>
                       </list>
                     </value>
                 </item>
