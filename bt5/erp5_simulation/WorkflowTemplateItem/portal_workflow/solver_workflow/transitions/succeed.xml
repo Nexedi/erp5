@@ -37,7 +37,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>success</string> </value>
+            <value> <string>succeed</string> </value>
         </item>
         <item>
             <key> <string>new_state_id</string> </key>
@@ -49,7 +49,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Success</string> </value>
+            <value> <string>Succeed</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>
