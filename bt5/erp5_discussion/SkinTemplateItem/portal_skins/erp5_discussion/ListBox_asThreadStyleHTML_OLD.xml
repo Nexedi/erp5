@@ -1,0 +1,181 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<tal:block\n
+  xmlns:tal="http://xml.zope.org/namespaces/tal"\n
+  xmlns:metal="http://xml.zope.org/namespaces/metal"\n
+  xmlns:i18n="http://xml.zope.org/namespaces/i18n"\n
+  tal:define="newline_to_br python:modules[\'Products.PythonScripts.standard\'].newline_to_br;\n
+              html_quote python:modules[\'Products.PythonScripts.standard\'].html_quote;\n
+              field_id here/getId;\n
+              form_id python: here.getForm().id;\n
+              selection_name here/getSelectionName;\n
+              requested_selection_name here/getRequestedSelectionName;\n
+              selection_index here/getSelectionIndex;\n
+              selection here/getSelection;\n
+              portal_url_string here/getPortalUrlString;\n
+              real_context here/getContext;\n
+              context_url real_context/getUrl;\n
+              md5_string here/getMD5Checksum;\n
+              line_list here/query;\n
+              is_domain_tree_mode here/isDomainTreeMode;\n
+              is_report_tree_mode here/isReportTreeMode;\n
+              is_domain_tree_supported here/isDomainTreeSupported;\n
+              is_report_tree_supported here/isReportTreeSupported;\n
+              show_select_column here/showSelectColumn;\n
+              show_search_line here/showSearchLine;\n
+              ">\n
+  <!-- ListBox starts here.  -->\n
+  <input type="hidden" name="list_selection_name" value="default" tal:attributes="value selection_name" />\n
+  <input type="hidden" name="list_selection_name" value="default"\n
+                       tal:attributes="value selection_name;\n
+                                       name string:${field_id}_list_selection_name" />\n
+  <input tal:condition="md5_string" type="hidden" name="md5_object_uid_list" value="checksum" tal:attributes="value md5_string" />\n
+\n
+  <tal:block tal:define="expand python: 0">\n
+    <tal:block metal:define-macro="ListBoxContainer">\n
+      <tal:block tal:condition="expand">\n
+        <tal:block tal:condition="not: is_domain_tree_mode">\n
+          <tal:block metal:define-slot="ListBoxBody" />\n
+        </tal:block>\n
+      </tal:block>\n
+    </tal:block>\n
+  </tal:block>\n
+\n
+  <tal:block tal:define="expand python: 1">\n
+    <tal:block metal:use-macro="template/macros/ListBoxContainer">\n
+      <tal:block metal:fill-slot="ListBoxBody">\n
+        <table style="boder:solid 1px #eee; background-color:#fff; margin:20px;">\n
+          <tr style="margin:5px; padding:5px; background-color:#ffffff; height:22px;">\n
+              <td style="margin-right:5px; padding:3px;width:35px; height:22px; background-color:#EFF6FF;">\n
+                <span style="font: bold 1.1em Helvetica, Arial, sans-serif;color:#3D748C;">statut</span>\n
+              </td>\n
+              <td style="width:320px; background-color:#EFF6FF;margin-right:5px; padding:3px">\n
+                <span style="font: bold 1.1em Helvetica, Arial, sans-serif;color:#3D748C;">Titre</span>\n
+              </td>\n
+\n
+              <td style="width:45px; background-color:#EFF6FF;margin-right:5px; padding:3px">\n
+                <span style="font: bold 1.1em Helvetica, Arial, sans-serif;color:#3D748C;">Replys</span>\n
+              </td>\n
+              <td style="width:40px; background-color:#EFF6FF;margin-right:5px; padding:3px">\n
+                <span style="font: bold 1.1em Helvetica, Arial, sans-serif;color:#3D748C;">Views</span>\n
+              </td>\n
+              <td style="background-color:#EFF6FF; width:450px; height:17px; padding:3px">\n
+                <span style="font: bold 1.1em Helvetica, Arial, sans-serif;color:#3D748C;">infos</span>\n
+              </td>\n
+            \n
+          </tr>\n
+          <tal:block tal:repeat="line line_list">\n
+          <tal:block tal:condition="python: not line_list.index(line) % 2">\n
+            <tr style="margin:5px; padding:5px; background-color:#ffffff; height:22px;"\n
+                 tal:define="event line/getBrain;">\n
+              <td style="margin-right:5px; padding:3px;width:35px; height:22px; background-color:#ddd;" tal:content="python: event.getValidationState()"></td>\n
+              <td style="width:320px; background-color:#ddd;margin-right:5px; padding:3px">\n
+                <a tal:attributes="href event/getId"><span tal:content="event/getTitle" style="font: bold 1.1em Helvetica, Arial, sans-serif;color:#333;"></span></a>\n
+              </td>\n
+\n
+              <td style="width:45px; background-color:#ddd;margin-right:5px; padding:3px">\n
+                <span tal:content="python: len(event.objectIds())"></span>\n
+              </td>\n
+              <td style="width:40px; background-color:#ddd;margin-right:5px; padding:3px">\n
+                <span>todo</span>\n
+              </td>\n
+              <td style="background-color:#ddd; width:450px; height:17px; padding:3px">\n
+                by <span tal:content="python: event.owner_info().get(\'id\')"></span> on <span tal:replace="event/getCreationDate"></span>\n
+              </td>\n
+            </tr>    \n
+          </tal:block>\n
+          <tal:block tal:condition="python: line_list.index(line) % 2">\n
+            <tr style="margin:5px; padding:5px; background-color:#ffffff; height:22px;"\n
+                 tal:define="event line/getBrain;">\n
+              <td style="margin-right:5px; padding:3px;width:35px; height:22px; background-color:#eee;" tal:content="python: event.getValidationState()"></td>\n
+              <td style="width:320px; background-color:#eee;margin-right:5px; padding:3px">\n
+                <a tal:attributes="href event/getId"><span tal:content="event/getTitle" style="font: bold 1.1em Helvetica, Arial, sans-serif;color:#333;"></span></a>\n
+              </td>\n
+\n
+              <td style="width:45px; background-color:#eee;margin-right:5px; padding:3px">\n
+                <span tal:content="python: len(event.objectIds())"></span>\n
+              </td>\n
+              <td style="width:40px; background-color:#eee;margin-right:5px; padding:3px">\n
+                <span>todo</span>\n
+              </td>\n
+              <td style="background-color:#eee; width:450px; height:17px; padding:3px">\n
+                by <span tal:content="python: event.owner_info().get(\'id\')"></span> on <span tal:replace="event/getCreationDate"></span>\n
+              </td>\n
+            </tr>  \n
+          </tal:block>\n
+          </tal:block>\n
+          <tr><td>\n
+          <button type="submit" title="Post" name="DiscussionThread_viewNewPostDialog:method" style="background-color:#fff; margin:5px; border:solid 1px #DAE6F6">\n
+            <span>New Thread</span>\n
+          </button>\n
+          </td></tr>\n
+      </table>\n
+      </tal:block>\n
+    </tal:block>\n
+  </tal:block>\n
+  <!-- ListBox ends here.  -->\n
+\n
+</tal:block>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>ListBox_asThreadStyleHTML_OLD</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,136 @@
+<type_roles>
+  <role id='Assignee; Auditor'>
+   <property id='title'>Event Associate</property>
+   <property id='description'>Documents which are related to events and which are still in draft state should be accessible by the event assignee and assignor.</property>
+   <property id='condition'>python:object.getValidationState() == 'draft'</property>
+   <property id='base_category_script'>ERP5Type_acquireSecurityFromRelatedAssignorOrAssignee</property>
+   <multi_property id='base_category'>aggregate</multi_property>
+  </role>
+  <role id='Auditor'>
+   <property id='title'>Extra Knowledge</property>
+   <property id='description'>Anyone who purchased a document can access it.</property>
+   <property id='condition'>python:object.Document_policyApplies('kb/extra')</property>
+   <property id='base_category_script'>ERP5Type_getSecurityFromContentReference</property>
+  </role>
+  <role id='Assignee'>
+   <property id='title'>Management</property>
+   <property id='condition'>python:object.Document_policyApplies('collaborative/management')</property>
+   <property id='base_category_script'>ERP5Type_getSecurityCategoryFromContent</property>
+   <multi_property id='category'>function/knowledge/manager</multi_property>
+   <multi_property id='base_category'>group</multi_property>
+  </role>
+  <role id='Auditor'>
+   <property id='title'>Nexedi Staff</property>
+   <property id='description'>Policy: */* (except personal/private)
+Rule: all people working for the same organisation are Auditors (we identify the organisation by the first part of the "group" path)</property>
+   <property id='condition'>python: not object.Document_policyApplies('*/private')</property>
+   <property id='base_category_script'>ERP5Type_getSecurityCategoryFromContent</property>
+   <multi_property id='category'>group/nexedi*</multi_property>
+   <multi_property id='base_category'>group</multi_property>
+  </role>
+  <role id='Assignor; Assignee'>
+   <property id='title'>Partner</property>
+   <property id='description'>A partner may publish documents written in the language of his territory if the document is classified as part of the knowledge base.</property>
+   <property id='condition'>python:object.Document_policyApplies('*/partner')</property>
+   <property id='base_category_script'>ERP5Type_getSecurityCategoryFromContentAndLanguage</property>
+   <multi_property id='category'>function/ipartner/manager</multi_property>
+  </role>
+  <role id='Auditor'>
+   <property id='title'>Partner</property>
+   <property id='description'>A partner can access any document in the knowledge base. Documents intended to be released beyond Nexedi staff to partners should be classified "kb/partner".</property>
+   <property id='condition'>python:object.Document_policyApplies('kb/*')</property>
+   <property id='base_category_script'>ERP5Type_getSecurityCategoryFromContent</property>
+   <multi_property id='category'>function/ipartner/manager</multi_property>
+  </role>
+  <role id='Associate'>
+   <property id='title'>Project Associates</property>
+   <property id='description'>Policy: */project
+Rule: all project members have a right to access document once it has been shared or released</property>
+   <property id='condition'>python:object.Document_policyApplies('*/project')</property>
+   <property id='base_category_script'>ERP5Type_getSecurityCategoryFromContentUseOnlyProjectDocument</property>
+   <multi_property id='base_category'>follow_up</multi_property>
+  </role>
+  <role id='Assignee'>
+   <property id='title'>Project Collaborators</property>
+   <property id='description'>Policy: collaborative/project
+Rule: all members of project team can edit the document before it is submitted, and can submit it</property>
+   <property id='condition'>python:object.Document_policyApplies('collaborative/project')</property>
+   <property id='base_category_script'>ERP5Type_getSecurityCategoryFromContentUseOnlyProjectDocument</property>
+   <multi_property id='base_category'>follow_up</multi_property>
+  </role>
+  <role id='Assignor'>
+   <property id='title'>Project Knowledge Manager</property>
+   <property id='description'>Policy: */project
+Rule: project director is an Assignor (has management rights to the doc - can review it, release, publish, add local roles)</property>
+   <property id='condition'>python:object.Document_policyApplies('*/project')</property>
+   <property id='base_category_script'>ERP5Type_getSecurityCategoryFromContentUseOnlyProjectDocument</property>
+   <multi_property id='category'>function/knowledge/manager</multi_property>
+   <multi_property id='category'>function/project/manager</multi_property>
+   <multi_property id='base_category'>follow_up</multi_property>
+  </role>
+  <role id='Assignee'>
+   <property id='title'>Public Collaborators</property>
+   <property id='description'>Policy: collaborative/public
+Everybody can edit and submit</property>
+   <property id='condition'>python:object.Document_policyApplies('collaborative/public')</property>
+   <property id='base_category_script'>ERP5Type_getSecurityCategoryFromAssignment</property>
+   <multi_property id='category'>function/knowledge/contributor</multi_property>
+  </role>
+  <role id='Assignee'>
+   <property id='title'>Staff Collaborators</property>
+   <property id='description'>Policy: collaborative/staff
+Rule: everyone in the organisation (root group) can edit the doc before it is submitted, and can suggest its publication</property>
+   <property id='condition'>python:object.Document_policyApplies('collaborative/staff')</property>
+   <property id='base_category_script'>ERP5Type_getSecurityCategoryFromAssignment</property>
+   <multi_property id='category'>group/nexedi*</multi_property>
+  </role>
+  <role id='Auditor'>
+   <property id='title'>Standard Knowledge</property>
+   <property id='description'>Anyone who purchased a document can access it.</property>
+   <property id='condition'>python:object.Document_policyApplies('kb/standard')</property>
+   <property id='base_category_script'>ERP5Type_getSecurityCategoryFromAssignment</property>
+   <multi_property id='category'>function/knowledge/contributor</multi_property>
+  </role>
+  <role id='Associate'>
+   <property id='title'>Team Associates</property>
+   <property id='description'>Policy: */team
+Rule: all team members have a right to access document once it has been shared or released</property>
+   <property id='condition'>python:object.Document_policyApplies('*/team')</property>
+   <property id='base_category_script'>ERP5Type_getSecurityCategoryFromContent</property>
+   <multi_property id='base_category'>group</multi_property>
+  </role>
+  <role id='Assignee'>
+   <property id='title'>Team Collaborators</property>
+   <property id='description'>Policy: collaborative/team
+Rule: all members of the team can edit the document before it is submitted, and can submit it</property>
+   <property id='condition'>python:object.Document_policyApplies('collaborative/team')</property>
+   <property id='base_category_script'>ERP5Type_getSecurityCategoryFromContent</property>
+   <multi_property id='base_category'>group</multi_property>
+  </role>
+  <role id='Assignor'>
+   <property id='title'>Team Knowledge Manager</property>
+   <property id='description'>Policy: all except */project
+Rule: team manager is an Assignor (has management rights to the doc - can review it, release, publish, add local roles)</property>
+   <property id='condition'>python: object.getGroup() and not (object.Document_policyApplies('*/project') or object.Document_policyApplies('*/private'))</property>
+   <property id='base_category_script'>ERP5Type_getSecurityCategoryFromContent</property>
+   <multi_property id='base_category'>group</multi_property>
+  </role>
+  <role id='Assignee; Assignor'>
+   <property id='title'>mod</property>
+   <property id='description'>Forum moderator</property>
+   <property id='base_category_script'>ERP5Type_getSecurityCategoryFromAssignment</property>
+   <multi_property id='category'>function/forum/administrator</multi_property>
+  </role>
+  <role id='Author'>
+   <property id='title'>user</property>
+   <property id='description'>Simple forum user</property>
+   <property id='base_category_script'>ERP5Type_getSecurityCategoryFromAssignment</property>
+   <multi_property id='category'>function/forum/user</multi_property>
+  </role>
+  <role id='Auditor'>
+   <property id='title'>visitor</property>
+   <property id='description'>Just a visitor</property>
+   <property id='base_category_script'>ERP5Type_getSecurityCategoryFromAssignment</property>
+   <multi_property id='category'>function/forum/visitor</multi_property>
+  </role>
+</type_roles>
