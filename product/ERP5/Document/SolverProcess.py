@@ -121,7 +121,7 @@ class SolverProcess(XMLObject, ActiveProcess):
         solver_movement_dict[movement_url] = movement_solver_configuration_dict.keys()
 
     # Third, build target solvers
-    for portal_type, solver_key_dict in solver_dict.items():
+    for solver_type, solver_key_dict in solver_dict.items():
       for solver_key, solver_movement_dict in solver_key_dict.items():
          solver_instance = self.newContent(portal_type=solver_type)
          solver_instance._setDeliveryList(solver_movement_dict.keys())
