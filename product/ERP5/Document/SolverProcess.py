@@ -138,6 +138,7 @@ class SolverProcess(XMLObject, ActiveProcess):
       Start solving
     """
     for solver in self.contentValues(portal_type=self.getPortalObject().getPortalTargetSolverTypeList()):
+      solver.startSolving()
       solver.activate(active_process=self).solve()
 
 
