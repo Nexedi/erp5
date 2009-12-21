@@ -7,6 +7,7 @@ Production Reduction Solver | solver_workflow
 Quantity Accept Solver | solver_workflow
 Quantity Cancel Solver | solver_workflow
 Quantity Split Solver | solver_workflow
+Resource Accept Solver | solver_workflow
 Resource Adoption Solver | solver_workflow
 Resource Replacement Solver | solver_workflow
 String Divergence Tester | edit_workflow

@@ -14,6 +14,8 @@ Quantity Cancel Solver | configuration
 Quantity Cancel Solver | view
 Quantity Split Solver | configuration
 Quantity Split Solver | view
+Resource Accept Solver | configuration
+Resource Accept Solver | view
 Solver Decision | configuration
 Solver Decision | view
 Solver Process | target_solver

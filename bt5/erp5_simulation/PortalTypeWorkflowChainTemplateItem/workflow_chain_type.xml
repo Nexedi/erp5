@@ -32,6 +32,10 @@
   <workflow>solver_workflow</workflow>
  </chain>
  <chain>
+  <type>Resource Accept Solver</type>
+  <workflow>solver_workflow</workflow>
+ </chain>
+ <chain>
   <type>Resource Adoption Solver</type>
   <workflow>solver_workflow</workflow>
  </chain>
