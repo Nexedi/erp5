@@ -8,10 +8,6 @@
   <workflow>edit_workflow</workflow>
  </chain>
  <chain>
-  <type>Variation Divergence Tester</type>
-  <workflow>edit_workflow</workflow>
- </chain>
- <chain>
   <type>Float Divergence Tester</type>
   <workflow>edit_workflow</workflow>
  </chain>
@@ -20,7 +16,35 @@
   <workflow>edit_workflow, rule_validation_workflow</workflow>
  </chain>
  <chain>
+  <type>Production Reduction Solver</type>
+  <workflow>solver_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Quantity Accept Solver</type>
+  <workflow>solver_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Quantity Cancel Solver</type>
+  <workflow>solver_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Quantity Split Solver</type>
+  <workflow>solver_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Resource Adoption Solver</type>
+  <workflow>solver_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Resource Replacement Solver</type>
+  <workflow>solver_workflow</workflow>
+ </chain>
+ <chain>
   <type>String Divergence Tester</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Variation Divergence Tester</type>
   <workflow>edit_workflow</workflow>
  </chain>
 </workflow_chain>

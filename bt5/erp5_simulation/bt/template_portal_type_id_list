@@ -1,6 +1,5 @@
 Category Membership Divergence Tester
 DateTime Divergence Tester
-Variation Divergence Tester
 Float Divergence Tester
 New Order Rule
 Production Reduction Solver
@@ -14,3 +13,4 @@ Solver Process
 Solver Tool
 Solver Type
 String Divergence Tester
+Variation Divergence Tester
