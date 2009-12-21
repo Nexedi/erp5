@@ -1,0 +1,113 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<tal:block tal:define="real_context here/getContext; \n
+                       base_url_string real_context/absolute_url;\n
+                       date_renderer nocall:real_context/WebSection_viewBlogFrontPage/listbox_effective_date/render_html;" \n
+           tal:repeat="line here/query">\n
+<!--\n
+<span tal:content="python: real_context.WebSection_getCategoryList()">Test</span>-->\n
+  <!--Here is a post-->\n
+  <div class="blog_post" tal:define="render_result line/render">\n
+    <tal:block tal:define="title python: render_result[0][1]; \n
+                           author python: render_result[1][1]; \n
+                           date python: render_result[2][1]; \n
+                           categories python: render_result[3][1]; \n
+                           url python: \'%s/%s\' % (base_url_string, render_result[4][1]);\n
+                           comments_url python: \'%s#comments\' % url;\n
+                           facebook_url python: \'http://www.facebook.com/share.php?u=%s&t=%s\' % (url, title);\n
+                           twitter_url python: \'http://twitter.com/home?status=Currently reading %s\' % url;\n
+                           summary python: render_result[5][1];\n
+                           comment_count python: render_result[6][1];\n
+                           date_rendered python: date_renderer(date)">\n
+\n
+<div class="post_head">\n
+  <a tal:attributes="href url"><h1 tal:content="title">This is the title of the blog post</h1></a>\n
+\n
+  <small class="post_time">\n
+    <strong tal:content="structure date_rendered">date</strong>\n
+  </small>\n
+\n
+  <small class="post_author">Author: <span tal:replace="author">Author</span></small> | <small class="post_category">Category: \n
+    <tal:block tal:repeat="category categories"><a tal:attributes="href python: \'%s?tag=%s\' % (base_url_string, category)" tal:content="category">cat.</a><tal:block tal:condition="not: repeat/category/end"> ; </tal:block></tal:block></small>\n
+\n
+</div><!--End post_head -->\n
+\n
+  <div class="post_body" tal:replace="structure summary">Here is a blog post content</div>\n
+\n
+  <div class="post_bottom">\n
+  <a tal:attributes="href comments_url"><tal:block tal:replace="comment_count">0</tal:block> comment</a> | \n
+  Share: <a title="Facebook" tal:attributes="href facebook_url"><img width="20px" alt="Facebook logo" src="blog_images/facebook-button.png"></a>&nbsp;&nbsp;\n
+         <a title="Twitter" tal:attributes="href twitter_url"><img width="20px" alt="Twitter Logo" src="blog_images/twitter-button.png"></a>\n
+\n
+  </div><!--End post_bottom-->\n
+\n
+    </tal:block>\n
+\n
+\n
+  </div><!--End blog_post-->\n
+\n
+    <tal:block tal:condition="not: repeat/line/end"><br /><hr class="post_separator" /></tal:block>\n
+\n
+</tal:block>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>ListBox_viewAsBlog</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
