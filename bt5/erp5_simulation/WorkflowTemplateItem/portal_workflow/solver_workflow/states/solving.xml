@@ -32,7 +32,7 @@
             <value>
               <tuple>
                 <string>fail</string>
-                <string>success</string>
+                <string>succeed</string>
               </tuple>
             </value>
         </item>
