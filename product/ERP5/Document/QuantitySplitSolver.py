@@ -85,3 +85,5 @@ class QuantitySplitSolver(SolverMixin, ConfigurableMixin, XMLObject):
         stop_date = configuration_dict.get('stop_date', None)
         if stop_date is not None:
           new_movement._setStopDate(stop_date)
+    # Finish solving
+    self.succeed()
