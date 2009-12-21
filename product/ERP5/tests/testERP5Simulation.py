@@ -121,6 +121,7 @@ class TestERP5Simulation(TestERP5SimulationMixin, ERP5TypeTestCase):
     packing_list = sequence.get('packing_list')
     solver_tool = self.portal.portal_solvers
     solver_process = solver_tool.newSolverProcess(packing_list)
+    sequence.edit(solver_process=solver_process)
     quantity_solver_decision = filter(
       lambda x:x.getCausalityValue().getTestedProperty()=='converted_quantity',
       solver_process.contentValues())[0]
@@ -170,6 +171,28 @@ class TestERP5Simulation(TestERP5SimulationMixin, ERP5TypeTestCase):
           portal_type= self.packing_list_line_portal_type):
       self.assertEquals(10,line.getQuantity())
 
+  def _checkSolverState(self, sequence=None, sequence_list=None,
+                        state='solved'):
+    """
+      Check if target solvers' state.
+    """
+    solver_process = sequence.get('solver_process')
+    for solver in solver_process.objectValues(
+      portal_type=self.portal.getPortalTargetSolverTypeList()):
+      self.assertEquals(state, solver.getSolverState())
+
+  def stepCheckSolverIsSolving(self, sequence=None, sequence_list=None, **kw):
+    """
+      Check if all target solvers have 'solving' state.
+    """
+    self._checkSolverState(sequence, sequence_list, 'solving')
+
+  def stepCheckSolverIsSolved(self, sequence=None, sequence_list=None, **kw):
+    """
+      Check if all target solvers have 'solved' state.
+    """
+    self._checkSolverState(sequence, sequence_list, 'solved')
+
   def test_01_splitAndDefer(self, quiet=quiet, run=run_all_test):
     """
       Change the quantity on an delivery line, then
@@ -196,9 +219,11 @@ class TestERP5Simulation(TestERP5SimulationMixin, ERP5TypeTestCase):
                       stepTic \
                       stepCheckPackingListIsDiverged \
                       stepSplitAndDeferPackingList \
+                      stepCheckSolverIsSolving \
                       stepTic \
                       stepCheckPackingListSplitted \
                       stepCheckPackingListIsSolved \
+                      stepCheckSolverIsSolved \
                       '
     sequence_list.addSequenceString(sequence_string)
 
