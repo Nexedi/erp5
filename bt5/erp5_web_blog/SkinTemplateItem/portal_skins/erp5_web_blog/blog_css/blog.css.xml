@@ -11,7 +11,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts61038807.2</string> </value>
+            <value> <string>ts61472107.6</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -23,52 +23,74 @@
         </item>
         <item>
             <key> <string>data</string> </key>
-            <value> <string>hr {\n
-border: none 0;\n
-border-top: 1px dotted black;\n
-width: 90%;\n
-height: 1px;\n
+            <value> <string>/*************************************\\\n
+*         CSS Rules for the blog      *\n
+\\*************************************/\n
+\n
+hr.post_separator {\n
+  border: none 0;\n
+  border-top: 1px dotted black;\n
+  width: 90%;\n
+  height: 1px;\n
 }\n
 \n
-.blog_post .blog_head h1{\n
-margin-left: 50px;\n
- display: block;\n
+.blog_post .post_head h1{\n
+  margin-left: 50px;\n
+  display: block;\n
 }\n
 \n
-.blog_post .blog_head .PostTime{\n
-position:absolute;\n
-left:-15px;\n
-top:3px;\n
-height:71px;\n
-width:67px;\n
-margin:0;\n
-padding:0;\n
-text-align:center;\n
-display:block;\n
-font-size:11px;\n
-font-weight:bold;\n
-line-height:14px;\n
+.blog_post .post_head .post_time input {\n
+  border: none;\n
+  background: none;\n
+  display: block;\n
+  text-align: center;\n
+  width: 67px;\n
+  font-weight: bold;\n
 }\n
 \n
-.CommentsList hr{\n
-border-top: 1px solid black;\n
- width: 50%;\n
+.blog_post .post_head .post_time {\n
+  position:absolute;\n
+  left:-15px;\n
+  top:3px;\n
+  width:67px;\n
+  margin:0;\n
+  padding:0;\n
+  text-align:center;\n
+  display:block;\n
+  font-size:11px;\n
+  font-weight:bold;\n
+  line-height:14px;\n
+}\n
+\n
+.blog_post .post_head .post_time strong {\n
+  text-align: center;\n
+  display: block;\n
+}\n
+\n
+.blog_post .post_head .post_author {\n
+  margin-left:50px;\n
+  display: inline;\n
+}\n
+\n
+.blog_post .post_body {\n
+  text-align: justify;\n
+}\n
+\n
+.comment_list hr {\n
+  border-top: 1px solid black;\n
+  width: 50%;\n
 }\n
 \n
 \n
-.CommentAutor{\n
-font-weight:bold;\n
+.comment_author {\n
+  font-weight:bold;\n
 }\n
 \n
-.CommentDate {\n
-font-size:10px;\n
-line-height:1em;\n
-margin-top:-10px;\n
+.comment_date {\n
+  font-size:10px;\n
+  line-height:1em;\n
+  margin-top:-10px;\n
 }\n
-\n
-#FollowUs fieldset{text-align:center;}\n
-\n
-\n
 </string> </value>
         </item>
         <item>
@@ -77,7 +99,7 @@ margin-top:-10px;\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>562</int> </value>
+            <value> <int>1064</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
