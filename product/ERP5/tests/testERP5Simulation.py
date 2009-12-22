@@ -333,8 +333,8 @@ class TestERP5SimulationPackingList(TestERP5SimulationMixin, TestPackingList):
     resource_solver_decision = filter(
       lambda x:x.getCausalityValue().getTestedProperty()=='resource',
       solver_process.contentValues())[0]
-    # use Resource Accept Solver.
-    resource_solver_decision.setSolverValue(self.portal.portal_types['Resource Accept Solver'])
+    # use Resource Replacement Solver.
+    resource_solver_decision.setSolverValue(self.portal.portal_types['Resource Replacement Solver'])
     solver_process.buildTargetSolverList()
     solver_process.solve()
 
