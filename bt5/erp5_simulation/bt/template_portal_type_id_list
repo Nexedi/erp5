@@ -4,6 +4,7 @@ Float Divergence Tester
 New Order Rule
 Production Reduction Solver
 Quantity Accept Solver
+Quantity Adoption Solver
 Quantity Cancel Solver
 Quantity Split Solver
 Resource Adoption Solver

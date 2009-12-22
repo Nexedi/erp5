@@ -5,6 +5,7 @@ New Order Rule | edit_workflow
 New Order Rule | rule_validation_workflow
 Production Reduction Solver | solver_workflow
 Quantity Accept Solver | solver_workflow
+Quantity Adoption Solver | solver_workflow
 Quantity Cancel Solver | solver_workflow
 Quantity Split Solver | solver_workflow
 Resource Adoption Solver | solver_workflow

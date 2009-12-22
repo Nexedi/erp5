@@ -12,6 +12,7 @@
  <portal_type id="Solver Process">
   <item>Production Reduction Solver</item>
   <item>Quantity Accept Solver</item>
+  <item>Quantity Adoption Solver</item>
   <item>Quantity Split Solver</item>
   <item>Resource Adoption Solver</item>
   <item>Resource Replacement Solver</item>
