@@ -29,7 +29,7 @@
         </item>
         <item>
             <key> <string>factory</string> </key>
-            <value> <string>addAdoptionSolver</string> </value>
+            <value> <string>addAdoptSolver</string> </value>
         </item>
         <item>
             <key> <string>group_list</string> </key>
