@@ -63,6 +63,10 @@
             <key> <string>solver_action_title</string> </key>
             <value> <string>Replace Resource</string> </value>
         </item>
+        <item>
+            <key> <string>tested_property</string> </key>
+            <value> <string>resource</string> </value>
+        </item>
       </dictionary>
     </pickle>
   </record>
