@@ -285,7 +285,7 @@ class RuleMixin:
           # Not Frozen can be updated
           kw = {}
           for tester in profit_tester_list:
-            if tester.compare(prevision_movement, decision_movement):
+            if not tester.compare(prevision_movement, decision_movement):
               kw.update(tester.getUpdatablePropertyDict(prevision_movement, decision_movement))
           if kw:
             movement_collection_diff.addUpdatableMovement(decision_movement, kw)
@@ -301,7 +301,7 @@ class RuleMixin:
           # Not Frozen can be updated
           kw = {}
           for tester in divergence_tester_list:
-            if tester.compare(prevision_movement, decision_movement): 
+            if not tester.compare(prevision_movement, decision_movement): 
               kw.update(tester.getUpdatablePropertyDict(prevision_movement, decision_movement))
               # XXX-JPS - there is a risk here that quanity is wrongly updated
           if kw:
