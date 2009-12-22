@@ -60,11 +60,11 @@ class TestERP5Simulation(TestERP5SimulationMixin, ERP5TypeTestCase):
     portal_rules = self.portal.portal_rules
     try:
       new_order_rule = filter(
-        lambda x:x.title == 'New Default Order Rule',
+        lambda x:x.title == 'New Simple Order Rule',
         portal_rules.objectValues(portal_type='New Order Rule'))[0]
     except IndexError:
       new_order_rule = portal_rules.newContent(
-        title='New Default Order Rule',
+        title='New Simple Order Rule',
         portal_type='New Order Rule',
         reference='default_order_rule',
         version=2,
