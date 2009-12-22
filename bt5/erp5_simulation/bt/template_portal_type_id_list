@@ -6,7 +6,6 @@ Production Reduction Solver
 Quantity Accept Solver
 Quantity Cancel Solver
 Quantity Split Solver
-Resource Accept Solver
 Resource Adoption Solver
 Resource Replacement Solver
 Solver Decision

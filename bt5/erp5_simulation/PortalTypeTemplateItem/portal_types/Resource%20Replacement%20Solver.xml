@@ -21,7 +21,23 @@
         </item>
         <item>
             <key> <string>configuration_form_id</string> </key>
-            <value> <string>ResourceReplacementSolver_viewConfiguration</string> </value>
+            <value> <string>Solver_viewConfiguration</string> </value>
+        </item>
+        <item>
+            <key> <string>configuration_property_list</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>delivery_solver</string> </key>
+            <value>
+              <tuple>
+                <string>FIFO</string>
+                <string>LIFO</string>
+                <string>MinPrice</string>
+              </tuple>
+            </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -62,6 +78,10 @@
         <item>
             <key> <string>solver_action_title</string> </key>
             <value> <string>Replace Resource</string> </value>
+        </item>
+        <item>
+            <key> <string>tested_property</string> </key>
+            <value> <string>resource</string> </value>
         </item>
       </dictionary>
     </pickle>
