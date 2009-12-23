@@ -372,6 +372,50 @@ class TestERP5SimulationPackingList(TestERP5SimulationMixin, TestPackingList):
         after_tag=after_tag,
         ).build(explanation_uid=packing_list.getCausalityValue().getUid())
 
+  def _adoptPrevisionQuantity(self, packing_list):
+    """
+    Solve quantity divergence by using solver tool.
+    """
+    solver_tool = self.portal.portal_solvers
+    solver_process = solver_tool.newSolverProcess(packing_list)
+    quantity_solver_decision = filter(
+      lambda x:x.getCausalityValue().getTestedProperty()=='quantity',
+      solver_process.contentValues())[0]
+    # use Quantity Adoption Solver.
+    quantity_solver_decision.setSolverValue(self.portal.portal_types['Quantity Adoption Solver'])
+    solver_process.buildTargetSolverList()
+    solver_process.solve()
+
+  def stepAdoptPrevisionQuantity(self,sequence=None, sequence_list=None, **kw):
+    """
+    Solve quantity divergence by using solver tool.
+    """
+    packing_list = sequence.get('packing_list')
+    self._adoptPrevisionQuantity(packing_list)
+
+  def stepNewPackingListAdoptPrevisionQuantity(self, sequence=None,
+                                               sequence_list=None, **kw):
+    """
+    Solve quantity divergence by using solver tool.
+    """
+    packing_list = sequence.get('new_packing_list')
+    self._adoptPrevisionQuantity(packing_list)
+
+  def stepAdoptPrevisionResource(self,sequence=None, sequence_list=None, **kw):
+    """
+    Solve resource divergence by using solver tool.
+    """
+    packing_list = sequence.get('packing_list')
+    solver_tool = self.portal.portal_solvers
+    solver_process = solver_tool.newSolverProcess(packing_list)
+    resource_solver_decision = filter(
+      lambda x:x.getCausalityValue().getTestedProperty()=='resource',
+      solver_process.contentValues())[0]
+    # use Resource Adopt Solver.
+    resource_solver_decision.setSolverValue(self.portal.portal_types['Resource Adoption Solver'])
+    solver_process.buildTargetSolverList()
+    solver_process.solve()
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestERP5Simulation))
