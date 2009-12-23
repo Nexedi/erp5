@@ -1357,6 +1357,35 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     catalog.filter_dict[method_id]['expression_instance'] = expr_instance
     catalog.filter_dict[method_id]['type'] = []
 
+
+  def stepCreateUpdateCatalogMethod(self, sequence=None, sequence_list=None, **kw):
+    """
+    Create ZSQL Method into catalog
+    """
+    pc = self.getCatalogTool()
+    catalog = pc.getSQLCatalog()
+    self.failUnless(catalog is not None)
+    method_id = "z_fake_method"
+    addSQLMethod = catalog.manage_addProduct['ZSQLMethods'].manage_addZSQLMethod
+    addSQLMethod(id=method_id, title='', connection_id='erp5_sql_connection',
+                 arguments='', template='')
+    zsql_method = catalog._getOb(method_id, None)
+    self.failUnless(zsql_method is not None)
+    sequence.edit(zsql_method_id = method_id)
+    # set this method in update_object properties of catalog
+    sql_uncatalog_object = list(catalog.sql_uncatalog_object)
+    sql_uncatalog_object.append(method_id)
+    sql_uncatalog_object.sort()
+    catalog.sql_uncatalog_object = tuple(sql_uncatalog_object)
+    # set filter for this method
+    expression = 'python: isDelivery'
+    expr_instance = Expression(expression)
+    catalog.filter_dict[method_id] = PersistentMapping()
+    catalog.filter_dict[method_id]['filtered'] = 1
+    catalog.filter_dict[method_id]['expression'] = expression
+    catalog.filter_dict[method_id]['expression_instance'] = expr_instance
+    catalog.filter_dict[method_id]['type'] = []
+
   def stepCreateNewCatalogMethod(self, sequence=None, sequence_list=None, **kw):
     """
     Create ZSQL Method into catalog
@@ -1441,6 +1470,25 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     filter_dict = catalog.filter_dict[method_id]
     self.assertEqual(filter_dict['filtered'], 1)
     self.assertEqual(filter_dict['expression'], 'python: isMovement')
+    self.assertEqual(filter_dict['type'], [])
+
+  def stepCheckUpdatedCatalogMethodExists(self, sequence=None, sequence_list=None, **kw):
+    """
+    Check presence of ZSQL Method in catalog
+    """
+    pc = self.getCatalogTool()
+    catalog = pc.getSQLCatalog()
+    self.failUnless(catalog is not None)
+    method_id = sequence.get('zsql_method_id', None)
+    zsql_method = catalog._getOb(method_id, None)
+    self.failUnless(zsql_method is not None)
+    # check catalog properties
+    self.failUnless(method_id in catalog.sql_uncatalog_object)
+    # check filter
+    self.failUnless(method_id in catalog.filter_dict.keys())
+    filter_dict = catalog.filter_dict[method_id]
+    self.assertEqual(filter_dict['filtered'], 1)
+    self.assertEqual(filter_dict['expression'], 'python: isDelivery')
     self.assertEqual(filter_dict['type'], [])
 
   def stepCheckCatalogMethodRemoved(self, sequence=None, sequence_list=None, **kw):
@@ -3395,6 +3443,85 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)
+
+  def test_121_BusinessTemplateWithUpdateOfCatalogMethod(self, quiet=quiet, run=run_all_test):
+    if not run: return
+    if not quiet:
+      message = 'Test Business Template Update With Catalog Method, Related Key, Result Key And Table'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ', 0, message)
+    sequence_list = SequenceList()
+    sequence_string = '\
+                       CreateCatalogMethod \
+                       CreateKeysAndTable \
+                       CreateNewBusinessTemplate \
+                       UseExportBusinessTemplate \
+                       AddCatalogMethodToBusinessTemplate \
+                       AddKeysAndTableToBusinessTemplate \
+                       CheckModifiedBuildingState \
+                       CheckNotInstalledInstallationState \
+                       BuildBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       CheckObjectPropertiesInBusinessTemplate \
+                       SaveBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       RemoveCatalogMethod \
+                       RemoveKeysAndTable \
+                       RemoveBusinessTemplate \
+                       RemoveAllTrashBins \
+                       ImportBusinessTemplate \
+                       UseImportBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       InstallBusinessTemplate \
+                       Tic \
+                       CheckInstalledInstallationState \
+                       CheckBuiltBuildingState \
+                       CheckNoTrashBin \
+                       CheckSkinsLayers \
+                       CheckCatalogMethodExists \
+                       CheckKeysAndTableExists \
+                       RemoveCatalogMethod \
+                       CreateUpdateCatalogMethod \
+                       CreateNewBusinessTemplate \
+                       UseExportBusinessTemplate \
+                       AddCatalogMethodToBusinessTemplate \
+                       AddKeysAndTableToBusinessTemplate \
+                       CheckModifiedBuildingState \
+                       CheckNotInstalledInstallationState \
+                       BuildBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       CheckObjectPropertiesInBusinessTemplate \
+                       SaveBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       RemoveCatalogMethod \
+                       CreateCatalogMethod \
+                       RemoveBusinessTemplate \
+                       RemoveAllTrashBins \
+                       ImportBusinessTemplate \
+                       UseImportBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       InstallBusinessTemplate \
+                       Tic \
+                       CheckInstalledInstallationState \
+                       CheckBuiltBuildingState \
+                       CheckSkinsLayers \
+                       CheckUpdatedCatalogMethodExists \
+                       CheckKeysAndTableExists \
+                       UninstallBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       CheckKeysAndTableRemoved \
+                       CheckCatalogMethodRemoved \
+                       '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self, quiet=quiet)
+
 
   def test_13_BusinessTemplateWithRole(self, quiet=quiet, run=run_all_test):
     if not run: return
