@@ -70,7 +70,7 @@ class TestERP5Simulation(TestERP5SimulationMixin, ERP5TypeTestCase):
         version=2,
         )
       # create category divergence testers that is only used for matching
-      for i in ('order',):
+      for i in ('resource',):
         new_order_rule.newContent(
           title='%s divergence tester' % i,
           portal_type='Category Membership Divergence Tester',
@@ -269,14 +269,6 @@ class TestERP5SimulationPackingList(TestERP5SimulationMixin, TestPackingList):
           title='%s divergence tester' % i,
           portal_type='Category Membership Divergence Tester',
           tested_property=i,
-          matching_provider=1)
-      # create category divergence testers that is only used for matching
-      for i in ('order',):
-        new_order_rule.newContent(
-          title='%s divergence tester' % i,
-          portal_type='Category Membership Divergence Tester',
-          tested_property=i,
-          divergence_provider=0,
           matching_provider=1)
       # create variation divergence testers that is also used for matching
       for i in ('variation_property_dict',):
