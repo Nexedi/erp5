@@ -416,6 +416,20 @@ class TestERP5SimulationPackingList(TestERP5SimulationMixin, TestPackingList):
     solver_process.buildTargetSolverList()
     solver_process.solve()
 
+  def stepCheckPackingListLineWithSameResource(self,sequence=None, sequence_list=None, **kw):
+    """
+      Look if the packing list has new previsions
+    """
+    old_packing_list_line = sequence.get('packing_list_line')
+    packing_list_line = old_packing_list_line.aq_parent[str(int(old_packing_list_line.getId())-1)]
+    resource = sequence.get('resource')
+    for line in sequence.get('packing_list').getMovementList():
+      self.assertEquals(line.getResourceValue(), resource)
+      self.assertEquals(line.getQuantity(), self.default_quantity)
+      self.assertEquals(line.getCausalityList(),
+                        [x.getOrder() for x in \
+                         line.getDeliveryRelatedValueList()])
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestERP5Simulation))
