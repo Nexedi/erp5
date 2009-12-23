@@ -53,25 +53,13 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>#request = container.REQUEST\n
-#RESPONSE =  request.RESPONSE\n
-\n
-#context.pdb_trace(context.getObject())\n
+            <value> <string>"""\n
+  This simple script returns the author name of the current context.\n
+"""\n
 \n
 document = context.getObject()\n
-#user_name = document.getOwnerInfo()[\'id\']\n
-return (document.getSourceValue() is not None and document.getSourceValue().getTitle() or "User unknown")\n
-\n
-#portal = context.getPortalObject()\n
-#found_user_list = portal.portal_catalog(portal_type=\'Person\', reference=user_name)\n
-#found_user_count = len(found_user_list)\n
-#if found_user_count != 1:\n
-#  person_name = user_name\n
-#else:\n
-#  person = found_user_list[0].getObject()\n
-#  person_name = person.getName()\n
-\n
-#return person_name\n
+source = document.getSourceValue()\n
+return (source is not None and source.getTitle() or "User unknown")\n
 </string> </value>
         </item>
         <item>
@@ -119,6 +107,7 @@ return (document.getSourceValue() is not None and document.getSourceValue().getT
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>document</string>
+                            <string>source</string>
                             <string>None</string>
                           </tuple>
                         </value>

@@ -55,13 +55,15 @@
             <key> <string>_body</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-request = container.REQUEST\n
-RESPONSE =  request.RESPONSE\n
-\n
+"""\n
+  This simple script returns the first paragraph of an HTML or raw text.\n
+  In the case of a raw text, the first line is returned, splitted by \\n.\n
+"""\n
 content = context.getTextContent()\n
-print content.split("</p>")[0] + "</p>"\n
-\n
-return printed\n
+if "</p>" in content:\n
+  return content.split("</p>")[0] + "</p>"\n
+else:\n
+  return content.split("\\n")[0]\n
 
 
 ]]></string> </value>
@@ -100,12 +102,7 @@ return printed\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>_print_</string>
-                            <string>_print</string>
                             <string>_getattr_</string>
-                            <string>container</string>
-                            <string>request</string>
-                            <string>RESPONSE</string>
                             <string>context</string>
                             <string>content</string>
                             <string>_getitem_</string>

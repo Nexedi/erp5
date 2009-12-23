@@ -373,7 +373,7 @@
                           <string>Categories</string>
                         </tuple>
                         <tuple>
-                          <string>reference</string>
+                          <string>WebSection_getBlogReference</string>
                           <string>Reference</string>
                         </tuple>
                         <tuple>
@@ -381,7 +381,7 @@
                           <string>Summary</string>
                         </tuple>
                         <tuple>
-                          <string>Discussion_getCommentCount</string>
+                          <string>DiscussionThread_getContextPostCount</string>
                           <string>Comment Count</string>
                         </tuple>
                       </list>

@@ -53,20 +53,31 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>current_section = context.getWebSectionValue()\n
-subject_list = []\n
-for item in current_section.WebSection_getDocumentValueList():\n
-  subject_list.extend(item.getSubjectList())\n
+            <value> <string>"""\n
+  This script returns the list of category (or tags) that are available in the current web section.\n
+  It returns a python list of Category object. A Category object is really simple, as it has just \n
+  one property with a getter and a setter : title.\n
+"""\n
 \n
+\n
+## First step : retrieve the raw list\n
+current_section = context.getWebSectionValue()\n
+subject_list = []\n
+\n
+for item in current_section.WebSection_getDocumentValueList():\n
+  subject_list.extend([x for x in item.getSubjectList() if not x in subject_list])\n
+\n
+## Now, build the object list so that a Listbox can be used to display the results of this script.\n
 result = []\n
-class FakeObject:\n
+\n
+class Category:\n
   def setTitle(self, title):\n
     self.title = title\n
   def getTitle(self):\n
     return self.title\n
 \n
 for item in subject_list:\n
-  obj = FakeObject()\n
+  obj = Category()\n
   obj.setTitle(item)\n
   result.append(obj)\n
 \n
@@ -114,8 +125,11 @@ return result\n
                             <string>subject_list</string>
                             <string>_getiter_</string>
                             <string>item</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>x</string>
                             <string>result</string>
-                            <string>FakeObject</string>
+                            <string>Category</string>
                             <string>obj</string>
                           </tuple>
                         </value>

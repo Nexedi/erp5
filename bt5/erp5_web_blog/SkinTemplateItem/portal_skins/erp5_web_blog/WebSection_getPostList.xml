@@ -53,7 +53,13 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>request = container.REQUEST\n
+            <value> <string>"""\n
+  This script returns the blog post that must be displayed in the current section.\n
+  The blog post are filtered through the tag parameter that is retrieved through\n
+  the GET parameters.\n
+"""\n
+\n
+request = container.REQUEST\n
 \n
 requested_tag = request.get(\'tag\')\n
 current_section = context.getWebSectionValue()\n

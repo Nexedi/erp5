@@ -53,11 +53,11 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># Import a standard function, and get the HTML request and response objects.\n
-request = container.REQUEST\n
-RESPONSE =  request.RESPONSE\n
+            <value> <string>"""\n
+  This script returns a valid reference to the blog post in context.\n
+"""\n
 \n
-return "%s/%s" % (context.absolute_url(), context.getReference())\n
+return "%s/WebPage_viewAsBlog" % context.getReference()\n
 </string> </value>
         </item>
         <item>
@@ -95,9 +95,6 @@ return "%s/%s" % (context.absolute_url(), context.getReference())\n
                         <value>
                           <tuple>
                             <string>_getattr_</string>
-                            <string>container</string>
-                            <string>request</string>
-                            <string>RESPONSE</string>
                             <string>context</string>
                           </tuple>
                         </value>
@@ -115,7 +112,7 @@ return "%s/%s" % (context.absolute_url(), context.getReference())\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>WebSection_getPermanentLink</string> </value>
+            <value> <string>WebSection_getBlogReference</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
