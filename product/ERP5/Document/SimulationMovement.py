@@ -359,8 +359,6 @@ class SimulationMovement(Movement, PropertyRecordableMixin):
     else:
       return False
 
-  getDeliverable = isDeliverable
-
   # Simulation Dates - acquire target dates
   security.declareProtected( Permissions.AccessContentsInformation,
                              'getOrderStartDate')
