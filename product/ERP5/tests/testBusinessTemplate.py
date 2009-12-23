@@ -248,6 +248,15 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     bt = sequence.get('import_bt')
     sequence.edit(current_bt=bt)
 
+  def stepCheckPreinstalReturnSomething(self, sequence=None,
+                                        sequence_list=None, **kw):
+    """
+    In case of upgrade preinstall call must return at least one element
+    which is marked as new/updated/removed
+    """
+    bt = sequence.get('current_bt', None)
+    self.assertNotEquals(len(bt.preinstall()), 0)
+
   def stepCheckInstalledInstallationState(self, sequence=None,
                                         sequence_list=None, **kw):
     """
@@ -3506,6 +3515,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        UseImportBusinessTemplate \
                        CheckBuiltBuildingState \
                        CheckNotInstalledInstallationState \
+                       CheckPreinstalReturnSomething \
                        InstallBusinessTemplate \
                        Tic \
                        CheckInstalledInstallationState \
