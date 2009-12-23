@@ -1,5 +1,6 @@
-##############################################################################
 # -*- coding: utf-8 -*-
+##############################################################################
+#
 # Copyright (c) 2009 Nexedi SA and Contributors. All Rights Reserved.
 #                    Sebastien Robin <seb@nexedi.com>
 #                    Łukasz Nowak <luke@nexedi.com>

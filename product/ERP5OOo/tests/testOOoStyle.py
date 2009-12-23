@@ -1,5 +1,6 @@
-##############################################################################
 # -*- coding: utf-8 -*-
+##############################################################################
+#
 # Copyright (c) 2007 Nexedi SA and Contributors. All Rights Reserved.
 #          Jerome Perrin <jerome@nexedi.com>
 #

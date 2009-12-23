@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-# -*- coding: utf-8 -*-
+#
 # Copyright (c) 2009 Nexedi KK and Contributors. All Rights Reserved.
 #                    Tatuya Kamada <tatuya@nexedi.com>
 #                    Fabien Morin <fabien@nexedi.com>
