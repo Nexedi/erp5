@@ -100,7 +100,9 @@ class DivergenceTesterMixin:
     If decision_movement is a simulation movement, use
     the recorded properties instead of the native ones.
     """
-    return '%s/%s' % (self.getPortalType(), self.getTestedProperty())
+    tested_property = self.getTestedProperty()
+    return '%s/%s/%r' % (self.getPortalType(), tested_property,
+                         movement.getProperty(tested_property))
 
   def compare(self, prevision_movement, decision_movement):
     """
