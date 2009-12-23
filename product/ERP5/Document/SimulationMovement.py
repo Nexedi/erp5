@@ -351,6 +351,16 @@ class SimulationMovement(Movement, PropertyRecordableMixin):
 
   getDeliverable = isDeliverable
 
+  security.declareProtected( Permissions.AccessContentsInformation,
+                             'isDeletable')
+  def isDeletable(self):
+    if not self.isFrozen() and not self._isTreeDelivered():
+      return True
+    else:
+      return False
+
+  getDeliverable = isDeliverable
+
   # Simulation Dates - acquire target dates
   security.declareProtected( Permissions.AccessContentsInformation,
                              'getOrderStartDate')
