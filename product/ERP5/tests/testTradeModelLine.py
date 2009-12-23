@@ -2720,7 +2720,6 @@ class TestTradeModelLine(TestTradeModelLineMixin):
     self.assertEqual(2, len(amount_list))
     self.assertEqual(508.51000000000005, getTotalAmount(amount_list))
 
-
 class TestTradeModelLineSale(TestTradeModelLine):
   invoice_portal_type = 'Sale Invoice Transaction'
   invoice_line_portal_type = 'Invoice Line'
@@ -2730,19 +2729,7 @@ class TestTradeModelLineSale(TestTradeModelLine):
   packing_list_portal_type = 'Sale Packing List'
   trade_condition_portal_type = 'Sale Trade Condition'
 
-
-class TestTradeModelLinePurchase(TestTradeModelLine):
-  invoice_portal_type = 'Purchase Invoice Transaction'
-  invoice_line_portal_type = 'Invoice Line'
-  invoice_transaction_line_portal_type = 'Purchase Invoice Transaction Line'
-  order_portal_type = 'Purchase Order'
-  order_line_portal_type = 'Purchase Order Line'
-  packing_list_portal_type = 'Purchase Packing List'
-  trade_condition_portal_type = 'Purchase Trade Condition'
-
-
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestTradeModelLineSale))
-  suite.addTest(unittest.makeSuite(TestTradeModelLinePurchase))
   return suite
