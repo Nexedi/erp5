@@ -92,8 +92,12 @@ class CategoryMembershipDivergenceTester(Predicate, DivergenceTesterMixin):
     If decision_movement is a simulation movement, use
     the recorded properties instead of the native ones.
     """
-    return '%s/%s/%r' % (self.getPortalType(), self.getTestedProperty(),
-                         movement.getPropertyList(self.getTestedProperty()))
+    tested_property = self.getTestedProperty()
+    if movement.isPropertyRecorded(tested_property):
+      value = movement.getRecordedProperty(tested_property)
+    else:
+      value = movement.getPropertyList(tested_property)
+    return '%s/%s/%r' % (self.getPortalType(), tested_property, value)
 
   def getUpdatablePropertyDict(self, prevision_movement, decision_movement):
     """
