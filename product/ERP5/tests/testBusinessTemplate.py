@@ -248,7 +248,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     bt = sequence.get('import_bt')
     sequence.edit(current_bt=bt)
 
-  def stepCheckPreinstalReturnSomething(self, sequence=None,
+  def stepCheckPreinstallReturnSomething(self, sequence=None,
                                         sequence_list=None, **kw):
     """
     In case of upgrade preinstall call must return at least one element
@@ -256,6 +256,15 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     """
     bt = sequence.get('current_bt', None)
     self.assertNotEquals(len(bt.preinstall()), 0)
+
+  def stepCheckCatalogPreinstallReturnCatalogMethod(self, sequence=None,
+                                        sequence_list=None, **kw):
+    """
+    In case of upgrade preinstall call must return at least one element
+    which is marked as new/updated/removed
+    """
+    bt = sequence.get('current_bt', None)
+    self.assertEquals(bt.preinstall(), {'portal_catalog/erp5_mysql_innodb/z_fake_method': ['Modified', 'CatalogMethod']})
 
   def stepCheckInstalledInstallationState(self, sequence=None,
                                         sequence_list=None, **kw):
@@ -3515,8 +3524,9 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        UseImportBusinessTemplate \
                        CheckBuiltBuildingState \
                        CheckNotInstalledInstallationState \
-                       CheckPreinstalReturnSomething \
-                       InstallBusinessTemplate \
+                       CheckPreinstallReturnSomething \
+                       CheckCatalogPreinstallReturnCatalogMethod \
+                       InstallWithoutForceBusinessTemplate \
                        Tic \
                        CheckInstalledInstallationState \
                        CheckBuiltBuildingState \
