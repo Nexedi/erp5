@@ -1071,7 +1071,7 @@ class ERP5TypeTestCase(backportUnittest.TestCase, PortalTestCase):
 class ResponseWrapper:
     '''Decorates a response object with additional introspective methods.'''
 
-    _bodyre = re.compile('^$^\n(.*)', re.MULTILINE | re.DOTALL)
+    _headers_separator_re = re.compile('(?:\r?\n){2}')
 
     def __init__(self, response, outstream, path):
         self._response = response
@@ -1087,10 +1087,13 @@ class ResponseWrapper:
 
     def getBody(self):
         '''Returns the page body, i.e. the output par headers.'''
-        body = self._bodyre.search(self.getOutput())
-        if body is not None:
-            body = body.group(1)
-        return body
+        output = self.getOutput()
+        try:
+            headers, body = self._headers_separator_re.split(output, 1)
+            return body
+        except ValueError:
+            # not enough values to unpack: no body
+            return None
 
     def getPath(self):
         '''Returns the path used by the request.'''
