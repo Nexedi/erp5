@@ -88,6 +88,26 @@ class VariationDivergenceTester(Predicate, DivergenceTesterMixin):
           dict(property_name=tested_property))
     return None
 
+  def generateHashKey(self, movement):
+    """
+    Returns a hash key which can be used to optimise the
+    matching algorithm between movements. The purpose
+    of this hash key is to reduce the size of lists of
+    movements which need to be compared using the compare
+    method (quadratic complexity).
+
+    If decision_movement is a simulation movement, use
+    the recorded properties instead of the native ones.
+    """
+    value_list = []
+    for tested_property in ('variation_category_list',
+                            'variation_property_dict'):
+      if movement.isPropertyRecorded(tested_property):
+        value_list.append(movement.getRecordedProperty(tested_property))
+      else:
+        value_list.append(movement.getProperty(tested_property))
+    return '%s/%r' % (self.getPortalType(), value_list)
+
   def getUpdatablePropertyDict(self, prevision_movement, decision_movement):
     """
     Returns a list of properties to update on decision_movement
