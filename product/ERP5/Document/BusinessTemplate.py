@@ -2184,6 +2184,46 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
           self._filter_type_archive[method_id] = \
                       catalog.filter_dict[method_id]['type']
 
+  def generateXml(self, path):
+    catalog = _getCatalogValue(self)
+    obj = self._objects[path]
+    method_id = obj.id
+    xml_data = '<catalog_method>'
+    if self._method_properties.has_key(method_id):
+      for method_property, value in self._method_properties[method_id].items():
+        xml_data += '\n <item key="%s" type="int">' %(method_property,)
+        xml_data += '\n  <value>%s</value>' %(value,)
+        xml_data += '\n </item>'
+
+      if catalog.filter_dict.has_key(method_id):
+        if catalog.filter_dict[method_id]['filtered']:
+          xml_data += '\n <item key="_is_filtered_archive" type="int">'
+          xml_data += '\n  <value>1</value>'
+          xml_data += '\n </item>'
+          for method in catalog_method_filter_list:
+            try:
+              value = getattr(self, method, '')[method_id]
+            except KeyError:
+              # the method has no key
+              continue
+            if method != '_filter_expression_instance_archive':
+              if type(value) in (type(''), type(u'')):
+                xml_data += '\n <item key="%s" type="str">' %(method,)
+                xml_data += '\n  <value>%s</value>' %(str(value))
+                xml_data += '\n </item>'
+              elif type(value) in (type(()), type([])):
+                xml_data += '\n <item key="%s" type="tuple">'%(method)
+                for item in value:
+                  xml_data += '\n  <value>%s</value>' %(str(item))
+                xml_data += '\n </item>'
+    xml_data += '\n</catalog_method>'
+    return xml_data
+
+  def preinstall(self, context, installed_bt, **kw):
+    modified_object_dict = ObjectTemplateItem.preinstall(self, context, installed_bt, **kw)
+    modified_object_dict.update(BaseTemplateItem.preinstall(self, context, installed_bt, **kw))
+    return modified_object_dict
+
   def export(self, context, bta, **kw):
     catalog = _getCatalogValue(self)
     if catalog is None:
@@ -2204,47 +2244,9 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
       XMLExportImport.exportXML(obj._p_jar, obj._p_oid, f)
       bta.addObject(obj=f.getvalue(), name=id, path=path)
       # add all datas specific to catalog inside one file
-      method_id = obj.id
-      object_path = os.path.join(path, method_id+'.catalog_keys.xml')
-
-      f = open(object_path, 'wb')
-      xml_data = '<catalog_method>'
-
-      for method_property, value in self._method_properties[method_id].items():
-        xml_data += '\n <item key="%s" type="int">' %(method_property,)
-        xml_data += '\n  <value>%s</value>' %(value,)
-        xml_data += '\n </item>'
-
-      if catalog.filter_dict.has_key(method_id):
-        if catalog.filter_dict[method_id]['filtered']:
-          xml_data += '\n <item key="_is_filtered_archive" type="int">'
-          xml_data += '\n  <value>1</value>'
-          xml_data += '\n </item>'
-          for method in catalog_method_filter_list:
-            value = getattr(self, method, '')[method_id]
-            if method != '_filter_expression_instance_archive':
-              if type(value) in (type(''), type(u'')):
-                xml_data += '\n <item key="%s" type="str">' %(method,)
-                xml_data += '\n  <value>%s</value>' %(str(value))
-                xml_data += '\n </item>'
-              elif type(value) in (type(()), type([])):
-                xml_data += '\n <item key="%s" type="tuple">'%(method)
-                for item in value:
-                  xml_data += '\n  <value>%s</value>' %(str(item))
-                xml_data += '\n </item>'
-      xml_data += '\n</catalog_method>'
-      f.write(xml_data)
-      f.close()
-
-  # Function to generate XML Code Manually
-  def generateXml(self, path=None):
-    obj = self._objects[path]
-    xml_data = '<key_list>'
-    obj.sort()
-    for key in obj:
-      xml_data += '\n <key>%s</key>' %(key)
-    xml_data += '\n</key_list>'
-    return xml_data
+      key_name = os.path.join(obj.id+'.catalog_keys')
+      xml_data = self.generateXml(key)
+      bta.addObject(obj=xml_data, name=key_name, path=path)
 
   def install(self, context, trashbin, **kw):
     ObjectTemplateItem.install(self, context, trashbin, **kw)
