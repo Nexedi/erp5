@@ -13,11 +13,11 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
-                <string>default</string>
                 <string>css_class</string>
-                <string>text_editor</string>
+                <string>default</string>
                 <string>editable</string>
+                <string>text_editor</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -118,7 +118,7 @@
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Event_viewFieldLibrary</string> </value>
+                    <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
