@@ -515,8 +515,8 @@ class TestPackingListMixin(TestOrderMixin):
     simulation_line_list = applied_rule.objectValues()
 #    self.assertEquals(len(simulation_line_list),1)
     for simulation_line in simulation_line_list:
-      simulation_line.recordProperty('quantity')
       simulation_line.edit(quantity=self.default_quantity-1)
+      simulation_line.getOrderValue().edit(quantity=self.default_quantity-1)
 
   def stepModifySimulationLineQuantityForMergedLine(self,sequence=None, sequence_list=None, **kw):
     """
@@ -526,8 +526,8 @@ class TestPackingListMixin(TestOrderMixin):
     simulation_line_list = applied_rule.objectValues()
     self.assertEquals(len(simulation_line_list),2)
     for simulation_line in simulation_line_list:
-      simulation_line.recordProperty('quantity')
       simulation_line.edit(quantity=self.default_quantity-1)
+      simulation_line.getOrderValue().edit(quantity=self.default_quantity-1)
 
   def stepModifySimulationLineStartDate(self,sequence=None, sequence_list=None, **kw):
     """
