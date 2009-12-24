@@ -185,11 +185,30 @@ class Selection(Acquisition.Implicit, Traversable, Persistent):
          restarted."""
       return newState
 
-    def __call__(self, method = None, context=None, REQUEST=None):
+    def __call__(self, method=None, context=None, REQUEST=None, params=None):
+        """
+        Calls the selection and return the list of selected documents
+        or objects. Seledction method, context and parameters may be 
+        overriden in a non persistent way.
+
+        method -- optional method (callable) or method path (string)
+                  to use instead of the persistent selection method
+
+        context -- optional context to call the selection method on
+
+        REQUEST -- optional REQUEST parameters (not used, only to 
+                   provide API compatibility)
+
+        params -- optional parameters which can be used to override
+                  default params
+        """
         #LOG("Selection", 0, str((self.__dict__)))
         #LOG("Selection", 0, str(method))
         #LOG('Selection', 0, "self.invert_mode = %s" % repr(self.invert_mode))
-        kw = self.params.copy()
+        if not params:
+          kw = self.params.copy()
+        else:
+          kw = params.copy()
         # Always remove '-C'-named parameter.
         kw.pop('-C', None)
         if self.invert_mode is not 0:

@@ -53,11 +53,8 @@ def getDocumentGroupByWorkflowStateList(self, form_id='', **kw):
   
   selection_name = request['selection_name']
 
-  list_method_name = 'searchFolder'
   form = getattr(portal, form_id)
   listbox = getattr(form, 'listbox', None)
-  if listbox is not None:
-    list_method_name = listbox.get_value('list_method').method_name
 
   # guess all column name from catalog schema
   possible_state_list = [column_name for column_name in
@@ -72,17 +69,17 @@ def getDocumentGroupByWorkflowStateList(self, form_id='', **kw):
   counter = 0
   if not selection_uid_list:
     for workflow_state in possible_state_list:
-      selection_params = \
-              selection_tool.getSelectionParamsFor(selection_name).copy()
-      selection_params['where_expression'] = \
-                        'catalog.%s is not NULL' % workflow_state
-      selection_params['group_by'] = ('catalog.portal_type',
+      params = \
+          selection_tool.getSelectionParamsFor(selection_name).copy() 
+      params['where_expression'] = \
+                       'catalog.%s is not NULL' % workflow_state
+      params['group_by'] = ('catalog.portal_type',
                                       'catalog.%s' % workflow_state)
-      selection_params['select_expression'] = (
+      params['select_expression'] = (
           'catalog.path, count(catalog.uid) as count, catalog.portal_type, catalog.%s'
             % workflow_state)
       
-      for brain in getattr(self, list_method_name)(**selection_params):
+      for brain in selection_tool.callSelectionFor(selection_name, params=params):
         doc = brain.getObject()
         for workflow in wf_tool.getWorkflowsFor(doc):
           state_var = workflow.variables.getStateVar()
@@ -161,13 +158,10 @@ def getWorkflowActionDocumentList(self, **kw):
   document_list = []
   portal = self.getPortalObject()
   getObject = portal.portal_catalog.getObject
-  searchResults = portal.portal_catalog.searchResults
   wtool = portal.portal_workflow
-  stool = portal.portal_selections
-  original_selection_params = stool.getSelectionParamsFor(selection_name)
-  original_selection_params.setdefault('sort_on', kw.get('sort_on'))
+  selection_tool = portal.portal_selections
 
-  selection_uid_list = stool.getSelectionCheckedUidsFor(selection_name)
+  selection_uid_list = selection_tool.getSelectionCheckedUidsFor(selection_name)
 
   if selection_uid_list:
     original_selection_params['uid'] = selection_uid_list
@@ -175,14 +169,15 @@ def getWorkflowActionDocumentList(self, **kw):
   translate = self.Base_translateString
   for listbox_selection in listbox:
     if listbox_selection.get('workflow_action'):
-      selection_params = original_selection_params.copy()
+      selection_params = selection_tool.getSelectionParamsFor(selection_name).copy() 
+      selection_params.setdefault('sort_on', kw.get('sort_on'))
       selection_params[listbox_selection['state_var']] = \
                                 listbox_selection['workflow_state']
       selection_params['portal_type'] = listbox_selection['portal_type']
 
       workflow_id, action = listbox_selection['workflow_action'].split('/')
       workflow = wtool.getWorkflowById(workflow_id)
-      for doc in searchResults(**selection_params):
+      for doc in selection_tool.callSelectionFor(selection_name, params=selection_params):
         doc = doc.getObject()
         action_list = [ai for ai in
                         workflow.listObjectActions(wtool._getOAI(doc))

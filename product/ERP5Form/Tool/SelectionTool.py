@@ -220,12 +220,34 @@ class SelectionTool( BaseTool, UniqueObject, SimpleItem ):
       return self.getSelectionNameList(context, REQUEST)
 
     security.declareProtected(ERP5Permissions.View, 'callSelectionFor')
-    def callSelectionFor(self, selection_name, context=None, REQUEST=None):
+    def callSelectionFor(self, selection_name, method=None, context=None, 
+                                               REQUEST=None, params=None):
+      """
+      Calls the selection and return the list of selected documents
+      or objects. Seledction method, context and parameters may be 
+      overriden in a non persistent way.
+
+      selection_name -- the name of the selectoin (string)
+
+      method -- optional method (callable) or method path (string)
+                to use instead of the persistent selection method
+
+      context -- optional context to call the selection method on
+
+      REQUEST -- optional REQUEST parameters (not used, only to 
+                 provide API compatibility)
+
+      params -- optional parameters which can be used to override
+                default params
+
+      TODO: is it acceptable to keep method in the API at this level
+            for security reasons (XXX-JPS)
+      """
       if context is None: context = self
       selection = self.getSelectionFor(selection_name, REQUEST=REQUEST)
       if selection is None:
         return None
-      return selection(context=context)
+      return selection(method=method, context=context, REQUEST=REQUEST, params=params)
 
     security.declareProtected(ERP5Permissions.View, 'getSelectionFor')
     def getSelectionFor(self, selection_name, REQUEST=None):
