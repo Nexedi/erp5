@@ -178,7 +178,6 @@ class SolverProcess(XMLObject, ActiveProcess):
     solver_decision_dict = {}
     for movement in movement_list:
       for simulation_movement in movement.getDeliveryRelatedValueList():
-        simulation_movemet_url = simulation_movement.getRelativeUrl()
         for divergence_tester in simulation_movement.getParentValue().getSpecialiseValue()._getDivergenceTesterList(exclude_quantity=False):
           if divergence_tester.compare(simulation_movement, movement):
             continue
@@ -187,7 +186,7 @@ class SolverProcess(XMLObject, ActiveProcess):
           application_list.sort()
           solver_decision_key = (divergence_tester.getRelativeUrl(), tuple(application_list))
           movement_dict = solver_decision_dict.setdefault(solver_decision_key, {})
-          movement_dict[simulation_movemet_url] = None
+          movement_dict[simulation_movement] = None
 
     # Now build the solver decision instances based on the previous
     # grouping
@@ -196,6 +195,8 @@ class SolverProcess(XMLObject, ActiveProcess):
       new_decision = self.newContent(portal_type='Solver Decision')
       new_decision._setDeliveryList(solver_decision_key[1])
       new_decision._setCausality(solver_decision_key[0])
+      for simulation_movement in movement_dict.keys():
+        simulation_movement.setSolverValue(new_decision)
       # No need to set application_list or....?
 
   def _generateRandomId(self):
