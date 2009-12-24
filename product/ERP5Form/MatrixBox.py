@@ -352,11 +352,16 @@ class MatrixBoxWidget(Widget.Widget):
 
                     if render_format=='html':
                       display_value = attribute_value
-
-                      if field_errors.has_key(key):
-                        # Display previous value (in case of error)
+                      if field_errors:
+                        # Display previous value in case of any error
+                        # in this form because we have no cell to get
+                        # value from
                         display_value = REQUEST.get('field_%s' % key,
                                                   attribute_value)
+                      else:
+                        display_value = attribute_value
+                      if field_errors.has_key(key):
+                        # Display error message if this cell has an error
                         has_error = 1
                         cell_body += '<span class="input">%s</span>%s' % (
                             my_field.render(value=display_value,
@@ -366,7 +371,7 @@ class MatrixBoxWidget(Widget.Widget):
                       else:
                         cell_body += '<span class="input">%s</span>' %\
                                          my_field.render(
-                                            value=attribute_value,
+                                            value=display_value,
                                             REQUEST=REQUEST,
                                             key=key)
 
@@ -378,8 +383,28 @@ class MatrixBoxWidget(Widget.Widget):
                     attribute_value = my_field.get_value('default', cell=None,
                         cell_index=kw, cell_position=(i,j,k))
                     if render_format == 'html':
-                      cell_body += str(my_field.render(value=attribute_value,
-                                      REQUEST=REQUEST, key=key))
+                      if field_errors:
+                        # Display previous value in case of any error
+                        # in this form because we have no cell to get
+                        # value from
+                        display_value = REQUEST.get('field_%s' % key,
+                                                  attribute_value)
+                      else:
+                        display_value = attribute_value
+                      if field_errors.has_key(key):
+                        # Display error message if this cell has an error
+                        has_error = 1
+                        cell_body += '<span class="input">%s</span>%s' % (
+                            my_field.render(value=display_value,
+                                            REQUEST=REQUEST,
+                                            key=key),
+                            translateString(field_errors[key].error_text))
+                      else:
+                        cell_body += '<span class="input">%s</span>' %\
+                                         my_field.render(
+                                            value=display_value,
+                                            REQUEST=REQUEST,
+                                            key=key)
                     elif render_format == 'list':
                       list_result_lines.append(None)
 
