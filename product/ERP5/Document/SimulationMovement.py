@@ -436,14 +436,6 @@ class SimulationMovement(Movement, PropertyRecordableMixin):
     """
     return self.getParentValue().getDivergenceList(self)
 
-  security.declareProtected( Permissions.AccessContentsInformation,
-      'getSolverList')
-  def getSolverList(self):
-    """
-    Returns solvers that can fix the current divergence
-    """
-    return self.getParentValue().getSolverList(self)
-
   security.declareProtected( Permissions.ModifyPortalContent,
                              'setDefaultDeliveryProperties')
   def setDefaultDeliveryProperties(self):

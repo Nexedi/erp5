@@ -222,15 +222,6 @@ class Rule(Predicate, XMLObject):
         result_list.append(result)
     return result_list
 
-  # XXX getSolverList is not part of the API and should be removed.
-  # Use getDivergenceList instead.
-#    security.declareProtected(Permissions.View, 'getSolverList')
-
-#    def getSolverList(self, applied_rule):
-#      """
-#        Returns a list Divergence solvers
-#      """
-
   # Deliverability / orderability
   def isOrderable(self, movement):
     return 0

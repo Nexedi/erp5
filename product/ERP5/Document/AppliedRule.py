@@ -176,14 +176,6 @@ class AppliedRule(XMLObject):
       return self.getSpecialiseValue().getDivergenceList(sim_mvt)
 
     security.declareProtected(Permissions.AccessContentsInformation,
-        'getSolverList')
-    def getSolverList(self, movement):
-      """
-      Returns a list Divergence solvers
-      """
-      return self.getSpecialiseValue().getSolverList(movement)
-
-    security.declareProtected(Permissions.AccessContentsInformation,
         'isRootAppliedRule')
     def isRootAppliedRule(self):
       """
