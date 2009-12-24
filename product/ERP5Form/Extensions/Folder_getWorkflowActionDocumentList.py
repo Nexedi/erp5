@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #############################################################################
 #
 # Copyright (c) 2007 Nexedi SA and Contributors. All Rights Reserved.
@@ -141,6 +142,13 @@ def getDocumentGroupByWorkflowStateList(self, form_id='', **kw):
                 workflow_state=doc.getProperty(state_var),
                 ))
   
+  # Let us sort this list by translated title of workflow state and workflow
+  def compareState(a, b):
+    return cmp((a.workflow_title, a.translated_workflow_state_title),
+               (b.workflow_title, b.translated_workflow_state_title))
+  document_list.sort(compareState)
+
+  # Return result
   return document_list
 
 
@@ -163,9 +171,6 @@ def getWorkflowActionDocumentList(self, **kw):
 
   selection_uid_list = selection_tool.getSelectionCheckedUidsFor(selection_name)
 
-  if selection_uid_list:
-    original_selection_params['uid'] = selection_uid_list
-
   translate = self.Base_translateString
   for listbox_selection in listbox:
     if listbox_selection.get('workflow_action'):
@@ -174,6 +179,8 @@ def getWorkflowActionDocumentList(self, **kw):
       selection_params[listbox_selection['state_var']] = \
                                 listbox_selection['workflow_state']
       selection_params['portal_type'] = listbox_selection['portal_type']
+      if selection_uid_list:
+        selection_params['uid'] = selection_uid_list
 
       workflow_id, action = listbox_selection['workflow_action'].split('/')
       workflow = wtool.getWorkflowById(workflow_id)
