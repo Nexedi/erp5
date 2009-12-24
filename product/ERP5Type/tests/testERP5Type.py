@@ -2103,10 +2103,9 @@ class TestPropertySheet:
                         foo.getRegionTitleList())
       self._ignore_log_errors()
       logged_errors = [ logrecord for logrecord in self.logged
-                        if logrecord[0] == 'CMFCategory' ]
+                        if logrecord.name == 'CMFCategory' ]
       self.assertEquals('Could not access object region/gamma',
-                        logged_errors[0][2])
-      
+                        logged_errors[0].getMessage())
 
     def test_list_accessors(self):
       self._addProperty('Person', '''{'id': 'dummy',
