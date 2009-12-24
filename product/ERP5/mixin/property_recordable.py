@@ -70,7 +70,7 @@ class PropertyRecordableMixin:
       else: # should be local property
         value = self.getProperty(id)
     else:
-      if x['type'] in list_types:
+      if property_info['type'] in list_types:
         value = self.getPropertyList(id)
       else:
         value = self.getProperty(id)
