@@ -8,6 +8,10 @@
   <workflow>edit_workflow</workflow>
  </chain>
  <chain>
+  <type>Destination Replacement Solver</type>
+  <workflow>solver_workflow</workflow>
+ </chain>
+ <chain>
   <type>Float Divergence Tester</type>
   <workflow>edit_workflow</workflow>
  </chain>

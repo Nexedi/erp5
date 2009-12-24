@@ -4,6 +4,7 @@ New Order Rule | Float Divergence Tester
 New Order Rule | String Divergence Tester
 New Order Rule | Variation Divergence Tester
 Rule Tool | New Order Rule
+Solver Process | Destination Replacement Solver
 Solver Process | Production Reduction Solver
 Solver Process | Quantity Accept Solver
 Solver Process | Quantity Adoption Solver
