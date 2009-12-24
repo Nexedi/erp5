@@ -106,7 +106,7 @@
 <tr>\n
   <td>verifyValue</td>\n
   <td>field_matrixbox_quantity_cell_0_1_0</td>\n
-  <td>2</td>\n
+  <td>2.0</td>\n
 </tr>\n
 <tr>\n
   <td>verifyValue</td>\n
@@ -170,7 +170,7 @@
 <tr>\n
   <td>verifyValue</td>\n
   <td>field_matrixbox_quantity_cell_0_1_0</td>\n
-  <td>3</td>\n
+  <td>3.0</td>\n
 </tr>\n
 <tr>\n
   <td>verifyValue</td>\n
