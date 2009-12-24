@@ -78,4 +78,4 @@ class AcceptSolver(SolverMixin, ConfigurableMixin, XMLObject):
         else:
           simulation_movement.setProperty(solved_property, new_value)
     # Finish solving
-    # self.succeed()
+    self.succeed()
