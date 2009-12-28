@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#
 # Copyright (c) 2009 Nexedi SA and Contributors. All Rights Reserved.
 #                    Fabien Morin <fabien@nexedi.com>
 #
@@ -35,7 +34,7 @@ from Products.ERP5OOo.tests.testFormPrintout import TestFormPrintoutMixin
 from Products.ERP5OOo.OOoUtils import OOoBuilder
 from Products.ERP5OOo.tests.utils import Validator
 from Products.ERP5Type.tests.utils import FileUpload
-from urllib import quote_plus
+from DateTime.DateTime import DateTime
 from lxml import etree
 import os
 
@@ -94,9 +93,9 @@ class TestFormPrintoutAsODG(TestFormPrintoutMixin):
       foo_module.newContent(id='test1', portal_type='Foo')
     test1 =  foo_module.test1
     if test1._getOb("foo_1", None) is None:
-      test1.newContent("foo_1", portal_type='Foo Line')
+      test1.newContent("foo_1", title='Foo Line 1', portal_type='Foo Line')
     if test1._getOb("foo_2", None) is None:
-      test1.newContent("foo_2", portal_type='Foo Line')
+      test1.newContent("foo_2", title='Foo Line 2', portal_type='Foo Line')
     transaction.commit()
     self.tic()
 
@@ -332,16 +331,13 @@ class TestFormPrintoutAsODG(TestFormPrintoutMixin):
     self._validate(odf_document)
     builder = OOoBuilder(odf_document)
     content_xml = builder.extract("content.xml")
-    self.assertTrue(content_xml.find('<draw:image xlink:href') > 0)
-    self.assertTrue(content_xml.find("Pictures/%s.png" % \
-      quote_plus(image.getPath())) > 0)
+    self.assertTrue(content_xml.find("Pictures/0.png") > 0)
 
     # check the image is in the odg file
     try:
-      builder.extract("Pictures/%s.png" % quote_plus(image.getPath()))
+      builder.extract("Pictures/0.png")
     except KeyError:
-      self.fail('image "Pictures/%s.png" not found in odg document' % \
-         image.getPath())
+      self.fail('image "Pictures/0.png" not found in odg document')
 
     content = etree.XML(content_xml)
     image_frame_xpath = '//draw:frame[@draw:name="image_view"]'
@@ -364,7 +360,7 @@ class TestFormPrintoutAsODG(TestFormPrintoutMixin):
     builder = OOoBuilder(odf_document)
     content_xml = builder.extract("content.xml")
     # confirming the image was removed
-    self.assertTrue(content_xml.find('<draw:image xlink:href') < 0)
+    self.assertFalse(content_xml.find("Pictures/0.png") > 0)
     self._validate(odf_document)
 
   def test_04_ProxyField(self):
