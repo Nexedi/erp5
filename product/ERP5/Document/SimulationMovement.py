@@ -334,9 +334,7 @@ class SimulationMovement(Movement, PropertyRecordableMixin):
   def isOrderable(self):
     applied_rule = self.getParentValue()
     rule = applied_rule.getSpecialiseValue()
-    if rule is not None:
-      return rule.isOrderable(self)
-    return 0
+    return rule is not None and rule.isOrderable(self)
 
   getOrderable = isOrderable
 
@@ -345,19 +343,14 @@ class SimulationMovement(Movement, PropertyRecordableMixin):
   def isDeliverable(self):
     applied_rule = self.getParentValue()
     rule = applied_rule.getSpecialiseValue()
-    if rule is not None:
-      return rule.isDeliverable(self)
-    return 0
+    return rule is not None and rule.isDeliverable(self)
 
   getDeliverable = isDeliverable
 
   security.declareProtected( Permissions.AccessContentsInformation,
                              'isDeletable')
   def isDeletable(self):
-    if not self.isFrozen() and not self._isTreeDelivered():
-      return True
-    else:
-      return False
+    return not self.isFrozen() and not self._isTreeDelivered()
 
   # Simulation Dates - acquire target dates
   security.declareProtected( Permissions.AccessContentsInformation,
