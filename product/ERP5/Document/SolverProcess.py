@@ -110,7 +110,7 @@ class SolverProcess(XMLObject, ActiveProcess):
           if other_solver_type == solver_type:
             continue
           if solver.conflictsWithSolver(types_tool[other_solver_type]):
-            raise "Solver %s conflicts with solver %s on movement %s" % (solver_type, other_solver, movement_url)
+            raise ValueError, "Solver %s conflicts with solver %s on movement %s" % (solver_type, other_solver_type, movement_url)
         # Make sure multiple configuration are possible
         try:
           # Solver key contains only those properties which differentiate
