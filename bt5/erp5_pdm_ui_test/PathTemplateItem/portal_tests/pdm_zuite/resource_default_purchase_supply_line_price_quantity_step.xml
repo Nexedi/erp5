@@ -82,17 +82,17 @@ Test quantity steps for price on purchase supply line\n
 20</td>\n
 <tr>\n
   <td>assertText</td>\n
-  <td>//input[@name="field_matrixbox_base_price_cell_0_0_0"]/../../td[1]</td>\n
+  <td>//input[@name="field_matrixbox_base_price_cell_0_0_0"]/../../../td[1]</td>\n
   <td>Quantity &lt; 10.0</td>\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
-  <td>//input[@name="field_matrixbox_base_price_cell_1_0_0"]/../../td[1]</td>\n
+  <td>//input[@name="field_matrixbox_base_price_cell_1_0_0"]/../../../td[1]</td>\n
   <td>10.0 &lt;= Quantity &lt; 20.0</td>\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
-  <td>//input[@name="field_matrixbox_base_price_cell_2_0_0"]/../../td[1]</td>\n
+  <td>//input[@name="field_matrixbox_base_price_cell_2_0_0"]/../../../td[1]</td>\n
   <td>20.0 &lt;= Quantity</td>\n
 </tr>\n
 \n
