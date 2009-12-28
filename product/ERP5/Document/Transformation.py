@@ -53,7 +53,7 @@ class Transformation(XMLObject, Predicate, Variated):
       to ...)
 
       XXX Transformation works only for a maximum of 3 variation base category...
-      Matrixbox must be rewrite for a clean implementation of n base category
+      Matrixbox must be rewritten for a clean implementation of n base category
 
     """
     meta_type = 'ERP5 Transformation'
@@ -90,8 +90,8 @@ class Transformation(XMLObject, Predicate, Variated):
                               'updateVariationCategoryList')
     def updateVariationCategoryList(self):
       """
-        Check if variation category list of the resource changed and update transformation
-        and transformation line
+        Check if variation category list of the resource has changed and update
+        transformation and transformation line
       """
       self.setVariationBaseCategoryList(self.getVariationBaseCategoryList())
       transformation_line_list = self.contentValues()
@@ -103,7 +103,7 @@ class Transformation(XMLObject, Predicate, Variated):
     def getVariationRangeBaseCategoryList(self):
       """
         Returns possible variation base_category ids of the
-        default resource which can be used a variation axis
+        default resource which can be used as variation axis
         in the transformation.
       """
       resource = self.getResourceValue()
@@ -137,12 +137,12 @@ class Transformation(XMLObject, Predicate, Variated):
         """
           Returns possible variation category values for the
           transformation according to the default resource.
-          Possible category values is provided as a list of
+          Possible category values are provided as a list of
           tuples (id, title). This is mostly
           useful in ERP5Form instances to generate selection
           menus.
           User may want to define generic transformation without
-          any resource define.
+          any defined resource.
         """
         if base_category_list is ():
           base_category_list = self.getVariationBaseCategoryList()
@@ -237,7 +237,7 @@ class Transformation(XMLObject, Predicate, Variated):
                                 rejected_resource_uid_list=None,
                                 context_quantity=0,**kw):
       """
-        getAggregatedAmountList returns a AggregatedAmountList which
+        getAggregatedAmountList returns an AggregatedAmountList which
         can be used either to do some calculation (ex. price, BOM)
         or to display a detailed view of a transformation.
 
