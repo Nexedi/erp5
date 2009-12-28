@@ -202,6 +202,9 @@ class SolverTool(BaseTool):
       test_property = 'quantity'
     application_value = movement
     try:
+      # XXX this way does not work correctly for category,
+      # eg. delivery_line.hasProperty('source') returns True even if it
+      # is only difined in its parent delivery.
       while not application_value.hasProperty(test_property):
         application_value = application_value.getParentValue()
     except AttributeError:
