@@ -56,6 +56,23 @@ try:
 except ImportError:
   SUPPORTS_WEBDAV_LOCKS = 0
 
+
+DRAW_URI = 'urn:oasis:names:tc:opendocument:xmlns:drawing:1.0'
+TEXT_URI = 'urn:oasis:names:tc:opendocument:xmlns:text:1.0'
+XLINK_URI = 'http://www.w3.org/1999/xlink'
+SVG_URI = 'urn:oasis:names:tc:opendocument:xmlns:svg-compatible:1.0'
+TABLE_URI = 'urn:oasis:names:tc:opendocument:xmlns:table:1.0'
+
+
+NSMAP = {
+          'draw': DRAW_URI,
+          'text': TEXT_URI,
+          'xlink': XLINK_URI,
+          'svg': SVG_URI,
+          'table': TABLE_URI,
+        }
+
+
 # Constructors
 manage_addFormPrintout = DTMLFile("dtml/FormPrintout_add", globals())
 
@@ -512,10 +529,10 @@ class ODFStrategy(Implicit):
     picture_type = picture.getContentType()
     picture_path = self._createOdfUniqueFileName(path=path, picture_type=picture_type)
     ooo_builder.addFileEntry(picture_path, media_type=picture_type, content=picture_data)
-    width, height = self._getPictureSize(picture, image_node)
-    image_node.set('{%s}href' % element_tree.nsmap['xlink'], picture_path)
-    image_frame.set('{%s}width' % element_tree.nsmap['svg'], width)
-    image_frame.set('{%s}height' % element_tree.nsmap['svg'], height)
+    width, height = self._getPictureSize(picture, image_frame)
+    image_node.set('{%s}href' % XLINK_URI, picture_path)
+    image_frame.set('{%s}width' % SVG_URI, str(width))
+    image_frame.set('{%s}height' % SVG_URI, str(height))
     # set when using report section
     self._setUniqueElementName(image_field.id, iteration_index, image_xpath, element_tree)
 
@@ -533,12 +550,13 @@ class ODFStrategy(Implicit):
         return picture_path
       number += 1
 
-  def _getPictureSize(self, picture=None, image_node=None):
-    if picture is None or image_node is None:
+  # XXX this method should not be used anymore. This should be made by the
+  # render_od*
+  def _getPictureSize(self, picture=None, draw_frame_node=None):
+    if picture is None or draw_frame_node is None:
       return ('0cm', '0cm')
-    draw_frame_node = image_node.getparent()
-    svg_width = draw_frame_node.attrib.get('{%s}width' % draw_frame_node.nsmap['svg'])
-    svg_height = draw_frame_node.attrib.get('{%s}height' % draw_frame_node.nsmap['svg'])
+    svg_width = draw_frame_node.attrib.get('{%s}width' % SVG_URI)
+    svg_height = draw_frame_node.attrib.get('{%s}height' % SVG_URI)
     if svg_width is None or svg_height is None:
       return ('0cm', '0cm')
     # if not match causes exception
@@ -639,7 +657,7 @@ class ODFStrategy(Implicit):
       table_row_list = []
     def removeOfficeAttribute(row):
       if row is None or has_header_rows: return
-      odf_cell_list = row.findall("{%s}table-cell" % row.nsmap['table'])
+      odf_cell_list = row.findall("{%s}table-cell" % TABLE_URI)
       for odf_cell in odf_cell_list:
         self._removeColumnValue(odf_cell)
 
@@ -680,7 +698,7 @@ class ODFStrategy(Implicit):
     return style_name_row_dictionary
 
   def _updateColumnValue(self, row, listbox_column_list):
-    odf_cell_list = row.findall("{%s}table-cell" % row.nsmap['table'])
+    odf_cell_list = row.findall("{%s}table-cell" % TABLE_URI)
     odf_cell_list_size = len(odf_cell_list)
     listbox_column_size = len(listbox_column_list)
     for (column_index, column) in enumerate(odf_cell_list):
@@ -693,7 +711,7 @@ class ODFStrategy(Implicit):
     """stat line is capable of column span setting"""
     if row_middle is None:
       return
-    odf_cell_list = row.findall("{%s}table-cell" % row.nsmap['table'])
+    odf_cell_list = row.findall("{%s}table-cell" % TABLE_URI)
     odf_column_span_list = self._getOdfColumnSpanList(row_middle)
     listbox_column_size = len(listbox_column_list)
     listbox_column_index = 0
@@ -748,16 +766,15 @@ class ODFStrategy(Implicit):
     if isinstance(value, DateTime):
       translated_value = value.strftime('%Y-%m-%d')
     translated_value = escape(translated_value)
-    text_namespace = element_tree.nsmap['text']
-    tab_element_str = '<text:tab xmlns:text="%s"/>' % text_namespace
-    line_break_element_str ='<text:line-break xmlns:text="%s"/>' % text_namespace
+    tab_element_str = '<text:tab xmlns:text="%s"/>' % TEXT_URI
+    line_break_element_str ='<text:line-break xmlns:text="%s"/>' % TEXT_URI
     translated_value = translated_value.replace('\t', tab_element_str)
     translated_value = translated_value.replace('\r', '')
     translated_value = translated_value.replace('\n', line_break_element_str)
     translated_value = unicode(str(translated_value),'utf-8')
     # create a paragraph
     template = '<text:p xmlns:text="%s">%s</text:p>'
-    fragment_element_tree = etree.XML(template % (text_namespace, translated_value))
+    fragment_element_tree = etree.XML(template % (TEXT_URI, translated_value))
     return fragment_element_tree
 
   def _removeColumnValue(self, column):
@@ -793,7 +810,7 @@ class ODFStrategy(Implicit):
     return None
 
   def _getColumnSpanSize(self, column=None):
-    span_attribute = "{%s}number-columns-spanned" % column.nsmap['table']
+    span_attribute = "{%s}number-columns-spanned" % TABLE_URI
     return int(column.attrib.get(span_attribute, 1))
 
   def _nextListboxColumnIndex(self, span=0, current_index=0, column_span_list=[]):
@@ -808,7 +825,7 @@ class ODFStrategy(Implicit):
   def _getOdfColumnSpanList(self, row_middle=None):
     if row_middle is None:
       return []
-    odf_cell_list = row_middle.findall("{%s}table-cell" % row_middle.nsmap['table'])
+    odf_cell_list = row_middle.findall("{%s}table-cell" % TABLE_URI)
     column_span_list = []
     for column in odf_cell_list:
       column_span = self._getColumnSpanSize(column)
@@ -880,13 +897,22 @@ class ODTStrategy(ODFStrategy):
     field_id = field.id
     reference_xpath = '//text:reference-mark[@text:name="%s"]' % field_id
     reference_list = element_tree.xpath(reference_xpath, namespaces=element_tree.nsmap)
+    value = str(field.get_value('default'))
+    if isinstance(value, (str, unicode)):
+      if isinstance(value, str):
+        value = value.decode('utf-8')
+      value = [value]
+    if isinstance(value, (list, tuple)):
+      value = '\n'.join(value)
+      value.replace('\r', '')
     for target_node in reference_list:
       node_to_replace = target_node.xpath('ancestor::text:p[1]', namespaces=element_tree.nsmap)[0]
       attr_dict = {}
       style_value = node_to_replace.attrib.get(self._style_attribute_name)
       if style_value:
         attr_dict.update({self._style_attribute_name: style_value})
-      new_node = field.render_odt(attr_dict=attr_dict)
+      new_node = field.render_odt(value=value, as_string=False,
+          attr_dict=attr_dict)
       node_to_replace.getparent().replace(node_to_replace, new_node)
     # set when using report section
     self._setUniqueElementName(base_name=field.id,
@@ -923,7 +949,16 @@ class ODTStrategy(ODFStrategy):
     #Try to fetch style-name
     attr_dict = {}
     [(attr_dict.update(target_node.attrib), parent_node.remove(target_node)) for target_node in node_to_remove_list]
-    new_node = field.render_odt(local_name='span', attr_dict=attr_dict)
+    value = field.get_value('default')
+    if isinstance(value, (str, unicode)):
+      if isinstance(value, str):
+        value = value.decode('utf-8')
+      value = [value]
+    if isinstance(value, (list, tuple)):
+      value = '\n'.join(value)
+      value.replace('\r', '')
+    new_node = field.render_odt(value=value, local_name='span',
+        attr_dict=attr_dict, as_string=False)
     parent_node.insert(text_reference_position+1, new_node)
     # set when using report section
     self._setUniqueElementName(base_name=field.id,
@@ -938,14 +973,55 @@ class ODTStrategy(ODFStrategy):
     field_id = field.id
     reference_xpath = '//*[@form:name = "%s"]' % field_id
     reference_list = element_tree.xpath(reference_xpath, namespaces=element_tree.nsmap)
+    value = field.get_value('default')
+    if isinstance(value, (str, unicode)):
+      if isinstance(value, str):
+        value = value.decode('utf-8')
+      value = [value]
+    if isinstance(value, (list, tuple)):
+      value = '\n'.join(value)
+      value.replace('\r', '')
     for target_node in reference_list:
       attr_dict = {}
       attr_dict.update(target_node.attrib)
-      new_node = field.render_odt(attr_dict=attr_dict)
+      new_node = field.render_odt(value=value, as_string=False,
+          attr_dict=attr_dict)
       target_node.getparent().replace(target_node, new_node)
 
 class ODGStrategy(ODFStrategy):
   """ODGStrategy create a ODG Document from a form and a ODG template"""
+
+  def _recursiveGetAttributeDict(self, node, attr_dict):
+    '''return a dictionnary corresponding with node attributes. Tag as key
+       and a list corresponding to the atributes values by apparence order.
+       Example, for a listbox, you will have something like :
+       { tabe.tag: [table.attrib,],
+         row.tag: [row.attrib,
+                   row.attrib],
+         cell.tag: [cell.attrib,
+                    cell.attrib,
+                    cell.attrib,
+                    cell.attrib,
+                    cell.attrib,
+                    cell.attrib,],
+
+    '''
+    attr_dict.setdefault(node.tag, []).append(dict(node.attrib))
+    for child in node:
+      self._recursiveGetAttributeDict(child, attr_dict)
+
+  def _recursiveApplyAttributeDict(self, node, attr_dict):
+    '''recursively apply given attributes to node
+    '''
+    image_tag_name = '{%s}%s' % (DRAW_URI, 'image')
+    if len(attr_dict[node.tag]):
+      attribute_to_update_dict = attr_dict[node.tag].pop(0)
+      # in case of images, we don't want to update image path
+      # because they were calculated by render_odg
+      if node.tag != image_tag_name:
+        node.attrib.update(attribute_to_update_dict)
+    for child in node:
+      self._recursiveApplyAttributeDict(child, attr_dict)
 
   def _replaceXmlByForm(self, element_tree, form, here, extra_context,
                         ooo_builder, iteration_index=0):
@@ -953,17 +1029,23 @@ class ODGStrategy(ODFStrategy):
     for (count, field) in enumerate(field_list):
       text_xpath = '//draw:frame[@draw:name="%s"]' % field.id
       node_list = element_tree.xpath(text_xpath, namespaces=element_tree.nsmap)
-
+      value = field.get_value('default')
+      if isinstance(value, (str, unicode)):
+        if isinstance(value, str):
+          value = value.decode('utf-8')
+        value = [value]
+      if isinstance(value, (list, tuple)):
+        value = '\n'.join(value)
+        value.replace('\r', '')
       for target_node in node_list:
-        attr_dict = {}
-        attr_dict.setdefault(target_node.tag, {}).update(target_node.attrib)
-        # store child style using their local-name as key
-        for descendant in target_node.iterdescendants():
-          attr_dict.setdefault(descendant.tag, {}).update(descendant.attrib)
         # render the field in odg xml node format
-        new_node = field.render_odg(target_node=target_node, printout=self,
-            REQUEST=self.REQUEST, ooo_builder=ooo_builder, attr_dict=attr_dict)
+        attr_dict = {}
+        self._recursiveGetAttributeDict(target_node, attr_dict)
+        new_node = field.render_odg(value=value, as_string=False, ooo_builder=ooo_builder,
+            REQUEST=self.REQUEST, attr_dict=attr_dict)
+
         if new_node is not None:
+          # replace the target node by the generated node
           target_node.getparent().replace(target_node, new_node)
         else:
           # if the render return None, remove the node
