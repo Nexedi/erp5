@@ -33,6 +33,8 @@ Solver Type | solver_view
 Solver Type | translation_view
 Solver Type | update_local_roles
 Solver Type | view
+Start Date Replacement Solver | configuration
+Start Date Replacement Solver | view
 String Divergence Tester | configuration
 String Divergence Tester | predicate
 String Divergence Tester | view

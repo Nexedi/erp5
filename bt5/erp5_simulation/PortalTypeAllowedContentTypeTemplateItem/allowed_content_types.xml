@@ -18,6 +18,7 @@
   <item>Resource Adoption Solver</item>
   <item>Resource Replacement Solver</item>
   <item>Solver Decision</item>
+  <item>Start Date Replacement Solver</item>
  </portal_type>
  <portal_type id="Solver Tool">
   <item>Solver Process</item>

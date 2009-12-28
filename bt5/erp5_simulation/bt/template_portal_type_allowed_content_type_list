@@ -12,6 +12,7 @@ Solver Process | Quantity Split Solver
 Solver Process | Resource Adoption Solver
 Solver Process | Resource Replacement Solver
 Solver Process | Solver Decision
+Solver Process | Start Date Replacement Solver
 Solver Tool | Solver Process
 Solver Type | Action Information
 Solver Type | Role Information
