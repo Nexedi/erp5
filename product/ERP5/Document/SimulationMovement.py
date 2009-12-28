@@ -547,7 +547,7 @@ class SimulationMovement(Movement, PropertyRecordableMixin):
     if cache_enabled:
       try:
         return cache[rule_key]
-      except:
+      except KeyError:
         result = getTreeDelivered(self, ignore_first=ignore_first)
         cache[rule_key] = result
         return result
