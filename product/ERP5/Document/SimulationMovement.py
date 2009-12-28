@@ -561,32 +561,36 @@ class SimulationMovement(Movement, PropertyRecordableMixin):
     if self.getDeliveryValue() is not None:
       # already delivered
       return False
+
     # might be buildable - business path depended
     business_path = self.getCausalityValue(portal_type='Business Path')
     explanation_value = self.getExplanationValue()
-    if business_path is not None and explanation_value is not None:
-      predecessor = business_path.getPredecessorValue()
-      if predecessor is None:
-        # first one, can be built
-        return True
-      else:
-        for successor_related in predecessor.getSuccessorRelatedValueList():
-          for business_path_movement in successor_related \
-              .getRelatedSimulationMovementValueList(explanation_value):
-            if successor_related.isMovementRelatedWithMovement(self,
-                business_path_movement):
-              business_path_movement_delivery = business_path_movement \
-                  .getDeliveryValue()
-              if business_path_movement_delivery is None:
-                return False # related movement is not delivered yet
-              business_path_movement_delivery_document = \
-                  business_path_movement_delivery.getParentValue()
-              # here we can optimise somehow, as
-              # business_path_movement_delivery_document would repeat
-              if not successor_related.isCompleted(
-                  business_path_movement_delivery_document):
-                # related movements delivery is not completed
-                return False
+
+    if business_path is None or explanation_value is None:
+      return True
+    predecessor = business_path.getPredecessorValue()
+    if predecessor is None:
+      # first one, can be built
+      return True
+
+    for successor_related in predecessor.getSuccessorRelatedValueList():
+      for business_path_movement in successor_related \
+          .getRelatedSimulationMovementValueList(explanation_value):
+        if successor_related.isMovementRelatedWithMovement(self,
+            business_path_movement):
+          business_path_movement_delivery = business_path_movement \
+              .getDeliveryValue()
+          if business_path_movement_delivery is None:
+            return False # related movement is not delivered yet
+
+          business_path_movement_delivery_document = \
+              business_path_movement_delivery.getParentValue()
+          # here we can optimise somehow, as
+          # business_path_movement_delivery_document would repeat
+          if not successor_related.isCompleted(
+              business_path_movement_delivery_document):
+            # related movements delivery is not completed
+            return False
     return True
 
   security.declareProtected( Permissions.ModifyPortalContent,
