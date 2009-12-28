@@ -106,8 +106,10 @@ class SolverProcess(XMLObject, ActiveProcess):
     for movement_url, movement_solver_dict in movement_dict.items():
       for solver_type, movement_solver_configuration_dict in movement_solver_dict.items():
         solver = types_tool[solver_type]
-        for other_solver in movement_solver_dict.keys():
-          if solver.conflictsWithSolver(other_solver):
+        for other_solver_type in movement_solver_dict.keys():
+          if other_solver_type == solver_type:
+            continue
+          if solver.conflictsWithSolver(types_tool[other_solver_type]):
             raise "Solver %s conflicts with solver %s on movement %s" % (solver_type, other_solver, movement_url)
         # Make sure multiple configuration are possible
         try:
