@@ -78,6 +78,7 @@
                         <string>iframe_content</string>
                         <string>text_content</string>
                         <string>comment_list</string>
+                        <string>new_post_form</string>
                       </list>
                     </value>
                 </item>

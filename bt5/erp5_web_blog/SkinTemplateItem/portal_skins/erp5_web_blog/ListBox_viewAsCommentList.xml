@@ -40,7 +40,7 @@
             <value> <string encoding="cdata"><![CDATA[
 
        \n
-<h2><tal:block tal:replace="python: len(here.query())">32</tal:block> comments</h2>\n
+<h2><a name="comments" tal:content="python: len(here.query())">32</a> comments</h2>\n
 \n
 <tal:block tal:define="real_context here/getContext; \n
                        base_url_string real_context/absolute_url;"\n
