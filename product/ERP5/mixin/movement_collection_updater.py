@@ -66,7 +66,7 @@ class MovementCollectionUpdaterMixin:
     """
     # We suppose here that we have an IMovementCollection in hand
     decision_movement_list = context.getMovementList()
-    prevision_movement_list = movement_generator.getAggregatedMovementList(
+    prevision_movement_list = movement_generator.getGeneratedMovementList(
       self._getMovementGeneratorContext(context),
       movement_list=self._getMovementGeneratorMovementList(), rounding=rounding)
 

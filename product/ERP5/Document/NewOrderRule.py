@@ -129,7 +129,7 @@ class NewOrderRule(Rule):
     return (movement.getSource() is None or movement.getDestination() is None)
 
 class OrderRuleMovementGenerator(object):
-  def getAggregatedMovementList(self, context, movement_list=None,
+  def getGeneratedMovementList(self, context, movement_list=None,
                                 rounding=False):
     """
     Input movement list comes from order
