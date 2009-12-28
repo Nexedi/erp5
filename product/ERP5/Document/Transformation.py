@@ -250,6 +250,7 @@ class Transformation(XMLObject, Predicate, Variated):
       # At this moment, we only consider 1 dependency
       template_transformation_list = self.getSpecialiseValueList()
       result = AggregatedAmountList()
+
       # Browse all involved transformations and create one line per 
       # line of transformation
       # Currently, we do not consider abstractions, we just add 
@@ -257,31 +258,49 @@ class Transformation(XMLObject, Predicate, Variated):
       transformation_line_list = []
       for transformation in ([self]+template_transformation_list):
         transformation_line_list.extend(transformation.objectValues())
+
+      # A list of functions taking a transformation_line as sole argument
+      # and returning True iif the line should be kept in the result
+      filter_list = []
+
       # Get only lines related to a precise trade_phase
       if trade_phase_list is not None:
-        transformation_line_list = filter(
-            lambda line: line.getTradePhase() in trade_phase_list,
-            transformation_line_list)
+        def trade_phase_filter(line):
+          return line.getTradePhase() in trade_phase_list
+
+        filter_list.append(trade_phase_filter)
+
       # Get only lines related to a precise industrial_phase
       if ind_phase_url_list is not None:
         LOG("Transformation", WARNING, "ind_phase_list is obsolete")
-        new_transf_line_list = []
-        for line in transformation_line_list:
+        def industrial_phase_filter(line):
           ind_ph = line.getIndustrialPhaseValue()
           if ind_ph is not None:
-            if ind_ph.getRelativeUrl() in ind_phase_url_list:
-              new_transf_line_list.append(line)
-        transformation_line_list = new_transf_line_list
+            return ind_ph.getRelativeUrl() in ind_phase_url_list
+          return False
+
+        filter_list.append(industrial_phase_filter)
+
       # Filter lines with resource we do not want to see
       if rejected_resource_uid_list is not None:
-        transformation_line_list = filter(
-                        lambda x: x.getResourceUid() not in\
-                                                   rejected_resource_uid_list,
-                        transformation_line_list)
+        def rejected_uid_filter(line):
+          return line.getResourceUid() not in rejected_resource_uid_list
+
+        filter_list.append(rejected_uid_filter)
+
+      def line_is_included(line):
+        # XXX > 2.5 : all(f(line) for f in filter_list)
+        for filterr in filter_list:
+          if not filterr(line):
+            return False
+        return True
+
       for transformation_line in transformation_line_list:
-        # Browse each transformed or assorted resource of the current 
+        # Browse each transformed or assorted resource of the current
         # transformation
-        result.extend(transformation_line.getAggregatedAmountList(context))
+        if line_is_included(transformation_line):
+          result.extend(transformation_line.getAggregatedAmountList(context))
+
       if context_quantity:
         result.multiplyQuantity(context=context)
       return result
