@@ -32,14 +32,22 @@ from zope.interface import Interface
 class IMovementGroup(Interface):
   """Movement Group interface specification
 
-  The purpose of MovementGroup is to define how movements are grouped,
-  and how values are updated from simulation movements.
+  The purpose of MovementGroup is to define how movements are grouped, [YES] XXX
+  and how values are updated from simulation movements. [NO] XXX
   """
   def test(document, property_dict, **kw):
     """Returns a tuple of 2 values.
     First one is True if document contains identical values than some 
     contained property_dict.
     Second one is a modified version of property_dict.
+
+    TODO:
+      - take into account the possibility to use Divergence Testers
+        to build movement groups
+      - how does separate method relate to matching provided by 
+        Divergence Testers
+      - consider an interface for property groups. Is it the same or
+        different ?
     """
 
   def separate(movement_list):
