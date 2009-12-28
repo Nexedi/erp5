@@ -1,1 +1,1 @@
-CMFActivity 5.4.4
+CMFActivity 5.4.5
