@@ -174,7 +174,8 @@ class Widget:
     """
     return None
 
-  def render_odt(self, field, as_string, local_name, attr_dict=None):
+  def render_odt(self, field, value, as_string, ooo_builder, REQUEST,
+      render_prefix, attr_dict, local_name):
     """
       Return a field value rendered in odt format.
       - as_string return value as string or as xml object
@@ -183,15 +184,14 @@ class Widget:
     if attr_dict is None:
       attr_dict = {}
     text_node = Element('{%s}%s' % (TEXT_URI, local_name), nsmap=NSMAP)
-    # get the field value
-    text_node.text = field.get_value('default').decode('utf-8')
+    text_node.text = value
     text_node.attrib.update(attr_dict)
     if as_string:
       return etree.tostring(text_node)
     return text_node
 
-  def render_odg(self, field, as_string, local_name, target_node=None,
-      printout=None, REQUEST=None, ooo_builder=None, attr_dict=None):
+  def render_odg(self, field, value, as_string, ooo_builder, REQUEST,
+      render_prefix, attr_dict):
     """
       Default render odg for widget - to be overwritten in field classes.
       Return a field node rendered in odg format.
@@ -203,30 +203,21 @@ class Widget:
     if attr_dict is None:
       attr_dict = {}
 
-    # get the field value
-    value = field.get_value('default')
-    if isinstance(value, (str, unicode)):
-      if isinstance(value, str):
-        value = value.decode('utf-8')
-      value = [value]
-    value = '\n'.join(value)
-    value.replace('\r', '')
-
     draw_frame_tag_name = '{%s}%s' % (DRAW_URI, 'frame')
     draw_frame_node = Element(draw_frame_tag_name, nsmap=NSMAP)
-    draw_frame_node.attrib.update(attr_dict.get(draw_frame_tag_name, {}))
+    draw_frame_node.attrib.update(attr_dict.get(draw_frame_tag_name, {}).pop(0))
 
     draw_tag_name = '{%s}%s' % (DRAW_URI, 'text-box')
     draw_node = Element(draw_tag_name, nsmap=NSMAP)
-    draw_node.attrib.update(attr_dict.get(draw_tag_name, {}))
+    draw_node.attrib.update(attr_dict.get(draw_tag_name, {}).pop(0))
 
-    text_p_tag_name = '{%s}%s' % (TEXT_URI, local_name)
+    text_p_tag_name = '{%s}%s' % (TEXT_URI, 'p')
     text_p_node = Element(text_p_tag_name, nsmap=NSMAP)
-    text_p_node.attrib.update(attr_dict.get(text_p_tag_name, {}))
+    text_p_node.attrib.update(attr_dict.get(text_p_tag_name, {}).pop(0))
 
     text_span_tag_name = '{%s}%s' % (TEXT_URI, 'span')
     text_span_node =  Element(text_span_tag_name, nsmap=NSMAP)
-    text_span_node.attrib.update(attr_dict.get(text_span_tag_name, {}))
+    text_span_node.attrib.update(attr_dict.get(text_span_tag_name, {}).pop(0))
 
     text_p_node.append(text_span_node)
     draw_node.append(text_p_node)
@@ -409,7 +400,8 @@ class CheckBoxWidget(Widget):
                             extra=field.get_value('extra'),
                             disabled='disabled')
 
-  def render_odt(self, field, as_string, local_name, attr_dict=None):
+  def render_odt(self, field, value, as_string, ooo_builder, REQUEST,
+      render_prefix, attr_dict, local_name):
     """
     <form:checkbox form:name="is_accepted"
                    form:control-implementation="ooo:com.sun.star.form.component.CheckBox"
@@ -435,9 +427,8 @@ class CheckBoxWidget(Widget):
                   )
                 )
 
-    checked = field.get_value('default')
     current_state_attribute_name = '{%s}current-state'% FORM_URI
-    if checked:
+    if value:
       attr_dict.update({current_state_attribute_name: 'checked'})
     elif attr_dict.has_key(current_state_attribute_name):
       del attr_dict[current_state_attribute_name]
@@ -493,17 +484,11 @@ class TextAreaWidget(Widget):
           return ''
         return value
 
-    def render_odt(self, field, as_string, local_name, attr_dict=None):
+    def render_odt(self, field, value, as_string, ooo_builder, REQUEST,
+        render_prefix, attr_dict, local_name):
         if attr_dict is None:
             attr_dict = {}
         text_node = Element('{%s}%s' % (TEXT_URI, local_name), nsmap=NSMAP)
-        value = field.get_value('default')
-        if isinstance(value, (str, unicode)):
-          if isinstance(value, str):
-            value = value.decode('utf-8')
-          value = [value]
-        value = '\n'.join(value)
-        value.replace('\r', '')
         def replaceCharsByNode(match_object):
             #global text_node
             if match_object.group(1) is None:
@@ -1290,7 +1275,8 @@ class DateTimeWidget(Widget):
   def render_pdf(self, field, value, render_prefix=None):
     return self.format_value(field, value, mode='pdf')
 
-  def render_odt(self, field, as_string, local_name, attr_dict=None):
+  def render_odt(self, field, value, as_string, ooo_builder, REQUEST,
+      render_prefix, attr_dict, local_name):
     """
       Return a field value rendered in odt format.
       - as_string return value as string or as xml object
@@ -1300,7 +1286,6 @@ class DateTimeWidget(Widget):
       attr_dict = {}
     text_node = Element('{%s}%s' % (TEXT_URI, local_name), nsmap=NSMAP)
     # get the field value
-    value = field.get_value('default')
     if not value and field.get_value('default_now'):
       value = DateTime()
     text_node.text = self.format_value(field, value, mode='pdf').decode('utf-8')
@@ -1308,6 +1293,17 @@ class DateTimeWidget(Widget):
     if as_string:
       return etree.tostring(text_node)
     return text_node
+
+  def render_odg(self, field, value, as_string, ooo_builder, REQUEST,
+      render_prefix, attr_dict):
+    """
+      Return a field value rendered in odt format.
+      - as_string return value as string or as xml object
+      - attr_dict can be used for additional attributes (like style).
+    """
+    return self.render_odt(field=field, value=value, as_string=as_string,
+        ooo_builder=ooo_builder, REQUEST=REQUEST, render_prexix=render_prefix,
+        attr_dict=attr_dict, local_name='p')
 
 DateTimeWidgetInstance = DateTimeWidget()
 
@@ -1612,12 +1608,12 @@ class FloatWidget(TextWidget):
             'format': format,
             'type': 'float'}
 
-  def render_odt(self, field, as_string, local_name, attr_dict=None):
+  def render_odt(self, field, value, as_string, ooo_builder, REQUEST,
+      render_prefix, attr_dict, local_name):
     if attr_dict is None:
       attr_dict = {}
     text_node = Element('{%s}%s' % (TEXT_URI, local_name), nsmap=NSMAP)
-    # get the field value
-    text_node.text = self.format_value(field, field.get_value('default')).decode('utf-8')
+    text_node.text = self.format_value(field, value).decode('utf-8')
     text_node.attrib.update(attr_dict)
     if as_string:
       return etree.tostring(text_node)
