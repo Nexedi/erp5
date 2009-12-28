@@ -245,19 +245,6 @@ class Transformation(XMLObject, Predicate, Variated):
                            with the quantity of the context
       """
       context = self.asContext(context=context, REQUEST=REQUEST, **kw)
-      # First we need to get the list of transformations which this 
-      # transformation depends on
-      # At this moment, we only consider 1 dependency
-      template_transformation_list = self.getSpecialiseValueList()
-      result = AggregatedAmountList()
-
-      # Browse all involved transformations and create one line per 
-      # line of transformation
-      # Currently, we do not consider abstractions, we just add 
-      # whatever we find in all transformations
-      transformation_line_list = []
-      for transformation in ([self]+template_transformation_list):
-        transformation_line_list.extend(transformation.objectValues())
 
       # A list of functions taking a transformation_line as sole argument
       # and returning True iif the line should be kept in the result
@@ -295,11 +282,22 @@ class Transformation(XMLObject, Predicate, Variated):
             return False
         return True
 
-      for transformation_line in transformation_line_list:
-        # Browse each transformed or assorted resource of the current
-        # transformation
-        if line_is_included(transformation_line):
-          result.extend(transformation_line.getAggregatedAmountList(context))
+      # First we need to get the list of transformations which this
+      # transformation depends on
+      # At this moment, we only consider 1 dependency
+      template_transformation_list = self.getSpecialiseValueList()
+
+      # Browse all involved transformations and create one line per
+      # line of transformation
+      # Currently, we do not consider abstractions, we just add
+      # whatever we find in all transformations
+      result = AggregatedAmountList()
+      for transformation in ([self] + template_transformation_list):
+        for transformation_line in transformation.objectValues():
+          # Browse each transformed or assorted resource of the current
+          # transformation
+          if line_is_included(transformation_line):
+            result.extend(transformation_line.getAggregatedAmountList(context))
 
       if context_quantity:
         result.multiplyQuantity(context=context)
