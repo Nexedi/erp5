@@ -445,8 +445,10 @@ class Amount(Base, Variated):
                                           resource.getDefaultQuantityUnit(),
                                           quantity_unit,
                                           self.getVariationCategoryList())
-      if quantity is not None:
-        return self.setQuantity(quantity)
+    else:
+      quantity = value
+    if quantity is not None:
+      return self.setQuantity(quantity)
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getNetQuantity')
   def getNetQuantity(self):
