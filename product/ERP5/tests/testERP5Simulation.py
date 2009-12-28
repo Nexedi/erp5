@@ -531,6 +531,18 @@ class TestERP5SimulationPackingList(TestERP5SimulationMixin, TestPackingList):
       simulation_line.edit(quantity=self.default_quantity-2)
       simulation_line.getOrderValue().edit(quantity=self.default_quantity-2)
 
+  def stepCheckSimulationQuantityUpdatedForMergedLine(self,sequence=None, sequence_list=None, **kw):
+    """
+      Test if the quantity of the simulation movement was changed
+    """
+    applied_rule = sequence.get('applied_rule')
+    simulation_line_list = applied_rule.objectValues()
+    self.assertEquals(len(simulation_line_list), 1)
+    for simulation_line in simulation_line_list:
+      self.assertEquals(simulation_line.getQuantity() + \
+                        simulation_line.getDeliveryError(),
+                        self.default_quantity * 2)
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestERP5Simulation))
