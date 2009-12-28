@@ -99,7 +99,7 @@
                   <a tal:attributes="href event/getId"><span style="margin:0; color #D98135; padding-left:5px; font:bold 1.2em Helvetica, Arial, sans-serif; margin-top:5px" tal:content="event/getTitle"></span></a>\n
                 </div>\n
                 <div style="float:right; height:20px;">\n
-                  <span style="color:#333; font-size:90%; margin:2px 0;">by <a tal:attributes="href python: event.getPersonPath()"> <span style="color:#a40;font-size:90%;" tal:content="python: event.getSourceValue().Title()"></span> </a> on <span tal:replace="event/getCreationDate"></span></span>\n
+                  <span style="color:#333; font-size:90%; margin:2px 0;">by <a tal:attributes="href python: event.getObject().person_path"> <span style="color:#a40;font-size:90%;" tal:content="python: (event.getSourceValue() is not None and event.getSourceValue().Title()) or \'User unknown\'"></span> </a> on <span tal:replace="event/getCreationDate"></span></span>\n
                 </div>\n
               </div>\n
               <hr>\n

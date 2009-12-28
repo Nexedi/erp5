@@ -119,18 +119,18 @@ Rule: team manager is an Assignor (has management rights to the doc - can review
    <property id='title'>mod</property>
    <property id='description'>Forum moderator</property>
    <property id='base_category_script'>ERP5Type_getSecurityCategoryFromAssignment</property>
-   <multi_property id='category'>function/forum/administrator</multi_property>
+   <multi_property id='category'>function/discussion/administrator</multi_property>
   </role>
   <role id='Author'>
    <property id='title'>user</property>
    <property id='description'>Simple forum user</property>
    <property id='base_category_script'>ERP5Type_getSecurityCategoryFromAssignment</property>
-   <multi_property id='category'>function/forum/user</multi_property>
+   <multi_property id='category'>function/discussion/user</multi_property>
   </role>
   <role id='Auditor'>
    <property id='title'>visitor</property>
    <property id='description'>Just a visitor</property>
    <property id='base_category_script'>ERP5Type_getSecurityCategoryFromAssignment</property>
-   <multi_property id='category'>function/forum/visitor</multi_property>
+   <multi_property id='category'>function/discussion/visitor</multi_property>
   </role>
 </type_roles>
