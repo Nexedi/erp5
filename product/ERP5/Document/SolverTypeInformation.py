@@ -55,7 +55,9 @@ class SolverTypeInformation(ERP5TypeInformation):
     """
     Returns True if the solver conflicts with other_solver. False else.
     """
-    # XXX real implementation is needed.
+    if self.getTestedProperty() == other_solver.getTestedProperty():
+      return True
+    # XXX more condition is needed?
     return False
 
   def reduceConfigurationList(self, configuration_property_id_list):
