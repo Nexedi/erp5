@@ -52,7 +52,7 @@ class Transformation(XMLObject, Predicate, Variated):
       Use of default_resource... (to define the variation range,
       to ...)
 
-      XXX Transformation works only for a miximum of 3 variation base category...
+      XXX Transformation works only for a maximum of 3 variation base category...
       Matrixbox must be rewrite for a clean implementation of n base category
 
     """
