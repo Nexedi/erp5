@@ -9,6 +9,7 @@ from Shared.DC.Scripts.Bindings import Bindings
 from Errors import ValidationError
 from Products.Formulator.Widget import MultiItemsWidget
 from zLOG import LOG
+from lxml import etree
 
 
 class Field:
@@ -280,14 +281,19 @@ class Field:
                                 render_prefix)
 
     security.declareProtected('View', 'render_odt')
-    def render_odt(self, as_string=False, local_name='p', attr_dict=None):
-      return self.widget.render_odt(self, as_string, local_name, attr_dict=attr_dict)
+    def render_odt(self, value=None, as_string=True, ooo_builder=None,
+        REQUEST=None, render_prefix=None, attr_dict=None, local_name='p'):
+      return self.widget.render_odt(self, value, as_string=as_string,
+          ooo_builder=ooo_builder, REQUEST=REQUEST,
+          render_prefix=render_prefix, attr_dict=attr_dict,
+          local_name=local_name)
 
     security.declareProtected('View', 'render_odg')
-    def render_odg(self, as_string=False, local_name='p', target_node=None,
-        printout=None, REQUEST=None, ooo_builder=None, attr_dict=None):
-      return self.widget.render_odg(self, as_string, local_name, target_node,
-          printout, REQUEST, ooo_builder, attr_dict)
+    def render_odg(self, value=None, as_string=True, ooo_builder=None,
+        REQUEST=None, render_prefix=None, attr_dict=None):
+      return self.widget.render_odg(self, value, as_string=as_string,
+          ooo_builder=ooo_builder, REQUEST=REQUEST,
+          render_prefix=render_prefix, attr_dict=attr_dict)
 
     security.declareProtected('View', 'render_css')
     def render_css(self, REQUEST=None):
