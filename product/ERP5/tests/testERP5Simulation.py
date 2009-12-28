@@ -437,6 +437,21 @@ class TestERP5SimulationPackingList(TestERP5SimulationMixin, TestPackingList):
     solver_process.buildTargetSolverList()
     solver_process.solve()
 
+  def stepUnifyStartDateWithDecision(self,sequence=None, sequence_list=None, **kw):
+    """
+      Check if simulation movement are disconnected
+    """
+    packing_list = sequence.get('packing_list')
+    solver_tool = self.portal.portal_solvers
+    solver_process = solver_tool.newSolverProcess(packing_list)
+    for start_date_solver_decision in filter(
+      lambda x:x.getCausalityValue().getTestedProperty()=='start_date',
+      solver_process.contentValues()):
+      # use StartDate Replacement Solver.
+      start_date_solver_decision.setSolverValue(self.portal.portal_types['Start Date Replacement Solver'])
+    solver_process.buildTargetSolverList()
+    solver_process.solve()
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestERP5Simulation))
