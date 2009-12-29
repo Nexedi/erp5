@@ -117,7 +117,8 @@ class ValueListGetter(Base.Getter):
 
     def __call__(self, instance, *args, **kw):
       # We return the list of matching objects
-      return [o.getObject() for o in self.contentValues({'portal_type': self._portal_type, 'id': self._storage_id})]
+      return instance.contentValues(filter = {'portal_type': self._portal_type,
+                                              'id' : self._storage_id})
 
     psyco.bind(__call__)
 
@@ -198,7 +199,9 @@ class ListGetter(Base.Getter):
 
     def __call__(self, instance, *args, **kw):
       # We return the list of matching objects
-      return [o.relative_url for o in self.searchFolder(portal_type = self._portal_type, id = self._storage_id)]
+        return [o.getRelativeUrl() for o in
+                instance.contentValues(filter = {'portal_type': self._portal_type,
+                                                 'id' : self._storage_id})]
 
     psyco.bind(__call__)
 
