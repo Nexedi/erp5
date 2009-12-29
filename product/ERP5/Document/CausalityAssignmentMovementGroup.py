@@ -60,11 +60,9 @@ class CausalityAssignmentMovementGroup(MovementGroup):
     # Go upper into the simulation tree in order to find an order link
     while parent.getOrderValue() is None and not(parent.isRootAppliedRule()):
       parent = parent.getParentValue()
-    order_movement = parent.getOrderValue()
-    if order_movement is not None:
-      causality = property_dict.get('causality_list', [])
-      order_movement_url = order_movement.getRelativeUrl()
-      if order_movement_url not in causality:
-        causality.append(order_movement_url)
-        property_dict['causality_list'] = causality
+    causality_list = property_dict.get('causality_list', [])
+    for order_movement in parent.getOrderList():
+      if order_movement not in causality_list:
+        causality_list.append(order_movement)
+    property_dict['causality_list'] = causality_list
     return property_dict
