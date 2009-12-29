@@ -79,11 +79,11 @@ class TestERP5Simulation(TestERP5SimulationMixin, ERP5TypeTestCase):
           tested_property=i,
           divergence_provider=0,
           matching_provider=1)
-      # create float divergence testers
-      for i in ('converted_quantity',):
+      # create net converted quantity divergence testers
+      for i in ('quantity',):
         new_order_rule.newContent(
           title='%s divergence tester' % i,
-          portal_type='Float Divergence Tester',
+          portal_type='Net Converted Quantity Divergence Tester',
           tested_property=i,
           use_delivery_ratio=1,
           quantity_range_min=-1,
@@ -125,7 +125,7 @@ class TestERP5Simulation(TestERP5SimulationMixin, ERP5TypeTestCase):
     solver_process = solver_tool.newSolverProcess(packing_list)
     sequence.edit(solver_process=solver_process)
     quantity_solver_decision = filter(
-      lambda x:x.getCausalityValue().getTestedProperty()=='converted_quantity',
+      lambda x:x.getCausalityValue().getTestedProperty()=='quantity',
       solver_process.contentValues())[0]
     # use Quantity Split Solver.
     quantity_solver_decision.setSolverValue(self.portal.portal_types['Quantity Split Solver'])
@@ -288,11 +288,11 @@ class TestERP5SimulationPackingList(TestERP5SimulationMixin, TestPackingList):
           portal_type='DateTime Divergence Tester',
           tested_property=i,
           quantity=0)
-      # create float divergence testers
+      # create net converted quantity divergence testers
       for i in ('quantity',):
         new_order_rule.newContent(
           title='%s divergence tester' % i,
-          portal_type='Float Divergence Tester', # XXX-JPS Quantity Divergence Tester ? (ie. quantity unit)
+          portal_type='Net Converted Quantity Divergence Tester',
           tested_property=i,
           use_delivery_ratio=1,
           quantity=0)
