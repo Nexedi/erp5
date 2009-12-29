@@ -148,15 +148,18 @@ class TradeCondition(Path, Transformation, XMLMatrix):
           # it is possible, that specialised object cannot be specialised
           # anymore
           continue
-        difference = set(child_specialised_value_list).difference(\
+        # Use a set for faster lookups. We do not use sets everywhere
+        # because search order does matter
+        intersection = set(child_specialised_value_list).intersection(\
             set(visited_trade_condition_list))
-        # don't add model that have already been visited. This permit to
-        # visit all the tree and to prevent having circular dependency
-        for model in difference:
-          specialise_value_list.append(model)
-          # only add those who matches the portal type given
-          if model in child_visited_trade_condition_list:
-            visited_trade_condition_list.append(model)
+        for model in child_specialised_value_list:
+          # don't add model that have already been visited. This permit to
+          # visit all the tree and to prevent having circular dependency
+          if model not in intersection:
+            specialise_value_list.append(model)
+            # only add those who matches the portal type given
+            if model in child_visited_trade_condition_list:
+              visited_trade_condition_list.append(model)
 
       return visited_trade_condition_list
 
