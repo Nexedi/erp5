@@ -543,6 +543,19 @@ class TestERP5SimulationPackingList(TestERP5SimulationMixin, TestPackingList):
                         simulation_line.getDeliveryError(),
                         self.default_quantity * 2)
 
+  def stepCheckPackingListLineWithDifferentResource(self,sequence=None, sequence_list=None, **kw):
+    """
+      Look if the packing list has new previsions
+    """
+    packing_list_line = sequence.get('packing_list_line')
+    new_resource = sequence.get('resource')
+    self.assertEquals(packing_list_line.getQuantity(), self.default_quantity*2)
+    self.assertEquals(packing_list_line.getResourceValue(), new_resource)
+    simulation_line_list = packing_list_line.getDeliveryRelatedValueList()
+    order_line_list = sum([x.getOrderList() for x in simulation_line_list], [])
+    self.assertEquals(sorted(packing_list_line.getCausalityList()),
+                      sorted(order_line_list))
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestERP5Simulation))
