@@ -45,13 +45,11 @@ class TestERP5SimulationMixin(TestPackingListMixin):
 
   def afterSetUp(self, quiet=1, run=1):
     TestPackingListMixin.afterSetUp(self, quiet, run)
-    self.validateNewRules()
-
-  def beforeTearDown(self):
     portal_rules = self.portal.portal_rules
     for rule in portal_rules.objectValues(portal_type='New Order Rule'):
       if rule.getValidationState() == 'validated':
         rule.invalidate()
+    self.validateNewRules()
 
 class TestERP5Simulation(TestERP5SimulationMixin, ERP5TypeTestCase):
   run_all_test = 1
