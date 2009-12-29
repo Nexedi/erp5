@@ -85,6 +85,7 @@ class TradeCondition(Path, Transformation, XMLMatrix):
       existing_movement_list = context.getMovementList()
       aggregated_amount_list = self.getAggregatedAmountList(context=context,
           movement_list=movement_list, **kw)
+
       modified_reference_list = []
       # check if the existing movements are in aggregated movements
       movement_to_delete_list = []
@@ -100,17 +101,21 @@ class TradeCondition(Path, Transformation, XMLMatrix):
           update_kw = {}
           for p in self.edited_property_list:
             update_kw[p] = amount.getProperty(p)
+
           if movement.getProperty('reference') == update_kw['reference'] and\
               movement.getVariationCategoryList() == \
               amount.getVariationCategoryList():
             movement.edit(**update_kw)
             modified_reference_list.append(update_kw['reference'])
             keep_movement = True
+
         if not keep_movement:
           movement_to_delete_list.append(movement)
+
       movement_to_add_list = AggregatedAmountList(
                   [amount for amount in aggregated_amount_list if
                     amount.getReference() not in modified_reference_list])
+
       return {'movement_to_delete_list' : movement_to_delete_list,
               'movement_to_add_list': movement_to_add_list}
 
