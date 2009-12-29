@@ -204,18 +204,21 @@ class Transformation(XMLObject, Predicate, Variated):
         variation_category_list = self.getVariationCategoryList(
                                             base_category_list=[base_category])
 
-        resource_list = [self.portal_categories.resolveCategory(x) for x in\
-                         variation_category_list]
-        category_list = [x for x in resource_list \
-                         if x.getPortalType() == 'Category']
+        category_list = []
+        object_list = []
+        for variation_category in variation_category_list:
+          resource = self.portal_categories.resolveCategory(variation_category)
+          if resource.getPortalType() == 'Category':
+            category_list.append(resource)
+          else:
+            object_list.append(resource)
+
         variation_category_item_list.extend(Renderer(
                                is_right_display=0,
                                display_none_category=0, base=base,
                                current_category=current_category,
                                display_id='logical_path',**kw).\
                                                  render(category_list))
-        object_list = [x for x in resource_list \
-                         if x.getPortalType() != 'Category']
         variation_category_item_list.extend(Renderer(
                                is_right_display=0,
                                base_category=base_category,
