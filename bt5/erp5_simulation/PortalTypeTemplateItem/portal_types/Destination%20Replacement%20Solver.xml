@@ -32,11 +32,7 @@
         <item>
             <key> <string>delivery_solver</string> </key>
             <value>
-              <tuple>
-                <string>FIFO</string>
-                <string>LIFO</string>
-                <string>MinPrice</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>
@@ -64,6 +60,14 @@
             <value>
               <none/>
             </value>
+        </item>
+        <item>
+            <key> <string>line_exclusive</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>line_grouping</string> </key>
+            <value> <int>0</int> </value>
         </item>
         <item>
             <key> <string>permission</string> </key>
