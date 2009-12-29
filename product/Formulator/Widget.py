@@ -832,6 +832,36 @@ class MultiItemsWidget(ItemsWidget):
       return string.join(self.render_items_view(field, value, REQUEST),
                           field.get_value('view_separator'))
 
+  def render_items_odf(self, field, value, REQUEST):
+    if type(value) is not type([]):
+      value = [value]
+
+    items = field.get_value('items',
+                            REQUEST=REQUEST,
+                            cell=getattr(REQUEST, 'cell', None))
+    d = {}
+    for item in items:
+      try:
+        item_text, item_value = item
+      except ValueError:
+        item_text = item
+        item_value = item
+      d[item_value] = item_text
+    result = []
+    for e in value:
+      result.append(d[e].replace('\xc2\xa0', ''))
+    return result
+
+  def render_odg(self, field, value, as_string, ooo_builder, REQUEST=None,
+    render_prefix=None, attr_dict=None):
+    if value is None:
+      return None
+    value_list = self.render_items_odf(field, value, REQUEST)
+    value = ', '.join(value_list).decode('utf-8')
+    return Widget.render_odg(self, field=field, value=value, as_string=as_string,
+      ooo_builder=ooo_builder, REQUEST=REQUEST, render_prefix=render_prefix,
+      attr_dict=attr_dict)
+
 class ListWidget(SingleItemsWidget):
     """List widget.
     """
@@ -1622,6 +1652,15 @@ class FloatWidget(TextWidget):
     if as_string:
       return etree.tostring(text_node)
     return text_node
+
+  def render_odg(self, field, value, as_string, ooo_builder, REQUEST,
+      render_prefix, attr_dict):
+    if attr_dict is None:
+      attr_dict = {}
+    value = field.render_pdf(value)
+    return Widget.render_odg(self, field=field, value=value, as_string=as_string,
+      ooo_builder=ooo_builder, REQUEST=REQUEST, render_prefix=render_prefix,
+      attr_dict=attr_dict)
 
 FloatWidgetInstance = FloatWidget()
 
