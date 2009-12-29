@@ -150,6 +150,7 @@ class ImageFieldWidget(Widget.TextWidget):
       # set the size of the image
       if display is not None:
         height, width = image_object.getSizeFromImageDisplay(display)
+        width, height = image_object._getAspectRatioSize(width, height)
         if draw_frame_node.attrib.get('{%s}width' % SVG_URI, {}) != {} and \
         draw_frame_node.attrib.get('{%s}height' % SVG_URI, {}) != {}:
           # if a size already exist from attr_dict, try to resize the image to
