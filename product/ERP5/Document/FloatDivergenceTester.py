@@ -71,8 +71,8 @@ class FloatDivergenceTester(Predicate, DivergenceTesterMixin):
                lambda x:False)(tested_property):
       decision_value = decision_movement.getRecordedProperty(tested_property)
     else:
-      decision_value = decision_movement.getProperty(tested_property)
-    prevision_value = prevision_movement.getProperty(tested_property)
+      decision_value = self._getPropertyValue(decision_movement, tested_property)
+    prevision_value = self._getPropertyValue(prevision_movement, tested_property)
 
     # use delivery_ratio if specified
     if self.getProperty('use_delivery_ratio') and \
@@ -165,7 +165,7 @@ class FloatDivergenceTester(Predicate, DivergenceTesterMixin):
     decision_movement -- a delivery movement (decision)
     """
     tested_property = self.getTestedProperty()
-    prevision_value = prevision_movement.getProperty(tested_property)
+    prevision_value = self._getPropertyValue(prevision_movement, tested_property)
     return {tested_property:prevision_value}
 
   def accept(self, simulation_movement):
@@ -189,3 +189,6 @@ class FloatDivergenceTester(Predicate, DivergenceTesterMixin):
     instead.
     """
     raise NotImplementedError
+
+  def _getPropertyValue(self, document, property):
+    return document.getProperty(property)
