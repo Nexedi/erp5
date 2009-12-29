@@ -200,6 +200,12 @@ class Transformation(XMLObject, Predicate, Variated):
       if base_category_list == ():
         base_category_list = self.getVariationBaseCategoryList()
 
+      category_renderer = Renderer(
+                             is_right_display=0,
+                             display_none_category=0, base=base,
+                             current_category=current_category,
+                             display_id='logical_path', **kw)
+
       for base_category in base_category_list:
         variation_category_list = self.getVariationCategoryList(
                                             base_category_list=[base_category])
@@ -213,12 +219,9 @@ class Transformation(XMLObject, Predicate, Variated):
           else:
             object_list.append(resource)
 
-        variation_category_item_list.extend(Renderer(
-                               is_right_display=0,
-                               display_none_category=0, base=base,
-                               current_category=current_category,
-                               display_id='logical_path',**kw).\
-                                                 render(category_list))
+        variation_category_item_list.extend(category_renderer.\
+                                              render(category_list))
+
         variation_category_item_list.extend(Renderer(
                                is_right_display=0,
                                base_category=base_category,
