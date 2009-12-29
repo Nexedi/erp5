@@ -16,12 +16,12 @@
   <workflow>edit_workflow</workflow>
  </chain>
  <chain>
-  <type>New Order Rule</type>
-  <workflow>edit_workflow, rule_validation_workflow</workflow>
- </chain>
- <chain>
   <type>Net Converted Quantity Divergence Tester</type>
   <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>New Order Rule</type>
+  <workflow>edit_workflow, rule_validation_workflow</workflow>
  </chain>
  <chain>
   <type>Production Reduction Solver</type>
