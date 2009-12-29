@@ -93,8 +93,8 @@ class TradeCondition(Path, Transformation, XMLMatrix):
         # check if the movement is a generated one or entered by the user.
         # If it has been entered by user, keep it.
         if not movement.getBaseApplicationList():
-          keep_movement = True
           continue
+
         for amount in aggregated_amount_list:
           # if movement is generated and if not exist, append to delete list
           update_kw = {}
