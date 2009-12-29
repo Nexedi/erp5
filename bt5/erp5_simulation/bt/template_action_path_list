@@ -10,6 +10,9 @@ Float Divergence Tester | configuration
 Float Divergence Tester | predicate
 Float Divergence Tester | view
 New Order Rule | view
+Net Converted Quantity Divergence Tester | configuration
+Net Converted Quantity Divergence Tester | predicate
+Net Converted Quantity Divergence Tester | view
 Quantity Accept Solver | configuration
 Quantity Accept Solver | view
 Quantity Cancel Solver | configuration
