@@ -142,8 +142,8 @@ class TradeCondition(Path, Transformation, XMLMatrix):
           # all children
           child_specialised_value_list = specialise.getSpecialiseValueList()
           # only children that match the portal_type given
-          child_visited_trade_condition_list = specialise.getSpecialiseValueList(\
-              portal_type=portal_type_list)
+          child_visited_trade_condition_set = set(specialise.\
+              getSpecialiseValueList(portal_type=portal_type_list))
         except AttributeError:
           # it is possible, that specialised object cannot be specialised
           # anymore
@@ -158,7 +158,7 @@ class TradeCondition(Path, Transformation, XMLMatrix):
           if model not in intersection:
             specialise_value_list.append(model)
             # only add those who matches the portal type given
-            if model in child_visited_trade_condition_list:
+            if model in child_visited_trade_condition_set:
               visited_trade_condition_list.append(model)
 
       return visited_trade_condition_list
