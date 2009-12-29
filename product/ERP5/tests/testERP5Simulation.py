@@ -60,34 +60,9 @@ class TestERP5Simulation(TestERP5SimulationMixin, ERP5TypeTestCase):
   def validateNewRules(self):
     # create a New Order Rule document.
     portal_rules = self.portal.portal_rules
-    try:
-      new_order_rule = filter(
-        lambda x:x.title == 'New Simple Order Rule',
-        portal_rules.objectValues(portal_type='New Order Rule'))[0]
-    except IndexError:
-      new_order_rule = portal_rules.newContent(
-        title='New Simple Order Rule',
-        portal_type='New Order Rule',
-        reference='default_order_rule',
-        version=2,
-        )
-      # create category divergence testers that is only used for matching
-      for i in ('resource',):
-        new_order_rule.newContent(
-          title='%s divergence tester' % i,
-          portal_type='Category Membership Divergence Tester',
-          tested_property=i,
-          divergence_provider=0,
-          matching_provider=1)
-      # create net converted quantity divergence testers
-      for i in ('quantity',):
-        new_order_rule.newContent(
-          title='%s divergence tester' % i,
-          portal_type='Net Converted Quantity Divergence Tester',
-          tested_property=i,
-          use_delivery_ratio=1,
-          quantity_range_min=-1,
-          quantity_range_max=2)
+    new_order_rule = filter(
+      lambda x:x.title == 'New Simple Order Rule',
+      portal_rules.objectValues(portal_type='New Order Rule'))[0]
     if new_order_rule.getValidationState() != 'validated':
       new_order_rule.validate()
 
@@ -235,67 +210,9 @@ class TestERP5SimulationPackingList(TestERP5SimulationMixin, TestPackingList):
   def validateNewRules(self):
     # create a New Order Rule document.
     portal_rules = self.portal.portal_rules
-    try:
-      new_order_rule = filter(
-        lambda x:x.title == 'New Default Order Rule',
-        portal_rules.objectValues(portal_type='New Order Rule'))[0]
-    except IndexError:
-      new_order_rule = portal_rules.newContent(
-        title='New Default Order Rule',
-        portal_type='New Order Rule',
-        reference='default_order_rule',
-        version=2,
-        )
-      # create category divergence testers
-      for i in ('aggregate',
-                'base_application',
-                'base_contribution',
-                'destination',
-                'destination_account', # XXX-JPS - Needed ?
-                'destination_function', # XXX-JPS - Needed ?
-                'destination_project', # XXX-JPS - Needed ?
-                'destination_section', 
-                'price_currency', # XXX-JPS - Needed ?
-                'source', 
-                'source_account', # XXX-JPS - Needed ?
-                'source_function', # XXX-JPS - Needed ?
-                'source_project', # XXX-JPS - Needed ?
-                'source_section',): 
-        new_order_rule.newContent(
-          title='%s divergence tester' % i,
-          portal_type='Category Membership Divergence Tester',
-          tested_property=i)
-      # create category divergence testers that is also used for matching
-      for i in ('resource',):
-        new_order_rule.newContent(
-          title='%s divergence tester' % i,
-          portal_type='Category Membership Divergence Tester',
-          tested_property=i,
-          matching_provider=1)
-      # create variation divergence testers that is also used for matching
-      for i in ('variation_property_dict',):
-        # tested_property has no meaning for this tester.
-        new_order_rule.newContent(
-          title='%s divergence tester' % i,
-          portal_type='Variation Divergence Tester',
-          tested_property=i,
-          matching_provider=1)
-      # create datetime divergence testers
-      for i in ('start_date',
-                'stop_date',):
-        new_order_rule.newContent(
-          title='%s divergence tester' % i,
-          portal_type='DateTime Divergence Tester',
-          tested_property=i,
-          quantity=0)
-      # create net converted quantity divergence testers
-      for i in ('quantity',):
-        new_order_rule.newContent(
-          title='%s divergence tester' % i,
-          portal_type='Net Converted Quantity Divergence Tester',
-          tested_property=i,
-          use_delivery_ratio=1,
-          quantity=0)
+    new_order_rule = filter(
+      lambda x:x.title == 'New Default Order Rule',
+      portal_rules.objectValues(portal_type='New Order Rule'))[0]
     if new_order_rule.getValidationState() != 'validated':
       new_order_rule.validate()
 

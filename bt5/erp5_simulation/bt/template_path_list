@@ -1,4 +1,8 @@
 portal_rules/default_invoicing_rule
 portal_rules/default_invoicing_rule/3
+portal_rules/new_order_rule
+portal_rules/new_order_rule/**
+portal_rules/new_simple_order_rule
+portal_rules/new_simple_order_rule/**
 portal_solvers/1
 portal_solvers/1/**
