@@ -104,7 +104,7 @@ return structure\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>listbox_line_list=None, is_report_tree_mode, is_domain_tree_mode</string> </value>
+            <value> <string>listbox_line_list=None, is_report_tree_mode=False, is_domain_tree_mode=False</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -155,7 +155,8 @@ return structure\n
             <value>
               <tuple>
                 <none/>
-                <none/>
+                <int>0</int>
+                <int>0</int>
               </tuple>
             </value>
         </item>
