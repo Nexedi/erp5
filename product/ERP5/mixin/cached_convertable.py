@@ -161,7 +161,8 @@ class CachedConvertableMixin:
     """
     """
     try:
-      return len(self.getConversion(**kw))
+      mime, data = self.getConversion(**kw)
+      return len(data)
     except KeyError:
       return 0
 
