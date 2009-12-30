@@ -111,6 +111,31 @@ class OOoTemplateStringIO(FasterStringIO):
       s = s.encode('utf-8')
     FasterStringIO.write(self, s)
 
+try:
+  from Products.PageTemplates.Expressions import ZopeContext, createZopeEngine
+except ImportError:
+  # BACK: remove when we drop support for Zope 2.8
+  _engine = None
+else:
+  # On Zope 2.12, we need an engine to decode non-unicode-strings for us 
+  class OOoContext(ZopeContext):
+    """ ZopeContext variant that ALWAYS converts standard strings through utf-8,
+    as needed by OpenOffice, ignoring the preferred encodings in the request.
+    """
+  
+    def _handleText(self, text, expr):
+      if isinstance(text, str):
+        # avoid calling the IUnicodeEncodingConflictResolver utility
+        return unicode(text, 'utf-8')
+      return ZopeContext._handleText(self, text, expr)
+  
+  def createOOoZopeEngine():
+      e = createZopeEngine()
+      e._create_context = OOoContext
+      return e
+
+  _engine = createOOoZopeEngine()
+
 class OOoTemplate(ZopePageTemplate):
   """
   A page template which is able to embed and OpenOffice
@@ -182,10 +207,21 @@ class OOoTemplate(ZopePageTemplate):
     # we store the attachments of the uploaded document
     self.OLE_documents_zipstring = None
     self.ooo_xml_file_id = xml_file_id
-  # Every OOoTemplate uses UTF-8 or Unicode, so a special StringIO class
-  # must be used, which does not care about response.
-  def StringIO(self):
-    return OOoTemplateStringIO()
+
+  if _engine is not None:
+    # Zope 2.12 relies on the ZTK implementation of page templates, 
+    # passing it a special expression evaluation context that converts strings
+    # to unicode in the presence of the proper request headers.
+    # Here we do the same, but forcing utf-8 conversion insteado of expecting
+    # request headers.
+    def pt_getEngine(self):
+      return _engine
+  else:
+    # BACK: Remove when we drop support for Zope 2.8!
+    # Every OOoTemplate uses UTF-8 or Unicode, so a special StringIO class
+    # must be used, which does not care about response.
+    def StringIO(self):
+      return OOoTemplateStringIO()
 
   def pt_upload(self, REQUEST, file=''):
     """Replace the document with the text in file."""
