@@ -14,10 +14,11 @@
             <value>
               <list>
                 <string>columns</string>
-                <string>list_method</string>
                 <string>editable_columns</string>
-                <string>url_columns</string>
                 <string>enabled</string>
+                <string>lines</string>
+                <string>list_method</string>
+                <string>url_columns</string>
               </list>
             </value>
         </item>
@@ -80,6 +81,12 @@
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>lines</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>list_method</string> </key>
@@ -159,9 +166,13 @@
                     <value> <string>DocumentationHelper_viewFieldLibrary</string> </value>
                 </item>
                 <item>
+                    <key> <string>lines</string> </key>
+                    <value> <int>20</int> </value>
+                </item>
+                <item>
                     <key> <string>list_method</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
                     </value>
                 </item>
                 <item>
@@ -214,6 +225,22 @@
     </pickle>
   </record>
   <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <tuple>
+        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>here/DocumentationHelper_getPreferredListboxLineCount</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="4" aka="AAAAAAAAAAQ=">
     <pickle>
       <tuple>
         <global name="Method" module="Products.Formulator.MethodField"/>
