@@ -345,11 +345,10 @@ class Image(File, OFSImage):
                 resolution=resolution, frame=frame, image_size=image_size)
       try:
         mime, image = self.getConversion(**kw)
-        return mime, image.data
       except KeyError:
         mime, image = self._makeDisplayPhoto(**kw)
         self.setConversion(image, mime, **kw)
-        return mime, image.data
+      return mime, image.data
     return self.getContentType(), self.getData()
 
   security.declareProtected(Permissions.View, 'getSearchableText')
