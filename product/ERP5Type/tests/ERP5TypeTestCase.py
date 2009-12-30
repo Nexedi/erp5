@@ -301,6 +301,15 @@ class ERP5TypeTestCase(backportUnittest.TestCase, PortalTestCase):
 
     getPortalObject = getPortal
 
+    def _app(self):
+      '''Opens a ZODB connection and returns the app object.
+      
+      We override it to patch HTTP_ACCEPT_CHARSET into REQUEST to get the zpt
+      unicode conflict resolver to work properly'''
+      app = PortalTestCase._app(self)
+      app.REQUEST['HTTP_ACCEPT_CHARSET'] = 'utf-8'
+      return app
+
     def enableLightInstall(self):
       """
       You can override this. Return if we should do a light install (1) or not (0)
@@ -1035,6 +1044,7 @@ class ERP5TypeTestCase(backportUnittest.TestCase, PortalTestCase):
 
         env['SERVER_NAME'] = request['SERVER_NAME']
         env['SERVER_PORT'] = request['SERVER_PORT']
+        env['HTTP_ACCEPT_CHARSET'] = request['HTTP_ACCEPT_CHARSET']
         env['REQUEST_METHOD'] = request_method
 
         p = path.split('?')
