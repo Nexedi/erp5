@@ -2703,7 +2703,7 @@ class ListBoxValidator(Validator.Validator):
                     error_result_key = '%s_%s' % (my_field.id, o.uid)
                     key = 'field_' + error_result_key
                     try:
-                      value = my_field._validate_helper(key, REQUEST) # We need cell
+                      value = my_field.validator.validate(my_field, key, REQUEST) # We need cell
                       error_result[error_result_key] = value
                       if not result.has_key(o.getUrl()):
                         result[o.getUrl()] = {}
