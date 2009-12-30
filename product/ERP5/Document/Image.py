@@ -513,7 +513,7 @@ class Image(File, OFSImage):
       width_preference = 'preferred_%s_image_width' % (image_display,)
       height = preference_tool.getPreference(height_preference)
       width = preference_tool.getPreference(width_preference)
-      return (height, width)
+      return (width, height)
     return None
 
   def _setFile(self, *args, **kw):
