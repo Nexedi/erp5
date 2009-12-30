@@ -52,10 +52,13 @@
 <tal:block tal:define="current_web_section python:request.get(\'current_web_section\', here);\n
                        search_area_section_id python:current_web_section.getLayoutProperty(\'layout_search_area_section_id\', \'\')">\n
 <div class="searchform">\n
-  <fieldset>\n
+  <fieldset tal:define="search_default_text python:current_web_section.Base_translateString(\'Search\')">\n
     <input name="field_your_search_text" class="field" value=""\n
-           onkeyup="submitFormOnEnter(event, this.form, \'search_area/ERP5Site_viewQuickSearchResultList\');"\n
-           tal:attributes="onkeyup string:submitFormOnEnter(event, this.form, \'${search_area_section_id}/ERP5Site_viewQuickSearchResultList\');" />\n
+           value="Search" tal:attributes="value string:${search_default_text};\n
+                                          onfocus string:if (this.value==\'${search_default_text}\') this.value=\'\';\n
+                                          onkeyup string:submitFormOnEnter(event, this.form, \'${search_area_section_id}/ERP5Site_viewQuickSearchResultList\');"\n
+           onfocus="this.value=\'\';"\n
+           onkeyup="submitFormOnEnter(event, this.form, \'search_area/ERP5Site_viewQuickSearchResultList\');"/>\n
     <input type="submit" class="button" value="Search" name="search_area/ERP5Site_viewQuickSearchResultList:method"\n
            tal:attributes="name string:${search_area_section_id}/ERP5Site_viewQuickSearchResultList:method"\n
            i18n:attributes="value" i18n:domain="ui" />\n

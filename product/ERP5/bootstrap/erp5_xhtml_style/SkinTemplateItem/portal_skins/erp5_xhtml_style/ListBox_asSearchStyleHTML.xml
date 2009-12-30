@@ -73,11 +73,15 @@
         <div class="search result">\n
 \n
           <!-- Advanced Search header -->\n
-          <div class="centeredInner searchBar" \n
+          <div class="centeredInner searchBar"\n
+               tal:define="search_default_text python:context.getContext().Base_translateString(\'Search\')"\n
                tal:condition="python:not is_gadget_mode and show_search_line">\n
             <input name="top_your_search_text" size="40" value="" type="text"\n
-                   onkeypress="submitFormOnEnter(event, this.form, \'ERP5Site_processAdvancedSearch\');"\n
-                   tal:attributes="value your_search_text" />\n
+                   value="Search" tal:attributes="value your_search_text | search_default_text;\n
+                                                  onfocus string:if (this.value==\'${search_default_text}\') this.value=\'\';"\n
+\n
+                   onfocus="this.value=\'\';"\n
+                   onkeypress="submitFormOnEnter(event, this.form, \'ERP5Site_processAdvancedSearch\');"/>\n
             <input class="button" i18n:domain="ui" i18n:attributes="value"\n
                    value="Search" name="ERP5Site_processAdvancedSearch:method" type="submit" />\n
           </div>\n
