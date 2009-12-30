@@ -2610,8 +2610,8 @@ class ListBoxValidator(Validator.Validator):
               my_field_id = '%s_%s' % (field.id, alias)
               if form.has_field( my_field_id ):
                 my_field = form.get_field(my_field_id)
-                key = 'field_' + my_field.id + '_%s' % o.uid
-                error_result_key = my_field.id + '_%s' % o.uid
+                error_result_key = '%s_%s' % (my_field.id, o.uid)
+                key = 'field_' + error_result_key
                 REQUEST.set('cell', o)
                 try:
                   value = my_field._validate_helper(key, REQUEST) # We need cell
@@ -2653,8 +2653,8 @@ class ListBoxValidator(Validator.Validator):
                 my_field = form.get_field(my_field_id)
                 REQUEST.set('cell', o)
                 if my_field.get_value('editable', REQUEST=REQUEST) and field.need_validate(REQUEST):
-                  key = 'field_%s_%s' % (my_field.id, o.uid)
                   error_result_key = '%s_%s' % (my_field.id, o.uid)
+                  key = 'field_' + error_result_key
                   try:
                     value = my_field._validate_helper(key, REQUEST) # We need cell
                     result[uid[4:]][sql] = value
@@ -2700,10 +2700,10 @@ class ListBoxValidator(Validator.Validator):
                   REQUEST.set('cell', o) # We need cell
                   if my_field.get_value('editable', REQUEST=REQUEST) and field.need_validate(REQUEST):
                     tales_expr = my_field.tales.get('default', "")
-                    key = 'field_' + my_field.id + '_%s' % o.uid
-                    error_result_key = my_field.id + '_%s' % o.uid
+                    error_result_key = '%s_%s' % (my_field.id, o.uid)
+                    key = 'field_' + error_result_key
                     try:
-                      value = my_field.validator.validate(my_field, key, REQUEST) # We need cell
+                      value = my_field._validate_helper(key, REQUEST) # We need cell
                       error_result[error_result_key] = value
                       if not result.has_key(o.getUrl()):
                         result[o.getUrl()] = {}
