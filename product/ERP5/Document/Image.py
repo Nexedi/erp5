@@ -344,10 +344,11 @@ class Image(File, OFSImage):
       kw = dict(display=display, format=format, quality=quality,
                 resolution=resolution, frame=frame, image_size=image_size)
       try:
-        return self.getConversion(**kw)
+        mime, image = self.getConversion(**kw)
+        return mime, image.data
       except KeyError:
         mime, image = self._makeDisplayPhoto(**kw)
-        self.setConversion(image.data, mime, **kw)
+        self.setConversion(image, mime, **kw)
         return mime, image.data
     return self.getContentType(), self.getData()
 
