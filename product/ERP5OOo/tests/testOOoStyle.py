@@ -36,8 +36,8 @@ from Products.ERP5OOo.tests.utils import Validator
 
 HTTP_OK = 200
 
-# setting this to a true value allow the use of a debugger
-debug = 0
+# setting this to True allows the .publish() calls to provide tracebacks
+debug = False
 
 class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
   """Tests ODF styles for ERP5."""
@@ -66,10 +66,9 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.portal.portal_selections.setSelectionFor(
                         'person_module_selection', Selection())
 
-  if debug:
-    def publish(self, path, basic=None, **kw):
-      kw['handle_errors'] = False
-      return ZopeTestCase.Functional.publish(self, path, basic, **kw)
+  def publish(self, *args, **kw):
+    kw['handle_errors'] = not debug
+    return ERP5TypeTestCase.publish(self, *args, **kw)
 
   def _validate(self, odf_file_data):
     error_list = self.validator.validate(odf_file_data)
