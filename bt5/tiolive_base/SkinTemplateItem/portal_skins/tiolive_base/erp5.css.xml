@@ -513,9 +513,12 @@ body {\n
   padding: 0;\n
   top: 0;\n
   margin-left: 3px;\n
-\twidth:132px;\t\n
-\t\n
+\twidth:132px;\n
+  color: #777777;\n
+\n
 }\n
+\n
+#fieldset-tiosearch input.input-texti:focus {color:#000000}\n
 \n
 #fieldset-tiosearch input.input-submit {\n
 \n
