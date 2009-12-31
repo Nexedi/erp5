@@ -84,7 +84,7 @@
                     <key> <string>center</string> </key>
                     <value>
                       <list>
-                        <string>my_title</string>
+                        <string>my_preferred_header_title</string>
                         <string>my_listbox_selection_list_lines</string>
                       </list>
                     </value>
