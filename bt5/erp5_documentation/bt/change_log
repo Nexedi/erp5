@@ -1,5 +1,8 @@
 2009-12-31 mayoro
-* adding action for documentation helper report
+* moving fields your_uri and your_class_name from hidden to bottom in DocumentationHelper_viewDocumentationHelper
+
+2009-12-31 mayoro
+* update XML due to new portal types
 
 2009-12-31 mayoro
 * Correcting display left and right order in BusinessTemplateDocumentationHelper_view
