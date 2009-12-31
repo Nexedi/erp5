@@ -79,7 +79,6 @@
                     <value>
                       <list>
                         <string>listbox</string>
-                        <string>listbox_description</string>
                         <string>your_active_pad_relative_url</string>
                       </list>
                     </value>
@@ -93,7 +92,9 @@
                 <item>
                     <key> <string>hidden</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>listbox_description</string>
+                      </list>
                     </value>
                 </item>
                 <item>
