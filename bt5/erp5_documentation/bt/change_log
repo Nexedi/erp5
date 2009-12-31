@@ -1,4 +1,7 @@
 2009-12-31 mayoro
+* revert commit r31528, bug was fix by commit r31549 by removing duplicates of uri and class_name in DocumentationHelper_viewDocumentationHelper and BusinessTemplateDocumentationHelper_view
+
+2009-12-31 mayoro
 * moving fields your_uri and your_class_name from hidden to bottom in DocumentationHelper_viewDocumentationHelper
 
 2009-12-31 mayoro

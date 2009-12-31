@@ -53,21 +53,15 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-from Products.ERP5Form.Report import ReportSection\n
+            <value> <string>from Products.ERP5Form.Report import ReportSection\n
 result = []\n
 request = context.REQUEST\n
 uri = request.get(\'uri\', None)\n
 if uri is None:\n
   uri = request.get(\'field_your_uri\')\n
-  if len(uri)>0:\n
-    uri = uri[0]\n
 class_name = request.get(\'class_name\', None)\n
 if class_name is None:\n
   class_name = request.get(\'field_your_class_name\')\n
-  if len(class_name)>0:\n
-     class_name = class_name[0]\n
 \n
 result.append(\n
   ReportSection(\n
@@ -81,9 +75,7 @@ result.append(\n
     )\n
 )\n
 return result\n
-
-
-]]></string> </value>
+</string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -127,8 +119,6 @@ return result\n
                             <string>request</string>
                             <string>None</string>
                             <string>uri</string>
-                            <string>len</string>
-                            <string>_getitem_</string>
                             <string>class_name</string>
                             <string>False</string>
                           </tuple>
