@@ -45,6 +45,10 @@
             <value> <string>This is wonderfull ERP5 instance</string> </value>
         </item>
         <item>
+            <key> <string>edit_order</string> </key>
+            <value> <string>[]</string> </value>
+        </item>
+        <item>
             <key> <string>encoding</string> </key>
             <value> <string>UTF-8</string> </value>
         </item>
@@ -71,10 +75,7 @@
                 <item>
                     <key> <string>bottom</string> </key>
                     <value>
-                      <list>
-                        <string>your_class_name</string>
-                        <string>your_uri</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -88,16 +89,15 @@
                     <value>
                       <list>
                         <string>your_reportbox</string>
+                        <string>your_class_name</string>
+                        <string>your_uri</string>
                       </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>left</string> </key>
                     <value>
-                      <list>
-                        <string>your_class_name</string>
-                        <string>your_uri</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -143,6 +143,10 @@
         </item>
         <item>
             <key> <string>update_action</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>update_action_title</string> </key>
             <value> <string></string> </value>
         </item>
       </dictionary>
