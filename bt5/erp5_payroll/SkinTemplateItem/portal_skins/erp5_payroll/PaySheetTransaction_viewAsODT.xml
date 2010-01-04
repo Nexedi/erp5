@@ -55,6 +55,7 @@ AAA=</string> </value>
                          tal:define="data_dict here/PaySheetTransaction_getODTDataDict;\n
                                      set_precision python: request.set(\'precision\', here.getQuantityPrecisionFromResource(here.getPriceCurrency()));\n
                                      quantity_renderer nocall:here/Base_viewFieldLibrary/my_money_quantity/render_pdf;\n
+                                     gross_category python:\'base_amount/payroll/report/salary/gross\';\n
                                      price_renderer nocall:here/PaySheetTransaction_viewFieldLibrary/my_price/render_pdf;\n
                                      default_language python:test(request.get(\'international_form\'), \'en\', here.Localizer.get_selected_language())">\n
   <office:scripts/>\n
@@ -414,13 +415,13 @@ AAA=</string> </value>
           <!-- If previous line has \'base_salary\' category in its\n
           base_contribution list and the next one don\'t have, display the total\n
           gross_salary -->\n
-          <tal:block condition="python: previous_line is not None and \'base_amount/payroll/earning/salary/gross_salary\' in previous_line[\'base_contribution_list\'] and \'base_amount/payroll/earning/salary/gross_salary\' not in line_dict[\'base_contribution_list\']">\n
+          <tal:block condition="python: previous_line is not None and gross_category in previous_line[\'base_contribution_list\'] and gross_category not in line_dict[\'base_contribution_list\']">\n
             <table:table-row table:style-name=\'Tableau1.3\'>\n
               <table:table-cell table:style-name=\'Tableau1.A8\' office:value-type=\'string\'>\n
                 <text:p text:style-name=\'Item_20_Table_20_Title_20_Left\' tal:content=\'python: here.Base_translateString("Gross Salary")\'>1</text:p>\n
               </table:table-cell>\n
               <table:table-cell table:style-name=\'Tableau1.A8\' office:value-type=\'string\'>\n
-                <text:p text:style-name=\'Table_20_Contents_20_Right\' tal:content=\'python:quantity_renderer(context.PaySheetTransaction_getMovementTotalPriceFromCategory(base_contribution="base_contribution/base_amount/payroll/earning/salary/gross_salary"))\'>400 000</text:p>\n
+                <text:p text:style-name=\'Table_20_Contents_20_Right\' tal:content=\'python:quantity_renderer(context.PaySheetTransaction_getMovementTotalPriceFromCategory(base_contribution="base_contribution/%s"%gross_category))\'>400 000</text:p>\n
               </table:table-cell>\n
               <table:table-cell table:style-name=\'Tableau1.A8\' office:value-type=\'string\'>\n
                  <text:p text:style-name=\'Table_20_Contents\'/>\n
@@ -521,8 +522,8 @@ AAA=</string> </value>
                 <text:p text:style-name=\'Table_20_Contents\'/>\n
               </table:table-cell>\n
 \n
-              <!-- if this line not contribute to gross_salary base amount display employer share else don\'t display it-->\n
-              <tal:block tal:condition="python: \'base_amount/payroll/earning/salary/gross_salary\' not in line_dict[\'base_contribution_list\']">\n
+              <!-- if this line does not contribute to gross category then display employer share else don\'t display it-->\n
+              <tal:block tal:condition="python: gross_category not in line_dict[\'base_contribution_list\']">\n
                 <table:table-cell table:style-name=\'Tableau1.A3\'\n
                                   office:value-type=\'float\'\n
                                   tal:condition="python: line_dict[\'employer_price\'] != None"\n
@@ -550,7 +551,7 @@ AAA=</string> </value>
                   <text:p text:style-name=\'Table_20_Contents\'/>\n
                 </table:table-cell>\n
               </tal:block>\n
-              <tal:block tal:condition="python: \'base_amount/payroll/earning/salary/gross_salary\' in line_dict[\'base_contribution_list\']">\n
+              <tal:block tal:condition="python: gross_category in line_dict[\'base_contribution_list\']">\n
                 <table:table-cell table:style-name=\'Tableau1.A3\' office:value-type=\'string\'>\n
                    <text:p text:style-name=\'Table_20_Contents\'/>\n
                 </table:table-cell>\n
@@ -615,7 +616,7 @@ AAA=</string> </value>
                 <table:table-cell table:style-name=\'Tableau3.E2\'\n
                                   office:value-type=\'float\'\n
                                   tal:attributes=\'office:value data_dict/total_price_novat\'>\n
-                  <text:p text:style-name=\'Item_20_Table_20_Title_20_Right\' tal:content="python: \'%s %s\' % (quantity_renderer(context.PaySheetTransaction_getMovementTotalPriceFromCategory(base_contribution=\'base_contribution/base_amount/payroll/earning/salary/net_salary\', contribution_share=\'contribution_share/employee\')), data_dict[\'currency\'])">800.000,00</text:p>\n
+                  <text:p text:style-name=\'Item_20_Table_20_Title_20_Right\' tal:content="python: \'%s %s\' % (quantity_renderer(context.PaySheetTransaction_getMovementTotalPriceFromCategory(base_contribution=\'base_contribution/base_amount/payroll/report/salary/net\', contribution_share=\'contribution_share/employee\')), data_dict[\'currency\'])">800.000,00</text:p>\n
                 </table:table-cell>\n
               </table:table-row>\n
               <table:table-row table:style-name=\'Tableau1.4\'>\n

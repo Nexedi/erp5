@@ -3,7 +3,7 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <global name="Category" module="Products.ERP5.Tool.Category"/>
+        <global name="Category" module="Products.ERP5Type.Document.Category"/>
         <tuple/>
       </tuple>
     </pickle>
@@ -13,6 +13,23 @@
             <key> <string>_count</string> </key>
             <value>
               <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_local_properties</string> </key>
+            <value>
+              <tuple>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>sort_index</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+              </tuple>
             </value>
         </item>
         <item>
@@ -28,28 +45,39 @@
             </value>
         </item>
         <item>
-            <key> <string>codification</string> </key>
+            <key> <string>effective_date</string> </key>
             <value>
-              <none/>
+              <object>
+                <klass>
+                  <global name="DateTime" module="DateTime.DateTime"/>
+                </klass>
+                <tuple>
+                  <none/>
+                </tuple>
+                <state>
+                  <tuple>
+                    <float>1261004400.0</float>
+                    <string>GMT+1</string>
+                  </tuple>
+                </state>
+              </object>
             </value>
-        </item>
-        <item>
-            <key> <string>description</string> </key>
-            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>tranche_a</string> </value>
+            <value> <string>base</string> </value>
         </item>
         <item>
-            <key> <string>int_index</string> </key>
-            <value>
-              <none/>
-            </value>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Category</string> </value>
+        </item>
+        <item>
+            <key> <string>sort_index</string> </key>
+            <value> <string>1</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Tranche A</string> </value>
+            <value> <string>Base</string> </value>
         </item>
       </dictionary>
     </pickle>

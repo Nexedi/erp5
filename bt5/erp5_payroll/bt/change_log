@@ -1,3 +1,6 @@
+2010-01-04 aurel
+Update the bt to use the new structure of the base amount category
+
 2009-12-5 yusei
 * Fix PaySheetTransaction_getODTDataDict. Make print pay slip works without pay sheet model.
 
