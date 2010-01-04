@@ -203,39 +203,54 @@ class TradeCondition(Path, Transformation, XMLMatrix):
             reference_list.append(reference)
             trade_model_line_composed_list.append(trade_model_line)
 
-      # build a graph
-      father_dict = {}
-      child_dict = {}
+      # build a graph of precedences
+      # B---\
+      #      \
+      # C-----> A
+      # A is parent of B and C, and returned order should be
+      #   (BC) A
+      # where (BC) cannot be sorted
+      parent_dict = {}
+      # B and C are leaves
+      leaf_line_list = []
       for line in trade_model_line_composed_list:
-        father_dict.setdefault(line, [])
+        has_child = False
         for other_line in trade_model_line_composed_list:
           if line == other_line:
             continue
-          child_dict.setdefault(other_line, [])
+          parent_dict.setdefault(other_line, [])
           for base_application in line.getBaseApplicationList():
             if base_application in other_line.getBaseContributionList():
-              father_dict[line].append(other_line)
-              child_dict[other_line].append(line)
+              parent_dict[other_line].append(line)
+              has_child = True
+        if not has_child:
+          leaf_line_list.append(line)
+
       final_list = []
-      if len(father_dict):
-        # find roots elements
-        # XXX maybe this can be done while building the graph
-        root_line_list = []
-        for k, v in child_dict.iteritems():
-          if len(v) == 0:
-            root_line_list.append(k)
-        # sort graph according to predecessors
-        f = root_line_list[:]
-        tmp = None
-        final_list = root_line_list[:]
-        while len(f):
-          tmp = f.pop(0)
-          for predecessors in father_dict[tmp]:
-            f.append(predecessors)
-            if predecessors in final_list:
-              final_list.remove(predecessors)
-            final_list.append(predecessors)
-        final_list.reverse()
+      if len(parent_dict):
+        # longest distance to a root (A)
+        depth = {}
+        tovisit = leaf_line_list
+        while tovisit:
+          node = tovisit[-1]
+          if node in depth:
+            tovisit.pop()
+            continue
+
+          parent_list = parent_dict.get(node, [])
+          if len(parent_list) == 0:
+            depth[node] = 0
+            tovisit.pop()
+          else:
+            for parent in parent_list:
+              if parent not in depth:
+                tovisit.append(parent)
+            if tovisit[-1] == node:
+              depth[node] = max(depth[p] for p in parent_list) + 1
+              tovisit.pop()
+
+        # the farther a line is from a root, the earlier it should be returned
+        final_list = sorted(depth.iterkeys(), key=depth.get, reverse=True)
 
       if len(final_list) == 0:
         # at least return original lines retrieved
