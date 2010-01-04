@@ -249,17 +249,40 @@ class PDFDocument(Image, CachedConvertableMixin):
     tmp = tempfile.NamedTemporaryFile()
     tmp.write(str(self.data))
     tmp.seek(0)
-    cmd = 'pdfinfo -meta -box %s' % tmp.name
-    r = os.popen(cmd)
-    h = r.read()
-    tmp.close()
-    r.close()
-    result = {}
-    for line in h.splitlines():
-      item_list = line.split(':')
-      key = item_list[0].strip()
-      value = ':'.join(item_list[1:]).strip()
-      result[key] = value
+    try:
+      # First, we use pdfinfo to get standard metadata
+      cmd = 'pdfinfo -meta -box %s' % tmp.name
+      r = os.popen(cmd)
+      h = r.read()
+      r.close()
+      result = {}
+      for line in h.splitlines():
+        item_list = line.split(':')
+        key = item_list[0].strip()
+        value = ':'.join(item_list[1:]).strip()
+        result[key] = value
+
+      # Then we use pdftk to get extra metadata
+      cmd = 'pdftk %s dump_data output' % tmp.name
+      r = os.popen(cmd)
+      h = r.read()
+      r.close()
+      line_list = (line for line in h.splitlines())
+      while True:
+        try:
+          line = line_list.next()
+        except StopIteration:
+          break
+        if line.startswith('InfoKey'):
+          key = line[len('InfoKey: '):]
+          line = line_list.next()
+          assert line.startswith('InfoValue: '),\
+              "Wrong format returned by pdftk dump_data"
+          value = line[len('InfoValue: '):]
+          result.setdefault(key, value)
+    finally:
+      tmp.close()
+
     self._content_information = result
     return result.copy()
 

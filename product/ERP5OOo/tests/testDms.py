@@ -792,6 +792,15 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.assertEquals('title', content_information['Title'])
     self.assertEquals('application/pdf', document.getContentType())
 
+  def test_PDF_content_information_extra_metadata(self):
+    # Extra metadata, such as those stored by pdftk update_info are also
+    # available in document.getContentInformation()
+    upload_file = makeFileUpload('metadata.pdf')
+    document = self.portal.portal_contributions.newContent(file=upload_file)
+    self.assertEquals('PDF', document.getPortalType())
+    content_information = document.getContentInformation()
+    self.assertEquals('the value', content_information['NonStandardMetadata'])
+
   def test_PDF_content_content_type(self):
     upload_file = makeFileUpload('REF-en-001.pdf')
     document = self.portal.document_module.newContent(portal_type='PDF')
