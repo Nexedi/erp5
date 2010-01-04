@@ -59,12 +59,12 @@ def special_extract_tb(tb, limit = None):
         # display where we failed in the sequence
         if co == Sequence.play.func_code:
           line += '\n    Current Sequence:'
-          for idx, method_name in enumerate([x._method_name for x in
-                                       f.f_locals['self']._step_list]):
-            if idx == f.f_locals['idx']:
-              line += '\n    > %s' % method_name
+          sequence = f.f_locals['self']
+          for idx, step in enumerate(sequence._step_list):
+            if idx == sequence._played_index:
+              line += '\n    > %s' % step._method_name
             else:
-              line += '\n      %s' % method_name
+              line += '\n      %s' % step._method_name
 
         list.append((filename, lineno, name, line))
         tb = tb.tb_next
@@ -109,11 +109,12 @@ class Sequence:
         ZopeTestCase._print('\nStarting New Sequence %i... ' % sequence_number)
         LOG('Sequence.play', 0, 'Starting New Sequence %i... ' % sequence_number)
     if sequence is None:
-      for idx, step in enumerate(self._step_list[self._played_index:]):
-        step.play(context, sequence=self, quiet=quiet)
+      while self._played_index < len(self._step_list):
+        self._step_list[self._played_index] \
+        .play(context, sequence=self, quiet=quiet)
         # commit transaction after each step
         transaction.commit()
-      self._played_index = len(self._step_list)
+        self._played_index += 1
 
   def addStep(self,method_name,required=1,max_replay=1):
     new_step = Step(method_name=method_name,
