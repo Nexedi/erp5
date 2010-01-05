@@ -347,12 +347,20 @@ class TestOOoImport(ERP5TypeTestCase):
 
   def stepImportFileNoMapping(self, sequence=None, sequence_list=None, **kw):
     f = makeFileUpload('import_data_list.ods')
-    #self.logMessage("f : %s" % str(f))
 
     person_module = self.getPortal().person_module
-    person_module.Base_importFile(import_file=f, listbox=())
-    self.assertRaises(ConversionError, person_module.Base_importFile, import_file=f, listbox=())
-    #self.logMessage("Validation failed : %s" % kw)
+    listbox = (
+    { 'listbox_key': '001',
+      'portal_type_property_list': ''},
+    { 'listbox_key': '002',
+      'portal_type_property_list': ''},
+    { 'listbox_key': '003',
+      'portal_type_property_list': ''},
+    { 'listbox_key': '004',
+      'portal_type_property_list': ''},)
+    redirect = person_module.Base_importFile(import_file=f, listbox=listbox)
+    self.assertTrue(redirect.endswith(
+      'portal_status_message=Please%20Define%20a%20mapping.'))
 
   def stepImportFileWithBlankLine(self, sequence=None, sequence_list=None, **kw):
     f = makeFileUpload('import_data_list_blank_line.ods')
