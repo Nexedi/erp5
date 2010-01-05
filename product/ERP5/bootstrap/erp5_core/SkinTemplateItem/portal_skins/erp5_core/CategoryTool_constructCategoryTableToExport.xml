@@ -63,7 +63,10 @@ for base_cat_id in context.REQUEST[\'category_list\']:\n
   d[\'cat_list\'] = cat_list = []\n
   d[\'max_cat_depth\'] = max_cat_depth = 0\n
   cat_info_list.append(d)\n
-  for cat in context.portal_catalog(portal_type=\'Category\', sort_on=((\'path\', \'accending\'),), **{\'%s_uid\' % (base_cat.getId(),): base_cat.getUid()}):\n
+  for cat in context.portal_catalog(portal_type=\'Category\',\n
+                                    sort_on=((\'path\', \'ascending\'),),\n
+                                    limit=None,\n
+                                    **{\'default_%s_uid\' % (base_cat.getId(),): base_cat.getUid()}):\n
     d[\'cat_list\'].append(cat)\n
     cat_depth = len(cat.getRelativeUrl().split(\'/\'))\n
     if cat_depth > d[\'max_cat_depth\']:\n
@@ -150,6 +153,7 @@ return result\n
                             <string>cat_list</string>
                             <string>max_cat_depth</string>
                             <string>_apply_</string>
+                            <string>None</string>
                             <string>cat</string>
                             <string>len</string>
                             <string>cat_depth</string>
