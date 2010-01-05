@@ -13,11 +13,11 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
+                <string>enabled</string>
+                <string>hash_script_id</string>
                 <string>items</string>
                 <string>size</string>
-                <string>hash_script_id</string>
-                <string>enabled</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -171,7 +171,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.getVariationRangeCategoryItemList(display_base_category=0, omit_individual_variation=1)</string> </value>
+            <value> <string>python: here.getVariationRangeCategoryItemList(display_base_category=0, omit_individual_variation=1, display_id=\'translated_title\')</string> </value>
         </item>
       </dictionary>
     </pickle>
