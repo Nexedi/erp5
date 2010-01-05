@@ -1570,6 +1570,46 @@ class TestTradeModelLine(TestTradeModelLineMixin):
     self.assertEquals([q.getReference() for q in trade_model_line_list],
         [q.getReference() for q in [A, C, B,]])
 
+  def assertMatchesPossibleSortList(self, candidate, expected_sort_list):
+    """
+    expected_sort_list is a list of possible sort. Example of a sort:
+      (DEFG) (BC) A
+      where everything in parenthesis can be not sorted
+    Each possible sort is represented as a list of list
+    For example, the possible sort (FG) C (DE) B A is represented as
+    [ [F, G], [C], [D, E], [B], [A] ]
+
+    candidate, in the other hand, is a simple list, for example
+      [F, G, C, D, E, B, A]
+
+    This function raises AssertionError if candidate does not match
+    one of the possible sorts
+    """
+    candidate_length = len(candidate)
+
+    for expected_sort in expected_sort_list:
+      i = 0
+      matching = True
+      while expected_sort and i < candidate_length:
+        current_head = expected_sort[0]
+        if candidate[i] in current_head:
+          current_head.remove(candidate[i])
+          if len(current_head) == 0:
+            expected_sort.pop(0)
+          i += 1
+        else:
+          matching = False
+          break
+
+      if matching and len(expected_sort) == 0 and i == candidate_length:
+        # we found a matching sort
+        return
+
+    # None of the possibilities matched, raise an error:
+    sort_list_representation = "\n".join(map(repr, expected_sort_list))
+    raise AssertionError("%s does not match one of the possible sorts:\n%s"
+        % (candidate, sort_list_representation))
+
 
   def test_getTradeModelLineComposedList(self):
     """Test that list of contribution/application relations is sorted to do easy traversal
@@ -1623,9 +1663,17 @@ class TestTradeModelLine(TestTradeModelLineMixin):
 
     trade_model_line_list = trade_condition.getTradeModelLineComposedList()
 
-    # XXX: This is only one good possible sorting
-    self.assertEquals([q.getReference() for q in trade_model_line_list],
-        [q.getReference() for q in [G, F, E, D, C, B, A]])
+    possible_sort_list = [
+                          [[D,E], [B], [F, G], [C], [A]],
+                          [[F,G], [C], [D, E], [B], [A]],
+                          [[D,E,F,G], [B,C], [A]],
+                         ]
+    def get_ref(l):
+      return map(lambda x:x.getReference(), l)
+
+    possible_sort_ref_list = [map(get_ref, sort) for sort in possible_sort_list]
+    self.assertMatchesPossibleSortList(get_ref(trade_model_line_list),
+                                        possible_sort_ref_list)
 
   def test_getComplexTradeModelLineComposedList(self):
     """Test that list of contribution/application relations is sorted to do easy traversal
@@ -1662,9 +1710,15 @@ class TestTradeModelLine(TestTradeModelLineMixin):
 
     trade_model_line_list = trade_condition.getTradeModelLineComposedList()
 
-    # XXX: This is only one good possible sorting
-    self.assertEquals([q.getReference() for q in trade_model_line_list],
-        [q.getReference() for q in [A, B, C, D]])
+    possible_sort_list = [
+                          [[A], [B,C], [D]]
+                         ]
+    def get_ref(l):
+      return map(lambda x:x.getReference(), l)
+
+    possible_sort_ref_list = [map(get_ref, sort) for sort in possible_sort_list]
+    self.assertMatchesPossibleSortList(get_ref(trade_model_line_list),
+                                        possible_sort_ref_list)
 
   def test_tradeModelLineWithFixedPrice(self):
     """
