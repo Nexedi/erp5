@@ -29,6 +29,7 @@ Cache Factory | statistics
 Cache Factory | view
 Cache Tool | statistics
 Cache Tool | view
+Category Tool | export_category_list
 Category Tool | fast_input
 Category Tool | view
 Category | view
