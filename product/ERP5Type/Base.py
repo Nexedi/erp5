@@ -2816,7 +2816,11 @@ class Base( CopyContainer,
   def isTempObject(self):
     """Return true if self is an instance of a temporary document class.
     """
-    return getattr(self.__class__, 'isTempDocument', 0)
+    isTempDocument = getattr(self.__class__, 'isTempDocument', None)
+    if isTempDocument is not None:
+      return isTempDocument()
+    else:
+      return False
 
   # Workflow Related Method
   security.declarePublic('getWorkflowStateItemList')
