@@ -45,7 +45,7 @@ except ImportError:
 import imghdr
 import random
 from Products.ERP5Type import Permissions
-from zLOG import LOG, INFO, PROBLEM
+from zLOG import LOG, INFO, DEBUG
 
 from OFS.Image import Pdata
 
