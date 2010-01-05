@@ -54,12 +54,10 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>from Products.ERP5Type.Document import newTempFile\n
-from Products.ERP5OOo.OOoUtils import CorruptedOOoFile\n
-from Products.ERP5.Document.Document import ConversionError\n
 from Products.ERP5OOo.OOoUtils import OOoParser\n
 import string\n
 \n
-request  = context.REQUEST\n
+request  = container.REQUEST\n
 \n
 def getSpreadsheet(file):\n
   ooo_parser = OOoParser()\n
@@ -100,14 +98,8 @@ if len(listbox) == 0:\n
   # First step\n
   # The purpose of this step is to read the first line of the spreadsheet_name\n
   # and to propose a mapping interface to the user\n
-  try:\n
-    spreadsheets = getSpreadsheet(import_file)\n
-  except ConversionError:\n
-    raise\n
-    return context.Base_redirect(\n
-               form_id=dialog_id,\n
-               keep_items={\n
-                 \'portal_status_message\': \'This file format is not handle.\'})\n
+  spreadsheets = getSpreadsheet(import_file)\n
+\n
   # Put the result of OOo parsing in the request\n
   request.set(\'ooo_import_spreadsheet_data\', spreadsheets)\n
 \n
@@ -181,8 +173,9 @@ else:\n
         raise AttributeError, "Portal type is not the same for all columns"\n
 \n
   # If no mapping is given\n
-  if mapping == {}:\n
-    raise AttributeError, \'Mapping not found\'\n
+  if not mapping:\n
+    return context.Base_redirect(form_id=form_id,\n
+                                 keep_items={\'portal_status_message\': \'Please Define a mapping.\'})\n
 \n
   # Create the active process for all the lines\n
   active_process_value = context.portal_activities.newActiveProcess()\n
@@ -254,7 +247,7 @@ raise NotImplementedError\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>dialog_id=None, import_file=None, import_file_line_script=\'Base_importFileLineDefaultScript\', listbox=None, **kw</string> </value>
+            <value> <string>form_id=\'view\', dialog_id=None, import_file=None, import_file_line_script=\'Base_importFileLineDefaultScript\', listbox=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>
@@ -282,12 +275,13 @@ raise NotImplementedError\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>4</int> </value>
+                        <value> <int>5</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>form_id</string>
                             <string>dialog_id</string>
                             <string>import_file</string>
                             <string>import_file_line_script</string>
@@ -296,19 +290,17 @@ raise NotImplementedError\n
                             <string>Products.ERP5Type.Document</string>
                             <string>newTempFile</string>
                             <string>Products.ERP5OOo.OOoUtils</string>
-                            <string>CorruptedOOoFile</string>
-                            <string>Products.ERP5.Document.Document</string>
-                            <string>ConversionError</string>
                             <string>OOoParser</string>
                             <string>string</string>
                             <string>_getattr_</string>
-                            <string>context</string>
+                            <string>container</string>
                             <string>request</string>
                             <string>getSpreadsheet</string>
                             <string>cleanUid</string>
                             <string>None</string>
                             <string>len</string>
                             <string>spreadsheets</string>
+                            <string>context</string>
                             <string>session_id</string>
                             <string>_getitem_</string>
                             <string>session</string>
@@ -363,6 +355,7 @@ raise NotImplementedError\n
             <key> <string>func_defaults</string> </key>
             <value>
               <tuple>
+                <string>view</string>
                 <none/>
                 <none/>
                 <string>Base_importFileLineDefaultScript</string>
