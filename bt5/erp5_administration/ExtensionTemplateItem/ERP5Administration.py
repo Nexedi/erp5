@@ -1,4 +1,12 @@
+# -*- coding: utf-8 -*-
+import sys
+from ZODB.POSException import ConflictError
+from zExceptions import ExceptionFormatter
+
+from Products.CMFActivity.ActiveResult import ActiveResult
+from Products.ERP5Type.Document import newTempOOoDocument
 from zLOG import LOG, INFO
+
 def dumpWorkflowChain(self):
   # This method outputs the workflow chain in the format that you can
   # easily get diff like the following:
@@ -90,3 +98,40 @@ def MessageCatalog_deleteNotTranslatedMessageDict(self):
     # delete message from dict
     del(self._messages[k])
   return len(not_translated_message_dict.keys())
+
+
+def checkConversionToolAvailability(self):
+  """
+  Check conversion tool (oood) is available for erp5.
+  This script convert an odt document into HTML and try to read
+  the returned string and find out expected string
+  """
+  portal = self.getPortalObject()
+  document_id = 'P-ERP5-TEST.Conversion.Tool.Availability-001-en.odt'
+  document_path = 'portal_skins/erp5_administration/%s' % (document_id,)
+  document_file = portal.restrictedTraverse(document_path)
+
+  message = None
+  severity = 0
+
+  try:
+    temp_document = newTempOOoDocument(self, document_id, data=document_file.data, source_reference=document_id)
+    temp_document.convertToBaseFormat()
+    mimetype, html_result = temp_document.convert(format='html')
+  except ConflictError:
+    raise
+  except: #Which Errors should we catch ?
+    #Transformation failed
+    message = 'Conversion tool got unexpected error:\n%s' % ''.join(ExceptionFormatter.format_exception(*sys.exc_info()))
+  else:
+    #Everything goes fine, Check that expected string is present in HTML conversion
+    if 'AZERTYUIOPMQ' not in html_result:
+      message = 'Conversion to HTML Failed:\n%s' % (html_result,)
+
+  active_process = self.newActiveProcess()
+  result = ActiveResult()
+  if message:
+    severity = 1
+    result.edit(detail=message)
+  result.edit(severity=severity)
+  active_process.activateResult(result)

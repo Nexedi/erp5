@@ -1,0 +1,129 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="Alarm" module="Products.ERP5Type.Document.Alarm"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>active_sense_method_id</string> </key>
+            <value> <string>Alarm_checkConversionToolAvailability</string> </value>
+        </item>
+        <item>
+            <key> <string>alarm_notification_mode</string> </key>
+            <value>
+              <tuple>
+                <string>problem</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string>Check that conversion tool (oood) is available for erp5</string> </value>
+        </item>
+        <item>
+            <key> <string>enabled</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>check_conversion_tool_availability</string> </value>
+        </item>
+        <item>
+            <key> <string>periodicity_hour</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>periodicity_hour_frequency</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+        <item>
+            <key> <string>periodicity_minute</string> </key>
+            <value>
+              <tuple>
+                <int>0</int>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>periodicity_month</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>periodicity_month_day</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>periodicity_start_date</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global id="1.1" name="DateTime" module="DateTime.DateTime"/>
+                </klass>
+                <tuple>
+                  <none/>
+                </tuple>
+                <state>
+                  <tuple>
+                    <float>1230768000.0</float>
+                    <string>GMT</string>
+                  </tuple>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>periodicity_stop_date</string> </key>
+            <value>
+              <object>
+                <klass> <reference id="1.1"/> </klass>
+                <tuple>
+                  <none/>
+                </tuple>
+                <state>
+                  <tuple>
+                    <float>1577836800.0</float>
+                    <string>GMT</string>
+                  </tuple>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>periodicity_week</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Alarm</string> </value>
+        </item>
+        <item>
+            <key> <string>sense_method_id</string> </key>
+            <value> <string>Alarm_getConversionToolAvailabiltyResult</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Check Conversion Tool Availability</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
