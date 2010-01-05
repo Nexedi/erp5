@@ -708,6 +708,33 @@ class TestAlarm(ERP5TypeTestCase):
     # Actual test.
     self.assertEquals(alarm.getAlarmDate(), None)
 
+  def test_21_AlarmCatalogPresence(self):
+    """Check that alarm date is properly stored in catalog upon first reindexation"""
+    date = DateTime().earliestTime()
+    alarm = self.newAlarm(enabled=True, periodicity_start_date=date)
+    transaction.commit()
+    self.tic()
+    self.assertEquals(alarm.getAlarmDate(), date)
+    alarm_list = alarm.Alarm_zGetAlarmDate(uid=alarm.getUid())
+    self.assertEqual(1, len(alarm_list))
+    catalog_alarm_date = alarm_list[0].alarm_date
+    self.assertEqual(date.toZone('UTC'), catalog_alarm_date)
+
+  def test_21a_AlarmCatalogPresenceDoubleReindex(self):
+    """Check that alarm date is properly stored in catalog"""
+    date = DateTime().earliestTime()
+    alarm = self.newAlarm(enabled=True, periodicity_start_date=date)
+    transaction.commit()
+    self.tic()
+    alarm.recursiveReindexObject()
+    transaction.commit()
+    self.tic()
+    self.assertEquals(alarm.getAlarmDate(), date)
+    alarm_list = alarm.Alarm_zGetAlarmDate(uid=alarm.getUid())
+    self.assertEqual(1, len(alarm_list))
+    catalog_alarm_date = alarm_list[0].alarm_date
+    self.assertEqual(date.toZone('UTC'), catalog_alarm_date)
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestAlarm))
