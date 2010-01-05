@@ -986,6 +986,9 @@ class Document(PermanentURLMixIn, XMLObject, UrlMixIn, CachedConvertableMixin, S
       Based on the document content, find out as many properties as needed.
       returns properties which should be set on the document
     """
+    if not self.hasData():
+      # if document is empty, we will not find anything in its content
+      return dict()
     if not self.hasBaseData():
       raise NotConvertedError
     method = self._getTypeBasedMethod('getPropertyDictFromContent',
@@ -1274,6 +1277,9 @@ class Document(PermanentURLMixIn, XMLObject, UrlMixIn, CachedConvertableMixin, S
       using the base_data property. Refer to Document.py propertysheet.
       Use accessors (getBaseData, setBaseData, hasBaseData, etc.)
     """
+    if not self.hasData():
+      # Empty document cannot be converted
+      return #'Document is empty'
     try:
       message = self._convertToBaseFormat() # Call implemetation method
       self.clearConversionCache() # Conversion cache is now invalid
