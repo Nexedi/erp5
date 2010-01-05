@@ -165,8 +165,11 @@ tool_list = [portal.portal_templates, portal.portal_trash,\n
              portal.portal_domains, portal.portal_rules,\n
              portal.portal_deliveries, portal.portal_orders,\n
              portal.portal_caches, portal.portal_types]\n
-if hasattr(portal, \'portal_gadgets\'):\n
-  tool_list.append(portal.portal_gadgets)\n
+possible_tool_list = [\'portal_gadgets\', \'portal_contribution_registry\',\n
+                      \'portal_roundings\',]\n
+for tool_id in possible_tool_list:\n
+  if getattr(portal, tool_id, None) is not None:\n
+    tool_list.append(getattr(portal, tool_id))\n
 \n
 for folder in tool_list:\n
   folder.activate(\n
@@ -304,7 +307,8 @@ return printed\n
                             <string>_getiter_</string>
                             <string>folder</string>
                             <string>tool_list</string>
-                            <string>hasattr</string>
+                            <string>possible_tool_list</string>
+                            <string>tool_id</string>
                           </tuple>
                         </value>
                     </item>
