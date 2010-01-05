@@ -1219,6 +1219,9 @@ def createExpressionContext(object, portal=None):
       'modules':      SecureModuleImporter,
       'member':       member,
       'here':         object,
+      # XXX 'here' is deprecated throughout the Zope code base. 'context' is
+      # the proper name these days
+      'context':         object,
       }
   ec = getEngine().getContext(data)
   tv[cache_key] = ec
