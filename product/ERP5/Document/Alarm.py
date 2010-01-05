@@ -583,20 +583,21 @@ Alarm Tool Node: %s
       result_list = self.Alarm_zGetAlarmDate(uid=self.getUid())
       if len(result_list) == 1:
         alarm_date = result_list[0].alarm_date
-        # But if the catalog does not have a valid one, replace it
-        # with the start date.
-        if alarm_date is None or alarm_date < periodicity_start_date:
-          alarm_date = periodicity_start_date
+      # But if the catalog does not have a valid one, replace it
+      # with the start date.
+      if alarm_date is None or alarm_date < periodicity_start_date:
+        alarm_date = periodicity_start_date
 
-        # Check if it is valid.
-        periodicity_stop_date = self.getPeriodicityStopDate()
-        if periodicity_stop_date is not None \
-              and alarm_date >= periodicity_stop_date:
-          alarm_date = None
-        else:
-          # convert the date to the user provided timezone
-          alarm_zone = periodicity_start_date.timezone()
-          alarm_date = alarm_date.toZone(alarm_zone)
+      # Check if it is valid.
+      periodicity_stop_date = self.getPeriodicityStopDate()
+      if periodicity_stop_date is not None \
+            and alarm_date >= periodicity_stop_date:
+        alarm_date = None
+      else:
+        # convert the date to the user provided timezone
+        alarm_zone = periodicity_start_date.timezone()
+        alarm_date = alarm_date.toZone(alarm_zone)
+
     return alarm_date
 
   # XXX there seem to be something which wants to call setters against
