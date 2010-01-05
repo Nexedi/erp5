@@ -903,33 +903,6 @@ msgstr "Correspondances de tailles"
 msgid "Apparel Technical Drawing"
 msgstr "Dessin technique"
 
-msgid "Apparel Transformation"
-msgstr "Nomenclature"
-
-msgid "Apparel Transformation List"
-msgstr "Nomenclatures"
-
-msgid "Apparel Transformation Module"
-msgstr "Module des nomenclatures"
-
-msgid "Apparel Transformation Operation"
-msgstr "Opération de gamme"
-
-msgid "Apparel Transformation Operation List"
-msgstr "Liste des opérations"
-
-msgid "Apparel Transformation Template"
-msgstr "Modèle de nomenclature"
-
-msgid "Apparel Transformation Transformed Resource"
-msgstr "Composant"
-
-msgid "Apparel Transformation Updated."
-msgstr "Nomenclature actualisée."
-
-msgid "Apparel Transformations"
-msgstr "Nomenclatures"
-
 msgid "Apparel fabric"
 msgstr "Tissu"
 
@@ -1288,10 +1261,10 @@ msgid "Beginning of this career step"
 msgstr "Début de carrière"
 
 msgid "Bill Of Material Description"
-msgstr "Détails de nomenclature"
+msgstr "Description de la liste des produits"
 
 msgid "Bill of Materials and Operations"
-msgstr "Facture des matériaux et des opérations"
+msgstr "Liste des produits et des opérations"
 
 msgid "Billable Client"
 msgstr "Client (facturer à)"
@@ -3033,6 +3006,9 @@ msgstr "Code pays par défaut du téléphone"
 msgid "Default Theme Configuration"
 msgstr "Configuration du thème par défaut"
 
+msgid "Default Variation"
+msgstr "Variante par défaut"
+
 msgid "Default Web Layout"
 msgstr "Configuration des pages web par défaut"
 
@@ -4215,9 +4191,6 @@ msgstr "Transformation élargie"
 
 msgid "Expanded View"
 msgstr "Aperçu"
-
-msgid "Expanded transformation"
-msgstr "Nomenclature"
 
 msgid "Expanded view"
 msgstr "Aperçu"
@@ -5581,15 +5554,6 @@ msgstr "Format MIME"
 msgid "Mail Message"
 msgstr "Email"
 
-msgid "Main Apparel Fabric"
-msgstr "Tissu principal"
-
-msgid "Main Apparel Fabric Supplier"
-msgstr "Fournisseur Tissu principal"
-
-msgid "Main resource"
-msgstr "Nomenclature du (Modèle ou Article)"
-
 msgid "Make Offer"
 msgstr "Proposer un devis"
 
@@ -5650,8 +5614,11 @@ msgstr "Cette action permet de définir que la sale opportunity provient de la d
 msgid "Marks the transaction that has been recorded in a journal as debit and credit"
 msgstr "Marque que la transaction a bien été passée au journal."
 
+msgid "Material"
+msgstr "Produit"
+
 msgid "Materials"
-msgstr "Matériaux"
+msgstr "Produits"
 
 msgid "Max Amount"
 msgstr "Montant Max."
@@ -7637,6 +7604,9 @@ msgstr "Unité de gestion"
 msgid "Quantity Unit must be defined"
 msgstr "L'unité doit être définie"
 
+msgid "Quantity Variation Axes"
+msgstr "Axes de variation de la quantité"
+
 msgid "Quantity axes"
 msgstr "Quantité variable selon"
 
@@ -7979,9 +7949,6 @@ msgstr "Modèles dépendants"
 msgid "Related Apparel Shape"
 msgstr "Forme liées"
 
-msgid "Related Apparel Transformation"
-msgstr "Nomenclatures liées"
-
 msgid "Related Balance Transaction"
 msgstr "Écriture de reprise des à nouveaux correspondante"
 
@@ -8055,7 +8022,7 @@ msgid "Related Tasks Report"
 msgstr "Rapport de tâches correspondant"
 
 msgid "Related Transformation"
-msgstr "Nomenclatures dépendantes"
+msgstr "Transformation correspondante"
 
 msgid "Related Trash Bin"
 msgstr "Corbeille correspondante"
@@ -10963,28 +10930,25 @@ msgid "Transactions Simulation State"
 msgstr "État de l'écriture"
 
 msgid "Transformation"
-msgstr "Nomenclature"
+msgstr "Transformation"
 
 msgid "Transformation Module"
-msgstr "Module des nomenclatures"
+msgstr "Module des transformations"
 
 msgid "Transformation Operation"
-msgstr "Opération de transformation"
+msgstr "Opération"
 
 msgid "Transformation Optional Resource"
-msgstr "Ressource optionnelle pour la transformation"
+msgstr "Produit optionel"
 
 msgid "Transformation Report"
 msgstr "Rapport de transformation"
 
-msgid "Transformation State"
-msgstr "État"
+msgid "Transformation Template"
+msgstr "Modèle de transformation"
 
 msgid "Transformation Transformed Resource"
-msgstr "Ressource transformée de la transformation"
-
-msgid "Transformation description"
-msgstr "Libellé pour nomenclatures"
+msgstr "Produit transformé"
 
 msgid "Transformations"
 msgstr "Transformations"
@@ -11399,6 +11363,9 @@ msgstr "Prix additionnel variable"
 
 msgid "Variation"
 msgstr "Variation"
+
+msgid "Variation Axes"
+msgstr "Axes de variation"
 
 msgid "Variation Base"
 msgstr "Axes de variantage"
