@@ -95,7 +95,7 @@ class PortalTypePropertySheetDocumentationHelper(DocumentationHelper):
                                                        context=self, object=self,
                                                        filename=self.title_or_id()
                                                        )
-          xpath = '//*[name() = "office:text"]//*[name() = "text:p"]'
+          xpath = '//office:text//text:p'
           # parse content.xml
           xml_doc = etree.fromstring(source_xml)
           # the namespace text
@@ -103,7 +103,7 @@ class PortalTypePropertySheetDocumentationHelper(DocumentationHelper):
           # all element text:p
           text_list = xml_doc.xpath(xpath, namespaces=xml_doc.nsmap)
           # all element wich have an text:style-name attribute
-          parent_tag_list = xml_doc.xpath('//*[@*[name() = "text:style-name"]]', namespaces=xml_doc.nsmap)
+          parent_tag_list = xml_doc.xpath('//*[@text:style-name]', namespaces=xml_doc.nsmap)
           # Change the attribute text:style-name with a default value
           [parent_tag.attrib.update({'{%s}style-name' % text_ns: 'Preformatted_20_Text'}) \
                    for parent_tag in parent_tag_list]
