@@ -13,8 +13,8 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>columns</string>
                 <string>all_columns</string>
+                <string>columns</string>
               </list>
             </value>
         </item>
@@ -108,7 +108,7 @@
                         </tuple>
                         <tuple>
                           <string>resource_title</string>
-                          <string>Resource</string>
+                          <string>Material</string>
                         </tuple>
                         <tuple>
                           <string>industrial_phase_translated_title</string>
