@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 # Copyright (c) 2008 Nexedi SA and Contributors. All Rights Reserved.
 #          Deheunynck Thibaut <thibaut@nexedi.com>
@@ -38,6 +39,7 @@ from Acquisition import aq_base
 from Products.ERP5Type.Globals import get_request
 from Products.ERP5OOo.Document.OOoDocument import STANDARD_IMAGE_FORMAT_LIST
 from Products.ERP5Type.Core.Folder import Folder
+from lxml import etree
 
 HTTP_OK = 200
 debug = 0
@@ -157,20 +159,20 @@ class TestOOoChart(ERP5TypeTestCase, ZopeTestCase.Functional):
       parser = OOoParser()
       parser.openFromString(body)
       content_xml_view = parser.oo_files['content.xml']
-      import libxml2
-      doc_view = libxml2.parseDoc(content_xml_view)
+
+      doc_view = etree.fromstring(content_xml_view)
       xpath = '//@*[name() = "xlink:href"]'
-      num_object = doc_view.xpathEval(xpath)[0].content[2:]
+      num_object = doc_view.xpath(xpath)[0][2:]
 
       content_xml_build = parser.oo_files['%s/content.xml' % num_object]
-      doc_build = libxml2.parseDoc(content_xml_build)
+      doc_build = etree.fromstring(content_xml_build)
       xpath = '//@*[name() = "office:value"]'
-      values = doc_build.xpathEval(xpath)
+      value_list = doc_build.xpath(xpath)
       # Test the data presence in the file XML
-      self.assertNotEquals(0, len(values))
+      self.assertNotEquals(0, len(value_list))
       # 2 values because there are - 10 document created by a owner 
       #                            - 0 Reference count
-      self.assertEquals(2, len(values))
+      self.assertEquals(2, len(value_list))
 
       # Test the differents render
       # render image
@@ -250,20 +252,20 @@ class TestOOoChart(ERP5TypeTestCase, ZopeTestCase.Functional):
       parser = OOoParser()
       parser.openFromString(body)
       content_xml_view = parser.oo_files['content.xml']
-      import libxml2
-      doc_view = libxml2.parseDoc(content_xml_view)
+
+      doc_view = etree.fromstring(content_xml_view)
       xpath = '//@*[name() = "xlink:href"]'
-      num_object = doc_view.xpathEval(xpath)[0].content[2:]
+      num_object = doc_view.xpath(xpath)[0][2:]
 
       content_xml_build = parser.oo_files['%s/content.xml' % num_object]
-      doc_build = libxml2.parseDoc(content_xml_build)
+      doc_build = etree.fromstring(content_xml_build)
       xpath = '//@*[name() = "office:value"]'
-      values = doc_build.xpathEval(xpath)
+      value_list = doc_build.xpath(xpath)
       # Test the data presence in the file XML
-      self.assertNotEquals(0, len(values))
+      self.assertNotEquals(0, len(value_list))
       # 2 values because there are - 10 document created by a owner 
       #                            - 0 Reference count
-      self.assertEquals(2, len(values))
+      self.assertEquals(2, len(value_list))
 
       # Test the differents render
       # render image
