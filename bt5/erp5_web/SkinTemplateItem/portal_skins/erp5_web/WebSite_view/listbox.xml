@@ -15,7 +15,6 @@
               <list>
                 <string>columns</string>
                 <string>editable_columns</string>
-                <string>list_action</string>
                 <string>selection_name</string>
                 <string>sort</string>
                 <string>title</string>
@@ -96,8 +95,8 @@
                           <string>Title</string>
                         </tuple>
                         <tuple>
-                          <string>portal_type</string>
-                          <string>Portal Type</string>
+                          <string>translated_portal_type</string>
+                          <string>Type</string>
                         </tuple>
                         <tuple>
                           <string>modification_date</string>
@@ -132,10 +131,6 @@
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string>Base_viewWebFieldLibrary</string> </value>
-                </item>
-                <item>
-                    <key> <string>list_action</string> </key>
-                    <value> <string>Folder_viewContentList</string> </value>
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>
