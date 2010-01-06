@@ -13,15 +13,15 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
-                <string>columns</string>
                 <string>all_columns</string>
-                <string>sort</string>
-                <string>selection_name</string>
-                <string>portal_types</string>
-                <string>editable_columns</string>
+                <string>columns</string>
                 <string>domain_root_list</string>
+                <string>editable_columns</string>
+                <string>portal_types</string>
                 <string>report_root_list</string>
+                <string>selection_name</string>
+                <string>sort</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -180,6 +180,10 @@
                         <tuple>
                           <string>efficiency</string>
                           <string>efficiency</string>
+                        </tuple>
+                        <tuple>
+                          <string>resource</string>
+                          <string>resource</string>
                         </tuple>
                       </list>
                     </value>
