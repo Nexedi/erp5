@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2006-2007 Nexedi SA and Contributors. All Rights Reserved.
@@ -26,20 +27,20 @@
 ##############################################################################
 from DateTime import DateTime
 import urllib2
-import libxml2
+from lxml import etree
 import re
 from zLOG import LOG
 
 
-def getObjectStringList(xml_string, element_to_find = 'object'):
+def getObjectStringList(xml_string, element_to_find='object'):
   """
     this function splits an ERP5 XML string into object
     string list, each object string is converted
     into utf-8 encoding and html entities are 
     translated into corresponding unicode code
   """
-  rss_doc = libxml2.parseDoc(xml_string)
-  return ['%s' % node for node in rss_doc.xpathEval('//%s' % element_to_find)]
+  rss_doc = etree.fromstring(xml_string)
+  return [etree.tostring(node) for node in rss_doc.xpath('//%s' % element_to_find)]
 
 def setTextContent(self):
   """
