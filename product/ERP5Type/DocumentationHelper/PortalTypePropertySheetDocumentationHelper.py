@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2007-2008 Nexedi SA and Contributors. All Rights Reserved.
@@ -31,15 +32,7 @@ from Products.ERP5Type.Globals import InitializeClass
 from DocumentationHelper import DocumentationHelper
 from Products.ERP5Type import Permissions
 from Products.CMFCore.utils import getToolByName
-
-# XXX Use lxml instead.
-try:
-  from libxml2 import parseDoc, parserError
-  import_succeed = 1
-except ImportError:
-  from xml.dom.minidom import parseString
-  from xml.xpath import Evaluate
-  import_succeed = 0
+from lxml import etree
 
 class PortalTypePropertySheetDocumentationHelper(DocumentationHelper):
   """
@@ -103,28 +96,18 @@ class PortalTypePropertySheetDocumentationHelper(DocumentationHelper):
                                                        filename=self.title_or_id()
                                                        )
           xpath = '//*[name() = "office:text"]//*[name() = "text:p"]'
-          if import_succeed:
-            #libxml2
-            # parse content.xml
-            xml_doc = parseDoc(source_xml)
-            # the name space text
-            text_ns = xml_doc.getRootElement().searchNs(xml_doc, 'text')
-            # all element text:p
-            text_list = xml_doc.xpathEval(xpath)
-            # all element wich have an text:style-name attribut
-            parent_tag_list = xml_doc.xpathEval('//*[@*[name() = "text:style-name"]]')
-            # Change the attribut text:style-name with a default value
-            [parent_tag.setNsProp(text_ns, 'style-name', 'Preformatted_20_Text') \
+          # parse content.xml
+          xml_doc = etree.fromstring(source_xml)
+          # the namespace text
+          text_ns = xml_doc.nsmap['text']
+          # all element text:p
+          text_list = xml_doc.xpath(xpath, namespaces=xml_doc.nsmap)
+          # all element wich have an text:style-name attribute
+          parent_tag_list = xml_doc.xpath('//*[@*[name() = "text:style-name"]]', namespaces=xml_doc.nsmap)
+          # Change the attribute text:style-name with a default value
+          [parent_tag.attrib.update({'{%s}style-name' % text_ns: 'Preformatted_20_Text'}) \
                    for parent_tag in parent_tag_list]
-            xml = ''.join([text.serialize('utf-8', 0) for text in text_list])
-            xml_doc.freeDoc()
-            return xml
-          else:
-            # minidom
-            xml_doc = parseString(source_xml)
-            tag_list = Evaluate (xpath , xml_doc)
-            xml = ''.join(tag.toxml('utf-8') for tag in tag_list)
-            return xml
+          return ''.join([etree.tostring(text, pretty_print=True) for text in text_list])
     else:
       return source_code
 
