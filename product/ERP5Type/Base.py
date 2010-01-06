@@ -2405,14 +2405,14 @@ class Base( CopyContainer,
     self._getCategoryTool()._cleanupCategories()
 
   # Category testing
-  security.declareProtected( Permissions.View, 'isMemberOf' )
+  security.declareProtected( Permissions.AccessContentsInformation, 'isMemberOf' )
   def isMemberOf(self, category, **kw):
     """
       Tests if an object if member of a given category
     """
     return self._getCategoryTool().isMemberOf(self, category, **kw)
 
-  security.declareProtected( Permissions.View, 'isAcquiredMemberOf' )
+  security.declareProtected( Permissions.AccessContentsInformation, 'isAcquiredMemberOf' )
   def isAcquiredMemberOf(self, category):
     """
       Tests if an object if member of a given category

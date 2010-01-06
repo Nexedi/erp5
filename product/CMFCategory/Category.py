@@ -689,7 +689,7 @@ class Category(Folder):
       """
       return '/'.join(self.portal_url.getRelativeContentPath(self)[1:])
 
-    security.declareProtected( Permissions.View, 'isMemberOf' )
+    security.declareProtected( Permissions.AccessContentsInformation, 'isMemberOf' )
     def isMemberOf(self, category, **kw):
       """
         Tests if an object if member of a given category
