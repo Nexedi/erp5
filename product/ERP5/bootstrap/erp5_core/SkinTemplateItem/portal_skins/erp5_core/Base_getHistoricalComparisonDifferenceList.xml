@@ -55,6 +55,7 @@
             <key> <string>_body</string> </key>
             <value> <string>from Products.PythonScripts.standard import Object\n
 from ZODB.POSException import ConflictError\n
+Base_translateString = context.Base_translateString\n
 \n
 serial = context.REQUEST[\'serial\']\n
 next_serial = context.REQUEST[\'next_serial\']\n
@@ -64,8 +65,8 @@ try:\n
 except ConflictError:\n
   raise\n
 except: # POSKeyError\n
-  return [Object(property_name=\'Historical revisions are not available, \'\n
-                               \'maybe the database has been packed\')]\n
+  return [Object(property_name=Base_translateString(\'Historical revisions are\'\n
+                      \' not available, maybe the database has been packed\'))]\n
 \n
 if next_serial == \'0.0.0.0\':\n
   new_getProperty = context.getProperty\n
@@ -75,15 +76,35 @@ else:\n
 old = context.HistoricalRevisions[serial]\n
 result = []\n
 \n
+binary_data_explanation = Base_translateString("Binary data can\'t be displayed")\n
+\n
 for prop_dict in context.getPropertyMap():\n
   prop = prop_dict[\'id\']\n
+  current_value=context.getProperty(prop)\n
   old_value = old.getProperty(prop)\n
   new_value = new_getProperty(prop)\n
   if new_value != old_value:\n
+    # check if values are unicode convertible (binary are not)\n
+    if isinstance(new_value, (str, unicode)):\n
+      try:\n
+        unicode(str(new_value), \'utf-8\')\n
+      except UnicodeDecodeError:\n
+        new_value = binary_data_explanation\n
+    if isinstance(old_value, (str, unicode)):\n
+      try:\n
+        unicode(str(old_value), \'utf-8\')\n
+      except UnicodeDecodeError:\n
+        old_value = binary_data_explanation\n
+    if isinstance(current_value, (str, unicode)):\n
+      try:\n
+        unicode(str(current_value), \'utf-8\')\n
+      except UnicodeDecodeError:\n
+        current_value = binary_data_explanation\n
+\n
     result.append( Object( property_name=prop,\n
                            new_value=new_value,\n
                            old_value=old_value,\n
-                           current_value=context.getProperty(prop)))\n
+                           current_value=current_value))\n
 return result\n
 </string> </value>
         </item>
@@ -126,20 +147,27 @@ return result\n
                             <string>Object</string>
                             <string>ZODB.POSException</string>
                             <string>ConflictError</string>
-                            <string>_getitem_</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>Base_translateString</string>
+                            <string>_getitem_</string>
                             <string>serial</string>
                             <string>next_serial</string>
                             <string>new_getProperty</string>
                             <string>new</string>
                             <string>old</string>
                             <string>result</string>
+                            <string>binary_data_explanation</string>
                             <string>_getiter_</string>
                             <string>prop_dict</string>
                             <string>prop</string>
+                            <string>current_value</string>
                             <string>old_value</string>
                             <string>new_value</string>
+                            <string>isinstance</string>
+                            <string>str</string>
+                            <string>unicode</string>
+                            <string>UnicodeDecodeError</string>
                           </tuple>
                         </value>
                     </item>
