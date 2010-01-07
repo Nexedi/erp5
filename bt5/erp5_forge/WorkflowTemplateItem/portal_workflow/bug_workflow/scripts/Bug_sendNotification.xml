@@ -67,7 +67,7 @@ for history_item in history[::-1]:\n
     break\n
 \n
 valid_transaction_list = ["confirm_action", "stop_action",\n
-                          "deliver_action", "set_ready_action", "cancel_action"]\n
+                          "deliver_action", "set_ready_action", "cancel_action", "re_assign_action"]\n
 \n
 message = [ h for h in state_change.getHistory() \\\n
                                         if h[\'action\'] in valid_transaction_list]\n
