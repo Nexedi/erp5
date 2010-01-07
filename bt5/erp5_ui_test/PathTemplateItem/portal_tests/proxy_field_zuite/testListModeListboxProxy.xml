@@ -136,6 +136,31 @@
   <td>listbox_record_number</td>\n
   <td>1 records</td>\n
 </tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>title</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>listbox_select</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>start_date</td>\n
+  <td>2009/01/01</td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>listbox_select</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>listbox_record_number</td>\n
+  <td>1 records</td>\n
+</tr>\n
 </tal:block>\n
 \n
 </tbody></table>\n
