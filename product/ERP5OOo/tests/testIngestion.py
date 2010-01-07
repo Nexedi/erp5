@@ -42,6 +42,7 @@ from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.ERP5Type.tests.utils import FileUpload
 from Products.ERP5OOo.Document.OOoDocument import ConversionError
 from zLOG import LOG, INFO, ERROR
+from Products.CMFCore.utils import getToolByName
 
 # Define the conversion server host
 conversion_server_host = ('127.0.0.1', 8008)
@@ -1405,6 +1406,31 @@ class TestIngestion(ERP5TypeTestCase):
                  ,'stepDiscoverFromFilenameWithNonASCIIFilename'
                 ]
     self.playSequence(step_list, quiet)
+
+  def test_14_ContributionToolIndexation(self, quiet=QUIET, run=RUN_ALL_TEST):
+    """
+    Check that contribution tool is correctly indexed after business template
+    installation.
+    Check that contribution tool is correctly indexed by ERP5Site_reindexAll.
+    """
+    portal = self.portal
+
+    contribution_tool = getToolByName(portal, 'portal_contributions')
+    self.assertEquals(1,
+        len(portal.portal_catalog(path=contribution_tool.getPath())))
+
+    # Clear catalog
+    portal_catalog = self.getCatalogTool()
+    portal_catalog.manage_catalogClear()
+    # Commit                                                                                                                                           
+    transaction.commit()
+    # Reindex all
+    portal.ERP5Site_reindexAll()
+    transaction.commit()
+    self.tic()
+    transaction.commit()
+    self.assertEquals(1,
+        len(portal.portal_catalog(path=contribution_tool.getPath())))
 
 # Missing tests
 """
