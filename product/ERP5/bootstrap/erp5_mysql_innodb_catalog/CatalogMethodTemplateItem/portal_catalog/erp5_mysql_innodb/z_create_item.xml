@@ -88,6 +88,7 @@
 #\n
 CREATE TABLE `item` (\n
   `uid` BIGINT UNSIGNED NOT NULL,\n
+  `order_id` TINYINT UNSIGNED NOT NULL,\n
   `date` datetime,\n
   `node_uid` BIGINT UNSIGNED default \'0\',\n
   `section_uid` BIGINT UNSIGNED default \'0\',\n
@@ -95,7 +96,7 @@ CREATE TABLE `item` (\n
   `aggregate_uid` BIGINT UNSIGNED default \'0\',\n
   `variation_text` VARCHAR(255),\n
   `simulation_state` VARCHAR(255) default \'\',\n
-  PRIMARY KEY (`uid`, `aggregate_uid`),\n
+  PRIMARY KEY (`uid`, `aggregate_uid`,`order_id`),\n
   KEY `section_uid` (`section_uid`),\n
   KEY `resource_uid` (`resource_uid`),\n
   KEY `variation_text` (`variation_text`),\n
@@ -144,6 +145,7 @@ CREATE TABLE `item` (\n
 #\n
 CREATE TABLE `item` (\n
   `uid` BIGINT UNSIGNED NOT NULL,\n
+  `order_id` TINYINT UNSIGNED NOT NULL,\n
   `date` datetime,\n
   `node_uid` BIGINT UNSIGNED default \'0\',\n
   `section_uid` BIGINT UNSIGNED default \'0\',\n
@@ -151,7 +153,7 @@ CREATE TABLE `item` (\n
   `aggregate_uid` BIGINT UNSIGNED default \'0\',\n
   `variation_text` VARCHAR(255),\n
   `simulation_state` VARCHAR(255) default \'\',\n
-  PRIMARY KEY (`uid`, `aggregate_uid`),\n
+  PRIMARY KEY (`uid`, `aggregate_uid`,`order_id`),\n
   KEY `section_uid` (`section_uid`),\n
   KEY `resource_uid` (`resource_uid`),\n
   KEY `variation_text` (`variation_text`),\n

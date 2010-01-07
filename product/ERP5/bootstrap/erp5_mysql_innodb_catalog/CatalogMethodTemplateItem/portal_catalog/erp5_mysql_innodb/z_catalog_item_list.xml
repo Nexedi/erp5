@@ -175,10 +175,12 @@ WHERE\n
 \n
 <dtml-var "\'\\0\'">\n
 \n
-<dtml-let movement_list="[]">\n
+<dtml-let movement_list="[]" uid_dict="{}">\n
   <dtml-in prefix="loop" expr="_.range(_.len(uid))">\n
     <dtml-if "isMovement[loop_item] and isAccountable[loop_item] and getAggregateUidList[loop_item]">\n
+      <dtml-call expr="uid_dict.update({uid[loop_item]: uid_dict.get(uid[loop_item], -1) + 1})">\n
       <dtml-call expr="movement_list.append(loop_item)">\n
+\n
     </dtml-if>\n
   </dtml-in>\n
   <dtml-if expr="_.len(movement_list) > 0">\n
@@ -187,8 +189,11 @@ INSERT INTO\n
 VALUES\n
     <dtml-in prefix="loop" expr="movement_list">\n
       <dtml-in "getAggregateUidList[loop_item]">\n
-( \n
+      \n
+(  \n
+  <dtml-call expr="uid_dict.update({uid[loop_item]: uid_dict.get(uid[loop_item], -1) + 1})">\n
   <dtml-sqlvar expr="uid[loop_item]" type="int">,\n
+  <dtml-sqlvar expr="uid_dict[uid[loop_item]]" type="int">,\n
   <dtml-sqlvar expr="getStopDate[loop_item]" type="datetime" optional>,\n
   <dtml-sqlvar expr="getDestinationUid[loop_item]" type="int" optional>,\n
   <dtml-sqlvar expr="getDestinationSectionUid[loop_item]" type="int" optional>,\n
@@ -254,10 +259,12 @@ WHERE\n
 \n
 <dtml-var "\'\\0\'">\n
 \n
-<dtml-let movement_list="[]">\n
+<dtml-let movement_list="[]" uid_dict="{}">\n
   <dtml-in prefix="loop" expr="_.range(_.len(uid))">\n
     <dtml-if "isMovement[loop_item] and isAccountable[loop_item] and getAggregateUidList[loop_item]">\n
+      <dtml-call expr="uid_dict.update({uid[loop_item]: uid_dict.get(uid[loop_item], -1) + 1})">\n
       <dtml-call expr="movement_list.append(loop_item)">\n
+\n
     </dtml-if>\n
   </dtml-in>\n
   <dtml-if expr="_.len(movement_list) > 0">\n
@@ -266,8 +273,11 @@ INSERT INTO\n
 VALUES\n
     <dtml-in prefix="loop" expr="movement_list">\n
       <dtml-in "getAggregateUidList[loop_item]">\n
-( \n
+      \n
+(  \n
+  <dtml-call expr="uid_dict.update({uid[loop_item]: uid_dict.get(uid[loop_item], -1) + 1})">\n
   <dtml-sqlvar expr="uid[loop_item]" type="int">,\n
+  <dtml-sqlvar expr="uid_dict[uid[loop_item]]" type="int">,\n
   <dtml-sqlvar expr="getStopDate[loop_item]" type="datetime" optional>,\n
   <dtml-sqlvar expr="getDestinationUid[loop_item]" type="int" optional>,\n
   <dtml-sqlvar expr="getDestinationSectionUid[loop_item]" type="int" optional>,\n
