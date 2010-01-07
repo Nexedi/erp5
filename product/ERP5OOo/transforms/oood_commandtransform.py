@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from Products.PortalTransforms.libtransforms.commandtransform import commandtransform
 from Products.PortalTransforms.interfaces import idatastream
 from Products.ERP5Type.Document import newTempOOoDocument
@@ -14,7 +15,8 @@ except ImportError:
   import_succeed = 0
 from zLOG import LOG
 
-REMOTE_URL_PATTERN = '^((?P<protocol>http(s)?://)(?P<domain>[.a-zA-Z0-9]+)+)?(?P<port>:\d{4})?(?P<path>/?\S*)'
+REMOTE_URL_RE = re.compile('^((?P<protocol>http(s)?://)(?P<domain>[.a-zA-Z0-9]+)+)?(?P<port>:\d{4})?(?P<path>/?\S*)')
+CLEAN_RELATIVE_PATH = re.compile('^../')
 
 class TransformError(Exception):
   pass
@@ -69,8 +71,9 @@ class OOOdCommandTransform(commandtransform):
     return self.__name__
 
   def includeImageList(self, data):
-    """
-      Include Images in ODF archive
+    """Include Images in ODF archive
+
+    - data: zipped archive content
     """
     builder = OOoBuilder(data)
     content = builder.extract('content.xml')
@@ -84,9 +87,13 @@ class OOOdCommandTransform(commandtransform):
       #Try to get image file from ZODB
       href_attribute_list = image_tag.xpath('.//@*[name() = "xlink:href"]')
       url = href_attribute_list[0]
-      matching = re.match(REMOTE_URL_PATTERN, url)
+      matching = REMOTE_URL_RE.match(url)
       if matching is not None:
         path = matching.groupdict().get('path')
+        # OOo corrupt relative Links inside HTML content during odt conversion
+        # <img src="REF.TO.IMAGE" ... /> become <draw:image xlink:href="../REF.TO.IMAGE" ... />
+        # So remove "../" added by OOo
+        path = CLEAN_RELATIVE_PATH.sub('', path)
         try:
           image = self.context.restrictedTraverse(path)
         except (AttributeError, KeyError):
@@ -122,8 +129,10 @@ class OOOdCommandTransform(commandtransform):
     return builder.render()
 
   def includeExternalCssList(self, data):
-    """
-      Replace external Css link by style Element
+    """Replace external Css link by style Element,
+    to avoid ooo querying portal without crendentials through http.
+
+    - data: html content
     """
     try:
       xml_doc = etree.XML(data)
@@ -136,7 +145,7 @@ class OOOdCommandTransform(commandtransform):
       #Try to get css from ZODB
       href_attribute_list = css_link_tag.xpath('.//@href')
       url = href_attribute_list[0]
-      matching = re.match(REMOTE_URL_PATTERN, url)
+      matching = REMOTE_URL_RE.match(url)
       if matching is not None:
         path = matching.groupdict().get('path')
         try:
