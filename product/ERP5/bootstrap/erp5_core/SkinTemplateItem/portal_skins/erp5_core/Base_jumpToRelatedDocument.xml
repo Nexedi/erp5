@@ -64,11 +64,12 @@ portal_type = map(lambda x:x[0],field.get_value(\'portal_type\'))\n
 kw = {}\n
 for k, v in field.get_value(\'parameter_list\') :\n
   kw[k] = v\n
-jump_reference_list = context.getAcquiredValueList(base_category, portal_type=portal_type, filter=kw)\n
+accessor_name = \'get%sValueList\' % \'\'.join([part.capitalize() for part in base_category.split(\'_\')])\n
+jump_reference_list = getattr(context, accessor_name)(portal_type=portal_type, filter=kw)\n
 \n
 if len(jump_reference_list)==1:\n
   jump_reference = jump_reference_list[0]\n
-  return request[ \'RESPONSE\' ].redirect( \'%s/view\' % jump_reference.absolute_url() )\n
+  return jump_reference.Base_redirect(\'view\')\n
 else:\n
   selection_uid_list = map(lambda x:x.getUid(),jump_reference_list)\n
   kw = {\'uid\': selection_uid_list}\n
@@ -132,6 +133,10 @@ else:\n
                             <string>k</string>
                             <string>v</string>
                             <string>_write_</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>part</string>
+                            <string>accessor_name</string>
                             <string>jump_reference_list</string>
                             <string>len</string>
                             <string>_getitem_</string>
