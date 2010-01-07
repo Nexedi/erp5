@@ -35,11 +35,14 @@ from zLOG import LOG
 from Testing import ZopeTestCase
 from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from Products.ERP5Type.tests.ERP5TypeTestCase import install_product_quiet
 from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.ERP5OOo.OOoUtils import OOoParser
 from Products.ERP5.Document.Document import ConversionError
 from DateTime import DateTime
 import transaction
+
+ZopeTestCase.installProduct('Sessions', quiet=install_product_quiet)
 
 person_current_id = 1
 
@@ -102,7 +105,6 @@ class TestOOoImport(ERP5TypeTestCase):
     self.pref.enable()
 
     # create browser_id_manager
-    ZopeTestCase.installProduct('Sessions')
     if not "browser_id_manager" in self.portal.objectIds():
       self.portal.manage_addProduct['Sessions'].constructBrowserIdManager()
 

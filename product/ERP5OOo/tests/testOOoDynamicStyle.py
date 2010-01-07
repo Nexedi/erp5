@@ -37,6 +37,11 @@ from Testing import ZopeTestCase
 from zipfile import ZipFile, ZIP_DEFLATED
 from StringIO import StringIO
 
+ZopeTestCase.installProduct('Localizer')
+ZopeTestCase.installProduct('PythonScripts')
+ZopeTestCase.installProduct('ERP5OOo')
+ZopeTestCase.installProduct('Five')
+
 class TestOooDynamicStyle(ZopeTestCase.FunctionalTestCase):
   manager_username = 'tatuya'
   manager_password = 'tatuya'
@@ -54,9 +59,6 @@ class TestOooDynamicStyle(ZopeTestCase.FunctionalTestCase):
 
   def afterSetUp(self):
     self.login()
-    ZopeTestCase.installProduct('Localizer')
-    ZopeTestCase.installProduct('PythonScripts')
-    ZopeTestCase.installProduct('ERP5OOo')
     self.folder.Localizer = DummyLocalizer()
     v12schema_url = os.path.join(os.path.dirname(__file__),
                                  'OpenDocument-schema-v1.2-draft9.rng') 
