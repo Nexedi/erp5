@@ -59,6 +59,8 @@ selection_params = context.portal_selections.getSelectionParamsFor(selection_nam
 \n
 params[\'omit_input\'] = omit_input\n
 params[\'omit_output\'] = omit_output\n
+# For now, we omit simulation to be compatible with other reports.\n
+params[\'omit_simulation\'] = True\n
 \n
 selection_domain = context.portal_selections.getSelectionDomainDictFor(selection_name)\n
 selection_report = context.portal_selections.getSelectionReportDictFor(selection_name)\n
@@ -80,9 +82,6 @@ elif \'title\' in selection_params or \\\n
 else:\n
   # make sure we only have Accounts as nodes\n
   params[\'node_category\'] = [\'account_type\',]\n
-\n
-# XXX this is a hack !\n
-params[\'where_expression\'] = " section.portal_type = \'Organisation\' "\n
 \n
 return portal.portal_simulation.getInventoryAssetPrice( **params )\n
 </string> </value>
@@ -133,6 +132,7 @@ return portal.portal_simulation.getInventoryAssetPrice( **params )\n
                             <string>params</string>
                             <string>selection_params</string>
                             <string>_write_</string>
+                            <string>True</string>
                             <string>selection_domain</string>
                             <string>selection_report</string>
                             <string>_getitem_</string>

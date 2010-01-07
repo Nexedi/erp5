@@ -57,9 +57,8 @@
 params = portal.ERP5Accounting_getParams(selection_name)\n
 params[\'omit_input\'] = omit_input\n
 params[\'omit_output\'] = omit_output\n
-\n
-# XXX this is a hack !\n
-params[\'where_expression\'] = " section.portal_type = \'Organisation\' "\n
+# For now, we omit simulation to be compatible with other reports.\n
+params[\'omit_simulation\'] = True\n
 \n
 return portal.portal_simulation.getInventoryAssetPrice(\n
                                           node_uid=brain.uid,\n
@@ -111,6 +110,7 @@ return portal.portal_simulation.getInventoryAssetPrice(\n
                             <string>portal</string>
                             <string>params</string>
                             <string>_write_</string>
+                            <string>True</string>
                             <string>_apply_</string>
                           </tuple>
                         </value>
