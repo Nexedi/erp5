@@ -79,8 +79,8 @@ class TestConstraint(PropertySheetTestCase):
     self.tic()
 
   def createCategories(self):
-    """ 
-      Light install create only base categories, so we create 
+    """
+      Light install create only base categories, so we create
       some categories for testing them
     """
     category_list = ['testGroup1', 'testGroup2']
@@ -90,7 +90,7 @@ class TestConstraint(PropertySheetTestCase):
         o = group.newContent(portal_type='Category',
                              id=category_id)
 
-  def stepDeleteObjectModuleContent(self, sequence=None, 
+  def stepDeleteObjectModuleContent(self, sequence=None,
                                     sequence_list=None, **kw):
     """
       Delete all objects in the module.
@@ -121,7 +121,7 @@ class TestConstraint(PropertySheetTestCase):
         group=group1,
     )
 
-  def stepSetObjectGroup(self, sequence=None, 
+  def stepSetObjectGroup(self, sequence=None,
                          sequence_list=None, **kw):
     """
       Set a group to object
@@ -133,7 +133,7 @@ class TestConstraint(PropertySheetTestCase):
     self.assertNotEquals(
           object.getGroup(portal_type=()),
           None )
-    
+
   def stepSetObjectGroupOrganisation(self, sequence=None,
                          sequence_list=None, **kw):
     """
@@ -145,7 +145,7 @@ class TestConstraint(PropertySheetTestCase):
     self.assertNotEquals(
           object.getGroup(portal_type='Organisation'),
           None )
-    
+
   def stepSetObjectGroupList(self, sequence=None,
                              sequence_list=None, **kw):
     """
@@ -157,7 +157,7 @@ class TestConstraint(PropertySheetTestCase):
 #     object.edit(group_value_list=[group1, group2])
     object.edit(group_list=['testGroup1', 'testGroup2'])
 
-  def stepSetObjectTitle(self, sequence=None, 
+  def stepSetObjectTitle(self, sequence=None,
                          sequence_list=None, **kw):
     """
       Set a different title value
@@ -166,7 +166,7 @@ class TestConstraint(PropertySheetTestCase):
     object_title = self.object_title
     object.setTitle(object_title)
 
-  def stepSetObjectNoneTitle(self, sequence=None, 
+  def stepSetObjectNoneTitle(self, sequence=None,
                              sequence_list=None, **kw):
     """
       Set a different title value
@@ -194,7 +194,7 @@ class TestConstraint(PropertySheetTestCase):
     object = sequence.get('object')
     object_title = self.object_title
     object.edit(title=12345)
-  
+
   def stepSetObjectBadTypedProperty(self, sequence=None,
                             sequence_list=None, **kw):
     """
@@ -206,7 +206,7 @@ class TestConstraint(PropertySheetTestCase):
     self.failUnless(not object.hasProperty(property_name))
     self.failUnless(object.getPropertyType(property_name) != 'int')
     object.setProperty(property_name, 12)
-  
+
   def stepSetObjectIntLocalProperty(self, sequence=None,
                             sequence_list=None, **kw):
     """
@@ -232,7 +232,7 @@ class TestConstraint(PropertySheetTestCase):
       sequence.edit(constraint=constraint,)
     return constraint
 
-  def stepCallCheckConsistency(self, sequence=None, 
+  def stepCallCheckConsistency(self, sequence=None,
                                sequence_list=None, **kw):
     """
       Call checkConsistency of a Constraint.
@@ -244,7 +244,7 @@ class TestConstraint(PropertySheetTestCase):
     sequence.edit(
         error_list=error_list
     )
-  
+
   def stepCallFixConsistency(self, sequence=None,
                                       sequence_list=None, **kw):
     """
@@ -258,7 +258,7 @@ class TestConstraint(PropertySheetTestCase):
         error_list=error_list
     )
 
-  def stepCallRelatedCheckConsistency(self, sequence=None, 
+  def stepCallRelatedCheckConsistency(self, sequence=None,
                                       sequence_list=None, **kw):
     """
     Call checkConsistency of a Constraint.
@@ -270,8 +270,8 @@ class TestConstraint(PropertySheetTestCase):
     sequence.edit(
         error_list=error_list
     )
-  
-  def stepCheckIfConstraintSucceeded(self, sequence=None, 
+
+  def stepCheckIfConstraintSucceeded(self, sequence=None,
                                      sequence_list=None, **kw):
     """
     Check that checkConsistency returns an empty list
@@ -280,7 +280,7 @@ class TestConstraint(PropertySheetTestCase):
     self.failIfDifferentSet(error_list, [],
           "error_list : %s" % [x.message for x in error_list])
 
-  def stepCheckIfConstraintFailed(self, sequence=None, 
+  def stepCheckIfConstraintFailed(self, sequence=None,
                                   sequence_list=None, **kw):
     """
     Check that checkConsistency does not return an empty list
@@ -292,14 +292,14 @@ class TestConstraint(PropertySheetTestCase):
     for error in error_list:
       self.assertNotEquals('',
                            error.getTranslatedMessage())
-       
 
-  def stepCreateConstraint(self, sequence=None, 
+
+  def stepCreateConstraint(self, sequence=None,
                            sequence_list=None, **kw):
     """
       Create a default Constraint
     """
-    self._createGenericConstraint(sequence, 
+    self._createGenericConstraint(sequence,
                                   klass_name='Constraint',
                                   id='default_constraint',
                                   description='constraint test')
@@ -320,33 +320,33 @@ class TestConstraint(PropertySheetTestCase):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)
 
-  def stepCreatePropertyExistence0(self, sequence=None, 
+  def stepCreatePropertyExistence0(self, sequence=None,
                                   sequence_list=None, **kw):
     """
       Create a PropertyExistence Constraint
     """
-    self._createGenericConstraint(sequence, 
+    self._createGenericConstraint(sequence,
                                   klass_name='PropertyExistence',
                                   id='property_existence',
                                   description='propertyExistence test')
 
-  def stepCreatePropertyExistence1(self, sequence=None, 
+  def stepCreatePropertyExistence1(self, sequence=None,
                                    sequence_list=None, **kw):
     """
       Create a PropertyExistence Constraint
     """
-    self._createGenericConstraint(sequence, 
+    self._createGenericConstraint(sequence,
                                   klass_name='PropertyExistence',
                                   id='property_existence',
                                   description='propertyExistence test',
                                   not_defined_property=None)
 
-  def stepCreatePropertyExistence1TrueCondition(self, sequence=None, 
+  def stepCreatePropertyExistence1TrueCondition(self, sequence=None,
                                    sequence_list=None, **kw):
     """
       Create a PropertyExistence Constraint with a true condition
     """
-    self._createGenericConstraint(sequence, 
+    self._createGenericConstraint(sequence,
                                   klass_name='PropertyExistence',
                                   id='property_existence',
                                   description='propertyExistence test',
@@ -354,12 +354,12 @@ class TestConstraint(PropertySheetTestCase):
                                   condition='python: object.getPortalType()' \
                                       + ' == "%s"' % self.object_portal_type)
 
-  def stepCreatePropertyExistence1FalseCondition(self, sequence=None, 
+  def stepCreatePropertyExistence1FalseCondition(self, sequence=None,
                                    sequence_list=None, **kw):
     """
       Create a PropertyExistence Constraint with a false condition
     """
-    self._createGenericConstraint(sequence, 
+    self._createGenericConstraint(sequence,
                                   klass_name='PropertyExistence',
                                   id='property_existence',
                                   description='propertyExistence test',
@@ -367,12 +367,12 @@ class TestConstraint(PropertySheetTestCase):
                                   condition='python: object.getPortalType()' \
                                       + ' == "False_PortalTypeXXX123"')
 
-  def stepCreatePropertyExistence2(self, sequence=None, 
+  def stepCreatePropertyExistence2(self, sequence=None,
                                    sequence_list=None, **kw):
     """
       Create a PropertyExistence Constraint
     """
-    self._createGenericConstraint(sequence, 
+    self._createGenericConstraint(sequence,
                                   klass_name='PropertyExistence',
                                   id='property_existence',
                                   description='propertyExistence test',
@@ -461,12 +461,12 @@ class TestConstraint(PropertySheetTestCase):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)
 
-  def stepCreatePropertyTypeValidity(self, sequence=None, 
+  def stepCreatePropertyTypeValidity(self, sequence=None,
                                      sequence_list=None, **kw):
     """
       Create a PropertyExistence Constraint
     """
-    self._createGenericConstraint(sequence, 
+    self._createGenericConstraint(sequence,
                                   klass_name='PropertyTypeValidity',
                                   id='property_type_validity',
                                   description='propertyTypeValidity test')
@@ -562,22 +562,22 @@ class TestConstraint(PropertySheetTestCase):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)
 
-  def stepCreateAttributeEquality0(self, sequence=None, 
+  def stepCreateAttributeEquality0(self, sequence=None,
                                   sequence_list=None, **kw):
     """
       Create a AttributeEquality Constraint
     """
-    self._createGenericConstraint(sequence, 
+    self._createGenericConstraint(sequence,
                                   klass_name='AttributeEquality',
                                   id='attribute_equality',
                                   description='AttributeEquality test')
 
-  def stepCreateAttributeEquality1(self, sequence=None, 
+  def stepCreateAttributeEquality1(self, sequence=None,
                                   sequence_list=None, **kw):
     """
       Create a AttributeEquality Constraint
     """
-    self._createGenericConstraint(sequence, 
+    self._createGenericConstraint(sequence,
                                   klass_name='AttributeEquality',
                                   id='attribute_equality',
                                   description='AttributeEquality test',
@@ -628,44 +628,44 @@ class TestConstraint(PropertySheetTestCase):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)
 
-  def stepCreateCategoryExistence0(self, sequence=None, 
+  def stepCreateCategoryExistence0(self, sequence=None,
                                   sequence_list=None, **kw):
     """
       Create a PropertyExistence Constraint
     """
-    self._createGenericConstraint(sequence, 
+    self._createGenericConstraint(sequence,
                                   klass_name='CategoryExistence',
                                   id='category_existence',
                                   description='CategoryExistence test')
 
-  def stepCreateCategoryExistence1(self, sequence=None, 
+  def stepCreateCategoryExistence1(self, sequence=None,
                                    sequence_list=None, **kw):
     """
       Create a PropertyExistence Constraint
     """
-    self._createGenericConstraint(sequence, 
+    self._createGenericConstraint(sequence,
                                   klass_name='CategoryExistence',
                                   id='category_existence',
                                   description='CategoryExistence test',
                                   unknown_base_category=None)
 
-  def stepCreateCategoryExistence2(self, sequence=None, 
+  def stepCreateCategoryExistence2(self, sequence=None,
                                    sequence_list=None, **kw):
     """
       Create a PropertyExistence Constraint
     """
-    self._createGenericConstraint(sequence, 
+    self._createGenericConstraint(sequence,
                                   klass_name='CategoryExistence',
                                   id='category_existence',
                                   description='CategoryExistence test',
                                   group=None)
-  
-  def stepCreateCategoryExistence3(self, sequence=None, 
+
+  def stepCreateCategoryExistence3(self, sequence=None,
                                    sequence_list=None, **kw):
     """
       Create a PropertyExistence Constraint with portal_type
     """
-    self._createGenericConstraint(sequence, 
+    self._createGenericConstraint(sequence,
                                   klass_name='CategoryExistence',
                                   id='category_existence',
                                   description='CategoryExistence test',
@@ -744,12 +744,12 @@ class TestConstraint(PropertySheetTestCase):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)
 
-  def stepCreateCategoryMembershipArity0(self, sequence=None, 
+  def stepCreateCategoryMembershipArity0(self, sequence=None,
                                          sequence_list=None, **kw):
     """
       Create a CategoryMembershipArity Constraint
     """
-    self._createGenericConstraint(sequence, 
+    self._createGenericConstraint(sequence,
                                   klass_name='CategoryMembershipArity',
                                   id='CategoryMembershipArity',
                                   description='CategoryMembershipArity test',
@@ -758,12 +758,12 @@ class TestConstraint(PropertySheetTestCase):
                                   portal_type=('Category', ),
                                   base_category=('group', ))
 
-  def stepCreateCategoryMembershipArity1(self, sequence=None, 
+  def stepCreateCategoryMembershipArity1(self, sequence=None,
                                          sequence_list=None, **kw):
     """
       Create a CategoryMembershipArity Constraint
     """
-    self._createGenericConstraint(sequence, 
+    self._createGenericConstraint(sequence,
                                   klass_name='CategoryMembershipArity',
                                   id='CategoryMembershipArity',
                                   description='CategoryMembershipArity test',
@@ -772,12 +772,12 @@ class TestConstraint(PropertySheetTestCase):
                                   portal_type=('Category', ),
                                   base_category=('group', ))
 
-  def stepCreateCategoryMembershipArity2(self, sequence=None, 
+  def stepCreateCategoryMembershipArity2(self, sequence=None,
                                          sequence_list=None, **kw):
     """
       Create a CategoryMembershipArity Constraint
     """
-    self._createGenericConstraint(sequence, 
+    self._createGenericConstraint(sequence,
                                   klass_name='CategoryMembershipArity',
                                   id='CategoryMembershipArity',
                                   description='CategoryMembershipArity test',
@@ -786,12 +786,12 @@ class TestConstraint(PropertySheetTestCase):
                                   portal_type=('Category', ),
                                   base_category=('group', ))
 
-  def stepCreateCategoryMembershipArity3(self, sequence=None, 
+  def stepCreateCategoryMembershipArity3(self, sequence=None,
                                          sequence_list=None, **kw):
     """
       Create a CategoryMembershipArity Constraint
     """
-    self._createGenericConstraint(sequence, 
+    self._createGenericConstraint(sequence,
                                   klass_name='CategoryMembershipArity',
                                   id='CategoryMembershipArity',
                                   description='CategoryMembershipArity test',
@@ -800,12 +800,12 @@ class TestConstraint(PropertySheetTestCase):
                                   portal_type=('Category', ),
                                   base_category=('group', ))
 
-  def stepCreateCategoryMembershipArity4(self, sequence=None, 
+  def stepCreateCategoryMembershipArity4(self, sequence=None,
                                          sequence_list=None, **kw):
     """
       Create a CategoryMembershipArity Constraint
     """
-    self._createGenericConstraint(sequence, 
+    self._createGenericConstraint(sequence,
                                   klass_name='CategoryMembershipArity',
                                   id='CategoryMembershipArity',
                                   description='CategoryMembershipArity test',
@@ -980,7 +980,7 @@ class TestConstraint(PropertySheetTestCase):
     self.assertNotEquals('', message_list[0].getTranslatedMessage())
     obj.setGroup('testGroup1')
     self.assertEquals(0, len(constraint.checkConsistency(obj)))
-  
+
   def test_CategoryAcquiredMembershipArityNoMax(self):
     obj = self._makeOne()
     constraint = self._createGenericConstraint(
@@ -994,15 +994,14 @@ class TestConstraint(PropertySheetTestCase):
     self.assertNotEquals('', message_list[0].getTranslatedMessage())
     obj.setGroup('testGroup1')
     self.assertEquals(0, len(constraint.checkConsistency(obj)))
-  
-  
-  def stepCreateCategoryRelatedMembershipArity0(self, sequence=None, 
+
+  def stepCreateCategoryRelatedMembershipArity0(self, sequence=None,
                                                 sequence_list=None, **kw):
     """
       Create a CategoryMembershipArity Constraint
     """
-    self._createGenericConstraint( 
-                            sequence, 
+    self._createGenericConstraint(
+                            sequence,
                             klass_name='CategoryRelatedMembershipArity',
                             id='CategoryRelatedMembershipArity',
                             description='CategoryRelatedMembershipArity test',
@@ -1011,13 +1010,13 @@ class TestConstraint(PropertySheetTestCase):
                             portal_type=('Organisation', ),
                             base_category=('group', ))
 
-  def stepCreateCategoryRelatedMembershipArity1(self, sequence=None, 
+  def stepCreateCategoryRelatedMembershipArity1(self, sequence=None,
                                                 sequence_list=None, **kw):
     """
       Create a CategoryMembershipArity Constraint
     """
-    self._createGenericConstraint( 
-                            sequence, 
+    self._createGenericConstraint(
+                            sequence,
                             klass_name='CategoryRelatedMembershipArity',
                             id='CategoryRelatedMembershipArity',
                             description='CategoryRelatedMembershipArity test',
@@ -1026,13 +1025,13 @@ class TestConstraint(PropertySheetTestCase):
                             portal_type=('Organisation', ),
                             base_category=('group', ))
 
-  def stepCreateCategoryRelatedMembershipArity2(self, sequence=None, 
+  def stepCreateCategoryRelatedMembershipArity2(self, sequence=None,
                                                 sequence_list=None, **kw):
     """
       Create a CategoryMembershipArity Constraint
     """
-    self._createGenericConstraint( 
-                            sequence, 
+    self._createGenericConstraint(
+                            sequence,
                             klass_name='CategoryRelatedMembershipArity',
                             id='CategoryRelatedMembershipArity',
                             description='CategoryRelatedMembershipArity test',
@@ -1135,7 +1134,7 @@ class TestConstraint(PropertySheetTestCase):
     obj = self._makeOne()
     obj.manage_addProperty('dummy_boolean_property', True, type='boolean')
     self.assertEquals([], obj.checkConsistency())
-  
+
   def test_BooleanPropertiesPropertyTypeValidityFix(self):
     """Tests PropertyTypeValidity can fix boolean values.
     """
@@ -1147,7 +1146,7 @@ class TestConstraint(PropertySheetTestCase):
     # should be fixed now
     self.assertEquals([], obj.checkConsistency())
     self.failUnless(obj.getPropertyType(prop_name))
-  
+
   def test_TALESConstraint(self):
     """Tests TALESConstraint
     """
@@ -1161,7 +1160,7 @@ class TestConstraint(PropertySheetTestCase):
     message_list = constraint.checkConsistency(obj)
     self.assertEquals(1, len(message_list))
     self.assertNotEquals('', message_list[0].getTranslatedMessage())
-    
+
   def test_TALESConstraintInvalidExpression(self):
     """Tests TALESConstraint with an invalid expression
     """
@@ -1189,7 +1188,7 @@ class TestConstraint(PropertySheetTestCase):
                    id='tales_constraint',
                    expression='error: " ')
     self.assertRaises(CompilerError, constraint.checkConsistency, obj)
-  
+
   def test_PropertyTypeValidityFixLocalPropertiesString(self):
     """Tests PropertyTypeValidity can repairs local property when this property
     is added on the class later, and this property is already in the good type.
@@ -1209,7 +1208,7 @@ class TestConstraint(PropertySheetTestCase):
     self.assertEquals('1', obj.getLocalProperty())
     obj.edit(local_property='something else')
     self.assertEquals('something else', obj.getLocalProperty())
-  
+
   def test_PropertyTypeValidityFixLocalPropertiesFloat(self):
     """Tests PropertyTypeValidity can repairs local property when this property
     is added on the class later, and this property type changed.
@@ -1229,7 +1228,7 @@ class TestConstraint(PropertySheetTestCase):
     self.assertEquals(1.234, obj.getLocalProperty())
     obj.edit(local_property=3)
     self.assertEquals(3., obj.getLocalProperty())
-  
+
   def test_PropertyTypeValidityFixLocalPropertiesContent(self):
     """Tests PropertyTypeValidity can repairs local property of type content
     when this property is added on the class later.
@@ -1344,7 +1343,7 @@ class TestConstraint(PropertySheetTestCase):
 
   def stepSetObjectTitle0(self, sequence=None, sequence_list=None, **kw):
     """
-      Set valid Title to Object 
+      Set valid Title to Object
     """
     object = sequence.get('object')
     object.setTitle(self.object_title)
@@ -1385,7 +1384,7 @@ class TestConstraint(PropertySheetTestCase):
               CheckIfConstraintSucceeded \
               '
     sequence_list.addSequenceString(sequence_string)
-    # Test Constraint with invalid Title 
+    # Test Constraint with invalid Title
     # Not match with regex
     sequence_string = '\
               CreateObject \
@@ -1418,7 +1417,7 @@ class TestConstraint(PropertySheetTestCase):
     self.assertEquals(message.class_name, 'StringAttributeMatch')
     obj.setTitle('a')
     self.assertEquals(obj.checkConsistency(), [])
-    
+
   def test_OverrideMessage(self):
     # messages can be overriden in property sheet
     obj = self._makeOne()
@@ -1428,7 +1427,7 @@ class TestConstraint(PropertySheetTestCase):
       '''class TestPropertySheet:
           _constraints = (
             { 'id': 'testing_constraint',
-              'message_attribute_does_not_match': 
+              'message_attribute_does_not_match':
                   'Attribute ${attribute_name} does not match',
               'type': 'StringAttributeMatch',
               'title': 'a.*', },)
@@ -1478,6 +1477,24 @@ class TestConstraint(PropertySheetTestCase):
     self.assertEquals(1, len(error_list))
     self.assertNotEquals("Attribute source_title should be of type string but is of type <type 'int'>",
                          str(error_list[0].getMessage()))
+
+  def test_PropertyTypeValidityForMultivaluedProperty(self):
+    """
+      This test allows to check that a multivalued property which defines a
+      type is composed of a list of elements of this type.
+    """
+    constraint = self._createGenericConstraint(
+                   klass_name='PropertyTypeValidity',
+                   id='multi_valuated_property', )
+    obj = self._makeOne()
+    self._addProperty(obj.getPortalType(),
+                      '''{'id': 'multi_valuated_property',
+                          'type': 'float',
+                          'multivalued': 1,
+                          'mode':       'w', }''')
+    obj.edit(multi_valuated_property=[1.0, 2.0, 3.0, ])
+    self.assertEquals([], constraint.checkConsistency(obj))
+
 
 def test_suite():
   suite = unittest.TestSuite()
