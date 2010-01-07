@@ -153,20 +153,24 @@
             ui_actions actions/object_ui | nothing;\n
             print_actions actions/object_print | nothing;\n
             list_mode list_mode | nothing;\n
-            can_modify_portal_content python: portal.portal_membership.checkPermission(\'Modify portal content\', here)">\n
+            can_modify_portal_content python: portal.portal_membership.checkPermission(\'Modify portal content\', here);\n
+            can_delete_objects python: portal.portal_membership.checkPermission(\'Delete objects\', here);\n
+            can_copy_or_move python: portal.portal_membership.checkPermission(\'Copy Or Move\', here)">\n
         <span class="separator"><!--separator--></span>\n
         <tal:block tal:condition="list_mode">\n
-          <button class="cut" type="submit" name="Folder_cut:method" title="Cut"\n
-                  i18n:attributes="title" i18n:domain="ui"\n
-                  tal:condition="can_modify_portal_content">\n
-            <span class="image"></span>\n
-            <span class="description" i18n:translate="" i18n:domain="ui">Cut</span>\n
-          </button>\n
-          <button class="copy" type="submit" name="Folder_copy:method" title="Copy"\n
-                  i18n:attributes="title" i18n:domain="ui">\n
-            <span class="image"></span>\n
-            <span class="description" i18n:translate="" i18n:domain="ui">Copy</span>\n
-          </button>\n
+          <tal:block tal:condition="can_copy_or_move">\n
+            <button class="cut" type="submit" name="Folder_cut:method" title="Cut"\n
+                    i18n:attributes="title" i18n:domain="ui"\n
+                    tal:condition="can_modify_portal_content">\n
+              <span class="image"></span>\n
+              <span class="description" i18n:translate="" i18n:domain="ui">Cut</span>\n
+            </button>\n
+            <button class="copy" type="submit" name="Folder_copy:method" title="Copy"\n
+                    i18n:attributes="title" i18n:domain="ui">\n
+              <span class="image"></span>\n
+              <span class="description" i18n:translate="" i18n:domain="ui">Copy</span>\n
+            </button>\n
+          </tal:block>\n
           <button class="paste" type="submit" name="Folder_paste:method" title="Paste"\n
                   i18n:attributes="title" i18n:domain="ui">\n
             <span class="image"></span>\n
@@ -192,7 +196,8 @@
           <span class="image"></span>\n
           <span class="description" i18n:translate="" i18n:domain="ui">Clone</span>\n
         </button>\n
-        <button tal:condition="list_mode" class="delete" type="submit" name="Folder_deleteObjectList:method" title="Delete"\n
+        <button tal:condition="python: list_mode and can_delete_objects" class="delete" type="submit" \n
+                name="Folder_deleteObjectList:method" title="Delete"\n
                 i18n:attributes="title" i18n:domain="ui">\n
           <span class="image"></span>\n
           <span class="description" i18n:translate="" i18n:domain="ui">Delete</span>\n
