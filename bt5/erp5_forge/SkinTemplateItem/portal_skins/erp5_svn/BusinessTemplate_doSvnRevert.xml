@@ -53,26 +53,23 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>if modified != \'\' and modified != \'none\':\n
-  other_files = modified.split(\',\')\n
-  if removed != \'\' and removed != \'none\':\n
-    other_files.extend(removed.split(\',\'))\n
-else:\n
-  if removed != \'\' and removed != \'none\':\n
-    other_files = removed.split(\',\')\n
-  else :\n
-    other_files = None\n
+            <value> <string>other_file_list = []\n
+\n
+if modified != \'\' and modified != \'none\':\n
+  other_file_list += modified.split(\',\')\n
+if removed != \'\' and removed != \'none\':\n
+  other_file_list += removed.split(\',\')\n
+\n
+added_file_list = []\n
 \n
 if added != \'\' and added != \'none\':\n
-  added_files = added.split(\',\')\n
-else:\n
-  added_files = None\n
+  added_file_list += added.split(\',\')\n
 \n
 if not added_files and not other_files:\n
   context.REQUEST.set(\'portal_status_message\', \'Nothing to revert.\')\n
   return context.BusinessTemplate_viewSvnStatus()\n
 \n
-context.getPortalObject()["portal_subversion"].revertZODB(business_template=context, added_files=added_files, other_files=other_files)\n
+context.getPortalObject()["portal_subversion"].revertZODB(business_template=context, added_file_list=added_file_list, other_file_list=other_file_list)\n
 \n
 context.REQUEST.set(\'portal_status_message\', \'Changes reverted successfully.\')\n
 return context.BusinessTemplate_viewSvnStatus()\n
@@ -116,10 +113,12 @@ return context.BusinessTemplate_viewSvnStatus()\n
                             <string>modified</string>
                             <string>removed</string>
                             <string>kw</string>
+                            <string>other_file_list</string>
+                            <string>_inplacevar_</string>
                             <string>_getattr_</string>
-                            <string>other_files</string>
-                            <string>None</string>
+                            <string>added_file_list</string>
                             <string>added_files</string>
+                            <string>other_files</string>
                             <string>context</string>
                             <string>_getitem_</string>
                           </tuple>
