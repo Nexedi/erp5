@@ -1,3 +1,6 @@
+2010-01-07 Nicolas Dumazet
+* Dont show a New button if there are no Visible Allowed Content Types
+
 2009-12-11 Kazuhiko
 * update FCKeditor to 2.6.5.
 
