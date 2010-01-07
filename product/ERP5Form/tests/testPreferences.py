@@ -31,7 +31,6 @@
 import unittest
 
 import transaction
-from AccessControl.SecurityManagement import newSecurityManager
 from AccessControl.SecurityManagement import noSecurityManager
 from AccessControl.SecurityManagement import getSecurityManager
 from zExceptions import Unauthorized
@@ -49,13 +48,12 @@ default_large_image_height, = [pref.get('default')
 class TestPreferences(ERP5TypeTestCase):
 
   def getTitle(self):
-    return "Portal Preference"
+    return "Portal Preferences"
 
   def afterSetUp(self):
     uf = self.getPortal().acl_users
     uf._doAddUser('manager', '', ['Manager', 'Assignor', ], [])
-    user = uf.getUserById('manager').__of__(uf)
-    newSecurityManager(None, user)
+    self.login('manager')
     self.createPreferences()
 
   def beforeTearDown(self):
@@ -286,12 +284,9 @@ class TestPreferences(ERP5TypeTestCase):
     # create 2 users: user_a and user_b
     uf = self.getPortal().acl_users
     uf._doAddUser('user_a', '', ['Member', ], [])
-    user_a = uf.getUserById('user_a').__of__(uf)
     uf._doAddUser('user_b', '', ['Member', ], [])
-    user_b = uf.getUserById('user_b').__of__(uf)
 
-    # log as user_a
-    newSecurityManager(None, user_a)
+    self.login('user_a')
 
     # create 2 prefs as user_a
     user_a_1 = portal_preferences.newContent(
@@ -306,8 +301,7 @@ class TestPreferences(ERP5TypeTestCase):
     self.assertEquals(user_a_1.getPreferenceState(), 'enabled')
     self.assertEquals(user_a_2.getPreferenceState(), 'disabled')
 
-    # log as user_b
-    newSecurityManager(None, user_b)
+    self.login('user_b')
 
     # create a pref for user_b
     user_b_1 = portal_preferences.newContent(
@@ -326,8 +320,7 @@ class TestPreferences(ERP5TypeTestCase):
 
     # Checks that a manager preference doesn't disable any other user
     # preferences
-    # log as manager
-    newSecurityManager(None, uf.getUserById('manager').__of__(uf))
+    self.login('manager')
 
     self.assert_('Manager' in
       getSecurityManager().getUser().getRolesInContext(portal_preferences))
@@ -409,7 +402,7 @@ class TestPreferences(ERP5TypeTestCase):
     uf = self.getPortal().acl_users
     uf._doAddUser('member', '', ['Member', ], [])
     member = uf.getUserById('member').__of__(uf)
-    newSecurityManager(None, member)
+    self.login('member')
     user_pref = preference_tool.newContent(portal_type='Preference')
 
     # Members can copy & paste existing preferences
@@ -465,8 +458,7 @@ class TestPreferences(ERP5TypeTestCase):
     # Members can't add new system preferences
     uf = self.getPortal().acl_users
     uf._doAddUser('member', '', ['Member', ], [])
-    member = uf.getUserById('member').__of__(uf)
-    newSecurityManager(None, member)
+    self.login('member')
     self.assertRaises(Unauthorized, preference_tool.newContent, portal_type='System Preference')
     # But they can see others
     system_pref.view()
