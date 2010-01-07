@@ -56,6 +56,7 @@ except ImportError:
   pysvn = None
 
 from base64 import b64encode, b64decode
+from warnings import warn
 
 NBSP = '&nbsp;'
 NBSP_TAB = NBSP*8
@@ -873,29 +874,41 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
 
   security.declareProtected('Import/Export objects', 'revertZODB')
   # path can be absolute or relative
-  def revertZODB(self, business_template, added_files=None, \
-  other_files=None, recurse=False):
+  def revertZODB(self,
+      business_template,
+      added_file_list=None,
+      other_file_list=None,
+      recurse=False,
+      # deprecated:
+      added_files=None,
+      other_files=None,
+      ):
     """Revert local changes in a file or a directory
        in ZODB and on hard drive
-
-       XXX-JPS: naming of parameters is wrong. added_files
-       should be added_file_list. Action: rename to added_file_list
-       and provide compatibility for scripts.
     """
+    if added_files is not None:
+      warn('Parameter added_files is deprecated, used added_file_list ' \
+           'instead.', DeprecationWarning)
+      added_file_list = added_files
+    if other_files is not None:
+      warn('Parameter other_files is deprecated, used other_file_list ' \
+           'instead.', DeprecationWarning)
+      other_file_list = other_files
+
     client = self._getClient()
     object_to_update = {}
     # Transform params to list if they are not already lists
-    if not added_files :
-      added_files = []
-    if not other_files :
-      other_files = []
-    if not isinstance(added_files, list) :
-      added_files = [added_files]
-    if not isinstance(other_files, list) :
-      other_files = [other_files]
+    if not added_file_list:
+      added_file_list = []
+    if not other_file_list:
+      other_file_list = []
+    if not isinstance(added_file_list, list) :
+      added_file_list = [added_file_list]
+    if not isinstance(other_file_list, list) :
+      other_file_list = [other_file_list]
       
     # Reinstall removed or modified files
-    for path in other_files :
+    for path in other_file_list :
       # security check
       self._getWorkingPath(self.relativeToAbsolute(path, business_template))
       path_list = path.split(os.sep)
@@ -907,7 +920,7 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
           object_to_update[tmp] = 'install'
     path_added_list = []
     # remove added files
-    for path in added_files :
+    for path in added_file_list :
       # security check
       self._getWorkingPath(self.relativeToAbsolute(path, business_template))
       path_list = path.split(os.sep)
@@ -932,9 +945,9 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
     # Remove it from portal template
     business_template.portal_templates.manage_delObjects(ids=tmp_bt.getId())
     #revert changes
-    added_files.extend(other_files)
+    added_file_list.extend(other_file_list)
     to_revert = [self.relativeToAbsolute(x, business_template) \
-    for x in added_files]
+    for x in added_file_list]
     if len(to_revert) != 0 :
       client.revert(to_revert, recurse)
       # Partially reinstall installed bt
