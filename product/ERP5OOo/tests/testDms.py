@@ -56,6 +56,7 @@ from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import FileUpload
 from Products.ERP5Type.tests.utils import DummyLocalizer
+from Products.ERP5OOo.OOoUtils import OOoBuilder
 from AccessControl.SecurityManagement import newSecurityManager
 from zLOG import LOG
 from Products.ERP5.Document.Document import NotConvertedError
@@ -913,6 +914,44 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
                                           filename='test.pdf')
     self.assertTrue(string_to_test in text_content)
 
+  def test_HTML_to_ODT_conversion_keep_related_image_list(self):
+    """This test create a Web Page and an Image.
+    HTML content of Web Page referred to that Image with it's reference.
+    Check that ODT conversion of Web Page embed image data.
+    """
+    # create web page
+    web_page_portal_type = 'Web Page'
+    web_page = self.portal.getDefaultModule(web_page_portal_type)\
+          .newContent(portal_type=web_page_portal_type)
+    image_reference = 'MY-TESTED-IMAGE'
+    # Target image with it reference only
+    html_content = '<p><img src="%s"/></p>' % image_reference
+    web_page.edit(text_content=html_content)
+
+    # Create image
+    image_portal_type = 'Image'
+    image = self.portal.getDefaultModule(image_portal_type)\
+          .newContent(portal_type=image_portal_type)
+
+    #edit content and publish it
+    upload_file = makeFileUpload('cmyk_sample.jpg')
+    image.edit(reference=image_reference,
+               version='001',
+               language='en',
+               file=upload_file)
+    image.publish()
+
+    transaction.commit()
+    self.tic()
+
+    # convert web_page into odt
+    mime_type, odt_archive = web_page.convert('odt')
+    builder = OOoBuilder(odt_archive)
+    image_count = builder._image_count
+    failure_message = 'Image is not embedded in ODF zipped archive'
+    #fetch image from zipped archive content then compare with EPR5 Image
+    self.assertEquals(builder.extract('Pictures/%s.jpeg' % image_count),
+                      image.getData(), failure_message)
 
 class TestDocumentWithSecurity(ERP5TypeTestCase):
 
