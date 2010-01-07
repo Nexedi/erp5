@@ -292,6 +292,19 @@ class TestBug(ERP5TypeTestCase):
     self.failUnless( bug_message.getStartDate() is not None)
     #self.assertEquals(bug_message.getSourceValue().getTitle(), 'dummy')
 
+  def stepCheckBugMessageNotificationReAssign(self, sequence=None, sequence_list=None, **kw):
+    """
+      Check the bug message when re-assign
+    """
+    last_message = self.portal.MailHost._last_message
+    self.assertNotEquals((), last_message)
+    mfrom, mto, messageText = last_message
+    from email.Parser import Parser
+    p = Parser()
+    m = p.parsestr(messageText)
+    self.assertTrue('Re-assign!' in m.get_payload()[0].get_payload(decode=True))
+
+
   def stepCheckBugInit(self, sequence=None, sequence_list=None, **kw):
     """
       Create a dummy bug
@@ -339,7 +352,7 @@ class TestBug(ERP5TypeTestCase):
       Re Assign the bug.
     """
     bug = sequence.get('bug')
-    self.workflow_tool.doActionFor(bug, 're_assign_action', send_event=1)
+    self.workflow_tool.doActionFor(bug, 're_assign_action', send_event=1, comment='Re-assign!')
     self.assertEquals(bug.getSimulationState(), 'ready')
 
   def stepCloseBug(self, sequence=None, sequence_list=None, **kw):
@@ -437,6 +450,7 @@ class TestBug(ERP5TypeTestCase):
                 , 'stepReAssignBug'
                 , 'stepTic'
                 , 'stepCheckBugNotification'
+                , 'stepCheckBugMessageNotificationReAssign'
                 , 'stepResolveBug'
                 , 'stepTic'
                 , 'stepCheckBugNotification'
