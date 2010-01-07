@@ -342,7 +342,7 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
       except for similarity cloud which we test.
     """
     if not run: return
-    
+
     printAndLog('\nTest Explicit Relations')
     # create test documents:
     # (1) TEST, 002, en
@@ -353,7 +353,7 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
     # set 3 similar to 1, 4 to 3, 5 to 4
     # getSimilarCloudValueList on 4 should return 1, 3 and 5
     # getSimilarCloudValueList(depth=1) on 4 should return 3 and 5
-    
+
     # create documents for test version and language
     # reference, version, language
     kw = {'portal_type': 'Drawing'}
@@ -362,35 +362,35 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
     document3 = self.portal.document_module.newContent(**kw)
     document4 = self.portal.document_module.newContent(**kw)
     document5 = self.portal.document_module.newContent(**kw)
-    
-    document6 = self.portal.document_module.newContent(reference='SIX', version='001', 
+
+    document6 = self.portal.document_module.newContent(reference='SIX', version='001',
                                                                                     language='en',  **kw)
-    document7 = self.portal.document_module.newContent(reference='SEVEN', version='001', 
+    document7 = self.portal.document_module.newContent(reference='SEVEN', version='001',
                                                                                     language='en',  **kw)
-    document8 = self.portal.document_module.newContent(reference='SEVEN', version='001', 
+    document8 = self.portal.document_module.newContent(reference='SEVEN', version='001',
                                                                                     language='fr',  **kw)
-    document9 = self.portal.document_module.newContent(reference='EIGHT', version='001', 
+    document9 = self.portal.document_module.newContent(reference='EIGHT', version='001',
                                                                                     language='en',  **kw)
-    document10 = self.portal.document_module.newContent(reference='EIGHT', version='002', 
+    document10 = self.portal.document_module.newContent(reference='EIGHT', version='002',
                                                                                       language='en',  **kw)
-    document11 = self.portal.document_module.newContent(reference='TEN', version='001', 
+    document11 = self.portal.document_module.newContent(reference='TEN', version='001',
                                                                                       language='en',  **kw)
-    document12 = self.portal.document_module.newContent(reference='TEN', version='001', 
+    document12 = self.portal.document_module.newContent(reference='TEN', version='001',
                                                                                       language='fr',  **kw)
-    document13 = self.portal.document_module.newContent(reference='TEN', version='002', 
+    document13 = self.portal.document_module.newContent(reference='TEN', version='002',
                                                                                       language='en',  **kw)
 
     document3.setSimilarValue(document1)
     document4.setSimilarValue(document3)
     document5.setSimilarValue(document4)
-    
+
     document6.setSimilarValueList([document8,  document13])
     document7.setSimilarValue([document9])
     document11.setSimilarValue(document7)
 
     transaction.commit()
     self.tic()
-    
+
     #if user language is 'en'
     self.portal.Localizer.changeLanguage('en')
 
@@ -400,41 +400,41 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.assertSameSet([document3, document5],
                        document4.getSimilarCloudValueList(depth=1))
 
-    self.assertSameSet([document7, document13], 
+    self.assertSameSet([document7, document13],
                        document6.getSimilarCloudValueList())
-    self.assertSameSet([document10, document13], 
+    self.assertSameSet([document10, document13],
                        document7.getSimilarCloudValueList())
-    self.assertSameSet([document7, document13], 
+    self.assertSameSet([document7, document13],
                        document9.getSimilarCloudValueList())
-    self.assertSameSet([], 
+    self.assertSameSet([],
                        document10.getSimilarCloudValueList())
     # 11 similar to 7, last version of 7 (en) is 7, similar of 7 is 9, last version of 9 (en) is 10
-    self.assertSameSet([document7, document10], 
+    self.assertSameSet([document7, document10],
                        document11.getSimilarCloudValueList())
-    self.assertSameSet([document6, document7], 
+    self.assertSameSet([document6, document7],
                        document13.getSimilarCloudValueList())
 
     transaction.commit()
-    
+
     # if user language is 'fr', test that latest documents are prefferable returned in user_language (if available)
     self.portal.Localizer.changeLanguage('fr')
-   
-    self.assertSameSet([document8, document13], 
+
+    self.assertSameSet([document8, document13],
                        document6.getSimilarCloudValueList())
-    self.assertSameSet([document6, document13], 
+    self.assertSameSet([document6, document13],
                        document8.getSimilarCloudValueList())
-    self.assertSameSet([document8, document10], 
+    self.assertSameSet([document8, document10],
                        document11.getSimilarCloudValueList())
-    self.assertSameSet([], 
+    self.assertSameSet([],
                        document12.getSimilarCloudValueList())
-    self.assertSameSet([document6, document8], 
+    self.assertSameSet([document6, document8],
                        document13.getSimilarCloudValueList())
-    
+
     transaction.commit()
-    
+
     # if user language is "bg"
     self.portal.Localizer.changeLanguage('bg')
-    self.assertSameSet([document8, document13], 
+    self.assertSameSet([document8, document13],
                        document6.getSimilarCloudValueList())
 
   def test_07_testImplicitRelations(self,quiet=QUIET,run=RUN_ALL_TEST):
@@ -620,7 +620,7 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
 
   def test_05_getCreationDate(self):
     """
-    Check getCreationDate on all document type, as those documents 
+    Check getCreationDate on all document type, as those documents
     are not associated to edit_workflow.
     """
     portal = self.getPortalObject()
@@ -781,7 +781,7 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
                                            display='thumbnail')
     # it's a valid PNG
     self.assertEquals('PNG', image_data[1:4])
-    
+
   def test_PDF_content_information(self):
     upload_file = makeFileUpload('REF-en-001.pdf')
     document = self.portal.portal_contributions.newContent(file=upload_file)
@@ -843,7 +843,7 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
     # But document can still be retrive with portal catalog
     self.assertRaises(NotConvertedError, document.asText)
     self.assertRaises(NotConvertedError, document.getSearchableText)
-    self.assertEquals('This document is not converted yet.', 
+    self.assertEquals('This document is not converted yet.',
                       document.Base_showFoundText())
 
   def test_Base_createNewFile(self):
@@ -883,7 +883,7 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
                                version=None,
                                description=None,
                                file=empty_file_upload)
-    
+
     self.assertTrue(ret.endswith(
       '?portal_status_message=File%20created%20successfully.'), ret)
     transaction.commit()
@@ -985,4 +985,4 @@ def test_suite():
   return suite
 
 
-# vim: syntax=python shiftwidth=2 
+# vim: syntax=python shiftwidth=2
