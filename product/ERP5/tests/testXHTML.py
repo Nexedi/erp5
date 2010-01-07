@@ -173,6 +173,20 @@ class TestXHTML(ERP5TypeTestCase):
         message += '\t%s\n' % str(error)
       self.fail(message)
 
+  def test_configurationOfFieldLibrary(self):
+    error_list = []
+    for business_template in self.portal.portal_templates.searchFolder():
+      # XXX Impossible to filter by installation state, as it is not catalogued
+      business_template = business_template.getObject()
+      for modifiable_field in business_template.BusinessTemplate_getModifiableFieldList():
+        error_list.append((modifiable_field.object_id,
+                          modifiable_field.choice_item_list[0][0]))
+    if error_list:
+      message = '\nField to modify\n'
+      for error in error_list:
+        message += '\t%s\n' % str(error)
+      self.fail(message)
+
   def test_portalTypesDomainTranslation(self):
     # according to bt5-Module.Creation.Guidelines document, module
     # portal_types should be translated using erp5_ui, and normal ones, using
