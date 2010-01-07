@@ -47,7 +47,6 @@ from dircache import listdir
 from OFS.Traversable import NotFound
 from Products.ERP5Type.patches.copyTree import copytree, Error
 from Products.ERP5Type.patches.cacheWalk import cacheWalk
-from time import ctime
 import transaction
 
 try:
