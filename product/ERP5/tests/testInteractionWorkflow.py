@@ -35,6 +35,7 @@ from Products.ERP5Type.Base import _aq_reset
 from AccessControl import ClassSecurityInfo
 from AccessControl.SecurityManagement import newSecurityManager
 import Products.ERP5Type
+from Products.ERP5Type.Workflow import addWorkflowByType
 
 class TestInteractionWorkflow(ERP5TypeTestCase):
 
@@ -83,20 +84,11 @@ class TestInteractionWorkflow(ERP5TypeTestCase):
 
   def _createInteractionWorkflowWithId(self, wf_id):
     wf_tool = self.getWorkflowTool()
-    # BACKWARD: CMF 1.8. Remove when we move to CMF 2.2
-    manage_addWorkflow = getattr(wf_tool, 'manage_addWorkflow', None)
-    if manage_addWorkflow is not None:
-      wf_type = "interaction_workflow (Web-configurable interaction workflow)"
-      manage_addWorkflow(workflow_type=wf_type, id=wf_id)
-      return wf_tool[wf_id]
-    else:
-      # On CMF 2.2, only this part should remain
-      dispatcher = wf_tool.manage_addProduct['ERP5Type']
-      return dispatcher.addWorkflow_interaction_workflow(wf_id)
+    return addWorkflowByType(wf_tool, "interaction_workflow", wf_id)
 
   def createInteractionWorkflow(self):
     id = 'test_workflow'
-    wf_type = "interaction_workflow (Web-configurable interaction workflow)"
+    wf_type = "interaction_workflow"
     if getattr(self.getWorkflowTool(), id, None) is None:
       self._createInteractionWorkflowWithId(id)
     wf = self.getWorkflowTool()[id]

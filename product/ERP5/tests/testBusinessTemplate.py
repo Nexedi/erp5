@@ -42,24 +42,14 @@ from urllib import pathname2url
 from Products.ERP5Type.Globals import PersistentMapping
 from Products.CMFCore.Expression import Expression
 from Products.ERP5Type.tests.utils import LogInterceptor
+from Products.ERP5Type.Workflow import addWorkflowByType
 import shutil
 import os
 
 from MethodObject import Method
 from Persistence import Persistent
 
-class Fake_manage_addWorkflow(Method, Persistent):
-
-  isFake = True # flag to allow removal of this method.
-
-  def __call__(self, context, workflow_type, workflow_id):
-    workflow_factory_id, _workflow_type_title = workflow_type.split(' ', 1)
-    dispatcher = context.manage_addProduct['ERP5Type']
-    factory = getattr(dispatcher,
-                      'addWorkflow_' + workflow_factory_id)
-    return factory(workflow_id)
-
-WORKFLOW_TYPE = 'erp5_workflow (ERP5-style empty workflow)' 
+WORKFLOW_TYPE = 'erp5_workflow' 
 
 class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
   """
@@ -106,21 +96,10 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
       content_type_registry.removePredicate('any')
       transaction.commit()
     pw = self.getWorkflowTool()
-    if getattr(pw, 'manage_addWorkflow', None) is None:
-      # CMF 2.2 no longer has manage_addWorkflow, and workflows should be added
-      # using manage_addProduct['ERP5Type'].manage_addWorkflow_<factory-id>,
-      # but this doesn't work on CMF 1.5
-      # BACK: stop using this hack when we drop Zope 2.8, CMF 2.2
-      pw.manage_addWorkflow = Fake_manage_addWorkflow()
 
   def beforeTearDown(self):
-    """Remove objects created tests."""
+    """Remove objects created in tests."""
     pw = self.getWorkflowTool()
-    if getattr(aq_base(pw.manage_addWorkflow),
-               'isFake', False):
-      # remove fake method which was added to make tests compatible with CMF 2.2
-      # BACK: remove this hack when we've abandoned Zope 2.8
-      del pw.manage_addWorkflow
 
     cbt = pw._chains_by_type
     props = {}
@@ -1146,9 +1125,10 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     """
     Create a workflow
     """
+    wf_id = 'geek_workflow'
     pw = self.getWorkflowTool()
-    pw.manage_addWorkflow(WORKFLOW_TYPE, 'geek_workflow')
-    workflow = pw._getOb('geek_workflow', None)
+    addWorkflowByType(pw, WORKFLOW_TYPE, wf_id)
+    workflow = pw._getOb(wf_id, None)
     self.failUnless(workflow is not None)
     sequence.edit(workflow_id=workflow.getId())
     cbt = pw._chains_by_type
@@ -1156,7 +1136,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     if cbt is not None:
       for id, wf_ids in cbt.items():
         props['chain_%s' % id] = ','.join(wf_ids)
-    props['chain_Geek Object'] = 'geek_workflow'
+    props['chain_Geek Object'] = wf_id
     pw.manage_changeWorkflows('', props=props)
 
   def stepCheckWorkflowChainRemoved(self, sequence=None, sequence_list=None, **kw):
@@ -4939,9 +4919,10 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     """
     Create a custom workflow
     """
+    wf_id = 'custom_geek_workflow'
     pw = self.getWorkflowTool()
-    pw.manage_addWorkflow(WORKFLOW_TYPE, 'custom_geek_workflow')
-    workflow = pw._getOb('custom_geek_workflow', None)
+    addWorkflowByType(pw, WORKFLOW_TYPE, wf_id)
+    workflow = pw._getOb(wf_id, None)
     self.failUnless(workflow is not None)
     sequence.edit(workflow_id=workflow.getId())
     cbt = pw._chains_by_type
@@ -4951,9 +4932,9 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
         props['chain_%s' % id] = ','.join(wf_ids)
     key = 'chain_Geek Object'
     if props.has_key(key):
-      props[key] = '%s,custom_geek_workflow' % props[key]
+      props[key] = '%s,%s' % (props[key], wf_id)
     else:
-      props['chain_Geek Object'] = 'custom_geek_workflow'
+      props[key] = wf_id
     pw.manage_changeWorkflows('', props=props)
 
   def stepCreateCustomBusinessTemplate(self, sequence=None,

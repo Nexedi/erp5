@@ -40,6 +40,7 @@ from Products.ERP5Type.tests.Sequence import SequenceList
 from zExceptions import BadRequest
 from Products.ERP5Type.tests.backportUnittest import skip
 from Products.ERP5Type.Tool.ClassTool import _aq_reset
+from Products.ERP5Type.Workflow import addWorkflowByType
 
 class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
 
@@ -927,8 +928,7 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
     # Add a non-existent workflow.
     pw = self.getWorkflowTool()
     dummy_worlflow_id = 'never_existent_workflow'
-    pw.manage_addWorkflow('dc_workflow (Web-configurable workflow)',
-                          dummy_worlflow_id)
+    addWorkflowByType(pw, 'erp5_workflow', dummy_worlflow_id)
     cbt = pw._chains_by_type
     props = {}
     for id, wf_ids in cbt.iteritems():
@@ -974,10 +974,8 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
     dummy_simulation_worlflow_id = 'fake_simulation_workflow'
     dummy_validation_worlflow_id = 'fake_validation_workflow'
     #Assume that erp5_styles workflow Manage permissions with acquired Role by default
-    pw.manage_addWorkflow('erp5_workflow (ERP5-style empty workflow)',
-                          dummy_simulation_worlflow_id)
-    pw.manage_addWorkflow('erp5_workflow (ERP5-style empty workflow)',
-                          dummy_validation_worlflow_id)
+    addWorkflowByType(pw, 'erp5_workflow', dummy_simulation_worlflow_id)
+    addWorkflowByType(pw, 'erp5_workflow', dummy_validation_worlflow_id)
     dummy_simulation_worlflow = pw[dummy_simulation_worlflow_id]
     dummy_validation_worlflow = pw[dummy_validation_worlflow_id]
     dummy_validation_worlflow.variables.setStateVar('validation_state')
