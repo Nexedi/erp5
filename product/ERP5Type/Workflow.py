@@ -38,34 +38,33 @@ from Products.DCWorkflow.DCWorkflow import DCWorkflowDefinition
 _workflow_factories = {}
 
 try:
-  from Products.CMFCore.WorkflowTool import addWorkflowFactory
+  from Products.CMFCore.WorkflowTool import addWorkflowFactory as baseAddWorkflowFactory
   # We're on CMF 1.5
 except ImportError:
   # We're on CMF 2
-  zLOG.LOG('Products.ERP5Type.Workflow.addWorkflowFactory',
-           zLOG.INFO,
-           summary='Registering Workflow Factories Directly',
-           detail='Products.CMFCore.WorkflowTool.addWorkflowFactory has '
-           'been removed from CMFCore. Workflows will be registered as '
-           'Zope 2 style factories instead.')
-  def addWorkflowFactory(factory, id, title):
-      """addWorkflowFactory replacement
-      
-      addWorkflowFactory has been removed from CMFCore 2.x.
-      DCWorkflow, which now handles this job, consults the GenericSetup tool,
-      at runtime, to determine all valid workflows.
-      
-      Instead of providing xml files in GenericSetup profiles for our,
-      workflows we prepare our own Zope2 style factories for registration
-      in the Workflow Tool.
-      """
-      assert not _workflow_factories.get(id), (
-          'Workflow with id %r already exists.' % id)
+  def baseAddWorkflowFactory(factory, id, tittle):
+    pass
 
-      factory_info = dict(factory=factory,
-                          id=id,
-                          title=title)
-      _workflow_factories[id] = factory_info
+def addWorkflowFactory(factory, id, title):
+    """addWorkflowFactory replacement
+    
+    addWorkflowFactory has been removed from CMFCore 2.x.
+    DCWorkflow, which now handles this job, consults the GenericSetup tool,
+    at runtime, to determine all valid workflows.
+    
+    Instead of providing xml files in GenericSetup profiles for our,
+    workflows we prepare our own Zope2 style factories for registration
+    in the Workflow Tool.
+    """
+    assert not _workflow_factories.get(id), (
+        'Workflow with id %r already exists.' % id)
+
+    factory_info = dict(factory=factory,
+                        id=id,
+                        title=title)
+    _workflow_factories[id] = factory_info
+    # register with CMF 1 if it's still there
+    baseAddWorkflowFactory(factory, id, title)
 
 # Workflow Creation DTML
 manage_addWorkflowFormDtml = HTMLFile('dtml/addWorkflow', globals())
