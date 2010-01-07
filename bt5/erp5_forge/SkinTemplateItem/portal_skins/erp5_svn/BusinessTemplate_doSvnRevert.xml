@@ -65,7 +65,7 @@ added_file_list = []\n
 if added != \'\' and added != \'none\':\n
   added_file_list += added.split(\',\')\n
 \n
-if not added_files and not other_files:\n
+if not added_file_list and not other_file_list:\n
   context.REQUEST.set(\'portal_status_message\', \'Nothing to revert.\')\n
   return context.BusinessTemplate_viewSvnStatus()\n
 \n
@@ -117,8 +117,6 @@ return context.BusinessTemplate_viewSvnStatus()\n
                             <string>_inplacevar_</string>
                             <string>_getattr_</string>
                             <string>added_file_list</string>
-                            <string>added_files</string>
-                            <string>other_files</string>
                             <string>context</string>
                             <string>_getitem_</string>
                           </tuple>
