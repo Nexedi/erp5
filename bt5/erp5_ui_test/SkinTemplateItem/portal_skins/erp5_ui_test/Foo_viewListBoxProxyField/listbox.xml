@@ -13,13 +13,13 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
-                <string>lines</string>
                 <string>columns</string>
-                <string>sort</string>
+                <string>editable_columns</string>
+                <string>lines</string>
                 <string>list_method</string>
                 <string>selection_name</string>
-                <string>editable_columns</string>
+                <string>sort</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -101,6 +101,10 @@
                         <tuple>
                           <string>quantity</string>
                           <string>Quantity</string>
+                        </tuple>
+                        <tuple>
+                          <string>start_date</string>
+                          <string>Start Date</string>
                         </tuple>
                       </list>
                     </value>
