@@ -59,7 +59,7 @@
             <value> <string>CREATE TABLE `versioning` (\n
   `uid` BIGINT UNSIGNED NOT NULL,\n
   `version` varchar(10) default \'\',\n
-  `language` varchar(2) default \'\',\n
+  `language` varchar(5) default \'\',\n
   `revision` varchar(10) default \'\',\n
   `effective_date` datetime default NULL,\n
   `expiration_date` datetime default NULL,\n
@@ -108,7 +108,7 @@
                         <value> <string>CREATE TABLE `versioning` (\n
   `uid` BIGINT UNSIGNED NOT NULL,\n
   `version` varchar(10) default \'\',\n
-  `language` varchar(2) default \'\',\n
+  `language` varchar(5) default \'\',\n
   `revision` varchar(10) default \'\',\n
   `effective_date` datetime default NULL,\n
   `expiration_date` datetime default NULL,\n

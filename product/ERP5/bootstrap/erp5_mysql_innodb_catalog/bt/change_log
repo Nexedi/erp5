@@ -1,3 +1,6 @@
+2010-01-07 Kazuhiko
+* increase the size of the language column in the versioning table from 2 to 5.
+
 2009-11-20 Yusuke
 * Relation bug is fixed.
 
