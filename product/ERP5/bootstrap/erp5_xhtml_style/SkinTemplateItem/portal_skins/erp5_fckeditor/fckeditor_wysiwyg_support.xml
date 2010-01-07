@@ -41,6 +41,7 @@
 
 <tal:block tal:define="baseHrefUrl        here/absolute_url;\n
                        cleaninput         python: inputvalue;\n
+                       cleaninput         python: cleaninput.replace(\'\\\\\',\'\\\\\\\\\');\n
                        cleaninput         python: cleaninput.replace(\'\\x27\',\'\\x5C\\x27\');\n
                        cleaninput         python: cleaninput.replace(\'\\r\',\'\\x5C\\x72\');\n
                        cleaninput         python: cleaninput.replace(\'\\n\',\'\\x5C\\x6E\');\n
