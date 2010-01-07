@@ -57,15 +57,3 @@ class ApparelComponent(Resource):
                       , PropertySheet.ApparelCollection
                       , PropertySheet.VariationRange
                       )
-
-    # Unit conversion
-    security.declareProtected(Permissions.AccessContentsInformation, 'convertQuantity')
-    def convertQuantity(self, quantity, from_unit, to_unit):
-      quantity = float(quantity)
-      if from_unit == 'measurement/meter' and to_unit == 'unit/cone':
-        return quantity / self.getLengthQuantity()
-      elif from_unit == 'unit/cone' and to_unit == 'measurement/meter':
-        return quantity * self.getLengthQuantity()
-      else:
-        return quantity
-
