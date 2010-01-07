@@ -397,7 +397,16 @@
                 <item>
                     <key> <string>columns</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>title</string>
+                          <string>Title</string>
+                        </tuple>
+                        <tuple>
+                          <string>quantity</string>
+                          <string>Quantity</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
