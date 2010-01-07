@@ -67,7 +67,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>top_your_search_text=\'\', top_your_search_portal_type, all_languages=False</string> </value>
+            <value> <string>top_your_search_text=\'\', top_your_search_portal_type=None, all_languages=False</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>

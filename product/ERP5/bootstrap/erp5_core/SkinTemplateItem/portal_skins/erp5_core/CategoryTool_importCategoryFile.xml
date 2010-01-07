@@ -330,7 +330,7 @@ return context.REQUEST.RESPONSE.redirect(\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>import_file, update_existing_property=False, keep_existing_category=True, detailed_report=False, simulation_mode=False, displayed_report=[], effective_date, expiration_date, existing_category_list=\'keep\', **kw</string> </value>
+            <value> <string>import_file, update_existing_property=False, keep_existing_category=True, detailed_report=False, simulation_mode=False, displayed_report=[], effective_date=None, expiration_date=None, existing_category_list=\'keep\', **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
