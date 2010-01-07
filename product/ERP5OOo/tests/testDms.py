@@ -894,6 +894,24 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.assertEquals('empty', document.getExternalProcessingState())
     self.assertEquals('File', document.getPortalType())
 
+  def test_HTML_to_ODT_conversion_keep_enconding(self):
+    """This test perform an PDF conversion of HTML content
+    then to plain text.
+    Check that encoding remains.
+    """
+    web_page_portal_type = 'Web Page'
+    string_to_test = 'éààéôù'
+    web_page = self.portal.getDefaultModule(web_page_portal_type)\
+          .newContent(portal_type=web_page_portal_type)
+    html_content = '<p>%s</p>' % string_to_test
+    web_page.edit(text_content=html_content)
+    mime_type, pdf_data = web_page.convert('pdf')
+    text_content = self.portal.portal_transforms.\
+                                      convertToData('text/plain',
+                                          str(pdf_data),
+                                          object=web_page, context=web_page,
+                                          filename='test.pdf')
+    self.assertTrue(string_to_test in text_content)
 
 
 class TestDocumentWithSecurity(ERP5TypeTestCase):
