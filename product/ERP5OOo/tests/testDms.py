@@ -977,6 +977,38 @@ class TestDocumentWithSecurity(ERP5TypeTestCase):
 
     self.assert_('I use reference to look up TEST' in preview_html)
 
+  def test_DownloadableDocumentSize(self):
+    '''Check that once the document is converted and cached, its size is
+    correctly set'''
+    portal = self.getPortalObject()
+    document_module = portal.getDefaultModule('Presentation')
+    pdf_size = 27131 # octets
+
+    # create a text document in document module
+    text_document = document_module.newContent(portal_type='Text',
+                                               reference='Foo_001',
+                                               title='Foo_OO1')
+    f = makeFileUpload('Foo_001.odt')
+    text_document.edit(file=f.read())
+    f.close()
+    transaction.commit()
+    self.tic()
+
+    # the document should be automatically converted to html
+    self.assertEquals(text_document.getExternalProcessingState(), 'converted')
+
+    # check there is nothing in the cache for pdf conversion
+    self.assertFalse(text_document.hasConversion(format='pdf'))
+
+    # call pdf conversion, in this way, the result should be cached
+    text_document.convert(format='pdf')
+
+
+    # check there is a cache entry for pdf conversion of this document
+    self.assertTrue(text_document.hasConversion(format='pdf'))
+
+    # check the size of the pdf conversion
+    self.assertEquals(text_document.getConversionSize(format='pdf'), pdf_size)
 
 def test_suite():
   suite = unittest.TestSuite()
