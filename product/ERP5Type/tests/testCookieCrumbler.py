@@ -38,6 +38,7 @@ class ERP5CookieCrumblerTests (CookieCrumblerTests):
   """ Modify original CMFCore Cookie Crumbler unit test to test long login """
 
   def setUp(self):
+    CookieCrumblerTests.setUp(self)
     root = Folder()
     self.root = root
     root.isTopLevelPrincipiaApplicationObject = 1  # User folder needs this
