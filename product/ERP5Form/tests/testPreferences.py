@@ -335,11 +335,23 @@ class TestPreferences(ERP5TypeTestCase):
     portal_workflow.doActionFor(
        manager_pref, 'enable_action', wf_id='preference_workflow')
     self.assertEquals(manager_pref.getPreferenceState(), 'enabled')
+    transaction.commit(); self.tic()
 
     # check users preferences are still enabled
     self.assertEquals(user_a_1.getPreferenceState(), 'enabled')
     self.assertEquals(user_b_1.getPreferenceState(), 'enabled')
     self.assertEquals(user_a_2.getPreferenceState(), 'disabled')
+
+    # A user with Manager and Owner can view all preferences, because this user
+    # is Manager and Owner, but for Manager, we have an exception, only
+    # preferences actually owned by the user are taken into account.
+    uf._doAddUser('manager_and_owner', '', ['Manager', 'Owner'], [])
+    self.login('manager_and_owner')
+    self.assert_('Owner' in
+      getSecurityManager().getUser().getRolesInContext(manager_pref))
+    self.assertEquals(None,
+        portal_preferences.getPreferredAccountingTransactionAtDate())
+
 
   def test_GlobalPreference(self):
     # globally enabled preference are preference for anonymous users.

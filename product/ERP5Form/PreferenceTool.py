@@ -204,12 +204,12 @@ class PreferenceTool(BaseTool):
         # XXX quick workaround so that manager only see user preference
         # they actually own.
         if user_is_manager and pref.getPriority() == Priority.USER :
-          if user.allowed(pref, ('Owner',)):
+          if pref.getOwnerTuple()[1] == user.getId():
             prefs.append(pref)
         else :
           prefs.append(pref)
     prefs.sort(key=lambda x: x.getPriority(), reverse=True)
-    # add system preferences after user preferences
+    # add system preferences before user preferences
     sys_prefs = [x.getObject() for x in self.searchFolder(portal_type='System Preference', sql_catalog_id=sql_catalog_id) \
                  if x.getObject().getProperty('preference_state', 'broken') in ('enabled', 'global')]
     sys_prefs.sort(key=lambda x: x.getPriority(), reverse=True)
