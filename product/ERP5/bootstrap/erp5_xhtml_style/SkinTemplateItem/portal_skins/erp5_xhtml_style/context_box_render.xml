@@ -179,14 +179,12 @@
           <span class="image"></span>\n
           <span class="description" i18n:translate="" i18n:domain="ui">Print</span>\n
         </button>\n
-        <tal:block tal:condition="python: len(here.getVisibleAllowedContentTypeList()) > 0">\n
-          <button class="new" type="submit" title="New"\n
-                  tal:attributes="name python: list_mode and \'Folder_create:method\' or \'Base_createNewDocument:method\'"\n
-                  i18n:attributes="title" i18n:domain="ui">\n
-            <span class="image"></span>\n
-            <span class="description" i18n:translate="" i18n:domain="ui">New</span>\n
-          </button>\n
-        </tal:block>\n
+        <button tal:condition="python: len(here.getVisibleAllowedContentTypeList()) > 0" class="new" type="submit" title="New"\n
+                tal:attributes="name python: list_mode and \'Folder_create:method\' or \'Base_createNewDocument:method\'"\n
+                i18n:attributes="title" i18n:domain="ui">\n
+          <span class="image"></span>\n
+          <span class="description" i18n:translate="" i18n:domain="ui">New</span>\n
+        </button>\n
         <button class="clone" type="submit" title="Clone"\n
                 name="Base_createCloneDocument:method"\n
                 tal:condition="not: list_mode"\n
