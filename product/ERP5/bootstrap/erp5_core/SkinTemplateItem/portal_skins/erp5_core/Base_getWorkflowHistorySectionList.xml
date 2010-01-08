@@ -66,7 +66,9 @@ for workflow_id, workflow_history in history_dict.items():\n
       form_id=\'Base_viewWorkflowHistory\',\n
       selection_params={\'workflow_id\': workflow_id,\n
                         \'workflow_title\' : workflow_title},\n
-      listbox_display_mode=\'FlatListMode\')\n
+      listbox_display_mode=\'FlatListMode\',\n
+      temporary_selection=False,\n
+      )\n
   )\n
 \n
 return result\n
@@ -135,6 +137,7 @@ return result\n
                             <string>workflow_history</string>
                             <string>_getitem_</string>
                             <string>workflow_title</string>
+                            <string>False</string>
                           </tuple>
                         </value>
                     </item>

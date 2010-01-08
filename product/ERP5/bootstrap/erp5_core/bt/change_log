@@ -1,3 +1,6 @@
+2010-01-08 yusuke
+* Fixed a problem view of workflow history was not able to paging.
+
 2010-01-05 yusuke
 * Add a category exporting feature
 
