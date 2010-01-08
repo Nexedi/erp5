@@ -304,11 +304,9 @@ class Alarm(XMLObject, PeriodicityMixin):
         # We do some inspection to keep compatibility
         # (because fixit and tag were not set previously)
         tag = str(self.portal_ids.generateNewLengthId(id_group=self.getId()))
-        kw = {}
-        method = getattr(self, method_id)
-        name_list = method.func_code.co_varnames
-        if 'params' in name_list or (method.func_defaults is not None
-          and len(method.func_defaults) < len(name_list)):
+        func_code = getattr(self, method_id).func_code
+        name_list = func_code.co_varnames[:func_code.co_argcount]
+        if 'params' in name_list:
           # New New API
           getattr(self.activate(tag=tag), method_id)(fixit=fixit, tag=tag, params=params)
         elif 'fixit' in name_list:
