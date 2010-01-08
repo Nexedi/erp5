@@ -167,6 +167,24 @@ class TestDateUtils(unittest.TestCase):
     self.assertEqual(atTheEndOfPeriod(date, 'month').pCommonZ(), 'Feb. 1, 2008 12:00 am Universal')
     self.assertEqual(atTheEndOfPeriod(date, 'week').pCommonZ(), 'Jan. 7, 2008 12:00 am Universal')
     self.assertEqual(atTheEndOfPeriod(date, 'day').pCommonZ(), 'Jan. 2, 2008 12:00 am Universal')
+    # Switch to summer time
+    self.assertEqual('Apr. 6, 2008 12:00 am US/Eastern',
+      atTheEndOfPeriod(DateTime('2008/04/05 23:59:59 US/Eastern'), 'day').pCommonZ())
+    self.assertEqual('Apr. 7, 2008 12:00 am US/Eastern',
+      atTheEndOfPeriod(DateTime('2008/04/06 00:00:00 US/Eastern'), 'day').pCommonZ())
+    self.assertEqual('Apr. 7, 2008 12:00 am US/Eastern',
+      atTheEndOfPeriod(DateTime('2008/04/06 23:59:59 US/Eastern'), 'day').pCommonZ())
+    self.assertEqual('May 1, 2008 12:00 am US/Eastern',
+      atTheEndOfPeriod(DateTime('2008/04/01 US/Eastern'), 'month').pCommonZ())
+    # Switch to winter time
+    self.assertEqual('Oct. 26, 2008 12:00 am US/Eastern',
+      atTheEndOfPeriod(DateTime('2008/10/25 23:59:59 US/Eastern'), 'day').pCommonZ())
+    self.assertEqual('Oct. 27, 2008 12:00 am US/Eastern',
+      atTheEndOfPeriod(DateTime('2008/10/26 00:00:00 US/Eastern'), 'day').pCommonZ())
+    self.assertEqual('Oct. 27, 2008 12:00 am US/Eastern',
+      atTheEndOfPeriod(DateTime('2008/10/26 23:59:59 US/Eastern'), 'day').pCommonZ())
+    self.assertEqual('Nov. 1, 2008 12:00 am US/Eastern',
+      atTheEndOfPeriod(DateTime('2008/10/01 US/Eastern'), 'month').pCommonZ())
 
 def test_suite():
   suite = unittest.TestSuite()

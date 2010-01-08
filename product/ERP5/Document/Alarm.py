@@ -35,7 +35,7 @@ from Products.ERP5Type.XMLObject import XMLObject
 from Acquisition import aq_base
 from DateTime import DateTime
 from Products.ERP5Type.Message import Message
-from Products.ERP5Type.DateUtils import addToDate
+from Products.ERP5Type.DateUtils import addToDate, atTheEndOfPeriod
 from Products.ERP5Security.ERP5UserManager import SUPER_USER
 from AccessControl.SecurityManagement import getSecurityManager, \
             setSecurityManager, newSecurityManager
@@ -158,40 +158,23 @@ class PeriodicityMixin:
           or (periodicity_stop_date is not None \
               and next_start_date >= periodicity_stop_date):
       return None
-    else:
-      # Make sure the old date is not too far away
-      day_count = int(current_date - next_start_date)
-      next_start_date = next_start_date + day_count
 
     previous_date = next_start_date
-    next_start_date = addToDate(next_start_date, minute=1)
+    next_start_date = max(addToDate(next_start_date, minute=1), current_date)
     while 1:
-      validate_minute = self._validateMinute(next_start_date, previous_date)
-      validate_hour = self._validateHour(next_start_date)
-      validate_day = self._validateDay(next_start_date)
-      validate_week = self._validateWeek(next_start_date)
-      validate_month = self._validateMonth(next_start_date)
-      if (next_start_date >= current_date \
-          and validate_minute and validate_hour and validate_day \
-          and validate_week and validate_month):
-        break
+      if not self._validateMonth(next_start_date):
+        next_start_date = atTheEndOfPeriod(next_start_date, 'month')
+      elif not (self._validateDay(next_start_date) and
+                self._validateWeek(next_start_date)):
+        next_start_date = atTheEndOfPeriod(next_start_date, 'day')
+      elif not self._validateMinute(next_start_date, previous_date):
+        next_start_date = addToDate(next_start_date, minute=1)
+      elif not self._validateHour(next_start_date):
+        next_start_date = addToDate(next_start_date, hour=1)
       else:
-        if not(validate_minute):
-          next_start_date = addToDate(next_start_date, minute=1)
-        else:
-          if not(validate_hour):
-            next_start_date = addToDate(next_start_date, hour=1)
-          else:
-            if not(validate_day and validate_week and validate_month):
-              # We have to reset hours and minutes in order to make sure
-              # we will start at the beginning of the next day
-              next_start_date = DateTime(next_start_date.Date() + ' 00:00:00 %s' % next_start_date.timezone())
-              next_start_date = addToDate(next_start_date, day=1)
-            else:
-              # Everything is right, but the date is still not bigger
-              # than the current date, so we must continue
-              next_start_date = addToDate(next_start_date, minute=1)
-    return next_start_date
+        parts = list(next_start_date.parts())
+        parts[5] = previous_date.second() # XXX keep old behaviour
+        return DateTime(*parts)
 
   # XXX May be we should create a Date class for following methods ???
   security.declareProtected(Permissions.AccessContentsInformation, 'getWeekDayList')

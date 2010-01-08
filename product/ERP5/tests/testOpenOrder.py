@@ -172,58 +172,63 @@ class TestOpenOrder(ERP5TypeTestCase):
     transaction.commit()
     self.tic()
 
-  def testPeriodicityDateList(self):
+  def testPeriodicityDateList(self, timezone=None):
     """
     Make sure that periodicity line can generate correct schedule.
     """
-    self.fail('Test disabled because it freezes')
+    #self.fail('Test disabled because it freezes')
+    def D(yr, mo, dy, hr=0, mn=0, sc=0):
+      return DateTime(yr, mo, dy, hr, mn, sc, timezone)
     # This across Summer time period, if server's timezone uses it.
     self.assertEqual(self.portal.sale_trade_condition_module.main_trade_condition.internet_connection_periodicity_line.getDatePeriodList(
-      DateTime(2008,1,15), DateTime(2008,12,1)),
-                     [(DateTime(2008,2,1,0,1), DateTime(2008,2,29)),
-                      (DateTime(2008,3,1,0,1), DateTime(2008,3,31)),
-                      (DateTime(2008,4,1,0,1), DateTime(2008,4,30)),
-                      (DateTime(2008,5,1,0,1), DateTime(2008,5,31)),
-                      (DateTime(2008,6,1,0,1), DateTime(2008,6,30)),
-                      (DateTime(2008,7,1,0,1), DateTime(2008,7,31)),
-                      (DateTime(2008,8,1,0,1), DateTime(2008,8,31)),
-                      (DateTime(2008,9,1,0,1), DateTime(2008,9,30)),
-                      (DateTime(2008,10,1,0,1), DateTime(2008,10,31)),
-                      (DateTime(2008,11,1,0,1), DateTime(2008,11,30)),
+      D(2008,1,15), D(2008,12,1)),
+                    [(D(2008,2,1,0,1), DateTime(2008,2,29)),
+                      (D(2008,3,1,0,1), DateTime(2008,3,31)),
+                      (D(2008,4,1,0,1), DateTime(2008,4,30)),
+                      (D(2008,5,1,0,1), DateTime(2008,5,31)),
+                      (D(2008,6,1,0,1), DateTime(2008,6,30)),
+                      (D(2008,7,1,0,1), DateTime(2008,7,31)),
+                      (D(2008,8,1,0,1), DateTime(2008,8,31)),
+                      (D(2008,9,1,0,1), DateTime(2008,9,30)),
+                      (D(2008,10,1,0,1), DateTime(2008,10,31)),
+                      (D(2008,11,1,0,1), DateTime(2008,11,30)),
                       ])
-    
+
     self.assertEqual(self.portal.sale_trade_condition_module.main_trade_condition.bread_periodicity_line.getDatePeriodList(
-      DateTime(2008,2,26), DateTime(2008,3,5)),
-                     [(DateTime(2008,2,26,6,0), DateTime(2008,2,26,6,0)),
-                      (DateTime(2008,2,26,12,0), DateTime(2008,2,26,12,0)),
-                      (DateTime(2008,2,27,6,0), DateTime(2008,2,27,6,0)),
-                      (DateTime(2008,2,27,12,0), DateTime(2008,2,27,12,0)),
-                      (DateTime(2008,2,28,6,0), DateTime(2008,2,28,6,0)),
-                      (DateTime(2008,2,28,12,0), DateTime(2008,2,28,12,0)),
-                      (DateTime(2008,2,29,6,0), DateTime(2008,2,29,6,0)),
-                      (DateTime(2008,2,29,12,0), DateTime(2008,2,29,12,0)),
-                      (DateTime(2008,3,1,6,0), DateTime(2008,3,1,6,0)),
-                      (DateTime(2008,3,1,12,0), DateTime(2008,3,1,12,0)),
-                      (DateTime(2008,3,3,6,0), DateTime(2008,3,3,6,0)),
-                      (DateTime(2008,3,3,12,0), DateTime(2008,3,3,12,0)),
-                      (DateTime(2008,3,4,6,0), DateTime(2008,3,4,6,0)),
-                      (DateTime(2008,3,4,12,0), DateTime(2008,3,4,12,0)),
+      D(2008,2,26), D(2008,3,5)),
+                    [(D(2008,2,26,6,0), D(2008,2,26,6,0)),
+                      (D(2008,2,26,12,0), D(2008,2,26,12,0)),
+                      (D(2008,2,27,6,0), D(2008,2,27,6,0)),
+                      (D(2008,2,27,12,0), D(2008,2,27,12,0)),
+                      (D(2008,2,28,6,0), D(2008,2,28,6,0)),
+                      (D(2008,2,28,12,0), D(2008,2,28,12,0)),
+                      (D(2008,2,29,6,0), D(2008,2,29,6,0)),
+                      (D(2008,2,29,12,0), D(2008,2,29,12,0)),
+                      (D(2008,3,1,6,0), D(2008,3,1,6,0)),
+                      (D(2008,3,1,12,0), D(2008,3,1,12,0)),
+                      (D(2008,3,3,6,0), D(2008,3,3,6,0)),
+                      (D(2008,3,3,12,0), D(2008,3,3,12,0)),
+                      (D(2008,3,4,6,0), D(2008,3,4,6,0)),
+                      (D(2008,3,4,12,0), D(2008,3,4,12,0)),
                       ])
 
     self.assertEqual(self.portal.sale_trade_condition_module.main_trade_condition.water_periodicity_line.getDatePeriodList(
-      DateTime(2008,2,16), DateTime(2008,4,15)),
-                     [(DateTime(2008,2,18,10,0), DateTime(2008,3,3,10,0)),
-                      (DateTime(2008,3,3,10,0), DateTime(2008,3,17,10,0)),
-                      (DateTime(2008,3,17,10,0), DateTime(2008,3,31,10,0)),
-                      (DateTime(2008,3,31,10,0), DateTime(2008,4,14,10,0)),
-                      (DateTime(2008,4,14,10,0), DateTime(2008,4,28,10,0)),
+      D(2008,2,16), D(2008,4,15)),
+                    [(D(2008,2,18,10,0), D(2008,3,3,10,0)),
+                      (D(2008,3,3,10,0), D(2008,3,17,10,0)),
+                      (D(2008,3,17,10,0), D(2008,3,31,10,0)),
+                      (D(2008,3,31,10,0), D(2008,4,14,10,0)),
+                      (D(2008,4,14,10,0), D(2008,4,28,10,0)),
                       ])
     self.assertEqual(self.portal.sale_trade_condition_module.main_trade_condition.training_periodicity_line.getDatePeriodList(
-      DateTime(2008,2,16), DateTime(2008,3,6)),
-                     [(DateTime(2008,2,18,10,0), DateTime(2008,2,19,10,0)),
-                      (DateTime(2008,2,25,10,0), DateTime(2008,2,26,10,0)),
-                      (DateTime(2008,3,3,10,0), DateTime(2008,3,4,10,0)),
+      D(2008,2,16), D(2008,3,6)),
+                    [(D(2008,2,18,10,0), D(2008,2,19,10,0)),
+                      (D(2008,2,25,10,0), D(2008,2,26,10,0)),
+                      (D(2008,3,3,10,0), D(2008,3,4,10,0)),
                       ])
+
+  def testPeriodicityDateListUniversal(self):
+    self.testPeriodicityDateList('Universal')
 
   def testOpenOrderRule(self):
     """

@@ -506,21 +506,16 @@ def atTheEndOfPeriod(date, period):
   If timezone is Universal, strftime('%Z') return empty string
   and TimeZone is replaced by local zone, 
   so date formating is manualy rendered.
-  XXXSunday is hardcoded
   """
   if period == 'year':
     end = addToDate(DateTime('%s/01/01 00:00:00 %s' % (date.year(), date.timezone())), **{period:1})
   elif period == 'month':
     end = addToDate(DateTime('%s/%s/01 00:00:00 %s' % (date.year(), zfill(date.month(), 2), date.timezone())), **{period:1})
   elif period == 'day':
-    end = addToDate(DateTime('%s/%s/%s 00:00:00 %s' % (date.year(), zfill(date.month(), 2), zfill(date.day(), 2), date.timezone())), **{period:1})
+    end = addToDate(date.earliestTime(), hour=36).earliestTime()
   elif period == 'week':
-    day_of_week = date.strftime('%A')
-    end = DateTime('%s/%s/%s 00:00:00 %s' % (date.year(), zfill(date.month(), 2), zfill(date.day(), 2), date.timezone()))
-    while day_of_week != 'Sunday':
-      end = addToDate(end, day=1)
-      day_of_week = end.strftime('%A')
-    end = addToDate(end, day=1)
+    end = atTheEndOfPeriod(date, 'day')
+    end = addToDate(end, day=(1-end.dow()) % 7)
   else:
     raise NotImplementedError, 'Period "%s" not Handled yet' % period
   return end
