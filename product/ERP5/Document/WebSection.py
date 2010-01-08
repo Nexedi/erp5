@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2002-2008 Nexedi SA and Contributors. All Rights Reserved.
@@ -193,7 +194,6 @@ class WebSection(Domain, PermanentURLMixIn):
                 id=document.getReference(),
                 original_container=document.getParentValue(),
                 original_id=document.getId(),
-                original_path=document.getPath(),
                 editable_absolute_url=document.absolute_url())).__of__(self)
         # Try to use a custom renderer if any
         custom_render_method_id = self.getCustomRenderMethodId()
