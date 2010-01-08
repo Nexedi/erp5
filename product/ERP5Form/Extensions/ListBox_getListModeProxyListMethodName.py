@@ -31,8 +31,8 @@ def getListModeProxyListMethodName(self):
   """Returns the name of the list method to use in listbox's list mode proxy
 
   If the method uses contentValues or objectValues, use searchFolder so that
-  searching and sorting works. Otherwise, just use the method as is but sorting
-  will not work.
+  searching works. Otherwise, just use the method as it is but searching may
+  not work.
   """
   template_field = self.getTemplateField()
   if template_field.get_value('list_method').method_name in (
