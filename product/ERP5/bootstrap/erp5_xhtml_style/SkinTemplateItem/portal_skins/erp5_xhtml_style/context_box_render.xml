@@ -156,8 +156,7 @@
             can_modify_portal_content python: portal.portal_membership.checkPermission(\'Modify portal content\', here);\n
             can_delete_objects python: portal.portal_membership.checkPermission(\'Delete objects\', here);\n
             can_copy_or_move python: portal.portal_membership.checkPermission(\'Copy Or Move\', here);\n
-            can_add_object_here python: len(here.getVisibleAllowedContentTypeList()) > 0;\n
-            can_add_object_in_container python: len(container.getVisibleAllowedContentTypeList()) > 0">\n
+            can_add_object_here python: len(here.getVisibleAllowedContentTypeList()) > 0;">\n
         <span class="separator"><!--separator--></span>\n
         <tal:block tal:condition="list_mode">\n
           <tal:block tal:condition="can_copy_or_move">\n
@@ -185,7 +184,7 @@
           <span class="image"></span>\n
           <span class="description" i18n:translate="" i18n:domain="ui">Print</span>\n
         </button>\n
-        <button tal:condition="python: list_mode and can_add_object_here or can_add_object_in_container"\n
+        <button tal:condition="python: list_mode and can_add_object_here"\n
                 tal:attributes="name python: list_mode and \'Folder_create:method\' or \'Base_createNewDocument:method\'"\n
                 class="new" type="submit" title="New"\n
                 i18n:attributes="title" i18n:domain="ui">\n
