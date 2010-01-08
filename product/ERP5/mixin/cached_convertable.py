@@ -78,6 +78,17 @@ class CachedConvertableMixin:
       cache_tool.updateCache()
     return cache_tool.getRamCacheRoot().get(cache_factory_name)
 
+  def _getCacheKey(self):
+    """
+    Returns the key to use for the cache entries. For now,
+    use the object uid. 
+
+    TODO: XXX-JPS use instance in the future
+    http://pypi.python.org/pypi/uuid/ to generate
+    a uuid stored as private property.
+    """
+    return aq_base(self).getUid()
+
   security.declareProtected(Permissions.ModifyPortalContent, 'clearConversionCache')
   def clearConversionCache(self):
     """
@@ -86,7 +97,7 @@ class CachedConvertableMixin:
       self.temp_conversion_data = {}
       return
     for cache_plugin in self._getCacheFactory().getCachePluginList():
-      cache_plugin.delete(self.getPath(), DEFAULT_CACHE_SCOPE)
+      cache_plugin.delete(self._getCacheKey(), DEFAULT_CACHE_SCOPE)
 
   security.declareProtected(Permissions.View, 'hasConversion')
   def hasConversion(self, **kw):
@@ -129,12 +140,12 @@ class CachedConvertableMixin:
     if data is not None:
       for cache_plugin in cache_factory.getCachePluginList():
         try:
-          cache_entry = cache_plugin.get(self.getPath(), DEFAULT_CACHE_SCOPE)
+          cache_entry = cache_plugin.get(self._getCacheKey(), DEFAULT_CACHE_SCOPE)
           cache_dict = cache_entry.getValue()
         except KeyError:
           cache_dict = {}
         cache_dict.update({cache_id: (self.getContentMd5(), mime, aq_base(data))})
-        cache_plugin.set(self.getPath(), DEFAULT_CACHE_SCOPE,
+        cache_plugin.set(self._getCacheKey(), DEFAULT_CACHE_SCOPE,
                          cache_dict, calculation_time=calculation_time,
                          cache_duration=cache_duration)
 
@@ -146,8 +157,7 @@ class CachedConvertableMixin:
     if self.isTempObject():
       return getattr(aq_base(self), 'temp_conversion_data', {})[cache_id]
     for cache_plugin in self._getCacheFactory().getCachePluginList():
-      document_path = getattr(aq_base(self), 'original_path', self.getPath())
-      cache_entry = cache_plugin.get(document_path, DEFAULT_CACHE_SCOPE)
+      cache_entry = cache_plugin.get(self._getCacheKey(), DEFAULT_CACHE_SCOPE)
       data_list = cache_entry.getValue().get(cache_id)
       if data_list:
         md5sum, mime, data = data_list
@@ -175,6 +185,11 @@ class CachedConvertableMixin:
   security.declareProtected(Permissions.ModifyPortalContent, 'updateContentMd5')
   def updateContentMd5(self):
     """Update md5 checksum from the original file
+    
+    XXX-JPS - this method is not part of any interfacce.
+              should it be public or private. It is called
+              by some interaction workflow already. Is
+              it general or related to caching only ?
     """
     data = self.getData()
-    self._setContentMd5(md5.new(data).hexdigest()) #reindex is useless
+    self._setContentMd5(md5.new(data).hexdigest()) # Reindex is useless
