@@ -915,7 +915,7 @@ Hé Hé Hé!""", page.asText().strip())
 
   def test_13_DocumentCache(self, quiet=quiet, run=run_all_test):
     """
-      Test that when a document is modified, it can be accessed throug a
+      Test that when a document is modified, it can be accessed through a
       web_site, a web_section or wathever and display the last content (not an
       old cache value of the document).
     """
@@ -942,12 +942,18 @@ Hé Hé Hé!""", page.asText().strip())
     self.tic()
     self.assertEquals(document.asText().strip(), 'initial text')
 
-    # Throug the web_site.
+    # First make sure conversion already exists on the web site
+    web_document = website.restrictedTraverse('NXD-Document.Cache')
+    self.assertTrue(web_document.hasConversion(format='txt'))
+    web_document = web_section.restrictedTraverse('NXD-Document.Cache')
+    self.assertTrue(web_document.hasConversion(format='txt'))
+
+    # Through the web_site.
     path = website.absolute_url_path() + '/NXD-Document.Cache'
     self.assertNotEquals(request.traverse(path)(REQUEST=request.REQUEST,
       RESPONSE=request.RESPONSE).find(content), -1)
 
-    # Throug a web_section.
+    # Through a web_section.
     path = web_section.absolute_url_path() + '/NXD-Document.Cache'
     self.assertNotEquals(request.traverse(path)(REQUEST=request.REQUEST,
       RESPONSE=request.RESPONSE).find(content), -1)
@@ -958,16 +964,138 @@ Hé Hé Hé!""", page.asText().strip())
     transaction.commit()
     self.tic()
 
-    # check the cache don't send again the old content
-    # Throug the web_site.
+    # check the cache doesn't send again the old content
+    # Through the web_site.
     path = website.absolute_url_path() + '/NXD-Document.Cache'
     self.assertNotEquals(request.traverse(path)(REQUEST=request.REQUEST,
       RESPONSE=request.RESPONSE).find(new_content), -1)
 
-    # Throug a web_section.
+    # Through a web_section.
     path = web_section.absolute_url_path() + '/NXD-Document.Cache'
     self.assertNotEquals(request.traverse(path)(REQUEST=request.REQUEST,
       RESPONSE=request.RESPONSE).find(new_content), -1)
+
+
+  def test_13a_DocumentMovedCache(self, quiet=quiet, run=run_all_test):
+    """
+      What happens to the cache if document is moved 
+      with a new ID. Can we still access content,
+      or is the cache emptied. There is no reason 
+      that the cache should be regenerated or that the
+      previous cache would not be emptied. 
+
+      Here, we test that the cache is not regenerated,
+      not emptied, and still available.
+    """
+    if not run: return
+    if not quiet:
+      message = '\ntest_13a_DocumentMovedCache'
+      ZopeTestCase._print(message)
+
+    portal = self.getPortal()
+    request = portal.REQUEST
+    request['PARENTS'] = [self.app]
+    website = self.setupWebSite()
+    web_section_portal_type = 'Web Section'
+    web_section = website.newContent(portal_type=web_section_portal_type)
+
+    content = '<p>initial text</p>'
+    new_content = '<p>modified text<p>'
+    document = portal.web_page_module.newContent(portal_type='Web Page',
+            id='document_original_cache',
+            reference='NXD-Document.Cache',
+            text_content=content)
+    document.publish()
+    transaction.commit()
+    self.tic()
+    self.assertEquals(document.asText().strip(), 'initial text')
+
+    # Make sure document cache keeps converted content even if ID changes
+    self.assertTrue(document.hasConversion(format='txt'))
+    document.edit(id='document_new_cache')
+    self.assertTrue(document.hasConversion(format='txt'))
+    document.edit(id='document_original_cache')
+    self.assertTrue(document.hasConversion(format='txt'))
+
+  def test_13b_DocumentEditCacheKey(self, quiet=quiet, run=run_all_test):
+    """
+      What happens if a web page is edited on a web site ?
+      Is converted content cleared and updated ? Or
+      is a wrong cache key created ? Here, we make sure
+      that the content is updated and the cache cleared
+      and reset.
+    """
+    if not run: return
+    if not quiet:
+      message = '\ntest_13b_DocumentCacheKey'
+      ZopeTestCase._print(message)
+
+    portal = self.getPortal()
+    request = portal.REQUEST
+    request['PARENTS'] = [self.app]
+    website = self.setupWebSite()
+    web_section_portal_type = 'Web Section'
+    web_section = website.newContent(portal_type=web_section_portal_type)
+
+    content = '<p>initial text</p>'
+    new_content = '<p>modified text<p>'
+    document = portal.web_page_module.newContent(portal_type='Web Page',
+            id='document_cache',
+            reference='NXD-Document.Cache',
+            text_content=content)
+    document.publish()
+    transaction.commit()
+    self.tic()
+    self.assertEquals(document.asText().strip(), 'initial text')
+
+    # Through the web_site.
+    path = website.absolute_url_path() + '/NXD-Document.Cache'
+    self.assertNotEquals(request.traverse(path)(REQUEST=request.REQUEST,
+      RESPONSE=request.RESPONSE).find(content), -1)
+
+    # Through a web_section.
+    path = web_section.absolute_url_path() + '/NXD-Document.Cache'
+    self.assertNotEquals(request.traverse(path)(REQUEST=request.REQUEST,
+      RESPONSE=request.RESPONSE).find(content), -1)
+
+    # Modify the web_page content
+    # Use unrestrictedTraverse (XXX-JPS reason unknown)
+    web_document = website.unrestrictedTraverse('web_page_module/%s' % document.getId())     
+    web_document.edit(text_content=new_content)
+    # Make sure cached is emptied
+    self.assertFalse(web_document.hasConversion(format='txt'))
+    self.assertFalse(document.hasConversion(format='txt'))
+    # Make sure cache is regenerated
+    self.assertEquals(web_document.asText().strip(), 'modified text')
+    transaction.commit()
+    self.tic()
+
+    # First make sure conversion already exists (since it should
+    # have been generated previously)
+    self.assertTrue(document.hasConversion(format='txt'))
+    web_document = web_section.restrictedTraverse('NXD-Document.Cache')
+    self.assertTrue(web_document.hasConversion(format='txt'))
+    web_document = website.restrictedTraverse('NXD-Document.Cache')
+    self.assertTrue(web_document.hasConversion(format='txt'))
+
+    # check the cache doesn't send again the old content
+    # test this fist on the initial document
+    self.assertEquals(document.asText().strip(), 'modified text')
+
+    # Through a web_section.
+    web_document = web_section.restrictedTraverse('NXD-Document.Cache')
+    self.assertEquals(web_document.asText().strip(), 'modified text')
+    path = web_section.absolute_url_path() + '/NXD-Document.Cache'
+    self.assertNotEquals(request.traverse(path)(REQUEST=request.REQUEST,
+      RESPONSE=request.RESPONSE).find(new_content), -1)
+
+    # Through a web_site.
+    web_document = website.restrictedTraverse('NXD-Document.Cache')
+    self.assertEquals(web_document.asText().strip(), 'modified text')
+    path = website.absolute_url_path() + '/NXD-Document.Cache'
+    self.assertNotEquals(request.traverse(path)(REQUEST=request.REQUEST,
+      RESPONSE=request.RESPONSE).find(new_content), -1)
+
 
   def test_14_AccessWebSiteForWithDifferentUserPreferences(self):
     """Check that Ram Cache Manager do not mix websection
