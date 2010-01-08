@@ -272,7 +272,6 @@ class TestItem(TestItemMixin, ERP5TypeTestCase):
     resource = self.createVariatedResource()
     # XXX this tests depends on the relative url of the resource
     self.assertEquals('product_module/1', resource.getRelativeUrl())
-
     transaction.commit()
     self.tic()
     packing_list = self.createPackingList(resource=resource,organisation=organisation)
@@ -481,6 +480,52 @@ class TestItem(TestItemMixin, ERP5TypeTestCase):
                                     portal_type='Purchase Packing List Cell')
     self.assertEquals(movement_cell_list,[])
     
+  def test_06_VerifyHavingSameItemTwiceOnMovementCausesNoBug(self):
+    """
+    """
+    organisation = self.createOrganisation(title='Organisation VI')
+    transaction.commit()
+    self.tic()
+    resource = self.createVariatedResource()
+    # XXX this tests depends on the relative url of the resource
+    self.assertEquals('product_module/4', resource.getRelativeUrl())
+
+    transaction.commit()
+    self.tic()
+    packing_list = self.createPackingList(resource=resource,organisation=organisation)
+   
+    packing_list_line= self.createPackingListLine(packing_list=packing_list,
+                                                  resource=resource)
+    transaction.commit()
+    self.tic()				      
+    packing_list_line.DeliveryLine_viewItemCreationDialog()
+    # create a listbox 
+    listbox = ({ 'listbox_key': '000',
+              'title': 'Lot A10',
+              'reference': '1070110000015',
+              'quantity': 20.0,
+              'line_variation_category_list': 'size/product_module/4/3'
+              },
+              )
+
+    self.portal.REQUEST.set('type', 'Item')
+    packing_list_line.DeliveryLine_createItemList(listbox=listbox)
+    transaction.commit()
+    self.tic()
+    item = [x.getObject() for x in self.portal.portal_catalog(
+                                    portal_type='Item',
+                                    reference = '1070110000015'
+                                    )][0]
+    packing_list_cell_list = packing_list_line.contentValues(portal_type='Purchase Packing List Cell')
+    for packing_list_cell in packing_list_cell_list:
+      packing_list_cell.setAggregateValueList(packing_list_cell.getAggregateValueList()+[item])
+    self.portal.portal_workflow.doActionFor(packing_list,
+               'confirm_action')
+    self.assertEquals(packing_list.getSimulationState(),
+              'confirmed')
+    transaction.commit()
+    self.tic()
+    self.assertEquals(packing_list.getCausalityState(),'solved')
 
   def test_select_item_dialog_no_variation(self):
     organisation = self.createOrganisation(title='Organisation III')
