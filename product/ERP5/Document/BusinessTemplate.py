@@ -959,7 +959,7 @@ class ObjectTemplateItem(BaseTemplateItem):
             # Zope 2.12 are used for .objectIds(), .objectValues() and
             # .objectItems(). In these cases, force the 
             LOG('Products.ERP5.Document.BusinessTemplate', WARNING,
-                'Cleaning corrupt BTreeFolder2 object at %r.' % (path,))
+                'Cleaning corrupted BTreeFolder2 object at %r.' % (path,))
             obj._initBTrees()
           obj = obj._getCopy(container)
           try:
