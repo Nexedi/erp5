@@ -3,8 +3,6 @@ DateTime Divergence Tester | edit_workflow
 Destination Replacement Solver | solver_workflow
 Float Divergence Tester | edit_workflow
 Net Converted Quantity Divergence Tester | edit_workflow
-New Order Rule | edit_workflow
-New Order Rule | rule_validation_workflow
 Production Reduction Solver | solver_workflow
 Quantity Accept Solver | solver_workflow
 Quantity Adoption Solver | solver_workflow

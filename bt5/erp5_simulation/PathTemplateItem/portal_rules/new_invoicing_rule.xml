@@ -3,7 +3,7 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <global name="OrderRule" module="Products.ERP5Type.Document.OrderRule"/>
+        <global name="InvoicingRule" module="Products.ERP5Type.Document.InvoicingRule"/>
         <tuple/>
       </tuple>
     </pickle>
@@ -29,23 +29,31 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>default_order_rule</string> </value>
+            <value> <string>default_invoicing_rule</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>new_order_rule</string> </value>
+            <value> <string>new_invoicing_rule</string> </value>
         </item>
         <item>
             <key> <string>last_id</string> </key>
-            <value> <string>19</string> </value>
+            <value> <string>20</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Order Rule</string> </value>
+            <value> <string>Invoicing Rule</string> </value>
+        </item>
+        <item>
+            <key> <string>test_method_id</string> </key>
+            <value>
+              <tuple>
+                <string>SimulationMovement_testInvoicingRule</string>
+              </tuple>
+            </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>New Default Order Rule</string> </value>
+            <value> <string>New Default Invoicing Rule</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>

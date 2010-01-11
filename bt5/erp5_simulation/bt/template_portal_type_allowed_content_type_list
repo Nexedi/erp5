@@ -1,10 +1,15 @@
-New Order Rule | Category Membership Divergence Tester
-New Order Rule | DateTime Divergence Tester
-New Order Rule | Float Divergence Tester
-New Order Rule | Net Converted Quantity Divergence Tester
-New Order Rule | String Divergence Tester
-New Order Rule | Variation Divergence Tester
-Rule Tool | New Order Rule
+Invoicing Rule | Category Membership Divergence Tester
+Invoicing Rule | DateTime Divergence Tester
+Invoicing Rule | Float Divergence Tester
+Invoicing Rule | Net Converted Quantity Divergence Tester
+Invoicing Rule | String Divergence Tester
+Invoicing Rule | Variation Divergence Tester
+Order Rule | Category Membership Divergence Tester
+Order Rule | DateTime Divergence Tester
+Order Rule | Float Divergence Tester
+Order Rule | Net Converted Quantity Divergence Tester
+Order Rule | String Divergence Tester
+Order Rule | Variation Divergence Tester
 Solver Process | Destination Replacement Solver
 Solver Process | Production Reduction Solver
 Solver Process | Quantity Accept Solver
