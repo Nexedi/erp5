@@ -41,7 +41,7 @@ from testPackingList import TestPackingList, TestPackingListMixin
 class TestERP5SimulationMixin(TestPackingListMixin):
   def getBusinessTemplateList(self):
     return list(TestPackingListMixin.getBusinessTemplateList(self)) + \
-           ['erp5_simulation',]
+           ['erp5_simulation_core', 'erp5_simulation',]
 
   def afterSetUp(self, quiet=1, run=1):
     TestPackingListMixin.afterSetUp(self, quiet, run)
