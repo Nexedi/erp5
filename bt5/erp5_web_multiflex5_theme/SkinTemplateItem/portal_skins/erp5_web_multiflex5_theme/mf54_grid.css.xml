@@ -56,6 +56,10 @@
   container_width python:here.getLayoutProperty(\'layout_container_width\', 978);\n
   border_width python:here.getLayoutProperty(\'layout_border_width\', 10);\n
   main_width python:container_width - 2 * border_width;\n
+  header_top_height python:here.getLayoutProperty(\'layout_header_top_height\', 100);\n
+  nav_button_left python: 547 + container_width - 978;\n
+  navglobal_width python: 600 + container_width - 978;\n
+\n
   right_column_width python:here.getLayoutProperty(\'layout_right_column_width\', 270);\n
   right_column_padding python:here.getLayoutProperty(\'layout_right_column_padding\', 12);\n
   main_content_width python:main_width - (right_column_padding + right_column_width) * ((has_right_column or 0) and 1);\n
@@ -107,7 +111,7 @@
  body {font-size:62.5%; background-color:<tal:block tal:replace="body_color"/>; font-family:arial,sans-serif;} /*Font-size: 1.0em = 10px when browser default size is 16px*/\n
 .container {width:<tal:block tal:replace="container_width"/>px; padding-top:10px; padding-bottom:20px; margin:0 auto; font-size:1.0em;}\n
 .header {width:<tal:block tal:replace="main_width"/>px; min-height:130px /*Non-IE6*/; height:auto !important /*Non-IE6*/; height:130px /*IE6*/; border-left:solid <tal:block tal:replace="border_width"/>px <tal:block tal:replace="primary_color"/>; border-right:solid <tal:block tal:replace="border_width"/>px <tal:block tal:replace="primary_color"/>; background:<tal:block tal:replace="secondary_color"/> url(<tal:block tal:replace="header_background_image"/>) repeat-x /*Total header background image entered here. Height: 125px*/; font-size:1.0em;}\n
-.header-top {clear:both; width:<tal:block tal:replace="main_width"/>px; height:100px; /*background:<tal:block tal:replace="header_color"/> url(<tal:block tal:replace="site_url"/>/mf54_image/bg_header_top.jpg) repeat-x Top header background image entered here. Height: 100px;*/ font-size:1.0em;}\n
+.header-top {clear:both; width:<tal:block tal:replace="main_width"/>px; height:<tal:block tal:replace="header_top_height"/>px; /*background:<tal:block tal:replace="header_color"/> url(<tal:block tal:replace="site_url"/>/mf54_image/bg_header_top.jpg) repeat-x Top header background image entered here. Height: 100px;*/ font-size:1.0em;}\n
 .header-bottom {clear:both; width:<tal:block tal:replace="main_width"/>px; min-height:30px /*Non-IE6*/; height:auto !important /*Non-IE6*/; height:30px /*IE6*/; /*background:<tal:block tal:replace="secondary_color"/> url(<tal:block tal:replace="site_url"/>/mf54_image/bg_header_bottom.jpg) repeat-x Bottom header background image entered here: Height: 25 px;*/ font-size:1.0em;}\n
 .navbar {white-space:nowrap /*IE hack*/; float:left; width:<tal:block tal:replace="main_width"/>px; border-left:solid <tal:block tal:replace="border_width"/>px <tal:block tal:replace="primary_color"/>; border-right:solid <tal:block tal:replace="border_width"/>px <tal:block tal:replace="primary_color"/>; background-color:<tal:block tal:replace="secondary_color"/>; font-family:tahoma,arial,sans-serif; font-size:130% !important /*Non-IE6*/; font-size:120% /*IE6*/;} /*Color navigation bar normal mode*/\n
 .main {clear:both; width:<tal:block tal:replace="main_width"/>px; padding:10px 0 20px 0; border-left:solid <tal:block tal:replace="border_width"/>px <tal:block tal:replace="primary_color"/>; border-right:solid <tal:block tal:replace="border_width"/>px <tal:block tal:replace="primary_color"/>; background-color:<tal:block tal:replace="primary_color"/>; font-size:1.0em;}\n
@@ -128,7 +132,7 @@
 .sitename a:hover {text-decoration:none;}\n
 \n
 /* BUTTON NAVIGATION */\n
-.navbutton {width:400px; position:absolute; z-index:2; margin-top:43px; margin-left:547px !important /*Non-IE6*/; margin-left:550px /*IE6*/;}\n
+.navbutton {width:400px; position:absolute; z-index:2; margin-top:43px; margin-left:<tal:block tal:content="nav_button_left" />px !important /*Non-IE6*/; margin-left:<tal:block tal:content="python: nav_button_left + 3" />px /*IE6*/;}\n
 .navbutton ul {float:right;}\n
 .navbutton li {display:inline; list-style:none;}\n
 .navbutton li a {padding-left:3px;}\n
@@ -136,7 +140,7 @@
 .navbutton a img {height:15px;}\n
 \n
 /* GLOBAL NAVIGATION */\n
-.navglobal {width:600px; position:absolute; z-index:3; margin-top:65px; margin-left:349px !important /*Non-IE6*/; margin-left:351px /*IE6*/;}\n
+.navglobal {width:<tal:block tal:content="navglobal_width" />px; position:absolute; z-index:3; margin-top:65px; margin-left:349px !important /*Non-IE6*/; margin-left:351px /*IE6*/;}\n
 .navglobal ul {float:right; font-weight:normal;}        \n
 .navglobal li {display:inline; list-style:none;}\n
 .navglobal li a {display:block; float:left; padding:2px 5px 2px 5px; color:rgb(125,125,125); text-decoration:none; font-size:130% !important /*Non-IE6*/; font-size:120% /*IE6*/;}\n

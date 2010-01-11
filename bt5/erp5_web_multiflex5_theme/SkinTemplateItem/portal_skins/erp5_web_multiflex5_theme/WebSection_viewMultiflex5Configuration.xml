@@ -95,6 +95,7 @@
                         <string>my_layout_footer_color</string>
                         <string>my_layout_menu_color</string>
                         <string>my_layout_additional_css</string>
+                        <string>my_layout_header_top_height</string>
                       </list>
                     </value>
                 </item>
