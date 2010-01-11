@@ -75,7 +75,7 @@
   content_bottom_background_image python:here.getLayoutProperty(\'layout_content_bottom_background_image\', \n
             \'mf54_image/bg_corner_content_%s1col_bottom.gif\' % ((not has_right_column and \'nosidebar_\') or \'\'));\n
   content_bottom_background_image python:\'%s/%s\' % (site_url, content_bottom_background_image);\n
-  content_top_background_image python:here.getLayoutProperty(\'layout_content_bottom_background_image\', \n
+  content_top_background_image python:here.getLayoutProperty(\'layout_content_top_background_image\', \n
             \'mf54_image/bg_corner_content_%s1col_top.gif\' % ((not has_right_column and \'nosidebar_\') or \'\'));\n
   content_top_background_image python:\'%s/%s\' % (site_url, content_top_background_image);\n
   subcontent_top_background_image python:here.getLayoutProperty(\'layout_subcontent_top_background_image\',\n
