@@ -137,6 +137,7 @@ class InvoicingRuleMovementGenerator(object):
     ret = []
     for movement in [context.getParentValue(),]:
       kw = _getPropertyAndCategoryList(movement)
+      kw.update({'order':None,'delivery':None})
       simulation_movement = context.newContent(
         portal_type=RuleMixin.movement_type,
         temp_object=True,
