@@ -1,0 +1,1 @@
+This business template contains python files that overrides existing files. Once TemplateTool supports installing documents whose class file exists in the same business template, all contents here should be merged into erp5_simulation business template.
