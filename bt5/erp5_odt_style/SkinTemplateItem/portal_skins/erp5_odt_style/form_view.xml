@@ -259,10 +259,11 @@ bWxQSwUGAAAAAAIAAgCeAAAAhwwAAAAA</string> </value>
                           <tal:block tal:condition="python: field_type == \'ImageField\'">\n
                             <text:p text:style-name=\'field-content\'\n
                                     tal:define="preferred_width python: preference_tool.getPreference(\'preferred_%s_image_width\' % (field.get_value(\'image_display\')), 100);\n
-                                    width python:(preferred_width  / 20.) &lt; max_size and (preferred_width / 20.) or max_size">\n
-                              <tal:block>\n
+                                    width python:(preferred_width  / 20.) &lt; max_size and (preferred_width / 20.) or max_size;\n
+                                    field_value python: field.get_value(\'default\')">\n
+                              <tal:block tal:condition="python: field_value not in (\'\', None,)">\n
                                 <office:include_img tal:attributes="width width;\n
-                                path python: \'/\'.join(request.physicalPathFromURL(field.get_value(\'default\')));"\n
+                                path python: \'/\'.join(request.physicalPathFromURL(field_value));"\n
                                 style="inline-graphic"/>\n
                               </tal:block>\n
                             </text:p>\n
