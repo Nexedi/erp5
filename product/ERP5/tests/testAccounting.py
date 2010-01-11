@@ -3771,8 +3771,8 @@ class TestAccountingWithSequences(ERP5TypeTestCase):
                       destination_section_value=self.other_vendor)
       useBankAccount(accounting_transaction)
 
-      # payment node have to be set on both sides if both sides are member of
-      # the same group.
+      # payment node have to be set on both sides if both sides have accounting
+      # lines
       accounting_transaction.setSourcePaymentValue(source_payment_value)
       accounting_transaction.setDestinationPaymentValue(None)
       self.assertRaises(ValidationFailed,
@@ -3791,20 +3791,6 @@ class TestAccountingWithSequences(ERP5TypeTestCase):
         self.getWorkflowTool().doActionFor(accounting_transaction, 'stop_action')
         self.assertEquals(accounting_transaction.getSimulationState(), 'stopped')
       except ValidationFailed, err :
-        self.fail("Validation failed : %s" % err.msg)
-
-      # if we are not interested in the accounting for the third party, no need
-      # to have a destination_payment
-      accounting_transaction = self.createAccountingTransaction()
-      useBankAccount(accounting_transaction)
-      # only set payment for source
-      accounting_transaction.setSourcePaymentValue(source_payment_value)
-      accounting_transaction.setDestinationPaymentValue(None)
-      # then we should be able to validate.
-      try:
-        self.getWorkflowTool().doActionFor(accounting_transaction, 'stop_action')
-        self.assertEquals(accounting_transaction.getSimulationState(), 'stopped')
-      except ValidationFailed, err:
         self.fail("Validation failed : %s" % err.msg)
     
   def stepValidateRemoveEmptyLines(self, sequence, sequence_list=None, **kw):

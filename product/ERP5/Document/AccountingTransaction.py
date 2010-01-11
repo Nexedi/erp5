@@ -72,13 +72,7 @@ class AccountingTransaction(Delivery):
       """
       section = self.getSourceSectionValue()
       if section is not None:
-        preference_tool = getToolByName(self, 'portal_preferences')
-        preferred_section_category = preference_tool.\
-                getPreferredAccountingTransactionSectionCategory()
-        if preferred_section_category:
-          if section.getPortalType() == 'Person':
-            return False
-          return section.isMemberOf(preferred_section_category)
+        return section.getPortalType() != 'Person'
       return False
 
     security.declareProtected(Permissions.AccessContentsInformation,
@@ -89,13 +83,7 @@ class AccountingTransaction(Delivery):
       """
       section = self.getDestinationSectionValue()
       if section is not None:
-        preference_tool = getToolByName(self, 'portal_preferences')
-        preferred_section_category = preference_tool.\
-                getPreferredAccountingTransactionSectionCategory()
-        if preferred_section_category:
-          if section.getPortalType() == 'Person':
-            return False
-          return section.isMemberOf(preferred_section_category)
+        return section.getPortalType() != 'Person'
       return False
     
     security.declareProtected(Permissions.AccessContentsInformation,
