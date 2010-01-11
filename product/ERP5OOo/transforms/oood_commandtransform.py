@@ -170,10 +170,10 @@ class OOOdCommandTransform(commandtransform):
                           xml_declaration=False, pretty_print=False, )
 
   def convert(self):
-    tmp_ooo = newTempOOoDocument(self.context, self.name)
+    tmp_ooo = newTempOOoDocument(self.context, self.context.generateNewId())
     tmp_ooo.edit( base_data=self.data,
-                  fname=self.name,
-                  source_reference=self.name,
+                  fname=self.name(),
+                  source_reference=self.name(),
                   base_content_type=self.mimetype,)
     tmp_ooo.oo_data = self.data
     self.ooo = tmp_ooo
