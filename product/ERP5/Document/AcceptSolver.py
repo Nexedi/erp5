@@ -84,5 +84,6 @@ class AcceptSolver(SolverMixin, ConfigurableMixin, XMLObject):
             new_value * simulation_movement.getDeliveryRatio())
         else:
           simulation_movement.setProperty(solved_property, new_value)
+        simulation_movement.expand()
     # Finish solving
     self.succeed()
