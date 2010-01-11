@@ -301,7 +301,7 @@ class TestDocumentConversionCache(ERP5TypeTestCase, ZopeTestCase.Functional):
     cache_id = document.generateCacheId(**kw)
     cache_factory = document._getCacheFactory()
     for cache_plugin in cache_factory.getCachePluginList():
-      cache_entry = cache_plugin.get(document.getPath(), DEFAULT_CACHE_SCOPE)
+      cache_entry = cache_plugin.get(document._getCacheKey(), DEFAULT_CACHE_SCOPE)
       value = cache_entry.getValue()
       md5sum, mime, data = value.get(cache_id)
       #get data from cache
