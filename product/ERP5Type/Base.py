@@ -104,7 +104,7 @@ from zLOG import LOG, INFO, ERROR, WARNING
 _MARKER = []
 
 global registered_workflow_method_set
-wildcard_interaction_method_id_matcher = re.compile(".*[\+\*].*")
+wildcard_interaction_method_id_match = re.compile(r'[[.?*+{(\\]').search
 workflow_method_registry = [] # XXX A set() would be better but would require a hash in WorkflowMethod class
 
 def resetRegisteredWorkflowMethod(portal_type=None):
@@ -667,13 +667,14 @@ def initializePortalTypeDynamicWorkflowMethods(self, klass, ptype, prop_holder,
         if tdef.trigger_type == TRIGGER_WORKFLOW_METHOD:
           # XXX Prefiltering per portal type would be more efficient
           for imethod_id in tdef.method_id:
-            if bool(wildcard_interaction_method_id_matcher.match(imethod_id)):
+            if wildcard_interaction_method_id_match(imethod_id):
               # Interactions workflows can use regexp based wildcard methods
               method_id_matcher = re.compile(imethod_id) # XXX What happens if exception ?
-              method_id_list = prop_holder.getAccessorMethodIdList() + prop_holder.getWorkflowMethodIdList()\
-                             + prop_holder.getClassMethodIdList(klass)
+              method_id_list = prop_holder.getAccessorMethodIdList() + \
+                               prop_holder.getWorkflowMethodIdList() + \
+                               prop_holder.getClassMethodIdList(klass)
                 # XXX - class stuff is missing here
-              method_id_list = [x for x in method_id_list if method_id_matcher.match(x)]
+              method_id_list = filter(method_id_matcher.match, method_id_list)
             else:
               # Single method
               method_id_list = [imethod_id]
