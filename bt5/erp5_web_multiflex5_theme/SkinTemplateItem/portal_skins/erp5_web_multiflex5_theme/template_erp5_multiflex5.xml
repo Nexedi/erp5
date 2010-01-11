@@ -129,7 +129,7 @@
     \n
     <!-- NAVIGATION BAR -->\n
     <div class="corner-page-top"></div>        \n
-    <div class="navbar">\n
+    <div class="navbar" tal:condition="python: here.getLayoutProperty(\'layout_navigation\') != 0">\n
       <!-- Layout form rendering -->\n
       <tal:block tal:condition="python: layout_form is not None">\n
         <tal:block tal:repeat="aggregate python: [(\'navbar\', navbar_area)]">\n

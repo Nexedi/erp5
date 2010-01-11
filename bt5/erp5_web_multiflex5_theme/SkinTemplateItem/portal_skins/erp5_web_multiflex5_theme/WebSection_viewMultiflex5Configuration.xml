@@ -139,6 +139,7 @@
                         <string>my_layout_sitemap_section_id</string>
                         <string>my_layout_sitemap_depth</string>
                         <string>my_layout_related</string>
+                        <string>my_layout_navigation</string>
                       </list>
                     </value>
                 </item>
