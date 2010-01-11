@@ -45,6 +45,13 @@ class ScriptPythonDocumentationHelper(DocumentationHelper):
     """
     return "Script Python"
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'getTitle')
+  def getTitle(self):
+    """
+    Returns the title of the documentation helper
+    """
+    return getattr(self.getDocumentedObject(), 'title', '')
+
   security.declareProtected(Permissions.AccessContentsInformation, 'getParams')
   def getParams(self):
     """

@@ -69,6 +69,13 @@ class SkinFolderDocumentationHelper(DocumentationHelper):
     """
     return "Skin Folder"
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'getTitle')
+  def getTitle(self):
+    """
+    Returns the title of the skin folder
+    """
+    return getattr(self.getDocumentedObject(), 'title', '')
+
   security.declareProtected(Permissions.AccessContentsInformation, 'getMetaTypeList')
   def getMetaTypeList(self):
     return sorted(set(obj.meta_type

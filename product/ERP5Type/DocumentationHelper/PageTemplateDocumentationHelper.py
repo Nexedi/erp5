@@ -45,6 +45,13 @@ class PageTemplateDocumentationHelper(DocumentationHelper):
     """
     return "Page Template"
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'getTitle')
+  def getTitle(self):
+    """
+    Returns the title of the documentation helper
+    """
+    return getattr(self.getDocumentedObject(), 'title', '')
+
   security.declareProtected(Permissions.AccessContentsInformation, 'getSourceCode')
   def getSourceCode(self):
     """

@@ -92,6 +92,13 @@ class DCWorkflowDocumentationHelper(DocumentationHelper):
     """
     return "DC Workflow"
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'getTitle')
+  def getTitle(self):
+    """
+    Returns the title of the skin folder
+    """
+    return getattr(self.getDocumentedObject(), 'title', '')
+
   security.declareProtected(Permissions.AccessContentsInformation, 'getRoleColumnList')
   def getRoleColumnList(self):
     """Return the list of pertinent columns for permissions on states."""
