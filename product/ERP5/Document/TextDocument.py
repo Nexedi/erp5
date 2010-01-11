@@ -215,9 +215,10 @@ class TextDocument(Document, TextContent):
       if text_content:
         if not self.hasConversion(format=format):
           portal_transforms = getToolByName(self, 'portal_transforms')
+          filename = self.getSourceReference(self.getTitleOrId())
           result = portal_transforms.convertToData(mime_type, text_content,
                                                    object=self, context=self,
-                                                   filename=self.getTitleOrId(),
+                                                   filename=filename,
                                                    mimetype=src_mimetype)
           if result is None:
             raise ConversionError('TextDocument conversion error. '
