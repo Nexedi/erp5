@@ -1020,11 +1020,11 @@ class TestDocumentWithSecurity(ERP5TypeTestCase):
     '''Check that once the document is converted and cached, its size is
     correctly set'''
     portal = self.getPortalObject()
-    document_module = portal.getDefaultModule('Presentation')
-    pdf_size = 27131 # octets
+    portal_type = 'Text'
+    document_module = portal.getDefaultModule(portal_type)
 
     # create a text document in document module
-    text_document = document_module.newContent(portal_type='Text',
+    text_document = document_module.newContent(portal_type=portal_type,
                                                reference='Foo_001',
                                                title='Foo_OO1')
     f = makeFileUpload('Foo_001.odt')
@@ -1040,7 +1040,8 @@ class TestDocumentWithSecurity(ERP5TypeTestCase):
     self.assertFalse(text_document.hasConversion(format='pdf'))
 
     # call pdf conversion, in this way, the result should be cached
-    text_document.convert(format='pdf')
+    mime_type, pdf_data = text_document.convert(format='pdf')
+    pdf_size = len(pdf_data)
 
 
     # check there is a cache entry for pdf conversion of this document
