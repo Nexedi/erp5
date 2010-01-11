@@ -160,7 +160,7 @@
         \n
         \n
         <text:h text:style-name=\'Heading 3\' text:level=\'3\'>Actors</text:h>\n
-        <text:p text:style-name="Text body" i18n:domain="ui" i18n:translate="">Actors involved in this Use Case are listed bellow:</text:p>\n
+        <text:p text:style-name="Text body" i18n:domain="ui" i18n:translate="">Actors involved in this Use Case are listed below:</text:p>\n
         <table:table table:style-name=\'Tableau1\' table:name=\'Tableau1\'>\n
           <table:table-column table:style-name="Tableau1.A"/>\n
           <table:table-column table:style-name="Tableau1.B"/>\n
