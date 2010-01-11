@@ -1,8 +1,6 @@
+portal_categories/base_amount/payroll
+portal_categories/base_amount/payroll/l10n
 portal_categories/base_amount/payroll/l10n/fr
 portal_categories/base_amount/payroll/l10n/fr/**
 portal_categories/salary_range/france
-portal_categories/salary_range/france/tranche_1
-portal_categories/salary_range/france/tranche_2
-portal_categories/salary_range/france/tranche_a
-portal_categories/salary_range/france/tranche_b
-portal_categories/salary_range/france/tranche_c
+portal_categories/salary_range/france/**
