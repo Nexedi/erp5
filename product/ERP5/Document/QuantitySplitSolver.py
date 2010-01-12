@@ -81,13 +81,15 @@ class QuantitySplitSolver(SolverMixin, ConfigurableMixin, XMLObject):
         kw.update({'portal_type':simulation_movement.getPortalType(),
                               'delivery':None,
                               'quantity':split_quantity})
+        new_movement = simulation_movement.getParentValue().newContent(**kw)
         start_date = configuration_dict.get('start_date', None)
         if start_date is not None:
-          kw['start_date'] = start_date
+          new_movement.recordProperty('start_date')
+          new_movement.setStartDate(start_date)
         stop_date = configuration_dict.get('stop_date', None)
         if stop_date is not None:
-          kw['stop_date'] = stop_date
-        new_movement = simulation_movement.getParentValue().newContent(**kw)
+          new_movement.recordProperty('stop_date')
+          new_movement.setStopDate(stop_date)
 
     # Finish solving
     self.succeed()
