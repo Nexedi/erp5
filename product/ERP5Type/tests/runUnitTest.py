@@ -310,7 +310,7 @@ def runUnitTestList(test_list, verbosity=1, debug=0):
   os.environ.setdefault('EVENT_LOG_FILE', os.path.join(tests_home, 'zLOG.log'))
   os.environ.setdefault('EVENT_LOG_SEVERITY', '-300')
 
-  _print("Loading Zope ... ")
+  _print("Loading Zope ... \n")
   _start = time.time()
 
   import Testing

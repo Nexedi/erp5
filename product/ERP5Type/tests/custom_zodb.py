@@ -7,7 +7,8 @@ from ZODB.DemoStorage import DemoStorage
 from ZODB.FileStorage import FileStorage
 from Products.ERP5Type.tests.utils import getMySQLArguments
 
-_print = sys.stderr.write
+def _print(message):
+  sys.stderr.write(message + "\n")
 
 instance_home = os.environ.get('INSTANCE_HOME')
 data_fs_path = os.environ.get('erp5_tests_data_fs_path',
