@@ -55,11 +55,10 @@
             <key> <string>_body</string> </key>
             <value> <string>from AccessControl import getSecurityManager\n
 u=getSecurityManager().getUser()\n
-role_list = u.getRolesInContext(context)\n
-if \'Assignor\' in role_list:\n
-    return True\n
+if u.has_permission("Modify portal content",context):\n
+  return True\n
 else:\n
-   return False\n
+  return False\n
 </string> </value>
         </item>
         <item>
@@ -109,7 +108,6 @@ else:\n
                             <string>_getattr_</string>
                             <string>u</string>
                             <string>context</string>
-                            <string>role_list</string>
                             <string>True</string>
                             <string>False</string>
                           </tuple>
