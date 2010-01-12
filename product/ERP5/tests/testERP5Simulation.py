@@ -46,7 +46,7 @@ class TestERP5SimulationMixin(TestPackingListMixin):
   def afterSetUp(self, quiet=1, run=1):
     TestPackingListMixin.afterSetUp(self, quiet, run)
     portal_rules = self.portal.portal_rules
-    for rule in portal_rules.objectValues(portal_type='New Order Rule'):
+    for rule in portal_rules.objectValues(portal_type='Order Rule'):
       if rule.getValidationState() == 'validated':
         rule.invalidate()
     self.validateNewRules()
@@ -56,11 +56,11 @@ class TestERP5Simulation(TestERP5SimulationMixin, ERP5TypeTestCase):
   quiet = 0
 
   def validateNewRules(self):
-    # create a New Order Rule document.
+    # create an Order Rule document.
     portal_rules = self.portal.portal_rules
     new_order_rule = filter(
       lambda x:x.title == 'New Simple Order Rule',
-      portal_rules.objectValues(portal_type='New Order Rule'))[0]
+      portal_rules.objectValues(portal_type='Order Rule'))[0]
     if new_order_rule.getValidationState() != 'validated':
       new_order_rule.validate()
 
@@ -206,11 +206,11 @@ class TestERP5Simulation(TestERP5SimulationMixin, ERP5TypeTestCase):
 
 class TestERP5SimulationPackingList(TestERP5SimulationMixin, TestPackingList):
   def validateNewRules(self):
-    # create a New Order Rule document.
+    # create an Order Rule document.
     portal_rules = self.portal.portal_rules
     new_order_rule = filter(
       lambda x:x.title == 'New Default Order Rule',
-      portal_rules.objectValues(portal_type='New Order Rule'))[0]
+      portal_rules.objectValues(portal_type='Order Rule'))[0]
     if new_order_rule.getValidationState() != 'validated':
       new_order_rule.validate()
 
