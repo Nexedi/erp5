@@ -91,9 +91,6 @@
                     }, \n
                    ),\n
   }\n
-                   \n
-  TODO:\n
-    - provide an option to exclude default pages from document list \n
 """\n
 \n
 def mapObject(property_dict):\n
@@ -113,7 +110,12 @@ def getSiteMapItemTree(section, depth=0, level=None):   \n
   if not depth: return result\n
   if level is None: level = 1\n
   if include_document or (include_document is None and section.isSiteMapDocumentParent()):\n
+    default_document = None\n
+    if exclude_default_document:\n
+      default_document = section.getDefaultDocumentValue()\n
     for document in section.getDocumentValueList(sort_on=\'title\'):\n
+      if default_document != None and default_document.absolute_url() == document.absolute_url():\n
+        continue\n
       result.append({\n
                       \'url\'      : section.WebSection_getPermanentURLForView(document),\n
                       \'level\'    : level,\n
@@ -152,7 +154,7 @@ return getSiteMapItemTree(context, depth=depth)\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>depth=1, include_subsection=None, include_document=None, property_mapping=(\'translated_title\',)</string> </value>
+            <value> <string>depth=1, include_subsection=None, include_document=None, property_mapping=(\'translated_title\',), exclude_default_document = False</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -172,7 +174,7 @@ return getSiteMapItemTree(context, depth=depth)\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>4</int> </value>
+                        <value> <int>5</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -182,6 +184,7 @@ return getSiteMapItemTree(context, depth=depth)\n
                             <string>include_subsection</string>
                             <string>include_document</string>
                             <string>property_mapping</string>
+                            <string>exclude_default_document</string>
                             <string>mapObject</string>
                             <string>None</string>
                             <string>getSiteMapItemTree</string>
@@ -204,6 +207,7 @@ return getSiteMapItemTree(context, depth=depth)\n
                 <tuple>
                   <string>translated_title</string>
                 </tuple>
+                <int>0</int>
               </tuple>
             </value>
         </item>
