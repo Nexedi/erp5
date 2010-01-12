@@ -108,15 +108,12 @@ class TestXHTML(ERP5TypeTestCase):
 
   def afterSetUp(self):
     self.portal = self.getPortal()
-    self.login()
-    self.enableDefaultSitePreference()
 
-  def login(self):
     uf = self.getPortal().acl_users
     uf._doAddUser('seb', '', ['Manager'], [])
-    uf._doAddUser('ERP5TypeTestCase', '', ['Manager'], [])
-    user = uf.getUserById('seb').__of__(uf)
-    newSecurityManager(None, user)
+
+    self.login('seb')
+    self.enableDefaultSitePreference()
 
   def enableDefaultSitePreference(self):
     portal_preferences = getToolByName(self.portal, 'portal_preferences')
