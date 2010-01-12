@@ -114,7 +114,7 @@ def getSiteMapItemTree(section, depth=0, level=None):   \n
     if exclude_default_document:\n
       default_document = section.getDefaultDocumentValue()\n
     for document in section.getDocumentValueList(sort_on=\'title\'):\n
-      if default_document != None and default_document.absolute_url() == document.absolute_url():\n
+      if default_document is not None and default_document.getPhysicalPath() == document.getPhysicalPath():\n
         continue\n
       result.append({\n
                       \'url\'      : section.WebSection_getPermanentURLForView(document),\n
@@ -137,6 +137,9 @@ def getSiteMapItemTree(section, depth=0, level=None):   \n
                         \'document\' : None,\n
                         \'subsection\'  : subsection_result,\n
                       })\n
+\n
+  if section.isSiteMapSectionParent() and include_site_default_page:\n
+    result.insert(0, {\'url\': context.getWebSiteValue().absolute_url(), \'level\': level, \'section\': None, \'document\': section.getDefaultDocumentValue(), \'subsection\': None})\n
   if property_mapping:\n
     return map(mapObject, result)\n
   return result\n
@@ -154,7 +157,7 @@ return getSiteMapItemTree(context, depth=depth)\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>depth=1, include_subsection=None, include_document=None, property_mapping=(\'translated_title\',), exclude_default_document = False</string> </value>
+            <value> <string>depth=1, include_subsection=None, include_document=None, property_mapping=(\'translated_title\',), exclude_default_document = False, include_site_default_page = False</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -174,7 +177,7 @@ return getSiteMapItemTree(context, depth=depth)\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>5</int> </value>
+                        <value> <int>6</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -185,6 +188,7 @@ return getSiteMapItemTree(context, depth=depth)\n
                             <string>include_document</string>
                             <string>property_mapping</string>
                             <string>exclude_default_document</string>
+                            <string>include_site_default_page</string>
                             <string>mapObject</string>
                             <string>None</string>
                             <string>getSiteMapItemTree</string>
@@ -207,6 +211,7 @@ return getSiteMapItemTree(context, depth=depth)\n
                 <tuple>
                   <string>translated_title</string>
                 </tuple>
+                <int>0</int>
                 <int>0</int>
               </tuple>
             </value>
