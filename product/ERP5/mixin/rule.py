@@ -269,7 +269,10 @@ class RuleMixin:
     # First, we update all properties (exc. quantity) which could be divergent
     # and if we can not, we compensate them
     for decision_movement in decision_movement_list:
-      decision_movement_quantity = decision_movement.getQuantity()
+      if decision_movement.isPropertyRecorded('quantity'):
+        decision_movement_quantity = decision_movement.getRecordedProperty('quantity')
+      else:
+        decision_movement_quantity = decision_movement.getQuantity()
       decision_quantity += decision_movement_quantity
       if self._isProfitAndLossMovement(decision_movement):
         if decision_movement.isFrozen():
