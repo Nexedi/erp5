@@ -60,6 +60,14 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
     person_module.pers.setFirstName('Bob')
     if person_module.pers._getOb('img', None) is None:
       person_module.pers.newContent(portal_type='Image', id='img')
+
+    if person_module._getOb('pers_without_image', None) is None:
+      person = person_module.newContent(
+                              portal_type='Person',
+                              id = 'pers_without_image',
+                              first_name = 'Test')
+      self.stepTic()
+
     self.portal.changeSkin(self.skin)
     self.validator = Validator()
     # make sure selections are empty
@@ -207,6 +215,26 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
   def test_form_view_encoding(self):
     self.portal.person_module.pers.setFirstName('Jérome')
     response = self.publish('/%s/person_module/pers/Person_view'
+                          % self.portal.getId(), basic=self.auth)
+    self.assertEquals(HTTP_OK, response.getStatus())
+    content_type = response.getHeader('content-type')
+    self.assertTrue(content_type.startswith(self.content_type), content_type)
+    content_disposition = response.getHeader('content-disposition')
+    self.assertEquals('inline', content_disposition.split(';')[0])
+    self._validate(response.getBody())
+
+  def test_form_view_embedded_image(self):
+    # with image
+    response = self.publish('/%s/person_module/pers/Person_viewDetails'
+                          % self.portal.getId(), basic=self.auth)
+    self.assertEquals(HTTP_OK, response.getStatus())
+    content_type = response.getHeader('content-type')
+    self.assertTrue(content_type.startswith(self.content_type), content_type)
+    content_disposition = response.getHeader('content-disposition')
+    self.assertEquals('inline', content_disposition.split(';')[0])
+    self._validate(response.getBody())
+    # without image
+    response = self.publish('/%s/person_module/pers_without_image/Person_viewDetails'
                           % self.portal.getId(), basic=self.auth)
     self.assertEquals(HTTP_OK, response.getStatus())
     content_type = response.getHeader('content-type')
