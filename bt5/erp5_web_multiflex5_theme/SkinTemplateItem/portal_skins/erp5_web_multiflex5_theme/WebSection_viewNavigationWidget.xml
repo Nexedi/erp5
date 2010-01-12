@@ -51,7 +51,9 @@
 </tal:block>\n
 \n
 <tal:block tal:define="current_web_site python:request.get(\'current_web_site\', here);\n
-                       menu_item_list python:current_web_site.WebSection_getSiteMapTree(depth=3);\n
+                       exclude_default_document python: context.getLayoutProperty(\'layout_navigation_default_visible\') == 0;\n
+                       include_site_default_page python: context.getLayoutProperty(\'layout_navigation_home_visible\') == 1;\n
+                       menu_item_list python:current_web_site.WebSection_getSiteMapTree(depth=3, exclude_default_document=exclude_default_document, include_site_default_page = include_site_default_page);\n
                        web_site_url python:current_web_site.absolute_url()">\n
   <ul>\n
     <li tal:repeat="menu_item menu_item_list">\n

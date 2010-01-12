@@ -141,6 +141,8 @@
                         <string>my_layout_sitemap_depth</string>
                         <string>my_layout_related</string>
                         <string>my_layout_navigation</string>
+                        <string>my_layout_navigation_default_visible</string>
+                        <string>my_layout_navigation_home_visible</string>
                       </list>
                     </value>
                 </item>
