@@ -165,9 +165,8 @@ class TestXHTML(ERP5TypeTestCase):
                                  field.get_value('field_id')))
 
     if error_list:
-      message = '\nDead proxy field list\n'
-      for error in error_list:
-        message += '\t%s\n' % str(error)
+      message = '\nDead proxy field list%s\n' \
+                    % '\n\t'.join(str(e) for e in error_list)
       self.fail(message)
 
   def test_configurationOfFieldLibrary(self):
@@ -179,9 +178,8 @@ class TestXHTML(ERP5TypeTestCase):
         error_list.append((modifiable_field.object_id,
                           modifiable_field.choice_item_list[0][0]))
     if error_list:
-      message = '\nField to modify\n'
-      for error in error_list:
-        message += '\t%s\n' % str(error)
+      message = '\nField to modify%s\n' \
+                    % '\n\t'.join(str(e) for e in error_list)
       self.fail(message)
 
   def test_portalTypesDomainTranslation(self):
@@ -198,9 +196,8 @@ class TestXHTML(ERP5TypeTestCase):
             error_list.append('"%s" should use erp5_ui' % \
                 portal_type.getId())
     if error_list:
-      message = '\nBad portal_type domain translation list\n'
-      for error in error_list:
-        message += '\t%s\n' % str(error)
+      message = '\nBad portal_type domain translation list%s\n' \
+                    % '\n\t'.join(error_list)
       self.fail(message)
 
   def test_emptySelectionNameInListbox(self):
