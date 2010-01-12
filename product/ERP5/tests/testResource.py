@@ -707,15 +707,6 @@ class TestResource(ERP5TypeTestCase):
     # Create product
     product_module = self.portal.getDefaultModule(self.product_portal_type)
     supply_module = self.portal.getDefaultModule(self.sale_supply_portal_type)
-    # Create generic supply
-    self.logMessage("Creating generic fake supply ...", tab=1)
-    generic_supply = supply_module.newContent(
-                     portal_type=self.sale_supply_portal_type,
-                     title='FakeGenericSupply',)
-    # Create empty supply line
-    supply_line = generic_supply.newContent(
-          portal_type=self.sale_supply_line_portal_type)
-    supply_line.setProperty('base_price', 0)
     for j in range(33, 35):
       self.logMessage("Creating fake product %s..." % j, tab=1)
       product = product_module.newContent(
@@ -743,13 +734,6 @@ class TestResource(ERP5TypeTestCase):
         supply_line.setProperty('base_price', base_price)
         # Register the case
         test_case_list.append((product, node, base_price))
-      # Create generic supply line
-      self.logMessage("Creating generic fake supply line ...", tab=1)
-      supply_line = generic_supply.newContent(
-            portal_type=self.sale_supply_line_portal_type,
-            resource_value=product)
-      supply_line.setProperty('base_price', j)
-      test_case_list.append((product, None, j))
     # Commit transaction
     self.logMessage("Commit transaction...", tab=1)
     transaction.commit()
@@ -758,19 +742,12 @@ class TestResource(ERP5TypeTestCase):
     self.tic()
     # Test the cases
     for product, node, base_price in test_case_list:
-      if node is not None:
-        self.logMessage("Check product %s with destination section %s" % \
-                        (product.getTitle(), node.getTitle()),
-                        tab=1)
-        self.assertEquals(base_price, 
-                          product.getPrice(
-                    categories=['destination_section/%s' % node.getRelativeUrl()]))
-      else:
-        self.logMessage("Check product %s without destination section" % \
-                        product.getTitle(),
-                        tab=1)
-        self.assertEquals(base_price, 
-                          product.getPrice())
+      self.logMessage("Check product %s with destination section %s" % \
+                      (product.getTitle(), node.getTitle()),
+                      tab=1)
+      self.assertEquals(base_price, 
+                        product.getPrice(
+                  categories=['destination_section/%s' % node.getRelativeUrl()]))
 
   def test_11b_getPriceWithCells(self, quiet=quiet, run=run_all_test):
     """
@@ -886,6 +863,9 @@ class TestResource(ERP5TypeTestCase):
         self.assertEquals(base_price,
                           product.getPrice(categories=[variation]))
   
+
+  # The following test tests Movement.getPrice, which is based on the movement
+  # context.
 
   def test_12_getInternalVsPurchaseVsSalePrice(self, quiet=quiet, run=run_all_test):
     """
