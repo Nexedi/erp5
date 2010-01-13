@@ -26,6 +26,7 @@
 #
 ##############################################################################
 
+from compiler.consts import CO_VARARGS, CO_VARKEYWORDS
 import zope.interface
 from AccessControl import ClassSecurityInfo
 from AccessControl import Unauthorized
@@ -304,9 +305,18 @@ class Alarm(XMLObject, PeriodicityMixin):
         # We do some inspection to keep compatibility
         # (because fixit and tag were not set previously)
         tag = str(self.portal_ids.generateNewLengthId(id_group=self.getId()))
-        func_code = getattr(self, method_id).func_code
+        method = getattr(self, method_id)
+        func_code = method.func_code
+        try:
+          has_kw = func_code.co_flags & CO_VARKEYWORDS
+        except AttributeError:
+          # XXX guess presence of *args and **kw
+          name_list = func_code.co_varnames[func_code.co_argcount:]
+          has_args = int(name_list and name_list[0] == 'args')
+          has_kw = int(len(name_list) > has_args and
+                       name_list[has_args] == 'kw')
         name_list = func_code.co_varnames[:func_code.co_argcount]
-        if 'params' in name_list:
+        if 'params' in name_list or has_kw:
           # New New API
           getattr(self.activate(tag=tag), method_id)(fixit=fixit, tag=tag, params=params)
         elif 'fixit' in name_list:
