@@ -313,7 +313,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:[str(int(x)) for x in here.Resource_getDefaultSaleSupplyLine().getQuantityStepList()]</string> </value>
+            <value> <string>python:[str(x) for x in context.getSaleSupplyLineQuantityStepList([])]</string> </value>
         </item>
       </dictionary>
     </pickle>
