@@ -34,6 +34,7 @@ import urllib
 
 from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from Products.ERP5 import __file__ as ERP5PackagePath
 from Products.CMFCore.utils import getToolByName
 from AccessControl.SecurityManagement import newSecurityManager
 from zLOG import LOG
@@ -47,7 +48,8 @@ from glob import glob
 INSTANCE_HOME = os.environ['INSTANCE_HOME']
 bt5_base_path = os.environ.get('erp5_tests_bt5_path',
                                os.path.join(INSTANCE_HOME, 'bt5'))
-bootstrap_base_path = os.path.join(INSTANCE_HOME, 'Products', 'ERP5', 'bootstrap')
+bootstrap_base_path = os.path.join(os.path.dirname(ERP5PackagePath),
+                                   'bootstrap')
 
 
 class TestXHTML(ERP5TypeTestCase):
@@ -535,11 +537,14 @@ validator = None
 # tidy or w3c may not be installed in livecd. Then we will skip xhtml validation tests.
 # create the validator object
 if validator_to_use == 'w3c':
-  validator_path = '/usr/share/w3c-markup-validator/cgi-bin/check'
-  if not os.path.exists(validator_path):
-    print 'w3c validator is not installed at %s' % validator_path
+  validator_paths = ['/usr/share/w3c-markup-validator/cgi-bin/check',
+                     '/usr/lib/cgi-bin/check']
+  for validator_path in validator_paths:
+    if os.path.exists(validator_path):
+      validator = W3Validator(validator_path, show_warnings)
+      break
   else:
-    validator = W3Validator(validator_path, show_warnings)
+    print 'No w3c validator found at', validator_paths
 
 elif validator_to_use == 'tidy':
   error = False
