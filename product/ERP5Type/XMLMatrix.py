@@ -514,6 +514,12 @@ class XMLMatrix(Folder):
         Creates a new content as a cell. This method is
         meant to be overriden by subclasses.
       """
+      if portal_type is None:
+        try:
+          portal_type = [x.getId() for x in self.allowedContentTypes() \
+                         if x.getId().endswith(' Cell')][0]
+        except IndexError:
+          pass
       return self.newContent(id=id, portal_type=portal_type, **kw)
 
     security.declareProtected( Permissions.AccessContentsInformation,
