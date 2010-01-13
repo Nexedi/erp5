@@ -78,8 +78,8 @@ Test quantity steps for price on internal supply line\n
 <tr>\n
   <td>assertText</td>\n
   <td>field_my_internal_supply_line_quantity_step_list</td>\n
-  <td>10\n
-20</td>\n
+  <td>10.0\n
+20.0</td>\n
 <tr>\n
   <td>assertText</td>\n
   <td>//input[@name="field_matrixbox_base_price_cell_0_0_0"]/../../../td[1]</td>\n
