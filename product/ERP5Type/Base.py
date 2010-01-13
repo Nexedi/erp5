@@ -3813,6 +3813,12 @@ class TempBase(Base):
 
   security.declarePublic('edit')
 
+# Persistence.Persistent is one of the superclasses of TempBase, and on Zope2.8
+# it's __class_init__ method is InitializeClass. This is not the case on
+# Zope2.12 which requires us to call InitializeClass manually, otherwise
+# allow_class(TempBase) in ERP5Type/Document/__init__.py will trample our
+# ClassSecurityInfo with one that doesn't declare our public methods
+InitializeClass(TempBase)
 
 def newTempDocumentationHelper(folder, id, REQUEST=None, **kw):
   o = TempDocumentationHelper(id)
