@@ -223,7 +223,7 @@
           <div class="input">\n
             <select class="input" name="clone_portal_type" \n
                     size="1" onchange="setCreationMode(this)">\n
-              <option value="None" selected>&mdash; Same as Current &mdash;</option>\n
+              <option value="None" selected="selected">&mdash; Same as Current &mdash;</option>\n
               <option tal:repeat="portal_type python: here.getPortalWebDocumentTypeList()"\n
                       tal:content="portal_type"\n
                       tal:attributes="value portal_type"\n
@@ -235,7 +235,7 @@
         <div class="field hiddenLabel">\n
           <label> </label>\n
           <div class="input">\n
-            <button alt=\'Clone &amp; Edit\' id="clone_action_button" \n
+            <button id="clone_action_button" \n
                     title=\'Clone &amp; Edit\'\n
                     name="Base_cloneContent:method">\n
               <img src="admin_toolbox_clone_document.png" id="clone_action_icon"\n
@@ -283,9 +283,8 @@
           // replace the action icon\n
           document.getElementById(\'clone_action_icon\').src = eval(action + \'_icon.src\');\n
 \n
-          // update action button alt & title\n
+          // update action button title\n
           var button   = document.getElementById(\'clone_action_button\');\n
-          button.alt   = action_name;\n
           button.title = action_name;\n
           button.name  = name;\n
         }\n

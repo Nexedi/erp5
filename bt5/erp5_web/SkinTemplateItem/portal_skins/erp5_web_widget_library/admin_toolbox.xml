@@ -164,7 +164,7 @@
         <div class="field hiddenLabel">\n
           <label> </label>\n
           <div class="input">\n
-            <button alt=\'Clone &amp; Edit\' id="clone_action_button" \n
+            <button id="clone_action_button" \n
                     title=\'Clone &amp; Edit\'\n
                     name="Base_cloneContent:method">\n
               <img src="admin_toolbox_clone_document.png" id="clone_action_icon"\n
@@ -213,9 +213,8 @@
           // replace the action icon\n
           document.getElementById(\'clone_action_icon\').src = eval(action + \'_icon.src\');\n
 \n
-          // update action button alt & title\n
+          // update action button title\n
           var button   = document.getElementById(\'clone_action_button\');\n
-          button.alt   = action_name;\n
           button.title = action_name;\n
           button.name  = name;\n
         }\n
