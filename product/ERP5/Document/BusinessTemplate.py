@@ -79,13 +79,13 @@ from difflib import unified_diff
 import posixpath
 import transaction
 
-import gdbm
 import threading
 
 CACHE_DATABASE_PATH = None
 try:
   if int(os.getenv('ERP5_BT5_CACHE', 0)):
     from App.config import getConfiguration
+    import gdbm
     instancehome = getConfiguration().instancehome
     CACHE_DATABASE_PATH = os.path.join(instancehome, 'bt5cache.db')
 except TypeError:
