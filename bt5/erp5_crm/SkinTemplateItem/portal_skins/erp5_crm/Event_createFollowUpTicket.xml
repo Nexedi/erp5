@@ -76,7 +76,7 @@ event.setFollowUpValueList([new_object])\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>follow_up_ticket_title="Sale Opportunity", follow_up_ticket_type</string> </value>
+            <value> <string>follow_up_ticket_title="Sale Opportunity", follow_up_ticket_type=None</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -122,6 +122,7 @@ event.setFollowUpValueList([new_object])\n
             <value>
               <tuple>
                 <string>Sale Opportunity</string>
+                <none/>
               </tuple>
             </value>
         </item>
