@@ -1136,6 +1136,16 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.assertEquals(1, len(self.getPortal().portal_catalog(
       translated_portal_type='Person', title='translate_table_test')))
 
+  def test_TempBasePublicMethods(self):
+    # make sure TempBase methods 'edit' and 'setProperty' are actually public
+    self.logout()
+    from Products.ERP5Type.Document import newTempBase
+    from OFS.Traversable import guarded_getattr
+    tb = newTempBase(self.portal, '_temp_base')
+    for name in ('edit', 'setProperty'):
+      # should not raise Unauthorized
+      edit = guarded_getattr(tb, 'edit')
+
   @skip("isIndexable is not designed to work like tested here, this test \
       must be rewritten once we know how to handle correctly templates")
   def test_NonIndexable(self):
