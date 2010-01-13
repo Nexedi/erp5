@@ -269,8 +269,7 @@ class TestCommerce(ERP5TypeTestCase):
         product_line = category.getRelativeUrl().replace('product_line/', '')
         product.setProductLine(product_line)
         product.setQuantityUnit('unit/piece')
-        supply_line = product.newContent(id='default_supply_line',
-                                         portal_type='Supply Line')
+        supply_line = product.newContent(portal_type='Sale Supply Line')
         supply_line.setBasePrice(10 * (i + 1))
         supply_line.setPricedQuantity(1)
         supply_line.setDefaultResourceValue(product)
@@ -285,8 +284,7 @@ class TestCommerce(ERP5TypeTestCase):
                                            title='UPS Shipping : 24h')
     ups.setQuantityUnit('unit/piece')
     supply_line = ups.setProductLine('shipping/UPS24h')
-    supply_line = ups.newContent(id='default_supply_line',
-                                 portal_type='Supply Line')
+    supply_line = ups.newContent(portal_type='Sale Supply Line')
     supply_line.setBasePrice(10)
     supply_line.setPricedQuantity(1)
     supply_line.setDefaultResourceValue(product)
