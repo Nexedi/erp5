@@ -44,7 +44,7 @@
         </item>
         <item>
             <key> <string>acquisition_copy_value</string> </key>
-            <value> <int>1</int> </value>
+            <value> <int>0</int> </value>
         </item>
         <item>
             <key> <string>acquisition_mask_value</string> </key>
@@ -112,7 +112,7 @@
         </item>
         <item>
             <key> <string>last_id</string> </key>
-            <value> <string>4</string> </value>
+            <value> <string>6</string> </value>
         </item>
         <item>
             <key> <string>membership_criterion_base_category</string> </key>
