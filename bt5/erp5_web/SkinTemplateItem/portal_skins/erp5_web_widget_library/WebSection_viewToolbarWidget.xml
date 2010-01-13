@@ -246,7 +246,7 @@
         </div>\n
       </fieldset>\n
 \n
-      <script type="text/javascript" language="JavaScript" tal:content="string:\n
+      <script type="text/javascript" tal:content="string:\n
         // preload action icons\n
         if (document.images) {\n
           clone_icon = new Image();\n
