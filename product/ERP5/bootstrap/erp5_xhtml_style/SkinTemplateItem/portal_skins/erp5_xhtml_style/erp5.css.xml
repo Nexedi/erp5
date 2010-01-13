@@ -816,8 +816,8 @@ a.tree_closed {\n
   background-image: url(\'<dtml-var expr="portal_url()">/images/language.png\');\n
 }\n
 \n
-#search input {color:#777777;}\n
-#search input:focus {color:#000000;}\n
+.quick_search_field {color:#777777;}\n
+.quick_search_field:focus {color:#000000;}\n
 \n
 #search button .image {\n
   background-image: url(\'<dtml-var expr="portal_url()">/images/search.png\');\n

@@ -44,7 +44,7 @@
   tal:define="dummy python: request.RESPONSE.setHeader(\'Content-Type\', \n
                                                        \'text/html;; charset=utf-8\');">\n
   <div tal:define="search_default_text python:here.Base_translateString(\'Search\')">\n
-    <input type="text" onkeypress="submitFormOnEnter(event, this.form, \'ERP5Site_processAdvancedSearch\');"\n
+    <input class="quick_search_field" type="text" onkeypress="submitFormOnEnter(event, this.form, \'ERP5Site_processAdvancedSearch\');"\n
       value="Search" tal:attributes="value string:${search_default_text};\n
                                      onfocus string:if (this.value==\'${search_default_text}\') this.value=\'\';"\n
       onfocus="this.value=\'\';"\n
