@@ -238,7 +238,7 @@
             <button id="clone_action_button" \n
                     title=\'Clone &amp; Edit\'\n
                     name="Base_cloneContent:method">\n
-              <img src="admin_toolbox_clone_document.png" id="clone_action_icon"\n
+              <img src="admin_toolbox_clone_document.png" id="clone_action_icon" alt="clone action icon"\n
                    tal:attributes="src string:$portal_url/admin_toolbox_clone_document.png" />\n
               <span id="duplicate_document_action">Clone &amp; Edit</span>\n
             </button>\n
