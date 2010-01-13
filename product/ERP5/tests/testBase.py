@@ -1144,7 +1144,7 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
     tb = newTempBase(self.portal, '_temp_base')
     for name in ('edit', 'setProperty'):
       # should not raise Unauthorized
-      edit = guarded_getattr(tb, 'edit')
+      edit = guarded_getattr(tb, name)
 
   @skip("isIndexable is not designed to work like tested here, this test \
       must be rewritten once we know how to handle correctly templates")
