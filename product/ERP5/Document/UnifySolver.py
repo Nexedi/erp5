@@ -65,7 +65,6 @@ class UnifySolver(SolverMixin, ConfigurableMixin, XMLObject):
     """
     solved_property = self._getPortalTypeValue().getTestedProperty()
     for movement in self.getDeliveryValueList():
-      import pdb; pdb.set_trace()
       configuration_dict = self.getConfigurationPropertyDict()
       new_value = configuration_dict.get('value')
       movement.setProperty(solved_property, new_value)
