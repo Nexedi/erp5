@@ -605,14 +605,18 @@ class TestCRMMailSend(ERP5TypeTestCase):
     if 'recipient' not in portal.person_module.contentIds():
       portal.person_module.newContent(
               id='recipient',
-              title='Recipient',
+              # The ',' below is to force quoting of the name in e-mail
+              # addresses on Zope 2.12
+              title='Recipient,',
               subordination_value=customer_organisation,
               default_email_text='recipient@example.com')
     if 'me' not in portal.person_module.contentIds():
       # also create the sender
       portal.person_module.newContent(
               id='me',
-              title='Me',
+              # The ',' below is to force quoting of the name in e-mail
+              # addresses on Zope 2.12
+              title='Me,',
               default_email_text='me@erp5.org')
 
     # set preference
@@ -657,8 +661,8 @@ class TestCRMMailSend(ERP5TypeTestCase):
     last_message = self.portal.MailHost._last_message
     self.assertNotEquals((), last_message)
     mfrom, mto, messageText = last_message
-    self.assertEquals('"Me" <me@erp5.org>', mfrom)
-    self.assertEquals(['"Recipient" <recipient@example.com>'], mto)
+    self.assertEquals('"Me," <me@erp5.org>', mfrom)
+    self.assertEquals(['"Recipient," <recipient@example.com>'], mto)
     
     message = email.message_from_string(messageText)
 
@@ -688,10 +692,10 @@ class TestCRMMailSend(ERP5TypeTestCase):
     self.assertNotEquals((), last_message_2)
     # check last message 1 and last message 2 (the order is random)
     # both should have 'From: Me'
-    self.assertEquals(['"Me" <me@erp5.org>', '"Me" <me@erp5.org>'],
+    self.assertEquals(['"Me," <me@erp5.org>', '"Me," <me@erp5.org>'],
                       [x[0] for x in (last_message_1, last_message_2)])
     # one should have 'To: Me' and the other should have 'To: Recipient'
-    self.assertEquals([['"Me" <me@erp5.org>'], ['"Recipient" <recipient@example.com>']],
+    self.assertEquals([['"Me," <me@erp5.org>'], ['"Recipient," <recipient@example.com>']],
                       sorted([x[1] for x in (last_message_1, last_message_2)]))
 
   def test_MailFromMailMessageEventNoSendMail(self):
@@ -761,8 +765,8 @@ class TestCRMMailSend(ERP5TypeTestCase):
     last_message = self.portal.MailHost._last_message
     self.assertNotEquals((), last_message)
     mfrom, mto, messageText = last_message
-    self.assertEquals('"Me" <me@erp5.org>', mfrom)
-    self.assertEquals(['"Recipient" <recipient@example.com>'], mto)
+    self.assertEquals('"Me," <me@erp5.org>', mfrom)
+    self.assertEquals(['"Recipient," <recipient@example.com>'], mto)
 
     message = email.message_from_string(messageText)
     part = None
@@ -786,8 +790,8 @@ class TestCRMMailSend(ERP5TypeTestCase):
     last_message = self.portal.MailHost._last_message
     self.assertNotEquals((), last_message)
     mfrom, mto, messageText = last_message
-    self.assertEquals('"Me" <me@erp5.org>', mfrom)
-    self.assertEquals(['"Recipient" <recipient@example.com>'], mto)
+    self.assertEquals('"Me," <me@erp5.org>', mfrom)
+    self.assertEquals(['"Recipient," <recipient@example.com>'], mto)
     
     message = email.message_from_string(messageText)
 
