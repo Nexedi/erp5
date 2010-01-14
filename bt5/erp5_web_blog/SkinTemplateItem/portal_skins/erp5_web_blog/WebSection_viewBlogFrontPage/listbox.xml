@@ -373,7 +373,7 @@
                           <string>Categories</string>
                         </tuple>
                         <tuple>
-                          <string>WebSection_getBlogReference</string>
+                          <string>reference</string>
                           <string>Reference</string>
                         </tuple>
                         <tuple>
