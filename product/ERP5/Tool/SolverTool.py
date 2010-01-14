@@ -137,7 +137,7 @@ class SolverTool(BaseTool):
         return True
     return False
 
-  def newSolverProcess(self, delivery_or_movement=None):
+  def newSolverProcess(self, delivery_or_movement=None, temp_object=False):
     """
     Builds a new solver process from the divergence
     analaysis of delivery_or_movement. All movements
@@ -152,7 +152,8 @@ class SolverTool(BaseTool):
       return None
 
     # Create an empty solver process
-    new_solver = self.newContent(portal_type='Solver Process')
+    new_solver = self.newContent(portal_type='Solver Process',
+                                 temp_object=temp_object)
     # And build decisions
     new_solver.buildSolverDecisionList(delivery_or_movement=delivery_or_movement)
     return new_solver

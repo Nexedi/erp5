@@ -153,7 +153,8 @@ class SolverProcess(XMLObject, ActiveProcess):
     this helps reducing CPU time.
     """
 
-  def buildSolverDecisionList(self, delivery_or_movement=None):
+  def buildSolverDecisionList(self, delivery_or_movement=None,
+                              temp_object=False):
     """
     Build (or rebuild) the solver decisions in the solver process
 
@@ -194,7 +195,8 @@ class SolverProcess(XMLObject, ActiveProcess):
     # grouping
     #  XXX-JPS: pseudocode for update (ie. rebuild) is not present
     for solver_decision_key, movement_dict in solver_decision_dict.items():
-      new_decision = self.newContent(portal_type='Solver Decision')
+      new_decision = self.newContent(portal_type='Solver Decision',
+                                     temp_object=temp_object)
       new_decision._setDeliveryList(solver_decision_key[1])
       new_decision._setCausality(solver_decision_key[0])
       for simulation_movement in movement_dict.keys():
