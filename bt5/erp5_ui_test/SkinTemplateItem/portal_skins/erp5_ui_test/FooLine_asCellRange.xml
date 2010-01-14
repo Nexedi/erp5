@@ -66,7 +66,7 @@ return [\'c\', \'d\'], [\'three\', \'four\'],\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>matrixbox</string> </value>
+            <value> <string>matrixbox, base_id=\'cell\'</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -86,13 +86,14 @@ return [\'c\', \'d\'], [\'three\', \'four\'],\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>2</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
                             <string>matrixbox</string>
+                            <string>base_id</string>
                           </tuple>
                         </value>
                     </item>
@@ -104,7 +105,9 @@ return [\'c\', \'d\'], [\'three\', \'four\'],\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <string>cell</string>
+              </tuple>
             </value>
         </item>
         <item>
