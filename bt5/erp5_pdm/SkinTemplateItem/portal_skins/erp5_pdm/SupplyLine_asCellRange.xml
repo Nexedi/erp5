@@ -63,7 +63,7 @@ add_predicate = 1\n
 \n
 \n
 # Get base category list\n
-if option_variation==1:\n
+if option_variation:\n
   # Get option base category list\n
   add_predicate = 0\n
   no_option_base_category_list = context.getVariationRangeBaseCategoryList(\n
@@ -96,7 +96,7 @@ else:\n
 \n
 # Generate cell range\n
 for base_category_list in base_category_list_list:\n
-  if matrixbox==1:\n
+  if matrixbox:\n
     # XXX matrixbox is right_display (not as listfield) \n
     # => invert display and value in item\n
     cell_range.append(map(lambda x: (x[1], x[0]),\n
@@ -110,11 +110,11 @@ for base_category_list in base_category_list_list:\n
                                      base_category_list=base_category_list,\n
                                      sort_id=\'id\'))\n
 # If no option, don\'t display quantity range\n
-if option_variation == 1:\n
+if option_variation:\n
   if cell_range != []:\n
     add_predicate = 1\n
 # Do we need to add predicate ?\n
-if add_predicate == 1:\n
+if add_predicate:\n
   # Get quantity step\n
   # XXX Dirty, use the same quantity range for option/no option matrix\n
   if base_id == \'path\':\n
@@ -126,7 +126,8 @@ if add_predicate == 1:\n
     if price_parameter.startswith(option_base_id_begin_with):\n
       price_parameter = price_parameter[len(option_base_id_begin_with):]\n
   predicate_list = context.getQuantityPredicateValueList(price_parameter)\n
-  if matrixbox == 1:\n
+\n
+  if matrixbox:\n
 #     pred_ids = [(x.getRelativeUrl(), x.getTitle()) for x in predicate_list]\n
     # Translate the matrixbox ranges\n
     pred_ids = []\n
