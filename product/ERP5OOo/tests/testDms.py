@@ -933,7 +933,7 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
     image = self.portal.getDefaultModule(image_portal_type)\
           .newContent(portal_type=image_portal_type)
 
-    #edit content and publish it
+    # edit content and publish it
     upload_file = makeFileUpload('cmyk_sample.jpg')
     image.edit(reference=image_reference,
                version='001',
@@ -948,10 +948,26 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
     mime_type, odt_archive = web_page.convert('odt')
     builder = OOoBuilder(odt_archive)
     image_count = builder._image_count
-    failure_message = 'Image is not embedded in ODF zipped archive'
-    #fetch image from zipped archive content then compare with EPR5 Image
+    failure_message = 'Expected image not found in ODF zipped archive'
+    # fetch image from zipped archive content then compare with ERP5 Image
     self.assertEquals(builder.extract('Pictures/%s.jpeg' % image_count),
                       image.getData(), failure_message)
+
+    # Continue the test with image resizing support
+    image_display = 'large'
+    # Add url parameters
+    html_content = '<p><img src="%s?display=%s&quality=75"/></p>' % \
+                                              (image_reference, image_display)
+    web_page.edit(text_content=html_content)
+    mime_type, odt_archive = web_page.convert('odt')
+    builder = OOoBuilder(odt_archive)
+    image_count = builder._image_count
+    # compute resized image for comparison
+    mime, converted_image = image.convert(format='jpeg', display=image_display)
+    # fetch image from zipped archive content
+    # then compare with resized ERP5 Image
+    self.assertEquals(builder.extract('Pictures/%s.jpeg' % image_count),
+                      converted_image, failure_message)
 
 class TestDocumentWithSecurity(ERP5TypeTestCase):
 
