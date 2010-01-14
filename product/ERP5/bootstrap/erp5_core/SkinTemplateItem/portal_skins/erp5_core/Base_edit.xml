@@ -148,7 +148,8 @@ def editMatrixBox(matrixbox_field, matrixbox):\n
         columns = []\n
         tabs = []\n
         if as_cell_range_script_id:\n
-          cell_range = getattr(context, as_cell_range_script_id)(matrixbox=True)\n
+          cell_range = getattr(matrix_context,\n
+              as_cell_range_script_id)(matrixbox=True, base_id=cell_base_id)\n
           if len(cell_range) == 1:\n
             lines, = cell_range\n
           elif len(cell_range) == 2:\n

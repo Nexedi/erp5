@@ -201,13 +201,19 @@ class MatrixBoxWidget(Widget.Widget):
         form = field.aq_parent
         field_title = field.get_value('title')
         cell_base_id = field.get_value('cell_base_id')
+        context = here
+        getter_method_id = field.get_value('getter_method')
+        if getter_method_id not in (None,''):
+          context = getattr(here,getter_method_id)()
+        if context is None:
+          return ''
         as_cell_range_script_id = field.get_value('as_cell_range_script_id')
         if as_cell_range_script_id:
           lines = []
           columns = []
           tabs = []
-          dimension_list = guarded_getattr(here,
-              as_cell_range_script_id)(matrixbox=True)
+          dimension_list = guarded_getattr(context,
+              as_cell_range_script_id)(matrixbox=True, base_id=cell_base_id)
           len_dimension_list = len(dimension_list)
           if len_dimension_list:
             if len_dimension_list == 1:
@@ -225,12 +231,6 @@ class MatrixBoxWidget(Widget.Widget):
           columns = field.get_value('columns')
           tabs = field.get_value('tabs')
         field_errors = REQUEST.get('field_errors', {})
-        context = here
-        getter_method_id = field.get_value('getter_method')
-        if getter_method_id not in (None,''):
-          context = getattr(here,getter_method_id)()
-        if context is None:
-          return ''
         cell_getter_method_id = field.get_value('cell_getter_method')
         if cell_getter_method_id not in (None, ''):
           cell_getter_method = getattr(here, cell_getter_method_id)
@@ -445,12 +445,18 @@ class MatrixBoxValidator(Validator.Validator):
         here = getattr(form, 'aq_parent', REQUEST)
         cell_base_id = field.get_value('cell_base_id')
         as_cell_range_script_id = field.get_value('as_cell_range_script_id')
+        context = here
+        getter_method_id = field.get_value('getter_method')
+        if getter_method_id not in (None,''):
+          context = getattr(here,getter_method_id)()
+          if context is None:
+            return {}
         if as_cell_range_script_id:
           lines = []
           columns = []
           tabs = []
-          dimension_list = guarded_getattr(here,
-              as_cell_range_script_id)(matrixbox=True)
+          dimension_list = guarded_getattr(context,
+              as_cell_range_script_id)(matrixbox=True, base_id=cell_base_id)
           len_dimension_list = len(dimension_list)
           if len_dimension_list:
             if len_dimension_list == 1:
@@ -469,12 +475,7 @@ class MatrixBoxValidator(Validator.Validator):
           tabs = field.get_value('tabs')
 
         editable_attributes = field.get_value('editable_attributes')
-        getter_method_id = field.get_value('getter_method')
         error_list = []
-        context = here
-        if getter_method_id not in (None,''):
-          context = getattr(here,getter_method_id)()
-          if context is None: return {}
         cell_getter_method_id = field.get_value('cell_getter_method')
         if cell_getter_method_id not in (None, ''):
           cell_getter_method = getattr(here, cell_getter_method_id)
