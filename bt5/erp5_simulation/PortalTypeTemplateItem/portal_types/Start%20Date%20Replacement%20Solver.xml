@@ -41,7 +41,7 @@
         </item>
         <item>
             <key> <string>factory</string> </key>
-            <value> <string>addAcceptSolver</string> </value>
+            <value> <string>addUnifySolver</string> </value>
         </item>
         <item>
             <key> <string>group_list</string> </key>
