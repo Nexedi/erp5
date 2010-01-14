@@ -112,7 +112,15 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>as_cell_range_script_id</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>cell_base_id</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>cell_getter_method</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -121,9 +129,7 @@
                 </item>
                 <item>
                     <key> <string>columns</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>css_class</string> </key>
@@ -167,15 +173,11 @@
                 </item>
                 <item>
                     <key> <string>lines</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
-                    </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>tabs</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
-                    </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>
@@ -217,7 +219,7 @@
                 </item>
                 <item>
                     <key> <string>as_cell_range_script_id</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>SupplyLine_asOptionVariationCellRange</string> </value>
                 </item>
                 <item>
                     <key> <string>cell_base_id</string> </key>
@@ -331,63 +333,6 @@
                 </item>
               </dictionary>
             </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <tuple>
-        <tuple>
-          <string>Products.Formulator.TALESField</string>
-          <string>TALESMethod</string>
-        </tuple>
-        <none/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>python:here.SupplyLine_asCellRange(\'path_optional_surcharge_ratio\', matrixbox=1, display_base_category=0, option_variation=1)[1]</string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="3" aka="AAAAAAAAAAM=">
-    <pickle>
-      <tuple>
-        <tuple>
-          <string>Products.Formulator.TALESField</string>
-          <string>TALESMethod</string>
-        </tuple>
-        <none/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>python:here.SupplyLine_asCellRange(\'path_optional_surcharge_ratio\', matrixbox=1, display_base_category=0, option_variation=1)[0]</string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="4" aka="AAAAAAAAAAQ=">
-    <pickle>
-      <tuple>
-        <tuple>
-          <string>Products.Formulator.TALESField</string>
-          <string>TALESMethod</string>
-        </tuple>
-        <none/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>python:here.SupplyLine_asCellRange(\'path_optional_surcharge_ratio\', matrixbox=1, display_base_category=0, option_variation=1)[2]</string> </value>
         </item>
       </dictionary>
     </pickle>
