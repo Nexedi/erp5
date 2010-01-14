@@ -51,6 +51,7 @@ smtp_host = ''
 email_subject = 'ERP5'
 run_only=''
 portal_url = ''
+xvfb_display = '123'
 
 tests_framework_home = os.path.dirname(os.path.abspath(__file__))
 # handle 'system global' instance
@@ -87,12 +88,13 @@ def parseArgs():
   global portal_url
   global run_only
   global email_subject
+  global xvfb_display
   try:
     opts, args = getopt.getopt(sys.argv[1:],
           "hsd", ["help", "stdout", "debug",
                  "email_to_address=", "host=", "port=", 
                  "portal_name=", "run_only=",
-                 "email_subject=", "smtp_host="] )
+                 "email_subject=", "smtp_host=", "xvfb_display="] )
   except getopt.GetoptError, msg:
     usage(sys.stderr, msg)
     sys.exit(2)
@@ -120,6 +122,8 @@ def parseArgs():
       run_only = arg
     elif opt == "--email_subject":
       email_subject = arg
+    elif opt == "--xvfb_display":
+      xvfb_display = arg
 
   if not stdout:
     send_mail = 1
@@ -144,8 +148,8 @@ def launchFuntionalTest():
   firefox_pid = None
   try:
     if not debug:
-      xvfb_pid = runXvfb()
-    firefox_pid = runFirefox()
+      xvfb_pid = runXvfb(xvfb_display)
+    firefox_pid = runFirefox(xvfb_display)
     while True:
       sleep(10)
       cur_status = getStatus()
@@ -165,14 +169,14 @@ def startZope():
 def stopZope():
   os.system('%s/bin/zopectl stop' % instance_home)
 
-def runXvfb():
-  pid = os.spawnlp(os.P_NOWAIT, 'Xvfb', 'Xvfb', ':123')
+def runXvfb(xvfb_display):
+  pid = os.spawnlp(os.P_NOWAIT, 'Xvfb', 'Xvfb', ':%s' %xvfb_display)
   display = os.environ.get('DISPLAY')
   if display:
     auth = Popen(['xauth', 'list', display], stdout=PIPE).communicate()[0]
     if auth:
       (displayname, protocolname, hexkey) = auth.split()
-      Popen(['xauth', 'add', 'localhost/unix:123', protocolname, hexkey])
+      Popen(['xauth', 'add', 'localhost/unix:%s' %xvfb_display, protocolname, hexkey])
   print 'Xvfb : %d' % pid
   return pid
 
@@ -215,7 +219,7 @@ user_pref("capability.principal.codebase.p1.subjectName", "");""" % \
   pref_file.write(prefs_js)
   pref_file.close()
 
-def runFirefox():
+def runFirefox(xvfb_display):
   prepareFirefox()
   if debug:
     try:
@@ -223,7 +227,7 @@ def runFirefox():
     except IOError:
       pass
   else:
-    os.environ['DISPLAY'] = ':123'
+    os.environ['DISPLAY'] = ':%s' %xvfb_display
   os.environ['MOZ_NO_REMOTE'] = '1'
   os.environ['HOME'] = profile_dir
   # check if old zelenium or new zelenium
