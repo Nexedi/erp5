@@ -28,16 +28,14 @@
 ##############################################################################
 
 from AccessControl import ClassSecurityInfo
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
+from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from Products.ERP5Type.XMLMatrix import XMLMatrix
-from Products.ERP5.Document.DeliveryLine import DeliveryLine
 from Products.ERP5.Document.Path import Path
 from Products.ERP5Type.Utils import convertToUpperCase
 
-from zLOG import LOG
 
-class SupplyLine(DeliveryLine, Path):
+class SupplyLine(Path, XMLMatrix):
     """A Supply Line is a path to define price 
     """
 
@@ -73,7 +71,6 @@ class SupplyLine(DeliveryLine, Path):
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getPrice')
     def getPrice(self):
-      # If price not defined, look up price
       if getattr(self, 'price', None) is None:
         self.price = 0.0
       # Return the price

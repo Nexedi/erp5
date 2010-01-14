@@ -26,21 +26,13 @@
 #
 ##############################################################################
 
-from Products.ERP5Type.Globals import InitializeClass, PersistentMapping
 from AccessControl import ClassSecurityInfo
 
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
-
-from Products.ERP5.Document.DeliveryCell import DeliveryCell
+from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5.Document.Path import Path
-from Products.ERP5.Document.Predicate import Predicate
 
-class SupplyCell(Predicate, DeliveryCell, Path):
-    """
-      A DeliveryCell allows to define specific quantities
-      for each variation of a resource in a delivery line.
-
-      (PATH)
+class SupplyCell(Path):
+    """A Supply Cell is used for different variations in a supply line.
     """
 
     meta_type = 'ERP5 Supply Cell'
@@ -67,3 +59,9 @@ class SupplyCell(Predicate, DeliveryCell, Path):
                       , PropertySheet.Reference
                       )
 
+    security.declareProtected( Permissions.AccessContentsInformation,
+                               'hasCellContent' )
+    def hasCellContent(self, base_id='movement'):
+      """A cell cannot have cell content itself.
+      """
+      return 0
