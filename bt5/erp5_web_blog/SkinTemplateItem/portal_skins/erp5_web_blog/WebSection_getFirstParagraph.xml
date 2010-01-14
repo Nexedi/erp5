@@ -57,11 +57,25 @@
 
 """\n
   This simple script returns the first paragraph of an HTML or raw text.\n
+  The separator is specified through the layout property \n
+    layout_blog_first_part_separator.\n
   In the case of a raw text, the first line is returned, splitted by \\n.\n
 """\n
 content = context.getTextContent()\n
-if "</p>" in content:\n
-  return content.split("</p>")[0] + "</p>"\n
+separator = "</p>"\n
+if hasattr(context, \'REQUEST\'):\n
+  here = context.REQUEST.get(\'current_web_section\', None)\n
+  if here is not None:\n
+    separator = here.getLayoutProperty(\'layout_blog_first_part_separator\', separator)\n
+\n
+if context.text_format == "text/html":\n
+  # We must analyse the separator a bit.\n
+  # XXXX: this whole logic is too light for this problem, but I don\'t want to parse the whole HTML.\n
+  if "</" in separator:\n
+    # We will repeat the separator to be sure the content is approximately XHTML valid.\n
+    return content.split(separator)[0] + separator\n
+  else:\n
+    return content.split(separator)[0]\n
 else:\n
   return content.split("\\n")[0]\n
 
@@ -105,6 +119,10 @@ else:\n
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>content</string>
+                            <string>separator</string>
+                            <string>hasattr</string>
+                            <string>None</string>
+                            <string>here</string>
                             <string>_getitem_</string>
                           </tuple>
                         </value>
