@@ -5,6 +5,9 @@ from Products.ERP5Type.Document import newTempOOoDocument
 from Products.CMFCore.utils import getToolByName
 from Acquisition import aq_base
 from zope.interface import implements
+from OFS.Image import Image as OFSImage
+from zLOG import LOG
+
 try:
   from Products.ERP5OOo.OOoUtils import OOoBuilder
   import re
@@ -13,9 +16,14 @@ try:
   import_succeed = 1
 except ImportError:
   import_succeed = 0
-from zLOG import LOG
+from urllib import unquote
+from urlparse import urlparse
+try:
+  # Python >= 2.6
+  from urlparse import parse_qsl
+except ImportError:
+  from cgi import parse_qsl
 
-REMOTE_URL_RE = re.compile('^((?P<protocol>http(s)?://)(?P<domain>[.a-zA-Z0-9]+)+)?(?P<port>:\d{4})?(?P<path>/?\S*)')
 CLEAN_RELATIVE_PATH = re.compile('^../')
 
 class TransformError(Exception):
@@ -82,24 +90,31 @@ class OOOdCommandTransform(commandtransform):
     SVG_NAMESPACE = 'urn:oasis:names:tc:opendocument:xmlns:svg-compatible:1.0'
     XLINK_NAMESPACE = 'http://www.w3.org/1999/xlink'
     ratio_px_cm = 2.54 / 100.
+    # Flag to enable modification of OOoBuilder
+    odt_content_modified = False
     for image_tag in image_tag_list:
       frame = image_tag.getparent()
       #Try to get image file from ZODB
       href_attribute_list = image_tag.xpath('.//@*[name() = "xlink:href"]')
       url = href_attribute_list[0]
-      matching = REMOTE_URL_RE.match(url)
-      if matching is not None:
-        path = matching.groupdict().get('path')
+      parse_result = urlparse(unquote(url))
+      # urlparse return a 6-tuple: scheme, netloc, path, params, query, fragment
+      path = parse_result[2]
+      if path:
         # OOo corrupt relative Links inside HTML content during odt conversion
         # <img src="REF.TO.IMAGE" ... /> become <draw:image xlink:href="../REF.TO.IMAGE" ... />
         # So remove "../" added by OOo
         path = CLEAN_RELATIVE_PATH.sub('', path)
+        # retrieve http parameters and use them to convert image
+        query_parameter_string = parse_result[4]
+        image_parameter_dict = dict(parse_qsl(query_parameter_string))
         try:
           image = self.context.restrictedTraverse(path)
         except (AttributeError, KeyError):
           #Image not found, this image is probably not hosted by ZODB. Do nothing
           image = None
         if image is not None:
+          odt_content_modified = True
           content_type = image.getContentType()
           mimetype_list = getToolByName(self.context,
                                         'mimetypes_registry').lookup(content_type)
@@ -107,25 +122,29 @@ class OOOdCommandTransform(commandtransform):
           format = 'png'
           if mimetype_list:
             format = mimetype_list[0].minor()
-          try:
+          if getattr(image, 'meta_type', None) == 'ERP5 Image':
             #ERP5 API
-            data = image.getData()
-            height = image.getHeight()
-            width = image.getWidth()
-          except (AttributeError, KeyError):
-            #OFS API
-            data = image.data
-            height = image.height
-            width = image.width
+            if 'format' in image_parameter_dict:
+              format = image_parameter_dict.pop('format')
+
+            # convert image according parameters
+            mime, image_data = image.convert(format, **image_parameter_dict)
+            image = OFSImage(image.getId(), image.getTitle(), image_data)
+
+          # image should be OFSImage
+          data = image.data
+          width = image.width
+          height = image.height
           if height:
             frame.attrib.update({'{%s}height' % SVG_NAMESPACE: '%.3fcm' % (height * ratio_px_cm)})
           if width:
             frame.attrib.update({'{%s}width' % SVG_NAMESPACE: '%.3fcm' % (width * ratio_px_cm)})
           new_path = builder.addImage(data, format=format)
           image_tag.attrib.update({'{%s}href' % XLINK_NAMESPACE: new_path})
-    builder.replace('content.xml', etree.tostring(xml_doc, encoding='utf-8',
-                                                  xml_declaration=True,
-                                                  pretty_print=False))
+    if odt_content_modified:
+      builder.replace('content.xml', etree.tostring(xml_doc, encoding='utf-8',
+                                                    xml_declaration=True,
+                                                    pretty_print=False))
     return builder.render()
 
   def includeExternalCssList(self, data):
@@ -145,9 +164,10 @@ class OOOdCommandTransform(commandtransform):
       #Try to get css from ZODB
       href_attribute_list = css_link_tag.xpath('.//@href')
       url = href_attribute_list[0]
-      matching = REMOTE_URL_RE.match(url)
-      if matching is not None:
-        path = matching.groupdict().get('path')
+      parse_result = urlparse(unquote(url))
+      # urlparse return a 6-tuple: scheme, netloc, path, params, query, fragment
+      path = parse_result[2]
+      if path:
         try:
           css_object = self.context.restrictedTraverse(path)
         except (AttributeError, KeyError):
