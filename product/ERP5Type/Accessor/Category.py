@@ -219,5 +219,5 @@ class Tester(ListGetter):
   """Tests if the category is set.
   """
   def __call__(self, instance, *args, **kw):
-    return bool(ListGetter.__call__(self, instance, *args, **kw))
+    return bool(instance._getCategoryMembershipList(self._key, **kw))
 
