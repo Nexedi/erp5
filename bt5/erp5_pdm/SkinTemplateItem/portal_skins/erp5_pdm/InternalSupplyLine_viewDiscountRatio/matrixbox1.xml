@@ -216,12 +216,20 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>as_cell_range_script_id</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>cell_base_id</string> </key>
                     <value> <string>path_optional_discount_ratio</string> </value>
                 </item>
                 <item>
+                    <key> <string>cell_getter_method</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>cell_portal_type</string> </key>
-                    <value> <string>Sale Supply Cell</string> </value>
+                    <value> <string>Internal Supply Cell</string> </value>
                 </item>
                 <item>
                     <key> <string>cell_range</string> </key>
