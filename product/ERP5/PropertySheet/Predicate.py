@@ -38,7 +38,7 @@ class Predicate:
         can be provides to scripts (this reduces duplication of code)
     """
 
-    _properties = (               
+    _properties = (
         {   'id'          : 'criterion_property',
             'description' : 'The properties to test identity or range on',
             'type'        : 'tokens',
@@ -46,7 +46,6 @@ class Predicate:
             'mode'        : 'w' },
         {   'id'          : 'membership_criterion_base_category', # OR, we check if we have one
                                                                   # of theses categories
-            #'storage_id'  : 'domain_base_category_list',       # Compatibility with legacy implementation
             'description' : 'The base categories to test',
             'type'        : 'tokens',
             'default'     : (),
@@ -58,37 +57,18 @@ class Predicate:
             'default'     : (),
             'mode'        : 'w' },
         {   'id'          : 'membership_criterion_category',
-            #'storage_id'  : 'predicate_value',       # Compatibility with legacy implementation
             'description' : 'The predicate categories',
             'type'        : 'lines',
             'default'     : (),
-            'mode'        : 'w' },                                    
+            'mode'        : 'w' },
         {   'id'          : 'test_method_id',
             'description' : 'A python method to implement additional tests',
             'type'        : 'lines', # Only a list of method ids is feasable for lines
-            'mode'        : 'w' },                
+            'mode'        : 'w' },
         #{   'id'          : 'parameter_string', # XXX Not feasable for AND
         #    'description' : 'A string defining default values for parameters (python syntax)',
         #    'type'        : 'string',
         #    'mode'        : 'w' },                
-        # Compatibility with legacy implementation       
-#        {   'id'          : 'predicate_property',
-#            'description' : 'The properties to use for the predicate',
-#            'type'        : 'string',
-#            'mode'        : 'w' }, # Make sure previous code still works, so w mode               
-#        {   'id'          : 'predicate_operator',
-#            'description' : 'The operator to use for the predicate',
-#            'type'        : 'string',
-#            'mode'        : 'w' }, # Make sure previous code still works, so w mode
-#        {   'id'          : 'predicate_value',
-#            'description' : 'The value to use for the predicate' \
-#                            'this value can be multiple',
-#            'type'        : 'lines',
-#            'mode'        : 'w' }, # Make sure previous code still works, so w mode
-#        {   'id'          : 'predicate_type',
-#            'description' : 'The type of the value',
-#            'type'        : 'string',
-#            'mode'        : 'w' }, # Make sure previous code still works, so w mode
         )
 
 
