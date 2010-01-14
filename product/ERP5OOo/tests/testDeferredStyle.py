@@ -45,7 +45,10 @@ class TestDeferredStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
   attachment_file_extension = ''
   username = 'bob'
   password = 'bobpwd'
-  first_name = 'Bob'
+  # the weird '<' char is to force quoting of the first name on the e-mail
+  # address. Zope 2.12 only surrounds names with quotes if they really need
+  # quoting.
+  first_name = 'Bob<Par'
 
   def getTitle(self):
     return 'Test Deferred Style'
