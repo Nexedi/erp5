@@ -11,7 +11,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts61472107.6</string> </value>
+            <value> <string>ts63398549.3</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -36,6 +36,11 @@ hr.post_separator {\n
 \n
 .blog_post .post_head h1{\n
   margin-left: 50px;\n
+  display: block;\n
+}\n
+\n
+.blog_post .post_read_more {\n
+  text-align: right;\n
   display: block;\n
 }\n
 \n
@@ -99,7 +104,7 @@ hr.post_separator {\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>1064</int> </value>
+            <value> <int>1135</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

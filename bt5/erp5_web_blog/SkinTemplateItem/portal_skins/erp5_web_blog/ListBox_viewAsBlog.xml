@@ -39,12 +39,14 @@
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
+<div class="blog_rss"><a href="./Blog_viewAsRSS"><img src="blog_images/rss-image.png" alt="This blog as RSS" /></a></div>\n
+\n
 <tal:block tal:define="real_context here/getContext; \n
                        base_url_string real_context/absolute_url;\n
                        date_renderer nocall:real_context/WebSection_viewBlogFrontPage/listbox_effective_date/render_html;" \n
            tal:repeat="line here/query">\n
-<!--\n
-<span tal:content="python: real_context.WebSection_getCategoryList()">Test</span>-->\n
+\n
+\n
   <!--Here is a post-->\n
   <div class="blog_post" tal:define="render_result line/render">\n
     <tal:block tal:define="title python: render_result[0][1]; \n
@@ -73,6 +75,7 @@
 \n
   <div class="post_body" tal:replace="structure summary">Here is a blog post content</div>\n
 \n
+  <div class="post_read_more"><a tal:attributes="href url">Read more</a></div>\n
   <div class="post_bottom">\n
   <a tal:attributes="href comments_url"><tal:block tal:replace="comment_count">0</tal:block> comment</a> | \n
   Share: <a title="Facebook" tal:attributes="href facebook_url"><img width="20px" alt="Facebook logo" src="blog_images/facebook-button.png"></a>&nbsp;&nbsp;\n

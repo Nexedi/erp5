@@ -53,27 +53,11 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>"""\n
-  This script returns the blog post that must be displayed in the current section.\n
-  The blog post are filtered through the tag parameter that is retrieved through\n
-  the GET parameters.\n
-"""\n
+            <value> <string>if hasattr(context, \'REQUEST\'):\n
+  here = context.REQUEST.get("PARENTS")[0].absolute_url()\n
+  return "%s/%s" % (here, context.getReference())\n
 \n
-request = container.REQUEST\n
-\n
-requested_tag = request.get(\'tag\')\n
-current_section = context.getWebSectionValue()\n
-result = []\n
-for item in current_section.WebSection_getDocumentValueList():\n
-  if requested_tag is not None:\n
-    if requested_tag in item.getSubjectList():\n
-      result.append(item)\n
-  else:\n
-    result.append(item)\n
-\n
-result.sort(key = lambda x: x.effective_date)\n
-\n
-return result\n
+return context.getReference()\n
 </string> </value>
         </item>
         <item>
@@ -84,7 +68,7 @@ return result\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>**kw</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -110,17 +94,11 @@ return result\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>kw</string>
-                            <string>_getattr_</string>
-                            <string>container</string>
-                            <string>request</string>
-                            <string>requested_tag</string>
+                            <string>hasattr</string>
                             <string>context</string>
-                            <string>current_section</string>
-                            <string>result</string>
-                            <string>_getiter_</string>
-                            <string>item</string>
-                            <string>None</string>
+                            <string>_getattr_</string>
+                            <string>_getitem_</string>
+                            <string>here</string>
                           </tuple>
                         </value>
                     </item>
@@ -137,7 +115,7 @@ return result\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>WebSection_getPostList</string> </value>
+            <value> <string>WebSection_getBlogPostLink</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
