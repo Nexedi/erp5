@@ -185,6 +185,9 @@ class Widget:
     """
     if attr_dict is None:
       attr_dict = {}
+    if isinstance(value, str):
+      #required by lxml
+      value = value.decode('utf-8')
     text_node = Element('{%s}%s' % (TEXT_URI, local_name), nsmap=NSMAP)
     text_node.text = value
     text_node.attrib.update(attr_dict)
@@ -204,7 +207,9 @@ class Widget:
     """
     if attr_dict is None:
       attr_dict = {}
-
+    if isinstance(value, str):
+      #required by lxml
+      value = value.decode('utf-8')
     draw_frame_tag_name = '{%s}%s' % (DRAW_URI, 'frame')
     draw_frame_node = Element(draw_frame_tag_name, nsmap=NSMAP)
     if len(attr_dict.get(draw_frame_tag_name, {})) > 0:
@@ -494,6 +499,9 @@ class TextAreaWidget(Widget):
         render_prefix, attr_dict, local_name):
         if attr_dict is None:
             attr_dict = {}
+        if isinstance(value, str):
+            #required by lxml
+            value = value.decode('utf-8')
         text_node = Element('{%s}%s' % (TEXT_URI, local_name), nsmap=NSMAP)
         def replaceCharsByNode(match_object):
             #global text_node
