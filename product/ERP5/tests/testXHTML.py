@@ -292,6 +292,9 @@ class W3Validator(object):
     '''
       retrun two list : a list of errors and an other for warnings
     '''
+    if isinstance(page_source, unicode):
+      # Zope 2.12 renders page templates as unicode
+      page_source = page_source.encode('utf-8')
     source = 'fragment=%s&output=soap12' % urllib.quote_plus(page_source)
     os.environ['CONTENT_LENGTH'] = str(len(source))
     os.environ['REQUEST_METHOD'] = 'POST'
@@ -442,7 +445,11 @@ def testPortalTypeViewRecursivly(validator, module_id, business_template_info,
                                   portal_path,
                                   view_name, 
                                   business_template_info.title)
-          method_name = 'test.%s.%s.%s' % (business_template_info.title, portal_type, view_name)
+          method_name = ('test_%s_%s_%s' % 
+                         (business_template_info.title, 
+                          str(portal_type).replace(' ','_'), # can be unicode
+                          view_name))
+          method.__name__ = method_name
           setattr(TestXHTML, method_name, method)
           module_id = backuped_module_id
           business_template_info = backuped_business_template_info
@@ -555,13 +562,14 @@ elif validator_to_use == 'tidy':
   else:
     validator = TidyValidator(validator_path, show_warnings)
 
+if validator is not None:
+  # add erp5_core to the list here to not return it
+  # on getBusinessTemplateList call
+  addTestMethodDynamically(validator,
+    ('erp5_core',) + TestXHTML.getBusinessTemplateList())
+
 def test_suite():
   # add the tests
-  if validator is not None:
-    # add erp5_core to the list here to not return it
-    # on getBusinessTemplateList call
-    addTestMethodDynamically(validator,
-      ('erp5_core',) + TestXHTML.getBusinessTemplateList())
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestXHTML))
   return suite
