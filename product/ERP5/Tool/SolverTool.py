@@ -155,7 +155,8 @@ class SolverTool(BaseTool):
     new_solver = self.newContent(portal_type='Solver Process',
                                  temp_object=temp_object)
     # And build decisions
-    new_solver.buildSolverDecisionList(delivery_or_movement=delivery_or_movement)
+    new_solver.buildSolverDecisionList(delivery_or_movement=delivery_or_movement,
+                                       temp_object=temp_object)
     return new_solver
 
   def getSolverProcessValueList(self, delivery_or_movement=None, validation_state=None):

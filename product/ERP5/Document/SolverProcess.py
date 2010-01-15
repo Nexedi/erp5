@@ -194,9 +194,16 @@ class SolverProcess(XMLObject, ActiveProcess):
     # Now build the solver decision instances based on the previous
     # grouping
     #  XXX-JPS: pseudocode for update (ie. rebuild) is not present
+    index = 1
     for solver_decision_key, movement_dict in solver_decision_dict.items():
-      new_decision = self.newContent(portal_type='Solver Decision',
-                                     temp_object=temp_object)
+      if temp_object:
+        new_decision = self.newContent(portal_type='Solver Decision',
+                                       temp_object=True,
+                                       #id=index,
+                                       uid='new_%s' % index)
+        index += 1
+      else:
+        new_decision = self.newContent(portal_type='Solver Decision')
       new_decision._setDeliveryList(solver_decision_key[1])
       new_decision._setCausality(solver_decision_key[0])
       for simulation_movement in movement_dict.keys():
