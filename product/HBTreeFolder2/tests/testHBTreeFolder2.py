@@ -15,7 +15,7 @@
 import unittest
 import ZODB
 import Testing
-import Zope
+import Zope2
 from Products.HBTreeFolder2.HBTreeFolder2 \
      import HBTreeFolder2, ExhaustedUniqueIdsError
 from OFS.ObjectManager import BadRequestException
