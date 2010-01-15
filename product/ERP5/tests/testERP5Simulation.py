@@ -377,6 +377,9 @@ class TestERP5SimulationPackingList(TestERP5SimulationMixin, TestPackingList):
       Check if simulation movement are disconnected
     """
     packing_list = sequence.get('packing_list')
+    applied_rule = sequence.get('applied_rule')
+    simulation_line_list = applied_rule.objectValues()
+    start_date = simulation_line_list[-1].getStartDate()
     solver_tool = self.portal.portal_solvers
     solver_process = solver_tool.newSolverProcess(packing_list)
     for start_date_solver_decision in filter(
@@ -385,7 +388,7 @@ class TestERP5SimulationPackingList(TestERP5SimulationMixin, TestPackingList):
       # use StartDate Replacement Solver.
       start_date_solver_decision.setSolverValue(self.portal.portal_types['Start Date Replacement Solver'])
       # configure for Quantity Split Solver.
-      kw = {'value':packing_list.contentValues()[-1].getDeliveryRelatedValue().getStartDate()}
+      kw = {'value':start_date}
       start_date_solver_decision.updateConfiguration(**kw)
     solver_process.buildTargetSolverList()
     solver_process.solve()
