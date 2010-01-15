@@ -70,8 +70,8 @@ class TestXMLMatrix(ERP5TypeTestCase, LogInterceptor):
     newSecurityManager(None, user)
     portal = self.getPortal()
     module = portal.purchase_order_module
-    if '1' not in module.objectIds():
-      order = module.newContent(id='1', portal_type='Purchase Order')
+    order = module.newContent(portal_type='Purchase Order')
+    self.matrix = order.newContent(portal_type='Purchase Order Line')
     self._catch_log_errors(ignored_level=PROBLEM)
 
   portal_activities_backup = None
@@ -92,11 +92,7 @@ class TestXMLMatrix(ERP5TypeTestCase, LogInterceptor):
     """
     if not quiet:
       ZopeTestCase._print('\nTest Rename Cell Range ')
-    portal = self.getPortal()
-    module = portal.purchase_order_module
-    order = module._getOb('1')
-    if order.hasContent('1'): order.deleteContent('1')
-    matrix = order.newContent(id='1', portal_type='Purchase Order Line')
+    matrix = self.matrix
 
     cell_range = [['1', '2', '3'], ['a', 'b', 'c']]
     kwd = {'base_id' : 'quantity'}
@@ -203,7 +199,7 @@ class TestXMLMatrix(ERP5TypeTestCase, LogInterceptor):
     """
     Tests if set Cell range do well catalog and uncatalog
     """
-    portal = self.getPortal()
+    portal = self.portal
     module = portal.purchase_order_module
     if not active:
       self.portal_activities_backup = portal._getOb('portal_activities')
@@ -215,9 +211,7 @@ class TestXMLMatrix(ERP5TypeTestCase, LogInterceptor):
       self.tic()
     catalog = portal.portal_catalog
 
-    order = module._getOb('1')
-    if order.hasContent('1'): order.deleteContent('1')
-    matrix = order.newContent(id='1', portal_type='Purchase Order Line')
+    matrix = self.matrix
     url = matrix.getUrl()
 
     cell_range = [['1', '2', '3'], ['a', 'b', 'c']]
@@ -241,6 +235,14 @@ class TestXMLMatrix(ERP5TypeTestCase, LogInterceptor):
     get_transaction().commit()
     self.assertEqual(matrix.getCellRange(**kwd), cell_range)
     next_cell_id_list = map(lambda x: x.getId(),matrix.objectValues())
+    # the cells on coordinates 2b, 3b, 3b and 3c are kept
+    self.assertEquals(4, len(next_cell_id_list))
+    for coord in [['2', 'b'],
+                  ['2', 'c'],
+                  ['3', 'b'],
+                  ['3', 'c']]:
+      self.assertNotEqual(None, matrix.getCell(*coord, **kwd))
+
     removed_id_list = filter(lambda x: x not in next_cell_id_list,initial_cell_id_list)
     self.tic()
     for id in next_cell_id_list:
