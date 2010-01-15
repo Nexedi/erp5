@@ -180,6 +180,8 @@ class Widget:
       Return a field value rendered in odt format.
       - as_string return value as string or as xml object
       - attr_dict can be used for additional attributes (like style).
+      - ooo_builder wrapper of ODF zipped archive usefull to insert images
+      - local_name local-name of the node returned by this render
     """
     if attr_dict is None:
       attr_dict = {}
@@ -191,14 +193,14 @@ class Widget:
     return text_node
 
   def render_odg(self, field, value, as_string, ooo_builder, REQUEST,
-      render_prefix, attr_dict):
+      render_prefix, attr_dict, local_name):
     """
       Default render odg for widget - to be overwritten in field classes.
       Return a field node rendered in odg format.
-      if as_string is True (default) the returned value is a string (xml
-      reprensation of the node), if it's False, the value returned is the node
-      object.
-      attr_dict can be used for additional parameters (like style).
+      - as_string return value as string or as xml object
+      - attr_dict can be used for additional attributes (like style).
+      - ooo_builder wrapper of ODF zipped archive usefull to insert images
+      - local_name local-name of the node returned by this render
     """
     if attr_dict is None:
       attr_dict = {}
@@ -852,15 +854,14 @@ class MultiItemsWidget(ItemsWidget):
       result.append(d[e].replace('\xc2\xa0', ''))
     return result
 
-  def render_odg(self, field, value, as_string, ooo_builder, REQUEST=None,
-    render_prefix=None, attr_dict=None):
+  def render_odg(self, field, value, as_string, ooo_builder, REQUEST,
+                 render_prefix, attr_dict, local_name):
     if value is None:
       return None
     value_list = self.render_items_odf(field, value, REQUEST)
     value = ', '.join(value_list).decode('utf-8')
-    return Widget.render_odg(self, field=field, value=value, as_string=as_string,
-      ooo_builder=ooo_builder, REQUEST=REQUEST, render_prefix=render_prefix,
-      attr_dict=attr_dict)
+    return Widget.render_odg(self, field, value, as_string, ooo_builder,
+                             REQUEST, render_prefix, attr_dict, local_name)
 
 class ListWidget(SingleItemsWidget):
     """List widget.
@@ -1329,15 +1330,14 @@ class DateTimeWidget(Widget):
     return text_node
 
   def render_odg(self, field, value, as_string, ooo_builder, REQUEST,
-      render_prefix, attr_dict):
+      render_prefix, attr_dict, local_name):
     """
       Return a field value rendered in odt format.
       - as_string return value as string or as xml object
       - attr_dict can be used for additional attributes (like style).
     """
-    return self.render_odt(field=field, value=value, as_string=as_string,
-        ooo_builder=ooo_builder, REQUEST=REQUEST, render_prexix=render_prefix,
-        attr_dict=attr_dict, local_name='p')
+    return self.render_odt(field, value, as_string, ooo_builder, REQUEST,
+                           render_prefix, attr_dict, local_name)
 
 DateTimeWidgetInstance = DateTimeWidget()
 
@@ -1654,13 +1654,12 @@ class FloatWidget(TextWidget):
     return text_node
 
   def render_odg(self, field, value, as_string, ooo_builder, REQUEST,
-      render_prefix, attr_dict):
+      render_prefix, attr_dict, local_name):
     if attr_dict is None:
       attr_dict = {}
     value = field.render_pdf(value)
-    return Widget.render_odg(self, field=field, value=value, as_string=as_string,
-      ooo_builder=ooo_builder, REQUEST=REQUEST, render_prefix=render_prefix,
-      attr_dict=attr_dict)
+    return Widget.render_odg(self, field, value, as_string, ooo_builder,
+                             REQUEST, render_prefix, attr_dict, local_name)
 
 FloatWidgetInstance = FloatWidget()
 
