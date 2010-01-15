@@ -69,3 +69,34 @@ class SolverTypeInformation(ERP5TypeInformation):
     """
     # XXX real implementation is needed.
     return configuration_property_id_list
+
+  def getDefaultConfigurationPropertyDict(self, configurable):
+    """
+    Returns a dictionary of default properties for specified
+    configurable object
+    (implementation)
+
+    configurable -- a configurable document (Solver Decision
+                    or Target Solver)
+                    
+    """
+    # Implemented through type based method
+    # and using read transaction cache
+
+  def getDefaultConfigurationPropertyList(self, id, configurable):
+    """
+    Returns a list of possible values for a given property
+    (public API)
+
+    configurable -- a configurable document (Solver Decision
+                    or Target Solver)
+    """
+
+  def getDefaultConfigurationProperty(self, id, configurable):
+    """
+    Returns the default value for a given property
+    (public API)
+
+    configurable -- a configurable document (Solver Decision
+                    or Target Solver)
+    """
