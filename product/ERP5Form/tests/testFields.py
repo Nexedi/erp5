@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2007 Nexedi SARL and Contributors. All Rights Reserved.
@@ -57,9 +58,8 @@ ZopeTestCase.installProduct('ERP5Type')
 from Acquisition import aq_base
 from Products.Formulator.FieldRegistry import FieldRegistry
 from Products.Formulator.Validator import ValidationError
-from Products.Formulator.StandardFields import FloatField
-from Products.Formulator.StandardFields import StringField
-from Products.Formulator.StandardFields import DateTimeField
+from Products.Formulator.StandardFields import FloatField, StringField,\
+DateTimeField, TextAreaField
 from Products.Formulator.MethodField import Method, BoundMethod
 from Products.Formulator.TALESField import TALESMethod
 
@@ -69,7 +69,10 @@ from Products.ERP5Form.Form import purgeFieldValueCache
 from Products.ERP5Form.Form import getFieldValue
 from Products.ERP5Form import Form
 from Products.ERP5Form import ProxyField
+from DateTime import DateTime
 
+from Products.Formulator.Widget import NSMAP
+ODG_XML_WRAPPING_XPATH = 'draw:text-box/text:p/text:span'
 
 class TestRenderViewAPI(unittest.TestCase):
   """For all fields and widgets, tests the signature of the render_view method.
@@ -217,6 +220,18 @@ class TestFloatField(unittest.TestCase):
     self.assertRaises(ValidationError,
         self.validator.validate, self.field, 'field_test_field', request)
 
+  def test_render_odt(self):
+    self.field.values['input_style'] = '-1 234.5'
+    self.field.values['default'] = 1000
+    self.assertEquals('1 000.0', self.field.render_odt(as_string=False).text)
+
+  def test_render_odg(self):
+    self.field.values['input_style'] = '-1 234.5'
+    self.field.values['default'] = 1000
+    test_value = self.field.render_odg(as_string=False)\
+      .xpath('%s/text()' % ODG_XML_WRAPPING_XPATH, namespaces=NSMAP)[0]
+    self.assertEquals('1 000.0', test_value)
+
 class TestStringField(unittest.TestCase):
   """Tests string field
   """
@@ -232,6 +247,62 @@ class TestStringField(unittest.TestCase):
     self.field.values['editable'] = 0
     self.assertEquals('&lt;script&gt;', self.field.render("<script>"))
 
+  def test_render_odt(self):
+    self.field.values['default'] = 'Hello World! <&> &lt;&mp;&gt;'
+    self.assertEquals('Hello World! <&> &lt;&mp;&gt;', self.field.render_odt(as_string=False).text)
+    self.assertEquals('Hello World!', self.field.render_odt(value='Hello World!', as_string=False).text)
+
+  def test_render_odg(self):
+    self.field.values['default'] = 'Hello World! <&> &lt;&mp;&gt;'
+    test_value = self.field.render_odg(as_string=False)\
+      .xpath('%s/text()' % ODG_XML_WRAPPING_XPATH, namespaces=NSMAP)[0]
+    self.assertEquals('Hello World! <&> &lt;&mp;&gt;', test_value)
+    test_value = self.field.render_odg(value='Hello World!', as_string=False)\
+      .xpath('%s/text()' % ODG_XML_WRAPPING_XPATH, namespaces=NSMAP)[0]
+    self.assertEquals('Hello World!', test_value)
+
+class TestDateTimeField(unittest.TestCase):
+  """Tests DateTime field
+  """
+
+  def getTitle(self):
+    return "DateTime Field"
+
+  def setUp(self):
+    self.field = DateTimeField('test_field')
+    self.widget = self.field.widget
+
+  def test_render_odt(self):
+    self.field.values['default'] = DateTime('2010/01/01 00:00:01 UTC')
+    self.assertEquals('2010/01/01   00:00',
+            self.field.render_odt(as_string=False).text)
+
+class TestTextAreaField(unittest.TestCase):
+  """Tests TextArea field
+  """
+
+  def getTitle(self):
+    return "TextArea Field"
+
+  def setUp(self):
+    self.field = TextAreaField('test_field')
+    self.widget = self.field.widget
+
+  def test_render_odt(self):
+    self.field.values['default'] = 'My first Line\nMy Second Line\tfoo'
+    self.assertEquals('text:line-break', 
+        self.field.render_odt(as_string=False)[0].xpath('name()'))
+    self.assertEquals('text:tab',
+        self.field.render_odt(as_string=False)[1].xpath('name()'))
+
+  def test_render_odg(self):
+    self.field.values['default'] = 'My first Line\nMy Second Line\tfoo'
+    test_value = self.field.render_odg(as_string=False)\
+      .xpath('%s/text:line-break' % ODG_XML_WRAPPING_XPATH, namespaces=NSMAP)
+    self.assertTrue(test_value)
+    test_value = self.field.render_odg(as_string=False)\
+      .xpath('%s/text:tab' % ODG_XML_WRAPPING_XPATH, namespaces=NSMAP)
+    self.assertTrue(test_value)
 
 class TestProxyField(unittest.TestCase):
 
@@ -626,6 +697,8 @@ def test_suite():
   suite.addTest(unittest.makeSuite(TestRenderViewAPI))
   suite.addTest(unittest.makeSuite(TestFloatField))
   suite.addTest(unittest.makeSuite(TestStringField))
+  suite.addTest(unittest.makeSuite(TestDateTimeField))
+  suite.addTest(unittest.makeSuite(TestTextAreaField))
   suite.addTest(unittest.makeSuite(TestProxyField))
   suite.addTest(unittest.makeSuite(TestFieldValueCache))
   return suite
