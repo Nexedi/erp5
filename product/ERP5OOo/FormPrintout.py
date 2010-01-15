@@ -897,22 +897,13 @@ class ODTStrategy(ODFStrategy):
     field_id = field.id
     reference_xpath = '//text:reference-mark[@text:name="%s"]' % field_id
     reference_list = element_tree.xpath(reference_xpath, namespaces=element_tree.nsmap)
-    value = str(field.get_value('default'))
-    if isinstance(value, (str, unicode)):
-      if isinstance(value, str):
-        value = value.decode('utf-8')
-      value = [value]
-    if isinstance(value, (list, tuple)):
-      value = '\n'.join(value)
-      value.replace('\r', '')
     for target_node in reference_list:
       node_to_replace = target_node.xpath('ancestor::text:p[1]', namespaces=element_tree.nsmap)[0]
       attr_dict = {}
       style_value = node_to_replace.attrib.get(self._style_attribute_name)
       if style_value:
         attr_dict.update({self._style_attribute_name: style_value})
-      new_node = field.render_odt(value=value, as_string=False,
-          attr_dict=attr_dict)
+      new_node = field.render_odt(as_string=False, attr_dict=attr_dict)
       node_to_replace.getparent().replace(node_to_replace, new_node)
     # set when using report section
     self._setUniqueElementName(base_name=field.id,
@@ -949,16 +940,8 @@ class ODTStrategy(ODFStrategy):
     #Try to fetch style-name
     attr_dict = {}
     [(attr_dict.update(target_node.attrib), parent_node.remove(target_node)) for target_node in node_to_remove_list]
-    value = field.get_value('default')
-    if isinstance(value, (str, unicode)):
-      if isinstance(value, str):
-        value = value.decode('utf-8')
-      value = [value]
-    if isinstance(value, (list, tuple)):
-      value = '\n'.join(value)
-      value.replace('\r', '')
-    new_node = field.render_odt(value=value, local_name='span',
-        attr_dict=attr_dict, as_string=False)
+    new_node = field.render_odt(local_name='span', attr_dict=attr_dict,
+                                as_string=False)
     parent_node.insert(text_reference_position+1, new_node)
     # set when using report section
     self._setUniqueElementName(base_name=field.id,
@@ -973,19 +956,10 @@ class ODTStrategy(ODFStrategy):
     field_id = field.id
     reference_xpath = '//*[@form:name = "%s"]' % field_id
     reference_list = element_tree.xpath(reference_xpath, namespaces=element_tree.nsmap)
-    value = field.get_value('default')
-    if isinstance(value, (str, unicode)):
-      if isinstance(value, str):
-        value = value.decode('utf-8')
-      value = [value]
-    if isinstance(value, (list, tuple)):
-      value = '\n'.join(value)
-      value.replace('\r', '')
     for target_node in reference_list:
       attr_dict = {}
       attr_dict.update(target_node.attrib)
-      new_node = field.render_odt(value=value, as_string=False,
-          attr_dict=attr_dict)
+      new_node = field.render_odt(as_string=False, attr_dict=attr_dict)
       target_node.getparent().replace(target_node, new_node)
 
 class ODGStrategy(ODFStrategy):
