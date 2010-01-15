@@ -562,14 +562,13 @@ elif validator_to_use == 'tidy':
   else:
     validator = TidyValidator(validator_path, show_warnings)
 
-if validator is not None:
-  # add erp5_core to the list here to not return it
-  # on getBusinessTemplateList call
-  addTestMethodDynamically(validator,
-    ('erp5_core',) + TestXHTML.getBusinessTemplateList())
-
 def test_suite():
   # add the tests
+  if validator is not None:
+    # add erp5_core to the list here to not return it
+    # on getBusinessTemplateList call
+    addTestMethodDynamically(validator,
+      ('erp5_core',) + TestXHTML.getBusinessTemplateList())
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestXHTML))
   return suite
