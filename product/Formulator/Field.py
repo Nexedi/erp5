@@ -281,19 +281,22 @@ class Field:
                                 render_prefix)
 
     security.declareProtected('View', 'render_odt')
-    def render_odt(self, value=None, as_string=True, ooo_builder=None,
+    def render_odt(self, key=None, value=None, as_string=True, ooo_builder=None,
         REQUEST=None, render_prefix=None, attr_dict=None, local_name='p'):
-      return self.widget.render_odt(self, value, as_string=as_string,
-          ooo_builder=ooo_builder, REQUEST=REQUEST,
-          render_prefix=render_prefix, attr_dict=attr_dict,
-          local_name=local_name)
+      widget_key = self.generate_field_key(key=key)
+      value = self._get_default(widget_key, value, REQUEST)
+      return self.widget.render_odt(self, value, as_string, ooo_builder,
+                                    REQUEST, render_prefix, attr_dict,
+                                    local_name)
 
     security.declareProtected('View', 'render_odg')
-    def render_odg(self, value=None, as_string=True, ooo_builder=None,
-        REQUEST=None, render_prefix=None, attr_dict=None):
-      return self.widget.render_odg(self, value, as_string=as_string,
-          ooo_builder=ooo_builder, REQUEST=REQUEST,
-          render_prefix=render_prefix, attr_dict=attr_dict)
+    def render_odg(self, key=None, value=None, as_string=True, ooo_builder=None,
+        REQUEST=None, render_prefix=None, attr_dict=None, local_name='p'):
+      widget_key = self.generate_field_key(key=key)
+      value = self._get_default(widget_key, value, REQUEST)
+      return self.widget.render_odg(self, value, as_string, ooo_builder,
+                                    REQUEST, render_prefix, attr_dict,
+                                    local_name)
 
     security.declareProtected('View', 'render_css')
     def render_css(self, REQUEST=None):
