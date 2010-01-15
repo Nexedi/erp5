@@ -180,9 +180,10 @@ class TestXHTML(ERP5TypeTestCase):
         error_list.append((modifiable_field.object_id,
                           modifiable_field.choice_item_list[0][0]))
     if error_list:
-      message = '\nField to modify%s\n' \
-                    % '\n\t'.join(str(e) for e in error_list)
-      self.fail(message)
+      message = '%s fields to modify' % len(error_list)
+      #message += '\n\t' + '\n\t'.join(fieldname + ": " + message
+      #                                 for fieldname, message in error_list)
+      self.fail(message) # uncomment above for details on each field
 
   def test_portalTypesDomainTranslation(self):
     # according to bt5-Module.Creation.Guidelines document, module
