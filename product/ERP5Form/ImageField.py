@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
@@ -110,7 +111,7 @@ class ImageFieldWidget(Widget.TextWidget):
         )
 
     def render_odg(self, field, value, as_string, ooo_builder, REQUEST,
-        render_prefix, attr_dict):
+        render_prefix, attr_dict, local_name):
       """
         return an image xml node rendered in odg format
         if as_string is True (default) the returned value is a string (xml
