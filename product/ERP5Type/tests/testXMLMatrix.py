@@ -46,8 +46,6 @@ class TestXMLMatrix(ERP5TypeTestCase, LogInterceptor):
   """
   Tests the Cell API
   """
-  quiet = 1
-
   def getBusinessTemplateList(self):
     """
     Return the list of business templates.
@@ -60,7 +58,7 @@ class TestXMLMatrix(ERP5TypeTestCase, LogInterceptor):
     """
     return "XMLMatrix"
 
-  def afterSetUp(self, quiet=1, run=1):
+  def afterSetUp(self):
     """
     Some pre-configuration
     """
@@ -86,12 +84,10 @@ class TestXMLMatrix(ERP5TypeTestCase, LogInterceptor):
     return ERP5TypeTestCase.beforeTearDown(self)
 
 
-  def test_01_RenameCellRange(self, quiet=quiet):
+  def test_01_RenameCellRange(self):
     """
     tests renameCellRange behaviour
     """
-    if not quiet:
-      ZopeTestCase._print('\nTest Rename Cell Range ')
     matrix = self.matrix
 
     cell_range = [['1', '2', '3'], ['a', 'b', 'c']]
@@ -329,25 +325,19 @@ class TestXMLMatrix(ERP5TypeTestCase, LogInterceptor):
     self.assertFalse(catalog.hasPath(cell2_path))
 
 
-  def test_02_SetCellRangeAndCatalogWithActivities(self, quiet=quiet):
+  def test_02_SetCellRangeAndCatalogWithActivities(self):
     """
     Tests if set Cell range do well catalog and uncatalog, using activities
     """
-    if not quiet:
-      ZopeTestCase._print('\nTest Set Cell Range And Catalog With Activities ')
     self.checkSetCellRangeAndCatalog(active=1)
 
-  
 
-  def test_9999_SetCellRangeAndCatalogWithoutActivities(self, quiet=quiet):
+  def test_9999_SetCellRangeAndCatalogWithoutActivities(self):
     """
     Tests if set Cell range do well catalog and uncatalog, not using
     activities.
-    WARNING this test removes activity tool from the test environment. All
-    tests after this one will have no activity tool.
+    This test removes activity tool, and restores it in teardown.
     """
-    if not quiet:
-      ZopeTestCase._print('\nTest Set Cell Range And Catalog Without Activities ')
     self.checkSetCellRangeAndCatalog(active=0)
   
 
