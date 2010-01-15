@@ -562,6 +562,17 @@ class LinesTextAreaWidget(TextAreaWidget):
       value = [value]
     return string.join(value, field.get_value('view_separator'))
 
+  def render_odt(self, field, value, as_string, ooo_builder, REQUEST,
+      render_prefix, attr_dict, local_name):
+    if value is None:
+      value = ['']
+    elif isinstance(value, (str, unicode)):
+      value = [value]
+    value = '\n'.join(value)
+    return TextAreaWidget.render_odt(self, field, value, as_string,
+                                     ooo_builder, REQUEST, render_prefix,
+                                     attr_dict, local_name)
+
 LinesTextAreaWidgetInstance = LinesTextAreaWidget()
 
 class FileWidget(TextWidget):
