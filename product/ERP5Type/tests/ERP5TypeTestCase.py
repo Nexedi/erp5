@@ -11,7 +11,7 @@ import base64
 import errno
 import md5
 import os
-#import random # XXX
+import random
 import re
 import socket
 import sys
@@ -753,7 +753,6 @@ class ERP5TypeTestCase(backportUnittest.TestCase, PortalTestCase):
       """Starts an HTTP ZServer thread."""
       from Testing.ZopeTestCase import threadutils, utils
       if utils._Z2HOST is None:
-        import random
         randint = random.Random(hash(os.environ['INSTANCE_HOME'])).randint
         def zserverRunner():
           try:

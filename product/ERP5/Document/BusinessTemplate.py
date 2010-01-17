@@ -5611,15 +5611,22 @@ Business Template is a set of definitions, such as skins, portal types and categ
       # Create temporary modules/classes for classes defined by this BT.
       # This is required if the BT contains instances of one of these classes.
       module_id_list = []
+      instance_oid_list = []
       for template_type in ('Constraint', 'Document', 'PropertySheet'):
         for template_id in getattr(self,
                                    'getTemplate%sIdList' % template_type)():
           module_id = 'Products.ERP5Type.%s.%s' % (template_type, template_id)
-          if module_id not in sys.modules:
-            module_id_list.append(module_id)
-            sys.modules[module_id] = module = imp.new_module(module_id)
-            module.SimpleItem = SimpleItem.SimpleItem
-            exec "class %s(SimpleItem): pass" % template_id in module.__dict__
+          module_id_list.append(module_id)
+          # Always redefine the module, so that 'instance_oid_list' contains
+          # the full list of oid to remove from pickle cache.
+          sys.modules[module_id] = module = imp.new_module(module_id)
+          module.SimpleItem = SimpleItem.SimpleItem
+          module.instance_oid_list = instance_oid_list
+          exec """class %s(SimpleItem):
+            def __setstate__(self, state):
+              instance_oid_list.append(self._p_oid)
+              return SimpleItem.__setstate__(self, state)""" % template_id \
+            in module.__dict__
 
       for item_name in self._item_name_list:
         getattr(self, item_name).importFile(bta)
@@ -5628,6 +5635,14 @@ Business Template is a set of definitions, such as skins, portal types and categ
       # (during the installation).
       for module_id in module_id_list:
         del sys.modules[module_id]
+      # Remove from pickle cache all objects whose classes are temporary
+      # (= defined by this BT). This forces to reload these objects on next
+      # access, with the correct classes.
+      # Invalidation is forced using __delitem__ instead of invalidate.
+      if instance_oid_list:
+        pickle_cache = self.getPortalObject()._p_jar._cache
+        for oid in instance_oid_list:
+          del pickle_cache[oid]
 
     def getItemsList(self):
       """Return list of items in business template
