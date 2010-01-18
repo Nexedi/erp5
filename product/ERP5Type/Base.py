@@ -2784,6 +2784,12 @@ class Base( CopyContainer,
   # Context related methods
   security.declarePublic('asContext')
   def asContext(self, context=None, REQUEST=None, **kw):
+    """
+    Allows to have a kind of temp copy of an object edited with kw
+    parameters. This is somewhat equivalent to use tempObject.
+
+    ex : joe_person = person_module.bob_person.asContext(first_name='Joe')
+    """
     if context is None:
       # Make a copy
       klass = self.__class__
