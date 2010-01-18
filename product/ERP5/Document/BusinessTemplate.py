@@ -5610,13 +5610,13 @@ Business Template is a set of definitions, such as skins, portal types and categ
 
       # Create temporary modules/classes for classes defined by this BT.
       # This is required if the BT contains instances of one of these classes.
-      module_id_list = []
+      orig_module_dict = {}
       instance_oid_list = []
       for template_type in ('Constraint', 'Document', 'PropertySheet'):
         for template_id in getattr(self,
                                    'getTemplate%sIdList' % template_type)():
           module_id = 'Products.ERP5Type.%s.%s' % (template_type, template_id)
-          module_id_list.append(module_id)
+          orig_module_dict[module_id] = sys.modules.get(module_id)
           # Always redefine the module, so that 'instance_oid_list' contains
           # the full list of oid to remove from pickle cache.
           sys.modules[module_id] = module = imp.new_module(module_id)
@@ -5633,8 +5633,12 @@ Business Template is a set of definitions, such as skins, portal types and categ
 
       # Remove temporary modules created above to allow import of real modules
       # (during the installation).
-      for module_id in module_id_list:
-        del sys.modules[module_id]
+      # Restore original module if any, in case the new one is not installed.
+      for module_id, module in orig_module_dict.iteritems():
+        if module is None:
+          del sys.modules[module_id]
+        else:
+          sys.modules[module_id] = module
       # Remove from pickle cache all objects whose classes are temporary
       # (= defined by this BT). This forces to reload these objects on next
       # access, with the correct classes.
@@ -5642,7 +5646,8 @@ Business Template is a set of definitions, such as skins, portal types and categ
       if instance_oid_list:
         pickle_cache = self.getPortalObject()._p_jar._cache
         for oid in instance_oid_list:
-          del pickle_cache[oid]
+          if pickle_cache.get(oid) is not None:
+            del pickle_cache[oid]
 
     def getItemsList(self):
       """Return list of items in business template
