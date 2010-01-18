@@ -41,11 +41,6 @@ os.environ['EVENT_LOG_FILE']     = os.path.join(os.getcwd(), 'zLOG.log')
 # Define the level of log we want, here is all
 os.environ['EVENT_LOG_SEVERITY'] = '-300'
 
-# Define how to launch the script if we don't use runUnitTest script
-if __name__ == '__main__':
-  execfile(os.path.join(sys.path[0], 'framework.py'))
-
-
 class TestERP5BankingAccountingCancellation(TestERP5BankingMixin):
   """
   Inside this test we will check that it is possible to cancel a transaction.
@@ -248,12 +243,3 @@ class TestERP5BankingAccountingCancellation(TestERP5BankingMixin):
     # play the sequence
     sequence_list.play(self)
 
-# define how we launch the unit test
-if __name__ == '__main__':
-  framework()
-else:
-  import unittest
-  def test_suite():
-    suite = unittest.TestSuite()
-    suite.addTest(unittest.makeSuite(TestERP5BankingAccountingCancellation))
-    return suite

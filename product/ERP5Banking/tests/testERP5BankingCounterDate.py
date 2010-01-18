@@ -43,10 +43,6 @@ os.environ['EVENT_LOG_FILE']     = os.path.join(os.getcwd(), 'zLOG.log')
 # Define the level of log we want, here is all
 os.environ['EVENT_LOG_SEVERITY'] = '-300'
 
-# Define how to launch the script if we don't use runUnitTest script
-if __name__ == '__main__':
-  execfile(os.path.join(sys.path[0], 'framework.py'))
-
 class TestERP5BankingCounterDate(TestERP5BankingMixin):
   RUN_ALL_TEST = 1 # we want to run all test
   QUIET = 0 # we don't want the test to be quiet
@@ -226,14 +222,4 @@ class TestERP5BankingCounterDate(TestERP5BankingMixin):
                      self.workflow_tool.doActionFor,
                      self.counter_date_2, 'open_action',
                      wf_id='counter_date_workflow')
-
-# define how we launch the unit test
-if __name__ == '__main__':
-  framework()
-else:
-  import unittest
-  def test_suite():
-    suite = unittest.TestSuite()
-    suite.addTest(unittest.makeSuite(TestERP5BankingCounterDate))
-    return suite
 
