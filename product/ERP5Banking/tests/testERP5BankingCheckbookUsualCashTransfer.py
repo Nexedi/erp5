@@ -360,8 +360,8 @@ class TestERP5BankingCheckbookUsualCashTransfer(TestERP5BankingCheckbookUsualCas
     """
     message = self.assertWorkflowTransitionFails(self.checkbook_usual_cash_transfer,
               'checkbook_usual_cash_transfer_workflow','confirm_to_deliver_action')
-    self.failUnless(message.find('Sorry, the item with reference')>=0)
-    self.failUnless(message.find('is not available any more')>=0)
+    self.assertTrue(message.find('Sorry, the item with reference')>=0)
+    self.assertTrue(message.find('is not available any more')>=0)
 
   ##################################
   ##  Tests

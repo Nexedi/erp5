@@ -356,9 +356,9 @@ class TestERP5BankingCheckbookReception(TestERP5BankingMixin):
     """
     msg = self.assertWorkflowTransitionFails(self.checkbook_reception2, 
         'checkbook_reception_workflow', 'deliver_action') 
-    self.failUnless(msg.find('The following references are already allocated')
+    self.assertTrue(msg.find('The following references are already allocated')
                     >=0)
-    self.failUnless(msg.find('50')>=0)
+    self.assertTrue(msg.find('50')>=0)
 
   def stepDeliverCheckbookReception3(self, sequence=None, sequence_list=None, **kwd):
     """
@@ -374,9 +374,9 @@ class TestERP5BankingCheckbookReception(TestERP5BankingMixin):
     """
     msg = self.assertWorkflowTransitionFails(self.checkbook_reception4, 
         'checkbook_reception_workflow', 'deliver_action') 
-    self.failUnless(msg.find('The following references are already allocated')
+    self.assertTrue(msg.find('The following references are already allocated')
                     >=0)
-    self.failUnless(msg.find('150')>=0)
+    self.assertTrue(msg.find('150')>=0)
 
   def stepDeliverCheckbookReception5(self, sequence=None, sequence_list=None, **kwd):
     """

@@ -485,7 +485,7 @@ class TestERP5BankingUsualCashTransfer(TestERP5BankingMixin):
     """
     message = self.assertWorkflowTransitionFails(self.usual_cash_transfer,
               'usual_cash_transfer_workflow','deliver_action')
-    self.failUnless(message.find('Insufficient balance')>=0)
+    self.assertTrue(message.find('Insufficient balance')>=0)
 
 
   ##################################

@@ -244,7 +244,7 @@ class TestERP5BankingCashMovementNewNotEmitted(TestERP5BankingMonetaryReceptionM
     self.assertEqual(self.container_1.getCashNumberRangeStop(), '100')
     self.assertEqual(len(self.container_1.getAggregateValueList()), 1)
     self.assertEqual(self.container_1.getAggregateValueList()[0], self.cash_container_item_1)
-#    self.failUnless(self.container_1.getAggregateValueList()[0] == self.cash_container_item_1 or self.container_1.getAggregateValueList()[0] == self.cash_container_item_2)
+#    self.assertTrue(self.container_1.getAggregateValueList()[0] == self.cash_container_item_1 or self.container_1.getAggregateValueList()[0] == self.cash_container_item_2)
     self.assertEqual(len(self.container_1.objectIds()), 1)
     # now get the line and check it
     self.container_line_1 = self.container_1.objectValues()[0]
@@ -281,7 +281,7 @@ class TestERP5BankingCashMovementNewNotEmitted(TestERP5BankingMonetaryReceptionM
     self.assertEqual(self.container_2.getCashNumberRangeStop(), '200')
     self.assertEqual(len(self.container_2.getAggregateValueList()), 1)
     self.assertEqual(self.container_2.getAggregateValueList()[0], self.cash_container_item_2)
-#    self.failUnless(self.container_2.getAggregateValueList()[0] == self.cash_container_item_2 or self.container_2.getAggregateValueList()[0] == self.cash_container_item_1)
+#    self.assertTrue(self.container_2.getAggregateValueList()[0] == self.cash_container_item_2 or self.container_2.getAggregateValueList()[0] == self.cash_container_item_1)
     self.assertEqual(len(self.container_2.objectIds()), 1)
     # now get the line and check it
     self.container_line_2 = self.container_2.objectValues()[0]

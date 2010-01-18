@@ -741,7 +741,7 @@ class TestERP5BankingVaultTransfer(TestERP5BankingMixin):
     """
     message = self.assertWorkflowTransitionFails(self.vault_transfer,
               'vault_transfer_workflow','deliver_action')
-    self.failUnless(message.find('Insufficient balance')>=0)
+    self.assertTrue(message.find('Insufficient balance')>=0)
 
   ##################################
   ##  Tests

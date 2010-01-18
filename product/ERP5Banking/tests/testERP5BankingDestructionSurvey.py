@@ -420,7 +420,7 @@ class TestERP5BankingDestructionSurvey(TestERP5BankingMixin):
     """
     message = self.assertWorkflowTransitionFails(self.destruction_survey,
               'destruction_survey_workflow','deliver_action')
-    self.failUnless(message.find('Insufficient balance')>=0)
+    self.assertTrue(message.find('Insufficient balance')>=0)
 
   ##################################
   ##  Tests

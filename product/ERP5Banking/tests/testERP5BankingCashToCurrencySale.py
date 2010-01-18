@@ -400,7 +400,7 @@ class TestERP5BankingCashToCurrencySale(TestERP5BankingMixin):
     """
     message = self.assertWorkflowTransitionFails(self.cash_to_currency_sale,
               'cash_to_currency_sale_workflow','deliver_action')
-    self.failUnless(message.find('Insufficient balance')>=0)
+    self.assertTrue(message.find('Insufficient balance')>=0)
 
   ##################################
   ##  Tests

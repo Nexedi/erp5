@@ -270,8 +270,8 @@ class TestERP5BankingCheckbookDelivery(TestERP5BankingCheckbookDeliveryMixin,
     """
     message = self.assertWorkflowTransitionFails(self.checkbook_delivery,
               'checkbook_delivery_workflow','deliver_action')
-    self.failUnless(message.find('Sorry, the item with reference')>=0)
-    self.failUnless(message.find('is not available any more')>=0)
+    self.assertTrue(message.find('Sorry, the item with reference')>=0)
+    self.assertTrue(message.find('is not available any more')>=0)
 
   ##################################
   ##  Tests

@@ -554,7 +554,7 @@ class TestERP5BankingUsualCashRendering(TestERP5BankingMixin):
     """
     message = self.assertWorkflowTransitionFails(self.usual_cash_rendering,
               'usual_cash_rendering_workflow','deliver_action')
-    self.failUnless(message.find('Insufficient balance')>=0)
+    self.assertTrue(message.find('Insufficient balance')>=0)
 
   def test_01_ERP5BankingUsualCashRendering(self, quiet=QUIET, run=RUN_ALL_TEST):
     """

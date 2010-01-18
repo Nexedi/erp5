@@ -448,7 +448,7 @@ class TestERP5BankingMonetarySurvey(TestERP5BankingMixin):
   def stepDeliverMonetarySurveyFails(self, sequence=None, sequence_list=None, **kwd):
     message = self.assertWorkflowTransitionFails(self.monetary_survey,
               'monetary_survey_workflow','deliver_action')
-    self.failUnless(message.find('Insufficient balance')>=0)
+    self.assertTrue(message.find('Insufficient balance')>=0)
 
   ##################################
   ##  Tests

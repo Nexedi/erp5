@@ -547,7 +547,7 @@ class TestERP5BankingMonetaryDestruction(TestERP5BankingMixin):
       cell = self.valid_line_1.getCell('emission_letter/p', variation, 'cash_status/retired')
       # check the portal type
       self.assertEqual(cell.getPortalType(), 'Monetary Destruction Cell')
-      self.failUnless(cell.getBaobabDestinationVariationText().find('new_not_emitted')>=0)
+      self.assertTrue(cell.getBaobabDestinationVariationText().find('new_not_emitted')>=0)
       if cell.getId() == 'movement_0_0_0':
         # check the quantity for coin for year 1992 is 5
         self.assertEqual(cell.getQuantity(), 5.0)
@@ -982,7 +982,7 @@ class TestERP5BankingMonetaryDestruction(TestERP5BankingMixin):
   def stepValidateFails(self, sequence=None, sequence_list=None, **kwd):
     message = self.assertWorkflowTransitionFails(self.monetary_destruction,
               'monetary_destruction_workflow','plan_to_deliver_action')
-    self.failUnless(message.find('Insufficient balance')>=0)
+    self.assertTrue(message.find('Insufficient balance')>=0)
 
   def stepResetInventoryForExterne(self, 
                sequence=None, sequence_list=None, **kwd):
@@ -994,7 +994,7 @@ class TestERP5BankingMonetaryDestruction(TestERP5BankingMixin):
   def stepDeliverFails(self, sequence=None, sequence_list=None, **kwd):
     message = self.assertWorkflowTransitionFails(self.monetary_destruction,
               'monetary_destruction_workflow','deliver_action')
-    self.failUnless(message.find('Insufficient balance')>=0)
+    self.assertTrue(message.find('Insufficient balance')>=0)
 
   ##################################
   ##  Tests

@@ -622,7 +622,7 @@ class TestERP5BankingCashBalanceRegulation(TestERP5BankingMixin):
     # do the workflow transition "deliver_action"
     message = self.assertWorkflowTransitionFails(self.cash_balance_regulation,
                          'cash_balance_regulation_workflow','deliver_action')
-    self.failUnless(message.find('local emission letter')>=0)
+    self.assertTrue(message.find('local emission letter')>=0)
 
   def stepCheckFinalInventory(self, sequence=None, sequence_list=None, check_source=1,**kwd):
     """

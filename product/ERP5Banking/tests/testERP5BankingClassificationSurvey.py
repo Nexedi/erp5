@@ -498,7 +498,7 @@ class TestERP5BankingClassificationSurvey(TestERP5BankingMixin):
     """
     message = self.assertWorkflowTransitionFails(self.classification_survey,
               'classification_survey_workflow','deliver_action')
-    self.failUnless(message.find('Insufficient balance')>=0)
+    self.assertTrue(message.find('Insufficient balance')>=0)
 
   ##################################
   ##  Tests

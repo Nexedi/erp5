@@ -487,7 +487,7 @@ class TestERP5BankingCashExchange(TestERP5BankingMixin):
   def stepDeliverFails(self, sequence=None, sequence_list=None, **kwd):
     message = self.assertWorkflowTransitionFails(self.cash_exchange,
               'cash_exchange_workflow','deliver_action')
-    self.failUnless(message.find('Insufficient balance')>=0)
+    self.assertTrue(message.find('Insufficient balance')>=0)
 
 
   ##################################

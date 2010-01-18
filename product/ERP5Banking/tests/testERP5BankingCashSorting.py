@@ -530,7 +530,7 @@ class TestERP5BankingCashSorting(TestERP5BankingMixin):
     """
     message = self.assertWorkflowTransitionFails(self.cash_sorting,
               'cash_sorting_workflow','deliver_action')
-    self.failUnless(message.find('Insufficient balance')>=0)
+    self.assertTrue(message.find('Insufficient balance')>=0)
 
   ##################################
   ##  Tests

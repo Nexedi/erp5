@@ -285,7 +285,7 @@ class TestERP5BankingCheckPaymentMixin(TestERP5BankingMixin):
                          'check_payment_workflow','plan_action')
       LOG('self.assertWorkflowTransitionFails message',0,message)
       if insuffisient_balance:
-        self.failUnless(message.find('Bank account is not sufficient')>=0)
+        self.assertTrue(message.find('Bank account is not sufficient')>=0)
       # We will force it in order to test the next step
       new_payment.plan()
     else:
@@ -298,9 +298,9 @@ class TestERP5BankingCheckPaymentMixin(TestERP5BankingMixin):
                          'check_payment_workflow','confirm_action')
       LOG('self.assertWorkflowTransitionFails message',0,message)
       if pending_account:
-        self.failUnless(message.find('There are operations pending for this account')>=0)
+        self.assertTrue(message.find('There are operations pending for this account')>=0)
       if insuffisient_balance:
-        self.failUnless(message.find('Bank account is not sufficient')>=0)
+        self.assertTrue(message.find('Bank account is not sufficient')>=0)
       self.assertEqual(new_payment.getSimulationState(), 'planned')
       get_transaction().commit()
       self.workflow_tool.doActionFor(new_payment, 'reject_action', 
@@ -319,7 +319,7 @@ class TestERP5BankingCheckPaymentMixin(TestERP5BankingMixin):
         message = self.assertWorkflowTransitionFails(new_payment,
                            'check_payment_workflow','deliver_action')
         LOG('self.assertWorkflowTransitionFails message',0,message)
-        self.failUnless(message.find('There are operations pending for this vault')>=0)
+        self.assertTrue(message.find('There are operations pending for this vault')>=0)
       self.workflow_tool.doActionFor(new_payment, 'reject_action', 
                                      wf_id='check_payment_workflow')
       self.workflow_tool.doActionFor(new_payment, 'cancel_action', 
@@ -490,7 +490,7 @@ class TestERP5BankingCheckPaymentMixin(TestERP5BankingMixin):
     """
     message = self.assertWorkflowTransitionFails(self.check_payment,
               'check_payment_workflow','deliver_action')
-    self.failUnless(message.find('Insufficient balance')>=0)
+    self.assertTrue(message.find('Insufficient balance')>=0)
 
   def stepCheckCheckIsDelivered(self, sequence=None, sequence_list=None, **kwd):
     """
