@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright (c) 2007 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2007-2010 Nexedi SA and Contributors. All Rights Reserved.
 #                    Aurelien Calonne <aurel@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional

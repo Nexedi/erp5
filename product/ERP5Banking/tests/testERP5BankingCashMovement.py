@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright (c) 2005-2006 Nexedi SARL and Convault_destinationbutors. All Rights Reserved.
+# Copyright (c) 2005-2010 Nexedi SA and Contributors. All Rights Reserved.
 #                    Alexandre Boeglin <alex_AT_nexedi_DOT_com>
 #                    Kevin Deldycke <kevin_AT_nexedi_DOT_com>
 #                    Aurelien Calonne <aurel@nexedi.com>

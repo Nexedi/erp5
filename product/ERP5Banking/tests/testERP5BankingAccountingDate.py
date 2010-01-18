@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright (c) 2007 Nexedi SARL and Concaisse_courantebutors. All Rights Reserved.
+# Copyright (c) 2007-2010 Nexedi SA and Contributors. All Rights Reserved.
 #                    Vincent Pelletier <vincent@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
