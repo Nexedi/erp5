@@ -29,11 +29,18 @@
 import unittest
 import os
 
+try:
+    from zope.app.testing.placelesssetup import PlacelessSetup
+except ImportError:
+    # BACK: Zope 2.8. Remove when we no longer support it
+    from zope.component.tests.placelesssetup import PlacelessSetup
+
+
 from Products.ERP5Form.PDFForm import PDFForm
 from Products.ERP5.Document.Document import Document
 
 
-class TestPDFForm(unittest.TestCase):
+class TestPDFForm(PlacelessSetup, unittest.TestCase):
   """Tests PDF Form
   """
 
@@ -43,12 +50,20 @@ class TestPDFForm(unittest.TestCase):
   def setUp(self):
     """Creates a PDFForm, and a document on which the PDF form is rendered.
     """
+    super(TestPDFForm, self).setUp()
+    try:
+        from Products.CMFCore.tests.base.utils import _setUpDefaultTraversable
+        _setUpDefaultTraversable()
+    except ImportError:
+        pass # On Zope 2.8, remove when we no longer support it
     self.document = Document('doc_id')
     pdf_file = open(os.path.join(os.path.dirname(__file__),
                                       'data', 'test_1.pdf'), 'rb')
     self.pdf_form = PDFForm('test_pdf_form').__of__(self.document)
     self.pdf_form.manage_upload(pdf_file)
-    
+
+  # if tearDown is ever added, don't forget to call PlacelessSetup.tearDown()
+
   def test_getCellNames(self):
     self.assertEquals(['text_1', 'text_2', 'text_3'],
                       self.pdf_form.getCellNames())
