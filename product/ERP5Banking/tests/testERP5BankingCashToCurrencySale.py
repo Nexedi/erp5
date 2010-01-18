@@ -65,8 +65,8 @@ class TestERP5BankingCashToCurrencySale(TestERP5BankingMixin):
   RUN_ALL_TEST = 1 # we want to run all test
   QUIET = 0 # we don't want the test to be quiet
 
-  outgoing_quantity_5000 = {'variation/1992':4,'variation/2003':6}
-  outgoing_quantity_100 = {'variation/1992':200,'variation/2003':0}
+  outgoing_quantity_5000 = {'variation/1992':4, 'variation/2003':6}
+  outgoing_quantity_100 = {'variation/1992':200, 'variation/2003':0}
 
   def getTitle(self):
     """
@@ -109,7 +109,7 @@ class TestERP5BankingCashToCurrencySale(TestERP5BankingMixin):
     self.line_list = line_list_sortante = [inventory_dict_line_1]
 
     self.guichet_entrante = self.paris.surface.banque_interne.guichet_1.encaisse_des_billets_et_monnaies.entrante
-    self.guichet_sortante= self.paris.surface.banque_interne.guichet_1.encaisse_des_devises.usd.sortante
+    self.guichet_sortante = self.paris.surface.banque_interne.guichet_1.encaisse_des_devises.usd.sortante
     self.guichet = self.paris.surface.banque_interne.guichet_1
 
 
@@ -392,14 +392,14 @@ class TestERP5BankingCashToCurrencySale(TestERP5BankingMixin):
     node = self.guichet_sortante
     line_list = self.line_list
     self.resetInventory(destination=node, currency=self.currency_1,
-                        line_list=line_list,extra_id='_reset_out')
+                        line_list=line_list, extra_id='_reset_out')
 
   def stepDeliverCashToCurrencySaleFails(self, sequence=None, sequence_list=None, **kwd):
     """
     Try if we get Insufficient balance
     """
     message = self.assertWorkflowTransitionFails(self.cash_to_currency_sale,
-              'cash_to_currency_sale_workflow','deliver_action')
+              'cash_to_currency_sale_workflow', 'deliver_action')
     self.assertTrue(message.find('Insufficient balance')>=0)
 
   ##################################

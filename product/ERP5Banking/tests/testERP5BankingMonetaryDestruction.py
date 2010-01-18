@@ -193,9 +193,9 @@ class TestERP5BankingMonetaryDestruction(TestERP5BankingMixin):
     self.login('super_user')
     # open counter date and counter
     self.openCounterDate(site=self.paris)
-    self.openCounterDate(site=self.madrid,id='counter_date_2')
+    self.openCounterDate(site=self.madrid, id='counter_date_2')
     lyon = portal.portal_categories.site.testsite.auxiliaire.lyon
-    self.openCounterDate(site=lyon,id='counter_date_3')
+    self.openCounterDate(site=lyon, id='counter_date_3')
 
   def stepCheckObjects(self, sequence=None, sequence_list=None, **kwd):
     """

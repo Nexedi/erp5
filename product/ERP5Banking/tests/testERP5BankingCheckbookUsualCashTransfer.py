@@ -319,9 +319,9 @@ class TestERP5BankingCheckbookUsualCashTransfer(TestERP5BankingCheckbookUsualCas
     """
     Check cash checkbook in item table
     """
-    LOG('sql request for getCurrentTrackingList',0,self.simulation_tool.getCurrentTrackingList(
+    LOG('sql request for getCurrentTrackingList', 0, self.simulation_tool.getCurrentTrackingList(
                      node=self.source_vault.getRelativeUrl(),
-                     at_date=self.date,src__=1))
+                     at_date=self.date, src__=1))
     self.assertEqual(len(self.simulation_tool.getCurrentTrackingList(
                      node=self.source_vault.getRelativeUrl(),
                      at_date=self.date)), 0)
@@ -340,7 +340,7 @@ class TestERP5BankingCheckbookUsualCashTransfer(TestERP5BankingCheckbookUsualCas
     self.assertEqual(len(checkbook_list), 2)
     # check we have cash checkbook 1
     checkbook_object_list = [x.getObject() for x in checkbook_list]
-    self.failIfDifferentSet(checkbook_object_list,[self.checkbook_1,self.check_1])
+    self.failIfDifferentSet(checkbook_object_list, [self.checkbook_1, self.check_1])
     self.assertEqual(len(self.simulation_tool.getFutureTrackingList(
                 node=self.destination_vault.getRelativeUrl(),
                 at_date=self.date)), 2)
@@ -359,7 +359,7 @@ class TestERP5BankingCheckbookUsualCashTransfer(TestERP5BankingCheckbookUsualCas
     Try if we get Insufficient balance
     """
     message = self.assertWorkflowTransitionFails(self.checkbook_usual_cash_transfer,
-              'checkbook_usual_cash_transfer_workflow','confirm_to_deliver_action')
+              'checkbook_usual_cash_transfer_workflow', 'confirm_to_deliver_action')
     self.assertTrue(message.find('Sorry, the item with reference')>=0)
     self.assertTrue(message.find('is not available any more')>=0)
 

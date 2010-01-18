@@ -66,8 +66,8 @@ class TestERP5BankingCashExchange(TestERP5BankingMixin):
   RUN_ALL_TEST = 1 # we want to run all test
   QUIET = 0 # we don't want the test to be quiet
 
-  outgoing_quantity_5000 = {'variation/1992':4,'variation/2003':6}
-  outgoing_quantity_100 = {'variation/1992':24,'variation/2003':0}
+  outgoing_quantity_5000 = {'variation/1992':4, 'variation/2003':6}
+  outgoing_quantity_100 = {'variation/1992':24, 'variation/2003':0}
 
   def getTitle(self):
     """

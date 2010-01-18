@@ -105,8 +105,8 @@ class TestERP5BankingStopPayment( TestERP5BankingCheckbookDeliveryMixin,
     For this test, the intial inventory and the final inventory is the same
     """
     # check the inventory of the bank account
-    self.assertEqual(self.simulation_tool.getCurrentInventory(payment=self.bank_account_2.getRelativeUrl(),resource=self.currency_1.getRelativeUrl()), 100000)
-    self.assertEqual(self.simulation_tool.getFutureInventory(payment=self.bank_account_2.getRelativeUrl(),resource=self.currency_1.getRelativeUrl()), 100000)
+    self.assertEqual(self.simulation_tool.getCurrentInventory(payment=self.bank_account_2.getRelativeUrl(), resource=self.currency_1.getRelativeUrl()), 100000)
+    self.assertEqual(self.simulation_tool.getFutureInventory(payment=self.bank_account_2.getRelativeUrl(), resource=self.currency_1.getRelativeUrl()), 100000)
 
   def stepCreateStopPayment(self, sequence=None, sequence_list=None, **kwd):
     """
@@ -142,10 +142,10 @@ class TestERP5BankingStopPayment( TestERP5BankingCheckbookDeliveryMixin,
     """
     line_list = self.stop_payment.objectValues(
                           portal_type='Checkbook Delivery Line')
-    self.assertEqual(len(line_list),1)
+    self.assertEqual(len(line_list), 1)
     line = line_list[0]
-    self.assertEqual(line.getAggregateValue(),self.check_1)
-    self.assertEqual(line.getQuantity(),1)
+    self.assertEqual(line.getAggregateValue(), self.check_1)
+    self.assertEqual(line.getQuantity(), 1)
 
   def stepSetStopPaymentDebit(self, sequence=None, sequence_list=None, **kwd):
     """
@@ -157,7 +157,7 @@ class TestERP5BankingStopPayment( TestERP5BankingCheckbookDeliveryMixin,
     """
     Set the debit required
     """
-    self.stop_payment_module.manage_delObjects(['stop_payment',])
+    self.stop_payment_module.manage_delObjects(['stop_payment'])
 
   def stepConfirmStopPayment(self, sequence=None, sequence_list=None, **kw):
     """
@@ -280,26 +280,26 @@ class TestERP5BankingStopPayment( TestERP5BankingCheckbookDeliveryMixin,
     """
     # check the inventory of the bank account
     self.assertEqual(self.simulation_tool.getCurrentInventory(
-                     payment=self.bank_account_2.getRelativeUrl()
-                     ,resource=self.currency_1.getRelativeUrl()), 100000)
+                     payment=self.bank_account_2.getRelativeUrl(),
+                     resource=self.currency_1.getRelativeUrl()), 100000)
     self.assertEqual(self.simulation_tool.getAvailableInventory(
-                     payment=self.bank_account_2.getRelativeUrl()
-                     ,resource=self.currency_1.getRelativeUrl()), 80000)
+                     payment=self.bank_account_2.getRelativeUrl(),
+                     resource=self.currency_1.getRelativeUrl()), 80000)
     self.assertEqual(self.simulation_tool.getFutureInventory(
-                     payment=self.bank_account_2.getRelativeUrl()
-                     ,resource=self.currency_1.getRelativeUrl()), 80000)
+                     payment=self.bank_account_2.getRelativeUrl(),
+                     resource=self.currency_1.getRelativeUrl()), 80000)
 
   def stepCheckCheckIsStopped(self, sequence=None, sequence_list=None, **kw):
     """
     Check that the check is stopped
     """
-    self.assertEqual(self.check_1.getSimulationState(),'stopped')
+    self.assertEqual(self.check_1.getSimulationState(), 'stopped')
 
   def stepCheckCheckIsConfirmed(self, sequence=None, sequence_list=None, **kw):
     """
     Check that the check is confirmed
     """
-    self.assertEqual(self.check_1.getSimulationState(),'confirmed')
+    self.assertEqual(self.check_1.getSimulationState(), 'confirmed')
 
   ##################################
   ##  Tests

@@ -148,7 +148,7 @@ class TestERP5BankingMonetaryIssue(TestERP5BankingMonetaryReceptionMixin):
     self.monetary_reception_module = self.getMonetaryReceptionModule()
     self.current_date = DateTime()
     self.createManagerAndLogin()
-    self.createFunctionGroupSiteCategory(site_list=['paris',])
+    self.createFunctionGroupSiteCategory(site_list=['paris'])
     self.issue = self.paris.caveau.reserve.encaisse_des_billets_et_monnaies
     self.reception = self.paris.caveau.serre.encaisse_des_billets_neufs_non_emis
     self.reception_site = self.reception
@@ -222,7 +222,7 @@ class TestERP5BankingMonetaryIssue(TestERP5BankingMonetaryReceptionMixin):
     # get the cash container item from the monetary reception
     cash_container_item_list = [x.getObject() for x in self.simulation_tool.getCurrentTrackingList(node=self.reception.getRelativeUrl())]
     self.assertEqual(len(cash_container_item_list), 2)
-    def reference_sort(a,b):                                                                                   return cmp(a.getReference(),b.getReference())
+    def reference_sort(a, b):                                                                                   return cmp(a.getReference(), b.getReference())
     cash_container_item_list.sort(reference_sort)
 
     # contruct list of dict to create cash container
@@ -230,7 +230,7 @@ class TestERP5BankingMonetaryIssue(TestERP5BankingMonetaryReceptionMixin):
     i = 1
     for cash_container in cash_container_item_list:
       # register cash container on self to check aggregate value later
-      setattr(self, 'cash_container_item_%s' %(str(i),), cash_container)
+      setattr(self, 'cash_container_item_%s' %(str(i), ), cash_container)
       container_dict = {}
       container_dict['id'] = str(i)
       container_dict['reference'] = cash_container.getReference()
@@ -240,9 +240,9 @@ class TestERP5BankingMonetaryIssue(TestERP5BankingMonetaryReceptionMixin):
       container_dict['quantity'] = cash_container_line.getQuantity()
       container_dict['aggregate'] = cash_container
       new_cash_container_list.append(container_dict)
-      i+=1
-    def reference_sort(a,b):
-      return cmp(a['reference'],b['reference'])
+      i += 1
+    def reference_sort(a, b):
+      return cmp(a['reference'], b['reference'])
     new_cash_container_list.sort(reference_sort)
 
 

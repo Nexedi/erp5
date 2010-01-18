@@ -112,7 +112,7 @@ class TestERP5BankingCounterDate(TestERP5BankingMixin):
     if not quiet:
       message = 'Check open CounterDate twice fails'
       ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ',0,message)
+      LOG('Testing... ', 0, message)
     self.openCounterDate(site=self.paris, id='counter_date_1')
     get_transaction().commit()
     self.tic()
@@ -127,7 +127,7 @@ class TestERP5BankingCounterDate(TestERP5BankingMixin):
            ob=self.counter_date_2, name='history', wf_id='counter_date_workflow')
     # check its len is 2
     msg = workflow_history[-1]['error_message']
-    self.assertTrue('there is already a counter date opened' in "%s" %(msg,))
+    self.assertTrue('there is already a counter date opened' in "%s" %(msg, ))
 
   def test_02_CheckOpenCounterDateWithOtherDateFail(self, quiet=QUIET, run=RUN_ALL_TEST):
     """
@@ -137,21 +137,21 @@ class TestERP5BankingCounterDate(TestERP5BankingMixin):
     if not quiet:
       message = 'Check open CounterDate on non-current date fails'
       ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ',0,message)
+      LOG('Testing... ', 0, message)
     def openAndTest(id, date):
       self.openCounterDate(site=self.paris, id=id, date=date, open=0)
       # open counter date and counter
       counter_date = getattr(self, id)
       self.assertRaises(ValidationFailed,
                        self.workflow_tool.doActionFor,
-                       counter_date,'open_action',
+                       counter_date, 'open_action',
                        wf_id='counter_date_workflow')
       # get workflow history
       workflow_history = self.workflow_tool.getInfoFor(
              ob=counter_date, name='history', wf_id='counter_date_workflow')
       # check its len is 2
       msg = workflow_history[-1]['error_message']
-      self.assertTrue('the date is not today' in "%s" %(msg,))
+      self.assertTrue('the date is not today' in "%s" %(msg, ))
     now = DateTime()
     # Future
     openAndTest('1', now + 2) # Just in case midnight passes between "now" calculation and validation, add 2 instead of 1
@@ -172,7 +172,7 @@ class TestERP5BankingCounterDate(TestERP5BankingMixin):
     if not quiet:
       message = 'Check CounterDate reference generator behaviour'
       ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ',0,message)
+      LOG('Testing... ', 0, message)
     counter_date_module = self.getPortal().counter_date_module
     def openAndTest(site, date, reference):
       id = 'counter_date_%s_%s' % (str(date).replace('/', '_'), site.getId())
@@ -213,7 +213,7 @@ class TestERP5BankingCounterDate(TestERP5BankingMixin):
     if not quiet:
       message = 'Check open CounterDate twice without activities fails'
       ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ',0,message)
+      LOG('Testing... ', 0, message)
     self.openCounterDate(site=self.paris, id='counter_date_1')
     get_transaction().commit()
     self.openCounterDate(site=self.paris, id='counter_date_2', open=0)

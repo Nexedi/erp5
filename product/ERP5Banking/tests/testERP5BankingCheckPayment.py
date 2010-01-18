@@ -247,7 +247,7 @@ class TestERP5BankingCheckPaymentMixin(TestERP5BankingMixin):
 
   def stepValidateAnotherCheckPaymentWorks(self, sequence=None, sequence_list=None, **kwd):
     """ Make sure we can validate another check payment """
-    self.createAnotherCheckPayment(sequence=sequence,will_fail=0,number="0000051")
+    self.createAnotherCheckPayment(sequence=sequence, will_fail=0, number="0000051")
 
   def stepPayAnotherCheckPaymentFails(self, sequence=None, sequence_list=None, **kwd):
     """ Make sure we can validate another check payment """
@@ -282,8 +282,8 @@ class TestERP5BankingCheckPaymentMixin(TestERP5BankingMixin):
     new_payment._setSource(self.bi_counter.getRelativeUrl())
     if will_fail and insuffisient_balance:
       message = self.assertWorkflowTransitionFails(new_payment,
-                         'check_payment_workflow','plan_action')
-      LOG('self.assertWorkflowTransitionFails message',0,message)
+                         'check_payment_workflow', 'plan_action')
+      LOG('self.assertWorkflowTransitionFails message', 0, message)
       if insuffisient_balance:
         self.assertTrue(message.find('Bank account is not sufficient')>=0)
       # We will force it in order to test the next step
@@ -295,8 +295,8 @@ class TestERP5BankingCheckPaymentMixin(TestERP5BankingMixin):
     get_transaction().commit()
     if will_fail:
       message = self.assertWorkflowTransitionFails(new_payment,
-                         'check_payment_workflow','confirm_action')
-      LOG('self.assertWorkflowTransitionFails message',0,message)
+                         'check_payment_workflow', 'confirm_action')
+      LOG('self.assertWorkflowTransitionFails message', 0, message)
       if pending_account:
         self.assertTrue(message.find('There are operations pending for this account')>=0)
       if insuffisient_balance:
@@ -317,8 +317,8 @@ class TestERP5BankingCheckPaymentMixin(TestERP5BankingMixin):
       if check_pay_will_fail:
         self.stepInputCashDetails(check_payment=new_payment)
         message = self.assertWorkflowTransitionFails(new_payment,
-                           'check_payment_workflow','deliver_action')
-        LOG('self.assertWorkflowTransitionFails message',0,message)
+                           'check_payment_workflow', 'deliver_action')
+        LOG('self.assertWorkflowTransitionFails message', 0, message)
         self.assertTrue(message.find('There are operations pending for this vault')>=0)
       self.workflow_tool.doActionFor(new_payment, 'reject_action', 
                                      wf_id='check_payment_workflow')
@@ -480,7 +480,7 @@ class TestERP5BankingCheckPaymentMixin(TestERP5BankingMixin):
     bi_counter_vault = self.bi_counter_vault
     line_list = self.line_list
     self.resetInventory(source=None, destination=bi_counter_vault, currency=self.currency_1,
-                             line_list=line_list,extra_id='_reset_out')
+                             line_list=line_list, extra_id='_reset_out')
 
   def stepPayCheckPaymentFails(self, sequence=None, sequence_list=None, **kwd):
     """
@@ -489,7 +489,7 @@ class TestERP5BankingCheckPaymentMixin(TestERP5BankingMixin):
     FIXME: check if the transition fails when a category or property is invalid.
     """
     message = self.assertWorkflowTransitionFails(self.check_payment,
-              'check_payment_workflow','deliver_action')
+              'check_payment_workflow', 'deliver_action')
     self.assertTrue(message.find('Insufficient balance')>=0)
 
   def stepCheckCheckIsDelivered(self, sequence=None, sequence_list=None, **kwd):

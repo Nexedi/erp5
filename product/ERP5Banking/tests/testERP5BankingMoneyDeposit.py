@@ -75,7 +75,7 @@ class TestERP5BankingMoneyDepositMixin(TestERP5BankingMixin):
     # Create a user and login as manager to populate the erp5 portal with objects for tests.
     self.createManagerAndLogin()
 
-    self.createFunctionGroupSiteCategory(site_list=['paris',])
+    self.createFunctionGroupSiteCategory(site_list=['paris'])
 
     """
     Windows to create the BANKNOTES of 10 000 and 5000, coins 200.
@@ -297,8 +297,8 @@ class TestERP5BankingMoneyDepositMixin(TestERP5BankingMixin):
     self.assertEqual(self.simulation_tool.getFutureInventory(node=self.money_deposit_counter_vault.getRelativeUrl(), resource = self.billet_5000.getRelativeUrl()), 26.0)
     # check the final inventory of the bank account
     #self.assertEqual(self.simulation_tool.getCurrentInventory(payment=self.bank_account_1.getRelativeUrl()), 120000)
-    self.assertEqual(self.simulation_tool.getCurrentInventory(payment=self.bank_account_1.getRelativeUrl(),resource=self.currency_1.getRelativeUrl()), 120000)
-    self.assertEqual(self.simulation_tool.getFutureInventory(payment=self.bank_account_1.getRelativeUrl(),resource=self.currency_1.getRelativeUrl()), 120000)
+    self.assertEqual(self.simulation_tool.getCurrentInventory(payment=self.bank_account_1.getRelativeUrl(), resource=self.currency_1.getRelativeUrl()), 120000)
+    self.assertEqual(self.simulation_tool.getFutureInventory(payment=self.bank_account_1.getRelativeUrl(), resource=self.currency_1.getRelativeUrl()), 120000)
 
   def stepDelMoneyDeposit(self, sequence=None, sequence_list=None, **kwd):
     """

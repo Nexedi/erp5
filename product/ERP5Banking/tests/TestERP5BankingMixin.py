@@ -58,7 +58,7 @@ class TestERP5BankingMixin(ERP5TypeTestCase):
             'erp5_banking_core',
             'erp5_banking_inventory',
             'erp5_banking_cash',
-            'erp5_banking_check',)
+            'erp5_banking_check')
 
   def enableLightInstall(self):
     """
@@ -316,7 +316,7 @@ class TestERP5BankingMixin(ERP5TypeTestCase):
       currency = self.getCurrencyModule()[currency_id]
       exchange_line = None
       exchange_line = currency.newContent(portal_type='Currency Exchange Line',
-                                          start_date='01/01/1900',stop_date='01/01/2900',
+                                          start_date='01/01/1900', stop_date='01/01/2900',
                                           base_price=base_price,
                                           currency_exchange_type_list=['currency_exchange_type/sale',
                                                                        'currency_exchange_type/purchase',
@@ -324,7 +324,7 @@ class TestERP5BankingMixin(ERP5TypeTestCase):
                                           )
       exchange_line.setPriceCurrencyValue(self.getCurrencyModule()[price_currency])
       cell_list = exchange_line.objectValues()
-      self.assertEquals(len(cell_list),3)
+      self.assertEquals(len(cell_list), 3)
       for cell in cell_list:
         cell.setBasePrice(cell_price)
 
@@ -340,7 +340,7 @@ class TestERP5BankingMixin(ERP5TypeTestCase):
     # Define static values (only use prime numbers to prevent confusions like 2 * 6 == 3 * 4)
     # variation list is the list of years for banknotes and coins
     self.variation_list = ('variation/1992', 'variation/2003')
-    self.usd_variation_list = ('variation/not_defined',)
+    self.usd_variation_list = ('variation/not_defined', )
     # quantity of banknotes of 10000 :
     self.quantity_10000 = {}
     # 2 banknotes of 10000 for the year 1992
@@ -463,22 +463,22 @@ class TestERP5BankingMixin(ERP5TypeTestCase):
     # create document for banknote of 100 USD
     self.usd_billet_100 = self.currency_cash_module.newContent(id='usd_billet_100',
          portal_type='Banknote', base_price=100,
-         price_currency_value=self.currency_2, variation_list=('not_defined',),
+         price_currency_value=self.currency_2, variation_list=('not_defined', ),
          quantity_unit_value=self.unit)
     # create document for banknote of 200 USD
     self.usd_billet_200 = self.currency_cash_module.newContent(id='usd_billet_200',
          portal_type='Banknote', base_price=200,
-         price_currency_value=self.currency_2, variation_list=('not_defined',),
+         price_currency_value=self.currency_2, variation_list=('not_defined', ),
          quantity_unit_value=self.unit)
     # create document for banknote of 50 USD
     self.usd_billet_50 = self.currency_cash_module.newContent(id='usd_billet_50',
          portal_type='Banknote', base_price=50,
-         price_currency_value=self.currency_2, variation_list=('not_defined',),
+         price_currency_value=self.currency_2, variation_list=('not_defined', ),
          quantity_unit_value=self.unit)
     # create document for banknote of 20 USD
     self.usd_billet_20 = self.currency_cash_module.newContent(id='usd_billet_20',
          portal_type='Banknote', base_price=20,
-         price_currency_value=self.currency_2, variation_list=('not_defined',),
+         price_currency_value=self.currency_2, variation_list=('not_defined', ),
          quantity_unit_value=self.unit)
 
   def createFunctionGroupSiteCategory(self, no_site=0, site_list=None):
@@ -495,7 +495,7 @@ class TestERP5BankingMixin(ERP5TypeTestCase):
     self.category_tool.role.newContent(id='internal', portal_type='Category')
 
     # add category for currency_exchange_type
-    self.currency_exchange_type = getattr(self.category_tool,'currency_exchange_type')
+    self.currency_exchange_type = getattr(self.category_tool, 'currency_exchange_type')
     self.currency_exchange_type.newContent(id='sale')
     self.currency_exchange_type.newContent(id='purchase')
     self.currency_exchange_type.newContent(id='transfer')
@@ -537,7 +537,7 @@ class TestERP5BankingMixin(ERP5TypeTestCase):
     # get the base category site
     self.site_base_category = getattr(self.category_tool, 'site')
     # add the category testsite in the category site which hold vaults situated in the bank
-    self.testsite = self.site_base_category.newContent(id='testsite', portal_type='Category',codification='TEST')
+    self.testsite = self.site_base_category.newContent(id='testsite', portal_type='Category', codification='TEST')
     site_reference_from_codification_dict = {
       'P10': ('FR', '000', '11111', '000000000000', '25'),
       'S10': ('SP', '000', '11111', '000000000000', '08'),
@@ -647,58 +647,58 @@ class TestERP5BankingMixin(ERP5TypeTestCase):
             vault_codification += 'GV'
           elif s == 'gros_paiement':
             vault_codification += 'GP'
-          s = surface.newContent(id='%s' %(s,), portal_type='Category', codification=vault_codification,  vault_type='site/surface/%s' %(s,))
+          s = surface.newContent(id='%s' % (s, ), portal_type='Category', codification=vault_codification,  vault_type='site/surface/%s' % (s, ))
           for ss in ['guichet_1', 'guichet_2']:
             final_vault_codification = vault_codification + ss[-1]
-            ss =  s.newContent(id='%s' %(ss,), portal_type='Category', codification=final_vault_codification,  vault_type='site/surface/%s/guichet' %(s.getId(),))
-            for sss in ['encaisse_des_billets_et_monnaies',]:
-              sss =  ss.newContent(id='%s' %(sss,), portal_type='Category', codification='',  vault_type='site/surface/%s/guichet' %(s.getId(),))
+            ss =  s.newContent(id='%s' % (ss, ), portal_type='Category', codification=final_vault_codification,  vault_type='site/surface/%s/guichet' % (s.getId(), ))
+            for sss in ['encaisse_des_billets_et_monnaies']:
+              sss =  ss.newContent(id='%s' % (sss, ), portal_type='Category', codification='',  vault_type='site/surface/%s/guichet' % (s.getId(), ))
               for ssss in ['entrante', 'sortante']:
-                sss.newContent(id='%s' %(ssss,), portal_type='Category', codification='',  vault_type='site/surface/%s/guichet' %(s.getId(),))
-            for sss in ['encaisse_des_devises',]:
-              sss =  ss.newContent(id='%s' %(sss,), portal_type='Category', codification='',  vault_type='site/surface/%s/guichet' %(s.getId(),))
+                sss.newContent(id='%s' % (ssss, ), portal_type='Category', codification='',  vault_type='site/surface/%s/guichet' % (s.getId(), ))
+            for sss in ['encaisse_des_devises']:
+              sss =  ss.newContent(id='%s' % (sss, ), portal_type='Category', codification='',  vault_type='site/surface/%s/guichet' % (s.getId(), ))
               for currency in ['usd']:
-                currency_cat = sss.newContent(id='%s' %(currency,), portal_type='Category', codification='',  vault_type='site/surface/%s' %(ss.getId(),))
+                currency_cat = sss.newContent(id='%s' % (currency, ), portal_type='Category', codification='',  vault_type='site/surface/%s' % (ss.getId(), ))
                 for ssss in ['entrante', 'sortante']:
-                  currency_cat.newContent(id='%s' %(ssss,), portal_type='Category', codification='',  vault_type='site/surface/%s/guichet' %(s.getId(),))
+                  currency_cat.newContent(id='%s' % (ssss, ), portal_type='Category', codification='',  vault_type='site/surface/%s/guichet' % (s.getId(), ))
         # create sort room
         salle_tri = surface.newContent(id='salle_tri', portal_type='Category', codification='',  vault_type='site/surface/salle_tri')
         for ss in ['encaisse_des_billets_et_monnaies', 'encaisse_des_billets_recus_pour_ventilation', 'encaisse_des_differences', 'encaisse_des_externes']:
-          ss =  salle_tri.newContent(id='%s' %(ss,), portal_type='Category', codification='',  vault_type='site/surface/salle_tri')
+          ss =  salle_tri.newContent(id='%s' % (ss, ), portal_type='Category', codification='',  vault_type='site/surface/salle_tri')
           if 'ventilation' in ss.getId():
             for country in destination_site_list:
               if country[0] != c.getCodification()[0]:
-                ss.newContent(id='%s' %(country,), portal_type='Category', codification='',  vault_type='site/caveau/%s' %(s.getId(),))
+                ss.newContent(id='%s' % (country, ), portal_type='Category', codification='',  vault_type='site/caveau/%s' % (s.getId(), ))
         # caveau
         caveau =  c.newContent(id='caveau', portal_type='Category', codification='',  vault_type='site/caveau')
         for s in ['auxiliaire', 'reserve', 'serre']:
-          s = caveau.newContent(id='%s' %(s,), portal_type='Category', codification='',  vault_type='site/caveau/%s' %(s,))
+          s = caveau.newContent(id='%s' % (s, ), portal_type='Category', codification='',  vault_type='site/caveau/%s' % (s, ))
           if s.getId() == 'serre':
-            for ss in ['encaisse_des_billets_neufs_non_emis', 'encaisse_des_billets_retires_de_la_circulation','encaisse_des_billets_detruits','encaisse_des_billets_neufs_non_emis_en_transit_allant_a']:
-              ss =  s.newContent(id='%s' %(ss,), portal_type='Category', codification='',  vault_type='site/caveau/%s' %(s.getId(),))
+            for ss in ['encaisse_des_billets_neufs_non_emis', 'encaisse_des_billets_retires_de_la_circulation', 'encaisse_des_billets_detruits', 'encaisse_des_billets_neufs_non_emis_en_transit_allant_a']:
+              ss =  s.newContent(id='%s' % (ss, ), portal_type='Category', codification='',  vault_type='site/caveau/%s' % (s.getId(), ))
               if 'transit' in ss.getId():
                 for country in destination_site_list:
                   if country[0] != c.getCodification()[0]:
-                    ss.newContent(id='%s' %(country,), portal_type='Category', codification='',  vault_type='site/caveau/%s' %(s.getId(),))
+                    ss.newContent(id='%s' % (country, ), portal_type='Category', codification='',  vault_type='site/caveau/%s' % (s.getId(), ))
 
           else:
             for ss in ['encaisse_des_billets_et_monnaies', 'encaisse_des_externes',
-                       'encaisse_des_billets_recus_pour_ventilation','encaisse_des_devises']:
-              ss =  s.newContent(id='%s' %(ss,), portal_type='Category', codification='',  vault_type='site/caveau/%s' %(s.getId(),))
+                       'encaisse_des_billets_recus_pour_ventilation', 'encaisse_des_devises']:
+              ss =  s.newContent(id='%s' % (ss, ), portal_type='Category', codification='',  vault_type='site/caveau/%s' % (s.getId(), ))
               if 'ventilation' in ss.getId():
                 for country in destination_site_list:
                   if country[0] != c.getCodification()[0]:
-                    ss.newContent(id='%s' %(country,), portal_type='Category', codification='',  vault_type='site/caveau/%s' %(s.getId(),))
+                    ss.newContent(id='%s' % (country, ), portal_type='Category', codification='',  vault_type='site/caveau/%s' % (s.getId(), ))
               if 'devises' in ss.getId():
-                for currency in ['eur','usd']:
-                  ss.newContent(id='%s' %(currency,), portal_type='Category', codification='',  vault_type='site/caveau/%s' %(ss.getId(),))
+                for currency in ['eur', 'usd']:
+                  ss.newContent(id='%s' % (currency, ), portal_type='Category', codification='',  vault_type='site/caveau/%s' % (ss.getId(), ))
               if 'encaisse_des_externes' in ss.getId():
-                ss.newContent(id='transit', portal_type='Category', codification='',  vault_type='site/caveau/%s' %(s.getId(),))
+                ss.newContent(id='transit', portal_type='Category', codification='',  vault_type='site/caveau/%s' % (s.getId(), ))
               #if ss.getId()=='encaisse_des_devises':
               #  for
             if s.getId() == 'auxiliaire':
               for ss in ['encaisse_des_billets_a_ventiler_et_a_detruire', 'encaisse_des_billets_ventiles_et_detruits', 'billets_detenus_par_des_tiers', 'encaisse_des_billets_recus_pour_ventilation_venant_de']:
-                s.newContent(id='%s' %(ss,), portal_type='Category', codification='',  vault_type='site/caveau/%s' %(s.getId(),))
+                s.newContent(id='%s' % (ss, ), portal_type='Category', codification='',  vault_type='site/caveau/%s' % (s.getId(), ))
         # Create forreing currency entries in encaisse_des_devises.
         for currency in ['usd', ]:
           caisse_courante.encaisse_des_devises.newContent(id=currency, portal_type='Category', codification='', vault_type='site/surface/caisse_courante/encaisse_des_devises')
@@ -784,7 +784,7 @@ class TestERP5BankingMixin(ERP5TypeTestCase):
     else:
       self.portal._updateProperty('not_working_days', "")
       
-    setattr(self.portal,'functionnal_test_mode',1)
+    setattr(self.portal, 'functionnal_test_mode', 1)
     # the person module
     self.person_module = self.getPersonModule()
     # the organisation module
@@ -818,12 +818,12 @@ class TestERP5BankingMixin(ERP5TypeTestCase):
     doc.Baobab_getUniqueReference()
 
 
-  def createPerson(self, id, first_name, last_name,site=None):
+  def createPerson(self, id, first_name, last_name, site=None):
     """
     Create a person
     """
     if site is None:
-      site="testsite/paris"
+      site = "testsite/paris"
     return self.person_module.newContent(id = id,
                                          portal_type = 'Person',
                                          first_name = first_name,
@@ -846,7 +846,7 @@ class TestERP5BankingMixin(ERP5TypeTestCase):
     if not kw.has_key('bank_account_key'):
       kw['bank_account_key'] = '12'
     if not kw.has_key('internal_bank_account_number'):
-      kw['internal_bank_account_number'] = 'k%11s' %(12341234512 + self.account_inventory_number,)
+      kw['internal_bank_account_number'] = 'k%11s' % (12341234512 + self.account_inventory_number, )
       #kw['internal_bank_account_number'] = 'k12341234512'
     bank_account = person.newContent(id = account_id,
                                      portal_type = 'Bank Account',
@@ -881,7 +881,7 @@ class TestERP5BankingMixin(ERP5TypeTestCase):
                                                        portal_type='Bank Account Inventory',
                                                        destination_payment_value=bank_account,
                                                        stop_date=inv_date)
-    account_inventory_line_id = 'account_inventory_line_%s' %(self.account_inventory_number,)
+    account_inventory_line_id = 'account_inventory_line_%s' % (self.account_inventory_number, )
     inventory_line = inventory.newContent(id=account_inventory_line_id,
                                           portal_type='Bank Account Inventory Line',
                                           resource_value=bank_account.getPriceCurrencyValue(),
@@ -919,12 +919,12 @@ class TestERP5BankingMixin(ERP5TypeTestCase):
                                             account_number_enabled=True,
                                             reference=reference,
                                             composition=check_model.getRelativeUrl())
-    model.newContent(id='variant_1',portal_type='Checkbook Model Check Amount Variation',
-                     quantity=50,title='50')
-    model.newContent(id='variant_2',portal_type='Checkbook Model Check Amount Variation',
-                     quantity=100,title='100')
-    model.newContent(id='variant_3',portal_type='Checkbook Model Check Amount Variation',
-                     quantity=200,title='200')
+    model.newContent(id='variant_1', portal_type='Checkbook Model Check Amount Variation',
+                     quantity=50, title='50')
+    model.newContent(id='variant_2', portal_type='Checkbook Model Check Amount Variation',
+                     quantity=100, title='100')
+    model.newContent(id='variant_3', portal_type='Checkbook Model Check Amount Variation',
+                     quantity=200, title='200')
     return model
 
 
@@ -993,7 +993,7 @@ class TestERP5BankingMixin(ERP5TypeTestCase):
       reference, range_start, range_stop, quantity, aggregate
     """
     # Container Creation
-    base_list=('emission_letter', 'variation', 'cash_status')
+    base_list = ('emission_letter', 'variation', 'cash_status')
     category_list =  ('emission_letter/'+global_dict['emission_letter'], 'variation/'+global_dict['variation'], 'cash_status/'+global_dict['cash_status'] )
     resource_total_quantity = 0
     # create cash container
@@ -1005,7 +1005,7 @@ class TestERP5BankingMixin(ERP5TypeTestCase):
                                                , cash_number_range_stop    = line_dict['range_stop']
                                                )
       if line_dict.has_key('aggregate'):
-        movement_container.setAggregateValueList([line_dict['aggregate'],])
+        movement_container.setAggregateValueList([line_dict['aggregate'], ])
       # create a cash container line
       container_line = movement_container.newContent(portal_type      = 'Container Line'
                                                      , reindex_object = 1
@@ -1014,13 +1014,13 @@ class TestERP5BankingMixin(ERP5TypeTestCase):
                                                      )
       container_line.setResourceValue(global_dict['resource'])
       container_line.setVariationCategoryList(category_list)
-      container_line.updateCellRange(script_id='CashDetail_asCellRange',base_id="movement")
+      container_line.updateCellRange(script_id='CashDetail_asCellRange', base_id="movement")
       for key in container_line.getCellKeyList(base_id='movement'):
-        if isSameSet(key,category_list):
+        if isSameSet(key, category_list):
           cell = container_line.newCell(*key)
           cell.setCategoryList(category_list)
           cell.setQuantity(line_dict['quantity'])
-          cell.setMappedValuePropertyList(['quantity','price'])
+          cell.setMappedValuePropertyList(['quantity', 'price'])
           cell.setMembershipCriterionBaseCategoryList(base_list)
           cell.setMembershipCriterionCategoryList(category_list)
           cell.edit(force_update = 1,
@@ -1038,18 +1038,18 @@ class TestERP5BankingMixin(ERP5TypeTestCase):
     movement_line.setVariationCategoryList(category_list)
     movement_line.updateCellRange(script_id="CashDetail_asCellRange", base_id="movement")
     for key in movement_line.getCellKeyList(base_id='movement'):
-      if isSameSet(key,category_list):
+      if isSameSet(key, category_list):
         cell = movement_line.newCell(*key)
         cell.setCategoryList(category_list)
         cell.setQuantity(resource_total_quantity)
-        cell.setMappedValuePropertyList(['quantity','price'])
+        cell.setMappedValuePropertyList(['quantity', 'price'])
         cell.setMembershipCriterionBaseCategoryList(base_list)
         cell.setMembershipCriterionCategoryList(category_list)
         cell.edit(force_update = 1,
                   price = movement_line.getResourceValue().getBasePrice())
 
 
-  def createCashInventory(self, source, destination, currency, line_list=[],extra_id='',
+  def createCashInventory(self, source, destination, currency, line_list=[], extra_id='',
                           reset_quantity=0, start_date=None, quantity_factor=1):
     """
     Create a cash inventory group
@@ -1057,7 +1057,7 @@ class TestERP5BankingMixin(ERP5TypeTestCase):
     # we need to have a unique inventory group id by destination
 
     inventory_group_id = 'inventory_group_%s_%s%s' % \
-                         (destination.getParentValue().getUid(),destination.getId(),extra_id)
+                         (destination.getParentValue().getUid(), destination.getId(), extra_id)
     if start_date is None:
       start_date = DateTime()-1
     if not hasattr(self, inventory_group_id):
@@ -1070,7 +1070,7 @@ class TestERP5BankingMixin(ERP5TypeTestCase):
       inventory_group = getattr(self, inventory_group_id)
 
     # get/create the inventory based on currency
-    inventory_id = '%s_inventory_%s' %(inventory_group_id,currency.getId())
+    inventory_id = '%s_inventory_%s' % (inventory_group_id, currency.getId())
     if not hasattr(self, inventory_id):
       inventory = inventory_group.newContent(id=inventory_id,
                                              portal_type='Cash Inventory',
@@ -1086,7 +1086,7 @@ class TestERP5BankingMixin(ERP5TypeTestCase):
     # variation_value : list of variation value (must be in the same order as variation_id
     # quantity
     for line in line_list:
-      variation_list = line.get('variation_list',None)
+      variation_list = line.get('variation_list', None)
       self.addCashLineToDelivery(inventory,
                                  line['id'],
                                  "Cash Inventory Line",
@@ -1194,7 +1194,7 @@ class TestERP5BankingMixin(ERP5TypeTestCase):
       extra_id = '_reset'
     # Before the test, we need to input the inventory
     self.createCashInventory(source=None, destination=destination, currency=currency,
-                             line_list=line_list,extra_id=extra_id, reset_quantity=1,
+                             line_list=line_list, extra_id=extra_id, reset_quantity=1,
                              start_date=start_date)
 
   def stepDeleteResetInventory(self, sequence=None, sequence_list=None, **kwd):

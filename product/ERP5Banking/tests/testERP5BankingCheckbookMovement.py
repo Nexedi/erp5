@@ -75,7 +75,7 @@ class TestERP5BankingCheckbookMovement(TestERP5BankingCheckbookVaultTransferMixi
     self.checkbook_model_module = self.getCheckbookModelModule()
 
     self.createManagerAndLogin()
-    self.createFunctionGroupSiteCategory(site_list=['paris','madrid'])
+    self.createFunctionGroupSiteCategory(site_list=['paris', 'madrid'])
     self.createCheckAndCheckbookModel()
     self.reception_destination_site = self.paris
     self.source_site = self.paris
@@ -281,7 +281,7 @@ class TestERP5BankingCheckbookMovement(TestERP5BankingCheckbookVaultTransferMixi
     self.assertEqual(len(checkbook_list), 2)
     # check we have cash checkbook 1
     checkbook_object_list = [x.getObject() for x in checkbook_list]
-    self.failIfDifferentSet(checkbook_object_list,[self.checkbook_1,self.check_1])
+    self.failIfDifferentSet(checkbook_object_list, [self.checkbook_1, self.check_1])
     self.assertEqual(len(self.simulation_tool.getFutureTrackingList(
                 node=self.destination_vault.getRelativeUrl())), 2)
 
@@ -299,7 +299,7 @@ class TestERP5BankingCheckbookMovement(TestERP5BankingCheckbookVaultTransferMixi
     Try if we get Insufficient balance
     """
     message = self.assertWorkflowTransitionFails(self.checkbook_movement,
-              'checkbook_movement_workflow','confirm_to_deliver_action')
+              'checkbook_movement_workflow', 'confirm_to_deliver_action')
     self.assertTrue(message.find('Sorry, the item with reference')>=0)
     self.assertTrue(message.find('is not available any more')>=0)
 

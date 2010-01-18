@@ -178,7 +178,7 @@ class TestERP5BankingCheckbookDelivery(TestERP5BankingCheckbookDeliveryMixin,
     self.assertEqual(len(checkbook_list), 2)
     # check we have cash checkbook 1
     checkbook_object_list = [x.getObject() for x in checkbook_list]
-    self.failIfDifferentSet(checkbook_object_list,[self.check_1,self.checkbook_1])
+    self.failIfDifferentSet(checkbook_object_list, [self.check_1, self.checkbook_1])
 
   def stepCreateCheckbookDelivery(self, sequence=None, sequence_list=None, **kwd):
     """
@@ -234,7 +234,7 @@ class TestERP5BankingCheckbookDelivery(TestERP5BankingCheckbookDeliveryMixin,
     self.assertEqual(state, 'delivered')
     # check that checks are issued
     check = self.checkbook_1.objectValues()[0]
-    self.assertEqual(check.getSimulationState(),'confirmed')
+    self.assertEqual(check.getSimulationState(), 'confirmed')
 
 
   def stepCheckFinalCheckbookInventory(self, sequence=None, sequence_list=None, **kw):
@@ -253,7 +253,7 @@ class TestERP5BankingCheckbookDelivery(TestERP5BankingCheckbookDeliveryMixin,
     self.assertEqual(len(checkbook_list), 1)
     # check we have cash checkbook 1
     checkbook_object_list = [x.getObject() for x in checkbook_list]
-    self.failIfDifferentSet(checkbook_object_list,[self.check_1])
+    self.failIfDifferentSet(checkbook_object_list, [self.check_1])
 
   def stepChangePreviousDeliveryDate(self, 
                sequence=None, sequence_list=None, **kwd):
@@ -269,7 +269,7 @@ class TestERP5BankingCheckbookDelivery(TestERP5BankingCheckbookDeliveryMixin,
     Try if we get Insufficient balance
     """
     message = self.assertWorkflowTransitionFails(self.checkbook_delivery,
-              'checkbook_delivery_workflow','deliver_action')
+              'checkbook_delivery_workflow', 'deliver_action')
     self.assertTrue(message.find('Sorry, the item with reference')>=0)
     self.assertTrue(message.find('is not available any more')>=0)
 

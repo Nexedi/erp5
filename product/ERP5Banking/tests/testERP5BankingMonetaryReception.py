@@ -78,7 +78,7 @@ class TestERP5BankingMonetaryReception(TestERP5BankingMixin):
     self.monetary_reception_module = self.getMonetaryReceptionModule()
 
     self.createManagerAndLogin()
-    self.createFunctionGroupSiteCategory(site_list=['paris',])
+    self.createFunctionGroupSiteCategory(site_list=['paris'])
     self.reception = self.paris.caveau.serre.encaisse_des_billets_neufs_non_emis
     self.checkUserFolderType()
     self.organisation = self.organisation_module.newContent(id='baobab_org', portal_type='Organisation',

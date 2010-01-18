@@ -66,8 +66,8 @@ class TestERP5BankingCashToCurrencyPurchase(TestERP5BankingMixin):
   RUN_ALL_TEST = 1 # we want to run all test
   QUIET = 0 # we don't want the test to be quiet
 
-  outgoing_quantity_5000 = {'variation/1992':4,'variation/2003':6}
-  outgoing_quantity_100 = {'variation/1992':120,'variation/2003':0}
+  outgoing_quantity_5000 = {'variation/1992':4, 'variation/2003':6}
+  outgoing_quantity_100 = {'variation/1992':120, 'variation/2003':0}
 
   def getTitle(self):
     """
@@ -119,7 +119,7 @@ class TestERP5BankingCashToCurrencyPurchase(TestERP5BankingMixin):
     line_list_sortante = [inventory_dict_line_1, inventory_dict_line_2]
 
     self.guichet_entrante = self.paris.surface.banque_interne.guichet_1.encaisse_des_devises.usd.sortante
-    self.guichet_sortante= self.paris.surface.banque_interne.guichet_1.encaisse_des_billets_et_monnaies.sortante
+    self.guichet_sortante = self.paris.surface.banque_interne.guichet_1.encaisse_des_billets_et_monnaies.sortante
     self.guichet = self.paris.surface.banque_interne.guichet_1
 
 
@@ -220,17 +220,17 @@ class TestERP5BankingCashToCurrencyPurchase(TestERP5BankingMixin):
     self.setDocumentSourceReference(self.cash_to_currency_purchase)
     # Check carrefully the script CurrencyPurchase_getQuantity
     script = self.cash_to_currency_purchase.CurrencyPurchase_getQuantity
-    self.assertEqual(script(),65000)
+    self.assertEqual(script(), 65000)
     self.cash_to_currency_purchase.setDiscountRatio(0.01)
-    self.assertEqual(script(),64350)
+    self.assertEqual(script(), 64350)
     self.cash_to_currency_purchase.setDiscountRatio(None)
     self.cash_to_currency_purchase.setDiscount(3000)
-    self.assertEqual(script(),62000)
+    self.assertEqual(script(), 62000)
     # Check that we can define a specific rate
     self.cash_to_currency_purchase.setCurrencyExchangeRate(660)
-    self.assertEqual(script(),63000)
+    self.assertEqual(script(), 63000)
     self.cash_to_currency_purchase.setCurrencyExchangeRate(None)
-    self.assertEqual(script(),62000)
+    self.assertEqual(script(), 62000)
 
   #def stepCreateValidIncomingLine(self, sequence=None, sequence_list=None, **kwd):
   def stepCreateValidIncomingLine(self, sequence=None, sequence_list=None, **kwd):

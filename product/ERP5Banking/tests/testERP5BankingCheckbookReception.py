@@ -281,18 +281,18 @@ class TestERP5BankingCheckbookReception(TestERP5BankingMixin):
 
     for line in self.checkbook_reception.objectValues():
       aggregate_value_list = line.getAggregateValueList()
-      self.assertEquals(len(aggregate_value_list),1)
+      self.assertEquals(len(aggregate_value_list), 1)
       aggregate_value = aggregate_value_list[0]
       if aggregate_value.getPortalType()=='Checkbook':
         self.checkbook_1 = aggregate_value
       elif aggregate_value.getPortalType()=='Check':
         self.check_1 = aggregate_value
         # Make sure new check is in draft mode
-        self.assertEquals(self.check_1.getSimulationState(),'draft')
-    self.assertNotEquals(None,self.checkbook_1)
-    self.assertNotEquals(None,self.check_1)
+        self.assertEquals(self.check_1.getSimulationState(), 'draft')
+    self.assertNotEquals(None, self.checkbook_1)
+    self.assertNotEquals(None, self.check_1)
     # Make sure that all checks inside checkbook are create
-    self.assertEquals(len(self.checkbook_1.objectValues()),50)
+    self.assertEquals(len(self.checkbook_1.objectValues()), 50)
     # Make sure that all checks inside checkbook are not issued yet
     self.assertEquals(self.checkbook_1.objectValues()[0].getSimulationState(),
                       'draft')
@@ -422,7 +422,7 @@ class TestERP5BankingCheckbookReception(TestERP5BankingMixin):
     self.assertEqual(len(checkbook_list), 2)
     # check we have cash checkbook 1
     checkbook_object_list = [x.getObject() for x in checkbook_list]
-    self.failIfDifferentSet(checkbook_object_list,[self.checkbook_1,self.check_1])
+    self.failIfDifferentSet(checkbook_object_list, [self.checkbook_1, self.check_1])
     self.assertEqual(len(self.simulation_tool.getFutureTrackingList(node=self.reception.getRelativeUrl())), 2)
 
   def stepCheckConfirmedCheckbookForImport(self, sequence=None, sequence_list=None, **kw):

@@ -75,11 +75,11 @@ class TestERP5BankingCheckDeposit(TestERP5BankingMixin):
 
     self.createManagerAndLogin()
     # create categories
-    self.createFunctionGroupSiteCategory(site_list=['paris',])
+    self.createFunctionGroupSiteCategory(site_list=['paris'])
     # define the user, a site is needed for accouting event
     self.checkUserFolderType()
     self.organisation = self.organisation_module.newContent(id='baobab_org', portal_type='Organisation',
-                                                            function='banking', group='baobab',  site='testsite/paris',role='internal')
+                                                            function='banking', group='baobab',  site='testsite/paris', role='internal')
     user_dict = {
       'super_user' : [['Manager'], self.organisation, 'banking/comptable', 'baobab', 'testsite/paris/surface/banque_interne/guichet_1']
       }
@@ -188,7 +188,7 @@ class TestERP5BankingCheckDeposit(TestERP5BankingMixin):
                                                               start_date = DateTime().Date(),
                                                               source_total_asset_price = 2000.0,
                                                               resource_value=self.currency_1,
-                                                              external_software_value=None,)
+                                                              external_software_value=None)
     self.assertNotEqual(self.check_deposit, None)
     self.assertEqual(self.check_deposit.getTotalPrice(fast=0), 0.0)
     self.assertEqual(self.check_deposit.getDestinationPayment(), self.bank_account_1.getRelativeUrl())
@@ -426,12 +426,12 @@ class TestERP5BankingCheckDeposit(TestERP5BankingMixin):
     Remove previous check and create a new one with same reference,
     like this we make sure the workflow history is empty
     """
-    self.checkbook_1.manage_delObjects([self.check_1.getId(),])
+    self.checkbook_1.manage_delObjects([self.check_1.getId(), ])
     self.check_1 = self.createCheck(id='check_1',
                                     reference='CHKNB1',
                                     resource_value=self.check_model,
                                     checkbook=self.checkbook_1)
-    self.checkbook_1.manage_delObjects([self.check_2.getId(),])
+    self.checkbook_1.manage_delObjects([self.check_2.getId()])
     self.check_2 = self.createCheck(id='check_2',
                                     reference='CHKNB2',
                                     resource_value=self.check_model,
@@ -443,7 +443,7 @@ class TestERP5BankingCheckDeposit(TestERP5BankingMixin):
     Clear the check deposit module
     """
     if hasattr(self, 'check_deposit'):
-      self.check_deposit_module.manage_delObjects([self.check_deposit.getId(),])
+      self.check_deposit_module.manage_delObjects([self.check_deposit.getId()])
 
   def test_01_ERP5BankingCheckDeposit(self, quiet=QUIET, run=RUN_ALL_TEST):
     """

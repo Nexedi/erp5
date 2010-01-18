@@ -114,7 +114,7 @@ class TestERP5BankingCashMovement(TestERP5BankingMixin):
     self.createManagerAndLogin()
 
     # create categories
-    self.createFunctionGroupSiteCategory(site_list=['paris','madrid'])
+    self.createFunctionGroupSiteCategory(site_list=['paris', 'madrid'])
 
     # Before the test, we need to input the inventory
 
@@ -380,7 +380,7 @@ class TestERP5BankingCashMovement(TestERP5BankingMixin):
     self.assertEqual(len(workflow_history), 2)
     # check we get an "Insufficient balance" message in the workflow history because of the invalid line
     msg = workflow_history[-1]['error_message']
-    self.assertTrue('Insufficient balance' in "%s" %(msg,))
+    self.assertTrue('Insufficient balance' in "%s" %(msg, ))
 
 
   def stepTryConfirmCashMovementWithBadInventory(self, sequence=None, sequence_list=None, **kwd):
@@ -610,7 +610,7 @@ class TestERP5BankingCashMovement(TestERP5BankingMixin):
     node = self.vault_source
     line_list = self.line_list
     self.resetInventory(destination=node, currency=self.currency_1,
-                        line_list=line_list,extra_id='_reset_out')
+                        line_list=line_list, extra_id='_reset_out')
 
   def stepDelCashMovement(self, sequence=None, sequence_list=None, **kwd):
     self.cash_movement_module.deleteContent('cash_movement_1')
@@ -620,7 +620,7 @@ class TestERP5BankingCashMovement(TestERP5BankingMixin):
     Try if we get Insufficient balance
     """
     message = self.assertWorkflowTransitionFails(self.cash_movement,
-              'cash_movement_workflow','start_action')
+              'cash_movement_workflow', 'start_action')
     self.assertTrue(message.find('Insufficient balance')>=0)
 
 

@@ -65,8 +65,8 @@ class TestERP5BankingCashBalanceRegulation(TestERP5BankingMixin):
   RUN_ALL_TEST = 1 # we want to run all test
   QUIET = 0 # we don't want the test to be quiet
 
-  outgoing_quantity_5000 = {'variation/1992':4,'variation/2003':6}
-  outgoing_quantity_100 = {'variation/1992':24,'variation/2003':0}
+  outgoing_quantity_5000 = {'variation/1992':4, 'variation/2003':6}
+  outgoing_quantity_100 = {'variation/1992':24, 'variation/2003':0}
 
   def getTitle(self):
     """
@@ -302,7 +302,7 @@ class TestERP5BankingCashBalanceRegulation(TestERP5BankingMixin):
                source='site/testsite/paris/caveau/auxiliaire/encaisse_des_externes')
 
   #def stepCreateValidIncomingLine(self, sequence=None, sequence_list=None, **kwd):
-  def stepCreateValidIncomingLine(self, sequence=None, sequence_list=None, check_source=1,**kwd):
+  def stepCreateValidIncomingLine(self, sequence=None, sequence_list=None, check_source=1, **kwd):
     """
     Create the cash balance regulation incoming line  with banknotes of 10000 and check it has been well created
     """
@@ -621,10 +621,10 @@ class TestERP5BankingCashBalanceRegulation(TestERP5BankingMixin):
     """
     # do the workflow transition "deliver_action"
     message = self.assertWorkflowTransitionFails(self.cash_balance_regulation,
-                         'cash_balance_regulation_workflow','deliver_action')
+                         'cash_balance_regulation_workflow', 'deliver_action')
     self.assertTrue(message.find('local emission letter')>=0)
 
-  def stepCheckFinalInventory(self, sequence=None, sequence_list=None, check_source=1,**kwd):
+  def stepCheckFinalInventory(self, sequence=None, sequence_list=None, check_source=1, **kwd):
     """
     Check inventory at source (vault encaisse_paris) after deliver of the cash sorting
     """
@@ -642,7 +642,7 @@ class TestERP5BankingCashBalanceRegulation(TestERP5BankingMixin):
       self.assertEqual(self.simulation_tool.getFutureInventory(node=self.guichet_1.getRelativeUrl(), resource = self.piece_100.getRelativeUrl()), 0.0)
 
 
-  def stepCheckFinalInventoryCaveau(self, sequence=None, sequence_list=None, check_source=1,**kwd):
+  def stepCheckFinalInventoryCaveau(self, sequence=None, sequence_list=None, check_source=1, **kwd):
     """
     Check inventory at source (vault encaisse_paris) after deliver of the cash sorting
     """
@@ -660,7 +660,7 @@ class TestERP5BankingCashBalanceRegulation(TestERP5BankingMixin):
       self.assertEqual(self.simulation_tool.getFutureInventory(node=self.guichet_caveau.getRelativeUrl(), resource = self.piece_100.getRelativeUrl()), 0.0)
 
 
-  def stepCheckFinalInventorySalleTri(self, sequence=None, sequence_list=None, check_source=1,**kwd):
+  def stepCheckFinalInventorySalleTri(self, sequence=None, sequence_list=None, check_source=1, **kwd):
     """
     Check inventory at source (vault encaisse_paris) after deliver of the cash sorting
     """
@@ -678,7 +678,7 @@ class TestERP5BankingCashBalanceRegulation(TestERP5BankingMixin):
       self.assertEqual(self.simulation_tool.getFutureInventory(node=self.guichet_salletri.getRelativeUrl(), resource = self.piece_100.getRelativeUrl()), 0.0)
 
 
-  def stepCheckFinalInventorySurface(self, sequence=None, sequence_list=None, check_source=1,**kwd):
+  def stepCheckFinalInventorySurface(self, sequence=None, sequence_list=None, check_source=1, **kwd):
     """
     Check inventory at source (vault encaisse_paris) after deliver of the cash sorting
     """
@@ -695,7 +695,7 @@ class TestERP5BankingCashBalanceRegulation(TestERP5BankingMixin):
       self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.guichet_surface.getRelativeUrl(), resource = self.piece_100.getRelativeUrl()), 0.0)
       self.assertEqual(self.simulation_tool.getFutureInventory(node=self.guichet_surface.getRelativeUrl(), resource = self.piece_100.getRelativeUrl()), 0.0)
 
-  def stepCheckFinalInventoryExternes(self, sequence=None, sequence_list=None, check_source=1,**kwd):
+  def stepCheckFinalInventoryExternes(self, sequence=None, sequence_list=None, check_source=1, **kwd):
     """
     Check inventory at source (vault encaisse_paris) after deliver of the cash sorting
     """

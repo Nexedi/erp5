@@ -78,7 +78,7 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin):
                              'variation_value': ('emission_letter/not_defined', 'cash_status/valid') + self.variation_list,
                              'quantity': self.quantity_10000}
 
-    line_list = [inventory_dict_line_1,]
+    line_list = [inventory_dict_line_1]
     self.mutilated_banknote_vault = self.paris.surface.caisse_courante.billets_mutiles
     self.maculated_banknote_vault = self.paris.surface.caisse_courante.billets_macules
     self.counter = self.paris.surface.banque_interne.guichet_1.encaisse_des_billets_et_monnaies.sortante

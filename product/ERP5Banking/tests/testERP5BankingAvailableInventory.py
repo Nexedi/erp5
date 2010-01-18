@@ -92,7 +92,7 @@ class TestERP5BankingAvailableInventory(TestERP5BankingCheckPaymentMixin,
                              currency=self.currency_1,
                              line_list=self.line_list)
 
-    self.openCounter(site=self.money_deposit_counter.guichet_1,id='counter_2')
+    self.openCounter(site=self.money_deposit_counter.guichet_1, id='counter_2')
 
     # Define foreign currency variables
     inventory_dict_line_1 = {'id' : 'inventory_line_1',
@@ -119,36 +119,36 @@ class TestERP5BankingAvailableInventory(TestERP5BankingCheckPaymentMixin,
     """
     Make sure we can not open the counter date twice
     """
-    self.openCounterDate(site=self.paris,id='counter_date_2',open=0)
+    self.openCounterDate(site=self.paris, id='counter_date_2', open=0)
     # open counter date and counter
     self.assertRaises(ValidationFailed,
                      self.workflow_tool.doActionFor,
-                     self.counter_date_2,'open_action',
+                     self.counter_date_2, 'open_action',
                      wf_id='counter_date_workflow')
     # get workflow history
     workflow_history = self.workflow_tool.getInfoFor(
            ob=self.counter_date_2, name='history', wf_id='counter_date_workflow')
     # check its len is 2
     msg = workflow_history[-1]['error_message']
-    self.assertTrue('there is already a counter date opened' in "%s" %(msg,))
+    self.assertTrue('there is already a counter date opened' in "%s" % (msg, ))
 
   def stepCheckOpenCounterDateTwiceWithOtherDateFail(self, sequence=None, sequence_list=None, **kwd):
     """
     Make sure we can not open the counter date twice
     """
-    self.openCounterDate(site=self.paris,id='counter_date_7',open=0)
+    self.openCounterDate(site=self.paris, id='counter_date_7', open=0)
     self.counter_date_7.setStartDate(DateTime())
     # open counter date and counter
     self.assertRaises(ValidationFailed,
                      self.workflow_tool.doActionFor,
-                     self.counter_date_7,'open_action',
+                     self.counter_date_7, 'open_action',
                      wf_id='counter_date_workflow')
     # get workflow history
     workflow_history = self.workflow_tool.getInfoFor(
            ob=self.counter_date_7, name='history', wf_id='counter_date_workflow')
     # check its len is 2
     msg = workflow_history[-1]['error_message']
-    self.assertTrue('there is already a counter date opened' in "%s" %(msg,))
+    self.assertTrue('there is already a counter date opened' in "%s" % (msg, ))
 
   def stepCheckRemainingOperations(self, 
                sequence=None, sequence_list=None, **kwd):
@@ -192,11 +192,11 @@ class TestERP5BankingAvailableInventory(TestERP5BankingCheckPaymentMixin,
     line_list = self.line_list
     start_date = DateTime()
     self.resetInventory(source=None, destination=bi_counter_vault, currency=self.currency_1,
-                             line_list=line_list,extra_id='_reset_in',
+                             line_list=line_list, extra_id='_reset_in',
                              start_date=start_date)
     bi_counter_vault = bi_counter.guichet_1.encaisse_des_billets_et_monnaies.sortante
     self.resetInventory(source=None, destination=bi_counter_vault, currency=self.currency_1,
-                             line_list=line_list,extra_id='_reset_out',
+                             line_list=line_list, extra_id='_reset_out',
                              start_date=start_date)
 
   def stepCheckRightStockBeforeClosingDate(self, 

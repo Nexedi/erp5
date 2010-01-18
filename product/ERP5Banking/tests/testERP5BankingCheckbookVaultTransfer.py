@@ -105,10 +105,10 @@ class TestERP5BankingCheckbookVaultTransferMixin(TestERP5BankingMixin):
                                          sequence_list=None, **kwd):
     self.checkItemsCreated(sequence=sequence,
                            sequence_list=sequence_list,
-                           traveler_check=1,**kwd)
+                           traveler_check=1, **kwd)
 
   def checkItemsCreated(self, sequence=None, sequence_list=None, 
-                        traveler_check=0,**kwd):
+                        traveler_check=0, **kwd):
     """
     Create the checkbook
     """
@@ -118,7 +118,7 @@ class TestERP5BankingCheckbookVaultTransferMixin(TestERP5BankingMixin):
 
     for line in self.checkbook_reception.objectValues():
       aggregate_value_list = line.getAggregateValueList()
-      self.assertEquals(len(aggregate_value_list),1)
+      self.assertEquals(len(aggregate_value_list), 1)
       aggregate_value = aggregate_value_list[0]
       if aggregate_value.getPortalType()=='Checkbook':
         self.checkbook_1 = aggregate_value
@@ -128,10 +128,10 @@ class TestERP5BankingCheckbookVaultTransferMixin(TestERP5BankingMixin):
         else:
           self.check_1 = aggregate_value
     if not traveler_check:
-      self.assertNotEquals(None,self.checkbook_1)
-      self.assertNotEquals(None,self.check_1)
+      self.assertNotEquals(None, self.checkbook_1)
+      self.assertNotEquals(None, self.check_1)
     else:
-      self.assertNotEquals(traveler_check,None)
+      self.assertNotEquals(traveler_check, None)
 
   def stepPutBackPreviousDeliveryDate(self, 
                sequence=None, sequence_list=None, **kwd):
@@ -339,7 +339,7 @@ class TestERP5BankingCheckbookVaultTransfer(TestERP5BankingCheckbookVaultTransfe
     self.assertEqual(len(checkbook_list), 2)
     # check we have cash checkbook 1
     checkbook_object_list = [x.getObject() for x in checkbook_list]
-    self.failIfDifferentSet(checkbook_object_list,[self.checkbook_1,self.check_1])
+    self.failIfDifferentSet(checkbook_object_list, [self.checkbook_1, self.check_1])
     self.assertEqual(len(self.simulation_tool.getFutureTrackingList(
                 node=self.destination_vault.getRelativeUrl())), 2)
 
@@ -357,7 +357,7 @@ class TestERP5BankingCheckbookVaultTransfer(TestERP5BankingCheckbookVaultTransfe
     Try if we get Insufficient balance
     """
     message = self.assertWorkflowTransitionFails(self.checkbook_vault_transfer,
-              'checkbook_vault_transfer_workflow','deliver_action')
+              'checkbook_vault_transfer_workflow', 'deliver_action')
     self.assertTrue(message.find('Sorry, the item with reference')>=0)
     self.assertTrue(message.find('is not available any more')>=0)
 
