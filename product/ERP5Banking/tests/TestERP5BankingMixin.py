@@ -691,7 +691,7 @@ class TestERP5BankingMixin(ERP5TypeTestCase):
                     ss.newContent(id='%s' %(country,), portal_type='Category', codification='',  vault_type='site/caveau/%s' %(s.getId(),))
               if 'devises' in ss.getId():
                 for currency in ['eur','usd']:
-                    ss.newContent(id='%s' %(currency,), portal_type='Category', codification='',  vault_type='site/caveau/%s' %(ss.getId(),))
+                  ss.newContent(id='%s' %(currency,), portal_type='Category', codification='',  vault_type='site/caveau/%s' %(ss.getId(),))
               if 'encaisse_des_externes' in ss.getId():
                 ss.newContent(id='transit', portal_type='Category', codification='',  vault_type='site/caveau/%s' %(s.getId(),))
               #if ss.getId()=='encaisse_des_devises':

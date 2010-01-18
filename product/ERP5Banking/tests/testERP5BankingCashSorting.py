@@ -480,8 +480,8 @@ class TestERP5BankingCashSorting(TestERP5BankingMixin):
     for node, resource, quantity in [(self.encaisse_reserve.getRelativeUrl(), self.billet_10000.getRelativeUrl(), 5.0),
                                      (self.encaisse_externe.getRelativeUrl(), self.billet_200.getRelativeUrl(), 12.0),
                                      (self.encaisse_auxiliaire.getRelativeUrl(), self.billet_5000.getRelativeUrl(), 24.0)]:
-        self.assertEqual(self.simulation_tool.getCurrentInventory(node=node, resource=resource), 0.0)
-        self.assertEqual(self.simulation_tool.getFutureInventory(node=node, resource=resource), quantity)
+      self.assertEqual(self.simulation_tool.getCurrentInventory(node=node, resource=resource), 0.0)
+      self.assertEqual(self.simulation_tool.getFutureInventory(node=node, resource=resource), quantity)
 
 
   def stepDeliverCashSorting(self, sequence=None, sequence_list=None, **kwd):
@@ -511,8 +511,8 @@ class TestERP5BankingCashSorting(TestERP5BankingMixin):
     for node, resource, quantity in [(self.encaisse_reserve.getRelativeUrl(), self.billet_10000.getRelativeUrl(), 5.0),
                                      (self.encaisse_externe.getRelativeUrl(), self.billet_200.getRelativeUrl(), 12.0),
                                      (self.encaisse_auxiliaire.getRelativeUrl(), self.billet_5000.getRelativeUrl(), 24.0)]:
-        self.assertEqual(self.simulation_tool.getCurrentInventory(node=node, resource=resource), quantity)
-        self.assertEqual(self.simulation_tool.getFutureInventory(node=node, resource=resource), quantity)
+      self.assertEqual(self.simulation_tool.getCurrentInventory(node=node, resource=resource), quantity)
+      self.assertEqual(self.simulation_tool.getFutureInventory(node=node, resource=resource), quantity)
 
   def stepResetSourceInventory(self, 
                sequence=None, sequence_list=None, **kwd):
