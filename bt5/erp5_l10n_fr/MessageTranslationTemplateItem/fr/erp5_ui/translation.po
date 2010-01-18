@@ -6249,10 +6249,7 @@ msgid "Open"
 msgstr "Ouvert"
 
 msgid "Open Bug"
-msgstr "Bogue ouvert"
-
-msgid "Open Bug [transition in bug_workflow]"
-msgstr "Bogue ouvert"
+msgstr "Ouvrir le bogue"
 
 msgid "Open Bugs"
 msgstr "Bogues ouverts"
