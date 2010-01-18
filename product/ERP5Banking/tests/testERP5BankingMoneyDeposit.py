@@ -320,7 +320,8 @@ class TestERP5BankingMoneyDeposit(TestERP5BankingMoneyDepositMixin):
     """
     Define the sequence of step that will be play
     """
-    if not run: return
+    if not run:
+      return
     sequence_list = SequenceList()
     # define the sequence
     sequence_string = 'Tic CheckObjects Tic CheckInitialInventory ' \

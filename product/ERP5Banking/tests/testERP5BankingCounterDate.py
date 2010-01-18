@@ -108,7 +108,8 @@ class TestERP5BankingCounterDate(TestERP5BankingMixin):
     """
       Test that opening a counter date when there is a counter date opened fails.
     """
-    if not run: return
+    if not run:
+      return
     if not quiet:
       message = 'Check open CounterDate twice fails'
       ZopeTestCase._print('\n%s ' % message)
@@ -133,7 +134,8 @@ class TestERP5BankingCounterDate(TestERP5BankingMixin):
     """
       Test that opening a counter date on a non-current date fails.
     """
-    if not run: return
+    if not run:
+      return
     if not quiet:
       message = 'Check open CounterDate on non-current date fails'
       ZopeTestCase._print('\n%s ' % message)
@@ -168,7 +170,8 @@ class TestERP5BankingCounterDate(TestERP5BankingMixin):
      - year-scoped
      - site-scoped
     """
-    if not run: return
+    if not run:
+      return
     if not quiet:
       message = 'Check CounterDate reference generator behaviour'
       ZopeTestCase._print('\n%s ' % message)
@@ -209,7 +212,8 @@ class TestERP5BankingCounterDate(TestERP5BankingMixin):
       Test that opening a counter date when there is a counter date opened
       fails, even when activites are not executed.
     """
-    if not run: return
+    if not run:
+      return
     if not quiet:
       message = 'Check open CounterDate twice without activities fails'
       ZopeTestCase._print('\n%s ' % message)

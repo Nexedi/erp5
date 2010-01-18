@@ -122,7 +122,8 @@ class TestERP5BankingAccountingDate(TestERP5BankingMixin):
     self.openAccountingDate(date=self.past_day, site=self.accounting_date_site)
     
   def test_AccountingDate(self, quiet=QUIET, run=RUN_ALL_TEST):
-    if not run: return
+    if not run:
+      return
     sequence_list = SequenceList()
     sequence_string_1 = 'stepEmptyAccountingDateModule ' \
                         'Tic ' \

@@ -222,7 +222,8 @@ class TestERP5BankingMonetaryIssue(TestERP5BankingMonetaryReceptionMixin):
     # get the cash container item from the monetary reception
     cash_container_item_list = [x.getObject() for x in self.simulation_tool.getCurrentTrackingList(node=self.reception.getRelativeUrl())]
     self.assertEqual(len(cash_container_item_list), 2)
-    def reference_sort(a, b):                                                                                   return cmp(a.getReference(), b.getReference())
+    def reference_sort(a, b):
+      return cmp(a.getReference(), b.getReference())
     cash_container_item_list.sort(reference_sort)
 
     # contruct list of dict to create cash container
@@ -449,7 +450,8 @@ class TestERP5BankingMonetaryIssue(TestERP5BankingMonetaryReceptionMixin):
     """
     Define the sequence of step that will be play
     """
-    if not run: return
+    if not run:
+      return
     sequence_list = SequenceList()
     # define the sequence
     sequence_string = 'Tic CheckObjects  CreateMonetaryReception Tic ' \
