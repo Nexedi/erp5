@@ -114,7 +114,7 @@ try:\n
     all_languages = context.getLayoutProperty(\'layout_all_languages\', default=False)\n
 \n
   # Build the list of parameters\n
-  if language is None:\n
+  if not language:\n
     language = portal.Localizer.get_selected_language()\n
 \n
   if validation_state is None:\n
