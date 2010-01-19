@@ -67,6 +67,8 @@ class TranslatedPropertyGetter(BaseGetter):
       if len(args) > 0:
         default = args[0]
       else:
+        default = instance.getProperty(self._property_id)
+      if kw.get('no_original_value'):
         default = self._default
 
       if self._language is None:
