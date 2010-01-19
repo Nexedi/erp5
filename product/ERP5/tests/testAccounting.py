@@ -2716,6 +2716,34 @@ class TestTransactions(AccountingTestCase):
     self.failIf(invoice_line.getGroupingReference())
     self.failIf(payment_line.getGroupingReference())
 
+  def test_automatically_setting_grouping_reference_in_one_invoice(self):
+    # this invoice will group it itself
+    invoice = self._makeOne(
+               title='One Invoice',
+               simulation_state='stopped',
+               destination_section_value=self.organisation_module.client_1,
+               lines=(dict(source_value=self.account_module.receivable,
+                           source_debit=100),
+                      dict(source_value=self.account_module.receivable,
+                           source_credit=100, )))
+    transaction.commit()
+    self.tic()
+    for line in invoice.contentValues():
+      self.assertTrue(line.getGroupingReference())
+
+    invoice.restart()
+    transaction.commit()
+    self.tic()
+    for line in invoice.contentValues():
+      self.assertFalse(line.getGroupingReference())
+
+    invoice.stop()
+    transaction.commit()
+    self.tic()
+    for line in invoice.contentValues():
+      self.assertTrue(line.getGroupingReference())
+
+ 
   def test_AccountingTransaction_getTotalDebitCredit(self):
     # source view
     accounting_transaction = self._makeOne(
