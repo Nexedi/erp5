@@ -506,6 +506,13 @@ Hé Hé Hé!""", page.asText().strip())
       self.assertEqual(['en' , 'en', 'en', 'en'],
                        [ w.getLanguage()  for w in websection.getDocumentValueList()])
 
+      # Check that receiving an empty string as language parameter (as done
+      # when using listbox search) correctly returns user language documents.
+      default_document_value_list = websection.getDocumentValueList(language='')
+      self.assertEqual(4, len(default_document_value_list))
+      self.assertEqual(['en', 'en', 'en', 'en'],
+                       [ w.getLanguage()  for w in default_document_value_list])
+
       pt_document_value_list = websection.getDocumentValueList(language='pt')
       self.assertEqual(4, len(pt_document_value_list))
       self.assertEqual(['pt' , 'pt', 'pt', 'pt'],
