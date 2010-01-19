@@ -32,7 +32,7 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type import Permissions
 from App.config import getConfiguration
-import os
+import os, os.path
 import random
 from Products.ERP5Type.Base import Base
 from Products.ERP5Type.Utils import convertToUpperCase
@@ -156,16 +156,17 @@ class DocumentationHelper(Implicit):
       instance_home = getConfiguration().instancehome
       file_name = self.uri.split('/')[-1]
       file_url = ''
-      list_path = os.listdir(instance_home+'/Products')
-      zope_property_sheet = instance_home + '/PropertySheet'
-      list_propertysheets = [zope_property_sheet,]
-      for path in list_path:
-        full_path = instance_home+'/Products/'+path
-        if os.path.isdir(full_path) and os.path.exists(full_path+'/PropertySheet'):
-          list_propertysheets.append(full_path+'/PropertySheet')
-      for propertysheet_directory in list_propertysheets:
-        if os.path.exists(propertysheet_directory+'/'+file_name):
-          file_url = propertysheet_directory+'/'+file_name
+      import Products
+      ModType = type(Products)
+      product_paths = [os.path.dirname(getattr(Products, modname).__file__)
+                       for modname in dir(Products)
+                       if type(getattr(Products, modname, None)) is ModType]
+      for path in [instance_home,] + product_paths:
+        file_url = os.path.join(path, 'PropertySheet', file_name)
+        if os.path.isfile(file_url):
+          break
+      else:
+        raise LookupError('could not find PropertySheet for %r' % (self.uri,))
       documented_object = open(file_url)
     elif '/' in self.uri and '#' not in self.uri:
       # URI refers to a portal object
@@ -176,9 +177,9 @@ class DocumentationHelper(Implicit):
     elif '/' in self.uri and '#' in self.uri:
       if '?' in self.uri:
         base_url, url = self.uri.split('?')
-        type, name = url.split('#')
+        type_, name = url.split('#')
         parent_object = self.getPortalObject().unrestrictedTraverse(base_url, None)
-        object_list = getattr(parent_object, type, None)
+        object_list = getattr(parent_object, type_, None)
         documented_object = None
         if object_list is not None:
           for obj in object_list:
@@ -211,7 +212,7 @@ class DocumentationHelper(Implicit):
         for key in module_list[1:]:
           documented_object = getattr(documented_object, key, None)
       else:
-        raise NotImplemented
+        raise NotImplementedError
         #fp, pathname, description = imp.find_module(base_module)
         #documented_object = imp.load_module(fp, pathname, description)
     return documented_object
