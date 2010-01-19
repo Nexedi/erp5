@@ -60,10 +60,14 @@ will be kept as is if the group is still valid, ie. the total quantity\n
 of all accounting lines in the group is 0.\n
 Returns the list of ungroupped lines.\n
 """\n
+\n
+if not context.getGroupingReference():\n
+  # The line grouping reference can alredy have been removed, for example when two\n
+  # lines of the same transaction have the same grouping reference.\n
+  return []\n
+\n
 portal = context.getPortalObject()\n
 precision = context.getResourceValue(portal_type=\'Currency\').getQuantityPrecision()\n
-\n
-assert context.getGroupingReference()\n
 \n
 if context.AccountingTransaction_isSourceView():\n
   node_uid = context.getSourceUid()\n
@@ -137,7 +141,6 @@ return line_list\n
                             <string>context</string>
                             <string>portal</string>
                             <string>precision</string>
-                            <string>AssertionError</string>
                             <string>node_uid</string>
                             <string>None</string>
                             <string>section_category</string>
