@@ -87,6 +87,15 @@ class TestContentTranslation(ERP5TypeTestCase):
     self.assert_(getattr(person, 'setJaKanaTranslatedFirstName', False))
     self.assert_(getattr(person, 'getJaKanaTranslatedFirstName', False))
 
+    # if there is no translation, original value is returned.
+    self.assertEqual('Yusei', person.getTranslatedFirstName())
+    self.assertEqual('Yusei Tahara', person.getTranslatedTitle())
+    self.assertEqual('Yusei', person.getJaKanaTranslatedFirstName())
+    # if no_original_value parameter is true, an empty string is returned.
+    self.assertEqual('', person.getTranslatedFirstName(no_original_value=True))
+    self.assertEqual('', person.getTranslatedTitle(no_original_value=True))
+    self.assertEqual('', person.getJaKanaTranslatedFirstName(no_original_value=True))
+
     person.setJaKanaTranslatedFirstName('タハラ')
     person.setJaKanaTranslatedLastName('ユウセイ')
 
@@ -116,6 +125,7 @@ class TestContentTranslation(ERP5TypeTestCase):
     self.assertEquals(address.getStreetAddress(), 'Taito-ku Tokyo')
     self.assertEquals(address.getJaKanaTranslatedStreetAddress(), '東京都 台東区')
     self.assertEquals(address.getTranslatedStreetAddress(language='ja-kana'), '東京都 台東区')
+
 
 def test_suite():
   suite = unittest.TestSuite()
