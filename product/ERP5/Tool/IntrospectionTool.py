@@ -41,7 +41,7 @@ from Products.ERP5Type.Utils import _setSuperSecurityManager
 from App.config import getConfiguration
 from AccessControl import Unauthorized
 from Products.ERP5Type.Cache import CachingMethod
-import tarfile
+from Products.ERP5Type import tarfile
 
 _MARKER = []
 
