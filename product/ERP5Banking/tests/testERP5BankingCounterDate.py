@@ -34,9 +34,6 @@ from DateTime import DateTime
 from Testing import ZopeTestCase
 from Products.DCWorkflow.DCWorkflow import ValidationFailed
 from Products.ERP5Banking.tests.TestERP5BankingMixin import TestERP5BankingMixin
-#from Products.ERP5Banking.tests.testERP5BankingCheckPayment \
-#      import TestERP5BankingCheckPaymentMixin
-from Products.ERP5Form.Document.Preference import Priority
 
 # Needed in order to have a log file inside the current folder
 os.environ['EVENT_LOG_FILE']     = os.path.join(os.getcwd(), 'zLOG.log')

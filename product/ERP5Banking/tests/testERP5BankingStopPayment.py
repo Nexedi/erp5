@@ -30,15 +30,12 @@
 # import requested python module
 import os
 from Products.ERP5Type.tests.Sequence import SequenceList
-from Products.DCWorkflow.DCWorkflow import Unauthorized, ValidationFailed
 from Products.ERP5Banking.tests.testERP5BankingCheckbookVaultTransfer \
      import TestERP5BankingCheckbookVaultTransferMixin
 from Products.ERP5Banking.tests.testERP5BankingCheckbookUsualCashTransfer \
      import TestERP5BankingCheckbookUsualCashTransferMixin
 from Products.ERP5Banking.tests.testERP5BankingCheckbookDelivery \
      import TestERP5BankingCheckbookDeliveryMixin
-from DateTime import DateTime
-from zLOG import LOG
 
 # Needed in order to have a log file inside the current folder
 os.environ['EVENT_LOG_FILE']     = os.path.join(os.getcwd(), 'zLOG.log')

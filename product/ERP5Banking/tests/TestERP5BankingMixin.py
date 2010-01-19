@@ -27,7 +27,6 @@
 ##############################################################################
 
 from DateTime import DateTime
-from zLOG import LOG
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 
 def isSameSet(a, b):

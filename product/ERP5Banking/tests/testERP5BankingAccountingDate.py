@@ -29,7 +29,7 @@
 from DateTime import DateTime
 from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.ERP5Banking.tests.TestERP5BankingMixin import TestERP5BankingMixin
-from Products.DCWorkflow.DCWorkflow import Unauthorized, ValidationFailed
+from Products.DCWorkflow.DCWorkflow import ValidationFailed
 
 QUIET = False
 RUN_ALL_TEST = True

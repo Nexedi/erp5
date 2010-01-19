@@ -29,11 +29,8 @@
 
 # import requested python module
 import os
-from zLOG import LOG
 from DateTime import DateTime
-from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type.tests.Sequence import SequenceList
-from Products.DCWorkflow.DCWorkflow import Unauthorized, ValidationFailed
 from Products.ERP5Banking.tests.TestERP5BankingMixin import TestERP5BankingMixin
 
 # Needed in order to have a log file inside the current folder

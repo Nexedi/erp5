@@ -30,10 +30,9 @@
 # import requested python module
 import os
 from Products.ERP5Type.tests.Sequence import SequenceList
-from Products.DCWorkflow.DCWorkflow import Unauthorized, ValidationFailed
+from Products.DCWorkflow.DCWorkflow import ValidationFailed
 from Products.ERP5Banking.tests.testERP5BankingCheckbookVaultTransfer \
      import TestERP5BankingCheckbookVaultTransferMixin
-from DateTime import DateTime
 from zLOG import LOG
 
 # Needed in order to have a log file inside the current folder

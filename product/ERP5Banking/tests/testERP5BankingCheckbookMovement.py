@@ -30,7 +30,6 @@
 # import requested python module
 import os
 from Products.ERP5Type.tests.Sequence import SequenceList
-from Products.DCWorkflow.DCWorkflow import Unauthorized, ValidationFailed
 from Products.ERP5Banking.tests.testERP5BankingCheckbookVaultTransfer \
     import TestERP5BankingCheckbookVaultTransferMixin
 
