@@ -61,9 +61,6 @@ class FormBoxWidget(Widget.Widget):
 
       WARNING: this is still pre-alpha code for experimentation. Do not
       use in production.
-  
-      TODO:
-          - implement validation
   """
 
   property_names = Widget.Widget.property_names + [
