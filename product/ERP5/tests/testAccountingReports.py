@@ -995,7 +995,220 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     self.failUnless(line_list[-1].isStatLine())
     self.checkLineProperties(line_list[-1], debit=700, credit=600)
 
+
+  def _createAccountStatementGroupedAtFromDateDataSet(self):
+    # create data set where the first transaction is grouped with another
+    # transaction on 2006/02/25, but with hour:minutes, which use to cause some
+    # bugs with the "non grouped lines from previous period" in the account
+    # statement.
+    account_module = self.account_module
+    bank = self.section.newContent(portal_type='Bank Account', title='Bank')
+    bank.validate()
+    # before
+    # this one will not have grouping reference
+    t1 = self._makeOne(
+              portal_type='Accounting Transaction',
+              title='Transaction 1',
+              source_reference='1',
+              simulation_state='delivered',
+              destination_section_value=self.organisation_module.client_1,
+              start_date=DateTime(2006, 2, 1),
+              lines=(dict(source_value=account_module.receivable,
+                          source_debit=100.0),
+                     dict(source_value=account_module.payable,
+                          source_credit=100.0)))
+
+    # This one will be grouped exactly at from_date
+    t2 = self._makeOne(
+              portal_type='Sale Invoice Transaction',
+              title='Transaction 2',
+              source_reference='2',
+              destination_section_value=self.organisation_module.client_1,
+              start_date=DateTime(2006, 2, 2),
+              lines=(dict(source_value=account_module.receivable,
+                          grouping_reference='A',
+                          source_debit=200.0),
+                     dict(source_value=account_module.payable,
+                          source_credit=200.0)))
+
+    # payment related to t2 invoice
+    t3 = self._makeOne(
+              portal_type='Payment Transaction',
+              title='Transaction 3',
+              source_reference='3',
+              simulation_state='delivered',
+              causality_value=t2,
+              payment_mode='payment_mode',
+              destination_section_value=self.organisation_module.client_1,
+              start_date=DateTime(2006, 2, 25, 2, 3),
+              lines=(dict(source_value=account_module.bank,
+                          source_debit=200.0),
+                     dict(source_value=account_module.receivable,
+                          grouping_reference='A',
+                          source_credit=200.0)))
+    # we validate t2 later, otherwise grouping reference will be cleaned up
+    t2.stop()
+    t2.deliver()
+
+    # Another invoice in the period
+    t4 = self._makeOne(
+              portal_type='Sale Invoice Transaction',
+              title='Transaction 4',
+              source_reference='4',
+              destination_section_value=self.organisation_module.client_1,
+              start_date=DateTime(2006, 3, 1),
+              lines=(dict(source_value=account_module.receivable,
+                          source_debit=400.0),
+                     dict(source_value=account_module.payable,
+                          source_credit=400.0)))
+    t4.stop()
+    t4.deliver()
+    transaction.commit()
+    self.tic()
+
+
+  def testAccountStatementFromDateDetailedSummaryGroupedAtFromDate(self):
+    # at the exact date of the grouped transaction
+    self._createAccountStatementGroupedAtFromDateDataSet()
     
+    # set request variables and render                 
+    request_form = self.portal.REQUEST.form
+    request_form['node'] = \
+                self.portal.account_module.receivable.getRelativeUrl()
+    request_form['from_date'] = DateTime(2006, 2, 25)
+    request_form['at_date'] = DateTime(2006, 6, 1)
+    request_form['section_category'] = 'group/demo_group'
+    request_form['simulation_state'] = ['delivered']
+    request_form['detailed_from_date_summary'] = 1
+    
+    report_section_list = self.getReportSectionList(
+                               self.portal.accounting_module,
+                               'AccountModule_viewAccountStatementReport')
+    # the report has 4 sections, 
+    self.assertEquals(4, len(report_section_list))
+    # but 2 of them are only titles
+    report_section_list = [r for r in report_section_list if r.form_id]
+    self.assertEquals(2, len(report_section_list))
+    
+    # the first section contains explanation of non grouped lines before the
+    # period
+    line_list = self.getListBoxLineList(report_section_list[0])
+    data_line_list = [l for l in line_list if l.isDataLine()]
+    # We only have line for transactions 1 and 2 which are not grouped
+    self.assertEquals(2, len(data_line_list))
+    self.checkLineProperties(data_line_list[0],
+                             Movement_getSpecificReference='1',
+                             date=DateTime(2006, 2, 1),
+                             Movement_getExplanationTitle='Transaction 1',
+                             Movement_getMirrorSectionTitle='Client 1',
+                             debit=100,
+                             credit=0,)
+    self.checkLineProperties(data_line_list[1],
+                             Movement_getSpecificReference='2',
+                             date=DateTime(2006, 2, 2),
+                             Movement_getExplanationTitle='Transaction 2',
+                             Movement_getMirrorSectionTitle='Client 1',
+                             debit=200,
+                             credit=0,)
+    self.failUnless(line_list[-1].isStatLine())
+    self.checkLineProperties(line_list[-1], debit=300, credit=0)
+    
+    # Second section is for previous balance summary and lines in the period,
+    # transaction 3 and transaction 4
+    line_list = self.getListBoxLineList(report_section_list[1])
+    data_line_list = [l for l in line_list if l.isDataLine()]
+    self.assertEquals(3, len(data_line_list))
+    self.checkLineProperties(data_line_list[0],
+                             Movement_getSpecificReference='Previous Balance',
+                             date=DateTime(2006, 2, 25),
+                             Movement_getExplanationTitle='',
+                             Movement_getMirrorSectionTitle='',
+                             running_total_price=300,
+                             debit=300,
+                             credit=0,)
+    self.checkLineProperties(data_line_list[1],
+                             Movement_getSpecificReference='3',
+                             date=DateTime(2006, 2, 25, 2, 3),
+                             Movement_getExplanationTitle='Transaction 3',
+                             Movement_getMirrorSectionTitle='Client 1',
+                             running_total_price=100,
+                             debit=0,
+                             credit=200,)
+    self.checkLineProperties(data_line_list[2],
+                             Movement_getSpecificReference='4',
+                             date=DateTime(2006, 3, 1),
+                             Movement_getExplanationTitle='Transaction 4',
+                             Movement_getMirrorSectionTitle='Client 1',
+                             running_total_price=500,
+                             debit=400,
+                             credit=0,)
+    self.failUnless(line_list[-1].isStatLine())
+    self.checkLineProperties(line_list[-1], debit=700, credit=200)
+
+  def testAccountStatementFromDateDetailedSummaryGroupedAtFromDateCase2(self):
+    # The day after the date of the grouped transaction
+    self._createAccountStatementGroupedAtFromDateDataSet()
+    
+    # set request variables and render                 
+    request_form = self.portal.REQUEST.form
+    request_form['node'] = \
+                self.portal.account_module.receivable.getRelativeUrl()
+    request_form['from_date'] = DateTime(2006, 2, 26)
+    request_form['at_date'] = DateTime(2006, 6, 1)
+    request_form['section_category'] = 'group/demo_group'
+    request_form['simulation_state'] = ['delivered']
+    request_form['detailed_from_date_summary'] = 1
+    
+    report_section_list = self.getReportSectionList(
+                               self.portal.accounting_module,
+                               'AccountModule_viewAccountStatementReport')
+    # the report has 4 sections, 
+    self.assertEquals(4, len(report_section_list))
+    # but 2 of them are only titles
+    report_section_list = [r for r in report_section_list if r.form_id]
+    self.assertEquals(2, len(report_section_list))
+    
+    # the first section contains explanation of non grouped lines before the
+    # period
+    line_list = self.getListBoxLineList(report_section_list[0])
+    data_line_list = [l for l in line_list if l.isDataLine()]
+    # We only have line for transaction 1 which are not grouped
+    self.assertEquals(1, len(data_line_list))
+    self.checkLineProperties(data_line_list[0],
+                             Movement_getSpecificReference='1',
+                             date=DateTime(2006, 2, 1),
+                             Movement_getExplanationTitle='Transaction 1',
+                             Movement_getMirrorSectionTitle='Client 1',
+                             debit=100,
+                             credit=0,)
+    self.failUnless(line_list[-1].isStatLine())
+    self.checkLineProperties(line_list[-1], debit=100, credit=0)
+    
+    # Second section is for previous balance summary and lines in the period,
+    # transaction 4
+    line_list = self.getListBoxLineList(report_section_list[1])
+    data_line_list = [l for l in line_list if l.isDataLine()]
+    self.assertEquals(2, len(data_line_list))
+    self.checkLineProperties(data_line_list[0],
+                             Movement_getSpecificReference='Previous Balance',
+                             date=DateTime(2006, 2, 26),
+                             Movement_getExplanationTitle='',
+                             Movement_getMirrorSectionTitle='',
+                             running_total_price=100,
+                             debit=300,
+                             credit=200,)
+    self.checkLineProperties(data_line_list[1],
+                             Movement_getSpecificReference='4',
+                             date=DateTime(2006, 3, 1),
+                             Movement_getExplanationTitle='Transaction 4',
+                             Movement_getMirrorSectionTitle='Client 1',
+                             running_total_price=500,
+                             debit=400,
+                             credit=0,)
+    self.failUnless(line_list[-1].isStatLine())
+    self.checkLineProperties(line_list[-1], debit=700, credit=200)
+    
+
   def testAccountStatementPeriodDateForExpenseAccounts(self):
     # Account statement for expense or income account will not show
     # transactions from previous periods.
