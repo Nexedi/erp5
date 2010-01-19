@@ -65,7 +65,7 @@ result = []\n
 property_name = args[0]\n
 language = args[1]\n
 method = getattr(context, \'get%s\' % upperCase(\'%s_translated_%s\' % (language, property_name)))\n
-translated_message = method()\n
+translated_message = method(no_original_value=True)\n
 \n
 return translated_message\n
 </string> </value>
@@ -118,6 +118,7 @@ return translated_message\n
                             <string>getattr</string>
                             <string>context</string>
                             <string>method</string>
+                            <string>True</string>
                             <string>translated_message</string>
                           </tuple>
                         </value>
