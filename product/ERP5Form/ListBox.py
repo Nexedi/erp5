@@ -2114,14 +2114,14 @@ class ListBoxRendererLine:
         if editable_field is not None:
           tales = editable_field.tales.get('default', '')
           if tales:
-            if obj is None: obj = self.getObject()
+            obj = self.getObject()
             original_value = editable_field.__of__(obj).get_value('default',
                                                         cell=brain)
             processed_value = original_value
 
         # If a tales expression is not defined, get a skin, an accessor or a property.
         if not tales:
-          if (obj is None or brain is not obj) and getattr(aq_self(brain), alias, None) is not None:
+          if getattr(aq_self(brain), alias, None) is not None:
             original_value = getattr(brain, alias)
             processed_value = original_value
           else:
