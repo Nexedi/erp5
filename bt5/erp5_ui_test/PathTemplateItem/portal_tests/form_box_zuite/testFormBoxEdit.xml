@@ -48,7 +48,7 @@
 <body>\n
 <table cellpadding="1" cellspacing="1" border="1">\n
 <thead>\n
-<tr><td rowspan="1" colspan="3">Test Form Box</td></tr>\n
+<tr><td rowspan="1" colspan="3">Test Form Box Edition</td></tr>\n
 </thead><tbody>\n
 <tal:block metal:use-macro="here/RelationFieldZuite_CommonTemplate/macros/init" />\n
 <tr>\n
@@ -81,17 +81,17 @@
 <!-- Initialize -->\n
 <tr>\n
   <td>type</td>\n
-  <td>field_my_title</td>\n
+  <td>field_my_formbox_my_title</td>\n
   <td>Default title</td>\n
 </tr>\n
 <tr>\n
   <td>type</td>\n
-  <td>field_my_quantity</td>\n
+  <td>field_my_formbox_my_quantity</td>\n
   <td>99</td>\n
 </tr>\n
 <tr>\n
   <td>type</td>\n
-  <td>field_my_description</td>\n
+  <td>field_my_formbox_my_description</td>\n
   <td>Default description</td>\n
 </tr>\n
 <tr>\n
@@ -106,17 +106,17 @@
 </tr>\n
 <tr>\n
   <td>verifyValue</td>\n
-  <td>field_my_title</td>\n
+  <td>field_my_formbox_my_title</td>\n
   <td>Default title</td>\n
 </tr>\n
 <tr>\n
   <td>verifyValue</td>\n
-  <td>field_my_quantity</td>\n
+  <td>field_my_formbox_my_quantity</td>\n
   <td>99.0</td>\n
 </tr>\n
 <tr>\n
   <td>verifyValue</td>\n
-  <td>field_my_description</td>\n
+  <td>field_my_formbox_my_description</td>\n
   <td>Default description</td>\n
 </tr>\n
 \n

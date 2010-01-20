@@ -43,7 +43,7 @@
       xmlns:metal="http://xml.zope.org/namespaces/metal">\n
 <head>\n
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">\n
-<title>Test Form Box Edition</title>\n
+<title>Test Form Box Dialog</title>\n
 </head>\n
 <body>\n
 <table cellpadding="1" cellspacing="1" border="1">\n
@@ -92,17 +92,17 @@
 </tr>\n
 <tr>\n
   <td>type</td>\n
-  <td>field_my_title</td>\n
+  <td>field_my_formbox_my_title</td>\n
   <td>Default title</td>\n
 </tr>\n
 <tr>\n
   <td>type</td>\n
-  <td>field_my_quantity</td>\n
+  <td>field_my_formbox_my_quantity</td>\n
   <td>99</td>\n
 </tr>\n
 <tr>\n
   <td>type</td>\n
-  <td>field_my_description</td>\n
+  <td>field_my_formbox_my_description</td>\n
   <td>Default description</td>\n
 </tr>\n
 \n
@@ -124,17 +124,17 @@
 </tr>\n
 <tr>\n
   <td>verifyValue</td>\n
-  <td>field_my_title</td>\n
+  <td>field_my_formbox_my_title</td>\n
   <td>Title 0</td>\n
 </tr>\n
 <tr>\n
   <td>verifyValue</td>\n
-  <td>field_my_quantity</td>\n
+  <td>field_my_formbox_my_quantity</td>\n
   <td>10.0</td>\n
 </tr>\n
 <tr>\n
   <td>verifyValue</td>\n
-  <td>field_my_description</td>\n
+  <td>field_my_formbox_my_description</td>\n
   <td></td>\n
 </tr>\n
 \n

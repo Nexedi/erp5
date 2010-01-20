@@ -154,15 +154,17 @@ class Field:
 
     security.declareProtected('Access contents information',
                               'generate_field_key')
-    def generate_field_key(self, validation=0, key=None):
+    def generate_field_key(self, validation=0, key=None, key_prefix=None):
       """Generate the key Silva uses to render the field in the form.
       """
       # Patched by JPS for ERP5 in order to
       # dynamically change the name
+      if key_prefix is None:
+        key_prefix = 'field'
       if key is not None:
-        return 'field_%s' % key
+        return '%s_%s' % (key_prefix, key)
       if self.field_record is None:
-        return 'field_%s' % self.id
+        return '%s_%s' % (key_prefix, self.id)
       elif validation:
         return self.id
       elif isinstance(self.widget, MultiItemsWidget):
@@ -230,7 +232,7 @@ class Field:
       return REQUEST.form[key]
 
     security.declareProtected('View', 'render')
-    def render(self, value=None, REQUEST=None, key=None, render_prefix=None):
+    def render(self, value=None, REQUEST=None, key=None, render_prefix=None, key_prefix=None):
       """Render the field widget.
       value -- the value the field should have (for instance
                 from validation).
@@ -240,7 +242,7 @@ class Field:
       if value and REQUEST are both None, the 'default' property of
       the field will be used for the value.
       """
-      return self._render_helper(self.generate_field_key(key=key), value, REQUEST,
+      return self._render_helper(self.generate_field_key(key=key, key_prefix=key_prefix), value, REQUEST,
                                  render_prefix)
 
     security.declareProtected('View', 'render_view')
@@ -264,12 +266,12 @@ class Field:
       return self.render(*args, **kw)
 
     security.declareProtected('View', 'render_htmlgrid')
-    def render_htmlgrid(self, value=None, REQUEST=None, key=None, render_prefix=None):
+    def render_htmlgrid(self, value=None, REQUEST=None, key=None, render_prefix=None, key_prefix=None):
       """
       render_htmlgrid returns a list of tuple (title, html render)
       """
       # What about CSS ? What about description ? What about error ?
-      widget_key = self.generate_field_key(key=key)
+      widget_key = self.generate_field_key(key=key, key_prefix=key_prefix)
       value = self._get_default(widget_key, value, REQUEST)
       __traceback_info__ = ('key=%s value=%r' % (key, value))
       return self.widget.render_htmlgrid(self, widget_key, value, REQUEST, render_prefix=render_prefix)
@@ -282,8 +284,9 @@ class Field:
 
     security.declareProtected('View', 'render_odt')
     def render_odt(self, key=None, value=None, as_string=True, ooo_builder=None,
-        REQUEST=None, render_prefix=None, attr_dict=None, local_name='p'):
-      widget_key = self.generate_field_key(key=key)
+        REQUEST=None, render_prefix=None, attr_dict=None, local_name='p',
+        key_prefix=None):
+      widget_key = self.generate_field_key(key=key, key_prefix=key_prefix)
       value = self._get_default(widget_key, value, REQUEST)
       return self.widget.render_odt(self, value, as_string, ooo_builder,
                                     REQUEST, render_prefix, attr_dict,
@@ -291,8 +294,9 @@ class Field:
 
     security.declareProtected('View', 'render_odg')
     def render_odg(self, key=None, value=None, as_string=True, ooo_builder=None,
-        REQUEST=None, render_prefix=None, attr_dict=None, local_name='p'):
-      widget_key = self.generate_field_key(key=key)
+        REQUEST=None, render_prefix=None, attr_dict=None, local_name='p',
+        key_prefix=None):
+      widget_key = self.generate_field_key(key=key, key_prefix=key_prefix)
       value = self._get_default(widget_key, value, REQUEST)
       return self.widget.render_odg(self, value, as_string, ooo_builder,
                                     REQUEST, render_prefix, attr_dict,
@@ -332,11 +336,11 @@ class Field:
       """
       return self.widget.render_dict(self, value)
 
-    def render_from_request(self, REQUEST):
+    def render_from_request(self, REQUEST, key_prefix=None):
         """Convenience method; render the field widget from REQUEST
         (unvalidated data), or default if no raw data is found.
         """
-        return self._render_helper(self.generate_field_key(), None, REQUEST)
+        return self._render_helper(self.generate_field_key(key_prefix=key_prefix), None, REQUEST)
 
     security.declareProtected('View', 'render_sub_field')
     def render_sub_field(self, id, value=None, REQUEST=None, key=None, render_prefix=None):
@@ -365,18 +369,18 @@ class Field:
         return value
 
     security.declareProtected('View', 'validate')
-    def validate(self, REQUEST):
+    def validate(self, REQUEST, key_prefix=None):
         """Validate/transform the field.
         """
         return self._validate_helper(
-            self.generate_field_key(validation=1), REQUEST)
+            self.generate_field_key(validation=1, key_prefix=key_prefix), REQUEST)
 
     security.declareProtected('View', 'need_validate')
-    def need_validate(self, REQUEST):
+    def need_validate(self, REQUEST, key_prefix=None):
         """Return true if validation is needed for this field.
         """
         return self.validator.need_validate(
-            self, self.generate_field_key(validation=1), REQUEST)
+            self, self.generate_field_key(validation=1, key_prefix=key_prefix), REQUEST)
 
     security.declareProtected('View', 'validate_sub_field')
     def validate_sub_field(self, id, REQUEST, key=None):

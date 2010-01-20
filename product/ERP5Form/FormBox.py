@@ -88,7 +88,11 @@ class FormBoxWidget(Widget.Widget):
     """
         Render a form in a field
     """
-    here = REQUEST['here']
+    # If FormBox is inside ListBox, we want use REQUEST['cell'] as
+    # 'here'.
+    # XXX REQUEST['cell'] will remain after ListBox rendering. We need a
+    # way to check if it is inside ListBox or not correctly.
+    here = REQUEST.get('cell', REQUEST['here'])
     try:
       form = getattr(here, field.get_value('formbox_target_id'))
     except AttributeError:
@@ -96,7 +100,7 @@ class FormBoxWidget(Widget.Widget):
           'Could not get a form from formbox %s in %s' % \
               (field.id, field.aq_parent.id))
       return ''
-    return form(REQUEST=REQUEST)
+    return form(REQUEST=REQUEST, key_prefix=key)
 
 class FormBoxEditor:
   """
@@ -152,14 +156,14 @@ class FormBoxValidator(Validator.Validator):
     current_field_errors = REQUEST.get('field_errors', [])
 
     # XXX Hardcode script name
-    result, result_type = here.Base_edit(formbox_target_id, silent_mode=1)
+    result, result_type = here.Base_edit(formbox_target_id, silent_mode=1, key_prefix=key)
     if result_type == 'edit':
       return FormBoxEditor(field.id, result)
     elif result_type == 'form':
       formbox_field_errors = REQUEST.get('field_errors', [])
       current_field_errors.extend(formbox_field_errors)
       REQUEST.set('field_errors', current_field_errors)
-      getattr(here, formbox_target_id).validate_all_to_request(REQUEST)
+      getattr(here, formbox_target_id).validate_all_to_request(REQUEST, key_prefix=key)
     else:
       raise NotImplementedError, result_type
 

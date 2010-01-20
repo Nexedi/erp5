@@ -600,6 +600,11 @@ class ERP5Form(ZMIForm, ZopePageTemplate):
         # properties which are sensitive.
         if not kwargs.has_key('args'):
             kwargs['args'] = args
+        if kwargs.has_key('key_prefix'):
+          key_prefix = kwargs['key_prefix']
+          del(kwargs['key_prefix'])
+        else:
+          key_prefix = None
         form = self
         obj = getattr(form, 'aq_parent', None)
         if obj is not None:
@@ -612,6 +617,7 @@ class ERP5Form(ZMIForm, ZopePageTemplate):
         extra_context = dict( container=container,
                               template=self,
                               form=self,
+                              key_prefix=key_prefix,
                               options=kwargs,
                               here=obj )
         return pt.pt_render(extra_context=extra_context)
@@ -652,7 +658,7 @@ class ERP5Form(ZMIForm, ZopePageTemplate):
 
     # Pached validate_all to support ListBox validation
     security.declareProtected('View', 'validate_all')
-    def validate_all(self, REQUEST):
+    def validate_all(self, REQUEST, key_prefix=None):
         """Validate all enabled fields in this form, catch any ValidationErrors
         if they occur and raise a FormValidationError in the end if any
         Validation Errors occured.
@@ -664,12 +670,12 @@ class ERP5Form(ZMIForm, ZopePageTemplate):
                 continue
             for field in self.get_fields_in_group(group):
                 # skip any field we don't need to validate
-                if not field.need_validate(REQUEST):
+                if not field.need_validate(REQUEST, key_prefix=key_prefix):
                     continue
                 if not (field.get_value('editable',REQUEST=REQUEST)):
                     continue
                 try:
-                    value = field.validate(REQUEST)
+                    value = field.validate(REQUEST, key_prefix=key_prefix)
                     # store under id
                     result[field.id] = value
                     # store as alternate name as well if necessary
