@@ -2287,7 +2287,6 @@ class ListBoxHTMLRendererLine(ListBoxRendererLine):
       if editable_field is not None and sql in editable_column_id_set:
         # XXX what if the object does not have uid?
         key = '%s_%s' % (editable_field.getId(), self.getUid())
-        widget_key = editable_field.generate_field_key(key=key)
         if has_error: # If there is any error on listbox, we should use what the user has typed
           display_value = None
         else:
