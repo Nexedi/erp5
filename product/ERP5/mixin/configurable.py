@@ -49,6 +49,13 @@ class ConfigurableMixin:
   zope.interface.implements(interfaces.IConfigurable,)
 
   security.declareProtected(Permissions.AccessContentsInformation,
+                            'getConfigurationProperty')
+  def getConfigurationProperty(self, key, default=None):
+    """
+    """
+    return self._getConfigurationPropertyDict().get(key, default)
+
+  security.declareProtected(Permissions.AccessContentsInformation,
                             'getConfigurationPropertyIdList')
   def getConfigurationPropertyIdList(self):
     """

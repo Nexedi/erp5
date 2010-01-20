@@ -32,6 +32,10 @@ from zope.interface import Interface
 class IConfigurable(Interface):
   """
   """
+  def getConfigurationProperty(key):
+    """
+    """
+
   def getConfigurationPropertyIdList():
     """
     """
