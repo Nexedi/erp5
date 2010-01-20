@@ -89,7 +89,16 @@ class BankingOperation(BaobabMixin, AccountingTransaction):
       return default
     else:
       return src.getInternalBankAccountNumber(default)
-    
+   
+  security.declareProtected(Permissions.View, 'setPosted')
+  def setPosted(self, value):
+    """
+    Custom method that's automatically sets the reference 
+    of the account transfer
+    """
+    if self.getPortalType()=="Account Transfer":
+      self.setReference("posted")
+    return self._setPosted(value)
 ### Dynamic patch
 Delivery.getBaobabSourceUid = lambda x: x.getSourceUid()
 Delivery.getBaobabSourceUid__roles__ = PermissionRole(Permissions.View)
