@@ -408,6 +408,30 @@ class TestCRMMailIngestion(ERP5TypeTestCase):
       file_name='postfix_mail.eml', mime_type='message/rfc822', data='Test'
       ))
 
+  def test_Base_getEntityListFromFromHeader(self):
+    expected_values = (
+      ('me@erp5.org', ['person_module/me']),
+      ('me@erp5.org, he@erp5.org', ['person_module/me', 'person_module/he']),
+      ('Sender <sender@customer.com>', ['person_module/sender']),
+      # tricks to confuse the e-mail parser:
+      # a comma in the name
+      ('"Sender," <sender@customer.com>, he@erp5.org', ['person_module/sender',
+                                                        'person_module/he']),
+      # multiple e-mails in the "Name" part that shouldn't be parsed
+      ('"me@erp5.org,sender@customer.com," <he@erp5.org>', ['person_module/he']),
+      # a < sign
+      ('"He<" <he@erp5.org>', ['person_module/he']),
+    )
+    portal = self.portal
+    Base_getEntityListFromFromHeader = portal.Base_getEntityListFromFromHeader
+    pc = self.portal.portal_catalog
+    for header, expected_paths in expected_values:
+      paths = [entity.getRelativeUrl()
+               for entity in portal.Base_getEntityListFromFromHeader(header)] 
+      self.assertEquals(paths, expected_paths,
+                        '%r should return %r, but returned %r' %
+                        (header, expected_paths, paths))
+
   def test_document_creation(self):
     # CRM email ingestion creates a Mail Message in event_module
     event = self._ingestMail('simple')
@@ -415,6 +439,11 @@ class TestCRMMailIngestion(ERP5TypeTestCase):
     self.assertEquals(event, self.portal.event_module.contentValues()[0])
     self.assertEquals('Mail Message', event.getPortalType())
     self.assertEquals('message/rfc822', event.getContentType())
+    # check if parsing of metadata from content is working
+    content_dict = {'source_list': ['person_module/sender'],
+                    'destination_list': ['person_module/me',
+                                         'person_module/he']}
+    self.assertEquals(event.getPropertyDictFromContent(), content_dict)
   
   def test_title(self):
     # title is found automatically, based on the Subject: header in the mail
