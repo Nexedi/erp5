@@ -1450,7 +1450,6 @@ class ERP5Generator(PortalGenerator):
                    cmf_activity_sql_connection_type, 'string')
     p._setProperty('cmf_activity_sql_connection_string',
                    cmf_activity_sql_connection_string, 'string')
-    # XXX hardcoded charset
     p._setProperty('management_page_charset', 'UTF-8', 'string')
     self.setup(p, create_userfolder, create_activities=create_activities,
         reindex=reindex, **kw)
@@ -1817,7 +1816,6 @@ class ERP5Generator(PortalGenerator):
       pas_dispatcher.addZODBGroupManager('zodb_groups')
       pas_dispatcher.addZODBRoleManager('zodb_roles')
       # Add CMF Portal Roles
-      #XXX Maybe it will be no longer required once PAS is the standard
       p.acl_users.zodb_roles.addRole('Member')
       p.acl_users.zodb_roles.addRole('Reviewer')
       # Register ZODB Interface
