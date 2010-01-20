@@ -2304,7 +2304,11 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
       if self._is_filtered_archive.get(method_id, 0):
         expression = self._filter_expression_archive[method_id]
         if context.getTemplateFormatVersion() == 1:
-          expr_instance = Expression(expression)
+          if expression and expression.strip():
+            # only compile non-empty expressions
+            expr_instance = Expression(expression)
+          else:
+            expr_instance = None
         else:
           expr_instance = self._filter_expression_instance_archive[method_id]
         filter_type = self._filter_type_archive[method_id]
