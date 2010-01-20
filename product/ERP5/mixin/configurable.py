@@ -53,20 +53,23 @@ class ConfigurableMixin:
   def getConfigurationPropertyIdList(self):
     """
     """
-    return self.getConfigurationPropertyDict().keys()
+    return self._getConfigurationPropertyDict().keys()
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getConfigurationPropertyDict')
   def getConfigurationPropertyDict(self):
     """
     """
-    if getattr(aq_base(self), '_configuration_property_dict', None) is None:
-      self._configuration_property_dict = PersistentMapping()
-    return self._configuration_property_dict
+    return dict(self._getConfigurationPropertyDict())
 
   security.declareProtected(Permissions.ModifyPortalContent,
                             'updateConfiguration')
   def updateConfiguration(self, **kw):
     """
     """
-    self.getConfigurationPropertyDict().update(kw)
+    self._getConfigurationPropertyDict().update(kw)
+
+  def _getConfigurationPropertyDict(self):
+    if getattr(aq_base(self), '_configuration_property_dict', None) is None:
+      self._configuration_property_dict = PersistentMapping()
+    return self._configuration_property_dict
