@@ -1,0 +1,104 @@
+diff -urN Zope-2.8.0-final.orig/lib/python/Acquisition/_Acquisition.c Zope-2.8.0-final/lib/python/Acquisition/_Acquisition.c
+--- Zope-2.8.0-final.orig/lib/python/Acquisition/_Acquisition.c	2005-06-11 08:24:02.000000000 +0200
++++ Zope-2.8.0-final/lib/python/Acquisition/_Acquisition.c	2005-06-17 16:26:00.742556205 +0200
+@@ -410,6 +410,64 @@
+ 		int explicit, int containment);
+ 
+ static PyObject *
++Wrapper_GetAttr(PyObject *self, PyObject *attr_name, PyObject *orig)
++{
++  /* This function retrieves an attribute from an object by PyObject_GetAttr.
++
++     The main difference between Wrapper_GetAttr and PyObject_GetAttr is that
++     Wrapper_GetAttr calls _aq_dynamic to generate an attribute dynamically, if
++     the attribute is not found.
++  */
++  PyObject *r, *v, *tb;
++  PyObject *d, *m;
++  PyObject *o;
++
++  if (isWrapper (self))
++    o = WRAPPER(self)->obj;
++  else
++    o = self;
++
++  /* Try to get an attribute in the normal way first.  */
++  r = PyObject_GetAttr(o, attr_name);
++  if (r)
++    return r;
++
++  /* If an unexpected error happens, return immediately.  */
++  PyErr_Fetch(&r,&v,&tb);
++  if (r != PyExc_AttributeError)
++    {
++      PyErr_Restore(r,v,tb);
++      return NULL;
++    }
++
++  /* Try to get _aq_dynamic.  */
++  m = PyObject_GetAttrString(o, "_aq_dynamic");
++  if (! m) {
++    PyErr_Restore(r,v,tb);
++    return NULL;
++  }
++
++  /* Call _aq_dynamic in the context of the original acquisition wrapper.  */
++  if (PyECMethod_Check(m) && PyECMethod_Self(m)==o)
++    ASSIGN(m,PyECMethod_New(m,OBJECT(self)));
++  else if (has__of__(m)) ASSIGN(m,__of__(m,OBJECT(self)));
++  d = PyObject_CallFunction(m, "O", attr_name);
++  Py_DECREF(m);
++
++  /* In the case of None, assume that the attribute is not found.  */
++  if (d == Py_None) {
++    Py_DECREF(d);
++    PyErr_Restore(r,v,tb);
++    return NULL;
++  }
++
++  Py_XDECREF(r);
++  Py_XDECREF(v);
++  Py_XDECREF(tb);
++  return d;
++}
++
++static PyObject *
+ Wrapper_findattr(Wrapper *self, PyObject *oname,
+ 		PyObject *filter, PyObject *extra, PyObject *orig,
+ 		int sob, int sco, int explicit, int containment)
+@@ -476,7 +534,7 @@
+ 	  Py_XDECREF(r); Py_XDECREF(v); Py_XDECREF(tb);
+ 	  r=NULL;
+ 	}
+-      else if ((r=PyObject_GetAttr(self->obj,oname)))
++      else if ((r=Wrapper_GetAttr(OBJECT(self),oname,orig)))
+ 	{
+ 	  if (r==Acquired)
+ 	    {
+@@ -550,7 +608,7 @@
+ 	}
+       else
+ 	{
+-	  if ((r=PyObject_GetAttr(self->container,oname))) {
++	  if ((r=Wrapper_GetAttr(self->container,oname,orig))) {
+ 	    if (r == Acquired) {
+ 	      Py_DECREF(r);
+ 	    }
+@@ -587,7 +645,7 @@
+ Wrapper_getattro(Wrapper *self, PyObject *oname)
+ {
+   if (self->obj || self->container)
+-    return Wrapper_findattr(self, oname, NULL, NULL, NULL, 1, 1, 0, 0);
++    return Wrapper_findattr(self, oname, NULL, NULL, OBJECT(self), 1, 1, 0, 0);
+ 
+   /* Maybe we are getting initialized? */
+   return Py_FindAttr(OBJECT(self),oname);
+@@ -604,7 +662,7 @@
+     return Py_FindAttr(OBJECT(self),oname);
+ 
+   if (self->obj || self->container)
+-    return Wrapper_findattr(self, oname, NULL, NULL, NULL, 1, 0, 0, 0);
++    return Wrapper_findattr(self, oname, NULL, NULL, OBJECT(self), 1, 0, 0, 0);
+ 
+   /* Maybe we are getting initialized? */
+   return Py_FindAttr(OBJECT(self),oname);

@@ -1,0 +1,10 @@
+#
+# Used for maintenance of external resources in this svn bundle.  Edit
+# this file as appropriate and then run the following command from within
+# the checkout directory where this file lives on your local machine:
+#
+# svn propset svn:externals -F ./EXTERNALS.TXT .
+#
+
+bootstrap svn://svn.zope.org/repos/main/zc.buildout/trunk/bootstrap
+

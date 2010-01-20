@@ -1,0 +1,5 @@
+ - force using locally build python
+ - merge into:
+  - https://svn.erp5.org/repos/public/experimental/erp5.buildout
+  - https://svn.erp5.org/repos/public/experimental/erp5.buildout-zope-2.12/
+  - https://svn.erp5.org/repos/public/experimental/mysqlsenna.buildout/
