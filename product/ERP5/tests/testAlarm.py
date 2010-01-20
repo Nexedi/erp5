@@ -31,6 +31,7 @@ import transaction
 
 from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from Products.ERP5Type.tests.utils import DummyMailHost
 from AccessControl.SecurityManagement import newSecurityManager, \
         getSecurityManager, setSecurityManager
 from AccessControl import Unauthorized
@@ -67,7 +68,19 @@ class TestAlarm(ERP5TypeTestCase):
     return "Alarm"
 
   def afterSetUp(self):
+    # add a dummy mailhost to capture alarm notifications
+    if 'MailHost' in self.portal.objectIds():
+      self.portal.manage_delObjects(['MailHost'])
+      self.portal._setObject('MailHost', DummyMailHost('MailHost'))
+
     self.login()
+
+  def beforeTearDown(self):
+    transaction.commit()
+    self.getActivityTool().manageClearActivities()
+    transaction.commit()
+    del self.portal.MailHost._message_list[:]
+    ERP5TypeTestCase.beforeTearDown(self)
 
   def newAlarm(self, **kw):
     """
@@ -552,7 +565,7 @@ class TestAlarm(ERP5TypeTestCase):
 
   def test_18_alarm_activities_execution_order(self, quiet=0, run=run_all_test):
     """
-    Make sure active process created by an alarm get the rigth tag
+    Make sure active process created by an alarm get the right tag
     """
     if not run: return
     if not quiet:
@@ -614,7 +627,7 @@ class TestAlarm(ERP5TypeTestCase):
     # Create script that generate active process
     sense_method_id = 'Alarm_setBogusLocalProperty'
     skin_folder_id = 'custom'
-    skin_folder = self.getPortal().portal_skins[skin_folder_id]
+    skin_folder = self.portal.portal_skins[skin_folder_id]
     skin_folder.manage_addProduct['PythonScripts']\
         .manage_addPythonScript(id=sense_method_id)
     skin_folder[sense_method_id].ZPythonScript_edit('*args,**kw', 
