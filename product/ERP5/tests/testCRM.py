@@ -44,7 +44,7 @@ TEST_HOME = os.path.dirname(__file__)
 def openTestFile(filename):
   return file(os.path.join(TEST_HOME, 'test_data', 'crm_emails', filename))
 
-clear_module_names = """
+clear_module_name_list = """
 campaign_module
 event_module
 meeting_module
@@ -71,7 +71,7 @@ class BaseTestCRM(ERP5TypeTestCase):
       self.portal.manage_delObjects(['MailHost'])
       self.portal._setObject('MailHost', DummyMailHost('MailHost'))
     # clear modules if necessary
-    for module_name in clear_module_names:
+    for module_name in clear_module_name_list:
       module = getattr(self.portal, module_name)
       module.manage_delObjects(list(module.objectIds()))
 
