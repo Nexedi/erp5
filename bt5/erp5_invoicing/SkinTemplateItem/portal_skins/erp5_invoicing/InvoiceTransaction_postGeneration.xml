@@ -105,19 +105,7 @@ if not invoice.hasTitle() and related_packing_list.hasTitle():\n
 \n
 # initialize accounting_workflow to confirmed state\n
 if invoice.getSimulationState() == \'draft\':\n
-  try :\n
-    context.getPortalObject().portal_workflow.doActionFor(\n
-      invoice, \'confirm_action\',\n
-      comment=translateString(\'Initialised by Delivery Builder.\'),\n
-      skip_period_validation=1)\n
-  except WorkflowException, e:\n
-    # The user cannot pass the transition, it\'s OK\n
-    pass\n
-\n
-  if invoice.getSimulationState() == \'draft\':\n
-    # call the workflow method, if the user cannot perform this operation.\n
-    invoice.confirm(comment=translateString(\'Initialised by Delivery Builder.\'),)\n
-\n
+  invoice.confirm(comment=translateString(\'Initialised by Delivery Builder.\'),)\n
 \n
 # First set the invoice in the building state on the causality workflow\n
 invoice.startBuilding()\n
@@ -184,7 +172,6 @@ invoice.activate(after_path_and_method_id=(related_simulation_movement_path_list
                             <string>order_trade_model_line_copy_id_list</string>
                             <string>order_trade_model_line</string>
                             <string>clipboard</string>
-                            <string>e</string>
                           </tuple>
                         </value>
                     </item>
