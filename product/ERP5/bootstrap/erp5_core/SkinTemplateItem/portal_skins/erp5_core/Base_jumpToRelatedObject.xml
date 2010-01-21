@@ -148,7 +148,7 @@ else:\n
                           \'Base_jumpToRelatedObjectList\', kw)\n
     request.set(\'object_uid\', context.getUid())\n
     request.set(\'uids\', selection_uid_list)\n
-    return context.Base_jumpToRelatedObjectList(\n
+    return getattr(context, relation_form_id)(\n
                       uids=selection_uid_list, REQUEST=request)\n
 \n
 query_params = dict(portal_status_message=message)\n
@@ -169,7 +169,7 @@ return context.REQUEST[ \'RESPONSE\' ].redirect(redirect_url)\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>base_category, portal_type=(), related=1, selection_name="", selection_index=0, form_id=\'view\', target_form_id=None, jump_from_relative_url=None</string> </value>
+            <value> <string>base_category, portal_type=(), related=1, selection_name="", selection_index=0, form_id=\'view\', target_form_id=None, jump_from_relative_url=None, relation_form_id=\'Base_jumpToRelatedObjectList\'</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -189,7 +189,7 @@ return context.REQUEST[ \'RESPONSE\' ].redirect(redirect_url)\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>8</int> </value>
+                        <value> <int>9</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -203,6 +203,7 @@ return context.REQUEST[ \'RESPONSE\' ].redirect(redirect_url)\n
                             <string>form_id</string>
                             <string>target_form_id</string>
                             <string>jump_from_relative_url</string>
+                            <string>relation_form_id</string>
                             <string>ZTUtils</string>
                             <string>make_query</string>
                             <string>_getattr_</string>
@@ -258,6 +259,7 @@ return context.REQUEST[ \'RESPONSE\' ].redirect(redirect_url)\n
                 <string>view</string>
                 <none/>
                 <none/>
+                <string>Base_jumpToRelatedObjectList</string>
               </tuple>
             </value>
         </item>
