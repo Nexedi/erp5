@@ -30,6 +30,7 @@ Inventory Line | view
 Inventory Module | view
 Inventory Module | view_stock_export
 Inventory Module | view_stock_report
+Inventory | inventory_fast_input
 Inventory | view
 Order Rule | view
 Organisation | jump_to_purchase_order
@@ -131,6 +132,7 @@ Sale Packing List | jump_related_order
 Sale Packing List | jump_related_sale_invoice
 Sale Packing List | packing_list_print
 Sale Packing List | profile_view
+Sale Packing List | sale_packing_list_fast_input
 Sale Packing List | view
 Sale Packing List | view_container_list
 Sale Packing List | view_stock
