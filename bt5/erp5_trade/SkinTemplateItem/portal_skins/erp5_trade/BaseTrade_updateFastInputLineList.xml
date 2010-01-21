@@ -1,0 +1,235 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+"""\n
+  This script just returns what the user entered in\n
+  the fast input form, searches for the product whose\n
+  reference or title has been just entered and updates\n
+  the total price and the stock corresponding to the \n
+  product\n
+"""\n
+context.log("update", "no_inventory %s" %(no_inventory))\n
+result = [x.getObject() for x in context.BaseTrade_getFastInputLineList(line_portal_type=line_portal_type,\n
+                                                                        no_inventory=no_inventory,\n
+                                                                        lines_num=10, **kw)]\n
+\n
+request= context.REQUEST\n
+\n
+portal = context.getPortalObject()\n
+Base_translateString = portal.Base_translateString\n
+total_price = 0.0\n
+for line in listbox:\n
+  if line.has_key(\'listbox_key\') and (line[\'title\'] or line[\'reference\'] not in (\'\', None)):\n
+     product = context.portal_catalog.getResultValue(\n
+                                    portal_type=[\'Product\',\'Service\'],\n
+                                    title=line[\'title\'],\n
+                                    reference=line[\'reference\'])\n
+     line_id = line[\'listbox_key\']\n
+     cell = result[int(line_id)-1]\n
+     cell.setResourceValue(product)    \n
+     line["quantity_unit"] = cell.getQuantityUnit()\n
+     line["resource_relative_url"] = cell.getResource()\n
+     request.form["field_listbox_resource_relative_url_new_%s"%line_id]=cell.getResource()\n
+     kw["field_listbox_resource_relative_url_new_%s"%line_id]=cell.getResource()\n
+     request.set("field_listbox_resource_relative_url_new_%s"%line_id,cell.getResource())\n
+     request.form["field_listbox_reference_new_%s"%line_id] = product.getReference() or \'\'\n
+     request.form["field_listbox_title_new_%s"%line_id] = product.getTitle()\n
+     request.form["field_listbox_quantity_unit_new_%s"%line_id] = cell.getQuantityUnit()\n
+     \n
+     if line["variation_category_list"]!=\'\' and product.getPortalType()==\'Product\' \\\n
+        and no_inventory is False \\\n
+        and line[\'quantity\'] <= product.getAvailableInventory(section_uid=context.getSourceSectionValue().getUid(),\n
+                                                              variation_text=\'variation/%s\'%line["variation_category_list"]):\n
+       supply_cell_list = product.default_ssl.contentValues(portal_type=supply_cell_portal_type)\n
+       for supply_cell in supply_cell_list:\n
+         if supply_cell.getVariationCategoryList()[0]==\'variation/%s\'%line["variation_category_list"]:\n
+           line["total_price"] = line[\'quantity\'] * supply_cell.getBasePrice()\n
+       request.form["field_listbox_total_price_new_%s"%line_id] = line[\'total_price\']    \n
+       request.form["field_listbox_getAvailableInventory_new_%s"%line_id] = product.getAvailableInventory(\n
+                                         section_uid=context.getSourceSectionValue().getUid(),\n
+                              variation_text=\'variation/%s\'%line["variation_category_list"])\n
+       request.form[\'field_listbox_inventory_new_%s\'%line_id] = product.getInventory(\n
+                                                              section_uid=context.getSourceSectionValue().getUid(),\n
+                                                       variation_text=\'variation/%s\'%line["variation_category_list"])\n
+       request.form["field_listbox_getCurrentInventory_new_%s"%line_id] = product.getCurrentInventory(\n
+                                                                        section_uid=context.getSourceSectionValue().getUid(),\n
+                                                          variation_text=\'variation/%s\'%line["variation_category_list"])\n
+       total_price +=line[\'total_price\']\n
+       request.form["field_my_total_price"] = total_price\n
+       \n
+     elif line["variation_category_list"]==\'\' and product.getPortalType()==\'Product\' \\\n
+          and no_inventory is False \\\n
+          and line[\'quantity\'] <= product.getAvailableInventory(section_uid=context.getSourceSectionValue().getUid()):\n
+       line["total_price"] = line[\'quantity\'] * cell.getPrice()\n
+       request.form["field_listbox_total_price_new_%s"%line_id] = line[\'total_price\']\n
+       request.form["field_listbox_getAvailableInventory_new_%s"%line_id] = product.getAvailableInventory(\n
+                                         section_uid=context.getSourceSectionValue().getUid())\n
+       request.form[\'field_listbox_inventory_new_%s\'%line_id] = product.getInventory(\n
+                                                              section_uid=context.getSourceSectionValue().getUid())\n
+       request.form["field_listbox_getCurrentInventory_new_%s"%line_id] = product.getCurrentInventory(\n
+                                                                        section_uid=context.getSourceSectionValue().getUid(),)\n
+       total_price +=line[\'total_price\']\n
+       request.form["field_my_total_price"] = total_price\n
+     elif product.getPortalType()==\'Service\':\n
+       line["total_price"] = line[\'quantity\'] * cell.getPrice()\n
+       request.form["field_listbox_total_price_new_%s"%line_id] = line[\'total_price\']\n
+       total_price +=line[\'total_price\']\n
+       request.form["field_my_total_price"] = total_price\n
+     elif no_inventory is False:\n
+       request.set(\'portal_status_message\', \n
+                 Base_translateString(\'Quantity Asked For Line %s Not Available In Inventory\'%line[\'listbox_key\'])) \n
+ \n
+context.Base_updateDialogForm(listbox=listbox,update=1,kw=kw)\n
+return listbox, kw\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>line_portal_type,supply_cell_portal_type, listbox=[], no_inventory=False, **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>4</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>line_portal_type</string>
+                            <string>supply_cell_portal_type</string>
+                            <string>listbox</string>
+                            <string>no_inventory</string>
+                            <string>kw</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>_getiter_</string>
+                            <string>_apply_</string>
+                            <string>x</string>
+                            <string>result</string>
+                            <string>request</string>
+                            <string>portal</string>
+                            <string>Base_translateString</string>
+                            <string>total_price</string>
+                            <string>line</string>
+                            <string>_getitem_</string>
+                            <string>None</string>
+                            <string>product</string>
+                            <string>line_id</string>
+                            <string>int</string>
+                            <string>cell</string>
+                            <string>_write_</string>
+                            <string>False</string>
+                            <string>supply_cell_list</string>
+                            <string>supply_cell</string>
+                            <string>_inplacevar_</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <list/>
+                <int>0</int>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>BaseTrade_updateFastInputLineList</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

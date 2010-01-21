@@ -260,7 +260,7 @@
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>
-                    <value> <string>sale_order_fast_input_selection</string> </value>
+                    <value> <string>sale_packing_list_fast_input_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>sort</string> </key>
@@ -274,7 +274,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Define Sale Order Lines</string> </value>
+                    <value> <string>Define Sale Packing List Lines</string> </value>
                 </item>
               </dictionary>
             </value>
@@ -293,7 +293,7 @@
       <dictionary>
         <item>
             <key> <string>method_name</string> </key>
-            <value> <string>SaleOrder_getFastInputSaleOrderLineList</string> </value>
+            <value> <string>SalePackingList_getFastInputSalePackingListLineList</string> </value>
         </item>
       </dictionary>
     </pickle>

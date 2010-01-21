@@ -1,0 +1,228 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>"""\n
+  This script creates a list of empty lines when called for\n
+  the first time.When called the next time, it displays on \n
+  the fast input all documents lines already added and \n
+  updates them based on fast input entries.\n
+"""\n
+from Products.ERP5Type.Document import newTempBase\n
+portal = context.getPortalObject()\n
+getobject = portal.portal_catalog.getobject\n
+request = context.REQUEST\n
+trade_document = context\n
+result = []\n
+line_list = context.contentValues(portal_type=line_portal_type)\n
+\n
+source_section = context.getSourceSectionValue()\n
+if no_inventory is False and source_section is None:\n
+  from Products.ERP5Type.Message import translateString\n
+  return context.Base_redirect(\'view\', keep_items=dict(\n
+    portal_status_message=translateString(\'Source section must be defined.\')))\n
+\n
+len_line_list = len(line_list)\n
+used_id = [] # list use to make sure we do not generate two line with same uid\n
+\n
+# first browse document\'s lines\n
+if len_line_list!=0:\n
+  for line in line_list:\n
+    obj=trade_document.newContent(portal_type=line_portal_type,\n
+                          id=line.getId(),\n
+                          uid="new_%s" % line.getId(),\n
+                          temp_object=1,\n
+                          is_indexable=0,)\n
+    used_id.append(int(line.getId()))\n
+\n
+    obj.edit(title=line.getResourceTitle(),\n
+             reference=line.getResourceReference(),\n
+             quantity=line.getQuantity(),\n
+             quantity_unit=line.getQuantityUnitList(),\n
+             total_price=line.getTotalPrice(),\n
+             )\n
+    if no_inventory is False:\n
+      obj.edit(\n
+        getAvailableInventory=line.getResourceValue().getAvailableInventory(\n
+                                  section_uid=source_section.getUid(),\n
+                                  variation_text=line.getVariationText()),\n
+        getCurrentInventory=line.getResourceValue().getCurrentInventory(\n
+                                  section_uid=source_section.getUid(),\n
+                                  variation_text=line.getVariationText()),\n
+        inventory=line.getResourceValue().getInventory(\n
+                                  section_uid=source_section.getUid(),\n
+                                  variation_text=line.getVariationText()))\n
+    result.append(obj)\n
+\n
+# then fill the remaining lines with empty ones\n
+for i in range(len_line_list+1,lines_num+1):\n
+   resource_relative_url = getattr(request,"field_listbox_resource_relative_url_new_%s"%i,None)\n
+   while i in used_id:\n
+     # do not used an id from previously generated lines\n
+     i+=1\n
+   obj=trade_document.newContent(portal_type=line_portal_type,\n
+                             id = i,\n
+                             uid="new_%s" % i,\n
+                             temp_object=1,\n
+                             getAvailableInventory=0,\n
+                             getCurrentInventory=0,\n
+                             is_indexable=0,)\n
+   used_id.append(i)\n
+\n
+   if resource_relative_url not in (\'\',None):\n
+    resource = context.restrictedTraverse(resource_relative_url)\n
+    obj.setResourceValue(resource)\n
+   result.append(obj)\n
+\n
+return result\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>line_portal_type, lines_num=10, no_inventory=False, **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>3</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>line_portal_type</string>
+                            <string>lines_num</string>
+                            <string>no_inventory</string>
+                            <string>kw</string>
+                            <string>Products.ERP5Type.Document</string>
+                            <string>newTempBase</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>portal</string>
+                            <string>getobject</string>
+                            <string>request</string>
+                            <string>trade_document</string>
+                            <string>result</string>
+                            <string>line_list</string>
+                            <string>source_section</string>
+                            <string>False</string>
+                            <string>None</string>
+                            <string>Products.ERP5Type.Message</string>
+                            <string>translateString</string>
+                            <string>dict</string>
+                            <string>len</string>
+                            <string>len_line_list</string>
+                            <string>used_id</string>
+                            <string>_getiter_</string>
+                            <string>line</string>
+                            <string>obj</string>
+                            <string>int</string>
+                            <string>range</string>
+                            <string>i</string>
+                            <string>getattr</string>
+                            <string>resource_relative_url</string>
+                            <string>_inplacevar_</string>
+                            <string>resource</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <int>10</int>
+                <int>0</int>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>BaseTrade_getFastInputLineList</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

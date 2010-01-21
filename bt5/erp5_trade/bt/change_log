@@ -1,3 +1,6 @@
+2010-01-21 aurel
+* add fast input for inventory and sale packing list, factorize the code so that it is easy to add a new fast input
+
 2009-12-16 yo
 * Change the permission of sale order fast input to Add portal content. This is not still sufficient (because Modified portal content on lines is also required), but better than before.
 

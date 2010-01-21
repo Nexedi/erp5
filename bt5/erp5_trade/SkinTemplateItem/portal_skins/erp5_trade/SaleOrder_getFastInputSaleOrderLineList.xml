@@ -53,60 +53,8 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>"""\n
-  This script creates a list of empty lines when called for\n
-  the first time.When called the next time, it displays on \n
-  the fast input all sale order lines already added and \n
-  updates them based on fast input entries.\n
-"""\n
-from Products.ERP5Type.Document import newTempBase\n
-portal = context.getPortalObject()\n
-getobject = portal.portal_catalog.getobject\n
-request = context.REQUEST\n
-sale_order = context\n
-result = []\n
-line_list = context.contentValues(portal_type=\'Sale Order Line\')\n
-source_section = context.getSourceSectionValue()\n
-len_line_list = len(line_list)\n
-if len_line_list!=0:\n
-  for line in line_list:\n
-    obj=sale_order.newContent(portal_type=\'Sale Order Line\',\n
-                          id=line.getId(),\n
-                          uid="new_%s" % line.getId(),\n
-                          temp_object=1,\n
-                          is_indexable=0,)\n
-    #obj = newTempBase(portal, id="new_%s" % line.getId(), uid="new_%s" % line.getId()) \n
-    obj.edit(title=line.getResourceTitle(),\n
-           reference=line.getResourceReference(),\n
-           quantity=line.getQuantity(),\n
-           quantity_unit=line.getQuantityUnitList(),\n
-           total_price=line.getTotalPrice(),\n
-           getAvailableInventory=line.getResourceValue().getAvailableInventory(\n
-                                       section_uid=source_section.getUid(),\n
-                                       variation_text=line.getVariationText()),\n
-           getCurrentInventory=line.getResourceValue().getCurrentInventory(\n
-                                                 section_uid=source_section.getUid(),\n
-                                                 variation_text=line.getVariationText()),\n
-           inventory=line.getResourceValue().getInventory(\n
-                                                 section_uid=source_section.getUid(),\n
-                                               variation_text=line.getVariationText()))\n
-    result.append(obj)\n
+            <value> <string>result = context.BaseTrade_getFastInputLineList(line_portal_type="Sale Order Line", lines_num=10, **kw)\n
 \n
-for i in range(len_line_list+1,lines_num+1):\n
-   resource_relative_url = getattr(request,"field_listbox_resource_relative_url_new_%s"%i,None)\n
-   obj=sale_order.newContent(portal_type=\'Sale Order Line\',\n
-                          id=i,\n
-                          uid="new_%s" % i,\n
-                          temp_object=1,\n
-                          getAvailableInventory=0,\n
-                          getCurrentInventory=0,\n
-                          is_indexable=0,)\n
-   #obj = newTempBase(portal,id="new_%s" % i, uid="new_%s" % i)\n
-   if resource_relative_url not in (\'\',None):\n
-    resource = context.restrictedTraverse(resource_relative_url)   \n
-    obj.setResourceValue(resource)\n
-   result.append(obj)\n
-   \n
 return result\n
 </string> </value>
         </item>
@@ -146,28 +94,10 @@ return result\n
                           <tuple>
                             <string>lines_num</string>
                             <string>kw</string>
-                            <string>Products.ERP5Type.Document</string>
-                            <string>newTempBase</string>
+                            <string>_apply_</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>portal</string>
-                            <string>getobject</string>
-                            <string>request</string>
-                            <string>sale_order</string>
                             <string>result</string>
-                            <string>line_list</string>
-                            <string>source_section</string>
-                            <string>len</string>
-                            <string>len_line_list</string>
-                            <string>_getiter_</string>
-                            <string>line</string>
-                            <string>obj</string>
-                            <string>range</string>
-                            <string>i</string>
-                            <string>getattr</string>
-                            <string>None</string>
-                            <string>resource_relative_url</string>
-                            <string>resource</string>
                           </tuple>
                         </value>
                     </item>

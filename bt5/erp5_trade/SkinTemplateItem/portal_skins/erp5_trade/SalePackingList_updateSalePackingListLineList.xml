@@ -53,12 +53,12 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>listbox, kw = context.BaseTrade_updateFastInputLineList(line_portal_type="Sale Order Line",\n
+            <value> <string>listbox, kw = context.BaseTrade_updateFastInputLineList(line_portal_type="Sale Packing List Line",\n
                                                         supply_cell_portal_type="Sale Supply Cell",\n
                                                         listbox=listbox,\n
                                                         **kw)\n
 \n
-return context.SaleOrder_viewSaleOrderFastInputDialog(listbox=listbox,**kw)\n
+return context.SalePackingList_viewSalePackingListFastInputDialog(listbox=listbox,**kw)\n
 </string> </value>
         </item>
         <item>
@@ -119,7 +119,7 @@ return context.SaleOrder_viewSaleOrderFastInputDialog(listbox=listbox,**kw)\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>SaleOrder_updateSaleOrderLineList</string> </value>
+            <value> <string>SalePackingList_updateSalePackingListLineList</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

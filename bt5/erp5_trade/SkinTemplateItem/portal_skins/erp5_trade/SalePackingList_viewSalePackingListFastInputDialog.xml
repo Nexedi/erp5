@@ -38,7 +38,7 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string>SaleOrder_setSaleOrderLineList</string> </value>
+            <value> <string>SalePackingList_setSalePackingListLineList</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -124,7 +124,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>SaleOrder_viewSaleOrderFastInputDialog</string> </value>
+            <value> <string>SalePackingList_viewSalePackingListFastInputDialog</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -132,7 +132,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>SaleOrder_viewSaleOrderFastInputDialog</string> </value>
+            <value> <string>SalePackingList_viewSalePackingListFastInputDialog</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
@@ -148,7 +148,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Define Sale Order Lines</string> </value>
+            <value> <string>Define Sale Packing List Lines</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>
@@ -156,7 +156,11 @@
         </item>
         <item>
             <key> <string>update_action</string> </key>
-            <value> <string>SaleOrder_updateSaleOrderLineList</string> </value>
+            <value> <string>SalePackingList_updateSalePackingListLineList</string> </value>
+        </item>
+        <item>
+            <key> <string>update_action_title</string> </key>
+            <value> <string></string> </value>
         </item>
       </dictionary>
     </pickle>

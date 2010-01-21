@@ -53,93 +53,11 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>"""\n
-  This script creates or updates sale order lines based on the fast \n
-  input information.It should take into account any sale order line \n
-  which were already created so that they are not duplicated.\n
-"""\n
-from Products.ERP5Type.Message import translateString\n
-from Products.ERP5Type.Log import log\n
-result_list = []\n
-sale_order_line_list = context.contentValues(portal_type=\'Sale Order Line\')\n
-if sale_order_line_list!=[]:\n
-  sale_order_line_id_list = [x.getId() for x in sale_order_line_list]\n
-for line in listbox:\n
- #for each line in listbox if line has a reference defined, search \n
- #for the product whose reference has been entered\n
- if line.has_key(\'listbox_key\') and line[\'title\'] not in (\'\', None):\n
-   line_id = line[\'listbox_key\']\n
-   product = context.portal_catalog.getResultValue(\n
-                           portal_type=[\'Product\',\'Service\'],\n
-                                    title=line[\'title\'],\n
-                                    reference=line[\'reference\'])\n
-  \n
-   #for each sale order line already added,\n
-   #if the line\'s id is the same as the sale order line, update it\n
-   for sale_order_line in sale_order_line_list:\n
-     if sale_order_line.getId()==line_id:\n
-       sale_order_line.edit(start_date=context.getStartDate(),\n
-               stop_date=context.getStopDate(),\n
-               resource_title=product.getTitle(),\n
-               price_currency = context.getPriceCurrency(),\n
-               quantity = line["quantity"],\n
-               quantity_unit = product.getQuantityUnit(),)\n
-       sale_order_line.setResourceValue(product)\n
-       if line["variation_category_list"]!=\'\':\n
-        sale_order_line.setVariationCategoryList([\'variation/%s\'%line["variation_category_list"]])\n
-        base_id = \'movement\'\n
-        cell_key_list = list(sale_order_line.getCellKeyList(base_id=base_id))\n
-        cell_key_list.sort()\n
-        price = line[\'total_price\']/line[\'quantity\']\n
-        quantity = line[\'quantity\']\n
-        for cell_key in cell_key_list:\n
-          cell = sale_order_line.newCell(base_id=base_id, \\\n
-                                portal_type=\'Sale Order Cell\', *cell_key)\n
-          cell.edit(mapped_value_property_list=[\'price\',\'quantity\'],\n
-                price=price, quantity=quantity,\n
-                predicate_category_list=cell_key,\n
-                variation_category_list=cell_key)\n
-        price += 1\n
-        quantity += 1\n
-       result_list.append(sale_order_line)\n
-   else:\n
-     # if there was no sale order line already defined\n
-     # for the sale order, add a new sale order line\n
-     log("it goes in here second")\n
-     if len(sale_order_line_list)==0 or line_id not in sale_order_line_id_list:\n
-      sale_order_line= context.newContent(\n
-                 portal_type=\'Sale Order Line\',)\n
-      sale_order_line.setResourceValue(product)\n
-      \n
-      sale_order_line.edit(\n
-               start_date=context.getStartDate(),\n
-               stop_date=context.getStopDate(),\n
-               resource_title=product.getTitle(),\n
-               price_currency = context.getPriceCurrency(),\n
-               quantity = line["quantity"],\n
-               )\n
-     if line["variation_category_list"]!=\'\':\n
-      sale_order_line.setVariationCategoryList([\'variation/%s\'%line["variation_category_list"]])\n
-      base_id = \'movement\'\n
-      cell_key_list = list(sale_order_line.getCellKeyList(base_id=base_id))\n
-      cell_key_list.sort()\n
-      price = line[\'total_price\']/line[\'quantity\']\n
-      quantity = line[\'quantity\']\n
-      for cell_key in cell_key_list:\n
-        cell = sale_order_line.newCell(base_id=base_id, \\\n
-                                portal_type=\'Sale Order Cell\', *cell_key)\n
-        cell.edit(mapped_value_property_list=[\'price\',\'quantity\'],\n
-                price=price, quantity=quantity,\n
-                predicate_category_list=cell_key,\n
-                variation_category_list=cell_key)\n
-        price += 1\n
-        quantity += 1\n
-     result_list.append(sale_order_line)\n
-                             \n
-\n
-#return to the feature module\n
-return context.Base_redirect(form_id, keep_items=dict(\n
-        portal_status_message=translateString(\'Sale Order Lines Created.\')))\n
+            <value> <string>context.BaseTrade_setFastInputLineList(line_portal_type="Sale Order Line",\n
+                                       cell_portal_type="Sale Order Cell",\n
+                                       listbox=listbox,\n
+                                       form_id=form_id,\n
+                                       **kw)\n
 </string> </value>
         </item>
         <item>
@@ -179,36 +97,9 @@ return context.Base_redirect(form_id, keep_items=dict(\n
                             <string>listbox</string>
                             <string>form_id</string>
                             <string>kw</string>
-                            <string>Products.ERP5Type.Message</string>
-                            <string>translateString</string>
-                            <string>Products.ERP5Type.Log</string>
-                            <string>log</string>
-                            <string>result_list</string>
+                            <string>_apply_</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>sale_order_line_list</string>
-                            <string>append</string>
-                            <string>$append0</string>
-                            <string>_getiter_</string>
-                            <string>x</string>
-                            <string>sale_order_line_id_list</string>
-                            <string>line</string>
-                            <string>_getitem_</string>
-                            <string>None</string>
-                            <string>line_id</string>
-                            <string>product</string>
-                            <string>sale_order_line</string>
-                            <string>base_id</string>
-                            <string>list</string>
-                            <string>cell_key_list</string>
-                            <string>price</string>
-                            <string>quantity</string>
-                            <string>cell_key</string>
-                            <string>_apply_</string>
-                            <string>cell</string>
-                            <string>_inplacevar_</string>
-                            <string>len</string>
-                            <string>dict</string>
                           </tuple>
                         </value>
                     </item>

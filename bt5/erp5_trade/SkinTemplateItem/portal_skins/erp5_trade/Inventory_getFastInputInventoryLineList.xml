@@ -53,12 +53,9 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>listbox, kw = context.BaseTrade_updateFastInputLineList(line_portal_type="Sale Order Line",\n
-                                                        supply_cell_portal_type="Sale Supply Cell",\n
-                                                        listbox=listbox,\n
-                                                        **kw)\n
+            <value> <string>result = context.BaseTrade_getFastInputLineList(line_portal_type="Inventory Line", lines_num=10, no_inventory=True, **kw)\n
 \n
-return context.SaleOrder_viewSaleOrderFastInputDialog(listbox=listbox,**kw)\n
+return result\n
 </string> </value>
         </item>
         <item>
@@ -69,7 +66,7 @@ return context.SaleOrder_viewSaleOrderFastInputDialog(listbox=listbox,**kw)\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>listbox=[],**kw</string> </value>
+            <value> <string>**kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -89,18 +86,18 @@ return context.SaleOrder_viewSaleOrderFastInputDialog(listbox=listbox,**kw)\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>0</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>listbox</string>
                             <string>kw</string>
                             <string>_apply_</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>_getiter_</string>
+                            <string>True</string>
+                            <string>result</string>
                           </tuple>
                         </value>
                     </item>
@@ -112,14 +109,12 @@ return context.SaleOrder_viewSaleOrderFastInputDialog(listbox=listbox,**kw)\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <tuple>
-                <list/>
-              </tuple>
+              <none/>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>SaleOrder_updateSaleOrderLineList</string> </value>
+            <value> <string>Inventory_getFastInputInventoryLineList</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
