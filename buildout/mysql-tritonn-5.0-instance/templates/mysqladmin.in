@@ -1,0 +1,3 @@
+#!/bin/sh
+
+${mysql-tritonn-5.0:location}/bin/mysqladmin -P ${ports:mysql} -S ${mycnf:sock} -u root -p $*
