@@ -31,7 +31,8 @@ Options:
                              URLs will start with:
                                  http://${host}:${port}/${portal_name}/
   --run_only=STRING          run only specified test suite (should be only one)
-  --email_subject            the email subject to be sent 
+  --email_subject            the email subject to be sent
+  --xvfb_display=STRING      Define a xvfb display to be used.
 Notes:
   * You need to prepepare first test environment by using following command:
   ./runUnitTest.py --save prepareFunctionalTest.py
