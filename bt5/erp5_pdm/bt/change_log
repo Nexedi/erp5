@@ -1,3 +1,6 @@
+2010-01-21 yo
+* make resource searchable in supply views in list mode.
+
 2009-11-12 Kazuhiko
 * remove 'size' base category because it is already included in erp5_core.
 
