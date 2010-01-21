@@ -1208,6 +1208,10 @@ self.portal.getDefaultModule(self.packing_list_portal_type).newContent(
         self.resource_portal_type).newContent(
                     portal_type=self.resource_portal_type,
                     title='Resource',)
+    resource2 = self.portal.getDefaultModule(
+        self.resource_portal_type).newContent(
+                    portal_type=self.resource_portal_type,
+                    title='Resource2',)
     currency = self.portal.currency_module.newContent(
                                 portal_type='Currency',
                                 title='Currency')
@@ -1237,7 +1241,7 @@ self.portal.getDefaultModule(self.packing_list_portal_type).newContent(
                                   quantity=5,
                                   price=10,
                                   description='The second line',
-                                  resource_value=resource,)
+                                  resource_value=resource2,)
 
     order.confirm()
     transaction.commit()
