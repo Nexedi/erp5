@@ -1179,6 +1179,65 @@ Hé Hé Hé!""", page.asText().strip())
     self.assertTrue('manage_main' not in response.getBody())
     self.assertTrue('manage_messages' not in response.getBody())
 
+  def test_15_Check_LastModified_Header(self):
+    """This allow check that Last-Modified set by caching policy manager
+    is correctly filled with getModificationDate of content.
+    This test check all Policy installed by erp5_web:
+    Policy ID - unauthenticated web pages
+                unauthenticated
+                authenticated
+    """
+    request = self.portal.REQUEST
+    website = self.setupWebSite()
+    web_section_portal_type = 'Web Section'
+    web_section = website.newContent(portal_type=web_section_portal_type)
+
+    content = '<p>initial text</p>'
+    document = self.portal.web_page_module.newContent(portal_type='Web Page',
+            id='document_cache',
+            reference='NXD-Document.Cache',
+            text_content=content)
+    document.publish()
+    transaction.commit()
+    self.tic()
+    path = website.absolute_url_path() + '/NXD-Document.Cache'
+    # test Different Policy installed by erp5_web
+    # unauthenticated web pages
+    response = self.publish(path)
+    last_modified_header = response.getHeader('Last-Modified')
+    self.assertTrue(last_modified_header)
+    from App.Common import rfc1123_date
+    # Convert the Date into string according RFC 1123 Time Format
+    modification_date = rfc1123_date(document.getModificationDate())
+    self.assertEqual(modification_date, last_modified_header)
+
+    # authenticated
+    user = self.createUser('webmaster')
+    self.createUserAssignement(user, {})
+    response = self.publish(path, 'webmaster:webmaster')
+    last_modified_header = response.getHeader('Last-Modified')
+    self.assertTrue(last_modified_header)
+    from App.Common import rfc1123_date
+    # Convert the Date into string according RFC 1123 Time Format
+    modification_date = rfc1123_date(document.getModificationDate())
+    self.assertEqual(modification_date, last_modified_header)
+
+    # unauthenticated
+    document_portal_type = 'Text'
+    document_module = self.portal.getDefaultModule(document_portal_type)
+    document = document_module.newContent(portal_type=document_portal_type,
+                                          reference='NXD-Document-TEXT.Cache')
+    document.publish()
+    transaction.commit()
+    self.tic()
+    path = website.absolute_url_path() + '/NXD-Document-TEXT.Cache'
+    response = self.publish(path)
+    last_modified_header = response.getHeader('Last-Modified')
+    self.assertTrue(last_modified_header)
+    from App.Common import rfc1123_date
+    # Convert the Date into string according RFC 1123 Time Format
+    modification_date = rfc1123_date(document.getModificationDate())
+    self.assertEqual(modification_date, last_modified_header)
 
 class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
   """
