@@ -558,6 +558,11 @@ class TestInvoice(TestInvoiceMixin):
     order_line.setResourceValue(other_resource)
     transaction.commit()
     self.tic()
+    # after changing 'resource', related simulation movement will be
+    # replaced with another id, and we need to find the appropriate one
+    # here.
+    delivery_movement = related_applied_rule.contentValues()[0]
+    invoice_applied_rule = delivery_movement.contentValues()[0]
     invoice_movement = invoice_applied_rule.contentValues()[0]
     self.assertEquals(other_resource,
             invoice_movement.getResourceValue())
