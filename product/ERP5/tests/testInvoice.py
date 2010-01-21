@@ -1477,11 +1477,7 @@ self.portal.getDefaultModule(self.packing_list_portal_type).newContent(
     self.assertEquals('quantity', divergence.tested_property)
 
     # accept decision
-    builder_list = invoice.getBuilderList()
-    self.assertEquals(2, len(builder_list))
-    for builder in builder_list:
-      builder.solveDivergence(invoice.getRelativeUrl(),
-                              divergence_to_accept_list=divergence_list)
+    self._acceptDivergenceOnInvoice(invoice, divergence_list)
 
     transaction.commit()
     self.tic()
@@ -1537,11 +1533,7 @@ self.portal.getDefaultModule(self.packing_list_portal_type).newContent(
     self.assertEquals('quantity', divergence.tested_property)
 
     # adopt prevision
-    builder_list = invoice.getBuilderList()
-    self.assertEquals(2, len(builder_list))
-    for builder in builder_list:
-      builder.solveDivergence(invoice.getRelativeUrl(),
-                              divergence_to_adopt_list=divergence_list)
+    self._adoptDivergenceOnInvoice(invoice, divergence_list)
 
     transaction.commit()
     self.tic()
@@ -3345,6 +3337,26 @@ class TestSaleInvoice(TestSaleInvoiceMixin, TestInvoice, ERP5TypeTestCase):
       """)
     sequence_list.play(self, quiet=quiet)
 
+  def _acceptDivergenceOnInvoice(self, invoice, divergence_list):
+    builder_list = invoice.getBuilderList()
+    self.assertEquals(2, len(builder_list))
+    for builder in builder_list:
+      builder.solveDivergence(invoice.getRelativeUrl(),
+                              divergence_to_accept_list=divergence_list)
+
+  def _adoptDivergenceOnPackingList(self, packing_list, divergence_list):
+    builder_list = packing_list.getBuilderList()
+    for builder in builder_list:
+      builder.solveDivergence(packing_list.getRelativeUrl(),
+                              divergence_to_adopt_list=divergence_list)
+
+  def _adoptDivergenceOnInvoice(self, invoice, divergence_list):
+    builder_list = invoice.getBuilderList()
+    self.assertEquals(2, len(builder_list))
+    for builder in builder_list:
+      builder.solveDivergence(invoice.getRelativeUrl(),
+                              divergence_to_adopt_list=divergence_list)
+
   def test_accept_quantity_divergence_on_invoice_with_started_packing_list(
                         self, quiet=quiet):
     # only applies to sale invoice, because purchase invoices are not built yet
@@ -3384,11 +3396,7 @@ class TestSaleInvoice(TestSaleInvoiceMixin, TestInvoice, ERP5TypeTestCase):
     self.assertEquals('quantity', divergence.tested_property)
 
     # accept decision
-    builder_list = invoice.getBuilderList()
-    self.assertEquals(2, len(builder_list))
-    for builder in builder_list:
-      builder.solveDivergence(invoice.getRelativeUrl(),
-                              divergence_to_accept_list=divergence_list)
+    self._acceptDivergenceOnInvoice(invoice, divergence_list)
 
     transaction.commit()
     self.tic()
@@ -3411,9 +3419,7 @@ class TestSaleInvoice(TestSaleInvoiceMixin, TestInvoice, ERP5TypeTestCase):
 
     # if we adopt prevision on this packing list, both invoice and packing list
     # will be solved
-    for builder in packing_list.getBuilderList():
-      builder.solveDivergence(packing_list.getRelativeUrl(),
-                              divergence_to_adopt_list=divergence_list)
+    self._adoptDivergenceOnPackingList(packing_list, divergence_list)
     
     transaction.commit()
     self.tic()
