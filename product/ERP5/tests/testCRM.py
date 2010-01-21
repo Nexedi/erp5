@@ -44,8 +44,42 @@ TEST_HOME = os.path.dirname(__file__)
 def openTestFile(filename):
   return file(os.path.join(TEST_HOME, 'test_data', 'crm_emails', filename))
 
+clear_module_names = """
+campaign_module
+event_module
+meeting_module
+organisation_module
+person_module
+sale_opportunity_module
+""".strip().splitlines()
 
-class TestCRM(ERP5TypeTestCase):
+class BaseTestCRM(ERP5TypeTestCase):
+
+  def afterSetUp(self):
+    super(BaseTestCRM, self).afterSetUp()
+    # add a dummy mailhost not to send real messages
+    self.oldMailHost = getattr(self.portal, 'MailHost', None)
+    if self.oldMailHost is not None:
+      self.portal.manage_delObjects(['MailHost'])
+      self.portal._setObject('MailHost', DummyMailHost('MailHost'))
+
+  def beforeTearDown(self):
+    transaction.abort()
+    self.getActivityTool().manageClearActivities()
+    # restore the original MailHost
+    if self.oldMailHost is not None:
+      self.portal.manage_delObjects(['MailHost'])
+      self.portal._setObject('MailHost', DummyMailHost('MailHost'))
+    # clear modules if necessary
+    for module_name in clear_module_names:
+      module = getattr(self.portal, module_name)
+      module.manage_delObjects(list(module.objectIds()))
+
+    transaction.commit()
+    self.tic()
+    super(BaseTestCRM, self).beforeTearDown()
+
+class TestCRM(BaseTestCRM):
   def getTitle(self):
     return "CRM"
 
@@ -331,7 +365,7 @@ class TestCRM(ERP5TypeTestCase):
       self.assertEqual(new_event.getTitle(), 'Re: Event Title')
 
 
-class TestCRMMailIngestion(ERP5TypeTestCase):
+class TestCRMMailIngestion(BaseTestCRM):
   """Test Mail Ingestion for standalone CRM.
   """
   def getTitle(self):
@@ -346,43 +380,31 @@ class TestCRMMailIngestion(ERP5TypeTestCase):
             )
 
   def afterSetUp(self):
+    super(TestCRMMailIngestion, self).afterSetUp()
     portal = self.portal
 
     # create customer organisation and person
-    if 'customer' not in portal.organisation_module.objectIds():
-      portal.organisation_module.newContent(
-              id='customer',
-              portal_type='Organisation',
-              title='Customer')
+    portal.organisation_module.newContent(
+            id='customer',
+            portal_type='Organisation',
+            title='Customer')
     customer_organisation = portal.organisation_module.customer
-    if 'sender' not in portal.person_module.contentIds():
-      portal.person_module.newContent(
-              id='sender',
-              title='Sender',
-              subordination_value=customer_organisation,
-              default_email_text='sender@customer.com')
+    portal.person_module.newContent(
+            id='sender',
+            title='Sender',
+            subordination_value=customer_organisation,
+            default_email_text='sender@customer.com')
     # also create the recipients
-    if 'me' not in portal.person_module.contentIds():
-      portal.person_module.newContent(
-              id='me',
-              title='Me',
-              default_email_text='me@erp5.org')
-    if 'he' not in portal.person_module.contentIds():
-      portal.person_module.newContent(
-              id='he',
-              title='He',
-              default_email_text='he@erp5.org')
+    portal.person_module.newContent(
+            id='me',
+            title='Me',
+            default_email_text='me@erp5.org')
+    portal.person_module.newContent(
+            id='he',
+            title='He',
+            default_email_text='he@erp5.org')
 
     # make sure customers are available to catalog
-    transaction.commit()
-    self.tic()
-
-  def beforeTearDown(self):
-    transaction.abort()
-    # clear modules if necessary
-    for module in (self.portal.event_module,
-                   self.portal.campaign_module):
-      module.manage_delObjects(list(module.objectIds()))
     transaction.commit()
     self.tic()
 
@@ -604,7 +626,7 @@ class TestCRMMailIngestion(ERP5TypeTestCase):
 ##    event = self._ingestMail('with_attachements')
 ##
 
-class TestCRMMailSend(ERP5TypeTestCase):
+class TestCRMMailSend(BaseTestCRM):
   """Test Mail Sending for CRM
   """
   def getTitle(self):
@@ -622,31 +644,29 @@ class TestCRMMailSend(ERP5TypeTestCase):
             )
 
   def afterSetUp(self):
+    super(TestCRMMailSend, self).afterSetUp()
     portal = self.portal
 
     # create customer organisation and person
-    if 'customer' not in portal.organisation_module.objectIds():
-      portal.organisation_module.newContent(
-              id='customer',
-              portal_type='Organisation',
-              title='Customer')
+    portal.organisation_module.newContent(
+            id='customer',
+            portal_type='Organisation',
+            title='Customer')
     customer_organisation = portal.organisation_module.customer
-    if 'recipient' not in portal.person_module.contentIds():
-      portal.person_module.newContent(
-              id='recipient',
-              # The ',' below is to force quoting of the name in e-mail
-              # addresses on Zope 2.12
-              title='Recipient,',
-              subordination_value=customer_organisation,
-              default_email_text='recipient@example.com')
-    if 'me' not in portal.person_module.contentIds():
-      # also create the sender
-      portal.person_module.newContent(
-              id='me',
-              # The ',' below is to force quoting of the name in e-mail
-              # addresses on Zope 2.12
-              title='Me,',
-              default_email_text='me@erp5.org')
+    portal.person_module.newContent(
+            id='recipient',
+            # The ',' below is to force quoting of the name in e-mail
+            # addresses on Zope 2.12
+            title='Recipient,',
+            subordination_value=customer_organisation,
+            default_email_text='recipient@example.com')
+    # also create the sender
+    portal.person_module.newContent(
+            id='me',
+            # The ',' below is to force quoting of the name in e-mail
+            # addresses on Zope 2.12
+            title='Me,',
+            default_email_text='me@erp5.org')
 
     # set preference
     default_pref = self.portal.portal_preferences.default_site_preference
@@ -657,21 +677,7 @@ class TestCRMMailSend(ERP5TypeTestCase):
     if default_pref.getPreferenceState() == 'disabled':
       default_pref.enable()
 
-    # add a dummy mailhost not to send real messages
-    if 'MailHost' in self.portal.objectIds():
-      self.portal.manage_delObjects(['MailHost'])
-      self.portal._setObject('MailHost', DummyMailHost('MailHost'))
-
     # make sure customers are available to catalog
-    transaction.commit()
-    self.tic()
-
-  def beforeTearDown(self):
-    transaction.abort()
-    # clear modules if necessary
-    for module in (self.portal.event_module,
-                   self.portal.campaign_module,):
-      module.manage_delObjects(list(module.objectIds()))
     transaction.commit()
     self.tic()
 
