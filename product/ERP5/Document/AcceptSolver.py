@@ -66,6 +66,7 @@ class AcceptSolver(SolverMixin, ConfigurableMixin, XMLObject):
     """
     solved_property = self._getPortalTypeValue().getTestedProperty()
     for movement in self.getDeliveryValueList():
+      import pdb; pdb.set_trace()
       new_value = movement.getProperty(solved_property)
       simulation_movement_list = movement.getDeliveryRelatedValueList()
       # if movement here is a delivery, we need to find simulation
@@ -75,15 +76,30 @@ class AcceptSolver(SolverMixin, ConfigurableMixin, XMLObject):
           [x.getDeliveryRelatedValueList() \
            for x in self.getDeliveryValue().getMovementList()], [])
       for simulation_movement in simulation_movement_list:
-        if not simulation_movement.isPropertyRecorded(solved_property):
-          simulation_movement.recordProperty(solved_property)
         # XXX hard coded
         if solved_property == 'quantity':
-          simulation_movement.setProperty(
-            solved_property,
-            new_value * simulation_movement.getDeliveryRatio())
+          new_quantity = new_value * simulation_movement.getDeliveryRatio()
+          value_dict = {'quantity':new_quantity}
         else:
-          simulation_movement.setProperty(solved_property, new_value)
+          value_dict = {solved_property:new_value}
+        self._solveRecursively(simulation_movement, value_dict)
         simulation_movement.expand()
     # Finish solving
     self.succeed()
+
+  def _solveRecursively(self, simulation_movement, value_dict=None):
+    """
+      Update value of the current simulation movement, and update
+      his parent movement.
+    """
+    for property_id in value_dict.iterkeys():
+      if not simulation_movement.isPropertyRecorded(property_id):
+        simulation_movement.recordProperty(property_id)
+    simulation_movement.edit(**value_dict)
+
+    applied_rule = simulation_movement.getParentValue()
+    parent_movement = applied_rule.getParentValue()
+    if parent_movement.getPortalType() == 'Simulation Movement' and \
+           not parent_movement.isFrozen():
+      # backtrack to the parent movement while it is not frozen
+      self._solveRecursively(parent_movement, value_dict=value_dict)
