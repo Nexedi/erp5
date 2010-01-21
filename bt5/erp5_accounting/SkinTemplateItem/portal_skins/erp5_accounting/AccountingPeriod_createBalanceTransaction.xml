@@ -71,6 +71,7 @@ def roundCurrency(value, resource_relative_url):\n
   return round(value, qty_precision)\n
 \n
 activity_tag = \'BalanceTransactionCreation\'\n
+activate_kw=dict(tag=activity_tag)\n
 \n
 at_date = context.getStopDate()\n
 assert at_date\n
@@ -88,7 +89,7 @@ for section_uid in \\\n
   section = portal.portal_catalog.getObject(uid=section_uid)\n
 \n
   balance_transaction = portal.accounting_module.newContent(\n
-                          activate_kw=dict(tag=activity_tag),\n
+                          activate_kw=activate_kw,\n
                           portal_type=\'Balance Transaction\',\n
                           start_date=(at_date + 1).earliestTime(),\n
                           title=context.getTitle() or Base_translateString(\'Balance Transaction\'),\n
@@ -152,6 +153,7 @@ for section_uid in \\\n
       balance_transaction.newContent(\n
           id=\'%03d\' % line_count,\n
           portal_type=\'Balance Transaction Line\',\n
+          activate_kw=activate_kw,\n
           destination=inventory.node_relative_url,\n
           resource=inventory.resource_relative_url,\n
           quantity=quantity,\n
@@ -168,6 +170,7 @@ for section_uid in \\\n
         balance_transaction.newContent(\n
           id=\'%03d\' % line_count,\n
           portal_type=\'Balance Transaction Line\',\n
+          activate_kw=activate_kw,\n
           destination=inventory.node_relative_url,\n
           quantity=total_price)\n
 \n
@@ -192,6 +195,7 @@ for section_uid in \\\n
       balance_transaction.newContent(\n
         id=\'%03d\' % line_count,\n
         portal_type=\'Balance Transaction Line\',\n
+        activate_kw=activate_kw,\n
         destination=inventory.node_relative_url,\n
         source_section_uid=inventory.mirror_section_uid,\n
         resource=inventory.resource_relative_url,\n
@@ -204,6 +208,7 @@ for section_uid in \\\n
       balance_transaction.newContent(\n
         id=\'%03d\' % line_count,\n
         portal_type=\'Balance Transaction Line\',\n
+        activate_kw=activate_kw,\n
         destination=inventory.node_relative_url,\n
         source_section_uid=inventory.mirror_section_uid,\n
         quantity=total_price)\n
@@ -230,6 +235,7 @@ for section_uid in \\\n
       balance_transaction.newContent(\n
         id=\'%03d\' % line_count,\n
         portal_type=\'Balance Transaction Line\',\n
+        activate_kw=activate_kw,\n
         destination=inventory.node_relative_url,\n
         resource=inventory.resource_relative_url,\n
         quantity=quantity,\n
@@ -242,6 +248,7 @@ for section_uid in \\\n
       balance_transaction.newContent(\n
         id=\'%03d\' % line_count,\n
         portal_type=\'Balance Transaction Line\',\n
+        activate_kw=activate_kw,\n
         destination=inventory.node_relative_url,\n
         destination_payment_uid=inventory.payment_uid,\n
         quantity=total_price)\n
@@ -249,6 +256,7 @@ for section_uid in \\\n
   # add a final line for p&l\n
   balance_transaction.newContent(\n
             id=\'%03d\' % (line_count + 1),\n
+            activate_kw=activate_kw,\n
             portal_type=\'Balance Transaction Line\',\n
             destination=profit_and_loss_account,\n
             quantity=-profit_and_loss_quantity)\n
@@ -307,6 +315,7 @@ context.activate(after_tag=activity_tag).getTitle()\n
                             <string>precision_cache</string>
                             <string>roundCurrency</string>
                             <string>activity_tag</string>
+                            <string>activate_kw</string>
                             <string>at_date</string>
                             <string>AssertionError</string>
                             <string>section</string>
