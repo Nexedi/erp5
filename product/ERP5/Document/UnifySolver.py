@@ -30,11 +30,10 @@
 import zope.interface
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
-from Products.ERP5Type.XMLObject import XMLObject
-from Products.ERP5.mixin.solver import SolverMixin
-from Products.ERP5.mixin.configurable import ConfigurableMixin
+from Products.ERP5.Document.AcceptSolver import AcceptSolver
+from Products.ERP5.Document.AdoptSolver import AdoptSolver
 
-class UnifySolver(SolverMixin, ConfigurableMixin, XMLObject):
+class UnifySolver(AcceptSolver, AdoptSolver):
   """
   """
   meta_type = 'ERP5 Unify Solver'
@@ -76,9 +75,10 @@ class UnifySolver(SolverMixin, ConfigurableMixin, XMLObject):
           [x.getDeliveryRelatedValueList() \
            for x in self.getDeliveryValue().getMovementList()], [])
       for simulation_movement in simulation_movement_list:
-        if not simulation_movement.isPropertyRecorded(solved_property):
-          simulation_movement.recordProperty(solved_property)
-        simulation_movement.setProperty(solved_property, new_value)
+        value_dict = {solved_property:new_value}
+        self._solveRecursively(simulation_movement, value_dict)
+        self._clearRecordedPropertyRecursively(simulation_movement,
+                                               solved_property)
         simulation_movement.expand()
     # Finish solving
     self.succeed()
