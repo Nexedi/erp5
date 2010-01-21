@@ -258,7 +258,7 @@ class TestInvoiceMixin(TestPackingListMixin,
     invoicing_rule = invoicing_rule_list[0]
     sequence.edit(invoicing_rule = invoicing_rule)
     for invoicing_rule in invoicing_rule_list:
-      self.assertEquals(invoicing_rule.getSpecialiseId(),
+      self.assertEquals(invoicing_rule.getSpecialiseReference(),
           'default_invoicing_rule')
       self.assertEquals(invoicing_rule.getPortalType(),
           'Applied Rule')
