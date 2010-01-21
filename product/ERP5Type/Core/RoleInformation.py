@@ -92,11 +92,10 @@ class RoleInformation(XMLObject):
   security.declareProtected(AccessContentsInformation, 'PrincipiaSearchSource')
   def PrincipiaSearchSource(self):
     """Return keywords for "Find" tab in ZMI"""
-    search_source_list = [self.getReference(),
-                          self.getTitle(),
-                          self.getDescription(),
-                          self.getConditionText(),
-                          self.getRoleBaseCategoryScriptId()]
+    search_source_list = [self.getTitle(),
+                         self.getDescription(),
+                         self.getConditionText(),
+                         self.getRoleBaseCategoryScriptId()]
     return ' '.join(filter(None, search_source_list))
 
   security.declarePrivate("getLocalRolesFor")
