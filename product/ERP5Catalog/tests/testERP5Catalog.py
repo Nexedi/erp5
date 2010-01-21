@@ -3932,17 +3932,28 @@ VALUES
     # Make sure that we are able to retrieve data directly from mysql
     # without retrieving real objects
     title="foo"
-    person = person_module.newContent(portal_type='Person',title=title)
+    description = "foobar"
+    person = person_module.newContent(portal_type='Person',title=title,
+                                      description=description)
     person_uid = person.getUid()
     person.immediateReindexObject()
     folder_object_list = person_module.searchFolder(uid=person_uid, select_dict={'title': None})
     new_title = 'bar'
+    new_description = 'foobarfoo'
     person.setTitle(new_title)
+    person.setDescription(new_description)
     self.assertEquals(new_title, person.getTitle())
     expected_sql_title_list = [title]
-    self.assertEquals([x.title for x in folder_object_list], expected_sql_title_list)
+    self.assertEquals([x.title for x in folder_object_list],
+                      expected_sql_title_list)
+    self.assertEquals([x.getProperty('title') for x in
+                      folder_object_list], expected_sql_title_list)
+    expected_sql_description_list = [new_description]
+    self.assertEquals([x.getProperty('description') for x in
+                      folder_object_list], expected_sql_description_list)
     real_title_list = [new_title]
-    self.assertEquals([x.getTitle() for x in folder_object_list], real_title_list)
+    self.assertEquals([x.getTitle() for x in
+                      folder_object_list], real_title_list)
 
 def test_suite():
   suite = unittest.TestSuite()

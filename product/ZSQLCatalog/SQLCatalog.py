@@ -1868,6 +1868,9 @@ class Catalog(Folder,
         search_key = self.getSearchKey(key, 'RelatedKey')
     return search_key, related_key_definition
 
+  def hasColumn(self, column):
+    return self.getColumnSearchKey(column)[0] is not None
+
   @profiler_decorator
   def getColumnDefaultSearchKey(self, key):
     """

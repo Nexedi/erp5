@@ -992,6 +992,12 @@ class ZCatalog(Folder, Persistent, Implicit):
       return catalog.getColumnIds()
     return []
 
+  def hasColumn(self, column, sql_catalog_id=None):
+    catalog = self.getSQLCatalog(sql_catalog_id)
+    if catalog is not None:
+      return catalog.hasColumn(column)
+    return False
+
   def getAttributesForColumn(self, column, sql_catalog_id=None):
     """
       Return the attribute names as a single string

@@ -534,6 +534,10 @@ class TestSQLCatalog(unittest.TestCase):
     self.assertTrue('ambiguous_mapping' in select_dict, select_dict)
     self.assertTrue('bar' in select_dict['ambiguous_mapping'], select_dict['ambiguous_mapping'])
 
+  def test_hasColumn(self):
+    self.assertTrue(self._catalog.hasColumn('uid'))
+    self.assertFalse(self._catalog.hasColumn('foobar'))
+
 ##return catalog(title=Query(title='a', operator='not'))
 #return catalog(title={'query': 'a', 'operator': 'not'})
 #return catalog(title={'query': ['a', 'b'], 'operator': 'not'})

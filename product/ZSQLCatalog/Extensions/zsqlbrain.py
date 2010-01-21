@@ -22,6 +22,8 @@ from AccessControl.SecurityInfo import allow_class
 
 from zLOG import LOG
 
+_MARKER = []
+
 class  ZSQLBrain(Acquisition.Implicit):
   security = ClassSecurityInfo()
   security.declareObjectPublic()
@@ -68,6 +70,19 @@ class  ZSQLBrain(Acquisition.Implicit):
           "Could not access object path %s" % self.getPath(),
           error=sys.exc_info() )
       return None
+
+  def getProperty(self, name, d=_MARKER, **kw):
+    value = None
+    if hasattr(self, name):
+      value = getattr(self, name)
+    else:
+      if d is not _MARKER:
+        kw['d'] = d
+      document = self.getObject()
+      if document is None:
+        raise AttributeError(name)
+      value = document.getProperty(name, **kw)
+    return value
 
   def absolute_url(self, relative=0):
     """

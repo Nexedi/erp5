@@ -174,6 +174,12 @@ class ISearchKeyCatalog(Interface):
       There is one comparison operator instance per possible string value.
     """
 
+  def hasColumn(column):
+    """
+      Check if the given column or virtual column (in case
+      of related keys) exists or not
+    """
+
   # TODO: add support for other operators (logical, ensemblist (?))
 
   def searchResults(REQUEST=None, **kw):
