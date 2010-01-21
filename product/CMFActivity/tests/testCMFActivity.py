@@ -31,6 +31,7 @@ import unittest
 
 from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from Products.ERP5Type.tests.utils import DummyMailHost
 from Products.CMFActivity.ActiveObject import INVOKE_ERROR_STATE,\
                                               VALIDATE_ERROR_STATE
 from Products.CMFActivity.Activity.Queue import VALIDATION_ERROR_DELAY
@@ -87,8 +88,15 @@ class TestCMFActivity(ERP5TypeTestCase):
     return getattr(self.getPortal(), 'organisation', None)
 
   def afterSetUp(self):
+    super(TestCMFActivity, self).afterSetUp()
     self.login()
-    portal = self.getPortal()
+    portal = self.portal
+    # trap outgoing e-mails
+    self.oldMailHost = getattr(self.portal, 'MailHost', None)
+    if self.oldMailHost is not None:
+      self.portal.manage_delObjects(['MailHost'])
+      self.portal._setObject('MailHost', DummyMailHost('MailHost'))
+    
     # remove all message in the message_table because
     # the previous test might have failed
     message_list = portal.portal_activities.getMessageList()
@@ -103,13 +111,11 @@ class TestCMFActivity(ERP5TypeTestCase):
     organisation_module = self.getOrganisationModule()
     if not(organisation_module.hasContent(self.company_id)):
       o1 = organisation_module.newContent(id=self.company_id)
-    get_transaction().commit()
-    self.tic()
+    self.stepTic()
     # import it now that Products.ERP5 has been initialized
     global Organisation
     from Products.ERP5Type.Document.Organisation import Organisation as Org
     Organisation = Org
-    
 
   def login(self, quiet=0, run=run_all_test):
     uf = self.getPortal().acl_users
