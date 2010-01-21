@@ -28,6 +28,7 @@ Product Module | view
 Product | internal_price_view
 Product | inventory_chart
 Product | inventory_variation_chart
+Product | jump_to_related_supply_line
 Product | jump_to_related_transformation
 Product | purchase_price_view
 Product | sale_price_view
@@ -64,6 +65,7 @@ Service Individual Variation | view
 Service Module | converted_inventory_report
 Service Module | view
 Service | internal_price_view
+Service | jump_to_related_supply_line
 Service | purchase_price_view
 Service | sale_price_view
 Service | view

@@ -1,3 +1,6 @@
+2010-01-21 yo
+* Add a jump to related supply lines. For now, jump only to lines but not cells, because views of cells are mostly nonsense, and their parents should have relations to the same resource anyway.
+
 2010-01-21 Nicolas Dumazet
 * deprecate quantity property of quantity_unit categories: use Quantity Unit Conversion Definitions instead.
 * introduce Quantity Unit Conversion module, Quantity Unit Conversion Definitions
