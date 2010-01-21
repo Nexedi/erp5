@@ -217,7 +217,11 @@ class SQLQueue(RAMQueue, SQLBase):
       if m.getExecutionState() == MESSAGE_EXECUTED:
         deletable_uid_list.append(uid)
       elif m.getExecutionState() == MESSAGE_NOT_EXECUTED:
-        if type(m.exc_type) is ClassType and \
+        # BACK: Only exceptions can be classes in Python 2.6.
+        # Once we drop support for Python 2.4, 
+        # please, remove the "type(m.exc_type) is type(ConflictError)" check
+        # and leave only the "issubclass(m.exc_type, ConflictError)" check.
+        if type(m.exc_type) is type(ConflictError) and \
            issubclass(m.exc_type, ConflictError):
           delay_uid_list.append(uid)
         elif priority > MAX_PRIORITY:

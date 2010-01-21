@@ -324,13 +324,13 @@ class SQLDict(RAMDict, SQLBase):
   def finalizeMessageExecution(self, activity_tool, message_uid_priority_list, uid_to_duplicate_uid_list_dict):
     """
       If everything was fine, delete all messages.
-      If anything failed, make successfull messages available (if any), and
+      If anything failed, make successful messages available (if any), and
       the following rules apply to failed messages:
         - Failures due to ConflictErrors cause messages to be postponed,
           but their priority is *not* increased.
         - Failures of messages already above maximum priority cause them to
           be put in a permanent-error state.
-        - In all other cases, priotity is increased and message is delayed.
+        - In all other cases, priority is increased and message is delayed.
     """
     def makeMessageListAvailable(uid_list):
       self.makeMessageListAvailable(activity_tool=activity_tool, uid_list=uid_list)
@@ -353,7 +353,11 @@ class SQLDict(RAMDict, SQLBase):
         # Should duplicate messages follow strictly the original message, or
         # should they be just made available again ?
         make_available_uid_list.extend(uid_to_duplicate_uid_list_dict.get(uid, []))
-        if type(m.exc_type) is ClassType and \
+        # BACK: Only exceptions can be classes in Python 2.6.
+        # Once we drop support for Python 2.4, 
+        # please, remove the "type(m.exc_type) is type(ConflictError)" check
+        # and leave only the "issubclass(m.exc_type, ConflictError)" check.
+        if type(m.exc_type) is type(ConflictError) and \
            issubclass(m.exc_type, ConflictError):
           delay_uid_list.append(uid)
         elif priority > MAX_PRIORITY:
