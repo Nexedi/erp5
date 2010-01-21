@@ -66,7 +66,6 @@ class AcceptSolver(SolverMixin, ConfigurableMixin, XMLObject):
     """
     solved_property = self._getPortalTypeValue().getTestedProperty()
     for movement in self.getDeliveryValueList():
-      import pdb; pdb.set_trace()
       new_value = movement.getProperty(solved_property)
       simulation_movement_list = movement.getDeliveryRelatedValueList()
       # if movement here is a delivery, we need to find simulation
