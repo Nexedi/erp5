@@ -1146,7 +1146,7 @@ class Catalog(Folder,
 
     RESPONSE.redirect(URL1 + '/manage_catalogView?manage_tabs_message=Object%20Uncataloged')
 
-  def manage_catalogReindex(self, REQUEST, RESPONSE, URL1):
+  def manage_catalogReindex(self, REQUEST, RESPONSE, URL1, urls=None):
     """ clear the catalog, then re-index everything """
     elapse = time.time()
     c_elapse = time.clock()
