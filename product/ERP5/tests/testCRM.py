@@ -65,7 +65,6 @@ class BaseTestCRM(ERP5TypeTestCase):
 
   def beforeTearDown(self):
     transaction.abort()
-    self.getActivityTool().manageClearActivities()
     # restore the original MailHost
     if self.oldMailHost is not None:
       self.portal.manage_delObjects(['MailHost'])
@@ -75,8 +74,7 @@ class BaseTestCRM(ERP5TypeTestCase):
       module = getattr(self.portal, module_name)
       module.manage_delObjects(list(module.objectIds()))
 
-    transaction.commit()
-    self.tic()
+    self.stepTic()
     super(BaseTestCRM, self).beforeTearDown()
 
 class TestCRM(BaseTestCRM):
