@@ -2377,24 +2377,81 @@ class TestInventoryDocument(InventoryAPITestCase):
                   [x.path for x in self.resource.getInventoryList(
                                          optimisation__=False,
                                          mirror_uid=self.mirror_node.getUid())])
-    
-class TestUnitConversion(InventoryAPITestCase):
-  QUANTITY_UNIT_CATEGORIES = {
-    'unit': {'unit': 1, 'a_few': None},
-    'length': {'m': 1, 'in': .0254},
-    'mass': {'kg': 1, 't': 1000, 'g': .001},
+
+class BaseTestUnitConversion(InventoryAPITestCase):
+  QUANTITY_UNIT_DICT = {}
+  METRIC_TYPE_CATEGORY_LIST = ()
+
+  def setUpUnitDefinition(self):
+
+    unit_module = self.portal.quantity_unit_conversion_module
+    for base, t in self.QUANTITY_UNIT_DICT.iteritems():
+      standard, definition_dict = t
+
+      group = unit_module._getOb(base, None)
+      if group is None:
+        group = unit_module.newContent(
+                 id=base,
+                 portal_type='Quantity Unit Conversion Group',
+                 quantity_unit="%s/%s" % (base, standard),
+                 immediate_reindex=1 )
+
+      for unit, amount in definition_dict.iteritems():
+        if group._getOb(unit, None) is None:
+          group.newContent(
+             id=unit,
+             portal_type="Quantity Unit Conversion Definition",
+             quantity_unit="%s/%s" % (base, unit),
+             quantity=amount,
+             immediate_reindex=1)
+
+  def afterSetUp(self):
+    InventoryAPITestCase.afterSetUp(self)
+
+    self.setUpUnitDefinition()
+
+  def makeMovement(self, quantity, resource, *variation, **kw):
+    m = self._makeMovement(quantity=quantity, resource_value=resource,
+      source_value=self.node, destination_value=self.mirror_node, **kw)
+    if variation:
+      m.setVariationCategoryList(variation)
+      self._safeTic()
+
+  def convertedSimulation(self, metric_type, **kw):
+    return self.getSimulationTool().getInventory(
+      metric_type=metric_type, node_uid=self.node.getUid(),
+      **kw)
+
+  def getNeededCategoryList(self):
+    category_list = ['metric_type/' + c for c in self.METRIC_TYPE_CATEGORY_LIST]
+    for base, t in self.QUANTITY_UNIT_DICT.iteritems():
+      standard, definition_dict = t
+
+      quantity = 'quantity_unit/%s/' % base
+      category_list.append(quantity + standard)
+      category_list.extend(quantity + unit for unit in definition_dict)
+    category_list += InventoryAPITestCase.getNeededCategoryList(self)
+    return category_list
+
+class TestUnitConversion(BaseTestUnitConversion):
+  QUANTITY_UNIT_DICT = {
+    # base: (reference, dict_of_others)
+    'unit':   ('unit', dict(a_few=None)),
+    'length': ('m',    {'in': .0254}),
+    'mass':   ('kg',   dict(t=1000, g=.001)),
   }
-  METRIC_TYPE_CATEGORIES = (
+  METRIC_TYPE_CATEGORY_LIST = (
     'unit',
     'unit/0',
     'unit/1',
     'unit/2',
+    'unit/lot',
     'mass/net',
     'mass/nutr/lipid',
   )
 
   def afterSetUp(self):
-    InventoryAPITestCase.afterSetUp(self)
+    BaseTestUnitConversion.afterSetUp(self)
 
     self.resource.setQuantityUnitList(('unit/unit', 'length/in'))
     self.other_resource.setQuantityUnit('mass/g')
@@ -2433,54 +2490,176 @@ class TestUnitConversion(InventoryAPITestCase):
 
     self._safeTic()
 
-  def getNeededCategoryList(self):
-    category_list = ['metric_type/' + c for c in self.METRIC_TYPE_CATEGORIES]
-    for level1, level2 in self.QUANTITY_UNIT_CATEGORIES.iteritems():
-      quantity = 'quantity_unit/%s/' % level1
-      category_list.extend(quantity + unit for unit in level2)
-    category_list += InventoryAPITestCase.getNeededCategoryList(self)
-    return category_list
-
-  def createCategories(self):
-    InventoryAPITestCase.createCategories(self)
-    quantity_unit = self.getCategoryTool().quantity_unit
-    for quantity_id, unit_dict in self.QUANTITY_UNIT_CATEGORIES.iteritems():
-      quantity_value = quantity_unit[quantity_id]
-      for unit_id, unit_scale in unit_dict.iteritems():
-        if unit_scale is not None:
-          quantity_value[unit_id].setProperty('quantity', unit_scale)
-
   def testConvertedInventoryList(self):
-    def makeMovement(quantity, resource, *variation, **kw):
-      m = self._makeMovement(quantity=quantity, resource_value=resource,
-        source_value=self.node, destination_value=self.mirror_node, **kw)
-      if variation:
-        m.setVariationCategoryList(variation)
-        self._safeTic()
-
-    makeMovement(2, self.resource, 'colour/green', 'size/big')
-    makeMovement(789, self.other_resource)
-    makeMovement(-13, self.resource, 'colour/red', 'size/small',
+    self.makeMovement(2, self.resource, 'colour/green', 'size/big')
+    self.makeMovement(789, self.other_resource)
+    self.makeMovement(-13, self.resource, 'colour/red', 'size/small',
                  'industrial_phase/phase1', 'industrial_phase/phase2')
 
-    def simulation(metric_type, **kw):
-      return self.getSimulationTool().getConvertedInventoryList(
-        metric_type=metric_type, node_uid=self.node.getUid(),
-        ignore_group_by=1, inventory_list=0, **kw)[0].converted_quantity
 
     for i in range(3):
-      self.assertEquals(None, simulation('unit/%i' % i))
+      self.assertEquals(None, self.convertedSimulation('unit/%i' % i))
 
-    self.assertEquals(None, simulation('unit', simulation_period='Current'))
-    self.assertEquals(11, simulation('unit'))
+    self.assertEquals(None,
+                      self.convertedSimulation('unit',
+                                               simulation_period='Current'))
+    self.assertEquals(11, self.convertedSimulation('unit'))
 
-    self.assertEquals(11 * 123 - 789,
-                      simulation('mass/net', quantity_unit=.001))
+    self.assertEquals(11 * .123 - .789, self.convertedSimulation('mass/net'))
     self.assertEquals((11 * 123 - 789) / 1e6,
-                      simulation('mass/net', quantity_unit='mass/t'))
+                      self.convertedSimulation('mass/net',
+                                               quantity_unit='mass/t'))
 
-    self.assertEquals(13 * .056 - 2 * .043, simulation('mass/nutr/lipid'))
+    self.assertEquals(13 * .056 - 2 * .043,
+                      self.convertedSimulation('mass/nutr/lipid'))
 
+class TestUnitConversionDefinition(BaseTestUnitConversion):
+  QUANTITY_UNIT_DICT = {
+    # base: (reference, dict_of_others)
+    'unit':   ('unit', dict(lot=1000, pack=6)),
+  }
+  METRIC_TYPE_CATEGORY_LIST = (
+    'unit',
+  )
+
+  def afterSetUp(self):
+    BaseTestUnitConversion.afterSetUp(self)
+
+    # Aliases for readability
+    self.resource_bylot = self.resource
+    self.resource_bylot_overriding = self.other_resource
+
+    # And a third resource
+    self.resource_byunit = self.getProductModule().newContent(
+                                  title='Resource counted By Unit',
+                                  portal_type='Product')
+
+    self.resource_bypack = self.getProductModule().newContent(
+                                  title='Resource counted By Pack',
+                                  portal_type='Product')
+
+    self.resource_bylot.setQuantityUnit('unit/lot')
+    self.resource_bypack.setQuantityUnit('unit/pack')
+    self.resource_bylot_overriding.setQuantityUnit('unit/lot')
+    self.resource_byunit.setQuantityUnit('unit/unit')
+
+
+    self._safeTic()
+
+    base_unit = self.resource_bylot_overriding.newContent(
+                  portal_type='Quantity Unit Conversion Group',
+                  quantity_unit='unit/unit',
+                  immediate_reindex=1)
+
+
+    unit = base_unit.newContent(
+            portal_type='Quantity Unit Conversion Definition',
+            quantity_unit='unit/lot',
+            quantity=50,
+            immediate_reindex=1)
+
+    self._safeTic()
+
+  def testAggregatedReports(self):
+    self.makeMovement(-10, self.resource_bylot)
+    self.makeMovement(-1, self.resource_bypack)
+    self.makeMovement(2, self.resource_bylot_overriding)
+    self.makeMovement(500, self.resource_byunit)
+
+    # Always displayed as quantity*unit_ratio
+    self.assertEquals(10*1000 + 1*6 - 2*50 - 500*1,
+                      self.convertedSimulation('unit'))
+    self.assertEquals(10*1000 + 1*6 - 2*50 - 500*1,
+                      self.convertedSimulation('unit',
+                                               quantity_unit='unit/unit'))
+    self.assertEquals(10*1 + 1*(6*0.001) - 2*1 - 500*(1./1000),
+                      self.convertedSimulation('unit',
+                                               quantity_unit='unit/lot'))
+    # amounts are rounded on the 12th digit.
+    self.assertEquals(round(10*(1000./6) + 1*1 - 2*(50./6) - 500*(1./6), 12),
+                      self.convertedSimulation('unit',
+                                               quantity_unit='unit/pack'))
+
+  def testResourceConvertQuantity(self):
+    # First, test without local Unit Definitions
+    for resource in (self.resource_bylot,
+                     self.resource_bypack,
+                     self.resource_byunit):
+      # not_reference -> reference quantity
+      self.assertEquals(1000,
+                        resource.convertQuantity(1,
+                                                 "unit/lot",
+                                                 "unit/unit"))
+      # reference -> not_reference
+      self.assertEquals(1,
+                        resource.convertQuantity(1000,
+                                                 "unit/unit",
+                                                 "unit/lot"))
+      # not_reference -> not_reference
+      self.assertEquals(1*1000./6,
+                        resource.convertQuantity(1,
+                                                 "unit/lot",
+                                                 "unit/pack"))
+      self.assertEquals(1*6./1000,
+                        resource.convertQuantity(1,
+                                                 "unit/pack",
+                                                 "unit/lot"))
+
+    # then with local Unit definition
+    self.assertEquals(1*50,
+                      self.resource_bylot_overriding\
+                          .convertQuantity(1, "unit/lot", "unit/unit"))
+    self.assertEquals(1./50,
+                      self.resource_bylot_overriding\
+                          .convertQuantity(1, "unit/unit", "unit/lot"))
+    self.assertEquals(1*50./6,
+                      self.resource_bylot_overriding\
+                          .convertQuantity(1, "unit/lot", "unit/pack"))
+    self.assertEquals(1*6./50,
+                      self.resource_bylot_overriding\
+                          .convertQuantity(1, "unit/pack", "unit/lot"))
+
+  def testResourceConvertQuantityAfterGlobalChange(self):
+    """
+    after a change in a Global unit definition, definitions should get
+    reindexed.
+    """
+    # Before the global change, global definition reads 1000
+    self.assertEquals(1000,
+                      self.resource_bylot.convertQuantity(1,
+                                                           "unit/lot",
+                                                           "unit/unit"))
+    # which does not affect resources overriding the definition
+    self.assertEquals(1*50,
+                      self.resource_bylot_overriding\
+                          .convertQuantity(1, "unit/lot", "unit/unit"))
+
+    portal = self.getPortalObject()
+
+    lot_uid = portal.portal_categories.quantity_unit.unit.lot.getUid()
+    query = portal.portal_catalog(quantity_unit_uid=lot_uid,
+                                                  grand_parent_portal_type= \
+                                                    "Quantity Unit Conversion" \
+                                                    " Module",
+                                                  portal_type= \
+                                                    "Quantity Unit Conversion" \
+                                                    " Definition")
+    self.assertEquals(1, len(query))
+    query[0].getObject().setQuantity(500)
+
+    # this change triggers Resource reindexations. Wait for 'em!
+    transaction.commit()
+    self.tic()
+
+    # SQL tables should have been updated:
+    self.assertEquals(500,
+                      self.resource_bylot.convertQuantity(1,
+                                                           "unit/lot",
+                                                           "unit/unit"))
+    # without affecting resources that override the definition
+    self.assertEquals(1*50,
+                      self.resource_bylot_overriding\
+                          .convertQuantity(1, "unit/lot", "unit/unit"))
 
 def test_suite():
   suite = unittest.TestSuite()
@@ -2492,6 +2671,7 @@ def test_suite():
   suite.addTest(unittest.makeSuite(TestTrackingList))
   suite.addTest(unittest.makeSuite(TestInventoryDocument))
   suite.addTest(unittest.makeSuite(TestUnitConversion))
+  suite.addTest(unittest.makeSuite(TestUnitConversionDefinition))
   return suite
 
 # vim: foldmethod=marker

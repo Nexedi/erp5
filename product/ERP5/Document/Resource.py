@@ -794,12 +794,12 @@ class Resource(XMLMatrix, Variated):
       if management_unit == quantity_unit:
         return 1.0
       traverse = self.portal_categories['quantity_unit'].unrestrictedTraverse
-      quantity = float(traverse(quantity_unit).getProperty('quantity'))
+      quantity = self.getQuantityUnitDefinitionRatio(traverse(quantity_unit))
       if quantity_unit.split('/', 1)[0] != management_unit.split('/', 1)[0]:
         measure = self.getDefaultMeasure(quantity_unit)
         quantity /= measure.getConvertedQuantity(variation_list)
       else:
-        quantity /= float(traverse(management_unit).getProperty('quantity'))
+        quantity /= self.getQuantityUnitDefinitionRatio(traverse(management_unit))
       return quantity
 
     # Unit conversion
@@ -852,6 +852,88 @@ class Resource(XMLMatrix, Variated):
         if len(result) == 1:
           return result[0]
 
+    def _getGlobalQuantityUnitDefinitionDict(self):
+      # XXX this info could be cached, as it is the same for all Resources
+      result = {}
+      module = self.getPortalObject().quantity_unit_conversion_module
+      for definition_list in module.objectValues(portal_type= \
+          'Quantity Unit Conversion Group'):
+        standard_quantity_unit_uid = definition_list.getQuantityUnitUid()
+        if standard_quantity_unit_uid is None:
+          continue
+
+        result[standard_quantity_unit_uid] = (None, 1.0)
+        for definition in definition_list.objectValues(portal_type= \
+            'Quantity Unit Conversion Definition'):
+          unit_uid = definition.getQuantityUnitUid()
+          if unit_uid is None:
+            continue
+          quantity = definition.getQuantity()
+          if not quantity:
+            continue
+          result[unit_uid] = (definition.getUid(), quantity)
+
+      return result
+
+    def _getQuantityUnitDefinitionDict(self):
+      """
+      Returns a dictionary representing the Unit Definitions that hold
+      for the current resource.
+        Keys: quantity_unit categories uids.
+        Values: tuple (unit_definition_uid, quantity)
+          * unit_definition_uid can be None if the quantity_unit is defined
+            as a standard_quantity_unit (no Unit Conversion Definition defines
+            it, its definition comes from a Unit Conversion Group)
+          * quantity is a float, an amount, expressed in the
+            standard_quantity_unit for the base category of the quantity_unit.
+            For example, if mass/g is the global standard quantity_unit, all
+            definitions for mass/* will be expressed in grams.
+      """
+      global_definition_dict = self._getGlobalQuantityUnitDefinitionDict()
+
+      result = global_definition_dict.copy()
+      for definition_list in self.objectValues(portal_type= \
+          'Quantity Unit Conversion Group'):
+        standard_quantity_unit_uid = definition_list.getQuantityUnitUid()
+        if standard_quantity_unit_uid is None:
+          continue
+
+        reference_ratio = global_definition_dict[standard_quantity_unit_uid][1]
+        for definition in definition_list.objectValues(portal_type= \
+            'Quantity Unit Conversion Definition'):
+          unit_uid = definition.getQuantityUnitUid()
+          if unit_uid is None:
+            continue
+          quantity = definition.getQuantity()
+          if not quantity:
+            continue
+          result[unit_uid] = (definition.getUid(), quantity*reference_ratio)
+
+      return result
+
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'getQuantityUnitConversionDefinitionRowList')
+    def getQuantityUnitConversionDefinitionRowList(self):
+      """
+      Returns a list rows to insert in the quantity_unit_conversion table.
+      Used by z_catalog_quantity_unit_conversion_list.
+      """
+      # XXX If one wanted to add variation-specific Unit Conversion Definitions
+      #  he could use an approach very similar to the one used for Measure.
+      #  Just add a variation VARCHAR column in quantity_unit_conversion table
+      #  (defaulting as "^"). The column would contain the REGEX describing the
+      #  variation, exactly as Measure.
+      #  Resource_zGetInventoryList would then need expansion to match the
+      #  product variation vs the quantity_unit_conversion REGEX.
+
+      uid = self.getUid()
+      row_list = []
+      for unit_uid, value in self._getQuantityUnitDefinitionDict().iteritems():
+        definition_uid, quantity = value
+        row_list.append((definition_uid, uid, unit_uid, quantity))
+
+      return row_list
+
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getMeasureRowList')
     def getMeasureRowList(self):
@@ -862,6 +944,8 @@ class Resource(XMLMatrix, Variated):
       quantity_unit_value = self.getQuantityUnitValue()
       if quantity_unit_value is None:
         return ()
+
+      quantity_unit_definition_dict = self._getQuantityUnitDefinitionDict()
 
       metric_type_map = {} # duplicate metric_type are not valid
 
@@ -875,7 +959,7 @@ class Resource(XMLMatrix, Variated):
       insert_list = []
       for measure in metric_type_map.itervalues():
         if measure is not None:
-          insert_list += measure.asCatalogRowList()
+          insert_list += measure.asCatalogRowList(quantity_unit_definition_dict)
 
       quantity_unit = quantity_unit_value.getCategoryRelativeUrl()
       if self.getDefaultMeasure(quantity_unit) is None:
@@ -884,7 +968,9 @@ class Resource(XMLMatrix, Variated):
             # At this point, we know there is no default measure and we must add
             # a row for the management unit, with the resource's uid as uid, and
             # a generic metric_type.
-            quantity = quantity_unit_value.getProperty('quantity')
+            quantity_unit_uid = quantity_unit_value.getUid()
+            quantity = quantity_unit_definition_dict[quantity_unit_uid][1]
+
             metric_type_uid = self.getPortalObject().portal_categories \
                                   .getCategoryUid(metric_type, 'metric_type')
             if quantity and metric_type_uid:
@@ -892,3 +978,28 @@ class Resource(XMLMatrix, Variated):
               insert_list += (uid, uid, '^', metric_type_uid, float(quantity)),
 
       return insert_list
+
+    def getQuantityUnitDefinitionRatio(self, quantity_unit_value):
+      """
+      get the ratio used to define the quantity unit quantity_unit_value.
+      If the Resource has a local Quantity Unit conversion Definition,
+      return the ratio from that Definition.
+      If not, fetch a Definition in the Global Module.
+      """
+      portal = self.getPortalObject()
+      quantity_unit_uid = quantity_unit_value.getUid()
+
+      ratio = None
+
+      deprecated_quantity = quantity_unit_value.getProperty('quantity')
+      if deprecated_quantity is not None:
+        warn('quantity field of quantity_unit categories is deprecated.' \
+           ' Please use Quantity Unit Conversion Definitions instead and' \
+           ' reset the value of this field.', DeprecationWarning)
+
+        ratio = float(deprecated_quantity)
+
+      query = self.ResourceModule_zGetQuantityUnitDefinitionRatio(
+                            quantity_unit_uid=quantity_unit_uid,
+                            resource_uid=self.getUid())
+      return query[0].quantity

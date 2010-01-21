@@ -32,6 +32,12 @@
                         <value>
                           <dictionary>
                             <item>
+                                <key> <string>convert_quantity_result</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
                                 <key> <string>from_table_list</string> </key>
                                 <value>
                                   <dictionary>
@@ -113,7 +119,7 @@
                                 </value>
                             </item>
                             <item>
-                                <key> <string>quantity_unit</string> </key>
+                                <key> <string>quantity_unit_uid</string> </key>
                                 <value>
                                   <dictionary/>
                                 </value>
@@ -189,7 +195,8 @@
                             <string>precision</string>
                             <string>inventory_list</string>
                             <string>statistic</string>
-                            <string>quantity_unit</string>
+                            <string>convert_quantity_result</string>
+                            <string>quantity_unit_uid</string>
                             <string>stock_table_id</string>
                           </list>
                         </value>
@@ -224,7 +231,8 @@ output_simulation_state:list\r\n
 precision\r\n
 inventory_list\r\n
 statistic\r\n
-quantity_unit\r\n
+convert_quantity_result\r\n
+quantity_unit_uid\r\n
 stock_table_id=stock</string> </value>
         </item>
         <item>
@@ -269,18 +277,20 @@ SELECT\n
 <dtml-if expr="precision is not None">\n
   SUM(ROUND(<dtml-var stock_table_id>.quantity, <dtml-var precision>)) AS inventory,\n
   SUM(ROUND(<dtml-var stock_table_id>.quantity, <dtml-var precision>)) AS total_quantity,\n
-<dtml-if quantity_unit>\n
-  SUM(ROUND(<dtml-var stock_table_id>.quantity * measure.quantity, <dtml-var precision>))\n
-  / <dtml-sqlvar quantity_unit type=float> AS converted_quantity,\n
-</dtml-if>\n
+  <dtml-if convert_quantity_result>\n
+    SUM(ROUND(<dtml-var stock_table_id>.quantity * measure.quantity \n
+      <dtml-if quantity_unit_uid> / quantity_unit_conversion.quantity</dtml-if>, <dtml-var precision>))\n
+    AS converted_quantity,\n
+  </dtml-if>\n
   SUM(ROUND(<dtml-var stock_table_id>.total_price, <dtml-var precision>)) AS total_price\n
 <dtml-else>\n
   SUM(<dtml-var stock_table_id>.quantity) AS inventory,\n
   SUM(<dtml-var stock_table_id>.quantity) AS total_quantity,\n
-<dtml-if quantity_unit>\n
-  ROUND(SUM(<dtml-var stock_table_id>.quantity * measure.quantity)\n
-        / <dtml-sqlvar quantity_unit type=float>, 12) AS converted_quantity,\n
-</dtml-if>\n
+  <dtml-if convert_quantity_result>\n
+    ROUND(SUM(<dtml-var stock_table_id>.quantity * measure.quantity\n
+      <dtml-if quantity_unit_uid> / quantity_unit_conversion.quantity</dtml-if>), 12)\n
+    AS converted_quantity,\n
+  </dtml-if>\n
   SUM(<dtml-var stock_table_id>.total_price) AS total_price\n
 </dtml-if>\n
 <dtml-if inventory_list>\n
@@ -324,6 +334,11 @@ FROM\n
   catalog, <dtml-var stock_table_id>\n
   <dtml-if section_filtered> INNER <dtml-else> LEFT </dtml-if>  \n
        JOIN catalog AS section ON (section.uid = <dtml-var stock_table_id>.section_uid)\n
+<dtml-if quantity_unit_uid>\n
+  LEFT JOIN quantity_unit_conversion ON \n
+    (quantity_unit_conversion.resource_uid = <dtml-var stock_table_id>.resource_uid\n
+    AND quantity_unit_conversion.quantity_unit_uid = <dtml-sqlvar quantity_unit_uid type=int>)\n
+</dtml-if>\n
 <dtml-in prefix="table" expr="from_table_list"> \n
   <dtml-if expr="table_key not in (\'catalog\', stock_table_id)">\n
   , <dtml-var table_item> AS <dtml-var table_key>\n
@@ -353,7 +368,7 @@ WHERE\n
   AND <dtml-var "portal_selections.buildSQLExpressionFromDomainSelection(selection_report, strict_membership=1)">\n
 </dtml-if>\n
 \n
-<dtml-if quantity_unit>\n
+<dtml-if convert_quantity_result>\n
   AND concat(<dtml-var stock_table_id>.variation_text,\'\\n\') REGEXP measure.variation\n
 </dtml-if>\n
 \n
@@ -410,18 +425,20 @@ SELECT\n
 <dtml-if expr="precision is not None">\n
   SUM(ROUND(<dtml-var stock_table_id>.quantity, <dtml-var precision>)) AS inventory,\n
   SUM(ROUND(<dtml-var stock_table_id>.quantity, <dtml-var precision>)) AS total_quantity,\n
-<dtml-if quantity_unit>\n
-  SUM(ROUND(<dtml-var stock_table_id>.quantity * measure.quantity, <dtml-var precision>))\n
-  / <dtml-sqlvar quantity_unit type=float> AS converted_quantity,\n
-</dtml-if>\n
+  <dtml-if convert_quantity_result>\n
+    SUM(ROUND(<dtml-var stock_table_id>.quantity * measure.quantity \n
+      <dtml-if quantity_unit_uid> / quantity_unit_conversion.quantity</dtml-if>, <dtml-var precision>))\n
+    AS converted_quantity,\n
+  </dtml-if>\n
   SUM(ROUND(<dtml-var stock_table_id>.total_price, <dtml-var precision>)) AS total_price\n
 <dtml-else>\n
   SUM(<dtml-var stock_table_id>.quantity) AS inventory,\n
   SUM(<dtml-var stock_table_id>.quantity) AS total_quantity,\n
-<dtml-if quantity_unit>\n
-  ROUND(SUM(<dtml-var stock_table_id>.quantity * measure.quantity)\n
-        / <dtml-sqlvar quantity_unit type=float>, 12) AS converted_quantity,\n
-</dtml-if>\n
+  <dtml-if convert_quantity_result>\n
+    ROUND(SUM(<dtml-var stock_table_id>.quantity * measure.quantity\n
+      <dtml-if quantity_unit_uid> / quantity_unit_conversion.quantity</dtml-if>), 12)\n
+    AS converted_quantity,\n
+  </dtml-if>\n
   SUM(<dtml-var stock_table_id>.total_price) AS total_price\n
 </dtml-if>\n
 <dtml-if inventory_list>\n
@@ -465,6 +482,11 @@ FROM\n
   catalog, <dtml-var stock_table_id>\n
   <dtml-if section_filtered> INNER <dtml-else> LEFT </dtml-if>  \n
        JOIN catalog AS section ON (section.uid = <dtml-var stock_table_id>.section_uid)\n
+<dtml-if quantity_unit_uid>\n
+  LEFT JOIN quantity_unit_conversion ON \n
+    (quantity_unit_conversion.resource_uid = <dtml-var stock_table_id>.resource_uid\n
+    AND quantity_unit_conversion.quantity_unit_uid = <dtml-sqlvar quantity_unit_uid type=int>)\n
+</dtml-if>\n
 <dtml-in prefix="table" expr="from_table_list"> \n
   <dtml-if expr="table_key not in (\'catalog\', stock_table_id)">\n
   , <dtml-var table_item> AS <dtml-var table_key>\n
@@ -494,7 +516,7 @@ WHERE\n
   AND <dtml-var "portal_selections.buildSQLExpressionFromDomainSelection(selection_report, strict_membership=1)">\n
 </dtml-if>\n
 \n
-<dtml-if quantity_unit>\n
+<dtml-if convert_quantity_result>\n
   AND concat(<dtml-var stock_table_id>.variation_text,\'\\n\') REGEXP measure.variation\n
 </dtml-if>\n
 \n

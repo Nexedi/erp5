@@ -54,6 +54,8 @@ from Products.ZSQLCatalog.SQLCatalog import Query, ComplexQuery
 from Shared.DC.ZRDB.Results import Results
 from Products.ERP5Type.Utils import mergeZRDBResults
 
+from warnings import warn
+
 class SimulationTool(BaseTool):
     """
     The SimulationTool implements the ERP5
@@ -868,6 +870,10 @@ class SimulationTool(BaseTool):
 
       precision - the precision used to round quantities and prices.
 
+      metric_type   - convert the results to a specific metric_type
+
+      quantity_unit - display results using this specific quantity unit
+
       **kw           -  if we want extended selection with more keywords (but
                         bad performance) check what we can do with
                         buildSQLQuery
@@ -893,9 +899,14 @@ class SimulationTool(BaseTool):
       if len(result) > 0:
         if len(result) != 1:
           raise ValueError, 'Sorry we must have only one'
-        inventory = result[0].total_quantity
-        if inventory is not None:
-          total_result = inventory
+        result = result[0]
+
+        if hasattr(result, "converted_quantity"):
+          total_result = result.converted_quantity
+        else:
+          inventory = result.total_quantity
+          if inventory is not None:
+            total_result = inventory
 
       return total_result
 
@@ -983,7 +994,7 @@ class SimulationTool(BaseTool):
                          selection_domain=None, selection_report=None,
                          statistic=0, inventory_list=1, 
                          precision=None, connection_id=None,
-                         quantity_unit=None, **kw):
+                         **kw):
       """
         Returns a list of inventories for a single or multiple
         resources on a single or multiple nodes, grouped by resource,
@@ -1018,6 +1029,34 @@ class SimulationTool(BaseTool):
            on individual nodes/categories/payments.
          - 
       """
+      getCategory = self.getPortalObject().portal_categories.getCategoryUid
+
+      result_column_id_dict = {}
+
+      quantity_unit = kw.pop('quantity_unit', None)
+      quantity_unit_uid = None
+      if quantity_unit is not None:
+
+        if isinstance(quantity_unit, str):
+          quantity_unit_uid = getCategory(quantity_unit, 'quantity_unit')
+          if quantity_unit_uid is not None:
+            result_column_id_dict['converted_quantity'] = None
+        elif isinstance(quantity_unit, int) or isinstance(quantity_unit, float):
+          # quantity_unit used to be a numerical parameter..
+          raise ValueError('Numeric values for quantity_unit are not supported')
+
+
+      convert_quantity_result = False
+      metric_type = kw.pop('metric_type', None)
+      if metric_type is not None:
+        metric_type_uid = getCategory(metric_type, 'metric_type')
+
+        if metric_type_uid is not None:
+          convert_quantity_result = True
+          kw['metric_type_uid'] = Query(
+                                    metric_type_uid=metric_type_uid,
+                                    table_alias_list=(("measure", "measure"),))
+
       if src__:
         sql_source_list = []
       # If no group at all, give a default sort group by
@@ -1181,7 +1220,9 @@ class SimulationTool(BaseTool):
                 selection_domain=selection_domain,
                 selection_report=selection_report, precision=precision,
                 inventory_list=inventory_list,
-                statistic=statistic, quantity_unit=quantity_unit,
+                statistic=statistic,
+                quantity_unit_uid=quantity_unit_uid,
+                convert_quantity_result=convert_quantity_result,
                 **inventory_stock_sql_kw)
               # Get delta inventory
               delta_inventory_line_list = self.Resource_zGetInventoryList(
@@ -1191,7 +1232,9 @@ class SimulationTool(BaseTool):
                 selection_domain=selection_domain,
                 selection_report=selection_report, precision=precision,
                 inventory_list=inventory_list,
-                statistic=statistic, quantity_unit=quantity_unit,
+                statistic=statistic,
+                quantity_unit_uid=quantity_unit_uid,
+                convert_quantity_result=convert_quantity_result,
                 **stock_sql_kw)
               # Match & add initial and delta inventories
               if src__:
@@ -1217,12 +1260,9 @@ class SimulationTool(BaseTool):
                       No group by criterion, regroup everything.
                     """
                     return 'dummy_key'
-                result_column_id_dict = {}
                 result_column_id_dict['inventory'] = None
                 result_column_id_dict['total_quantity'] = None
                 result_column_id_dict['total_price'] = None
-                if quantity_unit:
-                    result_column_id_dict['converted_quantity'] = None
                 def addLineValues(line_a=None, line_b=None):
                   """
                     Addition columns of 2 lines and return a line with same
@@ -1308,7 +1348,9 @@ class SimulationTool(BaseTool):
                     selection_domain=selection_domain,
                     selection_report=selection_report, precision=precision,
                     inventory_list=inventory_list, connection_id=connection_id,
-                    statistic=statistic, quantity_unit=quantity_unit,
+                    statistic=statistic,
+                    quantity_unit_uid=quantity_unit_uid,
+                    convert_quantity_result=convert_quantity_result,
                     **stock_sql_kw)
         if src__:
           sql_source_list.append(result)
@@ -1318,28 +1360,22 @@ class SimulationTool(BaseTool):
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getConvertedInventoryList')
-    def getConvertedInventoryList(self, metric_type, quantity_unit=1,
-                                  simulation_period='', **kw):
+    def getConvertedInventoryList(self, simulation_period='', **kw):
       """
       Return list of inventory with a 'converted_quantity' additional column,
       which contains the sum of measurements for the specified metric type,
       expressed in the 'quantity_unit' unit.
 
-      metric_type   - category relative url
-      quantity_unit - int, float or category relative url
+      metric_type   - category
+      quantity_unit - category
       """
-      getCategory = self.getPortalObject().portal_categories.getCategoryValue
 
-      kw['metric_type_uid'] = Query(
-        metric_type_uid=getCategory(metric_type, 'metric_type').getUid(),
-        table_alias_list=(("measure", "measure"),))
-
-      if isinstance(quantity_unit, str):
-        quantity_unit = float(getCategory(quantity_unit, 'quantity_unit')
-                              .getProperty('quantity'))
+      warn('getConvertedInventoryList is Deprecated, use ' \
+           'getInventory instead.', DeprecationWarning)
 
       method = getattr(self,'get%sInventoryList' % simulation_period)
-      return method(quantity_unit=quantity_unit, **kw)
+
+      return method(**kw)
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getAllInventoryList')

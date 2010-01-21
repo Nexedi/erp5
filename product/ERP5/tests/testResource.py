@@ -163,14 +163,26 @@ class TestResource(ERP5TypeTestCase):
     if self.quantity_unit_gram is None:
       self.quantity_unit_gram = quantity_unit_weight.newContent(
                                       portal_type='Category',
-                                      quantity=0.001,
                                       id='gram')
     self.quantity_unit_kilo = quantity_unit_weight._getOb('kilo', None)
     if self.quantity_unit_kilo is None:
       self.quantity_unit_kilo = quantity_unit_weight.newContent(
                                       portal_type='Category',
-                                      quantity=1,
                                       id='kilo')
+
+    unit_conversion_module = self.portal.quantity_unit_conversion_module
+    weight_group = unit_conversion_module._getOb('weight', None)
+    if weight_group is None:
+      weight_group = unit_conversion_module.newContent(id='weight',
+                                  portal_type='Quantity Unit Conversion Group',
+                                  quantity_unit='weight/kilo')
+
+    gram_definition = weight_group._getOb('gram', None)
+    if gram_definition is None:
+      gram_definition = weight_group.newContent(id='gram',
+                              portal_type='Quantity Unit Conversion Definition',
+                              quantity_unit='weight/gram',
+                              quantity=0.001)
 
 
   def stepCreateResource(self, sequence=None, sequence_list=None, **kw):
