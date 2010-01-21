@@ -339,6 +339,14 @@
                           <string>Milestone</string>
                         </tuple>
                         <tuple>
+                          <string>milestone_description</string>
+                          <string>Description</string>
+                        </tuple>
+                        <tuple>
+                          <string>milestone_outcome_description</string>
+                          <string>Outcome</string>
+                        </tuple>
+                        <tuple>
                           <string>stop_date</string>
                           <string>Stop Date</string>
                         </tuple>

@@ -31,18 +31,9 @@ from Products.ERP5Type.tests.utils import reindex
 import transaction
 from DateTime import DateTime
 
-class TestMilestoneReporting(ERP5ReportTestCase):
-  """Test Milestone Reporting
+class MilestoneReportingMixin:
 
-     This report is able to display all milestones from many projects,
-     it supports start and stop dates parameters
-  """
-  def getTitle(self):
-    return "Milestone Reporting"
-
-  def getBusinessTemplateList(self):
-    """Returns list of BT to be installed."""
-    return ('erp5_base','erp5_pdm', 'erp5_trade', 'erp5_project',)
+  business_template_list = ('erp5_base','erp5_pdm', 'erp5_trade', 'erp5_project',)
 
   @reindex
   def _makeOneMilestone(self, project_title, **kw):
@@ -55,12 +46,17 @@ class TestMilestoneReporting(ERP5ReportTestCase):
     else:
       project = project_module.newContent(portal_type='Project',
                   title=project_title)
-    task = project.newContent(portal_type='Project Milestone', **kw)
+    milestone = project.newContent(portal_type='Project Milestone', **kw)
+    return milestone
 
   def afterSetUp(self):
     """Setup the fixture.
     """
     self.portal = self.getPortal()
+    for module in (self.portal.project_module,):
+      module.manage_delObjects(list(module.objectIds()))
+    transaction.commit()
+    self.tic()
 
   def getDataLineLineListByCallingMilestoneReport(self,
       from_date=None, at_date=None):
@@ -80,18 +76,19 @@ class TestMilestoneReporting(ERP5ReportTestCase):
     data_line_list = [l for l in line_list if l.isDataLine()]
     return data_line_list
 
-  def testMilestoneReport(self):
+  def checkMilestoneReport(self, optimised=False):
     """
     Check monthly report available on project
     """
     # Create Tasks
-    self._makeOneMilestone(
+    milestone = self._makeOneMilestone(
               project_title='Foo',
               title='Foo Milestone A',
               start_date=DateTime('2009/10/01'),
               stop_date=DateTime('2009/10/27'),
+              description='foo',
+              outcome_description='bar',
               )
-
 
     # We should have this result
     # Project    Milestone         Stop Date
@@ -102,7 +99,24 @@ class TestMilestoneReporting(ERP5ReportTestCase):
     self.checkLineProperties(data_line_list[0],
                              project_title='Foo',
                              milestone_title='Foo Milestone A',
-                             stop_date=DateTime('2009/10/27'))
+                             stop_date=DateTime('2009/10/27'),
+                             milestone_description='foo',
+                             milestone_outcome_description='bar')
+
+    # Change value in order to check if we get real objects
+    milestone.setOutcomeDescription('foobar')
+    data_line_list = self.getDataLineLineListByCallingMilestoneReport(
+        from_date=DateTime('2009/10/01'), at_date=DateTime('2009/10/31'))
+    if optimised:
+      # Check that we do not get real object
+      self.checkLineProperties(data_line_list[0],
+                               milestone_outcome_description='bar')
+    else:
+      # Check that we get real object
+      self.checkLineProperties(data_line_list[0],
+                               milestone_outcome_description='foobar')
+    # Put back previous value
+    milestone.setOutcomeDescription('bar')
 
     # Add other tasks, some of them in another project
     self._makeOneMilestone(
@@ -156,3 +170,33 @@ class TestMilestoneReporting(ERP5ReportTestCase):
                              project_title='Foo',
                              milestone_title='Foo Milestone A',
                              stop_date=DateTime('2009/10/27'))
+
+class TestMilestoneReporting(MilestoneReportingMixin, ERP5ReportTestCase):
+  """Milestone Reporting
+
+     This report is able to display all milestones from many projects,
+     it supports start and stop dates parameters
+  """
+  def getTitle(self):
+    return "Milestone Reporting"
+
+  def getBusinessTemplateList(self):
+    """Returns list of BT to be installed."""
+    return self.business_template_list
+
+  def testMilestoneReport(self):
+    self.checkMilestoneReport()
+
+class TestOptimisedMilestoneReporting(MilestoneReportingMixin, ERP5ReportTestCase):
+  """Same as above, with additionnal business template adding extra
+     tables in order to do optimisations
+  """
+  def getTitle(self):
+    return "Optimised Milestone Reporting"
+
+  def getBusinessTemplateList(self):
+    """Returns list of BT to be installed."""
+    return self.business_template_list + ('erp5_project_mysql_innodb_catalog',)
+
+  def testMilestoneReport(self):
+    self.checkMilestoneReport(optimised=True)

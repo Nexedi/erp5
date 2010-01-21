@@ -93,9 +93,20 @@ if len(query_list):\n
 \n
 select_dict = {}\n
 select_dict[\'movement.stop_date\'] = None\n
-select_dict[\'catalog.title\'] = None\n
+select_dict[\'title\'] = None\n
+select_dict[\'description\'] = None\n
 select_dict[\'parent_title\'] = None\n
 milestone_list = []\n
+portal_catalog = portal.portal_catalog\n
+# Check for some extra properties that are not necessarly\n
+# in the catalog. We need by the way to check if\n
+# hasColumn exists, it is new and is not installed yet everywhere\n
+hasColumn = getattr(portal_catalog, \'hasColumn\', None)\n
+if hasColumn is not None:\n
+  for property in [\'outcome_description\']:\n
+    if hasColumn(property):\n
+      select_dict[property] = None\n
+\n
 if len(project_uid_list):\n
   milestone_list = [x for x in portal.portal_catalog(parent_uid=project_uid_list,\n
                        portal_type=\'Project Milestone\', select_dict=select_dict, **sql_kw)]\n
@@ -106,10 +117,11 @@ for milestone in milestone_list:\n
   # We wish to display the project only for the first milestone\n
   # of this project\n
   line_kw = {}\n
-  parent_title = milestone.parent_title\n
   line_kw[\'project_title\'] = milestone.parent_title\n
   line_kw[\'milestone_title\'] = milestone.title\n
   line_kw[\'stop_date\'] = getattr(milestone, \'stop_date\', None)\n
+  line_kw[\'milestone_description\'] = milestone.getProperty(\'description\')\n
+  line_kw[\'milestone_outcome_description\'] = milestone.getProperty(\'outcome_description\')\n
   listbox.append(line_kw)\n
 \n
 context.Base_updateDialogForm(listbox=listbox, empty_line_number=0)\n
@@ -186,10 +198,12 @@ return context.ProjectModule_viewMilestoneReport()\n
                             <string>query_list</string>
                             <string>select_dict</string>
                             <string>milestone_list</string>
+                            <string>portal_catalog</string>
+                            <string>getattr</string>
+                            <string>hasColumn</string>
+                            <string>property</string>
                             <string>milestone</string>
                             <string>line_kw</string>
-                            <string>parent_title</string>
-                            <string>getattr</string>
                           </tuple>
                         </value>
                     </item>
