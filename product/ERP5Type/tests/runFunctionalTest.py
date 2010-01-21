@@ -209,6 +209,14 @@ user_pref("security.warn_viewing_mixed.show_once", false);
 // Disable "do you want to remember this password?"
 user_pref("signon.rememberSignons", false);
 
+// Make sure we do not use cache
+user_pref("browser.cache.check_doc_frequency", 1);
+user_pref("network.http.use-cache", false);
+//user_pref("browser.cache.disk.capacity", 0);
+//user_pref("browser.cache.disk.enable", false);
+//user_pref("browser.cache.memory.enable", false);
+//user_pref("browser.cache.offline.enable", false);
+
 // this is required to upload files
 user_pref("capability.principal.codebase.p1.granted", "UniversalFileRead");
 user_pref("signed.applets.codebase_principal_support", true);
