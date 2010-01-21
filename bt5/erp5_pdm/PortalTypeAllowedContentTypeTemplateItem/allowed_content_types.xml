@@ -31,6 +31,7 @@
   <item>Measure</item>
   <item>Product Individual Variation</item>
   <item>Purchase Supply Line</item>
+  <item>Quantity Unit Conversion Group</item>
   <item>Sale Supply Line</item>
   <item>Supply Line</item>
  </portal_type>
@@ -47,6 +48,12 @@
  </portal_type>
  <portal_type id="Purchase Supply Module">
   <item>Purchase Supply</item>
+ </portal_type>
+ <portal_type id="Quantity Unit Conversion Group">
+  <item>Quantity Unit Conversion Definition</item>
+ </portal_type>
+ <portal_type id="Quantity Unit Conversion Module">
+  <item>Quantity Unit Conversion Group</item>
  </portal_type>
  <portal_type id="Sale Supply">
   <item>Sale Supply Line</item>

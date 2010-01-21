@@ -33,6 +33,7 @@ Product | purchase_price_view
 Product | sale_price_view
 Product | view
 Product | view_measure
+Product | view_quantities
 Product | view_stock
 Purchase Supply Line | additional_price
 Purchase Supply Line | base_price
@@ -45,6 +46,9 @@ Purchase Supply Line | view
 Purchase Supply Module | view
 Purchase Supply | view
 Purchase Supply | view_profile
+Quantity Unit Conversion Definition | view
+Quantity Unit Conversion Group | view
+Quantity Unit Conversion Module | view
 Sale Supply Line | additional_price
 Sale Supply Line | base_price
 Sale Supply Line | discount_ratio

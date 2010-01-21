@@ -1,3 +1,7 @@
+2010-01-21 Nicolas Dumazet
+* deprecate quantity property of quantity_unit categories: use Quantity Unit Conversion Definitions instead.
+* introduce Quantity Unit Conversion module, Quantity Unit Conversion Definitions
+
 2010-01-21 yo
 * make resource searchable in supply views in list mode.
 
