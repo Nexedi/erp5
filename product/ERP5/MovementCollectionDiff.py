@@ -107,7 +107,8 @@ def _getPropertyAndCategoryList(document):
   sheet configuration and all category values.
   """
   property_map = document.getPropertyMap()
-  bad_property_list = ['id', 'uid', 'categories_list', 'int_index']
+  bad_property_list = ['id', 'uid', 'categories_list', 'int_index', 'last_id',]
+  bad_category_list = ['solver',]
   # we don't want acquired properties without acquisition_mask_value
   for x in property_map:
     if x.has_key('acquisition_base_category') and not x.get('acquisition_mask_value', 0):
@@ -143,7 +144,7 @@ def _getPropertyAndCategoryList(document):
                               document.getPropertyIdList()]))
 
   def filter_category_func(x):
-    return len(x[1]) != 0
+    return len(x[1]) != 0 and x[0] not in bad_category_list
 
   property_dict.update(dict(filter(filter_category_func,
                                    [(x, getPropertyList(x)) for x in \
