@@ -86,27 +86,6 @@ class ResourceVariationTestCase(ERP5TypeTestCase):
                               resource.getPortalType(), **kw)
     return iv
 
-  def login(self):
-    """
-    Login Manager roles.
-    """
-    uf = self.getPortal().acl_users
-    uf._doAddUser('testmanager', 'test', ['Manager', 'Assignee', 'Assignor',
-                               'Associate', 'Auditor', 'Author'], [])
-    user = uf.getUserById('testmanager').__of__(uf)
-    newSecurityManager(None, user)
-    
-  def loginUser(self):
-    """
-    Login without Manager roles.
-    """
-    uf = self.getPortal().acl_users
-    uf._doAddUser('user', 'user',
-                  ['Assignee', 'Assignor', 'Associate',
-                   'Auditor', 'Author'], [])
-    user = uf.getUserById('user').__of__(uf)
-    newSecurityManager(None, user)
-
   def afterSetUp(self):
     """
     - create categories
