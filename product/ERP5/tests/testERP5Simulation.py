@@ -118,14 +118,15 @@ class TestERP5SimulationMixin(TestInvoiceMixin):
         tested_property=category,
         divergence_provider=False,
         matching_provider=True)
-    # matching provider for quantity (i.e. only used for expand)
+    # non-matching/non-divergence provider quantity divergence tester
+    # (i.e. only used for expand)
     invoice_rule.newContent(
       portal_type='Net Converted Quantity Divergence Tester',
       title='quantity divergence tester',
       tested_property='quantity',
       quantity=0,
       divergence_provider=False,
-      matching_provider=True)
+      matching_provider=False)
     # divergence provider for date
     for property_id in ('start_date', 'stop_date'):
       invoice_rule.newContent(
