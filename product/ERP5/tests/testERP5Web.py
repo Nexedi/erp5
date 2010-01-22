@@ -1180,7 +1180,7 @@ Hé Hé Hé!""", page.asText().strip())
     self.assertTrue('manage_messages' not in response.getBody())
 
   def test_15_Check_LastModified_Header(self):
-    """This allow check that Last-Modified set by caching policy manager
+    """Checks that Last-Modified header set by caching policy manager
     is correctly filled with getModificationDate of content.
     This test check all Policy installed by erp5_web:
     Policy ID - unauthenticated web pages
