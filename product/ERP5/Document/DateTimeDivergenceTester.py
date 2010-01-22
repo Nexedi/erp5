@@ -28,6 +28,7 @@
 
 import zope.interface
 from AccessControl import ClassSecurityInfo
+from DateTime import DateTime
 
 from Products.ERP5.Document.Predicate import Predicate
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
@@ -70,8 +71,8 @@ class DateTimeDivergenceTester(Predicate, DivergenceTesterMixin):
                lambda x:False)(tested_property):
       decision_value = decision_movement.getRecordedProperty(tested_property)
     else:
-      decision_value = decision_movement.getProperty(tested_property)
-    prevision_value = prevision_movement.getProperty(tested_property)
+      decision_value = decision_movement.getProperty(tested_property) or DateTime(0)
+    prevision_value = prevision_movement.getProperty(tested_property) or DateTime(0)
 
     delta = decision_value - prevision_value
     # XXX we should use appropriate property sheets and getter methods
