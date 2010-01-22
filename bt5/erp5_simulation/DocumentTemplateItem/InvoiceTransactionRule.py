@@ -190,6 +190,7 @@ class InvoiceTransactionRuleMovementGenerator(object):
         kw = _getPropertyAndCategoryList(input_movement)
 
         kw.update(
+          delivery=None,
           source=[accounting_rule_cell_line.getSource()],
           destination=[accounting_rule_cell_line.getDestination()],
           quantity=(input_movement.getCorrectedQuantity() *
