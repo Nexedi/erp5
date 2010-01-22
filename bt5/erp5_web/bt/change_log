@@ -1,3 +1,8 @@
+2010-01-22 nicolas
+* Update configuration of Caching Policy Manager to fill Last-Modified Header with modification_date.
+* Web Site and Web Section are not using Caching Policy Manager
+* Use getPortalWebDocumentTypeLits instead of Hardcoded portal_type
+
 2009-10-16 rafael
 * Update for the changes of new portal types of portal types.
 
