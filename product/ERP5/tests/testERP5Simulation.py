@@ -109,7 +109,9 @@ class TestERP5SimulationMixin(TestInvoiceMixin):
           destination_value=account_module[line_destination_id])
 
     # matching provider for source and destination
-    for category in ('source', 'destination',):
+    for category in ('resource', 'source', 'destination',
+                     'destination_total_asset_price',
+                     'source_total_asset_price'):
       invoice_rule.newContent(
         portal_type='Category Membership Divergence Tester',
         title='%s divergence tester' % category,
@@ -119,11 +121,20 @@ class TestERP5SimulationMixin(TestInvoiceMixin):
     # matching provider for quantity (i.e. only used for expand)
     invoice_rule.newContent(
       portal_type='Net Converted Quantity Divergence Tester',
-      title='%s divergence tester' % category,
+      title='quantity divergence tester',
       tested_property='quantity',
       quantity=0,
       divergence_provider=False,
       matching_provider=True)
+    # divergence provider for date
+    for property_id in ('start_date', 'stop_date'):
+      invoice_rule.newContent(
+        portal_type='DateTime Divergence Tester',
+        title='%s divergence tester' % property_id,
+        tested_property=property_id,
+        quantity=0,
+        divergence_provider=True,
+        matching_provider=False)
     invoice_rule.validate()
     transaction.commit()
     self.tic()
