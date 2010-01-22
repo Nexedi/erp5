@@ -236,8 +236,6 @@ class InvoiceTransactionRuleMovementGenerator(object):
       prevision_currency = prevision_line['resource'][0]
     except IndexError:
       prevision_currency = None
-    temporary_movement = newTempSimulationMovement(rule.getPortalObject(),
-        '1', **prevision_line)
     exchange_ratio = None
     precision = None
     try:
@@ -252,6 +250,8 @@ class InvoiceTransactionRuleMovementGenerator(object):
     if currency_url is not None and prevision_currency != currency_url:
       precision = section.getPriceCurrencyValue() \
           .getQuantityPrecision()
+      temporary_movement = newTempSimulationMovement(rule.getPortalObject(),
+          '1', **prevision_line)
       exchange_ratio = rule.restrictedTraverse(currency_url).getPrice(
           context=temporary_movement.asContext(
         categories=['price_currency/%s' % currency_url,
