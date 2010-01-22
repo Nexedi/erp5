@@ -135,22 +135,36 @@ class IAccountingMovement(IAssetMovement):
   """
   Accounting Movement private interface specification
 
-  The notion of debit and credit is used in accounting
-  instead of signed quantity. The following calculation
-  rules apply:
+  The notion of debit and credit is used in accounting instead of signed
+  quantity. The following calculation rules apply:
 
     Credit/Debit
 
     if quantity > 0
-      source_credit = - quantity
-      source_debit = quantity
-      destination_credit = quantity
-      destination_debit = - quantity
+      source_credit = quantity
+      source_debit = 0
+      destination_credit = 0
+      destination_debit = quantity
+
+    if quantity < 0
+      source_credit = 0
+      source_debit = - quantity
+      destination_credit = - quantity
+      destination_debit = 0
+
+  The cancellation amount concept from IAmount interface also applies for debit
+  and credit. For a cancellation amount, the calculation rule are different:
+
+    if quantity > 0
+      source_credit = 0
+      source_debit = - quantity
+      destination_credit = - quantity
+      destination_debit = 0
 
     if quantity < 0
       source_credit = quantity
-      source_debit = - quantity
-      destination_credit = - quantity
+      source_debit = 0
+      destination_credit = 0
       destination_debit = quantity
 
   """
