@@ -1,4 +1,7 @@
  - force using locally build python
+ - global build requirement checker
+   - needs recipe
+   - needs per profile dependency declaration
  - merge into:
   - https://svn.erp5.org/repos/public/experimental/erp5.buildout
   - https://svn.erp5.org/repos/public/experimental/erp5.buildout-zope-2.12/
