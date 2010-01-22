@@ -58,7 +58,7 @@
 """\n
 \n
 document = context.getObject()\n
-source = document.getSourceValue()\n
+source = document.getContributorRelatedValue()\n
 return (source is not None and source.getTitle() or "User unknown")\n
 </string> </value>
         </item>
