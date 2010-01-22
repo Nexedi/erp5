@@ -1,0 +1,3 @@
+#!/bin/sh
+
+${buildout:mysql_software}/bin/mysqld_safe ${mycnf:opt}
