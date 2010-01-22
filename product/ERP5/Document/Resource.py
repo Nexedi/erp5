@@ -855,7 +855,10 @@ class Resource(XMLMatrix, Variated):
     def _getGlobalQuantityUnitDefinitionDict(self):
       # XXX this info could be cached, as it is the same for all Resources
       result = {}
-      module = self.getPortalObject().quantity_unit_conversion_module
+      module = getattr(self.getPortalObject(),
+        'quantity_unit_conversion_module', None)
+      if module is None:
+        return result
       for definition_list in module.objectValues(portal_type= \
           'Quantity Unit Conversion Group'):
         standard_quantity_unit_uid = definition_list.getQuantityUnitUid()
