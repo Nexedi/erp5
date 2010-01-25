@@ -8,3 +8,4 @@
   - https://svn.erp5.org/repos/public/experimental/erp5.buildout
   - https://svn.erp5.org/repos/public/experimental/erp5.buildout-zope-2.12/
   - https://svn.erp5.org/repos/public/experimental/mysqlsenna.buildout/
+ - create MySQL database if not existing, before creating ERP5 site
