@@ -108,6 +108,7 @@
                     <value>
                       <list>
                         <string>my_solver</string>
+                        <string>my_delivery_solver</string>
                       </list>
                     </value>
                 </item>
