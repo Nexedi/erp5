@@ -1182,9 +1182,8 @@ Hé Hé Hé!""", page.asText().strip())
   def test_15_Check_LastModified_Header(self):
     """Checks that Last-Modified header set by caching policy manager
     is correctly filled with getModificationDate of content.
-    This test check all Policy installed by erp5_web:
+    This test check 2 Policy installed by erp5_web:
     Policy ID - unauthenticated web pages
-                unauthenticated
                 authenticated
     """
     request = self.portal.REQUEST
@@ -1217,24 +1216,6 @@ Hé Hé Hé!""", page.asText().strip())
     response = self.publish(path, 'webmaster:webmaster')
     last_modified_header = response.getHeader('Last-Modified')
     self.assertTrue(last_modified_header)
-    from App.Common import rfc1123_date
-    # Convert the Date into string according RFC 1123 Time Format
-    modification_date = rfc1123_date(document.getModificationDate())
-    self.assertEqual(modification_date, last_modified_header)
-
-    # unauthenticated
-    document_portal_type = 'Text'
-    document_module = self.portal.getDefaultModule(document_portal_type)
-    document = document_module.newContent(portal_type=document_portal_type,
-                                          reference='NXD-Document-TEXT.Cache')
-    document.publish()
-    transaction.commit()
-    self.tic()
-    path = website.absolute_url_path() + '/NXD-Document-TEXT.Cache'
-    response = self.publish(path)
-    last_modified_header = response.getHeader('Last-Modified')
-    self.assertTrue(last_modified_header)
-    from App.Common import rfc1123_date
     # Convert the Date into string according RFC 1123 Time Format
     modification_date = rfc1123_date(document.getModificationDate())
     self.assertEqual(modification_date, last_modified_header)

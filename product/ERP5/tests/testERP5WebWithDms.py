@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2009 Nexedi SA and Contributors. All Rights Reserved.
@@ -385,6 +386,33 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
           '%s\nform_id:%s\nfield_id:%s\n' % (field_path,
                                              field.get_value('form_id'),
                                              field.get_value('field_id')))
+
+  def test_06_Check_LastModified_Header(self):
+    """Checks that Last-Modified header set by caching policy manager
+    is correctly filled with getModificationDate of content.
+    This test check "unauthenticated" Policy installed by erp5_web:
+    """
+    request = self.portal.REQUEST
+    website = self.setupWebSite()
+    web_section_portal_type = 'Web Section'
+    web_section = website.newContent(portal_type=web_section_portal_type)
+
+    # unauthenticated
+    document_portal_type = 'Text'
+    document_module = self.portal.getDefaultModule(document_portal_type)
+    document = document_module.newContent(portal_type=document_portal_type,
+                                          reference='NXD-Document-TEXT.Cache')
+    document.publish()
+    transaction.commit()
+    self.tic()
+    path = website.absolute_url_path() + '/NXD-Document-TEXT.Cache'
+    response = self.publish(path)
+    last_modified_header = response.getHeader('Last-Modified')
+    self.assertTrue(last_modified_header)
+    from App.Common import rfc1123_date
+    # Convert the Date into string according RFC 1123 Time Format
+    modification_date = rfc1123_date(document.getModificationDate())
+    self.assertEqual(modification_date, last_modified_header)
 
 def test_suite():
   suite = unittest.TestSuite()
