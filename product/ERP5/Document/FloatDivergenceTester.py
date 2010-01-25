@@ -71,8 +71,8 @@ class FloatDivergenceTester(Predicate, DivergenceTesterMixin):
                lambda x:False)(tested_property):
       decision_value = decision_movement.getRecordedProperty(tested_property)
     else:
-      decision_value = self._getPropertyValue(decision_movement, tested_property)
-    prevision_value = self._getPropertyValue(prevision_movement, tested_property)
+      decision_value = self._getPropertyValue(decision_movement, tested_property) or 0.0
+    prevision_value = self._getPropertyValue(prevision_movement, tested_property) or 0.0
 
     # use delivery_ratio if specified
     if self.getProperty('use_delivery_ratio') and \
