@@ -40,13 +40,14 @@
             <value> <string encoding="cdata"><![CDATA[
 
 <tal:block tal:define="nearby python: context.WebSection_getNearbyPost();\n
+                       section python: context.getWebSectionValue().absolute_url() + \'/\';\n
                        previous nearby/previous;\n
                        next nearby/next">\n
 \n
 <span class="blog_navigator">\n
-<a href="nowhere.html" tal:condition="python: previous is not None" tal:attributes="href previous">Previous</a>\n
+<a href="nowhere.html" tal:condition="python: previous is not None" tal:attributes="href python: section + previous">Previous</a>\n
 &nbsp;\n
-<a href="elsewhere.html" tal:condition="python: next is not None" tal:attributes="href next">Next</a>\n
+<a href="elsewhere.html" tal:condition="python: next is not None" tal:attributes="href python: section + next">Next</a>\n
 </span>\n
 \n
 </tal:block>

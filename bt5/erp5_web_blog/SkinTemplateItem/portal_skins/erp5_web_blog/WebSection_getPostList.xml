@@ -72,6 +72,7 @@ for item in current_section.WebSection_getDocumentValueList():\n
     result.append(item)\n
 \n
 result.sort(key = lambda x: x.effective_date)\n
+result = result[::-1]\n
 \n
 return result\n
 </string> </value>
@@ -121,6 +122,7 @@ return result\n
                             <string>_getiter_</string>
                             <string>item</string>
                             <string>None</string>
+                            <string>_getitem_</string>
                           </tuple>
                         </value>
                     </item>
