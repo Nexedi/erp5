@@ -11,15 +11,15 @@
       <dictionary>
         <item>
             <key> <string>divergence_provider</string> </key>
-            <value> <int>0</int> </value>
+            <value> <int>1</int> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>2</string> </value>
+            <value> <string>20</string> </value>
         </item>
         <item>
             <key> <string>matching_provider</string> </key>
-            <value> <int>1</int> </value>
+            <value> <int>0</int> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -29,13 +29,13 @@
             <key> <string>tested_property</string> </key>
             <value>
               <tuple>
-                <string>source</string>
+                <string>destination_section</string>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>source divergence tester</string> </value>
+            <value> <string>destination_section divergence tester</string> </value>
         </item>
       </dictionary>
     </pickle>
