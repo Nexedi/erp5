@@ -36,6 +36,7 @@ from Products.ERP5.Document.Predicate import Predicate
 from Products.ERP5.mixin.rule import RuleMixin
 from Products.ERP5.mixin.movement_collection_updater import \
      MovementCollectionUpdaterMixin
+from Products.ERP5.mixin.movement_generator import MovementGeneratorMixin
 from Products.ERP5.MovementCollectionDiff import _getPropertyAndCategoryList
 
 # XXX this class should be moved to Rule.py once new simulation is fully
@@ -128,7 +129,7 @@ class OrderRule(Rule):
     # or destination.
     return (movement.getSource() is None or movement.getDestination() is None)
 
-class OrderRuleMovementGenerator(object):
+class OrderRuleMovementGenerator(MovementGeneratorMixin):
   def getGeneratedMovementList(self, context, movement_list=None,
                                 rounding=False):
     """
@@ -137,17 +138,23 @@ class OrderRuleMovementGenerator(object):
     XXX This implementation is very primitive, and does not support BPM,
     i.e. business paths are not taken into account.
     """
-    order = context.getDefaultCausalityValue()
-    if order is None:
-      return []
     ret = []
-    for movement in order.getMovementList(
-      portal_type=order.getPortalOrderMovementTypeList()):
-      kw = _getPropertyAndCategoryList(movement)
+    for input_movement, business_path in self \
+            ._getInputMovementAndPathTupleList(context):
+      kw = self._getPropertyAndCategoryList(input_movement, business_path)
       simulation_movement = context.newContent(
         portal_type=RuleMixin.movement_type,
         temp_object=True,
-        order_value=movement,
+        order_value=input_movement,
         **kw)
       ret.append(simulation_movement)
     return ret
+
+  def _getInputMovementList(self, context):
+    """Input movement list comes from order"""
+    order = context.getDefaultCausalityValue()
+    if order is None:
+      return []
+    else:
+      return order.getMovementList(
+        portal_type=order.getPortalOrderMovementTypeList())

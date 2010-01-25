@@ -36,6 +36,7 @@ from Products.ERP5.Document.Predicate import Predicate
 from Products.ERP5.mixin.rule import RuleMixin
 from Products.ERP5.mixin.movement_collection_updater import \
      MovementCollectionUpdaterMixin
+from Products.ERP5.mixin.movement_generator import MovementGeneratorMixin
 from Products.ERP5.MovementCollectionDiff import _getPropertyAndCategoryList
 
 # XXX this class should be moved to Rule.py once new simulation is fully
@@ -125,7 +126,7 @@ class InvoicingRule(Rule):
     # or destination.
     return (movement.getSource() is None or movement.getDestination() is None)
 
-class InvoicingRuleMovementGenerator(object):
+class InvoicingRuleMovementGenerator(MovementGeneratorMixin):
   def getGeneratedMovementList(self, context, movement_list=None,
                                 rounding=False):
     """
@@ -135,8 +136,9 @@ class InvoicingRuleMovementGenerator(object):
     i.e. business paths are not taken into account.
     """
     ret = []
-    for movement in [context.getParentValue(),]:
-      kw = _getPropertyAndCategoryList(movement)
+    for input_movement, business_path in self \
+            ._getInputMovementAndPathTupleList(context):
+      kw = self._getPropertyAndCategoryList(input_movement, business_path)
       kw.update({'order':None,'delivery':None})
       simulation_movement = context.newContent(
         portal_type=RuleMixin.movement_type,
@@ -144,3 +146,6 @@ class InvoicingRuleMovementGenerator(object):
         **kw)
       ret.append(simulation_movement)
     return ret
+
+  def _getInputMovementList(self, context):
+    return [context.getParentValue(),]
