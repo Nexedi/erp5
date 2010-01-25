@@ -273,7 +273,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:\'\'.join([str(x.getTranslatedMessage()) for x in cell.getMessageList()])</string> </value>
+            <value> <string>cell/getCausalityTitle</string> </value>
         </item>
       </dictionary>
     </pickle>
