@@ -1,6 +1,7 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2002, 2005 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2010 Nexedi SA and Contributors. All Rights Reserved.
 #                    Sebastien Robin <seb@nexedi.com>
 #                    Courteaud Romain <romain@nexedi.com>
 #
@@ -48,11 +49,17 @@ class CategoryRelatedMembershipArity(CategoryMembershipArity):
       'base_category' : ('causality',)
       'condition'     : 'python: object.getPortalType() == 'Foo',
     },
+
+  additional parameters passed to catalog are accepted:
+    'filter_parameter': {'simulation_state': ('planned',)},
   """
-  
+
   def _calculateArity(self, obj):
     base_category = self.constraint_definition['base_category']
-    portal_type = self.constraint_definition['portal_type']
-    return len(obj._getRelatedValueList(base_category,
-                                        portal_type=portal_type))
+    sql_kw = {'portal_type': self.constraint_definition['portal_type'],
+              '%s_uid' % base_category: obj.getUid()}
+    filter_parameter = self.constraint_definition.get('filter_parameter', {})
+    sql_kw.update(filter_parameter)
+    portal = obj.getPortalObject()
+    return len(portal.portal_catalog.unrestrictedSearchResults(**sql_kw))
 
