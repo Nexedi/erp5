@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from Constraint import Constraint
 from PropertyTypeValidity import PropertyTypeValidity
 from CategoryMembershipArity import CategoryMembershipArity
@@ -15,3 +16,5 @@ from ContentExistence import ContentExistence
 from StringAttributeMatch import StringAttributeMatch
 from CategoryMembershipState import CategoryMembershipState
 from CategoryAcquiredMembershipState import CategoryAcquiredMembershipState
+from CategoryRelatedMembershipState import CategoryRelatedMembershipState
+
