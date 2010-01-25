@@ -70,12 +70,10 @@ class TestERP5SimulationMixin(TestInvoiceMixin):
         account.setAccountType(account_type)
         portal.portal_workflow.doActionFor(account, 'validate_action')
 
-    invoice_rule = portal.portal_rules.default_invoice_transaction_rule
+    invoice_rule = portal.portal_rules.new_invoice_transaction_rule
     if invoice_rule.getValidationState() == 'validated':
       invoice_rule.invalidate()
-    invoice_rule.deleteContent(list(invoice_rule.objectIds()))
-    transaction.commit()
-    self.tic()
+
     region_predicate = invoice_rule.newContent(portal_type = 'Predicate')
     product_line_predicate = invoice_rule.newContent(portal_type = 'Predicate')
     region_predicate.edit(
@@ -108,34 +106,6 @@ class TestERP5SimulationMixin(TestInvoiceMixin):
           source_value=account_module[line_source_id],
           destination_value=account_module[line_destination_id])
 
-    # matching provider for source and destination
-    for category in ('resource', 'source', 'destination',
-                     'destination_total_asset_price',
-                     'source_total_asset_price'):
-      invoice_rule.newContent(
-        portal_type='Category Membership Divergence Tester',
-        title='%s divergence tester' % category,
-        tested_property=category,
-        divergence_provider=False,
-        matching_provider=True)
-    # non-matching/non-divergence provider quantity divergence tester
-    # (i.e. only used for expand)
-    invoice_rule.newContent(
-      portal_type='Net Converted Quantity Divergence Tester',
-      title='quantity divergence tester',
-      tested_property='quantity',
-      quantity=0,
-      divergence_provider=False,
-      matching_provider=False)
-    # divergence provider for date
-    for property_id in ('start_date', 'stop_date'):
-      invoice_rule.newContent(
-        portal_type='DateTime Divergence Tester',
-        title='%s divergence tester' % property_id,
-        tested_property=property_id,
-        quantity=0,
-        divergence_provider=True,
-        matching_provider=False)
     invoice_rule.validate()
     transaction.commit()
     self.tic()
