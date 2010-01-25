@@ -69,8 +69,55 @@ class TestERP5SimulationMixin(TestInvoiceMixin):
         account.setGap(account_gap)
         account.setAccountType(account_type)
         portal.portal_workflow.doActionFor(account, 'validate_action')
-
-    invoice_rule = portal.portal_rules.new_invoice_transaction_rule
+    invoice_rule = portal.portal_rules.newContent(
+                        portal_type='Invoice Transaction Rule',
+                        reference='default_invoice_transaction_rule',
+                        title='Transaction Rule',
+                        test_method_id=
+                        'SimulationMovement_testInvoiceTransactionRule',
+                        version=100)
+    # matching provider for source and destination
+    for category in ('resource', 'source', 'destination',
+                     'destination_total_asset_price',
+                     'source_total_asset_price'):
+      invoice_rule.newContent(
+        portal_type='Category Membership Divergence Tester',
+        title='%s divergence tester' % category,
+        tested_property=category,
+        divergence_provider=False,
+        matching_provider=True)
+    # non-matching/non-divergence provider quantity divergence tester
+    # (i.e. only used for expand)
+    invoice_rule.newContent(
+      portal_type='Net Converted Quantity Divergence Tester',
+      title='quantity divergence tester',
+      tested_property='quantity',
+      quantity=0,
+      divergence_provider=False,
+      matching_provider=False)
+    # divergence provider for date
+    for property_id in ('start_date', 'stop_date'):
+      invoice_rule.newContent(
+        portal_type='DateTime Divergence Tester',
+        title='%s divergence tester' % property_id,
+        tested_property=property_id,
+        quantity=0,
+        divergence_provider=True,
+        matching_provider=False)
+    for category in ('source_administration', 'source_decision', 'source_function', 'source_payment', 'source_project', 'source_section', 'destination_administration', 'destination_decision', 'destination_function', 'destination_payment', 'destination_project', 'destination_section'):
+      invoice_rule.newContent(
+        portal_type='Category Membership Divergence Tester',
+        title='%s divergence tester' % category,
+        tested_property=category,
+        divergence_provider=True,
+        matching_provider=False)
+    invoice_rule.newContent(
+      portal_type='Float Divergence Tester',
+      title='price divergence tester',
+      tested_property='price',
+      quantity=0,
+      divergence_provider=True,
+      matching_provider=False)
     if invoice_rule.getValidationState() == 'validated':
       invoice_rule.invalidate()
 
