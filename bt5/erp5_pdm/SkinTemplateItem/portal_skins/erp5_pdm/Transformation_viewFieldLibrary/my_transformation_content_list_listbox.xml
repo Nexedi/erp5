@@ -181,10 +181,6 @@
                           <string>efficiency</string>
                           <string>efficiency</string>
                         </tuple>
-                        <tuple>
-                          <string>resource</string>
-                          <string>resource</string>
-                        </tuple>
                       </list>
                     </value>
                 </item>

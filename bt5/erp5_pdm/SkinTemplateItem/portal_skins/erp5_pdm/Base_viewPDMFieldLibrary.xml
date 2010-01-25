@@ -57,6 +57,7 @@
                 <string>center</string>
                 <string>bottom</string>
                 <string>hidden</string>
+                <string>not_assigned</string>
               </list>
             </value>
         </item>
@@ -149,6 +150,14 @@
                         <string>my_reference</string>
                         <string>my_destination_carrier_title</string>
                         <string>my_source_carrier_title</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>not_assigned</string> </key>
+                    <value>
+                      <list>
+                        <string>listbox_quantity_unit</string>
                       </list>
                     </value>
                 </item>
