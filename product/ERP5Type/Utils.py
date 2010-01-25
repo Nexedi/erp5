@@ -72,7 +72,6 @@ from Products.ERP5Type.Accessor.Constant import Getter as ConstantGetter
 from Products.ERP5Type.Accessor.Interface import Getter as InterfaceGetter
 from Products.ERP5Type.Cache import getReadOnlyTransactionCache
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
-from zExceptions import ExceptionFormatter
 from zLOG import LOG, BLATHER, PROBLEM, WARNING
 
 #####################################################
@@ -1124,10 +1123,8 @@ def createConstraintList(property_holder, constraint_definition):
   try:
     consistency_class = getattr(Constraint, constraint_definition['type'])
   except AttributeError:
-    exc_info = sys.exc_info()
-    LOG("ERP5Type", PROBLEM, "Can not find Constraint: %s\n%s" % \
-                      (constraint_definition['type'],
-                      ''.join(ExceptionFormatter.format_exception(*exc_info))))
+    LOG("ERP5Type", PROBLEM, "Can not find Constraint: %s" \
+        % constraint_definition['type'], error=sys.exc_info())
     raise ConstraintNotFound(repr(constraint_definition))
   consistency_instance = consistency_class(**constraint_definition)
   property_holder.constraints += [consistency_instance]
