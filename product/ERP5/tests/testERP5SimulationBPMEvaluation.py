@@ -111,6 +111,76 @@ if True:
 
   TestBPMEvaluationMixin._createRootTradeRule = _createRootTradeRule
 
+  def _createTradeModelRule(self):
+    rule = self.rule_tool.newContent(portal_type='Trade Model Rule',
+      reference='default_trade_model_rule',
+      test_method_id = ('SimulationMovement_testTradeModelRule',)
+      )
+    # matching providers
+    for category in ('resource',):
+      rule.newContent(
+        portal_type='Category Membership Divergence Tester',
+        title='%s divergence tester' % category,
+        tested_property=category,
+        divergence_provider=False,
+        matching_provider=True)
+    rule.newContent(
+      portal_type='Variation Divergence Tester',
+      title='variation divergence tester',
+      tested_property='variation_property_dict',
+      divergence_provider=False,
+      matching_provider=True)
+
+    # divergence providers
+    for category in ('resource',
+                     'source_section',
+                     'destination_section',
+                     'source',
+                     'source_function',
+                     'destination_function',
+                     'source_project',
+                     'destination_project',
+                     'aggregate',
+                     'price_currency',
+                     'base_contribution',
+                     'base_application',
+                     'source_account',
+                     'destination_account',
+                     ):
+      rule.newContent(
+        portal_type='Category Membership Divergence Tester',
+        title='%s divergence tester' % category,
+        tested_property=category,
+        divergence_provider=True,
+        matching_provider=False)
+    rule.newContent(
+      portal_type='Net Converted Quantity Divergence Tester',
+      title='quantity divergence tester',
+      tested_property='quantity',
+      quantity=0,
+      divergence_provider=True,
+      matching_provider=False)
+    for property_id in ('start_date', 'stop_date'):
+      rule.newContent(
+        portal_type='DateTime Divergence Tester',
+        title='%s divergence tester' % property_id,
+        tested_property=property_id,
+        quantity=0,
+        divergence_provider=True,
+        matching_provider=False)
+    rule.newContent(
+      portal_type='Float Divergence Tester',
+      title='price divergence tester',
+      tested_property='price',
+      quantity=0,
+      divergence_provider=True,
+      matching_provider=False)
+
+    rule.validate()
+    transaction.commit()
+
+  TestBPMEvaluationMixin._createTradeModelRule = _createTradeModelRule
+
   def _createInvoicingRule(self):
     edit_dict = {}
     edit_dict.update(
