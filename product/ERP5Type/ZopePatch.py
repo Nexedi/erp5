@@ -21,6 +21,7 @@
 ##############################################################################
 
 # Load all monkey patches
+from Products.ERP5Type.patches import m2crypto
 from Products.ERP5Type.patches import ObjectManager
 from Products.ERP5Type.patches import PropertyManager
 from Products.ERP5Type.patches import TM
