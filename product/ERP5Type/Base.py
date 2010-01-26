@@ -1555,7 +1555,8 @@ class Base( CopyContainer,
     #  # This should be removed if we want strict property checking
     #  setattr(self, key, value)
 
-  security.declareProtected( Permissions.View, 'hasProperty' )
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'hasProperty')
   def hasProperty(self, key):
     """
       Previous Name: hasValue
@@ -1596,7 +1597,8 @@ class Base( CopyContainer,
           return 1
       return 0
 
-  security.declareProtected( Permissions.View, 'hasCategory' )
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'hasCategory')
   def hasCategory(self, key):
     """
       Previous Name: hasValue
@@ -2087,7 +2089,8 @@ class Base( CopyContainer,
     else:
       return self._getCategoryTool().resolveCategory(path)
 
-  security.declareProtected( Permissions.View, 'getDefaultValue' )
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getDefaultValue')
   getDefaultValue = _getDefaultValue
 
   def _getValueList(self, id, spec=(), filter=None, portal_type=(), checked_permission=None):
@@ -2153,7 +2156,8 @@ class Base( CopyContainer,
     except IndexError:
       return None
 
-  security.declareProtected(Permissions.View, 'getDefaultRelatedValue')
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getDefaultRelatedValue')
   getDefaultRelatedValue = _getDefaultRelatedValue
 
   def _getRelatedValueList(self, *args, **kw):
@@ -2162,7 +2166,8 @@ class Base( CopyContainer,
       kw['strict_membership'] = kw.pop('strict')
     return self._getCategoryTool().getRelatedValueList(self, *args, **kw)
 
-  security.declareProtected(Permissions.View, 'getRelatedValueList')
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getRelatedValueList')
   getRelatedValueList = _getRelatedValueList
 
   def _getDefaultRelatedProperty(self, id, property_name, spec=(), filter=None,
@@ -2198,7 +2203,8 @@ class Base( CopyContainer,
                              'getRelatedPropertyList' )
   getRelatedPropertyList = _getRelatedPropertyList
 
-  security.declareProtected( Permissions.View, 'getValueUidList' )
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getValueUidList')
   def getValueUidList(self, id, spec=(), filter=None, portal_type=(), checked_permission=None):
     uid_list = []
     for o in self._getValueList(id, spec=spec, filter=filter, portal_type=portal_type,
@@ -2355,10 +2361,12 @@ class Base( CopyContainer,
     else:
       return default
 
-  security.declareProtected( Permissions.View, 'getDefaultAcquiredCategoryMembership' )
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getDefaultAcquiredCategoryMembership')
   getDefaultAcquiredCategoryMembership = _getDefaultAcquiredCategoryMembership
 
-  security.declareProtected( Permissions.View, 'getCategoryList' )
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getCategoryList')
   def getCategoryList(self):
     """
       Returns the list of local categories
@@ -2368,7 +2376,8 @@ class Base( CopyContainer,
   def _getCategoryList(self):
     return self._getCategoryTool()._getCategoryList(self)
 
-  security.declareProtected( Permissions.View, 'getAcquiredCategoryList' )
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getAcquiredCategoryList')
   def getAcquiredCategoryList(self):
     """
       Returns the list of acquired categories
@@ -2385,7 +2394,8 @@ class Base( CopyContainer,
   def _setCategoryList(self, path_list):
     self.portal_categories._setCategoryList(self, path_list)
 
-  security.declareProtected( Permissions.View, 'getBaseCategoryList' )
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getBaseCategoryList')
   def getBaseCategoryList(self):
     """
       Lists the base_category ids which apply to this instance
@@ -2395,7 +2405,8 @@ class Base( CopyContainer,
   security.declareProtected( Permissions.View, 'getBaseCategoryIds' )
   getBaseCategoryIds = getBaseCategoryList
 
-  security.declareProtected( Permissions.View, 'getBaseCategoryValueList' )
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getBaseCategoryValueList')
   def getBaseCategoryValueList(self):
     return self._getCategoryTool().getBaseCategoryValues(context=self)
 
@@ -3112,7 +3123,8 @@ class Base( CopyContainer,
                                                 cache_factory='erp5_content_short')
     return cached_getAcquireLocalRoles(portal_type=self.getPortalType())
 
-  security.declareProtected(Permissions.View, 'get_local_permissions')
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'get_local_permissions')
   def get_local_permissions(self):
     """
     This works like get_local_roles. It allows to get all
@@ -3727,7 +3739,8 @@ class Base( CopyContainer,
     key = ('default_reindex_parameter', id(aq_base(self)))
     tv[key] = kw
 
-  security.declareProtected(Permissions.View, 'getDefaultReindexParameterDict' )
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getDefaultReindexParameterDict')
   def getDefaultReindexParameterDict(self, inherit_placeless=True):
     # This method returns default reindex parameters to self.
     # The result can be either a dict object or None.
@@ -3751,7 +3764,7 @@ class Base( CopyContainer,
         result.update(local)
     return result
 
-  security.declareProtected(Permissions.View, 'isItem' )
+  security.declareProtected(Permissions.AccessContentsInformation, 'isItem')
   def isItem(self):
     return self.portal_type in self.getPortalItemTypeList()
 
