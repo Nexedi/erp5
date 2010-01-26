@@ -214,29 +214,6 @@ class SimulationMovement(Movement, PropertyRecordableMixin):
     """
     return self.getParentValue().isAccountable(self)
 
-  # Ordering / Delivering
-  security.declareProtected( Permissions.AccessContentsInformation,
-                             'requiresOrder')
-  def requiresOrder(self):
-    """
-      Returns 1 if this needs to be ordered
-    """
-    if self.isOrderable():
-      return len(self.getCategoryMembership('order')) is 0
-    else:
-      return 0
-
-  security.declareProtected( Permissions.AccessContentsInformation,
-                             'requiresDelivery')
-  def requiresDelivery(self):
-    """
-      Returns 1 if this needs to be accounted
-    """
-    if self.isDeliverable():
-      return len(self.getCategoryMembership('delivery')) is 0
-    else:
-      return 0
-
 
   #######################################################
   # Causality Workflow Methods

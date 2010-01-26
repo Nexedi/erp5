@@ -46,17 +46,6 @@ class Simulation:
             'description' : 'If set to 1, the stop date can not be changed',
             'type'        : 'boolean',
             'mode'        : 'w' },
-        # Change of dates and quantities
-        {   'id'          : 'orderable',
-            'description' : 'If set to 1, self must be associated to an order',
-            'type'        : 'boolean',
-            'mode'        : 'w' },
-        {   'id'          : 'deliverable',
-            'description' : 'If set to 1, self must be associated to a delivery',
-            'type'        : 'boolean',
-            'mode'        : 'w' },
-
-
         {   'id'          : 'delivery_ratio',
             'description' : 'ratio to apply on the quantity property of the' \
                             'corresponding delivery to obtain the current quantity',

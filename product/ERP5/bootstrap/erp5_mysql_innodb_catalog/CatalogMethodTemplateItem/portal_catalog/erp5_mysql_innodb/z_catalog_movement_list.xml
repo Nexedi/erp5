@@ -84,12 +84,6 @@
                                 </value>
                             </item>
                             <item>
-                                <key> <string>isDeliverable</string> </key>
-                                <value>
-                                  <dictionary/>
-                                </value>
-                            </item>
-                            <item>
                                 <key> <string>isDivergent</string> </key>
                                 <value>
                                   <dictionary/>
@@ -97,12 +91,6 @@
                             </item>
                             <item>
                                 <key> <string>isMovement</string> </key>
-                                <value>
-                                  <dictionary/>
-                                </value>
-                            </item>
-                            <item>
-                                <key> <string>isOrderable</string> </key>
                                 <value>
                                   <dictionary/>
                                 </value>
@@ -131,8 +119,6 @@
                             <string>getStopDate</string>
                             <string>getPrice</string>
                             <string>isAccountable</string>
-                            <string>isOrderable</string>
-                            <string>isDeliverable</string>
                             <string>isDivergent</string>
                             <string>getVariationText</string>
                           </list>
@@ -162,8 +148,6 @@ getStartDate\n
 getStopDate\n
 getPrice\n
 isAccountable\n
-isOrderable\n
-isDeliverable\n
 isDivergent\n
 getVariationText</string> </value>
         </item>
@@ -235,8 +219,6 @@ VALUES\n
   <dtml-sqlvar expr="getStopDate[loop_item]" type="datetime" optional>,\n
   <dtml-sqlvar expr="getPrice[loop_item]" type="float" optional>,\n
   <dtml-sqlvar expr="isAccountable[loop_item]" type="int" optional>,\n
-  <dtml-sqlvar expr="isOrderable[loop_item]" type="int" optional>,\n
-  <dtml-sqlvar expr="isDeliverable[loop_item]" type="int" optional>,\n
   <dtml-sqlvar expr="isDivergent[loop_item]" type="int" optional>,\n
   <dtml-sqlvar expr="getVariationText[loop_item]" type="string" optional>\n
 )\n
@@ -314,8 +296,6 @@ VALUES\n
   <dtml-sqlvar expr="getStopDate[loop_item]" type="datetime" optional>,\n
   <dtml-sqlvar expr="getPrice[loop_item]" type="float" optional>,\n
   <dtml-sqlvar expr="isAccountable[loop_item]" type="int" optional>,\n
-  <dtml-sqlvar expr="isOrderable[loop_item]" type="int" optional>,\n
-  <dtml-sqlvar expr="isDeliverable[loop_item]" type="int" optional>,\n
   <dtml-sqlvar expr="isDivergent[loop_item]" type="int" optional>,\n
   <dtml-sqlvar expr="getVariationText[loop_item]" type="string" optional>\n
 )\n

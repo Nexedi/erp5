@@ -97,8 +97,6 @@ CREATE TABLE `movement` (\n
   `stop_date` datetime,\n
   `price` real,\n
   `is_accountable` bool,\n
-  `is_orderable` bool,\n
-  `is_deliverable` bool,\n
   `is_divergent` bool,\n
   `variation_text` VARCHAR(255),\n
   PRIMARY KEY `uid` (`uid`),\n
@@ -107,8 +105,6 @@ CREATE TABLE `movement` (\n
   KEY `destination_uid` (`destination_uid`),\n
   KEY `resource_uid` (`resource_uid`),\n
   KEY `is_accountable` (`is_accountable`),\n
-  KEY `is_orderable` (`is_orderable`),\n
-  KEY `is_deliverable` (`is_deliverable`),\n
   KEY `variation_text` (`variation_text`)\n
 ) TYPE=InnoDB;\n
 </string> </value>
@@ -162,8 +158,6 @@ CREATE TABLE `movement` (\n
   `stop_date` datetime,\n
   `price` real,\n
   `is_accountable` bool,\n
-  `is_orderable` bool,\n
-  `is_deliverable` bool,\n
   `is_divergent` bool,\n
   `variation_text` VARCHAR(255),\n
   PRIMARY KEY `uid` (`uid`),\n
@@ -172,8 +166,6 @@ CREATE TABLE `movement` (\n
   KEY `destination_uid` (`destination_uid`),\n
   KEY `resource_uid` (`resource_uid`),\n
   KEY `is_accountable` (`is_accountable`),\n
-  KEY `is_orderable` (`is_orderable`),\n
-  KEY `is_deliverable` (`is_deliverable`),\n
   KEY `variation_text` (`variation_text`)\n
 ) TYPE=InnoDB;\n
 </string> </value>
