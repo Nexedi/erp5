@@ -1,1 +1,5 @@
-Proof of concept version
+Proof of concept version.
+TODO:
+- proxify all fields
+- provide working defaults for minimal theme and m54
+Widget structure seems less appropriate from a modularity point of view than gadget structure.
