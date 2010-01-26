@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright (c) 2009 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2010 Nexedi SA and Contributors. All Rights Reserved.
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsibility of assessing all potential
@@ -134,9 +134,6 @@ class OrderRuleMovementGenerator(MovementGeneratorMixin):
                                 rounding=False):
     """
     Input movement list comes from order
-
-    XXX This implementation is very primitive, and does not support BPM,
-    i.e. business paths are not taken into account.
     """
     ret = []
     for input_movement, business_path in self \
