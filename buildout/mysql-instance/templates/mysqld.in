@@ -1,3 +1,3 @@
 #!/bin/sh
 
-${software_definition:mysql_software}/bin/mysqld_safe --no-defaults --port=${ports:mysql} --pid-file=${mycnf:pid} --log-error=${mycnf:err} --basedir=${mycnf:basedir} --datadir=${mycnf:datadir} --socket=${mycnf:sock}
+${software_definition:mysql_software}/bin/mysqld_safe --no-defaults --port=${configuration:mysql_port} --pid-file=${mycnf:pid} --log-error=${mycnf:err} --basedir=${mycnf:basedir} --datadir=${mycnf:datadir} --socket=${mycnf:sock}
