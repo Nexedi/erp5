@@ -1884,7 +1884,7 @@ class TestInventoryDocument(InventoryAPITestCase):
     if full_inventory:
       inventory_list = [inventory_list[0]]
     # TODO: Define a second resource which will only be present in full
-    # inventories. This will allow testing getInentoryList.
+    # inventories. This will allow testing getInventoryList.
     #else:
     #  inventory_list.append({'resource_relative_url': '','total_quantity': 50,'variation_text': ''})
     for inventory_line in inventory_list:
@@ -1896,7 +1896,7 @@ class TestInventoryDocument(InventoryAPITestCase):
       line.edit(resource=inventory_line['resource_relative_url'],
                 inventory=total_quantity,
                 variation_text=inventory_line['variation_text'])
-      # TODO: pass more properties through from calcuated inventory to
+      # TODO: pass more properties through from calculated inventory to
       # inventory lines if needed.
     inventory.deliver()
     return inventory
