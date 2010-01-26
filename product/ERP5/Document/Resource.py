@@ -989,15 +989,13 @@ class Resource(XMLMatrix, Variated):
       portal = self.getPortalObject()
       quantity_unit_uid = quantity_unit_value.getUid()
 
-      ratio = None
-
       deprecated_quantity = quantity_unit_value.getProperty('quantity')
       if deprecated_quantity is not None:
         warn('quantity field of quantity_unit categories is deprecated.' \
            ' Please use Quantity Unit Conversion Definitions instead and' \
            ' reset the value of this field.', DeprecationWarning)
 
-        ratio = float(deprecated_quantity)
+        return float(deprecated_quantity)
 
       query = self.ResourceModule_zGetQuantityUnitDefinitionRatio(
                             quantity_unit_uid=quantity_unit_uid,
