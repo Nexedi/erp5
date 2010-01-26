@@ -42,7 +42,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value> <string>XXX-JPS - use getPermanentURL instead of rereference to retrieve URL</string> </value>
         </item>
         <item>
             <key> <string>edit_order</string> </key>
