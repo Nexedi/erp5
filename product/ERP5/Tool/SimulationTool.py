@@ -1013,7 +1013,7 @@ class SimulationTool(BaseTool):
           inventory.
         Second query: Fetch full inventory amounts.
           Fetch values of inventory identified in the first query.
-        Tird query: Classic stock table read.
+        Third query: Classic stock table read.
           Fetch all rows in stock table which are posterior to the inventory.
         Final result
           Add results of the second and third queries, and return it.
@@ -1269,7 +1269,7 @@ class SimulationTool(BaseTool):
                     schema. If one of the parameters is None, returns the
                     other parameters.
 
-                    Arythmetic modifications on additions:
+                    Arithmetic modifications on additions:
                       None + x = x
                       None + None = None
                   """
@@ -1277,8 +1277,18 @@ class SimulationTool(BaseTool):
                     return line_b
                   if line_b is None:
                     return line_a
-                  result = {}
-                  for key, value in line_a.iteritems():
+                  # Create a new Shared.DC.ZRDB.Results.Results.__class__
+                  # instance to add the line values.
+                  # the logic for the 5 lines below is taken from
+                  # Shared.DC.ZRDB.Results.Results.__getitem__
+                  Result = line_a.__class__
+                  parent = line_a.aq_parent
+                  result = Result((), parent)
+                  if parent is not None:
+                    result = result.__of__(parent)
+
+                  for key in line_a.__record_schema__:
+                    value = line_a[key] 
                     if key in result_column_id_dict:
                       value_b = line_b[key]
                       if None not in (value, value_b):
@@ -1291,13 +1301,13 @@ class SimulationTool(BaseTool):
                       result[key] = line_a[key]
                     elif key not in ('date', 'stock_uid', 'path'):
                       LOG('InventoryTool.getInventoryList.addLineValues', 0,
-                          'missmatch for %s column: %s and %s' % \
+                          'mismatch for %s column: %s and %s' % \
                           (key, line_a[key], line_b[key]))
                   return result
                 inventory_list_dict = {}
                 for line_list in (initial_inventory_line_list,
                                   delta_inventory_line_list):
-                  for line in line_list.dictionaries():
+                  for line in line_list:
                     line_key = getInventoryListKey(line)
                     line_a = inventory_list_dict.get(line_key)
                     inventory_list_dict[line_key] = addLineValues(line_a,
