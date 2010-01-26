@@ -40,14 +40,6 @@ from Products.ERP5.PropertySheet.TradeModelLine import (TARGET_LEVEL_MOVEMENT,
                                                         TARGET_LEVEL_DELIVERY)
 import zope.interface
 
-def isMovement(document):
-  """Hides isMovement method or variable complexity"""
-  if callable(document.isMovement):
-    is_movement = document.isMovement()
-  else:
-    is_movement = document.isMovement
-  return is_movement
-
 class TradeModelLine(Predicate, XMLMatrix, Amount):
   """Trade Model Line is a way to represent trade transformation for movements"""
   meta_type = 'ERP5 Trade Model Line'
@@ -136,7 +128,7 @@ class TradeModelLine(Predicate, XMLMatrix, Amount):
     # otherwise it is needed to look up for movements
     if len(movement_list) == 0:
       # no movements passed, need to find some
-      if isMovement(context):
+      if context.isMovement():
         # create movement lists from context
         movement_list = [context]
       else:
