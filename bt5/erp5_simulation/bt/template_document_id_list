@@ -2,4 +2,5 @@ DeliveryRule
 InvoiceTransactionRule
 InvoicingRule
 OrderRule
+PaymentRule
 TradeModelRule

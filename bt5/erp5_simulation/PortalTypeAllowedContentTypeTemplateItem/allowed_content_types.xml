@@ -31,6 +31,14 @@
   <item>String Divergence Tester</item>
   <item>Variation Divergence Tester</item>
  </portal_type>
+ <portal_type id="Payment Rule">
+  <item>Category Membership Divergence Tester</item>
+  <item>DateTime Divergence Tester</item>
+  <item>Float Divergence Tester</item>
+  <item>Net Converted Quantity Divergence Tester</item>
+  <item>String Divergence Tester</item>
+  <item>Variation Divergence Tester</item>
+ </portal_type>
  <portal_type id="Solver Process">
   <item>Destination Replacement Solver</item>
   <item>Production Reduction Solver</item>

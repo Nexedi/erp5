@@ -22,6 +22,12 @@ Order Rule | Float Divergence Tester
 Order Rule | Net Converted Quantity Divergence Tester
 Order Rule | String Divergence Tester
 Order Rule | Variation Divergence Tester
+Payment Rule | Category Membership Divergence Tester
+Payment Rule | DateTime Divergence Tester
+Payment Rule | Float Divergence Tester
+Payment Rule | Net Converted Quantity Divergence Tester
+Payment Rule | String Divergence Tester
+Payment Rule | Variation Divergence Tester
 Solver Process | Destination Replacement Solver
 Solver Process | Production Reduction Solver
 Solver Process | Quantity Accept Solver
