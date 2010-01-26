@@ -93,14 +93,6 @@ class TradeModelRule(Rule):
   meta_type = 'ERP5 Trade Model Rule'
   portal_type = 'Trade Model Rule'
 
-  # XXX this method is missing in interface.
-  def isOrderable(self, movement):
-    return 0
-
-  # XXX this method is missing in interface.
-  def isDeliverable(self, movement):
-    return 0
-
   def _getMovementGenerator(self):
     """
     Return the movement generator to use in the expand process

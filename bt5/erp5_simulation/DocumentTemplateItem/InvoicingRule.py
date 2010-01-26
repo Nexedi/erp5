@@ -93,16 +93,6 @@ class InvoicingRule(Rule):
   meta_type = 'ERP5 Invoicing Rule'
   portal_type = 'Invoicing Rule'
 
-  # XXX this method is missing in interface.
-  def isOrderable(self, movement):
-    return 1
-
-  # XXX this method is missing in interface.
-  def isDeliverable(self, movement):
-    if movement.getSimulationState() in movement.getPortalDraftOrderStateList():
-      return 0
-    return 1
-
   def _getMovementGenerator(self):
     """
     Return the movement generator to use in the expand process
