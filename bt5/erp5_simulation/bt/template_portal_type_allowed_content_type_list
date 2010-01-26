@@ -1,3 +1,9 @@
+Delivery Rule | Category Membership Divergence Tester
+Delivery Rule | DateTime Divergence Tester
+Delivery Rule | Float Divergence Tester
+Delivery Rule | Net Converted Quantity Divergence Tester
+Delivery Rule | String Divergence Tester
+Delivery Rule | Variation Divergence Tester
 Invoice Transaction Rule | Category Membership Divergence Tester
 Invoice Transaction Rule | DateTime Divergence Tester
 Invoice Transaction Rule | Float Divergence Tester
@@ -28,4 +34,10 @@ Solver Process | Start Date Replacement Solver
 Solver Tool | Solver Process
 Solver Type | Action Information
 Solver Type | Role Information
+Trade Model Rule | Category Membership Divergence Tester
+Trade Model Rule | DateTime Divergence Tester
+Trade Model Rule | Float Divergence Tester
+Trade Model Rule | Net Converted Quantity Divergence Tester
+Trade Model Rule | String Divergence Tester
+Trade Model Rule | Variation Divergence Tester
 Types Tool | Solver Type
