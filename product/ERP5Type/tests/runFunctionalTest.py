@@ -38,22 +38,6 @@ Notes:
   ./runUnitTest.py --save prepareFunctionalTest.py
 """
 
-
-host = 'localhost'
-port = 8080
-portal_name = 'erp5_portal'
-user = 'ERP5TypeTestCase'
-password = ''
-send_mail = 0
-stdout = 0
-debug = 0
-email_to_address = 'erp5-report@erp5.org'
-smtp_host = ''
-email_subject = 'ERP5'
-run_only=''
-portal_url = ''
-xvfb_display = '123'
-
 tests_framework_home = os.path.dirname(os.path.abspath(__file__))
 # handle 'system global' instance
 if tests_framework_home.startswith('/usr/lib'):
@@ -63,128 +47,144 @@ else:
     tests_framework_home.split(os.path.sep)[:-3])
 
 instance_home = os.path.join(real_instance_home, 'unit_test')
-profile_dir = os.path.join(instance_home, 'profile')
 bt5_dir_list = ','.join([
                     os.path.join(instance_home, 'Products/ERP5/bootstrap'),
                     os.path.join(instance_home, 'bt5')])
 
 
+class FunctionalTestRunner:
+  """
+    Used to run Functional tests
+  """
+  def __init__(self, instance_home):
+    self.instance_home = instance_home
+    self.xvfb_fbdir = instance_home
+    self.send_mail = 0
+    self.stdout = 0
+    self.debug = 0
+    self.email_to_address = 'erp5-report@erp5.org'
+    self.smtp_host = ''
+    self.host = 'localhost'
+    self.port = 8080
+    self.user = 'ERP5TypeTestCase'
+    self.password = ''
+    self.portal_name = 'erp5_portal'
+    self.run_only = ''
+    self.email_subject = 'ERP5'
+    self.xvfb_display = '123'
+    self.profile_dir = os.path.join(instance_home, 'profile')
 
-def usage(stream, msg=None):
-  if msg:
-    print >>stream, msg
-    print >>stream
-  program = os.path.basename(sys.argv[0])
-  print >>stream, __doc__ % {"program": program}
+  def usage(self, stream, msg=None):
+    if msg:
+      print >>stream, msg
+      print >>stream
+    program = os.path.basename(sys.argv[0])
+    print >>stream, __doc__ % {"program": program}
 
-def parseArgs():
-  global send_mail
-  global stdout
-  global debug
-  global email_to_address
-  global smtp_host
-  global host
-  global port
-  global portal_name
-  global portal_url
-  global run_only
-  global email_subject
-  global xvfb_display
-  try:
-    opts, args = getopt.getopt(sys.argv[1:],
-          "hsd", ["help", "stdout", "debug",
-                 "email_to_address=", "host=", "port=", 
-                 "portal_name=", "run_only=",
-                 "email_subject=", "smtp_host=", "xvfb_display="] )
-  except getopt.GetoptError, msg:
-    usage(sys.stderr, msg)
-    sys.exit(2)
+  def parseArgs(self):
+    try:
+      opts, args = getopt.getopt(sys.argv[1:],
+            "hsd", ["help", "stdout", "debug",
+                   "email_to_address=", "host=", "port=", 
+                   "portal_name=", "run_only=", "user=", 
+                   "password=", "alarms=",
+                   "email_subject=", "smtp_host=", "xvfb_display="] )
+    except getopt.GetoptError, msg:
+      self.usage(sys.stderr, msg)
+      sys.exit(2)
+  
+    for opt, arg in opts:
+      if opt in ("-s", "--stdout"):
+        self.stdout = 1
+      elif opt in ("-d", "--debug"):
+        self.debug = 1
+      elif opt == '--email_to_address':
+        self.email_to_address = arg
+        self.send_mail = 1
+      elif opt == '--smtp_host':
+        self.smtp_host = arg
+      elif opt in ('-h', '--help'):
+        self.usage(sys.stdout)
+        sys.exit()
+      elif opt == "--host":
+        self.host = arg
+      elif opt == "--port":
+        self.port = int(arg)
+      elif opt == "--portal_name":
+        self.portal_name = arg
+      elif opt == "--run_only":
+        self.run_only = arg
+      elif opt == "--user":
+        user = arg
+      elif opt == "--password":
+        password = arg
+      elif opt == "--email_subject":
+        self.email_subject = arg
+      elif opt == "--xvfb_display":
+        self.xvfb_display = arg
+  
+    if not self.stdout:
+      self.send_mail = 1
+  
+    self.portal_url = "http://%s:%d/%s" % (self.host, self.port, self.portal_name)
+  
+  def openUrl(self, url):
+    f = urllib2.urlopen(url)
+    file_content = f.read()
+    f.close()
+    return file_content
+  
+  
+  def main(self):
+    self.setPreference()
+    self.unsubscribeFromTimerService()
+    self.launchFuntionalTest()
 
-  for opt, arg in opts:
-    if opt in ("-s", "--stdout"):
-      stdout = 1
-    elif opt in ("-d", "--debug"):
-      debug = 1
-    elif opt == '--email_to_address':
-      email_to_address = arg
-      send_mail = 1
-    elif opt == '--smtp_host':
-      smtp_host = arg
-    elif opt in ('-h', '--help'):
-      usage(sys.stdout)
-      sys.exit()
-    elif opt == "--host":
-      host = arg
-    elif opt == "--port":
-      port = int(arg)
-    elif opt == "--portal_name":
-      portal_name = arg
-    elif opt == "--run_only":
-      run_only = arg
-    elif opt == "--email_subject":
-      email_subject = arg
-    elif opt == "--xvfb_display":
-      xvfb_display = arg
-
-  if not stdout:
-    send_mail = 1
-
-  portal_url = "http://%s:%d/%s" % (host, port, portal_name)
-
-def openUrl(url):
-  f = urllib2.urlopen(url)
-  file_content = f.read()
-  f.close()
-  return file_content
-
-
-def main():
-  setPreference()
-  unsubscribeFromTimerService()
-  launchFuntionalTest()
-
-def launchFuntionalTest():
-  status = getStatus()
-  xvfb_pid = None
-  firefox_pid = None
-  try:
-    if not debug:
-      xvfb_pid = runXvfb(xvfb_display)
-    firefox_pid = runFirefox(xvfb_display)
-    while True:
-      sleep(10)
-      cur_status = getStatus()
-      if status != cur_status:
-        break
-  finally:
-      if xvfb_pid:
-        os.kill(xvfb_pid, signal.SIGTERM)
-      if firefox_pid:
-        os.kill(firefox_pid, signal.SIGTERM)
-
-def startZope():
-  os.environ['erp5_save_data_fs'] = "1"
-  os.system('%s/bin/zopectl start' % instance_home)
-  sleep(2) # ad hoc
-
-def stopZope():
-  os.system('%s/bin/zopectl stop' % instance_home)
-
-def runXvfb(xvfb_display):
-  pid = os.spawnlp(os.P_NOWAIT, 'Xvfb', 'Xvfb', ':%s' %xvfb_display)
-  display = os.environ.get('DISPLAY')
-  if display:
-    auth = Popen(['xauth', 'list', display], stdout=PIPE).communicate()[0]
-    if auth:
-      (displayname, protocolname, hexkey) = auth.split()
-      Popen(['xauth', 'add', 'localhost/unix:%s' %xvfb_display, protocolname, hexkey])
-  print 'Xvfb : %d' % pid
-  return pid
-
-def prepareFirefox():
-  os.system("rm -rf %s" % profile_dir)
-  os.mkdir(profile_dir)
-  prefs_js = """
+  def launchFuntionalTest(self):
+    status = self.getStatus()
+    xvfb_pid = None
+    firefox_pid = None
+    try:
+      if not self.debug:
+        xvfb_pid = self.runXvfb(self.xvfb_display)
+      firefox_pid = self.runFirefox(self.xvfb_display)
+      while True:
+        sleep(10)
+        cur_status = self.getStatus()
+        if status != cur_status:
+          break
+    finally:
+        if xvfb_pid:
+          os.kill(xvfb_pid, signal.SIGTERM)
+        if firefox_pid:
+          os.kill(firefox_pid, signal.SIGTERM)
+  
+  def startZope(self):
+    os.environ['erp5_save_data_fs'] = "1"
+    os.system('%s/bin/zopectl start' % self.instance_home)
+    sleep(2) # ad hoc
+  
+  def stopZope(self):
+    os.system('%s/bin/zopectl stop' % self.instance_home)
+  
+  def runXvfb(self, xvfb_display):
+    pid = os.spawnlp(os.P_NOWAIT, 'Xvfb', 'Xvfb', 
+                     '-fbdir' , '%s' % self.xvfb_fbdir  ,
+                     ':%s' % xvfb_display)
+    display = os.environ.get('DISPLAY')
+    if display:
+      auth = Popen(['xauth', 'list', display], stdout=PIPE).communicate()[0]
+      if auth:
+        (displayname, protocolname, hexkey) = auth.split()
+        Popen(['xauth', 'add', 'localhost/unix:%s' %xvfb_display, protocolname, hexkey])
+    print 'Xvfb : %d' % pid
+    print 'Take screenshots using xwud -in %s/Xvfb_screen0' % self.xvfb_fbdir
+    return pid
+  
+  def prepareFirefox(self, host, port):
+    os.system("rm -rf %s" % self.profile_dir)
+    os.mkdir(self.profile_dir)
+    prefs_js = """
 // Don't ask if we want to switch default browsers
 user_pref("browser.shell.checkDefaultBrowser", false);
 
@@ -213,93 +213,89 @@ user_pref("signon.rememberSignons", false);
 // Make sure we do not use cache
 user_pref("browser.cache.check_doc_frequency", 1);
 user_pref("network.http.use-cache", false);
-//user_pref("browser.cache.disk.capacity", 0);
-//user_pref("browser.cache.disk.enable", false);
-//user_pref("browser.cache.memory.enable", false);
-//user_pref("browser.cache.offline.enable", false);
 
 // this is required to upload files
 user_pref("capability.principal.codebase.p1.granted", "UniversalFileRead");
 user_pref("signed.applets.codebase_principal_support", true);
 user_pref("capability.principal.codebase.p1.id", "http://%s");
 user_pref("capability.principal.codebase.p1.subjectName", "");""" % \
-    '%s:%s' % (host, port)
-  pref_file = open(os.path.join(profile_dir, 'prefs.js'), 'w')
-  pref_file.write(prefs_js)
-  pref_file.close()
-
-def runFirefox(xvfb_display):
-  prepareFirefox()
-  if debug:
-    try:
-      shutil.copy2(os.path.expanduser('~/.Xauthority'), '%s/.Xauthority' % profile_dir)
-    except IOError:
-      pass
-  else:
-    os.environ['DISPLAY'] = ':%s' %xvfb_display
-  os.environ['MOZ_NO_REMOTE'] = '1'
-  os.environ['HOME'] = profile_dir
-  # check if old zelenium or new zelenium
-  try:
-    urllib2.urlopen("%s/portal_tests/core/scripts/selenium-version.js" % portal_url)
-  except urllib2.HTTPError:
-    # Zelenium 0.8
-    url_string = "%s/portal_tests/?auto=true&__ac_name=%s&__ac_password=%s" % (portal_url, user, password)
-  else:
-    # Zelenium 0.8+ or later
-    url_string = "%s/portal_tests/core/TestRunner.html?test=../test_suite_html&auto=on&resultsUrl=%s/portal_tests/postResults&__ac_name=%s&__ac_password=%s" % (portal_url, portal_url, user, password)
-
-  if run_only:
-    url_string = url_string.replace('/portal_tests/', '/portal_tests/%s/' % run_only, 1)
-  pid = os.spawnlp(os.P_NOWAIT, "firefox", "firefox", "-profile", profile_dir,
-      url_string)
-  os.environ['MOZ_NO_REMOTE'] = '0'
-  print 'firefox : %d' % pid
-  return pid
-
-def getStatus():
-  try:
-    status = openUrl('%s/portal_tests/TestTool_getResults'
-                             % (portal_url))
-  except urllib2.HTTPError, e:
-    if e.msg == "No Content" :
-      status = ""
+      '%s:%s' % (host, port)
+    pref_file = open(os.path.join(self.profile_dir, 'prefs.js'), 'w')
+    pref_file.write(prefs_js)
+    pref_file.close()
+  
+  def runFirefox(self,xvfb_display):
+    self.prepareFirefox(self.host, self.port)
+    if self.debug:
+      try:
+        shutil.copy2(os.path.expanduser('~/.Xauthority'), '%s/.Xauthority' % self.profile_dir)
+      except IOError:
+        pass
     else:
-      raise
-  return status
-
-def setPreference():
-  urllib2.urlopen('%s/BTZuite_setPreference?__ac_name='
-                  '%s&__ac_password=%s&working_copy_list=%s' %
-                  (portal_url, user, password, bt5_dir_list))
-
-def unsubscribeFromTimerService():
-  urllib2.urlopen('%s/portal_activities/?unsubscribe:method='
-                  '&__ac_name=%s&__ac_password=%s' %
-                  (portal_url, user, password))
-
-def sendResult():
-  global email_subject
-  result_uri = urllib2.urlopen('%s/portal_tests/TestTool_getResults' % portal_url).readline()
-  print result_uri
-  file_content = openUrl(result_uri)
-  passes_re = re.compile('<th[^>]*>Tests passed</th>\n\s*<td[^>]*>([^<]*)')
-  failures_re = re.compile('<th[^>]*>Tests failed</th>\n\s*<td[^>]*>([^<]*)')
-  image_re = re.compile('<img[^>]*?>')
-  error_title_re = re.compile('(?:error.gif.*?>|title status_failed"><td[^>]*>)([^>]*?)</td></tr>', re.S)
-  result_re = re.compile('<div style="padding-top: 10px;">\s*<p>\s*'
-                        '<img.*?</div>\s.*?</div>\s*', re.S)
-  error_result_re = re.compile('.*(?:error.gif|title status_failed).*', re.S)
-  passes = passes_re.search(file_content).group(1)
-  failures = failures_re.search(file_content).group(1)
-  error_titles = [re.compile('\s+').sub(' ', x).strip()
-                  for x in error_title_re.findall(file_content)]
-  os.chdir('%s/Products/ERP5' % instance_home)
-  revision = pysvn.Client().info('.').revision.number
-
-  subject = "%s r%s: Functional Tests, %s Passes, %s Failures" \
-              % (email_subject, revision, passes, failures)
-  summary = """
+      os.environ['DISPLAY'] = ':%s' %xvfb_display
+    os.environ['MOZ_NO_REMOTE'] = '1'
+    os.environ['HOME'] = self.profile_dir
+    # check if old zelenium or new zelenium
+    try:
+      urllib2.urlopen("%s/portal_tests/core/scripts/selenium-version.js" % self.portal_url)
+    except urllib2.HTTPError:
+      # Zelenium 0.8
+      url_string = "%s/portal_tests/?auto=true&__ac_name=%s&__ac_password=%s" % (self.portal_url, self.user, self.password)
+    else:
+      # Zelenium 0.8+ or later
+      url_string = "%s/portal_tests/core/TestRunner.html?test=../test_suite_html&auto=on&resultsUrl=%s/portal_tests/postResults&__ac_name=%s&__ac_password=%s" % (self.portal_url, self.portal_url, self.user, self.password)
+  
+    if self.run_only:
+      url_string = url_string.replace('/portal_tests/', '/portal_tests/%s/' % self.run_only, 1)
+    pid = os.spawnlp(os.P_NOWAIT, "firefox", "firefox", "-profile", self.profile_dir,
+        url_string)
+    os.environ['MOZ_NO_REMOTE'] = '0'
+    print 'firefox : %d' % pid
+    return pid
+  
+  def getStatus(self):
+    try:
+      status = self.openUrl('%s/portal_tests/TestTool_getResults'
+                               % (self.portal_url))
+    except urllib2.HTTPError, e:
+      if e.msg == "No Content" :
+        status = ""
+      else:
+        raise
+    return status
+  
+  def setPreference(self):
+    urllib2.urlopen('%s/BTZuite_setPreference?__ac_name='
+                    '%s&__ac_password=%s&working_copy_list=%s' %
+                    (self.portal_url, self.user, self.password, bt5_dir_list))
+  
+  def unsubscribeFromTimerService(self):
+    urllib2.urlopen('%s/portal_activities/?unsubscribe:method='
+                    '&__ac_name=%s&__ac_password=%s' %
+                    (self.portal_url, self.user, self.password))
+  
+  def sendResult(self):
+    result_uri = urllib2.urlopen('%s/portal_tests/TestTool_getResults' % self.portal_url).readline()
+    print result_uri
+    file_content = self.openUrl(result_uri)
+    passes_re = re.compile('<th[^>]*>Tests passed</th>\n\s*<td[^>]*>([^<]*)')
+    failures_re = re.compile('<th[^>]*>Tests failed</th>\n\s*<td[^>]*>([^<]*)')
+    image_re = re.compile('<img[^>]*?>')
+    error_title_re = re.compile('(?:error.gif.*?>|title status_failed"><td[^>]*>)([^>]*?)</td></tr>', re.S)
+    result_re = re.compile('<div style="padding-top: 10px;">\s*<p>\s*'
+                          '<img.*?</div>\s.*?</div>\s*', re.S)
+    error_result_re = re.compile('.*(?:error.gif|title status_failed).*', re.S)
+    passes = passes_re.search(file_content).group(1)
+    failures = failures_re.search(file_content).group(1)
+    error_titles = [re.compile('\s+').sub(' ', x).strip()
+                    for x in error_title_re.findall(file_content)]
+    # get SVN revision used
+    os.chdir('%s/Products/ERP5' % self.instance_home)
+    revision = pysvn.Client().info('.').revision.number
+  
+    subject = "%s r%s: Functional Tests, %s Passes, %s Failures" \
+                % (self.email_subject, revision, passes, failures)
+    summary = """
 Test Summary
 
 Tests passed: %4s
@@ -307,38 +303,39 @@ Tests failed: %4s
 
 Following tests failed:
 
-%s""" % (passes, failures, "\n".join(error_titles))
-  detail = ''
-  for e in result_re.findall(file_content):
-    if error_result_re.match(e):
-      detail += e
-  detail = image_re.sub('', detail)
-  detail = detail.replace('<tr class="title status_failed"', '<tr class="title status_failed" style="background-color:red"')
-  detail = detail.replace('<tr class="status_failed"', '<tr class="status_failed" style="background-color:red"')
-  if detail:
-    detail = '<html><body>%s</body></html>' % detail
-  status = (not failures)
-  if send_mail:
-    sendMail(subject=subject,
-             body=summary,
-             status=status,
-             attachments=[detail],
-             from_mail='nobody@svn.erp5.org',
-             to_mail=[email_to_address],
-             smtp_host=smtp_host)
-  if stdout:
-    print '-' * 79
-    print subject
-    print '-' * 79
-    print summary
-    print '-' * 79
-    print detail
-  return int(failures)
+  
+  %s""" % (passes, failures, "\n".join(error_titles))
+    detail = ''
+    for e in result_re.findall(file_content):
+      if error_result_re.match(e):
+        detail += e
+    detail = image_re.sub('', detail)
+    detail = detail.replace('<tr class="title status_failed"', '<tr class="title status_failed" style="background-color:red"')
+    detail = detail.replace('<tr class="status_failed"', '<tr class="status_failed" style="background-color:red"')
+    if detail:
+      detail = '<html><body>%s</body></html>' % detail
+    status = (not failures)
+    if self.send_mail:
+      sendMail(subject=subject,
+               body=summary,
+               status=status,
+               attachments=[detail],
+               from_mail='nobody@svn.erp5.org',
+               to_mail=[self.email_to_address],
+               smtp_host=self.smtp_host)
+    if self.stdout:
+      print '-' * 79
+      print subject
+      print '-' * 79
+      print summary
+      print '-' * 79
+      print detail
+    return int(failures)
 
 if __name__ == "__main__":
-  parseArgs()
-  startZope()
-  atexit.register(stopZope)
-  main()
-  sys.exit(sendResult())
-
+  test_runner = FunctionalTestRunner(instance_home)
+  test_runner.parseArgs()
+  test_runner.startZope()
+  atexit.register(test_runner.stopZope)
+  test_runner.main()
+  sys.exit(test_runner.sendResult())
