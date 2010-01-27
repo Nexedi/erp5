@@ -69,7 +69,7 @@ class SupplyLink(Path, XMLObject):
                       , PropertySheet.FlowCapacity
                       , PropertySheet.TransformedResource
                       , PropertySheet.Delivery
-                      , PropertySheet.Simulation
+                      , PropertySheet.SupplyLink
                       , PropertySheet.Reference
                       )
 
