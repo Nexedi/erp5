@@ -160,6 +160,11 @@ portal_delivery_movement_type_list = (
                       'Amortisation Transaction Line'
                        )
 
+portal_model_path_type_list = ('Trade Model Line',
+                               'Trade Model Cell',
+                               'Pay Sheet Model Line',
+                               'Pay Sheet Model Cell')
+
 portal_container_type_list = ('Container',)
 
 portal_container_line_type_list = ('Container Line',)
