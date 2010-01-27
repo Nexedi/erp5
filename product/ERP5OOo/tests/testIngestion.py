@@ -563,8 +563,6 @@ class TestIngestion(ERP5TypeTestCase):
     self.assertEquals(document.getRevision(), '1')
     f = makeFileUpload(filename)
     document.edit(file=f)
-    # set source
-    document.setSourceReference(filename)
     self.assert_(document.hasFile())
     # source_reference set to file name ?
     self.assertEquals(document.getSourceReference(), filename) 
