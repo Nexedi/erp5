@@ -173,7 +173,7 @@ class FormPrintout(Implicit, Persistent, RoleManager, Item):
     self.template = template
 
   security.declareProtected('View', 'index_html')
-  def index_html(self, icon=0, preview=0, width=None, height=None, REQUEST=None):
+  def index_html(self, REQUEST, icon=0, preview=0, width=None, height=None, RESPONSE=None):
     """Render and view a printout document."""
 
     obj = getattr(self, 'aq_parent', None)
@@ -200,10 +200,8 @@ class FormPrintout(Implicit, Persistent, RoleManager, Item):
     content_type = printout_template.content_type
     self.strategy = self._createStrategy(content_type)
     printout = self.strategy.render(extra_context=extra_context)
-    return self._oooConvertByFormat(printout,
-                                    content_type=content_type,
-                                    extra_context=extra_context,
-                                    REQUEST=REQUEST)
+    return self._oooConvertByFormat(printout, content_type,
+                                    extra_context, REQUEST)
 
   security.declareProtected('View', '__call__')
   __call__ = index_html
@@ -229,7 +227,7 @@ class FormPrintout(Implicit, Persistent, RoleManager, Item):
       return ODGStrategy()
     raise ValueError, 'Template type: %s is not supported' % content_type
 
-  def _oooConvertByFormat(self, printout, content_type=None, extra_context={}, REQUEST=None):
+  def _oooConvertByFormat(self, printout, content_type, extra_context, REQUEST):
     """
     Convert the ODF document into the given format.
 
