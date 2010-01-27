@@ -211,7 +211,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
     meta_type = 'ERP5 Catalog'
     security = ClassSecurityInfo()
 
-    default_result_limit = 1000
+    default_result_limit = None
     default_count_limit = 1
     
     manage_options = ({ 'label' : 'Overview', 'action' : 'manage_overview' },
