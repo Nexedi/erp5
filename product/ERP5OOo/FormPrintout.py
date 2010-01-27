@@ -239,10 +239,9 @@ class FormPrintout(Implicit, Persistent, RoleManager, Item):
     extra_context -- extra_context including a format
     REQUEST -- Request object
     """
-    options = extra_context.get('options', {})
     format = None
     if REQUEST is not None:
-      format = options.get('format', REQUEST.get('format', None))
+      format = REQUEST.get('format', None)
     if format is None:
       if REQUEST is not None:
         REQUEST.RESPONSE.setHeader('Content-Type','%s; charset=utf-8' % content_type)
