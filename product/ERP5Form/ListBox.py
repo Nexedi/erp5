@@ -1143,6 +1143,7 @@ class ListBoxRenderer:
     # objects in the current ListBox configuration.
     if 'select_expression' in params:
       del params['select_expression']
+    params.setdefault('limit', 1000) 
 
     self.getSelection().edit(params=params)
     return params
