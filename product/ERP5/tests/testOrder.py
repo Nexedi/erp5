@@ -225,6 +225,8 @@ class TestOrderMixin:
                                    portal_type=organisation_portal_type)
     organisation = organisation_module.newContent( \
                                    portal_type=organisation_portal_type)
+    bank_account = organisation.newContent(id='bank',
+                                           portal_type='Bank Account')
     if title is None:
       organisation.edit(title='organisation%s' % organisation.getId())
       sequence.edit(organisation=organisation)
@@ -906,8 +908,10 @@ class TestOrderMixin:
     order = sequence.get('order')
     order.edit( source_value = organisation1,
                 source_section_value = organisation1,
+                source_payment_value = organisation1['bank'],
                 destination_value = organisation2,
                 destination_section_value = organisation2,
+                destination_payment_value = organisation2['bank'],
                 source_project_value = project1,
                 destination_project_value = project2 )
     self.failUnless('Site Error' not in order.view())
