@@ -23,7 +23,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Trade Model Cell\n
+            <value> <string>Trade Model Cell\r\n
 </string> </value>
         </item>
         <item>
@@ -37,7 +37,10 @@
         <item>
             <key> <string>group_list</string> </key>
             <value>
-              <tuple/>
+              <tuple>
+                <string>model_path</string>
+                <string>transformation</string>
+              </tuple>
             </value>
         </item>
         <item>
@@ -46,11 +49,15 @@
         </item>
         <item>
             <key> <string>init_script</string> </key>
-            <value> <string></string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>permission</string> </key>
-            <value> <string></string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>title</string> </key>
