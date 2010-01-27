@@ -57,7 +57,6 @@
             <value>
               <tuple>
                 <string>model_path</string>
-                <string>transformation</string>
               </tuple>
             </value>
         </item>
