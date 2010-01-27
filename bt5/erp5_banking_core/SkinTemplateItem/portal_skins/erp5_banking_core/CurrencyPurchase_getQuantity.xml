@@ -77,7 +77,9 @@ if commission_price is not None:\n
 quantity = price - commission_value\n
 quantity = round(quantity,0)\n
 if quantity!=context.getQuantity():\n
-  if context.Base_getAssignorId()==False and context.getQuantity() is not None:\n
+  #verify that when the quantity is already calculated by another user,it does not need\n
+  # to be calculated again, just return the value already calculated \n
+  if context.Base_userHasModidyPortalContentPermission()==False and context.getQuantity() is not None:\n
     return quantity\n
   else:\n
     context.setQuantity(quantity)\n
