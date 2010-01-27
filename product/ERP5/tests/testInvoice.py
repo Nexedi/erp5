@@ -2454,7 +2454,6 @@ class TestSaleInvoiceMixin(TestInvoiceMixin,
           },
         'Payment Rule': {
           'parent_movement_type_list': invoice.getPortalAccountingMovementTypeList(),
-          'parent_id_list': ['receivable'],
           'next_rule_list': [],
           },
         }
