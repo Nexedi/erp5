@@ -105,9 +105,19 @@ class PaymentRuleMovementGenerator(MovementGeneratorMixin):
             ._getInputMovementAndPathTupleList(context):
       kw = self._getPropertyAndCategoryList(input_movement, business_path)
       kw.update({'order':None,'delivery':None})
+      quantity = kw.pop('quantity', 0)
+      # one for payable
       simulation_movement = context.newContent(
         portal_type=RuleMixin.movement_type,
         temp_object=True,
+        quantity=-quantity,
+        **kw)
+      ret.append(simulation_movement)
+      # one for bank
+      simulation_movement = context.newContent(
+        portal_type=RuleMixin.movement_type,
+        temp_object=True,
+        quantity=quantity,
         **kw)
       ret.append(simulation_movement)
     return ret
