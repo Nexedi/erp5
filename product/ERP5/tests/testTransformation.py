@@ -88,3 +88,30 @@ class TestTransformation(TestTransformationMixin, ERP5TypeTestCase):
     # Make sure that the isTested method is working properly on the
     # temp object
     self.assertTrue(aggregated_amount.isTested())
+
+  def test_resourceIsNotAcquiredOnTransformationLines(self):
+    '''
+    We don't want resource define on transformation to be acquired on
+    transformation lines
+    '''
+    transformation = self.createTransformation()
+
+    # create a product
+    portal = self.getPortalObject()
+    product_module = portal.getDefaultModule('Product')
+    product = product_module.newContent(portal_type='Product')
+
+    # set the product as resource of the transformations
+    transformation.setResourceValue(product)
+
+    # add transformations lines and check the don't acquire the resource
+    operation = transformation.newContent(portal_type='Transformation Operation')
+    self.assertEquals(operation.getResource(), None)
+
+    optional_resource = transformation.newContent(portal_type=\
+        'Transformation Optional Resource')
+    self.assertEquals(optional_resource.getResource(), None)
+
+    transformed_resource = transformation.newContent(portal_type=\
+        'Transformation Transformed Resource')
+    self.assertEquals(transformed_resource.getResource(), None)
