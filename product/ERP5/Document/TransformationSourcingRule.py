@@ -191,7 +191,6 @@ class TransformationSourcingRule(TransformationSourcingRuleMixin, Rule):
               'quantity_unit': parent_movement.getQuantityUnit(),
               'start_date': previous_supply_link.calculateStartDate(stop_date),
               'stop_date': stop_date,
-              'deliverable': 1,
               # Save the value of the current supply link
               'causality_value': previous_supply_link,
             }

@@ -118,7 +118,6 @@ class TransformationSourcingModelRule(TransformationModelRuleMixin, Rule):
       quantity_unit=parent_movement.getQuantityUnit(),
       start_date=start_date,
       stop_date=stop_date,
-      deliverable=1,
       )
 
     factory.makeMovements(applied_rule)

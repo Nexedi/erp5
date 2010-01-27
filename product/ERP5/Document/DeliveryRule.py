@@ -109,7 +109,6 @@ class DeliveryRule(Rule):
               order_ratio=1,
               delivery_value=deliv_mvt,
               delivery_ratio=1,
-              deliverable=1,
 
               source=deliv_mvt.getSource(),
               source_section=deliv_mvt.getSourceSection(),
@@ -153,7 +152,6 @@ class DeliveryRule(Rule):
             sim_mvt.edit(
                 delivery_value=deliv_mvt,
                 delivery_ratio=1,
-                deliverable=1,
 
                 source=deliv_mvt.getSource(),
                 source_section=deliv_mvt.getSourceSection(),
@@ -283,5 +281,4 @@ class DeliveryRule(Rule):
     return {
       'order_list': [movement.getRelativeUrl()],
       'delivery_list': [movement.getRelativeUrl()],
-      'deliverable': 1,
     }

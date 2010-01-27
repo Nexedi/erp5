@@ -84,7 +84,6 @@ class TaxRule(DeliveryRule):
                 order_value=tax_movement,
                 order_ratio=1,
                 delivery_ratio=1,
-                deliverable=1,
                 **property_dict )
         else:
           for existing_simulation_movement in \

@@ -210,5 +210,4 @@ class OrderRule(DeliveryRule):
     """Order rule specific update dictionary"""
     return {
       'order_list': [movement.getRelativeUrl()],
-      'deliverable': 1,
     }

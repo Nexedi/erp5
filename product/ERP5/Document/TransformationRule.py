@@ -120,7 +120,6 @@ class TransformationRule(TransformationSourcingRuleMixin, Rule):
           "source_section_list": (),
           "destination": production,
           "destination_section": production_section,
-          "deliverable": 1,
           'start_date': current_supply_link.calculateStartDate(stop_date),
           'stop_date': stop_date,
           'causality_value': current_supply_link,
@@ -199,7 +198,6 @@ class TransformationRule(TransformationSourcingRuleMixin, Rule):
             "destination_section_list": (),
             "source": production,
             "source_section": production_section,
-            "deliverable": 1,
             "variation_category_list": category_list+ind_phase_list,
             "variation_property_dict": \
                         parent_movement.getVariationPropertyDict(),
@@ -261,7 +259,6 @@ class TransformationRule(TransformationSourcingRuleMixin, Rule):
           "destination_section_list": (),
           "source": production,
           "source_section": production_section,
-          "deliverable": 1,
           'causality_value': current_supply_link,
         }
       return consumed_movement_dict

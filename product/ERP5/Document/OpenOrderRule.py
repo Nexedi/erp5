@@ -92,7 +92,6 @@ class OpenOrderRule(DeliveryRule):
             order_value=order_movement,
             order_ratio=1,
             delivery_ratio=1,
-            deliverable=1,
             **property_dict
             )
 
