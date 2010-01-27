@@ -37,11 +37,15 @@ from Products.ERP5.mixin.rule import RuleMixin
 from Products.ERP5.mixin.movement_collection_updater import \
      MovementCollectionUpdaterMixin
 from Products.ERP5.mixin.movement_generator import MovementGeneratorMixin
-from Products.ERP5.MovementCollectionDiff import _getPropertyAndCategoryList
 
-# XXX this class should be moved to Rule.py once new simulation is fully
-# integrated.
-class Rule(RuleMixin, MovementCollectionUpdaterMixin, Predicate):
+class TradeModelRule(RuleMixin, MovementCollectionUpdaterMixin, Predicate):
+  """
+    Rule for Trade Model
+  """
+  # CMF Type Definition
+  meta_type = 'ERP5 Trade Model Rule'
+  portal_type = 'Trade Model Rule'
+
   # Declarative security
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
@@ -63,35 +67,6 @@ class Rule(RuleMixin, MovementCollectionUpdaterMixin, Predicate):
     PropertySheet.Version,
     PropertySheet.Rule
     )
-
-  security.declareProtected(Permissions.View, 'getDivergenceList')
-  def getDivergenceList(self, movement):
-    """
-    Returns a list of divergences of the movements provided
-    in delivery_or_movement.
-
-    movement -- a movement, a delivery, a simulation movement,
-                or a list thereof
-    """
-    if movement.getDelivery() is None:
-      return []
-    result_list = []
-    for divergence_tester in self._getDivergenceTesterList(
-      exclude_quantity=False):
-      result = divergence_tester.explain(movement)
-      if isinstance(result, (list, tuple)): # for compatibility
-        result_list.extend(result)
-      elif result is not None:
-        result_list.append(result)
-    return result_list
-
-class TradeModelRule(Rule):
-  """
-    Rule for Trade Model
-  """
-  # CMF Type Definition
-  meta_type = 'ERP5 Trade Model Rule'
-  portal_type = 'Trade Model Rule'
 
   def _getMovementGenerator(self):
     """

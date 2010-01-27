@@ -39,9 +39,17 @@ from Products.ERP5.mixin.movement_collection_updater import \
 from Products.ERP5.MovementCollectionDiff import _getPropertyAndCategoryList
 from Products.ERP5.Document.PredicateMatrix import PredicateMatrix
 
-# XXX this class should be moved to Rule.py once new simulation is fully
-# integrated.
-class Rule(RuleMixin, MovementCollectionUpdaterMixin, Predicate):
+class InvoiceTransactionRule(RuleMixin, MovementCollectionUpdaterMixin, Predicate, PredicateMatrix):
+  """
+  Invoice Transaction Rule object generates accounting movements for
+  each invoice movement based on category membership and other
+  predicated. Template accounting movements are stored in cells inside
+  an instance of the InvoiceTransactionRule.
+  """
+  # CMF Type Definition
+  meta_type = 'ERP5 Invoice Transaction Rule'
+  portal_type = 'Invoice Transaction Rule'
+
   # Declarative security
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
@@ -63,38 +71,6 @@ class Rule(RuleMixin, MovementCollectionUpdaterMixin, Predicate):
     PropertySheet.Version,
     PropertySheet.Rule
     )
-
-  security.declareProtected(Permissions.View, 'getDivergenceList')
-  def getDivergenceList(self, movement):
-    """
-    Returns a list of divergences of the movements provided
-    in delivery_or_movement.
-
-    movement -- a movement, a delivery, a simulation movement,
-                or a list thereof
-    """
-    if movement.getDelivery() is None:
-      return []
-    result_list = []
-    for divergence_tester in self._getDivergenceTesterList(
-      exclude_quantity=False):
-      result = divergence_tester.explain(movement)
-      if isinstance(result, (list, tuple)): # for compatibility
-        result_list.extend(result)
-      elif result is not None:
-        result_list.append(result)
-    return result_list
-
-class InvoiceTransactionRule(Rule, PredicateMatrix):
-  """
-  Invoice Transaction Rule object generates accounting movements for
-  each invoice movement based on category membership and other
-  predicated. Template accounting movements are stored in cells inside
-  an instance of the InvoiceTransactionRule.
-  """
-  # CMF Type Definition
-  meta_type = 'ERP5 Invoice Transaction Rule'
-  portal_type = 'Invoice Transaction Rule'
 
   def _getMovementGenerator(self):
     """
