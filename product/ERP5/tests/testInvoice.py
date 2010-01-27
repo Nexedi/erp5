@@ -2114,7 +2114,9 @@ class TestSaleInvoiceMixin(TestInvoiceMixin,
     for builder in self.getPortal().portal_deliveries.objectValues():
       builder.build()
     self.assertEquals(sale_invoice_transaction_count,
-                      len(accounting_module.objectValues()))
+                      len(accounting_module.objectValues(
+      portal_type=('Sale Invoice Transaction',
+                   'Purchase Invoice Transaction'))))
 
   def stepModifyInvoicesDate(self, sequence=None,
                                            sequence_list=None, **kw):
