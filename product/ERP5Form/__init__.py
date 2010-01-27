@@ -45,6 +45,7 @@ from Tool import SelectionTool
 import OOoChart, PDFTemplate, Report, PDFForm, ParallelListField
 import PlanningBox, POSBox, FormBox, EditorField, ProxyField, DurationField
 import RelationField, ImageField, MultiRelationField, MultiLinkField, InputButtonField
+import CaptchaField
 import PreferenceTool
 
 from Products.Formulator.FieldRegistry import FieldRegistry
@@ -143,7 +144,9 @@ def initialize( context ):
                                 'www/StringField.gif')
     FieldRegistry.registerField(OOoChart.OOoChart,
                                 'www/StringField.gif')
- 
+    FieldRegistry.registerField(CaptchaField.CaptchaField,
+                                'www/StringField.gif')
+
     # some helper fields
     FieldRegistry.registerField(HelperFields.ListTextAreaField)
     FieldRegistry.registerField(HelperFields.MethodField)
