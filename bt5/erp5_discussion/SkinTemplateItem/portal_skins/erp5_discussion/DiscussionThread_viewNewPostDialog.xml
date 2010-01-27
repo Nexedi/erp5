@@ -99,6 +99,7 @@
                     <value>
                       <list>
                         <string>your_title</string>
+                        <string>your_captcha</string>
                       </list>
                     </value>
                 </item>
