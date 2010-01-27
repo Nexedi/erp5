@@ -246,7 +246,7 @@ class ERP5TypeInformation(XMLObject,
       'supply', 'supply_path', 'inventory_movement', 'tax_movement',
       # PDM
       'transformation', 'variation', 'sub_variation',
-      'product', 'service',
+      'product', 'service', 'model_path',
       # Accounting
       'accounting_transaction', 'accounting_movement',
       'invoice', 'invoice_movement', 'balance_transaction_line',
