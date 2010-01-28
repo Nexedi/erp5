@@ -807,12 +807,6 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
     document = self.portal.document_module.newContent(portal_type='PDF')
     # Here we use edit instead of setFile,
     # because only edit method set filename as source_reference.
-    # This is a feature related to portal_contribution,
-    # sometimes filename is replaced by value provided by
-    # rewriteIngestionData type based method.
-    # setFile should keep value provided by portal_contribution
-    # instead of reading it from file itself.
-    # See special parameter set_filename__ in ERP5.Tool.ContributionTool
     document.edit(file=upload_file)
     self.assertEquals('application/pdf', document.getContentType())
 
