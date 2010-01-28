@@ -78,6 +78,10 @@ from zLOG import LOG
 
 COPYRIGHT = "Copyright (c) 2002-%s Nexedi SA and Contributors. All Rights Reserved." % DateTime().year()
 LOCAL_DIRECTORY_LIST = ('Document', 'Extensions', 'Constraint', 'tests', 'PropertySheet')
+ATTRIBUTE_INSPECTION_SKIP_LIST = '''
+__implemented__
+__provides__
+'''.strip().splitlines()
 
 
 class ClassToolMixIn:
@@ -878,6 +882,9 @@ def initialize( context ):
           dochelper.setInheritanceList([type(x) for x in my_class.__bases__])
         #dochelper.my_security =
         for k, v in my_class.__dict__.items():
+          if k in ATTRIBUTE_INSPECTION_SKIP_LIST:
+            # skip attributes we don't know how to inspect
+            continue
           subdochelper = newTempDocumentationHelper(dochelper, k, title=k,
                            description=inspect.getdoc(v),
                            security=pformat(getattr(my_class,
