@@ -242,7 +242,7 @@ class FormPrintout(Implicit, Persistent, RoleManager, Item):
       format = REQUEST.get('format', None)
     if format is None:
       if REQUEST is not None:
-        REQUEST.RESPONSE.setHeader('Content-Type','%s; charset=utf-8' % content_type)
+        REQUEST.RESPONSE.setHeader('Content-Type','%s' % content_type)
         REQUEST.RESPONSE.setHeader('Content-disposition',
                                    'inline;filename="%s%s"' % (self.title_or_id(), guess_extension(content_type)))
       return printout

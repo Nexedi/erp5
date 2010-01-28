@@ -155,7 +155,7 @@ class TestFormPrintoutAsODT(TestFormPrintoutMixin):
     content_xml = builder.extract("content.xml")
     self.assertTrue(content_xml.find("Foo title!") > 0)
     self.assertEqual(request.RESPONSE.getHeader('content-type'),
-                     'application/vnd.oasis.opendocument.text; charset=utf-8')
+                     'application/vnd.oasis.opendocument.text')
     self.assertEqual(request.RESPONSE.getHeader('content-disposition'),
                      'inline;filename="Foo_viewAsPrintout.odt"')
     self._validate(odf_document)
@@ -206,8 +206,7 @@ class TestFormPrintoutAsODT(TestFormPrintoutMixin):
     builder = OOoBuilder(odf_document)
     content_xml = builder.extract("content.xml")
     self.assertTrue(content_xml.find("call!") > 0)
-    # when just call FormPrintout, it does not change content-type
-    self.assertEqual(request.RESPONSE.getHeader('content-type'), 'text/html')
+    self.assertEqual(request.RESPONSE.getHeader('content-type'), 'application/vnd.oasis.opendocument.text')
     self._validate(odf_document)
 
     # 5. Normal case: utf-8 string
