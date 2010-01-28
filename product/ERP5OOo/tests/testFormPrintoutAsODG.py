@@ -148,7 +148,7 @@ class TestFormPrintoutAsODG(TestFormPrintoutMixin):
 
     request = self.app.REQUEST
     # 1. Normal case: "my_title" field to the "my_title" reference in the ODF document
-    odf_document = foo_printout.index_html(REQUEST=request)
+    odf_document = foo_printout.index_html(request)
     self.assertTrue(odf_document is not None)
     builder = OOoBuilder(odf_document)
     content_xml = builder.extract("content.xml")
@@ -168,7 +168,7 @@ class TestFormPrintoutAsODG(TestFormPrintoutMixin):
     # 2. Normal case: change the field value and check again the ODF document
     test1.setTitle("Changed Title!")
     #foo_form.my_title.set_value('default', "Changed Title!")
-    odf_document = foo_printout.index_html(REQUEST=request)
+    odf_document = foo_printout.index_html(request)
     self.assertTrue(odf_document is not None)
     builder = OOoBuilder(odf_document)
     content_xml = builder.extract("content.xml")
@@ -180,7 +180,7 @@ class TestFormPrintoutAsODG(TestFormPrintoutMixin):
     # rename id 'my_title' to 'xxx_title', then does not match in the ODF document
     foo_form = portal.foo_module.test1.Foo_view
     foo_form.manage_renameObject('my_title', 'xxx_title', REQUEST=request)
-    odf_document = foo_printout.index_html(REQUEST=request)
+    odf_document = foo_printout.index_html(request)
     self.assertTrue(odf_document is not None)
     builder = OOoBuilder(odf_document)
     content_xml = builder.extract("content.xml")
@@ -195,7 +195,7 @@ class TestFormPrintoutAsODG(TestFormPrintoutMixin):
     foo_printout.template = None
     # template == None, causes a ValueError
     try:
-      foo_printout.index_html(REQUEST=request)
+      foo_printout.index_html(request)
     except ValueError, e:
       # e -> 'Can not create a ODF Document without a odf_template'
       self.assertTrue(True)
@@ -206,7 +206,7 @@ class TestFormPrintoutAsODG(TestFormPrintoutMixin):
     # 5. Normal case: just call a FormPrintout object
     request.RESPONSE.setHeader('Content-Type', 'text/html')
     test1.setTitle("call!")
-    odf_document = foo_printout() # call
+    odf_document = foo_printout(request) # call
     self.assertTrue(odf_document is not None)
     builder = OOoBuilder(odf_document)
     content_xml = builder.extract("content.xml")
@@ -217,7 +217,7 @@ class TestFormPrintoutAsODG(TestFormPrintoutMixin):
 
     # 5. Normal case: utf-8 string
     test1.setTitle("Français")
-    odf_document = foo_printout()
+    odf_document = foo_printout(request)
     self.assertTrue(odf_document is not None)
     builder = OOoBuilder(odf_document)
     content_xml = builder.extract("content.xml")
@@ -226,7 +226,7 @@ class TestFormPrintoutAsODG(TestFormPrintoutMixin):
 
     # 6. Normal case: unicode string
     test1.setTitle(u'Français test2')
-    odf_document = foo_printout()
+    odf_document = foo_printout(request)
     self.assertTrue(odf_document is not None)
     builder = OOoBuilder(odf_document)
     content_xml = builder.extract("content.xml")
@@ -274,7 +274,7 @@ class TestFormPrintoutAsODG(TestFormPrintoutMixin):
 
     request = self.app.REQUEST
     # 1. Normal case: "my_title" field to the "my_title" reference in the ODF document
-    odf_document = foo_printout.index_html(REQUEST=request)
+    odf_document = foo_printout.index_html(request)
     self.assertTrue(odf_document is not None)
     # validate the generated document
     self._validate(odf_document)
@@ -303,6 +303,7 @@ class TestFormPrintoutAsODG(TestFormPrintoutMixin):
     form.ImageField
     """
     # create a new person
+    request = self.portal.REQUEST
     person_module = self.portal.getDefaultModule('Person')
     if person_module._getOb('person1', None) is None:
       person_module.newContent(id='person1', portal_type='Person')
@@ -326,7 +327,7 @@ class TestFormPrintoutAsODG(TestFormPrintoutMixin):
     image_view_field.values['default'] = image.absolute_url_path()
 
     # 01 - Normal image mapping
-    odf_document = foo_printout()
+    odf_document = foo_printout(request)
     self.assertTrue(odf_document is not None)
     self._validate(odf_document)
     builder = OOoBuilder(odf_document)
@@ -355,7 +356,7 @@ class TestFormPrintoutAsODG(TestFormPrintoutMixin):
 
     # 02: No image defined
     image_view_field.values['default'] = ''
-    odf_document = foo_printout()
+    odf_document = foo_printout(request)
     self.assertTrue(odf_document is not None)
     builder = OOoBuilder(odf_document)
     content_xml = builder.extract("content.xml")
@@ -398,7 +399,7 @@ class TestFormPrintoutAsODG(TestFormPrintoutMixin):
 
     request = self.app.REQUEST
     # 1. Normal case: "my_title" field to the "my_title" reference in the ODF document
-    odf_document = foo_printout.index_html(REQUEST=request)
+    odf_document = foo_printout.index_html(request)
     self.assertTrue(odf_document is not None)
     builder = OOoBuilder(odf_document)
     content_xml = builder.extract("content.xml")
@@ -418,7 +419,7 @@ class TestFormPrintoutAsODG(TestFormPrintoutMixin):
     # 2. Normal case: change the field value and check again the ODF document
     test1.setTitle("Changed Title!")
     #foo_form.my_title.set_value('default', "Changed Title!")
-    odf_document = foo_printout.index_html(REQUEST=request)
+    odf_document = foo_printout.index_html(request)
     self.assertTrue(odf_document is not None)
     builder = OOoBuilder(odf_document)
     content_xml = builder.extract("content.xml")
@@ -430,7 +431,7 @@ class TestFormPrintoutAsODG(TestFormPrintoutMixin):
     # rename id 'my_title' to 'xxx_title', then does not match in the ODF document
     foo_form = portal.foo_module.test1.Foo_viewProxyField
     foo_form.manage_renameObject('my_title', 'xxx_title', REQUEST=request)
-    odf_document = foo_printout.index_html(REQUEST=request)
+    odf_document = foo_printout.index_html(request)
     self.assertTrue(odf_document is not None)
     builder = OOoBuilder(odf_document)
     content_xml = builder.extract("content.xml")
@@ -456,7 +457,7 @@ class TestFormPrintoutAsODG(TestFormPrintoutMixin):
     # 5. Normal case: just call a FormPrintout object
     request.RESPONSE.setHeader('Content-Type', 'text/html')
     test1.setTitle("call!")
-    odf_document = foo_printout() # call
+    odf_document = foo_printout(request) # call
     self.assertTrue(odf_document is not None)
     builder = OOoBuilder(odf_document)
     content_xml = builder.extract("content.xml")
@@ -467,7 +468,7 @@ class TestFormPrintoutAsODG(TestFormPrintoutMixin):
 
     # 5. Normal case: utf-8 string
     test1.setTitle("Français")
-    odf_document = foo_printout()
+    odf_document = foo_printout(request)
     self.assertTrue(odf_document is not None)
     builder = OOoBuilder(odf_document)
     content_xml = builder.extract("content.xml")
@@ -476,7 +477,7 @@ class TestFormPrintoutAsODG(TestFormPrintoutMixin):
 
     # 6. Normal case: unicode string
     test1.setTitle(u'Français test2')
-    odf_document = foo_printout()
+    odf_document = foo_printout(request)
     self.assertTrue(odf_document is not None)
     builder = OOoBuilder(odf_document)
     content_xml = builder.extract("content.xml")

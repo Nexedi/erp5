@@ -201,7 +201,7 @@ class TestFormPrintoutAsODT(TestFormPrintoutMixin):
     # 5. Normal case: just call a FormPrintout object
     request.RESPONSE.setHeader('Content-Type', 'text/html')
     test1.setTitle("call!")
-    odf_document = foo_printout() # call
+    odf_document = foo_printout(request) # call
     self.assertTrue(odf_document is not None)
     builder = OOoBuilder(odf_document)
     content_xml = builder.extract("content.xml")
@@ -212,7 +212,7 @@ class TestFormPrintoutAsODT(TestFormPrintoutMixin):
 
     # 5. Normal case: utf-8 string
     test1.setTitle("Français")
-    odf_document = foo_printout()
+    odf_document = foo_printout(self.portal.REQUEST)
     self.assertTrue(odf_document is not None)
     builder = OOoBuilder(odf_document)
     content_xml = builder.extract("content.xml")
@@ -221,7 +221,7 @@ class TestFormPrintoutAsODT(TestFormPrintoutMixin):
 
     # 6. Normal case: unicode string
     test1.setTitle(u'Français test2')
-    odf_document = foo_printout()
+    odf_document = foo_printout(self.portal.REQUEST)
     self.assertTrue(odf_document is not None)
     builder = OOoBuilder(odf_document)
     content_xml = builder.extract("content.xml")
@@ -237,7 +237,7 @@ class TestFormPrintoutAsODT(TestFormPrintoutMixin):
     week = foo_form.week
     week.values['default'] = ['line1', 'line2']
 
-    odf_document = foo_printout()
+    odf_document = foo_printout(self.portal.REQUEST)
     self.assertTrue(odf_document is not None)
     #test_output = open("/tmp/test_01_Paragraph_07_LinesField.odf", "w")
     #test_output.write(odf_document)
@@ -262,7 +262,7 @@ class TestFormPrintoutAsODT(TestFormPrintoutMixin):
     number.values['default'] = '543210'
     # set a float field format
     number.values['input_style'] = '-1 234.5'
-    odf_document = foo_printout()
+    odf_document = foo_printout(self.portal.REQUEST)
     self.assertTrue(odf_document is not None)
     #test_output = open("/tmp/test_01_Paragraph_08_Filed_Format.odf", "w")
     #test_output.write(odf_document)
@@ -274,7 +274,7 @@ class TestFormPrintoutAsODT(TestFormPrintoutMixin):
 
     # change format
     number.values['input_style'] = '-1234.5'
-    odf_document = foo_printout()
+    odf_document = foo_printout(self.portal.REQUEST)
     self.assertTrue(odf_document is not None)
     builder = OOoBuilder(odf_document)
     content_xml = builder.extract("content.xml")
@@ -292,7 +292,7 @@ class TestFormPrintoutAsODT(TestFormPrintoutMixin):
     test_title = foo_form.my_test_title
     test_title.values['default'] = 'ZZZ test here ZZZ'
 
-    odf_document = foo_printout()
+    odf_document = foo_printout(self.portal.REQUEST)
     self.assertTrue(odf_document is not None)
     #test_output = open("/tmp/test_01_Paragraph_09_RangeReferenceWithSpan.odf", "w")
     #test_output.write(odf_document)
@@ -819,7 +819,7 @@ return report_section_list
                                    form_name='FooReport_view',
                                    template='Foo2_getODTStyleSheet')
     self._validate(self.getODFDocumentFromPrintout(foo_report_printout))
-    odf_document = foo_report_printout()
+    odf_document = foo_report_printout(self.portal.REQUEST)
 
     #test_output = open("/tmp/test_04_Iteratoin.odf", "w")
     #test_output.write(odf_document)
@@ -847,7 +847,7 @@ r"""
 return []
 """
       )
-    odf_document = foo_report_printout()
+    odf_document = foo_report_printout(self.portal.REQUEST)
     #test_output = open("/tmp/test_04_02_Iteratoin.odf", "w")
     #test_output.write(odf_document)
     self.assertTrue(odf_document is not None)
@@ -923,7 +923,7 @@ return report_section_list
                                    form_name='FooReport_view',
                                    template='Foo3_getODTStyleSheet')
     self._validate(self.getODFDocumentFromPrintout(foo_report_printout))
-    odf_document = foo_report_printout()
+    odf_document = foo_report_printout(self.portal.REQUEST)
 
     #test_output = open("/tmp/test_04_Iteratoin_02_Section_01.odf", "w")
     #test_output.write(odf_document)
@@ -951,7 +951,7 @@ r"""
 return []
 """
       )
-    odf_document = foo_report_printout()
+    odf_document = foo_report_printout(self.portal.REQUEST)
     #test_output = open("/tmp/test_04_Iteratoin_02_Section_02.odf", "w")
     #test_output.write(odf_document)
     self.assertTrue(odf_document is not None)
@@ -1035,7 +1035,7 @@ return report_section_list
                                    form_name='Foo2_view',
                                    template='Foo4_getODTStyleSheet')
     self._validate(self.getODFDocumentFromPrintout(foo_report_printout))
-    odf_document = foo_report_printout()
+    odf_document = foo_report_printout(self.portal.REQUEST)
 
     # test_output = open("/tmp/test_04_Iteratoin_03_Section_01.odf", "w")
     # test_output.write(odf_document)
@@ -1063,7 +1063,7 @@ r"""
 return []
 """
       )
-    odf_document = foo_report_printout()
+    odf_document = foo_report_printout(self.portal.REQUEST)
     #test_output = open("/tmp/test_04_Iteratoin_02_Section_02.odf", "w")
     #test_output.write(odf_document)
     self.assertTrue(odf_document is not None)
@@ -1110,7 +1110,7 @@ return []
     my_default_image_absolute_url.values['default'] = image.absolute_url_path()
 
     # 01: Normal
-    odf_document = foo_printout()
+    odf_document = foo_printout(self.portal.REQUEST)
     self.assertTrue(odf_document is not None)
     builder = OOoBuilder(odf_document)
     content_xml = builder.extract("content.xml")
@@ -1128,7 +1128,7 @@ return []
 
     # 02: no image data
     my_default_image_absolute_url.values['default'] = ''
-    odf_document = foo_printout()
+    odf_document = foo_printout(self.portal.REQUEST)
     self.assertTrue(odf_document is not None)
     builder = OOoBuilder(odf_document)
     content_xml = builder.extract("content.xml")
@@ -1168,7 +1168,7 @@ return []
     checkbox = getattr(foo_form, field_name)
 
     checkbox.values['default'] = 1
-    odf_document = foo_printout()
+    odf_document = foo_printout(self.portal.REQUEST)
     self._validate(odf_document)
     builder = OOoBuilder(odf_document)
     content_xml = builder.extract("content.xml")
@@ -1177,7 +1177,7 @@ return []
     self.assertTrue(node.get('{%s}current-state' % document_tree.nsmap['form']))
 
     checkbox.values['default'] = 0
-    odf_document = foo_printout()
+    odf_document = foo_printout(self.portal.REQUEST)
     self._validate(odf_document)
     builder = OOoBuilder(odf_document)
     content_xml = builder.extract("content.xml")
