@@ -189,13 +189,7 @@ class TestFormPrintoutAsODT(TestFormPrintoutMixin):
     self.assertTrue(foo_printout.template == 'Foo_getODTStyleSheet')
     tmp_template = foo_printout.template
     foo_printout.template = None
-    # template == None, causes a ValueError
-    try:
-      foo_printout.index_html(REQUEST=request)
-    except ValueError, e:
-      # e -> 'Can not create a ODF Document without a odf_template'
-      self.assertTrue(True)
-
+    self.assertRaises(ValueError, foo_printout.index_html, request)
     # put back
     foo_printout.template = tmp_template
 
