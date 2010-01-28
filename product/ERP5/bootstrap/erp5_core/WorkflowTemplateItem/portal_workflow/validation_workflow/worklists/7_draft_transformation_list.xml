@@ -15,7 +15,7 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Transformation to Validate (%(count)s)</string> </value>
+            <value> <string>Transformations to Validate (%(count)s)</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
@@ -27,7 +27,7 @@ transformation_module/view?validation_state=draft&local_roles=%(local_roles)s&re
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Transformation To Validate</string> </value>
+            <value> <string>Transformations To Validate</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
