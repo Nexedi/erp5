@@ -1443,6 +1443,8 @@ class TestIngestion(ERP5TypeTestCase):
     my_filename = 'Something.doc'
     document = contribution_tool.newContent(file=file_object,
                                             file_name=my_filename)
+    transaction.commit()
+    self.tic()
     self.assertEquals(document.getSourceReference(), my_filename)
 
 # Missing tests
