@@ -10950,6 +10950,9 @@ msgstr "Produit transformé"
 msgid "Transformations"
 msgstr "Transformations"
 
+msgid "Transformations to Validate"
+msgstr "Transformations à valider"
+
 msgid "Transformed Resource"
 msgstr "Fournitures"
 
