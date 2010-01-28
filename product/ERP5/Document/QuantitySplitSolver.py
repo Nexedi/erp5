@@ -29,7 +29,7 @@
 
 import zope.interface
 from AccessControl import ClassSecurityInfo
-from Products.CMFCore.utils import getToolByName
+from Acquisition import aq_base
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5.mixin.solver import SolverMixin
@@ -76,12 +76,19 @@ class QuantitySplitSolver(SolverMixin, ConfigurableMixin, XMLObject):
       split_list = delivery_solver.setTotalQuantity(decision_quantity)
       # Create split movements
       for (simulation_movement, split_quantity) in split_list:
+        split_index = 0
+        new_id = "%s_split_%s" % (simulation_movement.getId(), split_index)
+        applied_rule = simulation_movement.getParentValue()
+        while getattr(aq_base(applied_rule), new_id, None) is not None:
+          split_index += 1
+          new_id = "%s_split_%s" % (simulation_movement.getId(), split_index)
         # Copy at same level
         kw = _getPropertyAndCategoryList(simulation_movement)
         kw.update({'portal_type':simulation_movement.getPortalType(),
-                              'delivery':None,
-                              'quantity':split_quantity})
-        new_movement = simulation_movement.getParentValue().newContent(**kw)
+                   'id':new_id,
+                   'delivery':None,
+                   'quantity':split_quantity})
+        new_movement = applied_rule.newContent(**kw)
         start_date = configuration_dict.get('start_date', None)
         if start_date is not None:
           new_movement.recordProperty('start_date')
