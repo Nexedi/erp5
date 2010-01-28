@@ -162,7 +162,7 @@ class TestDateUtils(unittest.TestCase):
         self.assertEqual(date, '2008-11-03')
 
   def test_atTheEndOfPeriod(self):
-    date = DateTime('2008/01/01 00:00:00 UTC')
+    date = DateTime('2008/01/01 00:00:00 Universal')
     self.assertEqual(atTheEndOfPeriod(date, 'year').pCommonZ(), 'Jan. 1, 2009 12:00 am Universal')
     self.assertEqual(atTheEndOfPeriod(date, 'month').pCommonZ(), 'Feb. 1, 2008 12:00 am Universal')
     self.assertEqual(atTheEndOfPeriod(date, 'week').pCommonZ(), 'Jan. 7, 2008 12:00 am Universal')
