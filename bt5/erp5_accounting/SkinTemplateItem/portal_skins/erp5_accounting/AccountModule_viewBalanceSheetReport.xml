@@ -83,11 +83,13 @@ dQEAAAAA</string> </value>
               at_date_previous_period python:modules["DateTime"].DateTime(at_date.year() - 1, at_date.month(), at_date.day()).latestTime();\n
               date_formatter nocall:here/Base_viewFieldLibrary/my_date/render_pdf;\n
               from_date python:context.Base_getAccountingPeriodStartDateForSectionCategory(section_category=request["section_category"], date=at_date);\n
+              from_date_previous_period python:context.Base_getAccountingPeriodStartDateForSectionCategory(section_category=request["section_category"], date=at_date_previous_period);\n
               portal_type here/getPortalAccountingMovementTypeList;\n
               section_uid python: context.Base_getSectionUidListForSectionCategory(request["section_category"]);\n
               financial_section python:context.getPortalObject().portal_categories.financial_section;\n
               getInventory python: lambda **kw: context.portal_simulation.getInventoryAssetPrice(section_uid=section_uid, simulation_state=request["simulation_state"], function=request.get("function") or None, project=request.get("project") or None, at_date=at_date, portal_type=portal_type, **kw);\n
               getInventoryIncomeAccount python: lambda **kw:context.portal_simulation.getInventoryAssetPrice(section_uid=section_uid, simulation_state=request["simulation_state"], function=request.get("function") or None, project=request.get("project") or None, at_date=at_date, from_date=from_date, portal_type=portal_type, **kw);\n
+              getInventoryIncomeAccountPreviousPeriod python: lambda **kw:context.portal_simulation.getInventoryAssetPrice(section_uid=section_uid, simulation_state=request["simulation_state"], function=request.get("function") or None, project=request.get("project") or None, at_date=at_date_previous_period, from_date=from_date_previous_period, portal_type=portal_type, **kw);\n
               getInventoryPreviousPeriod python: lambda **kw:context.portal_simulation.getInventoryAssetPrice(section_uid=section_uid, simulation_state=request["simulation_state"], function=request.get("function") or None, project=request.get("project") or None, at_date=at_date_previous_period, portal_type=portal_type, **kw);\'\n
   office:version=\'1.0\'>\n
   <office:scripts/>\n
@@ -620,7 +622,27 @@ dQEAAAAA</string> </value>
                         table:style-name=\'report-content-currency2\'>\n
                         <text:p></text:p>\n
                       </table:table-cell>\n
-                    </tal:block></tal:block>\n
+                  </tal:block>\n
+\n
+                  <!-- previous period -->\n
+                  <tal:block\n
+                      tal:define=\'value python: -getInventoryPreviousPeriod(node_category=node_category) - getInventoryIncomeAccountPreviousPeriod(node_category=["financial_section/income", "financial_section/expense"]);\n
+                                  global total_prev_period python: total_prev_period + value;\'>\n
+                    <table:table-cell\n
+                      tal:condition=\'value\'\n
+                      tal:attributes=\'office:value value\'\n
+                      table:style-name=\'report-content-currency2\'\n
+                      office:value=\'123456.56\'\n
+                      office:value-type=\'float\'>\n
+                      <text:p>123 456,56</text:p>\n
+                    </table:table-cell>\n
+                    <table:table-cell\n
+                      tal:condition=\'not:value\'\n
+                      table:style-name=\'report-content-currency2\'>\n
+                      <text:p></text:p>\n
+                    </table:table-cell>\n
+                  </tal:block>\n
+                </tal:block>\n
 \n
                   <tal:block tal:condition=\'python: cat_level_1.getId() != "net_profit"\'>\n
                     <tal:block \n
@@ -640,7 +662,6 @@ dQEAAAAA</string> </value>
                         <text:p></text:p>\n
                       </table:table-cell>\n
                     </tal:block>\n
-                  </tal:block>\n
 \n
                   <!-- previous period -->\n
                   <tal:block\n
@@ -660,6 +681,9 @@ dQEAAAAA</string> </value>
                       <text:p></text:p>\n
                     </table:table-cell>\n
                   </tal:block>\n
+\n
+                  </tal:block>\n
+\n
                 </tal:block>\n
               </table:table-row>\n
             <!-- }}} -->\n
@@ -721,7 +745,27 @@ dQEAAAAA</string> </value>
                         table:style-name=\'report-content-currency2\'>\n
                         <text:p></text:p>\n
                       </table:table-cell>\n
-                    </tal:block></tal:block>\n
+                  </tal:block>\n
+                \n
+                  <!-- previous period -->\n
+                  <tal:block\n
+                      tal:define=\'value python: -getInventoryPreviousPeriod(node_category=[node_category]) - getInventoryIncomeAccountPreviousPeriod(node_category=["financial_section/income", "financial_section/expense"]);\n
+                      global total_prev_period python: total_prev_period + value;\'>\n
+                    <table:table-cell\n
+                      tal:condition=\'value\'\n
+                      tal:attributes=\'office:value value\'\n
+                      table:style-name=\'report-content-currency2\'\n
+                      office:value=\'123456.56\'\n
+                      office:value-type=\'float\'>\n
+                      <text:p>123 456,56</text:p>\n
+                    </table:table-cell>\n
+                    <table:table-cell\n
+                      tal:condition=\'not:value\'\n
+                      table:style-name=\'report-content-currency2\'>\n
+                      <text:p></text:p>\n
+                    </table:table-cell>\n
+                  </tal:block>\n
+                </tal:block>\n
 \n
                   <tal:block tal:condition=\'python: cat_level_2.getId() != "net_profit"\'>\n
                     <tal:block \n
@@ -741,7 +785,6 @@ dQEAAAAA</string> </value>
                         <text:p></text:p>\n
                       </table:table-cell>\n
                     </tal:block>\n
-                  </tal:block>\n
 \n
                   <!-- previous period -->\n
                   <tal:block\n
@@ -761,6 +804,8 @@ dQEAAAAA</string> </value>
                       <text:p></text:p>\n
                     </table:table-cell>\n
                   </tal:block>\n
+                  </tal:block>\n
+\n
               </table:table-row>\n
 \n
               <!-- }}} -->\n
@@ -797,7 +842,28 @@ dQEAAAAA</string> </value>
                       <text:p></text:p>\n
                     </table:table-cell>\n
                    </tal:block>\n
+\n
+                  <!-- previous period -->\n
+                  <tal:block\n
+                      tal:define=\'value python: -getInventoryPreviousPeriod(node_category=[node_category]) - getInventoryIncomeAccountPreviousPeriod(node_category=["financial_section/income", "financial_section/expense"]);\n
+                      global total_prev_period python: total_prev_period + value;\'>\n
+                    <table:table-cell\n
+                      tal:condition=\'value\'\n
+                      tal:attributes=\'office:value value\'\n
+                      table:style-name=\'report-content-currency3\'\n
+                      office:value=\'123456.56\'\n
+                      office:value-type=\'float\'>\n
+                      <text:p>123 456,56</text:p>\n
+                    </table:table-cell>\n
+                    <table:table-cell\n
+                      tal:condition=\'not:value\'\n
+                      table:style-name=\'report-content-currency3\'>\n
+                      <text:p></text:p>\n
+                    </table:table-cell>\n
                   </tal:block>\n
+\n
+                  </tal:block>\n
+\n
                   <tal:block tal:condition=\'python: cat_level_3.getId() != "net_profit"\'>\n
                     <tal:block\n
                       tal:define=\'value python: -getInventory(node_category=node_category);\n
@@ -835,6 +901,7 @@ dQEAAAAA</string> </value>
                       <text:p></text:p>\n
                     </table:table-cell>\n
                   </tal:block>\n
+\n
                 </tal:block>\n
               </tal:block>\n
             </table:table-row>\n
