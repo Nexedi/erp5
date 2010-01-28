@@ -173,8 +173,14 @@ class FormPrintout(Implicit, Persistent, RoleManager, Item):
     self.template = template
 
   security.declareProtected('View', 'index_html')
-  def index_html(self, REQUEST, icon=0, preview=0, width=None, height=None, RESPONSE=None):
-    """Render and view a printout document."""
+  def index_html(self, REQUEST, icon=0, preview=0, width=None, height=None,
+                 RESPONSE=None, format=None, batch_mode=False):
+    """Render and view a printout document.
+
+    format: conversion format requested by User.
+            take precedence of format in REQUEST
+    batch_mode: if True then avoid overriding response headers.
+    """
 
     obj = getattr(self, 'aq_parent', None)
     if obj is not None:
@@ -201,7 +207,8 @@ class FormPrintout(Implicit, Persistent, RoleManager, Item):
     self.strategy = self._createStrategy(content_type)
     printout = self.strategy.render(extra_context=extra_context)
     return self._oooConvertByFormat(printout, content_type,
-                                    extra_context, REQUEST)
+                                    extra_context, REQUEST, 
+                                    format, batch_mode)
 
   security.declareProtected('View', '__call__')
   __call__ = index_html
@@ -227,7 +234,8 @@ class FormPrintout(Implicit, Persistent, RoleManager, Item):
       return ODGStrategy()
     raise ValueError, 'Template type: %s is not supported' % content_type
 
-  def _oooConvertByFormat(self, printout, content_type, extra_context, REQUEST):
+  def _oooConvertByFormat(self, printout, content_type, extra_context,
+                          REQUEST, format, batch_mode):
     """
     Convert the ODF document into the given format.
 
@@ -236,12 +244,13 @@ class FormPrintout(Implicit, Persistent, RoleManager, Item):
     content_type -- the content type of the printout
     extra_context -- extra_context including a format
     REQUEST -- Request object
+    format -- requested output format
+    batch_mode -- Disable headers overriding
     """
-    format = None
-    if REQUEST is not None:
+    if REQUEST is not None and not format:
       format = REQUEST.get('format', None)
-    if format is None:
-      if REQUEST is not None:
+    if not format:
+      if REQUEST is not None and not batch_mode:
         REQUEST.RESPONSE.setHeader('Content-Type','%s' % content_type)
         REQUEST.RESPONSE.setHeader('Content-disposition',
                                    'inline;filename="%s%s"' % (self.title_or_id(), guess_extension(content_type)))
@@ -254,7 +263,7 @@ class FormPrintout(Implicit, Persistent, RoleManager, Item):
                  base_content_type=content_type)
     tmp_ooo.oo_data = printout
     mime, data = tmp_ooo.convert(format)
-    if REQUEST is not None:
+    if REQUEST is not None and not batch_mode:
       REQUEST.RESPONSE.setHeader('Content-type', mime)
       REQUEST.RESPONSE.setHeader('Content-disposition',
           'attachment;filename="%s.%s"' % (self.title_or_id(), format))

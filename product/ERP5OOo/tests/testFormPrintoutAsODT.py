@@ -202,12 +202,12 @@ class TestFormPrintoutAsODT(TestFormPrintoutMixin):
     # 5. Normal case: just call a FormPrintout object
     request.RESPONSE.setHeader('Content-Type', 'text/html')
     test1.setTitle("call!")
-    odf_document = foo_printout(request) # call
+    odf_document = foo_printout(request, batch_mode=True) # call
     self.assertTrue(odf_document is not None)
     builder = OOoBuilder(odf_document)
     content_xml = builder.extract("content.xml")
     self.assertTrue(content_xml.find("call!") > 0)
-    self.assertEqual(request.RESPONSE.getHeader('content-type'), 'application/vnd.oasis.opendocument.text')
+    self.assertEqual(request.RESPONSE.getHeader('content-type'), 'text/html')
     self._validate(odf_document)
 
     # 5. Normal case: utf-8 string
