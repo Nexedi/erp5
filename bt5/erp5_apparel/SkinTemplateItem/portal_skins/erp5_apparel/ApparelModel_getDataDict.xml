@@ -105,8 +105,8 @@ def getShapeMainImagePath():\n
   apparel_shape = context.getSpecialiseValue(portal_type=\'Apparel Shape\')\n
   if apparel_shape:\n
     technical_drawing_list = apparel_shape.contentValues(portal_type=\'Apparel Technical Drawing\')\n
-  if len(technical_drawing_list):\n
-    return technical_drawing_list[0].absolute_url()\n
+    if len(technical_drawing_list):\n
+      return technical_drawing_list[0].absolute_url()\n
   return None\n
 \n
 def getPrototype():\n
@@ -126,7 +126,7 @@ data_dict = {\n
   \'morphology_title\': getMorphologyTitle() or \'\',\n
   \'shape_main_image_path\': getShapeMainImagePath() or \'\',\n
   \'prototype_title\': getPrototype() is not None and \\\n
-      getPrototype().getDestinationReference() or getPrototype().getTitle(),\n
+      getPrototype().getDestinationReference() or \'\',\n
   \'prototype_image_path\': getPrototype() is not None and getPrototype().absolute_url() or \'\',\n
   \'preferred_organisation_image_path\': getPreferredOrganisation() is not None\\\n
       and getPreferredOrganisation().getDefaultImageAbsoluteUrl() or \'\',\n

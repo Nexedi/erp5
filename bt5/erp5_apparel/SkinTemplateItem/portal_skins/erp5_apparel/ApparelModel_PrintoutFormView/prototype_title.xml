@@ -275,7 +275,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.ApparelModel_getPrototype() is not None and here.ApparelModel_getPrototype().getDestinationReference() or here.ApparelModel_getPrototype().getTitle()</string> </value>
+            <value> <string>python: here.ApparelModel_getPrototype() is not None and here.ApparelModel_getPrototype().getDestinationReference() or \'\'</string> </value>
         </item>
       </dictionary>
     </pickle>
