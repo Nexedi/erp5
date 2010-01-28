@@ -138,6 +138,10 @@ class ImageFieldWidget(Widget.TextWidget):
       if image_data is None:
         return draw_frame_node
 
+      # Big images are cut into smaller chunks, so it's required to cast to
+      # str. See OFS/Image -> _read_data method for more informations
+      image_data = str(image_data)
+
       format = content_type.split('/')[-1]
       # add the image to the odg document
       picture_path = ooo_builder.addImage(image=image_data, format=format)
