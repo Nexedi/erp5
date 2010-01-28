@@ -258,7 +258,7 @@
                 </item>
                 <item>
                     <key> <string>image_display</string> </key>
-                    <value> <string>thumbnail</string> </value>
+                    <value> <string>small</string> </value>
                 </item>
                 <item>
                     <key> <string>image_format</string> </key>
