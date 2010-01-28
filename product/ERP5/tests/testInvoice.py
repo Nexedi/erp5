@@ -33,7 +33,7 @@
 
 import transaction
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from Products.ERP5Type.tests.utils import FileUpload
+from Products.ERP5Type.tests.utils import FileUpload, DummyMailHost
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 from Products.ERP5OOo.OOoUtils import OOoParser
 from AccessControl.SecurityManagement import newSecurityManager
@@ -57,6 +57,7 @@ class TestInvoiceMixin(TestPackingListMixin,
   cpt_incoterm = 'cpt'
   unit_piece_quantity_unit = 'unit/piece'
   mass_quantity_unit = 'mass/kg'
+  oldMailhost = None
 
   # (account_id, account_gap, account_type)
   account_definition_list = (
@@ -119,10 +120,18 @@ class TestInvoiceMixin(TestPackingListMixin,
     self.createCategories()
     self.validateRules()
     self.login()
+    self.oldMailHost = getattr(self.portal, 'MailHost', None)
+    if self.oldMailHost is not None:
+      self.portal.manage_delObjects(['MailHost'])
+      self.portal._setObject('MailHost', DummyMailHost('MailHost'))
 
   def beforeTearDown(self):
     transaction.abort()
     self.tic()
+    # restore the original MailHost
+    if self.oldMailHost is not None:
+      self.portal.manage_delObjects(['MailHost'])
+      self.portal._setObject('MailHost', DummyMailHost('MailHost'))
     for folder in (self.portal.accounting_module,
                    self.portal.organisation_module,
                    self.portal.sale_order_module,
