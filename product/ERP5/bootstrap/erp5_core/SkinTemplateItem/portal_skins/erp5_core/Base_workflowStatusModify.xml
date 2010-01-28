@@ -54,19 +54,18 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
+from Products.CMFCore.WorkflowCore import WorkflowException\n
 \n
 o = context.getObject()\n
 \n
-action_list = context.portal_workflow.getActionsFor(o)\n
-action_list = filter(lambda x:x.has_key(\'id\'), action_list )\n
-action_id_list = map(lambda x:x[\'id\'], action_list)\n
-\n
-if workflow_action in action_id_list:\n
+if 1: # keep indentation\n
   try : \n
     context.portal_workflow.doActionFor( o,\n
      workflow_action,\n
      comment=comment,\n
      **kw)\n
+  except WorkflowException:\n
+    pass\n
   except ValidationFailed, message:\n
     if getattr(message, \'msg\', None) and same_type(message.msg, []):\n
       message = \'. \'.join(\'%s\' % x for x in message.msg)\n
@@ -116,13 +115,11 @@ if workflow_action in action_id_list:\n
                             <string>kw</string>
                             <string>Products.DCWorkflow.DCWorkflow</string>
                             <string>ValidationFailed</string>
+                            <string>Products.CMFCore.WorkflowCore</string>
+                            <string>WorkflowException</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>o</string>
-                            <string>action_list</string>
-                            <string>filter</string>
-                            <string>map</string>
-                            <string>action_id_list</string>
                             <string>_apply_</string>
                             <string>message</string>
                             <string>getattr</string>

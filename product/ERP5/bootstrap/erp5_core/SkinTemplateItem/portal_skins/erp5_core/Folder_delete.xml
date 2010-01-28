@@ -56,6 +56,8 @@
             <value> <string encoding="cdata"><![CDATA[
 
 from ZODB.POSException import ConflictError\n
+from Products.CMFCore.WorkflowCore import WorkflowException\n
+\n
 portal = context.getPortalObject()\n
 Base_translateString = portal.Base_translateString\n
 \n
@@ -146,11 +148,13 @@ elif uids is not None:\n
       object_ids = [x.getId() for x in object_to_remove_list]\n
       comment = Base_translateString(\'Deleted objects: ${object_ids}\',\n
                                      mapping={\'object_ids\': object_ids})\n
-      if \'edit_action\' in [x.get(\'id\', \'\') for x in\n
-                           portal.portal_workflow.getActionsFor(context)]:\n
+      try:\n
         # record object deletion in workflow history\n
         portal.portal_workflow.doActionFor(context, \'edit_action\',\n
                                            comment=comment)\n
+      except WorkflowException:\n
+        # no \'edit_action\' transition for this container\n
+        pass\n
 \n
       message = Base_translateString("Deleted.")\n
 \n
@@ -238,6 +242,8 @@ return REQUEST.RESPONSE.redirect("%s%s" % (ret_url, qs))\n
                             <string>md5_object_uid_list</string>
                             <string>ZODB.POSException</string>
                             <string>ConflictError</string>
+                            <string>Products.CMFCore.WorkflowCore</string>
+                            <string>WorkflowException</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>portal</string>
