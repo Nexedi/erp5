@@ -128,7 +128,6 @@ class ContributionTool(BaseTool):
         We always generate ID. So, we must prevent using the one
         which we were provided.
     """
-    user_filename = file_name # store original filename
     if file_name is not None:
       kw['file_name'] = file_name
     if data is not None:
@@ -144,12 +143,11 @@ class ContributionTool(BaseTool):
     document = None
 
     # Try to find the file_name
-    file_name = None
     mime_type = None
     if not url:
       # check if file was provided
       file = kw.get('file', None)
-      if file is not None:
+      if file is not None and file_name is None:
         file_name = file.filename
       else:
         # some channels supply data and file-name separately
@@ -248,9 +246,6 @@ class ContributionTool(BaseTool):
     if getattr(document, 'guessMimeType', None) is not None:
       # For File force to setup the mime_type
       document.guessMimeType(fname=file_name)
-    if user_filename:
-      # Restore the Original filename pass by the user
-      document.setSourceReference(user_filename)
     if url:
       document.fromURL(url)
 
