@@ -103,19 +103,18 @@ class File(Document, CMFFile, CachedConvertableMixin):
 
   ### Special edit method
   security.declarePrivate( '_edit' )
-  def _edit(self, set_filename__=1, **kw):
-    """\
+  def _edit(self, **kw):
+    """
       This is used to edit files
     """
     if kw.has_key('file'):
       file = kw.get('file')
       precondition = kw.get('precondition')
-      if set_filename__:
-        filename = getattr(file, 'filename', None)
-        # if file field is empty(no file is uploaded),
-        # filename is empty string.
-        if filename not in (None, ''):
-          self._setSourceReference(filename)
+      filename = getattr(file, 'filename', None)
+      # if file field is empty(no file is uploaded),
+      # filename is empty string.
+      if filename:
+        self._setSourceReference(filename)
       if self._isNotEmpty(file):
         self._setFile(file, precondition=precondition)
       del kw['file']

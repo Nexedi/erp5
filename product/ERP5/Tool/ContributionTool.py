@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2007 Nexedi SARL and Contributors. All Rights Reserved.
@@ -32,7 +33,6 @@ import string
 import socket
 import md5
 import urllib2, urllib
-import inspect
 
 from AccessControl import ClassSecurityInfo, getSecurityManager
 from Products.ERP5Type.Globals import InitializeClass, DTMLFile
@@ -128,10 +128,14 @@ class ContributionTool(BaseTool):
         We always generate ID. So, we must prevent using the one
         which we were provided.
     """
-    if file_name is not None: kw['file_name'] = file_name
-    if data is not None: kw['data'] = data # This is only used to make sure
-                                           # we can pass file as parameter to ZPublisher
-                                           # whenever we ingest email
+    user_filename = file_name # store original filename
+    if file_name is not None:
+      kw['file_name'] = file_name
+    if data is not None:
+      # This is only used to make sure
+      # we can pass file as parameter to ZPublisher
+      # whenever we ingest email
+      kw['data'] = data
     # Temp objects use the standard newContent from Folder
     if temp_object:
       # For temp_object creation, use the standard method
@@ -240,12 +244,13 @@ class ContributionTool(BaseTool):
         kw.update(modified_kw)
 
     # Then edit the document contents (so that upload can happen)
-    if 'set_filename__' in inspect.getargspec(document._edit)[0]:
-      # Only a few classes supports set_filename__.
-      document._edit(set_filename__=0, **kw)
+    document._edit(**kw)
+    if getattr(document, 'guessMimeType', None) is not None:
+      # For File force to setup the mime_type
       document.guessMimeType(fname=file_name)
-    else:
-      document._edit(**kw)
+    if user_filename:
+      # Restore the Original filename pass by the user
+      document.setSourceReference(user_filename)
     if url:
       document.fromURL(url)
 
