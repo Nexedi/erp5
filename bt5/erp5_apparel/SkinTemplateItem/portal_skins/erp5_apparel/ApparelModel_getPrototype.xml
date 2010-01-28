@@ -58,7 +58,7 @@
   return None if no prototype is found\n
 \'\'\'\n
 \n
-colour_variation_list = context.contenValues(portal_type=\'Apparel Model Colour Variation\')\n
+colour_variation_list = context.contentValues(portal_type=\'Apparel Model Colour Variation\')\n
 prototype_list = [x for x in colour_variation_list if x.isPrototype()]\n
 if len(prototype_list):\n
   return prototype_list[0]\n
