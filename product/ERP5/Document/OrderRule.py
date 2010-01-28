@@ -112,7 +112,6 @@ class OrderRule(DeliveryRule):
               order_value=movement,
               order_ratio=1,
               delivery_ratio=1,
-              deliverable=1,
               **property_dict )
           
         elif related_order in existing_movement_list:

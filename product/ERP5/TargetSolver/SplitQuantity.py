@@ -58,7 +58,6 @@ class SplitQuantity(CopyToTarget):
       stop_date = self.stop_date,
       # XXX resource
       order = simulation_movement.getOrder(),
-      deliverable = simulation_movement.isDeliverable(),
       quantity = self.quantity,
       source = simulation_movement.getSource(),
       destination = simulation_movement.getDestination(),

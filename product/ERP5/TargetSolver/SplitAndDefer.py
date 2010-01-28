@@ -109,7 +109,6 @@ class SplitAndDefer(CopyToTarget):
                         start_date=self.start_date,
                         stop_date=self.stop_date,
                         order=simulation_movement.getOrder(),
-                        deliverable=simulation_movement.isDeliverable(),
 
                         resource=simulation_movement.getResource(),
                         quantity=movement_quantity - new_movement_quantity,
