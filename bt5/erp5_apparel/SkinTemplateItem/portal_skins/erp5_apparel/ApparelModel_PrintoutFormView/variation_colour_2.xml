@@ -311,7 +311,7 @@
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-python: len(context.contentValues(portal_type=\'Apparel Model Colour Variation\')) >= 2 and context.contentValues(portal_type=\'Apparel Model Colour Variation\')[1].absolute_url()
+python: len(context.contentValues(portal_type=\'Apparel Model Colour Variation\')) >= 2 and context.contentValues(portal_type=\'Apparel Model Colour Variation\')[1].absolute_url() or None
 
 ]]></string> </value>
         </item>
