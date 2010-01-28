@@ -174,7 +174,7 @@ class PDFDocument(Image, CachedConvertableMixin):
         width = int(size.split(' ')[0])
         height = int(size.split(' ')[2])
         resolution = 72.0 * max_size / max(width, height)
-      except ValueError, ZeroDivisionError:
+      except (ValueError, ZeroDivisionError):
         resolution = None
       for page_number in range(page_count):
         src_mimetype, png_data = self.convert(
