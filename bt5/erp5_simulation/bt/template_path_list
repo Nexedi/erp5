@@ -2,6 +2,8 @@ portal_rules/default_invoicing_rule
 portal_rules/default_invoicing_rule/3
 portal_rules/new_delivery_rule
 portal_rules/new_delivery_rule/**
+portal_rules/new_invoice_rule
+portal_rules/new_invoice_rule/**
 portal_rules/new_invoice_transaction_rule
 portal_rules/new_invoice_transaction_rule/**
 portal_rules/new_invoicing_rule
