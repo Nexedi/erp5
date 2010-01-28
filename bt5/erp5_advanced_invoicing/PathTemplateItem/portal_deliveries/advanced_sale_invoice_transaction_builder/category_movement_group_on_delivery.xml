@@ -42,6 +42,8 @@
               <tuple>
                 <string>source_section</string>
                 <string>destination_section</string>
+                <string>source_payment</string>
+                <string>destination_payment</string>
               </tuple>
             </value>
         </item>
