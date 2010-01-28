@@ -348,7 +348,9 @@ class Image(File, OFSImage):
       except KeyError:
         mime, image = self._makeDisplayPhoto(**kw)
         self.setConversion(image, mime, **kw)
-      return mime, image.data
+      # Big images are cut into smaller chunks, so it's required to cast to
+      # str. See OFS/Image -> _read_data method for more informations
+      return mime, str(image.data)
     return self.getContentType(), self.getData()
 
   security.declareProtected(Permissions.View, 'getSearchableText')
