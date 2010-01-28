@@ -113,7 +113,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Base_viewDocumentList</string> </value>
+            <value> <string>ERP5Site_viewDocumentList</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
