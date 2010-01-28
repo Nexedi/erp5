@@ -1430,6 +1430,21 @@ class TestIngestion(ERP5TypeTestCase):
     self.assertEquals(1,
         len(portal.portal_catalog(path=contribution_tool.getPath())))
 
+  def test_15_TestFileNameDiscovery(self):
+    """Test that filename is well set in source_reference
+    - filename can we discovery from file
+    - filename can be pass as argument by the user
+    """
+    portal = self.portal
+    contribution_tool = getToolByName(portal, 'portal_contributions')
+    file_object = makeFileUpload('TEST-en-002.doc')
+    document = contribution_tool.newContent(file=file_object)
+    self.assertEquals(document.getSourceReference(), 'TEST-en-002.doc')
+    my_filename = 'Something.doc'
+    document = contribution_tool.newContent(file=file_object,
+                                            file_name=my_filename)
+    self.assertEquals(document.getSourceReference(), my_filename)
+
 # Missing tests
 """
     property_dict = context.getPropertyDictFromUserLogin()
