@@ -32,6 +32,7 @@
 import unittest
 import transaction
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from Products.ERP5Type.tests.backportUnittest import skip
 from Products.ERP5OOo.tests.testFormPrintout import TestFormPrintoutMixin
 from Products.ERP5Type.tests.utils import createZODBPythonScript
 from Products.MimetypesRegistry.mime_types.magic import guessMime
@@ -1156,10 +1157,11 @@ return []
     #test_output.write(printout.data)
     self.assertEqual('application/msword', guessMime(printout.data))
 
-  def test_09_FieldReplacement(self):
+  def test_09_FieldReplacement(self, validate=False):
     """test field in ODF Documents"""
     foo_printout = self.portal.foo_module.test1.Foo5_viewAsPrintout
-    self._validate(self.getODFDocumentFromPrintout(foo_printout))
+    if validate:
+      self._validate(self.getODFDocumentFromPrintout(foo_printout))
     foo_form = self.portal.foo_module.test1.Foo_view
     field_name = 'your_checkbox'
     if foo_form._getOb(field_name, None) is None:
@@ -1168,7 +1170,8 @@ return []
 
     checkbox.values['default'] = 1
     odf_document = foo_printout(self.portal.REQUEST)
-    self._validate(odf_document)
+    if validate:
+      self._validate(odf_document)
     builder = OOoBuilder(odf_document)
     content_xml = builder.extract("content.xml")
     document_tree = etree.XML(content_xml)
@@ -1177,12 +1180,20 @@ return []
 
     checkbox.values['default'] = 0
     odf_document = foo_printout(self.portal.REQUEST)
-    self._validate(odf_document)
+    if validate:
+      self._validate(odf_document)
     builder = OOoBuilder(odf_document)
     content_xml = builder.extract("content.xml")
     document_tree = etree.XML(content_xml)
     node = document_tree.xpath('//form:checkbox[@form:name = "%s"]' % field_name, namespaces=document_tree.nsmap)[0]
     self.assertFalse(node.get('{%s}current-state' % document_tree.nsmap['form']))
+
+  @skip('Disable validation because OOo does not produce compliant'\
+        ' xml, and RelaxNG status is still draft')
+  def test_09_FieldReplacementWithValidation(self):
+    """
+    """
+    return self.test_09_FieldReplacement(validate=True)
 
 def test_suite():
   suite = unittest.TestSuite()
