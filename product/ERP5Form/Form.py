@@ -184,6 +184,11 @@ class TALESValue(StaticValue):
     elif kw.get('cell', None) is None:
       if getattr(REQUEST, 'cell', None) is not None:
         kw['cell'] = getattr(REQUEST, 'cell')
+    # on Zope 2.12, only path expressions can access the CONTEXTS name
+    # but ERP5 has many python expressions that try to access CONTEXTS, so
+    # we try to keep backward compatibility
+    if self.tales_expr._text.startswith("python:"):
+      kw['CONTEXTS'] = kw
     try:
       value = self.tales_expr.__of__(field)(**kw)
     except (ConflictError, RuntimeError):
