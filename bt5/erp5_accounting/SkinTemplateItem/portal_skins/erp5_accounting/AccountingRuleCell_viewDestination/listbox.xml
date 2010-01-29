@@ -149,8 +149,8 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>Accounting Rule Cell</string>
-                          <string>Accounting Rule Cell</string>
+                          <string>Accounting Rule Cell Line</string>
+                          <string>Accounting Rule Cell Line</string>
                         </tuple>
                         <tuple>
                           <string>Accounting Transaction Line</string>
