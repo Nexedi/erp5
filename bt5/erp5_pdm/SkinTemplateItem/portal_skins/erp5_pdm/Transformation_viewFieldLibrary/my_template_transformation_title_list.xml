@@ -13,9 +13,10 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
                 <string>base_category</string>
                 <string>portal_type</string>
+                <string>proxy_listbox_ids</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -98,6 +99,17 @@
                       <list>
                         <tuple>
                           <string>Transformation</string>
+                          <string>Transformation</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>proxy_listbox_ids</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>TransformationModule_viewTransformationList/listbox</string>
                           <string>Transformation</string>
                         </tuple>
                       </list>

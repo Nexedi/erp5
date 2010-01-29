@@ -12,7 +12,9 @@
         <item>
             <key> <string>delegated_list</string> </key>
             <value>
-              <list/>
+              <list>
+                <string>proxy_listbox_ids</string>
+              </list>
             </value>
         </item>
         <item>
@@ -79,6 +81,17 @@
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string>TransformationTransformedResource_viewFieldLibrary</string> </value>
+                </item>
+                <item>
+                    <key> <string>proxy_listbox_ids</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>ApparelConsumptionModule_viewApparelConsumptionList/listbox</string>
+                          <string>Apparel Consumption</string>
+                        </tuple>
+                      </list>
+                    </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>

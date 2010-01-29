@@ -13,8 +13,9 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
                 <string>portal_type</string>
+                <string>proxy_listbox_ids</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -71,6 +72,12 @@
                     </value>
                 </item>
                 <item>
+                    <key> <string>proxy_listbox_ids</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
+                </item>
+                <item>
                     <key> <string>target</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -109,6 +116,10 @@
                     </value>
                 </item>
                 <item>
+                    <key> <string>proxy_listbox_ids</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
                 </item>
@@ -134,6 +145,22 @@
         <item>
             <key> <string>_text</string> </key>
             <value> <string>python: [(x, x) for x in here.getPortalServiceTypeList()]</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <tuple>
+        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>python:[(\'%sModule_view%sList/listbox\' % (x.replace(\' \',\'\'), x.replace(\' \', \'\')), x) for x in context.getPortalServiceTypeList()]</string> </value>
         </item>
       </dictionary>
     </pickle>
