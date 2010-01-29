@@ -131,7 +131,8 @@ data_dict = {\n
   \'preferred_organisation_image_path\': getPreferredOrganisation() is not None\\\n
       and getPreferredOrganisation().getDefaultImageAbsoluteUrl() or \'\',\n
   \'preferred_organisation_corporate_name\': getPreferredOrganisation() is not None\\\n
-      and getPreferredOrganisation().getCorporateName() or \'\',\n
+      and (getPreferredOrganisation().getCorporateName() or\\\n
+        getPreferredOrganisation().getTitle()) or \'\',\n
   \'preferred_organisation_address\': getOneLineAddress(\n
             getPreferredOrganisation() is not None and\\\n
               getPreferredOrganisation().getDefaultAddressText() or \'\',\n
