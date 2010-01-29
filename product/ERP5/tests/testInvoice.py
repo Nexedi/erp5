@@ -53,6 +53,7 @@ class TestInvoiceMixin(TestPackingListMixin,
   vat_rate = 0.196
   sale_gap = 'fr/pcg/7/70/707/7071/70712'
   customer_gap = 'fr/pcg/4/41/411'
+  bank_gap = 'fr/pcg/5/51/512'
   mail_delivery_mode = 'by_mail'
   cpt_incoterm = 'cpt'
   unit_piece_quantity_unit = 'unit/piece'
@@ -67,6 +68,7 @@ class TestInvoiceMixin(TestPackingListMixin,
       ('refundable_vat', vat_gap, 'asset/receivable/refundable_vat'),
       ('purchase', sale_gap, 'expense'),
       ('supplier', customer_gap, 'liability/payable'),
+      ('bank', bank_gap, 'asset/cash/bank'),
       )
   # (line_id, source_account_id, destination_account_id, line_quantity)
   transaction_line_definition_list = (
@@ -109,6 +111,7 @@ class TestInvoiceMixin(TestPackingListMixin,
             'gap/%s' % self.vat_gap,
             'gap/%s' % self.sale_gap,
             'gap/%s' % self.customer_gap,
+            'gap/%s' % self.bank_gap,
             'delivery_mode/%s' % self.mail_delivery_mode,
             'incoterm/%s' % self.cpt_incoterm,
             'quantity_unit/%s' % self.unit_piece_quantity_unit,
