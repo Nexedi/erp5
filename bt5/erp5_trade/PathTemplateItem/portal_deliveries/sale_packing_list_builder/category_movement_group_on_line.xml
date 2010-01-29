@@ -43,6 +43,10 @@
                 <string>resource</string>
                 <string>aggregate</string>
                 <string>quantity_unit</string>
+                <string>source_account</string>
+                <string>destination_account</string>
+                <string>source_function</string>
+                <string>destination_function</string>
               </tuple>
             </value>
         </item>
