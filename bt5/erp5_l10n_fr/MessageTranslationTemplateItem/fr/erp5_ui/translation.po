@@ -6327,7 +6327,7 @@ msgid "Operators"
 msgstr "Opérateurs"
 
 msgid "Optional Resources"
-msgstr "Ressources optionnelles"
+msgstr "Produits optionels"
 
 msgid "Order"
 msgstr "Commande"
