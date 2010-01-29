@@ -134,6 +134,7 @@
                         <string>my_source_title</string>
                         <string>my_quantity_unit_list</string>
                         <string>listbox_int_index</string>
+                        <string>my_product_line</string>
                       </list>
                     </value>
                 </item>

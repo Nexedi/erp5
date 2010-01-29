@@ -95,7 +95,7 @@
                         <string>my_title</string>
                         <string>my_reference</string>
                         <string>my_purchase_supply_line_source_reference</string>
-                        <string>my_resource</string>
+                        <string>my_product_line</string>
                         <string>my_quantity_unit_list</string>
                         <string>my_trade_description</string>
                         <string>my_base_weight</string>
