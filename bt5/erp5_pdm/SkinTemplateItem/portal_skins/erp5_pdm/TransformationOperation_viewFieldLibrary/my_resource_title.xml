@@ -160,7 +160,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:[(\'%sModule_view%sList/listbox\' % (x.replace(\' \',\'\'), x.replace(\' \', \'\')), x) for x in context.getPortalServiceTypeList()]</string> </value>
+            <value> <string>python:[(\'%sModule_view%sList/listbox\' % (x.replace(\' \',\'\'), x.replace(\' \', \'\')), x) for x in context.getPortalServiceTypeList() if context.Base_checkPermission(context.getDefaultModuleId(x), \'View\')]</string> </value>
         </item>
       </dictionary>
     </pickle>
