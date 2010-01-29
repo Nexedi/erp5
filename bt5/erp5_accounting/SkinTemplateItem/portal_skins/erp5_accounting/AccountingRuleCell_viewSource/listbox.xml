@@ -152,6 +152,10 @@
                           <string>Accounting Rule Cell Line</string>
                           <string>Accounting Rule Cell Line</string>
                         </tuple>
+                        <tuple>
+                          <string>Accounting Transaction Line</string>
+                          <string>Accounting Transaction Line</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>
