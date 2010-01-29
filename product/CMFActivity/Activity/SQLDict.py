@@ -260,8 +260,7 @@ class SQLDict(RAMDict, SQLBase):
     now_date = self.getNow(activity_tool)
     message_list = []
     def append(line, message):
-      uid = line.uid
-      message_list.append((uid, message, line.priority))
+      message_list.append((line.uid, message, line.priority))
     count = 0
     group_method_id = None
     try:
@@ -269,11 +268,13 @@ class SQLDict(RAMDict, SQLBase):
       uid_to_duplicate_uid_list_dict = {}
       if len(result) > 0:
         line = result[0]
-        m = self.loadMessage(line.message, uid=line.uid)
+        uid = line.uid
+        m = self.loadMessage(line.message, uid=uid)
         append(line, m)
         group_method_id = line.group_method_id
-        activity_tool.SQLDict_processMessage(uid=[line.uid])
-        uid_to_duplicate_uid_list_dict.setdefault(line.uid, []).extend(getDuplicateMessageUidList(line))
+        activity_tool.SQLDict_processMessage(uid=[uid])
+        uid_to_duplicate_uid_list_dict.setdefault(uid, []) \
+          .extend(getDuplicateMessageUidList(line))
         if group_method_id not in (None, '', '\0'):
           # Count the number of objects to prevent too many objects.
           count += len(m.getObjectList(activity_tool))
@@ -448,13 +449,13 @@ class SQLDict(RAMDict, SQLBase):
                                     'uid': message_uid_priority_list[0][0]})
       setActivityRuntimeValue('processing_node', processing_node)
       # Commit right before executing messages.
-      # As MySQL transaction do no start exactly at the same time as ZODB
+      # As MySQL transaction does not start exactly at the same time as ZODB
       # transactions but a bit later, messages available might be called
       # on objects which are not available - or available in an old
       # version - to ZODB connector.
-      # So all connectors must be commited now that we have selected
+      # So all connectors must be committed now that we have selected
       # everything needed from MySQL to get a fresh view of ZODB objects.
-      get_transaction().commit() 
+      get_transaction().commit()
       # Try to invoke
       try:
         method(*args)

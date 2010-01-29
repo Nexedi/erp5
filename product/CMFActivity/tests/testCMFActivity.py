@@ -56,6 +56,20 @@ try:
 except ImportError:
   pass
 
+class CommitFailed(Exception):
+  pass
+
+def registerFailingTransactionManager(*args, **kw):
+  from Shared.DC.ZRDB.TM import TM
+  class dummy_tm(TM):
+    def tpc_vote(self, *ignored):
+      raise CommitFailed
+    def _finish(self):
+      pass
+    def _abort(self):
+      pass
+  dummy_tm()._register()
+
 class TestCMFActivity(ERP5TypeTestCase):
 
   run_all_test = 1
@@ -2525,18 +2539,6 @@ class TestCMFActivity(ERP5TypeTestCase):
     self.tic()
     activity_tool = self.getActivityTool()
     from Shared.DC.ZRDB.TM import TM
-    class dummy_tm(TM):
-      def tpc_vote(self, *ignored):
-        raise Exception, 'vote always raises'
-
-      def _finish(self):
-        pass
-
-      def _abort(self):
-        pass
-    dummy_tm_instance = dummy_tm()
-    def registerFailingTransactionManager(self, *args, **kw):
-      dummy_tm_instance._register()
     try:
       Organisation.registerFailingTransactionManager = registerFailingTransactionManager
       obj = self.getPortal().organisation_module.newContent(portal_type='Organisation')
@@ -2581,19 +2583,6 @@ class TestCMFActivity(ERP5TypeTestCase):
     get_transaction().commit()
     self.tic()
     activity_tool = self.getActivityTool()
-    from Shared.DC.ZRDB.TM import TM
-    class dummy_tm(TM):
-      def tpc_vote(self, *ignored):
-        raise Exception, 'vote always raises'
-
-      def _finish(self):
-        pass
-
-      def _abort(self):
-        pass
-    dummy_tm_instance = dummy_tm()
-    def registerFailingTransactionManager(self, *args, **kw):
-      dummy_tm_instance._register()
     try:
       Organisation.registerFailingTransactionManager = registerFailingTransactionManager
       obj = self.getPortal().organisation_module.newContent(portal_type='Organisation')

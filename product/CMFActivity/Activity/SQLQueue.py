@@ -294,11 +294,11 @@ class SQLQueue(RAMQueue, SQLBase):
       processing_stop_time = time() + 30 # Stop processing after more than 10 seconds were spent
       processed_message_uid_list = []
       # Commit right before executing messages.
-      # As MySQL transaction do no start exactly at the same time as ZODB
+      # As MySQL transaction does not start exactly at the same time as ZODB
       # transactions but a bit later, messages available might be called
       # on objects which are not available - or available in an old
       # version - to ZODB connector.
-      # So all connectors must be commited now that we have selected
+      # So all connectors must be committed now that we have selected
       # everything needed from MySQL to get a fresh view of ZODB objects.
       get_transaction().commit()
       for value in message_uid_priority_list:
