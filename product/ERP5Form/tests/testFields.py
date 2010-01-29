@@ -31,6 +31,12 @@
 
 import unittest
 
+try:
+    from zope.app.testing.placelesssetup import PlacelessSetup
+except ImportError:
+    # BACK: Zope 2.8. Remove when we no longer support it
+    from zope.component.tests.placelesssetup import PlacelessSetup
+
 # Make it possible to use Globals.get_request
 class DummyRequest(dict):
   __allow_access_to_unprotected_subobjects__ = 1
@@ -304,12 +310,13 @@ class TestTextAreaField(unittest.TestCase):
       .xpath('%s/text:tab' % ODG_XML_WRAPPING_XPATH, namespaces=NSMAP)
     self.assertTrue(test_value)
 
-class TestProxyField(unittest.TestCase):
+class TestProxyField(PlacelessSetup, unittest.TestCase):
 
   def getTitle(self):
     return "Proxy Field"
 
   def setUp(self):
+    super(TestProxyField, self).setUp()
     self.container = Folder('container').__of__(Folder('root'))
     self.container._setObject('Base_viewProxyFieldLibrary',
                                ERP5Form('Base_viewProxyFieldLibrary', 'Proxys'))
@@ -318,6 +325,13 @@ class TestProxyField(unittest.TestCase):
     global request
     request = DummyRequest()
     self.container.REQUEST = request
+    try:
+        from Products.CMFCore.tests.base.utils import _setUpDefaultTraversable
+        _setUpDefaultTraversable()
+    except ImportError:
+        pass # On Zope 2.8, remove when we no longer support it
+
+  # if tearDown is ever added, don't forget to call PlacelessSetup.tearDown()
 
   def addField(self, form, id, title, field_type):
     form.manage_addField(id, title, field_type)
