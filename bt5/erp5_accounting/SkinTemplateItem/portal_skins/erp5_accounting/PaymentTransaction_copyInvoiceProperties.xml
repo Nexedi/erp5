@@ -73,7 +73,7 @@ if payment_transaction.getSimulationState() == "draft":\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string></string> </value>
+            <value> <string>related_simulation_movement_path_list=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -93,12 +93,14 @@ if payment_transaction.getSimulationState() == "draft":\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>1</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>related_simulation_movement_path_list</string>
+                            <string>kw</string>
                             <string>Products.ERP5Type.Message</string>
                             <string>translateString</string>
                             <string>context</string>
@@ -115,7 +117,9 @@ if payment_transaction.getSimulationState() == "draft":\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <none/>
+              </tuple>
             </value>
         </item>
         <item>
