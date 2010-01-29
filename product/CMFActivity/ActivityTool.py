@@ -93,7 +93,6 @@ is_initialized = False
 tic_lock = threading.Lock() # A RAM based lock to prevent too many concurrent tic() calls
 timerservice_lock = threading.Lock() # A RAM based lock to prevent TimerService spamming when busy
 is_running_lock = threading.Lock()
-first_run = True
 currentNode = None
 ROLE_IDLE = 0
 ROLE_PROCESSING = 1
@@ -918,7 +917,7 @@ class ActivityTool (Folder, UniqueObject):
         Starts again an activity
         processing_node starts from 1 (there is not node 0)
       """
-      global active_threads, first_run
+      global active_threads
 
       # return if the number of threads is too high
       # else, increase the number of active_threads and continue
@@ -936,15 +935,6 @@ class ActivityTool (Folder, UniqueObject):
         self.initialize()
 
       inner_self = aq_inner(self)
-
-      # If this is the first tic after zope is started, reset the processing
-      # flag for activities of this node
-      if first_run:
-        inner_self.SQLDict_clearProcessingFlag(
-                                processing_node=processing_node)
-        inner_self.SQLQueue_clearProcessingFlag(
-                                processing_node=processing_node)
-        first_run = False
 
       try:
         #Sort activity list by priority

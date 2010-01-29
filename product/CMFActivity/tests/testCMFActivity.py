@@ -3515,6 +3515,33 @@ class TestCMFActivity(ERP5TypeTestCase):
       activity_tool.SQLDict_delMessage(uid=[message.uid for message in result])
       get_transaction().commit()
 
+  def test_116_RaiseInCommitBeforeMessageExecution(self):
+    """
+      Test behaviour of CMFActivity when the commit just before message
+      execution fails. In particular, CMFActivity should restart the
+      activities it selected (processing=1) instead of ignoring them forever.
+    """
+    processed = []
+    activity_tool = self.portal.portal_activities
+    activity_tool.__class__.doSomething = processed.append
+    try:
+      for activity in 'SQLDict', 'SQLQueue':
+        activity_tool.activate(activity=activity).doSomething(activity)
+        get_transaction().commit()
+        activity_tool.distribute()
+        # Make first commit in dequeueMessage raise
+        registerFailingTransactionManager()
+        self.assertRaises(CommitFailed, activity_tool.tic)
+        # Normally, the request stops here and Zope aborts the transaction
+        get_transaction().abort()
+        self.assertEqual(processed, [])
+        # Activity is already in 'processing=1' state. Check tic reselects it.
+        activity_tool.tic()
+        self.assertEqual(processed, [activity])
+        del processed[:]
+    finally:
+      del activity_tool.__class__.doSomething
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestCMFActivity))

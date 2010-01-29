@@ -163,8 +163,10 @@ class SQLDict(RAMDict, SQLBase):
         This number is guaranted not to be exceeded.
         If None (or not given) no limit apply.
     """
-    result = activity_tool.SQLDict_selectReservedMessageList(processing_node=processing_node, count=limit)
-    if len(result) == 0:
+    result = not group_method_id and \
+      activity_tool.SQLDict_selectReservedMessageList(
+        processing_node=processing_node, count=limit)
+    if not result:
       activity_tool.SQLDict_reserveMessageList(count=limit, processing_node=processing_node, to_date=date, group_method_id=group_method_id)
       result = activity_tool.SQLDict_selectReservedMessageList(processing_node=processing_node, count=limit)
     return result
@@ -284,6 +286,8 @@ class SQLDict(RAMDict, SQLBase):
             path_and_method_id_dict = {}
             unreserve_uid_list = []
             for line in result:
+              if line.uid == uid:
+                continue
               # All fetched lines have the same group_method_id and
               # processing_node.
               # Their dates are lower-than or equal-to now_date.
@@ -468,6 +472,8 @@ class SQLDict(RAMDict, SQLBase):
           LOG('SQLDict', PANIC,
               'abort failed, thus some objects may be modified accidentally')
           raise
+        # XXX Is it still useful to free messages now that this node is able
+        #     to reselect them ?
         to_free_uid_list = [x[0] for x in message_uid_priority_list]
         try:
           makeMessageListAvailable(to_free_uid_list, uid_to_duplicate_uid_list_dict)

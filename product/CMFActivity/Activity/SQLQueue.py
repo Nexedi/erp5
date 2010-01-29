@@ -332,6 +332,8 @@ class SQLQueue(RAMQueue, SQLBase):
           # It is possible that the message is executed but the commit
           # of the transaction fails
           value[1].setExecutionState(MESSAGE_NOT_EXECUTED, context=activity_tool)
+          # XXX Is it still useful to free message now that this node is able
+          #     to reselect it ?
           try:
             makeMessageListAvailable([value[0]])
           except:
