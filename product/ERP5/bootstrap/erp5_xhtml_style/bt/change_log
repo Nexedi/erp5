@@ -1,3 +1,6 @@
+2010-1-31 Yusei
+* Update erp5.css and replace "display:none" with "visibility:hidden" to fix webkit based browser problem.
+
 2009-12-11 Kazuhiko
 * update FCKeditor to 2.6.5.
 
