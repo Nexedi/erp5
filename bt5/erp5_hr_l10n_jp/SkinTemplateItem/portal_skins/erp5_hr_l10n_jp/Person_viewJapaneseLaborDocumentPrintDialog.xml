@@ -38,7 +38,17 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string>Base_edit</string> </value>
+            <value> <string>Person_viewJapaneseLaborDocumentPrintOutAsODT</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>edit_order</string> </key>
+            <value>
+              <list/>
+            </value>
         </item>
         <item>
             <key> <string>encoding</string> </key>
@@ -46,7 +56,7 @@
         </item>
         <item>
             <key> <string>enctype</string> </key>
-            <value> <string></string> </value>
+            <value> <string>multipart/form-data</string> </value>
         </item>
         <item>
             <key> <string>group_list</string> </key>
@@ -54,7 +64,6 @@
               <list>
                 <string>left</string>
                 <string>right</string>
-                <string>center</string>
               </list>
             </value>
         </item>
@@ -63,41 +72,16 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>center</string> </key>
-                    <value>
-                      <list>
-                        <string>my_description</string>
-                      </list>
-                    </value>
-                </item>
-                <item>
                     <key> <string>left</string> </key>
                     <value>
-                      <list>
-                        <string>my_title</string>
-                        <string>my_reference</string>
-                        <string>my_subordination_title</string>
-                        <string>my_role_list</string>
-                        <string>my_function</string>
-                        <string>my_activity</string>
-                        <string>my_product_line_list</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
                     <key> <string>right</string> </key>
                     <value>
                       <list>
-                        <string>my_start_date</string>
-                        <string>my_stop_date</string>
-                        <string>my_career_start_mode</string>
-                        <string>my_career_end_mode</string>
-                        <string>my_collective_agreement_title</string>
-                        <string>my_grade</string>
-                        <string>my_salary_coefficient</string>
-                        <string>my_salary_level</string>
-                        <string>my_skill_list</string>
-                        <string>my_translated_validation_state_title</string>
+                        <string>your_format</string>
                       </list>
                     </value>
                 </item>
@@ -106,7 +90,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Career_view</string> </value>
+            <value> <string>Person_viewJapaneseLaborDocumentPrintDialog</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -114,11 +98,11 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>General</string> </value>
+            <value> <string>Base_viewODTPrintDialog</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
-            <value> <string>form_view</string> </value>
+            <value> <string>form_dialog</string> </value>
         </item>
         <item>
             <key> <string>row_length</string> </key>
@@ -130,7 +114,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Career</string> </value>
+            <value> <string>Print Japanese Labor Document</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>
@@ -138,6 +122,10 @@
         </item>
         <item>
             <key> <string>update_action</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>update_action_title</string> </key>
             <value> <string></string> </value>
         </item>
       </dictionary>
