@@ -108,8 +108,17 @@ class PaymentRuleMovementGenerator(MovementGeneratorMixin):
       if business_path is None:
         continue
       kw = _getPropertyAndCategoryList(input_movement)
-      kw.update({'order':None,'delivery':None})
+      kw.update({'order':None, 'delivery':None})
       quantity = kw.pop('quantity', 0)
+      efficiency = business_path.getEfficiency()
+      if efficiency:
+        quantity *= efficiency
+      start_date = business_path.getExpectedStartDate(input_movement)
+      if start_date is not None:
+        kw.update({'start_date':start_date})
+      stop_date = business_path.getExpectedStopDate(input_movement)
+      if stop_date is not None:
+        kw.update({'stop_date':stop_date})
       # one for payable
       simulation_movement = context.newContent(
         portal_type=RuleMixin.movement_type,
