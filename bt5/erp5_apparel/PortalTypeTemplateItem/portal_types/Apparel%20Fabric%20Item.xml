@@ -48,15 +48,15 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>        A Document can contain text that can be formatted using\n
-        *Structured Text* or *HTML*. Text can be automatically translated\n
-        through the use of \'message catalogs\'.\n
-\n
-        A Document is a terminating leaf\n
-        in the OFS. It can not contain anything.\n
-\n
-        Document inherits from XMLObject and can\n
-        be synchronized accross multiple sites.\n
+            <value> <string>        A Document can contain text that can be formatted using\r\n
+        *Structured Text* or *HTML*. Text can be automatically translated\r\n
+        through the use of \'message catalogs\'.\r\n
+\r\n
+        A Document is a terminating leaf\r\n
+        in the OFS. It can not contain anything.\r\n
+\r\n
+        Document inherits from XMLObject and can\r\n
+        be synchronized accross multiple sites.\r\n
 </string> </value>
         </item>
         <item>
@@ -85,7 +85,15 @@
         </item>
         <item>
             <key> <string>init_script</string> </key>
-            <value> <string>ApparelFabricItem_init</string> </value>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>permission</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>title</string> </key>
