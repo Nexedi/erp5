@@ -67,12 +67,12 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>source_stage/business_process_module/erp5_default_business_process/3</string>
-                <string>destination_stage/business_process_module/erp5_default_business_process/4</string>
+                <string>source_stage/business_process_module/erp5_default_business_process/invoiced</string>
+                <string>destination_stage/business_process_module/erp5_default_business_process/accounted</string>
                 <string>delivery_builder/portal_deliveries/purchase_invoice_transaction_builder</string>
                 <string>delivery_builder/portal_deliveries/sale_invoice_transaction_builder</string>
-                <string>predecessor/business_process_module/erp5_default_business_process/10</string>
-                <string>successor/business_process_module/erp5_default_business_process/4</string>
+                <string>predecessor/business_process_module/erp5_default_business_process/invoiced</string>
+                <string>successor/business_process_module/erp5_default_business_process/accounted</string>
                 <string>trade_phase/default/accounting</string>
               </tuple>
             </value>
