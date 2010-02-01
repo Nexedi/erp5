@@ -454,11 +454,13 @@ body {\n
   background-color: <dtml-var background_color>;\n
 }\n
 \n
-#main_form {\n
+#main_form, /* BBB */\n
+.main_form,  {\n
   color: inherit;\n
 }\n
 \n
-input#hidden_button {\n
+input#hidden_button, /* BBB */\n
+input.hidden_button {\n
   width: 0;\n
   height: 0;\n
   display: inline;\n
@@ -467,8 +469,8 @@ input#hidden_button {\n
 }\n
 \n
 textarea[readonly] {\n
-  background-color:inherit;\n
-  border:inherit;\n
+  background-color: inherit;\n
+  border: inherit;\n
 }\n
 \n
 a, a:visited, a:focus {\n
@@ -484,7 +486,7 @@ a:hover {\n
 }\n
 \n
 p.clear,\n
-div.clear{\n
+div.clear {\n
   height: 0;\n
   margin: 0;\n
   padding: 0;\n
@@ -507,20 +509,28 @@ div.index_html table {\n
   margin-bottom: 0.5em;\n
 }\n
 \n
-#main_bar button .description,\n
-#context_bar button .description,\n
+#main_bar button .description, /* BBB */\n
+.main_bar button .description,\n
+#context_bar button .description, /* BBB */\n
+.context_bar button .description,\n
 .content .field .description,\n
 .document .actions button.save .description,\n
-#context_bar .tool_buttons a .description {\n
+#context_bar .tool_buttons a .description, /* BBB */\n
+.context_bar .tool_buttons a .description {\n
   display: none;\n
 }\n
 \n
 /* The fields set for generated hidden fields */\n
-#hidden_fieldset { visibility: hidden; border:0; }\n
+#hidden_fieldset, /* BBB */\n
+.hidden_fieldset {\n
+  visibility: hidden;\n
+  border: 0;\n
+}\n
 \n
 /* Main bar */\n
 \n
-#main_bar {\n
+#main_bar, /* BBB */\n
+.main_bar {\n
   color: inherit;\n
   background-color: <dtml-var navigation_bar_background_color>;\n
   padding-top: 2px;\n
@@ -528,31 +538,41 @@ div.index_html table {\n
   vertical-align: middle;\n
 }\n
 \n
-#main_bar .first,\n
-#context_bar .first {\n
+#main_bar .first, /* BBB */\n
+.main_bar .first,\n
+#context_bar .first, /* BBB */\n
+.context_bar .first {\n
   float: left;\n
   vertical-align: middle;\n
 }\n
 \n
-#context_bar #jump,\n
-#main_bar .first{\n
+#context_bar #jump, /* BBB */\n
+.context_bar .jump,\n
+#main_bar .jump, /* BBB */\n
+.main_bar .jump {\n
   margin-left: 10px;\n
 }\n
 \n
 .listbox_title_line select,\n
-#context_bar select,\n
-#main_bar select {\n
+#context_bar select, /* BBB */\n
+.context_bar select,\n
+#main_bar select, /* BBB */\n
+.main_bar select {\n
   color: <dtml-var alternate_font_color>;\n
 }\n
 \n
-#main_bar .second,\n
-#context_bar .second {\n
+#main_bar .second, /* BBB */\n
+.main_bar .second,\n
+#context_bar .second, /* BBB */\n
+.context_bar .second {\n
   float: right;\n
   vertical-align: middle;\n
 }\n
 \n
-#main_bar button,\n
-#context_bar button,\n
+#main_bar button, /* BBB */\n
+.main_bar button,\n
+#context_bar button, /* BBB */\n
+.context_bar button,\n
 .dialog_selector button,\n
 .document .actions button.save {\n
   border: 0;\n
@@ -566,11 +586,13 @@ div.index_html table {\n
   color: inherit;\n
 }\n
 \n
-#context_bar .tool_buttons {\n
+#context_bar .tool_buttons, /* BBB */\n
+.context_bar .tool_buttons {\n
   vertical-align: middle;\n
 }\n
 \n
-#context_bar .tool_buttons a {\n
+#context_bar .tool_buttons a, /* BBB */\n
+.context_bar .tool_buttons a {\n
   margin-top: 2px;\n
   margin-left: 2px;\n
   margin-right: 2px;\n
@@ -578,12 +600,15 @@ div.index_html table {\n
   position: relative;\n
 }\n
 \n
-#context_bar .tool_buttons button {\n
- float: left;\n
+#context_bar .tool_buttons button, /* BBB */\n
+.context_bar .tool_buttons button {\n
+  float: left;\n
 }\n
 \n
-#main_bar button .image,\n
-#context_bar button .image,\n
+#main_bar button .image, /* BBB */\n
+.main_bar button .image,\n
+#context_bar button .image, /* BBB */\n
+.context_bar button .image,\n
 .dialog_selector button .image,\n
 .document .actions button.save .image {\n
   display: block;\n
@@ -592,42 +617,41 @@ div.index_html table {\n
   background-repeat: no-repeat;\n
 }\n
 \n
-/* XXX: Bug fix when not logged\n
-   by <chritophe@nexedi.com> */\n
+/* XXX: Bug fix when not logged */\n
 .document .actions {\n
   min-height: 2.5em;\n
 }\n
 \n
-.pageNavigation button{\n
+.pageNavigation button {\n
   display: inline;\n
-  border:0 none;\n
-  background-color:inherit;\n
-  vertical-align:middle;\n
+  border: 0 none;\n
+  background-color: inherit;\n
+  vertical-align: middle;\n
 }\n
 \n
 .pageNavigation button.listbox_first_page .image,\n
 .pageNavigation button.listbox_previous_page .image,\n
 .pageNavigation button.listbox_next_page .image,\n
-.pageNavigation button.listbox_last_page .image{\n
-  width:22px;\n
-  height:22px;\n
-  display:block;\n
-  background-color:transparent;\n
+.pageNavigation button.listbox_last_page .image {\n
+  width: 22px;\n
+  height: 22px;\n
+  display: block;\n
+  background-color: transparent;\n
 }\n
 \n
-.pageNavigation button.listbox_first_page .image{\n
+.pageNavigation button.listbox_first_page .image {\n
   background-image: url(\'<dtml-var expr="portal_url()">/images/2leftarrowv.png\');\n
 }\n
 \n
-.pageNavigation button.listbox_previous_page .image{\n
+.pageNavigation button.listbox_previous_page .image {\n
   background-image: url(\'<dtml-var expr="portal_url()">/images/1leftarrowv.png\');\n
 }\n
 \n
-.pageNavigation button.listbox_next_page .image{\n
+.pageNavigation button.listbox_next_page .image {\n
   background-image: url(\'<dtml-var expr="portal_url()">/images/1rightarrowv.png\');\n
 }\n
 \n
-.pageNavigation button.listbox_last_page .image{\n
+.pageNavigation button.listbox_last_page .image {\n
   background-image: url(\'<dtml-var expr="portal_url()">/images/2rightarrowv.png\');\n
 }\n
 \n
@@ -795,48 +819,62 @@ a.tree_closed {\n
   margin-left: 15%;\n
 }\n
 \n
-#jump,\n
-#action,\n
-#favourites,\n
-#modules,\n
-#language,\n
-#search {\n
+#jump, /* BBB */\n
+span.jump,\n
+#action, /* BBB */\n
+span.action,\n
+#favourites, /* BBB */\n
+span.favourites,\n
+#modules, /* BBB */\n
+span.modules,\n
+#language, /* BBB */\n
+span.language,\n
+#search, /* BBB */\n
+span.search {\n
   float: left;\n
 }\n
 \n
-#favourites button .image {\n
+#favourites button .image, /* BBB */\n
+span.favourites button .image {\n
   background-image: url(\'<dtml-var expr="portal_url()">/images/favourite.png\');\n
 }\n
 \n
-#modules button .image {\n
+#modules button .image, /* BBB */\n
+span.modules button .image {\n
   background-image: url(\'<dtml-var expr="portal_url()">/images/appearance.png\');\n
 }\n
 \n
-#language button .image {\n
+#language button .image, /* BBB */\n
+span.language button .image {\n
   background-image: url(\'<dtml-var expr="portal_url()">/images/language.png\');\n
 }\n
 \n
-.quick_search_field {color:#777777;}\n
-.quick_search_field:focus {color:#000000;}\n
+.quick_search_field { color: #777777; }\n
+.quick_search_field:focus { color: #000000; }\n
 \n
-#search button .image {\n
+#search button .image, /* BBB */\n
+span.search button .image {\n
   background-image: url(\'<dtml-var expr="portal_url()">/images/search.png\');\n
 }\n
 \n
-#status,\n
-#master {\n
+#status, /* BBB */\n
+.status,\n
+#master, /* BBB */\n
+.master {\n
   padding-left: .5em;\n
   padding-right: .5em;\n
 }\n
 \n
-#status {\n
+#status, /* BBB */\n
+.status {\n
   padding-top: .3em;\n
   padding-bottom: .4em;\n
 }\n
 \n
 /* Context bar */\n
 \n
-#context_bar {\n
+#context_bar, /* BBB */\n
+.context_bar {\n
   padding-top: 2px;\n
   padding-bottom: 2px;\n
   border-bottom-width: 1px;\n
@@ -847,7 +885,8 @@ a.tree_closed {\n
   vertical-align: middle;\n
 }\n
 \n
-#context_bar .tool_buttons a {\n
+#context_bar .tool_buttons a, /* BBB */\n
+.context_bar .tool_buttons a {\n
   float: left;\n
   margin-left: 2px;\n
   margin-right: 2px;\n
@@ -862,17 +901,22 @@ a.tree_closed {\n
   float: left;\n
 }\n
 \n
-#main_bar .separator {\n
+#main_bar .separator, /* BBB */\n
+.main_bar .separator {\n
   background-image: url(\'<dtml-var expr="portal_url()">/images/sepafon.png\');\n
 }\n
 \n
-#context_bar .separator {\n
+#context_bar .separator, /* BBB */\n
+.context_bar .separator {\n
   background-image: url(\'<dtml-var expr="portal_url()">/images/sepacla.png\');\n
 }\n
 \n
-#context_bar .tool_buttons a .image,\n
-#context_bar .tool_buttons button .image,\n
-#context_bar .tool_buttons a img {\n
+#context_bar .tool_buttons a .image, /* BBB */\n
+.context_bar .tool_buttons a .image,\n
+#context_bar .tool_buttons button .image, /* BBB */\n
+.context_bar .tool_buttons button .image,\n
+#context_bar .tool_buttons a img, /* BBB */\n
+.context_bar .tool_buttons a img {\n
   width: 22px;\n
   height: 22px;\n
   margin: 0;\n
@@ -881,140 +925,172 @@ a.tree_closed {\n
   background-repeat: no-repeat;\n
 }\n
 \n
-#context_bar #jump button .image {\n
+#context_bar #jump button .image, /* BBB */\n
+.context_bar .jump button .image {\n
   background-image: url(\'<dtml-var expr="portal_url()">/images/jump22.png\');\n
 }\n
 \n
-#context_bar #action button .image {\n
+#context_bar #action button .image, /* BBB */\n
+.context_bar .action button .image {\n
   background-image: url(\'<dtml-var expr="portal_url()">/images/exec.png\');\n
 }\n
 \n
-#context_bar .tool_buttons .list_mode .image {\n
+#context_bar .tool_buttons .list_mode .image, /* BBB */\n
+.context_bar .tool_buttons .list_mode .image {\n
   background-image: url(\'<dtml-var expr="portal_url()">/images/text_block.png\');\n
 }\n
 \n
-#context_bar .tool_buttons .new .image {\n
+#context_bar .tool_buttons .new .image, /* BBB */\n
+.context_bar .tool_buttons .new .image {\n
   background-image: url(\'<dtml-var expr="portal_url()">/images/filenew.png\');\n
 }\n
 \n
-#context_bar .tool_buttons .clone .image {\n
+#context_bar .tool_buttons .clone .image, /* BBB */\n
+.context_bar .tool_buttons .clone .image {\n
   background-image: url(\'<dtml-var expr="portal_url()">/images/fileclone.png\');\n
 }\n
 \n
-#context_bar .tool_buttons .jump_first .image {\n
+#context_bar .tool_buttons .jump_first .image, /* BBB */\n
+.context_bar .tool_buttons .jump_first .image {\n
   background-image: url(\'<dtml-var expr="portal_url()">/images/2leftarrowb.png\');\n
 }\n
 \n
-#context_bar .tool_buttons .jump_previous .image {\n
+#context_bar .tool_buttons .jump_previous .image, /* BBB */\n
+.context_bar .tool_buttons .jump_previous .image {\n
   background-image: url(\'<dtml-var expr="portal_url()">/images/1leftarrowb.png\');\n
 }\n
 \n
-#context_bar .tool_buttons .jump_next .image {\n
+#context_bar .tool_buttons .jump_next .image, /* BBB */\n
+.context_bar .tool_buttons .jump_next .image {\n
   background-image: url(\'<dtml-var expr="portal_url()">/images/1rightarrowb.png\');\n
 }\n
 \n
-#context_bar .tool_buttons .jump_last .image {\n
+#context_bar .tool_buttons .jump_last .image, /* BBB */\n
+.context_bar .tool_buttons .jump_last .image {\n
   background-image: url(\'<dtml-var expr="portal_url()">/images/2rightarrowb.png\');\n
 }\n
 \n
-#context_bar .tool_buttons .import_export .image {\n
+#context_bar .tool_buttons .import_export .image, /* BBB */\n
+.context_bar .tool_buttons .import_export .image {\n
   background-image: url(\'<dtml-var expr="portal_url()">/images/imp-exp.png\');\n
 }\n
 \n
-#context_bar .tool_buttons .jump_help .image {\n
+#context_bar .tool_buttons .jump_help .image, /* BBB */\n
+.context_bar .tool_buttons .jump_help .image {\n
   background-image: url(\'<dtml-var expr="portal_url()">/images/userhelp.png\');\n
 }\n
 \n
-#context_bar .tool_buttons .find .image {\n
+#context_bar .tool_buttons .jump_help .image, /* BBB */\n
+.context_bar .tool_buttons .jump_help .image {\n
   background-image: url(\'<dtml-var expr="portal_url()">/images/find.png\');\n
 }\n
 \n
-#context_bar .tool_buttons .print .image {\n
+#context_bar .tool_buttons .print .image, /* BBB */\n
+.context_bar .tool_buttons .print .image {\n
   background-image: url(\'<dtml-var expr="portal_url()">/images/print.png\');\n
 }\n
 \n
-#context_bar .tool_buttons .report .image {\n
+#context_bar .tool_buttons .report .image, /* BBB */\n
+.context_bar .tool_buttons .report .image {\n
   background-image: url(\'<dtml-var expr="portal_url()">/images/report.png\');\n
 }\n
 \n
-#context_bar .tool_buttons .fast_input .image {\n
+#context_bar .tool_buttons .fast_input .image, /* BBB */\n
+.context_bar .tool_buttons .fast_input .image {\n
   background-image: url(\'<dtml-var expr="portal_url()">/images/fast_input.png\');\n
 }\n
 \n
-#context_bar .tool_buttons .cut .image {\n
+#context_bar .tool_buttons .cut .image, /* BBB */\n
+.context_bar .tool_buttons .cut .image {\n
   background-image: url(\'<dtml-var expr="portal_url()">/images/editcut.png\');\n
 }\n
 \n
-#context_bar .tool_buttons .copy .image {\n
+#context_bar .tool_buttons .copy .image, /* BBB */\n
+.context_bar .tool_buttons .copy .image {\n
   background-image: url(\'<dtml-var expr="portal_url()">/images/editcopy.png\');\n
 }\n
 \n
-#context_bar .tool_buttons .paste .image {\n
+#context_bar .tool_buttons .paste .image, /* BBB */\n
+.context_bar .tool_buttons .paste .image {\n
   background-image: url(\'<dtml-var expr="portal_url()">/images/editpaste.png\');\n
 }\n
 \n
-#context_bar .tool_buttons .delete .image {\n
+#context_bar .tool_buttons .delete .image, /* BBB */\n
+.context_bar .tool_buttons .delete .image {\n
   background-image: url(\'<dtml-var expr="portal_url()">/images/editdelete.png\');\n
 }\n
 \n
-#context_bar .tool_buttons .show_all .image {\n
+#context_bar .tool_buttons .show_all .image, /* BBB */\n
+.context_bar .tool_buttons .show_all .image {\n
   background-image: url(\'<dtml-var expr="portal_url()">/images/showall.png\');\n
 }\n
 \n
-#context_bar .tool_buttons .filter .image {\n
+#context_bar .tool_buttons .filter .image, /* BBB */\n
+.context_bar .tool_buttons .filter .image {\n
   background-image: url(\'<dtml-var expr="portal_url()">/images/filter.png\');\n
 }\n
 \n
-#context_bar .tool_buttons .filter_on .image {\n
+#context_bar .tool_buttons .filter_on .image, /* BBB */\n
+.context_bar .tool_buttons .filter_on .image {\n
   background-image: url(\'<dtml-var expr="portal_url()">/images/filter_on.png\');\n
 }\n
 \n
-#context_bar .tool_buttons .sort .image {\n
+#context_bar .tool_buttons .sort .image, /* BBB */\n
+.context_bar .tool_buttons .sort .image {\n
   background-image: url(\'<dtml-var expr="portal_url()">/images/sort.png\');\n
 }\n
 \n
-#context_bar .tool_buttons .configure .image {\n
+#context_bar .tool_buttons .configure .image, /* BBB */\n
+.context_bar .tool_buttons .configure .image {\n
   background-image: url(\'<dtml-var expr="portal_url()">/images/configure.png\');\n
 }\n
 \n
-#context_bar .tool_buttons .activity_pending .image {\n
+#context_bar .tool_buttons .activity_pending .image, /* BBB */\n
+.context_bar .tool_buttons .activity_pending .image {\n
   width: 26px;\n
   background-image: url(\'<dtml-var expr="portal_url()">/images/activity_busy.png\');\n
 }\n
 \n
-#context_bar .tool_buttons .inspect_object .image {\n
+#context_bar .tool_buttons .inspect_object .image, /* BBB */\n
+.context_bar .tool_buttons .inspect_object .image {\n
   background-image: url(\'<dtml-var expr="portal_url()">/images/inspect.png\');\n
 }\n
 \n
 /* Status */\n
 \n
-#breadcrumb {\n
+#breadcrumb, /* BBB */\n
+.breadcrumb {\n
   float: left;\n
 /*   font-size: 90%; */\n
   margin-bottom: 5px;\n
 }\n
 \n
-#breadcrumb a {\n
+#breadcrumb a, /* BBB */\n
+.breadcrumb a {\n
   color: <dtml-var link_color>;\n
 }\n
 \n
-#logged_in_as {\n
+#logged_in_as, /* BBB */\n
+.logged_in_as {\n
   float: right;\n
 }\n
 \n
-#logged_in_as .logged_txt{\n
+#logged_in_as .logged_txt, /* BBB */\n
+.logged_in_as .logged_txt{\n
   color: <dtml-var link_color>;\n
 /*   font-size: 90%; */\n
 }\n
 \n
-#transition_message {\n
+#transition_message, /* BBB */\n
+.transition_message {\n
   margin-left: 1em;\n
   color: #f40;\n
   background-color: inherit;\n
   font-weight: bold;\n
 }\n
 \n
-#information_area {\n
+#information_area, /* BBB */\n
+.information_area {\n
   margin-top: 1em;\n
   padding:0.5em 1em 0.5em 1em;\n
   border-width: 1px;\n
@@ -1130,7 +1206,7 @@ a.tree_closed {\n
 /* LISTBOX */\n
 /* FIXME:\n
   - listbox uses lots of IDs, but there can be more than one listbox in a page !\n
-  - hardcoded images in html which are inly used for rendering style\n
+  - hardcoded images in html which are only used for rendering style\n
   */\n
 .ListSummary {\n
   background: url(\'<dtml-var expr="portal_url()">/images/tab_left_selected.png\') top left no-repeat;\n
@@ -1218,7 +1294,7 @@ table.listbox.table {\n
 }\n
 \n
 .listbox tr.DataA:hover,\n
-.listbox tr.DataB:hover, \n
+.listbox tr.DataB:hover,\n
 table.listbox.table tr.tbody:hover{\n
   color: inherit;\n
   background-color: <dtml-var listbox_hover_background_color>;\n
@@ -1324,7 +1400,8 @@ div.searchResultHeader .left  {float: left}\n
 /* Search results list\n
 ------------------------------------------------*/\n
 \n
-div#main_content.list_mode{\n
+div#main_content.list_mode, /* BBB */\n
+div.main_content.list_mode {\n
   font-size:0.7em;\n
   line-height:1.5em;\n
 }\n

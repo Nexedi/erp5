@@ -1,3 +1,6 @@
+2010-02-01 yo
+* Switch to class-based completely instead of id-based styling in erp5.css. The old way is kept for backward compatibility.
+
 2010-2-1 Yusei
 * Update erp5.css and set hidden_fieldset.border 0.
 
