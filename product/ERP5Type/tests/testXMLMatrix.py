@@ -220,17 +220,16 @@ class TestXMLMatrix(ERP5TypeTestCase, LogInterceptor):
                             *place, **kwd)
     get_transaction().commit()
     self.tic()
-    initial_cell_id_list = map(lambda x: x.getId(),matrix.objectValues())
+    initial_cell_id_list = list(matrix.objectIds())
     for id in initial_cell_id_list:
-      cell_path = url + '/' + id
-      self.assertEquals(catalog.hasPath(cell_path),True)
+      self.assertTrue(catalog.hasPath(url + '/' + id))
 
     cell_range = [['2', '3', '4'], ['b', 'c', 'd']]
     matrix.setCellRange(*cell_range, **kwd)
     # We must commit transaction in order to put cell reindexing in activity queue
     get_transaction().commit()
     self.assertEqual(matrix.getCellRange(**kwd), cell_range)
-    next_cell_id_list = map(lambda x: x.getId(),matrix.objectValues())
+    next_cell_id_list = list(matrix.objectIds())
     # the cells on coordinates 2b, 3b, 3b and 3c are kept
     self.assertEquals(4, len(next_cell_id_list))
     for coord in [['2', 'b'],
@@ -242,25 +241,21 @@ class TestXMLMatrix(ERP5TypeTestCase, LogInterceptor):
     removed_id_list = filter(lambda x: x not in next_cell_id_list,initial_cell_id_list)
     self.tic()
     for id in next_cell_id_list:
-      cell_path = url + '/' + id
-      self.assertEquals(catalog.hasPath(cell_path),True)
+      self.assertTrue(catalog.hasPath(url + '/' + id))
     for id in removed_id_list:
-      cell_path = url + '/' + id
-      self.assertEquals(catalog.hasPath(cell_path),False)
+      self.assertFalse(catalog.hasPath(url + '/' + id))
 
     cell_range = [['0', '1'], ['a','b']]
     matrix.setCellRange(*cell_range, **kwd)
     get_transaction().commit()
     self.assertEqual(matrix.getCellRange(**kwd), cell_range)
-    next2_cell_id_list = map(lambda x: x.getId(),matrix.objectValues())
+    next2_cell_id_list = list(matrix.objectIds())
     removed_id_list = filter(lambda x: x not in next2_cell_id_list,next_cell_id_list)
     self.tic()
     for id in next2_cell_id_list:
-      cell_path = url + '/' + id
-      self.assertEquals(catalog.hasPath(cell_path),True)
+      self.assertTrue(catalog.hasPath(url + '/' + id))
     for id in removed_id_list:
-      cell_path = url + '/' + id
-      self.assertEquals(catalog.hasPath(cell_path),False)
+      self.assertFalse(catalog.hasPath(url + '/' + id))
 
     cell_range = [['0', '1'], ['a','b']]
     kwd = {'base_id' : 'movement'}
@@ -269,8 +264,7 @@ class TestXMLMatrix(ERP5TypeTestCase, LogInterceptor):
     self.assertEqual(matrix.getCellRange(**kwd), cell_range)
     self.tic()
     for id in next2_cell_id_list:
-      cell_path = url + '/' + id
-      self.assertEquals(catalog.hasPath(cell_path),False)
+      self.assertFalse(catalog.hasPath(url + '/' + id))
 
     # create some cells
     cell1 = matrix.newCell(*['0', 'a'], **kwd)
@@ -339,7 +333,151 @@ class TestXMLMatrix(ERP5TypeTestCase, LogInterceptor):
     This test removes activity tool, and restores it in teardown.
     """
     self.checkSetCellRangeAndCatalog(active=0)
+
+  def test_add_dimension(self):
+    matrix = self.matrix
+
+    cell_range = [['1', ]]
+    kwd = {'base_id' : 'quantity'}
+    matrix.setCellRange(*cell_range, **kwd)
+
+    cell = matrix.newCell(*['1',], **kwd)
+    get_transaction().commit()
+    self.tic()
+    
+    cell_range = [['1', ], ['a', ]]
+    matrix.setCellRange(*cell_range, **kwd)
+    self.assertEquals(0, len(matrix.getCellValueList(**kwd)))
+    new_cell = matrix.newCell(*['1', 'a'], **kwd)
+    get_transaction().commit()
+    self.tic()
+
+  def test_del_dimension(self):
+    matrix = self.matrix
+
+    cell_range = [['1', ], ['a', ]]
+    kwd = {'base_id' : 'quantity'}
+    matrix.setCellRange(*cell_range, **kwd)
+
+    for place in cartesianProduct(cell_range):
+      matrix.newCell(*place, **kwd)
+    get_transaction().commit()
+    self.tic()
+    
+    cell_range = [['1', ]]
+    matrix.setCellRange(*cell_range, **kwd)
+    self.assertEquals(0, len(matrix.getCellValueList(**kwd)))
+    get_transaction().commit()
+    self.tic()
+
+  def test_increase_dimension(self):
+    matrix = self.matrix
+
+    cell_range = [['1', ], ['a', ]]
+    kwd = {'base_id' : 'quantity'}
+    matrix.setCellRange(*cell_range, **kwd)
+
+    for place in cartesianProduct(cell_range):
+      matrix.newCell(*place, **kwd)
+    cell = matrix.getCell(*['1', 'a'], **kwd)
+    get_transaction().commit()
+    self.tic()
+    
+    cell_range = [['1', '2', ], ['a']]
+    matrix.setCellRange(*cell_range, **kwd)
+    self.assertEquals(1, len(matrix.getCellValueList(**kwd)))
+    # previous cell is kept
+    self.assertEquals(cell, matrix.getCell(*['1', 'a'], **kwd))
+    get_transaction().commit()
+    self.tic()
+    # the cell is still in catalog
+    self.assertEquals(cell,
+        self.portal.portal_catalog.getObject(cell.getUid()))
+
+  def test_decrease_dimension(self):
+    matrix = self.matrix
+
+    cell_range = [['1', '2'], ['a', ]]
+    kwd = {'base_id' : 'quantity'}
+    matrix.setCellRange(*cell_range, **kwd)
+
+    for place in cartesianProduct(cell_range):
+      matrix.newCell(*place, **kwd)
+    cell = matrix.getCell(*['1', 'a'], **kwd)
+    get_transaction().commit()
+    self.tic()
+    
+    cell_range = [['1', ], ['a']]
+    matrix.setCellRange(*cell_range, **kwd)
+    self.assertEquals(1, len(matrix.getCellValueList(**kwd)))
+    # previous cell is kept
+    self.assertEquals(cell, matrix.getCell(*['1', 'a'], **kwd))
+    get_transaction().commit()
+    self.tic()
+    # the cell is still in catalog
+    self.assertEquals(cell,
+        self.portal.portal_catalog.getObject(cell.getUid()))
+
+
+  def test_decrease_and_increase_dimension(self):
+    matrix = self.matrix
+
+    cell_range = [['1', '2'], ['a', ]]
+    kwd = {'base_id' : 'quantity'}
+    matrix.setCellRange(*cell_range, **kwd)
+
+    for place in cartesianProduct(cell_range):
+      matrix.newCell(*place, **kwd)
+    cell = matrix.getCell(*['1', 'a'], **kwd)
+    get_transaction().commit()
+    self.tic()
+    
+    cell_range = [['1', ], ['a', 'b']]
+    matrix.setCellRange(*cell_range, **kwd)
+    self.assertEquals(1, len(matrix.getCellValueList(**kwd)))
+    # previous cell is kept
+    self.assertEquals(cell, matrix.getCell(*['1', 'a'], **kwd))
+    get_transaction().commit()
+    self.tic()
+    # the cell is still in catalog
+    self.assertEquals(cell,
+        self.portal.portal_catalog.getObject(cell.getUid()))
+
+  def test_change_dimension_cell_change_id(self):
+    # The dimension change, a cell is kept, but receives a new ID because its
+    # coordinate changes
+    matrix = self.matrix
+
+    cell_range = [['1', '2',], ['a', 'b',]]
+    kwd = {'base_id' : 'quantity'}
+    matrix.setCellRange(*cell_range, **kwd)
+
+    for place in cartesianProduct(cell_range):
+      matrix.newCell(*place, **kwd)
+    
+    cell = matrix.getCell('2', 'b', **kwd)
+    self.assertEquals('quantity_1_1', cell.getId())
+    cell.setTitle('This one')
+    get_transaction().commit()
+    self.tic()
+    
+    cell_range = [['2', '3', ], ['b', 'c',]]
+    matrix.setCellRange(*cell_range, **kwd)
+    get_transaction().commit()
+    self.assertFalse('quantity_0_1' in matrix.objectIds())
+
+    cell = matrix.getCell('2', 'b', **kwd)
+    # this is the same cell, but it just changed id
+    self.assertEquals('quantity_0_0', cell.getId())
+    self.assertEquals('This one', cell.getTitle())
   
+    get_transaction().commit()
+    self.tic()
+
+    # the cell is still in catalog
+    self.assertEquals(cell,
+        self.portal.portal_catalog.getObject(cell.getUid()))
+    
 
 def test_suite():
   suite = unittest.TestSuite()
