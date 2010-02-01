@@ -96,13 +96,12 @@ class MovementGeneratorMixin:
     for base_category in \
         business_path.getSourceArrowBaseCategoryList() +\
         business_path.getDestinationArrowBaseCategoryList():
-      # XXX: we need to use _list for categories *always*
       category_url = business_path.getDefaultAcquiredCategoryMembership(
           base_category, context=movement)
       if category_url not in ['', None]:
-        property_dict['%s_list' % base_category] = [category_url]
+        property_dict[base_category] = [category_url]
       else:
-        property_dict['%s_list' % base_category] = []
+        property_dict[base_category] = []
     # Amount
     if business_path.getQuantity():
       property_dict['quantity'] = business_path.getQuantity()
@@ -112,7 +111,9 @@ class MovementGeneratorMixin:
     else:
       property_dict['quantity'] = movement.getQuantity()
 
-    if movement.getStartDate() == movement.getStopDate():
+    movement_start_date = movement.getStartDate()
+    movement_stop_date = movement.getStopDate()
+    if movement_start_date == movement_stop_date:
       property_dict['start_date'] = business_path.getExpectedStartDate(
           movement)
       property_dict['stop_date'] = business_path.getExpectedStopDate(movement)
@@ -120,13 +121,13 @@ class MovementGeneratorMixin:
       # XXX: as soon as BPM will be fully operational this hack will not be
       #      needed anymore
       if property_dict['start_date'] is None:
-        property_dict['start_date'] = movement.getStartDate()
+        property_dict['start_date'] = movement_start_date
       if property_dict['stop_date'] is None:
-        property_dict['stop_date'] = movement.getStopDate()
+        property_dict['stop_date'] = movement_stop_date
     else: # XXX shall not be used, but business_path.getExpectedStart/StopDate
           # do not works on second path...
-      property_dict['start_date'] = movement.getStartDate()
-      property_dict['stop_date'] = movement.getStopDate()
+      property_dict['start_date'] = movement_start_date
+      property_dict['stop_date'] = movement_stop_date
 
     # save a relation to business path
     property_dict['causality_list'] = [business_path.getRelativeUrl()]
