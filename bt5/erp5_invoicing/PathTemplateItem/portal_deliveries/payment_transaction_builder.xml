@@ -35,7 +35,7 @@
         </item>
         <item>
             <key> <string>delivery_after_generation_script_id</string> </key>
-            <value> <string>PaymentTransaction_copyInvoiceProperties</string> </value>
+            <value> <string>PaymentTransaction_postGeneration</string> </value>
         </item>
         <item>
             <key> <string>delivery_cell_collect_order</string> </key>
