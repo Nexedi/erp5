@@ -67,7 +67,7 @@ if target_language:\n
   request[\'AcceptLanguage\'].set(target_language, 10)\n
 \n
 form_report = getattr(context, print_mode)\n
-return form_report()\n
+return form_report(**kw)\n
 </string> </value>
         </item>
         <item>
@@ -117,6 +117,7 @@ return form_report()\n
                             <string>request</string>
                             <string>_getitem_</string>
                             <string>form_report</string>
+                            <string>_apply_</string>
                           </tuple>
                         </value>
                     </item>
