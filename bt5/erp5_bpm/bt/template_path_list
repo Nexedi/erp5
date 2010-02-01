@@ -1,9 +1,5 @@
-business_process_module/erp5_default_business_process
-business_process_module/erp5_default_business_process/**
 portal_categories/end_of
 portal_categories/end_of/**
-portal_categories/trade_phase/default
-portal_categories/trade_phase/default/**
 portal_deliveries/bpm_sale_invoice_builder
 portal_deliveries/bpm_sale_invoice_builder/**
 portal_deliveries/bpm_sale_packing_list_builder
