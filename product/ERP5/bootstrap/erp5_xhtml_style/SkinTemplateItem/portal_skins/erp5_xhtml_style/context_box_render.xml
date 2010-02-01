@@ -43,7 +43,7 @@
            xmlns:metal="http://xml.zope.org/namespaces/metal"\n
            xmlns:i18n="http://xml.zope.org/namespaces/i18n">\n
   <tal:block metal:define-macro="master">\n
-    <span id="jump" metal:define-macro="jump">\n
+    <span id="jump" class="jump" metal:define-macro="jump">\n
       <select name="select_jump"\n
               onChange="submitAction(this.form,\'Base_doJump\')">\n
         <option selected="selected" value=""\n
@@ -78,7 +78,7 @@
 \n
     <span class="separator"><!--separator--></span>\n
 \n
-    <span id="action" metal:define-macro="action">\n
+    <span id="action" class="action" metal:define-macro="action">\n
       <select name="select_action"\n
               onChange="submitAction(this.form,\'Base_doAction\')">\n
         <option selected="selected" value=""\n

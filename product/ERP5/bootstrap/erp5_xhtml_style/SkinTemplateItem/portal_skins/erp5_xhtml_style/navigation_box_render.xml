@@ -45,7 +45,7 @@
   <tal:block tal:define="portal here/getPortalObject;\n
                          actions python:portal.portal_actions.listFilteredActionsFor(here)">\n
     <span class="first">\n
-      <span id="favourites">\n
+      <span id="favourites" class="favourites">\n
         <select name="select_favorite"\n
                 onChange="submitAction(this.form,\'Base_doFavorite\')"\n
                 tal:define="ordered_global_actions python:here.getOrderedGlobalActionList(actions[\'global\']);\n
@@ -82,7 +82,7 @@
         </button>\n
       </span>\n
       <span class="separator"><!--separator--></span>\n
-      <span id="modules">\n
+      <span id="modules" class="modules">\n
         <select name="select_module"\n
                 onChange="submitAction(this.form,\'Base_doModule\')"\n
                 tal:define="module_list here/ERP5Site_getModuleItemList;">\n
@@ -101,7 +101,7 @@
       </span>\n
     </span>\n
     <span class="second">\n
-      <span id="language">\n
+      <span id="language" class="language">\n
         <select name="select_language"\n
                 tal:define="language_list python:portal.portal_preferences.getPreference(\'preferred_user_interface_language_list\', None)"\n
                 onChange="submitAction(this.form,\'Base_doLanguage\')">\n
@@ -124,7 +124,7 @@
         </button>\n
       </span>\n
       <span class="separator"><!--separator--></span>\n
-      <span id="search" tal:define="search_default_text python:here.Base_translateString(\'Search\')">\n
+      <span id="search" class="search" tal:define="search_default_text python:here.Base_translateString(\'Search\')">\n
         <input type="hidden" name="all_languages" value="1" />\n
         <input class="quick_search_field" accesskey="4" type="text" name="field_your_search_text"\n
           value="Search" tal:attributes="value string:${search_default_text};\n
