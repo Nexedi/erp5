@@ -4,6 +4,12 @@ Delivery Rule | Float Divergence Tester
 Delivery Rule | Net Converted Quantity Divergence Tester
 Delivery Rule | String Divergence Tester
 Delivery Rule | Variation Divergence Tester
+Invoice Rule | Category Membership Divergence Tester
+Invoice Rule | DateTime Divergence Tester
+Invoice Rule | Float Divergence Tester
+Invoice Rule | Net Converted Quantity Divergence Tester
+Invoice Rule | String Divergence Tester
+Invoice Rule | Variation Divergence Tester
 Invoice Transaction Rule | Category Membership Divergence Tester
 Invoice Transaction Rule | DateTime Divergence Tester
 Invoice Transaction Rule | Float Divergence Tester
