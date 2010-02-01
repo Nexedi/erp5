@@ -54,7 +54,7 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>temporary_result = [assignment\n
-                    for assignment in context.contentValues(portal_type=\'Assignment\')\n
+                    for assignment in context.contentValues(portal_type=\'Career\')\n
                     if assignment.getValidationState()==\'open\']\n
 return sequence.sort(temporary_result, ((\'start_date\', \'cmp\', \'asc\'),))\n
 </string> </value>
@@ -119,7 +119,7 @@ return sequence.sort(temporary_result, ((\'start_date\', \'cmp\', \'asc\'),))\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Person_getAssignmentListAsLaborListPrintOut</string> </value>
+            <value> <string>Person_getCareerListAsLaborListPrintOut</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

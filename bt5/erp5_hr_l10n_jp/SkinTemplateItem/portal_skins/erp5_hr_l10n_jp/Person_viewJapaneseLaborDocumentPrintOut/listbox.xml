@@ -361,12 +361,12 @@
                           <string>title</string>
                         </tuple>
                         <tuple>
-                          <string>start_date</string>
-                          <string>start_date</string>
+                          <string>description</string>
+                          <string>description</string>
                         </tuple>
                         <tuple>
-                          <string>description</string>
-                          <string>description</string>
+                          <string>start_date</string>
+                          <string>start_date</string>
                         </tuple>
                       </list>
                     </value>
@@ -517,7 +517,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Assignments</string> </value>
+                    <value> <string>Career list</string> </value>
                 </item>
                 <item>
                     <key> <string>untranslatable_columns</string> </key>
@@ -548,7 +548,7 @@
       <dictionary>
         <item>
             <key> <string>method_name</string> </key>
-            <value> <string>Person_getAssignmentListAsLaborListPrintOut</string> </value>
+            <value> <string>Person_getCareerListAsLaborListPrintOut</string> </value>
         </item>
       </dictionary>
     </pickle>
