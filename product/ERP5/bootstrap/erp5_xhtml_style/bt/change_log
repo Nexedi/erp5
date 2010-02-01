@@ -1,3 +1,6 @@
+2010-2-1 Yusei
+* Update erp5.css and set hidden_fieldset.border 0.
+
 2010-1-31 Yusei
 * Update erp5.css and replace "display:none" with "visibility:hidden" to fix webkit based browser problem.
 
