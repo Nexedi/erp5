@@ -58,7 +58,7 @@ class TestBPMEvaluationMixin(TestBPMMixin):
 
   def getBusinessTemplateList(self):
     return TestBPMMixin.getBusinessTemplateList(self) + ('erp5_bpm',
-        'erp5_administration')
+        'erp5_administration', 'erp5_simulation',)
 
   def afterSetUp(self):
     TestBPMMixin.afterSetUp(self)
@@ -91,29 +91,59 @@ class TestBPMEvaluationMixin(TestBPMMixin):
     edit_dict = {}
     edit_dict.update(
       trade_phase = 'default/delivery',
-      expandable_property = ('aggregate_list', 'base_application_list',
-        'base_contribution_list', 'causality_list', 'description',
-        'destination_account_list', 'destination_function_list',
-        'destination_list', 'destination_section_list', 'price',
-        'price_currency_list', 'quantity', 'quantity_unit_list',
-        'resource_list', 'source_account_list', 'source_function_list',
-        'source_list', 'source_section_list', 'start_date', 'stop_date',
-        'variation_category_list', 'variation_property_dict'),
-      matching_property = ('resource_list', 'variation_category_list',
-        'variation_property_dict', 'order_list')
     )
     edit_dict.update(**kw)
     rule = self.rule_tool.newContent(**edit_dict)
-    rule.newContent(portal_type='Category Divergence Tester',
-        tested_property = ('source_section_list | Source Section',
-          'resource_list | Resource',
-          'destination_section_list | Destination Section',
-          'source_list | Source', 'destination_list | Destination',
-          'aggregate_list | Aggregate'))
-    rule.newContent(portal_type='Property Divergence Tester',
-        tested_property = ('start_date | Start Date',
-          'stop_date | Stop Date'))
-    rule.newContent(portal_type='Quantity Divergence Tester')
+
+    # matching providers
+    for category in ('resource', 'order'):
+      rule.newContent(
+        portal_type='Category Membership Divergence Tester',
+        title='%s divergence tester' % category,
+        tested_property=category,
+        divergence_provider=False,
+        matching_provider=True)
+    rule.newContent(
+      portal_type='Variation Divergence Tester',
+      title='variation divergence tester',
+      tested_property='variation_property_dict',
+      divergence_provider=False,
+      matching_provider=True)
+
+    # divergence providers
+    for category in ('source_section',
+                     'resource',
+                     'destination_section',
+                     'source',
+                     'aggregate'):
+      rule.newContent(
+        portal_type='Category Membership Divergence Tester',
+        title='%s divergence tester' % category,
+        tested_property=category,
+        divergence_provider=True,
+        matching_provider=False)
+    rule.newContent(
+      portal_type='Net Converted Quantity Divergence Tester',
+      title='quantity divergence tester',
+      tested_property='quantity',
+      quantity=0,
+      divergence_provider=True,
+      matching_provider=False)
+    for property_id in ('start_date', 'stop_date'):
+      rule.newContent(
+        portal_type='DateTime Divergence Tester',
+        title='%s divergence tester' % property_id,
+        tested_property=property_id,
+        quantity=0,
+        divergence_provider=True,
+        matching_provider=False)
+    rule.newContent(
+      portal_type='Float Divergence Tester',
+      title='price divergence tester',
+      tested_property='price',
+      quantity=0,
+      divergence_provider=True,
+      matching_provider=False)
 
     return rule
 
@@ -130,41 +160,69 @@ class TestBPMEvaluationMixin(TestBPMMixin):
     transaction.commit()
 
   def _createTradeModelRule(self):
-    edit_dict = {}
-    edit_dict.update(
-    )
     rule = self.rule_tool.newContent(portal_type='Trade Model Rule',
       reference='default_trade_model_rule',
-      expandable_property = ('delivery_mode_list', 'incoterm_list',
-        'source_list', 'destination_list', 'source_section_list',
-        'destination_section_list', 'source_decision_list',
-        'destination_decision_list', 'source_administration_list',
-        'destination_administration_list', 'price_currency_list',
-        'resource_list', 'aggregate_list', 'source_function_list',
-        'destination_function_list', 'source_account_list',
-        'destination_account_list', 'description',
-        'destination_payment_list', 'source_payment_list'),
       test_method_id = ('SimulationMovement_testTradeModelRule',)
       )
-    rule.newContent(portal_type='Category Divergence Tester',
-        tested_property = ('resource_list | Resource',
-          'source_section_list | Source Section',
-          'destination_section_list | Destination Section',
-          'source_list | Source', 'destination_list | Destination',
-          'source_function_list | Source Function',
-          'destination_function_list | Destination Function',
-          'source_project_list | Source Project',
-          'destination_project_list | Destination Project',
-          'aggregate_list | Aggregate',
-          'price_currency_list | Price Currency',
-          'base_contribution_list | Base Contribution',
-          'base_application_list | Base Application',
-          'source_account_list | Source Account',
-          'destination_account_list | Destination Account'))
-    rule.newContent(portal_type='Property Divergence Tester',
-        tested_property = ('start_date | Start Date',
-          'stop_date | Stop Date', 'price | Price'))
-    rule.newContent(portal_type='Quantity Divergence Tester')
+    # matching providers
+    for category in ('resource',):
+      rule.newContent(
+        portal_type='Category Membership Divergence Tester',
+        title='%s divergence tester' % category,
+        tested_property=category,
+        divergence_provider=False,
+        matching_provider=True)
+    rule.newContent(
+      portal_type='Variation Divergence Tester',
+      title='variation divergence tester',
+      tested_property='variation_property_dict',
+      divergence_provider=False,
+      matching_provider=True)
+
+    # divergence providers
+    for category in ('resource',
+                     'source_section',
+                     'destination_section',
+                     'source',
+                     'source_function',
+                     'destination_function',
+                     'source_project',
+                     'destination_project',
+                     'aggregate',
+                     'price_currency',
+                     'base_contribution',
+                     'base_application',
+                     'source_account',
+                     'destination_account',
+                     ):
+      rule.newContent(
+        portal_type='Category Membership Divergence Tester',
+        title='%s divergence tester' % category,
+        tested_property=category,
+        divergence_provider=True,
+        matching_provider=False)
+    rule.newContent(
+      portal_type='Net Converted Quantity Divergence Tester',
+      title='quantity divergence tester',
+      tested_property='quantity',
+      quantity=0,
+      divergence_provider=True,
+      matching_provider=False)
+    for property_id in ('start_date', 'stop_date'):
+      rule.newContent(
+        portal_type='DateTime Divergence Tester',
+        title='%s divergence tester' % property_id,
+        tested_property=property_id,
+        quantity=0,
+        divergence_provider=True,
+        matching_provider=False)
+    rule.newContent(
+      portal_type='Float Divergence Tester',
+      title='price divergence tester',
+      tested_property='price',
+      quantity=0,
+      divergence_provider=True,
+      matching_provider=False)
 
     rule.validate()
     transaction.commit()
@@ -187,38 +245,67 @@ class TestBPMEvaluationMixin(TestBPMMixin):
     rule = self.rule_tool.newContent(portal_type='Invoicing Rule',
       reference='default_invoicing_rule',
       trade_phase = 'default/invoicing',
-      expandable_property = ('aggregate_list', 'base_application_list',
-        'base_contribution_list', 'causality_list', 'delivery_mode_list',
-        'description', 'destination_account_list',
-        'destination_function_list', 'destination_list',
-        'destination_section_list', 'efficiency', 'incoterm_list', 'price',
-        'price_currency_list', 'quantity', 'quantity_unit_list',
-        'resource_list', 'source_account_list', 'source_function_list',
-        'source_list', 'source_section_list', 'start_date', 'stop_date',
-        'variation_category_list', 'variation_property_dict'),
-      matching_property = ('resource_list', 'variation_category_list',
-        'variation_property_dict'),
       test_method_id = ('SimulationMovement_testInvoicingRule',)
       )
-    rule.newContent(portal_type='Category Divergence Tester',
-        tested_property = ('resource_list | Resource',
-          'source_section_list | Source Section',
-          'destination_section_list | Destination Section',
-          'source_list | Source', 'destination_list | Destination',
-          'source_function_list | Source Function',
-          'destination_function_list | Destination Function',
-          'source_project_list | Source Project',
-          'destination_project_list | Destination Project',
-          'aggregate_list | Aggregate',
-          'price_currency_list | Price Currency',
-          'base_contribution_list | Base Contribution',
-          'base_application_list | Base Application',
-          'source_account_list | Source Account',
-          'destination_account_list | Destination Account'))
-    rule.newContent(portal_type='Property Divergence Tester',
-        tested_property = ('start_date | Start Date',
-          'stop_date | Stop Date'))
-    rule.newContent(portal_type='Quantity Divergence Tester')
+    # matching providers
+    for category in ('resource',):
+      rule.newContent(
+        portal_type='Category Membership Divergence Tester',
+        title='%s divergence tester' % category,
+        tested_property=category,
+        divergence_provider=False,
+        matching_provider=True)
+    rule.newContent(
+      portal_type='Variation Divergence Tester',
+      title='variation divergence tester',
+      tested_property='variation_property_dict',
+      divergence_provider=False,
+      matching_provider=True)
+
+    # divergence providers
+    for category in ('resource',
+                     'source_section',
+                     'destination_section',
+                     'source',
+                     'source_function',
+                     'destination_function',
+                     'source_project',
+                     'destination_project',
+                     'aggregate',
+                     'price_currency',
+                     'base_contribution',
+                     'base_application',
+                     'source_account',
+                     'destination_account',
+                     ):
+      rule.newContent(
+        portal_type='Category Membership Divergence Tester',
+        title='%s divergence tester' % category,
+        tested_property=category,
+        divergence_provider=True,
+        matching_provider=False)
+    rule.newContent(
+      portal_type='Net Converted Quantity Divergence Tester',
+      title='quantity divergence tester',
+      tested_property='quantity',
+      quantity=0,
+      divergence_provider=True,
+      matching_provider=False)
+    for property_id in ('start_date', 'stop_date'):
+      rule.newContent(
+        portal_type='DateTime Divergence Tester',
+        title='%s divergence tester' % property_id,
+        tested_property=property_id,
+        quantity=0,
+        divergence_provider=True,
+        matching_provider=False)
+    rule.newContent(
+      portal_type='Float Divergence Tester',
+      title='price divergence tester',
+      tested_property='price',
+      quantity=0,
+      divergence_provider=True,
+      matching_provider=False)
 
     rule.validate()
     transaction.commit()
