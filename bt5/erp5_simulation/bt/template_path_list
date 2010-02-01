@@ -1,3 +1,7 @@
+business_process_module/erp5_default_business_process
+business_process_module/erp5_default_business_process/**
+portal_categories/trade_phase/default
+portal_categories/trade_phase/default/**
 portal_rules/default_invoicing_rule
 portal_rules/default_invoicing_rule/3
 portal_rules/new_delivery_rule
