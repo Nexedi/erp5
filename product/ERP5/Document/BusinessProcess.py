@@ -86,10 +86,12 @@ class BusinessProcess(Path, XMLObject):
     elif not isinstance(trade_phase, (list, tuple)):
       trade_phase = (trade_phase,)
     result = []
+    business_path_list = sorted(self.objectValues(portal_type="Business Path"),
+                                key=lambda x:x.getIntIndex())
     if len(trade_phase) == 0:
-      return self.objectValues(portal_type="Business Path")
+      return business_path_list
     trade_phase = set(trade_phase)
-    for document in self.objectValues(portal_type="Business Path"):
+    for document in business_path_list:
       if trade_phase.intersection(document.getTradePhaseList()):
         result.append(document)
     return result
