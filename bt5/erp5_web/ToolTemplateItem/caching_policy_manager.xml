@@ -241,7 +241,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>python: getattr(object, \'getModificationDate\', None) is not None and object.getModificationDate() or object.modified()</string> </value>
+            <value> <string>python: getattr(object, \'getModificationDate\', object.modified)()</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -289,7 +289,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>python: getattr(object, \'getModificationDate\', None) is not None and object.getModificationDate() or object.modified()</string> </value>
+            <value> <string>python: getattr(object, \'getModificationDate\', object.modified)()</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -337,7 +337,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>python: getattr(object, \'getModificationDate\', None) is not None and object.getModificationDate() or object.modified()</string> </value>
+            <value> <string>python: getattr(object, \'getModificationDate\', object.modified)()</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -353,7 +353,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>python: member is None and object.getPortalType() in object.getPortalWebDocumentTypeList()</string> </value>
+            <value> <string>python: member is None and object.getPortalType() in ("Web Page", "Web Section", "Web Site")</string> </value>
         </item>
       </dictionary>
     </pickle>
