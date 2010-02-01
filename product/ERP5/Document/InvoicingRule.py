@@ -108,8 +108,6 @@ class InvoicingRule(Rule):
         'price': context_movement.getPrice(),
         'price_currency': context_movement.getPriceCurrency(),
         'efficiency': context_movement.getEfficiency(),
-        # We do need to collect invoice lines to build invoices
-        'deliverable': 1
         }
     return [invoice_line]
 
