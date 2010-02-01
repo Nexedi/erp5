@@ -342,6 +342,12 @@ Exception: %s %s
        activity_tool.getCurrentNode(), self.user_name,
        '/'.join(self.object_path), self.method_id, self.args, self.kw,
        call_traceback, self.exc_type, self.exc_value, self.traceback)
+
+    if isinstance(mail_text, unicode):
+      # __traceback_info__ can turn the tracebacks into unicode strings, but
+      # MailHost.send (in Zope 2.8) will not be able to parse headers if the
+      # mail_text is passed as a unicode.
+      mail_text = mail_text.encode('utf8')
     try:
       activity_tool.MailHost.send( mail_text )
     except (socket.error, MailHostError), message:
