@@ -55,17 +55,15 @@
             <key> <string>_body</string> </key>
             <value> <string>portal_type = context.getPortalType().lower().replace(\' \', \'_\')\n
 \n
-base = context.portal_preferences.getPreference(\'preferred_%s_variation_base_category_list\' % portal_type)\n
-optional = context.portal_preferences.getPreference(\'preferred_%s_optional_variation_base_category_list\' % portal_type)\n
-individual = context.portal_preferences.getPreference(\'preferred_%s_individual_variation_base_category_list\' % portal_type)\n
+base = context.portal_preferences.getPreference(\'preferred_%s_variation_base_category_list\' % portal_type, [])\n
+optional = context.portal_preferences.getPreference(\'preferred_%s_optional_variation_base_category_list\' % portal_type, [])\n
+individual = context.portal_preferences.getPreference(\'preferred_%s_individual_variation_base_category_list\' % portal_type, [])\n
+use_list = context.portal_preferences.getPreference(\'preferred_%s_use_list\' % portal_type, [])\n
 \n
-if individual:\n
-  context.edit(variation_base_category_list=base,\n
-      optional_variation_base_category_list=optional,\n
-      individual_variation_base_category_list=individual)\n
-else:\n
-  context.edit(variation_base_category_list=base,\n
-      optional_variation_base_category_list=optional)\n
+context.edit(variation_base_category_list=base,\n
+    optional_variation_base_category_list=optional,\n
+    individual_variation_base_category_list=individual,\n
+    use_list=use_list)\n
 </string> </value>
         </item>
         <item>
@@ -110,6 +108,7 @@ else:\n
                             <string>base</string>
                             <string>optional</string>
                             <string>individual</string>
+                            <string>use_list</string>
                           </tuple>
                         </value>
                     </item>
