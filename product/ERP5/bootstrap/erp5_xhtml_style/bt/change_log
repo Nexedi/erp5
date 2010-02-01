@@ -1,3 +1,6 @@
+2010-02-01 fabien
+* don't display action buttons (like copy/paste, ...) in dialog_mode
+
 2010-02-01 yo
 * Add classes into elements which have ids set in page templates, so that we could get rid of the ids potentially (but we can't because of tests).
 

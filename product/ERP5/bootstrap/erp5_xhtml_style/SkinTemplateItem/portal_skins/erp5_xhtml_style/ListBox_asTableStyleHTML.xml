@@ -336,7 +336,7 @@
 \n
           <!-- Copy / Paste buttons -->\n
           <div class="bottom_actions" \n
-               tal:condition="python:not is_gadget_mode and show_select_column">\n
+               tal:condition="python:not is_gadget_mode and show_select_column and not is_dialog_mode">\n
 \n
             <button type="submit" class="cut_button" title="Cut"\n
                     name="Folder_cut:method"\n
