@@ -195,6 +195,9 @@ def fixZSQLMethod(portal, method):
 
 def registerSkinFolder(skin_tool, skin_folder):
   request = skin_tool.REQUEST
+  # XXX: Getting parameter from request instead of dialog is bad
+  # XXX: This is even non consistent with rest of parameters selected by user
+  #      (like update_translation or update_catalog)
   register_skin_selection = request.get('your_register_skin_selection', 1)
   reorder_skin_selection = request.get('your_reorder_skin_selection', 1)
   skin_layer_list = request.get('your_skin_layer_list', 
