@@ -78,7 +78,7 @@ class TradeOrder:
     { 'id'            : 'total_quantity',
       'description'   : 'Total Quantity must not be 0',
       'type'          : 'TALESConstraint',
-      'expression'    : 'python: object.getTotalQuantity() > 0',
+      'expression'    : 'python: object.getTotalQuantity() != 0',
       'message_expression_false': 'Total Quantity must not be 0',
     },
     { 'id'            : 'start_date',
