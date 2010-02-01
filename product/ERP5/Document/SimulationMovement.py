@@ -309,18 +309,16 @@ class SimulationMovement(Movement, PropertyRecordableMixin):
   security.declareProtected( Permissions.AccessContentsInformation,
                              'isOrderable')
   def isOrderable(self):
-    applied_rule = self.getParentValue()
-    rule = applied_rule.getSpecialiseValue()
-    return rule is not None and rule.isOrderable(self)
+    # the value of this method is no longer used.
+    return True
 
   getOrderable = isOrderable
 
   security.declareProtected( Permissions.AccessContentsInformation,
                              'isDeliverable')
   def isDeliverable(self):
-    applied_rule = self.getParentValue()
-    rule = applied_rule.getSpecialiseValue()
-    return rule is not None and rule.isDeliverable(self)
+    # the value of this method is no longer used.
+    return True
 
   getDeliverable = isDeliverable
 
