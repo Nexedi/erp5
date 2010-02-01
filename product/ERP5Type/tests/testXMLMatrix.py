@@ -191,20 +191,11 @@ class TestXMLMatrix(ERP5TypeTestCase, LogInterceptor):
     get_transaction().commit()
     self.tic()
 
-  def checkSetCellRangeAndCatalog(self, active=1):
+  def test_02_SetCellRangeAndCatalogWithActivities(self):
     """
     Tests if set Cell range do well catalog and uncatalog
     """
     portal = self.portal
-    module = portal.purchase_order_module
-    if not active:
-      self.portal_activities_backup = portal._getOb('portal_activities')
-      portal._delObject('portal_activities')
-      module.recursiveImmediateReindexObject()
-    else:
-      module.recursiveReindexObject()
-      get_transaction().commit()
-      self.tic()
     catalog = portal.portal_catalog
 
     matrix = self.matrix
@@ -317,22 +308,6 @@ class TestXMLMatrix(ERP5TypeTestCase, LogInterceptor):
     self.assertTrue(catalog.hasPath(matrix.getPath()))
     self.assertFalse(catalog.hasPath(cell1_path))
     self.assertFalse(catalog.hasPath(cell2_path))
-
-
-  def test_02_SetCellRangeAndCatalogWithActivities(self):
-    """
-    Tests if set Cell range do well catalog and uncatalog, using activities
-    """
-    self.checkSetCellRangeAndCatalog(active=1)
-
-
-  def test_9999_SetCellRangeAndCatalogWithoutActivities(self):
-    """
-    Tests if set Cell range do well catalog and uncatalog, not using
-    activities.
-    This test removes activity tool, and restores it in teardown.
-    """
-    self.checkSetCellRangeAndCatalog(active=0)
 
   def test_add_dimension(self):
     matrix = self.matrix
