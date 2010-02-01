@@ -53,9 +53,11 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>context.setQuantityUnitList([\'length/meter\', \'area/squarecent\'])\n
-context.Use_init()\n
-context.Resource_init()\n
+            <value> <string>portal_type = context.getPortalType().lower().replace(\' \', \'_\')\n
+\n
+use_list = context.portal_preferences.getPreference(\'preferred_%s_use_list\' % portal_type)\n
+if use_list:\n
+  context.edit(use_list=use_list)\n
 </string> </value>
         </item>
         <item>
@@ -96,6 +98,8 @@ context.Resource_init()\n
                             <string>kw</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>portal_type</string>
+                            <string>use_list</string>
                           </tuple>
                         </value>
                     </item>
@@ -112,7 +116,7 @@ context.Resource_init()\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ApparelFabric_initScript</string> </value>
+            <value> <string>Use_init</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

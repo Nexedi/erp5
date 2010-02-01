@@ -48,7 +48,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>A apparel model\n
+            <value> <string>A apparel model\r\n
 </string> </value>
         </item>
         <item>
@@ -78,11 +78,13 @@
         </item>
         <item>
             <key> <string>init_script</string> </key>
-            <value> <string>Resource_init</string> </value>
+            <value> <string>ApparelResource_initScript</string> </value>
         </item>
         <item>
             <key> <string>permission</string> </key>
-            <value> <string></string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>title</string> </key>

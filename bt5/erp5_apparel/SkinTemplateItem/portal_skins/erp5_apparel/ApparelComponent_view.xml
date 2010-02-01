@@ -103,6 +103,7 @@
                         <string>my_base_width</string>
                         <string>my_base_height</string>
                         <string>composition_title</string>
+                        <string>my_use_list</string>
                       </list>
                     </value>
                 </item>

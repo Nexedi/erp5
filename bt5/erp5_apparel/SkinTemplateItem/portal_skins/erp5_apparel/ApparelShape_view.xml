@@ -95,6 +95,7 @@
                         <string>my_title</string>
                         <string>my_shape_list</string>
                         <string>my_apparel_shape_title_list</string>
+                        <string>my_use_list</string>
                       </list>
                     </value>
                 </item>

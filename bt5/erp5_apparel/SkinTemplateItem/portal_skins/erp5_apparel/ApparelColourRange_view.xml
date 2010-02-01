@@ -85,6 +85,7 @@
                       <list>
                         <string>my_title</string>
                         <string>my_fabric_brand_list</string>
+                        <string>my_use_list</string>
                       </list>
                     </value>
                 </item>

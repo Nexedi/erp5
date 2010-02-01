@@ -53,8 +53,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>context.setQuantityUnitList([\'length/meter\', \'area/squarecent\'])\n
-context.Use_init()\n
+            <value> <string>context.Use_init()\n
 context.Resource_init()\n
 </string> </value>
         </item>
@@ -112,7 +111,7 @@ context.Resource_init()\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ApparelFabric_initScript</string> </value>
+            <value> <string>ApparelResource_initScript</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

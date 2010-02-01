@@ -105,6 +105,9 @@
                         <string>my_preferred_apparel_shape_variation_base_category_list</string>
                         <string>my_preferred_apparel_shape_optional_variation_base_category_list</string>
                         <string>my_preferred_apparel_shape_individual_variation_base_category_list</string>
+                        <string>my_preferred_apparel_model_variation_base_category_list</string>
+                        <string>my_preferred_apparel_model_optional_variation_base_category_lits</string>
+                        <string>my_preferred_apparel_model_individual_variation_base_category_list</string>
                       </list>
                     </value>
                 </item>
@@ -112,15 +115,19 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
-                        <string>my_preferred_apparel_model_variation_base_category_list</string>
-                        <string>my_preferred_apparel_model_optional_variation_base_category_lits</string>
-                        <string>my_preferred_apparel_model_individual_variation_base_category_list</string>
                         <string>my_preferred_apparel_fabric_variation_base_category_list</string>
                         <string>my_preferred_apparel_fabric_optional_variation_base_category_list</string>
                         <string>my_preferred_apparel_fabric_individual_variation_base_category_list</string>
                         <string>my_preferred_apparel_colour_range_variation_base_category_list</string>
                         <string>my_preferred_apparel_colour_range_optional_variation_base_category_list</string>
                         <string>my_preferred_apparel_colour_range_individual_variation_base_category_list</string>
+                        <string>my_preferred_apparel_cloth_use_list</string>
+                        <string>my_preferred_apparel_assortment_use_list</string>
+                        <string>my_preferred_apparel_shape_use_list</string>
+                        <string>my_preferred_apparel_fabric_use_list</string>
+                        <string>my_preferred_apparel_component_use_list</string>
+                        <string>my_preferred_apparel_colour_range_use_list</string>
+                        <string>my_preferred_apparel_model_use_list</string>
                       </list>
                     </value>
                 </item>
