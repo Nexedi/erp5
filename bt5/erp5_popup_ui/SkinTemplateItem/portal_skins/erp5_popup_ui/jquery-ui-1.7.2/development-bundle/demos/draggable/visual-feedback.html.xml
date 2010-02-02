@@ -1,0 +1,126 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<!doctype html>\n
+<html lang="en">\n
+<head>\n
+\t<title>jQuery UI Draggable - Visual feedback</title>\n
+\t<link type="text/css" href="../../themes/base/ui.all.css" rel="stylesheet" />\n
+\t<script type="text/javascript" src="../../jquery-1.3.2.js"></script>\n
+\t<script type="text/javascript" src="../../ui/ui.core.js"></script>\n
+\t<script type="text/javascript" src="../../ui/ui.draggable.js"></script>\n
+\t<link type="text/css" href="../demos.css" rel="stylesheet" />\n
+\t<style type="text/css">\n
+\t#draggable, #draggable2, #draggable3, #set div { width: 90px; height: 90px; padding: 0.5em; float: left; margin: 0 10px 10px 0; }\n
+\t#draggable, #draggable2, #draggable3 { margin-bottom:20px; }\n
+\t#set { clear:both; float:left; width: 368px; height: 120px; }\n
+\tp { clear:both; margin:0; padding:1em 0; }\n
+\t</style>\n
+\t<script type="text/javascript">\n
+\t$(function() {\n
+\t\t$("#draggable").draggable({ helper: \'original\' });\n
+\t\t$("#draggable2").draggable({ opacity: 0.7, helper: \'clone\' });\n
+\t\t$("#draggable3").draggable({\n
+\t\t\tcursor: \'move\',\n
+\t\t\tcursorAt: { top: -12, left: -20 },\n
+\t\t\thelper: function(event) {\n
+\t\t\t\treturn $(\'<div class="ui-widget-header">I\\\'m a custom helper</div>\');\n
+\t\t\t}\n
+\t\t});\n
+\t\t$("#set div").draggable({ stack: { group: \'#set div\', min: 1 } });\n
+\t});\n
+\t</script>\n
+</head>\n
+<body>\n
+<div class="demo">\n
+\n
+<h3 class="docs">With helpers:</h3>\n
+\n
+<div id="draggable" class="ui-widget-content">\n
+\t<p>Original</p>\n
+</div>\n
+\n
+<div id="draggable2" class="ui-widget-content">\n
+\t<p>Semi-transparent clone</p>\n
+</div>\n
+\n
+<div id="draggable3" class="ui-widget-content">\n
+\t<p>Custom helper (in combination with cursorAt)</p>\n
+</div>\n
+\n
+<h3 class="docs">Stacked:</h3>\n
+<div id="set">\n
+\t<div class="ui-widget-content">\n
+\t\t<p>We are draggables..</p>\n
+\t</div>\n
+\n
+\t<div class="ui-widget-content">\n
+\t\t<p>..whose z-indexes are controlled automatically..</p>\n
+\t</div>\n
+\n
+\t<div class="ui-widget-content">\n
+\t\t<p>..with the stack option.</p>\n
+\t</div>\n
+</div>\n
+\n
+</div><!-- End demo -->\n
+\n
+<div class="demo-description">\n
+\n
+<p>Provide feedback to users as they drag an object in the form of a helper. The <code>helper</code> option accepts the values \'original\' (the draggable object moves with the cursor), \'clone\' (a duplicate of the draggable moves with the cursor), or a function that returns a DOM element (that element is shown near the cursor during drag). Control the helper\'s transparency with the <code>opacity</code> option.</p>\n
+\n
+<p>To clarify which draggable is in play, bring the draggable in motion to front. Use the <code>zIndex</code> option to set a higher z-index for the helper, if in play, or use the <code>stack</code> option to ensure that the last item dragged will appear on top of others in the same group on drag stop.</p>\n
+\n
+</div><!-- End demo-description -->\n
+</body>\n
+</html>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>visual-feedback.html</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

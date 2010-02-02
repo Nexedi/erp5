@@ -1,0 +1,192 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="DTMLMethod" module="OFS.DTMLMethod"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>erp5_popup.js</string> </value>
+        </item>
+        <item>
+            <key> <string>_vars</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>globals</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>raw</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/*\n
+Copyright (c) 2010 Nexedi SA and Contributors. All Rights Reserved.\n
+                   Yoshinori Okuji <yo@nexedi.com>\n
+\n
+This program is Free Software; you can redistribute it and/or\n
+modify it under the terms of the GNU General Public License\n
+as published by the Free Software Foundation; either version 2\n
+of the License, or (at your option) any later version.\n
+\n
+This program is distributed in the hope that it will be useful,\n
+but WITHOUT ANY WARRANTY; without even the implied warranty of\n
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n
+GNU General Public License for more details.\n
+\n
+You should have received a copy of the GNU General Public License\n
+along with this program; if not, write to the Free Software\n
+Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
+*/\n
+\n
+/*\n
+Note: this JavaScript is used to pop up dialogs inside the same pages, instead of transiting into different pages.\n
+It would not be difficult to extend this script to support more types of dialogs, but it is enabled only for\n
+relation update dialogs at the moment. This is tested with erp5_xhtml_style.\n
+\n
+If you want to use this feature, you need to load additional files in global_definitions:\n
+\n
+           dummy                python:js_list.extend((\'%s/jquery-ui-1.7.2/js/jquery-1.3.2.min.js\' % portal_path, \'%s/jquery-ui-1.7.2/js/jquery-ui-1.7.2.custom.min.js\' % portal_path));\n
+           dummy                python:css_list.append(\'%s/jquery-ui-1.7.2/css/smoothness/jquery-ui-1.7.2.custom.css\' % portal_path);\n
+           dummy                python:js_list.append(\'%s/erp5_popup.js\' % portal_path);\n
+\n
+The first two lines are required for loading jQuery and jQuery UI. The last line is for this file.\n
+*/\n
+\n
+jQuery(function() {\n
+  // XXX It is necessary to keep a reference to a dialog, because jQuery / jQuery UI does not keep information\n
+  // in elements of DOM unfortunately. This is not a big problem at the moment, because this implementation assumes\n
+  // that a dialog is modal.\n
+  var dialog = null;\n
+\n
+  var load = function(url, query) {\n
+    dialog.empty();\n
+\n
+    // Some bogus animations for having the user to feel easier.\n
+    var animate = function() {\n
+      var element = jQuery(\'p\', dialog);\n
+      if (element.length != 0) {\n
+        element.animate({opacity: 1}, 2000, \'linear\');\n
+        element.animate({opacity: 0}, 2000, \'linear\', animate);\n
+      }\n
+    };\n
+    jQuery(\'<p style="position: absolute; left: 0%; width: 100%; top: 30%; height: 40%; text-align: center; color: black; font-size: 32pt;">Loading...</p>\').appendTo(dialog);\n
+    animate();\n
+\n
+    jQuery.post(url, query, function(data, textStatus, XMLHttpRequest) {\n
+      if (textStatus == \'success\' || textStatus == \'notmodified\') {\n
+        // Stop the animations above.\n
+        dialog.empty();\n
+\n
+        dialog.html(jQuery(\'<div />\').append(data).find(\'form\'));\n
+        // XXX Get rid of unneeded stuff in JavaScript for now.\n
+        jQuery(\'.bars, .breadcrumb, .logged_in_as\', dialog).remove();\n
+        jQuery(\'[id]\', dialog).removeAttr(\'id\');\n
+\n
+        jQuery(\'input[type="image"], button.sort_button, .dialog_selector > button\', dialog).click(function(event) {\n
+          event.preventDefault();\n
+          var self = jQuery(this);\n
+          var form = jQuery(\'form.main_form\', dialog);\n
+          var params = {};\n
+          params[self.attr(\'name\')] = self.attr(\'value\');\n
+          load(form.attr(\'action\'), jQuery.param(params) + \'&\' + form.serialize());\n
+        });\n
+\n
+        // XXX Remove the hardcoded handler.\n
+        jQuery(\'.dialog_selector > select[onchange]\', dialog).removeAttr(\'onchange\');\n
+        jQuery(\'.dialog_selector > select\', dialog).change(function(event) {\n
+          //event.preventDefault();\n
+          var button = jQuery(\'button\', this.parentNode);\n
+          var form = jQuery(\'form.main_form\', dialog);\n
+          var params = {};\n
+          params[button.attr(\'name\')] = button.attr(\'value\');\n
+          load(form.attr(\'action\'), jQuery.param(params) + \'&\' + form.serialize());          \n
+        });\n
+\n
+        // XXX Remove the hardcoded handler.\n
+        jQuery(\'input[type="text"][name="listbox_page_start"][onkeypress]\', dialog).removeAttr(\'onkeypress\');\n
+        jQuery(\'input[type="text"][name="listbox_page_start"]\', dialog).keypress(function(event) {\n
+          if (event.keyCode == \'13\') {\n
+            event.preventDefault();\n
+            var self = jQuery(this);\n
+            self.value = self.attr(\'defaultValue\');\n
+            var form = jQuery(\'form.main_form\', dialog);\n
+            // XXX no other way but hardcoding the method name.\n
+            load(\'listbox_setPage\', form.serialize()); \n
+          }\n
+        });\n
+\n
+        jQuery(\'tr.listbox_search_line input[type="text"]\', dialog).keypress(function(event) {\n
+          if (event.keyCode == \'13\') {\n
+            event.preventDefault();\n
+            //var self = jQuery(this);\n
+            //self.value = self.attr(\'defaultValue\');\n
+            var form = jQuery(\'form.main_form\', dialog);\n
+            var first_submit_button = jQuery(jQuery(\'input[type="submit"]\', form)[0]);\n
+            var params = {};\n
+            params[first_submit_button.attr(\'name\')] = first_submit_button.attr(\'value\');\n
+            load(form.attr(\'action\'), jQuery.param(params) + \'&\' + form.serialize());          \n
+          }\n
+        });\n
+\n
+        jQuery(\'button.dialog_cancel_button\', dialog).click(function(event) {\n
+          event.preventDefault();\n
+          dialog.dialog(\'close\');\n
+        });\n
+\n
+        jQuery(\'button.dialog_update_button\', dialog).click(function(event) {\n
+          event.preventDefault();\n
+          var self = jQuery(this);\n
+          var form = jQuery(\'form.main_form\', dialog);\n
+          var params = {};\n
+          params[self.attr(\'name\')] = self.attr(\'value\');\n
+          load(form.attr(\'action\'), jQuery.param(params) + \'&\' + form.serialize());\n
+        });\n
+      }\n
+    });\n
+  };\n
+\n
+  // Make the relation update dialogs as pop-ups.\n
+  jQuery(\'input[value="update..."]\').click(function(event) {\n
+    event.preventDefault();\n
+    var self = jQuery(this);\n
+    // Make sure that the dialog is present, and it is empty.\n
+    if (dialog != null) {\n
+      dialog.empty();\n
+      if (!dialog.dialog(\'isOpen\'))\n
+        dialog.dialog(\'open\');\n
+    } else {\n
+      dialog = jQuery(\'<div id="dialog" />\').appendTo(\'body\');\n
+      dialog.dialog({ modal: true,\n
+                      width: jQuery(window).width() * 0.8,\n
+                      height: jQuery(window).height() * 0.8,\n
+                      title: jQuery(\'label\', this.parentNode.parentNode).text()\n
+      });\n
+    }\n
+    var form = jQuery(\'form#main_form\');\n
+    var params = {};\n
+    params[self.attr(\'name\')] = self.attr(\'value\');\n
+    load(form.attr(\'action\'), jQuery.param(params) + \'&\' + form.serialize());\n
+  });\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

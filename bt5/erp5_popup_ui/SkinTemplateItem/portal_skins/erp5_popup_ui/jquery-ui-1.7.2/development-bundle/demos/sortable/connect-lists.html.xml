@@ -1,0 +1,108 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<!doctype html>\n
+<html lang="en">\n
+<head>\n
+\t<title>jQuery UI Sortable - Connect lists</title>\n
+\t<link type="text/css" href="../../themes/base/ui.all.css" rel="stylesheet" />\n
+\t<script type="text/javascript" src="../../jquery-1.3.2.js"></script>\n
+\t<script type="text/javascript" src="../../ui/ui.core.js"></script>\n
+\t<script type="text/javascript" src="../../ui/ui.sortable.js"></script>\n
+\t<link type="text/css" href="../demos.css" rel="stylesheet" />\n
+\t<style type="text/css">\n
+\t#sortable1, #sortable2 { list-style-type: none; margin: 0; padding: 0; float: left; margin-right: 10px; }\n
+\t#sortable1 li, #sortable2 li { margin: 0 5px 5px 5px; padding: 5px; font-size: 1.2em; width: 120px; }\n
+\t</style>\n
+\t<script type="text/javascript">\n
+\t$(function() {\n
+\t\t$("#sortable1, #sortable2").sortable({\n
+\t\t\tconnectWith: \'.connectedSortable\'\n
+\t\t}).disableSelection();\n
+\t});\n
+\t</script>\n
+</head>\n
+<body>\n
+<div class="demo">\n
+\n
+<ul id="sortable1" class="connectedSortable">\n
+\t<li class="ui-state-default">Item 1</li>\n
+\t<li class="ui-state-default">Item 2</li>\n
+\t<li class="ui-state-default">Item 3</li>\n
+\t<li class="ui-state-default">Item 4</li>\n
+\t<li class="ui-state-default">Item 5</li>\n
+</ul>\n
+\n
+<ul id="sortable2" class="connectedSortable">\n
+\t<li class="ui-state-highlight">Item 1</li>\n
+\t<li class="ui-state-highlight">Item 2</li>\n
+\t<li class="ui-state-highlight">Item 3</li>\n
+\t<li class="ui-state-highlight">Item 4</li>\n
+\t<li class="ui-state-highlight">Item 5</li>\n
+</ul>\n
+\n
+</div><!-- End demo -->\n
+\n
+<div class="demo-description">\n
+\n
+<p>\n
+\tSort items from one list into another and vice versa, by passing a selector into\n
+\tthe <code>connectWith</code> option. The simplest way to do this is to\n
+\tgroup all related lists with a CSS class, and then pass that class into the\n
+\tsortable function (i.e., <code>connectWith: \'.myclass\'</code>).\n
+</p>\n
+\n
+</div><!-- End demo-description -->\n
+\n
+</body>\n
+</html>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>connect-lists.html</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

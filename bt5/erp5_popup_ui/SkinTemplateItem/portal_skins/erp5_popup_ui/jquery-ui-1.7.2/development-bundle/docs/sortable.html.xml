@@ -1,0 +1,1871 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+\n
+<ul class="UIAPIPlugin-toc">\n
+<li><a href="#overview">Overview</a></li>\n
+<li><a href="#options">Options</a></li>\n
+<li><a href="#events">Events</a></li>\n
+<li><a href="#methods">Methods</a></li>\n
+<li><a href="#theming">Theming</a></li>\n
+</ul>\n
+<div class="UIAPIPlugin">\n
+  <h1>jQuery UI Sortable</h1>\n
+  <div id="overview">\n
+    <h2 class="top-header">Overview</h2>\n
+    <div id="overview-main">\n
+        <p>The jQuery UI Sortable plugin makes selected elements sortable by dragging with the mouse.</p>\n
+<p>All callbacks receive two arguments: The original browser event and a prepared ui object, view below for a documentation of this object (if you name your second argument \'ui\'):</p>\n
+<ul>\n
+<li><b>ui.helper</b> - the current helper element (most often a clone of the item)</li>\n
+<li><b>ui.position</b> - current position of the helper</li>\n
+<li><b>ui.offset</b> - current absolute position of the helper</li>\n
+<li><b>ui.item</b> - the current dragged element</li>\n
+<li><b>ui.placeholder</b> - the placeholder (if you defined one)</li>\n
+<li><b>ui.sender</b> - the sortable where the item comes from (only exists if you move from one connected list to another)</li>\n
+</ul>\n
+    </div>\n
+    <div id="overview-dependencies">\n
+        <h3>Dependencies</h3>\n
+        <ul>\n
+<li>UI Core</li>\n
+</ul>\n
+    </div>\n
+    <div id="overview-example">\n
+        <h3>Example</h3>\n
+        <div id="overview-example" class="example">\n
+<ul><li><a href="#demo"><span>Demo</span></a></li><li><a href="#source"><span>View Source</span></a></li></ul>\n
+<p><div id="demo" class="tabs-container" rel="100">\n
+A simple jQuery UI Sortable.<br />\n
+</p>\n
+<pre>$(&quot;#sortable&quot;).sortable();\n
+</pre>\n
+<p></div><div id="source" class="tabs-container">\n
+</p>\n
+<pre>&lt;!DOCTYPE html&gt;\n
+&lt;html&gt;\n
+&lt;head&gt;\n
+  &lt;link type=&quot;text/css&quot; href=&quot;http://jqueryui.com/latest/themes/base/ui.all.css&quot; rel=&quot;stylesheet&quot; /&gt;\n
+  &lt;script type=&quot;text/javascript&quot; src=&quot;http://jqueryui.com/latest/jquery-1.3.2.js&quot;&gt;&lt;/script&gt;\n
+  &lt;script type=&quot;text/javascript&quot; src=&quot;http://jqueryui.com/latest/ui/ui.core.js&quot;&gt;&lt;/script&gt;\n
+  &lt;script type=&quot;text/javascript&quot; src=&quot;http://jqueryui.com/latest/ui/ui.sortable.js&quot;&gt;&lt;/script&gt;\n
+  &lt;script type="text/javascript"&gt;\n
+  $(document).ready(function(){\n
+    $(&quot;#sortable&quot;).sortable();\n
+  });\n
+  &lt;/script&gt;\n
+&lt;/head&gt;\n
+&lt;body style="font-size:62.5%;"&gt;\n
+  \n
+&lt;div id=&quot;sortable&quot;&gt;&lt;/div&gt;\n
+\n
+&lt;/body&gt;\n
+&lt;/html&gt;\n
+</pre>\n
+<p></div>\n
+</p><p></div>\n
+    </div>\n
+  </div>\n
+  <div id="options">\n
+    <h2 class="top-header">Options</h2>\n
+    <ul class="options-list">\n
+      \n
+<li class="option" id="option-appendTo">\n
+  <div class="option-header">\n
+    <h3 class="option-name"><a href="#option-appendTo">appendTo</a></h3>\n
+    <dl>\n
+      <dt class="option-type-label">Type:</dt>\n
+        <dd class="option-type">String</dd>\n
+      \n
+      <dt class="option-default-label">Default:</dt>\n
+        <dd class="option-default">\'parent\'</dd>\n
+      \n
+    </dl>\n
+  </div>\n
+  <div class="option-description">\n
+    <p>Defines where the helper that moves with the mouse is being appended to during the drag (for example, to resolve overlap/zIndex issues).</p>\n
+  </div>\n
+  <div class="option-examples">\n
+    <h4>Code examples</h4>\n
+    <dl class="option-examples-list">\n
+    \n
+<dt>\n
+  Initialize a sortable with the <code>appendTo</code> option specified.\n
+</dt>\n
+<dd>\n
+<pre><code>$(\'.selector\').sortable({ appendTo: \'body\' });</code></pre>\n
+</dd>\n
+\n
+    \n
+<dt>\n
+  Get or set the <code>appendTo</code> option, after init.\n
+</dt>\n
+<dd>\n
+<pre><code>//getter\n
+var appendTo = $(\'.selector\').sortable(\'option\', \'appendTo\');\n
+//setter\n
+$(\'.selector\').sortable(\'option\', \'appendTo\', \'body\');</code></pre>\n
+</dd>\n
+\n
+    </dl>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="option" id="option-axis">\n
+  <div class="option-header">\n
+    <h3 class="option-name"><a href="#option-axis">axis</a></h3>\n
+    <dl>\n
+      <dt class="option-type-label">Type:</dt>\n
+        <dd class="option-type">String</dd>\n
+      \n
+      <dt class="option-default-label">Default:</dt>\n
+        <dd class="option-default">false</dd>\n
+      \n
+    </dl>\n
+  </div>\n
+  <div class="option-description">\n
+    <p>If defined, the items can be dragged only horizontally or vertically. Possible values:\'x\', \'y\'.</p>\n
+  </div>\n
+  <div class="option-examples">\n
+    <h4>Code examples</h4>\n
+    <dl class="option-examples-list">\n
+    \n
+<dt>\n
+  Initialize a sortable with the <code>axis</code> option specified.\n
+</dt>\n
+<dd>\n
+<pre><code>$(\'.selector\').sortable({ axis: \'x\' });</code></pre>\n
+</dd>\n
+\n
+    \n
+<dt>\n
+  Get or set the <code>axis</code> option, after init.\n
+</dt>\n
+<dd>\n
+<pre><code>//getter\n
+var axis = $(\'.selector\').sortable(\'option\', \'axis\');\n
+//setter\n
+$(\'.selector\').sortable(\'option\', \'axis\', \'x\');</code></pre>\n
+</dd>\n
+\n
+    </dl>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="option" id="option-cancel">\n
+  <div class="option-header">\n
+    <h3 class="option-name"><a href="#option-cancel">cancel</a></h3>\n
+    <dl>\n
+      <dt class="option-type-label">Type:</dt>\n
+        <dd class="option-type">Selector</dd>\n
+      \n
+      <dt class="option-default-label">Default:</dt>\n
+        <dd class="option-default">\':input,button\'</dd>\n
+      \n
+    </dl>\n
+  </div>\n
+  <div class="option-description">\n
+    <p>Prevents sorting if you start on elements matching the selector.</p>\n
+  </div>\n
+  <div class="option-examples">\n
+    <h4>Code examples</h4>\n
+    <dl class="option-examples-list">\n
+    \n
+<dt>\n
+  Initialize a sortable with the <code>cancel</code> option specified.\n
+</dt>\n
+<dd>\n
+<pre><code>$(\'.selector\').sortable({ cancel: \'button\' });</code></pre>\n
+</dd>\n
+\n
+    \n
+<dt>\n
+  Get or set the <code>cancel</code> option, after init.\n
+</dt>\n
+<dd>\n
+<pre><code>//getter\n
+var cancel = $(\'.selector\').sortable(\'option\', \'cancel\');\n
+//setter\n
+$(\'.selector\').sortable(\'option\', \'cancel\', \'button\');</code></pre>\n
+</dd>\n
+\n
+    </dl>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="option" id="option-connectWith">\n
+  <div class="option-header">\n
+    <h3 class="option-name"><a href="#option-connectWith">connectWith</a></h3>\n
+    <dl>\n
+      <dt class="option-type-label">Type:</dt>\n
+        <dd class="option-type">Selector</dd>\n
+      \n
+      <dt class="option-default-label">Default:</dt>\n
+        <dd class="option-default">false</dd>\n
+      \n
+    </dl>\n
+  </div>\n
+  <div class="option-description">\n
+    <p>Takes a jQuery selector with items that also have sortables applied. If used, the sortable is now connected to the other one-way, so you can drag from this sortable to the other.</p>\n
+  </div>\n
+  <div class="option-examples">\n
+    <h4>Code examples</h4>\n
+    <dl class="option-examples-list">\n
+    \n
+<dt>\n
+  Initialize a sortable with the <code>connectWith</code> option specified.\n
+</dt>\n
+<dd>\n
+<pre><code>$(\'.selector\').sortable({ connectWith: \'.otherlist\' });</code></pre>\n
+</dd>\n
+\n
+    \n
+<dt>\n
+  Get or set the <code>connectWith</code> option, after init.\n
+</dt>\n
+<dd>\n
+<pre><code>//getter\n
+var connectWith = $(\'.selector\').sortable(\'option\', \'connectWith\');\n
+//setter\n
+$(\'.selector\').sortable(\'option\', \'connectWith\', \'.otherlist\');</code></pre>\n
+</dd>\n
+\n
+    </dl>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="option" id="option-containment">\n
+  <div class="option-header">\n
+    <h3 class="option-name"><a href="#option-containment">containment</a></h3>\n
+    <dl>\n
+      <dt class="option-type-label">Type:</dt>\n
+        <dd class="option-type">Element, String, Selector</dd>\n
+      \n
+      <dt class="option-default-label">Default:</dt>\n
+        <dd class="option-default">false</dd>\n
+      \n
+    </dl>\n
+  </div>\n
+  <div class="option-description">\n
+    <p>Constrains dragging to within the bounds of the specified element - can be a DOM element, \'parent\', \'document\', \'window\', or a jQuery selector.</p>\n
+  </div>\n
+  <div class="option-examples">\n
+    <h4>Code examples</h4>\n
+    <dl class="option-examples-list">\n
+    \n
+<dt>\n
+  Initialize a sortable with the <code>containment</code> option specified.\n
+</dt>\n
+<dd>\n
+<pre><code>$(\'.selector\').sortable({ containment: \'parent\' });</code></pre>\n
+</dd>\n
+\n
+    \n
+<dt>\n
+  Get or set the <code>containment</code> option, after init.\n
+</dt>\n
+<dd>\n
+<pre><code>//getter\n
+var containment = $(\'.selector\').sortable(\'option\', \'containment\');\n
+//setter\n
+$(\'.selector\').sortable(\'option\', \'containment\', \'parent\');</code></pre>\n
+</dd>\n
+\n
+    </dl>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="option" id="option-cursor">\n
+  <div class="option-header">\n
+    <h3 class="option-name"><a href="#option-cursor">cursor</a></h3>\n
+    <dl>\n
+      <dt class="option-type-label">Type:</dt>\n
+        <dd class="option-type">String</dd>\n
+      \n
+      <dt class="option-default-label">Default:</dt>\n
+        <dd class="option-default">\'auto\'</dd>\n
+      \n
+    </dl>\n
+  </div>\n
+  <div class="option-description">\n
+    <p>Defines the cursor that is being shown while sorting.</p>\n
+  </div>\n
+  <div class="option-examples">\n
+    <h4>Code examples</h4>\n
+    <dl class="option-examples-list">\n
+    \n
+<dt>\n
+  Initialize a sortable with the <code>cursor</code> option specified.\n
+</dt>\n
+<dd>\n
+<pre><code>$(\'.selector\').sortable({ cursor: \'crosshair\' });</code></pre>\n
+</dd>\n
+\n
+    \n
+<dt>\n
+  Get or set the <code>cursor</code> option, after init.\n
+</dt>\n
+<dd>\n
+<pre><code>//getter\n
+var cursor = $(\'.selector\').sortable(\'option\', \'cursor\');\n
+//setter\n
+$(\'.selector\').sortable(\'option\', \'cursor\', \'crosshair\');</code></pre>\n
+</dd>\n
+\n
+    </dl>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="option" id="option-cursorAt">\n
+  <div class="option-header">\n
+    <h3 class="option-name"><a href="#option-cursorAt">cursorAt</a></h3>\n
+    <dl>\n
+      <dt class="option-type-label">Type:</dt>\n
+        <dd class="option-type">Object</dd>\n
+      \n
+      <dt class="option-default-label">Default:</dt>\n
+        <dd class="option-default">false</dd>\n
+      \n
+    </dl>\n
+  </div>\n
+  <div class="option-description">\n
+    <p>Moves the sorting element or helper so the cursor always appears to drag from the same position. Coordinates can be given as a hash using a combination of one or two keys: <code>{ top, left, right, bottom }</code>.</p>\n
+  </div>\n
+  <div class="option-examples">\n
+    <h4>Code examples</h4>\n
+    <dl class="option-examples-list">\n
+    \n
+<dt>\n
+  Initialize a sortable with the <code>cursorAt</code> option specified.\n
+</dt>\n
+<dd>\n
+<pre><code>$(\'.selector\').sortable({ cursorAt: \'top\' });</code></pre>\n
+</dd>\n
+\n
+    \n
+<dt>\n
+  Get or set the <code>cursorAt</code> option, after init.\n
+</dt>\n
+<dd>\n
+<pre><code>//getter\n
+var cursorAt = $(\'.selector\').sortable(\'option\', \'cursorAt\');\n
+//setter\n
+$(\'.selector\').sortable(\'option\', \'cursorAt\', \'top\');</code></pre>\n
+</dd>\n
+\n
+    </dl>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="option" id="option-delay">\n
+  <div class="option-header">\n
+    <h3 class="option-name"><a href="#option-delay">delay</a></h3>\n
+    <dl>\n
+      <dt class="option-type-label">Type:</dt>\n
+        <dd class="option-type">Integer</dd>\n
+      \n
+      <dt class="option-default-label">Default:</dt>\n
+        <dd class="option-default">0</dd>\n
+      \n
+    </dl>\n
+  </div>\n
+  <div class="option-description">\n
+    <p>Time in milliseconds to define when the sorting should start. It helps preventing unwanted drags when clicking on an element.</p>\n
+  </div>\n
+  <div class="option-examples">\n
+    <h4>Code examples</h4>\n
+    <dl class="option-examples-list">\n
+    \n
+<dt>\n
+  Initialize a sortable with the <code>delay</code> option specified.\n
+</dt>\n
+<dd>\n
+<pre><code>$(\'.selector\').sortable({ delay: 500 });</code></pre>\n
+</dd>\n
+\n
+    \n
+<dt>\n
+  Get or set the <code>delay</code> option, after init.\n
+</dt>\n
+<dd>\n
+<pre><code>//getter\n
+var delay = $(\'.selector\').sortable(\'option\', \'delay\');\n
+//setter\n
+$(\'.selector\').sortable(\'option\', \'delay\', 500);</code></pre>\n
+</dd>\n
+\n
+    </dl>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="option" id="option-distance">\n
+  <div class="option-header">\n
+    <h3 class="option-name"><a href="#option-distance">distance</a></h3>\n
+    <dl>\n
+      <dt class="option-type-label">Type:</dt>\n
+        <dd class="option-type">Integer</dd>\n
+      \n
+      <dt class="option-default-label">Default:</dt>\n
+        <dd class="option-default">1</dd>\n
+      \n
+    </dl>\n
+  </div>\n
+  <div class="option-description">\n
+    <p>Tolerance, in pixels, for when sorting should start. If specified, sorting will not start until after mouse is dragged beyond distance. Can be used to allow for clicks on elements within a handle.</p>\n
+  </div>\n
+  <div class="option-examples">\n
+    <h4>Code examples</h4>\n
+    <dl class="option-examples-list">\n
+    \n
+<dt>\n
+  Initialize a sortable with the <code>distance</code> option specified.\n
+</dt>\n
+<dd>\n
+<pre><code>$(\'.selector\').sortable({ distance: 30 });</code></pre>\n
+</dd>\n
+\n
+    \n
+<dt>\n
+  Get or set the <code>distance</code> option, after init.\n
+</dt>\n
+<dd>\n
+<pre><code>//getter\n
+var distance = $(\'.selector\').sortable(\'option\', \'distance\');\n
+//setter\n
+$(\'.selector\').sortable(\'option\', \'distance\', 30);</code></pre>\n
+</dd>\n
+\n
+    </dl>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="option" id="option-dropOnEmpty">\n
+  <div class="option-header">\n
+    <h3 class="option-name"><a href="#option-dropOnEmpty">dropOnEmpty</a></h3>\n
+    <dl>\n
+      <dt class="option-type-label">Type:</dt>\n
+        <dd class="option-type">Boolean</dd>\n
+      \n
+      <dt class="option-default-label">Default:</dt>\n
+        <dd class="option-default">true</dd>\n
+      \n
+    </dl>\n
+  </div>\n
+  <div class="option-description">\n
+    <p>If empty allows for an item to be dropped from a linked selectable.</p>\n
+  </div>\n
+  <div class="option-examples">\n
+    <h4>Code examples</h4>\n
+    <dl class="option-examples-list">\n
+    \n
+<dt>\n
+  Initialize a sortable with the <code>dropOnEmpty</code> option specified.\n
+</dt>\n
+<dd>\n
+<pre><code>$(\'.selector\').sortable({ dropOnEmpty: false });</code></pre>\n
+</dd>\n
+\n
+    \n
+<dt>\n
+  Get or set the <code>dropOnEmpty</code> option, after init.\n
+</dt>\n
+<dd>\n
+<pre><code>//getter\n
+var dropOnEmpty = $(\'.selector\').sortable(\'option\', \'dropOnEmpty\');\n
+//setter\n
+$(\'.selector\').sortable(\'option\', \'dropOnEmpty\', false);</code></pre>\n
+</dd>\n
+\n
+    </dl>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="option" id="option-forceHelperSize">\n
+  <div class="option-header">\n
+    <h3 class="option-name"><a href="#option-forceHelperSize">forceHelperSize</a></h3>\n
+    <dl>\n
+      <dt class="option-type-label">Type:</dt>\n
+        <dd class="option-type">Boolean</dd>\n
+      \n
+      <dt class="option-default-label">Default:</dt>\n
+        <dd class="option-default">false</dd>\n
+      \n
+    </dl>\n
+  </div>\n
+  <div class="option-description">\n
+    <p>If true, forces the helper to have a size.</p>\n
+  </div>\n
+  <div class="option-examples">\n
+    <h4>Code examples</h4>\n
+    <dl class="option-examples-list">\n
+    \n
+<dt>\n
+  Initialize a sortable with the <code>forceHelperSize</code> option specified.\n
+</dt>\n
+<dd>\n
+<pre><code>$(\'.selector\').sortable({ forceHelperSize: true });</code></pre>\n
+</dd>\n
+\n
+    \n
+<dt>\n
+  Get or set the <code>forceHelperSize</code> option, after init.\n
+</dt>\n
+<dd>\n
+<pre><code>//getter\n
+var forceHelperSize = $(\'.selector\').sortable(\'option\', \'forceHelperSize\');\n
+//setter\n
+$(\'.selector\').sortable(\'option\', \'forceHelperSize\', true);</code></pre>\n
+</dd>\n
+\n
+    </dl>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="option" id="option-forcePlaceholderSize">\n
+  <div class="option-header">\n
+    <h3 class="option-name"><a href="#option-forcePlaceholderSize">forcePlaceholderSize</a></h3>\n
+    <dl>\n
+      <dt class="option-type-label">Type:</dt>\n
+        <dd class="option-type">Boolean</dd>\n
+      \n
+      <dt class="option-default-label">Default:</dt>\n
+        <dd class="option-default">false</dd>\n
+      \n
+    </dl>\n
+  </div>\n
+  <div class="option-description">\n
+    <p>If true, forces the placeholder to have a size.</p>\n
+  </div>\n
+  <div class="option-examples">\n
+    <h4>Code examples</h4>\n
+    <dl class="option-examples-list">\n
+    \n
+<dt>\n
+  Initialize a sortable with the <code>forcePlaceholderSize</code> option specified.\n
+</dt>\n
+<dd>\n
+<pre><code>$(\'.selector\').sortable({ forcePlaceholderSize: true });</code></pre>\n
+</dd>\n
+\n
+    \n
+<dt>\n
+  Get or set the <code>forcePlaceholderSize</code> option, after init.\n
+</dt>\n
+<dd>\n
+<pre><code>//getter\n
+var forcePlaceholderSize = $(\'.selector\').sortable(\'option\', \'forcePlaceholderSize\');\n
+//setter\n
+$(\'.selector\').sortable(\'option\', \'forcePlaceholderSize\', true);</code></pre>\n
+</dd>\n
+\n
+    </dl>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="option" id="option-grid">\n
+  <div class="option-header">\n
+    <h3 class="option-name"><a href="#option-grid">grid</a></h3>\n
+    <dl>\n
+      <dt class="option-type-label">Type:</dt>\n
+        <dd class="option-type">Array</dd>\n
+      \n
+      <dt class="option-default-label">Default:</dt>\n
+        <dd class="option-default">false</dd>\n
+      \n
+    </dl>\n
+  </div>\n
+  <div class="option-description">\n
+    <p>Snaps the sorting element or helper to a grid, every x and y pixels. Array values: [x, y]</p>\n
+  </div>\n
+  <div class="option-examples">\n
+    <h4>Code examples</h4>\n
+    <dl class="option-examples-list">\n
+    \n
+<dt>\n
+  Initialize a sortable with the <code>grid</code> option specified.\n
+</dt>\n
+<dd>\n
+<pre><code>$(\'.selector\').sortable({ grid: [50, 20] });</code></pre>\n
+</dd>\n
+\n
+    \n
+<dt>\n
+  Get or set the <code>grid</code> option, after init.\n
+</dt>\n
+<dd>\n
+<pre><code>//getter\n
+var grid = $(\'.selector\').sortable(\'option\', \'grid\');\n
+//setter\n
+$(\'.selector\').sortable(\'option\', \'grid\', [50, 20]);</code></pre>\n
+</dd>\n
+\n
+    </dl>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="option" id="option-handle">\n
+  <div class="option-header">\n
+    <h3 class="option-name"><a href="#option-handle">handle</a></h3>\n
+    <dl>\n
+      <dt class="option-type-label">Type:</dt>\n
+        <dd class="option-type">Selector, Element</dd>\n
+      \n
+      <dt class="option-default-label">Default:</dt>\n
+        <dd class="option-default">false</dd>\n
+      \n
+    </dl>\n
+  </div>\n
+  <div class="option-description">\n
+    <p>Restricts sort start click to the specified element.</p>\n
+  </div>\n
+  <div class="option-examples">\n
+    <h4>Code examples</h4>\n
+    <dl class="option-examples-list">\n
+    \n
+<dt>\n
+  Initialize a sortable with the <code>handle</code> option specified.\n
+</dt>\n
+<dd>\n
+<pre><code>$(\'.selector\').sortable({ handle: \'h2\' });</code></pre>\n
+</dd>\n
+\n
+    \n
+<dt>\n
+  Get or set the <code>handle</code> option, after init.\n
+</dt>\n
+<dd>\n
+<pre><code>//getter\n
+var handle = $(\'.selector\').sortable(\'option\', \'handle\');\n
+//setter\n
+$(\'.selector\').sortable(\'option\', \'handle\', \'h2\');</code></pre>\n
+</dd>\n
+\n
+    </dl>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="option" id="option-helper">\n
+  <div class="option-header">\n
+    <h3 class="option-name"><a href="#option-helper">helper</a></h3>\n
+    <dl>\n
+      <dt class="option-type-label">Type:</dt>\n
+        <dd class="option-type">String, Function</dd>\n
+      \n
+      <dt class="option-default-label">Default:</dt>\n
+        <dd class="option-default">\'original\'</dd>\n
+      \n
+    </dl>\n
+  </div>\n
+  <div class="option-description">\n
+    <p>Allows for a helper element to be used for dragging display. The supplied function receives the event and the element being sorted, and should return a DOMElement to be used as a custom proxy helper. Possible values: \'original\', \'clone\'</p>\n
+  </div>\n
+  <div class="option-examples">\n
+    <h4>Code examples</h4>\n
+    <dl class="option-examples-list">\n
+    \n
+<dt>\n
+  Initialize a sortable with the <code>helper</code> option specified.\n
+</dt>\n
+<dd>\n
+<pre><code>$(\'.selector\').sortable({ helper: \'clone\' });</code></pre>\n
+</dd>\n
+\n
+    \n
+<dt>\n
+  Get or set the <code>helper</code> option, after init.\n
+</dt>\n
+<dd>\n
+<pre><code>//getter\n
+var helper = $(\'.selector\').sortable(\'option\', \'helper\');\n
+//setter\n
+$(\'.selector\').sortable(\'option\', \'helper\', \'clone\');</code></pre>\n
+</dd>\n
+\n
+    </dl>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="option" id="option-items">\n
+  <div class="option-header">\n
+    <h3 class="option-name"><a href="#option-items">items</a></h3>\n
+    <dl>\n
+      <dt class="option-type-label">Type:</dt>\n
+        <dd class="option-type">Selector</dd>\n
+      \n
+      <dt class="option-default-label">Default:</dt>\n
+        <dd class="option-default">\'&gt; *\'</dd>\n
+      \n
+    </dl>\n
+  </div>\n
+  <div class="option-description">\n
+    <p>Specifies which items inside the element should be sortable.</p>\n
+  </div>\n
+  <div class="option-examples">\n
+    <h4>Code examples</h4>\n
+    <dl class="option-examples-list">\n
+    \n
+<dt>\n
+  Initialize a sortable with the <code>items</code> option specified.\n
+</dt>\n
+<dd>\n
+<pre><code>$(\'.selector\').sortable({ items: \'li\' });</code></pre>\n
+</dd>\n
+\n
+    \n
+<dt>\n
+  Get or set the <code>items</code> option, after init.\n
+</dt>\n
+<dd>\n
+<pre><code>//getter\n
+var items = $(\'.selector\').sortable(\'option\', \'items\');\n
+//setter\n
+$(\'.selector\').sortable(\'option\', \'items\', \'li\');</code></pre>\n
+</dd>\n
+\n
+    </dl>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="option" id="option-opacity">\n
+  <div class="option-header">\n
+    <h3 class="option-name"><a href="#option-opacity">opacity</a></h3>\n
+    <dl>\n
+      <dt class="option-type-label">Type:</dt>\n
+        <dd class="option-type">Float</dd>\n
+      \n
+      <dt class="option-default-label">Default:</dt>\n
+        <dd class="option-default">false</dd>\n
+      \n
+    </dl>\n
+  </div>\n
+  <div class="option-description">\n
+    <p>Defines the opacity of the helper while sorting. From 0.01 to 1</p>\n
+  </div>\n
+  <div class="option-examples">\n
+    <h4>Code examples</h4>\n
+    <dl class="option-examples-list">\n
+    \n
+<dt>\n
+  Initialize a sortable with the <code>opacity</code> option specified.\n
+</dt>\n
+<dd>\n
+<pre><code>$(\'.selector\').sortable({ opacity: 0.6 });</code></pre>\n
+</dd>\n
+\n
+    \n
+<dt>\n
+  Get or set the <code>opacity</code> option, after init.\n
+</dt>\n
+<dd>\n
+<pre><code>//getter\n
+var opacity = $(\'.selector\').sortable(\'option\', \'opacity\');\n
+//setter\n
+$(\'.selector\').sortable(\'option\', \'opacity\', 0.6);</code></pre>\n
+</dd>\n
+\n
+    </dl>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="option" id="option-placeholder">\n
+  <div class="option-header">\n
+    <h3 class="option-name"><a href="#option-placeholder">placeholder</a></h3>\n
+    <dl>\n
+      <dt class="option-type-label">Type:</dt>\n
+        <dd class="option-type">String</dd>\n
+      \n
+      <dt class="option-default-label">Default:</dt>\n
+        <dd class="option-default">false</dd>\n
+      \n
+    </dl>\n
+  </div>\n
+  <div class="option-description">\n
+    <p>Class that gets applied to the otherwise white space.</p>\n
+  </div>\n
+  <div class="option-examples">\n
+    <h4>Code examples</h4>\n
+    <dl class="option-examples-list">\n
+    \n
+<dt>\n
+  Initialize a sortable with the <code>placeholder</code> option specified.\n
+</dt>\n
+<dd>\n
+<pre><code>$(\'.selector\').sortable({ placeholder: \'ui-state-highlight\' });</code></pre>\n
+</dd>\n
+\n
+    \n
+<dt>\n
+  Get or set the <code>placeholder</code> option, after init.\n
+</dt>\n
+<dd>\n
+<pre><code>//getter\n
+var placeholder = $(\'.selector\').sortable(\'option\', \'placeholder\');\n
+//setter\n
+$(\'.selector\').sortable(\'option\', \'placeholder\', \'ui-state-highlight\');</code></pre>\n
+</dd>\n
+\n
+    </dl>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="option" id="option-revert">\n
+  <div class="option-header">\n
+    <h3 class="option-name"><a href="#option-revert">revert</a></h3>\n
+    <dl>\n
+      <dt class="option-type-label">Type:</dt>\n
+        <dd class="option-type">Boolean</dd>\n
+      \n
+      <dt class="option-default-label">Default:</dt>\n
+        <dd class="option-default">false</dd>\n
+      \n
+    </dl>\n
+  </div>\n
+  <div class="option-description">\n
+    <p>If set to true, the item will be reverted to its new DOM position with a smooth animation.</p>\n
+  </div>\n
+  <div class="option-examples">\n
+    <h4>Code examples</h4>\n
+    <dl class="option-examples-list">\n
+    \n
+<dt>\n
+  Initialize a sortable with the <code>revert</code> option specified.\n
+</dt>\n
+<dd>\n
+<pre><code>$(\'.selector\').sortable({ revert: true });</code></pre>\n
+</dd>\n
+\n
+    \n
+<dt>\n
+  Get or set the <code>revert</code> option, after init.\n
+</dt>\n
+<dd>\n
+<pre><code>//getter\n
+var revert = $(\'.selector\').sortable(\'option\', \'revert\');\n
+//setter\n
+$(\'.selector\').sortable(\'option\', \'revert\', true);</code></pre>\n
+</dd>\n
+\n
+    </dl>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="option" id="option-scroll">\n
+  <div class="option-header">\n
+    <h3 class="option-name"><a href="#option-scroll">scroll</a></h3>\n
+    <dl>\n
+      <dt class="option-type-label">Type:</dt>\n
+        <dd class="option-type">Boolean</dd>\n
+      \n
+      <dt class="option-default-label">Default:</dt>\n
+        <dd class="option-default">true</dd>\n
+      \n
+    </dl>\n
+  </div>\n
+  <div class="option-description">\n
+    <p>If set to true, the page scrolls when coming to an edge.</p>\n
+  </div>\n
+  <div class="option-examples">\n
+    <h4>Code examples</h4>\n
+    <dl class="option-examples-list">\n
+    \n
+<dt>\n
+  Initialize a sortable with the <code>scroll</code> option specified.\n
+</dt>\n
+<dd>\n
+<pre><code>$(\'.selector\').sortable({ scroll: false });</code></pre>\n
+</dd>\n
+\n
+    \n
+<dt>\n
+  Get or set the <code>scroll</code> option, after init.\n
+</dt>\n
+<dd>\n
+<pre><code>//getter\n
+var scroll = $(\'.selector\').sortable(\'option\', \'scroll\');\n
+//setter\n
+$(\'.selector\').sortable(\'option\', \'scroll\', false);</code></pre>\n
+</dd>\n
+\n
+    </dl>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="option" id="option-scrollSensitivity">\n
+  <div class="option-header">\n
+    <h3 class="option-name"><a href="#option-scrollSensitivity">scrollSensitivity</a></h3>\n
+    <dl>\n
+      <dt class="option-type-label">Type:</dt>\n
+        <dd class="option-type">Integer</dd>\n
+      \n
+      <dt class="option-default-label">Default:</dt>\n
+        <dd class="option-default">20</dd>\n
+      \n
+    </dl>\n
+  </div>\n
+  <div class="option-description">\n
+    <p>Defines how near the mouse must be to an edge to start scrolling.</p>\n
+  </div>\n
+  <div class="option-examples">\n
+    <h4>Code examples</h4>\n
+    <dl class="option-examples-list">\n
+    \n
+<dt>\n
+  Initialize a sortable with the <code>scrollSensitivity</code> option specified.\n
+</dt>\n
+<dd>\n
+<pre><code>$(\'.selector\').sortable({ scrollSensitivity: 40 });</code></pre>\n
+</dd>\n
+\n
+    \n
+<dt>\n
+  Get or set the <code>scrollSensitivity</code> option, after init.\n
+</dt>\n
+<dd>\n
+<pre><code>//getter\n
+var scrollSensitivity = $(\'.selector\').sortable(\'option\', \'scrollSensitivity\');\n
+//setter\n
+$(\'.selector\').sortable(\'option\', \'scrollSensitivity\', 40);</code></pre>\n
+</dd>\n
+\n
+    </dl>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="option" id="option-scrollSpeed">\n
+  <div class="option-header">\n
+    <h3 class="option-name"><a href="#option-scrollSpeed">scrollSpeed</a></h3>\n
+    <dl>\n
+      <dt class="option-type-label">Type:</dt>\n
+        <dd class="option-type">Integer</dd>\n
+      \n
+      <dt class="option-default-label">Default:</dt>\n
+        <dd class="option-default">20</dd>\n
+      \n
+    </dl>\n
+  </div>\n
+  <div class="option-description">\n
+    <p>The speed at which the window should scroll once the mouse pointer gets within the scrollSensitivity distance.</p>\n
+  </div>\n
+  <div class="option-examples">\n
+    <h4>Code examples</h4>\n
+    <dl class="option-examples-list">\n
+    \n
+<dt>\n
+  Initialize a sortable with the <code>scrollSpeed</code> option specified.\n
+</dt>\n
+<dd>\n
+<pre><code>$(\'.selector\').sortable({ scrollSpeed: 40 });</code></pre>\n
+</dd>\n
+\n
+    \n
+<dt>\n
+  Get or set the <code>scrollSpeed</code> option, after init.\n
+</dt>\n
+<dd>\n
+<pre><code>//getter\n
+var scrollSpeed = $(\'.selector\').sortable(\'option\', \'scrollSpeed\');\n
+//setter\n
+$(\'.selector\').sortable(\'option\', \'scrollSpeed\', 40);</code></pre>\n
+</dd>\n
+\n
+    </dl>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="option" id="option-tolerance">\n
+  <div class="option-header">\n
+    <h3 class="option-name"><a href="#option-tolerance">tolerance</a></h3>\n
+    <dl>\n
+      <dt class="option-type-label">Type:</dt>\n
+        <dd class="option-type">String</dd>\n
+      \n
+      <dt class="option-default-label">Default:</dt>\n
+        <dd class="option-default">\'intersect\'</dd>\n
+      \n
+    </dl>\n
+  </div>\n
+  <div class="option-description">\n
+    <p>This is the way the reordering behaves during drag. Possible values: \'intersect\', \'pointer\'. In some setups, \'pointer\' is more natural.\n
+</p>\n
+<ul>\n
+<li><b>intersect</b>: draggable overlaps the droppable at least 50%</li>\n
+<li><b>pointer</b>: mouse pointer overlaps the droppable</li>\n
+</ul>\n
+<p></p>\n
+  </div>\n
+  <div class="option-examples">\n
+    <h4>Code examples</h4>\n
+    <dl class="option-examples-list">\n
+    \n
+<dt>\n
+  Initialize a sortable with the <code>tolerance</code> option specified.\n
+</dt>\n
+<dd>\n
+<pre><code>$(\'.selector\').sortable({ tolerance: \'pointer\' });</code></pre>\n
+</dd>\n
+\n
+    \n
+<dt>\n
+  Get or set the <code>tolerance</code> option, after init.\n
+</dt>\n
+<dd>\n
+<pre><code>//getter\n
+var tolerance = $(\'.selector\').sortable(\'option\', \'tolerance\');\n
+//setter\n
+$(\'.selector\').sortable(\'option\', \'tolerance\', \'pointer\');</code></pre>\n
+</dd>\n
+\n
+    </dl>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="option" id="option-zIndex">\n
+  <div class="option-header">\n
+    <h3 class="option-name"><a href="#option-zIndex">zIndex</a></h3>\n
+    <dl>\n
+      <dt class="option-type-label">Type:</dt>\n
+        <dd class="option-type">Integer</dd>\n
+      \n
+      <dt class="option-default-label">Default:</dt>\n
+        <dd class="option-default">1000</dd>\n
+      \n
+    </dl>\n
+  </div>\n
+  <div class="option-description">\n
+    <p>Z-index for element/helper while being sorted.</p>\n
+  </div>\n
+  <div class="option-examples">\n
+    <h4>Code examples</h4>\n
+    <dl class="option-examples-list">\n
+    \n
+<dt>\n
+  Initialize a sortable with the <code>zIndex</code> option specified.\n
+</dt>\n
+<dd>\n
+<pre><code>$(\'.selector\').sortable({ zIndex: 5 });</code></pre>\n
+</dd>\n
+\n
+    \n
+<dt>\n
+  Get or set the <code>zIndex</code> option, after init.\n
+</dt>\n
+<dd>\n
+<pre><code>//getter\n
+var zIndex = $(\'.selector\').sortable(\'option\', \'zIndex\');\n
+//setter\n
+$(\'.selector\').sortable(\'option\', \'zIndex\', 5);</code></pre>\n
+</dd>\n
+\n
+    </dl>\n
+  </div>\n
+</li>\n
+\n
+    </ul>\n
+  </div>\n
+  <div id="events">\n
+    <h2 class="top-header">Events</h2>\n
+    <ul class="events-list">\n
+      \n
+<li class="event" id="event-start">\n
+  <div class="event-header">\n
+    <h3 class="event-name"><a href="#event-start">start</a></h3>\n
+    <dl>\n
+      <dt class="event-type-label">Type:</dt>\n
+        <dd class="event-type">sortstart</dd>\n
+    </dl>\n
+  </div>\n
+  <div class="event-description">\n
+    <p>This event is triggered when sorting starts.</p>\n
+  </div>\n
+  <div class="event-examples">\n
+    <h4>Code examples</h4>\n
+    <dl class="event-examples-list">\n
+    \n
+<dt>\n
+  Supply a callback function to handle the <code>start</code> event as an init option.\n
+</dt>\n
+<dd>\n
+<pre><code>$(\'.selector\').sortable({\n
+   start: function(event, ui) { ... }\n
+});</code></pre>\n
+</dd>\n
+\n
+    \n
+<dt>\n
+  Bind to the <code>start</code> event by type: <code>sortstart</code>.\n
+</dt>\n
+<dd>\n
+<pre><code>$(\'.selector\').bind(\'sortstart\', function(event, ui) {\n
+  ...\n
+});</code></pre>\n
+</dd>\n
+\n
+    </dl>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="event" id="event-sort">\n
+  <div class="event-header">\n
+    <h3 class="event-name"><a href="#event-sort">sort</a></h3>\n
+    <dl>\n
+      <dt class="event-type-label">Type:</dt>\n
+        <dd class="event-type">sort</dd>\n
+    </dl>\n
+  </div>\n
+  <div class="event-description">\n
+    <p>This event is triggered during sorting.</p>\n
+  </div>\n
+  <div class="event-examples">\n
+    <h4>Code examples</h4>\n
+    <dl class="event-examples-list">\n
+    \n
+<dt>\n
+  Supply a callback function to handle the <code>sort</code> event as an init option.\n
+</dt>\n
+<dd>\n
+<pre><code>$(\'.selector\').sortable({\n
+   sort: function(event, ui) { ... }\n
+});</code></pre>\n
+</dd>\n
+\n
+    \n
+<dt>\n
+  Bind to the <code>sort</code> event by type: <code>sort</code>.\n
+</dt>\n
+<dd>\n
+<pre><code>$(\'.selector\').bind(\'sort\', function(event, ui) {\n
+  ...\n
+});</code></pre>\n
+</dd>\n
+\n
+    </dl>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="event" id="event-change">\n
+  <div class="event-header">\n
+    <h3 class="event-name"><a href="#event-change">change</a></h3>\n
+    <dl>\n
+      <dt class="event-type-label">Type:</dt>\n
+        <dd class="event-type">sortchange</dd>\n
+    </dl>\n
+  </div>\n
+  <div class="event-description">\n
+    <p>This event is triggered during sorting, but only when the DOM position has changed.</p>\n
+  </div>\n
+  <div class="event-examples">\n
+    <h4>Code examples</h4>\n
+    <dl class="event-examples-list">\n
+    \n
+<dt>\n
+  Supply a callback function to handle the <code>change</code> event as an init option.\n
+</dt>\n
+<dd>\n
+<pre><code>$(\'.selector\').sortable({\n
+   change: function(event, ui) { ... }\n
+});</code></pre>\n
+</dd>\n
+\n
+    \n
+<dt>\n
+  Bind to the <code>change</code> event by type: <code>sortchange</code>.\n
+</dt>\n
+<dd>\n
+<pre><code>$(\'.selector\').bind(\'sortchange\', function(event, ui) {\n
+  ...\n
+});</code></pre>\n
+</dd>\n
+\n
+    </dl>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="event" id="event-beforeStop">\n
+  <div class="event-header">\n
+    <h3 class="event-name"><a href="#event-beforeStop">beforeStop</a></h3>\n
+    <dl>\n
+      <dt class="event-type-label">Type:</dt>\n
+        <dd class="event-type">sortbeforeStop</dd>\n
+    </dl>\n
+  </div>\n
+  <div class="event-description">\n
+    <p>This event is triggered when sorting stops, but when the placeholder/helper is still available.</p>\n
+  </div>\n
+  <div class="event-examples">\n
+    <h4>Code examples</h4>\n
+    <dl class="event-examples-list">\n
+    \n
+<dt>\n
+  Supply a callback function to handle the <code>beforeStop</code> event as an init option.\n
+</dt>\n
+<dd>\n
+<pre><code>$(\'.selector\').sortable({\n
+   beforeStop: function(event, ui) { ... }\n
+});</code></pre>\n
+</dd>\n
+\n
+    \n
+<dt>\n
+  Bind to the <code>beforeStop</code> event by type: <code>sortbeforeStop</code>.\n
+</dt>\n
+<dd>\n
+<pre><code>$(\'.selector\').bind(\'sortbeforeStop\', function(event, ui) {\n
+  ...\n
+});</code></pre>\n
+</dd>\n
+\n
+    </dl>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="event" id="event-stop">\n
+  <div class="event-header">\n
+    <h3 class="event-name"><a href="#event-stop">stop</a></h3>\n
+    <dl>\n
+      <dt class="event-type-label">Type:</dt>\n
+        <dd class="event-type">sortstop</dd>\n
+    </dl>\n
+  </div>\n
+  <div class="event-description">\n
+    <p>This event is triggered when sorting has stopped.</p>\n
+  </div>\n
+  <div class="event-examples">\n
+    <h4>Code examples</h4>\n
+    <dl class="event-examples-list">\n
+    \n
+<dt>\n
+  Supply a callback function to handle the <code>stop</code> event as an init option.\n
+</dt>\n
+<dd>\n
+<pre><code>$(\'.selector\').sortable({\n
+   stop: function(event, ui) { ... }\n
+});</code></pre>\n
+</dd>\n
+\n
+    \n
+<dt>\n
+  Bind to the <code>stop</code> event by type: <code>sortstop</code>.\n
+</dt>\n
+<dd>\n
+<pre><code>$(\'.selector\').bind(\'sortstop\', function(event, ui) {\n
+  ...\n
+});</code></pre>\n
+</dd>\n
+\n
+    </dl>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="event" id="event-update">\n
+  <div class="event-header">\n
+    <h3 class="event-name"><a href="#event-update">update</a></h3>\n
+    <dl>\n
+      <dt class="event-type-label">Type:</dt>\n
+        <dd class="event-type">sortupdate</dd>\n
+    </dl>\n
+  </div>\n
+  <div class="event-description">\n
+    <p>This event is triggered when the user stopped sorting and the DOM position has changed.</p>\n
+  </div>\n
+  <div class="event-examples">\n
+    <h4>Code examples</h4>\n
+    <dl class="event-examples-list">\n
+    \n
+<dt>\n
+  Supply a callback function to handle the <code>update</code> event as an init option.\n
+</dt>\n
+<dd>\n
+<pre><code>$(\'.selector\').sortable({\n
+   update: function(event, ui) { ... }\n
+});</code></pre>\n
+</dd>\n
+\n
+    \n
+<dt>\n
+  Bind to the <code>update</code> event by type: <code>sortupdate</code>.\n
+</dt>\n
+<dd>\n
+<pre><code>$(\'.selector\').bind(\'sortupdate\', function(event, ui) {\n
+  ...\n
+});</code></pre>\n
+</dd>\n
+\n
+    </dl>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="event" id="event-receive">\n
+  <div class="event-header">\n
+    <h3 class="event-name"><a href="#event-receive">receive</a></h3>\n
+    <dl>\n
+      <dt class="event-type-label">Type:</dt>\n
+        <dd class="event-type">sortreceive</dd>\n
+    </dl>\n
+  </div>\n
+  <div class="event-description">\n
+    <p>This event is triggered when a connected sortable list has received an item from another list.</p>\n
+  </div>\n
+  <div class="event-examples">\n
+    <h4>Code examples</h4>\n
+    <dl class="event-examples-list">\n
+    \n
+<dt>\n
+  Supply a callback function to handle the <code>receive</code> event as an init option.\n
+</dt>\n
+<dd>\n
+<pre><code>$(\'.selector\').sortable({\n
+   receive: function(event, ui) { ... }\n
+});</code></pre>\n
+</dd>\n
+\n
+    \n
+<dt>\n
+  Bind to the <code>receive</code> event by type: <code>sortreceive</code>.\n
+</dt>\n
+<dd>\n
+<pre><code>$(\'.selector\').bind(\'sortreceive\', function(event, ui) {\n
+  ...\n
+});</code></pre>\n
+</dd>\n
+\n
+    </dl>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="event" id="event-remove">\n
+  <div class="event-header">\n
+    <h3 class="event-name"><a href="#event-remove">remove</a></h3>\n
+    <dl>\n
+      <dt class="event-type-label">Type:</dt>\n
+        <dd class="event-type">sortremove</dd>\n
+    </dl>\n
+  </div>\n
+  <div class="event-description">\n
+    <p>This event is triggered when a sortable item has been dragged out from the list and into another.</p>\n
+  </div>\n
+  <div class="event-examples">\n
+    <h4>Code examples</h4>\n
+    <dl class="event-examples-list">\n
+    \n
+<dt>\n
+  Supply a callback function to handle the <code>remove</code> event as an init option.\n
+</dt>\n
+<dd>\n
+<pre><code>$(\'.selector\').sortable({\n
+   remove: function(event, ui) { ... }\n
+});</code></pre>\n
+</dd>\n
+\n
+    \n
+<dt>\n
+  Bind to the <code>remove</code> event by type: <code>sortremove</code>.\n
+</dt>\n
+<dd>\n
+<pre><code>$(\'.selector\').bind(\'sortremove\', function(event, ui) {\n
+  ...\n
+});</code></pre>\n
+</dd>\n
+\n
+    </dl>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="event" id="event-over">\n
+  <div class="event-header">\n
+    <h3 class="event-name"><a href="#event-over">over</a></h3>\n
+    <dl>\n
+      <dt class="event-type-label">Type:</dt>\n
+        <dd class="event-type">sortover</dd>\n
+    </dl>\n
+  </div>\n
+  <div class="event-description">\n
+    <p>This event is triggered when a sortable item is moved into a connected list.</p>\n
+  </div>\n
+  <div class="event-examples">\n
+    <h4>Code examples</h4>\n
+    <dl class="event-examples-list">\n
+    \n
+<dt>\n
+  Supply a callback function to handle the <code>over</code> event as an init option.\n
+</dt>\n
+<dd>\n
+<pre><code>$(\'.selector\').sortable({\n
+   over: function(event, ui) { ... }\n
+});</code></pre>\n
+</dd>\n
+\n
+    \n
+<dt>\n
+  Bind to the <code>over</code> event by type: <code>sortover</code>.\n
+</dt>\n
+<dd>\n
+<pre><code>$(\'.selector\').bind(\'sortover\', function(event, ui) {\n
+  ...\n
+});</code></pre>\n
+</dd>\n
+\n
+    </dl>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="event" id="event-out">\n
+  <div class="event-header">\n
+    <h3 class="event-name"><a href="#event-out">out</a></h3>\n
+    <dl>\n
+      <dt class="event-type-label">Type:</dt>\n
+        <dd class="event-type">sortout</dd>\n
+    </dl>\n
+  </div>\n
+  <div class="event-description">\n
+    <p>This event is triggered when a sortable item is moved away from a connected list.</p>\n
+  </div>\n
+  <div class="event-examples">\n
+    <h4>Code examples</h4>\n
+    <dl class="event-examples-list">\n
+    \n
+<dt>\n
+  Supply a callback function to handle the <code>out</code> event as an init option.\n
+</dt>\n
+<dd>\n
+<pre><code>$(\'.selector\').sortable({\n
+   out: function(event, ui) { ... }\n
+});</code></pre>\n
+</dd>\n
+\n
+    \n
+<dt>\n
+  Bind to the <code>out</code> event by type: <code>sortout</code>.\n
+</dt>\n
+<dd>\n
+<pre><code>$(\'.selector\').bind(\'sortout\', function(event, ui) {\n
+  ...\n
+});</code></pre>\n
+</dd>\n
+\n
+    </dl>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="event" id="event-activate">\n
+  <div class="event-header">\n
+    <h3 class="event-name"><a href="#event-activate">activate</a></h3>\n
+    <dl>\n
+      <dt class="event-type-label">Type:</dt>\n
+        <dd class="event-type">sortactivate</dd>\n
+    </dl>\n
+  </div>\n
+  <div class="event-description">\n
+    <p>This event is triggered when using connected lists, every connected list on drag start receives it.</p>\n
+  </div>\n
+  <div class="event-examples">\n
+    <h4>Code examples</h4>\n
+    <dl class="event-examples-list">\n
+    \n
+<dt>\n
+  Supply a callback function to handle the <code>activate</code> event as an init option.\n
+</dt>\n
+<dd>\n
+<pre><code>$(\'.selector\').sortable({\n
+   activate: function(event, ui) { ... }\n
+});</code></pre>\n
+</dd>\n
+\n
+    \n
+<dt>\n
+  Bind to the <code>activate</code> event by type: <code>sortactivate</code>.\n
+</dt>\n
+<dd>\n
+<pre><code>$(\'.selector\').bind(\'sortactivate\', function(event, ui) {\n
+  ...\n
+});</code></pre>\n
+</dd>\n
+\n
+    </dl>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="event" id="event-deactivate">\n
+  <div class="event-header">\n
+    <h3 class="event-name"><a href="#event-deactivate">deactivate</a></h3>\n
+    <dl>\n
+      <dt class="event-type-label">Type:</dt>\n
+        <dd class="event-type">sortdeactivate</dd>\n
+    </dl>\n
+  </div>\n
+  <div class="event-description">\n
+    <p>This event is triggered when sorting was stopped, is propagated to all possible connected lists.</p>\n
+  </div>\n
+  <div class="event-examples">\n
+    <h4>Code examples</h4>\n
+    <dl class="event-examples-list">\n
+    \n
+<dt>\n
+  Supply a callback function to handle the <code>deactivate</code> event as an init option.\n
+</dt>\n
+<dd>\n
+<pre><code>$(\'.selector\').sortable({\n
+   deactivate: function(event, ui) { ... }\n
+});</code></pre>\n
+</dd>\n
+\n
+    \n
+<dt>\n
+  Bind to the <code>deactivate</code> event by type: <code>sortdeactivate</code>.\n
+</dt>\n
+<dd>\n
+<pre><code>$(\'.selector\').bind(\'sortdeactivate\', function(event, ui) {\n
+  ...\n
+});</code></pre>\n
+</dd>\n
+\n
+    </dl>\n
+  </div>\n
+</li>\n
+\n
+    </ul>\n
+  </div>\n
+  <div id="methods">\n
+    <h2 class="top-header">Methods</h2>\n
+    <ul class="methods-list">\n
+      \n
+<li class="method" id="method-destroy">\n
+  <div class="method-header">\n
+    <h3 class="method-name"><a href="#method-destroy">destroy</a></h3>\n
+    <dl>\n
+      <dt class="method-signature-label">Signature:</dt>\n
+        <dd class="method-signature">.sortable( \'destroy\'\n
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+)</dd>\n
+    </dl>\n
+  </div>\n
+  <div class="method-description">\n
+    <p>Remove the sortable functionality completely. This will return the element back to its pre-init state.</p>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="method" id="method-disable">\n
+  <div class="method-header">\n
+    <h3 class="method-name"><a href="#method-disable">disable</a></h3>\n
+    <dl>\n
+      <dt class="method-signature-label">Signature:</dt>\n
+        <dd class="method-signature">.sortable( \'disable\'\n
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+)</dd>\n
+    </dl>\n
+  </div>\n
+  <div class="method-description">\n
+    <p>Disable the sortable.</p>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="method" id="method-enable">\n
+  <div class="method-header">\n
+    <h3 class="method-name"><a href="#method-enable">enable</a></h3>\n
+    <dl>\n
+      <dt class="method-signature-label">Signature:</dt>\n
+        <dd class="method-signature">.sortable( \'enable\'\n
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+)</dd>\n
+    </dl>\n
+  </div>\n
+  <div class="method-description">\n
+    <p>Enable the sortable.</p>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="method" id="method-option">\n
+  <div class="method-header">\n
+    <h3 class="method-name"><a href="#method-option">option</a></h3>\n
+    <dl>\n
+      <dt class="method-signature-label">Signature:</dt>\n
+        <dd class="method-signature">.sortable( \'option\'\n
+\n
+, optionName\n
+\n
+, <span class="optional">[</span>value<span class="optional">] </span>\n
+\n
+\n
+\n
+)</dd>\n
+    </dl>\n
+  </div>\n
+  <div class="method-description">\n
+    <p>Get or set any sortable option. If no value is specified, will act as a getter.</p>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="method" id="method-serialize">\n
+  <div class="method-header">\n
+    <h3 class="method-name"><a href="#method-serialize">serialize</a></h3>\n
+    <dl>\n
+      <dt class="method-signature-label">Signature:</dt>\n
+        <dd class="method-signature">.sortable( \'serialize\'\n
+\n
+, <span class="optional">[</span>options<span class="optional">] </span>\n
+\n
+\n
+\n
+\n
+\n
+)</dd>\n
+    </dl>\n
+  </div>\n
+  <div class="method-description">\n
+    <p>Serializes the sortable\'s item id\'s into a form/ajax submittable string. Calling this method produces a hash that can be appended to any url to easily submit a new item order back to the server.\n
+</p><p>It works by default by looking at the id of each item in the format \'setname_number\', and it spits out a hash like "setname[]=number&amp;setname[]=number".\n
+</p><p>You can also give in a option hash as second argument to custom define how the function works. The possible options are: \'key\' (replaces part1[] with whatever you want), \'attribute\' (test another attribute than \'id\') and \'expression\' (use your own regexp).\n
+</p><p>If serialize returns an empty string, make sure the id attributes include an underscore.  They must be in the form: "set_number" For example, a 3 element list with id attributes foo_1, foo_5, foo_2 will serialize to foo[]=1&amp;foo[]=5&amp;foo[]=2. You can use an underscore, equal sign or hyphen to separate the set and number.  For example foo=1 or foo-1 or foo_1 all serialize to foo[]=1.</p>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="method" id="method-toArray">\n
+  <div class="method-header">\n
+    <h3 class="method-name"><a href="#method-toArray">toArray</a></h3>\n
+    <dl>\n
+      <dt class="method-signature-label">Signature:</dt>\n
+        <dd class="method-signature">.sortable( \'toArray\'\n
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+)</dd>\n
+    </dl>\n
+  </div>\n
+  <div class="method-description">\n
+    <p>Serializes the sortable\'s item id\'s into an array of string. If you have\n
+</p>\n
+<pre>\n
+&lt;ul id=&quot;a_sortable&quot;&gt;&lt;br&gt;\n
+&lt;li id=&quot;hello&quot;&gt;Hello&lt;/li&gt;&lt;br&gt;\n
+&lt;li id=&quot;goodbye&quot;&gt;Good bye&lt;/li&gt;&lt;br&gt;\n
+&lt;/ul&gt;\n
+</pre>\n
+<p>and do\n
+</p>\n
+<pre>var result = $(\'#a_sortable\').sortable(\'toArray\');</pre>\n
+<p>then\n
+</p>\n
+<pre>result[0] will contain &quot;hello&quot; and result[1] will contain &quot;goodbye&quot;.</pre></p>\n
+  </div>\n
+</li>\n
+\n
+<p>\n
+<li class="method" id="method-refresh">\n
+  <div class="method-header">\n
+    <h3 class="method-name"><a href="#method-refresh">refresh</a></h3>\n
+    <dl>\n
+      <dt class="method-signature-label">Signature:</dt>\n
+        <dd class="method-signature">.sortable( \'refresh\'\n
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+)</dd>\n
+    </dl>\n
+  </div>\n
+  <div class="method-description">\n
+    <p>Refresh the sortable items. Custom trigger the reloading of all sortable items, causing new items to be recognized.</p>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="method" id="method-refreshPositions">\n
+  <div class="method-header">\n
+    <h3 class="method-name"><a href="#method-refreshPositions">refreshPositions</a></h3>\n
+    <dl>\n
+      <dt class="method-signature-label">Signature:</dt>\n
+        <dd class="method-signature">.sortable( \'refreshPositions\'\n
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+)</dd>\n
+    </dl>\n
+  </div>\n
+  <div class="method-description">\n
+    <p>Refresh the cached positions of the sortables\' items. Calling this method refreshes the cached item positions of all sortables. This is usually done automatically by the script and slows down performance. Use wisely.</p>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="method" id="method-cancel">\n
+  <div class="method-header">\n
+    <h3 class="method-name"><a href="#method-cancel">cancel</a></h3>\n
+    <dl>\n
+      <dt class="method-signature-label">Signature:</dt>\n
+        <dd class="method-signature">.sortable( \'cancel\'\n
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+)</dd>\n
+    </dl>\n
+  </div>\n
+  <div class="method-description">\n
+    <p>Cancels a change in the current sortable and reverts it back to how it was before the current sort started. Useful in the stop and receive callback functions.\n
+</p><p>If the sortable item is not being moved from one connected sortable to another:\n
+</p>\n
+<pre>$(this).sortable(\'cancel\');</pre>\n
+<p>will cancel the change.\n
+</p><p>If the sortable item is being moved from one connected sortable to another:\n
+</p>\n
+<pre>$(ui.sender).sortable(\'cancel\');</pre>\n
+<p>will cancel the change. Useful in the \'receive\' callback.</p>\n
+  </div>\n
+</li>\n
+\n
+    </ul>\n
+  </div>\n
+  <div id="theming">\n
+    <h2 class="top-header">Theming</h2>\n
+    <p>The jQuery UI Sortable plugin uses the jQuery UI CSS Framework to style its look and feel, including colors and background textures. We recommend using the ThemeRoller tool to create and download custom themes that are easy to build and maintain.\n
+</p>\n
+  <p>If a deeper level of customization is needed, there are widget-specific classes referenced within the ui.sortable.css stylesheet that can be modified. These classes are highlighed in bold below.\n
+</p>\n
+    \n
+  <h3>Sample markup with jQuery UI CSS Framework classes</h3>\n
+  &lt;ul class=&quot;<strong>ui-sortable</strong>&quot;&gt;<br />\n
+&#160;&#160;&#160;&lt;li&gt;&lt;/li&gt;<br />\n
+&#160;&#160;&#160;&lt;li&gt;&lt;/li&gt;<br />\n
+&#160;&#160;&#160;&lt;li&gt;&lt;/li&gt;<br />\n
+&lt;/ul&gt;\n
+  <p class="theme-note">\n
+    <strong>\n
+      Note: This is a sample of markup generated by the sortable plugin, not markup you should use to create a sortable. The only markup needed for that is <br />&lt;ul&gt;<br />\n
+&#160;&#160;&#160;&lt;li&gt;&lt;/li&gt;<br />\n
+&#160;&#160;&#160;&lt;li&gt;&lt;/li&gt;<br />\n
+&#160;&#160;&#160;&lt;li&gt;&lt;/li&gt;<br />\n
+&lt;/ul&gt;.\n
+    </strong>\n
+  </p>\n
+\n
+  </div>\n
+</div>\n
+\n
+</p><!-- \n
+Pre-expand include size: 68721 bytes\n
+Post-expand include size: 120119 bytes\n
+Template argument size: 70108 bytes\n
+Maximum: 2097152 bytes\n
+-->\n
+\n
+<!-- Saved in parser cache with key jqdocs_docs:pcache:idhash:3344-1!1!0!!en!2 and timestamp 20090604112215 -->\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>sortable.html</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

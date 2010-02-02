@@ -1,0 +1,760 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+\n
+<ul class="UIAPIPlugin-toc">\n
+<li><a href="#overview">Overview</a></li>\n
+<li><a href="#options">Options</a></li>\n
+<li><a href="#events">Events</a></li>\n
+<li><a href="#methods">Methods</a></li>\n
+<li><a href="#theming">Theming</a></li>\n
+</ul>\n
+<div class="UIAPIPlugin">\n
+  <h1>jQuery UI Selectable</h1>\n
+  <div id="overview">\n
+    <h2 class="top-header">Overview</h2>\n
+    <div id="overview-main">\n
+        <p>The jQuery UI Selectable plugin allows for elements to be selected by dragging a box (sometimes called a lasso) with the mouse over the elements. Also, elements can be selected by click or drag while holding the Ctrl/Meta key, allowing for multiple (non-contiguous) selections.</p>\n
+    </div>\n
+    <div id="overview-dependencies">\n
+        <h3>Dependencies</h3>\n
+        <ul>\n
+<li>UI Core</li>\n
+</ul>\n
+    </div>\n
+    <div id="overview-example">\n
+        <h3>Example</h3>\n
+        <div id="overview-example" class="example">\n
+<ul><li><a href="#demo"><span>Demo</span></a></li><li><a href="#source"><span>View Source</span></a></li></ul>\n
+<p><div id="demo" class="tabs-container" rel="">\n
+A simple jQuery UI Selectable.<br />\n
+</p>\n
+<pre>$(&quot;#selectable&quot;).selectable();\n
+</pre>\n
+<p></div><div id="source" class="tabs-container">\n
+</p>\n
+<pre>&lt;!DOCTYPE html&gt;\n
+&lt;html&gt;\n
+&lt;head&gt;\n
+  &lt;link type=&quot;text/css&quot; href=&quot;http://jqueryui.com/latest/themes/base/ui.all.css&quot; rel=&quot;stylesheet&quot; /&gt;\n
+  &lt;script type=&quot;text/javascript&quot; src=&quot;http://jqueryui.com/latest/jquery-1.3.2.js&quot;&gt;&lt;/script&gt;\n
+  &lt;script type=&quot;text/javascript&quot; src=&quot;http://jqueryui.com/latest/ui/ui.core.js&quot;&gt;&lt;/script&gt;\n
+  &lt;script type=&quot;text/javascript&quot; src=&quot;http://jqueryui.com/latest/ui/ui.selectable.js&quot;&gt;&lt;/script&gt;\n
+  &lt;script type="text/javascript"&gt;\n
+  $(document).ready(function(){\n
+    $(&quot;#selectable&quot;).selectable();\n
+  });\n
+  &lt;/script&gt;\n
+&lt;/head&gt;\n
+&lt;body style="font-size:62.5%;"&gt;\n
+  \n
+&lt;div id=&quot;selectable&quot;&gt;&lt;/div&gt;\n
+\n
+&lt;/body&gt;\n
+&lt;/html&gt;\n
+</pre>\n
+<p></div>\n
+</p><p></div>\n
+    </div>\n
+  </div>\n
+  <div id="options">\n
+    <h2 class="top-header">Options</h2>\n
+    <ul class="options-list">\n
+      \n
+<li class="option" id="option-autoRefresh">\n
+  <div class="option-header">\n
+    <h3 class="option-name"><a href="#option-autoRefresh">autoRefresh</a></h3>\n
+    <dl>\n
+      <dt class="option-type-label">Type:</dt>\n
+        <dd class="option-type">Boolean</dd>\n
+      \n
+      <dt class="option-default-label">Default:</dt>\n
+        <dd class="option-default">true</dd>\n
+      \n
+    </dl>\n
+  </div>\n
+  <div class="option-description">\n
+    <p>This determines whether to refresh (recalculate) the position and size of each selectee at the beginning of each select operation. If you have many many items, you may want to set this to false and call the refresh method manually.</p>\n
+  </div>\n
+  <div class="option-examples">\n
+    <h4>Code examples</h4>\n
+    <dl class="option-examples-list">\n
+    \n
+<dt>\n
+  Initialize a selectable with the <code>autoRefresh</code> option specified.\n
+</dt>\n
+<dd>\n
+<pre><code>$(\'.selector\').selectable({ autoRefresh: false });</code></pre>\n
+</dd>\n
+\n
+    \n
+<dt>\n
+  Get or set the <code>autoRefresh</code> option, after init.\n
+</dt>\n
+<dd>\n
+<pre><code>//getter\n
+var autoRefresh = $(\'.selector\').selectable(\'option\', \'autoRefresh\');\n
+//setter\n
+$(\'.selector\').selectable(\'option\', \'autoRefresh\', false);</code></pre>\n
+</dd>\n
+\n
+    </dl>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="option" id="option-cancel">\n
+  <div class="option-header">\n
+    <h3 class="option-name"><a href="#option-cancel">cancel</a></h3>\n
+    <dl>\n
+      <dt class="option-type-label">Type:</dt>\n
+        <dd class="option-type">Selector</dd>\n
+      \n
+      <dt class="option-default-label">Default:</dt>\n
+        <dd class="option-default">\':input,option\'</dd>\n
+      \n
+    </dl>\n
+  </div>\n
+  <div class="option-description">\n
+    <p>Prevents selecting if you start on elements matching the selector.</p>\n
+  </div>\n
+  <div class="option-examples">\n
+    <h4>Code examples</h4>\n
+    <dl class="option-examples-list">\n
+    \n
+<dt>\n
+  Initialize a selectable with the <code>cancel</code> option specified.\n
+</dt>\n
+<dd>\n
+<pre><code>$(\'.selector\').selectable({ cancel: \':input,option\' });</code></pre>\n
+</dd>\n
+\n
+    \n
+<dt>\n
+  Get or set the <code>cancel</code> option, after init.\n
+</dt>\n
+<dd>\n
+<pre><code>//getter\n
+var cancel = $(\'.selector\').selectable(\'option\', \'cancel\');\n
+//setter\n
+$(\'.selector\').selectable(\'option\', \'cancel\', \':input,option\');</code></pre>\n
+</dd>\n
+\n
+    </dl>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="option" id="option-delay">\n
+  <div class="option-header">\n
+    <h3 class="option-name"><a href="#option-delay">delay</a></h3>\n
+    <dl>\n
+      <dt class="option-type-label">Type:</dt>\n
+        <dd class="option-type">Integer</dd>\n
+      \n
+      <dt class="option-default-label">Default:</dt>\n
+        <dd class="option-default">0</dd>\n
+      \n
+    </dl>\n
+  </div>\n
+  <div class="option-description">\n
+    <p>Time in milliseconds to define when the selecting should start. It helps preventing unwanted selections when clicking on an element.</p>\n
+  </div>\n
+  <div class="option-examples">\n
+    <h4>Code examples</h4>\n
+    <dl class="option-examples-list">\n
+    \n
+<dt>\n
+  Initialize a selectable with the <code>delay</code> option specified.\n
+</dt>\n
+<dd>\n
+<pre><code>$(\'.selector\').selectable({ delay: 20 });</code></pre>\n
+</dd>\n
+\n
+    \n
+<dt>\n
+  Get or set the <code>delay</code> option, after init.\n
+</dt>\n
+<dd>\n
+<pre><code>//getter\n
+var delay = $(\'.selector\').selectable(\'option\', \'delay\');\n
+//setter\n
+$(\'.selector\').selectable(\'option\', \'delay\', 20);</code></pre>\n
+</dd>\n
+\n
+    </dl>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="option" id="option-distance">\n
+  <div class="option-header">\n
+    <h3 class="option-name"><a href="#option-distance">distance</a></h3>\n
+    <dl>\n
+      <dt class="option-type-label">Type:</dt>\n
+        <dd class="option-type">Integer</dd>\n
+      \n
+      <dt class="option-default-label">Default:</dt>\n
+        <dd class="option-default">0</dd>\n
+      \n
+    </dl>\n
+  </div>\n
+  <div class="option-description">\n
+    <p>Tolerance, in pixels, for when selecting should start. If specified, selecting will not start until after mouse is dragged beyond distance.</p>\n
+  </div>\n
+  <div class="option-examples">\n
+    <h4>Code examples</h4>\n
+    <dl class="option-examples-list">\n
+    \n
+<dt>\n
+  Initialize a selectable with the <code>distance</code> option specified.\n
+</dt>\n
+<dd>\n
+<pre><code>$(\'.selector\').selectable({ distance: 20 });</code></pre>\n
+</dd>\n
+\n
+    \n
+<dt>\n
+  Get or set the <code>distance</code> option, after init.\n
+</dt>\n
+<dd>\n
+<pre><code>//getter\n
+var distance = $(\'.selector\').selectable(\'option\', \'distance\');\n
+//setter\n
+$(\'.selector\').selectable(\'option\', \'distance\', 20);</code></pre>\n
+</dd>\n
+\n
+    </dl>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="option" id="option-filter">\n
+  <div class="option-header">\n
+    <h3 class="option-name"><a href="#option-filter">filter</a></h3>\n
+    <dl>\n
+      <dt class="option-type-label">Type:</dt>\n
+        <dd class="option-type">Selector</dd>\n
+      \n
+      <dt class="option-default-label">Default:</dt>\n
+        <dd class="option-default">\'*\'</dd>\n
+      \n
+    </dl>\n
+  </div>\n
+  <div class="option-description">\n
+    <p>The matching child elements will be made selectees (able to be selected).</p>\n
+  </div>\n
+  <div class="option-examples">\n
+    <h4>Code examples</h4>\n
+    <dl class="option-examples-list">\n
+    \n
+<dt>\n
+  Initialize a selectable with the <code>filter</code> option specified.\n
+</dt>\n
+<dd>\n
+<pre><code>$(\'.selector\').selectable({ filter: \'li\' });</code></pre>\n
+</dd>\n
+\n
+    \n
+<dt>\n
+  Get or set the <code>filter</code> option, after init.\n
+</dt>\n
+<dd>\n
+<pre><code>//getter\n
+var filter = $(\'.selector\').selectable(\'option\', \'filter\');\n
+//setter\n
+$(\'.selector\').selectable(\'option\', \'filter\', \'li\');</code></pre>\n
+</dd>\n
+\n
+    </dl>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="option" id="option-tolerance">\n
+  <div class="option-header">\n
+    <h3 class="option-name"><a href="#option-tolerance">tolerance</a></h3>\n
+    <dl>\n
+      <dt class="option-type-label">Type:</dt>\n
+        <dd class="option-type">String</dd>\n
+      \n
+      <dt class="option-default-label">Default:</dt>\n
+        <dd class="option-default">\'touch\'</dd>\n
+      \n
+    </dl>\n
+  </div>\n
+  <div class="option-description">\n
+    <p>Possible values: \'touch\', \'fit\'.\n
+</p>\n
+<ul>\n
+<li><b>fit</b>: draggable overlaps the droppable entirely</li>\n
+<li><b>touch</b>: draggable overlaps the droppable any amount</li>\n
+</ul>\n
+<p></p>\n
+  </div>\n
+  <div class="option-examples">\n
+    <h4>Code examples</h4>\n
+    <dl class="option-examples-list">\n
+    \n
+<dt>\n
+  Initialize a selectable with the <code>tolerance</code> option specified.\n
+</dt>\n
+<dd>\n
+<pre><code>$(\'.selector\').selectable({ tolerance: \'fit\' });</code></pre>\n
+</dd>\n
+\n
+    \n
+<dt>\n
+  Get or set the <code>tolerance</code> option, after init.\n
+</dt>\n
+<dd>\n
+<pre><code>//getter\n
+var tolerance = $(\'.selector\').selectable(\'option\', \'tolerance\');\n
+//setter\n
+$(\'.selector\').selectable(\'option\', \'tolerance\', \'fit\');</code></pre>\n
+</dd>\n
+\n
+    </dl>\n
+  </div>\n
+</li>\n
+\n
+    </ul>\n
+  </div>\n
+  <div id="events">\n
+    <h2 class="top-header">Events</h2>\n
+    <ul class="events-list">\n
+      \n
+<li class="event" id="event-selected">\n
+  <div class="event-header">\n
+    <h3 class="event-name"><a href="#event-selected">selected</a></h3>\n
+    <dl>\n
+      <dt class="event-type-label">Type:</dt>\n
+        <dd class="event-type">selected</dd>\n
+    </dl>\n
+  </div>\n
+  <div class="event-description">\n
+    <p>This event is triggered at the end of the select operation, on each element added to the selection.</p>\n
+  </div>\n
+  <div class="event-examples">\n
+    <h4>Code examples</h4>\n
+    <dl class="event-examples-list">\n
+    \n
+<dt>\n
+  Supply a callback function to handle the <code>selected</code> event as an init option.\n
+</dt>\n
+<dd>\n
+<pre><code>$(\'.selector\').selectable({\n
+   selected: function(event, ui) { ... }\n
+});</code></pre>\n
+</dd>\n
+\n
+    \n
+<dt>\n
+  Bind to the <code>selected</code> event by type: <code>selected</code>.\n
+</dt>\n
+<dd>\n
+<pre><code>$(\'.selector\').bind(\'selected\', function(event, ui) {\n
+  ...\n
+});</code></pre>\n
+</dd>\n
+\n
+    </dl>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="event" id="event-selecting">\n
+  <div class="event-header">\n
+    <h3 class="event-name"><a href="#event-selecting">selecting</a></h3>\n
+    <dl>\n
+      <dt class="event-type-label">Type:</dt>\n
+        <dd class="event-type">selecting</dd>\n
+    </dl>\n
+  </div>\n
+  <div class="event-description">\n
+    <p>This event is triggered during the select operation, on each element added to the selection.</p>\n
+  </div>\n
+  <div class="event-examples">\n
+    <h4>Code examples</h4>\n
+    <dl class="event-examples-list">\n
+    \n
+<dt>\n
+  Supply a callback function to handle the <code>selecting</code> event as an init option.\n
+</dt>\n
+<dd>\n
+<pre><code>$(\'.selector\').selectable({\n
+   selecting: function(event, ui) { ... }\n
+});</code></pre>\n
+</dd>\n
+\n
+    \n
+<dt>\n
+  Bind to the <code>selecting</code> event by type: <code>selecting</code>.\n
+</dt>\n
+<dd>\n
+<pre><code>$(\'.selector\').bind(\'selecting\', function(event, ui) {\n
+  ...\n
+});</code></pre>\n
+</dd>\n
+\n
+    </dl>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="event" id="event-start">\n
+  <div class="event-header">\n
+    <h3 class="event-name"><a href="#event-start">start</a></h3>\n
+    <dl>\n
+      <dt class="event-type-label">Type:</dt>\n
+        <dd class="event-type">selectablestart</dd>\n
+    </dl>\n
+  </div>\n
+  <div class="event-description">\n
+    <p>This event is triggered at the beginning of the select operation.</p>\n
+  </div>\n
+  <div class="event-examples">\n
+    <h4>Code examples</h4>\n
+    <dl class="event-examples-list">\n
+    \n
+<dt>\n
+  Supply a callback function to handle the <code>start</code> event as an init option.\n
+</dt>\n
+<dd>\n
+<pre><code>$(\'.selector\').selectable({\n
+   start: function(event, ui) { ... }\n
+});</code></pre>\n
+</dd>\n
+\n
+    \n
+<dt>\n
+  Bind to the <code>start</code> event by type: <code>selectablestart</code>.\n
+</dt>\n
+<dd>\n
+<pre><code>$(\'.selector\').bind(\'selectablestart\', function(event, ui) {\n
+  ...\n
+});</code></pre>\n
+</dd>\n
+\n
+    </dl>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="event" id="event-stop">\n
+  <div class="event-header">\n
+    <h3 class="event-name"><a href="#event-stop">stop</a></h3>\n
+    <dl>\n
+      <dt class="event-type-label">Type:</dt>\n
+        <dd class="event-type">selectablestop</dd>\n
+    </dl>\n
+  </div>\n
+  <div class="event-description">\n
+    <p>This event is triggered at the end of the select operation.</p>\n
+  </div>\n
+  <div class="event-examples">\n
+    <h4>Code examples</h4>\n
+    <dl class="event-examples-list">\n
+    \n
+<dt>\n
+  Supply a callback function to handle the <code>stop</code> event as an init option.\n
+</dt>\n
+<dd>\n
+<pre><code>$(\'.selector\').selectable({\n
+   stop: function(event, ui) { ... }\n
+});</code></pre>\n
+</dd>\n
+\n
+    \n
+<dt>\n
+  Bind to the <code>stop</code> event by type: <code>selectablestop</code>.\n
+</dt>\n
+<dd>\n
+<pre><code>$(\'.selector\').bind(\'selectablestop\', function(event, ui) {\n
+  ...\n
+});</code></pre>\n
+</dd>\n
+\n
+    </dl>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="event" id="event-unselected">\n
+  <div class="event-header">\n
+    <h3 class="event-name"><a href="#event-unselected">unselected</a></h3>\n
+    <dl>\n
+      <dt class="event-type-label">Type:</dt>\n
+        <dd class="event-type">unselected</dd>\n
+    </dl>\n
+  </div>\n
+  <div class="event-description">\n
+    <p>This event is triggered at the end of the select operation, on each element removed from the selection.</p>\n
+  </div>\n
+  <div class="event-examples">\n
+    <h4>Code examples</h4>\n
+    <dl class="event-examples-list">\n
+    \n
+<dt>\n
+  Supply a callback function to handle the <code>unselected</code> event as an init option.\n
+</dt>\n
+<dd>\n
+<pre><code>$(\'.selector\').selectable({\n
+   unselected: function(event, ui) { ... }\n
+});</code></pre>\n
+</dd>\n
+\n
+    \n
+<dt>\n
+  Bind to the <code>unselected</code> event by type: <code>unselected</code>.\n
+</dt>\n
+<dd>\n
+<pre><code>$(\'.selector\').bind(\'unselected\', function(event, ui) {\n
+  ...\n
+});</code></pre>\n
+</dd>\n
+\n
+    </dl>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="event" id="event-unselecting">\n
+  <div class="event-header">\n
+    <h3 class="event-name"><a href="#event-unselecting">unselecting</a></h3>\n
+    <dl>\n
+      <dt class="event-type-label">Type:</dt>\n
+        <dd class="event-type">unselecting</dd>\n
+    </dl>\n
+  </div>\n
+  <div class="event-description">\n
+    <p>This event is triggered during the select operation, on each element removed from the selection.</p>\n
+  </div>\n
+  <div class="event-examples">\n
+    <h4>Code examples</h4>\n
+    <dl class="event-examples-list">\n
+    \n
+<dt>\n
+  Supply a callback function to handle the <code>unselecting</code> event as an init option.\n
+</dt>\n
+<dd>\n
+<pre><code>$(\'.selector\').selectable({\n
+   unselecting: function(event, ui) { ... }\n
+});</code></pre>\n
+</dd>\n
+\n
+    \n
+<dt>\n
+  Bind to the <code>unselecting</code> event by type: <code>unselecting</code>.\n
+</dt>\n
+<dd>\n
+<pre><code>$(\'.selector\').bind(\'unselecting\', function(event, ui) {\n
+  ...\n
+});</code></pre>\n
+</dd>\n
+\n
+    </dl>\n
+  </div>\n
+</li>\n
+\n
+    </ul>\n
+  </div>\n
+  <div id="methods">\n
+    <h2 class="top-header">Methods</h2>\n
+    <ul class="methods-list">\n
+      \n
+<li class="method" id="method-destroy">\n
+  <div class="method-header">\n
+    <h3 class="method-name"><a href="#method-destroy">destroy</a></h3>\n
+    <dl>\n
+      <dt class="method-signature-label">Signature:</dt>\n
+        <dd class="method-signature">.selectable( \'destroy\'\n
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+)</dd>\n
+    </dl>\n
+  </div>\n
+  <div class="method-description">\n
+    <p>Remove the selectable functionality completely. This will return the element back to its pre-init state.</p>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="method" id="method-disable">\n
+  <div class="method-header">\n
+    <h3 class="method-name"><a href="#method-disable">disable</a></h3>\n
+    <dl>\n
+      <dt class="method-signature-label">Signature:</dt>\n
+        <dd class="method-signature">.selectable( \'disable\'\n
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+)</dd>\n
+    </dl>\n
+  </div>\n
+  <div class="method-description">\n
+    <p>Disable the selectable.</p>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="method" id="method-enable">\n
+  <div class="method-header">\n
+    <h3 class="method-name"><a href="#method-enable">enable</a></h3>\n
+    <dl>\n
+      <dt class="method-signature-label">Signature:</dt>\n
+        <dd class="method-signature">.selectable( \'enable\'\n
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+)</dd>\n
+    </dl>\n
+  </div>\n
+  <div class="method-description">\n
+    <p>Enable the selectable.</p>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="method" id="method-option">\n
+  <div class="method-header">\n
+    <h3 class="method-name"><a href="#method-option">option</a></h3>\n
+    <dl>\n
+      <dt class="method-signature-label">Signature:</dt>\n
+        <dd class="method-signature">.selectable( \'option\'\n
+\n
+, optionName\n
+\n
+, <span class="optional">[</span>value<span class="optional">] </span>\n
+\n
+\n
+\n
+)</dd>\n
+    </dl>\n
+  </div>\n
+  <div class="method-description">\n
+    <p>Get or set any selectable option. If no value is specified, will act as a getter.</p>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="method" id="method-refresh">\n
+  <div class="method-header">\n
+    <h3 class="method-name"><a href="#method-refresh">refresh</a></h3>\n
+    <dl>\n
+      <dt class="method-signature-label">Signature:</dt>\n
+        <dd class="method-signature">.selectable( \'refresh\'\n
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+)</dd>\n
+    </dl>\n
+  </div>\n
+  <div class="method-description">\n
+    <p>Refresh the position and size of each selectee element. This method can be used to manually recalculate the position and size of each selectee element. Very useful if autoRefresh is set to false.</p>\n
+  </div>\n
+</li>\n
+\n
+    </ul>\n
+  </div>\n
+  <div id="theming">\n
+    <h2 class="top-header">Theming</h2>\n
+    <p>The jQuery UI Selectable plugin uses the jQuery UI CSS Framework to style its look and feel, including colors and background textures. We recommend using the ThemeRoller tool to create and download custom themes that are easy to build and maintain.\n
+</p>\n
+  <p>If a deeper level of customization is needed, there are widget-specific classes referenced within the ui.selectable.css stylesheet that can be modified. These classes are highlighed in bold below.\n
+</p>\n
+    \n
+  <h3>Sample markup with jQuery UI CSS Framework classes</h3>\n
+  &lt;ul class=&quot;<strong>ui-selectable</strong>&quot;&gt;<br />\n
+&#160;&#160;&#160;&lt;li class=&quot;<strong>ui-selectee</strong>&quot;&gt;&lt;/li&gt;<br />\n
+&#160;&#160;&#160;&lt;li class=&quot;<strong>ui-selectee</strong>&quot;&gt;&lt;/li&gt;<br />\n
+&#160;&#160;&#160;&lt;li class=&quot;<strong>ui-selectee</strong>&quot;&gt;&lt;/li&gt;<br />\n
+&lt;/ul&gt;\n
+  <p class="theme-note">\n
+    <strong>\n
+      Note: This is a sample of markup generated by the selectable plugin, not markup you should use to create a selectable. The only markup needed for that is <br />&lt;ul&gt;<br />\n
+&#160;&#160;&#160;&lt;li&gt;&lt;/li&gt;<br />\n
+&#160;&#160;&#160;&lt;li&gt;&lt;/li&gt;<br />\n
+&#160;&#160;&#160;&lt;li&gt;&lt;/li&gt;<br />\n
+&lt;/ul&gt;.\n
+    </strong>\n
+  </p>\n
+\n
+  </div>\n
+</div>\n
+\n
+</p><!-- \n
+Pre-expand include size: 28549 bytes\n
+Post-expand include size: 45102 bytes\n
+Template argument size: 24967 bytes\n
+Maximum: 2097152 bytes\n
+-->\n
+\n
+<!-- Saved in parser cache with key jqdocs_docs:pcache:idhash:3343-1!1!0!!en!2 and timestamp 20090604112214 -->\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>selectable.html</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

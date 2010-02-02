@@ -1,0 +1,345 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<!doctype html>\n
+<html lang="en">\n
+<head>\n
+\t<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />\n
+\t<title>jQuery UI Demos</title>\n
+\t<link type="text/css" href="../themes/base/ui.all.css" rel="stylesheet" />\n
+\t<link type="text/css" href="demos.css" rel="stylesheet" />\n
+\t<script type="text/javascript" src="../jquery-1.3.2.js"></script>\n
+\t<script type="text/javascript" src="../external/bgiframe/jquery.bgiframe.js"></script>\n
+\t<script type="text/javascript" src="../ui/ui.core.js"></script>\n
+\t<script type="text/javascript" src="../ui/ui.accordion.js"></script>\n
+\t<script type="text/javascript" src="../ui/ui.datepicker.js"></script>\n
+\t<script type="text/javascript" src="../ui/ui.dialog.js"></script>\n
+\t<script type="text/javascript" src="../ui/ui.draggable.js"></script>\n
+\t<script type="text/javascript" src="../ui/ui.droppable.js"></script>\n
+\t<script type="text/javascript" src="../ui/ui.progressbar.js"></script>\n
+\t<script type="text/javascript" src="../ui/ui.resizable.js"></script>\n
+\t<script type="text/javascript" src="../ui/ui.selectable.js"></script>\n
+\t<script type="text/javascript" src="../ui/ui.slider.js"></script>\n
+\t<script type="text/javascript" src="../ui/ui.sortable.js"></script>\n
+\t<script type="text/javascript" src="../ui/ui.tabs.js"></script>\n
+\t<script type="text/javascript" src="../ui/effects.core.js"></script>\n
+\t<script type="text/javascript" src="../ui/effects.blind.js"></script>\n
+\t<script type="text/javascript" src="../ui/effects.bounce.js"></script>\n
+\t<script type="text/javascript" src="../ui/effects.clip.js"></script>\n
+\t<script type="text/javascript" src="../ui/effects.drop.js"></script>\n
+\t<script type="text/javascript" src="../ui/effects.explode.js"></script>\n
+\t<script type="text/javascript" src="../ui/effects.fold.js"></script>\n
+\t<script type="text/javascript" src="../ui/effects.highlight.js"></script>\n
+\t<script type="text/javascript" src="../ui/effects.pulsate.js"></script>\n
+\t<script type="text/javascript" src="../ui/effects.scale.js"></script>\n
+\t<script type="text/javascript" src="../ui/effects.shake.js"></script>\n
+\t<script type="text/javascript" src="../ui/effects.slide.js"></script>\n
+\t<script type="text/javascript" src="../ui/effects.transfer.js"></script>\n
+\t<script type="text/javascript" src="../ui/i18n/ui.datepicker-ar.js"></script>\n
+\t<script type="text/javascript" src="../ui/i18n/ui.datepicker-bg.js"></script>\n
+\t<script type="text/javascript" src="../ui/i18n/ui.datepicker-ca.js"></script>\n
+\t<script type="text/javascript" src="../ui/i18n/ui.datepicker-cs.js"></script>\n
+\t<script type="text/javascript" src="../ui/i18n/ui.datepicker-da.js"></script>\n
+\t<script type="text/javascript" src="../ui/i18n/ui.datepicker-de.js"></script>\n
+\t<script type="text/javascript" src="../ui/i18n/ui.datepicker-el.js"></script>\n
+\t<script type="text/javascript" src="../ui/i18n/ui.datepicker-eo.js"></script>\n
+\t<script type="text/javascript" src="../ui/i18n/ui.datepicker-es.js"></script>\n
+\t<script type="text/javascript" src="../ui/i18n/ui.datepicker-fa.js"></script>\n
+\t<script type="text/javascript" src="../ui/i18n/ui.datepicker-fi.js"></script>\n
+\t<script type="text/javascript" src="../ui/i18n/ui.datepicker-fr.js"></script>\n
+\t<script type="text/javascript" src="../ui/i18n/ui.datepicker-he.js"></script>\n
+\t<script type="text/javascript" src="../ui/i18n/ui.datepicker-hr.js"></script>\n
+\t<script type="text/javascript" src="../ui/i18n/ui.datepicker-hu.js"></script>\n
+\t<script type="text/javascript" src="../ui/i18n/ui.datepicker-hy.js"></script>\n
+\t<script type="text/javascript" src="../ui/i18n/ui.datepicker-id.js"></script>\n
+\t<script type="text/javascript" src="../ui/i18n/ui.datepicker-is.js"></script>\n
+\t<script type="text/javascript" src="../ui/i18n/ui.datepicker-it.js"></script>\n
+\t<script type="text/javascript" src="../ui/i18n/ui.datepicker-ja.js"></script>\n
+\t<script type="text/javascript" src="../ui/i18n/ui.datepicker-ko.js"></script>\n
+\t<script type="text/javascript" src="../ui/i18n/ui.datepicker-lt.js"></script>\n
+\t<script type="text/javascript" src="../ui/i18n/ui.datepicker-lv.js"></script>\n
+\t<script type="text/javascript" src="../ui/i18n/ui.datepicker-ms.js"></script>\n
+\t<script type="text/javascript" src="../ui/i18n/ui.datepicker-nl.js"></script>\n
+\t<script type="text/javascript" src="../ui/i18n/ui.datepicker-no.js"></script>\n
+\t<script type="text/javascript" src="../ui/i18n/ui.datepicker-pl.js"></script>\n
+\t<script type="text/javascript" src="../ui/i18n/ui.datepicker-pt-BR.js"></script>\n
+\t<script type="text/javascript" src="../ui/i18n/ui.datepicker-ro.js"></script>\n
+\t<script type="text/javascript" src="../ui/i18n/ui.datepicker-ru.js"></script>\n
+\t<script type="text/javascript" src="../ui/i18n/ui.datepicker-sk.js"></script>\n
+\t<script type="text/javascript" src="../ui/i18n/ui.datepicker-sl.js"></script>\n
+\t<script type="text/javascript" src="../ui/i18n/ui.datepicker-sq.js"></script>\n
+\t<script type="text/javascript" src="../ui/i18n/ui.datepicker-sr.js"></script>\n
+\t<script type="text/javascript" src="../ui/i18n/ui.datepicker-sr-SR.js"></script>\n
+\t<script type="text/javascript" src="../ui/i18n/ui.datepicker-sv.js"></script>\n
+\t<script type="text/javascript" src="../ui/i18n/ui.datepicker-th.js"></script>\n
+\t<script type="text/javascript" src="../ui/i18n/ui.datepicker-tr.js"></script>\n
+\t<script type="text/javascript" src="../ui/i18n/ui.datepicker-uk.js"></script>\n
+\t<script type="text/javascript" src="../ui/i18n/ui.datepicker-zh-CN.js"></script>\n
+\t<script type="text/javascript" src="../ui/i18n/ui.datepicker-zh-TW.js"></script>\n
+\t<script type="text/javascript">\n
+\tjQuery(function($) {\n
+\t\t\n
+\t\t$(\'.left-nav a\').click(function(ev) {\n
+\t\t\twindow.location.hash = this.href.replace(/.+\\/([^\\/]+)\\/index\\.html/,\'$1\') + \'|default\';\n
+\t\t\tloadPage(this.href);\n
+\t\t\t$(\'.left-nav a.selected\').removeClass(\'selected\');\n
+\t\t\t$(this).addClass(\'selected\');\n
+\t\t\tev.preventDefault();\n
+\t\t});\n
+\t\t\n
+\t\tif (window.location.hash) {\n
+\t\t\tif (window.location.hash.indexOf(\'|\') === -1) {\n
+\t\t\t\twindow.location.hash += \'|default\';\t\n
+\t\t\t}\t\t\t\n
+\t\t\tvar path = window.location.href.replace(/(index\\.html)?#/,\'\');\n
+\t\t\tpath = path.replace(\'\\|\',\'/\') + \'.html\';\n
+\t\t\tloadPage(path);\n
+\t\t}\t\t\n
+\n
+\t\tfunction loadPage(path) {\t\t\t\n
+\t\t\tvar section = path.replace(/\\/[^\\/]+\\.html/,\'\');\n
+\t\t\tvar header = section.replace(/.+\\/([^\\/]+)/,\'$1\').replace(/_/, \' \');\n
+\t\t\t\n
+\t\t\t$(\'td.normal div.normal\')\n
+\t\t\t\t.empty()\n
+\t\t\t\t.append(\'<h4 class="demo-subheader">Functional demo:</h4>\')\n
+\t\t\t\t.append(\'<h3 class="demo-header">\'+ header +\'</h3>\')\n
+\t\t\t\t.append(\'<div id="demo-config"></div>\')\n
+\t\t\t\t.find(\'#demo-config\')\n
+\t\t\t\t\t.append(\'<div id="demo-frame"></div><div id="demo-config-menu"></div><div id="demo-link"><a class="demoWindowLink" href="#"><span class="ui-icon ui-icon-newwin"></span>Open demo in a new window</a></div>\')\n
+\t\t\t\t\t.find(\'#demo-config-menu\')\n
+\t\t\t\t\t\t.load(section + \'/index.html .demos-nav\', function() {\n
+\t\t\t\t\t\t\t$(\'#demo-config-menu a\').each(function() {\n
+\t\t\t\t\t\t\t\tthis.setAttribute(\'href\', section + \'/\' + this.getAttribute(\'href\').replace(/.+\\/([^\\/]+)/,\'$1\'));\n
+\t\t\t\t\t\t\t\t$(this).attr(\'target\', \'demo-frame\');\n
+\t\t\t\t\t\t\t\t$(this).click(function() {\n
+\n
+\t\t\t\t\t\t\t\t\tresetDemos();\n
+\t\t\t\t\t\t\t\t\t\n
+\t\t\t\t\t\t\t\t\t$(this).parents(\'ul\').find(\'li\').removeClass(\'demo-config-on\');\n
+\t\t\t\t\t\t\t\t\t$(this).parent().addClass(\'demo-config-on\');\n
+\t\t\t\t\t\t\t\t\t$(\'#demo-notes\').fadeOut();\n
+\n
+\t\t\t\t\t\t\t\t\t//Set the hash to the actual page without ".html"\n
+\t\t\t\t\t\t\t\t\twindow.location.hash = header + \'|\' + this.getAttribute(\'href\').match((/\\/([^\\/\\\\]+)\\.html/))[1];\n
+\n
+\t\t\t\t\t\t\t\t\tloadDemo(this.getAttribute(\'href\'));\n
+\n
+\t\t\t\t\t\t\t\t\treturn false;\n
+\t\t\t\t\t\t\t\t});\n
+\t\t\t\t\t\t\t});\n
+\n
+\t\t\t\t\t\t\tif (window.location.hash) {\n
+\t\t\t\t\t\t\t\tvar demo = window.location.hash.split(\'|\')[1];\n
+\t\t\t\t\t\t\t\t$(\'#demo-config-menu a\').each(function(){\n
+\t\t\t\t\t\t\t\t\tif (this.href.indexOf(demo + \'.html\') !== -1) {\n
+\t\t\t\t\t\t\t\t\t\t$(this).parents(\'ul\').find(\'li\').removeClass(\'demo-config-on\');\n
+\t\t\t\t\t\t\t\t\t\t$(this).parent().addClass(\'demo-config-on\');\t\t\t\t\t\t\t\t\t\n
+\t\t\t\t\t\t\t\t\t\tloadDemo(this.href);\t\t\t\t\t\t\t\t\t\t\n
+\t\t\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t\t\t});\n
+\t\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t\tupdateDemoNotes();\n
+\t\t\t\t\t\t})\n
+\t\t\t\t\t.end()\n
+\t\t\t\t\t.find(\'#demo-link a\')\n
+\t\t\t\t\t\t.bind(\'click\', function(ev){\n
+\t\t\t\t\t\t\twindow.open(this.href);\n
+\t\t\t\t\t\t\tev.preventDefault();\n
+\t\t\t\t\t\t})\n
+\t\t\t\t\t.end()\n
+\t\t\t\t.end()\n
+\t\t\t;\n
+\t\t\t\n
+\t\t\tresetDemos();\n
+\t\t}\n
+\t\t\t\t\n
+\t\tfunction loadDemo(path) {\n
+\t\t\tvar directory = path.match(/([^\\/]+)\\/[^\\/\\.]+\\.html$/)[1];\n
+\t\t\t$.get(path, function(data) {\n
+\t\t\t\tvar source = data;\n
+\t\t\t\tdata = data.replace(/<script.*>.*<\\/script>/ig,""); // Remove script tags\n
+\t\t\t\tdata = data.replace(/<\\/?link.*>/ig,""); //Remove link tags\n
+\t\t\t\tdata = data.replace(/<\\/?html.*>/ig,""); //Remove html tag\n
+\t\t\t\tdata = data.replace(/<\\/?body.*>/ig,""); //Remove body tag\n
+\t\t\t\tdata = data.replace(/<\\/?head.*>/ig,""); //Remove head tag\n
+\t\t\t\tdata = data.replace(/<\\/?!doctype.*>/ig,""); //Remove doctype\n
+\t\t\t\tdata = data.replace(/<title.*>.*<\\/title>/ig,""); // Remove title tags\n
+\t\t\t\tdata = data.replace(/((href|src)=["\'])(?!(http|#))/ig, "$1" + directory + "/");\n
+\n
+\t\t\t\t$(\'#demo-style\').remove();\n
+\t\t\t\t$(\'#demo-frame\').empty().html(data);\n
+\t\t\t\t$(\'#demo-frame style\').clone().appendTo(\'head\').attr(\'id\',\'demo-style\');\n
+\t\t\t\t$(\'#demo-link a\').attr(\'href\', path);\n
+\t\t\t\tupdateDemoNotes();\n
+\t\t\t\tupdateDemoSource(source);\n
+\t\t\t\t\n
+\t\t\t\tif (/default.html$/.test(path)) {\n
+\t\t\t\t\t$.get("documentation/docs-" + path.match(/demos\\/(.+)\\//)[1] + ".html", function(html) {\n
+\t\t\t\t\t\t$("#demo-source").after(html);\n
+\t\t\t\t\t\t$("#widget-docs").tabs();\n
+\t\t\t\t\t\t$(".param-header").click(function() {\n
+\t\t\t\t\t\t\t$(this).parent().toggleClass("param-open").end().next().toggle();\n
+\t\t\t\t\t\t});\n
+\t\t\t\t\t\t$(".docs-list-header").each(function() {\n
+\t\t\t\t\t\t\tvar header = $(this);\n
+\t\t\t\t\t\t\tvar details = header.next().find(".param-details").hide();\n
+\t\t\t\t\t\t\t$("a:first", header).click(function() {\n
+\t\t\t\t\t\t\t\tdetails.show().parent().addClass("param-open");\n
+\t\t\t\t\t\t\t\treturn false;\n
+\t\t\t\t\t\t\t});\n
+\t\t\t\t\t\t\t$("a:last", header).click(function() {\n
+\t\t\t\t\t\t\t\tdetails.hide().parent().removeClass("param-open");\n
+\t\t\t\t\t\t\t\treturn false;\n
+\t\t\t\t\t\t\t});\n
+\t\t\t\t\t\t});\n
+\t\t\t\t\t});\n
+\t\t\t\t}\n
+\t\t\t});\n
+\t\t}\n
+\n
+\t\tfunction updateDemoNotes() {\n
+\t\t\tvar notes = $(\'#demo-frame .demo-description\');\n
+\t\t\tif ($(\'#demo-notes\').length == 0) {\n
+\t\t\t\t$(\'<div id="demo-notes"></div>\').insertAfter(\'#demo-config\');\n
+\t\t\t}\n
+\t\t\t$(\'#demo-notes\').hide().empty().html(notes.html());\n
+\t\t\t$(\'#demo-notes\').show();\n
+\t\t\tnotes.hide();\n
+\t\t}\n
+\t\t\n
+\t\tfunction updateDemoSource(source) {\n
+\t\t\tif ($(\'#demo-source\').length == 0) {\n
+\t\t\t\t$(\'<div id="demo-source"><a href="#" class="source-closed">View Source</a><div><pre><code></code></pre></div></div>\').insertAfter(\'#demo-notes\');\n
+\t\t\t\t$(\'#demo-source\').find(">a").click(function() {\n
+\t\t\t\t\t$(this).toggleClass("source-closed").toggleClass("source-open").next().toggle();\n
+\t\t\t\t\treturn false;\n
+\t\t\t\t}).end().find(">div").hide();\n
+\t\t\t}\n
+\t\t\tvar cleanedSource = source\n
+\t\t\t\t.replace(\'themes/base/ui.all.css\', \'theme/ui.all.css\')\n
+\t\t\t\t.replace(/\\s*\\x3Clink.*demos\\x2Ecss.*\\x3E\\s*/, \'\\r\\n\\t\')\n
+\t\t\t\t.replace(/\\x2E\\x2E\\x2F\\x2E\\x2E\\x2F/g, \'\');\n
+\n
+\t\t\t$(\'#demo-source code\').empty().text(cleanedSource);\n
+\t\t}\n
+\t\t\n
+\t\tfunction resetDemos() {\n
+\t\t\t$.datepicker.setDefaults($.extend({showMonthAfterYear: false}, $.datepicker.regional[\'\']));\n
+\t\t\t$(".ui-dialog-content").remove();\t\t\t\n
+\t\t}\n
+\t\t\t\t\n
+\t});\n
+\t</script>\n
+</head>\n
+<body>\n
+\n
+<table class="layout-grid" cellspacing="0" cellpadding="0">\n
+\t<tr>\n
+\t\t<td class="left-nav">\n
+\t\t\t<dl class="demos-nav">\n
+\t\t\t\t<dt>Interactions</dt>\n
+\t\t\t\t\t<dd><a href="draggable/index.html">Draggable</a></dd>\n
+\t\t\t\t\t<dd><a href="droppable/index.html">Droppable</a></dd>\n
+\t\t\t\t\t<dd><a href="resizable/index.html">Resizable</a></dd>\n
+\t\t\t\t\t<dd><a href="selectable/index.html">Selectable</a></dd>\n
+\t\t\t\t\t<dd><a href="sortable/index.html">Sortable</a></dd>\n
+\t\t\t\t<dt>Widgets</dt>\n
+\t\t\t\t\t<dd><a href="accordion/index.html">Accordion</a></dd>\n
+\t\t\t\t\t<dd><a href="datepicker/index.html">Datepicker</a></dd>\n
+\t\t\t\t\t<dd><a href="dialog/index.html">Dialog</a></dd>\n
+\t\t\t\t\t<dd><a href="progressbar/index.html">Progressbar</a></dd>\n
+\t\t\t\t\t<dd><a href="slider/index.html">Slider</a></dd>\n
+\t\t\t\t\t<dd><a href="tabs/index.html">Tabs</a></dd>\n
+\t\t\t\t<dt>Effects</dt>\n
+\t\t\t\t\t<dd><a href="addClass/index.html">Add Class</a></dd>\n
+\t\t\t\t\t<dd><a href="removeClass/index.html">Remove Class</a></dd>\n
+\t\t\t\t\t<dd><a href="animate/index.html">Animate</a></dd>\n
+\t\t\t\t\t<dd><a href="effect/index.html">Effect</a></dd>\n
+\t\t\t\t\t<dd><a href="hide/index.html">Hide</a></dd>\n
+\t\t\t\t\t<dd><a href="show/index.html">Show</a></dd>\n
+\t\t\t\t\t<dd><a href="switchClass/index.html">Switch Class</a></dd>\n
+\t\t\t\t\t<dd><a href="toggle/index.html">Toggle</a></dd>\n
+\t\t\t\t\t<dd><a href="toggleClass/index.html">Toggle Class</a></dd>\n
+\t\t\t\t<dt>About jQuery UI</dt>\n
+\t\t\t\t\t<dd><a href="http://jqueryui.com/docs/Getting_Started">Getting Started</a></dd>\n
+\t\t\t\t\t<dd><a href="http://jqueryui.com/docs/Upgrade_Guide">Upgrade Guide</a></dd>\n
+\t\t\t\t\t<dd><a href="http://jqueryui.com/docs/Changelog">Changelog</a></dd>\n
+\t\t\t\t\t<dd><a href="http://jqueryui.com/docs/Roadmap">Roadmap</a></dd>\n
+\t\t\t\t\t<dd><a href="http://jqueryui.com/docs/Subversion">Subversion Access</a></dd>\n
+\t\t\t\t\t<dd><a href="http://jqueryui.com/docs/Developer_Guide">UI Developer Guidelines</a></dd>\n
+\t\t\t\t<dt>Theming</dt>\n
+\t\t\t\t\t<dd><a href="http://jqueryui.com/docs/Theming">Theming jQuery UI</a></dd>\n
+\t\t\t\t\t<dd><a href="http://jqueryui.com/docs/Theming/API">jQuery UI CSS Framework</a></dd>\n
+\t\t\t\t\t<dd><a href="http://jqueryui.com/docs/Theming/Themeroller">ThemeRoller application</a></dd>\n
+\t\t\t\t\t<dd><a href="http://jqueryui.com/docs/Theming/ThemeSwitcher">Theme Switcher Widget</a></dd>\n
+\n
+\t\t\t</dl>\n
+\t\t</td>\n
+\t\t<td class="normal">\n
+\n
+\t\t\t<div class="normal">\n
+\n
+\t\t\t\t\t<h3>Instructions</h3>\n
+\t\t\t\t\t<p>\n
+\t\t\t\t\t\tThese demos showcase some common uses of each jQuery UI plugin. Simply copy and paste code from the demos to get started. Have fun playing with them.\n
+\t\t\t\t\t</p>\n
+\t\t\t\t\n
+\t\t\t</div>\n
+\n
+\t\t</td>\n
+\t</tr>\n
+</table>\n
+</body>\n
+</html>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>index.html</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

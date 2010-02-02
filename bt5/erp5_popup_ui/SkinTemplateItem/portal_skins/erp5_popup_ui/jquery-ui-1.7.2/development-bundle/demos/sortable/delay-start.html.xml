@@ -1,0 +1,117 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<!doctype html>\n
+<html lang="en">\n
+<head>\n
+\t<title>jQuery UI Sortable - Delay start</title>\n
+\t<link type="text/css" href="../../themes/base/ui.all.css" rel="stylesheet" />\n
+\t<script type="text/javascript" src="../../jquery-1.3.2.js"></script>\n
+\t<script type="text/javascript" src="../../ui/ui.core.js"></script>\n
+\t<script type="text/javascript" src="../../ui/ui.sortable.js"></script>\n
+\t<link type="text/css" href="../demos.css" rel="stylesheet" />\n
+\t<style type="text/css">\n
+\t#sortable1, #sortable2 { list-style-type: none; margin: 0; padding: 0; margin-bottom: 15px;zoom: 1; }\n
+\t#sortable1 li, #sortable2 li { margin: 0 5px 5px 5px; padding: 5px; font-size: 1.2em; width: 95%; }\n
+\t</style>\n
+\t<script type="text/javascript">\n
+\t$(function() {\n
+\t\t$("#sortable1").sortable({\n
+\t\t\tdelay: 300\n
+\t\t});\n
+\t\t\n
+\t\t$("#sortable2").sortable({\n
+\t\t\tdistance: 15\n
+\t\t});\n
+\n
+\t\t$("li").disableSelection();\n
+\t});\n
+\t</script>\n
+</head>\n
+<body>\n
+<div class="demo">\n
+\n
+<h3 class="docs">Time delay of 300ms:</h3>\n
+\n
+<ul id="sortable1">\n
+\t<li class="ui-state-default">Item 1</li>\n
+\t<li class="ui-state-default">Item 2</li>\n
+\t<li class="ui-state-default">Item 3</li>\n
+\t<li class="ui-state-default">Item 4</li>\n
+</ul>\n
+\n
+<h3 class="docs">Distance delay of 15px:</h3>\n
+\n
+<ul id="sortable2">\n
+\t<li class="ui-state-default">Item 1</li>\n
+\t<li class="ui-state-default">Item 2</li>\n
+\t<li class="ui-state-default">Item 3</li>\n
+\t<li class="ui-state-default">Item 4</li>\n
+</ul>\n
+\n
+</div><!-- End demo -->\n
+\n
+<div class="demo-description">\n
+\n
+<p>\n
+\tPrevent accidental sorting either by delay (time) or distance. Set a number of\n
+\tmilliseconds the element needs to be dragged before sorting starts\n
+\twith the <code>delay</code> option. Set a distance in pixels the element\n
+\tneeds to be dragged before sorting starts with the <code>distance</code>\n
+\toption.\n
+</p>\n
+\n
+</div><!-- End demo-description -->\n
+\n
+</body>\n
+</html>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>delay-start.html</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

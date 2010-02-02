@@ -1,0 +1,96 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<!doctype html>\n
+<html lang="en">\n
+<head>\n
+\t<title>jQuery UI Datepicker - Format date</title>\n
+\t<link type="text/css" href="../../themes/base/ui.all.css" rel="stylesheet" />\n
+\t<script type="text/javascript" src="../../jquery-1.3.2.js"></script>\n
+\t<script type="text/javascript" src="../../ui/ui.core.js"></script>\n
+\t<script type="text/javascript" src="../../ui/ui.datepicker.js"></script>\n
+\t<link type="text/css" href="../demos.css" rel="stylesheet" />\n
+\t<script type="text/javascript">\n
+\t$(function() {\n
+\t\t$("#datepicker").datepicker();\n
+\t\t$("#format").change(function() { $(\'#datepicker\').datepicker(\'option\', {dateFormat: $(this).val()}); });\n
+\t});\n
+\t</script>\n
+</head>\n
+<body>\n
+\n
+<div class="demo">\n
+\n
+<p>Date: <input type="text" id="datepicker" size="30"/></p>\n
+\n
+<p>Format options:<br />\n
+\t<select id="format">\n
+\t\t<option value="mm/dd/yy">Default - mm/dd/yy</option>\n
+\t\t<option value="yy-mm-dd">ISO 8601 - yy-mm-dd</option>\n
+\t\t<option value="d M, y">Short - d M, yy</option>\n
+\t\t<option value="d MM, y">Medium - d MM, yy</option>\n
+\t\t<option value="DD, d MM, yy">Full - DD, d MM, yy</option>\n
+\t\t<option value="\'day\' d \'of\' MM \'in the year\' yy">With text - \'day\' d \'of\' MM \'in the year\' yy</option>\n
+\t</select>\n
+</p>\n
+\n
+</div><!-- End demo -->\n
+\n
+<div class="demo-description">\n
+\n
+<p>Display date feedback in a variety of ways.  Choose a date format from the dropdown, then click on the input and select a date to see it in that format.</p>\n
+\n
+</div><!-- End demo-description -->\n
+\n
+</body>\n
+</html>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>date-formats.html</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
