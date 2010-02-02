@@ -63,18 +63,18 @@
           <div class="bottom_actions">\n
             <button tal:condition="cancel_url|request/cancel_url|nothing" accesskey="C"\n
                     id="dialog_cancel_button" name="Base_cancel:method"\n
-                    type="submit" class="bt-med">\n
+                    type="submit" class="bt-med dialog_cancel_button">\n
               <span i18n:translate="" i18n:domain="ui" tal:content="string:Cancel Action">Cancel Action</span>\n
             </button>\n
             <button tal:condition="form/update_action|nothing" accesskey="U"\n
                     id="dialog_update_button" name="Base_showUpdateDialog:method"\n
-                    type="submit" class="bt-med">\n
+                    type="submit" class="bt-med dialog_update_button">\n
               <span i18n:translate="" i18n:domain="ui"\n
                     tal:content="python:here.Base_getFormViewDialogActionButtonUpdateActionTitle(form)">Update</span>\n
             </button>\n
             <button accesskey="V"\n
                     id="dialog_submit_button" name="Base_callDialogMethod:method"\n
-                    type="submit" class="bt-med">\n
+                    type="submit" class="bt-med dialog_submit_button">\n
               <span i18n:translate="" i18n:domain="ui"\n
                     tal:content="python:here.Base_getFormViewDialogActionButtonTitle(form)">Do Action</span>\n
             </button>\n

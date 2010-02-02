@@ -1,3 +1,6 @@
+2010-02-02 yo
+* Add classes into buttons defined in dialog_main.
+
 2010-02-01 fabien
 * don't display action buttons (like copy/paste, ...) in dialog_mode
 
