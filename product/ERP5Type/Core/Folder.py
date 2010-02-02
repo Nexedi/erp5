@@ -877,11 +877,11 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn, 
     else:
       return CMFBTreeFolder._checkId(self, id, allow_dup)
 
-  def _setObject(self, id, object, roles=None, user=None, set_owner=1):
+  def _setObject(self, *args, **kw):
     if self._folder_handler == HBTREE_HANDLER:
-      return CMFHBTreeFolder._setObject(self, id, object, roles, user, set_owner)
+      return CMFHBTreeFolder._setObject(self, *args, **kw)
     else:
-      return CMFBTreeFolder._setObject(self, id, object, roles, user, set_owner)
+      return CMFBTreeFolder._setObject(self, *args, **kw)
 
   def get(self, id, default=None):
     """
