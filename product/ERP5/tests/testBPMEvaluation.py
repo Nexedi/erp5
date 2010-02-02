@@ -231,7 +231,7 @@ class TestBPMEvaluationMixin(TestBPMMixin):
     #       need those rule to create empty one applied rule
     rule_tool = self.portal.portal_rules
 
-    clipboard = rule_tool.manage_copyObjects(ids = ['default_invoice_rule'])
+    clipboard = rule_tool.manage_copyObjects(ids = ['new_invoice_rule'])
     pasted = rule_tool.manage_pasteObjects(clipboard)
     new_rule = getattr(rule_tool, pasted[0]['new_id'])
     new_rule.validate()
