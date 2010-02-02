@@ -13,17 +13,17 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
+                <string>columns</string>
+                <string>editable_columns</string>
+                <string>portal_types</string>
+                <string>selection_name</string>
                 <string>title</string>
-                <string>required</string>
-                <string>view_separator</string>
-                <string>size</string>
-                <string>items</string>
               </list>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_solver_list</string> </value>
+            <value> <string>listbox</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -68,7 +68,7 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>items</string> </key>
+                    <key> <string>portal_types</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
                     </value>
@@ -85,20 +85,76 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>title</string>
+                          <string>Title</string>
+                        </tuple>
+                        <tuple>
+                          <string>tested_property_list</string>
+                          <string>Tested properties</string>
+                        </tuple>
+                        <tuple>
+                          <string>translated_portal_type</string>
+                          <string>Portal Type</string>
+                        </tuple>
+                        <tuple>
+                          <string>updating_provider</string>
+                          <string>Updating</string>
+                        </tuple>
+                        <tuple>
+                          <string>divergence_provider</string>
+                          <string>Divergence</string>
+                        </tuple>
+                        <tuple>
+                          <string>matching_provider</string>
+                          <string>Matching</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>editable_columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>tested_property_list</string>
+                          <string>tested_property_list</string>
+                        </tuple>
+                        <tuple>
+                          <string>updating_provider</string>
+                          <string>Updating</string>
+                        </tuple>
+                        <tuple>
+                          <string>divergence_provider</string>
+                          <string>Divergence</string>
+                        </tuple>
+                        <tuple>
+                          <string>matching_provider</string>
+                          <string>Matching</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_multi_list_field</string> </value>
+                    <value> <string>my_view_mode_listbox</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key> <string>required</string> </key>
-                    <value> <int>1</int> </value>
+                    <key> <string>portal_types</string> </key>
+                    <value>
+                      <list/>
+                    </value>
                 </item>
                 <item>
-                    <key> <string>size</string> </key>
-                    <value> <int>5</int> </value>
+                    <key> <string>selection_name</string> </key>
+                    <value> <string>divergence_tester_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
@@ -106,16 +162,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Solvers</string> </value>
-                </item>
-                <item>
-                    <key> <string>view_separator</string> </key>
-                    <value> <string encoding="cdata"><![CDATA[
-
-<br />\n
-
-
-]]></string> </value>
+                    <value> <string>Divergence Testers</string> </value>
                 </item>
               </dictionary>
             </value>
@@ -134,7 +181,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:map(lambda x: (x, \'portal_types/%s\' % x), here.getPortalTargetSolverTypeList())</string> </value>
+            <value> <string>python: [(x, x) for x in here.getPortalDivergenceTesterTypeList()]</string> </value>
         </item>
       </dictionary>
     </pickle>
