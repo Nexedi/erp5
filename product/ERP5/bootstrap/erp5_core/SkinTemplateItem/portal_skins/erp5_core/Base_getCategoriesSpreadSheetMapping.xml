@@ -60,9 +60,13 @@
 `import_file` must be a spreadsheet in a format supported by openoffice\n
 \n
 `invalid_spreadsheet_error_handler` is the callback method that will be called if\n
-the spreadsheet is invalid. The method must recieve as only parameter a string\n
-explaining the error.\n
-If no error_callback is given, the default action is to raise a ValueError.\n
+the spreadsheet is invalid. The method must accept one parameter, an\n
+explanation of the error.\n
+The error handler can return a boolean, true meaning that the rest of the\n
+spreadsheet have to be processed, false meaning that the processing should\n
+stop.\n
+If no error_callback is given, the default action is to raise a ValueError on\n
+the first error encountered.\n
 \n
 The returned mapping has the following structure:\n
   \n
@@ -80,7 +84,6 @@ way that parent always precedes their children.\n
 """\n
 from Products.ERP5Type.Message import translateString\n
 from Products.ERP5OOo.OOoUtils import OOoParser\n
-from Products.ERP5Type.Document import newTempBase\n
 parser = OOoParser()\n
 category_list_spreadsheet_mapping = dict()\n
 error_list = []\n
@@ -91,17 +94,16 @@ def default_invalid_spreadsheet_error_handler(error_message):\n
 if invalid_spreadsheet_error_handler is None:\n
   invalid_spreadsheet_error_handler = default_invalid_spreadsheet_error_handler\n
 \n
-try:\n
-  property_id_list = context.portal_classes.getPropertySheetPropertyIdList()\n
-except AttributeError:\n
-  # Class tool is too old\n
-  property_id_list = []\n
+# FIXME: we are actually only interested in properties defined on Category\n
+# type information.\n
+property_id_list = context.portal_classes.getPropertySheetPropertyIdList()\n
 \n
 \n
 def getIDFromString(string=None):\n
   """\n
     This function transform a string to a safe and beautiful ID.\n
     It is used here to create a safe category ID from a string.\n
+    But the code is not really clever...\n
   """\n
   if string is None:\n
     return None\n
@@ -156,8 +158,11 @@ spreadsheet_list = parser.getSpreadsheetsMapping(no_empty_lines=True)\n
 \n
 \n
 for table_name in spreadsheet_list.keys():\n
+  sheet = spreadsheet_list[table_name]\n
+  if not sheet:\n
+    continue\n
   # Get the header of the table\n
-  columns_header = spreadsheet_list[table_name][0]\n
+  columns_header = sheet[0]\n
   # Get the mapping to help us know the property according a cell index\n
   property_map = {}\n
   column_index = 0\n
@@ -204,8 +209,7 @@ for table_name in spreadsheet_list.keys():\n
   # This path_element_list help us to reconstruct the absolute path\n
   path_element_list = []\n
   line_index = 2\n
-  for line in spreadsheet_list[table_name][1:]:\n
-\n
+  for line in sheet[1:]:\n
     # Exclude empty lines\n
     if line.count(\'\') + line.count(None) == len(line):\n
       continue\n
@@ -218,7 +222,6 @@ for table_name in spreadsheet_list.keys():\n
       property_id = property_map[cell_index]\n
       line_data[property_id] = cell\n
       cell_index += 1\n
-\n
     # Analyse every cell of the line\n
     category_property_list = {}\n
     cell_index = 0\n
@@ -277,28 +280,23 @@ for table_name in spreadsheet_list.keys():\n
 \n
           # Detect invalid IDs\n
           if path_element_id in property_id_list:\n
-            if simulation_mode:\n
-              error = newTempBase(context, \'item\')\n
-              error.edit(field_type = \'Invalid ID\', field_category = path_element_id, field_message = translateString("The ID ${id} in ${table} at line ${line}  is invalid, it\'s a reserved property name",mapping=dict(id=path_element_id, table=table_name, line=line_index)))\n
-              error_list.append(error)\n
-            else:\n
-              return invalid_spreadsheet_error_handler(translateString("The ID ${id} in ${table} at line ${line}  is invalid, it\'s a reserved property name",mapping=dict(id=path_element_id, table=table_name, line=line_index)))\n
-\n
-\n
+            cont = invalid_spreadsheet_error_handler(\n
+                      translateString("The ID ${id} in ${table} at line ${line} is invalid, it\'s a reserved property name",\n
+                        mapping=dict(id=path_element_id, table=table_name, line=line_index)))\n
+            if not cont:\n
+              return \n
 \n
           # Detect duplicate IDs\n
           for element in path_element_list[::-1]:\n
             if element[\'depth\'] != element_depth:\n
               break\n
             if element[\'value\'] == path_element_id:\n
-              if simulation_mode:\n
-                error = newTempBase(context, \'item\')\n
-                error.edit(field_type = \'Duplicate ID\', field_category = element[\'value\'], field_message = translateString("Duplicate ID ${id} found in ${table} at line ${line}  ", mapping=dict(id=element[\'value\'], table=table_name, line=line_index)))\n
-                error_list.append(error)\n
-              else:\n
-                return invalid_spreadsheet_error_handler( \n
-                    translateString("Duplicate id found in ${table} at line ${line} : ${id}",\n
+              cont = invalid_spreadsheet_error_handler(\n
+                      translateString(\n
+                      "Duplicate ID found in ${table} at line ${line} : ${id}",\n
                         mapping=dict(id=element[\'value\'], table=table_name, line=line_index)))\n
+              if not cont:\n
+                return\n
 \n
 \n
           # Detect wrong hierarchy\n
@@ -313,17 +311,13 @@ for table_name in spreadsheet_list.keys():\n
                 current_depth = element[\'depth\']\n
                 continue # we are on the direct parent (current level - 1)\n
               else:\n
-                if simulation_mode:\n
-                  error = newTempBase(context, \'item\')\n
-                  error.edit(field_type = \'Wrong hierarchy\', field_category = path_element_id, field_message = translateString("Wrong hierarchy found for ID ${id} and ${depth} in ${table} at line ${line} " ,mapping=dict(id=path_element_id,depth=element_depth, table=table_name, line=line_index)))\n
-                  error_list.append(error)         \n
-                else: \n
-                  return invalid_spreadsheet_error_handler(\n
+                cont = invalid_spreadsheet_error_handler(\n
                         translateString(\n
                            "Wrong hierarchy found for ID ${id} and depth ${depth} in ${table} at line ${line} ",\n
                              mapping=dict(id=path_element_id,\n
                                        depth=element_depth, table=table_name, line=line_index)))\n
-\n
+                if not cont:\n
+                  return\n
 \n
 \n
           # Save the path element\n
@@ -352,7 +346,7 @@ else:\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>import_file, invalid_spreadsheet_error_handler=None, simulation_mode=False</string> </value>
+            <value> <string>import_file, invalid_spreadsheet_error_handler=None</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -372,7 +366,7 @@ else:\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>3</int> </value>
+                        <value> <int>2</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -380,13 +374,10 @@ else:\n
                           <tuple>
                             <string>import_file</string>
                             <string>invalid_spreadsheet_error_handler</string>
-                            <string>simulation_mode</string>
                             <string>Products.ERP5Type.Message</string>
                             <string>translateString</string>
                             <string>Products.ERP5OOo.OOoUtils</string>
                             <string>OOoParser</string>
-                            <string>Products.ERP5Type.Document</string>
-                            <string>newTempBase</string>
                             <string>parser</string>
                             <string>dict</string>
                             <string>category_list_spreadsheet_mapping</string>
@@ -396,10 +387,10 @@ else:\n
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>property_id_list</string>
-                            <string>AttributeError</string>
                             <string>getIDFromString</string>
                             <string>content_type</string>
                             <string>hasattr</string>
+                            <string>Products.ERP5Type.Document</string>
                             <string>newTempOOoDocument</string>
                             <string>tmp_ooo</string>
                             <string>_getiter_</string>
@@ -411,6 +402,7 @@ else:\n
                             <string>spreadsheet_list</string>
                             <string>table_name</string>
                             <string>_getitem_</string>
+                            <string>sheet</string>
                             <string>columns_header</string>
                             <string>property_map</string>
                             <string>column_index</string>
@@ -445,7 +437,7 @@ else:\n
                             <string>element</string>
                             <string>path</string>
                             <string>clean_title</string>
-                            <string>error</string>
+                            <string>cont</string>
                             <string>current_depth</string>
                           </tuple>
                         </value>
@@ -460,7 +452,6 @@ else:\n
             <value>
               <tuple>
                 <none/>
-                <int>0</int>
               </tuple>
             </value>
         </item>
