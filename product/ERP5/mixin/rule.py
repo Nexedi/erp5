@@ -202,7 +202,7 @@ class RuleMixin:
     """
     tester_list = self.objectValues(
       portal_type=self.getPortalDivergenceTesterTypeList())
-    return [x for x in tester_list if x.getTestedProperty() == 'quantity']
+    return [x for x in tester_list if 'quantity' in x.getTestedPropertyList()]
 
   def _newProfitAndLossMovement(self, prevision_movement):
     """
