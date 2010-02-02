@@ -107,6 +107,11 @@ class Person:
     , 'type'       : 'int'
     , 'mode'       : 'w'
     },
+    { 'id'         : 'head_of_family'
+    , 'description': 'Has authority to exercise family control.'
+    , 'type'       : 'boolean'
+    , 'mode'       : 'w'
+    },
     # Contact fields
     { 'id'                       : 'address'
     , 'storage_id'               : 'default_address'
