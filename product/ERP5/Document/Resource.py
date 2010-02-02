@@ -852,29 +852,6 @@ class Resource(XMLMatrix, Variated):
         if len(result) == 1:
           return result[0]
 
-    def _getGlobalQuantityUnitDefinitionDict(self):
-      # XXX this info could be cached, as it is the same for all Resources
-      result = {}
-      module = self.getPortalObject().quantity_unit_conversion_module
-      for definition_list in module.objectValues(portal_type= \
-          'Quantity Unit Conversion Group'):
-        standard_quantity_unit_uid = definition_list.getQuantityUnitUid()
-        if standard_quantity_unit_uid is None:
-          continue
-
-        result[standard_quantity_unit_uid] = (None, 1.0)
-        for definition in definition_list.objectValues(portal_type= \
-            'Quantity Unit Conversion Definition'):
-          unit_uid = definition.getQuantityUnitUid()
-          if unit_uid is None:
-            continue
-          quantity = definition.getQuantity()
-          if not quantity:
-            continue
-          result[unit_uid] = (definition.getUid(), quantity)
-
-      return result
-
     def _getQuantityUnitDefinitionDict(self):
       """
       Returns a dictionary representing the Unit Definitions that hold
@@ -889,7 +866,8 @@ class Resource(XMLMatrix, Variated):
             For example, if mass/g is the global standard quantity_unit, all
             definitions for mass/* will be expressed in grams.
       """
-      global_definition_dict = self._getGlobalQuantityUnitDefinitionDict()
+      global_definition_dict = self.\
+          QuantityUnitConversionModule_getUniversalDefinitionDict()
 
       result = global_definition_dict.copy()
       for definition_list in self.objectValues(portal_type= \

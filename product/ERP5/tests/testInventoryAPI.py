@@ -2409,6 +2409,7 @@ class BaseTestUnitConversion(InventoryAPITestCase):
     InventoryAPITestCase.afterSetUp(self)
 
     self.setUpUnitDefinition()
+    self._safeTic()
 
   def makeMovement(self, quantity, resource, *variation, **kw):
     m = self._makeMovement(quantity=quantity, resource_value=resource,
@@ -2671,6 +2672,65 @@ class TestUnitConversionDefinition(BaseTestUnitConversion):
                       self.resource_bylot_overriding\
                           .convertQuantity(1, "unit/lot", "unit/unit"))
 
+class TestUnitConversionBackwardCompatibility(BaseTestUnitConversion):
+  QUANTITY_UNIT_DICT = {
+    # base: (reference, dict_of_others)
+    'mass':   ('kilogram', dict(gram=0.001)),
+  }
+  METRIC_TYPE_CATEGORY_LIST = (
+    'mass/net',
+  )
+  def setUpUnitDefinition(self):
+    # bypass Unit Definition setup
+    mass_category = self.portal.portal_categories.quantity_unit.mass
+    mass_category.gram.setProperty('quantity', 0.001)
+    mass_category.kilogram.setProperty('quantity', 1)
+
+    pass
+
+  def testBackwardCompatibility(self):
+    delivery_rule = self.getRuleTool().default_delivery_rule
+    delivery_rule.validate()
+
+    resource = self.portal.product_module.newContent(
+                      portal_type='Product',
+                      quantity_unit_list=('mass/gram',
+                                          'mass/kilogram'),)
+    node = self.portal.organisation_module.newContent(
+                      portal_type='Organisation')
+    delivery = self.portal.purchase_packing_list_module.newContent(
+                      portal_type='Purchase Packing List',
+                      start_date='2010-01-26',
+                      price_currency='currency_module/EUR',
+                      destination_value=node,
+                      destination_section_value=node)
+    delivery.newContent(portal_type='Purchase Packing List Line',
+                        resource_value=resource,
+                        quantity=10,
+                        quantity_unit='mass/gram')
+    delivery.newContent(portal_type='Purchase Packing List Line',
+                        resource_value=resource,
+                        quantity=3,
+                        quantity_unit='mass/kilogram')
+    delivery.confirm()
+    delivery.start()
+    delivery.stop()
+    transaction.commit()
+    self.tic()
+
+    # inventories of that resource are indexed in grams
+    self.assertEquals(3010,
+        self.portal.portal_simulation.getCurrentInventory(
+          resource_uid=resource.getUid(),
+          node_uid=node.getUid()))
+
+    # converted inventory also works
+    self.assertEquals(3.01,
+        self.portal.portal_simulation.getCurrentInventory(
+          quantity_unit='mass/kilogram',
+          resource_uid=resource.getUid(),
+          node_uid=node.getUid()))
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestInventory))
@@ -2682,6 +2742,7 @@ def test_suite():
   suite.addTest(unittest.makeSuite(TestInventoryDocument))
   suite.addTest(unittest.makeSuite(TestUnitConversion))
   suite.addTest(unittest.makeSuite(TestUnitConversionDefinition))
+  suite.addTest(unittest.makeSuite(TestUnitConversionBackwardCompatibility))
   return suite
 
 # vim: foldmethod=marker
