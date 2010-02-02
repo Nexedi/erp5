@@ -1033,21 +1033,25 @@ class SimulationTool(BaseTool):
 
       result_column_id_dict = {}
 
+      metric_type = kw.pop('metric_type', None)
       quantity_unit = kw.pop('quantity_unit', None)
       quantity_unit_uid = None
+
       if quantity_unit is not None:
 
         if isinstance(quantity_unit, str):
           quantity_unit_uid = getCategory(quantity_unit, 'quantity_unit')
           if quantity_unit_uid is not None:
             result_column_id_dict['converted_quantity'] = None
+            if metric_type is None:
+              # use the default metric type
+              metric_type = quantity_unit.split("/", 1)[0]
         elif isinstance(quantity_unit, int) or isinstance(quantity_unit, float):
           # quantity_unit used to be a numerical parameter..
           raise ValueError('Numeric values for quantity_unit are not supported')
 
 
       convert_quantity_result = False
-      metric_type = kw.pop('metric_type', None)
       if metric_type is not None:
         metric_type_uid = getCategory(metric_type, 'metric_type')
 

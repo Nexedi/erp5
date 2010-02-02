@@ -2513,6 +2513,16 @@ class TestUnitConversion(BaseTestUnitConversion):
     self.assertEquals(13 * .056 - 2 * .043,
                       self.convertedSimulation('mass/nutr/lipid'))
 
+    def testInventoryNoMetricType(self):
+      """
+      providing only the quantity_unit argument should also work,
+      and the standard metric type is used
+      """
+      self.assertEquals((11 * 123 - 789) / 1e6,
+                        self.getSimulationTool().getInventory(
+                           node_uid=self.node.getUid(),
+                           quantity_unit="mass/t"))
+
 class TestUnitConversionDefinition(BaseTestUnitConversion):
   QUANTITY_UNIT_DICT = {
     # base: (reference, dict_of_others)
