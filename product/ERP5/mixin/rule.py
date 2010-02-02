@@ -196,6 +196,22 @@ class RuleMixin:
     return filter(lambda x:x.isMatchingProvider(), self.objectValues(
       portal_type=self.getPortalDivergenceTesterTypeList()))
 
+  def _getUpdatingTesterList(self, exclude_quantity=True):
+    """
+    Return the applicable divergence testers which must be used to
+    update movements. (ie. not all divergence testers of the Rule)
+
+    exclude_quantity -- if set to true, do not consider
+                        quantity divergence testers
+     """
+    if exclude_quantity:
+      return filter(lambda x:x.isUpdatingProvider() and \
+                    'quantity' not in x.getTestedPropertyList(), self.objectValues(
+        portal_type=self.getPortalDivergenceTesterTypeList()))
+    else:
+      return filter(lambda x:x.isUpdatingProvider(), self.objectValues(
+        portal_type=self.getPortalDivergenceTesterTypeList()))
+
   def _getQuantityTesterList(self):
     """
     Return the applicable quantity divergence testers.
