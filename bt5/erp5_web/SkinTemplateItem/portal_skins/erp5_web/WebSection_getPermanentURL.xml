@@ -81,6 +81,9 @@
 \n
  The document parameter is required.\n
 \n
+ If view is True, the url returned point to html content and can be opened in\n
+ a browser (ie. + \'/view\' for ooo documents)\n
+\n
  More sophisticated behaviours are possible.\n
 \n
  SUGGESTIONS:\n
@@ -91,9 +94,14 @@
  - change the behaviour of WebSection_getPermanentURL\n
    for documents which are not published.\n
 """\n
+html_portal_type_list = (\'Web Site\', \'Web Section\', \'Web Page\')\n
+portal_type = document.getPortalType()\n
+\n
 # If no reference is defined, no way to build a permanent URL.\n
 reference = document.getReference()\n
 if not reference:\n
+  if view and portal_type not in html_portal_type_list:\n
+    return \'%s/view\' % document.absolute_url()\n
   return document.absolute_url()\n
 \n
 # Return absolute URL if this is not an appropriate portal_type\n
@@ -101,15 +109,21 @@ portal = context.getPortalObject()\n
 valid_portal_type_list = portal.getPortalDocumentTypeList()\n
 portal_type = document.getPortalType()\n
 if portal_type not in valid_portal_type_list:\n
+  if view and portal_type not in html_portal_type_list:\n
+    return \'%s/view\' % document.absolute_url()\n
   return document.absolute_url()\n
 \n
 # Return absolute URL if this is not a \'live\' document\n
 validation_state = (\'released\', \'released_alive\', \'published\', \'published_alive\',\n
                     \'shared\', \'shared_alive\', \'public\', \'validated\')\n
 if document.getValidationState() not in validation_state:\n
+  if view and portal_type not in html_portal_type_list:\n
+    return \'%s/view\' % document.absolute_url()\n
   return document.absolute_url()\n
 \n
 # Return the URL\n
+if view and portal_type not in html_portal_type_list:\n
+  return \'%s/%s/view\' % (context.absolute_url(), reference)\n
 return "%s/%s" % (context.absolute_url(), reference)\n
 </string> </value>
         </item>
@@ -121,7 +135,7 @@ return "%s/%s" % (context.absolute_url(), reference)\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>document</string> </value>
+            <value> <string>document, view=True</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -141,19 +155,21 @@ return "%s/%s" % (context.absolute_url(), reference)\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>2</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
                             <string>document</string>
+                            <string>view</string>
+                            <string>html_portal_type_list</string>
                             <string>_getattr_</string>
+                            <string>portal_type</string>
                             <string>reference</string>
                             <string>context</string>
                             <string>portal</string>
                             <string>valid_portal_type_list</string>
-                            <string>portal_type</string>
                             <string>validation_state</string>
                           </tuple>
                         </value>
@@ -166,7 +182,9 @@ return "%s/%s" % (context.absolute_url(), reference)\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <int>1</int>
+              </tuple>
             </value>
         </item>
         <item>

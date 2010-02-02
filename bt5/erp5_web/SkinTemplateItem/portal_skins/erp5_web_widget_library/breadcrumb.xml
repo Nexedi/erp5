@@ -49,7 +49,7 @@
       tal:condition="remaining_items">\n
     <li tal:define="current_item    python: remaining_items[0];\n
                     remaining_items python: remaining_items[1:]">\n
-      <a tal:attributes="href  python: \'%s/view\' % current_item[1].getPermanentURL(current_item[1]);\n
+      <a tal:attributes="href  python: current_item[1].getPermanentURL(current_item[1]);\n
                          class python: len(remaining_items) == 0 and \'selected\' or \'\'"\n
           tal:content="python: current_item[0]"/>\n
       <tal:block metal:use-macro="here/breadcrumb/macros/renderBreadcrumbItem"/>\n

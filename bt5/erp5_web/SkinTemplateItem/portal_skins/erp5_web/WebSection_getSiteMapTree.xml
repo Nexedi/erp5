@@ -117,7 +117,7 @@ def getSiteMapItemTree(section, depth=0, level=None):   \n
       if default_document is not None and default_document.getPhysicalPath() == document.getPhysicalPath():\n
         continue\n
       result.append({\n
-                      \'url\'      : section.WebSection_getPermanentURLForView(document),\n
+                      \'url\'      : section.getPermanentURL(document),\n
                       \'level\'    : level,\n
                       \'section\'  : None,\n
                       \'document\' : document,\n
