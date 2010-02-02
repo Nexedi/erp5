@@ -101,6 +101,7 @@
                         <string>my_start_date</string>
                         <string>my_gender</string>
                         <string>my_nationality</string>
+                        <string>my_head_of_family</string>
                       </list>
                     </value>
                 </item>
