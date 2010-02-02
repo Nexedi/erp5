@@ -960,6 +960,19 @@ class TestOOoImport(ERP5TypeTestCase):
     else:
       self.fail('ValueError not raised')
 
+  def test_Base_getCategoriesSpreadSheetMapping_MultiplePaths(self):
+    # If multiple paths is defined (for instance more than one * in paths
+    # columns), then it should be an error and the error must be reported
+    import_file = makeFileUpload(
+        'import_region_category_multiple_paths.ods')
+    try:
+      self.portal.portal_categories.Base_getCategoriesSpreadSheetMapping(
+             import_file=import_file)
+    except ValueError, error:
+      self.assertTrue('More that one path is defined' in str(error), str(error))
+    else:
+      self.fail('ValueError not raised')
+
   def test_Base_getCategoriesSpreadSheetMapping_Id_is_reserved_property_name(self):
     # tests Base_getCategoriesSpreadSheetMapping reserved property name are only test for path column, not all.
     import_file = makeFileUpload(
