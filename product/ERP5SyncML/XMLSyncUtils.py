@@ -738,8 +738,8 @@ class XMLSyncUtilsMixin(SyncCode):
                                                          rid=rid,
                                                          cmd_id=cmd_id))
             cmd_id += 1
-          # Delete Signature if object does not exist anymore
-          subscriber.delSignature(object_gid)
+            # Delete Signature if object does not exist anymore
+            subscriber.delSignature(object_gid)
 
     local_gid_list = []
     loop = 0
