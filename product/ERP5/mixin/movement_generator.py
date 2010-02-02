@@ -62,14 +62,14 @@ class MovementGeneratorMixin:
     """Returns list of tuples (movement, business_path)"""
     input_movement_list = self._getInputMovementList(context)
     business_process = context.getBusinessProcessValue()
+    trade_phase_list = context.getSpecialiseValue().getTradePhaseList()
 
     # In non-BPM case, we have no business path.
-    if business_process is None:
+    if business_process is None or len(trade_phase_list) == 0:
       return [(input_movement, None) for input_movement in input_movement_list]
 
     input_movement_and_path_list = []
     business_path_list = []
-    trade_phase_list = context.getSpecialiseValue().getTradePhaseList()
     for input_movement in input_movement_list:
       for business_path in business_process.getPathValueList(
                           trade_phase_list,
