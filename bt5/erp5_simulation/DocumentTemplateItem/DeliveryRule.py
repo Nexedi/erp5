@@ -101,9 +101,11 @@ class DeliveryRuleMovementGenerator(MovementGeneratorMixin):
     Input movement list comes from delivery
     """
     ret = []
+    rule = context.getSpecialiseValue()
     for input_movement, business_path in self \
             ._getInputMovementAndPathTupleList(context):
-      kw = self._getPropertyAndCategoryList(input_movement, business_path)
+      kw = self._getPropertyAndCategoryList(input_movement, business_path,
+                                            rule)
       simulation_movement = context.newContent(
         portal_type=RuleMixin.movement_type,
         temp_object=True,
