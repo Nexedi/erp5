@@ -181,7 +181,7 @@ class RuleMixin:
      """
     if exclude_quantity:
       return filter(lambda x:x.isDivergenceProvider() and \
-                    'quantity' in x.getTestedPropertyList(), self.objectValues(
+                    'quantity' not in x.getTestedPropertyList(), self.objectValues(
         portal_type=self.getPortalDivergenceTesterTypeList()))
     else:
       return filter(lambda x:x.isDivergenceProvider(), self.objectValues(
