@@ -69,8 +69,6 @@
               <tuple>
                 <string>delivery_builder/portal_deliveries/payment_transaction_builder</string>
                 <string>trade_phase/default/payment</string>
-                <string>source_stage/business_process_module/erp5_default_business_process/accounted</string>
-                <string>destination_stage/business_process_module/erp5_default_business_process/paid</string>
                 <string>predecessor/business_process_module/erp5_default_business_process/accounted</string>
                 <string>successor/business_process_module/erp5_default_business_process/paid</string>
               </tuple>

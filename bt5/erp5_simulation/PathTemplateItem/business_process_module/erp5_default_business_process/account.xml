@@ -67,8 +67,6 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>source_stage/business_process_module/erp5_default_business_process/invoiced</string>
-                <string>destination_stage/business_process_module/erp5_default_business_process/accounted</string>
                 <string>delivery_builder/portal_deliveries/purchase_invoice_transaction_builder</string>
                 <string>delivery_builder/portal_deliveries/sale_invoice_transaction_builder</string>
                 <string>predecessor/business_process_module/erp5_default_business_process/invoiced</string>

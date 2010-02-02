@@ -67,8 +67,6 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>source_stage/business_process_module/erp5_default_business_process/ordered</string>
-                <string>destination_stage/business_process_module/erp5_default_business_process/delivered</string>
                 <string>predecessor/business_process_module/erp5_default_business_process/ordered</string>
                 <string>successor/business_process_module/erp5_default_business_process/delivered</string>
                 <string>delivery_builder/portal_deliveries/sale_packing_list_builder</string>
