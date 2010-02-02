@@ -83,8 +83,14 @@ class MovementGeneratorMixin:
   def _getInputMovementList(self, context):
     raise NotImplementedError
 
-  def _getPropertyAndCategoryList(self, movement, business_path):
-    property_dict = _getPropertyAndCategoryList(movement)
+  def _getPropertyAndCategoryList(self, movement, business_path, rule=None):
+    if rule is None:
+      property_dict = _getPropertyAndCategoryList(movement)
+    else:
+      property_dict = {}
+      for tester in rule._getUpdatingTesterList():
+        property_dict.update(tester.getUpdatablePropertyDict(
+          movement, None))
 
     if business_path is None:
       return property_dict
