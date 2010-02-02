@@ -276,10 +276,13 @@ class WebSection(Domain, PermanentURLMixIn):
       return result
 
     security.declareProtected(Permissions.View, 'getPermanentURL')
-    def getPermanentURL(self, document):
+    def getPermanentURL(self, document, view=True):
       """
         Return a permanent URL of document in the context
         of the current section.
+
+        If view is True, the url returned point to html content and can be
+        opened in a browser (ie. + '/view' for ooo documents)
 
         This method must be implemented through a
         portal type dependent script:
@@ -294,7 +297,8 @@ class WebSection(Domain, PermanentURLMixIn):
           pass
 
       result = self._getTypeBasedMethod('getPermanentURL',
-                     fallback_script_id='WebSection_getPermanentURL')(document)
+                     fallback_script_id='WebSection_getPermanentURL')(document,
+                         view=view)
 
       if cache is not None:
         cache[key] = result
