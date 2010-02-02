@@ -49,4 +49,9 @@ class DivergenceTester:
        'type'        : 'boolean',
        'default'     : 0,
        'mode'        : 'rw' },
+    {  'id'          : 'updating_provider',
+       'description' : 'Defines whether a divergence tester acts as a updating provider.',
+       'type'        : 'boolean',
+       'default'     : 1,
+       'mode'        : 'rw' },
   )

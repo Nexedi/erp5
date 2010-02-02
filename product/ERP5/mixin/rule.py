@@ -258,7 +258,9 @@ class RuleMixin:
     #  let us imagine the case of a forward rule
     #  ie. what comes in must either go out or has been lost
     divergence_tester_list = self._getDivergenceTesterList()
-    profit_tester_list = self._getDivergenceTesterList()
+    profit_tester_list = divergence_tester_list
+    updating_tester_list = self._getUpdatingTesterList()
+    profit_updating_tester_list = updating_tester_list
     quantity_tester_list = self._getQuantityTesterList()
     compensated_quantity = 0.0
     updatable_movement = None
@@ -288,7 +290,7 @@ class RuleMixin:
           updatable_compensation_movement = decision_movement
           # Not Frozen can be updated
           kw = {}
-          for tester in profit_tester_list:
+          for tester in profit_updating_tester_list:
             if not tester.compare(prevision_movement, decision_movement):
               kw.update(tester.getUpdatablePropertyDict(prevision_movement, decision_movement))
           if kw:
@@ -304,7 +306,7 @@ class RuleMixin:
           updatable_movement = decision_movement
           # Not Frozen can be updated
           kw = {}
-          for tester in divergence_tester_list:
+          for tester in updating_tester_list:
             if not tester.compare(prevision_movement, decision_movement): 
               kw.update(tester.getUpdatablePropertyDict(prevision_movement, decision_movement))
               # XXX-JPS - there is a risk here that quanity is wrongly updated
