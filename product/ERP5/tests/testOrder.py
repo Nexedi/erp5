@@ -226,7 +226,8 @@ class TestOrderMixin:
     organisation = organisation_module.newContent( \
                                    portal_type=organisation_portal_type)
     bank_account = organisation.newContent(id='bank',
-                                           portal_type='Bank Account')
+                                           portal_type='Bank Account',
+                                           title='bank%s' % organisation.getId())
     if title is None:
       organisation.edit(title='organisation%s' % organisation.getId())
       sequence.edit(organisation=organisation)
