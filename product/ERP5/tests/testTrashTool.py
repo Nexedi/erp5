@@ -37,7 +37,7 @@ from Products.ERP5Type.tests.Sequence import SequenceList
 
 class TestTrashTool(ERP5TypeTestCase):
   """
-  Test some fonctionnality
+  Test the behaviour of TrashTool
   """
   run_all_test = 1
   quiet = 1
