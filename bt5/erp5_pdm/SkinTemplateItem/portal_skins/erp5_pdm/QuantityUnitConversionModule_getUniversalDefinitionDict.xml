@@ -53,22 +53,51 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>modified = state_change[\'object\']\n
+            <value> <string>def getUniversalQuantityUnitDefinitionDict():\n
 \n
-grand_parent = modified.getParentValue().getParentValue()\n
+  kw = dict(portal_type="Quantity Unit Conversion Definition",\n
+            grand_parent_portal_type="Quantity Unit Conversion Module")\n
 \n
-activate_kw=dict(after_path=modified.getPath())\n
+  result = {}\n
+  for definition in context.portal_catalog(**kw):\n
+    definition = definition.getObject()\n
+    definition_list = definition.getParentValue()\n
+    standard_quantity_unit_uid = definition_list.getQuantityUnitUid()\n
+    if standard_quantity_unit_uid is None:\n
+      continue\n
 \n
-if grand_parent.portal_type == "Product":\n
-  # If measure is local\n
-  grand_parent.reindexObject(activate_kw=activate_kw)\n
-else:\n
-  # This was a global definition.\n
-  # Its change implies that all local definitions need reindexation\n
-  # Even resources that do NOT override definitions need indexation.\n
-  context.activate(tag="QuantityUnitConversionDefinition_reindexResource", **activate_kw).QuantityUnitConversionModule_invalidateUniversalDefinitionDict()\n
-  activate_kw["after_tag"] = "QuantityUnitConversionDefinition_reindexResource"\n
-  context.product_module.recursiveReindexObject(activate_kw=activate_kw)\n
+    result[standard_quantity_unit_uid] = (None, 1.0)\n
+    unit_uid = definition.getQuantityUnitUid()\n
+    if unit_uid is None:\n
+      continue\n
+    quantity = definition.getQuantity()\n
+    if not quantity:\n
+      continue\n
+    result[unit_uid] = (definition.getUid(), quantity)\n
+\n
+  return result\n
+\n
+def getCategoryQuantityUnitDefinitionDict():\n
+  quantity_unit = context.portal_categories.quantity_unit\n
+  result = {}\n
+  for obj in quantity_unit.getCategoryMemberValueList(portal_type="Category"):\n
+    obj = obj.getObject()\n
+    quantity = obj.getProperty(\'quantity\')\n
+    if quantity is not None:\n
+      result[obj.getUid()] = (None, float(quantity))\n
+\n
+  return result\n
+\n
+def getQuantityUnitDefinitionDict():\n
+  result = getUniversalQuantityUnitDefinitionDict()\n
+  if not result:\n
+    result = getCategoryQuantityUnitDefinitionDict()\n
+  return result\n
+\n
+from Products.ERP5Type.Cache import CachingMethod\n
+return CachingMethod(getQuantityUnitDefinitionDict,\n
+                     "getUniversalQuantityUnitDefinitionDict",\n
+                     cache_factory="erp5_content_long")()\n
 </string> </value>
         </item>
         <item>
@@ -79,7 +108,7 @@ else:\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>state_change</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -99,22 +128,17 @@ else:\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>0</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>state_change</string>
-                            <string>_getitem_</string>
-                            <string>modified</string>
-                            <string>_getattr_</string>
-                            <string>grand_parent</string>
-                            <string>dict</string>
-                            <string>activate_kw</string>
-                            <string>_apply_</string>
-                            <string>context</string>
-                            <string>_write_</string>
+                            <string>getUniversalQuantityUnitDefinitionDict</string>
+                            <string>getCategoryQuantityUnitDefinitionDict</string>
+                            <string>getQuantityUnitDefinitionDict</string>
+                            <string>Products.ERP5Type.Cache</string>
+                            <string>CachingMethod</string>
                           </tuple>
                         </value>
                     </item>
@@ -131,7 +155,7 @@ else:\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>QuantityUnitConversionDefinition_reindexResource</string> </value>
+            <value> <string>QuantityUnitConversionModule_getUniversalDefinitionDict</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
