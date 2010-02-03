@@ -13,14 +13,15 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
+                <string>all_columns</string>
                 <string>columns</string>
-                <string>sort</string>
-                <string>list_method</string>
                 <string>count_method</string>
-                <string>selection_name</string>
-                <string>portal_types</string>
                 <string>editable_columns</string>
+                <string>list_method</string>
+                <string>portal_types</string>
+                <string>selection_name</string>
+                <string>sort</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -81,6 +82,85 @@
             <key> <string>values</string> </key>
             <value>
               <dictionary>
+                <item>
+                    <key> <string>all_columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>relative_url</string>
+                          <string>Url</string>
+                        </tuple>
+                        <tuple>
+                          <string>periodicity_day_frequency</string>
+                          <string>Day</string>
+                        </tuple>
+                        <tuple>
+                          <string>periodicity_hour_list</string>
+                          <string>Hours in Day</string>
+                        </tuple>
+                        <tuple>
+                          <string>periodicity_hour_frequency</string>
+                          <string>Hour</string>
+                        </tuple>
+                        <tuple>
+                          <string>periodicity_minute_list</string>
+                          <string>Minutes in Hour</string>
+                        </tuple>
+                        <tuple>
+                          <string>periodicity_minute_frequency</string>
+                          <string>Minute</string>
+                        </tuple>
+                        <tuple>
+                          <string>periodicity_month_list</string>
+                          <string>Months in Year</string>
+                        </tuple>
+                        <tuple>
+                          <string>periodicity_month_day_list</string>
+                          <string>Days in Month</string>
+                        </tuple>
+                        <tuple>
+                          <string>periodicity_month_frequency</string>
+                          <string>Month</string>
+                        </tuple>
+                        <tuple>
+                          <string>periodicity_week_list</string>
+                          <string>Weeks in Year</string>
+                        </tuple>
+                        <tuple>
+                          <string>periodicity_week_day</string>
+                          <string>Days in Week</string>
+                        </tuple>
+                        <tuple>
+                          <string>periodicity_week_frequency</string>
+                          <string>Week</string>
+                        </tuple>
+                        <tuple>
+                          <string>periodicity_start_date</string>
+                          <string>Start Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>periodicity_stop_date</string>
+                          <string>Stop Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>report_method_id</string>
+                          <string>Report Method</string>
+                        </tuple>
+                        <tuple>
+                          <string>active_sense_method_id</string>
+                          <string>Active Sense Method</string>
+                        </tuple>
+                        <tuple>
+                          <string>sense_method_id</string>
+                          <string>Sense Method</string>
+                        </tuple>
+                        <tuple>
+                          <string>solve_method_id</string>
+                          <string>Solve Method</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
                 <item>
                     <key> <string>all_editable_columns</string> </key>
                     <value>
