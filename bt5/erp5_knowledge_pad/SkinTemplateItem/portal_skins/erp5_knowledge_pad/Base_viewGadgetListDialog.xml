@@ -114,7 +114,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>GadgetTool_viewPrettyGadgetDialog</string> </value>
+            <value> <string>Base_viewGadgetListDialog</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
