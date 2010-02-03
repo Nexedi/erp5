@@ -207,13 +207,14 @@ class CachingMethod:
               *args, **kwd)
     return value
 
-  def delete(self, id=None, cache_factory=None, scope=DEFAULT_CACHE_SCOPE):
-    """ Delete cache key. """
-    if id is None:
-      id = self.id
-    if cache_factory is None:
-      cache_factory = self.cache_factory
-    cache_id = self.generateCacheId(id)
+  def delete(self, *args, **kwd):
+    """ Delete cache key. 
+    accept same arguments as __call__ to clear
+    the cache entry with the same cache_id
+    """
+    cache_factory = self.cache_factory
+    scope = kwd.pop('scope', DEFAULT_CACHE_SCOPE)
+    cache_id = self.generateCacheId(self.id, *args, **kwd)
     cache_factory = CachingMethod.factories[cache_factory]
     for cp in cache_factory.getCachePluginList():
       cp.delete(cache_id, scope)

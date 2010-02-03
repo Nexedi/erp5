@@ -261,6 +261,22 @@ return result
       ## Cache  cleared shouldn't be previously cached
       self.assert_(1.0 < calculation_time)
 
+    # Test delete method on CachingMethod
+    print "\n\tCalculation time (3rd call)", calculation_time
+    # fill the cache
+    original =  my_cache(nb_iterations, portal_path=('', portal.getId()))
+
+    # Purge the Caching Method
+    my_cache.delete(nb_iterations, portal_path=('', portal.getId()))
+
+    # Check that result is computed
+    start = time.time()
+    original =  my_cache(nb_iterations, portal_path=('', portal.getId()))
+    end = time.time()
+    calculation_time = end-start
+    print "\n\tCalculation time (4th call)", calculation_time
+    self.assert_(1.0 < calculation_time)
+
   def test_03_cachePersistentObjects(self):
     # storing persistent objects in cache is not allowed, but this check is
     # only performed in unit tests.
