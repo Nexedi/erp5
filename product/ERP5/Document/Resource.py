@@ -869,6 +869,8 @@ class Resource(XMLMatrix, Variated):
       global_definition_dict = self.\
           QuantityUnitConversionModule_getUniversalDefinitionDict()
 
+      # _getUniversalDefinitionDict is a cached function. Copy the object to
+      # avoid modifying it
       result = global_definition_dict.copy()
       for definition_group in self.objectValues(portal_type= \
           'Quantity Unit Conversion Group'):
