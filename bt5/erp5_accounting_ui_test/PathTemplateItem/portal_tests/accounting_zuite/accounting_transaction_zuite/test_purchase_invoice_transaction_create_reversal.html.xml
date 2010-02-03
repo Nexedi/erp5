@@ -74,11 +74,16 @@ Test for Creating Reversal Transaction for a Purchase Invoice Transaction\n
 </tr>\n
 <!-- }}} -->\n
 \n
-<!-- Add a purchase invoice transaction and check the default view {{{ -->\n
+<!-- Add a purchase invoice transaction and check the accounting view {{{ -->\n
 <tr>\n
   <td>selectAndWait</td>\n
   <td>select_action</td>\n
   <td>Add Purchase Invoice Transaction</td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>link=Accounting View</td>\n
+  <td/>\n
 </tr>\n
 <tr>\n
   <td>assertValue</td>\n
