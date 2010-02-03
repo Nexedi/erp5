@@ -210,6 +210,9 @@ user_pref("security.warn_viewing_mixed.show_once", false);
 // Disable "do you want to remember this password?"
 user_pref("signon.rememberSignons", false);
 
+// increase the timeout before warning of unresponsive script
+user_pref("dom.max_script_run_time", 120);
+
 // Make sure we do not use cache
 user_pref("browser.cache.check_doc_frequency", 1);
 user_pref("network.http.use-cache", false);
