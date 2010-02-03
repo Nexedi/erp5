@@ -33,7 +33,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>15</string> </value>
+            <value> <string>base_contribution_tester</string> </value>
         </item>
         <item>
             <key> <string>matching_provider</string> </key>
