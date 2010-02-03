@@ -33,6 +33,7 @@
 
 import transaction
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from Products.ERP5Type.tests.SecurityTestCase import SecurityTestCase
 from AccessControl.SecurityManagement import newSecurityManager
 from DateTime import DateTime
 from Products.ERP5Type.tests.Sequence import SequenceList
@@ -383,6 +384,10 @@ class TestAdvancedInvoice(TestSaleInvoiceMixin, ERP5TypeTestCase):
     err_list = odf_validator.validate(odt)
     if err_list:
       self.fail(''.join(err_list))
+
+  def test_Workflow(self):
+    """XXX: Make a test for auto_planned"""
+    pass
 
 
 class TestAdvancedSaleInvoice(TestAdvancedInvoice):
@@ -1073,9 +1078,136 @@ class TestAdvancedPurchaseInvoice(TestAdvancedInvoice):
     self.assertEquals('stopped', packing_list.getSimulationState())
     transaction.commit()
 
+
+class TestWorkflow(SecurityTestCase):
+  def getBusinessTemplateList(self):
+    return ('erp5_core', 'erp5_base', 'erp5_pdm',
+            'erp5_trade', 'erp5_accounting',
+            'erp5_invoicing', 'erp5_advanced_invoicing')
+
+  def afterSetUp(self):
+    skin_folder = self.portal.portal_skins.custom
+    security_mapping_script_id = 'ERP5Type_getSecurityMapping'
+    if getattr(skin_folder, security_mapping_script_id, None) is None:
+      skin_folder.manage_addProduct['PythonScripts'].manage_addPythonScript(id=security_mapping_script_id)
+      skin_folder[security_mapping_script_id].ZPythonScript_edit('', 'return (("ERP5Type_getSecurityCategoryFromAssignment", ["function"]),)')
+
+    role_list = [
+        {'role_name_list': ('Assignee',), 'role_category_list': ('function/assignee',)},
+        {'role_name_list': ('Assignor',), 'role_category_list': ('function/assignor',)},
+        {'role_name_list': ('Auditor',), 'role_category_list': ('function/auditor',)},
+        {'role_name_list': ('Author',), 'role_category_list': ('function/author',)},
+        {'role_name_list': ('Associate',), 'role_category_list': ('function/associate',)},
+        {'role_name_list': ('Manager',), 'role_category_list': ('function/manager',)},
+        ]
+
+    sale_invoice_type = self.portal.portal_types['Sale Invoice']
+    if len(sale_invoice_type.contentIds(filter={'portal_type': 'Role Infomation'})) == 0:
+      for role in role_list:
+        type_document = sale_invoice_type.newContent(portal_type='Role Information')
+        type_document.edit(**role)
+      transaction.commit()
+      self.tic()
+
+    for role in role_list:
+      for role_category in role['role_category_list']:
+        category_id_list = role_category.split('/')[1:]
+        node = self.portal.portal_categories.function
+        while category_id_list:
+          category_id = category_id_list.pop(0)
+          if node.get(category_id, None) is None:
+            node = node.newContent(id=category_id, portal_type='Category')
+          else:
+            node = node.get(category_id)
+    transaction.commit()
+    self.tic()
+
+    person_list = [
+        {'id': 'other'},
+        {'id': 'assignee', 'assignment_list': ({'function': 'assignee'},)},
+        {'id': 'assignor', 'assignment_list': ({'function': 'assignor'},)},
+        {'id': 'associate', 'assignment_list': ({'function': 'associate'},)},
+        {'id': 'auditor', 'assignment_list': ({'function': 'auditor'},)},
+        {'id': 'author', 'assignment_list': ({'function': 'author'},)},
+        {'id': 'manager', 'assignment_list': ({'function': 'manager'},)},
+        ]
+
+    person_module = self.portal.person_module
+    for person in person_list:
+      if person_module.get(person['id'], None) is None:
+        person_document = person_module.newContent(id=person['id'], portal_type='Person')
+        person_document.edit(reference=person['id'])
+        for assignment in person.get('assignment_list', []):
+          assignment_document = person_document.newContent(portal_type='Assignment')
+          assignment_document.edit(function=assignment['function'])
+          self.portal.portal_workflow.doActionFor(assignment_document, 'open_action')
+        transaction.commit()
+        self.tic()
+        setattr(self, person['id'], person_document)
+
+  def test_autoplanned(self):
+    sale_invoice = self.portal.getDefaultModule('Sale Invoice').newContent(portal_type='Sale Invoice')
+    self.assertEquals(sale_invoice.getSimulationState(), 'draft')
+    self.portal.portal_workflow.doActionFor(sale_invoice, 'auto_plan')
+    self.assertEquals(sale_invoice.getSimulationState(), 'auto_planned')
+
+    # other as anonymous
+    self.failIfUserCanAccessDocument(self.other.getId(), sale_invoice)
+    self.failIfUserCanAddDocument(self.other.getId(), sale_invoice)
+    self.failIfUserCanDeleteDocument(self.other.getId(), sale_invoice)
+    self.failIfUserCanModifyDocument(self.other.getId(), sale_invoice)
+    self.failIfUserCanViewDocument(self.other.getId(), sale_invoice)
+
+    # assignee
+    self.assertUserCanAccessDocument(self.assignee.getId(), sale_invoice)
+    self.assertUserCanAddDocument(self.assignee.getId(), sale_invoice)
+    self.assertUserCanDeleteDocument(self.assignee.getId(), sale_invoice)
+    self.assertUserCanModifyDocument(self.assignee.getId(), sale_invoice)
+    self.assertUserCanViewDocument(self.assignee.getId(), sale_invoice)
+
+    # assignor
+    self.assertUserCanAccessDocument(self.assignor.getId(), sale_invoice)
+    self.assertUserCanAddDocument(self.assignor.getId(), sale_invoice)
+    self.assertUserCanDeleteDocument(self.assignor.getId(), sale_invoice)
+    self.assertUserCanModifyDocument(self.assignor.getId(), sale_invoice)
+    self.assertUserCanViewDocument(self.assignor.getId(), sale_invoice)
+
+    # associate
+    self.assertUserCanAccessDocument(self.associate.getId(), sale_invoice)
+    self.assertUserCanAddDocument(self.associate.getId(), sale_invoice)
+    self.assertUserCanDeleteDocument(self.associate.getId(), sale_invoice)
+    self.assertUserCanModifyDocument(self.associate.getId(), sale_invoice)
+    self.assertUserCanViewDocument(self.associate.getId(), sale_invoice)
+
+    # auditor
+    self.assertUserCanAccessDocument(self.auditor.getId(), sale_invoice)
+    self.failIfUserCanAddDocument(self.auditor.getId(), sale_invoice)
+    self.failIfUserCanDeleteDocument(self.auditor.getId(), sale_invoice)
+    self.failIfUserCanModifyDocument(self.auditor.getId(), sale_invoice)
+    self.assertUserCanViewDocument(self.auditor.getId(), sale_invoice)
+
+    # author
+    self.failIfUserCanAccessDocument(self.author.getId(), sale_invoice)
+    self.failIfUserCanAddDocument(self.author.getId(), sale_invoice)
+    self.failIfUserCanDeleteDocument(self.author.getId(), sale_invoice)
+    self.failIfUserCanModifyDocument(self.author.getId(), sale_invoice)
+    self.failIfUserCanViewDocument(self.author.getId(), sale_invoice)
+
+    # manager
+    self.assertUserCanAccessDocument(self.manager.getId(), sale_invoice)
+    self.assertUserCanAddDocument(self.manager.getId(), sale_invoice)
+    self.assertUserCanDeleteDocument(self.manager.getId(), sale_invoice)
+    self.assertUserCanModifyDocument(self.manager.getId(), sale_invoice)
+    self.assertUserCanViewDocument(self.manager.getId(), sale_invoice)
+
+    self.assertSameSet(('confirm_action', 'plan_action',),
+        [action['id'] for action in self.portal.portal_workflow.getActionsFor(sale_invoice)
+          if action['category'] == 'workflow'])
+
 import unittest
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestAdvancedSaleInvoice))
   suite.addTest(unittest.makeSuite(TestAdvancedPurchaseInvoice))
+  suite.addTest(unittest.makeSuite(TestWorkflow))
   return suite
