@@ -11,11 +11,11 @@
       <dictionary>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Draft is the initial workflow state for accounting transactions</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>draft</string> </value>
+            <value> <string>auto_planned</string> </value>
         </item>
         <item>
             <key> <string>permission_roles</string> </key>
@@ -25,18 +25,14 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Draft</string> </value>
+            <value> <string>Auto Planned</string> </value>
         </item>
         <item>
             <key> <string>transitions</string> </key>
             <value>
               <tuple>
-                <string>auto_plan</string>
-                <string>cancel</string>
-                <string>cancel_action</string>
                 <string>confirm</string>
                 <string>confirm_action</string>
-                <string>delete_action</string>
                 <string>plan</string>
                 <string>plan_action</string>
               </tuple>
@@ -45,7 +41,9 @@
         <item>
             <key> <string>type_list</string> </key>
             <value>
-              <tuple/>
+              <tuple>
+                <string>draft_order</string>
+              </tuple>
             </value>
         </item>
       </dictionary>
@@ -73,7 +71,6 @@
                         <string>Associate</string>
                         <string>Auditor</string>
                         <string>Manager</string>
-                        <string>Owner</string>
                       </tuple>
                     </value>
                 </item>
@@ -85,7 +82,6 @@
                         <string>Assignor</string>
                         <string>Associate</string>
                         <string>Manager</string>
-                        <string>Owner</string>
                       </tuple>
                     </value>
                 </item>
@@ -97,7 +93,6 @@
                         <string>Assignor</string>
                         <string>Associate</string>
                         <string>Manager</string>
-                        <string>Owner</string>
                       </tuple>
                     </value>
                 </item>
@@ -109,7 +104,6 @@
                         <string>Assignor</string>
                         <string>Associate</string>
                         <string>Manager</string>
-                        <string>Owner</string>
                       </tuple>
                     </value>
                 </item>
@@ -122,7 +116,6 @@
                         <string>Associate</string>
                         <string>Auditor</string>
                         <string>Manager</string>
-                        <string>Owner</string>
                       </tuple>
                     </value>
                 </item>
