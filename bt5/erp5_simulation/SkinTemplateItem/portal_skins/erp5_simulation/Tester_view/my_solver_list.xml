@@ -13,11 +13,10 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
-                <string>required</string>
-                <string>view_separator</string>
-                <string>size</string>
                 <string>items</string>
+                <string>size</string>
+                <string>title</string>
+                <string>view_separator</string>
               </list>
             </value>
         </item>
@@ -93,8 +92,10 @@
                     <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key> <string>required</string> </key>
-                    <value> <int>1</int> </value>
+                    <key> <string>items</string> </key>
+                    <value>
+                      <list/>
+                    </value>
                 </item>
                 <item>
                     <key> <string>size</string> </key>
@@ -112,8 +113,7 @@
                     <key> <string>view_separator</string> </key>
                     <value> <string encoding="cdata"><![CDATA[
 
-<br />\n
-
+<br />
 
 ]]></string> </value>
                 </item>
