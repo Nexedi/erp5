@@ -140,7 +140,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.getParent().getQuantityUnitValue().getTitle()</string> </value>
+            <value> <string>python: here.getParentValue().getQuantityUnitValue().getTitle()</string> </value>
         </item>
       </dictionary>
     </pickle>
