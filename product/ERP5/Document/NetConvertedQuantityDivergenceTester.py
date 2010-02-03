@@ -55,9 +55,5 @@ class NetConvertedQuantityDivergenceTester(FloatDivergenceTester):
 
     decision_movement -- a delivery movement (decision)
     """
-    tested_property = 'net_converted_quantity'
-    prevision_value = self._getPropertyValue(prevision_movement, tested_property)
-    return {tested_property:prevision_value}
-
-  def _getPropertyValue(self, document, property):
-    return document.getNetConvertedQuantity()
+    return {'quantity':prevision_movement.getNetConvertedQuantity(),
+            'quantity_unit':prevision_movement.getQuantityUnit()}
