@@ -475,14 +475,19 @@ class TestERP5Simulation(TestERP5SimulationMixin, ERP5TypeTestCase):
   run_all_test = 1
   quiet = 0
 
-  def validateNewRules(self):
-    # create an Order Rule document.
-    portal_rules = self.portal.portal_rules
-    new_order_rule = filter(
-      lambda x:x.title == 'New Simple Order Rule',
-      portal_rules.objectValues(portal_type='Order Rule'))[0]
-    if new_order_rule.getValidationState() != 'validated':
-      new_order_rule.validate()
+  def afterSetUp(self):
+    TestERP5SimulationMixin.afterSetUp(self)
+    new_order_rule = self.portal.portal_rules['new_order_rule']
+    new_order_rule['quantity_tester'].edit(quantity=None,
+                                           quantity_range_max=2,
+                                           quantity_range_min=-1)
+
+  def beforeTearDown(self):
+    new_order_rule = self.portal.portal_rules['new_order_rule']
+    new_order_rule['quantity_tester'].edit(quantity=None,
+                                           quantity_range_max=2,
+                                           quantity_range_min=-1)
+    TestERP5SimulationMixin.beforeTearDown(self)
 
   def _modifyPackingListLineQuantity(self, sequence=None,
       sequence_list=None, delta=0.0):
