@@ -229,7 +229,7 @@ return context.Base_redirect(form_id, keep_items=dict(\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>BaseTrade_setFastInputLineList</string> </value>
+            <value> <string>Delivery_setFastInputLineList</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

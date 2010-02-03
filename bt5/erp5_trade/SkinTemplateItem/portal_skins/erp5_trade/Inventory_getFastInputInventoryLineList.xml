@@ -53,7 +53,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>result = context.BaseTrade_getFastInputLineList(line_portal_type="Inventory Line", lines_num=10, no_inventory=True, **kw)\n
+            <value> <string>result = context.Delivery_getFastInputLineList(line_portal_type="Inventory Line", lines_num=10, no_inventory=True, **kw)\n
 \n
 return result\n
 </string> </value>

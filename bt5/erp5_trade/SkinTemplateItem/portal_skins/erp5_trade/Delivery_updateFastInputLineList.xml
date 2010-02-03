@@ -63,7 +63,7 @@
   product\n
 """\n
 context.log("update", "no_inventory %s" %(no_inventory))\n
-result = [x.getObject() for x in context.BaseTrade_getFastInputLineList(line_portal_type=line_portal_type,\n
+result = [x.getObject() for x in context.Delivery_getFastInputLineList(line_portal_type=line_portal_type,\n
                                                                         no_inventory=no_inventory,\n
                                                                         lines_num=10, **kw)]\n
 \n
@@ -221,7 +221,7 @@ return listbox, kw\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>BaseTrade_updateFastInputLineList</string> </value>
+            <value> <string>Delivery_updateFastInputLineList</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

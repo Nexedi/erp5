@@ -214,7 +214,7 @@ return result\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>BaseTrade_getFastInputLineList</string> </value>
+            <value> <string>Delivery_getFastInputLineList</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
