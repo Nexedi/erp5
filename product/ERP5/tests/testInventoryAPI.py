@@ -2395,15 +2395,20 @@ class BaseTestUnitConversion(InventoryAPITestCase):
                  portal_type='Quantity Unit Conversion Group',
                  quantity_unit="%s/%s" % (base, standard),
                  immediate_reindex=1 )
+      if group.getValidationState() in ('draft', 'invalidated'):
+        group.validate()
 
       for unit, amount in definition_dict.iteritems():
-        if group._getOb(unit, None) is None:
-          group.newContent(
-             id=unit,
-             portal_type="Quantity Unit Conversion Definition",
-             quantity_unit="%s/%s" % (base, unit),
-             quantity=amount,
-             immediate_reindex=1)
+        definition = group._getOb(unit, None)
+        if definition is None:
+          definition = group.newContent(
+                        id=unit,
+                        portal_type="Quantity Unit Conversion Definition",
+                        quantity_unit="%s/%s" % (base, unit),
+                        quantity=amount,
+                        immediate_reindex=1)
+        if definition.getValidationState() in ('draft', 'invalidated'):
+          definition.validate()
 
   def afterSetUp(self):
     InventoryAPITestCase.afterSetUp(self)
@@ -2433,6 +2438,16 @@ class BaseTestUnitConversion(InventoryAPITestCase):
       category_list.extend(quantity + unit for unit in definition_dict)
     category_list += InventoryAPITestCase.getNeededCategoryList(self)
     return category_list
+
+  def beforeTearDown(self):
+    # invalidating definitions is enough
+    unit_module = self.portal.quantity_unit_conversion_module
+    for obj in unit_module.objectValues():
+      if obj.getValidationState() == "validated":
+        obj.invalidate()
+
+    super(BaseTestUnitConversion, self).beforeTearDown()
+
 
 class TestUnitConversion(BaseTestUnitConversion):
   QUANTITY_UNIT_DICT = {
@@ -2561,6 +2576,7 @@ class TestUnitConversionDefinition(BaseTestUnitConversion):
                   portal_type='Quantity Unit Conversion Group',
                   quantity_unit='unit/unit',
                   immediate_reindex=1)
+    base_unit.validate()
 
 
     unit = base_unit.newContent(
@@ -2568,8 +2584,17 @@ class TestUnitConversionDefinition(BaseTestUnitConversion):
             quantity_unit='unit/lot',
             quantity=50,
             immediate_reindex=1)
+    unit.validate()
 
     self._safeTic()
+
+  def beforeTearDown(self):
+    # invalidating definitions is enough
+    for obj in self.resource_bylot_overriding.objectValues("Quantity Unit " \
+        "Conversion Group"):
+      obj.invalidate()
+
+    super(TestUnitConversionDefinition, self).beforeTearDown()
 
   def testAggregatedReports(self):
     self.makeMovement(-10, self.resource_bylot)
@@ -2630,10 +2655,11 @@ class TestUnitConversionDefinition(BaseTestUnitConversion):
                       self.resource_bylot_overriding\
                           .convertQuantity(1, "unit/pack", "unit/lot"))
 
-  def testResourceConvertQuantityAfterGlobalChange(self):
+  def checkInitialStateAndGetLotDefinition(self):
     """
-    after a change in a Global unit definition, definitions should get
-    reindexed.
+    Helper function: check correctness of initial definitions
+    and return the (sole) Definition object of unit/lot for further
+    changes.
     """
     # Before the global change, global definition reads 1000
     self.assertEquals(1000,
@@ -2652,25 +2678,70 @@ class TestUnitConversionDefinition(BaseTestUnitConversion):
                                                   grand_parent_portal_type= \
                                                     "Quantity Unit Conversion" \
                                                     " Module",
+                                                  validation_state="validated",
                                                   portal_type= \
                                                     "Quantity Unit Conversion" \
                                                     " Definition")
     self.assertEquals(1, len(query))
-    query[0].getObject().setQuantity(500)
+    return query[0].getObject()
 
-    # this change triggers Resource reindexations. Wait for 'em!
-    transaction.commit()
-    self.tic()
+  def testResourceConvertQuantityAfterGlobalChange(self):
+    """
+    after a change in a Global unit definition, definitions should get
+    reindexed.
+    """
+    lot_definition = self.checkInitialStateAndGetLotDefinition()
 
-    # SQL tables should have been updated:
-    self.assertEquals(500,
-                      self.resource_bylot.convertQuantity(1,
-                                                           "unit/lot",
-                                                           "unit/unit"))
-    # without affecting resources that override the definition
-    self.assertEquals(1*50,
-                      self.resource_bylot_overriding\
-                          .convertQuantity(1, "unit/lot", "unit/unit"))
+    # We use a try...finally to avoid hitting unrelated tests
+    # in case of a failure
+    try:
+      lot_definition.setQuantity(500)
+
+      # this change triggers Resource reindexations. Wait for 'em!
+      transaction.commit()
+      self.tic()
+
+      # SQL tables should have been updated:
+      self.assertEquals(500,
+                        self.resource_bylot.convertQuantity(1,
+                                                            "unit/lot",
+                                                            "unit/unit"))
+      # without affecting resources that override the definition
+      self.assertEquals(1*50,
+                        self.resource_bylot_overriding\
+                           .convertQuantity(1, "unit/lot", "unit/unit"))
+    finally:
+      # restore initial value
+      lot_definition.setQuantity(1000)
+
+  def testResourceConvertQuantityAfterInvalidation(self):
+    """
+    after invalidating a Global unit definition, definitions should get
+    reindexed, and cache should be reloaded.
+    """
+    lot_definition = self.checkInitialStateAndGetLotDefinition()
+
+    # Be careful to restore the object state whatever is the outcome
+    # of the test
+    try:
+      lot_definition.invalidate()
+
+      # this change triggers Resource reindexations. Wait for 'em!
+      transaction.commit()
+      self.tic()
+
+      # SQL tables should have been updated:
+      self.assertEquals(None,
+                        self.resource_bylot.convertQuantity(1,
+                                                            "unit/lot",
+                                                            "unit/unit"))
+      # without affecting resources that override the definition
+      self.assertEquals(1*50,
+                        self.resource_bylot_overriding\
+                            .convertQuantity(1, "unit/lot", "unit/unit"))
+    finally:
+      # restore initial state
+      lot_definition.validate()
 
 class TestUnitConversionBackwardCompatibility(BaseTestUnitConversion):
   QUANTITY_UNIT_DICT = {
@@ -2686,7 +2757,8 @@ class TestUnitConversionBackwardCompatibility(BaseTestUnitConversion):
     mass_category.gram.setProperty('quantity', 0.001)
     mass_category.kilogram.setProperty('quantity', 1)
 
-    pass
+    # clear cache to force recalculation of quantity units
+    self.portal.portal_caches.clearCache(('erp5_content_long',))
 
   def testBackwardCompatibility(self):
     delivery_rule = self.getRuleTool().default_delivery_rule

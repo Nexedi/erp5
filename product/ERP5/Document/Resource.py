@@ -870,21 +870,29 @@ class Resource(XMLMatrix, Variated):
           QuantityUnitConversionModule_getUniversalDefinitionDict()
 
       result = global_definition_dict.copy()
-      for definition_list in self.objectValues(portal_type= \
+      for definition_group in self.objectValues(portal_type= \
           'Quantity Unit Conversion Group'):
-        standard_quantity_unit_uid = definition_list.getQuantityUnitUid()
+        if definition_group.getValidationState() != "validated":
+          continue
+
+        standard_quantity_unit_uid = definition_group.getQuantityUnitUid()
         if standard_quantity_unit_uid is None:
           continue
 
         reference_ratio = global_definition_dict[standard_quantity_unit_uid][1]
-        for definition in definition_list.objectValues(portal_type= \
+        for definition in definition_group.objectValues(portal_type= \
             'Quantity Unit Conversion Definition'):
+          if definition.getValidationState() != "validated":
+            continue
+
           unit_uid = definition.getQuantityUnitUid()
           if unit_uid is None:
             continue
+
           quantity = definition.getQuantity()
           if not quantity:
             continue
+
           result[unit_uid] = (definition.getUid(), quantity*reference_ratio)
 
       return result
