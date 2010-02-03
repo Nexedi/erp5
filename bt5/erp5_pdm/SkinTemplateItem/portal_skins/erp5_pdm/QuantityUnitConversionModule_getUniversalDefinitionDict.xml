@@ -56,13 +56,12 @@
             <value> <string>def getUniversalQuantityUnitDefinitionDict():\n
 \n
   kw = dict(portal_type="Quantity Unit Conversion Definition",\n
-            grand_parent_portal_type="Quantity Unit Conversion Module")\n
+            grand_parent_portal_type="Quantity Unit Conversion Module",\n
+            validation_state="validated")\n
 \n
   result = {}\n
   for definition in context.portal_catalog(**kw):\n
     definition = definition.getObject()\n
-    if definition.getValidationState() != "validated":\n
-      continue\n
 \n
     definition_group = definition.getParentValue()\n
     if definition_group.getValidationState() != "validated":\n
