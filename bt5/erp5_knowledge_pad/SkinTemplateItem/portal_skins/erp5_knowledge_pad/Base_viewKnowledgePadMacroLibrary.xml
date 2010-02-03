@@ -67,8 +67,6 @@
 <tal:block metal:define-macro="add_new_gadget">\n
   <a href="GadgetTool_viewPrettyGadgetList"\n
      tal:condition="not: isKnowledgePadTemplateUsed"\n
-     tal:define="real_here python: request.get(\'current_web_section\', here);\n
-                 real_here python: test(real_here.getPortalType()!=\'Web Site\', real_here, here);"\n
      tal:attributes="href python:\n
      \'GadgetTool_viewPrettyGadgetDialog?reset=1&cancel_url=%s&active_pad_relative_url=%s&mode=%s\'\n
       %(cancel_url, \n
