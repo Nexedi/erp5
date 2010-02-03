@@ -37,6 +37,45 @@ from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import DummyTranslationService
 
+try:
+  # BACK: Zope 2.8
+  # When we drop support, refactor the tests to use the i18n utilities
+  # directly
+  from Products.PageTemplates.GlobalTranslationService import \
+                                setGlobalTranslationService
+  def unregister_translation_domain_fallback():
+    """dummy function to keep the beforeTearDown() code neat"""
+ 
+except ImportError:
+  # Zope 2.12, simulate setting the globalTranslationService with
+  # zope.i18n utilities
+  import zope.interface
+  import zope.component
+  global_translation_service = None
+  
+  from zope.i18n.interfaces import ITranslationDomain, \
+                                   IFallbackTranslationDomainFactory
+  class DummyTranslationDomainFallback(object):
+    zope.interface.implements(ITranslationDomain)
+    zope.interface.classProvides(IFallbackTranslationDomainFactory)
+    
+    def __init__(self, domain):
+      self.domain = domain
+    
+    def translate(self, msgid, mapping=None, *args, **kw):
+      return global_translation_service.translate(self.domain, msgid, mapping,
+                                                  *args, **kw)
+  
+  def setGlobalTranslationService(translation_service):
+    global global_translation_service
+    global_translation_service = translation_service
+    zope.component.provideUtility(DummyTranslationDomainFallback,
+                                  provides=IFallbackTranslationDomainFactory)
+
+  def unregister_translation_domain_fallback():
+    from zope.component.globalregistry import base
+    base.unregisterUtility(DummyTranslationDomainFallback)
+
 HTTP_OK = 200
 HTTP_UNAUTHORIZED = 401
 HTTP_REDIRECT = 302
@@ -66,6 +105,7 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.auth = '%s:%s' % (self.manager_username, self.manager_password)
 
   def beforeTearDown(self):
+    unregister_translation_domain_fallback()
     transaction.abort()
     if 'test_folder' in self.portal.objectIds():
       self.portal.manage_delObjects(['test_folder'])
@@ -192,8 +232,6 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
   def test_allowed_content_types_translated(self):
     """Tests allowed content types from the action menu are translated"""
     translation_service = DummyTranslationService()
-    from Products.PageTemplates.GlobalTranslationService import \
-                                      setGlobalTranslationService
     setGlobalTranslationService(translation_service)
     # assumes that we can add Business Template in template tool
     response = self.publish('%s/portal_templates/view' %
@@ -208,8 +246,6 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
   def test_jump_action_translated(self):
     """Tests jump actions are translated"""
     translation_service = DummyTranslationService()
-    from Products.PageTemplates.GlobalTranslationService import \
-                                      setGlobalTranslationService
     setGlobalTranslationService(translation_service)
     # adds a new jump action to Template Tool portal type
     self.getTypesTool().getTypeInfo('Template Tool').newContent(
