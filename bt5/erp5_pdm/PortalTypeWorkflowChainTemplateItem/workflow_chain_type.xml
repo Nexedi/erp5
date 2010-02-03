@@ -29,11 +29,11 @@
  </chain>
  <chain>
   <type>Quantity Unit Conversion Definition</type>
-  <workflow>edit_workflow, quantity_unit_conversion_interaction_workflow</workflow>
+  <workflow>edit_workflow, quantity_unit_conversion_interaction_workflow, validation_workflow</workflow>
  </chain>
  <chain>
   <type>Quantity Unit Conversion Group</type>
-  <workflow>edit_workflow, quantity_unit_conversion_interaction_workflow</workflow>
+  <workflow>edit_workflow, quantity_unit_conversion_interaction_workflow, validation_workflow</workflow>
  </chain>
  <chain>
   <type>Sale Supply</type>

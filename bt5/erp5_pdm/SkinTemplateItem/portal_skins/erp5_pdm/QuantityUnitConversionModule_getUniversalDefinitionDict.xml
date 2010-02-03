@@ -61,18 +61,27 @@
   result = {}\n
   for definition in context.portal_catalog(**kw):\n
     definition = definition.getObject()\n
-    definition_list = definition.getParentValue()\n
-    standard_quantity_unit_uid = definition_list.getQuantityUnitUid()\n
+    if definition.getValidationState() != "validated":\n
+      continue\n
+\n
+    definition_group = definition.getParentValue()\n
+    if definition_group.getValidationState() != "validated":\n
+      continue\n
+\n
+    standard_quantity_unit_uid = definition_group.getQuantityUnitUid()\n
     if standard_quantity_unit_uid is None:\n
       continue\n
 \n
     result[standard_quantity_unit_uid] = (None, 1.0)\n
+\n
     unit_uid = definition.getQuantityUnitUid()\n
     if unit_uid is None:\n
       continue\n
+\n
     quantity = definition.getQuantity()\n
     if not quantity:\n
       continue\n
+\n
     result[unit_uid] = (definition.getUid(), quantity)\n
 \n
   return result\n
