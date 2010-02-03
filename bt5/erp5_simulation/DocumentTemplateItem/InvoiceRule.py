@@ -104,11 +104,12 @@ class InvoiceRuleMovementGenerator(MovementGeneratorMixin):
             ._getInputMovementAndPathTupleList(context):
       kw = self._getPropertyAndCategoryList(input_movement, business_path,
                                             rule)
+      input_movement_url = input_movement.getRelativeUrl()
+      kw.update({'order':input_movement_url,
+                 'delivery':input_movement_url})
       simulation_movement = context.newContent(
         portal_type=RuleMixin.movement_type,
         temp_object=True,
-        order_value=input_movement,
-        delivery_value=input_movement,
         **kw)
       ret.append(simulation_movement)
     return ret
