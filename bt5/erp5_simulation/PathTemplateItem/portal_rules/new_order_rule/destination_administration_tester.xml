@@ -11,7 +11,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>5</string> </value>
+            <value> <string>destination_administration_tester</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -21,13 +21,13 @@
             <key> <string>tested_property</string> </key>
             <value>
               <tuple>
-                <string>destination_account</string>
+                <string>destination_administration</string>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>destination_account divergence tester</string> </value>
+            <value> <string>destination_administration divergence tester</string> </value>
         </item>
       </dictionary>
     </pickle>

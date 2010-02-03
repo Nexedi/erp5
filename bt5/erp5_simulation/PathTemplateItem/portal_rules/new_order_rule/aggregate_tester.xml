@@ -11,7 +11,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>13</string> </value>
+            <value> <string>aggregate_tester</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -21,13 +21,13 @@
             <key> <string>tested_property</string> </key>
             <value>
               <tuple>
-                <string>source_project</string>
+                <string>aggregate</string>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>source_project divergence tester</string> </value>
+            <value> <string>aggregate divergence tester</string> </value>
         </item>
       </dictionary>
     </pickle>

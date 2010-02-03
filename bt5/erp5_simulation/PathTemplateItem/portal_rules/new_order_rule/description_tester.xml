@@ -3,7 +3,7 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <global name="CategoryMembershipDivergenceTester" module="Products.ERP5Type.Document.CategoryMembershipDivergenceTester"/>
+        <global name="StringDivergenceTester" module="Products.ERP5Type.Document.StringDivergenceTester"/>
         <tuple/>
       </tuple>
     </pickle>
@@ -11,23 +11,23 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>2</string> </value>
+            <value> <string>description_tester</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Category Membership Divergence Tester</string> </value>
+            <value> <string>String Divergence Tester</string> </value>
         </item>
         <item>
             <key> <string>tested_property</string> </key>
             <value>
               <tuple>
-                <string>base_application</string>
+                <string>description</string>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>base_application divergence tester</string> </value>
+            <value> <string>description divergence tester</string> </value>
         </item>
       </dictionary>
     </pickle>

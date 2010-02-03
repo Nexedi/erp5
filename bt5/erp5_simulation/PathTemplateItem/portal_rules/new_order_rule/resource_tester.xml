@@ -11,7 +11,11 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>10</string> </value>
+            <value> <string>resource_tester</string> </value>
+        </item>
+        <item>
+            <key> <string>matching_provider</string> </key>
+            <value> <int>1</int> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -21,13 +25,13 @@
             <key> <string>tested_property</string> </key>
             <value>
               <tuple>
-                <string>source</string>
+                <string>resource</string>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>source divergence tester</string> </value>
+            <value> <string>resource divergence tester</string> </value>
         </item>
       </dictionary>
     </pickle>

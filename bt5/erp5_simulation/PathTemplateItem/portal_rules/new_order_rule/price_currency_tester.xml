@@ -11,7 +11,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>3</string> </value>
+            <value> <string>price_currency_tester</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -21,13 +21,13 @@
             <key> <string>tested_property</string> </key>
             <value>
               <tuple>
-                <string>base_contribution</string>
+                <string>price_currency</string>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>base_contribution divergence tester</string> </value>
+            <value> <string>price_currency divergence tester</string> </value>
         </item>
       </dictionary>
     </pickle>
