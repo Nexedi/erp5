@@ -111,11 +111,15 @@ for workflow_item in workflow_item_list:\n
         # Display the workflow state in the state columns\n
         key = key[len(compatibility_name):]\n
     if key.endswith(\'state\'): \n
+      # Store locally the id of state, usefull for merging action and transition\n
+      state_id = wf_states.get(value, marker) and wf_states[value].id\n
+      o.setProperty(\'state_id\', state_id)\n
+\n
       key = \'state\'\n
       if display:\n
         value = wf_states.get(value, marker) and wf_states[value].title\n
       else:\n
-        value = wf_states.get(value, marker) and wf_states[value].id\n
+        value = state_id\n
     if key == \'action\':\n
       # Store locally the id of action, usefull for merging action and transition\n
       o.setProperty(\'action_id\', value)\n
@@ -247,6 +251,7 @@ return result\n
                             <string>value</string>
                             <string>compatibility_name</string>
                             <string>len</string>
+                            <string>state_id</string>
                             <string>same_type</string>
                             <string>getattr</string>
                           </tuple>
