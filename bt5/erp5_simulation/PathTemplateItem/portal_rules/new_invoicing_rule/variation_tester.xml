@@ -3,7 +3,7 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <global name="NetConvertedQuantityDivergenceTester" module="Products.ERP5Type.Document.NetConvertedQuantityDivergenceTester"/>
+        <global name="VariationDivergenceTester" module="Products.ERP5Type.Document.VariationDivergenceTester"/>
         <tuple/>
       </tuple>
     </pickle>
@@ -29,16 +29,6 @@
                       <value> <string>int</string> </value>
                   </item>
                 </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>use_delivery_ratio</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>int</string> </value>
-                  </item>
-                </dictionary>
               </tuple>
             </value>
         </item>
@@ -49,28 +39,26 @@
             </value>
         </item>
         <item>
-            <key> <string>categories</string> </key>
-            <value>
-              <tuple>
-                <string>solver/portal_types/Quantity Accept Solver</string>
-                <string>solver/portal_types/Quantity Adoption Solver</string>
-                <string>solver/portal_types/Quantity Split Solver</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>description</string> </key>
             <value>
               <none/>
             </value>
         </item>
         <item>
+            <key> <string>divergence_provider</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
-            <value> <string>19</string> </value>
+            <value> <string>variation_tester</string> </value>
+        </item>
+        <item>
+            <key> <string>matching_provider</string> </key>
+            <value> <int>1</int> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Net Converted Quantity Divergence Tester</string> </value>
+            <value> <string>Variation Divergence Tester</string> </value>
         </item>
         <item>
             <key> <string>quantity</string> </key>
@@ -80,17 +68,14 @@
             <key> <string>tested_property</string> </key>
             <value>
               <tuple>
-                <string>quantity</string>
+                <string>variation_category_list</string>
+                <string>variation_property_dict</string>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>quantity divergence tester</string> </value>
-        </item>
-        <item>
-            <key> <string>use_delivery_ratio</string> </key>
-            <value> <int>1</int> </value>
+            <value> <string>variation divergence tester</string> </value>
         </item>
       </dictionary>
     </pickle>

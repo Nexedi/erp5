@@ -22,27 +22,8 @@
             </value>
         </item>
         <item>
-            <key> <string>categories</string> </key>
-            <value>
-              <tuple>
-                <string>solver/portal_types/Resource Adoption Solver</string>
-                <string>solver/portal_types/Resource Replacement Solver</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
-            <key> <string>description</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
-            <value> <string>15</string> </value>
-        </item>
-        <item>
-            <key> <string>matching_provider</string> </key>
-            <value> <int>1</int> </value>
+            <value> <string>source_administration_tester</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -52,13 +33,13 @@
             <key> <string>tested_property</string> </key>
             <value>
               <tuple>
-                <string>resource</string>
+                <string>source_administration</string>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>resource divergence tester</string> </value>
+            <value> <string>source_administration divergence tester</string> </value>
         </item>
       </dictionary>
     </pickle>

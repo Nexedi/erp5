@@ -3,7 +3,7 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <global name="FloatDivergenceTester" module="Products.ERP5Type.Document.FloatDivergenceTester"/>
+        <global name="CategoryMembershipDivergenceTester" module="Products.ERP5Type.Document.CategoryMembershipDivergenceTester"/>
         <tuple/>
       </tuple>
     </pickle>
@@ -16,77 +16,30 @@
             </value>
         </item>
         <item>
-            <key> <string>_local_properties</string> </key>
-            <value>
-              <tuple>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>quantity</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>int</string> </value>
-                  </item>
-                </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>use_delivery_ratio</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>int</string> </value>
-                  </item>
-                </dictionary>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>_range_criterion</string> </key>
             <value>
               <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
             </value>
         </item>
         <item>
-            <key> <string>categories</string> </key>
-            <value>
-              <tuple />
-            </value>
-        </item>
-        <item>
-            <key> <string>description</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
-            <value> <string>20</string> </value>
+            <value> <string>source_function_tester</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Float Divergence Tester</string> </value>
-        </item>
-        <item>
-            <key> <string>quantity</string> </key>
-            <value> <int>0</int> </value>
+            <value> <string>Category Membership Divergence Tester</string> </value>
         </item>
         <item>
             <key> <string>tested_property</string> </key>
             <value>
               <tuple>
-                <string>price</string>
+                <string>source_function</string>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>price divergence tester</string> </value>
-        </item>
-        <item>
-            <key> <string>use_delivery_ratio</string> </key>
-            <value> <int>1</int> </value>
+            <value> <string>source_function divergence tester</string> </value>
         </item>
       </dictionary>
     </pickle>
