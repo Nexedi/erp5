@@ -59,6 +59,7 @@ periodicity_list = [\n
   \'periodicity_hour\',\n
   \'periodicity_hour_frequency\',\n
   \'periodicity_minute\',\n
+  \'periodicity_minute_frequency\',\n
   \'periodicity_month\',\n
   \'periodicity_month_day\',\n
   \'periodicity_month_frequency\',\n
