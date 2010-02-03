@@ -93,7 +93,7 @@
                     <key> <string>hidden</string> </key>
                     <value>
                       <list>
-                        <string>listbox_description</string>
+                        <string>listbox_thumbnail</string>
                       </list>
                     </value>
                 </item>
