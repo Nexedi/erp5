@@ -53,34 +53,13 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>section = context.portal_preferences.getPreferredSectionCategory() or\\\n
-                       context.portal_preferences.getPreferredAccountingTransactionSectionCategory()\n
+            <value> <string>section_item_list = context.Base_getPreferredSectionItemList(portal_type=\'Organisation\')\n
+current_destination_section = context.getDestinationSection()\n
+if current_destination_section is not None and\\\n
+    current_destination_section not in zip(*section_item_list)[1]:\n
+  section_item_list.append((context.getDestinationSectionTitle(), context.getDestinationSection()))\n
 \n
-section_value = None\n
-result = []\n
-\n
-if section is not None:\n
-  section_value = context.portal_categories.resolveCategory(section)\n
-\n
-if section_value is not None:\n
-  result = section_value.getGroupRelatedValueList(portal_type=\'Organisation\',\n
-                                                  checked_permission=\'View\')\n
-\n
-  result = [r for r in result\n
-            if r.getProperty(\'validation_state\') not in (\'invalidated\', \'deleted\')]\n
-\n
-\n
-current_destination_section = context.getDestinationSectionValue()\n
-\n
-if current_destination_section is not None and current_destination_section not in result:\n
-  result.append(current_destination_section)\n
-\n
-def sorted(seq, key):\n
-  seq = seq[::]\n
-  seq.sort(key=key)\n
-  return seq\n
-\n
-return [(\'\', \'\')] + sorted([(i.getTitle(), i.getRelativeUrl()) for i in result], key=lambda x:x[0])\n
+return section_item_list\n
 </string> </value>
         </item>
         <item>
@@ -119,17 +98,12 @@ return [(\'\', \'\')] + sorted([(i.getTitle(), i.getRelativeUrl()) for i in resu
                           <tuple>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>section</string>
-                            <string>None</string>
-                            <string>section_value</string>
-                            <string>result</string>
-                            <string>append</string>
-                            <string>$append0</string>
-                            <string>_getiter_</string>
-                            <string>r</string>
+                            <string>section_item_list</string>
                             <string>current_destination_section</string>
-                            <string>sorted</string>
-                            <string>i</string>
+                            <string>None</string>
+                            <string>_getitem_</string>
+                            <string>_apply_</string>
+                            <string>zip</string>
                           </tuple>
                         </value>
                     </item>
