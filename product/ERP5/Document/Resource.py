@@ -877,11 +877,21 @@ class Resource(XMLMatrix, Variated):
         if definition_group.getValidationState() != "validated":
           continue
 
-        standard_quantity_unit_uid = definition_group.getQuantityUnitUid()
-        if standard_quantity_unit_uid is None:
+        standard_quantity_unit_value = definition_group.getQuantityUnitValue()
+        if standard_quantity_unit_value is None:
           continue
 
-        reference_ratio = global_definition_dict[standard_quantity_unit_uid][1]
+        uid = standard_quantity_unit_value.getUid()
+        try:
+          reference_ratio = global_definition_dict[uid][1]
+        except KeyError:
+          LOG("Resource", WARNING,
+              "could not find a global Unit Definition for '%s' while " \
+              "indexing local Definition Group '%s'" % \
+                  (standard_quantity_unit_value.getRelativeUrl(),
+                   definition_group.getRelativeUrl()))
+          continue
+
         for definition in definition_group.objectValues(portal_type= \
             'Quantity Unit Conversion Definition'):
           if definition.getValidationState() != "validated":
@@ -957,7 +967,15 @@ class Resource(XMLMatrix, Variated):
             # a row for the management unit, with the resource's uid as uid, and
             # a generic metric_type.
             quantity_unit_uid = quantity_unit_value.getUid()
-            quantity = quantity_unit_definition_dict[quantity_unit_uid][1]
+            try:
+              quantity = quantity_unit_definition_dict[quantity_unit_uid][1]
+            except KeyError:
+              LOG("Resource", WARNING,
+                  "could not find an Unit Definition for '%s' while " \
+                  "indexing Resource '%s'" % \
+                     (quantity_unit_value.getRelativeUrl(),
+                      self.getRelativeUrl()))
+              quantity = None
 
             metric_type_uid = self.getPortalObject().portal_categories \
                                   .getCategoryUid(metric_type, 'metric_type')

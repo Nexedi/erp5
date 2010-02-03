@@ -25,6 +25,8 @@
 #
 ##############################################################################
 
+from zLOG import LOG, WARNING
+
 from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type import PropertySheet
@@ -167,21 +169,32 @@ class Measure(XMLMatrix):
     Returns the list of rows to insert in the measure table of the catalog.
     Called by Resource.getMeasureRowList.
     """
-    quantity_unit = self.getQuantityUnitValue()
+    quantity_unit_value = self.getQuantityUnitValue()
     metric_type = self.getMetricType()
-    if quantity_unit is None or not metric_type or \
-        quantity_unit.getParentId() != metric_type.split('/', 1)[0]:
+    if quantity_unit_value is None or not metric_type or \
+        quantity_unit_value.getParentId() != metric_type.split('/', 1)[0]:
       return ()
-    quantity_unit_uid = quantity_unit.getUid()
+
+    def getQuantity(quantity_unit_value):
+      quantity_unit_uid = quantity_unit_value.getUid()
+      try:
+        return quantity_unit_definition_dict[quantity_unit_uid][1]
+      except KeyError:
+        LOG("Measure", WARNING,
+            "could not find an Unit Definition for '%s' while " \
+            "indexing Measure '%s'" % \
+                (quantity_unit_value.getRelativeUrl(),
+                 self.getRelativeUrl()))
+        return None
 
     uid = self.getUid()
     resource = self.getResourceValue()
     resource_uid = resource.getUid()
     metric_type_uid = self.getMetricTypeUid()
     quantity = self.getQuantity()
-    try:
-      quantity_unit = quantity_unit_definition_dict[quantity_unit_uid][1]
-    except KeyError:
+
+    quantity_unit = getQuantity(quantity_unit_value)
+    if quantity_unit is None:
       return ()
 
     # The only purpose of the defining a default measure explicitly is to
@@ -198,11 +211,11 @@ class Measure(XMLMatrix):
       # so we simply return 1 row.
       if quantity is not None:
         quantity *= quantity_unit
-        management_unit_uid = resource.getQuantityUnitUid()
+        management_unit_value = resource.getQuantityUnitValue()
         management_unit_quantity = None
-        if management_unit_uid is not None:
-          management_unit_quantity = quantity_unit_definition_dict\
-                                        [management_unit_uid][1]
+        if management_unit_value is not None:
+          management_unit_quantity = getQuantity(management_unit_value)
+
         if (not default or quantity == management_unit_quantity):
           return (uid, resource_uid, '^', metric_type_uid, quantity),
       return ()
