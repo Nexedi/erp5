@@ -105,7 +105,7 @@ class DivergenceTesterMixin:
       value = movement.getRecordedProperty(tested_property)
     else:
       value = movement.getProperty(tested_property)
-    return '%s/%s/%r' % (self.getPortalType(), tested_property, value)
+    return '%s/%r' % (tested_property, value)
 
   def compare(self, prevision_movement, decision_movement):
     """

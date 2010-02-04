@@ -106,7 +106,7 @@ class VariationDivergenceTester(Predicate, DivergenceTesterMixin):
         value_list.append(movement.getRecordedProperty(tested_property))
       else:
         value_list.append(movement.getProperty(tested_property))
-    return '%s/%r' % (self.getPortalType(), value_list)
+    return 'variation/%r' % (value_list)
 
   def getUpdatablePropertyDict(self, prevision_movement, decision_movement):
     """

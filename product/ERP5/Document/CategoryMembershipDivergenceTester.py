@@ -97,7 +97,7 @@ class CategoryMembershipDivergenceTester(Predicate, DivergenceTesterMixin):
       value = movement.getRecordedProperty(tested_property)
     else:
       value = movement.getPropertyList(tested_property)
-    return '%s/%s/%r' % (self.getPortalType(), tested_property, value)
+    return '%s/%r' % (tested_property, value)
 
   def getUpdatablePropertyDict(self, prevision_movement, decision_movement):
     """
