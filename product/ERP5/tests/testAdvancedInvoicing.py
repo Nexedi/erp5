@@ -385,10 +385,6 @@ class TestAdvancedInvoice(TestSaleInvoiceMixin, ERP5TypeTestCase):
     if err_list:
       self.fail(''.join(err_list))
 
-  def test_Workflow(self):
-    """XXX: Make a test for auto_planned"""
-    pass
-
 
 class TestAdvancedSaleInvoice(TestAdvancedInvoice):
   quiet = 1
