@@ -818,17 +818,17 @@ class Base( CopyContainer,
     """
     initializeClassDynamicProperties(self, self.__class__)
 
-  security.declareProtected( Permissions.AccessContentsInformation, 'provides' )
-  def provides(self, interface_name):
+  security.declarePublic('provides')
+  def provides(cls, interface_name):
     """
     Check if the current class provides a particular interface
     """
-    result = False
-    for interface in implementedBy(self.__class__):
+    for interface in implementedBy(cls):
       if interface.getName() == interface_name:
-        result = True
-        break
-    return result
+        return True
+    return False
+  provides = classmethod(CachingMethod(provides, 'Base.provides',
+                                       cache_factory='erp5_ui_long'))
 
   def _aq_key(self):
     return (self.portal_type, self.__class__)

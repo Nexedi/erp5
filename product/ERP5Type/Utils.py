@@ -69,7 +69,6 @@ from Products.ERP5Type import Constraint
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as \
     PropertyConstantGetter
 from Products.ERP5Type.Accessor.Constant import Getter as ConstantGetter
-from Products.ERP5Type.Accessor.Interface import Getter as InterfaceGetter
 from Products.ERP5Type.Cache import getReadOnlyTransactionCache
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 from zLOG import LOG, BLATHER, PROBLEM, WARNING
@@ -594,16 +593,12 @@ def importLocalInterface(module_id, path = None, is_erp5_type=False):
       module = imp.load_source(class_id, path, f)
       import Products.ERP5Type.interfaces
       setattr(Products.ERP5Type.interfaces, class_id, getattr(module, class_id))
-
-    # Create interface getter
-    accessor_name = 'provides' + class_id
-    accessor = InterfaceGetter(accessor_name, class_id)
-    setattr(BaseClass, accessor_name, accessor)
-    BaseClass.security.declareProtected(
-                Permissions.AccessContentsInformation, accessor_name)
-
   finally:
     f.close()
+  # Create interface getter
+  accessor_name = 'provides' + class_id
+  setattr(BaseClass, accessor_name, lambda self: self.provides(class_id))
+  BaseClass.security.declarePublic(accessor_name)
 
 def importLocalConstraint(class_id, path = None):
   import Products.ERP5Type.Constraint
