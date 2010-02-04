@@ -484,9 +484,9 @@ class TestERP5Simulation(TestERP5SimulationMixin, ERP5TypeTestCase):
 
   def beforeTearDown(self):
     new_order_rule = self.portal.portal_rules['new_order_rule']
-    new_order_rule['quantity_tester'].edit(quantity=None,
-                                           quantity_range_max=2,
-                                           quantity_range_min=-1)
+    new_order_rule['quantity_tester'].edit(quantity=0,
+                                           quantity_range_max=None,
+                                           quantity_range_min=None)
     TestERP5SimulationMixin.beforeTearDown(self)
 
   def _modifyPackingListLineQuantity(self, sequence=None,
