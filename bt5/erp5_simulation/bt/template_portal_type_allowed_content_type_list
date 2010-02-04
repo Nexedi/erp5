@@ -35,7 +35,7 @@ Payment Rule | Net Converted Quantity Divergence Tester
 Payment Rule | String Divergence Tester
 Payment Rule | Variation Divergence Tester
 Solver Process | Accept Solver
-Solver Process | Adoption Solver
+Solver Process | Adopt Solver
 Solver Process | Production Reduction Solver
 Solver Process | Quantity Split Solver
 Solver Process | Solver Decision

@@ -49,7 +49,7 @@
  </portal_type>
  <portal_type id="Solver Process">
   <item>Accept Solver</item>
-  <item>Adoption Solver</item>
+  <item>Adopt Solver</item>
   <item>Production Reduction Solver</item>
   <item>Quantity Split Solver</item>
   <item>Solver Decision</item>
