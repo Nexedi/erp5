@@ -65,30 +65,32 @@ class AdoptSolver(SolverMixin, ConfigurableMixin, XMLObject):
     """
     Adopt new property to movements or deliveries.
     """
-    solved_property = self._getPortalTypeValue().getTestedProperty()
+    solved_property_list = self.getCausalityValue().getCausalityValue(). \
+                           getTestedPropertyList()
     for movement in self.getDeliveryValueList():
-      # XXX hardcoded
-      if solved_property == 'quantity':
-        total_quantity = sum(
-          [x.getQuantity() for x in movement.getDeliveryRelatedValueList()])
-        movement.setQuantity(total_quantity)
-        for simulation_movement in movement.getDeliveryRelatedValueList():
-          quantity = simulation_movement.getQuantity()
-          delivery_ratio = quantity / total_quantity
-          delivery_error = total_quantity * delivery_ratio - quantity
-          simulation_movement.edit(delivery_ratio=delivery_ratio,
-                                   delivery_error=delivery_error)
-          self._clearRecordedPropertyRecursively(simulation_movement,
-                                                 solved_property)
-      else:
-        # XXX TODO we need to support multiple values for categories or
-        # list type property.
-        simulation_movement = movement.getDeliveryRelatedValue()
-        movement.setProperty(solved_property,
-                             simulation_movement.getProperty(solved_property))
-        for simulation_movement in movement.getDeliveryRelatedValueList():
-          self._clearRecordedPropertyRecursively(simulation_movement,
-                                                 solved_property)
+      for solved_property in solved_property_list:
+        # XXX hardcoded
+        if solved_property == 'quantity':
+          total_quantity = sum(
+            [x.getQuantity() for x in movement.getDeliveryRelatedValueList()])
+          movement.setQuantity(total_quantity)
+          for simulation_movement in movement.getDeliveryRelatedValueList():
+            quantity = simulation_movement.getQuantity()
+            delivery_ratio = quantity / total_quantity
+            delivery_error = total_quantity * delivery_ratio - quantity
+            simulation_movement.edit(delivery_ratio=delivery_ratio,
+                                     delivery_error=delivery_error)
+            self._clearRecordedPropertyRecursively(simulation_movement,
+                                                   solved_property)
+        else:
+          # XXX TODO we need to support multiple values for categories or
+          # list type property.
+          simulation_movement = movement.getDeliveryRelatedValue()
+          movement.setProperty(solved_property,
+                               simulation_movement.getProperty(solved_property))
+          for simulation_movement in movement.getDeliveryRelatedValueList():
+            self._clearRecordedPropertyRecursively(simulation_movement,
+                                                   solved_property)
     # Finish solving
     self.succeed()
 

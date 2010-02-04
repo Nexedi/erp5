@@ -64,9 +64,9 @@ class AcceptSolver(SolverMixin, ConfigurableMixin, XMLObject):
     Adopt new property to simulation movements, with keeping the
     original one recorded.
     """
-    solved_property = self._getPortalTypeValue().getTestedProperty()
+    solved_property_list = self.getCausalityValue().getCausalityValue(). \
+                           getTestedPropertyList()
     for movement in self.getDeliveryValueList():
-      new_value = movement.getProperty(solved_property)
       simulation_movement_list = movement.getDeliveryRelatedValueList()
       # if movement here is a delivery, we need to find simulation
       # movements by its movements.
@@ -75,12 +75,15 @@ class AcceptSolver(SolverMixin, ConfigurableMixin, XMLObject):
           [x.getDeliveryRelatedValueList() \
            for x in self.getDeliveryValue().getMovementList()], [])
       for simulation_movement in simulation_movement_list:
-        # XXX hard coded
-        if solved_property == 'quantity':
-          new_quantity = new_value * simulation_movement.getDeliveryRatio()
-          value_dict = {'quantity':new_quantity}
-        else:
-          value_dict = {solved_property:new_value}
+        value_dict = {}
+        for solved_property in solved_property_list:
+          new_value = movement.getProperty(solved_property)
+          # XXX hard coded
+          if solved_property == 'quantity':
+            new_quantity = new_value * simulation_movement.getDeliveryRatio()
+            value_dict.update({'quantity':new_quantity})
+          else:
+            value_dict.update({solved_property:new_value})
         self._solveRecursively(simulation_movement, value_dict)
         simulation_movement.expand()
     # Finish solving
