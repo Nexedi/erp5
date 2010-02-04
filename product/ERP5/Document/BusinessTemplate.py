@@ -4871,21 +4871,12 @@ Business Template is a set of definitions, such as skins, portal types and categ
           revision_number = int(revision_number)+1
         self.setRevision(revision_number)
 
-    security.declareProtected(Permissions.ManagePortal, 'build')
-    def build(self, no_action=0):
+    security.declareProtected(Permissions.ManagePortal, 'storeTemplateItemData')
+    def storeTemplateItemData(self):
       """
-        Copy existing portal objects to self
+        Instanciate and Store Template items into properties.
       """
-      if no_action: return
-        # this is use at import of Business Template to get the status built
-      # Make sure that everything is sane.
-      self.clean()
-
-      self.updateRevisionNumber()
-
-      self._setTemplateFormatVersion(1)
-
-      # Store all data
+      # Store all Data
       self._portal_type_item = \
           PortalTypeTemplateItem(self.getTemplatePortalTypeIdList())
       self._portal_type_workflow_chain_item = \
@@ -4984,6 +4975,22 @@ Business Template is a set of definitions, such as skins, portal types and categ
       self._catalog_local_role_key_item = \
           CatalogLocalRoleKeyTemplateItem(
                self.getTemplateCatalogLocalRoleKeyList())
+
+    security.declareProtected(Permissions.ManagePortal, 'build')
+    def build(self, no_action=0):
+      """
+        Copy existing portal objects to self
+      """
+      if no_action: return
+        # this is use at import of Business Template to get the status built
+      # Make sure that everything is sane.
+      self.clean()
+
+      self.updateRevisionNumber()
+
+      self._setTemplateFormatVersion(1)
+
+      self.storeTemplateItemData()
 
       # Build each part
       for item_name in self._item_name_list:
@@ -5516,104 +5523,8 @@ Business Template is a set of definitions, such as skins, portal types and categ
         bta = BusinessTemplateFolder(importing=1, file=file, path=root_path)
       else:
         bta = BusinessTemplateTarball(importing=1, file=file)
-      self._portal_type_item = \
-          PortalTypeTemplateItem(self.getTemplatePortalTypeIdList())
-      self._portal_type_workflow_chain_item = \
-          PortalTypeWorkflowChainTemplateItem(self.getTemplatePortalTypeWorkflowChainList())
-      self._workflow_item = \
-          WorkflowTemplateItem(self.getTemplateWorkflowIdList())
-      self._skin_item = \
-          SkinTemplateItem(self.getTemplateSkinIdList())
-      self._registered_skin_selection_item = \
-          RegisteredSkinSelectionTemplateItem(
-              self.getTemplateRegisteredSkinSelectionList())
-      self._category_item = \
-          CategoryTemplateItem(self.getTemplateBaseCategoryList())
-      self._catalog_method_item = \
-          CatalogMethodTemplateItem(self.getTemplateCatalogMethodIdList())
-      self._action_item = \
-          ActionTemplateItem(self.getTemplateActionPathList())
-      self._portal_type_roles_item = \
-          PortalTypeRolesTemplateItem(self.getTemplatePortalTypeRoleList())
-      self._site_property_item = \
-          SitePropertyTemplateItem(self.getTemplateSitePropertyIdList())
-      self._module_item = \
-          ModuleTemplateItem(self.getTemplateModuleIdList())
-      self._document_item = \
-          DocumentTemplateItem(self.getTemplateDocumentIdList())
-      self._property_sheet_item = \
-          PropertySheetTemplateItem(self.getTemplatePropertySheetIdList())
-      self._constraint_item = \
-          ConstraintTemplateItem(self.getTemplateConstraintIdList())
-      self._extension_item = \
-          ExtensionTemplateItem(self.getTemplateExtensionIdList())
-      self._test_item = \
-          TestTemplateItem(self.getTemplateTestIdList())
-      self._product_item = \
-          ProductTemplateItem(self.getTemplateProductIdList())
-      self._role_item = \
-          RoleTemplateItem(self.getTemplateRoleList())
-      self._catalog_result_key_item = \
-          CatalogResultKeyTemplateItem(
-               self.getTemplateCatalogResultKeyList())
-      self._catalog_related_key_item = \
-          CatalogRelatedKeyTemplateItem(
-               self.getTemplateCatalogRelatedKeyList())
-      self._catalog_result_table_item = \
-          CatalogResultTableTemplateItem(
-               self.getTemplateCatalogResultTableList())
-      self._message_translation_item = \
-          MessageTranslationTemplateItem(
-               self.getTemplateMessageTranslationList())
-      self._path_item = \
-               PathTemplateItem(self.getTemplatePathList())
-      self._preference_item = \
-               PreferenceTemplateItem(self.getTemplatePreferenceList())
-      self._portal_type_allowed_content_type_item = \
-           PortalTypeAllowedContentTypeTemplateItem(
-               self.getTemplatePortalTypeAllowedContentTypeList())
-      self._portal_type_hidden_content_type_item = \
-           PortalTypeHiddenContentTypeTemplateItem(
-               self.getTemplatePortalTypeHiddenContentTypeList())
-      self._portal_type_property_sheet_item = \
-           PortalTypePropertySheetTemplateItem(
-               self.getTemplatePortalTypePropertySheetList())
-      self._portal_type_base_category_item = \
-           PortalTypeBaseCategoryTemplateItem(
-               self.getTemplatePortalTypeBaseCategoryList())
-      self._catalog_keyword_key_item = \
-          CatalogKeywordKeyTemplateItem(
-               self.getTemplateCatalogKeywordKeyList())
-      self._catalog_datetime_key_item = \
-          CatalogDateTimeKeyTemplateItem(
-               self.getTemplateCatalogDatetimeKeyList())
-      self._catalog_full_text_key_item = \
-          CatalogFullTextKeyTemplateItem(
-               self.getTemplateCatalogFullTextKeyList())
-      self._catalog_request_key_item = \
-          CatalogRequestKeyTemplateItem(
-               self.getTemplateCatalogRequestKeyList())
-      self._catalog_multivalue_key_item = \
-          CatalogMultivalueKeyTemplateItem(
-               self.getTemplateCatalogMultivalueKeyList())
-      self._catalog_topic_key_item = \
-          CatalogTopicKeyTemplateItem(
-               self.getTemplateCatalogTopicKeyList())
-      self._local_roles_item = \
-          LocalRolesTemplateItem(
-               self.getTemplateLocalRoleList())
-      self._tool_item = \
-          ToolTemplateItem(
-               self.getTemplateToolIdList())
-      self._catalog_scriptable_key_item = \
-          CatalogScriptableKeyTemplateItem(
-               self.getTemplateCatalogScriptableKeyList())
-      self._catalog_role_key_item = \
-          CatalogRoleKeyTemplateItem(
-               self.getTemplateCatalogRoleKeyList())
-      self._catalog_local_role_key_item = \
-          CatalogLocalRoleKeyTemplateItem(
-               self.getTemplateCatalogLocalRoleKeyList())
+
+      self.storeTemplateItemData()
 
       # Create temporary modules/classes for classes defined by this BT.
       # This is required if the BT contains instances of one of these classes.
