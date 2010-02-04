@@ -337,3 +337,13 @@ class LogInterceptor:
         for handler in root_logger.handlers:
             handler.removeFilter(self)
         self.installed = tuple([s for s in self.installed if s != subsystem])
+
+def to_utf8(text):
+  """ Converts string to utf-8 if string is unicode """
+  # BACK: The users of this function are probably reading the result of
+  # PageTemplate rendering, which is unicode in Zope 2.12, but string in Zope
+  # 2.8. When support for Zope 2.8 is dropped, rewrite the tests to assume
+  # the rendering is unicode and deal with it appropriately.
+  if isinstance(text, unicode):
+    text = text.encode('utf-8')
+  return text
