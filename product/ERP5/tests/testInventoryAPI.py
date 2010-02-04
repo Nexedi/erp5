@@ -127,6 +127,8 @@ class InventoryAPITestCase(ERP5TypeTestCase):
       rule_tool._setObject('default_order_rule',
                            OrderRule('default_order_rule'))
 
+    self.getInventory = self.getSimulationTool().getInventory
+
   def _safeTic(self):
     """Like tic, but swallowing errors, usefull for teardown"""
     try:
@@ -282,27 +284,28 @@ class InventoryAPITestCase(ERP5TypeTestCase):
 class TestInventory(InventoryAPITestCase):
   """Tests getInventory methods.
   """
+  def getInventoryEquals(self, value, **inventory_kw):
+    self.assertEquals(value, self.getInventory(**inventory_kw))
+
   def testReturnedTypeIsFloat(self):
     """getInventory returns a float"""
-    getInventory = self.getSimulationTool().getInventory
-    self.assertEquals(type(getInventory()), type(0.1))
+    inventory = self.getInventory()
+    self.assertEquals(type(inventory), type(0.1))
     # default is 0
-    self.assertEquals(0, getInventory())
+    self.assertEquals(0, inventory)
 
   def test_SimulationMovement(self):
     """Test Simulation Movements works in this testing environnement.
     """
-    getInventory = self.getSimulationTool().getInventory
     self._makeSimulationMovement(quantity=100)
-    self.assertEquals(100, getInventory(section_uid=self.section.getUid()))
+    self.getInventoryEquals(100, section_uid=self.section.getUid())
     # mixed with a real movement
     self._makeMovement(quantity=100)
-    self.assertEquals(200, getInventory(section_uid=self.section.getUid()))
+    self.getInventoryEquals(200, section_uid=self.section.getUid())
 
   def test_SimulationMovementisAccountable(self):
     """Test Simulation Movements are not accountable if related to a delivery.
     """
-    getInventory = self.getSimulationTool().getInventory
     sim_mvt = self._makeSimulationMovement(quantity=100)
     mvt = self._makeMovement(quantity=100)
     # simulation movement are accountable,
@@ -312,288 +315,233 @@ class TestInventory(InventoryAPITestCase):
     self.failIf(sim_mvt.isAccountable())
     # not accountable movement are not counted by getInventory
     transaction.commit(); self.tic() # (after reindexing of course)
-    self.assertEquals(100, getInventory(section_uid=self.section.getUid()))
+    self.getInventoryEquals(100, section_uid=self.section.getUid())
   
   def test_OmitSimulation(self):
     """Test omit_simulation argument to getInventory.
     """
-    getInventory = self.getSimulationTool().getInventory
     self._makeSimulationMovement(quantity=100)
     self._makeMovement(quantity=100)
-    self.assertEquals(100, getInventory(section_uid=self.section.getUid(),
-                                        omit_simulation=1))
+    self.getInventoryEquals(100, section_uid=self.section.getUid(),
+                                        omit_simulation=1)
 
   def test_SectionCategory(self):
     """Tests inventory on section category. """
-    getInventory = self.getSimulationTool().getInventory
     self.section.setGroup('level1/level2')
     self._makeMovement(quantity=100)
-    self.assertEquals(getInventory(
-                        section_category='group/level1'), 100)
-    self.assertEquals(getInventory(
-                        section_category='group/level1/level2'), 100)
-    self.assertEquals(getInventory(
-                        section_category='group/anotherlevel'), 0)
+    self.getInventoryEquals(100, section_category='group/level1')
+    self.getInventoryEquals(100, section_category='group/level1/level2')
+    self.getInventoryEquals(0, section_category='group/anotherlevel')
     
     # section category can be a list
-    self.assertEquals(getInventory(
-            section_category=['group/anotherlevel', 'group/level1']), 100)
+    self.getInventoryEquals(100,
+            section_category=['group/anotherlevel', 'group/level1'])
 
     # strict_section_category only takes movement where section is strict
     # member of the category.
-    self.assertEquals(getInventory(
-                section_category_strict_membership=['group/level1']), 0)
+    self.getInventoryEquals(0,
+                section_category_strict_membership=['group/level1'])
     self.section.setGroup('level1')
     transaction.commit()
     self.tic()
-    self.assertEquals(getInventory(
-                section_category_strict_membership=['group/level1']), 100)
+    self.getInventoryEquals(100,
+                section_category_strict_membership=['group/level1'])
     
     # non existing values to section_category are not silently ignored, but
     # raises an exception
     self.assertRaises(ValueError,
-                      getInventory,
+                      self.getInventory,
                       section_category='group/notexists')
 
   def test_MirrorSectionCategory(self):
     """Tests inventory on mirror section category. """
-    getInventory = self.getSimulationTool().getInventory
     self.mirror_section.setGroup('level1/level2')
     self._makeMovement(quantity=100)
-    self.assertEquals(getInventory(
-                        mirror_section_category='group/level1'), 100)
-    self.assertEquals(getInventory(
-                        mirror_section_category='group/level1/level2'), 100)
-    self.assertEquals(getInventory(
-                        mirror_section_category='group/anotherlevel'), 0)
-    
+    self.getInventoryEquals(100, mirror_section_category='group/level1')
+    self.getInventoryEquals(100, mirror_section_category='group/level1/level2')
+    self.getInventoryEquals(0, mirror_section_category='group/anotherlevel')
+
     # section category can be a list
-    self.assertEquals(getInventory(
-            mirror_section_category=['group/anotherlevel',
-                                     'group/level1']), 100)
+    self.getInventoryEquals(100,
+              mirror_section_category=['group/anotherlevel', 'group/level1'])
 
     # strict_section_category only takes movement where section is strict
     # member of the category.
-    self.assertEquals(getInventory(
-              mirror_section_category_strict_membership=['group/level1']), 0)
+    self.getInventoryEquals(0,
+              mirror_section_category_strict_membership=['group/level1'])
     self.mirror_section.setGroup('level1')
     transaction.commit()
     self.tic()
-    self.assertEquals(getInventory(
-            mirror_section_category_strict_membership=['group/level1']), 100)
+    self.getInventoryEquals(100,
+              mirror_section_category_strict_membership=['group/level1'])
     
     # non existing values to section_category are not silently ignored, but
     # raises an exception
     self.assertRaises(ValueError,
-                      getInventory,
+                      self.getInventory,
                       mirror_section_category='group/notexists')
 
   def test_NodeCategory(self):
     """Tests inventory on node_category """
-    getInventory = self.getSimulationTool().getInventory
     self.node.setGroup('level1/level2')
-    self._makeMovement(quantity=100,
-                       source_value=None)
-    self.assertEquals(getInventory(
-                        node_category='group/level1'), 100)
-    self.assertEquals(getInventory(
-                        node_category='group/level1/level2'), 100)
-    self.assertEquals(getInventory(
-                node_category_strict_membership=['group/level1']), 0)
+    self._makeMovement(quantity=100, source_value=None)
+
+    self.getInventoryEquals(100, node_category='group/level1')
+    self.getInventoryEquals(100, node_category='group/level1/level2')
+    self.getInventoryEquals(0, node_category_strict_membership=['group/level1'])
     self.node.setGroup('level1')
     transaction.commit()
     self.tic()
-    self.assertEquals(getInventory(
-                node_category_strict_membership=['group/level1']), 100)
+    self.getInventoryEquals(100,
+                            node_category_strict_membership=['group/level1'])
   
   def test_Function(self):
     """Tests inventory on function"""
-    getInventory = self.getSimulationTool().getInventory
-    self._makeMovement(quantity=100,
-                       destination_function='function/function1')
-    self.assertEquals(getInventory(
-                        function='function/function1'), 100)
-    self.assertEquals(getInventory(
-                        function='function/function1/function2'), 0)
+    self._makeMovement(quantity=100, destination_function='function/function1')
+
+    self.getInventoryEquals(100, function='function/function1')
+    self.getInventoryEquals(0, function='function/function1/function2')
 
   def test_FunctionUid(self):
     """Tests inventory on function uid"""
-    getInventory = self.getSimulationTool().getInventory
     function = self.portal.portal_categories.function
-    self._makeMovement(quantity=100,
-                       destination_function='function/function1')
-    self.assertEquals(getInventory(
-                        function_uid=function.function1.getUid()), 100)
-    self.assertEquals(getInventory(
-                        function_uid=function.function1.function2.getUid()), 0)
+    self._makeMovement(quantity=100, destination_function='function/function1')
+
+    self.getInventoryEquals(100, function_uid=function.function1.getUid())
+    self.getInventoryEquals(0,
+                            function_uid=function.function1.function2.getUid())
 
   def test_FunctionCategory(self):
     """Tests inventory on function category"""
-    getInventory = self.getSimulationTool().getInventory
-    function = self.portal.portal_categories.function
     self._makeMovement(quantity=100,
                        destination_function='function/function1/function2')
-    self.assertEquals(getInventory(
-                        function_category='function/function1'), 100)
-    self.assertEquals(getInventory(
-                        function='function/function1/function2'), 100)
+    self.getInventoryEquals(100, function_category='function/function1')
+    self.getInventoryEquals(100, function='function/function1/function2')
 
   def test_FunctionCategoryStrictMembership(self):
     """Tests inventory on function category strict membership"""
-    getInventory = self.getSimulationTool().getInventory
-    function = self.portal.portal_categories.function
     self._makeMovement(quantity=100,
                        destination_function='function/function1/function2')
-    self.assertEquals(getInventory(
-            function_category_strict_membership='function/function1'), 0)
-    self.assertEquals(getInventory(
-            function_category_strict_membership='function/function1/function2'), 100)
+    self.getInventoryEquals(0,
+            function_category_strict_membership='function/function1')
+    self.getInventoryEquals(100,
+            function_category_strict_membership='function/function1/function2')
   
   def test_Project(self):
     """Tests inventory on project"""
-    getInventory = self.getSimulationTool().getInventory
-    self._makeMovement(quantity=100,
-                       destination_project_value=self.project)
-    self._makeMovement(quantity=100,
-                       source_project_value=self.other_project)
-    self.assertEquals(getInventory(
-                        project=self.project.getRelativeUrl()), 100)
-    self.assertEquals(getInventory(
-                        project=self.other_project.getRelativeUrl()), -100)
+    self._makeMovement(quantity=100, destination_project_value=self.project)
+    self._makeMovement(quantity=100, source_project_value=self.other_project)
+
+    self.getInventoryEquals(100, project=self.project.getRelativeUrl())
+    self.getInventoryEquals(-100, project=self.other_project.getRelativeUrl())
 
   def test_ProjectUid(self):
     """Tests inventory on project uid"""
-    getInventory = self.getSimulationTool().getInventory
-    self._makeMovement(quantity=100,
-                       destination_project_value=self.project)
-    self._makeMovement(quantity=100,
-                       source_project_value=self.other_project)
-    self.assertEquals(getInventory(
-                        project_uid=self.project.getUid()), 100)
-    self.assertEquals(getInventory(
-                        project_uid=self.other_project.getUid()), -100)
+    self._makeMovement(quantity=100, destination_project_value=self.project)
+    self._makeMovement(quantity=100, source_project_value=self.other_project)
+
+    self.getInventoryEquals(100, project_uid=self.project.getUid())
+    self.getInventoryEquals(-100, project_uid=self.other_project.getUid())
 
   def test_ProjectCategory(self):
     """Tests inventory on project category"""
     # this test uses unrealistic data
-    getInventory = self.getSimulationTool().getInventory
     self.project.setGroup('level1/level2')
-    self._makeMovement(quantity=100,
-                       destination_project_value=self.project)
-    self.assertEquals(getInventory(
-                        project_category='group/level1'), 100)
-    self.assertEquals(getInventory(
-                        project_category='group/level1/level2'), 100)
+    self._makeMovement(quantity=100, destination_project_value=self.project)
+
+    self.getInventoryEquals(100, project_category='group/level1')
+    self.getInventoryEquals(100, project_category='group/level1/level2')
 
   def test_ProjectCategoryStrictMembership(self):
     """Tests inventory on project category strict membership"""
     # this test uses unrealistic data
-    getInventory = self.getSimulationTool().getInventory
     self.project.setGroup('level1/level2')
-    self._makeMovement(quantity=100,
-                       destination_project_value=self.project)
-    self.assertEquals(getInventory(
-                project_category_strict_membership='group/level1'), 0)
-    self.assertEquals(getInventory(
-                project_category_strict_membership='group/level1/level2'), 100)
+    self._makeMovement(quantity=100, destination_project_value=self.project)
+
+    self.getInventoryEquals(0,
+                    project_category_strict_membership='group/level1')
+    self.getInventoryEquals(100,
+                    project_category_strict_membership='group/level1/level2')
 
 
   def test_ResourceCategory(self):
     """Tests inventory on resource_category """
-    getInventory = self.getSimulationTool().getInventory
     self.resource.setProductLine('level1/level2')
-    self._makeMovement(quantity=100,
-                       source_value=None)
-    self.assertEquals(getInventory(
-                        resource_category='product_line/level1'), 100)
-    self.assertEquals(getInventory(
-                        resource_category='product_line/level1/level2'), 100)
-    self.assertEquals(getInventory(
-                resource_category_strict_membership=['product_line/level1']), 0)
+    self._makeMovement(quantity=100, source_value=None)
+
+    self.getInventoryEquals(100, resource_category='product_line/level1')
+    self.getInventoryEquals(100, resource_category='product_line/level1/level2')
+    self.getInventoryEquals(0,
+                resource_category_strict_membership=['product_line/level1'])
     self.resource.setProductLine('level1')
     transaction.commit()
     self.tic()
-    self.assertEquals(getInventory(
-            resource_category_strict_membership=['product_line/level1']), 100)
+    self.getInventoryEquals(100,
+                resource_category_strict_membership=['product_line/level1'])
 
   def test_PaymentCategory(self):
     """Tests inventory on payment_category """
-    getInventory = self.getSimulationTool().getInventory
     # for now, BankAccount have a product_line category, so we can use this for
     # our category membership tests.
     self.payment_node.setProductLine('level1/level2')
     self._makeMovement(quantity=100,
                        destination_payment_value=self.payment_node,
                        source_value=None)
-    self.assertEquals(getInventory(
-                        payment_category='product_line/level1'), 100)
-    self.assertEquals(getInventory(
-                        payment_category='product_line/level1/level2'), 100)
-    self.assertEquals(getInventory(
-                payment_category_strict_membership=['product_line/level1']), 0)
+
+    self.getInventoryEquals(100, payment_category='product_line/level1')
+    self.getInventoryEquals(100, payment_category='product_line/level1/level2')
+    self.getInventoryEquals(0,
+                payment_category_strict_membership=['product_line/level1'])
     self.payment_node.setProductLine('level1')
     transaction.commit()
     self.tic()
-    self.assertEquals(getInventory(
-              payment_category_strict_membership=['product_line/level1']), 100)
+    self.getInventoryEquals(100,
+              payment_category_strict_membership=['product_line/level1'])
 
   def test_OwnershipInventoryByNode(self):
     """Tests ownership inventory by node. """
-    getInventory = self.getSimulationTool().getInventory
-    self.assertEquals(getInventory(
-                        node_uid=self.node.getUid()), 0)
-    self.assertEquals(getInventory(
-                        node_uid=self.other_node.getUid()), 0)
+    self.getInventoryEquals(0, node_uid=self.node.getUid())
+    self.getInventoryEquals(0, node_uid=self.other_node.getUid())
     # transfer quantity=100 from node to other_node.
     self._makeMovement(quantity=100,
                        source_value=self.node,
                        destination_value=self.other_node)
     transaction.commit()
     self.tic()
-    self.assertEquals(getInventory(
-                        node_uid=self.node.getUid()), -100)
-    self.assertEquals(getInventory(
-                        node_uid=self.other_node.getUid()), 100)
-    self.assertEquals(getInventory(
-                        mirror_node_uid=self.node.getUid()), 100)
-    self.assertEquals(getInventory(
-                        mirror_node_uid=self.other_node.getUid()), -100)
+
+    self.getInventoryEquals(-100, node_uid=self.node.getUid())
+    self.getInventoryEquals(100, node_uid=self.other_node.getUid())
+    self.getInventoryEquals(100, mirror_node_uid=self.node.getUid())
+    self.getInventoryEquals(-100, mirror_node_uid=self.other_node.getUid())
 
   def test_OwnershipInventoryBySection(self):
     """Tests ownership inventory by section. """
-    getInventory = self.getSimulationTool().getInventory
-    self.assertEquals(getInventory(
-                        section_uid=self.section.getUid()), 0)
-    self.assertEquals(getInventory(
-                        section_uid=self.other_section.getUid()), 0)
+    self.getInventoryEquals(0, section_uid=self.section.getUid())
+    self.getInventoryEquals(0, section_uid=self.other_section.getUid())
     # transfer quantity=100 from section to other_section.
     self._makeMovement(quantity=100,
                        source_section_value=self.section,
                        destination_section_value=self.other_section)
     transaction.commit()
     self.tic()
-    self.assertEquals(getInventory(
-                        section_uid=self.section.getUid()), -100)
-    self.assertEquals(getInventory(
-                        section_uid=self.other_section.getUid()), 100)
-    self.assertEquals(getInventory(
-                        mirror_section_uid=self.section.getUid()), 100)
-    self.assertEquals(getInventory(
-                        mirror_section_uid=self.other_section.getUid()), -100)
+
+    self.getInventoryEquals(-100, section_uid=self.section.getUid())
+    self.getInventoryEquals(100, section_uid=self.other_section.getUid())
+    self.getInventoryEquals(100, mirror_section_uid=self.section.getUid())
+    self.getInventoryEquals(-100,
+                            mirror_section_uid=self.other_section.getUid())
 
   def test_SimulationState(self):
     """Tests inventory on simulation state. """
-    getInventory = self.getSimulationTool().getInventory
     self.payment_node.setProductLine('level1/level2')
     self._makeMovement(quantity=100,
                        simulation_state='confirmed',
                        source_value=None)
-    self.assertEquals(getInventory(), 100)
-    self.assertEquals(getInventory(simulation_state='confirmed'), 100)
-    self.assertEquals(getInventory(simulation_state='planned'), 0)
 
-    self.assertEquals(getInventory(simulation_state=['planned',
-                                                     'confirmed']), 100)
+    self.getInventoryEquals(100)
+    self.getInventoryEquals(100, simulation_state='confirmed')
+    self.getInventoryEquals(0, simulation_state='planned')
+    self.getInventoryEquals(100, simulation_state=['planned', 'confirmed'])
 
   def test_MultipleNodes(self):
     """Test section category with many nodes. """
@@ -612,157 +560,141 @@ class TestInventory(InventoryAPITestCase):
       # and record for later
       quantity_for_node[node] = quantity
 
-    getInventory = self.getSimulationTool().getInventory
     for category in test_group.getCategoryChildValueList():
       node_list = category.getGroupRelatedValueList(portal_type='Organisation')
       self.assertNotEquals(len(node_list), 0)
 
       # getInventory on node uid for all member of a category ...
       total_quantity = sum([quantity_for_node[node] for node in node_list])
-      self.assertEquals(getInventory(
-        node_uid=[node.getUid() for node in node_list]), total_quantity)
+      self.getInventoryEquals(total_quantity,
+                              node_uid=[node.getUid() for node in node_list])
       # ... is equivalent to node_category
-      self.assertEquals(getInventory(
-        node_category=category.getRelativeUrl()), total_quantity)
+      self.getInventoryEquals(total_quantity,
+                              node_category=category.getRelativeUrl())
   
   # FIXME: this test is currently broken
   def TODO_test_DoubleSectionCategory(self):
     """Tests inventory on section category, when the section is twice member\
     of the same category like it happens for group and mapping"""
-    getInventory = self.getSimulationTool().getInventory
     self.section.setGroup('level1/level2')
     self.section.setMapping('group/level1/level2')
     self._makeMovement(quantity=100)
     # We are twice member of the section_category, but the quantity should not
     # change.
-    self.assertEquals(getInventory(
-                        section_category='group/level1'), 100)
-    self.assertEquals(getInventory(
-                        section_category='group/level1/level2'), 100)
-    self.assertEquals(getInventory(
-            section_category_strict_membership=['group/level1/level2']), 100)
+    self.getInventoryEquals(100, section_category='group/level1')
+    self.getInventoryEquals(100, section_category='group/level1/level2')
+    self.getInventoryEquals(100,
+            section_category_strict_membership=['group/level1/level2'])
 
   def test_NoSection(self):
     """Tests inventory on section category / section uid, when the section is\
     empty."""
-    getInventory = self.getSimulationTool().getInventory
     self.section.setGroup('level1/level2')
     self._makeMovement(quantity=100, source_section_value=None)
-    self.assertEquals(getInventory(
-                        section_category='group/level1/level2'), 100)
-    self.assertEquals(getInventory(
-            section_category_strict_membership=['group/level1/level2']), 100)
-    self.assertEquals(getInventory(
-                        section_uid=self.section.getUid()), 100)
+    self.getInventoryEquals(100, section_category='group/level1/level2')
+    self.getInventoryEquals(100,
+            section_category_strict_membership=['group/level1/level2'])
+    self.getInventoryEquals(100, section_uid=self.section.getUid())
   
   def testPrecision(self):
     # getInventory supports a precision= argument to specify the precision to
     # round
-    getInventory = self.getSimulationTool().getInventory
     getInventoryAssetPrice = self.getSimulationTool().getInventoryAssetPrice
-    self._makeMovement( quantity=0.1234, price=1 )
+    self._makeMovement(quantity=0.1234, price=1)
+
     self.assertAlmostEquals(0.123,
-                getInventory(precision=3, node_uid=self.node.getUid()),
-                places=3)
+                            self.getInventory(precision=3,
+                                              node_uid=self.node.getUid()),
+                            places=3)
     self.assertAlmostEquals(0.123,
-             getInventoryAssetPrice(precision=3, node_uid=self.node.getUid()),
-             places=3)
+                            getInventoryAssetPrice(precision=3,
+                                                   node_uid=self.node.getUid()),
+                            places=3)
   
   def testPrecisionAndFloatRoundingIssues(self):
     # sum([0.1] * 10) != 1.0 but this is not a problem here
-    getInventory = self.getSimulationTool().getInventory
     getInventoryAssetPrice = self.getSimulationTool().getInventoryAssetPrice
     self._makeMovement( quantity=1, price=1 )
     for i in range(10):
       self._makeMovement( quantity=-0.1, price=1 )
-    self.assertEquals(0, getInventory(precision=2, node_uid=self.node.getUid()))
+    self.getInventoryEquals(0, precision=2, node_uid=self.node.getUid())
     self.assertEquals(0, getInventoryAssetPrice(precision=2,
                                                 node_uid=self.node.getUid()))
     
   def test_OmitInputOmitOutput(self):
-    getInventory = self.getSimulationTool().getInventory
     self._makeMovement(quantity=1, price=1)
     self._makeMovement(quantity=-1, price=1)
     # omit input ignores movement comming to this node
-    self.assertEquals(-1, getInventory(node_uid=self.node.getUid(),
-                                       omit_input=1))
+    self.getInventoryEquals(-1, node_uid=self.node.getUid(), omit_input=1)
     # omit output ignores movement going to this node
-    self.assertEquals(1, getInventory(node_uid=self.node.getUid(),
-                                      omit_output=1))
+    self.getInventoryEquals(1, node_uid=self.node.getUid(), omit_output=1)
     # omit_output & omit_input return nothing in that case
-    self.assertEquals(0, getInventory(node_uid=self.node.getUid(),
-                                      omit_input=1,
-                                      omit_output=1))
+    self.getInventoryEquals(0, node_uid=self.node.getUid(),
+                            omit_input=1, omit_output=1)
     # this also work with movements without source or without destination
     self._makeMovement(quantity=-2, price=1, source_value=None)
-    self.assertEquals(-3, getInventory(node_uid=self.node.getUid(),
-                                       omit_input=1))
-    self.assertEquals(1, getInventory(node_uid=self.node.getUid(),
-                                      omit_output=1))
+    self.getInventoryEquals(-3, node_uid=self.node.getUid(), omit_input=1)
+    self.getInventoryEquals(1, node_uid=self.node.getUid(), omit_output=1)
     # and with movements without source section / desination sections
     self._makeMovement(quantity=2, price=1, source_section_value=None)
-    self.assertEquals(-3, getInventory(node_uid=self.node.getUid(),
-                                       omit_input=1))
-    self.assertEquals(3, getInventory(node_uid=self.node.getUid(),
-                                      omit_output=1))
+    self.getInventoryEquals(-3, node_uid=self.node.getUid(), omit_input=1)
+    self.getInventoryEquals(3, node_uid=self.node.getUid(), omit_output=1)
     
   def test_OmitInputOmitOutputWithDifferentSections(self):
-    getInventory = self.getSimulationTool().getInventory
     self._makeMovement(quantity=2, price=1)
     self._makeMovement(quantity=-3, price=1,
                        destination_section_value=self.other_section )
-    self.assertEquals(0, getInventory(node_uid=self.node.getUid(),
-                                      section_uid=self.section.getUid(),
-                                      omit_input=1))
-    self.assertEquals(-3, getInventory(node_uid=self.node.getUid(),
-                                      section_uid=self.other_section.getUid(),
-                                      omit_input=1))
-    self.assertEquals(2, getInventory(node_uid=self.node.getUid(),
-                                      section_uid=self.section.getUid(),
-                                      omit_output=1))
-    self.assertEquals(0, getInventory(node_uid=self.node.getUid(),
-                                      section_uid=self.other_section.getUid(),
-                                      omit_output=1))
+    self.getInventoryEquals(0, node_uid=self.node.getUid(),
+                            section_uid=self.section.getUid(),
+                            omit_input=1)
+    self.getInventoryEquals(-3, node_uid=self.node.getUid(),
+                            section_uid=self.other_section.getUid(),
+                            omit_input=1)
+    self.getInventoryEquals(2, node_uid=self.node.getUid(),
+                            section_uid=self.section.getUid(),
+                            omit_output=1)
+    self.getInventoryEquals(0, node_uid=self.node.getUid(),
+                            section_uid=self.other_section.getUid(),
+                            omit_output=1)
     
   def test_OmitInputOmitOutputWithDifferentPayment(self):
-    getInventory = self.getSimulationTool().getInventory
     # simple case
     self._makeMovement(quantity=2, price=1,
                        destination_payment_value=self.payment_node )
     self._makeMovement(quantity=-3, price=1,
                        destination_payment_value=self.other_payment_node )
-    self.assertEquals(0, getInventory(node_uid=self.node.getUid(),
-                                      section_uid=self.section.getUid(),
-                                      payment_uid=self.payment_node.getUid(),
-                                      omit_input=1))
-    self.assertEquals(-3, getInventory(node_uid=self.node.getUid(),
-                                  section_uid=self.section.getUid(),
-                                  payment_uid=self.other_payment_node.getUid(),
-                                  omit_input=1))
-    self.assertEquals(2, getInventory(node_uid=self.node.getUid(),
-                                  section_uid=self.section.getUid(),
-                                  payment_uid=self.payment_node.getUid(),
-                                  omit_output=1))
-    self.assertEquals(0, getInventory(node_uid=self.node.getUid(),
-                                  section_uid=self.other_section.getUid(),
-                                  payment_uid=self.other_payment_node.getUid(),
-                                  omit_output=1))
+    self.getInventoryEquals(0,
+                            node_uid=self.node.getUid(),
+                            section_uid=self.section.getUid(),
+                            payment_uid=self.payment_node.getUid(),
+                            omit_input=1)
+    self.getInventoryEquals(-3,
+                            node_uid=self.node.getUid(),
+                            section_uid=self.section.getUid(),
+                            payment_uid=self.other_payment_node.getUid(),
+                            omit_input=1)
+    self.getInventoryEquals(2,
+                            node_uid=self.node.getUid(),
+                            section_uid=self.section.getUid(),
+                            payment_uid=self.payment_node.getUid(),
+                            omit_output=1)
+    self.getInventoryEquals(0,
+                            node_uid=self.node.getUid(),
+                            section_uid=self.other_section.getUid(),
+                            payment_uid=self.other_payment_node.getUid(),
+                            omit_output=1)
 
   def test_OmitInputOmitOutputCancellationAmount(self):
-    getInventory = self.getSimulationTool().getInventory
     self._makeMovement(quantity=-1, price=1, cancellation_amount=True)
     self._makeMovement(quantity=2, price=1, cancellation_amount=True)
-    self.assertEquals(2, getInventory(node_uid=self.node.getUid(),
-                                       omit_input=1))
-    self.assertEquals(-1, getInventory(node_uid=self.node.getUid(),
-                                      omit_output=1))
+
+    self.getInventoryEquals(2, node_uid=self.node.getUid(), omit_input=1)
+    self.getInventoryEquals(-1, node_uid=self.node.getUid(), omit_output=1)
     # omit_output & omit_input return nothing in that case
-    self.assertEquals(0, getInventory(node_uid=self.node.getUid(),
-                                      omit_input=1,
-                                      omit_output=1))
+    self.getInventoryEquals(0, node_uid=self.node.getUid(),
+                            omit_input=1, omit_output=1)
     
   def test_OmitInputOmitOutputWithDifferentPaymentSameNodeSameSection(self):
-    getInventory = self.getSimulationTool().getInventory
     self._makeMovement(quantity=2, price=1,
                        source_value=self.node,
                        destination_value=self.node,
@@ -770,33 +702,34 @@ class TestInventory(InventoryAPITestCase):
                        destination_section_value=self.section,
                        source_payment_value=self.other_payment_node,
                        destination_payment_value=self.payment_node )
-    self.assertEquals(2, getInventory(node_uid=self.node.getUid(),
-                                       section_uid=self.section.getUid(),
-                                       payment_uid=self.payment_node.getUid(),
-                                       omit_output=1))
-    self.assertEquals(-2, getInventory(node_uid=self.node.getUid(),
-                           section_uid=self.section.getUid(),
-                           payment_uid=self.other_payment_node.getUid(),
-                           omit_input=1))
+    self.getInventoryEquals(2,
+                            node_uid=self.node.getUid(),
+                            section_uid=self.section.getUid(),
+                            payment_uid=self.payment_node.getUid(),
+                            omit_output=1)
+    self.getInventoryEquals(-2,
+                            node_uid=self.node.getUid(),
+                            section_uid=self.section.getUid(),
+                            payment_uid=self.other_payment_node.getUid(),
+                            omit_input=1)
 
   def test_TimeZone(self):
     """
     Check that getInventory support DateTime parameter with 
     timezone
     """
-    getInventory = self.getSimulationTool().getInventory
     date_gmt_1 = DateTime('2005/12/01 GMT+9')
     date_gmt0 = DateTime('2005/12/01 GMT+10')
     date_gmt1 = DateTime('2005/12/01 GMT+11')
     self._makeMovement(quantity=1, start_date=date_gmt0)
-    self.assertEquals(0, getInventory(
-                           node_uid=self.node.getUid(),
-                           resource=self.resource.getRelativeUrl(),
-                           at_date=date_gmt1))
-    self.assertEquals(1, getInventory(
-                           node_uid=self.node.getUid(),
-                           resource=self.resource.getRelativeUrl(),
-                           at_date=date_gmt_1))
+    self.getInventoryEquals(0,
+                            node_uid=self.node.getUid(),
+                            resource=self.resource.getRelativeUrl(),
+                            at_date=date_gmt1)
+    self.getInventoryEquals(1,
+                            node_uid=self.node.getUid(),
+                            resource=self.resource.getRelativeUrl(),
+                            at_date=date_gmt_1)
 
 class TestInventoryList(InventoryAPITestCase):
   """Tests getInventoryList methods.
