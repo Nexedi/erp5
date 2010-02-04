@@ -16,5 +16,3 @@ portal_rules/new_payment_rule
 portal_rules/new_payment_rule/**
 portal_rules/new_trade_model_rule
 portal_rules/new_trade_model_rule/**
-portal_solvers/1
-portal_solvers/1/**
