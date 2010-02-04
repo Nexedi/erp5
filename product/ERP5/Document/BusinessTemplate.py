@@ -5534,7 +5534,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       self._action_item = \
           ActionTemplateItem(self.getTemplateActionPathList())
       self._portal_type_roles_item = \
-          PortalTypeRolesTemplateItem(self.getTemplatePortalTypeRolesList())
+          PortalTypeRolesTemplateItem(self.getTemplatePortalTypeRoleList())
       self._site_property_item = \
           SitePropertyTemplateItem(self.getTemplateSitePropertyIdList())
       self._module_item = \
