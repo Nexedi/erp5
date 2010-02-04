@@ -176,6 +176,7 @@ class TestResource(ERP5TypeTestCase):
       weight_group = unit_conversion_module.newContent(id='weight',
                                   portal_type='Quantity Unit Conversion Group',
                                   quantity_unit='weight/kilo')
+      weight_group.validate()
 
     gram_definition = weight_group._getOb('gram', None)
     if gram_definition is None:
@@ -183,6 +184,7 @@ class TestResource(ERP5TypeTestCase):
                               portal_type='Quantity Unit Conversion Definition',
                               quantity_unit='weight/gram',
                               quantity=0.001)
+      gram_definition.validate()
 
 
   def stepCreateResource(self, sequence=None, sequence_list=None, **kw):
