@@ -487,6 +487,7 @@ class TestERP5Simulation(TestERP5SimulationMixin, ERP5TypeTestCase):
     new_order_rule['quantity_tester'].edit(quantity=0,
                                            quantity_range_max=None,
                                            quantity_range_min=None)
+    transaction.commit()
     TestERP5SimulationMixin.beforeTearDown(self)
 
   def _modifyPackingListLineQuantity(self, sequence=None,
