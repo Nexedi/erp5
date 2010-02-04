@@ -1144,8 +1144,11 @@ class TestWorkflow(SecurityTestCase):
   def test_autoplanned(self):
     sale_invoice = self.portal.getDefaultModule('Sale Invoice').newContent(portal_type='Sale Invoice')
     self.assertEquals(sale_invoice.getSimulationState(), 'draft')
-    self.portal.portal_workflow.doActionFor(sale_invoice, 'auto_plan')
+    self.tic()
+
+    sale_invoice.autoPlan()
     self.assertEquals(sale_invoice.getSimulationState(), 'auto_planned')
+    self.tic()
 
     # other as anonymous
     self.failIfUserCanAccessDocument(self.other.getId(), sale_invoice)
