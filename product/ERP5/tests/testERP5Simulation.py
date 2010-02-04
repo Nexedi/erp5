@@ -133,7 +133,7 @@ class TestERP5SimulationMixin(TestInvoiceMixin):
       lambda x:x.getCausalityValue().getTestedProperty()=='quantity',
       solver_process.contentValues())[0]
     # use Quantity Accept Solver.
-    quantity_solver_decision.setSolverValue(self.portal.portal_types['Quantity Accept Solver'])
+    quantity_solver_decision.setSolverValue(self.portal.portal_types['Accept Solver'])
     solver_process.buildTargetSolverList()
     solver_process.solve()
 
@@ -167,7 +167,7 @@ class TestERP5SimulationMixin(TestInvoiceMixin):
       lambda x:x.getCausalityValue().getTestedProperty()=='resource',
       solver_process.contentValues())[0]
     # use Resource Replacement Solver.
-    resource_solver_decision.setSolverValue(self.portal.portal_types['Resource Replacement Solver'])
+    resource_solver_decision.setSolverValue(self.portal.portal_types['Accept Solver'])
     solver_process.buildTargetSolverList()
     solver_process.solve()
 
@@ -215,7 +215,7 @@ class TestERP5SimulationMixin(TestInvoiceMixin):
       lambda x:x.getCausalityValue().getTestedProperty()=='quantity',
       solver_process.contentValues())[0]
     # use Quantity Adoption Solver.
-    quantity_solver_decision.setSolverValue(self.portal.portal_types['Quantity Adoption Solver'])
+    quantity_solver_decision.setSolverValue(self.portal.portal_types['Adopt Solver'])
     solver_process.buildTargetSolverList()
     solver_process.solve()
 
@@ -253,7 +253,7 @@ class TestERP5SimulationMixin(TestInvoiceMixin):
       lambda x:x.getCausalityValue().getTestedProperty()=='resource',
       solver_process.contentValues())[0]
     # use Resource Adopt Solver.
-    resource_solver_decision.setSolverValue(self.portal.portal_types['Resource Adoption Solver'])
+    resource_solver_decision.setSolverValue(self.portal.portal_types['Adopt Solver'])
     solver_process.buildTargetSolverList()
     solver_process.solve()
 
@@ -282,7 +282,7 @@ class TestERP5SimulationMixin(TestInvoiceMixin):
       lambda x:x.getCausalityValue().getTestedProperty()=='destination',
       solver_process.contentValues()):
       # use Destination Replacement Solver.
-      destination_solver_decision.setSolverValue(self.portal.portal_types['Destination Replacement Solver'])
+      destination_solver_decision.setSolverValue(self.portal.portal_types['Accept Solver'])
     solver_process.buildTargetSolverList()
     solver_process.solve()
 
@@ -293,7 +293,7 @@ class TestERP5SimulationMixin(TestInvoiceMixin):
       lambda x:x.getCausalityValue().getTestedProperty()=='start_date',
       solver_process.contentValues()):
       # use StartDate Replacement Solver.
-      start_date_solver_decision.setSolverValue(self.portal.portal_types['Start Date Replacement Solver'])
+      start_date_solver_decision.setSolverValue(self.portal.portal_types['Unify Solver'])
       # configure for Quantity Split Solver.
       kw = {'value':document.getStartDate()}
       start_date_solver_decision.updateConfiguration(**kw)
@@ -322,7 +322,7 @@ class TestERP5SimulationMixin(TestInvoiceMixin):
       lambda x:x.getCausalityValue().getTestedProperty()=='start_date',
       solver_process.contentValues()):
       # use StartDate Replacement Solver.
-      start_date_solver_decision.setSolverValue(self.portal.portal_types['Start Date Replacement Solver'])
+      start_date_solver_decision.setSolverValue(self.portal.portal_types['Unify Solver'])
       # configure for Quantity Split Solver.
       kw = {'value':start_date}
       start_date_solver_decision.updateConfiguration(**kw)
