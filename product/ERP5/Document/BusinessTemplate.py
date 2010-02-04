@@ -5669,7 +5669,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       # Get objects
       item_name = class_name_dict[object_class]
 
-      new_bt =self
+      new_bt = self
       # Compare with a given business template
       compare_to_zodb = 0
       bt2_id = kw.get('compare_with', None)
@@ -5684,7 +5684,8 @@ Business Template is a set of definitions, such as skins, portal types and categ
         if installed_bt == new_bt:
           compare_to_zodb = 1
       if compare_to_zodb:
-        bt2 = self.portal_templates.manage_clone(ob=installed_bt, id=INSTALLED_BT_FOR_DIFF)
+        bt2 = self.portal_templates.manage_clone(ob=installed_bt, 
+                                                 id=INSTALLED_BT_FOR_DIFF)
         # Update portal types properties to get last modifications
         bt2.getPortalTypesProperties()
         bt2.edit(description='tmp bt generated for diff')
@@ -5707,8 +5708,10 @@ Business Template is a set of definitions, such as skins, portal types and categ
 
       # Not considered as objects by Zope (will be exported into XML manually)
       # XXX Bad naming
-      item_list_2 = ['_site_property_item', '_module_item',
-                     '_catalog_result_key_item', '_catalog_related_key_item',
+      item_list_2 = ['_site_property_item',
+                     '_module_item',
+                     '_catalog_result_key_item', 
+                     '_catalog_related_key_item',
                      '_catalog_result_table_item',
                      '_catalog_keyword_key_item',
                      '_catalog_datetime_key_item',
@@ -5741,7 +5744,8 @@ Business Template is a set of definitions, such as skins, portal types and categ
         installed_object = installed_item.removeProperties(installed_object)
         # XML Export in memory
         OFS.XMLExportImport.exportXML(new_object._p_jar, new_object._p_oid, f1)
-        OFS.XMLExportImport.exportXML(installed_object._p_jar, installed_object._p_oid, f2)
+        OFS.XMLExportImport.exportXML(installed_object._p_jar, 
+                                      installed_object._p_oid, f2)
         new_obj_xml = f1.getvalue()
         f1.close()
         installed_obj_xml = f2.getvalue()
