@@ -30,4 +30,4 @@
 from Products.CMFCore.Expression import Expression
 
 class TargetSolver:
-  _categories = ('delivery',)
+  _categories = ('delivery', 'causality')
