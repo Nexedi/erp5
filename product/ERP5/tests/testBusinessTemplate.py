@@ -196,6 +196,39 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     bt = sequence.get('copy_bt')
     sequence.edit(current_bt=bt, export_bt=bt)
 
+  def stepBuildCopyCoreBusinessTemplate(self, sequence=None,
+                                  sequence_list=None, **kw):
+    """
+    Build copied core bt
+    """
+    bt = sequence.get('copy_bt')
+    self.assertEquals(bt.getTitle(), 'erp5_core')
+    bt.build()
+
+  def stepInstallCopyCoreBusinessTemplate(self, sequence=None,
+                                  sequence_list=None, **kw):
+    """
+    Install copied core bt
+    """
+    bt = sequence.get('copy_bt')
+    self.assertEquals(bt.getTitle(), 'erp5_core')
+    self.assertEquals(bt.getInstallationState(), 'not_installed')
+    bt.install()
+
+  def stepCheckOriginalAndCopyBusinessTemplate(self, sequence=None,
+                                  sequence_list=None, **kw):
+    original_bt = sequence.get('current_bt')
+    copy_bt = sequence.get('copy_bt')
+    self.assertEquals(original_bt.getBuildingState(), 'built')
+    self.assertEquals(copy_bt.getBuildingState(), 'built')
+
+    for item_name in original_bt._item_name_list:
+      original_obj = getattr(original_bt, item_name)
+      copy_obj = getattr(copy_bt, item_name)
+      self.failIf(original_obj is None)
+      self.failIf(copy_obj is None)
+      self.assertEquals(original_obj.getKeys(), copy_obj.getKeys())
+
   def stepUseExportBusinessTemplate(self, sequence=None,
                                   sequence_list=None, **kw):
     """
@@ -5777,6 +5810,39 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)
+
+  def test_164_checkCopyBuild(self, quiet=quiet, run=run_all_test):
+    if not run: return
+    if not quiet:
+      message = 'Test Check basic copy and build is working'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ', 0, message)
+    sequence_list = SequenceList()
+    sequence_string = '\
+                       UseCoreBusinessTemplate \
+                       CopyCoreBusinessTemplate \
+                       BuildCopyCoreBusinessTemplate \
+                       CheckOriginalAndCopyBusinessTemplate \
+                       '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self, quiet=quiet)
+
+  def test_165_checkCopyBuildInstall(self, quiet=quiet, run=run_all_test):
+    if not run: return
+    if not quiet:
+      message = 'Test Check basic copy, build and installation is working'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ', 0, message)
+    sequence_list = SequenceList()
+    sequence_string = '\
+                       UseCoreBusinessTemplate \
+                       CopyCoreBusinessTemplate \
+                       BuildCopyCoreBusinessTemplate \
+                       InstallCopyCoreBusinessTemplate \
+                       '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self, quiet=quiet)
+
 
 def test_suite():
   suite = unittest.TestSuite()
