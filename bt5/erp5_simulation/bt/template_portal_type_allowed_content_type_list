@@ -34,15 +34,12 @@ Payment Rule | Float Divergence Tester
 Payment Rule | Net Converted Quantity Divergence Tester
 Payment Rule | String Divergence Tester
 Payment Rule | Variation Divergence Tester
-Solver Process | Destination Replacement Solver
+Solver Process | Accept Solver
+Solver Process | Adoption Solver
 Solver Process | Production Reduction Solver
-Solver Process | Quantity Accept Solver
-Solver Process | Quantity Adoption Solver
 Solver Process | Quantity Split Solver
-Solver Process | Resource Adoption Solver
-Solver Process | Resource Replacement Solver
 Solver Process | Solver Decision
-Solver Process | Start Date Replacement Solver
+Solver Process | Unify Solver
 Solver Tool | Solver Process
 Solver Type | Action Information
 Solver Type | Role Information

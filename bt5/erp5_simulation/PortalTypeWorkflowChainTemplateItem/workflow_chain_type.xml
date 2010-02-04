@@ -1,15 +1,19 @@
 <workflow_chain>
  <chain>
+  <type>Accept Solver</type>
+  <workflow>solver_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Adoption Solver</type>
+  <workflow>solver_workflow</workflow>
+ </chain>
+ <chain>
   <type>Category Membership Divergence Tester</type>
   <workflow>edit_workflow</workflow>
  </chain>
  <chain>
   <type>DateTime Divergence Tester</type>
   <workflow>edit_workflow</workflow>
- </chain>
- <chain>
-  <type>Destination Replacement Solver</type>
-  <workflow>solver_workflow</workflow>
  </chain>
  <chain>
   <type>Float Divergence Tester</type>
@@ -24,14 +28,6 @@
   <workflow>solver_workflow</workflow>
  </chain>
  <chain>
-  <type>Quantity Accept Solver</type>
-  <workflow>solver_workflow</workflow>
- </chain>
- <chain>
-  <type>Quantity Adoption Solver</type>
-  <workflow>solver_workflow</workflow>
- </chain>
- <chain>
   <type>Quantity Cancel Solver</type>
   <workflow>solver_workflow</workflow>
  </chain>
@@ -40,20 +36,12 @@
   <workflow>solver_workflow</workflow>
  </chain>
  <chain>
-  <type>Resource Adoption Solver</type>
-  <workflow>solver_workflow</workflow>
- </chain>
- <chain>
-  <type>Resource Replacement Solver</type>
-  <workflow>solver_workflow</workflow>
- </chain>
- <chain>
-  <type>Start Date Replacement Solver</type>
-  <workflow>solver_workflow</workflow>
- </chain>
- <chain>
   <type>String Divergence Tester</type>
   <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Unify Solver</type>
+  <workflow>solver_workflow</workflow>
  </chain>
  <chain>
   <type>Variation Divergence Tester</type>

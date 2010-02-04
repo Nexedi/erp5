@@ -1,29 +1,23 @@
+Accept Solver | configuration
+Accept Solver | view
+Adoption Solver | configuration
+Adoption Solver | view
 Category Membership Divergence Tester | configuration
 Category Membership Divergence Tester | predicate
 Category Membership Divergence Tester | view
 DateTime Divergence Tester | configuration
 DateTime Divergence Tester | predicate
 DateTime Divergence Tester | view
-Destination Replacement Solver | configuration
-Destination Replacement Solver | view
 Float Divergence Tester | configuration
 Float Divergence Tester | predicate
 Float Divergence Tester | view
 Net Converted Quantity Divergence Tester | configuration
 Net Converted Quantity Divergence Tester | predicate
 Net Converted Quantity Divergence Tester | view
-Quantity Accept Solver | configuration
-Quantity Accept Solver | view
-Quantity Adoption Solver | configuration
-Quantity Adoption Solver | view
 Quantity Cancel Solver | configuration
 Quantity Cancel Solver | view
 Quantity Split Solver | configuration
 Quantity Split Solver | view
-Resource Adoption Solver | configuration
-Resource Adoption Solver | view
-Resource Replacement Solver | configuration
-Resource Replacement Solver | view
 Solver Decision | configuration
 Solver Decision | view
 Solver Process | target_solver
@@ -35,11 +29,11 @@ Solver Type | solver_view
 Solver Type | translation_view
 Solver Type | update_local_roles
 Solver Type | view
-Start Date Replacement Solver | configuration
-Start Date Replacement Solver | view
 String Divergence Tester | configuration
 String Divergence Tester | predicate
 String Divergence Tester | view
+Unify Solver | configuration
+Unify Solver | view
 Variation Divergence Tester | configuration
 Variation Divergence Tester | predicate
 Variation Divergence Tester | view

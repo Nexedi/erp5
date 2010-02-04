@@ -21,15 +21,15 @@
         </item>
         <item>
             <key> <string>configuration_form_id</string> </key>
-            <value> <string>QuantityReplacementSolver_viewConfiguration</string> </value>
+            <value> <string>Solver_viewConfiguration</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>The quantity adoption solver resets the quantity value of the delivery movement to the total of the quantity values of related simulations. It eventually updates the delivery_ratio in the simulations.</string> </value>
+            <value> <string>The Unify Solver solves the divergence by unifying the value with a selected one and updating a simulation movement.</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>
-            <value> <string>addAdoptSolver</string> </value>
+            <value> <string>addUnifySolver</string> </value>
         </item>
         <item>
             <key> <string>group_list</string> </key>
@@ -41,7 +41,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Quantity Adoption Solver</string> </value>
+            <value> <string>Unify Solver</string> </value>
         </item>
         <item>
             <key> <string>init_script</string> </key>
@@ -61,11 +61,7 @@
         </item>
         <item>
             <key> <string>solver_action_title</string> </key>
-            <value> <string>Replace Quantity</string> </value>
-        </item>
-        <item>
-            <key> <string>tested_property</string> </key>
-            <value> <string>quantity</string> </value>
+            <value> <string>Unify value</string> </value>
         </item>
       </dictionary>
     </pickle>

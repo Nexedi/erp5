@@ -48,15 +48,12 @@
   <item>Variation Divergence Tester</item>
  </portal_type>
  <portal_type id="Solver Process">
-  <item>Destination Replacement Solver</item>
+  <item>Accept Solver</item>
+  <item>Adoption Solver</item>
   <item>Production Reduction Solver</item>
-  <item>Quantity Accept Solver</item>
-  <item>Quantity Adoption Solver</item>
   <item>Quantity Split Solver</item>
-  <item>Resource Adoption Solver</item>
-  <item>Resource Replacement Solver</item>
   <item>Solver Decision</item>
-  <item>Start Date Replacement Solver</item>
+  <item>Unify Solver</item>
  </portal_type>
  <portal_type id="Solver Tool">
   <item>Solver Process</item>
