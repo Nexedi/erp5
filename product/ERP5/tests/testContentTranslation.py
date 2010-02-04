@@ -27,6 +27,7 @@
 ##############################################################################
 import unittest
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from Products.ERP5Type.tests.utils import to_utf8
 import transaction
 
 
@@ -102,8 +103,8 @@ class TestContentTranslation(ERP5TypeTestCase):
     transaction.commit()
     self.tic()
 
-    self.assert_('タハラ' in person.Base_viewContentTranslation())
-    self.assert_('ユウセイ' in person.Base_viewContentTranslation())
+    self.assert_('タハラ' in to_utf8(person.Base_viewContentTranslation()))
+    self.assert_('ユウセイ' in to_utf8(person.Base_viewContentTranslation()))
 
     self.assertEqual(person.getJaKanaTranslatedFirstName(), 'タハラ')
     self.assertEqual(person.getJaKanaTranslatedLastName(), 'ユウセイ')

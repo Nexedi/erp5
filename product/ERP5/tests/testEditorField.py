@@ -35,6 +35,7 @@ import transaction
 from AccessControl.SecurityManagement import newSecurityManager
 from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from Products.ERP5Type.tests.utils import to_utf8
 
 class TestEditorField(ERP5TypeTestCase, ZopeTestCase.Functional):
   """
@@ -93,15 +94,6 @@ class TestEditorField(ERP5TypeTestCase, ZopeTestCase.Functional):
   def getDefaultSitePreference(self):
     return self.getPreferenceTool().default_site_preference
 
-  def _fromUnicode(self, html_text):
-    """
-    ZPTs in Zope 2.12 render to unicode. Here we normalize to utf-8
-    """
-    # XXX: We should consider switching ERP5 to Unicode instead.
-    if isinstance(html_text, unicode):
-      html_text = html_text.encode('utf-8')
-    return html_text
-
   def _testPreferredDocumentEditor(self, event, preferred_editor, editor, form_id, field_id):
     """
       Common code to test if current document (event)
@@ -135,7 +127,7 @@ class TestEditorField(ERP5TypeTestCase, ZopeTestCase.Functional):
 
       text_content -- the embedded text content
     """
-    html_text = self._fromUnicode(html_text)
+    html_text = to_utf8(html_text)
     match_string1 = "var oFCKeditor      = new FCKeditor('field_%s');" % field_id
     match_string2 = "oFCKeditor.Value    = '%s';" % ('\\n'.join(text_content.splitlines()))
     if html_text.find(match_string1) == -1:
@@ -160,7 +152,7 @@ class TestEditorField(ERP5TypeTestCase, ZopeTestCase.Functional):
 
       text_content -- the embedded text content
     """
-    html_text = self._fromUnicode(html_text)
+    html_text = to_utf8(html_text)
     match_string = """name="field_%s" >%s</textarea>""" % (field_id, text_content)
     if html_text.find(match_string) == -1:
       print html_text
@@ -179,7 +171,7 @@ class TestEditorField(ERP5TypeTestCase, ZopeTestCase.Functional):
       document -- the document which content is displayed in 
                   read only mode
     """
-    html_text = self._fromUnicode(html_text)
+    html_text = to_utf8(html_text)
     text_content = document.asStrippedHTML()
     match_string1 = """<div class="input">%s</div>""" % text_content
     match_string2 = """<div class="field page"""
