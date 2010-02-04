@@ -587,6 +587,15 @@ class BaseTemplateItem(Implicit, Persistent):
       obj._code = None
     return obj
 
+  def getTemplateTypeName(self):
+    """
+     Get a meaningfull class Name without 'TemplateItem'. Used to 
+     present to the user.
+
+     XXX: -12 used here is -len('TemplateItem')
+    """
+    return self.__class__.__name__[:-12]
+
 class ObjectTemplateItem(BaseTemplateItem):
   """
     This class is used for generic objects and as a subclass.
