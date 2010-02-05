@@ -107,8 +107,9 @@ class PaymentRuleMovementGenerator(MovementGeneratorMixin):
       # Payment Rule does not work with Business Path
       if business_path is None:
         continue
-      kw = self._getPropertyAndCategoryList(input_movement, business_path,
-                                            rule)
+      # Since we need to consider business_path only for bank movement,
+      # not for payable movement, we pass None as business_path here.
+      kw = self._getPropertyAndCategoryList(input_movement, None, rule)
       kw.update({'order':None, 'delivery':None})
       quantity = kw.pop('quantity', 0)
       efficiency = business_path.getEfficiency()
