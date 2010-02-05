@@ -1,3 +1,6 @@
+2010-02-05 aurel
+* add more columns into versioning table in order to use frequency_index
+
 2010-01-07 Kazuhiko
 * increase the size of the language column in the versioning table from 2 to 5.
 
