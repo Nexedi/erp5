@@ -59,10 +59,11 @@ using an XSLTMethod, after that extract all subobjects and pass them to fromXML 
 to create the corresponding RSS Item objects.\n
 """\n
 from DateTime import DateTime\n
+from AccessControl import getSecurityManager\n
 \n
 #Step1: transform an RSS Feed into ERP5 XML\n
 #xsl_kw = {\'date\':DateTime()}\n
-xsl_kw = {}\n
+xsl_kw = {\'actor\':getSecurityManager().getUser().getId()}\n
 xml_output = context.TextDocument_asCallable.RSSFeed_asAggregatedImportXML(**xsl_kw)\n
 \n
 #Step2: extract xml subobjects and create RSS Item objects\n
@@ -111,9 +112,11 @@ for rss_item in context.contentValues():\n
                           <tuple>
                             <string>kw</string>
                             <string>DateTime</string>
+                            <string>AccessControl</string>
+                            <string>getSecurityManager</string>
+                            <string>_getattr_</string>
                             <string>xsl_kw</string>
                             <string>_apply_</string>
-                            <string>_getattr_</string>
                             <string>context</string>
                             <string>xml_output</string>
                             <string>erp5_object_list</string>

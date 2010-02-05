@@ -41,6 +41,7 @@ xmlns:dc="http://purl.org/dc/elements/1.1/">\n
 <xsl:param name="sid" select="None"/>\n
 <xsl:param name="categories_list" select="None"/>\n
 <xsl:param name="subject_list" select="None"/>\n
+<xsl:param name="author" select="None"/>\n
 \n
 \n
 <!--Template matching the erp5 Tag-->\n
@@ -76,7 +77,7 @@ xmlns:dc="http://purl.org/dc/elements/1.1/">\n
           <pub_date><xsl:value-of select="pubDate|dc:date"/></pub_date>\n
           <workflow_action id="edit_workflow">\n
             <action type="string">edit</action>\n
-            <actor type="string"></actor>\n
+            <actor type="string"><xsl:value-of select=\'$actor\'/></actor>\n
             <comment type="string"></comment>\n
             <error_message type="string"></error_message>\n
             <serial type="string">0.0.0.0</serial>\n
