@@ -36,8 +36,8 @@ from Products.ERP5.Document.Predicate import Predicate
 from Products.ERP5.mixin.rule import RuleMixin
 from Products.ERP5.mixin.movement_collection_updater import \
      MovementCollectionUpdaterMixin
-from Products.ERP5.MovementCollectionDiff import _getPropertyAndCategoryList
 from Products.ERP5.Document.PredicateMatrix import PredicateMatrix
+from Products.ERP5.mixin.movement_generator import MovementGeneratorMixin
 
 class InvoiceTransactionRule(RuleMixin, MovementCollectionUpdaterMixin, Predicate, PredicateMatrix):
   """
@@ -95,7 +95,7 @@ class InvoiceTransactionRule(RuleMixin, MovementCollectionUpdaterMixin, Predicat
     # or destination.
     return (movement.getSource() is None or movement.getDestination() is None)
 
-class InvoiceTransactionRuleMovementGenerator(object):
+class InvoiceTransactionRuleMovementGenerator(MovementGeneratorMixin):
   def getGeneratedMovementList(self, context, movement_list=None,
                                 rounding=False):
     """
@@ -153,7 +153,8 @@ class InvoiceTransactionRuleMovementGenerator(object):
           # last resort : get the resource from the rule
           resource = accounting_rule_cell_line.getResource() \
               or cell.getResource()
-        kw = _getPropertyAndCategoryList(input_movement)
+        # XXX we need business path here?
+        kw = self._getPropertyAndCategoryList(input_movement, None, rule)
 
         kw.update(
           delivery=None,

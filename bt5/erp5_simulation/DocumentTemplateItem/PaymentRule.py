@@ -37,7 +37,6 @@ from Products.ERP5.mixin.rule import RuleMixin
 from Products.ERP5.mixin.movement_collection_updater import \
      MovementCollectionUpdaterMixin
 from Products.ERP5.mixin.movement_generator import MovementGeneratorMixin
-from Products.ERP5.MovementCollectionDiff import _getPropertyAndCategoryList
 
 class PaymentRule(RuleMixin, MovementCollectionUpdaterMixin, Predicate):
   """
@@ -102,12 +101,14 @@ class PaymentRuleMovementGenerator(MovementGeneratorMixin):
     XXX This implementation using Business Path, not Payment Condition.
     """
     ret = []
+    rule = context.getSpecialiseValue()
     for input_movement, business_path in self \
             ._getInputMovementAndPathTupleList(context):
       # Payment Rule does not work with Business Path
       if business_path is None:
         continue
-      kw = _getPropertyAndCategoryList(input_movement)
+      kw = self._getPropertyAndCategoryList(input_movement, business_path,
+                                            rule)
       kw.update({'order':None, 'delivery':None})
       quantity = kw.pop('quantity', 0)
       efficiency = business_path.getEfficiency()
