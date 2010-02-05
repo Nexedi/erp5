@@ -213,10 +213,6 @@ user_pref("signon.rememberSignons", false);
 // increase the timeout before warning of unresponsive script
 user_pref("dom.max_script_run_time", 120);
 
-// Make sure we do not use cache
-user_pref("browser.cache.check_doc_frequency", 1);
-user_pref("network.http.use-cache", false);
-
 // this is required to upload files
 user_pref("capability.principal.codebase.p1.granted", "UniversalFileRead");
 user_pref("signed.applets.codebase_principal_support", true);
