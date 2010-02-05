@@ -1276,7 +1276,7 @@ class Document(PermanentURLMixIn, XMLObject, UrlMixIn, CachedConvertableMixin, S
       using the base_data property. Refer to Document.py propertysheet.
       Use accessors (getBaseData, setBaseData, hasBaseData, etc.)
     """
-    if not self.hasData():
+    if getattr(self, 'hasData', None) is not None and not self.hasData():
       # Empty document cannot be converted
       return #'Document is empty'
     try:
