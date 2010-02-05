@@ -88,7 +88,9 @@ class MovementCollectionDiff(object):
     """
     property_dict = self._property_dict_dict.get(movement)
     if property_dict is None:
-      return _getPropertyAndCategoryList(movement)
+      property_dict = _getPropertyList(movement)
+      property_dict.update(_getCategoryList(movement, acquire=False))
+      return property_dict
     else:
       return property_dict
 
@@ -106,9 +108,14 @@ def _getPropertyAndCategoryList(document):
   Returns a dict that includes all property values, based on property
   sheet configuration and all category values.
   """
+  property_dict = {}
+  property_dict.update(_getPropertyList(document))
+  property_dict.update(_getCategoryList(document))
+  return property_dict
+
+def _getPropertyList(document, acquire=True):
   property_map = document.getPropertyMap()
   bad_property_list = ['id', 'uid', 'categories_list', 'int_index', 'last_id',]
-  bad_category_list = ['solver',]
   # we don't want acquired properties without acquisition_mask_value
   for x in property_map:
     if x.has_key('acquisition_base_category') and not x.get('acquisition_mask_value', 0):
@@ -133,20 +140,25 @@ def _getPropertyAndCategoryList(document):
     default = default_value_dict[key]
     if value == default:
       return False
+    if not acquire and not document.hasProperty(key):
+      return False
     if isinstance(value, (list, tuple)) and \
          isinstance(default, (list, tuple)) and \
          tuple(value) == tuple(default):
       return False
     return True
 
-  property_dict = dict(filter(filter_property_func,
-                              [(x, getter_dict[x](x)) for x in \
-                              document.getPropertyIdList()]))
+  return dict(filter(filter_property_func,
+                     [(x, getter_dict[x](x)) for x in \
+                      document.getPropertyIdList()]))
 
+def _getCategoryList(document, acquire=True):
+  bad_category_list = ['solver',]
+  getPropertyList = document.getPropertyList
   def filter_category_func(x):
-    return len(x[1]) != 0 and x[0] not in bad_category_list
+    return len(x[1]) != 0 and x[0] not in bad_category_list and \
+           (acquire or document.hasProperty(x[0]))
 
-  property_dict.update(dict(filter(filter_category_func,
-                                   [(x, getPropertyList(x)) for x in \
-                                    document.getBaseCategoryList()])))
-  return property_dict
+  return dict(filter(filter_category_func,
+                     [(x, getPropertyList(x)) for x in \
+                      document.getBaseCategoryList()]))
