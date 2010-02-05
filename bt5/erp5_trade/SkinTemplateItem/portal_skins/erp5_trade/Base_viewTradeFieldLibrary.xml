@@ -132,6 +132,14 @@
                         <string>my_sale_source_decision_title</string>
                         <string>my_sale_source_section</string>
                         <string>my_sale_source_title</string>
+                        <string>listbox_aggregate_title_list</string>
+                        <string>listbox_variation_category_item_list</string>
+                        <string>my_sale_causality_title</string>
+                        <string>my_translated_causality_state_title</string>
+                        <string>my_translated_container_state_title</string>
+                        <string>my_translated_immobilisation_state_title</string>
+                        <string>my_sale_source_administration_title</string>
+                        <string>my_sale_source_section_title</string>
                       </list>
                     </value>
                 </item>
