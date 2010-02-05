@@ -41,7 +41,7 @@ xmlns:dc="http://purl.org/dc/elements/1.1/">\n
 <xsl:param name="sid" select="None"/>\n
 <xsl:param name="categories_list" select="None"/>\n
 <xsl:param name="subject_list" select="None"/>\n
-<xsl:param name="author" select="None"/>\n
+<xsl:param name="actor" select="None"/>\n
 \n
 \n
 <!--Template matching the erp5 Tag-->\n
