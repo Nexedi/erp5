@@ -777,7 +777,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     """
     status = {}
     for subnode in xml:
-      keyword = subnode.xpath('name()')
+      keyword = str(subnode.xpath('name()'))
       value = self.getObjectProperty(keyword, xml)
       status[keyword] = value
     return status
