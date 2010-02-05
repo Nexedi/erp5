@@ -60,6 +60,10 @@ if \'?\' in dialog_action_url:\n
 else:\n
   dialog_action_url = \'%s?form_id=%s\' % (dialog_action_url, form_id)\n
 \n
+\n
+if format:\n
+  # Add format parameter if not null\n
+  dialog_action_url += \'&format=%s\' % (format,)\n
 return container.REQUEST.RESPONSE.redirect(dialog_action_url)\n
 
 
@@ -73,7 +77,7 @@ return container.REQUEST.RESPONSE.redirect(dialog_action_url)\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>dialog_action_url, form_id=\'\'</string> </value>
+            <value> <string>dialog_action_url, form_id=\'\', format=None</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -93,7 +97,7 @@ return container.REQUEST.RESPONSE.redirect(dialog_action_url)\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>2</int> </value>
+                        <value> <int>3</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -101,6 +105,8 @@ return container.REQUEST.RESPONSE.redirect(dialog_action_url)\n
                           <tuple>
                             <string>dialog_action_url</string>
                             <string>form_id</string>
+                            <string>format</string>
+                            <string>_inplacevar_</string>
                             <string>_getattr_</string>
                             <string>container</string>
                           </tuple>
@@ -116,6 +122,7 @@ return container.REQUEST.RESPONSE.redirect(dialog_action_url)\n
             <value>
               <tuple>
                 <string></string>
+                <none/>
               </tuple>
             </value>
         </item>
