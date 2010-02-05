@@ -110,6 +110,12 @@ class IndexableObjectWrapper(object):
         #   user:<user_id>:<role_id>
         # A line must not be present twice in final result.
         allowed = set(rolesForPermissionOn('View', ob))
+        # XXX the permission name is included by default for verbose
+        # logging of security errors, but the catalog does not need to
+        # index it. Unfortunately, rolesForPermissionOn does not have
+        # an option to disable this behavior at calling time, so
+        # discard it explicitly.
+        allowed.discard('_View_Permission')
         # XXX Owner is hardcoded, in order to prevent searching for user on the
         # site root.
         allowed.discard('Owner')
