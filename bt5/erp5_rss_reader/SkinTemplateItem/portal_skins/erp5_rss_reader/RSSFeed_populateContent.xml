@@ -61,7 +61,8 @@ to create the corresponding RSS Item objects.\n
 from DateTime import DateTime\n
 \n
 #Step1: transform an RSS Feed into ERP5 XML\n
-xsl_kw = {\'date\':DateTime()}\n
+#xsl_kw = {\'date\':DateTime()}\n
+xsl_kw = {}\n
 xml_output = context.TextDocument_asCallable.RSSFeed_asAggregatedImportXML(**xsl_kw)\n
 \n
 #Step2: extract xml subobjects and create RSS Item objects\n
