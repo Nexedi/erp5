@@ -88,7 +88,7 @@ class MovementGeneratorMixin:
       property_dict = _getPropertyAndCategoryList(movement)
     else:
       property_dict = {}
-      for tester in rule._getUpdatingTesterList():
+      for tester in rule._getUpdatingTesterList(exclude_quantity=False):
         property_dict.update(tester.getUpdatablePropertyDict(
           movement, None))
 
