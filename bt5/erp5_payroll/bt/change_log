@@ -1,6 +1,7 @@
 2010-02-06 yusuke
 * Add a field for service recipient
 * Update service destination of pay sheet line view to also allow person
+* Remove no need base category definition.
 
 2010-01-31 yusei
 Add Payslip List Printout to Accounting Transaction Module.
