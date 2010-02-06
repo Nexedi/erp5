@@ -93,6 +93,7 @@
                         <string>my_resource_title</string>
                         <string>my_source_section_title</string>
                         <string>my_destination_section_title</string>
+                        <string>my_destination_title</string>
                         <string>my_int_index</string>
                         <string>my_price</string>
                         <string>my_quantity</string>
