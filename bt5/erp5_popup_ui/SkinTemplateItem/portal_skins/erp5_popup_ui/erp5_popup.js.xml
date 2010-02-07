@@ -69,28 +69,34 @@ jQuery(function() {\n
   var dialog = null;\n
 \n
   var load = function(url, query) {\n
-    dialog.empty();\n
+    //dialog.empty();\n
 \n
     // Some bogus animations for having the user to feel easier.\n
     var animate = function() {\n
-      var element = jQuery(\'p\', dialog);\n
+      var element = jQuery(\'p.loading\', dialog);\n
       if (element.length != 0) {\n
-        element.animate({opacity: 1}, 2000, \'linear\');\n
-        element.animate({opacity: 0}, 2000, \'linear\', animate);\n
+        //element.animate({opacity: 1}, 2000, \'linear\');\n
+        //element.animate({opacity: 0}, 2000, \'linear\', animate);\n
+        element.animate({color: "white"}, 2000, \'linear\');\n
+        element.animate({color: "black"}, 2000, \'linear\', animate);\n
       }\n
     };\n
-    jQuery(\'<p style="position: absolute; left: 0%; width: 100%; top: 30%; height: 40%; text-align: center; color: black; font-size: 32pt;">Loading...</p>\').appendTo(dialog);\n
+    jQuery(\'<div class="loading" style="background-color: #AAAAAA; opacity: 0.5; position: absolute; left: 0%; width: 100%; top: 0%; height: 100%; transparent;"><p class="loading" style="position: absolute; left: 0%; width: 100%; top: 30%; height: 40%; text-align: center; color: black; font-size: 32pt;">Loading...</p></div>\').appendTo(dialog);\n
     animate();\n
 \n
     jQuery.post(url, query, function(data, textStatus, XMLHttpRequest) {\n
       if (textStatus == \'success\' || textStatus == \'notmodified\') {\n
         // Stop the animations above.\n
         dialog.empty();\n
+        //jQuery(\'div.loading\', dialog).remove();\n
 \n
         dialog.html(jQuery(\'<div />\').append(data).find(\'form\'));\n
         // XXX Get rid of unneeded stuff in JavaScript for now.\n
         jQuery(\'.bars, .breadcrumb, .logged_in_as\', dialog).remove();\n
         jQuery(\'[id]\', dialog).removeAttr(\'id\');\n
+\n
+        // Insert the same buttons as at the bottom into near the top.\n
+        jQuery(\'div.bottom_actions\', dialog).clone().insertAfter(jQuery(\'div.dialog_box\', dialog)).css(\'margin-bottom\', \'1em\');\n
 \n
         jQuery(\'input[type="image"], button.sort_button, .dialog_selector > button\', dialog).click(function(event) {\n
           event.preventDefault();\n
@@ -162,16 +168,14 @@ jQuery(function() {\n
     // Make sure that the dialog is present, and it is empty.\n
     if (dialog != null) {\n
       dialog.empty();\n
-      if (!dialog.dialog(\'isOpen\'))\n
-        dialog.dialog(\'open\');\n
-    } else {\n
-      dialog = jQuery(\'<div id="dialog" />\').appendTo(\'body\');\n
-      dialog.dialog({ modal: true,\n
-                      width: jQuery(window).width() * 0.8,\n
-                      height: jQuery(window).height() * 0.8,\n
-                      title: jQuery(\'label\', this.parentNode.parentNode).text()\n
-      });\n
+      dialog.destory();\n
     }\n
+    dialog = jQuery(\'<div id="dialog" />\').appendTo(\'body\');\n
+    dialog.dialog({ modal: true,\n
+                    width: jQuery(window).width() * 0.8,\n
+                    height: jQuery(window).height() * 0.8,\n
+                    title: jQuery(\'label\', this.parentNode.parentNode).text()\n
+    });\n
     var form = jQuery(\'form#main_form\');\n
     var params = {};\n
     params[self.attr(\'name\')] = self.attr(\'value\');\n
