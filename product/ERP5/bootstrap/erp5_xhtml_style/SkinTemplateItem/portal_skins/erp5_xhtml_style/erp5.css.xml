@@ -980,8 +980,8 @@ span.search button .image {\n
   background-image: url(\'<dtml-var expr="portal_url()">/images/userhelp.png\');\n
 }\n
 \n
-#context_bar .tool_buttons .jump_help .image, /* BBB */\n
-.context_bar .tool_buttons .jump_help .image {\n
+#context_bar .tool_buttons .find .image, /* BBB */\n
+.context_bar .tool_buttons .find .image {\n
   background-image: url(\'<dtml-var expr="portal_url()">/images/find.png\');\n
 }\n
 \n
