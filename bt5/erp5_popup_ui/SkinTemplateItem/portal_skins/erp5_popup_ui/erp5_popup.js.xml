@@ -56,7 +56,7 @@ relation update dialogs at the moment. This is tested with erp5_xhtml_style.\n
 If you want to use this feature, you need to load additional files in global_definitions:\n
 \n
            dummy                python:js_list.extend((\'%s/jquery-ui-1.7.2/js/jquery-1.3.2.min.js\' % portal_path, \'%s/jquery-ui-1.7.2/js/jquery-ui-1.7.2.custom.min.js\' % portal_path));\n
-           dummy                python:css_list.append(\'%s/jquery-ui-1.7.2/css/smoothness/jquery-ui-1.7.2.custom.css\' % portal_path);\n
+           dummy                python:css_list.append(\'%s/jquery-ui-1.7.2/css/erp5-theme/jquery-ui-1.7.2.custom.css\' % portal_path);\n
            dummy                python:js_list.append(\'%s/erp5_popup.js\' % portal_path);\n
 \n
 The first two lines are required for loading jQuery and jQuery UI. The last line is for this file.\n
