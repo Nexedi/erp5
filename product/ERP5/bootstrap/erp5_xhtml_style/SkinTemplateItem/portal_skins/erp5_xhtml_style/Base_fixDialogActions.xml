@@ -76,6 +76,7 @@ def addDialogIfNeeded(url):\n
 \n
   # try to get format parameter if exists\n
   parameter_kw = {}\n
+  format = \'\'\n
   if len(action_list) > 1:\n
     parameter_list = action.split(\'?\')[1]\n
     parameter_tuple_list = [tuple(tuple_parameter.split(\'=\')) for tuple_parameter in parameter_list.split(\'&\')]\n
