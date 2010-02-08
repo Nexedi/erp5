@@ -631,7 +631,7 @@ class ObjectTemplateItem(BaseTemplateItem):
       path = os.path.join(root_path, (os.sep).join(encode_folders))
       bta.addFolder(name=path)
       # export object in xml
-      f=StringIO()
+      f = StringIO()
       XMLExportImport.exportXML(obj._p_jar, obj._p_oid, f)
       bta.addObject(obj=f.getvalue(), name=id, path=path)
 
@@ -813,9 +813,13 @@ class ObjectTemplateItem(BaseTemplateItem):
       return subobjects_dict
     # XXX btsave is for backward compatibility
     if action == 'backup' or action == 'btsave' or action == 'save_and_remove':
-      subobjects_dict = self.portal_trash.backupObject(trashbin, container_path, object_id, save=1, **kw)
+      subobjects_dict = self.portal_trash.backupObject(trashbin, 
+                                                container_path, object_id, 
+                                                save=1, **kw)
     elif action == 'install':
-      subobjects_dict = self.portal_trash.backupObject(trashbin, container_path, object_id, save=0, **kw)
+      subobjects_dict = self.portal_trash.backupObject(trashbin, 
+                                                container_path, object_id, 
+                                                save=0, **kw)
     else:
       # As the list of available actions is not strictly defined,
       # prevent mistake if an action is not handled
@@ -1458,8 +1462,9 @@ class RegisteredSkinSelectionTemplateItem(BaseTemplateItem):
     root_path = os.path.join(bta.path, self.__class__.__name__)
     bta.addFolder(name=root_path)
     # export workflow chain
-    xml_data = self.generateXml()
-    bta.addObject(obj=xml_data, name='registered_skin_selection',  path=root_path)
+    bta.addObject(obj=self.generateXml(), 
+                  name='registered_skin_selection',  
+                  path=root_path)
 
   def install(self, context, trashbin, **kw):
     update_dict = kw.get('object_to_update')
@@ -3065,7 +3070,8 @@ class ModuleTemplateItem(BaseTemplateItem):
         try:
           if trash and trashbin is not None:
             container_path = key.split('/')
-            self.portal_trash.backupObject(trashbin, container_path, key, save=1, keep_subobjects=1)
+            self.portal_trash.backupObject(trashbin, container_path, 
+                                           key, save=1, keep_subobjects=1)
           p.manage_delObjects([key])
         except NotFound:
           pass
@@ -4982,9 +4988,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       self.clean()
 
       self.updateRevisionNumber()
-
       self._setTemplateFormatVersion(1)
-
       self.storeTemplateItemData()
 
       # Build each part
@@ -5058,7 +5062,8 @@ Business Template is a set of definitions, such as skins, portal types and categ
       if installed_bt == self:
         reinstall = 1
         if self.portal_templates._getOb(INSTALLED_BT_FOR_DIFF, None) is None:
-          bt2 = self.portal_templates.manage_clone(ob=installed_bt, id=INSTALLED_BT_FOR_DIFF)
+          bt2 = self.portal_templates.manage_clone(ob=installed_bt, 
+                                                   id=INSTALLED_BT_FOR_DIFF)
           # update portal types properties to get last modifications
           bt2.getPortalTypesProperties()
           bt2.edit(description='tmp bt generated for diff', bt_for_diff=1)
@@ -5085,7 +5090,8 @@ Business Template is a set of definitions, such as skins, portal types and categ
         old_item = getattr(installed_bt, item_name, None)
         if new_item is not None:
           if old_item is not None and hasattr(old_item, '_objects'):
-            modified_object = new_item.preinstall(context=self, installed_bt=old_item)
+            modified_object = new_item.preinstall(context=self, 
+                                                  installed_bt=old_item)
             if len(modified_object) > 0:
               modified_object_list.update(modified_object)
           else:
@@ -5158,7 +5164,8 @@ Business Template is a set of definitions, such as skins, portal types and categ
         for item_name in self._item_name_list:
           item = getattr(self, item_name, None)
           if item is not None:
-            item.install(self, force=force, object_to_update=object_to_update, trashbin=trashbin, installed_bt=installed_bt)
+            item.install(self, force=force, object_to_update=object_to_update, 
+                               trashbin=trashbin, installed_bt=installed_bt)
 
       # update catalog if necessary
       if force and self.isCatalogUpdatable():
