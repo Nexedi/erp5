@@ -68,7 +68,7 @@ xmlns:dc="http://purl.org/dc/elements/1.1/">\n
           <categories_list type="tokens"><xsl:value-of select="$categories_list"/></categories_list>\n
           <title type="string"><xsl:value-of select="*[local-name() = \'title\']"/></title>\n
           <subject_list type="lines"><xsl:value-of select="$subject_list"/></subject_list>\n
-          <description type="text"><xsl:value-of select="description|dc:description|content"/><xsl:apply-templates select=\'summary\'/></description>\n
+          <description type="text"><xsl:value-of select="description|dc:description|*[local-name() = \'content\']"/><xsl:apply-templates select=\'summary\'/></description>\n
           <url_text>\n
             <xsl:choose>\n
               <xsl:when test="link"><xsl:value-of select="link"/></xsl:when>\n
