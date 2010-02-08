@@ -150,6 +150,12 @@
                                 </value>
                             </item>
                             <item>
+                                <key> <string>isCancellationAmount</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
                                 <key> <string>isInventoryMovement</string> </key>
                                 <value>
                                   <dictionary/>
@@ -157,12 +163,6 @@
                             </item>
                             <item>
                                 <key> <string>isMovement</string> </key>
-                                <value>
-                                  <dictionary/>
-                                </value>
-                            </item>
-                            <item>
-                                <key> <string>isCancellationAmount</string> </key>
                                 <value>
                                   <dictionary/>
                                 </value>

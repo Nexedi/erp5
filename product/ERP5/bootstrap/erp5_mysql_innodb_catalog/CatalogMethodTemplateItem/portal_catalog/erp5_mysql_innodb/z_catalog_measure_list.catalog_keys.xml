@@ -6,8 +6,9 @@
   <value>1</value>
  </item>
  <item key="_filter_expression_archive" type="str">
-  <value>python: here.getPortalType() in here.getPortalResourceTypeList()</value>
+  <value>python: context.isResourceType()</value>
  </item>
- <item key="_filter_type_archive" type="tuple">
+ <item key="_filter_expression_cache_key_archive" type="tuple">
+  <value>portal_type</value>
  </item>
 </catalog_method>

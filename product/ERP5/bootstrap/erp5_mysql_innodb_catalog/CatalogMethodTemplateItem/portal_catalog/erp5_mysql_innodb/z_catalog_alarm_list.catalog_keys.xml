@@ -6,9 +6,9 @@
   <value>1</value>
  </item>
  <item key="_filter_expression_archive" type="str">
-  <value></value>
+  <value>python: context.isAlarmType()</value>
  </item>
- <item key="_filter_type_archive" type="tuple">
-  <value>Alarm</value>
+ <item key="_filter_expression_cache_key_archive" type="tuple">
+  <value>portal_type</value>
  </item>
 </catalog_method>
