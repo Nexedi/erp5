@@ -149,8 +149,10 @@ class BalanceTransaction(AccountingTransaction, Inventory):
     section_uid = self.getDestinationSectionUid()
     precision = 2
     if section_uid is not None:
-      precision =  self.getDestinationSectionValue()\
-                        .getPriceCurrencyValue().getQuantityPrecision()
+      accounting_currency = \
+          self.getDestinationSectionValue().getPriceCurrencyValue()
+      if accounting_currency is not None:
+        precision = accounting_currency.getQuantityPrecision()
     default_inventory_params = dict(
                         to_date=self.getStartDate().earliestTime(),
                         section_uid=section_uid,
