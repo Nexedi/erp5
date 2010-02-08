@@ -28,6 +28,7 @@
 ##############################################################################
 
 import zope.interface
+from math import log
 from Products.ERP5Type.Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 from Products.ERP5.Variated import Variated
@@ -417,6 +418,39 @@ class Amount(Base, Variated):
     quantity = self.getNetConvertedQuantity()
     if isinstance(price, (int, float)) and isinstance(quantity, (int, float)):
       return quantity * price
+
+  def _getBaseUnitPrice(self, context):
+    resource = self.getResourceValue()
+    if resource is not None:
+      operand_dict = resource.getPriceParameterDict(context=context)
+      if operand_dict is not None:
+        base_unit_price = operand_dict.get('base_unit_price', None)
+        return base_unit_price
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'getBaseUnitPrice')
+  def getBaseUnitPrice(self, **kw):
+    """
+      Get the base unit price.
+
+      If the property is not stored locally, look up one and store it.
+    """
+    local_base_unit_price = self._baseGetBaseUnitPrice()
+    if local_base_unit_price is None:
+      # We must find a base unit price for this movement
+      local_base_unit_price = self._getBaseUnitPrice(context=self)
+    return local_base_unit_price
+
+  security.declareProtected(Permissions.AccessContentsInformation, 
+                            'getPricePrecision')
+  def getPricePrecision(self):
+    """Return the floating point precision of a price.
+    """
+    # First, try to use a base unit price. If not available, use
+    # the older way of using a price currency.
+    try:
+      return int(round(- log(self.getBaseUnitPrice(), 10), 0))
+    except TypeError:
+      return self.getQuantityPrecisionFromResource(self.getPriceCurrency())
 
   # Conversion to standard unit
   security.declareProtected(Permissions.AccessContentsInformation, 'getConvertedQuantity')
