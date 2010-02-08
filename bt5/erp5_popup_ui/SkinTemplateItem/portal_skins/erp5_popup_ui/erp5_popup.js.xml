@@ -168,7 +168,7 @@ jQuery(function() {\n
     // Make sure that the dialog is present, and it is empty.\n
     if (dialog != null) {\n
       dialog.empty();\n
-      dialog.destory();\n
+      dialog.dialog(\'destroy\');\n
     }\n
     dialog = jQuery(\'<div id="dialog" />\').appendTo(\'body\');\n
     dialog.dialog({ modal: true,\n

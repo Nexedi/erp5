@@ -1,4 +1,7 @@
 2010-02-07 yo
+* Fix a mistake that "destroy" was not used correctly.
+
+2010-02-07 yo
 * Customize the jQuery UI theme for ERP5.
 
 2010-02-07 yo
