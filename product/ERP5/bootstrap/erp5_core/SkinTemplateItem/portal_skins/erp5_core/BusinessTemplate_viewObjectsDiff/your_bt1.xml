@@ -11,7 +11,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>diffview</string> </value>
+            <value> <string>your_bt1</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -143,9 +143,7 @@
                 </item>
                 <item>
                     <key> <string>enabled</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
-                    </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>external_validator</string> </key>
@@ -196,7 +194,7 @@
                 </item>
                 <item>
                     <key> <string>css_class</string> </key>
-                    <value> <string>pre</string> </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>default</string> </key>
@@ -216,11 +214,11 @@
                 </item>
                 <item>
                     <key> <string>editable</string> </key>
-                    <value> <int>0</int> </value>
+                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>enabled</string> </key>
-                    <value> <int>0</int> </value>
+                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>external_validator</string> </key>
@@ -232,7 +230,7 @@
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
-                    <value> <int>0</int> </value>
+                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>max_length</string> </key>
@@ -244,7 +242,11 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Unified Diff</string> </value>
+                    <value> <string encoding="cdata"><![CDATA[
+
+&nbsp;
+
+]]></string> </value>
                 </item>
                 <item>
                     <key> <string>truncate</string> </key>
@@ -275,23 +277,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:here.diffObject(request)</string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="3" aka="AAAAAAAAAAM=">
-    <pickle>
-      <tuple>
-        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-        <tuple/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>request/use_unified_diff</string> </value>
+            <value> <string>request/bt1</string> </value>
         </item>
       </dictionary>
     </pickle>

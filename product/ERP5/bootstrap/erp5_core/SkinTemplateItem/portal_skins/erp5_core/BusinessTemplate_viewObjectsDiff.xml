@@ -38,7 +38,17 @@
         </item>
         <item>
             <key> <string>action</string> </key>
+            <value> <string>BusinessTemplate_viewObjectsDiff</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
             <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>edit_order</string> </key>
+            <value>
+              <list/>
+            </value>
         </item>
         <item>
             <key> <string>encoding</string> </key>
@@ -46,13 +56,15 @@
         </item>
         <item>
             <key> <string>enctype</string> </key>
-            <value> <string></string> </value>
+            <value> <string>multipart/form-data</string> </value>
         </item>
         <item>
             <key> <string>group_list</string> </key>
             <value>
               <list>
                 <string>left</string>
+                <string>right</string>
+                <string>center</string>
               </list>
             </value>
         </item>
@@ -61,10 +73,30 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>left</string> </key>
+                    <key> <string>center</string> </key>
                     <value>
                       <list>
                         <string>diffview</string>
+                        <string>diffhtml</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>left</string> </key>
+                    <value>
+                      <list>
+                        <string>your_object_id</string>
+                        <string>your_object_class</string>
+                        <string>your_use_unified_diff</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>right</string> </key>
+                    <value>
+                      <list>
+                        <string>your_bt1</string>
+                        <string>your_bt2</string>
                       </list>
                     </value>
                 </item>
@@ -81,7 +113,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>BusinessTemplate_diffTwoObjects</string> </value>
+            <value> <string>BusinessTemplate_viewObjectsDiff</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
@@ -97,7 +129,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Diff Two Objects</string> </value>
+            <value> <string>Update Diff</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>
@@ -105,6 +137,10 @@
         </item>
         <item>
             <key> <string>update_action</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>update_action_title</string> </key>
             <value> <string></string> </value>
         </item>
       </dictionary>
