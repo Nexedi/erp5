@@ -96,7 +96,6 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>your_deferred_style</string>
                         <string>your_dialog_action_url</string>
                         <string>your_base_content_type</string>
                       </list>
