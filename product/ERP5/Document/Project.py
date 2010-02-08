@@ -67,5 +67,6 @@ class Project(XMLObject, XMLMatrix):
                        PropertySheet.CategoryCore,
                        PropertySheet.Arrow,
                        PropertySheet.Task,
+                       PropertySheet.Reference,
                        )
 
