@@ -74,15 +74,15 @@
               <dictionary>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_price_currency</string> </value>
+                    <value> <string>my_line_price_currency</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>OrderLine_viewFieldLibrary</string> </value>
+                    <value> <string>Base_viewTradeFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
-                    <value> <string>Click to edit the target</string> </value>
+                    <value> <string>7</string> </value>
                 </item>
               </dictionary>
             </value>

@@ -3,7 +3,7 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <global name="RelationStringField" module="Products.ERP5Form.RelationField"/>
+        <global name="MultiRelationStringField" module="Products.ERP5Form.MultiRelationField"/>
         <tuple/>
       </tuple>
     </pickle>
@@ -11,7 +11,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_destination_title</string> </value>
+            <value> <string>my_source_trade_title_list</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -129,6 +129,10 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>height</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>hidden</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -193,10 +197,6 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>truncate</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>unicode</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -205,7 +205,15 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>view_separator</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>whitespace_preserve</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>width</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -265,9 +273,7 @@
                 </item>
                 <item>
                     <key> <string>display_width</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
-                    </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>editable</string> </key>
@@ -275,7 +281,9 @@
                 </item>
                 <item>
                     <key> <string>enabled</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>external_validator</string> </key>
@@ -292,6 +300,12 @@
                 <item>
                     <key> <string>first_item</string> </key>
                     <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>height</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
@@ -358,10 +372,6 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>truncate</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>unicode</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -370,8 +380,18 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>view_separator</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>whitespace_preserve</string> </key>
                     <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>width</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAY=</string> </persistent>
+                    </value>
                 </item>
               </dictionary>
             </value>
@@ -441,11 +461,13 @@
                 </item>
                 <item>
                     <key> <string>default</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <list/>
+                    </value>
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string>The organisation or person to whom merchandise or service is delivered over or provided to.</string> </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>display_maxwidth</string> </key>
@@ -478,6 +500,10 @@
                 <item>
                     <key> <string>first_item</string> </key>
                     <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>height</string> </key>
+                    <value> <int>3</int> </value>
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
@@ -520,12 +546,12 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>Organisation</string>
-                          <string>Organisation</string>
+                          <string>Person</string>
+                          <string>Person</string>
                         </tuple>
                         <tuple>
-                          <string>Person</string>
-                          <string>Person</string>
+                          <string>Organisation</string>
+                          <string>Organisation</string>
                         </tuple>
                       </list>
                     </value>
@@ -569,11 +595,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Recipient or Beneficiary</string> </value>
-                </item>
-                <item>
-                    <key> <string>truncate</string> </key>
-                    <value> <int>0</int> </value>
+                    <value> <string>Original Supplier or Worker</string> </value>
                 </item>
                 <item>
                     <key> <string>unicode</string> </key>
@@ -584,8 +606,20 @@
                     <value> <string>Base_validateRelation</string> </value>
                 </item>
                 <item>
+                    <key> <string>view_separator</string> </key>
+                    <value> <string encoding="cdata"><![CDATA[
+
+<br />
+
+]]></string> </value>
+                </item>
+                <item>
                     <key> <string>whitespace_preserve</string> </key>
                     <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>width</string> </key>
+                    <value> <int>40</int> </value>
                 </item>
               </dictionary>
             </value>
@@ -626,6 +660,38 @@
     </pickle>
   </record>
   <record id="4" aka="AAAAAAAAAAQ=">
+    <pickle>
+      <tuple>
+        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>not: here/hasLineContent</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="5" aka="AAAAAAAAAAU=">
+    <pickle>
+      <tuple>
+        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>python: preferences.getPreference(\'preferred_textarea_height\', 4)</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="6" aka="AAAAAAAAAAY=">
     <pickle>
       <tuple>
         <global name="TALESMethod" module="Products.Formulator.TALESField"/>

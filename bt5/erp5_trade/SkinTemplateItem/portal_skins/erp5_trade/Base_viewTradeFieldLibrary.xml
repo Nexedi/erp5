@@ -128,8 +128,6 @@
                         <string>listbox_base_contribution_title_list</string>
                         <string>my_sale_destination_decision_title</string>
                         <string>my_sale_destination_section_title</string>
-                        <string>my_sale_destination_title</string>
-                        <string>my_sale_source_decision_title</string>
                         <string>my_sale_source_section</string>
                         <string>my_sale_source_title</string>
                         <string>listbox_aggregate_title_list</string>
@@ -140,6 +138,23 @@
                         <string>my_translated_immobilisation_state_title</string>
                         <string>my_sale_source_administration_title</string>
                         <string>my_sale_source_section_title</string>
+                        <string>listbox_start_date</string>
+                        <string>my_aggregate_title_list</string>
+                        <string>my_amortisation_method</string>
+                        <string>my_base_contribution_list</string>
+                        <string>my_price</string>
+                        <string>my_quantity</string>
+                        <string>my_quantity_unit</string>
+                        <string>my_resource_title</string>
+                        <string>my_total_quantity</string>
+                        <string>my_use</string>
+                        <string>my_variation_category_list</string>
+                        <string>my_sale_line_source_account</string>
+                        <string>my_purchase_line_destination_account</string>
+                        <string>my_line_reference</string>
+                        <string>my_line_price_currency</string>
+                        <string>my_source_trade_title_list</string>
+                        <string>my_int_index</string>
                       </list>
                     </value>
                 </item>
