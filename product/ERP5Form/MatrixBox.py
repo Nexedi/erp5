@@ -40,10 +40,6 @@ class MatrixBoxWidget(Widget.Widget):
     """
     An UI widget which displays a matrix
 
-    A MatrixBoxWidget should be called 'matrixbox', if you don't do so, then
-    you may have some errors, 
-    or some strange problems, you have been Warned !!!!
-
     Don't forget that you can use tales expressions for every field, so this
     is really usefull if you want to use fonctions 
     instead of predefined variables.
@@ -71,42 +67,42 @@ class MatrixBoxWidget(Widget.Widget):
                                    required=0)
 
     as_cell_range_script_id = fields.StringField('as_cell_range_script_id',
-                                 title='"As cell range" script id',
-                                 description=("""
-        Id of a script returning columns, lines and tabs. The script is passed
-        matrixbox=True as argument."""),
+                                 title='Cell range method',
+                                 description=(
+        "Method returning columns, lines and tabs. The method is passed"
+        " matrixbox=True, base_id=base_id as arguments."),
                                  default='',
                                  required=0)
     columns = fields.ListTextAreaField('columns',
                                  title="Columns",
                                  description=(
-      """This defines columnes of the matrixbox. 
-      This should be a list of couples, 
-      couple[0] is the variation, and couple[1] is the name displayed 
-      to the user.
-      For example (('color/bleu','bleu'),('color/red','red')).
-      Deprecated, use "As cell range" script id instead"""),
+      "This defines columns of the matrixbox. "
+      "This should be a list of couples, "
+      "couple[0] is the variation, and couple[1] is the name displayed "
+      "to the user.\n"
+      "For example (('color/blue', 'Bleu'), ('color/red','Red')).\n"
+      " Deprecated, use cell range method instead"),
                                  default=[],
                                  required=0)
 
     lines = fields.ListTextAreaField('lines',
                                  title="Lines",
                                  description=(
-      """This defines lines of the matrixbox. This should be a list of couples,
-      couple[0] is the variation, and couple[1] is the name displayed 
-      to the user.
-      For example (('size/baby/02','baby/02'),('size/baby/03','baby/03')).
-      Deprecated, use "As cell range" script id instead"""),
+      "This defines lines of the matrixbox. This should be a list of couples, "
+      "couple[0] is the variation, and couple[1] is the name displayed "
+      "to the user.\n"
+      "For example (('size/baby/02','baby/02'),('size/baby/03','baby/03')).\n"
+      "Deprecated, use cell range method instead"),
                                  default=[],
                                  required=0)
 
     tabs = fields.ListTextAreaField('tabs',
                                  title="Tabs",
                                  description=(
-      """This defines tabs. You can use it with the same way as Lines 
-      and Columns,
-      This is used only if you have more than 2 kinds of variations. 
-      Deprecated, use "As cell range" script id instead"""),
+      "This defines tabs. You can use it with the same way as Lines "
+      "and Columns.\n"
+      "This is used only if you have more than 2 kinds of variations.\n"
+      "Deprecated, use cell range method instead"),
                                  default=[],
                                  required=0)
 
@@ -114,38 +110,34 @@ class MatrixBoxWidget(Widget.Widget):
     cell_range = fields.ListTextAreaField('cell_range',
                                            title="Cell Range",
                                            description=(
-                """
-                This defines the range of the matrix.
-                """),
+                "This defines the range of the matrix."),
                                            default=[],
                                            required=0)
     getter_method = fields.StringField('getter_method',
                                  title='Getter method',
-                                 description=("""
-        You can specify a specific method in order to retrieve the context.
-        This field can be empty, if so the MatrixBox will use the default 
-        context."""),
+                                 description=(
+        "You can specify a specific method in order to retrieve the context. "
+        "This field can be empty, if so the MatrixBox will use the default "
+        "context."),
 
                                  default='',
                                  required=0)
 
     cell_getter_method = fields.StringField('cell_getter_method',
                                  title='Cell Getter method',
-                                 description=("""
-        You can specify a method in order to retrieve cells. This field can
-        be empty, if so the MatrixBox will use the default method : getCell.
-        """),
-
+                                 description=(
+        "You can specify a method in order to retrieve cells. This field can "
+        "be empty, if so the MatrixBox will use the default method : getCell."
+       ),
                                  default='',
                                  required=0)
 
     new_cell_method = fields.MethodField('new_cell_method',
                                  title='New Cell method',
-                                 description=("""
-        You can specify a specific method in order to create cells.
-        This field can be empty, if so the MatrixBox will use the default 
-        method :
-        newCell."""),
+                                 description=(
+        "You can specify a specific method in order to create cells. "
+        "This field can be empty, if so the MatrixBox will use the default "
+        "method : newCell."),
 
                                  default='',
                                  required=0)
@@ -153,35 +145,34 @@ class MatrixBoxWidget(Widget.Widget):
     editable_attributes = fields.ListTextAreaField('editable_attributes',
                                  title="Editable Properties",
                                  description=(
-        """A list of attributes which are set by hidden fields called 
-        matrixbox_attribute_name. This is used
-        when we want to specify a value calculated for each cell"""),
+        "A list of attributes which are set by hidden fields called "
+        "matrixbox_attribute_name. This is used "
+        "when we want to specify a computed value for each cell"),
                                  default=[],
                                  required=0)
 
     global_attributes = fields.ListTextAreaField('global_attributes',
                                  title="Global Properties",
                                  description=(
-        """An optional list of globals attributes which are set by hidden 
-        fields and which are applied to each cell. 
-        This is used if we want to set the same value for every cell"""),
+        "An optional list of globals attributes which are set by hidden "
+        "fields and which are applied to each cell. "
+        "This is used if we want to set the same value for every cell"),
                                  default=[],
                                  required=0)
 
     cell_base_id = fields.StringField('cell_base_id',
                                  title='Base id for cells',
-                                 description=("""
-        The Base id for cells : this is the name used to store cells, 
-        we usually,
-        use names like : 'mouvement','path', ...."""),
+                                 description=(
+        "The Base id for cells : this is the name used to store cells, "
+        "we usually use names like : 'movement', 'path', ... "),
                                  default='cell',
                                  required=0)
 
     cell_portal_type = fields.StringField('cell_portal_type',
                                  title='Portal Type for cells',
-                                 description=("""
-        The Portal Type for cells : This is the portal type used to 
-        construct a new cell."""),
+                                 description=(
+        "The Portal Type for cells : This is the portal type used to "
+        "create a new cell."),
                                  default='Mapped Value',
                                  required=0)
 
@@ -239,10 +230,10 @@ class MatrixBoxWidget(Widget.Widget):
         editable_attributes = field.get_value('editable_attributes')
 
         # This is required when we have no tabs
-        if len(tabs) == 0: 
+        if len(tabs) == 0:
           tabs = [(None,None)]
         # This is required when we have no columns
-        if len(columns) == 0: 
+        if len(columns) == 0:
           columns = [(None,None)]
 
         column_ids = [x[0] for x in columns]
@@ -562,8 +553,8 @@ class MatrixBox(ZMIField):
     security.declareProtected('Access contents information', 'get_value')
     def get_value(self, id, **kw):
       if id=='default' and kw.get('render_format') in ('list', ):
-        return self.widget.render(self, self.generate_field_key(), None, 
-                                  kw.get('REQUEST'), 
+        return self.widget.render(self, self.generate_field_key(), None,
+                                  kw.get('REQUEST'),
                                   render_format=kw.get('render_format'))
       else:
         return ZMIField.get_value(self, id, **kw)
