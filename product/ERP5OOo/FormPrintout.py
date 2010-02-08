@@ -173,8 +173,7 @@ class FormPrintout(Implicit, Persistent, RoleManager, Item):
     self.template = template
 
   security.declareProtected('View', 'index_html')
-  def index_html(self, REQUEST, icon=0, preview=0, width=None, height=None,
-                 RESPONSE=None, format=None, batch_mode=False):
+  def index_html(self, REQUEST, RESPONSE=None, format=None, batch_mode=False):
     """Render and view a printout document.
 
     format: conversion format requested by User.
