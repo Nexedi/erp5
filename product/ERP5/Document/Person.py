@@ -27,6 +27,7 @@
 #
 ##############################################################################
 
+import zope.interface
 from AccessControl import ClassSecurityInfo
 from Products.CMFCore.utils import getToolByName
 from Products.CMFCore.utils import _checkPermission
@@ -78,6 +79,8 @@ class Person(XMLObject):
     meta_type = 'ERP5 Person'
     portal_type = 'Person'
     add_permission = Permissions.AddPortalContent
+
+    zope.interface.implements(interfaces.INode)
 
     # Declarative security
     security = ClassSecurityInfo()

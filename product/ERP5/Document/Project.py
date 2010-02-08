@@ -1,7 +1,10 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2002 nSight SAS and Contributors. All Rights Reserved.
 #                    Nicolas Lhoir <nicolas.lhoir@nsight.fr>
+#               2010 Nexedi SA and Contributors. All Rights Reserved.
+#                    Jérome Perrin <jerome@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -26,11 +29,14 @@
 #
 ##############################################################################
 
+import zope.interface
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
-from Products.ERP5.Document.Order import Order
+from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
+from Products.ERP5Type.XMLObject import XMLObject
+from Products.ERP5Type.XMLMatrix import XMLMatrix
 
-class Project(Order):
+class Project(XMLObject, XMLMatrix):
     """
     Project is a class which describes a typical project in consulting firm.
     A project has a client, an invoiced client. A project has also a start
@@ -39,14 +45,15 @@ class Project(Order):
     Each task has a person to perform it, a certain amount of time, a date,
     a place, a description. For each person and each task, there is dedicated
     time rate.
-
-    XXX Project should not inherit from Order since Task exists.
-    This is not a Delivery
     """
 
     meta_type = 'ERP5 Project'
     portal_type = 'Project'
     add_permission = Permissions.AddPortalContent
+    # XXX to index start_date and stop_date in delivery table:
+    isDelivery = ConstantGetter('isDelivery', value=True)
+
+    zope.interface.implements(interfaces.INode)
 
     # Declarative security
     security = ClassSecurityInfo()

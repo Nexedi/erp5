@@ -78,9 +78,6 @@ class Ticket(Movement, Project):
 
     security.declareProtected(Permissions.AccessContentsInformation, 'isAccountable')
     def isAccountable(self):
-      """
-        Returns 1 if this needs to be accounted
-        Only account movements which are not associated to a delivery
-        Whenever delivery is there, delivery has priority
+      """ Tickets are accountable.
       """
       return 1

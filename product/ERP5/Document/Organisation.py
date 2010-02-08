@@ -26,6 +26,7 @@
 #
 ##############################################################################
 
+import zope.interface
 from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
@@ -54,6 +55,8 @@ class Organisation(XMLObject):
     meta_type = 'ERP5 Organisation'
     portal_type = 'Organisation'
     add_permission = Permissions.AddPortalContent
+
+    zope.interface.implements(interfaces.INode)
 
     # Declarative security
     security = ClassSecurityInfo()
