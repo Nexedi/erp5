@@ -65,12 +65,20 @@ class DiffFile:
     for line in self.header.splitlines():
       if line.startswith('--- '):
         tmp = re.search('\\([^)]+\\)$', line)
-        self.old_revision = tmp.string[tmp.start():tmp.end()][1:-1].strip()
+        if tmp is not None:
+          self.old_revision = tmp.string[tmp.start():tmp.end()][1:-1].strip()
+        else:
+          self.old_revision = line.replace("--- ", "")
       if line.startswith('+++ '):
         tmp = re.search('\\([^)]+\\)$', line)
-        self.new_revision = tmp.string[tmp.start():tmp.end()][1:-1].strip()
+        if tmp is not None:
+          self.new_revision = tmp.string[tmp.start():tmp.end()][1:-1].strip()
+        else:
+          self.new_revision = line.replace("+++ ", "")
     # Splitting the body from the header
-    self.body = os.linesep.join(raw_diff.strip().splitlines()[4:])
+    self.body = os.linesep.join(raw_diff.strip().splitlines()[3:])
+    if not self.body.startswith('@@'):
+       self.body = os.linesep.join(raw_diff.strip().splitlines()[4:])
     # Now splitting modifications
     self.children = []
     first = True
@@ -84,7 +92,7 @@ class DiffFile:
           first = False
           tmp.append(line)
     self.children.append(CodeBlock(os.linesep.join(tmp)))
-    
+
   def toHTML(self):
     """ return HTML diff
     """
