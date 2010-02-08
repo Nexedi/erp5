@@ -101,6 +101,7 @@ catalog_method_list = ('_is_catalog_list_method_archive',
 
 catalog_method_filter_list = ('_filter_expression_archive',
                               '_filter_expression_instance_archive',
+                              '_filter_expression_cache_key_archive',
                               '_filter_type_archive',)
 
 INSTALLED_BT_FOR_DIFF = 'installed_bt_for_diff'
@@ -2150,9 +2151,8 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
     self._method_properties = PersistentMapping()
 
     self._is_filtered_archive = PersistentMapping()
-    self._filter_expression_archive = PersistentMapping()
-    self._filter_expression_instance_archive = PersistentMapping()
-    self._filter_type_archive = PersistentMapping()
+    for method in catalog_method_filter_list:
+      setattr(self, method, PersistentMapping())
 
   def _extractMethodProperties(self, catalog, method_id):
     """Extracts properties for a given method in the catalog.
@@ -2184,20 +2184,14 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
       method_id = obj.id
       self._method_properties[method_id] = self._extractMethodProperties(
                                                           catalog, method_id)
-      self._is_filtered_archive[method_id] = 0
-      if catalog.filter_dict.has_key(method_id):
-        if catalog.filter_dict[method_id]['filtered']:
-          self._is_filtered_archive[method_id] = \
-                      catalog.filter_dict[method_id]['filtered']
-          self._filter_expression_archive[method_id] = \
-                      catalog.filter_dict[method_id]['expression']
-          self._filter_expression_instance_archive[method_id] = \
-                      catalog.filter_dict[method_id]['expression_instance']
-          self._filter_type_archive[method_id] = \
-                      catalog.filter_dict[method_id]['type']
+      filter = catalog.filter_dict.get(method_id, {})
+      self._is_filtered_archive[method_id] = filter.get('filtered', 0)
+      for method in catalog_method_filter_list:
+        property = method[8:-8]
+        if property in filter:
+          getattr(self, method)[method_id] = filter[property]
 
   def generateXml(self, path):
-    catalog = _getCatalogValue(self)
     obj = self._objects[path]
     method_id = obj.id
     xml_data = '<catalog_method>'
@@ -2207,23 +2201,18 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
         xml_data += '\n  <value>%s</value>' %(value,)
         xml_data += '\n </item>'
 
-      if catalog.filter_dict.has_key(method_id):
-        if catalog.filter_dict[method_id]['filtered']:
+      if self._is_filtered_archive.get(method_id):
           xml_data += '\n <item key="_is_filtered_archive" type="int">'
           xml_data += '\n  <value>1</value>'
           xml_data += '\n </item>'
           for method in catalog_method_filter_list:
-            try:
-              value = getattr(self, method, '')[method_id]
-            except KeyError:
-              # the method has no key
-              continue
             if method != '_filter_expression_instance_archive':
-              if type(value) in (type(''), type(u'')):
+              value = getattr(self, method, {}).get(method_id)
+              if isinstance(value, basestring):
                 xml_data += '\n <item key="%s" type="str">' %(method,)
                 xml_data += '\n  <value>%s</value>' %(str(value))
                 xml_data += '\n </item>'
-              elif type(value) in (type(()), type([])):
+              elif value:
                 xml_data += '\n <item key="%s" type="tuple">'%(method)
                 for item in value:
                   xml_data += '\n  <value>%s</value>' %(str(item))
@@ -2323,12 +2312,14 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
             expr_instance = None
         else:
           expr_instance = self._filter_expression_instance_archive[method_id]
-        filter_type = self._filter_type_archive[method_id]
         catalog.filter_dict[method_id] = PersistentMapping()
         catalog.filter_dict[method_id]['filtered'] = 1
         catalog.filter_dict[method_id]['expression'] = expression
         catalog.filter_dict[method_id]['expression_instance'] = expr_instance
-        catalog.filter_dict[method_id]['type'] = filter_type
+        catalog.filter_dict[method_id]['expression_cache_key'] = \
+          self._filter_expression_cache_key_archive.get(method_id, ())
+        catalog.filter_dict[method_id]['type'] = \
+          self._filter_type_archive.get(method_id, ())
       elif method_id in catalog.filter_dict.keys():
         catalog.filter_dict[method_id]['filtered'] = 0
 
@@ -2420,21 +2411,16 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
             value = str(method.getElementsByTagName('value')[0].childNodes[0].data)
           else:
             value = ''
-          key = str(key)
         elif key_type == "int":
           value = int(method.getElementsByTagName('value')[0].childNodes[0].data)
-          key = str(key)
         elif key_type == "tuple":
-          value = []
-          value_list = method.getElementsByTagName('value')
-          for item in value_list:
-            value.append(item.childNodes[0].data)
+          value = tuple(item.childNodes[0].data
+                        for item in method.getElementsByTagName('value'))
         else:
           LOG('BusinessTemplate import CatalogMethod, type unknown', 0, key_type)
           continue
         if key in catalog_method_list or key in catalog_method_filter_list:
-          dict = getattr(self, key, {})
-          dict[id] = value
+          getattr(self, key)[id] = value
         else:
           # new style key
           self._method_properties.setdefault(id, PersistentMapping())[key] = 1

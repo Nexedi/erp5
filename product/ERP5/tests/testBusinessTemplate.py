@@ -1381,12 +1381,13 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     sql_uncatalog_object.sort()
     catalog.sql_uncatalog_object = tuple(sql_uncatalog_object)
     # set filter for this method
-    expression = 'python: isMovement'
+    expression = 'python: context.isPredicate()'
     expr_instance = Expression(expression)
     catalog.filter_dict[method_id] = PersistentMapping()
     catalog.filter_dict[method_id]['filtered'] = 1
     catalog.filter_dict[method_id]['expression'] = expression
     catalog.filter_dict[method_id]['expression_instance'] = expr_instance
+    catalog.filter_dict[method_id]['expression_cache_key'] = 'portal_type',
     catalog.filter_dict[method_id]['type'] = []
 
 
@@ -1410,12 +1411,13 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     sql_uncatalog_object.sort()
     catalog.sql_uncatalog_object = tuple(sql_uncatalog_object)
     # set filter for this method
-    expression = 'python: isDelivery'
+    expression = 'python: context.isDelivery()'
     expr_instance = Expression(expression)
     catalog.filter_dict[method_id] = PersistentMapping()
     catalog.filter_dict[method_id]['filtered'] = 1
     catalog.filter_dict[method_id]['expression'] = expression
     catalog.filter_dict[method_id]['expression_instance'] = expr_instance
+    catalog.filter_dict[method_id]['expression_cache_key'] = 'portal_type',
     catalog.filter_dict[method_id]['type'] = []
 
   def stepCreateNewCatalogMethod(self, sequence=None, sequence_list=None, **kw):
@@ -1494,15 +1496,15 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     self.failUnless(catalog is not None)
     method_id = sequence.get('zsql_method_id', None)
     zsql_method = catalog._getOb(method_id, None)
-    self.failUnless(zsql_method is not None)
+    self.assertNotEqual(zsql_method, None)
     # check catalog properties
     self.failUnless(method_id in catalog.sql_uncatalog_object)
     # check filter
-    self.failUnless(method_id in catalog.filter_dict.keys())
     filter_dict = catalog.filter_dict[method_id]
     self.assertEqual(filter_dict['filtered'], 1)
-    self.assertEqual(filter_dict['expression'], 'python: isMovement')
-    self.assertEqual(filter_dict['type'], [])
+    self.assertEqual(filter_dict['expression'], 'python: context.isPredicate()')
+    self.assertEqual(filter_dict['expression_cache_key'], ('portal_type',))
+    self.assertEqual(filter_dict['type'], ())
 
   def stepCheckUpdatedCatalogMethodExists(self, sequence=None, sequence_list=None, **kw):
     """
@@ -1513,15 +1515,15 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     self.failUnless(catalog is not None)
     method_id = sequence.get('zsql_method_id', None)
     zsql_method = catalog._getOb(method_id, None)
-    self.failUnless(zsql_method is not None)
+    self.assertNotEqual(zsql_method, None)
     # check catalog properties
     self.failUnless(method_id in catalog.sql_uncatalog_object)
     # check filter
-    self.failUnless(method_id in catalog.filter_dict.keys())
     filter_dict = catalog.filter_dict[method_id]
     self.assertEqual(filter_dict['filtered'], 1)
-    self.assertEqual(filter_dict['expression'], 'python: isDelivery')
-    self.assertEqual(filter_dict['type'], [])
+    self.assertEqual(filter_dict['expression'], 'python: context.isDelivery()')
+    self.assertEqual(filter_dict['expression_cache_key'], ('portal_type',))
+    self.assertEqual(filter_dict['type'], ())
 
   def stepCheckCatalogMethodRemoved(self, sequence=None, sequence_list=None, **kw):
     """

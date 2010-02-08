@@ -36,6 +36,8 @@ import sys
 import urllib
 import string
 import pprint
+import re
+import warnings
 from cStringIO import StringIO
 from xml.dom.minidom import parse
 from xml.sax.saxutils import escape, quoteattr
@@ -62,6 +64,7 @@ try:
   from Products.CMFCore.Expression import Expression
   from Products.PageTemplates.Expressions import getEngine
   from Products.CMFCore.utils import getToolByName
+  new_context_search = re.compile(r'\bcontext\b').search
   withCMF = 1
 except ImportError:
   withCMF = 0
@@ -1368,8 +1371,7 @@ class Catalog(Folder,
 
     if method_id_list is None:
       method_id_list = self.sql_catalog_object_list
-    econtext_cache = {}
-    expression_result_cache = {}
+    econtext = getEngine().getContext()
     argument_cache = {}
 
     try:
@@ -1377,56 +1379,71 @@ class Catalog(Folder,
         enableReadOnlyTransactionCache(self)
 
       filter_dict = self.filter_dict
-      isMethodFiltered = self.isMethodFiltered
+      catalogged_object_list_cache = {}
       for method_name in method_id_list:
-        if isMethodFiltered(method_name):
-          catalogged_object_list = []
-          append = catalogged_object_list.append
+        # We will check if there is an filter on this
+        # method, if so we may not call this zsqlMethod
+        # for this object
+        expression = None
+        try:
           filter = filter_dict[method_name]
-          type_set = frozenset(filter['type']) or None
-          expression = filter['expression_instance']
-          expression_cache_key_list = filter.get('expression_cache_key', '').split()
-          for object in object_list:
-            # We will check if there is an filter on this
-            # method, if so we may not call this zsqlMethod
-            # for this object
-            if type_set is not None and object.getPortalType() not in type_set:
-              continue
-            elif expression is not None:
+          if filter['filtered']:
+            if filter.get('type'):
+              expression = Expression('python: context.getPortalType() in '
+                                      + repr(tuple(filter['type'])))
+              LOG('SQLCatalog', WARNING,
+                  "Convert deprecated type filter for %r into %r expression"
+                  % (method_name, expression.text))
+              filter['type'] = ()
+              filter['expression'] = expression.text
+              filter['expression_instance'] = expression
+            else:
+              expression = filter['expression_instance']
+        except KeyError:
+          pass
+        if expression is None:
+          catalogged_object_list = object_list
+        else:
+          text = expression.text
+          catalogged_object_list = catalogged_object_list_cache.get(text)
+          if catalogged_object_list is None:
+            catalogged_object_list_cache[text] = catalogged_object_list = []
+            append = catalogged_object_list.append
+            old_context = new_context_search(text) is None
+            if old_context:
+              warnings.warn("Filter expression for %r (%r): using variables"
+                            " other than 'context' is deprecated and slower."
+                            % (method_name, text), DeprecationWarning)
+            expression_cache_key_list = filter.get('expression_cache_key', ())
+            expression_result_cache = {}
+            for object in object_list:
               if expression_cache_key_list:
-                # We try to save results of expressions by portal_type
-                # or by anyother key which can prevent us from evaluating
-                # expressions. This cache is built each time we reindex
+                # Expressions are slow to evaluate because they are executed
+                # in restricted environment. So we try to save results of
+                # expressions by portal_type or any other key.
+                # This cache is built each time we reindex
                 # objects but we could also use over multiple transactions
                 # if this can improve performance significantly
+                # ZZZ - we could find a way to compute this once only
+                cache_key = tuple(object.getProperty(key) for key
+                                  in expression_cache_key_list)
                 try:
-                  cache_key = (object.getProperty(key, None) for key in expression_cache_key_list)
-                    # ZZZ - we could find a way to compute this once only
-                  cache_key = (method_name, tuple(cache_key))
-                  result = expression_result_cache[cache_key]
-                  compute_result = 0
+                  if expression_result_cache[cache_key]:
+                    append(object)
+                  continue
                 except KeyError:
-                  cache_result = 1
-                  compute_result = 1
+                  pass
+              if old_context:
+                result = expression(self.getExpressionContext(object))
               else:
-                cache_result = 0
-                compute_result = 1
-              if compute_result:
-                try:
-                  econtext = econtext_cache[object.uid]
-                except KeyError:
-                  econtext = self.getExpressionContext(object)
-                  econtext_cache[object.uid] = econtext
+                econtext.setLocal('context', object)
                 result = expression(econtext)
-              if cache_result:
+              if expression_cache_key_list:
                 expression_result_cache[cache_key] = result
-              if not result:
-                continue
-            append(object)
-        else:
-          catalogged_object_list = object_list
+              if result:
+                append(object)
 
-        if len(catalogged_object_list) == 0:
+        if not catalogged_object_list:
           continue
 
         #LOG('catalogObjectList', 0, 'method_name = %s' % (method_name,))
@@ -2325,27 +2342,17 @@ class Catalog(Folder,
         # We will first look if the filter is activated
         if not self.filter_dict.has_key(id):
           self.filter_dict[id] = PersistentMapping()
-          self.filter_dict[id]['filtered'] = 0
-          self.filter_dict[id]['type'] = []
-          self.filter_dict[id]['expression'] = ""
-          self.filter_dict[id]['expression_cache_key'] = "portal_type"
 
         if REQUEST.has_key('%s_box' % id):
           self.filter_dict[id]['filtered'] = 1
         else:
           self.filter_dict[id]['filtered'] = 0
 
-        if REQUEST.has_key('%s_expression' % id):
-          expression = REQUEST['%s_expression' % id]
-          if expression == "":
-            self.filter_dict[id]['expression'] = ""
-            self.filter_dict[id]['expression_instance'] = None
-          else:
-            expr_instance = Expression(expression)
-            self.filter_dict[id]['expression'] = expression
-            self.filter_dict[id]['expression_instance'] = expr_instance
+        expression = REQUEST.get('%s_expression' % id, '').strip()
+        self.filter_dict[id]['expression'] = expression
+        if expression:
+          self.filter_dict[id]['expression_instance'] = Expression(expression)
         else:
-          self.filter_dict[id]['expression'] = ""
           self.filter_dict[id]['expression_instance'] = None
 
         if REQUEST.has_key('%s_type' % id):
@@ -2356,14 +2363,8 @@ class Catalog(Folder,
         else:
           self.filter_dict[id]['type'] = []
 
-        if REQUEST.has_key('%s_expression_cache_key' % id):
-          expression_cache_key = REQUEST['%s_expression_cache_key' % id]
-          if expression_cache_key == "":
-            self.filter_dict[id]['expression_cache_key'] = expression_cache_key
-          else:
-            self.filter_dict[id]['expression_cache_key'] = ""
-        else:
-          self.filter_dict[id]['expression_cache_key'] = ""
+        self.filter_dict[id]['expression_cache_key'] = \
+          tuple(sorted(REQUEST.get('%s_expression_cache_key' % id, '').split()))
 
     if RESPONSE and URL1:
       RESPONSE.redirect(URL1 + '/manage_catalogFilter?manage_tabs_message=Filter%20Changed')
@@ -2406,7 +2407,7 @@ class Catalog(Folder,
         self.filter_dict = PersistentMapping()
         return ""
       try:
-        return self.filter_dict[method_name]['expression_cache_key']
+        return ' '.join(self.filter_dict[method_name]['expression_cache_key'])
       except KeyError:
         return ""
     return ""
@@ -2426,6 +2427,7 @@ class Catalog(Folder,
 
   def isPortalTypeSelected(self, method_name, portal_type):
     """ Returns true if the portal type is selected for this method.
+      XXX deprecated
     """
     if withCMF:
       if getattr(aq_base(self), 'filter_dict', None) is None:
@@ -2440,6 +2442,7 @@ class Catalog(Folder,
   def getFilteredPortalTypeList(self, method_name):
     """ Returns the list of portal types which define
         the filter.
+      XXX deprecated
     """
     if withCMF:
       if getattr(aq_base(self), 'filter_dict', None) is None:
@@ -2469,12 +2472,12 @@ class Catalog(Folder,
   def getExpressionContext(self, ob):
       '''
       An expression context provides names for TALES expressions.
+      XXX deprecated
       '''
       if withCMF:
         data = {
             'here':         ob,
             'container':    aq_parent(aq_inner(ob)),
-            'nothing':      None,
             #'root':         ob.getPhysicalRoot(),
             #'request':      getattr( ob, 'REQUEST', None ),
             #'modules':      SecureModuleImporter,
