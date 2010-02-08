@@ -51,7 +51,6 @@ bt5_dir_list = ','.join([
                     os.path.join(instance_home, 'Products/ERP5/bootstrap'),
                     os.path.join(instance_home, 'bt5')])
 
-
 class FunctionalTestRunner:
   """
     Used to run Functional tests
@@ -134,10 +133,8 @@ class FunctionalTestRunner:
     f.close()
     return file_content
   
-  
   def main(self):
-    self.setPreference()
-    self.unsubscribeFromTimerService()
+    self.setUp()
     self.launchFuntionalTest()
 
   def launchFuntionalTest(self):
@@ -272,7 +269,11 @@ user_pref("capability.principal.codebase.p1.subjectName", "");""" % \
     urllib2.urlopen('%s/portal_activities/?unsubscribe:method='
                     '&__ac_name=%s&__ac_password=%s' %
                     (self.portal_url, self.user, self.password))
-  
+
+  def setUp(self):
+    self.setPreference()
+    self.unsubscribeFromTimerService()
+
   def sendResult(self):
     result_uri = urllib2.urlopen('%s/portal_tests/TestTool_getResults' % self.portal_url).readline()
     print result_uri
@@ -309,8 +310,10 @@ Following tests failed:
       if error_result_re.match(e):
         detail += e
     detail = image_re.sub('', detail)
-    detail = detail.replace('<tr class="title status_failed"', '<tr class="title status_failed" style="background-color:red"')
-    detail = detail.replace('<tr class="status_failed"', '<tr class="status_failed" style="background-color:red"')
+    detail = detail.replace('<tr class="title status_failed"', 
+               '<tr class="title status_failed" style="background-color:red"')
+    detail = detail.replace('<tr class="status_failed"', 
+              '<tr class="status_failed" style="background-color:red"')
     if detail:
       detail = '<html><body>%s</body></html>' % detail
     status = (not failures)
