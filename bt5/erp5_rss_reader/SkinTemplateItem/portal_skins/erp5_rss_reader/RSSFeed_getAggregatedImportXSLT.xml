@@ -76,7 +76,7 @@ xmlns:dc="http://purl.org/dc/elements/1.1/">\n
               <xsl:otherwise>None</xsl:otherwise>\n
             </xsl:choose>\n
           </url_text>\n
-          <pub_date><xsl:value-of select="pubDate|dc:date"/></pub_date>\n
+          <pub_date><xsl:value-of select="pubDate|dc:date|*[local-name() = \'published\']"/></pub_date>\n
           <workflow_action id="edit_workflow">\n
             <action type="string">edit</action>\n
             <actor type="string"><xsl:value-of select=\'$actor\'/></actor>\n
@@ -84,7 +84,7 @@ xmlns:dc="http://purl.org/dc/elements/1.1/">\n
             <error_message type="string"></error_message>\n
             <serial type="string">0.0.0.0</serial>\n
             <state type="string">current</state>\n
-            <time type="date"><xsl:value-of select="pubDate|dc:date"/></time>\n
+            <time type="date"><xsl:value-of select="pubDate|dc:date|*[local-name() = \'published\']"/></time>\n
           </workflow_action>\n
           <xsl:apply-templates select=".//geo:lat"/>\n
           <xsl:apply-templates select=".//geo:long"/>\n
