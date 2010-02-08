@@ -43,19 +43,20 @@ xmlns:dc="http://purl.org/dc/elements/1.1/">\n
 <xsl:param name="subject_list" select="None"/>\n
 <xsl:param name="actor" select="None"/>\n
 \n
-\n
 <!--Template matching the erp5 Tag-->\n
 <xsl:template match="/">\n
   <erp5>\n
-      <xsl:apply-templates select="//item|//entry"/> \n
+      <xsl:apply-templates/> \n
   </erp5>\n
 </xsl:template>\n
 \n
+<xsl:template match="text()"/>\n
+\n
 <!--Template maching the item Tag-->\n
-<xsl:template match="item|entry">\n
+<xsl:template match="item|*[local-name() = \'entry\']">\n
        <xsl:variable name="md5_id">\n
         <xsl:choose>\n
-          <xsl:when test="title|dc:title"><xsl:value-of select="title|dc:title"/></xsl:when>\n
+          <xsl:when test="*[local-name() = \'title\']"><xsl:value-of select="*[local-name() = \'title\']"/></xsl:when>\n
           <xsl:when test="link"><xsl:value-of select="link|link/@href"/></xsl:when>\n
           <xsl:otherwise><xsl:value-of select="description|dc:description"/></xsl:otherwise>\n
         </xsl:choose>\n
@@ -65,7 +66,7 @@ xmlns:dc="http://purl.org/dc/elements/1.1/">\n
           <id type="string"><xsl:value-of select="$converted_id"/></id>\n
           <rid type="string"><xsl:value-of select=\'$rid\'/></rid>\n
           <categories_list type="tokens"><xsl:value-of select="$categories_list"/></categories_list>\n
-          <title type="string"><xsl:value-of select="title|dc:title"/></title>\n
+          <title type="string"><xsl:value-of select="*[local-name() = \'title\']"/></title>\n
           <subject_list type="lines"><xsl:value-of select="$subject_list"/></subject_list>\n
           <description type="text"><xsl:value-of select="description|dc:description|content"/><xsl:apply-templates select=\'summary\'/></description>\n
           <url_text>\n
@@ -86,7 +87,6 @@ xmlns:dc="http://purl.org/dc/elements/1.1/">\n
           </workflow_action>\n
         </object>\n
     </xsl:template>\n
-    \n
     <xsl:template match="summary">\n
       <xsl:apply-templates/>\n
     </xsl:template>\n
