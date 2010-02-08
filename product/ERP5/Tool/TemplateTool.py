@@ -36,6 +36,7 @@ import sys
 from Acquisition import Implicit
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Globals import InitializeClass, DTMLFile, PersistentMapping
+from Products.ERP5Type.DiffUtils import DiffFile
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type import Permissions, tarfile
 from Products.ERP5.Document.BusinessTemplate import BusinessTemplateMissingDependency
@@ -487,6 +488,14 @@ class TemplateTool (BaseTool):
 
       if hasattr(outfile, 'getvalue'):
         return outfile.getvalue()
+
+    def diffObjectAsHTML(self, REQUEST, **kw):
+      """
+        Convert diff into a HTML format before reply
+        This is compatible with ERP5Subversion look and feel but
+        it is preferred in future we use more difflib python library.
+      """
+      return DiffFile(self.diffObject(REQUEST, **kw)).toHTML()
 
     def diffObject(self, REQUEST, **kw):
       """

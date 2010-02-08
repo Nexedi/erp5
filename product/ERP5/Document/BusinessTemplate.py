@@ -29,6 +29,7 @@
 
 import fnmatch, imp, os, re, shutil, sys
 from Shared.DC.ZRDB.Connection import Connection as RDBConnection
+from Products.ERP5Type.DiffUtils import DiffFile
 from Products.ERP5Type.Globals import Persistent, PersistentMapping
 from Acquisition import Implicit, aq_base
 from AccessControl import ClassSecurityInfo
@@ -5607,6 +5608,14 @@ Business Template is a set of definitions, such as skins, portal types and categ
             missing_dep_list.append((dependency, version_restriction or ''))
       if len(missing_dep_list) != 0:
         raise BusinessTemplateMissingDependency, 'Impossible to install, please install the following dependencies before: %s'%repr(missing_dep_list)
+
+    def diffObjectAsHTML(self, REQUEST, **kw):
+      """
+        Convert diff into a HTML format before reply
+        This is compatible with ERP5Subversion look and feel but
+        it is preferred in future we use more difflib python library.
+      """
+      return DiffFile(self.diffObject(REQUEST, **kw)).toHTML()
 
     def diffObject(self, REQUEST, **kw):
       """
