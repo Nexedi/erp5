@@ -530,7 +530,9 @@ class ERP5Form(ZMIForm, ZopePageTemplate):
     # Tabs in ZMI
     manage_options = (ZMIForm.manage_options[:5] +
                       ({'label':'Proxify', 'action':'formProxify'},
-                       {'label':'UnProxify', 'action':'formUnProxify'}
+                       {'label':'UnProxify', 'action':'formUnProxify'},
+                       {'label':'RelatedProxy', 
+                         'action':'formShowRelatedProxyFields'}
                       )+
                       ZMIForm.manage_options[5:])
 
@@ -552,6 +554,12 @@ class ERP5Form(ZMIForm, ZopePageTemplate):
     # Proxify form
     security.declareProtected('View management screens', 'formUnProxify')
     formUnProxify = DTMLFile('dtml/formUnProxify', globals())
+
+    # Related Proxy Fields
+    security.declareProtected('View management screens',
+        'formShowRelatedProxyFields')
+    formShowRelatedProxyFields = DTMLFile('dtml/formShowRelatedProxyFields', 
+        globals())
 
     # Default Attributes
     pt = 'form_view'
@@ -725,6 +733,20 @@ class ERP5Form(ZMIForm, ZopePageTemplate):
 
     manage_FTPput = PUT
 
+    def getSimilarSkinFolderIdList(self):
+      """
+      Find other skins id installed in the same time
+      """
+      folder_id = self.aq_parent.id
+      # Find a business template which manages the context skin folder.
+      folder_id_list = []
+      for template in self.portal_templates.getInstalledBusinessTemplateList():
+        template_skin_id_list = template.getTemplateSkinIdList()
+        if folder_id in template_skin_id_list:
+          folder_id_list.extend(template_skin_id_list)
+          break
+      return folder_id_list
+
     #Methods for Proxify tab.
     security.declareProtected('View management screens', 'getFormFieldList')
     def getFormFieldList(self):
@@ -757,12 +779,8 @@ class ERP5Form(ZMIForm, ZopePageTemplate):
 
         skins_tool = self.portal_skins
         folder_id = self.aq_parent.id
-        # Find a business template which manages the context skin folder.
-        for template in self.portal_templates.getInstalledBusinessTemplateList():
-          template_skin_id_list = template.getTemplateSkinIdList()
-          if folder_id in template_skin_id_list:
-            for skin_folder_id in template_skin_id_list:
-              iterate(getattr(skins_tool, skin_folder_id))
+        for skin_folder_id in self.getSimilarSkinFolderIdList():
+          iterate(getattr(skins_tool, skin_folder_id))
         iterate(skins_tool.erp5_core)
         return form_list
 
@@ -913,6 +931,47 @@ class ERP5Form(ZMIForm, ZopePageTemplate):
       """
       return sorted([f for f in self.objectValues() \
           if f.meta_type == 'ProxyField'], key = lambda x: x.id)
+
+    security.declareProtected('View management screens',
+        'getRelatedProxyFieldDictList')
+    def getRelatedProxyFieldDictList(self, **kw):
+      """
+      Retrieve all proxy using proxy in this form
+      """
+      form_id = self.id
+      proxy_dict = {}
+      for document in self.objectValues():
+        if document.meta_type == 'ProxyField':
+          short_path = "%s.%s" % (form_id, document.id)
+          proxy_dict[short_path] = {'proxy': document,
+                                    'short_path': short_path,
+                                    'related_proxy_list': []}
+      def iterate(document):
+        for i in document.objectValues():
+          if i.meta_type == 'ERP5 Form' and '_view' in i.getId():
+            for field in i.objectValues():
+              if field.meta_type == 'ProxyField':
+                key = "%s.%s" % (field.get_value('form_id'),
+                                 field.get_value('field_id'))
+                if proxy_dict.has_key(key):
+                  proxy_dict[key]['related_proxy_list'].append(
+                      {'short_path': "%s.%s" % \
+                      (field.aq_parent.id, field.id),
+                       'proxy': field})
+          if i.meta_type == 'Folder':
+            iterate(i)
+
+      skins_tool = self.portal_skins
+      proxy_dict_list = []
+      if len(proxy_dict):
+        for skin_folder_id in self.getSimilarSkinFolderIdList():
+          iterate(getattr(skins_tool, skin_folder_id))
+        proxy_dict_list = proxy_dict.values()
+        proxy_dict_list.sort(key=lambda x: x['short_path'])
+        for item in proxy_dict_list:
+          item['related_proxy_list'].sort(key=lambda x: x['short_path'])
+
+      return proxy_dict_list
 
     security.declareProtected('Change Formulator Forms', 'proxifyField')
     def proxifyField(self, field_dict=None, force_delegate=False,
