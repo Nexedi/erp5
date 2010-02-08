@@ -29,6 +29,7 @@
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.ERP5Type import ERP5TypeInformation
+from Products.ERP5Type.Cache import getReadOnlyTransactionCache
 
 class SolverTypeInformation(ERP5TypeInformation):
   """
@@ -82,6 +83,25 @@ class SolverTypeInformation(ERP5TypeInformation):
     """
     # Implemented through type based method
     # and using read transaction cache
+    if configurable.getPortalType() == 'Solver Decision':
+      try:
+        solver_portal_type = configurable.getSolverValue().getId()
+      except AttributeError:
+        return {}
+    else:
+      solver_portal_type = configurable.getPortalType()
+
+    cache = getReadOnlyTransactionCache(self)
+    if cache is not None:
+      key = ('getDefaultConfigurationPropertyDict', solver_portal_type)
+      try:
+        method = cache[key]
+      except KeyError:
+        method = self._getTypeBasedMethod(
+          'getDefaultConfigurationPropertyDict',
+          fallback_script_id='Solver_getDefaultConfigurationPropertyDict')
+        cache[key] = method
+    return method(configurable)
 
   def getDefaultConfigurationPropertyList(self, id, configurable):
     """
