@@ -47,6 +47,20 @@ class Price:
             'acquisition_accessor_id'       : 'getPrice',
             'acquisition_depends'           : None,
             'mode'        : 'w' },
+        {   'id'          : 'base_unit_price',
+            'description' : 'The smallest unit price used to determine the precision of a price',
+            'type'        : 'float',
+            'acquisition_base_category'     : ('parent', 'order', 'delivery'),
+            'acquisition_portal_type'       : \
+                Expression('python: ' \
+                           'portal.getPortalAcquisitionMovementTypeList() +' \
+                           'portal.getPortalDeliveryTypeList() +' \
+                           'portal.getPortalSupplyPathTypeList()'),
+            'acquisition_copy_value'        : 0,
+            'acquisition_mask_value'        : 1,
+            'acquisition_accessor_id'       : 'getBaseUnitPrice',
+            'acquisition_depends'           : None,
+            'mode'        : 'w' },
         # priced_quantity should be acquired from cells to lines
         {   'id'          : 'priced_quantity',
             'description' : 'Number of units involved in base prices',

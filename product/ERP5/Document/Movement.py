@@ -27,6 +27,7 @@
 ##############################################################################
 
 import zope.interface
+from math import log
 from warnings import warn
 from AccessControl import ClassSecurityInfo
 
@@ -225,6 +226,12 @@ class Movement(XMLObject, Amount):
     else:
       return default
 
+  def _getBaseUnitPrice(self, context):
+    operand_dict = self.getPriceParameterDict(context=context)
+    if operand_dict is not None:
+      price = operand_dict.get('base_unit_price', None)
+      return price
+
   security.declareProtected(Permissions.AccessContentsInformation, 
           'getPriceCalculationOperandDict')
   def getPriceCalculationOperandDict(self, default=None, context=None, **kw):
@@ -293,6 +300,31 @@ class Movement(XMLObject, Amount):
       # We must find a price for this movement
       local_price = self._getPrice(context=self)
     return local_price
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'getBaseUnitPrice')
+  def getBaseUnitPrice(self, default=None, **kw):
+    """
+      Get the base unit price.
+
+      If the property is not stored locally, look up one and store it.
+    """
+    local_base_unit_price = self._baseGetBaseUnitPrice()
+    if local_base_unit_price is None:
+      # We must find a base unit price for this movement
+      local_base_unit_price = self._getBaseUnitPrice(context=self)
+    return local_base_unit_price
+
+  security.declareProtected(Permissions.AccessContentsInformation, 
+                            'getPricePrecision')
+  def getPricePrecision(self):
+    """Return the floating point precision of a price.
+    """
+    # First, try to use a base unit price. If not available, use
+    # the older way of using a price currency.
+    try:
+      return int(round(- log(self.getBaseUnitPrice(), 10), 0))
+    except TypeError:
+      return self.getQuantityPrecisionFromResource(self.getPriceCurrency())
 
   security.declareProtected( Permissions.AccessContentsInformation,
                              'getTotalPrice')

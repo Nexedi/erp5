@@ -608,6 +608,7 @@ class Resource(XMLMatrix, Variated):
         'variable_additional_price': [],
         'non_discountable_additional_price': [],
         'priced_quantity': None,
+        'base_unit_price': None,
       }
       if mapped_value is None:
         return price_parameter_dict
