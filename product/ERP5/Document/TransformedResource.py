@@ -279,15 +279,15 @@ class TransformedResource(Predicate, XMLObject, XMLMatrix, Amount):
                   quantity_defined_by = mapped_value.getRelativeUrl()
           if quantity in [None,'']:
             raise KeyError, \
-                  "No cell quantity matching on TransformedResource '%s' for \
-                   current context" % ( self.getRelativeUrl() ,   )
+                  "No cell quantity matching on TransformedResource '%s' for "\
+                  "current context" % ( self.getRelativeUrl() ,   )
         else:
           quantity = self.getQuantity()
           quantity_defined_by = self.getRelativeUrl()
         if quantity in [None,'']:
           raise KeyError, \
-                "No quantity defined on TransformedResource '%s' for \
-                 current context" % (self.getRelativeUrl(), )
+                "No quantity defined on TransformedResource '%s' for "\
+                "current context" % (self.getRelativeUrl(), )
         # If we have to do this, then there is a problem....
         # We'd better have better API for this, 
         # like an update function in the mapped_value
@@ -295,6 +295,8 @@ class TransformedResource(Predicate, XMLObject, XMLMatrix, Amount):
           quantity = float(quantity)
         except ValueError:
           error_string += 'Quantity is not a float.'
+
+
         # Get the variation category list
         variation_category_list_defined_by = None
         variation_category_list = None
@@ -319,8 +321,8 @@ class TransformedResource(Predicate, XMLObject, XMLMatrix, Amount):
               return aggregated_amount_list
             else:
               raise KeyError, \
-                    "No cell variation matching on TransformedResource '%s' \
-                     for current context" % (self.getRelativeUrl(), )
+                    "No cell variation matching on TransformedResource '%s' "\
+                    "for current context" % (self.getRelativeUrl(), )
         else:
           variation_category_list = self._getVariationCategoryList()
           variation_category_list_defined_by = self.getRelativeUrl()
