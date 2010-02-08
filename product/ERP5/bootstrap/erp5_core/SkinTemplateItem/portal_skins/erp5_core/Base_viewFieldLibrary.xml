@@ -152,6 +152,7 @@
                         <string>your_file_field</string>
                         <string>your_checkbox</string>
                         <string>your_string_field</string>
+                        <string>my_price</string>
                       </list>
                     </value>
                 </item>
