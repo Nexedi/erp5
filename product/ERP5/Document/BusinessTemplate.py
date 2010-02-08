@@ -2223,7 +2223,7 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
                 for item in value:
                   xml_data += '\n  <value>%s</value>' %(str(item))
                 xml_data += '\n </item>'
-    xml_data += '\n</catalog_method>'
+    xml_data += '\n</catalog_method>\n'
     return xml_data
 
   def preinstall(self, context, installed_bt, **kw):
