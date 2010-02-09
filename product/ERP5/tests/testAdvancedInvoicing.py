@@ -1203,9 +1203,11 @@ class TestWorkflow(SecurityTestCase):
     self.assertUserCanModifyDocument(username, sale_invoice)
     self.assertUserCanViewDocument(username, sale_invoice)
 
-    self.assertSameSet(('confirm_action', 'plan_action',),
-        [action['id'] for action in self.portal.portal_workflow.getActionsFor(sale_invoice)
-          if action['category'] == 'workflow'])
+    portal_workflow = self.portal.portal_workflow
+    action_ids = [action['id'] for action in
+                  portal_workflow.listActionInfos(object=sale_invoice)
+                  if action['category'] == 'workflow']
+    self.assertSameSet(('confirm_action', 'plan_action',), action_ids)
 
 import unittest
 def test_suite():
