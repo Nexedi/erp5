@@ -10,3 +10,5 @@
   - https://svn.erp5.org/repos/public/experimental/mysqlsenna.buildout/
  - create MySQL database if not existing, before creating ERP5 site
  - use more of buildout automatic dependency resolution
+ - finalise openoffice-bin
+ - do oood software and instance buildout
