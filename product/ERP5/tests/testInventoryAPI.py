@@ -446,7 +446,7 @@ class TestInventory(InventoryAPITestCase):
   def test_ProjectCategory(self):
     """Tests inventory on project category"""
     # this test uses unrealistic data
-    self.project.setGroup('level1/level2')
+    self.project.setSource('group/level1/level2')
     self._makeMovement(quantity=100, destination_project_value=self.project)
 
     self.getInventoryEquals(100, project_category='group/level1')
@@ -455,7 +455,7 @@ class TestInventory(InventoryAPITestCase):
   def test_ProjectCategoryStrictMembership(self):
     """Tests inventory on project category strict membership"""
     # this test uses unrealistic data
-    self.project.setGroup('level1/level2')
+    self.project.setSource('group/level1/level2')
     self._makeMovement(quantity=100, destination_project_value=self.project)
 
     self.getInventoryEquals(0,
