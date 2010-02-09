@@ -2342,15 +2342,13 @@ class ListBoxHTMLRendererLine(ListBoxRendererLine):
             html += u' <span class="error">%s</span>' % error_message
       else:
         # If not editable, show a static text with a link, if enabled.
-        processed_value = cgi.escape(processed_value)
-        if url is None:
-          html = processed_value
-        else:
+        html = cgi.escape(processed_value)
+        if url is not None:
           # JPS-XXX - I think we should not display a URL for objects
           # which do not have the View permission
-          if type(url) is str:
+          if instance(url, str):
             url = unicode(url, encoding)
-          html = u'<a href="%s">%s</a>' % (url, processed_value)
+          html = u'<a href="%s">%s</a>' % (url, html)
 
       html_list.append((html, original_value, error, editable_field, url))
 

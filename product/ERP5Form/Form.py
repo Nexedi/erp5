@@ -611,15 +611,9 @@ class ERP5Form(ZMIForm, ZopePageTemplate):
         # staff. The only real solution is to use a special
         # permission (ex. AccessPrivateInformation) for those
         # properties which are sensitive.
-        if not kwargs.has_key('args'):
-            kwargs['args'] = args
-        if kwargs.has_key('key_prefix'):
-          key_prefix = kwargs['key_prefix']
-          del(kwargs['key_prefix'])
-        else:
-          key_prefix = None
-        form = self
-        obj = getattr(form, 'aq_parent', None)
+        kwargs.setdefault('args', args)
+        key_prefix = kwargs.pop('key_prefix', None)
+        obj = getattr(self, 'aq_parent', None)
         if obj is not None:
           container = obj.aq_inner.aq_parent
           if not _checkPermission(Permissions.View, obj):
