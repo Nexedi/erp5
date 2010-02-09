@@ -103,6 +103,7 @@
                         <string>my_aggregate_title_list</string>
                         <string>my_int_index</string>
                         <string>my_reference</string>
+                        <string>my_base_unit_price</string>
                       </list>
                     </value>
                 </item>
