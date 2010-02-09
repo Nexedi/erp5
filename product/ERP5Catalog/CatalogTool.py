@@ -820,7 +820,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
       Construct a dictionnary with a list of properties
       to catalog into the table predicate
       """
-      if not getattr(object,'isPredicate',None):
+      if not object.providesIPredicate():
         return None
       object = object.asPredicate()
       if object is None:

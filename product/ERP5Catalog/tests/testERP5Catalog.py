@@ -53,12 +53,11 @@ except ImportError:
 from OFS.ObjectManager import ObjectManager
 from random import randint
 
-dummy_callable = lambda: 0
-
 class IndexableDocument(ObjectManager):
 
   # this property is required for dummy providesIMovement
   __allow_access_to_unprotected_subobjects__ = 1
+  isRADContent = 0
 
   def getUid(self):
     uid = getattr(self, 'uid', None)
@@ -68,10 +67,9 @@ class IndexableDocument(ObjectManager):
 
   def __getattr__(self, name):
     # Case for all "is..." magic properties (isMovement, ...)
-    if name.startswith('is'):
-      return 0
-    if name.startswith('provides'):
-      return dummy_callable
+    if name.startswith('is') or \
+       name.startswith('provides'):
+      return lambda: 0
     raise AttributeError, name
 
   def getPath(self):
