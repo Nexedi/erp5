@@ -2346,7 +2346,7 @@ class ListBoxHTMLRendererLine(ListBoxRendererLine):
         if url is not None:
           # JPS-XXX - I think we should not display a URL for objects
           # which do not have the View permission
-          if instance(url, str):
+          if isinstance(url, str):
             url = unicode(url, encoding)
           html = u'<a href="%s">%s</a>' % (url, html)
 
