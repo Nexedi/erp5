@@ -422,14 +422,14 @@ class ERP5TypeTestCase(backportUnittest.TestCase, PortalTestCase):
       uninstalled_list = []
       portal = self.portal
       for bt in portal.portal_templates.getInstalledBusinessTemplateList():
-        if bt.getTitle() in template_list:
+        bt_title = bt.getTitle()
+        if bt_title in template_list:
           bt.uninstall(remove_translations=True)
-          uninstalled_list.append(bt.getTitle())
-      getattr(portal, 'ERP5Site_updateTranslationTable', lambda: None)()
+          uninstalled_list.append(bt_title)
+      if uninstalled_list:
+        getattr(portal, 'ERP5Site_updateTranslationTable', lambda: None)()
       self.stepTic()
       return uninstalled_list
-      
-
 
     def setUp(self):
       '''Sets up the fixture. Do not override,
