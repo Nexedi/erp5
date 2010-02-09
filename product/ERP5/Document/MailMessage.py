@@ -72,27 +72,6 @@ class MailMessage(Event):
                     , PropertySheet.MailMessage
                     )
 
-  def getReplyBody(self):
-    """
-      This is used in order to respond to a mail,
-      this put a '> ' before each line of the body
-    """
-    reply_body = ''
-    body = self.getBody()
-    if type(body) is type('a'):
-      reply_body = '> ' + body.replace('\n', '\n> ')
-    return reply_body
-
-  def getReplySubject(self):
-    """
-      This is used in order to respond to a mail,
-      this put a 'Re: ' before the orignal subject
-    """
-    reply_subject = self.getTitle()
-    if reply_subject.find('Re: ') != 0:
-      reply_subject = 'Re: ' + reply_subject
-    return reply_subject
-
   def send(self, from_url=None, to_url=None, msg=None, subject=None):
     """
       Sends a reply to this mail message.
