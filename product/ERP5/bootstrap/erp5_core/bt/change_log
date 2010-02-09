@@ -1,4 +1,7 @@
 2010-02-09 yo
+* Add a new field, my_base_unit_price, into Base_viewFieldLibrary.
+
+2010-02-09 yo
 * Add a new field, my_price, into Base_viewFieldLibrary. This should be used only for unit price but not for total price.
 
 2010-01-21 yo
