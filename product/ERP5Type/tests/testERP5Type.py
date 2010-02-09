@@ -1396,6 +1396,55 @@ class TestPropertySheet:
       action_id_list = [x['id'] for x in actions.get('object_action',[])]
       self.assertTrue('action3' in action_id_list)
 
+
+    def test_21bis_getDefaultViewFor(self):
+      """check that any action, in category view, with higher priority
+      than 'view' take precedence
+      """
+      type_tool = self.getTypeTool()
+      portal_type = 'Organisation'
+      portal_type_object = type_tool[portal_type]
+      obj = self.getOrganisationModule().newContent(portal_type=portal_type)
+      default_view_list = [view for view in portal_type_object.listActions()
+                           if view.getReference() == 'view']
+      # we got only one default view on this portal type
+      self.assertEquals(1, len(default_view_list))
+      default_view = default_view_list[0]
+
+      self.assertEquals("Organisation_view",
+                        portal_type_object.getDefaultViewFor(obj).getId())
+
+      # Add new action with low priority to replace default view
+      new_default_view = portal_type_object.newContent(portal_type='Action Information',
+          reference="web_view",
+          title='Web view',
+          action='string:${object_url}/Organisation_viewDetails',
+          condition=None,
+          action_permission='View',
+          action_type='object_web_view',
+          visible=1,
+          float_index=0.5)
+
+      # check new default view is resturn
+      self.assertEquals("Organisation_viewDetails",
+                  portal_type_object.getDefaultViewFor(obj).getId())  
+
+      # Add new action with low priority 
+      # We set it no visible
+      hidden_action = portal_type_object.newContent(portal_type='Action Information',
+          reference="financial_view",
+          title='Financial view',
+          action='string:${object_url}/Organisation_viewFinancialInformationList',
+          condition=None,
+          action_permission='View',
+          action_type='object_view',
+          visible=0,
+          float_index=0.3)
+
+      # Default view must not change
+      self.assertEquals("Organisation_viewDetails",
+                  portal_type_object.getDefaultViewFor(obj).getId())  
+
     def test_22_securityReindex(self, quiet=quiet, run=run_all_test):
       """
       Tests that the security is reindexed when a role is changed on an object.
