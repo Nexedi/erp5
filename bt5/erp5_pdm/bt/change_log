@@ -1,3 +1,6 @@
+2010-02-10 yo
+* Add base_unit_price into the mapped values of Sale Supply Line and Purchase Supply Line.
+
 2010-02-09 yo
 * Base_viewPDMFieldLibrary/my_base_unit_price simply reuses Base_viewFieldLibrary/my_base_unit_price now.
 
