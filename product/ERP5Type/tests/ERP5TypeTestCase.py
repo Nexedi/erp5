@@ -364,52 +364,14 @@ class ERP5TypeTestCase(backportUnittest.TestCase, PortalTestCase):
 
       self.run(*args, **kw)
 
-    def setUp(self):
-      '''Sets up the fixture. Do not override,
-         use the hooks instead.
-      '''
-      # This is a workaround for the overwriting problem in Testing/__init__.py
-      # in Zope.  So this overwrites them again to revert the changes made by
-      # Testing.
-      # XXX: Leo: Is this still true? We need to reevaluate how we get 
-      # information from our environment.
-      try:
-        import App.config
-      except ImportError:
-        os.environ['INSTANCE_HOME'] = INSTANCE_HOME =\
-                            os.environ['COPY_OF_INSTANCE_HOME']
-        os.environ['SOFTWARE_HOME'] = SOFTWARE_HOME =\
-                            os.environ['COPY_OF_SOFTWARE_HOME']
-      else:
-        cfg = App.config.getConfiguration()
-        cfg.instancehome = os.environ['COPY_OF_INSTANCE_HOME']
-        App.config.setConfiguration(cfg)
+    def _getBTPathAndIdList(self, template_list):
       INSTANCE_HOME = os.environ['INSTANCE_HOME']
       bt5_path = os.environ.get('erp5_tests_bt5_path',
-                            os.path.join(INSTANCE_HOME, 'bt5'))
+                                os.path.join(INSTANCE_HOME, 'bt5'))
+      erp5_product_path = os.path.dirname(Products.ERP5.__file__)
       bootstrap_path = os.environ.get('erp5_tests_bootstrap_path',
-                                  os.path.join(INSTANCE_HOME, 'Products/ERP5/bootstrap'))
-
-      template_list = self.getBusinessTemplateList()
-      erp5_catalog_storage = os.environ.get('erp5_catalog_storage',
-                                            'erp5_mysql_innodb_catalog')
-      update_business_templates = os.environ.get('update_business_templates') is not None
-      erp5_load_data_fs = int(os.environ.get('erp5_load_data_fs', 0))
-      if update_business_templates and erp5_load_data_fs:
-        update_only = os.environ.get('update_only', None)
-        template_list = (erp5_catalog_storage, 'erp5_core',
-                         'erp5_xhtml_style') + tuple(template_list)
-        # Update only specified business templates, regular expression
-        # can be used.
-        if update_only is not None:
-          update_only_list = update_only.split(',')
-          matching_template_list = []
-          # First parse the template list in order to keep same order
-          for business_template in template_list:
-            for expression in update_only_list:
-              if re.search(expression, business_template):
-                matching_template_list.append(business_template)
-          template_list = matching_template_list
+                                      os.path.join(erp5_product_path, 
+                                                   'bootstrap'))
       new_template_list = []
       for template in template_list:
         id = template.split('/')[-1]
@@ -446,6 +408,71 @@ class ERP5TypeTestCase(backportUnittest.TestCase, PortalTestCase):
           if not os.path.exists(template):
             template = '%s.bt5' % template
         new_template_list.append((template,id))
+      return new_template_list
+
+    def manuallyInstallBusinessTemplate(self, *template_list):
+      new_template_list = self._getBTPathAndIdList(template_list)
+      light_install = self.enableLightInstall()
+      self._installBusinessTemplateList(new_template_list,
+                                        light_install=light_install)
+      self.tic()
+
+    def uninstallBusinessTemplate(self, *template_list):
+      template_list = set(template_list)
+      uninstalled_list = []
+      portal = self.portal
+      for bt in portal.portal_templates.getInstalledBusinessTemplateList():
+        if bt.getTitle() in template_list:
+          bt.uninstall(remove_translations=True)
+          uninstalled_list.append(bt.getTitle())
+      getattr(portal, 'ERP5Site_updateTranslationTable', lambda: None)()
+      self.stepTic()
+      return uninstalled_list
+      
+
+
+    def setUp(self):
+      '''Sets up the fixture. Do not override,
+         use the hooks instead.
+      '''
+      # This is a workaround for the overwriting problem in Testing/__init__.py
+      # in Zope.  So this overwrites them again to revert the changes made by
+      # Testing.
+      # XXX: Leo: Is this still true? We need to reevaluate how we get 
+      # information from our environment.
+      try:
+        import App.config
+      except ImportError:
+        os.environ['INSTANCE_HOME'] = INSTANCE_HOME =\
+                            os.environ['COPY_OF_INSTANCE_HOME']
+        os.environ['SOFTWARE_HOME'] = SOFTWARE_HOME =\
+                            os.environ['COPY_OF_SOFTWARE_HOME']
+      else:
+        cfg = App.config.getConfiguration()
+        cfg.instancehome = os.environ['COPY_OF_INSTANCE_HOME']
+        App.config.setConfiguration(cfg)
+
+      template_list = self.getBusinessTemplateList()
+      erp5_catalog_storage = os.environ.get('erp5_catalog_storage',
+                                            'erp5_mysql_innodb_catalog')
+      update_business_templates = os.environ.get('update_business_templates') is not None
+      erp5_load_data_fs = int(os.environ.get('erp5_load_data_fs', 0))
+      if update_business_templates and erp5_load_data_fs:
+        update_only = os.environ.get('update_only', None)
+        template_list = (erp5_catalog_storage, 'erp5_core',
+                         'erp5_xhtml_style') + tuple(template_list)
+        # Update only specified business templates, regular expression
+        # can be used.
+        if update_only is not None:
+          update_only_list = update_only.split(',')
+          matching_template_list = []
+          # First parse the template list in order to keep same order
+          for business_template in template_list:
+            for expression in update_only_list:
+              if re.search(expression, business_template):
+                matching_template_list.append(business_template)
+          template_list = matching_template_list
+      new_template_list = self._getBTPathAndIdList(template_list)
 
       # keep a mapping type info name -> property sheet list, to remove them in
       # tear down.
@@ -780,6 +807,55 @@ class ERP5TypeTestCase(backportUnittest.TestCase, PortalTestCase):
                               " (tried ports %s)\n" % ', '.join(port_list))
       return utils._Z2HOST, utils._Z2PORT
 
+    def _installBusinessTemplateList(self, business_template_list,
+                                     light_install=True,
+                                     quiet=True):
+      portal = self.portal
+      update_business_templates = os.environ.get('update_business_templates') is not None
+      BusinessTemplate_getModifiedObject = aq_base(getattr(portal, 'BusinessTemplate_getModifiedObject', None))
+
+      # check that all bt5 exist, saving time in case of missing bt
+      missing_bt_list = []
+      for url, bt_title in business_template_list:
+        # if the bt is not found, an error is raised
+        if not portal.portal_templates.assertBtPathExists(url):
+          missing_bt_list.append(bt_title)
+      if len(missing_bt_list):
+        raise RuntimeError("Some BT can't be found on your system : %s"
+                           % ', '.join(missing_bt_list))
+
+      # Add some business templates
+      for url, bt_title in business_template_list:
+        start = time.time()
+        get_install_kw = False
+        if bt_title in [x.getTitle() for x in portal.portal_templates.getInstalledBusinessTemplateList()]:
+          if update_business_templates:
+            if not quiet:
+              ZopeTestCase._print('Updating %s business template ... ' % bt_title)
+            if BusinessTemplate_getModifiedObject is not None:
+              get_install_kw = True
+          else:
+            continue
+        else:
+          if not quiet:
+            ZopeTestCase._print('Adding %s business template ... ' % bt_title)
+        bt = portal.portal_templates.download(url)
+        if not quiet:
+          ZopeTestCase._print('(imported in %.3fs) ' % (time.time() - start))
+        install_kw = None
+        if get_install_kw:
+          install_kw = {}
+          listbox_object_list = BusinessTemplate_getModifiedObject.__of__(bt)()
+          for listbox_line in listbox_object_list:
+            install_kw[listbox_line.object_id] = listbox_line.choice_item_list[0][1]
+        bt.install(light_install=light_install,
+                   object_to_update=install_kw,
+                   update_translation=1)
+        # Release locks
+        transaction.commit()
+        if not quiet:
+          ZopeTestCase._print('done (%.3fs)\n' % (time.time() - start))
+
     def setUpERP5Site(self,
                      business_template_list=(),
                      app=None,
@@ -869,53 +945,9 @@ class ERP5TypeTestCase(backportUnittest.TestCase, PortalTestCase):
 
             self._updateConnectionStrings()
             self._recreateCatalog()
-
-            update_business_templates = os.environ.get('update_business_templates') is not None
-            BusinessTemplate_getModifiedObject = aq_base(getattr(portal, 'BusinessTemplate_getModifiedObject', None))
-
-            # check that all bt5 exist, this permit to save time in case of
-            # missing bt
-            missing_bt_list = []
-            for url, bt_title in business_template_list:
-              # if the bt is not found, an error is raised
-              if not portal.portal_templates.assertBtPathExists(url):
-                missing_bt_list.append(bt_title)
-            if len(missing_bt_list):
-              raise RuntimeError("Some BT can't be found on your system : %s"
-                                 % ', '.join(missing_bt_list))
-
-            # Add some business templates
-            for url, bt_title in business_template_list:
-              start = time.time()
-              get_install_kw = False
-              if bt_title in [x.getTitle() for x in portal.portal_templates.getInstalledBusinessTemplateList()]:
-                if update_business_templates:
-                  if not quiet:
-                    ZopeTestCase._print('Updating %s business template ... ' % bt_title)
-                  if BusinessTemplate_getModifiedObject is not None:
-                    get_install_kw = True
-                else:
-                  continue
-              else:
-                if not quiet:
-                  ZopeTestCase._print('Adding %s business template ... ' % bt_title)
-              bt = portal.portal_templates.download(url)
-              if not quiet:
-                ZopeTestCase._print('(imported in %.3fs) ' % (time.time() - start))
-              install_kw = None
-              if get_install_kw:
-                install_kw = {}
-                listbox_object_list = BusinessTemplate_getModifiedObject.__of__(bt)()
-                for listbox_line in listbox_object_list:
-                  install_kw[listbox_line.object_id] = listbox_line.choice_item_list[0][1]
-              bt.install(light_install=light_install,
-                         object_to_update=install_kw,
-                         update_translation=1)
-              # Release locks
-              transaction.commit()
-              if not quiet:
-                ZopeTestCase._print('done (%.3fs)\n' % (time.time() - start))
-
+            self._installBusinessTemplateList(business_template_list,
+                                              light_install=light_install,
+                                              quiet=quiet)
             # Create a Manager user at the Portal level
             uf = self.getPortal().acl_users
             uf._doAddUser('ERP5TypeTestCase', '', ['Manager', 'Member', 'Assignee',
