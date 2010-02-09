@@ -69,12 +69,12 @@ if memcache is not None:
       available).
       Uses transactions to only update memcached at commit time.
       No conflict generation/resolution : last edit wins.
-  
+
       TODO:
         - prove that concurency handling in event queuing is not needed
         - make picklable ?
     """
-  
+
     def __init__(self, server_list=('127.0.0.1:11211',), server_max_key_length=MARKER,
                  server_max_value_length=MARKER):
       """
@@ -133,14 +133,14 @@ if memcache is not None:
         LOG('MemcachedDict', 0, 'An exception occured during _finish : %s' % (traceback.format_exc(), ))
       self.scheduled_action_dict.clear()
       self.local_cache.clear()
-  
+
     def _abort(self, *ignored):
       """
         Cleanup the action dict and invalidate local cache.
       """
       self.local_cache.clear()
       self.scheduled_action_dict.clear()
-  
+
     def __getitem__(self, key):
       """
         Get an item from local cache, otherwise from memcached.
@@ -156,7 +156,7 @@ if memcache is not None:
           raise KeyError, 'Key %s (was %s) not found.' % (encoded_key, key)
         self.local_cache[key] = result
       return result
-  
+
     def __setitem__(self, key, value):
       """
         Set an item to local cache and schedule update of memcached.
@@ -164,7 +164,7 @@ if memcache is not None:
       self._register()
       self.scheduled_action_dict[key] = UPDATE_ACTION
       self.local_cache[key] = value
-  
+
     def __delitem__(self, key):
       """
         Schedule key for deletion in memcached.
@@ -175,13 +175,13 @@ if memcache is not None:
       self._register()
       self.scheduled_action_dict[key] = DELETE_ACTION
       self.local_cache[key] = None
-  
+
     def set(self, key, value):
       """
         Set an item to local cache and schedule update of memcached.
       """
       return self.__setitem__(key, value)
-  
+
     def get(self, key, default=None):
       """
         Get an item from local cache, otherwise from memcached.
@@ -198,11 +198,11 @@ if memcache is not None:
       Class to make possible for multiple "users" to store data in the same
       dictionary without risking to overwrite other's data.
       Each "user" of the dictionary must get an instance of this class.
-  
+
       TODO:
         - handle persistence ?
     """
-  
+
     def __init__(self, dictionary, prefix):
       """
         dictionary
@@ -212,7 +212,7 @@ if memcache is not None:
       """
       self._dictionary = dictionary
       self.prefix = prefix
-  
+
     def _prefixKey(self, key):
       """
         Prefix key with self.prefix .
@@ -220,44 +220,44 @@ if memcache is not None:
       if not isinstance(key, basestring):
         raise TypeError, 'Key %s is not a string. Only strings are supported as key in SharedDict' % (repr(key), )
       return '%s_%s' % (self.prefix, key)
-  
+
     def __getitem__(self, key):
       """
         Get item from memcached.
       """
       return self._dictionary.__getitem__(self._prefixKey(key))
-    
+
     def __setitem__(self, key, value):
       """
         Put item in memcached.
       """
       self._dictionary.__setitem__(self._prefixKey(key), value)
-  
+
     def __delitem__(self, key):
       """
         Delete item from memcached.
       """
       self._dictionary.__delitem__(self._prefixKey(key))
-  
+
     # These are the method names called by zope
     __guarded_setitem__ = __setitem__
     __guarded_getitem__ = __getitem__
     __guarded_delitem__ = __delitem__
-  
+
     def get(self, key, default=None):
       """
         Get item from memcached.
       """
       return self._dictionary.get(self._prefixKey(key), default)
-  
+
     def set(self, key, value):
       """
         Put item in memcached.
       """
       self._dictionary.set(self._prefixKey(key), value)
-  
+
   allow_class(SharedDict)
-  
+
   class MemcachedTool(BaseTool):
     """
       Memcached interface available as a tool.
