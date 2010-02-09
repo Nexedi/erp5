@@ -155,6 +155,7 @@
                         <string>my_line_price_currency</string>
                         <string>my_source_trade_title_list</string>
                         <string>my_int_index</string>
+                        <string>my_base_unit_price</string>
                       </list>
                     </value>
                 </item>
