@@ -69,7 +69,8 @@ def getCurrencyForSection(section_url):\n
     return section.getPriceCurrency()\n
 \n
   if section.getPortalType() == \'Category\':\n
-    member_list = section.getGroupRelatedValueList(portal_type=\'Organisation\')\n
+    member_list = section.getGroupRelatedValueList(portal_type=\'Organisation\',\n
+                                                   checked_permission=\'View\')\n
     if len(member_list) == 1 and member_list[0].getPriceCurrency():\n
       return member_list[0].getPriceCurrency()\n
     mapping = section.getMappingValue(portal_type=\'Organisation\')\n

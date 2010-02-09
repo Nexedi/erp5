@@ -275,7 +275,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: [(\'\', \'\')] + [(x.getTitle(), x.getRelativeUrl()) for x in here.portal_categories.resolveCategory(here.getPreferredAccountingTransactionSectionCategory(\'portal_categories\')).getGroupRelatedValueList(portal_type=\'Organisation\')]</string> </value>
+            <value> <string>python: [(\'\', \'\')] + [(x.getTitle(), x.getRelativeUrl()) for x in here.portal_categories.resolveCategory(here.getPreferredAccountingTransactionSectionCategory(\'portal_categories\')).getGroupRelatedValueList(portal_type=\'Organisation\', checked_permission=\'View\')]</string> </value>
         </item>
       </dictionary>
     </pickle>
