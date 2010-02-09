@@ -4504,9 +4504,34 @@ class MessageTranslationTemplateItem(BaseTemplateItem):
           modified_object_list.update({path : ['Removed', self.__class__.__name__[:-12]]})
     return modified_object_list
 
-  def install(self, context, trashbin, **kw):
-    localizer = context.getPortalObject().Localizer
-    update_dict = kw.get('object_to_update')
+  def _splitKey(self,key):
+    path = key.split('/')
+    if len(path) == 1:
+      lang = path[0]
+      catalog = None
+    elif len(path) == 2:
+      lang = path[0]
+      catalog = path[1]
+    else:
+      lang = path[-3]
+      catalog = path[-2]
+    return lang, catalog
+
+  def _importCatalogLanguage(self, localizer, catalog, lang, po):
+    if catalog not in localizer.objectIds():
+      dispatcher = localizer.manage_addProduct['Localizer']
+      dispatcher.manage_addMessageCatalog(id=catalog, 
+                                          title='Message Catalog',
+                                          languages=['en'])
+    mc = localizer._getOb(catalog)
+    if lang not in mc.get_languages():
+      mc.manage_addLanguage(lang)
+    mc.manage_import(lang, po)
+
+  def install(self, context, trashbin, localizer=None, **kw):
+    if localizer is None:
+      localizer = context.getPortalObject().Localizer
+    update_dict = kw.get('object_to_update', {})
     force = kw.get('force')
     if context.getTemplateFormatVersion() == 1:
       for key in sorted(self._objects.keys()):
@@ -4515,16 +4540,7 @@ class MessageTranslationTemplateItem(BaseTemplateItem):
             action = update_dict[key]
             if action == 'nothing':
               continue
-          path = key.split('/')
-          if len(path) == 1:
-            lang = path[0]
-            catalog = None
-          elif len(path) == 2:
-            lang = path[0]
-            catalog = path[1]
-          else:
-            lang = path[-3]
-            catalog = path[-2]
+          lang, catalog = self._splitKey(key)
 
           if catalog is None:
             name = self._objects[key]
@@ -4547,20 +4563,43 @@ class MessageTranslationTemplateItem(BaseTemplateItem):
             po = self._objects[key]
             if lang not in localizer.get_languages():
               localizer.manage_addLanguage(lang)
-            mc = localizer._getOb(catalog)
-            if lang not in mc.get_languages():
-              mc.manage_addLanguage(lang)
-            mc.manage_import(lang, po)
+            self._importCatalogLanguage(localizer, catalog, lang, po)
     else:
       BaseTemplateItem.install(self, context, trashbin, **kw)
       for lang, catalogs in self._archive.iteritems():
         if lang not in localizer.get_languages():
           localizer.manage_addLanguage(lang)
         for catalog, po in catalogs.items():
-          mc = localizer._getOb(catalog)
-          if lang not in mc.get_languages():
-            mc.manage_addLanguage(lang)
-          mc.manage_import(lang, po)
+          self._importCatalogLanguage(catalog, lang, po)
+
+  def uninstall(self, context, remove_translations=False, **kw):
+    if not remove_translations:
+      return
+    portal = context.getPortalObject()
+    localizer = portal.Localizer
+    from Products.Localizer.Localizer import Localizer
+    fake_localizer = Localizer('Fake Localizer',
+                               languages=['en']).__of__(portal)
+    # roundabout way of keeping BW compatibility, allow install() to do the
+    # heavy lifting so we can extract the original catalogs and messages:
+    self.install(context, None, localizer=fake_localizer, force=True, **kw)
+    # now scan the actual message_catalog to remove messages present in the
+    # fake one.
+    for fake_message_catalog in fake_localizer.objectValues():
+      message_catalog = localizer._getOb(fake_message_catalog.getId())
+      # get list of messages present in both the fake and the real catalog
+      # UGH! direct attribute access... but there is no real API to access
+      # all messages here.
+      messages = set(fake_message_catalog._messages.keys())
+      messages.intersection_update(message_catalog._messages.keys())
+      for message in messages:
+        # delete translations from the real catalog that are present in the
+        # fake one
+        fake_translations = fake_message_catalog.get_translations(message)
+        translations = message_catalog.get_translations(message)
+        for lang in fake_translations.keys():
+          # XXX: should we check they're still the same before removing?
+          translations.pop(lang, None)
 
   def export(self, context, bta, **kw):
     if len(self._objects) == 0:
@@ -5268,7 +5307,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       for item_name in self._item_name_list[::-1]:
         item = getattr(self, item_name, None)
         if item is not None:
-          item.uninstall(self)
+          item.uninstall(self, **kw)
       # It is better to clear cache because the uninstallation of a
       # template deletes many things from the portal.
       self.getPortalObject().portal_caches.clearAllCache()
