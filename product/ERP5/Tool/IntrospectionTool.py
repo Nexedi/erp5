@@ -426,8 +426,14 @@ class IntrospectionTool(LogMixin, BaseTool):
        return '.'.join([str(i) for i in t])
     from Products import ERP5 as erp5_product
     erp5_product_path =  erp5_product.__file__.split("/")[:-1]
-    erp5_version = open("/".join((erp5_product_path) + ["VERSION.txt"])).read().strip()
-    zope_version = open(getConfiguration().softwarehome + "/version.txt").read().strip()
+    try:
+      erp5_v = open("/".join((erp5_product_path) + ["VERSION.txt"])).read().strip()
+      erp5_version = erp5_v.replace("ERP5 ", "")
+    except:
+       erp5_version = None
+
+    from App import version_txt
+    zope_version = tuple_to_format_str(version_txt.getZopeVersion()[:2])
 
     from sys import version_info
     # Get only x.x.x numbers.
@@ -439,11 +445,8 @@ class IntrospectionTool(LogMixin, BaseTool):
     except:
       pysvn_version = None
     
-    return {
-            "python" : py_version , 
-            "pysvn"  : pysvn_version ,
-            "erp5"   : erp5_version.replace("ERP5 ", ""),
-            "zope"   : zope_version.replace("Zope ", "")
+    return { "python" : py_version , "pysvn"  : pysvn_version ,
+             "erp5"   : erp5_version, "zope"   : zope_version
            }
 
 InitializeClass(IntrospectionTool)
