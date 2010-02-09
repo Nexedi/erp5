@@ -45,6 +45,10 @@ class IConvertable(Interface):
     taking into account optional parameters. This method
     returns a tuple of two values: a mime type string and
     the converted data.
+    
+    This methods raises a ConversionError if the target format
+    is not allowed, or an Unauthorized error if the target format
+    is not permitted.
 
     format -- the target conversion format specified either as an
               extension (ex. 'png') or as a mime type

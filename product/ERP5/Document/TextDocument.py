@@ -195,7 +195,7 @@ class TextDocument(Document, TextContent):
         substitution_method_parameter_dict = {}
       return self._substituteTextContent(subject, **substitution_method_parameter_dict)
 
-    security.declareProtected(Permissions.View, 'convert')
+    security.declareProtected(Permissions.AccessContentsInformation, 'convert')
     def convert(self, format, substitution_method_parameter_dict=None, **kw):
       """
         Convert text using portal_transforms or oood

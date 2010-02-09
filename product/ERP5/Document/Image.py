@@ -325,7 +325,7 @@ class Image(File, OFSImage):
     return mime_type, result
 
   # Conversion API
-  security.declareProtected(Permissions.ModifyPortalContent, 'convert')
+  security.declareProtected(Permissions.AccessContentsInformation, 'convert')
   def convert(self, format, display=None, quality=75, resolution=None, frame=None, **kw):
     """
     Implementation of conversion for Image files

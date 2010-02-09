@@ -101,7 +101,7 @@ class PDFDocument(Image, CachedConvertableMixin):
                             resolution=resolution, frame=frame)
 
   # Conversion API
-  security.declareProtected(Permissions.ModifyPortalContent, 'convert')
+  security.declareProtected(Permissions.AccessContentsInformation, 'convert')
   def convert(self, format, **kw):
     """
     Implementation of conversion for PDF files

@@ -353,7 +353,7 @@ class OOoDocument(PermanentURLMixIn, File, CachedConvertableMixin):
     return response_dict['mime'], Pdata(dec(response_dict['data']))
 
   # Conversion API
-  security.declareProtected(Permissions.View, 'convert')
+  security.declareProtected(Permissions.AccessContentsInformation, 'convert')
   def convert(self, format, display=None, **kw):
     """Convert the document to the given format.
 

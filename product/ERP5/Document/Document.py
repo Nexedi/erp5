@@ -1104,7 +1104,7 @@ class Document(PermanentURLMixIn, XMLObject, UrlMixIn, CachedConvertableMixin, S
     return method()
 
   # Conversion methods
-  security.declareProtected(Permissions.ModifyPortalContent, 'convert')
+  security.declareProtected(Permissions.AccessContentsInformation, 'convert')
   def convert(self, format, **kw):
     """
       Main content conversion function, returns result which should
@@ -1278,7 +1278,7 @@ class Document(PermanentURLMixIn, XMLObject, UrlMixIn, CachedConvertableMixin, S
     """
     if getattr(self, 'hasData', None) is not None and not self.hasData():
       # Empty document cannot be converted
-      return #'Document is empty'
+      return
     try:
       message = self._convertToBaseFormat() # Call implemetation method
       self.clearConversionCache() # Conversion cache is now invalid
