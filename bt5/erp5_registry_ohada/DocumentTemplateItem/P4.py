@@ -50,8 +50,6 @@ class P4(XMLObject):
     meta_type = 'ERP5 P4'
     portal_type = 'P4'
     add_permission = Permissions.AddPortalContent
-    isPortalContent = 1
-    isRADContent = 1
    
     # Declarative security
     security = ClassSecurityInfo()

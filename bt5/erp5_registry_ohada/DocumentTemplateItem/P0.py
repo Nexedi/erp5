@@ -55,8 +55,6 @@ class P0(XMLObject):
     meta_type = 'ERP5 P0'
     portal_type = 'P0'
     add_permission = Permissions.AddPortalContent
-    isPortalContent = 1
-    isRADContent = 1
 
     # Declarative security
     # Declarative properties

@@ -65,8 +65,6 @@ class M2(XMLObject):
     meta_type = 'ERP5 M2'
     portal_type = 'M2'
     add_permission = Permissions.AddPortalContent
-    isPortalContent = 1
-    isRADContent = 1
 
     # Declarative security
     security = ClassSecurityInfo()
