@@ -490,23 +490,22 @@ class ERP5TypeInformation(XMLObject,
       """Return the object that renders the default view for the given object
       """
       ec = createExpressionContext(ob)
-      best_action = (), None
+      best_action = None
       for action in self.getActionList():
-        if action['id'] == view:
-          if action.test(ec):
-            break
+        if action['id'] == view and action.test(ec):
+          best_action = action
+          break
         else:
           # In case that "view" (or "list") action is not present or not allowed,
           # find something that's allowed (of the same category, if possible).
-          index = action['category'].endswith('_' + view),
-          if best_action[0] < index and action.test(ec):
-            best_action = index, action
+          same_category = action['category'].endswith('_' + view)
+          if same_category and action.test(ec):
+            best_action = action
+            break
       else:
-        action = best_action[1]
-        if action is None:
-          raise AccessControl_Unauthorized(
-            'No accessible views available for %r' % ob.getPath())
-
+        raise AccessControl_Unauthorized(
+          'No accessible views available for %r' % ob.getPath())
+      action = best_action
       target = action.cook(ec)['url'].strip().split(ec.vars['object_url'])[-1]
       if target.startswith('/'):
           target = target[1:]
