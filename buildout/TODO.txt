@@ -1,4 +1,5 @@
  - force using locally build python
+  - probably works well, need to be sure
  - global build requirement checker
    - needs recipe
    - needs per profile dependency declaration
@@ -8,3 +9,4 @@
   - https://svn.erp5.org/repos/public/experimental/erp5.buildout-zope-2.12/
   - https://svn.erp5.org/repos/public/experimental/mysqlsenna.buildout/
  - create MySQL database if not existing, before creating ERP5 site
+ - use more of buildout automatic dependency resolution
