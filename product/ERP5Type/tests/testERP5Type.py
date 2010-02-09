@@ -1427,7 +1427,7 @@ class TestPropertySheet:
 
       # check new default view is resturn
       self.assertEquals("Organisation_viewDetails",
-                  portal_type_object.getDefaultViewFor(obj).getId())  
+                  portal_type_object.getDefaultViewFor(obj).getId())
 
       # Add new action with low priority 
       # We set it no visible
@@ -1444,6 +1444,32 @@ class TestPropertySheet:
       # Default view must not change
       self.assertEquals("Organisation_viewDetails",
                   portal_type_object.getDefaultViewFor(obj).getId())  
+
+      # If no action belong to view category, getDefaultViewFor
+      # should fallback to first valid Action.
+      # This is the current behaviour for Actions on modules.
+
+      # delete all current actions
+      portal_type_object.manage_delObjects([action.getId() for action in \
+          portal_type_object.contentValues(portal_type='Action Information')])
+
+      # Add new action which does not belong to view category ( action_type: 'object_list')
+      default_list = portal_type_object.newContent(portal_type='Action Information',
+          reference="view_list",
+          title='Web view',
+          action='string:${object_url}/Organisation_viewFinancialInformationList',
+          condition=None,
+          action_permission='View',
+          action_type='object_list',
+          visible=1,
+          float_index=0.2)
+
+      # check new custom action '_list' is return
+      self.assertEquals("Organisation_viewFinancialInformationList",
+                  portal_type_object.getDefaultViewFor(obj).getId())
+
+      # Avoid deletion of actions fo rother tests
+      transaction.abort()
 
     def test_22_securityReindex(self, quiet=quiet, run=run_all_test):
       """
