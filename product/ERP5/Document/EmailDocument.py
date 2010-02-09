@@ -504,7 +504,7 @@ class EmailDocument(File, TextDocument):
   security.declareProtected(Permissions.View, 'index_html')
   index_html = TextDocument.index_html
 
-  security.declareProtected(Permissions.View, 'convert')
+  security.declareProtected(Permissions.AccessContentsInformation, 'convert')
   convert = TextDocument.convert
 
   security.declareProtected(Permissions.AccessContentsInformation, 'hasBaseData')
