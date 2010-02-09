@@ -29,6 +29,7 @@
 import unittest
 from time import time
 import gc
+import subprocess
 
 import transaction
 from DateTime import DateTime
@@ -44,22 +45,37 @@ import os, hotshot
 # specific testing environment. We must always try to stay below max
 # historical values.
                                     # Historical values
-MIN_OBJECT_VIEW=0.142               # 0.112
-MAX_OBJECT_VIEW=0.144               # 0.120
-MIN_OBJECT_MANY_LINES_VIEW=0.288    # 0.274
-MAX_OBJECT_MANY_LINES_VIEW=0.292    # 0.294
-MIN_OBJECT_PROXYFIELD_VIEW=0.225    # 0.199
-MAX_OBJECT_PROXYFIELD_VIEW=0.228    # 0.220
+MIN_OBJECT_VIEW=0.144               # 0.112
+MAX_OBJECT_VIEW=0.147               # 0.120
+MIN_OBJECT_MANY_LINES_VIEW=0.281    # 0.274
+MAX_OBJECT_MANY_LINES_VIEW=0.286    # 0.294
+MIN_OBJECT_PROXYFIELD_VIEW=0.213    # 0.199
+MAX_OBJECT_PROXYFIELD_VIEW=0.217    # 0.220
 #CURRENT_MIN_OBJECT_VIEW=0.1220
 #CURRENT_MAX_OBJECT_VIEW=0.1280
-MIN_MODULE_VIEW=0.147               # 0.125
-MAX_MODULE_VIEW=0.150               # 0.175
-MIN_TIC=0.0329                      # 0.260
-MAX_TIC=0.0350                      # 0.343
+MIN_MODULE_VIEW=0.149               # 0.125
+MAX_MODULE_VIEW=0.151               # 0.175
+MIN_TIC=0.0323                      # 0.260
+MAX_TIC=0.0344                      # 0.343
 MIN_OBJECT_CREATION=0.0068          # 0.0070
 MAX_OBJECT_CREATION=0.0073          # 0.0082
 LISTBOX_COEF=0.00169                # 0.02472
 # Change history
+# 2010-02-09
+#  the bot is slightly slower since 2009-11-29
+#   MIN_OBJECT_VIEW : 0.142 -> 0.144
+#   MAX_OBJECT_VIEW : 0.144 -> 0.147
+#   MIN_MODULE_VIEW : 0.147 -> 0.149
+#   MAX_MODULE_VIEW : 0.150 -> 0.151
+#  too fast by the result of optimisation
+#   MIN_TIC : 0.0329 -> 0.0323
+#   MAX_TIC : 0.0350 -> 0.0344
+#   MIN_OBJECT_MANY_LINES_VIEW : 0.288 -> 0.281
+#   MAX_OBJECT_MANY_LINES_VIEW : 0.292 -> 0.286
+#   MIN_OBJECT_PROXYFIELD_VIEW : 0.225 -> 0.213
+#   MAX_OBJECT_PROXYFIELD_VIEW : 0.228 -> 0.217
+#  XXX test_02_viewFooObjectWithManyLines became slower with [31650]
+#      due to a new field in Foo_view.
 # 2009-11-16
 #   MIN_OBJECT_CREATION : 0.0071 -> 0.0068
 #   MAX_OBJECT_CREATION : 0.0077 -> 0.0073
@@ -69,7 +85,7 @@ LISTBOX_COEF=0.00169                # 0.02472
 #   MIN_OBJECT_MANY_LINES_VIEW : 0.289 -> 0.288
 #   MIN_OBJECT_MANY_LINES_VIEW : 0.293 -> 0.292
 # 2009-11-12
-#  temporary increase threashold for view to notice future regressions
+#  temporary increase threshold for view to notice future regressions
 #   MIN_OBJECT_VIEW : 0.132 -> 0.142
 #   MAX_OBJECT_VIEW : 0.138 -> 0.144
 #  too fast by the result of optimisation
@@ -119,8 +135,12 @@ class TestPerformance(ERP5TypeTestCase, LogInterceptor):
       """
         Executed before each test_*.
       """
-      # Prevent GC from happening.
-      # We don't want cpu time to be spent outside of python code if possible.
+      # We don't want cpu time to be spent by random external sources:
+      # - Bot should have its SQL database in a tmpfs storage.
+      # - As bot delete all '*.pyc' files before updating the working copy,
+      #   all '*.pyc' files have just been recreated. They should be synced:
+      subprocess.call('sync')
+      # - Prevent GC from happening.
       # It would increase the "crosstalk" between using more ram and using more cpu.
       # Another problem is that it makes result even less reproductible on another
       # machine where memory use does not evolve identicaly (ie. x86_64 arch,
