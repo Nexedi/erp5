@@ -1,4 +1,7 @@
 2010-02-09 yo
+* Base_viewPDMFieldLibrary/my_base_unit_price simply reuses Base_viewFieldLibrary/my_base_unit_price now.
+
+2010-02-09 yo
 * Add support for price precision. You can simply define supply lines for price precision, if you want to apply a precision different from a currency precision to unit prices.
 
 2010-01-01 fabien
