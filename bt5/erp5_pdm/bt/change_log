@@ -1,3 +1,6 @@
+2010-02-09 yo
+* Add support for price precision. You can simply define supply lines for price precision, if you want to apply a precision different from a currency precision to unit prices.
+
 2010-01-01 fabien
 * move fabric_brand category from erp5_pdm to erp5_apparel. This category is going to be replaced by a trade_mark_module.
 
