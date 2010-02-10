@@ -37,11 +37,10 @@ from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
 from Products.ERP5Type.Base import Base
 from Products.ERP5Type.Base import TempBase
 from Products.CMFCategory.Renderer import Renderer
-
+from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 
 from zLOG import LOG, ERROR
 from warnings import warn
-
 
 class Amount(Base, Variated):
   """
@@ -420,12 +419,23 @@ class Amount(Base, Variated):
       return quantity * price
 
   def _getBaseUnitPrice(self, context):
-    resource = self.getResourceValue()
-    if resource is not None:
-      operand_dict = resource.getPriceParameterDict(context=context)
-      if operand_dict is not None:
-        base_unit_price = operand_dict.get('base_unit_price', None)
-        return base_unit_price
+    # Stop any recursive call to this method. This happens when a Path
+    # does not have base unit price locally, so it looks it up, and
+    # each path of a predicate list does the same again.
+    tv = getTransactionalVariable(self)
+    key = '_getBaseUnitPrice'
+    if key in tv:
+      return
+    tv[key] = 1
+    try:
+      resource = self.getResourceValue()
+      if resource is not None:
+        operand_dict = resource.getPriceParameterDict(context=context)
+        if operand_dict is not None:
+          base_unit_price = operand_dict.get('base_unit_price', None)
+          return base_unit_price
+    finally:
+      del tv[key]
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getBaseUnitPrice')
   def getBaseUnitPrice(self, **kw):
