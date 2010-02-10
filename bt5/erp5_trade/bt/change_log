@@ -1,3 +1,6 @@
+2010-02-10 yo
+* Add support for price precision.
+
 2010-01-21 aurel
 * add fast input for inventory and sale packing list, factorize the code so that it is easy to add a new fast input
 
