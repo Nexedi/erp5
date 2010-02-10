@@ -30,14 +30,14 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 <dtml-var manage_tabs>
 
 <form action="manage_editFilter" method="POST">
+<p>Note about Expression Cache Key(s): If several objects have the same values
+   for the listed properties, the expression is evaluated only for one of these
+   objects. For performance reason, it is important to set this field if
+   possible (usually 'portal_type').</p>
 <dtml-in expr="getFilterableMethodList()" sort=id>
     <dtml-let method_id=id>
-    <h3>Method: <dtml-var id></br></h3>
+    <h3>Method: <dtml-var id></h3>
     <table cellspacing="0" cellpadding="2" border="0">
-      <tr>
-        <td align="left" valign="top">
-        </td>
-      </tr>
       <tr>
         <td align="left" valign="top">
         Activate Filter <input type="checkbox" name="<dtml-var id>_box"
@@ -57,7 +57,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
       </dtml-if>
       <tr>
         <td align="left" valign="top">
-        Expression <input type="text" name="<dtml-var id>_expression" size="20"
+        Expression <input type="text" name="<dtml-var id>_expression" size="50"
                          value="<dtml-var expr="getExpression(id)">">
         </td>
       </tr>
