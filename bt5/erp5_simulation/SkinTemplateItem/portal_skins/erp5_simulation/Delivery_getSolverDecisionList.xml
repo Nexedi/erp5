@@ -53,10 +53,24 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># XXX currently we create a temporary Solver Process and build temporary Solver Decision in it.\n
-# But for better performance, Solver Process and Solver Decision should be created by causality\n
-# workflow when a delivery becomes divergent.\n
-solver_process = context.getPortalObject().portal_solvers.newSolverProcess(context, temp_object=True)\n
+            <value> <string># XXX currently we create a Solver Process and build Solver Decision in it if missing.\n
+# But for better performance, Solver Process and Solver Decision should be created beforehand\n
+# by causality workflow when a delivery becomes divergent.\n
+solver_process = None\n
+solver_list = context.getSolverValueList()\n
+for i in solver_list:\n
+  # XXX if \'solving\' decision exists, what should we do?\n
+  if i.getSolverState() != \'solved\':\n
+    solver_process = i\n
+    break\n
+context.log(solver_process)\n
+if solver_process is None:\n
+  context.log(solver_process)\n
+  solver_process = context.getPortalObject().portal_solvers.newSolverProcess(context)\n
+  context.log(solver_process)\n
+  solver_list.append(solver_process.getRelativeUrl())\n
+  context.setSolverList(solver_list)\n
+# XXX should omit \'solved\' decision?\n
 return solver_process.objectValues(portal_type=\'Solver Decision\')\n
 </string> </value>
         </item>
@@ -95,10 +109,13 @@ return solver_process.objectValues(portal_type=\'Solver Decision\')\n
                         <value>
                           <tuple>
                             <string>kw</string>
+                            <string>None</string>
+                            <string>solver_process</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>True</string>
-                            <string>solver_process</string>
+                            <string>solver_list</string>
+                            <string>_getiter_</string>
+                            <string>i</string>
                           </tuple>
                         </value>
                     </item>

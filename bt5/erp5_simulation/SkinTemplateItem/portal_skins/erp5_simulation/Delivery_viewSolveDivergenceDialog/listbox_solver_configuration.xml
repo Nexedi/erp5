@@ -187,7 +187,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:request.get(\'listbox\', {}).get(cell.getId(), {}).get(\'solver\', \'\')</string> </value>
+            <value> <string>cell/getSolver</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -203,7 +203,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:here.Delivery_getSolverConfigurationFormId(cell.getId())</string> </value>
+            <value> <string>python:cell.getSolverValue().getConfigurationFormId()</string> </value>
         </item>
       </dictionary>
     </pickle>

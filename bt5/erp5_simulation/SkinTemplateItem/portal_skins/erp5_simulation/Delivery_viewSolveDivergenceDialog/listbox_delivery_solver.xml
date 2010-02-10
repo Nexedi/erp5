@@ -277,7 +277,11 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:request.get(\'listbox\', {}).get(cell.getId(), {}).get(\'solver\', \'\')</string> </value>
+            <value> <string encoding="cdata"><![CDATA[
+
+python:request.get(\'listbox\', {}).get(cell.getPath(), {}).get(\'solver\', \'\') and len(cell.SolverDecision_getDeliverySolverList()) > 1
+
+]]></string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -293,7 +297,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:here.Delivery_getDeliverySolverList(cell.getId())</string> </value>
+            <value> <string>python:cell.SolverDecision_getDeliverySolverList()</string> </value>
         </item>
       </dictionary>
     </pickle>
