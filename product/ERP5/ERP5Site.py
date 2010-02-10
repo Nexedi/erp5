@@ -1679,8 +1679,8 @@ class ERP5Generator(PortalGenerator):
           # are no longer action providers
           return
       except ImportError:
-        # Currently ERP5 tests don't load ZCML which is needed by the above
-        # import on CMF 1.5. This "try" should be removed when ERP5 tests
+        # BACK: Currently ERP5 tests don't load ZCML which is needed by the
+        # above import on CMF 1.5. This "try" should be removed when ERP5 tests
         # start loading ZCML. 
         pass
       action_id_list = [i.id for i in tool.listActions()]
