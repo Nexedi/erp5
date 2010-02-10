@@ -277,7 +277,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>request/bt1</string> </value>
+            <value> <string>python: request.get(\'bt1\', \'\')</string> </value>
         </item>
       </dictionary>
     </pickle>
