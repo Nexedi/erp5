@@ -7,6 +7,7 @@ Net Converted Quantity Divergence Tester | edit_workflow
 Production Reduction Solver | solver_workflow
 Quantity Cancel Solver | solver_workflow
 Quantity Split Solver | solver_workflow
+Solver Process | solver_process_workflow
 String Divergence Tester | edit_workflow
 Unify Solver | solver_workflow
 Variation Divergence Tester | edit_workflow
