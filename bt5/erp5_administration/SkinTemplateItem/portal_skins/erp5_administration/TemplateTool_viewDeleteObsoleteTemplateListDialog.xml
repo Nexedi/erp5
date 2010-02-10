@@ -38,7 +38,7 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string></string> </value>
+            <value> <string>TemplateTool_deleteObsoleteTemplateList</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -66,6 +66,7 @@
                 <string>right</string>
                 <string>center</string>
                 <string>bottom</string>
+                <string>hidden</string>
               </list>
             </value>
         </item>
@@ -84,41 +85,25 @@
                 <item>
                     <key> <string>center</string> </key>
                     <value>
-                      <list>
-                        <string>my_categories_list</string>
-                      </list>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>hidden</string> </key>
+                    <value>
+                      <list/>
                     </value>
                 </item>
                 <item>
                     <key> <string>left</string> </key>
                     <value>
-                      <list>
-                        <string>my_source_title</string>
-                        <string>my_source_section_title</string>
-                        <string>my_resource_title</string>
-                        <string>my_start_date</string>
-                        <string>my_stop_date</string>
-                        <string>my_quantity</string>
-                        <string>my_order_ratio</string>
-                        <string>my_delivery_ratio</string>
-                        <string>my_delivery_error</string>
-                        <string>my_price</string>
-                        <string>my_frozen</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
                     <key> <string>right</string> </key>
                     <value>
-                      <list>
-                        <string>my_destination_title</string>
-                        <string>my_destination_section_title</string>
-                        <string>my_portal_type</string>
-                        <string>my_order</string>
-                        <string>my_delivery</string>
-                        <string>my_translated_causality_state_title</string>
-                        <string>my_simulation_state</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
               </dictionary>
@@ -126,7 +111,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>SimulationMovement_view</string> </value>
+            <value> <string>TemplateTool_viewDeleteObsoleteTemplateListDialog</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -134,15 +119,11 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>SimulationMovement_view</string> </value>
+            <value> <string>TemplateTool_viewDeleteObsoleteTemplateListDialog</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
-            <value> <string>form_view</string> </value>
-        </item>
-        <item>
-            <key> <string>rid</string> </key>
-            <value> <int>-1722436585</int> </value>
+            <value> <string>form_dialog</string> </value>
         </item>
         <item>
             <key> <string>row_length</string> </key>
@@ -154,7 +135,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Simulation Movement</string> </value>
+            <value> <string>Delete Obsolete Templates</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>
@@ -162,6 +143,10 @@
         </item>
         <item>
             <key> <string>update_action</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>update_action_title</string> </key>
             <value> <string></string> </value>
         </item>
       </dictionary>

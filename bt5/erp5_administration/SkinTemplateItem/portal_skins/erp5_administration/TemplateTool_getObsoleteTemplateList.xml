@@ -53,21 +53,31 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>portal = context.getPortalObject()\n
-uid_list = portal.portal_selections.getSelectionCheckedUidsFor(\'delete_template_list_selection\')\n
+            <value> <string encoding="cdata"><![CDATA[
+
+portal = context.getPortalObject()\n
+obsolete_list = []\n
 \n
-if uid_list:\n
-  # if parameter is empty, catalog query will discard it and return all objects.\n
-  id_list = [content.getId() for content in portal.portal_catalog(uid=uid_list)]\n
-  message = \'Templates deleted: ${len_template_list}.\'\n
-  mapping = {\'len_template_list\': len(id_list)}\n
-  context.manage_delObjects(id_list)\n
-  translated_message = context.Base_translateString(message, mapping=mapping)\n
-else:\n
-  translated_message = context.Base_translateString(\'No Business Template deleted.\')\n
+business_template_list = context.objectValues(**kw)\n
+for business_template in business_template_list:\n
+  business_template_id = business_template.getId()\n
+  installation_state = business_template.getInstallationState()\n
+  if installation_state in (\'deleted\', \'replaced\'):\n
+    obsolete_list.append(business_template)\n
+  elif installation_state == \'not_installed\':\n
+    if len([x for x in business_template_list \\\n
+     if x.getTitle() == business_template.getTitle() and \\\n
+        x.getInstallationState() == \'installed\' and \\\n
+        int(x.getRevision() or \'0\') > int(business_template.getRevision() or \'0\')]):\n
+      obsolete_list.append(business_template)\n
 \n
-portal.ERP5Site_redirect(context.getAbsoluteUrl(), keep_items={\'portal_status_message\': translated_message})\n
-</string> </value>
+# Select all by default in selection\n
+uid_list = [business_template.getUid() for business_template in obsolete_list]\n
+portal.portal_selections.setSelectionCheckedUidsFor(kw.get(\'selection_name\'), uid_list)\n
+return obsolete_list\n
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -108,16 +118,19 @@ portal.ERP5Site_redirect(context.getAbsoluteUrl(), keep_items={\'portal_status_m
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>portal</string>
-                            <string>uid_list</string>
+                            <string>obsolete_list</string>
+                            <string>_apply_</string>
+                            <string>business_template_list</string>
+                            <string>_getiter_</string>
+                            <string>business_template</string>
+                            <string>business_template_id</string>
+                            <string>installation_state</string>
+                            <string>len</string>
                             <string>append</string>
                             <string>$append0</string>
-                            <string>_getiter_</string>
-                            <string>content</string>
-                            <string>id_list</string>
-                            <string>message</string>
-                            <string>len</string>
-                            <string>mapping</string>
-                            <string>translated_message</string>
+                            <string>x</string>
+                            <string>int</string>
+                            <string>uid_list</string>
                           </tuple>
                         </value>
                     </item>
@@ -134,7 +147,7 @@ portal.ERP5Site_redirect(context.getAbsoluteUrl(), keep_items={\'portal_status_m
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>TemplateTool_deleteObsoleteTemplateList</string> </value>
+            <value> <string>TemplateTool_getObsoleteTemplateList</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
