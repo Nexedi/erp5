@@ -30,6 +30,7 @@
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions
 from Products.ERP5.Document.Rule import Rule
+from zLOG import LOG, WARNING
 
 class DeliveryRule(Rule):
   """
@@ -101,7 +102,8 @@ class DeliveryRule(Rule):
             # We are on a cell
             new_id = "%s_%s" % (deliv_mvt.getParentId(), deliv_mvt.getId())
           # Generate the simulation deliv_mvt
-          # XXX Hardcoded value
+          property_dict = self._getExpandablePropertyDict(
+            applied_rule, deliv_mvt)
           new_sim_mvt = applied_rule.newContent(
               portal_type=self.movement_type,
               id=new_id,
@@ -109,85 +111,16 @@ class DeliveryRule(Rule):
               order_ratio=1,
               delivery_value=deliv_mvt,
               delivery_ratio=1,
-
-              source=deliv_mvt.getSource(),
-              source_section=deliv_mvt.getSourceSection(),
-              source_function=deliv_mvt.getSourceFunction(),
-              source_account=deliv_mvt.getSourceAccount(),
-              source_administration=deliv_mvt.getSourceAdministration(),
-              source_decision=deliv_mvt.getSourceDecision(),
-              source_project=deliv_mvt.getSourceProject(),
-              source_payment=deliv_mvt.getSourcePayment(),
-              destination=deliv_mvt.getDestination(),
-              destination_section=deliv_mvt.getDestinationSection(),
-              destination_function=deliv_mvt.getDestinationFunction(),
-              destination_account=deliv_mvt.getDestinationAccount(),
-              destination_administration=deliv_mvt.getDestinationAdministration(),
-              destination_decision=deliv_mvt.getDestinationDecision(),
-              destination_project=deliv_mvt.getDestinationProject(),
-              destination_payment=deliv_mvt.getDestinationPayment(),
-              start_date=deliv_mvt.getStartDate(),
-              stop_date=deliv_mvt.getStopDate(),
-
-              resource=deliv_mvt.getResource(),
-              variation_category_list=deliv_mvt.getVariationCategoryList(),
-              variation_property_dict=deliv_mvt.getVariationPropertyDict(),
-              aggregate_list=deliv_mvt.getAggregateList(),
-
-              quantity=deliv_mvt.getQuantity(),
-              quantity_unit=deliv_mvt.getQuantityUnit(),
-              incoterm=deliv_mvt.getIncoterm(),
-              price=deliv_mvt.getPrice(),
-              price_currency=deliv_mvt.getPriceCurrency(),
-              base_contribution_list=deliv_mvt.getBaseContributionList(),
-              base_application_list=deliv_mvt.getBaseApplicationList(),
-              description=deliv_mvt.getDescription(),
-          )
-          if deliv_mvt.hasTitle():
-            new_sim_mvt.setTitle(deliv_mvt.getTitle())
+              **property_dict)
         elif sim_mvt in existing_movement_list:
           if sim_mvt not in immutable_movement_list:
             # modification allowed
-            # XXX Hardcoded value
+            property_dict = self._getExpandablePropertyDict(
+              applied_rule, deliv_mvt)
             sim_mvt.edit(
                 delivery_value=deliv_mvt,
                 delivery_ratio=1,
-
-                source=deliv_mvt.getSource(),
-                source_section=deliv_mvt.getSourceSection(),
-                source_function=deliv_mvt.getSourceFunction(),
-                source_account=deliv_mvt.getSourceAccount(),
-                source_administration=deliv_mvt.getSourceAdministration(),
-                source_decision=deliv_mvt.getSourceDecision(),
-                source_project=deliv_mvt.getSourceProject(),
-                source_payment=deliv_mvt.getSourcePayment(),
-                destination=deliv_mvt.getDestination(),
-                destination_section=deliv_mvt.getDestinationSection(),
-                destination_function=deliv_mvt.getDestinationFunction(),
-                destination_account=deliv_mvt.getDestinationAccount(),
-                destination_administration=deliv_mvt.getDestinationAdministration(),
-                destination_decision=deliv_mvt.getDestinationDecision(),
-                destination_project=deliv_mvt.getDestinationProject(),
-                destination_payment=deliv_mvt.getDestinationPayment(),
-                start_date=deliv_mvt.getStartDate(),
-                stop_date=deliv_mvt.getStopDate(),
-
-                resource=deliv_mvt.getResource(),
-                variation_category_list=deliv_mvt.getVariationCategoryList(),
-                variation_property_dict=deliv_mvt.getVariationPropertyDict(),
-                aggregate_list=deliv_mvt.getAggregateList(),
-
-                quantity=deliv_mvt.getQuantity(),
-                quantity_unit=deliv_mvt.getQuantityUnit(),
-                incoterm=deliv_mvt.getIncoterm(),
-                price=deliv_mvt.getPrice(),
-                price_currency=deliv_mvt.getPriceCurrency(),
-                base_contribution_list=deliv_mvt.getBaseContributionList(),
-                base_application_list=deliv_mvt.getBaseApplicationList(),
-                description=deliv_mvt.getDescription(),
-                force_update=1)
-            if deliv_mvt.hasTitle():
-              sim_mvt.setTitle(deliv_mvt.getTitle())
+                **property_dict)
           else:
             # modification disallowed, must compensate
             pass
@@ -266,6 +199,64 @@ class DeliveryRule(Rule):
     if movement.getSimulationState() in movement.getPortalDraftOrderStateList():
       return 0
     return 1
+
+  def _getExpandablePropertyDict(self, applied_rule, movement,
+      business_path=None, **kw):
+    """
+    Return a Dictionary with the Properties used to edit
+    the simulation movement
+    """
+    if self._isBPM():
+      return Rule._getExpandablePropertyDict(self, applied_rule,
+          movement, business_path, **kw)
+    property_dict = {}
+
+    default_property_list = self.getExpandablePropertyList()
+    # For backward compatibility, we keep for some time the list
+    # of hardcoded properties. Theses properties should now be
+    # defined on the rule itself
+    if len(default_property_list) == 0:
+      LOG("Delivery Rule , _getExpandablePropertyDict", WARNING,
+          "Hardcoded properties set, please define your rule correctly")
+      default_property_list = (
+        'source',
+        'source_section',
+        'source_function',
+        'source_account',
+        'source_administration',
+        'source_decision',
+        'source_project',
+        'source_payment',
+        'destination',
+        'destination_section',
+        'destination_function',
+        'destination_account',
+        'destination_administration',
+        'destination_decision',
+        'destination_project',
+        'destination_payment',
+        'start_date',
+        'stop_date',
+        'description',
+        'resource',
+        'variation_category_list',
+        'variation_property_dict',
+        'base_contribution_list',
+        'base_application_list',
+        'aggregate_list',
+        'price',
+        'price_currency',
+        'quantity',
+        'quantity_unit',
+        'incoterm',
+      )
+
+    for prop in default_property_list:
+       property_dict[prop] = movement.getProperty(prop)
+
+    if movement.hasTitle():
+      property_dict['title'] = movement.getTitle()
+    return property_dict
 
   def _getInputMovementList(self, applied_rule):
     """Return list of movements from delivery"""
