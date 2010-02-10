@@ -334,6 +334,13 @@ class ERP5TypeTestCase(backportUnittest.TestCase, PortalTestCase):
       """
       PortalTestCase.login(self, user_name)
 
+    def logout(self):
+      PortalTestCase.logout(self)
+      # clean up certain cache related REQUEST keys that might be associated
+      # with the logged in user
+      for key in ('_ec_cache', '_oai_cache'):
+        self.portal.REQUEST.other.pop(key, None)
+
     def _setupUser(self):
       '''Creates the default user.'''
       uf = self.portal.acl_users
