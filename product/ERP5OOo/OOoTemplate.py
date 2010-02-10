@@ -568,7 +568,7 @@ class OOoTemplate(ZopePageTemplate):
           '%s; charset=utf-8' % self.content_type)
       request.RESPONSE.setHeader('Content-disposition',
           'inline;filename="%s%s"' % (self._getFileName(),
-                                      guess_extension(self.content_type)))
+                                      guess_extension(self.content_type) or ''))
     
     if DevelopmentMode:
       # Validate XML in development mode
