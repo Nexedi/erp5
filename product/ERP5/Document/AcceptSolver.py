@@ -96,10 +96,6 @@ class AcceptSolver(SolverMixin, ConfigurableMixin, XMLObject):
       Update value of the current simulation movement, and update
       his parent movement.
     """
-    if not simulation_movement.isPropertyRecorded(property_id):
-      simulation_movement.recordProperty(property_id)
-    simulation_movement.edit(**value_dict)
-
     applied_rule = simulation_movement.getParentValue()
     parent_movement = applied_rule.getParentValue()
     if parent_movement.getPortalType() == 'Simulation Movement' and \
@@ -107,3 +103,7 @@ class AcceptSolver(SolverMixin, ConfigurableMixin, XMLObject):
       # backtrack to the parent movement while it is not frozen
       self._solveRecursively(parent_movement, value_dict=value_dict,
                              property_id=property_id)
+    else:
+      if not simulation_movement.isPropertyRecorded(property_id):
+        simulation_movement.recordProperty(property_id)
+    simulation_movement.edit(**value_dict)
