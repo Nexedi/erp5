@@ -53,20 +53,21 @@ MIN_OBJECT_PROXYFIELD_VIEW=0.213    # 0.199
 MAX_OBJECT_PROXYFIELD_VIEW=0.217    # 0.220
 #CURRENT_MIN_OBJECT_VIEW=0.1220
 #CURRENT_MAX_OBJECT_VIEW=0.1280
-MIN_MODULE_VIEW=0.149               # 0.125
-MAX_MODULE_VIEW=0.152               # 0.175
+MIN_MODULE_VIEW=0.148               # 0.125
+MAX_MODULE_VIEW=0.153               # 0.175
 MIN_TIC=0.0323                      # 0.260
 MAX_TIC=0.0344                      # 0.343
 MIN_OBJECT_CREATION=0.0068          # 0.0070
 MAX_OBJECT_CREATION=0.0073          # 0.0082
-LISTBOX_COEF=0.00169                # 0.02472
+LISTBOX_COEF=0.00173                # 0.02472
 # Change history
 # 2010-02-09
 #  the bot is slightly slower since 2009-11-29
 #   MIN_OBJECT_VIEW : 0.142 -> 0.144
 #   MAX_OBJECT_VIEW : 0.144 -> 0.147
-#   MIN_MODULE_VIEW : 0.147 -> 0.149
-#   MAX_MODULE_VIEW : 0.150 -> 0.152
+#   MIN_MODULE_VIEW : 0.147 -> 0.148
+#   MAX_MODULE_VIEW : 0.150 -> 0.153
+#   LISTBOX_COEF: 0.00169 -> 0.00173
 #  too fast by the result of optimisation
 #   MIN_TIC : 0.0329 -> 0.0323
 #   MAX_TIC : 0.0350 -> 0.0344
