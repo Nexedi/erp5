@@ -40,6 +40,7 @@ from Products.ERP5Type.Globals import InitializeClass, DTMLFile, Persistent
 from AccessControl import ClassSecurityInfo
 from AccessControl.Role import RoleManager
 from OFS.SimpleItem import Item
+from OFS.PropertyManager import PropertyManager
 from urllib import quote, quote_plus
 from copy import deepcopy
 from lxml import etree
@@ -76,7 +77,8 @@ NSMAP = {
 # Constructors
 manage_addFormPrintout = DTMLFile("dtml/FormPrintout_add", globals())
 
-def addFormPrintout(self, id, title="", form_name='', template='', REQUEST=None):
+def addFormPrintout(self, id, title="", form_name='', template='',
+                    REQUEST=None, filename='object/title_or_id'):
   """Add form printout to folder.
 
   Keyword arguments:
@@ -86,7 +88,7 @@ def addFormPrintout(self, id, title="", form_name='', template='', REQUEST=None)
   template -- the name of a template which describes printout layout
   """
   # add actual object
-  id = self._setObject(id, FormPrintout(id, title, form_name, template))
+  id = self._setObject(id, FormPrintout(id, title, form_name, template, filename))
   # respond to the add_and_edit button if necessary
   add_and_edit(self, id, REQUEST)
   return ''
@@ -108,7 +110,7 @@ def add_and_edit(self, id, REQUEST):
     u = "%s/%s" % (u, quote(id))
   REQUEST.RESPONSE.redirect(u+'/manage_main')
 
-class FormPrintout(Implicit, Persistent, RoleManager, Item):
+class FormPrintout(Implicit, Persistent, RoleManager, Item, PropertyManager):
   """Form Printout
 
   FormPrintout is one of a reporting system in ERP5.
@@ -137,6 +139,15 @@ class FormPrintout(Implicit, Persistent, RoleManager, Item):
   property_sheets = ( PropertySheet.Base
                     , PropertySheet.SimpleItem)
 
+  _properties = ( {'id': 'template',
+                   'type': 'string',
+                   'mode': 'w'},
+                  {'id': 'form_name',
+                   'type': 'string',
+                   'mode': 'w'},
+                  {'id': 'filename',
+                   'type': 'tales',
+                   'mode': 'w',},)
   # Constructors
   constructors =   (manage_addFormPrintout, addFormPrintout)
 
@@ -157,8 +168,10 @@ class FormPrintout(Implicit, Persistent, RoleManager, Item):
   # default attributes
   template = None
   form_name = None
+  filename = 'object/title_or_id'
 
-  def __init__(self, id, title='', form_name='', template=''):
+  def __init__(self, id, title='', form_name='', template='',
+               filename='object/title_or_id'):
     """Initialize id, title, form_name, template.
 
     Keyword arguments:
@@ -166,11 +179,14 @@ class FormPrintout(Implicit, Persistent, RoleManager, Item):
     title -- the title of a form printout
     form_name -- the name of a form which as a document content
     template -- the name of a template which as a document layout
+    filename -- Tales expression which return the filename of
+    downloadable file.
     """
     self.id = id
     self.title = title
     self.form_name = form_name
     self.template = template
+    self.filename = filename
 
   security.declareProtected('View', 'index_html')
   def index_html(self, REQUEST, RESPONSE=None, format=None, batch_mode=False):
@@ -213,13 +229,14 @@ class FormPrintout(Implicit, Persistent, RoleManager, Item):
   __call__ = index_html
 
   security.declareProtected('Manage properties', 'doSettings')
-  def doSettings(self, REQUEST, title='', form_name='', template=''):
-    """Change title, form_name, template."""
+  def doSettings(self, REQUEST, title='', form_name='', template='', filename='object/title_or_id'):
+    """Change title, form_name, template, filename."""
     if SUPPORTS_WEBDAV_LOCKS and self.wl_isLocked():
       raise ResourceLockedError, "File is locked via WebDAV"
     self.form_name = form_name
     self.template = template
     self.title = title
+    self.filename = filename
     message = "Saved changes."
     if getattr(self, '_v_warnings', None):
       message = ("<strong>Warning:</strong> <i>%s</i>"
@@ -248,11 +265,13 @@ class FormPrintout(Implicit, Persistent, RoleManager, Item):
     """
     if REQUEST is not None and not format:
       format = REQUEST.get('format', None)
+    filename = self.getProperty('filename')
     if not format:
       if REQUEST is not None and not batch_mode:
         REQUEST.RESPONSE.setHeader('Content-Type','%s' % content_type)
         REQUEST.RESPONSE.setHeader('Content-disposition',
-                                   'inline;filename="%s%s"' % (self.title_or_id(), guess_extension(content_type)))
+                                   'inline;filename="%s%s"' % \
+                                     (filename, guess_extension(content_type) or ''))
       return printout
     from Products.ERP5Type.Document import newTempOOoDocument
     tmp_ooo = newTempOOoDocument(self, self.title_or_id())
@@ -265,7 +284,7 @@ class FormPrintout(Implicit, Persistent, RoleManager, Item):
     if REQUEST is not None and not batch_mode:
       REQUEST.RESPONSE.setHeader('Content-type', mime)
       REQUEST.RESPONSE.setHeader('Content-disposition',
-          'attachment;filename="%s.%s"' % (self.title_or_id(), format))
+          'attachment;filename="%s.%s"' % (filename, format))
     return data
 
 InitializeClass(FormPrintout)

@@ -222,6 +222,15 @@ class TestFormPrintoutAsODT(TestFormPrintoutMixin):
     self.assertTrue(content_xml.find("Français test2") > 0)
     self._validate(odf_document)
 
+    # 7. Change Filename of downloadable file
+    reference = 'My Reference'
+    test1.setReference(reference)
+    foo_printout.filename = 'here/getReference'
+    odf_document = foo_printout(self.portal.REQUEST)
+    self.assertEqual(request.RESPONSE.getHeader('content-disposition'),
+                     'inline;filename="%s.odt"' % reference)
+    test1.setReference(None)
+
   def test_01_Paragraph_07_LinesField(self):
     """test LinesField into multi line"""
     foo_printout = self.portal.foo_module.test1.Foo_viewAsPrintout

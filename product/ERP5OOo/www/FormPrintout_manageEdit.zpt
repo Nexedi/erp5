@@ -20,6 +20,11 @@
       <td><input name="template" value="default_template" type="text" size="20"
                 tal:attributes="value request/template | here/template | nothing"/></td>
     </tr>
+    <tr>
+      <td class="form-label">Filename</td>
+      <td><input name="filename" value="default_filename" type="text" size="20"
+                tal:attributes="value request/filename | here/filename | nothing"/></td>
+    </tr>
 
     <tr>
       <td align="left" valign="top" colspan="2">
