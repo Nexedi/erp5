@@ -176,14 +176,15 @@ class TALESValue(StaticValue):
     # This allows to pass some pointer to the local object
     # through the REQUEST parameter. Not very clean.
     # Used by ListBox to render different items in a list
-    if kw.get('REQUEST', None) is not None and kw.get('cell', None) is None:
-      if getattr(kw['REQUEST'], 'cell', None) is not None:
-        kw['cell'] = getattr(kw['REQUEST'], 'cell')
-      else:
-        kw['cell'] = kw['REQUEST']
-    elif kw.get('cell', None) is None:
-      if getattr(REQUEST, 'cell', None) is not None:
-        kw['cell'] = getattr(REQUEST, 'cell')
+    if kw.get('cell') is None:
+      request = kw.get('REQUEST')
+      if request is not None:
+        if getattr(request, 'cell', None) is not None:
+          kw['cell'] = request.cell
+        else:
+          kw['cell'] = request
+      elif getattr(REQUEST, 'cell', None) is not None:
+          kw['cell'] = REQUEST.cell
     # on Zope 2.12, only path expressions can access the CONTEXTS name
     # but ERP5 has many python expressions that try to access CONTEXTS, so
     # we try to keep backward compatibility
