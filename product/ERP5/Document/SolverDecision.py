@@ -29,7 +29,6 @@
 
 import zope.interface
 from AccessControl import ClassSecurityInfo
-from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5.mixin.configurable import ConfigurableMixin
@@ -88,3 +87,27 @@ class SolverDecision(ConfigurableMixin, XMLObject):
   # Declarative interfaces
   zope.interface.implements(interfaces.IConfigurable,
                            )
+
+  def getDefaultConfigurationPropertyDict(self):
+    """
+    Returns a dictionary of default properties for specified
+    configurable object
+    (implementation)
+    """
+    # XXX To be implemented through type based method and using read
+    # transaction cache
+    try:
+      solver_portal_type = self.getSolverValue().getId()
+    except AttributeError:
+      return {}
+
+    solver = self.getParentValue().newContent(
+      portal_type=solver_portal_type,
+      temp_object=True,
+      delivery_list=self.getDeliveryList(),
+      causality_value=self)
+    method = solver._getTypeBasedMethod(
+      'getDefaultConfigurationPropertyDict',
+      fallback_script_id='Solver_getDefaultConfigurationPropertyDict')
+
+    return method(self)
