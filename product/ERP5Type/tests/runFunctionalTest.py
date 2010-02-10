@@ -303,8 +303,7 @@ Tests failed: %4s
 
 Following tests failed:
 
-  
-  %s""" % (passes, failures, "\n".join(error_titles))
+%s""" % (passes, failures, "\n".join(error_titles))
     detail = ''
     for e in result_re.findall(file_content):
       if error_result_re.match(e):
