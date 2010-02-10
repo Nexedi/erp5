@@ -86,6 +86,7 @@
                     <value>
                       <list>
                         <string>my_categories_list</string>
+                        <string>my_recorded_property_list</string>
                       </list>
                     </value>
                 </item>

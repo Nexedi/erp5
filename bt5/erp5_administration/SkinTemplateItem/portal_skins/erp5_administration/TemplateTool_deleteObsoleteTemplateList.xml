@@ -53,21 +53,29 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>portal = context.getPortalObject()\n
-uid_list = portal.portal_selections.getSelectionCheckedUidsFor(\'delete_template_list_selection\')\n
+            <value> <string encoding="cdata"><![CDATA[
+
+portal_templates = context.getPortalObject().portal_templates\n
+delete_list = []\n
+bt_list = portal_templates.objectValues()\n
+for bt in bt_list:\n
+  bt_id = bt.getId()\n
+  installation_state = bt.getInstallationState()\n
+  if installation_state in (\'deleted\', \'replaced\'):\n
+    delete_list.append(bt_id)\n
+  elif installation_state == \'not_installed\':\n
+    if len([x for x in bt_list \\\n
+     if x.getTitle() == bt.getTitle() and \\\n
+        x.getInstallationState() == \'installed\' and \\\n
+        int(x.getRevision() or \'0\') > int(bt.getRevision() or \'0\')]):\n
+      delete_list.append(bt_id)\n
 \n
-if uid_list:\n
-  # if parameter is empty, catalog query will discard it and return all objects.\n
-  id_list = [content.getId() for content in portal.portal_catalog(uid=uid_list)]\n
-  message = \'Templates deleted: ${len_template_list}.\'\n
-  mapping = {\'len_template_list\': len(id_list)}\n
-  context.manage_delObjects(id_list)\n
-  translated_message = context.Base_translateString(message, mapping=mapping)\n
-else:\n
-  translated_message = context.Base_translateString(\'No Business Template deleted.\')\n
-\n
-portal.ERP5Site_redirect(context.getAbsoluteUrl(), keep_items={\'portal_status_message\': translated_message})\n
-</string> </value>
+print \'Deleted id list:%r\' % delete_list\n
+portal_templates.manage_delObjects(delete_list)\n
+return printed\n
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -77,7 +85,7 @@ portal.ERP5Site_redirect(context.getAbsoluteUrl(), keep_items={\'portal_status_m
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>*args, **kw</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -103,21 +111,22 @@ portal.ERP5Site_redirect(context.getAbsoluteUrl(), keep_items={\'portal_status_m
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>args</string>
-                            <string>kw</string>
+                            <string>_print_</string>
+                            <string>_print</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>portal</string>
-                            <string>uid_list</string>
+                            <string>portal_templates</string>
+                            <string>delete_list</string>
+                            <string>bt_list</string>
+                            <string>_getiter_</string>
+                            <string>bt</string>
+                            <string>bt_id</string>
+                            <string>installation_state</string>
+                            <string>len</string>
                             <string>append</string>
                             <string>$append0</string>
-                            <string>_getiter_</string>
-                            <string>content</string>
-                            <string>id_list</string>
-                            <string>message</string>
-                            <string>len</string>
-                            <string>mapping</string>
-                            <string>translated_message</string>
+                            <string>x</string>
+                            <string>int</string>
                           </tuple>
                         </value>
                     </item>
