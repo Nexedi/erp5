@@ -35,4 +35,4 @@ class Delivery:
         Delivery objects usually have a causality.
     """
 
-    _categories = ( 'causality', 'incoterm', 'delivery_mode')
+    _categories = ('causality', 'incoterm', 'delivery_mode', 'solver')

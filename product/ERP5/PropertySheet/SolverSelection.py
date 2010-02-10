@@ -31,13 +31,16 @@ from Products.CMFCore.Expression import Expression
 
 class SolverSelection:
   """
-    Solver Selection provides provides properties to 
+    Solver Selection provides provides properties to
     store a selection of solver portal types.
   """
 
   _properties = (
-    # XXX - Not sure if anything else needed.
-    
+    {'id'         :'delivery_solver',
+     'label'      :'Delivery Solver to be used',
+     'type'       :'string',
+     'mode'       :'w'
+    },
   )
 
   _categories = ('causality', 'delivery', 'solver',)
