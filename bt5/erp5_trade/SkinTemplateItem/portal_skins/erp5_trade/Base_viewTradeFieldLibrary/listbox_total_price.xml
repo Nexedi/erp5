@@ -58,6 +58,10 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>editable</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -73,6 +77,10 @@
                 </item>
                 <item>
                     <key> <string>target</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -123,7 +131,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.getQuantityPrecisionFromResource(here.getPriceCurrency())</string> </value>
+            <value> <string>python: cell.getQuantityPrecisionFromResource(cell.getPriceCurrency())</string> </value>
         </item>
       </dictionary>
     </pickle>
