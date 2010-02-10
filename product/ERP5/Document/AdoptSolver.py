@@ -80,23 +80,11 @@ class AdoptSolver(SolverMixin, ConfigurableMixin, XMLObject):
             delivery_error = total_quantity * delivery_ratio - quantity
             simulation_movement.edit(delivery_ratio=delivery_ratio,
                                      delivery_error=delivery_error)
-            self._clearRecordedPropertyRecursively(simulation_movement,
-                                                   solved_property)
         else:
           # XXX TODO we need to support multiple values for categories or
           # list type property.
           simulation_movement = movement.getDeliveryRelatedValue()
           movement.setProperty(solved_property,
                                simulation_movement.getProperty(solved_property))
-          for simulation_movement in movement.getDeliveryRelatedValueList():
-            self._clearRecordedPropertyRecursively(simulation_movement,
-                                                   solved_property)
     # Finish solving
     self.succeed()
-
-  def _clearRecordedPropertyRecursively(self, simulation_movement, property_id):
-    for applied_rule in simulation_movement.objectValues():
-      for child_simulation_movement in applied_rule.objectValues():
-        child_simulation_movement.clearRecordedProperty(property_id)
-        self._clearRecordedPropertyRecursively(child_simulation_movement,
-                                               property_id)
