@@ -154,19 +154,33 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     user = uf.getUserById('seb').__of__(uf)
     newSecurityManager(None, user)
 
+  def getBusinessTemplate(self,title):
+    """
+      Get a business template at portal_templates
+    """
+    template_tool = self.getTemplateTool()
+    for bt in template_tool.objectValues(filter={'portal_type':'Business Template'}):
+      if bt.getTitle() == title:
+        return bt
+    return None
+
   def stepUseCoreBusinessTemplate(self, sequence=None,
                                   sequence_list=None, **kw):
     """
     Define erp5_core as current bt
     """
-    template_tool = self.getTemplateTool()
-    core_bt = None
-    for bt in template_tool.objectValues(filter={'portal_type':'Business Template'}):
-      if bt.getTitle() == 'erp5_core':
-        core_bt = bt
-        break
+    core_bt = self.getBusinessTemplate('erp5_core')
     self.failIf(core_bt is None)
     sequence.edit(current_bt=core_bt)
+
+  def stepUseXHtmlBusinessTemplate(self, sequence=None,
+                                  sequence_list=None, **kw):
+    """
+    Define erp5_xhtml_style as current bt
+    """
+    bt = self.getBusinessTemplate('erp5_xhtml_style')
+    self.failIf(bt is None)
+    sequence.edit(current_bt=bt)
 
   def stepCopyCoreBusinessTemplate(self, sequence=None,
                                   sequence_list=None, **kw):
@@ -174,11 +188,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     Copy erp5_core as new Business Template
     """
     template_tool = self.getTemplateTool()
-    core_bt = None
-    for bt in template_tool.objectValues(filter={'portal_type':'Business Template'}):
-      if bt.getTitle() == 'erp5_core':
-        core_bt = bt
-        break
+    core_bt = self.getBusinessTemplate('erp5_core')
     self.failIf(core_bt is None)
     # make copy
     copy_data = template_tool.manage_copyObjects(ids=[core_bt.getId()])
@@ -188,12 +198,36 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     self.assertEqual(new_bt.getTitle(), 'erp5_core')
     sequence.edit(copy_bt=new_bt)
 
+  def stepCopyXHtmlBusinessTemplate(self, sequence=None,
+                                  sequence_list=None, **kw):
+    """                           
+    Copy erp5_xhtml_style as new Business Template
+    """
+    template_tool = self.getTemplateTool()
+    bt = self.getBusinessTemplate('erp5_xhtml_style')
+    self.failIf(bt is None)
+    sequence.edit(current_bt=bt)
+    copy_data = template_tool.manage_copyObjects(ids=[bt.getId()])
+    ids = template_tool.manage_pasteObjects(copy_data)
+    new_id = ids[0]['new_id']
+    new_bt = template_tool._getOb(new_id)
+    self.assertEqual(new_bt.getTitle(), 'erp5_xhtml_style')
+    sequence.edit(copy_xhtml_bt=new_bt)
+  
   def stepUseCopyCoreBusinessTemplate(self, sequence=None,
                                   sequence_list=None, **kw):
     """
     Define erp5_core as current bt
     """
     bt = sequence.get('copy_bt')
+    sequence.edit(current_bt=bt, export_bt=bt)
+
+  def stepUseCopyXHtmlBusinessTemplate(self, sequence=None,
+                                  sequence_list=None, **kw):
+    """
+    Define erp5_core as current bt
+    """
+    bt = sequence.get('copy_xhtml_bt')
     sequence.edit(current_bt=bt, export_bt=bt)
 
   def stepBuildCopyCoreBusinessTemplate(self, sequence=None,
@@ -203,6 +237,15 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     """
     bt = sequence.get('copy_bt')
     self.assertEquals(bt.getTitle(), 'erp5_core')
+    bt.build()
+
+  def stepBuildCopyXHtmlBusinessTemplate(self, sequence=None,
+                                  sequence_list=None, **kw):
+    """
+    Build copied xhtml style bt
+    """
+    bt = sequence.get('copy_xhtml_bt')
+    self.assertEquals(bt.getTitle(), 'erp5_xhtml_style')
     bt.build()
 
   def stepInstallCopyCoreBusinessTemplate(self, sequence=None,
@@ -5841,6 +5884,23 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CopyCoreBusinessTemplate \
                        BuildCopyCoreBusinessTemplate \
                        InstallCopyCoreBusinessTemplate \
+                       '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self, quiet=quiet)
+
+  def test_166_checkXHtmlCopyBuildInstall(self, quiet=quiet, run=run_all_test):
+    if not run: return
+    if not quiet:
+      message = 'Test Check basic copy, build and installation is working'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ', 0, message)
+    sequence_list = SequenceList()
+    sequence_string = '\
+                       UseXHtmlBusinessTemplate \
+                       CopyXHtmlBusinessTemplate \
+                       UseCopyXHtmlBusinessTemplate \
+                       BuildCopyXHtmlBusinessTemplate \
+                       InstallCurrentBusinessTemplate \
                        '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)
