@@ -9,6 +9,9 @@ socket = ${configuration:mysql_sock}
 [mysqld]
 port = ${configuration:mysql_port}
 socket = ${configuration:mysql_sock}
+datadir = ${configuration:mysql_datadir}
+pid-file = ${configuration:mysql_pid}
+log-error = ${configuration:mysql_error_log}
 skip-locking
 key_buffer = 384M
 max_allowed_packet = 1M
