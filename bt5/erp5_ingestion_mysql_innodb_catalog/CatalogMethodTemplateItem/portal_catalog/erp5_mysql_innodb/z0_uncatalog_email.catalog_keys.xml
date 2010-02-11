@@ -6,11 +6,9 @@
   <value>1</value>
  </item>
  <item key="_filter_expression_archive" type="str">
-  <value></value>
+  <value>python: context.getPortalType() in ('Email', 'Fax', 'Telephone',)</value>
  </item>
- <item key="_filter_type_archive" type="tuple">
-  <value>Email</value>
-  <value>Fax</value>
-  <value>Telephone</value>
+ <item key="_filter_expression_cache_key_archive" type="tuple">
+  <value>portal_type</value>
  </item>
 </catalog_method>
