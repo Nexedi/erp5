@@ -29,6 +29,7 @@
 
 import unittest
 import md5
+import pprint
 
 import transaction
 from AccessControl.SecurityManagement import newSecurityManager
@@ -186,24 +187,52 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.assertTrue('business_application'
                     in type_information.getTypeBaseCategoryList())
 
-  def test_02_FavouritesMenu(self, quiet=quiet, run=run_all_test):
-    """
-      Test that Manage members is not an entry in the My Favourites menu.
-    """
-    if not run: return
-    portal_actions = getattr(self.getPortal(), 'portal_actions', None)
-    global_action_list = portal_actions.listFilteredActionsFor(
-                               self.getPortal())['global']
-    action_name_list = []
-    for action in global_action_list:
-      if(action['visible']):
-        action_name_list.append(action['title'])
+  def check_actions(self, target, expected):
+    actions = self.portal.portal_actions.listFilteredActionsFor(target)
+    got = {}
+    for category, actions in actions.items():
+      got[category] = [dict(title=action['title'], id=action['id'])
+                       for action in actions
+                       if action['visible']]
+    msg = ("Actions do not match. Expected:\n%s\n\nGot:\n%s\n" %
+           (pprint.pformat(expected), pprint.pformat(got))) 
+    self.assertEquals(expected, got, msg)
 
-    self.assertTrue('Create Module' in action_name_list)
+  def test_actions_on_portal(self):
+    # as manager:
+    expected = {'folder': [],
+                'global': [{'title': 'Manage Business Templates',
+                            'id': 'bt_tool'},
+                           {'title': 'Configure Categories',
+                            'id': 'category_tool'},
+                           {'title': 'Create Module',
+                            'id': 'create_module'},
+                           {'title': 'Configure Portal Types',
+                            'id': 'types_tool'},
+                           {'title': 'Undo', 'id': 'undo'}],
+                'object': [],
+                'object_search': [{'title': 'Search', 'id': 'search'}],
+                'object_sort': [{'title': 'Sort', 'id': 'sort_on'}],
+                'object_ui': [{'title': 'Modify UI', 'id': 'list_ui'}],
+                'object_view': [{'title': 'History', 'id': 'history'},
+                                {'title': 'Metadata', 'id': 'metadata'}],
+                'user': [{'title': 'Preferences', 'id': 'preferences'},
+                         {'title': 'Log out', 'id': 'logout'}],
+                'workflow': []}
+    self.check_actions(self.portal, expected)
 
-    for action_name in action_name_list:
-      self.assertNotEqual(action_name, "Manage Members")
-      self.assertNotEqual(action_name, "Manage members")
+    # as anonymous:
+    self.logout()
+    expected = {'folder': [],
+                'global': [],
+                'object': [],
+                'object_search': [{'title': 'Search', 'id': 'search'}],
+                'object_sort': [{'title': 'Sort', 'id': 'sort_on'}],
+                'object_ui': [{'title': 'Modify UI', 'id': 'list_ui'}],
+                'object_view': [{'title': 'History', 'id': 'history'}],
+                'user': [{'id': 'login', 'title': 'Login'}],
+                'workflow': []}
+    self.check_actions(self.portal, expected)
 
   def test_frontpage(self):
     """Test we can view the front page.
