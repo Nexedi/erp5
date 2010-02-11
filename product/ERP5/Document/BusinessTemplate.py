@@ -2455,7 +2455,7 @@ class ActionTemplateItem(ObjectTemplateItem):
 
   def _splitPath(self, path):
     """
-      Split path tries to split a complexe path such as:
+      Split path tries to split a complex path such as:
 
       "foo/bar[id=zoo]"
 
