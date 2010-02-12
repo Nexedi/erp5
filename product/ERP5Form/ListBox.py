@@ -2545,6 +2545,8 @@ class ListBoxListRenderer(ListBoxRenderer):
 
 class ListBoxValidator(Validator.Validator):
     property_names = Validator.Validator.property_names
+    message_names = Validator.Validator.message_names + ['required_not_found']
+    required_not_found = 'Input is required but no input given.'
 
     def validate(self, field, key, REQUEST):
         form = field.aq_parent
@@ -2660,6 +2662,10 @@ class ListBoxValidator(Validator.Validator):
                     #LOG("ListBox ValidationError",0,str(err))
                     err.field_id = error_result_key
                     errors.append(err)
+                  except KeyError:
+                    err = ValidationError('required_not_found', field)
+                    err.field_id = field.id
+                    errors.append(err)
           else:
             # Second case: modification of existing objects
             #try:
@@ -2709,6 +2715,10 @@ class ListBoxValidator(Validator.Validator):
                     except ValidationError, err:
                       #LOG("ListBox ValidationError",0,str(err))
                       err.field_id = error_result_key
+                      errors.append(err)
+                    except KeyError:
+                      err = ValidationError('required_not_found', field)
+                      err.field_id = field.id
                       errors.append(err)
             #except:
             else:
