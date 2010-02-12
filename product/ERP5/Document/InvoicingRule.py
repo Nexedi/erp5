@@ -74,10 +74,6 @@ class InvoicingRule(Rule):
   def isDeliverable(self, movement):
     return movement.getResource() is not None
 
-  def _getExpandablePropertyUpdateDict(self, applied_rule, movement,
-      business_path, current_property_dict):
-    return {}
-
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getExpandablePropertyList')
   def getExpandablePropertyList(self, default=None):
