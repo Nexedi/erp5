@@ -103,6 +103,10 @@ class ProductionOrderRule(OrderRule):
       for prop in default_property_list:
         property_dict[prop] = movement.getProperty(prop)
     
+      # rule specific
+      property_dict.update(**self._getExpandablePropertyUpdateDict(applied_rule,
+        movement, business_path, property_dict))
+
       return property_dict
 
 from Products.ERP5Type.Utils import monkeyPatch
