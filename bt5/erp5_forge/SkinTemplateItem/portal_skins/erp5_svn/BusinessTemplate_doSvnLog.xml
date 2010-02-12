@@ -59,7 +59,7 @@ from Products.ERP5Subversion.SubversionClient import SubversionSSLTrustError\n
 from Products.ERP5Type.Document import newTempBase\n
 \n
 portal = context.getPortalObject()\n
-portal_subversion = portal.portal_subeversion\n
+portal_subversion = portal.portal_subversion\n
 \n
 try:\n
   log_list = portal_subversion.log(added, context)\n
