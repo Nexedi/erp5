@@ -61,74 +61,7 @@ class DeliveryRule(Rule):
     Else if the movement is not in current state, it can be modified.
     Else, it cannot be modified.
     """
-    if self._isBPM():
-      Rule.expand(self, applied_rule,
-          delivery_movement_type_list=delivery_movement_type_list, **kw)
-      return
-    existing_movement_list = []
-    immutable_movement_list = []
-    delivery = applied_rule.getDefaultCausalityValue()
-    if delivery_movement_type_list is None:
-      delivery_movement_type_list = self.getPortalDeliveryMovementTypeList()
-    if delivery is not None:
-      delivery_movement_list = delivery.getMovementList(
-                                            portal_type=delivery_movement_type_list)
-      # Check existing movements
-      for movement in applied_rule.contentValues(portal_type=self.movement_type):
-        if movement.getLastExpandSimulationState() not in \
-          self.getPortalCurrentInventoryStateList():
-          # XXX: This condition is quick and dirty hack - knowing if Simulation
-          #      Movement is frozen shall not be ever hardcoded, this is BPM
-          #      configuration
-          movement_delivery = movement.getDeliveryValue()
-          if not movement._isTreeDelivered(ignore_first=1) and \
-              movement_delivery not in delivery_movement_list:
-            applied_rule._delObject(movement.getId())
-          else:
-            existing_movement_list.append(movement)
-        else:
-          existing_movement_list.append(movement)
-          immutable_movement_list.append(movement)
-
-      # Create or modify movements
-      for deliv_mvt in delivery_movement_list:
-        sim_mvt = self._getDeliveryRelatedSimulationMovement(deliv_mvt)
-        if sim_mvt is None:
-          # create a new deliv_mvt
-          if deliv_mvt.getParentUid() == deliv_mvt.getExplanationUid():
-            # We are on a line
-            new_id = deliv_mvt.getId()
-          else:
-            # We are on a cell
-            new_id = "%s_%s" % (deliv_mvt.getParentId(), deliv_mvt.getId())
-          # Generate the simulation deliv_mvt
-          property_dict = self._getExpandablePropertyDict(
-            applied_rule, deliv_mvt)
-          new_sim_mvt = applied_rule.newContent(
-              portal_type=self.movement_type,
-              id=new_id,
-              order_value=deliv_mvt,
-              order_ratio=1,
-              delivery_value=deliv_mvt,
-              delivery_ratio=1,
-              **property_dict)
-        elif sim_mvt in existing_movement_list:
-          if sim_mvt not in immutable_movement_list:
-            # modification allowed
-            property_dict = self._getExpandablePropertyDict(
-              applied_rule, deliv_mvt)
-            sim_mvt.edit(
-                delivery_value=deliv_mvt,
-                delivery_ratio=1,
-                **property_dict)
-          else:
-            # modification disallowed, must compensate
-            pass
-
-      # Now we can set the last expand simulation state to the current state
-      applied_rule.setLastExpandSimulationState(delivery.getSimulationState())
-    # Pass to base class
-    Rule.expand(self, applied_rule, **kw)
+    return Rule._expand(self, applied_rule, **kw)
 
   def _getDeliveryRelatedSimulationMovement(self, delivery_movement):
     """Helper method to get the delivery related simulation movement.
@@ -268,3 +201,19 @@ class DeliveryRule(Rule):
       'order': movement.getRelativeUrl(),
       'delivery': movement.getRelativeUrl(),
     }
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getMatchingPropertyList')
+  def getMatchingPropertyList(self, default=None):
+    """
+    Return a list of properties used in expand.
+    """
+    property_list = self._baseGetMatchingPropertyList()
+    # For backward compatibility, we keep for some time the list
+    # of hardcoded properties. Theses properties should now be
+    # defined on the rule itself
+    if len(property_list) == 0:
+      LOG("Invoice Transaction Rule , getMatchingPropertyList", WARNING,
+          "Hardcoded properties set, please define your rule correctly")
+      property_list=['delivery',]
+    return property_list
