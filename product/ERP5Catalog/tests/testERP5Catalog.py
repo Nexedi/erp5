@@ -119,18 +119,24 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     get_transaction().commit()
     self.tic()
 
-  def getSQLPathList(self,connection_id=None):
+  def getSQLPathList(self,connection_id=None, sql=None):
     """
     Give the full list of path in the catalog
     """
     if connection_id is None:
       sql_connection = self.getSQLConnection()
     else:
-      sql_connection = getattr(self.getPortal(),connection_id)
-    sql = 'select path from catalog'
+      sql_connection = getattr(self.getPortal(), connection_id)
+    if sql is None:
+      sql = 'select distinct(path) from catalog'
     result = sql_connection.manage_test(sql)
-    path_list = map(lambda x: x['path'],result)
+    path_list = map(lambda x: x['path'], result)
     return path_list
+  
+  def getSQLPathListWithRolesAndUsers(self, connection_id):
+    sql = 'select distinct(path) from catalog, roles_and_users\
+           where catalog.security_uid=roles_and_users.uid'
+    return self.getSQLPathList(connection_id, sql)
 
   def checkRelativeUrlInSQLPathList(self,url_list,connection_id=None):
     path_list = self.getSQLPathList(connection_id=connection_id)
@@ -1464,6 +1470,12 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
       get_transaction().commit()
 
   def test_48_ERP5Site_hotReindexAll(self, quiet=quiet, run=run_all_test):
+    """
+      test the hot reindexing of catalog -> catalog2 
+      then a hot reindexing detailed catalog2 -> catalog
+      
+      this test use the variable environment: extra_sql_connection_string_list
+    """
     if not run: return
     if not quiet:
       message = 'Hot Reindex All'
@@ -1472,7 +1484,9 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
 
     portal = self.getPortal()
     self.original_connection_id = 'erp5_sql_connection'
+    self.original_deferred_connection_id = 'erp5_sql_deferred_connection2'
     self.new_connection_id = 'erp5_sql_connection2'
+    self.new_deferred_connection_id = 'erp5_sql_deferred_connection2'
     new_connection_string = getExtraSqlConnectionStringList()[0]
 
     # Skip this test if default connection string is not "test test".
@@ -1498,27 +1512,38 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
                                       new_connection_string)
     new_connection = portal[self.new_connection_id]
     new_connection.manage_open_connection()
+    portal.manage_addZMySQLConnection(self.new_deferred_connection_id,'',
+                                      new_connection_string)
+    new_connection = portal[self.new_deferred_connection_id]
+    new_connection.manage_open_connection()
+    # the transactionless connector must not be change because this one
+    # create the portal_ids otherwise it create of conflicts with uid
+    # objects
+
     # Create new catalog
     portal_catalog = self.getCatalogTool()
     self.original_catalog_id = 'erp5_mysql_innodb'
     self.new_catalog_id = self.original_catalog_id + '2'
     cp_data = portal_catalog.manage_copyObjects(ids=('erp5_mysql_innodb',))
     new_id = portal_catalog.manage_pasteObjects(cp_data)[0]['new_id']
-    new_catalog_id = 'erp5_mysql_innodb2'
-    portal_catalog.manage_renameObject(id=new_id,new_id=new_catalog_id)
+    portal_catalog.manage_renameObject(id=new_id, new_id=self.new_catalog_id)
 
     # Parse all methods in the new catalog in order to change the connector
     new_catalog = portal_catalog[self.new_catalog_id]
-    for zsql_method in new_catalog.objectValues():
-      setattr(zsql_method,'connection_id',self.new_connection_id)
-    portal_catalog = self.getCatalogTool()
-    portal_catalog.manage_hotReindexAll(self.original_catalog_id,
-                                 self.new_catalog_id)
+    source_sql_connection_id_list=list((self.original_connection_id,
+                                  self.original_deferred_connection_id))
+    destination_sql_connection_id_list=list((self.new_connection_id,
+                                       self.new_deferred_connection_id))
+    #launch the full hot reindexing 
+    portal_catalog.manage_hotReindexAll(source_sql_catalog_id=self.original_catalog_id,
+                 destination_sql_catalog_id=self.new_catalog_id,
+                 source_sql_connection_id_list=source_sql_connection_id_list,
+                 destination_sql_connection_id_list=destination_sql_connection_id_list,
+                 update_destination_sql_catalog=True)
+
     # Flush message queue
     get_transaction().commit()
     self.tic()
-    portal = self.getPortal()
-    module = portal.getDefaultModule('Organisation')
     self.organisation2 = module.newContent(portal_type='Organisation',
                                      title="GreatTitle2")
     first_deleted_url = self.organisation2.getRelativeUrl()
@@ -1527,12 +1552,12 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     path_list = [self.organisation.getRelativeUrl()]
     self.checkRelativeUrlInSQLPathList(path_list, connection_id=self.original_connection_id)
     self.checkRelativeUrlInSQLPathList(path_list, connection_id=self.new_connection_id)
-    path_list = [self.organisation2.getRelativeUrl()]
+    path_list = [first_deleted_url]
     self.checkRelativeUrlNotInSQLPathList(path_list, connection_id=self.original_connection_id)
     self.checkRelativeUrlInSQLPathList(path_list, connection_id=self.new_connection_id)
 
     # Make sure some zsql method use the right connection_id
-    zslq_method = portal.portal_skins.erp5_core.Resource_zGetInventoryList
+    zsql_method = portal.portal_skins.erp5_core.Resource_zGetInventoryList
     self.assertEquals(getattr(zsql_method,'connection_id'),self.new_connection_id)
 
     self.assertEquals(portal_catalog.getHotReindexingState(),
@@ -1585,10 +1610,21 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     self.checkRelativeUrlInSQLPathList(path_list,connection_id=self.new_connection_id)
     self.checkRelativeUrlInSQLPathList(path_list,connection_id=self.original_connection_id)
     module.manage_delObjects(ids=[self.next_deleted_organisation.getId()])
+    #Create object during the double indexing to check the security object
+    #after the hot reindexing
+    self.organisation4 = module.newContent(portal_type='Organisation',
+                                     title="GreatTitle2")
     get_transaction().commit()
     self.tic()
     self.assertEquals(portal_catalog.getHotReindexingState(),
                       HOT_REINDEXING_FINISHED_STATE)
+    # Check Security UID object exist in roles and users
+    # compare the number object in the catalog
+    count_catalog = len(self.getSQLPathList(self.original_connection_id))
+    count_restricted_catalog = len(self.getSQLPathListWithRolesAndUsers(\
+                               self.original_connection_id))
+    self.assertEquals(count_catalog, count_restricted_catalog)
+
     path_list = [self.organisation3.getRelativeUrl()]
     self.checkRelativeUrlInSQLPathList(path_list,connection_id=self.new_connection_id)
     self.checkRelativeUrlInSQLPathList(path_list,connection_id=self.original_connection_id)
