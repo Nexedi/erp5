@@ -433,11 +433,11 @@ class IntrospectionTool(LogMixin, BaseTool):
        erp5_version = None
 
     from App import version_txt
-    zope_version = tuple_to_format_str(version_txt.getZopeVersion()[:2])
+    zope_version = tuple_to_format_str(version_txt.getZopeVersion()[:3])
 
     from sys import version_info
     # Get only x.x.x numbers.
-    py_version = tuple_to_format_str(version_info)
+    py_version = tuple_to_format_str(version_info[:3])
     try:
       import pysvn
       # Convert tuple to x.x.x format
