@@ -58,15 +58,6 @@ class InvoiceRule(DeliveryRule):
       invoice movements should not be accountable either.
       """
       return 0
-    security.declareProtected(Permissions.ModifyPortalContent, 'expand')
-    def expand(self, applied_rule, **kw):
-      """
-        Call expand defined on DeliveryRule.
-      """
-      kw['delivery_movement_type_list'] = \
-          self.getPortalInvoiceMovementTypeList() + \
-          self.getPortalTaxMovementTypeList()
-      DeliveryRule.expand(self, applied_rule, **kw)
 
     def _getInputMovementList(self, applied_rule):
       """Return list of movements from delivery"""
