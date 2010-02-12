@@ -54,8 +54,8 @@ class SplitQuantity(CopyToTarget):
       portal_type = "Simulation Movement",
       id = new_id,
       efficiency = simulation_movement.getEfficiency(),
-      start_date = self.start_date,
-      stop_date = self.stop_date,
+      start_date=simulation_movement.getStartDate(),
+      stop_date=simulation_movement.getStopDate(),
       # XXX resource
       order = simulation_movement.getOrder(),
       quantity = self.quantity,
@@ -66,6 +66,10 @@ class SplitQuantity(CopyToTarget):
       activate_kw = self.activate_kw,
       **self.additional_parameters
     )
+    new_movement.recordProperty('start_date')
+    new_movement.recordProperty('stop_date')
+    new_movement.edit(start_date=self.start_date,
+                      stop_date=self.stop_date)
     simulation_movement.setDefaultActivateParameters(**self.activate_kw)
     simulation_movement.edit (
       quantity = (simulation_movement.getQuantity() - self.quantity)

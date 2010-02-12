@@ -352,7 +352,11 @@ class Rule(Predicate, XMLObject):
       p_matched_list = []
       for movement in non_matched_list:
         for prop in self.getMatchingPropertyList():
-          if prevision.get(prop) != movement.getProperty(prop):
+          if movement.isPropertyRecorded(prop):
+            movement_value = movement.getRecordedProperty(prop)
+          else:
+            movement_value = movement.getProperty(prop)
+          if prevision.get(prop) != movement_value:
             break
         else:
           p_matched_list.append(movement)
@@ -362,7 +366,10 @@ class Rule(Predicate, XMLObject):
         # Check the quantity
         m_quantity = 0.0
         for movement in p_matched_list:
-          m_quantity += movement.getQuantity()
+          if movement.isPropertyRecorded('quantity'):
+            m_quantity += movement.getRecordedProperty('quantity')
+          else:
+            m_quantity += movement.getQuantity()
         if m_quantity != prevision.get('quantity'):
           # special case - quantity
           if movement.isPropertyForced('quantity'):
@@ -391,7 +398,11 @@ class Rule(Predicate, XMLObject):
               + deletable_movement_list):
             prop_dict = modify_dict.setdefault(movement.getId(), {})
             for k, v in prevision.items():
-              if k not in ('quantity',) and v != movement.getProperty(k):
+              if movement.isPropertyRecorded(k):
+                movement_value = movement.getRecordedProperty(k)
+              else:
+                movement_value = movement.getProperty(k)
+              if k not in ('quantity',) and v != movement_value:
                 if movement.isPropertyForced(k):
                   # support compensation if not prevent_compensation
                   LOG('%s:%s' % (self.getRelativeUrl(), movement.getRelativeUrl()), WARNING,
@@ -460,7 +471,11 @@ class Rule(Predicate, XMLObject):
       p_matched_list = []
       for movement in non_matched_list:
         for prop in matching_property_list:
-          if prevision.get(prop) != movement.getProperty(prop):
+          if movement.isPropertyRecorded(prop):
+            movement_value = movement.getRecordedProperty(prop)
+          else:
+            movement_value = movement.getProperty(prop)
+          if prevision.get(prop) != movement_value:
             break
         else:
           p_matched_list.append(movement)
@@ -473,7 +488,10 @@ class Rule(Predicate, XMLObject):
         # Check the quantity
         m_quantity = 0.0
         for movement in p_matched_list:
-          m_quantity += movement.getQuantity()#getCorrectedQuantity()
+          if movement.isPropertyRecorded('quantity'):
+            m_quantity += movement.getRecordedProperty('quantity')
+          else:
+            m_quantity += movement.getQuantity()
         if m_quantity != prevision.get('quantity'):
           q_diff = prevision.get('quantity') - m_quantity
           # try to find a movement that can be edited
@@ -498,14 +516,22 @@ class Rule(Predicate, XMLObject):
             prop_dict = modify_dict.setdefault(movement.getId(), {})
             for prop in ('start_date', 'stop_date'):
               #XXX should be >= 15
-              if prevision.get(prop) != movement.getProperty(prop):
+              if movement.isPropertyRecorded(prop):
+                movement_value = movement.getRecordedProperty(prop)
+              else:
+                movement_value = movement.getProperty(prop)
+              if prevision.get(prop) != movement_value:
                 prop_dict[prop] = prevision.get(prop)
                 break
 
             for k, v in prevision.items():
-              if k not in ('quantity', 'start_date', 'stop_date') and\
-                      v != movement.getProperty(k):
-                prop_dict.setdefault(k, v)
+              if k not in ('quantity', 'start_date', 'stop_date'):
+                if movement.isPropertyRecorded(k):
+                  movement_value = movement.getRecordedProperty(k)
+                else:
+                  movement_value = movement.getProperty(k)
+                if v != movement_value:
+                  prop_dict.setdefault(k, v)
 
         # update movement lists
         for movement in p_matched_list:

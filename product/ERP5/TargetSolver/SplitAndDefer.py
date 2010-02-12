@@ -75,8 +75,6 @@ class SplitAndDefer(CopyToTarget):
         movement_dict.update(
           portal_type="Simulation Movement",
           id=new_id,
-          start_date=self.start_date,
-          stop_date=self.stop_date,
           quantity=movement_quantity - new_movement_quantity,
           activate_kw=self.activate_kw,
           order=simulation_movement.getOrder(),
@@ -92,6 +90,10 @@ class SplitAndDefer(CopyToTarget):
               # might be wrong
               forced_property_list.append(prop)
         new_movement = applied_rule.newContent(**movement_dict)
+        new_movement.recordProperty('start_date')
+        new_movement.recordProperty('stop_date')
+        new_movement.edit(start_date=self.start_date,
+                          stop_date=self.stop_date)
         new_movement.activate(**self.additional_parameters).expand()
         # XXX: start and stop date have to be forced on movement too
         forced_property_list.extend(['start_date', 'stop_date'])
@@ -106,8 +108,8 @@ class SplitAndDefer(CopyToTarget):
                         portal_type="Simulation Movement",
                         id=new_id,
                         efficiency=simulation_movement.getEfficiency(),
-                        start_date=self.start_date,
-                        stop_date=self.stop_date,
+                        start_date=simulation_movement.getStartDate(),
+                        stop_date=simulation_movement.getStopDate(),
                         order=simulation_movement.getOrder(),
 
                         resource=simulation_movement.getResource(),
@@ -135,11 +137,16 @@ class SplitAndDefer(CopyToTarget):
                         activate_kw=self.activate_kw,
                         **self.additional_parameters
       )
+      new_movement.recordProperty('start_date')
+      new_movement.recordProperty('stop_date')
+      new_movement.edit(start_date=self.start_date,
+                        stop_date=self.stop_date)
       new_movement.activate(**self.additional_parameters).expand()
       # adopt new quantity on original simulation movement
       simulation_movement.edit(quantity=new_movement_quantity)
     simulation_movement.setDefaultActivateParameters(**self.activate_kw)
     simulation_movement.activate(**self.additional_parameters).expand()
+    simulation_movement.aq_parent.expand()
 
     # SplitAndDefer solves the divergence at the current level, no need to
     # backtrack.

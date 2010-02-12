@@ -51,6 +51,7 @@ class CopyAndPropagate(TargetSolver):
     value_dict = {}
     quantity_ratio = None
     if scope == 'quantity':
+      property_id = 'quantity'
       new_quantity = simulation_movement.getDeliveryQuantity() * \
                      simulation_movement.getDeliveryRatio()
       old_quantity = simulation_movement.getQuantity()
@@ -70,10 +71,14 @@ class CopyAndPropagate(TargetSolver):
       value_dict[property_id] = new_value
     self._solveRecursively(simulation_movement,
                            quantity_ratio=quantity_ratio,
-                           value_dict=value_dict)
+                           value_dict=value_dict,
+                           property_id=property_id)
+    # XXX can we use activity for further expand?
+    simulation_movement.expand()
 
   def _solveRecursively(self, simulation_movement, is_last_movement=1,
-                        quantity_ratio=None, value_dict=None):
+                        quantity_ratio=None, value_dict=None,
+                        property_id=None):
     """
       Update value of the current simulation movement, and update
       his parent movement.
@@ -88,8 +93,6 @@ class CopyAndPropagate(TargetSolver):
       value_dict['delivery_error'] = quantity_error
       value_dict['quantity'] = quantity
 
-    simulation_movement.edit(**value_dict)
-
     applied_rule = simulation_movement.getParentValue()
     parent_movement = applied_rule.getParentValue()
     if parent_movement.getPortalType() == 'Simulation Movement' and \
@@ -97,4 +100,9 @@ class CopyAndPropagate(TargetSolver):
       # backtrack to the parent movement while it is not frozen
       self._solveRecursively(parent_movement, is_last_movement=0,
                              quantity_ratio=quantity_ratio,
-                             value_dict=value_dict)
+                             value_dict=value_dict,
+                             property_id=property_id)
+    else:
+      if not simulation_movement.isPropertyRecorded(property_id):
+        simulation_movement.recordProperty(property_id)
+    simulation_movement.edit(**value_dict)
