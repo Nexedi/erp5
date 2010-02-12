@@ -53,11 +53,13 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>request = context.REQUEST\n
+            <value> <string encoding="cdata"><![CDATA[
+
+request = context.REQUEST\n
 portal = context.getPortalObject()\n
 title = context.getTitle(\'Unknown\')\n
 translateString = context.Base_translateString\n
-web_page_module = portal.getDefaultModule(\'Web Page\')\n
+web_page_module = context.web_page_module\n
 \n
 # Find the applicable language\n
 language = portal.Localizer.get_selected_language()\n
@@ -65,19 +67,24 @@ language = portal.Localizer.get_selected_language()\n
 # Create a new empty page\n
 web_page = web_page_module.newContent(portal_type = \'Web Page\', \n
                                       title="New Page of Section %s" % title,\n
-                                      reference="default-%s" % context.getId(),\n
                                       version="1", language=language)\n
+\n
 \n
 # Copy categories into new Web Page\n
 category_list = context.getMembershipCriterionCategoryList()\n
-web_page.setCategoryList(category_list)\n
+web_page.setCategoryList(web_page.getCategoryList() + category_list)\n
 \n
 # Return the new page in the section context\n
-return web_page.Base_redirect(\'view\',\n
-          keep_items = dict(editable_mode=1,\n
-              portal_status_message=translateString("New Web Page of section ${web_section}.",\n
-          mapping = dict(web_section=title))))\n
-</string> </value>
+editable_mode = 1\n
+message = translateString("New Web Page of section %s." %(context.getTitle()))\n
+redirect_url = \'%s/%s/view?portal_status_message=%s&editable_mode:int=%s\' % (\n
+            context.absolute_url(), web_page.getRelativeUrl(),message,editable_mode)\n
+\n
+# return to the new page in the section context\n
+return context.REQUEST.RESPONSE.redirect(redirect_url)\n
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -123,7 +130,9 @@ return web_page.Base_redirect(\'view\',\n
                             <string>language</string>
                             <string>web_page</string>
                             <string>category_list</string>
-                            <string>dict</string>
+                            <string>editable_mode</string>
+                            <string>message</string>
+                            <string>redirect_url</string>
                           </tuple>
                         </value>
                     </item>
@@ -140,7 +149,7 @@ return web_page.Base_redirect(\'view\',\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>WebSection_newWebPage</string> </value>
+            <value> <string>WebSection_createNewWebPage</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
