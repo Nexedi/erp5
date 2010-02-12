@@ -963,6 +963,45 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.assertEquals(builder.extract('Pictures/%s.jpeg' % image_count),
                       converted_image, failure_message)
 
+  def test_addContributorToDocument(self):
+    """
+      Test if current authenticated user is added to contributor list of document
+      (only if authenticated user is an ERP5 Person object)
+    """
+    portal = self.portal
+    document_module = portal.document_module
+
+    # create Person objects and add preudo local security
+    person1 =  self.createUser(reference='user1')
+    document_module.manage_setLocalRoles('user1', ['Assignor',])
+    person2 =  self.createUser(reference='user2')
+    document_module.manage_setLocalRoles('user2', ['Assignor',])
+    self.stepTic()
+
+    # login as first one
+    ERP5TypeTestCase.login(self, 'user1')
+    doc = document_module.newContent(portal_type='File', 
+                                     title='Test1')
+    self.stepTic()
+    self.login()
+    self.assertSameSet([person1], 
+                       doc.getContributorValueList())
+
+    # login as second one
+    ERP5TypeTestCase.login(self, 'user2')
+    doc.edit(title='Test2')
+    self.stepTic()
+    self.login()
+    self.assertSameSet([person1, person2], 
+                       doc.getContributorValueList())
+
+    # editing with non ERP5 Person object, nothing added to contributor
+    self.login()
+    doc.edit(title='Test3')
+    self.stepTic()
+    self.assertSameSet([person1, person2], 
+                       doc.getContributorValueList())
+
 class TestDocumentWithSecurity(ERP5TypeTestCase):
 
   username = 'yusei'
