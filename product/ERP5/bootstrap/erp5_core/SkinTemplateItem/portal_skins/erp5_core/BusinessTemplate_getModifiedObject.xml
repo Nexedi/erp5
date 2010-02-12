@@ -61,9 +61,18 @@ def getModifiedObjectList(context):\n
   result = context.preinstall()\n
   return result\n
 \n
+def cacheIdGenerator(method_id, *args, **kw):\n
+  context = args[0]\n
+  return \'%s%s%s\' % (method_id,\n
+                     context.getUid(),\n
+                     context.getModificationDate().timeTime())\n
+\n
+cache_id_generator = cacheIdGenerator\n
+\n
 getModifiedObjectList = CachingMethod(getModifiedObjectList,\n
                               id=\'BusinessTemplate_getModifiedObjectList\',\n
-                              cache_factory=\'erp5_ui_medium\')\n
+                              cache_factory=\'erp5_ui_medium\',\n
+                              cache_id_generator=cache_id_generator)\n
 \n
 modified_object_list = getModifiedObjectList(context)\n
 keys = modified_object_list.keys()\n
@@ -159,6 +168,8 @@ return object_list\n
                             <string>context</string>
                             <string>Base_translateString</string>
                             <string>getModifiedObjectList</string>
+                            <string>cacheIdGenerator</string>
+                            <string>cache_id_generator</string>
                             <string>modified_object_list</string>
                             <string>keys</string>
                             <string>no_backup_list</string>
