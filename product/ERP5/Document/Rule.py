@@ -426,10 +426,7 @@ class Rule(Predicate, XMLObject):
     return (add_list, modify_dict, delete_list)
 
   def _getCompensatedMovementList(self, applied_rule,
-                                  matching_property_list=(
-                                  'resource',
-                                  'variation_category_list',
-                                  'variation_property_dict',), **kw):
+                                  matching_property_list=None, **kw):
     """
     Compute the difference between prevision and existing movements
 
@@ -439,8 +436,7 @@ class Rule(Predicate, XMLObject):
     using MovementGroups
     """
     if self._isBPM():
-      return self._getCompensatedMovementListBPM(applied_rule,
-          matching_property_list=matching_property_list, **kw)
+      return self._getCompensatedMovementListBPM(applied_rule, **kw)
     add_list = [] # list of movements to be added
     modify_dict = {} # dict of movements to be modified
     delete_list = [] # list of movements to be deleted
@@ -452,6 +448,13 @@ class Rule(Predicate, XMLObject):
     movement_list = immutable_movement_list + mutable_movement_list \
                     + deletable_movement_list
     non_matched_list = movement_list[:] # list of remaining movements 
+
+    if matching_property_list is None:
+      matching_property_list = self.getMatchingPropertyList()
+      if len(matching_property_list) == 0:
+        matching_property_list = ('resource',
+                                  'variation_category_list',
+                                  'variation_property_dict',)
 
     for prevision in prevision_list:
       p_matched_list = []
