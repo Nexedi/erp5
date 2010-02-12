@@ -54,8 +54,53 @@
             <value> <string>default_invoice_rule</string> </value>
         </item>
         <item>
+            <key> <string>expandable_property</string> </key>
+            <value>
+              <tuple>
+                <string>aggregate_list</string>
+                <string>base_application_list</string>
+                <string>base_contribution_list</string>
+                <string>description</string>
+                <string>destination</string>
+                <string>destination_account</string>
+                <string>destination_administration</string>
+                <string>destination_decision</string>
+                <string>destination_function</string>
+                <string>destination_payment</string>
+                <string>destination_project</string>
+                <string>destination_section</string>
+                <string>incoterm</string>
+                <string>price</string>
+                <string>price_currency</string>
+                <string>quantity</string>
+                <string>quantity_unit</string>
+                <string>resource</string>
+                <string>source</string>
+                <string>source_account</string>
+                <string>source_administration</string>
+                <string>source_decision</string>
+                <string>source_function</string>
+                <string>source_payment</string>
+                <string>source_project</string>
+                <string>source_section</string>
+                <string>start_date</string>
+                <string>stop_date</string>
+                <string>variation_category_list</string>
+                <string>variation_property_dict</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>default_invoice_rule</string> </value>
+        </item>
+        <item>
+            <key> <string>matching_property</string> </key>
+            <value>
+              <tuple>
+                <string>delivery</string>
+              </tuple>
+            </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
