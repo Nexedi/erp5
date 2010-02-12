@@ -558,7 +558,7 @@ class Rule(Predicate, XMLObject):
                 movement.getRelativeUrl())
     return (add_list, modify_dict, delete_list)
 
-  def _getExpandablePropertyDict(self, applied_rule, movement, business_path,
+  def _getExpandablePropertyDict(self, applied_rule, movement, business_path=None,
       **kw):
     """
     Return a Dictionary with the Properties used to edit the simulation
