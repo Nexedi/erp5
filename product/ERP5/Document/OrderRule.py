@@ -197,5 +197,5 @@ class OrderRule(DeliveryRule):
       business_path, current_property_dict):
     """Order rule specific update dictionary"""
     return {
-      'order_list': [movement.getRelativeUrl()],
+      'order': movement.getRelativeUrl(),
     }

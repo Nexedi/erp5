@@ -257,6 +257,6 @@ class DeliveryRule(Rule):
       business_path, current_property_dict):
     """Delivery specific update dict"""
     return {
-      'order_list': [movement.getRelativeUrl()],
-      'delivery_list': [movement.getRelativeUrl()],
+      'order': movement.getRelativeUrl(),
+      'delivery': movement.getRelativeUrl(),
     }
