@@ -331,10 +331,15 @@ try:
         else:
           raise error
       # Edit list to make it more usable in zope
+      revision_log_list = []
       for rev_dict in log_list:
-        rev_dict['revision'] = rev_dict['revision'].number
-        rev_dict['date'] = time.ctime(rev_dict['date'])
-      return log_list
+        rev_log_dict = {}
+        rev_log_dict['message'] = rev_dict.message
+        rev_log_dict['author'] = rev_dict.author
+        rev_log_dict['revision'] = rev_dict['revision'].number
+        rev_log_dict['date'] = time.ctime(rev_dict['date'])
+        revision_log_list.append(rev_log_dict)
+      return revision_log_list
         
     def add(self, path):
       self.client.add(path=path, force=True)
