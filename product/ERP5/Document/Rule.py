@@ -464,10 +464,6 @@ class Rule(Predicate, XMLObject):
 
     if matching_property_list is None:
       matching_property_list = self.getMatchingPropertyList()
-      if len(matching_property_list) == 0:
-        matching_property_list = ('resource',
-                                  'variation_category_list',
-                                  'variation_property_dict',)
 
     for prevision in prevision_list:
       p_matched_list = []
