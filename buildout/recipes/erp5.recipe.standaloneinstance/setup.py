@@ -32,6 +32,7 @@ setup(
     namespace_packages = ['erp5', 'erp5.recipe'],
     install_requires = [
         'erp5.recipe.zope2instance',
+        'erp5.recipe.createsite',
     ],
     zip_safe=False,
     entry_points = {'zc.buildout': ['default = %s:Recipe' % name]},

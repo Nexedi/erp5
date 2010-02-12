@@ -2,16 +2,20 @@
 import os
 import zc.buildout
 import erp5.recipe.zope2instance
+import erp5.recipe.createsite
 
-class Recipe(erp5.recipe.zope2instance.Recipe):
+class Recipe(erp5.recipe.zope2instance.Recipe, erp5.recipe.createsite.Recipe):
   def __init__(self, buildout, name, options):
+    standalone_location = options.get('location')
+    if not standalone_location:
+      raise zc.buildout.UserError('Location have to be specified')
+    options['control-script'] = options.get('control-script',
+        os.path.join(standalone_location, 'bin', 'zopectl'))
+    erp5.recipe.createsite.Recipe.__init__(self, buildout, name, options)
     self.egg = zc.recipe.egg.Egg(buildout, options['recipe'], options)
     self.buildout, self.options, self.name = buildout, options, name
     self.zope2_location = options.get('zope2-location', '')
 
-    standalone_location = options.get('location')
-    if not standalone_location:
-      raise zc.buildout.UserError('Location have to be specified')
     options['bin-directory'] = os.path.join(standalone_location, 'bin')
     options['scripts'] = '' # suppress script generation.
     options['file-storage'] = options.get('file-storage',
@@ -30,10 +34,17 @@ class Recipe(erp5.recipe.zope2instance.Recipe):
         assert relative_paths == 'false'
 
   def install(self):
+    # initalise zope instance
     erp5.recipe.zope2instance.Recipe.install(self)
+
+    # initialise ERP5 part
+    erp5.recipe.createsite.Recipe.install(self)
     # we return nothing, as this is totally standalone installation
     return []
 
   def build_zope_conf(self):
     # preparation for further fixing (chroot everything inside instance, etc)
     erp5.recipe.zope2instance.Recipe.build_zope_conf(self)
+
+  def update(self):
+    return erp5.recipe.zope2instance.Recipe.update(self)
