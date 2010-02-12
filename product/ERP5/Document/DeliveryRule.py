@@ -213,7 +213,7 @@ class DeliveryRule(Rule):
     # of hardcoded properties. Theses properties should now be
     # defined on the rule itself
     if len(property_list) == 0:
-      LOG("Invoice Transaction Rule , getMatchingPropertyList", WARNING,
+      LOG("Delivery Rule , getMatchingPropertyList", WARNING,
           "Hardcoded properties set, please define your rule correctly")
       property_list=['delivery',]
     return property_list
