@@ -200,63 +200,43 @@ class DeliveryRule(Rule):
       return 0
     return 1
 
-  def _getExpandablePropertyDict(self, applied_rule, movement,
-      business_path=None, **kw):
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getExpandablePropertyList')
+  def getExpandablePropertyList(self, default=None):
     """
-    Return a Dictionary with the Properties used to edit
-    the simulation movement
+    Return a list of properties used in expand.
     """
-    if self._isBPM():
-      return Rule._getExpandablePropertyDict(self, applied_rule,
-          movement, business_path, **kw)
-    property_dict = {}
-
-    default_property_list = self.getExpandablePropertyList()
+    property_list = self._baseGetExpandablePropertyList()
     # For backward compatibility, we keep for some time the list
     # of hardcoded properties. Theses properties should now be
     # defined on the rule itself
-    if len(default_property_list) == 0:
-      LOG("Delivery Rule , _getExpandablePropertyDict", WARNING,
-          "Hardcoded properties set, please define your rule correctly")
-      default_property_list = (
-        'source',
-        'source_section',
-        'source_function',
-        'source_account',
-        'source_administration',
-        'source_decision',
-        'source_project',
-        'source_payment',
-        'destination',
-        'destination_section',
-        'destination_function',
-        'destination_account',
-        'destination_administration',
-        'destination_decision',
-        'destination_project',
-        'destination_payment',
-        'start_date',
-        'stop_date',
-        'description',
-        'resource',
-        'variation_category_list',
-        'variation_property_dict',
-        'base_contribution_list',
-        'base_application_list',
+    if len(property_list) == 0:
+      LOG("Order Rule , _getExpandablePropertyDict", WARNING,
+                 "Hardcoded properties set, please define your rule correctly")
+      property_list = (
         'aggregate_list',
+        'base_application_list',
+        'base_contribution_list',
+        'description',
+        'destination',
+        'destination_account',
+        'destination_function',
+        'destination_section',
         'price',
         'price_currency',
         'quantity',
         'quantity_unit',
-        'incoterm',
+        'resource',
+        'source',
+        'source_account',
+        'source_function',
+        'source_section',
+        'start_date',
+        'stop_date',
+        'variation_category_list',
+        'variation_property_dict',
       )
-
-    for prop in default_property_list:
-       property_dict[prop] = movement.getProperty(prop)
-
-    if movement.hasTitle():
-      property_dict['title'] = movement.getTitle()
-    return property_dict
+    return property_list
 
   def _getInputMovementList(self, applied_rule):
     """Return list of movements from delivery"""

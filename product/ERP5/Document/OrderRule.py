@@ -149,52 +149,41 @@ class OrderRule(DeliveryRule):
     return Rule.isDivergent(self, movement)
 
   security.declareProtected(Permissions.AccessContentsInformation,
-                            '_getExpandablePropertyDict')
-  def _getExpandablePropertyDict(self, applied_rule, movement,
-      business_path=None, **kw):
+                            'getExpandablePropertyList')
+  def getExpandablePropertyList(self, default=None):
     """
-    Return a Dictionary with the Properties used to edit 
-    the simulation movement
+    Return a list of properties used in expand.
     """
-    if self._isBPM():
-      return DeliveryRule._getExpandablePropertyDict(self, applied_rule,
-          movement, business_path, **kw)
-    property_dict = {}
-
-    default_property_list = self.getExpandablePropertyList()
+    property_list = self._baseGetExpandablePropertyList()
     # For backward compatibility, we keep for some time the list
     # of hardcoded properties. Theses properties should now be
     # defined on the rule itself
-    if len(default_property_list) == 0:
+    if len(property_list) == 0:
       LOG("Order Rule , _getExpandablePropertyDict", WARNING,
                  "Hardcoded properties set, please define your rule correctly")
-      default_property_list = (
-        'source',
-        'source_section',
-        'source_function',
-        'source_account',
-        'destination',
-        'destination_section',
-        'destination_function',
-        'destination_account',
-        'start_date',
-        'stop_date',
-        'description',
-        'resource',
-        'variation_category_list',
-        'variation_property_dict',
-        'base_contribution_list',
+      property_list = (
         'aggregate_list',
+        'base_contribution_list',
+        'description',
+        'destination',
+        'destination_account',
+        'destination_function',
+        'destination_section',
         'price',
         'price_currency',
         'quantity',
         'quantity_unit',
+        'resource',
+        'source',
+        'source_account',
+        'source_function',
+        'source_section',
+        'start_date',
+        'stop_date',
+        'variation_category_list',
+        'variation_property_dict',
       )
-  
-    for prop in default_property_list:
-       property_dict[prop] = movement.getProperty(prop)
-       
-    return property_dict
+    return property_list
 
   def _getInputMovementList(self, applied_rule):
     """Input movement list comes from order"""
