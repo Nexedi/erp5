@@ -61,6 +61,7 @@
               <list>
                 <string>edit</string>
                 <string>_edit</string>
+                <string>_set*</string>
               </list>
             </value>
         </item>
