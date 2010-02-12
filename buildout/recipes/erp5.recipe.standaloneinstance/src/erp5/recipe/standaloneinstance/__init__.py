@@ -14,6 +14,8 @@ class Recipe(erp5.recipe.zope2instance.Recipe):
       raise zc.buildout.UserError('Location have to be specified')
     options['bin-directory'] = os.path.join(standalone_location, 'bin')
     options['scripts'] = '' # suppress script generation.
+    options['file-storage'] = options.get('file-storage',
+        os.path.join(standalone_location, 'var', 'Data.fs'))
 
     # Relative path support for the generated scripts
     relative_paths = options.get(
