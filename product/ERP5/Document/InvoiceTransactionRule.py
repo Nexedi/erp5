@@ -225,8 +225,8 @@ class InvoiceTransactionRule(Rule, PredicateMatrix):
     precision = None
     section = prevision_line.get(arrow, None)
     if section is not None:
-      currency_url = self.restrictedTraverse(section).getProperty(
-          'price_currency', None)
+      section = self.restrictedTraverse(section)
+      currency_url = section.getProperty('price_currency', None)
     else:
       currency_url = None
     if currency_url is not None and prevision_currency != currency_url:
