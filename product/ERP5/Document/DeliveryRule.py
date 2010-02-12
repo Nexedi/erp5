@@ -211,7 +211,7 @@ class DeliveryRule(Rule):
     # of hardcoded properties. Theses properties should now be
     # defined on the rule itself
     if len(property_list) == 0:
-      LOG("Order Rule , getExpandablePropertyList", WARNING,
+      LOG("Delivery Rule , getExpandablePropertyList", WARNING,
                  "Hardcoded properties set, please define your rule correctly")
       property_list = (
         'aggregate_list',
@@ -220,7 +220,11 @@ class DeliveryRule(Rule):
         'description',
         'destination',
         'destination_account',
+        'destination_administration',
+        'destination_decision',
         'destination_function',
+        'destination_payment',
+        'destination_project',
         'destination_section',
         'price',
         'price_currency',
@@ -229,7 +233,11 @@ class DeliveryRule(Rule):
         'resource',
         'source',
         'source_account',
+        'source_administration',
+        'source_decision',
         'source_function',
+        'source_payment',
+        'source_project',
         'source_section',
         'start_date',
         'stop_date',
