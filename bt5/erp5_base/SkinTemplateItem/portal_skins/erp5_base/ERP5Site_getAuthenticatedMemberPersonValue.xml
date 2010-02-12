@@ -53,10 +53,8 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>"""\n
-  Find and return Person object for current logged in user.\n
-  XXX: if current logged in user is defined in Zope\'s root\n
-       acl_folder script will raise ValueError. \n
+            <value> <string>"""Find and returns Person object for current logged in user.\n
+Returns None if no corresponding person, for example when not using ERP5Security.ERP5UserManager.\n
 """\n
 if user_name is None:\n
   user_name = context.portal_membership.getAuthenticatedMember()\n
