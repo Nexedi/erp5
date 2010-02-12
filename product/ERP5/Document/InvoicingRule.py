@@ -31,7 +31,7 @@
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5.Document.Rule import Rule
-
+from zLOG import LOG, WARNING
 
 class InvoicingRule(Rule):
   """
@@ -58,59 +58,6 @@ class InvoicingRule(Rule):
     """
     return 0
 
-#### Helper method for expand
-  def _generatePrevisionList(self, applied_rule, **kw):
-    """
-    Generate a list of movements, that should be children of this rule,
-    based on its context (parent movement, delivery, configuration ...)
-
-    These previsions are returned as dictionaries.
-    """
-    if self._isBPM():
-      return Rule._generatePrevisionList(self, applied_rule, **kw)
-    # XXX Isn't it better to share the code with expand method
-    context_movement = applied_rule.getParentValue()
-
-    # XXX Harcoded list
-    invoice_line = {
-        'source': context_movement.getSource(),
-        'source_section': context_movement.getSourceSection(),
-        'source_decision': context_movement.getSourceDecision(),
-        'source_administration': context_movement.getSourceAdministration(),
-        'source_project': context_movement.getSourceProject(),
-        'source_function': context_movement.getSourceFunction(),
-        'source_payment': context_movement.getSourcePayment(),
-        'source_account': context_movement.getSourceAccount(),
-        # this is required in order to have list of destination in the simulation
-        # XXX all this section will probably be removed once the simulation API
-        # will be fully reviewed
-        'destination_list': context_movement.getDestinationList(),
-        'destination_section': context_movement.getDestinationSection(),
-        'destination_decision': context_movement.getDestinationDecision(),
-        'destination_administration': context_movement.getDestinationAdministration(),
-        'destination_project': context_movement.getDestinationProject(),
-        'destination_function': context_movement.getDestinationFunction(),
-        'destination_payment': context_movement.getDestinationPayment(),
-        'destination_account': context_movement.getDestinationAccount(),
-        'start_date': context_movement.getStartDate(),
-        'stop_date': context_movement.getStopDate(),
-        'description': context_movement.getDescription(''),
-        'resource': context_movement.getResource(),
-        'variation_category_list': context_movement.getVariationCategoryList(),
-        'variation_property_dict':
-         context_movement.getVariationPropertyDict(),
-        'delivery_mode':context_movement.getDeliveryMode(),
-        'incoterm':context_movement.getIncoterm(),
-        'base_contribution_list': context_movement.getBaseContributionList(),
-        'aggregate_list': context_movement.getAggregateList(),
-        'quantity': context_movement.getCorrectedQuantity(),
-        'quantity_unit': context_movement.getQuantityUnit(),
-        'price': context_movement.getPrice(),
-        'price_currency': context_movement.getPriceCurrency(),
-        'efficiency': context_movement.getEfficiency(),
-        }
-    return [invoice_line]
-
   security.declareProtected(Permissions.ModifyPortalContent, 'expand')
   def expand(self, applied_rule, force=0, **kw):
     """
@@ -122,31 +69,7 @@ class InvoicingRule(Rule):
         modify, remove)
     - add/modify/remove child movements to match prevision
     """
-    if self._isBPM():
-      Rule.expand(self, applied_rule, force=force, **kw)
-      return
-    parent_movement = applied_rule.getParentValue()
-    if parent_movement is not None:
-      if not parent_movement.isFrozen():
-        add_list, modify_dict, \
-          delete_list = self._getCompensatedMovementList(applied_rule, **kw)
-        for movement_id in delete_list:
-          applied_rule._delObject(movement_id)
-      
-        for movement, prop_dict in modify_dict.items():
-          applied_rule[movement].edit(**prop_dict)
-
-        for movement_dict in add_list:
-          if 'id' in movement_dict.keys():
-            mvmt_id = applied_rule._get_id(movement_dict.pop('id'))
-            new_mvmt = applied_rule.newContent(id=mvmt_id,
-                portal_type=self.movement_type)
-          else:
-            new_mvmt = applied_rule.newContent(portal_type=self.movement_type)
-          new_mvmt.edit(**movement_dict)
-
-    # Pass to base class
-    Rule.expand(self, applied_rule, force=force, **kw)
+    return Rule._expand(self, applied_rule, force=force, **kw)
 
   def isDeliverable(self, movement):
     return movement.getResource() is not None
@@ -154,3 +77,51 @@ class InvoicingRule(Rule):
   def _getExpandablePropertyUpdateDict(self, applied_rule, movement,
       business_path, current_property_dict):
     return {}
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getExpandablePropertyList')
+  def getExpandablePropertyList(self, default=None):
+    """
+    Return a list of properties used in expand.
+    """
+    property_list = self._baseGetExpandablePropertyList()
+    # For backward compatibility, we keep for some time the list
+    # of hardcoded properties. Theses properties should now be
+    # defined on the rule itself
+    if len(property_list) == 0:
+      LOG("Invoicing Rule , getExpandablePropertyList", WARNING,
+                 "Hardcoded properties set, please define your rule correctly")
+      property_list = (
+        'aggregate_list',
+        'base_contribution_list',
+        'delivery_mode',
+        'description',
+        'destination_account',
+        'destination_administration',
+        'destination_decision',
+        'destination_function',
+        'destination_list',
+        'destination_payment',
+        'destination_project',
+        'destination_section',
+        'efficiency',
+        'incoterm',
+        'price',
+        'price_currency',
+        'quantity',
+        'quantity_unit',
+        'resource',
+        'source',
+        'source_account',
+        'source_administration',
+        'source_decision',
+        'source_function',
+        'source_payment',
+        'source_project',
+        'source_section',
+        'start_date',
+        'stop_date',
+        'variation_category_list',
+        'variation_property_dict',
+      )
+    return property_list
