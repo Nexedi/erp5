@@ -1,3 +1,6 @@
+2010-02-12 ivan
+* Add new interaction that will add contributor (logged in user) to edited document
+
 2009-11-12 Kazuhiko
 * remove 'similar' base category because it is already included in erp5_web.
 
