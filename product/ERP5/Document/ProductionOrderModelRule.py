@@ -54,7 +54,8 @@ class ProductionOrderModelRule(TransformationModelRuleMixin, OrderRule):
   # Simulation workflow
   security.declareProtected(Permissions.AccessContentsInformation,
                             '_getExpandablePropertyDict')
-  def _getExpandablePropertyDict(self, applied_rule, movement, **kw):
+  def _getExpandablePropertyDict(self, applied_rule, movement, business_path=None,
+                                 **kw):
     """
     Return a Dictionary with the Properties used to edit 
     the simulation movement.
