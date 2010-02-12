@@ -400,6 +400,8 @@ class Rule(Predicate, XMLObject):
             for k, v in prevision.items():
               if movement.isPropertyRecorded(k):
                 movement_value = movement.getRecordedProperty(k)
+                if isinstance(movement_value, list) and not isinstance(v, list):
+                  movement_value = movement_value[0]
               else:
                 movement_value = movement.getProperty(k)
               if k not in ('quantity',) and v != movement_value:
@@ -528,6 +530,8 @@ class Rule(Predicate, XMLObject):
               if k not in ('quantity', 'start_date', 'stop_date'):
                 if movement.isPropertyRecorded(k):
                   movement_value = movement.getRecordedProperty(k)
+                  if isinstance(movement_value, list) and not isinstance(v, list):
+                    movement_value = movement_value[0]
                 else:
                   movement_value = movement.getProperty(k)
                 if v != movement_value:
