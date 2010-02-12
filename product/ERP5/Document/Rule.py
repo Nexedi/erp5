@@ -130,7 +130,7 @@ class Rule(Predicate, XMLObject):
       return False
     return Predicate.test(self, *args, **kw)
 
-  def _expandBPM(self, applied_rule, force=0, **kw):
+  def _expand(self, applied_rule, force=0, **kw):
     """Generic expand with helpers.
     Do NOT overload, use helpers."""
     add_list, modify_dict, \
@@ -162,7 +162,7 @@ class Rule(Predicate, XMLObject):
       is expanded.
     """
     if self._isBPM():
-      return self._expandBPM(applied_rule, **kw)
+      return self._expand(applied_rule, **kw)
     for o in applied_rule.objectValues():
       o.expand(**kw)
 
@@ -310,10 +310,14 @@ class Rule(Predicate, XMLObject):
     """Returns list of tuples (movement, business_path)"""
     input_movement_list = self._getInputMovementList(applied_rule)
     business_process = applied_rule.getBusinessProcessValue()
+    trade_phase_list = self.getTradePhaseList()
+
+    # In non-BPM case, we have no business path.
+    if business_process is None or len(trade_phase_list) == 0:
+      return [(input_movement, None) for input_movement in input_movement_list]
 
     input_movement_and_path_list = []
     business_path_list = []
-    trade_phase_list = self.getTradePhaseList()
     for input_movement in input_movement_list:
       for business_path in business_process.getPathValueList(
                           trade_phase_list,
@@ -537,6 +541,13 @@ class Rule(Predicate, XMLObject):
     for prop in default_property_list:
       property_dict[prop] = movement.getProperty(prop)
 
+    # rule specific
+    property_dict.update(**self._getExpandablePropertyUpdateDict(applied_rule,
+      movement, business_path, property_dict))
+
+    if business_path is None:
+      return property_dict
+
     # Arrow
     for base_category in \
         business_path.getSourceArrowBaseCategoryList() +\
@@ -572,10 +583,6 @@ class Rule(Predicate, XMLObject):
           # do not works on second path...
       property_dict['start_date'] = movement.getStartDate()
       property_dict['stop_date'] = movement.getStopDate()
-
-    # rule specific
-    property_dict.update(**self._getExpandablePropertyUpdateDict(applied_rule,
-      movement, business_path, property_dict))
 
     # save a relation to business path
     property_dict['causality_list'] = [business_path.getRelativeUrl()]
