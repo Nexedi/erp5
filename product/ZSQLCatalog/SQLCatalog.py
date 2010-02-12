@@ -728,7 +728,19 @@ class Catalog(Folder,
   def getSecurityUid(self, wrapped_object):
     """
       Cache a uid for each security permission
+      Return a tuple with a security uid (string) and a new tuple content the
+      roles and users if not exist already.
 
+     With the roles of object, search the security_uid associate in the
+     catalog_innodb:
+      - if the security not exist a security uid is generated with id_tool
+        or security_uid_index property and
+        return the new security_uid and the tuple contains the new roles
+        to add the roles in roles_and_user table of the database.
+      - if the security exist the security uid is returned and the second
+        element is None for not recreate the security in roles_and_user
+        table of the database.
+                                   
       We try to create a unique security (to reduce number of lines)
       and to assign security only to root document
     """
@@ -797,8 +809,10 @@ class Catalog(Folder,
     # Reserved uids have been removed.
     self.clearReserved()
 
-    # Add a dummy item so that SQLCatalog will not use existing uids again.
-    self.insertMaxUid()
+    id_tool = getattr(self.getPortalObject(), 'portal_ids', None)
+    if id_tool is None:
+      # Add a dummy item so that SQLCatalog will not use existing uids again.
+      self.insertMaxUid()
 
     # Remove the cache of catalog schema.
     if hasattr(self, '_v_catalog_schema_dict') :

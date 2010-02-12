@@ -393,10 +393,12 @@ class ZCatalog(Folder, Persistent, Implicit):
     """
     if self.default_sql_catalog_id == source_sql_catalog_id:
       self.default_sql_catalog_id = destination_sql_catalog_id
-      # Insert the latest generated uid.
-      # This must be done just before swaping the catalogs in case there were
-      # generated uids since destination catalog was created.
-      self[destination_sql_catalog_id].insertMaxUid()
+      id_tool = getattr(self.getPortalObject(), 'portal_ids', None)
+      if id_tool is None:
+        # Insert the latest generated uid.
+        # This must be done just before swaping the catalogs in case there were
+        # generated uids since destination catalog was created.
+        self[destination_sql_catalog_id].insertMaxUid()
 
     LOG('exchangeDatabases skin_selection_dict:',0,skin_selection_dict)
     if skin_selection_dict is not None:
@@ -836,8 +838,12 @@ class ZCatalog(Folder, Persistent, Implicit):
           if self.hot_reindexing_state == HOT_REINDEXING_RECORDING_STATE:
             destination_catalog.recordObjectList(url_list, 1)
           else:
-            if wrapped_object_list:
-              destination_catalog.catalogObjectList(wrapped_object_list,**kw)
+            wrapped_destination_object_list = []
+            for obj in object_list:
+              wrap_obj = self.wrapObject(obj, sql_catalog_id=self.destination_sql_catalog_id)
+              wrapped_destination_object_list.append(wrap_obj)
+            if wrapped_destination_object_list:
+              destination_catalog.catalogObjectList(wrapped_destination_object_list,**kw)
 
     object_list[:] = failed_object_list
 
