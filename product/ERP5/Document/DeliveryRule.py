@@ -211,7 +211,7 @@ class DeliveryRule(Rule):
     # of hardcoded properties. Theses properties should now be
     # defined on the rule itself
     if len(property_list) == 0:
-      LOG("Order Rule , _getExpandablePropertyDict", WARNING,
+      LOG("Order Rule , getExpandablePropertyList", WARNING,
                  "Hardcoded properties set, please define your rule correctly")
       property_list = (
         'aggregate_list',
