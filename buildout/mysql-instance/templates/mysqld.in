@@ -1,3 +1,0 @@
-#!/bin/sh
-
-${software_definition:mysql_software}/bin/mysqld_safe --no-defaults --port=${configuration:mysql_port} --pid-file=${configuration:mysql_pid} --log-error=${configuration:mysql_error_log} --basedir=${software_definition:mysql_software} --datadir=${configuration:mysql_datadir} --socket=${configuration:mysql_sock}
