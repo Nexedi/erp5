@@ -31,7 +31,7 @@ from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
 from Products.ERP5.Document.Rule import Rule
 from Products.ERP5.Document.PredicateMatrix import PredicateMatrix
 
-from zLOG import LOG, BLATHER, INFO, PROBLEM
+from zLOG import LOG, BLATHER, INFO, PROBLEM, WARNING
 
 class InvoiceTransactionRule(Rule, PredicateMatrix):
   """
@@ -51,7 +51,7 @@ class InvoiceTransactionRule(Rule, PredicateMatrix):
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
 #### Helper method for expand
-  def _generatePrevisionListBPM(self, applied_rule, **kw):
+  def _generatePrevisionList(self, applied_rule, **kw):
     """
     Generate a list of movements, that should be children of this rule,
     based on its context (parent movement, delivery, configuration ...)
@@ -108,12 +108,12 @@ class InvoiceTransactionRule(Rule, PredicateMatrix):
           input_movement, business_path))
 
         prevision_line.update(
-          source_list = [accounting_rule_cell_line.getSource()],
-          destination_list = [accounting_rule_cell_line.getDestination()],
+          source = accounting_rule_cell_line.getSource(),
+          destination = accounting_rule_cell_line.getDestination(),
           quantity = (input_movement.getCorrectedQuantity() *
             input_movement.getPrice(0.0)) *
             accounting_rule_cell_line.getQuantity(),
-          resource_list = [resource],
+          resource = resource,
           price = 1,
         )
         if resource is not None:
@@ -144,103 +144,6 @@ class InvoiceTransactionRule(Rule, PredicateMatrix):
         prevision_list.append(prevision_line)
     return prevision_list
 
-  def _generatePrevisionList(self, applied_rule, **kw):
-    """
-    Generate a list of movements, that should be children of this rule,
-    based on its context (parent movement, delivery, configuration ...)
-
-    These previsions are acrually returned as dictionaries.
-    """
-    if self._isBPM():
-      return self._generatePrevisionListBPM(applied_rule, **kw)
-    prevision_list = []
-    context_movement = applied_rule.getParentValue()
-
-    # Find a matching cell
-    cell = self._getMatchingCell(context_movement)
-
-    if cell is not None : # else, we do nothing
-      for accounting_rule_cell_line in cell.objectValues() :
-        # get the resource (in that order):
-        #  * resource from the invoice (using deliveryValue)
-        #  * price_currency from the invoice
-        #  * price_currency from the parents simulation movement's
-        # deliveryValue
-        #  * price_currency from the top level simulation movement's
-        # orderValue
-        resource = None
-        invoice_line = context_movement.getDeliveryValue()
-        if invoice_line is not None :
-          invoice = invoice_line.getExplanationValue()
-          resource = invoice.getProperty('resource',
-                     invoice.getProperty('price_currency', None))
-        if resource is None :
-          # search the resource on parents simulation movement's deliveries
-          simulation_movement = applied_rule.getParentValue()
-          portal_simulation = self.getPortalObject().portal_simulation
-          while resource is None and \
-                      simulation_movement != portal_simulation :
-            delivery = simulation_movement.getDeliveryValue()
-            if delivery is not None:
-              resource = delivery.getProperty('price_currency', None)
-            if (resource is None) and \
-               (simulation_movement.getParentValue().getParentValue() \
-                                      == portal_simulation) :
-              # we are on the first simulation movement, we'll try
-              # to get the resource from it's order price currency.
-              order = simulation_movement.getOrderValue()
-              if order is not None:
-                resource = order.getProperty('price_currency', None)
-            simulation_movement = simulation_movement\
-                                        .getParentValue().getParentValue()
-        if resource is None :
-          # last resort : get the resource from the rule
-          resource = accounting_rule_cell_line.getResource() or cell.getResource()
-          if resource in (None, '') :
-            # XXX this happen in many order, so this log is probably useless
-            LOG("InvoiceTransactionRule", PROBLEM,
-                "expanding %s: without resource" % applied_rule.getPath())
-        # XXX Harcoded list
-        prevision_line = {
-            'source': accounting_rule_cell_line.getSource(),
-            'source_section': context_movement.getSourceSection(),
-            'source_decision': context_movement.getSourceDecision(),
-            'source_administration': context_movement.getSourceAdministration(),
-            'source_project': context_movement.getSourceProject(),
-            'source_function': context_movement.getSourceFunction(),
-            'source_payment': context_movement.getSourcePayment(),
-            'destination': accounting_rule_cell_line.getDestination(),
-            'destination_section': context_movement.getDestinationSection(),
-            'destination_decision': context_movement.getDestinationDecision(),
-            'destination_administration': context_movement.getDestinationAdministration(),
-            'destination_project': context_movement.getDestinationProject(),
-            'destination_function': context_movement.getDestinationFunction(),
-            'destination_payment': context_movement.getDestinationPayment(),
-            'start_date': context_movement.getStartDate(),
-            'stop_date': context_movement.getStopDate(),
-            'resource': resource,
-#               'variation_category_list': \
-#                   accounting_rule_cell_line.getVariationCategoryList(),
-#               'variation_property_dict': \
-#                   accounting_rule_cell_line.getVariationPropertyDict(),
-#               'aggregate_list': accounting_rule_cell_line.getAggregateList(),
-#               'price_currency': accounting_rule_cell_line.getPriceCurrency(),
-            # calculate (quantity * price) * cell_quantity
-            'quantity': (context_movement.getCorrectedQuantity() *
-              context_movement.getPrice(0.0)) * accounting_rule_cell_line.getQuantity(),
-#               'quantity_unit': accounting_rule_cell_line.getQuantityUnit(),
-            'price': 1,
-            'force_update': 1,
-            }
-
-        if accounting_rule_cell_line.hasProperty('generate_prevision_script_id'):
-          generate_prevision_script_id = \
-                accounting_rule_cell_line.getGeneratePrevisionScriptId()
-          prevision_line.update(getattr(context_movement,
-                                        generate_prevision_script_id)(prevision_line))
-        prevision_list.append(prevision_line)
-    return prevision_list
-
   security.declareProtected(Permissions.ModifyPortalContent, 'expand')
   def expand(self, applied_rule, force=0, **kw):
     """
@@ -252,72 +155,7 @@ class InvoiceTransactionRule(Rule, PredicateMatrix):
         modify, remove)
     - add/modify/remove child movements to match prevision
     """
-    if self._isBPM():
-      Rule.expand(self, applied_rule, force=force, **kw)
-      return
-
-    add_list, modify_dict, \
-        delete_list = self._getCompensatedMovementList(applied_rule,
-        matching_property_list=['resource', 'source',
-               'destination','destination_total_asset_price',
-              'source_total_asset_price'],**kw)
-
-    if len(add_list) or len(modify_dict):
-      pass#import pdb; pdb.set_trace()
-
-    for movement_id in delete_list:
-      applied_rule._delObject(movement_id)
-
-    for movement, prop_dict in modify_dict.items():
-      applied_rule[movement].edit(**prop_dict)
-
-    for movement_dict in add_list:
-      if 'id' in movement_dict.keys():
-        mvmt_id = applied_rule._get_id(movement_dict.pop('id'))
-        new_mvmt = applied_rule.newContent(id=mvmt_id,
-            portal_type=self.movement_type)
-      else:
-        new_mvmt = applied_rule.newContent(portal_type=self.movement_type)
-      new_mvmt.edit(**movement_dict)
-      #set asset_price on movement when resource is different from price
-      #currency of the source/destination section
-      currency = new_mvmt.getResourceValue()
-      if currency is not None:
-        currency_url = currency.getRelativeUrl()
-        dest_section = new_mvmt.getDestinationSectionValue()
-        if dest_section is not None:
-          dest_currency_url = dest_section.getProperty('price_currency', None)
-        else:
-          dest_currency_url = None
-        if dest_currency_url is not None and currency_url != dest_currency_url:
-          precision = dest_section.getPriceCurrencyValue().getQuantityPrecision()
-          dest_exchange_ratio = currency.getPrice(context=new_mvmt.asContext(
-            categories=['price_currency/%s' % dest_currency_url,
-                        'resource/%s' % currency_url],
-            start_date=new_mvmt.getStartDate()))
-          if dest_exchange_ratio is not None:
-            new_mvmt.edit(destination_total_asset_price=round(
-             (dest_exchange_ratio*
-              applied_rule.getParentValue().getTotalPrice()),precision))
-
-        source_section = new_mvmt.getSourceSectionValue()
-        if source_section is not None:
-          source_currency_url = source_section.getProperty('price_currency', None)
-        else:
-          source_currency_url = None
-        if source_currency_url is not None and currency_url != source_currency_url:
-          precision = source_section.getPriceCurrencyValue().getQuantityPrecision()
-          source_exchange_ratio = currency.getPrice(context=new_mvmt.asContext(
-            categories=['price_currency/%s' % source_currency_url,
-                        'resource/%s' % currency_url],
-            start_date=new_mvmt.getStartDate()))
-          if source_exchange_ratio is not None:
-            new_mvmt.setSourceTotalAssetPrice(round(
-       source_exchange_ratio*applied_rule.getParentValue().getTotalPrice(),
-            precision))
-
-    # Pass to base class
-    Rule.expand(self, applied_rule, force=force, **kw)
+    return Rule._expand(self, applied_rule, force=force, **kw)
 
   # Matrix related
   security.declareProtected( Permissions.ModifyPortalContent,
@@ -380,18 +218,12 @@ class InvoiceTransactionRule(Rule, PredicateMatrix):
 
   def _getCurrencyRatioAndPrecisionByArrow(self, arrow, prevision_line):
     from Products.ERP5Type.Document import newTempSimulationMovement
-    try:
-      prevision_currency = prevision_line['resource_list'][0]
-    except IndexError:
-      prevision_currency = None
+    prevision_currency = prevision_line.get('resource', None)
     temporary_movement = newTempSimulationMovement(self.getPortalObject(),
         '1', **prevision_line)
     exchange_ratio = None
     precision = None
-    try:
-      section = prevision_line['%s_list' % arrow][0]
-    except IndexError:
-      section = None
+    section = prevision_line.get(arrow, None)
     if section is not None:
       currency_url = self.restrictedTraverse(section).getProperty(
           'price_currency', None)
@@ -407,4 +239,51 @@ class InvoiceTransactionRule(Rule, PredicateMatrix):
         start_date=temporary_movement.getStartDate()))
     return exchange_ratio, precision
 
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getExpandablePropertyList')
+  def getExpandablePropertyList(self, default=None):
+    """
+    Return a list of properties used in expand.
+    """
+    property_list = self._baseGetExpandablePropertyList()
+    # For backward compatibility, we keep for some time the list
+    # of hardcoded properties. Theses properties should now be
+    # defined on the rule itself
+    if len(property_list) == 0:
+      LOG("Invoice Transaction Rule , getExpandablePropertyList", WARNING,
+                 "Hardcoded properties set, please define your rule correctly")
+      property_list = (
+        'destination_administration',
+        'destination_decision',
+        'destination_function',
+        'destination_payment',
+        'destination_project',
+        'destination_section',
+        'source_administration',
+        'source_decision',
+        'source_function',
+        'source_payment',
+        'source_project',
+        'source_section',
+        'start_date',
+        'stop_date',
+      )
+    return property_list
 
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getMatchingPropertyList')
+  def getMatchingPropertyList(self, default=None):
+    """
+    Return a list of properties used in expand.
+    """
+    property_list = self._baseGetMatchingPropertyList()
+    # For backward compatibility, we keep for some time the list
+    # of hardcoded properties. Theses properties should now be
+    # defined on the rule itself
+    if len(property_list) == 0:
+      LOG("Invoice Transaction Rule , getMatchingPropertyList", WARNING,
+          "Hardcoded properties set, please define your rule correctly")
+      property_list=['resource', 'source', 'destination',
+                     'destination_total_asset_price',
+                     'source_total_asset_price']
+    return property_list
