@@ -68,21 +68,21 @@ class ProductionOrderRule(OrderRule):
       # of hardcoded properties. Theses properties should now be
       # defined on the rule itself
       if len(default_property_list) == 0:
-        LOG("Order Rule , _getExpandablePropertyDict", WARNING,
+        LOG("Production Order Rule , _getExpandablePropertyDict", WARNING,
                    "Hardcoded properties set, please define your rule correctly")
         default_property_list = (
+          'aggregate_list',
           'destination', 
           'destination_section',
-          'start_date', 
-          'stop_date',
-          'resource', 
-          'variation_category_list',
-          'variation_property_dict', 
-          'aggregate_list',
           'price', 
           'price_currency',
           'quantity', 
           'quantity_unit', 
+          'resource', 
+          'start_date', 
+          'stop_date',
+          'variation_category_list',
+          'variation_property_dict', 
         )
     
       supply_chain = self.getSupplyChain(applied_rule)
@@ -93,12 +93,12 @@ class ProductionOrderRule(OrderRule):
       # Now, we have to generate Simulation Movement, in order to
       # create a ProductionPackingList.
       destination_node = last_link.getDestinationValue()
-      source_value = destination_node.getDestination()
-      source_section_value = last_link.getDestinationSection()
-      if source_value is not None:
-        property_dict["source"] = source_value
-      if source_section_value is not None:
-        property_dict["source_section"] = source_section_value
+      source = destination_node.getDestination()
+      source_section = last_link.getDestinationSection()
+      if source is not None:
+        property_dict['source'] = source
+      if source_section is not None:
+        property_dict['source_section'] = source_section
     
       for prop in default_property_list:
         property_dict[prop] = movement.getProperty(prop)
