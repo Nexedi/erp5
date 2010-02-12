@@ -110,7 +110,11 @@
         <item>
             <key> <string>matching_property</string> </key>
             <value>
-              <tuple/>
+              <tuple>
+                <string>resource</string>
+                <string>variation_category_list</string>
+                <string>variation_property_dict</string>
+              </tuple>
             </value>
         </item>
         <item>
