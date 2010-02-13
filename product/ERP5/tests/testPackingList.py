@@ -684,8 +684,11 @@ class TestPackingListMixin(TestOrderMixin):
     """
       Look if the packing list has new previsions
     """
-    old_packing_list_line = sequence.get('packing_list_line')
-    packing_list_line = old_packing_list_line.aq_parent[str(int(old_packing_list_line.getId())-1)]
+    order_line = sequence.get('order_line')
+    packing_list_line = order_line.getCausalityRelatedValue()
+    old_packing_list_line = [x for x in \
+                             sequence.get('packing_list').objectValues() \
+                             if x != packing_list_line][0]
     resource = sequence.get('resource')
     self.assertEquals(old_packing_list_line.getQuantity(), 0)
     self.assertNotEquals(old_packing_list_line.getResourceValue(), resource)
