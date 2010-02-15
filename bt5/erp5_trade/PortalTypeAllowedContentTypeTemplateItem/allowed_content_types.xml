@@ -99,6 +99,7 @@
  <portal_type id="Rule Tool">
   <item>Delivery Rule</item>
   <item>Order Rule</item>
+  <item>Order Simulation Rule</item>
  </portal_type>
  <portal_type id="Sale Order">
   <item>Payment Condition</item>
