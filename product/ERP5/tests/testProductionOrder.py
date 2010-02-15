@@ -699,8 +699,8 @@ class TestProductionOrderMixin(TestOrderMixin):
       # Test if applied rule has a specialise value with default_order_rule
       portal_rules = getToolByName(order, 'portal_rules')
       # XXX hardcoded value
-      self.assertEquals(portal_rules.default_production_order_rule, \
-                        applied_rule.getSpecialiseValue())
+      self.assertEquals('default_production_order_rule', \
+                        applied_rule.getSpecialiseReference())
       
       simulation_movement_list = applied_rule.objectValues()
       sequence.edit(simulation_movement_list=simulation_movement_list)
@@ -754,8 +754,8 @@ class TestProductionOrderMixin(TestOrderMixin):
     applied_rule = applied_rule_list[0]
     self.assertEquals("Applied Rule", applied_rule.getPortalType())
     portal_rules = getToolByName(applied_rule, 'portal_rules')
-    self.assertEquals(portal_rules.default_transformation_rule, \
-                      applied_rule.getSpecialiseValue())
+    self.assertEquals('default_transformation_rule', \
+                      applied_rule.getSpecialiseReference())
     # Test deeper simulation 
     simulation_movement_list = applied_rule.objectValues()
     self.assertEquals(2, len(simulation_movement_list))
@@ -867,8 +867,8 @@ class TestProductionOrderMixin(TestOrderMixin):
     applied_rule = applied_rule_list[0]
     self.assertEquals("Applied Rule", applied_rule.getPortalType())
     portal_rules = getToolByName(applied_rule, 'portal_rules')
-    self.assertEquals(portal_rules.default_transformation_rule, \
-                      applied_rule.getSpecialiseValue())
+    self.assertEquals('default_transformation_rule', \
+                      applied_rule.getSpecialiseReference())
     # Test deeper simulation 
     simulation_movement_list = list(applied_rule.objectValues())
     # FIXME
@@ -926,8 +926,8 @@ class TestProductionOrderMixin(TestOrderMixin):
     applied_rule = component_movement.objectValues()[0]
     self.assertEquals("Applied Rule", applied_rule.getPortalType())
     portal_rules = getToolByName(applied_rule, 'portal_rules')
-    self.assertEquals(portal_rules.default_transformation_sourcing_rule, \
-                      applied_rule.getSpecialiseValue())
+    self.assertEquals('default_transformation_sourcing_rule', \
+                      applied_rule.getSpecialiseReference())
     # Test supply movement
     simulation_movement_list = applied_rule.objectValues()
     # FIXME
@@ -1068,8 +1068,8 @@ class TestProductionOrderMixin(TestOrderMixin):
     applied_rule = applied_rule_list[0]
     self.assertEquals("Applied Rule", applied_rule.getPortalType())
     portal_rules = getToolByName(applied_rule, 'portal_rules')
-    self.assertEquals(portal_rules.default_transformation_rule, \
-                      applied_rule.getSpecialiseValue())
+    self.assertEquals('default_transformation_rule', \
+                      applied_rule.getSpecialiseReference())
     # Test deeper simulation 
     simulation_movement_list = list(applied_rule.objectValues())
     # FIXME
@@ -1130,8 +1130,8 @@ class TestProductionOrderMixin(TestOrderMixin):
     applied_rule = component_movement.objectValues()[0]
     self.assertEquals("Applied Rule", applied_rule.getPortalType())
     portal_rules = getToolByName(applied_rule, 'portal_rules')
-    self.assertEquals(portal_rules.default_transformation_sourcing_rule, \
-                      applied_rule.getSpecialiseValue())
+    self.assertEquals('default_transformation_sourcing_rule', \
+                      applied_rule.getSpecialiseReference())
     # Test supply movement
     simulation_movement_list = applied_rule.objectValues()
     # FIXME
@@ -1168,8 +1168,8 @@ class TestProductionOrderMixin(TestOrderMixin):
     applied_rule = applied_rule_list[0]
     self.assertEquals("Applied Rule", applied_rule.getPortalType())
     portal_rules = getToolByName(applied_rule, 'portal_rules')
-    self.assertEquals(portal_rules.default_transformation_sourcing_rule, \
-                      applied_rule.getSpecialiseValue())
+    self.assertEquals('default_transformation_sourcing_rule', \
+                      applied_rule.getSpecialiseReference())
     # Test deeper simulation 
     simulation_movement_list = list(applied_rule.objectValues())
     self.assertEquals(1, len(simulation_movement_list))
@@ -1195,8 +1195,8 @@ class TestProductionOrderMixin(TestOrderMixin):
     applied_rule = applied_rule_list[0]
     self.assertEquals("Applied Rule", applied_rule.getPortalType())
     portal_rules = getToolByName(applied_rule, 'portal_rules')
-    self.assertEquals(portal_rules.default_transformation_rule, \
-                      applied_rule.getSpecialiseValue())
+    self.assertEquals('default_transformation_rule', \
+                      applied_rule.getSpecialiseReference())
     # Test deeper simulation 
     simulation_movement_list = list(applied_rule.objectValues())
     # FIXME
@@ -1255,8 +1255,8 @@ class TestProductionOrderMixin(TestOrderMixin):
     applied_rule = component_movement.objectValues()[0]
     self.assertEquals("Applied Rule", applied_rule.getPortalType())
     portal_rules = getToolByName(applied_rule, 'portal_rules')
-    self.assertEquals(portal_rules.default_transformation_sourcing_rule, \
-                      applied_rule.getSpecialiseValue())
+    self.assertEquals('default_transformation_sourcing_rule', \
+                      applied_rule.getSpecialiseReference())
     # Test supply movement
     simulation_movement_list = applied_rule.objectValues()
     # FIXME
