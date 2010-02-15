@@ -62,7 +62,7 @@
   return (\n
     root_rule.getPortalType() == "Production Order Rule" and\\\n
     (parent_rule.getPortalType() in ("Transformation Sourcing Rule",\n
-                                     "Production Order Rule")) and\\\n
+                                     "Delivering Rule")) and\\\n
     root_movement.getSimulationState() == "confirmed"\n
   )\n
 \n

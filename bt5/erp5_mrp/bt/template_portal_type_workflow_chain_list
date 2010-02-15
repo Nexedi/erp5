@@ -6,8 +6,12 @@ Production Order Line | production_matrix_workflow
 Production Order Line | transformation_interaction_workflow
 Production Order Model Rule | edit_workflow
 Production Order Model Rule | rule_validation_workflow
+Production Order Model Simulation Rule | edit_workflow
+Production Order Model Simulation Rule | rule_validation_workflow
 Production Order Rule | edit_workflow
 Production Order Rule | rule_validation_workflow
+Production Order Simulation Rule | edit_workflow
+Production Order Simulation Rule | rule_validation_workflow
 Production Order | edit_workflow
 Production Order | order_simulation_interaction_workflow
 Production Order | production_order_workflow

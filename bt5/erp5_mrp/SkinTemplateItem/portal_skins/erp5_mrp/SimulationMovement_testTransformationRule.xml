@@ -76,7 +76,8 @@ if (root_rule is None or\n
     order is None or\n
     movement.getResourceValue() is None or\n
     movement.getSourceValue() is None or\n
-    movement.getResourceValue() != root_movement.getResourceValue()):\n
+    movement.getResourceValue() != root_movement.getResourceValue() or\n
+    movement.getPath() == root_movement.getPath()):\n
   return False\n
 \n
 supply_chain = rule.getSupplyChain(movement.getParentValue())\n
