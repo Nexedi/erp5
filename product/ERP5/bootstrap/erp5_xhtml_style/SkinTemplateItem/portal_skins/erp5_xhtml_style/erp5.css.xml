@@ -392,7 +392,7 @@ input, textarea, select, button, body, div, span, fieldset {\n
   padding: 0;\n
 }\n
 \n
-div.input > select, div.input > input {\n
+div.input > select, div.input > input, div.listbox select {\n
   max-width:320px;\n
 }\n
 \n
