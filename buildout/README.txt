@@ -26,3 +26,13 @@ As each software component this buildout requires something to be installed.
 To query what is required please use:
 
 bin/buildout install show-requirements
+
+Minimal requirements
+--------------------
+
+To start buildout it is required to have:
+
+ * any python with header files (file similar to
+   /usr/lib*/python*/config/Makefile have to be delivered by system package)
+ * svn client (to checkout buildout)
+
