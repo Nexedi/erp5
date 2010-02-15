@@ -63,7 +63,7 @@ if parent.getPortalType() == \'Applied Rule\':\n
     return False\n
   # XXX can we create invoicing rule for Production Order?\n
   if parent_rule_portal_type in [\'Delivering Simulation Rule\',] and \\\n
-      parent_rule.getParentValue().getParentValue().getPortalType() not in [\'Order Simulation Rule\']:\n
+      parent.getParentValue().getParentValue().getSpecialiseValue().getPortalType() not in [\'Order Simulation Rule\']:\n
     return False\n
 \n
 source_section = movement.getSourceSection()\n
