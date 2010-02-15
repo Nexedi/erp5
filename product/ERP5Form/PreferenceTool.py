@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2005 Nexedi SARL and Contributors. All Rights Reserved.
@@ -110,7 +111,7 @@ class PreferenceMethod(Method):
   func_defaults = ()
 
   def __init__(self, attribute, default):
-    self._preference_getter = attribute
+    self.__name__ = self._preference_getter = attribute
     self._preference_default = default
     self._preference_cache_id = 'PreferenceTool.CachingMethod.%s' % attribute
 
