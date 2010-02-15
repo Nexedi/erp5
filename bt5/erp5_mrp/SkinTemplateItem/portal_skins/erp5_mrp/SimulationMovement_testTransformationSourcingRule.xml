@@ -68,7 +68,7 @@ order = root_applied_rule.getCausalityValue()\n
 \n
 # Test movement\n
 if (root_rule is None or\n
-    root_rule.getPortalType() != "Production Order Rule" or\n
+    root_rule.getPortalType() not in ("Production Order Rule", "Production Order Simulation Rule") or\n
     order is None or\n
     movement.getResourceValue() is None or\n
     movement.getSourceValue() is None):\n
