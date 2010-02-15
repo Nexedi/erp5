@@ -588,15 +588,11 @@ class Rule(Predicate, XMLObject):
         property_dict['%s_list' % base_category] = [category_url]
       else:
         property_dict['%s_list' % base_category] = []
-    # Amount
-    if business_path.getQuantity():
-      property_dict['quantity'] = business_path.getQuantity()
-    elif business_path.getEfficiency():
-      property_dict['quantity'] = movement.getQuantity() *\
-        business_path.getEfficiency()
-    else:
-      property_dict['quantity'] = movement.getQuantity()
 
+    # Amount
+    property_dict['quantity'] = business_path.getExpectedQuantity()
+
+    # Date
     if movement.getStartDate() == movement.getStopDate():
       property_dict['start_date'] = business_path.getExpectedStartDate(
           movement)

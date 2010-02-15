@@ -406,6 +406,20 @@ class BusinessPath(Path):
           and self._isDeliverySimulationMovementRelated(
             explanation, simulation_movement)]
 
+  def getExpectedQuantity(self, explanation, *args, **kwargs):
+    """
+      Returns the expected stop date for this
+      path based on the explanation.
+
+      XXX predecessor_quantity argument is required?
+    """
+    if self.getQuantity():
+      return self.getQuantity()
+    elif self.getEfficiency():
+      return explanation.getQuantity() * self.getEfficiency()
+    else:
+      return explanation.getQuantity()
+
   def getExpectedStartDate(self, explanation, predecessor_date=None, *args, **kwargs):
     """
       Returns the expected start date for this
