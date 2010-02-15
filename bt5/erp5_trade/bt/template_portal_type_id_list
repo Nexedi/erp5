@@ -5,6 +5,7 @@ Business State
 Container
 Container Cell
 Container Line
+Delivering Simulation Rule
 Delivery Cell
 Delivery Rule
 First Causality Movement Group
@@ -17,6 +18,7 @@ Inventory Cell
 Inventory Line
 Inventory Module
 Order Rule
+Order Simulation Rule
 Payment Condition
 Purchase Order
 Purchase Order Cell

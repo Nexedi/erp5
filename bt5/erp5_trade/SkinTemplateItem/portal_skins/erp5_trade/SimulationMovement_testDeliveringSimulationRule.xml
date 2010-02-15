@@ -53,28 +53,21 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from Products.ZSQLCatalog.SQLCatalog import Query, ComplexQuery\n
+            <value> <string>movement = context\n
 \n
-kw[\'query\'] = ComplexQuery(\n
-  Query(portal_type=\'Simulation Movement\', explanation_portal_type=\'Sale Order\'),\n
-  ComplexQuery(\n
-    Query(parent_specialise_portal_type=[\'Order Rule\', \'Delivery Rule\'],\n
-          simulation_state=\'confirmed\'),\n
-    Query(parent_specialise_portal_type=\'Delivering Simulation Rule\',\n
-          grand_parent_simulation_state=\'confirmed\'),\n
-    operator=\'or\'),\n
-  operator=\'and\')\n
+parent = movement.getParentValue()\n
+if parent.getPortalType() == \'Applied Rule\':\n
+  parent_rule = parent.getSpecialiseValue()\n
+  if parent_rule.getPortalType() not in [\'Order Simulation Rule\', \'Production Order Simulation Rule\']:\n
+    return False\n
 \n
-kw.update(context.portal_catalog.buildSQLQuery(**kw))\n
-#from Products.ERP5Type.Log import log\n
-#log(\'SaleOrder_selectMovement\', \'SQL\\n%s\' % context.Order_zSelectMovement(src__=1, **kw))\n
+source_section = movement.getSourceSection()\n
+destination_section = movement.getDestinationSection()\n
+if source_section == destination_section or source_section is None \\\n
+    or destination_section is None:\n
+  return False\n
 \n
-if src__==0:\n
-  movement_list = [x.getObject() for x in context.Order_zSelectMovement(**kw)]\n
-  #log(\'SaleOrder_selectMovement\', \'mvt : %s\' % movement_list)\n
-  return movement_list\n
-else:\n
-  return context.Order_zSelectMovement(src__=1, **kw)\n
+return True\n
 </string> </value>
         </item>
         <item>
@@ -85,15 +78,7 @@ else:\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>src__=0, **kw</string> </value>
-        </item>
-        <item>
-            <key> <string>_proxy_roles</string> </key>
-            <value>
-              <tuple>
-                <string>Manager</string>
-              </tuple>
-            </value>
+            <value> <string>rule</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -119,20 +104,17 @@ else:\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>src__</string>
-                            <string>kw</string>
-                            <string>Products.ZSQLCatalog.SQLCatalog</string>
-                            <string>Query</string>
-                            <string>ComplexQuery</string>
-                            <string>_write_</string>
-                            <string>_getattr_</string>
-                            <string>_apply_</string>
+                            <string>rule</string>
                             <string>context</string>
-                            <string>append</string>
-                            <string>$append0</string>
-                            <string>_getiter_</string>
-                            <string>x</string>
-                            <string>movement_list</string>
+                            <string>movement</string>
+                            <string>_getattr_</string>
+                            <string>parent</string>
+                            <string>parent_rule</string>
+                            <string>False</string>
+                            <string>source_section</string>
+                            <string>destination_section</string>
+                            <string>None</string>
+                            <string>True</string>
                           </tuple>
                         </value>
                     </item>
@@ -144,18 +126,12 @@ else:\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <tuple>
-                <int>0</int>
-              </tuple>
+              <none/>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>SaleOrder_selectMovement</string> </value>
-        </item>
-        <item>
-            <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <string>SimulationMovement_testDeliveringSimulationRule</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

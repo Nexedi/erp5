@@ -13,6 +13,11 @@
  <portal_type id="Container Line">
   <item>Container Cell</item>
  </portal_type>
+ <portal_type id="Delivering Simulation Rule">
+  <item>Category Divergence Tester</item>
+  <item>Property Divergence Tester</item>
+  <item>Quantity Divergence Tester</item>
+ </portal_type>
  <portal_type id="Delivery Builder">
   <item>First Causality Movement Group</item>
  </portal_type>
@@ -40,6 +45,11 @@
   <item>Inventory</item>
  </portal_type>
  <portal_type id="Order Rule">
+  <item>Category Divergence Tester</item>
+  <item>Property Divergence Tester</item>
+  <item>Quantity Divergence Tester</item>
+ </portal_type>
+ <portal_type id="Order Simulation Rule">
   <item>Category Divergence Tester</item>
   <item>Property Divergence Tester</item>
   <item>Quantity Divergence Tester</item>

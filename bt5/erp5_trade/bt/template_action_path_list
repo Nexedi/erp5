@@ -8,6 +8,7 @@ Business State | view
 Container Line | view
 Container Line | view_quantity
 Container | view
+Delivering Simulation Rule | view
 Delivery Cell | view
 Delivery Rule | view
 First Causality Movement Group | view
@@ -33,6 +34,7 @@ Inventory Module | view_stock_report
 Inventory | inventory_fast_input
 Inventory | view
 Order Rule | view
+Order Simulation Rule | view
 Organisation | jump_to_purchase_order
 Organisation | jump_to_purchase_packing_list
 Organisation | jump_to_sale_order
