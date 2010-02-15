@@ -14,7 +14,7 @@ pid-file = ${configuration:mysql_pid}
 log-error = ${configuration:mysql_error_log}
 skip-locking
 key_buffer = 384M
-max_allowed_packet = 1M
+max_allowed_packet = 128M
 table_cache = 512
 sort_buffer_size = 2M
 read_buffer_size = 2M
