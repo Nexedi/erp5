@@ -262,7 +262,7 @@ class TestInvoiceMixin(TestPackingListMixin,
     invoice_transaction_rule_list = []
     for order_rule in order_rule_list :
       for order_simulation_movement in order_rule.objectValues() :
-        temp_invoicing_rule_list = [ar for ar in order_simulation_movement.objectValues()
+        temp_invoicing_rule_list = [ar for ar in order_simulation_movement.objectValues()[0].objectValues()[0].objectValues()
           if ar.getSpecialiseValue().getPortalType() == 'Invoicing Rule']
         self.assertEquals(len(temp_invoicing_rule_list), 1)
         invoicing_rule_list.extend(temp_invoicing_rule_list)
@@ -379,7 +379,9 @@ class TestInvoice(TestInvoiceMixin):
 
     related_applied_rule = order.getCausalityRelatedValue(
                              portal_type='Applied Rule')
-    delivery_movement = related_applied_rule.contentValues()[0]
+    order_movement = related_applied_rule.contentValues()[0]
+    delivery_applied_rule = order_movement.contentValues()[0]
+    delivery_movement = delivery_applied_rule.contentValues()[0]
     invoice_applied_rule = delivery_movement.contentValues()[0]
     invoice_movement = invoice_applied_rule.contentValues()[0]
     invoice_transaction_applied_rule = invoice_movement.contentValues()[0]
@@ -644,7 +646,9 @@ class TestInvoice(TestInvoiceMixin):
 
     related_applied_rule = order.getCausalityRelatedValue(
                              portal_type='Applied Rule')
-    delivery_movement = related_applied_rule.contentValues()[0]
+    order_movement = related_applied_rule.contentValues()[0]
+    delivery_applied_rule = order_movement.contentValues()[0]
+    delivery_movement = delivery_applied_rule.contentValues()[0]
     invoice_applied_rule = delivery_movement.contentValues()[0]
     invoice_movement = invoice_applied_rule.contentValues()[0]
     invoice_transaction_applied_rule = invoice_movement.contentValues()[0]
@@ -2444,6 +2448,10 @@ class TestSaleInvoiceMixin(TestInvoiceMixin,
 
     rule_dict = {
         'Order Rule': {
+          'movement_type_list': ['Sale Order Line', 'Sale Order Cell'],
+          'next_rule_list': ['Delivering Rule', ],
+          },
+        'Delivering Rule': {
           'movement_type_list': ['Sale Packing List Line', 'Sale Packing List Cell'],
           'next_rule_list': ['Invoicing Rule', ],
           },

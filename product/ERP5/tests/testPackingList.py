@@ -490,12 +490,23 @@ class TestPackingListMixin(TestOrderMixin):
     applied_rule = sequence.get('applied_rule')
     simulation_movement_list = applied_rule.objectValues()
     self.assertEquals(len(simulation_movement_list),1)
+    order_line = sequence.get('order_line')
     packing_list = sequence.get('packing_list')
     packing_list_line = sequence.get('packing_list_line')
     for simulation_movement in simulation_movement_list:
-      self.assertEquals(simulation_movement.getDeliveryValue(),packing_list_line)
+      self.assertEquals(simulation_movement.getDeliveryValue(), order_line)
       self.assertEquals(packing_list_line.getCausalityValue(),
-                        simulation_movement.getOrderValue())
+                        order_line)
+      rule_list = simulation_movement.objectValues()
+      self.failUnless(len(rule_list), 1)
+      delivering_rule = rule_list[0]
+      self.failUnless(delivering_rule.getSpecialiseValue().getPortalType(),
+                      'Delivering Rule')
+      child_simulation_movement_list = delivering_rule.objectValues()
+      self.failUnless(len(child_simulation_movement_list), 1)
+      child_simulation_movement = child_simulation_movement_list[0]
+      self.assertEquals(child_simulation_movement.getDeliveryValue(),
+                        packing_list_line)
 
   def stepCheckSimulationDisconnected(self,sequence=None, sequence_list=None, **kw):
     """
@@ -505,7 +516,8 @@ class TestPackingListMixin(TestOrderMixin):
     simulation_movement_list = applied_rule.objectValues()
     self.assertEquals(len(simulation_movement_list),1)
     for simulation_movement in simulation_movement_list:
-      self.assertEquals(simulation_movement.getDeliveryValue(),None)
+      child_simulation_movement = simulation_movement.objectValues()[0].objectValues()[0]
+      self.assertEquals(child_simulation_movement.getDeliveryValue(),None)
 
   def stepModifySimulationLineQuantity(self,sequence=None, sequence_list=None, **kw):
     """
@@ -516,7 +528,8 @@ class TestPackingListMixin(TestOrderMixin):
 #    self.assertEquals(len(simulation_movement_list),1)
     for simulation_movement in simulation_movement_list:
       simulation_movement.edit(quantity=self.default_quantity-1)
-      simulation_movement.getOrderValue().edit(quantity=self.default_quantity-1)
+      simulation_movement.getDeliveryValue().edit(quantity=self.default_quantity-1)
+      simulation_movement.expand()
 
   def stepModifySimulationLineQuantityForMergedLine(self,sequence=None, sequence_list=None, **kw):
     """
@@ -527,7 +540,8 @@ class TestPackingListMixin(TestOrderMixin):
     self.assertEquals(len(simulation_movement_list),2)
     for simulation_movement in simulation_movement_list:
       simulation_movement.edit(quantity=self.default_quantity-1)
-      simulation_movement.getOrderValue().edit(quantity=self.default_quantity-1)
+      simulation_movement.getDeliveryValue().edit(quantity=self.default_quantity-1)
+      simulation_movement.expand()
 
   def stepModifySimulationLineStartDate(self,sequence=None, sequence_list=None, **kw):
     """
@@ -539,6 +553,7 @@ class TestPackingListMixin(TestOrderMixin):
     for simulation_movement in simulation_movement_list:
       simulation_movement.recordProperty('start_date')
       simulation_movement.edit(start_date=self.datetime+15)
+      simulation_movement.expand()
 
   def stepModifyOneSimulationLineStartDate(self,sequence=None, sequence_list=None, **kw):
     """
@@ -550,6 +565,7 @@ class TestPackingListMixin(TestOrderMixin):
     self.assertEquals(len(simulation_movement_list),len(resource_list))
     simulation_movement_list[-1].recordProperty('start_date')
     simulation_movement_list[-1].edit(start_date=self.datetime+15)
+    simulation_movement_list[-1].expand()
 
   def stepModifySimulationLineResource(self,sequence=None, sequence_list=None, **kw):
     """
@@ -561,6 +577,7 @@ class TestPackingListMixin(TestOrderMixin):
     for simulation_movement in simulation_movement_list:
       simulation_movement.recordProperty('resource')
       simulation_movement.edit(resource_value=resource_list[-1])
+      simulation_movement.expand()
 
   def stepModifyOneSimulationLineResource(self,sequence=None, sequence_list=None, **kw):
     """
@@ -571,6 +588,7 @@ class TestPackingListMixin(TestOrderMixin):
     resource_list = sequence.get('resource_list')
     simulation_movement_list[-1].recordProperty('resource')
     simulation_movement_list[-1].edit(resource_value=resource_list[-1])
+    simulation_movement_list[-1].expand()
 
   def stepNewPackingListAdoptPrevisionQuantity(self,sequence=None, sequence_list=None, **kw):
     """
@@ -669,14 +687,16 @@ class TestPackingListMixin(TestOrderMixin):
     self.assertEquals(packing_list_line.getQuantity(), self.default_quantity)
     self.assertNotEquals(packing_list_line.getResourceValue(), new_resource)
     simulation_movement_list = packing_list_line.getDeliveryRelatedValueList()
-    order_line_list = [x.getOrder() for x in simulation_movement_list]
+    order_line_list = [x.getParentValue().getParentValue().getDelivery() \
+                       for x in simulation_movement_list]
     self.assertEquals(sorted(packing_list_line.getCausalityList()),
                       sorted(order_line_list))
     new_packing_list_line = packing_list_line.aq_parent[str(int(packing_list_line.getId())+1)]
     self.assertEquals(new_packing_list_line.getQuantity(), self.default_quantity)
     self.assertEquals(new_packing_list_line.getResourceValue(), new_resource)
     simulation_movement_list = new_packing_list_line.getDeliveryRelatedValueList()
-    order_line_list = [x.getOrder() for x in simulation_movement_list]
+    order_line_list = [x.getParentValue().getParentValue().getDelivery() \
+                       for x in simulation_movement_list]
     self.assertEquals(sorted(new_packing_list_line.getCausalityList()),
                       sorted(order_line_list))
 
@@ -695,7 +715,8 @@ class TestPackingListMixin(TestOrderMixin):
     self.assertEquals(packing_list_line.getQuantity(), self.default_quantity * 2)
     self.assertEquals(packing_list_line.getResourceValue(), resource)
     simulation_movement_list = packing_list_line.getDeliveryRelatedValueList()
-    order_line_list = [x.getOrder() for x in simulation_movement_list]
+    order_line_list = [x.getParentValue().getParentValue().getDelivery() \
+                       for x in simulation_movement_list]
     self.assertEquals(sorted(packing_list_line.getCausalityList()),
                       sorted(order_line_list))
 

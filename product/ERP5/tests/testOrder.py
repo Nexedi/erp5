@@ -804,13 +804,13 @@ class TestOrderMixin:
       # Check if number of movement is equal to number of simulation movement
       self.assertEquals(len(movement_list), len(simulation_movement_list))
       # Check if each movement has only one simulation movement related
-      order_movement_list = [x.getOrderValue() for x in \
+      order_movement_list = [x.getDeliveryValue() for x in \
                              simulation_movement_list]
       self.failIfDifferentSet(movement_list, order_movement_list)
 
       # Check each simulation movement
       for simulation_movement in simulation_movement_list:
-        order_movement = simulation_movement.getOrderValue()
+        order_movement = simulation_movement.getDeliveryValue()
         # Test quantity
         self.assertEquals(order_movement.getQuantity(), \
                           simulation_movement.getQuantity())
@@ -946,9 +946,23 @@ class TestOrderMixin:
 
       # First, test if each Simulation Movement is related to a Packing List
       # Movement
+      order_relative_url = order.getRelativeUrl()
       packing_list_relative_url = packing_list.getRelativeUrl()
       for simulation_movement in simulation_movement_list:
-        packing_list_movement_list = simulation_movement.getDeliveryValueList()
+        order_movement_list = simulation_movement.getDeliveryValueList()
+        self.failUnless(len(order_movement_list), 1)
+        order_movement = order_movement_list[0]
+        self.failUnless(order_movement is not None)
+        self.failUnless(order_movement.getRelativeUrl().\
+                                      startswith(order_relative_url))
+        rule_list = simulation_movement.objectValues()
+        self.failUnless(len(rule_list), 1)
+        delivering_rule = rule_list[0]
+        self.failUnless(delivering_rule.getSpecialiseValue().getPortalType(),
+                        'Delivering Rule')
+        child_simulation_movement_list = delivering_rule.objectValues()
+        self.failUnless(len(child_simulation_movement_list), 1)
+        packing_list_movement_list = child_simulation_movement_list[0].getDeliveryValueList()
         self.failUnless(len(packing_list_movement_list), 1)
         packing_list_movement = packing_list_movement_list[0]
         self.failUnless(packing_list_movement is not None)
