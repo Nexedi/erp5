@@ -209,6 +209,7 @@ class AppliedRule(XMLObject):
               .getRootSpecialiseValue(portal_type_list)
           if specialise_value is not None:
             return specialise_value
+        # 'order' category is deprecated. it is kept for compatibility.
         if order is not None:
           specialise_value = order.getExplanationValue() \
               .getRootSpecialiseValue(portal_type_list)

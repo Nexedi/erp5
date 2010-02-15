@@ -595,6 +595,7 @@ class Movement(XMLObject, Amount):
   security.declareProtected( Permissions.AccessContentsInformation,
                              'isSimulated')
   def isSimulated(self):
+    # 'order' category is deprecated. it is kept for compatibility.
     return (len(self.getDeliveryRelatedValueList()) > 0) or\
            (len(self.getOrderRelatedValueList()) > 0)
 
@@ -605,6 +606,7 @@ class Movement(XMLObject, Amount):
     """
       Returns the quantity of related order(s)
     """
+    # XXX deprecated
     return self.getQuantity()
 
   security.declareProtected( Permissions.AccessContentsInformation,
@@ -629,6 +631,7 @@ class Movement(XMLObject, Amount):
     """
       Returns the list of start date of related order(s)
     """
+    # XXX deprecated
     return [self.getStartDate()]
 
   security.declareProtected( Permissions.AccessContentsInformation,
@@ -653,6 +656,7 @@ class Movement(XMLObject, Amount):
     """
       Returns the list of stop date of related order(s)
     """
+    # XXX deprecated
     return [self.getStopDate()]
 
   security.declareProtected( Permissions.AccessContentsInformation,
@@ -677,6 +681,7 @@ class Movement(XMLObject, Amount):
     """
       Returns the source of related orders
     """
+    # XXX deprecated
     return self.getSourceList()
 
   security.declareProtected( Permissions.AccessContentsInformation,
@@ -701,6 +706,7 @@ class Movement(XMLObject, Amount):
     """
       Returns the destination of related orders
     """
+    # XXX deprecated
     return self.getDestinationList()
 
   security.declareProtected( Permissions.AccessContentsInformation,
@@ -725,6 +731,7 @@ class Movement(XMLObject, Amount):
     """
       Returns the source_section of related orders
     """
+    # XXX deprecated
     return self.getSourceSectionList()
 
   security.declareProtected( Permissions.AccessContentsInformation,
@@ -749,6 +756,7 @@ class Movement(XMLObject, Amount):
     """
       Returns the destination_section of related orders
     """
+    # XXX deprecated
     return self.getDestinationSectionList()
 
   security.declareProtected( Permissions.AccessContentsInformation,

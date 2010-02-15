@@ -197,6 +197,7 @@ class DeliveryRule(Rule):
   def _getExpandablePropertyUpdateDict(self, applied_rule, movement,
       business_path, current_property_dict):
     """Delivery specific update dict"""
+    # 'order' category is deprecated. it is kept for compatibility.
     return {
       'order': movement.getRelativeUrl(),
       'delivery': movement.getRelativeUrl(),

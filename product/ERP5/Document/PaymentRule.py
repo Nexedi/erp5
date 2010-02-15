@@ -65,6 +65,7 @@ class PaymentRule(Rule):
           if payment_condition_list:
             return payment_condition_list
 
+        # 'order' category is deprecated. it is kept for compatibility.
         order_movement = movement.getOrderValue()
         if order_movement is not None:
           explanation = order_movement.getExplanationValue()

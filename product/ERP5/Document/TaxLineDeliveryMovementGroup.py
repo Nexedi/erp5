@@ -99,7 +99,10 @@ class TaxLineDeliveryMovementGroup(MovementGroup):
 
       # in case of invoice rule (ie. starting from Invoice)
       if delivery_line is None:
+        # 'order' category is deprecated. it is kept for compatibility.
         delivery_line = applied_rule.getParentValue().getOrderValue()
+        if delivery_line is not None:
+          delivery_line = applied_rule.getParentValue().getDeliveryValue()
 
       # in case of invoicing rule (ie. starting from Order)
       if delivery_line is None:

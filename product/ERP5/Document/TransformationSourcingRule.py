@@ -107,8 +107,11 @@ class TransformationSourcingRuleMixin(ExtensionClass.Base):
     """
     Get transformation related to used by the applied rule.
     """
-    production_order_movement = movement.getRootSimulationMovement().\
-                                                   getOrderValue()
+    root_simulation_movement = movement.getRootSimulationMovement()
+    # 'order' category is deprecated. it is kept for compatibility.
+    production_order_movement = root_simulation_movement.getOrderValue()
+    if production_order_movement is None:
+      production_order_movement = root_simulation_movement.getDeliveryValue()
     # XXX Acquisition can be use instead
     parent_uid = production_order_movement.getParentUid()
     explanation_uid = production_order_movement.getExplanationUid()

@@ -89,6 +89,7 @@ class InvoiceTransactionRule(Rule, PredicateMatrix):
             delivery = simulation_movement.getDeliveryValue()
             if delivery is not None:
               resource = delivery.getProperty('price_currency', None)
+            # 'order' category is deprecated. it is kept for compatibility.
             if (resource is None) and \
                (simulation_movement.getParentValue().getParentValue() \
                                       == portal_simulation) :

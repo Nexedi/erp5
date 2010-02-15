@@ -145,7 +145,10 @@ class TransformationModelRuleMixin(Base):
     if movement is None and applied_rule is not None:
       movement = applied_rule.getParentValue()
 
+    # 'order' category is deprecated. it is kept for compatibility.
     order_movement = movement.getRootSimulationMovement().getOrderValue()
+    if order_movement is None:
+      order_movement = movement.getRootSimulationMovement().getDeliveryValue()
     explanation = self.getExplanationValue(movement=movement,
                                            applied_rule=applied_rule)
     # find the line of order recursively
@@ -196,8 +199,12 @@ class TransformationModelRuleMixin(Base):
     if applied_rule is not None:
       return applied_rule.getRootAppliedRule().getCausalityValue()
     else:
-      return movement.getRootSimulationMovement()\
-             .getOrderValue().getExplanationValue()
+      root_simulation_movement = movement.getRootSimulationMovement()
+      # 'order' category is deprecated. it is kept for compatibility.
+      order = root_simulation_movement.getOrderValue()
+      if order is None:
+        order = root_simulation_movement.getDeliveryValue()
+      return order.getExplanationValue()
 
   def getHeadProductionPathValueList(self, transformation, business_process):
     """

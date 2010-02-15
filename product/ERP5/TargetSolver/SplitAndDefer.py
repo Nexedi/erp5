@@ -77,6 +77,7 @@ class SplitAndDefer(CopyToTarget):
           id=new_id,
           quantity=movement_quantity - new_movement_quantity,
           activate_kw=self.activate_kw,
+          # 'order' category is deprecated. it is kept for compatibility.
           order=simulation_movement.getOrder(),
           **self.additional_parameters
         )
@@ -110,6 +111,8 @@ class SplitAndDefer(CopyToTarget):
                         efficiency=simulation_movement.getEfficiency(),
                         start_date=simulation_movement.getStartDate(),
                         stop_date=simulation_movement.getStopDate(),
+                        # 'order' category is deprecated. it is kept for
+                        # compatibility.
                         order=simulation_movement.getOrder(),
 
                         resource=simulation_movement.getResource(),

@@ -57,6 +57,7 @@ class SplitQuantity(CopyToTarget):
       start_date=simulation_movement.getStartDate(),
       stop_date=simulation_movement.getStopDate(),
       # XXX resource
+      # 'order' category is deprecated. it is kept for compatibility.
       order = simulation_movement.getOrder(),
       quantity = self.quantity,
       source = simulation_movement.getSource(),

@@ -125,21 +125,28 @@ class Order(Delivery):
       """
         Warning: does not work if it was not catalogued immediately
       """
+      # 'order' category is deprecated. it is kept for compatibility.
       for my_simulation_movement in self.getOrderRelatedValueList(
-                                         portal_type='Simulation Movement'):
+          portal_type='Simulation Movement') or \
+          self.getDeliveryRelatedValueList(
+          portal_type='Simulation Movement'):
           # And apply
           getattr(my_simulation_movement, method_id)(**kw)
       for m in self.contentValues(filter={'portal_type': \
                                           self.getPortalMovementTypeList()}):
         # Find related in simulation
         for my_simulation_movement in m.getOrderRelatedValueList(
-                                            portal_type='Simulation Movement'):
+            portal_type='Simulation Movement') or \
+            m.getDeliveryRelatedValueList(
+            portal_type='Simulation Movement'):
           # And apply
           getattr(my_simulation_movement, method_id)(**kw)
         for c in m.contentValues(filter={'portal_type':
             self.getPortalMovementTypeList()}):
           for my_simulation_movement in c.getOrderRelatedValueList(
-                                            portal_type='Simulation Movement'):
+              portal_type='Simulation Movement') or \
+              c.getDeliveryRelatedValueList(
+              portal_type='Simulation Movement'):
             # And apply
             getattr(my_simulation_movement, method_id)(**kw)
 
@@ -156,14 +163,21 @@ class Order(Delivery):
         Returns simulation movements related to a cell or line 
         of this order
       """
-      result = self.getOrderRelatedValueList(portal_type='Simulation Movement')
+      # XXX The name should be getDeliveryRelatedMovementList, but this
+      # method seems to be not used at all.
+      result = self.getOrderRelatedValueList(
+          portal_type='Simulation Movement') or \
+          self.getDeliveryRelatedValueList(portal_type='Simulation Movement')
       for m in self.contentValues(filter={'portal_type': \
                                           self.getPortalMovementTypeList()}):
         # Find related in simulation
-        result += m.getOrderRelatedValueList(portal_type='Simulation Movement')
+        result += m.getOrderRelatedValueList(
+            portal_type='Simulation Movement') or \
+            m.getDeliveryRelatedValueList(portal_type='Simulation Movement')
         for c in m.contentValues(filter={'portal_type': 'Delivery Cell'}):
-          result += c.getOrderRelatedValueList( \
-                                             portal_type='Simulation Movement')
+          result += c.getOrderRelatedValueList(
+              portal_type='Simulation Movement') or \
+              c.getDeliveryRelatedValueList(portal_type='Simulation Movement')
       return result
 
     def manage_beforeDelete(self, item, container):

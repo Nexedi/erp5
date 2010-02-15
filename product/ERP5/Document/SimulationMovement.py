@@ -165,6 +165,7 @@ class SimulationMovement(Movement, PropertyRecordableMixin):
     delivery = self.getDeliveryValue()
     if delivery is not None:
       return delivery.getSimulationState()
+    # 'order' category is deprecated. it is kept for compatibility.
     order = self.getOrderValue()
     if order is not None:
       return order.getSimulationState()
@@ -186,6 +187,7 @@ class SimulationMovement(Movement, PropertyRecordableMixin):
     delivery = self.getDeliveryValue()
     if delivery is not None:
       return delivery.getTranslatedSimulationStateTitle()
+    # 'order' category is deprecated. it is kept for compatibility.
     order = self.getOrderValue()
     if order is not None:
       return order.getTranslatedSimulationStateTitle()
@@ -331,16 +333,24 @@ class SimulationMovement(Movement, PropertyRecordableMixin):
   security.declareProtected( Permissions.AccessContentsInformation,
                              'getOrderStartDate')
   def getOrderStartDate(self):
+    # 'order' category is deprecated. it is kept for compatibility.
     order_value = self.getOrderValue()
     if order_value is not None:
       return order_value.getStartDate()
+    delivery_value = self.getDeliveryValue()
+    if delivery_value is not None:
+      return delivery_value.getStartDate()
 
   security.declareProtected( Permissions.AccessContentsInformation,
                              'getOrderStopDate')
   def getOrderStopDate(self):
+    # 'order' category is deprecated. it is kept for compatibility.
     order_value = self.getOrderValue()
     if order_value is not None:
       return order_value.getStopDate()
+    delivery_value = self.getDeliveryValue()
+    if delivery_value is not None:
+      return delivery_value.getStopDate()
 
   security.declareProtected( Permissions.AccessContentsInformation,
                              'getDeliveryStartDateList')

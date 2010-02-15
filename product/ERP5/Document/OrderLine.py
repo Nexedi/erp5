@@ -67,14 +67,17 @@ class OrderLine(DeliveryLine):
       """
         Warning: does not work if it was not catalogued immediately
       """
+      # XXX This method seems to be not used at all.
       # Find related in simulation
       for my_simulation_movement in self.getOrderRelatedValueList(
-                                   portal_type = 'Simulation Movement'):
+          portal_type = 'Simulation Movement') or \
+          self.getDeliveryRelatedValueList(portal_type = 'Simulation Movement'):
         # And apply
         getattr(my_simulation_movement, method_id)()
       for c in self.contentValues(filter={'portal_type': 'Delivery Cell'}):
         for my_simulation_movement in c.getOrderRelatedValueList(
-                                   portal_type = 'Simulation Movement'):
+            portal_type = 'Simulation Movement') or \
+            c.getDeliveryRelatedValueList(portal_type = 'Simulation Movement'):
           # And apply
           getattr(my_simulation_movement, method_id)()
 
