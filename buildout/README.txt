@@ -36,3 +36,14 @@ To start buildout it is required to have:
    /usr/lib*/python*/config/Makefile have to be delivered by system package)
  * svn client (to checkout buildout)
 
+Distribution helpers
+--------------------
+
+In profiles directory there are profiles to help with preparation of used
+distributions.
+
+To prepare Mandriva 2010.0 please type, after bootstrapping:
+
+  bin/buildout -c profiles/mandriva2010.0.cfg install dependency
+
+sudo is used internally.
