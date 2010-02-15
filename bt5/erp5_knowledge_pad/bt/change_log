@@ -1,3 +1,6 @@
+2010-02-15 ivan
+* Use dedicated file system based Gadget class
+
 2009-11-26 Fabien
 * add two more gadgets : google maps and google search. Add title on google calendar
 

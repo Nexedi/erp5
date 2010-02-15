@@ -3,7 +3,7 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <global name="Folder" module="Products.ERP5Type.Document.Folder"/>
+        <global name="Gadget" module="Products.ERP5.Document.Gadget"/>
         <tuple/>
       </tuple>
     </pickle>
@@ -13,30 +13,16 @@
             <key> <string>_Access_contents_information_Permission</string> </key>
             <value>
               <list>
-                <string>Assignor</string>
-                <string>Manager</string>
-                <string>Owner</string>
+                <string>Anonymous</string>
               </list>
-            </value>
-        </item>
-        <item>
-            <key> <string>_Modify_portal_content_Permission</string> </key>
-            <value>
-              <tuple>
-                <string>Assignor</string>
-                <string>Manager</string>
-                <string>Owner</string>
-              </tuple>
             </value>
         </item>
         <item>
             <key> <string>_View_Permission</string> </key>
             <value>
-              <tuple>
-                <string>Assignor</string>
-                <string>Manager</string>
-                <string>Owner</string>
-              </tuple>
+              <list>
+                <string>Anonymous</string>
+              </list>
             </value>
         </item>
         <item>
@@ -171,6 +157,12 @@
         <item>
             <key> <string>edit_form_id</string> </key>
             <value> <string>ERP5Site_viewGoogleSearchGadgetPreferenceDialog</string> </value>
+        </item>
+        <item>
+            <key> <string>gadget_type</string> </key>
+            <value>
+              <tuple/>
+            </value>
         </item>
         <item>
             <key> <string>id</string> </key>

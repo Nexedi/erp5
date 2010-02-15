@@ -3,7 +3,7 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <global name="Folder" module="Products.ERP5Type.Document.Folder"/>
+        <global name="Gadget" module="Products.ERP5.Document.Gadget"/>
         <tuple/>
       </tuple>
     </pickle>

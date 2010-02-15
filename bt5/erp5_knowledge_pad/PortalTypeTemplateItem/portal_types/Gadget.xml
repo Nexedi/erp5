@@ -29,34 +29,14 @@
             </value>
         </item>
         <item>
-            <key> <string>acquire_local_roles</string> </key>
-            <value> <int>0</int> </value>
-        </item>
-        <item>
-            <key> <string>content_icon</string> </key>
-            <value> <string>document_icon.gif</string> </value>
-        </item>
-        <item>
-            <key> <string>content_meta_type</string> </key>
-            <value> <string>ERP5 Gadget</string> </value>
-        </item>
-        <item>
             <key> <string>description</string> </key>
-            <value> <string>ERP5 gadget</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>factory</string> </key>
-            <value> <string>addXMLObject</string> </value>
-        </item>
-        <item>
-            <key> <string>filter_content_types</string> </key>
-            <value> <int>1</int> </value>
-        </item>
-        <item>
-            <key> <string>group_list</string> </key>
-            <value>
-              <tuple/>
-            </value>
+            <value> <string>addGadget</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -75,8 +55,8 @@
             </value>
         </item>
         <item>
-            <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Base Type</string> </value>
         </item>
       </dictionary>
     </pickle>

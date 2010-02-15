@@ -35,7 +35,9 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>icon</string> </key>
@@ -52,6 +54,10 @@
                 <string>View</string>
               </tuple>
             </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Action Information</string> </value>
         </item>
         <item>
             <key> <string>priority</string> </key>
@@ -79,7 +85,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>python: \'%s/%s?is_gadget_mode=0\' %(object.absolute_url(), getattr(object, \'edit_form_id\'))</string> </value>
+            <value> <string>python: \'%s/%s?is_gadget_mode=0\' %(object.absolute_url(), object.getEditFormId())</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -95,7 +101,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>python: getattr(object, \'edit_form_id\', None) is not None</string> </value>
+            <value> <string>python: object.getEditFormId() is not None</string> </value>
         </item>
       </dictionary>
     </pickle>
