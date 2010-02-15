@@ -72,12 +72,14 @@ root_movement = movement.getRootSimulationMovement()\n
 \n
 # Test movement\n
 if (root_rule is None or\n
-    root_rule.getPortalType() != "Production Order Rule" or\n
+    root_rule.getPortalType() not in ("Production Order Rule", "Production Order Simulation Rule") or\n
     order is None or\n
     movement.getResourceValue() is None or\n
     movement.getSourceValue() is None or\n
-    movement.getResourceValue() != root_movement.getResourceValue() or\n
-    movement.getPath() == root_movement.getPath()):\n
+    movement.getResourceValue() != root_movement.getResourceValue()):\n
+  return False\n
+if root_rule.getPortalType() in ("Production Order Simulation Rule",) and\\\n
+    movement.getPath() == root_movement.getPath():\n
   return False\n
 \n
 supply_chain = rule.getSupplyChain(movement.getParentValue())\n
