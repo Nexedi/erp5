@@ -1,5 +1,5 @@
 software: bootstrap
-	bin/buildout -N -c official.cfg
+	bin/buildout -c official.cfg
 
 bootstrap: bootstrap/bootstrap.py
 	python bootstrap/bootstrap.py
