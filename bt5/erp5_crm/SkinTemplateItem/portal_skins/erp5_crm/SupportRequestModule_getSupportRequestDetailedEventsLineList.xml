@@ -82,7 +82,7 @@ if request_stop_date:\n
 if request_validation_state:\n
   query_dict[\'simulation_state\'] = request_validation_state\n
 if request_ticket_type:\n
-  query_dict[\'movement.resource_uid\'] =  [portal.restrictedTraverse(x).getUid() \n
+  query_dict[\'movement.resource_uid\'] =  [portal.portal_categories.restrictedTraverse(x).getUid() \n
                                  for x in request_ticket_type]\n
 section_uid = context.Base_getSectionUidListForSectionCategory(request.get(\'section_category\',None))\n
 \n
