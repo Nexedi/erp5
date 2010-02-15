@@ -1079,6 +1079,17 @@ class TestProductionOrderMixin(TestOrderMixin):
     applied_rule = applied_rule_list[0]
     self.assertEquals("Applied Rule", applied_rule.getPortalType())
     portal_rules = getToolByName(applied_rule, 'portal_rules')
+    self.assertEquals('default_delivering_rule', \
+                      applied_rule.getSpecialiseReference())
+    # Test next applied rule
+    simulation_movement_list = applied_rule.objectValues()
+    self.assertEquals(1, len(simulation_movement_list))
+    simulation_movement = simulation_movement_list[0]
+    applied_rule_list = simulation_movement.objectValues()
+    self.assertEquals(1, len(applied_rule_list))
+    applied_rule = applied_rule_list[0]
+    self.assertEquals("Applied Rule", applied_rule.getPortalType())
+    portal_rules = getToolByName(applied_rule, 'portal_rules')
     self.assertEquals('default_transformation_rule', \
                       applied_rule.getSpecialiseReference())
     # Test deeper simulation 
