@@ -590,7 +590,7 @@ class Rule(Predicate, XMLObject):
         property_dict['%s_list' % base_category] = []
 
     # Amount
-    property_dict['quantity'] = business_path.getExpectedQuantity()
+    property_dict['quantity'] = business_path.getExpectedQuantity(movement)
 
     # Date
     if movement.getStartDate() == movement.getStopDate():
