@@ -12,3 +12,4 @@ assert-software: assert-python2.4
 assert-python2.4: bin/python2.4
 	bin/python2.4 -c 'import zlib'
 	bin/python2.4 -c 'import dbm'
+	bin/python2.4 -c 'import _ssl'
