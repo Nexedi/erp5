@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2001 Zope Corporation and Contributors. All Rights Reserved.
@@ -636,6 +637,10 @@ def end_unicode(self, tag, data):
     return unicode(end_string(self, tag, data), 'utf-8')
 
 ppml.end_unicode = end_unicode
+
+end_list = ppml.end_list
+end_tuple = ppml.end_tuple
+end_dictionary = ppml.end_dictionary
 
 class xmlUnpickler(NoBlanks, xyap):
     start_handlers={'pickle': start_pickle}
