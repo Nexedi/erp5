@@ -1095,6 +1095,34 @@ class TestResource(ERP5TypeTestCase):
       new_resource.getDefaultSaleSupplyLineValue().getResourceValue()
     )
 
+  def test_sourceDestinationReferenceOnSupplyLineOnDefaultSupplyLine(self):
+    '''Check that it's possible to set and get a source/destination_reference
+    on default supply line
+    '''
+    resource = self.portal.getDefaultModule(self.product_portal_type)\
+                .newContent(portal_type=self.product_portal_type)
+
+    resource.edit(\
+        purchase_supply_line_source_reference='test_source_reference_on_purchase_supply_line',
+        purchase_supply_line_destination_reference='test_destination_reference_on_purchase_supply_line',
+        sale_supply_line_source_reference='test_source_reference_on_sale_supply_line',
+        sale_supply_line_destination_reference='test_destination_reference_on_sale_supply_line',
+        internal_supply_line_source_reference='test_source_reference_on_internal_supply_line',
+        internal_supply_line_destination_reference='test_destination_reference_on_internal_supply_line',
+    )
+    self.assertEquals(resource.getPurchaseSupplyLineSourceReference(),
+        'test_source_reference_on_purchase_supply_line')
+    self.assertEquals(resource.getPurchaseSupplyLineDestinationReference(),
+        'test_destination_reference_on_purchase_supply_line')
+    self.assertEquals(resource.getSaleSupplyLineSourceReference(),
+        'test_source_reference_on_sale_supply_line')
+    self.assertEquals(resource.getSaleSupplyLineDestinationReference(),
+        'test_destination_reference_on_sale_supply_line')
+    self.assertEquals(resource.getInternalSupplyLineSourceReference(),
+        'test_source_reference_on_internal_supply_line')
+    self.assertEquals(resource.getInternalSupplyLineDestinationReference(),
+        'test_destination_reference_on_internal_supply_line')
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestResource))
