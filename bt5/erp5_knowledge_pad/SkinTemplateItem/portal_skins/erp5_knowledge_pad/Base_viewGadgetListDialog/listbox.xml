@@ -235,7 +235,7 @@
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>
-                    <value> <string>gadget_tool_view_pretty_gadget_dialog</string> </value>
+                    <value> <string>gadget_tool_view_gadget_add_dialog</string> </value>
                 </item>
                 <item>
                     <key> <string>sort</string> </key>

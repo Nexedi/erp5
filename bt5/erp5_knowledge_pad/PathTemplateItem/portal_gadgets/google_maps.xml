@@ -199,6 +199,12 @@
             <value> <string>ERP5Site_viewGoogleMapsGadgetPreferenceDialog</string> </value>
         </item>
         <item>
+            <key> <string>gadget_type</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>google_maps</string> </value>
         </item>

@@ -1,0 +1,129 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="Image" module="Products.ERP5Type.Document.Image"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts66309976.59</string> </value>
+        </item>
+        <item>
+            <key> <string>_count</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_mt_index</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_tree</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>content_md5</string> </key>
+            <value> <string>666154beb60203861990e5cabbf4963b</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>image/png</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="base64">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</string> </value>
+        </item>
+        <item>
+            <key> <string>height</string> </key>
+            <value> <int>24</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>default_image</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Image</string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2212</int> </value>
+        </item>
+        <item>
+            <key> <string>width</string> </key>
+            <value> <int>285</int> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="Length" module="BTrees.Length"/>
+    </pickle>
+    <pickle> <int>0</int> </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <global name="OOBTree" module="BTrees._OOBTree"/>
+    </pickle>
+    <pickle>
+      <none/>
+    </pickle>
+  </record>
+  <record id="4" aka="AAAAAAAAAAQ=">
+    <pickle>
+      <global name="OOBTree" module="BTrees._OOBTree"/>
+    </pickle>
+    <pickle>
+      <none/>
+    </pickle>
+  </record>
+</ZopeData>
