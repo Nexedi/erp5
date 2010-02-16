@@ -19,3 +19,4 @@
    - ply (https://svn.erp5.org/repos/public/spec/mandriva/python2.4-ply/)
    - pyxml (https://svn.erp5.org/repos/public/spec/mandriva/python2.4-pyxml/)
    - threadframe (https://svn.erp5.org/repos/public/spec/mandriva/python2.4-threadframe/)
+   - socksipy (http://socksipy.sourceforge.net/)
