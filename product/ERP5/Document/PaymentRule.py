@@ -70,8 +70,7 @@ class PaymentRule(Rule):
         return []
       # Since we need to consider business_path only for bank movement,
       # not for payable movement, we pass None as business_path here.
-      kw = self._getExpandablePropertyDict(applied_rule, None,
-                                           business_path)
+      kw = self._getExpandablePropertyDict(applied_rule, input_movement, None)
       kw['start_date'] = business_path.getExpectedStartDate(input_movement)
       kw['stop_date'] = business_path.getExpectedStopDate(input_movement)
       quantity = business_path.getExpectedQuantity(input_movement)
