@@ -55,19 +55,26 @@
             <key> <string>_body</string> </key>
             <value> <string>movement = context\n
 \n
-if movement.getId() not in (\'receivable\',):\n
-  return False\n
-\n
 parent = movement.getParentValue()\n
 if parent.getPortalType() != \'Applied Rule\':\n
   return False\n
 \n
 parent_rule = parent.getSpecialiseValue()\n
-if parent_rule.getPortalType() not in [\'Invoice Transaction Rule\']:\n
+if parent_rule.getPortalType() not in (\'Invoice Transaction Rule\',):\n
   return False\n
 \n
-delivery_movement = movement.getDeliveryValue()\n
-return delivery_movement is None or delivery_movement.getPortalType() in movement.getPortalAccountingMovementTypeList()\n
+receivable_account_type_list = (\'asset/receivable\',)\n
+payable_account_type_list = (\'liability/payable\',)\n
+\n
+for account in (movement.getSourceValue(portal_type=\'Account\'),\n
+                movement.getDestinationValue(portal_type=\'Account\')):\n
+  if account is not None:\n
+    account_type = account.getAccountType()\n
+    if account_type in receivable_account_type_list or \\\n
+        account_type in payable_account_type_list:\n
+      return True\n
+\n
+return False\n
 </string> </value>
         </item>
         <item>
@@ -108,11 +115,16 @@ return delivery_movement is None or delivery_movement.getPortalType() in movemen
                             <string>context</string>
                             <string>movement</string>
                             <string>_getattr_</string>
-                            <string>False</string>
                             <string>parent</string>
+                            <string>False</string>
                             <string>parent_rule</string>
-                            <string>delivery_movement</string>
+                            <string>receivable_account_type_list</string>
+                            <string>payable_account_type_list</string>
+                            <string>_getiter_</string>
+                            <string>account</string>
                             <string>None</string>
+                            <string>account_type</string>
+                            <string>True</string>
                           </tuple>
                         </value>
                     </item>
