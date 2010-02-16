@@ -77,11 +77,11 @@ class PaymentRule(Rule):
 
       # one for payable
       payable_dict = kw.copy()
-      payable_dict.update(dict(quanity=-quantity))
+      payable_dict.update(dict(quantity=-quantity))
       prevision_dict_list.append(payable_dict)
       # one for bank
       bank_dict = kw.copy()
-      bank_dict.update(dict(quanity=quantity,
+      bank_dict.update(dict(quantity=quantity,
                             source=business_path.getSource(),
                             destination=business_path.getDestination()))
       prevision_dict_list.append(bank_dict)
