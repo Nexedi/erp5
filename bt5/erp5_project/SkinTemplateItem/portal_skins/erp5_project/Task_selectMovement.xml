@@ -53,10 +53,17 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>kw[\'parent_specialise_portal_type\'] = [\'Order Rule\', \'Delivery Rule\']\n
-kw[\'explanation_portal_type\'] = \'Task\'\n
-kw[\'portal_type\'] = \'Simulation Movement\'\n
-kw[\'simulation_state\'] = \'confirmed\'\n
+            <value> <string>from Products.ZSQLCatalog.SQLCatalog import Query, ComplexQuery\n
+\n
+kw[\'query\'] = ComplexQuery(\n
+  Query(portal_type=\'Simulation Movement\', explanation_portal_type=\'Task\'),\n
+  ComplexQuery(\n
+    Query(parent_specialise_portal_type=[\'Order Rule\', \'Delivery Rule\'],\n
+          simulation_state=\'confirmed\'),\n
+    Query(parent_specialise_portal_type=\'Delivering Simulation Rule\',\n
+          grand_parent_simulation_state=\'confirmed\'),\n
+    operator=\'or\'),\n
+  operator=\'and\')\n
 \n
 kw.update(context.portal_catalog.buildSQLQuery(**kw))\n
 \n
@@ -111,6 +118,9 @@ else:\n
                           <tuple>
                             <string>src__</string>
                             <string>kw</string>
+                            <string>Products.ZSQLCatalog.SQLCatalog</string>
+                            <string>Query</string>
+                            <string>ComplexQuery</string>
                             <string>_write_</string>
                             <string>_getattr_</string>
                             <string>_apply_</string>
@@ -139,6 +149,10 @@ else:\n
         <item>
             <key> <string>id</string> </key>
             <value> <string>Task_selectMovement</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
