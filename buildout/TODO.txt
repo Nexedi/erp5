@@ -21,6 +21,7 @@
    - threadframe (https://svn.erp5.org/repos/public/spec/mandriva/python2.4-threadframe/)
    - socksipy (http://socksipy.sourceforge.net/)
    - SOAPpy
+   - make bin/python2.4 using all available eggs
  - software-profiles/openoffice-bin.cfg:
    - autodetection of platform and arch
    - consider using own recipie
