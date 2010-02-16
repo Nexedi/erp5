@@ -13,7 +13,9 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
+                <string>first_item</string>
                 <string>items</string>
+                <string>required</string>
                 <string>title</string>
               </list>
             </value>
@@ -90,6 +92,10 @@
                     <value> <string>my_category</string> </value>
                 </item>
                 <item>
+                    <key> <string>first_item</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
                     <key> <string>form_id</string> </key>
                     <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
@@ -98,6 +104,10 @@
                     <value>
                       <list/>
                     </value>
+                </item>
+                <item>
+                    <key> <string>required</string> </key>
+                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
