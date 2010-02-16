@@ -7,4 +7,5 @@ downloads
 eggs
 fake-eggs
 parts
+tmp-storage
 var
