@@ -54,9 +54,9 @@
                     visibility_css_dict python: {\'visible\': \'block\',\n
                                                  \'invisible\': \'none\'};\n
                     isAnon python: here.portal_membership.isAnonymousUser();\n
-                    edit_form_id python: getattr(gadget, \'edit_form_id\', None);\n
-                    view_form_id python: getattr(gadget, \'view_form_id\', None);\n
-                    render_type python: getattr(gadget, \'render_type\', None);\n
+                    edit_form_id gadget/getEditFormId;\n
+                    view_form_id gadget/getViewFormId;\n
+                    render_type gadget/getRenderType;\n
                     is_asynchronous_gadget python: render_type == \'asynchronous\';\n
                     current_web_section python: context.REQUEST.get(\'current_web_section\',\n
                                                                     here);\n

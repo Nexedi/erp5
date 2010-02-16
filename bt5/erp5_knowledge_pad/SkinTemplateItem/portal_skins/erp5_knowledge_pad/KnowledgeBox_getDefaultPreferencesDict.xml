@@ -58,7 +58,7 @@ preferences = {}\n
 \n
 # get default properties from Gadget only if edit form is available\n
 gadget = box.getSpecialiseValue()\n
-edit_form_id = getattr(gadget, \'edit_form_id\', None)\n
+edit_form_id = gadget.getEditFormId()\n
 \n
 if edit_form_id is not None:\n
   edit_form = getattr(context, edit_form_id, None)\n
@@ -114,9 +114,9 @@ return preferences\n
                             <string>preferences</string>
                             <string>_getattr_</string>
                             <string>gadget</string>
-                            <string>getattr</string>
-                            <string>None</string>
                             <string>edit_form_id</string>
+                            <string>None</string>
+                            <string>getattr</string>
                             <string>edit_form</string>
                             <string>filter</string>
                             <string>fields</string>
