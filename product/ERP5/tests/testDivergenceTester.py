@@ -38,7 +38,7 @@ class TestDivergenceTester(TestPackingListMixin, ERP5TypeTestCase):
   """
   run_all_test = 1
   quiet = 0
-  rule_id = 'default_order_rule'
+  rule_id = 'default_delivering_rule'
 
   def getTitle(self):
     return "Divergence Tester"
