@@ -48,22 +48,24 @@ class TaxRule(DeliveryRule):
     """ """ 
     immutable_movement_list = []
 
-    parent_simulation_movement = applied_rule.getParentValue()
-    order_movement = parent_simulation_movement.getDefaultOrderValue()
+    root_simulation_movement = applied_rule.getRootSimulationMovement()
+    order_movement = root_simulation_movement.getDefaultOrderValue()
+    if order_movement is None:
+      order_movement = root_simulation_movement.getDefaultDeliveryValue()
     
     order_movement_dict = {}
     for s_m in applied_rule.objectValues():
-      order_movement_dict.setdefault(s_m.getOrder(), []).append(s_m)
+      order_movement_dict.setdefault(s_m.getOrder() or s_m.getDelivery(), []).append(s_m)
 
     order_movement_total_price = order_movement.getTotalPrice()
-    parent_simulation_movement_total_price = \
-                    parent_simulation_movement.getTotalPrice()
+    root_simulation_movement_total_price = \
+                    root_simulation_movement.getTotalPrice()
 
     # XXX round 
     if order_movement_total_price != 0 and \
-        parent_simulation_movement_total_price != 0:
+        root_simulation_movement_total_price != 0:
                       
-      ratio = parent_simulation_movement_total_price / \
+      ratio = root_simulation_movement_total_price / \
                            order_movement_total_price
       for tax_movement in order_movement\
                         .DeliveryMovement_getCorrespondingTaxLineList():
