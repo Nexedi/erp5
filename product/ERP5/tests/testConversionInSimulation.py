@@ -295,8 +295,9 @@ class TestConversionInSimulation(AccountingTestCase,ERP5TypeTestCase):
     
     related_applied_rule = order.getCausalityRelatedValue(
                              portal_type='Applied Rule')
-    delivery_movement = related_applied_rule.contentValues()[0]
-    
+    order_movement = related_applied_rule.contentValues()[0]
+    delivery_applied_rule = order_movement.contentValues()[0]
+    delivery_movement = delivery_applied_rule.contentValues()[0]
     invoice_applied_rule = delivery_movement.contentValues()[0]
     invoice_movement = invoice_applied_rule.contentValues()[0]
     invoice_transaction_applied_rule = invoice_movement.contentValues()[0]
@@ -387,8 +388,9 @@ class TestConversionInSimulation(AccountingTestCase,ERP5TypeTestCase):
     
     related_applied_rule = order.getCausalityRelatedValue(
                              portal_type='Applied Rule')
-    delivery_movement = related_applied_rule.contentValues()[0]
-    
+    order_movement = related_applied_rule.contentValues()[0]
+    delivery_applied_rule = order_movement.contentValues()[0]
+    delivery_movement = delivery_applied_rule.contentValues()[0]
     invoice_applied_rule = delivery_movement.contentValues()[0]
     invoice_movement = invoice_applied_rule.contentValues()[0]
     invoice_transaction_applied_rule = invoice_movement.contentValues()[0]
@@ -477,7 +479,9 @@ class TestConversionInSimulation(AccountingTestCase,ERP5TypeTestCase):
     self.tic()
     related_applied_rule = order.getCausalityRelatedValue(
                              portal_type='Applied Rule')
-    delivery_movement = related_applied_rule.contentValues()[0]
+    order_movement = related_applied_rule.contentValues()[0]
+    delivery_applied_rule = order_movement.contentValues()[0]
+    delivery_movement = delivery_applied_rule.contentValues()[0]
     related_invoice = related_packing_list.getCausalityRelatedValue(
                             portal_type='Sale Invoice Transaction')
     self.assertNotEquals(related_invoice, None)
@@ -582,7 +586,9 @@ class TestConversionInSimulation(AccountingTestCase,ERP5TypeTestCase):
 
     related_applied_rule = order.getCausalityRelatedValue(
                             portal_type='Applied Rule')		
-    delivery_movement = related_applied_rule.contentValues()[0]  
+    order_movement = related_applied_rule.contentValues()[0]
+    delivery_applied_rule = order_movement.contentValues()[0]
+    delivery_movement = delivery_applied_rule.contentValues()[0]
     invoice_applied_rule = delivery_movement.contentValues()[0]
     invoice_movement = invoice_applied_rule.contentValues()[0]
     invoice_transaction_applied_rule = invoice_movement.contentValues()[0]
@@ -683,7 +689,9 @@ class TestConversionInSimulation(AccountingTestCase,ERP5TypeTestCase):
 
     related_applied_rule = order.getCausalityRelatedValue(
                              portal_type='Applied Rule')
-    delivery_movement = related_applied_rule.contentValues()[0]  
+    order_movement = related_applied_rule.contentValues()[0]
+    delivery_applied_rule = order_movement.contentValues()[0]
+    delivery_movement = delivery_applied_rule.contentValues()[0]
     invoice_applied_rule = delivery_movement.contentValues()[0]
     invoice_movement = invoice_applied_rule.contentValues()[0]
     invoice_transaction_applied_rule = invoice_movement.contentValues()[0]
@@ -839,6 +847,7 @@ class TestConversionInSimulation(AccountingTestCase,ERP5TypeTestCase):
                                 portal_type='Sale Packing List')
     self.assertNotEquals(related_packing_list, None)
     movement_list = related_packing_list.getMovementList()
+    movement_list.sort(key=lambda x:x.getCausalityId())
     self.assertEquals(len(movement_list),2)
     self.assertEquals(movement_list[0].getQuantityUnit(),
                          first_order_line.getQuantityUnit())
