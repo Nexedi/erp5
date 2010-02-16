@@ -25,3 +25,4 @@
  - software-profiles/openoffice-bin.cfg:
    - autodetection of platform and arch
    - consider using own recipie
+ - add bin and var/bin to path
