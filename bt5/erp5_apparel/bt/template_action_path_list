@@ -9,7 +9,7 @@ Apparel Assortment Module | sort_on
 Apparel Assortment Module | view
 Apparel Assortment Module | workflow_report
 Apparel Assortment | view
-Apparel Assortment | view_related_apparel_transformation
+Apparel Assortment | view_related_transformation
 Apparel Bath Module | csv_export
 Apparel Bath Module | import_csv
 Apparel Bath Module | list_ui
@@ -117,7 +117,7 @@ Apparel Model | copy_composition
 Apparel Model | development
 Apparel Model | inventory_view
 Apparel Model | jump_to_related_apparel_model
-Apparel Model | jump_to_related_apparel_transformation
+Apparel Model | jump_to_related_transformation
 Apparel Model | morphology_variation
 Apparel Model | purchase_price_view
 Apparel Model | sale_price_view
