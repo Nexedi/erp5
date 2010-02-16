@@ -12,6 +12,8 @@
 #
 ##############################################################################
 
+import string
+
 # Import everything right now, not after
 # or new patch will not work
 from Shared.DC.xml.ppml import *
