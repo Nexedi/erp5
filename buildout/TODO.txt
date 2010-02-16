@@ -7,9 +7,5 @@
    - needs per profile dependency declaration
  - implement declared parts (*/buildout.cfg empty)
  - merge from:
-  - https://svn.erp5.org/repos/public/experimental/erp5.buildout
   - https://svn.erp5.org/repos/public/experimental/erp5.buildout-zope-2.12/
-  - https://svn.erp5.org/repos/public/experimental/mysqlsenna.buildout/
  - use more of buildout automatic dependency resolution
- - finalise openoffice-bin
- - do oood software and instance buildout
