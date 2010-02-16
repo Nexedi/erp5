@@ -43,10 +43,11 @@ class RequirementMovementGroup(MovementGroup):
     return True, property_dict
 
   def _getRequirementList(self, movement):
+    root_movement = movement.getRootSimulationMovement()
     # 'order' category is deprecated. it is kept for compatibility.
-    order_value = movement.getOrderValue()
+    order_value = root_movement.getOrderValue()
     if order_value is None:
-      order_value = movement.getDeliveryValue()
+      order_value = root_movement.getDeliveryValue()
     requirement_list = []
     if order_value is not None:
       if 'Line' in order_value.getPortalType():
