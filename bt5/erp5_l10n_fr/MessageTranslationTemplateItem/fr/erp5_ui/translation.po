@@ -5269,6 +5269,9 @@ msgstr "Règle de facturation"
 msgid "Item"
 msgstr "Objet"
 
+msgid "Item Type List"
+msgstr "Types d'objets"
+
 msgid "Items copied."
 msgstr "Objets copiés"
 
