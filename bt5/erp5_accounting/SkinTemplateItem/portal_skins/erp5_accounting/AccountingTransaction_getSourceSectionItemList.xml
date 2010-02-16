@@ -60,9 +60,6 @@ if current_source_section is not None and\\\n
   section_item_list.append((context.getSourceSectionTitle(), context.getSourceSection()))\n
 \n
 return section_item_list\n
-\n
-# convert to ListField format\n
-return [(\'\', \'\')] + sorted([(i.getTitle(), i.getRelativeUrl()) for i in result], key=lambda x:x[0])\n
 </string> </value>
         </item>
         <item>
@@ -107,12 +104,6 @@ return [(\'\', \'\')] + sorted([(i.getTitle(), i.getRelativeUrl()) for i in resu
                             <string>_getitem_</string>
                             <string>_apply_</string>
                             <string>zip</string>
-                            <string>sorted</string>
-                            <string>append</string>
-                            <string>$append0</string>
-                            <string>_getiter_</string>
-                            <string>result</string>
-                            <string>i</string>
                           </tuple>
                         </value>
                     </item>
