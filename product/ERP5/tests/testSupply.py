@@ -210,6 +210,18 @@ class TestSaleSupply(TestSupplyMixin, ERP5TypeTestCase):
                                       portal_type=self.supply_line_portal_type)
     self.assertSameSet([supply_line], supply_line_list)
 
+  def test_sourceDestinationReferenceOnSupplyLine(self):
+    """
+      Check that it's possible to set and get a source/destination_reference on
+      supply_line
+    """
+    supply = self._makeSupply(start_date_range_min=DateTime())
+    supply_line = self._makeSupplyLine(supply)
+    supply_line.setSourceReference('my_source_reference')
+    self.assertEquals(supply_line.getSourceReference(), 'my_source_reference')
+    supply_line.setDestinationReference('my_destination_reference')
+    self.assertEquals(supply_line.getSourceReference(), 'my_destination_reference')
+
 class TestPurchaseSupply(TestSaleSupply):
   """
     Test Purchase Supplies usage
