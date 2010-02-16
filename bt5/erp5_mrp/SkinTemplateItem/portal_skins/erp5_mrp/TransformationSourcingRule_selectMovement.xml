@@ -71,7 +71,7 @@
 # XXX need to implement this part in the catalog\n
 # portal type causality of root applied rule\n
 search_kw = {\n
-  \'explanation_portal_type\': \'Production Order\',\n
+  \'explanation_portal_type\': (\'Production Order\', \'Production Simulation Order\'),\n
   \'portal_type\': \'Simulation Movement\',\n
 }\n
 if explanation_uid is not None:\n
