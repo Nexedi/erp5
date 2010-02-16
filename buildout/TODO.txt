@@ -20,3 +20,6 @@
    - pyxml (https://svn.erp5.org/repos/public/spec/mandriva/python2.4-pyxml/)
    - threadframe (https://svn.erp5.org/repos/public/spec/mandriva/python2.4-threadframe/)
    - socksipy (http://socksipy.sourceforge.net/)
+ - software-profiles/openoffice-bin.cfg:
+   - autodetection of platform and arch
+   - consider using own recipie
