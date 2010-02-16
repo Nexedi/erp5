@@ -56,13 +56,11 @@ class CausalityAssignmentMovementGroup(MovementGroup):
   def _addCausalityToEdit(self, movement, property_dict=None):
     if property_dict is None:
       property_dict = {}
-    parent = movement
-    # Go upper into the simulation tree in order to find an order link
-    while not parent.isRootAppliedRule():
-      parent = parent.getParentValue()
     causality_list = property_dict.get('causality_list', [])
+    root_movement = movement.getRootSimulationMovement()
     # 'order' category is deprecated. it is kept for compatibility.
-    movement_list = parent.getOrderList() or parent.getDeliveryList()
+    movement_list = root_movement.getOrderList() or \
+                    root_movement.getDeliveryList()
     for delivery_movement in movement_list:
       if delivery_movement not in causality_list:
         causality_list.append(delivery_movement)
