@@ -33,7 +33,9 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>icon</string> </key>
@@ -41,7 +43,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>jump_to_related_apparel_transformation</string> </value>
+            <value> <string>jump_to_related_transformation</string> </value>
         </item>
         <item>
             <key> <string>permissions</string> </key>
@@ -57,7 +59,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Related Apparel Transformation</string> </value>
+            <value> <string>Related Transformation</string> </value>
         </item>
         <item>
             <key> <string>visible</string> </key>
@@ -79,7 +81,7 @@
             <key> <string>text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-string:${object_url}/Base_jumpToRelatedObject?base_category=specialise&portal_type=Apparel+Transformation
+string:${object_url}/Base_jumpToRelatedObject?base_category=specialise&portal_type=Transformation
 
 ]]></string> </value>
         </item>
