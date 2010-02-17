@@ -117,7 +117,7 @@ return [x.getObject() for x in context.portal_catalog(portal_type=portal_type,si
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>DeliverBuilder_selectConfirmedDeliveryList</string> </value>
+            <value> <string>DeliveryBuilder_selectConfirmedDeliveryList</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
