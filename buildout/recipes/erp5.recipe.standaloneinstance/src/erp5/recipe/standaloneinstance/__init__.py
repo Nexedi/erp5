@@ -60,5 +60,9 @@ class Recipe(erp5.recipe.zope2instance.Recipe, erp5.recipe.createsite.Recipe):
     # preparation for further fixing (chroot everything inside instance, etc)
     erp5.recipe.zope2instance.Recipe.build_zope_conf(self)
 
+  def _clean_up(self, location):
+    # in new way nothing is deleted
+    return
+
   def update(self):
     return erp5.recipe.zope2instance.Recipe.update(self)
