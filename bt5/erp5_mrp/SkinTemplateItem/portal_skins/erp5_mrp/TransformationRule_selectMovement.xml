@@ -60,7 +60,8 @@
   parent_applied_rule = movement.getParentValue()\n
   parent_rule = parent_applied_rule.getSpecialiseValue()\n
   return (\n
-    root_rule.getPortalType() == "Production Order Rule" and\\\n
+    root_rule.getPortalType() in ("Production Order Rule",\n
+                                  "Production Order Simulation Rule") and\\\n
     parent_rule.getPortalType() == "Transformation Rule" and\\\n
     root_movement.getSimulationState() == "confirmed"\n
   )\n
