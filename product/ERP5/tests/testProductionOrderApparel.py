@@ -337,7 +337,7 @@ class TestProductionOrderApparelMixin(TestOrderMixin):
         LOG('Raise Assertion error',0,'')
         LOG('object.getQuantity()',0,object.getQuantity())
         LOG('object.__dict__',0,object.__dict__)
-        LOG('object.getOrderValue().getQuantity()',0,object.getOrderValue().getQuantity())
+        LOG('object.getDeliveryValue().getQuantity()',0,object.getDeliveryValue().getQuantity())
         raise AssertionError, "Attribute: %s, Value: %s, Result: %s" %\
                     (attribute, value, getattr(object, attribute)())
 
@@ -352,7 +352,7 @@ class TestProductionOrderApparelMixin(TestOrderMixin):
     simulation_movement_list = sequence.get('simulation_movement_list')
     self.assertEquals(1, len(simulation_movement_list))
     order_line = sequence.get('order_line')
-    related_simulation_movement_list = order_line.getOrderRelatedValueList()
+    related_simulation_movement_list = order_line.getDeliveryRelatedValueList()
     self.assertEquals(1, len(related_simulation_movement_list))
     related_simulation_movement = related_simulation_movement_list[0]
     self.assertEquals(related_simulation_movement,
@@ -372,6 +372,17 @@ class TestProductionOrderApparelMixin(TestOrderMixin):
              (production_organisation1, 'getSourceSectionValue')))
     # Test next applied rule
     applied_rule_list = related_simulation_movement.objectValues()
+    self.assertEquals(1, len(applied_rule_list))
+    applied_rule = applied_rule_list[0]
+    self.assertEquals("Applied Rule", applied_rule.getPortalType())
+    portal_rules = getToolByName(applied_rule, 'portal_rules')
+    self.assertEquals('default_delivering_rule', \
+                      applied_rule.getSpecialiseReference())
+    # Test next applied rule
+    simulation_movement_list = applied_rule.objectValues()
+    self.assertEquals(1, len(simulation_movement_list))
+    simulation_movement = simulation_movement_list[0]
+    applied_rule_list = simulation_movement.objectValues()
     self.assertEquals(1, len(applied_rule_list))
     applied_rule = applied_rule_list[0]
     self.assertEquals("Applied Rule", applied_rule.getPortalType())
@@ -462,7 +473,7 @@ class TestProductionOrderApparelMixin(TestOrderMixin):
     simulation_movement_list = sequence.get('simulation_movement_list')
     self.assertEquals(1, len(simulation_movement_list))
     order_line = sequence.get('order_line')
-    related_simulation_movement_list = order_line.getOrderRelatedValueList()
+    related_simulation_movement_list = order_line.getDeliveryRelatedValueList()
     self.assertEquals(1, len(related_simulation_movement_list))
     related_simulation_movement = related_simulation_movement_list[0]
     self.assertEquals(related_simulation_movement,
@@ -481,7 +492,7 @@ class TestProductionOrderApparelMixin(TestOrderMixin):
              (production_organisation1, 'getSourceValue'),
              (production_organisation1, 'getSourceSectionValue')))
     # Test next applied rule
-    applied_rule_list = related_simulation_movement.objectValues()
+    applied_rule_list = related_simulation_movement.objectValues()[0].objectValues()[0].objectValues()
     self.assertEquals(1, len(applied_rule_list))
     applied_rule = applied_rule_list[0]
     self.assertEquals("Applied Rule", applied_rule.getPortalType())
@@ -570,7 +581,7 @@ class TestProductionOrderApparelMixin(TestOrderMixin):
       operation_movement = operation_movement,
       component_movement = component_movement,
       supply_movement = supply_movement,
-      produced_delivery_movement = related_simulation_movement,
+      produced_delivery_movement = related_simulation_movement.objectValues()[0].objectValues()[0],
     )
 
   def stepCreateProductionOrganisation2(self, sequence=None, 
@@ -660,7 +671,7 @@ class TestProductionOrderApparelMixin(TestOrderMixin):
     simulation_movement_list = sequence.get('simulation_movement_list')
     self.assertEquals(1, len(simulation_movement_list))
     order_line = sequence.get('order_line')
-    related_simulation_movement_list = order_line.getOrderRelatedValueList()
+    related_simulation_movement_list = order_line.getDeliveryRelatedValueList()
     self.assertEquals(1, len(related_simulation_movement_list))
     related_simulation_movement = related_simulation_movement_list[0]
     self.assertEquals(related_simulation_movement,
@@ -680,6 +691,17 @@ class TestProductionOrderApparelMixin(TestOrderMixin):
              (production_organisation1, 'getSourceSectionValue')))
     # Test next applied rule
     applied_rule_list = related_simulation_movement.objectValues()
+    self.assertEquals(1, len(applied_rule_list))
+    applied_rule = applied_rule_list[0]
+    self.assertEquals("Applied Rule", applied_rule.getPortalType())
+    portal_rules = getToolByName(applied_rule, 'portal_rules')
+    self.assertEquals('default_delivering_rule', \
+                      applied_rule.getSpecialiseReference())
+    # Test next applied rule
+    simulation_movement_list = applied_rule.objectValues()
+    self.assertEquals(1, len(simulation_movement_list))
+    simulation_movement = simulation_movement_list[0]
+    applied_rule_list = simulation_movement.objectValues()
     self.assertEquals(1, len(applied_rule_list))
     applied_rule = applied_rule_list[0]
     self.assertEquals("Applied Rule", applied_rule.getPortalType())
