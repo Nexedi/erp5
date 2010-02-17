@@ -60,18 +60,19 @@ from string import zfill\n
 \n
 for k in kw.keys():\n
   v = kw[k]\n
-  if k == \'listbox\':\n
+  if k.endswith(\'listbox\'):\n
     listbox = {}\n
+    listbox_key = "%s_key" % k\n
     if v is not None:\n
       i = 1\n
       for line in v:\n
-        if line.has_key(\'listbox_key\'):\n
-          key = \'%s\' % line[\'listbox_key\']\n
+        if line.has_key(listbox_key):\n
+          key = \'%s\' % line[listbox_key]\n
         else:\n
           key = str(zfill(i,3))\n
         listbox[key] = line\n
         i+=1\n
-      request.set(\'listbox\',listbox)\n
+      request.set(k,listbox)\n
   else:\n
     request.set(\'my_%s\' % k, v)\n
     request.set(\'%s\' % k, v)\n
@@ -122,6 +123,7 @@ for k in kw.keys():\n
                             <string>_getitem_</string>
                             <string>v</string>
                             <string>listbox</string>
+                            <string>listbox_key</string>
                             <string>None</string>
                             <string>i</string>
                             <string>line</string>
