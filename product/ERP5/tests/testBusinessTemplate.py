@@ -35,6 +35,7 @@ from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from AccessControl.SecurityManagement import newSecurityManager
 from Acquisition import aq_base
+from OFS.SimpleItem import SimpleItem
 from zLOG import LOG
 from App.config import getConfiguration
 from Products.ERP5Type.tests.Sequence import SequenceList
@@ -5904,6 +5905,36 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)
+
+  def test_167_InstanceAndRelatedClassDefinedInSameBT(self):
+    from Products.ERP5Type.Document.BusinessTemplate import BaseTemplateItem
+    BaseTemplateItem_removeProperties = BaseTemplateItem.removeProperties
+    object_id_list = []
+    def removeProperties(self, obj):
+      # Check it works if the object is modified during download.
+      object_id_list.append(obj.id)
+      obj.title = 'foo'
+      return obj
+    SimpleItem_getCopy = SimpleItem._getCopy
+    try:
+      BaseTemplateItem.removeProperties = removeProperties
+      SimpleItem._getCopy = lambda *args: self.fail()
+      template_tool = self.portal.portal_templates
+      bt_path = os.path.join(os.path.dirname(__file__), 'test_data',
+                             self._testMethodName)
+      for i in xrange(6):
+        bt = template_tool.download(bt_path)
+        assert object_id_list.pop() == 'some_file' and not object_id_list
+        if i in (2, 4, 5):
+          transaction.commit()
+          self.tic()
+        bt.install(force=1)
+        assert not object_id_list
+        transaction.commit()
+        self.tic()
+    finally:
+      BaseTemplateItem.removeProperties = BaseTemplateItem_removeProperties
+      SimpleItem._getCopy = SimpleItem_getCopy
 
 
 def test_suite():
