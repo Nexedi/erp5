@@ -13,12 +13,13 @@
 #
 ##############################################################################
 
-import os
+import os, sys
+from string import Template
 import zc.buildout
-import erp5.recipe.zope2instance
+import plone.recipe.zope2instance
 import erp5.recipe.createsite
 
-class Recipe(erp5.recipe.zope2instance.Recipe, erp5.recipe.createsite.Recipe):
+class Recipe(plone.recipe.zope2instance.Recipe, erp5.recipe.createsite.Recipe):
   def __init__(self, buildout, name, options):
     standalone_location = options.get('location')
     if not standalone_location:
@@ -48,8 +49,69 @@ class Recipe(erp5.recipe.zope2instance.Recipe, erp5.recipe.createsite.Recipe):
         assert relative_paths == 'false'
 
   def install(self):
-    # initalise zope instance
-    erp5.recipe.zope2instance.Recipe.install(self)
+    # Override erp5.recipe.zope2instance so as to create several
+    # directories used by ERP5.
+    options = self.options
+    location = options['location']
+
+    requirements, ws = self.egg.working_set()
+    ws_locations = [d.location for d in ws]
+
+    # What follows is a bit of a hack because the instance-setup mechanism
+    # is a bit monolithic. We'll run mkzopeinstance and then we'll
+    # patch the result. A better approach might be to provide independent
+    # instance-creation logic, but this raises lots of issues that
+    # need to be stored out first.
+    if not self.zope2_location:
+      mkzopeinstance = os.path.join(
+        options['bin-directory'], 'mkzopeinstance')
+      if not mkzopeinstance:
+        # EEE
+        return
+
+    else:
+      mkzopeinstance = os.path.join(
+        self.zope2_location, 'bin', 'mkzopeinstance.py')
+      if not os.path.exists(mkzopeinstance):
+        mkzopeinstance = os.path.join(
+          self.zope2_location, 'utilities', 'mkzopeinstance.py')
+      if sys.platform[:3].lower() == "win":
+        mkzopeinstance = '"%s"' % mkzopeinstance
+
+    if not mkzopeinstance:
+      # EEE
+      return
+
+    assert os.spawnl(
+      os.P_WAIT, os.path.normpath(options['executable']),
+      zc.buildout.easy_install._safe_arg(options['executable']),
+      mkzopeinstance, '-d',
+      zc.buildout.easy_install._safe_arg(location),
+      '-u', options['user'],
+      ) == 0
+
+    # patch begin: create several directories
+    for directory in ('Constraint', 'Document', 'PropertySheet', 'tests'):
+      path = os.path.join(location, directory)
+      if not os.path.exists(path):
+        os.mkdir(path)
+    # patch end: create several directories
+
+    # Save the working set:
+    open(os.path.join(location, 'etc', '.eggs'), 'w').write(
+      '\n'.join(ws_locations))
+
+    # Make a new zope.conf based on options in buildout.cfg
+    self.build_zope_conf()
+
+    # Patch extra paths into binaries
+    self.patch_binaries(ws_locations)
+
+    # Install extra scripts
+    self.install_scripts()
+
+    # Add zcml files to package-includes
+    self.build_package_includes()
 
     # initialise ERP5 part
     erp5.recipe.createsite.Recipe.install(self)
@@ -59,10 +121,6 @@ class Recipe(erp5.recipe.zope2instance.Recipe, erp5.recipe.createsite.Recipe):
   def build_zope_conf(self):
     # preparation for further fixing (chroot everything inside instance, etc)
     erp5.recipe.zope2instance.Recipe.build_zope_conf(self)
-
-  def _clean_up(self, location):
-    # in new way nothing is deleted
-    return
 
   def update(self):
     return erp5.recipe.zope2instance.Recipe.update(self)
