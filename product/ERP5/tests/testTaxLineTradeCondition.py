@@ -706,7 +706,7 @@ class TestTaxLineOrderSimulation(AccountingBuildTestCase):
         invoice_simulation_movement.getBaseContributionValueList())
 
     # now test the tax movement
-    applied_tax_rule_list = [ar for ar in level2_applied_rule_list if
+    applied_tax_rule_list = [ar for ar in level3_applied_rule_list if
              ar.getSpecialiseValue().getPortalType() == 'Tax Rule']
     self.assertEquals(1, len(applied_tax_rule_list))
     tax_simulation_movement_list = applied_tax_rule_list[0].contentValues()
@@ -721,7 +721,7 @@ class TestTaxLineOrderSimulation(AccountingBuildTestCase):
     
     # reexpand and check nothing changed
     root_applied_rule.expand()
-    applied_tax_rule_list = [ar for ar in level2_applied_rule_list if
+    applied_tax_rule_list = [ar for ar in level3_applied_rule_list if
              ar.getSpecialiseValue().getPortalType() == 'Tax Rule']
     self.assertEquals(1, len(applied_tax_rule_list))
     tax_simulation_movement_list = applied_tax_rule_list[0].contentValues()
