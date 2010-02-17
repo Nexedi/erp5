@@ -18,7 +18,16 @@
         <item>
             <key> <string>_identity_criterion</string> </key>
             <value>
-              <dictionary/>
+              <dictionary>
+                <item>
+                    <key> <string>portal_type</string> </key>
+                    <value>
+                      <list>
+                        <string>Simulation Movement</string>
+                      </list>
+                    </value>
+                </item>
+              </dictionary>
             </value>
         </item>
         <item>
@@ -37,6 +46,14 @@
             <key> <string>_tree</string> </key>
             <value>
               <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>criterion_property</string> </key>
+            <value>
+              <tuple>
+                <string>portal_type</string>
+              </tuple>
             </value>
         </item>
         <item>
