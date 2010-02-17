@@ -19,11 +19,15 @@ import zc.buildout
 import plone.recipe.zope2instance
 import erp5.recipe.createsite
 
+class WithMinusTemplate(Template):
+  idpattern = '[_a-z][-_a-z0-9]*'
+
 class Recipe(plone.recipe.zope2instance.Recipe, erp5.recipe.createsite.Recipe):
   def __init__(self, buildout, name, options):
-    standalone_location = options.get('location')
+    standalone_location = options.get('instancehome')
     if not standalone_location:
-      raise zc.buildout.UserError('Location have to be specified')
+      raise zc.buildout.UserError('instancehome have to be specified')
+    options['location'] = standalone_location
     options['control-script'] = options.get('control-script',
         os.path.join(standalone_location, 'bin', 'zopectl'))
     erp5.recipe.createsite.Recipe.__init__(self, buildout, name, options)
@@ -52,7 +56,7 @@ class Recipe(plone.recipe.zope2instance.Recipe, erp5.recipe.createsite.Recipe):
     # Override erp5.recipe.zope2instance so as to create several
     # directories used by ERP5.
     options = self.options
-    location = options['location']
+    location = options['instancehome']
 
     requirements, ws = self.egg.working_set()
     ws_locations = [d.location for d in ws]
@@ -113,14 +117,28 @@ class Recipe(plone.recipe.zope2instance.Recipe, erp5.recipe.createsite.Recipe):
     # Add zcml files to package-includes
     self.build_package_includes()
 
-    # initialise ERP5 part
-    erp5.recipe.createsite.Recipe.install(self)
+    if self.options.get('force-zodb-update','false').strip().lower() == 'true':
+      force_zodb_update = True
+    else:
+      force_zodb_update = False
+
+    if not os.path.exists(options['zodb-path'].strip()) or \
+        force_zodb_update:
+      # initialise ERP5 part only in case if ZODB not exist yet or it is forced
+      erp5.recipe.createsite.Recipe.install(self)
     # we return nothing, as this is totally standalone installation
     return []
 
   def build_zope_conf(self):
-    # preparation for further fixing (chroot everything inside instance, etc)
-    erp5.recipe.zope2instance.Recipe.build_zope_conf(self)
+    options = self.options
+    location = options['instancehome']
+    template_input_data = ''.join(
+        file(self.options.get('zope_conf_template').strip()).readlines()
+    )
+    template = WithMinusTemplate(template_input_data)
+    result = template.substitute(self.options.copy())
+    zope_conf_path = os.path.join(location, 'etc', 'zope.conf')
+    file(zope_conf_path, 'w').write(result)
 
   def update(self):
-    return erp5.recipe.zope2instance.Recipe.update(self)
+    return plone.recipe.zope2instance.Recipe.update(self)
