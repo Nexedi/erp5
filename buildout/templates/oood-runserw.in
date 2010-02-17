@@ -1,2 +1,2 @@
 #!/bin/sh
-cd ${buildout:etc-directory} && ${configuration:openoffice_python} ${oood:location}/runserw.py $@
+cd ${buildout:etc-directory} && ${configuration:openoffice_python} ${software_definition:oood_software}/runserw.py $@
