@@ -15,3 +15,6 @@ assert-python2.4: bin/python2.4
 	bin/python2.4 -c 'import dbm'
 	bin/python2.4 -c 'import xml.parsers.expat'
 	bin/python2.4 -c 'import zlib'
+
+create-mandriva2010-rpm: bin/buildout
+	bin/buildout -c profiles/mandriva2010.0.cfg buildout:directory=`pwd` install create-rpm
