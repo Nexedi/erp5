@@ -22,7 +22,6 @@ class Recipe(collective.recipe.template.Recipe):
     dependencies = ["BuildRequires: %s" % pkg for pkg in package_list if pkg]
 
     version = options['version'].strip()
-    print '"%s"' % version
     if os.path.exists(version):
       version = open(version, 'r').read().strip()
 
