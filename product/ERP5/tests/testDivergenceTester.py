@@ -38,7 +38,7 @@ class TestDivergenceTester(TestPackingListMixin, ERP5TypeTestCase):
   """
   run_all_test = 1
   quiet = 0
-  rule_id = 'default_delivering_rule'
+  rule_id = 'default_delivering_simulation_rule'
 
   def getTitle(self):
     return "Divergence Tester"
@@ -83,17 +83,13 @@ class TestDivergenceTester(TestPackingListMixin, ERP5TypeTestCase):
     sequence_list.play(self, quiet=self.quiet)
     self.logMessage("Bootstrap finished")
 
-  def afterSetUp(self, quiet=1, run=run_all_test):
+  def setUpOnce(self, quiet=1, run=run_all_test):
     """
     Create an order and generate a packing list from it.
     This has to be called only once.
     """
-    if getattr(self.portal, 'set_up_once_called', 0):
-      return
-    else:
-      self.portal.set_up_once_called = 1
-      self.validateRules()
-      self.bootstrapSite()
+    self.validateRules()
+    self.bootstrapSite()
 
   def stepGetPackingList(self, sequence=None, sequence_list=None, **kw):
     """
