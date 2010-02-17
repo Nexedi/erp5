@@ -585,8 +585,9 @@ class TestProductionOrderMixin(TestOrderMixin):
       want_consume_quantity = self.colour_size_quantity_dict[colour][size]
       want_consume_for_production = want_produced_quantity * want_consume_quantity
       
-      produced_movement = order_movement.getDeliveryRelatedValue(\
+      order_simulation_movement = order_movement.getDeliveryRelatedValue(\
           portal_type='Simulation Movement')
+      produced_movement = order_simulation_movement.contentValues()[0].contentValues()[0]
 
       self.assertEquals(
         want_produced_quantity,
@@ -628,14 +629,17 @@ class TestProductionOrderMixin(TestOrderMixin):
 
     applied_rule = order.getCausalityRelatedValue(portal_type = self.applied_rule_portal_type)
 
-    production_movement_list = applied_rule.contentValues()
+    order_simulation_movement_list = applied_rule.contentValues()
 
     # XXX: hardcode
     self.assertEquals(
         1,
-        len(production_movement_list)
+        len(order_simulation_movement_list)
     )
 
+    order_simulation_movement = order_simulation_movement_list[0]
+    production_applied_rule = order_simulation_movement.contentValues()[0]
+    production_movement_list = production_applied_rule.contentValues()
     production_movement = production_movement_list[0]
 
     transformation_applied_rule = production_movement.contentValues()[0]
