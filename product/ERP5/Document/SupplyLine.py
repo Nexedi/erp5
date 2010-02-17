@@ -63,6 +63,7 @@ class SupplyLine(Path, XMLMatrix):
                       , PropertySheet.FlowCapacity
                       , PropertySheet.Predicate
                       , PropertySheet.Comment
+                      , PropertySheet.Reference
                       )
 
     #############################################
