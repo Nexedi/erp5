@@ -220,7 +220,7 @@ class TestSaleSupply(TestSupplyMixin, ERP5TypeTestCase):
     supply_line.setSourceReference('my_source_reference')
     self.assertEquals(supply_line.getSourceReference(), 'my_source_reference')
     supply_line.setDestinationReference('my_destination_reference')
-    self.assertEquals(supply_line.getSourceReference(), 'my_destination_reference')
+    self.assertEquals(supply_line.getDestinationReference(), 'my_destination_reference')
 
 class TestPurchaseSupply(TestSaleSupply):
   """
