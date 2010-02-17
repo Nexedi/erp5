@@ -448,7 +448,7 @@ class TestTaskMixin:
 
     for task_report_line in task_report.contentValues(portal_type='Task Report Line'):
       simulation_movement = task_report_line.getDeliveryRelatedValue()
-      task_line = simulation_movement.getOrderValue()
+      task_line = simulation_movement.getDeliveryValue()
       self.assert_(task_line.getDescription())
       self.assertEqual(task_line.getDescription(),
                        task_report_line.getDescription())
