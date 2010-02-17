@@ -9,14 +9,14 @@
 # Description:
 #     The path to the data files, local product files, import directory,
 #     and Extensions directory used by Zope.
-instancehome ${instance_home}
+instancehome ${instancehome}
 #
 # Directive: clienthome
 #
 # Description:
 #     The directory in which a running Zope's process identifier files are
 #     placed.
-clienthome ${client_home}
+clienthome ${clienthome}
 
 # Directive: path
 #
@@ -436,7 +436,9 @@ suppress-all-site-roots ${suppress-all-site-roots}
 #     limit on the size which the default FileStorage-backed Zope database
 #     can grow. Additions to the database will not be permitted once this
 #     filesize is exceeded.
-database-quota-size ${database-quota-size}
+# In profile use:
+#   database-quota-size value
+${database-quota-size}
 
 # Directive: read-only-database
 #
@@ -494,7 +496,7 @@ read-only-database ${read-only-database}
 # <logger trace>
 #   level WARN
 #   <logfile>
-#     path $INSTANCE/log/trace.log
+#     path INSTANCE/log/trace.log
 #     format %(message)s
 #   </logfile>
 # </logger>
@@ -564,7 +566,9 @@ port-base ${port-base}
 # Description:
 #     Requests bigger than this size get saved into a temporary file
 #     instead of being read completely into memory.
-large-file-threshold ${large-file-threshold}
+# In profile use:
+#   large-file-threshold value
+${large-file-threshold}
 
 # Directive: default-zpublisher-encoding
 #
@@ -597,8 +601,8 @@ default-zpublisher-encoding ${default-zpublisher-encoding}
 
 <http-server>
   # valid keys are "address" and "force-connection-close"
-  address ${http-server-address}
-  force-connection-close ${http-server-force-connection-close}
+  address ${http-address}
+  force-connection-close ${http-force-connection-close}
 </http-server>
 
 # Examples:
