@@ -31,7 +31,7 @@
 
 [System]
 # Folder where all oood core files are installed
-oood_home             = ${configuration:oood_home}
+oood_home             = ${software_definition:oood_software}
 # Folder where pid files, lock files and virtual frame buffer mappings are stored
 run_dir               = ${configuration:oood_run}
 tmp_dir               = ${configuration:oood_tmp}
