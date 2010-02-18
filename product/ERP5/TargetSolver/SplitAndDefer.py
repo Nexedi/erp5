@@ -29,9 +29,6 @@
 
 from CopyToTarget import CopyToTarget
 from Acquisition import aq_base
-from Products.ERP5Type.DivergenceMessage import DivergenceMessage
-from Products.ERP5.DivergenceSolutionDecision \
-    import DivergenceSolutionDecision
 
 class SplitAndDefer(CopyToTarget):
   """
@@ -58,85 +55,64 @@ class SplitAndDefer(CopyToTarget):
 
     if getattr(rule, 'getExpandablePropertyList', None) is not None:
       expandable_property_list = rule.getExpandablePropertyList()
+    if len(expandable_property_list) == 0:
+      # hardcoded default for compatibility
+      expandable_property_list = (
+        'base_application_list',
+        'base_contribution_list',
+        'description',
+        'destination',
+        'destination_account',
+        'destination_function',
+        'destination_section',
+        'efficiency',
+        'price',
+        'price_currency',
+        'quantity_unit',
+        'resource',
+        'source',
+        'source_account',
+        'source_function',
+        'source_section',
+        'start_date',
+        'stop_date',
+        'variation_category_list',
+        'variation_property_dict',
+        )
 
     if movement_quantity > new_movement_quantity:
       split_index = 0
       new_id = "%s_split_%s" % (simulation_movement.getId(), split_index)
-      applied_rule = simulation_movement.getParentValue()
       while getattr(aq_base(applied_rule), new_id, None) is not None:
         split_index += 1
         new_id = "%s_split_%s" % (simulation_movement.getId(), split_index)
       # Adopt different dates for deferred movements
-      if simulation_movement.getCausality() and expandable_property_list:
-        # working in BPM enabled system with nicely configured rules
-        movement_dict = {}
-        # new properties
-        movement_dict.update(
-          portal_type="Simulation Movement",
-          id=new_id,
-          quantity=movement_quantity - new_movement_quantity,
-          activate_kw=self.activate_kw,
-          # 'order' category is deprecated. it is kept for compatibility.
-          order=simulation_movement.getOrder(),
-          **self.additional_parameters
-        )
-
-        for prop in applied_rule.getSpecialiseValue().getExpandablePropertyList():
-          if prop not in movement_dict: # XXX: better way to filter out
-            movement_dict.update(**{
-              prop: simulation_movement.getProperty(prop)})
-        new_movement = applied_rule.newContent(**movement_dict)
-        new_movement.recordProperty('start_date')
-        new_movement.recordProperty('stop_date')
-        new_movement.edit(start_date=self.start_date,
-                          stop_date=self.stop_date)
-        new_movement.activate(**self.additional_parameters).expand()
-      else:
-        new_movement = applied_rule.newContent(
-                        portal_type="Simulation Movement",
-                        id=new_id,
-                        efficiency=simulation_movement.getEfficiency(),
-                        start_date=simulation_movement.getStartDate(),
-                        stop_date=simulation_movement.getStopDate(),
-                        # 'order' category is deprecated. it is kept for
-                        # compatibility.
-                        order=simulation_movement.getOrder(),
-
-                        resource=simulation_movement.getResource(),
-                        quantity=movement_quantity - new_movement_quantity,
-                        quantity_unit=simulation_movement.getQuantityUnit(),
-
-                        price=simulation_movement.getPrice(),
-                        price_currency=simulation_movement.getPriceCurrency(),
-
-                        source=simulation_movement.getSource(),
-                        destination=simulation_movement.getDestination(),
-                        source_section=simulation_movement.getSourceSection(),
-                        destination_section=simulation_movement.getDestinationSection(),
-                        source_function=simulation_movement.getSourceFunction(),
-                        destination_function=simulation_movement.getDestinationFunction(),
-                        source_account=simulation_movement.getSourceAccount(),
-                        destination_account=simulation_movement.getDestinationAccount(),
-
-                        variation_category_list=simulation_movement.getVariationCategoryList(),
-                        variation_property_dict=simulation_movement.getVariationPropertyDict(),
-
-                        base_application_list=simulation_movement.getBaseApplicationList(),
-                        base_contribution_list=simulation_movement.getBaseContributionList(),
-                        description=simulation_movement.getDescription(),
-                        activate_kw=self.activate_kw,
-                        **self.additional_parameters
+      movement_dict = {}
+      # new properties
+      movement_dict.update(
+        portal_type="Simulation Movement",
+        id=new_id,
+        quantity=movement_quantity - new_movement_quantity,
+        activate_kw=self.activate_kw,
+        # 'order' category is deprecated. it is kept for compatibility.
+        order=simulation_movement.getOrder(),
+        **self.additional_parameters
       )
+
+      for prop in expandable_property_list:
+        if prop not in movement_dict: # XXX: better way to filter out
+          movement_dict.update(**{
+            prop: simulation_movement.getProperty(prop)})
+      new_movement = applied_rule.newContent(**movement_dict)
       new_movement.recordProperty('start_date')
       new_movement.recordProperty('stop_date')
       new_movement.edit(start_date=self.start_date,
                         stop_date=self.stop_date)
       new_movement.activate(**self.additional_parameters).expand()
-      # adopt new quantity on original simulation movement
-      simulation_movement.edit(quantity=new_movement_quantity)
+    # adopt new quantity on original simulation movement
+    simulation_movement.edit(quantity=new_movement_quantity)
     simulation_movement.setDefaultActivateParameters(**self.activate_kw)
     simulation_movement.activate(**self.additional_parameters).expand()
-    simulation_movement.aq_parent.expand()
 
     # SplitAndDefer solves the divergence at the current level, no need to
     # backtrack.
