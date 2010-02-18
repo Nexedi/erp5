@@ -65,7 +65,7 @@ from Acquisition import aq_base
 from Products.Formulator.FieldRegistry import FieldRegistry
 from Products.Formulator.Validator import ValidationError
 from Products.Formulator.StandardFields import FloatField, StringField,\
-DateTimeField, TextAreaField
+DateTimeField, TextAreaField, CheckBoxField
 from Products.Formulator.MethodField import Method, BoundMethod
 from Products.Formulator.TALESField import TALESMethod
 
@@ -309,6 +309,30 @@ class TestTextAreaField(unittest.TestCase):
     test_value = self.field.render_odg(as_string=False)\
       .xpath('%s/text:tab' % ODG_XML_WRAPPING_XPATH, namespaces=NSMAP)
     self.assertTrue(test_value)
+
+class TestCheckBoxField(unittest.TestCase):
+  """Tests TextArea field
+  """
+
+  def getTitle(self):
+    return "CheckBox Field"
+
+  def setUp(self):
+    self.field = CheckBoxField('test_field')
+    self.widget = self.field.widget
+
+  def test_render_odt(self):
+    self.field.values['default'] = 1
+    self.assertEquals('{%s}checkbox' % (NSMAP.get('form')),
+                      self.field.render_odt(as_string=False).tag)
+
+  def test_render_odt_view(self):
+    self.field.values['default'] = 1
+    request = get_request()
+    request.set('editable_mode', 0)
+    self.assertEquals('{%s}p' % (NSMAP.get('text')),
+                      self.field.render_odt(as_string=False, REQUEST=request).tag)
+    self.assertEquals('1', self.field.render_odt(as_string=False, REQUEST=request).text)
 
 class TestProxyField(PlacelessSetup, unittest.TestCase):
 
@@ -713,6 +737,7 @@ def test_suite():
   suite.addTest(unittest.makeSuite(TestStringField))
   suite.addTest(unittest.makeSuite(TestDateTimeField))
   suite.addTest(unittest.makeSuite(TestTextAreaField))
+  suite.addTest(unittest.makeSuite(TestCheckBoxField))
   suite.addTest(unittest.makeSuite(TestProxyField))
   suite.addTest(unittest.makeSuite(TestFieldValueCache))
   return suite
