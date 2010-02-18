@@ -1633,6 +1633,7 @@ class TestSaleInvoiceMixin(TestInvoiceMixin,
   invoice_line_portal_type = 'Invoice Line'
   invoice_cell_portal_type = 'Invoice Cell'
   invoice_transaction_line_portal_type = 'Sale Invoice Transaction Line'
+  payment_portal_type = 'Payment Transaction'
 
   # default sequence for one line of not varianted resource.
   PACKING_LIST_DEFAULT_SEQUENCE = """
@@ -1937,6 +1938,91 @@ class TestSaleInvoiceMixin(TestInvoiceMixin,
       self.assertEquals(packing_list.getTotalPrice(),
                         invoice.getTotalPrice())
 
+  def stepCheckPaymentBuilding(self, sequence=None, sequence_list=None, **kw):
+    """
+    checks that the payment is built with the default_payment_builder
+    """
+    invoice = sequence.get('invoice')
+    related_payment_list = invoice.getCausalityRelatedValueList(
+      portal_type=self.payment_portal_type)
+
+    invoice_building_state = 'started'
+    invoice_state = invoice.getSimulationState()
+    if invoice_state != invoice_building_state :
+      self.assertEquals(0, len(related_payment_list))
+    else:
+      self.assertEquals(1, len(related_payment_list))
+
+      payment = related_payment_list[0].getObject()
+      self.failUnless(payment is not None)
+      # Payments created by Delivery Builder are in planned state
+      self.assertEquals(payment.getSimulationState(), 'planned')
+
+      # Get the list of simulation movements of packing list ...
+      invoice_simulation_movement_list = []
+      for invoice_movement in invoice.getMovementList(
+        portal_type=self.portal.getPortalAccountingMovementTypeList()):
+        invoice_simulation_movement_list.extend(
+          invoice_movement.getDeliveryRelatedValueList())
+      # ... payment simulation movement are their childrens.
+      simulation_movement_list = []
+      for p_l_simulation_movement in invoice_simulation_movement_list :
+        for applied_rule in p_l_simulation_movement.objectValues() :
+          simulation_movement_list.extend(applied_rule.objectValues())
+
+      # First, test if each Simulation Movement is related to an
+      # Payment Movement
+      payment_relative_url = payment.getRelativeUrl()
+      for simulation_movement in simulation_movement_list:
+        payment_movement_list = simulation_movement.getDeliveryValueList()
+        self.assertEquals(len(payment_movement_list), 1)
+        payment_movement = payment_movement_list[0]
+        self.failUnless(payment_movement is not None)
+        self.assert_(payment_movement.getRelativeUrl().\
+                              startswith(payment_relative_url))
+
+      # Then, test if each Payment movement is equals to the sum of somes
+      # Simulation Movements
+      for payment_movement in payment.getMovementList():
+        related_simulation_movement_list = payment_movement.\
+                 getDeliveryRelatedValueList(portal_type='Simulation Movement')
+        quantity = 0
+        total_price = 0
+        payment_movement_quantity = payment_movement.getQuantity()
+        for related_simulation_movement in related_simulation_movement_list:
+          quantity += related_simulation_movement.getQuantity()
+          total_price += related_simulation_movement.getPrice() *\
+                         related_simulation_movement.getQuantity()
+          # Test resource
+          self.assertEquals(payment_movement.getResource(), \
+                            related_simulation_movement.getResource())
+          # Test resource variation
+          self.assertEquals(payment_movement.getVariationText(), \
+                            related_simulation_movement.getVariationText())
+          self.assertEquals(payment_movement.getVariationCategoryList(), \
+                        related_simulation_movement.getVariationCategoryList())
+          # Test acquisition
+          self.checkAcquisition(payment_movement,
+                                related_simulation_movement)
+          # Test delivery ratio
+          self.assertEquals(related_simulation_movement.getQuantity() /\
+                            payment_movement_quantity, \
+                            related_simulation_movement.getDeliveryRatio())
+
+        self.assertEquals(quantity, payment_movement.getQuantity())
+        # Test price
+        self.assertEquals(total_price / quantity, payment_movement.getPrice())
+
+      sequence.edit(payment = payment)
+
+      # Test causality
+      self.assertEquals(len(payment.getCausalityValueList(
+                      portal_type = self.invoice_portal_type)), 1)
+      self.assertEquals(payment.getCausalityValue(), invoice)
+
+      # Finally, test getTotalQuantity and getTotalPrice on Payment
+      self.assertEquals(0, payment.getTotalQuantity())
+      self.assertEquals(0, payment.getTotalPrice())
 
   def stepCheckInvoicesConsistency(self, sequence=None, sequence_list=None,
       **kw):
@@ -2886,6 +2972,7 @@ class TestSaleInvoice(TestSaleInvoiceMixin, TestInvoice, ERP5TypeTestCase):
     stepCheckInvoiceTransactionRule
     stepTic
     stepCheckInvoiceBuilding
+    stepCheckPaymentBuilding
 
     stepStopPackingList
     stepTic
@@ -2897,6 +2984,7 @@ class TestSaleInvoice(TestSaleInvoiceMixin, TestInvoice, ERP5TypeTestCase):
 
     stepStartInvoice
     stepTic
+    stepCheckPaymentBuilding
     stepStopInvoice
     stepTic
     stepDeliverInvoice
@@ -3024,6 +3112,7 @@ class TestSaleInvoice(TestSaleInvoiceMixin, TestInvoice, ERP5TypeTestCase):
     stepCheckInvoiceIsSolved
     stepStartInvoice
     stepTic
+    stepCheckPaymentBuilding
     stepStopInvoice
     stepTic
     stepDeliverInvoice
@@ -3117,6 +3206,7 @@ class TestSaleInvoice(TestSaleInvoiceMixin, TestInvoice, ERP5TypeTestCase):
     stepTic
     stepStartInvoice
     stepTic
+    stepCheckPaymentBuilding
     stepStopInvoice
     stepTic
     stepDeliverInvoice
@@ -3157,6 +3247,7 @@ class TestSaleInvoice(TestSaleInvoiceMixin, TestInvoice, ERP5TypeTestCase):
     stepTic
     stepStartInvoice
     stepTic
+    stepCheckPaymentBuilding
     stepStopInvoice
     stepTic
     stepDeliverInvoice
@@ -3210,6 +3301,7 @@ class TestSaleInvoice(TestSaleInvoiceMixin, TestInvoice, ERP5TypeTestCase):
     stepTic
     stepStartInvoice
     stepTic
+    stepCheckPaymentBuilding
     stepStopInvoice
     stepTic
     stepDeliverInvoice
@@ -3229,6 +3321,7 @@ class TestSaleInvoice(TestSaleInvoiceMixin, TestInvoice, ERP5TypeTestCase):
 
     stepStartInvoice
     stepTic
+    stepCheckPaymentBuilding
     stepStopInvoice
     stepTic
     stepDeliverInvoice
@@ -3278,6 +3371,7 @@ class TestSaleInvoice(TestSaleInvoiceMixin, TestInvoice, ERP5TypeTestCase):
     stepTic
     stepStartInvoice
     stepTic
+    stepCheckPaymentBuilding
     stepStopInvoice
     stepTic
     stepDeliverInvoice
