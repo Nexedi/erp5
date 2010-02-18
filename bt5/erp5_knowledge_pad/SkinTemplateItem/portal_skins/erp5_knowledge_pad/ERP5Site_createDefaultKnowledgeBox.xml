@@ -59,6 +59,7 @@
 # knowledge_box = knowledge_pad.newContent(\n
 #   portal_type=\'Knowledge Box\',\n
 #   specialise=\'portal_gadgets/km_my_tasks\',\n
+#   activate_kw=activate_kw\n
 #   )\n
 # knowledge_box.visible()\n
 pass\n
@@ -72,7 +73,7 @@ pass\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>knowledge_pad</string> </value>
+            <value> <string>knowledge_pad, **activate_kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -99,6 +100,7 @@ pass\n
                         <value>
                           <tuple>
                             <string>knowledge_pad</string>
+                            <string>activate_kw</string>
                           </tuple>
                         </value>
                     </item>

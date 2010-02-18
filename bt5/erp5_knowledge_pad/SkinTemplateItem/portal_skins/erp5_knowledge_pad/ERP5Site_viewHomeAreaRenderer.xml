@@ -44,20 +44,17 @@
               default_pad_group python: \'\';\n
               knowledge_pads python:\n
                  here.ERP5Site_getKnowledgePadListForUser(mode=mode);\n
-              struct python:\n
-                      here.ERP5Site_getActiveKnowledgePadForUser(\n
-                         knowledge_pads,\n
-                         );\n
+              struct python: here.ERP5Site_getActiveKnowledgePadForUser(knowledge_pads);\n
               active_knowledge_pad python: struct[0];\n
               knowledge_pads python: struct[1];\n
               hasUserActivity python:\n
                       here.ERP5Site_hasUserActivity(active_knowledge_pad,\n
-                                                    mode=mode);\n
+                                                    mode=mode,\n
+\t\t\t\t\t\t    default_pad_group=default_pad_group);\n
               isAnon python: here.portal_membership.isAnonymousUser();\n
-              createDefaultPadForUser  python:  len(knowledge_pads)==0 and\n
-                                                hasUserActivity;\n
-              waitForActivitiesOnServer python: len(knowledge_pads)>=1 and \n
-                                                active_knowledge_pad is None and\n
+              createDefaultPadForUser  python: len(knowledge_pads)==0 and\n
+                                               not hasUserActivity;\n
+              waitForActivitiesOnServer python: active_knowledge_pad is None and\n
                                                 hasUserActivity;\n
               isUserAllowedToCreateKnowledgePads\n
                        context/Base_isUserAllowedToUseKnowledgePad;\n
@@ -95,18 +92,21 @@
       \n
     </tal:block>\n
      \n
-    <div tal:condition="python: waitForActivitiesOnServer and isUserAllowedToCreateKnowledgePads">\n
+    <div tal:condition="python: waitForActivitiesOnServer and \n
+                                isUserAllowedToCreateKnowledgePads">\n
       <div class="wait_block">\n
         <h2 i18n:translate="" i18n:domain="ui"> \n
           Please wait until your home is being updated.</h2>\n
         <p i18n:translate="" i18n:domain="ui"> You\'ll be automatically redirected.</p>\n
         <script type="text/javascript">\n
-          checkForActivitiesOnServer(5000, \'view\');\n
+          checkForActivitiesOnServer(5000, \'view\', \'erp5_front\', \'\');\n
         </script>\n
       </div>\n
     </div>\n
 \n
-    <div tal:condition="python: createDefaultPadForUser and isUserAllowedToCreateKnowledgePads">\n
+    <div tal:condition="python: not waitForActivitiesOnServer and \n
+                                isUserAllowedToCreateKnowledgePads and\n
+                                createDefaultPadForUser">\n
       <div class="wait_block">\n
         <h2 i18n:translate="" i18n:domain="ui"> \n
           Please wait until your tab is being prepared.\n

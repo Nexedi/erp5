@@ -54,7 +54,12 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>knowledge_pad = None\n
+portal = context.getPortalObject()\n
 user_pref = context.Base_getActiveGlobalKnowledgePadPreference()\n
+tag = \'%s_%s_%s\' %(portal.portal_membership.getAuthenticatedMember(),\n
+                   mode,\n
+                   default_pad_group)\n
+activate_kw = {\'tag\': tag}\n
 \n
 is_web_mode = mode in (\'web_front\', \'web_section\',)\n
 if user_pref is not None:\n
@@ -89,7 +94,8 @@ if knowledge_pad is None:\n
   # created empty one because no template found\n
   knowledge_pad = context.knowledge_pad_module.newContent(\n
                             portal_type = \'Knowledge Pad\',\n
-                            title = context.Base_translateString(\'Tab 1\'))\n
+                            title = context.Base_translateString(\'Tab 1\'),\n
+                            activate_kw = activate_kw)\n
 if is_web_mode:\n
   if context.getPortalType() == \'Web Site\' and default_pad_group in (\'\', None,):\n
     # script is called within Front Page Gadgets view\n
@@ -109,8 +115,7 @@ if owner is not None:\n
   knowledge_pad.reindexObject()\n
 \n
 # set default gadgets\n
-context.ERP5Site_createDefaultKnowledgeBox(knowledge_pad)\n
-\n
+context.ERP5Site_createDefaultKnowledgeBox(knowledge_pad, activate_kw=activate_kw)\n
 return knowledge_pad.getRelativeUrl()\n
 </string> </value>
         </item>
@@ -155,7 +160,10 @@ return knowledge_pad.getRelativeUrl()\n
                             <string>knowledge_pad</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>portal</string>
                             <string>user_pref</string>
+                            <string>tag</string>
+                            <string>activate_kw</string>
                             <string>is_web_mode</string>
                             <string>pref_pads</string>
                             <string>filter</string>

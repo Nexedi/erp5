@@ -53,17 +53,30 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>if active_knowledge_pad is None and mode is None:\n
-  # only if asynchronous checks\n
+            <value> <string>portal = context.getPortalObject()\n
+\n
+if active_knowledge_pad is None and js_call:\n
+  # only for asynchronous checks\n
   knowledge_pads = context.ERP5Site_getKnowledgePadListForUser(mode=mode)\n
-  active_knowledge_pad,knowledge_pads = \\\n
+  active_knowledge_pad, knowledge_pads = \\\n
        context.ERP5Site_getActiveKnowledgePadForUser(knowledge_pads)\n
+\n
 if active_knowledge_pad is None:\n
-  return \'False\'\n
-pending_activities = active_knowledge_pad.hasActivity()\n
+  # no pad but it may be reindexed in an activity now, check by tag\n
+  tag = \'%s_%s_%s\' %(portal.portal_membership.getAuthenticatedMember(),\n
+                     mode,\n
+                     default_pad_group)\n
+  is_pending_create_activities  = portal.portal_activities.countMessageWithTag(tag)\n
+  if js_call:\n
+    return str(is_pending_create_activities)\n
+  else:\n
+    return is_pending_create_activities\n
+\n
+# we have an active pad, check if it has pending activities\n
+is_pending_create_activities = active_knowledge_pad.hasActivity()\n
 if js_call:\n
-  return str(pending_activities)\n
-return pending_activities\n
+  return str(is_pending_create_activities)\n
+return is_pending_create_activities\n
 </string> </value>
         </item>
         <item>
@@ -74,7 +87,7 @@ return pending_activities\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>active_knowledge_pad=None, mode=None, js_call=0</string> </value>
+            <value> <string>active_knowledge_pad=None, mode=None, default_pad_group=\'\', js_call=0</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -94,7 +107,7 @@ return pending_activities\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>3</int> </value>
+                        <value> <int>4</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -102,13 +115,16 @@ return pending_activities\n
                           <tuple>
                             <string>active_knowledge_pad</string>
                             <string>mode</string>
+                            <string>default_pad_group</string>
                             <string>js_call</string>
-                            <string>None</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>portal</string>
+                            <string>None</string>
                             <string>knowledge_pads</string>
                             <string>_getiter_</string>
-                            <string>pending_activities</string>
+                            <string>tag</string>
+                            <string>is_pending_create_activities</string>
                             <string>str</string>
                           </tuple>
                         </value>
@@ -124,6 +140,7 @@ return pending_activities\n
               <tuple>
                 <none/>
                 <none/>
+                <string></string>
                 <int>0</int>
               </tuple>
             </value>
