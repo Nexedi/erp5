@@ -57,6 +57,18 @@ function replaceContent(req) {\n
   addOnClickEventsToTabs(req);\n
 }\n
 \n
+function showServerSideError(req) {\n
+  if (loading_deferred) {\n
+    loading_deferred.cancel();\n
+    loading_deferred = undefined;\n
+  }\n
+\n
+  var container = $(\'container\');\n
+  container.innerHTML = \'Server side error.\';\n
+\n
+  addOnClickEventsToTabs(req);\n
+}\n
+\n
 function showLoadingMessage() {\n
   var container = $(\'container\');\n
   container.innerHTML = \'<div><p style="text-align: left; vertical-align: middle; font-size: large;">Loading...</p></div>\';\n
@@ -90,7 +102,7 @@ function selectTab(e) {\n
 \n
   var url = mapping[this.parentNode.id];\n
   var d = doSimpleXMLHttpRequest(url);\n
-  d.addBoth(replaceContent)\n
+  d.addCallbacks(replaceContent, showServerSideError);\n
   e.stop();\n
 \n
   loading_deferred = callLater(0.3, showLoadingMessage);\n
