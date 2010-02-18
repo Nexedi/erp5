@@ -1,3 +1,6 @@
+2010-02-18 tatuya
+* Fix a issue that Bug document can not cancel the bug, because it can not add a content when cancelled state and the transition try to create an event.
+
 2009-11-18 yusei
 * Fix wrong python script parameter.
 
