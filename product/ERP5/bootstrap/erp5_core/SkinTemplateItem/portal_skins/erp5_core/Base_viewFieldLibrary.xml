@@ -154,6 +154,18 @@
                         <string>your_string_field</string>
                         <string>my_price</string>
                         <string>my_base_unit_price</string>
+                        <string>my_view_mode_title</string>
+                        <string>my_view_mode_category</string>
+                        <string>my_view_mode_category_list</string>
+                        <string>my_view_mode_comment</string>
+                        <string>my_view_mode_description</string>
+                        <string>my_view_mode_int_index</string>
+                        <string>my_view_mode_price</string>
+                        <string>my_view_mode_quantity</string>
+                        <string>my_view_mode_reference</string>
+                        <string>my_view_mode_translated_workflow_state_title</string>
+                        <string>my_date_time_field</string>
+                        <string>my_view_mode_money_quantity</string>
                       </list>
                     </value>
                 </item>
