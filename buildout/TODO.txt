@@ -27,3 +27,5 @@
      For example mysql-python egg is build against locally built mysql, but
      version of mysql is hardcoded in mysql-python egg part.
  - have all eggs available as software, but use them selectively in instances
+ - convert all ERP5 products into eggs, but allow in development profile to
+   have them locally editable and commitable (develop)
