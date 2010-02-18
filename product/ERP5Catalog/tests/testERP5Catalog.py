@@ -3989,6 +3989,35 @@ VALUES
     self.assertEquals([x.getTitle() for x in
                       folder_object_list], real_title_list)
 
+  def test_countResultsUsesFromExpression(self, quiet=quiet):
+    if not quiet:
+      message = 'countResults uses from_expression'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ',0,message)
+
+    person_module = self.getPersonModule()
+    module_len = len(person_module)
+    if module_len == 0:
+      person = person_module.newContent(portal_type='Person')
+      module_len = len(person_module)
+    module_uid = person_module.getUid()
+
+    get_transaction().commit()
+    self.tic()
+    catalog = self.getCatalogTool()
+
+    # Test sanity checks
+    self.assertEqual(len(catalog.searchResults(parent_uid=module_uid)),
+      module_len)
+    self.assertEqual(catalog.countResults(parent_uid=module_uid)[0][0],
+      module_len)
+
+    self.assertEquals(catalog.countResults(from_expression={
+      'catalog': '(SELECT sub_catalog.* FROM catalog AS sub_catalog' \
+        ' WHERE sub_catalog.parent_uid=%i)' \
+        ' AS catalog' % (module_uid, ),
+    })[0][0], module_len)
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestERP5Catalog))
