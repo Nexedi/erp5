@@ -53,15 +53,15 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>"""Add a New Test language."""\n
+            <value> <string>portal = context.getPortalObject()\n
+Localizer = portal.Localizer\n
 \n
-context.getPortalObject().Localizer.manage_addLanguage(\'wo\')\n
-context.getPortalObject().Localizer.manage_addLanguage(\'xh\')\n
-context.getPortalObject().Localizer.erp5_ui.manage_addLanguage(\'wo\')\n
-context.getPortalObject().Localizer.erp5_ui.manage_addLanguage(\'xh\')\n
-context.getPortalObject().portal_caches.clearAllCache()\n
-           \n
+for language in (\'wo\', \'xh\'):\n
+  Localizer.manage_addLanguage(language)\n
+  for catalog in Localizer.objectValues():\n
+    catalog.manage_addLanguage(language)\n
 \n
+portal.portal_caches.clearAllCache()\n
 return \'New Languages Added.\'\n
 </string> </value>
         </item>
@@ -101,6 +101,11 @@ return \'New Languages Added.\'\n
                           <tuple>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>portal</string>
+                            <string>Localizer</string>
+                            <string>_getiter_</string>
+                            <string>language</string>
+                            <string>catalog</string>
                           </tuple>
                         </value>
                     </item>
