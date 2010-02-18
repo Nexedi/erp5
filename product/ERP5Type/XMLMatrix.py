@@ -36,7 +36,6 @@ from Products.ERP5Type.Base import TempBase
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 
 from zLOG import LOG
-from string import join, replace
 
 class XMLMatrix(Folder):
     """
@@ -137,10 +136,7 @@ class XMLMatrix(Folder):
         return 0
       base_item = self.index[base_id]
       for i, my_id in enumerate(kw):
-        if base_item.has_key(i):
-          if not base_item[i].has_key(my_id):
-            return 0
-        else:
+        if not base_item.has_key(i) or not base_item[i].has_key(my_id):
           return 0
 
       return 1
@@ -165,15 +161,11 @@ class XMLMatrix(Folder):
         return
 
       # Create the new index for the range given in *kw
-      i = 0
-      for index_ids in kw:
+      for i, index_ids in enumerate(kw):
         temp = PersistentMapping()
-        j = 0
-        for my_id in index_ids:
+        for j, my_id in enumerate(index_ids):
           temp[my_id] = j
-          j += 1
         new_index[i] = temp
-        i += 1
 
       if self.index.has_key(base_id):
         # Compute cell movement from their position in previous range to their
@@ -242,11 +234,13 @@ class XMLMatrix(Folder):
 
         new_object_id_list = []
 
+        temp_object_id = 'temp_' + object_id
+        o = self._getOb(temp_object_id)
         if not to_delete and not (None in object_place):
-          o = self._getOb('temp_' + object_id)
-          self._delObject('temp_' + object_id) # In all cases, we have
-                                               # to remove the temp object
-          new_name = base_id + '_' + join(object_place,'_')
+          self._delObject(temp_object_id) # In all cases, we have
+                                          # to remove the temp object
+          object_place.insert(0, base_id)
+          new_name = '_'.join(object_place)
           o.id = new_name
           new_object_id_list.extend(new_name)
           self._setObject(new_name, aq_base(o))
@@ -269,9 +263,8 @@ class XMLMatrix(Folder):
           o.reindexObject() # we reindex in case position has changed
                             # uid should be consistent
         else:
-          o = self._getOb('temp_' + object_id)
           # In all cases, we have to remove the temp object
-          LOG("Del2 Object",0, 'temp_' + str(object_id))
+          LOG("Del2 Object",0, temp_object_id)
           LOG("Del2 Object",0, str(o.uid))
           #ATTENTION -> if path is not good, it will not be able to uncatalog !!!
           #o.immediateReindexObject() # STILL A PROBLEM -> getUidForPath XXX
@@ -281,7 +274,7 @@ class XMLMatrix(Folder):
             o.unindexObject(path='%s/%s' % (self.getUrl() , object_id))
             # unindexed already forced
             o.isIndexable = ConstantGetter('isIndexable', value=False)
-          self._delObject('temp_' + object_id) # object will be removed
+          self._delObject(temp_object_id) # object will be removed
                                                # from catalog automaticaly
       # We don't need the old index any more, we
       # can set the new index
