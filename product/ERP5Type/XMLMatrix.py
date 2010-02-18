@@ -516,11 +516,12 @@ class XMLMatrix(Folder):
         meant to be overriden by subclasses.
       """
       if portal_type is None:
-        try:
-          portal_type = [x.getId() for x in self.allowedContentTypes() \
-                         if x.getId().endswith(' Cell')][0]
-        except IndexError:
-          pass
+        for x in self.allowedContentTypes():
+          id = x.getId()
+          if id.endswith(' Cell'):
+            portal_type = id
+            break
+
       return self.newContent(id=id, portal_type=portal_type, **kw)
 
     security.declareProtected( Permissions.AccessContentsInformation,
