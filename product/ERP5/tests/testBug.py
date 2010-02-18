@@ -1,4 +1,4 @@
-##############################################################################
+#############################################################################
 #
 # Copyright (c) 2007-2008 Nexedi SA and Contributors. All Rights Reserved.
 #                       Kevin Deldycke <kevin_AT_nexedi_DOT_com>
@@ -491,24 +491,24 @@ class TestBug(ERP5TypeTestCase):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)
 
-# This tests is not Appliable anymore. It will be kept for a while.
-#  def test_04_StopDateUpdatedOnCancel(self, quiet=QUIET, run=RUN_ALL_TEST):
-#    """
-#      Same test as above but on cancel action (test bug #600).
-#    """
-#    if  not run: return
-#    sequence_list = SequenceList()
-#    step_list = [ 'stepCreateBug'
-#                , 'stepOpenBug'
-#                , 'stepTic'
-#                , 'stepSetOldClosedDate'
-#                , 'stepCancelBug'
-#                , 'stepTic'
-#                , 'stepCheckClosedDate'
-#                ]
-#    sequence_string = ' '.join(step_list)
-#    sequence_list.addSequenceString(sequence_string)
-#    sequence_list.play(self, quiet=quiet)
+  def test_04_StopDateUpdatedOnCancelWithUsualUser(self, quiet=QUIET, run=RUN_ALL_TEST):
+    """
+      Test that cancelBug with usual user.
+    """
+    if  not run: return
+    sequence_list = SequenceList()
+    step_list = [ 'stepLoginUsualUser'
+                , 'stepCreateBug'
+                , 'stepOpenBug'
+                , 'stepTic'
+                , 'stepSetOldClosedDate'
+                , 'stepCancelBug'
+                , 'stepTic'
+                , 'stepCheckClosedDate'
+                ]
+    sequence_string = ' '.join(step_list)
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self, quiet=quiet)
 
   def test_05_setCheckBugClone(self, quiet=QUIET, run=RUN_ALL_TEST):
     """
