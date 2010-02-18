@@ -23,3 +23,6 @@
    - consider using own recipie
  - add bin/ and var/bin/ to path
  - if software do not provide instance, put its binaries to bin/
+ - use declarative way of selecting in-buildout dependencies
+     For example mysql-python egg is build against locally built mysql, but
+     version of mysql is hardcoded in mysql-python egg part.
