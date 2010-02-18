@@ -3530,6 +3530,8 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        RemoveKeysAndTable \
                        RemoveBusinessTemplate \
                        RemoveAllTrashBins \
+                       Tic \
+                       CheckKeysAndTableRemoved \
                        ImportBusinessTemplate \
                        UseImportBusinessTemplate \
                        CheckBuiltBuildingState \
