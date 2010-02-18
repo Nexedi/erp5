@@ -236,6 +236,26 @@ class TestXHTML(ERP5TypeTestCase):
               error_list.append((form_path, list_method))
     self.assertEquals(error_list, [])
 
+  def test_listActionInListbox(self):
+    # check all list_action in listboxes
+    skins_tool = self.portal.portal_skins
+    error_list = []
+    for form_path, form in skins_tool.ZopeFind(
+              skins_tool, obj_metatypes=['ERP5 Form'], search_sub=1):
+      for field in self.getFieldList(form, form_path):
+        if field.meta_type == 'ListBox' or field.meta_type == 'ProxyField' and\
+            field.getRecursiveTemplateField().meta_type == 'ListBox':
+          list_action = field.get_value("list_action")
+          if list_action and list_action != 'list': # We assume that 'list'
+                                                    # list_action exists
+            if isinstance(list_action, str):
+              method = getattr(self.portal, list_action.split('?')[0], None)
+            else:
+              method = list_action
+            if not callable(method):
+              error_list.append(('%s/%s' % (form_path, field.id), list_action))
+    self.assertEquals(error_list, [])
+
   def test_moduleListMethod(self):
     """Make sure that module's list method works."""
     error_list = []
