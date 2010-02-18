@@ -656,15 +656,13 @@ class XMLMatrix(Folder):
         object_id_split = object_id.split('_')
         # We try to find the first split id which is an int
         base_id_len = len(object_id_split)
-        is_int = 1
         test_num = None
         while base_id_len > 0:
           try:
             # if this succeeds, it is very likely a cell with an id such as quantity_X_Y_0_Z
             test_num = int(object_id_split[base_id_len-1])
           except ValueError:
-            is_int = 0
-          if not is_int: break
+            break
           base_id_len -= 1
         if base_id_len > 0:
           base_id = '_'.join(object_id_split[0:base_id_len])
