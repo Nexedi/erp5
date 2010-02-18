@@ -635,7 +635,7 @@ class XMLMatrix(Folder):
         Constraint API.
       """
       # Check useless cells
-      to_delete = []
+      to_delete_set = set()
       error_list = []
       def addError(message):
         if fixit:
@@ -679,8 +679,7 @@ class XMLMatrix(Folder):
             if not self.index.has_key(base_id):
               # The matrix does not have this base_id
               addError("There is no index for base_id %s" % base_id)
-              if object_id not in to_delete:
-                to_delete.append(object_id)
+              to_delete_set.add(object_id)
             else:
               # Check empty indices.
               empty_list = []
@@ -698,17 +697,15 @@ class XMLMatrix(Folder):
               if len(object_id_split) != (len_id + base_id_len): # +1 for the quantity
                 addError("Dimension of cell is %s but should be %s" % (len(object_id_split)
                                                                             - base_id_len, len_id))
-                if object_id not in to_delete:
-                  to_delete.append(object_id)
+                to_delete_set.add(object_id)
               else :
                 for i in range(len_id):
                   if int(object_id_split[i+base_id_len]) >= len(self.index[base_id][i]):
                     addError("Cell %s is out of bound" % object_id)
-                    if object_id not in to_delete:
-                      to_delete.append(object_id)
+                    to_delete_set.add(object_id)
 
-      if fixit and len(to_delete) > 0:
-        self.manage_delObjects(to_delete)
+      if fixit and len(to_delete_set) > 0:
+        self.manage_delObjects(list(to_delete_set))
 
       return error_list
 
