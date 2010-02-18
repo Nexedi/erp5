@@ -496,11 +496,10 @@ class XMLMatrix(Folder):
       cell_id_list = [base_id]
 
       base_item = self.index[base_id]
-      for i, my_id in enumerate(kw):
-        try:
-          cell_id_list.append(base_item[i][my_id])
-        except KeyError:
-          raise KeyError, 'Invalid key: %s' % str(kw)
+      try:
+        cell_id_list.extend(base_item[i][my_id] for i, my_id in enumerate(kw))
+      except KeyError:
+        raise KeyError, 'Invalid key: %s' % str(kw)
 
       cell_id = "_".join(cell_id_list)
 
