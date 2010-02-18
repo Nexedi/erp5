@@ -117,10 +117,10 @@ class DeliveryBuilder(OrderBuilder):
     # Add resource query
     if self.getResourcePortalType() not in ('', None):
       kw['resourceType'] = self.getResourcePortalType()
-    if self.simulation_select_method_id in ['', None]:
+    if self.getSimulationSelectMethodId() in ['', None]:
       movement_list = [x.getObject() for x in self.portal_catalog(**kw)]
     else:
-      select_method = getattr(self.getPortalObject(), self.simulation_select_method_id)
+      select_method = getattr(self.getPortalObject(), self.getSimulationSelectMethodId())
       movement_list = select_method(**kw)
     # XXX Use buildSQLQuery will be better
     movement_list = [x for x in movement_list if \
@@ -134,7 +134,7 @@ class DeliveryBuilder(OrderBuilder):
       if mvt_dict.has_key(movement):
         raise SelectMethodError, \
               "%s return %s twice (or more)" % \
-              (str(self.simulation_select_method_id),
+              (str(self.getSimulationSelectMethodId()),
                str(movement.getRelativeUrl()))
       else:
         mvt_dict[movement] = 1
