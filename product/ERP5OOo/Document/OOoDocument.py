@@ -204,7 +204,7 @@ class OOoDocument(PermanentURLMixIn, File, CachedConvertableMixin):
       raise NotConvertedError
     # Else try to convert the document and return it
     mime, result = self.convert(format=format, display=display, **kw)
-    converted_filename = '%s.%s'%(filename.split('.')[0],  format)
+    converted_filename = '%s.%s'%('.'.join(filename.split('.')[:-1]),  format)
     if not mime:
       mime = getToolByName(self, 'mimetypes_registry').lookupExtension('name.%s' % format)
     RESPONSE.setHeader('Content-Length', len(result))

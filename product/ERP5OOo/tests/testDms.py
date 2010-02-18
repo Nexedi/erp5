@@ -595,7 +595,7 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
     doc = self.portal.document_module.newContent(
                                   source_reference='test.ods',
                                   portal_type='Spreadsheet')
-    doc.edit(file=makeFileUpload('import_data_list.ods'))
+    doc.edit(file=makeFileUpload('import.file.with.dot.in.filename.ods'))
     doc.publish()
     transaction.commit()
     self.tic()
@@ -609,14 +609,14 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
     response = self.publish('%s/Document_convert?format=pdf' % doc.getPath(),
                             basic='member_user2:secret')
     self.assertEquals('application/pdf', response.headers['content-type'])
-    self.assertEquals('attachment; filename="import_data_list.pdf"',
+    self.assertEquals('attachment; filename="import.file.with.dot.in.filename.pdf"',
                       response.headers['content-disposition'])
 
     # test Print icon works on OOoDocument
     response = self.publish('%s/OOoDocument_print' % doc.getPath())
     self.assertEquals('application/pdf',
                       response.headers['content-type'])
-    self.assertEquals('attachment; filename="import_data_list.pdf"',
+    self.assertEquals('attachment; filename="import.file.with.dot.in.filename.pdf"',
                       response.headers['content-disposition'])
 
   def test_05_getCreationDate(self):
