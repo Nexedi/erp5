@@ -204,6 +204,20 @@ class Field:
         return self.widget.render(self, key, value, REQUEST,
                                   render_prefix=render_prefix)
 
+    security.declarePrivate('_render_helper')
+    def _render_odt_helper(self, key, value, as_string, ooo_builder,
+                           REQUEST, render_prefix, attr_dict, local_name):
+      value = self._get_default(key, value, REQUEST)
+      __traceback_info__ = ('key=%s value=%r' % (key, value))
+      if not self.get_value('editable', REQUEST=REQUEST):
+        return self.widget.render_odt_view(self, value, as_string, ooo_builder,
+                                           REQUEST, render_prefix, attr_dict,
+                                           local_name)
+      else:
+        return self.widget.render_odt(self, value, as_string, ooo_builder,
+                                      REQUEST, render_prefix, attr_dict,
+                                      local_name)
+
     security.declarePrivate('_get_default')
     def _get_default(self, key, value, REQUEST):
         if value is not None:
@@ -286,11 +300,19 @@ class Field:
     def render_odt(self, key=None, value=None, as_string=True, ooo_builder=None,
         REQUEST=None, render_prefix=None, attr_dict=None, local_name='p',
         key_prefix=None):
-      widget_key = self.generate_field_key(key=key, key_prefix=key_prefix)
-      value = self._get_default(widget_key, value, REQUEST)
-      return self.widget.render_odt(self, value, as_string, ooo_builder,
-                                    REQUEST, render_prefix, attr_dict,
-                                    local_name)
+      field_key = self.generate_field_key(key=key, key_prefix=key_prefix)
+      return self._render_odt_helper(field_key, value, as_string,
+                                     ooo_builder, REQUEST, render_prefix,
+                                     attr_dict, local_name)
+
+    security.declareProtected('View', 'render_odt_view')
+    def render_odt_view(self, value=None, as_string=True, ooo_builder=None,
+        REQUEST=None, render_prefix=None, attr_dict=None, local_name='p'):
+      """Call read-only renderer
+      """
+      return self.widget.render_odt_view(self, value, as_string, ooo_builder,
+                                         REQUEST, render_prefix, attr_dict,
+                                         local_name)
 
     security.declareProtected('View', 'render_odg')
     def render_odg(self, key=None, value=None, as_string=True, ooo_builder=None,

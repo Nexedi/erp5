@@ -175,9 +175,18 @@ class Widget:
     return None
 
   def render_odt(self, field, value, as_string, ooo_builder, REQUEST,
-      render_prefix, attr_dict, local_name):
+                 render_prefix, attr_dict, local_name):
+    """This render dedicated to render fields inside OOo document
+      (eg. editable mode)
     """
-      Return a field value rendered in odt format.
+    # XXX By default fallback to render_odt_view
+    return self.render_odt_view(field, value, as_string, ooo_builder, REQUEST,
+      render_prefix, attr_dict, local_name)
+
+  def render_odt_view(self, field, value, as_string, ooo_builder, REQUEST,
+                      render_prefix, attr_dict, local_name):
+    """
+      Return a field value rendered in odt format as read-only mode.
       - as_string return value as string or as xml object
       - attr_dict can be used for additional attributes (like style).
       - ooo_builder wrapper of ODF zipped archive usefull to insert images
@@ -234,7 +243,7 @@ class Widget:
     draw_node.append(text_p_node)
     draw_frame_node.append(draw_node)
 
-    # XXX copy from render_odt, need to be unified
+    # XXX copy from render_odt_view, need to be unified
     def replaceCharsByNode(match_object):
         #global text_span_node
         if match_object.group(1) is None:
@@ -416,7 +425,7 @@ class CheckBoxWidget(Widget):
     """
     <form:checkbox form:name="is_accepted"
                    form:control-implementation="ooo:com.sun.star.form.component.CheckBox"
-                   checkbox form:current-state="checked"
+                   form:current-state="checked"
                    form:id="control1"
                    form:image-position="center">
       <form:properties>
@@ -447,6 +456,24 @@ class CheckBoxWidget(Widget):
     if as_string:
       return etree.tostring(form_node)
     return form_node
+
+  def render_odt_view(self, field, value, as_string, ooo_builder, REQUEST,
+      render_prefix, attr_dict, local_name):
+    """
+    """
+    if attr_dict is None:
+      attr_dict = {}
+    if isinstance(value, int):
+      value = str(value)
+    if isinstance(value, str):
+      #required by lxml
+      value = value.decode('utf-8')
+    text_node = Element('{%s}%s' % (TEXT_URI, local_name), nsmap=NSMAP)
+    text_node.text = value
+    text_node.attrib.update(attr_dict)
+    if as_string:
+      return etree.tostring(text_node)
+    return text_node
 
 CheckBoxWidgetInstance = CheckBoxWidget()
 
@@ -495,7 +522,7 @@ class TextAreaWidget(Widget):
           return ''
         return value
 
-    def render_odt(self, field, value, as_string, ooo_builder, REQUEST,
+    def render_odt_view(self, field, value, as_string, ooo_builder, REQUEST,
         render_prefix, attr_dict, local_name):
         if attr_dict is None:
             attr_dict = {}
@@ -562,14 +589,14 @@ class LinesTextAreaWidget(TextAreaWidget):
       value = [value]
     return string.join(value, field.get_value('view_separator'))
 
-  def render_odt(self, field, value, as_string, ooo_builder, REQUEST,
+  def render_odt_view(self, field, value, as_string, ooo_builder, REQUEST,
       render_prefix, attr_dict, local_name):
     if value is None:
       value = ['']
     elif isinstance(value, (str, unicode)):
       value = [value]
     value = '\n'.join(value)
-    return TextAreaWidget.render_odt(self, field, value, as_string,
+    return TextAreaWidget.render_odt_view(self, field, value, as_string,
                                      ooo_builder, REQUEST, render_prefix,
                                      attr_dict, local_name)
 
@@ -1329,7 +1356,7 @@ class DateTimeWidget(Widget):
   def render_pdf(self, field, value, render_prefix=None):
     return self.format_value(field, value, mode='pdf')
 
-  def render_odt(self, field, value, as_string, ooo_builder, REQUEST,
+  def render_odt_view(self, field, value, as_string, ooo_builder, REQUEST,
       render_prefix, attr_dict, local_name):
     """
       Return a field value rendered in odt format.
@@ -1661,7 +1688,7 @@ class FloatWidget(TextWidget):
             'format': format,
             'type': 'float'}
 
-  def render_odt(self, field, value, as_string, ooo_builder, REQUEST,
+  def render_odt_view(self, field, value, as_string, ooo_builder, REQUEST,
       render_prefix, attr_dict, local_name):
     if attr_dict is None:
       attr_dict = {}
