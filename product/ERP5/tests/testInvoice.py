@@ -116,12 +116,14 @@ class TestInvoiceMixin(TestPackingListMixin,
             'incoterm/%s' % self.cpt_incoterm,
             'quantity_unit/%s' % self.unit_piece_quantity_unit,
             'quantity_unit/%s' % self.mass_quantity_unit,
+            'trade_phase/default/payment',
         )
 
 
   def afterSetUp(self):
     self.createCategories()
     self.validateRules()
+    self.createBusinessProcess()
     self.login()
     self.oldMailHost = getattr(self.portal, 'MailHost', None)
     if self.oldMailHost is not None:
@@ -147,6 +149,29 @@ class TestInvoiceMixin(TestPackingListMixin,
      
     transaction.commit()
     self.tic()
+
+  def createBusinessProcess(self):
+    business_process_module = self.portal.business_process_module
+    test_business_process = getattr(business_process_module,
+                                    'test_business_process', None)
+    if test_business_process is None:
+      test_business_process = business_process_module.newContent(
+        portal_type='Business Process',
+        id='test_business_process',
+        reference='test_business_process',
+        title='Test Business Process',
+        version=1)
+    pay_path = getattr(test_business_process, 'pay', None)
+    if pay_path is None:
+      pay_path = test_business_process.newContent(
+        portal_type='Business Path',
+        id='pay',
+        title='Pay',
+        trade_phase='default/payment',
+        source='account_module/bank',
+        destination='account_module/bank')
+    rule = self.portal.portal_rules.default_payment_rule
+    rule.setTradePhase('default/payment')
 
   def login(self):
     """login, without manager role"""
