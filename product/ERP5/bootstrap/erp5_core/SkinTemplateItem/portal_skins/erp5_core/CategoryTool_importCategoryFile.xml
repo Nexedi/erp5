@@ -274,7 +274,6 @@ for base_category_id in base_category_id_list:\n
         category_to_delete_list.append(category.getRelativeUrl())\n
 \n
 if not simulation_mode:\n
-  \n
   # Delete unused categories\n
   if existing_category_list == \'delete\':\n
     for category in category_to_delete_list:\n
@@ -290,15 +289,13 @@ if not simulation_mode:\n
         if category is not None:\n
           category.edit(**{\'expiration_date\':expiration_date})\n
     else:\n
+      isTransitionPossible = context.getPortalObject().portal_workflow \\\n
+          .isTransitionPossible\n
       for category in category_to_delete_list:\n
-        expiration_possible = context.getPortalObject().portal_workflow \\\n
-            .isTransitionPossible(category, \'expire\')\n
-        break\n
-      if expiration_possible:\n
-        for category in category_to_delete_list:\n
-          category = context.portal_categories.resolveCategory(category)\n
-          if category is not None:\n
-            category.expire()\n
+        category = context.portal_categories.resolveCategory(category)\n
+        if category is not None \\\n
+            and isTransitionPossible(category, \'expire\'):\n
+          category.expire()\n
 \n
 \n
 \n
@@ -433,7 +430,7 @@ return context.REQUEST.RESPONSE.redirect(\n
                             <string>category_to_delete_list</string>
                             <string>base_category_id</string>
                             <string>parent</string>
-                            <string>expiration_possible</string>
+                            <string>isTransitionPossible</string>
                           </tuple>
                         </value>
                     </item>
