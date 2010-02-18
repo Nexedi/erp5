@@ -53,14 +53,9 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>"""Add a New Test language."""\n
-context.getPortalObject().Localizer.erp5_ui.gettext(\'Search Foos\')\n
-\n
-context.getPortalObject().Localizer.erp5_ui.message_edit(message=\'Search Foos\', language=\'wo\', translation=\'Seet Foos\',note=None)\n
-context.getPortalObject().Localizer.erp5_ui.message_edit(message=\'Search Foos\', language=\'xh\', translation=\'Searching Foos\',note=None)\n
-\n
-original_message = "Search Foos"\n
-return "Translation of %s updated" % (original_message, )\n
+            <value> <string>context.getPortalObject().Localizer.erp5_ui.gettext(message)\n
+context.getPortalObject().Localizer.erp5_ui.message_edit(message=message, language=language, translation=translation, note=None)\n
+return "Translation of %s updated" % (message, )\n
 </string> </value>
         </item>
         <item>
@@ -71,7 +66,7 @@ return "Translation of %s updated" % (original_message, )\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>message = "Search Foos",translation_1 =" Seet Foos",translation_2="Searching Foos"</string> </value>
+            <value> <string>message, translation, language</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -98,12 +93,11 @@ return "Translation of %s updated" % (original_message, )\n
                         <value>
                           <tuple>
                             <string>message</string>
-                            <string>translation_1</string>
-                            <string>translation_2</string>
+                            <string>translation</string>
+                            <string>language</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>None</string>
-                            <string>original_message</string>
                           </tuple>
                         </value>
                     </item>
@@ -115,11 +109,7 @@ return "Translation of %s updated" % (original_message, )\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <tuple>
-                <string>Search Foos</string>
-                <string> Seet Foos</string>
-                <string>Searching Foos</string>
-              </tuple>
+              <none/>
             </value>
         </item>
         <item>
