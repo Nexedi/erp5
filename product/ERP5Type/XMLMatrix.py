@@ -146,14 +146,12 @@ class XMLMatrix(Folder):
       base_id = kwd.get('base_id', "cell")
       if not self.index.has_key(base_id):
         return 0
-      i = 0
-      for my_id in kw:
+      for i, my_id in enumerate(kw):
         if self.index[base_id].has_key(i):
           if not self.index[base_id][i].has_key(my_id):
             return 0
         else:
           return 0
-        i += 1
 
       return 1
 
