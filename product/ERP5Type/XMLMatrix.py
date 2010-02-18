@@ -496,9 +496,9 @@ class XMLMatrix(Folder):
 
       base_item = self.index[base_id]
       for i, my_id in enumerate(kw):
-        if base_item[i].has_key(my_id):
+        try:
           cell_id += '_%s' % base_item[i][my_id]
-        else:
+        except KeyError:
           raise KeyError, 'Invalid key: %s' % str(kw)
 
       cell = self.get(cell_id)
