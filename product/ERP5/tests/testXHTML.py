@@ -210,7 +210,8 @@ class TestXHTML(ERP5TypeTestCase):
     for form_path, form in skins_tool.ZopeFind(
               skins_tool, obj_metatypes=['ERP5 Form'], search_sub=1):
       for field in self.getFieldList(form, form_path):
-        if field.meta_type =='ListBox':
+        if field.meta_type == 'ListBox' or field.meta_type == 'ProxyField' and\
+            field.getRecursiveTemplateField().meta_type == 'ListBox':
           selection_name = field.get_value("selection_name")
           if selection_name in ("",None):
             error_list.append(form_path)
@@ -223,7 +224,8 @@ class TestXHTML(ERP5TypeTestCase):
     for form_path, form in skins_tool.ZopeFind(
               skins_tool, obj_metatypes=['ERP5 Form'], search_sub=1):
       for field in self.getFieldList(form, form_path):
-        if field.meta_type == 'ListBox':
+        if field.meta_type == 'ListBox' or field.meta_type == 'ProxyField' and\
+            field.getRecursiveTemplateField().meta_type == 'ListBox':
           list_method = field.get_value("list_method")
           if list_method:
             if isinstance(list_method, str):
