@@ -326,9 +326,6 @@ class Rule(Predicate, XMLObject):
         business_path not in business_path_list and business_path_list \
             .append(business_path)
 
-    if len(business_path_list) > 1:
-      raise NotImplementedError
-
     return input_movement_and_path_list
 
   def _getCompensatedMovementListBPM(self, applied_rule, **kw):
