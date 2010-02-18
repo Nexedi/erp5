@@ -15,7 +15,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts66484637.32</string> </value>
+            <value> <string>ts66498134.37</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -102,13 +102,15 @@ function updater(url, box_relative_url, dom_id, \n
  request_params[\'is_gadget_mode:int\'] = 1; \n
  request_params[\'editable_mode:int\'] = editable_mode; \n
 \n
- getElement(dom_id).style.opacity = 0.5; //innerHTML = \'<div><p style="text-align: left; vertical-align: middle; font-size: large;">Loading...</p></div>\';\n
+ getElement(dom_id).style.opacity = 0.5;\n
  d = MochiKit.Async.doSimpleXMLHttpRequest(url, request_params);\n
- d.addCallback(handleServerSuccess);\n
+ d.addCallbacks(handleServerSuccess, handleServerError);\n
  function handleServerSuccess(res){\n
       getElement(dom_id).innerHTML = res.responseText;\n
-      getElement(dom_id).style.opacity = 1.0;\n
- }\n
+      getElement(dom_id).style.opacity = 1.0;};\n
+ function handleServerError(res){\n
+      getElement(dom_id).innerHTML = \'Server side error.\';\n
+      getElement(dom_id).style.opacity = 1.0;};\n
 }\n
 \n
 function checkForActivitiesOnServer(timeout, return_url, mode, default_pad_group){\n
@@ -377,7 +379,7 @@ MochiKit.DOM.addLoadEvent(initialize);\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <long>13496</long> </value>
+            <value> <long>13542</long> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
