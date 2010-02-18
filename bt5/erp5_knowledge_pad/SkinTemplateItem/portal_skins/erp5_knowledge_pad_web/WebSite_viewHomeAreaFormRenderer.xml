@@ -98,7 +98,8 @@
         \n
     </div>\n
       \n
-    <div tal:condition="python: not isAnon and createDefaultPadForUser \n
+    <div tal:condition="python: not isAnon and \n
+                                createDefaultPadForUser \n
                                 and isUserAllowedToCreateKnowledgePads">\n
       <div class="wait_block">\n
         <h2 i18n:translate="" i18n:domain="ui"> \n
