@@ -485,8 +485,6 @@ class DeliveryLine(Movement, XMLObject, XMLMatrix, Variated,
       # gather delivery relations from simulation movements.
       delivery_dict = {}
       for s_m in simulation_movement_list:
-        for decision in decision_list:
-          s_m.appendDecision(decision)
         delivery_path = s_m.getDelivery()
         delivery_dict[delivery_path] = \
                                      delivery_dict.get(delivery_path, []) + \
@@ -513,9 +511,6 @@ class DeliveryLine(Movement, XMLObject, XMLMatrix, Variated,
       solve_result_list = []
       # accept + split
       for decision in [q for q in decision_list if q.decision != 'adopt']:
-        for simulation_movement in self.getDeliveryRelatedValueList(
-            portal_type='Simulation Movement'):
-          simulation_movement.appendDecision(decision)
         if decision.decision == 'accept':
           # accepting - in case of passed DeliverySolver use it, otherwise
           # simply copy values to simulation
@@ -532,5 +527,4 @@ class DeliveryLine(Movement, XMLObject, XMLMatrix, Variated,
       adopt_decision_list = [q for q in decision_list \
                              if q.decision == 'adopt']
       if adopt_decision_list:
-        # XXX/FIXME appendDecision in this case
         self._updatePropertyFromSimulation(adopt_decision_list)

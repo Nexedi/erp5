@@ -571,38 +571,6 @@ class SimulationMovement(Movement, PropertyRecordableMixin):
             return False
     return True
 
-  security.declareProtected( Permissions.ModifyPortalContent,
-                             'appendDecision')
-  def appendDecision(self, decision):
-    """Appends decision, optionally initialises"""
-    property = decision.divergence.tested_property
-    if getattr(aq_base(self), 'divergence_solution_history', None) is None:
-      # initialise divergence history mapping
-      self.divergence_solution_history = PersistentMapping()
-    if self.divergence_solution_history.get(property, None) is None:
-      self.divergence_solution_history[property] = WorkflowHistoryList()
-    self.divergence_solution_history[property].append(decision)
-
-  security.declareProtected( Permissions.AccessContentsInformation,
-                             'isPropertyForced')
-  def isPropertyForced(self, property):
-    """Check if property was forced by user"""
-    divergence_solution_history = getattr(aq_base(self),
-        'divergence_solution_history', None)
-    if divergence_solution_history is None:
-      return False
-
-    for decision in divergence_solution_history.get(property, [])[::-1]:
-      # fuzzy logic:
-      #  * if there was accept decision with force - force
-      #  * but if there was accept without force after - do not force
-      # To be discussed.
-      if decision.decision == 'accept':
-        if decision.force_property:
-          return True
-        return False
-    return False
-
   def getSolverProcessValueList(self, movement=None, validation_state=None):
     """
     Returns the list of solver processes which are

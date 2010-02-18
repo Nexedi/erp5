@@ -55,7 +55,6 @@ class SplitAndDefer(CopyToTarget):
     applied_rule = simulation_movement.getParentValue()
     rule = applied_rule.getSpecialiseValue()
     expandable_property_list = []
-    forced_property_list = []
 
     if getattr(rule, 'getExpandablePropertyList', None) is not None:
       expandable_property_list = rule.getExpandablePropertyList()
@@ -86,24 +85,12 @@ class SplitAndDefer(CopyToTarget):
           if prop not in movement_dict: # XXX: better way to filter out
             movement_dict.update(**{
               prop: simulation_movement.getProperty(prop)})
-            if simulation_movement.isPropertyForced(prop):
-              # set same forcing on fresh movement - XXX might be good,
-              # might be wrong
-              forced_property_list.append(prop)
         new_movement = applied_rule.newContent(**movement_dict)
         new_movement.recordProperty('start_date')
         new_movement.recordProperty('stop_date')
         new_movement.edit(start_date=self.start_date,
                           stop_date=self.stop_date)
         new_movement.activate(**self.additional_parameters).expand()
-        # XXX: start and stop date have to be forced on movement too
-        forced_property_list.extend(['start_date', 'stop_date'])
-        for prop in forced_property_list:
-          fake_divergence = DivergenceMessage()
-          fake_divergence.tested_property = prop
-          decision = DivergenceSolutionDecision(fake_divergence, 'accept', None, None,
-              True)
-          new_movement.appendDecision(decision)
       else:
         new_movement = applied_rule.newContent(
                         portal_type="Simulation Movement",

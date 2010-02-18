@@ -372,26 +372,19 @@ class Rule(Predicate, XMLObject):
             m_quantity += movement.getQuantity()
         if m_quantity != prevision.get('quantity'):
           # special case - quantity
-          if movement.isPropertyForced('quantity'):
-            # TODO: support compensation if not prevent_compensation
-            LOG('%s:%s' % (self.getRelativeUrl(), movement.getRelativeUrl()), WARNING,
-                'Quantity forced to stay as %s, even if wanted %s' % (m_quantity, prevision.get('quantity')))
-            # DivergenceSolutionDecision mangle
-            pass
+          q_diff = prevision.get('quantity') - m_quantity
+          # try to find a movement that can be edited
+          for movement in p_matched_list:
+            if movement in (mutable_movement_list \
+                + deletable_movement_list):
+              # mark as requiring modification
+              prop_dict = modify_dict.setdefault(movement.getId(), {})
+              prop_dict['quantity'] = movement.getQuantity() + \
+                  q_diff
+              break
           else:
-            q_diff = prevision.get('quantity') - m_quantity
-            # try to find a movement that can be edited
-            for movement in p_matched_list:
-              if movement in (mutable_movement_list \
-                  + deletable_movement_list):
-                # mark as requiring modification
-                prop_dict = modify_dict.setdefault(movement.getId(), {})
-                prop_dict['quantity'] = movement.getQuantity() + \
-                    q_diff
-                break
-            else:
-              # no modifiable movement was found, need to compensate by quantity
-              raise NotImplementedError('Need to generate quantity compensation')
+            # no modifiable movement was found, need to compensate by quantity
+            raise NotImplementedError('Need to generate quantity compensation')
 
         for movement in p_matched_list:
           if movement in (mutable_movement_list \
