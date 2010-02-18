@@ -688,9 +688,10 @@ class XMLMatrix(Folder):
                   del base_item[key]
 
               len_id = len(base_item)
-              if len(object_id_split) != (len_id + base_id_len): # +1 for the quantity
-                addError("Dimension of cell is %s but should be %s" % (len(object_id_split)
-                                                                            - base_id_len, len_id))
+              current_dimension = len(object_id_split) - base_id_len
+              if current_dimension != len_id: # +1 for the quantity
+                addError("Dimension of cell is %s but should be %s" % (current_dimension,
+                                                                       len_id))
                 to_delete_set.add(object_id)
               else :
                 for i in range(len_id):
