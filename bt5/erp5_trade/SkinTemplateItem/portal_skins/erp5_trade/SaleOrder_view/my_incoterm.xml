@@ -74,7 +74,7 @@
               <dictionary>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_incoterm</string> </value>
+                    <value> <string>my_view_mode_incoterm</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>

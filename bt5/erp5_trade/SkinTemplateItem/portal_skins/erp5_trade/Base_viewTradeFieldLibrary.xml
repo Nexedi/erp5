@@ -88,7 +88,6 @@
                       <list>
                         <string>my_destination_carrier_title</string>
                         <string>my_source_carrier_title</string>
-                        <string>my_source_decision_title</string>
                         <string>my_destination_decision_title</string>
                         <string>my_destination_reference</string>
                         <string>my_destination_administration_title</string>
@@ -98,47 +97,19 @@
                         <string>my_destination_payment</string>
                         <string>my_source_administration_title</string>
                         <string>my_source_reference</string>
-                        <string>my_destination_section_title</string>
                         <string>my_source_section_title</string>
                         <string>my_source_title</string>
                         <string>my_destination_project_title</string>
                         <string>my_destination_account</string>
                         <string>my_source_account</string>
-                        <string>my_title</string>
-                        <string>my_total_price</string>
-                        <string>my_start_date</string>
-                        <string>my_stop_date</string>
-                        <string>my_comment</string>
-                        <string>my_delivery_mode</string>
-                        <string>my_description</string>
-                        <string>my_order</string>
-                        <string>my_origin</string>
-                        <string>my_price_currency</string>
-                        <string>my_reference</string>
-                        <string>my_specialise_title</string>
-                        <string>my_translated_simulation_state_title</string>
-                        <string>listbox_int_index</string>
-                        <string>listbox_price</string>
-                        <string>listbox_quantity</string>
-                        <string>listbox_quantity_unit</string>
-                        <string>listbox_reference</string>
-                        <string>listbox_stop_date</string>
-                        <string>listbox_total_price</string>
-                        <string>my_incoterm</string>
-                        <string>listbox_base_contribution_title_list</string>
-                        <string>my_sale_destination_decision_title</string>
-                        <string>my_sale_destination_section_title</string>
+                        <string>my_view_mode_title</string>
                         <string>my_sale_source_section</string>
-                        <string>my_sale_source_title</string>
-                        <string>listbox_aggregate_title_list</string>
                         <string>listbox_variation_category_item_list</string>
                         <string>my_sale_causality_title</string>
                         <string>my_translated_causality_state_title</string>
                         <string>my_translated_container_state_title</string>
                         <string>my_translated_immobilisation_state_title</string>
                         <string>my_sale_source_administration_title</string>
-                        <string>my_sale_source_section_title</string>
-                        <string>listbox_start_date</string>
                         <string>my_aggregate_title_list</string>
                         <string>my_amortisation_method</string>
                         <string>my_base_contribution_list</string>
@@ -155,7 +126,38 @@
                         <string>my_line_price_currency</string>
                         <string>my_source_trade_title_list</string>
                         <string>my_int_index</string>
-                        <string>my_base_unit_price</string>
+                        <string>your_site_title</string>
+                        <string>your_at_date</string>
+                        <string>your_listbox_quantity_unit</string>
+                        <string>my_view_mode_listbox_aggregate_title_list</string>
+                        <string>my_view_mode_listbox_base_contribution_title_list</string>
+                        <string>my_view_mode_listbox_int_index</string>
+                        <string>my_view_mode_listbox_price</string>
+                        <string>my_view_mode_listbox_quantity</string>
+                        <string>my_view_mode_listbox_quantity_unit</string>
+                        <string>my_view_mode_listbox_reference</string>
+                        <string>my_view_mode_listbox_start_date</string>
+                        <string>my_view_mode_listbox_stop_date</string>
+                        <string>my_view_mode_listbox_total_price</string>
+                        <string>my_view_mode_comment</string>
+                        <string>my_view_mode_delivery_mode</string>
+                        <string>my_view_mode_description</string>
+                        <string>my_view_mode_incoterm</string>
+                        <string>my_view_mode_order</string>
+                        <string>my_view_mode_origin</string>
+                        <string>my_view_mode_price_currency</string>
+                        <string>my_view_mode_reference</string>
+                        <string>my_view_mode_sale_destination_decision_title</string>
+                        <string>my_view_mode_sale_destination_section_title</string>
+                        <string>my_view_mode_sale_source_title</string>
+                        <string>my_view_mode_source_decision_title</string>
+                        <string>my_view_mode_specialise_title</string>
+                        <string>my_view_mode_start_date</string>
+                        <string>my_view_mode_stop_date</string>
+                        <string>my_view_mode_total_price</string>
+                        <string>my_view_mode_translated_simulation_state_title</string>
+                        <string>my_view_mode_destination_section_title</string>
+                        <string>my_view_mode_sale_source_section_title</string>
                       </list>
                     </value>
                 </item>

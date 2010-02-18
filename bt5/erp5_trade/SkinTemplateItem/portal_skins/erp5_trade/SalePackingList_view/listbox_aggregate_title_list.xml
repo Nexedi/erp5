@@ -74,7 +74,7 @@
               <dictionary>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>listbox_aggregate_title_list</string> </value>
+                    <value> <string>my_view_mode_listbox_aggregate_title_list</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
