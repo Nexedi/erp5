@@ -131,7 +131,7 @@
                                      onfocus string:if (this.value==\'${search_default_text}\') this.value=\'\';"\n
       onfocus="this.value=\'\';"\n
       onkeypress="submitFormOnEnter(event, this.form, \'ERP5Site_viewQuickSearchResultList\');" />\n
-    <input type="submit" class="input-submit" value="" alt="Search"\n
+    <button type="submit" class="input-submit" value="" alt="Search"\n
             name="ERP5Site_viewQuickSearchResultList:method"/>  \n
 </fieldset>\n
 \n

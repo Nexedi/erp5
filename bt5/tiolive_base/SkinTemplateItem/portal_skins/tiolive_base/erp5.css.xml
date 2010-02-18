@@ -478,7 +478,7 @@ body {\n
 \n
 }\n
 \n
-#fieldset-tiosearch input.input-submit {\n
+#fieldset-tiosearch button.input-submit {\n
 \n
   border:none;\n
   background: url(<dtml-var expr="portal_url()">/tiolive_base_image/input-tiosearch.png) no-repeat transparent;\n
@@ -518,9 +518,9 @@ body {\n
 \n
 }\n
 \n
-#fieldset-tiosearch input.input-texti:focus {color:#000000}\n
+#fieldset-tiosearch input.input-text:focus {color:#000000}\n
 \n
-#fieldset-tiosearch input.input-submit {\n
+#fieldset-tiosearch button.input-submit {\n
 \n
   width: 23px;\n
   height: 23px;\n
