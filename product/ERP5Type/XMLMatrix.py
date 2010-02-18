@@ -514,11 +514,7 @@ class XMLMatrix(Folder):
       if not self.index.has_key(base_id):
         return ()
       index = self.index[base_id]
-      id_tuple = []
-      append = id_tuple.append
-      for i in xrange(0, len(index)):
-        t = index[i]
-        append(t.keys())
+      id_tuple = [v.keys() for v in index.itervalues()]
       if len(id_tuple) == 0:
         return ()
       return cartesianProduct(id_tuple)
