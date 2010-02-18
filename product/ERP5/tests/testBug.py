@@ -549,6 +549,28 @@ class TestBug(ERP5TypeTestCase):
     self.assertEqual(title, bug_line.getTitle())
     self.assertEqual('delivered', bug_line.getSimulationState())
 
+  def test_08_openResolvedBug(self, quiet=QUIET, run=RUN_ALL_TEST):
+    """
+     Test that a bug is resolved, we can still reopen it
+    """
+    if not run: return
+    sequence_list = SequenceList()
+    step_list = [ 'stepCreateBug'
+		, 'stepCheckBugInit'
+		, 'stepOpenBug'
+                , 'stepTic'
+		, 'stepAssignBug'
+		, 'stepTic'
+		, 'stepResolveBug'
+		, 'stepTic'
+                , 'stepOpenBug'
+                , 'stepTic'
+		]
+    sequence_string = ' '.join(step_list)
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self, quiet=quiet)
+
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestBug))
