@@ -53,8 +53,9 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>context.getPortalObject().Localizer.erp5_ui.gettext(message)\n
-context.getPortalObject().Localizer.erp5_ui.message_edit(message=message, language=language, translation=translation, note=None)\n
+            <value> <string>catalog = context.getPortalObject().Localizer[catalog_id]\n
+catalog.gettext(message)\n
+catalog.message_edit(message=message, language=language, translation=translation, note=None)\n
 return "Translation of %s updated" % (message, )\n
 </string> </value>
         </item>
@@ -66,7 +67,7 @@ return "Translation of %s updated" % (message, )\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>message, translation, language</string> </value>
+            <value> <string>message, translation, language, catalog_id=\'erp5_ui\'</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -86,7 +87,7 @@ return "Translation of %s updated" % (message, )\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>3</int> </value>
+                        <value> <int>4</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -95,8 +96,11 @@ return "Translation of %s updated" % (message, )\n
                             <string>message</string>
                             <string>translation</string>
                             <string>language</string>
+                            <string>catalog_id</string>
+                            <string>_getitem_</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>catalog</string>
                             <string>None</string>
                           </tuple>
                         </value>
@@ -109,7 +113,9 @@ return "Translation of %s updated" % (message, )\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <string>erp5_ui</string>
+              </tuple>
             </value>
         </item>
         <item>
