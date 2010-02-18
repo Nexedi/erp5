@@ -684,15 +684,17 @@ class XMLMatrix(Folder):
             else:
               # Check empty indices.
               empty_list = []
-              for i in self.index[base_id].keys():
-                if self.index[base_id][i] is None or len(self.index[base_id][i]) == 0:
+              base_item = self.index[base_id]
+              for i in base_item.keys():
+                item = base_item[i]
+                if item is None or len(item) == 0:
                   addError("There is no id for the %dth axis of base_id %s" % (i, base_id))
                   empty_list.append(i)
               if fixit:
                 for i in empty_list:
-                  del self.index[base_id][i]
+                  del base_item[i]
 
-              len_id = len(self.index[base_id])
+              len_id = len(base_item)
               if len(object_id_split) != (len_id + base_id_len): # +1 for the quantity
                 addError("Dimension of cell is %s but should be %s" % (len(object_id_split)
                                                                             - base_id_len, len_id))
