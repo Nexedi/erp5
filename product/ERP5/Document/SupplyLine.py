@@ -152,8 +152,7 @@ class SupplyLine(Path, XMLMatrix):
       """
           This method can be overriden
       """
-      if 'base_id' not in kwd:
-        kwd['base_id'] = 'path'
+      kwd.setdefault('base_id', 'path')
       return XMLMatrix.getCell(self, *kw, **kwd)
 
     security.declareProtected(Permissions.ModifyPortalContent, 'newCell')
@@ -161,8 +160,7 @@ class SupplyLine(Path, XMLMatrix):
       """
           This method creates a new cell
       """
-      if 'base_id' not in kwd:
-        kwd['base_id'] = 'path'
+      kwd.setdefault('base_id', 'path')
       return XMLMatrix.newCell(self, *kw, **kwd)
 
     ############################################################
