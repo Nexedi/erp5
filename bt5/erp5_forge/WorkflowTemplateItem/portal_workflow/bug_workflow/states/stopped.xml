@@ -31,6 +31,8 @@
             <key> <string>transitions</string> </key>
             <value>
               <tuple>
+                <string>confirm</string>
+                <string>confirm_action</string>
                 <string>deliver</string>
                 <string>deliver_action</string>
                 <string>re_assign</string>
