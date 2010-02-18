@@ -75,15 +75,9 @@ class XMLMatrix(Folder):
       if not self.index.has_key(base_id):
         return None
 
-      cell_id_list = [base_id]
-      append = cell_id_list.append
-      index = self.index[base_id]
-      for i, my_id in enumerate(kw):
-        try:
-          append(str(index[i][my_id]))
-        except KeyError:
-          return None
-      cell_id = '_'.join(cell_id_list)
+      cell_id = self.keyToId(kw, base_id = base_id)
+      if cell_id is None:
+        return None
       return self.get(cell_id)
 
     security.declareProtected( Permissions.AccessContentsInformation,
@@ -493,15 +487,9 @@ class XMLMatrix(Folder):
       if not self.index.has_key(base_id):
         return None
 
-      cell_id_list = [base_id]
-
-      base_item = self.index[base_id]
-      try:
-        cell_id_list.extend(base_item[i][my_id] for i, my_id in enumerate(kw))
-      except KeyError:
+      cell_id = self.keyToId(kw, base_id = base_id)
+      if cell_id is None:
         raise KeyError, 'Invalid key: %s' % str(kw)
-
-      cell_id = "_".join(cell_id_list)
 
       cell = self.get(cell_id)
       if cell is not None:
