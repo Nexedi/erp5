@@ -62,7 +62,7 @@ def manage_addERP5Site(self,
                        title='ERP5',
                        description='',
                        create_userfolder=1,
-                       create_activities=1,
+                       create_activities=True,
                        email_from_address='postmaster@localhost',
                        email_from_name='Portal Administrator',
                        validate_email=0,
@@ -1432,7 +1432,7 @@ class ERP5Generator(PortalGenerator):
              erp5_sql_deferred_connection_type,
              cmf_activity_sql_connection_type,
              cmf_activity_sql_connection_string,
-             create_activities=1,
+             create_activities=True,
              reindex=1,
              **kw):
     id = str(id)
@@ -1471,7 +1471,7 @@ class ERP5Generator(PortalGenerator):
     make sure that we do not put un the queue the full reindexation
     """
     # Add Activity Tool
-    if kw.has_key('create_activities') and int(kw['create_activities'])==1:
+    if kw.get('create_activities', False):
       if not p.hasObject('portal_activities'):
         addTool = p.manage_addProduct['CMFActivity'].manage_addTool
         addTool('CMF Activity Tool', None) # Allow user to select active/passive
