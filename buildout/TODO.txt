@@ -26,3 +26,4 @@
  - use declarative way of selecting in-buildout dependencies
      For example mysql-python egg is build against locally built mysql, but
      version of mysql is hardcoded in mysql-python egg part.
+ - have all eggs available as software, but use them selectively in instances
