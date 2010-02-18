@@ -107,17 +107,9 @@ class XMLMatrix(Folder):
       if not self.index.has_key(base_id):
         return 0
 
-      cell_id = base_id
-      i = 0
-      for my_id in kw:
-        if self.index[base_id].has_key(i):
-          if self.index[base_id][i].has_key(my_id):
-            cell_id += '_%s' % self.index[base_id][i][my_id]
-          else:
-            return 0
-        else:
-          return 0
-        i += 1
+      cell_id = self.keyToId(kw, base_id = base_id)
+      if cell_id is None:
+        return 0
 
       return self.get(cell_id) is not None
 
