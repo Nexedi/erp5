@@ -291,9 +291,14 @@ if not simulation_mode:\n
           category.edit(**{\'expiration_date\':expiration_date})\n
     else:\n
       for category in category_to_delete_list:\n
-        category = context.portal_categories.resolveCategory(category)\n
-        if category is not None:\n
-          category.expire()\n
+        expiration_possible = context.getPortalObject().portal_workflow \\\n
+            .isTransitionPossible(category, \'expire\')\n
+        break\n
+      if expiration_possible:\n
+        for category in category_to_delete_list:\n
+          category = context.portal_categories.resolveCategory(category)\n
+          if category is not None:\n
+            category.expire()\n
 \n
 \n
 \n
@@ -428,6 +433,7 @@ return context.REQUEST.RESPONSE.redirect(\n
                             <string>category_to_delete_list</string>
                             <string>base_category_id</string>
                             <string>parent</string>
+                            <string>expiration_possible</string>
                           </tuple>
                         </value>
                     </item>
