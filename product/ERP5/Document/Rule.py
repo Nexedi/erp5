@@ -398,12 +398,6 @@ class Rule(Predicate, XMLObject):
               else:
                 movement_value = movement.getProperty(k)
               if k not in ('quantity',) and v != movement_value:
-                if movement.isPropertyForced(k):
-                  # support compensation if not prevent_compensation
-                  LOG('%s:%s' % (self.getRelativeUrl(), movement.getRelativeUrl()), WARNING,
-                      'Property %s forced to stay as %r, even if wanted %r' % (k, movement.getProperty(k), v))
-                  # DivergenceSolutionDecision mangle
-                  continue
                 prop_dict.setdefault(k, v)
 
         # update movement lists
