@@ -1047,6 +1047,9 @@ class ERP5Form(ZMIForm, ZopePageTemplate):
             proxy_field.values['field_id'] = target_field_id
 
             target_field = proxy_field.getTemplateField()
+            if target_field is None:
+              raise ValueError("Unable to find template : %s.%s" % (
+                               target_form_id, target_field_id))
 
             # copy data
             new_values = remove_same_value(copy(old_field, 'values'),
