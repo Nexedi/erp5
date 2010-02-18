@@ -2109,6 +2109,35 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     self.failUnless(module is not None)
     self.assertEquals(module.__ac_local_roles__, new_local_roles)
 
+  def stepCheckModuleLocalRolesInCatalogBeforeUpdate(self, sequence=None, sequence_list=None, **kw):
+    """
+    Check presence of local roles
+    """
+    p = self.getPortal()
+    module_id = sequence.get('module_id')
+    module = p._getOb(module_id, None)
+    self.failUnless(module is not None)
+    sql = "select distinct roles_and_users.uid as uid, allowedRolesAndUsers as role from catalog, roles_and_users where catalog.security_uid = roles_and_users.uid and catalog.uid=%s" %(module.getUid(),)
+    sql_connection = self.getSQLConnection()
+    result = sql_connection.manage_test(sql)
+    result = [(x.uid, x.role) for x in result]
+    sequence.edit(local_roles_catalog_result=result)
+
+  def stepCheckModuleLocalRolesInCatalogAfterUpdate(self, sequence=None, sequence_list=None, **kw):
+    """
+    Check presence of local roles
+    """
+    p = self.getPortal()
+    module_id = sequence.get('module_id')
+    before_update_local_roles = sequence.get('local_roles_catalog_result')
+    module = p._getOb(module_id, None)
+    self.failUnless(module is not None)
+    sql = "select distinct roles_and_users.uid as uid, allowedRolesAndUsers as role from catalog, roles_and_users where catalog.security_uid = roles_and_users.uid and catalog.uid=%s" %(module.getUid(),)
+    sql_connection = self.getSQLConnection()
+    result = sql_connection.manage_test(sql)
+    for line in result:
+      self.assertTrue((line.uid, line.role) not in before_update_local_roles)
+
   def stepCheckLocalRolesRemoved(self, sequence=None, sequence_list=None, **kw):
     """
     Check non-presence of local roles
@@ -3672,10 +3701,13 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        RemoveLocalRoles \
                        RemoveBusinessTemplate \
                        RemoveAllTrashBins \
+                       Tic \
                        ImportBusinessTemplate \
                        UseImportBusinessTemplate \
+                       Tic \
                        CheckBuiltBuildingState \
                        CheckNotInstalledInstallationState \
+                       CheckModuleLocalRolesInCatalogBeforeUpdate \
                        InstallBusinessTemplate \
                        Tic \
                        CheckInstalledInstallationState \
@@ -3683,6 +3715,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CheckNoTrashBin \
                        CheckSkinsLayers \
                        CheckLocalRolesExists \
+                       CheckModuleLocalRolesInCatalogAfterUpdate \
                        UninstallBusinessTemplate \
                        CheckBuiltBuildingState \
                        CheckNotInstalledInstallationState \
