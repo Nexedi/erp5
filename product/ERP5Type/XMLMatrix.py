@@ -385,8 +385,8 @@ class XMLMatrix(Folder):
         index_list = []
         for index in cell_id[len(base_id)+1:].split('_'):
           index_list.append(int(index))
-        for i in range(len(index_list)):
-          if index_list[i] >= size_list[i]:
+        for i, index in enumerate(index_list):
+          if index >= size_list[i]:
             removed_cell_id_list.append(cell_id)
             break
 
@@ -541,9 +541,9 @@ class XMLMatrix(Folder):
       index = self.index[base_id]
       cell_id_list = [base_id]
       append = cell_id_list.append
-      for i in xrange(len(kw)):
+      for i, item in enumerate(kw):
         try:
-          append(str(index[i][kw[i]]))
+          append(str(index[i][item]))
         except KeyError:
           return None
       return '_'.join(cell_id_list)
