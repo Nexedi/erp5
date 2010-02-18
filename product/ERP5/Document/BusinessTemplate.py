@@ -4715,6 +4715,7 @@ class LocalRolesTemplateItem(BaseTemplateItem):
         obj = p.unrestrictedTraverse(path)
         local_roles_dict = self._objects[roles_path][0]
         setattr(obj, '__ac_local_roles__', local_roles_dict)
+        obj.reindexObject()
 
   def uninstall(self, context, **kw):
     p = context.getPortalObject()
@@ -4722,6 +4723,7 @@ class LocalRolesTemplateItem(BaseTemplateItem):
       path = roles_path.split('/')[1:]
       obj = p.unrestrictedTraverse(path)
       setattr(obj, '__ac_local_roles__', {})
+      obj.reindexObject()
 
 class BusinessTemplate(XMLObject):
     """
