@@ -47,21 +47,18 @@
               default_pad_group python: \'\';\n
               knowledge_pads python: \n
                  here.ERP5Site_getKnowledgePadListForUser(mode=mode);\n
-              struct python:\n
-                here.WebSite_getActiveKnowledgePadForUser(\n
-                                              knowledge_pads,\n
-                                              );\n
+              struct python: here.WebSite_getActiveKnowledgePadForUser(knowledge_pads);\n
               active_knowledge_pad python: struct[0];\n
               knowledge_pads python: struct[1];\n
-              hasUserActivity python:\n
-                here.ERP5Site_hasUserActivity(active_knowledge_pad,\n
-                                              mode=mode);\n
+              hasUserActivity python:  here.ERP5Site_hasUserActivity(\n
+\t                                      active_knowledge_pad,\n
+                                              mode=mode,\n
+                                              default_pad_group=default_pad_group);\n
               isAnon python: here.portal_membership.isAnonymousUser();\n
               columns python: options.get(\'columns\', 3);\n
               createDefaultPadForUser  python: len(knowledge_pads)==0 and\n
-                                                hasUserActivity;\n
-              waitForActivitiesOnServer python: len(knowledge_pads)>=1 and \n
-                                                active_knowledge_pad is None and\n
+                                               not hasUserActivity;\n
+              waitForActivitiesOnServer python: active_knowledge_pad is None and\n
                                                 hasUserActivity;\n
               isUserAllowedToCreateKnowledgePads\n
                   context/Base_isUserAllowedToUseKnowledgePad;\n
@@ -86,7 +83,8 @@
                                                               cancel_url=cancel_url)"/> \n
     </tal:block>\n
   \n
-    <div tal:condition="python: not isAnon and waitForActivitiesOnServer\n
+    <div tal:condition="python: not isAnon and \n
+                                waitForActivitiesOnServer\n
                                 and isUserAllowedToCreateKnowledgePads">\n
       \n
       <div class="wait_block">\n
@@ -94,7 +92,7 @@
           Please wait until your home is being updated.</h2>\n
         <p i18n:translate="" i18n:domain="ui"> You\'ll be automatically redirected.</p>\n
         <script type="text/javascript">\n
-          checkForActivitiesOnServer(7000, \'view\');\n
+          checkForActivitiesOnServer(5000, \'view\', \'web_front\', \'\');\n
         </script>\n
       </div>\n
         \n
@@ -108,7 +106,7 @@
         </h2>\n
         <p i18n:translate="" i18n:domain="ui"> You\'ll be automatically redirected.</p>\n
         <script type="text/javascript">\n
-          createDefaultPadOnServer(7000,\n
+          createDefaultPadOnServer(5000,\n
           \'ERP5Site_createDefaultKnowledgePadListForUser\', \'\',\n
           \'view\', \'web_front\');\n
         </script>\n

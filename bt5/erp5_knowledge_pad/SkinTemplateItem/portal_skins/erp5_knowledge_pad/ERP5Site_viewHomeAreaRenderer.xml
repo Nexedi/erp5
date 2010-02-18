@@ -50,7 +50,7 @@
               hasUserActivity python:\n
                       here.ERP5Site_hasUserActivity(active_knowledge_pad,\n
                                                     mode=mode,\n
-\t\t\t\t\t\t    default_pad_group=default_pad_group);\n
+                                                    default_pad_group=default_pad_group);\n
               isAnon python: here.portal_membership.isAnonymousUser();\n
               createDefaultPadForUser  python: len(knowledge_pads)==0 and\n
                                                not hasUserActivity;\n
