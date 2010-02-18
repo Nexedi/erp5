@@ -477,8 +477,8 @@ class XMLMatrix(Folder):
         return None
 
       result = []
-      for i in range(0,len(cell_range.keys())):
-        result_items = cell_range[i].items()
+      for value in cell_range.itervalues():
+        result_items = value.items()
         result_items.sort(lambda x, y: x[1]-y[1])
         result_items = [x[0] for x in result_items]
         result += [result_items]
