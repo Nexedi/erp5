@@ -29,8 +29,10 @@
 import unittest
 
 import transaction
+import MethodObject
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from Products.ERP5Type.tests.utils import to_utf8
 from zLOG import LOG
 
 # dependency order
@@ -85,7 +87,7 @@ target_business_templates = (
   'erp5_l10n_pt-BR',
 )
 
-class TestTranslation(ERP5TypeTestCase):
+class TestWorkflowStateTitleTranslation(ERP5TypeTestCase):
   run_all_test = 1
   domain = 'erp5_ui'
   lang = 'en'
@@ -275,22 +277,98 @@ class TestTranslation(ERP5TypeTestCase):
     self.assertEquals(
          organisation.getTranslatedValidationStateTitle(),'Validé')
 
-class StandardRelatedKeysTranslationBase(ERP5TypeTestCase):
+class LanguageGetter(MethodObject.Method):
+
+  def __init__(self, lang):
+    self.lang = lang
+
+  def __call__(self, context):
+    return self.lang
+
+class TestTranslation(ERP5TypeTestCase):
   
+  lang = 'fr'
+
   def getBusinessTemplateList(self):
     return ['erp5_base',]
 
-  def beforeTearDown(self):
-    person_module = self.portal.person_module
-    person_module.manage_delObjects(list(person_module.objectIds()))
-    organisation_module = self.portal.organisation_module
-    organisation_module.manage_delObjects(list(organisation_module.objectIds()))
+  def _setUpTranslations(self):
+    self.portal.Localizer.manage_addLanguage(self.lang)
+    erp5_ui = self.portal.Localizer.erp5_ui
+    erp5_ui.gettext('Draft', add=1)
+    erp5_ui.gettext('Person', add=1)
+    erp5_ui.message_edit('Draft', self.lang, 'Brouillon', '')
+    erp5_ui.message_edit('Person', self.lang, 'Personne', '')
+    self.portal.ERP5Site_updateTranslationTable()
+
+  def _cleanUpTranslations(self):
+    erp5_ui = self.portal.Localizer.erp5_ui
+    for msgid in ('Person', 'Draft'):
+      translations = erp5_ui.get_translations(msgid)
+      translations.pop(self.lang, None)
+    self.portal.ERP5Site_updateTranslationTable()
+
+  def afterSetUp(self):
+    ERP5TypeTestCase.afterSetUp(self)
+    self._setUpTranslations()
+    
+    # replace Localizer.utils.lang_negotiator in MessageCatalog to return
+    # self.lang
+    from Products.Localizer import MessageCatalog
+    self.old_lang_negotiator = MessageCatalog.lang_negotiator
+    def lang_negotiator(avilable_languages, self=self):
+      return self.lang
+    MessageCatalog.lang_negotiator = lang_negotiator
+
+    # patch get_selected_language, used by portal_catalog queries that use
+    # translation
+    self.portal.Localizer.get_selected_language = LanguageGetter(self.lang)
+
     self.stepTic()
 
-  def check_standard_translated_related_keys(self):
+  def beforeTearDown(self):
+    transaction.abort()
+    # unpatch lang_negotiator and get_selected_message
+    from Products.Localizer import MessageCatalog
+    MessageCatalog.lang_negotiator = self.old_lang_negotiator
+    del self.portal.Localizer.get_selected_language
+
+    self._cleanUpTranslations()
+    # test clean-up actually worked
+    erp5_ui = self.portal.Localizer.erp5_ui
+    self.assertEquals(erp5_ui.gettext('Person', lang=self.lang), 'Person')
+    self.assertEquals(erp5_ui.gettext('Draft', lang=self.lang), 'Draft')
+
+    # erase created objects
+    for module in (self.portal.person_module, self.portal.organisation_module):
+      module.manage_delObjects(list(module.objectIds()))
+      
+    self.stepTic()
+    ERP5TypeTestCase.beforeTearDown(self)
+
+  def test_Localizer_translation(self):
+    # basically, test afterSetUp worked...
+    erp5_ui = self.portal.Localizer.erp5_ui
+    self.assertEquals(erp5_ui.gettext('Person', lang=self.lang), 'Personne')
+
+  def test_ZPT_translation(self):
+    dispatcher = self.portal.manage_addProduct['PageTemplates']
+    myzpt = dispatcher.manage_addPageTemplate('myzpt')
+    zpt_template = """
+    <tal:ommit xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+               i18n:domain="erp5_ui">
+      <tal:ommit i18n:translate="">Person</tal:ommit>
+      <tal:ommit i18n:translate="">Draft</tal:ommit>
+    </tal:ommit>
+    """
+    myzpt.pt_edit(zpt_template,
+                  'text/html')
+    results = to_utf8(myzpt()).split()
+    self.assertEquals(results, ['Personne', 'Brouillon'])
+
+  def test_portal_type_and_state_title_translation_on_portal_catalog(self):
     # make sure we can search by "translated_validation_state_title" and
     # "translated_portal_type"
-    lang='fr'
     person_1 = self.portal.person_module.newContent(portal_type='Person')
     person_1.validate()
     person_2 = self.portal.person_module.newContent(portal_type='Person')
@@ -298,85 +376,30 @@ class StandardRelatedKeysTranslationBase(ERP5TypeTestCase):
                             portal_type='Organisation')
     
     self.stepTic()
-    # patch the method, delete it later, or it would fail on commit
-    self.portal.Localizer.get_selected_language = lambda: lang
-    try:
-      self.assertEquals(set([person_1, person_2]),
-          set([x.getObject() for x in
-            self.portal.portal_catalog(translated_portal_type='Personne')]))
-      LOG("ORGANISATION TEST",0,organisation)
-      
-      self.assertEquals(set([person_2, organisation]),
-          set([x.getObject() for x in
-            self.portal.portal_catalog(translated_validation_state_title='Brouillon',
-                                       portal_type=('Person', 'Organisation'))]))
-      self.assertEquals([person_2],
-          [x.getObject() for x in
-            self.portal.portal_catalog(translated_validation_state_title='Brouillon',
-                                       translated_portal_type='Personne')])
-    finally:
-      del self.portal.Localizer.get_selected_language
+    self.assertEquals(set([person_1, person_2]),
+        set([x.getObject() for x in
+          self.portal.portal_catalog(translated_portal_type='Personne')]))
+    
+    self.assertEquals(set([person_2, organisation]),
+        set([x.getObject() for x in
+          self.portal.portal_catalog(translated_validation_state_title='Brouillon',
+                                     portal_type=('Person', 'Organisation'))]))
+    self.assertEquals([person_2],
+        [x.getObject() for x in
+          self.portal.portal_catalog(translated_validation_state_title='Brouillon',
+                                     translated_portal_type='Personne')])
 
-class TestStandardRelatedKeysWithLocalizer(StandardRelatedKeysTranslationBase):
+class TestTranslationWithBusinessTemplate(TestTranslation):
 
-  def beforeTearDown(self):
-    erp5_ui = self.portal.Localizer.erp5_ui
-    translations = erp5_ui.get_translations('Person')
-    translations.pop('fr', None)
-    self.assertEquals(erp5_ui.gettext('Person', lang='fr'), 'Person')
-    translations = erp5_ui.get_translations('Draft')
-    translations.pop('fr', None)
-    self.assertEquals(erp5_ui.gettext('Draft', lang='fr'), 'Draft')
-    StandardRelatedKeysTranslationBase.beforeTearDown(self)
-
-  def test_standard_translated_related_keys(self):
-    # manually add portal type and workflow title translations to the
-    # message catalog
-    lang = 'fr'
-    if lang not in [x['id'] for x in
-        self.portal.Localizer.get_languages_map()]:
-      self.portal.Localizer.manage_addLanguage(lang)
-
-    message_catalog = self.portal.Localizer.erp5_ui
-    message_catalog.gettext('Draft', add=1)
-    message_catalog.gettext('Person', add=1)
-    message_catalog.message_edit('Draft', lang, 'Brouillon', '')
-    message_catalog.message_edit('Person', lang, 'Personne', '')
-
-    self.portal.ERP5Site_updateTranslationTable()
-
-    self.check_standard_translated_related_keys()
-
-class TestStandardRelatedKeysWithBusinessTemplate(StandardRelatedKeysTranslationBase):
+  def _setUpTranslations(self):
+    self.manuallyInstallBusinessTemplate('erp5_l10n_fr')
 
   def _cleanUpTranslations(self):
     self.uninstallBusinessTemplate('erp5_l10n_fr')
-    localizer = self.portal.Localizer
-    self.assertEquals(localizer.erp5_ui.gettext('Person', lang='fr'), 'Person')
-
-  def afterSetUp(self):
-    StandardRelatedKeysTranslationBase.afterSetUp(self)
-    # in case a saved previous test poluted the environment with the
-    # erp5_l10n_fr BT
-    self._cleanUpTranslations()
-    
-  def beforeTearDown(self):
-    self._cleanUpTranslations()
-    StandardRelatedKeysTranslationBase.beforeTearDown(self)
-
-  def test_businessTemplateTranslation(self):
-    message_catalog = self.portal.Localizer.erp5_ui
-    self.assertEquals(message_catalog.gettext('Person', lang='fr'), 'Person')
-    self.manuallyInstallBusinessTemplate('erp5_l10n_fr')
-    self.assertEquals(message_catalog.gettext('Person', lang='fr'), 'Personne')
-
-  def test_standard_translated_related_keys(self):
-    self.manuallyInstallBusinessTemplate('erp5_l10n_fr')
-    self.check_standard_translated_related_keys()
 
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestTranslation))
-  suite.addTest(unittest.makeSuite(TestStandardRelatedKeysWithLocalizer))
-  suite.addTest(unittest.makeSuite(TestStandardRelatedKeysWithBusinessTemplate))
+  suite.addTest(unittest.makeSuite(TestTranslationWithBusinessTemplate))
+  suite.addTest(unittest.makeSuite(TestWorkflowStateTitleTranslation))
   return suite
