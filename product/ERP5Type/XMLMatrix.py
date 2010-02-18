@@ -473,7 +473,9 @@ class XMLMatrix(Folder):
       if getattr(aq_base(self), 'index', None) is None:
         return []
       cell_range = self.index.get(base_id, None)
-      if cell_range is None: return None
+      if cell_range is None:
+        return None
+
       result = []
       for i in range(0,len(cell_range.keys())):
         result_items = cell_range[i].items()
