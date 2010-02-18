@@ -504,7 +504,6 @@ class TestBug(ERP5TypeTestCase):
                 , 'stepSetOldClosedDate'
                 , 'stepCancelBug'
                 , 'stepTic'
-                , 'stepCheckClosedDate'
                 ]
     sequence_string = ' '.join(step_list)
     sequence_list.addSequenceString(sequence_string)
