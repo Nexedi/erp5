@@ -656,19 +656,17 @@ class XMLMatrix(Folder):
         object_id_split = object_id.split('_')
         # We try to find the first split id which is an int
         base_id_len = len(object_id_split)
-        test_num = None
+        base_id = None
         while base_id_len > 0:
           try:
             # if this succeeds, it is very likely a cell with an id such as quantity_X_Y_0_Z
             test_num = int(object_id_split[base_id_len-1])
           except ValueError:
+            base_id = '_'.join(object_id_split[:base_id_len])
             break
           base_id_len -= 1
-        if base_id_len > 0:
-          base_id = '_'.join(object_id_split[0:base_id_len])
-        else:
-          test_num = None
-        if test_num is not None:
+
+        if base_id is not None:
             if not self.index.has_key(base_id):
               # The matrix does not have this base_id
               addError("There is no index for base_id %s" % base_id)
