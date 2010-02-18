@@ -479,8 +479,7 @@ class XMLMatrix(Folder):
       result = []
       for value in cell_range.itervalues():
         result_items = sorted(value.iteritems(), key=lambda x:x[1])
-        result_items = [x[0] for x in result_items]
-        result += [result_items]
+        result.extend(x[0] for x in result_items)
       return result
 
     security.declareProtected( Permissions.ModifyPortalContent, 'newCell' )
