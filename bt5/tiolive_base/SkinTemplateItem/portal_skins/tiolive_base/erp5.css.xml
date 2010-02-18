@@ -421,14 +421,12 @@ body {\n
 #top-bar {\n
   background-color:#4780B0;\n
   border-bottom:1px solid #FFFFFF;\n
-  height:35px;\n
   overflow:hidden;\n
 }\n
 \n
 #fieldset-tiobar {\n
   float:left;\n
   overflow:hidden;\n
-  width:60%;\n
   border-style: none;\n
   font-size:11pt;\n
 }\n
@@ -443,10 +441,9 @@ body {\n
   float:left;\n
   height:100%;\n
   line-height:23px;\n
-  margin:0pt;\n
+  margin:0 100px 0 0;\n
   padding:5px 0pt 0pt;\n
   text-align: left;\n
-  width:20%;\n
 }\n
 \n
 #tiologin img#user-img{\n
@@ -470,6 +467,7 @@ body {\n
 \n
 #fieldset-tiosearch {\n
 \n
+  float:left;\n
 \tborder:none;\n
 \tfont-size:1pt;\n
 \tcolor:#f6a801;\n
@@ -498,7 +496,6 @@ body {\n
 \n
   margin: 0;\n
 \twidth:163px;\n
-\tposition: absolute;\n
 \tright:5px;\n
 \toverflow: hidden;\n
 \tdisplay:block;\n

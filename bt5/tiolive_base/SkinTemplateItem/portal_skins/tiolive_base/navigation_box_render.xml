@@ -110,6 +110,7 @@
   \n
       </span>\n
     </fieldset>\n
+    <span class="second">\n
 \n
 <p id="tiologin"\n
    tal:condition="here/portal_membership/isAnonymousUser"><a href="#" id="link-login"  \n
@@ -134,6 +135,7 @@
     <button type="submit" class="input-submit" value="" alt="Search"\n
             name="ERP5Site_viewQuickSearchResultList:method"/>  \n
 </fieldset>\n
+    </span>\n
 \n
 \n
   </div>\n
