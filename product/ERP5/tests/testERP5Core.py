@@ -93,6 +93,11 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
   def getTitle(self):
     return "ERP5Core"
 
+  def getBusinessTemplateList(self):
+    """
+    """
+    return ('erp5_base', )
+
   def login(self, quiet=0, run=run_all_test):
     uf = self.getPortal().acl_users
     uf._doAddUser(self.manager_username, self.manager_password, ['Manager'], [])
@@ -198,7 +203,7 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
            (pprint.pformat(expected), pprint.pformat(got))) 
     self.assertEquals(expected, got, msg)
 
-  def test_actions_on_portal(self):
+  def test_manager_actions_on_portal(self):
     # as manager:
     expected = {'folder': [],
                 'global': [{'title': 'Manage Business Templates',
@@ -211,6 +216,8 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
                             'id': 'types_tool'},
                            {'title': 'Undo', 'id': 'undo'}],
                 'object': [],
+                'object_action': [{'id': 'post_query', 'title': 'Post a Query'}],
+                'object_jump': [{'id': 'jump_query', 'title': 'Queries'}],
                 'object_search': [{'title': 'Search', 'id': 'search'}],
                 'object_sort': [{'title': 'Sort', 'id': 'sort_on'}],
                 'object_ui': [{'title': 'Modify UI', 'id': 'list_ui'}],
@@ -221,6 +228,26 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
                 'workflow': []}
     self.check_actions(self.portal, expected)
 
+  def test_member_actions_on_portal(self):
+    # as Member
+    self.createUser('usual_member')
+    self.logout()
+    transaction.commit()
+    self.tic()
+    ERP5TypeTestCase.login(self, 'usual_member')
+    expected = {'folder': [],
+                'global': [],
+                'object': [],
+                'object_search': [{'title': 'Search', 'id': 'search'}],
+                'object_sort': [{'title': 'Sort', 'id': 'sort_on'}],
+                'object_ui': [{'title': 'Modify UI', 'id': 'list_ui'}],
+                'object_view': [{'title': 'History', 'id': 'history'}],
+                'user': [{'title': 'Preferences', 'id': 'preferences'},
+                         {'title': 'Log out', 'id': 'logout'}],
+                'workflow': []}
+    self.check_actions(self.portal, expected)
+
+  def test_anonymous_actions_on_portal(self):
     # as anonymous:
     self.logout()
     expected = {'folder': [],
