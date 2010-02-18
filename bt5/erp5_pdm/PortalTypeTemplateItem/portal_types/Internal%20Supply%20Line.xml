@@ -76,7 +76,7 @@
         </item>
         <item>
             <key> <string>init_script</string> </key>
-            <value> <string>SaleSupplyLine_init</string> </value>
+            <value> <string>InternalSupplyLine_init</string> </value>
         </item>
         <item>
             <key> <string>permission</string> </key>
