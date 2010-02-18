@@ -478,8 +478,7 @@ class XMLMatrix(Folder):
 
       result = []
       for value in cell_range.itervalues():
-        result_items = value.items()
-        result_items.sort(key=lamba x:x[1])
+        result_items = sorted(value.iteritems(), key=lambda x:x[1])
         result_items = [x[0] for x in result_items]
         result += [result_items]
       return result
