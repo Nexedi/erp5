@@ -679,14 +679,13 @@ class XMLMatrix(Folder):
               # Check empty indices.
               empty_list = []
               base_item = self.index[base_id]
-              for i in base_item.keys():
-                item = base_item[i]
-                if item is None or len(item) == 0:
+              for key, value in base_item.iteritems()
+                if value is None or len(value) == 0:
                   addError("There is no id for the %dth axis of base_id %s" % (i, base_id))
-                  empty_list.append(i)
+                  empty_list.append(key)
               if fixit:
                 for i in empty_list:
-                  del base_item[i]
+                  del base_item[key]
 
               len_id = len(base_item)
               if len(object_id_split) != (len_id + base_id_len): # +1 for the quantity
@@ -695,7 +694,7 @@ class XMLMatrix(Folder):
                 to_delete_set.add(object_id)
               else :
                 for i in range(len_id):
-                  if int(object_id_split[i+base_id_len]) >= len(self.index[base_id][i]):
+                  if int(object_id_split[i+base_id_len]) >= len(base_item[i]):
                     addError("Cell %s is out of bound" % object_id)
                     to_delete_set.add(object_id)
 
