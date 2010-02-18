@@ -490,16 +490,19 @@ class XMLMatrix(Folder):
       if getattr(aq_base(self), 'index', None) is None:
         return None
       base_id = kwd.get('base_id', "cell")
-      cell_id = base_id
-      if not self.index.has_key(cell_id):
+      if not self.index.has_key(base_id):
         return None
+
+      cell_id_list = [base_id]
 
       base_item = self.index[base_id]
       for i, my_id in enumerate(kw):
         try:
-          cell_id += '_%s' % base_item[i][my_id]
+          cell_id_list.append(base_item[i][my_id])
         except KeyError:
           raise KeyError, 'Invalid key: %s' % str(kw)
+
+      cell_id = "_".join(cell_id_list)
 
       cell = self.get(cell_id)
       if cell is not None:
