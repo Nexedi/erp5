@@ -636,7 +636,17 @@ class XMLMatrix(Folder):
       """
       # Check useless cells
       to_delete = []
-      errors = []
+      error_list = []
+      def addError(message):
+        if fixit:
+          error_message += ' (fixed)'
+        error = (self.getRelativeUrl(),
+                 'XMLMatrix inconsistency',
+                 102,
+                 error_message)
+
+        error_list.append(error)
+
       # We make sure first that there is an index
       if getattr(aq_base(self), 'index', None) is None:
         self.index = PersistentMapping()
@@ -668,19 +678,15 @@ class XMLMatrix(Folder):
         if test_num is not None:
             if not self.index.has_key(base_id):
               # The matrix does not have this base_id
-              error_message = "There is no index for base_id %s" % base_id
-              if fixit: error_message += ' (fixed)'
-              errors += [(self.getRelativeUrl(), 'XMLMatrix inconsistency',102,error_message)]
+              addError("There is no index for base_id %s" % base_id)
               if object_id not in to_delete:
-                to_delete += [object_id]
+                to_delete.append(object_id)
             else:
               # Check empty indices.
               empty_list = []
               for i in self.index[base_id].keys():
                 if self.index[base_id][i] is None or len(self.index[base_id][i]) == 0:
-                  error_message = "There is no id for the %dth axis of base_id %s" % (i, base_id)
-                  if fixit: error_message += ' (fixed)'
-                  errors += [(self.getRelativeUrl(), 'XMLMatrix inconsistency',102,error_message)]
+                  addError("There is no id for the %dth axis of base_id %s" % (i, base_id))
                   empty_list.append(i)
               if fixit:
                 for i in empty_list:
@@ -688,25 +694,21 @@ class XMLMatrix(Folder):
 
               len_id = len(self.index[base_id])
               if len(object_id_split) != (len_id + base_id_len): # +1 for the quantity
-                error_message = "Dimension of cell is %s but should be %s" % (len(object_id_split)
-                                                                            - base_id_len, len_id)
-                if fixit: error_message += ' (fixed)'
-                errors += [(self.getRelativeUrl(), 'XMLMatrix inconsistency',102,error_message)]
+                addError("Dimension of cell is %s but should be %s" % (len(object_id_split)
+                                                                            - base_id_len, len_id))
                 if object_id not in to_delete:
-                  to_delete += [object_id]
+                  to_delete.append(object_id)
               else :
                 for i in range(len_id):
                   if int(object_id_split[i+base_id_len]) >= len(self.index[base_id][i]):
-                    error_message = "Cell %s is out of bound" % object_id
-                    if fixit: error_message += ' (fixed)'
-                    errors += [(self.getRelativeUrl(), 'XMLMatrix inconsistency',102,error_message)]
+                    addError("Cell %s is out of bound" % object_id)
                     if object_id not in to_delete:
-                      to_delete += [object_id]
+                      to_delete.append(object_id)
 
       if fixit and len(to_delete) > 0:
         self.manage_delObjects(to_delete)
 
-      return errors
+      return error_list
 
     security.declareProtected( Permissions.ModifyPortalContent, 'notifyAfterUpdateRelatedContent' )
     def notifyAfterUpdateRelatedContent(self, previous_category_url, new_category_url):
