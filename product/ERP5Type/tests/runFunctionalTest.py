@@ -177,10 +177,8 @@ class FunctionalTestRunner:
     print 'Xvfb : %d' % pid
     print 'Take screenshots using xwud -in %s/Xvfb_screen0' % self.xvfb_fbdir
     return pid
-  
-  def prepareFirefox(self, host, port):
-    os.system("rm -rf %s" % self.profile_dir)
-    os.mkdir(self.profile_dir)
+
+  def getPrefJs(self, host, port):
     prefs_js = """
 // Don't ask if we want to switch default browsers
 user_pref("browser.shell.checkDefaultBrowser", false);
@@ -216,12 +214,18 @@ user_pref("signed.applets.codebase_principal_support", true);
 user_pref("capability.principal.codebase.p1.id", "http://%s");
 user_pref("capability.principal.codebase.p1.subjectName", "");""" % \
       '%s:%s' % (host, port)
+    return prefs_js
+
+  def prepareFirefox(self, prefs_js=''):
+    os.system("rm -rf %s" % self.profile_dir)
+    os.mkdir(self.profile_dir)
     pref_file = open(os.path.join(self.profile_dir, 'prefs.js'), 'w')
     pref_file.write(prefs_js)
     pref_file.close()
   
   def runFirefox(self,xvfb_display):
-    self.prepareFirefox(self.host, self.port)
+    prefs_js = self.getPrefJs(self.host, self.port)
+    self.prepareFirefox(prefs_js)
     if self.debug:
       try:
         shutil.copy2(os.path.expanduser('~/.Xauthority'), '%s/.Xauthority' % self.profile_dir)
