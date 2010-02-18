@@ -63,32 +63,9 @@ def makeFileUpload(name):
   path = makeFilePath(name)
   return FileUploadTest(path, name)
 
-class TestOOoImport(ERP5TypeTestCase):
-  """
-    ERP5  test import object list from OOo Document
-  """
-
-  # pseudo constants
-  RUN_ALL_TEST = 1
-  QUIET = 0
+class TestOOoImportMixin(object):
   gender_base_cat_id    = 'gender'
   function_base_cat_id  = 'function'
-
-  ##################################
-  ##  ZopeTestCase Skeleton
-  ##################################
-
-  def getTitle(self):
-    """
-      Return the title of the current test set.
-    """
-    return "ERP5 Site - OOo File importing"
-
-  def getBusinessTemplateList(self):
-    """
-      Return the list of required business templates.
-    """
-    return ('erp5_base', 'erp5_ooo_import')
 
   def afterSetUp(self):
     """
@@ -143,21 +120,29 @@ class TestOOoImport(ERP5TypeTestCase):
     transaction.commit()
     self.tic()
 
+class TestOOoImport(TestOOoImportMixin, ERP5TypeTestCase):
+  """
+    ERP5  test import object list from OOo Document
+  """
 
+  # pseudo constants
+  RUN_ALL_TEST = 1
+  QUIET = 0
   ##################################
-  ##  Useful methods
+  ##  ZopeTestCase Skeleton
   ##################################
 
-  def login(self):
+  def getTitle(self):
     """
-      Create a new manager user and login.
+      Return the title of the current test set.
     """
-    user_name = 'bartek'
-    user_folder = self.portal.acl_users
-    user_folder._doAddUser(user_name, '', ['Manager', 'Owner', 'Assignor',
-                                           'Associate', 'Auditor', 'Author'], [])
-    user = user_folder.getUserById(user_name).__of__(user_folder)
-    newSecurityManager(None, user)
+    return "ERP5 Site - OOo File importing"
+
+  def getBusinessTemplateList(self):
+    """
+      Return the list of required business templates.
+    """
+    return ('erp5_base', 'erp5_ooo_import')
 
   ##################################
   ##  Basic steps
@@ -1050,7 +1035,45 @@ class TestOOoImport(ERP5TypeTestCase):
     if not_ok:
       self.fail('Spreadsheet not read!')
 
+class TestOOoImportWeb(TestOOoImportMixin, ERP5TypeTestCase):
+  def getTitle(self):
+    """
+      Return the title of the current test set.
+    """
+    return "ERP5 Site - OOo File importing (with web)"
+
+  def getBusinessTemplateList(self):
+    """
+      Return the list of required business templates.
+    """
+    return ('erp5_base', 'erp5_web', 'erp5_ooo_import')
+
+  def test_CategoryTool_importCategoryFileExpirationSupport(self):
+    # tests simple use of CategoryTool_importCategoryFile script
+    region = self.portal.portal_categories.region
+    dummy_region = region.newContent(id='dummy_region')
+    transaction.commit()
+    self.tic()
+    self.portal.portal_categories.CategoryTool_importCategoryFile(
+        import_file=makeFileUpload('import_region_category.sxc'),
+        existing_category_list='expire')
+    transaction.commit()
+    self.tic()
+    self.assertEqual(3, len(region))
+    self.assertTrue('dummy_region' in region.objectIds())
+    self.assertEqual(region.dummy_region.getValidationState(), 'expired')
+    self.assertTrue('europe' in region.objectIds())
+    self.assertTrue('germany' in region.europe.objectIds())
+    self.assertTrue('france' in region.europe.objectIds())
+    france = region.europe.france
+    self.assertEquals('France', france.getTitle())
+    self.assertTrue(france.hasProperty('title'))
+    self.assertEquals('A Country', france.getDescription())
+    self.assertEquals('FR', france.getCodification())
+    self.assertEquals(1, france.getIntIndex())
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestOOoImport))
+  suite.addTest(unittest.makeSuite(TestOOoImportWeb))
   return suite
