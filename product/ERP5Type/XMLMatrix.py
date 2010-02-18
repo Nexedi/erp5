@@ -586,10 +586,11 @@ class XMLMatrix(Folder):
         Returns a list of cell values as tuples
       """
       result = []
+      append = result.append
       for id in self.getCellIdList(base_id=base_id):
         o = self.get(id)
         if o is not None:
-          result += [o]
+          append(o)
       return result
 
     security.declareProtected( Permissions.AccessContentsInformation,
@@ -615,9 +616,10 @@ class XMLMatrix(Folder):
       """
       ids = self.getCellIds(base_id = base_id)
       my_ids = []
+      append = my_ids.append
       for i in self.objectIds():
         if i in ids:
-          my_ids += [i]
+          append(i)
 
       if len(my_ids) > 0:
         self.manage_delObjects(ids=my_ids)
