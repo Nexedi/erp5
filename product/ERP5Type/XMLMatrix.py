@@ -632,7 +632,7 @@ class XMLMatrix(Folder):
       # Check useless cells
       to_delete_set = set()
       error_list = []
-      def addError(message):
+      def addError(error_message):
         if fixit:
           error_message += ' (fixed)'
         error = (self.getRelativeUrl(),
@@ -679,9 +679,9 @@ class XMLMatrix(Folder):
               # Check empty indices.
               empty_list = []
               base_item = self.index[base_id]
-              for key, value in base_item.iteritems()
+              for key, value in base_item.iteritems():
                 if value is None or len(value) == 0:
-                  addError("There is no id for the %dth axis of base_id %s" % (i, base_id))
+                  addError("There is no id for the %dth axis of base_id %s" % (key, base_id))
                   empty_list.append(key)
               if fixit:
                 for i in empty_list:
