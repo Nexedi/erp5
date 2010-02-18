@@ -144,7 +144,7 @@ class TALESValue(StaticValue):
     self.tales_expr = tales_expr
 
   def __call__(self, field, id, **kw):
-    REQUEST = get_request()
+    REQUEST = kw.get('REQUEST', get_request())
     if REQUEST is not None:
       # Proxyfield stores the "real" field in the request. Look if the
       # corresponding field exists in request, and use it as field in the
@@ -235,7 +235,7 @@ class DefaultValue(StaticValue):
           value = ob.getProperty(self.key)
       except Unauthorized:
         value = ob.getProperty(self.key, d=value, checked_permission='View')
-        REQUEST = get_request()
+        REQUEST = kw.get('REQUEST', get_request())
         if REQUEST is not None:
           REQUEST.set('read_only_%s' % self.key, 1)
     except (KeyError, AttributeError):
@@ -252,7 +252,7 @@ class DefaultCheckBoxValue(DefaultValue):
         value = ob.getProperty(self.key)
       except Unauthorized:
         value = ob.getProperty(self.key, d=value, checked_permission='View')
-        REQUEST = get_request()
+        REQUEST = kw.get('REQUEST', get_request())
         if REQUEST is not None:
           REQUEST.set('read_only_%s' % self.key, 1)
     except (KeyError, AttributeError):
@@ -269,8 +269,9 @@ class EditableValue(StaticValue):
     # This is useful to render ERP5 content as in a web site (ECommerce)
     # editable_mode should be set for example by the page template
     # which defines the current layout
-    if kw.get('REQUEST', None) is not None:
-      if not getattr(kw['REQUEST'], 'editable_mode', 1):
+    REQUEST = kw.get('REQUEST', get_request())
+    if REQUEST is not None:
+      if not REQUEST.get('editable_mode', 1):
         return 0
     return self.value
 
@@ -318,7 +319,7 @@ def getFieldValue(self, field, id, **kw):
   return return_value, isCacheable(return_value)
 
 def get_value(self, id, **kw):
-  REQUEST = get_request()
+  REQUEST = kw.get('REQUEST', get_request())
   if REQUEST is not None:
     field = REQUEST.get(
       'field__proxyfield_%s_%s_%s' % (self.id, self._p_oid, id),
