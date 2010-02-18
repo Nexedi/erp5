@@ -1228,7 +1228,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
 
   def stepCheckWorkflowChainExists(self, sequence=None, sequence_list=None, **kw):
     """
-    Check if the workflowChain has been removed
+    Check if the workflowChain has been added
     """
     present = 0
     pw = self.getWorkflowTool()
@@ -4199,6 +4199,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CheckCategoriesExists \
                        CheckSubCategoriesExists \
                        CheckWorkflowExists \
+                       CheckWorkflowChainExists \
                        CheckFirstActionExists \
                        CheckSecondActionExists \
                        CheckCatalogMethodExists \
