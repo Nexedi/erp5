@@ -297,6 +297,7 @@ class ERP5TypeTestCase(backportUnittest.TestCase, PortalTestCase):
       # FIXME: Try not to run this call below so often by moving it somewhere
       # where it is called exactly once per test.
       portal.setupCurrentSkin(portal.REQUEST)
+      self.REQUEST = portal.REQUEST
       return portal
 
     getPortalObject = getPortal
@@ -339,7 +340,7 @@ class ERP5TypeTestCase(backportUnittest.TestCase, PortalTestCase):
       # clean up certain cache related REQUEST keys that might be associated
       # with the logged in user
       for key in ('_ec_cache', '_oai_cache'):
-        self.portal.REQUEST.other.pop(key, None)
+        self.REQUEST.other.pop(key, None)
 
     def _setupUser(self):
       '''Creates the default user.'''
