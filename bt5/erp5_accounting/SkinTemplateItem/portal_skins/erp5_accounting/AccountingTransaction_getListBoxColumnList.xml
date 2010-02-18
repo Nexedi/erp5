@@ -64,10 +64,12 @@ The same for apply for payment / payment_reference.\n
 section_dict = {None: 1}\n
 payment_dict = {None: 1}\n
 for line in context.getMovementList():\n
-  section_dict[line.getSourceSection()] = 1\n
-  section_dict[line.getDestinationSection()] = 1\n
-  payment_dict[line.getSourcePayment()] = 1\n
-  payment_dict[line.getDestinationPayment()] = 1\n
+  if source:\n
+    section_dict[line.getDestinationSection()] = 1\n
+    payment_dict[line.getDestinationPayment()] = 1\n
+  else:\n
+    section_dict[line.getSourceSection()] = 1\n
+    payment_dict[line.getSourcePayment()] = 1\n
 \n
 if context.getSourcePayment() or context.getDestinationSection():\n
   min_payment_count = 2\n
