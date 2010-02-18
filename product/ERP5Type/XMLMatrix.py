@@ -68,10 +68,10 @@ class XMLMatrix(Folder):
       """
           Access a cell at row and column
       """
-      base_id= kwd.get('base_id', "cell")
       if getattr(aq_base(self), 'index', None) is None:
         return None
 
+      base_id = kwd.get('base_id', "cell")
       if not self.index.has_key(base_id):
         return None
 
@@ -100,18 +100,7 @@ class XMLMatrix(Folder):
           Checks if matrix corresponding to base_id contains cell specified
           by *kw coordinates.
       """
-      if getattr(aq_base(self), 'index', None) is None:
-        return 0
-
-      base_id= kwd.get('base_id', "cell")
-      if not self.index.has_key(base_id):
-        return 0
-
-      cell_id = self.keyToId(kw, base_id = base_id)
-      if cell_id is None:
-        return 0
-
-      return self.get(cell_id) is not None
+      return self.getCell(*kw, **kwd) is not None
 
     security.declareProtected( Permissions.AccessContentsInformation,
                                'hasCellContent' )
