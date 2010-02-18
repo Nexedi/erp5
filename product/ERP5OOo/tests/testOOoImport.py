@@ -761,6 +761,51 @@ class TestOOoImport(ERP5TypeTestCase):
     self.assertEquals('FR', france.getCodification())
     self.assertEquals(1, france.getIntIndex())
 
+  def test_CategoryTool_importCategoryFileDeletionSupport(self):
+    # tests simple use of CategoryTool_importCategoryFile script
+    region = self.portal.portal_categories.region
+    dummy_region = region.newContent(id='dummy_region')
+    transaction.commit()
+    self.tic()
+    self.portal.portal_categories.CategoryTool_importCategoryFile(
+        import_file=makeFileUpload('import_region_category.sxc'),
+        existing_category_list='delete')
+    transaction.commit()
+    self.tic()
+    self.assertEqual(2, len(region))
+    self.assertTrue('europe' in region.objectIds())
+    self.assertTrue('germany' in region.europe.objectIds())
+    self.assertTrue('france' in region.europe.objectIds())
+    france = region.europe.france
+    self.assertEquals('France', france.getTitle())
+    self.assertTrue(france.hasProperty('title'))
+    self.assertEquals('A Country', france.getDescription())
+    self.assertEquals('FR', france.getCodification())
+    self.assertEquals(1, france.getIntIndex())
+
+  def test_CategoryTool_importCategoryFileExpirationSupport(self):
+    # tests simple use of CategoryTool_importCategoryFile script
+    region = self.portal.portal_categories.region
+    dummy_region = region.newContent(id='dummy_region')
+    transaction.commit()
+    self.tic()
+    self.portal.portal_categories.CategoryTool_importCategoryFile(
+        import_file=makeFileUpload('import_region_category.sxc'),
+        existing_category_list='expire')
+    transaction.commit()
+    self.tic()
+    self.assertEqual(3, len(region))
+    self.assertTrue('dummy_region' in region.objectIds())
+    self.assertTrue('europe' in region.objectIds())
+    self.assertTrue('germany' in region.europe.objectIds())
+    self.assertTrue('france' in region.europe.objectIds())
+    france = region.europe.france
+    self.assertEquals('France', france.getTitle())
+    self.assertTrue(france.hasProperty('title'))
+    self.assertEquals('A Country', france.getDescription())
+    self.assertEquals('FR', france.getCodification())
+    self.assertEquals(1, france.getIntIndex())
+
   def test_CategoryTool_importCategoryFileXLS(self):
     # tests that CategoryTool_importCategoryFile supports .xls files
     self.portal.portal_categories.CategoryTool_importCategoryFile(
