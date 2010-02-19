@@ -7,9 +7,10 @@ cache_time:0
 class_name:
 class_file:
 </dtml-comment>
-<params>uid</params>
+<params>table
+uid:list
+</params>
 DELETE FROM
-  message_queue
+  <dtml-var table>
 WHERE
-<dtml-in uid>uid = <dtml-sqlvar sequence-item type="int"><dtml-if sequence-end><dtml-else> OR </dtml-if>
-</dtml-in>
+  <dtml-sqltest uid type="int" multiple>

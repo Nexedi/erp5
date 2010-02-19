@@ -35,6 +35,7 @@ from Products.ERP5Type.tests.utils import DummyMailHost
 from Products.CMFActivity.ActiveObject import INVOKE_ERROR_STATE,\
                                               VALIDATE_ERROR_STATE
 from Products.CMFActivity.Activity.Queue import VALIDATION_ERROR_DELAY
+from Products.CMFActivity.Activity.SQLDict import SQLDict
 from Products.CMFActivity.Errors import ActivityPendingError, ActivityFlushError
 #from Products.ERP5Type.Document.Organisation import Organisation
 # The above cannot be imported at top level because it doesn't exist until
@@ -3512,7 +3513,8 @@ class TestCMFActivity(ERP5TypeTestCase):
                        1)
     finally:
       # Clear activities from all nodes
-      activity_tool.SQLDict_delMessage(uid=[message.uid for message in result])
+      activity_tool.SQLBase_delMessage(table=SQLDict.sql_table,
+                                       uid=[message.uid for message in result])
       get_transaction().commit()
 
   def test_116_RaiseInCommitBeforeMessageExecution(self):

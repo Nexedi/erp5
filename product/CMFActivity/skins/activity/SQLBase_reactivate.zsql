@@ -1,0 +1,26 @@
+<dtml-comment>
+title:
+connection_id:cmf_activity_sql_connection
+max_rows:1000
+max_cache:100
+cache_time:0
+class_name:
+class_file:
+</dtml-comment>
+<params>table
+uid:list
+priority
+delay
+</params>
+UPDATE
+  <dtml-var table>
+SET
+  processing = 0
+<dtml-if expr="priority is not None">
+  , priority = <dtml-sqlvar priority type="int">
+</dtml-if>
+<dtml-if expr="delay is not None">
+  , date = DATE_ADD(UTC_TIMESTAMP(), INTERVAL <dtml-sqlvar delay type="int"> SECOND)
+</dtml-if>
+WHERE
+  <dtml-sqltest uid type="int" multiple>

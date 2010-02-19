@@ -27,8 +27,7 @@
 ##############################################################################
 
 from Products.CMFActivity.ActivityTool import registerActivity, MESSAGE_NOT_EXECUTED, MESSAGE_EXECUTED
-from Queue import VALID, INVALID_PATH, VALIDATION_ERROR_DELAY, \
-        abortTransactionSynchronously
+from Queue import VALID, INVALID_PATH, abortTransactionSynchronously
 from RAMDict import RAMDict
 from Products.CMFActivity.ActiveObject import INVOKE_ERROR_STATE, VALIDATE_ERROR_STATE
 from Products.CMFActivity.Errors import ActivityFlushError
@@ -47,7 +46,6 @@ except ImportError:
 
 from zLOG import LOG, TRACE, WARNING, ERROR, INFO, PANIC
 
-MAX_PRIORITY = 5
 # Stop validating more messages when this limit is reached
 MAX_VALIDATED_LIMIT = 1000 
 # Read up to this number of messages to validate.
@@ -64,6 +62,8 @@ class SQLDict(RAMDict, SQLBase):
     and provide sequentiality. Should not create conflict
     because use of OOBTree.
   """
+  sql_table = 'message'
+
   # Transaction commit methods
   def prepareQueueMessageList(self, activity_tool, message_list):
     message_list = [m for m in message_list if m.is_registered]
@@ -104,7 +104,7 @@ class SQLDict(RAMDict, SQLBase):
                                                  order_validation_text = order_validation_text)
     uid_list = [x.uid for x in uid_list]
     if len(uid_list)>0:
-      activity_tool.SQLDict_delMessage(uid = uid_list)
+      activity_tool.SQLBase_delMessage(table=self.sql_table, uid=uid_list)
 
   def finishQueueMessage(self, activity_tool_path, m):
     # Nothing to do in SQLDict.
@@ -130,26 +130,6 @@ class SQLDict(RAMDict, SQLBase):
   def getRegisteredMessageList(self, activity_buffer, activity_tool):
     message_list = activity_buffer.getMessageList(self)
     return [m for m in message_list if m.is_registered]
-  
-  def validateMessage(self, activity_tool, message, uid_list, priority, processing_node):
-    validation_state = message.validate(self, activity_tool, check_order_validation=0)
-    if validation_state is not VALID:
-      # There is a serious validation error - we must lower priority
-      if priority > MAX_PRIORITY:
-        # This is an error
-        if len(uid_list) > 0:
-          activity_tool.SQLDict_assignMessage(uid=uid_list, processing_node=VALIDATE_ERROR_STATE)
-                                                                          # Assign message back to 'error' state
-        #m.notifyUser(activity_tool)                                      # Notify Error
-        get_transaction().commit()                                        # and commit
-      else:
-        # Lower priority
-        if len(uid_list) > 0: # Add some delay before new processing
-          activity_tool.SQLDict_setPriority(uid=uid_list, delay=VALIDATION_ERROR_DELAY,
-                                            priority=priority + 1, retry=1)
-        get_transaction().commit() # Release locks before starting a potentially long calculation
-      return 0
-    return 1
 
   def getReservedMessageList(self, activity_tool, date, processing_node, limit=None, group_method_id=None):
     """
@@ -320,105 +300,6 @@ class SQLDict(RAMDict, SQLBase):
       else:
         LOG('SQLDict', TRACE, '(no message was reserved)')
       return [], 0, None, {}
-
-  def finalizeMessageExecution(self, activity_tool, message_list, uid_to_duplicate_uid_list_dict):
-    """
-      If everything was fine, delete all messages.
-      If anything failed, make successful messages available (if any), and
-      the following rules apply to failed messages:
-        - Failures due to ConflictErrors cause messages to be postponed,
-          but their priority is *not* increased.
-        - Failures of messages already above maximum priority cause them to
-          be put in a permanent-error state.
-        - In all other cases, priority is increased and message is delayed.
-    """
-    def makeMessageListAvailable(uid_list):
-      self.makeMessageListAvailable(activity_tool=activity_tool, uid_list=uid_list)
-    deletable_uid_list = []
-    delay_uid_list = []
-    final_error_uid_list = []
-    make_available_uid_list = []
-    notify_user_list = []
-    non_executable_message_list = []
-    something_failed = (len([m for m in message_list if m.getExecutionState() == MESSAGE_NOT_EXECUTED]) != 0)
-    for m in message_list:
-      uid = m.uid
-      if m.getExecutionState() == MESSAGE_EXECUTED:
-        if something_failed:
-          make_available_uid_list.append(uid)
-          make_available_uid_list.extend(uid_to_duplicate_uid_list_dict.get(uid, []))
-        else:
-          deletable_uid_list.append(uid)
-          deletable_uid_list.extend(uid_to_duplicate_uid_list_dict.get(uid, []))
-      elif m.getExecutionState() == MESSAGE_NOT_EXECUTED:
-        # Should duplicate messages follow strictly the original message, or
-        # should they be just made available again ?
-        make_available_uid_list.extend(uid_to_duplicate_uid_list_dict.get(uid, []))
-        priority = m.line.priority
-        # BACK: Only exceptions can be classes in Python 2.6.
-        # Once we drop support for Python 2.4, 
-        # please, remove the "type(m.exc_type) is type(ConflictError)" check
-        # and leave only the "issubclass(m.exc_type, ConflictError)" check.
-        if type(m.exc_type) is type(ConflictError) and \
-           issubclass(m.exc_type, ConflictError):
-          delay_uid_list.append(uid)
-        elif priority > MAX_PRIORITY:
-          notify_user_list.append(m)
-          final_error_uid_list.append(uid)
-        else:
-          try:
-            # Immediately update, because values different for every message
-            activity_tool.SQLDict_setPriority(
-              uid=[uid],
-              delay=None,
-              retry=None,
-              priority=priority + 1)
-          except:
-            LOG('SQLDict', WARNING, 'Failed to increase priority of %r' % (uid, ), error=sys.exc_info())
-          delay_uid_list.append(uid)
-      else:
-        # Internal CMFActivity error: the message can not be executed because
-        # something is missing (context object cannot be found, method cannot
-        # be accessed on object).
-        non_executable_message_list.append(uid)
-    if len(deletable_uid_list):
-      try:
-        self._retryOnLockError(activity_tool.SQLDict_delMessage, kw={'uid': deletable_uid_list})
-      except:
-        LOG('SQLDict', ERROR, 'Failed to delete messages %r' % (deletable_uid_list, ), error=sys.exc_info())
-      else:
-        LOG('SQLDict', TRACE, 'Deleted messages %r' % (deletable_uid_list, ))
-    if len(delay_uid_list):
-      try:
-        # If this is a conflict error, do not lower the priority but only delay.
-        activity_tool.SQLDict_setPriority(uid=delay_uid_list, delay=VALIDATION_ERROR_DELAY, priority=None, retry=None)
-      except:
-        LOG('SQLDict', ERROR, 'Failed to delay %r' % (delay_uid_list, ), error=sys.exc_info())
-      make_available_uid_list += delay_uid_list
-    if len(final_error_uid_list):
-      try:
-        activity_tool.SQLDict_assignMessage(uid=final_error_uid_list,
-                                            processing_node=INVOKE_ERROR_STATE)
-      except:
-        LOG('SQLDict', ERROR, 'Failed to set message to error state for %r' % (final_error_uid_list, ), error=sys.exc_info())
-    if len(non_executable_message_list):
-      try:
-        activity_tool.SQLDict_assignMessage(uid=non_executable_message_list, processing_node=VALIDATE_ERROR_STATE)
-      except:
-        LOG('SQLDict', ERROR, 'Failed to set message to invalid path state for %r' % (non_executable_message_list, ), error=sys.exc_info())
-    if len(make_available_uid_list):
-      try:
-        makeMessageListAvailable(make_available_uid_list)
-      except:
-        LOG('SQLDict', ERROR, 'Failed to unreserve %r' % (make_available_uid_list, ), error=sys.exc_info())
-      else:
-        LOG('SQLDict', TRACE, 'Freed messages %r' % (make_available_uid_list, ))
-    try:
-      for m in notify_user_list:
-        m.notifyUser(activity_tool)
-    except:
-      # Notification failures must not cause this method to raise.
-      LOG('SQLDict', WARNING, 'Exception during notification phase of finalizeMessageExecution', error=sys.exc_info())
 
   # Queue semantic
   def dequeueMessage(self, activity_tool, processing_node):
@@ -595,7 +476,8 @@ class SQLDict(RAMDict, SQLBase):
         uid_list = activity_tool.SQLDict_readUidList(path = path, method_id = method_id,
                                                      order_validation_text=None)
         if len(uid_list)>0:
-          activity_tool.SQLDict_delMessage(uid = [x.uid for x in uid_list])
+          activity_tool.SQLBase_delMessage(table=self.sql_table,
+                                           uid=[x.uid for x in uid_list])
 
   getMessageList = SQLBase.getMessageList
 
@@ -672,11 +554,13 @@ class SQLDict(RAMDict, SQLBase):
                 if group_method_id is not None:
                   serialization_tag_group_method_id_dict[serialization_tag] = group_method_id
           if deletable_uid_list:
-            activity_tool.SQLDict_delMessage(uid=deletable_uid_list)
+            activity_tool.SQLBase_delMessage(table=self.sql_table,
+                                             uid=deletable_uid_list)
 
         distributable_count = len(message_dict)
         if distributable_count:
-          activity_tool.SQLDict_assignMessage(processing_node=0, uid=[message.uid for message in message_dict.itervalues()])
+          activity_tool.SQLBase_assignMessage(table=self.sql_table,
+            processing_node=0, uid=[m.uid for m in message_dict.itervalues()])
           validated_count += distributable_count
         if validated_count < MAX_VALIDATED_LIMIT:
           offset += READ_MESSAGE_LIMIT

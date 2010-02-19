@@ -28,8 +28,7 @@
 
 from Products.CMFActivity.ActivityTool import registerActivity, MESSAGE_NOT_EXECUTED, MESSAGE_EXECUTED
 from RAMQueue import RAMQueue
-from Queue import VALID, INVALID_PATH, VALIDATION_ERROR_DELAY, \
-        abortTransactionSynchronously
+from Queue import VALID, INVALID_PATH, abortTransactionSynchronously
 from Products.CMFActivity.ActiveObject import INVOKE_ERROR_STATE, VALIDATE_ERROR_STATE
 from Products.CMFActivity.Errors import ActivityFlushError
 from ZODB.POSException import ConflictError
@@ -48,7 +47,6 @@ except ImportError:
 
 from zLOG import LOG, WARNING, ERROR, INFO, PANIC, TRACE
 
-MAX_PRIORITY = 5
 # Stop validating more messages when this limit is reached
 MAX_VALIDATED_LIMIT = 1000
 # Read this many messages to validate.
@@ -73,6 +71,7 @@ class SQLQueue(RAMQueue, SQLBase):
     and provide sequentiality. Should not create conflict
     because use of OOBTree.
   """
+  sql_table = 'message_queue'
 
   def prepareQueueMessageList(self, activity_tool, message_list):
     message_list = [m for m in message_list if m.is_registered]
@@ -103,7 +102,7 @@ class SQLQueue(RAMQueue, SQLBase):
   def prepareDeleteMessage(self, activity_tool, m):
     # Erase all messages in a single transaction
     #LOG("prepareDeleteMessage", 0, str(m.__dict__))
-    activity_tool.SQLQueue_delMessage(uid = [m.uid])
+    activity_tool.SQLBase_delMessage(table=self.sql_table, uid=[m.uid])
 
   def finishQueueMessage(self, activity_tool_path, m):
     # Nothing to do in SQLQueue.
@@ -198,88 +197,6 @@ class SQLQueue(RAMQueue, SQLBase):
       else:
         LOG('SQLQueue', TRACE, '(no message was reserved)')
       return []
-
-  def finalizeMessageExecution(self, activity_tool, message_list):
-    def makeMessageListAvailable(uid_list):
-      self.makeMessageListAvailable(activity_tool=activity_tool, uid_list=uid_list)
-    deletable_uid_list = []
-    delay_uid_list = []
-    final_error_uid_list = []
-    notify_user_list = []
-    non_executable_message_list = []
-    for m in message_list:
-      uid = m.uid
-      if m.getExecutionState() == MESSAGE_EXECUTED:
-        deletable_uid_list.append(uid)
-      elif m.getExecutionState() == MESSAGE_NOT_EXECUTED:
-        priority = m.line.priority
-        # BACK: Only exceptions can be classes in Python 2.6.
-        # Once we drop support for Python 2.4, 
-        # please, remove the "type(m.exc_type) is type(ConflictError)" check
-        # and leave only the "issubclass(m.exc_type, ConflictError)" check.
-        if type(m.exc_type) is type(ConflictError) and \
-           issubclass(m.exc_type, ConflictError):
-          delay_uid_list.append(uid)
-        elif priority > MAX_PRIORITY:
-          notify_user_list.append(m)
-          final_error_uid_list.append(uid)
-        else:
-          try:
-            # Immediately update, because values different for every message
-            activity_tool.SQLQueue_setPriority(
-              uid=[uid],
-              delay=VALIDATION_ERROR_DELAY,
-              priority=priority + 1)
-          except:
-            LOG('SQLQueue', WARNING, 'Failed to increase priority of %r' % (uid, ), error=sys.exc_info())
-          try:
-            makeMessageListAvailable(delay_uid_list)
-          except:
-            LOG('SQLQueue', ERROR, 'Failed to unreserve %r' % (uid, ), error=sys.exc_info())
-          else:
-            LOG('SQLQueue', TRACE, 'Freed message %r' % (uid, ))
-      else:
-        # Internal CMFActivity error: the message can not be executed because
-        # something is missing (context object cannot be found, method cannot
-        # be accessed on object).
-        non_executable_message_list.append(uid)
-    if len(deletable_uid_list):
-      try:
-        self._retryOnLockError(activity_tool.SQLQueue_delMessage, kw={'uid': deletable_uid_list})
-      except:
-        LOG('SQLQueue', ERROR, 'Failed to delete messages %r' % (deletable_uid_list, ), error=sys.exc_info())
-      else:
-        LOG('SQLQueue', TRACE, 'Deleted messages %r' % (deletable_uid_list, ))
-    if len(delay_uid_list):
-      try:
-        # If this is a conflict error, do not lower the priority but only delay.
-        activity_tool.SQLQueue_setPriority(uid=delay_uid_list, delay=VALIDATION_ERROR_DELAY, priority=None)
-      except:
-        LOG('SQLQueue', ERROR, 'Failed to delay %r' % (delay_uid_list, ), error=sys.exc_info())
-      try:
-        makeMessageListAvailable(delay_uid_list)
-      except:
-        LOG('SQLQueue', ERROR, 'Failed to unreserve %r' % (delay_uid_list, ), error=sys.exc_info())
-      else:
-        LOG('SQLQueue', TRACE, 'Freed messages %r' % (delay_uid_list, ))
-    if len(final_error_uid_list):
-      try:
-        activity_tool.SQLQueue_assignMessage(uid=final_error_uid_list,
-                                             processing_node=INVOKE_ERROR_STATE)
-      except:
-        LOG('SQLQueue', ERROR, 'Failed to set message to error state for %r' % (final_error_uid_list, ), error=sys.exc_info())
-    if len(non_executable_message_list):
-      try:
-        activity_tool.SQLQueue_assignMessage(uid=non_executable_message_list,
-                                             processing_node=VALIDATE_ERROR_STATE)
-      except:
-        LOG('SQLQueue', ERROR, 'Failed to set message to invalid path state for %r' % (final_error_uid_list, ), error=sys.exc_info())
-    try:
-      for m in notify_user_list:
-        m.notifyUser(activity_tool)
-    except:
-      # Notification failures must not cause this method to raise.
-      LOG('SQLQueue', WARNING, 'Exception during notification phase of finalizeMessageExecution', error=sys.exc_info())
 
   def dequeueMessage(self, activity_tool, processing_node):
     def makeMessageListAvailable(uid_list):
@@ -430,7 +347,8 @@ class SQLQueue(RAMQueue, SQLBase):
                 'Could not validate %s on %s' % (m.method_id , path))
 
       if len(result):
-        activity_tool.SQLQueue_delMessage(uid = [line.uid for line in result])
+        activity_tool.SQLBase_delMessage(table=self.sql_table,
+                                         uid=[line.uid for line in result])
 
   getMessageList = SQLBase.getMessageList
 
@@ -489,7 +407,8 @@ class SQLQueue(RAMQueue, SQLBase):
                                         validation_text_dict, now_date=now_date)
         distributable_count = len(message_dict)
         if distributable_count:
-          activity_tool.SQLQueue_assignMessage(processing_node=0, uid=[message.uid for message in message_dict.itervalues()])
+          activity_tool.SQLBase_assignMessage(table=self.sql_table,
+            processing_node=0, uid=[m.uid for m in message_dict.itervalues()])
           validated_count += distributable_count
         if validated_count < MAX_VALIDATED_LIMIT:
           offset += READ_MESSAGE_LIMIT
