@@ -79,18 +79,20 @@ def getSkinPrefixList(self):
     'NotificationTool',
     'ERP5Site',
     'ERP5Type',
+    'Form', # Acceptable for ERP5 Forms which will soon become portal types too
   ))
 
   skin_prefix_list = set(skin_prefix_list)
   return skin_prefix_list
 
 # Generic method to check consistency of a skin item
-def checkConsistency(self, source_code=None):
+def checkConsistency(self, fixit=0, source_code=None):
   """
   Make sure skin folder item has appropriate prefix
   and that its source code, if any, does not contain
   calls to legacy methods
   """
+  if fixit: raise NotImplementedError
   message_list = []
   portal_path = self.getPortalObject().getPath()
   portal_path_len = len(portal_path)
@@ -116,16 +118,16 @@ def checkConsistency(self, source_code=None):
   return message_list
 
 # Add checkConsistency to Python Scripts
-def checkPythonScriptConsistency(self):
-  return checkConsistency(self, source_code=self.body())
+def checkPythonScriptConsistency(self, fixit=0):
+  return checkConsistency(self, fixit=fixit, source_code=self.body())
 
 from Products.PythonScripts.PythonScript import PythonScript
 PythonScript.checkConsistency= checkPythonScriptConsistency
 PythonScript.checkConsistency__roles__ = ('Manager',) # A hack to protect the method
 
 # Add checkConsistency to Page Templates
-def checkPageTemplateConsistency(self):
-  return checkConsistency(self, source_code=self.read())
+def checkPageTemplateConsistency(self, fixit=0):
+  return checkConsistency(self, fixit=fixit, source_code=self.read())
 
 from Products.PageTemplates.PageTemplate import PageTemplate
 PageTemplate.checkConsistency= checkPageTemplateConsistency
