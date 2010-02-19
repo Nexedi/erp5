@@ -65,7 +65,7 @@ from Acquisition import aq_base
 from Products.Formulator.FieldRegistry import FieldRegistry
 from Products.Formulator.Validator import ValidationError
 from Products.Formulator.StandardFields import FloatField, StringField,\
-DateTimeField, TextAreaField, CheckBoxField
+DateTimeField, TextAreaField, CheckBoxField, ListField
 from Products.Formulator.MethodField import Method, BoundMethod
 from Products.Formulator.TALESField import TALESMethod
 
@@ -333,6 +333,23 @@ class TestCheckBoxField(unittest.TestCase):
     self.assertEquals('{%s}p' % (NSMAP.get('text')),
                       self.field.render_odt(as_string=False, REQUEST=request).tag)
     self.assertEquals('1', self.field.render_odt(as_string=False, REQUEST=request).text)
+
+class TestListField(unittest.TestCase):
+  """Tests List field
+  """
+
+  def getTitle(self):
+    return "List Field"
+
+  def setUp(self):
+    self.field = ListField('test_field')
+    self.widget = self.field.widget
+
+  def test_render_odt(self):
+    self.field.values['default'] = ['My first Line', 'My Second Line', 'foo']
+    self.assertEquals('text:line-break', 
+        self.field.render_odt(as_string=False)[0].xpath('name()'))
+
 
 class TestProxyField(PlacelessSetup, unittest.TestCase):
 
@@ -738,6 +755,7 @@ def test_suite():
   suite.addTest(unittest.makeSuite(TestDateTimeField))
   suite.addTest(unittest.makeSuite(TestTextAreaField))
   suite.addTest(unittest.makeSuite(TestCheckBoxField))
+  suite.addTest(unittest.makeSuite(TestListField))
   suite.addTest(unittest.makeSuite(TestProxyField))
   suite.addTest(unittest.makeSuite(TestFieldValueCache))
   return suite
