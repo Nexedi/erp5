@@ -18,8 +18,6 @@ assert-python2.4: bin/python2.4
 
 assert-eggs-2.4:
 	ls -d eggs/erp5diff-*-py2.4.egg
-	ls -d eggs/elementtree-*-py2.4.egg
-	ls -d eggs/collective.recipe.supervisor-*-py2.4.egg
 	ls -d eggs/fpconst-*-py2.4.egg
 	ls -d eggs/lxml-*-py2.4-*-*.egg
 	ls -d eggs/numpy-*-py2.4-*-*.egg
@@ -37,8 +35,8 @@ assert-eggs-2.4:
 	ldd develop-eggs/MySQL_python-1.2.3c1-py2.4-linux-x86_64.egg/_mysql.so | grep 'parts/mysql-tritonn-5.0/lib/mysql/libmysqlclient_r.so'
 
 assert-parts-libs:
-	ldd parts/memcached/bin/memcached | grep 'parts/libevent/lib/libevent'
 	ldd parts/mysql-tritonn-5.0/libexec/mysqld | grep 'parts/senna/lib/libsenna.so.0'
+	ldd parts/memcached/bin/memcached | grep 'parts/libevent/lib/libevent'
 
 create-mandriva2010-rpm: bin/buildout
 	bin/buildout -c profiles/mandriva2010.0.cfg buildout:directory=`pwd` install create-rpm
