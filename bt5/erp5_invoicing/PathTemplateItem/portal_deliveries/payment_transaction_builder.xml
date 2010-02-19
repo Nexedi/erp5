@@ -93,6 +93,10 @@
             <value> <string>Payment Transaction</string> </value>
         </item>
         <item>
+            <key> <string>delivery_select_method_id</string> </key>
+            <value> <string>DeliveryBuilder_selectPlannedDeliveryList</string> </value>
+        </item>
+        <item>
             <key> <string>description</string> </key>
             <value>
               <none/>
