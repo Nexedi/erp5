@@ -363,11 +363,8 @@ class XMLMatrix(Folder):
         if self.get(cell_id) is not None:
           cell_id_list.append(cell_id)
       for cell_id in cell_id_list:
-        index_list = []
-        for index in cell_id[len(base_id)+1:].split('_'):
-          index_list.append(int(index))
-        for i, index in enumerate(index_list):
-          if index >= size_list[i]:
+        for i, index in enumerate(cell_id[len(base_id)+1:].split('_')):
+          if int(index) >= size_list[i]:
             removed_cell_id_list.append(cell_id)
             break
 
