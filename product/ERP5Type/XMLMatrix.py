@@ -331,11 +331,6 @@ class XMLMatrix(Folder):
       """
       base_id = kwd.get('base_id', 'cell')
 
-      movement = {}  # We will put in this dictionnary the previous and new
-                     # id of a given cell
-      new_index = PersistentMapping() # new_index defines the relation
-                                      # between keys and ids of cells
-
       if getattr(aq_base(self), 'index', None) is None:
         self.index = PersistentMapping()
 
