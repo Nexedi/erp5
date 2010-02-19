@@ -3,7 +3,7 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <global name="DeliveringSimulationRule" module="Products.ERP5Type.Document.DeliveringSimulationRule"/>
+        <global name="DeliverySimulationRule" module="Products.ERP5Type.Document.DeliverySimulationRule"/>
         <tuple/>
       </tuple>
     </pickle>
@@ -132,7 +132,7 @@
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Delivering Simulation Rule</string> </value>
+            <value> <string>Delivery Simulation Rule</string> </value>
         </item>
         <item>
             <key> <string>test_method_id</string> </key>
@@ -144,7 +144,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Default Delivering Simulation Rule</string> </value>
+            <value> <string>Default Delivery Simulation Rule</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>

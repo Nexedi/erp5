@@ -3,7 +3,7 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <global name="OrderSimulationRule" module="Products.ERP5Type.Document.OrderSimulationRule"/>
+        <global name="OrderRootSimulationRule" module="Products.ERP5Type.Document.OrderRootSimulationRule"/>
         <tuple/>
       </tuple>
     </pickle>
@@ -115,7 +115,7 @@
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Order Simulation Rule</string> </value>
+            <value> <string>Order Root Simulation Rule</string> </value>
         </item>
         <item>
             <key> <string>test_method_id</string> </key>
@@ -125,7 +125,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Default Order Simulation Rule</string> </value>
+            <value> <string>Default Order Root Simulation Rule</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
