@@ -1,3 +1,6 @@
+2010-02-19 yusei
+* Move base_amount/payroll and base_amount/payroll/l10n categories to erp5_payroll.
+
 2010-01-04 aurel
 Update the bt to use the new structure of the base amount category
 
