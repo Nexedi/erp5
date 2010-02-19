@@ -138,7 +138,7 @@
             <key> <string>test_method_id</string> </key>
             <value>
               <tuple>
-                <string>SimulationMovement_testDeliveringSimulationRule</string>
+                <string>SimulationMovement_testDeliverySimulationRule</string>
               </tuple>
             </value>
         </item>
