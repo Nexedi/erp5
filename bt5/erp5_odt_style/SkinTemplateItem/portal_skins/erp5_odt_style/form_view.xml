@@ -130,7 +130,12 @@ bWxQSwUGAAAAAAIAAgCeAAAAhwwAAAAA</string> </value>
           xmlns:i18n=\'http://xml.zope.org/namespaces/i18n\'\n
           xmlns:metal=\'http://xml.zope.org/namespaces/metal\'\n
           tal:attributes=\'dummy python:request.RESPONSE.setHeader("Content-Type", "text/html;; charset=utf-8")\'\n
-          tal:define="render_prefix render_prefix|nothing"\n
+          tal:define="render_prefix render_prefix|nothing;\n
+                      editable_mode request/editable_mode | nothing;\n
+                      dummy python: editable_mode is None and here.REQUEST.set(\'editable_mode\', 0);\n
+                      render_text python: lambda txt, attr_dict={}: context.Base_viewFieldLibrary.my_title.render_odt(value=txt,\n
+                                                                                                                      REQUEST=request,\n
+                                                                                                                      attr_dict=attr_dict);"\n
           office:version=\'1.0\'>\n
 \n
   <office:scripts/>\n
@@ -231,28 +236,18 @@ bWxQSwUGAAAAAAIAAgCeAAAAhwwAAAAA</string> </value>
                     <tal:block tal:condition="python:field_type not in (\'HiddenStringField\', \'FileField\')">\n
                       <table:table-row>\n
                       <table:table-cell table:style-name=\'field-table.A1\' office:value-type=\'string\'>\n
-                        <text:p text:style-name=\'field-label\' \n
-                            i18n:domain=\'ui\'\n
-                            i18n:translate=\'\'\n
-                            tal:content="python: field.get_value(\'title\')"/>\n
+                        <text:p tal:replace="structure python:render_text(field.get_value(\'title\'),\n
+                                              {\'{urn:oasis:names:tc:opendocument:xmlns:text:1.0}style-name\': \'field-label\',\n
+                                               \'{http://xml.zope.org/namespaces/i18n}domain\': \'ui\',\n
+                                               \'{http://xml.zope.org/namespaces/i18n}translate\': \'\'})"/>\n
                       </table:table-cell>\n
                       <tal:block tal:define="item_list python:field.has_value(\'items\') and field.get_value(\'items\') or None">\n
                         <table:table-cell table:style-name=\'field-table.B1\' \n
                                       office:value-type=\'string\'\n
                                       tal:define="value python: field.get_value(\'default\')">\n
                           <tal:block tal:condition="python: field_type not in (\'ImageField\',\'OOoChart\' )">\n
-                            <text:p tal:condition="python: not(same_type(value,[]) or same_type(value,()))"\n
-                                    text:style-name=\'field-content\'\n
-                                    tal:content="structure python:str(field.render_pdf(value)).replace(\'&amp;\', \'&amp;amp;\').replace(\'&gt;\', \'&amp;gt;\').replace(\'&lt;\', \'&amp;lt;\').replace(\'\\n\', \'&lt;text:line-break/&gt;\')"/>\n
-                            <tal:block tal:condition="python:same_type(value,[]) or same_type(value,())"\n
-                                        tal:repeat="item value">\n
-                              <text:p text:style-name=\'field-content\'\n
-                                      tal:content="python: str(item)"\n
-                                      tal:condition="not:item_list"/>\n
-                              <text:p text:style-name=\'field-content\'\n
-                                      tal:content="python: [i[0] for i in item_list if i[1] == item][0]"\n
-                                      tal:condition="item_list" />\n
-                            </tal:block>\n
+                            <text:p tal:replace="structure python:field.render_odt(REQUEST=request, attr_dict={\'{urn:oasis:names:tc:opendocument:xmlns:text:1.0}style-name\': \'field-content\'})"\n
+                                    />\n
                           </tal:block>\n
                           <!-- With this max_size, pictures and graph stay in a table cell-->\n
                           <tal:block tal:define="global max_size python:9;"/>\n
@@ -261,7 +256,7 @@ bWxQSwUGAAAAAAIAAgCeAAAAhwwAAAAA</string> </value>
                                     tal:define="preferred_width python: preference_tool.getPreference(\'preferred_%s_image_width\' % (field.get_value(\'image_display\')), 100);\n
                                     width python:(preferred_width  / 20.) &lt; max_size and (preferred_width / 20.) or max_size;\n
                                     field_value python: field.get_value(\'default\')">\n
-                              <tal:block tal:condition="python: field_value not in (\'\', None,)">\n
+                              <tal:block tal:condition="field_value">\n
                                 <office:include_img tal:attributes="width width;\n
                                 path python: \'/\'.join(request.physicalPathFromURL(field_value));"\n
                                 style="inline-graphic"/>\n
@@ -306,11 +301,11 @@ bWxQSwUGAAAAAAIAAgCeAAAAhwwAAAAA</string> </value>
         <tal:block tal:repeat="field field_list">\n
           <tal:block tal:define="field_type python: field.meta_type == \'ProxyField\' and field.getRecursiveTemplateField().meta_type or field.meta_type">\n
             <tal:block tal:condition="python: field_type not in (\'ImageField\',\'OOoChart\' )">\n
-              <text:p text:style-name=\'field-label-center\' i18n:domain="ui"\n
-                      i18n:translate=""\n
-                      tal:content="python: field.get_value(\'title\')"/>\n
-              <text:p text:style-name=\'field-content-center\'\n
-            tal:content="structure python: str(field.get_value(\'default\')).replace(\'&amp;\', \'&amp;amp;\').replace(\'&gt;\', \'&amp;gt;\').replace(\'&lt;\', \'&amp;lt;\').replace(\'\\n\', \'&lt;text:line-break/&gt;\')"/>\n
+              <text:p tal:replace="structure python:render_text(field.get_value(\'title\'),\n
+                                              {\'{urn:oasis:names:tc:opendocument:xmlns:text:1.0}style-name\': \'field-label-center\',\n
+                                               \'{http://xml.zope.org/namespaces/i18n}domain\': \'ui\',\n
+                                               \'{http://xml.zope.org/namespaces/i18n}translate\': \'\'})"/>\n
+              <text:p tal:replace="structure python:field.render_odt(REQUEST=request, attr_dict={\'{urn:oasis:names:tc:opendocument:xmlns:text:1.0}style-name\': \'field-content-center\'})"/>\n
             </tal:block>\n
             <tal:block tal:condition="python: field_type == \'ImageField\'">\n
               <text:p text:style-name=\'field-label-center\' i18n:domain="ui"\n
@@ -382,19 +377,17 @@ bWxQSwUGAAAAAAIAAgCeAAAAhwwAAAAA</string> </value>
                   </tal:block>\n
                   <tal:block tal:condition="python: (not (same_type(value,[]) or same_type(value,()) )) and (value != None)">\n
                     <tal:block tal:condition="python: field_type==\'EditorField\' and field.get_value(\'text_editor\')==\'fck_editor\'">\n
-                        <text:p text:style-name=\'field-content-center\' tal:content="structure python: str(field.render_pdf(field.portal_transforms.convertToData(\'text/plain\', value))).replace(\'&amp;\', \'&amp;amp;\').replace(\'&gt;\', \'&amp;gt;\').replace(\'&lt;\', \'&amp;lt;\').replace(\'\\n\', \'&lt;text:line-break/&gt;\')" />\n
+                        <text:p tal:replace="structure python:field.render_odt(value=here.getPortalObject().portal_transforms.convertToData(\'text/plain\', value), REQUEST=request, attr_dict={\'{urn:oasis:names:tc:opendocument:xmlns:text:1.0}style-name\': \'field-content-center\'})"/>\n
                     </tal:block>\n
                     <tal:block tal:condition="python: field_type in (\'EditorField\',) and field.get_value(\'text_editor\')==\'text_area\'">\n
-                      <text:p text:style-name=\'field-content-center\'\n
-                  tal:content="structure python: str(field.render_pdf(value)).replace(\'&amp;\', \'&amp;amp;\').replace(\'&gt;\', \'&amp;gt;\').replace(\'&lt;\', \'&amp;lt;\').replace(\'\\n\', \'&lt;text:line-break/&gt;\')"/>\n
+                      <text:p tal:replace="structure python:field.render_odt(REQUEST=request, attr_dict={\'{urn:oasis:names:tc:opendocument:xmlns:text:1.0}style-name\': \'field-content-center\'})"/>\n
                     </tal:block>\n
                     <tal:block tal:condition="python: field_type!=\'EditorField\'">\n
-                      <text:p text:style-name=\'field-content-center\'\n
-                              tal:content="structure python: str(field.render_pdf(value)).replace(\'&amp;\', \'&amp;amp;\').replace(\'&gt;\', \'&amp;gt;\').replace(\'&lt;\', \'&amp;lt;\').replace(\'\\n\', \'&lt;text:line-break/&gt;\')"/>\n
+                      <text:p tal:replace="structure python:field.render_odt(REQUEST=request, attr_dict={\'{urn:oasis:names:tc:opendocument:xmlns:text:1.0}style-name\': \'field-content-center\'})"/>\n
                     </tal:block>\n
                   </tal:block>\n
                   <tal:block tal:condition="python: value is None">\n
-                    <text:p text:style-name=\'field-content\' tal:content="python: \' \'" />\n
+                    <text:p text:style-name=\'field-content\'/>\n
                   </tal:block>\n
                 </tal:block>\n
               </tal:block>\n
