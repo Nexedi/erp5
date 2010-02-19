@@ -881,8 +881,8 @@ class ERP5TypeTestCase(backportUnittest.TestCase, PortalTestCase):
       title = self.getTitle()
       from Products.ERP5Type.Base import _aq_reset
       if portal_name in failed_portal_installation:
-        raise backportUnittest.SkipTest('Installation of %s already failed, giving up'
-                              % portal_name)
+        raise backportUnittest.SetupSiteError(
+            'Installation of %s already failed, giving up' % portal_name)
       try:
         if app is None:
           app = ZopeTestCase.app()

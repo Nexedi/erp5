@@ -35,6 +35,15 @@ class _UnexpectedSuccess(Exception):
   """
   pass
 
+class SetupSiteError(Exception):
+    """
+    The ERP5 Site could not have been setup.
+    This is raised when the site could not have been created in a previous
+    test. We want this to count as an error, but we do not want this to happear
+    in traceback for readability.
+    """
+    pass
+
 def _id(obj):
     return obj
 
@@ -127,6 +136,8 @@ class TestCase(unittest.TestCase):
                 self.setUp()
             except SkipTest, e:
                 result.addSkip(self, str(e))
+            except SetupSiteError, e:
+                result.errors.append(None)
             except Exception:
                 result.addError(self, sys.exc_info())
             else:
@@ -225,6 +236,13 @@ class _TextTestResult(unittest._TextTestResult, TestResult):
             self.stream.write("u")
             self.stream.flush()
 
+    def printErrors(self):
+        if self.dots or self.showAll:
+            self.stream.writeln()
+        # 'None' correspond to redundant errors due to site creation errors,
+        # and we do not display them here.
+        self.printErrorList('ERROR', filter(None, self.errors))
+        self.printErrorList('FAIL', self.failures)
 
 class TextTestRunner(unittest.TextTestRunner):
     def _makeResult(self):
