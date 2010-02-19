@@ -7,7 +7,7 @@ bin/buildout:
 # run make assert to check that all is working
 assert: assert-software
 
-assert-software: assert-python2.4 assert-eggs-2.4
+assert-software: assert-python2.4 assert-eggs-2.4 assert-parts-libs
 
 assert-python2.4: bin/python2.4
 	bin/python2.4 -c 'import _ssl'
@@ -35,6 +35,9 @@ assert-eggs-2.4:
 	ls -d develop-eggs/itools-*-py2.4-*-*.egg
 	ls -d develop-eggs/MySQL_python-*-py2.4-*-*.egg
 	ldd develop-eggs/MySQL_python-1.2.3c1-py2.4-linux-x86_64.egg/_mysql.so | grep 'parts/mysql-tritonn-5.0/lib/mysql/libmysqlclient_r.so'
+
+assert-parts-libs:
+	ldd parts/memcached/bin/memcached | grep 'parts/libevent/lib/libevent'
 
 create-mandriva2010-rpm: bin/buildout
 	bin/buildout -c profiles/mandriva2010.0.cfg buildout:directory=`pwd` install create-rpm
