@@ -345,6 +345,10 @@ class XMLMatrix(Folder):
         LOG('XMLMatrix',0,'return form _setCellRange - no need to change range')
         return
 
+      current_len = len(current_range)
+      new_len = len(kw)
+      len_delta = new_len - current_len
+
       # We must make sure the base_id exists
       # in the event of a matrix creation for example
       if not self.index.has_key(base_id):
@@ -352,11 +356,9 @@ class XMLMatrix(Folder):
         self.index[base_id] = PersistentMapping()
 
       # First, delete all cells which are out of range.
-      size_list = []
-      for place_list in kw:
-        size_list.append(len(place_list))
-      if len(kw) < len(current_range):
-        size_list.extend([1] * (len(current_range) - len(kw)))
+      size_list = map(len, kw)
+      if len_delta < 0:
+        size_list.extend([1] * (-len_delta))
       removed_cell_id_list = []
       cell_id_list = []
       for cell_id in self.getCellIdList(base_id = base_id):
@@ -373,24 +375,23 @@ class XMLMatrix(Folder):
         cell_id_list.remove(cell_id)
 
       # Secondly, rename coordinates. This does not change cell ids.
-      for i in range(max(len(kw), len(current_range))):
-        if i >= len(kw):
+      for i in range(max(new_len, current_len)):
+        if i >= new_len:
           del self.index[base_id][i]
         else:
-          if i >= len(current_range):
+          if i >= current_len:
             self.index[base_id][i] = PersistentMapping()
           for place in self.index[base_id][i].keys():
             if place not in kw[i]:
               del self.index[base_id][i][place]
-          j = 0
-          for place in kw[i]:
+
+          for j, place in enumerate(kw[i]):
             self.index[base_id][i][place] = j
-            j += 1
 
       # Lastly, rename ids and catalog/uncatalog everything.
-      if len(current_range) < len(kw):
+      if len_delta > 0:
         # Need to move, say, base_1_2 -> base_1_2_0
-        appended_id = '_0' * (len(kw) - len(current_range))
+        appended_id = '_0' * len_delta
         for old_id in cell_id_list:
           cell = self.get(old_id)
           if cell is not None:
@@ -402,9 +403,9 @@ class XMLMatrix(Folder):
             cell.isIndexable = ConstantGetter('isIndexable', value=True)
             cell.reindexObject()
             #cell.unindexObject(path='%s/%s' % (self.getUrl(), old_id))
-      elif len(current_range) > len(kw):
+      elif len_delta < 0:
         # Need to move, say, base_1_2_0 -> base_1_2
-        removed_id_len = 2 * (len(current_range) - len(kw))
+        removed_id_len = 2 * (-len_delta)
         for old_id in cell_id_list:
           cell = self.get(old_id)
           if cell is not None:
