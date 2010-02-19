@@ -26,6 +26,23 @@ NSMAP = {
 
 EForm = ElementMaker(namespace=FORM_URI, nsmap=NSMAP)
 
+RE_OOO_ESCAPE = re.compile(r'([\n\t])?([^\n\t]*)')
+def ooo_escape(match_object):
+  """Replacement function to use inside re.sub expression.
+  This function replace \t by <text:tab/>
+                        \n by <text:line-break/>
+  - parent_node is a global variable used to carry new nodes.
+  """
+  match_value = match_object.group(1)
+  if match_value is None:
+    parent_node.text = match_object.group(2)
+  elif match_value == '\n':
+    line_break = SubElement(parent_node, '{%s}%s' % (TEXT_URI, 'line-break'))
+    line_break.tail = match_object.group(2)
+  elif match_value == '\t':
+    line_break = SubElement(parent_node, '{%s}%s' % (TEXT_URI, 'tab'))
+    line_break.tail = match_object.group(2)
+
 class Widget:
   """A field widget that knows how to display itself as HTML.
   """
@@ -243,18 +260,9 @@ class Widget:
     draw_node.append(text_p_node)
     draw_frame_node.append(draw_node)
 
-    # XXX copy from render_odt_view, need to be unified
-    def replaceCharsByNode(match_object):
-        #global text_span_node
-        if match_object.group(1) is None:
-            text_span_node.text = match_object.group(2)
-        if match_object.group(1) == '\n':
-            line_break = SubElement(text_span_node, '{%s}%s' % (TEXT_URI, 'line-break'))
-            line_break.tail = match_object.group(2)
-        if match_object.group(1) == '\t':
-            line_break = SubElement(text_span_node, '{%s}%s' % (TEXT_URI, 'tab'))
-            line_break.tail = match_object.group(2)
-    re.sub('([\n\t])?([^\n\t]*)', replaceCharsByNode, value)
+    global parent_node
+    parent_node = text_span_node
+    RE_OOO_ESCAPE.sub(ooo_escape, value)
     if as_string:
       return etree.tostring(draw_frame_node)
     return draw_frame_node
@@ -530,17 +538,10 @@ class TextAreaWidget(Widget):
             #required by lxml
             value = value.decode('utf-8')
         text_node = Element('{%s}%s' % (TEXT_URI, local_name), nsmap=NSMAP)
-        def replaceCharsByNode(match_object):
-            #global text_node
-            if match_object.group(1) is None:
-                text_node.text = match_object.group(2)
-            if match_object.group(1) == '\n':
-                line_break = SubElement(text_node, '{%s}%s' % (TEXT_URI, 'line-break'))
-                line_break.tail = match_object.group(2)
-            if match_object.group(1) == '\t':
-                line_break = SubElement(text_node, '{%s}%s' % (TEXT_URI, 'tab'))
-                line_break.tail = match_object.group(2)
-        re.sub('([\n\t])?([^\n\t]*)', replaceCharsByNode, value)
+
+        global parent_node
+        parent_node = text_node
+        RE_OOO_ESCAPE.sub(ooo_escape, value)
         text_node.attrib.update(attr_dict)
         if as_string:
             return etree.tostring(text_node)
@@ -945,6 +946,25 @@ class ListWidget(SingleItemsWidget):
     def render_selected_item(self, text, value, key, css_class, extra_item):
         return render_element('option', contents=text, value=value,
                               selected=None, extra=extra_item)
+
+    def render_odt_view(self, field, value, as_string, ooo_builder, REQUEST,
+                        render_prefix, attr_dict, local_name):
+        if attr_dict is None:
+          attr_dict = {}
+        if value is None:
+          value = []
+        if isinstance(value, (list, tuple)):
+          value = '\n'.join(value)
+        if isinstance(value, str):
+          #required by lxml
+          value = value.decode('utf-8')
+        text_node = Element('{%s}%s' % (TEXT_URI, local_name), nsmap=NSMAP)
+        global parent_node = text_node
+        RE_OOO_ESCAPE.sub(ooo_escape, value)
+        text_node.attrib.update(attr_dict)
+        if as_string:
+            return etree.tostring(text_node)
+        return text_node
 
 ListWidgetInstance = ListWidget()
 
