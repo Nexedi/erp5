@@ -30,6 +30,8 @@
     ERP5Type is provides a RAD environment for Zope / CMF
     All ERP5 classes derive from ERP5Type
 """
+from zLOG import LOG, INFO
+DISPLAY_BOOT_PROCESS = False
 
 # Switch(es) for ongoing development which require single code base
 
@@ -68,6 +70,7 @@ def initialize( context ):
   import Document
   import Base, XMLObject
   from ERP5Type import ERP5TypeInformation
+  import CodingStyle
   # Define documents, classes, constructors and tools
   object_classes = ()
   content_constructors = ()
@@ -91,24 +94,38 @@ def initialize( context ):
   Products.ERP5Type.Workflow.registerAllWorkflowFactories(context)
   # We should register local constraints at some point
   from Products.ERP5Type.Utils import initializeLocalConstraintRegistry
+  if DISPLAY_BOOT_PROCESS: 
+    LOG('ERP5Type.__init__', INFO, 'initializeLocalConstraintRegistry')
   initializeLocalConstraintRegistry()
   # We should register local property sheets at some point
   from Products.ERP5Type.Utils import initializeLocalPropertySheetRegistry
+  if DISPLAY_BOOT_PROCESS: 
+    LOG('ERP5Type.__init__', INFO, 'initializeLocalPropertySheetRegistry')
   initializeLocalPropertySheetRegistry()
   # We should register product classes at some point
   from Products.ERP5Type.InitGenerator import initializeProductDocumentRegistry
+  if DISPLAY_BOOT_PROCESS: 
+    LOG('ERP5Type.__init__', INFO, 'initializeProductDocumentRegistry')
   initializeProductDocumentRegistry()
   # We should register local classes at some point
   from Products.ERP5Type.Utils import initializeLocalDocumentRegistry
+  if DISPLAY_BOOT_PROCESS: 
+    LOG('ERP5Type.__init__', INFO, 'initializeLocalDocumentRegistry')
   initializeLocalDocumentRegistry()
   # We can now setup global interactors
   from Products.ERP5Type.InitGenerator import initializeProductInteractorRegistry
+  if DISPLAY_BOOT_PROCESS: 
+    LOG('ERP5Type.__init__', INFO, 'initializeProductInteractorRegistry')
   initializeProductInteractorRegistry()
   # And local interactors
   from Products.ERP5Type.Utils import initializeLocalInteractorRegistry
+  if DISPLAY_BOOT_PROCESS: 
+    LOG('ERP5Type.__init__', INFO, 'initializeLocalInteractorRegistry')
   initializeLocalInteractorRegistry()
   # We can now install all interactors
   from Products.ERP5Type.InitGenerator import installInteractorClassRegistry
+  if DISPLAY_BOOT_PROCESS: 
+    LOG('ERP5Type.__init__', INFO, 'installInteractorClassRegistry')
   installInteractorClassRegistry()
 
 from AccessControl.SecurityInfo import allow_module
@@ -126,7 +143,6 @@ ModuleSecurityInfo('Products.ERP5Type.Message').declarePublic('translateString')
 allow_module('Products.ERP5Type.Error')
 allow_module('Products.ERP5Type.JSONEncoder')
 allow_module('Products.ERP5Type.Log')
-allow_module('Products.ERP5Type.ConnectionPlugin.SOAPWSDLConnection')
 ModuleSecurityInfo('Products.ERP5Type.JSON').declarePublic('dumps', 'loads')
 ModuleSecurityInfo('pprint').declarePublic('pformat', 'pprint')
 
