@@ -14,6 +14,7 @@
 
 # Make sure the xml export will be ordered
 
+from ZODB.utils import u64, p64
 from Shared.DC.xml import ppml
 from base64 import encodestring
 from cStringIO import StringIO
@@ -106,10 +107,10 @@ def XMLrecord(oid, plen, p, id_mapping):
     q=ppml.ToXMLUnpickler
     f=StringIO(p)
     u=q(f)
-    id=ppml.u64(oid)
+    id=u64(oid)
     id = id_mapping[id]
     old_aka = encodestring(oid)[:-1]
-    aka=encodestring(ppml.p64(long(id)))[:-1]  # Rebuild oid based on mapped id
+    aka=encodestring(p64(long(id)))[:-1]  # Rebuild oid based on mapped id
     id_mapping.setConvertedAka(old_aka, aka)
     u.idprefix=str(id)+'.'
     p=u.load(id_mapping=id_mapping).__str__(4)
