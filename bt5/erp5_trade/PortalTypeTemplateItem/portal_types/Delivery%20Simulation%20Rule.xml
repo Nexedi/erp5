@@ -19,7 +19,7 @@
         </item>
         <item>
             <key> <string>content_meta_type</string> </key>
-            <value> <string>ERP5 Delivering Simulation Rule</string> </value>
+            <value> <string>ERP5 Delivery Simulation Rule</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -27,7 +27,7 @@
         </item>
         <item>
             <key> <string>factory</string> </key>
-            <value> <string>addDeliveringSimulationRule</string> </value>
+            <value> <string>addDeliverySimulationRule</string> </value>
         </item>
         <item>
             <key> <string>filter_content_types</string> </key>
@@ -43,7 +43,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Delivering Simulation Rule</string> </value>
+            <value> <string>Delivery Simulation Rule</string> </value>
         </item>
         <item>
             <key> <string>init_script</string> </key>

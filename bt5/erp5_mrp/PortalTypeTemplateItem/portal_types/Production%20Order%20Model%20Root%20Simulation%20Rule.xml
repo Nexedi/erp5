@@ -38,16 +38,16 @@
         </item>
         <item>
             <key> <string>content_meta_type</string> </key>
-            <value> <string>ERP5 Production Order Model Simulation Rule</string> </value>
+            <value> <string>ERP5 Production Order Model Root Simulation Rule</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Prouction Order Model Simulation Rule object use a Business Process to expand a Production Order.\n
+            <value> <string>Prouction Order Model Root Simulation Rule object use a Business Process to expand a Production Order.\n
 </string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>
-            <value> <string>addProductionOrderModelSimulationRule</string> </value>
+            <value> <string>addProductionOrderModelRootSimulationRule</string> </value>
         </item>
         <item>
             <key> <string>filter_content_types</string> </key>
@@ -63,7 +63,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Production Order Model Simulation Rule</string> </value>
+            <value> <string>Production Order Model Root Simulation Rule</string> </value>
         </item>
         <item>
             <key> <string>immediate_view</string> </key>

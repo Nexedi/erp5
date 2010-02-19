@@ -63,9 +63,9 @@
     ((root_rule.getPortalType() in ("Production Order Rule",) and\\\n
       parent_rule.getPortalType() in ("Transformation Sourcing Rule",\n
                                       "Production Order Rule")) or\\\n
-     (root_rule.getPortalType() in ("Production Order Simulation Rule",) and\\\n
+     (root_rule.getPortalType() in ("Production Order Root Simulation Rule",) and\\\n
       parent_rule.getPortalType() in ("Transformation Sourcing Rule",\n
-                                      "Delivering Simulation Rule"))) and\\\n
+                                      "Delivery Simulation Rule"))) and\\\n
     root_movement.getSimulationState() == "confirmed"\n
   )\n
 \n

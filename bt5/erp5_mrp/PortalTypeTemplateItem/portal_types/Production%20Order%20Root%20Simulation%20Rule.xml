@@ -15,19 +15,20 @@
         </item>
         <item>
             <key> <string>content_icon</string> </key>
-            <value> <string>rule_icon.gif</string> </value>
+            <value> <string>document.gif</string> </value>
         </item>
         <item>
             <key> <string>content_meta_type</string> </key>
-            <value> <string>ERP5 Order Simulation Rule</string> </value>
+            <value> <string>ERP5 Production Order Root Simulation Rule</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>An ERP5 Rule...</string> </value>
+            <value> <string>Prouction Order Root Simulation Rule object use a Supply Chain to expand a Production Order.\n
+</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>
-            <value> <string>addOrderSimulationRule</string> </value>
+            <value> <string>addProductionOrderRootSimulationRule</string> </value>
         </item>
         <item>
             <key> <string>filter_content_types</string> </key>
@@ -43,7 +44,11 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Order Simulation Rule</string> </value>
+            <value> <string>Production Order Root Simulation Rule</string> </value>
+        </item>
+        <item>
+            <key> <string>immediate_view</string> </key>
+            <value> <string>ProductionOrderRule_view</string> </value>
         </item>
         <item>
             <key> <string>init_script</string> </key>
@@ -52,6 +57,10 @@
         <item>
             <key> <string>permission</string> </key>
             <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>product</string> </key>
+            <value> <string>ERP5Type</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

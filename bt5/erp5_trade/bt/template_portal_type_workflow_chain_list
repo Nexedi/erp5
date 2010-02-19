@@ -11,8 +11,8 @@ Container Line | pricing_interaction_workflow
 Container Line | trade_matrix_workflow
 Container | edit_workflow
 Container | pricing_interaction_workflow
-Delivering Simulation Rule | edit_workflow
-Delivering Simulation Rule | rule_validation_workflow
+Delivery Simulation Rule | edit_workflow
+Delivery Simulation Rule | rule_validation_workflow
 Delivery Cell | delivery_movement_causality_interaction_workflow
 Delivery Cell | delivery_movement_simulation_interaction_workflow
 Delivery Rule | edit_workflow
@@ -39,8 +39,8 @@ Inventory | edit_workflow
 Inventory | inventory_workflow
 Order Rule | edit_workflow
 Order Rule | rule_validation_workflow
-Order Simulation Rule | edit_workflow
-Order Simulation Rule | rule_validation_workflow
+Order Root Simulation Rule | edit_workflow
+Order Root Simulation Rule | rule_validation_workflow
 Payment Condition | edit_workflow
 Purchase Order Cell | edit_workflow
 Purchase Order Cell | order_movement_simulation_interaction_workflow

@@ -24,7 +24,7 @@
   <workflow>container_interaction_workflow, edit_workflow, pricing_interaction_workflow, trade_matrix_workflow</workflow>
  </chain>
  <chain>
-  <type>Delivering Simulation Rule</type>
+  <type>Delivery Simulation Rule</type>
   <workflow>edit_workflow, rule_validation_workflow</workflow>
  </chain>
  <chain>
@@ -64,7 +64,7 @@
   <workflow>edit_workflow, rule_validation_workflow</workflow>
  </chain>
  <chain>
-  <type>Order Simulation Rule</type>
+  <type>Order Root Simulation Rule</type>
   <workflow>edit_workflow, rule_validation_workflow</workflow>
  </chain>
  <chain>

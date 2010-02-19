@@ -58,7 +58,7 @@
 parent = movement.getParentValue()\n
 if parent.getPortalType() == \'Applied Rule\':\n
   parent_rule = parent.getSpecialiseValue()\n
-  if parent_rule.getPortalType() not in [\'Order Simulation Rule\', \'Production Order Simulation Rule\']:\n
+  if parent_rule.getPortalType() not in [\'Order Root Simulation Rule\', \'Production Order Root Simulation Rule\']:\n
     return False\n
 \n
 source_section = movement.getSourceSection()\n

@@ -30,15 +30,15 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, interfaces
 from Products.ERP5.Document.ProductionOrderRule import ProductionOrderRule
 
-class ProductionOrderSimulationRule(ProductionOrderRule):
+class ProductionOrderRootSimulationRule(ProductionOrderRule):
   """
     Prouction Order Simulation Rule object use a Supply Chain to expand a 
     Production Order.
   """
 
   # CMF Type Definition
-  meta_type = 'ERP5 Production Order Simulation Rule'
-  portal_type = 'Production Order Simulation Rule'
+  meta_type = 'ERP5 Production Order Root Simulation Rule'
+  portal_type = 'Production Order Root Simulation Rule'
 
   # Declarative security
   security = ClassSecurityInfo()

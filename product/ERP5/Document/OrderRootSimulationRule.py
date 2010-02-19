@@ -1,6 +1,7 @@
 ##############################################################################
 #
-# Copyright (c) 2005 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2002, 2005 Nexedi SARL and Contributors. All Rights Reserved.
+#                    Jean-Paul Smets-Solanes <jp@nexedi.com>
 #                    Romain Courteaud <romain@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
@@ -27,25 +28,24 @@
 ##############################################################################
 
 from AccessControl import ClassSecurityInfo
-from Products.ERP5Type import Permissions, interfaces
-from Products.ERP5.Document.ProductionOrderModelRule import ProductionOrderModelRule
+from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
+from Products.ERP5.Document.OrderRule import OrderRule
+from zLOG import LOG, WARNING
 
-class ProductionOrderModelSimulationRule(ProductionOrderModelRule):
+class OrderRootSimulationRule(OrderRule):
   """
-    Prouction Order Model Simulation Rule object use a Supply Chain to expand a 
-    Production Order.
-  """
+  Order Rule object make sure an Order in the simulation
+  is consistent with the real order
 
+  WARNING: what to do with movement split ?
+  """
   # CMF Type Definition
-  meta_type = 'ERP5 Production Order Model SimulationRule'
-  portal_type = 'Production Order Model SimulationRule'
+  meta_type = 'ERP5 Order Root Simulation Rule'
+  portal_type = 'Order Root Simulation Rule'
 
   # Declarative security
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
-
-  __implements = ( interfaces.IPredicate,
-                   interfaces.IRule )
 
   def _getExpandablePropertyUpdateDict(self, applied_rule, movement,
       business_path, current_property_dict):

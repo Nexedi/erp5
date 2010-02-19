@@ -13,7 +13,7 @@
  <portal_type id="Container Line">
   <item>Container Cell</item>
  </portal_type>
- <portal_type id="Delivering Simulation Rule">
+ <portal_type id="Delivery Simulation Rule">
   <item>Category Divergence Tester</item>
   <item>Property Divergence Tester</item>
   <item>Quantity Divergence Tester</item>
@@ -49,7 +49,7 @@
   <item>Property Divergence Tester</item>
   <item>Quantity Divergence Tester</item>
  </portal_type>
- <portal_type id="Order Simulation Rule">
+ <portal_type id="Order Root Simulation Rule">
   <item>Category Divergence Tester</item>
   <item>Property Divergence Tester</item>
   <item>Quantity Divergence Tester</item>
@@ -98,8 +98,9 @@
  </portal_type>
  <portal_type id="Rule Tool">
   <item>Delivery Rule</item>
+  <item>Delivery Simulation Rule</item>
   <item>Order Rule</item>
-  <item>Order Simulation Rule</item>
+  <item>Order Root Simulation Rule</item>
  </portal_type>
  <portal_type id="Sale Order">
   <item>Payment Condition</item>

@@ -60,7 +60,7 @@ kw[\'query\'] = ComplexQuery(\n
   ComplexQuery(\n
     Query(parent_specialise_portal_type=[\'Order Rule\', \'Delivery Rule\'],\n
           simulation_state=\'confirmed\'),\n
-    Query(parent_specialise_portal_type=\'Delivering Simulation Rule\',\n
+    Query(parent_specialise_portal_type=\'Delivery Simulation Rule\',\n
           grand_parent_simulation_state=\'confirmed\'),\n
     operator=\'or\'),\n
   operator=\'and\')\n

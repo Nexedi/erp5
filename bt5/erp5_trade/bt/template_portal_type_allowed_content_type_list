@@ -4,9 +4,9 @@ Business Process | Business State
 Container Line | Container Cell
 Container | Container
 Container | Container Line
-Delivering Simulation Rule | Category Divergence Tester
-Delivering Simulation Rule | Property Divergence Tester
-Delivering Simulation Rule | Quantity Divergence Tester
+Delivery Simulation Rule | Category Divergence Tester
+Delivery Simulation Rule | Property Divergence Tester
+Delivery Simulation Rule | Quantity Divergence Tester
 Delivery Builder | First Causality Movement Group
 Delivery Rule | Category Divergence Tester
 Delivery Rule | Property Divergence Tester
@@ -20,9 +20,9 @@ Inventory | Inventory Line
 Order Rule | Category Divergence Tester
 Order Rule | Property Divergence Tester
 Order Rule | Quantity Divergence Tester
-Order Simulation Rule | Category Divergence Tester
-Order Simulation Rule | Property Divergence Tester
-Order Simulation Rule | Quantity Divergence Tester
+Order Root Simulation Rule | Category Divergence Tester
+Order Root Simulation Rule | Property Divergence Tester
+Order Root Simulation Rule | Quantity Divergence Tester
 Preference | Sale Order
 Purchase Order Line | Purchase Order Cell
 Purchase Order Line | Purchase Order Line
@@ -42,8 +42,9 @@ Returned Sale Packing List Module | Returned Sale Packing List
 Returned Sale Packing List | Container
 Returned Sale Packing List | Returned Sale Packing List Line
 Rule Tool | Delivery Rule
+Rule Tool | Delivery Simulation Rule
 Rule Tool | Order Rule
-Rule Tool | Order Simulation Rule
+Rule Tool | Order Root Simulation Rule
 Sale Order Line | Sale Order Cell
 Sale Order Line | Sale Order Line
 Sale Order Module | Sale Order

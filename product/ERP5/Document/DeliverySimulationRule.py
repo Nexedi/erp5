@@ -29,14 +29,15 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions
 from Products.ERP5.Document.Rule import Rule
 
-class DeliveringSimulationRule(Rule):
+class DeliverySimulationRule(Rule):
   """
-    Delivering Simulation Rule expand simulation created by a order or delivery rule.
+  Delivery Simulation Rule expand simulation created by a order root
+  simulation rule or delivery root simulation rule.
   """
 
   # CMF Type Definition
-  meta_type = 'ERP5 Delivering Simulation Rule'
-  portal_type = 'Delivering Simulation Rule'
+  meta_type = 'ERP5 Delivery Simulation Rule'
+  portal_type = 'Delivery Simulation Rule'
   add_permission = Permissions.AddPortalContent
 
   # Declarative security

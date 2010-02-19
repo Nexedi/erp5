@@ -16,7 +16,7 @@
   <workflow>rule_validation_workflow, edit_workflow</workflow>
  </chain>
  <chain>
-  <type>Production Order Model Simulation Rule</type>
+  <type>Production Order Model Root Simulation Rule</type>
   <workflow>rule_validation_workflow, edit_workflow</workflow>
  </chain>
  <chain>
@@ -24,7 +24,7 @@
   <workflow>edit_workflow, rule_validation_workflow</workflow>
  </chain>
  <chain>
-  <type>Production Order Simulation Rule</type>
+  <type>Production Order Root Simulation Rule</type>
   <workflow>edit_workflow, rule_validation_workflow</workflow>
  </chain>
  <chain>
