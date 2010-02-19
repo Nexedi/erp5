@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2005, 2006 Nexedi SARL and Contributors. All Rights Reserved.
@@ -151,6 +152,24 @@ class ParallelListWidget(Widget.MultiListWidget,
         # use a marker
         REQUEST.set(KEYWORD % parameter, MARKER)
       return result
+
+    def render_odt(self, field, value, as_string, ooo_builder, REQUEST,
+                        render_prefix, attr_dict, local_name):
+      """
+      """
+      return Widget.ListWidget.render_odt(self, field, value, as_string,
+                                          ooo_builder, REQUEST, render_prefix,
+                                          attr_dict, local_name)
+
+
+    def render_odt_view(self, field, value, as_string, ooo_builder, REQUEST,
+                        render_prefix, attr_dict, local_name):
+      """
+      """
+      return Widget.ListWidget.render_odt_view(self, field, value, as_string,
+                                               ooo_builder, REQUEST,
+                                               render_prefix, attr_dict,
+                                               local_name)
 
 class ParallelListValidator(Validator.MultiSelectionValidator):
 
