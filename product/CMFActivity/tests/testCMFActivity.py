@@ -714,41 +714,6 @@ class TestCMFActivity(ERP5TypeTestCase):
     self.assertEquals(o.getTitle(), 'a')
     self.assertEquals(portal_activities.countMessageWithTag('toto'), 0)
 
-  def TryConflictErrorsWhileProcessing(self, activity):
-    """Try to execute active objects which may throw conflict errors
-    while processing, and check if they are still executed."""
-    # Make sure that no active object is installed.
-    activity_tool = self.getPortal().portal_activities
-    activity_tool.manageClearActivities(keep=0)
-
-    # Need an object.
-    organisation_module = self.getOrganisationModule()
-    if not organisation_module.hasContent(self.company_id):
-      organisation_module.newContent(id=self.company_id)
-    o = organisation_module._getOb(self.company_id)
-    get_transaction().commit()
-    self.flushAllActivities(silent = 1, loop_size = 10)
-    self.assertEquals(len(activity_tool.getMessageList()), 0)
-
-    # Monkey patch Organisation to induce conflict errors artificially.
-    o.foobar = 0
-    def induceConflictErrors(self, limit):
-      if self.__class__.current_num_conflict_errors < limit:
-        self.__class__.current_num_conflict_errors += 1
-        raise ConflictError
-      else:
-        self.foobar += 1
-    Organisation.induceConflictErrors = induceConflictErrors
-
-    # Test some range of conflict error occurences.
-    for i in xrange(10):
-      Organisation.current_num_conflict_errors = 0
-      o.activate(activity = activity).induceConflictErrors(i)
-      get_transaction().commit()
-      self.flushAllActivities(silent = 1, loop_size = i + 10)
-      self.assertEquals(len(activity_tool.getMessageList()), 0)
-    self.assertEqual(o.foobar, 10)
-
   def TryConflictErrorsWhileValidating(self, activity):
     """Try to execute active objects which may throw conflict errors
     while validating, and check if they are still executed."""
@@ -1676,27 +1641,64 @@ class TestCMFActivity(ERP5TypeTestCase):
     get_transaction().commit()
     self.assertEquals(len(activity_tool.getMessageList()), 0)
 
-  def test_68_TestConflictErrorsWhileProcessingWithSQLDict(self, quiet=0, run=run_all_test):
-    """
-      Test if conflict errors spoil out active objects with SQLDict.
-    """
-    if not run: return
+  def test_68_RetryMessageExecution(self, quiet=0):
     if not quiet:
-      message = '\nTest Conflict Errors While Processing With SQLDict'
+      message = '\nCheck number of executions of failing activities'
       ZopeTestCase._print(message)
       LOG('Testing... ', 0, message)
-    self.TryConflictErrorsWhileProcessing('SQLDict')
-
-  def test_69_TestConflictErrorsWhileProcessingWithSQLQueue(self, quiet=0, run=run_all_test):
-    """
-      Test if conflict errors spoil out active objects with SQLQueue.
-    """
-    if not run: return
-    if not quiet:
-      message = '\nTest Conflict Errors While Processing With SQLQueue'
-      ZopeTestCase._print(message)
-      LOG('Testing... ', 0, message)
-    self.TryConflictErrorsWhileProcessing('SQLQueue')
+    activity_tool = self.portal.portal_activities
+    self.assertFalse(activity_tool.getMessageList())
+    exec_count = [0]
+    # priority does not matter anymore
+    priority = random.Random().randint
+    def doSomething(self, retry_list):
+      i = exec_count[0]
+      exec_count[0] = i + 1
+      conflict, edit_kw = retry_list[i]
+      if edit_kw:
+        self.getActivityRuntimeEnvironment().edit(**edit_kw)
+      if conflict is not None:
+        raise conflict and ConflictError or Exception
+    def check(retry_list):
+      fail = retry_list[-1][0] is not None and 1 or 0
+      for activity in 'SQLDict', 'SQLQueue':
+        exec_count[0] = 0
+        activity_tool.activate(activity=activity, priority=priority(1,6)) \
+                     .doSomething(retry_list)
+        get_transaction().commit()
+        self.flushAllActivities(silent=1)
+        self.assertEqual(len(retry_list), exec_count[0])
+        self.assertEqual(fail, len(activity_tool.getMessageList()))
+        self.portal.portal_activities.manageCancel(
+          activity_tool.getPhysicalPath(), 'doSomething')
+    activity_tool.__class__.doSomething = doSomething
+    try:
+      ## Default behaviour
+      # Usual successful case: activity is run only once
+      check([(None, None)])
+      # Usual error case: activity is run 6 times before being frozen
+      check([(False, None)] * 6)
+      # On ConflictError, activity is reexecuted without increasing retry count
+      check([(True, None)] * 10 + [(None, None)])
+      check([(True, None), (False, None)] * 6)
+      ## Customized behaviour
+      # Do not retry
+      check([(False, {'max_retry': 0})])
+      # ... even in case of ConflictError
+      check([(True, {'max_retry': 0}),
+             (True, {'max_retry': 0, 'conflict_retry': 0})])
+      # Customized number of retries
+      for n in 3, 9:
+        check([(False, {'max_retry': n})] * n + [(None, None)])
+        check([(False, {'max_retry': n})] * (n + 1))
+      # Infinite retry
+      for n in 3, 9:
+        check([(False, {'max_retry': None})] * n + [(None, None)])
+        check([(False, {'max_retry': None})] * n + [(False, {'max_retry': 0})])
+      check([(False, {'max_retry': None})] * 9 + [(False, None)])
+    finally:
+      del activity_tool.__class__.doSomething
+    self.assertFalse(activity_tool.getMessageList())
 
   def test_70_TestConflictErrorsWhileValidatingWithSQLDict(self, quiet=0, run=run_all_test):
     """
