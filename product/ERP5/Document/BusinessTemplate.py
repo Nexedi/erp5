@@ -27,7 +27,7 @@
 #
 ##############################################################################
 
-import fnmatch, imp, os, re, shutil, sys
+import fnmatch, gc, imp, os, re, shutil, sys
 from Shared.DC.ZRDB.Connection import Connection as RDBConnection
 from Products.ERP5Type.DiffUtils import DiffFile
 from Products.ERP5Type.Globals import Persistent, PersistentMapping
@@ -5603,7 +5603,8 @@ Business Template is a set of definitions, such as skins, portal types and categ
         # Doing a savepoint will pickle them to a temporary storage so that all
         # references to it can be freed.
         transaction.savepoint(optimistic=True)
-        self.getPortalObject()._p_jar.cacheMinimize()
+        self._p_jar.cacheMinimize()
+        gc.collect()
 
       # Remove temporary modules created above to allow import of real modules
       # (during the installation).

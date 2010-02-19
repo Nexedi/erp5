@@ -46,6 +46,7 @@ from Products.ERP5Type.tests.utils import LogInterceptor
 from Products.ERP5Type.Workflow import addWorkflowByType
 import shutil
 import os
+import gc
 
 from MethodObject import Method
 from Persistence import Persistent
@@ -5959,12 +5960,14 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
       bt_path = os.path.join(os.path.dirname(__file__), 'test_data',
                              self._testMethodName)
       for i in xrange(6):
+        gc.disable()
         bt = template_tool.download(bt_path)
         assert object_id_list.pop() == 'some_file' and not object_id_list
         if i in (2, 4, 5):
           transaction.commit()
           self.tic()
         bt.install(force=1)
+        gc.enable()
         assert not object_id_list
         transaction.commit()
         self.tic()
