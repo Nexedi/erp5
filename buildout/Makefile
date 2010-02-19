@@ -38,6 +38,7 @@ assert-eggs-2.4:
 
 assert-parts-libs:
 	ldd parts/memcached/bin/memcached | grep 'parts/libevent/lib/libevent'
+	ldd parts/mysql-tritonn-5.0/libexec/mysqld | grep 'parts/senna/lib/libsenna.so.0'
 
 create-mandriva2010-rpm: bin/buildout
 	bin/buildout -c profiles/mandriva2010.0.cfg buildout:directory=`pwd` install create-rpm
