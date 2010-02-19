@@ -985,7 +985,7 @@ class Document(PermanentURLMixIn, XMLObject, UrlMixIn, CachedConvertableMixin, S
       Based on the document content, find out as many properties as needed.
       returns properties which should be set on the document
     """
-    if not self.hasData():
+    if getattr(self, 'hasData', None) is not None and not self.hasData():
       # if document is empty, we will not find anything in its content
       return dict()
     if not self.hasBaseData():
