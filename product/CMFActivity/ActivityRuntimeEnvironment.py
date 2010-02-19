@@ -1,33 +1,35 @@
-import threading
-import copy
-
-activity_runtime_environment_container = threading.local()
+from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 
 def getActivityRuntimeEnvironment():
   """
-    Raises AttributeError if called outside activity.
+    Raises KeyError if called outside activity.
   """
-  return copy.deepcopy(activity_runtime_environment_container.current)
+  return getTransactionalVariable(None)['activity_runtime_environment']
 
 def _getActivityRuntimeEnvironment():
-  current = getattr(activity_runtime_environment_container, 'current', None)
-  if current is None:
-    current = activity_runtime_environment_container.current = {}
-  return current
+  try:
+    return getActivityRuntimeEnvironment()
+  except KeyError:
+    return
 
-def setActivityRuntimeValue(key, value):
-  """
-    TODO: protect against unauthorized use ?
-  """
-  _getActivityRuntimeEnvironment()[key] = value
 
-def updateActivityRuntimeValue(new_dict):
-  """
-    TODO: protect against unauthorized use ?
-  """
-  _getActivityRuntimeEnvironment().update(new_dict)
+class BaseMessage:
 
-def clearActivityRuntimeEnvironment():
-  if getattr(activity_runtime_environment_container, 'current', None) is not None:
-    delattr(activity_runtime_environment_container, 'current')
+  delay = None
+  # None means infinite retry
+  max_retry = 5
+  # For errors happening after message invocation (ConflictError),
+  # should we retry quickly without increasing 'retry' count ?
+  conflict_retry = True
 
+
+class ActivityRuntimeEnvironment(object):
+
+  def __init__(self, message):
+    self._message = message
+
+  def edit(self, **kw):
+    # There is no point allowing to modify other attributes from a message
+    for k in kw:
+      getattr(BaseMessage, k)
+    self._message.__dict__.update(kw)

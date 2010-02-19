@@ -36,7 +36,8 @@ import sys
 from types import ClassType
 #from time import time
 from SQLBase import SQLBase
-from Products.CMFActivity.ActivityRuntimeEnvironment import setActivityRuntimeValue, updateActivityRuntimeValue, clearActivityRuntimeEnvironment
+from Products.CMFActivity.ActivityRuntimeEnvironment import (
+  ActivityRuntimeEnvironment, getTransactionalVariable)
 from zExceptions import ExceptionFormatter
 
 try:
@@ -315,19 +316,15 @@ class SQLDict(RAMDict, SQLBase):
       # Remove group_id parameter from group_method_id
       if group_method_id is not None:
         group_method_id = group_method_id.split('\0')[0]
-      clearActivityRuntimeEnvironment()
       if group_method_id not in (None, ""):
-        setActivityRuntimeValue('group_method_id', group_method_id)
         method  = activity_tool.invokeGroup
         args = (group_method_id, message_list)
+        activity_runtime_environment = ActivityRuntimeEnvironment(None)
       else:
         method = activity_tool.invoke
         message = message_list[0]
         args = (message, )
-        updateActivityRuntimeValue({'activity_kw': message.activity_kw,
-                                    'priority': message.line.priority,
-                                    'uid': message.uid})
-      setActivityRuntimeValue('processing_node', processing_node)
+        activity_runtime_environment = ActivityRuntimeEnvironment(message)
       # Commit right before executing messages.
       # As MySQL transaction does not start exactly at the same time as ZODB
       # transactions but a bit later, messages available might be called
@@ -336,6 +333,8 @@ class SQLDict(RAMDict, SQLBase):
       # So all connectors must be committed now that we have selected
       # everything needed from MySQL to get a fresh view of ZODB objects.
       get_transaction().commit()
+      tv = getTransactionalVariable(None)
+      tv['activity_runtime_environment'] = activity_runtime_environment
       # Try to invoke
       try:
         method(*args)

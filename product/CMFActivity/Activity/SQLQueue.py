@@ -37,7 +37,8 @@ import sys
 from time import time
 from sets import ImmutableSet
 from SQLBase import SQLBase
-from Products.CMFActivity.ActivityRuntimeEnvironment import setActivityRuntimeValue, updateActivityRuntimeValue, clearActivityRuntimeEnvironment
+from Products.CMFActivity.ActivityRuntimeEnvironment import (
+  ActivityRuntimeEnvironment, getTransactionalVariable)
 from zExceptions import ExceptionFormatter
 
 try:
@@ -214,13 +215,10 @@ class SQLQueue(RAMQueue, SQLBase):
       # So all connectors must be committed now that we have selected
       # everything needed from MySQL to get a fresh view of ZODB objects.
       get_transaction().commit()
+      tv = getTransactionalVariable(None)
       for m in message_list:
+        tv['activity_runtime_environment'] = ActivityRuntimeEnvironment(m)
         processed_count += 1
-        clearActivityRuntimeEnvironment()
-        updateActivityRuntimeValue({'processing_node': processing_node,
-                                    'activity_kw': m.activity_kw,
-                                    'priority': m.line.priority,
-                                    'uid': m.uid})
         # Try to invoke
         try:
           activity_tool.invoke(m)

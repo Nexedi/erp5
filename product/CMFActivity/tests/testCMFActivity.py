@@ -32,6 +32,7 @@ import unittest
 from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import DummyMailHost
+from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 from Products.CMFActivity.ActiveObject import INVOKE_ERROR_STATE,\
                                               VALIDATE_ERROR_STATE
 from Products.CMFActivity.Activity.Queue import VALIDATION_ERROR_DELAY
@@ -49,7 +50,6 @@ from DateTime import DateTime
 import cPickle as pickle
 from Products.CMFActivity.ActivityTool import Message
 import random
-from Products.CMFActivity.ActivityRuntimeEnvironment import setActivityRuntimeValue, clearActivityRuntimeEnvironment
 import threading
 
 try:
@@ -2802,44 +2802,32 @@ class TestCMFActivity(ERP5TypeTestCase):
       delattr(Organisation, 'mustRunAfter')
 
   def CheckActivityRuntimeEnvironment(self, activity):
-    organisation = self.getPortal().organisation_module.newContent(portal_type='Organisation')
-    get_transaction().commit()
-    self.tic()
-    activity_tool = self.getActivityTool()
-    check_result_dict = {}
-    initial_list_check_value = [1, 2]
+    document = self.portal.organisation_module
+    activity_result = []
     def extractActivityRuntimeEnvironment(self):
-      setActivityRuntimeValue('list_check', initial_list_check_value)
-      environment = self.getActivityRuntimeEnvironment()
-      check_result_dict['environment'] = environment
-    def runAndCheck():
-      check_result_dict.clear()
-      self.assertFalse('environment' in check_result_dict)
-      get_transaction().commit()
-      self.tic()
-      self.assertTrue('environment' in check_result_dict)
-    Organisation.extractActivityRuntimeEnvironment = extractActivityRuntimeEnvironment
+      activity_result.append(self.getActivityRuntimeEnvironment())
+    document.__class__.doSomething = extractActivityRuntimeEnvironment
     try:
-      # Check that organisation.getActivityRuntimeEnvironment raises outside
-      # of activities.
-      clearActivityRuntimeEnvironment()
-      #organisation.getActivityRuntimeEnvironment()
-      self.assertRaises(AttributeError, organisation.getActivityRuntimeEnvironment)
+      document.activate(activity=activity).doSomething()
+      get_transaction().commit()
+      # Check that getActivityRuntimeEnvironment raises outside of activities
+      self.assertRaises(KeyError, document.getActivityRuntimeEnvironment)
       # Check Runtime isolation
-      setActivityRuntimeValue('blah', True)
-      organisation.activate(activity=activity).extractActivityRuntimeEnvironment()
-      runAndCheck()
-      self.assertEqual(check_result_dict['environment'].get('blah'), None)
-      # Check Runtime presence
-      self.assertTrue(len(check_result_dict['environment']) > 0)
-      self.assertTrue('processing_node' in check_result_dict['environment'])
-      # Check Runtime does a deepcopy
-      self.assertTrue('list_check' in check_result_dict['environment'])
-      check_result_dict['environment']['list_check'].append(3)
-      self.assertTrue(check_result_dict['environment']['list_check'] != \
-                      initial_list_check_value)
+      self.tic()
+      # Check that it still raises outside of activities
+      self.assertRaises(KeyError, document.getActivityRuntimeEnvironment)
+      # Check activity runtime environment instance
+      env = activity_result.pop()
+      self.assertFalse(activity_result)
+      message = env._message
+      self.assertEqual(message.line.priority, 1)
+      self.assertEqual(message.object_path, document.getPhysicalPath())
+      self.assertTrue(message.conflict_retry) # default value
+      env.edit(max_retry=0, conflict_retry=False)
+      self.assertFalse(message.conflict_retry) # edited value
+      self.assertRaises(AttributeError, env.edit, foo='bar')
     finally:
-      delattr(Organisation, 'extractActivityRuntimeEnvironment')
+      del document.__class__.doSomething
 
   def test_104_activityRuntimeEnvironmentSQLDict(self, quiet=0, run=run_all_test):
     if not run: return

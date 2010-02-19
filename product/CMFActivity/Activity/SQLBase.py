@@ -35,8 +35,6 @@ from Products.CMFActivity.ActiveObject import (
   INVOKE_ERROR_STATE, VALIDATE_ERROR_STATE)
 from Queue import VALIDATION_ERROR_DELAY
 
-MAX_RETRY = 5
-
 
 class SQLBase:
   """
@@ -166,16 +164,24 @@ class SQLBase:
         # please, remove the "type(m.exc_type) is type(ConflictError)" check
         # and leave only the "issubclass(m.exc_type, ConflictError)" check.
         if type(m.exc_type) is type(ConflictError) and \
-           issubclass(m.exc_type, ConflictError):
+           m.conflict_retry and issubclass(m.exc_type, ConflictError):
           delay_uid_list.append(uid)
         else:
+          max_retry = m.max_retry
           retry = m.line.retry
-          if retry >= MAX_RETRY:
+          if max_retry is not None and retry >= max_retry:
+            # Always notify when we stop retrying.
             notify_user_list.append(m)
             final_error_uid_list.append(uid)
             continue
-          # By default, make delay quadratic to the number of retries.
-          delay = VALIDATION_ERROR_DELAY * (retry * retry + 1) / 2
+          # In case of infinite retry, notify the user
+          # when the default limit is reached.
+          if max_retry is None and retry == m.__class__.max_retry:
+            notify_user_list.append(m)
+          delay = m.delay
+          if delay is None:
+            # By default, make delay quadratic to the number of retries.
+            delay = VALIDATION_ERROR_DELAY * (retry * retry + 1) / 2
           try:
             # Immediately update, because values different for every message
             activity_tool.SQLBase_reactivate(table=self.sql_table,

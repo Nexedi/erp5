@@ -48,6 +48,7 @@ from Products.ERP5Type.Globals import InitializeClass, DTMLFile
 from Acquisition import aq_base
 from Acquisition import aq_inner
 from ActivityBuffer import ActivityBuffer
+from ActivityRuntimeEnvironment import BaseMessage
 from zExceptions import ExceptionFormatter
 from BTrees.OIBTree import OIBTree
 
@@ -153,7 +154,8 @@ MESSAGE_NOT_EXECUTED = 0
 MESSAGE_EXECUTED = 1
 MESSAGE_NOT_EXECUTABLE = 2
 
-class Message:
+
+class Message(BaseMessage):
   """Activity Message Class.
 
   Message instances are stored in an activity queue, inside the Activity Tool.
