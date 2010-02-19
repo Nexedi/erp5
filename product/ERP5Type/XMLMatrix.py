@@ -658,30 +658,31 @@ class XMLMatrix(Folder):
               # The matrix does not have this base_id
               addError("There is no index for base_id %s" % base_id)
               to_delete_set.add(object_id)
-            else:
-              # Check empty indices.
-              empty_list = []
-              base_item = self.index[base_id]
-              for key, value in base_item.iteritems():
-                if value is None or len(value) == 0:
-                  addError("There is no id for the %dth axis of base_id %s" % (key, base_id))
-                  empty_list.append(key)
-              if fixit:
-                for i in empty_list:
-                  del base_item[key]
+              continue
 
-              len_id = len(base_item)
-              current_dimension = len(cell_coordinate_list)
-              if current_dimension != len_id:
-                addError("Dimension of cell is %s but should be %s" % (current_dimension,
-                                                                       len_id))
-                to_delete_set.add(object_id)
-              else :
-                for i, coordinate in enumerate(cell_coordinate_list):
-                  if coordinate >= len(base_item[i]):
-                    addError("Cell %s is out of bound" % object_id)
-                    to_delete_set.add(object_id)
-                    break
+            # Check empty indices.
+            empty_list = []
+            base_item = self.index[base_id]
+            for key, value in base_item.iteritems():
+              if value is None or len(value) == 0:
+                addError("There is no id for the %dth axis of base_id %s" % (key, base_id))
+                empty_list.append(key)
+            if fixit:
+              for i in empty_list:
+                del base_item[key]
+
+            len_id = len(base_item)
+            current_dimension = len(cell_coordinate_list)
+            if current_dimension != len_id:
+              addError("Dimension of cell is %s but should be %s" % (current_dimension,
+                                                                     len_id))
+              to_delete_set.add(object_id)
+            else :
+              for i, coordinate in enumerate(cell_coordinate_list):
+                if coordinate >= len(base_item[i]):
+                  addError("Cell %s is out of bound" % object_id)
+                  to_delete_set.add(object_id)
+                  break
 
       if fixit and len(to_delete_set) > 0:
         self.manage_delObjects(list(to_delete_set))
