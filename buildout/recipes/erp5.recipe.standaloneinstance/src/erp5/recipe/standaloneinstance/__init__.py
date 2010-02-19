@@ -133,7 +133,7 @@ class Recipe(plone.recipe.zope2instance.Recipe, erp5.recipe.createsite.Recipe):
     options = self.options
     location = options['instancehome']
     template_input_data = ''.join(
-        file(self.options.get('zope_conf_template').strip()).readlines()
+        file(self.options['zope_conf_template'].strip()).readlines()
     )
     template = WithMinusTemplate(template_input_data)
     result = template.substitute(self.options.copy())
