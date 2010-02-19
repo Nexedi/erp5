@@ -174,8 +174,8 @@ class SQLBase:
             notify_user_list.append(m)
             final_error_uid_list.append(uid)
             continue
-          # XXX: What about making delay quadratic to the number of retries ?
-          delay = VALIDATION_ERROR_DELAY #* (retry * retry + 1) / 2
+          # By default, make delay quadratic to the number of retries.
+          delay = VALIDATION_ERROR_DELAY * (retry * retry + 1) / 2
           try:
             # Immediately update, because values different for every message
             activity_tool.SQLBase_reactivate(table=self.sql_table,
