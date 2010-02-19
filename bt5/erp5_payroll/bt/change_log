@@ -1,3 +1,6 @@
+2010-02-19 yusei
+* Move base_amount/payroll and base_amount/payroll/l10n categories from French localisation business template.
+
 2010-02-06 yusuke
 * Add a field for service recipient
 * Update service destination of pay sheet line view to also allow person
