@@ -20,6 +20,8 @@ import string
 from Shared.DC.xml.ppml import *
 from Shared.DC.xml import ppml
 
+from marshal import dumps as mdumps
+
 # For converting to a more readable expression.
 reprs = {}
 ### patch begin: create a conversion table for [\x00-\x1f]. this table is
@@ -621,60 +623,6 @@ class ToXMLUnpickler(Unpickler):
     #  dispatch[code] = LogCall(dispatch[code])
 
 ppml.ToXMLUnpickler = ToXMLUnpickler
-
-def end_string(self, tag, data):
-    v=data[2]
-    a=data[1]
-    encoding = a.get('encoding','repr') # JPS: repr is default encoding
-    if encoding != '': # Bugfix since (is was used on string)
-        v=unconvert(encoding,v)
-    if a.has_key('id'): self._pickleids[a['id']]=v
-    return v
-
-ppml.end_string = end_string
-
-def end_unicode(self, tag, data):
-    return unicode(end_string(self, tag, data), 'utf-8')
-
-ppml.end_unicode = end_unicode
-
-end_list = ppml.end_list
-end_tuple = ppml.end_tuple
-end_dictionary = ppml.end_dictionary
-
-class xmlUnpickler(NoBlanks, xyap):
-    start_handlers={'pickle': start_pickle}
-    end_handlers={
-        'int':
-        lambda self,tag,data,atoi=string.atoi,name=name:
-            atoi(name(self, tag, data)),
-        'long':
-        lambda self,tag,data,atoi=string.atoi,name=name:
-            atoi(name(self, tag, data)),
-        'boolean':
-        lambda self,tag,data,atoi=string.atoi,name=name:
-            atoi(name(self, tag, data)),
-        'string': end_string ,
-        'unicode': end_unicode ,
-        'double':
-        lambda self,tag,data,atof=string.atof,name=name:
-            atof(name(self, tag, data)),
-        'float':
-        lambda self,tag,data,atof=string.atof,name=name:
-            atof(name(self, tag, data)),
-        'none': lambda self, tag, data: None,
-        'list': end_list,
-        'tuple': end_tuple,
-        'dictionary': end_dictionary,
-        'key': lambda self, tag, data: data[2],
-        'value': lambda self, tag, data: data[2],
-        'item': lambda self, tag, data: data[2:],
-        'reference': lambda self, tag, data: self._pickleids[data[1]['id']],
-        'state': lambda self, tag, data: data[2],
-        'klass': lambda self, tag, data: data[2],
-        }
-
-ppml.xmlUnpickler = xmlUnpickler
 
 def save_string(self, tag, data):
     binary=self.binary
