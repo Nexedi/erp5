@@ -351,7 +351,920 @@ class TestInvoiceMixin(TestPackingListMixin,
         self.assertEquals(movement.getStopDate(),
             parent_movement.getStopDate())
 
+  def modifyPackingListState(self, transition_name,
+                             sequence,packing_list=None):
+    """ calls the workflow for the packing list """
+    if packing_list is None:
+      packing_list = sequence.get('packing_list')
+    packing_list.portal_workflow.doActionFor(packing_list, transition_name)
 
+  def stepSetReadyPackingList(self, sequence=None, sequence_list=None, **kw):
+    """ set the Packing List as Ready. This must build the invoice. """
+    self.modifyPackingListState('set_ready_action', sequence=sequence)
+    packing_list = sequence.get('packing_list')
+    self.assertEquals(packing_list.getSimulationState(), 'ready')
+
+  def stepSetReadyNewPackingList(self, sequence=None,
+                                 sequence_list=None, **kw):
+    """ set the Packing List as Ready. This must build the invoice. """
+    packing_list = sequence.get('new_packing_list')
+    self.modifyPackingListState('set_ready_action', sequence=sequence,
+                                packing_list=packing_list)
+    self.assertEquals(packing_list.getSimulationState(), 'ready')
+
+  def stepStartPackingList(self, sequence=None, sequence_list=None, **kw):
+    self.modifyPackingListState('start_action', sequence=sequence)
+    packing_list = sequence.get('packing_list')
+    self.assertEquals(packing_list.getSimulationState(), 'started')
+
+  def stepStartNewPackingList(self, sequence=None, sequence_list=None, **kw):
+    packing_list = sequence.get('new_packing_list')
+    self.modifyPackingListState('start_action', sequence=sequence,
+                                packing_list=packing_list)
+    self.assertEquals(packing_list.getSimulationState(), 'started')
+
+  def stepStopPackingList(self, sequence=None, sequence_list=None, **kw):
+    self.modifyPackingListState('stop_action', sequence=sequence)
+    packing_list = sequence.get('packing_list')
+    self.assertEquals(packing_list.getSimulationState(), 'stopped')
+
+  def stepDeliverPackingList(self, sequence=None, sequence_list=None, **kw):
+    self.modifyPackingListState('deliver_action', sequence=sequence)
+    packing_list = sequence.get('packing_list')
+    self.assertEquals(packing_list.getSimulationState(), 'delivered')
+
+  def stepCancelPackingList(self, sequence=None, sequence_list=None, **kw):
+    self.modifyPackingListState('cancel_action', sequence=sequence)
+    packing_list = sequence.get('packing_list')
+    self.assertEquals(packing_list.getSimulationState(), 'cancelled')
+
+  def modifyInvoiceState(self, transition_name,
+                             sequence,invoice=None):
+    """ calls the workflow for the invoice """
+    if invoice is None:
+      invoice = sequence.get('invoice')
+    invoice.portal_workflow.doActionFor(invoice, transition_name)
+
+  def stepStartInvoice(self, sequence=None, sequence_list=None, **kw):
+    self.modifyInvoiceState('start_action', sequence=sequence)
+    invoice = sequence.get('invoice')
+    self.assertEquals(invoice.getSimulationState(), 'started')
+
+  def stepStartNewInvoice(self, sequence=None, sequence_list=None, **kw):
+    invoice = sequence.get('new_invoice')
+    self.modifyInvoiceState('start_action', sequence=sequence,
+                                invoice=invoice)
+    self.assertEquals(invoice.getSimulationState(), 'started')
+
+  def stepStopInvoice(self, sequence=None, sequence_list=None, **kw):
+    self.modifyInvoiceState('stop_action', sequence=sequence)
+    invoice = sequence.get('invoice')
+    self.assertEquals(invoice.getSimulationState(), 'stopped')
+
+  def stepDeliverInvoice(self, sequence=None, sequence_list=None, **kw):
+    self.modifyInvoiceState('deliver_action', sequence=sequence)
+    invoice = sequence.get('invoice')
+    self.assertEquals(invoice.getSimulationState(), 'delivered')
+
+  def stepCancelInvoice(self, sequence=None, sequence_list=None, **kw):
+    self.modifyInvoiceState('cancel_action', sequence=sequence)
+    invoice = sequence.get('invoice')
+    self.assertEquals(invoice.getSimulationState(), 'cancelled')
+
+
+  def stepSwitchPackingLists(self, sequence=None, sequence_list=None, **kw):
+    packing_list = sequence.get('packing_list')
+    new_packing_list = sequence.get('new_packing_list')
+    #invoice = new_packing_list.getDefaultCausalityRelatedValue(
+        #portal_type=self.invoice_portal_type)
+    sequence.edit(packing_list=new_packing_list,
+        new_packing_list=packing_list)#, invoice=invoice)
+
+  def stepSwitchInvoices(self, sequence=None, sequence_list=None, **kw):
+    invoice = sequence.get('invoice')
+    new_invoice = sequence.get('new_invoice')
+    sequence.edit(invoice=new_invoice, new_invoice=invoice)
+
+  def stepCheckPackingListSimulation(self, sequence=None, sequence_list=None, **kw):
+    """ checks that simulation movements related to the packing list are OK """
+    packing_list = sequence.get('packing_list')
+    order = sequence.get('order')
+    order_root_applied_rule = order.getCausalityRelatedValueList(
+                                  portal_type = 'Applied Rule')[0]
+    # check simulation movements from this packing list
+    for movement in packing_list.getMovementList() :
+      simulation_movement_list = movement.getOrderRelatedValueList()
+      self.assertNotEquals(len(simulation_movement_list), 0)
+      total_quantity = 0
+      for simulation_movement in simulation_movement_list :
+        total_quantity += simulation_movement.getQuantity()
+        # check that those movements come from the same root applied
+        # rule than the order.
+        self.assertEquals( simulation_movement.getRootAppliedRule(),
+                           order_root_applied_rule)
+      self.assertEquals(total_quantity, movement.getQuantity())
+
+  def stepCheckInvoiceBuilding(self, sequence=None, sequence_list=None, **kw):
+    """
+    checks that the invoice is built with the default_invoice_builder
+    """
+    packing_list = sequence.get('packing_list')
+    related_invoice_list = packing_list.getCausalityRelatedValueList(
+                     portal_type=self.invoice_portal_type)
+
+    packing_list_building_state = 'started'
+    packing_list_state = packing_list.getSimulationState()
+    if packing_list_state != packing_list_building_state :
+      self.assertEquals(0, len(related_invoice_list))
+    else:
+      self.assertEquals(1, len(related_invoice_list))
+
+      invoice = related_invoice_list[0].getObject()
+      self.failUnless(invoice is not None)
+      # Invoices created by Delivery Builder are in confirmed state
+      self.assertEquals(invoice.getSimulationState(), 'confirmed')
+
+      # Get the list of simulation movements of packing list ...
+      packing_list_simulation_movement_list = []
+      for packing_list_movement in packing_list.getMovementList():
+           packing_list_simulation_movement_list.extend(
+                packing_list_movement.getDeliveryRelatedValueList())
+      # ... invoice simulation movement are their childrens.
+      simulation_movement_list = []
+      for p_l_simulation_movement in packing_list_simulation_movement_list :
+        for applied_rule in p_l_simulation_movement.objectValues() :
+          simulation_movement_list.extend(applied_rule.objectValues())
+
+      # First, test if each Simulation Movement is related to an
+      # Invoice Movement
+      invoice_relative_url = invoice.getRelativeUrl()
+      for simulation_movement in simulation_movement_list:
+        invoice_movement_list = simulation_movement.getDeliveryValueList()
+        self.assertEquals(len(invoice_movement_list), 1)
+        invoice_movement = invoice_movement_list[0]
+        self.failUnless(invoice_movement is not None)
+        self.assert_(invoice_movement.getRelativeUrl().\
+                              startswith(invoice_relative_url))
+
+      # Then, test if each Invoice movement is equals to the sum of somes
+      # Simulation Movements
+      for invoice_movement in invoice.getMovementList(portal_type = [
+                          self.invoice_cell_portal_type,
+                          self.invoice_line_portal_type]) :
+        related_simulation_movement_list = invoice_movement.\
+                 getDeliveryRelatedValueList(portal_type='Simulation Movement')
+        quantity = 0
+        total_price = 0
+        invoice_movement_quantity = invoice_movement.getQuantity()
+        for related_simulation_movement in related_simulation_movement_list:
+          quantity += related_simulation_movement.getQuantity()
+          total_price += related_simulation_movement.getPrice() *\
+                         related_simulation_movement.getQuantity()
+          # Test resource
+          self.assertEquals(invoice_movement.getResource(), \
+                            related_simulation_movement.getResource())
+          # Test resource variation
+          self.assertEquals(invoice_movement.getVariationText(), \
+                            related_simulation_movement.getVariationText())
+          self.assertEquals(invoice_movement.getVariationCategoryList(), \
+                        related_simulation_movement.getVariationCategoryList())
+          # Test acquisition
+          self.checkAcquisition(invoice_movement,
+                                related_simulation_movement)
+          # Test delivery ratio
+          self.assertEquals(related_simulation_movement.getQuantity() /\
+                            invoice_movement_quantity, \
+                            related_simulation_movement.getDeliveryRatio())
+
+        self.assertEquals(quantity, invoice_movement.getQuantity())
+        # Test price
+        self.assertEquals(total_price / quantity, invoice_movement.getPrice())
+
+      sequence.edit(invoice = invoice)
+
+      # Test causality
+      self.assertEquals(len(invoice.getCausalityValueList(
+                      portal_type = self.packing_list_portal_type)), 1)
+      self.assertEquals(invoice.getCausalityValue(), packing_list)
+
+      # Finally, test getTotalQuantity and getTotalPrice on Invoice
+      self.assertEquals(packing_list.getTotalQuantity(),
+                        invoice.getTotalQuantity())
+      self.assertEquals(packing_list.getTotalPrice(),
+                        invoice.getTotalPrice())
+
+  def stepCheckPaymentBuilding(self, sequence=None, sequence_list=None, **kw):
+    """
+    checks that the payment is built with the default_payment_builder
+    """
+    invoice = sequence.get('invoice')
+    related_payment_list = invoice.getCausalityRelatedValueList(
+      portal_type=self.payment_portal_type)
+
+    invoice_building_state = 'started'
+    invoice_state = invoice.getSimulationState()
+    if invoice_state != invoice_building_state :
+      self.assertEquals(0, len(related_payment_list))
+    else:
+      self.assertEquals(1, len(related_payment_list))
+
+      payment = related_payment_list[0].getObject()
+      self.failUnless(payment is not None)
+      # Payments created by Delivery Builder are in planned state
+      self.assertEquals(payment.getSimulationState(), 'planned')
+
+      # Get the list of simulation movements of packing list ...
+      invoice_simulation_movement_list = []
+      for invoice_movement in invoice.getMovementList(
+        portal_type=self.portal.getPortalAccountingMovementTypeList()):
+        invoice_simulation_movement_list.extend(
+          invoice_movement.getDeliveryRelatedValueList())
+      # ... payment simulation movement are their childrens.
+      simulation_movement_list = []
+      for p_l_simulation_movement in invoice_simulation_movement_list :
+        for applied_rule in p_l_simulation_movement.objectValues() :
+          simulation_movement_list.extend(applied_rule.objectValues())
+
+      # First, test if each Simulation Movement is related to an
+      # Payment Movement
+      payment_relative_url = payment.getRelativeUrl()
+      for simulation_movement in simulation_movement_list:
+        payment_movement_list = simulation_movement.getDeliveryValueList()
+        self.assertEquals(len(payment_movement_list), 1)
+        payment_movement = payment_movement_list[0]
+        self.failUnless(payment_movement is not None)
+        self.assert_(payment_movement.getRelativeUrl().\
+                              startswith(payment_relative_url))
+
+      # Then, test if each Payment movement is equals to the sum of somes
+      # Simulation Movements
+      for payment_movement in payment.getMovementList():
+        related_simulation_movement_list = payment_movement.\
+                 getDeliveryRelatedValueList(portal_type='Simulation Movement')
+        quantity = 0
+        total_price = 0
+        payment_movement_quantity = payment_movement.getQuantity()
+        for related_simulation_movement in related_simulation_movement_list:
+          quantity += related_simulation_movement.getQuantity()
+          total_price += related_simulation_movement.getPrice() *\
+                         related_simulation_movement.getQuantity()
+          # Test resource
+          self.assertEquals(payment_movement.getResource(), \
+                            related_simulation_movement.getResource())
+          # Test resource variation
+          self.assertEquals(payment_movement.getVariationText(), \
+                            related_simulation_movement.getVariationText())
+          self.assertEquals(payment_movement.getVariationCategoryList(), \
+                        related_simulation_movement.getVariationCategoryList())
+          # Test acquisition
+          self.checkAcquisition(payment_movement,
+                                related_simulation_movement)
+          # Test delivery ratio
+          self.assertEquals(related_simulation_movement.getQuantity() /\
+                            payment_movement_quantity, \
+                            related_simulation_movement.getDeliveryRatio())
+
+        self.assertEquals(quantity, payment_movement.getQuantity())
+        # Test price
+        self.assertEquals(total_price / quantity, payment_movement.getPrice())
+
+      sequence.edit(payment = payment)
+
+      # Test causality
+      self.assertEquals(len(payment.getCausalityValueList(
+                      portal_type = self.invoice_portal_type)), 1)
+      self.assertEquals(payment.getCausalityValue(), invoice)
+
+      # Finally, test getTotalQuantity and getTotalPrice on Payment
+      self.assertEquals(0, payment.getTotalQuantity())
+      self.assertEquals(0, payment.getTotalPrice())
+
+  def stepCheckInvoicesConsistency(self, sequence=None, sequence_list=None,
+      **kw):
+    """
+    Checks that all invoices are consistent:
+    - transaction lines match invoice lines
+    - no movement is divergent
+    """
+    invoice_list = self.getPortal()['accounting_module'].objectValues()
+    for invoice in invoice_list:
+      accounting_state_list = \
+          list(self.getPortal().getPortalCurrentInventoryStateList())
+      accounting_state_list.append('cancelled')
+      if invoice.getSimulationState() in accounting_state_list:
+        invoice_line_list = invoice.contentValues(
+            portal_type=self.invoice_line_portal_type)
+        invoice_transaction_line_list = invoice.contentValues(
+            portal_type=self.invoice_transaction_line_portal_type)
+        self.assertEquals(3, len(invoice_transaction_line_list))
+        expected_price = 0.0
+        for line in invoice_line_list:
+          expected_price += line.getTotalPrice()
+        for line_id, line_source, line_dest, line_ratio in \
+            self.transaction_line_definition_list:
+          for line in invoice.contentValues(
+              portal_type=self.invoice_transaction_line_portal_type):
+            if line.getSource() == 'account_module/%s' % line_source and \
+                line.getDestination() == 'account_module/%s' % line_dest:
+              break
+          else:
+            self.fail('No line found that matches %s' % line_id)
+          resource_precision = line.getResourceValue().getQuantityPrecision()
+          self.assertEquals(round(line.getQuantity(), resource_precision),
+              round(expected_price * line_ratio, resource_precision))
+
+  def stepCheckInvoiceLineHasReferenceAndIntIndex(self, sequence=None, **kw):
+    """Check that the unique invoice line in the invoice has reference and int
+    index.
+    """
+    invoice = sequence.get('invoice')
+    invoice_line_list = invoice.contentValues(
+                            portal_type=self.invoice_line_portal_type)
+    self.assertEquals(1, len(invoice_line_list))
+    invoice_line = invoice_line_list[0]
+    self.assertEquals(1, invoice_line.getIntIndex())
+    self.assertEquals('1', invoice_line.getReference())
+
+  def stepCheckPackingListInvoice(
+                      self, sequence=None, sequence_list=None, **kw):
+    """ Checks if the delivery builder is working as expected,
+        coping the atributes from packing list to invoice."""
+    packing_list = sequence.get('packing_list')
+    related_invoice_list = packing_list.getCausalityRelatedValueList(
+                     portal_type=self.invoice_portal_type)
+    self.assertEquals(len(related_invoice_list), 1)
+    invoice = related_invoice_list[0]
+    self.assertEquals(packing_list.getSource(), invoice.getSource())
+    self.assertEquals(packing_list.getDestination(), invoice.getDestination())
+    self.assertEquals(packing_list.getDestinationSection(), \
+                                       invoice.getDestinationSection())
+    self.assertEquals(packing_list.getSourceSection(), \
+                                       invoice.getSourceSection())
+    self.assertEquals(packing_list.getDestinationDecision(), \
+                                       invoice.getDestinationDecision())
+    self.assertEquals(packing_list.getSourceDecision(), \
+                                       invoice.getSourceDecision())
+    self.assertEquals(packing_list.getDestinationAdministration(), \
+                                       invoice.getDestinationAdministration())
+    self.assertEquals(packing_list.getSourceAdministration(), \
+                                       invoice.getSourceAdministration())
+    self.assertEquals(packing_list.getDestinationProject(), \
+                                       invoice.getDestinationProject())
+    self.assertEquals(packing_list.getSourceProject(), \
+                                       invoice.getSourceProject())
+    self.assertEquals(packing_list.getPriceCurrency(), \
+                                       invoice.getPriceCurrency())
+
+
+
+  def stepCheckDeliveryRuleForDeferred(
+                      self, sequence=None, sequence_list=None, **kw):
+    """ Checks that a delivery rule has been created when we took 'split
+        and defer' decision on the divergeant Packing List. """
+    # TODO
+
+  def stepCheckDeliveryRuleIsEmpty(
+                      self, sequence=None, sequence_list=None, **kw):
+    """ Checks that an empty delivery rule is created for the
+        convergeant Packing List"""
+    packing_list = sequence.get('packing_list')
+    self.failUnless(packing_list is not None)
+    simulation_tool = self.getSimulationTool()
+    # Check that there is an applied rule for our packing list
+    rule_list = [x for x in simulation_tool.objectValues()
+                          if x.getCausalityValue()==packing_list]
+    self.assertEquals(len(rule_list),1)
+    packing_list_rule = rule_list[0]
+    sequence.edit(packing_list_rule=packing_list_rule)
+    rule_line_list = packing_list_rule.objectValues()
+    packing_list_line_list = packing_list.objectValues()
+    self.assertEquals(len(packing_list_line_list),
+                      len(rule_line_list))
+    self.assertEquals(1, len(rule_line_list))
+    rule_line = rule_line_list[0]
+    packing_list_line = packing_list_line_list[0]
+    self.assertEquals(rule_line.getQuantity(), 10)
+    self.assertEquals(rule_line.getPrice(), 100)
+    self.assertEquals(rule_line.getDeliveryValue(),
+                      packing_list_line)
+    self.assertEquals(rule_line.getStartDate(),
+                      packing_list_line.getStartDate())
+    self.assertEquals(rule_line.getStopDate(),
+                      packing_list_line.getStopDate())
+    self.assertEquals(rule_line.getPortalType(),
+                      'Simulation Movement')
+
+
+  def stepCheckPackingList(self,sequence=None, sequence_list=None,**kw):
+    """  """
+    packing_list_module = self.getSalePackingListModule()
+    order_rule = sequence.get('order_rule')
+    order = sequence.get('order')
+    sale_packing_list_list = []
+    for o in packing_list_module.objectValues():
+      if o.getCausalityValue() == order:
+        sale_packing_list_list.append(o)
+    self.assertEquals(len(sale_packing_list_list), 1)
+    sale_packing_list = sale_packing_list_list[0]
+    sale_packing_list_line_list = sale_packing_list.objectValues()
+    self.assertEquals(len(sale_packing_list_line_list),1)
+    sale_packing_list_line = sale_packing_list_line_list[0]
+    product = sequence.get('resource')
+    self.assertEquals(sale_packing_list_line.getResourceValue(),
+                      product)
+    self.assertEquals(sale_packing_list_line.getPrice(),
+                      self.price1)
+    LOG('sale_packing_list_line.showDict()',0,
+          sale_packing_list_line.showDict())
+    self.assertEquals(sale_packing_list_line.getQuantity(),
+                      self.quantity1)
+    self.assertEquals(sale_packing_list_line.getTotalPrice(),
+                      self.total_price1)
+    sequence.edit(packing_list = sale_packing_list)
+
+  def stepCheckTwoInvoices(self,sequence=None, sequence_list=None, **kw):
+    """ checks invoice properties are well set. """
+    # Now we will check that we have two invoices created
+    packing_list = sequence.get('packing_list')
+    invoice_list = packing_list.getCausalityRelatedValueList(
+         portal_type=self.invoice_portal_type)
+    self.assertEquals(len(invoice_list),1)
+    invoice = invoice_list[0]
+    self.assertEquals(invoice.getSimulationState(), 'confirmed')
+    sequence.edit(invoice=invoice)
+    new_packing_list = sequence.get('new_packing_list')
+    new_invoice_list = new_packing_list.getCausalityRelatedValueList(
+        portal_type=self.invoice_portal_type)
+    self.assertEquals(len(new_invoice_list),1)
+    new_invoice = new_invoice_list[0]
+    self.assertEquals(new_invoice.getSimulationState(), 'confirmed')
+    sequence.edit(new_invoice=new_invoice)
+
+  def stepStartTwoInvoices(self,sequence=None, sequence_list=None, **kw):
+    """ start both invoices. """
+    portal = self.getPortal()
+    invoice = sequence.get('invoice')
+    new_invoice = sequence.get('new_invoice')
+    portal.portal_workflow.doActionFor(invoice, 'start_action')
+    portal.portal_workflow.doActionFor(new_invoice, 'start_action')
+
+  def stepCheckTwoInvoicesTransactionLines(self,sequence=None,
+                                           sequence_list=None, **kw):
+    """ checks invoice properties are well set. """
+    invoice = sequence.get('invoice')
+    new_invoice = sequence.get('new_invoice')
+    self.assertEquals(3,len(invoice.objectValues(
+        portal_type=self.invoice_transaction_line_portal_type)))
+    self.assertEquals(3,len(new_invoice.objectValues(
+        portal_type=self.invoice_transaction_line_portal_type)))
+    account_module = self.getAccountModule()
+    found_dict = {}
+    for line in invoice.objectValues(
+        portal_type=self.invoice_transaction_line_portal_type):
+      source_id = line.getSourceId()
+      found_dict[source_id] = line.getQuantity()
+    total_price = (self.default_quantity-1) * self.default_price
+    expected_dict = {
+      'sale' : total_price,
+      'receivable_vat' : total_price * self.vat_rate,
+      'customer' : - (total_price + total_price * self.vat_rate)
+      }
+    self.failIfDifferentSet(expected_dict.keys(),found_dict.keys())
+    for key in found_dict.keys():
+      self.assertAlmostEquals(expected_dict[key],found_dict[key],places=2)
+    found_dict = {}
+    for line in new_invoice.objectValues(
+        portal_type=self.invoice_transaction_line_portal_type):
+      source_id = line.getSourceId()
+      found_dict[source_id] = line.getQuantity()
+    total_price = 1 * self.default_price
+    expected_dict = {
+      'sale' : total_price,
+      'receivable_vat' : total_price * self.vat_rate,
+      'customer' : - (total_price + total_price * self.vat_rate)
+      }
+    self.failIfDifferentSet(expected_dict.keys(), found_dict.keys())
+    for key in found_dict.keys():
+      self.assertAlmostEquals(expected_dict[key], found_dict[key], places=2)
+
+  def stepRebuildAndCheckNothingIsCreated(self, sequence=None,
+                                           sequence_list=None, **kw):
+    """Rebuilds with sale_invoice_builder and checks nothing more is
+    created. """
+    accounting_module = self.getAccountingModule()
+    portal_type_list = ('Sale Invoice Transaction', 'Purchase Invoice Transaction')
+    sale_invoice_transaction_count = len(accounting_module.objectValues(
+      portal_type=portal_type_list))
+    for builder in self.getPortal().portal_deliveries.objectValues():
+      builder.build()
+    self.assertEquals(sale_invoice_transaction_count,
+                      len(accounting_module.objectValues(
+      portal_type=portal_type_list)))
+
+  def stepModifyInvoicesDate(self, sequence=None,
+                                           sequence_list=None, **kw):
+    """Change invoice date"""
+    invoice = sequence.get('invoice')
+    new_invoice = sequence.get('new_invoice')
+    invoice.edit(start_date=self.datetime,
+                 stop_date=self.datetime+1)
+    new_invoice.edit(start_date=self.datetime,
+                 stop_date=self.datetime+1)
+
+  def stepRemoveDateMovementGroupForTransactionBuilder(self, sequence=None,
+            sequence_list=None, **kw):
+    """
+    Remove DateMovementGroup
+    """
+    portal = self.getPortal()
+    builder = portal.portal_deliveries.sale_invoice_transaction_builder
+    delivery_movement_group_list = builder.getDeliveryMovementGroupList()
+    uf = self.getPortal().acl_users
+    uf._doAddUser('admin', '', ['Manager'], [])
+    user = uf.getUserById('admin').__of__(uf)
+    newSecurityManager(None, user)
+    for movement_group in delivery_movement_group_list:
+      if movement_group.getPortalType() == 'Property Movement Group':
+        # it contains 'start_date' and 'stop_date' only, so we remove
+        # movement group itself.
+        builder.deleteContent(movement_group.getId())
+    builder.newContent(
+      portal_type = 'Parent Explanation Movement Group',
+      collect_order_group='delivery',
+      int_index=len(delivery_movement_group_list)+1
+      )
+    user = uf.getUserById('test_invoice_user').__of__(uf)
+    newSecurityManager(None, user)
+
+  def stepEditInvoice(self, sequence=None, sequence_list=None, **kw):
+    """Edit the current invoice, to trigger updateAppliedRule."""
+    invoice = sequence.get('invoice')
+    invoice.edit()
+
+    # call updateAppliedRule directly, don't rely on edit interactions
+    rule_reference = 'default_invoice_rule'
+    self.assertNotEquals(0,
+        len(self.portal.portal_rules.searchFolder(reference=rule_reference)))
+    invoice.updateAppliedRule(rule_reference=rule_reference)
+
+  def stepCheckInvoiceRuleNotAppliedOnInvoiceEdit(self,
+                    sequence=None, sequence_list=None, **kw):
+    """If we call edit on the invoice, invoice rule should not be
+    applied on lines created by delivery builder."""
+    invoice = sequence.get('invoice')
+    # FIXME: empty applied rule should not be created
+    #self.assertEquals(len(invoice.getCausalityRelatedValueList(
+    #         portal_type=self.applied_rule_portal_type)), 0)
+    for invoice_mvt in invoice.getMovementList():
+      self.assertEquals(len(invoice_mvt.getOrderRelatedValueList(
+            portal_type=self.simulation_movement_portal_type)), 0)
+
+  def stepEditPackingList(self, sequence=None, sequence_list=None, **kw):
+    """Edit the current packing list, to trigger updateAppliedRule."""
+    packing_list = sequence.get('packing_list')
+    packing_list.edit()
+
+    # call updateAppliedRule directly, don't rely on edit interactions
+    rule_reference = 'default_delivery_rule'
+    self.assertNotEquals(0,
+        len(self.portal.portal_rules.searchFolder(reference=rule_reference)))
+    packing_list.updateAppliedRule(rule_reference=rule_reference)
+
+  def stepCheckDeliveryRuleNotAppliedOnPackingListEdit(self,
+                    sequence=None, sequence_list=None, **kw):
+    """If we call edit on the packing list, delivery rule should not be
+    applied on lines created by delivery builder."""
+    packing_list = sequence.get('packing_list')
+    # FIXME: empty applied rule should not be created
+    #self.assertEquals(len(packing_list.getCausalityRelatedValueList(
+    #         portal_type=self.applied_rule_portal_type)), 0)
+    for delivery_mvt in packing_list.getMovementList():
+      self.assertEquals(len(delivery_mvt.getOrderRelatedValueList(
+            portal_type=self.simulation_movement_portal_type)), 0)
+
+  def stepDecreaseInvoiceLineQuantity(self, sequence=None, sequence_list=None,
+      **kw):
+    """
+    Set a decreased quantity on invoice lines
+    """
+    invoice = sequence.get('invoice')
+    quantity = sequence.get('line_quantity',default=self.default_quantity)
+    quantity = quantity - 1
+    sequence.edit(line_quantity=quantity)
+    for invoice_line in invoice.objectValues(
+        portal_type=self.invoice_line_portal_type):
+      invoice_line.edit(quantity=quantity)
+    sequence.edit(last_delta = sequence.get('last_delta', 0.0) - 1.0)
+
+  def stepIncreaseInvoiceLineQuantity(self, sequence=None, sequence_list=None,
+      **kw):
+    """
+    Set a Increased quantity on invoice lines
+    """
+    invoice = sequence.get('invoice')
+    quantity = sequence.get('line_quantity',default=self.default_quantity)
+    quantity = quantity + 1
+    sequence.edit(line_quantity=quantity)
+    for invoice_line in invoice.objectValues(
+        portal_type=self.invoice_line_portal_type):
+      invoice_line.edit(quantity=quantity)
+    sequence.edit(last_delta = sequence.get('last_delta', 0.0) + 1.0)
+
+  def stepSetInvoiceLineQuantityToZero(self, sequence=None, sequence_list=None,
+      **kw):
+    """
+    Set the quantity on invoice lines to zero
+    """
+    invoice = sequence.get('invoice')
+    #default_quantity = sequence.get('line_quantity',default_quantity)
+    quantity = 0.0
+    sequence.edit(line_quantity=quantity)
+    for invoice_line in invoice.objectValues(
+        portal_type=self.invoice_line_portal_type):
+      invoice_line.edit(quantity=quantity)
+    sequence.edit(last_delta = - self.default_quantity)
+
+  def stepChangeInvoiceStartDate(self, sequence=None, sequence_list=None, **kw):
+    """
+      Change the start_date of the invoice.
+    """
+    invoice = sequence.get('invoice')
+    invoice.edit(start_date=self.datetime + 15)
+
+  def stepCheckInvoiceIsCalculating(self, sequence=None, sequence_list=None,
+      **kw):
+    """
+    Test if invoice is calculating
+    """
+    invoice = sequence.get('invoice')
+    self.assertEquals('calculating',invoice.getCausalityState())
+
+  def stepCheckInvoiceIsDiverged(self, sequence=None, sequence_list=None,
+      **kw):
+    """
+    Test if invoice is diverged
+    """
+    invoice = sequence.get('invoice')
+    self.assertEquals('diverged',invoice.getCausalityState())
+
+  def stepCheckInvoiceIsSolved(self, sequence=None, sequence_list=None,
+      **kw):
+    """
+    Test if invoice is solved
+    """
+    invoice = sequence.get('invoice')
+    self.assertEquals('solved', invoice.getCausalityState(),
+                      invoice.getDivergenceList())
+
+  def stepCheckInvoiceIsDivergent(self, sequence=None, sequence_list=None,
+      **kw):
+    """
+    Test if invoice is divergent
+    """
+    invoice = sequence.get('invoice')
+    self.assertTrue(invoice.isDivergent())
+
+  def stepCheckInvoiceIsNotDivergent(self, sequence=None, sequence_list=None,
+      **kw):
+    """
+    Test if invoice is not divergent
+    """
+    invoice = sequence.get('invoice')
+    if invoice.isDivergent():
+      self.fail(invoice.getDivergenceList())
+
+  def stepSplitAndDeferInvoice(self, sequence=None, sequence_list=None,
+      **kw):
+    """
+    split and defer at the invoice level
+    """
+    invoice = sequence.get('invoice')
+    kw = {'listbox':[
+      {'listbox_key':line.getRelativeUrl(),
+       'choice':'SplitAndDefer'} for line in invoice.getMovementList()]}
+    self.portal.portal_workflow.doActionFor(
+      invoice,
+      'split_and_defer_action',
+      start_date=self.datetime + 15,
+      stop_date=self.datetime + 25,
+      **kw)
+    pass
+
+  def stepUnifyStartDateWithDecisionInvoice(self, sequence=None,
+                                            sequence_list=None):
+    invoice = sequence.get('invoice')
+    self._solveDeliveryGroupDivergence(invoice, 'start_date',
+                                       invoice.getRelativeUrl())
+
+  def stepAcceptDecisionQuantityInvoice(self,sequence=None, sequence_list=None):
+    invoice = sequence.get('invoice')
+    self._solveDivergence(invoice, 'quantity', 'accept')
+
+  def stepAcceptDecisionInvoice(self, sequence=None, sequence_list=None,
+      **kw):
+    """
+    accept decision at the invoice level
+    """
+    invoice = sequence.get('invoice')
+    invoice.portal_workflow.doActionFor(invoice,'accept_decision_action')
+
+  def stepCheckInvoiceSplitted(self, sequence=None, sequence_list=None, **kw):
+    """
+    Test if invoice was splitted
+    """
+    packing_list = sequence.get('packing_list')
+    invoice_list = packing_list.getCausalityRelatedValueList(
+        portal_type=self.invoice_portal_type)
+    self.assertEquals(2,len(invoice_list))
+    invoice1 = None
+    invoice2 = None
+    for invoice in invoice_list:
+      if invoice.getUid() == sequence.get('invoice').getUid():
+        invoice1 = invoice
+      else:
+        invoice2 = invoice
+    sequence.edit(new_invoice=invoice2)
+    for line in invoice1.objectValues(
+          portal_type=self.invoice_line_portal_type):
+      self.assertEquals(self.default_quantity-1,line.getQuantity())
+    for line in invoice2.objectValues(
+          portal_type=self.invoice_line_portal_type):
+      self.assertEquals(1,line.getQuantity())
+
+  def stepCheckInvoiceNotSplitted(self, sequence=None, sequence_list=None, **kw):
+    """
+    Test if invoice was not splitted
+    """
+    packing_list = sequence.get('packing_list')
+    invoice_list = packing_list.getCausalityRelatedValueList(
+        portal_type=self.invoice_portal_type)
+    self.assertEquals(1,len(invoice_list))
+    invoice1 = None
+    for invoice in invoice_list:
+      if invoice.getUid() == sequence.get('invoice').getUid():
+        invoice1 = invoice
+    last_delta = sequence.get('last_delta', 0.0)
+    for line in invoice1.objectValues(
+        portal_type=self.invoice_line_portal_type):
+      self.assertEquals(self.default_quantity + last_delta,
+          line.getQuantity())
+
+  def stepAddInvoiceLines(self, sequence=None, sequence_list=[]):
+    """
+    add some invoice and accounting lines to the invoice
+    """
+    invoice = sequence.get('invoice')
+    invoice.newContent(portal_type='Invoice Line',
+        resource_value=sequence.get('resource'), quantity=3, price=555)
+    invoice.newContent(portal_type='Sale Invoice Transaction Line',
+        id ='receivable', source='account_module/customer',
+        destination='account_module/supplier', quantity=-1665)
+    invoice.newContent(portal_type='Sale Invoice Transaction Line',
+        id='income', source='account_module/sale',
+        destination='account_module/purchase', quantity=1665)
+
+  def stepAddWrongInvoiceLines(self, sequence=None, sequence_list=[]):
+    """
+    add some wrong invoice and accounting lines to the invoice
+    """
+    invoice = sequence.get('invoice')
+    invoice.newContent(portal_type='Sale Invoice Transaction Line',
+        id='bad_movement', source='account_module/sale',
+        destination='account_module/purchase', quantity=2, price=4)
+    invoice.newContent(portal_type='Sale Invoice Transaction Line',
+        id='counter_bad_movement', source='account_module/sale',
+        destination='account_module/purchase', quantity=-2, price=4)
+    for movement in invoice.getMovementList():
+      movement.edit(resource_value=sequence.get('resource'))
+
+  def stepCheckStartInvoiceFail(self, sequence=None, sequence_list=[]):
+    """
+    checks that it's not possible to start an invoice with really wrong
+    lines
+    """
+    try:
+      self.tic()
+    except RuntimeError, exc:
+      invoice = sequence.get('invoice')
+      it_builder = self.portal.portal_deliveries.sale_invoice_transaction_builder
+      # check which activities are failing
+      self.assertTrue(str(exc).startswith('tic is looping forever.'),
+          '%s does not start with "tic is looping forever."' % str(exc))
+      msg_list = ['/'.join(x.object_path) for x in
+          self.getActivityTool().getMessageList()]
+      self.assertTrue(it_builder.getPath() in msg_list, '%s in %s' %
+          (it_builder.getPath(), msg_list))
+      # flush failing activities
+      activity_tool = self.getActivityTool()
+      activity_tool.manageClearActivities(keep=0)
+    else:
+      self.fail("Error: stepStartInvoice didn't fail, the builder script"
+          + " InvoiceTransaction_postTransactionLineGeneration should have"
+          + " complained that accounting movements use multiple resources")
+
+  def stepCheckSimulationTrees(self, sequence=None, sequence_list=[]):
+    """
+    check that rules are created in the order we expect them
+    """
+    applied_rule_set = set()
+    invoice = sequence.get('invoice')
+    for movement in invoice.getMovementList():
+      for sm in movement.getDeliveryRelatedValueList():
+        applied_rule_set.add(sm.getRootAppliedRule())
+
+    rule_dict = {
+        'Order Rule': {
+          'movement_type_list': ['Sale Order Line', 'Sale Order Cell'],
+          'next_rule_list': ['Delivering Rule', ],
+          },
+        'Delivering Rule': {
+          'movement_type_list': ['Sale Packing List Line', 'Sale Packing List Cell'],
+          'next_rule_list': ['Invoicing Rule', ],
+          },
+        'Invoicing Rule': {
+          'movement_type_list': invoice.getPortalInvoiceMovementTypeList(),
+          'next_rule_list': ['Invoice Transaction Rule', 'Trade Model Rule'],
+          },
+        'Trade Model Rule': {
+          'next_rule_list': ['Invoice Transaction Rule'],
+          },
+        'Invoice Rule': {
+          'movement_type_list': invoice.getPortalInvoiceMovementTypeList() \
+              + invoice.getPortalAccountingMovementTypeList(),
+          'next_rule_list': ['Invoice Transaction Rule', 'Payment Rule',
+            'Trade Model Rule'],
+          },
+        'Invoice Transaction Rule': {
+          'parent_movement_type_list': invoice.getPortalInvoiceMovementTypeList(),
+          'movement_type_list': invoice.getPortalAccountingMovementTypeList(),
+          'next_rule_list': ['Payment Rule'],
+          },
+        'Payment Rule': {
+          'parent_movement_type_list': invoice.getPortalAccountingMovementTypeList(),
+          'next_rule_list': [],
+          },
+        }
+
+    def checkTree(rule):
+      """
+      checks the tree recursively
+      """
+      rule_type = rule.getSpecialiseValue().getPortalType()
+      rule_def = rule_dict.get(rule_type, {})
+      for k, v in rule_def.iteritems():
+        if k == 'movement_type_list':
+          for movement in rule.objectValues():
+            if movement.getDeliveryValue() is not None:
+              self.assertTrue(movement.getDeliveryValue().getPortalType() in v,
+                  'looking for %s in %s on %s' % (
+                  movement.getDeliveryValue().getPortalType(), v,
+                  movement.getPath()))
+        elif k == 'next_rule_list':
+          for movement in rule.objectValues():
+            found_rule_dict = {}
+            for next_rule in movement.objectValues():
+              next_rule_type = next_rule.getSpecialiseValue().getPortalType()
+              self.assertTrue(next_rule_type in v,
+                  'looking for %s in %s on %s' % (
+                  next_rule_type, v, next_rule.getPath()))
+              n = found_rule_dict.get(next_rule_type, 0)
+              found_rule_dict[next_rule_type] = n + 1
+            # for each movement, we want to make sure that each rule is not
+            # instanciated more than once
+            if len(found_rule_dict):
+              self.assertEquals(set(found_rule_dict.itervalues()), set([1]))
+        elif k == 'parent_movement_type_list':
+          if rule.getParentValue().getDeliveryValue() is not None:
+            parent_type = rule.getParentValue().getDeliveryValue().getPortalType()
+            self.assertTrue(parent_type in v, 'looking for %s in %s on %s' % (
+                parent_type, v, rule.getParentValue().getPath()))
+        elif k == 'parent_id_list':
+          self.assertTrue(rule.getParentId() in v, 'looking for %s in %s on %s'
+              % (rule.getParentId(), v, rule.getPath()))
+      for movement in rule.objectValues():
+        for next_rule in movement.objectValues():
+          checkTree(next_rule)
+
+    for applied_rule in applied_rule_set:
+      checkTree(applied_rule)
+
+  def stepAddInvoiceLinesManyTransactions(self, sequence=None, sequence_list=[]):
+    """
+    add some invoice and accounting lines to the invoice
+    """
+    invoice = sequence.get('invoice')
+    invoice_line = invoice.newContent(portal_type='Invoice Line')
+    transaction_line_1 = invoice.newContent(portal_type='Sale Invoice Transaction Line')
+    transaction_line_2 = invoice.newContent(portal_type='Sale Invoice Transaction Line')
+    transaction.commit()
+    self.tic()
+    invoice_line.edit(resource_value=sequence.get('resource'), quantity=3,
+        price=555)
+    transaction_line_1.edit(id ='receivable', source='account_module/customer',
+        destination='account_module/supplier', quantity=-1665)
+    transaction_line_2.edit(
+        id='income', source='account_module/sale',
+        destination='account_module/purchase', quantity=1665)
 
 class TestInvoice(TestInvoiceMixin):
   """Test methods for sale and purchase invoice.
@@ -1736,904 +2649,6 @@ class TestSaleInvoiceMixin(TestInvoiceMixin,
       stepCheckNewPackingListIsPacked
     """
 
-  def modifyPackingListState(self, transition_name,
-                             sequence,packing_list=None):
-    """ calls the workflow for the packing list """
-    if packing_list is None:
-      packing_list = sequence.get('packing_list')
-    packing_list.portal_workflow.doActionFor(packing_list, transition_name)
-
-  def stepSetReadyPackingList(self, sequence=None, sequence_list=None, **kw):
-    """ set the Packing List as Ready. This must build the invoice. """
-    self.modifyPackingListState('set_ready_action', sequence=sequence)
-    packing_list = sequence.get('packing_list')
-    self.assertEquals(packing_list.getSimulationState(), 'ready')
-
-  def stepSetReadyNewPackingList(self, sequence=None,
-                                 sequence_list=None, **kw):
-    """ set the Packing List as Ready. This must build the invoice. """
-    packing_list = sequence.get('new_packing_list')
-    self.modifyPackingListState('set_ready_action', sequence=sequence,
-                                packing_list=packing_list)
-    self.assertEquals(packing_list.getSimulationState(), 'ready')
-
-  def stepStartPackingList(self, sequence=None, sequence_list=None, **kw):
-    self.modifyPackingListState('start_action', sequence=sequence)
-    packing_list = sequence.get('packing_list')
-    self.assertEquals(packing_list.getSimulationState(), 'started')
-
-  def stepStartNewPackingList(self, sequence=None, sequence_list=None, **kw):
-    packing_list = sequence.get('new_packing_list')
-    self.modifyPackingListState('start_action', sequence=sequence,
-                                packing_list=packing_list)
-    self.assertEquals(packing_list.getSimulationState(), 'started')
-
-  def stepStopPackingList(self, sequence=None, sequence_list=None, **kw):
-    self.modifyPackingListState('stop_action', sequence=sequence)
-    packing_list = sequence.get('packing_list')
-    self.assertEquals(packing_list.getSimulationState(), 'stopped')
-
-  def stepDeliverPackingList(self, sequence=None, sequence_list=None, **kw):
-    self.modifyPackingListState('deliver_action', sequence=sequence)
-    packing_list = sequence.get('packing_list')
-    self.assertEquals(packing_list.getSimulationState(), 'delivered')
-
-  def stepCancelPackingList(self, sequence=None, sequence_list=None, **kw):
-    self.modifyPackingListState('cancel_action', sequence=sequence)
-    packing_list = sequence.get('packing_list')
-    self.assertEquals(packing_list.getSimulationState(), 'cancelled')
-
-  def modifyInvoiceState(self, transition_name,
-                             sequence,invoice=None):
-    """ calls the workflow for the invoice """
-    if invoice is None:
-      invoice = sequence.get('invoice')
-    invoice.portal_workflow.doActionFor(invoice, transition_name)
-
-  def stepStartInvoice(self, sequence=None, sequence_list=None, **kw):
-    self.modifyInvoiceState('start_action', sequence=sequence)
-    invoice = sequence.get('invoice')
-    self.assertEquals(invoice.getSimulationState(), 'started')
-
-  def stepStartNewInvoice(self, sequence=None, sequence_list=None, **kw):
-    invoice = sequence.get('new_invoice')
-    self.modifyInvoiceState('start_action', sequence=sequence,
-                                invoice=invoice)
-    self.assertEquals(invoice.getSimulationState(), 'started')
-
-  def stepStopInvoice(self, sequence=None, sequence_list=None, **kw):
-    self.modifyInvoiceState('stop_action', sequence=sequence)
-    invoice = sequence.get('invoice')
-    self.assertEquals(invoice.getSimulationState(), 'stopped')
-
-  def stepDeliverInvoice(self, sequence=None, sequence_list=None, **kw):
-    self.modifyInvoiceState('deliver_action', sequence=sequence)
-    invoice = sequence.get('invoice')
-    self.assertEquals(invoice.getSimulationState(), 'delivered')
-
-  def stepCancelInvoice(self, sequence=None, sequence_list=None, **kw):
-    self.modifyInvoiceState('cancel_action', sequence=sequence)
-    invoice = sequence.get('invoice')
-    self.assertEquals(invoice.getSimulationState(), 'cancelled')
-
-
-  def stepSwitchPackingLists(self, sequence=None, sequence_list=None, **kw):
-    packing_list = sequence.get('packing_list')
-    new_packing_list = sequence.get('new_packing_list')
-    #invoice = new_packing_list.getDefaultCausalityRelatedValue(
-        #portal_type=self.invoice_portal_type)
-    sequence.edit(packing_list=new_packing_list,
-        new_packing_list=packing_list)#, invoice=invoice)
-
-  def stepSwitchInvoices(self, sequence=None, sequence_list=None, **kw):
-    invoice = sequence.get('invoice')
-    new_invoice = sequence.get('new_invoice')
-    sequence.edit(invoice=new_invoice, new_invoice=invoice)
-
-  def stepCheckPackingListSimulation(self, sequence=None, sequence_list=None, **kw):
-    """ checks that simulation movements related to the packing list are OK """
-    packing_list = sequence.get('packing_list')
-    order = sequence.get('order')
-    order_root_applied_rule = order.getCausalityRelatedValueList(
-                                  portal_type = 'Applied Rule')[0]
-    # check simulation movements from this packing list
-    for movement in packing_list.getMovementList() :
-      simulation_movement_list = movement.getOrderRelatedValueList()
-      self.assertNotEquals(len(simulation_movement_list), 0)
-      total_quantity = 0
-      for simulation_movement in simulation_movement_list :
-        total_quantity += simulation_movement.getQuantity()
-        # check that those movements come from the same root applied
-        # rule than the order.
-        self.assertEquals( simulation_movement.getRootAppliedRule(),
-                           order_root_applied_rule)
-      self.assertEquals(total_quantity, movement.getQuantity())
-
-  def stepCheckInvoiceBuilding(self, sequence=None, sequence_list=None, **kw):
-    """
-    checks that the invoice is built with the default_invoice_builder
-    """
-    packing_list = sequence.get('packing_list')
-    related_invoice_list = packing_list.getCausalityRelatedValueList(
-                     portal_type=self.invoice_portal_type)
-
-    packing_list_building_state = 'started'
-    packing_list_state = packing_list.getSimulationState()
-    if packing_list_state != packing_list_building_state :
-      self.assertEquals(0, len(related_invoice_list))
-    else:
-      self.assertEquals(1, len(related_invoice_list))
-
-      invoice = related_invoice_list[0].getObject()
-      self.failUnless(invoice is not None)
-      # Invoices created by Delivery Builder are in confirmed state
-      self.assertEquals(invoice.getSimulationState(), 'confirmed')
-
-      # Get the list of simulation movements of packing list ...
-      packing_list_simulation_movement_list = []
-      for packing_list_movement in packing_list.getMovementList():
-           packing_list_simulation_movement_list.extend(
-                packing_list_movement.getDeliveryRelatedValueList())
-      # ... invoice simulation movement are their childrens.
-      simulation_movement_list = []
-      for p_l_simulation_movement in packing_list_simulation_movement_list :
-        for applied_rule in p_l_simulation_movement.objectValues() :
-          simulation_movement_list.extend(applied_rule.objectValues())
-
-      # First, test if each Simulation Movement is related to an
-      # Invoice Movement
-      invoice_relative_url = invoice.getRelativeUrl()
-      for simulation_movement in simulation_movement_list:
-        invoice_movement_list = simulation_movement.getDeliveryValueList()
-        self.assertEquals(len(invoice_movement_list), 1)
-        invoice_movement = invoice_movement_list[0]
-        self.failUnless(invoice_movement is not None)
-        self.assert_(invoice_movement.getRelativeUrl().\
-                              startswith(invoice_relative_url))
-
-      # Then, test if each Invoice movement is equals to the sum of somes
-      # Simulation Movements
-      for invoice_movement in invoice.getMovementList(portal_type = [
-                          self.invoice_cell_portal_type,
-                          self.invoice_line_portal_type]) :
-        related_simulation_movement_list = invoice_movement.\
-                 getDeliveryRelatedValueList(portal_type='Simulation Movement')
-        quantity = 0
-        total_price = 0
-        invoice_movement_quantity = invoice_movement.getQuantity()
-        for related_simulation_movement in related_simulation_movement_list:
-          quantity += related_simulation_movement.getQuantity()
-          total_price += related_simulation_movement.getPrice() *\
-                         related_simulation_movement.getQuantity()
-          # Test resource
-          self.assertEquals(invoice_movement.getResource(), \
-                            related_simulation_movement.getResource())
-          # Test resource variation
-          self.assertEquals(invoice_movement.getVariationText(), \
-                            related_simulation_movement.getVariationText())
-          self.assertEquals(invoice_movement.getVariationCategoryList(), \
-                        related_simulation_movement.getVariationCategoryList())
-          # Test acquisition
-          self.checkAcquisition(invoice_movement,
-                                related_simulation_movement)
-          # Test delivery ratio
-          self.assertEquals(related_simulation_movement.getQuantity() /\
-                            invoice_movement_quantity, \
-                            related_simulation_movement.getDeliveryRatio())
-
-        self.assertEquals(quantity, invoice_movement.getQuantity())
-        # Test price
-        self.assertEquals(total_price / quantity, invoice_movement.getPrice())
-
-      sequence.edit(invoice = invoice)
-
-      # Test causality
-      self.assertEquals(len(invoice.getCausalityValueList(
-                      portal_type = self.packing_list_portal_type)), 1)
-      self.assertEquals(invoice.getCausalityValue(), packing_list)
-
-      # Finally, test getTotalQuantity and getTotalPrice on Invoice
-      self.assertEquals(packing_list.getTotalQuantity(),
-                        invoice.getTotalQuantity())
-      self.assertEquals(packing_list.getTotalPrice(),
-                        invoice.getTotalPrice())
-
-  def stepCheckPaymentBuilding(self, sequence=None, sequence_list=None, **kw):
-    """
-    checks that the payment is built with the default_payment_builder
-    """
-    invoice = sequence.get('invoice')
-    related_payment_list = invoice.getCausalityRelatedValueList(
-      portal_type=self.payment_portal_type)
-
-    invoice_building_state = 'started'
-    invoice_state = invoice.getSimulationState()
-    if invoice_state != invoice_building_state :
-      self.assertEquals(0, len(related_payment_list))
-    else:
-      self.assertEquals(1, len(related_payment_list))
-
-      payment = related_payment_list[0].getObject()
-      self.failUnless(payment is not None)
-      # Payments created by Delivery Builder are in planned state
-      self.assertEquals(payment.getSimulationState(), 'planned')
-
-      # Get the list of simulation movements of packing list ...
-      invoice_simulation_movement_list = []
-      for invoice_movement in invoice.getMovementList(
-        portal_type=self.portal.getPortalAccountingMovementTypeList()):
-        invoice_simulation_movement_list.extend(
-          invoice_movement.getDeliveryRelatedValueList())
-      # ... payment simulation movement are their childrens.
-      simulation_movement_list = []
-      for p_l_simulation_movement in invoice_simulation_movement_list :
-        for applied_rule in p_l_simulation_movement.objectValues() :
-          simulation_movement_list.extend(applied_rule.objectValues())
-
-      # First, test if each Simulation Movement is related to an
-      # Payment Movement
-      payment_relative_url = payment.getRelativeUrl()
-      for simulation_movement in simulation_movement_list:
-        payment_movement_list = simulation_movement.getDeliveryValueList()
-        self.assertEquals(len(payment_movement_list), 1)
-        payment_movement = payment_movement_list[0]
-        self.failUnless(payment_movement is not None)
-        self.assert_(payment_movement.getRelativeUrl().\
-                              startswith(payment_relative_url))
-
-      # Then, test if each Payment movement is equals to the sum of somes
-      # Simulation Movements
-      for payment_movement in payment.getMovementList():
-        related_simulation_movement_list = payment_movement.\
-                 getDeliveryRelatedValueList(portal_type='Simulation Movement')
-        quantity = 0
-        total_price = 0
-        payment_movement_quantity = payment_movement.getQuantity()
-        for related_simulation_movement in related_simulation_movement_list:
-          quantity += related_simulation_movement.getQuantity()
-          total_price += related_simulation_movement.getPrice() *\
-                         related_simulation_movement.getQuantity()
-          # Test resource
-          self.assertEquals(payment_movement.getResource(), \
-                            related_simulation_movement.getResource())
-          # Test resource variation
-          self.assertEquals(payment_movement.getVariationText(), \
-                            related_simulation_movement.getVariationText())
-          self.assertEquals(payment_movement.getVariationCategoryList(), \
-                        related_simulation_movement.getVariationCategoryList())
-          # Test acquisition
-          self.checkAcquisition(payment_movement,
-                                related_simulation_movement)
-          # Test delivery ratio
-          self.assertEquals(related_simulation_movement.getQuantity() /\
-                            payment_movement_quantity, \
-                            related_simulation_movement.getDeliveryRatio())
-
-        self.assertEquals(quantity, payment_movement.getQuantity())
-        # Test price
-        self.assertEquals(total_price / quantity, payment_movement.getPrice())
-
-      sequence.edit(payment = payment)
-
-      # Test causality
-      self.assertEquals(len(payment.getCausalityValueList(
-                      portal_type = self.invoice_portal_type)), 1)
-      self.assertEquals(payment.getCausalityValue(), invoice)
-
-      # Finally, test getTotalQuantity and getTotalPrice on Payment
-      self.assertEquals(0, payment.getTotalQuantity())
-      self.assertEquals(0, payment.getTotalPrice())
-
-  def stepCheckInvoicesConsistency(self, sequence=None, sequence_list=None,
-      **kw):
-    """
-    Checks that all invoices are consistent:
-    - transaction lines match invoice lines
-    - no movement is divergent
-    """
-    invoice_list = self.getPortal()['accounting_module'].objectValues()
-    for invoice in invoice_list:
-      accounting_state_list = \
-          list(self.getPortal().getPortalCurrentInventoryStateList())
-      accounting_state_list.append('cancelled')
-      if invoice.getSimulationState() in accounting_state_list:
-        invoice_line_list = invoice.contentValues(
-            portal_type=self.invoice_line_portal_type)
-        invoice_transaction_line_list = invoice.contentValues(
-            portal_type=self.invoice_transaction_line_portal_type)
-        self.assertEquals(3, len(invoice_transaction_line_list))
-        expected_price = 0.0
-        for line in invoice_line_list:
-          expected_price += line.getTotalPrice()
-        for line_id, line_source, line_dest, line_ratio in \
-            self.transaction_line_definition_list:
-          for line in invoice.contentValues(
-              portal_type=self.invoice_transaction_line_portal_type):
-            if line.getSource() == 'account_module/%s' % line_source and \
-                line.getDestination() == 'account_module/%s' % line_dest:
-              break
-          else:
-            self.fail('No line found that matches %s' % line_id)
-          resource_precision = line.getResourceValue().getQuantityPrecision()
-          self.assertEquals(round(line.getQuantity(), resource_precision),
-              round(expected_price * line_ratio, resource_precision))
-
-  def stepCheckInvoiceLineHasReferenceAndIntIndex(self, sequence=None, **kw):
-    """Check that the unique invoice line in the invoice has reference and int
-    index.
-    """
-    invoice = sequence.get('invoice')
-    invoice_line_list = invoice.contentValues(
-                            portal_type=self.invoice_line_portal_type)
-    self.assertEquals(1, len(invoice_line_list))
-    invoice_line = invoice_line_list[0]
-    self.assertEquals(1, invoice_line.getIntIndex())
-    self.assertEquals('1', invoice_line.getReference())
-
-  def stepCheckPackingListInvoice(
-                      self, sequence=None, sequence_list=None, **kw):
-    """ Checks if the delivery builder is working as expected,
-        coping the atributes from packing list to invoice."""
-    packing_list = sequence.get('packing_list')
-    related_invoice_list = packing_list.getCausalityRelatedValueList(
-                     portal_type=self.invoice_portal_type)
-    self.assertEquals(len(related_invoice_list), 1)
-    invoice = related_invoice_list[0]
-    self.assertEquals(packing_list.getSource(), invoice.getSource())
-    self.assertEquals(packing_list.getDestination(), invoice.getDestination())
-    self.assertEquals(packing_list.getDestinationSection(), \
-                                       invoice.getDestinationSection())
-    self.assertEquals(packing_list.getSourceSection(), \
-                                       invoice.getSourceSection())
-    self.assertEquals(packing_list.getDestinationDecision(), \
-                                       invoice.getDestinationDecision())
-    self.assertEquals(packing_list.getSourceDecision(), \
-                                       invoice.getSourceDecision())
-    self.assertEquals(packing_list.getDestinationAdministration(), \
-                                       invoice.getDestinationAdministration())
-    self.assertEquals(packing_list.getSourceAdministration(), \
-                                       invoice.getSourceAdministration())
-    self.assertEquals(packing_list.getDestinationProject(), \
-                                       invoice.getDestinationProject())
-    self.assertEquals(packing_list.getSourceProject(), \
-                                       invoice.getSourceProject())
-    self.assertEquals(packing_list.getPriceCurrency(), \
-                                       invoice.getPriceCurrency())
-
-
-
-  def stepCheckDeliveryRuleForDeferred(
-                      self, sequence=None, sequence_list=None, **kw):
-    """ Checks that a delivery rule has been created when we took 'split
-        and defer' decision on the divergeant Packing List. """
-    # TODO
-
-  def stepCheckDeliveryRuleIsEmpty(
-                      self, sequence=None, sequence_list=None, **kw):
-    """ Checks that an empty delivery rule is created for the
-        convergeant Packing List"""
-    packing_list = sequence.get('packing_list')
-    self.failUnless(packing_list is not None)
-    simulation_tool = self.getSimulationTool()
-    # Check that there is an applied rule for our packing list
-    rule_list = [x for x in simulation_tool.objectValues()
-                          if x.getCausalityValue()==packing_list]
-    self.assertEquals(len(rule_list),1)
-    packing_list_rule = rule_list[0]
-    sequence.edit(packing_list_rule=packing_list_rule)
-    rule_line_list = packing_list_rule.objectValues()
-    packing_list_line_list = packing_list.objectValues()
-    self.assertEquals(len(packing_list_line_list),
-                      len(rule_line_list))
-    self.assertEquals(1, len(rule_line_list))
-    rule_line = rule_line_list[0]
-    packing_list_line = packing_list_line_list[0]
-    self.assertEquals(rule_line.getQuantity(), 10)
-    self.assertEquals(rule_line.getPrice(), 100)
-    self.assertEquals(rule_line.getDeliveryValue(),
-                      packing_list_line)
-    self.assertEquals(rule_line.getStartDate(),
-                      packing_list_line.getStartDate())
-    self.assertEquals(rule_line.getStopDate(),
-                      packing_list_line.getStopDate())
-    self.assertEquals(rule_line.getPortalType(),
-                      'Simulation Movement')
-
-
-  def stepCheckPackingList(self,sequence=None, sequence_list=None,**kw):
-    """  """
-    packing_list_module = self.getSalePackingListModule()
-    order_rule = sequence.get('order_rule')
-    order = sequence.get('order')
-    sale_packing_list_list = []
-    for o in packing_list_module.objectValues():
-      if o.getCausalityValue() == order:
-        sale_packing_list_list.append(o)
-    self.assertEquals(len(sale_packing_list_list), 1)
-    sale_packing_list = sale_packing_list_list[0]
-    sale_packing_list_line_list = sale_packing_list.objectValues()
-    self.assertEquals(len(sale_packing_list_line_list),1)
-    sale_packing_list_line = sale_packing_list_line_list[0]
-    product = sequence.get('resource')
-    self.assertEquals(sale_packing_list_line.getResourceValue(),
-                      product)
-    self.assertEquals(sale_packing_list_line.getPrice(),
-                      self.price1)
-    LOG('sale_packing_list_line.showDict()',0,
-          sale_packing_list_line.showDict())
-    self.assertEquals(sale_packing_list_line.getQuantity(),
-                      self.quantity1)
-    self.assertEquals(sale_packing_list_line.getTotalPrice(),
-                      self.total_price1)
-    sequence.edit(packing_list = sale_packing_list)
-
-  def stepCheckTwoInvoices(self,sequence=None, sequence_list=None, **kw):
-    """ checks invoice properties are well set. """
-    # Now we will check that we have two invoices created
-    packing_list = sequence.get('packing_list')
-    invoice_list = packing_list.getCausalityRelatedValueList(
-         portal_type=self.invoice_portal_type)
-    self.assertEquals(len(invoice_list),1)
-    invoice = invoice_list[0]
-    self.assertEquals(invoice.getSimulationState(), 'confirmed')
-    sequence.edit(invoice=invoice)
-    new_packing_list = sequence.get('new_packing_list')
-    new_invoice_list = new_packing_list.getCausalityRelatedValueList(
-        portal_type=self.invoice_portal_type)
-    self.assertEquals(len(new_invoice_list),1)
-    new_invoice = new_invoice_list[0]
-    self.assertEquals(new_invoice.getSimulationState(), 'confirmed')
-    sequence.edit(new_invoice=new_invoice)
-
-  def stepStartTwoInvoices(self,sequence=None, sequence_list=None, **kw):
-    """ start both invoices. """
-    portal = self.getPortal()
-    invoice = sequence.get('invoice')
-    new_invoice = sequence.get('new_invoice')
-    portal.portal_workflow.doActionFor(invoice, 'start_action')
-    portal.portal_workflow.doActionFor(new_invoice, 'start_action')
-
-  def stepCheckTwoInvoicesTransactionLines(self,sequence=None,
-                                           sequence_list=None, **kw):
-    """ checks invoice properties are well set. """
-    invoice = sequence.get('invoice')
-    new_invoice = sequence.get('new_invoice')
-    self.assertEquals(3,len(invoice.objectValues(
-        portal_type=self.invoice_transaction_line_portal_type)))
-    self.assertEquals(3,len(new_invoice.objectValues(
-        portal_type=self.invoice_transaction_line_portal_type)))
-    account_module = self.getAccountModule()
-    found_dict = {}
-    for line in invoice.objectValues(
-        portal_type=self.invoice_transaction_line_portal_type):
-      source_id = line.getSourceId()
-      found_dict[source_id] = line.getQuantity()
-    total_price = (self.default_quantity-1) * self.default_price
-    expected_dict = {
-      'sale' : total_price,
-      'receivable_vat' : total_price * self.vat_rate,
-      'customer' : - (total_price + total_price * self.vat_rate)
-      }
-    self.failIfDifferentSet(expected_dict.keys(),found_dict.keys())
-    for key in found_dict.keys():
-      self.assertAlmostEquals(expected_dict[key],found_dict[key],places=2)
-    found_dict = {}
-    for line in new_invoice.objectValues(
-        portal_type=self.invoice_transaction_line_portal_type):
-      source_id = line.getSourceId()
-      found_dict[source_id] = line.getQuantity()
-    total_price = 1 * self.default_price
-    expected_dict = {
-      'sale' : total_price,
-      'receivable_vat' : total_price * self.vat_rate,
-      'customer' : - (total_price + total_price * self.vat_rate)
-      }
-    self.failIfDifferentSet(expected_dict.keys(), found_dict.keys())
-    for key in found_dict.keys():
-      self.assertAlmostEquals(expected_dict[key], found_dict[key], places=2)
-
-  def stepRebuildAndCheckNothingIsCreated(self, sequence=None,
-                                           sequence_list=None, **kw):
-    """Rebuilds with sale_invoice_builder and checks nothing more is
-    created. """
-    accounting_module = self.getAccountingModule()
-    portal_type_list = ('Sale Invoice Transaction', 'Purchase Invoice Transaction')
-    sale_invoice_transaction_count = len(accounting_module.objectValues(
-      portal_type=portal_type_list))
-    for builder in self.getPortal().portal_deliveries.objectValues():
-      builder.build()
-    self.assertEquals(sale_invoice_transaction_count,
-                      len(accounting_module.objectValues(
-      portal_type=portal_type_list)))
-
-  def stepModifyInvoicesDate(self, sequence=None,
-                                           sequence_list=None, **kw):
-    """Change invoice date"""
-    invoice = sequence.get('invoice')
-    new_invoice = sequence.get('new_invoice')
-    invoice.edit(start_date=self.datetime,
-                 stop_date=self.datetime+1)
-    new_invoice.edit(start_date=self.datetime,
-                 stop_date=self.datetime+1)
-
-  def stepRemoveDateMovementGroupForTransactionBuilder(self, sequence=None,
-            sequence_list=None, **kw):
-    """
-    Remove DateMovementGroup
-    """
-    portal = self.getPortal()
-    builder = portal.portal_deliveries.sale_invoice_transaction_builder
-    delivery_movement_group_list = builder.getDeliveryMovementGroupList()
-    uf = self.getPortal().acl_users
-    uf._doAddUser('admin', '', ['Manager'], [])
-    user = uf.getUserById('admin').__of__(uf)
-    newSecurityManager(None, user)
-    for movement_group in delivery_movement_group_list:
-      if movement_group.getPortalType() == 'Property Movement Group':
-        # it contains 'start_date' and 'stop_date' only, so we remove
-        # movement group itself.
-        builder.deleteContent(movement_group.getId())
-    builder.newContent(
-      portal_type = 'Parent Explanation Movement Group',
-      collect_order_group='delivery',
-      int_index=len(delivery_movement_group_list)+1
-      )
-    user = uf.getUserById('test_invoice_user').__of__(uf)
-    newSecurityManager(None, user)
-
-  def stepEditInvoice(self, sequence=None, sequence_list=None, **kw):
-    """Edit the current invoice, to trigger updateAppliedRule."""
-    invoice = sequence.get('invoice')
-    invoice.edit()
-
-    # call updateAppliedRule directly, don't rely on edit interactions
-    rule_reference = 'default_invoice_rule'
-    self.assertNotEquals(0,
-        len(self.portal.portal_rules.searchFolder(reference=rule_reference)))
-    invoice.updateAppliedRule(rule_reference=rule_reference)
-
-  def stepCheckInvoiceRuleNotAppliedOnInvoiceEdit(self,
-                    sequence=None, sequence_list=None, **kw):
-    """If we call edit on the invoice, invoice rule should not be
-    applied on lines created by delivery builder."""
-    invoice = sequence.get('invoice')
-    # FIXME: empty applied rule should not be created
-    #self.assertEquals(len(invoice.getCausalityRelatedValueList(
-    #         portal_type=self.applied_rule_portal_type)), 0)
-    for invoice_mvt in invoice.getMovementList():
-      self.assertEquals(len(invoice_mvt.getOrderRelatedValueList(
-            portal_type=self.simulation_movement_portal_type)), 0)
-
-  def stepEditPackingList(self, sequence=None, sequence_list=None, **kw):
-    """Edit the current packing list, to trigger updateAppliedRule."""
-    packing_list = sequence.get('packing_list')
-    packing_list.edit()
-
-    # call updateAppliedRule directly, don't rely on edit interactions
-    rule_reference = 'default_delivery_rule'
-    self.assertNotEquals(0,
-        len(self.portal.portal_rules.searchFolder(reference=rule_reference)))
-    packing_list.updateAppliedRule(rule_reference=rule_reference)
-
-  def stepCheckDeliveryRuleNotAppliedOnPackingListEdit(self,
-                    sequence=None, sequence_list=None, **kw):
-    """If we call edit on the packing list, delivery rule should not be
-    applied on lines created by delivery builder."""
-    packing_list = sequence.get('packing_list')
-    # FIXME: empty applied rule should not be created
-    #self.assertEquals(len(packing_list.getCausalityRelatedValueList(
-    #         portal_type=self.applied_rule_portal_type)), 0)
-    for delivery_mvt in packing_list.getMovementList():
-      self.assertEquals(len(delivery_mvt.getOrderRelatedValueList(
-            portal_type=self.simulation_movement_portal_type)), 0)
-
-  def stepDecreaseInvoiceLineQuantity(self, sequence=None, sequence_list=None,
-      **kw):
-    """
-    Set a decreased quantity on invoice lines
-    """
-    invoice = sequence.get('invoice')
-    quantity = sequence.get('line_quantity',default=self.default_quantity)
-    quantity = quantity - 1
-    sequence.edit(line_quantity=quantity)
-    for invoice_line in invoice.objectValues(
-        portal_type=self.invoice_line_portal_type):
-      invoice_line.edit(quantity=quantity)
-    sequence.edit(last_delta = sequence.get('last_delta', 0.0) - 1.0)
-
-  def stepIncreaseInvoiceLineQuantity(self, sequence=None, sequence_list=None,
-      **kw):
-    """
-    Set a Increased quantity on invoice lines
-    """
-    invoice = sequence.get('invoice')
-    quantity = sequence.get('line_quantity',default=self.default_quantity)
-    quantity = quantity + 1
-    sequence.edit(line_quantity=quantity)
-    for invoice_line in invoice.objectValues(
-        portal_type=self.invoice_line_portal_type):
-      invoice_line.edit(quantity=quantity)
-    sequence.edit(last_delta = sequence.get('last_delta', 0.0) + 1.0)
-
-  def stepSetInvoiceLineQuantityToZero(self, sequence=None, sequence_list=None,
-      **kw):
-    """
-    Set the quantity on invoice lines to zero
-    """
-    invoice = sequence.get('invoice')
-    #default_quantity = sequence.get('line_quantity',default_quantity)
-    quantity = 0.0
-    sequence.edit(line_quantity=quantity)
-    for invoice_line in invoice.objectValues(
-        portal_type=self.invoice_line_portal_type):
-      invoice_line.edit(quantity=quantity)
-    sequence.edit(last_delta = - self.default_quantity)
-
-  def stepChangeInvoiceStartDate(self, sequence=None, sequence_list=None, **kw):
-    """
-      Change the start_date of the invoice.
-    """
-    invoice = sequence.get('invoice')
-    invoice.edit(start_date=self.datetime + 15)
-
-  def stepCheckInvoiceIsCalculating(self, sequence=None, sequence_list=None,
-      **kw):
-    """
-    Test if invoice is calculating
-    """
-    invoice = sequence.get('invoice')
-    self.assertEquals('calculating',invoice.getCausalityState())
-
-  def stepCheckInvoiceIsDiverged(self, sequence=None, sequence_list=None,
-      **kw):
-    """
-    Test if invoice is diverged
-    """
-    invoice = sequence.get('invoice')
-    self.assertEquals('diverged',invoice.getCausalityState())
-
-  def stepCheckInvoiceIsSolved(self, sequence=None, sequence_list=None,
-      **kw):
-    """
-    Test if invoice is solved
-    """
-    invoice = sequence.get('invoice')
-    self.assertEquals('solved', invoice.getCausalityState(),
-                      invoice.getDivergenceList())
-
-  def stepCheckInvoiceIsDivergent(self, sequence=None, sequence_list=None,
-      **kw):
-    """
-    Test if invoice is divergent
-    """
-    invoice = sequence.get('invoice')
-    self.assertTrue(invoice.isDivergent())
-
-  def stepCheckInvoiceIsNotDivergent(self, sequence=None, sequence_list=None,
-      **kw):
-    """
-    Test if invoice is not divergent
-    """
-    invoice = sequence.get('invoice')
-    if invoice.isDivergent():
-      self.fail(invoice.getDivergenceList())
-
-  def stepSplitAndDeferInvoice(self, sequence=None, sequence_list=None,
-      **kw):
-    """
-    split and defer at the invoice level
-    """
-    invoice = sequence.get('invoice')
-    kw = {'listbox':[
-      {'listbox_key':line.getRelativeUrl(),
-       'choice':'SplitAndDefer'} for line in invoice.getMovementList()]}
-    self.portal.portal_workflow.doActionFor(
-      invoice,
-      'split_and_defer_action',
-      start_date=self.datetime + 15,
-      stop_date=self.datetime + 25,
-      **kw)
-    pass
-
-  def stepUnifyStartDateWithDecisionInvoice(self, sequence=None,
-                                            sequence_list=None):
-    invoice = sequence.get('invoice')
-    self._solveDeliveryGroupDivergence(invoice, 'start_date',
-                                       invoice.getRelativeUrl())
-
-  def stepAcceptDecisionQuantityInvoice(self,sequence=None, sequence_list=None):
-    invoice = sequence.get('invoice')
-    self._solveDivergence(invoice, 'quantity', 'accept')
-
-  def stepAcceptDecisionInvoice(self, sequence=None, sequence_list=None,
-      **kw):
-    """
-    accept decision at the invoice level
-    """
-    invoice = sequence.get('invoice')
-    invoice.portal_workflow.doActionFor(invoice,'accept_decision_action')
-
-  def stepCheckInvoiceSplitted(self, sequence=None, sequence_list=None, **kw):
-    """
-    Test if invoice was splitted
-    """
-    packing_list = sequence.get('packing_list')
-    invoice_list = packing_list.getCausalityRelatedValueList(
-        portal_type=self.invoice_portal_type)
-    self.assertEquals(2,len(invoice_list))
-    invoice1 = None
-    invoice2 = None
-    for invoice in invoice_list:
-      if invoice.getUid() == sequence.get('invoice').getUid():
-        invoice1 = invoice
-      else:
-        invoice2 = invoice
-    sequence.edit(new_invoice=invoice2)
-    for line in invoice1.objectValues(
-          portal_type=self.invoice_line_portal_type):
-      self.assertEquals(self.default_quantity-1,line.getQuantity())
-    for line in invoice2.objectValues(
-          portal_type=self.invoice_line_portal_type):
-      self.assertEquals(1,line.getQuantity())
-
-  def stepCheckInvoiceNotSplitted(self, sequence=None, sequence_list=None, **kw):
-    """
-    Test if invoice was not splitted
-    """
-    packing_list = sequence.get('packing_list')
-    invoice_list = packing_list.getCausalityRelatedValueList(
-        portal_type=self.invoice_portal_type)
-    self.assertEquals(1,len(invoice_list))
-    invoice1 = None
-    for invoice in invoice_list:
-      if invoice.getUid() == sequence.get('invoice').getUid():
-        invoice1 = invoice
-    last_delta = sequence.get('last_delta', 0.0)
-    for line in invoice1.objectValues(
-        portal_type=self.invoice_line_portal_type):
-      self.assertEquals(self.default_quantity + last_delta,
-          line.getQuantity())
-
-  def stepAddInvoiceLines(self, sequence=None, sequence_list=[]):
-    """
-    add some invoice and accounting lines to the invoice
-    """
-    invoice = sequence.get('invoice')
-    invoice.newContent(portal_type='Invoice Line',
-        resource_value=sequence.get('resource'), quantity=3, price=555)
-    invoice.newContent(portal_type='Sale Invoice Transaction Line',
-        id ='receivable', source='account_module/customer',
-        destination='account_module/supplier', quantity=-1665)
-    invoice.newContent(portal_type='Sale Invoice Transaction Line',
-        id='income', source='account_module/sale',
-        destination='account_module/purchase', quantity=1665)
-
-  def stepAddWrongInvoiceLines(self, sequence=None, sequence_list=[]):
-    """
-    add some wrong invoice and accounting lines to the invoice
-    """
-    invoice = sequence.get('invoice')
-    invoice.newContent(portal_type='Sale Invoice Transaction Line',
-        id='bad_movement', source='account_module/sale',
-        destination='account_module/purchase', quantity=2, price=4)
-    invoice.newContent(portal_type='Sale Invoice Transaction Line',
-        id='counter_bad_movement', source='account_module/sale',
-        destination='account_module/purchase', quantity=-2, price=4)
-    for movement in invoice.getMovementList():
-      movement.edit(resource_value=sequence.get('resource'))
-
-  def stepCheckStartInvoiceFail(self, sequence=None, sequence_list=[]):
-    """
-    checks that it's not possible to start an invoice with really wrong
-    lines
-    """
-    try:
-      self.tic()
-    except RuntimeError, exc:
-      invoice = sequence.get('invoice')
-      it_builder = self.portal.portal_deliveries.sale_invoice_transaction_builder
-      # check which activities are failing
-      self.assertTrue(str(exc).startswith('tic is looping forever.'),
-          '%s does not start with "tic is looping forever."' % str(exc))
-      msg_list = ['/'.join(x.object_path) for x in
-          self.getActivityTool().getMessageList()]
-      self.assertTrue(it_builder.getPath() in msg_list, '%s in %s' %
-          (it_builder.getPath(), msg_list))
-      # flush failing activities
-      activity_tool = self.getActivityTool()
-      activity_tool.manageClearActivities(keep=0)
-    else:
-      self.fail("Error: stepStartInvoice didn't fail, the builder script"
-          + " InvoiceTransaction_postTransactionLineGeneration should have"
-          + " complained that accounting movements use multiple resources")
-
-  def stepCheckSimulationTrees(self, sequence=None, sequence_list=[]):
-    """
-    check that rules are created in the order we expect them
-    """
-    applied_rule_set = set()
-    invoice = sequence.get('invoice')
-    for movement in invoice.getMovementList():
-      for sm in movement.getDeliveryRelatedValueList():
-        applied_rule_set.add(sm.getRootAppliedRule())
-
-    rule_dict = {
-        'Order Rule': {
-          'movement_type_list': ['Sale Order Line', 'Sale Order Cell'],
-          'next_rule_list': ['Delivering Rule', ],
-          },
-        'Delivering Rule': {
-          'movement_type_list': ['Sale Packing List Line', 'Sale Packing List Cell'],
-          'next_rule_list': ['Invoicing Rule', ],
-          },
-        'Invoicing Rule': {
-          'movement_type_list': invoice.getPortalInvoiceMovementTypeList(),
-          'next_rule_list': ['Invoice Transaction Rule', 'Trade Model Rule'],
-          },
-        'Trade Model Rule': {
-          'next_rule_list': ['Invoice Transaction Rule'],
-          },
-        'Invoice Rule': {
-          'movement_type_list': invoice.getPortalInvoiceMovementTypeList() \
-              + invoice.getPortalAccountingMovementTypeList(),
-          'next_rule_list': ['Invoice Transaction Rule', 'Payment Rule',
-            'Trade Model Rule'],
-          },
-        'Invoice Transaction Rule': {
-          'parent_movement_type_list': invoice.getPortalInvoiceMovementTypeList(),
-          'movement_type_list': invoice.getPortalAccountingMovementTypeList(),
-          'next_rule_list': ['Payment Rule'],
-          },
-        'Payment Rule': {
-          'parent_movement_type_list': invoice.getPortalAccountingMovementTypeList(),
-          'next_rule_list': [],
-          },
-        }
-
-    def checkTree(rule):
-      """
-      checks the tree recursively
-      """
-      rule_type = rule.getSpecialiseValue().getPortalType()
-      rule_def = rule_dict.get(rule_type, {})
-      for k, v in rule_def.iteritems():
-        if k == 'movement_type_list':
-          for movement in rule.objectValues():
-            if movement.getDeliveryValue() is not None:
-              self.assertTrue(movement.getDeliveryValue().getPortalType() in v,
-                  'looking for %s in %s on %s' % (
-                  movement.getDeliveryValue().getPortalType(), v,
-                  movement.getPath()))
-        elif k == 'next_rule_list':
-          for movement in rule.objectValues():
-            found_rule_dict = {}
-            for next_rule in movement.objectValues():
-              next_rule_type = next_rule.getSpecialiseValue().getPortalType()
-              self.assertTrue(next_rule_type in v,
-                  'looking for %s in %s on %s' % (
-                  next_rule_type, v, next_rule.getPath()))
-              n = found_rule_dict.get(next_rule_type, 0)
-              found_rule_dict[next_rule_type] = n + 1
-            # for each movement, we want to make sure that each rule is not
-            # instanciated more than once
-            if len(found_rule_dict):
-              self.assertEquals(set(found_rule_dict.itervalues()), set([1]))
-        elif k == 'parent_movement_type_list':
-          if rule.getParentValue().getDeliveryValue() is not None:
-            parent_type = rule.getParentValue().getDeliveryValue().getPortalType()
-            self.assertTrue(parent_type in v, 'looking for %s in %s on %s' % (
-                parent_type, v, rule.getParentValue().getPath()))
-        elif k == 'parent_id_list':
-          self.assertTrue(rule.getParentId() in v, 'looking for %s in %s on %s'
-              % (rule.getParentId(), v, rule.getPath()))
-      for movement in rule.objectValues():
-        for next_rule in movement.objectValues():
-          checkTree(next_rule)
-
-    for applied_rule in applied_rule_set:
-      checkTree(applied_rule)
-
-
 class TestSaleInvoice(TestSaleInvoiceMixin, TestInvoice, ERP5TypeTestCase):
   """Tests for sale invoice.
   """
@@ -3011,25 +3026,6 @@ class TestSaleInvoice(TestSaleInvoiceMixin, TestInvoice, ERP5TypeTestCase):
           seq + end_sequence
       sequence_list.addSequenceString(sequence)
     sequence_list.play(self, quiet=quiet)
-
-  def stepAddInvoiceLinesManyTransactions(self, sequence=None, sequence_list=[]):
-    """
-    add some invoice and accounting lines to the invoice
-    """
-    invoice = sequence.get('invoice')
-    invoice_line = invoice.newContent(portal_type='Invoice Line')
-    transaction_line_1 = invoice.newContent(portal_type='Sale Invoice Transaction Line')
-    transaction_line_2 = invoice.newContent(portal_type='Sale Invoice Transaction Line')
-    transaction.commit()
-    self.tic()
-    invoice_line.edit(resource_value=sequence.get('resource'), quantity=3,
-        price=555)
-    transaction_line_1.edit(id ='receivable', source='account_module/customer',
-        destination='account_module/supplier', quantity=-1665)
-    transaction_line_2.edit(
-        id='income', source='account_module/sale',
-        destination='account_module/purchase', quantity=1665)
-
 
   def test_16a_ManuallyAddedMovementsManyTransactions(self, quiet=quiet):
     """
