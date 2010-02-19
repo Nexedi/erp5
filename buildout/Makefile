@@ -34,6 +34,7 @@ assert-eggs-2.4:
 	ls -d develop-eggs/itools-*-py2.4-*-*.egg
 	ls -d develop-eggs/itools-*-py2.4-*-*.egg
 	ls -d develop-eggs/MySQL_python-*-py2.4-*-*.egg
+	ldd develop-eggs/MySQL_python-1.2.3c1-py2.4-linux-x86_64.egg/_mysql.so | grep 'parts/mysql-tritonn-5.0/lib/mysql/libmysqlclient_r.so'
 
 create-mandriva2010-rpm: bin/buildout
 	bin/buildout -c profiles/mandriva2010.0.cfg buildout:directory=`pwd` install create-rpm
