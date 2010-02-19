@@ -636,17 +636,22 @@ class XMLMatrix(Folder):
         # check each key in index
         # First we make sure this is a cell
         object_id_split = object_id.split('_')
-        # We try to find the first split id which is an int
-        base_id_len = len(object_id_split)
+
         base_id = None
-        while base_id_len > 0:
+        cell_coordinate_list = []
+        while object_id_split:
+          coordinate = None
           try:
-            # if this succeeds, it is very likely a cell with an id such as quantity_X_Y_0_Z
-            test_num = int(object_id_split[base_id_len-1])
+            coordinate = int(object_id_split[-1])
           except ValueError:
-            base_id = '_'.join(object_id_split[:base_id_len])
+            # The last item is not a coordinate, object_id_split hence
+            # only contains the base_id elements
+            base_id = '_'.join(object_id_split)
             break
-          base_id_len -= 1
+          else:
+            cell_coordinate_list.insert(0, coordinate)
+            # the last item is a coordinate not part of base_id
+            object_id_split.pop()
 
         if base_id is not None:
             if not self.index.has_key(base_id):
@@ -666,14 +671,14 @@ class XMLMatrix(Folder):
                   del base_item[key]
 
               len_id = len(base_item)
-              current_dimension = len(object_id_split) - base_id_len
-              if current_dimension != len_id: # +1 for the quantity
+              current_dimension = len(cell_coordinate_list)
+              if current_dimension != len_id:
                 addError("Dimension of cell is %s but should be %s" % (current_dimension,
                                                                        len_id))
                 to_delete_set.add(object_id)
               else :
-                for i in range(len_id):
-                  if int(object_id_split[i+base_id_len]) >= len(base_item[i]):
+                for i, coordinate in enumerate(cell_coordinate_list):
+                  if coordinate >= len(base_item[i]):
                     addError("Cell %s is out of bound" % object_id)
                     to_delete_set.add(object_id)
 
