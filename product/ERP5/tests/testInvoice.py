@@ -472,7 +472,10 @@ class TestInvoiceMixin(TestPackingListMixin,
     related_invoice_list = packing_list.getCausalityRelatedValueList(
                      portal_type=self.invoice_portal_type)
 
-    packing_list_building_state = 'started'
+    if packing_list.getPortalType() == 'Purchase Packing List':
+      packing_list_building_state = 'stopped'
+    else:
+      packing_list_building_state = 'started'
     packing_list_state = packing_list.getSimulationState()
     if packing_list_state != packing_list_building_state :
       self.assertEquals(0, len(related_invoice_list))
@@ -572,6 +575,18 @@ class TestInvoiceMixin(TestPackingListMixin,
       self.failUnless(payment is not None)
       # Payments created by Delivery Builder are in planned state
       self.assertEquals(payment.getSimulationState(), 'planned')
+      # Test source section and destination section of payment, that
+      # should be reversed for Purchase case.
+      if invoice.getPortalType() == 'Purchase Invoice Transaction':
+        self.assertEquals(payment.getSourceSection(), \
+                          invoice.getDestinationSection())
+        self.assertEquals(payment.getDestinationSection(), \
+                          invoice.getSourceSection())
+      else:
+        self.assertEquals(payment.getSourceSection(), \
+                          invoice.getSourceSection())
+        self.assertEquals(payment.getDestinationSection(), \
+                          invoice.getDestinationSection())
 
       # Get the list of simulation movements of packing list ...
       invoice_simulation_movement_list = []
