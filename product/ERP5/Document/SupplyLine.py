@@ -178,7 +178,6 @@ class SupplyLine(Path, XMLMatrix):
             (price_parameter, predicate_id_start_with)
       # XXX Hardcoded portal type name
       predicate_list = self.contentIds(filter={'portal_type': 'Predicate'})
-      # XXX filtering can be done with contentIds ?
       result = [x for x in predicate_list \
               if x.startswith(predicate_id_start_with)]
       return result
