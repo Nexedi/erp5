@@ -161,6 +161,8 @@ class XMLMatrix(Folder):
         return
 
       # Create the new index for the range given in *kw
+      # *kw practical example:
+      # kw = [ ['color/blue', 'color/red'], ['size/S', 'size/L']]
       for i, index_ids in enumerate(kw):
         temp = PersistentMapping()
         for j, my_id in enumerate(index_ids):
@@ -437,7 +439,7 @@ class XMLMatrix(Folder):
       result = []
       for value in cell_range.itervalues():
         result_items = sorted(value.iteritems(), key=lambda x:x[1])
-        result.extend(x[0] for x in result_items)
+        result.append([x[0] for x in result_items])
       return result
 
     security.declareProtected( Permissions.ModifyPortalContent, 'newCell' )
