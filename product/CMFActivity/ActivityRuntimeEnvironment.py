@@ -15,12 +15,16 @@ def _getActivityRuntimeEnvironment():
 
 class BaseMessage:
 
-  delay = None
+  def __property(**kw):
+    (k, v), = kw.items()
+    return property(lambda self: self.activity_kw.get(k, v))
+
+  delay = __property(delay=None)
   # None means infinite retry
-  max_retry = 5
+  max_retry = __property(max_retry=5)
   # For errors happening after message invocation (ConflictError),
   # should we retry quickly without increasing 'retry' count ?
-  conflict_retry = True
+  conflict_retry = __property(conflict_retry=True)
 
 
 class ActivityRuntimeEnvironment(object):
@@ -32,4 +36,4 @@ class ActivityRuntimeEnvironment(object):
     # There is no point allowing to modify other attributes from a message
     for k in kw:
       getattr(BaseMessage, k)
-    self._message.__dict__.update(kw)
+    self._message.activity_kw.update(kw)

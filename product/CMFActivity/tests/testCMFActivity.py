@@ -1659,12 +1659,12 @@ class TestCMFActivity(ERP5TypeTestCase):
         self.getActivityRuntimeEnvironment().edit(**edit_kw)
       if conflict is not None:
         raise conflict and ConflictError or Exception
-    def check(retry_list):
+    def check(retry_list, **activate_kw):
       fail = retry_list[-1][0] is not None and 1 or 0
       for activity in 'SQLDict', 'SQLQueue':
         exec_count[0] = 0
-        activity_tool.activate(activity=activity, priority=priority(1,6)) \
-                     .doSomething(retry_list)
+        activity_tool.activate(activity=activity, priority=priority(1,6),
+                               **activate_kw).doSomething(retry_list)
         get_transaction().commit()
         self.flushAllActivities(silent=1)
         self.assertEqual(len(retry_list), exec_count[0])
@@ -1687,6 +1687,7 @@ class TestCMFActivity(ERP5TypeTestCase):
       # ... even in case of ConflictError
       check([(True, {'max_retry': 0}),
              (True, {'max_retry': 0, 'conflict_retry': 0})])
+      check([(True, None)] * 6, conflict_retry=False)
       # Customized number of retries
       for n in 3, 9:
         check([(False, {'max_retry': n})] * n + [(None, None)])
@@ -1696,6 +1697,7 @@ class TestCMFActivity(ERP5TypeTestCase):
         check([(False, {'max_retry': None})] * n + [(None, None)])
         check([(False, {'max_retry': None})] * n + [(False, {'max_retry': 0})])
       check([(False, {'max_retry': None})] * 9 + [(False, None)])
+
     finally:
       del activity_tool.__class__.doSomething
     self.assertFalse(activity_tool.getMessageList())
