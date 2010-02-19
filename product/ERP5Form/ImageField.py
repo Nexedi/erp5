@@ -30,6 +30,7 @@
 from Products.Formulator import Widget, Validator
 from Products.Formulator.Field import ZMIField
 from Products.Formulator.DummyField import fields
+from OFS.Image import Image as OFSImage
 from lxml.etree import Element
 from Acquisition import aq_base
 from lxml import etree
@@ -135,6 +136,12 @@ class ImageFieldWidget(Widget.TextWidget):
       # is displayed in the form as a thumbnail, it will be added in the odg
       # document as thumbnail size/quality
       content_type, image_data = image_object.convert(**image_parameter_dict)
+      if isinstance(image_data, str):
+        image = OFSImage('', '', image_data)
+      else:
+        image = image_data
+      width = image.width
+      height = image.height
       if image_data is None:
         return draw_frame_node
 
@@ -154,8 +161,11 @@ class ImageFieldWidget(Widget.TextWidget):
 
       # set the size of the image
       if display is not None:
-        width, height = image_object.getSizeFromImageDisplay(display)
-        width, height = image_object._getAspectRatioSize(width, height)
+	# if the image width and height are not on defined, use current
+	# width and height
+	if (image_object.getWidth(), image_object.getHeight()) not in \
+	    ((-1, -1), (0,0)):
+	  width, height = image_object._getAspectRatioSize(width, height)
         if draw_frame_node.attrib.get('{%s}width' % SVG_URI, {}) != {} and \
         draw_frame_node.attrib.get('{%s}height' % SVG_URI, {}) != {}:
           # if a size already exist from attr_dict, try to resize the image to
