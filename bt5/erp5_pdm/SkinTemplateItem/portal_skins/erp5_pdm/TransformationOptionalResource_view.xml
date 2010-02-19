@@ -119,6 +119,7 @@
                         <string>my_quantity</string>
                         <string>my_quantity_unit</string>
                         <string>my_efficiency</string>
+                        <string>my_comment</string>
                       </list>
                     </value>
                 </item>
