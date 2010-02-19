@@ -5946,11 +5946,10 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
   def test_167_InstanceAndRelatedClassDefinedInSameBT(self):
     from Products.ERP5Type.Document.BusinessTemplate import BaseTemplateItem
     BaseTemplateItem_removeProperties = BaseTemplateItem.removeProperties
-    object_id_list = []
+    marker_list = []
     def removeProperties(self, obj):
       # Check it works if the object is modified during download.
-      object_id_list.append(obj.id)
-      obj.title = 'foo'
+      obj.int_index = marker_list.pop()
       return obj
     SimpleItem_getCopy = SimpleItem._getCopy
     try:
@@ -5960,15 +5959,16 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
       bt_path = os.path.join(os.path.dirname(__file__), 'test_data',
                              self._testMethodName)
       for i in xrange(6):
+        marker_list.append(i)
         gc.disable()
         bt = template_tool.download(bt_path)
-        assert object_id_list.pop() == 'some_file' and not object_id_list
+        assert not marker_list
         if i in (2, 4, 5):
           transaction.commit()
           self.tic()
         bt.install(force=1)
         gc.enable()
-        assert not object_id_list
+        self.assertEqual(self.portal.some_file.int_index, i)
         transaction.commit()
         self.tic()
     finally:

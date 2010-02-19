@@ -5578,10 +5578,8 @@ Business Template is a set of definitions, such as skins, portal types and categ
       # This is required if the BT contains instances of one of these classes.
       orig_module_dict = {}
       instance_oid_list = []
-      for template_type in ('Constraint', 'Document', 'PropertySheet'):
-        for template_id in getattr(self,
-                                   'getTemplate%sIdList' % template_type)():
-          module_id = 'Products.ERP5Type.%s.%s' % (template_type, template_id)
+      for template_id in self.getTemplateDocumentIdList():
+          module_id = 'Products.ERP5Type.Document.' + template_id
           orig_module_dict[module_id] = sys.modules.get(module_id)
           # Always redefine the module, so that 'instance_oid_list' contains
           # the full list of oid to remove from pickle cache.
