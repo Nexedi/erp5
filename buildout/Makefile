@@ -7,7 +7,7 @@ bin/buildout:
 # run make assert to check that all is working
 assert: assert-software
 
-assert-software: assert-python2.4
+assert-software: assert-python2.4 assert-eggs-2.4
 
 assert-python2.4: bin/python2.4
 	bin/python2.4 -c 'import _ssl'
@@ -15,6 +15,25 @@ assert-python2.4: bin/python2.4
 	bin/python2.4 -c 'import dbm'
 	bin/python2.4 -c 'import xml.parsers.expat'
 	bin/python2.4 -c 'import zlib'
+
+assert-eggs-2.4:
+	ls -d eggs/erp5diff-*-py2.4.egg
+	ls -d eggs/elementtree-*-py2.4.egg
+	ls -d eggs/collective.recipe.supervisor-*-py2.4.egg
+	ls -d eggs/fpconst-*-py2.4.egg
+	ls -d eggs/lxml-*-py2.4-*-*.egg
+	ls -d eggs/numpy-*-py2.4-*-*.egg
+	ls -d eggs/python_ldap-*-py2.4-*-*.egg
+	ls -d eggs/python_memcached-*-py2.4.egg
+	ls -d eggs/pytz-*-py2.4.egg
+	ls -d eggs/PyXML-*-py2.4-*-*.egg
+	ls -d eggs/simplejson-*-py2.4-*-*.egg
+	ls -d eggs/SOAPpy-*-py2.4.egg
+	ls -d eggs/threadframe-*-py2.4-*-*.egg
+	ls -d eggs/timerserver-*-py2.4.egg
+	ls -d develop-eggs/itools-*-py2.4-*-*.egg
+	ls -d develop-eggs/itools-*-py2.4-*-*.egg
+	ls -d develop-eggs/MySQL_python-*-py2.4-*-*.egg
 
 create-mandriva2010-rpm: bin/buildout
 	bin/buildout -c profiles/mandriva2010.0.cfg buildout:directory=`pwd` install create-rpm
