@@ -1562,7 +1562,7 @@ class TestCMFActivity(ERP5TypeTestCase):
     # Monkey patch Message not to send failure notification emails
     from Products.CMFActivity.ActivityTool import Message
     originalNotifyUser = Message.notifyUser
-    def notifyUserSilent(self, activity_tool, message=''):
+    def notifyUserSilent(self, *args, **kw):
       pass
     Message.notifyUser = notifyUserSilent
 
@@ -1645,7 +1645,7 @@ class TestCMFActivity(ERP5TypeTestCase):
     # Monkey patch Message not to send failure notification emails
     from Products.CMFActivity.ActivityTool import Message
     originalNotifyUser = Message.notifyUser
-    def notifyUserSilent(self, activity_tool, message=''):
+    def notifyUserSilent(self, *args, **kw):
       pass
     Message.notifyUser = notifyUserSilent
 
@@ -2324,7 +2324,7 @@ class TestCMFActivity(ERP5TypeTestCase):
     # monkeypatch method.
     notification_done = []
     from Products.CMFActivity.ActivityTool import Message
-    def fake_notifyUser(self, activity_tool):
+    def fake_notifyUser(self, *args, **kw):
       notification_done.append(True)
     original_notifyUser = Message.notifyUser
     def failingMethod(self):

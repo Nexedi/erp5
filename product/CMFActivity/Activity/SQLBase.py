@@ -171,13 +171,13 @@ class SQLBase:
           retry = m.line.retry
           if max_retry is not None and retry >= max_retry:
             # Always notify when we stop retrying.
-            notify_user_list.append(m)
+            notify_user_list.append((m, False))
             final_error_uid_list.append(uid)
             continue
           # In case of infinite retry, notify the user
           # when the default limit is reached.
           if max_retry is None and retry == m.__class__.max_retry:
-            notify_user_list.append(m)
+            notify_user_list.append((m, True))
           delay = m.delay
           if delay is None:
             # By default, make delay quadratic to the number of retries.
@@ -235,8 +235,8 @@ class SQLBase:
       else:
         self._log(TRACE, 'Freed messages %r' % make_available_uid_list)
     try:
-      for m in notify_user_list:
-        m.notifyUser(activity_tool)
+      for m, retry in notify_user_list:
+        m.notifyUser(activity_tool, retry)
     except:
       # Notification failures must not cause this method to raise.
       self._log(WARNING,

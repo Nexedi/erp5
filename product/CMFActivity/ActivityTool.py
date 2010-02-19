@@ -310,7 +310,7 @@ class Message(BaseMessage):
   def getDependentMessageList(self, activity, activity_tool):
     return activity.getDependentMessageList(activity_tool, self, **self.activity_kw)
 
-  def notifyUser(self, activity_tool, message="Failed Processing Activity"):
+  def notifyUser(self, activity_tool, retry=False):
     """Notify the user that the activity failed."""
     portal = activity_tool.getPortalObject()
     user_email = portal.getProperty('email_to_address',
@@ -322,13 +322,18 @@ class Message(BaseMessage):
     if self.call_traceback:
       call_traceback = 'Created at:\n%s' % self.call_traceback
 
+    fail_count = self.line.retry + 1
+    if retry:
+      message = "Pending activity already failed %s times" % fail_count
+    else:
+      message = "Activity failed"
+    path = '/'.join(self.object_path)
     mail_text = """From: %s <%s>
 To: %s
-Subject: %s
-
-%s
+Subject: %s: %s/%s
 
 Node: %s
+Failures: %s
 User name: %r
 Document: %s
 Method: %s
@@ -339,10 +344,10 @@ Named Parameters: %r
 Exception: %s %s
 
 %s
-""" % (email_from_name, activity_tool.email_from_address, 
-       user_email, message, message,
-       activity_tool.getCurrentNode(), self.user_name,
-       '/'.join(self.object_path), self.method_id, self.args, self.kw,
+""" % (email_from_name, activity_tool.email_from_address, user_email,
+       message, path, self.method_id,
+       activity_tool.getCurrentNode(), fail_count,
+       self.user_name, path, self.method_id, self.args, self.kw,
        call_traceback, self.exc_type, self.exc_value, self.traceback)
 
     if isinstance(mail_text, unicode):
