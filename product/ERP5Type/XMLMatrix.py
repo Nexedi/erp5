@@ -470,7 +470,7 @@ class XMLMatrix(Folder):
       if portal_type is None:
         for x in self.allowedContentTypes():
           portal_type_id = x.getId()
-          if id.endswith(' Cell'):
+          if portal_type_id.endswith(' Cell'):
             portal_type = portal_type_id
             break
 
