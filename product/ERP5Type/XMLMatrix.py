@@ -681,6 +681,7 @@ class XMLMatrix(Folder):
                   if coordinate >= len(base_item[i]):
                     addError("Cell %s is out of bound" % object_id)
                     to_delete_set.add(object_id)
+                    break
 
       if fixit and len(to_delete_set) > 0:
         self.manage_delObjects(list(to_delete_set))
