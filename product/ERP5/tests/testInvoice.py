@@ -464,6 +464,24 @@ class TestInvoiceMixin(TestPackingListMixin,
                            order_root_applied_rule)
       self.assertEquals(total_quantity, movement.getQuantity())
 
+  def checkMirrorAcquisition(self, object, acquired_object):
+    """
+      Check if properties are well acquired for mirrored case
+    """
+    # packing_list_movement, simulation_movement
+
+    self.assertEquals(acquired_object.getStartDate(), object.getStopDate())
+    self.assertEquals(acquired_object.getStopDate(), object.getStartDate())
+    self.assertEquals(acquired_object.getSourceValue(), \
+                      object.getDestinationValue())
+    self.assertEquals(acquired_object.getDestinationValue(), \
+                      object.getSourceValue())
+
+    self.assertEquals(acquired_object.getSourceSectionValue(), \
+                      object.getDestinationSectionValue())
+    self.assertEquals(acquired_object.getDestinationSectionValue(), \
+                      object.getSourceSectionValue())
+
   def stepCheckInvoiceBuilding(self, sequence=None, sequence_list=None, **kw):
     """
     checks that the invoice is built with the default_invoice_builder
@@ -632,8 +650,12 @@ class TestInvoiceMixin(TestPackingListMixin,
           self.assertEquals(payment_movement.getVariationCategoryList(), \
                         related_simulation_movement.getVariationCategoryList())
           # Test acquisition
-          self.checkAcquisition(payment_movement,
-                                related_simulation_movement)
+          if invoice.getPortalType() == 'Purchase Invoice Transaction':
+            self.checkMirrorAcquisition(payment_movement,
+                                        related_simulation_movement)
+          else:
+            self.checkAcquisition(payment_movement,
+                                  related_simulation_movement)
           # Test delivery ratio
           self.assertEquals(related_simulation_movement.getQuantity() /\
                             payment_movement_quantity, \
