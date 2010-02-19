@@ -959,7 +959,8 @@ class ListWidget(SingleItemsWidget):
           #required by lxml
           value = value.decode('utf-8')
         text_node = Element('{%s}%s' % (TEXT_URI, local_name), nsmap=NSMAP)
-        global parent_node = text_node
+        global parent_node
+        parent_node = text_node
         RE_OOO_ESCAPE.sub(ooo_escape, value)
         text_node.attrib.update(attr_dict)
         if as_string:
