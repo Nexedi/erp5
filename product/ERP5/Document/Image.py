@@ -414,7 +414,7 @@ class Image(File, OFSImage):
       parameter_list.append('%s:-' % format)
     else:
       parameter_list.append('-')
-    #self.log(parameter_list)
+
     process = subprocess.Popen(parameter_list,
                                stdin=subprocess.PIPE,
                                stdout=subprocess.PIPE,
