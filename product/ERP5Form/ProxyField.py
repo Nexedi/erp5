@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2006 Nexedi SARL and Contributors. All Rights Reserved.
@@ -130,6 +131,9 @@ class ProxyWidget(Widget.Widget):
   render_css = WidgetDelegatedMethod('render_css', default='')
   render_dict = WidgetDelegatedMethod('render_dict', default=None)
   render_odf = WidgetDelegatedMethod('render_odf', default='')
+  render_odt = WidgetDelegatedMethod('render_odt', default=None)
+  render_odt_view = WidgetDelegatedMethod('render_odt_view', default=None)
+  render_odg = WidgetDelegatedMethod('render_odg', default=None)
   get_javascript_list = WidgetDelegatedMethod(
                             'get_javascript_list', default=[])
 
