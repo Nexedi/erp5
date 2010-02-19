@@ -1,4 +1,7 @@
 <base_category_list>
+ <portal_type id="Business Process Module">
+  <item>business_application</item>
+ </portal_type>
  <portal_type id="Internal Packing List Module">
   <item>business_application</item>
  </portal_type>
