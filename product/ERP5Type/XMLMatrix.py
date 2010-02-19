@@ -471,19 +471,19 @@ class XMLMatrix(Folder):
         return self.newCellContent(cell_id,**kwd)
 
     security.declareProtected( Permissions.ModifyPortalContent, 'newCellContent' )
-    def newCellContent(self, id, portal_type=None, **kw):
+    def newCellContent(self, cell_id, portal_type=None, **kw):
       """
         Creates a new content as a cell. This method is
         meant to be overriden by subclasses.
       """
       if portal_type is None:
         for x in self.allowedContentTypes():
-          id = x.getId()
+          portal_type_id = x.getId()
           if id.endswith(' Cell'):
-            portal_type = id
+            portal_type = portal_type_id
             break
 
-      return self.newContent(id=id, portal_type=portal_type, **kw)
+      return self.newContent(id=cell_id, portal_type=portal_type, **kw)
 
     security.declareProtected( Permissions.AccessContentsInformation,
                                'getCellKeyList' )
