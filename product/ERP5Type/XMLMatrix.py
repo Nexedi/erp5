@@ -350,24 +350,22 @@ class XMLMatrix(Folder):
         # Create an index for this base_id
         self.index[base_id] = PersistentMapping()
 
-      # First, delete all cells which are out of range.
-      size_list = map(len, kw)
-      if len_delta < 0:
-        size_list.extend([1] * (-len_delta))
-      removed_cell_id_list = []
       cell_id_list = []
       for cell_id in self.getCellIdList(base_id = base_id):
         if self.get(cell_id) is not None:
           cell_id_list.append(cell_id)
-      for cell_id in cell_id_list:
+
+      # First, delete all cells which are out of range.
+      size_list = map(len, kw)
+      if len_delta < 0:
+        size_list.extend([1] * (-len_delta))
+      def is_in_range(cell_id):
         for i, index in enumerate(cell_id[len(base_id)+1:].split('_')):
           if int(index) >= size_list[i]:
-            removed_cell_id_list.append(cell_id)
-            break
-
-      for cell_id in removed_cell_id_list:
-        self._delObject(cell_id)
-        cell_id_list.remove(cell_id)
+            self._delObject(cell_id)
+            return False
+        return True
+      cell_id_list = filter(is_in_range, cell_id_list)
 
       # Secondly, rename coordinates. This does not change cell ids.
       for i in range(max(new_len, current_len)):
