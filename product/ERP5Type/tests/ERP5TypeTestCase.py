@@ -698,7 +698,7 @@ class ERP5TypeTestCase(backportUnittest.TestCase, PortalTestCase):
                 )
             raise RuntimeError,\
               'tic is looping forever. These messages are pending: %r %s' % (
-            [('/'.join(m.object_path), m.method_id, m.processing_node, m.priority)
+            [('/'.join(m.object_path), m.method_id, m.processing_node, m.retry)
             for m in portal_activities.getMessageList()],
             error_message
             )

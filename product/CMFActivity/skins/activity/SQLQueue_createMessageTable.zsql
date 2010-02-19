@@ -20,6 +20,7 @@ CREATE TABLE `message_queue` (
   `priority` TINYINT NOT NULL DEFAULT 0,
   `tag` VARCHAR(255) NOT NULL,
   `serialization_tag` VARCHAR(255) NOT NULL,
+  `retry` TINYINT UNSIGNED NOT NULL DEFAULT 0,
   `message` LONGBLOB NOT NULL,
   PRIMARY KEY (`uid`),
   KEY (`path`),

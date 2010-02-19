@@ -35,7 +35,7 @@ from Products.CMFActivity.ActiveObject import (
   INVOKE_ERROR_STATE, VALIDATE_ERROR_STATE)
 from Queue import VALIDATION_ERROR_DELAY
 
-MAX_PRIORITY = 5
+MAX_RETRY = 5
 
 
 class SQLBase:
@@ -67,7 +67,7 @@ class SQLBase:
                              activity=class_name,
                              uid=line.uid,
                              processing_node=line.processing_node,
-                             priority=line.priority,
+                             retry=line.retry,
                              processing=line.processing)
             for line in readMessageList(path=None,
                                         method_id=None,
@@ -133,10 +133,10 @@ class SQLBase:
       If anything failed, make successful messages available (if any), and
       the following rules apply to failed messages:
         - Failures due to ConflictErrors cause messages to be postponed,
-          but their priority is *not* increased.
-        - Failures of messages already above maximum priority cause them to
+          but their retry count is *not* increased.
+        - Failures of messages already above maximum retry count cause them to
           be put in a permanent-error state.
-        - In all other cases, priority is increased and message is delayed.
+        - In all other cases, retry count is increased and message is delayed.
     """
     deletable_uid_list = []
     delay_uid_list = []
@@ -161,7 +161,6 @@ class SQLBase:
         # should they be just made available again ?
         if uid_to_duplicate_uid_list_dict is not None:
           make_available_uid_list += uid_to_duplicate_uid_list_dict.get(uid, ())
-        priority = m.line.priority
         # BACK: Only exceptions can be classes in Python 2.6.
         # Once we drop support for Python 2.4,
         # please, remove the "type(m.exc_type) is type(ConflictError)" check
@@ -169,19 +168,23 @@ class SQLBase:
         if type(m.exc_type) is type(ConflictError) and \
            issubclass(m.exc_type, ConflictError):
           delay_uid_list.append(uid)
-        elif priority > MAX_PRIORITY:
-          notify_user_list.append(m)
-          final_error_uid_list.append(uid)
         else:
+          retry = m.line.retry
+          if retry >= MAX_RETRY:
+            notify_user_list.append(m)
+            final_error_uid_list.append(uid)
+            continue
+          # XXX: What about making delay quadratic to the number of retries ?
+          delay = VALIDATION_ERROR_DELAY #* (retry * retry + 1) / 2
           try:
             # Immediately update, because values different for every message
             activity_tool.SQLBase_reactivate(table=self.sql_table,
                                              uid=[uid],
-                                             delay=None,
-                                             priority=priority + 1)
+                                             delay=delay,
+                                             retry=1)
           except:
-            self._log(WARNING, 'Failed to increase priority of %r' % uid)
-          delay_uid_list.append(uid)
+            self._log(WARNING, 'Failed to reactivate %r' % uid)
+        make_available_uid_list.append(uid)
       else:
         # Internal CMFActivity error: the message can not be executed because
         # something is missing (context object cannot be found, method cannot
@@ -198,12 +201,11 @@ class SQLBase:
         self._log(TRACE, 'Deleted messages %r' % deletable_uid_list)
     if delay_uid_list:
       try:
-        # If this is a conflict error, do not lower the priority but only delay.
+        # If this is a conflict error, do not increase 'retry' but only delay.
         activity_tool.SQLBase_reactivate(table=self.sql_table,
-          uid=delay_uid_list, delay=VALIDATION_ERROR_DELAY, priority=None)
+          uid=delay_uid_list, delay=VALIDATION_ERROR_DELAY, retry=None)
       except:
         self._log(ERROR, 'Failed to delay %r' % delay_uid_list)
-      make_available_uid_list += delay_uid_list
     if final_error_uid_list:
       try:
         activity_tool.SQLBase_assignMessage(table=self.sql_table,

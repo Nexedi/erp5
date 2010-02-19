@@ -1620,7 +1620,10 @@ class TestCMFActivity(ERP5TypeTestCase):
 
   def test_67_TestCancelFailedActiveObject(self, quiet=0, run=run_all_test):
     """Cancel an active object to make sure that it does not refer to
-    a persistent object."""
+    a persistent object.
+
+    XXX: this test fails if run first
+    """
     if not run: return
     if not quiet:
       message = '\nTest if it is possible to safely cancel an active object'
@@ -1657,7 +1660,7 @@ class TestCMFActivity(ERP5TypeTestCase):
     self.assertEquals(len(activity_tool.getMessageList()), 1)
 
     # Just wait for the active object to be abandoned.
-    self.flushAllActivities(silent=1, loop_size=10)
+    self.flushAllActivities(silent=1, loop_size=100)
     self.assertEquals(len(activity_tool.getMessageList()), 1)
     self.assertEquals(activity_tool.getMessageList()[0].processing_node, 
                       INVOKE_ERROR_STATE)
