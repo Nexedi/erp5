@@ -43,7 +43,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>contribute_content</string> </value>
+            <value> <string>contribute_link</string> </value>
         </item>
         <item>
             <key> <string>permissions</string> </key>
@@ -55,11 +55,11 @@
         </item>
         <item>
             <key> <string>priority</string> </key>
-            <value> <float>3.0</float> </value>
+            <value> <float>4.0</float> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Contribute Content</string> </value>
+            <value> <string>Contribute Link</string> </value>
         </item>
         <item>
             <key> <string>visible</string> </key>
@@ -79,7 +79,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/ContributionTool_viewContributeFileDialog</string> </value>
+            <value> <string>string:${object_url}/ContributionTool_viewContributeLinkDialog</string> </value>
         </item>
       </dictionary>
     </pickle>
