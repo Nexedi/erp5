@@ -104,6 +104,13 @@ class DocumentPreference:
       'default'     : False,
       'preference'  : 1,
       'mode'        : '' },
+    { 'id'          : 'preferred_redirect_to_document',
+      'description' : 'Is preferred to redirect user to ingested document',
+      'type'        : 'boolean',
+      'write_permission': Permissions.ManageProperties,
+      'default'     : False,
+      'preference'  : 1,
+      'mode'        : '' },      
     )
 
 # vim: shiftwidth=2
