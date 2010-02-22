@@ -117,11 +117,13 @@ else:\n
       if related:\n
         return context.getPortalObject().getDefaultModule(portal_type[0]).Base_redirect(\n
                  \'view\', keep_items={\'default_%s_uid\' % base_category: relation.getUid(),\n
+                                     \'ignore_hide_rows\': 1,\n
                                      \'reset\': 1})\n
       get_uid_method = getattr(relation, \'get%sUidList\' % getter_base_name)\n
       return context.getPortalObject().getDefaultModule(portal_type[0]).Base_redirect(\n
                  \'view\', keep_items=dict(\n
                            reset=1,\n
+                           ignore_hide_rows=1,\n
                            uid=get_uid_method(portal_type=portal_type,\n
                                               checked_permission=\'View\')))\n
 \n
