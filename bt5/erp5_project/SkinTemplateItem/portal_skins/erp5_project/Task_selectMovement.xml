@@ -58,7 +58,7 @@
 kw[\'query\'] = ComplexQuery(\n
   Query(portal_type=\'Simulation Movement\', explanation_portal_type=\'Task\'),\n
   ComplexQuery(\n
-    Query(parent_specialise_portal_type=[\'Order Rule\', \'Delivery Rule\'],\n
+    Query(parent_specialise_portal_type=[\'Order Rule\', \'Delivery Rule\', \'Delivery Root Simulation Rule\'],\n
           simulation_state=\'confirmed\'),\n
     Query(parent_specialise_portal_type=\'Delivery Simulation Rule\',\n
           grand_parent_simulation_state=\'confirmed\'),\n

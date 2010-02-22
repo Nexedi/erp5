@@ -103,7 +103,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>default_order_simulation_rule</string> </value>
+            <value> <string>default_order_root_simulation_rule</string> </value>
         </item>
         <item>
             <key> <string>matching_property</string> </key>
