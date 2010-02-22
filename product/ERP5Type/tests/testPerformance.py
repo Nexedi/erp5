@@ -370,7 +370,7 @@ class TestPerformance(ERP5TypeTestCase, LogInterceptor):
       # Check performance
       before_view = time()
       for x in xrange(100):
-        foo.Foo_view()
+        foo.Foo_viewPerformance()
       after_view = time()
       req_time = (after_view - before_view)/100.
 
@@ -380,7 +380,7 @@ class TestPerformance(ERP5TypeTestCase, LogInterceptor):
                 req_time,
                 MAX_OBJECT_MANY_LINES_VIEW )
       if PROFILE:
-          self.profile(foo.Foo_view)
+          self.profile(foo.Foo_viewPerformance)
       if DO_TEST:
         self.failUnless( MIN_OBJECT_MANY_LINES_VIEW < req_time
                                     < MAX_OBJECT_MANY_LINES_VIEW,
