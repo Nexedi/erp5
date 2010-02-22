@@ -42,8 +42,8 @@ Distribution helpers
 In profiles directory there are profiles to help with preparation of used
 distributions.
 
-To prepare Mandriva 2010.0 please type, after bootstrapping:
+To prepare Mandriva 2010.0 please type, having root privileges:
 
-  bin/buildout -c profiles/mandriva2010.0.cfg install dependency
+  helpers/mandriva2010.0.sh
 
 sudo is used internally.
