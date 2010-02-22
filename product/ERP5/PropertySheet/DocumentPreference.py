@@ -96,6 +96,13 @@ class DocumentPreference:
       'write_permission': 'Manage properties',
       'preference'  : 1,
       'mode'        : '' },
+    { 'id'          : 'preferred_synchronous_metadata_discovery',
+      'description' : 'Is preferred synchronous metadata discovery',
+      'type'        : 'boolean',
+      'write_permission': 'Manage properties',
+      'default'     : False,
+      'preference'  : 1,
+      'mode'        : '' },
     )
 
 # vim: shiftwidth=2
