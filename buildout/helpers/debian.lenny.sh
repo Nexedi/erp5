@@ -10,6 +10,7 @@ libbz2-dev
 libgdbm-dev
 libglib2.0-dev
 libjpeg62-dev
+libldap2-dev
 libncurses5-dev
 libneon27-dev
 libssl-dev

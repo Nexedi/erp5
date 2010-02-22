@@ -22,6 +22,7 @@ libbzip2-devel
 libgdbm-devel
 libglib2.0-devel
 libjpeg-devel
+libldap-devel
 libncurses-devel
 libneon-devel
 libopenssl-devel
