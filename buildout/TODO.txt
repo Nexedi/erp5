@@ -1,7 +1,3 @@
- - fail hard in case if python is not built with selected extensions
-   Currently it is possible to have python without zlib, despite the fact that
-   zlib is stated as configure option. This leads to irritating behaviour of
-   later components.
  - global build requirement checker
    - needs recipe
    - needs per profile dependency declaration
