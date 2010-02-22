@@ -100,8 +100,8 @@ class TrashTool(BaseTool):
             o = o.aq_parent
             connection=o._p_jar
           copy.seek(0)
-          backup = connection.importFile(copy)
           try:
+            backup = connection.importFile(copy)
             backup.isIndexable = ConstantGetter('isIndexable', value=False)
             try:
               # the isIndexable setting above avoids the recursion of
@@ -115,10 +115,11 @@ class TrashTool(BaseTool):
               # BACK: On Zope 2.8. _setObject does not accept "suppress_events"
               # remove when we drop support
               backup_object_container._setObject(object_id, backup)
-          except AttributeError:
-            # XXX we can go here due to formulator because attribute field_added
-            # doesn't not exists on parent if it is a Trash Folder and not a Form
-            # so object is not backup
+          except (AttributeError, ImportError):
+            # XXX we can go here due to formulator because attribute
+            # field_added doesn't not exists on parent if it is a Trash
+            # Folder and not a Form, or a module for the old object is
+            # already removed, and we cannot backup the object
             LOG("Trash Tool backupObject", 100, "Can't backup object %s" %(object_id))
             pass
 
