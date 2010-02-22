@@ -11,25 +11,25 @@ assert-software: assert-python2.4 assert-parts-libs
 
 assert-python2.4: bin/python2.4
 	bin/python2.4 -V 2>&1 | grep 'Python 2.4.6'
+	bin/python2.4 -c 'import ERP5Diff'
+	bin/python2.4 -c 'import MySQLdb'
+	bin/python2.4 -c 'import SOAPpy'
 	bin/python2.4 -c 'import _ssl'
+	bin/python2.4 -c 'import _xmlplus'
 	bin/python2.4 -c 'import bz2'
 	bin/python2.4 -c 'import dbm'
+	bin/python2.4 -c 'import fpconst'
+	bin/python2.4 -c 'import itools'
+	bin/python2.4 -c 'import ldap'
+	bin/python2.4 -c 'import lxml'
+	bin/python2.4 -c 'import memcache'
+	bin/python2.4 -c 'import numpy'
+	bin/python2.4 -c 'import pytz'
+	bin/python2.4 -c 'import simplejson'
+	bin/python2.4 -c 'import threadframe'
 	bin/python2.4 -c 'import xml.parsers.expat'
 	bin/python2.4 -c 'import zlib'
-	bin/python2.4 -c 'import lxml'
-	bin/python2.4 -c 'import numpy'
-	bin/python2.4 -c 'import ldap'
-	bin/python2.4 -c 'import pytz'
-	bin/python2.4 -c 'import fpconst'
-	bin/python2.4 -c 'import memcache'
-	bin/python2.4 -c 'import threadframe'
-	bin/python2.4 -c 'import itools'
-	bin/python2.4 -c 'import MySQLdb'
-	bin/python2.4 -c 'import ERP5Diff'
 	# elementtree
-	# PyXML
-	# simplejson
-	# SOAPpy
 
 assert-parts-libs:
 	ldd parts/mysql-tritonn-5.0/libexec/mysqld | grep 'parts/senna/lib/libsenna.so.0'
