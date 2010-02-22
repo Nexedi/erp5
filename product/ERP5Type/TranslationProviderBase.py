@@ -93,8 +93,11 @@ class TranslationProviderBase(object):
       id='%s._updateInitialPropertyTranslationDomainDict' % self.getId(),
       cache_factory='erp5_ui_long')()
 
-    return dict((k, v.__of__(self))
-                for k, v in self._property_domain_dict.iteritems())
+    if getattr(self, '_property_domain_dict', None) is None:
+      return {}
+    else:
+      return dict((k, v.__of__(self))
+                  for k, v in self._property_domain_dict.iteritems())
 
   security.declarePublic('getContentTranslationDomainPropertyNameList')
   def getContentTranslationDomainPropertyNameList(self):
