@@ -38,7 +38,7 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string>ContributionTool_newContent</string> </value>
+            <value> <string>Base_contribute</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -99,6 +99,7 @@
                         <string>your_classification</string>
                         <string>your_portal_type</string>
                         <string>your_file</string>
+                        <string>your_redirect_url</string>
                       </list>
                     </value>
                 </item>
@@ -145,6 +146,10 @@
         </item>
         <item>
             <key> <string>update_action</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>update_action_title</string> </key>
             <value> <string></string> </value>
         </item>
       </dictionary>
