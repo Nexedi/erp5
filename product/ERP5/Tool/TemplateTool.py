@@ -256,6 +256,11 @@ class TemplateTool (BaseTool):
             except KeyError:
               continue
             value = tar.extractfile(info).read()
+            if value is 'None':
+              # At export time, we used to export non-existent properties:
+              #   str(obj.getProperty('non-existing')) == 'None'
+              # Discard them
+              continue
             if prop_type == 'text' or prop_type == 'string' \
                                    or prop_type == 'int':
               prop_dict[pid] = value
@@ -320,6 +325,11 @@ class TemplateTool (BaseTool):
           if not os.path.exists(prop_path):
             continue          
           value = open(prop_path, 'rb').read()
+          if value is 'None':
+            # At export time, we used to export non-existent properties:
+            #   str(obj.getProperty('non-existing')) == 'None'
+            # Discard them
+            continue
           if prop_type in ('text', 'string', 'int', 'boolean'):
             prop_dict[pid] = value
           elif prop_type in ('lines', 'tokens'):

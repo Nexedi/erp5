@@ -5553,6 +5553,8 @@ Business Template is a set of definitions, such as skins, portal types and categ
                   'install_object_list_list', 'id_generator', 'bt_for_diff'):
           continue
         value = self.getProperty(id)
+        if value is None:
+          continue
         if prop_type in ('text', 'string', 'int', 'boolean'):
           bta.addObject(obj=value, name=id, path=path+os.sep+'bt', ext='')
         elif prop_type in ('lines', 'tokens'):
