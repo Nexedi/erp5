@@ -86,6 +86,10 @@ class TestAccountingRulesMixin:
                     = "Invoice Transaction Rule"
 
   payment_transaction_portal_type      = "Payment Transaction"
+  payment_transaction_line_definition_list = (
+    ('payable', None, None, -1.0),
+    ('bank', 'account_module/bank', 'account_module/bank', 1.0)
+    )
 
   def getBusinessTemplateList(self):
     """  Return the list of business templates. """
@@ -483,10 +487,58 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       )
     sequence.edit(euro=currency_module.EUR, currency=currency_module.EUR)
 
-  def stepCreatePaymentRule(self, **kw) :
+  def stepCreatePaymentRule(self, sequence, **kw) :
     """ create a rule payment transaction generation """
-    # XXX: for now there are no cells in payment rule, so nothing to do here
-    # TODO
+    payment_rule = getattr(self.getRuleTool(),
+                           'default_payment_simulation_rule')
+    if payment_rule.getValidationState() == 'validated':
+      payment_rule.invalidate()
+      transaction.commit()
+
+    # delete anything inside the rule first
+    # clear the message queue, so that it does not contains unexistant paths
+    self.tic()
+    payment_rule.deleteContent(
+      [x for x in payment_rule.objectIds()])
+    self.assertEquals(len(payment_rule.objectValues()), 0)
+    transaction.commit()
+
+    # and add new content, predicate
+    predicate_product_notebook = payment_rule.newContent(
+      id = 'all',
+      title = 'all',
+      portal_type = self.predicate_portal_type,
+      string_index = 'all',
+      int_index = '1',
+    )
+    sequence.edit(payment_rule=payment_rule)
+
+  def stepUpdatePaymentRuleMatrix(self, sequence, **kw) :
+    """Creates/updates the matrix of the sale invoice transaction rule """
+    payment_rule = sequence.get('payment_rule')
+    base_id = 'movement'
+    kwd = {'base_id': base_id}
+
+    # update the matrix, generates the accounting rule cells
+    payment_rule.edit()
+    payment_rule.updateMatrix()
+    self.tic()
+
+    # check the accounting rule cells inside the matrix
+    cell_list = payment_rule.contentValues(
+                filter = {'portal_type':self.accounting_rule_cell_portal_type})
+    self.assertEqual(len(cell_list), 1)
+    cell = cell_list[0]
+
+    for line_id, line_source_id, line_destination_id, line_ratio in \
+        self.payment_transaction_line_definition_list:
+      line = cell.newContent(id=line_id,
+          portal_type='Accounting Transaction Line', quantity=line_ratio,
+          source=line_source_id,
+          destination=line_destination_id)
+    payment_rule.validate()
+    transaction.commit()
+    self.tic()
 
   def stepCreateEmptyInvoice(self, sequence, **kw) :
     """ Create an empty invoice that will be modified later """
@@ -1496,6 +1548,8 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
     self.playSequence("""
       stepCreateInvoiceTransactionRule
       stepUpdateInvoiceTransactionRuleMatrix
+      stepCreatePaymentRule
+      stepUpdatePaymentRuleMatrix
       stepValidateInvoiceTransaction
       stepTic
       stepCheckAddPredicate
@@ -1523,6 +1577,8 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       stepTic
       stepCreateInvoiceTransactionRule
       stepUpdateInvoiceTransactionRuleMatrix
+      stepCreatePaymentRule
+      stepUpdatePaymentRuleMatrix
       stepValidateInvoiceTransaction
       stepCreateProducts
       stepTic
@@ -1552,6 +1608,8 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       stepCreateProducts
       stepCreateInvoiceTransactionRule
       stepUpdateInvoiceTransactionRuleMatrix
+      stepCreatePaymentRule
+      stepUpdatePaymentRuleMatrix
       stepValidateInvoiceTransaction
       stepCreateNotebookFranceCell
       stepTic
@@ -1587,6 +1645,8 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       stepCreateProducts
       stepCreateInvoiceTransactionRule
       stepUpdateInvoiceTransactionRuleMatrix
+      stepCreatePaymentRule
+      stepUpdatePaymentRuleMatrix
       stepValidateInvoiceTransaction
       stepCreateNotebookFranceCell
       stepTic
@@ -1621,6 +1681,8 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       stepCreateProducts
       stepCreateInvoiceTransactionRule
       stepUpdateInvoiceTransactionRuleMatrix
+      stepCreatePaymentRule
+      stepUpdatePaymentRuleMatrix
       stepValidateInvoiceTransaction
       stepCreateNotebookFranceCell
       stepTic
@@ -1655,6 +1717,8 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       stepCreateProducts
       stepCreateInvoiceTransactionRule
       stepUpdateInvoiceTransactionRuleMatrix
+      stepCreatePaymentRule
+      stepUpdatePaymentRuleMatrix
       stepValidateInvoiceTransaction
       stepCreateNotebookFranceCell
       stepTic
@@ -1692,6 +1756,8 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       stepCreateProducts
       stepCreateInvoiceTransactionRule
       stepUpdateInvoiceTransactionRuleMatrix
+      stepCreatePaymentRule
+      stepUpdatePaymentRuleMatrix
       stepValidateInvoiceTransaction
       stepCreateNotebookFranceCell
       stepTic
@@ -1727,6 +1793,8 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       stepCreateProducts
       stepCreateInvoiceTransactionRule
       stepUpdateInvoiceTransactionRuleMatrix
+      stepCreatePaymentRule
+      stepUpdatePaymentRuleMatrix
       stepValidateInvoiceTransaction
       stepCreateNotebookFranceCell
       stepTic
@@ -1762,6 +1830,8 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       stepCreateProducts
       stepCreateInvoiceTransactionRule
       stepUpdateInvoiceTransactionRuleMatrix
+      stepCreatePaymentRule
+      stepUpdatePaymentRuleMatrix
       stepValidateInvoiceTransaction
       stepCreateNotebookFranceCell
       stepTic
@@ -1799,6 +1869,8 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       stepCreateProducts
       stepCreateInvoiceTransactionRule
       stepUpdateInvoiceTransactionRuleMatrix
+      stepCreatePaymentRule
+      stepUpdatePaymentRuleMatrix
       stepValidateInvoiceTransaction
       stepCreateNotebookFranceCell
       stepTic
@@ -1835,6 +1907,8 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       stepCreateProducts
       stepCreateInvoiceTransactionRule
       stepUpdateInvoiceTransactionRuleMatrix
+      stepCreatePaymentRule
+      stepUpdatePaymentRuleMatrix
       stepValidateInvoiceTransaction
       stepCreateNotebookFranceCell
       stepTic
