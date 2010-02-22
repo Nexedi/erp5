@@ -10,6 +10,9 @@ Accounting Transaction Module | Sale Invoice Transaction
 Accounting Transaction | Accounting Transaction Line
 Accounting Transaction | File
 Accounting Transaction | Image
+Accounting Transaction Root Simulation Rule | Category Divergence Tester
+Accounting Transaction Root Simulation Rule | Property Divergence Tester
+Accounting Transaction Root Simulation Rule | Quantity Divergence Tester
 Balance Transaction | Balance Transaction Line
 Invoice Root Simulation Rule | Category Divergence Tester
 Invoice Root Simulation Rule | Property Divergence Tester
@@ -32,6 +35,8 @@ Preference | Sale Invoice Transaction
 Purchase Invoice Transaction | File
 Purchase Invoice Transaction | Image
 Purchase Invoice Transaction | Purchase Invoice Transaction Line
+Rule Tool | Accounting Transaction Root Simulation Rule
+Rule Tool | Invoice Root Simulation Rule
 Rule Tool | Invoice Rule
 Rule Tool | Payment Rule
 Sale Invoice Transaction | File

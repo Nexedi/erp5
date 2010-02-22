@@ -21,6 +21,11 @@
   <item>Purchase Invoice Transaction</item>
   <item>Sale Invoice Transaction</item>
  </portal_type>
+ <portal_type id="Accounting Transaction Root Simulation Rule">
+  <item>Category Divergence Tester</item>
+  <item>Property Divergence Tester</item>
+  <item>Quantity Divergence Tester</item>
+ </portal_type>
  <portal_type id="Balance Transaction">
   <item>Balance Transaction Line</item>
  </portal_type>
@@ -60,6 +65,7 @@
   <item>Purchase Invoice Transaction Line</item>
  </portal_type>
  <portal_type id="Rule Tool">
+  <item>Accounting Transaction Root Simulation Rule</item>
   <item>Invoice Root Simulation Rule</item>
   <item>Invoice Rule</item>
   <item>Payment Rule</item>

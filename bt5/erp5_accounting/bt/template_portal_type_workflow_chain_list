@@ -7,6 +7,8 @@ Accounting Transaction Line | delivery_movement_simulation_interaction_workflow
 Accounting Transaction Line | edit_workflow
 Accounting Transaction | accounting_workflow
 Accounting Transaction | edit_workflow
+Accounting Transaction Root Simulation Rule | edit_workflow
+Accounting Transaction Root Simulation Rule | rule_validation_workflow
 Balance Transaction | accounting_workflow
 Balance Transaction | edit_workflow
 Cash Register | edit_workflow
