@@ -38,7 +38,7 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string>Base_createNewFile</string> </value>
+            <value> <string>Base_contribute</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -99,6 +99,8 @@
                     <value>
                       <list>
                         <string>your_file</string>
+                        <string>your_redirect_url</string>
+                        <string>your_attach_document_to_context</string>
                       </list>
                     </value>
                 </item>
@@ -152,6 +154,10 @@
         </item>
         <item>
             <key> <string>update_action</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>update_action_title</string> </key>
             <value> <string></string> </value>
         </item>
       </dictionary>
