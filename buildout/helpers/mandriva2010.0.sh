@@ -27,6 +27,7 @@ libncurses-devel
 libneon-devel
 libopenssl-devel
 libtermcap-devel
+libsasl2-devel
 libxml2-devel
 libxslt-devel
 make

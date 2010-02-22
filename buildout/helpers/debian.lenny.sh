@@ -13,6 +13,7 @@ libjpeg62-dev
 libldap2-dev
 libncurses5-dev
 libneon27-dev
+libsasl2-dev
 libssl-dev
 libsvn-dev
 libxml2-dev
