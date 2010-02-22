@@ -1,3 +1,6 @@
+2010-02-22 yo
+* Stop form_render from relying on the type of editable_mode (i.e. int).
+
 2010-02-02 yo
 * Add classes into buttons defined in dialog_main.
 
