@@ -33,7 +33,6 @@ import subprocess
 
 import transaction
 from DateTime import DateTime
-from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from zLOG import LOG
 from Products.ERP5Type.tests.utils import LogInterceptor
@@ -181,11 +180,15 @@ class TestPerformance(ERP5TypeTestCase, LogInterceptor):
       bar.setReference(bar.getRelativeUrl())
       transaction.commit()
       self.tic()
-      tv = getTransactionalVariable(None)
       # Check performance
       before_view = time()
       for x in xrange(100):
-        tv.clear()
+        # XXX: Note that we don't clean TransactionVariable cache and REQUEST
+        #      before each call to 'view' requests. In reality, they would be
+        #      always empty at the beginning of such requests.
+        #      If you work to improve performance of 'view' requests using this
+        #      kind of cache, make sure it is actually useful outside
+        #      testPerformance.
         bar.Bar_viewPerformance()
       after_view = time()
       req_time = (after_view - before_view)/100.
@@ -244,7 +247,6 @@ class TestPerformance(ERP5TypeTestCase, LogInterceptor):
       view_result = {}
       tic_result = {}
       add_result = {}
-      tv = getTransactionalVariable(None)
       # call view once to fill caches
       self.bar_module.BarModule_viewBarList()
       # add object in bar module
@@ -270,7 +272,6 @@ class TestPerformance(ERP5TypeTestCase, LogInterceptor):
           gc.collect()
           before_form = time()
           for x in xrange(100):
-            tv.clear()
             self.bar_module.BarModule_viewBarList()
           after_form = time()
           # store result
@@ -333,11 +334,9 @@ class TestPerformance(ERP5TypeTestCase, LogInterceptor):
                      title='Line 2')
       transaction.commit()
       self.tic()
-      tv = getTransactionalVariable(None)
       # Check performance
       before_view = time()
       for x in xrange(100):
-        tv.clear()
         foo.Foo_viewProxyField()
       after_view = time()
       req_time = (after_view - before_view)/100.
@@ -368,11 +367,9 @@ class TestPerformance(ERP5TypeTestCase, LogInterceptor):
                          title='Line %s' % i)
       transaction.commit()
       self.tic()
-      tv = getTransactionalVariable(None)
       # Check performance
       before_view = time()
       for x in xrange(100):
-        tv.clear()
         foo.Foo_view()
       after_view = time()
       req_time = (after_view - before_view)/100.
