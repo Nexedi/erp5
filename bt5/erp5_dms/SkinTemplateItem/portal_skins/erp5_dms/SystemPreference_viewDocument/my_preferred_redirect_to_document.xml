@@ -19,7 +19,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>preferred_redirect_to_document</string> </value>
+            <value> <string>my_preferred_redirect_to_document</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
