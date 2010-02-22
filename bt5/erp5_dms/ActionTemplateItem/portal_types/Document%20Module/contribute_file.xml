@@ -79,7 +79,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/ContributionTool_viewContributeFileDialog</string> </value>
+            <value> <string>string:${object_url}/Base_viewContributeFileDialog</string> </value>
         </item>
       </dictionary>
     </pickle>
