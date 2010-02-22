@@ -5,5 +5,9 @@ portal_deliveries/sale_packing_list_builder
 portal_deliveries/sale_packing_list_builder/**
 portal_rules/default_delivery_rule
 portal_rules/default_delivery_rule/**
+portal_rules/default_delivery_simulation_rule
+portal_rules/default_delivery_simulation_rule/**
 portal_rules/default_order_rule
 portal_rules/default_order_rule/**
+portal_rules/default_order_simulation_rule
+portal_rules/default_order_simulation_rule/**
