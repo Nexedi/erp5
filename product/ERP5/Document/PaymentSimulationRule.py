@@ -28,8 +28,9 @@
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions
 from Products.ERP5.Document.Rule import Rule
+from Products.ERP5.Document.PredicateMatrix import PredicateMatrix
 
-class PaymentSimulationRule(Rule):
+class PaymentSimulationRule(Rule, PredicateMatrix):
   """
   Payment Simulation Rule generates payment simulation movements from
   accounting / invoice transaction simulation movements.
