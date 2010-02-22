@@ -24,6 +24,10 @@
   <workflow>edit_workflow, validation_workflow</workflow>
  </chain>
  <chain>
+  <type>Invoice Root Simulation Rule</type>
+  <workflow>edit_workflow, rule_validation_workflow</workflow>
+ </chain>
+ <chain>
   <type>Invoice Rule</type>
   <workflow>edit_workflow, rule_validation_workflow</workflow>
  </chain>

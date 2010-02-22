@@ -56,6 +56,7 @@ Cash Register | jump_active_accounting_pref
 Cash Register | transactions
 Cash Register | view
 Credit Card | transactions
+Invoice Root Simulation Rule | view
 Invoice Rule | view
 Organisation | grouping_reference_fast_input
 Organisation | jump_active_accounting_pref
