@@ -1,3 +1,6 @@
+2010-02-22 yusei
+* Set appropriate title to each workflow definition.
+
 2010-02-10 yo
 * Add base_unit_price into the mapped values of Sale Supply Line and Purchase Supply Line.
 
