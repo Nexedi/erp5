@@ -1,8 +1,8 @@
 ##############################################################################
 #
-# Copyright (c) 2004 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2010 Nexedi SA and Contributors. All Rights Reserved.
 #          Sebastien Robin <seb@nexedi.com>
-#          Jerome Perrin <jerome@nexedi.com>  
+#          Jerome Perrin <jerome@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -23,7 +23,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 #
 ##############################################################################
 """
@@ -32,12 +32,12 @@ This tests also do basic checks for XMLMatrix and Predicate matching the
 way it is used in the invoice related simulation.
 """
 
-# TODO : 
+# TODO :
 #   * test with a Person as destination_section
 #   * test cancelling / deleting an invoice
 #   * test payment rule & payment builder
 #   * test simulation purge when Payment delivered or top level Order cancelled
-#   * test removing cells for a line 
+#   * test removing cells for a line
 #
 
 import unittest
@@ -49,7 +49,6 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.Sequence import SequenceList
 
 from Testing import ZopeTestCase
-from AccessControl.SecurityManagement import newSecurityManager
 from zLOG import LOG, INFO
 from DateTime import DateTime
 
@@ -70,7 +69,7 @@ class SaleInvoiceTest:
 
 
 class TestAccountingRulesMixin:
-  # define portal_types 
+  # define portal_types
   account_module_portal_type           = "Account Module"
   accounting_module_portal_type        = "Accounting Module"
   product_module_portal_type           = "Product Module"
@@ -85,7 +84,7 @@ class TestAccountingRulesMixin:
   accounting_rule_cell_portal_type     = "Accounting Rule Cell"
   invoice_transaction_rule_portal_type \
                     = "Invoice Transaction Rule"
-  
+
   payment_transaction_portal_type      = "Payment Transaction"
 
   def getBusinessTemplateList(self):
@@ -96,7 +95,7 @@ class TestAccountingRulesMixin:
   def getAccountModule(self):
     return getattr(self.getPortal(), 'account',
         getattr(self.getPortal(), 'account_module'))
-  
+
   def getAccountingModule(self):
     return getattr(self.getPortal(), 'accounting',
         getattr(self.getPortal(), 'accounting_module'))
@@ -104,14 +103,14 @@ class TestAccountingRulesMixin:
   def getProductModule(self):
     return getattr(self.getPortal(), 'product',
         getattr(self.getPortal(), 'product_module'))
-  
+
   ## XXX move this to "Sequence class"
   def playSequence(self, sequence_string, quiet=0) :
     sequence_list = SequenceList()
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)
 
-  
+
 class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
   """
   This should test the simulation tree and builds starting from the
@@ -119,16 +118,16 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
 
   """
   RUN_ALL_TESTS = 1
-  QUIET = 1
-  
+  QUIET = 0
+
   def getTitle(self):
     return "Accounting Rules"
- 
+
   def afterSetUp(self) :
     self.login()
     self.createCategories()
     self.validateRules()
-    
+
   def createCategories(self) :
     """ create all categories that are needed for this test.
     It uses getCategoriesToCreate, so you should overload this method.
@@ -155,7 +154,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       self.assertNotEquals(None,
                 self.getCategoryTool().restrictedTraverse(cat_string),
                 cat_string)
-    
+
   def getBaseCategoriesToCreate(self) :
     return ("hd_size", "cpu_freq")
 
@@ -164,9 +163,9 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       # regions for our organisations
       "region/europe/west/france",
       "region/africa",
-      
+
       # those are mandatory for account, and accounting rules depends on
-      # the account_type category. (ie payable, will create a Payment 
+      # the account_type category. (ie payable, will create a Payment
       # Transaction accordingly)
       "account_type/asset/cash",
       "account_type/asset/receivable/refundable_vat",
@@ -174,13 +173,13 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       "account_type/expense",
       "account_type/income",
       "account_type/liability/payable/collected_vat",
-     
+
       # some products lines for our products
       "product_line/storever/notebook",
       "product_line/storever/barebone",
       "product_line/storever/openbrick",
       "product_line/not_used/not_matched",
-      
+
       # some categories for variating our products
       "cpu_freq/1Ghz",
       "cpu_freq/2Ghz",
@@ -189,7 +188,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
     )
 
   def stepCreateInvoiceTransactionRule(self, sequence, **kw) :
-    """ 
+    """
       Create some predicates in the Invoice Transaction Rule
     """
     invoice_transaction_rule = getattr(self.getRuleTool(),
@@ -260,18 +259,18 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       predicate_region_france  = predicate_region_france,
       predicate_region_africa  = predicate_region_africa,
     )
-  
+
   def stepUpdateInvoiceTransactionRuleMatrix(self, sequence, **kw) :
     """Creates/updates the matrix of the sale invoice transaction rule """
     invoice_transaction_rule = sequence.get('invoice_transaction_rule')
     base_id = 'movement'
     kwd = {'base_id': base_id}
-    
+
     # update the matrix, generates the accounting rule cells
     invoice_transaction_rule.edit()
     invoice_transaction_rule.updateMatrix()
     self.tic()
-    
+
     # check the accounting rule cells inside the matrix
     cell_list = invoice_transaction_rule.contentValues(
                 filter = {'portal_type':self.accounting_rule_cell_portal_type})
@@ -287,7 +286,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
                                           '%s_1_0'%base_id, None)
     product_barebone_region_africa_cell = getattr(invoice_transaction_rule,
                                           '%s_1_1'%base_id, None)
-    
+
     self.failUnless(product_notebook_region_france_cell != None)
     self.failUnless(product_notebook_region_africa_cell != None)
     self.failUnless(product_barebone_region_france_cell != None)
@@ -299,7 +298,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       product_barebone_region_france_cell = product_barebone_region_france_cell,
       product_barebone_region_africa_cell = product_barebone_region_africa_cell,
     )
-    
+
   def stepValidateInvoiceTransaction(self, sequence, **kw) :
     """validates the sale invoice transaction rule"""
     sequence.get('invoice_transaction_rule').validate()
@@ -333,9 +332,9 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       product_notebook_region_france_cell_vat =
             product_notebook_region_france_cell_vat,
     )
-  
+
   def stepCreateBareboneFranceCell(self, sequence, **kw):
-    """ creates the content of product_barebone_region_france_cell, 
+    """ creates the content of product_barebone_region_france_cell,
       the same as product_notebook_region_france_cell, but the income
       account is differrent """
     # create content in the notebook / france cell
@@ -365,8 +364,8 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       product_barebone_region_france_cell_receivable =\
                 product_barebone_region_france_cell_receivable
     )
-      
-  
+
+
   def stepCreateAccounts(self, sequence, **kw):
     """
       Create an income, an payable and a collected_vat account
@@ -405,7 +404,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       receivable      = account_module.receivable,
       collected_vat   = account_module.collected_vat,
     )
-    
+
   def stepCreateEntities(self, sequence, **kw) :
     """ Create a vendor and a client organisation.
       The region of the client is the same as the region
@@ -432,10 +431,10 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       client_fr   = organisation_module.client_fr,
       client      = organisation_module.client_fr,
     )
-  
+
   def stepCreateProducts(self, sequence, **kw) :
     """
-      Create 2 kind of products, a notebook (Varianted) 
+      Create 2 kind of products, a notebook (Varianted)
       and a barebone not varianted.
     """
     product_module = self.getProductModule()
@@ -455,7 +454,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
         "cpu_freq/2Ghz",
         "hd_size/60Go",
         "hd_size/120Go",])
-      
+
       barebone = product_module.newContent(
         id = 'barebone',
         title = 'Barebone',
@@ -469,7 +468,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       product_notebook = product_module.notebook,
       product_barebone = product_module.barebone,
     )
-    
+
   def stepCreateCurrencies(self, sequence, **kw) :
     """
       Create EUR currency
@@ -483,18 +482,18 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
         base_unit_quantity = .01,
       )
     sequence.edit(euro=currency_module.EUR, currency=currency_module.EUR)
-    
+
   def stepCreatePaymentRule(self, **kw) :
     """ create a rule payment transaction generation """
     # XXX: for now there are no cells in payment rule, so nothing to do here
     # TODO
-    
+
   def stepCreateEmptyInvoice(self, sequence, **kw) :
     """ Create an empty invoice that will be modified later """
     vendor = sequence.get('vendor')
     client = sequence.get('client')
     currency = sequence.get('currency')
-    
+
     empty_invoice = self.getAccountingModule().newContent(
                 id = 'empty_invoice',
                 portal_type = self.invoice_portal_type,
@@ -505,16 +504,16 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
                 destination_section = client.getRelativeUrl(),
                 created_by_builder = 1,
               )
-    
+
     sequence.edit(
       simple_invoice = empty_invoice,
       invoice = empty_invoice,
     )
-    
+
   def stepCreateSimpleInvoice(self, sequence, **kw) :
     """ creates a simple sale invoice for non varianted notebook product.
       The invoice is from `vendor` to `client_fr`, so the cell defined in
-      stepUpdateInvoiceTransactionRuleMatrix should match. 
+      stepUpdateInvoiceTransactionRuleMatrix should match.
       This invoice containts one line, 10 notebook * 10 EUR, so total price
       is 100
     """
@@ -522,7 +521,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
     client = sequence.get('client')
     product_notebook = sequence.get('product_notebook')
     currency = sequence.get('currency')
-    
+
     simple_invoice = self.getAccountingModule().newContent(
                 id = 'simple_invoice',
                 portal_type = self.invoice_portal_type,
@@ -534,7 +533,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
                 destination_section = client.getRelativeUrl(),
                 created_by_builder = 1,
               )
-    
+
     invoice_line = simple_invoice.newContent(
       id = 'invoice_line',
       resource = product_notebook.getRelativeUrl(),
@@ -543,14 +542,14 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       portal_type = self.invoice_line_portal_type)
 
     self.assertEqual(invoice_line.getTotalPrice(), 100)
-    
+
     sequence.edit(
       simple_invoice = simple_invoice,
       invoice = simple_invoice,
       invoice_line = invoice_line,
       invoice_lines = [invoice_line]
     )
-  
+
   def stepCreateOtherSimpleInvoice(self, sequence, **kw) :
     """ creates a simple sale invoice for non varianted notebook product.
       It will contain one line that will later be changed.
@@ -559,7 +558,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
     client = sequence.get('client')
     product_notebook = sequence.get('product_notebook')
     currency = sequence.get('currency')
-    
+
     simple_invoice = self.getAccountingModule().newContent(
                 id = 'other_simple_invoice',
                 portal_type = self.invoice_portal_type,
@@ -570,7 +569,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
                 destination_section = client.getRelativeUrl(),
                 created_by_builder = 1,
               )
-    
+
     invoice_line = simple_invoice.newContent(
       id = 'invoice_line',
       resource = product_notebook.getRelativeUrl(),
@@ -586,12 +585,12 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
     )
 
   def stepAddInvoiceLine(self, sequence, **kw) :
-    """ add an invoice line in the current invoice : 
+    """ add an invoice line in the current invoice :
       10 notebook * 10 EUR, so total price is 100
     """
     product_notebook = sequence.get('product_notebook')
     invoice = sequence.get('invoice')
-    
+
     invoice_line = invoice.newContent(
       id = 'invoice_line_%s'%(int(random.random()*1000)),
       portal_type = self.invoice_line_portal_type)
@@ -601,16 +600,16 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       quantity = 10,
       price = 10
     )
-    
+
     self.assertEqual(invoice_line.getTotalPrice(), 100)
-    
+
     sequence.edit(
       invoice_line = invoice_line,
       invoice_lines = [invoice_line]
     )
 
   def stepEditInvoiceLine(self, sequence, **kw) :
-    """ edit the invoice line : 
+    """ edit the invoice line :
       10 notebook * 10 EUR, so total price is 100
     """
     invoice = sequence.get('invoice')
@@ -618,10 +617,10 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
     invoice_line.edit(
       quantity = 10,
       price = 10)
-    
+
     self.assertEqual(invoice_line.getTotalPrice(), 100)
 
-   
+
   def stepDeleteInvoiceLine(self, sequence, **kw) :
     """ remove an invoice line from the invoice
     """
@@ -629,7 +628,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
     invoice_line = sequence.get('invoice_line')
     invoice._delObject(invoice_line.getId())
     invoice.recursiveReindexObject()
- 
+
   def stepUpdateAppliedRule(self, sequence, **kw) :
     """ update the applied rule for the invoice. In the UI, the call to
     updateAppliedRule is made in an interraction workflow when you edit
@@ -638,10 +637,10 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
     # on the invoice (but this is not necessary)
     invoice=sequence.get('invoice')
     invoice.edit()
-    
+
   def stepCreateSimpleInvoiceTwoLines(self, sequence, **kw) :
-    """ 
-      similar to stepCreateSimpleInvoice, but replace 
+    """
+      similar to stepCreateSimpleInvoice, but replace
       "10 notebook * 10 EUR, so total price is 100" by :
       "5 notebook * 10 EUR + 5 notebook * 10 EUR , so total price is 100"
     """
@@ -649,7 +648,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
     client = sequence.get('client')
     product_notebook = sequence.get('product_notebook')
     currency = sequence.get('currency')
-    
+
     simple_invoice = self.getAccountingModule().newContent(
                 id = 'simple_invoice_two_lines',
                 portal_type = self.invoice_portal_type,
@@ -660,7 +659,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
                 destination_section = client.getRelativeUrl(),
                 created_by_builder = 1,
               )
-    
+
     invoice_line1 = simple_invoice.newContent(
       id = 'invoice_line1',
       resource = product_notebook.getRelativeUrl(),
@@ -676,7 +675,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
 
     self.assertEqual(invoice_line1.getTotalPrice()
             + invoice_line2.getTotalPrice(), 100)
-    
+
     sequence.edit(
       simple_invoice = simple_invoice,
       invoice = simple_invoice,
@@ -684,15 +683,15 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
     )
 
   def stepCreateSimpleInvoiceTwoCells(self, sequence, **kw) :
-    """ 
+    """
       similar to stepCreateSimpleInvoiceTwoLines, but use two
-      differents cells on the same line instead of two differents lines. 
+      differents cells on the same line instead of two differents lines.
     """
     vendor = sequence.get('vendor')
     client = sequence.get('client')
     product_notebook = sequence.get('product_notebook')
     currency = sequence.get('currency')
-    
+
     simple_invoice = self.getAccountingModule().newContent(
                 id = 'simple_invoice_two_cells',
                 portal_type = self.invoice_portal_type,
@@ -703,12 +702,12 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
                 destination_section = client.getRelativeUrl(),
                 created_by_builder = 1,
               )
-    
+
     invoice_line = simple_invoice.newContent(
       id = 'invoice_line',
       resource = product_notebook.getRelativeUrl(),
       portal_type = self.invoice_line_portal_type)
-      
+
     sequence.edit(
       simple_invoice = simple_invoice,
       invoice = simple_invoice,
@@ -721,7 +720,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
     """ add 2 cells in the invoice line, same quantity as simple invoice
     """
     invoice_line = sequence.get('invoice_line')
-    
+
     # initialy, the line must not contain cells
     self.assertEqual(len(invoice_line.objectIds()), 0)
     invoice_line._setVariationBaseCategoryList(['hd_size', 'cpu_freq'])
@@ -730,7 +729,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
     base_id = 'movement'
     invoice_line.updateCellRange(base_id)
     cell_key_list = list(invoice_line.getCellKeyList(base_id = base_id))
-    
+
     # this is probably not the easiest way to create cells ...
     price = 10
     quantity = 5
@@ -741,23 +740,23 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
                 price = price, quantity = quantity,
                 predicate_category_list = cell_key,
                 variation_category_list = cell_key)
-    
+
     # getTotalPrice uses mysql, so we must make sure the invoice is cataloged
     # to have correct results
     invoice_line.getParentValue().recursiveImmediateReindexObject()
     self.assertEqual(invoice_line.getTotalPrice(), 100)
     self.assertEqual(invoice_line.getTotalQuantity(), 10)
-    
+
     # then we must have 2 cells inside our line
     self.assertEqual(len(invoice_line.objectIds()), 2)
 
   def stepCreateMultiLineInvoice(self, sequence, **kw) :
-    """ create an invoice with varianted products 
+    """ create an invoice with varianted products
       The invoice is from `vendor` to `client_fr`, so the cell defined in
       This invoice containts two lines :
-      10 notebook * 10 EUR, so total price is 100 
+      10 notebook * 10 EUR, so total price is 100
             (matched by product_notebook_region_france_cell)
-      10 barebone * 100 EUR, so total price is 1000 
+      10 barebone * 100 EUR, so total price is 1000
             (matched by product_notebook_region_france_cell)
       total price for the invoice is 100 + 1000
     """
@@ -766,7 +765,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
     product_notebook = sequence.get('product_notebook')
     product_barebone = sequence.get('product_barebone')
     currency = sequence.get('currency')
-    
+
     multi_line_invoice = self.getAccountingModule().newContent(
                 id = 'multi_line_invoice',
                 portal_type = self.invoice_portal_type,
@@ -778,7 +777,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
                 destination_section = client.getRelativeUrl(),
                 created_by_builder = 1,
               )
-    
+
     notebook_line = multi_line_invoice.newContent(
       portal_type = self.invoice_line_portal_type,
       id = 'notebook_line',
@@ -795,13 +794,13 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
 
     self.assertEqual( 10*10 + 10*100,
         notebook_line.getTotalPrice() + barebone_line.getTotalPrice())
-    
+
     sequence.edit(
       multi_line_invoice = multi_line_invoice,
       invoice = multi_line_invoice,
       invoice_lines = [notebook_line, barebone_line],
     )
-    
+
   def stepCheckAddPredicate(self, sequence, **kw) :
     invoice_transaction_rule = sequence.get('invoice_transaction_rule')
     # next, we add a predicate to see if it is still okay (3x2 cells)
@@ -846,14 +845,14 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
     cell_list = invoice_transaction_rule.contentValues(
         filter = {'portal_type':self.accounting_rule_cell_portal_type})
     self.assertEqual(len(cell_list), 4)
-   
+
   def stepCreateDummyInvoice(self, sequence, **kw) :
     """ Create a dummy invoice for temp movements """
     invoice = self.getAccountingModule().newContent(
                       id = "dummy_invoice",
                    )
     sequence.edit(invoice = invoice)
-    
+
   def stepCreateMatchableInvoiceMovements(self, sequence, **kw) :
     """ Create a temp movement that will be matched by the
       default_invoice_transaction_rule """
@@ -876,7 +875,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       product_barebone_region_france_movement =
                   product_barebone_region_france_movement ,
     )
-  
+
   def stepCheckMatchableInvoiceMovements(self, sequence, **kw) :
     """ Check that we have a matching cell for the movement """
     invoice_transaction_rule = sequence.get("invoice_transaction_rule")
@@ -884,7 +883,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
                           'product_barebone_region_france_movement')
     product_notebook_region_france_movement  = sequence.get(
                           'product_notebook_region_france_movement')
-    
+
     # Make sure acquisition is working for destination_region
     self.assertEqual(
           product_barebone_region_france_movement.getDestinationRegion(),
@@ -892,19 +891,19 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
     self.assertEqual(
           product_notebook_region_france_movement.getDestinationRegion(),
           'region/europe/west/france')
-          
+
     # Make sure category is working for resource
     self.assertEqual(product_barebone_region_france_movement.getProductLine(),
             'storever/barebone')
     self.assertEqual(product_notebook_region_france_movement.getProductLine(),
             'storever/notebook')
-    
-    # check the predicates 
+
+    # check the predicates
     predicate_product_notebook = sequence.get("predicate_product_notebook")
     predicate_product_barebone = sequence.get("predicate_product_barebone")
     predicate_region_france  = sequence.get("predicate_region_france")
     predicate_region_africa  = sequence.get("predicate_region_africa")
-    
+
     self.assert_(not predicate_region_africa.test(
                       product_barebone_region_france_movement ))
     self.assert_( predicate_region_france.test(
@@ -913,7 +912,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
                       product_barebone_region_france_movement ))
     self.assert_( predicate_product_barebone.test(
                       product_barebone_region_france_movement ))
-    
+
     self.assert_(not predicate_region_africa.test(
                       product_notebook_region_france_movement ))
     self.assert_( predicate_region_france.test(
@@ -922,7 +921,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
                       product_notebook_region_france_movement ))
     self.assert_( predicate_product_notebook.test(
                       product_notebook_region_france_movement ))
-    
+
     # check the cells
     product_notebook_region_france_cell = sequence.get(
                      'product_notebook_region_france_cell')
@@ -940,7 +939,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
                         product_barebone_region_france_movement ))
     self.assert_(not product_barebone_region_africa_cell.test(
                         product_barebone_region_france_movement ))
-    
+
     self.assert_(    product_notebook_region_france_cell.test(
                         product_notebook_region_france_movement ))
     self.assert_(not product_barebone_region_france_cell.test(
@@ -949,7 +948,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
                         product_notebook_region_france_movement ))
     self.assert_(not product_barebone_region_africa_cell.test(
                         product_notebook_region_france_movement ))
-    
+
     # finally check the matching cell is the good one
     self.assertEquals(product_notebook_region_france_cell,
               invoice_transaction_rule._getMatchingCell(
@@ -957,7 +956,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
     self.assertEqual(product_barebone_region_france_cell,
               invoice_transaction_rule._getMatchingCell(
                 product_barebone_region_france_movement ))
-  
+
   def stepCreateNotMatchableInvoiceMovements(self, sequence, **kw) :
     """ create a temp movement that not any cell could match. """
     from Products.ERP5Type.Document import newTempMovement
@@ -993,14 +992,14 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
     self.tic() # make sure message queue is empty
     self.getSimulationTool().deleteContent(
         list(self.getSimulationTool().objectIds()))
-    
+
   def stepClearAccountingModule(self, sequence, **kw) :
     """ clear the content of accounting module """
     self.tic() # make sure message queue is empty
     # delete
     self.getAccountingModule().deleteContent(
         list(self.getAccountingModule().objectIds()))
-    
+
   def stepCheckFirstRuleIsApplied(self, sequence, **kw) :
     """ check every level of the simulation """
     invoice = sequence.get('invoice')
@@ -1011,10 +1010,10 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
     currency = sequence.get('currency')
     invoice_transaction_rule_cell = sequence.get(
                                   'invoice_transaction_rule_cell')
-    
+
     # content of the simulation tool is a list of invoice rules
     applied_rule_list = self.getSimulationTool().contentValues()
-    
+
     self.assertEqual(len(applied_rule_list), 1)
     applied_rule = applied_rule_list[0]
     self.assertEqual( applied_rule.getPortalType(),
@@ -1023,7 +1022,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
                       'portal_rules/default_invoice_rule')
     self.assertEqual( applied_rule.getCausality(),
                       invoice.getRelativeUrl())
-    
+
     # inside the rule there are simulation movements
     simulation_movement_list = applied_rule.contentValues()
     # the first one is a mirror of the movement in the invoice line
@@ -1036,10 +1035,10 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       if simulation_movement.getOrderValue().getPortalType() == \
               self.invoice_line_portal_type :
         invoice_line_simulation_movement_list.append(simulation_movement)
-    
+
     self.assertEqual( len(invoice_line_simulation_movement_list), 1)
     simulation_movement = invoice_line_simulation_movement_list[0]
-    
+
     self.assertEqual( simulation_movement.getPortalType(),
                       self.simulation_movement_portal_type)
     self.assertEqual( invoice_line.getResource(),
@@ -1058,21 +1057,21 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
                       simulation_movement.getSource())
     self.assertEqual( invoice_line.getDestination(),
                       simulation_movement.getDestination())
-    
+
     # inside this movement there are applied rules which specialize
     # invoice_transaction_rule and trade_model_rule...
     applied_rule_list = simulation_movement.contentValues()
     self.assertEquals( len(applied_rule_list), 2)
     # ...but only invoice_transaction_rule is interesting
-    applied_rule = [applied_rule for applied_rule in applied_rule_list if 
-      applied_rule.getSpecialiseValue().getPortalType() == 
+    applied_rule = [applied_rule for applied_rule in applied_rule_list if
+      applied_rule.getSpecialiseValue().getPortalType() ==
       'Invoice Transaction Rule'][0]
     self.assertEquals( applied_rule.getPortalType(),
                       self.applied_rule_portal_type)
     self.assertEquals( applied_rule.getSpecialise(),
                       invoice_transaction_rule.getRelativeUrl())
-    
-    # and in this applied rule, we got simulation movements, 
+
+    # and in this applied rule, we got simulation movements,
     # based on those inside product_notebook_region_france_cell
     simulation_movement_list = applied_rule.contentValues()
     self.assertEqual( len(simulation_movement_list), 3)
@@ -1098,12 +1097,12 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       self.assert_(len(rule_movement_found.keys()), 3)
     sequence.edit( simulation_movement_list = simulation_movement_list )
 
-      
+
   def stepCollectSimulationMovements(self, sequence, **kw) :
     """ put some simulation movements in sequence for later checkings """
     invoice = sequence.get('invoice')
     invoice_line = sequence.get('invoice_line')
-    
+
     applied_rule_list = self.getSimulationTool().contentValues()
     self.assertEquals(len(applied_rule_list), 1)
     simulation_movement_list = []
@@ -1111,7 +1110,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
     simulation_movement_resources = {}
     simulation_movement_paths = {}
     simulation_movement_section_paths = {}
-    
+
     applied_rule = applied_rule_list[0]
     for invoice_simulation_movement in applied_rule.objectValues() :
       for invoice_transaction_applied_rule in \
@@ -1150,7 +1149,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
                                        'simulation_movement_paths')
     simulation_movement_section_paths = sequence.get(
                                'simulation_movement_section_paths')
-    
+
     for simulation_movement in simulation_movement_list :
       path = simulation_movement.getPath()
       self.assertEquals(
@@ -1170,14 +1169,14 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
              simulation_movement.getDestinationSection()),
         simulation_movement_section_paths[path]
       )
-  
+
   def stepCheckPaymentRuleIsApplied(self, sequence, **kw) :
     """ checks that a payment rule is applied for the total amount
       of receivable """
     # TODO
-  
+
   def stepPlanInvoice(self, sequence, **kw) :
-    """ put the invoice in the `planned` state, which will 
+    """ put the invoice in the `planned` state, which will
       start the simulation process. """
     invoice = sequence.get('invoice')
     self.getPortal().portal_workflow.doActionFor(
@@ -1197,12 +1196,12 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       skip_period_validation = 1
     )
     self.assertEquals(invoice.getSimulationState(), 'confirmed')
-  
+
   def stepCheckNoAccountingLinesBuiltYet(self, sequence, **kw) :
     invoice = sequence.get('invoice')
     self.assertEquals(0, len(invoice.getMovementList(
                     portal_type=invoice.getPortalAccountingMovementTypeList())))
-  
+
   def stepStartInvoice(self, sequence, **kw) :
     """ put the invoice in the `started` state, which starts the delivery
     builder.
@@ -1217,7 +1216,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
 
 
   def stepCheckAccountingLinesCoherantWithSimulation(self, sequence, **kw) :
-    """ checks that accounting lines are created on the sale invoice 
+    """ checks that accounting lines are created on the sale invoice
     transaction """
     invoice  = sequence.get('invoice')
     vendor   = sequence.get('vendor')
@@ -1232,7 +1231,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
                   self.invoice_transaction_line_portal_type})
     self.assertEquals( len(invoice_transaction_line_list),
                        len(simulation_movement_list))
-    
+
     simulation_movement_found = {}
     for invoice_transaction_line in invoice_transaction_line_list :
       self.assertEquals( invoice_transaction_line.getSourceSection(),
@@ -1255,21 +1254,21 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
           self.assertEquals(simulation_movement.getDelivery(),
                             invoice_transaction_line.getRelativeUrl())
       self.assert_(len(simulation_movement_found.keys()), 3)
-  
-  
+
+
   def stepCheckAccountingLinesCreatedForSimpleInvoice(
             self, sequence, **kw) :
-    """ Checks that accounting lines are created on the sale invoice 
+    """ Checks that accounting lines are created on the sale invoice
     transaction and that all movement are correctly aggregated.
     The price of the invoice was 100, it should result in the following
     accounting layout :
-    
+
       ===============   =======   =======
       account           Debit     Credit
       ===============   =======   =======
       income                       100
       collected_vat                 19.60
-      receivable         119.60 
+      receivable         119.60
       ===============   =======   =======
     """
     invoice  = sequence.get('invoice')
@@ -1277,11 +1276,11 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
     client   = sequence.get('client')
     currency = sequence.get('currency')
     invoice_lines = sequence.get('invoice_lines')
-    
+
     invoice_transaction_line_list = invoice.contentValues(
         filter = {'portal_type': self.invoice_transaction_line_portal_type})
     self.assertEquals(len(invoice_transaction_line_list), 3)
-    
+
     accounting_lines_layout = {
       'income'            : (0, 100),
       'collected_vat'     : (0, 19.60),
@@ -1299,21 +1298,21 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       self.assertNotEquals(
               len(invoice_transaction_line.getDeliveryRelatedValueList(
                               portal_type='Simulation Movement')), 0)
-      
+
   def stepCheckAccountingLinesCreatedForMultiLineInvoice(
             self, sequence, **kw) :
-    """ Checks that accounting lines are created on the sale invoice 
+    """ Checks that accounting lines are created on the sale invoice
     transaction and that all movement are correctly aggregated.
     The price of the invoice was 1100, it should result in the following
     accounting layout :
-    
+
       ===============   =======   =======
       account           Debit     Credit
       ===============   =======   =======
       income                       100
       income_barebone              1000
       collected_vat                215.60
-      receivable        1315.60 
+      receivable        1315.60
       ===============   =======   =======
     """
     invoice  = sequence.get('invoice')
@@ -1321,18 +1320,18 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
     client   = sequence.get('client')
     currency = sequence.get('currency')
     invoice_lines = sequence.get('invoice_lines')
-    
+
     invoice_transaction_line_list = invoice.contentValues(
         filter = {'portal_type': self.invoice_transaction_line_portal_type})
     self.assertEquals(len(invoice_transaction_line_list), 4)
-    
+
     accounting_lines_layout = {
       'income'            : (0, 100),
       'income_barebone'   : (0, 1000),
       'collected_vat'     : (0, 215.60),
       'receivable'        : (1315.60, 0),
     }
-  
+
     for invoice_transaction_line in invoice_transaction_line_list :
       debit, credit = accounting_lines_layout[
                                     invoice_transaction_line.getSourceId()]
@@ -1356,7 +1355,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
           transaction_dict[accounting_line.getId()] = \
                 accounting_line.getTotalQuantity()
       accounting_lines_dict[transaction.getId()] = transaction_dict
-    
+
     # reindex the simulation for testing purposes
     self.getSimulationTool().recursiveReindexObject()
     self.tic()
@@ -1367,11 +1366,11 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       # TODO: conflict with pay_sheet_transaction_builder must be tested too
       delivery_tool.pay_sheet_transaction_builder.build()
     self.tic()
-    
+
     # nothing should have changed
     self.assertEquals(accounting_transaction_count,
             len(self.getAccountingModule().objectIds()))
-      
+
     for transaction in self.getAccountingModule().objectValues() :
       transaction_dict = accounting_lines_dict[transaction.getId()]
       for accounting_line in transaction.objectValues() :
@@ -1380,7 +1379,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
           self.assertEquals(
               transaction_dict[accounting_line.getId()],
               accounting_line.getTotalQuantity())
-    
+
   def stepCheckInvoiceSimulation(self, sequence=None, \
                                     sequence_list=None, **kw):
     invoice = sequence.get('invoice')
@@ -1461,7 +1460,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       10,
       simulation_movement.getPrice()
     )
-    
+
   def test_01_HasEverything(self, quiet=QUIET, run=RUN_ALL_TESTS):
     """ check necessary tools and modules are present. """
     if not run:
@@ -1484,7 +1483,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
   def test_02_UpdateInvoiceTransactionRuleMatrix(self, quiet=QUIET,
                                               run=RUN_ALL_TESTS):
     """ test edition of matrix and rule.
-    Try to update the matrix after adding some predicates, 
+    Try to update the matrix after adding some predicates,
     and check if all objects were created
     """
     if not run:
@@ -1493,7 +1492,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       message = 'Test Update Invoice Transaction Rule Matrix'
       ZopeTestCase._print('\n%s ' % message)
       LOG('Testing... ', INFO, message)
-    
+
     self.playSequence("""
       stepCreateInvoiceTransactionRule
       stepUpdateInvoiceTransactionRuleMatrix
@@ -1516,7 +1515,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       message = 'Test Invoice Transaction Rule getMatchingCell '
       ZopeTestCase._print('\n%s ' % message)
       LOG('Testing... ', INFO, message)
-    
+
     self.playSequence("""
       stepCreateAccounts
       stepCreateEntities
@@ -1533,7 +1532,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       stepCreateNotMatchableInvoiceMovements
       stepCheckNotMatchableInvoiceMovements
     """, quiet=quiet)
-  
+
   def test_04_SimpleInvoice(self, quiet=QUIET, run=RUN_ALL_TESTS):
     """ Simple Invoice.
     Try to expand an invoice containing only one simple Invoice Line.
@@ -1561,7 +1560,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       stepCreateSimpleInvoice
       stepPlanInvoice
       stepTic
-      stepCheckFirstRuleIsApplied 
+      stepCheckFirstRuleIsApplied
       stepCheckPaymentRuleIsApplied
       stepConfirmInvoice
       stepTic
@@ -1569,6 +1568,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       stepStartInvoice
       stepTic
       stepCheckAccountingLinesCoherantWithSimulation
+      stepPdb
       """, quiet=quiet )
 
   def test_04b_SimpleInvoiceConfirm(self, quiet=QUIET, run=RUN_ALL_TESTS):
@@ -1602,7 +1602,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       stepCheckAccountingLinesCreatedForSimpleInvoice
       stepRebuildAndCheckNothingIsCreated
       """, quiet=quiet )
-  
+
   def test_04c_SimpleInvoiceTwoLines(self, quiet=QUIET, run=RUN_ALL_TESTS):
     """ Simple Invoice, 2 lines.
     Same test as SimpleInvoice but use 2 lines of quantity 5 instead of
@@ -1636,7 +1636,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       stepCheckAccountingLinesCreatedForSimpleInvoice
       stepRebuildAndCheckNothingIsCreated
       """, quiet=quiet )
-      
+
   def test_04d_SimpleInvoiceTwoCells(self, quiet=QUIET, run=RUN_ALL_TESTS):
     """ Simple Invoice, 2 cells.
     Same test as SimpleInvoice but use 2 cells of quantity 5 instead of
@@ -1670,8 +1670,8 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       stepCheckAccountingLinesCreatedForSimpleInvoice
       stepRebuildAndCheckNothingIsCreated
       """, quiet=quiet )
-   
-  # next 5 tests will check update of applied rules. 
+
+  # next 5 tests will check update of applied rules.
   def test_05a_SimpleInvoiceReExpandAddLine(self, quiet=QUIET,
         run=RUN_ALL_TESTS):
     """ Add a new line then updateAppliedRule.
@@ -1710,7 +1710,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       stepCheckAccountingLinesCreatedForSimpleInvoice
       stepRebuildAndCheckNothingIsCreated
       """, quiet=quiet )
-      
+
   def test_05b_SimpleInvoiceReExpandEditLine(self, quiet=QUIET,
               run = RUN_ALL_TESTS):
     """ Tests that editing a line updates simulation correctly """
@@ -1782,7 +1782,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       stepCheckAccountingLinesCreatedForSimpleInvoice
       stepRebuildAndCheckNothingIsCreated
       """, quiet=quiet )
-      
+
   def test_05d_SimpleInvoiceReExpandCreateCell(self, quiet=QUIET,
                   run=RUN_ALL_TESTS):
     """ Tests that replacing a line by cells updates simulation correctly """
@@ -1817,7 +1817,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       stepCheckAccountingLinesCreatedForSimpleInvoice
       stepRebuildAndCheckNothingIsCreated
       """, quiet=quiet)
-                     
+
   def test_05e_SimpleInvoiceExpandManyTimes(
                                 self, quiet=QUIET, run=RUN_ALL_TESTS):
     """ Tests that updating an applied rule many times doesn't break the
@@ -1841,7 +1841,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       stepTic
       stepClearSimulation
       stepClearAccountingModule
-      stepCreateSimpleInvoice 
+      stepCreateSimpleInvoice
       stepPlanInvoice
       stepTic """ +
       ("""
@@ -1895,7 +1895,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       stepCheckAccountingLinesCreatedForMultiLineInvoice
       stepRebuildAndCheckNothingIsCreated
       """, quiet=quiet )
-    
+
   def TODO_test_07_PaymentRuleForInvoice(self, quiet=QUIET, run=RUN_ALL_TESTS):
     """ Payment Rule.
       checks the payment rule is applied on invoice simulation
@@ -1904,7 +1904,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
     #   date from trade condition
     #   quantity from sum of receivable movement
     #   link to sale invoice
- 
+
   def test_planning_invoice_creates_simulation(self, quiet=QUIET):
     # http://mail.nexedi.com/pipermail/erp5-dev/2008-June/001969.html
     self.playSequence("""
