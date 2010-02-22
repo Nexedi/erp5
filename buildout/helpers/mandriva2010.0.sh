@@ -23,6 +23,7 @@ libgdbm-devel
 libglib2.0-devel
 libjpeg-devel
 libncurses-devel
+libneon-devel
 libopenssl-devel
 libtermcap-devel
 libxml2-devel

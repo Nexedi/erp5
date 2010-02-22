@@ -11,6 +11,7 @@ libgdbm-dev
 libglib2.0-dev
 libjpeg62-dev
 libncurses5-dev
+libneon27-dev
 libssl-dev
 libsvn-dev
 libxml2-dev
