@@ -22,6 +22,7 @@ rpm
 subversion
 subversion-tools
 xvfb
+zip
 zlib1g-dev\
 """
 

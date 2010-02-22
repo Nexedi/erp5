@@ -35,6 +35,7 @@ subversion
 subversion-devel
 subversion-tools
 x11-server-xvfb
+zip
 zlib1-devel\
 """
 if [ x"$1" == x ]; then
