@@ -125,7 +125,7 @@ if redirect_to_document or redirect_url is not None:\n
   # this is an UI mode where script should handle HTTP redirects and is likely used\n
   # by ERP5 form\n
   message = context.Base_translateString(message)\n
-  if redirect_to_document:\n
+  if redirect_to_document and document is not None:\n
     # explicitly requried to redirect to ingested document\n
     return document.Base_redirect(\'view\', \n
                                   keep_items=dict(portal_status_message=message))\n
