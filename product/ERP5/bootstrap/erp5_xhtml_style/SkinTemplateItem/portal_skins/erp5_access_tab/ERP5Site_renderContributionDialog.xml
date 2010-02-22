@@ -93,11 +93,8 @@
 \n
     <div style="float:none; margin-top:10px;">\n
       <input type="hidden"\n
-             name="synchronous_metadata_discovery"\n
-             value="1"/>\n
-      <input type="hidden"\n
-             name="redirect_to_document"\n
-             value="1"/>\n
+             name="redirect_url"\n
+             tal:attributes="value here/absolute_url"/>\n
       <input type="submit" \n
              i18n:attributes="value" \n
              i18n:domain="ui" name="Base_contribute:method" value="Contribute"/>\n
