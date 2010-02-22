@@ -35,6 +35,7 @@ Accounting Transaction Module | third_parties_report
 Accounting Transaction Module | trial_balance_export
 Accounting Transaction Module | trial_balance_report
 Accounting Transaction Module | view
+Accounting Transaction Root Simulation Rule | view
 Accounting Transaction | add_accounting_transaction_line
 Accounting Transaction | convert_destination_price
 Accounting Transaction | convert_source_price
@@ -46,7 +47,6 @@ Accounting Transaction | document_list
 Accounting Transaction | profile_view
 Accounting Transaction | source_asset
 Accounting Transaction | view
-Accounting Transaction Root Simulation Rule | view
 Balance Transaction Line | view
 Balance Transaction | add_balance_transaction_line
 Balance Transaction | destination_asset

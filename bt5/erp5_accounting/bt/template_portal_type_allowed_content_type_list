@@ -7,12 +7,12 @@ Accounting Transaction Module | Balance Transaction
 Accounting Transaction Module | Payment Transaction
 Accounting Transaction Module | Purchase Invoice Transaction
 Accounting Transaction Module | Sale Invoice Transaction
-Accounting Transaction | Accounting Transaction Line
-Accounting Transaction | File
-Accounting Transaction | Image
 Accounting Transaction Root Simulation Rule | Category Divergence Tester
 Accounting Transaction Root Simulation Rule | Property Divergence Tester
 Accounting Transaction Root Simulation Rule | Quantity Divergence Tester
+Accounting Transaction | Accounting Transaction Line
+Accounting Transaction | File
+Accounting Transaction | Image
 Balance Transaction | Balance Transaction Line
 Invoice Root Simulation Rule | Category Divergence Tester
 Invoice Root Simulation Rule | Property Divergence Tester
