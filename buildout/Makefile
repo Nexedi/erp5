@@ -10,7 +10,7 @@ assert: assert-software
 assert-software: assert-python2.4 assert-parts-libs
 
 assert-python2.4: bin/python2.4
-	bin/python2.4 -V | grep 'Python 2.4.6'
+	bin/python2.4 -V 2>&1 | grep 'Python 2.4.6'
 	bin/python2.4 -c 'import _ssl'
 	bin/python2.4 -c 'import bz2'
 	bin/python2.4 -c 'import dbm'
@@ -25,7 +25,7 @@ assert-python2.4: bin/python2.4
 	bin/python2.4 -c 'import threadframe'
 	bin/python2.4 -c 'import itools'
 	bin/python2.4 -c 'import MySQLdb'
-	# erp5diff
+	bin/python2.4 -c 'import ERP5Diff'
 	# elementtree
 	# PyXML
 	# simplejson
