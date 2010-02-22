@@ -1568,7 +1568,6 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       stepStartInvoice
       stepTic
       stepCheckAccountingLinesCoherantWithSimulation
-      stepPdb
       """, quiet=quiet )
 
   def test_04b_SimpleInvoiceConfirm(self, quiet=QUIET, run=RUN_ALL_TESTS):
