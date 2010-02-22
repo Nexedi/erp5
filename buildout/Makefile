@@ -18,6 +18,7 @@ assert-python2.4: bin/python2.4
 	bin/python2.4 -c 'import _xmlplus'
 	bin/python2.4 -c 'import bz2'
 	bin/python2.4 -c 'import dbm'
+	bin/python2.4 -c 'import elementtree'
 	bin/python2.4 -c 'import fpconst'
 	bin/python2.4 -c 'import itools'
 	bin/python2.4 -c 'import ldap'
@@ -29,7 +30,6 @@ assert-python2.4: bin/python2.4
 	bin/python2.4 -c 'import threadframe'
 	bin/python2.4 -c 'import xml.parsers.expat'
 	bin/python2.4 -c 'import zlib'
-	# elementtree
 
 assert-parts-libs:
 	ldd parts/mysql-tritonn-5.0/libexec/mysqld | grep 'parts/senna/lib/libsenna.so.0'
