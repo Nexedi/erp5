@@ -62,11 +62,17 @@ portal_contributions = portal.portal_contributions\n
 \n
 system_preference = portal.portal_preferences.getActiveSystemPreference()\n
 if synchronous_metadata_discovery is None:\n
-  # not specified, fallback to site system preference configuration\n
-  synchronous_metadata_discovery = system_preference.isPreferredSynchronousMetadataDiscovery()\n
+  if system_preference is not None:\n
+    # not specified, fallback to site system preference configuration\n
+    synchronous_metadata_discovery = system_preference.isPreferredSynchronousMetadataDiscovery()\n
+  else:\n
+    synchronous_metadata_discovery = False\n
 \n
 if redirect_to_document is None:\n
-  redirect_to_document = system_preference.isPreferredRedirectToDocument()\n
+  if system_preference is not None:\n
+    redirect_to_document = system_preference.isPreferredRedirectToDocument()\n
+  else:\n
+    redirect_to_document = False\n
 \n
 document_kw = {}\n
 if use_context_for_container:\n
@@ -191,6 +197,7 @@ return document\n
                             <string>portal</string>
                             <string>portal_contributions</string>
                             <string>system_preference</string>
+                            <string>False</string>
                             <string>document_kw</string>
                             <string>_write_</string>
                             <string>_apply_</string>
@@ -198,7 +205,6 @@ return document\n
                             <string>message</string>
                             <string>getattr</string>
                             <string>file_name</string>
-                            <string>False</string>
                             <string>is_existing_document_updated</string>
                             <string>merged_document</string>
                             <string>document_edit_kw</string>
