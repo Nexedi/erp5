@@ -236,10 +236,8 @@ bWxQSwUGAAAAAAIAAgCeAAAAhwwAAAAA</string> </value>
                     <tal:block tal:condition="python:field_type not in (\'HiddenStringField\', \'FileField\')">\n
                       <table:table-row>\n
                       <table:table-cell table:style-name=\'field-table.A1\' office:value-type=\'string\'>\n
-                        <text:p tal:replace="structure python:render_text(field.get_value(\'title\'),\n
-                                              {\'{urn:oasis:names:tc:opendocument:xmlns:text:1.0}style-name\': \'field-label\',\n
-                                               \'{http://xml.zope.org/namespaces/i18n}domain\': \'ui\',\n
-                                               \'{http://xml.zope.org/namespaces/i18n}translate\': \'\'})"/>\n
+                        <text:p tal:replace="structure python:render_text(here.Base_translateString(field.get_value(\'title\')),\n
+                                              {\'{urn:oasis:names:tc:opendocument:xmlns:text:1.0}style-name\': \'field-label\'})"/>\n
                       </table:table-cell>\n
                       <tal:block tal:define="item_list python:field.has_value(\'items\') and field.get_value(\'items\') or None">\n
                         <table:table-cell table:style-name=\'field-table.B1\' \n
@@ -254,7 +252,7 @@ bWxQSwUGAAAAAAIAAgCeAAAAhwwAAAAA</string> </value>
                           <tal:block tal:condition="python: field_type == \'ImageField\'">\n
                             <text:p text:style-name=\'field-content\'\n
                                     tal:define="preferred_width python: preference_tool.getPreference(\'preferred_%s_image_width\' % (field.get_value(\'image_display\')), 100);\n
-                                    width python:(preferred_width  / 20.) &lt; max_size and (preferred_width / 20.) or max_size;\n
+                                    width python:(preferred_width / 20.) &lt; max_size and (preferred_width / 20.) or max_size;\n
                                     field_value python: field.get_value(\'default\')">\n
                               <tal:block tal:condition="field_value">\n
                                 <office:include_img tal:attributes="width width;\n
@@ -301,10 +299,8 @@ bWxQSwUGAAAAAAIAAgCeAAAAhwwAAAAA</string> </value>
         <tal:block tal:repeat="field field_list">\n
           <tal:block tal:define="field_type python: field.meta_type == \'ProxyField\' and field.getRecursiveTemplateField().meta_type or field.meta_type">\n
             <tal:block tal:condition="python: field_type not in (\'ImageField\',\'OOoChart\' )">\n
-              <text:p tal:replace="structure python:render_text(field.get_value(\'title\'),\n
-                                              {\'{urn:oasis:names:tc:opendocument:xmlns:text:1.0}style-name\': \'field-label-center\',\n
-                                               \'{http://xml.zope.org/namespaces/i18n}domain\': \'ui\',\n
-                                               \'{http://xml.zope.org/namespaces/i18n}translate\': \'\'})"/>\n
+              <text:p tal:replace="structure python:render_text(here.Base_translateString(field.get_value(\'title\')),\n
+                                              {\'{urn:oasis:names:tc:opendocument:xmlns:text:1.0}style-name\': \'field-label-center\'})"/>\n
               <text:p tal:replace="structure python:field.render_odt(REQUEST=request, attr_dict={\'{urn:oasis:names:tc:opendocument:xmlns:text:1.0}style-name\': \'field-content-center\'})"/>\n
             </tal:block>\n
             <tal:block tal:condition="python: field_type == \'ImageField\'">\n
