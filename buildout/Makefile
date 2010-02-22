@@ -10,6 +10,7 @@ assert: assert-software
 assert-software: assert-python2.4 assert-parts-libs
 
 assert-python2.4: bin/python2.4
+	bin/python2.4 -V | grep 'Python 2.4.6'
 	bin/python2.4 -c 'import _ssl'
 	bin/python2.4 -c 'import bz2'
 	bin/python2.4 -c 'import dbm'
