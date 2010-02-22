@@ -92,7 +92,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>default_invoice_rule</string> </value>
+            <value> <string>default_invoice_root_simulation_rule</string> </value>
         </item>
         <item>
             <key> <string>matching_property</string> </key>
@@ -118,7 +118,7 @@
         </item>
         <item>
             <key> <string>version</string> </key>
-            <value> <string>1</string> </value>
+            <value> <string>2</string> </value>
         </item>
       </dictionary>
     </pickle>
