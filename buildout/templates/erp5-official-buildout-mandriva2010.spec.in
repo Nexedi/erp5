@@ -7,7 +7,7 @@
 %define _requires_exceptions /usr/local/bin/python
 
 %define fullname %{name}-%{version}
-%define installdir /opt/%{fullname}
+%define installdir /opt/erp5/%{version}
 
 Name: %{name}
 Version: %{version}
@@ -21,7 +21,7 @@ Group: Databases
 
 ${:dependencies}
 
-BuildRoot: %{_tmppath}/%{fullname}-%{release}-root
+BuildRoot: /opt/rpmbuild/%{fullname}-%{release}-root
 
 %description
 %{summary}
