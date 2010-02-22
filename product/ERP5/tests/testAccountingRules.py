@@ -383,7 +383,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
         title = "Income Notebook",
         account_type = "income",
       )
-      income = account_module.newContent(
+      income_barebone = account_module.newContent(
         id = "income_barebone",
         portal_type = self.account_portal_type,
         title = "Income Barebone",
@@ -394,6 +394,12 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
         portal_type=self.account_portal_type,
         title = "Receivable",
         account_type = "asset/receivable",
+      )
+      bank = account_module.newContent(
+        id = "bank",
+        portal_type=self.account_portal_type,
+        title = "Bank",
+        account_type = "asset/cash/bank",
       )
       collected_vat = account_module.newContent(
         id = "collected_vat",
@@ -406,6 +412,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       income          = account_module.income,
       income_barebone = account_module.income_barebone,
       receivable      = account_module.receivable,
+      bank   = account_module.bank,
       collected_vat   = account_module.collected_vat,
     )
 
