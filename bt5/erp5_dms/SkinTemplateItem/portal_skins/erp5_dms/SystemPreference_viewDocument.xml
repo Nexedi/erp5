@@ -76,6 +76,7 @@
                         <string>my_preferred_document_ingestion_email_notification</string>
                         <string>my_preferred_document_reference_method_id</string>
                         <string>my_preferred_conversion_cache_factory</string>
+                        <string>my_preferred_synchronous_metadata_discovery</string>
                       </list>
                     </value>
                 </item>
