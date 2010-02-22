@@ -1,7 +1,7 @@
 Document Ingestion Message | view
 Document Ingestion Module | list
 Document Module | advanced_search
-Document Module | contribute_content
+Document Module | contribute_file
 Document Module | list_ui
 Document Module | search
 Document Module | sort_on
@@ -50,7 +50,6 @@ Image | jump_to_successor
 Image | jump_to_wiki_predecessor
 Image | local_permission
 Image | related_document
-Organisation | contribute_file
 PDF | download
 PDF | file_upload
 PDF | html_view
@@ -65,7 +64,6 @@ PDF | local_permission
 PDF | related_document
 PDF | view
 PDF | web_view
-Person | contribute_file
 Presentation | convert
 Presentation | create_snapshot
 Presentation | download
