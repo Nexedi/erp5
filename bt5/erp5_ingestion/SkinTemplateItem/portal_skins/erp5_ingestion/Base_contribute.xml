@@ -60,6 +60,10 @@ MARKER = [\'\', None]\n
 portal = context.getPortalObject()\n
 portal_contributions = portal.portal_contributions\n
 \n
+if synchronous_metadata_discovery is None:\n
+  # not specified, fallback to site system preference configuration\n
+  synchronous_metadata_discovery = portal.portal_preferences.getActiveSystemPreference().isPreferredSynchronousMetadataDiscovery()\n
+\n
 document_kw = {}\n
 if use_context_for_container:\n
   document_kw[\'container_path\'] = context.getRelativeUrl()\n
@@ -140,7 +144,7 @@ return document\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>file=None, url=None, portal_type=None, classification=None, synchronous_metadata_discovery=False, redirect_to_document=False, attach_document_to_context=False, use_context_for_container=False, redirect_url=None, **kw</string> </value>
+            <value> <string>file=None, url=None, portal_type=None, classification=None, synchronous_metadata_discovery=None, redirect_to_document=False, attach_document_to_context=False, use_context_for_container=False, redirect_url=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -220,7 +224,7 @@ return document\n
                 <none/>
                 <none/>
                 <none/>
-                <int>0</int>
+                <none/>
                 <int>0</int>
                 <int>0</int>
                 <int>0</int>
