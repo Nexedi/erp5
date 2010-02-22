@@ -60,9 +60,13 @@ MARKER = [\'\', None]\n
 portal = context.getPortalObject()\n
 portal_contributions = portal.portal_contributions\n
 \n
+system_preference = portal.portal_preferences.getActiveSystemPreference()\n
 if synchronous_metadata_discovery is None:\n
   # not specified, fallback to site system preference configuration\n
-  synchronous_metadata_discovery = portal.portal_preferences.getActiveSystemPreference().isPreferredSynchronousMetadataDiscovery()\n
+  synchronous_metadata_discovery = system_preference.isPreferredSynchronousMetadataDiscovery()\n
+\n
+if redirect_to_document is None:\n
+  redirect_to_document = system_preference.isPreferredRedirectToDocument()\n
 \n
 document_kw = {}\n
 if use_context_for_container:\n
@@ -144,7 +148,7 @@ return document\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>file=None, url=None, portal_type=None, classification=None, synchronous_metadata_discovery=None, redirect_to_document=False, attach_document_to_context=False, use_context_for_container=False, redirect_url=None, **kw</string> </value>
+            <value> <string>file=None, url=None, portal_type=None, classification=None, synchronous_metadata_discovery=None, redirect_to_document=None, attach_document_to_context=False, use_context_for_container=False, redirect_url=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -186,6 +190,7 @@ return document\n
                             <string>context</string>
                             <string>portal</string>
                             <string>portal_contributions</string>
+                            <string>system_preference</string>
                             <string>document_kw</string>
                             <string>_write_</string>
                             <string>_apply_</string>
@@ -225,7 +230,7 @@ return document\n
                 <none/>
                 <none/>
                 <none/>
-                <int>0</int>
+                <none/>
                 <int>0</int>
                 <int>0</int>
                 <none/>
