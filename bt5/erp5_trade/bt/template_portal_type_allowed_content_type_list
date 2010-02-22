@@ -4,6 +4,9 @@ Business Process | Business State
 Container Line | Container Cell
 Container | Container
 Container | Container Line
+Delivery Root Simulation Rule | Category Divergence Tester
+Delivery Root Simulation Rule | Property Divergence Tester
+Delivery Root Simulation Rule | Quantity Divergence Tester
 Delivery Simulation Rule | Category Divergence Tester
 Delivery Simulation Rule | Property Divergence Tester
 Delivery Simulation Rule | Quantity Divergence Tester
@@ -42,6 +45,7 @@ Returned Sale Packing List Module | Returned Sale Packing List
 Returned Sale Packing List | Container
 Returned Sale Packing List | Returned Sale Packing List Line
 Rule Tool | Delivery Rule
+Rule Tool | Delivery Root Simulation Rule
 Rule Tool | Delivery Simulation Rule
 Rule Tool | Order Rule
 Rule Tool | Order Root Simulation Rule

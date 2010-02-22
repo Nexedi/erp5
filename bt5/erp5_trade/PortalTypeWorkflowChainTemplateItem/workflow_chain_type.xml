@@ -24,6 +24,10 @@
   <workflow>container_interaction_workflow, edit_workflow, pricing_interaction_workflow, trade_matrix_workflow</workflow>
  </chain>
  <chain>
+  <type>Delivery Root Simulation Rule</type>
+  <workflow>edit_workflow, rule_validation_workflow</workflow>
+ </chain>
+ <chain>
   <type>Delivery Simulation Rule</type>
   <workflow>edit_workflow, rule_validation_workflow</workflow>
  </chain>
