@@ -9,8 +9,14 @@ How to run
 ----------
 
 Checkout: https://svn.erp5.org/repos/public/erp5/trunk/buildout/
-Bootstrap: python bootstrap/bootstrap.py
-Run buildout: bin/buildout
+For example:
+
+  svn co https://svn.erp5.org/repos/public/erp5/trunk/buildout/ ~/erp5.buildout
+
+Run make inside:
+
+  cd ~/erp5.buildout
+  make
 
 It will install required software and configure it locally, up to ERP5 site
 with some Business Templates. By default it will use local python, MySQL,
