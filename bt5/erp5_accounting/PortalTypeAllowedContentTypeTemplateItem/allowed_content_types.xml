@@ -48,6 +48,11 @@
   <item>Property Divergence Tester</item>
   <item>Quantity Divergence Tester</item>
  </portal_type>
+ <portal_type id="Payment Simulation Rule">
+  <item>Category Divergence Tester</item>
+  <item>Property Divergence Tester</item>
+  <item>Quantity Divergence Tester</item>
+ </portal_type>
  <portal_type id="Payment Transaction">
   <item>Accounting Transaction Line</item>
   <item>File</item>
@@ -69,6 +74,7 @@
   <item>Invoice Root Simulation Rule</item>
   <item>Invoice Rule</item>
   <item>Payment Rule</item>
+  <item>Payment Simulation Rule</item>
  </portal_type>
  <portal_type id="Sale Invoice Transaction">
   <item>File</item>

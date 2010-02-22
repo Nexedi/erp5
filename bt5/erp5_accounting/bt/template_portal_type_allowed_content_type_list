@@ -25,6 +25,9 @@ Organisation | Cash Register
 Payment Rule | Category Divergence Tester
 Payment Rule | Property Divergence Tester
 Payment Rule | Quantity Divergence Tester
+Payment Simulation Rule | Category Divergence Tester
+Payment Simulation Rule | Property Divergence Tester
+Payment Simulation Rule | Quantity Divergence Tester
 Payment Transaction | Accounting Transaction Line
 Payment Transaction | File
 Payment Transaction | Image
@@ -39,6 +42,7 @@ Rule Tool | Accounting Transaction Root Simulation Rule
 Rule Tool | Invoice Root Simulation Rule
 Rule Tool | Invoice Rule
 Rule Tool | Payment Rule
+Rule Tool | Payment Simulation Rule
 Sale Invoice Transaction | File
 Sale Invoice Transaction | Image
 Sale Invoice Transaction | Sale Invoice Transaction Line

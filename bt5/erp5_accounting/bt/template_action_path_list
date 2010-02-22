@@ -64,6 +64,8 @@ Organisation | jump_active_accounting_pref
 Organisation | jump_to_accounting
 Organisation | transactions
 Payment Rule | view
+Payment Simulation Rule | divergence
+Payment Simulation Rule | view
 Payment Transaction | add_accounting_transaction_line
 Payment Transaction | convert_destination_price
 Payment Transaction | convert_source_price
