@@ -62,6 +62,15 @@ To start buildout it is required to have:
    /usr/lib*/python*/config/Makefile have to be delivered by system package)
  * svn client (to checkout buildout)
 
+After build check
+-----------------
+
+After software is build invoke:
+
+  make assert
+
+To be sure that all components are available (corretly build and linked).
+
 Distribution helpers
 --------------------
 
