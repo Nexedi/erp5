@@ -235,7 +235,11 @@ def getMySQLArguments():
 
   if "@" in db: # look for hostname
     db, host = db.split('@')
-    host = '-h %s' % host
+    if ":" in host: # look for port
+      host, port = host.split(':')
+      host = '-h %s -P %s' % (host, port)
+    else:
+      host = '-h %s' % host
 
   return '-u %s %s %s %s' % (user, password, host, db)
 
