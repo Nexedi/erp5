@@ -116,8 +116,10 @@ else:\n
   if attach_document_to_context:\n
     # attach document to current context using follow_up\n
     follow_up_list = document.getFollowUpValueList()\n
-    follow_up_list.append(context)\n
-    document.setFollowUpValueList([x.getRelativeUrl() for x in follow_up_list])\n
+    if context not in follow_up_list:\n
+      # attach to context only if not already attached\n
+      follow_up_list.append(context)\n
+      document.setFollowUpValueList([x.getRelativeUrl() for x in follow_up_list])\n
   # edit document   \n
   if document_edit_kw is not {}:\n
     document.edit(**document_edit_kw)\n
