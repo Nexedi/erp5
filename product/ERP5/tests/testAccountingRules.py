@@ -1232,7 +1232,22 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
   def stepCheckPaymentRuleIsApplied(self, sequence, **kw) :
     """ checks that a payment rule is applied for the total amount
       of receivable """
-    # TODO
+    invoice_line = sequence.get('invoice_line')
+    simulation_movement = invoice_line.getDeliveryRelatedValue()
+    applied_rule_list = simulation_movement.objectValues()
+    # Invoice Transaction Rule and Trade Model Rule
+    self.assertEquals(2, len(applied_rule_list))
+    applied_rule = [x for x in applied_rule_list \
+                    if x.getSpecialiseReference() == \
+                    'default_invoice_transaction_rule'][0]
+    simulation_movement_list = [x for x in applied_rule.objectValues() \
+                                if x.getSourceTitle() in ('Receivable',
+                                                          'Payable')]
+    self.assertEquals(1, len(simulation_movement_list))
+    simulation_movement = simulation_movement_list[0]
+    applied_rule_list = simulation_movement.objectValues()
+    self.assertEquals(1, len(applied_rule_list))
+    payment_applied_rule = applied_rule_list[0]
 
   def stepPlanInvoice(self, sequence, **kw) :
     """ put the invoice in the `planned` state, which will
