@@ -63,7 +63,7 @@ class PaymentSimulationRule(Rule, PredicateMatrix):
     movement_and_tuple_list = self._getInputMovementAndPathTupleList(
         applied_rule)
     input_movement = movement_and_tuple_list[0][0]
-    payment_condition_list = [x[1] for x in movement_and_tuple_list]
+    payment_condition_list = [x[1] for x in movement_and_tuple_list if x[1] is not None]
 
     kw = self._getExpandablePropertyDict(applied_rule, input_movement, None)
     prevision_list = []
