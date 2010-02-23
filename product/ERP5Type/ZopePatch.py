@@ -58,8 +58,8 @@ from Products.ERP5Type.patches import memcache_client
 from Products.ERP5Type.patches import StateChangeInfoPatch
 from Products.ERP5Type.patches import transforms
 from Products.ERP5Type.patches import OFSPdata
-# Forward Compatibility with Zope 2.12 or CMF 2.2. Remove when we've dropped
-# support for old versions
+# BACK: Forward Compatibility with Zope 2.12 or CMF 2.2. Remove when we've
+# dropped support for older versions.
 from Products.ERP5Type.patches import TransactionAddBeforeCommitHook
 
 # These symbols are required for backward compatibility
