@@ -2,6 +2,7 @@
 #
 # Copyright (c) 2002 Coramy SAS and Contributors. All Rights Reserved.
 #          Thierry Faucher <Thierry_Faucher@coramy.com>
+# Copyright (c) 2010 Nexedi SA and Contributors. All Rights Reserved.
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -57,7 +58,8 @@ class TradeCondition:
           'description' : 'The current payment condition.',
           'type'        : 'content',
           'portal_type' : ('Payment Condition',),
-          'acquired_property_id' : ( 'payment_mode', 'payment_mode_title',
+          'acquired_property_id' : ( # from PropertySheet/PaymentCondition.py
+                                     'payment_mode', 'payment_mode_title',
                                      'trade_date', 'trade_date_title',
                                      'payment_term', 'payment_additional_term',
                                      'payment_end_of_month', 'payment_date',
@@ -68,6 +70,9 @@ class TradeCondition:
                                      'destination_payment',
                                      'destination_payment_value',
                                      'destination_payment_title',
+                                     # from PropertySheet/BusinessPath.py
+                                     'lead_time', 'wait_time',
+                                     'end_of', 'end_of_value', 'end_of_title',
                                    ),
           'mode'        : 'w' },
   )
@@ -75,4 +80,3 @@ class TradeCondition:
   _categories = ( 'group', 'activity', 'incoterm',
                   'price_currency', 'delivery_mode',
                   'trade_condition_type',  )
-
