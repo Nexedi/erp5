@@ -24,7 +24,7 @@ libglib2.0-devel
 libjpeg-devel
 libldap-devel
 libncurses-devel
-libneon-devel
+libneon0.27-devel
 libopenssl-devel
 libtermcap-devel
 libsasl2-devel
