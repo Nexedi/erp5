@@ -13,6 +13,7 @@ Helper for buildout-base installation of ERP5 on Mandriva 2010.
    -l  lists the required dependencies\
 """
 PACKAGE_LIST="""\
+automake
 bison
 cpio
 flex
