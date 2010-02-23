@@ -1090,8 +1090,8 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
     # movement linked to an invoice line
     invoice_line_simulation_movement_list = []
     for simulation_movement in simulation_movement_list :
-      self.assertNotEquals(simulation_movement.getOrderValue(), None)
-      if simulation_movement.getOrderValue().getPortalType() == \
+      self.assertNotEquals(simulation_movement.getDeliveryValue(), None)
+      if simulation_movement.getDeliveryValue().getPortalType() == \
               self.invoice_line_portal_type :
         invoice_line_simulation_movement_list.append(simulation_movement)
 
@@ -1498,11 +1498,6 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
     self.assertEquals(
       client.getRelativeUrl(),
       simulation_movement.getDestinationSection()
-    )
-
-    self.assertEquals(
-      invoice_line.getRelativeUrl(),
-      simulation_movement.getOrder()
     )
 
     self.assertEquals(
