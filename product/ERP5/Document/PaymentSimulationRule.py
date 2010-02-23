@@ -63,7 +63,27 @@ class PaymentSimulationRule(Rule, PredicateMatrix):
     movement_and_tuple_list = self._getInputMovementAndPathTupleList(
         applied_rule)
     input_movement = movement_and_tuple_list[0][0]
-    payment_condition_list = [x[1] for x in movement_and_tuple_list if x[1] is not None]
+
+    payment_conditon_list = []
+
+    # try to find local payment conditions
+    delivery = input_movement.getDeliveryValue()
+    if delivery is None:
+      delivery = input_movement.getExplanationValue()
+    if delivery is not None:
+      payment_condition_list = delivery.getPaymentConditionValueList()
+
+    # try to find payment conditions in specialised trade conditions
+    if len(payment_condition_list) == 0:
+      specialise = input_movement.getSpecialiseValue()
+      if specialise is None and delivery is not None:
+        specialise = delivery.getSpecialiseValue()
+      if specialise is not None:
+        payment_condition_list = specialise.getPaymentConditionValueList()
+
+    # try to use payment conditions in BPM configuration
+    if len(payment_condition_list) == 0:
+      payment_condition_list = [x[1] for x in movement_and_tuple_list if x[1] is not None]
 
     kw = self._getExpandablePropertyDict(applied_rule, input_movement, None)
     prevision_list = []
