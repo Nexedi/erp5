@@ -179,7 +179,7 @@ class TradeCondition(Path, Transformation, XMLMatrix):
 
       reference_list = []
       trade_model_line_composed_list = []
-      containting_object_list = []
+      containing_object_list = []
       start_date = None
       stop_date = None
       if context is not None:
@@ -188,14 +188,14 @@ class TradeCondition(Path, Transformation, XMLMatrix):
           # if context is movement it is needed to ask its explanation
           # for contained Trade Model Lines
           document = context.getExplanationValue()
-        containting_object_list.append(document)
+        containing_object_list.append(document)
         start_date = document.getStartDate()
         stop_date = document.getStopDate()
-      containting_object_list.extend(\
+      containing_object_list.extend(\
           self.findEffectiveSpecialiseValueList(context=self,
             start_date=start_date, stop_date=stop_date))
 
-      for specialise in containting_object_list:
+      for specialise in containing_object_list:
         for trade_model_line in specialise.contentValues(
             portal_type=portal_type_list):
           reference = trade_model_line.getReference()
