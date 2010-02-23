@@ -131,14 +131,19 @@ try:
   # Workaround Localizer >= 1.2 patch that doesn't work with
   # ZopeTestCase REQUESTs (it's the same as iHotFix
   from Products.Localizer import patches
-  from types import UnicodeType
-  # revert monkey patchs from Localizer
+  # revert monkey patches from Localizer
   patches.get_request = get_request
+except ImportError:
+  pass
 
+try:
+  from Products.Localizer import patches
+  # originalStringIO has been removed from recent Localizer versions
+  from Products.Localizer.patches import originalStringIO
   class UnicodeSafeStringIO(patches.originalStringIO):
     """StringIO like class which never fails with unicode."""
     def write(self, s):
-      if isinstance(s, UnicodeType):
+      if isinstance(s, unicode):
         s = s.encode('utf8', 'repr')
       patches.originalStringIO.write(self, s)
   # Localizer will patch PageTemplate StringIO with
