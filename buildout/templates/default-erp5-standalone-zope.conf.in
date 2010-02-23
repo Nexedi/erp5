@@ -47,8 +47,8 @@ path ${lib_path}
 #     to it here).
 
 # In profile use:
-#   products X
-#   products Y
+#   ProductLocationX
+#   ProductLocationY
 
 ${products}
 

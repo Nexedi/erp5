@@ -136,7 +136,16 @@ class Recipe(plone.recipe.zope2instance.Recipe, erp5.recipe.createsite.Recipe):
         file(self.options['zope_conf_template'].strip()).readlines()
     )
     template = WithMinusTemplate(template_input_data)
-    result = template.substitute(self.options.copy())
+    # make prepend products with 'products'
+    options_dict = self.options.copy()
+    if 'products' in options_dict:
+      prefixed_products = []
+      for product in options_dict['products'].split('\n'):
+        product = product.strip()
+        if product:
+          prefixed_products.append('products %s' % product)
+      options_dict['products'] = '\n'.join(prefixed_products)
+    result = template.substitute(options_dict)
     zope_conf_path = os.path.join(location, 'etc', 'zope.conf')
     file(zope_conf_path, 'w').write(result)
 
