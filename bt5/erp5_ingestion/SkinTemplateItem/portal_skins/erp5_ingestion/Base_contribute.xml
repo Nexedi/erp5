@@ -111,7 +111,7 @@ else:\n
   for key in [\'title\', \'reference\', \'group\', \'source_project\', \n
               \'short_title\', \'language\', \'version\', \'description\']:\n
     value = kw.get(key, kw.get(\'field_your_%s\' %key, kw.get(\'field_my_%s\' %key, None)))\n
-    if value is not None:\n
+    if value not in MARKER:\n
       document_edit_kw[key] = value\n
   if attach_document_to_context:\n
     # attach document to current context using follow_up\n
