@@ -1,3 +1,9 @@
+2010-02 jps
+* added Software Release portal type
+* added Software Publication portal type
+* removed upload module
+* added optional dependency to DMS (Software Release) and CRM (Software Publication)
+
 2010-02-18 tatuya
 * Fix a issue that Bug document can not cancel the bug, because it can not add a content when cancelled state and the transition try to create an event.
 

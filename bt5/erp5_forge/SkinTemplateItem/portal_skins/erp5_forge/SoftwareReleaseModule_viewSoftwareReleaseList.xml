@@ -38,7 +38,17 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string>Base_edit</string> </value>
+            <value> <string>Base_doSelect</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>edit_order</string> </key>
+            <value>
+              <list/>
+            </value>
         </item>
         <item>
             <key> <string>encoding</string> </key>
@@ -53,7 +63,10 @@
             <value>
               <list>
                 <string>left</string>
+                <string>right</string>
+                <string>center</string>
                 <string>bottom</string>
+                <string>hidden</string>
               </list>
             </value>
         </item>
@@ -70,11 +83,27 @@
                     </value>
                 </item>
                 <item>
+                    <key> <string>center</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>hidden</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
                     <key> <string>left</string> </key>
                     <value>
-                      <list>
-                        <string>my_id</string>
-                      </list>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>right</string> </key>
+                    <value>
+                      <list/>
                     </value>
                 </item>
               </dictionary>
@@ -82,7 +111,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ExternalFolder_view</string> </value>
+            <value> <string>SoftwareReleaseModule_viewSoftwareReleaseList</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -90,11 +119,11 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>ExternalFolder_view</string> </value>
+            <value> <string>SoftwareReleaseModule_viewSoftwareReleaseList</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
-            <value> <string>form_view</string> </value>
+            <value> <string>form_list</string> </value>
         </item>
         <item>
             <key> <string>row_length</string> </key>
@@ -106,7 +135,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>External Folder</string> </value>
+            <value> <string>Software Releases</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>
@@ -114,6 +143,10 @@
         </item>
         <item>
             <key> <string>update_action</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>update_action_title</string> </key>
             <value> <string></string> </value>
         </item>
       </dictionary>

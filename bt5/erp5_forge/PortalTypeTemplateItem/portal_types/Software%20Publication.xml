@@ -30,23 +30,23 @@
         </item>
         <item>
             <key> <string>acquire_local_roles</string> </key>
-            <value> <int>1</int> </value>
+            <value> <int>0</int> </value>
         </item>
         <item>
             <key> <string>content_icon</string> </key>
-            <value> <string>folder_icon.gif</string> </value>
+            <value> <string>document.gif</string> </value>
         </item>
         <item>
             <key> <string>content_meta_type</string> </key>
-            <value> <string>ERP5 Folder</string> </value>
+            <value> <string>ERP5 Ticket</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Folder to upload files</string> </value>
+            <value> <string>A Software Release Publication is a technical mini-project which keeps track of all events associated to a given software release publication campaign. Use it for example to associate text documents, videos, press releases, image and end-user event to a single ticket at the occasion of the publication of new software release.</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>
-            <value> <string>addFolder</string> </value>
+            <value> <string>addTicket</string> </value>
         </item>
         <item>
             <key> <string>filter_content_types</string> </key>
@@ -56,21 +56,24 @@
             <key> <string>group_list</string> </key>
             <value>
               <tuple>
-                <string>module</string>
+                <string>project</string>
+                <string>ticket</string>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Upload Module</string> </value>
+            <value> <string>Software Publication</string> </value>
         </item>
         <item>
             <key> <string>init_script</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Ticket_init</string> </value>
         </item>
         <item>
             <key> <string>permission</string> </key>
-            <value> <string></string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -90,7 +93,7 @@
       <dictionary>
         <item>
             <key> <string>domain_name</string> </key>
-            <value> <string>erp5_ui</string> </value>
+            <value> <string>erp5_content</string> </value>
         </item>
         <item>
             <key> <string>property_name</string> </key>
@@ -110,7 +113,7 @@
       <dictionary>
         <item>
             <key> <string>domain_name</string> </key>
-            <value> <string>erp5_ui</string> </value>
+            <value> <string>erp5_content</string> </value>
         </item>
         <item>
             <key> <string>property_name</string> </key>

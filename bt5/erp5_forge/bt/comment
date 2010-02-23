@@ -1,1 +1,6 @@
 * The glossary module "Update Workflows by English Glossary" Action uses DCWorkflow's API method "setProperties". In case of future patches or updates, this must be reviewed, as there is a risk of overwriting important data
+* Software Release act both as documents and thys as items. They can be linked to through the 'aggregate' relation by any document which acts as a movement (ex. Event, Ticket, Sale Order Line).
+* upload_module has been removed since it was only used by Nexedi and it can be implemented better with DMS and caching.
+TODO:
+- add view of list of bugs for a given software release
+- add jump action from software release bugs, movements, etc.
