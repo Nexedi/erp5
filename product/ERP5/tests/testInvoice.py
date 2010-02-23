@@ -77,6 +77,10 @@ class TestInvoiceMixin(TestPackingListMixin,
       ('collected_vat', 'receivable_vat', 'refundable_vat', vat_rate),
       )
 
+  payment_transaction_line_definition_list = (
+    ('payable', None, None, -1.0),
+    ('bank', 'account_module/bank', 'account_module/bank', 1.0)
+    )
 
   def getTitle(self):
     return "Invoices"
@@ -122,6 +126,7 @@ class TestInvoiceMixin(TestPackingListMixin,
 
   def afterSetUp(self):
     self.createCategories()
+    self.createPaymentRule()
     self.validateRules()
     self.createBusinessProcess()
     self.login()
@@ -147,6 +152,55 @@ class TestInvoiceMixin(TestPackingListMixin,
       
       folder.manage_delObjects([x for x in folder.objectIds() if x not in ('organisation_1','organisation_2','ppl_1','ppl_2')])
      
+    transaction.commit()
+    self.tic()
+
+  @UnrestrictedMethod
+  def createPaymentRule(self):
+    """ create a rule payment transaction generation """
+    payment_rule = getattr(self.getRuleTool(),
+                           'default_payment_simulation_rule')
+    if payment_rule.getValidationState() == 'validated':
+      payment_rule.invalidate()
+      transaction.commit()
+
+    # delete anything inside the rule first
+    # clear the message queue, so that it does not contains unexistant paths
+    self.tic()
+    payment_rule.deleteContent(
+      [x for x in payment_rule.objectIds()])
+    self.assertEquals(len(payment_rule.objectValues()), 0)
+    transaction.commit()
+
+    # and add new content, predicate
+    payment_rule.newContent(
+      id = 'all',
+      title = 'all',
+      portal_type = self.predicate_portal_type,
+      string_index = 'all',
+      int_index = '1',
+    )
+
+    base_id = 'movement'
+    kwd = {'base_id': base_id}
+
+    # update the matrix, generates the accounting rule cells
+    payment_rule.edit()
+    payment_rule.updateMatrix()
+    self.tic()
+
+    # check the accounting rule cells inside the matrix
+    cell_list = payment_rule.contentValues(
+                filter = {'portal_type':self.accounting_rule_cell_portal_type})
+    self.assertEqual(len(cell_list), 1)
+    cell = cell_list[0]
+
+    for line_id, line_source_id, line_destination_id, line_ratio in \
+        self.payment_transaction_line_definition_list:
+      line = cell.newContent(id=line_id,
+          portal_type='Accounting Transaction Line', quantity=line_ratio,
+          source=line_source_id,
+          destination=line_destination_id)
     transaction.commit()
     self.tic()
 
