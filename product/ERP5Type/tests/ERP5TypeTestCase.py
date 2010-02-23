@@ -42,6 +42,14 @@ Products.ERP5Type.Utils.get_request = get_request
 Globals.get_request = get_request
 
 try:
+  from zope.site.hooks import setSite
+except ImportError:
+  # BACK: Zope 2.8. setSite is somewhere else, and we can't use it anyway
+  # since ERP5Site is not yet an ISite. Remove once we drop support for 2.8
+  def setSite(site=None):
+    pass
+
+try:
   import itools.zope
   def get_context():
     return current_app
@@ -298,6 +306,7 @@ class ERP5TypeTestCase(backportUnittest.TestCase, PortalTestCase):
       # where it is called exactly once per test.
       portal.setupCurrentSkin(portal.REQUEST)
       self.REQUEST = portal.REQUEST
+      setSite(portal)
       return portal
 
     getPortalObject = getPortal
@@ -1014,8 +1023,7 @@ class ERP5TypeTestCase(backportUnittest.TestCase, PortalTestCase):
       '''Tears down the fixture. Do not override,
          use the hooks instead.
       '''
-      # avoid backportUnittest.TestCase.tearDown inheritance and still allow
-      # "runUnitTest --save" to monkey-patch PortalTestCase.tearDown
+      setSite() # undo site configuration from self.getPortal()
       return PortalTestCase.tearDown(self)
 
     def beforeClose(self):
