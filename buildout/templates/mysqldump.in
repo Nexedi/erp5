@@ -1,0 +1,3 @@
+#!/bin/sh
+
+${software_definition:mysql_software}/bin/mysqldump --defaults-file=${configuration:mysql_cnf_file} $@
