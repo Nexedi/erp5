@@ -125,7 +125,8 @@ def updateTranslation():\n
 context.edit()#invoke interaction workflows etc.\n
 updateTranslation()\n
 \n
-\n
+ignore_layout = int(ignore_layout)\n
+editable_mode = int(editable_mode)\n
 redirect_url = \'%s/%s?ignore_layout:int=%s&editable_mode:int=%s&portal_status_message=%s\' % (\n
   context.absolute_url(),\n
   form_id,\n
@@ -212,6 +213,7 @@ return result\n
                             <string>value</string>
                             <string>callable</string>
                             <string>updateTranslation</string>
+                            <string>int</string>
                             <string>result</string>
                           </tuple>
                         </value>
