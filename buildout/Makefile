@@ -20,6 +20,7 @@ assert-python2.4: bin/python2.4
 	bin/python2.4 -c 'import dbm'
 	bin/python2.4 -c 'import elementtree'
 	bin/python2.4 -c 'import fpconst'
+	bin/python2.4 -c 'import gdbm'
 	bin/python2.4 -c 'import itools'
 	bin/python2.4 -c 'import ldap'
 	bin/python2.4 -c 'import lxml'
