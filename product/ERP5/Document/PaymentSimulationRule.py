@@ -52,9 +52,19 @@ class PaymentSimulationRule(Rule, PredicateMatrix):
     based on its context (parent movement, delivery, configuration ...)
 
     These previsions are returned as dictionaries.
+
+    * source and destination (i.e. account) are provided by rule cells.
+    * start_date, stop_date and quantity are calculated according to
+      payment conditions.
     """
-    input_movement, business_path = self._getInputMovementAndPathTupleList(
-        applied_rule)[0]
+    # Find an input movement and using Payment Conditions.
+    # XXX we also need to support local Payment Conditions, that are not
+    # provided by BPM.
+    movement_and_tuple_list = self._getInputMovementAndPathTupleList(
+        applied_rule)
+    input_movement = movement_and_tuple_list[0][0]
+    payment_condition_list = [x[1] for x in movement_and_tuple_list]
+
     kw = self._getExpandablePropertyDict(applied_rule, input_movement, None)
     prevision_list = []
 
@@ -63,23 +73,26 @@ class PaymentSimulationRule(Rule, PredicateMatrix):
 
     if cell is not None : # else, we do nothing
       for payment_rule_cell_line in cell.objectValues():
-        prevision_line = kw.copy()
-        prevision_line.update(
-          source=payment_rule_cell_line.getSource() or \
-                 input_movement.getSource(),
-          destination=payment_rule_cell_line.getDestination() or \
-                 input_movement.getDestination(),
-          quantity=input_movement.getQuantity() * \
-                   payment_rule_cell_line.getQuantity()
-          )
-        # Generate Prevision Script is required for Payment Simulation Rule?
-        if payment_rule_cell_line.hasProperty(
-            'generate_prevision_script_id'):
-          generate_prevision_script_id = \
-                payment_rule_cell_line.getGeneratePrevisionScriptId()
-          prevision_line.update(getattr(input_movement,
-                              generate_prevision_script_id)(prevision_line))
-        prevision_list.append(prevision_line)
+        for payment_condition in payment_condition_list:
+          prevision_line = kw.copy()
+          prevision_line.update(
+            source=payment_rule_cell_line.getSource() or \
+                   input_movement.getSource(),
+            destination=payment_rule_cell_line.getDestination() or \
+                   input_movement.getDestination(),
+            start_date=payment_condition.getExpectedStartdate(input_movement),
+            stop_date=payment_condition.getExpectedStopdate(input_movement),
+            quantity=payment_condition.getExpectedQuantity(input_movement) * \
+                     payment_rule_cell_line.getQuantity()
+            )
+          # Generate Prevision Script is required for Payment Simulation Rule?
+          if payment_rule_cell_line.hasProperty(
+              'generate_prevision_script_id'):
+            generate_prevision_script_id = \
+                  payment_rule_cell_line.getGeneratePrevisionScriptId()
+            prevision_line.update(getattr(input_movement,
+                                generate_prevision_script_id)(prevision_line))
+          prevision_list.append(prevision_line)
     return prevision_list
 
   security.declareProtected(Permissions.ModifyPortalContent, 'expand')
