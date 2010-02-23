@@ -17,6 +17,7 @@ Delivery Rule | Quantity Divergence Tester
 Internal Packing List Line | Internal Packing List Cell
 Internal Packing List Module | Internal Packing List
 Internal Packing List | Internal Packing List Line
+Internal Packing List | Payment Condition
 Inventory Line | Inventory Cell
 Inventory Module | Inventory
 Inventory | Inventory Line
@@ -35,6 +36,7 @@ Purchase Order | Purchase Order Line
 Purchase Order | Trade Model Line
 Purchase Packing List Line | Purchase Packing List Cell
 Purchase Packing List Module | Purchase Packing List
+Purchase Packing List | Payment Condition
 Purchase Packing List | Purchase Packing List Line
 Purchase Trade Condition Module | Purchase Trade Condition
 Purchase Trade Condition | Payment Condition
@@ -43,6 +45,7 @@ Purchase Trade Condition | Trade Model Line
 Returned Sale Packing List Line | Returned Sale Packing List Cell
 Returned Sale Packing List Module | Returned Sale Packing List
 Returned Sale Packing List | Container
+Returned Sale Packing List | Payment Condition
 Returned Sale Packing List | Returned Sale Packing List Line
 Rule Tool | Delivery Rule
 Rule Tool | Delivery Root Simulation Rule
@@ -58,6 +61,7 @@ Sale Order | Trade Model Line
 Sale Packing List Line | Sale Packing List Cell
 Sale Packing List Module | Sale Packing List
 Sale Packing List | Container
+Sale Packing List | Payment Condition
 Sale Packing List | Sale Packing List Line
 Sale Trade Condition Module | Sale Trade Condition
 Sale Trade Condition | Payment Condition
