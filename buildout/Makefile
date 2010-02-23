@@ -17,7 +17,6 @@ assert-python2.4: bin/python2.4
 	bin/python2.4 -c 'import _ssl'
 	bin/python2.4 -c 'import _xmlplus'
 	bin/python2.4 -c 'import bz2'
-	bin/python2.4 -c 'import dbm'
 	bin/python2.4 -c 'import elementtree'
 	bin/python2.4 -c 'import fpconst'
 	bin/python2.4 -c 'import gdbm'
