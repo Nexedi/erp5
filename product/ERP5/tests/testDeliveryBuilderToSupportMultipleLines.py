@@ -230,9 +230,11 @@ class TestNestedLine(TestNestedLineMixin, ERP5TypeTestCase):
     # packing_list = sequence.get('packing_list')
     document = sequence.get('invoice')
     self.assertEquals('Sale Invoice Transaction', document.getPortalType())
-    self.assertEquals(1, len(document))
+    line_list = document.objectValues(
+      portal_type=self.portal.getPortalInvoiceMovementTypeList())
+    self.assertEquals(1, len(line_list))
 
-    line = document.objectValues()[0]
+    line = line_list[0]
     self.assertEquals('Invoice Line', line.getPortalType())
     self.assertEquals(None, line.getQuantity(None))
     self.assertEquals(1, len(line))
@@ -266,9 +268,11 @@ class TestNestedLine(TestNestedLineMixin, ERP5TypeTestCase):
 
     document = sequence.get('invoice')
     self.assertEquals('solved', document.getCausalityState())
-    self.assertEquals(1, len(document))
+    line_list = document.objectValues(
+      portal_type=self.portal.getPortalInvoiceMovementTypeList())
+    self.assertEquals(1, len(line_list))
 
-    line = document.objectValues()[0]
+    line = line_list[0]
     self.assertEquals('Invoice Line', line.getPortalType())
     self.assertEquals(None, line.getQuantity(None))
     self.assertEquals(1, len(line))
@@ -302,9 +306,11 @@ class TestNestedLine(TestNestedLineMixin, ERP5TypeTestCase):
     document = sequence.get('invoice')
     
     self.assertEquals('solved', document.getCausalityState())
-    self.assertEquals(1, len(document))
+    line_list = document.objectValues(
+      portal_type=self.portal.getPortalInvoiceMovementTypeList())
+    self.assertEquals(1, len(line_list))
 
-    line = document.objectValues()[0]
+    line = line_list[0]
     self.assertEquals('Invoice Line', line.getPortalType())
     self.assertEquals(None, line.getQuantity(None))
     self.assertEquals(1, len(line))
@@ -358,9 +364,11 @@ class TestNestedLine(TestNestedLineMixin, ERP5TypeTestCase):
 
     document = self.portal.accounting_module.objectValues()[0]
     self.assertEquals('solved', document.getCausalityState())
-    self.assertEquals(1, len(document))
+    line_list = document.objectValues(
+      portal_type=self.portal.getPortalInvoiceMovementTypeList())
+    self.assertEquals(1, len(line_list))
 
-    line = document.objectValues()[0]
+    line = line_list[0]
     self.assertEquals('Invoice Line', line.getPortalType())
     self.assertEquals(None, line.getQuantity(None))
     self.assertEquals(1, len(line))
