@@ -2,7 +2,7 @@
 ERP5 buildout
 =============
 
-Introductoin
+Introduction
 ============
 
 ERP5 Buildout is providing a way to build and manage ERP5 software components
