@@ -53,7 +53,9 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>"""This script is called on the Invoice after the delivery builder has created\n
+            <value> <string encoding="cdata"><![CDATA[
+
+"""This script is called on the Invoice after the delivery builder has created\n
 the new Invoice.\n
 """\n
 from Products.ERP5Type.Message import translateString\n
@@ -77,8 +79,22 @@ if not invoice.Invoice_isAdvanced():\n
     invoice.setResource(invoice.getPriceCurrency())\n
 \n
 related_packing_list = invoice.getDefaultCausalityValue()\n
-\n
 related_order = related_packing_list.getDefaultCausalityValue()\n
+\n
+# copy payment conditions from packing list\n
+# if missing, try to copy from order (for compatibility)\n
+payment_condition_copy_id_list = related_packing_list.contentIds(filter={\'portal_type\':\'Payment Condition\'})\n
+if len(payment_condition_copy_id_list) > 0:\n
+  clipboard = related_packing_list.manage_copyObjects(\n
+    ids=payment_condition_copy_id_list)\n
+  invoice.manage_pasteObjects(clipboard)\n
+elif related_order is not None:\n
+  payment_condition_copy_id_list = related_order.contentIds(filter={\'portal_type\':\'Payment Condition\'})\n
+  if len(payment_condition_copy_id_list) > 0:\n
+    clipboard = related_order.manage_copyObjects(\n
+      ids=payment_condition_copy_id_list)\n
+    invoice.manage_pasteObjects(clipboard)\n
+\n
 if related_order is not None:\n
   # copy trade condition:\n
   if not context.getSpecialise():\n
@@ -113,7 +129,9 @@ invoice.startBuilding()\n
 # Then an activity should put the causality state in diverged or solved\n
 invoice.activate(after_path_and_method_id=(related_simulation_movement_path_list,\n
   (\'immediateReindexObject\',\'recursiveImmediateReindexObject\'))).updateCausalityState()\n
-</string> </value>
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -164,6 +182,9 @@ invoice.activate(after_path_and_method_id=(related_simulation_movement_path_list
                             <string>_getattr_</string>
                             <string>related_packing_list</string>
                             <string>related_order</string>
+                            <string>payment_condition_copy_id_list</string>
+                            <string>len</string>
+                            <string>clipboard</string>
                             <string>append</string>
                             <string>$append0</string>
                             <string>_getiter_</string>
@@ -171,7 +192,6 @@ invoice.activate(after_path_and_method_id=(related_simulation_movement_path_list
                             <string>invoice_trade_model_line_reference_list</string>
                             <string>order_trade_model_line_copy_id_list</string>
                             <string>order_trade_model_line</string>
-                            <string>clipboard</string>
                           </tuple>
                         </value>
                     </item>
