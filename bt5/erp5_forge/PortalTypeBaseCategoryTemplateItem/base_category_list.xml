@@ -1,5 +1,6 @@
 <base_category_list>
  <portal_type id="Bug">
+  <item>aggregate</item>
   <item>bug_difficulty</item>
   <item>bug_priority</item>
   <item>bug_severity</item>
@@ -14,7 +15,10 @@
   <item>business_field</item>
   <item>causality</item>
  </portal_type>
- <portal_type id="Upload Module">
+ <portal_type id="Software Publication Module">
+  <item>business_application</item>
+ </portal_type>
+ <portal_type id="Software Release Module">
   <item>business_application</item>
  </portal_type>
 </base_category_list>

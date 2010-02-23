@@ -118,6 +118,7 @@
                         <string>my_bug_severity</string>
                         <string>my_bug_priority</string>
                         <string>my_bug_difficulty</string>
+                        <string>my_aggregate_title_list</string>
                         <string>my_translated_simulation_state_title</string>
                       </list>
                     </value>
