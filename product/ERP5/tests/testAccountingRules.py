@@ -1077,8 +1077,8 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
     applied_rule = applied_rule_list[0]
     self.assertEqual( applied_rule.getPortalType(),
                       self.applied_rule_portal_type)
-    self.assertEqual( applied_rule.getSpecialise(),
-                      'portal_rules/default_invoice_rule')
+    self.assertEqual( applied_rule.getSpecialiseReference(),
+                      'default_invoice_rule')
     self.assertEqual( applied_rule.getCausality(),
                       invoice.getRelativeUrl())
 
@@ -1455,8 +1455,8 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
     applied_rule = applied_rule_list[0]
 
     self.assertEquals(
-      'portal_rules/default_invoice_rule',
-      applied_rule.getSpecialise()
+      'default_invoice_rule',
+      applied_rule.getSpecialiseReference()
     )
 
     self.assertEquals(
