@@ -50,6 +50,7 @@ Apparel Component Variation | download
 Apparel Component Variation | image_view
 Apparel Component Variation | view
 Apparel Component | instruction_view
+Apparel Component | jump_to_related_transformation
 Apparel Component | purchase_price_view
 Apparel Component | sale_price_view
 Apparel Component | view
@@ -83,6 +84,7 @@ Apparel Fabric Module | sort_on
 Apparel Fabric Module | view
 Apparel Fabric Module | workflow_report
 Apparel Fabric | instruction_view
+Apparel Fabric | jump_to_related_transformation
 Apparel Fabric | purchase_price_view
 Apparel Fabric | sale_price_view
 Apparel Fabric | view
@@ -134,6 +136,7 @@ Apparel Shape | development
 Apparel Shape | jump_to_related_apparel_cloth
 Apparel Shape | jump_to_related_apparel_model
 Apparel Shape | jump_to_related_apparel_shape
+Apparel Shape | jump_to_related_transformation
 Apparel Shape | view
 Apparel Size Module | csv_export
 Apparel Size Module | csv_import

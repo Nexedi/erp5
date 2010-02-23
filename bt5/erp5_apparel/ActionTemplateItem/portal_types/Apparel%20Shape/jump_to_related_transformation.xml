@@ -45,7 +45,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>view_related_transformation</string> </value>
+            <value> <string>jump_to_related_transformation</string> </value>
         </item>
         <item>
             <key> <string>permissions</string> </key>
@@ -57,7 +57,7 @@
         </item>
         <item>
             <key> <string>priority</string> </key>
-            <value> <float>2.0</float> </value>
+            <value> <float>8.0</float> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -101,7 +101,7 @@ string:${object_url}/Base_jumpToRelatedObject?base_category=resource&portal_type
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>python: portal.Base_checkPermission(\'apparel_assortment_module\', \'View\')</string> </value>
+            <value> <string>python: portal.Base_checkPermission(\'apparel_shape_module\', \'View\')</string> </value>
         </item>
       </dictionary>
     </pickle>
