@@ -35,18 +35,24 @@ try:
 except ImportError:
   pass
 
+# This dict define the alias between old Translation Service catalog id
+#   and new Localizer Message Catalog.
+message_catalog_aliases = { "Default": "default"
+                          , "ui"     : "erp5_ui"
+                          , "content": "erp5_content"
+                          }
 
+# "invert" message_catalog_aliases
+message_catalog_alias_sources = {}
+for name, value in message_catalog_aliases.items():
+  message_catalog_alias_sources.setdefault(value, []).append(name)
+
+# BACK: This method is not used in Zope 2.12. Drop when we drop support for
+# Zope 2.8
 def Localizer_translate(self, domain, msgid, lang=None, mapping=None, *args, **kw):
     """
       This translate() method use Localizer and support catalog aliases.
     """
-    # This dict define the alias between old Translation Service catalog id
-    #   and new Localizer Message Catalog.
-    message_catalog_aliases = { "Default": "default"
-                              , "ui"     : "erp5_ui"
-                              , "content": "erp5_content"
-                              }
-
     # Get the Localizer catalog id
     catalog_id = message_catalog_aliases.get(domain, domain)
     catalog_obj = self._getOb(catalog_id, None)
@@ -86,6 +92,8 @@ def Localizer_translate(self, domain, msgid, lang=None, mapping=None, *args, **k
       translated_str = Template(translated_str).substitute(unicode_mapping)
     return translated_str
 
+# BACK: This method is not used in Zope 2.12. Drop when we drop support for
+# Zope 2.8
 def GlobalTranslationService_translate(self, domain, msgid, *args, **kw):
   context = kw.get('context')
   if context is None:
@@ -252,3 +260,41 @@ Localizer.Localizer._properties = _properties
 Localizer.Localizer.user_defined_languages = user_defined_languages
 Localizer.Localizer.get_languages_map = get_languages_map
 Localizer.InitializeClass(Localizer.Localizer)
+
+# BACK: Can't write a configure.zcml that works on both Zope 2.8 and Zope 2.12
+# So we monkeypatch the subscriber instead. When we drop support for Zope 2.8
+# write a proper subscriber for MessageCatalog and IObjectMovedEvent
+try:
+  from Products.Localizer.MessageCatalog import (MessageCatalog_moved as
+                                                 MessageCatalog_moved_orig)
+except ImportError:
+  pass # Zope 2.8
+else:
+  from zope.component import getSiteManager
+  from zope.i18n.interfaces import ITranslationDomain
+  import Products.Localizer.MessageCatalog
+  def MessageCatalog_moved(object, event):
+    """
+    Install ITranslationDomain aliases alongside the original
+    MessageCatalog names
+    """
+    MessageCatalog_moved_orig(object, event)
+    if event.oldParent is not None:
+      # unregister old aliases
+      oldAliases = message_catalog_alias_sources.get(event.oldName, ())
+      sm = getSiteManager(event.oldParent)
+      for alias in oldAliases:
+        sm.unregisterUtility(object, ITranslationDomain, alias)
+
+    if event.newParent is not None:
+      # register new aliases
+      newAliases = message_catalog_alias_sources.get(event.newName, ())
+      sm = getSiteManager(event.newParent)
+      # FIXME: install aliases only if inside an ERP5Site
+      # but how to do that without causing circular dependencies? ERP5Site
+      # needs to implement an IERP5Site interface, declared inside
+      # Products.ERP5Type.interfaces
+      for alias in newAliases:
+        sm.registerUtility(object, ITranslationDomain, alias)
+  
+  Products.Localizer.MessageCatalog.MessageCatalog_moved = MessageCatalog_moved
