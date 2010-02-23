@@ -324,6 +324,10 @@ class TestTranslation(ERP5TypeTestCase):
     # translation
     self.portal.Localizer.get_selected_language = LanguageGetter(self.lang)
 
+    # create the zpt used by self.translate_by_zpt()
+    dispatcher = self.portal.manage_addProduct['PageTemplates']
+    dispatcher.manage_addPageTemplate('myzpt')
+    self.myzpt = self.portal.myzpt
     self.stepTic()
 
   def beforeTearDown(self):
@@ -342,7 +346,8 @@ class TestTranslation(ERP5TypeTestCase):
     # erase created objects
     for module in (self.portal.person_module, self.portal.organisation_module):
       module.manage_delObjects(list(module.objectIds()))
-      
+    self.portal.manage_delObjects(['myzpt'])
+
     self.stepTic()
     ERP5TypeTestCase.beforeTearDown(self)
 
@@ -351,19 +356,25 @@ class TestTranslation(ERP5TypeTestCase):
     erp5_ui = self.portal.Localizer.erp5_ui
     self.assertEquals(erp5_ui.gettext('Person', lang=self.lang), 'Personne')
 
-  def test_ZPT_translation(self):
-    dispatcher = self.portal.manage_addProduct['PageTemplates']
-    myzpt = dispatcher.manage_addPageTemplate('myzpt')
+  def translate_by_zpt(self, domain, *words):
     zpt_template = """
     <tal:ommit xmlns:i18n="http://xml.zope.org/namespaces/i18n"
-               i18n:domain="erp5_ui">
-      <tal:ommit i18n:translate="">Person</tal:ommit>
-      <tal:ommit i18n:translate="">Draft</tal:ommit>
+               i18n:domain="%s">
+      <tal:ommit repeat="word options/words" content="word"
+                 i18n:translate="">Word</tal:ommit>
     </tal:ommit>
-    """
-    myzpt.pt_edit(zpt_template,
-                  'text/html')
-    results = to_utf8(myzpt()).split()
+    """ % domain
+    self.myzpt.pt_edit(zpt_template, 'text/html')
+    results = to_utf8(self.myzpt(words=words)).split()
+    return results
+
+  def test_ZPT_translation(self):
+    results = self.translate_by_zpt('erp5_ui', 'Person', 'Draft')
+    self.assertEquals(results, ['Personne', 'Brouillon'])
+
+  def test_ZPT_translation_with_domain_alias(self):
+    # test with a translation domain alias
+    results = self.translate_by_zpt('ui', 'Person', 'Draft')
     self.assertEquals(results, ['Personne', 'Brouillon'])
 
   def test_portal_type_and_state_title_translation_on_portal_catalog(self):
