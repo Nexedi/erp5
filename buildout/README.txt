@@ -1,9 +1,29 @@
+=============
 ERP5 buildout
 =============
 
-This is ERP5 buildout. It contains all software components required to build
-and run ERP5 on operating system, which provides compiler, some widespread used
-binaries and development files (headers and libraries).
+Introductoin
+============
+
+ERP5 Buildout is providing a way to build and manage ERP5 software components
+with all needed dependencies.
+
+ERP5 Buildout is also providing a way to manage instances of software
+(whenever provided by ERP5 Buildout or externally).
+
+
+Software
+========
+
+Software part shall be system independent. In perfect world it shall depend
+only on:
+
+ * C compiler
+ * standard C and C++ library
+ * operating system kernel
+
+As world is not perfect some additional build time requirements are added,
+please look below for a way to acquire list of dependencies and system helpers.
 
 How to run
 ----------
@@ -52,4 +72,4 @@ To prepare Mandriva 2010.0 please type, having root privileges:
 
   helpers/mandriva2010.0.sh
 
-sudo is used internally.
+There are more helpers available, please refer to helpers directory.
