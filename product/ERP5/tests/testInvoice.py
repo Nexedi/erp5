@@ -1228,7 +1228,7 @@ class TestInvoiceMixin(TestPackingListMixin,
         'Invoice Rule': {
           'movement_type_list': invoice.getPortalInvoiceMovementTypeList() \
               + invoice.getPortalAccountingMovementTypeList(),
-          'next_rule_list': ['Invoice Transaction Rule', 'Payment Rule',
+          'next_rule_list': ['Invoice Transaction Rule', 'Payment Simulation Rule',
             'Trade Model Rule'],
           },
         'Invoice Transaction Rule': {
