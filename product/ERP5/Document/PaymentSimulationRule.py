@@ -72,18 +72,22 @@ class PaymentSimulationRule(Rule, PredicateMatrix):
     cell = self._getMatchingCell(input_movement)
 
     if cell is not None : # else, we do nothing
-      for payment_rule_cell_line in cell.objectValues():
-        for payment_condition in payment_condition_list:
+      for payment_condition in payment_condition_list:
+        start_date = payment_condition.getExpectedStartDate(input_movement) or \
+                     input_movement.getStartDate()
+        stop_date = payment_condition.getExpectedStopDate(input_movement) or \
+                     input_movement.getStopDate()
+        quantity = payment_condition.getExpectedQuantity(input_movement)
+        for payment_rule_cell_line in cell.objectValues():
           prevision_line = kw.copy()
           prevision_line.update(
             source=payment_rule_cell_line.getSource() or \
                    input_movement.getSource(),
             destination=payment_rule_cell_line.getDestination() or \
                    input_movement.getDestination(),
-            start_date=payment_condition.getExpectedStartdate(input_movement),
-            stop_date=payment_condition.getExpectedStopdate(input_movement),
-            quantity=payment_condition.getExpectedQuantity(input_movement) * \
-                     payment_rule_cell_line.getQuantity()
+            start_date=start_date,
+            stop_date=stop_date,
+            quantity=quantity * payment_rule_cell_line.getQuantity()
             )
           # Generate Prevision Script is required for Payment Simulation Rule?
           if payment_rule_cell_line.hasProperty(
