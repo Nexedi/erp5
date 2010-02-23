@@ -30,9 +30,9 @@ from Products.ERP5Type.Globals import InitializeClass, PersistentMapping
 from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
-from Products.ERP5Type.XMLObject import XMLObject
+from Products.ERP5.Document.BusinessPath import BusinessPath
 
-class PaymentCondition(XMLObject):
+class PaymentCondition(BusinessPath):
     """
       Payment Conditions are used to define all the parameters of a payment
     """
@@ -52,6 +52,7 @@ class PaymentCondition(XMLObject):
                       , PropertySheet.DublinCore
                       , PropertySheet.Amount
                       , PropertySheet.PaymentCondition
+                      , PropertySheet.Chain
                       , PropertySheet.SortIndex
+                      , PropertySheet.BusinessPath
                       )
-
