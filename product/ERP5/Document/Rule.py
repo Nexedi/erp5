@@ -34,7 +34,6 @@ from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5.Document.Predicate import Predicate
 from Acquisition import aq_base
-from zLOG import LOG, WARNING
 
 class Rule(Predicate, XMLObject):
   """
@@ -71,7 +70,7 @@ class Rule(Predicate, XMLObject):
   # Declarative security
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
-  
+
   zope.interface.implements( interfaces.IPredicate,
                      interfaces.IRule )
 
@@ -86,7 +85,7 @@ class Rule(Predicate, XMLObject):
                     , PropertySheet.Version
                     , PropertySheet.Rule
                     )
-  
+
   # Portal Type of created children
   movement_type = 'Simulation Movement'
 
@@ -94,7 +93,7 @@ class Rule(Predicate, XMLObject):
                             'isAccountable')
   def isAccountable(self, movement):
     """Tells wether generated movement needs to be accounted or not.
-    
+
     Only account movements which are not associated to a delivery;
     Whenever delivery is there, delivery has priority
     """
@@ -102,7 +101,7 @@ class Rule(Predicate, XMLObject):
 
   security.declareProtected(Permissions.ModifyPortalContent,
                             'constructNewAppliedRule')
-  def constructNewAppliedRule(self, context, id=None, 
+  def constructNewAppliedRule(self, context, id=None,
                               activate_kw=None, **kw):
     """
       Creates a new applied rule which points to self
@@ -201,12 +200,12 @@ class Rule(Predicate, XMLObject):
     delivery = sim_mvt.getDeliveryValue()
     if delivery is None:
       return 0
-      
+
     if self.getDivergenceList(sim_mvt) == []:
       return 0
     else:
       return 1
-    
+
   security.declareProtected(Permissions.View, 'getDivergenceList')
   def getDivergenceList(self, sim_mvt):
     """
@@ -288,12 +287,12 @@ class Rule(Predicate, XMLObject):
 
     a movement is deletable if it has no delivered child, is not in current
     state, and not in delivery movements.
-    a movement 
+    a movement
     """
     immutable_movement_list = []
     mutable_movement_list = []
     deletable_movement_list = []
-    
+
     for movement in applied_rule.contentValues(portal_type=self.movement_type):
       if movement.isFrozen():
         immutable_movement_list.append(movement)
@@ -317,14 +316,11 @@ class Rule(Predicate, XMLObject):
       return [(input_movement, None) for input_movement in input_movement_list]
 
     input_movement_and_path_list = []
-    business_path_list = []
     for input_movement in input_movement_list:
       for business_path in business_process.getPathValueList(
                           trade_phase_list,
                           input_movement):
         input_movement_and_path_list.append((input_movement, business_path))
-        business_path not in business_path_list and business_path_list \
-            .append(business_path)
 
     return input_movement_and_path_list
 
@@ -444,7 +440,7 @@ class Rule(Predicate, XMLObject):
                                                                **kw)
     movement_list = immutable_movement_list + mutable_movement_list \
                     + deletable_movement_list
-    non_matched_list = movement_list[:] # list of remaining movements 
+    non_matched_list = movement_list[:] # list of remaining movements
 
     if matching_property_list is None:
       matching_property_list = self.getMatchingPropertyList()
@@ -463,7 +459,7 @@ class Rule(Predicate, XMLObject):
           p_matched_list.append(movement)
 
       # XXX hardcoded ...
-#       LOG("Rule, _getCompensatedMovementList", WARNING, 
+#       LOG("Rule, _getCompensatedMovementList", WARNING,
 #           "Hardcoded properties check")
       # Movements exist, we'll try to make them match the prevision
       if p_matched_list != []:
