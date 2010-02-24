@@ -1,3 +1,6 @@
+2010-02-24 yusei
+* Move Software Release and Software Publication to erp5_forge_release to remove dependencies to crm and dms.
+
 2010-02 jps
 * added Software Release portal type
 * added Software Publication portal type
