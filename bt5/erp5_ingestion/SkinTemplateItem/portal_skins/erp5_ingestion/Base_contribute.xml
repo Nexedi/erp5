@@ -123,7 +123,7 @@ else:\n
   # edit document   \n
   if document_edit_kw is not {}:\n
     document.edit(**document_edit_kw)\n
-  document_portal_type = document.getTranslatedPortalType()\n
+  document_portal_type = document.getPortalType()\n
   if not is_existing_document_updated:\n
     message = \'%s created successfully.\' %document_portal_type\n
   else:\n
