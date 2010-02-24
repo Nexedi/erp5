@@ -318,7 +318,10 @@ try:
     
     def switch(self, path, url):
       return self.client.switch(path=path, url=url)
-    
+
+    def checkout(self, path, url):
+      return self.client.checkout(path=path, url=url)
+
     def log(self, path):
       try:
         log_list = self.client.log(path)

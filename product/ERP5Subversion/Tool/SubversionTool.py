@@ -516,7 +516,26 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
       url = url[:-1]
     # Update from SVN
     client.switch(path=path, url=url)
-  
+
+  security.declareProtected('Import/Export objects', 'checkout')
+  def checkout(self, business_template, url):
+    """ Checkout business configuration from SVN into 
+        the first Preferres Subversion Working Copy.
+    """
+    wc_list = self.getPortalObject().portal_preferences\
+    .getPreferredSubversionWorkingCopyList()
+    if not wc_list or len(wc_list) == 0 :
+      raise SubversionPreferencesError, \
+      'Please set at least one Subversion Working Copy in preferences first.'
+    bt_name = business_template.getTitle()
+    wc_path = os.path.join(wc_list[0], bt_name)
+    path = self._getWorkingPath(wc_path)
+    client = self._getClient()
+    if url[-1] != '/' :
+      url += '/' 
+    url += bt_name
+    client.checkout(path=path, url=url)
+
   security.declareProtected('Import/Export objects', 'add')
   # path can be a list or not (relative or absolute)
   def add(self, path, business_template=None):
