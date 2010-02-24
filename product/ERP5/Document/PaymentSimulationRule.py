@@ -66,10 +66,14 @@ class PaymentSimulationRule(Rule, PredicateMatrix):
 
     payment_conditon_list = []
 
-    # try to find local payment conditions
-    delivery = input_movement.getDeliveryValue()
-    if delivery is None:
-      delivery = input_movement.getExplanationValue()
+    # try to find local payment conditions from the upper level delivery
+    rule = applied_rule
+    movement = input_movement
+    delivery = movement.getDeliveryValue()
+    while delivery is None and not(rule.isRootAppliedRule()):
+      rule = movement.getParentValue()
+      movement = rule.getParentValue()
+      delivery = movement.getDeliveryValue()
     if delivery is not None:
       payment_condition_list = delivery.getPaymentConditionValueList()
 
