@@ -15,8 +15,8 @@
    - socksipy (http://socksipy.sourceforge.net/)
    - make bin/python2.4 using all available eggs
  - software-profiles/openoffice-bin.cfg:
-   - [DONE?] autodetection of platform and arch
-   - [DONE?] consider using own recipe, which would be closer to buildout usage (internal cache, etc)
+   - consider using own recipe or zorg.recipe.openoffice, which would be
+     closer to buildout usage (internal cache, etc)
  - add bin/ and var/bin/ to path
  - if software do not provide instance, put its binaries to bin/
  - use declarative way of selecting in-buildout dependencies
