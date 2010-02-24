@@ -1,0 +1,4 @@
+* Software Release act both as documents and thys as items. They can be linked to through the 'aggregate' relation by any document which acts as a movement (ex. Event, Ticket, Sale Order Line).
+TODO:
+- add view of list of bugs for a given software release
+- add jump action from software release bugs, movements, etc.
