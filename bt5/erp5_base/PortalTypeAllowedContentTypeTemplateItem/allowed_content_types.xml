@@ -31,7 +31,9 @@
   <item>Quantity Sign Movement Group</item>
   <item>Requirement Movement Group</item>
   <item>Root Applied Rule Causality Movement Group</item>
+  <item>Split Category Movement Group</item>
   <item>Split Movement Group</item>
+  <item>Split Property Movement Group</item>
   <item>Tax Line Delivery Movement Group</item>
   <item>Title Movement Group</item>
   <item>Variant Movement Group</item>
@@ -59,7 +61,9 @@
   <item>Quantity Sign Movement Group</item>
   <item>Requirement Movement Group</item>
   <item>Root Applied Rule Causality Movement Group</item>
+  <item>Split Category Movement Group</item>
   <item>Split Movement Group</item>
+  <item>Split Property Movement Group</item>
   <item>Title Movement Group</item>
   <item>Variant Movement Group</item>
   <item>Variation Property Movement Group</item>
