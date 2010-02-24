@@ -32,13 +32,12 @@ class Recipe(plone.recipe.zope2instance.Recipe, erp5.recipe.createsite.Recipe):
         os.path.join(standalone_location, 'bin', 'zopectl'))
     erp5.recipe.createsite.Recipe.__init__(self, buildout, name, options)
     self.egg = zc.recipe.egg.Egg(buildout, options['recipe'], options)
-    self.buildout, self.options, self.name = buildout, options, name
-    self.zope2_location = options.get('zope2-location', '')
-
     options['bin-directory'] = os.path.join(standalone_location, 'bin')
     options['scripts'] = '' # suppress script generation.
     options['file-storage'] = options.get('file-storage',
         os.path.join(standalone_location, 'var', 'Data.fs'))
+    self.buildout, self.options, self.name = buildout, options, name
+    self.zope2_location = options.get('zope2-location', '')
 
     # Relative path support for the generated scripts
     relative_paths = options.get(
@@ -60,6 +59,45 @@ class Recipe(plone.recipe.zope2instance.Recipe, erp5.recipe.createsite.Recipe):
 
     requirements, ws = self.egg.working_set()
     ws_locations = [d.location for d in ws]
+
+    if options.get('mysql_create_database', 'false').lower() == 'true':
+      try:
+        import MySQLdb
+      except ImportError:
+        raise ImportError('To be able to create database MySQLdb is required'
+            ' Install system wide or use software generated python')
+      mysql_database_name, mysql_user, mysql_password, mysql_port, mysql_host\
+            = \
+          options.get('mysql_database_name'), \
+          options.get('mysql_user'), \
+          options.get('mysql_password'), \
+          options.get('mysql_port'), \
+          options.get('mysql_host')
+
+      if not (mysql_database_name and mysql_user):
+        raise zc.buildout.UserError('mysql_database_name and mysql_user are '
+          'required to create database and grant privileges')
+      connection = MySQLdb.connect(
+        host = self.options.get('mysql_host'),
+        port = int(self.options.get('mysql_port')),
+        user = self.options.get('mysql_superuser'),
+        passwd = self.options.get('mysql_superpassword'),
+      )
+      connection.autocommit(0)
+      cursor = connection.cursor()
+      cursor.execute(
+        'CREATE DATABASE IF NOT EXISTS %s DEFAULT CHARACTER SET utf8 COLLATE '
+        'utf8_unicode_ci' % mysql_database_name)
+      privileges = ['GRANT ALL PRIVILEGES ON %s.* TO %s' % (
+          mysql_database_name, mysql_user)]
+
+      if mysql_host:
+        privileges.append('@%s' % mysql_host)
+      if mysql_password:
+        privileges.append(' IDENTIFIED BY "%s"' % mysql_password)
+      cursor.execute(''.join(privileges))
+      connection.commit()
+      connection.close()
 
     # What follows is a bit of a hack because the instance-setup mechanism
     # is a bit monolithic. We'll run mkzopeinstance and then we'll
