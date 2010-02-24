@@ -82,3 +82,36 @@ To prepare Mandriva 2010.0 please type, having root privileges:
   helpers/mandriva2010.0.sh
 
 There are more helpers available, please refer to helpers directory.
+
+Instances
+=========
+
+Note: Instance generation is still work in progress.
+
+After software is generated it is time to have instances running.
+The easiest way to generate instance is of course to reuse generated software.
+If software is available in ~/erp5.buildout, such scenario work:
+
+$ svn co https://svn.erp5.org/repos/public/erp5/trunk/buildout/ ~/instances
+$ cd instances
+$ cat > my_instances.cfg
+[buildout]
+extends = profiles/development.cfg
+
+parts =
+  software-links
+  mysql-instance
+  oood-instance
+  supervisor-instance
+
+[software_definition]
+software_home = /home/MYUSER/erp5.buildout
+^D
+$ ~/erp5.buildout/bin/python2.4 bootstrap/bootstrap.py -c my_instances.cfg
+$ bin/buildout -c my_instances.cfg
+$ var/bin/supervisord # it will start supervisor and configured software
+$ $EDITOR my_instances.cfg
+# add zope-instance and runUnitTest to parts
+$ bin/buildout -c my_instances.cfg
+
+Fully configured development instance will be available in var/zope-instance.
