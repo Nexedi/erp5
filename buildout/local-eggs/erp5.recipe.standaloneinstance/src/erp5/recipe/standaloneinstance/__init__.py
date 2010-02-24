@@ -174,6 +174,7 @@ class Recipe(plone.recipe.zope2instance.Recipe, erp5.recipe.createsite.Recipe):
         file(self.options['zope_conf_template'].strip()).readlines()
     )
     template = WithMinusTemplate(template_input_data)
+    # XXX: support local products with simple option instead of hardcoding
     # make prepend products with 'products'
     options_dict = self.options.copy()
     if 'products' in options_dict:
