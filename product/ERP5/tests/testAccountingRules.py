@@ -54,9 +54,9 @@ from DateTime import DateTime
 
 
 class PurchaseInvoiceTest:
-  invoice_portal_type = 'Sale Invoice Transaction'
+  invoice_portal_type = 'Purchase Invoice Transaction'
   invoice_transaction_line_portal_type \
-                     = "Sale Invoice Transaction Line"
+                     = "Purchase Invoice Transaction Line"
   invoice_line_portal_type = "Invoice Line"
   invoice_cell_portal_type = "Invoice Cell"
 
