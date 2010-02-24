@@ -23,9 +23,6 @@ from itools import i18n
 from Products.ERP5Type.Message import Message
 from zLOG import LOG, ERROR
 
-class LocalizerPatchError(Exception):
-  """Error wen trying to use or apply the Localizer patch"""
-
 # This patch will not work if Translation Service Zope product exist on the system
 try:
   from Products import TranslationService
