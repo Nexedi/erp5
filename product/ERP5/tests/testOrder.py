@@ -915,12 +915,7 @@ class TestOrderMixin:
                 destination_payment_value = organisation2['bank'],
                 source_project_value = project1,
                 destination_project_value = project2 )
-    # XXX Specialise should be Trade Condition, not Business Process
-    # itself here.
-    business_process = getattr(self.portal.business_process_module,
-                               'test_business_process', None)
-    if business_process is not None:
-      order.edit(specialise_value=business_process)
+    order.setPaymentConditionEfficiency(1.0)
     self.failUnless('Site Error' not in order.view())
 
   def stepCheckDeliveryBuilding(self, sequence=None, sequence_list=None, **kw):
