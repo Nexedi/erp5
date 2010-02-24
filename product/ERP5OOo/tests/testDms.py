@@ -867,7 +867,7 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.assertEquals(contributed_document, document)
 
   def test_Base_createNewFile_empty(self):
-     """
+    """
       Test contributing an empty file and attaching it to context.
     """
     person = self.portal.person_module.newContent(portal_type='Person')
