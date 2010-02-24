@@ -1,6 +1,7 @@
 #!/bin/sh
 
 PACKAGE_LIST="""\
+automake1.9
 bison
 build-essential
 cpio
@@ -16,6 +17,7 @@ libneon27-dev
 libsasl2-dev
 libssl-dev
 libsvn-dev
+libtool
 libxml2-dev
 libxslt1-dev
 make
