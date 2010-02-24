@@ -39,7 +39,7 @@ message_catalog_aliases = { "Default": "default"
                           , "content": "erp5_content"
                           }
 
-# "invert" message_catalog_aliases
+# "invert" message_catalog_aliases mapping
 message_catalog_alias_sources = {}
 for name, value in message_catalog_aliases.items():
   message_catalog_alias_sources.setdefault(value, []).append(name)
