@@ -59,6 +59,7 @@ class PurchaseInvoiceTest:
                      = "Purchase Invoice Transaction Line"
   invoice_line_portal_type = "Invoice Line"
   invoice_cell_portal_type = "Invoice Cell"
+  payment_transaction_line_portal_type = "Accounting Transaction Line"
 
 class SaleInvoiceTest:
   invoice_portal_type = 'Sale Invoice Transaction'
@@ -66,7 +67,7 @@ class SaleInvoiceTest:
                      = "Sale Invoice Transaction Line"
   invoice_line_portal_type = "Invoice Line"
   invoice_cell_portal_type = "Invoice Cell"
-
+  payment_transaction_line_portal_type = "Accounting Transaction Line"
 
 class TestAccountingRulesMixin:
   # define portal_types
@@ -564,6 +565,8 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
                 created_by_builder = 1,
               )
 
+    empty_invoice.setPaymentConditionEfficiency(1.0)
+
     sequence.edit(
       simple_invoice = empty_invoice,
       invoice = empty_invoice,
@@ -600,6 +603,8 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       price = 10,
       portal_type = self.invoice_line_portal_type)
 
+    simple_invoice.setPaymentConditionEfficiency(1.0)
+
     self.assertEqual(invoice_line.getTotalPrice(), 100)
 
     sequence.edit(
@@ -635,6 +640,8 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       quantity = 123,
       price = 456,
       portal_type = self.invoice_line_portal_type)
+
+    simple_invoice.setPaymentConditionEfficiency(1.0)
 
     sequence.edit(
       simple_invoice = simple_invoice,
@@ -732,6 +739,8 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       price = 10,
       portal_type = self.invoice_line_portal_type)
 
+    simple_invoice.setPaymentConditionEfficiency(1.0)
+
     self.assertEqual(invoice_line1.getTotalPrice()
             + invoice_line2.getTotalPrice(), 100)
 
@@ -766,6 +775,8 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       id = 'invoice_line',
       resource = product_notebook.getRelativeUrl(),
       portal_type = self.invoice_line_portal_type)
+
+    simple_invoice.setPaymentConditionEfficiency(1.0)
 
     sequence.edit(
       simple_invoice = simple_invoice,
@@ -850,6 +861,8 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       resource = product_barebone.getRelativeUrl(),
       quantity = 10,
       price = 100)
+
+    multi_line_invoice.setPaymentConditionEfficiency(1.0)
 
     self.assertEqual( 10*10 + 10*100,
         notebook_line.getTotalPrice() + barebone_line.getTotalPrice())
@@ -1288,7 +1301,6 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
     )
     self.assertEquals(invoice.getSimulationState(), 'started')
 
-
   def stepCheckAccountingLinesCoherantWithSimulation(self, sequence, **kw) :
     """ checks that accounting lines are created on the sale invoice
     transaction """
@@ -1373,6 +1385,44 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
               len(invoice_transaction_line.getDeliveryRelatedValueList(
                               portal_type='Simulation Movement')), 0)
 
+  def stepCheckPaymentLinesCreatedForSimpleInvoice(
+            self, sequence, **kw) :
+    """ Checks that payment transaction lines are created on the payment
+    transaction and that all movement are correctly aggregated.  The
+    price of the invoice was 100, it should result in the following
+    accounting layout :
+
+      ===============   =======   =======
+      account           Debit     Credit
+      ===============   =======   =======
+      receivable                   119.60
+      bank               119.60
+      ===============   =======   =======
+    """
+    payment  = sequence.get('invoice').getCausalityRelatedValue(
+        portal_type='Payment Transaction')
+
+    payment_transaction_line_list = payment.contentValues(
+        filter = {'portal_type': self.payment_transaction_line_portal_type})
+    self.assertEquals(len(payment_transaction_line_list), 2)
+
+    accounting_lines_layout = {
+      'receivable'        : (0, 119.60),
+      'bank'              : (119.60, 0),
+    }
+
+    for payment_transaction_line in payment_transaction_line_list :
+      self.assert_(
+          payment_transaction_line.getSourceId() in accounting_lines_layout.keys(),
+          'unexepected source_id %s' % payment_transaction_line.getSourceId())
+      debit, credit = accounting_lines_layout[
+                            payment_transaction_line.getSourceId()]
+      self.assertEquals(debit, payment_transaction_line.getSourceDebit())
+      self.assertEquals(credit, payment_transaction_line.getSourceCredit())
+      self.assertNotEquals(
+              len(payment_transaction_line.getDeliveryRelatedValueList(
+                              portal_type='Simulation Movement')), 0)
+
   def stepCheckAccountingLinesCreatedForMultiLineInvoice(
             self, sequence, **kw) :
     """ Checks that accounting lines are created on the sale invoice
@@ -1413,6 +1463,44 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       self.assertEquals(credit, invoice_transaction_line.getSourceCredit())
       self.assertNotEquals(
               len(invoice_transaction_line.getDeliveryRelatedValueList(
+                              portal_type='Simulation Movement')), 0)
+
+  def stepCheckPaymentLinesCreatedForMultiLineInvoice(
+            self, sequence, **kw) :
+    """ Checks that payment transaction lines are created on the payment
+    transaction and that all movement are correctly aggregated.  The
+    price of the invoice was 100, it should result in the following
+    accounting layout :
+
+      ===============   =======   =======
+      account           Debit     Credit
+      ===============   =======   =======
+      receivable                  1315.60
+      bank              1315.60
+      ===============   =======   =======
+    """
+    payment  = sequence.get('invoice').getCausalityRelatedValue(
+        portal_type='Payment Transaction')
+
+    payment_transaction_line_list = payment.contentValues(
+        filter = {'portal_type': self.payment_transaction_line_portal_type})
+    self.assertEquals(len(payment_transaction_line_list), 2)
+
+    accounting_lines_layout = {
+      'receivable'        : (0, 1315.60),
+      'bank'              : (1315.60, 0),
+    }
+
+    for payment_transaction_line in payment_transaction_line_list :
+      self.assert_(
+          payment_transaction_line.getSourceId() in accounting_lines_layout.keys(),
+          'unexepected source_id %s' % payment_transaction_line.getSourceId())
+      debit, credit = accounting_lines_layout[
+                            payment_transaction_line.getSourceId()]
+      self.assertEquals(debit, payment_transaction_line.getSourceDebit())
+      self.assertEquals(credit, payment_transaction_line.getSourceCredit())
+      self.assertNotEquals(
+              len(payment_transaction_line.getDeliveryRelatedValueList(
                               portal_type='Simulation Movement')), 0)
 
   def stepRebuildAndCheckNothingIsCreated(self, sequence, **kw) :
@@ -1643,6 +1731,8 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       stepStartInvoice
       stepTic
       stepCheckAccountingLinesCoherantWithSimulation
+      stepCheckAccountingLinesCreatedForSimpleInvoice
+      stepCheckPaymentLinesCreatedForSimpleInvoice
       """, quiet=quiet )
 
   def test_04b_SimpleInvoiceConfirm(self, quiet=QUIET, run=RUN_ALL_TESTS):
@@ -1676,6 +1766,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       stepStartInvoice
       stepTic
       stepCheckAccountingLinesCreatedForSimpleInvoice
+      stepCheckPaymentLinesCreatedForSimpleInvoice
       stepRebuildAndCheckNothingIsCreated
       """, quiet=quiet )
 
@@ -1712,6 +1803,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       stepStartInvoice
       stepTic
       stepCheckAccountingLinesCreatedForSimpleInvoice
+      stepCheckPaymentLinesCreatedForSimpleInvoice
       stepRebuildAndCheckNothingIsCreated
       """, quiet=quiet )
 
@@ -1748,6 +1840,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       stepStartInvoice
       stepTic
       stepCheckAccountingLinesCreatedForSimpleInvoice
+      stepCheckPaymentLinesCreatedForSimpleInvoice
       stepRebuildAndCheckNothingIsCreated
       """, quiet=quiet )
 
@@ -1790,6 +1883,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       stepStartInvoice
       stepTic
       stepCheckAccountingLinesCreatedForSimpleInvoice
+      stepCheckPaymentLinesCreatedForSimpleInvoice
       stepRebuildAndCheckNothingIsCreated
       """, quiet=quiet )
 
@@ -1827,6 +1921,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       stepStartInvoice
       stepTic
       stepCheckAccountingLinesCreatedForSimpleInvoice
+      stepCheckPaymentLinesCreatedForSimpleInvoice
       stepRebuildAndCheckNothingIsCreated
       """, quiet=quiet )
 
@@ -1866,6 +1961,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       stepStartInvoice
       stepTic
       stepCheckAccountingLinesCreatedForSimpleInvoice
+      stepCheckPaymentLinesCreatedForSimpleInvoice
       stepRebuildAndCheckNothingIsCreated
       """, quiet=quiet )
 
@@ -1903,6 +1999,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       stepStartInvoice
       stepTic
       stepCheckAccountingLinesCreatedForSimpleInvoice
+      stepCheckPaymentLinesCreatedForSimpleInvoice
       stepRebuildAndCheckNothingIsCreated
       """, quiet=quiet)
 
@@ -1945,6 +2042,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       stepStartInvoice
       stepTic
       stepCheckAccountingLinesCreatedForSimpleInvoice
+      stepCheckPaymentLinesCreatedForSimpleInvoice
       stepRebuildAndCheckNothingIsCreated
       """, quiet=quiet )
 
@@ -1983,6 +2081,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       stepStartInvoice
       stepTic
       stepCheckAccountingLinesCreatedForMultiLineInvoice
+      stepCheckPaymentLinesCreatedForMultiLineInvoice
       stepRebuildAndCheckNothingIsCreated
       """, quiet=quiet )
 
