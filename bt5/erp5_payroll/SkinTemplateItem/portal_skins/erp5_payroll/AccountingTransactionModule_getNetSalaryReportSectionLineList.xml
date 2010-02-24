@@ -61,7 +61,7 @@ portal = context.getPortalObject()\n
 translateString = portal.Base_translateString\n
 \n
 net_salary_base_amount_uid = \\\n
-              portal.portal_categories.base_amount.net_salary.getUid()\n
+              portal.portal_categories.base_amount.payroll.report.salary.net.getUid()\n
 employee_contribution_share_uid = \\\n
               portal.portal_categories.contribution_share.employee.getUid()\n
 \n
