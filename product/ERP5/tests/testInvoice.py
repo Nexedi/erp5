@@ -78,8 +78,7 @@ class TestInvoiceMixin(TestPackingListMixin,
       )
 
   payment_transaction_line_definition_list = (
-    ('payable', None, None, -1.0),
-    ('bank', 'account_module/bank', 'account_module/bank', 1.0)
+    ('bank', 'account_module/bank', 'account_module/bank'),
     )
 
   def getTitle(self):
@@ -195,10 +194,10 @@ class TestInvoiceMixin(TestPackingListMixin,
     self.assertEqual(len(cell_list), 1)
     cell = cell_list[0]
 
-    for line_id, line_source_id, line_destination_id, line_ratio in \
+    for line_id, line_source_id, line_destination_id in \
         self.payment_transaction_line_definition_list:
       line = cell.newContent(id=line_id,
-          portal_type='Accounting Transaction Line', quantity=line_ratio,
+          portal_type='Accounting Transaction Line',
           source=line_source_id,
           destination=line_destination_id)
     transaction.commit()

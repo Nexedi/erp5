@@ -101,26 +101,28 @@ class PaymentSimulationRule(Rule, PredicateMatrix):
                      input_movement.getStartDate()
         stop_date = payment_condition.getExpectedStopDate(input_movement) or \
                      input_movement.getStopDate()
+        kw.update({'start_date':start_date, 'stop_date':stop_date})
         quantity = payment_condition.getExpectedQuantity(input_movement)
-        for payment_rule_cell_line in cell.objectValues():
-          prevision_line = kw.copy()
-          prevision_line.update(
-            source=payment_rule_cell_line.getSource() or \
-                   input_movement.getSource(),
-            destination=payment_rule_cell_line.getDestination() or \
-                   input_movement.getDestination(),
-            start_date=start_date,
-            stop_date=stop_date,
-            quantity=quantity * payment_rule_cell_line.getQuantity()
-            )
-          # Generate Prevision Script is required for Payment Simulation Rule?
-          if payment_rule_cell_line.hasProperty(
-              'generate_prevision_script_id'):
-            generate_prevision_script_id = \
-                  payment_rule_cell_line.getGeneratePrevisionScriptId()
-            prevision_line.update(getattr(input_movement,
-                                generate_prevision_script_id)(prevision_line))
-          prevision_list.append(prevision_line)
+
+        # one for payable
+        prevision_line = kw.copy()
+        prevision_line.update(
+          source=input_movement.getSource(),
+          destination=input_movement.getDestination(),
+          quantity=-quantity
+          )
+        prevision_list.append(prevision_line)
+        # one for cash, bank etc.
+        payment_rule_cell_line_list = cell.objectValues()
+        assert len(payment_rule_cell_line_list) == 1
+        payment_rule_cell_line = payment_rule_cell_line_list[0]
+        prevision_line = kw.copy()
+        prevision_line.update(
+          source=payment_rule_cell_line.getSource(),
+          destination=payment_rule_cell_line.getDestination(),
+          quantity=quantity
+          )
+        prevision_list.append(prevision_line)
     return prevision_list
 
   security.declareProtected(Permissions.ModifyPortalContent, 'expand')
