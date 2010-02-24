@@ -104,12 +104,12 @@ else:\n
                                  file_name=file_name)\n
     is_existing_document_updated = (merged_document!=document)\n
     document = merged_document\n
-  # XXX: introspect document and find editable properties\n
-  # then use kw and try to get values in two available modes the\n
-  # script coulb be called: from ERP5 From or directly from Python script\n
+  # introspect document and find editable properties\n
+  # then use kw and try to get values in two available modes: the\n
+  # script coulbe be called: from ERP5 From or directly from Python script\n
   document_edit_kw = {}\n
-  for key in [\'title\', \'reference\', \'group\', \'source_project\', \n
-              \'short_title\', \'language\', \'version\', \'description\']:\n
+  property_id_list = document.propertyIds()\n
+  for key in property_id_list:\n
     value = kw.get(key, kw.get(\'field_your_%s\' %key, kw.get(\'field_my_%s\' %key, None)))\n
     if value not in MARKER:\n
       document_edit_kw[key] = value\n
@@ -210,6 +210,7 @@ return document\n
                             <string>is_existing_document_updated</string>
                             <string>merged_document</string>
                             <string>document_edit_kw</string>
+                            <string>property_id_list</string>
                             <string>_getiter_</string>
                             <string>key</string>
                             <string>value</string>
