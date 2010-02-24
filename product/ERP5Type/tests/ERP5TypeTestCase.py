@@ -1028,8 +1028,8 @@ class ERP5TypeTestCase(backportUnittest.TestCase, PortalTestCase):
       '''Tears down the fixture. Do not override,
          use the hooks instead.
       '''
+      PortalTestCase.tearDown(self)
       setSite() # undo site configuration from self.getPortal()
-      return PortalTestCase.tearDown(self)
 
     def beforeClose(self):
       PortalTestCase.beforeClose(self)
