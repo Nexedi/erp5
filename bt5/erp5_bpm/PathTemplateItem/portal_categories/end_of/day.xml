@@ -13,19 +13,12 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>trade_date/custom</string>
                 <string>end_of/day</string>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>codification</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>description</string> </key>
             <value>
               <none/>
             </value>
