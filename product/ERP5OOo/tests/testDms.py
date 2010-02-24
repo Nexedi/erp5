@@ -842,52 +842,58 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
                       document.Base_showFoundText())
 
   def test_Base_createNewFile(self):
-    context = self.portal.person_module.newContent(portal_type='Person')
-    ret = context.Base_createNewFile(portal_type=None,
-                               title=None,
-                               reference=None,
-                               short_title=None,
-                               language=None,
-                               version=None,
-                               description=None,
-                               file=makeFileUpload('TEST-en-002.odt'))
-    self.assertTrue(ret.endswith(
-      '?portal_status_message=Text%20created%20successfully.'), ret)
-    transaction.commit()
-    self.tic()
-    document_list = context.getFollowUpRelatedValueList()
+    """
+      Test contributing a file and attaching it to context.
+    """
+    person = self.portal.person_module.newContent(portal_type='Person')
+    contributed_document = person.Base_contribute(
+                                     portal_type=None,
+                                     title=None,
+                                     reference=None,
+                                     short_title=None,
+                                     language=None,
+                                     version=None,
+                                     description=None,
+                                     attach_document_to_context=True,
+                                     file=makeFileUpload('TEST-en-002.odt'))
+    self.assertEquals('Text', contributed_document.getPortalType())
+    self.stepTic()
+    document_list = person.getFollowUpRelatedValueList()
     self.assertEquals(1, len(document_list))
     document = document_list[0]
     self.assertEquals('converted', document.getExternalProcessingState())
     self.assertEquals('Text', document.getPortalType())
     self.assertEquals('title', document.getTitle())
+    self.assertEquals(contributed_document, document)
 
   def test_Base_createNewFile_empty(self):
-    context = self.portal.person_module.newContent(portal_type='Person')
+     """
+      Test contributing an empty file and attaching it to context.
+    """
+    person = self.portal.person_module.newContent(portal_type='Person')
     empty_file_upload = ZPublisher.HTTPRequest.FileUpload(FieldStorage(
                             fp=StringIO.StringIO(),
                             environ=dict(REQUEST_METHOD='PUT'),
                             headers={"content-disposition":
                               "attachment; filename=empty;"}))
 
-    ret = context.Base_createNewFile(portal_type=None,
-                               title=None,
-                               reference=None,
-                               short_title=None,
-                               language=None,
-                               version=None,
-                               description=None,
-                               file=empty_file_upload)
-
-    self.assertTrue(ret.endswith(
-      '?portal_status_message=File%20created%20successfully.'), ret)
-    transaction.commit()
-    self.tic()
-    document_list = context.getFollowUpRelatedValueList()
+    contributed_document = person.Base_contribute(
+                                    portal_type=None,
+                                    title=None,
+                                    reference=None,
+                                    short_title=None,
+                                    language=None,
+                                    version=None,
+                                    description=None,
+                                    attach_document_to_context=True,
+                                    file=empty_file_upload)
+    self.stepTic()
+    document_list = person.getFollowUpRelatedValueList()
     self.assertEquals(1, len(document_list))
     document = document_list[0]
     self.assertEquals('empty', document.getExternalProcessingState())
     self.assertEquals('File', document.getPortalType())
+    self.assertEquals(contributed_document, document)
 
   def test_HTML_to_ODT_conversion_keep_enconding(self):
     """This test perform an PDF conversion of HTML content
