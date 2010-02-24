@@ -52,6 +52,8 @@ except ImportError:
   # zope.i18n utilities
   import zope.interface
   import zope.component
+  import Acquisition
+
   global_translation_service = None
   
   from zope.i18n.interfaces import ITranslationDomain, \
@@ -72,10 +74,25 @@ except ImportError:
     global_translation_service = translation_service
     zope.component.provideUtility(DummyTranslationDomainFallback,
                                   provides=IFallbackTranslationDomainFactory)
+    # disable translation for the 'ui' domain so it can use the fallback above.
+    # Save it on a portal attribute since we don't have access to the test
+    # class 
+    sm = zope.component.getSiteManager()
+    portal = Acquisition.aq_parent(sm)
+    ui_domain = sm.getUtility(ITranslationDomain, name='ui')
+    # store in a list to avoid acquisition wrapping
+    portal._save_ui_domain = [ui_domain]
+    sm.unregisterUtility(provided=ITranslationDomain, name='ui')
 
   def unregister_translation_domain_fallback():
     from zope.component.globalregistry import base
     base.unregisterUtility(DummyTranslationDomainFallback)
+    sm = zope.component.getSiteManager()
+    portal = Acquisition.aq_parent(sm)
+    ui_domain = getattr(portal, '_save_ui_domain', [None]).pop()
+    if ui_domain is not None:
+      sm.registerUtility(ui_domain, ITranslationDomain, 'ui')
+      del portal._save_ui_domain
 
 HTTP_OK = 200
 HTTP_UNAUTHORIZED = 401
@@ -106,13 +123,12 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
 
   def afterSetUp(self):
     self.login()
-    self.portal = self.getPortal()
     self.portal_id = self.portal.getId()
     self.auth = '%s:%s' % (self.manager_username, self.manager_password)
 
   def beforeTearDown(self):
-    unregister_translation_domain_fallback()
     transaction.abort()
+    unregister_translation_domain_fallback()
     if 'test_folder' in self.portal.objectIds():
       self.portal.manage_delObjects(['test_folder'])
     self.portal.portal_selections.setSelectionFor('test_selection', None)
