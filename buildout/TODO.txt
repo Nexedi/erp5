@@ -29,3 +29,4 @@
    software *and* instance buildouts
  - make eggs defined with standalone instance recipe inside instance instead
    of globally for buildout
+ - create software-profiles/apache-ssl.cfg to build ssl setup into apache.
