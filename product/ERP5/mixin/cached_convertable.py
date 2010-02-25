@@ -45,7 +45,7 @@ class CachedConvertableMixin:
   """
   This class provides a generic implementation of IConvertable.
 
-    This class provides a generic API to store in the ZODB
+    This class provides a generic API to store using portal_caches plugin structure
     various converted versions of a file or of a string.
 
     Versions are stored in dictionaries; the class stores also
