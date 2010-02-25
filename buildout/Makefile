@@ -40,8 +40,7 @@ assert-parts-libs:
 
 debian-appliance:
 	svn co https://svn.erp5.org/repos/public/spec/debian-erp5-appliance/ debian-erp5-appliance
-	cd debian-erp5-appliance/$(INSTALL_PATH)
-	make
+	cd debian-erp5-appliance/$(INSTALL_PATH); $(MAKE) $(MFLAGS)
 	rm -rf debian-erp5-appliance/*.txt
 	rm -rf `find . -type d -name .svn`
 	rm -rf `find . -name *.pyc`
