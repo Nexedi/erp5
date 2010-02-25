@@ -1436,11 +1436,11 @@ class RegisteredSkinSelectionTemplateItem(BaseTemplateItem):
       selection_list = skin_folder.getProperty(
           'business_template_registered_skin_selections',
           [])
+      # Backward compatibility, some values can be string
+      if isinstance(selection_list, str):
+        selection_list = selection_list.replace(',', ' ').split(' ')
       if skin_selection_id in selection_list:
-        if self._objects.has_key(skin_folder_id):
-          self._objects[skin_folder_id].append(skin_selection_id)
-        else:
-          self._objects[skin_folder_id] = [skin_selection_id]
+        self._objects.setdefault(skin_folder_id, []).append(skin_selection_id)
       else:
         raise NotFound, 'No skin selection %s found for skin folder %s.' \
                           % (skin_selection_id, skin_folder_id)
@@ -1461,7 +1461,7 @@ class RegisteredSkinSelectionTemplateItem(BaseTemplateItem):
     return xml_data
 
   def export(self, context, bta, **kw):
-    if len(self._objects.keys()) == 0:
+    if not self._objects:
       return
     root_path = os.path.join(bta.path, self.__class__.__name__)
     bta.addFolder(name=root_path)
@@ -1484,34 +1484,34 @@ class RegisteredSkinSelectionTemplateItem(BaseTemplateItem):
           if action == 'nothing':
             continue
         skin_folder = skin_tool[skin_folder_id]
-        selection_string = skin_folder.getProperty(
-          'business_template_registered_skin_selections', None)
+        default_value = []
+        selection_list = skin_folder.getProperty(
+          'business_template_registered_skin_selections', default_value)
 
-        if selection_string is None:
+        if selection_list is default_value:
           create_property = True
-          selection_string = self._objects[skin_folder_id].replace(',', ' ')
+          selection_list = self._objects[skin_folder_id]
         else:
           create_property = False
-          if not isinstance(selection_string, basestring):
-            selection_string = ' '.join(selection_string)
-          selection_string += ' %s' % \
-            self._objects[skin_folder_id].replace(',', ' ')
+          if isinstance(selection_list, basestring):
+            selection_list = selection_list.replace(',', ' ').split(' ')
+          elif isinstance(selection_list, tuple):
+            selection_list = list(selection_list)
+          selection_list.extend(self._objects[skin_folder_id])
 
         # Remove duplicate
-        selection_string = \
-            ' '.join(dict([(x, 0) for x in selection_string.split(' ')]).keys())
+        selection_list = list(set(selection_list))
         if create_property:
           skin_folder._setProperty(
               'business_template_registered_skin_selections',
-              selection_string.split(' '), type='tokens')
+              selection_list, type='tokens')
         else:
           skin_folder._updateProperty(
               'business_template_registered_skin_selections',
-              selection_string.split(' '))
+              selection_list)
 
-        selection_list = selection_string.split(' ')
         unregisterSkinFolder(skin_tool, skin_folder,
-            skin_tool.getSkinSelections())
+                             skin_tool.getSkinSelections())
         registerSkinFolder(skin_tool, skin_folder)
 
   def uninstall(self, context, **kw):
@@ -1526,12 +1526,13 @@ class RegisteredSkinSelectionTemplateItem(BaseTemplateItem):
 
     for skin_folder_id in object_keys:
       skin_folder = skin_tool[skin_folder_id]
-      current_selection_string = skin_folder.getProperty(
+      current_selection_list = skin_folder.getProperty(
         'business_template_registered_skin_selections', [])
-      current_selection_set = set(current_selection_string)
+      current_selection_set = set(current_selection_list)
 
-      skin_selection = workflow_id = self._objects[skin_folder_id]
-      skin_selection_list = skin_selection.split(',')
+      skin_selection_list = workflow_id = self._objects[skin_folder_id]
+      if isinstance(skin_selection_list, str):
+        skin_selection_list = skin_selection_list.replace(',', ' ').split(' ')
       for skin_selection in skin_selection_list:
         current_selection_set.remove(skin_selection)
 
@@ -1584,13 +1585,13 @@ class RegisteredSkinSelectionTemplateItem(BaseTemplateItem):
     for skin_folder_selection in skin_folder_selection_list:
       skin_folder_id = skin_folder_selection.getElementsByTagName(
           'skin_folder')[0].childNodes[0].data
-      selection_list = skin_folder_selection.getElementsByTagName(
+      selection_string = skin_folder_selection.getElementsByTagName(
           'skin_selection')[0].childNodes
-      if len(selection_list) == 0:
-        selection = ''
+      if not selection_string:
+        selection_list = []
       else:
-        selection = selection_list[0].data
-      skin_selection_dict[str(skin_folder_id)] = str(selection)
+        selection_list = selection_string[0].data.split(',')
+      skin_selection_dict[str(skin_folder_id)] = selection_list
     self._objects = skin_selection_dict
 
 
