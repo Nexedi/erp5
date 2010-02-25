@@ -33,7 +33,7 @@ from zLOG import LOG, WARNING
 from Products.ERP5Type.Base import WorkflowMethod
 from Products.CMFCore.utils import getToolByName
 from Products.CMFCore.utils import _setCacheHeaders, _ViewEmulator
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
+from Products.ERP5Type import Permissions, PropertySheet, Constraint
 from Products.ERP5.Document.Document import Document, ConversionError
 from Products.ERP5Type.WebDAVSupport import TextContent
 from Products.CMFDefault.utils import isHTMLSafe
@@ -153,7 +153,7 @@ class TextDocument(Document, TextContent):
       RESPONSE.setHeader('Accept-Ranges', 'bytes')
       return data
 
-    def _substituteTextContent(self, text, **kw):
+    def _substituteTextContent(self, text, safe_substitute=True, **kw):
       # If a method for string substitutions of the text content, perform it.
       # Decode everything into unicode before the substitutions, in order to
       # avoid encoding errors.
@@ -162,7 +162,9 @@ class TextDocument(Document, TextContent):
         try:
           mapping = guarded_getattr(self, method_id)(**kw)
         except AttributeError:
-          LOG('TextDocument', WARNING, 'could not get the substitution mapping method %s from %r, so the content will not be substituted.' % (method_id, self))
+          LOG('TextDocument', WARNING, 'could not get the substitution'
+              ' mapping method %s from %r, so the content will not be'
+              ' substituted.' % (method_id, self))
           return text
 
         is_str = isinstance(text, str)
@@ -177,7 +179,10 @@ class TextDocument(Document, TextContent):
             v = str(v).decode('utf-8')
           unicode_mapping[k] = v
 
-        text = Template(text).substitute(unicode_mapping)
+        if safe_substitute:
+          text = Template(text).safe_substitute(unicode_mapping)
+        else:
+          text = Template(text).substitute(unicode_mapping)
 
         # If the original was a str, convert it back to str.
         if is_str:
@@ -186,17 +191,18 @@ class TextDocument(Document, TextContent):
       return text
 
     security.declareProtected(Permissions.View, 'asSubjectText')
-    def asSubjectText(self, substitution_method_parameter_dict=None, **kw):
+    def asSubjectText(self, substitution_method_parameter_dict=None, safe_substitute=True, **kw):
       """
         Converts the subject of the document to a textual representation.
       """
       subject = TextDocument.inheritedAttribute('asSubjectText')(self, **kw)
       if substitution_method_parameter_dict is None:
         substitution_method_parameter_dict = {}
-      return self._substituteTextContent(subject, **substitution_method_parameter_dict)
+      return self._substituteTextContent(subject, safe_substitute=safe_substitute,
+                                         **substitution_method_parameter_dict)
 
     security.declareProtected(Permissions.AccessContentsInformation, 'convert')
-    def convert(self, format, substitution_method_parameter_dict=None, **kw):
+    def convert(self, format, substitution_method_parameter_dict=None, safe_substitute=True, **kw):
       """
         Convert text using portal_transforms or oood
       """
@@ -228,7 +234,8 @@ class TextDocument(Document, TextContent):
           mime_type, result = self.getConversion(format=format)
         if substitution_method_parameter_dict is None:
           substitution_method_parameter_dict = {}
-        result = self._substituteTextContent(result, **substitution_method_parameter_dict)
+        result = self._substituteTextContent(result, safe_substitute=safe_substitute,
+                                             **substitution_method_parameter_dict)
         return mime_type, result
       else:
         # text_content is not set, return empty string instead of None

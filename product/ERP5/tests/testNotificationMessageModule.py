@@ -29,8 +29,8 @@
 import unittest
 
 import transaction
-from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from Products.ERP5Type.tests.utils import createZODBPythonScript
 from AccessControl.SecurityManagement import newSecurityManager
 from AccessControl.SecurityManagement import getSecurityManager
 from zLOG import LOG
@@ -38,11 +38,8 @@ from Products.ERP5Type.tests.utils import DummyMailHost
 
 class TestNotificationMessageModule(ERP5TypeTestCase):
   """
-  Test notification tool
+  Test notification message module
   """
-  run_all_test = 1
-  quiet = 1
-
   def getBusinessTemplateList(self):
     return ('erp5_base',)
 
@@ -78,12 +75,7 @@ class TestNotificationMessageModule(ERP5TypeTestCase):
     transaction.commit()
     self.tic()
 
-  def test_01_get_document(self, quiet=quiet, run=run_all_test):
-    if not run: return
-    if not quiet:
-      message = 'Test type base Method'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_01_get_document(self):
     module = self.getNotificationMessageModule()
     tool = self.getPortal().portal_notifications
     #Test Document A in english
@@ -116,6 +108,88 @@ class TestNotificationMessageModule(ERP5TypeTestCase):
     self.tic()
     result = tool.getDocumentValue(reference='A', language='fr')
     self.assertEqual(result.getRelativeUrl(), n_m_fr_02.getRelativeUrl())
+
+
+  def test_substitution_content(self):
+    """Tests that content and subject have string.Template based substitutions
+    """
+    module = self.getNotificationMessageModule()
+    createZODBPythonScript(self.portal,
+                           'NotificationMessage_getDummySubstitionMapping',
+                           '**kw',
+                           '''return dict(a="b")''')
+    doc = module.newContent(portal_type='Notification Message',
+                            title='Test ${a}',
+                            text_content='substitution text: ${a}',
+                            text_content_substitution_mapping_method_id=
+                            'NotificationMessage_getDummySubstitionMapping')
+
+    mime, text = doc.convert('txt')
+    self.assertEqual('text/plain', mime)
+    self.assertEqual('substitution text: b', text)
+
+    self.assertEqual('Test b', doc.asSubjectText())
+
+
+  def test_substitution_content_parameters(self):
+    """Tests that we can pass parameters to convert to the substitution method,
+    by using substitution_method_parameter_dict """
+    module = self.getNotificationMessageModule()
+    createZODBPythonScript(self.portal,
+                           'NotificationMessage_getDummySubstitionMapping',
+                           '**kw',
+                           '''return kw''')
+    doc = module.newContent(portal_type='Notification Message',
+                            title='Test ${a}',
+                            text_content='substitution text: ${a}',
+                            text_content_substitution_mapping_method_id=
+                            'NotificationMessage_getDummySubstitionMapping')
+
+    mime, text = doc.convert('txt',
+                             substitution_method_parameter_dict=dict(a='b'))
+    self.assertEqual('substitution text: b', text)
+
+
+  def test_substitution_content_and_convert(self):
+    """Tests that substitution also works with different target format.
+    """
+    module = self.getNotificationMessageModule()
+    createZODBPythonScript(self.portal,
+                           'NotificationMessage_getDummySubstitionMapping',
+                           '**kw',
+                           '''return dict(a="b")''')
+    doc = module.newContent(portal_type='Notification Message',
+                            text_format='text/html',
+                            text_content='substitution text: <em>${a}</em>',
+                            text_content_substitution_mapping_method_id=
+                            'NotificationMessage_getDummySubstitionMapping')
+
+    mime, text = doc.convert('txt')
+    self.assertEqual('substitution text: b', text)
+
+  def test_safe_substitution_content(self):
+    """Tests that 'safe' substitution is performed, unless safe_substitute is
+    explicitly passed to False.
+    """
+    module = self.getNotificationMessageModule()
+    createZODBPythonScript(self.portal,
+                           'NotificationMessage_getDummySubstitionMapping',
+                           '**kw',
+                           '''return dict(a="b")''')
+    doc = module.newContent(portal_type='Notification Message',
+                            title='${b}',
+                            text_content='substitution text: ${b}',
+                            text_content_substitution_mapping_method_id=
+                            'NotificationMessage_getDummySubstitionMapping')
+
+    mime, text = doc.convert('txt')
+    self.assertEqual('substitution text: ${b}', text)
+    self.assertEqual('${b}', doc.asSubjectText())
+
+    self.assertRaises(KeyError, doc.convert, 'txt', safe_substitute=False)
+    self.assertRaises(KeyError, doc.convert, 'html', safe_substitute=False)
+    self.assertRaises(KeyError, doc.asSubjectText, safe_substitute=False)
+
 
 def test_suite():
   suite = unittest.TestSuite()
