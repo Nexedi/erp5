@@ -1,3 +1,5 @@
+INSTALL_PATH='opt/erp5/'`cat VERSION.txt`
+
 software: bin/buildout
 	bin/buildout
 
@@ -35,3 +37,14 @@ assert-parts-libs:
 	ldd parts/mysql-tritonn-5.0/libexec/mysqld | grep 'parts/senna/lib/libsenna.so.0'
 	ldd develop-eggs/MySQL_python-1.2.3c1-py2.4-linux-x86_64.egg/_mysql.so | grep 'parts/mysql-tritonn-5.0/lib/mysql/libmysqlclient_r.so'
 	ldd parts/memcached/bin/memcached | grep 'parts/libevent/lib/libevent'
+
+debian-appliance:
+	svn co https://svn.erp5.org/repos/public/spec/debian-erp5-appliance/ debian-erp5-appliance
+	cd debian-erp5-appliance/$(INSTALL_PATH)
+	make
+	rm -rf debian-erp5-appliance/*.txt
+	rm -rf `find . -type d -name .svn`
+	rm -rf `find . -name *.pyc`
+	cd ../../../../
+	dpkg-deb -b debian-erp5-appliance/ .
+
