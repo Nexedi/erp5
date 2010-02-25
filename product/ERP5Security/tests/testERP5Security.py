@@ -375,7 +375,7 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
     # add another function subcategory.
     self.getCategoryTool()['function'].newContent(portal_type='Category',
                                                   id='another_subcat',
-                                                  codification='Function2')
+                                                  codification='F2')
     self.defined_category = "group/subcat\n"\
                             "site/subcat\n"\
                             "function/subcat"
@@ -455,33 +455,60 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
       role_name='Assignor',
       description='desc.',
       title='an Assignor role for testing',
-      role_category=self.defined_category,
-      role_base_category_script_id='ERP5Type_getSecurityCategoryFromAssignment')
-    obj = self._makeOne()
-    self.assertEquals(['Assignor'], obj.__ac_local_roles__.get('F1_G1_S1'))
-
+      role_category=self.defined_category)
     self.loginAsUser(self.username)
-    self.failUnless('Assignor' in
-            getSecurityManager().getUser().getRolesInContext(obj))
+    user = getSecurityManager().getUser()
+
+    obj = self._makeOne()
+    self.assertEqual(['Assignor'], obj.__ac_local_roles__.get('F1_G1_S1'))
+    self.assertTrue('Assignor' in user.getRolesInContext(obj))
+    self.assertFalse('Assignee' in user.getRolesInContext(obj))
+    transaction.abort()
 
   def testDynamicLocalRole(self):
     """Test simple case of setting a dynamic role.
     The site category is not defined explictly the role, and will have the
     current site of the user.
     """
-    self._getTypeInfo().newContent(portal_type='Role Information',
-      role_name='Assignor',
-      description='desc.',
-      title='an Assignor role for testing',
-      role_category_list=('group/subcat', 'function/subcat'),
-      role_base_category_script_id='ERP5Type_getSecurityCategoryFromAssignment',
-      role_base_category='site')
-
+    for role, function in (('Assignee', 'subcat'),
+                           ('Assignor', 'another_subcat')):
+      self._getTypeInfo().newContent(portal_type='Role Information',
+        role_name=role,
+        title='an Assignor role for testing',
+        role_category_list=('group/subcat', 'function/' + function),
+        role_base_category_script_id='ERP5Type_getSecurityCategoryFromAssignment',
+        role_base_category='site')
     self.loginAsUser(self.username)
+    user = getSecurityManager().getUser()
+
     obj = self._makeOne()
-    self.assertEquals(['Assignor'], obj.__ac_local_roles__.get('F1_G1_S1'))
-    self.failUnless('Assignor' in
-            getSecurityManager().getUser().getRolesInContext(obj))
+    self.assertEqual(['Assignee'], obj.__ac_local_roles__.get('F1_G1_S1'))
+    self.assertEqual(['Assignor'], obj.__ac_local_roles__.get('F2_G1_S1'))
+    self.assertTrue('Assignee' in user.getRolesInContext(obj))
+    self.assertFalse('Assignor' in user.getRolesInContext(obj))
+    transaction.abort()
+
+  def testSeveralFunctionsOnASingleAssignment(self):
+    """Test dynamic role generation when an assignment defines several functions
+    """
+    assignment, = self.portal.portal_catalog(portal_type='Assignment',
+                                             parent_reference=self.username)
+    assignment.setFunctionList(('subcat', 'another_subcat'))
+    self._getTypeInfo().newContent(portal_type='Role Information',
+      role_name='Assignee',
+      title='an Assignor role for testing',
+      role_category_list=('group/subcat', 'site/subcat'),
+      role_base_category_script_id='ERP5Type_getSecurityCategoryFromAssignment',
+      role_base_category='function')
+    self.loginAsUser(self.username)
+    user = getSecurityManager().getUser()
+
+    obj = self._makeOne()
+    self.assertEqual(['Assignee'], obj.__ac_local_roles__.get('F1_G1_S1'))
+    self.assertEqual(['Assignee'], obj.__ac_local_roles__.get('F2_G1_S1'))
+    self.assertTrue('Assignee' in user.getRolesInContext(obj))
+    self.assertFalse('Assignor' in user.getRolesInContext(obj))
+    transaction.abort()
 
   def testAcquireLocalRoles(self):
     """Tests that document does not acquire loal roles from their parents if
