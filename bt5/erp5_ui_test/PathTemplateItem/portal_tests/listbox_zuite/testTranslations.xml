@@ -110,6 +110,17 @@
 </tal:block>\n
 </tal:block>\n
 \n
+<tr>\n
+  <td>open</td>\n
+  <td tal:content="string: ${here/portal_url}/view">erp5/view</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>select</td>\n
+  <td>select_language</td>\n
+  <td>label=English</td>\n
+</tr>\n
+\n
 </tbody>\n
 </table>\n
 </body>\n
