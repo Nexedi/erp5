@@ -510,8 +510,8 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
     self.assertEquals(len(payment_rule.objectValues()), 0)
     transaction.commit()
 
-    # and add new content, predicate
-    predicate_product_notebook = payment_rule.newContent(
+    # and add a new predicate
+    payment_rule.newContent(
       id = 'all',
       title = 'all',
       portal_type = self.predicate_portal_type,
@@ -523,8 +523,6 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
   def stepUpdatePaymentRuleMatrix(self, sequence, **kw) :
     """Creates/updates the matrix of the sale invoice transaction rule """
     payment_rule = sequence.get('payment_rule')
-    base_id = 'movement'
-    kwd = {'base_id': base_id}
 
     # update the matrix, generates the accounting rule cells
     payment_rule.edit()
