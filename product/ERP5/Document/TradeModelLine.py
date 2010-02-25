@@ -190,8 +190,11 @@ class TradeModelLine(Predicate, XMLMatrix, Amount):
         # if parent don't have findSpecialiseValueList, this mean it's on the
         # specialise_value
         document = self.getParentValue().getSpecialiseValue()
-      business_process_list = document.findSpecialiseValueList(
-          context=context, portal_type_list=['Business Process'])
+      try:
+        business_process_list = document.findSpecialiseValueList(
+            context=context, portal_type_list=['Business Process'])
+      except AttributeError:
+        business_process_list = []
       business_process = None
       property_dict = {}
       if len(business_process_list):
