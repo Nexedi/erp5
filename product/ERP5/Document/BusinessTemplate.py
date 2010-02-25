@@ -71,7 +71,7 @@ customImporters={
 from zLOG import LOG, WARNING, PROBLEM
 from warnings import warn
 from gzip import GzipFile
-from xml.dom.minidom import parse
+from lxml.etree import parse
 from xml.sax.saxutils import escape
 from Products.CMFCore.Expression import Expression
 from Products.ERP5Type import tarfile
@@ -1581,17 +1581,14 @@ class RegisteredSkinSelectionTemplateItem(BaseTemplateItem):
     # import workflow chain for portal_type
     skin_selection_dict = {}
     xml = parse(file)
-    skin_folder_selection_list = xml.getElementsByTagName('skin_folder_selection')
-    for skin_folder_selection in skin_folder_selection_list:
-      skin_folder_id = skin_folder_selection.getElementsByTagName(
-          'skin_folder')[0].childNodes[0].data
-      selection_string = skin_folder_selection.getElementsByTagName(
-          'skin_selection')[0].childNodes
+    for skin_folder_selection in xml.getroot():
+      skin_folder_id = skin_folder_selection.find('skin_folder').text
+      selection_string = skin_folder_selection.find('skin_selection').text
       if not selection_string:
         selection_list = []
       else:
-        selection_list = selection_string[0].data.split(',')
-      skin_selection_dict[str(skin_folder_id)] = selection_list
+        selection_list = selection_string.split(',')
+      skin_selection_dict[skin_folder_id] = selection_list
     self._objects = skin_selection_dict
 
 
@@ -1722,18 +1719,14 @@ class PortalTypeTemplateItem(ObjectTemplateItem):
   def _importFile(self, file_name, file):
     if 'workflow_chain_type.xml' in file_name:
       # import workflow chain for portal_type
-      dict = {}
+      result_dict = {}
       xml = parse(file)
-      chain_list = xml.getElementsByTagName('chain')
+      chain_list = xml.findall('//chain')
       for chain in chain_list:
-        ptype = chain.getElementsByTagName('type')[0].childNodes[0].data
-        workflow_list = chain.getElementsByTagName('workflow')[0].childNodes
-        if len(workflow_list) == 0:
-          workflow = ''
-        else:
-          workflow = workflow_list[0].data
-        dict[str(ptype)] = str(workflow)
-      self._workflow_chain_archive = dict
+        portal_type = chain.find('type').text
+        workflow = chain.find('workflow').text or ''
+        result_dict[portal_type] = workflow
+      self._workflow_chain_archive = result_dict
     else:
       ObjectTemplateItem._importFile(self, file_name, file)
 
@@ -1935,20 +1928,16 @@ class PortalTypeWorkflowChainTemplateItem(BaseTemplateItem):
       LOG('Business Template', 0, 'Skipping file "%s"' % (file_name, ))
       return
     # import workflow chain for portal_type
-    dict = {}
+    result_dict = {}
     xml = parse(file)
-    chain_list = xml.getElementsByTagName('chain')
+    chain_list = xml.findall('chain')
     for chain in chain_list:
-      ptype = chain.getElementsByTagName('type')[0].childNodes[0].data
-      workflow_list = chain.getElementsByTagName('workflow')[0].childNodes
-      if len(workflow_list) == 0:
-        workflow = ''
-      else:
-        workflow = workflow_list[0].data
-      if 'portal_type_workflow_chain/' not in str(ptype):
-        ptype = 'portal_type_workflow_chain/' + str(ptype)
-      dict[str(ptype)] = str(workflow)
-    self._objects = dict
+      portal_type = chain.find('type').text
+      workflow = chain.find('workflow').text or ''
+      if 'portal_type_workflow_chain/' not in portal_type:
+        portal_type = 'portal_type_workflow_chain/%s' % (portal_type,)
+      result_dict[portal_type] = workflow
+    self._objects = result_dict
 
 # just for backward compatibility
 PortalTypeTemplateWorkflowChainItem = PortalTypeWorkflowChainTemplateItem
@@ -2047,14 +2036,11 @@ class PortalTypeAllowedContentTypeTemplateItem(BaseTemplateItem):
       return
     path, name = posixpath.split(file_name)
     xml = parse(file)
-    portal_type_list = xml.getElementsByTagName('portal_type')
+    portal_type_list = xml.findall('portal_type')
     for portal_type in portal_type_list:
-      id = portal_type.getAttribute('id')
-      item_type_list = []
-      item_list = portal_type.getElementsByTagName('item')
-      for item in item_list:
-        item_type_list.append(str(item.childNodes[0].data))
-      self._objects[self.class_property+'/'+id] = item_type_list
+      id = portal_type.get('id')
+      item_type_list = [item.text for item in portal_type.findall('item')]
+      self._objects['%s/%s' % (self.class_property, id,)] = item_type_list
 
   def install(self, context, trashbin, **kw):
     p = context.getPortalObject()
@@ -2412,20 +2398,17 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
       name = os.path.basename(file_name)
       id = name.split('.', 1)[0]
       xml = parse(file)
-      method_list = xml.getElementsByTagName('item')
+      method_list = xml.findall('item')
       for method in method_list:
-        key = method.getAttribute('key')
-        key_type = str(method.getAttribute('type'))
+        key = method.get('key')
+        key_type = method.get('type')
+        value_node = method.find('value')
         if key_type == "str":
-          if len(method.getElementsByTagName('value')[0].childNodes):
-            value = str(method.getElementsByTagName('value')[0].childNodes[0].data)
-          else:
-            value = ''
+          value = value_node.text or ''
         elif key_type == "int":
-          value = int(method.getElementsByTagName('value')[0].childNodes[0].data)
+          value = int(value_node.text)
         elif key_type == "tuple":
-          value = tuple(item.childNodes[0].data
-                        for item in method.getElementsByTagName('value'))
+          value = tuple([value_node.text for value_node in method.findall('value')])
         else:
           LOG('BusinessTemplate import CatalogMethod, type unknown', 0, key_type)
           continue
@@ -2729,28 +2712,32 @@ class PortalTypeRolesTemplateItem(BaseTemplateItem):
       return
     type_roles_list = []
     xml = parse(file)
-    xml_type_roles_list = xml.getElementsByTagName('role')
+    xml_type_roles_list = xml.findall('role')
     for role in xml_type_roles_list:
-      id = role.getAttribute('id').encode('utf_8', 'backslashreplace')
-      type_role_property_dict = {'id':id}
+      id = role.get('id')
+      if isinstance(id, unicode):
+        id = id.encode('utf_8', 'backslashreplace')
+      type_role_property_dict = {'id': id}
       # uniq
-      property_list = role.getElementsByTagName('property')
-      for property in property_list:
-        property_id = property.getAttribute('id').encode()
-        if property.hasChildNodes():
-          property_value = property.childNodes[0].data.encode('utf_8', 'backslashreplace')
-          type_role_property_dict[property_id] = property_value
+      property_list = role.findall('property')
+      for property_node in property_list:
+        property_id = property_node.get('id')
+        if property_node.text:
+          value = property_node.text
+          if isinstance(value, unicode):
+            value = value.encode('utf_8', 'backslashreplace')
+          type_role_property_dict[property_id] = value
       # multi
-      multi_property_list = role.getElementsByTagName('multi_property')
-      for property in multi_property_list:
-        property_id = property.getAttribute('id').encode()
-        if not type_role_property_dict.has_key(property_id):
-          type_role_property_dict[property_id] = []
-        if property.hasChildNodes():
-          property_value = property.childNodes[0].data.encode('utf_8', 'backslashreplace')
-          type_role_property_dict[property_id].append(property_value)
+      multi_property_list = role.findall('multi_property')
+      for property_node in multi_property_list:
+        property_id = property_node.get('id')
+        if property_node.text:
+          value = property_node.text
+          if isinstance(value, unicode):
+            value = value.encode('utf_8', 'backslashreplace')
+          type_role_property_dict.setdefault(property_id, []).append(value)
       type_roles_list.append(type_role_property_dict)
-    self._objects['portal_type_roles/'+file_name[:-4]] = type_roles_list
+    self._objects['portal_type_roles/%s' % (file_name[:-4],)] = type_roles_list
 
   def install(self, context, trashbin, **kw):
     update_dict = kw.get('object_to_update')
@@ -2809,20 +2796,15 @@ class SitePropertyTemplateItem(BaseTemplateItem):
       LOG('Business Template', 0, 'Skipping file "%s"' % (file_name, ))
       return
     xml = parse(file)
-    property_list = xml.getElementsByTagName('property')
-    for prop in property_list:
-      id = prop.getElementsByTagName('id')[0].childNodes[0].data
-      prop_type = prop.getElementsByTagName('type')[0].childNodes[0].data
-      if prop_type in ('lines', 'tokens'):
-        value = []
-        values = prop.getElementsByTagName('value')[0]
-        items = values.getElementsByTagName('item')
-        for item in items:
-          i = item.childNodes[0].data
-          value.append(str(i))
-      else:
-        value = str(prop.getElementsByTagName('value')[0].childNodes[0].data)
-      self._objects[str(id)] = (str(prop_type), value)
+    property_node = xml.getroot()[0]
+    property_id = property_node.find('id').text
+    prop_type = property_node.find('type').text
+    value_node = property_node.find('value')
+    if prop_type in ('lines', 'tokens'):
+      value = [item.text for item in value_node.findall('item')]
+    else:
+      value = value_node.text
+    self._objects[property_id] = (prop_type, value)
 
   def install(self, context, trashbin, **kw):
     update_dict = kw.get('object_to_update')
@@ -3014,46 +2996,27 @@ class ModuleTemplateItem(BaseTemplateItem):
     mapping = {}
     xml = parse(file)
     for key in ('portal_type', 'id', 'title', 'permission_list'):
-      elt = xml.getElementsByTagName(key)[0]
+      key_node = xml.find(key)
       if key == 'permission_list':
-        plist = []
-        perm_list = elt.getElementsByTagName('permission')
-        for perm in perm_list:
-          perm_type = perm.getAttribute('type').encode() or None
-          name_elt = perm.getElementsByTagName('name')[0]
-          name_node = name_elt.childNodes[0]
-          name = name_node.data
-          role_list = perm.getElementsByTagName('role')
-          rlist = []
-          for role in role_list:
-            role_node = role.childNodes[0]
-            role = role_node.data
-            rlist.append(str(role))
-          if perm_type == 'list' or perm_type is None:
-            perm_tuple = (str(name), list(rlist))
+        permission_list = []
+        for permission in key_node:
+          permission_type = permission.get('type', None)
+          name = permission.find('name').text
+          role_list = [role.text for role in permission.findall('role')]
+          if permission_type in ('list', None):
+            perm_tuple = (name, list(role_list))
           else:
-            perm_tuple = (str(name), tuple(rlist))
-          plist.append(perm_tuple)
-        mapping[key] = plist
+            perm_tuple = (name, tuple(role_list))
+          permission_list.append(perm_tuple)
+        mapping[key] = permission_list
       else:
-        node_list = elt.childNodes
-        if len(node_list) == 0:
-          value = ''
-        else:
-          value = node_list[0].data
-        mapping[key] = str(value)
+        mapping[key] = key_node.text or ''
 
     category_list = []
-    try:
-      elt = xml.getElementsByTagName('category_list')[0]
-    except IndexError:
-      pass
-    else:
-      category_element_list = elt.getElementsByTagName('category')
-      for category_element in category_element_list:
-        category_node = category_element.childNodes[0]
-        category = str(category_node.data)
-        category_list.append(category)
+    category_list_node = xml.find('category_list')
+    if category_list_node is not None:
+      category_list.extend(node.text for node\
+                            in category_list_node.findall('category'))
     mapping['category_list'] = category_list
 
     self._objects[file_name[:-4]] = mapping
@@ -3185,7 +3148,7 @@ class DocumentTemplateItem(BaseTemplateItem):
       LOG('Business Template', 0, 'Skipping file "%s"' % (file_name, ))
       return
     text = file.read()
-    self._objects[file_name[:-3]]=text
+    self._objects[file_name[:-3]] = text
 
 class PropertySheetTemplateItem(DocumentTemplateItem):
   local_file_reader_name = 'readLocalPropertySheet'
@@ -3280,11 +3243,9 @@ class RoleTemplateItem(BaseTemplateItem):
       LOG('Business Template', 0, 'Skipping file "%s"' % (file_name, ))
       return
     xml = parse(file)
-    role_list = xml.getElementsByTagName('role')
-    for role in role_list:
-      node = role.childNodes[0]
-      value = node.data
-      self._objects[str(value)] = 1
+    for role in xml.getroot():
+      value = role.text
+      self._objects[value] = 1
 
   def uninstall(self, context, **kw):
     p = context.getPortalObject()
@@ -3350,14 +3311,9 @@ class CatalogResultKeyTemplateItem(BaseTemplateItem):
     if not file_name.endswith('.xml'):
       LOG('Business Template', 0, 'Skipping file "%s"' % (file_name, ))
       return
-    list = []
     xml = parse(file)
-    key_list = xml.getElementsByTagName('key')
-    for key in key_list:
-      node = key.childNodes[0]
-      value = node.data
-      list.append(str(value))
-    self._objects[file_name[:-4]] = list
+    key_list = [key.text for key in xml.getroot()]
+    self._objects[file_name[:-4]] = key_list
 
   def install(self, context, trashbin, **kw):
     catalog = _getCatalogValue(self)
@@ -3444,14 +3400,9 @@ class CatalogRelatedKeyTemplateItem(BaseTemplateItem):
     if not file_name.endswith('.xml'):
       LOG('Business Template', 0, 'Skipping file "%s"' % (file_name, ))
       return
-    list = []
     xml = parse(file)
-    key_list = xml.getElementsByTagName('key')
-    for key in key_list:
-      node = key.childNodes[0]
-      value = node.data
-      list.append(str(value))
-    self._objects[file_name[:-4]] = list
+    key_list = [key.text for key in xml.getroot()]
+    self._objects[file_name[:-4]] = key_list
 
   def install(self, context, trashbin, **kw):
     catalog = _getCatalogValue(self)
@@ -3541,14 +3492,9 @@ class CatalogResultTableTemplateItem(BaseTemplateItem):
     if not file_name.endswith('.xml'):
       LOG('Business Template', 0, 'Skipping file "%s"' % (file_name, ))
       return
-    list = []
     xml = parse(file)
-    key_list = xml.getElementsByTagName('key')
-    for key in key_list:
-      node = key.childNodes[0]
-      value = node.data
-      list.append(str(value))
-    self._objects[file_name[:-4]] = list
+    key_list = [key.text for key in xml.getroot()]
+    self._objects[file_name[:-4]] = key_list
 
   def install(self, context, trashbin, **kw):
     catalog = _getCatalogValue(self)
@@ -3636,14 +3582,9 @@ class CatalogKeywordKeyTemplateItem(BaseTemplateItem):
     if not file_name.endswith('.xml'):
       LOG('Business Template', 0, 'Skipping file "%s"' % (file_name, ))
       return
-    list = []
     xml = parse(file)
-    key_list = xml.getElementsByTagName('key')
-    for key in key_list:
-      node = key.childNodes[0]
-      value = node.data
-      list.append(str(value))
-    self._objects[file_name[:-4]] = list
+    key_list = [key.text for key in xml.getroot()]
+    self._objects[file_name[:-4]] = key_list
 
   def install(self, context, trashbin, **kw):
     catalog = _getCatalogValue(self)
@@ -3731,14 +3672,9 @@ class CatalogDateTimeKeyTemplateItem(BaseTemplateItem):
     if not file_name.endswith('.xml'):
       LOG('Business Template', 0, 'Skipping file "%s"' % (file_name, ))
       return
-    list = []
     xml = parse(file)
-    key_list = xml.getElementsByTagName('key')
-    for key in key_list:
-      node = key.childNodes[0]
-      value = node.data
-      list.append(str(value))
-    self._objects[file_name[:-4]] = list
+    key_list = [key.text for key in xml.getroot()]
+    self._objects[file_name[:-4]] = key_list
 
   def install(self, context, trashbin, **kw):
     catalog = _getCatalogValue(context)
@@ -3826,14 +3762,9 @@ class CatalogFullTextKeyTemplateItem(BaseTemplateItem):
     if not file_name.endswith('.xml'):
       LOG('Business Template', 0, 'Skipping file "%s"' % (file_name, ))
       return
-    list = []
     xml = parse(file)
-    key_list = xml.getElementsByTagName('key')
-    for key in key_list:
-      node = key.childNodes[0]
-      value = node.data
-      list.append(str(value))
-    self._objects[file_name[:-4]] = list
+    key_list = [key.text for key in xml.getroot()]
+    self._objects[file_name[:-4]] = key_list
 
   def install(self, context, trashbin, **kw):
     catalog = _getCatalogValue(self)
@@ -3922,14 +3853,9 @@ class CatalogRequestKeyTemplateItem(BaseTemplateItem):
     if not file_name.endswith('.xml'):
       LOG('Business Template', 0, 'Skipping file "%s"' % (file_name, ))
       return
-    list = []
     xml = parse(file)
-    key_list = xml.getElementsByTagName('key')
-    for key in key_list:
-      node = key.childNodes[0]
-      value = node.data
-      list.append(str(value))
-    self._objects[file_name[:-4]] = list
+    key_list = [key.text for key in xml.getroot()]
+    self._objects[file_name[:-4]] = key_list
 
   def install(self, context, trashbin, **kw):
     catalog = _getCatalogValue(self)
@@ -4017,14 +3943,9 @@ class CatalogMultivalueKeyTemplateItem(BaseTemplateItem):
     if not file_name.endswith('.xml'):
       LOG('Business Template', 0, 'Skipping file "%s"' % (file_name, ))
       return
-    list = []
     xml = parse(file)
-    key_list = xml.getElementsByTagName('key')
-    for key in key_list:
-      node = key.childNodes[0]
-      value = node.data
-      list.append(str(value))
-    self._objects[file_name[:-4]] = list
+    key_list = [key.text for key in xml.getroot()]
+    self._objects[file_name[:-4]] = key_list
 
   def install(self, context, trashbin, **kw):
     catalog = _getCatalogValue(self)
@@ -4111,14 +4032,9 @@ class CatalogTopicKeyTemplateItem(BaseTemplateItem):
     if not file_name.endswith('.xml'):
       LOG('Business Template', 0, 'Skipping file "%s"' % (file_name, ))
       return
-    list = []
     xml = parse(file)
-    key_list = xml.getElementsByTagName('key')
-    for key in key_list:
-      node = key.childNodes[0]
-      value = node.data
-      list.append(str(value))
-    self._objects[file_name[:-4]] = list
+    key_list = [key.text for key in xml.getroot()]
+    self._objects[file_name[:-4]] = key_list
 
   def install(self, context, trashbin, **kw):
     catalog = _getCatalogValue(self)
@@ -4205,14 +4121,9 @@ class CatalogScriptableKeyTemplateItem(BaseTemplateItem):
     if not file_name.endswith('.xml'):
       LOG('Business Template', 0, 'Skipping file "%s"' % (file_name, ))
       return
-    list = []
     xml = parse(file)
-    key_list = xml.getElementsByTagName('key')
-    for key in key_list:
-      node = key.childNodes[0]
-      value = node.data
-      list.append(str(value))
-    self._objects[file_name[:-4]] = list
+    key_list = [key.text for key in xml.getroot()]
+    self._objects[file_name[:-4]] = key_list
 
   def install(self, context, trashbin, **kw):
     catalog = _getCatalogValue(self)
@@ -4301,14 +4212,9 @@ class CatalogRoleKeyTemplateItem(BaseTemplateItem):
     if not file_name.endswith('.xml'):
       LOG('Business Template', 0, 'Skipping file "%s"' % (file_name, ))
       return
-    list = []
     xml = parse(file)
-    key_list = xml.getElementsByTagName('key')
-    for key in key_list:
-      node = key.childNodes[0]
-      value = node.data
-      list.append(str(value))
-    self._objects[file_name[:-4]] = list
+    key_list = [key.text for key in xml.getroot()]
+    self._objects[file_name[:-4]] = key_list
 
   def install(self, context, trashbin, **kw):
     catalog = _getCatalogValue(self)
@@ -4397,14 +4303,9 @@ class CatalogLocalRoleKeyTemplateItem(BaseTemplateItem):
     if not file_name.endswith('.xml'):
       LOG('Business Template', 0, 'Skipping file "%s"' % (file_name, ))
       return
-    list = []
     xml = parse(file)
-    key_list = xml.getElementsByTagName('key')
-    for key in key_list:
-      node = key.childNodes[0]
-      value = node.data
-      list.append(str(value))
-    self._objects[file_name[:-4]] = list
+    key_list = [key.text for key in xml.getroot()]
+    self._objects[file_name[:-4]] = key_list
 
   def install(self, context, trashbin, **kw):
     catalog = _getCatalogValue(self)
@@ -4629,11 +4530,9 @@ class MessageTranslationTemplateItem(BaseTemplateItem):
       self._objects[file_name[:-3]] = text
     elif name == 'language.xml':
       xml = parse(file)
-      language_element = xml.getElementsByTagName('language')[0]
-      name_element = language_element.getElementsByTagName('name')[0]
-      name = str(name_element.childNodes[0].data)
-      code_element = language_element.getElementsByTagName('code')[0]
-      code = str(code_element.childNodes[0].data)
+      language_element = xml.find('language')
+      name = language_element.find('name').text
+      code = language_element.find('code').text
       self._objects[code] = name
 
 class LocalRolesTemplateItem(BaseTemplateItem):
@@ -4691,19 +4590,13 @@ class LocalRolesTemplateItem(BaseTemplateItem):
       return
     xml = parse(file)
     # local roles
-    local_roles = xml.getElementsByTagName('local_roles')[0]
-    local_roles_list = local_roles.getElementsByTagName('role')
+    local_roles_list = xml.findall('//role')
     local_roles_dict = {}
     for role in local_roles_list:
-      id = role.getAttribute('id')
-      if isinstance(id, unicode):
-        id = id.encode('utf-8')
-      item_type_list = []
-      item_list = role.getElementsByTagName('item')
-      for item in item_list:
-        item_type_list.append(str(item.childNodes[0].data))
+      id = role.get('id')
+      item_type_list = [item.text for item in role]
       local_roles_dict[id] = item_type_list
-    self._objects['local_roles/'+file_name[:-4]] = (local_roles_dict, )
+    self._objects['local_roles/%s' % (file_name[:-4],)] = (local_roles_dict, )
 
   def install(self, context, trashbin, **kw):
     update_dict = kw.get('object_to_update')
