@@ -29,4 +29,5 @@
    software *and* instance buildouts
  - make eggs defined with standalone instance recipe inside instance instead
    of globally for buildout
- - create software-profiles/apache-ssl.cfg to build ssl setup into apache.
+ - update software-profiles/apache.cfg to build fully modular apache (with ssl,
+   cache, etc) which will give full control while creating apache instances
