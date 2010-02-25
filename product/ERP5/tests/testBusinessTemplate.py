@@ -175,15 +175,6 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     self.failIf(core_bt is None)
     sequence.edit(current_bt=core_bt)
 
-  def stepUseXHtmlBusinessTemplate(self, sequence=None,
-                                  sequence_list=None, **kw):
-    """
-    Define erp5_xhtml_style as current bt
-    """
-    bt = self.getBusinessTemplate('erp5_xhtml_style')
-    self.failIf(bt is None)
-    sequence.edit(current_bt=bt)
-
   def stepCopyCoreBusinessTemplate(self, sequence=None,
                                   sequence_list=None, **kw):
     """
@@ -200,36 +191,12 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     self.assertEqual(new_bt.getTitle(), 'erp5_core')
     sequence.edit(copy_bt=new_bt)
 
-  def stepCopyXHtmlBusinessTemplate(self, sequence=None,
-                                  sequence_list=None, **kw):
-    """                           
-    Copy erp5_xhtml_style as new Business Template
-    """
-    template_tool = self.getTemplateTool()
-    bt = self.getBusinessTemplate('erp5_xhtml_style')
-    self.failIf(bt is None)
-    sequence.edit(current_bt=bt)
-    copy_data = template_tool.manage_copyObjects(ids=[bt.getId()])
-    ids = template_tool.manage_pasteObjects(copy_data)
-    new_id = ids[0]['new_id']
-    new_bt = template_tool._getOb(new_id)
-    self.assertEqual(new_bt.getTitle(), 'erp5_xhtml_style')
-    sequence.edit(copy_xhtml_bt=new_bt)
-  
   def stepUseCopyCoreBusinessTemplate(self, sequence=None,
                                   sequence_list=None, **kw):
     """
     Define erp5_core as current bt
     """
     bt = sequence.get('copy_bt')
-    sequence.edit(current_bt=bt, export_bt=bt)
-
-  def stepUseCopyXHtmlBusinessTemplate(self, sequence=None,
-                                  sequence_list=None, **kw):
-    """
-    Define erp5_core as current bt
-    """
-    bt = sequence.get('copy_xhtml_bt')
     sequence.edit(current_bt=bt, export_bt=bt)
 
   def stepBuildCopyCoreBusinessTemplate(self, sequence=None,
@@ -239,15 +206,6 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     """
     bt = sequence.get('copy_bt')
     self.assertEquals(bt.getTitle(), 'erp5_core')
-    bt.build()
-
-  def stepBuildCopyXHtmlBusinessTemplate(self, sequence=None,
-                                  sequence_list=None, **kw):
-    """
-    Build copied xhtml style bt
-    """
-    bt = sequence.get('copy_xhtml_bt')
-    self.assertEquals(bt.getTitle(), 'erp5_xhtml_style')
     bt.build()
 
   def stepInstallCopyCoreBusinessTemplate(self, sequence=None,
@@ -964,6 +922,17 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     self.failUnless(bt is not None)
     bt.edit(template_registered_skin_selection_list = \
         ('%s | Foo' % sequence.get('skin_folder_id'), ))
+
+  def stepEditRegistredSelectionToBusinessTemplate(self, sequence=None, 
+                                                  sequence_list=None, **kw):
+    """
+    Add registered selection to business template
+    """
+    bt = sequence.get('current_bt', None)
+    self.failUnless(bt is not None)
+    bt.edit(template_registered_skin_selection_list = \
+        ('%s | Foo' % sequence.get('skin_folder_id'),
+         '%s | Bar' % sequence.get('skin_folder_id'),))
 
   def stepAddPathToBusinessTemplate(self, sequence=None, sequence_list=None, **kw):
     """
@@ -4811,6 +4780,13 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
           'business_template_registered_skin_selections', ('Foo',),
           type='tokens')
 
+  def stepSetSkinFolderRegistredSelections2(self, sequence=None, **kw):
+    ps = self.getSkinsTool()
+    skin_id = sequence.get('skin_folder_id')
+    skin_folder = ps._getOb(skin_id, None)
+    skin_folder._updateProperty(
+          'business_template_registered_skin_selections', ('Foo', 'Bar',))
+
   def stepCreateSkinSelection(self, sequence=None, **kw):
     ps = self.getSkinsTool()
     ps.manage_skinLayers(skinpath=('erp5_core',), skinname='Foo', add_skin=1)
@@ -5890,6 +5866,12 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        \
                        CheckModifiedSkinFolderExists \
                        CheckSkinSelectionAdded \
+                       \
+                       SetSkinFolderRegistredSelections2 \
+                       CopyBusinessTemplate \
+                       EditRegistredSelectionToBusinessTemplate \
+                       BuildBusinessTemplate \
+                       InstallCurrentBusinessTemplate \
                        '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)
@@ -5922,23 +5904,6 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CopyCoreBusinessTemplate \
                        BuildCopyCoreBusinessTemplate \
                        InstallCopyCoreBusinessTemplate \
-                       '
-    sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
-
-  def test_166_checkXHtmlCopyBuildInstall(self, quiet=quiet, run=run_all_test):
-    if not run: return
-    if not quiet:
-      message = 'Test Check basic copy, build and installation is working'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
-    sequence_list = SequenceList()
-    sequence_string = '\
-                       UseXHtmlBusinessTemplate \
-                       CopyXHtmlBusinessTemplate \
-                       UseCopyXHtmlBusinessTemplate \
-                       BuildCopyXHtmlBusinessTemplate \
-                       InstallCurrentBusinessTemplate \
                        '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)
