@@ -136,6 +136,7 @@ if redirect_to_document or redirect_url is not None:\n
   if redirect_to_document and document is not None:\n
     # explicitly required to view ingested document\n
     context.REQUEST.set(\'portal_status_message\', message)\n
+    context.REQUEST.set(\'editable_mode\', editable_mode)\n
     return document.view()\n
   elif redirect_url is not None:\n
     # redirect URL has been supplied by caller\n
@@ -156,7 +157,7 @@ return document\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>file=None, url=None, portal_type=None, classification=None, synchronous_metadata_discovery=None, redirect_to_document=None, attach_document_to_context=False, use_context_for_container=False, redirect_url=None, **kw</string> </value>
+            <value> <string>file=None, url=None, portal_type=None, classification=None, synchronous_metadata_discovery=None, redirect_to_document=None, attach_document_to_context=False, use_context_for_container=False, redirect_url=None, editable_mode = 1, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -176,7 +177,7 @@ return document\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>9</int> </value>
+                        <value> <int>10</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -191,6 +192,7 @@ return document\n
                             <string>attach_document_to_context</string>
                             <string>use_context_for_container</string>
                             <string>redirect_url</string>
+                            <string>editable_mode</string>
                             <string>kw</string>
                             <string>None</string>
                             <string>MARKER</string>
@@ -243,6 +245,7 @@ return document\n
                 <int>0</int>
                 <int>0</int>
                 <none/>
+                <int>1</int>
               </tuple>
             </value>
         </item>
