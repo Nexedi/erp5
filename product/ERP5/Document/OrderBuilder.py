@@ -122,6 +122,8 @@ class OrderBuilder(XMLObject, Amount, Predicate):
       else:
         movement_list = [self.restrictedTraverse(relative_url) for relative_url \
                          in movement_relative_url_list]
+    if not len(movement_list):
+      return []
     # Collect
     root_group_node = self.collectMovement(movement_list)
     # Build
