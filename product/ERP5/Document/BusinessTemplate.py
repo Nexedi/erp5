@@ -4530,9 +4530,8 @@ class MessageTranslationTemplateItem(BaseTemplateItem):
       self._objects[file_name[:-3]] = text
     elif name == 'language.xml':
       xml = parse(file)
-      language_element = xml.find('language')
-      name = language_element.find('name').text
-      code = language_element.find('code').text
+      name = xml.find('name').text
+      code = xml.find('code').text
       self._objects[code] = name
 
 class LocalRolesTemplateItem(BaseTemplateItem):
