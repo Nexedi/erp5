@@ -81,7 +81,6 @@
             <key> <string>acquisition_base_category</string> </key>
             <value>
               <tuple>
-                <string>delivery</string>
                 <string>order</string>
                 <string>parent</string>
               </tuple>

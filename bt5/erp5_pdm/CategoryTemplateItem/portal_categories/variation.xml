@@ -18,7 +18,6 @@
             <value>
               <tuple>
                 <string>specialise</string>
-                <string>delivery</string>
                 <string>order</string>
                 <string>parent</string>
               </tuple>
