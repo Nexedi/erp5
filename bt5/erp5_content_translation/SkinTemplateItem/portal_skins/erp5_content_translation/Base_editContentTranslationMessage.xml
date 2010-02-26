@@ -109,8 +109,7 @@ def updateTranslation():\n
   language_list = context.Base_getContentTranslationLanguageValueAndLabelList()\n
 \n
   def upperCase(text):\n
-    text = text.replace(\'-\', \'_\')\n
-    return \'\'.join([i.capitalize() for i in text.split(\'_\')])\n
+    return convertToUpperCase(text.replace(\'-\', \'_\'))\n
 \n
   for key in request.form.keys():\n
     if key.startswith(\'field_matrixbox_\'):\n

@@ -53,16 +53,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from Products.ERP5Type.Utils import convertToUpperCase\n
-def upperCase(text):\n
-  return convertToUpperCase(text.replace(\'-\', \'_\'))\n
-\n
-property_name = args[0]\n
-language = args[1]\n
-method = getattr(context, \'get%s\' % upperCase(\'%s_translated_%s\' % (language, property_name)))\n
-translated_message = method(no_original_value=True)\n
-\n
-return translated_message\n
+            <value> <string>return context\n
 </string> </value>
         </item>
         <item>
@@ -73,7 +64,7 @@ return translated_message\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>*args, **kw</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -99,19 +90,7 @@ return translated_message\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>args</string>
-                            <string>kw</string>
-                            <string>Products.ERP5Type.Utils</string>
-                            <string>convertToUpperCase</string>
-                            <string>upperCase</string>
-                            <string>_getitem_</string>
-                            <string>property_name</string>
-                            <string>language</string>
-                            <string>getattr</string>
                             <string>context</string>
-                            <string>method</string>
-                            <string>True</string>
-                            <string>translated_message</string>
                           </tuple>
                         </value>
                     </item>
@@ -128,7 +107,7 @@ return translated_message\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Base_getContentTranslationMessageAsCell</string> </value>
+            <value> <string>Base_getContentTranslationTargetObject</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

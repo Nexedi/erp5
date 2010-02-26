@@ -54,15 +54,63 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>from Products.ERP5Type.Utils import convertToUpperCase\n
+\n
+\n
+########### CONFIGURATION ######################################\n
+# If you want to index properties more, extend property_list   #\n
+# and portal_type_list.                                        #\n
+################################################################\n
+property_list = (\'first_name\', \'last_name\')\n
+portal_type_list = (\'Person\')\n
+\n
+\n
+result = []\n
+\n
 def upperCase(text):\n
   return convertToUpperCase(text.replace(\'-\', \'_\'))\n
 \n
-property_name = args[0]\n
-language = args[1]\n
-method = getattr(context, \'get%s\' % upperCase(\'%s_translated_%s\' % (language, property_name)))\n
-translated_message = method(no_original_value=True)\n
+language_list = context.Localizer.get_languages()\n
 \n
-return translated_message\n
+for document in document_list:\n
+  if document.getPortalType() not in portal_type_list:\n
+    continue\n
+  uid = document.getUid()\n
+  for property_name in property_list:\n
+    temporary_result = []\n
+\n
+    original_text = None\n
+    original_method = getattr(document, \'get%s\' % upperCase(property_name), None)\n
+    if original_method is not None:\n
+      original_text = original_method()\n
+\n
+    for language in language_list:\n
+      method_name = \'get%s\' % (upperCase(\'%s_translated_%s\' %\n
+                                         (language, property_name)),)\n
+      translated_text = None\n
+      method = getattr(document, method_name, None)\n
+      if method is not None and document.getProperty(\'%s_translation_domain\' % property_name) == \'content\':\n
+        translated_text = method()\n
+      else:\n
+        translation_method = getattr(document, \'get%s\' % upperCase(\'translated_%s\' % property_name), None)\n
+        if original_text is not None and translation_method is not None:\n
+          temporary_translated_text = translation_method(language=language)\n
+          if original_text != temporary_translated_text:\n
+             translated_text = temporary_translated_text\n
+      if translated_text:\n
+        temporary_result.append({\'uid\': uid,\n
+                                 \'property_name\': property_name,\n
+                                 \'language\': language,\n
+                                 \'translated_text\': translated_text,\n
+                                 })\n
+    # also add original content\n
+    if original_text is not None:\n
+      temporary_result.append({\'uid\': uid,\n
+                               \'property_name\': property_name,\n
+                               \'language\': \'\',\n
+                               \'translated_text\': original_text,\n
+                               })\n
+    result.extend(temporary_result)\n
+return result\n
 </string> </value>
         </item>
         <item>
@@ -73,7 +121,7 @@ return translated_message\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>*args, **kw</string> </value>
+            <value> <string>document_list=None</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -93,25 +141,37 @@ return translated_message\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>1</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>args</string>
-                            <string>kw</string>
+                            <string>document_list</string>
                             <string>Products.ERP5Type.Utils</string>
                             <string>convertToUpperCase</string>
+                            <string>property_list</string>
+                            <string>portal_type_list</string>
+                            <string>result</string>
                             <string>upperCase</string>
-                            <string>_getitem_</string>
-                            <string>property_name</string>
-                            <string>language</string>
-                            <string>getattr</string>
+                            <string>_getattr_</string>
                             <string>context</string>
+                            <string>language_list</string>
+                            <string>_getiter_</string>
+                            <string>document</string>
+                            <string>uid</string>
+                            <string>property_name</string>
+                            <string>temporary_result</string>
+                            <string>None</string>
+                            <string>original_text</string>
+                            <string>getattr</string>
+                            <string>original_method</string>
+                            <string>language</string>
+                            <string>method_name</string>
+                            <string>translated_text</string>
                             <string>method</string>
-                            <string>True</string>
-                            <string>translated_message</string>
+                            <string>translation_method</string>
+                            <string>temporary_translated_text</string>
                           </tuple>
                         </value>
                     </item>
@@ -123,12 +183,14 @@ return translated_message\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <none/>
+              </tuple>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Base_getContentTranslationMessageAsCell</string> </value>
+            <value> <string>CatalogTool_getContentTranslationDictList</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

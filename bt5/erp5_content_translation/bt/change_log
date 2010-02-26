@@ -1,3 +1,6 @@
+2010-02-26 yusuke
+* supports catalog search.
+
 2010-01-19 yusei
 * Now translation accessors return original value if there is no translation. For translation UI of content translation, use no_original_value parameter and do not display original value in input fields.
 
