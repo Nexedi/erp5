@@ -34,6 +34,8 @@ from SQLQuery import SQLQuery
 from Products.ZSQLCatalog.interfaces.query import IQuery
 from zope.interface.verify import verifyClass
 from Products.ZSQLCatalog.SQLCatalog import profiler_decorator
+from Products.ZSQLCatalog.Query.AutoQuery import AutoQuery
+from Products.ZSQLCatalog.Query.RelatedQuery import RelatedQuery
 
 logical_operator_search_text_dict = {
   'and': 'AND',
@@ -91,6 +93,45 @@ class ComplexQuery(Query):
         query = SQLQuery(query)
       append(query)
     self.query_list = new_query_list
+    self.checkQueryTree()
+
+  def _findRelatedQuery(self, query):
+    """
+      XXX This method is used for checkQueryTree checking.
+      Find RelatedQuery or a query which have RelatedQuery
+      from container queries recursively
+    """
+    result = None
+    if isinstance(query, AutoQuery):
+      result = self._findRelatedQuery(query.wrapped_query)
+    elif isinstance(query, ComplexQuery):
+      if getattr(query, '_has_related_query', False):
+        result = query
+      else:
+        for sub_query in query.query_list:
+          result = self._findRelatedQuery(sub_query)
+          if result:
+            break
+    elif isinstance(query, RelatedQuery):
+      result = query
+    return result
+
+  def checkQueryTree(self):
+    """
+      XXX
+      If self has 'or' operator and a RelatedQuery in the tree,
+      it will not return valid result.
+    """
+    for query in self.query_list:
+      result = self._findRelatedQuery(query)
+      if result:
+        self._has_related_query = True
+        break
+    else:
+      self._has_related_query = False
+    if (self._has_related_query and
+        self.logical_operator == 'or'):
+      raise NotImplementedError
 
   @profiler_decorator
   def _asSearchTextExpression(self, sql_catalog, column=None):
