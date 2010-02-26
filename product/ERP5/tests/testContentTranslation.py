@@ -52,6 +52,59 @@ class TestContentTranslation(ERP5TypeTestCase):
       dict(first_name=TRANSLATION_DOMAIN_CONTENT_TRANSLATION,
            last_name=TRANSLATION_DOMAIN_CONTENT_TRANSLATION))
 
+  def testCatalogSearch(self):
+    """
+    Search a person's properties and translated properties with catalog.
+    """
+    portal = self.portal
+
+    portal.Localizer._add_user_defined_language('Nobody Readable', 'nob-read')
+    portal.Localizer.add_language('nob-read')
+    transaction.commit()
+    self.tic()
+
+    person1 = portal.person_module.newContent(portal_type='Person',
+                                              first_name='first_name_of_p1',
+                                              last_name='last_name_of_p1')
+    person2 = portal.person_module.newContent(portal_type='Person',
+                                              first_name='first_name_of_p2',
+                                              last_name='last_name_of_p2')
+    person3 = portal.person_module.newContent(portal_type='Person',
+                                              first_name='Yusuke',
+                                              last_name='Muraoka')
+    person1.setNobReadTranslatedFirstName('XXX')
+    person1.setNobReadTranslatedLastName('YYY')
+    person2.setNobReadTranslatedFirstName('---')
+    person2.setNobReadTranslatedLastName('   ')
+    person3.setNobReadTranslatedFirstName('友介')
+    person3.setNobReadTranslatedLastName('村岡')
+    self.assertEqual(person1.getNobReadTranslatedFirstName('XXX'), 'XXX')
+    self.assertEqual(person1.getNobReadTranslatedLastName('YYY'), 'YYY')
+    self.assertEqual(person2.getNobReadTranslatedFirstName('---'), '---')
+    self.assertEqual(person2.getNobReadTranslatedLastName('   '), '   ')
+    self.assertEqual(person3.getNobReadTranslatedFirstName('友介'), '友介')
+    self.assertEqual(person3.getNobReadTranslatedLastName('村岡'), '村岡')
+    transaction.commit()
+    self.tic()
+
+    result1 = portal.portal_catalog(content_translation_title='Yusuke')
+    self.assertEquals(len(result1), 1)
+    result_obj1 = result1[0].getObject()
+
+    result2 = portal.portal_catalog(content_translation_title='友介')
+    self.assertEquals(len(result2), 1)
+    result_obj2 = result2[0].getObject()
+
+    self.assertEquals(result_obj1, result_obj2)
+
+    # re-catalog
+    person3.setNobReadTranslatedFirstName('ゆうすけ')
+    transaction.commit()
+    self.tic()
+
+    result3 = portal.portal_catalog(content_translation_title='友介')
+    self.assertEquals(len(result3), 0)
+    
   def testContentTranslation(self):
     """
     Make sure that translatable properties can have content translation into
