@@ -104,7 +104,15 @@ class TestContentTranslation(ERP5TypeTestCase):
 
     result3 = portal.portal_catalog(content_translation_title='友介')
     self.assertEquals(len(result3), 0)
-    
+
+    # un-catalog
+    portal.person_module.manage_delObjects(person3.getId())
+    transaction.commit()
+    self.tic()
+
+    result4 = portal.portal_catalog(content_translation_title='村岡')
+    self.assertEquals(len(result4), 0)
+ 
   def testContentTranslation(self):
     """
     Make sure that translatable properties can have content translation into
