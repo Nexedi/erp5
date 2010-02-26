@@ -2461,6 +2461,44 @@ class ActionTemplateItem(ObjectTemplateItem):
       return relative_url, key, value
     return path, None, None
 
+  def _getPortalTypeActionCopy(self, obj, value):
+    id_id = 'reference'
+    for action in obj.getActionInformationList():
+      if getattr(action, id_id, None) == value:
+        return obj._exportOldAction(action)
+
+  def _getPortalToolActionCopy(self, obj, context, value):
+    try:
+      from Products.CMFCore.interfaces import IActionProvider
+    except ImportError:
+      # BACK:
+      # we still don't load ZCML on tests on 2.8, but on 2.8 actions from other
+      # tools are not redirected to portal_actions
+      pass
+    else:
+      if not IActionProvider.providedBy(obj):
+        # look for the action in portal_actions, instead of the original object
+        LOG('Products.ERP5.Document.BusinessTemplate', WARNING,
+            'Redirected action export',
+            'Attempted to retrieve action %r from %r which is no longer an '
+            'IActionProvided. Retrieving action from portal_actions instead' %
+            (value, obj.getId()))
+        obj = context.getPortalObject().portal_actions
+    id_id = 'id'
+    for action in obj.listActions():
+      if getattr(action, id_id, None) == value:
+        return action._getCopy(context)
+
+  def _getActionCopy(self, obj, context, value):
+    """
+    Gets action copy from action provider given the action id or reference
+    """
+    # Several tools still use CMF actions
+    if obj.getParentId() == 'portal_types':
+      return self._getPortalTypeActionCopy(obj, value)
+    else:
+      return self._getPortalToolActionCopy(obj, context, value)
+
   def build(self, context, **kw):
     BaseTemplateItem.build(self, context, **kw)
     p = context.getPortalObject()
@@ -2468,21 +2506,11 @@ class ActionTemplateItem(ObjectTemplateItem):
       url, value = id.split(' | ')
       url = posixpath.split(url)
       obj = p.unrestrictedTraverse(url)
-      # Several tools still use CMF actions
-      is_new_action = obj.getParentId() == 'portal_types'
-      id_id = is_new_action and 'reference' or 'id'
-      for action in (is_new_action and obj.getActionInformationList
-                                    or obj.listActions)():
-        if getattr(action, id_id, None) == value:
-          break
-      else:
+      action = self._getActionCopy(obj, context, value)
+      if action is None:
         if self.is_bt_for_diff:
           continue
         raise NotFound('Action %r not found' % id)
-      if is_new_action:
-        action = obj._exportOldAction(action)
-      else:
-        action = action._getCopy(context)
       key = posixpath.join(url[-2], url[-1], value)
       self._objects[key] = self.removeProperties(action)
       self._objects[key].wl_clearLocks()
@@ -2514,6 +2542,7 @@ class ActionTemplateItem(ObjectTemplateItem):
           try:
             from Products.CMFCore.interfaces import IActionProvider
           except ImportError:
+              # BACK:
               # we still don't load ZCML on tests on 2.8, but on 2.8 we don't
               # need to redirect actions to portal_actions.
               pass
@@ -2522,7 +2551,7 @@ class ActionTemplateItem(ObjectTemplateItem):
               # some tools stopped being ActionProviders in CMF 2.x. Drop the
               # action into portal_actions.
               LOG('Products.ERP5.Document.BusinessTemplate', WARNING,
-                  'Misplaced action',
+                  'Redirected action import',
                   'Attempted to store action %r in %r which is no longer an '
                   'IActionProvided. Storing action on portal_actions instead' %
                   (id, path))
