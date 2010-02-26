@@ -27,44 +27,65 @@
 #
 ##############################################################################
 """
-Products.ERP5.interfaces.predicate
+Products.ERP5.interfaces.variated
 """
 
 from zope.interface import Interface
 
-class IPredicate(Interface):
-  """Predicate document interface specification
+class IVariationRange(Interface):
+  """IVariationRange interface specification
 
-  A Predicate allows to make a statement about a document.
-  A statement can be related to:
-
-  - the attributes of the document (ex. price >= 3.0)
-
-  - the categories of the document (ex. )
-
-  The Predicate class is an abstract class, which is
-  implemented by subclasses.
+  Common Interface for all objects which define a variation
+  range.
   """
 
-  def test(context, tested_base_category_list=None):
+  # provides VariationRange accessors
+
+  # Discrete Variation Range Accessors
+  def setVariationBaseCategoryList(base_category_id_list):
     """
-    A Predicate can be tested on a given context. Parameters can
-    passed in order to ignore some conditions:
-    
-    tested_base_category_list -- a list of category that we do
-        want to test. For example, we might want to test only the
-        destination or the source of a predicate.
-        (XXX-JPS - is this really needed ? is this appropriate
-         naming - probably not)
+    modifies the list of base category ids which are used to
+    define discrete variation dimensions for this instance.
+    Normally provided by the VariationRange property sheet.
+
+    Used in: Resource, Delivery Line
+
+    base_category_id_list -- 
     """
 
-  def asSQLExpression():
+  # Matrix Handling API
+  def getLineVariationRangeCategoryItemList():
     """
-    A Predicate can be rendered as an sql expression. This
-    can be useful to create reporting trees based on the
-    ZSQLCatalog. This SQL expression is however partial since
-    python scripts which are used by the test method of the predicate
-    can be converted to SQL. If a python script is defined to 
-    implement test, results obtained through asSQLExpression
-    must be additionnaly tested by invoking test().
+    returns possible variation dimensions displayed in line.
+
+    Used in: Resource, Delivery Line
+
+    XXX - missing default display ID
+    """
+
+  def getColumnVariationRangeCategoryItemList():
+    """
+    returns possible variation dimensions displayed in column
+
+    Used in: Resource, Delivery Line
+
+    XXX - missing default display ID
+    """
+
+  def getTabVariationRangeCategoryItemList():
+    """
+    returns possible variation dimensions displayed in tab
+
+    Used in: Resource, Delivery Line
+
+    XXX - missing default display ID
+    """
+
+  def getMatrixVariationRangeBaseCategoryList(self):
+    """
+    return possible variation dimensions for a matrix
+
+    Used in: Resource, Delivery Line
+
+    XXX - missing default display ID
     """

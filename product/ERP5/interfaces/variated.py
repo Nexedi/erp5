@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2002-2010 Nexedi SA and Contributors. All Rights Reserved.
 #                    Jean-Paul Smets-Solanes <jp@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
@@ -33,9 +33,21 @@ Products.ERP5.interfaces.variated
 from zope.interface import Interface
 
 class IVariated(Interface):
-  """
-    Common Interface for all objects which can be
-    variated.
+  """IVariated interface specification
+
+  IVariated defines methods to access and modify
+  discrete variations (categories) and variation
+  properties. It also provides variation range methods
+  which are often invoked from variated objects.
+
+  IVariated is normally used to specify discrete variations
+  of a movement.
+
+  IVariated is also used on all objects which define
+  a variation range, such as Resources, Delivery Lines
+  which contain Delivery Cells. In this case, categories
+  specify a subset of the total variation range, rather
+  than a specific discrete variation.
   """
 
   # The following methods are intended to access to the
@@ -43,76 +55,213 @@ class IVariated(Interface):
   # are based on categories. General variations are encapsulated
   # into VariationValue instances.
 
-  # Discrete Variation accessors
-  def getVariationCategoryList():
+  # Discrete Variation Accessors
+  def getVariationBaseCategoryList(omit_optional_variation=0,
+                                   omit_individual_variation=0):
     """
-      returns a list or relative URLs which defines
-      a discrete variation (ie. a list of category
-      memberships)
+    returns a list of base category ids which are used
+    to define discrete variation dimensions for this instance
+
+    Used in: Resource, Delivery Line, Delivery Cell
+
+    omit_optional_variation -- 
+
+    omit_individual_variation --
     """
 
-  def setVariationCategoryList(node_list):
+  def getVariationBaseCategoryItemList(self, display_id='title_or_id',
+        omit_optional_variation=0, omit_individual_variation=0):
     """
-      modifies the discrete variation of an
-      variated instance by providing a list
-      of relative URLs
+    returns a list of (base_category.id, base_category.display_id())
+    which can be displayed in an ERP5 Form and define 
+    to define discrete variation dimensions for this instance
+
+    Used in: Resource, Delivery Line, Delivery Cell
+
+    display_id -- 
+
+    omit_optional_variation -- 
+
+    omit_individual_variation --
     """
 
-  def getVariationBaseCategoryList(node_list):
+  def getVariationCategoryList(self, base_category_list=(),
+        omit_optional_variation=0, omit_individual_variation=0):
     """
-      returns a list of base category ids
-      which are used to define discrete variations
-      for this instance
+    returns a list or relative URLs which defines
+    a discrete variation (ie. a list of category
+    memberships)
+
+    Used in: Resource, Delivery Line, Delivery Cell
+
+    base_category_list --
+
+    omit_optional_variation -- 
+
+    omit_individual_variation --
     """
 
-  def setVariationBaseCategoryList(node_list):
+  def setVariationCategoryList(node_list, base_category_list=()):
     """
-      modifies the list of base category ids
-      which are used to define discrete variations
-      for this instance
+    modifies the discrete variation of a variated instance by
+    providing a list of relative URLs
+
+    Used in: Resource, Delivery Line, Delivery Cell
+
+    base_category_list --
     """
 
-  # General Variation accessors
-  def getVariationValue():
+  def getVariationCategoryItemList(base_category_list=(), base=1,
+        display_id='logical_path', display_base_category=1,
+        current_category=None, omit_optional_variation=0,
+        omit_individual_variation=0, **kw):
     """
-      Returns a VariationValue object. 
+    returns a list of (category.getRelativeUrl(), category.display_id())
+    which define the discrete variations  of a variated instance
+    in a way which be displayed in an ERP5 Form.
+
+    Used in: Resource, Delivery Line, Delivery Cell
+
+    base_category_list --
+
+    base --
+
+    display_id --
+
+    display_base_category --
+
+    base_category_list --
+
+    current_category --
+
+    omit_optional_variation --
+
+    omit_individual_variation --
+
+    **kw -- 
     """
 
-  def setVariationValue(value):
+  # Discrete Variation Range Accessors
+  def getVariationRangeBaseCategoryList():
     """
-      Sets the VariationValue.
+    returns a list of base categories which are acceptable
+    as discrete variation dimensions
+
+    Used in: Resource, Delivery Line, Delivery Cell
     """
 
-
-  # The following methods are intended to access the
-  # variation range of a variated object. A Variation range can
-  # be defined in a Resource instance or in any object
-  # which has a relation with a Resource (Amount, Transformation)
-
-  # Discrete Variation Range accessors
-
-  def getVariationRangeCategoryList(base_category_list=(), base=1):
+  def getVariationRangeBaseCategoryItemList(base=1, 
+                                            display_id='getTitle'):
     """
-      returns a list of categories which are acceptable
-      as discrete variation values
+    returns a list of (base_category.id, base_category.display_id())
+    which are acceptable as discrete variation dimensions of
+    the variated instance and are easy to display in an ERP5Form
+    
+    Used in: Resource, Delivery Line, Delivery Cell
+
+    display_id --
     """
 
-  def getVariationRangeCategoryItemList(base_category_list=(),
-                          display_id='getTitle', base=1, current_category=None):
+  def getVariationRangeCategoryList(base_category_list=(), base=1,
+        root=1, current_category=None, omit_individual_variation=0):
     """
-      returns a list of (category.id, category.display_id()) which are acceptable
-      as discrete variation values
+    returns a list of categories which are acceptable
+    as discrete variation values of the current variated instance
+
+    Used in: Resource, Delivery Line, Delivery Cell
+
+    base_category_list -- 
+
+    base -- 
+
+    root -- 
+
+    current_category -- 
+
+    omit_individual_variation -- 
     """
 
-  def getVariationRangeBaseCategoryList(base_category_list=(), base=1):
+  def getVariationRangeCategoryItemList(base_category_list=(), base=1, 
+        root=1, display_method_id='getCategoryChildLogicalPathItemList',
+        display_base_category=1, current_category=None, **kw):
     """
-      returns a list of base categories which are acceptable
-      as discrete variation values
+    returns a list of (category.id, category.display_id()) which are acceptable
+    as discrete variation values. This is mostly useful in ERP5Form 
+    instances to generate selection menus.
+
+    Used in: Resource, Delivery Line, Delivery Cell
+
+    base_category_list -- 
+
+    base -- 
+
+    root -- 
+
+    display_method_id -- 
+
+    display_base_category -- 
+
+    current_category -- 
+
+    **kw --
     """
 
-  def getVariationRangeBaseCategoryItemList(base_category_list=(),
-                          display_id='getTitle', base=1, current_category=None):
+  # Variated Value API
+  def setVariated(variated):
     """
-      returns a list of base category items which are acceptable
-      as discrete variation values
+    Sets all variation categories and properties of the current
+    variated instance to the categories and properties of
+    variated instance provided as parameter.
+
+    Used in: Resource, Delivery Line, Delivery Cell
+
+    variated -- 
+    """
+
+  def compareVariated(variated):
+    """
+    Compares current variated instance with another
+    variated instance provided as parameter.
+
+    Used in: Resource, Delivery Line, Delivery Cell
+
+    variated --     
+    """
+
+  # Serialization API
+  def getVariationText(self):
+    """
+    returns a human readable, computer parsable,
+    non ambiguous string representation of the variation
+    categories and properties of the current instance.
+
+    Used in: Delivery Line (terminal), Delivery Cell
+    """
+
+  def setVariationText(variation_text):
+    """
+    parses variation_text to set variation properties
+    and categories of the current instance
+
+    Used in: Delivery Line (terminal), Delivery Cell
+    Could be used in: Resource, Delivery Line (non terminal)
+    """
+
+  def setVariationUid():
+    """
+    returns a unique UID integer representation of the variation
+    categories and properties of the current instance based
+    on a UID mapping of variation_text
+
+    Used in: Delivery Line (terminal), Delivery Cell
+    Could be used in: Resource, Delivery Line (non terminal)
+    """
+
+  def setVariationUid(variation_uid):
+    """
+    sets variation properties and categories of the current instance
+    by looking up variation to UID mapping
+
+    Used in: Delivery Line (terminal), Delivery Cell
+    Could be used in: Resource, Delivery Line (non terminal)
     """
