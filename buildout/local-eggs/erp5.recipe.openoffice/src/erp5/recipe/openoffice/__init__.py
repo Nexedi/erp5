@@ -31,3 +31,4 @@ class Recipe(original.Recipe):
 
     options['download-url'] = options['download-%s' % target]
     original.Recipe.__init__(self, buildout, name, options)
+    self.options['tmp-storage'] = buildout['buildout']["download-cache"]
