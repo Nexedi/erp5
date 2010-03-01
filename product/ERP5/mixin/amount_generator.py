@@ -45,7 +45,7 @@ class AmountGeneratorMixin:
   # Declarative interfaces
   zope.interface.implements(interfaces.IAmountGenerator,)
 
-  def _getGlobalPropertyDict(self, context, amount_list=None, rounding=False)
+  def _getGlobalPropertyDict(self, context, amount_list=None, rounding=False):
     """
     This method can be overridden to define global
     properties involved in trade model line calculation
@@ -56,7 +56,7 @@ class AmountGeneratorMixin:
       'employee': 100,
     }
 
-  def _getAmountPropertyDict(self, amount, amount_list=None, rounding=False)
+  def _getAmountPropertyDict(self, amount, amount_list=None, rounding=False):
     """
     This method can be overridden to define local
     properties involved in trade model line calculation
@@ -116,33 +116,32 @@ class AmountGeneratorMixin:
       # Browse recursively the trade model and accumulate
       # applicable values - first define the recursive method
       def accumulateAmountList(amount_generator_line):
-        amount_generator_line_list = amount_generator_line.contentValues(portal_type=self.getPortalAmountGeneratorLineTypeList()):
+        amount_generator_line_list = amount_generator_line.contentValues(portal_type=self.getPortalAmountGeneratorLineTypeList())
         # Recursively feed base_amount
         if len(amount_generator_line_list):
-          def compareIndex(a, b):
-            return cmp(a.getIntIndex(), b.getIntIndex())
-          amount_generator_line_list = amount_generator_line_list.sort(compareIndex)  
+          amount_generator_line_list = amount_generator_line_list.sort(key=lambda x: x.getIntIndex())
           for amount_generator_line in amount_generator_line_list:
             accumulateAmountList(amount_generator_line)
           return 
         # Try to collect cells and aggregate their mapped properties
         # using resource + variation as aggregation key or base_application
         # for intermediate lines
-        amount_generator_cell_list = amount_generator_line.contentValues(portal_type=self.getPortalAmountGeneratorCellTypeList()):        
+        amount_generator_cell_list = amount_generator_line.contentValues(portal_type=self.getPortalAmountGeneratorCellTypeList())
         if not amount_generator_cell_list: 
           # Consider the line as the unique cell
           amount_generator_cell_list = [amount_generator_line]
-        resource_amount_aggregate = {}
-        value_amount_aggregate = {}
+        resource_amount_aggregate = {} # aggregates final line information
+        value_amount_aggregate = {} # aggregates intermediate line information
         for amount_generator_cell in amount_generator_cell_list:
           if amount_generator_cell.test(amount): # XXX-JPS getTargetLevel not supported
             # Case 1: the cell defines a final amount of resource 
             if amount_generator_cell.getResource():
               # We must aggregate per resource, variation
-              key = (amount_generator_cell.getResource(), amount_generator_cell.getVariationText())
+              key = (amount_generator_cell.getResource(), amount_generator_cell.getVariationText()) # Variation UID, Hash ?
               resource_amount_aggregate.setdefault(key, {})
               # Then collect the mapped properties (resource, quantity, net_converted_quantity, base_contribution_list, base_application, etc.)
               for property_key in amount_generator_cell.getMappedValuePropertyList():
+                # Handling of property lists ? XXX?
                 resource_amount_aggregate[key][property_key] = amount_generator_cell.getProperty(property_key)
               resource_amount_aggregate[key]['category_list'] = amount_generator_cell.getCategoryMembershipList(
                  amount_generator_cell.getMappedValueBaseCategoryList())
@@ -185,10 +184,10 @@ class AmountGeneratorMixin:
             # Create an Amount object
             amount = Amount() # XXX-JPS we could use a movement for safety
             if category_list: amount._setCategoryList(category_list)
+            amount._edit(**property_dict)
             if rounding:
               # We hope here that rounding is sufficient at line level
               amount = portal_roundings.getRoundingProxy(amount, context=amount_generator_line)
-            amount._edit(**property_dict)
             result.append(amount)
         if value_amount_aggregate:
           for base_application, property_dict in value_amount_aggregate.items():            
@@ -200,7 +199,7 @@ class AmountGeneratorMixin:
             base_contribution_list = property_dict['base_contribution_list']
             value = base_amount[base_application] * \
                       (property_dict.get('quantity', None) or 1.0) * \
-                      (property_dict.get('price', None) or 1.0)
+                      (property_dict.get('price', None) or 1.0)       # XXX-JPS is it really 1.0 ?
                       # Quantity is used as a multiplier
                       # Price is used as a ratio (also a kind of multiplier)
             for base_key in base_contribution_list:
@@ -211,8 +210,8 @@ class AmountGeneratorMixin:
       accumulateAmountList(self)
 
       # Purge base_amount of amount applications
-      for application in amount.getBaseApplicationList(): # Acquired from Resource
-        base_amount[application] = 0
+      for application in amount_propert_dict.keys():
+        del base_amount[application]
 
     return result
 
