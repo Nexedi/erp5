@@ -369,12 +369,17 @@ def runUnitTestList(test_list, verbosity=1, debug=0):
   from glob import glob
   product_test_list = glob(os.path.join(products_home, '*', 'tests'))
   sys.path.extend(product_test_list)
-  bt5_path = os.environ.get('erp5_tests_bt5_path',
-                            os.path.join(instance_home, 'bt5'))
-  bt5_test_list = glob(os.path.join(bt5_path, '*', 'TestTemplateItem'))
+  erp5_tests_bt5_path = os.environ.get('erp5_tests_bt5_path',
+                              os.path.join(instance_home, 'bt5'))
+  bt5_path_list = erp5_tests_bt5_path.split(",")
+  bt5_test_list = []
+  project_bt5_test_list = []
+  for bt5_path in bt5_path_list:
+    bt5_test_list.extend(glob(os.path.join(bt5_path,'*','TestTemplateItem')))
+    # also suport instance_home/bt5/project_bt5/*
+    project_bt5_test_list.extend(glob(os.path.join(bt5_path, '*', '*',
+                                                         'TestTemplateItem')))
   sys.path.extend(bt5_test_list)
-  # also suport instance_home/bt5/project_bt5/*
-  project_bt5_test_list = glob(os.path.join(bt5_path, '*', '*', 'TestTemplateItem'))
   sys.path.extend(project_bt5_test_list)
 
   sys.path.extend((real_tests_home, tests_home))

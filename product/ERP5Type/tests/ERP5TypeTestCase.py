@@ -388,7 +388,7 @@ class ERP5TypeTestCase(backportUnittest.TestCase, PortalTestCase):
 
     def _getBTPathAndIdList(self, template_list):
       INSTANCE_HOME = os.environ['INSTANCE_HOME']
-      bt5_path = os.environ.get('erp5_tests_bt5_path',
+      erp5_tests_bt5_path = os.environ.get('erp5_tests_bt5_path',
                                 os.path.join(INSTANCE_HOME, 'bt5'))
       erp5_product_path = os.path.dirname(Products.ERP5.__file__)
       bootstrap_path = os.environ.get('erp5_tests_bootstrap_path',
@@ -401,30 +401,36 @@ class ERP5TypeTestCase(backportUnittest.TestCase, PortalTestCase):
           file, headers = urlretrieve(template)
         except IOError :
           # First, try the bt5 directory itself.
-          path = os.path.join(bt5_path, template)
-          alternate_path = os.path.join(bootstrap_path, template)
-          if os.path.exists(path):
-            template = path
-          elif os.path.exists(alternate_path):
-            template = alternate_path
-          else:
-            path = '%s.bt5' % path
+          original_template = template
+          for bt5_path in erp5_tests_bt5_path.split(','):
+            template = original_template
+            path = os.path.join(bt5_path, template)
+            alternate_path = os.path.join(bootstrap_path, template)
             if os.path.exists(path):
               template = path
+              break
+            elif os.path.exists(alternate_path):
+              template = alternate_path
+              break
             else:
-              # Otherwise, look at sub-directories.
-              # This is for backward-compatibility.
-              path = os.path.join(INSTANCE_HOME, 'bt5', '*', template)
-              template_list = glob(path)
-              if len(template_list) == 0:
-                template_list = glob('%s.bt5' % path)
-              if len(template_list) and template_list[0]:
-                template = template_list[0]
+              path = '%s.bt5' % path
+              if os.path.exists(path):
+                template = path
+                break
               else:
-                # The last resort is current directory.
-                template = '%s' % id
-                if not os.path.exists(template):
-                  template = '%s.bt5' % id
+                # Otherwise, look at sub-directories.
+                # This is for backward-compatibility.
+                path = os.path.join(INSTANCE_HOME, 'bt5', '*', template)
+                template_list = glob(path)
+                if len(template_list) == 0:
+                  template_list = glob('%s.bt5' % path)
+                if len(template_list) and template_list[0]:
+                  template = template_list[0]
+                else:
+                  # The last resort is current directory.
+                  template = '%s' % id
+                  if not os.path.exists(template):
+                    template = '%s.bt5' % id
         else:
           template = '%s' % template
           if not os.path.exists(template):
