@@ -170,7 +170,7 @@ def createZODBPythonScript(container, script_id, script_params,
 
   container.manage_addProduct['PythonScripts']\
                 .manage_addPythonScript(id = script_id)
-  script = container[script_id]
+  script = container._getOb(script_id)
   script.ZPythonScript_edit(script_params, script_content)
   container.portal_url.getPortalObject().changeSkin(None)
   return script
