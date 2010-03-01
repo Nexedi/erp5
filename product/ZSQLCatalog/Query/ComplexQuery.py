@@ -119,8 +119,21 @@ class ComplexQuery(Query):
   def checkQueryTree(self):
     """
       XXX
-      If self has 'or' operator and a RelatedQuery in the tree,
-      it will not return valid result.
+      The root of this query tree will not return semantic valid SQLExpression
+      when the self has 'or' operator and a RelatedQuery in the query tree of self.
+      The semantic valid means that, for example, there is a query tree which has
+      three queries:
+        - one is intended for searching document with the title 'bra%'
+        - one is intended for searching document which is related to a category
+        - a ComplexQuery with 'or' operator which has above queries as children
+      in this case, the root of the query tree should return an expression
+      "(document.tile like 'bra%') or (document related to the category and
+      the category entry must be in catalog)". This is semantic valid.
+      However at current implementation, return the expression
+      "(document.title like 'bra%' or document related to the category) and (the
+      category entry must be in catalog)". The outside relation between category
+      and catalog also affects the document.title condition. It is a limitation for
+      performance. We don't hope to return affected result. So raise the Exception.
     """
     for query in self.query_list:
       result = self._findRelatedQuery(query)
