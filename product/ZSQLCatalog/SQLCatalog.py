@@ -805,6 +805,7 @@ class Catalog(Folder,
       except:
         LOG('SQLCatalog', WARNING,
             'could not clear catalog with %s' % method_name, error=sys.exc_info())
+        raise
 
     # Reserved uids have been removed.
     self.clearReserved()
