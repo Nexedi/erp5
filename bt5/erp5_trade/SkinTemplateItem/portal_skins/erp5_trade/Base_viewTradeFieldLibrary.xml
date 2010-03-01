@@ -104,7 +104,7 @@
                         <string>my_source_account</string>
                         <string>my_view_mode_title</string>
                         <string>my_sale_source_section</string>
-                        <string>listbox_variation_category_item_list</string>
+                        <string>my_report_mode_listbox_variation_category_item_list</string>
                         <string>my_sale_causality_title</string>
                         <string>my_translated_causality_state_title</string>
                         <string>my_translated_container_state_title</string>
@@ -126,9 +126,7 @@
                         <string>my_line_price_currency</string>
                         <string>my_source_trade_title_list</string>
                         <string>my_int_index</string>
-                        <string>your_site_title</string>
-                        <string>your_at_date</string>
-                        <string>your_listbox_quantity_unit</string>
+                        <string>my_report_mode_listbox_quantity_unit</string>
                         <string>my_view_mode_listbox_aggregate_title_list</string>
                         <string>my_view_mode_listbox_base_contribution_title_list</string>
                         <string>my_view_mode_listbox_int_index</string>
@@ -158,6 +156,23 @@
                         <string>my_view_mode_translated_simulation_state_title</string>
                         <string>my_view_mode_destination_section_title</string>
                         <string>my_view_mode_sale_source_section_title</string>
+                        <string>my_report_mode_at_date</string>
+                        <string>my_report_mode_site_title</string>
+                        <string>listbox_variation_category_item_list</string>
+                        <string>my_view_mode_quantity</string>
+                        <string>my_view_mode_quantity_unit</string>
+                        <string>my_view_mode_resource_title</string>
+                        <string>my_view_mode_variation_category_list</string>
+                        <string>my_view_mode_total_quantity</string>
+                        <string>my_view_mode_container_quantity</string>
+                        <string>my_view_mode_container_resource_title</string>
+                        <string>my_view_mode_quantity_mapped_value_property_list</string>
+                        <string>my_view_mode_matrixbox_predicate_category_list</string>
+                        <string>my_view_mode_matrixbox_quantity</string>
+                        <string>my_view_mode_matrixbox_variation_category_list</string>
+                        <string>my_view_mode_read_only_resource_title</string>
+                        <string>my_view_mode_read_only_title</string>
+                        <string>my_view_mode_line_quantity_unit</string>
                       </list>
                     </value>
                 </item>

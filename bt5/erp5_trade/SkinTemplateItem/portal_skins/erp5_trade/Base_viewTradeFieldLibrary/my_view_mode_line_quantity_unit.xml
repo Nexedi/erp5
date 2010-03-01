@@ -13,15 +13,15 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>display_width</string>
+                <string>enabled</string>
+                <string>items</string>
                 <string>title</string>
-                <string>default</string>
               </list>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>your_site_title</string> </value>
+            <value> <string>my_view_mode_line_quantity_unit</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -58,7 +58,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>default</string> </key>
+                    <key> <string>enabled</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
                     </value>
@@ -72,7 +72,17 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>items</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
+                </item>
+                <item>
                     <key> <string>target</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -83,24 +93,30 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>display_width</string> </key>
-                    <value> <int>20</int> </value>
+                    <key> <string>enabled</string> </key>
+                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>your_title</string> </value>
+                    <value> <string>my_category</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
+                    <key> <string>items</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
                     <key> <string>target</string> </key>
-                    <value> <string>7</string> </value>
+                    <value> <string>Click to edit the target</string> </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Site</string> </value>
+                    <value> <string>Quantity Unit</string> </value>
                 </item>
               </dictionary>
             </value>
@@ -119,7 +135,23 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.portal_categories.site.restrictedTraverse(here.REQUEST.get(\'site\', \'\')).getTranslatedTitle()</string> </value>
+            <value> <string>python: here.isMovement() and not here.getVariationCategoryList()</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <tuple>
+        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>python: here.getResource() and here.getResourceValue().getQuantityUnitList() and [(\'\', \'\')] + [(x.getTranslatedLogicalPath(), x.getCategoryRelativeUrl(base=0)) for x in here.getResourceValue().getQuantityUnitValueList()] or [(\'\', \'\')]</string> </value>
         </item>
       </dictionary>
     </pickle>
