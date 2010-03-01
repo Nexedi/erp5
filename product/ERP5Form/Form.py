@@ -49,6 +49,7 @@ from Products.ERP5Type.Utils import UpperCase
 
 from Products.ERP5Type.PsycoWrapper import psyco
 import sys
+import re
 
 _field_value_cache = {}
 def purgeFieldValueCache():
@@ -785,7 +786,7 @@ class ERP5Form(ZMIForm, ZopePageTemplate):
         """"""
         def extract_keyword(name):
             keyword_list = [i for i in name.split('_') if not i in \
-                    ('my', 'default', 'listbox')]
+                    ('my', 'default', 'listbox', 'your')]
             if len(keyword_list) == 0:
               # This means that the name is one of the exception keywords,
               # so we have to keep it
@@ -806,8 +807,13 @@ class ERP5Form(ZMIForm, ZopePageTemplate):
             if field_object.aq_base is field.aq_base:
                 return 0
             field_id = field_object.getId()
-            if id_.startswith('my_') and not field_id.startswith('my_'):
-                return 0
+            # All proxy fields in field libraries should define their
+            # technical context
+            # XXX Theses 3 following lines will need to be uncommented
+            # as soon as proxy guideline is fully validated on erp5_trade
+            #if field.meta_type == 'ProxyField' and \
+            #    re.match('my_.*_mode', field_id) is None:
+            #  return 0
             # XXX keyword match is not useful anymore.Need different approach.
             keyword_match_rate = check_keyword_list(field_id, extract_keyword(id_))
             if keyword_match_rate>0.5:
