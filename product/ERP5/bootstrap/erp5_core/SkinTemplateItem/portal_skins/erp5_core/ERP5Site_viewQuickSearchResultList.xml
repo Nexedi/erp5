@@ -75,6 +75,12 @@ if web_section is not None and \\\n
 else:\n
   search_context = context.getPortalObject()\n
 \n
+if field_your_search_text in (\'\', None):\n
+  # no search criteria specified, refuse to conduct any search and \n
+  # show a message to user\n
+  kw[\'portal_status_message\'] = \'Please specify search criteria.\'\n
+  return search_context.Base_redirect(\'view\', keep_items=kw)\n
+  \n
 return search_context.Base_redirect(field_your_search_form_id, keep_items=kw)\n
 </string> </value>
         </item>
@@ -126,6 +132,7 @@ return search_context.Base_redirect(field_your_search_form_id, keep_items=kw)\n
                             <string>bool</string>
                             <string>False</string>
                             <string>search_context</string>
+                            <string>_write_</string>
                           </tuple>
                         </value>
                     </item>
