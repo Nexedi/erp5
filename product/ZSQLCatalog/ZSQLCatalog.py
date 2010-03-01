@@ -516,6 +516,7 @@ class ZCatalog(Folder, Persistent, Implicit):
     self.ERP5Site_reindexAll(sql_catalog_id=destination_sql_catalog_id,
                              final_activity_tag=final_activity_tag,
                              clear_catalog=1,
+                             additional_priority=1,
                              passive_commit=1)
     # Once reindexing is finished, change the hot reindexing state so that
     # new catalog changes are applied in both catalogs.
