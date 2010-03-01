@@ -100,6 +100,14 @@ return context.Base_redirect(form_id, keep_items={\'portal_status_message\': msg
             <value> <string>form_id, flush_worklfow_history_comment, **kw</string> </value>
         </item>
         <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>errors</string> </key>
             <value>
               <tuple/>
