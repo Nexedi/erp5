@@ -73,21 +73,13 @@ context = web_section_value\n
 def buildIndex(language=None):\n
   from Products.ZSQLCatalog.SQLCatalog import NegatedQuery, Query\n
   # Retrieve the different subjects in the catalog\n
-  if language is not None:\n
-    subject_list = context.searchResults(\n
+  subject_list = context.searchResults(\n
       select_expression=\'subject, reference\',\n
       query=NegatedQuery(Query(subject=None)),\n
-      language=language,\n
-      sort_on=((\'subject\', \'descending\'), (\'title\', \'ascending\')),\n
+      language=language or \'\',\n
+      sort_on=((\'subject\', \'ascending\'), (\'title\', \'ascending\')),\n
       #src__=1,\n
-    )\n
-  else:\n
-    subject_list = context.searchResults(\n
-      select_expression=\'subject, reference\',\n
-      query=NegatedQuery(Query(subject=None)),\n
-      sort_on=((\'subject\', \'descending\'), (\'title\', \'ascending\')),\n
-      #src__=1,\n
-    )\n
+   )\n
   #return subject_list\n
   #return map(lambda x:(x.subject, x.reference), subject_list)\n
   # Convert the result into list\n
@@ -109,7 +101,7 @@ def buildIndex(language=None):\n
       subject_title = subject_title[0].upper() + subject_title[1:]\n
       result.append("<h1>%s</h1>" % subject_title)\n
     result.append("""<p><a href="%s/%s/view">%s</a></p>""" % (web_section_url, subject.reference, subject.title))\n
-\n
+    last_subject = subject.subject\n
   return \'\\n\'.join(result)\n
 \n
 from Products.ERP5Type.Cache import CachingMethod\n
