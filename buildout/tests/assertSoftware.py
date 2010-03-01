@@ -10,20 +10,17 @@ class AssertPythonSoftware(unittest.TestCase):
 
   def test_use_generated_python(self):
     fd, name = tempfile.mkstemp()
-    f = os.fdopen(fd, 'w')
-    f.write("""\
+    try:
+      f = os.fdopen(fd, 'w')
+      f.write("""\
 #!%s
 import sys
 print sys.version_info[:2]
     """ % sys.executable)
-    f.close()
-    f_stat = os.stat(name)
-    os.chmod(name, f_stat.st_mode | stat.S_IXUSR)
-    try:
-      try:
-        self.assertEqual(0, os.system(name))
-      except:
-        raise
+      f.close()
+      f_stat = os.stat(name)
+      os.chmod(name, f_stat.st_mode | stat.S_IXUSR)
+      self.assertEqual(0, os.system(name))
     finally:
       os.unlink(name)
 
