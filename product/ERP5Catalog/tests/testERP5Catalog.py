@@ -1978,9 +1978,9 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     # Add a script to create uid list
     catalog = self.getCatalogTool().getSQLCatalog()
     script_id = 'z0_zCreateUid'
-    catalog.manage_addProduct['PythonScripts'].manage_addPythonScript(id = script_id)
-    body = "context.getPortalObject().portal_ids.generateNewLengthIdList(id_group='text_uid')"
-    script = catalog._getOb(script_id).ZPythonScript_edit('*args,**kw', body)
+    script_content = "context.getPortalObject().portal_ids.generateNewLengthIdList(id_group='text_uid')"
+    script = createZODBPythonScript(catalog, script_id,
+                          '*args,**kw', script_content)
     sql_clear_catalog = list(catalog.sql_clear_catalog)
     sql_clear_catalog.append(script_id)
     sql_clear_catalog.sort()
