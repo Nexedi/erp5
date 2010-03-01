@@ -662,24 +662,14 @@ class OrderBuilder(XMLObject, Amount, Predicate):
                                      force_update=0, activate_kw=None):
     """
       Initialize or update delivery movement properties.
-      Set delivery ratio on simulation movement.
     """
-    if update_existing_movement == 1 and not force_update:
-      # Important.
-      # Attributes of object_to_update must not be modified here.
-      # Because we can not change values that user modified.
-      # Delivery will probably diverge now, but this is not the job of
-      # DeliveryBuilder to resolve such problem.
-      # Use Solver instead.
-      simulation_movement.edit(delivery_ratio=0)
-    else:
+    if not update_existing_movement or force_update:
       # Now, only 1 movement is possible, so copy from this movement
       # XXX hardcoded value
       property_dict['quantity'] = simulation_movement.getQuantity()
       property_dict['price'] = simulation_movement.getPrice()
       # Update properties on object (quantity, price...)
       delivery_movement._edit(force_update=1, **property_dict)
-      simulation_movement.edit(delivery_ratio=1)
 
   @UnrestrictedMethod
   def callAfterBuildingScript(self, delivery_list, movement_list=None, **kw):

@@ -157,6 +157,18 @@ class DeliveryBuilder(OrderBuilder):
                             update_existing_movement=update_existing_movement,
                             force_update=force_update, 
                             activate_kw=activate_kw)
+
+    if update_existing_movement and not force_update:
+      # Important.
+      # Attributes of delivery_movement must not be modified here.
+      # Because we can not change values modified by the user.
+      # Delivery will probably diverge now, but this is not the job of
+      # DeliveryBuilder to resolve such problem.
+      # Use Solver instead.
+      simulation_movement.edit(delivery_ratio=0)
+    else:
+      simulation_movement.edit(delivery_ratio=1)
+
     simulation_movement.edit(delivery_value=delivery_movement,
                              activate_kw=activate_kw)
 
