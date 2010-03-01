@@ -32,17 +32,23 @@ print sys.version_info[:2]
       _ssl
       _xmlplus
       bz2
+      cElementTree
       elementtree
       fpconst
       gdbm
       itools
       ldap
       lxml
+      mechanize
       memcache
       numpy
+      paramiko
+      ply
       pytz
       simplejson
+      socks
       threadframe
+      xml
       xml.parsers.expat
       zlib
       """)
@@ -53,7 +59,7 @@ print sys.version_info[:2]
       except ImportError:
         failed_library_list.append(lib)
     self.assertEqual([], failed_library_list,
-        'Python libraries not found:\n'+'\n\t'.join(failed_library_list))
+        'Python libraries not found:\n'+'\n'.join(failed_library_list))
 
 class AssertLddLibs(unittest.TestCase):
   def test_tritonn_senna(self):
@@ -145,7 +151,7 @@ class AssertApache(unittest.TestCase):
       if not os.path.exists('parts/apache/modules/%s' % module):
         failed_module_list.append(module)
     self.assertEqual([], failed_module_list,
-        'Apache modules not found:\n'+'\n\t'.join(failed_module_list))
+        'Apache modules not found:\n'+'\n'.join(failed_module_list))
 
 if __name__ == '__main__':
   unittest.main()

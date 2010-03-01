@@ -5,15 +5,6 @@
  - merge from:
   - https://svn.erp5.org/repos/public/experimental/erp5.buildout-zope-2.12/
  - use more of buildout automatic dependency resolution
- - software-profiles/python-2.4.cfg:
-   - celementtree (https://svn.erp5.org/repos/public/spec/mandriva/python2.4-celementtree/)
-   - mechanize (https://svn.erp5.org/repos/public/spec/mandriva/python2.4-mechanize/)
-   - numeric (https://svn.erp5.org/repos/public/spec/mandriva/python2.4-numeric/)
-   - paramiko (https://svn.erp5.org/repos/public/spec/mandriva/python2.4-paramiko/)
-   - ply (https://svn.erp5.org/repos/public/spec/mandriva/python2.4-ply/)
-   - pyxml (https://svn.erp5.org/repos/public/spec/mandriva/python2.4-pyxml/)
-   - socksipy (http://socksipy.sourceforge.net/)
-   - make bin/python2.4 using all available eggs
  - software-profiles/openoffice-bin.cfg:
    - consider using own recipe or zorg.recipe.openoffice, which would be
      closer to buildout usage (internal cache, etc)
