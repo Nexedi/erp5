@@ -1,5 +1,5 @@
 import unittest
-import sys, os, tempfile, stat
+import sys, os, tempfile, stat, subprocess
 
 def createCleanList(s):
   return sorted([q.strip() for q in s.split() if len(q.strip()) > 0])
@@ -20,7 +20,7 @@ print sys.version_info[:2]
       f.close()
       f_stat = os.stat(name)
       os.chmod(name, f_stat.st_mode | stat.S_IXUSR)
-      self.assertEqual(0, os.system(name))
+      self.assertEqual(0, subprocess.call([name]))
     finally:
       os.unlink(name)
 
