@@ -2351,15 +2351,10 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
                                         operator='AND')
     self.assertEqual(len(catalog(query=query_find_name_erp5)), 2)
 
-    try:
-      query = ComplexQuery(query_find_european,
-                           query_find_name_erp5,
-                           operator='OR')
-    except NotImplementedError:
-      # correct behaviour for now
-      raise
-    else:
-      self.fail("In this query pattern, ComplexQuery doesn't return valid result.")
+    self.assertRaises(NotImplementedError,
+                      lambda : ComplexQuery(query_find_european,
+                                            query_find_name_erp5,
+                                            operator='OR'))
  
   def test_check_security_table_content(self, quiet=quiet, run=run_all_test):
     sql_connection = self.getSQLConnection()
