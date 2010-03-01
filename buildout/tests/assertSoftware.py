@@ -1,5 +1,5 @@
 import unittest
-import sys, os
+import sys, os, tempfile, stat
 
 def createCleanList(s):
   return sorted([q.strip() for q in s.split() if len(q.strip()) > 0])
@@ -7,6 +7,25 @@ def createCleanList(s):
 class AssertPythonSoftware(unittest.TestCase):
   def test_python_version(self):
     self.assertEqual((2,4), sys.version_info[:2])
+
+  def test_use_generated_python(self):
+    fd, name = tempfile.mkstemp()
+    f = os.fdopen(fd, 'w')
+    f.write("""\
+#!%s
+import sys
+print sys.version_info[:2]
+    """ % sys.executable)
+    f.close()
+    f_stat = os.stat(name)
+    os.chmod(name, f_stat.st_mode | stat.S_IXUSR)
+    try:
+      try:
+        self.assertEqual(0, os.system(name))
+      except:
+        raise
+    finally:
+      os.unlink(name)
 
   def test_required_libraries(self):
     required_library_list = createCleanList("""
