@@ -1970,6 +1970,25 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     self.assertTrue("TRUNCATE(catalog.uid,2) = '2567.54'" in sql_src or \
                     'TRUNCATE(`catalog`.`uid`, 2) = 2567.54' in sql_src, sql_src)
 
+  def test_56_ActivateDuringClearCatalog(self, quiet=quiet,run=run_all_test):
+    """
+      Create a script in the catalog to generate a uid list
+      Check the creation some objects, or activities, during a clear
+    """
+    # Add a script to create uid list
+    catalog = self.getCatalogTool().getSQLCatalog()
+    script_id = 'z0_zCreateUid'
+    catalog.manage_addProduct['PythonScripts'].manage_addPythonScript(id = script_id)
+    body = "context.getPortalObject().portal_ids.generateNewLengthIdList(id_group='text_uid')"
+    script = catalog._getOb(script_id).ZPythonScript_edit('*args,**kw', body)
+    sql_clear_catalog = list(catalog.sql_clear_catalog)
+    sql_clear_catalog.append(script_id)
+    sql_clear_catalog.sort()
+    catalog.sql_clear_catalog = tuple(sql_clear_catalog)
+    # launch the sql_clear_catalog with the script after the drop tables and
+    # before the recreate tables of catalog
+    catalog.manage_catalogClear()
+
   def test_SearchOnOwner(self, quiet=quiet, run=run_all_test):
     if not run: return  
     # owner= can be used a search key in the catalog to have all documents for
