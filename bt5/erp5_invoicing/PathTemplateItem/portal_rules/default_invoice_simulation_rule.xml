@@ -3,7 +3,7 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <global name="PaymentSimulationRule" module="Products.ERP5Type.Document.PaymentSimulationRule"/>
+        <global name="InvoiceSimulationRule" module="Products.ERP5Type.Document.InvoiceSimulationRule"/>
         <tuple/>
       </tuple>
     </pickle>
@@ -59,6 +59,12 @@
             </value>
         </item>
         <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
             <key> <string>criterion_property</string> </key>
             <value>
               <tuple>
@@ -68,57 +74,81 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>default_payment_rule</string> </value>
+            <value> <string>default_invoicing_rule</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>expandable_property</string> </key>
             <value>
               <tuple>
-                <string>destination</string>
-                <string>destination_payment</string>
-                <string>destination_project</string>
-                <string>destination_section</string>
-                <string>payment_mode</string>
-                <string>price</string>
-                <string>quantity</string>
-                <string>resource</string>
                 <string>source</string>
-                <string>source_payment</string>
-                <string>source_project</string>
                 <string>source_section</string>
+                <string>source_decision</string>
+                <string>source_administration</string>
+                <string>source_project</string>
+                <string>source_function</string>
+                <string>source_payment</string>
+                <string>source_account</string>
+                <string>destination</string>
+                <string>destination_section</string>
+                <string>destination_decision</string>
+                <string>destination_administration</string>
+                <string>destination_project</string>
+                <string>destination_function</string>
+                <string>destination_payment</string>
+                <string>destination_account</string>
                 <string>start_date</string>
                 <string>stop_date</string>
+                <string>description</string>
+                <string>resource</string>
+                <string>variation_category_list</string>
+                <string>variation_property_dict</string>
+                <string>delivery_mode</string>
+                <string>incoterm</string>
+                <string>base_contribution_list</string>
+                <string>aggregate_list</string>
+                <string>quantity</string>
+                <string>quantity_unit</string>
+                <string>price</string>
+                <string>price_currency</string>
+                <string>efficiency</string>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>default_payment_simulation_rule</string> </value>
+            <value> <string>default_invoice_simulation_rule</string> </value>
         </item>
         <item>
             <key> <string>matching_property</string> </key>
             <value>
               <tuple>
-                <string>destination</string>
-                <string>source</string>
+                <string>resource</string>
+                <string>variation_category_list</string>
+                <string>variation_property_dict</string>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Payment Simulation Rule</string> </value>
+            <value> <string>Invoice Simulation Rule</string> </value>
         </item>
         <item>
             <key> <string>test_method_id</string> </key>
             <value>
               <tuple>
-                <string>SimulationMovement_testPaymentSimulationRule</string>
+                <string>SimulationMovement_testInvoiceSimulationRule</string>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Default Payment Simulation Rule</string> </value>
+            <value> <string>Default Invoice Simulation Rule</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -129,25 +159,13 @@
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
-      <tuple>
-        <tuple>
-          <string>BTrees.Length</string>
-          <string>Length</string>
-        </tuple>
-        <none/>
-      </tuple>
+      <global name="Length" module="BTrees.Length"/>
     </pickle>
     <pickle> <int>0</int> </pickle>
   </record>
   <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
-      <tuple>
-        <tuple>
-          <string>BTrees.OOBTree</string>
-          <string>OOBTree</string>
-        </tuple>
-        <none/>
-      </tuple>
+      <global name="OOBTree" module="BTrees._OOBTree"/>
     </pickle>
     <pickle>
       <none/>
@@ -155,13 +173,7 @@
   </record>
   <record id="4" aka="AAAAAAAAAAQ=">
     <pickle>
-      <tuple>
-        <tuple>
-          <string>BTrees.OOBTree</string>
-          <string>OOBTree</string>
-        </tuple>
-        <none/>
-      </tuple>
+      <global name="OOBTree" module="BTrees._OOBTree"/>
     </pickle>
     <pickle>
       <none/>

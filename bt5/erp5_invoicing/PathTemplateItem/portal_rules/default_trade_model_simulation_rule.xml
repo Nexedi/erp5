@@ -3,7 +3,7 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <global name="PaymentSimulationRule" module="Products.ERP5Type.Document.PaymentSimulationRule"/>
+        <global name="TradeModelSimulationRule" module="Products.ERP5Type.Document.TradeModelSimulationRule"/>
         <tuple/>
       </tuple>
     </pickle>
@@ -28,6 +28,23 @@
                     </value>
                 </item>
               </dictionary>
+            </value>
+        </item>
+        <item>
+            <key> <string>_local_properties</string> </key>
+            <value>
+              <tuple>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>expandable_property_list</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>lines</string> </value>
+                  </item>
+                </dictionary>
+              </tuple>
             </value>
         </item>
         <item>
@@ -59,6 +76,12 @@
             </value>
         </item>
         <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
             <key> <string>criterion_property</string> </key>
             <value>
               <tuple>
@@ -68,57 +91,72 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>default_payment_rule</string> </value>
+            <value> <string>default_trade_model_rule</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>expandable_property</string> </key>
             <value>
               <tuple>
-                <string>destination</string>
-                <string>destination_payment</string>
-                <string>destination_project</string>
-                <string>destination_section</string>
-                <string>payment_mode</string>
-                <string>price</string>
-                <string>quantity</string>
-                <string>resource</string>
-                <string>source</string>
-                <string>source_payment</string>
-                <string>source_project</string>
-                <string>source_section</string>
-                <string>start_date</string>
-                <string>stop_date</string>
+                <string>aggregate_list</string>
+                <string>delivery_mode_list</string>
+                <string>description</string>
+                <string>destination_account_list</string>
+                <string>destination_administration_list</string>
+                <string>destination_decision_list</string>
+                <string>destination_function_list</string>
+                <string>destination_list</string>
+                <string>destination_payment_list</string>
+                <string>destination_section_list</string>
+                <string>incoterm_list</string>
+                <string>price_currency_list</string>
+                <string>resource_list</string>
+                <string>source_account_list</string>
+                <string>source_administration_list</string>
+                <string>source_decision_list</string>
+                <string>source_function_list</string>
+                <string>source_list</string>
+                <string>source_payment_list</string>
+                <string>source_section_list</string>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>default_payment_simulation_rule</string> </value>
+            <value> <string>default_trade_model_simulation_rule</string> </value>
+        </item>
+        <item>
+            <key> <string>last_id</string> </key>
+            <value> <string>3</string> </value>
         </item>
         <item>
             <key> <string>matching_property</string> </key>
             <value>
               <tuple>
-                <string>destination</string>
-                <string>source</string>
+                <string>reference</string>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Payment Simulation Rule</string> </value>
+            <value> <string>Trade Model Simulation Rule</string> </value>
         </item>
         <item>
             <key> <string>test_method_id</string> </key>
             <value>
               <tuple>
-                <string>SimulationMovement_testPaymentSimulationRule</string>
+                <string>SimulationMovement_testTradeModelSimulationRule</string>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Default Payment Simulation Rule</string> </value>
+            <value> <string>Default Trade Model Simulation Rule</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -129,25 +167,13 @@
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
-      <tuple>
-        <tuple>
-          <string>BTrees.Length</string>
-          <string>Length</string>
-        </tuple>
-        <none/>
-      </tuple>
+      <global name="Length" module="BTrees.Length"/>
     </pickle>
     <pickle> <int>0</int> </pickle>
   </record>
   <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
-      <tuple>
-        <tuple>
-          <string>BTrees.OOBTree</string>
-          <string>OOBTree</string>
-        </tuple>
-        <none/>
-      </tuple>
+      <global name="OOBTree" module="BTrees._OOBTree"/>
     </pickle>
     <pickle>
       <none/>
@@ -155,13 +181,7 @@
   </record>
   <record id="4" aka="AAAAAAAAAAQ=">
     <pickle>
-      <tuple>
-        <tuple>
-          <string>BTrees.OOBTree</string>
-          <string>OOBTree</string>
-        </tuple>
-        <none/>
-      </tuple>
+      <global name="OOBTree" module="BTrees._OOBTree"/>
     </pickle>
     <pickle>
       <none/>
