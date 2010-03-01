@@ -1,3 +1,6 @@
+2010-03-02 yo
+* Take auto_planned into account for the views of Sale Invoice Transaction and Purchase Invoice Transaction.
+
 2009-10-16 rafael
 * Update for the changes of new portal types of portal types.
 

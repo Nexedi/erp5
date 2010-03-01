@@ -97,7 +97,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>python: object.getSimulationState() in (\'draft\', \'planned\', \'confirmed\')</string> </value>
+            <value> <string>python: object.getSimulationState() in (\'draft\', \'planned\', \'confirmed\', \'auto_planned\')</string> </value>
         </item>
       </dictionary>
     </pickle>
