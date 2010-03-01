@@ -87,6 +87,7 @@ class TextDocument(Document, TextContent):
                       , PropertySheet.ExternalDocument
                       , PropertySheet.Url
                       , PropertySheet.TextDocument
+                      , PropertySheet.Reference
                       )
 
     # Explicit inheritance
