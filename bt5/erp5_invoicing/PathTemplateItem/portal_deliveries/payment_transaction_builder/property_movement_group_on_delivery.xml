@@ -3,7 +3,7 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <global name="MirrorPropertyMovementGroup" module="Products.ERP5Type.Document.MirrorPropertyMovementGroup"/>
+        <global name="PropertyMovementGroup" module="Products.ERP5Type.Document.PropertyMovementGroup"/>
         <tuple/>
       </tuple>
     </pickle>
@@ -34,7 +34,7 @@
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Mirror Property Movement Group</string> </value>
+            <value> <string>Property Movement Group</string> </value>
         </item>
         <item>
             <key> <string>tested_property</string> </key>
