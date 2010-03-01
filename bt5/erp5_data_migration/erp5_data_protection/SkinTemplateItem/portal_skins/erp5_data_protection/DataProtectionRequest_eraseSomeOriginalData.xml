@@ -1,0 +1,174 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>portal = context.getPortalObject()\n
+selection_name = \'data_protection_request_erase_data_selection\'\n
+property_id_list = portal.portal_selections.getSelectionCheckedUidsFor(selection_name)\n
+# clean up selection\n
+portal.portal_selections.setSelectionCheckedUidsFor(selection_name, ())\n
+document_to_cleanup = context.getFollowUpValue()\n
+clean_up_done = False\n
+\n
+# First: Purge workflow history comments\n
+if flush_worklfow_history_comment:\n
+  document_to_cleanup.Base_purgeWorkflowHistoryCommentList()\n
+  edit_message = portal.Base_translateString(\'Workflow comments deleted by data protection manager\')\n
+  portal.portal_workflow.doActionFor(document_to_cleanup, \'edit_action\', comment=edit_message)\n
+  clean_up_done = True\n
+\n
+# Second: erase properties\n
+if property_id_list:\n
+  edit_kw = {}\n
+  [edit_kw.update({property_id: None}) for property_id in property_id_list]\n
+\n
+  edit_message = portal.Base_translateString(\'Properties deleted by data protection manager: ${items}\',\n
+                                             mapping={\'items\': \', \'.join(property_id_list)})\n
+  portal.portal_workflow.doActionFor(document_to_cleanup, \'edit_action\', comment=edit_message)\n
+  document_to_cleanup.edit(**edit_kw)\n
+  clean_up_done = True\n
+\n
+if clean_up_done:\n
+  msg = portal.Base_translateString(\'Data erased.\')\n
+  # Then remove \'View History\' permission to everyone except manager\n
+  document_to_cleanup.manage_permission(\'View History\', [\'Manager\'], 0)\n
+else:\n
+  msg = portal.Base_translateString(\'No change occurs.\')\n
+\n
+return context.Base_redirect(form_id, keep_items={\'portal_status_message\': msg}, **kw)\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>form_id, flush_worklfow_history_comment, **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>2</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>form_id</string>
+                            <string>flush_worklfow_history_comment</string>
+                            <string>kw</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>portal</string>
+                            <string>selection_name</string>
+                            <string>property_id_list</string>
+                            <string>document_to_cleanup</string>
+                            <string>False</string>
+                            <string>clean_up_done</string>
+                            <string>edit_message</string>
+                            <string>True</string>
+                            <string>edit_kw</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>_getiter_</string>
+                            <string>property_id</string>
+                            <string>None</string>
+                            <string>_apply_</string>
+                            <string>msg</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>DataProtectionRequest_eraseSomeOriginalData</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

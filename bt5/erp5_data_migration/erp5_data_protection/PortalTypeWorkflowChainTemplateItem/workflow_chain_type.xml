@@ -1,0 +1,6 @@
+<workflow_chain>
+ <chain>
+  <type>Data Protection Request</type>
+  <workflow>data_protection_request_workflow, edit_workflow</workflow>
+ </chain>
+</workflow_chain>
