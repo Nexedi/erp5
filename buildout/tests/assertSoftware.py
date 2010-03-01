@@ -20,8 +20,8 @@ print sys.version_info[:2]
       f.close()
       f_stat = os.stat(name)
       os.chmod(name, f_stat.st_mode | stat.S_IXUSR)
-      result = ''.join(subprocess.Popen([name], stdout=subprocess.PIPE)\
-          .stdout.readlines()).strip()
+      result = subprocess.Popen([name], stdout=subprocess.PIPE)\
+          .communicate()[0].strip()
       self.assertEqual('(2, 4)', result)
     finally:
       os.unlink(name)
