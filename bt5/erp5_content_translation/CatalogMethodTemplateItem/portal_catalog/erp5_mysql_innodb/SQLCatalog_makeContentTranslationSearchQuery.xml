@@ -53,7 +53,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from Products.ZSQLCatalog.SQLCatalog import Query, SimpleQuery, AndQuery, OrQuery\n
+            <value> <string>from Products.ZSQLCatalog.SQLCatalog import Query, SimpleQuery, AndQuery\n
 \n
 ########### CONFIGURATION ######################################\n
 # This is a query for search translated properties of Person   #\n
@@ -61,17 +61,14 @@
 ################################################################\n
 \n
 query = AndQuery(SimpleQuery(**{\'content_translation.translated_text\': value, \'comparison_operator\': \'match\'}),\n
-                 OrQuery(Query(**{\'content_translation.property_name\': \'first_name\'}),\n
-                         Query(**{\'content_translation.property_name\': \'last_name\'})\n
-                         )\n
+                 Query(**{\'content_translation.property_name\': \'title\'})\n
                  )\n
 \n
 ################################################################\n
 # Above query must make SQL condition like this.               #\n
 ################################################################\n
 #     MATCH(content_translation.translated_text) AGAINST({value})\n
-# AND (   content_translation.property_name = \'first_name\'\n
-#      OR content_translation.property_name = \'last_name\')\n
+# AND content_translation.property_name = \'title\'\n
 \n
 return query\n
 </string> </value>
@@ -115,7 +112,6 @@ return query\n
                             <string>Query</string>
                             <string>SimpleQuery</string>
                             <string>AndQuery</string>
-                            <string>OrQuery</string>
                             <string>_apply_</string>
                             <string>query</string>
                           </tuple>

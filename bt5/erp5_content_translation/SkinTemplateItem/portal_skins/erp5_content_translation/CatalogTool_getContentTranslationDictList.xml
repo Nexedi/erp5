@@ -60,8 +60,8 @@
 # If you want to index properties more, extend property_list   #\n
 # and portal_type_list.                                        #\n
 ################################################################\n
-property_list = (\'first_name\', \'last_name\')\n
-portal_type_list = (\'Person\')\n
+property_list = (\'title\',)\n
+portal_type_list = (\'Person\',)\n
 \n
 \n
 result = []\n
