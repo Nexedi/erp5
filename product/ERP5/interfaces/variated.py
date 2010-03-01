@@ -55,6 +55,15 @@ class IVariated(Interface):
   # are based on categories. General variations are encapsulated
   # into VariationValue instances.
 
+  # Property Variation Accessors
+  def getVariationPropertyList():
+    """
+    return the list of variation property IDs which are provided
+    by the variated instance.
+
+    Used in: Resource, Delivery Line, Delivery Cell
+    """
+
   # Discrete Variation Accessors
   def getVariationBaseCategoryList(omit_optional_variation=0,
                                    omit_individual_variation=0):
@@ -247,7 +256,7 @@ class IVariated(Interface):
     Could be used in: Resource, Delivery Line (non terminal)
     """
 
-  def setVariationUid():
+  def getVariationUid():
     """
     returns a unique UID integer representation of the variation
     categories and properties of the current instance based
