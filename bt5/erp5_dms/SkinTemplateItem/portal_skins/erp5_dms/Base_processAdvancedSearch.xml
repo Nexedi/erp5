@@ -55,11 +55,23 @@
             <key> <string>_body</string> </key>
             <value> <string>"""\n
   Puts all the arguments from advanced search dialog form together as \n
-  a parseable search string. Set it in the request to pass it \n
-  on to search form.\n
+  a parseable search string. Set it in the selection so it can be used\n
+  in search form.\n
 """\n
+portal = context.getPortalObject()\n
 searchabletext = context.Base_assembleSearchString()\n
-context.REQUEST.set(\'searchabletext\', searchabletext)\n
+\n
+selection_id = \'search_advanced_dialog_selection\'\n
+selection_object = portal.portal_selections.getSelectionParamsFor(selection_id, {})\n
+if selection_object:\n
+  # update\n
+  selection_object[\'searchabletext\'] = searchabletext\n
+else:\n
+  selection_object = {\'searchabletext\': searchabletext}\n
+\n
+selection_object[\'list_style\'] = \'search\'\n
+portal.portal_selections.setSelectionParamsFor(selection_id, \\\n
+                                               selection_object)\n
 return context.Base_viewAdvancedSearchResultList()\n
 </string> </value>
         </item>
@@ -101,7 +113,11 @@ return context.Base_viewAdvancedSearchResultList()\n
                             <string>kw</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>portal</string>
                             <string>searchabletext</string>
+                            <string>selection_id</string>
+                            <string>selection_object</string>
+                            <string>_write_</string>
                           </tuple>
                         </value>
                     </item>

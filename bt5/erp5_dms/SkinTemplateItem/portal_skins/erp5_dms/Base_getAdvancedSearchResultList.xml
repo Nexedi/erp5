@@ -74,6 +74,13 @@ date_format = \'%Y-%m-%d\'\n
 if searchabletext is None:\n
   # searchabletext can be supplied in request (fallback)\n
   searchabletext = context.REQUEST.get(\'searchabletext\')\n
+  \n
+if searchabletext is None:\n
+  # or in selection\n
+  selection_id = \'search_advanced_dialog_selection\'\n
+  selection_object = portal.portal_selections.getSelectionParamsFor(selection_id)\n
+  if selection_object:\n
+    searchabletext = selection_object.get(\'searchabletext\')\n
 \n
 if searchabletext is None:\n
   raise ValueError, "No search string specified."\n
@@ -170,6 +177,8 @@ return result\n
                             <string>query_kw</string>
                             <string>date_format</string>
                             <string>None</string>
+                            <string>selection_id</string>
+                            <string>selection_object</string>
                             <string>ValueError</string>
                             <string>parsed_search_string</string>
                             <string>portal_type</string>
