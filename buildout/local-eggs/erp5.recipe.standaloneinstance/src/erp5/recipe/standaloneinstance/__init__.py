@@ -17,12 +17,11 @@ import os, sys
 from string import Template
 import zc.buildout
 import plone.recipe.zope2instance
-import erp5.recipe.createsite
 
 class WithMinusTemplate(Template):
   idpattern = '[_a-z][-_a-z0-9]*'
 
-class Recipe(plone.recipe.zope2instance.Recipe, erp5.recipe.createsite.Recipe):
+class Recipe(plone.recipe.zope2instance.Recipe):
   def __init__(self, buildout, name, options):
     standalone_location = options.get('instancehome')
     if not standalone_location:
@@ -162,10 +161,41 @@ class Recipe(plone.recipe.zope2instance.Recipe, erp5.recipe.createsite.Recipe):
 
     if not os.path.exists(options['zodb-path'].strip()) or \
         force_zodb_update:
-      # initialise ERP5 part only in case if ZODB not exist yet or it is forced
-      erp5.recipe.createsite.Recipe.install(self)
+      self.update_zodb()
     # we return nothing, as this is totally standalone installation
     return []
+
+  def update_zodb(self):
+    options = self.options
+    zopectl_path = os.path.join(options['bin-directory'],
+                  options['control-script'])
+    script_name = os.path.join(os.path.dirname(__file__),
+                 'create_erp5_instance.py')
+    argv = [zopectl_path, 'run', script_name]
+
+    if options.get('portal_id'):
+      argv.extend(['--portal_id', options['portal_id']])
+    if options.get('erp5_sql_connection_string'):
+      argv.extend(['--erp5_sql_connection_string',
+            options['erp5_sql_connection_string']])
+
+    if options.get('cmf_activity_sql_connection_string'):
+      argv.extend(['--cmf_activity_sql_connection_string',
+         options['cmf_activity_sql_connection_string']])
+    if options.get('erp5_catalog_storage'):
+      argv.extend(['--erp5_catalog_storage',
+            options['erp5_catalog_storage']])
+    if options.get('user'):
+      # XXX read rom zope2instance section ?
+      argv.extend(['--initial-user',
+            options['user']])
+
+    argv.extend(['--bt5-path',
+          os.path.join(options['bt5-path'])])
+    argv.extend([bt for bt in options.get('bt5', '').split('\n') if bt])
+
+    assert os.spawnl(
+       os.P_WAIT, zopectl_path, *argv ) == 0
 
   def build_zope_conf(self):
     options = self.options
@@ -189,4 +219,6 @@ class Recipe(plone.recipe.zope2instance.Recipe, erp5.recipe.createsite.Recipe):
     file(zope_conf_path, 'w').write(result)
 
   def update(self):
+#    if self.options.get('force-zodb-update','false').strip().lower() == 'true':
+#      return self.install()
     return plone.recipe.zope2instance.Recipe.update(self)
