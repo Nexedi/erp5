@@ -742,6 +742,8 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
     """
     if not run: return
     printAndLog('\nScriptable Keys')
+    portal = self.portal
+    
     # Check that SQL generated is valid
     self.portal.portal_catalog(advanced_search_text='')
     self.portal.portal_catalog(advanced_search_text='a search text')
@@ -753,14 +755,54 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
     document_1.setDescription('Hello. ScriptableKey is very useful if you want to make your own search syntax.')
     document_2 = self.portal.document_module.newContent(portal_type='File')
     document_2.setDescription('This test make sure that scriptable key feature on ZSQLCatalog works.')
+    person = portal.person_module.newContent(portal_type = 'Person', \
+                                             reference= "john",
+                                             title='John Doe Great')
+    web_page = portal.web_page_module.newContent(portal_type = 'Web Page',
+                                                 reference = "page_great_site",
+                                                 text_content = 'Great website')
+    organisation = portal.organisation_module.newContent( \
+                            portal_type = 'Organisation', \
+                            reference = 'organisation-1',
+                            title='Super nova organisation')
+    self.stepTic()
+    
+    def getAdvancedSearchTextResultList(advanced_search_text, portal_type=None):
+      kw = {'advanced_search_text': advanced_search_text}
+      if portal_type is not None:
+        kw['portal_type'] = portal_type
+      return [x.getObject() for x in portal.portal_catalog(**kw)]
+    
+    # full text search
+    self.assertSameSet([document_1], \
+      getAdvancedSearchTextResultList('ScriptableKey'))
+    self.assertEqual(len(getAdvancedSearchTextResultList('RelatedKey')), 0)
+    self.assertSameSet([document_1, document_2], \
+      getAdvancedSearchTextResultList('make'))    
+    self.assertSameSet([web_page, person], \
+      getAdvancedSearchTextResultList("Great", ['Person', 'Web Page']))
+    self.assertSameSet([web_page, person], \
+      getAdvancedSearchTextResultList("Great"))
 
-    transaction.commit()
-    self.tic()
+   # full text search with reference
+    self.assertSameSet([web_page], \
+      getAdvancedSearchTextResultList("reference:%s Great" %web_page.getReference()))
+    self.assertSameSet([person],
+          getAdvancedSearchTextResultList('reference:%s' %person.getReference()))
 
-    # Use scriptable key to search above documents.
-    self.assertEqual(len(self.portal.portal_catalog(advanced_search_text='ScriptableKey')), 1)
-    self.assertEqual(len(self.portal.portal_catalog(advanced_search_text='RelatedKey')), 0)
-    self.assertEqual(len(self.portal.portal_catalog(advanced_search_text='make')), 2)
+    # full text search with portal_type
+    self.assertSameSet([person], \
+      getAdvancedSearchTextResultList(person.getTitle(), person.getPortalType()))
+    self.assertSameSet([web_page], \
+      getAdvancedSearchTextResultList(web_page.getTextContent(),
+                                      web_page.getPortalType()))
+    self.assertSameSet([organisation], \
+      getAdvancedSearchTextResultList(organisation.getTitle(),
+                                      organisation.getPortalType()))
+    # full text search with portal_type & reference
+    self.assertSameSet([person], \
+      getAdvancedSearchTextResultList('reference:%s' %person.getReference(), \
+                                      person.getPortalType()))
 
   def test_PDFTextContent(self):
     upload_file = makeFileUpload('REF-en-001.pdf')
