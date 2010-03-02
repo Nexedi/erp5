@@ -1096,6 +1096,30 @@ class ERP5Site(FolderMixIn, CMFSite):
     return self._getPortalGroupedTypeList('target_solver')
 
   security.declareProtected(Permissions.AccessContentsInformation,
+                            'getPortalAmountGeneratorTypeList')
+  def getPortalAmountGeneratorTypeList(self):
+    """
+    Return amount generator types.
+    """
+    return self._getPortalGroupedTypeList('amount_generator')
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getPortalAmountGeneratorLineTypeList')
+  def getPortalAmountGeneratorLineTypeList(self):
+    """
+    Return amount generator line types.
+    """
+    return self._getPortalGroupedTypeList('amount_generator_line')
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getPortalAmountGeneratorCellTypeList')
+  def getPortalAmountGeneratorCellTypeList(self):
+    """
+    Return amount generator cell types.
+    """
+    return self._getPortalGroupedTypeList('amount_generator_cell')
+
+  security.declareProtected(Permissions.AccessContentsInformation,
                             'getPortalCalendarPeriodTypeList')
   def getPortalCalendarPeriodTypeList(self):
     """
