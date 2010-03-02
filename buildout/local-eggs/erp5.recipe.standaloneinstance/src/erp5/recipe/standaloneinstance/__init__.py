@@ -29,7 +29,6 @@ class Recipe(plone.recipe.zope2instance.Recipe):
     options['location'] = standalone_location
     options['control-script'] = options.get('control-script',
         os.path.join(standalone_location, 'bin', 'zopectl'))
-    erp5.recipe.createsite.Recipe.__init__(self, buildout, name, options)
     self.egg = zc.recipe.egg.Egg(buildout, options['recipe'], options)
     options['bin-directory'] = os.path.join(standalone_location, 'bin')
     options['scripts'] = '' # suppress script generation.
