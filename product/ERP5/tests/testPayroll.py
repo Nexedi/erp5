@@ -116,9 +116,10 @@ class TestPayrollMixin(ERP5ReportTestCase, TestTradeModelLineMixin):
     """return a list of categories that should be created."""
     return ('contribution_share/employer',
             'contribution_share/employee',
-            'base_amount/deductible_tax',
-            'base_amount/base_salary',
-            'base_amount/net_salary',
+            'base_amount/payroll/base/income_tax',
+            'base_amount/payroll/base/contribution',
+            'base_amount/payroll/report/salary/net',
+            'base_amount/payroll/report/salary/gross',
             'grade/worker',
             'grade/engineer',
             'quantity_unit/time/month',
@@ -284,8 +285,8 @@ class TestPayrollMixin(ERP5ReportTestCase, TestTradeModelLineMixin):
                     resource_value=sequence.get('urssaf_service'),
                     variation_category_list=['contribution_share/employee',
                                              'contribution_share/employer'],
-                    base_application_list=[ 'base_amount/base_salary'],
-                    base_contribution_list=['base_amount/deductible_tax'])
+                    base_application_list=[ 'base_amount/payroll/base/contribution'],
+                    base_contribution_list=['base_amount/payroll/base/income_tax'])
     sequence.edit(urssaf_model_line = model_line)
 
   def stepModelCreateUrssafModelLineWithSlices(self, sequence=None, **kw):
@@ -300,8 +301,8 @@ class TestPayrollMixin(ERP5ReportTestCase, TestTradeModelLineMixin):
                                        'salary_range/france/slice_0_to_200',
                                        'salary_range/france/slice_200_to_400',
                                        'salary_range/france/slice_400_to_5000'],
-                    base_application_list=[ 'base_amount/base_salary'],
-                    base_contribution_list=['base_amount/deductible_tax'])
+                    base_application_list=[ 'base_amount/payroll/base/contribution'],
+                    base_contribution_list=['base_amount/payroll/base/income_tax'])
     sequence.edit(urssaf_model_line_with_slices = model_line)
 
   def stepModelCreateUrssafModelLineWithComplexSlices(self, sequence=None, **kw):
@@ -315,8 +316,8 @@ class TestPayrollMixin(ERP5ReportTestCase, TestTradeModelLineMixin):
                                        'contribution_share/employer',
                                        'salary_range/france/slice_200_to_400',
                                        'salary_range/france/slice_600_to_800'],
-                    base_application_list=[ 'base_amount/base_salary'],
-                    base_contribution_list=['base_amount/deductible_tax'])
+                    base_application_list=[ 'base_amount/payroll/base/contribution'],
+                    base_contribution_list=['base_amount/payroll/base/income_tax'])
     sequence.edit(urssaf_model_line_with_slices = model_line)
 
   def stepPaysheetCreateUrssafModelLine(self, sequence=None, **kw):
@@ -331,8 +332,8 @@ class TestPayrollMixin(ERP5ReportTestCase, TestTradeModelLineMixin):
                     resource_value=sequence.get('urssaf_service'),
                     variation_category_list=['contribution_share/employee',
                                              'contribution_share/employer'],
-                    base_application_list=[ 'base_amount/base_salary'],
-                    base_contribution_list=['base_amount/deductible_tax'])
+                    base_application_list=[ 'base_amount/payroll/base/contribution'],
+                    base_contribution_list=['base_amount/payroll/base/income_tax'])
     sequence.edit(urssaf_model_line = model_line)
 
   def stepUrssafModelLineCreateMovements(self, sequence=None, **kw):
@@ -476,8 +477,8 @@ class TestPayrollMixin(ERP5ReportTestCase, TestTradeModelLineMixin):
                     price=20,
                     quantity=150,
                     resource_value=sequence.get('labour_service'),
-                    base_contribution_list=['base_amount/base_salary',
-                                            'base_amount/gross_salary'])
+                    base_contribution_list=['base_amount/payroll/base/contribution',
+                                            'base_amount/payroll/report/salary/gross'])
     sequence.edit(labour_paysheet_line = paysheet_line)
 
   def stepPaysheetCreateBonusPaySheetLine(self, sequence=None, **kw):
@@ -487,7 +488,7 @@ class TestPayrollMixin(ERP5ReportTestCase, TestTradeModelLineMixin):
                     resource_value=sequence.get('bonus_service'),
                     variation_category_list=['contribution_share/employee',
                                              'contribution_share/employer'],
-                    base_contribution_list=[ 'base_amount/base_salary'])
+                    base_contribution_list=[ 'base_amount/payroll/base/contribution'])
     sequence.edit(bonus_paysheet_line = paysheet_line)
 
   def stepPaysheetCreateBonusPaySheetLineMovements(self, sequence=None, **kw):
@@ -1050,8 +1051,8 @@ class TestPayrollMixin(ERP5ReportTestCase, TestTradeModelLineMixin):
                     reference='intermediate_line',
                     variation_category_list=['contribution_share/employee',
                                              'contribution_share/employer'],
-                    base_contribution_list=['base_amount/deductible_tax'],
-                    base_application_list=['base_amount/base_salary'],
+                    base_contribution_list=['base_amount/payroll/base/income_tax'],
+                    base_application_list=['base_amount/payroll/base/contribution'],
                     create_line=False,)
     sequence.edit(intermediate_model_line = model_line)
 
@@ -1067,8 +1068,8 @@ class TestPayrollMixin(ERP5ReportTestCase, TestTradeModelLineMixin):
                     reference='line_applied_on_intermediate_line',
                     variation_category_list=['contribution_share/employee',
                                              'contribution_share/employer'],
-                    base_contribution_list=['base_amount/net_salary'],
-                    base_application_list=['base_amount/deductible_tax'])
+                    base_contribution_list=['base_amount/payroll/report/salary/net'],
+                    base_application_list=['base_amount/payroll/base/income_tax'])
     sequence.edit(model_line_applied_on_tax = model_line)
 
   def stepIntermediateModelLineCreateMovements(self, sequence=None,
@@ -1107,8 +1108,8 @@ class TestPayrollMixin(ERP5ReportTestCase, TestTradeModelLineMixin):
                     reference='old_age_insurance',
                     variation_category_list=['contribution_share/employee',
                                              'contribution_share/employer'],
-                    base_application_list=[ 'base_amount/base_salary'],
-                    base_contribution_list=['base_amount/deductible_tax'])
+                    base_application_list=[ 'base_amount/payroll/base/contribution'],
+                    base_contribution_list=['base_amount/payroll/base/income_tax'])
     sequence.edit(old_age_insurance = model_line)
 
   def stepOldAgeInsuranceModelLineCreateMovements(self, sequence=None, **kw):
@@ -1133,8 +1134,8 @@ class TestPayrollMixin(ERP5ReportTestCase, TestTradeModelLineMixin):
                     reference='sickness_insurance',
                     variation_category_list=['contribution_share/employee',
                                              'contribution_share/employer'],
-                    base_application_list=[ 'base_amount/base_salary'],
-                    base_contribution_list=['base_amount/deductible_tax'])
+                    base_application_list=[ 'base_amount/payroll/base/contribution'],
+                    base_contribution_list=['base_amount/payroll/base/income_tax'])
     sequence.edit(sickness_insurance = model_line)
 
   def stepSicknessInsuranceModelLineCreateMovements(self, sequence=None, **kw):
@@ -1185,8 +1186,8 @@ class TestPayrollMixin(ERP5ReportTestCase, TestTradeModelLineMixin):
                     reference='model_line_in_the_payesheet',
                     variation_category_list=['contribution_share/employee',
                                              'contribution_share/employer'],
-                    base_application_list=[ 'base_amount/base_salary'],
-                    base_contribution_list=['base_amount/deductible_tax'])
+                    base_application_list=[ 'base_amount/payroll/base/contribution'],
+                    base_contribution_list=['base_amount/payroll/base/income_tax'])
     sequence.edit(model_line_on_paysheet = model_line)
 
   def stepPaysheetModelLineCreateMovements(self, sequence=None, **kw):
@@ -1474,8 +1475,8 @@ class TestPayrollMixin(ERP5ReportTestCase, TestTradeModelLineMixin):
         trade_phase='payroll/france/labour',
         reference='model_without_ref',
         resource_value=labour,
-        base_contribution_list=['base_amount/base_salary',
-          'base_amount/gross_salary'],
+        base_contribution_list=['base_amount/payroll/base/contribution',
+          'base_amount/payroll/report/salary/gross'],
         quantity=10000)
     
     # create the paysheet
@@ -1521,8 +1522,8 @@ class TestPayrollMixin(ERP5ReportTestCase, TestTradeModelLineMixin):
         trade_phase='payroll/france/labour',
         reference='model_without_date',
         resource_value=labour,
-        base_contribution_list=['base_amount/base_salary',
-          'base_amount/gross_salary'],
+        base_contribution_list=['base_amount/payroll/base/contribution',
+          'base_amount/payroll/report/salary/gross'],
         quantity=10000)
 
     # create a paysheet without date
@@ -1597,8 +1598,8 @@ class TestPayrollMixin(ERP5ReportTestCase, TestTradeModelLineMixin):
         trade_phase='payroll/france/labour',
         reference='check_model_date_validity_1',
         resource_value=labour,
-        base_contribution_list=['base_amount/base_salary',
-          'base_amount/gross_salary'],
+        base_contribution_list=['base_amount/payroll/base/contribution',
+          'base_amount/payroll/report/salary/gross'],
         quantity=20000,
         price=1)
 
@@ -1607,8 +1608,8 @@ class TestPayrollMixin(ERP5ReportTestCase, TestTradeModelLineMixin):
         trade_phase='payroll/france/labour',
         reference='check_model_date_validity_2',
         resource_value=labour,
-        base_contribution_list=['base_amount/base_salary',
-          'base_amount/gross_salary'],
+        base_contribution_list=['base_amount/payroll/base/contribution',
+          'base_amount/payroll/report/salary/gross'],
         quantity=30000,
         price=1)
     self.stepTic()
@@ -1706,8 +1707,8 @@ class TestPayrollMixin(ERP5ReportTestCase, TestTradeModelLineMixin):
           reference='zero_price_line',
           portal_type='Pay Sheet Model Line',
           resource_value=labour,
-          base_contribution_list=['base_amount/base_salary',
-            'base_amount/gross_salary'],
+          base_contribution_list=['base_amount/payroll/base/contribution',
+            'base_amount/payroll/report/salary/gross'],
           quantity=5,
           price=0)
 
@@ -1745,8 +1746,8 @@ class TestPayrollMixin(ERP5ReportTestCase, TestTradeModelLineMixin):
     model_line_1 = self.createModelLine(model_1)
     model_line_1.edit(
         resource_value=labour,
-        base_contribution_list=['base_amount/base_salary',
-          'base_amount/gross_salary'],
+        base_contribution_list=['base_amount/payroll/base/contribution',
+          'base_amount/payroll/report/salary/gross'],
         quantity=10000)
 
     # define two models with same references and same dates
@@ -1761,8 +1762,8 @@ class TestPayrollMixin(ERP5ReportTestCase, TestTradeModelLineMixin):
     model_line_2 = self.createModelLine(model_2)
     model_line_2.edit(
         resource_value=labour,
-        base_contribution_list=['base_amount/base_salary',
-          'base_amount/gross_salary'],
+        base_contribution_list=['base_amount/payroll/base/contribution',
+          'base_amount/payroll/report/salary/gross'],
         quantity=20000)
 
     model_3 = paysheet_model_module.newContent( \
@@ -1775,8 +1776,8 @@ class TestPayrollMixin(ERP5ReportTestCase, TestTradeModelLineMixin):
     model_line_3 = self.createModelLine(model_3)
     model_line_3.edit(
         resource_value=labour,
-        base_contribution_list=['base_amount/base_salary',
-          'base_amount/gross_salary'],
+        base_contribution_list=['base_amount/payroll/base/contribution',
+          'base_amount/payroll/report/salary/gross'],
         quantity=30000)
 
     # define two models with same references and same dates
@@ -1791,8 +1792,8 @@ class TestPayrollMixin(ERP5ReportTestCase, TestTradeModelLineMixin):
     model_line_4 = self.createModelLine(model_4)
     model_line_4.edit(
         resource_value=labour,
-        base_contribution_list=['base_amount/base_salary',
-          'base_amount/gross_salary'],
+        base_contribution_list=['base_amount/payroll/base/contribution',
+          'base_amount/payroll/report/salary/gross'],
         quantity=40000)
 
     model_5 = paysheet_model_module.newContent( \
@@ -1805,8 +1806,8 @@ class TestPayrollMixin(ERP5ReportTestCase, TestTradeModelLineMixin):
     model_line_5 = self.createModelLine(model_5)
     model_line_5.edit(
         resource_value=labour,
-        base_contribution_list=['base_amount/base_salary',
-          'base_amount/gross_salary'],
+        base_contribution_list=['base_amount/payroll/base/contribution',
+          'base_amount/payroll/report/salary/gross'],
         quantity=50000)
 
     # third level : define two models with same references and same dates
@@ -1821,8 +1822,8 @@ class TestPayrollMixin(ERP5ReportTestCase, TestTradeModelLineMixin):
     model_line_6 = self.createModelLine(model_6)
     model_line_6.edit(
         resource_value=labour,
-        base_contribution_list=['base_amount/base_salary',
-          'base_amount/gross_salary'],
+        base_contribution_list=['base_amount/payroll/base/contribution',
+          'base_amount/payroll/report/salary/gross'],
         quantity=60000)
 
     model_7 = paysheet_model_module.newContent( \
@@ -1835,8 +1836,8 @@ class TestPayrollMixin(ERP5ReportTestCase, TestTradeModelLineMixin):
     model_line_7 = self.createModelLine(model_7)
     model_line_7.edit(
         resource_value=labour,
-        base_contribution_list=['base_amount/base_salary',
-          'base_amount/gross_salary'],
+        base_contribution_list=['base_amount/payroll/base/contribution',
+          'base_amount/payroll/report/salary/gross'],
         quantity=70000)
 
     self.stepTic()
@@ -2831,7 +2832,7 @@ class TestPayroll(TestPayrollMixin):
     line = ps1.newContent(portal_type='Pay Sheet Line',
                    resource_value=salary_service,
                    destination_value=employee1,
-                   base_contribution_list=['base_amount/net_salary',],
+                   base_contribution_list=['base_amount/payroll/report/salary/net',],
                    variation_category_list=('contribution_share/employee',
                                             'contribution_share/employer'))
     cell_employee = line.newCell('contribution_share/employee',
@@ -2844,7 +2845,7 @@ class TestPayroll(TestPayrollMixin):
                    resource_value=service,
                    source_section_value=provider,
                    destination_value=employee1,
-                   base_contribution_list=['base_amount/net_salary',],
+                   base_contribution_list=['base_amount/payroll/report/salary/net',],
                    variation_category_list=('contribution_share/employee',
                                             'contribution_share/employer'))
     cell_employee = line.newCell('contribution_share/employee',
@@ -2871,7 +2872,7 @@ class TestPayroll(TestPayrollMixin):
     line = ps2.newContent(portal_type='Pay Sheet Line',
                    resource_value=salary_service,
                    destination_value=employee2,
-                   base_contribution_list=['base_amount/net_salary',],
+                   base_contribution_list=['base_amount/payroll/report/salary/net',],
                    variation_category_list=('contribution_share/employee',
                                             'contribution_share/employer'))
     cell_employee = line.newCell('contribution_share/employee',
@@ -2884,7 +2885,7 @@ class TestPayroll(TestPayrollMixin):
                    resource_value=service,
                    source_section_value=provider,
                    destination_value=employee2,
-                   base_contribution_list=['base_amount/net_salary',],
+                   base_contribution_list=['base_amount/payroll/report/salary/net',],
                    variation_category_list=('contribution_share/employee',
                                             'contribution_share/employer'))
     cell_employee = line.newCell('contribution_share/employee',
