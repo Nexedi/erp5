@@ -56,8 +56,8 @@
             <value> <string>"""\n
   This script receives a request from advanced search form and \n
   puts together a search string in a search syntax, depending on\n
-  parameters received. It is the reverse of Base_parseSearchString external\n
-  method.\n
+  parameters received. \n
+  It is the reverse of Base_parseSearchString script.\n
 """\n
 MARKER = [\'\', None]\n
 request = context.REQUEST\n
@@ -155,7 +155,6 @@ search_mode_map={\'in_boolean_mode\':\'boolean\',\n
 if search_mode not in MARKER and search_mode_map.has_key(search_mode):\n
   search_string += \' mode:%s\' % search_mode_map[search_mode]\n
 \n
-context.log(search_string)\n
 return search_string\n
 </string> </value>
         </item>
