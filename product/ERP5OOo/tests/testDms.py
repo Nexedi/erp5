@@ -751,26 +751,32 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.portal.portal_catalog(portal_search_text='a search text')
 
     # Create a document.
-    document_1 = self.portal.document_module.newContent(portal_type='File')
-    document_1.setDescription('Hello. ScriptableKey is very useful if you want to make your own search syntax.')
-    document_2 = self.portal.document_module.newContent(portal_type='File')
-    document_2.setDescription('This test make sure that scriptable key feature on ZSQLCatalog works.')
+    document_1 = self.portal.document_module.newContent(
+                        portal_type = 'File',
+                        description = 'Hello. ScriptableKey is very useful if you want to make your own search syntax.',
+                        language = 'en',
+                        version = '001')
+    document_2 = self.portal.document_module.newContent(
+                        portal_type='File',
+                        description = 'This test make sure that scriptable key feature on ZSQLCatalog works.',
+                        language='fr',
+                        version = '002')
     person = portal.person_module.newContent(portal_type = 'Person', \
                                              reference= "john",
                                              title='John Doe Great')
     web_page = portal.web_page_module.newContent(portal_type = 'Web Page',
                                                  reference = "page_great_site",
-                                                 text_content = 'Great website')
+                                                 text_content = 'Great website',
+                                                 language='en',
+                                                 version = '003')
     organisation = portal.organisation_module.newContent( \
                             portal_type = 'Organisation', \
                             reference = 'organisation-1',
                             title='Super nova organisation')
     self.stepTic()
     
-    def getAdvancedSearchTextResultList(advanced_search_text, portal_type=None):
+    def getAdvancedSearchTextResultList(advanced_search_text):
       kw = {'advanced_search_text': advanced_search_text}
-      if portal_type is not None:
-        kw['portal_type'] = portal_type
       return [x.getObject() for x in portal.portal_catalog(**kw)]
     
     # full text search
@@ -779,8 +785,6 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.assertEqual(len(getAdvancedSearchTextResultList('RelatedKey')), 0)
     self.assertSameSet([document_1, document_2], \
       getAdvancedSearchTextResultList('make'))    
-    self.assertSameSet([web_page, person], \
-      getAdvancedSearchTextResultList("Great", ['Person', 'Web Page']))
     self.assertSameSet([web_page, person], \
       getAdvancedSearchTextResultList("Great"))
 
@@ -792,17 +796,35 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
 
     # full text search with portal_type
     self.assertSameSet([person], \
-      getAdvancedSearchTextResultList(person.getTitle(), person.getPortalType()))
-    self.assertSameSet([web_page], \
-      getAdvancedSearchTextResultList(web_page.getTextContent(),
-                                      web_page.getPortalType()))
+      getAdvancedSearchTextResultList('%s portal_type:%s' %(person.getTitle(), person.getPortalType())))
+
     self.assertSameSet([organisation], \
-      getAdvancedSearchTextResultList(organisation.getTitle(),
-                                      organisation.getPortalType()))
+      getAdvancedSearchTextResultList('%s portal_type:%s' \
+                                       %(organisation.getTitle(),
+                                         organisation.getPortalType())))
     # full text search with portal_type & reference
     self.assertSameSet([person], \
-      getAdvancedSearchTextResultList('reference:%s' %person.getReference(), \
-                                      person.getPortalType()))
+      getAdvancedSearchTextResultList('reference:%s portal_type:%s' \
+                                        %(person.getReference(), person.getPortalType())))
+    # full text search with language
+    self.assertSameSet([document_1, web_page], \
+      getAdvancedSearchTextResultList('language:en'))
+    self.assertSameSet([document_1], \
+      getAdvancedSearchTextResultList('Hello language:en'))
+    self.assertSameSet([document_2], \
+      getAdvancedSearchTextResultList('language:fr'))
+    self.assertSameSet([web_page], \
+      getAdvancedSearchTextResultList('%s reference:%s language:%s' \
+                                       %(web_page.getTextContent(),
+                                         web_page.getReference(),
+                                         web_page.getLanguage())))
+    # full text search with version
+    self.assertSameSet([web_page], \
+      getAdvancedSearchTextResultList('%s reference:%s language:%s version:%s' \
+                                       %(web_page.getTextContent(),
+                                         web_page.getReference(),
+                                         web_page.getLanguage(),
+                                         web_page.getVersion())))
 
   def test_PDFTextContent(self):
     upload_file = makeFileUpload('REF-en-001.pdf')
