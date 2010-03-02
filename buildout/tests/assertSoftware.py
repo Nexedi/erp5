@@ -50,6 +50,7 @@ print sys.version_info[:2]
       simplejson
       socks
       threadframe
+      uuid
       xml
       xml.parsers.expat
       zlib
