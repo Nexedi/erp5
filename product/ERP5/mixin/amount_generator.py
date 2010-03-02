@@ -170,7 +170,25 @@ class AmountGeneratorMixin:
             # Case 1: the cell defines a final amount of resource 
             if amount_generator_cell.getResource() and\
                getattr(amount_generator_cell, 'getBaseApplication', None) is not None:
-              # We must aggregate per resource, variation
+              # Define a key in order to aggregate amounts
+              #   in transformations where variation and quantity
+              #   are defined in different cells
+              #
+              # Transformed Resource (Transformation)
+              #   key = anything (only one cell selected)
+              #   current key = (acquired resource, acquired variation)
+              #  
+              # Assorted Resource (Transformation)
+              #   key = (assorted resource, assorted resource variation)
+              #   usually resource and quantity provided together
+              # 
+              # Payroll
+              # 
+              #   key = (payroll resource, payroll resource variation)
+              # 
+              # Tax
+              # 
+              #   key = (tax resource, tax resource variation)
               key = (amount_generator_cell.getResource(), amount_generator_cell.getVariationText()) # Variation UID, Hash ?
               resource_amount_aggregate.setdefault(key, {})
               # Then collect the mapped properties (resource, quantity, net_converted_quantity, base_contribution_list, base_application, etc.)
@@ -185,8 +203,22 @@ class AmountGeneratorMixin:
               resource_amount_aggregate[key]['id'] = amount_generator_cell.getRelativeUrl().replace('/', '_')
             # Case 2: the cell defines a temporary calculation line
             elif getattr(amount_generator_cell, 'getBaseContributionList', None) is not None:
-              # We must aggregate per base_application
-              # Therefore, base_application MUST be defined
+              # Define a key in order to aggregate amounts in cells
+              #   base_application MUST be defined
+              #
+              # Single line case: key = base_application
+              #    
+              # Payroll
+              # 
+              #   key = base_application
+              #     it is not possible to use cells to add amounts
+              #     in intermediate calculation but only to 
+              #     select one amount
+              #     
+              #   key = (base_application, XXX) would be required
+              # 
+              #  Use of a method to generate keys is probably better.
+              #  than hardcoding it here
               key = amount_generator_cell.getBaseApplication()
               value_amount_aggregate.setdefault(key, {})
               # Then collect the mapped properties
