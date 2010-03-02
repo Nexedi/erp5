@@ -91,6 +91,9 @@ parsed_search_string = context.Base_parseSearchString(searchabletext)\n
 portal_type = parsed_search_string.get(\'portal_type\', None)\n
 if portal_type is None or not len(portal_type):\n
   query_kw[\'portal_type\'] = portal.getPortalDocumentTypeList()\n
+else:\n
+  # safe to add passed portal_type\n
+  query_kw[\'portal_type\'] = portal_type\n
 \n
 # ZSQLCatalog wants table.key to avoid ambiguity\n
 parsed_searchabletext = parsed_search_string.get(\'searchabletext\', None)\n
@@ -120,6 +123,8 @@ if len(where_expression_list):\n
 if parsed_search_string.get(\'mine\'):\n
   # user wants only his documents\n
   query_kw[\'owner\'] = str(portal.portal_membership.getAuthenticatedMember())\n
+\n
+# XXX: add contributor title\n
 \n
 if parsed_search_string.get(\'newest\'):\n
   #...and now we check for only the newest versions\n

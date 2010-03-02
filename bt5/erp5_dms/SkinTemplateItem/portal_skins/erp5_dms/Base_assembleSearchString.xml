@@ -132,13 +132,13 @@ for category in (\'group\', \'site\', \'function\', \'publication_section\', \'c
   if category_value not in MARKER:\n
     search_string += \' %s:%s\' % (category, category_value)\n
 \n
-# Category title search\n
+# contributor title search\n
 for category in (\'contributor_title\',):\n
   category_value = kw.get(category, request.get(category, None))\n
   if category_value not in MARKER:\n
     search_string += \' %s:%s\' %(category, category_value)\n
 \n
-#only my docs\n
+# only my docs\n
 mine = kw.get(\'mine\', request.get(\'mine\', None))\n
 if mine not in MARKER:\n
   search_string += \' mine:yes\'\n
