@@ -207,7 +207,7 @@ class TestInvoiceVAT(ERP5TypeTestCase):
     income account                        1
 
     """
-    itr = self.getPortal().portal_rules.default_invoice_transaction_rule
+    itr = self.getPortal().portal_rules.default_invoice_transaction_simulation_rule
     itr.manage_delObjects([x for x in itr.objectIds()])
     pred = itr.newContent(portal_type='Predicate')
     pred.setStringIndex('product')

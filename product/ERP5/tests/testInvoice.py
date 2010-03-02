@@ -223,7 +223,7 @@ class TestInvoiceMixin(TestPackingListMixin,
         trade_phase='default/payment',
         source='account_module/bank',
         destination='account_module/bank')
-    rule = self.portal.portal_rules.default_payment_rule
+    rule = self.portal.portal_rules.default_payment_simulation_rule
     rule.setTradePhase('default/payment')
 
   def login(self):
@@ -255,7 +255,7 @@ class TestInvoiceMixin(TestPackingListMixin,
         account.setAccountType(account_type)
         portal.portal_workflow.doActionFor(account, 'validate_action')
 
-    invoice_rule = portal.portal_rules.default_invoice_transaction_rule
+    invoice_rule = portal.portal_rules.default_invoice_transaction_simulation_rule
     if invoice_rule.getValidationState() == 'validated':
       invoice_rule.invalidate()
     invoice_rule.deleteContent(list(invoice_rule.objectIds()))
@@ -341,7 +341,7 @@ class TestInvoiceMixin(TestPackingListMixin,
     for order_rule in order_rule_list :
       for order_simulation_movement in order_rule.objectValues() :
         temp_invoicing_rule_list = [ar for ar in order_simulation_movement.objectValues()[0].objectValues()[0].objectValues()
-          if ar.getSpecialiseValue().getPortalType() == 'Invoicing Rule']
+          if ar.getSpecialiseValue().getPortalType() == 'Invoice Simulation Rule']
         self.assertEquals(len(temp_invoicing_rule_list), 1)
         invoicing_rule_list.extend(temp_invoicing_rule_list)
     sequence.edit(invoicing_rule_list=invoicing_rule_list)
@@ -358,7 +358,7 @@ class TestInvoiceMixin(TestPackingListMixin,
         invoice_transaction_rule_list.extend([applied_rule for applied_rule
           in simulation_movement.objectValues() if applied_rule \
               .getSpecialiseValue().getPortalType()
-              == 'Invoice Transaction Rule'])
+              == 'Invoice Transaction Simulation Rule'])
         resource_list = sequence.get('resource_list')
         self.assertEquals(simulation_movement.getPortalType(),
                           'Simulation Movement')
@@ -1263,28 +1263,28 @@ class TestInvoiceMixin(TestPackingListMixin,
         applied_rule_set.add(sm.getRootAppliedRule())
 
     rule_dict = {
-        'Order Rule': {
+        'Order Root Simulation Rule': {
           'movement_type_list': ['Sale Order Line', 'Sale Order Cell'],
-          'next_rule_list': ['Delivering Rule', ],
+          'next_rule_list': ['Delivery Simulation Rule', ],
           },
-        'Delivering Rule': {
+        'Delivery Simulation Rule': {
           'movement_type_list': ['Sale Packing List Line', 'Sale Packing List Cell'],
-          'next_rule_list': ['Invoicing Rule', ],
+          'next_rule_list': ['Invoice Simulation Rule', ],
           },
-        'Invoicing Rule': {
+        'Invoice Simulation Rule': {
           'movement_type_list': invoice.getPortalInvoiceMovementTypeList(),
-          'next_rule_list': ['Invoice Transaction Rule', 'Trade Model Rule'],
+          'next_rule_list': ['Invoice Transaction Simulation Rule', 'Trade Model Simulation Rule'],
           },
-        'Trade Model Rule': {
-          'next_rule_list': ['Invoice Transaction Rule'],
+        'Trade Model Simulation Rule': {
+          'next_rule_list': ['Invoice Transaction Simulation Rule'],
           },
-        'Invoice Rule': {
+        'Invoice Simulation Rule': {
           'movement_type_list': invoice.getPortalInvoiceMovementTypeList() \
               + invoice.getPortalAccountingMovementTypeList(),
-          'next_rule_list': ['Invoice Transaction Rule', 'Payment Simulation Rule',
-            'Trade Model Rule'],
+          'next_rule_list': ['Invoice Transaction Simulation Rule', 'Payment Simulation Rule',
+            'Trade Model Simulation Rule'],
           },
-        'Invoice Transaction Rule': {
+        'Invoice Transaction Simulation Rule': {
           'parent_movement_type_list': invoice.getPortalInvoiceMovementTypeList(),
           'movement_type_list': invoice.getPortalAccountingMovementTypeList(),
           'next_rule_list': ['Payment Simulation Rule'],

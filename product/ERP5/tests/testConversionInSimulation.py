@@ -188,7 +188,7 @@ class TestConversionInSimulation(AccountingTestCase,ERP5TypeTestCase):
         account.setAccountType(account_type)
         portal.portal_workflow.doActionFor(account, 'validate_action')
 
-    invoice_rule = portal.portal_rules.default_invoice_transaction_rule
+    invoice_rule = portal.portal_rules.default_invoice_transaction_simulation_rule
     if invoice_rule.getValidationState() == 'validated':
       invoice_rule.invalidate()
     invoice_rule.deleteContent(list(invoice_rule.objectIds()))

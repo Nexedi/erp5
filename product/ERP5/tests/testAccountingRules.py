@@ -196,7 +196,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       Create some predicates in the Invoice Transaction Rule
     """
     invoice_transaction_rule = getattr(self.getRuleTool(),
-            'default_invoice_transaction_rule')
+            'default_invoice_transaction_simulation_rule')
     if invoice_transaction_rule.getValidationState() == 'validated':
       invoice_transaction_rule.invalidate()
       transaction.commit()
@@ -1134,7 +1134,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
     # ...but only invoice_transaction_rule is interesting
     applied_rule = [applied_rule for applied_rule in applied_rule_list if
       applied_rule.getSpecialiseValue().getPortalType() ==
-      'Invoice Transaction Rule'][0]
+      'Invoice Transaction Simulation Rule'][0]
     self.assertEquals( applied_rule.getPortalType(),
                       self.applied_rule_portal_type)
     self.assertEquals( applied_rule.getSpecialise(),
