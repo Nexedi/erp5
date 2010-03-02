@@ -27,7 +27,6 @@
 #
 ##############################################################################
 
-from Products.ERP5Type.Utils import createExpressionContext
 from Products.ERP5Form.FormBox import FormBox
 from urlparse import urlparse
 
@@ -52,15 +51,10 @@ def Base_updatePropertyMapListWithFieldLabel(self, property_map_list):
         return label
   portal = self.getPortalObject()
   result_list = []
-  portal_type = self.getPortalType()
-  portal_type_object = portal.portal_types[portal_type]
-  action_view_url_list = [action.getAction() for action in \
-                                portal_type_object.getActionInformationList() \
-                                if 'view' in action.getActionType()]
-  action_url_list = [action_view_url(createExpressionContext(self))\
-                                   for action_view_url in action_view_url_list]
-  form_id_list = [urlparse(action_url)[2].split('/')[-1] \
-                                             for action_url in action_url_list]
+  action_list_dict = portal.portal_actions.listFilteredActionsFor(self)
+  action_list = action_list_dict.get('object_view', ())
+  form_id_list = [urlparse(action['url'])[2].split('/')[-1] \
+                                             for action in action_list]
   for property_map in property_map_list:
     label = None
     for form_id in form_id_list:
