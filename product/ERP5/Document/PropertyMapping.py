@@ -56,6 +56,6 @@ class PropertyMapping(XMLObject):
                          for x in self.getMappingPropertyList()])
     mapped_property = mapping_dict.get(property, property)
     if mapped_property.startswith('-'):
-      return -1 * document.getProperty(mapped_property)
+      return -1 * document.getProperty(mapped_property[1:])
     else:
       document.getProperty(mapped_property)
