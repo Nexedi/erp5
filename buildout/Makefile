@@ -1,4 +1,5 @@
-INSTALL_PATH='opt/erp5/'`cat VERSION.txt`
+SOFTWARE_BUILD_PATH='/opt/erp5/'`cat VERSION.txt`
+PACKAGE_INSTALL_PATH='opt/erp5/'`cat VERSION.txt`
 
 software: bin/buildout
 	bin/buildout
@@ -11,10 +12,14 @@ assert: bin/python2.4
 	bin/python2.4 tests/assertSoftware.py
 
 debian-appliance:
-	svn co https://svn.erp5.org/repos/public/spec/debian-erp5-appliance/ debian-erp5-appliance
-	cd debian-erp5-appliance/$(INSTALL_PATH); $(MAKE) $(MFLAGS)
+	svn co https://svn.erp5.org/repos/public/erp5/trunk/buildout $(SOFTWARE_BUILD_PATH)
+	cd $(SOFTWARE_BUILD_PATH); $(MAKE) $(MFLAGS)
+	svn co --ignore-externals https://svn.erp5.org/repos/public/spec/debian-erp5-appliance/ debian-erp5-appliance
+	mkdir -p debian-erp5-appliance/$(PACKAGE_INSTALL_PATH)
+	mv $(SOFTWARE_BUILD_PATH)/* debian-erp5-appliance/$(PACKAGE_INSTALL_PATH)
 	rm -rf debian-erp5-appliance/*.txt
-	rm -rf `find . -type d -name .svn`
-	rm -rf `find . -name *.pyc`
-	cd ../../../../
+	rm -rf debian-erp5-appliance/*.TXT
+	rm -rf `find debian-erp5-appliance/ -type d -name .svn`
+	rm -rf `find debian-erp5-appliance/ -name *.pyc`
 	dpkg-deb -b debian-erp5-appliance/ .
+
