@@ -429,6 +429,7 @@ class SimulationTool(BaseTool):
         # Group-by expression
         group_by = new_kw.pop('group_by', [])
         column_group_by = new_kw.pop('column_group_by', [])
+
         if column_group_by:
           group_by.extend(['%s.%s' % (table, x) for x in column_group_by])
         related_key_group_by = new_kw.pop('related_key_group_by', [])
@@ -506,7 +507,7 @@ class SimulationTool(BaseTool):
         # instances
         resource=None, node=None, payment=None,
         section=None, mirror_section=None, item=None,
-        function=None, project=None,
+        function=None, project=None, transformed_resource=None,
         # used for tracking
         input=0, output=0,
         # categories
@@ -529,6 +530,7 @@ class SimulationTool(BaseTool):
         # variations
         variation_text=None, sub_variation_text=None,
         variation_category=None,
+        transformed_variation_text=None,
         # uids
         resource_uid=None, node_uid=None, section_uid=None, payment_uid=None,
         mirror_node_uid=None, mirror_section_uid=None, function_uid=None,
@@ -622,6 +624,9 @@ class SimulationTool(BaseTool):
       column_value_dict.setUIDList('payment_uid', payment)
       column_value_dict.setUIDList('project_uid', project)
       column_value_dict.setUIDList('function_uid', function)
+
+      sql_kw['transformed_uid'] = self._generatePropertyUidList(transformed_resource)
+
       if column_value_dict.setUIDList('section_uid', section):
         sql_kw['section_filtered'] = 1
       column_value_dict.setUIDList('mirror_section_uid', mirror_section)
@@ -873,6 +878,17 @@ class SimulationTool(BaseTool):
       metric_type   - convert the results to a specific metric_type
 
       quantity_unit - display results using this specific quantity unit
+
+      transformed_resource - one, or several resources. list resources that can
+                             be produced using those resources as input in a
+                             transformation.
+                             relative_resource_url for each returned line will
+                             point to the transformed resource, while the stock
+                             will be the stock of the produced resource,
+                             expressed in number of transformed resources.
+      transformed_variation_text - to be used with transformed_resource, to
+                                   to refine the transformation selection only
+                                   to those using variated resources as input.
 
       **kw           -  if we want extended selection with more keywords (but
                         bad performance) check what we can do with

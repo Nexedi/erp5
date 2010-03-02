@@ -191,7 +191,9 @@ class InventoryListBrain(ZSQLBrain):
       # Add parameters to query_kw
       query_kw_update = {}
 
-      if cname_id in ('getCurrentInventory', ):
+      if cname_id in ('transformed_resource_title', ):
+        return '%s/view' % resource.absolute_url()
+      elif cname_id in ('getCurrentInventory', ):
         query_kw_update = {
           'simulation_state': 
             list(self.getPortalCurrentInventoryStateList() + \
