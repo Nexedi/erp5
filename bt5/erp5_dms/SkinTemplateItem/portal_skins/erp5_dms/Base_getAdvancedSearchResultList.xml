@@ -100,9 +100,10 @@ parsed_searchabletext = parsed_search_string.get(\'searchabletext\', None)\n
 if parsed_searchabletext is not None: \n
   query_kw[\'full_text.SearchableText\'] =  parsed_searchabletext\n
 \n
-reference = parsed_search_string.get(\'reference\', None)\n
-if reference is not None:\n
-  query_kw[\'reference\'] = reference\n
+for key in (\'reference\', \'version\', \'language\',):\n
+  value = parsed_search_string.get(key, None)\n
+  if value is not None:\n
+    query_kw[key] = value\n
 \n
 where_expression_list = []\n
 creation_from = parsed_search_string.get(\'creation_from\', None)\n
@@ -139,6 +140,7 @@ if parsed_search_string.get(\'newest\'):\n
 else:\n
   result = portal.portal_catalog(**query_kw)\n
 \n
+context.log(portal.portal_catalog(src__=1, **query_kw))\n
 return result\n
 
 
@@ -194,7 +196,9 @@ return result\n
                             <string>len</string>
                             <string>_write_</string>
                             <string>parsed_searchabletext</string>
-                            <string>reference</string>
+                            <string>_getiter_</string>
+                            <string>key</string>
+                            <string>value</string>
                             <string>where_expression_list</string>
                             <string>creation_from</string>
                             <string>creation_to</string>
@@ -203,7 +207,6 @@ return result\n
                             <string>str</string>
                             <string>append</string>
                             <string>$append0</string>
-                            <string>_getiter_</string>
                             <string>_apply_</string>
                             <string>doc</string>
                             <string>result</string>
