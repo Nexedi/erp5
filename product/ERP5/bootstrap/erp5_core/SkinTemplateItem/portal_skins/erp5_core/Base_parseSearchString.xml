@@ -140,6 +140,8 @@ criterion_alias_dict = {\n
   \'newest\':           (True, None),\n
   # indicates user search for documents by contributor title  \n
   \'contributor_title\':(True, None),\n
+  # indicates user search mode (boolean or with with query expansion)\n
+  \'mode\':             (True, None),\n
 }\n
 \n
 DEFAULT_CRITERION_ALIAS = \'searchabletext\'\n
