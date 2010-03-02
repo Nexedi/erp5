@@ -1,3 +1,6 @@
+2010-03-02 Nicolas Dumazet
+* Catalog transformations
+
 2010-02-05 aurel
 * add more columns into versioning table in order to use frequency_index
 
