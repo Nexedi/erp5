@@ -39,6 +39,7 @@ from DateTime import DateTime
 from Products.ERP5Type.tests.utils import LogInterceptor
 from Products.ERP5Type.tests.utils import createZODBPythonScript, todo_erp5, \
                                           getExtraSqlConnectionStringList
+from Products.ERP5Type.tests.backportUnittest import skip
 from Products.ZSQLCatalog.ZSQLCatalog import HOT_REINDEXING_FINISHED_STATE,\
       HOT_REINDEXING_RECORDING_STATE, HOT_REINDEXING_DOUBLE_INDEXING_STATE
 from Products.CMFActivity.Errors import ActivityFlushError
@@ -1970,7 +1971,8 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     self.assertTrue("TRUNCATE(catalog.uid,2) = '2567.54'" in sql_src or \
                     'TRUNCATE(`catalog`.`uid`, 2) = 2567.54' in sql_src, sql_src)
 
-  def test_56_ActivateDuringClearCatalog(self, quiet=quiet,run=run_all_test):
+  @skip('Regression portal_ids must be delete of catalog')
+  def test_56_CreateUidDuringClearCatalog(self, quiet=quiet,run=run_all_test):
     """
       Create a script in the catalog to generate a uid list
       Check the creation some objects, or activities, during a clear
