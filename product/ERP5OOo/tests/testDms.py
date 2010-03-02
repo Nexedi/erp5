@@ -834,7 +834,6 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
     portal = self.portal
     assemble = portal.Base_assembleSearchString
     parse = portal.Base_parseSearchString
-    search = portal.Base_getAdvancedSearchResultList
     
     # directly pasing searchable string
     self.assertEquals('searchable text',
@@ -981,6 +980,107 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.assertEquals(kw['mine'], parsed_string['mine'])
     self.assertEquals(kw['newest'], parsed_string['newest'])
     self.assertEquals('boolean', parsed_string['mode'])
+
+  def test_11_SearchStringSearchCapability(self, quiet=QUIET, run=RUN_ALL_TEST):
+    """
+    Test search string search search capabilities.
+    """
+    if not run: return
+
+    portal = self.portal
+    assemble = portal.Base_assembleSearchString
+    search = portal.Base_getAdvancedSearchResultList
+
+    def getAdvancedSearchStringResultList(**kw):
+      search_string = assemble(**kw)
+      print search_string
+      return [x.getObject() for x in search(search_string)]
+    # create some objects
+    document_1 = portal.document_module.newContent(
+                   portal_type = 'File',
+                   description = 'standalone software linux python free',
+                   version = '001',
+                   language = 'en',
+                   reference = 'nxd-test-doc-1')
+    document_2 = portal.document_module.newContent(
+                   portal_type = 'Presentation',
+                   description = 'standalone free python linux knowledge system management',
+                   version = '002',
+                   language = 'fr',
+                   reference = 'nxd-test-doc-2')
+    document_3 = portal.document_module.newContent(
+                   portal_type = 'Presentation',
+                   description = 'just a copy',
+                   version = '003',
+                   language = 'en',
+                   reference = 'nxd-test-doc-2')
+    web_page_1 = portal.web_page_module.newContent(
+                   portal_type = 'Web Page',
+                   text_content = 'software based solutions document management product standalone',
+                   version = '003',
+                   language = 'jp',
+                   reference = 'nxd-test-web-page-3')
+    self.stepTic()
+
+    # search arbitrary word
+    kw = {'searchabletext_any': 'software'}
+    self.assertSameSet([document_1,web_page_1], getAdvancedSearchStringResultList(**kw))
+    
+    # exact word search
+    kw = {'searchabletext_any': '',
+          'searchabletext_phrase': 'linux python'}
+    self.assertSameSet([document_1], getAdvancedSearchStringResultList(**kw))
+    kw = {'searchabletext_any': '',
+          'searchabletext_phrase': 'python linux'}
+    self.assertSameSet([document_2], getAdvancedSearchStringResultList(**kw))
+    kw = {'searchabletext_any': '',
+          'searchabletext_phrase': 'python linux knowledge system'}
+    self.assertSameSet([document_2], getAdvancedSearchStringResultList(**kw))
+    
+    # search "with all of the words" - each word prefixed by "+"
+    kw = {'searchabletext_any': 'standalone',
+          'searchabletext_all': 'python'}
+    self.assertSameSet([document_1, document_2], getAdvancedSearchStringResultList(**kw))
+    
+    # search without these words - every word prefixed by "-"
+    kw = {'searchabletext_any': 'standalone',
+          'searchabletext_without': 'python'}
+    self.assertSameSet([web_page_1], getAdvancedSearchStringResultList(**kw))
+   
+    # only given portal_types - add "type:Type" or type:(Type1,Type2...)
+    kw = {'searchabletext_any': 'python',
+          'search_portal_type': 'Presentation'}
+    self.assertSameSet([document_2], getAdvancedSearchStringResultList(**kw))
+   
+    # search by reference
+    kw = {'searchabletext_any': '',
+          'reference': document_2.getReference()}
+    self.assertSameSet([document_2, document_3], getAdvancedSearchStringResultList(**kw))
+    kw = {'searchabletext_any': 'copy',
+          'reference': document_2.getReference()}
+    self.assertSameSet([document_3], getAdvancedSearchStringResultList(**kw))
+  
+    # search by version
+    kw = {'searchabletext_any': '',
+          'reference': document_2.getReference(),
+	  'version': document_2.getVersion()}
+    self.assertSameSet([document_2], getAdvancedSearchStringResultList(**kw))
+   
+    # search by language
+    kw = {'searchabletext_any': '',
+          'reference': document_2.getReference(),
+          'language': document_2.getLanguage()}
+    self.assertSameSet([document_2], getAdvancedSearchStringResultList(**kw))
+    kw = {'searchabletext_any': '',
+          'reference': document_2.getReference(),
+          'language': document_3.getLanguage()}
+    self.assertSameSet([document_3], getAdvancedSearchStringResultList(**kw))
+  
+    # XXX: only my docs
+    # XXX: only newest versions
+    # XXX: search mode
+    # XXX: search limited to a certain date range
+    # XXX: contributor title search
 
   def test_PDFTextContent(self):
     upload_file = makeFileUpload('REF-en-001.pdf')
