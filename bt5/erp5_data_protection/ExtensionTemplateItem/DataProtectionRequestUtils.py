@@ -59,7 +59,7 @@ def Base_updatePropertyMapListWithFieldLabel(self, property_map_list):
                                 if 'view' in action.getActionType()]
   action_url_list = [action_view_url(createExpressionContext(self))\
                                    for action_view_url in action_view_url_list]
-  form_id_list = [urlparse(action_url)[2].replace('%s/' % self.getPath(), '') \
+  form_id_list = [urlparse(action_url)[2].split('/')[-1] \
                                              for action_url in action_url_list]
   for property_map in property_map_list:
     label = None
