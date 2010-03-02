@@ -993,7 +993,6 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
 
     def getAdvancedSearchStringResultList(**kw):
       search_string = assemble(**kw)
-      print search_string
       return [x.getObject() for x in search(search_string)]
     # create some objects
     document_1 = portal.document_module.newContent(
@@ -1051,6 +1050,12 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
     kw = {'searchabletext_any': 'python',
           'search_portal_type': 'Presentation'}
     self.assertSameSet([document_2], getAdvancedSearchStringResultList(**kw))
+    kw = {'searchabletext_any': 'python',
+          'search_portal_type': 'File'}
+    self.assertSameSet([document_1], getAdvancedSearchStringResultList(**kw))
+    kw = {'searchabletext_any': 'management',
+          'search_portal_type': 'File'}
+    self.assertSameSet([], getAdvancedSearchStringResultList(**kw))
    
     # search by reference
     kw = {'searchabletext_any': '',
@@ -1059,12 +1064,21 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
     kw = {'searchabletext_any': 'copy',
           'reference': document_2.getReference()}
     self.assertSameSet([document_3], getAdvancedSearchStringResultList(**kw))
+    kw = {'searchabletext_any': 'copy',
+          'reference': document_2.getReference(),
+	  'search_portal_type': 'File'}
+    self.assertSameSet([], getAdvancedSearchStringResultList(**kw))
   
     # search by version
     kw = {'searchabletext_any': '',
           'reference': document_2.getReference(),
-	  'version': document_2.getVersion()}
+          'version': document_2.getVersion()}
     self.assertSameSet([document_2], getAdvancedSearchStringResultList(**kw))
+    kw = {'searchabletext_any': '',
+          'reference': document_2.getReference(),
+          'version': document_2.getVersion(),
+          'search_portal_type': 'File'}
+    self.assertSameSet([], getAdvancedSearchStringResultList(**kw))
    
     # search by language
     kw = {'searchabletext_any': '',
@@ -1075,6 +1089,11 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
           'reference': document_2.getReference(),
           'language': document_3.getLanguage()}
     self.assertSameSet([document_3], getAdvancedSearchStringResultList(**kw))
+    kw = {'searchabletext_any': '',
+          'reference': document_2.getReference(),
+          'language': document_3.getLanguage(),
+	  'search_portal_type': 'File'}
+    self.assertSameSet([], getAdvancedSearchStringResultList(**kw))
   
     # XXX: only my docs
     # XXX: only newest versions
