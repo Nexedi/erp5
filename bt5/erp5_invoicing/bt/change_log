@@ -1,3 +1,7 @@
+2010-03-02 yusei
+* Remove short title.
+* Fix allowed content type setting.
+
 2010-02-10 yo
 * Add support for price precision.
 
