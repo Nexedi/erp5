@@ -32,7 +32,7 @@ from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type.DivergenceMessage import DivergenceMessage
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
-from Products.ERP5.Document.PropertyDivergenceTester import \
+from Products.ERP5Legacy.Document.PropertyDivergenceTester import \
                                                PropertyDivergenceTester
 
 class CategoryDivergenceTester(PropertyDivergenceTester):
