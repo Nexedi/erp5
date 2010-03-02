@@ -1,3 +1,6 @@
+2010-03-02 yusei
+* Remove short title.
+
 2010-02-24 yusei
 * Move Software Release and Software Publication to erp5_forge_release to remove dependencies to crm and dms.
 
