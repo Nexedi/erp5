@@ -28,7 +28,7 @@
 
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, interfaces
-from Products.ERP5.Document.ProductionOrderModelRule import ProductionOrderModelRule
+from Products.ERP5Legacy.Document.ProductionOrderModelRule import ProductionOrderModelRule
 
 class ProductionOrderModelRootSimulationRule(ProductionOrderModelRule):
   """

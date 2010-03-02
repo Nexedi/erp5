@@ -29,7 +29,7 @@
 
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
-from Products.ERP5.Document.OrderRule import OrderRule
+from Products.ERP5Legacy.Document.OrderRule import OrderRule
 from zLOG import LOG, WARNING
 
 class OrderRootSimulationRule(OrderRule):

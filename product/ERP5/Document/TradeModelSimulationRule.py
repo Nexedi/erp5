@@ -27,7 +27,7 @@
 
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions
-from Products.ERP5.Document.TradeModelRule import TradeModelRule
+from Products.ERP5Legacy.Document.TradeModelRule import TradeModelRule
 
 class TradeModelSimulationRule(TradeModelRule):
   """

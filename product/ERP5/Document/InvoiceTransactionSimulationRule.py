@@ -27,7 +27,7 @@
 
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions
-from Products.ERP5.Document.InvoiceTransactionRule import InvoiceTransactionRule
+from Products.ERP5Legacy.Document.InvoiceTransactionRule import InvoiceTransactionRule
 
 class InvoiceTransactionSimulationRule(InvoiceTransactionRule):
   """

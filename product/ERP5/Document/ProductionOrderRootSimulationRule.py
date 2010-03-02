@@ -28,7 +28,7 @@
 
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, interfaces
-from Products.ERP5.Document.ProductionOrderRule import ProductionOrderRule
+from Products.ERP5Legacy.Document.ProductionOrderRule import ProductionOrderRule
 
 class ProductionOrderRootSimulationRule(ProductionOrderRule):
   """

@@ -27,7 +27,7 @@
 
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions
-from Products.ERP5.Document.DeliveryRule import DeliveryRule
+from Products.ERP5Legacy.Document.DeliveryRule import DeliveryRule
 
 class DeliveryRootSimulationRule(DeliveryRule):
   """
