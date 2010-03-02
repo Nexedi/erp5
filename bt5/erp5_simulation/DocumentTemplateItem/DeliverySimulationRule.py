@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright (c) 2009 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2010 Nexedi SA and Contributors. All Rights Reserved.
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsibility of assessing all potential
@@ -26,7 +26,7 @@
 ##############################################################################
 """
 XXX This file is experimental for new simulation implementation, and
-will replace InvoicingRule.
+will replace DeliveryRule.
 """
 
 import zope.interface
@@ -38,13 +38,16 @@ from Products.ERP5.mixin.movement_collection_updater import \
      MovementCollectionUpdaterMixin
 from Products.ERP5.mixin.movement_generator import MovementGeneratorMixin
 
-class InvoicingRule(RuleMixin, MovementCollectionUpdaterMixin, Predicate):
+class DeliverySimulationRule(RuleMixin, MovementCollectionUpdaterMixin, Predicate):
   """
-  Invoicing Rule expand simulation created by a order or delivery rule.
+  Delivery Rule object make sure an Delivery in the simulation
+  is consistent with the real delivery
+
+  WARNING: what to do with movement split ?
   """
   # CMF Type Definition
-  meta_type = 'ERP5 Invoicing Rule'
-  portal_type = 'Invoicing Rule'
+  meta_type = 'ERP5 Delivery Simulation Rule'
+  portal_type = 'Delivery Simulation Rule'
 
   # Declarative security
   security = ClassSecurityInfo()
@@ -72,7 +75,7 @@ class InvoicingRule(RuleMixin, MovementCollectionUpdaterMixin, Predicate):
     """
     Return the movement generator to use in the expand process
     """
-    return InvoicingRuleMovementGenerator()
+    return DeliveryRuleMovementGenerator()
 
   def _getMovementGeneratorContext(self, context):
     """
@@ -91,14 +94,11 @@ class InvoicingRule(RuleMixin, MovementCollectionUpdaterMixin, Predicate):
     # or destination.
     return (movement.getSource() is None or movement.getDestination() is None)
 
-class InvoicingRuleMovementGenerator(MovementGeneratorMixin):
+class DeliveryRuleMovementGenerator(MovementGeneratorMixin):
   def getGeneratedMovementList(self, context, movement_list=None,
                                 rounding=False):
     """
-    Input movement list comes from order
-
-    XXX This implementation is very primitive, and does not support BPM,
-    i.e. business paths are not taken into account.
+    Input movement list comes from the parent
     """
     ret = []
     for input_movement, business_path in self \
@@ -111,6 +111,3 @@ class InvoicingRuleMovementGenerator(MovementGeneratorMixin):
         **kw)
       ret.append(simulation_movement)
     return ret
-
-  def _getInputMovementList(self, context):
-    return [context.getParentValue(),]

@@ -26,7 +26,7 @@
 ##############################################################################
 """
 XXX This file is experimental for new simulation implementation, and
-will replace OrderRule.
+will replace DeliveryRule.
 """
 
 import zope.interface
@@ -38,16 +38,13 @@ from Products.ERP5.mixin.movement_collection_updater import \
      MovementCollectionUpdaterMixin
 from Products.ERP5.mixin.movement_generator import MovementGeneratorMixin
 
-class OrderRule(RuleMixin, MovementCollectionUpdaterMixin, Predicate):
+class TradeModelSimulationRule(RuleMixin, MovementCollectionUpdaterMixin, Predicate):
   """
-  Order Rule object make sure an Order in the simulation
-  is consistent with the real order
-
-  WARNING: what to do with movement split ?
+    Rule for Trade Model
   """
   # CMF Type Definition
-  meta_type = 'ERP5 Order Rule'
-  portal_type = 'Order Rule'
+  meta_type = 'ERP5 Trade Model Simulation Rule'
+  portal_type = 'Trade Model Simulation Rule'
 
   # Declarative security
   security = ClassSecurityInfo()
@@ -75,7 +72,7 @@ class OrderRule(RuleMixin, MovementCollectionUpdaterMixin, Predicate):
     """
     Return the movement generator to use in the expand process
     """
-    return OrderRuleMovementGenerator()
+    return TradeModelRuleMovementGenerator()
 
   def _getMovementGeneratorContext(self, context):
     """
@@ -94,32 +91,50 @@ class OrderRule(RuleMixin, MovementCollectionUpdaterMixin, Predicate):
     # or destination.
     return (movement.getSource() is None or movement.getDestination() is None)
 
-class OrderRuleMovementGenerator(MovementGeneratorMixin):
+class TradeModelRuleMovementGenerator(MovementGeneratorMixin):
   def getGeneratedMovementList(self, context, movement_list=None,
                                 rounding=False):
     """
-    Input movement list comes from order
+    Generates list of movements
     """
-    ret = []
-    rule = context.getSpecialiseValue()
-    for input_movement, business_path in self \
-            ._getInputMovementAndPathTupleList(context):
-      kw = self._getPropertyAndCategoryList(input_movement, business_path,
-                                            rule)
-      input_movement_url = input_movement.getRelativeUrl()
-      kw.update({'order':input_movement_url})
+    movement_list = []
+    trade_condition = context.getTradeConditionValue()
+    business_process = context.getBusinessProcessValue()
+
+    if trade_condition is None or business_process is None:
+      return movement_list
+
+    context_movement = context.getParentValue()
+    for amount in trade_condition.getAggregatedAmountList(context_movement):
+      # business path specific
+      business_path_list = business_process.getPathValueList(
+          trade_phase=amount.getTradePhaseList())
+      if len(business_path_list) == 0:
+        raise ValueError('Cannot find Business Path')
+
+      if len(business_path_list) != 1:
+        raise NotImplementedError('Only one Business Path is supported')
+
+      business_path = business_path_list[0]
+
+      kw = self._getPropertyAndCategoryList(context_movement, business_path)
+
+      # rule specific
+      kw['price'] = amount.getProperty('price')
+      kw['resource'] = amount.getProperty('resource_list')
+      kw['reference'] = amount.getProperty('reference')
+      kw['quantity'] = amount.getProperty('quantity')
+      kw['base_application'] = amount.getProperty(
+          'base_application_list')
+      kw['base_contribution'] = amount.getProperty(
+          'base_contribution_list')
+
       simulation_movement = context.newContent(
         portal_type=RuleMixin.movement_type,
         temp_object=True,
+        order=None,
+        delivery=None,
         **kw)
-      ret.append(simulation_movement)
-    return ret
+      movement_list.append(simulation_movement)
 
-  def _getInputMovementList(self, context):
-    """Input movement list comes from order"""
-    order = context.getDefaultCausalityValue()
-    if order is None:
-      return []
-    else:
-      return order.getMovementList(
-        portal_type=order.getPortalOrderMovementTypeList())
+    return movement_list

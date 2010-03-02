@@ -26,7 +26,7 @@
 ##############################################################################
 """
 XXX This file is experimental for new simulation implementation, and
-will replace DeliveryRule.
+will replace InvoiceRule.
 """
 
 import zope.interface
@@ -38,16 +38,14 @@ from Products.ERP5.mixin.movement_collection_updater import \
      MovementCollectionUpdaterMixin
 from Products.ERP5.mixin.movement_generator import MovementGeneratorMixin
 
-class DeliveryRule(RuleMixin, MovementCollectionUpdaterMixin, Predicate):
+class InvoiceRootSimulationRule(RuleMixin, MovementCollectionUpdaterMixin, Predicate):
   """
-  Delivery Rule object make sure an Delivery in the simulation
-  is consistent with the real delivery
-
-  WARNING: what to do with movement split ?
+  InvoiceRule and DeliveryRule seems to be identical. Keep it for
+  compatibility only.
   """
   # CMF Type Definition
-  meta_type = 'ERP5 Delivery Rule'
-  portal_type = 'Delivery Rule'
+  meta_type = 'ERP5 Invoice Root Simulation Rule'
+  portal_type = 'Invoice Root Simulation Rule'
 
   # Declarative security
   security = ClassSecurityInfo()
@@ -75,7 +73,7 @@ class DeliveryRule(RuleMixin, MovementCollectionUpdaterMixin, Predicate):
     """
     Return the movement generator to use in the expand process
     """
-    return DeliveryRuleMovementGenerator()
+    return InvoiceRuleMovementGenerator()
 
   def _getMovementGeneratorContext(self, context):
     """
@@ -94,7 +92,7 @@ class DeliveryRule(RuleMixin, MovementCollectionUpdaterMixin, Predicate):
     # or destination.
     return (movement.getSource() is None or movement.getDestination() is None)
 
-class DeliveryRuleMovementGenerator(MovementGeneratorMixin):
+class InvoiceRuleMovementGenerator(MovementGeneratorMixin):
   def getGeneratedMovementList(self, context, movement_list=None,
                                 rounding=False):
     """
@@ -125,7 +123,8 @@ class DeliveryRuleMovementGenerator(MovementGeneratorMixin):
       ret = []
       existing_movement_list = context.objectValues()
       for movement in delivery.getMovementList(
-        portal_type=delivery.getPortalDeliveryMovementTypeList()):
+        portal_type=(delivery.getPortalInvoiceMovementTypeList() + \
+                     delivery.getPortalTaxMovementTypeList())):
         simulation_movement = self._getDeliveryRelatedSimulationMovement(movement)
         if simulation_movement is None or \
                simulation_movement in existing_movement_list:

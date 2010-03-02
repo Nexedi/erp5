@@ -39,7 +39,7 @@ from Products.ERP5.mixin.movement_collection_updater import \
 from Products.ERP5.Document.PredicateMatrix import PredicateMatrix
 from Products.ERP5.mixin.movement_generator import MovementGeneratorMixin
 
-class InvoiceTransactionRule(RuleMixin, MovementCollectionUpdaterMixin, Predicate, PredicateMatrix):
+class InvoiceTransactionSimulationRule(RuleMixin, MovementCollectionUpdaterMixin, Predicate, PredicateMatrix):
   """
   Invoice Transaction Rule object generates accounting movements for
   each invoice movement based on category membership and other
@@ -47,8 +47,8 @@ class InvoiceTransactionRule(RuleMixin, MovementCollectionUpdaterMixin, Predicat
   an instance of the InvoiceTransactionRule.
   """
   # CMF Type Definition
-  meta_type = 'ERP5 Invoice Transaction Rule'
-  portal_type = 'Invoice Transaction Rule'
+  meta_type = 'ERP5 Invoice Transaction Simulation Rule'
+  portal_type = 'Invoice Transaction Simulation Rule'
 
   # Declarative security
   security = ClassSecurityInfo()

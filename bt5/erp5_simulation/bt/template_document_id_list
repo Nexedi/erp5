@@ -1,7 +1,8 @@
-DeliveryRule
-InvoiceRule
-InvoiceTransactionRule
-InvoicingRule
-OrderRule
-PaymentRule
-TradeModelRule
+DeliveryRootSimulationRule
+DeliverySimulationRule
+InvoiceRootSimulationRule
+InvoiceSimulationRule
+InvoiceTransactionSimulationRule
+OrderRootSimulationRule
+PaymentSimulationRule
+TradeModelSimulationRule

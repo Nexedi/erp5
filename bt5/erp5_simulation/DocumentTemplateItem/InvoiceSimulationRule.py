@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright (c) 2010 Nexedi SA and Contributors. All Rights Reserved.
+# Copyright (c) 2009 Nexedi SARL and Contributors. All Rights Reserved.
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsibility of assessing all potential
@@ -26,7 +26,7 @@
 ##############################################################################
 """
 XXX This file is experimental for new simulation implementation, and
-will replace InvoiceRule.
+will replace InvoicingRule.
 """
 
 import zope.interface
@@ -38,14 +38,13 @@ from Products.ERP5.mixin.movement_collection_updater import \
      MovementCollectionUpdaterMixin
 from Products.ERP5.mixin.movement_generator import MovementGeneratorMixin
 
-class InvoiceRule(RuleMixin, MovementCollectionUpdaterMixin, Predicate):
+class InvoiceSimulationRule(RuleMixin, MovementCollectionUpdaterMixin, Predicate):
   """
-  InvoiceRule and DeliveryRule seems to be identical. Keep it for
-  compatibility only.
+  Invoicing Rule expand simulation created by a order or delivery rule.
   """
   # CMF Type Definition
-  meta_type = 'ERP5 Invoice Rule'
-  portal_type = 'Invoice Rule'
+  meta_type = 'ERP5 Invoice Simulation Rule'
+  portal_type = 'Invoice Simulation Rule'
 
   # Declarative security
   security = ClassSecurityInfo()
@@ -73,7 +72,7 @@ class InvoiceRule(RuleMixin, MovementCollectionUpdaterMixin, Predicate):
     """
     Return the movement generator to use in the expand process
     """
-    return InvoiceRuleMovementGenerator()
+    return InvoicingRuleMovementGenerator()
 
   def _getMovementGeneratorContext(self, context):
     """
@@ -92,21 +91,20 @@ class InvoiceRule(RuleMixin, MovementCollectionUpdaterMixin, Predicate):
     # or destination.
     return (movement.getSource() is None or movement.getDestination() is None)
 
-class InvoiceRuleMovementGenerator(MovementGeneratorMixin):
+class InvoicingRuleMovementGenerator(MovementGeneratorMixin):
   def getGeneratedMovementList(self, context, movement_list=None,
                                 rounding=False):
     """
-    Input movement list comes from delivery
+    Input movement list comes from order
+
+    XXX This implementation is very primitive, and does not support BPM,
+    i.e. business paths are not taken into account.
     """
     ret = []
-    rule = context.getSpecialiseValue()
     for input_movement, business_path in self \
             ._getInputMovementAndPathTupleList(context):
-      kw = self._getPropertyAndCategoryList(input_movement, business_path,
-                                            rule)
-      input_movement_url = input_movement.getRelativeUrl()
-      kw.update({'order':input_movement_url,
-                 'delivery':input_movement_url})
+      kw = self._getPropertyAndCategoryList(input_movement, business_path)
+      kw.update({'order':None,'delivery':None})
       simulation_movement = context.newContent(
         portal_type=RuleMixin.movement_type,
         temp_object=True,
@@ -115,42 +113,4 @@ class InvoiceRuleMovementGenerator(MovementGeneratorMixin):
     return ret
 
   def _getInputMovementList(self, context):
-    """Input movement list comes from delivery"""
-    delivery = context.getDefaultCausalityValue()
-    if delivery is None:
-      return []
-    else:
-      ret = []
-      existing_movement_list = context.objectValues()
-      for movement in delivery.getMovementList(
-        portal_type=(delivery.getPortalInvoiceMovementTypeList() + \
-                     delivery.getPortalTaxMovementTypeList())):
-        simulation_movement = self._getDeliveryRelatedSimulationMovement(movement)
-        if simulation_movement is None or \
-               simulation_movement in existing_movement_list:
-          ret.append(movement)
-      return ret
-
-  def _getDeliveryRelatedSimulationMovement(self, delivery_movement):
-    """Helper method to get the delivery related simulation movement.
-    This method is more robust than simply calling getDeliveryRelatedValue
-    which will not work if simulation movements are not indexed.
-    """
-    simulation_movement = delivery_movement.getDeliveryRelatedValue()
-    if simulation_movement is not None:
-      return simulation_movement
-    # simulation movement was not found, maybe simply because it's not indexed
-    # yet. We'll look in the simulation tree and try to find it anyway before
-    # creating another simulation movement.
-    # Try to find the one from trade model rule, which is the most common case
-    # where we may expand again before indexation of simulation movements is
-    # finished.
-    delivery = delivery_movement.getExplanationValue()
-    for movement in delivery.getMovementList():
-      related_simulation_movement = movement.getDeliveryRelatedValue()
-      if related_simulation_movement is not None:
-        for applied_rule in related_simulation_movement.contentValues():
-          for simulation_movement in applied_rule.contentValues():
-            if simulation_movement.getDeliveryValue() == delivery_movement:
-              return simulation_movement
-    return None
+    return [context.getParentValue(),]

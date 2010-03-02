@@ -38,13 +38,16 @@ from Products.ERP5.mixin.movement_collection_updater import \
      MovementCollectionUpdaterMixin
 from Products.ERP5.mixin.movement_generator import MovementGeneratorMixin
 
-class TradeModelRule(RuleMixin, MovementCollectionUpdaterMixin, Predicate):
+class DeliveryRootSimulationRule(RuleMixin, MovementCollectionUpdaterMixin, Predicate):
   """
-    Rule for Trade Model
+  Delivery Rule object make sure an Delivery in the simulation
+  is consistent with the real delivery
+
+  WARNING: what to do with movement split ?
   """
   # CMF Type Definition
-  meta_type = 'ERP5 Trade Model Rule'
-  portal_type = 'Trade Model Rule'
+  meta_type = 'ERP5 Delivery Root Simulation Rule'
+  portal_type = 'Delivery Root Simulation Rule'
 
   # Declarative security
   security = ClassSecurityInfo()
@@ -72,7 +75,7 @@ class TradeModelRule(RuleMixin, MovementCollectionUpdaterMixin, Predicate):
     """
     Return the movement generator to use in the expand process
     """
-    return TradeModelRuleMovementGenerator()
+    return DeliveryRuleMovementGenerator()
 
   def _getMovementGeneratorContext(self, context):
     """
@@ -91,50 +94,64 @@ class TradeModelRule(RuleMixin, MovementCollectionUpdaterMixin, Predicate):
     # or destination.
     return (movement.getSource() is None or movement.getDestination() is None)
 
-class TradeModelRuleMovementGenerator(MovementGeneratorMixin):
+class DeliveryRuleMovementGenerator(MovementGeneratorMixin):
   def getGeneratedMovementList(self, context, movement_list=None,
                                 rounding=False):
     """
-    Generates list of movements
+    Input movement list comes from delivery
     """
-    movement_list = []
-    trade_condition = context.getTradeConditionValue()
-    business_process = context.getBusinessProcessValue()
-
-    if trade_condition is None or business_process is None:
-      return movement_list
-
-    context_movement = context.getParentValue()
-    for amount in trade_condition.getAggregatedAmountList(context_movement):
-      # business path specific
-      business_path_list = business_process.getPathValueList(
-          trade_phase=amount.getTradePhaseList())
-      if len(business_path_list) == 0:
-        raise ValueError('Cannot find Business Path')
-
-      if len(business_path_list) != 1:
-        raise NotImplementedError('Only one Business Path is supported')
-
-      business_path = business_path_list[0]
-
-      kw = self._getPropertyAndCategoryList(context_movement, business_path)
-
-      # rule specific
-      kw['price'] = amount.getProperty('price')
-      kw['resource'] = amount.getProperty('resource_list')
-      kw['reference'] = amount.getProperty('reference')
-      kw['quantity'] = amount.getProperty('quantity')
-      kw['base_application'] = amount.getProperty(
-          'base_application_list')
-      kw['base_contribution'] = amount.getProperty(
-          'base_contribution_list')
-
+    ret = []
+    rule = context.getSpecialiseValue()
+    for input_movement, business_path in self \
+            ._getInputMovementAndPathTupleList(context):
+      kw = self._getPropertyAndCategoryList(input_movement, business_path,
+                                            rule)
+      input_movement_url = input_movement.getRelativeUrl()
+      kw.update({'order':input_movement_url,
+                 'delivery':input_movement_url})
       simulation_movement = context.newContent(
         portal_type=RuleMixin.movement_type,
         temp_object=True,
-        order=None,
-        delivery=None,
         **kw)
-      movement_list.append(simulation_movement)
+      ret.append(simulation_movement)
+    return ret
 
-    return movement_list
+  def _getInputMovementList(self, context):
+    """Input movement list comes from delivery"""
+    delivery = context.getDefaultCausalityValue()
+    if delivery is None:
+      return []
+    else:
+      ret = []
+      existing_movement_list = context.objectValues()
+      for movement in delivery.getMovementList(
+        portal_type=delivery.getPortalDeliveryMovementTypeList()):
+        simulation_movement = self._getDeliveryRelatedSimulationMovement(movement)
+        if simulation_movement is None or \
+               simulation_movement in existing_movement_list:
+          ret.append(movement)
+      return ret
+
+  def _getDeliveryRelatedSimulationMovement(self, delivery_movement):
+    """Helper method to get the delivery related simulation movement.
+    This method is more robust than simply calling getDeliveryRelatedValue
+    which will not work if simulation movements are not indexed.
+    """
+    simulation_movement = delivery_movement.getDeliveryRelatedValue()
+    if simulation_movement is not None:
+      return simulation_movement
+    # simulation movement was not found, maybe simply because it's not indexed
+    # yet. We'll look in the simulation tree and try to find it anyway before
+    # creating another simulation movement.
+    # Try to find the one from trade model rule, which is the most common case
+    # where we may expand again before indexation of simulation movements is
+    # finished.
+    delivery = delivery_movement.getExplanationValue()
+    for movement in delivery.getMovementList():
+      related_simulation_movement = movement.getDeliveryRelatedValue()
+      if related_simulation_movement is not None:
+        for applied_rule in related_simulation_movement.contentValues():
+          for simulation_movement in applied_rule.contentValues():
+            if simulation_movement.getDeliveryValue() == delivery_movement:
+              return simulation_movement
+    return None
