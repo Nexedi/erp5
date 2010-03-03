@@ -477,6 +477,12 @@ class FakeMovement:
     return self.__movement_list[0].getVariationCategoryList(
         omit_optional_variation=omit_optional_variation, **kw)
 
+  def getMappedProperty(self, property):
+    if property == 'quantity':
+      return self.getQuantity()
+    else:
+      raise NotImplementedError
+
   def edit(self, activate_kw=None, **kw):
     """
       Written in order to call edit in delivery builder,
