@@ -25,9 +25,9 @@
 #
 ##############################################################################
 
-class PropertyMapping:
+class MappedProperty:
   """
-  Property sheet for Property Mapping class and subclass instances
+  Property sheet for Mapped Property class and subclass instances
   """
   _properties = (
     {'id'          : 'mapping_property',

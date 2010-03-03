@@ -27,9 +27,9 @@ Payment Rule | Property Divergence Tester
 Payment Rule | Quantity Divergence Tester
 Payment Simulation Rule | Accounting Rule Cell
 Payment Simulation Rule | Category Divergence Tester
+Payment Simulation Rule | Mapped Property
 Payment Simulation Rule | Predicate
 Payment Simulation Rule | Property Divergence Tester
-Payment Simulation Rule | Property Mapping
 Payment Simulation Rule | Quantity Divergence Tester
 Payment Transaction | Accounting Transaction Line
 Payment Transaction | File

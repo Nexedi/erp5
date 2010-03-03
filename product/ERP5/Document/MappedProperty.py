@@ -29,18 +29,14 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLObject import XMLObject
 
-class PropertyMapping(XMLObject):
+class MappedProperty(XMLObject):
   """
-  Property Mapping object describes how properties or categories are
+  Mapped Property object describes how properties or categories are
   mapped, eg. use source as destination, use destination as source, use
   quantity as -quantity, etc.
-
-  TODO:
-  - make sure naming is consistent with MappedValue document class
-    and rename if needed (XXX-JPS)
   """
-  meta_type = 'ERP5 Property Mapping'
-  portal_type = 'Property Mapping'
+  meta_type = 'ERP5 Mapped Property'
+  portal_type = 'Mapped Property'
   add_permission = Permissions.AddPortalContent
 
   # Declarative security
@@ -51,11 +47,11 @@ class PropertyMapping(XMLObject):
   property_sheets = (PropertySheet.Base,
                      PropertySheet.SimpleItem,
                      PropertySheet.CategoryCore,
-                     PropertySheet.PropertyMapping)
+                     PropertySheet.MappedProperty)
 
   security.declareProtected(Permissions.AccessContentsInformation,
-                            'getMappedValue')
-  def getMappedValue(self, document, property):
+                            'getMappedProperty')
+  def getMappedProperty(self, document, property):
     if property.endswith('_list'):
       property = property[:-5]
       getProperty = document.getPropertyList

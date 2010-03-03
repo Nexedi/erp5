@@ -3,7 +3,7 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <global name="PropertyMapping" module="Products.ERP5Type.Document.PropertyMapping"/>
+        <global name="MappedProperty" module="Products.ERP5Type.Document.MappedProperty"/>
         <tuple/>
       </tuple>
     </pickle>
@@ -55,7 +55,7 @@
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Property Mapping</string> </value>
+            <value> <string>Mapped Property</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
