@@ -23,11 +23,11 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Property Mapping object describes how properties or categories are mapped from simulation movements to delivery documents, eg. use source as destination, use destination as source, use quantity as -quantity, etc.</string> </value>
+            <value> <string>Mapped Property object describes how properties or categories are mapped from simulation movements to delivery documents, eg. use source as destination, use destination as source, use quantity as -quantity, etc.</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>
-            <value> <string>addPropertyMapping</string> </value>
+            <value> <string>addMappedProperty</string> </value>
         </item>
         <item>
             <key> <string>filter_content_types</string> </key>
@@ -41,7 +41,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Property Mapping</string> </value>
+            <value> <string>Mapped Property</string> </value>
         </item>
         <item>
             <key> <string>init_script</string> </key>

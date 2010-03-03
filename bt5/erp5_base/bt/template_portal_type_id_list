@@ -24,6 +24,7 @@ Fax
 File
 Image
 Link
+Mapped Property
 Mirror Movement Group
 Monthly Range Movement Group
 Nested Line Movement Group
@@ -39,7 +40,6 @@ Person
 Person Module
 Property Assignment Movement Group
 Property Divergence Tester
-Property Mapping
 Property Movement Group
 Quantity Divergence Tester
 Quantity Sign Movement Group

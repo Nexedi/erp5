@@ -107,7 +107,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>PropertyMapping_view</string> </value>
+            <value> <string>MappedProperty_view</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -115,7 +115,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>PropertyMapping_view</string> </value>
+            <value> <string>MappedProperty_view</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
@@ -131,7 +131,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Property Mapping</string> </value>
+            <value> <string>Mapped Property</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>

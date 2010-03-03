@@ -36,6 +36,7 @@ Image | download
 Image | fullsize_view
 Image | view
 Link | view
+Mapped Property | view
 Mirror Movement Group | view
 Monthly Range Movement Group | view
 Nested Line Movement Group | view
@@ -69,7 +70,6 @@ Person | view
 Preference | base_preference
 Property Assignment Movement Group | view
 Property Divergence Tester | view
-Property Mapping | view
 Property Movement Group | view
 Quantity Divergence Tester | view
 Quantity Sign Movement Group | view
