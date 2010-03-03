@@ -173,7 +173,7 @@ class TradeModelLine(Predicate, XMLMatrix, Amount):
     base_application_list = self.getBaseApplicationList()
 
     document = self.getParentValue()
-    self_id = '_'.join(document.getId(), self.getId(), context.getId())
+    self_id = '_'.join((document.getId(), self.getId(), context.getId()))
 
     # Make tmp movement list only when trade model line is not set to movement level.
     tmp_movement_list = []
