@@ -28,7 +28,8 @@ parser.add_option("-u", "--initial-user",
                   default="zope:zope")
 parser.add_option("--bt5-path",
                   dest="bt5_path",
-                  help="Path to folder containing business templates",
+                  help="Path to folder containing business templates. "
+                  "Can be multiple, separated by commas.",
                   default="bt5")
 
 (options, args) = parser.parse_args()
@@ -44,6 +45,7 @@ options.erp5_sql_connection_string =\
       unquote(options.erp5_sql_connection_string)
 options.cmf_activity_sql_connection_string =\
       unquote(options.cmf_activity_sql_connection_string)
+
 username, password = options.user_and_pass.split(':')
 
 try:
@@ -89,8 +91,19 @@ if default_site_preference.getPreferenceState() == 'disabled':
 
 # install our business templates
 bt5_list = []
+bt5_path_list = options.bt5_path.split(',')
+
 for arg in args:
-  bt_path = os.path.join(options.bt5_path, arg)
+  bt_path = None
+  for path in bt5_path_list:
+    bt_path = os.path.join(path, arg)
+    if os.path.exists(bt_path):
+      break
+    else:
+      bt_path = None
+  if bt_path is None:
+    raise ValueError('Business Template %s not found in paths %s' % (arg,
+      options.bt5_path))
   installed_bt = portal.portal_templates.getInstalledBusinessTemplate(arg)
   if installed_bt is not None:
     # XXX this way works only for extracted business template, not for
