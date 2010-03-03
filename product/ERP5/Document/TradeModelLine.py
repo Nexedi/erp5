@@ -172,7 +172,8 @@ class TradeModelLine(Predicate, XMLMatrix, Amount):
     aggregated_amount_list = AggregatedAmountList()
     base_application_list = self.getBaseApplicationList()
 
-    self_id = self.getParentValue().getId() + '_' + self.getId()
+    document = self.getParentValue()
+    self_id = '_'.join(document.getId(), self.getId(), context.getId())
 
     # Make tmp movement list only when trade model line is not set to movement level.
     tmp_movement_list = []
@@ -185,7 +186,6 @@ class TradeModelLine(Predicate, XMLMatrix, Amount):
       update = 1
     else:
       # get source and destination using Business Process
-      document = self.getParentValue()
       if getattr(document, 'findSpecialiseValueList', None) is None:
         # if parent don't have findSpecialiseValueList, this mean it's on the
         # specialise_value

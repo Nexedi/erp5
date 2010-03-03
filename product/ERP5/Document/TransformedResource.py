@@ -181,11 +181,12 @@ class TransformedResource(Predicate, XMLObject, XMLMatrix, Amount):
         # If no predicate is defined on line, the result of the test 
         # must be true
         # Create temporary object to store amount
-        # XXX changed by TB getParentID()+getId() instead of getId()
-        # This might not be enough if we have different transformation
-        # with the same id (for example in several modules)
         parent = self.getParentValue()
-        tmp_amount = parent.newContent(id=self.getParentId()+'_'+self.getId(),
+        # Be careful: this id must be unique, and change when the context is
+        # changing. Failure to do so exposes to possible erroneous cache hits
+        # for physical path based caching.
+        tmp_id = '_'.join((parent.getId(), self.getId(), context.getId()))
+        tmp_amount = parent.newContent(id=tmp_id,
                         temp_object=1, portal_type=self.getPortalType())
         # Create error string
         error_string = ''
