@@ -1491,14 +1491,15 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     """
     Remove catalog method into the business template
     """
-    bt = sequence.get('current_bt', None)
-    self.failUnless(bt is not None)
+    business_template = sequence.get('current_bt', None)
+    self.assertTrue(business_template is not None)
     method_id = sequence.get('zsql_method_id', None)
-    current_methods = list(bt.getTemplateCatalogMethodIdList())
-    pc = self.getCatalogTool()
-    catalog_id = pc.getSQLCatalog().id
-    current_methods.remove(catalog_id+'/'+method_id)
-    bt.edit(template_catalog_method_id_list=current_methods)
+    current_method_list = list(business_template.\
+                          getTemplateCatalogMethodIdList())
+    catalog_tool = self.getCatalogTool()
+    catalog_id = catalog_tool.getSQLCatalog().id
+    current_method_list.remove(catalog_id+'/'+method_id)
+    business_template.edit(template_catalog_method_id_list=current_method_list)
 
   def stepAddNewCatalogMethodToBusinessTemplate(self, sequence=None, sequence_list=None, **kw):
     """
