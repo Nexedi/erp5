@@ -437,7 +437,7 @@ class SimulationMovement(Movement, PropertyRecordableMixin):
           Look are invocations of _isProfitAndLossMovement in
           ERP5.mixin.rule to understand how.
     """
-    quantity = self.getQuantity()
+    quantity = self.getMappedProperty('quantity')
     profit_quantity = self.getProfitQuantity() or 0
     delivery_error = self.getDeliveryError() or 0
     return quantity - profit_quantity + delivery_error

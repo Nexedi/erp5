@@ -70,13 +70,14 @@ class CategoryDivergenceTester(PropertyDivergenceTester):
     tested_property = self.getTestedPropertyList()
 
     delivery_mvt = simulation_movement.getDeliveryValue()
+    delivery_mvt_getProperty = delivery_mvt.getProperty
+    simulation_movement_getProperty = simulation_movement.getMappedProperty
     for tested_property_id, tested_property_title in \
                                   self._splitStringList(tested_property):
+      list_prop = '%s_list' % tested_property_id
       message = None
-      delivery_mvt_category_list = \
-          delivery_mvt.getPropertyList(tested_property_id)
-      simulation_category_list = \
-          simulation_movement.getPropertyList(tested_property_id)
+      delivery_mvt_category_list = delivery_mvt_getProperty(list_prop)
+      simulation_category_list = simulation_movement_getProperty(list_prop)
 
       # XXX Don't we need to check the order too ?
       delivery_mvt_category_list.sort()
