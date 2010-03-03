@@ -86,6 +86,8 @@
                         <string>my_id</string>
                         <string>my_title</string>
                         <string>my_description</string>
+                        <string>my_simulation_select_method_id</string>
+                        <string>my_delivery_cell_separate_order_list</string>
                         <string>my_delivery_module_before_building_script_id</string>
                       </list>
                     </value>
