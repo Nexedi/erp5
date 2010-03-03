@@ -47,6 +47,7 @@ import transaction
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.Sequence import SequenceList
+from Products.ERP5.Document.MirrorMovementGroup import _isMirrored
 
 from Testing import ZopeTestCase
 from zLOG import LOG, INFO
@@ -506,8 +507,9 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
     # clear the message queue, so that it does not contains unexistant paths
     self.tic()
     payment_rule.deleteContent(
-      [x for x in payment_rule.objectIds()])
-    self.assertEquals(len(payment_rule.objectValues()), 0)
+      [x.getId() for x in payment_rule.objectValues() if \
+       x.getPortalType() == self.predicate_portal_type])
+    self.assertEquals(len(payment_rule.objectValues()), 1)
     transaction.commit()
 
     # and add a new predicate
@@ -1409,16 +1411,28 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
     }
 
     for payment_transaction_line in payment_transaction_line_list :
-      self.assert_(
-          payment_transaction_line.getSourceId() in accounting_lines_layout.keys(),
-          'unexepected source_id %s' % payment_transaction_line.getSourceId())
-      debit, credit = accounting_lines_layout[
-                            payment_transaction_line.getSourceId()]
-      self.assertEquals(debit, payment_transaction_line.getSourceDebit())
-      self.assertEquals(credit, payment_transaction_line.getSourceCredit())
-      self.assertNotEquals(
-              len(payment_transaction_line.getDeliveryRelatedValueList(
-                              portal_type='Simulation Movement')), 0)
+      if _isMirrored(payment_transaction_line):
+        self.assert_(
+            payment_transaction_line.getDestinationId() in accounting_lines_layout.keys(),
+            'unexepected destination_id %s' % payment_transaction_line.getDestinationId())
+        debit, credit = accounting_lines_layout[
+                              payment_transaction_line.getDestinationId()]
+        self.assertEquals(debit, payment_transaction_line.getDestinationDebit())
+        self.assertEquals(credit, payment_transaction_line.getDestinationCredit())
+        self.assertNotEquals(
+                len(payment_transaction_line.getDeliveryRelatedValueList(
+                                portal_type='Simulation Movement')), 0)
+      else:
+        self.assert_(
+            payment_transaction_line.getSourceId() in accounting_lines_layout.keys(),
+            'unexepected source_id %s' % payment_transaction_line.getSourceId())
+        debit, credit = accounting_lines_layout[
+                              payment_transaction_line.getSourceId()]
+        self.assertEquals(debit, payment_transaction_line.getSourceDebit())
+        self.assertEquals(credit, payment_transaction_line.getSourceCredit())
+        self.assertNotEquals(
+                len(payment_transaction_line.getDeliveryRelatedValueList(
+                                portal_type='Simulation Movement')), 0)
 
   def stepCheckAccountingLinesCreatedForMultiLineInvoice(
             self, sequence, **kw) :
@@ -1521,6 +1535,8 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
     delivery_tool = self.getPortal().portal_deliveries
     # and build again ...
     delivery_tool.sale_invoice_transaction_builder.build()
+    delivery_tool.purchase_invoice_transaction_builder.build()
+    delivery_tool.payment_transaction_builder.build()
     if hasattr(delivery_tool, 'pay_sheet_transaction_builder') :
       # TODO: conflict with pay_sheet_transaction_builder must be tested too
       delivery_tool.pay_sheet_transaction_builder.build()
