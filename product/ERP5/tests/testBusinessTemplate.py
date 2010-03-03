@@ -1487,6 +1487,19 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     catalog_id = pc.getSQLCatalog().id
     bt.edit(template_catalog_method_id_list=[catalog_id+'/'+method_id])
 
+  def stepRemoveCatalogMethodToBusinessTemplate(self, sequence=None, sequence_list=None, **kw):
+    """
+    Remove catalog method into the business template
+    """
+    bt = sequence.get('current_bt', None)
+    self.failUnless(bt is not None)
+    method_id = sequence.get('zsql_method_id', None)
+    current_methods = list(bt.getTemplateCatalogMethodIdList())
+    pc = self.getCatalogTool()
+    catalog_id = pc.getSQLCatalog().id
+    current_methods.remove(catalog_id+'/'+method_id)
+    bt.edit(template_catalog_method_id_list=current_methods)
+
   def stepAddNewCatalogMethodToBusinessTemplate(self, sequence=None, sequence_list=None, **kw):
     """
     Add catalog method into the business template
@@ -2365,7 +2378,8 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
       else:
         install_state = ""
       install_object_dict[obj] = install_state
-    import_bt.install(force=0, object_to_update=install_object_dict)
+    import_bt.install(force=0, object_to_update=install_object_dict,
+                      update_catalog=1)
 
   def stepInstallDuplicatedBusinessTemplate(self, sequence=None,
                                             sequence_list=None, **kw):
@@ -3603,6 +3617,56 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)
 
+  def test_122_BusinessTemplateWithRemoveCatalogMethod(self, quiet=quiet, run=run_all_test):
+    if not run: return
+    if not quiet:
+      message = 'Test Business Template remove a Catalog Method'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ', 0, message)
+    sequence_list = SequenceList()
+    sequence_string = '\
+                       CreateCatalogMethod \
+                       CreateNewBusinessTemplate \
+                       UseExportBusinessTemplate \
+                       AddCatalogMethodToBusinessTemplate \
+                       CheckModifiedBuildingState \
+                       CheckNotInstalledInstallationState \
+                       BuildBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       SaveBusinessTemplate \
+                       CheckNotInstalledInstallationState \
+                       RemoveCatalogMethod \
+                       RemoveBusinessTemplate \
+                       ImportBusinessTemplate \
+                       UseImportBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       InstallBusinessTemplate \
+                       Tic \
+                       CheckBuiltBuildingState \
+                       CheckInstalledInstallationState \
+                       CheckCatalogMethodExists \
+                       \
+                       CopyBusinessTemplate \
+                       Tic \
+                       RemoveCatalogMethodToBusinessTemplate \
+                       BuildBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       SaveBusinessTemplate \
+                       ImportBusinessTemplate \
+                       Tic \
+                       UseImportBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       InstallWithoutForceBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckInstalledInstallationState \
+                       Tic \
+                       CheckCatalogMethodRemoved \
+                       '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self, quiet=quiet)
 
   def test_13_BusinessTemplateWithRole(self, quiet=quiet, run=run_all_test):
     if not run: return
