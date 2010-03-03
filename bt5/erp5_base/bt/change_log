@@ -1,3 +1,6 @@
+2010-03-03 kazuhiko
+* add property_mapping base category.
+
 2010-03-03 yo
 * Allow OrderBuilder to specify a method to select simulation movements and methods to separate cells.
 

@@ -61,7 +61,7 @@ class MirrorMovementGroup(MovementGroup):
           applied_rule.getSpecialiseValue().objectValues(
           portal_type='Mapped Property') or [])
         if len(mapping_list) > 0:
-          movement.setMappingValue(mapping_list[0])
+          movement.setPropertyMappingValue(mapping_list[0])
     return [[movement_list, {}]]
 
 def _isMirrored(document):

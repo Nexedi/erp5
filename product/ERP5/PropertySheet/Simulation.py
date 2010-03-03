@@ -65,4 +65,4 @@ class Simulation:
             'mode'        : 'w' },
   )
 
-  _categories = ('order', 'delivery', 'delivery_mode', 'incoterm', 'payment_mode', 'solver', 'specialise', 'mapping')
+  _categories = ('order', 'delivery', 'delivery_mode', 'incoterm', 'payment_mode', 'solver', 'specialise', 'property_mapping')

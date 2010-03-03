@@ -613,7 +613,7 @@ class SimulationMovement(Movement, PropertyRecordableMixin):
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getMappedProperty')
   def getMappedProperty(self, property):
-    mapping = self.getMappingValue()
+    mapping = self.getPropertyMappingValue()
     if mapping is not None:
       return mapping.getMappedProperty(self, property)
     else:
