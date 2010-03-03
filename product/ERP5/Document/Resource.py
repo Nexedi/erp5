@@ -37,6 +37,8 @@ from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.XMLMatrix import XMLMatrix
 from Products.ERP5Type.Base import Base
 
+from Products.ERP5Type.Utils import cartesianProduct
+
 from Products.ERP5.Variated import Variated
 from Products.CMFCategory.Renderer import Renderer
 from Products.CMFCore.utils import getToolByName
@@ -276,6 +278,42 @@ class Resource(XMLMatrix, Variated):
                                               'getDefaultResourceValue')
     def getDefaultResourceValue(self):
       return self
+
+
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'getDefaultTransformationValue')
+    def getDefaultTransformationValue(self, context):
+      transformation_list = self.portal_domains.searchPredicateList(context,
+                                portal_type="Transformation")
+
+      if len(transformation_list) > 0:
+        return transformation_list[0]
+
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'getDefaultConversionTransformationValue')
+    def getDefaultConversionTransformationValue(self):
+      """
+      Return a Transformation object that should be used to compute
+      converted inventories.
+      This should be overriden in subclasses, or in the Type Based Method
+      of the same name.
+
+      The method can return an existing Transformation object, or a
+      temporary Transformation: one might want for example, for conversion
+      purposes, to ignore some (packaging, wrapping, labelling) components
+      in conversion reports. This method can be used to create a simplified
+      transformation from the complex transformation returned by
+      getDefaultTransformationValue
+      """
+      method = context._getTypeBasedMethod(\
+                        'getDefaultConversionTransformationValue')
+      if method is not None:
+        return method()
+
+      transformation_list = self.portal_catalog(portal_type="Transformation",
+                                            resource_category_uid=self.getUid())
+      if len(transformation_list) > 0:
+        return transformation_list[0].getObject()
 
 
     ####################################################
@@ -932,6 +970,48 @@ class Resource(XMLMatrix, Variated):
         row_list.append((definition_uid, uid, unit_uid, quantity))
 
       return row_list
+
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'getTransformationRowList')
+    def getTransformationRowList(self):
+      """
+      Returns a list of rows to insert in the transformation table.
+      Used by z_catalog_transformation_list
+      """
+      from Products.ERP5Type.Document import newTempMovement
+      resource_uid = self.getUid()
+
+      variation_list_list = []
+      for base_variation in self.getVariationBaseCategoryList():
+        variation_list = self.getVariationCategoryList( \
+            base_category_list=(base_variation,))
+        if len(variation_list) > 0:
+          variation_list_list.append(variation_list)
+
+      transformation = self.getDefaultConversionTransformationValue()
+
+      kw = dict(resource=self.getRelativeUrl(), quantity=1.0)
+      row_list = []
+      for i, variation_list in enumerate(cartesianProduct(variation_list_list)):
+        # We must have an unique movement ID for each movement, or we might
+        # hit the cache due to similar physical paths
+        movement = newTempMovement(self, 'temp_%s' % i,
+                                    variation_category_list=variation_list,
+                                    **kw)
+
+        base_row = dict(uid=resource_uid,
+                        variation_text=movement.getVariationText())
+        for amount in transformation.getAggregatedAmountList(movement):
+          transformed_resource_uid = amount.getResourceUid()
+          quantity = amount.getQuantity()
+          if transformed_resource_uid is not None and quantity is not None:
+            row = base_row.copy()
+            row.update(transformed_uid=transformed_resource_uid,
+                       transformed_variation_text=amount.getVariationText(),
+                       quantity=quantity)
+            row_list.append(row)
+      return row_list
+
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getMeasureRowList')
