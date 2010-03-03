@@ -1,3 +1,6 @@
+2010-03-03 yusuke
+* Use sql_deferred_connection instead of sql_connection
+
 2010-03-02 yusei
 * Remove short title.
 
