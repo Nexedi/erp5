@@ -736,19 +736,12 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
 #     image = image_list[0]
 #     self.assertEquals('embedded', image.getValidationState())
 
-  def test_09_ScriptableKeys(self, quiet=QUIET, run=RUN_ALL_TEST):
+  def test_09_SearchableText(self, quiet=QUIET, run=RUN_ALL_TEST):
     """
-    Check the default DMS scriptale keys
+    Check DMS SearchableText capabilities.
     """
     if not run: return
-    printAndLog('\nScriptable Keys')
     portal = self.portal
-    
-    # Check that SQL generated is valid
-    self.portal.portal_catalog(advanced_search_text='')
-    self.portal.portal_catalog(advanced_search_text='a search text')
-    self.portal.portal_catalog(portal_search_text='')
-    self.portal.portal_catalog(portal_search_text='a search text')
 
     # Create a document.
     document_1 = self.portal.document_module.newContent(
@@ -775,8 +768,10 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
                             title='Super nova organisation')
     self.stepTic()
     
-    def getAdvancedSearchTextResultList(advanced_search_text):
-      kw = {'advanced_search_text': advanced_search_text}
+    def getAdvancedSearchTextResultList(searchable_text, portal_type=None):
+      kw = {'SearchableText': searchable_text}
+      if portal_type is not None:
+        kw['portal_type'] = portal_type
       return [x.getObject() for x in portal.portal_catalog(**kw)]
     
     # full text search
@@ -802,6 +797,15 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
       getAdvancedSearchTextResultList('%s portal_type:%s' \
                                        %(organisation.getTitle(),
                                          organisation.getPortalType())))
+
+    # full text search with portal_type passed outside searchable_text
+    self.assertSameSet([web_page, person],
+                       getAdvancedSearchTextResultList('Great'))
+    self.assertSameSet([web_page], \
+                       getAdvancedSearchTextResultList('Great', web_page.getPortalType()))
+    self.assertSameSet([person], \
+                       getAdvancedSearchTextResultList('Great', person.getPortalType()))
+    
     # full text search with portal_type & reference
     self.assertSameSet([person], \
       getAdvancedSearchTextResultList('reference:%s portal_type:%s' \
@@ -825,6 +829,7 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
                                          web_page.getReference(),
                                          web_page.getLanguage(),
                                          web_page.getVersion())))
+
   def test_10_SearchString(self, quiet=QUIET, run=RUN_ALL_TEST):
     """
     Test search string search generation and parsing.
