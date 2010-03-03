@@ -56,10 +56,15 @@ class PropertyMapping(XMLObject):
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getMappedValue')
   def getMappedValue(self, document, property):
+    if property.endswith('_list'):
+      property = property[:-5]
+      getProperty = document.getPropertyList
+    else:
+      getProperty = document.getProperty
     mapping_dict = dict([[x.strip() for x in x.split('|')] \
                          for x in self.getMappingPropertyList()])
     mapped_property = mapping_dict.get(property, property)
     if mapped_property.startswith('-'):
-      return -1 * document.getProperty(mapped_property[1:])
+      return -1 * getProperty(mapped_property[1:])
     else:
-      document.getProperty(mapped_property)
+      return getProperty(mapped_property)
