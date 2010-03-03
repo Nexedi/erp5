@@ -1,5 +1,6 @@
+# -*- coding: utf-8 -*-
 import logging
-from sgmllib import SGMLParser
+from HTMLParser import HTMLParser
 import re
 from cgi import escape
 from zope.interface import implements
@@ -68,7 +69,7 @@ def decode_htmlentity(m):
    except ValueError:
       return entity_value
 
-class StrippingParser(SGMLParser):
+class StrippingParser(HTMLParser):
     """Pass only allowed tags;  raise exception for known-bad.
 
     Copied from Products.CMFDefault.utils
@@ -78,7 +79,7 @@ class StrippingParser(SGMLParser):
     from htmlentitydefs import entitydefs # replace entitydefs from sgmllib
 
     def __init__(self, valid, nasty, remove_javascript, raise_error):
-        SGMLParser.__init__( self )
+        HTMLParser.__init__( self )
         self.result = []
         self.valid = valid
         self.nasty = nasty
@@ -111,7 +112,7 @@ class StrippingParser(SGMLParser):
 
         self.result.append('&%s%s' % (name, x))
 
-    def unknown_starttag(self, tag, attrs):
+    def handle_starttag(self, tag, attrs):
         """ Delete all tags except for legal ones.
         """
 
@@ -145,7 +146,7 @@ class StrippingParser(SGMLParser):
             # omit tag
             pass
 
-    def unknown_endtag(self, tag):
+    def handle_endtag(self, tag):
         if self.nasty.has_key(tag) and not self.valid.has_key(tag):
             self.suppress = False
         if self.suppress: return
