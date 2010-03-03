@@ -2113,7 +2113,13 @@ class ListBoxRendererLine:
         editable_field = renderer.getEditableField(alias)
         tales = False
         if editable_field is not None:
-          tales = editable_field.tales.get('default', '')
+          # XXX we need to take care of whether the editable field is
+          # a proxy field or not, because a proxy field may inherit a
+          # tales expression from a template field, and the API is not
+          # unified.
+          get_tales = getattr(editable_field, 'get_recursive_tales',
+                              editable_field.get_tales)
+          tales = get_tales('default')
           if tales:
             obj = self.getObject()
             original_value = editable_field.__of__(obj).get_value('default',
@@ -2703,7 +2709,6 @@ class ListBoxValidator(Validator.Validator):
                   my_field = form.get_field(my_field_id)
                   REQUEST.set('cell', o) # We need cell
                   if my_field.get_value('editable', REQUEST=REQUEST) and field.need_validate(REQUEST):
-                    tales_expr = my_field.tales.get('default', "")
                     error_result_key = '%s_%s' % (my_field.id, o.uid)
                     key = 'field_' + error_result_key
                     try:
