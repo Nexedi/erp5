@@ -30,9 +30,9 @@ from Products.ERP5Type.Globals import InitializeClass, PersistentMapping
 from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
-from Products.ERP5.Document.BusinessPath import BusinessPath
+from Products.ERP5.Document.TradeModelLine import TradeModelLine
 
-class PaymentCondition(BusinessPath):
+class PaymentCondition(TradeModelLine):
     """
       Payment Conditions are used to define all the parameters of a payment
     """

@@ -97,12 +97,13 @@ class PaymentSimulationRule(Rule, PredicateMatrix):
 
     if cell is not None : # else, we do nothing
       for payment_condition in payment_condition_list:
-        start_date = payment_condition.getExpectedStartDate(input_movement) or \
-                     input_movement.getStartDate()
-        stop_date = payment_condition.getExpectedStopDate(input_movement) or \
-                     input_movement.getStopDate()
-        kw.update({'start_date':start_date, 'stop_date':stop_date})
-        quantity = payment_condition.getExpectedQuantity(input_movement)
+        aggregated_ammount_list = payment_condition.getAggregatedAmountList(
+            input_movement, movement_list=[input_movement])
+        assert len(aggregated_ammount_list) == 1
+        aggregated_ammount = aggregated_ammount_list[0]
+        start_date = aggregated_ammount.getStartDate()
+        stop_date = aggregated_ammount.getStopDate()
+        quantity = aggregated_ammount.getQuantity()
 
         # one for payable
         prevision_line = kw.copy()
