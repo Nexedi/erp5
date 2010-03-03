@@ -129,12 +129,12 @@ class TestBPMMixin(ERP5TypeTestCase):
         'asset/receivable/refundable_vat')
 
     itr = self.portal.portal_rules.newContent(
-                        portal_type='Invoice Transaction Rule',
+                        portal_type='Invoice Transaction Simulation Rule',
                         reference='default_invoice_transaction_rule',
                         id='test_invoice_transaction_rule',
                         title='Transaction Rule',
                         test_method_id=
-                        'SimulationMovement_testInvoiceTransactionRule',
+                        'SimulationMovement_testInvoiceTransactionSimulationRule',
                         version=100)
     predicate = itr.newContent(portal_type='Predicate',)
     predicate.edit(
