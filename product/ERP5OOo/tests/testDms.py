@@ -994,6 +994,7 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
     def getAdvancedSearchStringResultList(**kw):
       search_string = assemble(**kw)
       return [x.getObject() for x in search(search_string)]
+
     # create some objects
     document_1 = portal.document_module.newContent(
                    portal_type = 'File',
@@ -1003,7 +1004,7 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
                    reference = 'nxd-test-doc-1')
     document_2 = portal.document_module.newContent(
                    portal_type = 'Presentation',
-                   description = 'standalone free python linux knowledge system management',
+                   description = 'standalone free python linux knowledge system management different',
                    version = '002',
                    language = 'fr',
                    reference = 'nxd-test-doc-2')
@@ -1013,24 +1014,57 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
                    version = '003',
                    language = 'en',
                    reference = 'nxd-test-doc-2')
+    # multiple revisions of a Web Page
     web_page_1 = portal.web_page_module.newContent(
                    portal_type = 'Web Page',
-                   text_content = 'software based solutions document management product standalone',
+                   text_content = 'software based solutions document management product standalone owner different',
                    version = '003',
                    language = 'jp',
                    reference = 'nxd-test-web-page-3')
+    web_page_2 = portal.web_page_module.newContent(
+                   portal_type = 'Web Page',
+                   text_content = 'new revision (004) of nxd-test-web-page-3',
+                   version = '004',
+                   language = 'jp',
+                   reference = 'nxd-test-web-page-3')
+    web_page_3 = portal.web_page_module.newContent(
+                   portal_type = 'Web Page',
+                   text_content = 'new revision (005) of nxd-test-web-page-3',
+                   version = '005',
+                   language = 'jp',
+                   reference = 'nxd-test-web-page-3')
+    # publish documents so we can test searching within owned documents for an user
+    for document in (document_1, document_2, document_3, web_page_1, web_page_2, web_page_3):
+      document.publish()
+    # create test Person objects and add pseudo local security
+    person1 =  self.createUser(reference='user1')
+    person1.setTitle('Another Contributor')
+    portal.document_module.manage_setLocalRoles('user1', ['Assignor',])
     self.stepTic()
+
+    # login as another user
+    ERP5TypeTestCase.login(self, 'user1')
+    document_4 = portal.document_module.newContent(
+                   portal_type = 'Presentation',
+                   description = 'owner different user contributing document',
+                   version = '003',
+                   language = 'bg',
+                   reference = 'tlv-test-doc-1')
+    contributor_list = document_4.getContributorValueList()
+    contributor_list.append(person1)
+    document_4.setContributorValueList(contributor_list)
+    document_4.publish()
+    self.stepTic()
+    self.login()
 
     # search arbitrary word
     kw = {'searchabletext_any': 'software'}
     self.assertSameSet([document_1,web_page_1], getAdvancedSearchStringResultList(**kw))
     
     # exact word search
-    kw = {'searchabletext_any': '',
-          'searchabletext_phrase': 'linux python'}
+    kw = {'searchabletext_phrase': 'linux python'}
     self.assertSameSet([document_1], getAdvancedSearchStringResultList(**kw))
-    kw = {'searchabletext_any': '',
-          'searchabletext_phrase': 'python linux'}
+    kw = {'searchabletext_phrase': 'python linux'}
     self.assertSameSet([document_2], getAdvancedSearchStringResultList(**kw))
     kw = {'searchabletext_any': '',
           'searchabletext_phrase': 'python linux knowledge system'}
@@ -1058,8 +1092,7 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.assertSameSet([], getAdvancedSearchStringResultList(**kw))
    
     # search by reference
-    kw = {'searchabletext_any': '',
-          'reference': document_2.getReference()}
+    kw = {'reference': document_2.getReference()}
     self.assertSameSet([document_2, document_3], getAdvancedSearchStringResultList(**kw))
     kw = {'searchabletext_any': 'copy',
           'reference': document_2.getReference()}
@@ -1070,36 +1103,56 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.assertSameSet([], getAdvancedSearchStringResultList(**kw))
   
     # search by version
-    kw = {'searchabletext_any': '',
-          'reference': document_2.getReference(),
+    kw = {'reference': document_2.getReference(),
           'version': document_2.getVersion()}
     self.assertSameSet([document_2], getAdvancedSearchStringResultList(**kw))
-    kw = {'searchabletext_any': '',
-          'reference': document_2.getReference(),
+    kw = {'reference': document_2.getReference(),
           'version': document_2.getVersion(),
           'search_portal_type': 'File'}
     self.assertSameSet([], getAdvancedSearchStringResultList(**kw))
    
     # search by language
-    kw = {'searchabletext_any': '',
-          'reference': document_2.getReference(),
+    kw = {'reference': document_2.getReference(),
           'language': document_2.getLanguage()}
     self.assertSameSet([document_2], getAdvancedSearchStringResultList(**kw))
-    kw = {'searchabletext_any': '',
-          'reference': document_2.getReference(),
+    kw = {'reference': document_2.getReference(),
           'language': document_3.getLanguage()}
     self.assertSameSet([document_3], getAdvancedSearchStringResultList(**kw))
-    kw = {'searchabletext_any': '',
-          'reference': document_2.getReference(),
+    kw = {'reference': document_2.getReference(),
           'language': document_3.getLanguage(),
-	  'search_portal_type': 'File'}
+          'search_portal_type': 'File'}
     self.assertSameSet([], getAdvancedSearchStringResultList(**kw))
   
-    # XXX: only my docs
-    # XXX: only newest versions
-    # XXX: search mode
+    # only my docs
+    ERP5TypeTestCase.login(self, 'user1')
+    kw = {'searchabletext_any': 'owner'}
+    # should return all documents matching a word no matter if we're owner or not
+    self.assertSameSet([web_page_1, document_4], getAdvancedSearchStringResultList(**kw))
+    kw = {'searchabletext_any': 'owner',
+          'mine': 'yes'}
+    # should return ONLY our own documents matching a word
+    self.assertSameSet([document_4], getAdvancedSearchStringResultList(**kw))
+    self.login()
+    
+    # only newest versions
+    # should return ALL documents for a reference
+    kw = {'reference': web_page_1.getReference()}
+    self.assertSameSet([web_page_1, web_page_2, web_page_3], getAdvancedSearchStringResultList(**kw))
+    # should return ONLY newest document for a reference
+    kw = {'reference': web_page_1.getReference(),
+          'newest': 'yes'}
+    self.assertSameSet([web_page_3], getAdvancedSearchStringResultList(**kw))
+
+    # contributor title search
+    kw = {'searchabletext_any': 'owner'}
+    # should return all documents matching a word no matter of contributor
+    self.assertSameSet([web_page_1, document_4], getAdvancedSearchStringResultList(**kw))
+    kw = {'searchabletext_any': 'owner',
+          'contributor_title': '%Contributor%'}
+    self.assertSameSet([document_4], getAdvancedSearchStringResultList(**kw))
     # XXX: search limited to a certain date range
-    # XXX: contributor title search
+    # XXX: search mode
+
 
   def test_PDFTextContent(self):
     upload_file = makeFileUpload('REF-en-001.pdf')
@@ -1316,7 +1369,7 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
     portal = self.portal
     document_module = portal.document_module
 
-    # create Person objects and add preudo local security
+    # create Person objects and add pseudo local security
     person1 =  self.createUser(reference='user1')
     document_module.manage_setLocalRoles('user1', ['Assignor',])
     person2 =  self.createUser(reference='user2')
