@@ -308,8 +308,10 @@ class TradeModelLine(Predicate, XMLMatrix, Amount):
           # movements (current_aggregated_amount_list).
           # if the quantity is not defined, take it by searching all movements
           # that used this base_amount
-          if set(base_application_list)\
-              .intersection(set(movement.getBaseContributionList())) and \
+          if (len(base_application_list) == 0 or \
+              len(movement.getBaseContributionList()) == 0 or \
+              set(base_application_list).intersection( \
+              set(movement.getBaseContributionList()))) and \
               (len(movement.getVariationCategoryList()) == 0 or \
                len(tmp_movement.getVariationCategoryList()) == 0 or \
               set(movement.getVariationCategoryList()).intersection( \
