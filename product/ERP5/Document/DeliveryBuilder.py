@@ -312,11 +312,13 @@ class DeliveryBuilder(OrderBuilder):
                                    [s_m]
 
     for s_m_list_per_movement in delivery_dict.values():
-      total_quantity = sum([quantity_dict.get(s_m, s_m.getQuantity()) \
+      total_quantity = sum([quantity_dict.get(s_m,
+                                              s_m.getMappedProperty('quantity')) \
                             for s_m in s_m_list_per_movement])
       if total_quantity != 0.0:
         for s_m in s_m_list_per_movement:
-          delivery_ratio = quantity_dict.get(s_m, s_m.getQuantity()) \
+          delivery_ratio = quantity_dict.get(s_m,
+                                             s_m.getMappedProperty('quantity')) \
                                              / total_quantity
           s_m.edit(delivery_ratio=delivery_ratio)
       else:

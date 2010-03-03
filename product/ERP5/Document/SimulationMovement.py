@@ -609,3 +609,12 @@ class SimulationMovement(Movement, PropertyRecordableMixin):
     movement -- not applicable
     """
     raise NotImplementedError
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getMappedProperty')
+  def getMappedProperty(self, property):
+    mapping = self.getMappingValue()
+    if mapping is not None:
+      return mapping.getMappedProperty(self, property)
+    else:
+      return self.getProperty(property)

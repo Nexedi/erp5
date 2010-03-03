@@ -354,11 +354,11 @@ class FakeMovement:
     """
     total_quantity = 0
     for movement in self.__movement_list:
-      total_quantity += movement.getQuantity()
+      total_quantity += movement.getMappedProperty('quantity')
 
     if total_quantity != 0:
       for movement in self.__movement_list:
-        quantity = movement.getQuantity()
+        quantity = movement.getMappedProperty('quantity')
         movement.edit(delivery_ratio=quantity*delivery_ratio/total_quantity)
     else:
       # Distribute equally ratio to all movement
@@ -407,7 +407,7 @@ class FakeMovement:
     """
     total_quantity = 0
     for movement in self.getMovementList():
-      quantity = movement.getQuantity()
+      quantity = movement.getMappedProperty('quantity')
       if quantity != None:
         total_quantity += quantity
     return total_quantity
@@ -418,7 +418,7 @@ class FakeMovement:
     """
     total_price = 0
     for movement in self.getMovementList():
-      quantity = movement.getQuantity()
+      quantity = movement.getMappedProperty('quantity')
       price = movement.getPrice()
       if (quantity is not None) and (price is not None):
         total_price += (quantity * price)
