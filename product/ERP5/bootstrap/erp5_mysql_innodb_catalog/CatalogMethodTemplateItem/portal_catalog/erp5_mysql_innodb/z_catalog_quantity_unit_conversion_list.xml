@@ -78,7 +78,7 @@ getQuantityUnitConversionDefinitionRowList\r\n
        Make sure that we get no duplicates, and also aggregate the uids of the modified resources for deletion\n
       </dtml-comment>\n
       <dtml-in loop_item prefix="inner">\n
-        <dtml-call expr="quantity_unit_conversion_dict.setdefault(inner_item[1], {}).setdefault(inner_item[2], inner_item)">\n
+        <dtml-call expr="quantity_unit_conversion_dict.setdefault(inner_item[\'uid\'], {}).setdefault(inner_item[\'resource_uid\'], inner_item)">\n
       </dtml-in>\n
     </dtml-if>\n
   </dtml-in>\n
@@ -98,10 +98,10 @@ INSERT INTO `quantity_unit_conversion`\n
 VALUES\n
     <dtml-in "value_list" prefix="loop">\n
 (\n
-  <dtml-sqlvar expr="loop_item[0]" type="int" optional>,\n
-  <dtml-sqlvar expr="loop_item[1]" type="int">,\n
-  <dtml-sqlvar expr="loop_item[2]" type="int">,\n
-  <dtml-sqlvar expr="loop_item[3]" type="float">\n
+  <dtml-sqlvar expr="loop_item[\'uid\']" type="int" optional>,\n
+  <dtml-sqlvar expr="loop_item[\'resource_uid\']" type="int">,\n
+  <dtml-sqlvar expr="loop_item[\'quantity_unit_uid\']" type="int">,\n
+  <dtml-sqlvar expr="loop_item[\'quantity\']" type="float">\n
 )\n
 <dtml-unless sequence-end>,</dtml-unless>\n
     </dtml-in>\n
@@ -155,7 +155,7 @@ VALUES\n
        Make sure that we get no duplicates, and also aggregate the uids of the modified resources for deletion\n
       </dtml-comment>\n
       <dtml-in loop_item prefix="inner">\n
-        <dtml-call expr="quantity_unit_conversion_dict.setdefault(inner_item[1], {}).setdefault(inner_item[2], inner_item)">\n
+        <dtml-call expr="quantity_unit_conversion_dict.setdefault(inner_item[\'uid\'], {}).setdefault(inner_item[\'resource_uid\'], inner_item)">\n
       </dtml-in>\n
     </dtml-if>\n
   </dtml-in>\n
@@ -175,10 +175,10 @@ INSERT INTO `quantity_unit_conversion`\n
 VALUES\n
     <dtml-in "value_list" prefix="loop">\n
 (\n
-  <dtml-sqlvar expr="loop_item[0]" type="int" optional>,\n
-  <dtml-sqlvar expr="loop_item[1]" type="int">,\n
-  <dtml-sqlvar expr="loop_item[2]" type="int">,\n
-  <dtml-sqlvar expr="loop_item[3]" type="float">\n
+  <dtml-sqlvar expr="loop_item[\'uid\']" type="int" optional>,\n
+  <dtml-sqlvar expr="loop_item[\'resource_uid\']" type="int">,\n
+  <dtml-sqlvar expr="loop_item[\'quantity_unit_uid\']" type="int">,\n
+  <dtml-sqlvar expr="loop_item[\'quantity\']" type="float">\n
 )\n
 <dtml-unless sequence-end>,</dtml-unless>\n
     </dtml-in>\n

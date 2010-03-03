@@ -60,7 +60,7 @@
         </item>
         <item>
             <key> <string>arguments_src</string> </key>
-            <value> <string>uid\n
+            <value> <string>uid\r\n
 getMeasureRowList</string> </value>
         </item>
         <item>
@@ -116,11 +116,11 @@ INSERT INTO `measure`\n
 VALUES\n
     <dtml-in measure_list prefix="loop">\n
 (\n
-  <dtml-sqlvar expr="loop_item[0]" type="int">,\n
-  <dtml-sqlvar expr="loop_item[1]" type="int">,\n
-  <dtml-sqlvar expr="loop_item[2]" type="string">,\n
-  <dtml-sqlvar expr="loop_item[3]" type="int">,\n
-  <dtml-sqlvar expr="loop_item[4]" type="float">\n
+  <dtml-sqlvar expr="loop_item[\'uid\']" type="int">,\n
+  <dtml-sqlvar expr="loop_item[\'resource_uid\']" type="int">,\n
+  <dtml-sqlvar expr="loop_item[\'variation\']" type="string">,\n
+  <dtml-sqlvar expr="loop_item[\'metric_type_uid\']" type="int">,\n
+  <dtml-sqlvar expr="loop_item[\'quantity\']" type="float">\n
 )\n
 <dtml-unless sequence-end>,</dtml-unless>\n
     </dtml-in>\n
@@ -182,11 +182,11 @@ INSERT INTO `measure`\n
 VALUES\n
     <dtml-in measure_list prefix="loop">\n
 (\n
-  <dtml-sqlvar expr="loop_item[0]" type="int">,\n
-  <dtml-sqlvar expr="loop_item[1]" type="int">,\n
-  <dtml-sqlvar expr="loop_item[2]" type="string">,\n
-  <dtml-sqlvar expr="loop_item[3]" type="int">,\n
-  <dtml-sqlvar expr="loop_item[4]" type="float">\n
+  <dtml-sqlvar expr="loop_item[\'uid\']" type="int">,\n
+  <dtml-sqlvar expr="loop_item[\'resource_uid\']" type="int">,\n
+  <dtml-sqlvar expr="loop_item[\'variation\']" type="string">,\n
+  <dtml-sqlvar expr="loop_item[\'metric_type_uid\']" type="int">,\n
+  <dtml-sqlvar expr="loop_item[\'quantity\']" type="float">\n
 )\n
 <dtml-unless sequence-end>,</dtml-unless>\n
     </dtml-in>\n
