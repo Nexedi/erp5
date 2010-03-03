@@ -91,7 +91,9 @@ if default_site_preference.getPreferenceState() == 'disabled':
 
 # install our business templates
 bt5_list = []
-bt5_path_list = options.bt5_path.split(',')
+bt5_path_list = []
+for i in options.bt5_path.split('\n'):
+  bt5_path_list.extend(i.split(","))
 
 for arg in args:
   bt_path = None
