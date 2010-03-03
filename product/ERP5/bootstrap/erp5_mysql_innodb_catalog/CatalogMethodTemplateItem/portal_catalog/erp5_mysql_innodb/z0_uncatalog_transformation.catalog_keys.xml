@@ -1,5 +1,5 @@
 <catalog_method>
- <item key="sql_clear_catalog" type="int">
+ <item key="sql_uncatalog_object" type="int">
   <value>1</value>
  </item>
 </catalog_method>
