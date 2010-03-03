@@ -2369,7 +2369,10 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
         values = self._archive.values()
     else:
       try:
-        value = self._archive[object_path]
+        if context.getTemplateFormatVersion() == 1:
+          value = self._objects[object_path]
+        else:
+          value = self._archive[object_path]
       except KeyError:
         value = None
       if value is not None:
