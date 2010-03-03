@@ -60,6 +60,7 @@
   It is the reverse of Base_parseSearchString script.\n
 """\n
 MARKER = [\'\', None]\n
+BOOLEAN_MARKER = MARKER + [0]\n
 request = context.REQUEST\n
 \n
 # one can specify a direct search string, \n
@@ -140,12 +141,12 @@ for category in (\'contributor_title\',):\n
 \n
 # only my docs\n
 mine = kw.get(\'mine\', request.get(\'mine\', None))\n
-if mine not in MARKER:\n
+if mine not in BOOLEAN_MARKER:\n
   search_string += \' mine:yes\'\n
 \n
 # only newest versions\n
 newest =  kw.get(\'newest\', request.get(\'newest\', None))\n
-if newest not in MARKER:\n
+if newest not in BOOLEAN_MARKER:\n
   search_string += \' newest:yes\'\n
 \n
 # search mode\n
@@ -195,6 +196,7 @@ return search_string\n
                             <string>kw</string>
                             <string>None</string>
                             <string>MARKER</string>
+                            <string>BOOLEAN_MARKER</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>request</string>

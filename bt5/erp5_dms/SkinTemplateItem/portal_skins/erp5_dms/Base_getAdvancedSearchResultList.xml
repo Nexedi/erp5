@@ -125,13 +125,16 @@ if modification_to:\n
 if len(where_expression_list):\n
   query_kw[\'where_expression\'] = \' AND \'.join(where_expression_list)\n
 \n
-if parsed_search_string.get(\'mine\'):\n
+if parsed_search_string.get(\'mine\', None) is not None:\n
   # user wants only his documents\n
   query_kw[\'owner\'] = str(portal.portal_membership.getAuthenticatedMember())\n
 \n
-# XXX: add contributor title\n
+# add contributor title\n
+contributor_title = parsed_search_string.get(\'contributor_title\', None)\n
+if contributor_title is not None:\n
+  query_kw[\'contributor_title\'] = contributor_title\n
 \n
-if parsed_search_string.get(\'newest\'):\n
+if parsed_search_string.get(\'newest\', None) is not None:\n
   #...and now we check for only the newest versions\n
   # but we need to preserve order\n
   query_kw[\'group_by\'] = (\'reference\',)\n
@@ -140,7 +143,6 @@ if parsed_search_string.get(\'newest\'):\n
 else:\n
   result = portal.portal_catalog(**query_kw)\n
 \n
-context.log(portal.portal_catalog(src__=1, **query_kw))\n
 return result\n
 
 
@@ -205,6 +207,7 @@ return result\n
                             <string>modification_from</string>
                             <string>modification_to</string>
                             <string>str</string>
+                            <string>contributor_title</string>
                             <string>append</string>
                             <string>$append0</string>
                             <string>_apply_</string>
