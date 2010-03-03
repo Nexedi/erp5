@@ -217,7 +217,9 @@ class Measure(XMLMatrix):
           management_unit_quantity = getQuantity(management_unit_value)
 
         if (not default or quantity == management_unit_quantity):
-          return (uid, resource_uid, '^', metric_type_uid, quantity),
+          return (dict(uid=uid, resource_uid=resource_uid,
+                       variation='^', metric_type_uid=metric_type_uid,
+                       quantity=quantity)),
       return ()
 
     if default:
@@ -302,10 +304,10 @@ class Measure(XMLMatrix):
         if quantity is None:
           continue
         cell = quantity
-      row_list.append((uid,
-                       resource_uid,
-                       '^%s$' % ''.join(regex_list),
-                       metric_type_uid,
-                       cell * quantity_unit))
+      row_list.append(dict(uid=uid,
+                       resource_uid=resource_uid,
+                       variation='^%s$' % ''.join(regex_list),
+                       metric_type_uid=metric_type_uid,
+                       quantity=cell * quantity_unit))
 
     return row_list

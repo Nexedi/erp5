@@ -967,7 +967,10 @@ class Resource(XMLMatrix, Variated):
       row_list = []
       for unit_uid, value in self._getQuantityUnitDefinitionDict().iteritems():
         definition_uid, quantity = value
-        row_list.append((definition_uid, uid, unit_uid, quantity))
+        row_list.append(dict(uid=definition_uid,
+                             resource_uid=uid,
+                             quantity_unit_uid=unit_uid,
+                             quantity=quantity))
 
       return row_list
 
@@ -1062,7 +1065,9 @@ class Resource(XMLMatrix, Variated):
                                   .getCategoryUid(metric_type, 'metric_type')
             if quantity and metric_type_uid:
               uid = self.getUid()
-              insert_list += (uid, uid, '^', metric_type_uid, float(quantity)),
+              insert_list.append(dict(uid=uid, resource_uid=uid, variation='^',
+                                  metric_type_uid=metric_type_uid,
+                                  quantity=float(quantity)))
 
       return insert_list
 
