@@ -51,7 +51,8 @@ class PropertyMovementGroup(MovementGroup):
                               if x in property_list]
     else:
       target_property_list = self.getTestedPropertyList()
+    getProperty = document.getProperty
     for prop in target_property_list:
-      if property_dict[prop] != document.getProperty(prop, None):
+      if property_dict[prop] != getProperty(prop):
         return False, property_dict
     return True, property_dict

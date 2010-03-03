@@ -52,8 +52,9 @@ class CategoryMovementGroup(PropertyMovementGroup):
                               if x in property_list]
     else:
       target_property_list = self.getTestedPropertyList()
+    getProperty = document.getProperty
     for prop in target_property_list:
-      if property_dict['%s_list' % prop] != \
-             sorted(document.getPropertyList(prop, None)):
+      list_prop = '%s_list' % prop
+      if property_dict[list_prop] != sorted(getProperty(list_prop)):
         return False, property_dict
     return True, property_dict
