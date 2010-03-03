@@ -19,7 +19,7 @@ debian-appliance:
 	sed -i "s,__VERSION__,$(PACKAGE_VERSION),g" debian-erp5-appliance/DEBIAN/control
 	sed -i "s,__VERSION__,`cat VERSION.txt`,g" debian-erp5-appliance/DEBIAN/prerm
 	svn co https://svn.erp5.org/repos/public/erp5/trunk/buildout $(SOFTWARE_BUILD_PATH)
-	cd $(SOFTWARE_BUILD_PATH); #$(MAKE) $(MFLAGS)
+	cd $(SOFTWARE_BUILD_PATH); $(MAKE) $(MFLAGS)
 	mkdir -p debian-erp5-appliance/$(PACKAGE_INSTALL_PATH)
 	mv $(SOFTWARE_BUILD_PATH)/* debian-erp5-appliance/$(PACKAGE_INSTALL_PATH)
 	rm -rf debian-erp5-appliance/*.txt
