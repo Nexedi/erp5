@@ -54,8 +54,7 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>rule = state_change[\'object\'].getParentValue()\n
-\n
-if rule.getPortalType() in (\'Invoice Transaction Rule\', \'Payment Rule\') :\n
+if getattr(rule, \'updateMatrix\', None) is not None:\n
   rule.activate(\n
     after_path_and_method_id=([rule.getPath(),],\n
         [\'immediateReindexObject\', \'recursiveImmediateReindexObject\'])\n
@@ -100,6 +99,8 @@ if rule.getPortalType() in (\'Invoice Transaction Rule\', \'Payment Rule\') :\n
                             <string>_getattr_</string>
                             <string>_getitem_</string>
                             <string>rule</string>
+                            <string>getattr</string>
+                            <string>None</string>
                           </tuple>
                         </value>
                     </item>

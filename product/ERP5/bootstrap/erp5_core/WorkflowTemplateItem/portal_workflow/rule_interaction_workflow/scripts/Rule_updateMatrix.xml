@@ -54,7 +54,8 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>matrix = state_change[\'object\']\n
-matrix.activate(\n
+if getattr(matrix, \'updateMatrix\', None) is not None:\n
+  matrix.activate(\n
     after_path_and_method_id=([matrix.getPath(),],\n
         [\'immediateReindexObject\', \'recursiveImmediateReindexObject\'])\n
     ).updateMatrix()\n
@@ -97,6 +98,8 @@ matrix.activate(\n
                             <string>state_change</string>
                             <string>_getitem_</string>
                             <string>matrix</string>
+                            <string>getattr</string>
+                            <string>None</string>
                             <string>_getattr_</string>
                           </tuple>
                         </value>
