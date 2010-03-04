@@ -107,7 +107,7 @@ class OrderRuleMovementGenerator(MovementGeneratorMixin):
       kw = self._getPropertyAndCategoryList(input_movement, business_path,
                                             rule)
       input_movement_url = input_movement.getRelativeUrl()
-      kw.update({'order':input_movement_url})
+      kw.update({'delivery':input_movement_url})
       simulation_movement = context.newContent(
         portal_type=RuleMixin.movement_type,
         temp_object=True,
