@@ -72,7 +72,7 @@ class MovementCollectionUpdaterMixin:
 
     # Get divergence testers
     tester_list = self._getMatchingTesterList()
-    if len(tester_list) == 0:
+    if len(tester_list) == 0 and len(prevision_movement_list) > 2:
       raise ValueError("It is not possible to match movements without divergence testers")
 
     # Create small groups of movements per hash keys
