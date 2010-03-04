@@ -507,9 +507,8 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
     # clear the message queue, so that it does not contains unexistant paths
     self.tic()
     payment_rule.deleteContent(
-      [x.getId() for x in payment_rule.objectValues() if \
-       x.getPortalType() == self.predicate_portal_type])
-    self.assertEquals(len(payment_rule.objectValues()), 1)
+      [x.getId() for x in payment_rule.objectValues(
+      portal_type=['Predicate', self.accounting_rule_cell_portal_type])])
     transaction.commit()
 
     # and add a new predicate
