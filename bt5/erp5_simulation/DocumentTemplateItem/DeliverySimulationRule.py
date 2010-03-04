@@ -111,3 +111,6 @@ class DeliveryRuleMovementGenerator(MovementGeneratorMixin):
         **kw)
       ret.append(simulation_movement)
     return ret
+
+  def _getInputMovementList(self, context):
+    return [context.getParentValue(),]
