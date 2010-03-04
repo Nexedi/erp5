@@ -41,7 +41,7 @@ from AccessControl.SecurityManagement import newSecurityManager
 from DateTime import DateTime
 from Testing import ZopeTestCase
 
-from Products.ERP5.Document.OrderRule import OrderRule
+from Products.ERP5Legacy.Document.OrderRule import OrderRule
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import reindex
 from Products.DCWorkflow.DCWorkflow import ValidationFailed
