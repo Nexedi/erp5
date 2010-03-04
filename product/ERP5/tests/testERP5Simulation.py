@@ -49,7 +49,7 @@ class TestERP5SimulationMixin(TestInvoiceMixin):
   def afterSetUp(self, quiet=1, run=1):
     TestInvoiceMixin.afterSetUp(self)
     portal_rules = self.portal.portal_rules
-    for rule in portal_rules.objectValues(portal_type='Order Rule'):
+    for rule in portal_rules.objectValues(portal_type='Order Root Simulation Rule'):
       if rule.getValidationState() == 'validated':
         rule.invalidate()
     self.validateNewRules()
@@ -122,8 +122,8 @@ class TestERP5SimulationMixin(TestInvoiceMixin):
     # create an Order Rule document.
     portal_rules = self.portal.portal_rules
     new_order_rule = filter(
-      lambda x:x.title == 'New Default Order Rule',
-      portal_rules.objectValues(portal_type='Order Rule'))[0]
+      lambda x:x.title == 'New Default Order Root Simulation Rule',
+      portal_rules.objectValues(portal_type='Order Root Simulation Rule'))[0]
     if new_order_rule.getValidationState() != 'validated':
       new_order_rule.validate()
 
@@ -371,13 +371,13 @@ class TestERP5SimulationMixin(TestInvoiceMixin):
       self.assertEquals(len(unique_movement_list),
                         len(simulation_movement_list))
       # Check if all movements are related to simulation movements
-      order_movement_list = sum([x.getOrderValueList() for x in \
+      order_movement_list = sum([x.getDeliveryValue() for x in \
                                  simulation_movement_list], [])
       self.failIfDifferentSet(movement_list, order_movement_list)
 
       # Check each simulation movement
       for simulation_movement in simulation_movement_list:
-        order_movement_list = simulation_movement.getOrderValueList()
+        order_movement_list = simulation_movement.getDeliveryValueList()
         # Test quantity
         self.assertEquals(sum([x.getQuantity() for x in order_movement_list]),
                           simulation_movement.getQuantity())
