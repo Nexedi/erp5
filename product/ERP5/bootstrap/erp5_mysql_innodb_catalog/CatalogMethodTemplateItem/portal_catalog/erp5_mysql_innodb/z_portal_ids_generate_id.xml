@@ -95,6 +95,9 @@ default:int=1</string> </value>
             <key> <string>src</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
+# Warning : This method is obsolete, the new method is IdTool_zGenerateId\n
+#           it\'s kept for backward compatiblity\n
+\n
 # DO NOT FORGET TO COMMIT AFTER !!\n
 # commit ZSQL method should be z_portal_ids_commit\n
 \n
@@ -146,6 +149,9 @@ SELECT `last_id` AS `LAST_INSERT_ID()` FROM portal_ids\n
                         <key> <string>raw</string> </key>
                         <value> <string encoding="cdata"><![CDATA[
 
+# Warning : This method is obsolete, the new method is IdTool_zGenerateId\n
+#           it\'s kept for backward compatiblity\n
+\n
 # DO NOT FORGET TO COMMIT AFTER !!\n
 # commit ZSQL method should be z_portal_ids_commit\n
 \n

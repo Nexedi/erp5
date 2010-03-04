@@ -9,7 +9,6 @@ erp5_mysql_innodb/z0_drop_inventory_stock
 erp5_mysql_innodb/z0_drop_item
 erp5_mysql_innodb/z0_drop_measure
 erp5_mysql_innodb/z0_drop_movement
-erp5_mysql_innodb/z0_drop_portal_ids
 erp5_mysql_innodb/z0_drop_predicate
 erp5_mysql_innodb/z0_drop_predicate_category
 erp5_mysql_innodb/z0_drop_record
@@ -62,7 +61,6 @@ erp5_mysql_innodb/z_create_inventory_stock
 erp5_mysql_innodb/z_create_item
 erp5_mysql_innodb/z_create_measure
 erp5_mysql_innodb/z_create_movement
-erp5_mysql_innodb/z_create_portal_ids
 erp5_mysql_innodb/z_create_predicate
 erp5_mysql_innodb/z_create_predicate_category
 erp5_mysql_innodb/z_create_record
@@ -77,9 +75,7 @@ erp5_mysql_innodb/z_delete_uid
 erp5_mysql_innodb/z_getitem_by_path
 erp5_mysql_innodb/z_getitem_by_uid
 erp5_mysql_innodb/z_portal_ids_commit
-erp5_mysql_innodb/z_portal_ids_dump
 erp5_mysql_innodb/z_portal_ids_generate_id
-erp5_mysql_innodb/z_portal_ids_get_last_id
 erp5_mysql_innodb/z_produce_reserved_uid_list
 erp5_mysql_innodb/z_read_recorded_object_list
 erp5_mysql_innodb/z_record_object_list

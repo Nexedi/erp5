@@ -37,6 +37,12 @@
             </value>
         </item>
         <item>
+            <key> <string>_col</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
             <key> <string>arguments_src</string> </key>
             <value> <string></string> </value>
         </item>
@@ -50,7 +56,10 @@
         </item>
         <item>
             <key> <string>src</string> </key>
-            <value> <string>commit</string> </value>
+            <value> <string># Warning : This method is obsolete, the new method is IdTool_zCommit\n
+#           it\'s kept for backward compatiblity\n
+\n
+commit</string> </value>
         </item>
         <item>
             <key> <string>template</string> </key>
@@ -86,7 +95,10 @@
                     </item>
                     <item>
                         <key> <string>raw</string> </key>
-                        <value> <string>commit</string> </value>
+                        <value> <string># Warning : This method is obsolete, the new method is IdTool_zGenerateId\n
+#           it\'s kept for backward compatiblity\n
+\n
+commit</string> </value>
                     </item>
                   </dictionary>
                 </state>
