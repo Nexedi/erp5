@@ -18,7 +18,9 @@ debian-appliance:
 	svn co --ignore-externals https://svn.erp5.org/repos/public/spec/debian-erp5-appliance/ debian-erp5-appliance
 	sed -i "s,__VERSION__,$(PACKAGE_VERSION),g" debian-erp5-appliance/DEBIAN/control
 	sed -i "s,__VERSION__,`cat VERSION.txt`,g" debian-erp5-appliance/DEBIAN/prerm
-	svn co https://svn.erp5.org/repos/public/erp5/trunk/buildout $(SOFTWARE_BUILD_PATH)
+	sudo svn co https://svn.erp5.org/repos/public/erp5/trunk/buildout $(SOFTWARE_BUILD_PATH)
+	sudo chown -R `whoami` $(SOFTWARE_BUILD_PATH)
+	sudo $(SOFTWARE_BUILD_PATH)/helpers/debian.lenny.sh
 	cd $(SOFTWARE_BUILD_PATH); $(MAKE) $(MFLAGS)
 	mkdir -p debian-erp5-appliance/$(PACKAGE_INSTALL_PATH)
 	mv $(SOFTWARE_BUILD_PATH)/* debian-erp5-appliance/$(PACKAGE_INSTALL_PATH)
