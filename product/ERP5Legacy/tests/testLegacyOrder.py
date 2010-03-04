@@ -2540,9 +2540,8 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
     self.assertEquals(10 + 20, order.getTotalQuantity())
     self.assertEquals(10*4 + 20*5, order.getTotalPrice())
 
-  def test_order_payment_condition_not_copied(self):
-    # Payment Condition no longer exist in packing list, so they should not be
-    # copied in the packing list
+  def test_order_payment_condition_copied(self):
+    # Payment Condition should be copied in the packing list
     resource = self.portal.getDefaultModule(
         self.resource_portal_type).newContent(
                     portal_type=self.resource_portal_type,
@@ -2573,7 +2572,7 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
     related_packing_list = order.getCausalityRelatedValue(
                                    portal_type=self.packing_list_portal_type)
     self.assertNotEquals(related_packing_list, None)
-    self.assertEquals(0, len(related_packing_list.contentValues(
+    self.assertEquals(1, len(related_packing_list.contentValues(
                                           portal_type='Payment Condition')))
 
   def test_Order_viewAsODT(self):
