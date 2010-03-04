@@ -1,14 +1,32 @@
+"""
+ TODO: Add copyright.
+"""
+
+
 import unittest
 import sys, os, tempfile, stat, subprocess
 
 def createCleanList(s):
+  """
+    TODO: Add doc string.
+  """
   return sorted([q.strip() for q in s.split() if len(q.strip()) > 0])
 
 class AssertPythonSoftware(unittest.TestCase):
+  """
+    TODO: Add doc string.
+  """
+
   def test_python_version(self):
-    self.assertEqual((2,4), sys.version_info[:2])
+   """
+    TODO: Add doc string.
+   """
+   self.assertEqual((2,4), sys.version_info[:2])
 
   def test_use_generated_python(self):
+    """
+      TODO: Add doc string.
+    """
     fd, name = tempfile.mkstemp()
     try:
       f = os.fdopen(fd, 'w')
@@ -27,6 +45,9 @@ print sys.version_info[:2]
       os.unlink(name)
 
   def test_required_libraries(self):
+    """
+      TODO: Add doc string.
+    """
     required_library_list = createCleanList("""
       ERP5Diff
       MySQLdb
@@ -65,96 +86,121 @@ print sys.version_info[:2]
         'Python libraries not found:\n'+'\n'.join(failed_library_list))
 
 class AssertLddLibs(unittest.TestCase):
+  """
+    TODO: Add doc string.
+  """
+
   def test_tritonn_senna(self):
+    """
+      TODO: Add doc string.
+    """
     result = os.system("ldd parts/mysql-tritonn-5.0/libexec/mysqld | grep -q "
         "'parts/senna/lib/libsenna.so.0'")
     self.assertEqual(result, 0)
 
   def test_MySQLdb(self):
+    """
+      TODO: Add doc string.
+    """
     result = os.system("ldd develop-eggs/MySQL_python-1.2.3c1-py2.4-linux-x86"
        "_64.egg/_mysql.so | grep -q 'parts/mysql-tritonn-5.0/lib/mysql/libmys"
        "qlclient_r.so'")
     self.assertEqual(result, 0)
 
   def test_memcached_libevent(self):
+    """
+      TODO: Add doc string.
+    """
     result = os.system("ldd parts/memcached/bin/memcached | grep -q 'parts/li"
         "bevent/lib/libevent'")
 
 class AssertApache(unittest.TestCase):
+  """
+    TODO: Add doc string.
+  """
+
   def test_modules(self):
+    """
+      TODO: Add doc string.
+    """
     required_module_list = createCleanList("""
-      mod_authn_default.so
-      mod_log_config.so
-      mod_proxy_http.so
-      mod_authn_alias.so
-      mod_authz_dbm.so
-      mod_case_filter_in.so
-      mod_imagemap.so
-      mod_setenvif.so
-      mod_include.so
-      mod_charset_lite.so
-      mod_info.so
-      mod_cache.so
-      mod_actions.so
-      mod_proxy_connect.so
-      mod_auth_digest.so
-      mod_unique_id.so
-      mod_mime_magic.so
-      mod_disk_cache.so
-      mod_mime.so
-      mod_usertrack.so
-      mod_asis.so
-      mod_optional_hook_import.so
-      mod_negotiation.so
-      mod_proxy.so
-      mod_authz_default.so
-      mod_ext_filter.so
-      mod_auth_basic.so
-      mod_authz_owner.so
-      mod_authn_anon.so
-      mod_rewrite.so
-      mod_proxy_balancer.so
-      mod_substitute.so
-      mod_filter.so
-      mod_expires.so
-      mod_autoindex.so
-      mod_status.so
-      mod_cgid.so
-      mod_version.so
-      mod_echo.so
-      mod_optional_fn_export.so
-      mod_optional_fn_import.so
-      mod_ident.so
-      mod_cgi.so
-      mod_bucketeer.so
-      mod_optional_hook_export.so
-      mod_vhost_alias.so
-      mod_ssl.so
-      mod_authz_user.so
-      mod_env.so
-      mod_logio.so
-      mod_proxy_ftp.so
-      mod_example.so
-      mod_cern_meta.so
-      mod_authz_groupfile.so
-      mod_dir.so
-      mod_log_forensic.so
-      mod_alias.so
-      mod_deflate.so
-      mod_authn_dbm.so
-      mod_case_filter.so
-      mod_authz_host.so
-      mod_headers.so
-      mod_dumpio.so
-      mod_speling.so
-      mod_authn_file.so
+      authn_default_module
+      log_config_module
+      proxy_http_module
+      authn_alias_module
+      authz_dbm_module
+      case_filter_in_module
+      imagemap_module
+      setenvif_module
+      include_module
+      charset_lite_module
+      info_module
+      cache_module
+      actions_module
+      proxy_connect_module
+      auth_digest_module
+      unique_id_module
+      mime_magic_module
+      disk_cache_module
+      mime_module
+      usertrack_module
+      asis_module
+      optional_hook_import_module
+      negotiation_module
+      proxy_module
+      authz_default_module
+      ext_filter_module
+      auth_basic_module
+      authz_owner_module
+      authn_anon_module
+      rewrite_module
+      proxy_balancer_module
+      substitute_module
+      filter_module
+      expires_module
+      autoindex_module
+      status_module
+      cgid_module
+      version_module
+      echo_module
+      optional_fn_export_module
+      optional_fn_import_module
+      ident_module
+      cgi_module
+      bucketeer_module
+      optional_hook_export_module
+      vhost_alias_module
+      ssl_module
+      authz_user_module
+      env_module
+      logio_module
+      proxy_ftp_module
+      cern_meta_module
+      authz_groupfile_module
+      dir_module
+      log_forensic_module
+      alias_module
+      deflate_module
+      authn_dbm_module
+      case_filter_module
+      authz_host_module
+      headers_module
+      dumpio_module
+      speling_module
+      authn_file_module
     """)
+    parts_path_prefix = os.path.join(os.path.dirname(__file__), '../parts')
+    result = os.popen("%s/apache/bin/httpd -M" % parts_path_prefix)
+    loaded_module_list = [module_name for module_name in result.read().split() 
+                          if module_name.endswith('module')]
+    result.close()
     failed_module_list = []
     for module in required_module_list:
-      if not os.path.exists('parts/apache/modules/%s' % module):
+      if module not in loaded_module_list:
         failed_module_list.append(module)
     self.assertEqual([], failed_module_list,
         'Apache modules not found:\n'+'\n'.join(failed_module_list))
 
+    
 if __name__ == '__main__':
   unittest.main()
