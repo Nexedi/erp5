@@ -61,7 +61,8 @@ while transformation.getPortalType() != "Transformation":\n
   transformation = transformation.getParentValue()\n
 \n
 resource = transformation.getResourceValue()\n
-resource.reindexObject()\n
+if resource is not None:\n
+    resource.reindexObject()\n
 </string> </value>
         </item>
         <item>
@@ -103,6 +104,7 @@ resource.reindexObject()\n
                             <string>transformation</string>
                             <string>_getattr_</string>
                             <string>resource</string>
+                            <string>None</string>
                           </tuple>
                         </value>
                     </item>

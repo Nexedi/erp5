@@ -53,7 +53,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ransformationDescendant_reindexTransformationResource</string> </value>
+            <value> <string>TransformationDescendant_reindexTransformationResource</string> </value>
         </item>
         <item>
             <key> <string>method_id</string> </key>
