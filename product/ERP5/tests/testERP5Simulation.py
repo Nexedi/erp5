@@ -371,7 +371,7 @@ class TestERP5SimulationMixin(TestInvoiceMixin):
       self.assertEquals(len(unique_movement_list),
                         len(simulation_movement_list))
       # Check if all movements are related to simulation movements
-      order_movement_list = sum([x.getDeliveryValue() for x in \
+      order_movement_list = sum([x.getDeliveryValueList() for x in \
                                  simulation_movement_list], [])
       self.failIfDifferentSet(movement_list, order_movement_list)
 
