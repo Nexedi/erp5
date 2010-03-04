@@ -43,8 +43,8 @@ Service | Supply Line
 Supply Line | Predicate
 Supply Line | Supply Cell
 Transformation Module | Transformation
-Transformation Operation | Mapped Value
-Transformation Transformed Resource | Mapped Value
+Transformation Operation | Transformation Operation Cell
+Transformation Transformed Resource | Transformation Transformed Resource Cell
 Transformation | Transformation Operation
 Transformation | Transformation Optional Resource
 Transformation | Transformation Transformed Resource

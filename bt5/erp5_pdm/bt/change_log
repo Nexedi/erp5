@@ -1,5 +1,6 @@
 2010-03-04 Nicolas Dumazet
 * Add version field to Transformations
+* Add Transformation Transformed Resource Cell & Transformation Operation Cell portal types
 
 2010-03-03 yusei
 * Fix cell portal type names in matrix boxes. Internal Supply Cell must be used in Internal Supply Line.
