@@ -3,7 +3,7 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <global name="InvoiceTransactionRule" module="Products.ERP5Type.Document.InvoiceTransactionRule"/>
+        <global name="InvoiceTransactionSimulationRule" module="Products.ERP5Type.Document.InvoiceTransactionSimulationRule"/>
         <tuple/>
       </tuple>
     </pickle>
@@ -79,7 +79,7 @@
             <key> <string>test_method_id</string> </key>
             <value>
               <tuple>
-                <string>SimulationMovement_testInvoiceTransactionRule</string>
+                <string>SimulationMovement_testInvoiceTransactionSimulationRule</string>
               </tuple>
             </value>
         </item>

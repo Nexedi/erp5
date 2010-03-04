@@ -3,7 +3,7 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <global name="OrderRule" module="Products.ERP5Type.Document.OrderRule"/>
+        <global name="OrderRootSimulationRule" module="Products.ERP5Type.Document.OrderRootSimulationRule"/>
         <tuple/>
       </tuple>
     </pickle>

@@ -3,7 +3,7 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <global name="PaymentRule" module="Products.ERP5Type.Document.PaymentRule"/>
+        <global name="PaymentSimulationRule" module="Products.ERP5Type.Document.PaymentSimulationRule"/>
         <tuple/>
       </tuple>
     </pickle>
@@ -73,7 +73,7 @@
             <key> <string>test_method_id</string> </key>
             <value>
               <tuple>
-                <string>SimulationMovement_testPaymentRule</string>
+                <string>SimulationMovement_testPaymentSimulationRule</string>
               </tuple>
             </value>
         </item>

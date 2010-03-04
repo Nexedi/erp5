@@ -3,7 +3,7 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <global name="TradeModelRule" module="Products.ERP5Type.Document.TradeModelRule"/>
+        <global name="TradeModelSimulationRule" module="Products.ERP5Type.Document.TradeModelSimulationRule"/>
         <tuple/>
       </tuple>
     </pickle>
@@ -61,7 +61,7 @@
             <key> <string>test_method_id</string> </key>
             <value>
               <tuple>
-                <string>SimulationMovement_testTradeModelRule</string>
+                <string>SimulationMovement_testTradeModelSimulationRule</string>
               </tuple>
             </value>
         </item>
