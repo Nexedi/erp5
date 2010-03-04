@@ -282,7 +282,28 @@ class Resource(XMLMatrix, Variated):
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getDefaultTransformationValue')
-    def getDefaultTransformationValue(self, context):
+    def getDefaultTransformationValue(self, context=None):
+      """
+      If context is None, returns the first available transformation that
+      use self as a Resource.
+
+      Otherwise, context is used as a Predicate to match Transformations.
+      If the search returns several candidates due to a relaxed Predicate,
+      the first item is returned arbitrarily.
+      """
+      if context is None:
+        transformation_list = self.portal_catalog(portal_type="Transformation",
+                                            resource_category_uid=self.getUid())
+        if len(transformation_list) > 0:
+          return transformation_list[0].getObject()
+
+      method = context._getTypeBasedMethod('getDefaultTransformationValue')
+      if method is not None:
+        return method(context)
+      method = self._getTypeBasedMethod('getDefaultTransformationValue')
+      if method is not None:
+        return method(context)
+
       transformation_list = self.portal_domains.searchPredicateList(context,
                                 portal_type="Transformation")
 
@@ -302,18 +323,14 @@ class Resource(XMLMatrix, Variated):
       temporary Transformation: one might want for example, for conversion
       purposes, to ignore some (packaging, wrapping, labelling) components
       in conversion reports. This method can be used to create a simplified
-      transformation from the complex transformation returned by
-      getDefaultTransformationValue
+      transformation from a complex real-world transformation.
       """
-      method = context._getTypeBasedMethod(\
+      method = self._getTypeBasedMethod(\
                         'getDefaultConversionTransformationValue')
       if method is not None:
         return method()
 
-      transformation_list = self.portal_catalog(portal_type="Transformation",
-                                            resource_category_uid=self.getUid())
-      if len(transformation_list) > 0:
-        return transformation_list[0].getObject()
+      return self.getDefaultConversionTransformationValue(context=None)
 
 
     ####################################################
