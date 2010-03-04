@@ -285,7 +285,8 @@ class Resource(XMLMatrix, Variated):
     def getDefaultTransformationValue(self, context=None):
       """
       If context is None, returns the first available transformation that
-      use self as a Resource.
+      use self as a Resource. If there are several candidates, return the
+      Transformation that has the latest version.
 
       Otherwise, context is used as a Predicate to match Transformations.
       If the search returns several candidates due to a relaxed Predicate,
@@ -293,7 +294,9 @@ class Resource(XMLMatrix, Variated):
       """
       if context is None:
         transformation_list = self.portal_catalog(portal_type="Transformation",
-                                            resource_category_uid=self.getUid())
+                                            resource_category_uid=self.getUid(),
+                                            sort_on=[('version', 'descending')],
+                                            limit=1)
         if len(transformation_list) > 0:
           return transformation_list[0].getObject()
 
@@ -305,7 +308,8 @@ class Resource(XMLMatrix, Variated):
         return method(context)
 
       transformation_list = self.portal_domains.searchPredicateList(context,
-                                portal_type="Transformation")
+                                portal_type="Transformation",
+                                limit=1)
 
       if len(transformation_list) > 0:
         return transformation_list[0]
@@ -330,7 +334,7 @@ class Resource(XMLMatrix, Variated):
       if method is not None:
         return method()
 
-      return self.getDefaultConversionTransformationValue(context=None)
+      return self.getDefaultTransformationValue(context=None)
 
 
     ####################################################
