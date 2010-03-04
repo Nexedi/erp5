@@ -1502,16 +1502,28 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
     }
 
     for payment_transaction_line in payment_transaction_line_list :
-      self.assert_(
-          payment_transaction_line.getSourceId() in accounting_lines_layout.keys(),
-          'unexepected source_id %s' % payment_transaction_line.getSourceId())
-      debit, credit = accounting_lines_layout[
-                            payment_transaction_line.getSourceId()]
-      self.assertEquals(debit, payment_transaction_line.getSourceDebit())
-      self.assertEquals(credit, payment_transaction_line.getSourceCredit())
-      self.assertNotEquals(
-              len(payment_transaction_line.getDeliveryRelatedValueList(
-                              portal_type='Simulation Movement')), 0)
+      if _isMirrored(payment_transaction_line):
+        self.assert_(
+            payment_transaction_line.getDestinationId() in accounting_lines_layout.keys(),
+            'unexepected source_id %s' % payment_transaction_line.getDestinationId())
+        debit, credit = accounting_lines_layout[
+                              payment_transaction_line.getDestinationId()]
+        self.assertEquals(debit, payment_transaction_line.getDestinationDebit())
+        self.assertEquals(credit, payment_transaction_line.getDestinationCredit())
+        self.assertNotEquals(
+                len(payment_transaction_line.getDeliveryRelatedValueList(
+                                portal_type='Simulation Movement')), 0)
+      else:
+        self.assert_(
+            payment_transaction_line.getSourceId() in accounting_lines_layout.keys(),
+            'unexepected source_id %s' % payment_transaction_line.getSourceId())
+        debit, credit = accounting_lines_layout[
+                              payment_transaction_line.getSourceId()]
+        self.assertEquals(debit, payment_transaction_line.getSourceDebit())
+        self.assertEquals(credit, payment_transaction_line.getSourceCredit())
+        self.assertNotEquals(
+                len(payment_transaction_line.getDeliveryRelatedValueList(
+                                portal_type='Simulation Movement')), 0)
 
   def stepRebuildAndCheckNothingIsCreated(self, sequence, **kw) :
     """ Calls the DeliveryBuilder again and checks that the accounting module
@@ -2076,8 +2088,9 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       stepCreateCurrencies
       stepCreateProducts
       stepCreateInvoiceTransactionRule
-      stepTic
       stepUpdateInvoiceTransactionRuleMatrix
+      stepCreatePaymentRule
+      stepUpdatePaymentRuleMatrix
       stepValidateInvoiceTransaction
       stepTic
       stepCreateNotebookFranceCell
@@ -2114,8 +2127,9 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       stepCreateCurrencies
       stepCreateProducts
       stepCreateInvoiceTransactionRule
-      stepTic
       stepUpdateInvoiceTransactionRuleMatrix
+      stepCreatePaymentRule
+      stepUpdatePaymentRuleMatrix
       stepValidateInvoiceTransaction
       stepTic
       stepCreateNotebookFranceCell
