@@ -53,18 +53,26 @@
  </chain>
  <chain>
   <type>Transformation</type>
-  <workflow>edit_workflow, validation_workflow</workflow>
+  <workflow>conversion_interaction_workflow, edit_workflow, validation_workflow</workflow>
  </chain>
  <chain>
   <type>Transformation Operation</type>
-  <workflow>edit_workflow</workflow>
+  <workflow>conversion_interaction_workflow, edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Transformation Operation Cell</type>
+  <workflow>conversion_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>Transformation Optional Resource</type>
-  <workflow>edit_workflow</workflow>
+  <workflow>conversion_interaction_workflow, edit_workflow</workflow>
  </chain>
  <chain>
   <type>Transformation Transformed Resource</type>
-  <workflow>edit_workflow</workflow>
+  <workflow>conversion_interaction_workflow, edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Transformation Transformed Resource Cell</type>
+  <workflow>conversion_interaction_workflow</workflow>
  </chain>
 </workflow_chain>

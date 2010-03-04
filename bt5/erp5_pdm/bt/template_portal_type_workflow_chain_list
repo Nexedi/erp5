@@ -26,8 +26,14 @@ Service | edit_workflow
 Service | validation_workflow
 Supply Line | edit_workflow
 Supply Line | supply_line_interaction_workflow
+Transformation Operation Cell | conversion_interaction_workflow
+Transformation Operation | conversion_interaction_workflow
 Transformation Operation | edit_workflow
+Transformation Optional Resource | conversion_interaction_workflow
 Transformation Optional Resource | edit_workflow
+Transformation Transformed Resource Cell | conversion_interaction_workflow
+Transformation Transformed Resource | conversion_interaction_workflow
 Transformation Transformed Resource | edit_workflow
+Transformation | conversion_interaction_workflow
 Transformation | edit_workflow
 Transformation | validation_workflow
