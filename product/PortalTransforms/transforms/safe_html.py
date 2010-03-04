@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import logging
-from HTMLParser import HTMLParser
+from HTMLParser import HTMLParser, HTMLParseError
 import re
 from cgi import escape
 from zope.interface import implements
@@ -13,6 +13,9 @@ from Products.CMFDefault.utils import SimpleHTMLParser
 from Products.CMFDefault.utils import VALID_TAGS
 from Products.CMFDefault.utils import NASTY_TAGS
 from Products.PortalTransforms.utils import safeToInt
+
+from lxml import etree
+from lxml.etree import HTMLParser as LHTMLParser
 
 # tag mapping: tag -> short or long tag
 VALID_TAGS = VALID_TAGS.copy()
@@ -256,17 +259,42 @@ class SafeHTML:
             data.setData(orig)
             return data
 
-        try:
-            safe = scrubHTML(
-                bodyfinder(orig),
-                valid=self.config.get('valid_tags', {}),
-                nasty=self.config.get('nasty_tags', {}),
-                remove_javascript=self.config.get('remove_javascript', True),
-                raise_error=False)
-        except IllegalHTML, inst:
-            data.setData(msg_pat % ("Error", str(inst)))
-        else:
-            data.setData(safe)
+        html_string = orig
+        allready_repaired = False
+        while True:
+            try:
+                safe = scrubHTML(
+                    bodyfinder(html_string),
+                    valid=self.config.get('valid_tags', {}),
+                    nasty=self.config.get('nasty_tags', {}),
+                    remove_javascript=self.config.get('remove_javascript', True),
+                    raise_error=False)
+            except IllegalHTML, inst:
+                data.setData(msg_pat % ("Error", str(inst)))
+                break
+            except HTMLParseError:
+                # ouch !
+                # HTMLParser is not able to parse very dirty HTML string,
+                # try to repair any broken html with help of lxml
+                if allready_repaired:
+                  raise
+                allready_repaired = True
+                encoding = kwargs.get('encoding')
+                # recover parameter is equal to True by default
+                # in lxml API. I pass the argument to improve readability
+                # of above code.
+                try:
+                    lparser = LHTMLParser(encoding=encoding, recover=True)
+                except LookupError:
+                    # Provided encoding is not known by parser, so discard it
+                    lparser = LHTMLParser(recover=True)
+                repaired_html_tree = etree.HTML(orig, parser=lparser)
+                html_string = etree.tostring(repaired_html_tree)
+                # avoid breaking now.
+                # continue into the loop with repaired html
+            else:
+                data.setData(safe)
+                break
         return data
 
 def register():
