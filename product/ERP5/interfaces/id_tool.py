@@ -90,3 +90,33 @@ class IIdTool(Interface):
                               default=100, id_count=3)
        # this can returns ['154', '155', '156']
     """
+
+  def initializeGenerator(id_generator=None, all=False):
+    """
+    Initialize generators. This is mostly used when a new ERP5 site
+    is created. Some generators will need to do some initialization like
+    creating SQL Database, prepare some data in ZODB, etc
+
+    id_generator (string)
+       Select an particular id generator by giving its reference.
+
+    all (boolean)
+       do initialization for all generators
+    """
+
+  def clearGenerator(id_generator=None, all=False):
+    """
+    Clear generators data. This can be usefull when working on a
+    development instance or in some other rare cases. This will
+    loose data and must be use with caution
+
+    This can be incompatible with some particular generator implementation,
+    in this case a particular error will be raised (to be determined and
+    added here)
+
+    id_generator (string)
+       Select an particular id generator by giving its reference.
+
+    all (boolean)
+       do initialization for all generators
+    """

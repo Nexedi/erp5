@@ -76,3 +76,21 @@ class IIdGenerator(Interface):
        id (optional). By default, ids are managed like integers and
        are increased one by one
     """
+
+  def initializeGenerator():
+    """
+    Initialize generator. This is mostly used when a new ERP5 site
+    is created. Some generators will need to do some initialization like
+    creating SQL Database, prepare some data in ZODB, etc
+    """
+
+  def clearGenerator():
+    """
+    Clear generators data. This can be usefull when working on a
+    development instance or in some other rare cases. This will
+    loose data and must be use with caution
+
+    This can be incompatible with some particular generator implementation,
+    in this case a particular error will be raised (to be determined and
+    added here)
+    """
