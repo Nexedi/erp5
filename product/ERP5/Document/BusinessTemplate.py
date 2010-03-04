@@ -3147,6 +3147,16 @@ class DocumentTemplateItem(BaseTemplateItem):
             continue
           if self.local_file_importer_name is not None:
             globals()[self.local_file_importer_name](name)
+            # after any import, flush all ZODB caches to force a DB reload
+            # otherwise we could have objects trying to get commited while
+            # holding reference to a class that is no longer the same one as
+            # the class in its import location and pickle doesn't tolerate it.
+            # First we do a savepoint to dump dirty objects to temporary
+            # storage, so that all references to them can be freed.
+            transaction.savepoint(optimistic=True)
+            # Then we need to flush from all caches, not only the one from this
+            # connection
+            self.getPortalObject()._p_jar.db().cacheMinimize()
     else:
       BaseTemplateItem.install(self, context, trashbin, **kw)
       for id in self._archive.keys():

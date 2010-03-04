@@ -5988,6 +5988,14 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
       template_tool = self.portal.portal_templates
       bt_path = os.path.join(os.path.dirname(__file__), 'test_data',
                              self._testMethodName)
+      # create a previously existing instance of the overriden document type
+      from Products.ERP5Type.Document.File import File
+      from Products.CMFDefault.File import File as BaseFile
+      self.portal._setObject('another_file', File('another_file'))
+      transaction.commit()
+      self.tic()
+      # check its class has not yet been overriden
+      self.assertTrue(isinstance(self.portal.another_file, BaseFile))
       for i in xrange(6):
         marker_list.append(i)
         gc.disable()
@@ -6001,6 +6009,9 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
         self.assertEqual(self.portal.some_file.int_index, i)
         transaction.commit()
         self.tic()
+        # check the previously existing instance now behaves as the overriden
+        # class
+        self.assertFalse(isinstance(self.portal.another_file, BaseFile))
     finally:
       BaseTemplateItem.removeProperties = BaseTemplateItem_removeProperties
       SimpleItem._getCopy = SimpleItem_getCopy
