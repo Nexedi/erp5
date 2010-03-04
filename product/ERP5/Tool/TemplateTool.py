@@ -91,7 +91,7 @@ class TemplateTool (BaseTool):
     meta_type = 'ERP5 Template Tool'
     portal_type = 'Template Tool'
     allowed_types = ( 'ERP5 Business Template',)
-    
+
     # This stores information on repositories.
     repository_dict = {}
 
@@ -113,7 +113,7 @@ class TemplateTool (BaseTool):
         if bt.getInstallationState() == 'installed' and bt.getTitle() == title:
           return bt
       return None
-        
+
     def getInstalledBusinessTemplatesList(self):
       """Deprecated.
       """
@@ -128,7 +128,7 @@ class TemplateTool (BaseTool):
         if bt.getInstallationState() == 'installed':
           installed_bts.append(bt)
       return installed_bts
-        
+
     def getBuiltBusinessTemplatesList(self):
       """Deprecated.
       """
@@ -181,9 +181,9 @@ class TemplateTool (BaseTool):
       path = business_template.getTitle()
       path = pathname2url(path)
       # XXX Why is it necessary to create a temporary directory?
-      tmpdir_path = mkdtemp() 
+      tmpdir_path = mkdtemp()
       # XXX not thread safe
-      current_directory = os.getcwd() 
+      current_directory = os.getcwd()
       os.chdir(tmpdir_path)
       export_string = business_template.export(path=path)
       os.chdir(current_directory)
@@ -191,7 +191,7 @@ class TemplateTool (BaseTool):
         RESPONSE.setHeader('Content-type','tar/x-gzip')
         RESPONSE.setHeader('Content-Disposition',
                            'inline;filename=%s-%s.bt5' % \
-                               (path, 
+                               (path,
                                 business_template.getVersion()))
       try:
         return export_string.getvalue()
@@ -233,7 +233,7 @@ class TemplateTool (BaseTool):
         magic = file.read(5)
       finally:
         file.close()
-        
+
       if magic == '<?xml': # old version
         self._importObjectFromFile(path, id=id)
         bt = self[id]
@@ -286,13 +286,13 @@ class TemplateTool (BaseTool):
         REQUEST = getattr(self, 'REQUEST', None)
 
       bt = self.download(url, id=id)
-            
+
       if REQUEST is not None:
         ret_url = bt.absolute_url() + '/view'
         psm = translateString("Business template downloaded successfully.")
-        REQUEST.RESPONSE.redirect("%s?portal_status_message=%s" 
+        REQUEST.RESPONSE.redirect("%s?portal_status_message=%s"
                                     % (ret_url, psm))
-    
+
     def _download_local(self, path, bt_id):
       """Download Business Template from local directory or file
       """
@@ -323,7 +323,7 @@ class TemplateTool (BaseTool):
           pid = prop['id']
           prop_path = os.path.join('.', bt_path, pid)
           if not os.path.exists(prop_path):
-            continue          
+            continue
           value = open(prop_path, 'rb').read()
           if value is 'None':
             # At export time, we used to export non-existent properties:
@@ -346,7 +346,7 @@ class TemplateTool (BaseTool):
     def _download_url(self, url, bt_id):
       tempid, temppath = mkstemp()
       try:
-        os.close(tempid) # Close the opened fd as soon as possible.    
+        os.close(tempid) # Close the opened fd as soon as possible.
         file_path, headers = urlretrieve(url, temppath)
         if re.search(r'<title>Revision \d+:', open(file_path, 'r').read()):
           # this looks like a subversion repository, try to check it out
@@ -388,7 +388,7 @@ class TemplateTool (BaseTool):
       # come from the management interface.
       if REQUEST is not None:
         return self.manage_download(url, id=id, REQUEST=REQUEST)
-      
+
       if id is None:
         id = self.generateNewId()
 
@@ -399,7 +399,7 @@ class TemplateTool (BaseTool):
            os.path.isfile(os.path.normpath(url)):
           urltype = 'file'
           name = os.path.normpath(url)
-      
+
       if urltype and urltype != 'file':
         bt = self._download_url(url, id)
       else:
@@ -408,23 +408,23 @@ class TemplateTool (BaseTool):
       bt.build(no_action=True)
       return bt
 
-    def importBase64EncodedText(self, file_data=None, id=None, REQUEST=None, 
+    def importBase64EncodedText(self, file_data=None, id=None, REQUEST=None,
                                 batch_mode=False, **kw):
-      """ 
+      """
         Import Business Template from passed base64 encoded text.
       """
       import_file = StringIO(decodestring(file_data))
-      return self.importFile(import_file = import_file, id = id, REQUEST = REQUEST, 
+      return self.importFile(import_file = import_file, id = id, REQUEST = REQUEST,
                              batch_mode = batch_mode, **kw)
 
-    def importFile(self, import_file=None, id=None, REQUEST=None, 
+    def importFile(self, import_file=None, id=None, REQUEST=None,
                    batch_mode=False, **kw):
       """
         Import Business Template from one file
       """
       if REQUEST is None:
         REQUEST = getattr(self, 'REQUEST', None)
-      
+
       if id is None:
         id = self.generateNewId()
 
@@ -592,21 +592,21 @@ class TemplateTool (BaseTool):
                   temp_property_dict.get('provision', ())
               property_dict['copyright_list'] = \
                   temp_property_dict.get('copyright', ())
-              
+
               property_dict_list.append(property_dict)
           finally:
             doc.unlink()
         finally:
           f.close()
-        
+
         self.repository_dict[repository] = tuple(property_dict_list)
-        
+
       if REQUEST is not None:
         ret_url = self.absolute_url() + '/' + REQUEST.get('dialog_id', 'view')
         psm = translateString("Business templates updated successfully.")
         REQUEST.RESPONSE.redirect("%s?cancel_url=%s&portal_status_message=%s&dialog_category=object_exchange&selection_name=business_template_selection"
                                   % (ret_url, REQUEST.form.get('cancel_url', ''), psm))
-                
+
     security.declareProtected( Permissions.AccessContentsInformation,
                                'getRepositoryList' )
     def getRepositoryList(self):
@@ -614,7 +614,7 @@ class TemplateTool (BaseTool):
         Get the list of repositories.
       """
       return self.repository_dict.keys()
-      
+
     security.declarePublic( 'decodeRepositoryBusinessTemplateUid' )
     def decodeRepositoryBusinessTemplateUid(self, uid):
       """
@@ -622,7 +622,7 @@ class TemplateTool (BaseTool):
         Return a repository and an id.
       """
       return cPickle.loads(b64decode(uid))
-    
+
     security.declarePublic( 'encodeRepositoryBusinessTemplateUid' )
     def encodeRepositoryBusinessTemplateUid(self, repository, id):
       """
@@ -659,7 +659,7 @@ class TemplateTool (BaseTool):
           return True;
         return False;
       raise UnsupportedComparingOperator, 'Unsupported comparing operator: %s'%(operator,)
-    
+
     security.declareProtected(Permissions.AccessContentsInformation,
                               'IsOneProviderInstalled')
     def IsOneProviderInstalled(self, title):
@@ -674,13 +674,13 @@ class TemplateTool (BaseTool):
         if title in provision_list:
           return True
       return False
-    
+
     security.declareProtected(Permissions.AccessContentsInformation,
                                'getLastestBTOnRepos')
     def getLastestBTOnRepos(self, title, version_restriction=None):
       """
        It's possible we have different versions of the same BT
-       available on various repositories or on the same repository. 
+       available on various repositories or on the same repository.
        This function returns the latest one that meet the version_restriction
        (i.e "<= 0.2") in the following form :
        tuple (repository, id)
@@ -699,7 +699,7 @@ class TemplateTool (BaseTool):
         return (result[0], result[1])
       else:
         raise BusinessTemplateUnknownError, 'Business Template %s (%s) could not be found in the repositories'%(title, version_restriction or '')
-    
+
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getProviderList')
     def getProviderList(self, title):
@@ -714,7 +714,7 @@ class TemplateTool (BaseTool):
           if (title in provision_list) and (property_dict['title'] not in result_list):
             result_list.append(property_dict['title'])
       return result_list
-     
+
     security.declareProtected(Permissions.AccessContentsInformation,
                                'getDependencyList')
     def getDependencyList(self, bt):
@@ -778,7 +778,7 @@ class TemplateTool (BaseTool):
                     result_list.append(bt_dep)
               return result_list
       raise BusinessTemplateUnknownError, 'The Business Template %s could not be found on repository %s'%(bt[1], bt[0])
-                
+
     def findProviderInBTList(self, provider_list, bt_list):
       """
        Find one provider in provider_list which is present in
@@ -790,7 +790,7 @@ class TemplateTool (BaseTool):
           if id.startswith(provider):
             return (repository, id)
       raise BusinessTemplateUnknownError, 'Provider not found in bt_list'
-    
+
     security.declareProtected(Permissions.AccessContentsInformation,
                               'sortBusinessTemplateList')
     def sortBusinessTemplateList(self, bt_list):
@@ -808,7 +808,7 @@ class TemplateTool (BaseTool):
           if dependency not in result_list:
             result_list.append(dependency)
       return result_list
-    
+
     security.declareProtected( Permissions.AccessContentsInformation,
                                'getRepositoryBusinessTemplateList' )
     def getRepositoryBusinessTemplateList(self, update_only=False, **kw):
@@ -904,7 +904,7 @@ class TemplateTool (BaseTool):
       """
       #LOG('getUpdatedRepositoryBusinessTemplateList', 0, 'kw = %r' % (kw,))
       return self.getRepositoryBusinessTemplateList(update_only=True, **kw)
-      
+
     def compareVersions(self, version1, version2):
       """
         Return negative if version1 < version2, 0 if version1 == version2,
@@ -942,7 +942,7 @@ class TemplateTool (BaseTool):
         except IndexError:
           e = 0
         return e
-        
+
       for i in xrange(max(len(v1), len(v2))):
         e1 = convert(v1, i)
         e2 = convert(v2, i)
@@ -951,5 +951,5 @@ class TemplateTool (BaseTool):
           return result
 
       return 0
-      
+
 InitializeClass(TemplateTool)
