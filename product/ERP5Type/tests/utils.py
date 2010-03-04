@@ -351,3 +351,98 @@ def to_utf8(text):
   if isinstance(text, unicode):
     text = text.encode('utf-8')
   return text
+
+def updateCellList(portal, line, cell_type, cell_range_method, cell_dict_list):
+  """A matrixbox-like helper function to create cells at once.
+
+    dicts in cell_dict_list can have following keys:
+     - base_id
+     - cell_range_kw
+     - dimension
+     - mapped_value_argument_list
+     - table
+
+    Example:
+      updateCellList(sale_order_line_1_1,
+                     'Sale Order Cell',
+                     'DeliveryLine_asCellRange',
+                     ({'base_id':'movement',
+                       'mapped_value_argument_list':('quantity',),
+                       'dimension':1,
+                       'table':(('product_packing/package', 1),
+                                ('product_packing/case'   , 1),
+                               )
+                       },
+                      )
+                     )
+  """
+  def get_range_id_list(range_list):
+    if not range_list:
+      return []
+    if len(range_list[0])>1:
+      return [item[0] for item in range_list]
+    else:
+      return range_list
+
+  for cell_dict in cell_dict_list:
+    base_id = cell_dict['base_id']
+    if callable(cell_range_method):
+      cell_range_list = cell_range_method()
+    else:
+      cell_range_list = getattr(line, cell_range_method)(
+        matrixbox=True,
+        base_id=base_id,
+        **cell_dict.get('cell_range_kw', {}))
+    line.setCellRange(base_id=base_id,
+                      *[get_range_id_list(cell_range)
+                        for cell_range in cell_range_list]
+                      )
+
+    dimension = cell_dict['dimension']
+    mapped_value_argument_list = cell_dict['mapped_value_argument_list']
+    def getMappedValueDict(item):
+      if len(mapped_value_argument_list)==1:
+        return {mapped_value_argument_list[0]:item}
+      else:
+        result = {}
+        for index, argument_name in enumerate(mapped_value_argument_list):
+          result[argument_name] = item[index]
+        return result
+
+    table = cell_dict['table']
+    if dimension==1:
+      data_list = []
+      for table_line in table:
+        data_list.append(([table_line[0]], getMappedValueDict(table_line[1])))
+    elif dimension==2:
+      column = table[0]
+      data_list = []
+      for table_line in table[1:]:
+        row = table_line[0]
+        for index, item in enumerate(table_line[1:]):
+          data_list.append(([row, column[index]], getMappedValueDict(item)))
+    elif dimension==3:
+      raise NotImplementedError
+
+    for category_list, mapped_value_dict in data_list:
+      cell = line.newCell(portal_type=cell_type,
+                          base_id=base_id,
+                          *category_list)
+
+      cell.edit(**mapped_value_dict)
+      cell.setMappedValuePropertyList(mapped_value_dict.keys())
+
+      base_category_list = [category_path
+                            for category_path in category_list
+                            if (category_path.split('/')[0] in
+                                portal.portal_categories.objectIds())
+                            ]
+
+      cell.setMembershipCriterionBaseCategoryList(base_category_list)
+      membership_criterion_category_list = [
+        category_path
+        for category_path in category_list
+        if category_path.split('/')[0] in base_category_list]
+      cell.setMembershipCriterionCategoryList(membership_criterion_category_list)
+      cell.edit(predicate_category_list=category_list,
+                variation_category_list=category_list)
