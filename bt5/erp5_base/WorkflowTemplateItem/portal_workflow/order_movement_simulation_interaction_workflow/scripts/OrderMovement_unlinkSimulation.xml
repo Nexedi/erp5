@@ -59,6 +59,9 @@
 simulation_movement_list = order_movement.getOrderRelatedValueList(\n
     portal_type="Simulation Movement")\n
 for simulation_movement in simulation_movement_list:\n
+  if simulation_movement.getDelivery() == order_movement.getRelativeUrl():\n
+    simulation_movement.setDelivery(None)\n
+  # \'order\' category is deprecated. it is kept for compatibility.\n
   if simulation_movement.getOrder() == order_movement.getRelativeUrl():\n
     simulation_movement.setOrder(None)\n
 </string> </value>
