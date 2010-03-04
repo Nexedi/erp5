@@ -78,7 +78,7 @@ class TestERP5SimulationMixin(TestInvoiceMixin):
         account.setAccountType(account_type)
         portal.portal_workflow.doActionFor(account, 'validate_action')
     portal_rules = portal.portal_rules
-    clipboard = portal_rules.manage_copyObjects(ids=['new_invoice_transaction_rule'])
+    clipboard = portal_rules.manage_copyObjects(ids=['new_invoice_transaction_simulation_rule'])
     pasted = portal_rules.manage_pasteObjects(clipboard)
     invoice_rule = getattr(portal_rules, pasted[0]['new_id'])
 
@@ -438,13 +438,13 @@ class TestERP5Simulation(TestERP5SimulationMixin, ERP5TypeTestCase):
 
   def afterSetUp(self):
     TestERP5SimulationMixin.afterSetUp(self)
-    new_order_rule = self.portal.portal_rules['new_order_rule']
+    new_order_rule = self.portal.portal_rules.new_order_root_simulation_rule
     new_order_rule['quantity_tester'].edit(quantity=None,
                                            quantity_range_max=2,
                                            quantity_range_min=-1)
 
   def beforeTearDown(self):
-    new_order_rule = self.portal.portal_rules['new_order_rule']
+    new_order_rule = self.portal.portal_rules.new_order_root_simulation_rule
     new_order_rule['quantity_tester'].edit(quantity=0,
                                            quantity_range_max=None,
                                            quantity_range_min=None)
