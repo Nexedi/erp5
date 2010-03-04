@@ -37,7 +37,6 @@ from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
-from Products.ERP5Type.tests.utils import todo_erp5
 from testPackingList import TestPackingList
 from testInvoice import TestSaleInvoice, TestInvoiceMixin
 
@@ -596,12 +595,6 @@ class TestERP5SimulationPackingList(TestERP5SimulationMixin, TestPackingList):
 
 class TestERP5SimulationInvoice(TestERP5SimulationMixin, TestSaleInvoice):
   pass
-
-# erp5_simulation needs to be updated to follow the new simulation
-# hierarchy, i.e. do not use order category in simulation movements.
-TestERP5Simulation = todo_erp5(TestERP5Simulation)
-TestERP5SimulationPackingList = todo_erp5(TestERP5SimulationPackingList)
-TestERP5SimulationInvoice = todo_erp5(TestERP5SimulationInvoice)
 
 def test_suite():
   suite = unittest.TestSuite()
