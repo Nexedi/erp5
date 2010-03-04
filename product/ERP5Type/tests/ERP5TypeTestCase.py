@@ -20,8 +20,9 @@ import traceback
 from cStringIO import StringIO
 from cPickle import dumps
 from glob import glob
-from urllib import urlretrieve
+from urllib import urlopen
 from warnings import warn
+from ZTUtils import make_query
 
 # XXX make sure that get_request works.
 current_app = None
@@ -386,56 +387,42 @@ class ERP5TypeTestCase(backportUnittest.TestCase, PortalTestCase):
 
       self.run(*args, **kw)
 
-    def _getBTPathAndIdList(self, template_list):
-      INSTANCE_HOME = os.environ['INSTANCE_HOME']
-      erp5_tests_bt5_path = os.environ.get('erp5_tests_bt5_path',
-                                os.path.join(INSTANCE_HOME, 'bt5'))
-      erp5_product_path = os.path.dirname(Products.ERP5.__file__)
-      bootstrap_path = os.environ.get('erp5_tests_bootstrap_path',
-                                      os.path.join(erp5_product_path, 
-                                                   'bootstrap'))
+    @staticmethod
+    def _getBTPathAndIdList(template_list):
+      bootstrap_path = os.environ.get('erp5_tests_bootstrap_path') or \
+        ERP5Site.getBootstrapDirectory()
+      bt5_path = os.environ.get('erp5_tests_bt5_path')
+      if bt5_path:
+        bt5_path_list = bt5_path.split(',')
+      else:
+        bt5_path = os.path.join(os.environ['INSTANCE_HOME'], 'bt5')
+        bt5_path_list = bt5_path, os.path.join(bt5_path, '*')
+
+      not_found_list = []
       new_template_list = []
       for template in template_list:
         id = template.split('/')[-1]
-        try :
-          file, headers = urlretrieve(template)
-        except IOError :
-          # First, try the bt5 directory itself.
-          original_template = template
-          for bt5_path in erp5_tests_bt5_path.split(','):
-            template = original_template
-            path = os.path.join(bt5_path, template)
-            alternate_path = os.path.join(bootstrap_path, template)
-            if os.path.exists(path):
-              template = path
-              break
-            elif os.path.exists(alternate_path):
-              template = alternate_path
-              break
-            else:
-              path = '%s.bt5' % path
-              if os.path.exists(path):
-                template = path
-                break
-              else:
-                # Otherwise, look at sub-directories.
-                # This is for backward-compatibility.
-                path = os.path.join(INSTANCE_HOME, 'bt5', '*', template)
-                template_list = glob(path)
-                if len(template_list) == 0:
-                  template_list = glob('%s.bt5' % path)
-                if len(template_list) and template_list[0]:
-                  template = template_list[0]
-                else:
-                  # The last resort is current directory.
-                  template = '%s' % id
-                  if not os.path.exists(template):
-                    template = '%s.bt5' % id
+        for path in bt5_path_list:
+          if path.endswith('/portal_templates'):
+            bt_id = urlopen('%s/getLastBusinessTemplateId?title=%s'
+                            % (path, template)).read()
+            path = bt_id and '%s/manage_exportObject?%s' % (path,
+              make_query(id=bt_id, download=1, to_xml=0))
+          else:
+            path = os.path.join(path, template)
+            path_list = glob(path) + glob(path + '.bt5')
+            path = path_list and path_list[0]
+          if path:
+            break
         else:
-          template = '%s' % template
-          if not os.path.exists(template):
-            template = '%s.bt5' % template
-        new_template_list.append((template,id))
+          path = os.path.join(bootstrap_path, template)
+          if not os.path.exists(path):
+            not_found_list.append(template)
+            continue
+        new_template_list.append((path, id))
+      if not_found_list:
+        raise RuntimeError("Following BT can't be found on your system : %s"
+                           % ', '.join(not_found_list))
       return new_template_list
 
     def manuallyInstallBusinessTemplate(self, *template_list):
@@ -500,7 +487,6 @@ class ERP5TypeTestCase(backportUnittest.TestCase, PortalTestCase):
               if re.search(expression, business_template):
                 matching_template_list.append(business_template)
           template_list = matching_template_list
-      new_template_list = self._getBTPathAndIdList(template_list)
 
       # keep a mapping type info name -> property sheet list, to remove them in
       # tear down.
@@ -508,7 +494,7 @@ class ERP5TypeTestCase(backportUnittest.TestCase, PortalTestCase):
       light_install = self.enableLightInstall()
       create_activities = self.enableActivityTool()
       hot_reindexing = self.enableHotReindexing()
-      self.setUpERP5Site(business_template_list=new_template_list,
+      self.setUpERP5Site(business_template_list=template_list,
                          light_install=light_install,
                          create_activities=create_activities,
                          quiet=install_bt5_quiet,
@@ -838,25 +824,16 @@ class ERP5TypeTestCase(backportUnittest.TestCase, PortalTestCase):
     def _installBusinessTemplateList(self, business_template_list,
                                      light_install=True,
                                      quiet=True):
-      portal = self.portal
+      template_tool = self.portal.portal_templates
       update_business_templates = os.environ.get('update_business_templates') is not None
-      BusinessTemplate_getModifiedObject = aq_base(getattr(portal, 'BusinessTemplate_getModifiedObject', None))
-
-      # check that all bt5 exist, saving time in case of missing bt
-      missing_bt_list = []
-      for url, bt_title in business_template_list:
-        # if the bt is not found, an error is raised
-        if not portal.portal_templates.assertBtPathExists(url):
-          missing_bt_list.append(bt_title)
-      if len(missing_bt_list):
-        raise RuntimeError("Some BT can't be found on your system : %s"
-                           % ', '.join(missing_bt_list))
+      BusinessTemplate_getModifiedObject = aq_base(
+        getattr(self.portal, 'BusinessTemplate_getModifiedObject', None))
 
       # Add some business templates
       for url, bt_title in business_template_list:
         start = time.time()
         get_install_kw = False
-        if bt_title in [x.getTitle() for x in portal.portal_templates.getInstalledBusinessTemplateList()]:
+        if bt_title in [x.getTitle() for x in template_tool.getInstalledBusinessTemplateList()]:
           if update_business_templates:
             if not quiet:
               ZopeTestCase._print('Updating %s business template ... ' % bt_title)
@@ -867,7 +844,7 @@ class ERP5TypeTestCase(backportUnittest.TestCase, PortalTestCase):
         else:
           if not quiet:
             ZopeTestCase._print('Adding %s business template ... ' % bt_title)
-        bt = portal.portal_templates.download(url)
+        bt = template_tool.download(url)
         if not quiet:
           ZopeTestCase._print('(imported in %.3fs) ' % (time.time() - start))
         install_kw = None
@@ -915,6 +892,8 @@ class ERP5TypeTestCase(backportUnittest.TestCase, PortalTestCase):
         if not (hasattr(aq_base(app), portal_name) and
                  setup_done.get(tuple(business_template_list))):
           setup_done[tuple(business_template_list)] = 1
+          business_template_list = \
+            self._getBTPathAndIdList(business_template_list)
           try:
             _start = time.time()
             # Add user and log in
@@ -1134,6 +1113,10 @@ class ERP5TypeTestCase(backportUnittest.TestCase, PortalTestCase):
         setSecurityManager(sm)
 
         return ResponseWrapper(response, outstream, path)
+
+from Products.ERP5 import ERP5Site
+ERP5Site.getBootstrapBusinessTemplateUrl = lambda bt_title: \
+  ERP5TypeTestCase._getBTPathAndIdList((bt_title,))[0][0]
 
 
 class ResponseWrapper:

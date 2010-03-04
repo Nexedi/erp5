@@ -1279,6 +1279,14 @@ def getBootstrapDirectory():
   product_path = package_home(globals())
   return os.path.join(product_path, 'bootstrap')
 
+def getBootstrapBusinessTemplateUrl(bt_title):
+  """
+    Return the path to download the given bootstrap business template
+  """
+  path = os.path.join(getBootstrapDirectory(), bt_title)
+  if not os.path.exists(path):
+    path += '.bt5'
+  return path
 
 # This PortalGenerator class was copied wholesale from CMF 1.5 which is
 # identical to the one on 1.6, and hasn't been used by CMF itself since even
@@ -1442,9 +1450,6 @@ class PortalGenerator:
 class ERP5Generator(PortalGenerator):
 
   klass = ERP5Site
-
-  def getBootstrapDirectory(self):
-    return getBootstrapDirectory()
 
   def create(self,
              parent,
@@ -1806,7 +1811,7 @@ class ERP5Generator(PortalGenerator):
                   'business_template_installation_workflow'):
       if wf_id in tool.objectIds():
         tool.manage_delObjects([wf_id])
-    bootstrap_dir = self.getBootstrapDirectory()
+    bootstrap_dir = getBootstrapDirectory()
     business_template_building_workflow = os.path.join(
                                  bootstrap_dir,
                                  'business_template_building_workflow.xml')
@@ -1984,14 +1989,9 @@ class ERP5Generator(PortalGenerator):
     if template_tool is None:
       return
     if template_tool.getInstalledBusinessTemplate('erp5_core') is None:
-      bootstrap_dir = self.getBootstrapDirectory()
       for bt in ('erp5_core', p.erp5_catalog_storage, 'erp5_xhtml_style'):
         if not bt:
           continue
-        template = os.path.join(bootstrap_dir, bt)
-        if not os.path.exists(template):
-          template = os.path.join(bootstrap_dir, '%s.bt5' % bt)
-
-        id = template_tool.generateNewId()
-        template_tool.download(template, id=id)
-        template_tool[id].install(**kw)
+        url = getBootstrapBusinessTemplateUrl(bt)
+        bt = template_tool.download(url)
+        bt.install(**kw)

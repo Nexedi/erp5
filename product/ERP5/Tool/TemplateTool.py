@@ -124,7 +124,7 @@ class TemplateTool (BaseTool):
       """Get the list of installed business templates.
       """
       installed_bts = []
-      for bt in self.contentValues(filter={'portal_type':'Business Template'}):
+      for bt in self.contentValues(portal_type='Business Template'):
         if bt.getInstallationState() == 'installed':
           installed_bts.append(bt)
       return installed_bts
@@ -139,10 +139,21 @@ class TemplateTool (BaseTool):
       """Get the list of built and not installed business templates.
       """
       built_bts = []
-      for bt in self.contentValues(filter={'portal_type':'Business Template'}):
+      for bt in self.contentValues(portal_type='Business Template'):
         if bt.getInstallationState() == 'not_installed' and bt.getBuildingState() == 'built':
           built_bts.append(bt)
       return built_bts
+
+    def getLastBusinessTemplateId(self, title):
+      """Get the id of the business template with the highest revision number
+      """
+      last_bt = None, None
+      for bt in self.contentValues(portal_type='Business Template'):
+        if bt.getTitle() == title and bt.getBuildingState() == 'built':
+          revision = bt.getRevision()
+          if last_bt[0] < revision and bt.getInstallationState() != 'deleted':
+            last_bt = revision, bt.getId()
+      return last_bt[1]
 
     security.declareProtected(Permissions.ManagePortal,
                               'getDefaultBusinessTemplateDownloadURL')
@@ -401,6 +412,12 @@ class TemplateTool (BaseTool):
           name = os.path.normpath(url)
 
       if urltype and urltype != 'file':
+        if '/manage_exportObject?' in url:
+          # In this case, the downloaded BT is already built.
+          bt = self._p_jar.importFile(urlopen(url))
+          bt.id = id
+          del bt.uid
+          return self[self._setObject(id, bt)]
         bt = self._download_url(url, id)
       else:
         bt = self._download_local(name, id)
