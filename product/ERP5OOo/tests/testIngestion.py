@@ -111,7 +111,6 @@ class TestIngestion(ERP5TypeTestCase):
     self.createDefaultCategoryList()
     self.setSystemPreference()
     self.setSimulatedNotificationScript()
-    self.setTools()
 
   def beforeTearDown(self):
     activity_tool = self.portal.portal_activities
@@ -143,18 +142,6 @@ class TestIngestion(ERP5TypeTestCase):
       factory(id=script_id)
     script = getattr(context, script_id)
     script.ZPythonScript_edit('email_to, event, doc, **kw', 'return')
-
-  def setTools(self):
-    # XXX FIX ME
-    # XXX We should use business template to install these tools.(Yusei)
-    if getattr(self.portal, 'mimetypes_registry', None) is None:
-      self.portal.manage_addProduct['MimetypesRegistry'].manage_addTool(type='MimeTypes Registry')
-    if getattr(self.portal, 'portal_transforms', None) is None:
-      self.portal.manage_addProduct['PortalTransforms'].manage_addTool(type='Portal Transforms')
-
-  ##################################
-  ##  Useful methods
-  ##################################
 
   def login(self, quiet=QUIET, run=RUN_ALL_TEST):
     """
@@ -233,8 +220,7 @@ class TestIngestion(ERP5TypeTestCase):
               if hasattr(new_category, method_id):
                 method = getattr(new_category, method_id)
                 method(value.encode('UTF-8'))
-    transaction.commit()
-    self.tic()
+    self.stepTic()
 
   def getCategoryList(self, base_category=None):
     """
@@ -282,9 +268,7 @@ class TestIngestion(ERP5TypeTestCase):
     if document is not None:
       document_module.manage_delObjects([id,])
     document = document_module.newContent(portal_type=portal_type, id=id)
-    document.reindexObject()
-    transaction.commit()
-    self.tic()
+    self.stepTic()
     self.checkIsObjectCatalogged(portal_type, id=id, parent_uid=document_module.getUid())
     self.assert_(hasattr(document_module, id))
     return document
@@ -311,9 +295,7 @@ class TestIngestion(ERP5TypeTestCase):
       printAndLog('Ingesting file: ' + filename)
       f = makeFileUpload(filename)
       context.edit(file=f)
-      context.reindexObject()
-      transaction.commit()
-      self.tic()
+      self.stepTic()
       self.failUnless(context.hasFile())
       if context.getPortalType() in ('Image', 'File', 'PDF'):
         # File and images do not support conversion to text in DMS
@@ -334,9 +316,7 @@ class TestIngestion(ERP5TypeTestCase):
     filename = 'TEST-en-002.' + format
     f = makeFileUpload(filename)
     context.edit(file=f)
-    context.reindexObject()
-    transaction.commit()
-    self.tic()
+    self.stepTic()
     # We call clear cache to be sure that the target list is updated
     self.getPortal().portal_caches.clearCache()
     target_list = context.getTargetFormatList()
@@ -380,8 +360,7 @@ class TestIngestion(ERP5TypeTestCase):
       # reindex
       ob.immediateReindexObject()
       created_documents.append(ob)
-    transaction.commit()
-    self.tic()
+    self.stepTic()
     # inspect created objects
     count = 0
     for extension, portal_type in extension_to_type:
@@ -432,8 +411,9 @@ class TestIngestion(ERP5TypeTestCase):
     # pass to discovery file_name and user_login
     context.discoverMetadata(context.getSourceReference(), 'john_doe') 
     context.reindexObject()
-    transaction.commit()
-    self.tic()
+    self.stepTic()
+    #transaction.commit()
+    #self.tic()
 
   def checkMetadataOrder(self, expected_metadata, document_id='one'):
     """
@@ -470,12 +450,9 @@ class TestIngestion(ERP5TypeTestCase):
                                       id=person_id,
                                       reference=reference,
                                       first_name='John',
-                                      last_name='Doe'
-                                      )
-    person.setDefaultEmailText('john@doe.com')
-    person.reindexObject()
-    transaction.commit()
-    self.tic()
+                                      last_name='Doe',
+                                      default_email_text='john@doe.com')
+    self.stepTic()
 
   def stepCreateTextDocument(self, sequence=None, sequence_list=None, **kw):
     """
