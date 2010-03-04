@@ -588,7 +588,7 @@ class TestFormPrintoutAsODT(TestFormPrintoutMixin):
     foo_form.manage_renameObject('listbox3', 'listbox', REQUEST=request)
 
   def test_02_Table_07_CellFormat(self):
-    """7. Normal case: cell format cetting"""
+    """7. Normal case: make sure that it is enable to use ODF cell format setting in FormPrintout"""
     # test target
     test1 = self.portal.foo_module.test1
     foo_printout = test1.Foo_viewAsPrintout
