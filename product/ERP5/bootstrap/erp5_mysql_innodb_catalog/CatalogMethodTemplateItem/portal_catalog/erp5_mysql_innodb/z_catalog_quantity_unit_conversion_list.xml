@@ -78,7 +78,7 @@ getQuantityUnitConversionDefinitionRowList\r\n
        Make sure that we get no duplicates, and also aggregate the uids of the modified resources for deletion\n
       </dtml-comment>\n
       <dtml-in loop_item prefix="inner">\n
-        <dtml-call expr="quantity_unit_conversion_dict.setdefault(inner_item[\'resource_uid\'], {}).setdefault(inner_item[\'quantity_unit\'], inner_item)">\n
+        <dtml-call expr="quantity_unit_conversion_dict.setdefault(inner_item[\'resource_uid\'], {}).setdefault(inner_item[\'quantity_unit_uid\'], inner_item)">\n
       </dtml-in>\n
     </dtml-if>\n
   </dtml-in>\n
@@ -155,7 +155,7 @@ VALUES\n
        Make sure that we get no duplicates, and also aggregate the uids of the modified resources for deletion\n
       </dtml-comment>\n
       <dtml-in loop_item prefix="inner">\n
-        <dtml-call expr="quantity_unit_conversion_dict.setdefault(inner_item[\'resource_uid\'], {}).setdefault(inner_item[\'quantity_unit\'], inner_item)">\n
+        <dtml-call expr="quantity_unit_conversion_dict.setdefault(inner_item[\'resource_uid\'], {}).setdefault(inner_item[\'quantity_unit_uid\'], inner_item)">\n
       </dtml-in>\n
     </dtml-if>\n
   </dtml-in>\n
