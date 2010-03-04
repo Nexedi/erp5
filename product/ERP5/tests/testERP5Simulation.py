@@ -438,14 +438,14 @@ class TestERP5Simulation(TestERP5SimulationMixin, ERP5TypeTestCase):
 
   def afterSetUp(self):
     TestERP5SimulationMixin.afterSetUp(self)
-    new_order_rule = self.portal.portal_rules.new_order_root_simulation_rule
-    new_order_rule['quantity_tester'].edit(quantity=None,
+    new_delivery_rule = self.portal.portal_rules.new_delivery_simulation_rule
+    new_delivery_rule['quantity_tester'].edit(quantity=None,
                                            quantity_range_max=2,
                                            quantity_range_min=-1)
 
   def beforeTearDown(self):
-    new_order_rule = self.portal.portal_rules.new_order_root_simulation_rule
-    new_order_rule['quantity_tester'].edit(quantity=0,
+    new_delivery_rule = self.portal.portal_rules.new_delivery_simulation_rule
+    new_delivery_rule['quantity_tester'].edit(quantity=0,
                                            quantity_range_max=None,
                                            quantity_range_min=None)
     transaction.commit()
