@@ -269,7 +269,7 @@ class TestERP5SimulationMixin(TestInvoiceMixin):
       self.assertEquals(line.getResourceValue(), resource)
       self.assertEquals(line.getQuantity(), self.default_quantity)
       self.assertEquals(line.getCausalityList(),
-                        [x.getOrder() for x in \
+                        [x.getParentValue().getParentValue().getDelivery() for x in \
                          line.getDeliveryRelatedValueList()])
 
   def stepUnifyDestinationWithDecision(self,sequence=None, sequence_list=None):
@@ -405,7 +405,7 @@ class TestERP5SimulationMixin(TestInvoiceMixin):
     self.assertEquals(len(simulation_line_list), 1)
     for simulation_line in simulation_line_list:
       simulation_line.edit(quantity=self.default_quantity-2)
-      simulation_line.getOrderValue().edit(quantity=self.default_quantity-2)
+      simulation_line.getDeliveryValue().edit(quantity=self.default_quantity-2)
 
   def stepCheckSimulationQuantityUpdatedForMergedLine(self,sequence=None, sequence_list=None):
     """
@@ -428,7 +428,7 @@ class TestERP5SimulationMixin(TestInvoiceMixin):
     self.assertEquals(packing_list_line.getQuantity(), self.default_quantity*2)
     self.assertEquals(packing_list_line.getResourceValue(), new_resource)
     simulation_line_list = packing_list_line.getDeliveryRelatedValueList()
-    order_line_list = sum([x.getOrderList() for x in simulation_line_list], [])
+    order_line_list = sum([x.getParentValue().getParentValue().getDeliveryList() for x in simulation_line_list], [])
     self.assertEquals(sorted(packing_list_line.getCausalityList()),
                       sorted(order_line_list))
 
