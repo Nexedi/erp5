@@ -55,7 +55,7 @@
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Trade Model Rule</string> </value>
+            <value> <string>Trade Model Simulation Rule</string> </value>
         </item>
         <item>
             <key> <string>test_method_id</string> </key>

@@ -63,7 +63,7 @@
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Invoice Rule</string> </value>
+            <value> <string>Invoice Root Simulation Rule</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

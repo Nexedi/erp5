@@ -73,7 +73,7 @@
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Invoice Transaction Rule</string> </value>
+            <value> <string>Invoice Transaction Simulation Rule</string> </value>
         </item>
         <item>
             <key> <string>test_method_id</string> </key>
