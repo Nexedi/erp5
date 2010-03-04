@@ -124,8 +124,13 @@ class IdTool(BaseTool):
     """
       Store persistently data from SQL table portal_ids.
     """
-    portal_catalog = getToolByName(self, 'portal_catalog').getSQLCatalog()
-    query = getattr(portal_catalog, 'z_portal_ids_dump')
+    # XXX It's temporary, a New API will be implemented soon
+    #     the code will be change
+    portal = self.getPortalObject()
+    query = getattr(portal, 'IdTool_zDump', None)
+    if query is None:
+      portal_catalog = getToolByName(self, 'portal_catalog').getSQLCatalog()
+      query = getattr(portal_catalog, 'z_portal_ids_dump')
     dict_length_ids = getattr(aq_base(self), 'dict_length_ids', None)
     if dict_length_ids is None:
       dict_length_ids = self.dict_length_ids = PersistentMapping()
@@ -157,11 +162,16 @@ class IdTool(BaseTool):
       if last_id is not None:
         return last_id.value - 1
     # otherwise check in mysql
-    portal_catalog = getToolByName(self, 'portal_catalog').getSQLCatalog()
-    query = getattr(portal_catalog, 'z_portal_ids_get_last_id', None)
+    # XXX It's temporary, a New API will be implemented soon
+    #     the code will be change
+    portal = self.getPortalObject()
+    query = getattr(portal, 'IdTool_zGetLastId', None)
+    if query is None:
+      portal_catalog = getToolByName(self, 'portal_catalog').getSQLCatalog()
+      query = getattr(portal_catalog, 'z_portal_ids_get_last_id')
     if query is None:
       raise AttributeError, 'Error while getting last Id: ' \
-            'z_portal_ids_get_last_id could not ' \
+            'IdTool_zGetLastId could not ' \
             'be found.'
     result = query(id_group=id_group)
     if len(result):
@@ -195,12 +205,18 @@ class IdTool(BaseTool):
     # FIXME: A skin folder should be used to contain ZSQLMethods instead of
     # default catalog, like activity tool (anyway, it uses activity tool
     # ZSQLConnection, so hot reindexing is not helping here).
-    portal_catalog = getToolByName(self, 'portal_catalog').getSQLCatalog()
-    query = getattr(portal_catalog, 'z_portal_ids_generate_id')
-    commit = getattr(portal_catalog, 'z_portal_ids_commit')
+    # XXX It's temporary, a New API will be implemented soon
+    #     the code will be change
+    portal = self.getPortalObject()
+    query = getattr(portal, 'IdTool_zGenerateId', None)
+    commit = getattr(portal, 'IdTool_zCommit', None)
+    if query is None or commit is None:
+      portal_catalog = getToolByName(self, 'portal_catalog').getSQLCatalog()
+      query = getattr(portal_catalog, 'z_portal_ids_generate_id')
+      commit = getattr(portal_catalog, 'z_portal_ids_commit')
     if None in (query, commit):
       raise AttributeError, 'Error while generating Id: ' \
-        'z_portal_ids_generate_id and/or z_portal_ids_commit could not ' \
+        'idTool_zGenerateId and/or idTool_zCommit could not ' \
         'be found.'
     try:
       result = query(id_group=id_group, id_count=id_count, default=default)

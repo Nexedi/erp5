@@ -1833,7 +1833,10 @@ class ERP5Generator(PortalGenerator):
       portal_catalog = p.portal_catalog
       # Clear portal ids sql table, like this we do not take
       # ids for a previously created web site
-      portal_catalog.getSQLCatalog().z0_drop_portal_ids()
+      # XXX It's temporary, a New API will be implemented soon
+      #     the code will be change
+      p.IdTool_zDropTable()
+      p.IdTool_zCreateTable()
       # Then clear the catalog and reindex it
       portal_catalog.manage_catalogClear()
       # Calling ERP5Site_reindexAll is useless.
