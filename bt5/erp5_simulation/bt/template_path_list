@@ -4,6 +4,8 @@ portal_categories/trade_phase/default
 portal_categories/trade_phase/default/**
 portal_rules/new_delivery_root_simulation_rule
 portal_rules/new_delivery_root_simulation_rule/**
+portal_rules/new_delivery_simulation_rule
+portal_rules/new_delivery_simulation_rule/**
 portal_rules/new_invoice_root_simulation_rule
 portal_rules/new_invoice_root_simulation_rule/**
 portal_rules/new_invoice_simulation_rule
