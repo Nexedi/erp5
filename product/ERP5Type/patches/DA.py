@@ -155,7 +155,10 @@ def DA__call__(self, REQUEST=None, __ick__=None, src__=0, test__=0, **kw):
     # Connection id is retrieve from user preference
     if c is None:
       physical_path = self.getPhysicalPath()
-      if "portal_catalog" not in physical_path and 'cmf_activity' not in self.connection_id:
+      # XXX cleaner solution will be needed
+      if 'portal_catalog' not in physical_path and\
+         'cmf_activity' not in self.connection_id and\
+         'transactionless' not in self.connection_id:
         try:
           archive_id = self.portal_preferences.getPreferredArchive()
         except AttributeError:
