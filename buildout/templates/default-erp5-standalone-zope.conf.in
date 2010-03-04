@@ -10,6 +10,79 @@
 #     The path to the data files, local product files, import directory,
 #     and Extensions directory used by Zope.
 instancehome ${instancehome}
+
+# Directive: ip-address
+#
+# Description:
+#     The default IP address on which Zope's various server protocol
+#     implementations will listen for requests. If this is unset, Zope
+#     will listen on all IP addresses supported by the machine. This
+#     directive can be overridden on a per-server basis in the servers
+#     section.
+ip-address ${ip-address}
+
+# Directives: servers
+#
+# Description:
+#     A set of sections which allow the specification of Zope's various
+#     ZServer servers.  7 different server types may be defined:
+#     http-server, ftp-server, webdav-source-server, persistent-cgi,
+#     fast-cgi, monitor-server, and icp-server.  If no servers are
+#     defined, the default servers are used.
+#
+#     Ports may be specified using the 'address' directive either in simple
+#     form (80) or in complex form including hostname 127.0.0.1:80.  If the
+#     hostname is "left off", the default-ip-address is used as the hostname.
+#
+#     Port numbers are offset by the setting of port-base.
+#
+#     To run the monitor-server an emergency user must be defined 
+#     (through an 'access' file).
+#
+# Default:
+#
+#     An HTTP server starts on port 8080.
+
+<http-server>
+  # valid keys are "address" and "force-connection-close"
+  address ${http-address}
+  force-connection-close ${http-force-connection-close}
+</http-server>
+
+# TODO in clever way:
+#
+#  <ftp-server>
+#    # valid key is "address"
+#    address 8021
+#  </ftp-server>
+#
+#  <webdav-source-server>
+#    # valid keys are "address" and "force-connection-close"
+#    address 1980
+#    force-connection-close off
+#  </webdav-source-server>
+#
+#  <persistent-cgi>
+#    # valid key is "path"
+#    path somefile
+#  </persistent-cgi>
+#
+#  <fast-cgi>
+#    # valid key is "address"; the address may be hostname:port, port,
+#    # or a path for a Unix-domain socket
+#    address somefile
+#  </fast-cgi>
+#
+#  <monitor-server>
+#    # valid keys are "address"
+#    address 8099
+#  </monitor-server>
+#
+#  <icp-server>
+#    # valid key is "address"
+#    address 888
+#  </icp-server>
+
 #
 # Directive: clienthome
 #
@@ -17,20 +90,6 @@ instancehome ${instancehome}
 #     The directory in which a running Zope's process identifier files are
 #     placed.
 clienthome ${clienthome}
-
-# Directive: path
-#
-# Description:
-#     Name of a directory which should be inserted into the
-#     the beginning of Python's module search path.  This directive
-#     may be specified as many times as needed to insert additional
-#     directories.  The set of directories specified is inserted into the
-#     beginning of the module search path in the order which they are specified
-#     here.  Note that the processing of this directive may happen too late
-#     under some circumstances; it is recommended that you use the PYTHONPATH
-#     environment variable if using this directive doesn't work for you.
-path ${lib_path}
-
 
 # Directive: products
 #
@@ -52,6 +111,16 @@ path ${lib_path}
 
 ${products}
 
+# Directives: port-base
+#
+# Description:
+#     Offset applied to the port numbers used for ZServer
+#     configurations.  For example, if the http-server port is 8080 and
+#     the port-base is 1000, the HTTP server will listen on port 9080.
+#     This makes it easy to change the complete set of ports used by a
+#     Zope server process
+port-base ${port-base}
+
 # Directive: environment
 #
 # Description:
@@ -65,6 +134,19 @@ ${products}
 #     VAR value
 #   </environment>
 ${environment}
+
+# Directive: path
+#
+# Description:
+#     Name of a directory which should be inserted into the
+#     the beginning of Python's module search path.  This directive
+#     may be specified as many times as needed to insert additional
+#     directories.  The set of directories specified is inserted into the
+#     beginning of the module search path in the order which they are specified
+#     here.  Note that the processing of this directive may happen too late
+#     under some circumstances; it is recommended that you use the PYTHONPATH
+#     environment variable if using this directive doesn't work for you.
+path ${lib_path}
 
 # Directive: debug-mode
 #
@@ -86,7 +168,6 @@ ${environment}
 #     encouraged, as it speeds execution (sometimes dramatically).
 debug-mode ${debug-mode}
 
-
 # Directive: effective-user
 #
 # Description:
@@ -94,9 +175,7 @@ debug-mode ${debug-mode}
 #     directive with an effective username or userid number to which Zope
 #     will 'suid' after the server ports are bound. This directive only
 #     has effect under UNIX and if Zope is started as the root user.
-
 effective-user ${effective-user}
-
 
 # Directive: enable-product-installation
 #
@@ -112,7 +191,6 @@ effective-user ${effective-user}
 #     once, the others can have it turned off.
 #     NOTE: If your main storage is mounted read-only,
 #     you must set this directive to "off".
-
 enable-product-installation ${enable-product-installation}
 
 # Directive: locale
@@ -124,9 +202,7 @@ enable-product-installation ${enable-product-installation}
 #     support the locale module, or if the requested locale is not
 #     supported by your system, an error will be raised and Zope will not
 #     start.
-
 locale ${locale}
-
 
 # Directive: datetime-format
 #
@@ -137,9 +213,7 @@ locale ${locale}
 #     days-before-month-before-year ("international").  The default
 #     behaviour of DateTime (when this setting is left unset) is to
 #     parse dates as US dates.
-
 datetime-format ${datetime-format}
-
 
 # Directive: zserver-threads
 #
@@ -158,7 +232,6 @@ zserver-threads ${zserver-threads}
 #     in order to attempt to increae performance in your particular
 #     environment.
 python-check-interval ${python-check-interval}
-
 
 # Directive: zserver-read-only-mode
 #
@@ -261,16 +334,6 @@ ${cgi-environment}
 #     hostnames to be written to Zope's access log. By default, Zope will
 #     not resolve hostnames unless this is set.
 dns-server ${dns-server}
-
-# Directive: ip-address
-#
-# Description:
-#     The default IP address on which Zope's various server protocol
-#     implementations will listen for requests. If this is unset, Zope
-#     will listen on all IP addresses supported by the machine. This
-#     directive can be overridden on a per-server basis in the servers
-#     section.
-ip-address ${ip-address}
 
 # Directive: http-realm
 #
@@ -551,16 +614,6 @@ ${warnfilter}
 #     in order to service incoming connections.
 max-listen-sockets ${max-listen-sockets}
 
-# Directives: port-base
-#
-# Description:
-#     Offset applied to the port numbers used for ZServer
-#     configurations.  For example, if the http-server port is 8080 and
-#     the port-base is 1000, the HTTP server will listen on port 9080.
-#     This makes it easy to change the complete set of ports used by a
-#     Zope server process
-port-base ${port-base}
-
 # Directive: large-file-threshold
 #
 # Description:
@@ -576,68 +629,6 @@ ${large-file-threshold}
 #     This controls what character set is used to encode unicode
 #     data that reaches ZPublisher without any other specified encoding.
 default-zpublisher-encoding ${default-zpublisher-encoding}
-
-# Directives: servers
-#
-# Description:
-#     A set of sections which allow the specification of Zope's various
-#     ZServer servers.  7 different server types may be defined:
-#     http-server, ftp-server, webdav-source-server, persistent-cgi,
-#     fast-cgi, monitor-server, and icp-server.  If no servers are
-#     defined, the default servers are used.
-#
-#     Ports may be specified using the 'address' directive either in simple
-#     form (80) or in complex form including hostname 127.0.0.1:80.  If the
-#     hostname is "left off", the default-ip-address is used as the hostname.
-#
-#     Port numbers are offset by the setting of port-base.
-#
-#     To run the monitor-server an emergency user must be defined 
-#     (through an 'access' file).
-#
-# Default:
-#
-#     An HTTP server starts on port 8080.
-
-<http-server>
-  # valid keys are "address" and "force-connection-close"
-  address ${http-address}
-  force-connection-close ${http-force-connection-close}
-</http-server>
-
-# Examples:
-#
-#  <ftp-server>
-#    # valid key is "address"
-#    address 8021
-#  </ftp-server>
-#
-#  <webdav-source-server>
-#    # valid keys are "address" and "force-connection-close"
-#    address 1980
-#    force-connection-close off
-#  </webdav-source-server>
-#
-#  <persistent-cgi>
-#    # valid key is "path"
-#    path somefile
-#  </persistent-cgi>
-#
-#  <fast-cgi>
-#    # valid key is "address"; the address may be hostname:port, port,
-#    # or a path for a Unix-domain socket
-#    address somefile
-#  </fast-cgi>
-#
-#  <monitor-server>
-#    # valid keys are "address"
-#    address 8099
-#  </monitor-server>
-#
-#  <icp-server>
-#    # valid key is "address"
-#    address 888
-#  </icp-server>
 
 
 # Database (zodb_db) section
@@ -663,6 +654,7 @@ default-zpublisher-encoding ${default-zpublisher-encoding}
     container-class Products.TemporaryFolder.TemporaryContainer
 </zodb_db>
 
+# Timeserver to have ticks in zope
 %import timerserver
 <timer-server>
   interval 5
