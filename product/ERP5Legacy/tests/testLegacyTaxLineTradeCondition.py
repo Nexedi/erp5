@@ -1,7 +1,7 @@
 import unittest
 import transaction
 from DateTime import DateTime
-from Products.ERP5.tests.testTradeCondition import TestWithSaleOrder, \
+from testLegacyTradeCondition import TestWithSaleOrder, \
     TestWithPurchaseOrder, TestWithSaleInvoice, TestWithPurchaseInvoice, \
     TradeConditionTestCase, AccountingBuildTestCase
 
