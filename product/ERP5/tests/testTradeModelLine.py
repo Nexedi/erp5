@@ -154,10 +154,10 @@ class TestTradeModelLine(TestTradeModelLineMixin):
         portal_type='Simulation Movement'):
       invoicing_applied_rule = [x for x in
           line_simulation_movement.objectValues()
-          if x.getSpecialiseValue().getPortalType() == 'Invoicing Rule'][0]
+          if x.getSpecialiseValue().getPortalType() == 'Invoice Simulation Rule'][0]
       invoicing_movement = invoicing_applied_rule.objectValues()[0]
       trade_model_rule = [x for x in invoicing_movement.objectValues()
-          if x.getSpecialiseValue().getPortalType() == 'Trade Model Rule'][0]
+          if x.getSpecialiseValue().getPortalType() == 'Trade Model Simulation Rule'][0]
       result_list.append(trade_model_rule.objectValues())
     return result_list
 
@@ -166,7 +166,7 @@ class TestTradeModelLine(TestTradeModelLineMixin):
         .objectValues()
     self.assertEquals(1, len(invoice_transaction_rule_list))
     invoice_transaction_rule = invoice_transaction_rule_list[0]
-    self.assertEqual('Invoice Transaction Rule',
+    self.assertEqual('Invoice Transaction Simulation Rule',
         invoice_transaction_rule.getSpecialiseValue().getPortalType())
 
     invoice_transaction_simulation_movement_list = invoice_transaction_rule \
