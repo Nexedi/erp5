@@ -24,13 +24,7 @@
                         <value>
                           <dictionary>
                             <item>
-                                <key> <string>getTransformationRowList</string> </key>
-                                <value>
-                                  <dictionary/>
-                                </value>
-                            </item>
-                            <item>
-                                <key> <string>uid</string> </key>
+                                <key> <string>row_dict_list</string> </key>
                                 <value>
                                   <dictionary/>
                                 </value>
@@ -42,8 +36,7 @@
                         <key> <string>_keys</string> </key>
                         <value>
                           <list>
-                            <string>uid</string>
-                            <string>getTransformationRowList</string>
+                            <string>row_dict_list</string>
                           </list>
                         </value>
                     </item>
@@ -60,8 +53,7 @@
         </item>
         <item>
             <key> <string>arguments_src</string> </key>
-            <value> <string>uid\r\n
-getTransformationRowList</string> </value>
+            <value> <string>row_dict_list</string> </value>
         </item>
         <item>
             <key> <string>cache_time_</string> </key>
@@ -87,7 +79,7 @@ getTransformationRowList</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>z_catalog_transformation_list</string> </value>
+            <value> <string>z_catalog_transformation</string> </value>
         </item>
         <item>
             <key> <string>max_cache_</string> </key>
@@ -102,19 +94,14 @@ getTransformationRowList</string> </value>
             <value> <string encoding="cdata"><![CDATA[
 
 DELETE FROM `transformation` WHERE\n
-  <dtml-sqltest uid type="int" multiple>;\n
-\n
-<dtml-let transformation_list="[]">\n
-  <dtml-in getTransformationRowList prefix="loop">\n
-    <dtml-call expr="loop_item and transformation_list.extend(loop_item)">\n
-  </dtml-in>\n
-\n
-  <dtml-if transformation_list>\n
-    <dtml-var sql_delimiter>\n
+  <dtml-sqltest expr="row_dict_list[0][\'uid\']" column="uid" type="int">\n
+  AND\n
+  <dtml-sqltest expr="row_dict_list[0][\'variation_text\']" column="variation_text" type="string">;\n
+<dtml-var sql_delimiter>\n
 \n
 INSERT INTO `transformation`\n
 VALUES\n
-    <dtml-in transformation_list prefix="loop">\n
+    <dtml-in row_dict_list prefix="loop">\n
 (\n
   <dtml-sqlvar expr="loop_item[\'uid\']" type="int">,\n
   <dtml-sqlvar expr="loop_item[\'variation_text\']" type="string">,\n
@@ -123,11 +110,7 @@ VALUES\n
   <dtml-sqlvar expr="loop_item[\'quantity\']" type="float">\n
 )\n
 <dtml-unless sequence-end>,</dtml-unless>\n
-    </dtml-in>\n
-\n
-  </dtml-if>\n
-</dtml-let>\n
-
+    </dtml-in>
 
 ]]></string> </value>
         </item>
@@ -168,19 +151,14 @@ VALUES\n
                         <value> <string encoding="cdata"><![CDATA[
 
 DELETE FROM `transformation` WHERE\n
-  <dtml-sqltest uid type="int" multiple>;\n
-\n
-<dtml-let transformation_list="[]">\n
-  <dtml-in getTransformationRowList prefix="loop">\n
-    <dtml-call expr="loop_item and transformation_list.extend(loop_item)">\n
-  </dtml-in>\n
-\n
-  <dtml-if transformation_list>\n
-    <dtml-var sql_delimiter>\n
+  <dtml-sqltest expr="row_dict_list[0][\'uid\']" column="uid" type="int">\n
+  AND\n
+  <dtml-sqltest expr="row_dict_list[0][\'variation_text\']" column="variation_text" type="string">;\n
+<dtml-var sql_delimiter>\n
 \n
 INSERT INTO `transformation`\n
 VALUES\n
-    <dtml-in transformation_list prefix="loop">\n
+    <dtml-in row_dict_list prefix="loop">\n
 (\n
   <dtml-sqlvar expr="loop_item[\'uid\']" type="int">,\n
   <dtml-sqlvar expr="loop_item[\'variation_text\']" type="string">,\n
@@ -189,11 +167,7 @@ VALUES\n
   <dtml-sqlvar expr="loop_item[\'quantity\']" type="float">\n
 )\n
 <dtml-unless sequence-end>,</dtml-unless>\n
-    </dtml-in>\n
-\n
-  </dtml-if>\n
-</dtml-let>\n
-
+    </dtml-in>
 
 ]]></string> </value>
                     </item>
