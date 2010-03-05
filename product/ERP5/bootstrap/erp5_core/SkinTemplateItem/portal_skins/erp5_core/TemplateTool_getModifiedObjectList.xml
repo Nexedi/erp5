@@ -75,19 +75,19 @@ getModifiedObjectList = CachingMethod(getModifiedObjectList, \n
                                       id=\'BusinessTemplate_getModifiedObjectList\',\n
                                       cache_factory=\'erp5_ui_medium\')\n
 \n
-bt_objects = {}\n
+bt_object_dict = {}\n
 \n
 for bt_id in bt_id_list:\n
   bt = context.portal_templates[bt_id]\n
-  bt_objects[bt.getId()] = [bt.getTitle(), getModifiedObjectList(bt)]\n
+  bt_object_dict[bt.getId()] = [bt.getTitle(), getModifiedObjectList(bt)]\n
 \n
 object_list = []\n
-no_backup_list = [\'Action\', \'SiteProperty\', \'Module\', \'Document\', \n
+no_backup_set = set([\'Action\', \'SiteProperty\', \'Module\', \'Document\', \n
                   \'PropertySheet\', \'Extension\', \'Test\', \'Product\', \n
                   \'Role\', \'CatalogResultKey\', \'CatalogRelatedKey\', \n
                   \'CatalogResultTable\', \'MessageTranslation\', \'LocalRoles\', \n
                   \'PortalTypeAllowedContentType\', \'PortalTypeHiddenContentType\', \n
-                  \'PortalTypePropertySheet\', \'PortalTypeBaseCategory\']\n
+                  \'PortalTypePropertySheet\', \'PortalTypeBaseCategory\'])\n
 \n
 install_title = Base_translateString(\'Install\')\n
 upgrade_title = Base_translateString(\'Upgrade\')\n
@@ -96,51 +96,34 @@ remove_title = Base_translateString(\'Remove\')\n
 save_and_remove_title = Base_translateString(\'Backup And Remove\')\n
 \n
 for bt in bt_id_list:\n
-  modified_object_list = bt_objects[bt][1]  \n
-  bt_title = bt_objects[bt][0]\n
+  bt_title, modified_object_list = bt_object_dict[bt]\n
   keys = modified_object_list.keys()\n
   keys.sort()\n
-  i = 0\n
-  for object_id in keys:    \n
+  for i, object_id in enumerate(keys):    \n
     object_state, object_class = modified_object_list[object_id]\n
     object_id = bt+\'|\'+object_id\n
-    line = newTempBase(context, \'tmp_install_%s\' %(str(i)))\n
-    if object_state == \'New\':\n
-      line.edit(object_id=object_id,\n
-                bt_title = bt_title, \n
-                object_state=object_state, \n
-                object_class=object_class, \n
-                choice_item_list=[[install_title, \'install\']])\n
-    elif object_state == \'Modified\':\n
-      if object_class in no_backup_list:\n
-        line.edit(object_id=object_id, \n
-                  bt_title = bt_title, \n
-                  object_state=object_state, \n
-                  object_class=object_class, \n
-                  choice_item_list=[[upgrade_title, \'install\']])\n
+    line = newTempBase(context, \'tmp_install_%s\' % i)\n
+\n
+    if object_state == \'Modified\':\n
+      if object_class in no_backup_set:\n
+        choice_item_list = [[upgrade_title, \'install\']]\n
       else:\n
-        line.edit(object_id=object_id, \n
-                  bt_title = bt_title, \n
-                  object_state=object_state, \n
-                  object_class=object_class, \n
-                  choice_item_list=[[backup_title, \'backup\']])\n
-    \n
+        choice_item_list = [[backup_title, \'backup\']]\n
     elif object_state == \'Removed\':\n
-      if object_class in no_backup_list:\n
-        line.edit(object_id=object_id, \n
-                  bt_title = bt_title, \n
-                  object_state=object_state, \n
-                  object_class=object_class, \n
-                  choice_item_list=[[remove_title, \'remove\']])\n
+      if object_class in no_backup_set:\n
+        choice_item_list = [[remove_title, \'remove\']]\n
       else:\n
-        line.edit(object_id=object_id, \n
-                  bt_title = bt_title, \n
-                  object_state=object_state, \n
-                  object_class=object_class, \n
-                  choice_item_list=[[save_and_remove_title, \'save_and_remove\']])\n
-    line.setUid(\'new_%s\' % str(object_id))\n
+        choice_item_list = [[save_and_remove_title, \'save_and_remove\']]\n
+    else:\n
+      choice_item_list = [[install_title, \'install\']]\n
+\n
+    line.edit(object_id=object_id,\n
+              bt_title = bt_title, \n
+              object_state=object_state, \n
+              object_class=object_class, \n
+              choice_item_list=choice_item_list)\n
+    line.setUid(\'new_%s\' % object_id)\n
     object_list.append(line)\n
-  i += 1 \n
 \n
 object_list.sort(key=lambda x:(x.bt_title, x.object_class, x.object_state))\n
 return object_list\n
@@ -195,29 +178,30 @@ return object_list\n
                             <string>Products.ERP5Type.Cache</string>
                             <string>CachingMethod</string>
                             <string>getModifiedObjectList</string>
-                            <string>bt_objects</string>
+                            <string>bt_object_dict</string>
                             <string>_getiter_</string>
                             <string>bt_id</string>
                             <string>_getitem_</string>
                             <string>bt</string>
                             <string>_write_</string>
                             <string>object_list</string>
-                            <string>no_backup_list</string>
+                            <string>set</string>
+                            <string>no_backup_set</string>
                             <string>install_title</string>
                             <string>upgrade_title</string>
                             <string>backup_title</string>
                             <string>remove_title</string>
                             <string>save_and_remove_title</string>
-                            <string>modified_object_list</string>
                             <string>bt_title</string>
+                            <string>modified_object_list</string>
                             <string>keys</string>
+                            <string>enumerate</string>
                             <string>i</string>
                             <string>object_id</string>
                             <string>object_state</string>
                             <string>object_class</string>
-                            <string>str</string>
                             <string>line</string>
-                            <string>_inplacevar_</string>
+                            <string>choice_item_list</string>
                           </tuple>
                         </value>
                     </item>
