@@ -7,6 +7,14 @@
   <item>String Divergence Tester</item>
   <item>Variation Divergence Tester</item>
  </portal_type>
+ <portal_type id="Delivery Simulation Rule">
+  <item>Category Membership Divergence Tester</item>
+  <item>DateTime Divergence Tester</item>
+  <item>Float Divergence Tester</item>
+  <item>Net Converted Quantity Divergence Tester</item>
+  <item>String Divergence Tester</item>
+  <item>Variation Divergence Tester</item>
+ </portal_type>
  <portal_type id="Invoice Root Simulation Rule">
   <item>Category Membership Divergence Tester</item>
   <item>DateTime Divergence Tester</item>

@@ -4,6 +4,12 @@ Delivery Root Simulation Rule | Float Divergence Tester
 Delivery Root Simulation Rule | Net Converted Quantity Divergence Tester
 Delivery Root Simulation Rule | String Divergence Tester
 Delivery Root Simulation Rule | Variation Divergence Tester
+Delivery Simulation Rule | Category Membership Divergence Tester
+Delivery Simulation Rule | DateTime Divergence Tester
+Delivery Simulation Rule | Float Divergence Tester
+Delivery Simulation Rule | Net Converted Quantity Divergence Tester
+Delivery Simulation Rule | String Divergence Tester
+Delivery Simulation Rule | Variation Divergence Tester
 Invoice Root Simulation Rule | Category Membership Divergence Tester
 Invoice Root Simulation Rule | DateTime Divergence Tester
 Invoice Root Simulation Rule | Float Divergence Tester
