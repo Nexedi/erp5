@@ -286,10 +286,12 @@ class SafeHTML:
                 # in lxml API. I pass the argument to improve readability
                 # of above code.
                 try:
-                    lparser = LHTMLParser(encoding=encoding, recover=True)
+                    lparser = LHTMLParser(encoding=encoding, recover=True,
+                                          remove_comments=True)
                 except LookupError:
                     # Provided encoding is not known by parser, so discard it
-                    lparser = LHTMLParser(recover=True)
+                    lparser = LHTMLParser(recover=True,
+                                          remove_comments=True)
                 repaired_html_tree = etree.HTML(orig, parser=lparser)
                 html_string = etree.tostring(repaired_html_tree)
                 # avoid breaking now.
