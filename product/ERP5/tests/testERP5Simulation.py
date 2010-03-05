@@ -76,11 +76,12 @@ class TestERP5SimulationMixin(TestInvoiceMixin):
         account.setGap(account_gap)
         account.setAccountType(account_type)
         portal.portal_workflow.doActionFor(account, 'validate_action')
-    portal_rules = portal.portal_rules
-    clipboard = portal_rules.manage_copyObjects(ids=['new_invoice_transaction_simulation_rule'])
-    pasted = portal_rules.manage_pasteObjects(clipboard)
-    invoice_rule = getattr(portal_rules, pasted[0]['new_id'])
-
+    invoice_rule = portal.portal_rules.new_invoice_transaction_simulation_rule
+    if invoice_rule.getValidationState() == 'validated':
+      invoice_rule.invalidate()
+    invoice_rule.deleteContent(list(invoice_rule.contentIds(filter={'portal_type':['Predicate', 'Accounting Rule Cell']})))
+    transaction.commit()
+    self.tic()
     region_predicate = invoice_rule.newContent(portal_type = 'Predicate')
     product_line_predicate = invoice_rule.newContent(portal_type = 'Predicate')
     region_predicate.edit(
