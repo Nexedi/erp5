@@ -147,19 +147,19 @@ class TestBPMEvaluationMixin(TestBPMMixin):
     return rule
 
   def _createOrderRule(self):
-    rule = self._createRootTradeRule(portal_type='Order Rule',
+    rule = self._createRootTradeRule(portal_type='Order Root Simulation Rule',
         reference='default_order_rule')
     rule.validate()
     transaction.commit()
 
   def _createDeliveryRule(self):
-    rule = self._createRootTradeRule(portal_type='Delivery Rule',
+    rule = self._createRootTradeRule(portal_type='Delivery Root Simulation Rule',
         reference='default_delivery_rule')
     rule.validate()
     transaction.commit()
 
   def _createTradeModelRule(self):
-    rule = self.rule_tool.newContent(portal_type='Trade Model Rule',
+    rule = self.rule_tool.newContent(portal_type='Trade Model Simulation Rule',
       reference='default_trade_model_rule',
       test_method_id = ('SimulationMovement_testTradeModelRule',)
       )
@@ -231,7 +231,7 @@ class TestBPMEvaluationMixin(TestBPMMixin):
     #       need those rule to create empty one applied rule
     rule_tool = self.portal.portal_rules
 
-    clipboard = rule_tool.manage_copyObjects(ids = ['new_invoice_rule'])
+    clipboard = rule_tool.manage_copyObjects(ids = ['new_invoice_root_simulation_rule'])
     pasted = rule_tool.manage_pasteObjects(clipboard)
     new_rule = getattr(rule_tool, pasted[0]['new_id'])
     new_rule.validate()
@@ -241,10 +241,10 @@ class TestBPMEvaluationMixin(TestBPMMixin):
     edit_dict = {}
     edit_dict.update(
     )
-    rule = self.rule_tool.newContent(portal_type='Invoicing Rule',
+    rule = self.rule_tool.newContent(portal_type='Invoice Simulation Rule',
       reference='default_invoicing_rule',
       trade_phase = 'default/invoicing',
-      test_method_id = ('SimulationMovement_testInvoicingRule',)
+      test_method_id = ('SimulationMovement_testInvoiceSimulationRule',)
       )
     # matching providers
     for category in ('resource',):
@@ -391,7 +391,7 @@ class TestBPMEvaluationMixin(TestBPMMixin):
       for bpm_invoicing_rule in root_simulation_movement.contentValues():
         self.assertEqual(bpm_invoicing_rule.getPortalType(), 'Applied Rule')
         self.assertEqual(bpm_invoicing_rule.getSpecialiseValue() \
-            .getPortalType(), 'Invoicing Rule')
+            .getPortalType(), 'Invoice Simulation Rule')
         # only one movement inside invoicing rule
         self.assertEquals(len(bpm_invoicing_rule.contentValues()), 1)
         for invoicing_simulation_movement in bpm_invoicing_rule \
@@ -423,7 +423,7 @@ class TestBPMEvaluationMixin(TestBPMMixin):
               .contentValues():
             self.assertEqual(trade_model_rule.getPortalType(), 'Applied Rule')
             self.assertEqual(trade_model_rule.getSpecialiseValue() \
-                .getPortalType(), 'Trade Model Rule')
+                .getPortalType(), 'Trade Model Simulation Rule')
             self.assertSameSet(trade_model_rule.contentValues(
               portal_type='Simulation Movement'), [])
 
@@ -639,7 +639,7 @@ class TestOrder(TestBPMEvaluationMixin, GenericRuleTestsMixin):
   """Check BPMised Order Rule behaviour"""
   root_document_portal_type = 'Sale Order'
   root_document_line_portal_type = 'Sale Order Line'
-  root_rule_portal_type = 'Order Rule'
+  root_rule_portal_type = 'Order Root Simulation Rule'
 
   def _doFirstTransition(self, document):
     document.plan()
@@ -672,7 +672,7 @@ class TestPackingList(TestBPMEvaluationMixin, GenericRuleTestsMixin):
   """Check BPM Delivery Rule behaviour"""
   root_document_portal_type = 'Sale Packing List'
   root_document_line_portal_type = 'Sale Packing List Line'
-  root_rule_portal_type = 'Delivery Rule'
+  root_rule_portal_type = 'Delivery Root Simulation Rule'
 
   def _packDelivery(self):
     """Packs delivery fully, removes possible containers before"""
