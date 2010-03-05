@@ -2917,7 +2917,6 @@ class TestSaleInvoice(TestSaleInvoiceMixin, TestInvoice, ERP5TypeTestCase):
 
     stepRebuildAndCheckNothingIsCreated
     stepCheckInvoicesConsistency
-    stepPdb
     """
 
     mid_sequence_list = ["""
