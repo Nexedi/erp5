@@ -1,5 +1,5 @@
 <allowed_content_type_list>
- <portal_type id="Delivery Rule">
+ <portal_type id="Delivery Root Simulation Rule">
   <item>Category Membership Divergence Tester</item>
   <item>DateTime Divergence Tester</item>
   <item>Float Divergence Tester</item>
@@ -7,7 +7,7 @@
   <item>String Divergence Tester</item>
   <item>Variation Divergence Tester</item>
  </portal_type>
- <portal_type id="Invoice Rule">
+ <portal_type id="Invoice Root Simulation Rule">
   <item>Category Membership Divergence Tester</item>
   <item>DateTime Divergence Tester</item>
   <item>Float Divergence Tester</item>
@@ -15,7 +15,7 @@
   <item>String Divergence Tester</item>
   <item>Variation Divergence Tester</item>
  </portal_type>
- <portal_type id="Invoice Transaction Rule">
+ <portal_type id="Invoice Simulation Rule">
   <item>Category Membership Divergence Tester</item>
   <item>DateTime Divergence Tester</item>
   <item>Float Divergence Tester</item>
@@ -23,7 +23,7 @@
   <item>String Divergence Tester</item>
   <item>Variation Divergence Tester</item>
  </portal_type>
- <portal_type id="Invoicing Rule">
+ <portal_type id="Invoice Transaction Simulation Rule">
   <item>Category Membership Divergence Tester</item>
   <item>DateTime Divergence Tester</item>
   <item>Float Divergence Tester</item>
@@ -31,7 +31,7 @@
   <item>String Divergence Tester</item>
   <item>Variation Divergence Tester</item>
  </portal_type>
- <portal_type id="Order Rule">
+ <portal_type id="Order Root Simulation Rule">
   <item>Category Membership Divergence Tester</item>
   <item>DateTime Divergence Tester</item>
   <item>Float Divergence Tester</item>
@@ -39,7 +39,7 @@
   <item>String Divergence Tester</item>
   <item>Variation Divergence Tester</item>
  </portal_type>
- <portal_type id="Payment Rule">
+ <portal_type id="Payment Simulation Rule">
   <item>Category Membership Divergence Tester</item>
   <item>DateTime Divergence Tester</item>
   <item>Float Divergence Tester</item>
@@ -62,7 +62,7 @@
   <item>Action Information</item>
   <item>Role Information</item>
  </portal_type>
- <portal_type id="Trade Model Rule">
+ <portal_type id="Trade Model Simulation Rule">
   <item>Category Membership Divergence Tester</item>
   <item>DateTime Divergence Tester</item>
   <item>Float Divergence Tester</item>

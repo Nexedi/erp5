@@ -1,39 +1,39 @@
-Delivery Rule | Category Membership Divergence Tester
-Delivery Rule | DateTime Divergence Tester
-Delivery Rule | Float Divergence Tester
-Delivery Rule | Net Converted Quantity Divergence Tester
-Delivery Rule | String Divergence Tester
-Delivery Rule | Variation Divergence Tester
-Invoice Rule | Category Membership Divergence Tester
-Invoice Rule | DateTime Divergence Tester
-Invoice Rule | Float Divergence Tester
-Invoice Rule | Net Converted Quantity Divergence Tester
-Invoice Rule | String Divergence Tester
-Invoice Rule | Variation Divergence Tester
-Invoice Transaction Rule | Category Membership Divergence Tester
-Invoice Transaction Rule | DateTime Divergence Tester
-Invoice Transaction Rule | Float Divergence Tester
-Invoice Transaction Rule | Net Converted Quantity Divergence Tester
-Invoice Transaction Rule | String Divergence Tester
-Invoice Transaction Rule | Variation Divergence Tester
-Invoicing Rule | Category Membership Divergence Tester
-Invoicing Rule | DateTime Divergence Tester
-Invoicing Rule | Float Divergence Tester
-Invoicing Rule | Net Converted Quantity Divergence Tester
-Invoicing Rule | String Divergence Tester
-Invoicing Rule | Variation Divergence Tester
-Order Rule | Category Membership Divergence Tester
-Order Rule | DateTime Divergence Tester
-Order Rule | Float Divergence Tester
-Order Rule | Net Converted Quantity Divergence Tester
-Order Rule | String Divergence Tester
-Order Rule | Variation Divergence Tester
-Payment Rule | Category Membership Divergence Tester
-Payment Rule | DateTime Divergence Tester
-Payment Rule | Float Divergence Tester
-Payment Rule | Net Converted Quantity Divergence Tester
-Payment Rule | String Divergence Tester
-Payment Rule | Variation Divergence Tester
+Delivery Root Simulation Rule | Category Membership Divergence Tester
+Delivery Root Simulation Rule | DateTime Divergence Tester
+Delivery Root Simulation Rule | Float Divergence Tester
+Delivery Root Simulation Rule | Net Converted Quantity Divergence Tester
+Delivery Root Simulation Rule | String Divergence Tester
+Delivery Root Simulation Rule | Variation Divergence Tester
+Invoice Root Simulation Rule | Category Membership Divergence Tester
+Invoice Root Simulation Rule | DateTime Divergence Tester
+Invoice Root Simulation Rule | Float Divergence Tester
+Invoice Root Simulation Rule | Net Converted Quantity Divergence Tester
+Invoice Root Simulation Rule | String Divergence Tester
+Invoice Root Simulation Rule | Variation Divergence Tester
+Invoice Simulation Rule | Category Membership Divergence Tester
+Invoice Simulation Rule | DateTime Divergence Tester
+Invoice Simulation Rule | Float Divergence Tester
+Invoice Simulation Rule | Net Converted Quantity Divergence Tester
+Invoice Simulation Rule | String Divergence Tester
+Invoice Simulation Rule | Variation Divergence Tester
+Invoice Transaction Simulation Rule | Category Membership Divergence Tester
+Invoice Transaction Simulation Rule | DateTime Divergence Tester
+Invoice Transaction Simulation Rule | Float Divergence Tester
+Invoice Transaction Simulation Rule | Net Converted Quantity Divergence Tester
+Invoice Transaction Simulation Rule | String Divergence Tester
+Invoice Transaction Simulation Rule | Variation Divergence Tester
+Order Root Simulation Rule | Category Membership Divergence Tester
+Order Root Simulation Rule | DateTime Divergence Tester
+Order Root Simulation Rule | Float Divergence Tester
+Order Root Simulation Rule | Net Converted Quantity Divergence Tester
+Order Root Simulation Rule | String Divergence Tester
+Order Root Simulation Rule | Variation Divergence Tester
+Payment Simulation Rule | Category Membership Divergence Tester
+Payment Simulation Rule | DateTime Divergence Tester
+Payment Simulation Rule | Float Divergence Tester
+Payment Simulation Rule | Net Converted Quantity Divergence Tester
+Payment Simulation Rule | String Divergence Tester
+Payment Simulation Rule | Variation Divergence Tester
 Solver Process | Accept Solver
 Solver Process | Adopt Solver
 Solver Process | Production Reduction Solver
@@ -43,10 +43,10 @@ Solver Process | Unify Solver
 Solver Tool | Solver Process
 Solver Type | Action Information
 Solver Type | Role Information
-Trade Model Rule | Category Membership Divergence Tester
-Trade Model Rule | DateTime Divergence Tester
-Trade Model Rule | Float Divergence Tester
-Trade Model Rule | Net Converted Quantity Divergence Tester
-Trade Model Rule | String Divergence Tester
-Trade Model Rule | Variation Divergence Tester
+Trade Model Simulation Rule | Category Membership Divergence Tester
+Trade Model Simulation Rule | DateTime Divergence Tester
+Trade Model Simulation Rule | Float Divergence Tester
+Trade Model Simulation Rule | Net Converted Quantity Divergence Tester
+Trade Model Simulation Rule | String Divergence Tester
+Trade Model Simulation Rule | Variation Divergence Tester
 Types Tool | Solver Type
