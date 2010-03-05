@@ -29,8 +29,8 @@
                     <key> <string>request_vars</string> </key>
                     <value>
                       <tuple>
-                        <string>LOCALIZER_LANGUAGE</string>
                         <string>current_web_section_url</string>
+                        <string>web_site_language</string>
                       </tuple>
                     </value>
                 </item>
