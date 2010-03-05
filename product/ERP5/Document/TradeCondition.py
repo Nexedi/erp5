@@ -127,7 +127,7 @@ class TradeCondition(Path, Transformation, XMLMatrix):
          Uses Breadth First Search.
       """
       if portal_type_list is None:
-        portal_type_list = [self.getPortalType()]
+        portal_type_list = self.getPortalAmountGeneratorTypeList()
       if context.getPortalType() in portal_type_list:
         specialise_value_list = [context]
         visited_trade_condition_list = [context]
@@ -356,7 +356,7 @@ class TradeCondition(Path, Transformation, XMLMatrix):
         effective_model_list = []
       visited_trade_condition_list = []
       if portal_type_list is None:
-        portal_type_list = [self.getPortalType()]
+        portal_type_list = self.getPortalAmountGeneratorTypeList()
 
       if context.getPortalType() in portal_type_list:
         effective_model = context.getEffectiveModel(
