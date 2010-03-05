@@ -1472,6 +1472,19 @@ le3\\\">ERP5:<br />=0A   </p>=0A  <p class=3D\\\"style3\\\"><strong>ERP5</strong
 <br />=0A    ERP5</p>=0A</di=
 v>=0A</body>=0A</html>=0A
 <br>=
+
+<table class=3DMoNormalTable border=3D0 cellspacing=3D0 cellpadding=3D0 =
+width=3D64
+ style=3D'width:48.0pt;margin-left:-.75pt;border-collapse:collapse'>
+ <tr style=3D'height:15.0pt'>
+  <td width=3D64 nowrap valign=3Dbottom =
+style=3D'width:48.0pt;padding:0cm 5.4pt 0cm 5.4pt;
+  height:15.0pt'>
+  <p class=3DMoNormal><span =
+style=3D'color:black'>05D65812<o:p></o:p></span></p>
+  </td>
+ </tr>
+</table>
 </BODY></HTML>
     """
     web_page.edit(text_content=html_content)
