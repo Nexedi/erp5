@@ -300,9 +300,11 @@ class Resource(XMLMatrix, Variated):
         if len(transformation_list) > 0:
           return transformation_list[0].getObject()
 
-      method = context._getTypeBasedMethod('getDefaultTransformationValue')
-      if method is not None:
-        return method(context)
+      else:
+        method = context._getTypeBasedMethod('getDefaultTransformationValue')
+        if method is not None:
+          return method(context)
+
       method = self._getTypeBasedMethod('getDefaultTransformationValue')
       if method is not None:
         return method(context)
@@ -335,6 +337,37 @@ class Resource(XMLMatrix, Variated):
         return method()
 
       return self.getDefaultTransformationValue(context=None)
+
+
+    security.declareProtected(Permissions.AccessContentsInformation,
+                           'getTransformationVariationCategoryCartesianProduct')
+    def getTransformationVariationCategoryCartesianProduct(self):
+      """
+      Defines which variations are of interest when indexing
+      Transformations related to this resource.
+
+      By default, this returns the cartesian Product of all
+      possible categories using all variation axes.
+
+      Override this to reduce the number of indexed rows, and/or
+      if some variation axes do not matter when displaying
+      Transformed inventories.
+
+      XXX This should use variated_range mixin when available
+      """
+      method = self._getTypeBasedMethod(\
+          'getTransformationVariationCategoryCartesianProduct')
+      if method is not None:
+        return method()
+
+      variation_list_list = []
+      for base_variation in self.getVariationBaseCategoryList():
+        variation_list = self.getVariationCategoryList( \
+            base_category_list=(base_variation,))
+        if len(variation_list) > 0:
+          variation_list_list.append(variation_list)
+
+      return cartesianProduct(variation_list_list)
 
 
     ####################################################
@@ -994,48 +1027,6 @@ class Resource(XMLMatrix, Variated):
                              quantity=quantity))
 
       return row_list
-
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'getTransformationRowList')
-    def getTransformationRowList(self):
-      """
-      Returns a list of rows to insert in the transformation table.
-      Used by z_catalog_transformation_list
-      """
-      from Products.ERP5Type.Document import newTempMovement
-      resource_uid = self.getUid()
-
-      variation_list_list = []
-      for base_variation in self.getVariationBaseCategoryList():
-        variation_list = self.getVariationCategoryList( \
-            base_category_list=(base_variation,))
-        if len(variation_list) > 0:
-          variation_list_list.append(variation_list)
-
-      transformation = self.getDefaultConversionTransformationValue()
-
-      kw = dict(resource=self.getRelativeUrl(), quantity=1.0)
-      row_list = []
-      for i, variation_list in enumerate(cartesianProduct(variation_list_list)):
-        # We must have an unique movement ID for each movement, or we might
-        # hit the cache due to similar physical paths
-        movement = newTempMovement(self, 'temp_%s' % i,
-                                    variation_category_list=variation_list,
-                                    **kw)
-
-        base_row = dict(uid=resource_uid,
-                        variation_text=movement.getVariationText())
-        for amount in transformation.getAggregatedAmountList(movement):
-          transformed_resource_uid = amount.getResourceUid()
-          quantity = amount.getQuantity()
-          if transformed_resource_uid is not None and quantity is not None:
-            row = base_row.copy()
-            row.update(transformed_uid=transformed_resource_uid,
-                       transformed_variation_text=amount.getVariationText(),
-                       quantity=quantity)
-            row_list.append(row)
-      return row_list
-
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getMeasureRowList')
