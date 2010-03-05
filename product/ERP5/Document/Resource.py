@@ -292,6 +292,10 @@ class Resource(XMLMatrix, Variated):
       If the search returns several candidates due to a relaxed Predicate,
       the first item is returned arbitrarily.
       """
+      method = self._getTypeBasedMethod('getDefaultTransformationValue')
+      if method is not None:
+        return method(context)
+
       if context is None:
         transformation_list = self.portal_catalog(portal_type="Transformation",
                                             resource_category_uid=self.getUid(),
@@ -299,13 +303,9 @@ class Resource(XMLMatrix, Variated):
                                             limit=1)
         if len(transformation_list) > 0:
           return transformation_list[0].getObject()
+        return None
 
-      else:
-        method = context._getTypeBasedMethod('getDefaultTransformationValue')
-        if method is not None:
-          return method(context)
-
-      method = self._getTypeBasedMethod('getDefaultTransformationValue')
+      method = context._getTypeBasedMethod('getDefaultTransformationValue')
       if method is not None:
         return method(context)
 
