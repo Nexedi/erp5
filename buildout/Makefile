@@ -16,6 +16,7 @@ assert: bin/python2.4
 
 debian-appliance:
 	svn co --ignore-externals https://svn.erp5.org/repos/public/spec/debian-erp5-appliance/ debian-erp5-appliance
+	sed -i "s,__PACKAGE_NAME__,erp5-`cat VERSION.txt`,g" debian-erp5-appliance/DEBIAN/control
 	sed -i "s,__VERSION__,$(PACKAGE_VERSION),g" debian-erp5-appliance/DEBIAN/control
 	sed -i "s,__VERSION__,`cat VERSION.txt`,g" debian-erp5-appliance/DEBIAN/prerm
 	sudo svn co https://svn.erp5.org/repos/public/erp5/trunk/buildout $(SOFTWARE_BUILD_PATH)
@@ -28,5 +29,5 @@ debian-appliance:
 	rm -rf debian-erp5-appliance/*.TXT
 	rm -rf `find debian-erp5-appliance/ -type d -name .svn`
 	rm -rf `find debian-erp5-appliance/ -name *.pyc`
-	dpkg-deb -b debian-erp5-appliance/ erp5-`cat VERSION.txt`.deb
+	dpkg-deb -b debian-erp5-appliance/ .
 
