@@ -25,8 +25,13 @@ Options:
                              --data_fs_path to run tests on an existing
                              Data.fs
   --data_fs_path=STRING      Use the given path for the Data.fs
-  --bt5_path                 Path to the Business Templates. Default is
-                             INSTANCE_HOME/bt5.
+  --bt5_path                 Search for Business Templates in the given list of
+                             paths (or any HTTP url supported by template tool),
+                             delimited with commas. In particular, BT can be
+                             downloaded directly from a running ERP5 instance
+                             using a url like:
+                               http://.../erp5/portal_templates/asRepository
+                             Default is INSTANCE_HOME/bt5 and its subfolders.
   --recreate_catalog=0 or 1  recreate the content of the sql catalog. Default
                              is to recreate, unless using --data_fs_path
   --save                     Run unit tests in persistent mode (if unset,
