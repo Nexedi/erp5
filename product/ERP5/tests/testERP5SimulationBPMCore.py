@@ -49,12 +49,12 @@ if True:
         'asset/receivable/refundable_vat')
 
     itr = self.portal.portal_rules.newContent(
-                        portal_type='Invoice Transaction Rule',
+                        portal_type='Invoice Transaction Simulation Rule',
                         reference='default_invoice_transaction_rule',
-                        id='test_invoice_transaction_rule',
-                        title='Transaction Rule',
+                        id='test_invoice_transaction_simulation_rule',
+                        title='Transaction Simulation Rule',
                         test_method_id=
-                        'SimulationMovement_testInvoiceTransactionRule',
+                        'SimulationMovement_testInvoiceTransactionSimulationRule',
                         version=100)
     # matching provider for source and destination
     for category in ('resource', 'source', 'destination',

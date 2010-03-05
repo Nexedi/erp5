@@ -131,8 +131,8 @@ class TestBPMMixin(ERP5TypeTestCase):
     itr = self.portal.portal_rules.newContent(
                         portal_type='Invoice Transaction Simulation Rule',
                         reference='default_invoice_transaction_rule',
-                        id='test_invoice_transaction_rule',
-                        title='Transaction Rule',
+                        id='test_invoice_transaction_simulation_rule',
+                        title='Transaction Simulation Rule',
                         test_method_id=
                         'SimulationMovement_testInvoiceTransactionSimulationRule',
                         version=100)
@@ -218,7 +218,7 @@ class TestBPMMixin(ERP5TypeTestCase):
           'delete from %s where processing_node=-2' % table)
     # remove not needed rules
     self.portal.portal_rules.manage_delObjects(
-        ids=['test_invoice_transaction_rule'])
+        ids=['test_invoice_transaction_simulation_rule'])
     self.stepTic()
 
 class TestBPMImplementation(TestBPMMixin):
