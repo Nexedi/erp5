@@ -303,7 +303,13 @@ class Transformation(XMLObject, Predicate, Variated):
           # Browse each transformed or assorted resource of the current
           # transformation
           if line_is_included(transformation_line):
-            result.extend(transformation_line.getAggregatedAmountList(context))
+            try:
+              result.extend(transformation_line.getAggregatedAmountList(context))
+            except KeyError:
+              # KeyError is raised by TransformedResource.getAggregatedAmountList
+              # in case of misconfiguration of a Cell.
+              # Just ignore the line
+              pass
 
       if context_quantity:
         result.multiplyQuantity(context=context)
