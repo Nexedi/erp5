@@ -1204,6 +1204,25 @@ class Document(PermanentURLMixIn, XMLObject, UrlMixIn, CachedConvertableMixin, S
       mime, html = self.convert(**kw)
       return self._stripHTML(str(html))
 
+  security.declareProtected(Permissions.View, 'asSafeHTML')
+  def asSafeHTML(self, **kw):
+    """
+      Converts the current document to HTML, strip it and remove
+      emmbed javascript, forms, any external plugins imports.
+    """
+    format = 'text/x-html-safe'
+    if not self.hasBaseData():
+      return ''
+    try:
+      mime, data = self.getConversion(format=format)
+      return data
+    except KeyError:
+      kw['format'] = 'html'
+      mime, html = self.convert(**kw)
+      safe_html = self._safeHTML(str(html), format=format)
+      self.setConversion(safe_html, mime=mime, format=format)
+      return safe_html
+
   def _guessEncoding(self, string):
     """
       Try to guess the encoding for this string.
@@ -1239,6 +1258,34 @@ class Document(PermanentURLMixIn, XMLObject, UrlMixIn, CachedConvertableMixin, S
         return str(stripped_html)
     return stripped_html
 
+  def _safeHTML(self, html, format='text/x-html-safe', charset=None):
+    """
+      A private method to strip HTML content in safe mode,
+      w/o emmbed javascript, forms and any external plugins imports.
+      This should be used when we do not trust the user (Anonymous)
+      who push data into database.
+      - html: content to strip
+      - format: destination format
+      - charset: charset used to encode string. Take precedence
+      on charset values found in html string
+    """
+    portal = self.getPortalObject()
+    if charset is None:
+      # find charset
+      charset_list = self.charset_parser.findall(html)
+      if charset_list:
+        charset = charset_list[0]
+    if charset and charset not in ('utf-8', 'UTF-8'):
+      try:
+        safe_html_string = html.decode(charset).encode('utf-8')
+      except (UnicodeDecodeError, LookupError):
+        pass
+      else:
+        charset = 'utf-8' # Override charset if convertion succeeds
+    transform_tool = getToolByName(portal, 'portal_transforms')
+    safe_html_string = transform_tool.convertToData(format, html,
+                                                    encoding=charset)
+    return safe_html_string
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getContentInformation')
   def getContentInformation(self):
