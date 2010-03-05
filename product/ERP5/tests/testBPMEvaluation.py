@@ -80,13 +80,14 @@ class TestBPMEvaluationMixin(TestBPMMixin):
       if rule.getValidationState() == 'validated':
         rule.invalidate()
     transaction.commit()
-    self._createOrderRule()
-    self._createDeliveryRule()
-    self._createInvoicingRule()
-    self._createInvoiceRule()
-    self._createTradeModelRule()
+    self._createOrderRootSimulationRule()
+    self._createDeliverySimulationRule()
+    self._createDeliverySimulationRule()
+    self._createInvoiceSimulationRule()
+    self._createInvoiceRootSimulationRule()
+    self._createTradeModelSimulationRule()
 
-  def _createRootTradeRule(self, **kw):
+  def _createTradeRootSimulationRule(self, **kw):
     edit_dict = {}
     edit_dict.update(
       trade_phase = 'default/delivery',
@@ -95,19 +96,13 @@ class TestBPMEvaluationMixin(TestBPMMixin):
     rule = self.rule_tool.newContent(**edit_dict)
 
     # matching providers
-    for category in ('resource', 'order'):
+    for category in ('delivery',):
       rule.newContent(
         portal_type='Category Membership Divergence Tester',
         title='%s divergence tester' % category,
         tested_property=category,
         divergence_provider=False,
         matching_provider=True)
-    rule.newContent(
-      portal_type='Variation Divergence Tester',
-      title='variation divergence tester',
-      tested_property='variation_property_dict',
-      divergence_provider=False,
-      matching_provider=True)
 
     # divergence providers
     for category in ('source_section',
@@ -146,22 +141,30 @@ class TestBPMEvaluationMixin(TestBPMMixin):
 
     return rule
 
-  def _createOrderRule(self):
-    rule = self._createRootTradeRule(portal_type='Order Root Simulation Rule',
+  def _createOrderRootSimulationRule(self):
+    rule = self._createTradeRootSimulationRule(portal_type='Order Root Simulation Rule',
         reference='default_order_rule')
     rule.validate()
     transaction.commit()
 
-  def _createDeliveryRule(self):
-    rule = self._createRootTradeRule(portal_type='Delivery Root Simulation Rule',
+  def _createDeliveryRootSimulationRule(self):
+    rule = self._createTradeRootSimulationRule(portal_type='Delivery Root Simulation Rule',
         reference='default_delivery_rule')
     rule.validate()
     transaction.commit()
 
-  def _createTradeModelRule(self):
+  def _createDeliverySimulationRule(self):
+    rule = self.rule_tool.newContent(portal_type='Delivery Simulation Rule',
+      reference='default_trade_model_rule',
+      test_method_id = ('SimulationMovement_testDeliverySimulationRule',)
+      )
+    rule.validate()
+    transaction.commit()
+
+  def _createTradeModelSimulationRule(self):
     rule = self.rule_tool.newContent(portal_type='Trade Model Simulation Rule',
       reference='default_trade_model_rule',
-      test_method_id = ('SimulationMovement_testTradeModelRule',)
+      test_method_id = ('SimulationMovement_testTradeModelSimulationRule',)
       )
     # matching providers
     for category in ('resource',):
@@ -226,7 +229,7 @@ class TestBPMEvaluationMixin(TestBPMMixin):
     rule.validate()
     transaction.commit()
 
-  def _createInvoiceRule(self):
+  def _createInvoiceRootSimulationRule(self):
     # Note: This is not used, but invoices, even if built from simulation,
     #       need those rule to create empty one applied rule
     rule_tool = self.portal.portal_rules
@@ -237,7 +240,7 @@ class TestBPMEvaluationMixin(TestBPMMixin):
     new_rule.validate()
     transaction.commit()
 
-  def _createInvoicingRule(self):
+  def _createInvoiceSimulationRule(self):
     edit_dict = {}
     edit_dict.update(
     )
