@@ -368,7 +368,7 @@ class TestBPMEvaluationMixin(TestBPMMixin):
     for root_simulation_movement in root_simulation_movement_list:
       self.assertEqual(root_simulation_movement.getPortalType(),
           'Simulation Movement')
-      movement = root_simulation_movement.getOrderValue()
+      movement = root_simulation_movement.getDeliveryValue()
       property_problem_list = []
       # check some properties equality between delivery line and simulation
       # movement, gather errors
@@ -383,7 +383,7 @@ class TestBPMEvaluationMixin(TestBPMMixin):
       if len(property_problem_list) > 0:
         self.fail('\n'.join(property_problem_list))
       self.assertEqual(
-        movement.getQuantity() * root_simulation_movement.getOrderRatio(),
+        movement.getQuantity() * root_simulation_movement.getDeliveryRatio(),
         root_simulation_movement.getQuantity())
       # root rule is order or delivery - so below each movement invoicing one
       # is expected
@@ -413,7 +413,7 @@ class TestBPMEvaluationMixin(TestBPMMixin):
           if len(property_problem_list) > 0:
             self.fail('\n'.join(property_problem_list))
           self.assertEqual(
-            movement.getQuantity() * root_simulation_movement.getOrderRatio(),
+            movement.getQuantity() * root_simulation_movement.getDeliveryRatio(),
             invoicing_simulation_movement.getQuantity())
           # simple check for trade model rule existence, without movements,
           # as no trade condition configured
@@ -537,7 +537,7 @@ class GenericRuleTestsMixin:
     # recalculate order ratio
     for movement in self.root_document.getMovementList():
       movement_quantity = movement.getQuantity()
-      for simulation_movement in movement.getOrderRelatedValueList():
+      for simulation_movement in movement.getDeliveryRelatedValueList():
         new_ratio = simulation_movement.getQuantity() / movement_quantity
         simulation_movement.edit(order_ratio = new_ratio)
         if simulation_movement.getDelivery() is not None:
