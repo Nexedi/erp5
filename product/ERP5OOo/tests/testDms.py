@@ -1472,7 +1472,10 @@ le3\\\">ERP5:<br />=0A   </p>=0A  <p class=3D\\\"style3\\\"><strong>ERP5</strong
 <br />=0A    ERP5</p>=0A</di=
 v>=0A</body>=0A</html>=0A
 <br>=
-
+<!-- This is a comment, This string AZERTYY shouldn't be dislayed-->
+<style>
+<!-- This is a comment, This string AZERTYY shouldn't be dislayed-->
+</style>
 <table class=3DMoNormalTable border=3D0 cellspacing=3D0 cellpadding=3D0 =
 width=3D64
  style=3D'width:48.0pt;margin-left:-.75pt;border-collapse:collapse'>
@@ -1490,6 +1493,7 @@ style=3D'color:black'>05D65812<o:p></o:p></span></p>
     web_page.edit(text_content=html_content)
     safe_html = web_page.asSafeHTML()
     self.assertTrue('inside very broken HTML code' in html_content)
+    self.assertTrue('AZERTYY' not in html_content)
 
 class TestDocumentWithSecurity(ERP5TypeTestCase):
 
