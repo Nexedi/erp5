@@ -58,12 +58,7 @@
 parent = movement.getParentValue()\n
 if parent.getPortalType() == \'Applied Rule\':\n
   parent_rule = parent.getSpecialiseValue()\n
-  parent_rule_portal_type = parent_rule.getPortalType()\n
-  if parent_rule_portal_type not in [\'Order Rule\', \'Delivery Rule\', \'Delivery Root Simulation Rule\', \'Delivery Simulation Rule\']:\n
-    return False\n
-  # XXX can we create tax rule for Production Order?\n
-  if parent_rule_portal_type in [\'Delivery Simulation Rule\',] and \\\n
-      parent.getParentValue().getParentValue().getSpecialiseValue().getPortalType() not in [\'Order Root Simulation Rule\']:\n
+  if parent_rule.getPortalType() not in [\'Delivery Rule\', \'Order Rule\']:\n
     return False\n
 \n
 return True\n
@@ -109,7 +104,6 @@ return True\n
                             <string>_getattr_</string>
                             <string>parent</string>
                             <string>parent_rule</string>
-                            <string>parent_rule_portal_type</string>
                             <string>False</string>
                             <string>True</string>
                           </tuple>
