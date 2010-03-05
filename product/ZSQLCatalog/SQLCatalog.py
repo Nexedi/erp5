@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2002-2009 Nexedi SARL. All Rights Reserved.
@@ -52,6 +53,13 @@ from zope.interface.verify import verifyClass
 from zope.interface import implements
 
 from SearchText import isAdvancedSearchText
+
+# Try to import ActiveObject in order to make SQLCatalog active
+try:
+  from Products.CMFActivity.ActiveObject import ActiveObject
+except ImportError:
+  ActiveObject = ExtensionClass.Base 
+
 
 PROFILING_ENABLED = False
 if PROFILING_ENABLED:
@@ -233,7 +241,7 @@ related_key_warned_column_set = set()
 class Catalog(Folder,
               Persistent,
               Acquisition.Implicit,
-              ExtensionClass.Base,
+              ActiveObject,
               OFS.History.Historical):
   """ An Object Catalog
 
