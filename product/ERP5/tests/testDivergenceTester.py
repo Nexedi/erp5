@@ -51,8 +51,7 @@ class TestDivergenceTester(TestPackingListMixin, ERP5TypeTestCase):
     rule = getattr(self.getPortal().portal_rules, self.rule_id)
     tester_list = rule.contentValues(
              portal_type=rule.getPortalDivergenceTesterTypeList())
-    rule.manage_delObjects(
-                    uids=[x.getUid() for x in tester_list])
+    rule.deleteContent([x.getId() for x in tester_list])
 
   def bootstrapSite(self):
     """
