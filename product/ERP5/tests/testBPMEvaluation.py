@@ -391,7 +391,11 @@ class TestBPMEvaluationMixin(TestBPMMixin):
       # root rule is order or delivery - so below each movement invoicing one
       # is expected
       self.assertEquals(len(root_simulation_movement.contentValues()), 1)
-      for bpm_invoicing_rule in root_simulation_movement.contentValues():
+      delivery_rule = root_simulation_movement.contentValues()[0]
+      delivery_simulation_movement_list = delivery_rule.contentValues()
+      self.assertEqual(1, len(delivery_simulation_movement_list))
+      delivery_simulation_movement = delivery_simulation_movement_list[0]
+      for bpm_invoicing_rule in delivery_simulation_movement.contentValues():
         self.assertEqual(bpm_invoicing_rule.getPortalType(), 'Applied Rule')
         self.assertEqual(bpm_invoicing_rule.getSpecialiseValue() \
             .getPortalType(), 'Invoice Simulation Rule')
