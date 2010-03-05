@@ -28,4 +28,4 @@
 from Products.ERP5Type.XMLObject import XMLObject
 
 class File(XMLObject):
-  pass
+  isClassOverriden = True

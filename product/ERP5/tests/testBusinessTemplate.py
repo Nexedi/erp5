@@ -5975,6 +5975,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
 
   def test_167_InstanceAndRelatedClassDefinedInSameBT(self):
     from Products.ERP5Type.Document.BusinessTemplate import BaseTemplateItem
+    portal = self.portal
     BaseTemplateItem_removeProperties = BaseTemplateItem.removeProperties
     marker_list = []
     def removeProperties(self, obj):
@@ -5985,17 +5986,16 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     try:
       BaseTemplateItem.removeProperties = removeProperties
       SimpleItem._getCopy = lambda *args: self.fail()
-      template_tool = self.portal.portal_templates
+      template_tool = portal.portal_templates
       bt_path = os.path.join(os.path.dirname(__file__), 'test_data',
                              self._testMethodName)
       # create a previously existing instance of the overriden document type
       from Products.ERP5Type.Document.File import File
-      from Products.CMFDefault.File import File as BaseFile
-      self.portal._setObject('another_file', File('another_file'))
+      portal._setObject('another_file', File('another_file'))
       transaction.commit()
       self.tic()
       # check its class has not yet been overriden
-      self.assertTrue(isinstance(self.portal.another_file, BaseFile))
+      self.assertFalse(getattr(portal.another_file, 'isClassOverriden', False))
       for i in xrange(6):
         marker_list.append(i)
         gc.disable()
@@ -6006,15 +6006,20 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
           self.tic()
         bt.install(force=1)
         gc.enable()
-        self.assertEqual(self.portal.some_file.int_index, i)
+        self.assertEqual(portal.some_file.int_index, i)
         transaction.commit()
         self.tic()
-        # check the previously existing instance now behaves as the overriden
-        # class
-        self.assertFalse(isinstance(self.portal.another_file, BaseFile))
     finally:
       BaseTemplateItem.removeProperties = BaseTemplateItem_removeProperties
       SimpleItem._getCopy = SimpleItem_getCopy
+    # check the previously existing instance now behaves as the overriden class
+    self.assertTrue(getattr(portal.another_file, 'isClassOverriden', False))
+    self.uninstallBusinessTemplate('test_data')
+    transaction.commit()
+    self.tic()
+    # check both File instances no longer behave like being overriden
+    self.assertFalse(getattr(portal.some_file, 'isClassOverriden', False))
+    self.assertFalse(getattr(portal.another_file, 'isClassOverriden', False))
 
 
 def test_suite():
