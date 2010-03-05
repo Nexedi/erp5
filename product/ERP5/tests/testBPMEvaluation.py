@@ -81,7 +81,7 @@ class TestBPMEvaluationMixin(TestBPMMixin):
         rule.invalidate()
     transaction.commit()
     self._createOrderRootSimulationRule()
-    self._createDeliverySimulationRule()
+    self._createDeliveryRootSimulationRule()
     self._createDeliverySimulationRule()
     self._createInvoiceSimulationRule()
     self._createInvoiceRootSimulationRule()
@@ -155,7 +155,7 @@ class TestBPMEvaluationMixin(TestBPMMixin):
 
   def _createDeliverySimulationRule(self):
     rule = self.rule_tool.newContent(portal_type='Delivery Simulation Rule',
-      reference='default_trade_model_rule',
+      reference='default_delivering_rule',
       test_method_id = ('SimulationMovement_testDeliverySimulationRule',)
       )
     rule.validate()

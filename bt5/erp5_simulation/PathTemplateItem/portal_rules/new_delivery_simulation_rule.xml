@@ -43,13 +43,13 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>trade_phase/default/invoicing</string>
+                <string>trade_phase/default/delivery</string>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>default_invoicing_rule</string> </value>
+            <value> <string>default_delivering_rule</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
