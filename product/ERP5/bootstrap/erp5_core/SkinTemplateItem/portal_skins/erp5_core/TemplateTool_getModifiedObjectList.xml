@@ -82,12 +82,15 @@ for bt_id in bt_id_list:\n
   bt_object_dict[bt.getId()] = [bt.getTitle(), getModifiedObjectList(bt)]\n
 \n
 object_list = []\n
-no_backup_set = set([\'Action\', \'SiteProperty\', \'Module\', \'Document\', \n
-                  \'PropertySheet\', \'Extension\', \'Test\', \'Product\', \n
-                  \'Role\', \'CatalogResultKey\', \'CatalogRelatedKey\', \n
-                  \'CatalogResultTable\', \'MessageTranslation\', \'LocalRoles\', \n
-                  \'PortalTypeAllowedContentType\', \'PortalTypeHiddenContentType\', \n
-                  \'PortalTypePropertySheet\', \'PortalTypeBaseCategory\'])\n
+no_backup_list = [\'Action\', \'SiteProperty\', \'Module\', \'Document\', \n
+                 \'PropertySheet\', \'Extension\', \'Test\', \'Product\', \n
+                 \'Role\', \'CatalogResultKey\', \'CatalogRelatedKey\', \n
+                 \'CatalogResultTable\', \'MessageTranslation\', \'LocalRoles\', \n
+                 \'PortalTypeAllowedContentType\', \'PortalTypeHiddenContentType\', \n
+                 \'PortalTypePropertySheet\', \'PortalTypeBaseCategory\']\n
+no_backup_dict = {}\n
+for i in no_backup_list:\n
+  no_backup_dict[i] = True\n
 \n
 install_title = Base_translateString(\'Install\')\n
 upgrade_title = Base_translateString(\'Upgrade\')\n
@@ -105,12 +108,12 @@ for bt in bt_id_list:\n
     line = newTempBase(context, \'tmp_install_%s\' % i)\n
 \n
     if object_state == \'Modified\':\n
-      if object_class in no_backup_set:\n
+      if object_class in no_backup_dict:\n
         choice_item_list = [[upgrade_title, \'install\']]\n
       else:\n
         choice_item_list = [[backup_title, \'backup\']]\n
     elif object_state == \'Removed\':\n
-      if object_class in no_backup_set:\n
+      if object_class in no_backup_dict:\n
         choice_item_list = [[remove_title, \'remove\']]\n
       else:\n
         choice_item_list = [[save_and_remove_title, \'save_and_remove\']]\n
@@ -185,8 +188,10 @@ return object_list\n
                             <string>bt</string>
                             <string>_write_</string>
                             <string>object_list</string>
-                            <string>set</string>
-                            <string>no_backup_set</string>
+                            <string>no_backup_list</string>
+                            <string>no_backup_dict</string>
+                            <string>i</string>
+                            <string>True</string>
                             <string>install_title</string>
                             <string>upgrade_title</string>
                             <string>backup_title</string>
@@ -196,7 +201,6 @@ return object_list\n
                             <string>modified_object_list</string>
                             <string>keys</string>
                             <string>enumerate</string>
-                            <string>i</string>
                             <string>object_id</string>
                             <string>object_state</string>
                             <string>object_class</string>
