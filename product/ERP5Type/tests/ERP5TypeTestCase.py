@@ -9,6 +9,7 @@ __version__ = '0.3.0'
 
 import base64
 import errno
+import httplib
 import md5
 import os
 import random
@@ -17,10 +18,10 @@ import socket
 import sys
 import time
 import traceback
+import urllib
 from cStringIO import StringIO
 from cPickle import dumps
 from glob import glob
-from urllib import urlopen
 from warnings import warn
 from ZTUtils import make_query
 
@@ -398,20 +399,33 @@ class ERP5TypeTestCase(backportUnittest.TestCase, PortalTestCase):
         bt5_path = os.path.join(os.environ['INSTANCE_HOME'], 'bt5')
         bt5_path_list = bt5_path, os.path.join(bt5_path, '*')
 
+      def search(path, template):
+        urltype, url = urllib.splittype(path + '/' + template)
+        if urltype == 'http':
+          host, selector = urllib.splithost(url)
+          user_passwd, host = urllib.splituser(host)
+          host = urllib.unquote(host)
+          h = httplib.HTTP(host)
+          h.putrequest('HEAD', selector)
+          h.putheader('Host', host)
+          if user_passwd:
+            h.putheader('Authorization',
+                        'Basic %s' % base64.b64encode(user_passwd).strip())
+          h.endheaders()
+          errcode, errmsg, headers = h.getreply()
+          if errcode == 200:
+            return urltype + ':' + url
+        else:
+          path_list = glob(os.path.join(path, template))
+          if path_list:
+            return path_list[0]
+
       not_found_list = []
       new_template_list = []
       for template in template_list:
         id = template.split('/')[-1]
         for path in bt5_path_list:
-          if path.endswith('/portal_templates'):
-            bt_id = urlopen('%s/getLastBusinessTemplateId?title=%s'
-                            % (path, template)).read()
-            path = bt_id and '%s/manage_exportObject?%s' % (path,
-              make_query(id=bt_id, download=1, to_xml=0))
-          else:
-            path = os.path.join(path, template)
-            path_list = glob(path) + glob(path + '.bt5')
-            path = path_list and path_list[0]
+          path = search(path, template) or search(path, template + '.bt5')
           if path:
             break
         else:

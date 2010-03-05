@@ -33,7 +33,7 @@ import os
 import shutil
 import sys
 
-from Acquisition import Implicit
+from Acquisition import Implicit, Explicit
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Globals import InitializeClass, DTMLFile, PersistentMapping
 from Products.ERP5Type.DiffUtils import DiffFile
@@ -144,16 +144,38 @@ class TemplateTool (BaseTool):
           built_bts.append(bt)
       return built_bts
 
-    def getLastBusinessTemplateId(self, title):
-      """Get the id of the business template with the highest revision number
-      """
-      last_bt = None, None
-      for bt in self.contentValues(portal_type='Business Template'):
-        if bt.getTitle() == title and bt.getBuildingState() == 'built':
-          revision = bt.getRevision()
-          if last_bt[0] < revision and bt.getInstallationState() != 'deleted':
-            last_bt = revision, bt.getId()
-      return last_bt[1]
+    @property
+    def asRepository(self):
+      class asRepository(Explicit):
+        """Export business template by their title
+
+        Provides a view of template tool allowing a user to download the last
+        revision of a business template with a URL like:
+          http://.../erp5/portal_templates/asRepository/erp5_core
+        """
+        def __before_publishing_traverse__(self, self2, request):
+          path = request['TraversalRequestNameStack']
+          self.subpath = tuple(reversed(path))
+          del path[:]
+        def __call__(self, REQUEST, RESPONSE):
+          title, = self.subpath
+          last_bt = None, None
+          for bt in self.aq_parent.searchFolder(title=title):
+            bt = bt.getObject()
+            revision = int(bt.getRevision())
+            if last_bt[0] < revision and bt.getInstallationState() != 'deleted':
+              last_bt = revision, bt
+          if last_bt[1] is None:
+            return RESPONSE.notFoundError(title)
+          RESPONSE.setHeader('Content-type', 'application/data')
+          RESPONSE.setHeader('Content-Disposition',
+                             'inline;filename=%s-%s.zexp' % (title, last_bt[0]))
+          if REQUEST['REQUEST_METHOD'] == 'GET':
+            bt = last_bt[1]
+            if bt.getBuildingState() != 'built':
+              bt.build()
+            return self.aq_parent.manage_exportObject(bt.getId(), download=1)
+      return asRepository().__of__(self)
 
     security.declareProtected(Permissions.ManagePortal,
                               'getDefaultBusinessTemplateDownloadURL')
@@ -412,7 +434,7 @@ class TemplateTool (BaseTool):
           name = os.path.normpath(url)
 
       if urltype and urltype != 'file':
-        if '/manage_exportObject?' in url:
+        if '/portal_templates/asRepository/' in url:
           # In this case, the downloaded BT is already built.
           bt = self._p_jar.importFile(urlopen(url))
           bt.id = id
