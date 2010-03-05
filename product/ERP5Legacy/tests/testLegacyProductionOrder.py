@@ -317,7 +317,7 @@ class TestProductionOrderMixin(TestOrderMixin):
       for size in self.mrp_size_list:
         id = 'quantity_%s_%s'%(colour_count,size_count)
         transformation_transformed_resource.newContent(
-          portal_type = 'Mapped Value',
+          portal_type = 'Transformation Transformed Resource Cell',
           id = id,
           mapped_value_property_list = ('quantity',),
           membership_criterion_base_category = ('colour', 'size'),
@@ -341,7 +341,7 @@ class TestProductionOrderMixin(TestOrderMixin):
       for size in self.mrp_size_list:
         id = 'variation_%s_%s'%(colour_count,size_count)
         transformation_transformed_resource.newContent(
-          portal_type = 'Mapped Value',
+          portal_type = 'Transformation Transformed Resource Cell',
           id = id,
           mapped_value_property_list = (),
           membership_criterion_base_category = ('colour', 'size'),
