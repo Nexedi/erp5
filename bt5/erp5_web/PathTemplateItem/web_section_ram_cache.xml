@@ -11,7 +11,7 @@
       <dictionary>
         <item>
             <key> <string>_RAMCacheManager__cacheid</string> </key>
-            <value> <string>140571995811424_1232605080.630355</string> </value>
+            <value> <string>140072430325584_1267799344.968250</string> </value>
         </item>
         <item>
             <key> <string>_settings</string> </key>
@@ -29,8 +29,8 @@
                     <key> <string>request_vars</string> </key>
                     <value>
                       <tuple>
+                        <string>LOCALIZER_LANGUAGE</string>
                         <string>current_web_section_url</string>
-                        <string>web_site_language</string>
                       </tuple>
                     </value>
                 </item>

@@ -1,3 +1,6 @@
+2010-03-05 fabien
+* fix caches id bug. Now caches should works much better.
+
 2010-02-02 fabien
 * remove WebSection_getPermanentURLForView which was bad (see bug #1507) and use getPermanentUrl() from WebSection.py.
 * WebSection_getPermanentUrl script is not used anymore (and should never be used, it should be called only by getPermanentUrl() from WebSection.py). Now by default, getPermanentUrl(document) always return a link to html content. If you want to get a link to a file (ie. openoffice document, pdf document, ...) you should explicitly specify it :
