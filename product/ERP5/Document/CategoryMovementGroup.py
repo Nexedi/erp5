@@ -40,7 +40,7 @@ class CategoryMovementGroup(PropertyMovementGroup):
 
   def _getPropertyDict(self, movement, **kw):
     property_dict = {}
-    getProperty = movement.getMappedProperty
+    getProperty = getattr(movement, 'getMappedProperty', movement.getProperty)
     for prop in self.getTestedPropertyList():
       list_prop = '%s_list' % prop
       property_dict[list_prop] = sorted(getProperty(list_prop))

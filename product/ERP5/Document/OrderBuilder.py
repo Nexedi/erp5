@@ -690,7 +690,10 @@ class OrderBuilder(XMLObject, Amount, Predicate):
     if not update_existing_movement or force_update:
       # Now, only 1 movement is possible, so copy from this movement
       # XXX hardcoded value
-      property_dict['quantity'] = simulation_movement.getMappedProperty('quantity')
+      if getattr(simulation_movement, 'getMappedProperty', None) is not None:
+        property_dict['quantity'] = simulation_movement.getMappedProperty('quantity')
+      else:
+        property_dict['quantity'] = simulation_movement.getQuantity()
       property_dict['price'] = simulation_movement.getPrice()
       # Update properties on object (quantity, price...)
       delivery_movement._edit(force_update=1, **property_dict)
