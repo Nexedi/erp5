@@ -686,15 +686,10 @@ class TestTaxLineOrderSimulation(AccountingBuildTestCase):
                                    portal_type='Simulation Movement')
     self.assertEquals(1, len(simulation_movement_list))
     level2_applied_rule_list = simulation_movement_list[0].contentValues()
-    self.assertEquals(1, len(level2_applied_rule_list))
-    level2_applied_rule = level2_applied_rule_list[0]
-    simulation_movement_list = level2_applied_rule.contentValues(
-                                   portal_type='Simulation Movement')
-    level3_applied_rule_list = simulation_movement_list[0].contentValues()
-    self.assertEquals(2, len(level3_applied_rule_list))
+    self.assertEquals(2, len(level2_applied_rule_list))
     # first test the invoice movement, they should have base_contribution set
     # correctly
-    invoice_rule_list = [ar for ar in level3_applied_rule_list if
+    invoice_rule_list = [ar for ar in level2_applied_rule_list if
              ar.getSpecialiseValue().getPortalType() == 'Invoicing Rule']
     self.assertEquals(1, len(invoice_rule_list))
     invoice_simulation_movement_list = invoice_rule_list[0].contentValues()
@@ -706,7 +701,7 @@ class TestTaxLineOrderSimulation(AccountingBuildTestCase):
         invoice_simulation_movement.getBaseContributionValueList())
 
     # now test the tax movement
-    applied_tax_rule_list = [ar for ar in level3_applied_rule_list if
+    applied_tax_rule_list = [ar for ar in level2_applied_rule_list if
              ar.getSpecialiseValue().getPortalType() == 'Tax Rule']
     self.assertEquals(1, len(applied_tax_rule_list))
     tax_simulation_movement_list = applied_tax_rule_list[0].contentValues()
@@ -721,7 +716,7 @@ class TestTaxLineOrderSimulation(AccountingBuildTestCase):
     
     # reexpand and check nothing changed
     root_applied_rule.expand()
-    applied_tax_rule_list = [ar for ar in level3_applied_rule_list if
+    applied_tax_rule_list = [ar for ar in level2_applied_rule_list if
              ar.getSpecialiseValue().getPortalType() == 'Tax Rule']
     self.assertEquals(1, len(applied_tax_rule_list))
     tax_simulation_movement_list = applied_tax_rule_list[0].contentValues()
@@ -777,9 +772,9 @@ class TestTaxLineOrderSimulation(AccountingBuildTestCase):
     self.assertEquals(2, len(simulation_movement_list))
     # line 1
     line1_simulation_movement_list = [sm for sm in simulation_movement_list
-          if sm.getDeliveryValue() == order_line1]
+          if sm.getOrderValue() == order_line1]
     self.assertEquals(1, len(line1_simulation_movement_list))
-    simulation_movement = line1_simulation_movement_list[0].contentValues()[0].contentValues()[0]
+    simulation_movement = line1_simulation_movement_list[0]
     self.assertEquals(2.0, simulation_movement.getQuantity())
     applied_tax_rule_list = [ar for ar in simulation_movement.objectValues()
         if ar.getSpecialiseValue().getPortalType() == 'Tax Rule']
@@ -795,9 +790,9 @@ class TestTaxLineOrderSimulation(AccountingBuildTestCase):
     
     # line 2
     line2_simulation_movement_list = [sm for sm in simulation_movement_list
-          if sm.getDeliveryValue() == order_line2]
+          if sm.getOrderValue() == order_line2]
     self.assertEquals(1, len(line2_simulation_movement_list))
-    simulation_movement = line2_simulation_movement_list[0].contentValues()[0].contentValues()[0]
+    simulation_movement = line2_simulation_movement_list[0]
     self.assertEquals(7., simulation_movement.getQuantity())
     applied_tax_rule_list = [ar for ar in simulation_movement.objectValues()
         if ar.getSpecialiseValue().getPortalType() == 'Tax Rule']
@@ -1173,7 +1168,7 @@ class TestTaxLineInvoiceSimulation(AccountingBuildTestCase):
                                    portal_type='Simulation Movement')
     self.assertEquals(2, len(simulation_movement_list))
     tax_simulation_movement_list = [m for m in simulation_movement_list
-                                    if m.getDeliveryValue() == tax_line]
+                                    if m.getOrderValue() == tax_line]
     self.assertEquals(1, len(tax_simulation_movement_list))
     tax_simulation_movement = tax_simulation_movement_list[0]
     self.assertEquals([base_1],
@@ -1184,7 +1179,7 @@ class TestTaxLineInvoiceSimulation(AccountingBuildTestCase):
                       tax_simulation_movement.getPriceCurrencyValue())
 
     invoice_simulation_movement_list = [m for m in simulation_movement_list
-                                    if m.getDeliveryValue() == invoice_line]
+                                    if m.getOrderValue() == invoice_line]
     self.assertEquals(1, len(invoice_simulation_movement_list))
     invoice_simulation_movement = invoice_simulation_movement_list[0]
     self.assertEquals([base_1],
