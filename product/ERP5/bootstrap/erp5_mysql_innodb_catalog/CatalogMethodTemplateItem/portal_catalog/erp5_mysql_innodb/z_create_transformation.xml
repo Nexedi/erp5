@@ -64,8 +64,7 @@
   `quantity` double,\n
   KEY `resource` (`uid`, `variation_text`),\n
   KEY `transformed_resource` (`transformed_uid`, `transformed_variation_text`)\n
-)\n
-\n
+) ENGINE=InnoDB;\n
 </string> </value>
         </item>
         <item>
@@ -110,8 +109,7 @@
   `quantity` double,\n
   KEY `resource` (`uid`, `variation_text`),\n
   KEY `transformed_resource` (`transformed_uid`, `transformed_variation_text`)\n
-)\n
-\n
+) ENGINE=InnoDB;\n
 </string> </value>
                     </item>
                   </dictionary>
