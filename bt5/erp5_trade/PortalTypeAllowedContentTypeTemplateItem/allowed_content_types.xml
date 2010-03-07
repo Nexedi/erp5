@@ -13,20 +13,20 @@
  <portal_type id="Container Line">
   <item>Container Cell</item>
  </portal_type>
- <portal_type id="Delivery Simulation Rule">
-  <item>Category Divergence Tester</item>
-  <item>Property Divergence Tester</item>
-  <item>Quantity Divergence Tester</item>
+ <portal_type id="Delivery Builder">
+  <item>First Causality Movement Group</item>
  </portal_type>
  <portal_type id="Delivery Root Simulation Rule">
   <item>Category Divergence Tester</item>
   <item>Property Divergence Tester</item>
   <item>Quantity Divergence Tester</item>
  </portal_type>
- <portal_type id="Delivery Builder">
-  <item>First Causality Movement Group</item>
- </portal_type>
  <portal_type id="Delivery Rule">
+  <item>Category Divergence Tester</item>
+  <item>Property Divergence Tester</item>
+  <item>Quantity Divergence Tester</item>
+ </portal_type>
+ <portal_type id="Delivery Simulation Rule">
   <item>Category Divergence Tester</item>
   <item>Property Divergence Tester</item>
   <item>Quantity Divergence Tester</item>
@@ -50,12 +50,12 @@
  <portal_type id="Inventory Module">
   <item>Inventory</item>
  </portal_type>
- <portal_type id="Order Rule">
+ <portal_type id="Order Root Simulation Rule">
   <item>Category Divergence Tester</item>
   <item>Property Divergence Tester</item>
   <item>Quantity Divergence Tester</item>
  </portal_type>
- <portal_type id="Order Root Simulation Rule">
+ <portal_type id="Order Rule">
   <item>Category Divergence Tester</item>
   <item>Property Divergence Tester</item>
   <item>Quantity Divergence Tester</item>
@@ -105,11 +105,11 @@
   <item>Returned Sale Packing List</item>
  </portal_type>
  <portal_type id="Rule Tool">
-  <item>Delivery Rule</item>
   <item>Delivery Root Simulation Rule</item>
+  <item>Delivery Rule</item>
   <item>Delivery Simulation Rule</item>
-  <item>Order Rule</item>
   <item>Order Root Simulation Rule</item>
+  <item>Order Rule</item>
  </portal_type>
  <portal_type id="Sale Order">
   <item>Payment Condition</item>

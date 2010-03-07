@@ -1,26 +1,22 @@
 <workflow_chain>
  <chain>
   <type>Production Order</type>
-  <workflow>edit_workflow, production_order_workflow, order_simulation_interaction_workflow</workflow>
+  <workflow>edit_workflow, order_simulation_interaction_workflow, production_order_workflow</workflow>
  </chain>
  <chain>
   <type>Production Order Cell</type>
-  <workflow>order_movement_simulation_interaction_workflow, edit_workflow</workflow>
+  <workflow>edit_workflow, order_movement_simulation_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>Production Order Line</type>
-  <workflow>transformation_interaction_workflow, order_movement_simulation_interaction_workflow, production_matrix_workflow, edit_workflow</workflow>
- </chain>
- <chain>
-  <type>Production Order Model Rule</type>
-  <workflow>rule_validation_workflow, edit_workflow</workflow>
+  <workflow>edit_workflow, order_movement_simulation_interaction_workflow, production_matrix_workflow, transformation_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>Production Order Model Root Simulation Rule</type>
-  <workflow>rule_validation_workflow, edit_workflow</workflow>
+  <workflow>edit_workflow, rule_validation_workflow</workflow>
  </chain>
  <chain>
-  <type>Production Order Rule</type>
+  <type>Production Order Model Rule</type>
   <workflow>edit_workflow, rule_validation_workflow</workflow>
  </chain>
  <chain>
@@ -28,28 +24,32 @@
   <workflow>edit_workflow, rule_validation_workflow</workflow>
  </chain>
  <chain>
+  <type>Production Order Rule</type>
+  <workflow>edit_workflow, rule_validation_workflow</workflow>
+ </chain>
+ <chain>
   <type>Production Packing List</type>
-  <workflow>delivery_simulation_interaction_workflow, production_packing_list_workflow, delivery_causality_workflow, edit_workflow, delivery_causality_interaction_workflow</workflow>
+  <workflow>delivery_causality_interaction_workflow, delivery_causality_workflow, delivery_simulation_interaction_workflow, edit_workflow, production_packing_list_workflow</workflow>
  </chain>
  <chain>
   <type>Production Packing List Cell</type>
-  <workflow>delivery_movement_simulation_interaction_workflow, delivery_movement_causality_interaction_workflow</workflow>
+  <workflow>delivery_movement_causality_interaction_workflow, delivery_movement_simulation_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>Production Packing List Line</type>
-  <workflow>delivery_movement_causality_interaction_workflow, production_matrix_workflow, edit_workflow, delivery_movement_simulation_interaction_workflow</workflow>
+  <workflow>delivery_movement_causality_interaction_workflow, delivery_movement_simulation_interaction_workflow, edit_workflow, production_matrix_workflow</workflow>
  </chain>
  <chain>
   <type>Production Report</type>
-  <workflow>delivery_simulation_interaction_workflow, delivery_causality_interaction_workflow, production_packing_list_workflow, edit_workflow, delivery_causality_workflow</workflow>
+  <workflow>delivery_causality_interaction_workflow, delivery_causality_workflow, delivery_simulation_interaction_workflow, edit_workflow, production_packing_list_workflow</workflow>
  </chain>
  <chain>
   <type>Production Report Cell</type>
-  <workflow>delivery_movement_simulation_interaction_workflow, delivery_movement_causality_interaction_workflow</workflow>
+  <workflow>delivery_movement_causality_interaction_workflow, delivery_movement_simulation_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>Production Report Line</type>
-  <workflow>delivery_movement_simulation_interaction_workflow, edit_workflow, production_matrix_workflow, delivery_movement_causality_interaction_workflow</workflow>
+  <workflow>delivery_movement_causality_interaction_workflow, delivery_movement_simulation_interaction_workflow, edit_workflow, production_matrix_workflow</workflow>
  </chain>
  <chain>
   <type>Supply Chain</type>
@@ -65,7 +65,7 @@
  </chain>
  <chain>
   <type>Transformation Model Rule</type>
-  <workflow>rule_validation_workflow, edit_workflow</workflow>
+  <workflow>edit_workflow, rule_validation_workflow</workflow>
  </chain>
  <chain>
   <type>Transformation Rule</type>
@@ -73,7 +73,7 @@
  </chain>
  <chain>
   <type>Transformation Sourcing Model Rule</type>
-  <workflow>rule_validation_workflow, edit_workflow</workflow>
+  <workflow>edit_workflow, rule_validation_workflow</workflow>
  </chain>
  <chain>
   <type>Transformation Sourcing Rule</type>

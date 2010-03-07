@@ -53,7 +53,9 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>order = state_change[\'object\']\n
+            <value> <string encoding="cdata"><![CDATA[
+
+order = state_change[\'object\']\n
 business_process =  order.getSpecialiseValue()\n
 \n
 # When a business process is selected as specialise, ProductionOrderModelRule can be used.\n
@@ -88,7 +90,9 @@ for i in xrange(len(builder_list)):\n
       tag=\'%s_builder_%s\' % (order_path, i),\n
       priority=3).build(explanation_uid=order.getUid(),\n
                         activate_kw=activate_kw)\n
-</string> </value>
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
