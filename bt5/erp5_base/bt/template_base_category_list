@@ -17,7 +17,6 @@ grade
 group
 insurance_coverage
 legal_parent
-property_mapping
 marital_status
 market_segment
 nationality
@@ -26,6 +25,7 @@ order_builder
 payment_mode
 predecessor
 price_currency
+property_mapping
 region
 resource_use
 role
