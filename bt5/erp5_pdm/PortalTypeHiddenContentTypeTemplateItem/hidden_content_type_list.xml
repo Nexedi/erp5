@@ -48,9 +48,9 @@
   <item>Supply Cell</item>
  </portal_type>
  <portal_type id="Transformation Operation">
-  <item>Mapped Value</item>
+  <item>Transformation Operation Cell</item>
  </portal_type>
  <portal_type id="Transformation Transformed Resource">
-  <item>Mapped Value</item>
+  <item>Transformation Transformed Resource Cell</item>
  </portal_type>
 </hidden_content_type_list>
