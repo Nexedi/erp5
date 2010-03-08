@@ -1375,14 +1375,14 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
     document_module = portal.document_module
 
     # create Person objects and add pseudo local security
-    person1 =  self.createUser(reference='user1')
-    document_module.manage_setLocalRoles('user1', ['Assignor',])
-    person2 =  self.createUser(reference='user2')
-    document_module.manage_setLocalRoles('user2', ['Assignor',])
+    person1 =  self.createUser(reference='contributor1')
+    document_module.manage_setLocalRoles('contributor1', ['Assignor',])
+    person2 =  self.createUser(reference='contributor2')
+    document_module.manage_setLocalRoles('contributor2', ['Assignor',])
     self.stepTic()
 
     # login as first one
-    ERP5TypeTestCase.login(self, 'user1')
+    ERP5TypeTestCase.login(self, 'contributor1')
     doc = document_module.newContent(portal_type='File', 
                                      title='Test1')
     self.stepTic()
@@ -1391,7 +1391,7 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
                        doc.getContributorValueList())
 
     # login as second one
-    ERP5TypeTestCase.login(self, 'user2')
+    ERP5TypeTestCase.login(self, 'contributor2')
     doc.edit(title='Test2')
     self.stepTic()
     self.login()
