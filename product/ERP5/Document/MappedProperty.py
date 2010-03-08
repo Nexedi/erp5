@@ -64,3 +64,24 @@ class MappedProperty(XMLObject):
       return -1 * getProperty(mapped_property[1:])
     else:
       return getProperty(mapped_property)
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'setMappedProperty')
+  def setMappedProperty(self, document, property, value):
+    if property.endswith('_list'):
+      property = property[:-5]
+      setProperty = document.setPropertyList
+    else:
+      setProperty = document.setProperty
+    mapping_dict = {}
+    for x in self.getMappingPropertyList():
+      from_property, to_property = [x.strip() for x in x.split('|')]
+      if to_property.startswith('-'):
+        mapping_dict[to_property[1:]] = '-%s' % from_property
+      else:
+        mapping_dict[to_property] = from_property
+    mapped_property = mapping_dict.get(property, property)
+    if mapped_property.startswith('-'):
+      return setProperty(-1 * value)
+    else:
+      return setProperty(value)

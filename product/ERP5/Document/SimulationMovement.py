@@ -618,3 +618,12 @@ class SimulationMovement(Movement, PropertyRecordableMixin):
       return mapping.getMappedProperty(self, property)
     else:
       return self.getProperty(property)
+
+  security.declareProtected(Permissions.ModifyPortalContent,
+                            'setMappedProperty')
+  def setMappedProperty(self, property, value):
+    mapping = self.getPropertyMappingValue()
+    if mapping is not None:
+      return mapping.setMappedProperty(self, property, value)
+    else:
+      return self.setProperty(property, value)
