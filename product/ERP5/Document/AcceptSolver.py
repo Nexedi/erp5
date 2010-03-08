@@ -85,13 +85,13 @@ class AcceptSolver(SolverMixin, ConfigurableMixin, XMLObject):
           else:
             value_dict.update({solved_property:new_value})
         self._solveRecursively(simulation_movement, value_dict,
-                               solved_property)
+                               solved_property_list)
         simulation_movement.expand()
     # Finish solving
     self.succeed()
 
   def _solveRecursively(self, simulation_movement, value_dict=None,
-                        property_id=None):
+                        property_id_list=None):
     """
       Update value of the current simulation movement, and update
       his parent movement.
@@ -102,8 +102,9 @@ class AcceptSolver(SolverMixin, ConfigurableMixin, XMLObject):
            not parent_movement.isFrozen():
       # backtrack to the parent movement while it is not frozen
       self._solveRecursively(parent_movement, value_dict=value_dict,
-                             property_id=property_id)
+                             property_id_list=property_id_list)
     else:
-      if not simulation_movement.isPropertyRecorded(property_id):
-        simulation_movement.recordProperty(property_id)
+      for property_id in property_id_list:
+        if not simulation_movement.isPropertyRecorded(property_id):
+          simulation_movement.recordProperty(property_id)
     simulation_movement.edit(**value_dict)
