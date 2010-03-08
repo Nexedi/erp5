@@ -267,7 +267,9 @@ class PreferenceTool(BaseTool):
     template_list = []
     for portal_type in allowed_content_types:
       for template_url in _getDocumentTemplateList(user_id, portal_type=portal_type):
-        template_list.append(self.restrictedTraverse(template_url))
+        template = self.restrictedTraverse(template_url, None)
+        if template is not None:
+          template_list.append(template)
     return template_list
 
 InitializeClass(PreferenceTool)
