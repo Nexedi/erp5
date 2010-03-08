@@ -41,7 +41,6 @@ from AccessControl.SecurityManagement import newSecurityManager
 from DateTime import DateTime
 from Testing import ZopeTestCase
 
-from Products.ERP5.Document.OrderRootSimulationRule import OrderRootSimulationRule
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import reindex
 from Products.DCWorkflow.DCWorkflow import ValidationFailed
@@ -121,12 +120,6 @@ class InventoryAPITestCase(ERP5TypeTestCase):
                                   portal_type='Product')
     self.item = self.getItemModule().newContent(title='Item')
     self.other_item = self.getItemModule().newContent(title='Other Item')
-    # create a dummy Rule, to be able to create simulation movements
-    rule_tool = self.portal.portal_rules
-    if not hasattr(rule_tool, 'default_order_root_simulation_rule'):
-      rule_tool._setObject('default_order_root_simulation_rule',
-                           OrderRootSimulationRule('default_order_root_simulation_rule'))
-
     self.getInventory = self.getSimulationTool().getInventory
 
   def _safeTic(self):
