@@ -83,17 +83,19 @@ related_order = related_packing_list.getDefaultCausalityValue()\n
 \n
 # copy payment conditions from packing list\n
 # if missing, try to copy from order (for compatibility)\n
-payment_condition_copy_id_list = related_packing_list.contentIds(filter={\'portal_type\':\'Payment Condition\'})\n
-if len(payment_condition_copy_id_list) > 0:\n
-  clipboard = related_packing_list.manage_copyObjects(\n
-    ids=payment_condition_copy_id_list)\n
-  invoice.manage_pasteObjects(clipboard)\n
-elif related_order is not None:\n
-  payment_condition_copy_id_list = related_order.contentIds(filter={\'portal_type\':\'Payment Condition\'})\n
+if not invoice.contentValues(portal_type=\'Payment Condition\'):\n
+  payment_condition_copy_id_list = []\n
+  if related_packing_list is not None:\n
+    payment_condition_copy_id_list = related_packing_list.contentIds(filter={\'portal_type\':\'Payment Condition\'})\n
   if len(payment_condition_copy_id_list) > 0:\n
-    clipboard = related_order.manage_copyObjects(\n
-      ids=payment_condition_copy_id_list)\n
+    clipboard = related_packing_list.manage_copyObjects(ids=payment_condition_copy_id_list)\n
     invoice.manage_pasteObjects(clipboard)\n
+  elif related_order is not None:\n
+    payment_condition_copy_id_list = related_order.contentIds(\n
+      filter={\'portal_type\':\'Payment Condition\'})\n
+    if len(payment_condition_copy_id_list) > 0:\n
+      clipboard = related_order.manage_copyObjects(ids=payment_condition_copy_id_list)\n
+      invoice.manage_pasteObjects(clipboard)\n
 \n
 if related_order is not None:\n
   # copy trade condition:\n

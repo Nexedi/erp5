@@ -1,3 +1,6 @@
+2010-03-08 tatuya
+* Prevent to copy multiple payment conditions at the Delivery After Generation Script of Invoice Transaction. If the payment conditions are multiple, payment transaction builder manage to create too many payment transaction lines.
+
 2010-03-02 yusei
 * Remove short title.
 * Fix allowed content type setting.
