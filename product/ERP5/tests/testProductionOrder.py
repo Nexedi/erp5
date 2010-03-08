@@ -348,10 +348,10 @@ class TestProductionOrderMixin(TestOrderMixin):
     for colour in self.colour_list:
       for size in self.mrp_size_list:
         order_line.newCell(
-          'colour/%s' % colour,
           'size/%s' % size,
+          'colour/%s' % colour,
           quantity = self.order_line_colour_size_quantity_dict[colour][size],
-          base_id="quantity",
+          base_id='movement',
         )
 
   def stepSetOrderLineVariationCategories(self, sequence=None, sequence_list=None,
@@ -555,7 +555,10 @@ class TestProductionOrderMixin(TestOrderMixin):
     #      used in production simulations.
     order = sequence.get('order')
 
-    for order_movement in order.getMovementList():
+    movement_list = order.getMovementList()
+    self.assertNotEqual(len(movement_list), 0)
+
+    for order_movement in movement_list:
       size = order_movement.getSize()
       colour = order_movement.getColour()
 
