@@ -107,4 +107,5 @@ class AcceptSolver(SolverMixin, ConfigurableMixin, XMLObject):
       for property_id in property_id_list:
         if not simulation_movement.isPropertyRecorded(property_id):
           simulation_movement.recordProperty(property_id)
-    simulation_movement.edit(**value_dict)
+    for property_id, value in value_dict.iteritems():
+      simulation_movement.setMappedProperty(property_id, value)
