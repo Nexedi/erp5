@@ -166,6 +166,7 @@
                         <string>my_view_mode_translated_workflow_state_title</string>
                         <string>my_date_time_field</string>
                         <string>my_view_mode_money_quantity</string>
+                        <string>my_report_mode_at_date</string>
                       </list>
                     </value>
                 </item>
