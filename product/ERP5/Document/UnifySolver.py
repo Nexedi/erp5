@@ -77,8 +77,7 @@ class UnifySolver(AcceptSolver):
            for x in self.getDeliveryValue().getMovementList()], [])
       for simulation_movement in simulation_movement_list:
         value_dict = {solved_property:new_value}
-        self._solveRecursively(simulation_movement, value_dict,
-                               [solved_property])
+        self._solveRecursively(simulation_movement, value_dict)
         simulation_movement.expand()
     # Finish solving
     self.succeed()
