@@ -111,11 +111,11 @@
             <key> <string>matching_property</string> </key>
             <value>
               <tuple>
-	        <string>destination</string>
-	        <string>destination_total_asset_price</string>
-	        <string>source</string>
-	        <string>source_total_asset_price</string>
-	        <string>resource</string>
+                <string>destination</string>
+                <string>destination_total_asset_price</string>
+                <string>source</string>
+                <string>source_total_asset_price</string>
+                <string>resource</string>
               </tuple>
             </value>
         </item>

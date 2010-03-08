@@ -71,7 +71,7 @@ else:\n
   builder_list = [\n
     order.portal_deliveries.production_report_builder,\n
     order.portal_deliveries.production_packing_list_builder\n
-  ]\n
+]\n
 \n
 order_path = order.getPath()\n
 previous_tag = order_path + \'_firstUpdateAppliedRule\'\n
