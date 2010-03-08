@@ -66,13 +66,14 @@ editable_column_list = [(\'int_index\', \'PaySheet Order\'),\n
                         (\'title\', \'Title\'),]\n
 \n
 not_editable_column_list = [(\'source_section_title\', \'Service Provider\'),\n
-                            (\'slice\', \'Slice\'),\n
-                            (\'base\', \'Base\'),]\n
+                            (\'slice\', \'Slice\'),]\n
 \n
 column_list.extend(editable_column_list)\n
 \n
 if not editable:\n
   column_list.extend(not_editable_column_list)\n
+\n
+column_list.append((\'base\', \'Base\'))\n
 \n
 \n
 # this following columns are add for both edibales and not\n
