@@ -559,6 +559,9 @@ class TestProductionOrderMixin(TestOrderMixin):
       size = order_movement.getSize()
       colour = order_movement.getColour()
 
+      self.assertNotEqual(size, None)
+      self.assertNotEqual(colour, None)
+
       want_produced_quantity = self.order_line_colour_size_quantity_dict[colour][size]
       want_consume_quantity = self.colour_size_quantity_dict[colour][size]
       want_consume_for_production = want_produced_quantity * want_consume_quantity
