@@ -754,6 +754,12 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
                         description = 'This test make sure that scriptable key feature on ZSQLCatalog works.',
                         language='fr',
                         version = '002')
+    document_3 = portal.document_module.newContent(
+                   portal_type = 'Presentation',
+                   title = "Complete set of tested reports with a long title.",
+                   version = '003',
+                   language = 'bg',
+                   reference = 'tio-test-doc-3')
     person = portal.person_module.newContent(portal_type = 'Person', \
                                              reference= "john",
                                              title='John Doe Great')
@@ -782,6 +788,13 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
       getAdvancedSearchTextResultList('make'))    
     self.assertSameSet([web_page, person], \
       getAdvancedSearchTextResultList("Great"))
+    # full text search with whole title of a document
+    self.assertSameSet([document_3], \
+      getAdvancedSearchTextResultList(document_3.getTitle()))
+    # full text search with reference part of searchable_text 
+    # (i.e. not specified with 'reference:' - simply part of search text)
+    self.assertSameSet([document_3], \
+      getAdvancedSearchTextResultList(document_3.getReference()))
 
    # full text search with reference
     self.assertSameSet([web_page], \
