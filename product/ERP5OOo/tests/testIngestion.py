@@ -292,7 +292,6 @@ class TestIngestion(ERP5TypeTestCase):
     context = getattr(document_module, document_id)
     for revision, format in enumerate(format_list):
       filename = 'TEST-en-002.' + format
-      printAndLog('Ingesting file: ' + filename)
       f = makeFileUpload(filename)
       context.edit(file=f)
       self.stepTic()
@@ -344,7 +343,6 @@ class TestIngestion(ERP5TypeTestCase):
     old_portal_type = ''
     for extension, portal_type in extension_to_type:
       filename = 'TEST-en-002.' + extension
-      printAndLog(filename)
       file = makeFileUpload(filename)
       # if we change portal type we must change version because 
       # mergeRevision would fail
@@ -352,13 +350,10 @@ class TestIngestion(ERP5TypeTestCase):
         counter += 1
         old_portal_type = portal_type
       file.filename = 'TEST-en-00%d.%s' % (counter, extension)
-      printAndLog(file.filename)
       if with_portal_type:
         ob = self.portal.portal_contributions.newContent(portal_type=portal_type, file=file)
       else:
         ob = self.portal.portal_contributions.newContent(file=file)
-      # reindex
-      ob.immediateReindexObject()
       created_documents.append(ob)
     self.stepTic()
     # inspect created objects
@@ -410,11 +405,8 @@ class TestIngestion(ERP5TypeTestCase):
                                  contributor='person_module/james')
     # pass to discovery file_name and user_login
     context.discoverMetadata(context.getSourceReference(), 'john_doe') 
-    context.reindexObject()
     self.stepTic()
-    #transaction.commit()
-    #self.tic()
-
+    
   def checkMetadataOrder(self, expected_metadata, document_id='one'):
     """
     Asserts that metadata of document ID document_id
@@ -547,7 +539,7 @@ class TestIngestion(ERP5TypeTestCase):
     self.assertEquals(document.getRevision(), '2')
     document.reindexObject()
     transaction.commit()
-
+    
   def stepUploadFromViewForm(self, sequence=None, sequence_list=None, **kw):
     """
       Upload a file from view form and make sure this increases the revision
@@ -559,7 +551,7 @@ class TestIngestion(ERP5TypeTestCase):
     self.assertEquals(context.getRevision(), str(int(revision) + 1))
     context.reindexObject()
     transaction.commit()
-
+    
   def stepUploadTextFromContributionTool(self, sequence=None, sequence_list=None, **kw):
     """
       Upload a file from contribution.
@@ -582,9 +574,7 @@ class TestIngestion(ERP5TypeTestCase):
     f.filename = 'TEST-en-002.doc'
 
     self.portal.portal_contributions.newContent(file=f)
-    transaction.commit()
-    self.tic()
-    transaction.commit()
+    self.stepTic()
     self.assertEquals(context.getRevision(), str(int(revision) + 1))
     self.assert_('This document is modified.' in context.asText())
     self.assertEquals(len(self.portal.document_module.objectIds()),
@@ -599,11 +589,7 @@ class TestIngestion(ERP5TypeTestCase):
     """
     f = makeFileUpload('ANOTHE-en-001.doc')
     self.portal.portal_contributions.newContent(id='two', file=f)
-
-    transaction.commit()
-    self.tic()
-    transaction.commit()
-
+    self.stepTic()
     context = self.getDocument('two')
     self.assert_('This is a another very interesting document.' in context.asText())
     self.assertEquals(context.getReference(), 'ANOTHE')
@@ -667,8 +653,7 @@ class TestIngestion(ERP5TypeTestCase):
     context = self.getDocument('one')
     f = makeFileUpload('TEST-en-002.doc')
     context.edit(file=f)
-    transaction.commit()
-    self.tic()
+    self.stepTic()
     # Then make sure content discover works
     property_dict = context.getPropertyDictFromUserLogin()
     self.assertEquals(property_dict['contributor'], 'person_module/john')
@@ -690,8 +675,7 @@ class TestIngestion(ERP5TypeTestCase):
               subject='another subject',
               description='another description')
     context.edit(**kw)
-    context.reindexObject(); transaction.commit();
-    self.tic();
+    self.stepTic()
 
   def stepCheckChangedMetadata(self, sequence=None, sequence_list=None, **kw):
     """
@@ -911,8 +895,7 @@ class TestIngestion(ERP5TypeTestCase):
     """
     f = open(makeFilePath('email_from.txt'))
     document = self.receiveEmail(data=f.read())
-    transaction.commit()
-    self.tic()
+    self.stepTic()
 
   def stepReceiveEmailFromJohn(self, sequence=None, sequence_list=None, **kw):
     """
@@ -920,8 +903,7 @@ class TestIngestion(ERP5TypeTestCase):
     """
     f = open(makeFilePath('email_from.txt'))
     document = self.receiveEmail(f.read())
-    transaction.commit()
-    self.tic()
+    self.stepTic()
 
   def stepVerifyEmailedDocuments(self, sequence=None, sequence_list=None, **kw):
     """
@@ -945,7 +927,6 @@ class TestIngestion(ERP5TypeTestCase):
     self.assertEqual(len(result), 1)
     document = result[0].getObject()
     self.assertEqual(document.getRelativeUrl(), result[0].getRelativeUrl())
-
 
   def playSequence(self, step_list, quiet):
     sequence_list = SequenceList()
@@ -1397,13 +1378,10 @@ class TestIngestion(ERP5TypeTestCase):
     # Clear catalog
     portal_catalog = self.getCatalogTool()
     portal_catalog.manage_catalogClear()
-    # Commit                                                                                                                                           
-    transaction.commit()
+    
     # Reindex all
     portal.ERP5Site_reindexAll()
-    transaction.commit()
-    self.tic()
-    transaction.commit()
+    self.stepTic()
     self.assertEquals(1,
         len(portal.portal_catalog(path=contribution_tool.getPath())))
 
@@ -1420,8 +1398,7 @@ class TestIngestion(ERP5TypeTestCase):
     my_filename = 'Something.doc'
     document = contribution_tool.newContent(file=file_object,
                                             file_name=my_filename)
-    transaction.commit()
-    self.tic()
+    self.stepTic()
     self.assertEquals(document.getSourceReference(), my_filename)
 
 # Missing tests
