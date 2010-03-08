@@ -19,7 +19,7 @@
         </item>
         <item>
             <key> <string>content_meta_type</string> </key>
-            <value> <string>ERP5 Split Category Movement Group</string> </value>
+            <value> <string>ERP5 Parent Delivery Category Movement Group</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -29,7 +29,7 @@
         </item>
         <item>
             <key> <string>factory</string> </key>
-            <value> <string>addSplitCategoryMovementGroup</string> </value>
+            <value> <string>addParentDeliveryCategoryMovementGroup</string> </value>
         </item>
         <item>
             <key> <string>filter_content_types</string> </key>
@@ -45,7 +45,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Split Category Movement Group</string> </value>
+            <value> <string>Parent Delivery Category Movement Group</string> </value>
         </item>
         <item>
             <key> <string>init_script</string> </key>

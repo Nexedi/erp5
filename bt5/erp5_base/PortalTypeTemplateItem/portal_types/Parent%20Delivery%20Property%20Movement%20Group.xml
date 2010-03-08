@@ -19,7 +19,7 @@
         </item>
         <item>
             <key> <string>content_meta_type</string> </key>
-            <value> <string>ERP5 Split Property Movement Group</string> </value>
+            <value> <string>ERP5 Parent Delivery Property Movement Group</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -29,7 +29,7 @@
         </item>
         <item>
             <key> <string>factory</string> </key>
-            <value> <string>addSplitPropertyMovementGroup</string> </value>
+            <value> <string>addParentDeliveryPropertyMovementGroup</string> </value>
         </item>
         <item>
             <key> <string>filter_content_types</string> </key>
@@ -45,7 +45,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Split Property Movement Group</string> </value>
+            <value> <string>Parent Delivery Property Movement Group</string> </value>
         </item>
         <item>
             <key> <string>init_script</string> </key>

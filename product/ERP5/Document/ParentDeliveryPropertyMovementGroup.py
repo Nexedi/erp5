@@ -25,24 +25,26 @@
 #
 ##############################################################################
 
-from Products.ERP5.Document.CategoryMovementGroup import CategoryMovementGroup
+from Products.ERP5.Document.PropertyMovementGroup import PropertyMovementGroup
 
-class SplitCategoryMovementGroup(CategoryMovementGroup):
+class ParentDeliveryPropertyMovementGroup(PropertyMovementGroup):
   """
-  Split Category Movement Group is similar to Category Movement Group,
-  but it does grouping only by specified category values and do not
-  update documents.
+  Parent Delivery Property Movement Group is similar to Property
+  Movement Group, but it does grouping only by specified category values
+  on its parent simulation movement's delivery value and do not update
+  documents.
 
   This is useful for acquired properties like payment_condition_*.
   """
-  meta_type = 'ERP5 Split Category Movement Group'
-  portal_type = 'Split Category Movement Group'
+  meta_type = 'ERP5 Parent Delivery Property Movement Group'
+  portal_type = 'Parent Delivery Property Movement Group'
 
   def _getPropertyDict(self, movement, **kw):
     property_dict = {}
-    for prop in self.getTestedPropertyList():
-      property_dict['_%s_list' % prop] = sorted(
-        movement.getPropertyList(prop))
+    parent_delivery = self._getParentDelivery(movement)
+    if parent_delivery is not None:
+      for prop in self.getTestedPropertyList():
+        property_dict['_%s' % prop] = parent_delivery.getProperty(prop, None)
     return property_dict
 
   def test(self, document, property_dict, property_list=None, **kw):
@@ -52,7 +54,17 @@ class SplitCategoryMovementGroup(CategoryMovementGroup):
     else:
       target_property_list = self.getTestedPropertyList()
     for prop in target_property_list:
-      if property_dict['_%s_list' % prop] != \
-             sorted(document.getPropertyList(prop, None)):
+      if property_dict['_%s' % prop] != document.getProperty(prop, None):
         return False, property_dict
     return True, property_dict
+
+  def _getParentDelivery(self, movement):
+    # try to find local payment conditions from the upper level delivery
+    rule = movement.getParentValue()
+    movement = rule.getParentValue()
+    delivery = movement.getDeliveryValue()
+    while delivery is None and not(rule.isRootAppliedRule()):
+      rule = movement.getParentValue()
+      movement = rule.getParentValue()
+      delivery = movement.getDeliveryValue()
+    return delivery

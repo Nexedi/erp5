@@ -57,6 +57,8 @@ Organisation | document_view
 Organisation | financial_view
 Organisation | jump_to_persons
 Organisation | view
+Parent Delivery Category Movement Group | view
+Parent Delivery Property Movement Group | view
 Parent Explanation Movement Group | view
 Person Module | view
 Person | assignment
@@ -81,9 +83,7 @@ Root Applied Rule Causality Movement Group | view
 Rounding Model | predicate_view
 Rounding Model | view
 Rounding Tool | view
-Split Category Movement Group | view
 Split Movement Group | view
-Split Property Movement Group | view
 Tax Line Delivery Movement Group | view
 Telephone | change_function
 Telephone | view

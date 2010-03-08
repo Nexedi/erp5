@@ -25,23 +25,28 @@
 #
 ##############################################################################
 
-from Products.ERP5.Document.PropertyMovementGroup import PropertyMovementGroup
+from Products.ERP5.Document.ParentDeliveryPropertyMovementGroup \
+     import ParentDeliveryPropertyMovementGroup
 
-class SplitPropertyMovementGroup(PropertyMovementGroup):
+class ParentDeliveryCategoryMovementGroup(ParentDeliveryPropertyMovementGroup):
   """
-  Split Property Movement Group is similar to Property Movement Group,
-  but it does grouping only by specified property values and do not
-  update documents.
+  Parent Delivery Category Movement Group is similar to Category
+  Movement Group, but it does grouping only by specified category values
+  on its parent simulation movement's delivery value and do not update
+  documents.
 
   This is useful for acquired properties like payment_condition_*.
   """
-  meta_type = 'ERP5 Split Property Movement Group'
-  portal_type = 'Split Property Movement Group'
+  meta_type = 'ERP5 Parent Delivery Category Movement Group'
+  portal_type = 'Parent Delivery Category Movement Group'
 
   def _getPropertyDict(self, movement, **kw):
     property_dict = {}
-    for prop in self.getTestedPropertyList():
-      property_dict['_%s' % prop] = movement.getProperty(prop, None)
+    parent_delivery = self._getParentDelivery(movement)
+    if parent_delivery is not None:
+      for prop in self.getTestedPropertyList():
+        property_dict['_%s_list' % prop] = sorted(
+          movement.getPropertyList(prop))
     return property_dict
 
   def test(self, document, property_dict, property_list=None, **kw):
@@ -51,6 +56,7 @@ class SplitPropertyMovementGroup(PropertyMovementGroup):
     else:
       target_property_list = self.getTestedPropertyList()
     for prop in target_property_list:
-      if property_dict['_%s' % prop] != document.getProperty(prop, None):
+      if property_dict['_%s_list' % prop] != \
+             sorted(document.getPropertyList(prop, None)):
         return False, property_dict
     return True, property_dict
