@@ -172,6 +172,8 @@ class TransformedResource(Predicate, XMLObject, XMLMatrix, Amount):
       """
         Get all interesting amount value and return AggregatedAmountList
       """
+      from Products.ERP5Type.Document import newTempAmount
+
       context = self.asContext(context=context, REQUEST=REQUEST, **kw)
       # Create the result object
       aggregated_amount_list = AggregatedAmountList()
@@ -186,8 +188,8 @@ class TransformedResource(Predicate, XMLObject, XMLMatrix, Amount):
         # changing. Failure to do so exposes to possible erroneous cache hits
         # for physical path based caching.
         tmp_id = '_'.join((parent.getId(), self.getId(), context.getId()))
-        tmp_amount = parent.newContent(id=tmp_id,
-                        temp_object=1, portal_type=self.getPortalType())
+        tmp_amount = newTempAmount(parent, tmp_id)
+
         # Create error string
         error_string = ''
         # Add resource relation
