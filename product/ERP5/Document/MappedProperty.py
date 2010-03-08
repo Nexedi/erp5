@@ -49,8 +49,9 @@ class MappedProperty(XMLObject):
                      PropertySheet.CategoryCore,
                      PropertySheet.MappedProperty)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getMappedProperty')
+  # Security should be handled by the target document not by the mapped
+  # property document.
+  security.declarePublic('getMappedProperty')
   def getMappedProperty(self, document, property):
     if property.endswith('_list'):
       property = property[:-5]
@@ -65,8 +66,9 @@ class MappedProperty(XMLObject):
     else:
       return getProperty(mapped_property)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'setMappedProperty')
+  # Security should be handled by the target document not by the mapped
+  # property document.
+  security.declarePublic('setMappedProperty')
   def setMappedProperty(self, document, property, value):
     if property.endswith('_list'):
       property = property[:-5]
