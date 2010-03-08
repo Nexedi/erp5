@@ -888,18 +888,10 @@ class TestIngestion(ERP5TypeTestCase):
     self.setDiscoveryOrder(['user_login', 'file_name', 'content', 'input'])
     self.discoverMetadata()
     self.checkMetadataOrder(expected_metadata)
-
-  def stepReceiveEmailFromUnknown(self, sequence=None, sequence_list=None, **kw):
+   
+  def stepReceiveEmail(self, sequence=None, sequence_list=None, **kw):
     """
-      email was sent in by someone who is not in the person_module
-    """
-    f = open(makeFilePath('email_from.txt'))
-    document = self.receiveEmail(data=f.read())
-    self.stepTic()
-
-  def stepReceiveEmailFromJohn(self, sequence=None, sequence_list=None, **kw):
-    """
-      email was sent in by someone who is in the person_module
+      Email was sent in by someone to ERP5.
     """
     f = open(makeFilePath('email_from.txt'))
     document = self.receiveEmail(f.read())
@@ -1283,9 +1275,12 @@ class TestIngestion(ERP5TypeTestCase):
     if not run: return
     if not quiet: printAndLog('test_11_EmailIngestion')
     step_list = [ 'stepCleanUp'
-                 ,'stepReceiveEmailFromUnknown'
+                 # unknown sender
+                 ,'stepReceiveEmail'
+                 # create sender as Person object in ERP5
                  ,'stepCreatePerson'
-                 ,'stepReceiveEmailFromJohn'
+                 # now a known sender
+                 ,'stepReceiveEmail'
                  ,'stepVerifyEmailedDocuments'
                 ]
     self.playSequence(step_list, quiet)
@@ -1378,7 +1373,6 @@ class TestIngestion(ERP5TypeTestCase):
     # Clear catalog
     portal_catalog = self.getCatalogTool()
     portal_catalog.manage_catalogClear()
-    
     # Reindex all
     portal.ERP5Site_reindexAll()
     self.stepTic()
