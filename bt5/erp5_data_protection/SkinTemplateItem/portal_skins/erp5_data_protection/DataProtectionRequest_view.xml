@@ -77,7 +77,9 @@
                 <item>
                     <key> <string>bottom</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>my_text_content</string>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -92,7 +94,6 @@
                     <key> <string>hidden</string> </key>
                     <value>
                       <list>
-                        <string>my_text_content</string>
                         <string>my_owner</string>
                       </list>
                     </value>
@@ -101,9 +102,9 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>my_title</string>
                         <string>my_reference</string>
                         <string>my_follow_up_title</string>
+                        <string>your_follow_up_portal_type</string>
                       </list>
                     </value>
                 </item>

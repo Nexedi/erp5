@@ -91,7 +91,9 @@
                 <item>
                     <key> <string>hidden</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>listbox_follow_up_portal_type</string>
+                      </list>
                     </value>
                 </item>
                 <item>

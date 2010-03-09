@@ -63,7 +63,8 @@ def filterPropertyMapList(property_map):\n
   # We assume that categories, dates, and numerical values\n
   # doesn\'t carry compromising data\n
   restricted_property_list = (\'id\', \'rid\', \'id_group\',\n
-                              \'id_generator\', \'last_id\',)\n
+                              \'id_generator\', \'last_id\',\n
+                              \'reference\',)\n
   return property_map[\'type\'] in (\'string\', \'data\', \'text\',) and \\\n
     property_map[\'id\'] not in restricted_property_list and \\\n
     document_to_inspect.getProperty(property_map[\'id\']) and \\\n

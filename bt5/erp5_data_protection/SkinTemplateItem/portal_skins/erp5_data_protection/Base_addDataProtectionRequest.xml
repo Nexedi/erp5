@@ -57,9 +57,6 @@
 portal_type = \'Data Protection Request\'\n
 module = portal.getDefaultModule(portal_type)\n
 current_user = portal.ERP5Site_getAuthenticatedMemberPersonValue()\n
-title = \'%s: %s - %s\' % (current_user is not None and current_user.getTitle() or \'\',\n
-                         context.getTitle(),\n
-                         getattr(context, \'getReference\', lambda x:x)(\'\'),)\n
 \n
 reference_index = portal.portal_ids.generateNewId(id_group=(\'data_protection_request\'), default=1)\n
 reference = \'DPR-%s\' % (reference_index,)\n
@@ -67,11 +64,10 @@ data_protection = module.newContent(portal_type=portal_type,\n
                                     contributor_value=current_user,\n
                                     follow_up_value=context,\n
                                     description=description,\n
-                                    reference=reference,\n
-                                    title=title)\n
-\n
+                                    reference=reference)\n
+data_protection.submit()\n
 msg = portal.Base_translateString(\'New data protection request added.\')\n
-return data_protection.Base_redirect(\'DataProtectionRequest_view\', keep_items={\'portal_status_message\': msg}, **kw)\n
+return context.Base_redirect(form_id, keep_items={\'portal_status_message\': msg}, **kw)\n
 </string> </value>
         </item>
         <item>
@@ -82,7 +78,7 @@ return data_protection.Base_redirect(\'DataProtectionRequest_view\', keep_items=
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>description, **kw</string> </value>
+            <value> <string>description, form_id=\'view\', **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -102,13 +98,14 @@ return data_protection.Base_redirect(\'DataProtectionRequest_view\', keep_items=
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>2</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
                             <string>description</string>
+                            <string>form_id</string>
                             <string>kw</string>
                             <string>_getattr_</string>
                             <string>context</string>
@@ -116,9 +113,6 @@ return data_protection.Base_redirect(\'DataProtectionRequest_view\', keep_items=
                             <string>portal_type</string>
                             <string>module</string>
                             <string>current_user</string>
-                            <string>None</string>
-                            <string>getattr</string>
-                            <string>title</string>
                             <string>reference_index</string>
                             <string>reference</string>
                             <string>data_protection</string>
@@ -135,7 +129,9 @@ return data_protection.Base_redirect(\'DataProtectionRequest_view\', keep_items=
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <string>view</string>
+              </tuple>
             </value>
         </item>
         <item>
