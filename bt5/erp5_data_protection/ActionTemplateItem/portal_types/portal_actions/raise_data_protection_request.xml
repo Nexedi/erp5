@@ -87,7 +87,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>python: portal.Base_checkPermission(\'data_protection_request_module\', \'Add portal content\')</string> </value>
+            <value> <string>python: portal.Base_checkPermission(\'data_protection_request_module\', \'Add portal content\') and here.getPortalType() not in portal.getPortalModuleTypeList()</string> </value>
         </item>
       </dictionary>
     </pickle>
