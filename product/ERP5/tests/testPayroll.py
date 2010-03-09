@@ -2992,10 +2992,10 @@ class TestPayroll(TestPayrollMixin):
 
     # create an invoice transaction rule for pay sheets.
     rule = self.portal.portal_rules.newContent(
-      portal_type='Invoice Transaction Rule',
-      title='Rule for PaySheet Accounting',
+      portal_type='Invoice Transaction Simulation Rule',
+      title='Simulation Rule for PaySheet Accounting',
       reference='paysheet_transaction_rule',
-      test_method_id='SimulationMovement_testInvoiceTransactionRule')
+      test_method_id='SimulationMovement_testInvoiceTransactionSimulationRule')
     rule.newContent(portal_type='Predicate',
       title='Employee Share',
       string_index='contribution_share',
