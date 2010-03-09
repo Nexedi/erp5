@@ -43,7 +43,7 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>trade_phase/default/invoice</string>
+                <string>trade_phase/default/invoicing</string>
               </tuple>
             </value>
         </item>
@@ -67,7 +67,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>New Invoice Root Simulation Rule</string> </value>
+            <value> <string>New Default Invoice Root Simulation Rule</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
