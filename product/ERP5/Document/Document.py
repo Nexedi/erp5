@@ -499,6 +499,7 @@ class Document(PermanentURLMixIn, XMLObject, UrlMixIn, CachedConvertableMixin, S
                             interfaces.IVersionable,
                             interfaces.IDownloadable,
                             interfaces.ICrawlable,
+                            interfaces.IDocument
                            )
 
   # Regular expressions
