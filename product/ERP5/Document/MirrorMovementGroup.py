@@ -51,6 +51,8 @@ class MirrorMovementGroup(MovementGroup):
   def _separate(self, movement_list):
     # record if mirrored or not in simulation movements.
     mapping_dict = {}
+    if len(movement_list) == 0:
+      return []
     for movement in movement_list:
       if _isMirrored(movement):
         applied_rule = movement.getParentValue()
