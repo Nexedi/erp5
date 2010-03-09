@@ -539,19 +539,19 @@
                       <list>
                         <tuple>
                           <string>property_id</string>
-                          <string>nothing</string>
+                          <string></string>
                         </tuple>
                         <tuple>
                           <string>property_label</string>
-                          <string>nothing</string>
+                          <string></string>
                         </tuple>
                         <tuple>
                           <string>property_description</string>
-                          <string>nothing</string>
+                          <string></string>
                         </tuple>
                         <tuple>
                           <string>property_value</string>
-                          <string>nothing</string>
+                          <string></string>
                         </tuple>
                       </list>
                     </value>
