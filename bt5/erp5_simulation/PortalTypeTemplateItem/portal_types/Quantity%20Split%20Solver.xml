@@ -33,8 +33,8 @@
             <key> <string>delivery_solver</string> </key>
             <value>
               <tuple>
-                <string>FIFO Solver</string>
-                <string>LIFO Solver</string>
+                <string>FIFO</string>
+                <string>LIFO</string>
               </tuple>
             </value>
         </item>
