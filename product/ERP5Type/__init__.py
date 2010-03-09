@@ -135,7 +135,8 @@ allow_module('Products.ERP5Type.Cache')
 ModuleSecurityInfo('Products.ERP5Type.Utils').declarePublic(
     'sortValueList', 'convertToUpperCase', 'UpperCase',
     'convertToMixedCase', 'cartesianProduct', 'sleep', 'getCommonTimeZoneList',
-    'int2letter', 'getMessageIdWithContext', 'getTranslationStringWithContext')
+    'int2letter', 'getMessageIdWithContext', 'getTranslationStringWithContext',
+    'Email_parseAddressHeader')
 
 allow_module('Products.ERP5Type.Message')
 ModuleSecurityInfo('Products.ERP5Type.Message').declarePublic('translateString')

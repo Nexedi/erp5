@@ -341,6 +341,16 @@ def getTranslationStringWithContext(self, msg_id, context, context_id):
      result = localizer.erp5_ui.gettext(msg_id)
    return result.encode('utf8')
 
+from rfc822 import AddressList
+
+def Email_parseAddressHeader(text):
+  """
+  Given a text taken from a From/To/CC/... email header,
+  return a list of tuples (name, address) extracted from
+  this header
+  """
+  return AddressList(text).addresslist
+
 #####################################################
 # Globals initialization
 #####################################################
