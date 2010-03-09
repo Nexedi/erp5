@@ -96,7 +96,6 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>my_delivery_solver</string>
                         <string>my_start_date</string>
                         <string>my_stop_date</string>
                       </list>
@@ -125,7 +124,7 @@
         </item>
         <item>
             <key> <string>pt</string> </key>
-            <value> <string>form_view</string> </value>
+            <value> <string>embedded_form_render</string> </value>
         </item>
         <item>
             <key> <string>row_length</string> </key>
