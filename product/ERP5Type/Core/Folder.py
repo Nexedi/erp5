@@ -422,6 +422,7 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn, 
   property_sheets = ( PropertySheet.Base
                     , PropertySheet.SimpleItem
                     , PropertySheet.Folder
+                    , PropertySheet.CategoryCore
                     )
 
   # Class inheritance fixes
