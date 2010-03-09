@@ -13,7 +13,7 @@ libglib2.0-dev
 libjpeg62-dev
 libldap2-dev
 libncurses5-dev
-libneon27-dev
+libneon27-gnutls-dev
 libsasl2-dev
 libssl-dev
 libsvn-dev
@@ -30,4 +30,4 @@ zip
 zlib1g-dev\
 """
 
-apt-get install $PACKAGE_LIST
+apt-get install $PACKAGE_LIST $@
