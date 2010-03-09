@@ -21,7 +21,19 @@
         </item>
         <item>
             <key> <string>configuration_form_id</string> </key>
-            <value> <string>Solver_viewConfiguration</string> </value>
+            <value> <string>Solver_viewConfigurationFormBox</string> </value>
+        </item>
+        <item>
+            <key> <string>configuration_property_list</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>delivery_solver</string> </key>
+            <value>
+              <tuple/>
+            </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -48,6 +60,14 @@
             <value>
               <none/>
             </value>
+        </item>
+        <item>
+            <key> <string>line_exclusive</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>line_grouping</string> </key>
+            <value> <int>0</int> </value>
         </item>
         <item>
             <key> <string>permission</string> </key>
