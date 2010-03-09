@@ -38,7 +38,7 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string>Workflow_statusModify</string> </value>
+            <value> <string>Delivery_submitSolveDivergenceDialog</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -93,10 +93,10 @@
                     <value>
                       <list>
                         <string>listbox_divergence</string>
+                        <string>listbox_solver_configuration</string>
                         <string>listbox_solver</string>
                         <string>listbox_delivery_solver</string>
                         <string>listbox_comment</string>
-                        <string>listbox_solver_configuration</string>
                       </list>
                     </value>
                 </item>
