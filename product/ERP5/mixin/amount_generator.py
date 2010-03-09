@@ -143,8 +143,12 @@ class AmountGeneratorMixin:
       base_amount.update(amount_propert_dict)
 
       # Initialize base_amount with total_price for each amount applications
-      for application in delivery_amount.getBaseApplicationList(): # Acquired from Resource
-        base_amount[application] = amount.getTotalPrice()
+      #for application in delivery_amount.getBaseApplicationList(): # Acquired from Resource - XXX-JPS ?
+      application_list = delivery_amount.getBaseContributionList() # or getBaseApplicationList ?
+      if application_list:
+        total_price = delivery_amount.getTotalPrice()
+        for application in application_list: # Acquired from Resource - seems more normal
+          base_amount[application] = total_price
     
       # Browse recursively the trade model and accumulate
       # applicable values - first define the recursive method
@@ -196,13 +200,15 @@ class AmountGeneratorMixin:
                 # XXX-JPS Make sure handling of list properties can be handled
                 resource_amount_aggregate[key][property_key] = amount_generator_cell.getProperty(property_key)
               resource_amount_aggregate[key]['category_list'] = amount_generator_cell.getCategoryMembershipList(
-                 amount_generator_cell.getMappedValueBaseCategoryList())
+                 amount_generator_cell.getMappedValueBaseCategoryList(), base=1)
               resource_amount_aggregate[key]['resource'] = amount_generator_cell.getResource()
               # For final amounts, base_application and id MUST be defined
               resource_amount_aggregate[key]['base_application'] = amount_generator_cell.getBaseApplication() # Required
+              #resource_amount_aggregate[key]['trade_phase_list'] = amount_generator_cell.getTradePhaseList() # Required moved to MappedValue
               resource_amount_aggregate[key]['id'] = amount_generator_cell.getRelativeUrl().replace('/', '_')
             # Case 2: the cell defines a temporary calculation line
-            elif getattr(amount_generator_cell, 'getBaseContributionList', None) is not None:
+            elif getattr(amount_generator_cell, 'getBaseContributionList', None) is not None\
+                 and getattr(amount_generator_cell, 'getBaseApplication', None) is not None:
               # Define a key in order to aggregate amounts in cells
               #   base_application MUST be defined
               #
@@ -225,7 +231,7 @@ class AmountGeneratorMixin:
               for property_key in amount_generator_cell.getMappedValuePropertyList():
                 value_amount_aggregate[key][property_key] = amount_generator_cell.getProperty(property_key)
               value_amount_aggregate[key]['category_list'] = amount_generator_cell.getCategoryMembershipList(
-                 amount_generator_cell.getMappedValueBaseCategoryList())
+                 amount_generator_cell.getMappedValueBaseCategoryList(), base=1)
               # For intermediate calculations, base_contribution_list MUST be defined
               value_amount_aggregate[key]['base_contribution_list'] = amount_generator_cell.getBaseContributionList() # Required
         if resource_amount_aggregate:
@@ -249,7 +255,7 @@ class AmountGeneratorMixin:
             # Quantity is used as a multiplier (like in transformations for MRP)
             # net_converted_quantity is used preferrably to quantity since we need
             # values converted to the default management unit
-            # If not quantity is provided, we consider that the value is 1.0 (XXX is it OK ?)
+            # If not quantity is provided, we consider that the value is 1.0 (XXX is it OK ?) XXX-JPS Need careful review with taxes
             property_dict['quantity'] = base_amount[amount_generator_line.getBaseApplication()] * \
                 (property_dict.get('net_converted_quantity', property_dict.get('quantity', 1.0)))
             # This sounds wrong if cell has getBaseApplication()
