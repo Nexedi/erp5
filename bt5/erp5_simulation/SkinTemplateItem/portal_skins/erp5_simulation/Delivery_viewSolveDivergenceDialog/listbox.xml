@@ -420,20 +420,16 @@
                           <string>Target Solver</string>
                         </tuple>
                         <tuple>
+                          <string>solver_configuration</string>
+                          <string>Target Solver Configuration</string>
+                        </tuple>
+                        <tuple>
                           <string>delivery_solver</string>
                           <string>Delivery Solver</string>
                         </tuple>
                         <tuple>
-                          <string>solver_parameter</string>
-                          <string>Target Solver Parameter</string>
-                        </tuple>
-                        <tuple>
                           <string>comment</string>
                           <string>Comment</string>
-                        </tuple>
-                        <tuple>
-                          <string>solver_configuration</string>
-                          <string>Target Solver Configuration</string>
                         </tuple>
                       </list>
                     </value>
