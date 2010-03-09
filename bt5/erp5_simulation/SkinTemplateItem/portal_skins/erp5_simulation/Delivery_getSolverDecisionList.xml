@@ -63,15 +63,15 @@ for i in solver_list:\n
   if i.getSolverState() != \'solved\':\n
     solver_process = i\n
     break\n
-context.log(solver_process)\n
+\n
 if solver_process is None:\n
-  context.log(solver_process)\n
   solver_process = context.getPortalObject().portal_solvers.newSolverProcess(context)\n
-  context.log(solver_process)\n
   solver_list.append(solver_process.getRelativeUrl())\n
   context.setSolverList(solver_list)\n
+\n
 # XXX should omit \'solved\' decision?\n
-return solver_process.objectValues(portal_type=\'Solver Decision\')\n
+solver_decision_list = solver_process.objectValues(portal_type=\'Solver Decision\')\n
+return solver_decision_list\n
 </string> </value>
         </item>
         <item>
@@ -116,6 +116,7 @@ return solver_process.objectValues(portal_type=\'Solver Decision\')\n
                             <string>solver_list</string>
                             <string>_getiter_</string>
                             <string>i</string>
+                            <string>solver_decision_list</string>
                           </tuple>
                         </value>
                     </item>
