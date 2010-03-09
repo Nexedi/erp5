@@ -57,7 +57,7 @@
 from Products.ERP5Type.Log import log\n
 LOG = lambda msg:log("SaleInvoice_selectPackingListMovement", msg)\n
 \n
-kw[\'parent_specialise_portal_type\']  = \'Invoicing Rule\'\n
+kw[\'parent_specialise_portal_type\']  = [\'Invoicing Rule\', \'Invoice Simulation Rule\']\n
 kw[\'explanation_portal_type\']        = [\'Task\', \'Task Report\']\n
 kw[\'portal_type\']                    = \'Simulation Movement\'\n
 kw[\'grand_parent_simulation_state\']  = [\'started\', \'stopped\',\'delivered\']\n
