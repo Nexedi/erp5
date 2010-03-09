@@ -196,7 +196,13 @@ now = []\n
 for name in relative:\n
     obj = obj.restrictedTraverse(name)\n
     now.append(name)\n
-    title = obj.getCompactTranslatedTitle()\n
+    try:\n
+      title = obj.getCompactTranslatedTitle()\n
+    except AttributeError:\n
+      # Some objects do not have getCompactTranslatedTitle.\n
+      # UI related codes must run at any cases even if context is non-erp5 objects.\n
+      # Otherwise some error messages can be overridden by getCompactTranslatedTitle attribute error.\n
+      title = obj.Title()\n
     if not name == \'talkback\':\n
         result.append( { \'id\'      : name\n
                        , \'title\'   : title\n
@@ -266,6 +272,7 @@ return result\n
                             <string>_getiter_</string>
                             <string>name</string>
                             <string>title</string>
+                            <string>AttributeError</string>
                           </tuple>
                         </value>
                     </item>
