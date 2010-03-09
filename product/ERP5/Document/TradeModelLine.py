@@ -343,11 +343,18 @@ class TradeModelLine(Predicate, XMLMatrix, Amount):
           tmp_movement = calculation_script(
               current_aggregated_amount_list=movement_list,
               current_movement=tmp_movement)
-        else:
+        elif calculation_script.func_code.co_argcount==3:
+          # backward compatibility
           tmp_movement = calculation_script(
               current_aggregated_amount_list=movement_list,
               current_movement=tmp_movement,
               aggregated_movement_list=aggregated_movement_list)
+        else:
+          tmp_movement = calculation_script(
+              current_aggregated_amount_list=movement_list,
+              current_movement=tmp_movement,
+              aggregated_movement_list=aggregated_movement_list,
+              trade_model_line=self)
         if tmp_movement is None:
           # Do nothing
           return aggregated_amount_list
