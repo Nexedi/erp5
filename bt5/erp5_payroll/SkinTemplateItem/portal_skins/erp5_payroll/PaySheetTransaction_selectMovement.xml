@@ -57,7 +57,7 @@
 LOG = lambda msg:context.log("PaySheetTransaction_selectMovement", msg)\n
 \n
 search_kw=dict(\n
-    parent_specialise_portal_type=\'Invoice Transaction Rule\',\n
+    parent_specialise_portal_type=[\'Invoice Transaction Rule\', \'Invoice Transaction Simulation Rule\'],\n
     explanation_portal_type=[\'Pay Sheet Transaction\'],\n
     portal_type=\'Simulation Movement\',\n
     grand_parent_simulation_state=[\'confirmed\', \'started\'])\n
