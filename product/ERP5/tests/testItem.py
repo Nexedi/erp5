@@ -162,6 +162,7 @@ class TestItemMixin(TestSaleInvoiceMixin):
     """ Check items """
     order_line = sequence.get('order_line')
     simulation_movement = order_line.getOrderRelatedValue()
+    self.failIf(simulation_movement is None)
     self.checkAggregate(line=simulation_movement, sequence=sequence)
 
   def stepCheckPackingListLineAggregate(self, sequence=None,
