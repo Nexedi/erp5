@@ -95,6 +95,7 @@
               <tuple>
                 <string>aggregate_list</string>
                 <string>base_contribution_list</string>
+                <string>delivery_mode</string>
                 <string>description</string>
                 <string>destination</string>
                 <string>destination_account</string>
