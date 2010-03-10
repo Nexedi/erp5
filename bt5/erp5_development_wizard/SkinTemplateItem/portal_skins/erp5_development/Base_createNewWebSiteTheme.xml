@@ -66,6 +66,7 @@ page_template_header = """<tal:block define="dummy python: request.RESPONSE.setH
 """\n
 theme_id = web_site_theme_id.lower().replace(" ", "_")\n
 main_template_id = "template_%s" % theme_id\n
+default_form_group = "feature box (News)"\n
 \n
 # XXX Should support Web Section too?\n
 web_site = context.getWebSiteValue()\n
@@ -119,12 +120,18 @@ field.manage_edit_xmlrpc(dict(form_id=\'Base_viewFieldLibrary\', field_id=\'my_s
 content_layout_form_id = "%s_content_layout" % theme_id\n
 skin_folder.manage_addProduct[\'ERP5Form\'].addERP5Form(content_layout_form_id)\n
 layout_form = getattr(skin_folder, content_layout_form_id)\n
+for form_group in ["right", \'hidden\', \'center\', \'bottom\']:\n
+  layout_form.remove_group(form_group)\n
+layout_form.rename_group(\'left\', default_form_group)\n
 context.editForm(layout_form, {\'pt\': main_template_id})\n
 \n
 # Create default web layout\n
 layout_form_id = "%s_layout" % theme_id\n
 skin_folder.manage_addProduct[\'ERP5Form\'].addERP5Form(layout_form_id)\n
 layout_form = getattr(skin_folder,layout_form_id)\n
+for form_group in ["right", \'hidden\', \'center\', \'bottom\']:\n
+  layout_form.remove_group(form_group)\n
+layout_form.rename_group(\'left\', default_form_group)\n
 context.editForm(layout_form, {\'pt\': main_template_id})\n
 \n
 if apply_web_site_theme:\n
@@ -190,6 +197,7 @@ return web_site.Base_redirect("view", \n
                             <string>page_template_header</string>
                             <string>theme_id</string>
                             <string>main_template_id</string>
+                            <string>default_form_group</string>
                             <string>web_site</string>
                             <string>skin_folder</string>
                             <string>_getitem_</string>
@@ -210,6 +218,8 @@ return web_site.Base_redirect("view", \n
                             <string>dict</string>
                             <string>content_layout_form_id</string>
                             <string>layout_form</string>
+                            <string>_getiter_</string>
+                            <string>form_group</string>
                             <string>layout_form_id</string>
                             <string>portal_status_message</string>
                           </tuple>
