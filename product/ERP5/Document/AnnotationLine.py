@@ -26,14 +26,10 @@
 #
 ##############################################################################
 
-from Products.ERP5Type.Globals import InitializeClass, PersistentMapping
 from AccessControl import ClassSecurityInfo
 
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
-
+from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5.Document.PaySheetLine import PaySheetLine
-
-from zLOG import LOG
 
 class AnnotationLine(PaySheetLine):
     """

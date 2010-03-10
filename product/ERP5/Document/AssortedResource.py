@@ -26,21 +26,15 @@
 #
 ##############################################################################
 
-from Products.ERP5Type.Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
-from Products.ERP5Type.XMLObject import XMLObject
+from Products.ERP5Type import Permissions, PropertySheet, Constraint
 from Products.ERP5Type.XMLMatrix import XMLMatrix
 from Products.ERP5Type.Utils import cartesianProduct
 from Products.ERP5.Document.TransformedResource import TransformedResource
 from Products.ERP5Type.Base import TempBase
 
-from Products.ERP5.Document.Amount import Amount
-
 from Products.CMFCore.Expression import Expression
-
-from zLOG import LOG
 
 import operator
 

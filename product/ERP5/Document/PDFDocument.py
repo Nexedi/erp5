@@ -26,19 +26,16 @@
 #
 ##############################################################################
 
-import tempfile, os, cStringIO
+import tempfile, os
 
 from AccessControl import ClassSecurityInfo
 from Products.CMFCore.utils import getToolByName, _setCacheHeaders,\
     _ViewEmulator
 
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
-from Products.ERP5Type.Cache import CachingMethod
+from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5.Document.Image import Image
 from Products.ERP5.Document.Document import ConversionError
 from Products.ERP5.mixin.cached_convertable import CachedConvertableMixin
-
-from zLOG import LOG, WARNING
 
 class PDFDocument(Image, CachedConvertableMixin):
   """

@@ -28,13 +28,11 @@
 
 from AccessControl import ClassSecurityInfo
 
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
+from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.Base import Base
 from Products.ERP5Type.Utils import convertToUpperCase
 
 from Products.ERP5.Document.Coordinate import Coordinate
-
-import string
 
 class InternetProtocolAddress(Base, Coordinate):
   """

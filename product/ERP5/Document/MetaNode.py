@@ -28,12 +28,10 @@
 
 from AccessControl import ClassSecurityInfo
 
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
-#from Products.ERP5.Core.MetaNode import MetaNode as CoreMetaNode
+from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5.Document.Organisation import Organisation as Node
-#from Node import Node
+from Products.CMFCore.utils import getToolByName
 
-#class MetaNode(Node, CoreMetaNode):
 class MetaNode(Node):
     """
       A Node

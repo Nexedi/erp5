@@ -28,16 +28,12 @@
 ##############################################################################
 
 from AccessControl import ClassSecurityInfo
-from Products.CMFCore.utils import getToolByName
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, Cache
+from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5.Document.Domain import Domain
 from Products.ERP5.Document.Document import PermanentURLMixIn
-from Acquisition import ImplicitAcquisitionWrapper, aq_base, aq_inner
-from Products.ERP5Type.Base import TempBase
+from Acquisition import aq_base, aq_inner
 from Products.ERP5Type.UnrestrictedMethod import unrestricted_apply
 from AccessControl import Unauthorized
-from zLOG import LOG, WARNING
-import sys
 
 from Products.ERP5Type.Cache import getReadOnlyTransactionCache
 

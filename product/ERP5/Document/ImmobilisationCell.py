@@ -26,19 +26,13 @@
 #
 ##############################################################################
 
-from Products.ERP5Type.Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 
-from Products.ERP5Type import Base, Permissions, PropertySheet, Constraint, interfaces
-#from Products.ERP5.Core import MetaNode, MetaResource
+from Products.ERP5Type import Permissions, PropertySheet
 
 from Products.ERP5Type.XMLObject import XMLObject
-from Products.ERP5.Document.Amount import Amount
 from Products.ERP5.Document.Movement import Movement
 from Products.ERP5.Document.ImmobilisationMovement import ImmobilisationMovement
-
-from string import capitalize
-from zLOG import LOG
 
 class ImmobilisationCell(Movement, XMLObject, ImmobilisationMovement):
   """

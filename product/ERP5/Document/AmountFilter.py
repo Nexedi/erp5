@@ -27,11 +27,9 @@
 ##############################################################################
 
 from AccessControl import ClassSecurityInfo
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
+from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5.Document.Amount import Amount
 from Products.ERP5.Document.MappedValue import MappedValue
-
-from zLOG import LOG
 
 class AmountFilter(MappedValue, Amount):
     """

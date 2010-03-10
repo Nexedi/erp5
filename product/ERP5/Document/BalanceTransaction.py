@@ -29,7 +29,7 @@
 from UserDict import UserDict
 
 from AccessControl import ClassSecurityInfo
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
+from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5.Document.Inventory import Inventory
 from Products.ERP5.Document.AccountingTransaction import AccountingTransaction
 

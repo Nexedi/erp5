@@ -16,17 +16,16 @@
 """
 
 from Products.ERP5Type import Globals
-import AccessControl
 from Products.ERP5Type.Globals import package_home
 
 from Products.SiteErrorLog.SiteErrorLog import manage_addErrorLog
 from ZPublisher import BeforeTraverse
 from AccessControl import ClassSecurityInfo
 from Products.CMFDefault.Portal import CMFSite
-from Products.CMFCore.utils import getToolByName, _getAuthenticatedUser
-from Products.ERP5Type import Permissions, PropertySheet, Constraint
+from Products.CMFCore.utils import getToolByName
+from Products.ERP5Type import Permissions
 from Products.ERP5Type.Core.Folder import FolderMixIn
-from Acquisition import aq_base, aq_parent, aq_inner, aq_acquire
+from Acquisition import aq_base
 from Products.ERP5Type import allowClassTool
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from Products.ERP5Type.Cache import caching_instance_method
@@ -40,9 +39,8 @@ from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 
 from zLOG import LOG, INFO
 from string import join
-import os, traceback
+import os
 import warnings
-import transaction
 MARKER = []
 
 
@@ -1847,8 +1845,6 @@ class ERP5Generator(PortalGenerator):
       # Calling ERP5Site_reindexAll is useless.
 
   def setupUserFolder(self, p):
-      from Products import ERP5Security
-      from Products import PluggableAuthService
       # Use Pluggable Auth Service instead of the standard acl_users.
       p.manage_addProduct['PluggableAuthService'].addPluggableAuthService()
       pas_dispatcher = p.acl_users.manage_addProduct['PluggableAuthService']

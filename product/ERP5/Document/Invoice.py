@@ -27,10 +27,9 @@
 ##############################################################################
 
 from AccessControl import ClassSecurityInfo
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
+from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5.Document.AccountingTransaction import AccountingTransaction
 from Products.ERP5.Document.Delivery import Delivery
-from zLOG import LOG
 
 class Invoice(AccountingTransaction):
     # CMF Type Definition

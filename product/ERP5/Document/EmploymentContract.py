@@ -32,8 +32,6 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.DateUtils import addToDate, atTheEndOfPeriod
 from DateTime import DateTime
 
-from zLOG import LOG
-
 class EmploymentContract(SubscriptionItem):
   """
     Employment Contracts in ERP5 are intended to store work contract properties

@@ -26,9 +26,8 @@
 #
 ##############################################################################
 
-from Products.ERP5Type import interfaces, Permissions
+from Products.ERP5Type import interfaces
 from Products.ERP5Type.Context import Context
-from Products.ERP5Type.Base import Base
 from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5.Variated import Variated
 

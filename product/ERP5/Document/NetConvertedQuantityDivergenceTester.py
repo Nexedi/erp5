@@ -26,11 +26,10 @@
 #
 ##############################################################################
 
-import zope.interface
 from AccessControl import ClassSecurityInfo
 
 from Products.ERP5.Document.FloatDivergenceTester import FloatDivergenceTester
-from Products.ERP5Type import Permissions, PropertySheet, interfaces
+from Products.ERP5Type import Permissions
 
 class NetConvertedQuantityDivergenceTester(FloatDivergenceTester):
   """

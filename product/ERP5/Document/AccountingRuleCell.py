@@ -29,7 +29,7 @@
 #from Products.ERP5Type.Globals import InitializeClass, PersistentMapping
 #from Products.CMFCore.utils import getToolByName
 from AccessControl import ClassSecurityInfo
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
+from Products.ERP5Type import Permissions, PropertySheet
 
 from Products.ERP5.Document.Predicate import Predicate
 from Products.ERP5.Document.Invoice import Invoice

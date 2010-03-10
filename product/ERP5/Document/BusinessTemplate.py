@@ -36,24 +36,6 @@ from AccessControl import ClassSecurityInfo
 from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from Products.ERP5Type.Base import WorkflowMethod, _aq_reset
-from Products.ERP5Type.Utils import readLocalDocument, \
-                                    writeLocalDocument, \
-                                    importLocalDocument, \
-                                    removeLocalDocument
-from Products.ERP5Type.Utils import readLocalPropertySheet, \
-                                    writeLocalPropertySheet, \
-                                    importLocalPropertySheet, \
-                                    removeLocalPropertySheet
-from Products.ERP5Type.Utils import readLocalConstraint, \
-                                    writeLocalConstraint, \
-                                    importLocalConstraint, \
-                                    removeLocalConstraint
-from Products.ERP5Type.Utils import readLocalExtension, \
-                                    writeLocalExtension, \
-                                    removeLocalExtension
-from Products.ERP5Type.Utils import readLocalTest, \
-                                    writeLocalTest, \
-                                    removeLocalTest
 from Products.ERP5Type.Utils import convertToUpperCase
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLObject import XMLObject
@@ -68,7 +50,7 @@ customImporters={
     XMLExportImport.magic: importXML,
     }
 
-from zLOG import LOG, WARNING, PROBLEM
+from zLOG import LOG, WARNING
 from warnings import warn
 from gzip import GzipFile
 from lxml.etree import parse

@@ -33,10 +33,9 @@ from zLOG import LOG, WARNING
 from Products.ERP5Type.Base import WorkflowMethod
 from Products.CMFCore.utils import getToolByName
 from Products.CMFCore.utils import _setCacheHeaders, _ViewEmulator
-from Products.ERP5Type import Permissions, PropertySheet, Constraint
+from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5.Document.Document import Document, ConversionError
 from Products.ERP5Type.WebDAVSupport import TextContent
-from Products.CMFDefault.utils import isHTMLSafe
 import re
 
 try:

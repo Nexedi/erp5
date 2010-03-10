@@ -28,18 +28,14 @@
 ##############################################################################
 
 import mimetypes
-import re
 
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Base import WorkflowMethod
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
-from Products.ERP5Type.Cache import CachingMethod
+from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5.Document.Document import Document
 from Products.ERP5.Document.Document import ConversionError
 from Products.ERP5Type.Base import Base, removeIContentishInterface
 from Products.CMFDefault.File import File as CMFFile
-from zLOG import LOG
-from DateTime import DateTime
 
 # Mixin Import
 from Products.ERP5.mixin.cached_convertable import CachedConvertableMixin

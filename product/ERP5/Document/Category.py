@@ -31,13 +31,12 @@ from AccessControl import ClassSecurityInfo
 
 from Products.ERP5.Document.MetaNode import MetaNode
 from Products.ERP5.Document.MetaResource import MetaResource
-from Products.ERP5Type import interfaces, Permissions, PropertySheet
+from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from Products.ERP5Type.Base import Base
 from Products.ERP5.Document.Predicate import Predicate
 
 from zLOG import LOG
-
 
 class Category(CMFCategory, Predicate, MetaNode, MetaResource):
     """
@@ -149,7 +148,6 @@ class Category(CMFCategory, Predicate, MetaNode, MetaResource):
     def experimental_listDAVObjects(self):
       """
       """
-      from zLOG import LOG
       LOG("Category listDAVObjects" ,0, "listDAVObjects")
       # XXX - We should try to use only Lazy Maps and to set a limit to the
       # number of objects

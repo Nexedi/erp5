@@ -27,10 +27,9 @@
 ##############################################################################
 
 import zope.interface
-from Products.ERP5Type.Globals import InitializeClass, PersistentMapping
 from AccessControl import ClassSecurityInfo
 
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
+from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5.Document.Item import Item
 
 class SubscriptionItem(Item):

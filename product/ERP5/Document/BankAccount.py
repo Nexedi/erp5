@@ -29,11 +29,10 @@
 
 from AccessControl import ClassSecurityInfo
 
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
+from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.Core.Folder import Folder
 from Products.ERP5.Document.Coordinate import Coordinate
 from Products.ERP5.Document.MetaNode import MetaNode
-import string
 
 class BankAccount(Folder, Coordinate, MetaNode):
     """

@@ -30,7 +30,7 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Globals import InitializeClass
 from Products.CMFCore.utils import getToolByName
 
-from Products.ERP5Type import Context, interfaces, Permissions
+from Products.ERP5Type import interfaces, Permissions
 from Products.ERP5Type.Base import Base
 from Products.CMFCategory.Renderer import Renderer
 

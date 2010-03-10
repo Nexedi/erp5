@@ -26,14 +26,12 @@
 #
 ##############################################################################
 
-from compiler.consts import CO_VARARGS, CO_VARKEYWORDS
-import zope.interface
+from compiler.consts import CO_VARKEYWORDS
 from AccessControl import ClassSecurityInfo
 from AccessControl import Unauthorized
 from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLObject import XMLObject
-from Acquisition import aq_base
 from DateTime import DateTime
 from Products.ERP5Type.Message import Message
 from Products.ERP5Type.DateUtils import addToDate, atTheEndOfPeriod

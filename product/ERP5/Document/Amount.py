@@ -29,13 +29,11 @@
 
 import zope.interface
 from math import log
-from Products.ERP5Type.Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 from Products.ERP5.Variated import Variated
 from Products.ERP5.VariationValue import VariationValue
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
+from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.Base import Base
-from Products.ERP5Type.Base import TempBase
 from Products.CMFCategory.Renderer import Renderer
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 

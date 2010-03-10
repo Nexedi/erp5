@@ -32,7 +32,6 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import PropertySheet
 from Products.ERP5Type.Permissions import AccessContentsInformation
 from Products.ERP5Type.XMLMatrix import XMLMatrix
-from Products.ERP5.Variated import Variated
 
 
 class Measure(XMLMatrix):

@@ -26,19 +26,13 @@
 #
 ##############################################################################
 
-from Products.ERP5Type.Globals import InitializeClass, PersistentMapping
 from AccessControl import ClassSecurityInfo
 
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
-from Products.ERP5Type.XMLMatrix import XMLMatrix
+from Products.ERP5Type import Permissions, PropertySheet
 
-from Products.ERP5.Document.DeliveryLine import DeliveryLine
-from Products.ERP5.Document.Movement import Movement
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5.Document.Path import Path
 from Products.ERP5.Document.SupplyChain import SupplyChainError
-
-from zLOG import LOG
 
 class SupplyLink(Path, XMLObject):
     """

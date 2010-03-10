@@ -30,11 +30,9 @@
 
 from AccessControl import ClassSecurityInfo
 
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
+from Products.ERP5Type import Permissions, PropertySheet
 
 from Products.ERP5.Document.SupplyLine import SupplyLine
-from Products.ERP5.Document.Amount import Amount
-from zLOG import LOG
 
 class BudgetTransferLine(SupplyLine):
     """

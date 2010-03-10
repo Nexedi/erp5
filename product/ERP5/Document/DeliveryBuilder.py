@@ -29,7 +29,7 @@
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5.Document.OrderBuilder import OrderBuilder, \
-        SelectMethodError, SelectMovementError
+        SelectMethodError
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 
 class DeliveryBuilder(OrderBuilder):

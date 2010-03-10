@@ -29,16 +29,12 @@
 
 import zope.interface
 from AccessControl import ClassSecurityInfo
-from Acquisition import aq_base, aq_parent, aq_inner, aq_acquire
-from Products.CMFCore.utils import getToolByName
 
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
+from Products.ERP5Type import Permissions, interfaces
 from Products.ERP5.Document.Rule import Rule
 from Products.ERP5Type.Errors import TransformationRuleError
 from Products.ERP5.Document.TransformationSourcingRule import\
                                             TransformationSourcingRuleMixin
-
-from zLOG import LOG
 
 class TransformationRule(TransformationSourcingRuleMixin, Rule):
     """

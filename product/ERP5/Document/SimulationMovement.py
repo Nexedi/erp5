@@ -28,13 +28,11 @@
 ##############################################################################
 
 import zope.interface
-from Products.ERP5Type.Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 from Products.CMFCore.utils import getToolByName
 
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
+from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
-from Products.ERP5Type.Globals import PersistentMapping
 
 from Products.ERP5.Document.Movement import Movement
 
@@ -43,7 +41,6 @@ from zLOG import LOG, WARNING
 from Acquisition import aq_base
 
 from Products.ERP5.Document.AppliedRule import TREE_DELIVERED_CACHE_KEY, TREE_DELIVERED_CACHE_ENABLED
-from Products.ERP5Type.patches.WorkflowTool import WorkflowHistoryList
 from Products.ERP5.mixin.property_recordable import PropertyRecordableMixin
 
 # XXX Do we need to create groups ? (ie. confirm group include confirmed, getting_ready and ready

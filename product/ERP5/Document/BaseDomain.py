@@ -26,10 +26,9 @@
 #
 ##############################################################################
 
-from Products.ERP5Type.Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
+from Products.ERP5Type import Permissions
 from Products.ERP5.Document.Domain import Domain
 
 class BaseDomain(Domain):

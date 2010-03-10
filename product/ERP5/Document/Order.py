@@ -28,13 +28,10 @@
 ##############################################################################
 
 from AccessControl import ClassSecurityInfo
-from Products.CMFCore.utils import getToolByName
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
-from Products.ERP5Type.Base import Base
+from Products.ERP5Type import Permissions, PropertySheet
 
 from Products.ERP5.Document.Delivery import Delivery
 
-from zLOG import LOG
 from warnings import warn
 
 class Order(Delivery):

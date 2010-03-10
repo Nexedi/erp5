@@ -26,13 +26,11 @@
 #
 ##############################################################################
 
-from Products.ERP5Type.Globals import InitializeClass, PersistentMapping
 from AccessControl import ClassSecurityInfo
 
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
+from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLMatrix import XMLMatrix
 
-from Products.ERP5.Document.Resource import Resource
 from Products.ERP5.Document.MappedValue import MappedValue
 
 class Pricing(MappedValue, XMLMatrix):

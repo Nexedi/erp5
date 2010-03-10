@@ -30,11 +30,8 @@
 #
 ##############################################################################
 
-import os
 import string
 import struct
-import sys
-import time
 import subprocess
 from cStringIO import StringIO
 
@@ -43,7 +40,7 @@ from Acquisition import aq_base
 
 from DocumentTemplate.DT_Util import html_quote
 from Products.CMFCore.utils import _setCacheHeaders, _ViewEmulator
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
+from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5.Document.File import File
 from Products.ERP5.Document.Document import ConversionError
 

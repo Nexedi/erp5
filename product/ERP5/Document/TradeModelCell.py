@@ -29,7 +29,7 @@
 
 from AccessControl import ClassSecurityInfo
 
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
+from Products.ERP5Type import Permissions, PropertySheet, interfaces
 
 from Products.ERP5.Document.TradeModelLine import TradeModelLine
 from Products.ERP5.Document.MappedValue import MappedValue

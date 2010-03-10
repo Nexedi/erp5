@@ -28,10 +28,8 @@
 ##############################################################################
 
 from AccessControl import ClassSecurityInfo
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
+from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5.Document.DeliveryLine import DeliveryLine
-from Products.ERP5.Document.Amount import Amount
-from zLOG import LOG
 
 class BudgetTransaction(DeliveryLine):
     """

@@ -30,7 +30,7 @@ import zope.interface
 from warnings import warn
 from AccessControl import ClassSecurityInfo
 
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
+from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.Base import Base
 
 #from Products.ERP5.Core import MetaNode, MetaResource
@@ -39,7 +39,7 @@ from Products.ERP5Type.XMLObject import XMLObject
 
 from Products.ERP5.Document.Amount import Amount
 
-from zLOG import LOG, WARNING, DEBUG
+from zLOG import LOG, WARNING
 
 class Movement(XMLObject, Amount):
   """

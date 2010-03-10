@@ -26,23 +26,18 @@
 #
 ##############################################################################
 
-import zope.interface
-from Products.ERP5Type.Globals import InitializeClass, PersistentMapping
 from AccessControl import ClassSecurityInfo
 
 from DateTime import DateTime
 from string import capitalize
 
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
+from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLObject import XMLObject
-from Products.ERP5Type.DateUtils import addToDate, getClosestDate, getIntervalBetweenDates 
-from Products.ERP5Type.DateUtils import getMonthAndDaysBetween, getRoundedMonthBetween
-from Products.ERP5Type.DateUtils import getMonthFraction, getYearFraction, getBissextilCompliantYearFraction
-from Products.ERP5Type.DateUtils import same_movement_interval, number_of_months_in_year, centis, millis
-from Products.ERP5Type.DateUtils import getAccountableYearFraction, roundDate
+from Products.ERP5Type.DateUtils import addToDate, getClosestDate, roundDate
+from Products.ERP5Type.DateUtils import getRoundedMonthBetween, millis
+from Products.ERP5Type.DateUtils import getAccountableYearFraction
 from Products.ERP5.Document.Amount import Amount
 from Products.CMFCore.utils import getToolByName
-from Products.PythonScripts.Utility import allow_class
 from Products.ERP5.Document.ImmobilisationMovement import UNIMMOBILISING_METHOD, NO_CHANGE_METHOD, AMORTISATION_METHOD_PREFIX
 from Products.ERP5.Document.ImmobilisationMovement import IMMOBILISATION_NEEDED_PROPERTY_LIST, IMMOBILISATION_UNCONTINUOUS_NEEDED_PROPERTY_LIST, IMMOBILISATION_FACULTATIVE_PROPERTY_LIST
 from zLOG import LOG

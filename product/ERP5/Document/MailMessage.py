@@ -27,15 +27,11 @@
 #
 ##############################################################################
 
-from Products.ERP5Type.Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
+from Products.ERP5Type import Permissions, PropertySheet
 
 from Products.ERP5.Document.Event import Event
-import smtplib
-
-from zLOG import LOG
 
 _MARKER = []
 

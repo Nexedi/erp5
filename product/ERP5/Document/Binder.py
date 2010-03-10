@@ -26,9 +26,8 @@
 #
 ##############################################################################
 
-from Products.ERP5Type.Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
+from Products.ERP5Type import Permissions, PropertySheet
 
 from Products.ERP5Type.Core.Folder import Folder
 from Products.ERP5.Document.Document import Document

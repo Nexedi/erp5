@@ -27,8 +27,7 @@
 
 from AccessControl import ClassSecurityInfo
 
-from AccessControl.ZopeGuards import guarded_getattr
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
+from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5.Document.BudgetVariation import BudgetVariation
 
 

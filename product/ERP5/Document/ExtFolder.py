@@ -28,13 +28,12 @@
 
 from AccessControl import ClassSecurityInfo
 
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
+from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ExtFile.ExtFile import ExtFile
 from Products.ExtFile.ExtImage import ExtImage
 import os
 from App.config import getConfiguration
-from Products.ERP5Type.Globals import package_home
 from Products.ERP5 import product_path
 from Shared.DC.ZRDB.TM import TM
 import shutil

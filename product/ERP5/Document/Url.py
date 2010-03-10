@@ -28,10 +28,9 @@
 
 from AccessControl import ClassSecurityInfo
 from Products.CMFCore.utils import getToolByName
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
+from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.Base import Base
 from Products.ERP5.Document.Coordinate import Coordinate
-from Products.ERP5.Tool.NotificationTool import buildEmailMessage
 from zLOG import LOG
 import urllib
 

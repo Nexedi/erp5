@@ -26,16 +26,12 @@
 #
 ##############################################################################
 
-from Products.ERP5Type.Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
-from Products.ERP5Type.Utils import UpperCase
+from Products.ERP5Type import Permissions, PropertySheet
 
 from Products.ERP5.Document.Predicate import Predicate
 from Products.ERP5.Document.Amount import Amount
-
-from zLOG import LOG
 
 class MappedValue(Predicate, Amount):
   """

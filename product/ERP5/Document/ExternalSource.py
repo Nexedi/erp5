@@ -26,17 +26,10 @@
 ##############################################################################
 
 from AccessControl import ClassSecurityInfo
-from Products.CMFCore.utils import getToolByName
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
+from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5.Document.Url import UrlMixIn
 from Products.ERP5.Document.Document import UpdateMixIn
-
-import mimetypes
-import re
-import urllib
-from htmlentitydefs import name2codepoint
-from DateTime import DateTime
 
 class ExternalSource(XMLObject, UrlMixIn, UpdateMixIn):
   """

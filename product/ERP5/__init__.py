@@ -78,13 +78,9 @@ portal_tools = ( CategoryTool.CategoryTool,
 content_classes = ()
 content_constructors = ()
 
-# Import Interaction Workflow
-from InteractionWorkflow import InteractionWorkflowDefinition
-
 # Finish installation
 def initialize( context ):
   import Document
-  from zLOG import LOG
   # Initialize
   initializeProduct(context, this_module, globals(),
                          document_module = Document,

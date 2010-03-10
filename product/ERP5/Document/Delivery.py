@@ -31,7 +31,6 @@
 import zope.interface
 
 from Products.CMFCore.utils import getToolByName
-from Products.ERP5Type.Base import WorkflowMethod
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter

@@ -29,14 +29,10 @@
 
 import re, types
 from DateTime import DateTime
-from Products.ERP5Type.Globals import get_request
 from AccessControl import ClassSecurityInfo, Unauthorized
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
-from Products.ERP5Type.Base import WorkflowMethod
-from Products.CMFCore.utils import getToolByName, _checkPermission
-from Products.CMFCore.utils import _setCacheHeaders, _ViewEmulator
-from Products.CMFDefault.utils import isHTMLSafe
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
+from Products.CMFCore.utils import _checkPermission
+from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5.Document.TextDocument import TextDocument
 from Products.ERP5.Document.File import File
 from Products.ERP5.Document.Document import ConversionError, \

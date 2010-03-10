@@ -27,10 +27,8 @@
 ##############################################################################
 
 from AccessControl import ClassSecurityInfo
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
+from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5.Document.SupplyLine import SupplyLine
-
-from zLOG import LOG
 
 class OpenOrderLine(SupplyLine):
     """

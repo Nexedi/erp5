@@ -28,13 +28,12 @@
 
 import zope.interface
 from warnings import warn
-from Products.ERP5Type.Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 from Acquisition import aq_base, aq_inner
 
 from Products.CMFCore.utils import getToolByName
 
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
+from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from Products.ERP5Type.Core.Folder import Folder
 from Products.ERP5Type.Document import newTempBase
@@ -43,8 +42,6 @@ from Products.ERP5Type.Utils import convertToUpperCase
 from Products.ERP5Type.Cache import getReadOnlyTransactionCache, enableReadOnlyTransactionCache, disableReadOnlyTransactionCache
 from Products.ZSQLCatalog.SQLCatalog import SQLQuery
 from Products.ERP5Type.Globals import PersistentMapping
-
-from zLOG import LOG
 
 class Predicate(XMLObject, Folder):
   """

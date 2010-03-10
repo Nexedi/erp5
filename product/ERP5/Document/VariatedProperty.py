@@ -27,18 +27,11 @@
 ##############################################################################
 
 import zope.interface
-from Products.ERP5Type.Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
+from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.XMLMatrix import XMLMatrix
-from Products.ERP5.Variated import Variated
-from Products.ERP5Type.Utils import cartesianProduct
-
-from Products.CMFCore.Expression import Expression
-
-from zLOG import LOG
 
 class VariatedProperty(XMLObject, XMLMatrix):
     """

@@ -28,14 +28,11 @@
 
 from AccessControl import ClassSecurityInfo
 
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
+from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5.Document.Predicate import Predicate
 
 from Products.ERP5.Variated import Variated
-from Products.ERP5.Document.Delivery import Delivery
-from Products.ERP5.Document.Inventory import Inventory
 
-from zLOG import LOG
 
 class Budget(Predicate, Variated):
     """

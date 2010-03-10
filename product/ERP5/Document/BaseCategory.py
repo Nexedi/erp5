@@ -29,12 +29,10 @@
 from Products.CMFCategory.Category import BaseCategory as CMFBaseCategory
 from AccessControl import ClassSecurityInfo
 
-from Products.ERP5Type import interfaces, Permissions, PropertySheet
+from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.Base import _aq_reset
-
-from zLOG import LOG
 
 
 class BaseCategory(CMFBaseCategory, XMLObject):

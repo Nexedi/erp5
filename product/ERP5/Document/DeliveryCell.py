@@ -30,19 +30,14 @@
 
 import zope.interface
 
-from Products.ERP5Type.Globals import InitializeClass, PersistentMapping
 from AccessControl import ClassSecurityInfo
-from Acquisition import aq_base
 
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
-from Products.ERP5Type.Base import Base
+from Products.ERP5Type import Permissions, PropertySheet, interfaces
 
 from Products.ERP5.Document.OrderLine import OrderLine
 from Products.ERP5.Document.Movement import Movement
 from Products.ERP5.Document.MappedValue import MappedValue
 from Products.ERP5.Document.ImmobilisationMovement import ImmobilisationMovement
-
-from zLOG import LOG
 
 class DeliveryCell(MappedValue, Movement, ImmobilisationMovement):
     """

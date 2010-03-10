@@ -26,13 +26,10 @@
 #
 ##############################################################################
 
-from Products.ERP5Type.Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
-from Products.CMFCore.utils import getToolByName
+from Products.ERP5Type import Permissions, PropertySheet
 
 from Products.ERP5.Document.Delivery import Delivery
-from Acquisition import aq_base
 
 class AccountingTransaction(Delivery):
     """

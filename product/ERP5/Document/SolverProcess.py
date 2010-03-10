@@ -29,7 +29,6 @@
 
 import zope.interface
 from AccessControl import ClassSecurityInfo
-from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.CMFActivity.ActiveProcess import ActiveProcess

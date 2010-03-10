@@ -30,15 +30,11 @@
 import zope.interface
 
 from AccessControl import ClassSecurityInfo
-from Products.CMFCore.utils import getToolByName
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
+from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.XMLObject import XMLObject
-from Products.ERP5Type.PsycoWrapper import psyco
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 from Products.ERP5.Document.Rule import Rule
-
-from zLOG import LOG
 
 TREE_DELIVERED_CACHE_KEY = 'AppliedRule._isTreeDelivered_cache'
 TREE_DELIVERED_CACHE_ENABLED = 'TREE_DELIVERED_CACHE_ENABLED'

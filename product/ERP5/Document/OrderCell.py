@@ -27,16 +27,10 @@
 #
 ##############################################################################
 
-from Products.ERP5Type.Globals import InitializeClass, PersistentMapping
 from AccessControl import ClassSecurityInfo
-from Acquisition import aq_base
 
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
-from Products.ERP5Type.Base import Base
-
+from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5.Document.DeliveryCell import DeliveryCell
-
-from zLOG import LOG
 
 class OrderCell(DeliveryCell):
     """

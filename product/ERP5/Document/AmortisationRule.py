@@ -28,18 +28,14 @@
 
 from AccessControl import ClassSecurityInfo
 from DateTime import DateTime
-from copy import deepcopy
-from string import lower, capitalize
+from string import capitalize
 
-from Products.ERP5Type.DateUtils import millis, centis, getClosestDate, addToDate
+from Products.ERP5Type.DateUtils import centis, getClosestDate, addToDate
 from Products.ERP5Type.DateUtils import getDecimalNumberOfYearsBetween
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
+from Products.ERP5Type import Permissions
 from Products.ERP5.Document.Rule import Rule
 from Products.CMFCore.utils import getToolByName
 from Products.ERP5.Document.ImmobilisationMovement import NO_CHANGE_METHOD
-
-
-from zLOG import LOG
 
 class AmortisationRule(Rule):
     """

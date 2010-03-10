@@ -29,22 +29,16 @@
 ##############################################################################
 import zope.interface
 
-from Products.ERP5Type.Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.XMLMatrix import XMLMatrix
-from Products.ERP5Type.Utils import cartesianProduct
-from Products.ERP5Type.Base import TempBase
 
 from Products.ERP5.Document.Amount import Amount
 from Products.ERP5.AggregatedAmountList import AggregatedAmountList
 
-from Products.CMFCore.Expression import Expression
 from Products.ERP5.Document.Predicate import Predicate
-
-from zLOG import LOG
 
 class TransformedResource(Predicate, XMLObject, XMLMatrix, Amount):
     """

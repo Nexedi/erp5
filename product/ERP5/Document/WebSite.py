@@ -25,19 +25,16 @@
 #
 ##############################################################################
 
-from Acquisition import ImplicitAcquisitionWrapper, aq_base, aq_inner
 from AccessControl import ClassSecurityInfo
 
-from Products.ERP5.Document.WebSection import WebSection, WEBSECTION_KEY
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces, Cache
+from Products.ERP5.Document.WebSection import WebSection
+from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.Cache import CachingMethod
 
 from Products.ERP5Type.Globals import get_request
 from Persistence import Persistent
 from ZPublisher import BeforeTraverse
 from ZPublisher.HTTPRequest import HTTPRequest
-
-from zLOG import LOG
 
 WEBSITE_KEY = 'web_site_value'
 WEBSITE_LANGUAGE_KEY = 'web_site_language'
