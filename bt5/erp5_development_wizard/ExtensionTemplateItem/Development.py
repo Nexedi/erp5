@@ -52,7 +52,7 @@ def getPythonCodeExecutionError(self):
   return result[1]
 
 
-import lxml
+import lxml.html
 
 def updateCodeWithMainContent(self, html_code, div_class):
    main_content = """
