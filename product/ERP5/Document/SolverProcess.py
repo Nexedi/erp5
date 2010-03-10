@@ -217,9 +217,6 @@ class SolverProcess(XMLObject, ActiveProcess):
         new_decision = self.newContent(portal_type='Solver Decision')
       new_decision._setDeliveryList(solver_decision_key[1])
       new_decision._setCausality(solver_decision_key[0])
-      for simulation_movement in movement_dict.keys():
-        simulation_movement.setSolverValue(new_decision)
-      # No need to set application_list or....?
 
   def _generateRandomId(self):
     # call ActiveProcess._generateRandomId() explicitly otherwise
