@@ -55,11 +55,6 @@ class Gadget:
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
-    { 'id'         : 'gadget_type'
-    , 'description': 'A gadget type makes it easy to make specific gadgets for a specific ERP5 view'
-    , 'type'       : 'tokens'
-    , 'mode'       : 'w'
-    },
   )
 
-  _categories = ()
+  _categories = ('gadget_type',)
