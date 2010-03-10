@@ -188,6 +188,7 @@ class SolverProcess(XMLObject, ActiveProcess):
     # delivery lines. Let group decisions in such way
     # that a single decision is created per divergence tester instance
     # and per application level list
+    solver_tool = self.getParentValue()
     solver_decision_dict = {}
     for movement in movement_list:
       for simulation_movement in movement.getDeliveryRelatedValueList():
@@ -195,7 +196,7 @@ class SolverProcess(XMLObject, ActiveProcess):
           if divergence_tester.compare(simulation_movement, movement):
             continue
           application_list = map(lambda x:x.getRelativeUrl(), 
-                 self.getSolverDecisionApplicationValueList(movement, divergence_tester))
+                 solver_tool.getSolverDecisionApplicationValueList(movement, divergence_tester))
           application_list.sort()
           solver_decision_key = (divergence_tester.getRelativeUrl(), tuple(application_list))
           movement_dict = solver_decision_dict.setdefault(solver_decision_key, {})
