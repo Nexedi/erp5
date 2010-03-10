@@ -207,19 +207,29 @@ class SolverProcess(XMLObject, ActiveProcess):
 
     # Now build the solver decision instances based on the previous
     # grouping
-    #  XXX-JPS: pseudocode for update (ie. rebuild) is not present
+    solver_decision_list = self.objectValues(portal_type='Solver Decision')
     index = 1
     for solver_decision_key, movement_dict in solver_decision_dict.items():
-      if temp_object:
-        new_decision = self.newContent(portal_type='Solver Decision',
-                                       temp_object=True,
-                                       #id=index,
-                                       uid='new_%s' % index)
-        index += 1
+      causality, delivery_list = solver_decision_key
+      matched_solver_decision_list = [
+        x for x in solver_decision_list \
+        if x.getDeliveryList() == list(delivery_list) and \
+        x.getCausality() == causality]
+      if len(matched_solver_decision_list) > 0:
+        solver_decision_list.remove(matched_solver_decision_list[0])
       else:
-        new_decision = self.newContent(portal_type='Solver Decision')
-      new_decision._setDeliveryList(solver_decision_key[1])
-      new_decision._setCausality(solver_decision_key[0])
+        if temp_object:
+          new_decision = self.newContent(portal_type='Solver Decision',
+                                         temp_object=True,
+                                         #id=index,
+                                         uid='new_%s' % index)
+          index += 1
+        else:
+          new_decision = self.newContent(portal_type='Solver Decision')
+        new_decision._setDeliveryList(solver_decision_key[1])
+        new_decision._setCausality(solver_decision_key[0])
+    # XXX what should we do for non-matched existing solver decisions?
+    # do we need to cancel them by using an appropriate workflow?
 
   def _generateRandomId(self):
     # call ActiveProcess._generateRandomId() explicitly otherwise
