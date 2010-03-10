@@ -70,9 +70,8 @@ class TradeCondition:
                                      'destination_payment',
                                      'destination_payment_value',
                                      'destination_payment_title',
-                                     # from PropertySheet/BusinessPath.py
-                                     'lead_time', 'wait_time',
-                                     'end_of', 'end_of_value', 'end_of_title',
+                                     # from PropertySheet/TradeModelLine.py
+                                     'calculation_script_id',
                                    ),
           'mode'        : 'w' },
   )

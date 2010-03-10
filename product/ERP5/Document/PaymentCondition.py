@@ -54,5 +54,5 @@ class PaymentCondition(TradeModelLine):
                       , PropertySheet.PaymentCondition
                       , PropertySheet.Chain
                       , PropertySheet.SortIndex
-                      , PropertySheet.BusinessPath
+                      , PropertySheet.TradeModelLine
                       )
