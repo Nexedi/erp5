@@ -1,3 +1,6 @@
+URGENT:
+- use tal:block instead of block
+- layout forms should be minimal (ex. 1 group) with appropriate group naming (ex. feature box (News))
 TODO:
 - code review
 - separation of code and code templates
