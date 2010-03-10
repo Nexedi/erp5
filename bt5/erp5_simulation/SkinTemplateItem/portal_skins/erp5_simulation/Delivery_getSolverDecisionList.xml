@@ -68,6 +68,9 @@ if solver_process is None:\n
   solver_process = context.getPortalObject().portal_solvers.newSolverProcess(context)\n
   solver_list.append(solver_process.getRelativeUrl())\n
   context.setSolverList(solver_list)\n
+else:\n
+  # update existing solver process\n
+  solver_process.buildSolverDecisionList(context)\n
 \n
 # XXX should omit \'solved\' decision?\n
 solver_decision_list = solver_process.objectValues(portal_type=\'Solver Decision\')\n
