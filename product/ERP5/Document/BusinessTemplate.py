@@ -68,7 +68,7 @@ customImporters={
     XMLExportImport.magic: importXML,
     }
 
-from zLOG import LOG, WARNING, PROBLEM
+from zLOG import LOG, WARNING
 from warnings import warn
 from gzip import GzipFile
 from lxml.etree import parse
@@ -3082,15 +3082,15 @@ class ModuleTemplateItem(BaseTemplateItem):
     pass
 
 class DocumentTemplateItem(BaseTemplateItem):
-  local_file_reader_name = 'readLocalDocument'
-  local_file_writer_name = 'writeLocalDocument'
-  local_file_importer_name = 'importLocalDocument'
-  local_file_remover_name = 'removeLocalDocument'
+  local_file_reader_name = staticmethod(readLocalDocument)
+  local_file_writer_name = staticmethod(writeLocalDocument)
+  local_file_importer_name = staticmethod(importLocalDocument)
+  local_file_remover_name = staticmethod(removeLocalDocument)
 
   def build(self, context, **kw):
     BaseTemplateItem.build(self, context, **kw)
     for id in self._archive.keys():
-      self._objects[self.__class__.__name__+'/'+id] = globals()[self.local_file_reader_name](id)
+      self._objects[self.__class__.__name__+'/'+id] = self.local_file_reader_name(id)
 
   def preinstall(self, context, installed_bt, **kw):
     modified_object_list = {}
@@ -3139,14 +3139,14 @@ class DocumentTemplateItem(BaseTemplateItem):
           path, name = posixpath.split(id)
           # This raises an exception if the file already exists.
           try:
-            globals()[self.local_file_writer_name](name, text, create=0)
+            self.local_file_writer_name(name, text, create=0)
           except IOError, error:
             LOG("BusinessTemplate.py", WARNING, "Cannot install class %s on file system" %(name,))
             if error.errno :
               raise
             continue
           if self.local_file_importer_name is not None:
-            globals()[self.local_file_importer_name](name)
+            self.local_file_importer_name(name)
             # after any import, flush all ZODB caches to force a DB reload
             # otherwise we could have objects trying to get commited while
             # holding reference to a class that is no longer the same one as
@@ -3162,9 +3162,9 @@ class DocumentTemplateItem(BaseTemplateItem):
       for id in self._archive.keys():
         text = self._archive[id]
         # This raises an exception if the file exists.
-        globals()[self.local_file_writer_name](id, text, create=1)
+        self.local_file_writer_name(id, text, create=1)
         if self.local_file_importer_name is not None:
-          globals()[self.local_file_importer_name](id)
+          self.local_file_importer_name(id)
 
   def uninstall(self, context, **kw):
     object_path = kw.get('object_path', None)
@@ -3173,7 +3173,7 @@ class DocumentTemplateItem(BaseTemplateItem):
     else:
       object_keys = self._archive.keys()
     for id in object_keys:
-      globals()[self.local_file_remover_name](id)
+      self.local_file_remover_name(id)
     BaseTemplateItem.uninstall(self, context, **kw)
 
   def export(self, context, bta, **kw):
@@ -3193,30 +3193,30 @@ class DocumentTemplateItem(BaseTemplateItem):
     self._objects[file_name[:-3]] = text
 
 class PropertySheetTemplateItem(DocumentTemplateItem):
-  local_file_reader_name = 'readLocalPropertySheet'
-  local_file_writer_name = 'writeLocalPropertySheet'
-  local_file_importer_name = 'importLocalPropertySheet'
-  local_file_remover_name = 'removeLocalPropertySheet'
+  local_file_reader_name = staticmethod(readLocalPropertySheet)
+  local_file_writer_name = staticmethod(writeLocalPropertySheet)
+  local_file_importer_name = staticmethod(importLocalPropertySheet)
+  local_file_remover_name = staticmethod(removeLocalPropertySheet)
 
 class ConstraintTemplateItem(DocumentTemplateItem):
-  local_file_reader_name = 'readLocalConstraint'
-  local_file_writer_name = 'writeLocalConstraint'
-  local_file_importer_name = 'importLocalConstraint'
-  local_file_remover_name = 'removeLocalConstraint'
+  local_file_reader_name = staticmethod(readLocalConstraint)
+  local_file_writer_name = staticmethod(writeLocalConstraint)
+  local_file_importer_name = staticmethod(importLocalConstraint)
+  local_file_remover_name = staticmethod(removeLocalConstraint)
 
 class ExtensionTemplateItem(DocumentTemplateItem):
-  local_file_reader_name = 'readLocalExtension'
-  local_file_writer_name = 'writeLocalExtension'
+  local_file_reader_name = staticmethod(readLocalExtension)
+  local_file_writer_name = staticmethod(writeLocalExtension)
   # Extension needs no import
   local_file_importer_name = None
-  local_file_remover_name = 'removeLocalExtension'
+  local_file_remover_name = staticmethod(removeLocalExtension)
 
 class TestTemplateItem(DocumentTemplateItem):
-  local_file_reader_name = 'readLocalTest'
-  local_file_writer_name = 'writeLocalTest'
+  local_file_reader_name = staticmethod(readLocalTest)
+  local_file_writer_name = staticmethod(writeLocalTest)
   # Test needs no import
   local_file_importer_name = None
-  local_file_remover_name = 'removeLocalTest'
+  local_file_remover_name = staticmethod(removeLocalTest)
 
 
 class ProductTemplateItem(BaseTemplateItem):
