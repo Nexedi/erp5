@@ -157,6 +157,12 @@ class SolverTool(BaseTool):
     # And build decisions
     new_solver.buildSolverDecisionList(delivery_or_movement=delivery_or_movement,
                                        temp_object=temp_object)
+
+    # Append the solver process into the delivery's solver category
+    delivery = delivery_or_movement.getRootDeliveryValue()
+    solver_list = delivery.getSolverValueList()
+    solver_list.append(new_solver)
+    delivery.setSolverValueList(solver_list)
     return new_solver
 
   def getSolverProcessValueList(self, delivery_or_movement=None, validation_state=None):

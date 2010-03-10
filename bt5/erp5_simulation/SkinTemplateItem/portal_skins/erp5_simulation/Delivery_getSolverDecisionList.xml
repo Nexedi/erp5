@@ -59,15 +59,12 @@
 solver_process = None\n
 solver_list = context.getSolverValueList()\n
 for i in solver_list:\n
-  # XXX if \'solving\' decision exists, what should we do?\n
-  if i.getValidationState() != \'solved\':\n
+  if i.getValidationState() == \'draft\':\n
     solver_process = i\n
     break\n
 \n
 if solver_process is None:\n
   solver_process = context.getPortalObject().portal_solvers.newSolverProcess(context)\n
-  solver_list.append(solver_process.getRelativeUrl())\n
-  context.setSolverList(solver_list)\n
 else:\n
   # update existing solver process\n
   solver_process.buildSolverDecisionList(context)\n
