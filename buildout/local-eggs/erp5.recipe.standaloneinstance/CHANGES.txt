@@ -1,6 +1,12 @@
 Changelog
 =========
 
+0.2 (2010-03-10)
+----------------
+
+ - fix issues, that during uninstallation instance data was removed
+   [luke]
+
 0.1 (2010-02-12)
 ----------------
 

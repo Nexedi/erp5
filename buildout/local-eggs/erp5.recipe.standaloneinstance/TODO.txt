@@ -1,4 +1,3 @@
  - be even more isolated
  - support for Zope and ZEO
  - in case of one Zope add normal directory
- - use template for zope.conf and zeo.conf
