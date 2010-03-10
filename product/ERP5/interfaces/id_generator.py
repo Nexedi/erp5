@@ -94,3 +94,28 @@ class IIdGenerator(Interface):
     in this case a particular error will be raised (to be determined and
     added here)
     """
+
+  def exportGeneratorIdDict():
+    """
+    Export last id values in a dictionnary in the form { group_id : last_id }
+
+    This can be incompatible with some particular generator implementation,
+    in this case a particular error will be raised (to be determined and
+    added here)
+    """
+
+  def importGeneratorIdDict(id_dict):
+    """
+    Import data, this is usefull if we want to replace a generator by
+    another one. It will allows to make the new generator starting from
+    values of the old one
+
+    Parameters :
+
+    id_dict (dict)
+      A dictionnary in the form { group_id : last_id }
+
+    This can be incompatible with some particular generator implementation,
+    in this case a particular error will be raised (to be determined and
+    added here)
+    """
