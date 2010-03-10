@@ -126,6 +126,8 @@ class TestInvoiceMixin(TestPackingListMixin,
     if self.oldMailHost is not None:
       self.portal.manage_delObjects(['MailHost'])
       self.portal._setObject('MailHost', DummyMailHost('MailHost'))
+    transaction.commit()
+    self.tic()
 
   def beforeTearDown(self):
     transaction.abort()
