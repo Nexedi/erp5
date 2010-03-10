@@ -56,7 +56,7 @@
             <value> <string>solver_process = state_change[\'object\'].getParentValue()\n
 for solver in solver_process.objectValues(\n
     portal_type=solver_process.getPortalObject().getPortalTargetSolverTypeList()):\n
-  if solver.getSolverState() != \'solved\':\n
+  if solver.getValidationState() != \'solved\':\n
     return\n
 solver_process.succeed()\n
 </string> </value>

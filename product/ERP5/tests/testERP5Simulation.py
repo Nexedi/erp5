@@ -452,7 +452,7 @@ class TestERP5Simulation(TestERP5SimulationMixin, ERP5TypeTestCase):
     solver_process = sequence.get('solver_process')
     for solver in solver_process.objectValues(
       portal_type=self.portal.getPortalTargetSolverTypeList()):
-      self.assertEquals(state, solver.getSolverState())
+      self.assertEquals(state, solver.getValidationState())
 
   def stepCheckSolverIsSolving(self, sequence=None, sequence_list=None, **kw):
     """

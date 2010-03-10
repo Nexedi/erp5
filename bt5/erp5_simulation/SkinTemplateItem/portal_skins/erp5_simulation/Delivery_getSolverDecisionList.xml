@@ -60,7 +60,7 @@ solver_process = None\n
 solver_list = context.getSolverValueList()\n
 for i in solver_list:\n
   # XXX if \'solving\' decision exists, what should we do?\n
-  if i.getSolverState() != \'solved\':\n
+  if i.getValidationState() != \'solved\':\n
     solver_process = i\n
     break\n
 \n
