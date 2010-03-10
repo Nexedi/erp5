@@ -36,7 +36,7 @@ from Acquisition import aq_base
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from Products.ERP5Type.Globals import get_request
 from Products.CMFCore.utils import getToolByName, _checkPermission
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
+from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.DateUtils import convertDateToHour, number_of_hours_in_day, number_of_hours_in_year
 from Products.ERP5Type.Utils import convertToUpperCase
@@ -51,7 +51,6 @@ from Products.ZSQLCatalog.SQLCatalog import SQLQuery
 from AccessControl import Unauthorized
 import zope.interface
 import cStringIO
-import string
 from OFS.Image import Pdata
 from Products.PythonScripts.Utility import allow_class
 
