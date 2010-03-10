@@ -108,6 +108,8 @@ class PaymentSimulationRule(Rule, PredicateMatrix):
         # one for payable
         prevision_line = kw.copy()
         prevision_line.update(
+          start_date=start_date,
+          stop_date=stop_date,
           source=input_movement.getSource(),
           destination=input_movement.getDestination(),
           quantity=-quantity
@@ -119,6 +121,8 @@ class PaymentSimulationRule(Rule, PredicateMatrix):
         payment_rule_cell_line = payment_rule_cell_line_list[0]
         prevision_line = kw.copy()
         prevision_line.update(
+          start_date=start_date,
+          stop_date=stop_date,
           source=payment_rule_cell_line.getSource(),
           destination=payment_rule_cell_line.getDestination(),
           quantity=quantity
