@@ -3302,10 +3302,10 @@ class TestPayroll(TestPayrollMixin):
     cell.setQuantityRangeMax(2)
 
     # model 2 gets cell values from model 1 (see test_07_model_getCell)
-    self.assertEquals(1,
-        model_2.getCell('salary_range/france/slice_a').getQuantityRangeMin())
-    self.assertEquals(2,
-        model_2.getCell('salary_range/france/slice_a').getQuantityRangeMax())
+    model_2_cell = model_2.getCell('salary_range/france/slice_a')
+    self.failIf(model_2_cell is None)
+    self.assertEquals(1, model_2_cell.getQuantityRangeMin())
+    self.assertEquals(2, model_2_cell.getQuantityRangeMax())
 
     # model 2 can override values
     model_2.edit(variation_settings_category_list=('salary_range/france',))
