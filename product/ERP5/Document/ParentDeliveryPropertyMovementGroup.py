@@ -26,6 +26,9 @@
 ##############################################################################
 
 from Products.ERP5.Document.PropertyMovementGroup import PropertyMovementGroup
+from Products.ERP5Type.Utils import UpperCase
+
+_MARKER = []
 
 class ParentDeliveryPropertyMovementGroup(PropertyMovementGroup):
   """
@@ -44,7 +47,7 @@ class ParentDeliveryPropertyMovementGroup(PropertyMovementGroup):
     parent_delivery = self._getParentDelivery(movement)
     if parent_delivery is not None:
       for prop in self.getTestedPropertyList():
-        property_dict['_%s' % prop] = parent_delivery.getProperty(prop, None)
+        property_dict['_%s' % prop] = self._getProperty(parent_delivery, prop, None)
     return property_dict
 
   def test(self, document, property_dict, property_list=None, **kw):
@@ -54,7 +57,7 @@ class ParentDeliveryPropertyMovementGroup(PropertyMovementGroup):
     else:
       target_property_list = self.getTestedPropertyList()
     for prop in target_property_list:
-      if property_dict['_%s' % prop] != document.getProperty(prop, None):
+      if property_dict['_%s' % prop] != self._getProperty(document, prop, None):
         return False, property_dict
     return True, property_dict
 
@@ -68,3 +71,10 @@ class ParentDeliveryPropertyMovementGroup(PropertyMovementGroup):
       movement = rule.getParentValue()
       delivery = movement.getDeliveryValue()
     return delivery
+
+  def _getProperty(self, document, property_id, d=_MARKER):
+    # XXX here we don't use Base.getProperty() but try to call accessor
+    # directly to make acquired property
+    # (eg. payment_condition_efficiency) working.
+    accessor_name = 'get' + UpperCase(property_id)
+    return getattr(document, accessor_name)(d)

@@ -45,8 +45,9 @@ class ParentDeliveryCategoryMovementGroup(ParentDeliveryPropertyMovementGroup):
     parent_delivery = self._getParentDelivery(movement)
     if parent_delivery is not None:
       for prop in self.getTestedPropertyList():
-        property_dict['_%s_list' % prop] = sorted(
-          movement.getPropertyList(prop))
+        list_prop = '_%s_list' % prop
+        property_dict[list_prop] = sorted(
+          self._getProperty(movement, list_prop, []))
     return property_dict
 
   def test(self, document, property_dict, property_list=None, **kw):
@@ -56,7 +57,8 @@ class ParentDeliveryCategoryMovementGroup(ParentDeliveryPropertyMovementGroup):
     else:
       target_property_list = self.getTestedPropertyList()
     for prop in target_property_list:
-      if property_dict['_%s_list' % prop] != \
-             sorted(document.getPropertyList(prop, None)):
+      list_prop = '_%s_list' % prop
+      if property_dict[list_prop] != \
+             sorted(self._getProperty(document, list_prop, [])):
         return False, property_dict
     return True, property_dict
