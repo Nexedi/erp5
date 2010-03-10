@@ -65,7 +65,7 @@ MARKER = [\'\', None]\n
 page_template_header = """<tal:block define="dummy python: request.RESPONSE.setHeader(\'Content-Type\', \'text/__REPLACE__;; charset=utf-8\')"/>\n
 """\n
 theme_id = web_site_theme_id.lower().replace(" ", "_")\n
-main_template_id = "template_erp5_web_%s" % theme_id\n
+main_template_id = "template_%s" % theme_id\n
 \n
 # XXX Should support Web Section too?\n
 web_site = context.getWebSiteValue()\n
