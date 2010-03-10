@@ -198,12 +198,12 @@ class SolverTool(BaseTool):
     of the interface definition.
     """
     # Short Term Implementation Approach
+    # XXX tested_property can be multiple for some testers like Net
+    # Converted Quantity Divergence Tester or Variation Divergence
+    # Tester.
     test_property = divergence_tester.getTestedProperty()
     application_value = movement
     try:
-      # XXX this way does not work correctly for category,
-      # eg. delivery_line.hasProperty('source') returns True even if it
-      # is only difined in its parent delivery.
       while not application_value.hasProperty(test_property):
         application_value = application_value.getParentValue()
     except AttributeError:
