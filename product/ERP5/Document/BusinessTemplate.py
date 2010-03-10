@@ -3261,24 +3261,17 @@ class RoleTemplateItem(BaseTemplateItem):
     p = context.getPortalObject()
     # get roles
     if context.getTemplateFormatVersion() == 1:
-      role_list = self._objects.keys()
+      role_set = set(self._objects)
     else:
-      role_list = self._archive.keys()
+      role_set = set(self._archive)
     # set roles in PAS
     if p.acl_users.meta_type == 'Pluggable Auth Service':
       role_manager_list = p.acl_users.objectValues('ZODB Role Manager')
       for role_manager in role_manager_list:
-        existing_role_list = role_manager.listRoleIds()
-        for role in role_list:
-          if role not in existing_role_list:
-            role_manager.addRole(role)
+        for role in role_set.difference(role_manager.listRoleIds()):
+          role_manager.addRole(role)
     # set roles on portal
-    roles = {}
-    for role in p.__ac_roles__:
-      roles[role] = 1
-    for role in role_list:
-      roles[role] = 1
-    p.__ac_roles__ = tuple(roles.keys())
+    p.__ac_roles__ = tuple(role_set.union(p.__ac_roles__))
 
   def _importFile(self, file_name, file):
     if not file_name.endswith('.xml'):
