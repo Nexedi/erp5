@@ -51,6 +51,7 @@ conversion_server_host = ('127.0.0.1', 8008)
 TEST_FILES_HOME = os.path.join(os.path.dirname(__file__), 'test_document')
 FILE_NAME_REGULAR_EXPRESSION = "(?P<reference>[A-Z&é@{]{3,7})-(?P<language>[a-z]{2})-(?P<version>[0-9]{3})"
 REFERENCE_REGULAR_EXPRESSION = "(?P<reference>[A-Z&é@{]{3,7})(-(?P<language>[a-z]{2}))?(-(?P<version>[0-9]{3}))?"
+NON_PROCESSABLE_PORTAL_TYPE_LIST = ('Image', 'File', 'PDF')
 
 def printAndLog(msg):
   """
@@ -289,21 +290,21 @@ class TestIngestion(ERP5TypeTestCase):
       document_module = self.portal.document_module
     else:
       document_module = self.portal.getDefaultModule(portal_type)
-    context = getattr(document_module, document_id)
+    document = getattr(document_module, document_id)
     for revision, format in enumerate(format_list):
-      filename = 'TEST-en-002.' + format
+      filename = 'TEST-en-002.%s' %format
       f = makeFileUpload(filename)
-      context.edit(file=f)
+      document.edit(file=f)
       self.stepTic()
-      self.failUnless(context.hasFile())
-      if context.getPortalType() in ('Image', 'File', 'PDF'):
+      self.failUnless(document.hasFile())
+      if document.getPortalType() in NON_PROCESSABLE_PORTAL_TYPE_LIST:
         # File and images do not support conversion to text in DMS
         # PDF has not implemented _convertToBaseFormat() so can not be converted
-        self.assertEquals(context.getExternalProcessingState(), 'uploaded')
+        self.assertEquals(document.getExternalProcessingState(), 'uploaded')
       else:
-        self.assertEquals(context.getExternalProcessingState(), 'converted') # this is how we know if it was ok or not
-        self.assert_('magic' in context.SearchableText())
-        self.assert_('magic' in str(context.asText()))
+        self.assertEquals(document.getExternalProcessingState(), 'converted') # this is how we know if it was ok or not
+        self.assert_('magic' in document.SearchableText())
+        self.assert_('magic' in str(document.asText()))
 
   def checkDocumentExportList(self, document_id, format, asserted_target_list):
     """
@@ -311,14 +312,14 @@ class TestIngestion(ERP5TypeTestCase):
       a test file of given format and assert that the document
       can be converted to any of the formats in asserted_target_list
     """
-    context = self.getDocument(document_id)
+    document = self.getDocument(document_id)
     filename = 'TEST-en-002.' + format
     f = makeFileUpload(filename)
-    context.edit(file=f)
+    document.edit(file=f)
     self.stepTic()
     # We call clear cache to be sure that the target list is updated
     self.getPortal().portal_caches.clearCache()
-    target_list = context.getTargetFormatList()
+    target_list = document.getTargetFormatList()
     for target in asserted_target_list:
       self.assert_(target in target_list)
 
@@ -342,7 +343,7 @@ class TestIngestion(ERP5TypeTestCase):
     counter = 1
     old_portal_type = ''
     for extension, portal_type in extension_to_type:
-      filename = 'TEST-en-002.' + extension
+      filename = 'TEST-en-002.%s' %extension
       file = makeFileUpload(filename)
       # if we change portal type we must change version because 
       # mergeRevision would fail
@@ -351,26 +352,26 @@ class TestIngestion(ERP5TypeTestCase):
         old_portal_type = portal_type
       file.filename = 'TEST-en-00%d.%s' % (counter, extension)
       if with_portal_type:
-        ob = self.portal.portal_contributions.newContent(portal_type=portal_type, file=file)
+        document = self.portal.portal_contributions.newContent(portal_type=portal_type, file=file)
       else:
-        ob = self.portal.portal_contributions.newContent(file=file)
-      created_documents.append(ob)
+        document = self.portal.portal_contributions.newContent(file=file)
+      created_documents.append(document)
     self.stepTic()
     # inspect created objects
     count = 0
     for extension, portal_type in extension_to_type:
-      ob = created_documents[count]
+      document = created_documents[count]
       count+=1
-      self.assertEquals(ob.getPortalType(), portal_type)
-      self.assertEquals(ob.getReference(), 'TEST')
-      if ob.getPortalType() in ('Image', 'File', 'PDF'):
+      self.assertEquals(document.getPortalType(), portal_type)
+      self.assertEquals(document.getReference(), 'TEST')
+      if document.getPortalType() in NON_PROCESSABLE_PORTAL_TYPE_LIST:
         # Image, File and PDF are not converted to a base format
-        self.assertEquals(ob.getExternalProcessingState(), 'uploaded')
+        self.assertEquals(document.getExternalProcessingState(), 'uploaded')
       else:
         # We check if conversion has succeeded by looking
         # at the external_processing workflow
-        self.assertEquals(ob.getExternalProcessingState(), 'converted')
-        self.assert_('magic' in ob.SearchableText())
+        self.assertEquals(document.getExternalProcessingState(), 'converted')
+        self.assert_('magic' in document.SearchableText())
 
   def newPythonScript(self, object_id, script_id, argument_list, code):
     """
@@ -378,8 +379,7 @@ class TestIngestion(ERP5TypeTestCase):
       and source code.
     """
     context = self.getDocument(object_id)
-    factory = context.manage_addProduct['PythonScripts'].manage_addPythonScript
-    factory(id=script_id)
+    context.manage_addProduct['PythonScripts'].manage_addPythonScript(id=script_id)
     script = getattr(context, script_id)
     script.ZPythonScript_edit(argument_list, code)
 
@@ -396,15 +396,15 @@ class TestIngestion(ERP5TypeTestCase):
       Sets input parameters and on the document ID document_id
       and discover metadata. For reindexing
     """
-    context = self.getDocument(document_id)
+    document = self.getDocument(document_id)
     # simulate user input
-    context._backup_input = dict(reference='INPUT', 
-                                 language='in',
-                                 version='004', 
-                                 short_title='from_input',
-                                 contributor='person_module/james')
+    document._backup_input = dict(reference='INPUT', 
+                                  language='in',
+                                  version='004', 
+                                  short_title='from_input',
+                                  contributor='person_module/james')
     # pass to discovery file_name and user_login
-    context.discoverMetadata(context.getSourceReference(), 'john_doe') 
+    document.discoverMetadata(document.getSourceReference(), 'john_doe') 
     self.stepTic()
     
   def checkMetadataOrder(self, expected_metadata, document_id='one'):
@@ -412,9 +412,9 @@ class TestIngestion(ERP5TypeTestCase):
     Asserts that metadata of document ID document_id
     is the same as expected_metadata
     """
-    context = self.getDocument(document_id)
+    document = self.getDocument(document_id)
     for k, v in expected_metadata.items():
-      self.assertEquals(context.getProperty(k), v)
+      self.assertEquals(document.getProperty(k), v)
 
   def receiveEmail(self, data,
                    portal_type='Document Ingestion Message',
@@ -493,24 +493,24 @@ class TestIngestion(ERP5TypeTestCase):
       Check if the document is in "empty" processing state
       (ie. no file upload has been done yet)
     """
-    context = self.getDocument('one')
-    return self.assertEquals(context.getExternalProcessingState(), 'empty')
+    document = self.getDocument('one')
+    return self.assertEquals(document.getExternalProcessingState(), 'empty')
 
   def stepCheckUploadedState(self, sequence=None, sequence_list=None, **kw):
     """
       Check if the document is in "uploaded" processing state
       (ie. a file upload has been done)
     """
-    context = self.getDocument('one')
-    return self.assertEquals(context.getExternalProcessingState(), 'uploaded')
+    document = self.getDocument('one')
+    return self.assertEquals(document.getExternalProcessingState(), 'uploaded')
 
   def stepCheckConvertingState(self, sequence=None, sequence_list=None, **kw):
     """
       Check if the document is in "converting" processing state
       (ie. a file upload has been done and the document is converting)
     """
-    context = self.getDocument('one')
-    return self.assertEquals(context.getExternalProcessingState(), 'converting')
+    document = self.getDocument('one')
+    return self.assertEquals(document.getExternalProcessingState(), 'converting')
 
   def stepCheckConvertedState(self, sequence=None, sequence_list=None, **kw):
     """
@@ -518,8 +518,8 @@ class TestIngestion(ERP5TypeTestCase):
       (ie. a file conversion has been done and the document has
       been converted)
     """
-    context = self.getDocument('one')
-    return self.assertEquals(context.getExternalProcessingState(), 'converted')
+    document = self.getDocument('one')
+    return self.assertEquals(document.getExternalProcessingState(), 'converted')
 
   def stepStraightUpload(self, sequence=None, sequence_list=None, **kw):
     """
@@ -544,12 +544,12 @@ class TestIngestion(ERP5TypeTestCase):
     """
       Upload a file from view form and make sure this increases the revision
     """
-    context = self.getDocument('one')
+    document = self.getDocument('one')
     f = makeFileUpload('TEST-en-002.doc')
-    revision = context.getRevision()
-    context.edit(file=f)
-    self.assertEquals(context.getRevision(), str(int(revision) + 1))
-    context.reindexObject()
+    revision = document.getRevision()
+    document.edit(file=f)
+    self.assertEquals(document.getRevision(), str(int(revision) + 1))
+    document.reindexObject()
     transaction.commit()
     
   def stepUploadTextFromContributionTool(self, sequence=None, sequence_list=None, **kw):
@@ -565,22 +565,21 @@ class TestIngestion(ERP5TypeTestCase):
       Upload a file from contribution form and make sure this update existing
       document and don't make a new document.
     """
-    context = self.getDocument('one')
-    revision = context.getRevision()
+    document = self.getDocument('one')
+    revision = document.getRevision()
     number_of_document = len(self.portal.document_module.objectIds())
-    self.assert_('This document is modified.' not in context.asText())
+    self.assert_('This document is modified.' not in document.asText())
 
     f = makeFileUpload('TEST-en-002-modified.doc')
     f.filename = 'TEST-en-002.doc'
 
     self.portal.portal_contributions.newContent(file=f)
     self.stepTic()
-    self.assertEquals(context.getRevision(), str(int(revision) + 1))
-    self.assert_('This document is modified.' in context.asText())
+    self.assertEquals(document.getRevision(), str(int(revision) + 1))
+    self.assert_('This document is modified.' in document.asText())
     self.assertEquals(len(self.portal.document_module.objectIds()),
                       number_of_document)
-
-    context.reindexObject()
+    document.reindexObject()
     transaction.commit()
 
   def stepUploadAnotherTextFromContributionTool(self, sequence=None, sequence_list=None, **kw):
@@ -590,11 +589,11 @@ class TestIngestion(ERP5TypeTestCase):
     f = makeFileUpload('ANOTHE-en-001.doc')
     self.portal.portal_contributions.newContent(id='two', file=f)
     self.stepTic()
-    context = self.getDocument('two')
-    self.assert_('This is a another very interesting document.' in context.asText())
-    self.assertEquals(context.getReference(), 'ANOTHE')
-    self.assertEquals(context.getVersion(), '001')
-    self.assertEquals(context.getLanguage(), 'en')
+    document = self.getDocument('two')
+    self.assert_('This is a another very interesting document.' in document.asText())
+    self.assertEquals(document.getReference(), 'ANOTHE')
+    self.assertEquals(document.getVersion(), '001')
+    self.assertEquals(document.getLanguage(), 'en')
 
   def stepDiscoverFromFilename(self, sequence=None, sequence_list=None, **kw):
     """
@@ -602,26 +601,26 @@ class TestIngestion(ERP5TypeTestCase):
       discovery and we should have basic coordinates immediately,
       from first stage.
     """
-    context = self.getDocument('one')
+    document = self.getDocument('one')
     file_name = 'TEST-en-002.doc'
     # First make sure the regular expressions work
-    property_dict = context.getPropertyDictFromFileName(file_name)
+    property_dict = document.getPropertyDictFromFileName(file_name)
     self.assertEquals(property_dict['reference'], 'TEST')
     self.assertEquals(property_dict['language'], 'en')
     self.assertEquals(property_dict['version'], '002')
     # Then make sure content discover works
     # XXX - This part must be extended
-    property_dict = context.getPropertyDictFromContent()
+    property_dict = document.getPropertyDictFromContent()
     self.assertEquals(property_dict['title'], 'title')
     self.assertEquals(property_dict['description'], 'comments')
     self.assertEquals(property_dict['subject_list'], ['keywords'])
     # Then make sure metadata discovery works
     f = makeFileUpload(file_name)
-    context.edit(file=f)
-    self.assertEquals(context.getReference(), 'TEST')
-    self.assertEquals(context.getLanguage(), 'en')
-    self.assertEquals(context.getVersion(), '002')
-    self.assertEquals(context.getSourceReference(), file_name)
+    document.edit(file=f)
+    self.assertEquals(document.getReference(), 'TEST')
+    self.assertEquals(document.getLanguage(), 'en')
+    self.assertEquals(document.getVersion(), '002')
+    self.assertEquals(document.getSourceReference(), file_name)
 
   def stepCheckConvertedContent(self, sequence=None, sequence_list=None, **kw):
     """
@@ -630,10 +629,10 @@ class TestIngestion(ERP5TypeTestCase):
       the word "magic"
     """
     self.tic()
-    context = self.getDocument('one')
-    self.assert_(context.hasBaseData())
-    self.assert_('magic' in context.SearchableText())
-    self.assert_('magic' in str(context.asText()))
+    document = self.getDocument('one')
+    self.assert_(document.hasBaseData())
+    self.assert_('magic' in document.SearchableText())
+    self.assert_('magic' in str(document.asText()))
 
   def stepSetSimulatedDiscoveryScript(self, sequence=None, sequence_list=None, **kw):
     """
@@ -650,31 +649,31 @@ class TestIngestion(ERP5TypeTestCase):
       Upload with custom getPropertyDict methods
       check that all metadata are correct
     """
-    context = self.getDocument('one')
+    document = self.getDocument('one')
     f = makeFileUpload('TEST-en-002.doc')
-    context.edit(file=f)
+    document.edit(file=f)
     self.stepTic()
     # Then make sure content discover works
-    property_dict = context.getPropertyDictFromUserLogin()
+    property_dict = document.getPropertyDictFromUserLogin()
     self.assertEquals(property_dict['contributor'], 'person_module/john')
     # reference from filename (the rest was checked some other place)
-    self.assertEquals(context.getReference(), 'TEST')
+    self.assertEquals(document.getReference(), 'TEST')
     # short_title from content
-    self.assertEquals(context.getShortTitle(), 'short')
+    self.assertEquals(document.getShortTitle(), 'short')
     # title from metadata inside the document
-    self.assertEquals(context.getTitle(),  'title')
+    self.assertEquals(document.getTitle(),  'title')
     # contributors from user
-    self.assertEquals(context.getContributor(), 'person_module/john')
+    self.assertEquals(document.getContributor(), 'person_module/john')
 
   def stepEditMetadata(self, sequence=None, sequence_list=None, **kw):
     """
       we change metadata in a document which has ODF
     """
-    context = self.getDocument('one')
+    document = self.getDocument('one')
     kw = dict(title='another title',
               subject='another subject',
               description='another description')
-    context.edit(**kw)
+    document.edit(**kw)
     self.stepTic()
 
   def stepCheckChangedMetadata(self, sequence=None, sequence_list=None, **kw):
@@ -684,8 +683,8 @@ class TestIngestion(ERP5TypeTestCase):
     # XXX actually this is an example of how it should be
     # implemented in OOoDocument class - we don't really
     # need oood for getting/setting metadata...
-    context = self.getDocument('one')
-    newcontent = context.getBaseData()
+    document = self.getDocument('one')
+    newcontent = document.getBaseData()
     cs = cStringIO.StringIO()
     cs.write(str(newcontent))
     z = zipfile.ZipFile(cs)
@@ -788,25 +787,25 @@ class TestIngestion(ERP5TypeTestCase):
     printAndLog('stepExportImage not implemented')
 
   def stepCheckHasSnapshot(self, sequence=None, sequence_list=None, **kw):
-    context = self.getDocument('one')
-    self.failUnless(context.hasSnapshotData())
+    document = self.getDocument('one')
+    self.failUnless(document.hasSnapshotData())
 
   def stepCheckHasNoSnapshot(self, sequence=None, sequence_list=None, **kw):
-    context = self.getDocument('one')
-    self.failIf(context.hasSnapshotData())
+    document = self.getDocument('one')
+    self.failIf(document.hasSnapshotData())
 
   def stepCreateSnapshot(self, sequence=None, sequence_list=None, **kw):
-    context = self.getDocument('one')
-    context.createSnapshot()
+    document = self.getDocument('one')
+    document.createSnapshot()
 
   def stepTryRecreateSnapshot(self, sequence=None, sequence_list=None, **kw):
-    context = self.getDocument('one')
+    document = self.getDocument('one')
     # XXX this always fails, don't know why
-    #self.assertRaises(ConversionError, context.createSnapshot)
+    #self.assertRaises(ConversionError, document.createSnapshot)
 
   def stepDeleteSnapshot(self, sequence=None, sequence_list=None, **kw):
-    context = self.getDocument('one')
-    context.deleteSnapshot()
+    document = self.getDocument('one')
+    document.deleteSnapshot()
 
   def stepCleanUp(self, sequence=None, sequence_list=None, **kw):
     """
@@ -1042,8 +1041,6 @@ class TestIngestion(ERP5TypeTestCase):
                  ,'stepCheckChangedMetadata'
                 ]
     self.playSequence(step_list, quiet)
-
-
 
   #    Ingest various formats (xls, doc, sxi, ppt etc)
   #    Verify that they are successfully converted
