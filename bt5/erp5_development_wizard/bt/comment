@@ -1,0 +1,8 @@
+TODO:
+- code review
+- separation of code and code templates
+- naming cleanup
+- merge into erp5_forge
+- rename skin to erp5_development_wizard
+- make sure actions take into account current context (ex. module, portal type)
+- add a concept of "Development WIzard" in the user interface to prevent explosion of menus

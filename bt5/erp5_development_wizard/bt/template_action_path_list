@@ -1,0 +1,8 @@
+Gadget Tool | gadget_wizard
+Web Section | new_theme_wizard
+Web Site | new_theme_wizard
+portal_actions | create_erp5_report
+portal_actions | gadget_tool
+portal_actions | new_web_view_wizard
+portal_actions | python_shell
+portal_actions | sql_shell
