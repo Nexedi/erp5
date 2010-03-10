@@ -61,8 +61,15 @@ def updateCodeWithMainContent(self, html_code, div_class):
       </div>      
    """ % (div_class)
    document = lxml.html.fromstring(html_code)
-   element = document.find_class(div_class)[0]
-   element.getparent().replace(element, lxml.html.fromstring(main_content))
+   element_list = document.find_class(div_class)
+   if len(element_list) == 0:
+     raise ValueError("It was not possible to find div with class=%s" % (div_class))
+
+   element = element_list[0]
+   new_element = lxml.html.fromstring(main_content)
+   if element.get("id") is not None:
+     new_element.set('id', element.get('id'))
+   element.getparent().replace(element, new_element)
    new_html_code = lxml.html.tostring(document, pretty_print=True)
    return new_html_code.replace("__REPLACE_MAIN_CONTENT__", 
-                                '<tal:block metal:define-slot="main"/>') 
+                                '<tal:block metal:define-slot="main"/>')
