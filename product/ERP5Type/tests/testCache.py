@@ -32,6 +32,7 @@ import unittest
 import time
 import os
 
+from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.CachePlugins.RamCache import RamCache
 from Products.ERP5Type.CachePlugins.DistributedRamCache import\
                                               DistributedRamCache
@@ -42,13 +43,13 @@ from Products.ERP5Type.Tool.CacheTool import CacheTool
 class Foo:
   my_field = (1,2,3,4,5)
 
-class TestRamCache(unittest.TestCase):
+class TestRamCache(ERP5TypeTestCase):
   quiet = 1
 
   def getTitle(self):
     return "Cache"
 
-  def setUp(self):
+  def afterSetUp(self):
     self.cache_plugins = (RamCache(),
                           DistributedRamCache({'server': '127.0.0.1:11211',
                                                'debug_level': 7,
@@ -198,6 +199,3 @@ class TestRamCache(unittest.TestCase):
       values.append(my_text)
       values.append(Foo())
     return values
-
-if __name__ == '__main__':
-  unittest.main()

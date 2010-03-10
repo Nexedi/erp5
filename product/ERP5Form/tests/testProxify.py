@@ -26,40 +26,19 @@
 #
 ##############################################################################
 
-import unittest
-
-# Make it possible to use Globals.get_request
-class DummyRequest(dict):
-  def set(self, k, v):
-    self[k] = v
-
-global request
-request = DummyRequest()
-
-def get_request():
-  global request
-  return request
-
-# apply patch (before it's imported by other modules)
-from Products.ERP5Type import Globals
-Globals.get_request = get_request
-
+from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.Formulator.TALESField import TALESMethod
 from Products.ERP5Type.Core.Folder import Folder
 from Products.ERP5Form.Form import ERP5Form
 from Products.ERP5Form.ProxyField import purgeFieldValueCache
 
-# install ERP5Form and load patches
-from Testing import ZopeTestCase
-ZopeTestCase.installProduct('ERP5Form')
 
-
-class TestProxify(unittest.TestCase):
+class TestProxify(ERP5TypeTestCase):
 
   def getTitle(self):
     return "Proxify"
 
-  def setUp(self):
+  def afterSetUp(self):
     # base field library
     self.container = Folder('container').__of__(Folder('root'))
     self.container._setObject('Base_view',
@@ -107,9 +86,6 @@ class TestProxify(unittest.TestCase):
     person_view.my_career_subordination_title.values['proxy_listbox_ids'] = [('OrganisationModule_viewOrganisationList/listbox', 'Organisation')]
     person_view.my_custom_description.values['editable'] = 0
     person_view.my_another_description.values['editable'] = 0
-
-    global request
-    request = DummyRequest()
 
   def test_single_level_proxify(self):
     # StringField
@@ -235,9 +211,3 @@ class TestProxify(unittest.TestCase):
     self.assertEqual(field.meta_type, 'RelationStringField')
     self.assertEqual(field.get_value('title'), 'Organisation')
     self.assertEqual(field.get_value('proxy_listbox_ids'), [('OrganisationModule_viewOrganisationList/listbox', 'Organisation')])
-
-
-def test_suite():
-  suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestProxify))
-  return suite
