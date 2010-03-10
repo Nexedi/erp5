@@ -244,6 +244,16 @@ def _getConnectionStringDict():
                               erp5_sql_transactionless_connection_string
   return connection_string_dict
 
+def _getConversionServerDict():
+  """ Returns a dict with hostname and port for Conversion Server (Oood)
+  """
+  conversion_server_hostname = os.environ.get('conversion_server_hostname', 
+                                              'localhost')
+  conversion_server_port = os.environ.get('conversion_server_port',
+                                          '8008')
+  return dict(hostname=conversion_server_hostname, 
+              port=int(conversion_server_port))
+
 
 def profile_if_environ(environment_var_name):
     if int(os.environ.get(environment_var_name, 0)):
@@ -518,6 +528,7 @@ class ERP5TypeTestCase(backportUnittest.TestCase, PortalTestCase):
       global current_app
       current_app = self.app
       self._updateConnectionStrings()
+      self._updateConversionServerConfiguration()
 
     def afterSetUp(self):
       '''Called after setUp() has completed. This is
@@ -550,6 +561,14 @@ class ERP5TypeTestCase(backportUnittest.TestCase, PortalTestCase):
                                     _getConnectionStringDict().items():
         connection_name = connection_string_name.replace('_string', '')
         getattr(portal, connection_name).edit('', connection_string)
+
+    def _updateConversionServerConfiguration(self):
+      """Update conversion server (Oood) at default site preferences.
+      """
+      conversion_dict = _getConversionServerDict()
+      preference = self.portal.portal_preferences.default_site_preference
+      preference.setPreferredOoodocServerAddress(conversion_dict['hostname'])
+      preference.setPreferredOoodocServerPortNumber(conversion_dict['port'])
 
     def _recreateCatalog(self, quiet=0):
       """Clear activities and catalog and recatalog everything.

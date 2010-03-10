@@ -79,6 +79,17 @@ Options:
                              for performance reasons. Provide list of documents
                              (delimited with comas) for which we want to force
                              indexing. This can only be for now 'portal_types'
+  
+  --conversion_server_hostname=STRING
+                            Hostname used to connect to conversion server (Oood), 
+			    this value will stored at default preference. By default 
+			    localhost is used. 
+
+  --conversion_server_port=STRING
+                            Port number used to connect to conversion server
+			    (Oood), the value will be stored at default preference. 
+			    By default 8008 is used.
+
 """
 
 def getUnitTestFile():
@@ -490,6 +501,8 @@ def main():
         "bt5_path=",
         "recreate_catalog=", "erp5_sql_connection_string=",
         "cmf_activity_sql_connection_string=",
+        "conversion_server_port=", 
+        "conversion_server_hostname=",
         "erp5_catalog_storage=",
         "save",
         "load",
@@ -557,6 +570,10 @@ def main():
       os.environ["update_business_templates"] = "1"
     elif opt == "--update_business_templates":
       os.environ["update_business_templates"] = "1"
+    elif opt == "--conversion_server_hostname":
+      os.environ["conversion_server_hostname"] = arg
+    elif opt == "--conversion_server_port":
+      os.environ["conversion_server_port"] = arg
 
   test_list = args
   if not test_list:
