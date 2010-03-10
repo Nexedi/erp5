@@ -55,6 +55,8 @@
             <key> <string>_body</string> </key>
             <value> <string>transaction = context\n
 \n
+transaction.Delivery_generateReference()\n
+\n
 if kw.get(\'created_by_builder\', 0): \n
   return\n
 \n
@@ -65,7 +67,7 @@ transaction.newContent(portal_type=\'Accounting Transaction Line\',\n
 transaction.newContent(portal_type=\'Accounting Transaction Line\',\n
                        id=\'bank\', )\n
 \n
-context.AccountingTransaction_initFromPreferences()\n
+transaction.AccountingTransaction_initFromPreferences()\n
 </string> </value>
         </item>
         <item>

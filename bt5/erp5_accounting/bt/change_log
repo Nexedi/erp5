@@ -1,3 +1,6 @@
+2010-03-10 yusuke
+* Update init scripts of transactions to make reference.
+
 2010-03-08 tatuya
 * Make the quantity divergence tester of payment simulation rule set the decimal alignment as well as trade model rule so that the rule will allow the rounding error when calculation.
 

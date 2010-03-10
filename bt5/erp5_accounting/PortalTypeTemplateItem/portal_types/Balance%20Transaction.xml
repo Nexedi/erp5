@@ -37,8 +37,8 @@
             <key> <string>group_list</string> </key>
             <value>
               <tuple>
-                <string>delivery</string>
                 <string>accounting_transaction</string>
+                <string>delivery</string>
               </tuple>
             </value>
         </item>
@@ -48,11 +48,13 @@
         </item>
         <item>
             <key> <string>init_script</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Delivery_generateReference</string> </value>
         </item>
         <item>
             <key> <string>permission</string> </key>
-            <value> <string></string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>title</string> </key>
