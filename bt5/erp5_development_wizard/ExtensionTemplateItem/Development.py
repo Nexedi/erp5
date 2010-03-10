@@ -57,10 +57,12 @@ import lxml
 def updateCodeWithMainContent(self, html_code, div_class):
    main_content = """
        <div class="%s">
-        <tal:block metal:define-slot="main"/>
+        __REPLACE_MAIN_CONTENT__
       </div>      
    """ % (div_class)
    document = lxml.html.fromstring(html_code)
    element = document.find_class(div_class)[0]
    element.getparent().replace(element, lxml.html.fromstring(main_content))
-   return lxml.html.tostring(document, pretty_print=True)
+   new_html_code = lxml.html.tostring(document, pretty_print=True)
+   return new_html_code.replace("__REPLACE_MAIN_CONTENT__", 
+                                '<tal:block metal:define-slot="main"/>') 

@@ -61,11 +61,12 @@ skin_folder = getattr(context.portal_skins, skin_folder_id)\n
 template = context.portal_skins.erp5_development.template_theme_web_main\n
 template_source = template.document_src()\n
 template_body_top, template_body_bottom = template_source.split("<!-- SPLIT -->")\n
-new_code_0 = html_text.replace("<body>", template_body_top)\n
+new_code = context.ERP5Site_updateCodeWithMainContent(html_text, main_div_class_name)\n
+new_code_0 = new_code.replace("<body>", template_body_top)\n
 new_code_1 = new_code_0.replace("</body>", template_body_bottom)\n
 new_code_2 = new_code_1.replace("\'__REPLACE_CSS__\'", css_tales)\n
-new_code_3 = new_code_2.replace("\'__REPLACE_JS__\'", js_tales)\n
-final_code = context.ERP5Site_updateCodeWithMainContent(new_code_3, main_div_class_name)\n
+final_code = new_code_2.replace("\'__REPLACE_JS__\'", js_tales)\n
+\n
 \n
 skin_folder.manage_addProduct[\'PageTemplates\'].manage_addPageTemplate(main_template_id, "Default Template")\n
 getattr(skin_folder, main_template_id).write(final_code)\n
@@ -124,10 +125,10 @@ return "OK"\n
                             <string>_getiter_</string>
                             <string>template_body_top</string>
                             <string>template_body_bottom</string>
+                            <string>new_code</string>
                             <string>new_code_0</string>
                             <string>new_code_1</string>
                             <string>new_code_2</string>
-                            <string>new_code_3</string>
                             <string>final_code</string>
                             <string>_getitem_</string>
                           </tuple>
