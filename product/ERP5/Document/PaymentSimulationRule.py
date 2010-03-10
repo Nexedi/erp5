@@ -104,6 +104,7 @@ class PaymentSimulationRule(Rule, PredicateMatrix):
         start_date = aggregated_ammount.getStartDate()
         stop_date = aggregated_ammount.getStopDate()
         quantity = aggregated_ammount.getQuantity()
+        payment_mode = payment_condition.getPaymentMode()
 
         # one for payable
         prevision_line = kw.copy()
@@ -112,6 +113,7 @@ class PaymentSimulationRule(Rule, PredicateMatrix):
           stop_date=stop_date,
           source=input_movement.getSource(),
           destination=input_movement.getDestination(),
+          payment_mode=payment_mode,
           quantity=-quantity
           )
         prevision_list.append(prevision_line)
@@ -125,6 +127,7 @@ class PaymentSimulationRule(Rule, PredicateMatrix):
           stop_date=stop_date,
           source=payment_rule_cell_line.getSource(),
           destination=payment_rule_cell_line.getDestination(),
+          payment_mode=payment_mode,
           quantity=quantity
           )
         prevision_list.append(prevision_line)
