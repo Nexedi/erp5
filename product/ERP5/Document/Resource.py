@@ -897,11 +897,12 @@ class Resource(XMLMatrix, Variated):
 
     # Unit conversion
     security.declareProtected(Permissions.AccessContentsInformation, 'convertQuantity')
-    def convertQuantity(self, quantity, from_unit, to_unit, variation_list=()):
+    def convertQuantity(self, quantity, from_unit, to_unit, variation_list=(),
+      transformed_resource=None, transformed_variation_list=()):
       # 'variation_list' parameter may be deprecated:
       # cf Measure.getConvertedQuantity
       try:
-        return quantity * self._getConversionRatio(from_unit, variation_list) \
+        result = quantity * self._getConversionRatio(from_unit, variation_list)\
                         / self._getConversionRatio(to_unit, variation_list)
       except (ArithmeticError, AttributeError, LookupError, TypeError), error:
         # For compatibility, we only log the error and return None.
@@ -909,6 +910,28 @@ class Resource(XMLMatrix, Variated):
         LOG('Resource.convertQuantity', WARNING,
             'could not convert quantity for %s (%r)'
             % (self.getRelativeUrl(), error))
+        return None
+
+      if transformed_resource is not None:
+        variation_text = '\n'.join(variation_list)
+        transformed_variation_text = '\n'.join(transformed_variation_list)
+        transformed_uid = transformed_resource.getUid()
+
+        query = self.zGetTransformedResourceConversionRatio(\
+                    ui = self.getUid(),
+                    variation_text = variation_text,
+                    transformed_uid = transformed_uid,
+                    transformed_variation_text=transformed_variation_text,
+                  )
+        if len(query) == 0:
+          LOG('Resource.convertQuantity', WARNING,
+              'could not get Transformation associated to %s -> %s'
+              % (transformed_resource.getRelativeUrl(),
+                self.getRelativeUrl()))
+          return None
+        result *= query[0].quantity
+
+      return result
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getMeasureList')
