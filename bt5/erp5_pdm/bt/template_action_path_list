@@ -24,6 +24,7 @@ Internal Supply | view_profile
 Measure | view
 Product Individual Variation | view
 Product Module | converted_inventory_report
+Product Module | transformed_inventory_report
 Product Module | view
 Product | internal_price_view
 Product | inventory_chart
@@ -32,6 +33,7 @@ Product | jump_to_related_supply_line
 Product | jump_to_related_transformation
 Product | purchase_price_view
 Product | sale_price_view
+Product | transformed_resource_inventory
 Product | view
 Product | view_measure
 Product | view_quantities

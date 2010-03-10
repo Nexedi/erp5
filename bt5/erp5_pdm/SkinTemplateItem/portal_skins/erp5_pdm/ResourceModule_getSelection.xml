@@ -121,6 +121,10 @@ class ResourceSelection:\n
         (display_none_category=0, local_sort_id=\'quantity\'))\n
     return common_quantity_unit_item_list\n
 \n
+  def getCommonTransformedResourceItemList(self):\n
+   return [(r.title, r.relative_url) for r in \\\n
+     context.Resource_zGetTransformedResourceList(resource_uid=self.getUidList())]\n
+\n
 self = ResourceSelection()\n
 self.context = context\n
 self.portal = context.getPortalObject()\n
@@ -130,6 +134,7 @@ if not uid_list:\n
   raise ValueError(\'No resource selected.\')\n
 self.getUidList = lambda: uid_list\n
 \n
+\n
 return self\n
 </string> </value>
         </item>
@@ -138,6 +143,10 @@ return self\n
             <value>
               <none/>
             </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
