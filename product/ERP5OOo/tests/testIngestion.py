@@ -895,19 +895,41 @@ class TestIngestion(ERP5TypeTestCase):
     f = open(makeFilePath('email_from.txt'))
     document = self.receiveEmail(f.read())
     self.stepTic()
-  
-  def stepVerifyEmailedDocumentsInitialContribution(self, sequence=None, sequence_list=None, **kw):
+
+  def stepReceiveMultipleAttachmentsEmail(self, sequence=None, sequence_list=None, **kw):
     """
-      Find the newly mailed-in document and check its properties.
+      Email was sent in by someone to ERP5.
     """
-    attachment_list, ingested_document = self.verifyEmailedDocuments()
+    f = open(makeFilePath('email_multiple_attachments.eml'))
+    document = self.receiveEmail(f.read())
+    self.stepTic()
+
+  def stepVerifyEmailedMultipleDocumentsInitialContribution(self, sequence=None, sequence_list=None, **kw):
+    """
+      Verify contributed for initial time multiple document per email.
+    """
+    attachment_list, ingested_document = self.verifyEmailedMultipleDocuments()
+    self.assertEquals('1', ingested_document.getRevision())
+    
+  def stepVerifyEmailedMultipleDocumentsMultipleContribution(self, sequence=None, sequence_list=None, **kw):
+    """
+      Verify contributed for initial time multiple document per email.
+    """
+    attachment_list, ingested_document = self.verifyEmailedMultipleDocuments()
+    self.assertTrue(ingested_document.getRevision() > '1')
+
+  def stepVerifyEmailedDocumentInitialContribution(self, sequence=None, sequence_list=None, **kw):
+    """
+      Verify contributed for initial time document per email.
+    """
+    attachment_list, ingested_document = self.verifyEmailedDocument()
     self.assertEquals('1', ingested_document.getRevision())
 
-  def stepVerifyEmailedDocumentsMultipleContribution(self, sequence=None, sequence_list=None, **kw):
+  def stepVerifyEmailedDocumentMultipleContribution(self, sequence=None, sequence_list=None, **kw):
     """
-      Find the newly mailed-in document and check its properties.
+      Verify contributed for multiple times document per email.
     """
-    attachment_list, ingested_document = self.verifyEmailedDocuments()
+    attachment_list, ingested_document = self.verifyEmailedDocument()
     self.assertTrue(ingested_document.getRevision() > '1')
 
   def playSequence(self, step_list, quiet):
@@ -916,9 +938,42 @@ class TestIngestion(ERP5TypeTestCase):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)
 
-  def verifyEmailedDocuments(self):
+  def verifyEmailedMultipleDocuments(self):
     """
-      Basic checks for verifying newly mailed-in document
+      Basic checks for verifying a mailed-in multiple documents.
+    """
+    # First, check document ingestion message
+    ingestion_message = self.portal_catalog.getResultValue(
+                                 portal_type='Document Ingestion Message',
+                                 title='Multiple Attachments',
+                                 source_title='John Doe')
+    self.assertTrue(ingestion_message is not None)
+    # Second, check attachments to ingested message
+    attachment_list = ingestion_message.getAggregateValueList()
+    self.assertEqual(len(attachment_list), 5)
+    extension_reference_portal_type_map = {'DOC': 'Text', 
+                                           'JPG': 'Image',
+                                           'ODT': 'Text', 
+                                           'PDF': 'PDF',
+                                           'PPT': 'Presentation'}
+    for sub_reference, portal_type in extension_reference_portal_type_map.items():
+      ingested_document = self.portal_catalog.getResultValue(
+                               portal_type=portal_type,
+                               reference='TEST%s' %sub_reference,
+                               language='en',
+                               version='002')
+      self.assertNotEquals(None, ingested_document)
+      if portal_type not in NON_PROCESSABLE_PORTAL_TYPE_LIST:
+        self.assertEquals('converted', ingested_document.getExternalProcessingState())
+      else:
+        self.assertEquals('uploaded', ingested_document.getExternalProcessingState())
+      # check aggregate between 'Document Ingestion Message' and ingested document
+      self.assertTrue(ingested_document in attachment_list)
+    return attachment_list, ingested_document
+    
+  def verifyEmailedDocument(self):
+    """
+      Basic checks for verifying a mailed-in document
     """
     # First, check document ingestion message
     ingestion_message = self.portal_catalog.getResultValue(
@@ -1298,10 +1353,16 @@ class TestIngestion(ERP5TypeTestCase):
                  ,'stepCreatePerson'
                  # now a known sender
                  ,'stepReceiveEmail'
-                 ,'stepVerifyEmailedDocumentsInitialContribution'
+                 ,'stepVerifyEmailedDocumentInitialContribution'
                  # send one more time
                  ,'stepReceiveEmail'
-                 ,'stepVerifyEmailedDocumentsMultipleContribution'
+                 ,'stepVerifyEmailedDocumentMultipleContribution'
+                 # send email with multiple attachments
+                 ,'stepReceiveMultipleAttachmentsEmail'
+                 ,'stepVerifyEmailedMultipleDocumentsInitialContribution'
+                 # send email with multiple attachments one more time
+                 ,'stepReceiveMultipleAttachmentsEmail'
+                 ,'stepVerifyEmailedMultipleDocumentsMultipleContribution'
                 ]
     self.playSequence(step_list, quiet)
 
