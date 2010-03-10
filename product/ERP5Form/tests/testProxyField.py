@@ -54,6 +54,7 @@ class TestProxyField(ERP5TypeTestCase):
     field library
     """
     portal_skins = self.getSkinsTool()
+    my_title_value = 'Generic Title'
     # Create an empty field library
     portal_skins.manage_addProduct['OFSP'].manage_addFolder('customized_geek')
     skin_folder = portal_skins._getOb('customized_geek')
@@ -69,7 +70,7 @@ class TestProxyField(ERP5TypeTestCase):
         'Base_viewGeekFieldLibrary',
         'View')
     form = skin_folder._getOb('Base_viewGeekFieldLibrary', None)
-    form.manage_addField('my_title', 'Generic Title', 'StringField')
+    form.manage_addField('my_title', my_title_value, 'StringField')
 
     # Custom field library has to have an higher priority
     selection = portal_skins.getSkinPath('View')
@@ -85,11 +86,17 @@ class TestProxyField(ERP5TypeTestCase):
                                                           'View')
     form = skin_folder._getOb('Base_viewGeek', None)
     form.manage_addField('my_title', 'Title', 'ProxyField')
-    field = getattr(form, 'my_title')
+    field = form._getOb('my_title')
     field.manage_edit_xmlrpc(dict(
       form_id='Base_viewGeekFieldLibrary', field_id='my_title'))
 
-    self.assertEquals('Generic Title', field.get_value('title'))
+    self.assertEquals(my_title_value, field.get_value('title'))
+
+    # Reveal a bug, causes infinite loop when ProxyField.getTemplateField
+    # returns the proxyfield itself.
+    # This is caused by the acquisition context
+    self.assertRaises(KeyError, self.portal.portal_skins.custom.Base_viewGeek.\
+        my_title.Base_viewGeekFieldLibrary.my_title.get_value, 'ANYTHING_WHICH_RAISES_KEY_ERROR')
 
   def testPathOfTemplateField(self):
     """
@@ -187,3 +194,63 @@ class TestProxyField(ERP5TypeTestCase):
     self.assertEquals('Generic Title', field.get_value('title'))
     self.changeSkin('CustomizedView')
     self.assertEquals('Customized Title', field.get_value('title'))
+
+  def testEmptySurchargedFieldLibrary_acquisition(self):
+    """
+    This test checks that it is not required to duplicate all fields in a custom
+    field library, and field is well return in portal acquisition context
+    """
+    portal_skins = self.getSkinsTool()
+    my_title_value = 'Generic Title'
+    # Create an empty field library
+    portal_skins.manage_addProduct['OFSP'].manage_addFolder('customized_geek')
+    skin_folder = portal_skins._getOb('customized_geek')
+    skin_folder.manage_addProduct['ERP5Form'].addERP5Form(
+        'Base_viewGeekFieldLibrary',
+        'View')
+    form = skin_folder._getOb('Base_viewGeekFieldLibrary', None)
+
+    # Create the default field library with a template field
+    portal_skins.manage_addProduct['OFSP'].manage_addFolder('erp5_geek')
+    skin_folder = portal_skins._getOb('erp5_geek')
+    skin_folder.manage_addProduct['ERP5Form'].addERP5Form(
+        'Base_viewGeekFieldLibrary',
+        'View')
+    form = skin_folder._getOb('Base_viewGeekFieldLibrary', None)
+    form.manage_addField('my_title', my_title_value, 'StringField')
+
+    # Custom field library has to have an higher priority
+    selection = portal_skins.getSkinPath('View')
+    selection = selection.split(',')
+    selection.append('customized_geek')
+    selection.append('erp5_geek')
+    portal_skins.manage_skinLayers(skinpath=tuple(selection),
+                                skinname='View', add_skin=1)
+    portal_skins.getPortalObject().changeSkin(None)
+
+    skin_folder = portal_skins._getOb('custom')
+    skin_folder.manage_addProduct['ERP5Form'].addERP5Form('Base_viewGeek',
+                                                          'View')
+    form = skin_folder._getOb('Base_viewGeek', None)
+    form.manage_addField('my_title', 'Title', 'ProxyField')
+    field = form._getOb('my_title')
+    field.manage_edit_xmlrpc(dict(
+      form_id='Base_viewGeekFieldLibrary', field_id='my_title'))
+
+    # Check that acquisition wrapper fits
+    # restricted environment requirements.
+    # If object returned is not wrapped in portal context,
+    # current user is not Found in current context
+    # then Unauthorized Exception is raised.
+    python_script_id = "ERP5Site_testAccessProxyFieldProperty"
+    python_script_parameter = "proxy_field"
+    python_script_body = """
+print proxy_field.getRecursiveTemplateField().meta_type
+return printed
+"""
+    skin_folder.manage_addProduct['PythonScripts'].manage_addPythonScript(
+                                                id=python_script_id)
+    python_script_object = skin_folder._getOb(python_script_id)
+    python_script_object.ZPythonScript_edit(python_script_parameter,
+                                            python_script_body)
+    python_script_object(field)
