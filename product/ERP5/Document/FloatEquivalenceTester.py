@@ -33,16 +33,16 @@ from AccessControl import ClassSecurityInfo
 
 from Products.ERP5.Document.Predicate import Predicate
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
-from Products.ERP5.mixin.divergence_tester import DivergenceTesterMixin
+from Products.ERP5.mixin.equivalence_tester import EquivalenceTesterMixin
 
-class FloatDivergenceTester(Predicate, DivergenceTesterMixin):
+class FloatEquivalenceTester(Predicate, EquivalenceTesterMixin):
   """
   The purpose of this divergence tester is to check the
   consistency between delivery movement and simulation movement
   for some specific properties.
   """
-  meta_type = 'ERP5 Float Divergence Tester'
-  portal_type = 'Float Divergence Tester'
+  meta_type = 'ERP5 Float Equivalence Tester'
+  portal_type = 'Float Equivalence Tester'
   add_permission = Permissions.AddPortalContent
 
   # Declarative security
@@ -54,12 +54,12 @@ class FloatDivergenceTester(Predicate, DivergenceTesterMixin):
                       , PropertySheet.XMLObject
                       , PropertySheet.CategoryCore
                       , PropertySheet.DublinCore
-                      , PropertySheet.DivergenceTester
+                      , PropertySheet.EquivalenceTester
                       , PropertySheet.SolverSelection
                      )
 
   # Declarative interfaces
-  zope.interface.implements( interfaces.IDivergenceTester, )
+  zope.interface.implements( interfaces.IEquivalenceTester, )
 
   def _compare(self, prevision_movement, decision_movement):
     """

@@ -27,7 +27,7 @@
         </item>
         <item>
             <key> <string>factory</string> </key>
-            <value> <string>addVariationDivergenceTester</string> </value>
+            <value> <string>addVariationEquivalenceTester</string> </value>
         </item>
         <item>
             <key> <string>filter_content_types</string> </key>

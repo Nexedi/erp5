@@ -27,7 +27,7 @@
         </item>
         <item>
             <key> <string>factory</string> </key>
-            <value> <string>addFloatDivergenceTester</string> </value>
+            <value> <string>addFloatEquivalenceTester</string> </value>
         </item>
         <item>
             <key> <string>filter_content_types</string> </key>

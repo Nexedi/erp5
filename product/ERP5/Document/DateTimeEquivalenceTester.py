@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2008-2009 Nexedi SA and Contributors. All Rights Reserved.
-#                    Rafael Monnerat <rafael@nexedi.com>
-#                    Jean-Paul Smets <jp@nexedi.com>
+# Copyright (c) 2009 Nexedi SA and Contributors. All Rights Reserved.
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsibility of assessing all potential
@@ -24,25 +22,26 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 #
 ##############################################################################
 
 import zope.interface
 from AccessControl import ClassSecurityInfo
+from DateTime import DateTime
 
 from Products.ERP5.Document.Predicate import Predicate
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
-from Products.ERP5.mixin.divergence_tester import DivergenceTesterMixin
+from Products.ERP5.mixin.equivalence_tester import EquivalenceTesterMixin
 
-class StringDivergenceTester(Predicate, DivergenceTesterMixin):
+class DateTimeEquivalenceTester(Predicate, EquivalenceTesterMixin):
   """
   The purpose of this divergence tester is to check the
   consistency between delivery movement and simulation movement
-  for a specific property.
+  for some specific properties.
   """
-  meta_type = 'ERP5 String Divergence Tester'
-  portal_type = 'String Divergence Tester'
+  meta_type = 'ERP5 DateTime Equivalence Tester'
+  portal_type = 'DateTime Equivalence Tester'
   add_permission = Permissions.AddPortalContent
 
   # Declarative security
@@ -50,17 +49,17 @@ class StringDivergenceTester(Predicate, DivergenceTesterMixin):
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
   # Declarative properties
-  property_sheets = (   PropertySheet.Base
-                      , PropertySheet.XMLObject
-                      , PropertySheet.CategoryCore
-                      , PropertySheet.DublinCore
-                      , PropertySheet.DivergenceTester
-                      , PropertySheet.SolverSelection
-                     )
+  property_sheets = (
+    PropertySheet.Base,
+    PropertySheet.XMLObject,
+    PropertySheet.CategoryCore,
+    PropertySheet.DublinCore,
+    PropertySheet.EquivalenceTester,
+    PropertySheet.SolverSelection
+    )
 
   # Declarative interfaces
-  zope.interface.implements( interfaces.IDivergenceTester, )
-
+  zope.interface.implements(interfaces.IEquivalenceTester,)
 
   def _compare(self, prevision_movement, decision_movement):
     """
@@ -72,17 +71,30 @@ class StringDivergenceTester(Predicate, DivergenceTesterMixin):
                lambda x:False)(tested_property):
       decision_value = decision_movement.getRecordedProperty(tested_property)
     else:
-      decision_value = decision_movement.getProperty(tested_property)
-    prevision_value = prevision_movement.getProperty(tested_property)
+      decision_value = decision_movement.getProperty(tested_property) or DateTime(0)
+    prevision_value = prevision_movement.getProperty(tested_property) or DateTime(0)
 
-    # XXX do we have configurable parameter for this divergence tester ?
-    # like ambiguity...
-    if decision_value != prevision_value:
+    delta = decision_value - prevision_value
+    # XXX we should use appropriate property sheets and getter methods
+    # for these properties.
+    absolute_tolerance_min = self.getProperty('quantity_range_min') or \
+                             self.getProperty('quantity')
+    if absolute_tolerance_min is not None and \
+       delta < absolute_tolerance_min:
       return (
         prevision_value, decision_value,
-        'The value of ${property_name} is different between decision and prevision.',
-        dict(property_name=tested_property))
-    return None
+        'The difference of ${property_name} between decision and prevision is less than ${value}.',
+        dict(property_name=tested_property,
+             value=absolute_tolerance_min))
+    absolute_tolerance_max = self.getProperty('quantity_range_max') or \
+                             self.getProperty('quantity')
+    if absolute_tolerance_max is not None and \
+       delta > absolute_tolerance_max:
+      return (
+        prevision_value, decision_value,
+        'The difference of ${property_name} between decision and prevision is larger than ${value}.',
+        dict(property_name=tested_property,
+             value=absolute_tolerance_max))
 
   def getUpdatablePropertyDict(self, prevision_movement, decision_movement):
     """

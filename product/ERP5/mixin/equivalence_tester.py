@@ -31,20 +31,20 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, interfaces
 from Products.ERP5Type.DivergenceMessage import DivergenceMessage
 
-class DivergenceTesterMixin:
+class EquivalenceTesterMixin:
   """
   Provides generic methods and helper methods to implement
-  IDivergenceTester
+  IEquivalenceTester
   """
   # Declarative security
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
   # Declarative interfaces
-  zope.interface.implements(interfaces.IDivergenceTester,)
+  zope.interface.implements(interfaces.IEquivalenceTester,)
 
-  # Implementation of IDivergenceTester
-  def testDivergence(self, simulation_movement):
+  # Implementation of IEquivalenceTester
+  def testEquivalence(self, simulation_movement):
     """
     Tests if simulation_movement is divergent. Returns False (0)
     or True (1).
@@ -59,7 +59,7 @@ class DivergenceTesterMixin:
   def explain(self, simulation_movement):
     """
     Returns a single message which explain the nature of
-    the divergence of simulation_movement with its related
+    the equivalence of simulation_movement with its related
     delivery movement.
 
     If decision_movement is a simulation movement, use
@@ -175,7 +175,7 @@ class DivergenceTesterMixin:
 
   def accept(self, simulation_movement):
     """
-    Copies the properties handled by the divergence tester
+    Copies the properties handled by the equivalence tester
     from the related delivery movement to simulation_movement.
 
     NOTE: the future existence of this method is still unknown
@@ -186,7 +186,7 @@ class DivergenceTesterMixin:
 
   def adopt(self, simulation_movement):
     """
-    Copies the properties handled by the divergence tester
+    Copies the properties handled by the equivalence tester
     from simulation_movement to the related delivery movement
 
     NOTE: the future existence of this method is still unknown

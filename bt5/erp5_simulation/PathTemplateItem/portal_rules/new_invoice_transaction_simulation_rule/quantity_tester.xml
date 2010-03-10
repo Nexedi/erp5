@@ -3,7 +3,7 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <global name="NetConvertedQuantityDivergenceTester" module="Products.ERP5Type.Document.NetConvertedQuantityDivergenceTester"/>
+        <global name="NetConvertedQuantityEquivalenceTester" module="Products.ERP5Type.Document.NetConvertedQuantityEquivalenceTester"/>
         <tuple/>
       </tuple>
     </pickle>

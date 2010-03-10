@@ -3,7 +3,7 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <global name="VariationDivergenceTester" module="Products.ERP5Type.Document.VariationDivergenceTester"/>
+        <global name="VariationEquivalenceTester" module="Products.ERP5Type.Document.VariationEquivalenceTester"/>
         <tuple/>
       </tuple>
     </pickle>

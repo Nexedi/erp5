@@ -3,7 +3,7 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <global name="CategoryMembershipDivergenceTester" module="Products.ERP5Type.Document.CategoryMembershipDivergenceTester"/>
+        <global name="CategoryMembershipEquivalenceTester" module="Products.ERP5Type.Document.CategoryMembershipEquivalenceTester"/>
         <tuple/>
       </tuple>
     </pickle>

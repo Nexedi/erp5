@@ -3,7 +3,7 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <global name="FloatDivergenceTester" module="Products.ERP5Type.Document.FloatDivergenceTester"/>
+        <global name="FloatEquivalenceTester" module="Products.ERP5Type.Document.FloatEquivalenceTester"/>
         <tuple/>
       </tuple>
     </pickle>

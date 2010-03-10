@@ -28,17 +28,17 @@
 
 from AccessControl import ClassSecurityInfo
 
-from Products.ERP5.Document.FloatDivergenceTester import FloatDivergenceTester
+from Products.ERP5.Document.FloatEquivalenceTester import FloatEquivalenceTester
 from Products.ERP5Type import Permissions
 
-class NetConvertedQuantityDivergenceTester(FloatDivergenceTester):
+class NetConvertedQuantityEquivalenceTester(FloatEquivalenceTester):
   """
   The purpose of this divergence tester is to check the
   consistency between delivery movement and simulation movement
   for some specific properties.
   """
-  meta_type = 'ERP5 Net Converted Quantity Divergence Tester'
-  portal_type = 'Net Converted Quantity Divergence Tester'
+  meta_type = 'ERP5 Net Converted Quantity Equivalence Tester'
+  portal_type = 'Net Converted Quantity Equivalence Tester'
   add_permission = Permissions.AddPortalContent
 
   # Declarative security

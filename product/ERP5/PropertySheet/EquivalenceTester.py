@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2006-2008 Nexedi SA and Contributors. All Rights Reserved.
-#               Rafael Monnerat <rafael@nexedi.com>
+# Copyright (c) 2010 Nexedi SA and Contributors. All Rights Reserved.
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsibility of assessing all potential
@@ -28,9 +27,9 @@
 ##############################################################################
 
 
-class DivergenceTester:
+class EquivalenceTester:
   """
-    Divergence Tester are use for the divergence testers.
+  Equivalence Tester are used for the equivalence testers.
   """
 
   _properties = (
@@ -39,4 +38,19 @@ class DivergenceTester:
        'type'        : 'lines',
        'default'     : (),
        'mode'        : 'w' },
+    {  'id'          : 'divergence_provider',
+       'description' : 'Defines whether a equivalence tester acts as a divergence provider.',
+       'type'        : 'boolean',
+       'default'     : 1,
+       'mode'        : 'rw' },
+    {  'id'          : 'matching_provider',
+       'description' : 'Defines whether a equivalence tester acts as a matching provider.',
+       'type'        : 'boolean',
+       'default'     : 0,
+       'mode'        : 'rw' },
+    {  'id'          : 'updating_provider',
+       'description' : 'Defines whether a equivalence tester acts as a updating provider.',
+       'type'        : 'boolean',
+       'default'     : 1,
+       'mode'        : 'rw' },
   )

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2009 Nexedi SA and Contributors. All Rights Reserved.
+# Copyright (c) 2008-2009 Nexedi SA and Contributors. All Rights Reserved.
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsibility of assessing all potential
@@ -22,7 +22,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
 ##############################################################################
 
@@ -31,16 +31,16 @@ from AccessControl import ClassSecurityInfo
 
 from Products.ERP5.Document.Predicate import Predicate
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
-from Products.ERP5.mixin.divergence_tester import DivergenceTesterMixin
+from Products.ERP5.mixin.equivalence_tester import EquivalenceTesterMixin
 
-class VariationDivergenceTester(Predicate, DivergenceTesterMixin):
+class CategoryMembershipEquivalenceTester(Predicate, EquivalenceTesterMixin):
   """
   The purpose of this divergence tester is to check the
   consistency between delivery movement and simulation movement
-  for a specific property.
+  for a specific category.
   """
-  meta_type = 'ERP5 Dict Divergence Tester'
-  portal_type = 'Dict Divergence Tester'
+  meta_type = 'ERP5 Category Membership Equivalence Tester'
+  portal_type = 'Category Membership Equivalence Tester'
   add_permission = Permissions.AddPortalContent
 
   # Declarative security
@@ -52,40 +52,33 @@ class VariationDivergenceTester(Predicate, DivergenceTesterMixin):
                       , PropertySheet.XMLObject
                       , PropertySheet.CategoryCore
                       , PropertySheet.DublinCore
-                      , PropertySheet.DivergenceTester
+                      , PropertySheet.EquivalenceTester
                       , PropertySheet.SolverSelection
                      )
 
   # Declarative interfaces
-  zope.interface.implements( interfaces.IDivergenceTester, )
+  zope.interface.implements( interfaces.IEquivalenceTester, )
 
   def _compare(self, prevision_movement, decision_movement):
     """
     If prevision_movement and decision_movement don't match, it returns a
     list : (prevision_value, decision_value, message, mapping)
     """
-    for tested_property in ('variation_category_list',
-                            'variation_property_dict'):
-      if getattr(decision_movement, 'isPropertyRecorded',
-                 lambda x:False)(tested_property):
-        decision_value = decision_movement.getRecordedProperty(tested_property)
-      else:
-        decision_value = decision_movement.getProperty(tested_property)
-      prevision_value = prevision_movement.getProperty(tested_property)
+    tested_property = self.getTestedProperty()
+    if getattr(decision_movement, 'isPropertyRecorded',
+               lambda x:False)(tested_property):
+      decision_value = decision_movement.getRecordedProperty(tested_property)
+    else:
+      decision_value = decision_movement.getPropertyList(tested_property)
+    prevision_value = prevision_movement.getPropertyList(tested_property)
 
-      if isinstance(prevision_value, (list, tuple)):
-        result = sorted(decision_value) == sorted(prevision_value)
-      elif isinstance(prevision_value, dict):
-        result = sorted(decision_value.items()) == \
-                 sorted(prevision_value.items())
-      else:
-        # should not happen
-        raise AttributeError, 'prevision and decision values of this divergence tester should be list, tuple or dict.'
-      if not result:
-        return (
-          prevision_value, decision_value,
-          'The value of ${property_name} is different between decision and prevision.',
-          dict(property_name=tested_property))
+    # XXX do we have configurable parameter for this divergence tester ?
+    # like ambiguity...
+    if sorted(decision_value) != sorted(prevision_value):
+      return (
+        prevision_value, decision_value,
+        'The values of ${property_name} category are different between decision and prevision.',
+        dict(property_name=tested_property))
     return None
 
   def generateHashKey(self, movement):
@@ -99,14 +92,12 @@ class VariationDivergenceTester(Predicate, DivergenceTesterMixin):
     If decision_movement is a simulation movement, use
     the recorded properties instead of the native ones.
     """
-    value_list = []
-    for tested_property in ('variation_category_list',
-                            'variation_property_dict'):
-      if movement.isPropertyRecorded(tested_property):
-        value_list.append(movement.getRecordedProperty(tested_property))
-      else:
-        value_list.append(movement.getProperty(tested_property))
-    return 'variation/%r' % (value_list)
+    tested_property = self.getTestedProperty()
+    if movement.isPropertyRecorded(tested_property):
+      value = movement.getRecordedProperty(tested_property)
+    else:
+      value = movement.getPropertyList(tested_property)
+    return '%s/%r' % (tested_property, value)
 
   def getUpdatablePropertyDict(self, prevision_movement, decision_movement):
     """
@@ -117,12 +108,9 @@ class VariationDivergenceTester(Predicate, DivergenceTesterMixin):
 
     decision_movement -- a delivery movement (decision)
     """
-    property_dict = {}
-    for tested_property in ('variation_category_list',
-                            'variation_property_dict'):
-      prevision_value = prevision_movement.getProperty(tested_property)
-      property_dict[tested_property] = prevision_value
-    return property_dict
+    tested_property = self.getTestedProperty()
+    prevision_value = prevision_movement.getPropertyList(tested_property)
+    return {tested_property:prevision_value}
 
   def accept(self, simulation_movement):
     """
