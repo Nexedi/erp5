@@ -1505,8 +1505,13 @@ style=3D'color:black'>05D65812<o:p></o:p></span></p>
     """
     web_page.edit(text_content=html_content)
     safe_html = web_page.asSafeHTML()
-    self.assertTrue('inside very broken HTML code' in html_content)
-    self.assertTrue('AZERTYY' not in html_content)
+    self.assertTrue('inside very broken HTML code' in safe_html)
+    # http://www.w3.org/TR/REC-html40/present/styles.html#edef-STYLE
+    # according to the HTML spec, style nodes contains only
+    # CDATA, so comments nodes are serialised as Text.
+    # The parser is not able to remove these pseudo comments nodes.
+    # Anyway style nodes should be stripped.
+    self.assertTrue('AZERTYY' not in safe_html)
 
 class TestDocumentWithSecurity(ERP5TypeTestCase):
 
