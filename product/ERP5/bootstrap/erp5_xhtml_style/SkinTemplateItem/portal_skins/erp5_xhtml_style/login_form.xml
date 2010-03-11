@@ -94,7 +94,7 @@
             <div class="field">\n
               <label>&nbsp;</label>\n
               <div class="input">\n
-                <a tal:attributes="href string:${here/portal_url}/mail_password_form"\n
+                <a tal:attributes="href string:${here/portal_url}/portal_password/PasswordTool_viewEmailPassword"\n
                    i18n:translate="" i18n:domain="ui">I forgot my password!</a>\n
               </div>\n
             </div>\n
