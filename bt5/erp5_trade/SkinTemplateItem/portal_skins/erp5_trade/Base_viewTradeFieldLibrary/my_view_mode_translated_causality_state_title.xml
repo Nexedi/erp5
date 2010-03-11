@@ -19,7 +19,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_use</string> </value>
+            <value> <string>my_view_mode_translated_causality_state_title</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -76,7 +76,7 @@
               <dictionary>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_category</string> </value>
+                    <value> <string>my_view_mode_translated_workflow_state_title</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
@@ -88,7 +88,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Use</string> </value>
+                    <value> <string>Causality State</string> </value>
                 </item>
               </dictionary>
             </value>

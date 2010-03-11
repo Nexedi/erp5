@@ -74,7 +74,7 @@
               <dictionary>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_source_title</string> </value>
+                    <value> <string>my_view_mode_source_title</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
@@ -82,7 +82,7 @@
                 </item>
                 <item>
                     <key> <string>target</string> </key>
-                    <value> <string>7</string> </value>
+                    <value> <string>Click to edit the target</string> </value>
                 </item>
               </dictionary>
             </value>

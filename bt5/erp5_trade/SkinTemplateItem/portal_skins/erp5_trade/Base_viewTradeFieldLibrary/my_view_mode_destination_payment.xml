@@ -13,16 +13,15 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>hash_script_id</string>
                 <string>title</string>
-                <string>size</string>
+                <string>description</string>
                 <string>items</string>
               </list>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_variation_category_list</string> </value>
+            <value> <string>my_view_mode_destination_payment</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -59,6 +58,10 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>description</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -76,6 +79,10 @@
                     <key> <string>target</string> </key>
                     <value> <string></string> </value>
                 </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value> <string></string> </value>
+                </item>
               </dictionary>
             </value>
         </item>
@@ -84,20 +91,22 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>description</string> </key>
+                    <value> <string>The organisation or person in charge of paying for the client.</string> </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_category_list</string> </value>
+                    <value> <string>my_category</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key> <string>hash_script_id</string> </key>
-                    <value> <string>Base_getMultiListFieldPropertyDictList</string> </value>
-                </item>
-                <item>
-                    <key> <string>size</string> </key>
-                    <value> <int>5</int> </value>
+                    <key> <string>items</string> </key>
+                    <value>
+                      <list/>
+                    </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
@@ -105,7 +114,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Variation</string> </value>
+                    <value> <string>Payer</string> </value>
                 </item>
               </dictionary>
             </value>
@@ -124,7 +133,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.getVariationRangeCategoryItemList(display_base_category = 0)</string> </value>
+            <value> <string>python:[(\'\', \'\')] + (here.getDestinationSection() and [(x.Title(), x.getRelativeUrl()) for x in here.getDestinationSectionValue().objectValues(portal_type = here.getPortalPaymentNodeTypeList())] or [])</string> </value>
         </item>
       </dictionary>
     </pickle>
