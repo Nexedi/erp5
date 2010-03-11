@@ -1049,9 +1049,12 @@ class TestOOoImportWeb(TestOOoImportMixin, ERP5TypeTestCase):
     return ('erp5_base', 'erp5_web', 'erp5_ooo_import')
 
   def test_CategoryTool_importCategoryFileExpirationSupport(self):
-    # tests simple use of CategoryTool_importCategoryFile script
+    """Import category file with expiration request, and do it again to be
+    sure that expired categories will not be expired again."""
     region = self.portal.portal_categories.region
     dummy_region = region.newContent(id='dummy_region')
+    dummy_expired_region = region.newContent(id='dummy_expired_region')
+    dummy_expired_region.expire()
     transaction.commit()
     self.tic()
     self.portal.portal_categories.CategoryTool_importCategoryFile(
@@ -1059,9 +1062,11 @@ class TestOOoImportWeb(TestOOoImportMixin, ERP5TypeTestCase):
         existing_category_list='expire')
     transaction.commit()
     self.tic()
-    self.assertEqual(3, len(region))
+    self.assertEqual(4, len(region))
     self.assertTrue('dummy_region' in region.objectIds())
     self.assertEqual(region.dummy_region.getValidationState(), 'expired')
+    self.assertTrue('dummy_expired_region' in region.objectIds())
+    self.assertEqual(region.dummy_expired_region.getValidationState(), 'expired')
     self.assertTrue('europe' in region.objectIds())
     self.assertTrue('germany' in region.europe.objectIds())
     self.assertTrue('france' in region.europe.objectIds())
