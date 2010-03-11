@@ -36,7 +36,7 @@ from zope.interface.verify import verifyClass
 from Products.ZSQLCatalog.SQLCatalog import profiler_decorator
 import re
 
-FULLTEXT_BOLLEAN_DETECTOR = re.compile(r'.*[\+\-<>\(\)\~\*]')
+FULLTEXT_BOOLEAN_DETECTOR = re.compile(r'.*[\+\-<>\(\)\~\*]')
 
 class FullTextKey(SearchKey):
   """
@@ -63,7 +63,7 @@ class FullTextKey(SearchKey):
     append = new_value_list.append
     for value in operator_value_dict.pop('match', []):
       if isinstance(value, basestring) and \
-         FULLTEXT_BOLLEAN_DETECTOR.match(value) is not None:
+         FULLTEXT_BOOLEAN_DETECTOR.match(value) is not None:
         operator_value_dict.setdefault('match_boolean', []).append(value)
       else:
         append(value)
