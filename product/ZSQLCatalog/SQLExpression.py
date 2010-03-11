@@ -55,6 +55,32 @@ def defaultDict(value):
   assert isinstance(value, dict)
   return value.copy()
 
+class MergeConflictError(ValueError):
+  pass
+
+class MergeConflict(object):
+  """
+  This class allows lazy errors.
+
+  SQLExpression detects merge conflicts when 2 different values exist for the
+  same key in 2 SQLExpression tree nodes.
+  This class allows to postpone raising an exception, to allow conflicting
+  values as long as they are not actualy used.
+  """
+  # TODO (?): Include the traceback as of instanciation in error message,
+  #           if it can help debugging.
+  def __init__(self, message):
+    self._message = message
+
+  def __call__(self):
+    raise MergeConflictError(self._message)
+
+def conflictSafeGet(dikt, key, default=None):
+  result = dikt.get(key, default)
+  if isinstance(result, MergeConflict):
+    result() # Raises
+  return result
+
 class SQLExpression(object):
 
   implements(ISQLExpression)
@@ -180,12 +206,13 @@ class SQLExpression(object):
     return result
 
   @profiler_decorator
-  def getOrderByDict(self):
+  def _getOrderByDict(self, delay_error=True):
     result_dict = self.order_by_dict.copy()
     for sql_expression in self.sql_expression_list:
-      order_by_dict = sql_expression.getOrderByDict()
+      order_by_dict = sql_expression._getOrderByDict(delay_error=delay_error)
       for key, value in order_by_dict.iteritems():
-        if key in result_dict and value != result_dict[key]:
+        if key in result_dict and value != result_dict[key] \
+            and not isinstance(value, MergeConflict):
           message = 'I don\'t know how to merge order_by_dict with ' \
                     'conflicting entries for key %r: %r vs. %r' % (key, result_dict[key], value)
           if DEBUG:
@@ -194,9 +221,15 @@ class SQLExpression(object):
               sql_expression,
               sql_expression.query,
               ', '.join('%r (%r)' % (x, x.query) for x in self.sql_expression_list))
-          raise ValueError, message
+          if delay_error:
+            order_by_dict[key] = MergeConflict(message)
+          else:
+            raise MergeConflictError, message
       result_dict.update(order_by_dict)
     return result_dict
+
+  def getOrderByDict(self):
+    return self._getOrderByDict(delay_error=False)
 
   @profiler_decorator
   def getOrderByExpression(self):
@@ -205,9 +238,8 @@ class SQLExpression(object):
 
       Returns a rendered "order by" expression. See getOrderByList.
     """
-    order_by_dict = self.getOrderByDict()
-    get = order_by_dict.get
-    return SQL_LIST_SEPARATOR.join(get(x, str(x)) \
+    order_by_dict = self._getOrderByDict()
+    return SQL_LIST_SEPARATOR.join(conflictSafeGet(order_by_dict, x, str(x)) \
                                    for x in self.getOrderByList())
 
   @profiler_decorator

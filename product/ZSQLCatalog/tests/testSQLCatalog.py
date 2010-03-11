@@ -35,6 +35,7 @@ from Products.ZSQLCatalog.SQLCatalog import SimpleQuery
 from Products.ZSQLCatalog.Query.EntireQuery import EntireQuery
 from Products.ZSQLCatalog.Query.RelatedQuery import RelatedQuery
 from DateTime import DateTime
+from Products.ZSQLCatalog.SQLExpression import MergeConflictError
 
 class ReferenceQuery:
   """
@@ -417,9 +418,21 @@ class TestSQLCatalog(unittest.TestCase):
                  {'keyword': '<"=a OR =b"'})
     self.catalog(ReferenceQuery(ReferenceQuery(operator='like', keyword='%"a" OR "b"%'), operator='and'),
                  {'keyword': '"\\"a\\" OR \\"b\\""'})
-    self.catalog(ReferenceQuery(ReferenceQuery(ReferenceQuery(operator='match', fulltext='a'),
-                                               ReferenceQuery(ReferenceQuery(operator='match', fulltext='b'), operator='not'), operator='and'), operator='and'),
-                 {'fulltext': 'a NOT b'})
+    # This example introduces impossible-to-merge search text criterion, which
+    # is allowed as long as 
+    reference_query = ReferenceQuery(
+        ReferenceQuery(ReferenceQuery(operator='match', fulltext='a'),
+        ReferenceQuery(ReferenceQuery(operator='match', fulltext='b'),
+      operator='not'), operator='and'), operator='and')
+    self.catalog(reference_query, {'fulltext': 'a NOT b'})
+    # The same, with an order by, must raise
+    self.assertRaises(MergeConflictError, self.catalog, reference_query,
+      {'fulltext': 'a NOT b', 'order_by_list': [('fulltext', ), ]},
+      check_search_text=False)
+    # If one want to sort on, he must use the equivalent FullText syntax:
+    self.catalog(ReferenceQuery(ReferenceQuery(operator='match_boolean', fulltext='a -b'), operator='and'),
+      {'fulltext': 'a -b', 'order_by_list': [('fulltext', ), ]},
+      check_search_text=False)
     self.catalog(ReferenceQuery(ReferenceQuery(ReferenceQuery(operator='match', fulltext='a'),
                                                ReferenceQuery(ReferenceQuery(operator='match', fulltext='b'), operator='not'), operator='or'), operator='and'),
                  {'fulltext': 'a OR NOT b'})
