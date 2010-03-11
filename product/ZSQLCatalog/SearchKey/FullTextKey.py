@@ -68,7 +68,11 @@ class FullTextKey(SearchKey):
       else:
         append(value)
     if len(new_value_list):
-      operator_value_dict['match'] = new_value_list
+      if 'match_boolean' in operator_value_dict:
+        # use boolean mode for all expressions
+        operator_value_dict['match_boolean'].extend(new_value_list)
+      else:
+        operator_value_dict['match'] = new_value_list
     return operator_value_dict, logical_operator, parsed
 
   @profiler_decorator
