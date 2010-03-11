@@ -1592,7 +1592,10 @@ div.search .searchPages .selected{\n
 .listbox_missing_search_criterion td{\n
   text-align: center!important;\n
 }\n
-
+\n
+.hidden_label > label {\n
+  display:none;\n
+}
 
 ]]></string> </value>
         </item>
