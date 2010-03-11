@@ -88,20 +88,6 @@ class TransformedResource(Predicate, XMLObject, XMLMatrix, Amount):
       self.setVVariationBaseCategoryList(self.getVVariationBaseCategoryList())
 
     security.declareProtected(Permissions.ModifyPortalContent, 
-                              '_updateQMatrixCellRange')
-    def _updateQMatrixCellRange(self):
-      # XXX use base_id parameter instead
-      cell_range =  self.TransformedResource_asCellRange('quantity')
-      # XXX TransformedResource works only for a maximum of 3 variation
-      # base category...
-      # Matrixbox must be rewrite for a clean implementation of n base
-      # category
-      if len(cell_range) <= 3:
-        self.setCellRange(base_id='quantity', *cell_range)
-      else:
-        raise MoreThan3VariationBaseCategory
-
-    security.declareProtected(Permissions.ModifyPortalContent, 
                               '_setQVariationBaseCategoryList')
     def _setQVariationBaseCategoryList(self, value):
       """
@@ -109,8 +95,7 @@ class TransformedResource(Predicate, XMLObject, XMLMatrix, Amount):
         variate on
       """
       self._baseSetQVariationBaseCategoryList(value)
-      # XXX calling updatecellRange is better
-      self._updateQMatrixCellRange()
+      self._updateCellRange('quantity')
 
     security.declareProtected(Permissions.ModifyPortalContent, 
                               'setQVariationBaseCategoryList')
@@ -123,20 +108,6 @@ class TransformedResource(Predicate, XMLObject, XMLMatrix, Amount):
       self.reindexObject()
 
     security.declareProtected(Permissions.ModifyPortalContent, 
-                              '_updateVMatrixCellRange')
-    def _updateVMatrixCellRange(self):
-      # XXX use base_id parameter instead
-      cell_range =  self.TransformedResource_asCellRange('variation')
-      # XXX TransformedResource works only for a maximum of 3 variation
-      # base category...
-      # Matrixbox must be rewrite for a clean implementation of n base
-      # category
-      if len(cell_range) <= 3:
-        self.setCellRange(base_id='variation', *cell_range)
-      else:
-        raise MoreThan3VariationBaseCategory
-
-    security.declareProtected(Permissions.ModifyPortalContent, 
                               '_setVVariationBaseCategoryList')
     def _setVVariationBaseCategoryList(self, value):
       """
@@ -144,8 +115,7 @@ class TransformedResource(Predicate, XMLObject, XMLMatrix, Amount):
         variate on
       """
       self._baseSetVVariationBaseCategoryList(value)
-      # XXX calling updatecellRange is better
-      self._updateVMatrixCellRange()
+      self._updateCellRange('variation')
 
     security.declareProtected(Permissions.ModifyPortalContent, 
                               'setVVariationBaseCategoryList')
