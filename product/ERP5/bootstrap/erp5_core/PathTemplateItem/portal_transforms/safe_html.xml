@@ -180,19 +180,23 @@
               <dictionary>
                 <item>
                     <key> <string>applet</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <string>1</string> </value>
                 </item>
                 <item>
                     <key> <string>embed</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <string>1</string> </value>
                 </item>
                 <item>
                     <key> <string>object</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <string>1</string> </value>
                 </item>
                 <item>
                     <key> <string>script</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <string>1</string> </value>
+                </item>
+                <item>
+                    <key> <string>style</string> </key>
+                    <value> <string>1</string> </value>
                 </item>
               </dictionary>
             </value>
@@ -215,207 +219,251 @@
               <dictionary>
                 <item>
                     <key> <string>a</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <string>1</string> </value>
+                </item>
+                <item>
+                    <key> <string>abbr</string> </key>
+                    <value> <string>1</string> </value>
+                </item>
+                <item>
+                    <key> <string>acronym</string> </key>
+                    <value> <string>1</string> </value>
+                </item>
+                <item>
+                    <key> <string>address</string> </key>
+                    <value> <string>1</string> </value>
                 </item>
                 <item>
                     <key> <string>area</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <string>1</string> </value>
                 </item>
                 <item>
                     <key> <string>b</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <string>1</string> </value>
                 </item>
                 <item>
                     <key> <string>base</string> </key>
-                    <value> <int>0</int> </value>
+                    <value> <string>0</string> </value>
+                </item>
+                <item>
+                    <key> <string>bdo</string> </key>
+                    <value> <string>1</string> </value>
                 </item>
                 <item>
                     <key> <string>big</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <string>1</string> </value>
                 </item>
                 <item>
                     <key> <string>blockquote</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <string>1</string> </value>
                 </item>
                 <item>
                     <key> <string>body</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <string>1</string> </value>
                 </item>
                 <item>
                     <key> <string>br</string> </key>
-                    <value> <int>0</int> </value>
+                    <value> <string>0</string> </value>
                 </item>
                 <item>
                     <key> <string>caption</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <string>1</string> </value>
                 </item>
                 <item>
                     <key> <string>cite</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <string>1</string> </value>
                 </item>
                 <item>
                     <key> <string>code</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <string>1</string> </value>
+                </item>
+                <item>
+                    <key> <string>col</string> </key>
+                    <value> <string>1</string> </value>
+                </item>
+                <item>
+                    <key> <string>colgroup</string> </key>
+                    <value> <string>1</string> </value>
                 </item>
                 <item>
                     <key> <string>dd</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <string>1</string> </value>
                 </item>
                 <item>
                     <key> <string>del</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <string>1</string> </value>
+                </item>
+                <item>
+                    <key> <string>dfn</string> </key>
+                    <value> <string>1</string> </value>
                 </item>
                 <item>
                     <key> <string>div</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <string>1</string> </value>
                 </item>
                 <item>
                     <key> <string>dl</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <string>1</string> </value>
                 </item>
                 <item>
                     <key> <string>dt</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <string>1</string> </value>
                 </item>
                 <item>
                     <key> <string>em</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <string>1</string> </value>
                 </item>
                 <item>
                     <key> <string>h1</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <string>1</string> </value>
                 </item>
                 <item>
                     <key> <string>h2</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <string>1</string> </value>
                 </item>
                 <item>
                     <key> <string>h3</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <string>1</string> </value>
                 </item>
                 <item>
                     <key> <string>h4</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <string>1</string> </value>
                 </item>
                 <item>
                     <key> <string>h5</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <string>1</string> </value>
                 </item>
                 <item>
                     <key> <string>h6</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <string>1</string> </value>
                 </item>
                 <item>
                     <key> <string>head</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <string>1</string> </value>
                 </item>
                 <item>
                     <key> <string>hr</string> </key>
-                    <value> <int>0</int> </value>
+                    <value> <string>0</string> </value>
                 </item>
                 <item>
                     <key> <string>html</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <string>1</string> </value>
                 </item>
                 <item>
                     <key> <string>i</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <string>1</string> </value>
                 </item>
                 <item>
                     <key> <string>img</string> </key>
-                    <value> <int>0</int> </value>
+                    <value> <string>0</string> </value>
                 </item>
                 <item>
                     <key> <string>ins</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <string>1</string> </value>
                 </item>
                 <item>
                     <key> <string>kbd</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <string>1</string> </value>
                 </item>
                 <item>
                     <key> <string>li</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <string>1</string> </value>
                 </item>
                 <item>
                     <key> <string>map</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <string>1</string> </value>
                 </item>
                 <item>
                     <key> <string>meta</string> </key>
-                    <value> <int>0</int> </value>
+                    <value> <string>0</string> </value>
                 </item>
                 <item>
                     <key> <string>ol</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <string>1</string> </value>
                 </item>
                 <item>
                     <key> <string>p</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <string>1</string> </value>
                 </item>
                 <item>
                     <key> <string>pre</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <string>1</string> </value>
                 </item>
                 <item>
                     <key> <string>q</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <string>1</string> </value>
+                </item>
+                <item>
+                    <key> <string>samp</string> </key>
+                    <value> <string>1</string> </value>
                 </item>
                 <item>
                     <key> <string>small</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <string>1</string> </value>
                 </item>
                 <item>
                     <key> <string>span</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <string>1</string> </value>
                 </item>
                 <item>
                     <key> <string>strong</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <string>1</string> </value>
                 </item>
                 <item>
                     <key> <string>sub</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <string>1</string> </value>
                 </item>
                 <item>
                     <key> <string>sup</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <string>1</string> </value>
                 </item>
                 <item>
                     <key> <string>table</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <string>1</string> </value>
                 </item>
                 <item>
                     <key> <string>tbody</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <string>1</string> </value>
                 </item>
                 <item>
                     <key> <string>td</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <string>1</string> </value>
+                </item>
+                <item>
+                    <key> <string>tfoot</string> </key>
+                    <value> <string>1</string> </value>
                 </item>
                 <item>
                     <key> <string>th</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <string>1</string> </value>
+                </item>
+                <item>
+                    <key> <string>thead</string> </key>
+                    <value> <string>1</string> </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <string>1</string> </value>
                 </item>
                 <item>
                     <key> <string>tr</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <string>1</string> </value>
                 </item>
                 <item>
                     <key> <string>tt</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <string>1</string> </value>
                 </item>
                 <item>
                     <key> <string>u</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <string>1</string> </value>
                 </item>
                 <item>
                     <key> <string>ul</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <string>1</string> </value>
+                </item>
+                <item>
+                    <key> <string>var</string> </key>
+                    <value> <string>1</string> </value>
                 </item>
               </dictionary>
             </value>
