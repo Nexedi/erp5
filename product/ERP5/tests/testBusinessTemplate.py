@@ -6022,7 +6022,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
       SimpleItem._getCopy = lambda *args: self.fail()
       template_tool = portal.portal_templates
       bt_path = os.path.join(os.path.dirname(__file__), 'test_data',
-                             self._testMethodName)
+                             'test_167_InstanceAndRelatedClassDefinedInSameBT')
       # create a previously existing instance of the overriden document type
       from Products.ERP5Type.Document.File import File
       portal._setObject('another_file', File('another_file'))
@@ -6048,6 +6048,14 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
       SimpleItem._getCopy = SimpleItem_getCopy
     # check the previously existing instance now behaves as the overriden class
     self.assertTrue(getattr(portal.another_file, 'isClassOverriden', False))
+
+  def test_168_DocumentUninstallIsEffective(self):
+    portal = self.portal
+    # Test_167 above needs to have been run
+    if not getattr(getattr(portal, 'some_file', None),
+                   'isClassOverriden',
+                   False):
+      self.test_167_InstanceAndRelatedClassDefinedInSameBT()
     self.uninstallBusinessTemplate('test_data')
     transaction.commit()
     self.tic()
