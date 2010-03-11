@@ -126,6 +126,26 @@ class TestTransformation(TestTransformationMixin, ERP5TypeTestCase):
     # temp object
     self.assertTrue(aggregated_amount.isTested())
 
+  def test_variationCategory(self):
+    swimcap = self.createResource(
+        'Swimming Cap',
+        self.swimsuit_variation_base_category_list,
+        self.swimsuit_variation_category_list,
+    )
+    transformation = self.createTransformation()
+    transformation.edit(
+        title = 'Swimcap Production',
+        variation_base_category_list = self.swimsuit_variation_base_category_list
+    )
+    transformation.setResourceValue(swimcap)
+
+    transaction.commit()
+    self.tic()
+    self.assertEquals(
+        swimcap.getVariationCategoryList(),
+        transformation.getVariationCategoryList()
+    )
+
   def test_transformedInventory(self):
     portal = self.getPortal()
 
