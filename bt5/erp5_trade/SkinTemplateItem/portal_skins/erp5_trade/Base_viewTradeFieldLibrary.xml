@@ -165,7 +165,6 @@
                         <string>my_view_mode_variation_category_list</string>
                         <string>my_view_mode_total_quantity</string>
                         <string>my_view_mode_container_quantity</string>
-                        <string>my_view_mode_container_resource_title</string>
                         <string>my_view_mode_quantity_mapped_value_property_list</string>
                         <string>my_view_mode_matrixbox_predicate_category_list</string>
                         <string>my_view_mode_matrixbox_quantity</string>
@@ -173,6 +172,11 @@
                         <string>my_view_mode_read_only_resource_title</string>
                         <string>my_view_mode_read_only_title</string>
                         <string>my_view_mode_line_quantity_unit</string>
+                        <string>my_view_mode_referential_date</string>
+                        <string>my_view_mode_contained_total_quantity</string>
+                        <string>my_view_mode_gross_weight</string>
+                        <string>my_view_mode_serial_number</string>
+                        <string>my_view_mode_container_resource_title</string>
                       </list>
                     </value>
                 </item>

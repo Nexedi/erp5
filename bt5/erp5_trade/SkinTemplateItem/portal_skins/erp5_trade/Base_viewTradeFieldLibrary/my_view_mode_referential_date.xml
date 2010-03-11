@@ -12,12 +12,16 @@
         <item>
             <key> <string>delegated_list</string> </key>
             <value>
-              <list/>
+              <list>
+                <string>items</string>
+                <string>orientation</string>
+                <string>title</string>
+              </list>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_title</string> </value>
+            <value> <string>my_view_mode_referential_date</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -74,15 +78,38 @@
               <dictionary>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_view_mode_title</string> </value>
+                    <value> <string>my_radio_field</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Base_viewTradeFieldLibrary</string> </value>
+                    <value> <string>Base_viewFieldLibrary</string> </value>
+                </item>
+                <item>
+                    <key> <string>items</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>Start Date</string>
+                          <string>start_date</string>
+                        </tuple>
+                        <tuple>
+                          <string>Stop Date</string>
+                          <string>stop_date</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>orientation</string> </key>
+                    <value> <string>horizontal</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value> <string>Referential Date</string> </value>
                 </item>
               </dictionary>
             </value>
