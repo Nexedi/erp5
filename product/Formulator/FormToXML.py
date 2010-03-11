@@ -58,17 +58,24 @@ def formToXML(form, prologue=1):
             value_element = SubElement(values_element, key)
           value_element.text = escape(str(value)).decode(encoding)
 
-          tales_element = SubElement(field_element, 'tales')
-          items = field.tales.items()
-          items.sort()
-          for key, value in items:
-            if value:
-              tale_element = SubElement(tales_element, key)
-              tale_element.text = escape(str(value._text)).decode(encoding)
-          messages = SubElement(field_element, 'messages')
-          for message_key in field.get_error_names():
-            message_element = SubElement(messages, 'message', name=message_key)
-            message_element.text = escape(field.get_error_message(message_key)).decode(encoding)
+        tales_element = SubElement(field_element, 'tales')
+        items = field.tales.items()
+        items.sort()
+        for key, value in items:
+          if value:
+            tale_element = SubElement(tales_element, key)
+            tale_element.text = escape(str(value._text)).decode(encoding)
+        messages = SubElement(field_element, 'messages')
+        for message_key in field.get_error_names():
+          message_element = SubElement(messages, 'message', name=message_key)
+          message_element.text = escape(field.get_error_message(message_key)).decode(encoding)
+        # Special attribute for ProxyFields *delegated_list*
+        delegated_list = getattr(field, 'delegated_list', [])
+        if delegated_list:
+          delegated_list_element = SubElement(field_element, 'delegated_list')
+          delegated_list.sort()
+          [SubElement(delegated_list_element, delegated) for delegated in delegated_list]
+
     form_as_string = etree.tostring(form_as_xml, encoding='utf-8',
                                     xml_declaration=True, pretty_print=True)
     if form.unicode_mode:

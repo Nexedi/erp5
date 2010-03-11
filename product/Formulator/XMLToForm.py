@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import XMLObjects
 from Products.Formulator.TALESField import TALESMethod
 from Products.Formulator.MethodField import Method
@@ -110,11 +111,20 @@ def XMLToForm(s, form, override_encoding=None):
                     text = encode(entry.text, encoding)
                     field.message_values[name] = text
 
+            # set delegated_list, mean ProxyField
+            is_proxy_field = False
+            if hasattr(entry.first, 'delegated_list'):
+                delegated_list_element = entry.first.delegated_list
+                delegated_list = delegated_list_element.getElementNames()
+                field.delegated_list = delegated_list
+                is_proxy_field = True
             # for persistence machinery
             field.values = field.values
             field.tales = field.tales
             field.message_values = field.message_values
-        
+            if is_proxy_field:
+              field.delegated_list = field.delegated_list
+
     # delete default group
     if not has_default:
         form.move_group_down('Default')
