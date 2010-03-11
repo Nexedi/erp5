@@ -494,7 +494,11 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
       bank2.validate()
     else:
       bank2 = bank1
-    
+
+    # reset ids for auto generating reference
+    self.portal.portal_ids.setLastGeneratedId(0, id_group='Accounting_Transaction_Module-Accounting_Transaction')
+    self.portal.portal_ids.setLastGeneratedId(0, id_group='Accounting_Transaction_Module-Payment_Transaction')
+
     # before
     t1 = self._makeOne(
               portal_type='Accounting Transaction',
@@ -2683,7 +2687,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
           Movement_getExplanationTitle='Transaction 1',
           date=DateTime(2006, 2, 1),
           Movement_getExplanationTranslatedPortalType='Accounting Transaction',
-          Movement_getExplanationReference=None,
+          Movement_getExplanationReference='AT 1',
           Movement_getMirrorSectionTitle='Client 1',
           debit=0, credit=100, running_total_price=-100, )
     
@@ -2692,7 +2696,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
           Movement_getExplanationTitle='Transaction 2',
           date=DateTime(2006, 2, 1, 0, 1),
           Movement_getExplanationTranslatedPortalType='Accounting Transaction',
-          Movement_getExplanationReference=None,
+          Movement_getExplanationReference='AT 2',
           Movement_getMirrorSectionTitle='Client 1',
           debit=200, credit=0, running_total_price=100, )
     
@@ -2716,7 +2720,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
           Movement_getExplanationTitle='Transaction 1',
           date=DateTime(2006, 2, 1),
           Movement_getExplanationTranslatedPortalType='Accounting Transaction',
-          Movement_getExplanationReference=None,
+          Movement_getExplanationReference='AT 1',
           Movement_getMirrorSectionTitle='Client 1',
           debit=100, credit=0, running_total_price=100, )
     
@@ -2725,7 +2729,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
           Movement_getExplanationTitle='Transaction 2',
           date=DateTime(2006, 2, 1, 0, 1),
           Movement_getExplanationTranslatedPortalType='Accounting Transaction',
-          Movement_getExplanationReference=None,
+          Movement_getExplanationReference='AT 2',
           Movement_getMirrorSectionTitle='Client 1',
           debit=0, credit=200, running_total_price=-100, )
     
@@ -2734,7 +2738,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
           Movement_getExplanationTitle='Transaction 3',
           date=DateTime(2006, 2, 2, 0, 2),
           Movement_getExplanationTranslatedPortalType='Payment Transaction',
-          Movement_getExplanationReference=None,
+          Movement_getExplanationReference='PT 1',
           Movement_getMirrorSectionTitle='Client 1',
           debit=300, credit=0, running_total_price=200, )
     
@@ -2753,7 +2757,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
           Movement_getExplanationTitle='Transaction 8',
           date=DateTime(2006, 2, 3),
           Movement_getExplanationTranslatedPortalType='Accounting Transaction',
-          Movement_getExplanationReference=None,
+          Movement_getExplanationReference='AT 5',
           Movement_getMirrorSectionTitle='Client 1',
           debit=800, credit=0, running_total_price=1600, )
     
@@ -2777,7 +2781,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
           Movement_getExplanationTitle='Transaction 4',
           date=DateTime(2006, 2, 2, 0, 3),
           Movement_getExplanationTranslatedPortalType='Payment Transaction',
-          Movement_getExplanationReference=None,
+          Movement_getExplanationReference='PT 2',
           Movement_getMirrorSectionTitle='Client 2',
           debit=400, credit=0, running_total_price=400, )
     
@@ -2794,7 +2798,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
           Movement_getExplanationTitle='Transaction 5',
           date=DateTime(2006, 2, 2, 0, 4),
           Movement_getExplanationTranslatedPortalType='Accounting Transaction',
-          Movement_getExplanationReference=None,
+          Movement_getExplanationReference='AT 3',
           Movement_getMirrorSectionTitle='John Smith',
           debit=500, credit=0, running_total_price=500, )
     
@@ -2811,7 +2815,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
           Movement_getExplanationTitle='Transaction 3',
           date=DateTime(2006, 2, 2, 0, 2),
           Movement_getExplanationTranslatedPortalType='Payment Transaction',
-          Movement_getExplanationReference=None,
+          Movement_getExplanationReference='PT 1',
           Movement_getMirrorSectionTitle='Client 1',
           debit=0, credit=300, running_total_price=-300, )
     
@@ -2820,7 +2824,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
           Movement_getExplanationTitle='Transaction 4',
           date=DateTime(2006, 2, 2, 0, 3),
           Movement_getExplanationTranslatedPortalType='Payment Transaction',
-          Movement_getExplanationReference=None,
+          Movement_getExplanationReference='PT 2',
           Movement_getMirrorSectionTitle='Client 2',
           debit=0, credit=400, running_total_price=-700, )
 
@@ -2829,7 +2833,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
           Movement_getExplanationTitle='Transaction 5',
           date=DateTime(2006, 2, 2, 0, 4),
           Movement_getExplanationTranslatedPortalType='Accounting Transaction',
-          Movement_getExplanationReference=None,
+          Movement_getExplanationReference='AT 3',
           Movement_getMirrorSectionTitle='John Smith',
           debit=0, credit=500, running_total_price=-1200, )
 
@@ -2848,7 +2852,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
           Movement_getExplanationTitle='Transaction 8',
           date=DateTime(2006, 2, 3),
           Movement_getExplanationTranslatedPortalType='Accounting Transaction',
-          Movement_getExplanationReference=None,
+          Movement_getExplanationReference='AT 5',
           Movement_getMirrorSectionTitle='Client 1',
           debit=0, credit=800, running_total_price=-2600, )
     

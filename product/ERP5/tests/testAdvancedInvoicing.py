@@ -390,7 +390,7 @@ class TestAdvancedSaleInvoice(TestAdvancedInvoice):
   quiet = 1
   RUN_ALL_TESTS = 1
   login = TestAdvancedInvoice.login
-  
+
   def stepCheckInvoicesAndTransactionsConsistency(self, sequence=None, sequence_list=None,
                                                   **kw):
     """
@@ -897,7 +897,7 @@ class TestAdvancedSaleInvoice(TestAdvancedInvoice):
     self.portal.portal_workflow.doActionFor(invoice, 'confirm_action')
 
     # We could generate a better reference here.
-    self.assertEquals('1', invoice.getReference())
+    self.assertEquals('SIT 1', invoice.getReference())
 
   def test_10_ManuallyAddedMovements(self, quiet=quiet, run=RUN_ALL_TESTS):
     """

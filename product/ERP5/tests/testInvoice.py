@@ -2560,6 +2560,10 @@ class TestSaleInvoiceMixin(TestInvoiceMixin,
       stepCheckNewPackingListIsPacked
     """
 
+  def afterSetUp(self):
+    super(TestSaleInvoiceMixin, self).afterSetUp()
+    self.portal.portal_ids.setLastGeneratedId(0, id_group='Accounting_Transaction_Module-Sale_Invoice_Transaction')
+
 class TestSaleInvoice(TestSaleInvoiceMixin, TestInvoice, ERP5TypeTestCase):
   """Tests for sale invoice.
   """
@@ -3321,8 +3325,7 @@ class TestSaleInvoice(TestSaleInvoiceMixin, TestInvoice, ERP5TypeTestCase):
                     destination_section_value=client)
     self.portal.portal_workflow.doActionFor(invoice, 'confirm_action')
 
-    # We could generate a better reference here.
-    self.assertEquals('1', invoice.getReference())
+    self.assertEquals('SIT 1', invoice.getReference())
 
   def test_16_ManuallyAddedMovements(self, quiet=quiet):
     """
