@@ -29,8 +29,11 @@
 from Testing.ZopeTestCase.PortalTestCase import PortalTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.SecurityTestCase import SecurityTestCase
+from Products.Formulator.XMLToForm import XMLToForm
+from Products.Formulator.FormToXML import formToXML
 import transaction
 import unittest
+from lxml import etree
 
 class TestProxyField(ERP5TypeTestCase):
   """
@@ -254,3 +257,49 @@ return printed
     python_script_object.ZPythonScript_edit(python_script_parameter,
                                             python_script_body)
     python_script_object(field)
+
+  def test_serializeProxyField(self):
+    """Test formToXML and XMLToForm with proxyfields.
+    """
+    portal_skins = self.getSkinsTool()
+    # Create the default field library with a template field
+    portal_skins.manage_addProduct['OFSP'].manage_addFolder('erp5_geek')
+    skin_folder = portal_skins._getOb('erp5_geek')
+    skin_folder.manage_addProduct['ERP5Form'].addERP5Form(
+        'Base_viewGeekFieldLibrary',
+        'View')
+    form = skin_folder._getOb('Base_viewGeekFieldLibrary', None)
+    form.manage_addField('my_title', 'My Geek Title', 'StringField')
+
+    # Custom field library has to have an higher priority
+    selection = portal_skins.getSkinPath('View')
+    selection = selection.split(',')
+    selection.append('erp5_geek')
+    portal_skins.manage_skinLayers(skinpath=tuple(selection),
+                                skinname='View', add_skin=1)
+    portal_skins.getPortalObject().changeSkin(None)
+
+    skin_folder = portal_skins._getOb('custom')
+    skin_folder.manage_addProduct['ERP5Form'].addERP5Form('Base_viewGeek',
+                                                          'View')
+    form = skin_folder._getOb('Base_viewGeek', None)
+    form.manage_addField('my_title', 'Title', 'ProxyField')
+    field = form._getOb('my_title')
+    field.manage_edit_xmlrpc(dict(
+      form_id='Base_viewGeekFieldLibrary', field_id='my_title'))
+    my_title = 'My Custom Proxy Title'
+    field.manage_edit_surcharged_xmlrpc({'title': my_title})
+
+    # Test xml serialisation of form.
+    xml_string = formToXML(form)
+    xml_tree = etree.fromstring(xml_string)
+    field_node = xml_tree.find('groups/group/fields/field')
+    self.assertEquals(field_node.find('type').text, 'ProxyField')
+    self.assertTrue(field_node.find('delegated_list/title') is not None)
+
+    skin_folder.manage_addProduct['ERP5Form'].addERP5Form('Base_viewSuperGeek',
+                                                          'View')
+    form = skin_folder._getOb('Base_viewSuperGeek')
+    # Test objectification of XML
+    XMLToForm(xml_string, form)
+    self.assertTrue(form.my_title.get_value('title'), my_title)
