@@ -82,10 +82,10 @@ for c in ([line_base_category, column_base_category] + tab_base_category_list):\
       # XXX matrixbox is right_display (not as listfield) \n
       # => invert display and value in item\n
       cell_range.append(map(lambda x: (x[1],x[0]), \n
-                        transformation.getVariationCategoryItemList\n
+                        transformation.getVariationRangeCategoryItemList\n
                                 (base_category_list=(c,))))\n
     else:\n
-      cell_range.append(transformation.getVariationCategoryList(\n
+      cell_range.append(transformation.getVariationRangeCategoryList(\n
                                              base_category_list=(c,)))\n
 \n
 # Remove empty range\n
