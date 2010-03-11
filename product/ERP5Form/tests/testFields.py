@@ -29,6 +29,8 @@
 
 # TODO: Some tests from this file can be merged into Formulator
 
+from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+import transaction
 import unittest
 
 try:
@@ -334,22 +336,78 @@ class TestCheckBoxField(unittest.TestCase):
                       self.field.render_odt(as_string=False, REQUEST=request).tag)
     self.assertEquals('1', self.field.render_odt(as_string=False, REQUEST=request).text)
 
-class TestListField(unittest.TestCase):
+class TestListField(ERP5TypeTestCase):
   """Tests List field
   """
 
   def getTitle(self):
     return "List Field"
 
-  def setUp(self):
+  def getBusinessTemplateList(self):
+    """
+    Tuple of Business Templates we need to install
+    """
+    return (
+      'erp5_base',
+    )
+
+  def afterSetUp(self):
     self.field = ListField('test_field')
     self.widget = self.field.widget
+    self.createCategories()
+    transaction.commit()
+    self.tic()
+
+  def createCategories(self):
+    """
+      Light install create only base categories, so we create
+      some categories for testing them
+    """
+    category_tool = self.portal.portal_categories
+    category_dict = {'a':1, 'b':2, 'd':3, 'c':4, 'e':None, 'g':None, 'f':None}
+    if len(category_tool.gender.contentValues()) == 0 :
+      for category_id, int_index in category_dict.items():
+        category_tool.gender.newContent(portal_type='Category',
+                                               id=category_id,
+                                               int_index=int_index)
 
   def test_render_odt(self):
     self.field.values['default'] = ['My first Line', 'My Second Line', 'foo']
     self.assertEquals('text:line-break', 
         self.field.render_odt(as_string=False)[0].xpath('name()'))
 
+  def test_listField_value_order(self):
+    '''This test check the list field value order
+    '''
+    # create a form with a list_field that use gender category
+    portal_skins = self.getSkinsTool()
+    skin_folder = portal_skins._getOb('custom')
+    skin_folder.manage_addProduct['ERP5Form'].addERP5Form(
+        'Base_viewTestFieldValueOrder',
+        'View')
+    form = skin_folder._getOb('Base_viewTestFieldValueOrder', None)
+
+    # The field is a proxyfield on Base_viewFieldLibrary.my_category that
+    # category should be sort on int_index and translated_id
+    form.manage_addField('my_gender', 'Test List Field',
+        'ProxyField')
+    field = getattr(form, 'my_gender')
+    field.manage_edit_xmlrpc(dict(
+    form_id='Base_viewFieldLibrary', field_id='my_category'))
+
+    category_item_list = field.get_value('items')
+    self.assertEquals(category_item_list,
+        [['', ''], ['e', 'e'], ['f', 'f'], ['g', 'g'], ['a', 'a'], ['b', 'b'],
+          ['d', 'd'], ['c', 'c']])
+
+    # try on a person to select on gender and check if the result is the same
+    person_module = self.portal.getDefaultModule('Person')
+    person = person_module.newContent(portal_type='Person')
+    person.setGender('b')
+    self.assertEquals(person.getGender(), 'b')
+    self.assertEquals(person.Person_view.my_gender.get_value('items'),
+        [['', ''], ['e', 'e'], ['f', 'f'], ['g', 'g'], ['a', 'a'], ['b', 'b'],
+          ['d', 'd'], ['c', 'c']])
 
 class TestProxyField(PlacelessSetup, unittest.TestCase):
 
