@@ -167,6 +167,10 @@
                         <string>my_date_time_field</string>
                         <string>my_view_mode_money_quantity</string>
                         <string>my_report_mode_at_date</string>
+                        <string>my_dialog_mode_deferred_style</string>
+                        <string>my_dialog_mode_format</string>
+                        <string>my_dialog_mode_landscape</string>
+                        <string>my_dialog_mode_portal_skin</string>
                       </list>
                     </value>
                 </item>
