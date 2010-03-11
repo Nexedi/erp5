@@ -13,10 +13,10 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
+                <string>default</string>
+                <string>hidden</string>
                 <string>title</string>
                 <string>view_separator</string>
-                <string>hidden</string>
-                <string>default</string>
               </list>
             </value>
         </item>
@@ -73,7 +73,19 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>hidden</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>target</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>view_separator</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -83,6 +95,12 @@
             <key> <string>values</string> </key>
             <value>
               <dictionary>
+                <item>
+                    <key> <string>default</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
                 <item>
                     <key> <string>field_id</string> </key>
                     <value> <string>my_lines_field</string> </value>
@@ -129,7 +147,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:cell_index</string> </value>
+            <value> <string>python:((cell is not None) and cell.getVariationCategoryList()) or cell_index</string> </value>
         </item>
       </dictionary>
     </pickle>

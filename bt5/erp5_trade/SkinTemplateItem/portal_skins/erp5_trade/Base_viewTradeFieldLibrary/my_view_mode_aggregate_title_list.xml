@@ -13,20 +13,17 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>cell_portal_type</string>
-                <string>editable_attributes</string>
                 <string>title</string>
-                <string>global_attributes</string>
-                <string>cell_base_id</string>
-                <string>tabs</string>
-                <string>lines</string>
-                <string>columns</string>
+                <string>catalog_index</string>
+                <string>portal_type</string>
+                <string>base_category</string>
+                <string>enabled</string>
               </list>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>matrixbox</string> </value>
+            <value> <string>my_view_mode_aggregate_title_list</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -63,9 +60,15 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>columns</string> </key>
+                    <key> <string>catalog_index</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>enabled</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
                     </value>
                 </item>
                 <item>
@@ -77,13 +80,7 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>lines</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>tabs</string> </key>
+                    <key> <string>portal_type</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
                     </value>
@@ -100,59 +97,28 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>cell_base_id</string> </key>
-                    <value> <string>movement</string> </value>
+                    <key> <string>base_category</string> </key>
+                    <value> <string>aggregate</string> </value>
                 </item>
                 <item>
-                    <key> <string>cell_portal_type</string> </key>
-                    <value> <string>Delivery Cell</string> </value>
-                </item>
-                <item>
-                    <key> <string>editable_attributes</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>quantity</string>
-                          <string>quantity</string>
-                        </tuple>
-                        <tuple>
-                          <string>price</string>
-                          <string>price</string>
-                        </tuple>
-                        <tuple>
-                          <string>industrial_phase_list</string>
-                          <string>industrial_phase_list</string>
-                        </tuple>
-                        <tuple>
-                          <string>variation_category_list</string>
-                          <string></string>
-                        </tuple>
-                        <tuple>
-                          <string>variation_category_list</string>
-                          <string>variation_category_list</string>
-                        </tuple>
-                        <tuple>
-                          <string>predicate_category_list</string>
-                          <string>predicate_category_list</string>
-                        </tuple>
-                      </list>
-                    </value>
+                    <key> <string>catalog_index</string> </key>
+                    <value> <string>aggregate</string> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_matrix_box</string> </value>
+                    <value> <string>my_multi_relation_field</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key> <string>global_attributes</string> </key>
+                    <key> <string>portal_type</string> </key>
                     <value>
                       <list>
                         <tuple>
-                          <string>mapped_value_property_list</string>
-                          <string>mapped_value_property_list</string>
+                          <string>(tales)</string>
+                          <string>(tales)</string>
                         </tuple>
                       </list>
                     </value>
@@ -163,7 +129,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>matrixbox</string> </value>
+                    <value> <string>Items</string> </value>
                 </item>
               </dictionary>
             </value>
@@ -182,7 +148,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:here.DeliveryLine_asCellRange(matrixbox=1)[1]</string> </value>
+            <value> <string>python: field.getId().replace(\'my_\', \'\').replace(\'_list\', \'\').replace(\'%s_\' % field.get_value(\'base_category\'), \'\')</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -198,7 +164,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:here.DeliveryLine_asCellRange(matrixbox=1)[0]</string> </value>
+            <value> <string>python: (here.getResource() and here.getResourceValue().getAggregatedPortalTypeList()) or (here.getAggregate()) or (here.getResource() is None and here.getPortalItemTypeList())</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -214,7 +180,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:here.DeliveryLine_asCellRange(matrixbox=1)[2]</string> </value>
+            <value> <string>python: [(x, x) for x in here.getPortalItemTypeList()]</string> </value>
         </item>
       </dictionary>
     </pickle>

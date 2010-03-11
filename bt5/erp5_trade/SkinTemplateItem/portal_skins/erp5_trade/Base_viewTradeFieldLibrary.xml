@@ -177,6 +177,13 @@
                         <string>my_view_mode_gross_weight</string>
                         <string>my_view_mode_serial_number</string>
                         <string>my_view_mode_container_resource_title</string>
+                        <string>my_view_mode_price</string>
+                        <string>my_view_mode_aggregate_title_list</string>
+                        <string>my_view_mode_amortisation_method</string>
+                        <string>my_view_mode_listbox_base_application_title_list</string>
+                        <string>my_view_mode_price_quantity_mapped_value_property_list</string>
+                        <string>my_view_mode_matrixbox_industrial_phase_list</string>
+                        <string>my_view_mode_matrixbox_price</string>
                       </list>
                     </value>
                 </item>
