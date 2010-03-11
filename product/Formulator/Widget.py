@@ -337,6 +337,11 @@ class TextWidget(Widget):
     for line in old_value:
       value.append(escape(line))
     value = '<br/>'.join(value)
+
+    extra = field.get_value('extra')
+    if extra not in (None, ''):
+      value = "<div %s>%s</div>" % (extra, value)
+
     css_class = field.get_value('css_class')
     if css_class not in ('', None):
       # All strings should be escaped before rendering in HTML
