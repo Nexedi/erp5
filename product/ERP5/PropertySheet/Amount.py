@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
@@ -69,7 +70,7 @@ class Amount:
       'acquisition_depends'           : None,
       'mode'        : 'w' },
     { 'id'          : 'cancellation_amount',
-      'description' : 'defines if this quantity is used in order to cancel another one',
+      'description' : 'Defines if this quantity is used in order to cancel another one',
       'type'        : 'boolean',
       'default': False,
       'mode'        : 'w' },
@@ -77,7 +78,7 @@ class Amount:
     # When comparing a delivery to a property_dict coming from a MovementGroup,
     # the DeliveryBuilder needs to have at least a specific property for each MovementGroup
     { 'id'          : 'quantity_sign',
-      'description' : 'defines if the quantity is positive or negative',
+      'description' : 'Defines if the quantity is positive or negative',
       'type'        : 'float',
       'mode'        : 'w' },
     { 'id'          : 'efficiency',
@@ -95,15 +96,15 @@ class Amount:
       #'has_adapater_id'               :
       'mode'        : 'w' },
     # Profit and loss
-    { 'id'          : 'profit_quantity',
+    { 'id'          : 'profit_quantity', # XXX-JPS - probably deprecated
       'description' : 'A quantity which represents generation of resource from nowhere',
       'type'        : 'float',
       'default'     : 0.0,
       'mode'        : 'w' },
- )
+  )
 
   _categories = ('resource', 'quantity_unit',
-                 'base_application', 'base_contribution', 'use',
+                 'base_application', 'base_contribution', 'use', 'trade_phase', 
                  # Acquired categories
                  'product_line', )
   
