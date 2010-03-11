@@ -490,10 +490,10 @@ class BaseTemplateItem(Implicit, Persistent):
   def build(self, context, **kw):
     pass
 
-  def preinstall(self, context, installed_bt, **kw):
+  def preinstall(self, context, installed_item, **kw):
     """
       Build a list of added/removed/changed files between the BusinessTemplate
-      being installed (self) and the installed one (installed_bt).
+      being installed (self) and the installed one (installed_item).
       Note : we compare files between BTs, *not* between the installed BT and
       the objects in the DataFS.
 
@@ -503,17 +503,17 @@ class BaseTemplateItem(Implicit, Persistent):
     if context.getTemplateFormatVersion() == 1:
       new_keys = self._objects.keys()
       for path in new_keys:
-        if installed_bt._objects.has_key(path):
+        if installed_item._objects.has_key(path):
           # compare objects to see it there are changes
           new_obj_xml = self.generateXml(path=path)
-          old_obj_xml = installed_bt.generateXml(path=path)
+          old_obj_xml = installed_item.generateXml(path=path)
           if new_obj_xml != old_obj_xml:
             modified_object_list.update({path : ['Modified', self.__class__.__name__[:-12]]})
           # else, compared versions are identical, don't overwrite the old one
         else: # new object
           modified_object_list.update({path : ['New', self.__class__.__name__[:-12]]})
       # list removed objects
-      old_keys = installed_bt._objects.keys()
+      old_keys = installed_item._objects.keys()
       for path in old_keys:
         if path not in new_keys:
           modified_object_list.update({path : ['Removed', self.__class__.__name__[:-12]]})
@@ -767,15 +767,15 @@ class ObjectTemplateItem(BaseTemplateItem):
     self.removeProperties(obj)
     self._objects[file_name[:-4]] = obj
 
-  def preinstall(self, context, installed_bt, **kw):
+  def preinstall(self, context, installed_item, **kw):
     modified_object_list = {}
     if context.getTemplateFormatVersion() == 1:
       upgrade_list = []
       type_name = self.__class__.__name__.split('TemplateItem')[-2]
       for path in self._objects:
-        if installed_bt._objects.has_key(path):
+        if installed_item._objects.has_key(path):
           upgrade_list.append((path,
-            self.removeProperties(installed_bt._objects[path])))
+            self.removeProperties(installed_item._objects[path])))
         else: # new object
           modified_object_list[path] = 'New', type_name
       # update _p_jar property of objects cleaned by removeProperties
@@ -797,7 +797,7 @@ class ObjectTemplateItem(BaseTemplateItem):
         if new_obj_xml != old_obj_xml:
           modified_object_list[path] = 'Modified', type_name
       # get removed object
-      for path in set(installed_bt._objects) - set(self._objects):
+      for path in set(installed_item._objects) - set(self._objects):
         modified_object_list[path] = 'Removed', type_name
     return modified_object_list
 
@@ -1388,8 +1388,8 @@ class SkinTemplateItem(ObjectTemplateItem):
           obj._delProperty(
               'business_template_registered_skin_selections')
 
-  def preinstall(self, context, installed_bt, **kw):
-    modified_object_list = ObjectTemplateItem.preinstall(self, context, installed_bt, **kw)
+  def preinstall(self, context, installed_item, **kw):
+    modified_object_list = ObjectTemplateItem.preinstall(self, context, installed_item, **kw)
     # We must install/update an ERP5 Form if one of its widget is modified.
     # This allow to keep the widget order and the form layout after an update
     #   from a BT to another one.
@@ -1553,22 +1553,22 @@ class RegisteredSkinSelectionTemplateItem(BaseTemplateItem):
         # Register to all other skin selection
         registerSkinFolder(skin_tool, skin_folder)
 
-  def preinstall(self, context, installed_bt, **kw):
+  def preinstall(self, context, installed_item, **kw):
     modified_object_list = {}
     if context.getTemplateFormatVersion() == 1:
       new_keys = self._objects.keys()
       new_dict = PersistentMapping()
       for path in new_keys:
-        if installed_bt._objects.has_key(path):
+        if installed_item._objects.has_key(path):
           # compare object to see it there is changes
           new_object = self._objects[path]
-          old_object = installed_bt._objects[path]
+          old_object = installed_item._objects[path]
           if new_object != old_object:
             modified_object_list.update({path : ['Modified', self.__class__.__name__[:-12]]})
         else: # new object
           modified_object_list.update({path : ['New', self.__class__.__name__[:-12]]})
       # get removed object
-      old_keys = installed_bt._objects.keys()
+      old_keys = installed_item._objects.keys()
       for path in old_keys:
         if path not in new_keys:
           modified_object_list.update({path : ['Removed', self.__class__.__name__[:-12]]})
@@ -1602,9 +1602,9 @@ class WorkflowTemplateItem(ObjectTemplateItem):
   # So we hide modified subobjects to the user and we always reinstall
   # (or remove) everything.
 
-  def preinstall(self, context, installed_bt, **kw):
+  def preinstall(self, context, installed_item, **kw):
     modified_object_dict = ObjectTemplateItem.preinstall(self, context,
-                                                         installed_bt, **kw)
+                                                         installed_item, **kw)
     modified_workflow_dict = {}
     for modified_object, state in modified_object_dict.iteritems():
       path = modified_object.split('/')
@@ -1905,25 +1905,25 @@ class PortalTypeWorkflowChainTemplateItem(BaseTemplateItem):
           chain_dict[id] = chain
     context.portal_workflow.manage_changeWorkflows('', props=chain_dict)
 
-  def preinstall(self, context, installed_bt, **kw):
+  def preinstall(self, context, installed_item, **kw):
     modified_object_list = {}
     if context.getTemplateFormatVersion() == 1:
       new_keys = self._objects.keys()
       new_dict = PersistentMapping()
       # Fix key from installed bt if necessary
-      for key in installed_bt._objects.keys():
+      for key in installed_item._objects.keys():
         if not "portal_type_workflow_chain/" in key:
           new_key = 'portal_type_workflow_chain/%s' %key
-          new_dict[new_key] = installed_bt._objects[key]
+          new_dict[new_key] = installed_item._objects[key]
         else:
-          new_dict[key] = installed_bt._objects[key]
+          new_dict[key] = installed_item._objects[key]
       if len(new_dict):
-        installed_bt._objects = new_dict
+        installed_item._objects = new_dict
       for path in new_keys:
-        if installed_bt._objects.has_key(path):
+        if installed_item._objects.has_key(path):
           # compare object to see it there is changes
           new_object = self._objects[path]
-          old_object = installed_bt._objects[path]
+          old_object = installed_item._objects[path]
           # compare same type of object
           if isinstance(old_object, list) or isinstance(old_object, tuple):
             old_object = ', '.join(old_object)
@@ -1932,7 +1932,7 @@ class PortalTypeWorkflowChainTemplateItem(BaseTemplateItem):
         else: # new object
           modified_object_list.update({path : ['New', self.__class__.__name__[:-12]]})
       # get removed object
-      old_keys = installed_bt._objects.keys()
+      old_keys = installed_item._objects.keys()
       for path in old_keys:
         if path not in new_keys:
           modified_object_list.update({path : ['Removed', self.__class__.__name__[:-12]]})
@@ -2014,32 +2014,32 @@ class PortalTypeAllowedContentTypeTemplateItem(BaseTemplateItem):
     xml_data = self.generateXml(path=None)
     bta.addObject(obj=xml_data, name=path, path=None)
 
-  def preinstall(self, context, installed_bt, **kw):
+  def preinstall(self, context, installed_item, **kw):
     modified_object_list = {}
     if context.getTemplateFormatVersion() == 1:
       portal = context.getPortalObject()
       new_keys = self._objects.keys()
       new_dict = PersistentMapping()
       # fix key if necessary in installed bt for diff
-      for key in installed_bt._objects.keys():
+      for key in installed_item._objects.keys():
         if self.class_property not in key:
           new_key = '%s/%s' % (self.class_property, key)
-          new_dict[new_key] = installed_bt._objects[key]
+          new_dict[new_key] = installed_item._objects[key]
         else:
-          new_dict[key] = installed_bt._objects[key]
+          new_dict[key] = installed_item._objects[key]
       if len(new_dict):
-        installed_bt._objects = new_dict
+        installed_item._objects = new_dict
       for path in new_keys:
-        if installed_bt._objects.has_key(path):
+        if installed_item._objects.has_key(path):
           # compare object to see it there is changes
           new_object = self._objects[path]
-          old_object = installed_bt._objects[path]
+          old_object = installed_item._objects[path]
           if new_object != old_object:
             modified_object_list.update({path : ['Modified', self.__class__.__name__[:-12]]})
         else: # new object
           modified_object_list.update({path : ['New', self.__class__.__name__[:-12]]})
       # get removed object
-      old_keys = installed_bt._objects.keys()
+      old_keys = installed_item._objects.keys()
       for path in old_keys:
         if path not in new_keys:
           modified_object_list.update({path : ['Removed', self.__class__.__name__[:-12]]})
@@ -2231,9 +2231,9 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
     xml_data += '\n</catalog_method>\n'
     return xml_data
 
-  def preinstall(self, context, installed_bt, **kw):
-    modified_object_dict = ObjectTemplateItem.preinstall(self, context, installed_bt, **kw)
-    modified_object_dict.update(BaseTemplateItem.preinstall(self, context, installed_bt, **kw))
+  def preinstall(self, context, installed_item, **kw):
+    modified_object_dict = ObjectTemplateItem.preinstall(self, context, installed_item, **kw)
+    modified_object_dict.update(BaseTemplateItem.preinstall(self, context, installed_item, **kw))
     return modified_object_dict
 
   def export(self, context, bta, **kw):
@@ -3107,25 +3107,25 @@ class DocumentTemplateItem(BaseTemplateItem):
     for id in self._archive.keys():
       self._objects[self.__class__.__name__+'/'+id] = self.local_file_reader_name(id)
 
-  def preinstall(self, context, installed_bt, **kw):
+  def preinstall(self, context, installed_item, **kw):
     modified_object_list = {}
     if context.getTemplateFormatVersion() == 1:
       new_keys = self._objects.keys()
       new_dict = PersistentMapping()
       # fix key if necessary in installed bt for diff
-      for key in installed_bt._objects.keys():
+      for key in installed_item._objects.keys():
         if self.__class__.__name__ in key:
           new_key = key[len('%s/' % self.__class__.__name__):]
-          new_dict[new_key] = installed_bt._objects[key]
+          new_dict[new_key] = installed_item._objects[key]
         else:
-          new_dict[key] = installed_bt._objects[key]
+          new_dict[key] = installed_item._objects[key]
       if len(new_dict):
-        installed_bt._objects = new_dict
+        installed_item._objects = new_dict
       for path in new_keys:
-        if installed_bt._objects.has_key(path):
+        if installed_item._objects.has_key(path):
           # compare object to see if there is changes
           new_obj_code = self._objects[path]
-          old_obj_code = installed_bt._objects[path]
+          old_obj_code = installed_item._objects[path]
           if new_obj_code != old_obj_code:
             modified_object_list.update(
                 {path : ['Modified', self.__class__.__name__[:-12]]})
@@ -3133,7 +3133,7 @@ class DocumentTemplateItem(BaseTemplateItem):
           modified_object_list.update(
                 {path : ['New', self.__class__.__name__[:-12]]})
           # get removed object
-      old_keys = installed_bt._objects.keys()
+      old_keys = installed_item._objects.keys()
       for path in old_keys:
         if path not in new_keys:
           modified_object_list.update(
@@ -3247,26 +3247,26 @@ class RoleTemplateItem(BaseTemplateItem):
     if len(role_list) > 0:
       self._objects[self.__class__.__name__+'/'+'role_list'] = role_list
 
-  def preinstall(self, context, installed_bt, **kw):
+  def preinstall(self, context, installed_item, **kw):
     modified_object_list = {}
     if context.getTemplateFormatVersion() == 1:
       new_roles = self._objects.keys()
-      if installed_bt.id == INSTALLED_BT_FOR_DIFF:
+      if installed_item.id == INSTALLED_BT_FOR_DIFF:
         #must rename keys in dict if reinstall
         new_dict = PersistentMapping()
         old_keys = ()
-        if len(installed_bt._objects.values()) > 0:
-          old_keys = installed_bt._objects.values()[0]
+        if len(installed_item._objects.values()) > 0:
+          old_keys = installed_item._objects.values()[0]
         for key in old_keys:
           new_dict[key] = ''
-        installed_bt._objects = new_dict
+        installed_item._objects = new_dict
       for role in new_roles:
-        if installed_bt._objects.has_key(role):
+        if installed_item._objects.has_key(role):
           continue
         else: # only show new roles
           modified_object_list.update({role : ['New', 'Role']})
       # get removed roles
-      old_roles = installed_bt._objects.keys()
+      old_roles = installed_item._objects.keys()
       for role in old_roles:
         if role not in new_roles:
           modified_object_list.update({role : ['Removed', self.__class__.__name__[:-12]]})
@@ -4439,21 +4439,21 @@ class MessageTranslationTemplateItem(BaseTemplateItem):
         name = localizer.get_language_name(lang)
         self._objects[lang] = name
 
-  def preinstall(self, context, installed_bt, **kw):
+  def preinstall(self, context, installed_item, **kw):
     modified_object_list = {}
     if context.getTemplateFormatVersion() == 1:
       new_keys = self._objects.keys()
       for path in new_keys:
-        if installed_bt._objects.has_key(path):
+        if installed_item._objects.has_key(path):
           # compare object to see if there is changes
           new_obj_code = self._objects[path]
-          old_obj_code = installed_bt._objects[path]
+          old_obj_code = installed_item._objects[path]
           if new_obj_code != old_obj_code:
             modified_object_list.update({path : ['Modified', self.__class__.__name__[:-12]]})
         else: # new object
           modified_object_list.update({path : ['New', self.__class__.__name__[:-12]]})
       # get removed object
-      old_keys = installed_bt._objects.keys()
+      old_keys = installed_item._objects.keys()
       for path in old_keys:
         if path not in new_keys:
           modified_object_list.update({path : ['Removed', self.__class__.__name__[:-12]]})
@@ -5075,11 +5075,11 @@ Business Template is a set of definitions, such as skins, portal types and categ
 
       for item_name in self._item_name_list:
         new_item = getattr(self, item_name, None)
-        old_item = getattr(installed_bt, item_name, None)
+        installed_item = getattr(installed_bt, item_name, None)
         if new_item is not None:
-          if old_item is not None and hasattr(old_item, '_objects'):
+          if installed_item is not None and hasattr(installed_item, '_objects'):
             modified_object = new_item.preinstall(context=self, 
-                                                  installed_bt=old_item)
+                                                  installed_item=installed_item)
             if len(modified_object) > 0:
               modified_object_list.update(modified_object)
           else:
