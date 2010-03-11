@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2010 Nexedi SA and Contributors. All Rights Reserved.
@@ -28,7 +29,7 @@
 XXX This file is experimental for new simulation implementation, and
 will replace DeliveryRule.
 """
-
+from zLOG import LOG
 import zope.interface
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
@@ -98,7 +99,7 @@ class TradeModelRuleMovementGenerator(MovementGeneratorMixin):
     Generates list of movements
     """
     movement_list = []
-    trade_condition = context.getTradeConditionValue()
+    trade_condition = context.getTradeConditionValue() # XXX-JPS - which API ?
     business_process = context.getBusinessProcessValue()
 
     if trade_condition is None or business_process is None:
@@ -108,7 +109,7 @@ class TradeModelRuleMovementGenerator(MovementGeneratorMixin):
     for amount in trade_condition.getAggregatedAmountList(context_movement):
       # business path specific
       business_path_list = business_process.getPathValueList(
-          trade_phase=amount.getTradePhaseList())
+          trade_phase=amount.getTradePhaseList()) # Why a list of trade phases ? XXX-JPS
       if len(business_path_list) == 0:
         raise ValueError('Cannot find Business Path')
 
@@ -120,8 +121,8 @@ class TradeModelRuleMovementGenerator(MovementGeneratorMixin):
       kw = self._getPropertyAndCategoryList(context_movement, business_path)
 
       # rule specific
-      kw['price'] = amount.getProperty('price')
-      kw['resource'] = amount.getProperty('resource_list')
+      kw['price'] = amount.getPrice() or amount.getEfficiency()
+      kw['resource'] = amount.getProperty('resource_list') # Inconsistent... list and not list XXX-JPS
       kw['reference'] = amount.getProperty('reference')
       kw['quantity'] = amount.getProperty('quantity')
       kw['base_application'] = amount.getProperty(
@@ -129,11 +130,14 @@ class TradeModelRuleMovementGenerator(MovementGeneratorMixin):
       kw['base_contribution'] = amount.getProperty(
           'base_contribution_list')
 
+      LOG('kw before setting order and delivery to None', 0, repr(kw))
+      kw['order'] = None
+      kw['delivery'] = None # Where does this come from ??? XXX-JPS - Why not None ?
+                            # XXX-JPS Way too many properties are copied
+
       simulation_movement = context.newContent(
         portal_type=RuleMixin.movement_type,
         temp_object=True,
-        order=None,
-        delivery=None,
         **kw)
       movement_list.append(simulation_movement)
 
