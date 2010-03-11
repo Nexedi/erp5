@@ -528,7 +528,6 @@ class ERP5TypeTestCase(backportUnittest.TestCase, PortalTestCase):
       global current_app
       current_app = self.app
       self._updateConnectionStrings()
-      self._updateConversionServerConfiguration()
 
     def afterSetUp(self):
       '''Called after setUp() has completed. This is
@@ -566,12 +565,9 @@ class ERP5TypeTestCase(backportUnittest.TestCase, PortalTestCase):
       """Update conversion server (Oood) at default site preferences.
       """
       conversion_dict = _getConversionServerDict()
-
-      preference = getattr(self.portal.portal_preferences, 
-                           'default_site_preference', None)
-      if preference is not None:
-        preference.setPreferredOoodocServerAddress(conversion_dict['hostname'])
-        preference.setPreferredOoodocServerPortNumber(conversion_dict['port'])
+      preference = self.portal.portal_preferences.default_site_preference
+      preference._setPreferredOoodocServerAddress(conversion_dict['hostname'])
+      preference._setPreferredOoodocServerPortNumber(conversion_dict['port'])
 
     def _recreateCatalog(self, quiet=0):
       """Clear activities and catalog and recatalog everything.
@@ -986,6 +982,7 @@ class ERP5TypeTestCase(backportUnittest.TestCase, PortalTestCase):
                 pass
               self.startZServer()
 
+            self._updateConversionServerConfiguration()
             self._updateConnectionStrings()
             self._recreateCatalog()
             self._installBusinessTemplateList(business_template_list,
