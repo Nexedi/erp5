@@ -566,9 +566,12 @@ class ERP5TypeTestCase(backportUnittest.TestCase, PortalTestCase):
       """Update conversion server (Oood) at default site preferences.
       """
       conversion_dict = _getConversionServerDict()
-      preference = self.portal.portal_preferences.default_site_preference
-      preference.setPreferredOoodocServerAddress(conversion_dict['hostname'])
-      preference.setPreferredOoodocServerPortNumber(conversion_dict['port'])
+
+      preference = getattr(self.portal.portal_preferences, 
+                           'default_site_preference', None)
+      if preference is not None:
+        preference.setPreferredOoodocServerAddress(conversion_dict['hostname'])
+        preference.setPreferredOoodocServerPortNumber(conversion_dict['port'])
 
     def _recreateCatalog(self, quiet=0):
       """Clear activities and catalog and recatalog everything.
