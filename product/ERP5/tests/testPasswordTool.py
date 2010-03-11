@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2004 Nexedi SARL and Contributors. All Rights Reserved.
@@ -63,7 +64,7 @@ class TestPasswordTool(ERP5TypeTestCase):
     # clear modules if necessary
     self.portal.person_module.manage_delObjects(list(self.portal.person_module.objectIds()))
     # reset password tool internal structure
-    self.portal.portal_password.password_request_dict.clear()
+    self.portal.portal_password._password_request_dict.clear()
     transaction.commit()
     self.tic()
 
@@ -180,7 +181,7 @@ class TestPasswordTool(ERP5TypeTestCase):
     We don't check use of random url in mail here as we have on request
     But random is also check by changeUserPassword, so it's the same
     """
-    key = self.portal.portal_password.password_request_dict.keys()[0]
+    key = self.portal.portal_password._password_request_dict.keys()[0]
     self.portal.portal_password.changeUserPassword(user_login="userA",
                                                    password="secret",
                                                    password_confirmation="secret",
@@ -194,7 +195,7 @@ class TestPasswordTool(ERP5TypeTestCase):
     Call method that change the password with a bad user name
     This must not work
     """
-    key = self.portal.portal_password.password_request_dict.keys()[0]
+    key = self.portal.portal_password._password_request_dict.keys()[0]
     sequence.edit(key=key)
     self.portal.portal_password.changeUserPassword(user_login="userZ",
                                                    password="secret",
@@ -235,13 +236,13 @@ class TestPasswordTool(ERP5TypeTestCase):
     Change expiration date so that reset of password is not available
     """
     # save key for url
-    key = self.portal.portal_password.password_request_dict.keys()[0]
+    key = self.portal.portal_password._password_request_dict.keys()[0]
     sequence.edit(key=key)
     # modify date
-    for k, v in self.portal.portal_password.password_request_dict.items():
+    for k, v in self.portal.portal_password._password_request_dict.items():
       login, date = v
       date = DateTime() - 1
-      self.portal.portal_password.password_request_dict[k] = (login, date)
+      self.portal.portal_password._password_request_dict[k] = (login, date)
 
   def stepSimulateExpirationAlarm(self, sequence=None, sequence_list=None, **kw):
     """
@@ -253,7 +254,7 @@ class TestPasswordTool(ERP5TypeTestCase):
     """
     after alarm all expired request must have been removed
     """
-    self.assertEqual(len(self.portal.portal_password.password_request_dict), 0)
+    self.assertEqual(len(self.portal.portal_password._password_request_dict), 0)
 
 
   def stepLogout(self, sequence=None, sequence_list=None, **kw):
@@ -353,16 +354,16 @@ class TestPasswordTool(ERP5TypeTestCase):
     self._assertUserExists('userA', 'passwordA')
     self._assertUserExists('userB', 'passwordB')
     
-    self.assertEquals(0, len(self.portal.portal_password.password_request_dict))
+    self.assertEquals(0, len(self.portal.portal_password._password_request_dict))
     self.portal.portal_password.mailPasswordResetRequest(user_login="userA")
-    self.assertEquals(1, len(self.portal.portal_password.password_request_dict))
-    key_a = self.portal.portal_password.password_request_dict.keys()[0]
+    self.assertEquals(1, len(self.portal.portal_password._password_request_dict))
+    key_a = self.portal.portal_password._password_request_dict.keys()[0]
     transaction.commit()
     self.tic()
 
     self.portal.portal_password.mailPasswordResetRequest(user_login="userB")
     possible_key_list =\
-        self.portal.portal_password.password_request_dict.keys()
+        self.portal.portal_password._password_request_dict.keys()
     self.assertEquals(2, len(possible_key_list))
     key_b = [k for k in possible_key_list if k != key_a][0]
     transaction.commit()
@@ -405,14 +406,14 @@ class TestPasswordTool(ERP5TypeTestCase):
 
     self._assertUserExists('userZ ', 'passwordZ')
     
-    self.assertEquals(0, len(self.portal.portal_password.password_request_dict))
+    self.assertEquals(0, len(self.portal.portal_password._password_request_dict))
     # No reset should be send if trailing space is not entered
     self.portal.portal_password.mailPasswordResetRequest(user_login="userZ")
-    self.assertEquals(0, len(self.portal.portal_password.password_request_dict))
+    self.assertEquals(0, len(self.portal.portal_password._password_request_dict))
     self.portal.portal_password.mailPasswordResetRequest(user_login="userZ ")
-    self.assertEquals(1, len(self.portal.portal_password.password_request_dict))
+    self.assertEquals(1, len(self.portal.portal_password._password_request_dict))
 
-    key_a = self.portal.portal_password.password_request_dict.keys()[0]
+    key_a = self.portal.portal_password._password_request_dict.keys()[0]
     transaction.commit()
     self.tic()
 
