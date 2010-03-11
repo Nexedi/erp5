@@ -507,6 +507,9 @@ class TestSQLCatalog(unittest.TestCase):
     """
     self.catalog(ReferenceQuery(ReferenceQuery(operator='match_boolean', fulltext='a+b'), operator='and'),
                  {'fulltext': 'a+b'})
+    self.catalog(ReferenceQuery(ReferenceQuery( ReferenceQuery(operator='=', uid='foo'),
+                ReferenceQuery(operator='match_boolean', fulltext='+a b'), operator='and'
+    ), operator='and'), {'fulltext': '+a b uid:foo'})
 
   def test_DefaultKeyTextRendering(self):
     self.catalog(ReferenceQuery(ReferenceQuery(operator='like', default='a% b'), operator='and'),
