@@ -28,6 +28,7 @@
 
 
 import unittest
+from lxml import etree
 
 import transaction
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
@@ -376,6 +377,58 @@ return []
     """
     self._helperExtraAndCssInListboxLine("LinesField", True)
     self._helperExtraAndCssInListboxLine("LinesField", False)
+
+  def test_09_editablePropertyPrecedence(self):
+    """
+      When listbox's editable column and listbox_xx's editable property
+      conflict, the listbox editable column choice should take over.
+
+      For example, if listbox_foo is defined as editable, without
+      having column "foo" listed as editable in the listbox, the field should
+      not be rendered as editable
+    """
+    portal = self.getPortal()
+    portal.ListBoxZuite_reset()
+
+    field_name = 'noneditable'
+    field_id = 'listbox_noneditable'
+
+    # Reset listbox properties
+    listbox = portal.FooModule_viewFooList.listbox
+    listbox.ListBox_setPropertyList(
+      field_list_method = 'portal_catalog',
+      field_columns = ['%s | Check extra' % field_name,],
+    )
+
+    form = portal.FooModule_viewFooList
+    form.manage_addField(field_id, field_name, "StringField")
+    field = getattr(form, field_id)
+
+    field.values['default'] = '42'
+    field.values['editable'] = True
+    form.groups['bottom'].remove(field_id)
+    form.groups['hidden'].append(field_id)
+
+    # Create an new empty object with a list property
+    foo_module = portal.foo_module
+    o = foo_module.newContent()
+
+    # Reindex
+    o.immediateReindexObject()
+
+    # Render the module in html
+    request = get_request()
+    request['here'] = portal.foo_module
+    rendered_listbox = listbox.render(REQUEST=request)
+
+    html = etree.HTML(rendered_listbox)
+    # When a StringField is editable, it is rendered as an input
+    # with name: "field_%(field_id)s_%(object_id)s"
+    editable_field_list = html.xpath(
+                            '//input[starts-with(@name, $name)]',
+                            name='field_%s_' % field_id,
+                          )
+    self.assertEquals(len(editable_field_list), 0)
 
   def test_ObjectSupport(self):
     # make sure listbox supports rendering of simple objects
