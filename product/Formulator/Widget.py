@@ -531,9 +531,10 @@ class TextAreaWidget(Widget):
                             extra=field.get_value('extra'))
 
     def render_view(self, field, value, REQUEST, render_prefix=None):
-        if value is None:
-          return ''
-        return value
+        return render_element("div",
+                              css_class=field.get_value('css_class'),
+                              contents=html_quote(value),
+                              extra=field.get_value('extra'))
 
     def render_odt_view(self, field, value, as_string, ooo_builder, REQUEST,
         render_prefix, attr_dict, local_name):
@@ -593,7 +594,12 @@ class LinesTextAreaWidget(TextAreaWidget):
       return ''
     elif isinstance(value, (str, unicode)):
       value = [value]
-    return string.join(value, field.get_value('view_separator'))
+    return TextAreaWidget.render_view(
+        self,
+        field,
+        string.join(value, field.get_value('view_separator')),
+        REQUEST,
+    )
 
   def render_odt_view(self, field, value, as_string, ooo_builder, REQUEST,
       render_prefix, attr_dict, local_name):
