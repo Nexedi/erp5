@@ -551,6 +551,15 @@ class TestSQLCatalog(unittest.TestCase):
     self.assertTrue(self._catalog.hasColumn('uid'))
     self.assertFalse(self._catalog.hasColumn('foobar'))
 
+  def test_fulltextOrderBy(self):
+    # No order_by_list, resulting "ORDER BY" must be empty.
+    sql_expression = self.asSQLExpression({'fulltext': 'foo'})
+    self.assertEqual(sql_expression.getOrderByExpression(), '')
+    # order_by_list on fulltext column, resulting "ORDER BY" must be non-empty.
+    sql_expression = self.asSQLExpression({'fulltext': 'foo',
+      'order_by_list': [('fulltext', ), ]})
+    self.assertNotEqual(sql_expression.getOrderByExpression(), '')
+
 ##return catalog(title=Query(title='a', operator='not'))
 #return catalog(title={'query': 'a', 'operator': 'not'})
 #return catalog(title={'query': ['a', 'b'], 'operator': 'not'})
