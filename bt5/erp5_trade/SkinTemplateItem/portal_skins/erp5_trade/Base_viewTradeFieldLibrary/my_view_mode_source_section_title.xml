@@ -23,7 +23,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_view_mode_sale_destination_decision_title</string> </value>
+            <value> <string>my_view_mode_source_section_title</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -111,7 +111,7 @@
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string>The person or organisation in charge of selecting the supplier or taking the decision to place the order.</string> </value>
+                    <value> <string>The invoicing person or organisation.</string> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
@@ -157,7 +157,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Buyer</string> </value>
+                    <value> <string>Supplier</string> </value>
                 </item>
               </dictionary>
             </value>
