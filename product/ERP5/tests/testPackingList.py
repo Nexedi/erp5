@@ -1497,6 +1497,73 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
     self.assertEqual('cancelled', packing_list.getSimulationState())
     self.assertEqual('cancelled', simulation_movement.getSimulationState())
 
+  def stepCreateSourceAccount(self, sequence=None, **kw):
+    organisation = self.stepCreateOrganisation(sequence, None, 'dummy_source')
+    sequence.edit(source_account = sequence.get('dummy_source')['bank'])
+
+  def stepCreateDestinationAccount(self, sequence=None, **kw):
+    organisation = self.stepCreateOrganisation(sequence, None,
+        'dummy_destination')
+    sequence.edit(destination_account = sequence.get('dummy_destination')
+        ['bank'])
+
+  def stepSetOrderLineSourceAccount(self, sequence=None, **kw):
+    order_line = sequence.get('order_line')
+    account = sequence.get('source_account')
+    self.assertNotEqual(None, account)
+    order_line.setSourceAccountValue(account)
+
+  def stepSetOrderLineDestinationAccount(self, sequence=None, **kw):
+    order_line = sequence.get('order_line')
+    account = sequence.get('destination_account')
+    self.assertNotEqual(None, account)
+    order_line.setDestinationAccountValue(account)
+
+  def stepCheckPackingListLineSourceAccount(self, sequence=None, **kw):
+    packing_list = sequence.get('packing_list')
+    account = sequence.get('source_account')
+    for line in packing_list.getMovementList():
+      self.assertEqual(line.getSourceAccountValue(), account)
+
+  def stepCheckPackingListLineDestinationAccount(self, sequence=None, **kw):
+    packing_list = sequence.get('packing_list')
+    account = sequence.get('destination_account')
+    for line in packing_list.getMovementList():
+      self.assertEqual(line.getDestinationAccountValue(), account)
+
+  def test_17_PackingListOrderLineWithAccount(self, quiet=quiet):
+    """
+      Check how packing list behaves if comes from order line which has
+      source/destination account set.
+    """
+    sequence_list = SequenceList()
+
+    # Test with a simply order without cell
+    sequence_string = self.default_order_sequence + """
+                      stepCreateNotVariatedResource \
+                      stepCreateSourceAccount
+                      stepCreateDestinationAccount
+                      stepTic
+                      stepCreateOrderLine
+                      stepSetOrderLineResource
+                      stepSetOrderLineDefaultValues
+                      stepSetOrderLineSourceAccount
+                      stepSetOrderLineDestinationAccount
+                      stepOrderOrder
+                      stepTic
+                      stepConfirmOrder
+                      stepTic
+                      stepCheckOrderSimulation
+                      stepCheckDeliveryBuilding
+                      stepCheckPackingListIsSolved
+                      stepCheckOrderPackingList
+                      stepCheckPackingListLineSourceAccount
+                      stepCheckPackingListLineDestinationAccount
+                      """
+    sequence_list.addSequenceString(sequence_string)
+
+    sequence_list.play(self, quiet=quiet)
+
 
 class TestPurchasePackingListMixin(TestPackingListMixin):
   """Mixing class with steps to test purchase packing lists.
