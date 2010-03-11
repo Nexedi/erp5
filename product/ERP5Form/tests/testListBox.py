@@ -296,31 +296,47 @@ return []
     # Make sure that word is there
     self.assertEqual(rendered_listbox.find(word) > 0, True)
 
-  def test_07_ExtraAndCssFieldsInIntegerField(self, quiet=0, run=run_all_test):
+  def _helperExtraAndCssInListboxLine(self, field_type, editable):
     """
-      Check that css_class and extra fields are rendered when used in a
-      listbox_xxx line, using IntegerField for the check.
+    Create a listbox_xxx field, in the hidden group, that defines
+    identifiable CSS classes and extra properties.
+      - field_type: type of the field which is created
+      - editable: boolean, defines if the field should be defined as editable
+
+    Render the field in the listbox, and check that CSS and extra are
+    present in the rendered HTML
+
+    Field names and Ids are generated to be unique for each
+    (field_type, editable) entry.
     """
     portal = self.getPortal()
     portal.ListBoxZuite_reset()
+
+    field_name = field_type.lower()
+    if editable:
+      field_name += '_editable'
+    field_id = 'listbox_' + field_name
 
     # Reset listbox properties
     listbox = portal.FooModule_viewFooList.listbox
     listbox.ListBox_setPropertyList(
       field_list_method = 'portal_catalog',
-      field_columns = ['extra | Check extra',],
+      field_columns = ['%s | Check extra' % field_name,],
     )
 
     form = portal.FooModule_viewFooList
-    form.manage_addField('listbox_extra', 'extra', 'IntegerField')
-    integerfield = form.listbox_extra
+    form.manage_addField(field_id, field_name, field_type)
+    field = getattr(form, field_id)
 
-    word = 'dummy_%s_to_check_for_in_listbox_test'
-    extra = word % "extra"
-    css_class = word % "css_class"
-    integerfield.values['extra'] = "alt='%s'" % extra
-    integerfield.values['css_class'] = css_class
-    integerfield.values['default'] = '42'
+    word = '%s_dummy_%%s_to_check_for_in_listbox_test' % field_name
+    extra = word % 'extra'
+    css_class = word % 'css_class'
+    field.values['extra'] = "alt='%s'" % extra
+    field.values['css_class'] = css_class
+    field.values['default'] = '42'
+    field.values['editable'] = editable
+    form.groups['bottom'].remove(field_id)
+    form.groups['hidden'].append(field_id)
 
     # Create an new empty object with a list property
     foo_module = portal.foo_module
@@ -334,9 +350,32 @@ return []
     request['here'] = portal.foo_module
     rendered_listbox = listbox.render(REQUEST=request)
 
-    # Make sure that the extras and css_classes
-    self.assertTrue(extra in rendered_listbox)
-    self.assertTrue(css_class in rendered_listbox)
+    if editable:
+      editable_text = 'An editable'
+    else:
+      editable_text = 'A non-editable'
+    error_msg = "%s %s used as a listbox cell does not render properly the " \
+        "'%%s' property" % (editable_text, field_type)
+
+    # Make sure that the extras and css_classes are rendered
+    self.assertTrue(extra in rendered_listbox, error_msg % 'extra')
+    self.assertTrue(css_class in rendered_listbox, error_msg % 'css_class')
+
+  def test_07_ExtraAndCssFieldsInIntegerField(self, quiet=0, run=run_all_test):
+    """
+      Check that css_class and extra fields are rendered when used in a
+      listbox_xxx line, using IntegerField for the check.
+    """
+    self._helperExtraAndCssInListboxLine("IntegerField", True)
+    self._helperExtraAndCssInListboxLine("IntegerField", False)
+
+  def test_08_ExtraAndCssFieldsInLinesField(self, quiet=0, run=run_all_test):
+    """
+      Check that css_class and extra fields are rendered when used in a
+      listbox_xxx line, using LinesField for the check.
+    """
+    self._helperExtraAndCssInListboxLine("LinesField", True)
+    self._helperExtraAndCssInListboxLine("LinesField", False)
 
   def test_ObjectSupport(self):
     # make sure listbox supports rendering of simple objects
