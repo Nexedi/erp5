@@ -448,10 +448,8 @@ class ProxyField(ZMIField):
 
     if (proxy_form is not None):
       field_id = self.get_value('field_id')
-      proxy_field = getattr(aq_base(proxy_form), field_id, None)
-      if proxy_field is not None:
-        proxy_field = getattr(proxy_form, field_id)
-      else:
+      proxy_field = proxy_form._getOb(field_id, None)
+      if proxy_field is None:
         if form_id_with_skin_folder_name_flag is False:
           # Try to get the field from another field library with a lower
           # priority.
