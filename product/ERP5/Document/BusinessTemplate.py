@@ -1602,7 +1602,7 @@ class WorkflowTemplateItem(ObjectTemplateItem):
   # So we hide modified subobjects to the user and we always reinstall
   # (or remove) everything.
 
-  def preinstall(self, context, installed_item, **kw):
+  def preinstall(self, context, installed_item, installed_bt, **kw):
     modified_object_dict = ObjectTemplateItem.preinstall(self, context,
                                                          installed_item, **kw)
     modified_workflow_dict = {}
@@ -1612,6 +1612,28 @@ class WorkflowTemplateItem(ObjectTemplateItem):
         modified_workflow_dict.setdefault('/'.join(path[:2]), ('Modified', state[1]))
       else:
         modified_workflow_dict[modified_object] = state
+    removed_workflow_id_list = [x[0].split('/', 1)[1] \
+                                for x in modified_workflow_dict.iteritems() \
+                                if x[1][0] == 'Removed']
+    if len(removed_workflow_id_list) > 0:
+      installed_chain_list = [[y.strip() for y in x.split('|')] for x in \
+                                installed_bt.getTemplatePortalTypeWorkflowChainList()]
+      new_chain_list = [[y.strip() for y in x.split('|')] for x in \
+                          context.getTemplatePortalTypeWorkflowChainList()]
+      chain_dict = getChainByType(context)[1]
+      for workflow_id in removed_workflow_id_list:
+        affected_portal_type_set = set([x[0][6:] for x in \
+                                        chain_dict.iteritems() \
+                                        if workflow_id in \
+                                        [y.strip() for y in x[1].split(',')]])
+        safe_portal_type_set = set([x[0] for x in installed_chain_list \
+                                    if x[1] == workflow_id]) - \
+                               set([x[0] for x in new_chain_list \
+                                    if x[1] == workflow_id])
+        if affected_portal_type_set - safe_portal_type_set:
+          value = modified_workflow_dict['portal_workflow/%s' % workflow_id]
+          modified_workflow_dict['portal_workflow/%s' % workflow_id] = \
+              ('Removed but used', value[1])
     return modified_workflow_dict
 
   def install(self, context, trashbin, **kw):
@@ -5079,7 +5101,8 @@ Business Template is a set of definitions, such as skins, portal types and categ
         if new_item is not None:
           if installed_item is not None and hasattr(installed_item, '_objects'):
             modified_object = new_item.preinstall(context=self, 
-                                                  installed_item=installed_item)
+                                                  installed_item=installed_item,
+                                                  installed_bt=installed_bt)
             if len(modified_object) > 0:
               modified_object_list.update(modified_object)
           else:

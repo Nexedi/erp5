@@ -107,11 +107,13 @@ for object_id in keys:\n
       choice_item_list=[[upgrade_title, \'install\']]\n
     else:\n
       choice_item_list=[[backup_title, \'backup\']]\n
-  elif object_state == \'Removed\':\n
+  elif object_state in (\'Removed\', \'Removed but used\'):\n
     if object_class in no_backup_dict:\n
       choice_item_list=[[remove_title, \'remove\']]\n
     else:\n
       choice_item_list=[[save_and_remove_title, \'save_and_remove\']]\n
+  else:\n
+    choice_item_list = [[install_title, \'install\']]\n
 \n
   line.edit(object_id=object_id,\n
                 object_state=object_state,\n

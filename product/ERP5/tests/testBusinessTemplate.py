@@ -2414,6 +2414,27 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     import_bt.install(force=0, object_to_update=install_object_dict,
                       update_catalog=1)
 
+  def stepInstallWithRemoveCheckedBusinessTemplate(self, sequence=None, sequence_list=None, **kw):
+    """
+    Install importzed business template
+    """
+    import_bt = sequence.get('import_bt')
+    object_list = import_bt.preinstall()
+    install_object_dict = {}
+    for obj in object_list.keys():
+      state = object_list[obj][0]
+      if state in ('Removed', 'Removed but used'):
+        install_state = 'save_and_remove'
+      elif state == 'Modified':
+        install_state = 'backup'
+      elif state == 'New':
+        install_state = 'install'
+      else:
+        install_state = ""
+      install_object_dict[obj] = install_state
+    import_bt.install(force=0, object_to_update=install_object_dict,
+                      update_catalog=1)
+
   def stepInstallDuplicatedBusinessTemplate(self, sequence=None,
                                             sequence_list=None, **kw):
     """
@@ -2991,6 +3012,76 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CheckBuiltBuildingState \
                        CheckNotInstalledInstallationState \
                        InstallWithoutForceBusinessTemplate \
+                       Tic \
+                       CheckInstalledInstallationState \
+                       CheckBuiltBuildingState \
+                       CheckSkinsLayers \
+                       CheckWorkflowExists \
+                       CheckWorkflowChainRemoved \
+                       SaveWorkflowChain \
+                       '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self, quiet=quiet)
+
+  def test_042_BusinessTemplateWithWorkflowRemoved(self, quiet=quiet, run=run_all_test):
+    if not run: return
+    if not quiet:
+      message = 'Test Business Template With Remove Of Workflow'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ', 0, message)
+    sequence_list = SequenceList()
+    sequence_string = '\
+                       CreatePortalType \
+                       CreateWorkflow \
+                       CreateNewBusinessTemplate \
+                       UseExportBusinessTemplate \
+                       AddWorkflowToBusinessTemplate \
+                       AddWorkflowChainToBusinessTemplate \
+                       CheckModifiedBuildingState \
+                       CheckNotInstalledInstallationState \
+                       BuildBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       CheckObjectPropertiesInBusinessTemplate \
+                       SaveBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       RemoveWorkflow \
+                       RemoveBusinessTemplate \
+                       RemoveAllTrashBins \
+                       ImportBusinessTemplate \
+                       UseImportBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       InstallBusinessTemplate \
+                       ModifyWorkflowChain \
+                       Tic \
+                       CheckInstalledInstallationState \
+                       CheckBuiltBuildingState \
+                       CheckNoTrashBin \
+                       CheckSkinsLayers \
+                       CheckWorkflowExists \
+                       CheckWorkflowChainExists \
+                       CreateSecondBusinessTemplate \
+                       UseSecondBusinessTemplate \
+                       CheckModifiedBuildingState \
+                       CheckNotInstalledInstallationState \
+                       BuildBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       CheckObjectPropertiesInBusinessTemplate \
+                       SaveBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       RemoveBusinessTemplate \
+                       RemoveAllTrashBins \
+                       ImportBusinessTemplate \
+                       UseImportBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       Tic \
+                       Pdb \
+                       InstallWithRemoveCheckedBusinessTemplate \
                        Tic \
                        CheckInstalledInstallationState \
                        CheckBuiltBuildingState \
