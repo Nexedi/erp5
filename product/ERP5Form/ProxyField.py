@@ -428,6 +428,8 @@ class ProxyField(ZMIField):
         except KeyError:
           pass
 
+    portal = self.getPortalObject()
+    portal_skins = getToolByName(portal, 'portal_skins')
     form = self.aq_parent
     object = form.aq_parent
 
@@ -438,17 +440,18 @@ class ProxyField(ZMIField):
       # If a / is in the form_id, it means that skin_folder is explicitly
       # defined. If so, prevent acquisition to get the form.
       form_id_with_skin_folder_name_flag = True
-      proxy_form = aq_base(object.portal_skins).unrestrictedTraverse(form_id, None)
+      proxy_form = aq_base(portal_skins).unrestrictedTraverse(form_id, None)
+      if proxy_form is not None:
+        proxy_form = portal_skins.unrestrictedTraverse(form_id)
     else:
       proxy_form = getattr(object, form_id, None)
 
     if (proxy_form is not None):
       field_id = self.get_value('field_id')
-      try:
-        proxy_field = aq_base(getattr(proxy_form, field_id))
-      except (AttributeError, TypeError):
-        proxy_field = None
-
+      proxy_field = getattr(aq_base(proxy_form), field_id, None)
+      if proxy_field is not None:
+        proxy_field = getattr(proxy_form, field_id)
+      else:
         if form_id_with_skin_folder_name_flag is False:
           # Try to get the field from another field library with a lower
           # priority.
@@ -458,23 +461,20 @@ class ProxyField(ZMIField):
 
           if skin_info is not None:
             skin_selection_name, ignore, resolve = skin_info
-            portal_skins = aq_base(self.portal_skins)
 
             selection_dict = portal_skins._getSelections()
             candidate_folder_id_list = selection_dict[skin_selection_name].split(',')
 
             for candidate_folder_id in candidate_folder_id_list:
-              candidate_folder = getattr(portal_skins, candidate_folder_id, None)
+              candidate_folder = portal_skins._getOb(candidate_folder_id, None)
               if candidate_folder is not None:
-                proxy_form = getattr(candidate_folder, form_id, None)
+                proxy_form = candidate_folder._getOb(form_id, None)
                 if proxy_form is not None:
-                  proxy_field = getattr(proxy_form, field_id, None)
+                  proxy_field = proxy_form._getOb(field_id, None)
                   if proxy_field is not None:
                     break
 
-    if proxy_field is not None:
-      proxy_field = proxy_field.__of__(form)
-    else:
+    if proxy_field is None:
       LOG('ProxyField', WARNING, 
           'Could not get a field from a proxy field %s in %s' % \
               (self.id, object.id))
