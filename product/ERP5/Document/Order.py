@@ -96,7 +96,7 @@ class Order(Delivery):
         if not base_contribution_value_list:
           # We cannot find any amount so that the result is 0.
           return 0
-        current_aggregated_amount_list = trade_condition.getAggregatedAmountList(self, rounding=rounding)
+        current_aggregated_amount_list = trade_condition.getAggregatedAmountList(self, rounding=rounding, force_create_line=True)
         trade_model_line = newTempTradeModelLine(
             self,
             '_temp_%s' % (self.getId()))

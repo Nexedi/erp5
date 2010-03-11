@@ -260,7 +260,8 @@ class TradeCondition(Path, Transformation, XMLMatrix):
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getAggregatedAmountList')
-    def getAggregatedAmountList(self, context, movement_list=None, **kw):
+    def getAggregatedAmountList(self, context, movement_list=None,
+                                force_create_line=False, **kw):
       if movement_list is None:
         movement_list = []
       result = AggregatedAmountList()
@@ -290,7 +291,7 @@ class TradeCondition(Path, Transformation, XMLMatrix):
                 'Reference must be set.')
         for model_line in trade_model_line_composed_list:
           if model_line.getReference() == movement_reference and\
-              model_line.isCreateLine():
+              (force_create_line or model_line.isCreateLine()):
             aggregated_amount_list.append(movement)
 
       return aggregated_amount_list
