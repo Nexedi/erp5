@@ -296,6 +296,48 @@ return []
     # Make sure that word is there
     self.assertEqual(rendered_listbox.find(word) > 0, True)
 
+  def test_07_ExtraAndCssFieldsInIntegerField(self, quiet=0, run=run_all_test):
+    """
+      Check that css_class and extra fields are rendered when used in a
+      listbox_xxx line, using IntegerField for the check.
+    """
+    portal = self.getPortal()
+    portal.ListBoxZuite_reset()
+
+    # Reset listbox properties
+    listbox = portal.FooModule_viewFooList.listbox
+    listbox.ListBox_setPropertyList(
+      field_list_method = 'portal_catalog',
+      field_columns = ['extra | Check extra',],
+    )
+
+    form = portal.FooModule_viewFooList
+    form.manage_addField('listbox_extra', 'extra', 'IntegerField')
+    integerfield = form.listbox_extra
+
+    word = 'dummy_%s_to_check_for_in_listbox_test'
+    extra = word % "extra"
+    css_class = word % "css_class"
+    integerfield.values['extra'] = "alt='%s'" % extra
+    integerfield.values['css_class'] = css_class
+    integerfield.values['default'] = '42'
+
+    # Create an new empty object with a list property
+    foo_module = portal.foo_module
+    o = foo_module.newContent()
+
+    # Reindex
+    o.immediateReindexObject()
+
+    # Render the module in html
+    request = get_request()
+    request['here'] = portal.foo_module
+    rendered_listbox = listbox.render(REQUEST=request)
+
+    # Make sure that the extras and css_classes
+    self.assertTrue(extra in rendered_listbox)
+    self.assertTrue(css_class in rendered_listbox)
+
   def test_ObjectSupport(self):
     # make sure listbox supports rendering of simple objects
     # the only requirement is that objects have a `uid` attribute which is a

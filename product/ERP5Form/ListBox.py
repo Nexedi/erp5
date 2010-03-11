@@ -2291,37 +2291,41 @@ class ListBoxHTMLRendererLine(ListBoxRendererLine):
           except AttributeError:
             pass
 
-      if editable_field is not None and sql in editable_column_id_set:
+      if editable_field is not None:
         # XXX what if the object does not have uid?
         key = '%s_%s' % (editable_field.getId(), self.getUid())
-        if has_error: # If there is any error on listbox, we should use what the user has typed
-          display_value = None
-        else:
-          validated_value_dict = request.get(field_id, None)
-          if validated_value_dict is None:
-            # If this is neither an error nor a validated listbox
-            # we should use the original value
-            display_value = original_value
+        if sql in editable_column_id_set:
+          if has_error: # If there is any error on listbox, we should use what the user has typed
+            display_value = None
           else:
-            # If the listbox has been validated (ie. as it is the
-            # case whenever a relation field displays a popup menu)
-            # we have to use the value entered by the user
-            display_value = None #
-        if error_dict.has_key(key): # If error on current field, we should display message
-          error_text = error_dict[key].error_text
-          error_text = cgi.escape(error_text)
-          if isinstance(error_text, str):
-            error_mapping = getattr(error_dict[key], 'error_mapping', None)
-            if error_mapping is not None:
-              error_text = u'%s' % Message(domain=ui_domain,
-                                           message=error_text,
-                                           mapping=error_mapping)
+            validated_value_dict = request.get(field_id, None)
+            if validated_value_dict is None:
+              # If this is neither an error nor a validated listbox
+              # we should use the original value
+              display_value = original_value
             else:
-              error_text = u'%s' % Message(domain=ui_domain,
-                                           message=error_text)
-          error_message = u'<br />' + error_text
+              # If the listbox has been validated (ie. as it is the
+              # case whenever a relation field displays a popup menu)
+              # we have to use the value entered by the user
+              display_value = None #
+          if error_dict.has_key(key): # If error on current field, we should display message
+            error_text = error_dict[key].error_text
+            error_text = cgi.escape(error_text)
+            if isinstance(error_text, str):
+              error_mapping = getattr(error_dict[key], 'error_mapping', None)
+              if error_mapping is not None:
+                error_text = u'%s' % Message(domain=ui_domain,
+                                             message=error_text,
+                                             mapping=error_mapping)
+              else:
+                error_text = u'%s' % Message(domain=ui_domain,
+                                             message=error_text)
+            error_message = u'<br />' + error_text
+          else:
+            error_message = u''
         else:
           error_message = u''
+          display_value = original_value
 
         # We need a way to pass the current line object (ie. brain) to the
         # field which is being displayed. Since the render_view API did not
