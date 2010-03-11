@@ -50,6 +50,7 @@ class TestZelenium(ERP5TypeTestCase):
                 'erp5_simplified_invoicing',
                 'erp5_accounting_ui_test',
                 'erp5_pdm_ui_test',
+                'erp5_trade_ui_test',
                 'erp5_ingestion', 'erp5_ingestion_mysql_innodb_catalog',
                 'erp5_web', 'erp5_dms', 'erp5_dms_ui_test',
                 # erp5_web_ui_test must run at the last.
