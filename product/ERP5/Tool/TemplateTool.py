@@ -218,7 +218,8 @@ class TemplateTool (BaseTool):
       # XXX not thread safe
       current_directory = os.getcwd()
       os.chdir(tmpdir_path)
-      export_string = business_template.export(path=path)
+      absolute_path = os.path.abspath(path)
+      export_string = business_template.export(path=absolute_path)
       os.chdir(current_directory)
       if RESPONSE is not None:
         RESPONSE.setHeader('Content-type','tar/x-gzip')

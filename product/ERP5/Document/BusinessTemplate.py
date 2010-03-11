@@ -311,7 +311,7 @@ class BusinessTemplateArchive:
   def addObject(self, *kw):
     pass
 
-  def finishCreation(self, **kw):
+  def finishCreation(self, name=None, **kw):
     pass
 
 class BusinessTemplateFolder(BusinessTemplateArchive):
@@ -431,10 +431,10 @@ class BusinessTemplateTarball(BusinessTemplateArchive):
     f.write(str(obj))
     f.close()
 
-  def finishCreation(self):
-    self.tar.add(self.path)
+  def finishCreation(self, name):
+    self.tar.add(name)
     self.tar.close()
-    shutil.rmtree(self.path)
+    shutil.rmtree(name)
     return self.fobj
 
   def _initImport(self, file=None, **kw):
@@ -5508,7 +5508,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       for item_name in self._item_name_list:
         getattr(self, item_name).export(context=self, bta=bta)
 
-      return bta.finishCreation()
+      return bta.finishCreation(self.getTitle())
 
     security.declareProtected(Permissions.ManagePortal, 'importFile')
     def importFile(self, dir = 0, file=None, root_path=None):
