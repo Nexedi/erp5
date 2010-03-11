@@ -29,7 +29,6 @@
 XXX This file is experimental for new simulation implementation, and
 will replace DeliveryRule.
 """
-from zLOG import LOG
 import zope.interface
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
@@ -130,7 +129,6 @@ class TradeModelRuleMovementGenerator(MovementGeneratorMixin):
       kw['base_contribution'] = amount.getProperty(
           'base_contribution_list')
 
-      LOG('kw before setting order and delivery to None', 0, repr(kw))
       kw['order'] = None
       kw['delivery'] = None # Where does this come from ??? XXX-JPS - Why not None ?
                             # XXX-JPS Way too many properties are copied
