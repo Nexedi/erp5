@@ -646,7 +646,8 @@ class XMLMatrix(Folder):
             # the last item is a coordinate not part of base_id
             object_id_split.pop()
 
-        if base_id is not None:
+        current_dimension = len(cell_coordinate_list)
+        if current_dimension > 0 and base_id is not None:
             if not self.index.has_key(base_id):
               # The matrix does not have this base_id
               addError("There is no index for base_id %s" % base_id)
@@ -665,7 +666,6 @@ class XMLMatrix(Folder):
                 del base_item[key]
 
             len_id = len(base_item)
-            current_dimension = len(cell_coordinate_list)
             if current_dimension != len_id:
               addError("Dimension of cell is %s but should be %s" % (current_dimension,
                                                                      len_id))
