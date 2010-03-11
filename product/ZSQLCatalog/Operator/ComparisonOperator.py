@@ -119,7 +119,7 @@ class MatchComparisonOperator(MonovaluedComparisonOperator):
     # Sort on this column uses relevance.
     # TODO: Add a way to allow sorting by raw column value.
     order_by_dict = {
-      column: self.where_expression_format_string,
+      column: match_string,
     }
     return SQLExpression(
       self,
