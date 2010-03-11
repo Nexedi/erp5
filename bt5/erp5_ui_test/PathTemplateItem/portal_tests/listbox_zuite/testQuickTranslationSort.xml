@@ -82,6 +82,11 @@
     <td></td>\n
   </tr>\n
 </tal:block>\n
+<tr>\n
+  <td>open</td>\n
+  <td>${base_url}/ERP5Site_updateTranslationTable</td>\n
+  <td></td>\n
+</tr>\n
 \n
 <tr>\n
   <td>open</td>\n
@@ -129,11 +134,6 @@
   <td>${base_url}/foo_module/view</td>\n
   <td></td>\n
 </tr>\n
-<tr>\n
-  <td>selectAndWait</td>\n
-  <td>select_language</td>\n
-  <td>label=English</td>\n
-</tr> \n
 <tr>\n
   <td>assertElementPresent</td>\n
     <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.translated_simulation_state_title\']</td>\n
@@ -373,6 +373,12 @@
   <td>//tr[@id="listbox_data_line_1"]/td[2]</td>\n
   <td>Dalidated</td>\n
 </tr>\n
+<!-- Restore english language -->\n
+<tr>\n
+  <td>selectAndWait</td>\n
+  <td>select_language</td>\n
+  <td>label=English</td>\n
+</tr> \n
 </tal:block>\n
 \n
 </tbody></table>\n
