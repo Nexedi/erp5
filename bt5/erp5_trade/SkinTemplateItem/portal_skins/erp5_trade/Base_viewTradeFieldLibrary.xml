@@ -176,6 +176,11 @@
                         <string>my_view_mode_translated_immobilisation_state_title</string>
                         <string>my_view_mode_sale_causality_title</string>
                         <string>my_view_mode_source_section</string>
+                        <string>my_view_mode_inventory</string>
+                        <string>my_view_mode_read_only_variation_category_list</string>
+                        <string>my_view_mode_purchase_destination_account</string>
+                        <string>my_view_mode_sale_source_account</string>
+                        <string>my_view_mode_read_only_reference</string>
                       </list>
                     </value>
                 </item>
