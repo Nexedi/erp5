@@ -107,8 +107,12 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     props = {}
     if cbt is not None:
       for id, wf_ids in cbt.items():
+        wf_ids = list(wf_ids)
+        if 'geek_workflow' in wf_ids:
+          wf_ids.remove('geek_workflow')
         if id != "Geek Object":
           props['chain_%s' % id] = ', '.join(wf_ids)
+
     pw.manage_changeWorkflows('', props=props)
     if 'erp5_geek' in self.getSkinsTool().objectIds():
       self.getSkinsTool().manage_delObjects(['erp5_geek'])
@@ -1186,6 +1190,34 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     props['chain_Geek Object'] = wf_id
     pw.manage_changeWorkflows('', props=props)
 
+  def stepModifyWorkflowChain(self, sequence=None, sequence_list=None, **kw):
+    """
+    Modify the workflow chain not by business template installation
+    """
+    wf_id = 'geek_workflow'
+    pw = self.getWorkflowTool()
+    workflow = pw._getOb(wf_id, None)
+    self.failUnless(workflow is not None)
+    cbt = pw._chains_by_type
+    props = {}
+    if cbt is not None:
+      for id, wf_ids in cbt.items():
+        props['chain_%s' % id] = ','.join(wf_ids)
+    props['chain_Base Category'] = 'edit_workflow,%s' % wf_id
+    pw.manage_changeWorkflows('', props=props)
+
+  def stepSaveWorkflowChain(self, sequence=None, sequence_list=None, **kw):
+    """
+    Save the workflow chain as it is
+    """
+    pw = self.getWorkflowTool()
+    cbt = pw._chains_by_type
+    props = {}
+    if cbt is not None:
+      for id, wf_ids in cbt.items():
+        props['chain_%s' % id] = ','.join(wf_ids)
+    pw.manage_changeWorkflows('', props=props)
+
   def stepCheckWorkflowChainRemoved(self, sequence=None, sequence_list=None, **kw):
     """
     Check if the workflowChain has been removed
@@ -1244,7 +1276,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     if cbt is not None:
       for id, wf_ids in cbt.items():
         wf_ids = list(wf_ids)
-        if id == "Geek Object":
+        if wf_id in wf_ids:
           wf_ids.remove(wf_id)
         props['chain_%s' % id] = ','.join(wf_ids)
     pw.manage_changeWorkflows('', props=props)
@@ -2933,6 +2965,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CheckBuiltBuildingState \
                        CheckNotInstalledInstallationState \
                        InstallBusinessTemplate \
+                       ModifyWorkflowChain \
                        Tic \
                        CheckInstalledInstallationState \
                        CheckBuiltBuildingState \
@@ -2964,6 +2997,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CheckSkinsLayers \
                        CheckWorkflowRemoved \
                        CheckWorkflowChainRemoved \
+                       SaveWorkflowChain \
                        '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)
