@@ -533,7 +533,7 @@ class TextAreaWidget(Widget):
     def render_view(self, field, value, REQUEST, render_prefix=None):
         return render_element("div",
                               css_class=field.get_value('css_class'),
-                              contents=html_quote(value),
+                              contents=value,
                               extra=field.get_value('extra'))
 
     def render_odt_view(self, field, value, as_string, ooo_builder, REQUEST,
