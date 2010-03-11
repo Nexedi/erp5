@@ -1581,20 +1581,15 @@ class Base( CopyContainer,
       returns False if the first name was never defined and
       even if self.getProperty('first_name') returns ''
     """
-    accessor_name = 'has' + UpperCase(key)
-    if hasattr(self, accessor_name):
-      method = getattr(self, accessor_name)
-      try:
-        return method()
-      except ConflictError:
-        raise
-      except:
-        return 0
-    else:
+    method = getattr(self, 'has' + UpperCase(key), _MARKER)
+    if method is _MARKER:
       # Check in local properties (which obviously were defined at some point)
-      for p_id in self.propertyIds():
-        if key == p_id:
-          return 1
+      return key in self.propertyIds()
+    try:
+      return method()
+    except ConflictError:
+      raise
+    except:
       return 0
 
   security.declareProtected(Permissions.AccessContentsInformation,
@@ -2552,7 +2547,6 @@ class Base( CopyContainer,
       if id_ in ptype_translation_dict:
         return str(Message('erp5_ui', ptype_translation_dict[id_]))
 
-
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getCompactTitle')
   def getCompactTitle(self):
@@ -2571,12 +2565,11 @@ class Base( CopyContainer,
     if self.hasShortTitle():
       r = self.getShortTitle()
       if r: return r
-    if self.getProperty('reference'):
-      r = self.getProperty('reference') 
-      if r: return r
-    r = self._baseGetTitle() # No need to test existence since all Base instances have this method
-    if r: return r      # Also useful whenever title is calculated
-    return self.getId()
+    return (self.getProperty('reference') or
+            # No need to test existence since all Base instances have this method
+            # Also useful whenever title is calculated
+            self._baseGetTitle() or
+            self.getId())
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getCompactTranslatedTitle')
@@ -2605,13 +2598,12 @@ class Base( CopyContainer,
       if r: return r
       r = self.getShortTitle()
       if r: return r
-    if self.getProperty('reference'):
-      r = self.getReference()
-      if r: return r
-    r = self._baseGetTranslatedTitle() # No need to test existence since all Base instances have this method
-    if r: return r                # Also useful whenever title is calculated
-    return self.getId()
-  
+    return (self.getProperty('reference') or
+            # No need to test existence since all Base instances have this method
+            # Also useful whenever title is calculated
+            self._baseGetTranslatedTitle() or
+            self.getId())
+
   # This method allows to sort objects in list is a more reasonable way
   security.declareProtected(Permissions.AccessContentsInformation, 'getIntId')
   def getIntId(self):
@@ -3057,16 +3049,6 @@ class Base( CopyContainer,
 
       fallback_script_id : the script to use if nothing is found
     """
-    def getScriptName(portal_type, method_id):
-      from Products.ERP5Type.Base import Base
-      class_name_list = [base_class.__name__ for base_class in self.__class__.mro() if issubclass(base_class, Base)]
-      script_name_end = '_%s' % method_id
-      for script_name_begin in [portal_type, self.getMetaType()] + class_name_list:
-        name = ''.join([script_name_begin.replace(' ',''), script_name_end])
-        script = getattr(self, name, None)
-        if script is not None:
-          return name
-
     # script_id should not be used any more, keep compatibility
     if script_id is not None:
       LOG('ERP5Type/Base.getTypeBaseMethod',0,
@@ -3077,18 +3059,26 @@ class Base( CopyContainer,
     # transaction
     portal_type = self.getPortalType()
     tv = getTransactionalVariable(self)
-    type_base_cache = tv.setdefault(
-        'Base.type_based_cache', {})
+    type_base_cache = tv.setdefault('Base.type_based_cache', {})
 
     cache_key = (portal_type, method_id)
     try:
-      name = type_base_cache[cache_key]
+      script = type_base_cache[cache_key]
     except KeyError:
-      name = getScriptName(portal_type, method_id)
-      type_base_cache[cache_key] = name
+      class_name_list = [portal_type, self.getMetaType()] + \
+        [base_class.__name__ for base_class in self.__class__.mro()
+                             if issubclass(base_class, Base)]
+      script_name_end = '_' + method_id
+      for script_name_begin in class_name_list:
+        script_id = script_name_begin.replace(' ','') + script_name_end
+        script = getattr(self, script_id, None)
+        if script is not None:
+          type_base_cache[cache_key] = aq_base(script)
+          return script
+      type_base_cache[cache_key] = None
 
-    if name is not None:
-      return getattr(self, name)
+    if script is not None:
+      return script.__of__(self)
     if fallback_script_id is not None:
       return getattr(self, fallback_script_id)
 
