@@ -1654,6 +1654,21 @@ class WorkflowTemplateItem(ObjectTemplateItem):
     else:
       ObjectTemplateItem.install(self, context, trashbin, **kw)
 
+  def uninstall(self, context, **kw):
+    object_path = kw.get('object_path', None)
+    if object_path is not None:
+      object_keys = [object_path]
+    else:
+      object_keys = self._archive.keys()
+    removed_workflow_id_list = set([x.split('/', 1)[1] for x in object_keys])
+    (default_chain, chain_dict) = getChainByType(context)
+    for portal_type, workflow_ids in chain_dict.iteritems():
+      workflow_ids = set([x.strip() for x in workflow_ids.split(',')]) - \
+                     removed_workflow_id_list
+      chain_dict[portal_type] = ', '.join(workflow_ids)
+    context.portal_workflow.manage_changeWorkflows(default_chain,
+                                                   props=chain_dict)
+    ObjectTemplateItem.uninstall(self, context, **kw)
 
 class PortalTypeTemplateItem(ObjectTemplateItem):
 
