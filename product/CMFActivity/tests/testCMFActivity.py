@@ -3539,6 +3539,38 @@ class TestCMFActivity(ERP5TypeTestCase):
     finally:
       del activity_tool.__class__.doSomething
 
+  def test_117_PlacelessDefaultReindexParameters(self):
+    """
+      Test behaviour of PlacelessDefaultReindexParameters.
+    """
+    portal = self.portal
+    
+    original_reindex_parameters = portal.getPlacelessDefaultReindexParameters()
+    if original_reindex_parameters is None:
+      original_reindex_parameters = {}
+    
+    tag = 'SOME_RANDOM_TAG'      
+    activate_kw = original_reindex_parameters.get('activate_kw', {}).copy()
+    activate_kw['tag'] = tag 
+    portal.setPlacelessDefaultReindexParameters(activate_kw=activate_kw, \
+                                                **original_reindex_parameters)
+    current_default_reindex_parameters = portal.getPlacelessDefaultReindexParameters()
+    self.assertEquals({'activate_kw': {'tag': tag}}, \
+                       current_default_reindex_parameters)
+    person = portal.person_module.newContent(portal_type='Person')
+    get_transaction().commit()
+    # as we specified it in setPlacelessDefaultReindexParameters we should have
+    # an activity for this tags
+    self.assertEquals(1, portal.portal_activities.countMessageWithTag(tag))
+    self.tic()
+    self.assertEquals(0, portal.portal_activities.countMessageWithTag(tag))
+    
+    # restore originals ones
+    portal.setPlacelessDefaultReindexParameters(**original_reindex_parameters)
+    person = portal.person_module.newContent(portal_type='Person')
+    # .. now now messages with this tag should apper
+    self.assertEquals(0, portal.portal_activities.countMessageWithTag(tag))    
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestCMFActivity))
