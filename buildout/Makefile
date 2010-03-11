@@ -31,3 +31,14 @@ debian-appliance:
 	rm -rf `find debian-erp5-appliance/ -name *.pyc`
 	dpkg-deb -b debian-erp5-appliance/ .
 
+rpm-appliance:
+	svn co https://svn.erp5.org/repos/public/erp5/trunk/utils/rpmgen rpmgen
+	# set the correct version defined in the main buildout
+	sed -i "s,\$${checkout:location\}\/VERSION.txt,`cat VERSION.txt`,g" rpmgen/buildout.cfg
+	# set the correct release
+	sed -i "s,release = 001,release = $(PACKAGE_VERSION),g" rpmgen/buildout.cfg
+	# it must use version defined in the main buildout
+	sed -i "s,\$$(shell cat parts/checkout/VERSION.txt), `cat VERSION.txt`,g" rpmgen/Makefile
+	sudo helpers/mandriva2010.0.sh
+	# just make and wait...
+	cd rpmgen; make
