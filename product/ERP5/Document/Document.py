@@ -220,27 +220,12 @@ class PermanentURLMixIn(ExtensibleTraversableMixIn):
     if name is None:
       return self.getDefaultDocumentValue()
 
-    cache = getReadOnlyTransactionCache(self)
-    method = None
-    if cache is not None:
-      key = ('getDocumentValue', self)
-      try:
-        method = cache[key]
-      except KeyError:
-        pass
-
-    if method is None:
-      method = self._getTypeBasedMethod('getDocumentValue',
+    method = self._getTypeBasedMethod('getDocumentValue',
               fallback_script_id='WebSection_getDocumentValue')
-
-    if cache is not None:
-      if cache.get(key, _MARKER) is _MARKER:
-        cache[key] = method
 
     document = method(name, portal=portal, **kw)
     if document is not None:
-      document = document.__of__(self)
-    return document
+      return document.__of__(self)
 
 class DocumentProxyMixin:
   """
@@ -695,18 +680,7 @@ class Document(PermanentURLMixIn, XMLObject, UrlMixIn, CachedConvertableMixin, S
       NOTE: passing a group_by parameter may be useful at a
       later stage of the implementation.
     """
-    tv = getTransactionalVariable(self) # XXX Performance improvement required
-    cache_key = ('getImplicitPredecessorValueList', self.getPhysicalPath())
-    try:
-      return tv[cache_key]
-    except KeyError:
-      pass
-
-    method = self._getTypeBasedMethod('getImplicitPredecessorValueList',
-        fallback_script_id = 'Base_getImplicitPredecessorValueList')
-    result = method()
-    tv[cache_key] = result
-    return result
+    return self._getTypeBasedMethod('getImplicitPredecessorValueList')()
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getImplicitSimilarValueList')
   def getImplicitSimilarValueList(self):
