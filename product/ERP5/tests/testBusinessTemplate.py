@@ -955,6 +955,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     base_category = pc.newContent(portal_type = 'Base Category')
     self.failUnless(base_category is not None)
     sequence.edit(bc_id=base_category.getId(),)
+    sequence.edit(base_category_uid=base_category.getUid(),)
 
   # Content Type Registry
   def stepAddEntryToContentTypeRegistry(self, sequence=None, sequence_list=None, **kw):
@@ -1140,11 +1141,29 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     category = base_category._getOb(cat_id, None)
     self.failUnless(category is not None)
     subcategory_list = []
+    subcategory_uid_dict = {}
     for i in xrange(10):
-      subcategory = category.newContent(portal_type='Category')
+      subcategory = category.newContent(portal_type='Category', title='toto')
       self.failUnless(subcategory is not None)
       subcategory_list.append(subcategory.getId())
-    sequence.edit(subcategory_id_list=subcategory_list, parent_category_id=category.getId())
+      subcategory_uid_dict[subcategory.getId()] = subcategory.getUid()
+    sequence.edit(subcategory_id_list=subcategory_list, \
+                  parent_category_id=category.getId(), \
+                  subcategory_uid_dict=subcategory_uid_dict)
+
+  def stepModifySubCategories(self, sequence=None, sequence_list=None, **kw):
+    """
+      Modify the title some subcategories
+    """
+    base_category_id = sequence.get('bc_id')
+    category_tool = self.getCategoryTool()
+    base_category = category_tool._getOb(base_category_id, None)
+    parent_category_id = sequence.get('parent_category_id')
+    category = base_category._getOb(parent_category_id, None)
+    subcategory_id_list = sequence.get('subcategory_id_list')
+    for subcategory_id in subcategory_id_list:
+      subcategory = category._getOb(subcategory_id, None)
+      subcategory.edit(title='foo')
 
   def stepAddSubCategoriesAsPathToBusinessTemplate(self, sequence=None, sequence_list=None, **kw):
     """
@@ -1170,6 +1189,25 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     for subcategory_id in subcategory_id_list:
       subcategory = category._getOb(subcategory_id, None)
       self.failUnless(subcategory is not None)
+      self.assertEquals(subcategory.getTitle(), 'toto')
+
+  def stepCheckUidSubCategories(self, sequence=None, sequence_list=None, **kw):
+    """
+    Check Uid on base category and the sub categories
+    """
+    base_category_id = sequence.get('bc_id')
+    category_tool = self.getCategoryTool()
+    base_category = category_tool._getOb(base_category_id, None)
+    self.assertEquals(base_category.getUid(), \
+                      sequence.get('base_category_uid'))
+    parent_category_id = sequence.get('parent_category_id')
+    category = base_category._getOb(parent_category_id, None)
+    subcategory_id_list = sequence.get('subcategory_id_list')
+    subcategory_uid_dict = sequence.get('subcategory_uid_dict')
+    for subcategory_id in subcategory_id_list:
+      subcategory = category._getOb(subcategory_id, None)
+      self.assertEquals(subcategory.getUid(), \
+           subcategory_uid_dict[subcategory_id])
 
   # workflow
   def stepCreateWorkflow(self, sequence=None, sequence_list=None, **kw):
@@ -5810,6 +5848,52 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        SetOldSitePropertyValue \
                        CheckSitePropertyRemoved \
                        '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self, quiet=quiet)
+
+  # test of uid
+  def test_40_BusinessTemplateUidOfCategoriesUnchanged(self, quiet=quiet, run=run_all_test):
+    """  
+      Test that the uids of categories are unchanged during their reinstall
+      Add sub categories with the title 'toto' and save their uid in a dict
+      Create business template with the sub categories in path_template_list
+      The sub categories title are changed in 'foo'
+      Install business template
+      Check the old sub categories with' toto' as title
+      And check if the uid of sub categories is unchanged
+    """
+    if not run: return
+    if not quiet:
+      message = 'Test that the uids of categories are unchanged during their reinstall'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ', 0, message)
+    sequence_list = SequenceList()
+    sequence_string = '\
+                       CreateBaseCategory \
+                       CreateCategories \
+                       CreateSubCategories \
+                       CreateNewBusinessTemplate \
+                       UseExportBusinessTemplate \
+                       CheckModifiedBuildingState \
+                       CheckNotInstalledInstallationState \
+                       AddSubCategoriesAsPathToBusinessTemplate \
+                       BuildBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       CheckObjectPropertiesInBusinessTemplate \
+                       SaveBusinessTemplate \
+                       CheckSubCategoriesExists \
+                       ImportBusinessTemplate \
+                       UseImportBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       ModifySubCategories \
+                       Tic \
+                       InstallBusinessTemplate \
+                       Tic \
+                       CheckSubCategoriesExists \
+                       CheckUidSubCategories \
+                       UninstallBusinessTemplate \
+                      '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)
 
