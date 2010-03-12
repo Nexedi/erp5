@@ -78,7 +78,7 @@ class MergeConflict(object):
 def conflictSafeGet(dikt, key, default=None):
   result = dikt.get(key, default)
   if isinstance(result, MergeConflict):
-    result() # Raises
+    result() # Raises
   return result
 
 class SQLExpression(object):
