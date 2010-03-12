@@ -192,17 +192,20 @@ class Field:
                 return "Unknown error: %s" % name
 
     security.declarePrivate('_render_helper')
-    def _render_helper(self, key, value, REQUEST, render_prefix=None):
+    def _render_helper(self, key, value, REQUEST, render_prefix=None, editable=None):
       value = self._get_default(key, value, REQUEST)
       __traceback_info__ = ('key=%s value=%r' % (key, value))
       if self.get_value('hidden', REQUEST=REQUEST):
         return self.widget.render_hidden(self, key, value, REQUEST)
-      elif (not self.get_value('editable', REQUEST=REQUEST)):
-        return self.widget.render_view(self, value, REQUEST=REQUEST,
-                                       render_prefix=render_prefix)
       else:
-        return self.widget.render(self, key, value, REQUEST,
-                                  render_prefix=render_prefix)
+        if editable is None:
+          editable = self.get_value('editable', REQUEST=REQUEST)
+        if not editable:
+          return self.widget.render_view(self, value, REQUEST=REQUEST,
+                                         render_prefix=render_prefix)
+        else:
+          return self.widget.render(self, key, value, REQUEST,
+                                    render_prefix=render_prefix)
 
     security.declarePrivate('_render_helper')
     def _render_odt_helper(self, key, value, as_string, ooo_builder,
@@ -246,18 +249,25 @@ class Field:
       return REQUEST.form[key]
 
     security.declareProtected('View', 'render')
-    def render(self, value=None, REQUEST=None, key=None, render_prefix=None, key_prefix=None):
+    def render(self, value=None, REQUEST=None, key=None, render_prefix=None, key_prefix=None, editable=None):
       """Render the field widget.
       value -- the value the field should have (for instance
                 from validation).
       REQUEST -- REQUEST can contain raw (unvalidated) field
                 information. If value is None, REQUEST is searched
                 for this value.
+      editable -- if not None, this boolean can override the Editable property
+                 of the rendered field
       if value and REQUEST are both None, the 'default' property of
       the field will be used for the value.
       """
-      return self._render_helper(self.generate_field_key(key=key, key_prefix=key_prefix), value, REQUEST,
-                                 render_prefix)
+      return self._render_helper(
+        self.generate_field_key(key=key, key_prefix=key_prefix),
+        value,
+        REQUEST,
+        render_prefix=render_prefix,
+        editable=editable,
+      )
 
     security.declareProtected('View', 'render_view')
     def render_view(self, value=None, REQUEST=None, render_prefix=None):

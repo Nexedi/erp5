@@ -2295,6 +2295,7 @@ class ListBoxHTMLRendererLine(ListBoxRendererLine):
         # XXX what if the object does not have uid?
         key = '%s_%s' % (editable_field.getId(), self.getUid())
         if sql in editable_column_id_set:
+          listbox_defines_column_as_editable = True
           if has_error: # If there is any error on listbox, we should use what the user has typed
             display_value = None
           else:
@@ -2324,18 +2325,24 @@ class ListBoxHTMLRendererLine(ListBoxRendererLine):
           else:
             error_message = u''
         else:
+          listbox_defines_column_as_editable = False
           error_message = u''
           display_value = original_value
 
-        # We need a way to pass the current line object (ie. brain) to the
-        # field which is being displayed. Since the render_view API did not
-        # permit this, we use the 'cell' value to pass the line object.
-        request.set('cell', brain)
         enabled = editable_field.get_value('enabled', REQUEST=request)
         if enabled:
-          cell_html = editable_field.render(value=display_value,
-                                            REQUEST=request,
-                                            key=key)
+          # We need a way to pass the current line object (ie. brain) to the
+          # field which is being displayed. Since the render_view API did not
+          # permit this, we use the 'cell' value to pass the line object.
+          request.set('cell', brain)
+          # Listbox 'editable' configuration should take precedence over
+          # individual field configuration
+          cell_html = editable_field.render(
+            value=display_value,
+            REQUEST=request,
+            key=key,
+            editable=listbox_defines_column_as_editable,
+          )
           if isinstance(cell_html, str):
             cell_html = unicode(cell_html, encoding)
         else:
