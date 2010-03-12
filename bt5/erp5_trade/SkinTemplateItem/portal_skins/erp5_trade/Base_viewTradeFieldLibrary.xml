@@ -181,6 +181,12 @@
                         <string>my_view_mode_purchase_destination_account</string>
                         <string>my_view_mode_sale_source_account</string>
                         <string>my_view_mode_read_only_reference</string>
+                        <string>my_view_mode_inventory_price_mapped_value_property_list</string>
+                        <string>my_view_mode_matrixbox_inventory</string>
+                        <string>my_view_mode_full_inventory</string>
+                        <string>my_view_mode_inventory_destination_section_title</string>
+                        <string>my_view_mode_inventory_destination_title</string>
+                        <string>my_view_mode_inventory_start_date</string>
                       </list>
                     </value>
                 </item>
