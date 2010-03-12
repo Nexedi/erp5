@@ -1232,24 +1232,29 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
     document = self.portal.document_module.newContent(portal_type='Drawing')
     self.assertEquals('empty', document.getExternalProcessingState())
 
-    filename = 'TEST-en-002.odt'
-    upload_file = makeFileUpload(filename)
+    upload_file = makeFileUpload('TEST-en-002.odt')
     document.edit(file=upload_file)
-    transaction.commit()
-    self.tic()
+    self.stepTic()
     self.assertEquals('converted', document.getExternalProcessingState())
 
-    # Upload different type of file inside
+    # Upload different type of file inside which can not be converted to base format
     upload_file = makeFileUpload('REF-en-001.pdf')
     document.edit(file=upload_file)
+    self.stepTic()
     self.assertEquals('application/pdf', document.getContentType())
-    self.assertEquals('converting', document.getExternalProcessingState())
+    self.assertEquals('conversion_failed', document.getExternalProcessingState())
     # As document is not converted, text convertion is impossible
     # But document can still be retrive with portal catalog
     self.assertRaises(NotConvertedError, document.asText)
     self.assertRaises(NotConvertedError, document.getSearchableText)
     self.assertEquals('This document is not converted yet.',
                       document.Base_showFoundText())
+    
+    # upload again good content
+    upload_file = makeFileUpload('TEST-en-002.odt')
+    document.edit(file=upload_file)
+    self.stepTic()
+    self.assertEquals('converted', document.getExternalProcessingState())
 
   def test_Base_createNewFile(self):
     """
