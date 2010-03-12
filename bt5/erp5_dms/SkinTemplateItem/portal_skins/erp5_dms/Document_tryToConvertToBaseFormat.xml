@@ -54,6 +54,7 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>from Products.ERP5.Document.Document import ConversionError\n
+from Products.ERP5Type.Log import log\n
 from ZODB.POSException import ConflictError\n
 from xmlrpclib import Fault\n
 from socket import error as SocketError\n
@@ -75,12 +76,11 @@ if context.getExternalProcessingState()!=\'converted\':\n
     message = \'Problem: %s\' % (repr(e) or \'undefined.\')\n
   except:\n
     message = \'Problem: unknown\'\n
-\n
-  # reach here, then exception was raised.\n
-  # message must be logged in workflow.\n
-  context.processFile(comment=message)\n
-  # try again.\n
-  context.activate(priority=3).convertToBaseFormat()\n
+  # reach here, then exception was raised, message must be logged in workflow\n
+  # do not simply raise but rather change external processing state\n
+  # so user will see something is wrong \n
+  context.conversionFailed(comment=message)\n
+  log(\'%s %s\' %(context.getRelativeUrl(), message))\n
 return message\n
 </string> </value>
         </item>
@@ -128,6 +128,8 @@ return message\n
                           <tuple>
                             <string>Products.ERP5.Document.Document</string>
                             <string>ConversionError</string>
+                            <string>Products.ERP5Type.Log</string>
+                            <string>log</string>
                             <string>ZODB.POSException</string>
                             <string>ConflictError</string>
                             <string>xmlrpclib</string>

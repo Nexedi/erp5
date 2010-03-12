@@ -11,25 +11,23 @@
       <dictionary>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Indicates that the conversion of document to an open document is in process</string> </value>
+            <value> <string>Conversion process failed from some reason</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>converting</string> </value>
+            <value> <string>conversion_failed</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Converting</string> </value>
+            <value> <string>Conversion Failed</string> </value>
         </item>
         <item>
             <key> <string>transitions</string> </key>
             <value>
               <tuple>
-                <string>conversion_failed</string>
                 <string>convert_action</string>
-                <string>convert_file</string>
+                <string>process_conversion_failed</string>
                 <string>process_file</string>
-                <string>upload_file</string>
               </tuple>
             </value>
         </item>

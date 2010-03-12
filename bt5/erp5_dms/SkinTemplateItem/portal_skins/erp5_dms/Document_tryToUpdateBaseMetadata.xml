@@ -55,6 +55,7 @@
             <key> <string>_body</string> </key>
             <value> <string>from ZODB.POSException import ConflictError\n
 from Products.ERP5.Document.Document import ConversionError\n
+from Products.ERP5Type.Log import log\n
 \n
 message = None\n
 try:\n
@@ -67,11 +68,19 @@ except Exception, e:\n
   message = \'Problem: %s\' % (repr(e) or \'undefined.\')\n
 except:\n
   message = \'Problem: unknown\'\n
-# reach here, then exception was raised.\n
-# message must be logged in workflow.\n
-context.updateFileMetadata(comment=message)\n
-# try again\n
-context.activate(priority=3).updateBaseMetadata(**kw)\n
+\n
+# reach here, then exception was raised, message must be logged in workflow\n
+# do not simply raise but rather change external processing state\n
+# so user will see something is wrong. As usually updateBaseMetadata is called\n
+# after convertToBaseFormat it\'s possible that object is in conversion failed state \n
+isTransitionPossible = context.getPortalObject().portal_workflow.isTransitionPossible\n
+if isTransitionPossible(context, \'conversion_failed\'):\n
+  # mark document as conversion failed if not already done by convertToBaseFormat\n
+  context.conversionFailed(comment=message)\n
+else:\n
+  # just save problem message in workflow history\n
+  context.processConversionFailed(comment=message)\n
+log(\'%s %s\' %(context.getRelativeUrl(), message))\n
 return message\n
 </string> </value>
         </item>
@@ -114,6 +123,8 @@ return message\n
                             <string>ConflictError</string>
                             <string>Products.ERP5.Document.Document</string>
                             <string>ConversionError</string>
+                            <string>Products.ERP5Type.Log</string>
+                            <string>log</string>
                             <string>None</string>
                             <string>message</string>
                             <string>_apply_</string>
@@ -123,6 +134,7 @@ return message\n
                             <string>str</string>
                             <string>Exception</string>
                             <string>repr</string>
+                            <string>isTransitionPossible</string>
                           </tuple>
                         </value>
                     </item>

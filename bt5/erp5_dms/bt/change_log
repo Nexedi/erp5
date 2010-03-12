@@ -1,3 +1,6 @@
+2010-03-12 ivan
+* Add conversion_failed state (indicating an external OOOd failure) and needed transitions.
+
 2010-02-12 ivan
 * Add new interaction that will add contributor (logged in user) to edited document
 
