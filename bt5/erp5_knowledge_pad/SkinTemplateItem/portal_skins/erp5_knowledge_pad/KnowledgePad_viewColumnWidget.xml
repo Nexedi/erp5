@@ -115,38 +115,42 @@
                       i18n:domain="ui">Server side error.</span>\n
               </tal:block>\n
 \n
-              <tal:block tal:condition="python: edit_form_object is not None">\n
-                <form action="KnowledgeBox_baseEdit"\n
-                      tal:condition="not: is_asynchronous_gadget"\n
-                      tal:define="box_relative_url python: box.getRelativeUrl();">\n
-                  <div>\n
-                    <span tal:replace="structure python: edit_form_object()"/>\n
-                    <input type="hidden" \n
-                           name="box_relative_url" \n
-                           tal:attributes="value box_relative_url"/>\n
-                    <input type="hidden" \n
-                           name="cancel_url" \n
-                           tal:attributes="value cancel_url;\n
-                             name python: \'%s_cancel_url\' \n
-                                         %box_relative_url.replace(\'/\', \'_\')"/> \n
-                    <button type="submit"\n
-                            i18n:translate="" \n
-                            i18n:domain="ui" \n
-                            name="KnowledgeBox_baseEdit:method">Save</button>\n
-                  </div>\n
-                </form>\n
+              <tal:block tal:condition="python: edit_form_object is not None"\n
+                         tal:define="box_relative_url python: box.getRelativeUrl();\n
+                                     form_fields_main_prefix python: \'gadget_preference_%s_field\' %box_relative_url.replace(\'/\', \'_\');">\n
+\n
+                <!-- render edit gadget preferences form -->\n
+                <span tal:replace="structure python: edit_form_object(key_prefix=form_fields_main_prefix)"/>\n
+\n
+                <tal:block tal:condition="not: is_asynchronous_gadget">\n
+\n
+                      <input type="hidden" \n
+                             name="cancel_url" \n
+                             tal:attributes="value cancel_url;\n
+                               name python: \'%s_cancel_url\' %form_fields_main_prefix"/>\n
+                      <button type="submit"\n
+                              i18n:translate="" \n
+                              i18n:domain="ui"\n
+                              tal:attributes="onclick python: \n
+                                \'submitSynchronousGadgetPreferenceForm(\\\'%s\\\',\\\'%s\\\')\' \n
+                                  %(form_fields_main_prefix, box_relative_url)">Save</button>\n
+\n
+                </tal:block>\n
 \n
                 <tal:block tal:condition="is_asynchronous_gadget">\n
-                  <span tal:replace="structure python: edit_form_object()"/>\n
+\n
                   <button type="button" \n
                           i18n:translate="" \n
                           i18n:domain="ui"\n
                           tal:attributes="onclick python: \n
-                                 \'sendPreferencesToServer(\\\'%s\\\', \\\'%s\\\', \\\'%s\\\', \\\'%s\\\')\'\n
-                                                           %(edit_form_dom_id, \n
-                                                             view_form_id, \n
-                                                             box.getRelativeUrl(), \n
-                                                             view_form_dom_id)">Save</button>\n
+                                 \'submitAsynchronousGadgetPreferenceForm(\n
+                                    \\\'%s\\\', \\\'%s\\\', \\\'%s\\\', \\\'%s\\\', \\\'%s\\\')\'\n
+                                    %(edit_form_dom_id, \n
+                                      view_form_id, \n
+                                      box_relative_url, \n
+                                      view_form_dom_id,\n
+                                      form_fields_main_prefix)">Save</button>\n
+\n
                 </tal:block>\n
               </tal:block>\n
             </tal:block>\n

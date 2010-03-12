@@ -15,7 +15,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts66498134.37</string> </value>
+            <value> <string>ts68379872.09</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -157,12 +157,32 @@ function createDefaultPadOnServer(timeout, create_url,\n
       checkForActivitiesOnServer(timeout, return_url);};\n
 };\n
 \n
+function submitSynchronousGadgetPreferenceForm(\n
+                                form_fields_main_prefix, \n
+                                box_relative_url){\n
+  /* this will add respective gadget knowledge box relative url and\n
+     gadget ERP5 preference form field_prefix (so multiple gadgets can \n
+     safely coexist in one HTML page with one HTML form */\n
+  appendChildNodes(document.forms[0], \n
+                   INPUT({\'value\':box_relative_url, \n
+                          \'name\': \'box_relative_url\', \n
+                          \'type\':\'hidden\'}));\n
+  appendChildNodes(document.forms[0], \n
+                   INPUT({\'value\':form_fields_main_prefix, \n
+                          \'name\': \'form_fields_main_prefix\', \n
+                          \'type\':\'hidden\'}));\n
+  clickSaveButton(\'KnowledgeBox_baseEdit\');\n
+};\n
 \n
-function sendPreferencesToServer(form_dom_id, view_form_url, \n
-                                 box_relative_url, visual_block_dom_id){\n
+function submitAsynchronousGadgetPreferenceForm(\n
+                                 form_dom_id, \n
+                                 view_form_url, \n
+                                 box_relative_url, \n
+                                 visual_block_dom_id, \n
+                                 form_fields_main_prefix){\n
   // iterate over all possible form elements within edit form,\n
   // collect them and send to server\n
-  var request_str = "?box_relative_url=" + box_relative_url+ \'&\';\n
+  var request_str = "?box_relative_url=" + box_relative_url+ "&form_fields_main_prefix=" + form_fields_main_prefix + "&";\n
   var url="KnowledgeBox_baseEdit";\n
   forEach(getElementsByTagAndClassName(\'input\', null, form_dom_id) , function (item) {\n
     if (item.type == "checkbox"){\n
@@ -379,7 +399,7 @@ MochiKit.DOM.addLoadEvent(initialize);\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <long>13542</long> </value>
+            <value> <long>14577</long> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
