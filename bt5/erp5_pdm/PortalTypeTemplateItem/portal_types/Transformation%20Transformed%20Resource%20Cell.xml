@@ -36,7 +36,9 @@
         <item>
             <key> <string>group_list</string> </key>
             <value>
-              <tuple/>
+              <tuple>
+                <string>amount_generator_cell</string>
+              </tuple>
             </value>
         </item>
         <item>
