@@ -11,7 +11,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_follow_up_title</string> </value>
+            <value> <string>your_agent_title</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -249,7 +249,9 @@
                 </item>
                 <item>
                     <key> <string>default</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>description</string> </key>
@@ -322,7 +324,7 @@
                 <item>
                     <key> <string>portal_type</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
                     </value>
                 </item>
                 <item>
@@ -378,7 +380,7 @@
               <dictionary>
                 <item>
                     <key> <string>allow_creation</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>allow_jump</string> </key>
@@ -390,7 +392,7 @@
                 </item>
                 <item>
                     <key> <string>base_category</string> </key>
-                    <value> <string>follow_up</string> </value>
+                    <value> <string>agent</string> </value>
                 </item>
                 <item>
                     <key> <string>catalog_index</string> </key>
@@ -527,7 +529,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Follow Up</string> </value>
+                    <value> <string>Context</string> </value>
                 </item>
                 <item>
                     <key> <string>truncate</string> </key>
@@ -552,6 +554,22 @@
     </pickle>
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>here/getAgentTitle</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
       <tuple>
         <global name="TALESMethod" module="Products.Formulator.TALESField"/>

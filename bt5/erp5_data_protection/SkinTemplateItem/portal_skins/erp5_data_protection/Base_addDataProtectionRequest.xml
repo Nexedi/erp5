@@ -62,7 +62,7 @@ reference_index = portal.portal_ids.generateNewId(id_group=(\'data_protection_re
 reference = \'DPR-%s\' % (reference_index,)\n
 data_protection = module.newContent(portal_type=portal_type,\n
                                     contributor_value=current_user,\n
-                                    follow_up_value=context,\n
+                                    agent_value=context,\n
                                     description=description,\n
                                     reference=reference)\n
 data_protection.submit()\n

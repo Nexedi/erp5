@@ -58,7 +58,7 @@ selection_name = \'data_protection_request_erase_data_selection\'\n
 property_id_list = portal.portal_selections.getSelectionCheckedUidsFor(selection_name)\n
 # clean up selection\n
 portal.portal_selections.setSelectionCheckedUidsFor(selection_name, ())\n
-document_to_cleanup = context.getFollowUpValue()\n
+document_to_cleanup = context.getAgentValue()\n
 clean_up_done = False\n
 \n
 # First: Purge workflow history comments\n

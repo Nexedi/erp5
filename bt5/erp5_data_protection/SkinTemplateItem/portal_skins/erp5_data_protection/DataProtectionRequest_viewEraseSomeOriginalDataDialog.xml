@@ -86,6 +86,7 @@
                     <key> <string>center</string> </key>
                     <value>
                       <list>
+                        <string>your_agent_title</string>
                         <string>your_flush_worklfow_history_comment</string>
                       </list>
                     </value>
@@ -99,9 +100,7 @@
                 <item>
                     <key> <string>left</string> </key>
                     <value>
-                      <list>
-                        <string>your_follow_title</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
