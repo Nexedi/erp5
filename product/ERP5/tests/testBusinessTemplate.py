@@ -3080,7 +3080,6 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CheckBuiltBuildingState \
                        CheckNotInstalledInstallationState \
                        Tic \
-                       Pdb \
                        InstallWithRemoveCheckedBusinessTemplate \
                        Tic \
                        CheckInstalledInstallationState \
