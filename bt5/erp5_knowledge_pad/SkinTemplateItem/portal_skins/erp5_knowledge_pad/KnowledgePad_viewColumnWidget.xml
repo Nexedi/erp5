@@ -71,7 +71,7 @@
 \n
     <div class="block" \n
       tal:condition="python: gadget is not None"\n
-      tal:attributes="id python: \'%s/%s\' %(here.getRelativeUrl(), box_id)">\n
+      tal:attributes="id python: \'%s_%s\' %(here.getRelativeUrl().replace(\'/\',\'_\'), box_id)">\n
 \n
       <h3 class="handle">\n
         <span class="handle">\n
