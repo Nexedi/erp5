@@ -66,11 +66,11 @@ if not context.portal_membership.isAnonymousUser():\n
       l = []\n
       sub_items=item.split(\'|\')\n
       # get box relative url\n
-      try:  box_url=sub_items[0]\n
-      except indexError: pass\n
+      splitted_box_url = sub_items[0].split(\'_\')\n
+      box_url=\'knowledge_pad_module/%s/%s\' %(splitted_box_url[-2], splitted_box_url[-1]) \n
       # remove box_relative_url from layout string\n
       for sub_item in sub_items:\n
-        dummy1, dummy2, knowledge_box = sub_item.split(\'/\')\n
+        knowledge_box = sub_item.split(\'_\')[-1]\n
         l.append(knowledge_box)\n
       # join boxes\n
       new_user_layout.append(\'|\'.join(l))\n
@@ -137,10 +137,8 @@ return "OK"\n
                             <string>l</string>
                             <string>sub_items</string>
                             <string>_getitem_</string>
-                            <string>indexError</string>
+                            <string>splitted_box_url</string>
                             <string>sub_item</string>
-                            <string>dummy1</string>
-                            <string>dummy2</string>
                             <string>knowledge_box</string>
                             <string>knowledge_pad</string>
                             <string>getattr</string>

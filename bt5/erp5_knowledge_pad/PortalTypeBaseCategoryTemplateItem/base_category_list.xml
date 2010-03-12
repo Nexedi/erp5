@@ -1,4 +1,7 @@
 <base_category_list>
+ <portal_type id="Gadget">
+  <item>gadget_type</item>
+ </portal_type>
  <portal_type id="Knowledge Box">
   <item>specialise</item>
  </portal_type>
