@@ -40,7 +40,7 @@ class TestProxify(ERP5TypeTestCase):
 
   def afterSetUp(self):
     # base field library
-    self.container = Folder('container').__of__(Folder('root'))
+    self.container = Folder('container').__of__(self.portal)
     self.container._setObject('Base_view',
                                ERP5Form('Base_view', 'Base'))
     base_view = self.base_view = self.container.Base_view
