@@ -506,7 +506,10 @@ class TestERP5SimulationPackingList(TestERP5SimulationMixin, TestPackingList):
   pass
 
 class TestERP5SimulationInvoice(TestERP5SimulationMixin, TestSaleInvoice):
-  pass
+
+  def afterSetUp(self):
+    super(TestERP5SimulationInvoice, self).afterSetUp()
+    self.portal.portal_ids.setLastGeneratedId(0, id_group='Accounting_Transaction_Module-Sale_Invoice_Transaction')
 
 def test_suite():
   suite = unittest.TestSuite()
