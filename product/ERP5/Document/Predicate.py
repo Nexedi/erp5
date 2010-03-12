@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
@@ -35,7 +36,6 @@ from Products.CMFCore.utils import getToolByName
 
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
-from Products.ERP5Type.Core.Folder import Folder
 from Products.ERP5Type.Document import newTempBase
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.Utils import convertToUpperCase
@@ -43,7 +43,7 @@ from Products.ERP5Type.Cache import getReadOnlyTransactionCache, enableReadOnlyT
 from Products.ZSQLCatalog.SQLCatalog import SQLQuery
 from Products.ERP5Type.Globals import PersistentMapping
 
-class Predicate(XMLObject, Folder):
+class Predicate(XMLObject):
   """
     A Predicate object defines a list of criterions
     which can be applied to test a document or to search for documents.
