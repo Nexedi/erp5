@@ -146,9 +146,19 @@ class TradeModelLine(Predicate, XMLMatrix, Amount):
       # movement level trade model is applied to each movement and
       # generate result par movement.
       result = []
-      for movement in movement_list:
+      # If there is an amount which target level is delivery level and
+      # create line is true, then treat it as a movement.
+      movement_like_amount_list = []
+      temporary_aggregated_amount_list = []
+      for amount in current_aggregated_amount_list:
+        if (amount.getProperty('target_level')==TARGET_LEVEL_DELIVERY and
+            amount.getProperty('create_line')):
+          movement_like_amount_list.append(amount)
+        else:
+          temporary_aggregated_amount_list(amount)
+      for movement in (movement_list + movement_like_amount_list):
         result.extend(self._getAggregatedAmountList(
-          context, [movement], current_aggregated_amount_list,
+          context, [movement], temporary_aggregated_amount_list,
           base_id, rounding, **kw))
       return result
     else:
@@ -244,6 +254,7 @@ class TradeModelLine(Predicate, XMLMatrix, Amount):
         'stop_date': context.getStopDate(),
         'create_line': self.isCreateLine(),
         'trade_phase_list': self.getTradePhaseList(),
+        'target_level': self.getTargetLevel(),
       }
       common_params.update(property_dict)
 
