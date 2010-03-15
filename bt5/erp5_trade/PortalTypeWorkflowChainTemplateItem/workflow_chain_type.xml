@@ -77,15 +77,15 @@
  </chain>
  <chain>
   <type>Purchase Order</type>
-  <workflow>edit_workflow, delivery_simulation_interaction_workflow, order_workflow</workflow>
+  <workflow>delivery_simulation_interaction_workflow, edit_workflow, order_workflow</workflow>
  </chain>
  <chain>
   <type>Purchase Order Cell</type>
-  <workflow>edit_workflow, delivery_movement_simulation_interaction_workflow, pricing_interaction_workflow</workflow>
+  <workflow>delivery_movement_simulation_interaction_workflow, edit_workflow, pricing_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>Purchase Order Line</type>
-  <workflow>edit_workflow, movement_base_contribution_interaction_workflow, delivery_movement_simulation_interaction_workflow, pricing_interaction_workflow, trade_matrix_workflow</workflow>
+  <workflow>delivery_movement_simulation_interaction_workflow, edit_workflow, movement_base_contribution_interaction_workflow, pricing_interaction_workflow, trade_matrix_workflow</workflow>
  </chain>
  <chain>
   <type>Purchase Packing List</type>
@@ -117,15 +117,15 @@
  </chain>
  <chain>
   <type>Sale Order</type>
-  <workflow>edit_workflow, delivery_simulation_interaction_workflow, order_workflow</workflow>
+  <workflow>delivery_simulation_interaction_workflow, edit_workflow, order_workflow</workflow>
  </chain>
  <chain>
   <type>Sale Order Cell</type>
-  <workflow>edit_workflow, delivery_movement_simulation_interaction_workflow, pricing_interaction_workflow</workflow>
+  <workflow>delivery_movement_simulation_interaction_workflow, edit_workflow, pricing_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>Sale Order Line</type>
-  <workflow>edit_workflow, movement_base_contribution_interaction_workflow, delivery_movement_simulation_interaction_workflow, pricing_interaction_workflow, trade_matrix_workflow</workflow>
+  <workflow>delivery_movement_simulation_interaction_workflow, edit_workflow, movement_base_contribution_interaction_workflow, pricing_interaction_workflow, trade_matrix_workflow</workflow>
  </chain>
  <chain>
   <type>Sale Packing List</type>

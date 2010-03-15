@@ -1,15 +1,15 @@
 <workflow_chain>
  <chain>
   <type>Production Order</type>
-  <workflow>edit_workflow, delivery_simulation_interaction_workflow, production_order_workflow</workflow>
+  <workflow>delivery_simulation_interaction_workflow, edit_workflow, production_order_workflow</workflow>
  </chain>
  <chain>
   <type>Production Order Cell</type>
-  <workflow>edit_workflow, delivery_movement_simulation_interaction_workflow</workflow>
+  <workflow>delivery_movement_simulation_interaction_workflow, edit_workflow</workflow>
  </chain>
  <chain>
   <type>Production Order Line</type>
-  <workflow>edit_workflow, delivery_movement_simulation_interaction_workflow, production_matrix_workflow, transformation_interaction_workflow</workflow>
+  <workflow>delivery_movement_simulation_interaction_workflow, edit_workflow, production_matrix_workflow, transformation_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>Production Order Model Root Simulation Rule</type>
