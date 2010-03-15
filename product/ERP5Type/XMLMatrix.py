@@ -621,6 +621,14 @@ class XMLMatrix(Folder):
       if getattr(aq_base(self), 'index', None) is None:
         self.index = PersistentMapping()
       # We will check each cell of the matrix the matrix
+
+      # XXX This code assumes the following predicate:
+      #   each subobject of an XMLMatrix is either a Cell that needs
+      #   consistency checking OR ( is not a Cell, and has an id that is
+      #   not like "(\w+_)+(\d+_)*\d+" )
+      # But Documents inheriting XMLMatrix can have unrelated, non-cell
+      # subobjects, possibly with id looking like some_id_2. If it ever happens,
+      # an error will be wrongly raised.
       for obj in self.objectValues():
         object_id = obj.getId()
         # obect_id is equal to something like 'something_quantity_3_2'
