@@ -52,6 +52,8 @@ Purchase Order Line | edit_workflow
 Purchase Order Line | movement_base_contribution_interaction_workflow
 Purchase Order Line | pricing_interaction_workflow
 Purchase Order Line | trade_matrix_workflow
+Purchase Order | delivery_causality_interaction_workflow
+Purchase Order | delivery_causality_workflow
 Purchase Order | delivery_simulation_interaction_workflow
 Purchase Order | edit_workflow
 Purchase Order | order_workflow
@@ -85,6 +87,8 @@ Sale Order Line | edit_workflow
 Sale Order Line | movement_base_contribution_interaction_workflow
 Sale Order Line | pricing_interaction_workflow
 Sale Order Line | trade_matrix_workflow
+Sale Order | delivery_causality_interaction_workflow
+Sale Order | delivery_causality_workflow
 Sale Order | delivery_simulation_interaction_workflow
 Sale Order | edit_workflow
 Sale Order | order_workflow
