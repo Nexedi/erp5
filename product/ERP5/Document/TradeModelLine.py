@@ -155,7 +155,7 @@ class TradeModelLine(Predicate, XMLMatrix, Amount):
             amount.getProperty('create_line')):
           movement_like_amount_list.append(amount)
         else:
-          temporary_aggregated_amount_list(amount)
+          temporary_aggregated_amount_list.append(amount)
       for movement in (movement_list + movement_like_amount_list):
         result.extend(self._getAggregatedAmountList(
           context, [movement], temporary_aggregated_amount_list,
