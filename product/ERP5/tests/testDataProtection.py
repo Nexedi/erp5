@@ -94,7 +94,7 @@ class TestDataProtection(ERP5TypeTestCase):
                           description='I think the description is compromised')
     transaction.commit()
     self.tic()
-    data_protection = document.getFollowUpRelatedValueList(
+    data_protection = document.getAgentRelatedValueList(
                                                     portal_type=portal_type)[0]
     sequence.set('data_protection_request_relative_url',
                  data_protection.getRelativeUrl())
@@ -176,8 +176,6 @@ class TestDataProtection(ERP5TypeTestCase):
     ValidateDocument \
     Tic \
     CreateDataProtectionRequest \
-    Tic \
-    SubmitDataProtectionRequest \
     Tic \
     EraseDocumentProperties \
     Tic \
