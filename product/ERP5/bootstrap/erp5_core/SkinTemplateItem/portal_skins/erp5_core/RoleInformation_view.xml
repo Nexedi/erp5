@@ -42,7 +42,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>This form is a placeholder. Its layout must be finished and configured according to the rules.</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>edit_order</string> </key>
@@ -143,7 +143,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Role Information</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>
