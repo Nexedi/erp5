@@ -15,6 +15,8 @@ Task Report | delivery_causality_workflow
 Task Report | delivery_simulation_interaction_workflow
 Task Report | edit_workflow
 Task Report | task_report_workflow
+Task | delivery_causality_interaction_workflow
+Task | delivery_causality_workflow
 Task | delivery_simulation_interaction_workflow
 Task | edit_workflow
 Task | task_workflow

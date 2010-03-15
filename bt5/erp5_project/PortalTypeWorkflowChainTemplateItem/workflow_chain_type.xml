@@ -17,7 +17,7 @@
  </chain>
  <chain>
   <type>Task</type>
-  <workflow>delivery_simulation_interaction_workflow, edit_workflow, task_workflow</workflow>
+  <workflow>delivery_causality_interaction_workflow, delivery_causality_workflow, delivery_simulation_interaction_workflow, edit_workflow, task_workflow</workflow>
  </chain>
  <chain>
   <type>Task Line</type>
