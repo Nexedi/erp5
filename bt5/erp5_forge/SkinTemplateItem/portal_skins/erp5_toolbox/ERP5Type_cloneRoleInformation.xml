@@ -53,18 +53,21 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>"""\n
-  A quite generic script to clone security settings amont portal types.\n
-  from_type - a portal type id\n
-  to_type_list - a list of target types\n
-  Uses external method\n
+            <value> <string>"""Obsolete compatibility script.\n
 """\n
+from Products.ERP5Type.Log import log\n
+log("Obsolete script, please use BaseType_copyRoleList instead")\n
 \n
 print \'cloning role information from\'\n
 print from_type\n
 if to_type_list == ():\n
   to_type_list = (to_type,)\n
-print context.cloneRoleInformation(context.portal_types, from_type, to_type_list)\n
+\n
+print "to", to_type_list\n
+\n
+context.portal_types[from_type].BaseType_copyRoleList(remove_existing_roles=True,\n
+                                                      portal_type_list=to_type_list)\n
+\n
 return printed\n
 </string> </value>
         </item>
@@ -107,8 +110,12 @@ return printed\n
                             <string>to_type</string>
                             <string>_print_</string>
                             <string>_print</string>
+                            <string>Products.ERP5Type.Log</string>
+                            <string>log</string>
                             <string>_getattr_</string>
+                            <string>_getitem_</string>
                             <string>context</string>
+                            <string>True</string>
                           </tuple>
                         </value>
                     </item>
