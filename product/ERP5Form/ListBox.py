@@ -2330,18 +2330,19 @@ class ListBoxHTMLRendererLine(ListBoxRendererLine):
           display_value = original_value
 
         enabled = editable_field.get_value('enabled', REQUEST=request)
+        editable = editable_field.get_value('editable', REQUEST=request)
         if enabled:
           # We need a way to pass the current line object (ie. brain) to the
           # field which is being displayed. Since the render_view API did not
           # permit this, we use the 'cell' value to pass the line object.
           request.set('cell', brain)
-          # Listbox 'editable' configuration should take precedence over
-          # individual field configuration
+          # Field is editable only if listbox lists it in editable columns AND
+          # if listbox_field is editable
           cell_html = editable_field.render(
             value=display_value,
             REQUEST=request,
             key=key,
-            editable=listbox_defines_column_as_editable,
+            editable=listbox_defines_column_as_editable and editable,
           )
           if isinstance(cell_html, str):
             cell_html = unicode(cell_html, encoding)
@@ -2351,7 +2352,7 @@ class ListBoxHTMLRendererLine(ListBoxRendererLine):
         if url is None:
           html = cell_html + error_message
         else:
-          if editable_field.get_value('editable', REQUEST=request):
+          if editable:
             html = u'%s' % cell_html
           else:
             html = u'<a href="%s">%s</a>' % (url, cell_html)

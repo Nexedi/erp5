@@ -378,34 +378,49 @@ return []
     self._helperExtraAndCssInListboxLine("LinesField", True)
     self._helperExtraAndCssInListboxLine("LinesField", False)
 
-  def test_09_editablePropertyPrecedence(self):
+  def test_09_editablePropertyConfiguration(self):
     """
-      When listbox's editable column and listbox_xx's editable property
-      conflict, the listbox editable column choice should take over.
+      Test editable behavior of delegated columns.
+      A column is editable if and only if listbox_foo is editable AND foo is
+      in the editable columns of the listbox.
 
       For example, if listbox_foo is defined as editable, without
       having column "foo" listed as editable in the listbox, the field should
       not be rendered as editable
     """
+    self._helperEditableColumn(True, True, True)
+    self._helperEditableColumn(False, False, False)
+    self._helperEditableColumn(True, False, False)
+    self._helperEditableColumn(False, True, False)
+
+  def _helperEditableColumn(self, editable_in_listbox, editable_in_line,
+      expected_editable):
     portal = self.getPortal()
     portal.ListBoxZuite_reset()
 
-    field_name = 'noneditable'
-    field_id = 'listbox_noneditable'
+    field_name = 'editableproperty_%s_%s' \
+                    % (editable_in_listbox, editable_in_line)
+    field_name = field_name.lower()
+    field_id = 'listbox_%s' % field_name
 
     # Reset listbox properties
     listbox = portal.FooModule_viewFooList.listbox
-    listbox.ListBox_setPropertyList(
+    kw = dict(
       field_list_method = 'portal_catalog',
       field_columns = ['%s | Check extra' % field_name,],
     )
+    if editable_in_listbox:
+      kw['field_editable_columns'] = '%s | Check extra' % field_name
+
+    listbox.ListBox_setPropertyList(**kw)
+
 
     form = portal.FooModule_viewFooList
     form.manage_addField(field_id, field_name, "StringField")
     field = getattr(form, field_id)
 
     field.values['default'] = '42'
-    field.values['editable'] = True
+    field.values['editable'] = editable_in_line
     form.groups['bottom'].remove(field_id)
     form.groups['hidden'].append(field_id)
 
@@ -428,7 +443,10 @@ return []
                             '//input[starts-with(@name, $name)]',
                             name='field_%s_' % field_id,
                           )
-    self.assertEquals(len(editable_field_list), 0)
+
+    msg = "editable_in_listbox: %s, editable_in_line: %s" \
+            % (editable_in_listbox, editable_in_line)
+    self.assertEquals(len(editable_field_list) == 1, expected_editable, msg)
 
   def test_ObjectSupport(self):
     # make sure listbox supports rendering of simple objects
