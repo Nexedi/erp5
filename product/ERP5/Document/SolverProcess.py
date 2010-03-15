@@ -228,6 +228,9 @@ class SolverProcess(XMLObject, ActiveProcess):
           new_decision = self.newContent(portal_type='Solver Decision')
         new_decision._setDeliveryList(solver_decision_key[1])
         new_decision._setCausality(solver_decision_key[0])
+        for simulation_movement in movement_dict.keys():
+          simulation_movement.setSolverValueList(
+            simulation_movement.getSolverValueList() + [new_decision])
     # XXX what should we do for non-matched existing solver decisions?
     # do we need to cancel them by using an appropriate workflow?
 
