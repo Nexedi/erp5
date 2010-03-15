@@ -56,14 +56,14 @@ Currently, method ids are hardcoded, and it could be better to use a generic tri
             <value>
               <list>
                 <string>cancel</string>
+                <string>close</string>
                 <string>confirm</string>
                 <string>deliver</string>
+                <string>open</string>
                 <string>order</string>
                 <string>plan</string>
-                <string>submit</string>
                 <string>start</string>
-                <string>close</string>
-                <string>open</string>
+                <string>submit</string>
               </list>
             </value>
         </item>

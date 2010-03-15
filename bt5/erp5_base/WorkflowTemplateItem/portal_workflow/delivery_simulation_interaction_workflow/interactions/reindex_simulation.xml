@@ -59,14 +59,14 @@
             <key> <string>method_id</string> </key>
             <value>
               <list>
-                <string>plan</string>
-                <string>order</string>
+                <string>cancel</string>
                 <string>confirm</string>
+                <string>deliver</string>
+                <string>order</string>
+                <string>plan</string>
                 <string>setReady</string>
                 <string>start</string>
                 <string>stop</string>
-                <string>deliver</string>
-                <string>cancel</string>
               </list>
             </value>
         </item>
