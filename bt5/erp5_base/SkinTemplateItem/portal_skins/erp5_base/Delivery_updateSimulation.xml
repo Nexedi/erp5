@@ -56,7 +56,7 @@
             <value> <string>delivery = context\n
 delivery_path = delivery.getPath()\n
 path_and_method_id = (delivery_path, (\'immediateReindexObject\',\'recursiveImmediateReindexObject\'))\n
-after_tag = delivery_path + \'_expand\'\n
+after_tag = (delivery_path + \'_firstUpdateAppliedRule\', delivery_path + \'_expand\')\n
 tag = delivery_path + \'_updateAppliedRule\'\n
 \n
 priority = 3\n
