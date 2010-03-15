@@ -17,11 +17,11 @@
  </chain>
  <chain>
   <type>Task</type>
-  <workflow>edit_workflow, order_simulation_interaction_workflow, task_workflow</workflow>
+  <workflow>edit_workflow, delivery_simulation_interaction_workflow, task_workflow</workflow>
  </chain>
  <chain>
   <type>Task Line</type>
-  <workflow>edit_workflow, order_movement_simulation_interaction_workflow</workflow>
+  <workflow>edit_workflow, delivery_movement_simulation_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>Task Report</type>
