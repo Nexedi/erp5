@@ -63,11 +63,9 @@ if resource is not None:\n
   for base_category in base_category_list:\n
     if matrixbox == 1:\n
       # XXX matrixbox is right_display (not as listfield) => invert display and value in item\n
-      cell_range.append( map(lambda x: (x[1],x[0]), context.getVariationCategoryItemList(base_category_list = (base_category,) ) ) )\n
+      cell_range.extend( map(lambda x: (x[1],x[0]), context.getVariationCategoryItemList(base_category_list = (base_category,) ) ) )\n
     else:\n
-      cell_range.append( context.getVariationCategoryList(base_category_list = (base_category,) ) )\n
-\n
-  cell_range = filter(lambda x: x != [], cell_range )\n
+      cell_range.extend( context.getVariationCategoryList(base_category_list = (base_category,) ) )\n
 \n
 return cell_range\n
 
@@ -120,7 +118,6 @@ return cell_range\n
                             <string>_getiter_</string>
                             <string>base_category</string>
                             <string>map</string>
-                            <string>filter</string>
                           </tuple>
                         </value>
                     </item>
