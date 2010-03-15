@@ -32,7 +32,7 @@ import transaction
 
 from Products.ERP5Type.tests.utils import createZODBPythonScript
 from Products.ERP5.tests.testTradeModelLine import TestTradeModelLineMixin
-from Products.ERP5.PropertySheet.TradeModelLine import TARGET_LEVEL_DELIVERY
+from Products.ERP5.PropertySheet.TradeModelLine import TARGET_LEVEL_DELIVERY, TARGET_LEVEL_MOVEMENT
 
 class TestComplexTradeModelLineUseCase(TestTradeModelLineMixin):
   """This test provides several complex use cases which are seen in the normal
@@ -53,13 +53,17 @@ class TestComplexTradeModelLineUseCase(TestTradeModelLineMixin):
     return trade_condition
 
   def getAmount(self, order, reference, return_object=False):
+    amount_list = []
     trade_condition = order.getSpecialiseValue()
-    for movement in trade_condition.getAggregatedAmountList(order):
-      if movement.getReference() == reference:
-        if return_object == True:
-          return movement
-        else:
-          return movement.getTotalPrice()
+    for amount in trade_condition.getAggregatedAmountList(order):
+      if amount.getReference() == reference:
+        amount_list.append(amount)
+    if return_object == True:
+      return amount_list
+    elif amount_list:
+      return sum([amount.getTotalPrice(0) for amount in amount_list])
+    else:
+      return None
 
   def appendBaseContributionCategory(self, document, new_category):
     base_contribution_value_list = document.getBaseContributionValueList()
@@ -121,6 +125,7 @@ class TestComplexTradeModelLineUseCase(TestTradeModelLineMixin):
     self.discount_amount_of_non_vat_taxable = base_amount.newContent(id='discount_amount_of_non_vat_taxable')
     self.discount_amount_of_vat_taxable = base_amount.newContent(id='discount_amount_of_vat_taxable')
     self.vat_taxable = base_amount.newContent(id='vat_taxable')
+    self.additional_charge = base_amount.newContent('additional_charge')
     self.total_price_without_vat = base_amount.newContent(id='total_price_without_vat')
     self.total_price_of_vat_taxable = base_amount.newContent(id='total_price_of_vat_taxable')
     self.discount_amount = base_amount.newContent(id='discount_amount')
@@ -143,7 +148,8 @@ class TestComplexTradeModelLineUseCase(TestTradeModelLineMixin):
 
     # create services
     self.service_vat = portal.service_module.newContent(title='VAT')
-    self.service_discount = portal.service_module.newContent(title='VAT')
+    self.service_discount = portal.service_module.newContent(title='DISCOUNT')
+    self.service_shipping_fee = portal.service_module.newContent(title='SHIPPING FEE')
 
     self.stepTic()
 
@@ -189,7 +195,8 @@ class TestComplexTradeModelLineUseCase(TestTradeModelLineMixin):
       trade_phase=None,
       base_application_value_list=[self.discount_amount_of_non_vat_taxable,
                                    self.discount_amount_of_vat_taxable,
-                                   self.total_price_of_ordered_items],
+                                   self.total_price_of_ordered_items,
+                                   self.additional_charge],
       base_contribution_value_list=[self.total_price_without_vat])
     self.trade_condition.newContent(
       portal_type='Trade Model Line',
@@ -533,9 +540,12 @@ else:
     self.stepTic()
     
     # check again
-    one_free_poster_amount = self.getAmount(order,
-                                            '3CD_OR_1DVD_GET_1_POSTER_FREE',
-                                            return_object=True)
+    one_free_poster_amount_list = self.getAmount(
+      order,
+      '3CD_OR_1DVD_GET_1_POSTER_FREE',
+      return_object=True)
+    self.assertEqual(len(one_free_poster_amount_list), 1)
+    one_free_poster_amount = one_free_poster_amount_list[0]
     self.assertEqual(one_free_poster_amount.getTotalPrice(), 0)
     self.assertEqual(one_free_poster_amount.getQuantity(), 1)
     self.assertEqual(one_free_poster_amount.getPrice(), 0)
@@ -554,9 +564,11 @@ else:
     self.stepTic()
 
     # check again
-    one_free_poster_amount = self.getAmount(order,
+    one_free_poster_amount_list = self.getAmount(order,
                                             '3CD_OR_1DVD_GET_1_POSTER_FREE',
                                             return_object=True)
+    self.assertEqual(len(one_free_poster_amount_list), 1)
+    one_free_poster_amount = one_free_poster_amount_list[0]
     self.assertEqual(one_free_poster_amount.getTotalPrice(), 0)
     self.assertEqual(one_free_poster_amount.getQuantity(), 1)
     self.assertEqual(one_free_poster_amount.getPrice(), 0)
@@ -665,6 +677,73 @@ if total_quantity >= 3:
     self.assertEqual(self.getAmount(order, 'TOTAL_PRICE_WITHOUT_VAT'), 16550)
     self.assertEqual(self.getAmount(order, 'VAT_AMOUNT'), 827.5)
     self.assertEqual(self.getAmount(order, 'TOTAL_PRICE_WITH_VAT'), 17377.5)
+
+  def test_usecase6(self):
+    """
+    Use case 6 : Add a shipping fee by TradeModelLine and VAT is charged to
+    this fee.
+    """
+    order = self.createOrder()
+    order.edit(specialise_value=self.trade_condition)
+    order.Order_applyTradeCondition(order.getSpecialiseValue())
+    order.newContent(portal_type='Trade Model Line',
+                     reference='SHIPPING_FEE',
+                     resource_value=self.service_shipping_fee,
+                     price=1,
+                     quantity=500,
+                     efficiency=1,
+                     target_level=TARGET_LEVEL_DELIVERY,
+                     create_line=True,
+                     trade_phase=None,
+                     base_application_value_list=[],
+                     base_contribution_value_list=[self.additional_charge,
+                                                   self.vat_taxable])
+
+    order_line_1 = order.newContent(portal_type=self.order_line_portal_type,
+                                    resource_value=self.movie_dvd_1,
+                                    quantity=1,
+                                    price=3000)
+    order_line_2 = order.newContent(portal_type=self.order_line_portal_type,
+                                    resource_value=self.movie_dvd_2,
+                                    quantity=1,
+                                    price=1000)
+
+    self.stepTic()
+
+    # check amounts
+    self.assertEqual(self.getAmount(order, 'TOTAL_PRICE_WITHOUT_VAT'), 4500)
+    self.assertEqual(self.getAmount(order, 'VAT_AMOUNT'), 225)
+    self.assertEqual(
+      len(self.getAmount(order, 'VAT_AMOUNT', return_object=True)),
+      1)
+    self.assertEqual(self.getAmount(order, 'TOTAL_PRICE_WITH_VAT'), 4725)
+
+    # change trade model line and calculate vat price per movement
+    order.newContent(portal_type='Trade Model Line',
+                     title='VAT Amount',
+                     reference='VAT_AMOUNT',
+                     resource_value=self.service_vat,
+                     price=0.05,
+                     quantity=None,
+                     efficiency=1,
+                     target_level=TARGET_LEVEL_MOVEMENT,
+                     create_line=True,
+                     trade_phase_value=self.portal.portal_categories.trade_phase.default.invoicing,
+                     base_application_value_list=[self.discount_amount_of_vat_taxable,
+                                                  self.vat_taxable],
+                     base_contribution_value_list=[self.vat_amount])
+
+    self.stepTic()
+
+    # check amounts again
+    self.assertEqual(self.getAmount(order, 'TOTAL_PRICE_WITHOUT_VAT'), 4500)
+    self.assertEqual(self.getAmount(order, 'VAT_AMOUNT'), 225)
+    self.assertEqual(
+      len(self.getAmount(order, 'VAT_AMOUNT', return_object=True)),
+      3)
+    self.assertEqual(self.getAmount(order, 'TOTAL_PRICE_WITH_VAT'), 4725)
+
+
 class TestComplexTradeModelLineUseCaseSale(TestComplexTradeModelLineUseCase):
   order_portal_type = 'Sale Order'
   order_line_portal_type = 'Sale Order Line'
