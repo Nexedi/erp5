@@ -8,6 +8,9 @@ Accounting Transaction Line | edit_workflow
 Accounting Transaction Root Simulation Rule | edit_workflow
 Accounting Transaction Root Simulation Rule | rule_validation_workflow
 Accounting Transaction | accounting_workflow
+Accounting Transaction | delivery_causality_interaction_workflow
+Accounting Transaction | delivery_causality_workflow
+Accounting Transaction | delivery_simulation_interaction_workflow
 Accounting Transaction | edit_workflow
 Balance Transaction | accounting_workflow
 Balance Transaction | edit_workflow
