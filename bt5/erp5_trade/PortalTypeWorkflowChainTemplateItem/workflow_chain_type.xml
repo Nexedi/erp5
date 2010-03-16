@@ -105,7 +105,7 @@
  </chain>
  <chain>
   <type>Returned Sale Packing List</type>
-  <workflow>delivery_causality_interaction_workflow, delivery_causality_workflow, delivery_causality_workflow, edit_workflow, packing_list_workflow</workflow>
+  <workflow>delivery_causality_interaction_workflow, delivery_causality_workflow, delivery_simulation_interaction_workflow, edit_workflow, packing_list_workflow</workflow>
  </chain>
  <chain>
   <type>Returned Sale Packing List Cell</type>
@@ -113,7 +113,7 @@
  </chain>
  <chain>
   <type>Returned Sale Packing List Line</type>
-  <workflow>delivery_movement_causality_interaction_workflow, delivery_movement_simulation_interaction_workflow, edit_workflow, pricing_interaction_workflow, trade_matrix_workflow</workflow>
+  <workflow>delivery_movement_causality_interaction_workflow, delivery_movement_simulation_interaction_workflow, edit_workflow, movement_base_contribution_interaction_workflow, pricing_interaction_workflow, trade_matrix_workflow</workflow>
  </chain>
  <chain>
   <type>Sale Order</type>
