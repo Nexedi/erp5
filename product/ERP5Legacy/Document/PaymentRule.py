@@ -31,7 +31,7 @@ from Acquisition import aq_base, aq_parent, aq_inner, aq_acquire
 from Products.CMFCore.utils import getToolByName
 
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
-from Products.ERP5.Document.Rule import Rule
+from Products.ERP5Legacy.Document.Rule import Rule
 
 from zLOG import LOG, INFO
 

@@ -33,7 +33,7 @@ import zope.interface
 from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type import Permissions, interfaces
-from Products.ERP5.Document.Rule import Rule
+from Products.ERP5Legacy.Document.Rule import Rule
 from Products.ERP5Type.Errors import TransformationRuleError
 
 class MovementFactory:

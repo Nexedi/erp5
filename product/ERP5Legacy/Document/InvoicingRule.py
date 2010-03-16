@@ -30,7 +30,7 @@
 
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
-from Products.ERP5.Document.Rule import Rule
+from Products.ERP5Legacy.Document.Rule import Rule
 from zLOG import LOG, WARNING
 
 class InvoicingRule(Rule):

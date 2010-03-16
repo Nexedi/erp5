@@ -27,7 +27,7 @@
 
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions
-from Products.ERP5.Document.Rule import Rule
+from Products.ERP5Legacy.Document.Rule import Rule
 from Products.ERP5Legacy.Document.DeliveryRule import DeliveryRule
 from zLOG import LOG, WARNING
 from DateTime import DateTime

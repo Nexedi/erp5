@@ -34,7 +34,7 @@ from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
-from Products.ERP5.Document.Rule import Rule
+from Products.ERP5Legacy.Document.Rule import Rule
 
 TREE_DELIVERED_CACHE_KEY = 'AppliedRule._isTreeDelivered_cache'
 TREE_DELIVERED_CACHE_ENABLED = 'TREE_DELIVERED_CACHE_ENABLED'
