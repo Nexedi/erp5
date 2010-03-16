@@ -90,11 +90,11 @@
                       <list>
                         <tuple>
                           <string>source_project_title</string>
-                          <string>Supplier Project</string>
+                          <string>Client Project</string>
                         </tuple>
                         <tuple>
                           <string>destination_project_title</string>
-                          <string>Client Project</string>
+                          <string>Supplier Project</string>
                         </tuple>
                         <tuple>
                           <string>translated_container_state_title</string>
@@ -127,19 +127,19 @@
                         </tuple>
                         <tuple>
                           <string>source_title</string>
-                          <string>Sender or Provider</string>
+                          <string>Returner</string>
                         </tuple>
                         <tuple>
                           <string>source_section_title</string>
-                          <string>Supplier</string>
+                          <string>Client</string>
                         </tuple>
                         <tuple>
                           <string>destination_title</string>
-                          <string>Recipient or Beneficiary</string>
+                          <string>Recipient</string>
                         </tuple>
                         <tuple>
                           <string>destination_section_title</string>
-                          <string>Client</string>
+                          <string>Supplier</string>
                         </tuple>
                         <tuple>
                           <string>delivery.stop_date</string>
@@ -179,18 +179,6 @@
                           <string>delivery.stop_date</string>
                           <string>Delivery Date</string>
                         </tuple>
-                        <tuple>
-                          <string>delivery.start_date</string>
-                          <string>Shipping Date</string>
-                        </tuple>
-                        <tuple>
-                          <string>total_price</string>
-                          <string>Total Price</string>
-                        </tuple>
-                        <tuple>
-                          <string>total_net_price</string>
-                          <string>Net Total Price</string>
-                        </tuple>
                       </list>
                     </value>
                 </item>
@@ -227,27 +215,27 @@
                         </tuple>
                         <tuple>
                           <string>source_title</string>
-                          <string>Sender or Provider</string>
+                          <string>Returner</string>
                         </tuple>
                         <tuple>
                           <string>source_section_title</string>
-                          <string>Supplier</string>
-                        </tuple>
-                        <tuple>
-                          <string>source_project_title</string>
-                          <string>Supplier Project</string>
-                        </tuple>
-                        <tuple>
-                          <string>destination_title</string>
-                          <string>Recipient or Beneficiary</string>
-                        </tuple>
-                        <tuple>
-                          <string>destination_section_title</string>
                           <string>Client</string>
                         </tuple>
                         <tuple>
-                          <string>destination_project_title</string>
+                          <string>source_project_title</string>
                           <string>Client Project</string>
+                        </tuple>
+                        <tuple>
+                          <string>destination_title</string>
+                          <string>Recipient</string>
+                        </tuple>
+                        <tuple>
+                          <string>destination_section_title</string>
+                          <string>Supplier</string>
+                        </tuple>
+                        <tuple>
+                          <string>destination_project_title</string>
+                          <string>Supplier Project</string>
                         </tuple>
                         <tuple>
                           <string>delivery.stop_date</string>
@@ -297,27 +285,27 @@
                         </tuple>
                         <tuple>
                           <string>source_title</string>
-                          <string>Sender or Provider</string>
+                          <string>Returner</string>
                         </tuple>
                         <tuple>
                           <string>source_section_title</string>
-                          <string>Supplier</string>
-                        </tuple>
-                        <tuple>
-                          <string>source_project_title</string>
-                          <string>Supplier Project</string>
-                        </tuple>
-                        <tuple>
-                          <string>destination_title</string>
-                          <string>Recipient or Beneficiary</string>
-                        </tuple>
-                        <tuple>
-                          <string>destination_section_title</string>
                           <string>Client</string>
                         </tuple>
                         <tuple>
-                          <string>destination_project_title</string>
+                          <string>source_project_title</string>
                           <string>Client Project</string>
+                        </tuple>
+                        <tuple>
+                          <string>destination_title</string>
+                          <string>Recipient</string>
+                        </tuple>
+                        <tuple>
+                          <string>destination_section_title</string>
+                          <string>Supplier</string>
+                        </tuple>
+                        <tuple>
+                          <string>destination_project_title</string>
+                          <string>Supplier Project</string>
                         </tuple>
                         <tuple>
                           <string>delivery.stop_date</string>

@@ -12,7 +12,10 @@
         <item>
             <key> <string>delegated_list</string> </key>
             <value>
-              <list/>
+              <list>
+                <string>portal_type</string>
+                <string>title</string>
+              </list>
             </value>
         </item>
         <item>
@@ -81,8 +84,23 @@
                     <value> <string>SalePackingList_viewFieldLibrary</string> </value>
                 </item>
                 <item>
+                    <key> <string>portal_type</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>Sale Packing List</string>
+                          <string>Sale Packing List</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value> <string>Sale Packing List</string> </value>
                 </item>
               </dictionary>
             </value>
