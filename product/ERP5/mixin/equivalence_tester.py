@@ -164,7 +164,7 @@ class EquivalenceTesterMixin:
     divergence_message = self.explain(simulation_movement)
     # XXX explanation message should be provided by each class, each
     # portal type or each document.
-    message = '<a href="${decision_url}">${property_name} of ${decision_value} of ${decision_title}</a> of <a href="${delivery_url}">${delivery_title}</a> is different from <a href="${prevision_url}">planned ${property_name} of ${prevision_value}</a>.'
+    message = '<a href="${decision_url}">${property_name} of ${decision_value} of ${decision_type} ${decision_title}</a> of <a href="${delivery_url}">${delivery_title}</a> is different from <a href="${prevision_url}">planned ${property_name} of ${prevision_value}</a>.'
     decision_movement = self.getPortalObject().unrestrictedTraverse(
       divergence_message.getProperty('object_relative_url'))
     decision_delivery = decision_movement.getDeliveryValue()
@@ -172,6 +172,10 @@ class EquivalenceTesterMixin:
       'decision_url':decision_movement.absolute_url(),
       'property_name':divergence_message.getProperty('tested_property'),
       'decision_value':h(divergence_message.getProperty('decision_value')),
+      # XXXXXX if we need such a 'short portal type' name, we need a way
+      # to define it.
+      'decision_type':decision_movement.getPortalType().replace(
+           '%s ' % decision_delivery.getPortalType(), ''),
       'decision_title':h(decision_movement.getTitleOrId()),
       'delivery_url':decision_delivery.absolute_url(),
       'delivery_title':h(decision_delivery.getTitleOrId()),
