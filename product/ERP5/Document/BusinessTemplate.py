@@ -1164,7 +1164,7 @@ class ObjectTemplateItem(BaseTemplateItem):
               container.getSkinSelections())
 
         container.manage_delObjects([object_id])
-        if container.aq_parent.meta_type == 'ERP5 Catalog' and len(container.objectIds()) == 0:
+        if container.aq_parent.meta_type == 'ERP5 Catalog' and not len(container):
           # We are removing a ZSQLMethod, remove the SQLCatalog if empty
           container.getParentValue().manage_delObjects([container.id])
       except (NotFound, KeyError, BadRequest, AttributeError):
