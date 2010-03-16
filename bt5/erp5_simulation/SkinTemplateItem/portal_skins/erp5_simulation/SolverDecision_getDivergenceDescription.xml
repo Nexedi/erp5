@@ -60,7 +60,7 @@ from Products.PythonScripts.standard import html_quote\n
 # even if we have several divergence testers, the first\n
 # one is enough for displaying the title.\n
 tester = context.getCausalityValue()\n
-return \'<div>%s</div><div>(%s)</div>\' % (\n
+return \'<div>%s</div><div><em>(%s)</em></div>\' % (\n
     html_quote(tester.getTranslatedTitle()),\n
     context.getExplanationMessage())\n
 

@@ -54,10 +54,10 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>try:\n
-  return [(\'(None)\', \'\')] + [x for x in context.getPortalObject().portal_solvers.getDeliverySolverTranslatedItemList() \\\n
+  return [(\'Do Nothing\', \'\')] + [x for x in context.getPortalObject().portal_solvers.getDeliverySolverTranslatedItemList() \\\n
       if x[1] in context.getSolverValue().getDeliverySolverList()]\n
 except AttributeError:\n
-  return [(\'(None)\', \'\')]\n
+  return [(\'Do Nothing\', \'\')]\n
 </string> </value>
         </item>
         <item>
