@@ -14,6 +14,7 @@
 ##############################################################################
 
 import z3c.recipe.openoffice.recipe as original
+import os
 import platform
 
 class Recipe(original.Recipe):
@@ -31,4 +32,5 @@ class Recipe(original.Recipe):
 
     options['download-url'] = options['download-%s' % target]
     original.Recipe.__init__(self, buildout, name, options)
-    self.options['tmp-storage'] = buildout['buildout']["download-cache"]
+    self.options['tmp-storage'] = buildout['buildout'].get('download-cache',
+                os.path.join(buildout['buildout']['directory'], 'download'))
