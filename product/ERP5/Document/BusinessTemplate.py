@@ -2077,7 +2077,11 @@ class PortalTypeAllowedContentTypeTemplateItem(BaseTemplateItem):
     for portal_type in portal_type_list:
       id = portal_type.get('id')
       item_type_list = [item.text for item in portal_type.findall('item')]
-      self._objects['%s/%s' % (self.class_property, id,)] = item_type_list
+      if self.class_property not in id
+        key = '%s/%s' % (self.class_property, id,)
+      else:
+        key = id
+      self._objects[key] = item_type_list
 
   def install(self, context, trashbin, **kw):
     portal = context.getPortalObject()
