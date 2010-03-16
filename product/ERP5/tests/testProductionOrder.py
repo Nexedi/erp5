@@ -312,11 +312,16 @@ class TestProductionOrderMixin(TestOrderMixin):
     transformation_transformed_resource = sequence.get('transformation_transformed_resource')
 
     for colour in self.colour_list:
+      colour_path = 'colour/%s' % colour
       for size in self.mrp_size_list:
+        size_path = 'size/%s' % size
         transformation_transformed_resource.newCell(
-          'colour/%s' % colour,
-          'size/%s' % size,
+          colour_path,
+          size_path,
+          mapped_value_property_list = ('quantity',),
           quantity = self.colour_size_quantity_dict[colour][size],
+          membership_criterion_base_category= ('size', 'colour', ),
+          membership_criterion_category= (size_path, colour_path,),
           base_id="quantity",
         )
 
@@ -329,11 +334,15 @@ class TestProductionOrderMixin(TestOrderMixin):
     transformation_transformed_resource = sequence.get('transformation_transformed_resource')
 
     for colour in self.colour_list:
+      colour_path = 'colour/%s' % colour
       for size in self.mrp_size_list:
+        size_path = 'size/%s' % size
         transformation_transformed_resource.newCell(
-          'colour/%s' % colour,
-          'size/%s' % size,
+          colour_path,
+          size_path,
           categories = self.colour_size_variation_dict[colour][size],
+          membership_criterion_base_category= ('size', 'colour', ),
+          membership_criterion_category= (size_path, colour_path,),
           base_id="variation",
         )
 
@@ -345,11 +354,17 @@ class TestProductionOrderMixin(TestOrderMixin):
     order_line = sequence.get('order_line')
 
     for colour in self.colour_list:
+      colour_path = 'colour/%s' % colour
       for size in self.mrp_size_list:
+        size_path = 'size/%s' % size
         order_line.newCell(
-          'size/%s' % size,
-          'colour/%s' % colour,
+          size_path,
+          colour_path,
+          mapped_value_property_list = ('quantity',),
           quantity = self.order_line_colour_size_quantity_dict[colour][size],
+          categories = [size_path, colour_path],
+          membership_criterion_base_category= ('size', 'colour', ),
+          membership_criterion_category= (size_path, colour_path,),
           base_id='movement',
         )
 

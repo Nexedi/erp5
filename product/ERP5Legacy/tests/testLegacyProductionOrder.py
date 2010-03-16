@@ -313,12 +313,19 @@ class TestProductionOrderMixin(TestOrderMixin):
     transformation_transformed_resource = sequence.get('transformation_transformed_resource')
 
     for colour in self.colour_list:
+      colour_path = 'colour/%s' % colour
       for size in self.mrp_size_list:
+        size_path = 'size/%s' % size
         quantity = self.colour_size_quantity_dict[colour][size]
-        transformation_transformed_resource.newCell('colour/%s' % colour,
-                                                    'size/%s' % size,
-                                                    quantity=quantity,
-                                                    base_id="quantity")
+        transformation_transformed_resource.newCell(
+            colour_path,
+            size_path,
+            mapped_value_property_list = ('quantity',),
+            quantity=quantity,
+            membership_criterion_base_category= ('size', 'colour', ),
+            membership_criterion_category= (size_path, colour_path,),
+            base_id="quantity",
+        )
 
   def stepSetTransformationTransformedResourceVariationMatrix(self, sequence=None, sequence_list=None,
                                **kw):
@@ -329,12 +336,18 @@ class TestProductionOrderMixin(TestOrderMixin):
     transformation_transformed_resource = sequence.get('transformation_transformed_resource')
 
     for colour in self.colour_list:
+      colour_path = 'colour/%s' % colour
       for size in self.mrp_size_list:
+        size_path = 'size/%s' % size
         variation_list = self.colour_size_variation_dict[colour][size]
-        transformation_transformed_resource.newCell('colour/%s' % colour,
-                                                    'size/%s' % size,
-                                                    categories = variation_list,
-                                                    base_id="variation")
+        transformation_transformed_resource.newCell(
+            colour_path,
+            size_path,
+            categories = variation_list,
+            membership_criterion_base_category= ('size', 'colour', ),
+            membership_criterion_category= (size_path, colour_path,),
+            base_id="variation",
+        )
 
   def stepSetOrderLineQuantityMatrix(self, sequence=None, sequence_list=None,
                                **kw):
@@ -343,11 +356,17 @@ class TestProductionOrderMixin(TestOrderMixin):
     """
     order_line = sequence.get('order_line')
     for colour in self.colour_list:
+      colour_path = 'colour/%s' % colour
       for size in self.mrp_size_list:
+        size_path = 'size/%s' % size
         order_line.newCell(
-          'size/%s' % size,
-          'colour/%s' % colour,
+          size_path,
+          colour_path,
+          mapped_value_property_list = ('quantity',),
           quantity = self.order_line_colour_size_quantity_dict[colour][size],
+          categories = [size_path, colour_path],
+          membership_criterion_base_category= ('size', 'colour', ),
+          membership_criterion_category= (size_path, colour_path,),
           base_id='movement',
         )
 
