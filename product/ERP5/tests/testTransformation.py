@@ -242,6 +242,7 @@ class TestTransformation(TestTransformationMixin, ERP5TypeTestCase):
         len(fabric_line.getCellKeyList(base_id='quantity'))
     )
 
+    swimsuit_quantity = 4.0
     from Products.ERP5Type.Document import newTempAmount
     n = 1
     # Check that getAggregatedAmount returns the expected results, a.k.a.
@@ -251,7 +252,7 @@ class TestTransformation(TestTransformationMixin, ERP5TypeTestCase):
         # id does not matter, just make it unique
         temp_amount = newTempAmount(transformation, "foo_%s_%s" % (size, colour))
         temp_amount.edit(
-            quantity = 1.0,
+            quantity = swimsuit_quantity,
             variation_category_list = [size, colour],
             resource = swimsuit.getRelativeUrl(),
         )
@@ -262,12 +263,12 @@ class TestTransformation(TestTransformationMixin, ERP5TypeTestCase):
           resource = amount.getResource()
           if resource == fabric.getRelativeUrl():
             self.assertEquals(amount.getVariationCategoryList(), [colour])
-            self.assertEquals(amount.getQuantity(), i+1)
+            self.assertEquals(amount.getQuantity(), (i+1)*swimsuit_quantity)
           elif resource == button.getRelativeUrl():
             self.assertEquals(amount.getVariationCategoryList(), [size])
-            self.assertEquals(amount.getQuantity(), button_number)
+            self.assertEquals(amount.getQuantity(), button_number*swimsuit_quantity)
           elif resource == "operation/sewing":
-            self.assertEquals(amount.getQuantity(), n)
+            self.assertEquals(amount.getQuantity(), n*swimsuit_quantity)
           else:
             self.fail("Invalid Resource: %s" % resource)
         n += 1
