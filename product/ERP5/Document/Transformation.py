@@ -186,20 +186,6 @@ class Transformation(XMLObject, Predicate, Variated):
       self.reindexObject()
 
     security.declareProtected(Permissions.AccessContentsInformation,
-                              'getVariationCategoryList')
-    def getVariationCategoryList(self, **kwd):
-      """
-      Returns the variation categories applicable to the Transformation.
-      When a resource is defined, it should not return more than what is
-      set through the Resource.
-      """
-      resource = self.getResourceValue()
-      if resource is not None:
-        return resource.getVariationCategoryList(**kwd)
-      else:
-        return self.getVariationCategoryList(**kwd)
-
-    security.declareProtected(Permissions.AccessContentsInformation,
                               'getVariationCategoryItemList')
     def getVariationCategoryItemList(self, base_category_list=(), base=1,
                                      display_id='title',

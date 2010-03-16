@@ -146,6 +146,36 @@ class TestTransformation(TestTransformationMixin, ERP5TypeTestCase):
         transformation.getVariationCategoryList()
     )
 
+  def test_variationCategoryWithIndividualVariation(self):
+    '''Check that individual variation are return when getVariationCategoryList
+    is called on a transformation
+    '''
+    swimcap = self.createResource(
+        'Swimming Cap',
+        self.swimsuit_variation_base_category_list,
+        self.swimsuit_variation_category_list,
+    )
+    # create individual variation
+    individual_variation = swimcap.newContent(portal_type='Product Individual Variation')
+
+    transaction.commit()
+    self.tic()
+    transformation = self.createTransformation()
+    transformation.setResourceValue(swimcap)
+
+    transformation.edit(
+        title = 'Swimcap Production',
+        variation_base_category_list = \
+            self.swimsuit_variation_base_category_list + ['variation',]
+    )
+
+    # check the individual variation is returned by the
+    # getVariationCategoryList
+    individual_url = 'variation/%s' % individual_variation.getRelativeUrl()
+    self.assertTrue(individual_url in
+        transformation.getVariationCategoryList())
+
+
   def test_transformedInventory(self):
     portal = self.getPortal()
 
