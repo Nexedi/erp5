@@ -2091,44 +2091,43 @@ class PortalTypeAllowedContentTypeTemplateItem(BaseTemplateItem):
     else:
       old_objects = {}
     for key in set(self._objects.keys()).union(set(old_objects.keys())):
-      if update_dict.has_key(key) or force:
+      if key in update_dict or force:
         if not force:
           action = update_dict[key]
           if action == 'nothing':
             continue
         try:
           portal_id = key.split('/')[-1]
-          portal_type = pt._getOb(portal_id)
+          portal_type = types_tool._getOb(portal_id)
         except (AttributeError, KeyError):
           raise AttributeError, "Portal type '%s' not found while " \
               "installing %s" % (portal_id, self.getTitle())
         property_list = self._objects.get(key, [])
         old_property_list = old_objects.get(key, ())
         object_property_list = getattr(portal_type, self.class_property, ())
-        if len(object_property_list) > 0:
-          # merge differences between portal types properties
-          # for example:
-          # * current value : [A,B,C]
-          # * in new BT : [A,D]
-          # * in old BT : [A,B]
-          # -> [A,D,C] i.e. C is merged but B is not merged
-          for id in object_property_list:
-            if id not in property_list and id not in old_property_list:
-              property_list.append(id)
+        # merge differences between portal types properties
+        # for example:
+        # * current value : [A,B,C]
+        # * in new BT : [A,D]
+        # * in old BT : [A,B]
+        # -> [A,D,C] i.e. C is merged but B is not merged
+        for id in object_property_list:
+          if id not in property_list and id not in old_property_list:
+            property_list.append(id)
         setattr(portal_type, self.class_property, tuple(property_list))
 
   def uninstall(self, context, **kw):
     object_path = kw.get('object_path', None)
-    p = context.getPortalObject()
-    pt = p.unrestrictedTraverse('portal_types')
+    portal = context.getPortalObject()
+    types_tool = getToolByName(portal, 'portal_types')
     if object_path is not None:
-      object_keys = [object_path]
+      object_key_list = [object_path]
     else:
-      object_keys = self._objects.keys()
-    for key in object_keys:
+      object_key_list = self._objects.keys()
+    for key in object_key_list:
       try:
         portal_id = key.split('/')[-1]
-        portal_type = pt._getOb(portal_id)
+        portal_type = types_tool._getOb(portal_id)
       except (AttributeError,  KeyError):
         LOG("portal types not found : ", 100, portal_id)
         continue
