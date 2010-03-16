@@ -172,14 +172,23 @@ class TestTransformation(TestTransformationMixin, ERP5TypeTestCase):
     fabric_line.setVVariationBaseCategoryList(['colour'])
     for colour in self.colour_category_list:
       # For a blue swimming suit, we need blue fabric
-      fabric_line.newCell(colour, category = colour, base_id = 'variation')
+      fabric_line.newCell(colour,
+                          categories = colour,
+                          membership_criterion_base_category= ('colour',),
+                          membership_criterion_category= (colour,),
+                          base_id = 'variation')
 
     fabric_line.setQVariationBaseCategoryList(['size'])
     for i, size in enumerate(self.size_category_list):
       # Depending on the size, the quantity of Fabric is different.
       # arbitrarily, we fix the quantity for size s as:
       # self.size_category_list.index(s) + 1
-      fabric_line.newCell(size, quantity = i+1, base_id = 'quantity')
+      fabric_line.newCell(size,
+                          quantity = i+1,
+                          mapped_value_property_list = ('quantity',),
+                          membership_criterion_base_category= ('size',),
+                          membership_criterion_category= (size,),
+                          base_id = 'quantity')
 
     button = self.createComponent()
     button.edit(
@@ -194,7 +203,11 @@ class TestTransformation(TestTransformationMixin, ERP5TypeTestCase):
     button_line.setVVariationBaseCategoryList(['size'])
     for size in self.size_category_list:
       # The button used depends on the size
-      button_line.newCell(size, category = size, base_id = 'variation')
+      button_line.newCell(size,
+                          categories = size,
+                          membership_criterion_base_category= ('size',),
+                          membership_criterion_category= (size,),
+                          base_id = 'variation')
 
     sewing_line = transformation.newContent(
         portal_type = self.operation_line_portal_type)
@@ -205,7 +218,13 @@ class TestTransformation(TestTransformationMixin, ERP5TypeTestCase):
     i = 1
     for size in self.size_category_list:
       for colour in self.colour_category_list:
-        sewing_line.newCell(size, colour, quantity = i, base_id = 'quantity')
+        sewing_line.newCell(size,
+                            colour,
+                            mapped_value_property_list = ('quantity',),
+                            membership_criterion_base_category= ('size', 'colour'),
+                            membership_criterion_category= (size, colour),
+                            quantity = i,
+                            base_id = 'quantity')
         i += 1
 
     transaction.commit()
@@ -219,6 +238,22 @@ class TestTransformation(TestTransformationMixin, ERP5TypeTestCase):
         len(swimsuit.getVariationCategoryList(base_category_list=['size'])),
         len(fabric_line.getCellKeyList(base_id='quantity'))
     )
+
+    from Products.ERP5Type.Document import newTempAmount
+    for i, size in enumerate(self.size_category_list):
+      for colour in self.colour_category_list:
+        # id does not matter, just make it unique
+        a = newTempAmount(transformation, "foo_%s_%s" % (size, colour))
+        a.edit(
+            quantity = 1.0,
+            variation_category_list = [size, colour],
+            resource = swimsuit.getRelativeUrl(),
+        )
+        ag = fabric_line.getAggregatedAmountList(a)
+        self.assertEquals(len(ag), 1)
+        self.assertEquals(ag[0].getResource(), fabric.getRelativeUrl())
+        self.assertEquals(ag[0].getVariationCategoryList(), [colour])
+        self.assertEquals(ag[0].quantity, i+1)
 
     # XXX (will be expanded)
 
@@ -248,3 +283,9 @@ class TestTransformation(TestTransformationMixin, ERP5TypeTestCase):
     transformed_resource = transformation.newContent(portal_type=\
         'Transformation Transformed Resource')
     self.assertEquals(transformed_resource.getResource(), None)
+
+def test_suite():
+  import unittest
+  suite = unittest.TestSuite()
+  suite.addTest(unittest.makeSuite(TestTransformation))
+  return suite
