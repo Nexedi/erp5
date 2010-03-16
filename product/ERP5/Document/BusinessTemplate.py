@@ -2080,8 +2080,8 @@ class PortalTypeAllowedContentTypeTemplateItem(BaseTemplateItem):
       self._objects['%s/%s' % (self.class_property, id,)] = item_type_list
 
   def install(self, context, trashbin, **kw):
-    p = context.getPortalObject()
-    pt = p.unrestrictedTraverse('portal_types')
+    portal = context.getPortalObject()
+    types_tool = getToolByName(portal, 'portal_types')
     update_dict = kw.get('object_to_update')
     force = kw.get('force')
     installed_bt = kw.get('installed_bt')
