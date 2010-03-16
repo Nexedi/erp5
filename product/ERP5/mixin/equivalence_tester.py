@@ -30,6 +30,8 @@ import zope.interface
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, interfaces
 from Products.ERP5Type.DivergenceMessage import DivergenceMessage
+from Products.ERP5Type.Message import Message
+from Products.PythonScripts.standard import html_quote as h
 
 class EquivalenceTesterMixin:
   """
@@ -153,6 +155,30 @@ class EquivalenceTesterMixin:
     """
     decision_movement.edit(
       **self.getUpdatablePropertyDict(prevision_movement, decision_movement))
+
+  def getExplanationMessage(self, simulation_movement):
+    """
+    Returns the HTML message that describes the detail of the
+    divergence.
+    """
+    divergence_message = self.explain(simulation_movement)
+    # XXX explanation message should be provided by each class, each
+    # portal type or each document.
+    message = '<a href="${decision_url}">${property_name} of ${decision_value} of ${decision_title}</a> of <a href="${delivery_url}">${delivery_title}</a> is different from <a href="${prevision_url}">planned ${property_name} of ${prevision_value}</a>.'
+    decision_movement = self.getPortalObject().unrestrictedTraverse(
+      divergence_message.getProperty('object_relative_url'))
+    decision_delivery = decision_movement.getDeliveryValue()
+    mapping = {
+      'decision_url':decision_movement.absolute_url(),
+      'property_name':divergence_message.getProperty('tested_property'),
+      'decision_value':h(divergence_message.getProperty('decision_value')),
+      'decision_title':h(decision_movement.getTitleOrId()),
+      'delivery_url':decision_delivery.absolute_url(),
+      'delivery_title':h(decision_delivery.getTitleOrId()),
+      'prevision_url':'#', # XXX it should be a link to the detailed view.
+      'prevision_value':h(divergence_message.getProperty('prevision_value')),
+      }
+    return str(Message(domain='erp5_ui', message=message, mapping=mapping))
 
   # Placeholder for methods to override
   def _compare(self, prevision_movement, decision_movement):

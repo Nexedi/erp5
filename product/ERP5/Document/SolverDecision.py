@@ -111,3 +111,19 @@ class SolverDecision(ConfigurableMixin, XMLObject):
       fallback_script_id='Solver_getDefaultConfigurationPropertyDict')
 
     return method(self)
+
+  def getExplanationMessage(self, all=False):
+    """
+    Returns the HTML message that describes the detail of divergences to
+    be solved with this Solver Decision.
+    """
+    simulation_movement_list = self.getSolverRelatedValueList()
+    message_list = []
+    for tester in self.getCausalityValueList():
+      for simulation_movement in simulation_movement_list:
+        if all or len(message_list) == 0:
+          message_list.append(tester.getExplanationMessage(simulation_movement))
+        elif len(message_list) == 1:
+          # XXX it should be a link to the detailed view.
+          message_list.append('...')
+    return ''.join(message_list)
