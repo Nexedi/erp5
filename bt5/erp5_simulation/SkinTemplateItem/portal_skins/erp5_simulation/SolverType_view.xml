@@ -102,6 +102,7 @@
                         <string>my_line_grouping</string>
                         <string>my_line_exclusive</string>
                         <string>my_delivery_solver_list</string>
+                        <string>my_tested_property_list</string>
                       </list>
                     </value>
                 </item>
