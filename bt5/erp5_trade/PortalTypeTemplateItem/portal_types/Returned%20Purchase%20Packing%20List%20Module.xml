@@ -34,39 +34,45 @@
         </item>
         <item>
             <key> <string>content_icon</string> </key>
-            <value> <string>organisation_icon.gif</string> </value>
-        </item>
-        <item>
-            <key> <string>content_meta_type</string> </key>
-            <value> <string>ERP5 Delivery Line</string> </value>
+            <value> <string>folder_icon.gif</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Returned Sale Packing List Lines are part of returend sale packing lists and bear the different product or service references that are returned by the customer.</string> </value>
+            <value> <string>A container of Returned Purchase Packing Lists.</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>
-            <value> <string>addDeliveryLine</string> </value>
-        </item>
-        <item>
-            <key> <string>filter_content_types</string> </key>
-            <value> <int>1</int> </value>
+            <value> <string>addFolder</string> </value>
         </item>
         <item>
             <key> <string>group_list</string> </key>
             <value>
               <tuple>
-                <string>delivery_movement</string>
+                <string>module</string>
               </tuple>
             </value>
         </item>
         <item>
+            <key> <string>icon</string> </key>
+            <value> <string>document_icon.gif</string> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
-            <value> <string>Returned Sale Packing List Line</string> </value>
+            <value> <string>Returned Purchase Packing List Module</string> </value>
+        </item>
+        <item>
+            <key> <string>immediate_view</string> </key>
+            <value> <string>Folder_view</string> </value>
         </item>
         <item>
             <key> <string>init_script</string> </key>
-            <value> <string>DeliveryLine_init</string> </value>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>meta_type</string> </key>
+            <value> <string>ERP5 Folder</string> </value>
         </item>
         <item>
             <key> <string>permission</string> </key>
@@ -75,8 +81,12 @@
             </value>
         </item>
         <item>
-            <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Base Type</string> </value>
+        </item>
+        <item>
+            <key> <string>product</string> </key>
+            <value> <string>ERP5Type</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -92,7 +102,7 @@
       <dictionary>
         <item>
             <key> <string>domain_name</string> </key>
-            <value> <string>erp5_content</string> </value>
+            <value> <string>erp5_ui</string> </value>
         </item>
         <item>
             <key> <string>property_name</string> </key>
@@ -112,7 +122,7 @@
       <dictionary>
         <item>
             <key> <string>domain_name</string> </key>
-            <value> <string>erp5_content</string> </value>
+            <value> <string>erp5_ui</string> </value>
         </item>
         <item>
             <key> <string>property_name</string> </key>

@@ -34,19 +34,19 @@
         </item>
         <item>
             <key> <string>content_icon</string> </key>
-            <value> <string>organisation_icon.gif</string> </value>
+            <value> <string>order_line_icon.gif</string> </value>
         </item>
         <item>
             <key> <string>content_meta_type</string> </key>
-            <value> <string>ERP5 Delivery Line</string> </value>
+            <value> <string>ERP5 Delivery Cell</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Returned Sale Packing List Lines are part of returend sale packing lists and bear the different product or service references that are returned by the customer.</string> </value>
+            <value> <string>A Returned Purchase Packing List Cell specifies a price and a quantity for each variation of a resource in a delivery line.</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>
-            <value> <string>addDeliveryLine</string> </value>
+            <value> <string>addDeliveryCell</string> </value>
         </item>
         <item>
             <key> <string>filter_content_types</string> </key>
@@ -62,11 +62,11 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Returned Sale Packing List Line</string> </value>
+            <value> <string>Returned Purchase Packing List Cell</string> </value>
         </item>
         <item>
             <key> <string>init_script</string> </key>
-            <value> <string>DeliveryLine_init</string> </value>
+            <value> <string>DeliveryCell_init</string> </value>
         </item>
         <item>
             <key> <string>permission</string> </key>

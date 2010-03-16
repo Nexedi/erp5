@@ -17,6 +17,9 @@
  <portal_type id="Purchase Packing List Line">
   <item>Purchase Packing List Cell</item>
  </portal_type>
+ <portal_type id="Returned Purchase Packing List Line">
+  <item>Returned Purchase Packing List Cell</item>
+ </portal_type>
  <portal_type id="Returned Sale Packing List Line">
   <item>Returned Sale Packing List Cell</item>
  </portal_type>

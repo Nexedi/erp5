@@ -29,44 +29,40 @@
             </value>
         </item>
         <item>
-            <key> <string>acquire_local_roles</string> </key>
-            <value> <int>1</int> </value>
-        </item>
-        <item>
-            <key> <string>content_icon</string> </key>
-            <value> <string>organisation_icon.gif</string> </value>
-        </item>
-        <item>
-            <key> <string>content_meta_type</string> </key>
-            <value> <string>ERP5 Delivery Line</string> </value>
-        </item>
-        <item>
             <key> <string>description</string> </key>
-            <value> <string>Returned Sale Packing List Lines are part of returend sale packing lists and bear the different product or service references that are returned by the customer.</string> </value>
+            <value> <string>Returned Purchase Packing List allows for keeping a trace of goods or services which have been delivered to a customer. It can track how delivered goods or services differ from ordered goods or services. A single order may therefore result in multiple packing lists. Packing Lists directly impact the inventory. It is essential to understand that once an order has been confirmed, it should never be modified since it defines a contractual relation. Changes to initial expectations shall be entered into Packing Lists, not in Orders. The impact of changes shall be calculated automatically through so-called "Solvers" which postpone backordered goods, accept the changes to initial expectations, etc. based on standard or custom business rules.</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>
-            <value> <string>addDeliveryLine</string> </value>
-        </item>
-        <item>
-            <key> <string>filter_content_types</string> </key>
-            <value> <int>1</int> </value>
+            <value> <string>addPackingList</string> </value>
         </item>
         <item>
             <key> <string>group_list</string> </key>
             <value>
               <tuple>
-                <string>delivery_movement</string>
+                <string>delivery</string>
               </tuple>
             </value>
         </item>
         <item>
+            <key> <string>icon</string> </key>
+            <value> <string>document_icon.gif</string> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
-            <value> <string>Returned Sale Packing List Line</string> </value>
+            <value> <string>Returned Purchase Packing List</string> </value>
+        </item>
+        <item>
+            <key> <string>immediate_view</string> </key>
+            <value> <string>XMLObject_view</string> </value>
         </item>
         <item>
             <key> <string>init_script</string> </key>
-            <value> <string>DeliveryLine_init</string> </value>
+            <value> <string>Delivery_generateReference</string> </value>
+        </item>
+        <item>
+            <key> <string>meta_type</string> </key>
+            <value> <string>ERP5 XML Object</string> </value>
         </item>
         <item>
             <key> <string>permission</string> </key>
@@ -75,8 +71,12 @@
             </value>
         </item>
         <item>
-            <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Base Type</string> </value>
+        </item>
+        <item>
+            <key> <string>product</string> </key>
+            <value> <string>ERP5Type</string> </value>
         </item>
       </dictionary>
     </pickle>
