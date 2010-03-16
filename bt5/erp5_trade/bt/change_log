@@ -1,4 +1,7 @@
 2010-03-16 yo
+* Returned Sale Packing List should generate a root applied rule using default_delivery_rule by default.
+
+2010-03-16 yo
 * Update the workflow chain of returned sale packing list line for base contribution.
 
 2010-03-16 yo
