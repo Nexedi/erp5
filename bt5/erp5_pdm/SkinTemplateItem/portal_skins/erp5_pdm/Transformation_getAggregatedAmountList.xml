@@ -54,13 +54,21 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>request = context.REQUEST\n
-\n
-context.getPortalType()\n
-\n
 request.other[\'categories\'] = reference_variation_category_list\n
 tmp_context = context.asContext(context=context, REQUEST=request)\n
+price_currency = kw.get(\'price_currency\', None)\n
 \n
-return context.getAggregatedAmountList(tmp_context)\n
+result = context.getAggregatedAmountList(tmp_context)\n
+final_result = []\n
+for line in result:\n
+  resource = line.getResourceValue()\n
+  sender_value = None\n
+  if resource is not None:\n
+    sender = line.getResourceValue().getPurchaseSupplyLineSource()\n
+  line.setCategoryMembership(\'source\', sender)\n
+  line.setCategoryMembership(\'price_currency\', price_currency)\n
+\n
+return result\n
 </string> </value>
         </item>
         <item>
@@ -104,6 +112,15 @@ return context.getAggregatedAmountList(tmp_context)\n
                             <string>request</string>
                             <string>_write_</string>
                             <string>tmp_context</string>
+                            <string>None</string>
+                            <string>price_currency</string>
+                            <string>result</string>
+                            <string>final_result</string>
+                            <string>_getiter_</string>
+                            <string>line</string>
+                            <string>resource</string>
+                            <string>sender_value</string>
+                            <string>sender</string>
                           </tuple>
                         </value>
                     </item>
