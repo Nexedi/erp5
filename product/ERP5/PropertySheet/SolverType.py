@@ -32,7 +32,8 @@ class SolverType:
 
     _properties = (
         { 'id':         'tested_property',
-          'type':       'string',
+          'type':       'lines',
+          'default'     : (),
           'mode':       'w',
           'label':      'Property to be solved'
          },
