@@ -149,6 +149,8 @@ class TestTransformation(TestTransformationMixin, ERP5TypeTestCase):
   def test_transformedInventory(self):
     portal = self.getPortal()
 
+    button_number = 3.0
+
     swimsuit = self.createResource(
         'Swimming Suit',
         self.swimsuit_variation_base_category_list,
@@ -199,6 +201,7 @@ class TestTransformation(TestTransformationMixin, ERP5TypeTestCase):
 
     button_line = self.createTransformedResource(transformation)
     button_line.setResourceValue(button)
+    button_line.setQuantity(button_number)
 
     button_line.setVVariationBaseCategoryList(['size'])
     for size in self.size_category_list:
@@ -240,20 +243,34 @@ class TestTransformation(TestTransformationMixin, ERP5TypeTestCase):
     )
 
     from Products.ERP5Type.Document import newTempAmount
+    n = 1
+    # Check that getAggregatedAmount returns the expected results, a.k.a.
+    # that our Transformation is set up correctly.
     for i, size in enumerate(self.size_category_list):
       for colour in self.colour_category_list:
         # id does not matter, just make it unique
-        a = newTempAmount(transformation, "foo_%s_%s" % (size, colour))
-        a.edit(
+        temp_amount = newTempAmount(transformation, "foo_%s_%s" % (size, colour))
+        temp_amount.edit(
             quantity = 1.0,
             variation_category_list = [size, colour],
             resource = swimsuit.getRelativeUrl(),
         )
-        ag = fabric_line.getAggregatedAmountList(a)
-        self.assertEquals(len(ag), 1)
-        self.assertEquals(ag[0].getResource(), fabric.getRelativeUrl())
-        self.assertEquals(ag[0].getVariationCategoryList(), [colour])
-        self.assertEquals(ag[0].quantity, i+1)
+        amount_list = transformation.getAggregatedAmountList(temp_amount)
+        # fabric + button + sewing
+        self.assertEquals(len(amount_list), 3)
+        for amount in amount_list:
+          resource = amount.getResource()
+          if resource == fabric.getRelativeUrl():
+            self.assertEquals(amount.getVariationCategoryList(), [colour])
+            self.assertEquals(amount.getQuantity(), i+1)
+          elif resource == button.getRelativeUrl():
+            self.assertEquals(amount.getVariationCategoryList(), [size])
+            self.assertEquals(amount.getQuantity(), button_number)
+          elif resource == "operation/sewing":
+            self.assertEquals(amount.getQuantity(), n)
+          else:
+            self.fail("Invalid Resource: %s" % resource)
+        n += 1
 
     # XXX (will be expanded)
 
