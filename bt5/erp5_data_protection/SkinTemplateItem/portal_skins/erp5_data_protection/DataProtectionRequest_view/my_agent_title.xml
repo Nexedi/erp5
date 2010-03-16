@@ -390,7 +390,7 @@
                 </item>
                 <item>
                     <key> <string>base_category</string> </key>
-                    <value> <string>follow_up</string> </value>
+                    <value> <string>agent</string> </value>
                 </item>
                 <item>
                     <key> <string>catalog_index</string> </key>
