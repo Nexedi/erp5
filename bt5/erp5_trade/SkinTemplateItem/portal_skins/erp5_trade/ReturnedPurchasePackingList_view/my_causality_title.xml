@@ -88,8 +88,8 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>Sale Packing List</string>
-                          <string>Sale Packing List</string>
+                          <string>Purchase Packing List</string>
+                          <string>Purchase Packing List</string>
                         </tuple>
                       </list>
                     </value>
@@ -100,7 +100,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Sale Packing List</string> </value>
+                    <value> <string>Purchase Packing List</string> </value>
                 </item>
               </dictionary>
             </value>
