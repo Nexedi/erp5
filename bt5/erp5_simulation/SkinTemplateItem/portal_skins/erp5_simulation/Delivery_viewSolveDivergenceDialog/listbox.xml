@@ -358,19 +358,15 @@
                       <list>
                         <tuple>
                           <string>divergence</string>
-                          <string>Divergence</string>
+                          <string>Divergence Description</string>
                         </tuple>
                         <tuple>
                           <string>solver</string>
-                          <string>Target Solver</string>
+                          <string>Divergence Resolution</string>
                         </tuple>
                         <tuple>
                           <string>solver_configuration</string>
-                          <string>Target Solver Configuration</string>
-                        </tuple>
-                        <tuple>
-                          <string>delivery_solver</string>
-                          <string>Delivery Solver</string>
+                          <string>Parameters</string>
                         </tuple>
                         <tuple>
                           <string>comment</string>
@@ -416,16 +412,16 @@
                     <value>
                       <list>
                         <tuple>
+                          <string>divergence</string>
+                          <string>Divergence Description</string>
+                        </tuple>
+                        <tuple>
                           <string>solver</string>
                           <string>Target Solver</string>
                         </tuple>
                         <tuple>
                           <string>solver_configuration</string>
-                          <string>Target Solver Configuration</string>
-                        </tuple>
-                        <tuple>
-                          <string>delivery_solver</string>
-                          <string>Delivery Solver</string>
+                          <string>Parameters</string>
                         </tuple>
                         <tuple>
                           <string>comment</string>
@@ -553,7 +549,12 @@
                 <item>
                     <key> <string>url_columns</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>divergence</string>
+                          <string></string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
               </dictionary>

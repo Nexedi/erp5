@@ -92,11 +92,10 @@
                     <key> <string>hidden</string> </key>
                     <value>
                       <list>
-                        <string>listbox_divergence</string>
                         <string>listbox_solver_configuration</string>
                         <string>listbox_solver</string>
-                        <string>listbox_delivery_solver</string>
                         <string>listbox_comment</string>
+                        <string>listbox_divergence</string>
                       </list>
                     </value>
                 </item>
