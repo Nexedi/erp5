@@ -491,6 +491,7 @@ class ERP5TypeTestCase(backportUnittest.TestCase, PortalTestCase):
         cfg.instancehome = os.environ['COPY_OF_INSTANCE_HOME']
         App.config.setConfiguration(cfg)
 
+      use_dummy_mail_host = os.environ.get('use_dummy_mail_host', 0)
       template_list = self.getBusinessTemplateList()
       erp5_catalog_storage = os.environ.get('erp5_catalog_storage',
                                             'erp5_mysql_innodb_catalog')
@@ -523,7 +524,8 @@ class ERP5TypeTestCase(backportUnittest.TestCase, PortalTestCase):
                          create_activities=create_activities,
                          quiet=install_bt5_quiet,
                          hot_reindexing=hot_reindexing,
-                         erp5_catalog_storage=erp5_catalog_storage)
+                         erp5_catalog_storage=erp5_catalog_storage, 
+                         use_dummy_mail_host=use_dummy_mail_host)
       PortalTestCase.setUp(self)
       global current_app
       current_app = self.app
@@ -560,6 +562,14 @@ class ERP5TypeTestCase(backportUnittest.TestCase, PortalTestCase):
                                     _getConnectionStringDict().items():
         connection_name = connection_string_name.replace('_string', '')
         getattr(portal, connection_name).edit('', connection_string)
+
+    def _setUpDummyMailHost(self):
+      """Replace Original Mail Host by Dummy Mail Host.
+      """
+      from Products.ERP5Type.tests.utils import DummyMailHost
+      if 'MailHost' in self.portal.objectIds():
+        self.portal.manage_delObjects(['MailHost'])
+        self.portal._setObject('MailHost', DummyMailHost('MailHost'))
 
     def _updateConversionServerConfiguration(self):
       """Update conversion server (Oood) at default site preferences.
@@ -900,7 +910,8 @@ class ERP5TypeTestCase(backportUnittest.TestCase, PortalTestCase):
                      light_install=1,
                      create_activities=1,
                      hot_reindexing=1,
-                     erp5_catalog_storage='erp5_mysql_innodb_catalog'):
+                     erp5_catalog_storage='erp5_mysql_innodb_catalog',
+                     use_dummy_mail_host=0):
       '''
         Creates an ERP5 site.
         business_template_list must be specified correctly
@@ -993,6 +1004,9 @@ class ERP5TypeTestCase(backportUnittest.TestCase, PortalTestCase):
             uf._doAddUser('ERP5TypeTestCase', '', ['Manager', 'Member', 'Assignee',
                             'Assignor', 'Author', 'Auditor', 'Associate'], [])
             user = uf.getUserById('ERP5TypeTestCase').__of__(uf)
+
+            if use_dummy_mail_host:
+              self._setUpDummyMailHost()
 
             setup_once = getattr(self, 'setUpOnce', None)
             if setup_once is not None and \

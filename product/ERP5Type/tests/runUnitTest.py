@@ -90,6 +90,11 @@ Options:
 			    (Oood), the value will be stored at default preference. 
 			    By default 8008 is used.
 
+  --use_dummy_mail_host
+                            Replace the MailHost by DummyMailHost. This prevent
+			    the instance send emails. By default Original MailHost 
+			    is used.
+
 """
 
 def getUnitTestFile():
@@ -510,6 +515,7 @@ def main():
         "enable_full_indexing=",
         "run_only=",
         "update_only=",
+        "use_dummy_mail_host", 
         "update_business_templates"] )
   except getopt.GetoptError, msg:
     usage(sys.stderr, msg)
@@ -574,6 +580,8 @@ def main():
       os.environ["conversion_server_hostname"] = arg
     elif opt == "--conversion_server_port":
       os.environ["conversion_server_port"] = arg
+    elif opt == "--use_dummy_mail_host":
+      os.environ["use_dummy_mail_host"] = "1"
 
   test_list = args
   if not test_list:
