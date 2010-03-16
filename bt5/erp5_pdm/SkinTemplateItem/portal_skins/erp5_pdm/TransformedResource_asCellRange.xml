@@ -91,6 +91,11 @@ for c in ([line_base_category, column_base_category] + tab_base_category_list):\
 # Remove empty range\n
 cell_range = filter(lambda x: x != [], cell_range)\n
 \n
+dimension = len(cell_range)\n
+if matrixbox and dimension<3:\n
+  # Matrixbox view always expects three dimensions (lines, columns, tabs)\n
+  # It costs very little to avoid noisy rendering tracebacks\n
+  return cell_range + [[]]*(3-dimension)\n
 return cell_range\n
 
 
@@ -147,6 +152,8 @@ return cell_range\n
                             <string>getattr</string>
                             <string>_getitem_</string>
                             <string>map</string>
+                            <string>len</string>
+                            <string>dimension</string>
                           </tuple>
                         </value>
                     </item>
