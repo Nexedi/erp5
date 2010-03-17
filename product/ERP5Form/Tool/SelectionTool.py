@@ -1207,7 +1207,9 @@ class SelectionTool( BaseTool, UniqueObject, SimpleItem ):
         saved_form_data = {}
         for key, value in REQUEST.form.items():
           if not isinstance(value, FileUpload):
-              saved_form_data[key] = value
+            if isinstance(value, basestring):
+              value = value.encode('base64')
+            saved_form_data[key] = value
 
         base_category = None
         kw = {}

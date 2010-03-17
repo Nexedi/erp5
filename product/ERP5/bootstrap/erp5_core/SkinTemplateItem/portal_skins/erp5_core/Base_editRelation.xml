@@ -70,6 +70,10 @@ if listbox_uid is not None:\n
   uids = selection_tool.getSelectionCheckedUidsFor(selection_name)\n
 \n
 old_request = dict(saved_form_data)\n
+for k, v in old_request.items():\n
+  if isinstance(v, str):\n
+    old_request[k] = v.decode(\'base64\')\n
+\n
 \n
 field = getattr(context, form_id).get_field(field_id)\n
 field_key = field.generate_field_key()\n
@@ -154,19 +158,21 @@ return edit_method(form_id,\n
                             <string>selected_uids</string>
                             <string>dict</string>
                             <string>old_request</string>
+                            <string>_getiter_</string>
+                            <string>k</string>
+                            <string>v</string>
+                            <string>isinstance</string>
+                            <string>str</string>
+                            <string>_write_</string>
                             <string>getattr</string>
                             <string>field</string>
                             <string>field_key</string>
                             <string>len</string>
                             <string>_getitem_</string>
                             <string>sub_field_key</string>
-                            <string>str</string>
-                            <string>_write_</string>
                             <string>container</string>
                             <string>request</string>
                             <string>request_form</string>
-                            <string>_getiter_</string>
-                            <string>k</string>
                             <string>edit_method</string>
                             <string>True</string>
                           </tuple>
