@@ -106,6 +106,13 @@ class TestXHTML(ERP5TypeTestCase):
       'erp5_project',
 
       'erp5_calendar',
+
+      'erp5_advanced_invoicing',
+
+      'erp5_odt_style',
+      'erp5_documentation',
+
+      'erp5_administration',
     )
 
   def afterSetUp(self):
