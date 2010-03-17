@@ -349,8 +349,10 @@ class BusinessTemplateFolder(BusinessTemplateArchive):
       path = os.path.normpath(path)
       object_path = os.path.join(path, name)
     f = open(object_path+ext, 'wb')
-    f.write(str(obj))
-    f.close()
+    try:
+      f.write(str(obj))
+    finally:
+      f.close()
 
   def _initImport(self, file=None, path=None, **kw):
     # Normalize the paths to eliminate the effect of double-slashes.
@@ -428,8 +430,10 @@ class BusinessTemplateTarball(BusinessTemplateArchive):
       path = os.path.normpath(path)
       object_path = os.path.join(path, name)
     f = open(object_path+ext, 'wb')
-    f.write(str(obj))
-    f.close()
+    try:
+      f.write(str(obj))
+    finally:
+      f.close()
 
   def finishCreation(self, name):
     self.tar.add(name)
@@ -3124,23 +3128,20 @@ class DocumentTemplateItem(BaseTemplateItem):
 
   def build(self, context, **kw):
     BaseTemplateItem.build(self, context, **kw)
-    for id in self._archive.keys():
-      self._objects[self.__class__.__name__+'/'+id] = self.local_file_reader_name(id)
+    for key in self._archive.iterkeys():
+      self._objects[key] = self.local_file_reader_name(key)
 
   def preinstall(self, context, installed_item, **kw):
     modified_object_list = {}
     if context.getTemplateFormatVersion() == 1:
       new_keys = self._objects.keys()
-      new_dict = PersistentMapping()
       # fix key if necessary in installed bt for diff
+      extra_prefix = self.__class__.__name__ + '/'
       for key in installed_item._objects.keys():
-        if self.__class__.__name__ in key:
-          new_key = key[len('%s/' % self.__class__.__name__):]
-          new_dict[new_key] = installed_item._objects[key]
-        else:
-          new_dict[key] = installed_item._objects[key]
-      if len(new_dict):
-        installed_item._objects = new_dict
+        if key.startswith(extra_prefix):
+          new_key = key[len(extra_prefix):]
+          installed_item._objects[new_key] = installed_item._objects[key]
+          del installed_item._objects[key]
       for path in new_keys:
         if installed_item._objects.has_key(path):
           # compare object to see if there is changes
@@ -3177,7 +3178,7 @@ class DocumentTemplateItem(BaseTemplateItem):
             self.local_file_writer_name(name, text, create=0)
           except IOError, error:
             LOG("BusinessTemplate.py", WARNING, "Cannot install class %s on file system" %(name,))
-            if error.errno :
+            if error.errno:
               raise
             continue
           if self.local_file_importer_name is not None:
@@ -3207,8 +3208,8 @@ class DocumentTemplateItem(BaseTemplateItem):
       object_keys = [object_path]
     else:
       object_keys = self._archive.keys()
-    for id in object_keys:
-      self.local_file_remover_name(id)
+    for key in object_keys:
+      self.local_file_remover_name(key)
     BaseTemplateItem.uninstall(self, context, **kw)
 
   def export(self, context, bta, **kw):
@@ -3216,9 +3217,13 @@ class DocumentTemplateItem(BaseTemplateItem):
       return
     path = os.path.join(bta.path, self.__class__.__name__)
     bta.addFolder(name=path)
-    for path in self._objects.keys():
-      obj = self._objects[path]
-      bta.addObject(obj=obj, name=path, path=None, ext='.py')
+    extra_prefix = self.__class__.__name__ + '/'
+    for key in self._objects.keys():
+      obj = self._objects[key]
+      # BBB the prefix was put into each key in the previous implementation.
+      if not key.startswith(extra_prefix):
+        key = extra_prefix + key
+      bta.addObject(obj=obj, name=key, ext='.py')
 
   def _importFile(self, file_name, file):
     if not file_name.endswith('.py'):
