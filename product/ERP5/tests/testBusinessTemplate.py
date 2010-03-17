@@ -234,7 +234,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
       copy_obj = getattr(copy_bt, item_name)
       self.failIf(original_obj is None)
       self.failIf(copy_obj is None)
-      self.assertEquals(original_obj.getKeys(), copy_obj.getKeys())
+      self.failIfDifferentSet(original_obj.getKeys(), copy_obj.getKeys())
 
   def stepUseExportBusinessTemplate(self, sequence=None,
                                   sequence_list=None, **kw):
