@@ -117,35 +117,38 @@ class Order(Delivery):
       kw.setdefault('portal_type', self.getPortalOrderMovementTypeList())
       return Delivery.getTotalQuantity(self, **kw)
     
-    def applyToOrderRelatedMovement(self, portal_type='Simulation Movement', \
-                                    method_id = 'expand',**kw):
+    def applyToDeliveryRelatedMovement(self, portal_type='Simulation Movement',
+                                       method_id='expand',**kw):
       """
         Warning: does not work if it was not catalogued immediately
       """
       # 'order' category is deprecated. it is kept for compatibility.
-      for my_simulation_movement in self.getOrderRelatedValueList(
+      for my_simulation_movement in self.getDeliveryRelatedValueList(
           portal_type='Simulation Movement') or \
-          self.getDeliveryRelatedValueList(
+          self.getOrderRelatedValueList(
           portal_type='Simulation Movement'):
           # And apply
           getattr(my_simulation_movement, method_id)(**kw)
       for m in self.contentValues(filter={'portal_type': \
                                           self.getPortalMovementTypeList()}):
         # Find related in simulation
-        for my_simulation_movement in m.getOrderRelatedValueList(
+        for my_simulation_movement in m.getDeliveryRelatedValueList(
             portal_type='Simulation Movement') or \
-            m.getDeliveryRelatedValueList(
+            m.getOrderRelatedValueList(
             portal_type='Simulation Movement'):
           # And apply
           getattr(my_simulation_movement, method_id)(**kw)
         for c in m.contentValues(filter={'portal_type':
             self.getPortalMovementTypeList()}):
-          for my_simulation_movement in c.getOrderRelatedValueList(
+          for my_simulation_movement in c.getDeliveryRelatedValueList(
               portal_type='Simulation Movement') or \
-              c.getDeliveryRelatedValueList(
+              c.getOrderRelatedValueList(
               portal_type='Simulation Movement'):
             # And apply
             getattr(my_simulation_movement, method_id)(**kw)
+
+    # 'order' category is deprecated. it is kept for compatibility.
+    applyToOrderRelatedMovement = applyToDeliveryRelatedMovement
 
     def applyToOrderRelatedAppliedRule(self, method_id='expand',**kw):
       my_applied_rule = self.getCausalityRelatedValue( \
