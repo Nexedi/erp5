@@ -211,7 +211,8 @@ class TextDocument(Document, TextContent):
       # Return the raw content
       if format == 'raw':
         return 'text/plain', self.getTextContent()
-      mime_type = getToolByName(self, 'mimetypes_registry').lookupExtension('name.%s' % format)
+      portal = self.getPortalObject()
+      mime_type = getToolByName(portal, 'mimetypes_registry').lookupExtension('name.%s' % format)
       mime_type = str(mime_type)
       src_mimetype = self.getTextFormat(DEFAULT_TEXT_FORMAT)
       if not src_mimetype.startswith('text/'):
@@ -220,7 +221,7 @@ class TextDocument(Document, TextContent):
       text_content = self.getTextContent()
       if text_content:
         if not self.hasConversion(format=format):
-          portal_transforms = getToolByName(self, 'portal_transforms')
+          portal_transforms = getToolByName(portal, 'portal_transforms')
           filename = self.getSourceReference(self.getTitleOrId())
           result = portal_transforms.convertToData(mime_type, text_content,
                                                    object=self, context=self,
