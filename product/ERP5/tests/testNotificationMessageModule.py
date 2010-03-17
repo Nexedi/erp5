@@ -126,7 +126,7 @@ class TestNotificationMessageModule(ERP5TypeTestCase):
 
     mime, text = doc.convert('txt')
     self.assertEqual('text/plain', mime)
-    self.assertEqual('substitution text: b', text)
+    self.assertEqual('substitution text: b', text.rstrip())
 
     self.assertEqual('Test b', doc.asSubjectText())
 
@@ -147,7 +147,7 @@ class TestNotificationMessageModule(ERP5TypeTestCase):
 
     mime, text = doc.convert('txt',
                              substitution_method_parameter_dict=dict(a='b'))
-    self.assertEqual('substitution text: b', text)
+    self.assertEqual('substitution text: b', text.rstrip())
 
 
   def test_substitution_content_and_convert(self):
@@ -165,7 +165,7 @@ class TestNotificationMessageModule(ERP5TypeTestCase):
                             'NotificationMessage_getDummySubstitionMapping')
 
     mime, text = doc.convert('txt')
-    self.assertEqual('substitution text: b', text)
+    self.assertEqual('substitution text: b', text.rstrip())
 
   def test_safe_substitution_content(self):
     """Tests that 'safe' substitution is performed, unless safe_substitute is
@@ -183,7 +183,7 @@ class TestNotificationMessageModule(ERP5TypeTestCase):
                             'NotificationMessage_getDummySubstitionMapping')
 
     mime, text = doc.convert('txt')
-    self.assertEqual('substitution text: ${b}', text)
+    self.assertEqual('substitution text: ${b}', text.rstrip())
     self.assertEqual('${b}', doc.asSubjectText())
 
     self.assertRaises(KeyError, doc.convert, 'txt', safe_substitute=False)
