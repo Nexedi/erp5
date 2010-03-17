@@ -715,7 +715,10 @@ class TestProductionOrderMixin(TestOrderMixin):
         LOG('Raise Assertion error',0,'')
         LOG('object.getQuantity()',0,object.getQuantity())
         LOG('object.__dict__',0,object.__dict__)
-        LOG('object.getOrderValue().getQuantity()',0,object.getOrderValue().getQuantity())
+        order_value = object.getOrderValue()
+        LOG('object.getOrderValue()',0, order_value)
+        if order_value is not None:
+          LOG('object.getOrderValue().getQuantity()',0,order_value.getQuantity())
         raise AssertionError, "Attribute: %s, Value: %s, Result: %s" %\
                     (attribute, value, getattr(object, attribute)())
 
