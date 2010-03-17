@@ -33,36 +33,9 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 import transaction
 import unittest
 
-try:
-    from zope.app.testing.placelesssetup import PlacelessSetup
-except ImportError:
-    # BACK: Zope 2.8. Remove when we no longer support it
-    from zope.component.tests.placelesssetup import PlacelessSetup
-
-# Make it possible to use Globals.get_request
-class DummyRequest(dict):
-  __allow_access_to_unprotected_subobjects__ = 1
-  def set(self, k, v):
-    self[k] = v
-
-global request
-request = DummyRequest()
-
-def get_request():
-  global request
-  return request
-
-# apply patch (before it's imported by other modules)
-from Products.ERP5Type import Globals
-Globals.get_request = get_request
-
-
 # Initialize ERP5Form Product to load monkey patches
 from Testing import ZopeTestCase
-ZopeTestCase.installProduct('ERP5Form')
-# Initialize ERP5Type Product to install interactors
-ZopeTestCase.installProduct('ERP5Type')
-from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+
 from Acquisition import aq_base
 from Products.Formulator.FieldRegistry import FieldRegistry
 from Products.Formulator.Validator import ValidationError
@@ -82,7 +55,7 @@ from DateTime import DateTime
 from Products.Formulator.Widget import NSMAP
 ODG_XML_WRAPPING_XPATH = 'draw:text-box/text:p/text:span'
 
-class TestRenderViewAPI(unittest.TestCase):
+class TestRenderViewAPI(ERP5TypeTestCase):
   """For all fields and widgets, tests the signature of the render_view method.
   In particular, render_view must accept a 'REQUEST' parameter after 'value'.
   """
@@ -99,14 +72,14 @@ class TestRenderViewAPI(unittest.TestCase):
           field.widget.render_view.im_func.func_code.co_varnames[:4], '%s %s' % (field.widget, field.widget.render_view.im_func.func_code.co_varnames[:4]))
 
 
-class TestFloatField(unittest.TestCase):
+class TestFloatField(ERP5TypeTestCase):
   """Tests Float field
   """
 
   def getTitle(self):
     return "Float Field"
 
-  def setUp(self):
+  def afterSetUp(self):
     self.field = FloatField('test_field')
     self.widget = self.field.widget
     self.validator = self.field.validator
@@ -183,50 +156,50 @@ class TestFloatField(unittest.TestCase):
 
   def test_validate_thousand_separator_point(self):
     self.field.values['input_style'] = '-1 234.5'
-    request.set('field_test_field', '1 000.0')
+    self.portal.REQUEST.set('field_test_field', '1 000.0')
     self.assertEquals(1000,
-        self.validator.validate(self.field, 'field_test_field', request))
+        self.validator.validate(self.field, 'field_test_field', self.portal.REQUEST))
   
   def test_validate_thousand_separator_coma(self):
     self.field.values['input_style'] = '-1 234,5'
-    request.set('field_test_field', '1 000,0')
+    self.portal.REQUEST.set('field_test_field', '1 000,0')
     self.assertEquals(1000,
-        self.validator.validate(self.field, 'field_test_field', request))
+        self.validator.validate(self.field, 'field_test_field', self.portal.REQUEST))
 
   def test_validate_thousand_separator_point_coma(self):
     self.field.values['input_style'] = '-1.234,5'
-    request.set('field_test_field', '1.000,0')
+    self.portal.REQUEST.set('field_test_field', '1.000,0')
     self.assertEquals(1000,
-        self.validator.validate(self.field, 'field_test_field', request))
+        self.validator.validate(self.field, 'field_test_field', self.portal.REQUEST))
 
   def test_validate_thousand_separator_coma_point(self):
     self.field.values['input_style'] = '-1,234.5'
-    request.set('field_test_field', '1,000.0')
+    self.portal.REQUEST.set('field_test_field', '1,000.0')
     self.assertEquals(1000,
-        self.validator.validate(self.field, 'field_test_field', request))
+        self.validator.validate(self.field, 'field_test_field', self.portal.REQUEST))
 
   def test_validate_percent_style(self):
     self.field.values['input_style'] = '-12.3%'
-    request.set('field_test_field', '10.0%')
+    self.portal.REQUEST.set('field_test_field', '10.0%')
     self.assertEquals(0.1,
-        self.validator.validate(self.field, 'field_test_field', request))
+        self.validator.validate(self.field, 'field_test_field', self.portal.REQUEST))
 
   def test_validate_not_float(self):
-    request.set('field_test_field', 'not_float')
+    self.portal.REQUEST.set('field_test_field', 'not_float')
     self.assertRaises(ValidationError,
-        self.validator.validate, self.field, 'field_test_field', request)
+        self.validator.validate, self.field, 'field_test_field', self.portal.REQUEST)
 
   def test_validate_two_comma(self):
     self.field.values['input_style'] = '-1.234,5'
-    request.set('field_test_field', '1,000,0')
+    self.portal.REQUEST.set('field_test_field', '1,000,0')
     self.assertRaises(ValidationError,
-        self.validator.validate, self.field, 'field_test_field', request)
+        self.validator.validate, self.field, 'field_test_field', self.portal.REQUEST)
 
   def test_validate_two_dots(self):
     self.field.values['input_style'] = '-1,234.5'
-    request.set('field_test_field', '1.000.0')
+    self.portal.REQUEST.set('field_test_field', '1.000.0')
     self.assertRaises(ValidationError,
-        self.validator.validate, self.field, 'field_test_field', request)
+        self.validator.validate, self.field, 'field_test_field', self.portal.REQUEST)
 
   def test_render_odt(self):
     self.field.values['input_style'] = '-1 234.5'
@@ -240,14 +213,14 @@ class TestFloatField(unittest.TestCase):
       .xpath('%s/text()' % ODG_XML_WRAPPING_XPATH, namespaces=NSMAP)[0]
     self.assertEquals('1 000.0', test_value)
 
-class TestStringField(unittest.TestCase):
+class TestStringField(ERP5TypeTestCase):
   """Tests string field
   """
 
   def getTitle(self):
     return "String Field"
 
-  def setUp(self):
+  def afterSetUp(self):
     self.field = StringField('test_field')
     self.widget = self.field.widget
 
@@ -269,14 +242,14 @@ class TestStringField(unittest.TestCase):
       .xpath('%s/text()' % ODG_XML_WRAPPING_XPATH, namespaces=NSMAP)[0]
     self.assertEquals('Hello World!', test_value)
 
-class TestDateTimeField(unittest.TestCase):
+class TestDateTimeField(ERP5TypeTestCase):
   """Tests DateTime field
   """
 
   def getTitle(self):
     return "DateTime Field"
 
-  def setUp(self):
+  def afterSetUp(self):
     self.field = DateTimeField('test_field')
     self.widget = self.field.widget
 
@@ -285,14 +258,14 @@ class TestDateTimeField(unittest.TestCase):
     self.assertEquals('2010/01/01   00:00',
             self.field.render_odt(as_string=False).text)
 
-class TestTextAreaField(unittest.TestCase):
+class TestTextAreaField(ERP5TypeTestCase):
   """Tests TextArea field
   """
 
   def getTitle(self):
     return "TextArea Field"
 
-  def setUp(self):
+  def afterSetUp(self):
     self.field = TextAreaField('test_field')
     self.widget = self.field.widget
 
@@ -312,14 +285,14 @@ class TestTextAreaField(unittest.TestCase):
       .xpath('%s/text:tab' % ODG_XML_WRAPPING_XPATH, namespaces=NSMAP)
     self.assertTrue(test_value)
 
-class TestCheckBoxField(unittest.TestCase):
+class TestCheckBoxField(ERP5TypeTestCase):
   """Tests TextArea field
   """
 
   def getTitle(self):
     return "CheckBox Field"
 
-  def setUp(self):
+  def afterSetUp(self):
     self.field = CheckBoxField('test_field')
     self.widget = self.field.widget
 
@@ -330,11 +303,10 @@ class TestCheckBoxField(unittest.TestCase):
 
   def test_render_odt_view(self):
     self.field.values['default'] = 1
-    request = get_request()
-    request.set('editable_mode', 0)
+    self.portal.REQUEST.set('editable_mode', 0)
     self.assertEquals('{%s}p' % (NSMAP.get('text')),
-                      self.field.render_odt(as_string=False, REQUEST=request).tag)
-    self.assertEquals('1', self.field.render_odt(as_string=False, REQUEST=request).text)
+                      self.field.render_odt(as_string=False, REQUEST=self.portal.REQUEST).tag)
+    self.assertEquals('1', self.field.render_odt(as_string=False, REQUEST=self.portal.REQUEST).text)
 
 class TestListField(ERP5TypeTestCase):
   """Tests List field
@@ -414,23 +386,18 @@ class TestProxyField(ERP5TypeTestCase):
   def getTitle(self):
     return "Proxy Field"
 
-  def setUp(self):
-    super(ERP5TypeTestCase, self).setUp()
+  def afterSetUp(self):
     self.container = Folder('container').__of__(self.portal)
     self.container._setObject('Base_viewProxyFieldLibrary',
                                ERP5Form('Base_viewProxyFieldLibrary', 'Proxys'))
     self.container._setObject('Base_view',
                                ERP5Form('Base_view', 'View'))
-    global request
-    request = DummyRequest()
-    self.container.REQUEST = request
     try:
         from Products.CMFCore.tests.base.utils import _setUpDefaultTraversable
         _setUpDefaultTraversable()
     except ImportError:
         pass # On Zope 2.8, remove when we no longer support it
 
-  # if tearDown is ever added, don't forget to call PlacelessSetup.tearDown()
 
   def addField(self, form, id, title, field_type):
     form.manage_addField(id, title, field_type)
@@ -530,7 +497,7 @@ class TestProxyField(ERP5TypeTestCase):
     proxy_field = self.addField(self.container.Base_view,
                                 'my_id', 'ID', 'ProxyField')
     proxy_field.manage_edit_xmlrpc(dict(form_id='Base_viewProxyFieldLibrary'))
-    proxy_field.manage_tales_xmlrpc(dict(field_id='request/field_id'))
+    proxy_field.manage_tales_xmlrpc(dict(field_id='here/REQUEST/field_id'))
 
     self.container.REQUEST.set('field_id', 'my_title')
     self.assertEquals(original_field, proxy_field.getTemplateField())
@@ -694,8 +661,7 @@ class TestFieldValueCache(ERP5TypeTestCase):
   def getTitle(self):
     return "Field Value Cache"
 
-  def setUp(self):
-    ERP5TypeTestCase.setUp(self)
+  def afterSetUp(self):
     self.root = self.portal
     self.root.form = ERP5Form('form', 'Form')
     self.root.getProperty = lambda key, d=None: \
