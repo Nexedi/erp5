@@ -3266,25 +3266,19 @@ class ProductTemplateItem(BaseTemplateItem):
 class RoleTemplateItem(BaseTemplateItem):
 
   def build(self, context, **kw):
-    role_list = []
-    for key in self._archive.keys():
-      role_list.append(key)
-    if len(role_list) > 0:
-      self._objects[self.__class__.__name__+'/'+'role_list'] = role_list
+    for key in self._archive.iterkeys():
+      self._objects[key] = 1
 
   def preinstall(self, context, installed_item, **kw):
     modified_object_list = {}
     if context.getTemplateFormatVersion() == 1:
       new_roles = self._objects.keys()
-      if installed_item.id == INSTALLED_BT_FOR_DIFF:
-        #must rename keys in dict if reinstall
-        new_dict = PersistentMapping()
-        old_keys = ()
-        if len(installed_item._objects.values()) > 0:
-          old_keys = installed_item._objects.values()[0]
-        for key in old_keys:
-          new_dict[key] = ''
-        installed_item._objects = new_dict
+      # BBB it might be necessary to change the data structure.
+      obsolete_key = self.__class__.__name__ + '/role_list'
+      if obsolete_key in installed_item._objects:
+        for role in installed_item._objects[obsolete_key]:
+          installed_item._objects[role] = 1
+        del installed_item._objects[obsolete_key]
       for role in new_roles:
         if installed_item._objects.has_key(role):
           continue
@@ -3347,23 +3341,28 @@ class RoleTemplateItem(BaseTemplateItem):
     p.__ac_roles__ = tuple(roles.keys())
 
   # Function to generate XML Code Manually
-  def generateXml(self, path):
-    obj = self._objects[path]
+  def generateXml(self):
+    role_list = self._objects.keys()
     xml_data = '<role_list>'
-    obj.sort()
-    for role in obj:
-      xml_data += '\n <role>%s</role>' %(role)
+    for role in sorted(role_list):
+      xml_data += '\n <role>%s</role>' % (role,)
     xml_data += '\n</role_list>'
     return xml_data
 
   def export(self, context, bta, **kw):
-    if len(self._objects.keys()) == 0:
+    if len(self._objects) == 0:
       return
     path = os.path.join(bta.path, self.__class__.__name__)
     bta.addFolder(name=path)
-    for path in self._objects.keys():
-      xml_data = self.generateXml(path=path)
-      bta.addObject(obj=xml_data, name=path, path=None,)
+    # BBB it might be necessary to change the data structure.
+    obsolete_key = self.__class__.__name__ + '/role_list'
+    if obsolete_key in self._objects:
+      for role in self._objects[obsolete_key]:
+        self._objects[role] = 1
+      del self._objects[obsolete_key]
+    xml_data = self.generateXml()
+    path = obsolete_key
+    bta.addObject(obj=xml_data, name=path)
 
 class CatalogResultKeyTemplateItem(BaseTemplateItem):
 
