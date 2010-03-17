@@ -29,6 +29,7 @@
 ##############################################################################
 import zope.interface
 
+from warnings import warn
 from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
@@ -268,8 +269,17 @@ class TransformedResource(Predicate, XMLObject, XMLMatrix, Amount):
         context_quantity = None
         quantity_getter = getattr(context, "getQuantity", None)
         if quantity_getter is not None:
-          context_quantity = quantity_getter()
-        if context_quantity is None:
+          _marker = object()
+          context_quantity = quantity_getter(_marker)
+          if context_quantity is _marker:
+            # XXX Backwards compatibility:
+            # previously, quantity property of the Amount was completely
+            # ignored, and was assumed to be 1.0 . Re-enact this old
+            # behavior (quantity default value is 0.0) to avoid breakages
+            warn("No quantity was defined on the Amount passed to " \
+                 "getAggregatedAmountList, 1.0 was assumed", DeprecationWarning)
+            context_quantity = 1.0
+        else:
           raise KeyError("No quantity defined on context")
         quantity *= float(context_quantity)
 
