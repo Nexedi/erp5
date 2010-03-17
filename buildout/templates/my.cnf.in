@@ -7,6 +7,7 @@ socket = ${configuration:mysql_sock}
 
 # The MySQL server
 [mysqld]
+sql-mode="NO_ENGINE_SUBSTITUTION"
 port = ${configuration:mysql_port}
 socket = ${configuration:mysql_sock}
 datadir = ${configuration:mysql_datadir}
