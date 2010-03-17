@@ -36,6 +36,7 @@ from DateTime import DateTime
 from Products.CMFCore.utils import getToolByName
 from Products.ERP5.PropertySheet.TradeModelLine import (TARGET_LEVEL_MOVEMENT,
                                                         TARGET_LEVEL_DELIVERY)
+from Products.ERP5Type.tests.utils import createZODBPythonScript
 
 class TestTradeModelLineMixin(TestBPMMixin):
   """Provides methods to implementations sharing similar logic to Trade Model Lines"""
@@ -2560,10 +2561,29 @@ class TestTradeModelLine(TestTradeModelLineMixin):
 
     # create other trade model lines.
     # for movement
-    extra_fee = self.createTradeModelLine(trade_condition,
-                                          reference='EXTRA_FEE_A',
-                                          base_contribution_list=['base_amount/total'])
-    extra_fee.edit(quantity=100, price=1, target_level=TARGET_LEVEL_MOVEMENT)
+    extra_fee_a = self.createTradeModelLine(trade_condition,
+                                            reference='EXTRA_FEE_A',
+                                            base_application_list=['base_amount/tax'],
+                                            base_contribution_list=['base_amount/total'])
+    # Use custom script to return a movement which has a fixed value of quantity.
+    # If a fixed quantity value is set to trade model line directly then it is
+    # applied to all the movements without matching base_application category.
+    createZODBPythonScript(
+      self.portal.portal_skins.custom,
+      'TradeModelLine_calculateExtraFeeA',
+      'current_aggregated_amount_list, current_movement, aggregated_movement_list',
+      """\
+current_movement.setQuantity(100)
+return current_movement
+""")
+    extra_fee_a.edit(price=1, target_level=TARGET_LEVEL_MOVEMENT,
+                     calculation_script_id='TradeModelLine_calculateExtraFeeA')
+    # Extra fee b has a fixed quantity so that this trade model line is applied
+    # to all movements by force.
+    extra_fee_b = self.createTradeModelLine(trade_condition,
+                                            reference='EXTRA_FEE_B',
+                                            base_contribution_list=['base_amount/total'])
+    extra_fee_b.edit(quantity=1, price=1, target_level=TARGET_LEVEL_MOVEMENT)
     # for delivery level
     discount = self.createTradeModelLine(trade_condition,
                                          reference='DISCOUNT_B',
@@ -2578,8 +2598,8 @@ class TestTradeModelLine(TestTradeModelLineMixin):
       return result
 
     amount_list = trade_condition.getAggregatedAmountList(order)
-    self.assertEqual(5, len(amount_list))
-    self.assertEqual(100 + 100 - 10 + 1000*0.05 + 500*0.05,
+    self.assertEqual(8, len(amount_list))
+    self.assertEqual(100 + 100 + 1 + 1 + 1 - 10 + 1000*0.05 + 500*0.05,
                      getTotalAmount(amount_list))
 
     # Make sure that getAggregatedAmountList of movement uses movement
@@ -2589,32 +2609,41 @@ class TestTradeModelLine(TestTradeModelLineMixin):
         if amount.getReference()==reference:
           return amount
     amount_list = trade_condition.getAggregatedAmountList(order_line_1)
-    self.assertEqual(2, len(amount_list))
+    self.assertEqual(3, len(amount_list))
     extra_fee_a_amount = getMovementFromAmountListByReference(amount_list,
                                                               'EXTRA_FEE_A')
-    self.assertEqual([],
+    self.assertEqual([order_line_1],
                      extra_fee_a_amount.getCausalityValueList())
+    extra_fee_b_amount = getMovementFromAmountListByReference(amount_list,
+                                                              'EXTRA_FEE_B')
+    self.assertEqual([],
+                     extra_fee_b_amount.getCausalityValueList())
     tax_amount = getMovementFromAmountListByReference(amount_list,
                                                       'TAX')
     self.assertEqual([order_line_1],
                      tax_amount.getCausalityValueList())
     amount_list = trade_condition.getAggregatedAmountList(order_line_2)
-    self.assertEqual(2, len(amount_list))
+    self.assertEqual(3, len(amount_list))
     extra_fee_a_amount = getMovementFromAmountListByReference(amount_list,
                                                               'EXTRA_FEE_A')
-    self.assertEqual([],
+    self.assertEqual([order_line_2],
                      extra_fee_a_amount.getCausalityValueList())
+    extra_fee_b_amount = getMovementFromAmountListByReference(amount_list,
+                                                              'EXTRA_FEE_B')
+    self.assertEqual([],
+                     extra_fee_b_amount.getCausalityValueList())
     tax_amount = getMovementFromAmountListByReference(amount_list,
                                                       'TAX')
     self.assertEqual([order_line_2],
                      tax_amount.getCausalityValueList())
 
     # Change target level
-    extra_fee.edit(target_level=TARGET_LEVEL_DELIVERY)
+    extra_fee_a.edit(target_level=TARGET_LEVEL_DELIVERY)
+    extra_fee_b.edit(target_level=TARGET_LEVEL_DELIVERY)
     tax.edit(target_level=TARGET_LEVEL_DELIVERY)
     amount_list = trade_condition.getAggregatedAmountList(order)
-    self.assertEqual(3, len(amount_list))
-    self.assertEqual(100 - 10 + 1500*0.05,
+    self.assertEqual(4, len(amount_list))
+    self.assertEqual(100 + 1 - 10 + 1500*0.05,
                      getTotalAmount(amount_list))
 
   def test_tradeModelLineWithRounding(self):

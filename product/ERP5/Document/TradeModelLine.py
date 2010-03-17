@@ -339,6 +339,10 @@ class TradeModelLine(Predicate, XMLMatrix, Amount):
 
       else:
         # if the quantity is defined, use it
+        #
+        # Is this really good? This looks too implicit.
+        # Using something like "apply this trade model line by force"
+        # option would be better...(yusei)
         modified = 1
         if tmp_movement.getPrice() is None:
           # if price is not defined, it the same as 100 %
