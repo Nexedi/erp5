@@ -62,7 +62,7 @@ from Testing import ZopeTestCase
 ZopeTestCase.installProduct('ERP5Form')
 # Initialize ERP5Type Product to install interactors
 ZopeTestCase.installProduct('ERP5Type')
-
+from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Acquisition import aq_base
 from Products.Formulator.FieldRegistry import FieldRegistry
 from Products.Formulator.Validator import ValidationError
@@ -409,14 +409,14 @@ class TestListField(ERP5TypeTestCase):
         [['', ''], ['e', 'e'], ['f', 'f'], ['g', 'g'], ['a', 'a'], ['b', 'b'],
           ['d', 'd'], ['c', 'c']])
 
-class TestProxyField(PlacelessSetup, unittest.TestCase):
+class TestProxyField(ERP5TypeTestCase):
 
   def getTitle(self):
     return "Proxy Field"
 
   def setUp(self):
-    super(TestProxyField, self).setUp()
-    self.container = Folder('container').__of__(Folder('root'))
+    super(ERP5TypeTestCase, self).setUp()
+    self.container = Folder('container').__of__(self.portal)
     self.container._setObject('Base_viewProxyFieldLibrary',
                                ERP5Form('Base_viewProxyFieldLibrary', 'Proxys'))
     self.container._setObject('Base_view',
@@ -687,7 +687,7 @@ class TestProxyField(PlacelessSetup, unittest.TestCase):
     self.assertFalse(field.is_message_delegated(test_error))
     self.assertEquals(field.get_error_message(test_error), test_message2)
 
-class TestFieldValueCache(unittest.TestCase):
+class TestFieldValueCache(ERP5TypeTestCase):
   """Tests field value caching system
   """
 
@@ -695,8 +695,8 @@ class TestFieldValueCache(unittest.TestCase):
     return "Field Value Cache"
 
   def setUp(self):
-    self.root = Folder('root')
-    self.root = self.root.__of__(self.root)
+    ERP5TypeTestCase.setUp(self)
+    self.root = self.portal
     self.root.form = ERP5Form('form', 'Form')
     self.root.getProperty = lambda key, d=None: \
       dict(on_memory_field='123').get(key, d)
