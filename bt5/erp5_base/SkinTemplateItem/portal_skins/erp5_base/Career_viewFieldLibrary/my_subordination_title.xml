@@ -13,12 +13,11 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
-                <string>description</string>
-                <string>base_category</string>
-                <string>portal_type</string>
                 <string>catalog_index</string>
+                <string>description</string>
+                <string>portal_type</string>
                 <string>proxy_listbox_ids</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -79,10 +78,6 @@
             <key> <string>values</string> </key>
             <value>
               <dictionary>
-                <item>
-                    <key> <string>base_category</string> </key>
-                    <value> <string>subordination</string> </value>
-                </item>
                 <item>
                     <key> <string>catalog_index</string> </key>
                     <value> <string>title</string> </value>
