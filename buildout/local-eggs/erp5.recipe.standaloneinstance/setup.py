@@ -32,6 +32,7 @@ setup(
     namespace_packages = ['erp5', 'erp5.recipe'],
     install_requires = [
         'plone.recipe.zope2instance',
+        'erp5.recipe.mysqldatabase',
     ],
     zip_safe=False,
     entry_points = {'zc.buildout': ['default = %s:Recipe' % name]},
