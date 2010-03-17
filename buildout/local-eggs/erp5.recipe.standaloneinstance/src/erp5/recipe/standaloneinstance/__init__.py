@@ -17,7 +17,7 @@ import os, sys
 from string import Template
 import zc.buildout
 import plone.recipe.zope2instance
-from erp5.recipe.mysqldatabase import Recipe as mysqlrecipe
+import erp5.recipe.mysqldatabase
 
 class WithMinusTemplate(Template):
   idpattern = '[_a-z][-_a-z0-9]*'
@@ -60,7 +60,7 @@ class Recipe(plone.recipe.zope2instance.Recipe):
 
     if options.get('mysql_create_database', 'false').lower() == 'true':
        # Use mysqldatabase recipe for Create the mysql database.
-       mysqlrecipe(self.buildout, self.name, self.options).install()
+       erp5.recipe.mysqldatabase.Recipe(self.buildout, self.name, self.options).install()
 
 
     # What follows is a bit of a hack because the instance-setup mechanism
