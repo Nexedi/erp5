@@ -119,7 +119,13 @@ class TestTransformation(TestTransformationMixin, ERP5TypeTestCase):
         resource_value=component,
         quantity=1)
     transformed_resource.setTested(True)
-    aggregated_amount_list = transformation.getAggregatedAmountList()
+    from Products.ERP5Type.Document import newTempAmount
+    amount = newTempAmount(transformation, "foobar")
+    amount.edit(
+        quantity = 1.0,
+        resource = component.getRelativeUrl(),
+    )
+    aggregated_amount_list = transformation.getAggregatedAmountList(amount)
     self.assertEquals(len(aggregated_amount_list), 1)
     aggregated_amount = aggregated_amount_list[0]
     # Make sure that the isTested method is working properly on the
@@ -287,6 +293,7 @@ class TestTransformation(TestTransformationMixin, ERP5TypeTestCase):
             resource = swimsuit.getRelativeUrl(),
         )
         amount_list = transformation.getAggregatedAmountList(temp_amount)
+
         # fabric + button + sewing
         self.assertEquals(len(amount_list), 3)
         for amount in amount_list:
