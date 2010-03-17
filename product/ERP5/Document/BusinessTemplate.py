@@ -1940,10 +1940,10 @@ class PortalTypeWorkflowChainTemplateItem(BaseTemplateItem):
       new_key_list = self._objects.keys()
       new_dict = PersistentMapping()
       # Fix key from installed bt if necessary
-      for key in installed_item._objects:
+      for key, value in installed_item._objects.iteritems():
         if not 'portal_type_workflow_chain/' in key:
           key = 'portal_type_workflow_chain/%s' % (key)
-        new_dict[key] = installed_item._objects[key]
+        new_dict[key] = value
       if new_dict:
         installed_item._objects = new_dict
       for path in new_key_list:
