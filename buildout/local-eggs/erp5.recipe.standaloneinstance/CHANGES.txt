@@ -1,6 +1,12 @@
 Changelog
 =========
 
+0.3 (2010-03-17)
+----------------
+
+ - do not enable not set any preferences
+   [luke]
+
 0.2 (2010-03-10)
 ----------------
 

@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 name = "erp5.recipe.standaloneinstance"
-version = '0.2'
+version = '0.3'
 
 def read(name):
     return open(name).read()

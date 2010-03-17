@@ -80,15 +80,6 @@ if portal is None:
   transaction.commit()
   portal = app._getOb(options.portal_id)
 
-# set preference for erp5_subversion
-from App.config import getConfiguration
-default_site_preference = portal.portal_preferences.default_site_preference
-instance_home = getConfiguration().instancehome
-default_site_preference.edit(
-  preferred_subversion_working_copy_list=['%s/bt5/' % instance_home])
-if default_site_preference.getPreferenceState() == 'disabled':
-  default_site_preference.enable()
-
 # install our business templates
 bt5_list = []
 bt5_path_list = []
