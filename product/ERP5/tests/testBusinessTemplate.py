@@ -6071,6 +6071,9 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     skin_folder._setProperty(
                     'business_template_skin_layer_priority',
                     99, type='float')
+    # Make sure it is really set.
+    self.assertEquals(
+        99, skin_folder.getProperty('business_template_skin_layer_priority'))
 
   def stepUnmodifySkinFolder(self, sequence=None,sequence_list=None, **kw):
     """
