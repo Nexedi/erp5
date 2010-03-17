@@ -206,7 +206,6 @@ class TestIngestion(ERP5TypeTestCase):
               category_type = 'Category'
             base_path_obj.newContent( portal_type       = category_type
                                     , id                = category_id
-                                    , immediate_reindex = 1
                                     )
           base_path_obj = base_path_obj[category_id]
           is_base_category = False

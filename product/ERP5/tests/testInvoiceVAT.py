@@ -113,8 +113,7 @@ class TestInvoiceVAT(ERP5TypeTestCase):
         if not cat in path.objectIds() :
           path = path.newContent(
                     portal_type='Category',
-                    id=cat,
-                    immediate_reindex=1 )
+                    id=cat,)
         else:
           path = path[cat]
     # check categories have been created

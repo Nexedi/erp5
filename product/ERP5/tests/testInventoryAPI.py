@@ -170,8 +170,7 @@ class InventoryAPITestCase(ERP5TypeTestCase):
         if not cat in path.objectIds() :
           path = path.newContent(
                     portal_type='Category',
-                    id=cat,
-                    immediate_reindex=1 )
+                    id=cat,)
         else:
           path = path[cat]
     # check categories have been created
@@ -179,6 +178,8 @@ class InventoryAPITestCase(ERP5TypeTestCase):
       self.assertNotEquals(None,
                 self.getCategoryTool().restrictedTraverse(cat_string),
                 cat_string)
+    transaction.commit()
+    self.tic()
                 
   def getNeededCategoryList(self):
     """return a list of categories that should be created."""
@@ -2319,8 +2320,7 @@ class BaseTestUnitConversion(InventoryAPITestCase):
         group = unit_module.newContent(
                  id=base,
                  portal_type='Quantity Unit Conversion Group',
-                 quantity_unit="%s/%s" % (base, standard),
-                 immediate_reindex=1 )
+                 quantity_unit="%s/%s" % (base, standard),)
       if group.getValidationState() in ('draft', 'invalidated'):
         group.validate()
 
@@ -2331,8 +2331,7 @@ class BaseTestUnitConversion(InventoryAPITestCase):
                         id=unit,
                         portal_type="Quantity Unit Conversion Definition",
                         quantity_unit="%s/%s" % (base, unit),
-                        quantity=amount,
-                        immediate_reindex=1)
+                        quantity=amount,)
         if definition.getValidationState() in ('draft', 'invalidated'):
           definition.validate()
 
@@ -2342,12 +2341,12 @@ class BaseTestUnitConversion(InventoryAPITestCase):
     self.setUpUnitDefinition()
     self._safeTic()
 
+  @reindex
   def makeMovement(self, quantity, resource, *variation, **kw):
     m = self._makeMovement(quantity=quantity, resource_value=resource,
       source_value=self.node, destination_value=self.mirror_node, **kw)
     if variation:
       m.setVariationCategoryList(variation)
-      self._safeTic()
 
   def convertedSimulation(self, metric_type, **kw):
     return self.getSimulationTool().getInventory(
@@ -2500,16 +2499,14 @@ class TestUnitConversionDefinition(BaseTestUnitConversion):
 
     base_unit = self.resource_bylot_overriding.newContent(
                   portal_type='Quantity Unit Conversion Group',
-                  quantity_unit='unit/unit',
-                  immediate_reindex=1)
+                  quantity_unit='unit/unit',)
     base_unit.validate()
 
 
     unit = base_unit.newContent(
             portal_type='Quantity Unit Conversion Definition',
             quantity_unit='unit/lot',
-            quantity=50,
-            immediate_reindex=1)
+            quantity=50,)
     unit.validate()
 
     self._safeTic()

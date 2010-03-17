@@ -84,8 +84,7 @@ class TestPredicateMixIn(ERP5TypeTestCase):
         if not cat in path.objectIds() :
           path = path.newContent(
             portal_type = 'Category',
-            id = cat,
-            immediate_reindex = 1 )
+            id = cat,)
         else :
           path = path[cat]
 
@@ -94,6 +93,8 @@ class TestPredicateMixIn(ERP5TypeTestCase):
       self.assertNotEquals(None,
                 self.getCategoryTool().restrictedTraverse(cat_string),
                 cat_string)
+    transaction.commit()
+    self.tic()
 
   def getNeededCategoryList(self):
     """return a list of categories that should be created."""

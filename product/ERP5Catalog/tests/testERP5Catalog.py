@@ -195,8 +195,8 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     self.checkRelativeUrlNotInSQLPathList(path_list)
     # Now we will ask to immediatly reindex
     person = person_module.newContent(id='2',
-                                      portal_type='Person',
-                                      immediate_reindex=1)
+                                      portal_type='Person',)
+    person.immediateReindexObject()
     path_list = [person.getRelativeUrl()]
     self.checkRelativeUrlInSQLPathList(path_list)
     person.immediateReindexObject()
@@ -228,7 +228,8 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     # Now we will try the same thing as previous test and look at searchFolder
     folder_object_list = [x.getObject().getId() for x in person_module.searchFolder()]
     self.assertEquals([],folder_object_list)
-    person = person_module.newContent(id='4',portal_type='Person',immediate_reindex=1)
+    person = person_module.newContent(id='4',portal_type='Person',)
+    person.immediateReindexObject()
     folder_object_list = [x.getObject().getId() for x in person_module.searchFolder()]
     self.assertEquals(['4'],folder_object_list)
     person.immediateReindexObject()
@@ -300,7 +301,8 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     portal_catalog = self.getCatalogTool()
     portal_catalog.manage_catalogClear()
 
-    person = person_module.newContent(id='4',portal_type='Person',immediate_reindex=1)
+    person = person_module.newContent(id='4',portal_type='Person')
+    person.immediateReindexObject()
     folder_object_list = [x.getObject().getId() for x in person_module.searchFolder()]
     self.assertEquals(['4'],folder_object_list)
 
@@ -910,8 +912,8 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     person_module = self.getPersonModule()
     # Now we will ask to immediatly reindex
     person = person_module.newContent(id='2',
-                                      portal_type='Person',
-                                      immediate_reindex=1)
+                                      portal_type='Person',)
+    person.immediateReindexObject()
     path_list = [person.getRelativeUrl()]
     self.checkRelativeUrlInSQLPathList(path_list)
     # We will delete the connector
