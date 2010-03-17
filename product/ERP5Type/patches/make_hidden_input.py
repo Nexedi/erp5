@@ -49,4 +49,4 @@ if version_txt.getZopeVersion() < (2, 9):
       return '\n'.join(qlist)
 
   ZTUtils.Zope.make_hidden_input = make_hidden_input
-  print 'patching'
+
