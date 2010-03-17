@@ -62,7 +62,6 @@ portal = context.getPortalObject()\n
 accounting_module = portal.accounting_module\n
 year = 2005\n
 default_date = DateTime(year, 01, 01)\n
-immediate_reindex = 0\n
 \n
 # if the previous test didn\'t change input data, no need to recreate content\n
 current_script_data_id = \'%s_month_count_%s_draft_%s_state_%s_payment_%s\' % (\n
@@ -124,12 +123,10 @@ if product_list:\n
   product = product_list[0]\n
 else:\n
   product = portal.product_module.newContent(portal_type=\'Product\',\n
-                              immediate_reindex=immediate_reindex,\n
                               title=\'Dummy Product for testing\')\n
 \n
 for i in range(random.randint(5, 10)):\n
   pl = portal.sale_packing_list_module.newContent(\n
-        immediate_reindex=immediate_reindex,\n
         portal_type=\'Sale Packing List\',\n
         title=\'Dummy Packing List for testing\',\n
         source_section=section,\n
@@ -138,7 +135,6 @@ for i in range(random.randint(5, 10)):\n
         destination=getOrganisationByTitle(\'Client 1\'),\n
         start_date=default_date, )\n
   line = pl.newContent(portal_type=\'Sale Packing List Line\',\n
-                immediate_reindex=immediate_reindex,\n
                 resource_value=product,\n
                 quantity=random.randint(300, 500),\n
                 price=random.randint(300, 500))\n
@@ -151,7 +147,6 @@ for i in range(random.randint(5, 10)):\n
 for month in range(1, month_count + 1):\n
   default_date = DateTime(year, month, 1)\n
   tr = accounting_module.newContent(\n
-        immediate_reindex=immediate_reindex,\n
         title=\'Accounts opening\',\n
         portal_type=\'Accounting Transaction\',\n
         source_section=section,\n
@@ -162,15 +157,12 @@ for month in range(1, month_count + 1):\n
     )\n
 \n
   tr.newContent(portal_type=\'Accounting Transaction Line\',\n
-                immediate_reindex=immediate_reindex,\n
                 source=getAccountByTitle(\'Equity\'),\n
                 quantity=20000)\n
   tr.newContent(portal_type=\'Accounting Transaction Line\',\n
-                immediate_reindex=immediate_reindex,\n
                 source=getAccountByTitle(\'Fixed Assets\'),\n
                 quantity=-15000)\n
   tr.newContent(portal_type=\'Accounting Transaction Line\',\n
-                immediate_reindex=immediate_reindex,\n
                 source=getAccountByTitle(\'Stocks\'),\n
                 quantity=-5000)\n
   # TODO: "validated" should be renamed to "stopped"\n
@@ -190,7 +182,6 @@ for month in range(1, month_count + 1):\n
   for client_title, amount  in ((\'Client 1\', 2000), (\'Client 2\', 3000)):\n
     default_date += 1\n
     tr = accounting_module.newContent(\n
-          immediate_reindex=immediate_reindex,\n
           portal_type=\'Sale Invoice Transaction\',\n
           title=\'%s Sale Invoice\' % client_title,\n
           source_section=section,\n
@@ -203,20 +194,16 @@ for month in range(1, month_count + 1):\n
           resource=euro_resource,\n
       )\n
     tr.newContent(portal_type=\'Sale Invoice Transaction Line\',\n
-                  immediate_reindex=immediate_reindex,\n
                   source=getAccountByTitle(\'Receivable\'),\n
                   quantity=-(amount * (1 + vat_rate)))\n
     tr.newContent(portal_type=\'Sale Invoice Transaction Line\',\n
-                  immediate_reindex=immediate_reindex,\n
                   source=getAccountByTitle(\'Collected VAT 10%\'),\n
                   quantity=amount * vat_rate)\n
     tr.newContent(portal_type=\'Sale Invoice Transaction Line\',\n
-                  immediate_reindex=immediate_reindex,\n
                   source=getAccountByTitle(\'Goods Sales\'),\n
                   quantity=amount)\n
     # add a random invoice line, which should not impact our tests\n
     tr.newContent(portal_type=\'Invoice Line\',\n
-                  immediate_reindex=immediate_reindex,\n
                   source=section,\n
                   destination=getOrganisationByTitle(client_title),\n
                   resource_value=product,\n
@@ -235,7 +222,6 @@ for month in range(1, month_count + 1):\n
     if add_related_payments:\n
       payment = accounting_module.newContent(\n
             causality_value=tr,\n
-            immediate_reindex=immediate_reindex,\n
             portal_type=\'Payment Transaction\',\n
             title=\'%s Payment\' % client_title,\n
             source_section=section,\n
@@ -246,11 +232,9 @@ for month in range(1, month_count + 1):\n
             resource=euro_resource,\n
         )\n
       payment.newContent(portal_type=\'Accounting Transaction Line\',\n
-                    immediate_reindex=immediate_reindex,\n
                     source=getAccountByTitle(\'Bank\'),\n
                     quantity=-(amount * (1 + vat_rate)))\n
       payment.newContent(portal_type=\'Accounting Transaction Line\',\n
-                    immediate_reindex=immediate_reindex,\n
                     source=getAccountByTitle(\'Receivable\'),\n
                     quantity=(amount * (1 + vat_rate)))\n
       if transaction_state in (\'validated\', \'delivered\'):\n
@@ -276,7 +260,6 @@ for month in range(1, month_count + 1):\n
   amount=7000\n
   default_date += 1\n
   tr = accounting_module.newContent(\n
-        immediate_reindex=immediate_reindex,\n
         portal_type=\'Purchase Invoice Transaction\',\n
         title=\'First Purchase Invoice\',\n
         destination_section=section,\n
@@ -287,15 +270,12 @@ for month in range(1, month_count + 1):\n
         resource=euro_resource,\n
     )\n
   tr.newContent(portal_type=\'Purchase Invoice Transaction Line\',\n
-                immediate_reindex=immediate_reindex,\n
                 destination=getAccountByTitle(\'Payable\'),\n
                 quantity=-(amount * (1 + vat_rate)))\n
   tr.newContent(portal_type=\'Purchase Invoice Transaction Line\',\n
-                immediate_reindex=immediate_reindex,\n
                 destination=getAccountByTitle(\'Refundable VAT 10%\'),\n
                 quantity=amount * vat_rate)\n
   tr.newContent(portal_type=\'Purchase Invoice Transaction Line\',\n
-                immediate_reindex=immediate_reindex,\n
                 destination=getAccountByTitle(\'Goods Purchase\'),\n
                 quantity=amount)\n
   if transaction_state == \'validated\':\n
@@ -314,7 +294,6 @@ if add_draft_transactions:\n
   # impact on the test\n
   for client_title, amount  in ((\'Client 1\', 2000), (\'Client 2\', 3000)):\n
     tr = accounting_module.newContent(\n
-          immediate_reindex=immediate_reindex,\n
           portal_type=\'Sale Invoice Transaction\',\n
           title=\'%s Sale Invoice\' % client_title,\n
           source_section=section,\n
@@ -326,16 +305,13 @@ if add_draft_transactions:\n
       )\n
     tr.newContent(portal_type=\'Sale Invoice Transaction Line\',\n
                   source=getAccountByTitle(\'Receivable\'),\n
-                  quantity=random.randint(300, 400),\n
-                  immediate_reindex=immediate_reindex)\n
+                  quantity=random.randint(300, 400),)\n
     tr.newContent(portal_type=\'Sale Invoice Transaction Line\',\n
                   source=getAccountByTitle(\'Collected VAT 10%\'),\n
-                  quantity=random.randint(300, 400),\n
-                  immediate_reindex=immediate_reindex)\n
+                  quantity=random.randint(300, 400),)\n
     tr.newContent(portal_type=\'Sale Invoice Transaction Line\',\n
                   source=getAccountByTitle(\'Goods Sales\'),\n
-                  quantity=random.randint(300, 400),\n
-                  immediate_reindex=immediate_reindex)\n
+                  quantity=random.randint(300, 400),)\n
 \n
 accounting_module.setProperty(\'current_content_script\',\n
                               current_script_data_id)\n
@@ -392,7 +368,6 @@ return "Accounting Transactions Created."\n
                             <string>accounting_module</string>
                             <string>year</string>
                             <string>default_date</string>
-                            <string>immediate_reindex</string>
                             <string>script</string>
                             <string>current_script_data_id</string>
                             <string>_getiter_</string>
