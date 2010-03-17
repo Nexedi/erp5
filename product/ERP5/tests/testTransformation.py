@@ -99,6 +99,19 @@ class TestTransformation(TestTransformationMixin, ERP5TypeTestCase):
     """
     return ('erp5_base','erp5_pdm', 'erp5_trade', 'erp5_mrp',)
 
+  def test_01_getAggregatedAmountListSimple(self):
+    """
+    Make sure that getAggregatedAmountList return something
+    """
+    transformation = self.createTransformation()
+    transformed_resource = self.createTransformedResource(transformation)
+    component = self.createComponent()
+    transformed_resource.edit(
+        resource_value=component,
+        quantity=1)
+    aggregated_amount_list = transformation.getAggregatedAmountList()
+    self.assertEquals(len(aggregated_amount_list), 1)
+
   def test_01_getAggregatedAmountListWithVariatedProperty(self):
     """
     Make sure that getAggregatedAmountList is still working properly if we
