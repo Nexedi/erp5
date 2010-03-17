@@ -497,7 +497,7 @@ class TestProxyField(ERP5TypeTestCase):
     proxy_field = self.addField(self.container.Base_view,
                                 'my_id', 'ID', 'ProxyField')
     proxy_field.manage_edit_xmlrpc(dict(form_id='Base_viewProxyFieldLibrary'))
-    proxy_field.manage_tales_xmlrpc(dict(field_id='here/REQUEST/field_id'))
+    proxy_field.manage_tales_xmlrpc(dict(field_id='request/field_id'))
 
     self.container.REQUEST.set('field_id', 'my_title')
     self.assertEquals(original_field, proxy_field.getTemplateField())
