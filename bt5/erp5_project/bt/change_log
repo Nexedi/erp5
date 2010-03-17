@@ -1,3 +1,6 @@
+2010-03-17 tatuya
+* Add a type based method so that Task document will find the applied rule.
+
 2009-11-03 Sébastien Ost @ Idealis Consulting
 * improve descriptions of several fields.
 * improve descriptions of several portal types.
