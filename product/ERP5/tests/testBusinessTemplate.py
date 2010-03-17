@@ -47,6 +47,8 @@ from Products.ERP5Type.Workflow import addWorkflowByType
 import shutil
 import os
 import gc
+import random
+import string
 
 from MethodObject import Method
 from Persistence import Persistent
@@ -2419,10 +2421,15 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     Install importzed business template
     """
     import_bt = sequence.get('current_bt')
+    import_bt.reinstall()
+
+  def stepCheckBeforeReinstall(self, sequence=None, sequence_list=None, **kw):
+    """
+    """
+    import_bt = sequence.get('current_bt')
     diff_list = import_bt.BusinessTemplate_getModifiedObject()
     self.assertTrue('portal_types/Geek Object/become_geek'
                     in [line.object_id for line in diff_list])
-    import_bt.reinstall()
 
   def stepInstallCurrentBusinessTemplate(self, sequence=None, sequence_list=None, **kw):
     """
@@ -5664,6 +5671,36 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)
 
+  def stepCreateFakeZODBScript(self, sequence=None, sequence_list=None, **kw):
+    """Create a Script inside portal_skins
+    """
+    grain_of_sand = ''.join([random.choice(string.ascii_letters) for i in xrange(10)])
+    python_script_id = 'ERP5Site_dummyScriptWhichRandomId%s' % grain_of_sand
+    skin_folder_id = 'custom'
+    if getattr(self.portal.portal_skins, skin_folder_id, None) is None:
+        self.portal.portal_skins.manage_addProduct['OFSP'].manage_addFolder(skin_folder_id)
+    skin_folder = self.portal.portal_skins[skin_folder_id]
+    skin_folder.manage_addProduct['PythonScripts'].manage_addPythonScript(
+                                                                 id=python_script_id)
+    sequence.set('python_script_id', python_script_id)
+    sequence.set('skin_folder_id', skin_folder_id)
+
+  def stepAddSkinFolderToBusinessTemplate(self, sequence=None, sequence_list=None, **kw):
+    """
+    Add types to business template
+    """
+    bt = sequence.get('current_bt', None)
+    self.failUnless(bt is not None)
+    bt.edit(template_skin_id_list=('custom'))
+
+  def stepCheckFakeScriptIsDeleted(self, sequence=None, sequence_list=None, **kw):
+    """Check that script inside ZODB is deleted by BT reinstallation
+    """
+    python_script_id = sequence.get('python_script_id')
+    skin_folder_id = sequence.get('skin_folder_id')
+    folder = self.portal.portal_skins[skin_folder_id]
+    self.assertTrue(python_script_id not in folder.objectIds())
+
   def test_38_CheckReinstallation(self, quiet=quiet, run=run_all_test):
     if not run: return
     if not quiet:
@@ -5684,7 +5721,19 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        InstallCurrentBusinessTemplate Tic \
                        Tic \
                        RemoveFirstAction \
+                       CheckBeforeReinstall \
                        ReinstallBusinessTemplate Tic \
+                       \
+                       CreateNewBusinessTemplate \
+                       UseExportBusinessTemplate \
+                       AddSkinFolderToBusinessTemplate \
+                       BuildBusinessTemplate \
+                       SaveBusinessTemplate \
+                       InstallCurrentBusinessTemplate Tic \
+                       CreateFakeZODBScript \
+                       ReinstallBusinessTemplate \
+                       Tic \
+                       CheckFakeScriptIsDeleted \
                        '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)
