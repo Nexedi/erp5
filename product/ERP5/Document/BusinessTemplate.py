@@ -2045,10 +2045,10 @@ class PortalTypeAllowedContentTypeTemplateItem(BaseTemplateItem):
       new_key_list = self._objects.keys()
       new_dict = PersistentMapping()
       # fix key if necessary in installed bt for diff
-      for key in installed_item._objects.keys():
+      for key, value in installed_item._objects.iteritems():
         if self.class_property not in key:
           key = '%s/%s' % (self.class_property, key)
-        new_dict[key] = installed_item._objects[key]
+        new_dict[key] = value
       if new_dict:
         installed_item._objects = new_dict
       for path in new_key_list:
