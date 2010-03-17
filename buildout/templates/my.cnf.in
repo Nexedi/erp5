@@ -7,7 +7,13 @@ socket = ${configuration:mysql_sock}
 
 # The MySQL server
 [mysqld]
+# ERP5 by default requires InnoDB storage. MySQL by default fallbacks to using
+# different engine, like MyISAM. Such behaviour generates problems only, when
+# tables requested as InnoDB are silently created with MyISAM engine.
+#
+# Loud fail is really required in such case.
 sql-mode="NO_ENGINE_SUBSTITUTION"
+
 port = ${configuration:mysql_port}
 socket = ${configuration:mysql_sock}
 datadir = ${configuration:mysql_datadir}
