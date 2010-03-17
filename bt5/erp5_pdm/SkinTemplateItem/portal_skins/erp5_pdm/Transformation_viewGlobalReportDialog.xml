@@ -99,6 +99,7 @@
                         <string>your_portal_skin</string>
                         <string>your_format</string>
                         <string>your_price_currency</string>
+                        <string>your_variation_category_list</string>
                       </list>
                     </value>
                 </item>

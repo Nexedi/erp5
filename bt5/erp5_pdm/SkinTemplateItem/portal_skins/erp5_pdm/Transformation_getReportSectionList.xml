@@ -55,7 +55,11 @@
             <key> <string>_body</string> </key>
             <value> <string>from Products.ERP5Form.Report import ReportSection\n
 \n
-if reference_variation_category_list == []:\n
+REQUEST = context.REQUEST\n
+variation_category_list = REQUEST.get(\'variation_category_list\', [])\n
+if len(variation_category_list):\n
+  reference_variation_category_list = variation_category_list\n
+elif reference_variation_category_list == []:\n
   reference_variation_category_list = context.getVariationCategoryList()\n
 \n
 result = []\n
@@ -148,6 +152,9 @@ return result\n
                             <string>ReportSection</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>REQUEST</string>
+                            <string>variation_category_list</string>
+                            <string>len</string>
                             <string>result</string>
                             <string>cartesianProduct</string>
                             <string>variation_category_dict</string>
