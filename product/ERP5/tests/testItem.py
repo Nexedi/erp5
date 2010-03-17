@@ -161,7 +161,7 @@ class TestItemMixin(TestSaleInvoiceMixin):
                                           sequence_list=None, **kw):
     """ Check items """
     order_line = sequence.get('order_line')
-    simulation_movement = order_line.getOrderRelatedValue()
+    simulation_movement = order_line.getDeliveryRelatedValue()
     self.failIf(simulation_movement is None)
     self.checkAggregate(line=simulation_movement, sequence=sequence)
 
