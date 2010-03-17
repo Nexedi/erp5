@@ -113,6 +113,8 @@ class TestXHTML(ERP5TypeTestCase):
       'erp5_documentation',
 
       'erp5_administration',
+
+      'erp5_knowledge_pad',
     )
 
   def afterSetUp(self):
