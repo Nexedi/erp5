@@ -58,7 +58,8 @@
   This script is called by drag and drop javascript framework\n
   when user click on \'Close\' button.\n
 """\n
-\n
+splitted_box_url = box_relative_url.split(\'_\')\n
+box_relative_url = \'knowledge_pad_module/%s/%s\'  %(splitted_box_url[-2], splitted_box_url[-1])\n
 box = context.restrictedTraverse(box_relative_url)\n
 box.delete()\n
 </string> </value>
@@ -105,6 +106,8 @@ box.delete()\n
                           <tuple>
                             <string>box_relative_url</string>
                             <string>_getattr_</string>
+                            <string>splitted_box_url</string>
+                            <string>_getitem_</string>
                             <string>context</string>
                             <string>box</string>
                           </tuple>
