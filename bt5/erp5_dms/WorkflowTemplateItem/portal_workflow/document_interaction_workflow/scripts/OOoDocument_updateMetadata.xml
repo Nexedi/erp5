@@ -84,7 +84,8 @@ if document.hasBaseData():\n
       new_metadata[metadata_key] = value\n
   if new_metadata:\n
     # edit metadata via server\n
-    document.activate().Document_tryToUpdateBaseMetadata(**new_metadata)\n
+    after_tag = \'document_%s_convert\' % document.getPath()\n
+    document.activate(after_tag=after_tag).Document_tryToUpdateBaseMetadata(**new_metadata)\n
 
 
 ]]></string> </value>
@@ -140,6 +141,7 @@ if document.hasBaseData():\n
                             <string>str</string>
                             <string>metadata_key</string>
                             <string>_write_</string>
+                            <string>after_tag</string>
                             <string>_apply_</string>
                           </tuple>
                         </value>

@@ -63,7 +63,8 @@ if document.hasBaseData():\n
 if document.getParentValue().getPortalType() != \'Contribution Tool\' \\\n
    and document.isSupportBaseDataConversion():\n
   document.processFile()\n
-  document.activate().Document_tryToConvertToBaseFormat()\n
+  tag = \'document_%s_convert\' % document.getPath()\n
+  document.activate(tag=tag).Document_tryToConvertToBaseFormat()\n
 </string> </value>
         </item>
         <item>
@@ -104,6 +105,7 @@ if document.getParentValue().getPortalType() != \'Contribution Tool\' \\\n
                             <string>_getitem_</string>
                             <string>document</string>
                             <string>_getattr_</string>
+                            <string>tag</string>
                           </tuple>
                         </value>
                     </item>
