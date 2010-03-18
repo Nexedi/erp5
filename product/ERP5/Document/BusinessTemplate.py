@@ -903,16 +903,6 @@ class ObjectTemplateItem(BaseTemplateItem):
       groups = {}
       old_groups = {}
       portal = context.getPortalObject()
-      # Fetch all sub objects path recursively
-      recursive_path_list = []
-      def fillRecursivePathList(from_path_list):
-        for from_path in from_path_list:
-          container = portal.unrestrictedTraverse(from_path, None)
-          if container is not None:
-            recursive_path_list.append(from_path)
-            fillRecursivePathList(['%s/%s' % (from_path, sub_content_id) for\
-                                      sub_content_id in container.objectIds()])
-      fillRecursivePathList(self._objects.keys())
       # sort to add objects before their subobjects
       keys = self._objects.keys()
       keys.sort()
@@ -1129,6 +1119,18 @@ class ObjectTemplateItem(BaseTemplateItem):
       # restore previous activities execution order
       context.setPlacelessDefaultReindexParameters(**original_reindex_parameters)
       # Do not forget to delete all remaining objects if asked by user
+      # Fetch all sub objects path recursively
+      recursive_path_list = []
+      def fillRecursivePathList(from_path_list):
+        for from_path in from_path_list:
+          container = portal.unrestrictedTraverse(from_path, None)
+          if container is not None:
+            recursive_path_list.append(from_path)
+            # Check that container support iteration of sub_content_id
+            if getattr(aq_base(container), 'objectIds', None) is not None:
+              fillRecursivePathList(['%s/%s' % (from_path, sub_content_id) for\
+                                        sub_content_id in container.objectIds()])
+      fillRecursivePathList(self._objects.keys())
       for recursive_path in recursive_path_list:
         if recursive_path in update_dict:
           action = update_dict[recursive_path]
