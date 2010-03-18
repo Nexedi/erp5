@@ -58,8 +58,8 @@ class Movement:
             'type'        : 'string',
             'mode'        : 'w' },
         {   'id'          : 'frozen',
-            'description' : '''a frozen movement cannot be modified by the
-                simulation anylonger''',
+            'description' : 'A frozen movement cannot be modified by the'
+                            ' simulation anylonger',
             'type'        : 'int',
             'acquisition_base_category'     : ('delivery', 'parent'),
             'acquisition_portal_type'       : Expression('''python:
