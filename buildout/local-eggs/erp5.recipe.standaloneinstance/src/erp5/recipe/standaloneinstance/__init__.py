@@ -13,7 +13,7 @@
 #
 ##############################################################################
 
-import os, sys
+import os, sys, subprocess
 from string import Template
 import zc.buildout
 import plone.recipe.zope2instance
@@ -124,11 +124,54 @@ class Recipe(plone.recipe.zope2instance.Recipe):
     else:
       force_zodb_update = False
 
+    if os.path.exists(options['zodb-path'].strip()) and not force_zodb_update:
+      # in case if there is no site available force update of ZODB
+      force_zodb_update = not self.is_site_available()
+
     if not os.path.exists(options['zodb-path'].strip()) or \
         force_zodb_update:
-      self.update_zodb()
+      if os.path.exists(options['zodb-path'].strip()):
+        if not self.is_site_running():
+          # only in case if site is not running changes to ZODB are allowed
+          self.update_zodb()
     # we return nothing, as this is totally standalone installation
     return []
+
+  def is_site_running(self):
+    options = self.options
+    zopectl_path = os.path.join(options['bin-directory'],
+                  options['control-script'])
+    argv = [zopectl_path, 'status']
+    (result_std, result_err) = subprocess.Popen(argv, stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE).communicate()
+    result_std = result_std.strip()
+    if 'running' in result_std:
+      return True
+    return False
+
+  def is_site_available(self):
+    if self.is_site_running():
+      # in case of running site it is not possible to attach to Data.fs
+      # and even more - any change in Data.fs, even forced one, could be
+      # dangerous, so assume that running site do have site inside
+      return True
+    options = self.options
+    zopectl_path = os.path.join(options['bin-directory'],
+                  options['control-script'])
+    script_name = os.path.join(os.path.dirname(__file__),
+                 'portal_check.py')
+    argv = [zopectl_path, 'run', script_name, options.get('portal_id',
+      'erp5')]
+    (result_std, result_err) = subprocess.Popen(argv, stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE).communicate()
+    result_std = result_std.strip()
+    if result_std == 'False':
+      return False
+    elif result_std == 'True':
+      return True
+    else:
+      raise ValueError('Unknwon response from %s: %r %r' % (argv, result_std,
+        result_err))
 
   def update_zodb(self):
     options = self.options
@@ -192,7 +235,7 @@ class Recipe(plone.recipe.zope2instance.Recipe):
     requirements, ws = self.egg.working_set()
     ws_locations = [d.location for d in ws]
 
-    if os.path.exists(instancehome):
+    if os.path.exists(instancehome) and self.is_site_available():
       # See if we can stop. We need to see if the working set path
       # has changed.
       saved_path = os.path.join(instancehome, 'etc', '.eggs')
