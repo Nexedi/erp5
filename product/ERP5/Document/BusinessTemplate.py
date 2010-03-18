@@ -1125,6 +1125,8 @@ class ObjectTemplateItem(BaseTemplateItem):
         for from_path in from_path_list:
           container = portal.unrestrictedTraverse(from_path, None)
           if container is not None:
+            if from_path in recursive_path_list:
+              continue
             recursive_path_list.append(from_path)
             # Check that container support iteration of sub_content_id
             if getattr(aq_base(container), 'objectIds', None) is not None:
