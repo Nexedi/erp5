@@ -163,22 +163,6 @@ class Transformation(XMLObject, Predicate, Variated):
         return result
 
     security.declareProtected(Permissions.AccessContentsInformation,
-                              '_setVariationBaseCategoryList')
-    def _setVariationBaseCategoryList(self, value):
-      """
-        Define the possible base categories
-      """
-#      XXX TransformedResource works only for a maximum of 3 variation base category...
-#      Matrixbox must be rewrite for a clean implementation of n base category
-      if len(value) <= 3:
-        self._baseSetVariationBaseCategoryList(value)
-      else:
-        raise MoreThan3VariationBaseCategory
-
-      # create relations between resource variation and transformation
-      self._setVariationCategoryList( self.getVariationRangeCategoryList() )
-
-    security.declareProtected(Permissions.AccessContentsInformation,
                               'setVariationBaseCategoryList')
     def setVariationBaseCategoryList(self, value):
       """
