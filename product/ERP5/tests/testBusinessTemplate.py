@@ -5685,13 +5685,15 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     sequence.set('python_script_id', python_script_id)
     sequence.set('skin_folder_id', skin_folder_id)
 
-  def stepAddSkinFolderToBusinessTemplate(self, sequence=None, sequence_list=None, **kw):
+  def stepAddCustomSkinFolderToBusinessTemplate(self, sequence=None, sequence_list=None, **kw):
     """
     Add types to business template
     """
     bt = sequence.get('current_bt', None)
     self.failUnless(bt is not None)
-    bt.edit(template_skin_id_list=('custom'))
+    template_skin_id_list = list(bt.getProperty('template_skin_id_list'))
+    template_skin_id_list.append('custom')
+    bt.edit(template_skin_id_list=template_skin_id_list)
 
   def stepCheckFakeScriptIsDeleted(self, sequence=None, sequence_list=None, **kw):
     """Check that script inside ZODB is deleted by BT reinstallation
@@ -5726,7 +5728,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        \
                        CreateNewBusinessTemplate \
                        UseExportBusinessTemplate \
-                       AddSkinFolderToBusinessTemplate \
+                       AddCustomSkinFolderToBusinessTemplate \
                        BuildBusinessTemplate \
                        SaveBusinessTemplate \
                        InstallCurrentBusinessTemplate Tic \
