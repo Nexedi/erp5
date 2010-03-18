@@ -69,13 +69,14 @@ newSecurityManager(None, user.__of__(app.acl_users))
 
 portal = getattr(app, options.portal_id, None)
 if portal is None:
-  print 'Adding ERP5 site %s' % options.portal_id
-  app.manage_addProduct['ERP5'].manage_addERP5Site(
+  add_dict = dict(
               id=options.portal_id,
               erp5_sql_connection_string=options.erp5_sql_connection_string,
               cmf_activity_sql_connection_string=\
                         options.cmf_activity_sql_connection_string,
-              erp5_catalog_storage='erp5_mysql_innodb_catalog')
+              erp5_catalog_storage='erp5_mysql_innodb_catalog'  )
+  print 'Adding ERP5 site with parameters %r' % add_dict
+  app.manage_addProduct['ERP5'].manage_addERP5Site(**add_dict)
 
   transaction.commit()
   portal = app._getOb(options.portal_id)
