@@ -1,3 +1,6 @@
+2010-03-17 yusei
+* Fix listbox list actions on Documentation_view.
+
 2010-03-02 fabien
 * set a tales expression on field Base_viewFieldLibrary/my_view_mode_listbox to automatically generate selection_name.
 
