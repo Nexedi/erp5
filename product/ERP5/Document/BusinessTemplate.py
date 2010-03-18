@@ -2021,8 +2021,9 @@ class PortalTypeAllowedContentTypeTemplateItem(BaseTemplateItem):
     key_list = self._objects.keys()
     key_list.sort()
     for key in key_list:
+      id_value = key.replace('%s/' % self.class_property, '')
       allowed_item_list = sorted(self._objects[key])
-      xml_data += '\n <portal_type id="%s">' %(key,)
+      xml_data += '\n <portal_type id="%s">' % (id_value)
       for allowed_item in allowed_item_list:
         xml_data += '\n  <item>%s</item>' %(allowed_item,)
       xml_data += '\n </portal_type>'
