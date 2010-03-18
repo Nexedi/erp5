@@ -615,9 +615,17 @@ class TestApparelTransformation(TestOrderMixin, ERP5TypeTestCase):
     """
       Verify aggregated data according to an expected structure
     """
-    for expected in expected_list:
-      aggregated_amount_list = transformation.getAggregatedAmountList(
-        context=transformation.asContext(categories = expected['id']) )
+    from Products.ERP5Type.Document import newTempAmount
+    produced_resource = transformation.getResource()
+
+    for i, expected in enumerate(expected_list):
+      context = newTempAmount(transformation, "temp_amount_%s" % i)
+      context.edit(
+          quantity = 1.0,
+          variation_category_list = expected['id'],
+          resource = produced_resource,
+      )
+      aggregated_amount_list = transformation.getAggregatedAmountList(context)
       expected_amount_list = expected['amount']
       
       # Check the number of aggregated components
