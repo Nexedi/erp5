@@ -2421,7 +2421,11 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     Install importzed business template
     """
     import_bt = sequence.get('current_bt')
-    import_bt.reinstall()
+    listbox_object_list = import_bt.BusinessTemplate_getModifiedObject()
+    install_kw = {}
+    for listbox_line in listbox_object_list:
+      install_kw[listbox_line.object_id] = listbox_line.choice_item_list[0][1]
+    import_bt.reinstall(object_to_update=install_kw)
 
   def stepCheckBeforeReinstall(self, sequence=None, sequence_list=None, **kw):
     """
