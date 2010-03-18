@@ -142,6 +142,21 @@ metal:use-macro="here/RelationFieldZuite_CommonTemplate/macros/init"\n
   <td></td>\n
 </tr>\n
 <tr>\n
+  <td>open</td>\n
+  <td>${base_url}/Zuite_waitForActivities</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyTextPresent</td>\n
+  <td>Done.</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>open</td>\n
+  <td>${base_url}/foo_module/0/Foo_viewRelationField</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
   <td>verifyValue</td>\n
   <td>field_my_bar_category_title_list</td>\n
   <td>azértï</td>\n
