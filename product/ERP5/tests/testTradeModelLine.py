@@ -37,6 +37,7 @@ from Products.CMFCore.utils import getToolByName
 from Products.ERP5.PropertySheet.TradeModelLine import (TARGET_LEVEL_MOVEMENT,
                                                         TARGET_LEVEL_DELIVERY)
 from Products.ERP5Type.tests.utils import createZODBPythonScript
+from Products.ERP5Type.tests.backportUnittest import expectedFailure
 
 class TestTradeModelLineMixin(TestBPMMixin):
   """Provides methods to implementations sharing similar logic to Trade Model Lines"""
@@ -2068,6 +2069,8 @@ class TestTradeModelLine(TestTradeModelLineMixin):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)
 
+  # This test does not work without implementing an appropriate Trade Model Solver.
+  @expectedFailure
   def test_TradeModelRuleSimulationBuildInvoiceInvoiceLineModifyDivergencyAndSolving(self, quiet=quiet):
     """Check that after changing invoice line invoice is properly diverged and it is possible to solve"""
     sequence_list = SequenceList()

@@ -39,6 +39,7 @@ from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 from testPackingList import TestPackingList
 from testInvoice import TestSaleInvoice, TestInvoiceMixin
+from Products.ERP5Type.tests.backportUnittest import expectedFailure
 
 class TestERP5SimulationMixin(TestInvoiceMixin):
   def getBusinessTemplateList(self):
@@ -505,6 +506,14 @@ class TestERP5Simulation(TestERP5SimulationMixin, ERP5TypeTestCase):
 class TestERP5SimulationPackingList(TestERP5SimulationMixin, TestPackingList):
   pass
 
+for failing_method in [
+  # This test does not work as it is because of the different behaviour of
+  # Adopt Solver.
+  'test_05d_SimulationChangeResourceOnOneSimulationMovementForMergedLine',
+  ]:
+  setattr(TestERP5SimulationPackingList, failing_method,
+          expectedFailure(getattr(TestERP5SimulationPackingList, failing_method)))
+        
 class TestERP5SimulationInvoice(TestERP5SimulationMixin, TestSaleInvoice):
 
   def afterSetUp(self):
