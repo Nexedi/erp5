@@ -56,6 +56,7 @@
             <value> <string encoding="cdata"><![CDATA[
 
 from Products.ERP5Type.DateUtils import addToDate\n
+from Products.ERP5Type.Message import translateString\n
 \n
 month_added = 1\n
 if frequency == \'quarterly\':\n
@@ -72,7 +73,7 @@ while date < context.getStopDate():\n
     period.setShortTitle(\'%s-%s\' % (date.strftime(\'%Y %m\'), (end_date - 1).strftime(\'%m\')))\n
   else:\n
     period.setShortTitle(date.strftime(\'%Y-%m\'))\n
-    period.setTitle(date.strftime(\'%B\'))\n
+    period.setTitle(str(translateString(date.strftime(\'%B\'))))\n
 \n
   if open_periods:\n
     period.start()\n
@@ -80,7 +81,7 @@ while date < context.getStopDate():\n
   date = end_date\n
   \n
 return context.Base_redirect(form_id, \n
-     keep_items=dict(portal_status_message=\'Accounting periods created.\'))\n
+     keep_items=dict(portal_status_message=translateString(\'Accounting periods created.\')))\n
 
 
 ]]></string> </value>
@@ -124,6 +125,8 @@ return context.Base_redirect(form_id, \n
                             <string>form_id</string>
                             <string>Products.ERP5Type.DateUtils</string>
                             <string>addToDate</string>
+                            <string>Products.ERP5Type.Message</string>
+                            <string>translateString</string>
                             <string>month_added</string>
                             <string>_getattr_</string>
                             <string>context</string>
@@ -131,6 +134,7 @@ return context.Base_redirect(form_id, \n
                             <string>dict</string>
                             <string>end_date</string>
                             <string>period</string>
+                            <string>str</string>
                           </tuple>
                         </value>
                     </item>
