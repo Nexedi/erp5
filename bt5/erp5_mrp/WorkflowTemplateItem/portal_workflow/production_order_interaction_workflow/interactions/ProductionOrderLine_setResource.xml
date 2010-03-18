@@ -36,6 +36,12 @@
             </value>
         </item>
         <item>
+            <key> <string>before_commit_script_name</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
             <key> <string>description</string> </key>
             <value> <string>Setting the resource will set best, if found, transformation related to this resource on movement.</string> </value>
         </item>
