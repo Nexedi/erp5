@@ -162,9 +162,9 @@ class TestTransformation(TestTransformationMixin, ERP5TypeTestCase):
 
     transaction.commit()
     self.tic()
-    self.assertEquals(
-        swimcap.getVariationCategoryList(),
-        transformation.getVariationCategoryList()
+    self.assertSameSet(
+        set(swimcap.getVariationCategoryList()),
+        set(transformation.getVariationCategoryList()),
     )
 
   def test_variationCategoryWithIndividualVariation(self):
