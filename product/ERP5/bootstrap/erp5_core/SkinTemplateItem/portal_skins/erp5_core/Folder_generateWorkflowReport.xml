@@ -55,62 +55,65 @@
             <key> <string>_body</string> </key>
             <value> <string>listbox = []\n
 result_dict = {}\n
+translate_state_dict = {}\n
+state_dict={}\n
+portal_type_dict={}\n
+workflow_dict={}\n
 portal_workflow = context.portal_workflow\n
 content_type_list = context.allowedContentTypes()\n
 content_type_list.sort()\n
 \n
 translateString = context.Base_translateString\n
 \n
-# XXX better implementation is required, but I do not know how to get workflows related to a portal type\n
-possible_state_name_list = (\'validation_state\',\n
-                            \'simulation_state\',\n
-                            \'causality_state\',\n
-                            \'invoice_state\',\n
-                            \'payment_state\',\n
-                            \'event_state\',\n
-                            \'opportunity_state\',\n
-                            \'immobilisation_state\',)\n
+workflow_tool = context.portal_workflow\n
+for portal_type in content_type_list:\n
+  portal_type_id = portal_type.getId()\n
+  workflow_list = workflow_tool.getWorkflowsFor(portal_type_id)\n
+  # Retrieve the workflows by portal_type\n
+  for workflow in workflow_list:\n
+    # not \'edit_workflow\' because state variable is not in catalog\n
+    if getattr(workflow, \'states\', None) is not None and \\\n
+      workflow.getId() != \'edit_workflow\':\n
+      #retrieve state_var to search in the catalog the states use by the\n
+      #workflow\n
+      state_var = workflow.state_var\n
+      result_list = context.Base_zCountByWorkflowState(portal_type=portal_type_id,\n
+                                                       state_name=state_var)\n
+      if not ((len(result_list) == 1) and (result_list[0][0] is None)):\n
+        for result in result_list:\n
+          portal_type_dict = result_dict.get(portal_type_id,{})\n
+          workflow_dict = portal_type_dict.get(workflow.title,{})\n
+          workflow_dict.update({result[0]:result[1]})\n
+          portal_type_dict.update({workflow.title:workflow_dict})\n
+          result_dict.update({portal_type_id:portal_type_dict})\n
+          # store the title states for the translation\n
+          if not translate_state_dict.has_key(result[0]):\n
+            state_title = getattr(workflow.states, result[0]).title_or_id()\n
+            translate_state_dict[result[0]] = state_title\n
 \n
-for content_type in content_type_list:\n
-  content_type_id = content_type.id\n
-  for state_name in possible_state_name_list:\n
-    result_list = context.Base_zCountByWorkflowState(portal_type=content_type_id,\n
-                                                     state_name=state_name)\n
-    if not ((len(result_list) == 1) and (result_list[0][0] is None)):\n
-      for result in result_list:\n
-        portal_type_dict = result_dict.get(content_type_id, {})\n
-        count = portal_type_dict.get(result[0], 0) + result[1]\n
-        portal_type_dict.update({result[0]: count})\n
-        result_dict.update({content_type_id: portal_type_dict})\n
-\n
-\n
-def getStateTranslatedTitle(state, portal_type, saved_state_dict=dict()):\n
-  if state in saved_state_dict:\n
-    return saved_state_dict[state]\n
-  # XXX requires manager proxy role\n
-  workflow_for_ptype = portal_workflow.getWorkflowsFor(portal_type)\n
-  for workflow in workflow_for_ptype:\n
-    if getattr(workflow, \'states\', None) is not None and state in workflow.states.objectIds():\n
-      saved_state_dict[state] = translateString(getattr(workflow.states, state).title_or_id())\n
-      return saved_state_dict[state]\n
-\n
+#Display the result\n
 state_list_dict = {}\n
 portal_type_list = result_dict.keys()\n
 portal_type_list.sort()\n
 for portal_type in portal_type_list:\n
-  listbox.append({\'translated_portal_type\': translateString(portal_type),\n
-                  \'state\'      : \'\',\n
-                  \'count\'      : \'\'})\n
-  state_list = result_dict[portal_type].keys()\n
-  state_list.sort()\n
-  for state in state_list:\n
-    state_title = getStateTranslatedTitle(state, portal_type)\n
-    count = state_list_dict.get(state, 0) + result_dict[portal_type][state]\n
-    state_list_dict.update({state:count})\n
-    listbox.append({\'translated_portal_type\': \'\',\n
-                    \'state\'      : state_title,\n
-                    \'count\'      : result_dict[portal_type][state]})\n
+  workflow_list = result_dict[portal_type].keys()\n
+  for workflow_title in workflow_list:\n
+    listbox.append({\'translated_portal_type\': \'%s - %s\' %\\\n
+      (translateString(portal_type), translateString(workflow_title)),\n
+                    \'state\'      : \'\',\n
+                    \'count\'      : \'\'})\n
+    state_list = result_dict[portal_type][workflow_title].keys()\n
+    state_list.sort()\n
+    for state in state_list:\n
+      result_count = result_dict[portal_type][workflow_title][state]\n
+      count = state_list_dict.get(state, 0) + result_count\n
+      # account the number of items by state\n
+      state_list_dict.update({state:count})\n
+      listbox.append({\'translated_portal_type\': \'\',\n
+                      \'state\'      : translateString(translate_state_dict[state]),\n
+                      \'count\'      : result_count})\n
 \n
+#Display the total by state\n
 listbox.append({\'translated_portal_type\': translateString(\'All\'),\n
                 \'state\'      : \'\',\n
                 \'count\'      : \'\'})\n
@@ -118,7 +121,7 @@ state_list = state_list_dict.keys()\n
 state_list.sort()\n
 for state in state_list:\n
   listbox.append({\'translated_portal_type\': \'\',\n
-                  \'state\'      : getStateTranslatedTitle(state, None),\n
+                  \'state\'      : translateString(translate_state_dict[state]),\n
                   \'count\'      : state_list_dict[state]})\n
 \n
 context.Base_updateDialogForm(listbox=listbox, empty_line_number=0)\n
@@ -169,31 +172,37 @@ return context.Folder_viewWorkflowReport()\n
                           <tuple>
                             <string>listbox</string>
                             <string>result_dict</string>
+                            <string>translate_state_dict</string>
+                            <string>state_dict</string>
+                            <string>portal_type_dict</string>
+                            <string>workflow_dict</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>portal_workflow</string>
                             <string>content_type_list</string>
                             <string>translateString</string>
-                            <string>possible_state_name_list</string>
+                            <string>workflow_tool</string>
                             <string>_getiter_</string>
-                            <string>content_type</string>
-                            <string>content_type_id</string>
-                            <string>state_name</string>
+                            <string>portal_type</string>
+                            <string>portal_type_id</string>
+                            <string>workflow_list</string>
+                            <string>workflow</string>
+                            <string>getattr</string>
+                            <string>None</string>
+                            <string>state_var</string>
                             <string>result_list</string>
                             <string>len</string>
                             <string>_getitem_</string>
-                            <string>None</string>
                             <string>result</string>
-                            <string>portal_type_dict</string>
-                            <string>count</string>
-                            <string>dict</string>
-                            <string>getStateTranslatedTitle</string>
+                            <string>state_title</string>
+                            <string>_write_</string>
                             <string>state_list_dict</string>
                             <string>portal_type_list</string>
-                            <string>portal_type</string>
+                            <string>workflow_title</string>
                             <string>state_list</string>
                             <string>state</string>
-                            <string>state_title</string>
+                            <string>result_count</string>
+                            <string>count</string>
                           </tuple>
                         </value>
                     </item>
