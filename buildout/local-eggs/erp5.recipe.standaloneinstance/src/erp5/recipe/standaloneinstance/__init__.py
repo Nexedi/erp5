@@ -207,7 +207,7 @@ class Recipe(plone.recipe.zope2instance.Recipe):
 
       # Nothing has changed.
       self.install_scripts()
-      return instancehome
+      return []
     else:
       return self.install()
 

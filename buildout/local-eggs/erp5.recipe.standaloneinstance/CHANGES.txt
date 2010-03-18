@@ -1,6 +1,13 @@
 Changelog
 =========
 
+0.4 (2010-03-18)
+----------------
+
+ - continue fixing of deletion of data - update of instance could result in
+   buildout having stored location of instance, which then could be removed
+   [luke]
+
 0.3 (2010-03-17)
 ----------------
 
