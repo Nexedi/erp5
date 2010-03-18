@@ -20,6 +20,7 @@ from App import version_txt
 if version_txt.getZopeVersion() < (2, 9):
   import ZTUtils.Zope
   from ZTUtils.Zope import complex_marshal
+  import cgi
 
   def make_hidden_input(*args, **kwargs):
       '''Construct a set of hidden input elements, with marshalling markup.
@@ -49,4 +50,5 @@ if version_txt.getZopeVersion() < (2, 9):
       return '\n'.join(qlist)
 
   ZTUtils.Zope.make_hidden_input = make_hidden_input
+  ZTUtils.make_hidden_input = make_hidden_input
 
