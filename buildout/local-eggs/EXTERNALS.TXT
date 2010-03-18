@@ -1,0 +1,4 @@
+# svn propset svn:externals -F ./EXTERNALS.TXT .
+
+z3c.recipe.openoffice   http://svn.zope.org/repos/main/z3c.recipe.openoffice/branches/erp5-downloadcache
+
