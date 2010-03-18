@@ -31,6 +31,8 @@
 ##############################################################################
 
 import zope.interface
+
+from warnings import warn
 from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
@@ -247,7 +249,15 @@ class Transformation(XMLObject, Predicate, Variated):
         can be used either to do some calculation (ex. price, BOM)
         or to display a detailed view of a transformation.
       """
-      context = self.asContext(context=context, REQUEST=REQUEST, **kw)
+      if context is None:
+        warn("Calling Transformation.getAggregatedAmountList without context " \
+             "is wrong. Context should be an Amount defining the resource to " \
+             "produce", DeprecationWarning)
+        from Products.ERP5Type.Document import newTempAmount
+        context = newTempAmount(self, "deprecated_usage")
+        context.setResourceValue(self.getResourceValue())
+        context.setQuantity(1.0)
+
 
       # A list of functions taking a transformation_line as sole argument
       # and returning True iif the line should be kept in the result

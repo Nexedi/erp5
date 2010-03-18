@@ -133,13 +133,12 @@ class TransformedResource(Predicate, XMLObject, XMLMatrix, Amount):
 
     security.declareProtected(Permissions.AccessContentsInformation, 
                               'getAggregatedAmountList')
-    def getAggregatedAmountList(self, context=None, REQUEST=None, **kw):
+    def getAggregatedAmountList(self, context, REQUEST=None, **kw):
       """
         Get all interesting amount value and return AggregatedAmountList
       """
       from Products.ERP5Type.Document import newTempAmount
 
-      context = self.asContext(context=context, REQUEST=REQUEST, **kw)
       # Create the result object
       aggregated_amount_list = AggregatedAmountList()
       test_result = self.test(context)

@@ -108,9 +108,11 @@ class TestTransformation(TestTransformationMixin, ERP5TypeTestCase):
     component = self.createComponent()
     transformed_resource.edit(
         resource_value=component,
-        quantity=1)
+        quantity=2)
     aggregated_amount_list = transformation.getAggregatedAmountList()
     self.assertEquals(len(aggregated_amount_list), 1)
+    aggregated_amount = aggregated_amount_list[0]
+    self.assertEquals(aggregated_amount.quantity, 2)
 
   def test_01_getAggregatedAmountListWithVariatedProperty(self):
     """
