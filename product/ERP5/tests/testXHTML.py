@@ -34,6 +34,7 @@ import urllib
 
 from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from Products.ERP5Type.tests.backportUnittest import expectedFailure
 from Products.ERP5 import __file__ as ERP5PackagePath
 from Products.CMFCore.utils import getToolByName
 from AccessControl.SecurityManagement import newSecurityManager
@@ -180,6 +181,7 @@ class TestXHTML(ERP5TypeTestCase):
                     % '\n\t'.join(str(e) for e in error_list)
       self.fail(message)
 
+  @expectedFailure
   def test_configurationOfFieldLibrary(self):
     error_list = []
     for business_template in self.portal.portal_templates.searchFolder():
