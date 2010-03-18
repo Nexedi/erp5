@@ -15,8 +15,10 @@
               <list>
                 <string>base_category</string>
                 <string>catalog_index</string>
+                <string>columns</string>
                 <string>description</string>
                 <string>portal_type</string>
+                <string>proxy_listbox_ids</string>
                 <string>title</string>
               </list>
             </value>
@@ -87,8 +89,27 @@
                     <value> <string>title</string> </value>
                 </item>
                 <item>
+                    <key> <string>columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>title</string>
+                          <string>Usual Name</string>
+                        </tuple>
+                        <tuple>
+                          <string>career_subordination_title</string>
+                          <string>Organisation</string>
+                        </tuple>
+                        <tuple>
+                          <string>translated_validation_state_title</string>
+                          <string>State</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
                     <key> <string>description</string> </key>
-                    <value> <string>The person or organisation in charge of taking the decision to make the request.</string> </value>
+                    <value> <string>The person in charge of taking the decision to make the request.</string> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
@@ -105,6 +126,17 @@
                         <tuple>
                           <string>Person</string>
                           <string>Person</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>proxy_listbox_ids</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>PersonModule_viewPersonList/listbox</string>
+                          <string>Persons</string>
                         </tuple>
                       </list>
                     </value>
