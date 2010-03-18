@@ -406,7 +406,6 @@ class MultiRelationEditor:
     def edit(self, o):
       if self.relation_editor_list != None:
 
-        relation_uid_list = []
         relation_object_list = []
         for value, uid, display_text, relation_key, item_key in \
                                self.relation_editor_list:
@@ -426,22 +425,19 @@ class MultiRelationEditor:
                 kw ={}
                 kw[self.key] = value.replace('%', '')
                 kw['portal_type'] = portal_type
-                kw['immediate_reindex'] = 1
                 new_object = portal_module_object.newContent(**kw)
-                uid = new_object.getUid()
+                relation_object_list.append(new_object)
               else:
-                raise
-              
-            relation_uid_list.append(int(uid))
-            relation_object_list.append( o.portal_catalog.getObject(uid))
+                raise 
+            else:
+              relation_object_list.append(o.portal_catalog.getObject(uid))
 
         # Edit relation
         if self.relation_setter_id:
           relation_setter = getattr(o, self.relation_setter_id)
           relation_setter((), portal_type=self.portal_type_list)
-          relation_setter(relation_uid_list,                  # relation setter is uid based
-                          portal_type=self.portal_type_list)  # maybe not the best solution
-                                                              # and inconsistent with bellow
+          relation_setter(relation_object_list,
+                          portal_type=self.portal_type_list)
         else:
           # we could call a generic method which create the setter method name
           if len(relation_object_list) == 1:
