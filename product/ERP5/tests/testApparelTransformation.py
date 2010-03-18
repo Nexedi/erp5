@@ -630,9 +630,12 @@ class TestApparelTransformation(TestOrderMixin, ERP5TypeTestCase):
       
       # Check the number of aggregated components
       if len(aggregated_amount_list) != len(expected_amount_list):
-        LOG('TEST ERROR :', 0, 'number of Amount differs between expected (%d) and aggregated (%d) for categories %s' %
-             (len(expected_amount_list), len(aggregated_amount_list), expected['id']))
-        self.failUnless(0)
+        error = 'number of Amount differs between expected (%d) and ' \
+                'aggregated (%d) for categories %s' % \
+                    (len(expected_amount_list),
+                     len(aggregated_amount_list), expected['id'])
+        LOG('TEST ERROR :', 0, error)
+        self.fail(error)
         
       # Check quantity for each component
       for i in range(len(aggregated_amount_list)):
@@ -648,9 +651,13 @@ class TestApparelTransformation(TestOrderMixin, ERP5TypeTestCase):
           if round(a_price,10) != round(e_price,10):
             error = 1
         if error == 1:
-          LOG('TEST ERROR :', 0, 'Total price differs between expected (%s) and aggregated (%s) Amounts (resource : %s, id_categories : %s, amount.categories : %s)' %
-            (repr(e_price), repr(a_price), repr(a_amount.getResource()), expected['id'], a_amount.getCategoryList()))
-          self.failUnless(0)
+          error = 'Total price differs between expected (%s) and aggregated' \
+                  ' (%s) Amounts (resource : %s, id_categories : %s, ' \
+                  'amount.categories : %s)' % \
+                    (repr(e_price), repr(a_price), repr(a_amount.getResource()),
+                     expected['id'], a_amount.getCategoryList())
+          LOG('TEST ERROR :', 0, error)
+          self.fail(error)
           
       # Check duration for each component
         a_duration = a_amount.getDuration()
@@ -664,16 +671,23 @@ class TestApparelTransformation(TestOrderMixin, ERP5TypeTestCase):
           if round(a_duration,10) != round(e_duration,10):
             error = 1
         if error == 1:
-          LOG('TEST ERROR :', 0, 'Duration differs between expected (%s) and aggregated (%s) Amounts (resource : %s, id_categories : %s, amount.categories : %s)' %
-            (repr(e_duration), repr(a_duration), repr(a_amount.getResource()), expected['id'], a_amount.getCategoryList()))
-          self.failUnless(0)
+          error = 'Duration differs between expected (%s) and aggregated (%s)' \
+                  ' Amounts (resource : %s, id_categories : %s, ' \
+                  'amount.categories : %s)' % \
+                    (repr(e_duration), repr(a_duration),
+                     repr(a_amount.getResource()), expected['id'],
+                     a_amount.getCategoryList())
+          LOG('TEST ERROR :', 0, error)
+          self.fail(error)
             
       # Check global quantity
       total_price = aggregated_amount_list.getTotalPrice()
       if round(total_price, 10) != round(expected['total'], 10):
-        LOG('TEST ERROR :', 0, 'Total price for AggregatedAmountList differs between expected (%s) and aggregated (%s) (%s)' %
-          (repr(total_price), repr(expected['total']), expected['id']))
-        self.failUnless(0)
+        error = 'Total price for AggregatedAmountList differs between ' \
+                'expected (%s) and aggregated (%s) (%s)' % \
+                  (repr(total_price), repr(expected['total']), expected['id'])
+        LOG('TEST ERROR :', 0, error)
+        self.fail(error)
         
       # Check global duration
       total_duration = aggregated_amount_list.getTotalDuration()
@@ -687,8 +701,14 @@ class TestApparelTransformation(TestOrderMixin, ERP5TypeTestCase):
         if round(total_duration, 10) != round(expected_duration, 10):
           error = 1
       if error == 1:
-        LOG('TEST ERROR :', 0, 'Total duration differs between expected (%s) and aggregated (%s) (%s)' %
-          (repr(expected_duration), repr(total_duration), expected['id']))
+        error='Total duration differs between expected (%s) and ' \
+              'aggregated (%s) (%s)' % \
+                (repr(expected_duration), repr(total_duration),
+                 expected['id'])
+        LOG('TEST ERROR :', 0, error)
+        # XXX Is it alright to exit this test with an error without raising
+        # anything?
+        # self.fail(error)
        
                
   def test_01_getAggregatedAmountList(self, quiet=0, run=run_all_test):
