@@ -903,6 +903,16 @@ class ObjectTemplateItem(BaseTemplateItem):
       groups = {}
       old_groups = {}
       portal = context.getPortalObject()
+      # Fetch all sub objects path recursively
+      recursive_path_list = []
+      def fillRecursivePathList(from_path_list):
+        for from_path in from_path_list:
+          container = portal.unrestrictedTraverse(from_path, None)
+          if container is not None:
+            recursive_path_list.append(from_path)
+            fillRecursivePathList(['%s/%s' % (from_path, sub_content_id) for\
+                                      sub_content_id in container.objectIds()])
+      fillRecursivePathList(self._objects.keys())
       # sort to add objects before their subobjects
       keys = self._objects.keys()
       keys.sort()
@@ -1064,7 +1074,7 @@ class ObjectTemplateItem(BaseTemplateItem):
                 obj._setProperty(
                     'business_template_registered_skin_selections',
                     skin_selection_list, type='tokens')
-           
+
           recurse(restoreHook, obj)
       # now put original order group
       # we remove object not added in forms
@@ -1118,6 +1128,22 @@ class ObjectTemplateItem(BaseTemplateItem):
           obj.groups = new_groups_dict
       # restore previous activities execution order
       context.setPlacelessDefaultReindexParameters(**original_reindex_parameters)
+      # Do not forget to delete all remaining objects if asked by user
+      for recursive_path in recursive_path_list:
+        if recursive_path in update_dict:
+          action = update_dict[recursive_path]
+          if action in ('remove', 'save_and_remove'):
+            document = portal.restrictedTraverse(recursive_path)
+            if getattr(aq_base(document), 'getParentValue', None) is not None:
+              # regular ERP5 object
+              parent = document.getParentValue()
+            else:
+              parent = document.aq_parent
+            document_id = document.getId()
+            container_path_list = recursive_path.split('/')[:-1]
+            self._backupObject(action, trashbin, container_path_list,
+                               document_id)
+            parent.manage_delObjects([document_id])
     else:
       # for old business template format
       BaseTemplateItem.install(self, context, trashbin, **kw)
