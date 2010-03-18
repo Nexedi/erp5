@@ -264,6 +264,25 @@ class TransformedResource(Predicate, XMLObject, XMLMatrix, Amount):
         except ValueError:
           error_string += 'Quantity is not a float.'
 
+        # If IAmount specifies that 4 resources are needed, all quantities
+        # need to be multiplicated by 4...
+        context_quantity = None
+        quantity_getter = getattr(context, "getQuantity", None)
+        if quantity_getter is not None:
+          _marker = object()
+          context_quantity = quantity_getter(_marker)
+          if context_quantity is _marker:
+            # XXX Backwards compatibility:
+            # previously, quantity property of the Amount was completely
+            # ignored, and was assumed to be 1.0 . Re-enact this old
+            # behavior (quantity default value is 0.0) to avoid breakages
+            warn("No quantity was defined on the Amount passed to " \
+                 "getAggregatedAmountList, 1.0 was assumed", DeprecationWarning)
+            context_quantity = 1.0
+        else:
+          raise KeyError("No quantity defined on context")
+        quantity *= float(context_quantity)
+
         # Get the variation category list
         variation_category_list_defined_by = None
         variation_category_list = None

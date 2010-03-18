@@ -241,14 +241,11 @@ class Transformation(XMLObject, Predicate, Variated):
                                 # obsolete, use trade_phase_list instead
                                 ind_phase_url_list=None,
                                 rejected_resource_uid_list=None,
-                                context_quantity=0,**kw):
+                                **kw):
       """
         getAggregatedAmountList returns an AggregatedAmountList which
         can be used either to do some calculation (ex. price, BOM)
         or to display a detailed view of a transformation.
-
-        context_quantity : if set to one, multiply all quantities
-                           with the quantity of the context
       """
       context = self.asContext(context=context, REQUEST=REQUEST, **kw)
 
@@ -304,13 +301,13 @@ class Transformation(XMLObject, Predicate, Variated):
           # transformation
           if line_is_included(transformation_line):
             try:
-              result.extend(transformation_line.getAggregatedAmountList(context))
+              line_result = transformation_line.getAggregatedAmountList(context)
             except KeyError:
               # KeyError is raised by TransformedResource.getAggregatedAmountList
               # in case of misconfiguration of a Cell.
               # Just ignore the line
               pass
+            else:
+              result.extend(line_result)
 
-      if context_quantity:
-        result.multiplyQuantity(context=context)
       return result

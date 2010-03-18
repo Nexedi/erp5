@@ -248,7 +248,7 @@ class TransformationRule(TransformationSourcingRuleMixin, Rule):
                         amount.getVariationCategoryList(),
           "variation_property_dict": \
                         amount.getVariationPropertyDict(),
-          "quantity": amount.getNetQuantity() * parent_movement.getQuantity(), # getNetQuantity to support efficency from transformation
+          "quantity": amount.getNetQuantity(), # getNetQuantity to support efficency from transformation
           "price": price,
           "quantity_unit": amount.getQuantityUnit(),
           "destination_list": (),
