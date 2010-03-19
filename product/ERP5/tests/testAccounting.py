@@ -153,14 +153,12 @@ class AccountingTestCase(ERP5TypeTestCase):
         tr.deliver()
     return tr
 
-
-  def login(self, name=username):
+  def createUserAndlogin(self, name=username):
     """login with Assignee, Assignor & Author roles."""
     uf = self.getPortal().acl_users
     uf._doAddUser(self.username, '', ['Assignee', 'Assignor', 'Author'], [])
     user = uf.getUserById(self.username).__of__(uf)
     newSecurityManager(None, user)
-
 
   def setUp(self):
     """Setup the fixture.
@@ -4032,7 +4030,7 @@ class TestAccountingTransactionTemplate(AccountingTestCase):
 
   def test_Template(self):
     self.disableUserPreferenceList()
-    self.login('claudie')
+    self.createUserAndlogin('claudie')
     preference = self.portal.portal_preferences.newContent('Preference')
     preference.priority = Priority.USER
     preference.enable()
@@ -4077,7 +4075,7 @@ class TestAccountingTransactionTemplate(AccountingTestCase):
     # test creating a template using Base_doAction script (this is what
     # erp5_xhtml_style does)
     self.disableUserPreferenceList()
-    self.login('claudie')
+    self.createUserAndlogin('claudie')
     preference = self.portal.portal_preferences.newContent('Preference')
     preference.priority = Priority.USER
     preference.enable()
