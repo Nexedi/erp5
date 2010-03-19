@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2002-2006 Nexedi SARL and Contributors. All Rights Reserved.
@@ -48,6 +49,7 @@ class EditorWidget(Widget.TextAreaWidget):
     A widget that displays a GUI HTML editor widget (based
     on FCK editor). This widget is intended to be used in
     conjunction with WebSite.
+    This Widget does not escape values.
 
     TODO:
         - implement validation
