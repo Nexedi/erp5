@@ -49,7 +49,7 @@ from Products.ERP5Form.Form import ERP5Form
 from Products.ERP5Form.Form import purgeFieldValueCache
 from Products.ERP5Form.Form import getFieldValue
 from Products.ERP5Form import Form
-from Products.ERP5Form import ProxyField
+from Products.ERP5Form import ProxyField, EditorField
 from DateTime import DateTime
 
 from Products.Formulator.Widget import NSMAP
@@ -296,6 +296,18 @@ class TestTextAreaField(ERP5TypeTestCase):
     test_value = self.field.render_odg(as_string=False)\
       .xpath('%s/text:tab' % ODG_XML_WRAPPING_XPATH, namespaces=NSMAP)
     self.assertTrue(test_value)
+
+class TestEditorField(TestTextAreaField):
+  """Tests Editor field
+  """
+
+  def getTitle(self):
+    return "Editor Field"
+
+  def afterSetUp(self):
+    self.field = EditorField.EditorField('test_field')
+    self.widget = self.field.widget
+
 
 class TestLinesField(ERP5TypeTestCase):
 
@@ -803,6 +815,7 @@ def test_suite():
   suite.addTest(unittest.makeSuite(TestStringField))
   suite.addTest(unittest.makeSuite(TestDateTimeField))
   suite.addTest(unittest.makeSuite(TestTextAreaField))
+  suite.addTest(unittest.makeSuite(TestEditorField))
   suite.addTest(unittest.makeSuite(TestLinesField))
   suite.addTest(unittest.makeSuite(TestCheckBoxField))
   suite.addTest(unittest.makeSuite(TestListField))

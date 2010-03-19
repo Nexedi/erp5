@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2002-2006 Nexedi SARL and Contributors. All Rights Reserved.
@@ -89,8 +90,14 @@ class EditorWidget(Widget.TextAreaWidget):
       Render form in view only mode.
     """
     if value is None:
-      value = ''
-    return value
+      return ''
+    text_editor = field.get_value('text_editor')
+    if text_editor == 'text_area':
+      return Widget.TextAreaWidget.render_view(self, field, value,
+                                               REQUEST=REQUEST,
+                                               render_prefix=REQUEST)
+    else:
+      return value
 
 EditorWidgetInstance = EditorWidget()
 
