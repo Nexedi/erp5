@@ -1,4 +1,3 @@
-import errno
 import os
 import shutil
 import sys
@@ -20,11 +19,8 @@ save = int(os.environ.get('erp5_save_data_fs', 0))
 _print("Cleaning static files ... ")
 static_dir_list = 'Constraint', 'Document', 'PropertySheet', 'Extensions'
 for dir in static_dir_list:
-  try:
-    shutil.rmtree(os.path.join(instance_home, dir))
-  except OSError, e:
-    if e.errno != errno.ENOENT:
-      raise
+  for f in glob.glob(os.path.join(instance_home, dir, '*')):
+    os.remove(f)
 
 if load:
   dump_sql = os.path.join(instance_home, 'dump.sql')
@@ -38,6 +34,7 @@ if load:
   for dir in static_dir_list:
     full_path = os.path.join(instance_home, dir)
     if os.path.exists(full_path + '.bak'):
+      os.rmdir(full_path)
       shutil.copytree(full_path + '.bak', full_path, symlinks=True)
 elif save and os.path.exists(data_fs_path):
   os.remove(data_fs_path)
