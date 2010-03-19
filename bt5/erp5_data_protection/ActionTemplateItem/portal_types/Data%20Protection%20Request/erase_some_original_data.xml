@@ -101,7 +101,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>python:here.getValidationState() in (\'submitted\', \'open\') and [x for x in object.getPortalObject().portal_membership.getAuthenticatedMember().getRolesInContext(object) if x in (\'Assignor\', \'Manager\')]</string> </value>
+            <value> <string>python:here.getValidationState() in (\'submitted\', \'open\') and [x for x in object.getPortalObject().portal_membership.getAuthenticatedMember().getRolesInContext(object) if x in (\'Assignor\', \'Manager\')] and here.getAgentValue(checked_permission=\'View\') is not None</string> </value>
         </item>
       </dictionary>
     </pickle>
