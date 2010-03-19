@@ -202,9 +202,14 @@ class TALESValue(StaticValue):
           'Field.get_value ( %s/%s [%s]), exception on tales_expr: ' %
           ( form.getId(), field.getId(), id), error=sys.exc_info())
       # field may be ProxyField
-      try:
+      # here we avoid calling field.get_recursive_orig_value
+      # on all fields because it can be acquired from another
+      # field in context. ie, from a listbox field.
+      # So, test condition on meta_type attribute to avoid
+      # non desirable side effects.
+      if field.meta_type == 'ProxyField':
         value = field.get_recursive_orig_value(id)
-      except AttributeError:
+      else:
         value = field.get_orig_value(id)
 
     return self.returnValue(field, id, value)
