@@ -1,4 +1,7 @@
 <property_sheet_list>
+ <portal_type id="Project">
+  <item>Codification</item>
+ </portal_type>
  <portal_type id="Project Line">
   <item>Amount</item>
   <item>OutcomeDescription</item>
