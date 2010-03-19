@@ -56,9 +56,11 @@
             <value> <string>if selection_name is not None:\n
 \n
   reference_variation_category_list = context.portal_selections.getSelectionParamsFor(selection_name)[\'reference_variation_category_list\']\n
-  request = context.REQUEST\n
-  request.other[\'categories\'] = reference_variation_category_list\n
-  tmp_context = context.asContext(context=context, REQUEST=request)\n
+  from Products.ERP5Type.Document import newTempAmount\n
+  tmp_context = newTempAmount(context, "temp_context",\n
+                              quantity=1.0,\n
+                              variation_category_list=reference_variation_category_list,\n
+                              resource=context.getRelativeUrl()) \n
    \n
   aal = context.getAggregatedAmountList(tmp_context)\n
 \n
@@ -111,8 +113,8 @@ else:\n
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>reference_variation_category_list</string>
-                            <string>request</string>
-                            <string>_write_</string>
+                            <string>Products.ERP5Type.Document</string>
+                            <string>newTempAmount</string>
                             <string>tmp_context</string>
                             <string>aal</string>
                             <string>result</string>
