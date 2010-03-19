@@ -53,9 +53,11 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>request = context.REQUEST\n
-request.other[\'categories\'] = reference_variation_category_list\n
-tmp_context = context.asContext(context=context, REQUEST=request)\n
+            <value> <string>from Products.ERP5Type.Document import newTempAmount\n
+tmp_context = newTempAmount(context, "temp_context",\n
+                            quantity=1.0,\n
+                            variation_category_list=reference_variation_category_list,\n
+                            resource=context.getRelativeUrl()) \n
 price_currency = kw.get(\'price_currency\', None)\n
 \n
 result = context.getAggregatedAmountList(tmp_context)\n
@@ -107,10 +109,10 @@ return result\n
                           <tuple>
                             <string>reference_variation_category_list</string>
                             <string>kw</string>
-                            <string>_getattr_</string>
+                            <string>Products.ERP5Type.Document</string>
+                            <string>newTempAmount</string>
                             <string>context</string>
-                            <string>request</string>
-                            <string>_write_</string>
+                            <string>_getattr_</string>
                             <string>tmp_context</string>
                             <string>None</string>
                             <string>price_currency</string>
