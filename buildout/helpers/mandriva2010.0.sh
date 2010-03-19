@@ -35,6 +35,7 @@ make
 patch
 python-devel
 rpm
+rpm-build
 subversion
 subversion-devel
 subversion-tools
