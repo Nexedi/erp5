@@ -1,3 +1,4 @@
+import errno
 import os
 import shutil
 import sys
@@ -16,6 +17,15 @@ data_fs_path = os.environ.get('erp5_tests_data_fs_path',
 load = int(os.environ.get('erp5_load_data_fs', 0))
 save = int(os.environ.get('erp5_save_data_fs', 0))
 
+_print("Cleaning static files ... ")
+static_dir_list = 'Constraint', 'Document', 'PropertySheet', 'Extensions'
+for dir in static_dir_list:
+  try:
+    shutil.rmtree(os.path.join(instance_home, dir))
+  except OSError, e:
+    if e.errno != errno.ENOENT:
+      raise
+
 if load:
   dump_sql = os.path.join(instance_home, 'dump.sql')
   if os.path.exists(dump_sql):
@@ -25,22 +35,12 @@ if load:
   else:
     os.environ['erp5_tests_recreate_catalog'] = '1'
   _print("Restoring static files ... ")
-  for dir in ('Constraint', 'Document', 'PropertySheet', 'Extensions'):
-    if os.path.exists(os.path.join(instance_home, '%s.bak' % dir)):
-      full_path = os.path.join(instance_home, dir)
-      shutil.rmtree(full_path)
-      shutil.copytree(os.path.join(instance_home, '%s.bak' % dir),
-                      full_path, symlinks=True)
-else:
-  _print("Cleaning static files ... ")
-  for dir in ('Constraint', 'Document', 'PropertySheet', 'Extensions'):
+  for dir in static_dir_list:
     full_path = os.path.join(instance_home, dir)
-    if os.path.exists(full_path):
-      assert os.path.isdir(full_path)
-      for f in glob.glob('%s/*' % full_path):
-        os.unlink(f)
-  if save and os.path.exists(data_fs_path):
-    os.remove(data_fs_path)
+    if os.path.exists(full_path + '.bak'):
+      shutil.copytree(full_path + '.bak', full_path, symlinks=True)
+elif save and os.path.exists(data_fs_path):
+  os.remove(data_fs_path)
 
 if save:
   Storage = FileStorage(data_fs_path)
