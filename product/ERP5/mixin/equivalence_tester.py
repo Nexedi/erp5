@@ -170,12 +170,11 @@ class EquivalenceTesterMixin:
     decision_delivery = decision_movement.getDeliveryValue()
     mapping = {
       'decision_url':decision_movement.absolute_url(),
+      # TODO we need a way to map the property name to the business word,
+      # eg. 'start_date' to 'Delivery Date' for trade etc.
       'property_name':divergence_message.getProperty('tested_property'),
       'decision_value':h(divergence_message.getProperty('decision_value')),
-      # XXXXXX if we need such a 'short portal type' name, we need a way
-      # to define it.
-      'decision_type':decision_movement.getPortalType().replace(
-           '%s ' % decision_delivery.getPortalType(), ''),
+      'decision_type':decision_movement.getPortalType(),
       'decision_title':h(decision_movement.getTitleOrId()),
       'delivery_url':decision_delivery.absolute_url(),
       'delivery_title':h(decision_delivery.getTitleOrId()),
