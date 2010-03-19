@@ -33,6 +33,7 @@ libxml2-devel
 libxslt-devel
 make
 patch
+python-devel
 rpm
 subversion
 subversion-devel
