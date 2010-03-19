@@ -495,7 +495,7 @@ class TextAreaWidget(Widget):
     """
     property_names = Widget.property_names +\
                      ['width', 'height', 'extra']
-    
+
     default = fields.TextAreaField('default',
                                    title='Default',
                                    description=(
@@ -503,7 +503,7 @@ class TextAreaWidget(Widget):
                                    default="",
                                    width=20, height=3,
                                    required=0)
-    
+
     width = fields.IntegerField('width',
                                 title='Width',
                                 description=(
