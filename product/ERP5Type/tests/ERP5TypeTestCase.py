@@ -1069,7 +1069,7 @@ class ERP5TypeTestCase(backportUnittest.TestCase, PortalTestCase):
         portal_activities = self.portal.portal_activities
         # Drop remaining activities.
         count = portal_activities.countMessage()
-        portal_activities.manageClearActivities()
+        portal_activities.manageClearActivities(keep=False)
         if count:
           LOG('Products.ERP5Type.tests.ERP5TypeTestCase.beforeClose', DEBUG,
               'dropped %d left-over activity messages' % (count,))
