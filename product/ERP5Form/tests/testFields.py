@@ -40,7 +40,7 @@ from Acquisition import aq_base
 from Products.Formulator.FieldRegistry import FieldRegistry
 from Products.Formulator.Validator import ValidationError
 from Products.Formulator.StandardFields import FloatField, StringField,\
-DateTimeField, TextAreaField, CheckBoxField, ListField
+DateTimeField, TextAreaField, CheckBoxField, ListField, LinesField
 from Products.Formulator.MethodField import Method, BoundMethod
 from Products.Formulator.TALESField import TALESMethod
 
@@ -296,6 +296,19 @@ class TestTextAreaField(ERP5TypeTestCase):
     test_value = self.field.render_odg(as_string=False)\
       .xpath('%s/text:tab' % ODG_XML_WRAPPING_XPATH, namespaces=NSMAP)
     self.assertTrue(test_value)
+
+class TestLinesField(ERP5TypeTestCase):
+
+  def getTitle(self):
+    return "Lines Field"
+
+  def afterSetUp(self):
+    self.field = LinesField('test_field')
+    self.widget = self.field.widget
+
+  def test_render_view(self):
+    self.assertEquals(self.field.render_view(value=['My first Line\n', '&My Second Line\tfoo']),
+                      '<div  >My first Line<br />\n<br />\n&amp;My Second Line\tfoo</div>')
 
 class TestCheckBoxField(ERP5TypeTestCase):
   """Tests TextArea field
@@ -790,6 +803,7 @@ def test_suite():
   suite.addTest(unittest.makeSuite(TestStringField))
   suite.addTest(unittest.makeSuite(TestDateTimeField))
   suite.addTest(unittest.makeSuite(TestTextAreaField))
+  suite.addTest(unittest.makeSuite(TestLinesField))
   suite.addTest(unittest.makeSuite(TestCheckBoxField))
   suite.addTest(unittest.makeSuite(TestListField))
   suite.addTest(unittest.makeSuite(TestProxyField))

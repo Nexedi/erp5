@@ -599,14 +599,17 @@ class LinesTextAreaWidget(TextAreaWidget):
   def render_view(self, field, value, REQUEST=None, render_prefix=None):
     if value is None:
       return ''
-    elif isinstance(value, (str, unicode)):
-      value = [value]
-    return TextAreaWidget.render_view(
-        self,
-        field,
-        string.join(value, field.get_value('view_separator')),
-        REQUEST,
-    )
+    if isinstance(value, (str, unicode)):
+      value = value.split('\n')
+    line_separator = field.get_value('view_separator')
+
+    value_list = [escape(part).replace('\n', line_separator) for part in value]
+    value = line_separator.join(value_list)
+    return render_element("div",
+                          css_class=field.get_value('css_class'),
+                          contents=value,
+                          extra=field.get_value('extra'))
+
 
   def render_odt_view(self, field, value, as_string, ooo_builder, REQUEST,
       render_prefix, attr_dict, local_name):
