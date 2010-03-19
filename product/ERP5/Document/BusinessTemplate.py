@@ -1832,7 +1832,7 @@ class PortalTypeWorkflowChainTemplateItem(BaseTemplateItem):
             # here, we use 'LOG' instead of 'raise', because it can
             # happen when a workflow is removed from the chain by
             # another business template.
-            LOG('BusinessTemplate', WARNING, 'workflow %s not found'\
+            LOG('BusinessTemplate', WARNING, 'workflow %s not found '\
                        'in chain for portal_type %s' % (workflow_name, portal_type))
         self._objects.setdefault(portal_type, []).append(workflow_name)
       elif not self.is_bt_for_diff:
