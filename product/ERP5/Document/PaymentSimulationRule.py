@@ -64,7 +64,7 @@ class PaymentSimulationRule(Rule, PredicateMatrix):
         applied_rule)
     input_movement = movement_and_tuple_list[0][0]
 
-    payment_conditon_list = []
+    payment_condition_list = []
 
     # try to find local payment conditions from the upper level delivery
     rule = applied_rule
