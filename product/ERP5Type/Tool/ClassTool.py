@@ -336,19 +336,19 @@ from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
 from Products.ERP5Type.XMLObject import XMLObject
 
 class %s(XMLObject):
-    # CMF Type Definition
-    meta_type = 'MYPROJECT Template Document'
-    portal_type = 'Template Document'
+  # CMF Type Definition
+  meta_type = 'MYPROJECT Template Document'
+  portal_type = 'Template Document'
 
-    # Declarative security
-    security = ClassSecurityInfo()
-    security.declareObjectProtected(Permissions.AccessContentsInformation)
+  # Declarative security
+  security = ClassSecurityInfo()
+  security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-    # Default Properties
-    property_sheets = ( PropertySheet.Base
-                      , PropertySheet.XMLObject
-                      , PropertySheet.CategoryCore
-                      , PropertySheet.DublinCore
+  # Default Properties
+  property_sheets = ( PropertySheet.Base
+                    , PropertySheet.XMLObject
+                    , PropertySheet.CategoryCore
+                    , PropertySheet.DublinCore
                       )""" % (COPYRIGHT, class_id)
         self.writeLocalDocument(class_id, text)
         if REQUEST is not None:
@@ -423,16 +423,16 @@ class %s(XMLObject):
 ##############################################################################
 
 class %s:
-    \"\"\"
-        %s properties for all ERP5 objects
-    \"\"\"
+  \"\"\"
+      %s properties for all ERP5 objects
+  \"\"\"
 
-    _properties = (
-        {   'id'          : 'a_property',
-            'description' : 'A local property description',
-            'type'        : 'string',
-            'mode'        : '' },
-    )
+  _properties = (
+      {   'id'          : 'a_property',
+          'description' : 'A local property description',
+          'type'        : 'string',
+          'mode'        : '' },
+  )
 
 
 """ % (COPYRIGHT, class_id, class_id)
@@ -660,22 +660,22 @@ class Test(ERP5TypeTestCase):
 from Products.ERP5Type.Constraint import Constraint
 
 class %s(Constraint):
+  \"\"\"
+    Explain here what this constraint checker does
+  \"\"\"
+
+  def checkConsistency(self, obj, fixit = 0):
     \"\"\"
-      Explain here what this constraint checker does
+      Implement here the consistency checker
+      whenever fixit is not 0, object data should be updated to
+      satisfy the constraint
     \"\"\"
 
-    def checkConsistency(self, obj, fixit = 0):
-      \"\"\"
-        Implement here the consistency checker
-        whenever fixit is not 0, object data should be updated to
-        satisfy the constraint
-      \"\"\"
+    error_list = []
 
-      errors = []
+    # Do the job here
 
-      # Do the job here
-
-      return errors
+    return error_list
 """ % (COPYRIGHT, class_id)
         self.writeLocalConstraint(class_id, text)
         if REQUEST is not None:
