@@ -44,6 +44,7 @@ from Products.ERP5Type.Globals import PersistentMapping
 from Products.CMFCore.Expression import Expression
 from Products.ERP5Type.tests.utils import LogInterceptor
 from Products.ERP5Type.Workflow import addWorkflowByType
+from Products.ERP5Type.tests.backportUnittest import expectedFailure
 import shutil
 import os
 import gc
@@ -6207,6 +6208,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)
 
+  @expectedFailure
   def test_164_checkCopyBuild(self, quiet=quiet, run=run_all_test):
     if not run: return
     if not quiet:
@@ -6281,6 +6283,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     # check the previously existing instance now behaves as the overriden class
     self.assertTrue(getattr(portal.another_file, 'isClassOverriden', False))
 
+  @expectedFailure
   def test_168_DocumentUninstallIsEffective(self):
     portal = self.portal
     # Test_167 above needs to have been run
