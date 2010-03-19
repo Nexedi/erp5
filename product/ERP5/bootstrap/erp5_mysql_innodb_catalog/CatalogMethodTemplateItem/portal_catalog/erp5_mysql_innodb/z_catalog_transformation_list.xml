@@ -24,7 +24,7 @@
                         <value>
                           <dictionary>
                             <item>
-                                <key> <string>row_dict_list</string> </key>
+                                <key> <string>row_dict_dict_list</string> </key>
                                 <value>
                                   <dictionary/>
                                 </value>
@@ -36,7 +36,7 @@
                         <key> <string>_keys</string> </key>
                         <value>
                           <list>
-                            <string>row_dict_list</string>
+                            <string>row_dict_dict_list</string>
                           </list>
                         </value>
                     </item>
@@ -53,7 +53,7 @@
         </item>
         <item>
             <key> <string>arguments_src</string> </key>
-            <value> <string>row_dict_list</string> </value>
+            <value> <string>row_dict_dict_list</string> </value>
         </item>
         <item>
             <key> <string>cache_time_</string> </key>
@@ -79,7 +79,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>z_catalog_transformation</string> </value>
+            <value> <string>z_catalog_transformation_list</string> </value>
         </item>
         <item>
             <key> <string>max_cache_</string> </key>
@@ -93,15 +93,22 @@
             <key> <string>src</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
+<dtml-let row_list="[]">\n
+<dtml-in row_dict_dict_list prefix="outer">\n
 DELETE FROM `transformation` WHERE\n
-  <dtml-sqltest expr="row_dict_list[0][\'uid\']" column="uid" type="int">\n
+  <dtml-sqltest expr="outer_item[\'uid\']" column="uid" type="int">\n
   AND\n
-  <dtml-sqltest expr="row_dict_list[0][\'variation_text\']" column="variation_text" type="string">;\n
+  <dtml-sqltest expr="outer_item[\'variation_text\']" column="variation_text" type="string">;\n
+<dtml-var sql_delimiter>\n
+<dtml-call "row_list.extend(outer_item[\'row_dict_list\'])">\n
+</dtml-in>\n
+\n
+<dtml-if "len(row_list)>0">\n
 <dtml-var sql_delimiter>\n
 \n
 INSERT INTO `transformation`\n
 VALUES\n
-    <dtml-in row_dict_list prefix="loop">\n
+    <dtml-in row_list prefix="loop">\n
 (\n
   <dtml-sqlvar expr="loop_item[\'uid\']" type="int">,\n
   <dtml-sqlvar expr="loop_item[\'variation_text\']" type="string">,\n
@@ -110,7 +117,9 @@ VALUES\n
   <dtml-sqlvar expr="loop_item[\'quantity\']" type="float">\n
 )\n
 <dtml-unless sequence-end>,</dtml-unless>\n
-    </dtml-in>
+    </dtml-in>\n
+</dtml-if>\n
+</dtml-let>
 
 ]]></string> </value>
         </item>
@@ -150,15 +159,22 @@ VALUES\n
                         <key> <string>raw</string> </key>
                         <value> <string encoding="cdata"><![CDATA[
 
+<dtml-let row_list="[]">\n
+<dtml-in row_dict_dict_list prefix="outer">\n
 DELETE FROM `transformation` WHERE\n
-  <dtml-sqltest expr="row_dict_list[0][\'uid\']" column="uid" type="int">\n
+  <dtml-sqltest expr="outer_item[\'uid\']" column="uid" type="int">\n
   AND\n
-  <dtml-sqltest expr="row_dict_list[0][\'variation_text\']" column="variation_text" type="string">;\n
+  <dtml-sqltest expr="outer_item[\'variation_text\']" column="variation_text" type="string">;\n
+<dtml-var sql_delimiter>\n
+<dtml-call "row_list.extend(outer_item[\'row_dict_list\'])">\n
+</dtml-in>\n
+\n
+<dtml-if "len(row_list)>0">\n
 <dtml-var sql_delimiter>\n
 \n
 INSERT INTO `transformation`\n
 VALUES\n
-    <dtml-in row_dict_list prefix="loop">\n
+    <dtml-in row_list prefix="loop">\n
 (\n
   <dtml-sqlvar expr="loop_item[\'uid\']" type="int">,\n
   <dtml-sqlvar expr="loop_item[\'variation_text\']" type="string">,\n
@@ -167,7 +183,9 @@ VALUES\n
   <dtml-sqlvar expr="loop_item[\'quantity\']" type="float">\n
 )\n
 <dtml-unless sequence-end>,</dtml-unless>\n
-    </dtml-in>
+    </dtml-in>\n
+</dtml-if>\n
+</dtml-let>
 
 ]]></string> </value>
                     </item>
