@@ -61,7 +61,7 @@
                               quantity=1.0,\n
                               variation_category_list=reference_variation_category_list,\n
                               resource=context.getRelativeUrl()) \n
-  price_currency = request.get(\'price_currency\', None)\n
+  price_currency = context.REQUEST.get(\'price_currency\', None)\n
    \n
   aal = context.getAggregatedAmountList(tmp_context)\n
   for line in aal:\n
@@ -124,7 +124,6 @@ else:\n
                             <string>Products.ERP5Type.Document</string>
                             <string>newTempAmount</string>
                             <string>tmp_context</string>
-                            <string>request</string>
                             <string>price_currency</string>
                             <string>aal</string>
                             <string>_getiter_</string>
