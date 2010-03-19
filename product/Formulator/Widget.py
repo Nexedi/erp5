@@ -531,6 +531,13 @@ class TextAreaWidget(Widget):
                             extra=field.get_value('extra'))
 
     def render_view(self, field, value, REQUEST, render_prefix=None):
+        if value is None:
+            return ''
+        if not isinstance(value, (tuple, list)):
+            value = value.split('\n')
+        line_separator = '<br/>'
+        value_list = [escape(part).replace('\n', line_separator) for part in value]
+        value = line_separator.join(value_list)
         return render_element("div",
                               css_class=field.get_value('css_class'),
                               contents=value,
