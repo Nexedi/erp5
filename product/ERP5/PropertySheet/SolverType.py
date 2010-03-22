@@ -42,15 +42,25 @@ class SolverType:
           'mode':       'w',
           'label':      'Solver Action Title'
          },
-        { 'id':         'line_grouping',
+        { 'id':         'line_groupable',
           'type':       'boolean',
           'mode':       'w',
-          'label':      'Line Grouping'
+          'label':      'Line Groupable'
          },
         { 'id':         'line_exclusive',
           'type':       'boolean',
           'mode':       'w',
           'label':      'Line Exclusive'
+         },
+        { 'id':         'configuration_groupable',
+          'type':       'boolean',
+          'mode':       'w',
+          'label':      'Configuration Groupable'
+         },
+        { 'id':         'process_exclusive',
+          'type':       'boolean',
+          'mode':       'w',
+          'label':      'Process Exclusive'
          },
         { 'id':         'delivery_solver',
           'type':       'tokens',
@@ -58,3 +68,5 @@ class SolverType:
           'label':      'Delivery Solvers'
          },
     )
+
+    _categories = ('conflicting_solver',)
