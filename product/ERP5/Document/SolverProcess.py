@@ -170,8 +170,7 @@ class SolverProcess(XMLObject, ActiveProcess):
       delivery_or_movement = [delivery_or_movement]
     movement_list = []
     for x in delivery_or_movement:
-      if x.getPortalType() not in \
-             self.getPortalObject().getPortalMovementTypeList():
+      if x.isDelivery():
         movement_list.extend(x.getMovementList())
 
     # We suppose here that movement_list is a list of
