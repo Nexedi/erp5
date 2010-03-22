@@ -109,6 +109,7 @@ class SolverProcess(XMLObject, ActiveProcess):
         configuration_list = solver_movement_dict.setdefault(movement_url, [])
         configuration_list.extend(movement_solver_configuration_dict) # XXX-JPS WRONG
     # Then start the grouping procedure
+    solver_dict = {}
     for movement_url, movement_solver_dict in movement_dict.items():
       for solver_type, movement_solver_configuration_dict in movement_solver_dict.items():
         solver = types_tool[solver_type]
@@ -130,7 +131,6 @@ class SolverProcess(XMLObject, ActiveProcess):
         solver_movement_dict[movement_url] = movement_solver_configuration_dict.keys()
 
     # Third, build target solvers
-    solver_dict = {}
     for solver_type, solver_key_dict in solver_dict.items():
       for solver_key, solver_movement_dict in solver_key_dict.items():
          solver_instance = self.newContent(portal_type=solver_type)
