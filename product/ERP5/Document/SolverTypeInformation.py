@@ -114,7 +114,10 @@ class SolverTypeInformation(ERP5TypeInformation):
     if self.isLineGroupable():
       return ()
 
-    return movement.getRelativeUrl()
+    if isinstance(movement, str):
+      return movement
+    else:
+      return movement.getRelativeUrl()
 
   def getDefaultConfigurationPropertyDict(self, configurable):
     """
