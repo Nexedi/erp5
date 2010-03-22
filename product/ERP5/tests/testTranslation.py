@@ -100,7 +100,7 @@ class TestWorkflowStateTitleTranslation(ERP5TypeTestCase):
     return target_business_templates
 
   def getTranslation(self, msgid):
-    
+
     result = self.portal.Localizer.erp5_ui.gettext(
           msgid, default='')
     #result = self.portal.Localizer.translate(
@@ -132,7 +132,7 @@ class TestWorkflowStateTitleTranslation(ERP5TypeTestCase):
         for state in workflow.states.items():
           state_title = state[1].title
           state_id = state[0]
-	  msgid = '%s [state in %s]' % (state_title, workflow_id)
+          msgid = '%s [state in %s]' % (state_title, workflow_id)
           translated_state_title = self.getTranslation(msgid)
 
           if translated_state_title is not None:
@@ -184,7 +184,7 @@ class TestWorkflowStateTitleTranslation(ERP5TypeTestCase):
               error_dict[key].append((
                 workflow_id, wrong_state_id, state_title, state_id_list))
               error = 1
-      
+
       if error:
         for key, item_list in error_dict.items():
           if len(item_list) != 0:
@@ -201,7 +201,7 @@ class TestWorkflowStateTitleTranslation(ERP5TypeTestCase):
               self.logMessage(
                   "\t%r\t%r\t'%s'" % \
                   item)
-        
+
         self.fail(self.message)
 
   def test_01_EnglishTranslation(self, quiet=0, run=run_all_test):
@@ -238,14 +238,14 @@ class TestWorkflowStateTitleTranslation(ERP5TypeTestCase):
     """
     self.lang = 'pt-BR'
     self.checkWorkflowStateTitle(quiet=quiet, run=run)
-    
+
   def test_06_FrenchTranslationOfMessageWithContext(self, quiet=0,
          run=run_all_test):
     """
     Test French translation
     """
     self.lang = 'fr'
-    
+
     message_catalog = self.portal.Localizer.erp5_ui
     message_catalog.gettext('Validated', add=1)
     message_catalog.gettext("Draft",add=1)
@@ -263,12 +263,12 @@ class TestWorkflowStateTitleTranslation(ERP5TypeTestCase):
     item_module = self.getPortal().item_module
     item = item_module.newContent(portal_type='Item',
                                   title = 'Lot A')
-                                  
+
 
     transaction.commit()
     self.tic()
     self.portal.Localizer.get_selected_language = lambda: self.lang
-    
+
     self.assertEquals(
          item.getTranslatedValidationStateTitle(),'Draft')
     item.validate()
@@ -286,7 +286,7 @@ class LanguageGetter(MethodObject.Method):
     return self.lang
 
 class TestTranslation(ERP5TypeTestCase):
-  
+
   lang = 'fr'
 
   def getBusinessTemplateList(self):
@@ -311,7 +311,7 @@ class TestTranslation(ERP5TypeTestCase):
   def afterSetUp(self):
     ERP5TypeTestCase.afterSetUp(self)
     self._setUpTranslations()
-    
+
     # replace Localizer.utils.lang_negotiator in MessageCatalog to return
     # self.lang
     from Products.Localizer import MessageCatalog
@@ -385,12 +385,12 @@ class TestTranslation(ERP5TypeTestCase):
     person_2 = self.portal.person_module.newContent(portal_type='Person')
     organisation = self.portal.organisation_module.newContent(
                             portal_type='Organisation')
-    
+
     self.stepTic()
     self.assertEquals(set([person_1, person_2]),
         set([x.getObject() for x in
           self.portal.portal_catalog(translated_portal_type='Personne')]))
-    
+
     self.assertEquals(set([person_2, organisation]),
         set([x.getObject() for x in
           self.portal.portal_catalog(translated_validation_state_title='Brouillon',
