@@ -20,7 +20,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_line_exclusive</string> </value>
+            <value> <string>my_process_exclusive</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -77,7 +77,7 @@
               <dictionary>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string>Check if the solver must be the only one to solve per line.</string> </value>
+                    <value> <string>Check if only one instance of the solver is possible per Solver Process.</string> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
@@ -93,7 +93,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Line Exclusive</string> </value>
+                    <value> <string>Process Exclusive</string> </value>
                 </item>
               </dictionary>
             </value>
