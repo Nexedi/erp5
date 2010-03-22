@@ -84,9 +84,6 @@ class SolverProcess(XMLObject, ActiveProcess):
     movement_dict = {}
     types_tool = self.portal_types
 
-    # XXX The following logic does not work if several testers handle
-    # the divergence for the same property.
-
     # First create a mapping between delivery movements and solvers
     #   in order to know for each movements which solvers are needed
     #   and which parameters with
@@ -101,24 +98,18 @@ class SolverProcess(XMLObject, ActiveProcess):
       for movement in decision.getDeliveryValueList():
         # Detect incompatibilities
         movement_solver_dict = movement_dict.setdefault(movement.getRelativeUrl(), {})
-        movement_solver_configuration_dict = movement_solver_dict.setdefault((solver_type, decision), {})
+        movement_solver_configuration_dict = movement_solver_dict.setdefault(solver_type, {})
         movement_solver_configuration_dict[solver_conviguration_key] = None
 
     # Second, make sure solvers do not conflict and configuration is valid
     for movement_url, movement_solver_dict in movement_dict.items():
-      for solver_info, movement_solver_configuration_dict in movement_solver_dict.items():
-        solver_type, decision = solver_info
+      for solver_type, movement_solver_configuration_dict in movement_solver_dict.items():
         solver = types_tool[solver_type]
-        for other_solver_info in movement_solver_dict.keys():
-          if other_solver_info == solver_info:
+        for other_solver_type in movement_solver_dict.keys():
+          if other_solver_type == solver_type:
             continue
-          # Try do detect conflict.
-          # XXX it cannot be determined by solver portal type itself, but we
-          # need the information of testers.
-          # if solver.conflictsWithSolver(types_tool[other_solver_type]):
-          if set(decision.getCausalityValue().getTestedPropertyList).intersection(
-              set(other_solver_info[1].getCausalityValue().getTestedPropertyList)):
-            raise ValueError, "Solver %s for %s conflicts with solver %s for %s on movement %s" % (solver_type, decision.getTitle(), other_solver_info[0], other_solver_info[0].getCausalityTitle(), movement_url)
+          if solver.conflictsWithSolver(types_tool[other_solver_type]):
+            raise ValueError, "Solver %s conflicts with solver %s on movement %s" % (solver_type, other_solver_type, movement_url)
         # Make sure multiple configuration are possible
         try:
           # Solver key contains only those properties which differentiate
@@ -126,17 +117,15 @@ class SolverProcess(XMLObject, ActiveProcess):
           solver_key = tuple(solver.reduceConfigurationList(movement_solver_configuration_dict.keys()))
         except:
           raise
-        solver_key_dict = solver_dict.setdefault(solver_info, {})
+        solver_key_dict = solver_dict.setdefault(solver_type, {})
         solver_movement_dict = solver_key_dict.setdefault(solver_key, {})
         solver_movement_dict[movement_url] = movement_solver_configuration_dict.keys()
 
     # Third, build target solvers
-    for solver_info, solver_key_dict in solver_dict.items():
-      solver_type, decision = solver_info
+    for solver_type, solver_key_dict in solver_dict.items():
       for solver_key, solver_movement_dict in solver_key_dict.items():
          solver_instance = self.newContent(portal_type=solver_type)
          solver_instance._setDeliveryList(solver_movement_dict.keys())
-         solver_instance.setCausalityValue(decision)
          for movement_url, configuration_list in solver_movement_dict.iteritems():
            for configuration_kw in configuration_list:
              if len(configuration_kw):
