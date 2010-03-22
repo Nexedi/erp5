@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2002, 2005 Nexedi SARL and Contributors. All Rights Reserved.
@@ -31,6 +32,7 @@
 
 from PropertyExistence import PropertyExistence
 from Products.CMFCore.Expression import Expression
+from Products.ZSQLCatalog.SQLCatalog import Query, NegatedQuery
 
 class AttributeUnicity(PropertyExistence):
   """
@@ -67,7 +69,10 @@ class AttributeUnicity(PropertyExistence):
       from Products.ERP5Type.Utils import createExpressionContext
       econtext = createExpressionContext(obj)
       criterion_dict = expression(econtext)
-      result = obj.portal_catalog.countResults(**criterion_dict)[0][0]
+      # Add uid in criterion keys to avoid fetching current object.
+      criterion_dict['query'] = NegatedQuery(Query(uid=obj.getUid()))
+      portal = obj.portal_catalog.getPortalObject()
+      result = portal.portal_catalog.countResults(**criterion_dict)[0][0]
       if result >= 1:
         mapping['value'] = criterion_dict.get(attribute_name)
         message_id = 'message_invalid_attribute_unicity'
