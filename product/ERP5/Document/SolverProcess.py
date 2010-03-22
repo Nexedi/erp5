@@ -32,7 +32,6 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.CMFActivity.ActiveProcess import ActiveProcess
-from Products.ERP5Type.Errors import UnsupportedWorkflowMethod
 
 class SolverProcess(XMLObject, ActiveProcess):
   """
@@ -150,12 +149,11 @@ class SolverProcess(XMLObject, ActiveProcess):
     """
       Start solving
     """
+    isTransitionPossible = self.getPortalObject().portal_workflow.isTransitionPossible
     for solver in self.contentValues(portal_type=self.getPortalObject().getPortalTargetSolverTypeList()):
-      try:
+      if isTransitionPossible(solver, 'start_solving'):
         solver.startSolving()
         solver.activate(active_process=self).solve()
-      except UnsupportedWorkflowMethod:
-        pass
 
   # API
   def isSolverDecisionListConsistent(self):
