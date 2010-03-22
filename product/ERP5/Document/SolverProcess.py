@@ -189,7 +189,7 @@ class SolverProcess(XMLObject, ActiveProcess):
           application_list.sort()
           solver_decision_key = (divergence_tester.getRelativeUrl(), tuple(application_list))
           movement_dict = solver_decision_dict.setdefault(solver_decision_key, {})
-          movement_dict[simulation_movement] = None
+          movement_dict[movement] = None
 
     # Now build the solver decision instances based on the previous
     # grouping
@@ -212,11 +212,18 @@ class SolverProcess(XMLObject, ActiveProcess):
           index += 1
         else:
           new_decision = self.newContent(portal_type='Solver Decision')
-        new_decision._setDeliveryList(solver_decision_key[1])
+        new_decision._setDeliveryValueList(movement_dict.keys())
         new_decision._setCausality(solver_decision_key[0])
-        for simulation_movement in movement_dict.keys():
-          simulation_movement.setSolverValueList(
-            simulation_movement.getSolverValueList() + [new_decision])
+        # XXX We need a relation between Simulation Movement and Solver
+        # Process, but ideally, the relation should be created when a
+        # Target Solver processes, not when a Solver Decision is
+        # created.
+        # for movement in movement_dict.keys():
+        #   for simulation_movement in movement.getDeliveryRelatedValueList():
+        #     solver_list = simulation_movement.getSolverValueList()
+        #     if self not in solver_list:
+        #       simulation_movement.setSolverValueList(
+        #         solver_list + [self])
     # XXX what should we do for non-matched existing solver decisions?
     # do we need to cancel them by using an appropriate workflow?
 
