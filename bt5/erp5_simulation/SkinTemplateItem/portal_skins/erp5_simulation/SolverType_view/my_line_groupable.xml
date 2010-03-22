@@ -19,7 +19,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_line_grouping</string> </value>
+            <value> <string>my_line_groupable</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
