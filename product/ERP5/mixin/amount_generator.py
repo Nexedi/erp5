@@ -226,8 +226,13 @@ class AmountGeneratorMixin:
             property_dict['base_application'] = getBaseApplication() # Required
             #property_dict['trade_phase_list'] = amount_generator_cell.getTradePhaseList() # Required moved to MappedValue
             property_dict['id'] = amount_generator_cell.getRelativeUrl().replace('/', '_')
+          try:
+            base_contribution_list = \
+              amount_generator_cell.getBaseContributionList()
+          except AttributeError:
+            continue
           # Case 2: the cell defines a temporary calculation line
-          elif getattr(amount_generator_cell, 'getBaseContributionList', None) is not None:
+          if base_contribution_list:
             # Define a key in order to aggregate amounts in cells
             #   base_application MUST be defined
             #
@@ -249,13 +254,9 @@ class AmountGeneratorMixin:
             # Then collect the mapped properties
             for key in amount_generator_cell.getMappedValuePropertyList():
               property_dict[key] = amount_generator_cell.getProperty(key)
-            property_dict['category_list'] = \
-              amount_generator_cell.getCategoryMembershipList(
-                amount_generator_cell.getMappedValueBaseCategoryList(), base=1)
             # For intermediate calculations,
             # base_contribution_list MUST be defined
-            property_dict['base_contribution_list'] = \
-              amount_generator_cell.getBaseContributionList() # Required
+            property_dict['base_contribution_list'] = base_contribution_list
         for property_dict in resource_amount_aggregate.itervalues():
           base_application = property_dict.pop('base_application')
           # property_dict should include
