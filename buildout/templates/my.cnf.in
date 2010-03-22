@@ -49,7 +49,7 @@ collation_server = utf8_unicode_ci
 character_set_server = utf8
 default-character-set = utf8
 skip-character-set-client-handshake
-
+${:mysqld-extra-configuration}
 
 [mysqldump]
 quick
