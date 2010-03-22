@@ -64,8 +64,10 @@ class AdoptSolver(SolverMixin, ConfigurableMixin, XMLObject):
     """
     Adopt new property to movements or deliveries.
     """
-    solved_property_list = self.getCausalityValue().getCausalityValue(). \
-                           getTestedPropertyList()
+    configuration_dict = self.getConfigurationPropertyDict()
+    portal_type = self.getPortalObject().portal_types[self.getPortalType()]
+    solved_property_list = configuration_dict.get('tested_property_list',
+                                                  portal_type.getTestedPropertyList())
     for movement in self.getDeliveryValueList():
       for solved_property in solved_property_list:
         # XXX hardcoded

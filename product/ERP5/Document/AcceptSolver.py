@@ -63,8 +63,10 @@ class AcceptSolver(SolverMixin, ConfigurableMixin, XMLObject):
     Adopt new property to simulation movements, with keeping the
     original one recorded.
     """
-    solved_property_list = self.getCausalityValue().getCausalityValue(). \
-                           getTestedPropertyList()
+    configuration_dict = self.getConfigurationPropertyDict()
+    portal_type = self.getPortalObject().portal_types[self.getPortalType()]
+    solved_property_list = configuration_dict.get('tested_property_list',
+                                                  portal_type.getTestedPropertyList())
     for movement in self.getDeliveryValueList():
       simulation_movement_list = movement.getDeliveryRelatedValueList()
       # if movement here is a delivery, we need to find simulation

@@ -61,9 +61,12 @@ class UnifySolver(AcceptSolver):
     Adopt new property to simulation movements, with keeping the
     original one recorded.
     """
+    configuration_dict = self.getConfigurationPropertyDict()
+    portal_type = self.getPortalObject().portal_types[self.getPortalType()]
+    solved_property_list = configuration_dict.get('tested_property_list',
+                                                  portal_type.getTestedPropertyList())
     # XXX it does not support multiple tested properties.
-    solved_property = self.getCausalityValue().getCausalityValue(). \
-                      getTestedProperty()
+    solved_property = solved_property_list[0]
     for movement in self.getDeliveryValueList():
       configuration_dict = self.getConfigurationPropertyDict()
       new_value = configuration_dict.get('value')
