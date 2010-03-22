@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2005 Nexedi SARL and Contributors. All Rights Reserved.
@@ -1495,6 +1496,71 @@ class TestConstraint(PropertySheetTestCase):
     obj.edit(multi_valuated_property=[1.0, 2.0, 3.0, ])
     self.assertEquals([], constraint.checkConsistency(obj))
 
+  def stepValidateObject(self, sequence=None, sequence_list=None, **kw):
+    """
+    """
+    document = sequence.get('object')
+    document.validate()
+
+  def stepInvalidateObject(self, sequence=None, sequence_list=None, **kw):
+    """
+    """
+    document = sequence.get('object')
+    document.invalidate()
+
+  def stepCreateAttributeUnicityConstraint(self, sequence=None,
+                           sequence_list=None, **kw):
+    """
+      Create a default Constraint
+    """
+    constraint = self._createGenericConstraint(sequence,
+                                  klass_name='AttributeUnicity',
+                                  id='title_unicity_constraint',
+                                  description='AttributeUnicity test',
+                                  title="python: {'portal_type': object.getPortalType(),"\
+                                  "'validation_state': 'validated', 'title': object.getTitle()}",
+                                  condition="object/getTitle")
+    sequence.set('constraint', constraint)
+
+  def test_08_AttributeUnicity(self, quiet=quiet, run=run_all_test):
+    """
+      Test attribute unicity
+    """
+    if not run: return
+    sequence_list = SequenceList()
+    # Test Constraint without unicity on title
+    sequence_string = '\
+              CreateObject \
+              ValidateObject \
+              SetObjectTitle \
+              Tic \
+              CreateAttributeUnicityConstraint \
+              CallCheckConsistency \
+              CheckIfConstraintSucceeded \
+              '
+
+    # invalidate object without Tic If zodb and catalog are not synchronized,
+    # The constraint should still working
+    sequence_string += '\
+              InvalidateObject \
+              CallCheckConsistency \
+              CheckIfConstraintSucceeded \
+              Tic \
+              ValidateObject \
+              Tic \
+              '
+
+     # Test Constraint with Two object with same title
+    sequence_string += '\
+              CreateObject \
+              SetObjectTitle \
+              Tic \
+              CallCheckConsistency \
+              CheckIfConstraintFailed \
+              '
+    sequence_list.addSequenceString(sequence_string)
+
+    sequence_list.play(self, quiet=quiet)
 
 def test_suite():
   suite = unittest.TestSuite()
