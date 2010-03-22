@@ -52,24 +52,69 @@ class SolverTypeInformation(ERP5TypeInformation):
                     , PropertySheet.Configurable
                     )
 
-  def conflictsWithSolver(self, other_solver):
+  def conflictsWithSolver(self, movement, configuration_dict, other_configuration_list):
     """
     Returns True if the solver conflicts with other_solver. False else.
+
+    movement -- a movement or a movement relative url
+  
+    configuration_dict -- a dictionary of configuration parameters to
+                          solve the current movement with self
+                          
+    other_configuration_list -- a list of solvers and their configuration
+                                for the same movement
     """
-    if self.getTestedProperty() == other_solver.getTestedProperty():
-      return True
-    # XXX more condition is needed?
+    method = self._getTypeBasedMethod('conflictsWithSolver')
+    if method is not None:
+      return method(movement, configuration_dict, other_configuration_list)
+
+    # Default Implementation (use categories and trivial case)
+    for solver_type, configuration_dict in other_configuration_list:
+      if solver.getTestedProperty() == self.getTestedProperty():
+        return True
+
+    # Return False by Default
     return False
 
-  def reduceConfigurationList(self, configuration_property_id_list):
+  def getSolverProcessGroupingKey(self, movement, configuration_dict, other_configuration_list):
     """
-    Note: if one reduces production by 10% for one line and one reduces
-    production by 20% for another line or for the same line the total
-    reduction is 20% for both lines this is the goal of
-    reduceConfigurationList
+    Returns a key which can be used to group solvers during the 
+    process to build Targer Solver instances from Solver Decisions.
+    This key depends on the movement and on the configuration_dict.
+
+    For example, the movement dependent key for a solver which reduces
+    produced quantity is the releative URL of the production order which
+    this movement depends from (if it depennds on a single production 
+    order). If the same movement relates to multiple production orders,
+    then the movement dependent grouping key should be None, but this
+    could generate a different group for movements which depend on
+    a single production order and for movements which depend on 
+    multiple production orders. For this purpose, the grouping key
+    can be decided by looking up other_movement_list, a dictionnary
+    which provides for each movement solver by the same solver the
+    configuration parameters.
+
+    The configuration dependent key for a "universal" solver (ex.
+    Adopt, Accept) which tested property is configurable, is the 
+    tested property itself.
+
+    movement -- a movement or a movement relative url
+  
+    configuration_dict -- a dictionary of configuration parameters
+
+    other_configuration_list -- a list of movements and their configuration
+                                which are solved by the same solve type. 
+                                [(m1, c1), (m2, c2), ...] 
     """
-    # XXX real implementation is needed.
-    return configuration_property_id_list
+    method = self._getTypeBasedMethod('getSolverProcessGroupingKey')
+    if method is not None:
+      return method(movement, configuration_dict, other_configuration_list)
+
+    # Default Implementation (read properties and implement XXX)
+    if self.isLineGroupable():
+      return ()
+
+    return movement.getRelativeUrl()
 
   def getDefaultConfigurationPropertyDict(self, configurable):
     """
@@ -119,4 +164,6 @@ class SolverTypeInformation(ERP5TypeInformation):
 
     configurable -- a configurable document (Solver Decision
                     or Target Solver)
+
+    TODO: XXX-JPS unify with IConfigurable
     """
