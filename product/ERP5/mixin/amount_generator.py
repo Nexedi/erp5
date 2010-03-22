@@ -99,6 +99,31 @@ class AmountGeneratorMixin:
           # on the weight in tons
       )
 
+  def _getResourceAmountAggregateKey(self, amount_generator_cell):
+    """Define a key in order to aggregate amounts
+
+      Transformed Resource (Transformation)
+        key must be None because:
+          - quantity and variation are defined in different cells so that the
+            user does not need to enter values depending on all axes
+          - amount_generator_cell.test should filter only 1 variant
+        current key = (acquired resource, acquired variation)
+
+      Assorted Resource (Transformation)
+        key = (assorted resource, assorted resource variation)
+        usually resource and quantity provided together
+
+      Payroll
+
+        key = (payroll resource, payroll resource variation)
+
+      Tax
+
+        key = (tax resource, tax resource variation)
+    """
+    return (amount_generator_cell.getResource(),
+            amount_generator_cell.getVariationText()) # Variation UID, Hash ?
+
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getGeneratedAmountList')
   def getGeneratedAmountList(self, context, amount_list=None, rounding=False):
@@ -185,28 +210,7 @@ class AmountGeneratorMixin:
           resource = amount_generator_cell.getResource()
           # Case 1: the cell defines a final amount of resource
           if resource:
-            # Define a key in order to aggregate amounts
-            #   in transformations where variation and quantity
-            #   are defined in different cells
-            #
-            # Transformed Resource (Transformation)
-            #   key = anything (only one cell selected)
-            #   current key = (acquired resource, acquired variation)
-            #
-            # Assorted Resource (Transformation)
-            #   key = (assorted resource, assorted resource variation)
-            #   usually resource and quantity provided together
-            #
-            # Payroll
-            #
-            #   key = (payroll resource, payroll resource variation)
-            #
-            # Tax
-            #
-            #   key = (tax resource, tax resource variation)
-            key = (amount_generator_cell.getResource(),
-                    # Variation UID, Hash ?
-                   amount_generator_cell.getVariationText())
+            key = self._getResourceAmountAggregateKey(amount_generator_cell)
             property_dict = resource_amount_aggregate.setdefault(key, {})
             # Then collect the mapped properties (net_converted_quantity,
             # resource, quantity, base_contribution_list, base_application...)
