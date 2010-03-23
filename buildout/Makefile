@@ -34,7 +34,7 @@ debian-appliance:
 rpm-appliance:
 	svn co https://svn.erp5.org/repos/public/erp5/trunk/utils/rpmgen rpmgen
 	# set the correct name erp5-5.4.6
-	sed -i "s,\name = erp5-official-buildout,name = erp5-`cat VERSION.txt`,g" rpmgen/buildout.cfg
+	sed -i "s,name = erp5-official-buildout,name = erp5-`cat VERSION.txt`,g" rpmgen/buildout.cfg
 	# set the correct version defined in the main buildout
 	sed -i "s,\$${checkout:location\}\/VERSION.txt,`cat VERSION.txt`,g" rpmgen/buildout.cfg
 	# set the correct release
