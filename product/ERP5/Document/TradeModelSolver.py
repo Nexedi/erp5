@@ -86,7 +86,8 @@ class TradeModelSolver(AcceptSolver):
       if applied_rule.getSpecialiseReference() == 'default_trade_model_rule':
         trade_model_related_movement_list.append(movement)
 
-    # Second, apply changes on invoice lines.
+    # Second, apply changes on invoice lines to simulation movements,
+    # then expand.
     for movement in solved_movement_list:
       for simulation_movement in movement.getDeliveryRelatedValueList():
         value_dict = {}
@@ -104,13 +105,15 @@ class TradeModelSolver(AcceptSolver):
         simulation_movement.expand()
 
     # Third, adopt changes on trade model related lines.
+    # XXX non-linear case is not yet supported.
     for movement in trade_model_related_movement_list:
       for solved_property in solved_property_list:
         if solved_property == 'quantity':
+          simulation_movement_list = movement.getDeliveryRelatedValueList()
           total_quantity = sum(
-            [x.getQuantity() for x in movement.getDeliveryRelatedValueList()])
+            [x.getQuantity() for x in simulation_movement_list])
           movement.setQuantity(total_quantity)
-          for simulation_movement in movement.getDeliveryRelatedValueList():
+          for simulation_movement in simulation_movement_list:
             quantity = simulation_movement.getQuantity()
             delivery_ratio = quantity / total_quantity
             delivery_error = total_quantity * delivery_ratio - quantity
