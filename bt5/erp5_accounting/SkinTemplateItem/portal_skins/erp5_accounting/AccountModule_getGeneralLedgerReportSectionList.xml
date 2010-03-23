@@ -203,6 +203,7 @@ for inventory in portal.portal_simulation.getInventoryList(\n
   \n
   selection_params = params.copy()\n
   selection_params[\'from_date\'] = from_date\n
+  selection_params[\'at_date\'] = at_date\n
   selection_params[\'node_uid\'] = inventory.node_uid\n
   selection_params[\'payment_uid\'] = None\n
   selection_params[\'mirror_section_uid\'] = None\n
@@ -237,6 +238,7 @@ for inventory in portal.portal_simulation.getInventoryList(\n
   \n
   selection_params = params.copy()\n
   selection_params[\'from_date\'] = from_date\n
+  selection_params[\'at_date\'] = at_date\n
   selection_params[\'node_uid\'] = inventory.node_uid\n
   selection_params[\'payment_uid\'] = None\n
   selection_params[\'mirror_section_uid\'] = None\n
@@ -268,6 +270,7 @@ for inventory in portal.portal_simulation.getInventoryList(\n
   key = (inventory.node_relative_url, None, None)\n
   selection_params = params.copy()\n
   selection_params[\'from_date\'] = max(from_date, period_start_date)\n
+  selection_params[\'at_date\'] = at_date\n
   selection_params[\'period_start_date\'] = max(from_date, period_start_date)\n
   selection_params[\'node_uid\'] = inventory.node_uid\n
   selection_params[\'payment_uid\'] = None\n
@@ -301,6 +304,7 @@ for inventory in portal.portal_simulation.getInventoryList(\n
 \n
   selection_params = params.copy()\n
   selection_params[\'from_date\'] = from_date\n
+  selection_params[\'at_date\'] = at_date\n
   selection_params[\'node_uid\'] = inventory.node_uid\n
   selection_params[\'payment_uid\'] = None\n
   selection_params[\'mirror_section_uid\'] = inventory.mirror_section_uid\n
@@ -336,6 +340,7 @@ for inventory in portal.portal_simulation.getInventoryList(\n
 \n
   selection_params = params.copy()\n
   selection_params[\'from_date\'] = from_date\n
+  selection_params[\'at_date\'] = at_date\n
   selection_params[\'node_uid\'] = inventory.node_uid\n
   selection_params[\'payment_uid\'] = None\n
   selection_params[\'mirror_section_uid\'] = inventory.mirror_section_uid\n
@@ -369,6 +374,7 @@ for inventory in portal.portal_simulation.getInventoryList(\n
 \n
   selection_params = params.copy()\n
   selection_params[\'from_date\'] = from_date\n
+  selection_params[\'at_date\'] = at_date\n
   selection_params[\'node_uid\'] = inventory.node_uid\n
   selection_params[\'payment_uid\'] = inventory.payment_uid\n
   selection_params[\'mirror_section_uid\'] = None\n
@@ -403,6 +409,7 @@ for inventory in portal.portal_simulation.getInventoryList(\n
 \n
   selection_params = params.copy()\n
   selection_params[\'from_date\'] = from_date\n
+  selection_params[\'at_date\'] = at_date\n
   selection_params[\'node_uid\'] = inventory.node_uid\n
   selection_params[\'payment_uid\'] = inventory.payment_uid\n
   selection_params[\'mirror_section_uid\'] = None\n
@@ -421,6 +428,7 @@ for inventory in portal.portal_simulation.getInventoryList(\n
 report_section_list.sort(key=ReportSection.getTitle)\n
 \n
 total_params = params.copy()\n
+total_params[\'at_date\'] = at_date\n
 report_section_list.append(ReportSection(\n
               path=context.getPhysicalPath(),\n
               title=Base_translateString("Total"),\n
