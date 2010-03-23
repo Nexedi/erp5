@@ -237,9 +237,9 @@ class DocumentProxyMixin:
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'index_html' )
-  def index_html(self, REQUEST, RESPONSE, format=None, **kw):
+  def index_html(self, REQUEST, RESPONSE, **kw):
     """ Only a proxy method """
-    self.getProxiedDocument().index_html(REQUEST, RESPONSE, format, **kw)
+    return self.getProxiedDocument().index_html(REQUEST, RESPONSE, **kw)
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getProxiedDocument' )
