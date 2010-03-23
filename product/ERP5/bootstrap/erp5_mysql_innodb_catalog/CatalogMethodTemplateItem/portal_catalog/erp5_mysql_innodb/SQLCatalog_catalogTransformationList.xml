@@ -73,8 +73,9 @@ for i, transformation in enumerate(getDefaultConversionTransformationValue):\n
     current_batch.append((transformation_relative_url, variation_list_list))\n
     current_size += size\n
   else:\n
-    context.activate(activity=\'SQLQueue\').SQLCatalog_catalogTransformation(current_batch)\n
-    current_batch = (transformation_relative_url, variation_list_list),\n
+    if current_batch:\n
+      context.activate(activity=\'SQLQueue\').SQLCatalog_catalogTransformation(current_batch)\n
+    current_batch = [(transformation_relative_url, variation_list_list)]\n
     current_size = size\n
 \n
 \n
