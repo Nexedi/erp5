@@ -43,4 +43,4 @@ rpm-appliance:
 	sed -i "s,\$$(shell cat parts/checkout/VERSION.txt), `cat VERSION.txt`,g" rpmgen/Makefile
 	sudo helpers/mandriva2010.0.sh
 	# just make and wait...
-	cd rpmgen; make
+	cd rpmgen; make all
