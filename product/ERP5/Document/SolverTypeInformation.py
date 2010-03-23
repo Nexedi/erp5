@@ -52,31 +52,45 @@ class SolverTypeInformation(ERP5TypeInformation):
                     , PropertySheet.Configurable
                     )
 
-  def conflictsWithSolver(self, movement, configuration_dict, other_configuration_list):
+  def getSolverConflictMessageList(self, movement, configuration_mapping, solver_dict, movement_dict):
     """
-    Returns True if the solver conflicts with other_solver. False else.
+    Returns the list of conflictings messgaes if the solver and configuration_mapping
+    conflicts with another solver
 
-    movement -- a movement or a movement relative url
+    movement -- a movement
+
+    configuration_mapping -- a mapping of configuration parameters sorted in
+                             canonical way. ((c1, v1), (c2, v2 ))
   
-    configuration_dict -- a dictionary of configuration parameters to
-                          solve the current movement with self
-                          
-    other_configuration_list -- a list of solvers and their configuration
-                                for the same movement
+    solver_dict -- a dictionary of configuration parameters for 
+                   each solver
+                      solver_dict[solver] = {
+                         movement : [((c1, v1), (c2, v2 )),
+                                     ((c1, v1), (c2, v2 )),
+                                    ],}
+
+    movement_dict -- a dictionary of solver and configuration parameters for 
+                     each movement
+                       movement_dict[movement] = {
+                                     solver : [((c1, v1), (c2, v2 )),
+                                               ((c1, v1), (c2, v2 )),
+                                              ],}
     """
-    method = self._getTypeBasedMethod('conflictsWithSolver')
+    method = self._getTypeBasedMethod('getSolverConflictMessageList')
     if method is not None:
-      return method(movement, configuration_dict, other_configuration_list)
+      return method(movement, configuration_mapping, solver_dict, movement_dict)
 
     # Default Implementation (use categories and trivial case)
-    for solver_type, configuration_dict in other_configuration_list:
-      if solver.getTestedProperty() == self.getTestedProperty():
-        return True
+    #  this default implementation should be applicable to most 
+    #  solvers so that use of Type Based methods is very rare
+    for solver, configuration_list in movement_dict[movement].items():
+      if solver is not self and solver.getTestedProperty() == self.getTestedProperty():
+        return AppropriateUIMessage(whatever) # XXX-TODO
 
-    # Return False by Default
-    return False
+    # Return emtpty message list
+    return ()
 
-  def getSolverProcessGroupingKey(self, movement, configuration_dict, other_configuration_list):
+  def getSolverProcessGroupingKey(self, movement, configuration_mapping, solver_dict, movement_dict):
     """
     Returns a key which can be used to group solvers during the 
     process to build Targer Solver instances from Solver Decisions.
@@ -98,26 +112,34 @@ class SolverTypeInformation(ERP5TypeInformation):
     Adopt, Accept) which tested property is configurable, is the 
     tested property itself.
 
-    movement -- a movement or a movement relative url
-  
-    configuration_dict -- a dictionary of configuration parameters
+    movement -- a movement
 
-    other_configuration_list -- a list of movements and their configuration
-                                which are solved by the same solve type. 
-                                [(m1, c1), (m2, c2), ...] 
+    configuration_mapping -- a mapping of configuration parameters sorted in
+                             canonical way. ((c1, v1), (c2, v2 ))
+  
+    solver_dict -- a dictionary of configuration parameters for 
+                   each solver
+                      solver_dict[solver] = {
+                         movement : [((c1, v1), (c2, v2 )),
+                                     ((c1, v1), (c2, v2 )),
+                                    ],}
+
+    movement_dict -- a dictionary of solver and configuration parameters for 
+                     each movement
+                       movement_dict[movement] = {
+                                     solver : [((c1, v1), (c2, v2 )),
+                                               ((c1, v1), (c2, v2 )),
+                                              ],}
     """
     method = self._getTypeBasedMethod('getSolverProcessGroupingKey')
     if method is not None:
-      return method(movement, configuration_dict, other_configuration_list)
+      return method(movement, configuration_mapping, solver_dict, movement_dict)
 
-    # Default Implementation (read properties and implement XXX)
+    # Default Implementation (read solver type properties and implement XXX-TODO)
     if self.isLineGroupable():
       return ()
 
-    if isinstance(movement, str):
-      return movement
-    else:
-      return movement.getRelativeUrl()
+    return movement.getRelativeUrl()
 
   def getDefaultConfigurationPropertyDict(self, configurable):
     """
