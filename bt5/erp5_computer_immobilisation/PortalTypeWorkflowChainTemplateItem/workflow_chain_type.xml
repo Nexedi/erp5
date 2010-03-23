@@ -5,7 +5,7 @@
  </chain>
  <chain>
   <type>Computer Partition</type>
-  <workflow>validation_workflow, edit_workflow</workflow>
+  <workflow>edit_workflow, validation_workflow</workflow>
  </chain>
  <chain>
   <type>Internet Protocol Address</type>
