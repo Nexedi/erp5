@@ -33,6 +33,7 @@ import MethodObject
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import to_utf8
+from Products.ERP5Type.Utils import getMessageIdWithContext
 from zLOG import LOG
 
 # dependency order
@@ -132,7 +133,7 @@ class TestWorkflowStateTitleTranslation(ERP5TypeTestCase):
         for state in workflow.states.items():
           state_title = state[1].title
           state_id = state[0]
-          msgid = '%s [state in %s]' % (state_title, workflow_id)
+          msgid = getMessageIdWithContext(state_title, 'state', workflow_id)
           translated_state_title = self.getTranslation(msgid)
 
           if translated_state_title is not None:
@@ -248,34 +249,37 @@ class TestWorkflowStateTitleTranslation(ERP5TypeTestCase):
 
     message_catalog = self.portal.Localizer.erp5_ui
     message_catalog.gettext('Validated', add=1)
-    message_catalog.gettext("Draft",add=1)
-    message_catalog.gettext("Validated [state in item_workflow]", add=1)
-    message_catalog.message_edit(
-              'Validated', self.lang, 'Validé'.decode('utf8'), '')
-    message_catalog.message_edit(
-    "Validated [state in item_workflow]",self.lang,"En bon usage", '')
+    message_catalog.gettext('Draft', add=1)
+    message_catalog.gettext(getMessageIdWithContext('Validated',
+                                                    'state',
+                                                    'item_workflow'),
+                            add=1)
+    message_catalog.message_edit('Validated', self.lang,
+                                 'Validé'.decode('utf8'), '')
+    message_catalog.message_edit(getMessageIdWithContext('Validated',
+                                                         'state',
+                                                         'item_workflow'),
+                                 self.lang, "En bon usage", '')
     message_catalog.message_edit('Draft', self.lang, '', '')
-    organisation_module = self.getPortal().organisation_module
+    portal_type = 'Organisation'
+    organisation_module = self.getPortal().getDefaultModule(portal_type)
     organisation = organisation_module.newContent(
-                  portal_type='Organisation',
-                  title = 'My Organisation')
+                  portal_type=portal_type,
+                  title='My Organisation')
     organisation.validate()
-    item_module = self.getPortal().item_module
-    item = item_module.newContent(portal_type='Item',
-                                  title = 'Lot A')
-
+    portal_type = 'Item'
+    item_module = self.getPortal().getDefaultModule(portal_type)
+    item = item_module.newContent(portal_type=portal_type, title='Lot A')
 
     transaction.commit()
     self.tic()
     self.portal.Localizer.get_selected_language = lambda: self.lang
 
-    self.assertEquals(
-         item.getTranslatedValidationStateTitle(),'Draft')
+    self.assertEquals(item.getTranslatedValidationStateTitle(), 'Draft')
     item.validate()
-    self.assertEquals(item.getTranslatedValidationStateTitle(),
-                              "En bon usage") 
-    self.assertEquals(
-         organisation.getTranslatedValidationStateTitle(),'Validé')
+    self.assertEquals(item.getTranslatedValidationStateTitle(), "En bon usage")
+    self.assertEquals(organisation.getTranslatedValidationStateTitle(),
+                      'Validé')
 
 class LanguageGetter(MethodObject.Method):
 
@@ -288,6 +292,9 @@ class LanguageGetter(MethodObject.Method):
 class TestTranslation(ERP5TypeTestCase):
 
   lang = 'fr'
+
+  def getTitle(self):
+    return 'Test Translation'
 
   def getBusinessTemplateList(self):
     return ['erp5_base',]
