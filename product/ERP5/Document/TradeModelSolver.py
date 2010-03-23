@@ -61,8 +61,10 @@ class TradeModelSolver(AcceptSolver):
     original one recorded, and then update Trade Model related lines
     accordingly.
     """
-    solved_property_list = self.getCausalityValue().getCausalityValue(). \
-                           getTestedPropertyList()
+    configuration_dict = self.getConfigurationPropertyDict()
+    portal_type = self.getPortalObject().portal_types[self.getPortalType()]
+    solved_property_list = configuration_dict.get('tested_property_list',
+                                                  portal_type.getTestedPropertyList())
 
     # Here, items of delivery_list should be movements, not deliveries.
     solved_movement_list = self.getDeliveryValueList()
