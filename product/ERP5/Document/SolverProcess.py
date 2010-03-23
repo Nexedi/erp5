@@ -150,7 +150,7 @@ class SolverProcess(XMLObject, ActiveProcess):
           solver_key = solver.getSolverProcessGroupingKey(movement, configuration_mapping, solver_dict, movement_dict)
           solver_key_dict = grouped_solver_dict.setdefault(solver, {})
           solver_movement_dict = solver_key_dict.setdefault(solver_key, {})
-          movement_solver_configuration_list = movement_solver_dict.setdefault(solver, [])
+          movement_solver_configuration_list = solver_movement_dict.setdefault(movement, [])
           if configuration_mapping not in movement_solver_configuration_list:
             movement_solver_configuration_list.append(configuration_mapping)
 
