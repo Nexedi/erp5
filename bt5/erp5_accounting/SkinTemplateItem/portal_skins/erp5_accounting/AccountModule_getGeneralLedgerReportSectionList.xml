@@ -88,8 +88,7 @@ request.set(\'precision\', precision)\n
 \n
 request.other[\'is_accounting_report\'] = True\n
 \n
-params = dict(at_date=at_date,\n
-              precision=precision,\n
+params = dict(precision=precision,\n
               section_uid=section_uid,\n
               simulation_state=simulation_state,\n
               period_start_date=period_start_date,\n
@@ -185,17 +184,56 @@ if gap or gap_root:\n
 \n
 report_section_list = []\n
 \n
+existing_section_dict = dict()\n
+\n
 # group by node\n
+# movements in the period\n
 for inventory in portal.portal_simulation.getInventoryList(\n
                             node_category_strict_membership=account_type_to_group_by_node,\n
                             portal_type=portal.getPortalAccountingMovementTypeList(),\n
                             from_date=from_date,\n
+                            at_date=at_date,\n
                             group_by_node=1,\n
                             group_by_section=0,\n
                             group_by_mirror_section=0,\n
                             group_by_resource=0,\n
                             **params):\n
   key = (inventory.node_relative_url, None, None)\n
+  existing_section_dict[key] = True\n
+  \n
+  selection_params = params.copy()\n
+  selection_params[\'from_date\'] = from_date\n
+  selection_params[\'node_uid\'] = inventory.node_uid\n
+  selection_params[\'payment_uid\'] = None\n
+  selection_params[\'mirror_section_uid\'] = None\n
+  report_section_list.append(\n
+              ReportSection(\n
+                      path=inventory.node_relative_url,\n
+                      title=getFullAccountName(key),\n
+                      form_id=\'Account_viewAccountingTransactionList\',\n
+                      selection_name=\'account_preference_selection\',\n
+                      selection_params=selection_params,\n
+                      selection_columns=account_columns,\n
+                      listbox_display_mode=\'FlatListMode\',\n
+                      selection_sort_order=[(\'stock.date\',\n
+                                             \'ascending\')]))\n
+\n
+# non zero balance at begining of period\n
+for inventory in portal.portal_simulation.getInventoryList(\n
+                            node_category_strict_membership=account_type_to_group_by_node,\n
+                            portal_type=portal.getPortalAccountingMovementTypeList(),\n
+                            at_date=from_date,\n
+                            group_by_node=1,\n
+                            group_by_section=0,\n
+                            group_by_mirror_section=0,\n
+                            group_by_resource=0,\n
+                            **params):\n
+  key = (inventory.node_relative_url, None, None)\n
+  if key in existing_section_dict:\n
+    continue\n
+  if not inventory.total_price:\n
+    continue\n
+  existing_section_dict[key] = True\n
   \n
   selection_params = params.copy()\n
   selection_params[\'from_date\'] = from_date\n
@@ -215,11 +253,13 @@ for inventory in portal.portal_simulation.getInventoryList(\n
                                              \'ascending\')]))\n
 \n
 \n
+\n
 # profit & loss -> same, but from date limited to the current period\n
 for inventory in portal.portal_simulation.getInventoryList(\n
                             node_category_strict_membership=profit_and_loss_account_type,\n
                             portal_type=portal.getPortalAccountingMovementTypeList(),\n
                             from_date=max(from_date, period_start_date),\n
+                            at_date=at_date,\n
                             group_by_node=1,\n
                             group_by_section=0,\n
                             group_by_mirror_section=0,\n
@@ -245,16 +285,54 @@ for inventory in portal.portal_simulation.getInventoryList(\n
                                              \'ascending\')]))\n
 \n
 # group by mirror_section\n
+# movements in the period\n
 for inventory in portal.portal_simulation.getInventoryList(\n
                             node_category_strict_membership=account_type_to_group_by_mirror_section,\n
                             portal_type=portal.getPortalAccountingMovementTypeList(),\n
                             from_date=from_date,\n
+                            at_date=at_date,\n
                             group_by_node=1,\n
                             group_by_section=0,\n
                             group_by_mirror_section=1,\n
                             group_by_resource=0,\n
                             **params):\n
   key = (inventory.node_relative_url, inventory.mirror_section_uid, None)\n
+  existing_section_dict[key] = True\n
+\n
+  selection_params = params.copy()\n
+  selection_params[\'from_date\'] = from_date\n
+  selection_params[\'node_uid\'] = inventory.node_uid\n
+  selection_params[\'payment_uid\'] = None\n
+  selection_params[\'mirror_section_uid\'] = inventory.mirror_section_uid\n
+  report_section_list.append(\n
+              ReportSection(\n
+                      path=inventory.node_relative_url,\n
+                      title=getFullAccountName(key),\n
+                      form_id=\'Account_viewAccountingTransactionList\',\n
+                      selection_name=\'account_preference_selection\',\n
+                      selection_params=selection_params,\n
+                      selection_columns=account_columns,\n
+                      listbox_display_mode=\'FlatListMode\',\n
+                      selection_sort_order=[(\'stock.date\',\n
+                                             \'ascending\')]))\n
+\n
+# non zero balance at begining of period\n
+for inventory in portal.portal_simulation.getInventoryList(\n
+                            node_category_strict_membership=account_type_to_group_by_mirror_section,\n
+                            portal_type=portal.getPortalAccountingMovementTypeList(),\n
+                            at_date=from_date,\n
+                            group_by_node=1,\n
+                            group_by_section=0,\n
+                            group_by_mirror_section=1,\n
+                            group_by_resource=0,\n
+                            **params):\n
+  key = (inventory.node_relative_url, inventory.mirror_section_uid, None)\n
+\n
+  if key in existing_section_dict:\n
+    continue\n
+  if not inventory.total_price:\n
+    continue\n
+  existing_section_dict[key] = True\n
 \n
   selection_params = params.copy()\n
   selection_params[\'from_date\'] = from_date\n
@@ -275,16 +353,53 @@ for inventory in portal.portal_simulation.getInventoryList(\n
 \n
 \n
 # group by payment\n
+# movements in the period\n
 for inventory in portal.portal_simulation.getInventoryList(\n
                             node_category_strict_membership=account_type_to_group_by_payment,\n
                             portal_type=portal.getPortalAccountingMovementTypeList(),\n
                             from_date=from_date,\n
+                            at_date=at_date,\n
                             group_by_node=1,\n
                             group_by_section=0,\n
                             group_by_paymnent=1,\n
                             group_by_resource=0,\n
                             **params):\n
   key = (inventory.node_relative_url, None, inventory.payment_uid)\n
+  existing_section_dict[key] = True\n
+\n
+  selection_params = params.copy()\n
+  selection_params[\'from_date\'] = from_date\n
+  selection_params[\'node_uid\'] = inventory.node_uid\n
+  selection_params[\'payment_uid\'] = inventory.payment_uid\n
+  selection_params[\'mirror_section_uid\'] = None\n
+  report_section_list.append(\n
+              ReportSection(\n
+                      path=inventory.node_relative_url,\n
+                      title=getFullAccountName(key),\n
+                      form_id=\'Account_viewAccountingTransactionList\',\n
+                      selection_name=\'account_preference_selection\',\n
+                      selection_params=selection_params,\n
+                      selection_columns=account_columns,\n
+                      listbox_display_mode=\'FlatListMode\',\n
+                      selection_sort_order=[(\'stock.date\',\n
+                                             \'ascending\')]))\n
+\n
+# non zero balance at begining of period\n
+for inventory in portal.portal_simulation.getInventoryList(\n
+                            node_category_strict_membership=account_type_to_group_by_payment,\n
+                            portal_type=portal.getPortalAccountingMovementTypeList(),\n
+                            at_date=from_date,\n
+                            group_by_node=1,\n
+                            group_by_section=0,\n
+                            group_by_paymnent=1,\n
+                            group_by_resource=0,\n
+                            **params):\n
+  key = (inventory.node_relative_url, None, inventory.payment_uid)\n
+  if key in existing_section_dict:\n
+    continue\n
+  if not inventory.total_price:\n
+    continue\n
+  existing_section_dict[key] = True\n
 \n
   selection_params = params.copy()\n
   selection_params[\'from_date\'] = from_date\n
@@ -393,6 +508,7 @@ return report_section_list\n
                             <string>account_type_to_group_by_payment</string>
                             <string>account_type_to_group_by_mirror_section</string>
                             <string>report_section_list</string>
+                            <string>existing_section_dict</string>
                             <string>_getiter_</string>
                             <string>_apply_</string>
                             <string>inventory</string>
