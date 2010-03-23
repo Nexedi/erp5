@@ -287,7 +287,8 @@ class SimulationMovement(Movement, PropertyRecordableMixin):
     """Returns the delivery if any or the order related to the root
     applied rule if any.
     """
-    if self.getDeliveryValue() is None:
+    delivery_value = self.getDeliveryValue()
+    if delivery_value is None:
       ra = self.getRootAppliedRule()
       order = ra.getCausalityValue()
       if order is not None:
@@ -296,12 +297,13 @@ class SimulationMovement(Movement, PropertyRecordableMixin):
         # Ex. zero stock rule
         return ra
     else:
-      explanation_value = self.getDeliveryValue()
-      while explanation_value.getPortalType() not in \
-              self.getPortalDeliveryTypeList() and \
-          explanation_value != self.getPortalObject():
+      explanation_value = delivery_value
+      portal = self.getPortalObject()
+      delivery_type_list = self.getPortalDeliveryTypeList()
+      while explanation_value.getPortalType() not in delivery_type_list and \
+          explanation_value != portal:
             explanation_value = explanation_value.getParentValue()
-      if explanation_value != self.getPortalObject():
+      if explanation_value != portal:
         return explanation_value
 
   # Deliverability / orderability
