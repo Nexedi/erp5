@@ -30,6 +30,7 @@
 #
 ##############################################################################
 
+from collections import deque
 from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
@@ -120,48 +121,47 @@ class TradeCondition(Path, Transformation, XMLMatrix):
               'movement_to_add_list': movement_to_add_list}
 
     security.declareProtected(Permissions.AccessContentsInformation,
-        'findSpecialiseValueList')
+                              'findSpecialiseValueList')
     def findSpecialiseValueList(self, context, portal_type_list=None):
       """Returns a list of specialised objects representing inheritance tree.
-
-         Uses Breadth First Search.
       """
-      if portal_type_list is None:
-        portal_type_list = self.getPortalAmountGeneratorTypeList()
-      if context.getPortalType() in portal_type_list:
-        specialise_value_list = [context]
-        visited_trade_condition_list = [context]
-      else:
-        specialise_value_list = context.getSpecialiseValueList()
-        visited_trade_condition_list = context.getSpecialiseValueList(\
-            portal_type=portal_type_list)
+      return self.findEffectiveSpecialiseValueList(context,
+        portal_type_list=portal_type_list)
 
-      while len(specialise_value_list) != 0:
-        specialise = specialise_value_list.pop(0)
+
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'findEffectiveSpecialiseValueList')
+    def findEffectiveSpecialiseValueList(self, context, start_date=None,
+                                         stop_date=None, portal_type_list=None):
+      """Return a list of effective specialised objects that is the
+      inheritance tree.
+      An effective object is an object which have start_date and stop_date
+      included to the range of the given parameters start_date and stop_date.
+
+      This algorithm uses Breadth First Search.
+      """
+      portal_type_set = set(portal_type_list or
+                            self.getPortalAmountGeneratorTypeList())
+      def getEffectiveModel(model):
         try:
-          # all children
-          child_specialised_value_list = specialise.getSpecialiseValueList()
-          # only children that match the portal_type given
-          child_visited_trade_condition_set = set(specialise.\
-              getSpecialiseValueList(portal_type=portal_type_list))
+          getEffectiveModel = model.getEffectiveModel
         except AttributeError:
-          # it is possible, that specialised object cannot be specialised
-          # anymore
-          continue
-        # Use a set for faster lookups. We do not use sets everywhere
-        # because search order does matter
-        intersection = set(child_specialised_value_list).intersection(\
-            set(visited_trade_condition_list))
-        for model in child_specialised_value_list:
-          # don't add model that have already been visited. This permit to
-          # visit all the tree and to prevent having circular dependency
-          if model not in intersection:
-            specialise_value_list.append(model)
-            # only add those who matches the portal type given
-            if model in child_visited_trade_condition_set:
-              visited_trade_condition_list.append(model)
-
-      return visited_trade_condition_list
+          return model
+        return getEffectiveModel(start_date, stop_date)
+      filtered_list = []
+      specialise_value_list = deque((getEffectiveModel(context),))
+      specialise_value_set = set(specialise_value_list)
+      specialise_index = 0
+      while specialise_value_list:
+        context = specialise_value_list.popleft()
+        if context.getPortalType() in portal_type_set:
+          filtered_list.append(context)
+        for specialise_value in map(getEffectiveModel,
+                                    context.getSpecialiseValueList()):
+          if specialise_value not in specialise_value_set:
+            specialise_value_set.add(specialise_value)
+            specialise_value_list.append(specialise_value)
+      return filtered_list
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getTradeModelLineComposedList')
@@ -339,66 +339,6 @@ class TradeCondition(Path, Transformation, XMLMatrix):
       return reference_dict
 
     security.declareProtected(Permissions.AccessContentsInformation,
-        'findEffectiveSpecialiseValueList')
-    def findEffectiveSpecialiseValueList(self, context, start_date=None,
-        stop_date=None, portal_type_list=None, effective_model_list=None):
-      """Return a list of effective specialised objects that is the
-      inheritance tree.
-      An effective object is an object which have start_date and stop_date
-      included to the range of the given parameters start_date and stop_date.
-      If no start_date and stop_date are provided, findSpecialiseValueList
-      result is returned.
-
-      This algorithm uses Breadth First Search.
-      """
-      if start_date is None and stop_date is None:
-        # if dates are not defined, return findSpecialiseValueList result
-        return self.findSpecialiseValueList(context=context)
-      if effective_model_list is None:
-        effective_model_list = []
-      visited_trade_condition_list = []
-      if portal_type_list is None:
-        portal_type_list = self.getPortalAmountGeneratorTypeList()
-
-      if context.getPortalType() in portal_type_list:
-        effective_model = context.getEffectiveModel(
-            start_date=start_date, stop_date=stop_date)
-        if effective_model is not None:
-          effective_model_list = [effective_model]
-          visited_trade_condition_list = [effective_model]
-      else:
-        model_list = context.getSpecialiseValueList(\
-            portal_type=portal_type_list)
-        effective_model_list = [model.getEffectiveModel(\
-            start_date=start_date, stop_date=stop_date) for model in\
-            model_list]
-        visited_trade_condition_list = [model.getEffectiveModel(\
-            start_date=start_date, stop_date=stop_date) for model in\
-            model_list]
-      # remove None models
-      effective_model_list = [ob for ob in effective_model_list if ob is not None]
-      while len(effective_model_list) != 0:
-        specialise = effective_model_list.pop(0)
-        effective_specialise = specialise.getEffectiveModel(start_date=start_date,
-          stop_date=stop_date)
-        child_list = []
-        if effective_specialise is not None:
-          child_list = effective_specialise.getSpecialiseValueList(\
-              portal_type=portal_type_list)
-
-        intersection = set(child_list).intersection(\
-            set(visited_trade_condition_list))
-        for model in child_list:
-          effective_model = model.getEffectiveModel(start_date=start_date,
-              stop_date=stop_date)
-          if effective_model is not None and effective_model not in intersection:
-            # don't add model that are already been visited. This permit to
-            # visit all model tree, and to not have circular dependency
-            effective_model_list.append(effective_model)
-            visited_trade_condition_list.append(effective_model)
-      return visited_trade_condition_list
-
-    security.declareProtected(Permissions.AccessContentsInformation,
         'getInheritanceReferenceDict')
     def getInheritanceReferenceDict(self, portal_type_list,
         property_list=None):
@@ -463,9 +403,6 @@ class TradeCondition(Path, Transformation, XMLMatrix):
     def getModelInheritanceEffectiveProperty(self, paysheet, property_name):
       """Get a property from an effective model
       """
-      v = self.getProperty(property_name)
-      if v:
-        return v
       model_list = self.findEffectiveSpecialiseValueList(context=self,
           start_date=paysheet.getStartDate(), stop_date=paysheet.getStopDate())
       for specialised_model in model_list:
