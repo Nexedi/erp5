@@ -220,7 +220,8 @@ class AmountGeneratorMixin:
             category_list = amount_generator_cell.getCategoryMembershipList(
               amount_generator_cell.getMappedValueBaseCategoryList(), base=1)
             if category_list:
-              property_dict.setdefault('category_list', []) += category_list
+              property_dict.setdefault('category_list',
+                                       []).extend(category_list)
             property_dict['resource'] = resource
             # For final amounts, base_application and id MUST be defined
             property_dict['base_application'] = getBaseApplication() # Required
