@@ -126,7 +126,7 @@ msgid "-- Quick Search --"
 msgstr "-- Recherche rapide --"
 
 msgid "-- Select Classification --"
-msgstr "-- Choisir une classification --"
+msgstr "-- Sélectionnez une classification --"
 
 msgid "-- Select Document Type --"
 msgstr "-- Sélectionnez le type de document --"
@@ -437,6 +437,12 @@ msgstr "Lignes de Comptabilité"
 msgid "Accounting Operation Date"
 msgstr "Date comptable"
 
+msgid "Source Accounting Operation Date"
+msgstr "Date comptable pour la source"
+
+msgid "Destination Accounting Operation Date"
+msgstr "Date comptable pour la destination"
+
 msgid "Accounting Period"
 msgstr "Période comptable"
 
@@ -499,6 +505,9 @@ msgstr "Comptabilité"
 
 msgid "Accounting Workflow"
 msgstr "Workflow de comptabilité"
+
+msgid "Accounting periods created."
+msgstr "Périodes comptables crées."
 
 msgid ""
 "Accounting preferences: The default currency when creating new transactions"
@@ -768,6 +777,9 @@ msgstr "Taux de remise exclusif de toute autre remise."
 
 msgid "Analysed"
 msgstr "Analysé"
+
+msgid "Analytics"
+msgstr "Analytique"
 
 msgid "Annotation Function"
 msgstr "Fonction de l'annotation"
@@ -2821,6 +2833,18 @@ msgstr "Créer les écritures de trésorerie correspondantes"
 msgid "Create Reversal Transaction"
 msgstr "Contrepasser l'écriture"
 
+msgid "Create Reversal Transactions"
+msgstr "Contrepasser les écritures"
+
+msgid "Use Negated Quantities"
+msgstr "Utiliser des montants négatifs"
+
+msgid "No valid transaction in your selection."
+msgstr "Pas d'écritures valides dans votre sélection."
+
+msgid "Create Secondary Periods"
+msgstr "Créer des périodes comptables intermédiaires"
+
 msgid "Create Snapshot"
 msgstr "Créer une image"
 
@@ -3636,7 +3660,7 @@ msgid "Destination Administration"
 msgstr "Responsable des tâches administratives pour le client"
 
 msgid "Destination Conversion"
-msgstr "Conversion de la destination"
+msgstr "Conversion pour la destination"
 
 msgid "Destination Payment"
 msgstr "Payeur"
@@ -4772,6 +4796,9 @@ msgstr "Trouvés"
 msgid "French"
 msgstr "Français"
 
+msgid "Frequency"
+msgstr "Fréquence"
+
 msgid "Frequency (weeks)"
 msgstr "Fréquence (semaines)"
 
@@ -5083,9 +5110,6 @@ msgstr "Le cours d'une devise par rapport à une autre."
 
 msgid "I forgot my password!"
 msgstr "J'ai oublié mon mot de passe !"
-
-msgid "IBAN"
-msgstr "Code IBAN"
 
 msgid "IBAN Key"
 msgstr "Clé IBAN"
@@ -6174,6 +6198,9 @@ msgstr "Mois"
 msgid "Month / Day / Year"
 msgstr "Mois / Jour / Année"
 
+msgid "Monthly"
+msgstr "Mensuel"
+
 msgid "Monthly Report"
 msgstr "Rapport mensuel"
 
@@ -6616,7 +6643,7 @@ msgid "Open Meetings"
 msgstr "Réunions en cours"
 
 msgid "Open Project"
-msgstr "Projet ouvert"
+msgstr "Ouvrir le projet"
 
 msgid "Open Support Requests"
 msgstr "Demandes d'assistance en cours"
@@ -7233,7 +7260,7 @@ msgid "Planned"
 msgstr "Planifié"
 
 msgid "Planned [state in accounting_workflow]"
-msgstr "planifié"
+msgstr "Planifié"
 
 msgid "Planned [state in bug_event_workflow]"
 msgstr "Planifié"
@@ -7574,6 +7601,9 @@ msgstr "Produits à valider"
 msgid "Profile"
 msgstr "Profil"
 
+msgid "Profit And Loss Account"
+msgstr "Compte de résultat"
+
 msgid "Profit and Loss"
 msgstr "Compte de résultat"
 
@@ -7635,7 +7665,7 @@ msgid "Project Title"
 msgstr "Titre du projet"
 
 msgid "Project Workflow"
-msgstr "Workflow du projet"
+msgstr "Workflow des projets"
 
 msgid "Project to Open"
 msgstr "Projet à ouvrir"
@@ -7740,7 +7770,7 @@ msgid "Publish Category [transition in category_publication_workflow]"
 msgstr "Publier la catégorie"
 
 msgid "Publish Document"
-msgstr "Publier"
+msgstr "Publier le document"
 
 msgid "Publish Document Action"
 msgstr "Publier (action)"
@@ -7755,6 +7785,9 @@ msgstr "Publier (action)"
 
 msgid "Publish Document Action [transition in publication_workflow]"
 msgstr "Publier (action)"
+
+msgid "Publish Document Alive"
+msgstr "Publier le document (modifiable)"
 
 msgid ""
 "Publish Document Alive Action [transition in document_publication_workflow]"
@@ -8004,6 +8037,9 @@ msgstr "Tranches"
 
 msgid "Quantity unit"
 msgstr "Unité"
+
+msgid "Quarterly"
+msgstr "Trimestriel"
 
 msgid "Queries"
 msgstr "Questions"
@@ -8445,13 +8481,16 @@ msgid "Release Alive"
 msgstr "Diffuser (modifiable)"
 
 msgid "Release Document"
-msgstr "Diffuser"
+msgstr "Diffuser le document"
 
 msgid "Release Document Action"
 msgstr "Diffuser (action)"
 
 msgid "Release Document Action [transition in document_publication_workflow]"
 msgstr "Diffuser (action)"
+
+msgid "Release Document Alive"
+msgstr "Diffuser le document (modifiable)"
 
 msgid ""
 "Release Document Alive Action [transition in document_publication_workflow]"
@@ -8739,14 +8778,11 @@ msgstr "Redémarrer la période comptable"
 msgid "Restart Task"
 msgstr "Redémarrer la tâche"
 
-msgid "Restart Transaction (journalise) [transition in accounting_workflow]"
-msgstr "Modifier la transaction (passer au journal)"
+msgid "Restart Transaction (journalise)"
+msgstr "Modifier l'écriture (retour au brouillard)"
 
-msgid "Restart Transaction Action [transition in accounting_workflow]"
-msgstr "Modifier la transaction (passer au journal)"
-
-msgid "Restart Transaction [transition in accounting_workflow]"
-msgstr "Modifier la transaction (passer au journal)"
+msgid "Restart Transaction Action"
+msgstr "Modifier l'écriture (retour au brouillard)"
 
 msgid "Result"
 msgstr "Résultat"
@@ -9307,13 +9343,16 @@ msgid "Share Alive"
 msgstr "Partager (modifiable)"
 
 msgid "Share Document"
-msgstr "Partager"
+msgstr "Partager le document"
 
 msgid "Share Document Action"
 msgstr "Partager (action)"
 
 msgid "Share Document Action [transition in document_publication_workflow]"
 msgstr "Partager (action)"
+
+msgid "Share Document Alive"
+msgstr "Partager le document (modifiable)"
 
 msgid ""
 "Share Document Alive Action [transition in document_publication_workflow]"
@@ -9638,7 +9677,7 @@ msgid "Source Code"
 msgstr "Code source"
 
 msgid "Source Conversion"
-msgstr "Conversion d'origine"
+msgstr "Conversion pour la source"
 
 msgid "Source Credit"
 msgstr "Crédit"
@@ -9777,6 +9816,12 @@ msgstr "Démarrer l'étape de carrière"
 msgid "Start Date"
 msgstr "Date de début"
 
+msgid "Start Periods ?"
+msgstr "Démarrer les périodes ?"
+
+msgid "Start Project"
+msgstr "Commencer le projet"
+
 msgid "Start Task"
 msgstr "Démarrer la tâche"
 
@@ -9871,6 +9916,9 @@ msgstr "Stock par variante"
 msgid "Stop"
 msgstr "Terminer l'étape de carrière"
 
+msgid "Stop Accounting Period"
+msgstr "Cloturer la période comptable"
+
 msgid "Stop Assignment"
 msgstr "Terminer l'affectation"
 
@@ -9891,6 +9939,9 @@ msgstr "Terminer l'étape de carrière"
 
 msgid "Stop Date"
 msgstr "Date de fin"
+
+msgid "Stop Project"
+msgstr "Terminer le projet"
 
 msgid "Stopped"
 msgstr "Terminé"
@@ -9983,6 +10034,9 @@ msgstr "Soumettre le message"
 
 msgid "Submit Message [transition in notification_message_workflow]"
 msgstr "Soumettre le message"
+
+msgid "Submit Project"
+msgstr "Soumettre le projet"
 
 msgid "Submit for Review"
 msgstr "Demander une validation"
@@ -12733,3 +12787,10 @@ msgstr "la largeur en pixel des micro-images."
 
 msgid "the width in pixel of nano image"
 msgstr "La largeur en pixel des images nano."
+
+msgid "Source Price Currency"
+msgstr "Devise de la source"
+
+msgid "Destination Price Currency"
+msgstr "Devise de la destination"
+
