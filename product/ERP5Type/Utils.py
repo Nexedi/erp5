@@ -64,7 +64,6 @@ from Products.PageTemplates.Expressions import SecureModuleImporter
 from Products.ZCatalog.Lazy import LazyMap
 
 from Products.ERP5Type import Permissions
-from Products.ERP5Type import Constraint
 
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as \
     PropertyConstantGetter
@@ -1125,6 +1124,7 @@ def createConstraintList(property_holder, constraint_definition):
 
     constraint_definition -- the constraint with all attributes
   """
+  from Products.ERP5Type import Constraint
   try:
     consistency_class = getattr(Constraint, constraint_definition['type'])
   except AttributeError:
@@ -1501,10 +1501,11 @@ def setDefaultProperties(property_holder, object=None, portal=None):
         createRelatedValueAccessors(property_holder, cat, read_permission=read_permission)
       # Unnecessary to create these accessors more than once.
       base_category_dict.clear()
+    from Products.ERP5Type.Constraint import PropertyTypeValidity
     # Create the constraint method list - always check type
     property_holder.constraints = [
-                  Constraint.PropertyTypeValidity(id='type_check',
-                  description="Type Validity Check Error") ]
+                  PropertyTypeValidity(id='type_check',
+                    description="Type Validity Check Error") ]
 
     for const in constraint_list:
       createConstraintList(property_holder, constraint_definition=const)

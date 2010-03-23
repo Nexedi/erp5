@@ -32,7 +32,6 @@
 
 from PropertyExistence import PropertyExistence
 from Products.CMFCore.Expression import Expression
-from Products.ZSQLCatalog.SQLCatalog import Query, NegatedQuery
 
 class AttributeUnicity(PropertyExistence):
   """
@@ -69,6 +68,7 @@ class AttributeUnicity(PropertyExistence):
       from Products.ERP5Type.Utils import createExpressionContext
       econtext = createExpressionContext(obj)
       criterion_dict = expression(econtext)
+      from Products.ZSQLCatalog.SQLCatalog import Query, NegatedQuery
       # Add uid in criterion keys to avoid fetching current object.
       criterion_dict['query'] = NegatedQuery(Query(uid=obj.getUid()))
       portal = obj.portal_catalog.getPortalObject()
