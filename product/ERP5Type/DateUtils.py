@@ -42,7 +42,8 @@ security.declarePublic('addToDate', 'getClosestDate',
     'getMonthFraction', 'getYearFraction', 'getAccountableYearFraction',
     'getBissextilCompliantYearFraction', 'getIntervalListBetweenDates',
     'getDecimalNumberOfYearsBetween','roundMonthToGreaterEntireYear',
-    'roundDate', 'convertDateToHour', 'getNumberOfDayInMonth', 'atTheEndOfPeriod')
+    'roundDate', 'convertDateToHour', 'getNumberOfDayInMonth', 'atTheEndOfPeriod',
+    'copyDate')
 
 millis = DateTime('2000/01/01 12:00:00.001') - DateTime('2000/01/01 12:00:00')
 centis = millis * 10
@@ -519,3 +520,23 @@ def atTheEndOfPeriod(date, period):
   else:
     raise NotImplementedError, 'Period "%s" not Handled yet' % period
   return end
+
+def copyDate(date, year=None, month=None, day=None,
+             hour=None, minute=None, second=None, timezone=None):
+  if year is None:
+    year = datetime.year()
+  if month is None:
+    month = datetime.month()
+  if day is None:
+    day = datetime.day()
+  if hour is None:
+    hour = datetime.hour()
+  if minute is None:
+    minute = datetime.minute()
+  if second is None:
+    second = datetime.second()
+  if timezone is None:
+    timezone = datetime.timezone()
+  return DateTime('%i/%i/%i %i:%i:%d %s' % (year, month, day,
+                                            hour, minute, second,
+                                            timezone))
