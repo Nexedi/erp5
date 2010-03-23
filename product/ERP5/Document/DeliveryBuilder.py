@@ -31,6 +31,7 @@ from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5.Document.OrderBuilder import OrderBuilder, \
         SelectMethodError
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
+from Products.ERP5Type.CopySupport import CopyError, tryMethodCallWithTemporaryPermission
 
 class DeliveryBuilder(OrderBuilder):
   """
@@ -331,3 +332,104 @@ class DeliveryBuilder(OrderBuilder):
     return delivery_list
 
   solveDivergence = UnrestrictedMethod(_solveDivergence)
+
+  def _createDelivery(self, delivery_module, movement_list, activate_kw):
+    """
+      Refer to the docstring in OrderBuilder.
+      Unlike OrderBuilder, DeliveryBuilder needs to respect
+      existing relationship.
+    """
+    try:
+      old_delivery = self._searchUpByPortalType(
+        movement_list[0].getDeliveryValue(),
+        self.getDeliveryPortalType())
+    except AttributeError:
+      old_delivery = None
+    if old_delivery is None:
+      # from scratch
+      new_delivery_id = str(delivery_module.generateNewId())
+      delivery = delivery_module.newContent(
+        portal_type=self.getDeliveryPortalType(),
+        id=new_delivery_id,
+        created_by_builder=1,
+        activate_kw=activate_kw)
+    else:
+      # from duplicated original delivery
+      cp = tryMethodCallWithTemporaryPermission(
+        delivery_module, 'Copy or Move',
+        lambda parent, *ids:
+        parent._duplicate(parent.manage_copyObjects(ids=ids))[0],
+        (delivery_module, old_delivery.getId()), {}, CopyError)
+      delivery = delivery_module[cp['new_id']]
+      # delete non-split movements
+      keep_id_list = [y.getDeliveryValue().getId() for y in movement_list]
+      delete_id_list = [x.getId() for x in delivery.contentValues() \
+                       if x.getId() not in keep_id_list]
+      delivery.deleteContent(delete_id_list)
+
+    return delivery
+
+  def _createDeliveryLine(self, delivery, movement_list, activate_kw):
+    """
+      Refer to the docstring in OrderBuilder.
+      Unlike OrderBuilder, DeliveryBuilder needs to respect
+      existing relationship.
+    """
+    try:
+      old_delivery_line = self._searchUpByPortalType(
+        movement_list[0].getDeliveryValue(),
+        self.getDeliveryLinePortalType())
+    except AttributeError:
+      old_delivery_line = None
+    if old_delivery_line is None:
+      # from scratch
+      new_delivery_line_id = str(delivery.generateNewId())
+      delivery_line = delivery.newContent(
+        portal_type=self.getDeliveryLinePortalType(),
+        id=new_delivery_line_id,
+        variation_category_list=[],
+        activate_kw=activate_kw)
+    else:
+      # from duplicated original line
+      cp = tryMethodCallWithTemporaryPermission(
+        delivery, 'Copy or Move',
+        lambda parent, *ids:
+        parent._duplicate(parent.manage_copyObjects(ids=ids))[0],
+        (delivery, old_delivery_line.getId()), {}, CopyError)
+      delivery_line = delivery[cp['new_id']]
+      # reset variation category list
+      delivery_line.setVariationCategoryList([])
+      # delete non-split movements
+      keep_id_list = [y.getDeliveryValue().getId() for y in movement_list]
+      delete_id_list = [x.getId() for x in delivery_line.contentValues() \
+                       if x.getId() not in keep_id_list]
+      delivery_line.deleteContent(delete_id_list)
+
+    return delivery_line
+
+  def _createDeliveryCell(self, delivery_line, movement, activate_kw, 
+                          base_id, cell_key):
+    """
+      Refer to the docstring in OrderBuilder.
+      Unlike OrderBuilder, DeliveryBuilder needs to respect
+      existing relationship.
+    """
+    try:
+      old_cell = movement.getDeliveryValue()
+    except AttributeError:
+      old_cell = None
+    if old_cell is None:
+      # from scratch
+      cell = delivery_line.newCell(base_id=base_id, \
+               portal_type=self.getDeliveryCellPortalType(),
+               activate_kw=activate_kw,*cell_key)
+    else:
+      # from duplicated original line
+      cp = tryMethodCallWithTemporaryPermission(
+        delivery_line, 'Copy or Move',
+        lambda parent, *ids:
+        parent._duplicate(parent.manage_copyObjects(ids=ids))[0],
+        (delivery_line, old_cell.getId()), {}, CopyError)
+      cell = delivery_line[cp['new_id']]
+
+    return cell

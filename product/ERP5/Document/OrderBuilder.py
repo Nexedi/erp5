@@ -33,7 +33,6 @@ from Products.ERP5.Document.Predicate import Predicate
 from Products.ERP5.Document.Amount import Amount
 from Products.ERP5.MovementGroup import MovementGroupNode
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
-from Products.ERP5Type.CopySupport import CopyError, tryMethodCallWithTemporaryPermission
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 from DateTime import DateTime
 from Acquisition import aq_parent, aq_inner
@@ -348,6 +347,19 @@ class OrderBuilder(XMLObject, Amount, Predicate):
                           **kw)
     return delivery_list
 
+  def _createDelivery(self, delivery_module, movement_list, activate_kw):
+    """
+      Create a new delivery in case where a builder may not update
+      an existing one.
+    """
+    new_delivery_id = str(delivery_module.generateNewId())
+    delivery = delivery_module.newContent(
+      portal_type=self.getDeliveryPortalType(),
+      id=new_delivery_id,
+      created_by_builder=1,
+      activate_kw=activate_kw)
+    return delivery
+
   def _processDeliveryGroup(self, delivery_module, movement_group_node,
                             collect_order_list, movement_group_node_list=None,
                             delivery_to_update_list=None,
@@ -398,35 +410,9 @@ class OrderBuilder(XMLObject, Amount, Predicate):
         delivery = delivery_to_update_list[0]
 
       if delivery is None:
-        # Create delivery
-        try:
-          old_delivery = self._searchUpByPortalType(
-            movement_group_node.getMovementList()[0].getDeliveryValue(),
-            self.getDeliveryPortalType())
-        except AttributeError:
-          old_delivery = None
-        if old_delivery is None:
-          # from scratch
-          new_delivery_id = str(delivery_module.generateNewId())
-          delivery = delivery_module.newContent(
-            portal_type=self.getDeliveryPortalType(),
-            id=new_delivery_id,
-            created_by_builder=1,
-            activate_kw=activate_kw)
-        else:
-          # from duplicated original delivery
-          cp = tryMethodCallWithTemporaryPermission(
-            delivery_module, 'Copy or Move',
-            lambda parent, *ids:
-            parent._duplicate(parent.manage_copyObjects(ids=ids))[0],
-            (delivery_module, old_delivery.getId()), {}, CopyError)
-          delivery = delivery_module[cp['new_id']]
-          # delete non-split movements
-          keep_id_list = [y.getDeliveryValue().getId() for y in \
-                          movement_group_node.getMovementList()]
-          delete_id_list = [x.getId() for x in delivery.contentValues() \
-                           if x.getId() not in keep_id_list]
-          delivery.deleteContent(delete_id_list)
+        delivery = self._createDelivery(delivery_module,
+                                        movement_group_node.getMovementList(),
+                                        activate_kw)
       # Put properties on delivery
       self._setUpdated(delivery, 'delivery')
       if property_dict:
@@ -443,6 +429,19 @@ class OrderBuilder(XMLObject, Amount, Predicate):
                                 force_update=force_update)
       delivery_list.append(delivery)
     return delivery_list
+
+  def _createDeliveryLine(self, delivery, movement_list, activate_kw):
+    """
+      Create a new delivery line in case where a builder may not update
+      an existing one.
+    """
+    new_delivery_line_id = str(delivery.generateNewId())
+    delivery_line = delivery.newContent(
+      portal_type=self.getDeliveryLinePortalType(),
+      id=new_delivery_line_id,
+      created_by_builder=1,
+      activate_kw=activate_kw)
+    return delivery_line
 
   def _processDeliveryLineGroup(self, delivery, movement_group_node,
                                 collect_order_list, movement_group_node_list=None,
@@ -483,36 +482,10 @@ class OrderBuilder(XMLObject, Amount, Predicate):
       else:
         # Create delivery line
         update_existing_line = 0
-        try:
-          old_delivery_line = self._searchUpByPortalType(
-            movement_group_node.getMovementList()[0].getDeliveryValue(),
-            self.getDeliveryLinePortalType())
-        except AttributeError:
-          old_delivery_line = None
-        if old_delivery_line is None:
-          # from scratch
-          new_delivery_line_id = str(delivery.generateNewId())
-          delivery_line = delivery.newContent(
-            portal_type=self.getDeliveryLinePortalType(),
-            id=new_delivery_line_id,
-            variation_category_list=[],
-            activate_kw=activate_kw)
-        else:
-          # from duplicated original line
-          cp = tryMethodCallWithTemporaryPermission(
-            delivery, 'Copy or Move',
-            lambda parent, *ids:
-            parent._duplicate(parent.manage_copyObjects(ids=ids))[0],
-            (delivery, old_delivery_line.getId()), {}, CopyError)
-          delivery_line = delivery[cp['new_id']]
-          # reset variation category list
-          delivery_line.setVariationCategoryList([])
-          # delete non-split movements
-          keep_id_list = [y.getDeliveryValue().getId() for y in \
-                          movement_group_node.getMovementList()]
-          delete_id_list = [x.getId() for x in delivery_line.contentValues() \
-                           if x.getId() not in keep_id_list]
-          delivery_line.deleteContent(delete_id_list)
+        delivery_line = self._createDeliveryLine(
+                delivery,
+                movement_group_node.getMovementList(),
+                activate_kw)
       # Put properties on delivery line
       self._setUpdated(delivery_line, 'line')
       if property_dict:
@@ -564,6 +537,17 @@ class OrderBuilder(XMLObject, Amount, Predicate):
                                   activate_kw=activate_kw,
                                   force_update=force_update)
 
+  def _createDeliveryCell(self, delivery_line, movement, activate_kw,
+                          base_id, cell_key):
+    """
+      Create a new delivery cell in case where a builder may not update
+      an existing one.
+    """
+    cell = delivery_line.newCell(base_id=base_id,
+                                 portal_type=self.getDeliveryCellPortalType(),
+                                 activate_kw=activate_kw,
+                                 *cell_key)
+    return cell
 
   def _processDeliveryCellGroup(self, delivery_line, movement_group_node,
                                 collect_order_list, movement_group_node_list=None,
@@ -645,35 +629,19 @@ class OrderBuilder(XMLObject, Amount, Predicate):
           cell_key = movement.getVariationCategoryList(
               omit_optional_variation=1)
           if not delivery_line.hasCell(base_id=base_id, *cell_key):
-            try:
-              old_cell = movement_group_node.getMovementList()[0].getDeliveryValue()
-            except AttributeError:
-              old_cell = None
-            if old_cell is None:
-              # from scratch
-              cell = delivery_line.newCell(base_id=base_id, \
-                       portal_type=self.getDeliveryCellPortalType(),
-                       activate_kw=activate_kw,*cell_key)
-            else:
-              # from duplicated original line
-              cp = tryMethodCallWithTemporaryPermission(
-                delivery_line, 'Copy or Move',
-                lambda parent, *ids:
-                parent._duplicate(parent.manage_copyObjects(ids=ids))[0],
-                (delivery_line, old_cell.getId()), {}, CopyError)
-              cell = delivery_line[cp['new_id']]
-
+            cell = self._createDeliveryCell(delivery_line, movement,
+                                            activate_kw, base_id, cell_key)
             vcl = movement.getVariationCategoryList()
             cell._edit(category_list=vcl,
-                      # XXX hardcoded value
-                      mapped_value_property_list=['quantity', 'price'],
-                      membership_criterion_category_list=vcl,
-                      membership_criterion_base_category_list=movement.\
+                       # XXX hardcoded value
+                       mapped_value_property_list=('quantity', 'price'),
+                       membership_criterion_category_list=vcl,
+                       membership_criterion_base_category_list=movement.\
                                              getVariationBaseCategoryList())
-            object_to_update = cell
           else:
             raise MatrixError, 'Cell: %s already exists on %s' % \
                   (str(cell_key), str(delivery_line))
+          object_to_update = cell
         self._setUpdated(object_to_update, 'cell')
         self._setDeliveryMovementProperties(
                             object_to_update, movement, property_dict,
