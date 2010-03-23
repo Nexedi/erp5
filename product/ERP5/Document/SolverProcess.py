@@ -141,13 +141,13 @@ class SolverProcess(XMLObject, ActiveProcess):
           # Detect conflicts. This includes finding out that a solver which
           # is exclusive per movement, conflicts with another solver on the same 
           # movement
-          solver_message_list = solver.getSolverConflictMessageList(movement, configuration_mapping, solver_dict)
+          solver_message_list = solver.getSolverConflictMessageList(movement, configuration_mapping, solver_dict, movement_dict)
           if solver_message_list:
             message_list.extend(solver_message_list)
             continue # No need to keep on
           # Solver key contains only those properties which differentiate
           # solvers (ex. there should be only Production Reduction Solver)
-          solver_key = solver.getSolverProcessGroupingKey(movement, configuration_mapping, solver_dict)
+          solver_key = solver.getSolverProcessGroupingKey(movement, configuration_mapping, solver_dict, movement_dict)
           solver_key_dict = grouped_solver_dict.setdefault(solver, {})
           solver_movement_dict = solver_key_dict.setdefault(solver_key, {})
           movement_solver_configuration_list = movement_solver_dict.setdefault(solver, [])
