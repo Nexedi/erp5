@@ -164,7 +164,7 @@ class TextDocument(Document, TextContent):
         except AttributeError:
           LOG('TextDocument', WARNING, 'could not get the substitution'
               ' mapping method %s from %r, so the content will not be'
-              ' substituted.' % (method_id, self))
+              ' substituted.' % (method_id, self.getRelativeUrl()))
           return text
 
         is_str = isinstance(text, str)
