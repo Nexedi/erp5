@@ -369,7 +369,8 @@ class TradeModelLine(Predicate, XMLMatrix, Amount):
               current_aggregated_amount_list=movement_list,
               current_movement=tmp_movement,
               aggregated_movement_list=aggregated_movement_list,
-              trade_model_line=self)
+              trade_model_line=self,
+              **kw)
         if tmp_movement is None:
           # Do nothing
           return aggregated_amount_list
