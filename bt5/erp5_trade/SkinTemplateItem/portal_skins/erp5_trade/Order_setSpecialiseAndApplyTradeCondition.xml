@@ -55,7 +55,7 @@
             <key> <string>_body</string> </key>
             <value> <string>context.setSpecialiseValueList(relation_value_list, portal_type=portal_type)\n
 \n
-if relation_uid_list:\n
+if relation_value_list:\n
   context.Order_applyTradeCondition(context.getSpecialiseValue(), force=1)\n
 </string> </value>
         </item>
@@ -97,7 +97,6 @@ if relation_uid_list:\n
                             <string>portal_type</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>relation_uid_list</string>
                           </tuple>
                         </value>
                     </item>
