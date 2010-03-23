@@ -57,9 +57,8 @@ class TradeModelSolver(AcceptSolver):
   # ISolver Implementation
   def solve(self):
     """
-    Adopt new quantity to simulation movements, with keeping the
-    original one recorded, and then update Trade Model related lines
-    accordingly.
+    Adopt new values to simulation movements, with keeping the original
+    one recorded, and then update Trade Model related lines accordingly.
     """
     configuration_dict = self.getConfigurationPropertyDict()
     portal_type = self.getPortalObject().portal_types[self.getPortalType()]
@@ -98,11 +97,14 @@ class TradeModelSolver(AcceptSolver):
             value_dict.update({'quantity':new_quantity})
           else:
             value_dict.update({solved_property:new_value})
-        self._solveRecursively(simulation_movement, value_dict)
+        for property_id, value in value_dict.iteritems():
+          if not simulation_movement.isPropertyRecorded(property_id):
+            simulation_movement.recordProperty(property_id)
+          simulation_movement.setMappedProperty(property_id, value)
         simulation_movement.expand()
 
     # Third, adopt changes on trade model related lines.
-    for movement in self.getDeliveryValueList():
+    for movement in trade_model_related_movement_list:
       for solved_property in solved_property_list:
         if solved_property == 'quantity':
           total_quantity = sum(
