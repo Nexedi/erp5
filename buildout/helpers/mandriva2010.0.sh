@@ -19,6 +19,7 @@ cpio
 flex
 gcc
 gcc-c++
+groff
 libbzip2-devel
 libgdbm-devel
 libglib2.0-devel
