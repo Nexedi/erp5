@@ -1137,7 +1137,10 @@ class ObjectTemplateItem(BaseTemplateItem):
         if recursive_path in update_dict:
           action = update_dict[recursive_path]
           if action in ('remove', 'save_and_remove'):
-            document = portal.restrictedTraverse(recursive_path)
+            document = portal.restrictedTraverse(recursive_path, None)
+            if document is None:
+              # It happens if the parent of target path is removed before
+              continue
             if getattr(aq_base(document), 'getParentValue', None) is not None:
               # regular ERP5 object
               parent = document.getParentValue()
