@@ -162,6 +162,8 @@ class EquivalenceTesterMixin:
     divergence.
     """
     divergence_message = self.explain(simulation_movement)
+    if divergence_message is None:
+      return None
     # XXX explanation message should be provided by each class, each
     # portal type or each document.
     message = '<a href="${decision_url}">${property_name} of ${decision_value} of ${decision_type} ${decision_title}</a> of <a href="${delivery_url}">${delivery_title}</a> is different from <a href="${prevision_url}">planned ${property_name} of ${prevision_value}</a>.'
