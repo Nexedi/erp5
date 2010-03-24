@@ -157,7 +157,9 @@
                 </item>
                 <item>
                     <key> <string>items</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>required</string> </key>
@@ -233,20 +235,7 @@
                 <item>
                     <key> <string>items</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>FLOOR</string>
-                          <string>FLOOR</string>
-                        </tuple>
-                        <tuple>
-                          <string>CEIL</string>
-                          <string>CEIL</string>
-                        </tuple>
-                        <tuple>
-                          <string>MID</string>
-                          <string>MID</string>
-                        </tuple>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -259,7 +248,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Rounding Mode</string> </value>
+                    <value> <string>Decimal Rounding Option</string> </value>
                 </item>
                 <item>
                     <key> <string>unicode</string> </key>
@@ -271,6 +260,22 @@
                 </item>
               </dictionary>
             </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>python:[(\'\', \'\')]+here.portal_roundings.getDecimalRoundingOptionItemList()</string> </value>
         </item>
       </dictionary>
     </pickle>
