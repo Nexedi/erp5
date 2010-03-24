@@ -297,10 +297,12 @@ class Resource(XMLMatrix, Variated):
         return method(context)
 
       if context is None:
-        transformation_list = self.portal_catalog(portal_type="Transformation",
-                                            resource_category_uid=self.getUid(),
-                                            sort_on=[('version', 'descending')],
-                                            limit=1)
+        transformation_list = self.portal_catalog(
+            portal_type="Transformation",
+            resource_relative_url=self.getRelativeUrl(),
+            sort_on=[('version', 'descending')],
+            limit=1
+        )
         if len(transformation_list) > 0:
           return transformation_list[0].getObject()
         return None
