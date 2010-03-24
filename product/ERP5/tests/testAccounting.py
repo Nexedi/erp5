@@ -194,6 +194,8 @@ class AccountingTestCase(ERP5TypeTestCase):
     
     self.validateRules()
 
+    self.createUserAndlogin(self.username)
+
     # and all this available to catalog
     transaction.commit()
     self.tic()
