@@ -30,14 +30,13 @@
 import unittest
 import transaction
 
-from Products.ERP5.tests.testBPMCore import TestBPMMixin
+from Products.ERP5.tests.testERP5SimulationBPMCore import TestBPMMixin
 from Products.ERP5Type.tests.Sequence import SequenceList
 from DateTime import DateTime
 from Products.CMFCore.utils import getToolByName
 from Products.ERP5.PropertySheet.TradeModelLine import (TARGET_LEVEL_MOVEMENT,
                                                         TARGET_LEVEL_DELIVERY)
 from Products.ERP5Type.tests.utils import createZODBPythonScript
-from Products.ERP5Type.tests.backportUnittest import expectedFailure
 
 class TestTradeModelLineMixin(TestBPMMixin):
   """Provides methods to implementations sharing similar logic to Trade Model Lines"""
@@ -78,8 +77,6 @@ class TestTradeModelLine(TestTradeModelLineMixin):
   modified_order_line_price_ratio = 2.0
   modified_invoice_line_quantity_ratio = modified_order_line_quantity_ratio \
       = 2.5
-
-  modified_packing_list_line_quantity_ratio = 0.5
 
   COMMON_DOCUMENTS_CREATION_SEQUENCE_STRING = """
               CreateServiceTax
@@ -132,6 +129,11 @@ class TestTradeModelLine(TestTradeModelLineMixin):
               ModifyOrderLineDiscountedTaxed
               Tic
   """ + AGGREGATED_AMOUNT_LIST_CHECK_SEQUENCE_STRING
+
+  # reset some values
+  def afterSetUp(self):
+    TestTradeModelLineMixin.afterSetUp(self)
+    self.modified_packing_list_line_quantity_ratio = 0.5
 
   # Helper methods
   def _solveDivergence(self, obj, property, decision, group='line'):
@@ -241,7 +243,15 @@ class TestTradeModelLine(TestTradeModelLineMixin):
 
   def stepAcceptDecisionQuantityInvoice(self, sequence=None, **kw):
     invoice = sequence.get('invoice')
-    self._solveDivergence(invoice, 'quantity', 'accept')
+    solver_tool = self.portal.portal_solvers
+    solver_process = solver_tool.newSolverProcess(invoice)
+    for quantity_solver_decision in filter(
+      lambda x:x.getCausalityValue().getTestedProperty()=='quantity',
+      solver_process.contentValues()):
+      # use Trade Model Solver.
+      quantity_solver_decision.setSolverValue(self.portal.portal_types['Trade Model Solver'])
+    solver_process.buildTargetSolverList()
+    solver_process.solve()
 
   def stepAdoptPrevisionQuantityInvoice(self, sequence=None, **kw):
     invoice = sequence.get('invoice')
@@ -2069,8 +2079,6 @@ class TestTradeModelLine(TestTradeModelLineMixin):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)
 
-  # This test does not work without implementing an appropriate Trade Model Solver.
-  @expectedFailure
   def test_TradeModelRuleSimulationBuildInvoiceInvoiceLineModifyDivergencyAndSolving(self, quiet=quiet):
     """Check that after changing invoice line invoice is properly diverged and it is possible to solve"""
     sequence_list = SequenceList()
