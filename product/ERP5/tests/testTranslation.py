@@ -133,7 +133,7 @@ class TestWorkflowStateTitleTranslation(ERP5TypeTestCase):
         for state in workflow.states.items():
           state_title = state[1].title
           state_id = state[0]
-          msgid = getMessageIdWithContext(state_title, 'state', workflow_id)
+	  msgid = '%s [state in %s]' % (state_title, workflow_id)
           translated_state_title = self.getTranslation(msgid)
 
           if translated_state_title is not None:
