@@ -1,3 +1,6 @@
+2010-03-24 nicolas
+* Change duration cache of dms_cache_factory to avoid keeping converted values indefinitely. New duration is 6 month.
+
 2010-03-12 ivan
 * Add conversion_failed state (indicating an external OOOd failure) and needed transitions.
 

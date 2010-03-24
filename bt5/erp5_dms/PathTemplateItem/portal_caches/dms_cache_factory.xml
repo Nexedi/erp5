@@ -29,7 +29,12 @@
         </item>
         <item>
             <key> <string>cache_duration</string> </key>
-            <value> <int>0</int> </value>
+            <value> <int>15768000</int> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string>Keep converted values 6 month maximum\n
+60*60*24*365/2</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
