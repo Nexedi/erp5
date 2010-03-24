@@ -1,3 +1,6 @@
+2010-03-24 tatuya
+* Add Test Method Id field into BusinessPath_viewAdvanced so that Business Process will select appropriate Business Paths using the test method through Predicate API.
+
 2010-03-16 yo
 * Add Returned Purchase Packing List family.
 
