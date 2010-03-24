@@ -45,9 +45,9 @@ rpm-appliance:
 	# just make and wait...
 	cd rpmgen; make
 	# now we have the erp5 software rpm and we need it installed to build tiolive application rpm
-	if test -d /home/`whoami`/rpmbuild/RPMS/x86_64; \
-	then find /home/`whoami`/rpmbuild/RPMS/x86_64/ -name  erp5-`cat VERSION.txt`* -print0 | xargs -0 sudo urpmi; \
-	else find /home/`whoami`/rpmbuild/RPMS/i586/ -name  erp5-`cat VERSION.txt`* -print0 | xargs -0 sudo urpmi; \
+	if test -d ~/rpmbuild/RPMS/x86_64; \
+	then find ~/rpmbuild/RPMS/x86_64/ -name  erp5-`cat VERSION.txt`*.rpm -print0 | xargs -0 sudo urpmi; \
+	else find ~/rpmbuild/RPMS/i586/ -name  erp5-`cat VERSION.txt`*.rpm -print0 | xargs -0 sudo urpmi; \
  	fi
 	# building tiolive appliance
 	sudo rpmbuild -bb rpmgen/spec/tiolive-application-buildout-mandriva2010.spec
