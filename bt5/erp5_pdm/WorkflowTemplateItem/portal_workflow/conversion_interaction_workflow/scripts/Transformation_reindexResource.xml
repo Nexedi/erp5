@@ -57,7 +57,8 @@
 resource = transformation.getResourceValue()\n
 \n
 if resource is not None:\n
-  resource.reindexObject()\n
+  activate_kw=dict(after_path=transformation.getPath())\n
+  resource.reindexObject(activate_kw=activate_kw)\n
 </string> </value>
         </item>
         <item>
@@ -100,6 +101,8 @@ if resource is not None:\n
                             <string>_getattr_</string>
                             <string>resource</string>
                             <string>None</string>
+                            <string>dict</string>
+                            <string>activate_kw</string>
                           </tuple>
                         </value>
                     </item>
