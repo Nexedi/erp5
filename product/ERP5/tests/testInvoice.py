@@ -3460,21 +3460,24 @@ class TestSaleInvoice(TestSaleInvoiceMixin, TestInvoice, ERP5TypeTestCase):
           invoice_line.getDeliveryRelatedValue(portal_type='Simulation Movement'
               ).getQuantity())
 
-    # the packing list is divergent, because it is not frozen
-    self.assertEquals('diverged', packing_list.getCausalityState())
-      
-    divergence_list = packing_list.getDivergenceList()
-    self.assertEquals(1, len(divergence_list))
-
-    divergence = divergence_list[0]
-    self.assertEquals('quantity', divergence.tested_property)
-
-    # if we adopt prevision on this packing list, both invoice and packing list
-    # will be solved
-    self._adoptDivergenceOnPackingList(packing_list, divergence_list)
-    
-    transaction.commit()
-    self.tic()
+    if self.portal._getOb('portal_solvers', None) is not None:
+      # With new simulation solvers, changes on simulation movements will
+      # not backtrack.
+      pass
+    else:
+      # With legacy simulation solvers, changes on simulation movements
+      # will backtrack if simulation movements are not frozen.
+      # the packing list is divergent, because it is not frozen
+      self.assertEquals('diverged', packing_list.getCausalityState())
+      divergence_list = packing_list.getDivergenceList()
+      self.assertEquals(1, len(divergence_list))
+      divergence = divergence_list[0]
+      self.assertEquals('quantity', divergence.tested_property)
+      # if we adopt prevision on this packing list, both invoice and
+      # packing list will be solved
+      self._adoptDivergenceOnPackingList(packing_list, divergence_list)
+      transaction.commit()
+      self.tic()
     self.assertEquals('solved', packing_list.getCausalityState())
     self.assertEquals('solved', invoice.getCausalityState())
   
