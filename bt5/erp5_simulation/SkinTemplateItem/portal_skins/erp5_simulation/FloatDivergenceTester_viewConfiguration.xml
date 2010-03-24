@@ -85,7 +85,7 @@
                     <value>
                       <list>
                         <string>my_decimal_alignment_enabled</string>
-                        <string>my_decimal_rouding_option</string>
+                        <string>my_decimal_rounding_option</string>
                         <string>my_decimal_exponent</string>
                       </list>
                     </value>
