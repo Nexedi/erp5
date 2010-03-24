@@ -148,6 +148,11 @@ class Person(XMLObject):
     def title_or_id(self):
       return self.getTitleOrId()
 
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'hasTitle')
+    def hasTitle(self):
+      return not not self.getTitle()
+
     def _setFirstName(self, value):
       """
         Update Title if first_name is modified

@@ -134,6 +134,12 @@ class TestPerson(ERP5TypeTestCase):
     self.assertEquals('first last', p.getTitleOrId())
     self.assertEquals('first last', p.title_or_id())
     
+  def testHasTitle(self):
+    p = self._makeOne('person')
+    self.assertFalse(p.hasTitle())
+    p.setFirstName('bob')
+    self.assertTrue(p.hasTitle())
+
   def testSetPasswordSecurity(self):
     p = self._makeOne('person')
     p.manage_permission(Permissions.SetOwnPassword, [], 0)
