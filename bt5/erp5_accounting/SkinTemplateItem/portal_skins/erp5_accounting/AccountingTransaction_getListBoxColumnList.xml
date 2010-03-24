@@ -77,11 +77,11 @@ else:\n
   min_payment_count = 1\n
 \n
 if context.getSourceSection() and context.getDestinationSection():\n
-  min_section_count = 3\n
+  min_section_count = 2\n
 else:\n
   # if we have no mirror_section on the transaction but a mirror_section on\n
   # a line, we have to show the column\n
-  min_section_count = 2\n
+  min_section_count = 1\n
 \n
 multiple_sections = len(section_dict) > min_section_count\n
 multiple_payment = len(payment_dict) > min_payment_count\n
