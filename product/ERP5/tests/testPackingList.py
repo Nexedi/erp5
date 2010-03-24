@@ -412,6 +412,7 @@ class TestPackingListMixin(TestOrderMixin):
     self.assertEquals(len(simulation_movement_list),1)
     org3 = sequence.get('organisation3')
     for simulation_movement in simulation_movement_list:
+      simulation_movement = simulation_movement.objectValues()[0].objectValues()[0]
       self.assertEquals(simulation_movement.getDestinationValue(),org3)
 
   def stepChangePackingListStartDate(self, sequence=None, sequence_list=None, **kw):
@@ -439,6 +440,7 @@ class TestPackingListMixin(TestOrderMixin):
     simulation_movement_list = applied_rule.objectValues()
     self.assertEquals(len(simulation_movement_list),1)
     for simulation_movement in simulation_movement_list:
+      simulation_movement = simulation_movement.objectValues()[0].objectValues()[0]
       self.assertEquals(simulation_movement.getQuantity() + \
                         simulation_movement.getDeliveryError(),
                         self.default_quantity)
@@ -451,6 +453,7 @@ class TestPackingListMixin(TestOrderMixin):
     simulation_movement_list = applied_rule.objectValues()
     self.assertEquals(len(simulation_movement_list),2)
     for simulation_movement in simulation_movement_list:
+      simulation_movement = simulation_movement.objectValues()[0].objectValues()[0]
       self.assertEquals(simulation_movement.getQuantity() + \
                         simulation_movement.getDeliveryError(),
                         self.default_quantity)
