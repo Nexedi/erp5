@@ -3,6 +3,9 @@ PACKAGE_INSTALL_PATH='opt/erp5/'`cat VERSION.txt`
 ifndef $(PACKAGE_VERSION)
 PACKAGE_VERSION=`cat VERSION.txt`
 endif
+ifndef $(PACKAGE_RELEASE)
+PACKAGE_RELEASE="None"
+endif
 
 software: bin/buildout
 	bin/buildout
@@ -36,9 +39,9 @@ rpm-appliance:
 	# set the correct name erp5-5.4.6
 	sed -i "s,name = erp5-official-buildout,name = erp5-`cat VERSION.txt`,g" rpmgen/buildout.cfg
 	# set the correct version defined in the main buildout
-	sed -i "s,\$${checkout:location\}\/VERSION.txt,`cat VERSION.txt`,g" rpmgen/buildout.cfg
+	sed -i "s,\$${checkout:location\}\/VERSION.txt,$(PACKAGE_VERSION),g" rpmgen/buildout.cfg
 	# set the correct release
-	sed -i "s,release = 001,release = $(PACKAGE_VERSION),g" rpmgen/buildout.cfg
+	if [ $(PACKAGE_RELEASE) != 'None' ]; then sed -i "s,release = mdv2010.0,release = $(PACKAGE_RELEASE),g" rpmgen/buildout.cfg; fi
 	# it must use version defined in the main buildout
 	sed -i "s,\$$(shell cat parts/checkout/VERSION.txt), `cat VERSION.txt`,g" rpmgen/Makefile
 	sudo helpers/mandriva2010.0.sh
