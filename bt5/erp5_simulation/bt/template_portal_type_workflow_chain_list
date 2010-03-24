@@ -9,5 +9,6 @@ Quantity Cancel Solver | solver_workflow
 Quantity Split Solver | solver_workflow
 Solver Process | solver_process_workflow
 String Divergence Tester | edit_workflow
+Trade Model Solver | solver_workflow
 Unify Solver | solver_workflow
 Variation Divergence Tester | edit_workflow

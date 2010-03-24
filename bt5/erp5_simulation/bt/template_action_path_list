@@ -32,6 +32,8 @@ Solver Type | view
 String Divergence Tester | configuration
 String Divergence Tester | predicate
 String Divergence Tester | view
+Trade Model Solver | configuration
+Trade Model Solver | view
 Unify Solver | configuration
 Unify Solver | view
 Variation Divergence Tester | configuration
