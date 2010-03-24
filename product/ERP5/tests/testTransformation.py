@@ -26,8 +26,8 @@
 #
 ##############################################################################
 
-from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from testProductionOrder import TestProductionOrderMixin
+from testInventoryAPI import BaseTestUnitConversion
 import transaction
 
 class TestTransformationMixin(TestProductionOrderMixin):
@@ -92,12 +92,24 @@ class TestTransformationMixin(TestProductionOrderMixin):
     resource.setVariationCategoryList(self.button_variation_category_list)
 
 
-class TestTransformation(TestTransformationMixin, ERP5TypeTestCase):
+class TestTransformation(TestTransformationMixin, BaseTestUnitConversion):
+  QUANTITY_UNIT_DICT = {
+    # base: (reference, dict_of_others)
+    'mass':   ('kilogram', dict(gram=0.001)),
+  }
+  METRIC_TYPE_CATEGORY_LIST = (
+    'mass/net',
+  )
+
+  def afterSetUp(self):
+    TestTransformationMixin.afterSetUp(self)
+    BaseTestUnitConversion.afterSetUp(self)
 
   def getBusinessTemplateList(self):
     """
     """
-    return ('erp5_base','erp5_pdm', 'erp5_trade', 'erp5_mrp',)
+    return ('erp5_base','erp5_pdm', 'erp5_trade', 'erp5_mrp', 'erp5_apparel',
+            'erp5_dummy_movement', 'erp5_project')
 
   def test_01_getAggregatedAmountListSimple(self):
     """
@@ -213,6 +225,7 @@ class TestTransformation(TestTransformationMixin, ERP5TypeTestCase):
         variation_base_category_list = self.swimsuit_variation_base_category_list
     )
     transformation.setResourceValue(swimsuit)
+    transaction.commit()
 
     fabric = self.createResource(
         'Fabric',
@@ -284,6 +297,11 @@ class TestTransformation(TestTransformationMixin, ERP5TypeTestCase):
     transaction.commit()
     self.tic()
 
+    self.assertEqual(swimsuit.getDefaultTransformationValue().getRelativeUrl(),
+                     transformation.getRelativeUrl())
+    self.assertEqual(fabric.getDefaultTransformationValue(), None)
+    self.assertEqual(button.getDefaultTransformationValue(), None)
+
     # Swimming Suit does not use ALL categories in Size category.
     # As a result, transformation lines should restrict their dimensions,
     # using the range induced by the resource, instead of naively
@@ -325,7 +343,39 @@ class TestTransformation(TestTransformationMixin, ERP5TypeTestCase):
             self.fail("Invalid Resource: %s" % resource)
         n += 1
 
+
+    for size in self.size_category_list:
+      for colour in self.colour_category_list:
+        self.makeMovement(swimsuit_quantity, swimsuit, size, colour)
+
+    transaction.commit()
+    self.tic()
+
+    inv = self.getSimulationTool().getInventoryList(
+            node_uid=self.node.getUid(),
+            transformed_resource=[fabric.getRelativeUrl(),
+                                  button.getRelativeUrl(),
+                                  "operation/sewing"],
+            )
+    self.assertEquals(len(inv),
+          len(transformation) * len(self.size_category_list) \
+            * len(self.colour_category_list))
+
+    return
     # XXX (will be expanded)
+
+    for i, size in enumerate(self.size_category_list):
+      for colour in self.colour_category_list:
+        variation_text = '\n'.join([colour, size])
+        inv = self.getSimulationTool().getInventoryList(
+                node_uid=self.mirror_node.getUid(),
+                transformed_resource=[fabric.getRelativeUrl(),
+                                      button.getRelativeUrl(),
+                                      "operation/sewing"],
+                variation_text=variation_text,
+              )
+        import pdb; pdb.set_trace()
+
 
   def test_resourceIsNotAcquiredOnTransformationLines(self):
     '''
