@@ -361,9 +361,15 @@ class TestTransformation(TestTransformationMixin, BaseTestUnitConversion):
           len(transformation) * len(self.size_category_list) \
             * len(self.colour_category_list))
 
-    return
-    # XXX (will be expanded)
+    self.assertEquals(len(self.getSimulationTool().getInventoryList(
+            node_uid=self.node.getUid(),
+            transformed_resource=[fabric.getRelativeUrl(),
+                                  button.getRelativeUrl(),
+                                  "operation/sewing"],
+            variation_text="something_not_existing",
+            )), 0)
 
+    n = 1
     for i, size in enumerate(self.size_category_list):
       for colour in self.colour_category_list:
         variation_text = '\n'.join([colour, size])
@@ -374,7 +380,23 @@ class TestTransformation(TestTransformationMixin, BaseTestUnitConversion):
                                       "operation/sewing"],
                 variation_text=variation_text,
               )
-        import pdb; pdb.set_trace()
+        self.assertEquals(len(inv), len(transformation))
+        for line in inv:
+          self.assertEquals(line.getVariationText(), variation_text)
+          self.assertEquals(line.getResource(), swimsuit.getRelativeUrl())
+          transformed_resource = line.transformed_resource_relative_url
+          if transformed_resource == fabric.getRelativeUrl():
+            self.assertEquals(line.transformed_variation_text, colour)
+            self.assertEquals(line.total_quantity, (i+1)*swimsuit_quantity)
+          elif transformed_resource == button.getRelativeUrl():
+            self.assertEquals(line.transformed_variation_text, size)
+            self.assertEquals(line.total_quantity, button_number*swimsuit_quantity)
+          elif transformed_resource == "operation/sewing":
+            self.assertEquals(line.total_quantity, n*swimsuit_quantity)
+            self.assertEquals(line.transformed_variation_text, "")
+          else:
+            self.fail("Invalid Transformed Resource: %s" % transformed_resource)
+        n += 1
 
 
   def test_resourceIsNotAcquiredOnTransformationLines(self):
