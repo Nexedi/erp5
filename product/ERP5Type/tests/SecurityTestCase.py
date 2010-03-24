@@ -29,6 +29,7 @@
 """Base Class for security tests using ERP5Security and DCWorkflow
 """
 
+from pprint import pformat
 import transaction
 from AccessControl.SecurityManagement import newSecurityManager
 from AccessControl.SecurityManagement import getSecurityManager
@@ -71,14 +72,14 @@ class AssertPermissionMethod(object):
           groups = user.getGroups()
         self._instance.fail(
           'User %s does NOT have %s permission on %s %s (user roles: [%s], '
-          'roles needed: [%s], existing local roles: %s, '
+          'roles needed: [%s], existing local roles:\n%s\n'
           'your user groups: [%s])' %
           (username, self._permission_name, document.getPortalTypeName(),
             document, ', '.join(user.getRolesInContext(document)),
            ', '.join([x['name'] for x in
                       document.rolesOfPermission(self._permission_name)
                       if x['selected']]),
-           repr(document.get_local_roles()),
+           pformat(document.get_local_roles()),
            ', '.join(groups)))
     finally:
       setSecurityManager(sm)
