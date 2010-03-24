@@ -54,13 +54,3 @@ class IHtmlConvertable(Interface):
     kw -- optional parameters which can be passed to the
           conversion engine
     """
-
-  def asSafeHTML(**kw):
-    """
-    Converts the current document to HTML, and remove
-    emmbed javascript, forms, any external plugins imports.
-
-    kw -- optional parameters which can be passed to the
-          conversion engine
-    """
-

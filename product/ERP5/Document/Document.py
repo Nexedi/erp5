@@ -1178,25 +1178,6 @@ class Document(PermanentURLMixIn, XMLObject, UrlMixIn, CachedConvertableMixin, S
       mime, html = self.convert(**kw)
       return self._stripHTML(str(html))
 
-  security.declareProtected(Permissions.View, 'asSafeHTML')
-  def asSafeHTML(self, **kw):
-    """
-      Converts the current document to HTML, strip it and remove
-      emmbed javascript, forms, any external plugins imports.
-    """
-    format = 'text/x-html-safe'
-    if not self.hasBaseData():
-      return ''
-    try:
-      mime, data = self.getConversion(format=format)
-      return data
-    except KeyError:
-      kw['format'] = 'html'
-      mime, html = self.convert(**kw)
-      safe_html = self._safeHTML(str(html), format=format)
-      self.setConversion(safe_html, mime=mime, format=format)
-      return safe_html
-
   def _guessEncoding(self, string):
     """
       Try to guess the encoding for this string.
