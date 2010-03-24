@@ -92,7 +92,8 @@ class BusinessProcess(Path, XMLObject):
       return business_path_list
     trade_phase = set(trade_phase)
     for document in business_path_list:
-      if trade_phase.intersection(document.getTradePhaseList()):
+      if trade_phase.intersection(document.getTradePhaseList()) and \
+              document.test(context):
         result.append(document)
     return result
 

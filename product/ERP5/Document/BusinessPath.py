@@ -33,10 +33,11 @@ from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5.Document.Path import Path
+from Products.ERP5.Document.Predicate import Predicate
 
 import zope.interface
 
-class BusinessPath(Path):
+class BusinessPath(Path, Predicate):
   """
     The BusinessPath class embeds all information related to
     lead times and parties involved at a given phase of a business
@@ -88,7 +89,8 @@ class BusinessPath(Path):
                             interfaces.IArrowBase,
                             interfaces.IBusinessPath,
                             interfaces.IBusinessBuildable,
-                            interfaces.IBusinessCompletable
+                            interfaces.IBusinessCompletable,
+                            interfaces.IPredicate,
                             )
 
   # IArrowBase implementation
@@ -366,6 +368,17 @@ class BusinessPath(Path):
       movement_list.extend(movement.getDeliveryRelatedValueList(
         portal_type='Simulation Movement'))
     return movement_list
+
+  # IPredicate implementation
+  security.declareProtected(Permissions.AccessContentsInformation, 'test')
+  def test(self, *args, **kw):
+    """
+    Returns whether the business path is used or not by a given movement context.
+    If test method is not defined in a business path, returns True
+    """
+    if not self.getTestMethodId():
+      return True
+    return Predicate.test(self, *args, **kw)
 
   # IBusinessPath implementation
   security.declareProtected(Permissions.AccessContentsInformation,
