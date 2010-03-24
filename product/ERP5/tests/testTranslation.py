@@ -280,6 +280,12 @@ class TestWorkflowStateTitleTranslation(ERP5TypeTestCase):
     self.assertEquals(item.getTranslatedValidationStateTitle(), "En bon usage")
     self.assertEquals(organisation.getTranslatedValidationStateTitle(),
                       'Validé')
+    # Now run indexation of translations.
+    self.portal.ERP5Site_updateTranslationTable()
+    # Ckeck queries with translated workflow state title generated with
+    # getMessageIdWithContext
+    self.assertTrue(len(self.portal.portal_catalog(
+                            translated_validation_state_title="En bon usage")))
 
 class LanguageGetter(MethodObject.Method):
 
