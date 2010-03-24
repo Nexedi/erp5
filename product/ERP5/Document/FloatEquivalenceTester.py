@@ -79,11 +79,6 @@ class FloatEquivalenceTester(Predicate, EquivalenceTesterMixin):
         prevision_movement.getDelivery() == decision_movement.getRelativeUrl():
       decision_value *= prevision_movement.getDeliveryRatio()
 
-    # XXX do we need to support order_ratio too?
-    if self.getProperty('use_order_ratio') and \
-        decision_movement.getOrder() == prevision_movement.getRelativeUrl():
-      prevision_value *= decision_movement.getOrderRatio()
-
     delta = decision_value - prevision_value
     # XXX we should use appropriate property sheets and getter methods
     # for these properties.
