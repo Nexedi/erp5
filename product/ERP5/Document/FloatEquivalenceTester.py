@@ -56,6 +56,7 @@ class FloatEquivalenceTester(Predicate, EquivalenceTesterMixin):
                       , PropertySheet.DublinCore
                       , PropertySheet.EquivalenceTester
                       , PropertySheet.SolverSelection
+                      , PropertySheet.DecimalOption
                      )
 
   # Declarative interfaces
@@ -78,6 +79,10 @@ class FloatEquivalenceTester(Predicate, EquivalenceTesterMixin):
     if self.getProperty('use_delivery_ratio') and \
         prevision_movement.getDelivery() == decision_movement.getRelativeUrl():
       decision_value *= prevision_movement.getDeliveryRatio()
+
+    if self.isDecimalAlignmentEnabled():
+      decision_value = self._round(decision_value)
+      prevision_value = self._round(prevision_value)
 
     delta = decision_value - prevision_value
     # XXX we should use appropriate property sheets and getter methods
@@ -145,10 +150,23 @@ class FloatEquivalenceTester(Predicate, EquivalenceTesterMixin):
             dict(property_name=tested_property,
                  value=relative_tolerance_max))
     return None
-    # XXX the followings are not treated yet:
-    # * decimal_alignment_enabled
-    # * decimal_rounding_option
-    # * decimal_exponent
+
+  def _round(self, value):
+    from decimal import (Decimal, ROUND_DOWN, ROUND_UP, ROUND_CEILING,
+                         ROUND_FLOOR, ROUND_HALF_DOWN, ROUND_HALF_EVEN,
+                         ROUND_HALF_UP)
+    # Python2.4 did not support ROUND_05UP yet.
+    rounding_option_dict = {'ROUND_DOWN':ROUND_DOWN,
+                            'ROUND_UP':ROUND_UP,
+                            'ROUND_CEILING':ROUND_CEILING,
+                            'ROUND_FLOOR':ROUND_FLOOR,
+                            'ROUND_HALF_DOWN':ROUND_HALF_DOWN,
+                            'ROUND_HALF_EVEN':ROUND_HALF_EVEN,
+                            'ROUND_HALF_UP':ROUND_HALF_UP}
+    rounding_option = rounding_option_dict.get(self.getDecimalRoundingOption(),
+                                               ROUND_DOWN)
+    return Decimal(str(value)).quantize(Decimal(self.getDecimalExponent()),
+                                    rounding=rounding_option)
 
   def getUpdatablePropertyDict(self, prevision_movement, decision_movement):
     """
