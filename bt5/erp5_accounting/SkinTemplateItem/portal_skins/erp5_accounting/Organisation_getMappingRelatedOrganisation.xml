@@ -80,8 +80,6 @@ while group.getPortalType() != \'Base Category\':\n
   group_chain.append(group)\n
   group = group.getParentValue()\n
 \n
-group_chain.reverse()\n
-\n
 for group in group_chain:\n
   organisation = getOrganisationForSectionCategory(group)\n
   if organisation is not None and (\n
