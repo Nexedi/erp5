@@ -57,10 +57,10 @@
 \n
 membership_criterion_category_list = budget.getMembershipCriterionCategoryList()\n
 \n
+# Remove all previous memberships from the same base\n
+cleaned_membership_criterion_category_list = []\n
 for base_category in budget.getMembershipCriterionBaseCategoryList():\n
   if base_category in budget.getVariationBaseCategoryList():\n
-    # Remove all previous memberships from the same base\n
-    cleaned_membership_criterion_category_list = []\n
     for membership_criterion_category in membership_criterion_category_list:\n
       if not membership_criterion_category.startswith("%s/" % base_category):\n
         cleaned_membership_criterion_category_list.append(membership_criterion_category)\n
@@ -110,9 +110,9 @@ budget.setMembershipCriterionCategoryList(cleaned_membership_criterion_category_
                             <string>budget</string>
                             <string>_getattr_</string>
                             <string>membership_criterion_category_list</string>
+                            <string>cleaned_membership_criterion_category_list</string>
                             <string>_getiter_</string>
                             <string>base_category</string>
-                            <string>cleaned_membership_criterion_category_list</string>
                             <string>membership_criterion_category</string>
                           </tuple>
                         </value>
