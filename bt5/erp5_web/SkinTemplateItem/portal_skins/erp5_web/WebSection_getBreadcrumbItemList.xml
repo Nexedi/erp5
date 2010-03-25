@@ -120,9 +120,7 @@ for i in xrange(0, len(chain_list)):\n
     if i == 0:\n
       title = context.Base_translateString(\'Home\')\n
     else:\n
-      title = crumb.getProperty(\'translated_short_title\', None) or\\\n
-              crumb.getProperty(\'translated_title_or_id\', None) or\\\n
-              crumb.title\n
+      title = crumb.Base_getTitle()\n
     crumb_list.append((title, crumb))\n
   except Unauthorized:\n
     # We should ignore any item in the chain which raises \n
