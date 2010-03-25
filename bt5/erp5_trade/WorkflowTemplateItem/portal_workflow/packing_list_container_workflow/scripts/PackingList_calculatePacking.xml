@@ -54,10 +54,13 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>packing_list = state_change[\'object\']\n
+isTransitionPossible = packing_list.getPortalObject().portal_workflow.isTransitionPossible\n
 if packing_list.isPacked():\n
-  packing_list.pack()\n
-elif packing_list.getPortalObject().portal_workflow.isTransitionPossible(packing_list, \'miss\'):\n
-  packing_list.miss()\n
+  if isTransitionPossible(packing_list, \'pack\'):\n
+    packing_list.pack()\n
+else:\n
+  if isTransitionPossible(packing_list, \'miss\'):\n
+    packing_list.miss()\n
 </string> </value>
         </item>
         <item>
@@ -99,6 +102,7 @@ elif packing_list.getPortalObject().portal_workflow.isTransitionPossible(packing
                             <string>_getitem_</string>
                             <string>packing_list</string>
                             <string>_getattr_</string>
+                            <string>isTransitionPossible</string>
                           </tuple>
                         </value>
                     </item>
