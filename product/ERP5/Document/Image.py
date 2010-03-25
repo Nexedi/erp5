@@ -53,6 +53,8 @@ except ImportError:
 from zLOG import LOG, WARNING
 
 from Products.CMFCore.utils import getToolByName
+#Mixin import
+from Products.ERP5.mixin.convertable import ConvertableMixin
 
 default_displays_id_list = ('nano', 'micro', 'thumbnail',
                             'xsmall', 'small', 'medium',
@@ -60,7 +62,7 @@ default_displays_id_list = ('nano', 'micro', 'thumbnail',
 
 default_formats = ['jpg', 'jpeg', 'png', 'gif', 'pnm', 'ppm']
 
-class Image(File, OFSImage):
+class Image(File, OFSImage, ConvertableMixin):
   """
     An Image is a File which contains image data. It supports
     various conversions of format, size, resolution through
@@ -322,11 +324,36 @@ class Image(File, OFSImage):
     return mime_type, result
 
   # Conversion API
+  security.declareProtected(Permissions.View, 'getAllowedTargetItemList')
+  def getAllowedTargetItemList(self):
+    import commands
+    import re
+    import os
+    new_result = []
+    filename = os.path.abspath(self.getSourceReference())
+    result = commands.getstatusoutput('convert -list format %s ' % self.getSourceReference())
+    new_list = re.split('\n',result[1])
+    allowed = []
+    for new_str in new_list:
+      test_str = new_str.lstrip()
+      pattern = re.compile(r'''([A-z]+[*]?\s+[A-z]+\s+[rw+-]+\s+[A-z]+\s+[A-z]+\D+[A-z]+)''',re.VERBOSE)
+      if re.match(pattern,test_str):
+        new_result.append(test_str)
+    
+    len_new_result = len(new_result)
+    for i in range(0,len_new_result):
+      allowed.append(list((new_result[i].split()[1].lower(),' '.join(new_result[i].split()[3:])))) 
+    return [(y, x) for x, y in allowed]
+
   security.declareProtected(Permissions.AccessContentsInformation, 'convert')
   def convert(self, format, display=None, quality=75, resolution=None, frame=None, **kw):
     """
     Implementation of conversion for Image files
     """
+    # Raise an error if the format is not permitted
+    if not self.isTargetFormatPermitted(format):
+      raise Unauthorized("User does not have enough permission to access document"
+				     " in %s format" % (format or 'original'))
     if format in ('text', 'txt', 'html', 'base_html', 'stripped-html'):
       try:
         return self.getConversion(format=format)
@@ -339,7 +366,7 @@ class Image(File, OFSImage):
     if (display is not None or resolution is not None or quality != 75 or format != ''\
                             or frame is not None) and image_size:
       kw = dict(display=display, format=format, quality=quality,
-                resolution=resolution, frame=frame, image_size=image_size)
+               resolution=resolution, frame=frame, image_size=image_size)
       try:
         mime, image = self.getConversion(**kw)
       except KeyError:
@@ -369,7 +396,7 @@ class Image(File, OFSImage):
     # display may be set from a cookie (?)
     image_size = self.getSizeFromImageDisplay(display)
     kw = dict(display=display, format=format, quality=quality,
-              resolution=resolution, frame=frame, image_size=image_size)
+		  resolution=resolution, frame=frame, image_size=image_size)
     _setCacheHeaders(_ViewEmulator().__of__(self), kw)
 
     if (display is not None or resolution is not None or quality != 75 or format != ''\
