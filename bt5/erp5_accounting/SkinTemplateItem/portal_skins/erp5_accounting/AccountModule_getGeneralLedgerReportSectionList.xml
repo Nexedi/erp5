@@ -258,7 +258,7 @@ for inventory in portal.portal_simulation.getInventoryList(\n
 \n
 # profit & loss -> same, but from date limited to the current period\n
 for inventory in portal.portal_simulation.getInventoryList(\n
-                            node_category_strict_membership=profit_and_loss_account_type,\n
+                            node_category=profit_and_loss_account_type,\n
                             portal_type=portal.getPortalAccountingMovementTypeList(),\n
                             from_date=max(from_date, period_start_date),\n
                             at_date=at_date,\n

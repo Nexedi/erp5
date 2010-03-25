@@ -166,7 +166,7 @@ for node in getInventoryList(\n
 \n
 ### profit & loss accounts {{{\n
 for node in getInventoryList(\n
-                node_category_strict_membership=profit_and_loss_account_type,\n
+                node_category=profit_and_loss_account_type,\n
                 from_date=max(period_start_date, from_date),\n
                 group_by_node=1,\n
                 omit_output=1,\n
@@ -182,7 +182,7 @@ for node in getInventoryList(\n
   total_debit += round(total_price, precision)\n
 \n
 for node in getInventoryList(\n
-                node_category_strict_membership=profit_and_loss_account_type,\n
+                node_category=profit_and_loss_account_type,\n
                 from_date=max(period_start_date, from_date),\n
                 group_by_node=1,\n
                 omit_input=1,\n
@@ -387,7 +387,7 @@ for node in getInventoryList(\n
 \n
 ### profit & loss accounts {{{\n
 for node in getInventoryList(\n
-                node_category_strict_membership=profit_and_loss_account_type,\n
+                node_category=profit_and_loss_account_type,\n
                 omit_output=1,\n
                 from_date=min(period_start_date,\n
                               initial_balance_date),\n
@@ -403,7 +403,7 @@ for node in getInventoryList(\n
                     \'initial_debit_balance\', 0) + total_price\n
 \n
 for node in getInventoryList(\n
-                node_category_strict_membership=profit_and_loss_account_type,\n
+                node_category=profit_and_loss_account_type,\n
                 omit_input=1,\n
                 from_date=min(period_start_date,\n
                               initial_balance_date),\n

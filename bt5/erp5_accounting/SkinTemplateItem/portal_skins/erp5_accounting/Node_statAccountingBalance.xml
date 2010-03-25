@@ -93,7 +93,8 @@ if params.get(\'period_start_date\', 0) and params.get(\'node_uid\'):\n
     node = context\n
   else:\n
     node = portal.portal_catalog.getObject(params[\'node_uid\'])\n
-  if node.getAccountTypeId() in (\'expense\', \'income\'):\n
+  if node.isMemberOf(\'account_type/expense\') or\\\n
+        node.isMemberOf(\'account_type/income\'):\n
     # For expense or income accounts, we only take into account transactions\n
     # from the beginning of the period.\n
     params[\'from_date\'] = params[\'period_start_date\']\n

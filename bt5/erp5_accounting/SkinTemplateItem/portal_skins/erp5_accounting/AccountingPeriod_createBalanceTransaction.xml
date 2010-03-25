@@ -113,7 +113,8 @@ for section_uid in \\\n
         \'account_type/asset/receivable\',\n
         \'account_type/liability/payable\'):\n
       group_by_mirror_section_node_category_list.append(node_category_url)\n
-    elif node_category_url in (\'account_type/income\', \'account_type/expense\'):\n
+    elif node_category.isMemberOf(\'account_type/income\') or \\\n
+         node_category.isMemberOf(\'account_type/expense\'):\n
       profit_and_loss_node_category_list.append(node_category_url)\n
     else:\n
       group_by_node_node_category_list.append(node_category_url)\n

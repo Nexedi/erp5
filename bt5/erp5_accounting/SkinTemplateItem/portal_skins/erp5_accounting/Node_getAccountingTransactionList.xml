@@ -92,15 +92,18 @@ if not \'parent_portal_type\' in params:\n
 new_result  = []\n
 net_balance = 0.0\n
 \n
-node_account_type = None\n
+# accounts from PL have a balance calculated differently\n
+is_pl_account = False\n
 if params.get(\'node_uid\'):\n
   if context.getUid() == params[\'node_uid\']:\n
-    node_account_type = context.getAccountTypeId()\n
+    is_pl_account = context.isMemberOf(\'account_type/expense\')\\\n
+                 or context.isMemberOf(\'account_type/income\')\n
   else:\n
     node = portal.portal_catalog.getObject(params[\'node_uid\'])\n
-    node_account_type = node.getAccountTypeId()\n
+    is_pl_account = node.isMemberOf(\'account_type/expense\')\\\n
+                 or node.isMemberOf(\'account_type/income\')\n
 \n
-if from_date or node_account_type in (\'expense\', \'income\'):\n
+if from_date or is_pl_account:\n
   period_start_date = None\n
   # Create a new parameter list to get the previous balance\n
   get_inventory_kw = params.copy()\n
@@ -109,7 +112,7 @@ if from_date or node_account_type in (\'expense\', \'income\'):\n
   get_inventory_kw.pop(\'at_date\', None)\n
 \n
   if params.has_key(\'period_start_date\'):\n
-    if node_account_type in (\'expense\', \'income\'):\n
+    if is_pl_account:\n
       # if we have on an expense / income account, only take into account\n
       # movements from the current period.\n
       period_start_date = params[\'period_start_date\']\n
@@ -126,13 +129,12 @@ if from_date or node_account_type in (\'expense\', \'income\'):\n
         from_date = period_start_date\n
 \n
   # Get previous debit and credit\n
-  if from_date == period_start_date and \\\n
-                      node_account_type in (\'expense\', \'income\'):\n
+  if from_date == period_start_date and is_pl_account:\n
     previous_total_debit = previous_total_credit = 0\n
   else:\n
     getInventoryAssetPrice = portal.portal_simulation.getInventoryAssetPrice\n
     # first to the balance at the period start date\n
-    if node_account_type in (\'expense\', \'income\'):\n
+    if is_pl_account:\n
       period_openning_balance = 0\n
     else:\n
       period_openning_balance = getInventoryAssetPrice(\n
@@ -268,7 +270,8 @@ return portal.portal_simulation.getMovementHistoryList(\n
                             <string>_write_</string>
                             <string>new_result</string>
                             <string>net_balance</string>
-                            <string>node_account_type</string>
+                            <string>False</string>
+                            <string>is_pl_account</string>
                             <string>node</string>
                             <string>period_start_date</string>
                             <string>get_inventory_kw</string>
