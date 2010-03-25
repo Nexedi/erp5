@@ -97,6 +97,7 @@
                     <value>
                       <list>
                         <string>my_tested_property</string>
+                        <string>my_tested_property_title</string>
                         <string>my_quantity</string>
                         <string>my_quantity_range_min</string>
                         <string>my_quantity_range_max</string>
