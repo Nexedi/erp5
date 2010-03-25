@@ -46,11 +46,11 @@ rpm-appliance:
 	sed -i "s,\$$(shell cat parts/checkout/VERSION.txt), `cat VERSION.txt`,g" rpmgen/Makefile
 	sudo helpers/mandriva2010.0.sh
 	# just make and wait...
-	cd rpmgen; make
+	cd rpmgen; make erp5-software
 	# now we have the erp5 software rpm and we need it installed to build tiolive application rpm
 	if test -d ~/rpmbuild/RPMS/x86_64; \
 	then find ~/rpmbuild/RPMS/x86_64/ -name  erp5-`cat VERSION.txt`*.rpm -print0 | xargs -0 sudo urpmi --auto ; \
 	else find ~/rpmbuild/RPMS/i586/ -name  erp5-`cat VERSION.txt`*.rpm -print0 | xargs -0 sudo urpmi --auto ; \
  	fi
 	# building tiolive appliance
-	sudo rpmbuild -bb rpmgen/spec/tiolive-application-buildout-mandriva2010.spec
+	sudo rpmbuild -bb rpmgen/specs/tiolive-application-buildout-mandriva2010.spec
