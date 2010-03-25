@@ -517,6 +517,10 @@
                           <string>Folder_viewTicketList/listbox</string>
                           <string>Campaigns</string>
                         </tuple>
+                        <tuple>
+                          <string>Base_viewRelatedObjectListBase/listbox</string>
+                          <string>All</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>
