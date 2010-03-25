@@ -51,9 +51,6 @@ class TestBPMMixin(ERP5TypeTestCase):
   normal_resource_use_category_list = ['normal']
   invoicing_resource_use_category_list = ['discount', 'tax']
 
-  def setUpOnce(self):
-    self.validateRules()
-
   def createCategoriesInCategory(self, category, category_id_list):
     for category_id in category_id_list:
       if not category.hasObject(category_id):
@@ -204,6 +201,7 @@ class TestBPMMixin(ERP5TypeTestCase):
     itr.validate()
 
   def afterSetUp(self):
+    self.validateRules()
     self.createCategories()
     self.createInvoiceTransactionRule()
     self.stepTic()
