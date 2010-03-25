@@ -368,6 +368,7 @@ bWxQSwUGAAAAAAIAAgCeAAAAhwwAAAAA</string> </value>
                            tal:condition="not:item_list"/>\n
                       <text:p text:style-name=\'field-content\'\n
                            tal:content="python: [i[0] for i in item_list if i[1] == item][0]"\n
+                           tal:on-error="item"\n
                            tal:condition="item_list" />\n
                     </tal:block>\n
                   </tal:block>\n

@@ -114,7 +114,8 @@ dQEAAAAA</string> </value>
                             <tal:block tal:condition="python: same_type(value, []) or same_type(value, ())">\n
                               <tal:block tal:repeat="item value">\n
                                 <text:p tal:condition="not:item_list" tal:content="item"></text:p>\n
-                                <text:p tal:condition="item_list" tal:content="python: [i[0] for i in item_list if i[1] == item][0]"></text:p>\n
+                                <text:p tal:condition="item_list" tal:content="python: [i[0] for i in item_list if i[1] == item][0]"\n
+                                        tal:on-error="item"></text:p>\n
                               </tal:block>\n
                             </tal:block>\n
 \n
