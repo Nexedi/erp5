@@ -114,7 +114,7 @@ Grouping from account transaction view\n
 <tr>\n
   <td>verifyText</td>\n
   <td>//label[contains(text(),"Total Selected Amount")]/../div[1]/</td>\n
-  <td>2 200.00</td>\n
+  <td>-3 300.00</td>\n
 </tr>\n
 \n
 <!-- Not possible to group for now -->\n
@@ -131,7 +131,7 @@ Grouping from account transaction view\n
 <tr>\n
   <td>verifyText</td>\n
   <td>//label[contains(text(),"Total Selected Amount")]/../div[1]/</td>\n
-  <td>2 200.00</td>\n
+  <td>-3 300.00</td>\n
 </tr>\n
 \n
 <!-- select one more -->\n
