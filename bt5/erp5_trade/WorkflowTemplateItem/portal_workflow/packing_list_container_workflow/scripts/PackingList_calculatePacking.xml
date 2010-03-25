@@ -56,7 +56,7 @@
             <value> <string>packing_list = state_change[\'object\']\n
 if packing_list.isPacked():\n
   packing_list.pack()\n
-else:\n
+elif packing_list.getPortalObject().portal_workflow.isTransitionPossible(packing_list, \'miss\'):\n
   packing_list.miss()\n
 </string> </value>
         </item>
