@@ -109,3 +109,10 @@ class IConvertable(Interface):
     where format is an extension (ex. 'png') which can be 
     passed to IConvertable.convert or to IDownloadable.index_html
     """
+  def getPermittedTargetFormatItemList():
+    """
+    Returns the list of authorized formats for conversion
+    in the form of tuples. For each format, checks
+    if the current user can convert the current 
+    document into that format.
+    """
