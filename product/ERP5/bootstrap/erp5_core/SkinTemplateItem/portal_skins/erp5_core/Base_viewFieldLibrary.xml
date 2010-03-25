@@ -171,6 +171,10 @@
                         <string>my_dialog_mode_format</string>
                         <string>my_dialog_mode_landscape</string>
                         <string>my_dialog_mode_portal_skin</string>
+                        <string>my_dialog_mode_at_date</string>
+                        <string>my_dialog_mode_from_date</string>
+                        <string>my_dialog_mode_target_language</string>
+                        <string>my_core_mode_money_quantity</string>
                       </list>
                     </value>
                 </item>
