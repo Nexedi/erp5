@@ -14,7 +14,6 @@
             <value>
               <list>
                 <string>columns</string>
-                <string>proxy_listbox_ids</string>
                 <string>sort</string>
               </list>
             </value>
@@ -70,12 +69,6 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>proxy_listbox_ids</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
-                </item>
-                <item>
                     <key> <string>sort</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -126,12 +119,6 @@
                     <value> <string>Transformation_viewFieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key> <string>proxy_listbox_ids</string> </key>
-                    <value>
-                      <list/>
-                    </value>
-                </item>
-                <item>
                     <key> <string>sort</string> </key>
                     <value>
                       <list>
@@ -152,22 +139,6 @@
                 </item>
               </dictionary>
             </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <tuple>
-        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-        <tuple/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>python:[(\'%sModule_view%sList/listbox\' % (x.replace(\' \',\'\'), x.replace(\' \', \'\')), x) for x in context.getPortalProductTypeList() if context.Base_checkPermission(context.getDefaultModuleId(x), \'View\')]</string> </value>
         </item>
       </dictionary>
     </pickle>

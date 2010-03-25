@@ -117,7 +117,14 @@
                 </item>
                 <item>
                     <key> <string>proxy_listbox_ids</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>Base_viewRelatedObjectListBase/listbox</string>
+                          <string>All</string>
+                        </tuple>
+                      </list>
+                    </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
@@ -160,7 +167,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:[(\'%sModule_view%sList/listbox\' % (x.replace(\' \',\'\'), x.replace(\' \', \'\')), x) for x in context.getPortalProductTypeList() if context.Base_checkPermission(context.getDefaultModuleId(x), \'View\')]</string> </value>
+            <value> <string>python: field.get_orig_value(\'proxy_listbox_ids\') + [(\'%sModule_view%sList/listbox\' % (x.replace(\' \',\'\'), x.replace(\' \', \'\')), x) for x in zip(*field.get_value(\'portal_type\'))[0] if context.Base_checkPermission(context.getDefaultModuleId(x), \'View\')]</string> </value>
         </item>
       </dictionary>
     </pickle>
