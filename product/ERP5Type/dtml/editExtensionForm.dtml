@@ -2,9 +2,6 @@
 <dtml-var manage_tabs>
 
 <h2>Edit Extension Class: <dtml-var class_id></h2>
-
-<dtml-if message><dtml-var message></dtml-if>
-
 <form method="POST" action="<dtml-var absolute_url>">
 <textarea name="text:text" rows="20" cols="82"><dtml-var "getExtensionText(class_id)"></textarea>
 <br>

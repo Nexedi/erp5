@@ -2,9 +2,6 @@
 <dtml-var manage_tabs>
 
 <div class="std-text"><p><strong>Product Generation</strong></p></div>
-
-<dtml-if message><p><dtml-var message></p></dtml-if>
-
 <form method="POST" action="generateProduct">
 <table cellspacing="0" cellpadding="2" border="0">
   <tr>

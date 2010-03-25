@@ -352,7 +352,7 @@ class %s(XMLObject):
                       )""" % (COPYRIGHT, class_id)
         self.writeLocalDocument(class_id, text)
         if REQUEST is not None:
-          REQUEST.RESPONSE.redirect('%s/manage_editDocumentForm?class_id=%s&message=Document+Created' % (self.absolute_url(), class_id))
+          REQUEST.RESPONSE.redirect('%s/manage_editDocumentForm?class_id=%s&manage_tabs_message=Document+Created' % (self.absolute_url(), class_id))
 
       security.declareProtected( Permissions.ManageExtensions, 'editDocument' )
       def editDocument(self, class_id, text, REQUEST=None):
@@ -362,7 +362,7 @@ class %s(XMLObject):
         previous_text = readLocalDocument(class_id)
         self.writeLocalDocument(class_id, text, create=0)
         if REQUEST is not None:
-          REQUEST.RESPONSE.redirect('%s/manage_editDocumentForm?class_id=%s&message=Document+Saved' % (self.absolute_url(), class_id))
+          REQUEST.RESPONSE.redirect('%s/manage_editDocumentForm?class_id=%s&manage_tabs_message=Document+Saved' % (self.absolute_url(), class_id))
 
       security.declareProtected( Permissions.ManageExtensions, 'importDocument' )
       def importDocument(self, class_id, class_path=None, REQUEST=None):
@@ -379,7 +379,7 @@ class %s(XMLObject):
         _aq_reset()
 
         if REQUEST is not None and class_path is None:
-          REQUEST.RESPONSE.redirect('%s/manage_editDocumentForm?class_id=%s&message=Document+Reloaded+Successfully' % (self.absolute_url(), class_id))
+          REQUEST.RESPONSE.redirect('%s/manage_editDocumentForm?class_id=%s&manage_tabs_message=Document+Reloaded+Successfully' % (self.absolute_url(), class_id))
 
 
       security.declareProtected( Permissions.ManagePortal, 'getPropertySheetText' )
@@ -438,7 +438,7 @@ class %s:
 """ % (COPYRIGHT, class_id, class_id)
         self.writeLocalPropertySheet(class_id, text)
         if REQUEST is not None:
-          REQUEST.RESPONSE.redirect('%s/manage_editPropertySheetForm?class_id=%s&message=PropertySheet+Created' % (self.absolute_url(), class_id))
+          REQUEST.RESPONSE.redirect('%s/manage_editPropertySheetForm?class_id=%s&manage_tabs_message=PropertySheet+Created' % (self.absolute_url(), class_id))
 
       security.declareProtected( Permissions.ManageExtensions, 'editPropertySheet' )
       def editPropertySheet(self, class_id, text, REQUEST=None):
@@ -448,7 +448,7 @@ class %s:
         previous_text = readLocalPropertySheet(class_id)
         self.writeLocalPropertySheet(class_id, text, create=0)
         if REQUEST is not None:
-          REQUEST.RESPONSE.redirect('%s/manage_editPropertySheetForm?class_id=%s&message=PropertySheet+Saved' % (self.absolute_url(), class_id))
+          REQUEST.RESPONSE.redirect('%s/manage_editPropertySheetForm?class_id=%s&manage_tabs_message=PropertySheet+Saved' % (self.absolute_url(), class_id))
 
       security.declareProtected( Permissions.ManageExtensions, 'importPropertySheet' )
       def importPropertySheet(self, class_id, REQUEST=None):
@@ -464,7 +464,7 @@ class %s:
         # XXX it is not sure however that class defined propertysheets will be updated
         _aq_reset()
         if REQUEST is not None:
-          REQUEST.RESPONSE.redirect('%s/manage_editPropertySheetForm?class_id=%s&message=PropertySheet+Reloaded+Successfully' % (self.absolute_url(), class_id))
+          REQUEST.RESPONSE.redirect('%s/manage_editPropertySheetForm?class_id=%s&manage_tabs_message=PropertySheet+Reloaded+Successfully' % (self.absolute_url(), class_id))
 
       security.declareProtected( Permissions.ManagePortal, 'getExtensionText' )
       def getExtensionText(self, class_id):
@@ -511,7 +511,7 @@ def myExtensionMethod(self, param=None):
 """ % COPYRIGHT
         self.writeLocalExtension(class_id, text)
         if REQUEST is not None:
-          REQUEST.RESPONSE.redirect('%s/manage_editExtensionForm?class_id=%s&message=Extension+Created' % (self.absolute_url(), class_id))
+          REQUEST.RESPONSE.redirect('%s/manage_editExtensionForm?class_id=%s&manage_tabs_message=Extension+Created' % (self.absolute_url(), class_id))
 
       security.declareProtected( Permissions.ManageExtensions, 'editExtension' )
       def editExtension(self, class_id, text, REQUEST=None):
@@ -521,7 +521,7 @@ def myExtensionMethod(self, param=None):
         previous_text = readLocalExtension(class_id)
         self.writeLocalExtension(class_id, text, create=0)
         if REQUEST is not None:
-          REQUEST.RESPONSE.redirect('%s/manage_editExtensionForm?class_id=%s&message=Extension+Saved' % (self.absolute_url(), class_id))
+          REQUEST.RESPONSE.redirect('%s/manage_editExtensionForm?class_id=%s&manage_tabs_message=Extension+Saved' % (self.absolute_url(), class_id))
 
       security.declareProtected( Permissions.ManagePortal, 'getTestText' )
       def getTestText(self, class_id):
@@ -601,7 +601,7 @@ class Test(ERP5TypeTestCase):
 ''' % COPYRIGHT
         self.writeLocalTest(class_id, text)
         if REQUEST is not None:
-          REQUEST.RESPONSE.redirect('%s/manage_editTestForm?class_id=%s&message=Test+Created' % (self.absolute_url(), class_id))
+          REQUEST.RESPONSE.redirect('%s/manage_editTestForm?class_id=%s&manage_tabs_message=Test+Created' % (self.absolute_url(), class_id))
 
       security.declareProtected( Permissions.ManageExtensions, 'editTest' )
       def editTest(self, class_id, text, REQUEST=None):
@@ -611,7 +611,7 @@ class Test(ERP5TypeTestCase):
         previous_text = readLocalTest(class_id)
         self.writeLocalTest(class_id, text, create=0)
         if REQUEST is not None:
-          REQUEST.RESPONSE.redirect('%s/manage_editTestForm?class_id=%s&message=Test+Saved' % (self.absolute_url(), class_id))
+          REQUEST.RESPONSE.redirect('%s/manage_editTestForm?class_id=%s&manage_tabs_message=Test+Saved' % (self.absolute_url(), class_id))
 
       security.declareProtected( Permissions.ManagePortal, 'getConstraintText' )
       def getConstraintText(self, class_id):
@@ -627,7 +627,7 @@ class Test(ERP5TypeTestCase):
         """
         if class_id == '':
           if REQUEST is not None:
-            REQUEST.RESPONSE.redirect('%s/manage_viewConstraintList?message=You+must+specify+a+class+name' % (self.absolute_url(),))
+            REQUEST.RESPONSE.redirect('%s/manage_viewConstraintList?manage_tabs_message=You+must+specify+a+class+name' % (self.absolute_url(),))
             return
         text = """\
 ##############################################################################
@@ -679,7 +679,7 @@ class %s(Constraint):
 """ % (COPYRIGHT, class_id)
         self.writeLocalConstraint(class_id, text)
         if REQUEST is not None:
-          REQUEST.RESPONSE.redirect('%s/manage_editConstraintForm?class_id=%s&message=Constraint+Created' % (self.absolute_url(), class_id))
+          REQUEST.RESPONSE.redirect('%s/manage_editConstraintForm?class_id=%s&manage_tabs_message=Constraint+Created' % (self.absolute_url(), class_id))
 
       security.declareProtected( Permissions.ManageExtensions, 'editConstraint' )
       def editConstraint(self, class_id, text, REQUEST=None):
@@ -689,7 +689,7 @@ class %s(Constraint):
         previous_text = readLocalConstraint(class_id)
         self.writeLocalConstraint(class_id, text, create=0)
         if REQUEST is not None:
-          REQUEST.RESPONSE.redirect('%s/manage_editConstraintForm?class_id=%s&message=Constraint+Saved' % (self.absolute_url(), class_id))
+          REQUEST.RESPONSE.redirect('%s/manage_editConstraintForm?class_id=%s&manage_tabs_message=Constraint+Saved' % (self.absolute_url(), class_id))
 
       security.declareProtected( Permissions.ManageExtensions, 'importConstraint' )
       def importConstraint(self, class_id, REQUEST=None):
@@ -705,7 +705,7 @@ class %s(Constraint):
         # XXX it is not sure however that class defined propertysheets will be updated
         _aq_reset()
         if REQUEST is not None:
-          REQUEST.RESPONSE.redirect('%s/manage_editConstraintForm?class_id=%s&message=Constraint+Reloaded+Successfully' % (self.absolute_url(), class_id))
+          REQUEST.RESPONSE.redirect('%s/manage_editConstraintForm?class_id=%s&manage_tabs_message=Constraint+Reloaded+Successfully' % (self.absolute_url(), class_id))
 
       security.declareProtected( Permissions.ManageExtensions, 'generateProduct' )
       def generateProduct(self, product_id,
