@@ -220,6 +220,17 @@
                                 </value>
                             </item>
                             <item>
+                                <key> <string>section_category_strict</string> </key>
+                                <value>
+                                  <dictionary>
+                                    <item>
+                                        <key> <string>default</string> </key>
+                                        <value> <string>False</string> </value>
+                                    </item>
+                                  </dictionary>
+                                </value>
+                            </item>
+                            <item>
                                 <key> <string>select_expression</string> </key>
                                 <value>
                                   <dictionary/>
@@ -338,6 +349,7 @@
                             <string>creation_date_range_min</string>
                             <string>creation_date_range_max</string>
                             <string>section_category</string>
+                            <string>section_category_strict</string>
                             <string>count</string>
                             <string>transaction_uid</string>
                             <string>specific_reference</string>
@@ -383,6 +395,7 @@ amount_range_max=""\r\n
 creation_date_range_min=""\r\n
 creation_date_range_max=""\r\n
 section_category=""\r\n
+section_category_strict=False\r\n
 count=""\r\n
 transaction_uid=""\r\n
 specific_reference\r\n
@@ -534,6 +547,7 @@ destination_section_where_expression</string> </value>
         AND section.uid = category.uid\n
         AND category.category_uid =\n
         <dtml-var "portal_categories.restrictedTraverse(section_category).getUid()">\n
+        <dtml-if "section_category_strict">AND category.category_strict_membership = 1</dtml-if>\n
       </dtml-if>\n
       \n
       <dtml-if from_date>\n
@@ -744,6 +758,7 @@ destination_section_where_expression</string> </value>
             AND section.uid = category.uid\n
             AND category.category_uid =\n
             <dtml-var "portal_categories.restrictedTraverse(section_category).getUid()">\n
+            <dtml-if "section_category_strict">AND category.category_strict_membership = 1</dtml-if>\n
           </dtml-if>\n
           <dtml-if "delivery_mirror_section_title">\n
             AND mirror_section_catalog.uid = mirror_section_delivery.destination_section_uid\n
@@ -931,6 +946,7 @@ UNION\n
             AND section.uid = category.uid\n
             AND category.category_uid =\n
             <dtml-var "portal_categories.restrictedTraverse(section_category).getUid()">\n
+            <dtml-if "section_category_strict">AND category.category_strict_membership = 1</dtml-if>\n
           </dtml-if>\n
           <dtml-if "delivery_mirror_section_title">\n
             AND mirror_section_catalog.uid = mirror_section_delivery.source_section_uid\n
@@ -1193,6 +1209,7 @@ UNION\n
         AND section.uid = category.uid\n
         AND category.category_uid =\n
         <dtml-var "portal_categories.restrictedTraverse(section_category).getUid()">\n
+        <dtml-if "section_category_strict">AND category.category_strict_membership = 1</dtml-if>\n
       </dtml-if>\n
       \n
       <dtml-if from_date>\n
@@ -1403,6 +1420,7 @@ UNION\n
             AND section.uid = category.uid\n
             AND category.category_uid =\n
             <dtml-var "portal_categories.restrictedTraverse(section_category).getUid()">\n
+            <dtml-if "section_category_strict">AND category.category_strict_membership = 1</dtml-if>\n
           </dtml-if>\n
           <dtml-if "delivery_mirror_section_title">\n
             AND mirror_section_catalog.uid = mirror_section_delivery.destination_section_uid\n
@@ -1590,6 +1608,7 @@ UNION\n
             AND section.uid = category.uid\n
             AND category.category_uid =\n
             <dtml-var "portal_categories.restrictedTraverse(section_category).getUid()">\n
+            <dtml-if "section_category_strict">AND category.category_strict_membership = 1</dtml-if>\n
           </dtml-if>\n
           <dtml-if "delivery_mirror_section_title">\n
             AND mirror_section_catalog.uid = mirror_section_delivery.source_section_uid\n
