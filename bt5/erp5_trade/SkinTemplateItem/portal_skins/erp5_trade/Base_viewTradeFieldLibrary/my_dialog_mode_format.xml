@@ -12,11 +12,7 @@
         <item>
             <key> <string>delegated_list</string> </key>
             <value>
-              <list>
-                <string>description</string>
-                <string>title</string>
-                <string>items</string>
-              </list>
+              <list/>
             </value>
         </item>
         <item>
@@ -66,12 +62,6 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>items</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
-                </item>
-                <item>
                     <key> <string>target</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -82,10 +72,6 @@
             <key> <string>values</string> </key>
             <value>
               <dictionary>
-                <item>
-                    <key> <string>description</string> </key>
-                    <value> <string>Format in which the user want to export the document</string> </value>
-                </item>
                 <item>
                     <key> <string>field_id</string> </key>
                     <value> <string>my_dialog_mode_format</string> </value>
@@ -98,28 +84,8 @@
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
                 </item>
-                <item>
-                    <key> <string>title</string> </key>
-                    <value> <string>Export Format</string> </value>
-                </item>
               </dictionary>
             </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <tuple>
-        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-        <tuple/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>python: here.Base_getConversionFormatItemList(base_content_type=\'application/vnd.oasis.opendocument.spreadsheet\')</string> </value>
         </item>
       </dictionary>
     </pickle>

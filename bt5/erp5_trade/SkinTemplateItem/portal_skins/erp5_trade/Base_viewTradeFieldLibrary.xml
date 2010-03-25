@@ -187,6 +187,32 @@
                         <string>my_view_mode_inventory_destination_section_title</string>
                         <string>my_view_mode_inventory_destination_title</string>
                         <string>my_view_mode_inventory_start_date</string>
+                        <string>my_view_mode_listbox_total_quantity</string>
+                        <string>my_view_mode_listbox_read_only_stop_date</string>
+                        <string>my_view_mode_listbox_read_only_quantity_unit</string>
+                        <string>my_dialog_mode_listbox_variation_category_list</string>
+                        <string>my_dialog_mode_listbox_quantity_unit</string>
+                        <string>my_dialog_mode_listbox_quantity</string>
+                        <string>my_dialog_mode_aggregation_level</string>
+                        <string>my_dialog_mode_at_date</string>
+                        <string>my_dialog_mode_delivery_mode</string>
+                        <string>my_dialog_mode_from_date</string>
+                        <string>my_dialog_mode_group_by</string>
+                        <string>my_dialog_mode_incoterm</string>
+                        <string>my_dialog_mode_order</string>
+                        <string>my_dialog_mode_section_category</string>
+                        <string>my_dialog_mode_order_simulation_state</string>
+                        <string>my_dialog_mode_use_selection</string>
+                        <string>my_dialog_mode_spreadsheet_format</string>
+                        <string>my_dialog_mode_reference_as_prefix</string>
+                        <string>my_dialog_mode_international_form</string>
+                        <string>my_dialog_mode_target_language</string>
+                        <string>my_dialog_mode_use_line_title</string>
+                        <string>my_dialog_mode_text_format</string>
+                        <string>my_view_mode_listbox_title</string>
+                        <string>my_dialog_mode_editable_total_price</string>
+                        <string>my_core_mode_total_price</string>
+                        <string>my_view_mode_int_index</string>
                       </list>
                     </value>
                 </item>
