@@ -14,7 +14,6 @@
             <value>
               <list>
                 <string>default</string>
-                <string>enabled</string>
                 <string>image_display</string>
               </list>
             </value>
@@ -64,12 +63,6 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>enabled</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
-                    </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -95,10 +88,6 @@
                 <item>
                     <key> <string>default</string> </key>
                     <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>enabled</string> </key>
-                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
@@ -134,22 +123,6 @@
         <item>
             <key> <string>_text</string> </key>
             <value> <string>python: cell.getObject().getDefaultImageValue().absolute_url()</string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="3" aka="AAAAAAAAAAM=">
-    <pickle>
-      <tuple>
-        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-        <tuple/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>python: getattr(cell, \'getObject\', None) is not None and cell.getObject().getDefaultImageValue() is not None</string> </value>
         </item>
       </dictionary>
     </pickle>
