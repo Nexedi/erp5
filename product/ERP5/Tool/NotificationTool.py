@@ -339,8 +339,9 @@ class NotificationTool(BaseTool):
     if event_keyword_argument_dict is None:
       event_keyword_argument_dict = {}
     for notifier in notifier_list:
-      if notifier in available_notifier_list and store_as_event:
+      if notifier in available_notifier_list:
         event = self.getDefaultModule(notifier).newContent(portal_type=notifier,
+                                                           temp_object=not store_as_event,
                                                            **event_keyword_argument_dict)
       else:
         from Products.ERP5Type.Document import newTempEvent
