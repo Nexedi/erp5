@@ -34,7 +34,12 @@ class EquivalenceTester:
 
   _properties = (
     {  'id'          : 'tested_property',
-       'description' : 'Property used to Test',
+       'description' : 'Property used to test',
+       'type'        : 'lines',
+       'default'     : (),
+       'mode'        : 'w' },
+    {  'id'          : 'tested_property_title',
+       'description' : 'Title of the property used to test',
        'type'        : 'lines',
        'default'     : (),
        'mode'        : 'w' },
