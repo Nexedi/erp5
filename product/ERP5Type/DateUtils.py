@@ -524,19 +524,19 @@ def atTheEndOfPeriod(date, period):
 def copyDate(date, year=None, month=None, day=None,
              hour=None, minute=None, second=None, timezone=None):
   if year is None:
-    year = datetime.year()
+    year = date.year()
   if month is None:
-    month = datetime.month()
+    month = date.month()
   if day is None:
-    day = datetime.day()
+    day = date.day()
   if hour is None:
-    hour = datetime.hour()
+    hour = date.hour()
   if minute is None:
-    minute = datetime.minute()
+    minute = date.minute()
   if second is None:
-    second = datetime.second()
+    second = date.second()
   if timezone is None:
-    timezone = datetime.timezone()
+    timezone = date.timezone()
   return DateTime('%i/%i/%i %i:%i:%d %s' % (year, month, day,
                                             hour, minute, second,
                                             timezone))
