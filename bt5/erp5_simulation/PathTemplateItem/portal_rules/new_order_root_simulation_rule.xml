@@ -30,9 +30,7 @@
         <item>
             <key> <string>categories</string> </key>
             <value>
-              <tuple>
-                <string>trade_phase/default/delivery</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>

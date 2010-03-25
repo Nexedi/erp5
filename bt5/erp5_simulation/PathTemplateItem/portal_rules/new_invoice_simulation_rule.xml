@@ -42,9 +42,7 @@
         <item>
             <key> <string>categories</string> </key>
             <value>
-              <tuple>
-                <string>trade_phase/default/invoicing</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>
