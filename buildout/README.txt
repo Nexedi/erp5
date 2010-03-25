@@ -111,7 +111,8 @@ $ ~/erp5.buildout/bin/python2.4 bootstrap/bootstrap.py -c my_instances.cfg
 $ bin/buildout -c my_instances.cfg
 $ var/bin/supervisord # it will start supervisor and configured software
 $ $EDITOR my_instances.cfg
-# add zope-instance and runUnitTest to parts
+# add "runUnitTest" to parts, the "development-instance" part will be pulled
+# automatically as a dependency
 $ bin/buildout -c my_instances.cfg
 
 Fully configured development instance will be available in var/zope-instance.
