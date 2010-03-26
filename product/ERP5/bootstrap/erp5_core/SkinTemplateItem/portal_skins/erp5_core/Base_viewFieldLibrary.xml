@@ -175,6 +175,7 @@
                         <string>my_dialog_mode_from_date</string>
                         <string>my_dialog_mode_target_language</string>
                         <string>my_core_mode_money_quantity</string>
+                        <string>my_view_mode_version</string>
                       </list>
                     </value>
                 </item>
