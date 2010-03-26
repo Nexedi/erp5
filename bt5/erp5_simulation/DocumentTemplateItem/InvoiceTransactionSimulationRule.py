@@ -207,7 +207,7 @@ class InvoiceTransactionRuleMovementGenerator(MovementGeneratorMixin):
     exchange_ratio = None
     precision = None
     try:
-      section = prevision_line[arrow][0]
+      section = prevision_line.get(arrow, [])[0]
     except IndexError:
       section = None
     if section is not None:
