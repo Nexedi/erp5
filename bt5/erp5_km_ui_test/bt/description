@@ -1,0 +1,1 @@
+Functional test suites for erp5_km. This test is destructive in the sense that it uses real modules. It can not be run on a production system.
