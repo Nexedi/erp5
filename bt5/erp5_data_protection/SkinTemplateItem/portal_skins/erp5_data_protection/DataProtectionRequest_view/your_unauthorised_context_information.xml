@@ -3,7 +3,7 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <global name="StringField" module="Products.Formulator.StandardFields"/>
+        <global name="EditorField" module="Products.ERP5Form.EditorField"/>
         <tuple/>
       </tuple>
     </pickle>
@@ -11,7 +11,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>your_follow_up_portal_type</string> </value>
+            <value> <string>your_unauthorised_context_information</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -22,12 +22,20 @@
                     <value> <string>The input failed the external validator.</string> </value>
                 </item>
                 <item>
+                    <key> <string>line_too_long</string> </key>
+                    <value> <string>A line was too long.</string> </value>
+                </item>
+                <item>
                     <key> <string>required_not_found</string> </key>
                     <value> <string>Input is required but no input given.</string> </value>
                 </item>
                 <item>
                     <key> <string>too_long</string> </key>
-                    <value> <string>Too much input was given.</string> </value>
+                    <value> <string>You entered too many characters.</string> </value>
+                </item>
+                <item>
+                    <key> <string>too_many_lines</string> </key>
+                    <value> <string>You entered too many lines.</string> </value>
                 </item>
               </dictionary>
             </value>
@@ -53,14 +61,6 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>display_maxwidth</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>display_width</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>editable</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -77,6 +77,10 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>height</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>hidden</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -85,15 +89,23 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>max_linelength</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>max_lines</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>required</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>title</string> </key>
+                    <key> <string>text_editor</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>truncate</string> </key>
+                    <key> <string>title</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -102,6 +114,10 @@
                 </item>
                 <item>
                     <key> <string>whitespace_preserve</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>width</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -130,14 +146,6 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>display_maxwidth</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>display_width</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>editable</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -156,6 +164,10 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>height</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>hidden</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -164,15 +176,23 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>max_linelength</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>max_lines</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>required</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>title</string> </key>
+                    <key> <string>text_editor</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>truncate</string> </key>
+                    <key> <string>title</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -181,6 +201,10 @@
                 </item>
                 <item>
                     <key> <string>whitespace_preserve</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>width</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -207,14 +231,6 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>display_maxwidth</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>display_width</string> </key>
-                    <value> <int>20</int> </value>
-                </item>
-                <item>
                     <key> <string>editable</string> </key>
                     <value> <int>0</int> </value>
                 </item>
@@ -231,6 +247,10 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>height</string> </key>
+                    <value> <int>5</int> </value>
+                </item>
+                <item>
                     <key> <string>hidden</string> </key>
                     <value> <int>0</int> </value>
                 </item>
@@ -239,16 +259,24 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>max_linelength</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>max_lines</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>required</string> </key>
                     <value> <int>0</int> </value>
                 </item>
                 <item>
-                    <key> <string>title</string> </key>
-                    <value> <string>Type</string> </value>
+                    <key> <string>text_editor</string> </key>
+                    <value> <string>text_area</string> </value>
                 </item>
                 <item>
-                    <key> <string>truncate</string> </key>
-                    <value> <int>0</int> </value>
+                    <key> <string>title</string> </key>
+                    <value> <string>Access to context unauthorised</string> </value>
                 </item>
                 <item>
                     <key> <string>unicode</string> </key>
@@ -257,6 +285,10 @@
                 <item>
                     <key> <string>whitespace_preserve</string> </key>
                     <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>width</string> </key>
+                    <value> <int>40</int> </value>
                 </item>
               </dictionary>
             </value>
@@ -275,7 +307,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.getAgentValue() is not None and here.getAgentValue().getTranslatedPortalType() or None</string> </value>
+            <value> <string>here/DataProtectionRequest_getUnauthorisedContextInformationText</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -291,7 +323,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.getAgentValue(checked_permission=\'View\') is not None</string> </value>
+            <value> <string>python: here.getAgentValue(checked_permission=\'View\') is None</string> </value>
         </item>
       </dictionary>
     </pickle>

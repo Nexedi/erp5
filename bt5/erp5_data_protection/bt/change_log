@@ -1,1 +1,5 @@
+2010-03-26 nicolas
+* Disable fields when data protection manager can not access document containing sensitive data.
+* Display instructions to follow.
+
 2010-02-26 nicolas
