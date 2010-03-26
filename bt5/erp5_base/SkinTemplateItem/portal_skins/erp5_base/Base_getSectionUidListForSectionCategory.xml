@@ -55,13 +55,16 @@
             <key> <string>_body</string> </key>
             <value> <string>"""Returns the list of section_uid for a group section_category.\n
 \n
-This will only return organisation member of this section category.\n
+This will only return organisations member of this section category.\n
+If \'strict_membership\' is true, then only organisations strictly member\n
+of the category will be returned.\n
 """\n
 portal = context.getPortalObject()\n
 \n
 section = portal.portal_categories.restrictedTraverse(section_category)\n
 return [x.getUid() for x in\n
             section.getGroupRelatedValueList(portal_type=\'Organisation\',\n
+                                             strict_membership=strict_membership,\n
                                              checked_permission=\'View\')]\n
 </string> </value>
         </item>
@@ -73,7 +76,7 @@ return [x.getUid() for x in\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>section_category</string> </value>
+            <value> <string>section_category, strict_membership=False</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -93,13 +96,14 @@ return [x.getUid() for x in\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>2</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
                             <string>section_category</string>
+                            <string>strict_membership</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>portal</string>
@@ -119,7 +123,9 @@ return [x.getUid() for x in\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <int>0</int>
+              </tuple>
             </value>
         </item>
         <item>
