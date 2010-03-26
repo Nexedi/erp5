@@ -58,11 +58,14 @@ section_category = context.portal_preferences\\\n
          .getPreferredAccountingTransactionSectionCategory()\n
 if destination is not None and section_category:\n
   if destination.getPortalType() == \'Person\':\n
-    return 0\n
+    return False\n
   if destination.isMemberOf(section_category):\n
-    return 1\n
+    return True\n
 \n
-return 0\n
+if destination is None and context.getSourceSection() is None:\n
+  return True\n
+\n
+return False\n
 </string> </value>
         </item>
         <item>
@@ -104,6 +107,8 @@ return 0\n
                             <string>destination</string>
                             <string>section_category</string>
                             <string>None</string>
+                            <string>False</string>
+                            <string>True</string>
                           </tuple>
                         </value>
                     </item>
