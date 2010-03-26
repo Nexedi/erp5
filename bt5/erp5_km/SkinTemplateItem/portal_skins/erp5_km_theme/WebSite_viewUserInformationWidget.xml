@@ -1,0 +1,109 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>web_section_user_ram_cache</string> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<tal:block replace="nothing">\n
+  <!--\n
+  This widget displays the login information about the user\n
+  and a login / logout link.\n
+\n
+  TODO:\n
+    - make sure translation is possible or working\n
+    - using CSS styling of icons (no reference to image directly please)\n
+    - check if anonymous mode works\n
+    - is login_form appropriate here ? or another one ?\n
+  -->\n
+</tal:block>\n
+\n
+<tal:block tal:define="current_web_site python:request.get(\'current_web_site\', here);\n
+                       portal_path python:request.get(\'current_web_site_url\', current_web_site.absolute_url());">\n
+\n
+<tal:block tal:condition="not:here/portal_membership/isAnonymousUser">\n
+  <tal:block tal:define="person_object current_web_site/ERP5Site_getAuthenticatedMemberPersonValue">\n
+    <a tal:define="user_name python:person_object is not None and person_object.getTitle() or here.portal_membership.getAuthenticatedMember().getUserName()"\n
+      tal:attributes="href string:${portal_path}/WebSite_redirectToUserPerson">\n
+      <b tal:replace="user_name">\n
+        jp\n
+      </b>\n
+    </a>\n
+  </tal:block>\n
+  &nbsp;\n
+  <a id="n7" href="#" tal:attributes="href string:${portal_path}/WebSite_logout"\n
+    i18n:translate="" i18n:domain="ui">\n
+    Logout\n
+  </a>\n
+</tal:block>\n
+\n
+<tal:block tal:condition="here/portal_membership/isAnonymousUser">\n
+  <a id="n7" href="#" tal:attributes="href string:${portal_path}/login_form"\n
+    i18n:translate="" i18n:domain="ui">\n
+    Login\n
+  </a>\n
+</tal:block>\n
+\n
+</tal:block>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>WebSite_viewUserInformationWidget</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

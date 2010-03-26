@@ -1,0 +1,133 @@
+2010-02-16 ivan
+* Update Gadget instances to use new file system based Gadget class and default image property
+
+2009-12-25 jps
+* Added an option to layout configuration so that it is possible to change the appearance of the navigation menu to anonymous users and make it look like a navigatable web site
+
+2009-11-06 Herve
+* Update the configuration of the gadget "Latest Documents" to improve its usage
+* Configure the listbox of the gadget "My  Documents" to use the ListBox_asListStyleHTML page template.
+
+2009-11-06 Herve
+* Updates the css file "erp5_knowledge_box.css" to improve text presentation ListBox_asListStyleHTML
+
+2009-11-06 Herve
+* Configure the listbox of the gadget "Latest Documents" to use the ListBox_asListStyleHTML page template.
+
+
+2009-08-03 fabien
+* begening of the new km style integration :
+* remove old icons and add new ones (same with css files)
+* change css class hiddenLabel to hidden_label
+* update some css selectors to fit erp5 html code
+* update header
+* remove archive directory
+This revision is not finished and should be review
+
+2009-05-19 jps
+* add a splash area in front page for anonymous users
+
+2009-03-24 fabien
+* add some css selectors to display the portal type of objects in the search results
+* move some files in erp5_web and in erp5_xhtml_style because they are now generic
+* some method need to be renamed after been moved so change the name everywhere
+
+2009-03-19 fabien
+- change list method of the listbox to drop using this dirty scriptable key
+- use the same form everywhere to display the results
+
+2009-02-01 jps
+* tentative refactoring with simplification in mind
+
+2008-12-04 ivan
+* Add Express advertisement gadget
+
+2008-11-07 ivan
+* Add dependency on erp5_knowledge_pad
+
+2008-09-24 yusei
+* Add a style for python code block in erp5_yuna_content.css.
+
+2008-08-28 yusei
+* Use Base_translateString or translateString instead of N_ for translation message.
+
+2008-07-31 thomas
+* Permit to choose the context to update a listbox by passing a dom_id to the request.
+
+2008-07-06 yo
+* Remove the extra WebSection_viewInlinePageRenderer.
+
+2008-07-01 yusei
+* Fix WebSection_viewInlinePageRenderer to get a non document object. Thank you for Thomas Nouret.
+
+2008-06-29 yo
+* Fix the generation of came_from for login_form.
+
+2008-06-28 yo
+* Copy a fix for WebSection_viewInlinePageRenderer from erp5_web... But why is it required to have the same script here on earth???
+
+2008-06-16 thomas
+* render listbox gadgets asynchronously.
+
+2008-06-12 yo
+* Remove WebSection_getDocumentValue. No reason to override it.
+* Add WebSection_getDocumentValueList to show all languages in KM.
+
+2008-06-10 ivan
+* add support for dialog form in Yuna KM
+
+
+2008-06-06 ivan
+* add test
+
+2008-04-30 kazuhiko
+* add download_text.png
+* replace some images
+
+2008-4-14 yusei
+* Update erp5_km_yuna_style.
+
+2007-11-28 Yusei
+* Remove bookmark feature.
+
+2007-11-26 Yusei
+* Implement WebSite_getBookmarkContentValueList.
+* When editable_mode is truth value, field should be displayed in table style listbox.
+
+2007-11-23 Yusei
+* Replace bentos to fixed html box.
+* Update css.
+* Fixed dashboard related bug.
+
+2007-11-22 Yusei
+* Fixed a bug, previous fix was not enough.
+
+2007-11-21 Yusei
+* Fixed a relation document box bug.
+
+2007-11-16 Yusei
+* Fixed WebSite_viewAsSCALE in order to use enter key to submit search query.
+
+2007-10-11 Yusei
+* Modified ListBox_asStandardHTML. This changes depends on ERP5Form bug fix. Please upgrade ERP5Form to revision 16942 or above.
+
+2007-09-25 yo
+* Set module group on portal types.
+
+2007-09-16 Yusei
+* Fixed newsletter subscribe box.
+
+2007-08-24 Yusei
+* Changed advertising field type to EditorField to make it clickable.
+
+2007-08-03 JPS
+* Improvelents in CSS and layouts but now fails on IE
+
+2007-06-27 Ivan
+* New CSS based layout. Widgets library added
+
+2007-06-13 Ivan
+* Start refactoring
+
+2007-03-09
+New BT refactored

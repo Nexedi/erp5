@@ -1,0 +1,1401 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>http_cache</string> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/****************************************************************/\n
+/*   TODO: XXX-JPS                                              */\n
+/*     - missing docstring                                      */\n
+/*     - add dynamic properties                                 */\n
+/****************************************************************/\n
+\n
+<tal:block define="dummy python: request.RESPONSE.setHeader(\'Content-Type\', \'text/css;; charset=utf-8\')"/>\n
+\n
+/*\n
+##  dreikelvin CSS Framework 3.5\n
+##\n
+##  Author & Copyright: Robert Jung 2008\n
+##  URL: http://design.dreikelvin.de/\n
+##\n
+##  CSS for "ERP5"\n
+##\n
+##\n
+*/\n
+/* ## XHTML basis elements ############################ start # */\n
+\n
+body,html {\n
+\n
+\tmargin:0;\n
+\tpadding:0;\n
+\theight:100%;\n
+\n
+}\n
+\n
+br, .clear{ clear:both; }\n
+\n
+.hidden {  display:none;  }\n
+\n
+div {\n
+\n
+\tmargin:0;\n
+\tpadding:0;\n
+\tfloat:none;\n
+\twidth:100%;\n
+\tposition:relative;\n
+\n
+}\n
+\n
+.transition_message {background-color:#FF654A;}\n
+.information_area {background-color:#FFAC3D}\n
+\n
+.transition_message,\n
+.information_area{\n
+  font-weight:bold;\n
+  margin-left:10px;\n
+  color:white;\n
+  text-indent:4px;\n
+  margin-bottom:10px;\n
+}\n
+\n
+\n
+/* ## XHTML basis elements ########################### end ### */\n
+\n
+/* ## main elements ################################## start # */\n
+\n
+#mainwrapper {\n
+\n
+  min-height: 100%;\n
+\twidth:952px;\n
+\tmargin: 0 auto;\n
+\n
+}\n
+\n
+\n
+#header {\n
+\n
+\tdisplay:block;\n
+  clear:both;\n
+\n
+}\n
+\n
+#index {\n
+\n
+\tdisplay:none;\n
+\n
+}\n
+\n
+#index a {\n
+\n
+\tdisplay:none;\n
+\n
+}\n
+\n
+#center,\n
+.document > .content{\n
+\n
+\tclear:both;\n
+\tposition: relative;\n
+/*\toverflow: hidden; */\n
+\tpadding-bottom:35px;\n
+\n
+}\n
+\n
+.front_pad { /* This class is used to display gadgets in front page */\n
+  margin: 0;\n
+  padding-top: 0px;\n
+  padding-bottom: 0px;\n
+  padding-left: 7px;\n
+  padding-right: 7px;\n
+  width: 936px; /* XXX-JPS Related to front splash and page width - should become dynamic */\n
+}\n
+\n
+div.document div.content fieldset#fieldset_bottom div.input {\n
+\n
+  margin-left:0;\n
+  margin-top:0.2em;\n
+\n
+}\n
+\n
+.content .field label {\n
+\n
+  float:left;\n
+\n
+}\n
+\n
+.content #fieldset_left .field .input,\n
+.content #fieldset_right .field .input,\n
+.content #fieldset_center .field .input,\n
+.content #fieldset_bottom .field .input{\n
+\n
+float: left;\n
+\n
+}\n
+\n
+.content .field label, .content #fieldset_right .field .input,\n
+.content .field label, .content #fieldset_left .field .input,\n
+.content .field label, .content #fieldset_center .field .input,\n
+.content .field label, .content #fieldset_center_right .field .input,\n
+.content .field label, .content #fieldset_center_left .field .input {\n
+\n
+  width: auto;\n
+\n
+}\n
+\n
+.content .field label, .content .field .input {\n
+  width: 100%;\n
+}\n
+\n
+.content .field label {\n
+\n
+width:30%;\n
+\n
+}\n
+\n
+.column-1, .column-2 {\n
+\n
+\twidth:100%;\n
+\tclear:both;\n
+\tmargin-top:10px;\n
+\n
+}\n
+\n
+.column-2 {\n
+\n
+\tmargin:0 10px;\n
+\tfloat: none;\n
+\twidth:auto;\n
+\n
+\n
+}\n
+\n
+#fieldset_left,\n
+#fieldset_right {\n
+\toverflow: hidden;\n
+\n
+\n
+}\n
+\n
+#wrapper_right {\n
+\n
+\tfloat: left;\n
+\twidth:22.5%;\n
+\tposition:relative;\n
+  margin-left: 19px;\n
+  padding-top: 15px;\n
+\n
+}\n
+\n
+#km_left .text,\n
+#km_front .text {\n
+\n
+\tpadding:10px;\n
+  width: auto;\n
+\n
+}\n
+\n
+.area {\n
+\n
+\twidth:33%;\n
+\tfloat:left;\n
+\n
+}\n
+\n
+.column-2 .left {\n
+\n
+\twidth:32%;\n
+\tmargin-right:10px;\n
+\n
+}\n
+\n
+.column-2 .right {\n
+\n
+\twidth:32%;\n
+\tmargin-left:10px;\n
+\n
+}\n
+\n
+a img {\n
+\n
+\tborder:none;\n
+\n
+}\n
+\n
+#fieldset_left h4,\n
+#fieldset_right h4,\n
+#fieldset_center h4{\n
+\n
+\tmargin:0 0 20px 0;\n
+\tpadding:10px;\n
+\n
+}\n
+\n
+div#main_content fieldset.bottom label {\n
+\n
+  display:none;\n
+\n
+}\n
+\n
+fieldset.bottom button.right{float: right;}\n
+\n
+\n
+textarea {\n
+\n
+  width: 100%;\n
+\n
+}\n
+\n
+div#wrapper_headline span.header_title {\n
+\n
+  margin: 10px;\n
+\n
+}\n
+\n
+div.headline,\n
+#fieldset_webcontent_header_bottom{\n
+\n
+  display:none;\n
+\n
+}\n
+\n
+div#wrapper_headline div.header_title {\n
+  float:left;\n
+  width: auto;\n
+}\n
+\n
+div#wrapper_headline div.file img, div#wrapper_headline div.file p {\n
+  float:left;\n
+}\n
+\n
+div#wrapper_headline div.file {\n
+  color:#7B7B7B;\n
+  float:right;\n
+  font-size:0.6em;\n
+  margin:0;\n
+  text-align:left;\n
+  width:auto;\n
+  font-size:0.7em;\n
+}\n
+\n
+div#wrapper_headline div.file p{\n
+\n
+  margin: 0;\n
+\n
+}\n
+\n
+div.input > input {\n
+max-width:320px;\n
+}\n
+\n
+button, select, input {\n
+  vertical-align:middle;\n
+}\n
+\n
+/* ## main elements ################################### end ### */\n
+\n
+/* ## navigation ###################################### start # */\n
+\n
+#menu {\n
+\n
+\tfloat:left;\n
+\twidth:100%;\n
+\tmargin:0;\n
+\tpadding:0;\n
+\tz-index: 1;\n
+\n
+}\n
+\n
+#wrapper_path {\n
+\n
+\tfloat:left;\n
+\n
+}\n
+\n
+\n
+\n
+#menu ul {\n
+\n
+\tfloat:left;\n
+\tlist-style-type: none;\n
+\tmargin:0;\n
+\tpadding:0;\n
+\n
+\n
+}\n
+\n
+#menu .navbar {\n
+\twidth:55%;\n
+}\n
+\n
+#menu ul li {\n
+\n
+\tmargin:0;\n
+\tpadding:0;\n
+\tfloat:left;\n
+\theight:100%;\n
+\n
+}\n
+\n
+#menu .meta {\n
+\n
+\tfloat:right;\n
+\twidth:auto;\n
+  margin-right: 10px;\n
+\n
+}\n
+\n
+.tools {\n
+\n
+\tfloat: left;\n
+\tdisplay: block;\n
+\tclear: both;\n
+\twidth:100%;\n
+  padding: 10px 0;\n
+\n
+}\n
+\n
+\n
+#menu ul li a:link, #menu ul li a:active, #menu ul li a:visited {\n
+\n
+\theight:100%;\n
+\tline-height:42px;\n
+\tfloat:left;\n
+\n
+}\n
+\n
+#menu .nav a.workflow_title {\n
+\tcursor: default;\n
+}\n
+\n
+#menu ul li #n1:link, #menu ul li #n1:active, #menu ul li #n1:visited {\n
+\n
+\ttext-indent: -99999px;\n
+\tdisplay:block;\n
+\theight:17px;\n
+\twidth:8px;\n
+\tposition: relative;\n
+\ttop: 10px;\n
+\tmargin-left:10px;\n
+\n
+}\n
+\n
+#menu #n7:link, #menu #n7:active, #menu #n7:visited {\n
+\n
+\theight:20px;\n
+\tposition: relative;\n
+\tline-height: 20px;\n
+\tpadding-left:25px;\n
+\n
+}\n
+\n
+ul.breadcrumb {\n
+\n
+\tlist-style-type: none;\n
+\tmargin:0 0 0 5px;\n
+\tpadding:0;\n
+\twidth:auto;\n
+  height:100%;\n
+\tfloat: left;\n
+\tposition: relative;\n
+\tz-index: 11;\n
+\n
+}\n
+\n
+ul.breadcrumb li {\n
+\n
+\tfloat:left;\n
+\tmargin-left:5px;\n
+  height:100%;\n
+\n
+}\n
+\n
+ul.widget_management_box,\n
+ul.language_box{\n
+\n
+\tfloat:right;\n
+  margin:0;\n
+\tpadding: 0;\n
+\tz-index: 10;\n
+\tposition: relative;\n
+\tlist-style-type: none;\n
+\n
+}\n
+\n
+ul.language_box li {\n
+\n
+\tfloat:left;\n
+\tmargin: 0 2px;\n
+\n
+}\n
+\n
+ul.language_box{\n
+  padding: 0 10px;\n
+}\n
+\n
+ul.language_box img {\n
+  padding:3px;\n
+  opacity:0.7;\n
+}\n
+\n
+ul.language_box .selected img {\n
+\n
+  padding:2px;\n
+  border:1px solid grey;\n
+  opacity:1;\n
+\n
+}\n
+\n
+ul.widget_management_box{\tpadding: 0 10px 0 0;}\n
+\n
+ul.widget_management_box a {float:left;}\n
+\n
+\n
+.pnav {\n
+\n
+\tmargin:0;\n
+\tpadding: 2px;\n
+\twidth:auto;\n
+\ttext-align: center;\n
+\n
+}\n
+\n
+.actions,\n
+.document,\n
+#main_content{\n
+\n
+  float: left;\n
+\n
+}\n
+\n
+.box {\n
+\n
+width: auto;\n
+\n
+}\n
+\n
+.actions ul {\n
+\n
+\tdisplay:block;\n
+\tfloat:left;\n
+\tclear: both;\n
+\tlist-style-type: none;\n
+\tmargin: 10px 0 0 10px;\n
+\tpadding:0;\n
+\tposition: relative;\n
+\tbottom:-10px;\n
+\n
+}\n
+\n
+.actions ul li {\n
+\n
+\tfloat:left;\n
+\tmargin: 0 1px 0 0;\n
+\n
+}\n
+\n
+\n
+.actions ul li a:link, .action ul li a:active, .actions ul li a:visited {\n
+\n
+\tpadding: 5px 10px;\n
+\tdisplay: block;\n
+\theight:100%;\n
+\n
+}\n
+\n
+#tabs {\n
+\n
+\toverflow: hidden;\n
+\twidth:99%;\n
+\n
+}\n
+\n
+#tabs ul {\n
+\n
+\tlist-style-type: none;\n
+\tmargin:0;\n
+\tpadding:10px 0 18px 0;\n
+\theight:22px;\n
+\tdisplay: block;\n
+\toverflow:hidden;\n
+\n
+}\n
+\n
+#tabs ul li {\n
+\n
+\tfloat:left;\n
+\toverflow: hidden;\n
+\tmargin: 0;\n
+  padding: 0 0 0 10px;\n
+\theight:22px;\n
+\twidth:auto;\n
+\tbackground: url(../km_img/tabs.png) no-repeat transparent;\n
+\n
+}\n
+\n
+#tabs ul li span {\n
+\n
+\tdisplay: block;\n
+\toverflow: hidden;\n
+\tmargin: 0;\n
+\twidth:auto;\n
+\theight:22px;\n
+\tline-height:24px;\n
+\tpadding-right:40px;\n
+\tposition: relative;\n
+\n
+}\n
+\n
+#tabs ul li span a.icon {\n
+\n
+\tfloat:right;\n
+\twidth:10px;\n
+\theight:10px;\n
+\ttext-indent:-999999px;\n
+\tposition: absolute;\n
+\ttop:5px;\n
+\n
+}\n
+\n
+\n
+#tabs ul li span a.edit { right:24px; }\n
+#tabs ul li span a.close { right:9px; }\n
+\n
+\n
+a#tabs-add:link, a#tabs-add:active, a#tabs-add:visited,\n
+a#tabs-hide:link, a#tabs-hide:active, a#tabs-hide:visited { padding: 0 10px 0 10px; }\n
+\n
+#tabs_switcher{padding-top: 15px;}\n
+\n
+/* ## navigation ###################################### end ### */\n
+\n
+\n
+\n
+/* ## layout elements ################################# start # */\n
+\n
+.float-left {  float:left;  }\n
+\n
+.float-right {  float:right;  }\n
+\n
+.centered {  text-align:center;  }\n
+\n
+.align-right {  text-align:right;  }\n
+\n
+img.float-left {\n
+\n
+\tmargin: 0 10px 10px 0;\n
+\n
+}\n
+\n
+\n
+/* ## layout elements ################################# end ### */\n
+\n
+/* ## element "boxes" ################################# start # */\n
+\n
+.gadget {\n
+\n
+\tmargin:0;\n
+\tpadding:0;\n
+\tborder:none;\n
+\n
+}\n
+\n
+.draggable_wrapper #page_wrapper h3 {\n
+\n
+\tmargin:0;\n
+\tpadding:8px 0;\n
+\tdisplay: block;\n
+\twhite-space: nowrap;\n
+\n
+}\n
+\n
+.gadget h3 span ,\n
+.draggable_wrapper #page_wrapper h3 span{\n
+\n
+  padding: 0 !important;\n
+\n
+}\n
+\n
+.draggable_wrapper #page_wrapper h3 span {\n
+\n
+  padding-left: 15px !important;\n
+\n
+}\n
+\n
+.gadget h3 span.handle,\n
+.draggable_wrapper #page_wrapper h3 span.handle{\n
+\n
+  min-height:16px !important;\n
+\n
+}\n
+\n
+.gadget .adminToolbox > label{\n
+\n
+  display:none;\n
+\n
+}\n
+\n
+.gadget .adminToolbox .inner select{\n
+\n
+  width: 100%;\n
+\n
+}\n
+\n
+div.adminToolbox button[type="submit"] {\n
+\n
+display:none;\n
+\n
+}\n
+\n
+div.adminToolbox fieldset {\n
+  display:block;\n
+}\n
+\n
+div.adminToolbox fieldset .clone-button{\n
+  text-align: center;\n
+}\n
+\n
+div.adminToolbox fieldset {\n
+  display:block;\n
+}\n
+\n
+div.adminToolbox fieldset .clone-button{\n
+  text-align: center;\n
+}\n
+\n
+.gadget .inner .table-b{\n
+\n
+  table-layout: fixed;\n
+  overflow: scroll;\n
+\n
+}\n
+\n
+div#mainwrapper div#wrapper_right{\n
+  float:left;\n
+}\n
+\n
+div#km_left div#wrapper_bottom{ \n
+  font-size:0.7em;\n
+  border:0;\n
+  margin:10px;\n
+  clear:left;\n
+}\n
+\n
+div#mainwrapper div#wrapper_right fieldset.widget .minimize_wrapper .content{\n
+\n
+  width: auto;\n
+\n
+}\n
+\n
+.box_inner_content {\n
+\n
+  width: auto;\n
+\n
+}\n
+\n
+div#mainwrapper div#wrapper_right fieldset.widget iframe {width: 100%;}\n
+div#mainwrapper div#wrapper_right fieldset.widget table.gadget td div {\n
+padding: 0 !important;\n
+margin: 0 !important;\n
+border: 0 !important;\n
+}\n
+\n
+div#mainwrapper div#wrapper_right fieldset.widget div.field ul{\n
+  list-style-position:inside;\n
+  list-style-type:square;\n
+}\n
+div#mainwrapper div#wrapper_right fieldset.widget div.field label{\n
+  display:block;\n
+  float:left;\n
+  min-width:5em;\n
+  margin:0pt;\n
+  color:black;\n
+}\n
+\n
+div#mainwrapper div#wrapper_right fieldset.widget div.field label:after {content: ":"}\n
+div#mainwrapper div#wrapper_bottom div.gadget fieldset.widget,\n
+div#mainwrapper div#wrapper_right div.gadget fieldset.widget{\n
+  border:0;\n
+  margin:0;\n
+  clear:both;\n
+}\n
+div#mainwrapper div.wrapper div.gadget fieldset.widget legend{\n
+  display:none;\n
+}\n
+div#mainwrapper div.wrapper div.gadget fieldset.widget div.field label{\n
+  display:none;\n
+}\n
+\n
+\n
+\n
+.gadget h3 { padding: 2px 0; }\n
+\n
+.gadget .block h3 span.gadget_title {\n
+\n
+  float: left;\n
+  position: absolute;\n
+  left: 26px;\n
+\n
+}\n
+\n
+.gadget h3 small {\n
+\n
+\twidth:65px;\n
+\tfloat:right;\n
+\tposition: absolute;\n
+\tright:2px;\n
+\ttop:11px;\n
+\n
+}\n
+\n
+.gadget h3 small {\n
+\twidth:50px;\n
+\tfloat:right;\n
+\tposition: absolute;\n
+\tright:0;\n
+\ttop:5px;\n
+\n
+}\n
+\n
+.gadget h3.handle a,\n
+.draggable_wrapper #page_wrapper h3.handle a {\n
+\n
+\twidth: 11px;\n
+\theight: 11px;\n
+\ttext-indent: -999999px;\n
+\tmargin: 2px 5px 0 0;\n
+\n
+}\n
+\n
+.gadget .inner {\n
+\n
+\tpadding:10px;\n
+\twidth:auto;\n
+\n
+}\n
+\n
+.gadget .inner .post {\n
+\n
+\tpadding: 0 0 10px 0;\n
+\n
+}\n
+\n
+.gadget h4 {\n
+\n
+\tmargin:0;\n
+\tpadding: 0;\n
+\n
+}\n
+\n
+\n
+.gadget .inner .feed {\n
+\n
+\tmargin:0 0 0 20px;\n
+\tpadding:0;\n
+\n
+}\n
+\n
+.gadget p { margin:0; }\n
+\n
+.document > .content ul li {\n
+\n
+\tmargin-left:0;\n
+\tpadding-left:0;\n
+\n
+}\n
+\n
+table {\n
+\n
+\twidth:100%;\n
+\tborder-collapse: collapse;\n
+\n
+}\n
+\n
+table.table-b { width:100%; }\n
+\n
+table tr td, table tr.thead th {\n
+\n
+\tpadding:4px;\n
+\tvertical-align: top;\n
+\n
+}\n
+\n
+\n
+table .left {\n
+\n
+  float: left;\n
+\n
+}\n
+\n
+table .right {\n
+\n
+  float: right;\n
+\n
+}\n
+\n
+.gadget .inner .table-b{\n
+\n
+\n
+}\n
+\n
+.gadget .inner .table-b tr td{\n
+\n
+  padding: 3px;\n
+\n
+}\n
+\n
+#km_left .document > .content{\n
+\n
+\tfloat:left;\n
+  margin: 10px;\n
+\n
+}\n
+\n
+#km_front .document > .content{\n
+\n
+\tfloat:left;\n
+  padding: 10px;\n
+  width: auto;\n
+  min-width: 98%\n
+\n
+}\n
+\n
+#fieldset_left .field,\n
+#fieldset_right .field,\n
+#fieldset_center .field,\n
+#fieldset_bottom .field {\n
+\n
+  width: 98%;\n
+\n
+}\n
+\n
+#fieldset_left .gadget,\n
+#fieldset_right .gadget {\n
+\n
+  margin-top:10px;\n
+\n
+}\n
+\n
+/* ## element "boxes" ################################ end ### */\n
+\n
+/* ## element "footer" ############################### start # */\n
+\n
+#wrapper_footer {\n
+\n
+\tclear:both;\n
+\twidth: 100%;\n
+\toverflow: hidden;\n
+\tposition: relative;\n
+\tmargin-top: -4.6em;\n
+\n
+}\n
+\n
+#footer {\n
+\n
+  width:952px;\n
+  margin: 0 auto;\n
+\n
+}\n
+\n
+#wrapper_footer ul {\n
+\n
+\tlist-style-type: none;\n
+\tmargin:0 auto;\n
+\tpadding: 11px 20px;\n
+\n
+}\n
+\n
+#footer_left {float: left;}\n
+#footer_right {float: right;}\n
+\n
+#footer_right li {\n
+\n
+text-align: right;\n
+\n
+}\n
+\n
+/* ## element "footer" ############################### end ### */\n
+\n
+/* ## forms ########################################## start # */\n
+\n
+fieldset, form {\n
+\n
+\tborder:none;\n
+\tmargin:0;\n
+\tpadding:0;\n
+\n
+}\n
+\n
+table tr.thead th input {\n
+\n
+\twidth:90%;\n
+\n
+}\n
+\n
+input { width:98%; }\n
+\n
+form p,\n
+.bottom_actions{\n
+\n
+  margin:5px 0;\n
+\n
+}\n
+\n
+\n
+.meta {\n
+\n
+  line-height: 42px;\n
+\n
+}\n
+\n
+.meta div{\n
+\n
+  display: inline;\n
+  width: auto;\n
+  float: left;\n
+\n
+}\n
+\n
+.meta input {\n
+\n
+  width:100px;\n
+  vertical-align: middle;\n
+\n
+}\n
+\n
+.meta .search_button {\n
+width: 20px;\n
+height: 20px;\n
+margin-top:11px;\n
+\n
+}\n
+\n
+.meta div.input > select {\n
+  border: none;\n
+  max-width: 60px;\n
+  margin-left:0.2em;\n
+}\n
+\n
+.meta input.search_text {\n
+\n
+  color:#777777;\n
+  padding:2px;\n
+  font-size:1em;\n
+  border: none;\n
+  width: 120px;\n
+  margin-left: 40px;\n
+\n
+}\n
+.meta input.search_text:focus {color:#000000;}\n
+\n
+.meta input.search_button {\n
+\n
+\tborder:none;\n
+\tmargin:0;\n
+\tpadding:0;\n
+\twidth:20px;\n
+\theight:20px;\n
+\n
+}\n
+\n
+#menu .navbar fieldset,\n
+#menu .meta fieldset {\n
+\n
+  float: left;\n
+\n
+}\n
+\n
+#fieldset_left .field,\n
+#fieldset_right .field {\n
+\n
+  margin: 5px 0;\n
+  float: left;\n
+\n
+}\n
+\n
+.date_field {\n
+\n
+  width: auto;\n
+\n
+}\n
+\n
+/* ## forms ########################################## end ### */\n
+\n
+/* ## buttons ######################################### start # */\n
+\n
+a.bt-edit:link, a.bt-edit:active, a.bt-edit:visited {\n
+\n
+\theight:24px;\n
+\twidth:auto;\n
+\tdisplay:block;\n
+\tpadding-left:10px;\n
+\tmargin: 0 0 5px 0;\n
+\n
+}\n
+\n
+a.bt-edit:link strong, a.bt-edit:active strong, a.bt-edit:visited strong {\n
+\n
+\theight:100%;\n
+\twidth:auto;\n
+\tdisplay:block;\n
+\tline-height:24px;\n
+\twhite-space: nowrap;\n
+\n
+}\n
+\n
+a.bt-edit strong img {\n
+\n
+\tposition: relative;\n
+\ttop:2px;\n
+\n
+}\n
+\n
+button#bt-clone {\n
+\n
+  margin-top: 1em;\n
+\n
+}\n
+\n
+button.formbt {\n
+\n
+\twidth: auto;\n
+\theight:35px;\n
+\tcursor: pointer;\n
+\tborder:none;\n
+\tpadding: 0 20px 0 0;\n
+\tmargin: 0 5px 0 0;\n
+\tposition: relative;\n
+\toverflow: visible;\n
+\n
+}\n
+\n
+button::-moz-focus-inner { border:none; }\n
+\n
+button.formbt > span {\n
+\n
+\tdisplay:block;\n
+\twidth:100%;\n
+\theight:35px;\n
+\tmargin:0;\n
+\tpadding:0 0 0 5px;\n
+\tline-height:35px;\n
+\tposition: relative;\n
+\tleft:-2px;\n
+\twhite-space: nowrap;\n
+\n
+}\n
+\n
+a.bt-download:link, a.bt-download:active, a.bt-download:visited,\n
+a.bt-rss:link, a.bt-rss:active, a.bt-rss:visited {\n
+\n
+\tpadding-right:15px;\n
+\tposition: absolute;\n
+\tright:10px;\n
+\ttop:10px;\n
+\n
+}\n
+\n
+button.bt-med {\n
+\n
+\twidth: auto;\n
+\theight:24px;\n
+\tcursor: pointer;\n
+\tborder:none;\n
+\tpadding: 0 20px 0 0;\n
+\tmargin: 0 5px 0 0;\n
+\tposition: relative;\n
+\toverflow: visible;\n
+\n
+}\n
+\n
+button.bt-med span {\n
+\n
+\tdisplay:block;\n
+\twidth:100%;\n
+\theight:24px;\n
+\tmargin:0;\n
+\tpadding:0 0 0 10px;\n
+\tline-height:24px;\n
+\tposition: relative;\n
+\tleft:-2px;\n
+\twhite-space: nowrap;\n
+\n
+}\n
+\n
+button.bt-med span img {\n
+\n
+\tdisplay:inline;\n
+\tposition: relative;\n
+\ttop:3px;\n
+\tmargin-right:5px;\n
+\n
+}\n
+\n
+.bt-small {\n
+\n
+\tdisplay:block;\n
+\twidth: auto;\n
+\theight:18px;\n
+\tcursor: pointer;\n
+\tborder:none;\n
+\tpadding: 0 15px 0 0;\n
+\tmargin: -2px 2px 0 2px;\n
+\tposition: relative;\n
+\toverflow: visible;\n
+\n
+}\n
+\n
+.bt-small span {\n
+\n
+\tdisplay:block;\n
+\twidth:100%;\n
+\theight:18px;\n
+\tmargin:0;\n
+\tpadding:0 0 0 10px;\n
+\tline-height:18px;\n
+\tposition: relative;\n
+\tleft:-2px;\n
+\twhite-space: nowrap;\n
+\n
+}\n
+\n
+.bt-small span img {\n
+\n
+\tdisplay:inline;\n
+\tmargin-right:2px;\n
+\n
+}\n
+\n
+/* ## buttons ######################################### end ### */\n
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+#main_form {\n
+\n
+  height:100%;\n
+\n
+}\n
+\n
+\n
+.input input[type=image] {\n
+\n
+  width: auto !important;\n
+\n
+}\n
+\n
+\n
+\n
+#km_left {\n
+\n
+  padding-top: 15px;\n
+\tfloat: left;\n
+\twidth:75%;\n
+\n
+}\n
+\n
+#km_left.alone {\n
+\n
+  width: 100%;\n
+\n
+}\n
+\n
+\n
+.bottom_actions {\n
+\n
+  float:right;\n
+  width: auto;\n
+  margin-right: 10px;\n
+\n
+}\n
+\n
+\n
+\n
+\n
+/* Login form  CSS */\n
+fieldset#fieldset_left_registration, \n
+fieldset#fieldset_right_registration {\n
+  width:50%;\n
+  float: left;\n
+  background-color: #D1D1D1;\n
+}\n
+\n
+fieldset#fieldset_left_registration {\n
+  width: 49%;\n
+  margin-right: 0.5em;\n
+}\n
+\n
+fieldset#fieldset_left_registration h4, \n
+fieldset#fieldset_right_registration h4 {\n
+  margin: 0 0 10px 0;\n
+  font-weight: bold;\n
+  padding: 0.1em 0.5em;\n
+  background: #5B7C9B none repeat scroll 0% !important;\n
+  color: white !important;\n
+  display: block;\n
+  font-size: 1.2em;\n
+}\n
+\n
+fieldset#fieldset_left_registration > div,\n
+fieldset#fieldset_right_registration > div {\n
+  clear:both;\n
+  margin:0.1em 0pt;\n
+  position:relative;\n
+}\n
+\n
+fieldset#fieldset_left_registration div.input, \n
+fieldset#fieldset_right_registration div.input {\n
+  display:block;\n
+  width: auto;\n
+}\n
+ \n
+fieldset#fieldset_left_registration label, \n
+fieldset#fieldset_right_registration label {\n
+  display:block;\n
+  float:left;\n
+  margin:0pt;\n
+  text-align:right;\n
+  width:11.5em;\n
+  padding-right: 0.1em;\n
+}\n
+\n
+fieldset#fieldset_right_registration div.required label {\n
+  background-image:url(km_img/required_mark.png) !important;\n
+  background-position:left center !important;\n
+  background-repeat:no-repeat !important;\n
+}\n
+\n
+fieldset#fieldset_left_registration input,\n
+fieldset#fieldset_left_registration textarea,\n
+fieldset#fieldset_left_registration select,\n
+fieldset#fieldset_right_registration input,\n
+fieldset#fieldset_right_registration textarea,\n
+fieldset#fieldset_right_registration select {\n
+  border:1px solid #999999;\n
+  color:#333333;\n
+  font-family:Sans,Verdana,Tahoma,Georgia,Geneva,Arial,sans-serif;\n
+  font-size:8pt;\n
+  line-height:1.5em;\n
+  width: auto;\n
+}\n
+\n
+/* ## screen sizes #################################### start # */\n
+\n
+.screen_small #mainwrapper {\n
+\n
+\twidth:780px;\n
+\n
+}\n
+\n
+.screen_small #mainwrapper .content .gadget .box,\n
+.screen_small #mainwrapper .content .gadget .box table tr td {\n
+\n
+\tfont-size:9px;\n
+\n
+}\n
+\n
+/* ## screen sizes #################################### end ### */\n
+\n
+\n
+\n
+\n
+.listbox input {\n
+\n
+  width: auto;\n
+\n
+}\n
+\n
+.pageNavigation .input input[type="image"] {\n
+\n
+  vertical-align: middle;\n
+\n
+}\n
+\n
+.pageNavigation input {\n
+\n
+  width: auto;\n
+\n
+}\n
+\n
+\n
+#wrapper_splash .input img{\n
+\n
+  border: none;\n
+  display: block;\n
+  margin: auto;\n
+\n
+}\n
+\n
+\n
+.related_docs {\n
+\n
+  max-width: 170px;\n
+\n
+}\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>layout.css</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

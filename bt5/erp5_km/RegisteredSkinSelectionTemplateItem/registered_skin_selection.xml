@@ -1,0 +1,18 @@
+<registered_skin_selection>
+ <skin_folder_selection>
+  <skin_folder>erp5_km</skin_folder>
+  <skin_selection>KM</skin_selection>
+ </skin_folder_selection>
+ <skin_folder_selection>
+  <skin_folder>erp5_km_theme</skin_folder>
+  <skin_selection>KM</skin_selection>
+ </skin_folder_selection>
+ <skin_folder_selection>
+  <skin_folder>erp5_km_widget_library</skin_folder>
+  <skin_selection>KM</skin_selection>
+ </skin_folder_selection>
+ <skin_folder_selection>
+  <skin_folder>erp5_xhtml_style</skin_folder>
+  <skin_selection>KM</skin_selection>
+ </skin_folder_selection>
+</registered_skin_selection>

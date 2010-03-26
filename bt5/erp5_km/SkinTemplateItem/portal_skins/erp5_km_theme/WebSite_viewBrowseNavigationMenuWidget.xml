@@ -1,0 +1,135 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>web_site_user_ram_cache</string> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<tal:block tal:define="current_web_site python:request.get(\'current_web_site\', here);\n
+                       portal_path python:request.get(\'current_web_site_url\', current_web_site.absolute_url());\n
+                       current_web_section_url python:request.get(\'current_web_section_url\', portal_path);\n
+                       search_area_url python: \'%s%s\' % (portal_path, current_web_site.getLayoutProperty(\'layout_search_area_web_section_id\', default=\'\'));\n
+                       menu_item_list python:current_web_site.WebSection_getSiteMapTree(depth=32, property_mapping=(\'compact_translated_title\',));\n
+                       is_anonymous here/portal_membership/isAnonymousUser;\n
+                       anonymous_navigation_menu python:is_anonymous and current_web_site.getLayoutProperty(\'layout_anonymous_navigation_menu\');">\n
+\n
+  <li tal:condition="not:anonymous_navigation_menu">\n
+    <a href="#" >\n
+      <tal:block i18n:translate="" i18n:domain="ui">Browse</tal:block>\n
+      <!--[if IE 7]><!-->\n
+    </a><!--<![endif]-->\n
+    <!--[if lte IE 6]><table><tr><td><![endif]-->\n
+    <ul tal:condition="menu_item_list">\n
+      <li tal:repeat="menu_item menu_item_list">\n
+        <tal:block tal:condition="not:nocall:menu_item/subsection"><a tal:attributes="href menu_item/url" tal:content="menu_item/compact_translated_title | menu_item/translated_title">Menu</a></tal:block>\n
+        <tal:block tal:condition="nocall:menu_item/subsection">\n
+        <a tal:attributes="href menu_item/url"><tal:block tal:replace="menu_item/compact_translated_title | menu_item/translated_title">Drop-down Menu</tal:block><!--[if IE 7]><!--></a><!--<![endif]-->\n
+        <!--[if lte IE 6]><table><tr><td><![endif]-->\n
+        <ul metal:define-macro="generateTree">\n
+          <li tal:repeat="item menu_item/subsection">\n
+            <a href="#" tal:attributes="href item/url" tal:content="item/compact_translated_title | item/translated_title">Menu subitem 1</a>\n
+            <tal:recurse define="menu_item item" tal:condition="nocall:item/subsection">\n
+              <metal:call use-macro="here/WebSite_viewBrowseNavigationMenuWidget/macros/generateTree" />\n
+            </tal:recurse>\n
+          </li>\n
+        </ul>\n
+        <!--[if lte IE 6]></td></tr></table></a><![endif]-->\n
+        </tal:block>\n
+      </li>\n
+    </ul>\n
+    <!--[if lte IE 6]></td></tr></table></a><![endif]-->\n
+  </li>\n
+\n
+  <tal:block tal:condition="anonymous_navigation_menu">\n
+    <li tal:repeat="menu_item menu_item_list">\n
+      <a href="#" >\n
+        <tal:block tal:replace="menu_item/compact_translated_title | menu_item/translated_title">Menu</tal:block>\n
+        <!--[if IE 7]><!-->\n
+      </a><!--<![endif]-->\n
+      <!--[if lte IE 6]><table><tr><td><![endif]-->\n
+      <tal:block tal:define="menu_item_list menu_item/subsection">\n
+        <ul tal:condition="menu_item_list">\n
+          <li tal:repeat="menu_item menu_item_list">\n
+            <tal:block tal:condition="not:nocall:menu_item/subsection"><a tal:attributes="href menu_item/url" tal:content="menu_item/compact_translated_title | menu_item/translated_title">Menu</a></tal:block>\n
+            <tal:block tal:condition="nocall:menu_item/subsection">\n
+            <a tal:attributes="href menu_item/url"><tal:block tal:replace="menu_item/compact_translated_title | menu_item/translated_title">Drop-down Menu</tal:block><!--[if IE 7]><!--></a><!--<![endif]-->\n
+            <!--[if lte IE 6]><table><tr><td><![endif]-->\n
+            <ul>\n
+              <li tal:repeat="item menu_item/subsection">\n
+                <a href="#" tal:attributes="href item/url" tal:content="item/compact_translated_title | item/translated_title">Menu subitem 1</a>\n
+                <tal:recurse define="menu_item item" tal:condition="nocall:item/subsection">\n
+                  <metal:call use-macro="here/WebSite_viewNavigationMenuWidget/macros/generateTree" />\n
+                </tal:recurse>\n
+              </li>\n
+            </ul>\n
+            <!--[if lte IE 6]></td></tr></table></a><![endif]-->\n
+            </tal:block>\n
+          </li>\n
+        </ul>\n
+        <!--[if lte IE 6]></td></tr></table></a><![endif]-->\n
+      </tal:block>\n
+    </li>\n
+  </tal:block>\n
+</tal:block>  \n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>WebSite_viewBrowseNavigationMenuWidget</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
