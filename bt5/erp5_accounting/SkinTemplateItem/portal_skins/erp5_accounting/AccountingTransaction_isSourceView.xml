@@ -69,9 +69,9 @@ if source is not None and section_category:\n
 # then we\'ll not show source view\n
 destination = context.getDestinationSectionValue()\n
 if destination is not None and section_category:\n
-  if source.getPortalType() == \'Person\':\n
+  if destination.getPortalType() == \'Person\':\n
     return True\n
-  if source.isMemberOf(section_category):\n
+  if destination.isMemberOf(section_category):\n
     return False\n
 \n
 # If we reach this point, none of the sections are member of the preferred section\n
