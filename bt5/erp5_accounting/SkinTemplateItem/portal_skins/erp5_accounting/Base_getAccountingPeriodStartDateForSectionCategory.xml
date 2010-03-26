@@ -59,10 +59,13 @@ from Products.ERP5Type.Cache import CachingMethod\n
 \n
 def getAccountingPeriodStartDateForSectionCategory(section_category, date):\n
   portal = context.getPortalObject()\n
-  section_uid = portal.Base_getSectionUidListForSectionCategory(\n
-                                      section_category)\n
   # XXX for now we guess period start date from the first organisation having\n
-  # accounting periods\n
+  # accounting periods, giving priority to the organisation directly associated\n
+  # to the section category\n
+  section_uid = portal.Base_getSectionUidListForSectionCategory(\n
+                                      section_category, strict_membership=True)\n
+  section_uid.extend(portal.Base_getSectionUidListForSectionCategory(\n
+                                      section_category, strict_membership=False))\n
   period_start_date = None\n
   valid_accounting_period = dict(portal_type=\'Accounting Period\',\n
                                  simulation_state=(\'planned\', \'confirmed\',\n
