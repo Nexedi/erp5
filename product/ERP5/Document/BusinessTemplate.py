@@ -1984,9 +1984,9 @@ class PortalTypeWorkflowChainTemplateItem(BaseTemplateItem):
           # compare object to see it there is changes
           new_object = self._objects[path]
           old_object = installed_item._objects[path]
-          if isinstance(new_object, list) or isinstance(new_object, tuple):
+          if isinstance(new_object, (list, tuple)):
             new_object = self._chain_string_separator.join(new_object)
-          if isinstance(old_object, list) or isinstance(old_object, tuple):
+          if isinstance(old_object, (list, tuple)):
             old_object = self._chain_string_separator.join(old_object)
           if new_object != old_object:
             modified_object_list.update({path : ['Modified', self.getTemplateTypeName()]})
@@ -2366,7 +2366,7 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
           old_value = getattr(catalog, key, None)
           if isinstance(old_value, str):
             setattr(catalog, key, method_id)
-          elif isinstance(old_value, list) or isinstance(old_value, tuple):
+          elif isinstance(old_value, (list, tuple)):
             if method_id not in old_value:
               new_value = list(old_value) + [method_id]
               new_value.sort()
