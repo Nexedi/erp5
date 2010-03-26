@@ -13,14 +13,14 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
-                <string>columns</string>
-                <string>list_method</string>
-                <string>stat_method</string>
-                <string>portal_types</string>
                 <string>anchor</string>
+                <string>columns</string>
                 <string>editable_columns</string>
+                <string>list_method</string>
+                <string>portal_types</string>
                 <string>stat_columns</string>
+                <string>stat_method</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -283,7 +283,7 @@
       <dictionary>
         <item>
             <key> <string>method_name</string> </key>
-            <value> <string>AccountingTransaction_getInvoiceTransactionLineList</string> </value>
+            <value> <string>AccountingTransaction_getAccountingTransactionLineList</string> </value>
         </item>
       </dictionary>
     </pickle>
