@@ -177,8 +177,11 @@ class SupplyLine(Path, XMLMatrix):
         predicate_id_start_with = "%s_%s" % \
             (price_parameter, predicate_id_start_with)
       # XXX Hardcoded portal type name
-      predicate_list = self.contentIds(filter={'portal_type': 'Predicate'})
-      result = [x for x in predicate_list \
+      predicate_list = self.objectValues(portal_type='Predicate',
+              sort_on=('int_index', 'id'))
+      predicate_list.sort(key=lambda p: p.getIntIndex() or p.getId())
+      predicate_id_list = [x.getId() for x in predicate_list]
+      result = [x for x in predicate_id_list \
               if x.startswith(predicate_id_start_with)]
       return result
 
@@ -188,7 +191,7 @@ class SupplyLine(Path, XMLMatrix):
       """
         Return predicate related to a price parameter.
       """
-      result = [getattr(self, x) for x in \
+      result = [self[x] for x in \
               self.getQuantityPredicateIdList(price_parameter)]
       return result
 
