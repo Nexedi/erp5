@@ -67,8 +67,7 @@
 """\n
 portal_type = context.getPortalType()\n
 \n
-if portal_type in (\'Image\', \'Presentation\', \'Drawing\', \'Spreadsheet\', \'Text\', \'PDF\', ) \\\n
-   and context.isTargetFormatPermitted("png"):\n
+if portal_type in (\'Image\', \'Presentation\', \'Drawing\', \'Spreadsheet\', \'Text\', \'PDF\', ):\n
   return context.absolute_url()\n
 \n
 return None\n
