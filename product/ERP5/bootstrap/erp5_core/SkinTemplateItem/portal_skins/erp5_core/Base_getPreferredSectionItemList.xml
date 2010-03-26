@@ -54,7 +54,10 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>section = context.portal_preferences.getPreferredSectionCategory() or\\\n
-                       context.portal_preferences.getPreferredAccountingTransactionSectionCategory() \n
+                       context.portal_preferences.getPreferredAccountingTransactionSectionCategory()\n
+\n
+if not section:\n
+  return [(\'\', \'\')]\n
 \n
 section_value = context.portal_categories.resolveCategory(section)\n
 value_list = section_value.getGroupRelatedValueList(portal_type=portal_type,\n
