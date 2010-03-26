@@ -40,7 +40,8 @@ from Acquisition import aq_base
 from Products.Formulator.FieldRegistry import FieldRegistry
 from Products.Formulator.Validator import ValidationError
 from Products.Formulator.StandardFields import FloatField, StringField,\
-DateTimeField, TextAreaField, CheckBoxField, ListField, LinesField
+DateTimeField, TextAreaField, CheckBoxField, ListField, LinesField, \
+MultiListField
 from Products.Formulator.MethodField import Method, BoundMethod
 from Products.Formulator.TALESField import TALESMethod
 
@@ -310,6 +311,21 @@ class TestLinesField(ERP5TypeTestCase):
     self.assertEquals(self.field.render_view(value=['My first Line\n', '&My Second Line\tfoo']),
                       '<div  >My first Line<br />\n<br />\n&amp;My Second Line\tfoo</div>')
 
+  def test_render_odt(self):
+    self.field.values['default'] = ['A', 'B']
+    self.assertEquals('{%(text)s}p' % NSMAP,
+                      self.field.render_odt(as_string=False).tag)
+
+  def test_render_odt_view(self):
+    self.field.values['default'] = ['A', 'B']
+    element = self.field.render_odt(as_string=False,
+                                    REQUEST=self.portal.REQUEST)
+    self.assertEquals('{%(text)s}p' % NSMAP, element.tag)
+    # separated by text:line-break
+    self.assertEquals('{%(text)s}line-break' % NSMAP, element[0].tag)
+    self.assertEquals(['A', 'B'], [x for x in element.itertext()])
+
+
 class TestCheckBoxField(ERP5TypeTestCase):
   """Tests TextArea field
   """
@@ -323,13 +339,13 @@ class TestCheckBoxField(ERP5TypeTestCase):
 
   def test_render_odt(self):
     self.field.values['default'] = 1
-    self.assertEquals('{%s}checkbox' % (NSMAP.get('form')),
+    self.assertEquals('{%(form)s}checkbox' % NSMAP,
                       self.field.render_odt(as_string=False).tag)
 
   def test_render_odt_view(self):
     self.field.values['default'] = 1
     self.portal.REQUEST.set('editable_mode', 0)
-    self.assertEquals('{%s}p' % (NSMAP.get('text')),
+    self.assertEquals('{%(text)s}p' % NSMAP,
                       self.field.render_odt(as_string=False, REQUEST=self.portal.REQUEST).tag)
     self.assertEquals('1', self.field.render_odt(as_string=False, REQUEST=self.portal.REQUEST).text)
 
@@ -356,9 +372,7 @@ class TestListField(ERP5TypeTestCase):
     self.tic()
 
   def createCategories(self):
-    """
-      Light install create only base categories, so we create
-      some categories for testing them
+    """Create some categories into gender
     """
     category_tool = self.portal.portal_categories
     category_dict = {'a':1, 'b':2, 'd':3, 'c':4, 'e':None, 'g':None, 'f':None}
@@ -369,9 +383,18 @@ class TestListField(ERP5TypeTestCase):
                                                int_index=int_index)
 
   def test_render_odt(self):
-    self.field.values['default'] = ['My first Line', 'My Second Line', 'foo']
-    self.assertEquals('text:line-break', 
-        self.field.render_odt(as_string=False)[0].xpath('name()'))
+    items = [('My first Line', '1'), ('My Second Line', '2')]
+    self.field.values['items'] = items
+    self.field.values['default'] = '2'
+    element = self.field.render_odt(as_string=False)
+    self.assertEquals('{%(text)s}p' % NSMAP, element.tag)
+    self.assertEquals('My Second Line', element.text)
+
+    # values not in items are displayed with ???
+    self.field.values['default'] = '3'
+    element = self.field.render_odt(as_string=False)
+    self.assertEquals('??? (3)', element.text)
+
 
   def test_listField_value_order(self):
     '''This test check the list field value order
@@ -405,6 +428,41 @@ class TestListField(ERP5TypeTestCase):
     self.assertEquals(person.Person_view.my_gender.get_value('items'),
         [['', ''], ['e', 'e'], ['f', 'f'], ['g', 'g'], ['a', 'a'], ['b', 'b'],
           ['d', 'd'], ['c', 'c']])
+
+
+class TestMultiListField(ERP5TypeTestCase):
+
+  def afterSetUp(self):
+    self.field = MultiListField('test_field')
+    self.widget = self.field.widget
+    self.field.values['items'] = [('A', 'a',), ('B', 'b')]
+    self.field.values['default'] = ['a', 'b']
+
+  def test_render_view(self):
+    self.assertEquals('A<br />\nB', self.field.render_view(value=['a', 'b']))
+
+  def test_render_odt(self):
+    element = self.field.render_odt(as_string=False)
+    self.assertEquals('{%(text)s}p' % NSMAP, element.tag)
+    # separated by text:line-break
+    self.assertEquals('{%(text)s}line-break' % NSMAP, element[0].tag)
+    self.assertEquals(['A', 'B'], [x for x in element.itertext()])
+
+  def test_render_odt_view(self):
+    element = self.field.render_odt_view(as_string=False,
+                                        value=['a', 'b'],
+                                        REQUEST=self.portal.REQUEST)
+    self.assertEquals('{%(text)s}p' % NSMAP, element.tag)
+    # separated by text:line-break
+    self.assertEquals('{%(text)s}line-break' % NSMAP, element[0].tag)
+    self.assertEquals(['A', 'B'], [x for x in element.itertext()])
+
+    # values not in items are displayed with ???
+    element = self.field.render_odt_view(as_string=False,
+                                        value=['other'],
+                                        REQUEST=self.portal.REQUEST)
+    self.assertEquals('{%(text)s}p' % NSMAP, element.tag)
+    self.assertEquals('??? (other)', element.text)
 
 class TestProxyField(ERP5TypeTestCase):
 
@@ -806,6 +864,7 @@ def test_suite():
   suite.addTest(unittest.makeSuite(TestLinesField))
   suite.addTest(unittest.makeSuite(TestCheckBoxField))
   suite.addTest(unittest.makeSuite(TestListField))
+  suite.addTest(unittest.makeSuite(TestMultiListField))
   suite.addTest(unittest.makeSuite(TestProxyField))
   suite.addTest(unittest.makeSuite(TestFieldValueCache))
   return suite
