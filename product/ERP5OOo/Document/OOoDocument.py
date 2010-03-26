@@ -48,13 +48,10 @@ from Products.ERP5.Document.File import File
 from Products.ERP5.Document.Document import PermanentURLMixIn
 from Products.ERP5.Document.Document import ConversionError
 from Products.ERP5.Document.Document import NotConvertedError
-from AccessControl.SecurityManagement import getSecurityManager
 from zLOG import LOG, ERROR
 
 # Mixin Import
 from Products.ERP5.mixin.cached_convertable import CachedConvertableMixin
-from Products.ERP5.mixin.convertable import ConvertableMixin
-from Products.ERP5.mixin.base_convertable import BaseConvertableMixin
 
 enc=base64.encodestring
 dec=base64.decodestring
@@ -91,7 +88,7 @@ class TimeoutTransport(SafeTransport):
     return SafeTransport.make_connection(self, h)
 
 
-class OOoDocument(PermanentURLMixIn, File, CachedConvertableMixin, BaseConvertableMixin, ConvertableMixin):
+class OOoDocument(PermanentURLMixIn, File, CachedConvertableMixin):
   """
     A file document able to convert OOo compatible files to
     any OOo supported format, to capture metadata and to
@@ -187,7 +184,9 @@ class OOoDocument(PermanentURLMixIn, File, CachedConvertableMixin, BaseConvertab
     _setCacheHeaders(_ViewEmulator().__of__(self), {'format' : format})
 
     # Verify that the format is acceptable (from permission point of view)
-    if self.isTargetFormatPermitted(format)==False:
+    method = self._getTypeBasedMethod('checkConversionFormatPermission', 
+        fallback_script_id = 'Document_checkConversionFormatPermission')
+    if not method(format=format):
       raise Unauthorized("OOoDocument: user does not have enough permission to access document"
                          " in %s format" % (format or 'original'))
 
@@ -280,7 +279,8 @@ class OOoDocument(PermanentURLMixIn, File, CachedConvertableMixin, BaseConvertab
         allowed = server_proxy.getAllowedTargets(content_type)
         warn('Your oood version is too old, using old method '
             'getAllowedTargets instead of getAllowedTargetList',
-             DeprecationWarning)  
+             DeprecationWarning)
+
       # tuple order is reversed to be compatible with ERP5 Form
       return [(y, x) for x, y in allowed]
 
@@ -313,10 +313,9 @@ class OOoDocument(PermanentURLMixIn, File, CachedConvertableMixin, BaseConvertab
   def isTargetFormatAllowed(self, format):
     """
       Checks if the current document can be converted
-      into the specified target format
+      into the specified target format.
     """
     return format in self.getTargetFormatList()
-
 
   security.declarePrivate('_convert')
   def _convert(self, format):
@@ -410,10 +409,6 @@ class OOoDocument(PermanentURLMixIn, File, CachedConvertableMixin, BaseConvertab
     # Raise an error if the format is not supported
     if not self.isTargetFormatAllowed(format):
       raise ConversionError("OOoDocument: target format %s is not supported" % format)
-    # Raise an error if the format is not permitted
-    if not self.isTargetFormatPermitted(format):
-      raise Unauthorized("OOoDocument: user does not have enough permission to access document"
-				                     " in %s format" % (format or 'original'))
     # Check if we have already a base conversion
     if not self.hasBaseData():
       raise NotConvertedError
@@ -558,13 +553,13 @@ class OOoDocument(PermanentURLMixIn, File, CachedConvertableMixin, BaseConvertab
       metadata = response_dict['meta']
       self._base_metadata = metadata
       if metadata.get('MIMEType', None) is not None:
-        self._setBaseContentType(metadata['MIMEType'])   
+        self._setBaseContentType(metadata['MIMEType'])
     else:
       # Explicitly raise the exception!
       raise ConversionError(
                 "OOoDocument: Error converting document to base format %s:%s:"
                                        % (response_code, response_message))
-  
+
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getContentInformation')
   def getContentInformation(self):
