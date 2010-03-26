@@ -68,6 +68,7 @@ print sys.version_info[:2]
       paramiko
       ply
       pytz
+      readline
       simplejson
       socks
       threadframe
