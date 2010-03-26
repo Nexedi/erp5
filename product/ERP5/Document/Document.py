@@ -1138,8 +1138,8 @@ class Document(PermanentURLMixIn, XMLObject, UrlMixIn, CachedConvertableMixin, S
       # if base is defined yet.
       html = str(html)
       if not html.find('<base') >= 0:
-        base = '<base href="%s">' % self.getContentBaseURL()
-        html = html.replace('<head>', '<head>%s' % base)
+        base = '<base href="%s"/>' % self.getContentBaseURL()
+        html = html.replace('<head>', '<head>%s' % base, 1)
       self.setConversion(html, mime='text/html', format='base-html')
     return html
 
