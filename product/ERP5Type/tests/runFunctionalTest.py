@@ -313,12 +313,13 @@ Following tests failed:
       if error_result_re.match(e):
         detail += e
     detail = image_re.sub('', detail)
-    detail = detail.replace('<tr class="title status_failed"', 
-               '<tr class="title status_failed" style="background-color:red"')
-    detail = detail.replace('<tr class="status_failed"', 
-              '<tr class="status_failed" style="background-color:red"')
     if detail:
-      detail = '<html><body>%s</body></html>' % detail
+      detail = '''<html>
+<head>
+ <style type="text/css">tr.status_failed { background-color:red };</style>
+</head>
+<body>%s</body>
+</html>''' % detail
     status = (not failures)
     if self.send_mail:
       sendMail(subject=subject,
