@@ -77,14 +77,15 @@ if role_filter_list == [\'\'] :\n
 if role_filter_list:\n
   role_filter_list = [\'role/%s\' % r for r in role_filter_list]\n
   \n
-\n
+section_uid = context.Base_getSectionUidListForSectionCategory(\n
+                                             request[\'section_category\'],\n
+                                             request[\'section_category_strict\'])\n
 result = []\n
 \n
 params =  {\n
-    \'at_date\'                     : at_date\n
-  , \'section_category\': section_category\n
+    \'at_date\' : at_date\n
+  , \'section_uid\': section_uid\n
   , \'simulation_state\': simulation_state\n
-  #, \'where_expression\'            : " section.portal_type = \'Organisation\' "\n
 }\n
 \n
 params[\'hide_grouping\'] = request[\'omit_grouped_references\']\n
@@ -227,6 +228,7 @@ return result\n
                             <string>$append0</string>
                             <string>_getiter_</string>
                             <string>r</string>
+                            <string>section_uid</string>
                             <string>result</string>
                             <string>params</string>
                             <string>portal</string>

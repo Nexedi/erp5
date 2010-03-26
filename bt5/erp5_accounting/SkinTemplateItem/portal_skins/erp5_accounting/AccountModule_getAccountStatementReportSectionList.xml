@@ -72,7 +72,8 @@ request.set(\'is_accounting_report\', True)\n
 \n
 at_date = request[\'at_date\']\n
 section_uid = context.Base_getSectionUidListForSectionCategory(\n
-                                             request[\'section_category\'])\n
+                                             request[\'section_category\'],\n
+                                             request[\'section_category_strict\'])\n
 # XXX for now node is required (ie. we cannot display all transactions with\n
 # a third party regardless of the account).\n
 node = request[\'node\']\n

@@ -64,7 +64,8 @@ simulation_state = request[\'simulation_state\']\n
 at_date = request[\'at_date\'].latestTime()\n
 from_date = request.get(\'from_date\') or at_date.earliestTime()\n
 section_uid = context.Base_getSectionUidListForSectionCategory(\n
-                                     request[\'section_category\'])\n
+                                     request[\'section_category\'],\n
+                                     request[\'section_category_strict\'])\n
 payment_mode = request.get(\'payment_mode\')\n
 payment = request.get(\'payment\')\n
 gap_root = request.get(\'gap_root\')\n

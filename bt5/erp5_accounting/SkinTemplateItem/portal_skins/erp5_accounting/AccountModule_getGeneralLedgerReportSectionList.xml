@@ -67,7 +67,7 @@ Base_translateString = context.Base_translateString\n
 at_date             = request[\'at_date\']\n
 section_category    = request[\'section_category\']\n
 section_uid = context.Base_getSectionUidListForSectionCategory(\n
-                                                section_category)\n
+                        section_category, request[\'section_category_strict\'])\n
 simulation_state    = request[\'simulation_state\']\n
 from_date           = request.get(\'from_date\', None)\n
 gap                 = request.get(\'gap\', None)\n

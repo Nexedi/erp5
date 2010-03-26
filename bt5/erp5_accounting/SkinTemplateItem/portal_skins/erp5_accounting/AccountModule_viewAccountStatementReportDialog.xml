@@ -84,6 +84,7 @@
                     <value>
                       <list>
                         <string>your_section_category</string>
+                        <string>your_section_category_strict</string>
                         <string>your_function</string>
                         <string>your_project</string>
                         <string>your_from_date</string>

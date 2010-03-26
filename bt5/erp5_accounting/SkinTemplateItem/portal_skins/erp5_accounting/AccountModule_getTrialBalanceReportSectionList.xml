@@ -72,7 +72,8 @@ show_empty_accounts = request[\'show_empty_accounts\']\n
 per_account_class_summary = request[\'per_account_class_summary\']\n
 gap_root = request.get(\'gap_root\', None)\n
 section_uid = portal.Base_getSectionUidListForSectionCategory(\n
-                                   request[\'section_category\'])\n
+                                   request[\'section_category\'],\n
+                                   request[\'section_category_strict\'])\n
 \n
 period_start_date = portal.Base_getAccountingPeriodStartDateForSectionCategory(\n
        section_category=request[\'section_category\'], date=from_date or at_date)\n

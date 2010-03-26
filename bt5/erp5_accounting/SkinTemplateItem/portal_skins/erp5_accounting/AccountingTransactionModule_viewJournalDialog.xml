@@ -77,6 +77,7 @@
                     <value>
                       <list>
                         <string>your_section_category</string>
+                        <string>your_section_category_strict</string>
                         <string>your_from_date</string>
                         <string>your_at_date</string>
                         <string>your_portal_skin</string>
