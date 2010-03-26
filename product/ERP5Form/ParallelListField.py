@@ -157,7 +157,7 @@ class ParallelListWidget(Widget.MultiListWidget,
                         render_prefix, attr_dict, local_name):
       """
       """
-      return Widget.ListWidget.render_odt(self, field, value, as_string,
+      return Widget.MultiListWidget.render_odt(self, field, value, as_string,
                                           ooo_builder, REQUEST, render_prefix,
                                           attr_dict, local_name)
 
@@ -166,7 +166,7 @@ class ParallelListWidget(Widget.MultiListWidget,
                         render_prefix, attr_dict, local_name):
       """
       """
-      return Widget.ListWidget.render_odt_view(self, field, value, as_string,
+      return Widget.MultiListWidget.render_odt_view(self, field, value, as_string,
                                                ooo_builder, REQUEST,
                                                render_prefix, attr_dict,
                                                local_name)
