@@ -233,7 +233,7 @@ class SupplyLine(Path, XMLMatrix):
           max_quantity = quantity_step_list[i+1]
           # XXX Hardcoded portal type name
           p = self.newContent(id='%s_%s' % (predicate_id_start_with, str(i)),
-                              portal_type = 'Predicate')
+                              portal_type='Predicate', int_index=i+1)
           p.setCriterionPropertyList(('quantity', ))
           p.setCriterion('quantity', min=min_quantity, max=max_quantity)
           if script is not None:
