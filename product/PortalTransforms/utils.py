@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """some common utilities
 """
 import logging
@@ -12,10 +13,12 @@ class TransformException(Exception):
 FB_REGISTRY = None
 
 # logging function
-logger = logging.getLogger('PortalTransforms')
+from zLOG import LOG
+#logger = logging.getLogger('PortalTransforms')
 
 def log(message, severity=logging.INFO):
-    logger.log(severity, message)
+    LOG('PortalTransforms', severity, message)
+    #logger.log(severity, message)
 
 # directory where template for the ZMI are located
 import os.path
