@@ -27,21 +27,24 @@ NSMAP = {
 EForm = ElementMaker(namespace=FORM_URI, nsmap=NSMAP)
 
 RE_OOO_ESCAPE = re.compile(r'([\n\t])?([^\n\t]*)')
-def ooo_escape(match_object):
+class OOoEscaper:
   """Replacement function to use inside re.sub expression.
   This function replace \t by <text:tab/>
                         \n by <text:line-break/>
-  - parent_node is a global variable used to carry new nodes.
+  The parent node is passed to the constructor.
   """
-  match_value = match_object.group(1)
-  if match_value is None:
-    parent_node.text = match_object.group(2)
-  elif match_value == '\n':
-    line_break = SubElement(parent_node, '{%s}%s' % (TEXT_URI, 'line-break'))
-    line_break.tail = match_object.group(2)
-  elif match_value == '\t':
-    line_break = SubElement(parent_node, '{%s}%s' % (TEXT_URI, 'tab'))
-    line_break.tail = match_object.group(2)
+  def __init__(self, parent_node):
+    self.parent_node = parent_node
+  def __call__(self, match_object):
+    match_value = match_object.group(1)
+    if match_value is None:
+      self.parent_node.text = match_object.group(2)
+    elif match_value == '\n':
+      line_break = SubElement(self.parent_node, '{%s}%s' % (TEXT_URI, 'line-break'))
+      line_break.tail = match_object.group(2)
+    elif match_value == '\t':
+      line_break = SubElement(self.parent_node, '{%s}%s' % (TEXT_URI, 'tab'))
+      line_break.tail = match_object.group(2)
 
 class Widget:
   """A field widget that knows how to display itself as HTML.
@@ -260,9 +263,7 @@ class Widget:
     draw_node.append(text_p_node)
     draw_frame_node.append(draw_node)
 
-    global parent_node
-    parent_node = text_span_node
-    RE_OOO_ESCAPE.sub(ooo_escape, value)
+    RE_OOO_ESCAPE.sub(OOoEscaper(text_span_node), value)
     if as_string:
       return etree.tostring(draw_frame_node)
     return draw_frame_node
@@ -552,9 +553,7 @@ class TextAreaWidget(Widget):
             value = value.decode('utf-8')
         text_node = Element('{%s}%s' % (TEXT_URI, local_name), nsmap=NSMAP)
 
-        global parent_node
-        parent_node = text_node
-        RE_OOO_ESCAPE.sub(ooo_escape, value)
+        RE_OOO_ESCAPE.sub(OOoEscaper(text_node), value)
         text_node.attrib.update(attr_dict)
         if as_string:
             return etree.tostring(text_node)
@@ -786,6 +785,41 @@ class SingleItemsWidget(ItemsWidget):
 
   render_pdf = render_view
 
+  def render_odt_view(self, field, value, as_string, ooo_builder, REQUEST,
+      render_prefix, attr_dict, local_name):
+
+    items = field.get_value('items',
+                            REQUEST=REQUEST,
+                            cell=getattr(REQUEST, 'cell', None))
+    # XXX this code can be factorized
+    d = {}
+    for item in items:
+      try:
+        item_text, item_value = item
+      except ValueError:
+        item_text = item
+        item_value = item
+      d[item_value] = item_text
+
+    if value is None:
+      value = ''
+
+    value = d.get(value, '??? (%s)' % value)
+
+    if attr_dict is None:
+      attr_dict = {}
+    if isinstance(value, str):
+      #required by lxml
+      value = value.decode('utf-8')
+    text_node = Element('{%s}%s' % (TEXT_URI, local_name), nsmap=NSMAP)
+
+    RE_OOO_ESCAPE.sub(OOoEscaper(text_node), value)
+    text_node.attrib.update(attr_dict)
+    if as_string:
+      return etree.tostring(text_node)
+    return text_node
+
+
 class MultiItemsWidget(ItemsWidget):
   """A widget with a number of items that has multiple selectable
   items.
@@ -931,6 +965,46 @@ class MultiItemsWidget(ItemsWidget):
     return Widget.render_odg(self, field, value, as_string, ooo_builder,
                              REQUEST, render_prefix, attr_dict, local_name)
 
+  def render_odt_view(self, field, value, as_string, ooo_builder, REQUEST,
+      render_prefix, attr_dict, local_name):
+
+    items = field.get_value('items',
+                            REQUEST=REQUEST,
+                            cell=getattr(REQUEST, 'cell', None))
+    d = {}
+    for item in items:
+      try:
+        item_text, item_value = item
+      except ValueError:
+        item_text = item
+        item_value = item
+      d[item_value] = item_text
+
+    if value is None:
+      value = ['']
+    elif isinstance(value, basestring):
+      value = [value]
+
+    result = []
+    for e in value:
+      result.append(d.get(e, '??? (%s)' % e))
+      
+    value = '\n'.join(result)
+
+    if attr_dict is None:
+      attr_dict = {}
+    if isinstance(value, str):
+      #required by lxml
+      value = value.decode('utf-8')
+    text_node = Element('{%s}%s' % (TEXT_URI, local_name), nsmap=NSMAP)
+
+    RE_OOO_ESCAPE.sub(OOoEscaper(text_node), value)
+    text_node.attrib.update(attr_dict)
+    if as_string:
+      return etree.tostring(text_node)
+    return text_node
+
+
 class ListWidget(SingleItemsWidget):
     """List widget.
     """
@@ -967,26 +1041,6 @@ class ListWidget(SingleItemsWidget):
     def render_selected_item(self, text, value, key, css_class, extra_item):
         return render_element('option', contents=text, value=value,
                               selected=None, extra=extra_item)
-
-    def render_odt_view(self, field, value, as_string, ooo_builder, REQUEST,
-                        render_prefix, attr_dict, local_name):
-        if attr_dict is None:
-          attr_dict = {}
-        if value is None:
-          value = []
-        if isinstance(value, (list, tuple)):
-          value = '\n'.join(value)
-        if isinstance(value, str):
-          #required by lxml
-          value = value.decode('utf-8')
-        text_node = Element('{%s}%s' % (TEXT_URI, local_name), nsmap=NSMAP)
-        global parent_node
-        parent_node = text_node
-        RE_OOO_ESCAPE.sub(ooo_escape, value)
-        text_node.attrib.update(attr_dict)
-        if as_string:
-            return etree.tostring(text_node)
-        return text_node
 
 ListWidgetInstance = ListWidget()
 
