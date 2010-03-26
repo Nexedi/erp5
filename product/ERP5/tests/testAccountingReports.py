@@ -153,6 +153,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     request_form = self.portal.REQUEST.form
     request_form['at_date'] = DateTime(2006, 2, 2)
     request_form['section_category'] = 'group/demo_group'
+    request_form['section_category_strict'] = False
     request_form['portal_type'] = ['Sale Invoice Transaction']
     request_form['simulation_state'] = ['delivered']
     
@@ -315,6 +316,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     request_form = self.portal.REQUEST.form
     request_form['at_date'] = DateTime(2006, 2, 2)
     request_form['section_category'] = 'group/demo_group'
+    request_form['section_category_strict'] = False
     request_form['portal_type'] = ['Accounting Transaction']
     request_form['simulation_state'] = ['delivered']
     
@@ -443,6 +445,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     request_form = self.portal.REQUEST.form
     request_form['at_date'] = DateTime(2006, 2, 2)
     request_form['section_category'] = 'group/demo_group'
+    request_form['section_category_strict'] = False
     request_form['portal_type'] = ['Payment Transaction']
     request_form['simulation_state'] = ['delivered']
     request_form['payment'] = bank1.getRelativeUrl()
@@ -664,6 +667,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
                 self.portal.account_module.receivable.getRelativeUrl()
     request_form['at_date'] = DateTime(2006, 2, 2)
     request_form['section_category'] = 'group/demo_group/sub1'
+    request_form['section_category_strict'] = False
     request_form['simulation_state'] = ['delivered']
     
     report_section_list = self.getReportSectionList(
@@ -763,6 +767,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     request_form['from_date'] = DateTime(2006, 2, 2)
     request_form['at_date'] = DateTime(2006, 2, 2)
     request_form['section_category'] = 'group/demo_group'
+    request_form['section_category_strict'] = False
     request_form['simulation_state'] = ['delivered']
     
     report_section_list = self.getReportSectionList(
@@ -835,6 +840,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     request_form['from_date'] = DateTime(2000, 2, 2)
     request_form['at_date'] = DateTime(2006, 2, 2)
     request_form['section_category'] = 'group/demo_group'
+    request_form['section_category_strict'] = False
     request_form['simulation_state'] = ['delivered']
     
     report_section_list = self.getReportSectionList(
@@ -939,6 +945,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     request_form['from_date'] = DateTime(2006, 2, 25)
     request_form['at_date'] = DateTime(2006, 6, 1)
     request_form['section_category'] = 'group/demo_group'
+    request_form['section_category_strict'] = False
     request_form['simulation_state'] = ['delivered']
     request_form['detailed_from_date_summary'] = 1
     
@@ -1082,6 +1089,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     request_form['from_date'] = DateTime(2006, 2, 25)
     request_form['at_date'] = DateTime(2006, 6, 1)
     request_form['section_category'] = 'group/demo_group'
+    request_form['section_category_strict'] = False
     request_form['simulation_state'] = ['delivered']
     request_form['detailed_from_date_summary'] = 1
     
@@ -1160,6 +1168,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     request_form['from_date'] = DateTime(2006, 2, 26)
     request_form['at_date'] = DateTime(2006, 6, 1)
     request_form['section_category'] = 'group/demo_group'
+    request_form['section_category_strict'] = False
     request_form['simulation_state'] = ['delivered']
     request_form['detailed_from_date_summary'] = 1
     
@@ -1225,6 +1234,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     request_form['from_date'] = DateTime(2006, 1, 1)
     request_form['at_date'] = DateTime(2006, 2, 2)
     request_form['section_category'] = 'group/demo_group'
+    request_form['section_category_strict'] = False
     request_form['simulation_state'] = ['delivered']
     
     report_section_list = self.getReportSectionList(
@@ -1286,6 +1296,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     request_form['from_date'] = DateTime(2006, 2, 2)
     request_form['at_date'] = DateTime(2006, 2, 2)
     request_form['section_category'] = 'group/demo_group'
+    request_form['section_category_strict'] = False
     request_form['simulation_state'] = ['delivered']
     
     report_section_list = self.getReportSectionList(
@@ -1345,6 +1356,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     request_form['from_date'] = DateTime(2006, 1, 1)
     request_form['at_date'] = DateTime(2006, 2, 2)
     request_form['section_category'] = 'group/demo_group'
+    request_form['section_category_strict'] = False
     request_form['simulation_state'] = ['delivered']
     
     report_section_list = self.getReportSectionList(
@@ -1399,6 +1411,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     request_form['from_date'] = DateTime(2006, 2, 2)
     request_form['at_date'] = DateTime(2006, 2, 2)
     request_form['section_category'] = 'group/demo_group'
+    request_form['section_category_strict'] = False
     request_form['simulation_state'] = ['delivered']
     
     report_section_list = self.getReportSectionList(
@@ -1444,6 +1457,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     request_form['from_date'] = DateTime(2006, 2, 2)
     request_form['at_date'] = DateTime(2006, 2, 2)
     request_form['section_category'] = 'group/demo_group'
+    request_form['section_category_strict'] = False
     request_form['simulation_state'] = ['delivered']
     
     report_section_list = self.getReportSectionList(
@@ -1477,6 +1491,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
                   self.portal.account_module.receivable.getRelativeUrl()
     request_form['at_date'] = DateTime(2006, 2, 2)
     request_form['section_category'] = 'group/demo_group'
+    request_form['section_category_strict'] = False
     request_form['simulation_state'] = ['stopped', 'confirmed']
 
     report_section_list = self.getReportSectionList(
@@ -1536,6 +1551,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     request_form['from_date'] = DateTime(2006, 1, 1)
     request_form['at_date'] = DateTime(2006, 12, 31)
     request_form['section_category'] = 'group/demo_group'
+    request_form['section_category_strict'] = False
     request_form['simulation_state'] = ['delivered']
     
     report_section_list = self.getReportSectionList(
@@ -1594,6 +1610,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     request_form['from_date'] = DateTime(2006, 1, 1)
     request_form['at_date'] = DateTime(2006, 12, 31)
     request_form['section_category'] = 'group/demo_group'
+    request_form['section_category_strict'] = False
     request_form['simulation_state'] = ['delivered']
     
     report_section_list = self.getReportSectionList(
@@ -1666,6 +1683,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
                 self.portal.account_module.receivable.getRelativeUrl()
     request_form['at_date'] = DateTime(2006, 2, 2)
     request_form['section_category'] = 'group/demo_group'
+    request_form['section_category_strict'] = False
     request_form['simulation_state'] = ['delivered']
     
     report_section_list = self.getReportSectionList(
@@ -1716,6 +1734,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     request_form['from_date'] = DateTime(2006, 1, 1)
     request_form['at_date'] = DateTime(2006, 12, 31)
     request_form['section_category'] = 'group/demo_group'
+    request_form['section_category_strict'] = False
     request_form['simulation_state'] = ['stopped', 'delivered']
     request_form['show_empty_accounts'] = 1
     request_form['expand_accounts'] = 0
@@ -1813,6 +1832,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     request_form['from_date'] = DateTime(2006, 1, 1)
     request_form['at_date'] = DateTime(2006, 2, 2)
     request_form['section_category'] = 'group/demo_group'
+    request_form['section_category_strict'] = False
     request_form['simulation_state'] = ['delivered']
     request_form['show_empty_accounts'] = 0
     request_form['expand_accounts'] = 1
@@ -1925,6 +1945,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     request_form['from_date'] = DateTime(2006, 1, 1)
     request_form['at_date'] = DateTime(2006, 2, 2)
     request_form['section_category'] = 'group/demo_group'
+    request_form['section_category_strict'] = False
     request_form['simulation_state'] = ['delivered']
     request_form['show_empty_accounts'] = 0
     request_form['expand_accounts'] = 0
@@ -2009,6 +2030,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     request_form['from_date'] = DateTime(2007, 1, 1)
     request_form['at_date'] = DateTime(2007, 12, 31)
     request_form['section_category'] = 'group/demo_group'
+    request_form['section_category_strict'] = False
     request_form['simulation_state'] = ['delivered']
     request_form['show_empty_accounts'] = 0
     request_form['expand_accounts'] = 0
@@ -2073,6 +2095,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     request_form['from_date'] = DateTime(2007, 1, 1)
     request_form['at_date'] = DateTime(2007, 12, 31)
     request_form['section_category'] = 'group/demo_group'
+    request_form['section_category_strict'] = False
     request_form['simulation_state'] = ['delivered']
     request_form['show_empty_accounts'] = 0
     request_form['expand_accounts'] = 1
@@ -2152,6 +2175,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     request_form['from_date'] = DateTime(2007, 1, 1)
     request_form['at_date'] = DateTime(2007, 12, 31)
     request_form['section_category'] = 'group/demo_group'
+    request_form['section_category_strict'] = False
     request_form['simulation_state'] = ['delivered']
     request_form['show_empty_accounts'] = 0
     request_form['expand_accounts'] = 0
@@ -2219,6 +2243,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     request_form['from_date'] = DateTime(2007, 1, 1)
     request_form['at_date'] = DateTime(2007, 12, 31)
     request_form['section_category'] = 'group/demo_group'
+    request_form['section_category_strict'] = False
     request_form['simulation_state'] = ['delivered']
     request_form['show_empty_accounts'] = 0
     request_form['expand_accounts'] = 0
@@ -2298,6 +2323,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     request_form['from_date'] = DateTime(2007, 2, 1)
     request_form['at_date'] = DateTime(2007, 12, 31)
     request_form['section_category'] = 'group/demo_group'
+    request_form['section_category_strict'] = False
     request_form['simulation_state'] = ['delivered']
     request_form['show_empty_accounts'] = 0
     request_form['expand_accounts'] = 0
@@ -2365,6 +2391,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     request_form['from_date'] = DateTime(2007, 1, 1)
     request_form['at_date'] = DateTime(2007, 12, 31)
     request_form['section_category'] = 'group/demo_group'
+    request_form['section_category_strict'] = False
     request_form['simulation_state'] = ['delivered']
     request_form['show_empty_accounts'] = 0
     request_form['expand_accounts'] = 0
@@ -2436,6 +2463,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     request_form['from_date'] = DateTime(2006, 1, 1)
     request_form['at_date'] = DateTime(2006, 2, 2)
     request_form['section_category'] = 'group/demo_group'
+    request_form['section_category_strict'] = False
     request_form['simulation_state'] = ['delivered']
     request_form['show_empty_accounts'] = 0
     request_form['expand_accounts'] = 0
@@ -2477,6 +2505,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     request_form['from_date'] = DateTime(2006, 1, 1)
     request_form['at_date'] = DateTime(2006, 2, 2)
     request_form['section_category'] = 'group/demo_group'
+    request_form['section_category_strict'] = False
     request_form['simulation_state'] = ['delivered']
     request_form['show_empty_accounts'] = 0
     request_form['expand_accounts'] = 1
@@ -2555,6 +2584,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     request_form['from_date'] = DateTime(2006, 1, 1)
     request_form['at_date'] = DateTime(2006, 12, 31)
     request_form['section_category'] = 'group/demo_group'
+    request_form['section_category_strict'] = False
     request_form['simulation_state'] = ['delivered']
     request_form['show_empty_accounts'] = 0
     request_form['expand_accounts'] = 0
@@ -2605,6 +2635,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     request_form['from_date'] = DateTime(2006, 1, 1)
     request_form['at_date'] = DateTime(2006, 12, 31)
     request_form['section_category'] = 'group/demo_group'
+    request_form['section_category_strict'] = False
     request_form['simulation_state'] = ['stopped', 'delivered']
     request_form['show_empty_accounts'] = 0
     request_form['expand_accounts'] = 0
@@ -2648,6 +2679,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     request_form['from_date'] = DateTime(2006, 1, 1)
     request_form['at_date'] = DateTime(2006, 12, 31)
     request_form['section_category'] = 'group/demo_group'
+    request_form['section_category_strict'] = False
     request_form['simulation_state'] = ['delivered']
 
     report_section_list = self.getReportSectionList(
@@ -2876,6 +2908,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     request_form = self.portal.REQUEST.form
     request_form['at_date'] = DateTime(2006, 12, 31)
     request_form['section_category'] = 'group/demo_group'
+    request_form['section_category_strict'] = False
     request_form['simulation_state'] = ['delivered']
     
     # for now, we simply check that that the report is rendered with no error
@@ -2896,6 +2929,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     request_form = self.portal.REQUEST.form
     request_form['at_date'] = DateTime(2006, 12, 31)
     request_form['section_category'] = 'group/demo_group'
+    request_form['section_category_strict'] = False
     request_form['simulation_state'] = ['delivered']
     
     # for now, we simply check that that the report is rendered with no error
@@ -2937,6 +2971,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     request_form = self.portal.REQUEST.form
     request_form['at_date'] = DateTime(2006, 2, 1)
     request_form['section_category'] = 'group/demo_group'
+    request_form['section_category_strict'] = False
     request_form['simulation_state'] = ['delivered']
     request_form['omit_balanced_accounts'] = False
     request_form['omit_grouped_references'] = True
