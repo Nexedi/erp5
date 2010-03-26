@@ -56,16 +56,27 @@
             <value> <string>source = context.getSourceSectionValue()\n
 section_category = context.portal_preferences\\\n
          .getPreferredAccountingTransactionSectionCategory()\n
+\n
+# If the source is an organisation member of the preferred section category,\n
+# then we\'ll show the source view\n
 if source is not None and section_category:\n
   if source.getPortalType() == \'Person\':\n
     return False\n
   if source.isMemberOf(section_category):\n
     return True\n
 \n
-if source is None and context.getDestinationSection() is None:\n
-  return True\n
+# Else, if the destination is an organisation member of the preferred section category,\n
+# then we\'ll not show source view\n
+destination = context.getDestinationSectionValue()\n
+if destination is not None and section_category:\n
+  if source.getPortalType() == \'Person\':\n
+    return True\n
+  if source.isMemberOf(section_category):\n
+    return False\n
 \n
-return False\n
+# If we reach this point, none of the sections are member of the preferred section\n
+# category, we\'ll then show source view, default for this script\n
+return True\n
 </string> </value>
         </item>
         <item>
@@ -109,6 +120,7 @@ return False\n
                             <string>None</string>
                             <string>False</string>
                             <string>True</string>
+                            <string>destination</string>
                           </tuple>
                         </value>
                     </item>
