@@ -43,12 +43,9 @@ try:
 except ImportError:
   from Products.ERP5Type.patches.string import Template
 
-# Mixin import
-from Products.ERP5.mixin.convertable import ConvertableMixin
-
 DEFAULT_TEXT_FORMAT = 'text/html'
 
-class TextDocument(Document, TextContent, ConvertableMixin):
+class TextDocument(Document, TextContent):
     """
         A Document contains text which can be formatted using
         *Structured Text* or *HTML*. Text can be automatically translated
@@ -149,10 +146,6 @@ class TextDocument(Document, TextContent, ConvertableMixin):
       if format is None:
         # The default is to use ERP5 Forms to render the page
         return self.view()
-      # Raise an error if the format is not permitted
-      if not self.isTargetFormatPermitted(format):
-	raise Unauthorized("User does not have enough permission to access document"
-				" in %s format" % (format or 'original'))
       mime, data = self.convert(format=format) 
       RESPONSE.setHeader('Content-Length', len(str(data))) # XXX - Not efficient 
                                                            # if datastream instance
@@ -207,25 +200,12 @@ class TextDocument(Document, TextContent, ConvertableMixin):
         substitution_method_parameter_dict = {}
       return self._substituteTextContent(subject, safe_substitute=safe_substitute,
                                          **substitution_method_parameter_dict)
-    
-    security.declareProtected(Permissions.View, 'getAllowedTargetItemList')
-    def getAllowedTargetItemList(self):
-      mime_type = getToolByName(self, 'mimetypes_registry')
-      allowed=[]
-      for extension in mime_type.extensions:
-        allowed.append((mime_type.extensions[extension].name(),extension))
 
-      return [(y, x) for x, y in allowed]
-    
     security.declareProtected(Permissions.AccessContentsInformation, 'convert')
     def convert(self, format, substitution_method_parameter_dict=None, safe_substitute=True, **kw):
       """
         Convert text using portal_transforms or oood
       """
-      # Raise an error if the format is not permitted
-      if not self.isTargetFormatPermitted(format):
-	raise Unauthorized("User does not have enough permission to access document"
-					 " in %s format" % (format or 'original'))
       # Accelerate rendering in Web mode
       _setCacheHeaders(_ViewEmulator().__of__(self), {'format' : format})
       # Return the raw content

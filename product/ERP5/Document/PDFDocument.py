@@ -37,13 +37,7 @@ from Products.ERP5.Document.Image import Image
 from Products.ERP5.Document.Document import ConversionError
 from Products.ERP5.mixin.cached_convertable import CachedConvertableMixin
 
-
-from zLOG import LOG, WARNING
-# Mixin import
-from Products.ERP5.mixin.convertable import ConvertableMixin
-
-
-class PDFDocument(Image, ConvertableMixin, CachedConvertableMixin):
+class PDFDocument(Image, CachedConvertableMixin):
   """
   PDFDocument is a subclass of Image which is able to
   extract text content from a PDF file either as text
@@ -104,11 +98,6 @@ class PDFDocument(Image, ConvertableMixin, CachedConvertableMixin):
                             resolution=resolution, frame=frame)
 
   # Conversion API
-  security.declareProtected(Permissions.View, 'getAllowedTargetItemList')
-  def getAllowedTargetItemList(self):
-    return Image.getAllowedTargetItemList(self) + \
-       [('Text', 'txt'),('Plain Text','text'), ('HTML Document', 'html')]
-  
   security.declareProtected(Permissions.AccessContentsInformation, 'convert')
   def convert(self, format, **kw):
     """
