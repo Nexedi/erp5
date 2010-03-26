@@ -80,6 +80,17 @@ class TestIdTool(ERP5TypeTestCase):
     self.assertEqual(None, last_id)
     last_id = idtool.getLastLengthGeneratedId(id_group=8,default=99)
     self.assertEqual(99, last_id)
+    # test the store parameter with an existing value stored in the ZODB
+    new_id = idtool.generateNewLengthId(id_group=(9,), store=1)
+    transaction.commit()
+    self.tic()
+    last_id = idtool.getLastLengthGeneratedId(id_group=(9,),)
+    self.assertEqual(new_id, last_id)
+    new_id = idtool.generateNewLengthId(id_group=(9,), store=0)
+    transaction.commit()
+    self.tic()
+    last_id = idtool.getLastLengthGeneratedId(id_group=(9,),)
+    self.assertEqual(new_id, last_id)
     
 
   def test_generateNewId(self, quiet=0, run=run_all_test):
