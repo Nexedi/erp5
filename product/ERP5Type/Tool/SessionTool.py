@@ -234,7 +234,7 @@ class SessionTool(BaseTool):
   def manage_delObjects(self, ids=[], REQUEST=None):
     """ Delete session object. """
     storage_plugin = self._getStoragePlugin()
-    if not isinstance(ids, list) or isinstance(ids, list):
+    if not isinstance(ids, (list, tuple)):
       ids = [ids]
     for session_id in ids:
       storage_plugin.delete(session_id, SESSION_SCOPE)
