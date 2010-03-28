@@ -564,7 +564,7 @@ class Document(PermanentURLMixIn, XMLObject, UrlMixIn, CachedConvertableMixin, S
       if method is not None:
         if callable(method):
           val = method()
-          if isinstance(val, list) or isinstance(val, tuple):
+          if isinstance(val, (list, tuple)):
             return list(val)
           return [str(val)]
       val = self.getPropertyList(property)

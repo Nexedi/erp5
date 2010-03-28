@@ -179,7 +179,7 @@ class FolderMixIn(ExtensionClass.Base):
     error_message = 'deleteContent only accepts string or list of strings not '
     if isinstance(id, str):
       self._delObject(id)
-    elif isinstance(id, list) or isinstance(id, tuple):
+    elif isinstance(id, (list, tuple)):
       for my_id in id:
         if isinstance(my_id, str):
           self._delObject(my_id)

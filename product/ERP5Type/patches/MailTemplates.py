@@ -60,7 +60,7 @@ if BaseMailTemplate is not None:
           if value is not None:
               values[key]=value
               # turn some sequences in coma-seperated strings
-              if isinstance(value,tuple) or isinstance(value,list):
+              if isinstance(value, (tuple, list)):
                   value = ', '.join(value)
               # make sure we have no unicode headers
               if isinstance(value,unicode):

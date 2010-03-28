@@ -44,7 +44,7 @@ def calcPythonObjectMemorySize(i):
   if isinstance(i, dict):
     for k, v in i.items():
       s += calcPythonObjectMemorySize(k) + calcPythonObjectMemorySize(v)
-  elif isinstance(i, list) or isinstance(i, tuple):
+  elif isinstance(i, (list, tuple)):
     for v in i:
       s += calcPythonObjectMemorySize(v)
   return s

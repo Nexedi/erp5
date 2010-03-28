@@ -1062,7 +1062,7 @@ class SimulationTool(BaseTool):
             if metric_type is None:
               # use the default metric type
               metric_type = quantity_unit.split("/", 1)[0]
-        elif isinstance(quantity_unit, int) or isinstance(quantity_unit, float):
+        elif isinstance(quantity_unit, (int, float)):
           # quantity_unit used to be a numerical parameter..
           raise ValueError('Numeric values for quantity_unit are not supported')
 
