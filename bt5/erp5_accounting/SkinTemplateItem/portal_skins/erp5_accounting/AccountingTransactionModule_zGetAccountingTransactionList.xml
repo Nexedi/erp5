@@ -225,7 +225,7 @@
                                   <dictionary>
                                     <item>
                                         <key> <string>default</string> </key>
-                                        <value> <string>False</string> </value>
+                                        <value> <string></string> </value>
                                     </item>
                                   </dictionary>
                                 </value>
@@ -395,7 +395,7 @@ amount_range_max=""\r\n
 creation_date_range_min=""\r\n
 creation_date_range_max=""\r\n
 section_category=""\r\n
-section_category_strict=False\r\n
+section_category_strict=""\r\n
 count=""\r\n
 transaction_uid=""\r\n
 specific_reference\r\n
