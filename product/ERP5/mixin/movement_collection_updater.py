@@ -95,23 +95,7 @@ class MovementCollectionUpdaterMixin:
         else:
           tester_key.append(None)
       tester_key = tuple(tester_key)
-      # try to aggregate
-      aggregated_movement_list = prevision_movement_dict.setdefault(tester_key,
-                                                                    [])
-      no_match = True
-      for aggregated_movement in aggregated_movement_list:
-        if _compare(tester_list, aggregated_movement, movement):
-          no_match = False
-          order = movement.getOrder()
-          if order is not None:
-            aggregated_movement.setOrderList(
-              aggregated_movement.getOrderList() + [order])
-          aggregated_movement.setConvertedQuantity(
-            aggregated_movement.getConvertedQuantity() + \
-            movement.getConvertedQuantity())
-      if no_match:
-        aggregated_movement_list.append(movement)
-      prevision_movement_dict[tester_key] = aggregated_movement_list
+      prevision_movement_dict.setdefault(tester_key, []).append(movement)
 
     # Prepare a mapping between prevision and decision
     # The prevision_to_decision_map is a list of tuples
