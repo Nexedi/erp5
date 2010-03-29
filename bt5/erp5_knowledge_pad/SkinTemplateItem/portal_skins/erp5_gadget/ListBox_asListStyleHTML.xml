@@ -132,15 +132,20 @@
           <a class="right" tal:attributes="onclick python:real_context.KnowledgePad_generateAjaxCall(context_url+\'/\'+form_id,box,box_id, {}, 1)"><img alt="" tal:attributes="onload python:\'if(\\\'\'+rss_title.replace(\'\\\'\',\'\')+\'\\\'==\\\'Please enter a valid Rss or Atom url in the edit form\\\'){showElement(\\\'edit_form_\'+box_id+\'\\\');;}\'" src="refresh.png"/></a>\n
 \n
           <!-- Feed Title -->\n
-\n
               <tal:block tal:condition="anonymous">\n
-                <a class="title"\n
+                <a class="title" tal:condition="python: here.field.get_value(\'list_action\')"\n
                    tal:attributes="href rss_link; target string:_blank; id python:\'rss_title_\'+box_id"\n
+                   tal:content="rss_title"/>\n
+                <span class="title" tal:condition="python: not here.field.get_value(\'list_action\')"\n
+                   tal:attributes="id python:\'rss_title_\'+box_id"\n
                    tal:content="rss_title"/>\n
               </tal:block>\n
               <tal:block tal:condition="not: anonymous">\n
-                <a class="title"\n
+                <a class="title" tal:condition="python: here.field.get_value(\'list_action\')"\n
                    tal:attributes="href rss_link; target string:_blank; id python:\'rss_title_\'+box_id"\n
+                   tal:content="python:real_context.Base_formatRssTitleWithUnreadItemCount(rss_title=rss_title,selection_name=selection_name,total_line=total_line)"/>\n
+                <span class="title" tal:condition="python:not here.field.get_value(\'list_action\')"\n
+                   tal:attributes="id python:\'rss_title_\'+box_id"\n
                    tal:content="python:real_context.Base_formatRssTitleWithUnreadItemCount(rss_title=rss_title,selection_name=selection_name,total_line=total_line)"/>\n
               </tal:block>\n
 \n
