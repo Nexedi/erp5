@@ -456,7 +456,7 @@
                 </item>
                 <item>
                     <key> <string>list_action</string> </key>
-                    <value> <string>list</string> </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>list_method</string> </key>
@@ -576,7 +576,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: \'%s\' % context.REQUEST.get(\'rss_link\', \'Rss Link Error\').encode(\'utf-8\')</string> </value>
+            <value> <string>python: (request.get(\'rss_link\') or \'\').encode(\'utf-8\')</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -608,7 +608,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: \'%s\' % context.REQUEST.get(\'rss_title\', \'Rss Title Error\').encode(\'utf-8\')</string> </value>
+            <value> <string>python: request.get(\'rss_title\', \'Rss Title Error\').encode(\'utf-8\')</string> </value>
         </item>
       </dictionary>
     </pickle>
