@@ -273,7 +273,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: cell.getFollowUpValue() is not None and cell.getFollowUpValue().getTranslatedPortalType() or None</string> </value>
+            <value> <string>python: cell.getAgentValue() is not None and cell.getAgentValue().getTranslatedPortalType() or None</string> </value>
         </item>
       </dictionary>
     </pickle>
