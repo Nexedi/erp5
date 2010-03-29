@@ -72,18 +72,20 @@ search_kw = {\n
 if skip_invalidated_bank_accounts:\n
   search_kw[\'validation_state\'] = \'!=invalidated\'\n
 \n
-if group_value is None:\n
-  search_kw[\'parent_uid\'] = organisation_value.getUid()\n
-else:\n
+# if organisation contains bank accounts, only take into account those.\n
+bank_account_list = organisation_value.searchFolder(**search_kw)\n
+\n
+if not bank_account_list:\n
   uid_list = []\n
   while group_value.getPortalType() != \'Base Category\':\n
     uid_list.append(group_value.getUid())\n
     group_value = group_value.getParentValue()\n
   search_kw[\'parent_strict_group_uid\'] = uid_list\n
   search_kw[\'parent_portal_type\'] = \'Organisation\'\n
+  bank_account_list = portal.portal_catalog(**search_kw)\n
 \n
 item_list = [(\'\', \'\')]\n
-for bank in portal.portal_catalog(**search_kw):\n
+for bank in bank_account_list:\n
   bank = bank.getObject()\n
      \n
   if bank.getReference() and bank.getTitle() \\\n
@@ -147,10 +149,11 @@ return item_list\n
                             <string>group_value</string>
                             <string>search_kw</string>
                             <string>_write_</string>
+                            <string>_apply_</string>
+                            <string>bank_account_list</string>
                             <string>uid_list</string>
                             <string>item_list</string>
                             <string>_getiter_</string>
-                            <string>_apply_</string>
                             <string>bank</string>
                           </tuple>
                         </value>
