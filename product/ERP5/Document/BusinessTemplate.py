@@ -4723,9 +4723,13 @@ class LocalRolesTemplateItem(BaseTemplateItem):
         setattr(obj, '__ac_local_roles__', local_roles_dict)
         obj.reindexObject()
 
-  def uninstall(self, context, **kw):
+  def uninstall(self, context, object_path=None, **kw):
     p = context.getPortalObject()
-    for roles_path in self._objects.keys():
+    if object_path is not None:
+      keys = [object_path]
+    else:
+      keys = self._objects.keys()
+    for roles_path in keys:
       path = roles_path.split('/')[1:]
       obj = p.unrestrictedTraverse(path)
       setattr(obj, '__ac_local_roles__', {})
