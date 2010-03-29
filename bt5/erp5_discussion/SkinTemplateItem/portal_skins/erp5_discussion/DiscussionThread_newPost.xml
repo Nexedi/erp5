@@ -54,63 +54,35 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>"""\n
-  this script create a thread and it first post\n
+  This script create a thread and its first post.\n
 """\n
 \n
-# find the person path if it\'s accessible by the user\n
-person_path = context.DiscussionThread_getAuthenticatedMemberPersonPath()\n
+portal = context.getPortalObject()\n
+person = portal.ERP5Site_getAuthenticatedMemberPersonValue()\n
 signature = context.getPortalObject().portal_preferences.getPreference(\'preferred_forum_signature\')\n
 \n
-#create the thread and the first post in it\n
-\n
-translateString = context.Base_translateString\n
-\n
-\n
-discussion_thread_module = context.getPortalObject().discussion_thread_module\n
-\n
-discussion_thread = discussion_thread_module.newContent(\n
-                       portal_type="Discussion Thread",\n
-                       title=title,\n
-                       text_content=text_content,\n
-                       agent_value=context\n
-)\n
-\n
+discussion_thread =  portal.discussion_thread_module.newContent(\n
+                      portal_type = "Discussion Thread",\n
+                      title=title,\n
+                      source_value = person,\n
+                      follow_up_value = context)\n
 \n
 discussion_post = discussion_thread.newContent(\n
-                       portal_type="Discussion Post",\n
-                       title=title,\n
-                       text_content=text_content,\n
-                       person_path = person_path,\n
-                       source = person_path,\n
-                       signature = signature\n
-)\n
+                       portal_type = "Discussion Post",\n
+                       title = post_title,\n
+                       text_content = text_content,\n
+                       source_value = person,\n
+                       signature = signature)\n
 \n
-\n
-#discussion_post.post()\n
-\n
-# Case 1 - some metadata was provided at creation\n
-try:\n
-  if discussion_thread.getPublicationSection() or \\\n
-    discussion_thread.getGroup() or \\\n
-    discussion_thread.getFunction() or \\\n
-    discussion_thread.getSite() or \\\n
-    discussion_thread.getFollowUp():\n
-    discussion_thread.submit()\n
-    portal_status_message = translateString(\n
-      "New post created. Your post will be reviewed for approval."\n
-    )\n
-# Case 2 - no information defined\n
-  else:\n
-    portal_status_message = translateString(\n
-      "New post created. Please fill all metadata and submit your thread for approval"\n
-    )\n
-except:\n
-  portal_status_message = translateString(\n
-    "New post created. Please fill all metadata and submit your thread for approval"\n
-  )\n
+if person is None:\n
+  portal_status_message = "New reply created. Your post will be reviewed for approval."\n
+  discussion_post.stack()\n
+else:\n
+  portal_status_message = "New thread created"\n
+  discussion_post.post()\n
 \n
 return discussion_thread.Base_redirect(\'view\', \n
-          keep_items = dict(portal_status_message=portal_status_message), **kw)\n
+          keep_items = dict(portal_status_message=context.Base_translateString(portal_status_message)))\n
 </string> </value>
         </item>
         <item>
@@ -121,7 +93,16 @@ return discussion_thread.Base_redirect(\'view\', \n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>title, text_content, form_id, **kw</string> </value>
+            <value> <string>title, post_title, text_content, form_id, **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Author</string>
+              </tuple>
+            </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -141,26 +122,26 @@ return discussion_thread.Base_redirect(\'view\', \n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>3</int> </value>
+                        <value> <int>4</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
                             <string>title</string>
+                            <string>post_title</string>
                             <string>text_content</string>
                             <string>form_id</string>
                             <string>kw</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>person_path</string>
+                            <string>portal</string>
+                            <string>person</string>
                             <string>signature</string>
-                            <string>translateString</string>
-                            <string>discussion_thread_module</string>
                             <string>discussion_thread</string>
                             <string>discussion_post</string>
+                            <string>None</string>
                             <string>portal_status_message</string>
-                            <string>_apply_</string>
                             <string>dict</string>
                           </tuple>
                         </value>

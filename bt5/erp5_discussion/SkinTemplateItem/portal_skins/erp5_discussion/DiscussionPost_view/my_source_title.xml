@@ -480,6 +480,16 @@
                     </value>
                 </item>
                 <item>
+                    <key> <string>proxy_listbox_ids</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>relation_form_id</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>relation_setter_id</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -499,7 +509,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>my_source_title</string> </value>
+                    <value> <string>Source</string> </value>
                 </item>
                 <item>
                     <key> <string>truncate</string> </key>

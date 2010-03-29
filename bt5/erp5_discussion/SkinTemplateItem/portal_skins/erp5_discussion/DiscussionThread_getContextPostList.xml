@@ -59,18 +59,18 @@
  If there is no Discussion Thread, an empty list is returned.\n
 """\n
 \n
-#context.pdb_trace(context)\n
-discussion = context.getAgentRelated(portal_type = "Discussion Thread")\n
+if context.getPortalType() != "Discussion Thread":\n
+  discussion = context.DiscussionThread_getContextThread()\n
+else:\n
+  discussion = context\n
 \n
 if discussion == None:\n
   return []\n
 \n
-discussion = context.restrictedTraverse(discussion, None)\n
+if kw.has_key("portal_type") == False:\n
+  kw[\'portal_type\'] = "Discussion Post"\n
 \n
-if discussion == None:\n
-  return []\n
-\n
-return discussion.searchFolder()\n
+return discussion.searchFolder(**kw)\n
 </string> </value>
         </item>
         <item>
@@ -86,9 +86,7 @@ return discussion.searchFolder()\n
         <item>
             <key> <string>_proxy_roles</string> </key>
             <value>
-              <tuple>
-                <string>Manager</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>
@@ -120,6 +118,9 @@ return discussion.searchFolder()\n
                             <string>context</string>
                             <string>discussion</string>
                             <string>None</string>
+                            <string>False</string>
+                            <string>_write_</string>
+                            <string>_apply_</string>
                           </tuple>
                         </value>
                     </item>

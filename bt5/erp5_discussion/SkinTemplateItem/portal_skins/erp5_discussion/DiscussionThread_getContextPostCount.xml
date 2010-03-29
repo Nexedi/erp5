@@ -53,23 +53,15 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>"""\n
- This script returns the number of Discussion Post objects from the Discussion Thread \n
+            <value> <string>""" This script returns the number of Discussion Post objects from the Discussion Thread \n
  object that is associated to this context.\n
- If there is no Discussion Thread, 0 is returned.\n
-"""\n
-\n
-discussion = context.getAgentRelated(portal_type = "Discussion Thread")\n
+ If there is no Discussion Thread, 0 is returned."""\n
+discussion = context.DiscussionThread_getContextThread()\n
 \n
 if discussion == None:\n
   return 0\n
 \n
-discussion = context.restrictedTraverse(discussion, None)\n
-\n
-if discussion == None:\n
-  return 0\n
-\n
-return len(discussion.countFolder())\n
+return len(discussion.searchFolder(portal_type=\'Discussion Post\'))\n
 </string> </value>
         </item>
         <item>
@@ -85,9 +77,7 @@ return len(discussion.countFolder())\n
         <item>
             <key> <string>_proxy_roles</string> </key>
             <value>
-              <tuple>
-                <string>Manager</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>

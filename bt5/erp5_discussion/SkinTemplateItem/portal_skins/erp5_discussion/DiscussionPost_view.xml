@@ -93,7 +93,6 @@
                     <value>
                       <list>
                         <string>my_title</string>
-                        <string>my_person_path</string>
                         <string>my_source_title</string>
                         <string>my_signature</string>
                       </list>
@@ -103,7 +102,7 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
-                        <string>my_translated_validation_state</string>
+                        <string>my_translated_validation_state_title</string>
                       </list>
                     </value>
                 </item>

@@ -77,15 +77,16 @@
                 <item>
                     <key> <string>bottom</string> </key>
                     <value>
-                      <list>
-                        <string>your_text_content</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
                     <key> <string>center</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>your_text_content</string>
+                        <string>your_captcha</string>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -99,7 +100,7 @@
                     <value>
                       <list>
                         <string>your_title</string>
-                        <string>your_captcha</string>
+                        <string>your_post_title</string>
                       </list>
                     </value>
                 </item>
