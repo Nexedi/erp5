@@ -31,9 +31,7 @@ msgid "Activities of membership organizations"
 msgstr "Hébergement médico-social et social"
 
 msgid "Activities of private households"
-msgstr ""
-"Activités des ménages en tant qu'employeurs ; activités indifférenciées des "
-"ménages en tant que producteurs de biens et services pour usage propre"
+msgstr "Activités des ménages en tant qu'employeurs"
 
 msgid "Administration"
 msgstr "Administration"

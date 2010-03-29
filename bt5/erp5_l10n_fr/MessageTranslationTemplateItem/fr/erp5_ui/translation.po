@@ -437,12 +437,6 @@ msgstr "Lignes de Comptabilité"
 msgid "Accounting Operation Date"
 msgstr "Date comptable"
 
-msgid "Source Accounting Operation Date"
-msgstr "Date comptable pour la source"
-
-msgid "Destination Accounting Operation Date"
-msgstr "Date comptable pour la destination"
-
 msgid "Accounting Period"
 msgstr "Période comptable"
 
@@ -2836,12 +2830,6 @@ msgstr "Contrepasser l'écriture"
 msgid "Create Reversal Transactions"
 msgstr "Contrepasser les écritures"
 
-msgid "Use Negated Quantities"
-msgstr "Utiliser des montants négatifs"
-
-msgid "No valid transaction in your selection."
-msgstr "Pas d'écritures valides dans votre sélection."
-
 msgid "Create Secondary Periods"
 msgstr "Créer des périodes comptables intermédiaires"
 
@@ -3656,6 +3644,9 @@ msgstr "Destination"
 msgid "Destination Account"
 msgstr "Compte de destination"
 
+msgid "Destination Accounting Operation Date"
+msgstr "Date comptable pour la destination"
+
 msgid "Destination Administration"
 msgstr "Responsable des tâches administratives pour le client"
 
@@ -3664,6 +3655,9 @@ msgstr "Conversion pour la destination"
 
 msgid "Destination Payment"
 msgstr "Payeur"
+
+msgid "Destination Price Currency"
+msgstr "Devise de la destination"
 
 msgid "Destination Reference"
 msgstr "Référence de destination"
@@ -4325,7 +4319,7 @@ msgid "Entity"
 msgstr "Entité"
 
 msgid "Entity Role"
-msgstr "Rôle de l'entité"
+msgstr "Rôle du tiers"
 
 msgid "Equals To"
 msgstr "Égal à "
@@ -6436,6 +6430,9 @@ msgstr "Aucun document correspondant n'a été trouvé."
 
 msgid "No trade condition."
 msgstr "Pas de condition commerciale trouvée."
+
+msgid "No valid transaction in your selection."
+msgstr "Pas d'écritures valides dans votre sélection."
 
 msgid "Node Budget Variation"
 msgstr "Variation de budget par noeuds"
@@ -9670,6 +9667,9 @@ msgstr "Source"
 msgid "Source Account"
 msgstr "Compte source"
 
+msgid "Source Accounting Operation Date"
+msgstr "Date comptable pour la source"
+
 msgid "Source Administration"
 msgstr "Administrateur du Fournisseur"
 
@@ -9690,6 +9690,9 @@ msgstr "Groupement"
 
 msgid "Source Payment"
 msgstr "Responsable des paiements pour le fournisseur"
+
+msgid "Source Price Currency"
+msgstr "Devise de la source"
 
 msgid "Source Project"
 msgstr "Projet du fournisseur"
@@ -9963,6 +9966,9 @@ msgstr "Terminé"
 
 msgid "Street Address"
 msgstr "Adresse"
+
+msgid "Strict Section Category"
+msgstr "Appartenance stricte à la catégorie de section"
 
 msgid "String Fields Width"
 msgstr "Largeur des champs représentant une chaîne de caractères"
@@ -11565,6 +11571,9 @@ msgstr "Date de fin"
 msgid "To Date N-1"
 msgstr "Date de fin (N-1)"
 
+msgid "To display actual content, please fill in one or more search criterion."
+msgstr "Effectuez une recherche pour afficher le contenu."
+
 msgid ""
 "To reset your password, please enter your login below. An email will be sent "
 "to your address with a link to enter your new password."
@@ -11981,6 +11990,9 @@ msgstr "Usage"
 
 msgid "Use Current Selection"
 msgstr "Utiliser la sélection courante"
+
+msgid "Use Negated Quantities"
+msgstr "Utiliser des montants négatifs"
 
 msgid ""
 "Use the Post action to send a message, place a phone call or post a note."
@@ -12787,10 +12799,3 @@ msgstr "la largeur en pixel des micro-images."
 
 msgid "the width in pixel of nano image"
 msgstr "La largeur en pixel des images nano."
-
-msgid "Source Price Currency"
-msgstr "Devise de la source"
-
-msgid "Destination Price Currency"
-msgstr "Devise de la destination"
-
