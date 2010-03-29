@@ -89,7 +89,7 @@ for obj in object_list:\n
                     method_id=\'AccountingTransaction_createReversalTransaction\'):\n
       raise Redirect, "%s/view?portal_status_message=%s" % (\n
                 context.absolute_url(), translateString(\n
-        \'Reveral creation already in progress, abandon.\'))\n
+        \'Reversal creation already in progress, abandon.\'))\n
     obj.activate(tag=tag).AccountingTransaction_createReversalTransaction(\n
                                 cancellation_amount=cancellation_amount)\n
     activated += 1\n
