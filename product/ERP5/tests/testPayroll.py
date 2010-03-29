@@ -63,10 +63,12 @@ class TestPayrollMixin(ERP5ReportTestCase, TestTradeModelLineMixin):
 
   def afterSetUp(self):
     """Prepare the test."""
+    TestTradeModelLineMixin.afterSetUp(self)
     self.createCategories()
 
   @reindex
   def beforeTearDown(self):
+    TestTradeModelLineMixin.beforeTearDown(self)
     transaction.abort()
     for module in (
       self.portal.organisation_module,
@@ -2996,6 +2998,48 @@ class TestPayroll(TestPayrollMixin):
       title='Simulation Rule for PaySheet Accounting',
       reference='paysheet_transaction_rule',
       test_method_id='SimulationMovement_testInvoiceTransactionSimulationRule')
+    # matching provider for source and destination
+    for category in ('resource', 'source', 'destination',
+                     'destination_total_asset_price',
+                     'source_total_asset_price'):
+      rule.newContent(
+        portal_type='Category Membership Divergence Tester',
+        title='%s divergence tester' % category,
+        tested_property=category,
+        divergence_provider=False,
+        matching_provider=True)
+    # non-matching/non-divergence provider quantity divergence tester
+    # (i.e. only used for expand)
+    rule.newContent(
+      portal_type='Net Converted Quantity Divergence Tester',
+      title='quantity divergence tester',
+      tested_property='quantity',
+      quantity=0,
+      divergence_provider=False,
+      matching_provider=False)
+    # divergence provider for date
+    for property_id in ('start_date', 'stop_date'):
+      rule.newContent(
+        portal_type='DateTime Divergence Tester',
+        title='%s divergence tester' % property_id,
+        tested_property=property_id,
+        quantity=0,
+        divergence_provider=True,
+        matching_provider=False)
+    for category in ('source_administration', 'source_decision', 'source_function', 'source_payment', 'source_project', 'source_section', 'destination_administration', 'destination_decision', 'destination_function', 'destination_payment', 'destination_project', 'destination_section'):
+      rule.newContent(
+        portal_type='Category Membership Divergence Tester',
+        title='%s divergence tester' % category,
+        tested_property=category,
+        divergence_provider=True,
+        matching_provider=False)
+    rule.newContent(
+      portal_type='Float Divergence Tester',
+      title='price divergence tester',
+      tested_property='price',
+      quantity=0,
+      divergence_provider=True,
+      matching_provider=False)
     rule.newContent(portal_type='Predicate',
       title='Employee Share',
       string_index='contribution_share',
