@@ -48,9 +48,9 @@ print sys.version_info[:2]
     """
       TODO: Add doc string.
     """
-    stdout, stderr = subprocess.Popen([sys.executable, '-V'],
+    stdout, stderr = subprocess.Popen(["bin/python2.4", "-V"],
         stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()
-    self.assertTrue('2.4' in stderr)
+    self.assertTrue('Python 2.4' in stderr)
 
   def test_required_libraries(self):
     """
