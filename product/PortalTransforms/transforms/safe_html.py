@@ -7,7 +7,6 @@ from zope.interface import implements
 
 from Products.PortalTransforms.interfaces import itransform
 from Products.PortalTransforms.utils import log
-from Products.CMFDefault.utils import bodyfinder
 from Products.CMFDefault.utils import IllegalHTML
 from Products.CMFDefault.utils import SimpleHTMLParser
 from Products.CMFDefault.utils import VALID_TAGS
@@ -266,7 +265,7 @@ class SafeHTML:
         while True:
             try:
                 safe = scrubHTML(
-                    bodyfinder(html_string),
+                    html_string,
                     valid=self.config.get('valid_tags', {}),
                     nasty=self.config.get('nasty_tags', {}),
                     remove_javascript=self.config.get('remove_javascript', True),
