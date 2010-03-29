@@ -105,6 +105,10 @@
                           <string>Requester</string>
                         </tuple>
                         <tuple>
+                          <string>creation_date</string>
+                          <string>Creation Date</string>
+                        </tuple>
+                        <tuple>
                           <string>translated_validation_state_title</string>
                           <string>State</string>
                         </tuple>
@@ -118,6 +122,10 @@
                         <tuple>
                           <string>agent_portal_type</string>
                           <string>Type</string>
+                        </tuple>
+                        <tuple>
+                          <string>creation_date</string>
+                          <string>Creation Date</string>
                         </tuple>
                       </list>
                     </value>
@@ -173,6 +181,10 @@
                           <string>Requester</string>
                         </tuple>
                         <tuple>
+                          <string>creation_date</string>
+                          <string>Creation Date</string>
+                        </tuple>
+                        <tuple>
                           <string>translated_validation_state_title</string>
                           <string>State</string>
                         </tuple>
@@ -202,6 +214,10 @@
                         <tuple>
                           <string>contributor_title</string>
                           <string>Requester</string>
+                        </tuple>
+                        <tuple>
+                          <string>creation_date</string>
+                          <string>Creation Date</string>
                         </tuple>
                         <tuple>
                           <string>translated_validation_state_title</string>
