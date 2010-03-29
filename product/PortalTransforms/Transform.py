@@ -1,4 +1,5 @@
-from logging import ERROR
+# -*- coding: utf-8 -*-
+from zLOG import ERROR
 from UserDict import UserDict
 
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile

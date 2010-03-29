@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ### Register Transforms
 ### This is interesting because we don't expect all transforms to be
 ### available on all platforms. To do this we allow things to fail at
@@ -11,7 +12,7 @@
 ###    implement the transform, if register needs to fail for now it
 ###    should raise an ImportError as well (dumb, I know)
 
-from logging import DEBUG, ERROR
+from zLOG import DEBUG, ERROR
 from Products.PortalTransforms.utils import log
 from Products.PortalTransforms.libtransforms.utils import MissingBinary
 modules = [

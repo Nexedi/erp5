@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 """some common utilities
 """
-import logging
 from time import time
 from types import UnicodeType, StringType
 
@@ -13,10 +12,10 @@ class TransformException(Exception):
 FB_REGISTRY = None
 
 # logging function
-from zLOG import LOG
+from zLOG import LOG, INFO
 #logger = logging.getLogger('PortalTransforms')
 
-def log(message, severity=logging.INFO):
+def log(message, severity=INFO):
     LOG('PortalTransforms', severity, message)
     #logger.log(severity, message)
 

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from AccessControl.Role import RoleManager
 from AccessControl import ClassSecurityInfo
 from Acquisition import Implicit
@@ -39,7 +40,7 @@ from zope.interface import implements
 
 __revision__ = '$Id: TransformEngine.py 6255 2006-04-11 15:29:29Z hannosch $'
 
-from logging import DEBUG
+from zLOG import DEBUG
 
 class TransformTool(UniqueObject, ActionProviderBase, Folder):
 

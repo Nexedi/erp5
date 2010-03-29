@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import logging
+from zLOG import ERROR
 from HTMLParser import HTMLParser, HTMLParseError
 import re
 from cgi import escape
@@ -251,7 +251,7 @@ class SafeHTML:
     def convert(self, orig, data, **kwargs):
         # note if we need an upgrade.
         if not self.config.has_key('disable_transform'):
-            log(logging.ERROR, 'PortalTransforms safe_html transform needs to be '
+            log(ERROR, 'PortalTransforms safe_html transform needs to be '
                 'updated. Please re-install the PortalTransforms product to fix.')
 
         # if we have a config that we don't want to delete
