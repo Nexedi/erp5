@@ -44,6 +44,14 @@ print sys.version_info[:2]
     finally:
       os.unlink(name)
 
+  def test_use_generated_python_as_normal_interpreter(self):
+    """
+      TODO: Add doc string.
+    """
+    stdout, stderr = subprocess.Popen([sys.executable, '-V'],
+        stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()
+    self.assertTrue('2.4' in stderr)
+
   def test_required_libraries(self):
     """
       TODO: Add doc string.
