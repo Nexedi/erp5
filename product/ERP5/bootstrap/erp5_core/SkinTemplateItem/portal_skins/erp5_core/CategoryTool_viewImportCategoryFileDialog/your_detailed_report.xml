@@ -136,7 +136,7 @@
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string>Check this box if you want this dailog to return a very detailed report (power users only).</string> </value>
+                    <value> <string>Check this box if you want this dialog to return a very detailed report (power users only).</string> </value>
                 </item>
                 <item>
                     <key> <string>editable</string> </key>
