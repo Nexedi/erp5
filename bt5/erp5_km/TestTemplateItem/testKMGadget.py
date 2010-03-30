@@ -32,8 +32,6 @@ from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from AccessControl.SecurityManagement import newSecurityManager
 from zLOG import LOG, WARNING
-import simplejson as json
-  
 
 def _getGadgetInstanceUrlFromKnowledgePad(knowledge_pad,  gadget):
   """ Get Knowledge Box's relative URL specialising a gadget in a Knowledge Pad."""
