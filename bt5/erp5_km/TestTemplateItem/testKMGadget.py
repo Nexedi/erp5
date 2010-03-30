@@ -157,11 +157,12 @@ class TestGadgets(ERP5TypeTestCase,  ZopeTestCase.Functional):
     self.assertEqual('visible', box.getValidationState())
     
     # toggle box state
-    portal.KnowledgeBox_toggleVisibility(box.getRelativeUrl())
+    box_id = box.getRelativeUrl().replace('/', '_')
+    portal.KnowledgeBox_toggleVisibility(box_id)
     self.assertEqual('invisible', box.getValidationState())
-    portal.KnowledgeBox_toggleVisibility(box.getRelativeUrl())
+    portal.KnowledgeBox_toggleVisibility(box_id)
     self.assertEqual('visible', box.getValidationState())
-    portal.KnowledgePad_deleteBox(box.getRelativeUrl())
+    portal.KnowledgePad_deleteBox(box_id)
     self.assertEqual('deleted', box.getValidationState())
     
     # add new pad 
