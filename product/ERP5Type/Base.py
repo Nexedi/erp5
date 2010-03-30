@@ -121,7 +121,7 @@ class WorkflowMethod(Method):
       method - a callable object or a method
 
       id - the workflow transition id. This is useful
-           to emulate "old" CMF behaviour but is 
+           to emulate "old" CMF behaviour but is
            somehow inconsistent with the new registration based
            approach implemented here.
 
@@ -137,7 +137,7 @@ class WorkflowMethod(Method):
       self._transition_id = id
     # Only publishable methods can be published as interactions
     # A pure private method (ex. _doNothing) can not be published
-    # This is intentional to prevent methods such as submit, share to 
+    # This is intentional to prevent methods such as submit, share to
     # be called from a URL. If someone can show that this way
     # is wrong (ex. for remote operation of a site), let us know.
     if not method.__name__.startswith('_'):
@@ -158,7 +158,7 @@ class WorkflowMethod(Method):
     """
     if getattr(self, '__name__', None) in ('getPhysicalPath', 'getId'):
       # To prevent infinite recursion, 2 methods must have special treatment
-      # this is clearly not the best way to implement this but it is 
+      # this is clearly not the best way to implement this but it is
       # already better than what we had. I (JPS) would prefer to use
       # critical sections in this part of the code and a
       # thread variable which tells in which semantic context the code
@@ -264,7 +264,7 @@ class WorkflowMethod(Method):
 
   def registerTransitionOncePerTransaction(self, portal_type, workflow_id, transition_id):
     """
-      Transitions registered as one per transactions will be invoked 
+      Transitions registered as one per transactions will be invoked
       only once per transaction
     """
     transition_list = self._invoke_once.setdefault(portal_type, {}).setdefault(workflow_id, [])
@@ -306,7 +306,7 @@ method_registration_cache = {}
 
 WORKFLOW_METHOD_MARKER = ('Base._doNothing',)
 RESERVED_TUPLE_PROPERTY = set(('_constraints', '_properties', '_categories',
-                               '__implements__', 'property_sheets', 
+                               '__implements__', 'property_sheets',
                                '_erp5_properties'))
 # It might be necessary to use another type for those reserved properties
 # ex. list type
@@ -357,7 +357,7 @@ class PropertyHolder:
     Saves in a dictionary all parameters required to create an accessor
     The goal here is to minimize memory occupation. We have found the following:
 
-    - the size of a tuple with simple types and the size 
+    - the size of a tuple with simple types and the size
       of None are the same (a pointer)
 
     - the size of a pointer to a class is the same as the
@@ -367,8 +367,8 @@ class PropertyHolder:
       which contain simple types (string, int, etc.) but innefficient
       for tuples which contain a pointer
 
-    - as a result, it is better to create separate dicts if 
-      values contain pointers and single dict if value is 
+    - as a result, it is better to create separate dicts if
+      values contain pointers and single dict if value is
       a tuple of simple types
 
     Parameters:
@@ -412,7 +412,7 @@ class PropertyHolder:
       It is possible to gain 30% of accessor RAM footprint
       by postponing security declaration.
 
-      WARNING: we optimize size by not setting security if 
+      WARNING: we optimize size by not setting security if
       it is the same as the default. This may be a bit
       dangerous if classes use another default
       security.
@@ -550,7 +550,7 @@ def initializePortalTypeDynamicProperties(self, klass, ptype, aq_key, portal):
        (ptype != parent_type or klass != parent_klass) and \
        not Base.aq_portal_type.has_key(parent_type):
       initializePortalTypeDynamicProperties(parent_object, parent_klass,
-                                            parent_type, 
+                                            parent_type,
                                             parent_object._aq_key(), portal)
 
     prop_list = list(getattr(klass, '_properties', []))
@@ -639,7 +639,7 @@ def initializePortalTypeDynamicWorkflowMethods(self, klass, ptype, prop_holder,
                 method = WorkflowMethod(method)
                 setattr(klass, method_id, method)
               else:
-                # We must be sure that we 
+                # We must be sure that we
                 # are going to register class defined
                 # workflow methods to the appropriate transition
                 transition_id = method.getTransitionId()
@@ -687,7 +687,7 @@ def initializePortalTypeDynamicWorkflowMethods(self, klass, ptype, prop_holder,
                     method = WorkflowMethod(method)
                     setattr(klass, method_id, method)
                   else:
-                    # We must be sure that we 
+                    # We must be sure that we
                     # are going to register class defined
                     # workflow methods to the appropriate transition
                     transition_id = method.getTransitionId()
@@ -1612,7 +1612,7 @@ class Base( CopyContainer,
   ping = WorkflowMethod(ping)
 
   # Object attributes update method
-  def _edit(self, REQUEST=None, force_update=0, reindex_object=0, 
+  def _edit(self, REQUEST=None, force_update=0, reindex_object=0,
             keep_existing=0, activate_kw=None, edit_order=[], restricted=0, **kw):
     """
       Generic edit Method for all ERP5 object
@@ -1635,7 +1635,7 @@ class Base( CopyContainer,
     key_list = kw.keys()
     unordered_key_list = [k for k in key_list if k not in edit_order]
     ordered_key_list = [k for k in edit_order if k in key_list]
-    restricted_method_list = []    
+    restricted_method_list = []
     if restricted:
       # retrieve list of accessors which doesn't use default permissions
       aq_key = self._aq_key()
@@ -1753,7 +1753,7 @@ class Base( CopyContainer,
   def getContentPropertyIdList(self):
     """
       Return content properties of the current instance.
-      Content properties are filtered out in getPropertyIdList so 
+      Content properties are filtered out in getPropertyIdList so
       that rendering in ZMI is compatible with Zope standard properties
     """
     return [property['id'] for property in self._erp5_properties if property['type'] == 'content']
@@ -2102,7 +2102,7 @@ class Base( CopyContainer,
         LOG("ERP5Type WARNING",0,"category %s has no object value" % path, error=sys.exc_info())
     return ref_list
 
-  security.declareProtected(Permissions.AccessContentsInformation, 
+  security.declareProtected(Permissions.AccessContentsInformation,
                             'getValueList')
   getValueList = _getValueList
 
@@ -2117,7 +2117,7 @@ class Base( CopyContainer,
     else:
       return self._getCategoryTool().resolveCategory(path)
 
-  security.declareProtected(Permissions.AccessContentsInformation, 
+  security.declareProtected(Permissions.AccessContentsInformation,
                             'getDefaultAcquiredValue')
   getDefaultAcquiredValue = _getDefaultAcquiredValue
 
@@ -2130,7 +2130,7 @@ class Base( CopyContainer,
         ref_list.append(category)
     return ref_list
 
-  security.declareProtected(Permissions.AccessContentsInformation, 
+  security.declareProtected(Permissions.AccessContentsInformation,
                             'getAcquiredValueList')
   getAcquiredValueList = _getAcquiredValueList
 
@@ -2138,7 +2138,7 @@ class Base( CopyContainer,
                               strict_membership=0, strict="deprecated",
                               checked_permission=None):
     # backward compatibility to keep strict keyword working
-    if strict != "deprecated" : 
+    if strict != "deprecated" :
       strict_membership = strict
     value_list = self._getRelatedValueList(
                                 id, spec=spec, filter=filter,
@@ -2226,7 +2226,7 @@ class Base( CopyContainer,
 
   security.declareProtected( Permissions.ModifyPortalContent, 'setValueUidList' )
   def setValueUidList(self, id, uids, spec=(), filter=None, portal_type=(), keep_default=1, checked_permission=None):
-    self._setValueUids(id, uids, spec=spec, filter=filter, portal_type=portal_type, 
+    self._setValueUids(id, uids, spec=spec, filter=filter, portal_type=portal_type,
                                  keep_default=keep_default, checked_permission=checked_permission)
     self.reindexObject()
 
@@ -2908,7 +2908,7 @@ class Base( CopyContainer,
             reindex_activate_kw.update(activate_kw)
           activate_kw = reindex_activate_kw
         kw.update(reindex_kw)
-      
+
       group_id_list  = []
       if kw.get("group_id", "") not in ('', None):
         group_id_list.append(kw.get("group_id", ""))
@@ -2916,7 +2916,7 @@ class Base( CopyContainer,
         group_id_list.append(kw.get("sql_catalog_id", ""))
       group_id = ' '.join(group_id_list)
 
-      self.activate(group_method_id='portal_catalog/catalogObjectList', 
+      self.activate(group_method_id='portal_catalog/catalogObjectList',
                     alternate_method_id='alternateReindexObject',
                     group_id=group_id,
                     serialization_tag=self.getRootDocumentPath(),
@@ -3344,7 +3344,7 @@ class Base( CopyContainer,
   def updateRoleMappingsFor(self, wf_id, **kw):
     """
     Update security policy according to workflow settings given by wf_id
-      
+
     There's no check that the document is actually chained to the workflow,
     it's caller responsability to perform this check.
     """
@@ -3668,7 +3668,7 @@ class Base( CopyContainer,
             dynamic_accessor_list.append(subdochelper)
             if getattr(documented_item, property['id'], None) is not None:
               dynamic_property_list.append(subdochelper)
-        
+
         def visitCategory(category):
           if category in seen_categories:
             return
@@ -3698,7 +3698,7 @@ class Base( CopyContainer,
             expression_category_list.extend(category(econtext))
             continue
           visitCategory(category)
-        
+
         for category in expression_category_list:
           visitCategory(category)
 
@@ -3849,7 +3849,7 @@ class DocumentationHelper(Base):
                     , PropertySheet.DublinCore
                     , PropertySheet.DocumentationHelper
                     , )
-  
+
   def _funcname_cmp_prepare(self, funcname):
     for pos in range(len(funcname)):
       if funcname[pos] != '_':
@@ -3866,7 +3866,7 @@ class DocumentationHelper(Base):
     if my_title > his_title:
       return 1
     return 0
-  
+
 
 class TempDocumentationHelper(DocumentationHelper, TempBase):
   """Temporary version of Documentation Helper.
