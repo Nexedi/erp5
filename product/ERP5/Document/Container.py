@@ -74,6 +74,14 @@ class Container(Movement, XMLObject):
                       , PropertySheet.SortIndex
                       )
 
+    def reindexObject(self, *args, **kw):
+      """Reindex container and children
+
+      Children must be reindexed because PackingList.isPacked use the catalog
+      to find them.
+      """
+      self.recursiveReindexObject(*args, **kw)
+
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getQuantity')
     def getQuantity(self, default=1.0):

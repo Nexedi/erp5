@@ -53,10 +53,15 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>delivery = state_change[\'object\'].getExplanationValue()\n
+            <value> <string>object = state_change[\'object\']\n
+delivery = object.getExplanationValue()\n
 \n
 if getattr(delivery, \'calculatePacking\', None) is not None:\n
-  path_and_method_id = (delivery.getPath(), (\'immediateReindexObject\',\'recursiveImmediateReindexObject\'))\n
+  try:\n
+    container = object.getContainerValue()\n
+    path_and_method_id = container.getPath(), \'recursiveImmediateReindexObject\'\n
+  except AttributeError:\n
+    path_and_method_id = None\n
   delivery.activate(after_path_and_method_id=path_and_method_id).calculatePacking()\n
 </string> </value>
         </item>
@@ -95,12 +100,15 @@ if getattr(delivery, \'calculatePacking\', None) is not None:\n
                         <value>
                           <tuple>
                             <string>state_change</string>
-                            <string>_getattr_</string>
                             <string>_getitem_</string>
+                            <string>object</string>
+                            <string>_getattr_</string>
                             <string>delivery</string>
                             <string>getattr</string>
                             <string>None</string>
+                            <string>container</string>
                             <string>path_and_method_id</string>
+                            <string>AttributeError</string>
                           </tuple>
                         </value>
                     </item>
