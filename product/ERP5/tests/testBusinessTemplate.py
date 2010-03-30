@@ -6138,6 +6138,8 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     skin_id = sequence.get('skin_folder_id')
     skin_folder = ps._getOb(skin_id, None)
     skin_folder._delProperty('business_template_skin_layer_priority')
+    self.assertEquals(
+        None, skin_folder.getProperty('business_template_skin_layer_priority'))
 
   def stepCheckModifiedSkinFolderExists(self, sequence=None,
                                         sequence_list=None, **kw):
