@@ -35,6 +35,7 @@ libxslt-devel
 make
 patch
 python-devel
+python-setuptools
 rpm
 subversion
 subversion-devel

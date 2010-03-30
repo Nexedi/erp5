@@ -23,6 +23,7 @@ libxml2-dev
 libxslt1-dev
 make
 patch
+python-setuptools
 rpm
 subversion
 subversion-tools
