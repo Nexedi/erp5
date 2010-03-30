@@ -61,9 +61,7 @@ class TestGadgets(ERP5TypeTestCase,  ZopeTestCase.Functional):
             'erp5_trade',
             'erp5_dms',
             'erp5_project',
-            'nexedi_erp5_express_customer',
-            'erp5_km',
-            )
+            'erp5_km')
 
   def getTitle(self):
     return "Gadgets"
@@ -851,111 +849,6 @@ class TestGadgets(ERP5TypeTestCase,  ZopeTestCase.Functional):
     request.set('editable_mode',  1)
     self.failUnless('View Web Section' in relation_form_renderer())
 
-  def test_14ExpressAdvertisementSystemGadget(self, quiet=quiet, run=run_all_test):
-    """ Check Express Advertisement gadget. 
-         Express advertisement system uses gadgets in customer instances and KM web site. """
-    if not run: return
-    portal = self.getPortal()
-    request = self.app.REQUEST
-
-    portal_gadgets = portal.portal_gadgets
-    express_advertisement_gadget = portal_gadgets.express_advertisement
-
-    response = self.publish('%s/WebSite_viewHomeAreaFormRenderer' %self.web_site_url, self.auth)
-    self.failUnless(self.web_front_knowledge_pad.getTitle() in response.getBody())
-
-    # Web Front gadgets
-    web_front_gadgets = [express_advertisement_gadget]
-    for gadget in web_front_gadgets:
-      self.web_front_knowledge_pad.KnowledgePad_addBoxList(**{'uids':[gadget.getUid()]})
-    self.stepTic()
-
-    self.changeSkin('KM')
-    # check that gadgets are added to web front page view
-    response = self.publish('%s/WebSite_viewHomeAreaFormRenderer' %self.web_site_url, self.auth)
-    for gadget in web_front_gadgets:
-      self.failUnless(gadget.getTitle() in response.getBody())
-
-    # emulate JavaScript by calling directly WebSection_getTextContentAsJSON
-    web_page_module = self.portal.web_page_module
-    web_site_module = self.portal.web_site_module
-    portal_categories = portal.portal_categories 
-    publication_section_category_id_list = ['express_ads',  'KM_ads']
-    for category_id in publication_section_category_id_list:
-      portal_categories.publication_section.newContent(portal_type = 'Category', \
-                                                       id = category_id)
-    referenced_doc =  web_page_module.newContent(
-                                      portal_type='Web Page', \
-                                      language='en', \
-                                      reference='ref-doc-1')
-    referenced_doc.publish() 
-
-    express_web_page_ad = web_page_module.newContent(
-                               portal_type='Web Page', \
-                               language='en', \
-                               reference='km-1', \
-                               text_content='Express Ads CONTENT', \
-                               publication_section_list=[publication_section_category_id_list[0]])
-    # set reference to other real document from which we borrow content
-    express_web_page_ad.setSuccessorValue(referenced_doc)
-    express_web_page_ad.publish()
-
-    installation_image = self.portal.image_module.newContent(portal_type='Image', \
-                                   language='en', \
-                                   reference='express-install-image', \
-                                   publication_section_list=[publication_section_category_id_list[0]])
-    installation_image.publish()
-
-    km_web_page_ad = web_page_module.newContent(
-                               portal_type='Web Page', \
-                               language='en', \
-                               reference='km-1', \
-                               text_content='KM Express Ads CONTENT', \
-                               publication_section_list=[publication_section_category_id_list[1]])
-    km_web_page_ad.publish()
-
-
-    express_frame = web_site_module.newContent(portal_type='Web Site', \
-                                               id = 'express_frame')
-    advertisement_section = express_frame.newContent(portal_type='Web Section', \
-                                                     id = 'advertisement_section')
-    predicate_kw = dict(membership_criterion_base_category = ['publication_section'],
-                        membership_criterion_category=['publication_section/%s' \
-                                       %publication_section_category_id_list[0]])
-    for key in ['gadget', 'installation', 'message', 'product']:
-      section = advertisement_section.newContent(portal_type='Web Section', \
-                                                 id = key, 
-                                                 **predicate_kw)
-    # add documentation (for gadget)
-    section = advertisement_section.gadget.newContent(portal_type='Web Section', \
-                                                      id = 'documentation', 
-                                                      **predicate_kw)
-    # set predicate & web page
-    km_section = advertisement_section.newContent(portal_type='Web Section', \
-                                                  id = 'km')
-    km_section.edit(membership_criterion_base_category = ['publication_section'], 
-                    membership_criterion_category=['publication_section/%s' \
-                      %publication_section_category_id_list[1]])
-    self.stepTic()
-
-    # installation should return images tags
-    json_result = json.loads(
-                    advertisement_section.WebSection_getTextContentAsJSON(type_list='installation'))
-    self.assertEquals(json_result['installation'][0]['content'],
-                      installation_image.tag(display='medium'))
-
-    # check Express ads returned JSON result
-    for ad_type in ['gadget', 'message', 'documentation']:
-      json_result = json.loads(
-                      advertisement_section.WebSection_getTextContentAsJSON(type_list=ad_type))
-      self.assertEquals(json_result[ad_type][0]['content'], express_web_page_ad.getTextContent())
-      self.assertEquals(json_result[ad_type][0]['url'], referenced_doc.getReference())
-
-    # check KM ads returned JSON result
-    json_result = json.loads(advertisement_section.WebSection_getTextContentAsJSON(type_list=['km']))
-    self.assertEquals(json_result['km'][0]['content'], km_web_page_ad.getTextContent())
-    self.assertEquals(json_result['km'][0]['url'], km_web_page_ad.absolute_url())
-
   def test_15GadgetServerSideFailure(self, quiet=quiet, run=run_all_test):
     """ 
       Check that if gadget uses a non existent view / edit form
@@ -995,6 +888,44 @@ class TestGadgets(ERP5TypeTestCase,  ZopeTestCase.Functional):
     gadget.edit_form_id = old_gadget_edit_form_id
     response = self.publish('%s/WebSite_viewHomeAreaFormRenderer' %self.web_site_url, self.auth)
     self.failUnless('Server side error' not in response.getBody())
+
+  def test_16WebSiteBrowserGadget(self, quiet=quiet, run=run_all_test):
+    """ 
+      Check Web Site Browser Gadget.
+     """
+    if not run: return 
+    portal = self.getPortal()
+    web_site_browser_gadget = portal.portal_gadgets.web_site_browser
+
+    # add gadget
+    self.web_front_knowledge_pad.KnowledgePad_addBoxList(**{'uids':[web_site_browser_gadget.getUid()]})
+    self.stepTic()
+
+    self.changeSkin('KM')
+    # "Subsections" gadget
+    gadget_view_form_id  = web_site_browser_gadget.view_form_id
+    box_url = _getGadgetInstanceUrlFromKnowledgePad( \
+                                     self.web_front_knowledge_pad,  \
+                                     web_site_browser_gadget)
+    # .. create subsection and make sure it appears in gadget
+    subsection = self.website.newContent(portal_type='Web Section',  
+                                         title='Sub Section 12345')
+    self.stepTic()
+    url = self.base_url_pattern %(self.web_site_url,  
+                                  gadget_view_form_id, 
+                                  self.website.getRelativeUrl(),  
+                                  box_url)    
+    self.failUnless(subsection.getTitle() not in 
+                    self.publish(url, self.auth).getBody())
+    self.failUnless('Browse' in 
+                    self.publish(url, self.auth).getBody())
+
+    # make section visible
+    subsection.edit(visible=True)
+    self.stepTic()
+    self.changeSkin('KM')
+    self.failUnless(subsection.getTitle() in 
+                    self.publish(url, self.auth).getBody())
 
 def test_suite():
   suite = unittest.TestSuite()
