@@ -32,7 +32,6 @@ from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5.Document.Invoice import Invoice
 
 #XXX TODO: review naming of new methods
-#XXX WARNING: current API naming may change although model should be stable.
 
 class PaySheetTransaction(Invoice):
   """
@@ -135,13 +134,11 @@ class PaySheetTransaction(Invoice):
       If property_list is provided, only subobjects with at least one of those
       properties will be taken into account
     '''
-    model = self.getSpecialiseValue().getEffectiveModel(\
-        start_date=self.getStartDate(),
-        stop_date=self.getStopDate())
+    model = self.getSpecialiseValue()
     sub_object_list = []
     if model is not None:
       # if there is an effective model
-      model_reference_dict = model.getInheritanceReferenceDict(
+      model_reference_dict = model.getInheritanceReferenceDict(self,
                                      portal_type_list=portal_type_list,
                                      property_list=property_list)
       traverse = self.getPortalObject().unrestrictedTraverse
@@ -166,9 +163,8 @@ class PaySheetTransaction(Invoice):
       if len(parent.contentValues(portal_type='Pay Sheet Cell')) == 0:
         # the line contain no movements, remove it
         self.manage_delObjects(parent.getId())
-    business_process_list = paysheet_model.findSpecialiseValueList(\
-        context=paysheet_model,
-        portal_type_list=['Business Process'])
+    business_process_list = paysheet_model.findEffectiveSpecialiseValueList(
+        self, portal_type_list=['Business Process'])
     if len(business_process_list):
       # XXX currently, we consider that is to complicated to use more than one
       # Business Process, so we take the first (wich is the nearest from

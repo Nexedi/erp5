@@ -153,7 +153,7 @@ def getPaymentConditionText(order):\n
 def getSocialOrganisationValue():\n
   model = context.getSpecialiseValue()\n
   if model is not None:\n
-    business_process_list = model.findSpecialiseValueList(\\\n
+    business_process_list = model.findEffectiveSpecialiseValueList(\\\n
               context=context, portal_type_list=[\'Business Process\'])\n
     business_process = None\n
     if len(business_process_list):\n

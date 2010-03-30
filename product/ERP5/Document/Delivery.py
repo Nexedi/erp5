@@ -36,11 +36,12 @@ from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5.Document.ImmobilisationDelivery import ImmobilisationDelivery
+from Products.ERP5.mixin.composition import CompositionMixin
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 
 from zLOG import LOG, PROBLEM
 
-class Delivery(XMLObject, ImmobilisationDelivery):
+class Delivery(XMLObject, ImmobilisationDelivery, CompositionMixin):
     """
         Each time delivery is modified, it MUST launch a reindexing of
         inventories which are related to the resources contained in the Delivery

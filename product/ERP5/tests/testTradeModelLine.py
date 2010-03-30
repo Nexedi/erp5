@@ -1369,31 +1369,10 @@ class TestTradeModelLine(TestTradeModelLineMixin):
       order_line_discounted.getTotalPrice() * 0.32) * 0.8
     )
 
+  def assertSameUidSet(self, a, b, msg=None):
+    self.assertEqual(set(x.uid for x in a), set(x.uid for x in b), msg)
+
   # Tests
-  def test_TradeConditionTradeModelLineBasicComposition(self):
-    """
-      If Trade Condition is specialised by another Trade Condition they
-      Trade Model Lines shall be merged.
-    """
-    trade_condition_1 = self.createTradeCondition()
-    trade_condition_2 = self.createTradeCondition()
-
-    trade_condition_1.setSpecialiseValue(trade_condition_2)
-
-    trade_condition_1_trade_model_line = self.createTradeModelLine(
-        trade_condition_1,
-        reference='A')
-
-    trade_condition_2_trade_model_line = self.createTradeModelLine(
-        trade_condition_2,
-        reference='B')
-
-    self.assertSameSet(
-      [trade_condition_1_trade_model_line,
-        trade_condition_2_trade_model_line],
-      trade_condition_1.getTradeModelLineComposedList()
-    )
-
   def test_TradeConditionTradeModelLineBasicCompositionWithOrder(self):
     trade_condition_1 = self.createTradeCondition()
     trade_condition_2 = self.createTradeCondition()
@@ -1414,66 +1393,26 @@ class TestTradeModelLine(TestTradeModelLineMixin):
         order,
         reference='C')
 
-    self.assertSameSet(
-      [trade_condition_1_trade_model_line, trade_condition_2_trade_model_line],
-      trade_condition_1.getTradeModelLineComposedList()
-    )
-
-    self.assertSameSet(
+    self.assertSameUidSet(
       [trade_condition_1_trade_model_line, trade_condition_2_trade_model_line,
         order_trade_model_line],
       trade_condition_1.getTradeModelLineComposedList(context=order)
     )
 
   def test_TradeConditionCircularCompositionIsSafe(self):
+    order = self.createOrder()
     trade_condition_1 = self.createTradeCondition()
     trade_condition_2 = self.createTradeCondition()
 
+    order.setSpecialiseValue(trade_condition_1)
     trade_condition_1.setSpecialiseValue(trade_condition_2)
     trade_condition_2.setSpecialiseValue(trade_condition_1)
 
-    self.assertEquals(trade_condition_1. \
-        findSpecialiseValueList(trade_condition_1),
+    self.assertEqual(trade_condition_1.findEffectiveSpecialiseValueList(order),
         [trade_condition_1, trade_condition_2]
     )
 
-  def test_findSpecialiseValueList(self):
-    '''
-      check that findSpecialiseValueList is able to return all the inheritance
-      model tree using Depth-first search
-
-                                  trade_condition_1
-                                    /           \
-                                   /             \
-                                  /               \
-                       trade_condition_2       trade_condition_3
-                               |
-                               |
-                               |
-                        trade_condition_4
-
-      According to Depth-first search algorithm, result of this graph is:
-      [trade_condition_1, trade_condition_2, trade_condition_3,
-      trade_condition_4]
-    '''
-    trade_condition_1 = self.createTradeCondition()
-    trade_condition_2 = self.createTradeCondition()
-    trade_condition_3 = self.createTradeCondition()
-    trade_condition_4 = self.createTradeCondition()
-
-    trade_condition_1.setSpecialiseValueList((trade_condition_2,
-      trade_condition_3))
-    trade_condition_2.setSpecialiseValue(trade_condition_4)
-
-    specialise_value_list = trade_condition_1.findSpecialiseValueList(
-        context=trade_condition_1)
-    self.assertEquals(len(specialise_value_list), 4)
-    self.assertEquals(
-      [trade_condition_1, trade_condition_2, trade_condition_3,
-       trade_condition_4], specialise_value_list)
-
-
-  def test_findSpecialiseValueListWithPortalType(self):
+  def test_findEffectiveSpecialiseValueListWithPortalType(self):
     '''
       check that findSpecialiseValueList is able to return all the inheritance
       model tree using Depth-first search with a specific portal_type asked
@@ -1495,43 +1434,26 @@ class TestTradeModelLine(TestTradeModelLineMixin):
     As only business_process will be a "Business Process" and we search for business process
     the result must be [business_process]
     '''
+    order = self.createOrder()
     trade_condition_1 = self.createTradeCondition()
     trade_condition_2 = self.createTradeCondition()
     trade_condition_3 = self.createTradeCondition()
     trade_condition_4 = self.createTradeCondition()
     business_process = self.createBusinessProcess()
-    
+
+    order.setSpecialiseValue(trade_condition_1)
     trade_condition_1.setSpecialiseValueList((trade_condition_2,
       trade_condition_3))
     trade_condition_2.setSpecialiseValue(trade_condition_4)
     trade_condition_4.setSpecialiseValue(business_process)
-    
-    specialise_value_list = trade_condition_1.findSpecialiseValueList(
-      portal_type_list = ['Business Process'],
-      context=trade_condition_1)
-    self.assertEquals(len(specialise_value_list), 1)
-    self.assertEquals([business_process,] , specialise_value_list)
+
+    self.assertEqual(trade_condition_1.findEffectiveSpecialiseValueList(order),
+      [trade_condition_1, trade_condition_2, trade_condition_3,
+       trade_condition_4])
+    self.assertEqual(trade_condition_1.findEffectiveSpecialiseValueList(order,
+      portal_type_list = ['Business Process']), [business_process])
 
   def test_TradeConditionTradeModelLineReferenceIsShadowingComposition(self):
-    trade_condition_1 = self.createTradeCondition()
-    trade_condition_2 = self.createTradeCondition()
-
-    trade_condition_1.setSpecialiseValue(trade_condition_2)
-
-    trade_condition_1_trade_model_line = self.createTradeModelLine(
-        trade_condition_1,
-        reference='A')
-
-    trade_condition_2_trade_model_line = self.createTradeModelLine(
-        trade_condition_2,
-        reference='A')
-
-    self.assertSameSet(
-      [trade_condition_1_trade_model_line],
-      trade_condition_1.getTradeModelLineComposedList()
-    )
-
-  def test_TradeConditionTradeModelLineReferenceIsShadowingCompositionWithOrder(self):
     trade_condition_1 = self.createTradeCondition()
     trade_condition_2 = self.createTradeCondition()
     order = self.createOrder()
@@ -1551,13 +1473,7 @@ class TestTradeModelLine(TestTradeModelLineMixin):
         order,
         reference = 'B')
 
-    self.assertSameSet(
-      [trade_condition_1_trade_model_line,
-        trade_condition_2_trade_model_line],
-      trade_condition_1.getTradeModelLineComposedList()
-    )
-
-    self.assertSameSet(
+    self.assertSameUidSet(
       [trade_condition_1_trade_model_line, order_trade_model_line],
       trade_condition_1.getTradeModelLineComposedList(context=order)
     )
@@ -1568,7 +1484,9 @@ class TestTradeModelLine(TestTradeModelLineMixin):
     where we create trade model line in a wrong order in comparison to application relations
     We have a contribution graph like this A ---> C ---> B so final order must be A, C, B
     """
+    order = self.createOrder()
     trade_condition = self.createTradeCondition()
+    order.setSpecialiseValue(trade_condition)
     A = self.createTradeModelLine(trade_condition, reference='A', id=1,
         base_contribution_list=['base_amount/total'])
 
@@ -1579,7 +1497,7 @@ class TestTradeModelLine(TestTradeModelLineMixin):
     C = self.createTradeModelLine(trade_condition, reference='C', id=3,
         base_contribution_list=['base_amount/total_tax'],
         base_application_list=['base_amount/total'])
-    trade_model_line_list = trade_condition.getTradeModelLineComposedList()
+    trade_model_line_list = trade_condition.getTradeModelLineComposedList(order)
 
     self.assertEquals([q.getReference() for q in trade_model_line_list],
         [q.getReference() for q in [A, C, B,]])
@@ -1646,7 +1564,9 @@ class TestTradeModelLine(TestTradeModelLineMixin):
       * (DEFG) (BC) A
     where everything in parenthesis can be not sorted
     """
+    order = self.createOrder()
     trade_condition = self.createTradeCondition()
+    order.setSpecialiseValue(trade_condition)
 
     A = self.createTradeModelLine(trade_condition, reference='A',
         base_application_list=['base_amount/total'])
@@ -1675,7 +1595,7 @@ class TestTradeModelLine(TestTradeModelLineMixin):
         base_contribution_list=['base_amount/total_discount'],
         base_application_list=['base_amount/discount'])
 
-    trade_model_line_list = trade_condition.getTradeModelLineComposedList()
+    trade_model_line_list = trade_condition.getTradeModelLineComposedList(order)
 
     possible_sort_list = [
                           [[D,E], [B], [F, G], [C], [A]],
@@ -1704,7 +1624,9 @@ class TestTradeModelLine(TestTradeModelLineMixin):
       * A (BC) D
     where everything in parenthesis can be not sorted
     """
+    order = self.createOrder()
     trade_condition = self.createTradeCondition()
+    order.setSpecialiseValue(trade_condition)
 
     C = self.createTradeModelLine(trade_condition, reference='C',
         base_contribution_list=['base_amount/total'],
@@ -1722,7 +1644,7 @@ class TestTradeModelLine(TestTradeModelLineMixin):
         base_contribution_list=['base_amount/total'],
         base_application_list=['base_amount/total_tax'])
 
-    trade_model_line_list = trade_condition.getTradeModelLineComposedList()
+    trade_model_line_list = trade_condition.getTradeModelLineComposedList(order)
 
     possible_sort_list = [
                           [[A], [B,C], [D]]

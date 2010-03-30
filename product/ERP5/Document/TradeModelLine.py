@@ -196,12 +196,12 @@ class TradeModelLine(Predicate, XMLMatrix, Amount):
       update = 1
     else:
       # get source and destination using Business Process
-      if getattr(document, 'findSpecialiseValueList', None) is None:
+      if getattr(document, 'findEffectiveSpecialiseValueList', None) is None:
         # if parent don't have findSpecialiseValueList, this mean it's on the
         # specialise_value
         document = self.getParentValue().getSpecialiseValue()
       try:
-        business_process_list = document.findSpecialiseValueList(
+        business_process_list = document.findEffectiveSpecialiseValueList(
             context=context, portal_type_list=['Business Process'])
       except AttributeError:
         business_process_list = []

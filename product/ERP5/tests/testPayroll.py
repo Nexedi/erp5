@@ -1371,14 +1371,17 @@ class TestPayrollMixin(ERP5ReportTestCase, TestTradeModelLineMixin):
                              quantity=4)
 
   def stepCheckInheritanceModelReferenceDict(self, sequence=None, **kw):
+    paysheet = self.createPaysheet()
     model_employee = sequence.get('model_employee')
+    paysheet.setSpecialiseValue(model_employee)
+
     model_employee_url = model_employee.getRelativeUrl()
     model_company_url = sequence.get('model_company').getRelativeUrl()
     model_company_alt_url = sequence.get('model_company_alt').getRelativeUrl()
     model_country_url = sequence.get('model_country').getRelativeUrl()
-    
-    model_reference_dict = model_employee.getInheritanceReferenceDict(\
-        portal_type_list=('Annotation Line',))
+
+    model_reference_dict = model_employee.getInheritanceReferenceDict(
+        paysheet, portal_type_list=('Annotation Line',))
     self.assertEquals(len(model_reference_dict), 3) # there is 4 model but two
                                                     # models have the same
                                                     # reference.
@@ -1394,8 +1397,6 @@ class TestPayrollMixin(ERP5ReportTestCase, TestTradeModelLineMixin):
     self.assertNotEquals(model_reference_dict.has_key(model_country_url), True)
     
     # check the object list :
-    paysheet = self.createPaysheet()
-    paysheet.setSpecialiseValue(model_employee)
     object_list = paysheet.getInheritedObjectValueList(portal_type_list=\
         ('Annotation Line',))
     self.assertEquals(len(object_list), 3) # one line have the same reference
@@ -1527,6 +1528,7 @@ class TestPayrollMixin(ERP5ReportTestCase, TestTradeModelLineMixin):
         base_contribution_list=['base_amount/payroll/base/contribution',
           'base_amount/payroll/report/salary/gross'],
         quantity=10000)
+    self.stepTic()
 
     # create a paysheet without date
     paysheet_without_date = self.createPaysheet()
@@ -1694,9 +1696,7 @@ class TestPayrollMixin(ERP5ReportTestCase, TestTradeModelLineMixin):
 
     # check the effective model tree list
     effective_value_list = specialise_value.findEffectiveSpecialiseValueList(\
-        context=specialise_value,
-        start_date=paysheet.getStartDate(),
-        stop_date=paysheet.getStopDate())
+        context=paysheet)
     self.assertEquals(effective_value_list, [model_2])
 
   def stepCreateModelLineZeroPrice(self, sequence=None, **kw):
@@ -1857,30 +1857,15 @@ class TestPayrollMixin(ERP5ReportTestCase, TestTradeModelLineMixin):
     model_1.setSpecialiseValue(model_4)
     model_4.setSpecialiseValue(model_6)
     paysheet.PaySheetTransaction_applyModel()
-    self.assertEquals(specialise_value.findSpecialiseValueList(context=paysheet),
-        [model_1, model_4, model_6])
-    self.assertEquals(specialise_value.findEffectiveSpecialiseValueList(\
-        context=paysheet, start_date=paysheet.getStartDate(),
-        stop_date=paysheet.getStopDate()), [model_2,])
+    self.assertEquals([model_2],
+      specialise_value.findEffectiveSpecialiseValueList(context=paysheet))
 
     model_1.setSpecialiseValue(None)
     model_2.setSpecialiseValue(model_5)
     model_5.setSpecialiseValue(model_6)
     paysheet.PaySheetTransaction_applyModel()
-    self.assertEquals(specialise_value.findSpecialiseValueList(context=paysheet),
-        [model_1,])
-    self.assertEquals(specialise_value.findEffectiveSpecialiseValueList(\
-        context=paysheet, start_date=paysheet.getStartDate(),
-        stop_date=paysheet.getStopDate()), [model_2, model_5, model_7])
-
-    model_3.setSpecialiseValue(model_5)
-    model_5.setSpecialiseValue(model_6)
-    paysheet.PaySheetTransaction_applyModel()
-    self.assertEquals(specialise_value.findSpecialiseValueList(context=paysheet),
-        [model_1,])
-    self.assertEquals(specialise_value.findEffectiveSpecialiseValueList(\
-        context=paysheet, start_date=paysheet.getStartDate(),
-        stop_date=paysheet.getStopDate()), [model_2, model_5, model_7])
+    self.assertEquals([model_2, model_5, model_7],
+      specialise_value.findEffectiveSpecialiseValueList(context=paysheet))
 
   def stepCheckPropertiesAreCopiedFromModelLineToPaySheetLine(self,
       sequence=None, **kw):
@@ -2383,6 +2368,7 @@ class TestPayroll(TestPayrollMixin):
     sequence_string = """
                CreateModelTree
                ModelTreeAddAnnotationLines
+               Tic
                CheckInheritanceModelReferenceDict
     """
     sequence_list.addSequenceString(sequence_string)

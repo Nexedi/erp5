@@ -34,10 +34,10 @@ from collections import deque
 from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
+from Products.ERP5.mixin.composition import _getEffectiveModel
 from Products.ERP5.Document.Transformation import Transformation
 from Products.ERP5.Document.Path import Path
 from Products.ERP5.AggregatedAmountList import AggregatedAmountList
-from Products.ERP5Type.XMLMatrix import XMLMatrix
 from Products.ZSQLCatalog.SQLCatalog import Query, ComplexQuery
 
 import zope.interface
@@ -47,7 +47,7 @@ import zope.interface
 # XXX TODO: review naming of new methods
 # XXX WARNING: current API naming may change although model should be stable.
 
-class TradeCondition(Path, Transformation, XMLMatrix):
+class TradeCondition(Path, Transformation):
     """
       Trade Conditions are used to store the conditions (payment, logistic,...)
       which should be applied (and used in the orders) when two companies make
@@ -121,18 +121,8 @@ class TradeCondition(Path, Transformation, XMLMatrix):
               'movement_to_add_list': movement_to_add_list}
 
     security.declareProtected(Permissions.AccessContentsInformation,
-                              'findSpecialiseValueList')
-    def findSpecialiseValueList(self, context, portal_type_list=None):
-      """Returns a list of specialised objects representing inheritance tree.
-      """
-      return self.findEffectiveSpecialiseValueList(context,
-        portal_type_list=portal_type_list)
-
-
-    security.declareProtected(Permissions.AccessContentsInformation,
                               'findEffectiveSpecialiseValueList')
-    def findEffectiveSpecialiseValueList(self, context, start_date=None,
-                                         stop_date=None, portal_type_list=None):
+    def findEffectiveSpecialiseValueList(self, context, portal_type_list=None):
       """Return a list of effective specialised objects that is the
       inheritance tree.
       An effective object is an object which have start_date and stop_date
@@ -142,30 +132,13 @@ class TradeCondition(Path, Transformation, XMLMatrix):
       """
       portal_type_set = set(portal_type_list or
                             self.getPortalAmountGeneratorTypeList())
-      def getEffectiveModel(model):
-        try:
-          getEffectiveModel = model.getEffectiveModel
-        except AttributeError:
-          return model
-        return getEffectiveModel(start_date, stop_date)
-      filtered_list = []
-      specialise_value_list = deque((getEffectiveModel(context),))
-      specialise_value_set = set(specialise_value_list)
-      specialise_index = 0
-      while specialise_value_list:
-        context = specialise_value_list.popleft()
-        if context.getPortalType() in portal_type_set:
-          filtered_list.append(context)
-        for specialise_value in map(getEffectiveModel,
-                                    context.getSpecialiseValueList()):
-          if specialise_value not in specialise_value_set:
-            specialise_value_set.add(specialise_value)
-            specialise_value_list.append(specialise_value)
-      return filtered_list
+      return [x for x in context._findEffectiveSpecialiseValueList()
+                if x.getPortalType() in portal_type_set]
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getTradeModelLineComposedList')
-    def getTradeModelLineComposedList(self, context=None, portal_type_list=None):
+    def getTradeModelLineComposedList(self, context=None,
+                                      portal_type_list=None):
       """Returns list of Trade Model Lines using composition.
 
       Reference of Trade Model Line is used to hide other Trade Model Line
@@ -176,32 +149,12 @@ class TradeCondition(Path, Transformation, XMLMatrix):
       """
       if portal_type_list is None:
         portal_type_list = self.model_line_portal_type_list
-
-      reference_list = []
-      trade_model_line_composed_list = []
-      containing_object_list = []
-      start_date = None
-      stop_date = None
-      if context is not None:
-        document = context
-        if getattr(context, 'getExplanationValue', None) is not None:
-          # if context is movement it is needed to ask its explanation
-          # for contained Trade Model Lines
-          document = context.getExplanationValue()
-        containing_object_list.append(document)
-        start_date = document.getStartDate()
-        stop_date = document.getStopDate()
-      containing_object_list.extend(\
-          self.findEffectiveSpecialiseValueList(context=self,
-            start_date=start_date, stop_date=stop_date))
-
-      for specialise in containing_object_list:
-        for trade_model_line in specialise.contentValues(
-            portal_type=portal_type_list):
-          reference = trade_model_line.getReference()
-          if reference not in reference_list or reference is None:
-            reference_list.append(reference)
-            trade_model_line_composed_list.append(trade_model_line)
+      try:
+        context = context.getExplanationValue()
+      except AttributeError:
+        pass
+      trade_model_line_composed_list = \
+        context.asComposedDocument().contentValues(portal_type=portal_type_list)
 
       # build a graph of precedences
       # B---\
@@ -296,116 +249,8 @@ class TradeCondition(Path, Transformation, XMLMatrix):
 
       return aggregated_amount_list
 
-    security.declareProtected( Permissions.AccessContentsInformation, 'getCell')
-    def getCell(self, *kw , **kwd):
-      '''Overload the function getCell to be able to search a cell on the
-      inheritance model tree if the cell is not found on current one.
-      '''
-      cell = XMLMatrix.getCell(self, *kw, **kwd)
-      if cell is None:
-        # if cell not found, look on the inherited models
-        start_date = kwd.has_key('paysheet') and \
-            kwd['paysheet'].getStartDate() or None
-        stop_date = kwd.has_key('paysheet') and \
-            kwd['paysheet'].getStopDate() or None
-        model_list = self.findEffectiveSpecialiseValueList(\
-            context=self, start_date=start_date, stop_date=stop_date)
-        for specialised_model in model_list:
-          cell = XMLMatrix.getCell(specialised_model, *kw, **kwd)
-          if cell is not None:
-            return cell
-      return cell
-
-    security.declareProtected(Permissions.AccessContentsInformation,
-        'getReferenceDict')
-    def getReferenceDict(self, portal_type_list, property_list=None):
-      """Return a dict containing all id's of the objects contained in
-      this model and corresponding to the given portal_type. The key of the dict
-      are the reference (or id if no reference)
-      """
-      if property_list is None:
-        property_list=[]
-      reference_dict = {}
-      object_list = self.contentValues(portal_type=portal_type_list,
-          sort_on='id')
-      for obj in object_list:
-        keep = (len(property_list) == 0)
-        for property_ in property_list:
-          if obj.hasProperty(property_):
-            keep = 1
-            break
-        if keep:
-          reference_dict[obj.getProperty('reference', obj.getId())] = obj.getId()
-      return reference_dict
-
-    security.declareProtected(Permissions.AccessContentsInformation,
-        'getInheritanceReferenceDict')
-    def getInheritanceReferenceDict(self, portal_type_list,
-        property_list=None):
-      '''Returns a dict with the model url as key and a list of reference as
-      value. A Reference can appear only one time in the final output.
-      If property_list is not empty, documents which don't have any of theses
-      properties will be skipped.
-      '''
-      if property_list is None:
-        property_list=[]
-      model_list = self.findSpecialiseValueList(context=self)
-      reference_list = []
-      model_reference_dict = {}
-      for model in model_list:
-        id_list = []
-        model_reference_list = model.getReferenceDict(
-                             portal_type_list, property_list=property_list)
-        for reference in model_reference_list.keys():
-          if reference not in reference_list:
-            reference_list.append(reference)
-            id_list.append(model_reference_list[reference])
-        if len(id_list) != 0:
-          model_reference_dict[model.getRelativeUrl()]=id_list
-      return model_reference_dict
-
     security.declareProtected(Permissions.AccessContentsInformation,
         'getEffectiveModel')
     def getEffectiveModel(self, start_date=None, stop_date=None):
-      '''Return the more appropriate model using effective_date, expiration_date
-      and version number.
-      An effective model is a model which start and stop_date are equal (or
-      excluded) to the range of the given start and stop_date and with the
-      higher version number (if there is more than one)
-      '''
-      reference = self.getReference()
-      if not reference or (start_date is None and stop_date is None):
-        return self
-      
-      return self.getPortalObject().portal_catalog.unrestrictedGetResultValue(
-                              query=ComplexQuery(
-                                      ComplexQuery(
-                                        Query(effective_date=None),
-                                        Query(effective_date=start_date,
-                                              range='ngt'),
-                                        logical_operator='OR'),
-                                      ComplexQuery(
-                                        Query(expiration_date=None),
-                                        Query(expiration_date=stop_date,
-                                              range='min'),
-                                        logical_operator='OR'),
-                                      Query(reference=reference),
-                                      Query(validation_state=(
-                                              'deleted', 'invalidated'),
-                                            operator='NOT'),
-                                      Query(portal_type=self.getPortalType()),
-                                      logical_operator='AND'),
-                              sort_on=(('version','descending'),))
+      return _getEffectiveModel(self, start_date, stop_date)
 
-
-    security.declareProtected(Permissions.AccessContentsInformation,
-        'getModelInheritanceEffectiveProperty')
-    def getModelInheritanceEffectiveProperty(self, paysheet, property_name):
-      """Get a property from an effective model
-      """
-      model_list = self.findEffectiveSpecialiseValueList(context=self,
-          start_date=paysheet.getStartDate(), stop_date=paysheet.getStopDate())
-      for specialised_model in model_list:
-        v = specialised_model.getProperty(property_name)
-        if v:
-          return v
