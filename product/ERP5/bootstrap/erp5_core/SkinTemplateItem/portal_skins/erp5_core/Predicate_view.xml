@@ -45,6 +45,15 @@
             <value> <string></string> </value>
         </item>
         <item>
+            <key> <string>edit_order</string> </key>
+            <value>
+              <list>
+                <string>membership_criterion_category_list</string>
+                <string>membership_criterion_document_list</string>
+              </list>
+            </value>
+        </item>
+        <item>
             <key> <string>encoding</string> </key>
             <value> <string>UTF-8</string> </value>
         </item>
@@ -161,6 +170,10 @@
         </item>
         <item>
             <key> <string>update_action</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>update_action_title</string> </key>
             <value> <string></string> </value>
         </item>
       </dictionary>
