@@ -915,10 +915,9 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     """
     bt = sequence.get('current_bt', None)
     self.failUnless(bt is not None)
-    wf_ids = []
-    wf_ids.append(sequence.get('skin_folder_id', ''))
-    self.assertEqual(len(wf_ids), 1)
-    bt.edit(template_skin_id_list=wf_ids)
+    skin_id = sequence.get('skin_folder_id', '')
+    self.failIfEqual(skin_id, '')
+    bt.edit(template_skin_id_list=[skin_id])
 
   def stepAddRegistredSelectionToBusinessTemplate(self, sequence=None, 
                                                   sequence_list=None, **kw):
