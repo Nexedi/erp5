@@ -53,8 +53,13 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>category_list = context.getMembershipCriterionBaseCategoryList()\n
-category_list += [i for i in context.getMultimembershipCriterionBaseCategoryList() \\\n
+            <value> <string>category_list = request.get(\'field_my_membership_criterion_base_category_list\', [])\n
+if not same_type(category_list, []):\n
+  category_list = [category_list]\n
+multimembership_criterion_base_category_list = request.get(\'field_my_multimembership_criterion_base_category_list\', [])\n
+if not same_type(multimembership_criterion_base_category_list, []):\n
+  multimembership_criterion_base_category_list = [multimembership_criterion_base_category_list]\n
+category_list += [i for i in multimembership_criterion_base_category_list \\\n
                   if i not in category_list]\n
 portal_categories = context.getPortalObject().portal_categories\n
 \n
@@ -103,13 +108,15 @@ return 1\n
                             <string>item_list</string>
                             <string>request</string>
                             <string>_getattr_</string>
-                            <string>context</string>
                             <string>category_list</string>
+                            <string>same_type</string>
+                            <string>multimembership_criterion_base_category_list</string>
                             <string>_inplacevar_</string>
                             <string>append</string>
                             <string>$append0</string>
                             <string>_getiter_</string>
                             <string>i</string>
+                            <string>context</string>
                             <string>portal_categories</string>
                             <string>item</string>
                             <string>base_category</string>
