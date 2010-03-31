@@ -70,6 +70,7 @@ request=context.REQUEST\n
 try:\n
   # Define form basic fields\n
   form = getattr(context,form_id)\n
+  edit_order = form.edit_order\n
   # Validate\n
   form.validate_all_to_request(request)\n
   # Basic attributes\n
@@ -97,7 +98,7 @@ try:\n
       v.update(gv)\n
       context.setCriterion(property, **v)\n
   # Update basic attributes\n
-  context.edit(REQUEST=request,**kw)\n
+  context.edit(REQUEST=request, edit_order=edit_order, **kw)\n
   context.reindexObject()\n
 except FormValidationError, validation_errors:\n
   # Pack errors into the request\n
@@ -186,6 +187,7 @@ request[ \'RESPONSE\' ].redirect( redirect_url )\n
                             <string>request</string>
                             <string>getattr</string>
                             <string>form</string>
+                            <string>edit_order</string>
                             <string>kw</string>
                             <string>_getiter_</string>
                             <string>f</string>
