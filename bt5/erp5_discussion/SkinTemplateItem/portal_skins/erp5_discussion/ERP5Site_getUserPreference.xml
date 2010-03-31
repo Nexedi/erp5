@@ -54,30 +54,10 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>"""\n
- This script allows to create a new Discussion Post in context.\n
- If user is not an ERP5 Person object we ask for validation, else we post\n
+  XXX: Get user preference for username (own:local_roles:Owner) and expose it as a dict to callee.\n
+  XXX: use proxy roles\n
 """\n
-portal = context.getPortalObject()\n
-signature = portal.portal_preferences.getPreference(\'preferred_forum_signature\')\n
-\n
-person = portal.ERP5Site_getAuthenticatedMemberPersonValue()\n
-discussion_post = context.newContent(\n
-                       portal_type="Discussion Post",\n
-                       title=title,\n
-                       text_content=text_content,\n
-                       source_value=person,\n
-                       predecessor_value=predecessor,\n
-                       signature=signature)\n
-\n
-if person is None:\n
-  portal_status_message = "New reply created. Your post will be reviewed for approval."\n
-  discussion_post.stack()\n
-else:\n
-  portal_status_message = "New reply created."\n
-  discussion_post.post()\n
-\n
-return context.Base_redirect(form_id,\n
-         keep_items = dict(portal_status_message=context.Base_translateString(portal_status_message)))\n
+return {}\n
 </string> </value>
         </item>
         <item>
@@ -88,15 +68,7 @@ return context.Base_redirect(form_id,\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>title, text_content, form_id, predecessor=None,**kw</string> </value>
-        </item>
-        <item>
-            <key> <string>_proxy_roles</string> </key>
-            <value>
-              <tuple>
-                <string>Assignee</string>
-              </tuple>
-            </value>
+            <value> <string>username=None</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -116,26 +88,13 @@ return context.Base_redirect(form_id,\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>4</int> </value>
+                        <value> <int>1</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>title</string>
-                            <string>text_content</string>
-                            <string>form_id</string>
-                            <string>predecessor</string>
-                            <string>kw</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>portal</string>
-                            <string>signature</string>
-                            <string>person</string>
-                            <string>discussion_post</string>
-                            <string>None</string>
-                            <string>portal_status_message</string>
-                            <string>dict</string>
+                            <string>username</string>
                           </tuple>
                         </value>
                     </item>
@@ -154,7 +113,7 @@ return context.Base_redirect(form_id,\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>DiscussionPost_newReply</string> </value>
+            <value> <string>ERP5Site_getUserPreference</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

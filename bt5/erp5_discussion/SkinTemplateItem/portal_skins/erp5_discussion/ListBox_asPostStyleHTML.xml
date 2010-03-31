@@ -114,15 +114,15 @@
                    tal:content="structure python:event.asStrippedHTML()">\n
                 </span><br />\n
               </div>\n
-<!--\n
-              <tal:block tal:define="sign python: \'Signature attribbute not defined\'"\n
-                         tal:condition="python: sign != \'\'">\n
+\n
+              <tal:block tal:define="sign python: real_context.ERP5Site_getUserPreference().get(\'preferred_forum_signature\', None)"\n
+                         tal:condition="python: sign is not None">\n
                 <hr>\n
                 <div style="margin-left:10px;">\n
                   <span style="color:#aaa" tal:content="sign"></span>\n
                 </div>\n
               </tal:block>\n
--->\n
+\n
               <hr>\n
               <input type="checkbox" name="good_uid" tal:attributes="value event/getUid; id python: \'listbox_cb_%s\' % (event.getUid())" style="visibility:hidden">\n
               <tal:block tal:condition="python: real_context.portal_membership.getAuthenticatedMember()"\n
@@ -130,7 +130,7 @@
                 <button tal:condition="python: real_context.portal_membership.checkPermission(\'Add portal content\', real_context)" \n
                         type="submit" \n
                         title="Reply" \n
-                        name="DiscussionPost_viewNewReplyDialog:method" \n
+                        name="DiscussionThread_viewCreateNewDiscussionPostDialog:method" \n
                         style="border:dashed 1px #3D6474; background-color:#eee; padding:3px;" \n
                         tal:attributes="onClick python: \'getElementById(\\\'listbox_cb_%s\\\').checked = true\' % (event.getUid())">\n
                   <span>Reply</span>\n
