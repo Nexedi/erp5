@@ -53,8 +53,11 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>portal = context.getPortalObject()\n
-from ZTUtils import LazyFilter\n
+            <value> <string>from ZTUtils import LazyFilter\n
+from Products.CMFCore.permissions import AccessContentsInformation\n
+\n
+\n
+portal = context.getPortalObject()\n
 \n
 def getCurrencyItemList(include_empty=1, portal_path=""):\n
   result = []\n
@@ -65,7 +68,7 @@ def getCurrencyItemList(include_empty=1, portal_path=""):\n
                              portal.restrictedTraverse(\'currency\', None))\n
 \n
   if currency_module is not None:\n
-    for currency in LazyFilter(currency_module.contentValues(), skip=\'View\'):\n
+    for currency in LazyFilter(currency_module.contentValues(), skip=AccessContentsInformation):\n
       if not skip_invalidated or \\\n
             currency.getProperty(\'validation_state\', \'default\') != \'invalidated\':\n
         # for currency, we intentionaly use reference (EUR) not title (Euros).\n
@@ -121,11 +124,13 @@ return getCurrencyItemList( include_empty=include_empty,\n
                           <tuple>
                             <string>include_empty</string>
                             <string>skip_invalidated</string>
+                            <string>ZTUtils</string>
+                            <string>LazyFilter</string>
+                            <string>Products.CMFCore.permissions</string>
+                            <string>AccessContentsInformation</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>portal</string>
-                            <string>ZTUtils</string>
-                            <string>LazyFilter</string>
                             <string>getCurrencyItemList</string>
                             <string>Products.ERP5Type.Cache</string>
                             <string>CachingMethod</string>

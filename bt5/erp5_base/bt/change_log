@@ -1,3 +1,6 @@
+2010-03-31 yusei
+* Use "Access contents information" instead of "View" to check if currency can be displayed or not.
+
 2010-03-11 yusuke
 * Reference generating script comes from erp5_trade.
 
