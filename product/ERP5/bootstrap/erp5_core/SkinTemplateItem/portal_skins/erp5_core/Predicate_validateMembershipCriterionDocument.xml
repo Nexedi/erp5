@@ -53,7 +53,9 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>category_list = request.get(\'field_my_membership_criterion_base_category_list\', [])\n
+            <value> <string># XXX the name of this script is bad as the context is not a predicate\n
+\n
+category_list = request.get(\'field_my_membership_criterion_base_category_list\', [])\n
 if not same_type(category_list, []):\n
   category_list = [category_list]\n
 multimembership_criterion_base_category_list = request.get(\'field_my_multimembership_criterion_base_category_list\', [])\n
