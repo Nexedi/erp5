@@ -54,42 +54,23 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>"""\n
- This script allows to create a new Discussion Thread.\n
+  Get user preference for forum signature..\n
 """\n
+from Products.ERP5Type.Cache import CachingMethod\n
 \n
 portal = context.getPortalObject()\n
-person = portal.ERP5Site_getAuthenticatedMemberPersonValue()\n
+def getPreferredForumSignature(username):\n
+  preference = portal.portal_catalog.getResultValue(\n
+                                       portal_type=\'Preference\',\n
+                                       owner = username,\n
+                                       preference_state=\'enabled\')\n
+  if preference is not None:\n
+    return preference.getProperty(\'preferred_forum_signature\', None)\n
 \n
-version = \'001\'\n
-language = portal.Localizer.get_selected_language()\n
-discussion_thread = portal.discussion_thread_module.newContent(\n
-                      portal_type = "Discussion Thread",\n
-                      title = title,\n
-                      source_value = person,\n
-                      version = version,\n
-                      language = language,\n
-                      description=description,\n
-                      subject_list=subject_list,\n
-                      classification=classification,\n
-                      group_list=group_list,\n
-                      reference=reference)\n
-discussion_post = discussion_thread.newContent(\n
-                      portal_type = "Discussion Post",\n
-                      title = title,\n
-                      text_content = text_content,\n
-                      source_value = person,\n
-                      version = version,\n
-                      language = language)\n
-\n
-if person is None:\n
-  portal_status_message = "New discussion created. Your post will be reviewed for approval."\n
-  discussion_post.stack()\n
-else:\n
-  portal_status_message = "New discussion created."\n
-  discussion_post.post()\n
-\n
-return discussion_thread.Base_redirect(form_id,\n
-         keep_items = dict(portal_status_message=context.Base_translateString(portal_status_message)))\n
+getPreferredForumSignature = CachingMethod(getPreferredForumSignature,\n
+                               ("ERP5Site_getUserPreferredForumSignature", username),\n
+                                cache_factory=\'erp5_ui_short\')\n
+return getPreferredForumSignature(username)\n
 </string> </value>
         </item>
         <item>
@@ -100,13 +81,13 @@ return discussion_thread.Base_redirect(form_id,\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>title, text_content, form_id, predecessor=None, description=None, subject_list=None, classification=None, group_list=None, reference=None,**kw</string> </value>
+            <value> <string>username</string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>
             <value>
               <tuple>
-                <string>Assignee</string>
+                <string>Manager</string>
               </tuple>
             </value>
         </item>
@@ -128,33 +109,19 @@ return discussion_thread.Base_redirect(form_id,\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>9</int> </value>
+                        <value> <int>1</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>title</string>
-                            <string>text_content</string>
-                            <string>form_id</string>
-                            <string>predecessor</string>
-                            <string>description</string>
-                            <string>subject_list</string>
-                            <string>classification</string>
-                            <string>group_list</string>
-                            <string>reference</string>
-                            <string>kw</string>
+                            <string>username</string>
+                            <string>Products.ERP5Type.Cache</string>
+                            <string>CachingMethod</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>portal</string>
-                            <string>person</string>
-                            <string>version</string>
-                            <string>language</string>
-                            <string>discussion_thread</string>
-                            <string>discussion_post</string>
-                            <string>None</string>
-                            <string>portal_status_message</string>
-                            <string>dict</string>
+                            <string>getPreferredForumSignature</string>
                           </tuple>
                         </value>
                     </item>
@@ -166,19 +133,12 @@ return discussion_thread.Base_redirect(form_id,\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <tuple>
-                <none/>
-                <none/>
-                <none/>
-                <none/>
-                <none/>
-                <none/>
-              </tuple>
+              <none/>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>DiscussionThreadModule_createNewDiscussionThread</string> </value>
+            <value> <string>ERP5Site_getUserPreferredForumSignature</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

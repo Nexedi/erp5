@@ -96,43 +96,58 @@
         <div class="ListContent" style="margin-bottom:5px;">\n
           <tal:block tal:repeat="line line_list">\n
             <div style="margin:5px; padding:10px; background-color:#ffffff; border-radius: 15px 15px; -moz-border-radius: 10px;"\n
-                 tal:define="event line/getBrain;">\n
+                 tal:define="event line/getBrain;\n
+                             event_object event/getObject;\n
+                             event_source event_object/getSourceValue;\n
+                             event_id event_object/getId;\n
+                             event_title event_object/getTitle;\n
+                             event_creation_date event_object/getCreationDate;">\n
               <div style="background-color:#efefef; padding:3px;  height:20px; border-left:solid 3px #DE9435">\n
                 <div style="float:left; height:20px;">\n
-                  <a tal:attributes="href event/getId"><span style="margin:0; color #D98135; padding-left:5px; font:bold 1.2em Helvetica, Arial, sans-serif; margin-top:5px" tal:content="event/getTitle"></span></a>\n
+                  <a tal:attributes="href event_id">\n
+                    <span style="margin:0; color #D98135; padding-left:5px; font:bold 1.2em Helvetica, Arial, sans-serif; margin-top:5px" \n
+                          tal:content="event_title"></span>\n
+                  </a>\n
                 </div>\n
                 <div style="float:left;height:20px;margin-left:10px;margin-top:3px;">\n
-                  <span tal:content="python: event.getTranslatedValidationStateTitle()"></span>\n
+                  <span tal:content="python: event_object.getTranslatedValidationStateTitle()"></span>\n
                 </div>\n
                 <div style="float:right; height:20px;">\n
-                  <span style="color:#333; font-size:90%; margin:2px 0;">by <a tal:attributes="href python: event.getObject().getSource()"> <span style="color:#a40;font-size:90%;" tal:content="python: (event.getSourceValue() is not None and event.getSourceValue().Title()) or \'User unknown\'"></span> </a> on <span tal:replace="event/getCreationDate"></span></span>\n
+                  <span style="color:#333; font-size:90%; margin:2px 0;">\n
+                    by \n
+                    <a tal:attributes="href python: event_source.absolute_url()"> \n
+                    <span style="color:#a40;font-size:90%;" \n
+                          tal:content="python: (event_source is not None and event_source.getTitle()) or \'User unknown\'"></span> </a> \n
+                    on \n
+                    <span tal:replace="event_creation_date"></span>\n
+                  </span>\n
                 </div>\n
               </div>\n
               <hr>\n
               <div style="margin-left:10px;">\n
                 <span style="color:black;margin-top:10px;margin-bottom:10px;"\n
-                   tal:content="structure python:event.asStrippedHTML()">\n
-                </span><br />\n
+                   tal:content="structure python:event_object.asStrippedHTML()">\n
+                </span>\n
+                <br />\n
               </div>\n
 \n
-              <tal:block tal:define="sign python: real_context.ERP5Site_getUserPreference().get(\'preferred_forum_signature\', None)"\n
-                         tal:condition="python: sign is not None">\n
+              <tal:block tal:define="signature python: real_context.ERP5Site_getUserPreferredForumSignature(event_source.getReference())"\n
+                         tal:condition="python: signature is not None">\n
                 <hr>\n
                 <div style="margin-left:10px;">\n
-                  <span style="color:#aaa" tal:content="sign"></span>\n
+                  <span style="color:#aaa" tal:content="signature"></span>\n
                 </div>\n
               </tal:block>\n
 \n
               <hr>\n
               <input type="checkbox" name="good_uid" tal:attributes="value event/getUid; id python: \'listbox_cb_%s\' % (event.getUid())" style="visibility:hidden">\n
-              <tal:block tal:condition="python: real_context.portal_membership.getAuthenticatedMember()"\n
-                           tal:define="event_object event/getObject">\n
+              <tal:block tal:condition="python: real_context.portal_membership.getAuthenticatedMember()">\n
                 <button tal:condition="python: real_context.portal_membership.checkPermission(\'Add portal content\', real_context)" \n
                         type="submit" \n
                         title="Reply" \n
                         name="DiscussionThread_viewCreateNewDiscussionPostDialog:method" \n
                         style="border:dashed 1px #3D6474; background-color:#eee; padding:3px;" \n
-                        tal:attributes="onClick python: \'getElementById(\\\'listbox_cb_%s\\\').checked = true\' % (event.getUid())">\n
+                        tal:attributes="onClick python: \'getElementById(\\\'listbox_cb_%s\\\').checked = true\' % (event_object.getUid())">\n
                   <span>Reply</span>\n
                 </button>\n
                 <tal:block tal:condition="python:real_context.portal_membership.checkPermission(\'Delete objects\', event_object)">\n
