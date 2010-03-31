@@ -7,3 +7,6 @@ erp5.recipe.mysqldatabase https://svn.erp5.org/repos/public/erp5/trunk/utils/erp
 erp5.recipe.mysqlserver https://svn.erp5.org/repos/public/erp5/trunk/utils/erp5.recipe.mysqlserver
 erp5.recipe.openoffice https://svn.erp5.org/repos/public/erp5/trunk/utils/erp5.recipe.openoffice
 erp5.recipe.standaloneinstance https://svn.erp5.org/repos/public/erp5/trunk/utils/erp5.recipe.standaloneinstance
+Acquisition svn://svn.zope.org/repos/main/Acquisition/branches/erp5-aq_dynamic
+Products.DCWorkflow svn://svn.zope.org/repos/main/Sandbox/lra/branches/restore-WorkflowMethod-Products.DCWorkflow
+
