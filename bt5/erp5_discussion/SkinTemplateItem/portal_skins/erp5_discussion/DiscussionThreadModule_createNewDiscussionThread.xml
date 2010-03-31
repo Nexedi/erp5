@@ -54,30 +54,36 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>"""\n
- This script allows to create a new Discussion Post in context.\n
+ This script allows to create a new Discussion Thread.\n
 """\n
 \n
 portal = context.getPortalObject()\n
 person = portal.ERP5Site_getAuthenticatedMemberPersonValue()\n
+\n
 version = \'001\'\n
 language = portal.Localizer.get_selected_language()\n
-discussion_post = context.newContent(\n
-                    portal_type = "Discussion Post",\n
-                    title = title,\n
-                    text_content = text_content,\n
-                    source_value = person,\n
-                    predecessor_value = predecessor,\n
-                    version = version,\n
-                    language = language)\n
+discussion_thread = portal.discussion_thread_module.newContent(\n
+                      portal_type = "Discussion Thread",\n
+                      title = title,\n
+                      source_value = person,\n
+                      version = version,\n
+                      language = language)\n
+discussion_post = discussion_thread.newContent(\n
+                      portal_type = "Discussion Post",\n
+                      title = title,\n
+                      text_content = text_content,\n
+                      source_value = person,\n
+                      version = version,\n
+                      language = language)\n
 \n
 if person is None:\n
-  portal_status_message = "New post created. Your post will be reviewed for approval."\n
+  portal_status_message = "New discussion created. Your post will be reviewed for approval."\n
   discussion_post.stack()\n
 else:\n
-  portal_status_message = "New post created."\n
+  portal_status_message = "New discussion created."\n
   discussion_post.post()\n
 \n
-return context.Base_redirect(form_id,\n
+return discussion_thread.Base_redirect(form_id,\n
          keep_items = dict(portal_status_message=context.Base_translateString(portal_status_message)))\n
 </string> </value>
         </item>
@@ -134,6 +140,7 @@ return context.Base_redirect(form_id,\n
                             <string>person</string>
                             <string>version</string>
                             <string>language</string>
+                            <string>discussion_thread</string>
                             <string>discussion_post</string>
                             <string>None</string>
                             <string>portal_status_message</string>
@@ -156,7 +163,7 @@ return context.Base_redirect(form_id,\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>DiscussionThread_createNewDiscussionPost</string> </value>
+            <value> <string>DiscussionThreadModule_createNewDiscussionThread</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
