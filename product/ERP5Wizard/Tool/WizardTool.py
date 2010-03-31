@@ -503,6 +503,13 @@ class WizardTool(BaseTool):
     # add user preffered language
     parameter_dict['user_preferred_language'] = self.getConfiguratorUserPreferredLanguage()
 
+    # new way - reuse, if exist erp5_site_global_id
+    erp5_site_global_id = getattr(self.getPortalObject(),
+        'erp5_site_global_id', None)
+    if erp5_site_global_id is not None:
+      # XXX: is overriding of current_bc_index required?
+      parameter_dict['erp5_site_global_id'] = erp5_site_global_id
+
   def _updateParameterDictWithFileUpload(self, parameter_dict):
     """Updates parameter_dict to replace file upload with their file content,
     encoded as XML-RPC Binary
