@@ -1,3 +1,6 @@
+2010-03-31 fabien
+* add a test that check it's possible to add membership criterion predicate
+
 2009-04-17 Kazuhiko
 * add security configurations
 
