@@ -1,3 +1,6 @@
+2010-03-31 yusei
+* Add Security.py extension to this business template. It was moved from erp5_forge before, but this business template did not recognize the change.
+
 2010-03-02 yusei
 * Remove short title.
 
