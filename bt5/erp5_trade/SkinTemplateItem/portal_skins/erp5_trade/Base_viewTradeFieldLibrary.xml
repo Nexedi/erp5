@@ -235,6 +235,44 @@
                         <string>my_view_mode_opposite_source_section_title</string>
                         <string>my_view_mode_opposite_source_title</string>
                         <string>my_view_mode_returned_sale_causality_title</string>
+                        <string>my_dialog_mode_item_stock</string>
+                        <string>my_dialog_mode_negative_stock</string>
+                        <string>my_dialog_mode_positive_stock</string>
+                        <string>my_dialog_mode_zero_stock</string>
+                        <string>my_dialog_mode_site</string>
+                        <string>my_dialog_mode_listbox_container_quantity</string>
+                        <string>my_dialog_mode_container_count</string>
+                        <string>my_dialog_mode_container_type</string>
+                        <string>my_dialog_mode_gross_weight</string>
+                        <string>my_dialog_mode_next_container_int_index</string>
+                        <string>my_view_mode_trade_condition_specialise_title_list</string>
+                        <string>my_dialog_mode_listbox_inventory</string>
+                        <string>my_dialog_mode_listbox_reference</string>
+                        <string>my_dialog_mode_listbox_title</string>
+                        <string>my_dialog_mode_total_price</string>
+                        <string>my_view_mode_efficiency</string>
+                        <string>my_view_mode_end_of</string>
+                        <string>my_view_mode_lead_time</string>
+                        <string>my_view_mode_payment_mode</string>
+                        <string>my_view_mode_wait_time</string>
+                        <string>my_view_mode_batch_quantity</string>
+                        <string>my_view_mode_completed_state_list</string>
+                        <string>my_view_mode_deliverable</string>
+                        <string>my_view_mode_delivery_builder_list</string>
+                        <string>my_view_mode_destination_method_id</string>
+                        <string>my_view_mode_frozen_state_list</string>
+                        <string>my_view_mode_order_builder_list</string>
+                        <string>my_view_mode_predecessor_title</string>
+                        <string>my_view_mode_source_method_id</string>
+                        <string>my_view_mode_successor_title</string>
+                        <string>my_view_mode_test_method_id</string>
+                        <string>my_view_mode_trade_phase</string>
+                        <string>my_view_mode_business_process_specialise_title_list</string>
+                        <string>my_view_mode_listbox_delivery_builder_title_list</string>
+                        <string>my_view_mode_listbox_order_builder_title_list</string>
+                        <string>my_view_mode_listbox_deliverable</string>
+                        <string>my_view_mode_purchase_trade_condition_specialise_title</string>
+                        <string>my_view_mode_destination_section</string>
                       </list>
                     </value>
                 </item>
