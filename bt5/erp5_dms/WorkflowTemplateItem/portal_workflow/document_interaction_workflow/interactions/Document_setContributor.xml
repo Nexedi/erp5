@@ -71,6 +71,8 @@
             <key> <string>portal_type_filter</string> </key>
             <value>
               <list>
+                <string>Discussion Post</string>
+                <string>Discussion Thread</string>
                 <string>Drawing</string>
                 <string>File</string>
                 <string>Image</string>
