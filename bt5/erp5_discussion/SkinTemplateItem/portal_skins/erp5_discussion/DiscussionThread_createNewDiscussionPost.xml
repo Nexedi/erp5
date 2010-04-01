@@ -70,12 +70,9 @@ discussion_post = context.newContent(\n
                     version = version,\n
                     language = language)\n
 \n
-if person is None:\n
-  portal_status_message = "New post created. Your post will be reviewed for approval."\n
-  discussion_post.stack()\n
-else:\n
-  portal_status_message = "New post created."\n
-  discussion_post.post()\n
+# depending on security model Post can be submited for review\n
+portal_status_message = "New post created."\n
+discussion_post.release()\n
 \n
 return context.Base_redirect(form_id,\n
          keep_items = dict(portal_status_message=context.Base_translateString(portal_status_message)))\n
@@ -95,7 +92,7 @@ return context.Base_redirect(form_id,\n
             <key> <string>_proxy_roles</string> </key>
             <value>
               <tuple>
-                <string>Assignee</string>
+                <string>Assignor</string>
               </tuple>
             </value>
         </item>
@@ -135,7 +132,6 @@ return context.Base_redirect(form_id,\n
                             <string>version</string>
                             <string>language</string>
                             <string>discussion_post</string>
-                            <string>None</string>
                             <string>portal_status_message</string>
                             <string>dict</string>
                           </tuple>

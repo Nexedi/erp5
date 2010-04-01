@@ -54,13 +54,13 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>"""\n
-  Delete Discussion Post.\n
+  Evaluate if user is allowed to create new Discussion Post in context.\n
+ \n
 """\n
-discussion_post = getattr(context, delete_discussion_post_id)\n
-discussion_post.reject()\n
-discussion_post.delete()\n
-context.Base_redirect(\'view\', \\\n
-                      keep_items={\'portal_status_message\': context.Base_translateString(\'Post rejected.\')})\n
+return context.portal_membership.checkPermission(\'Add portal content\', context) or \\\n
+         (context.getValidationState() in (\'published\', \'published_alive\', \\\n
+                                          \'shared\', \'shared_alive\', \\\n
+                                          \'released\', \'released_alive\',))\n
 </string> </value>
         </item>
         <item>
@@ -68,10 +68,6 @@ context.Base_redirect(\'view\', \\\n
             <value>
               <none/>
             </value>
-        </item>
-        <item>
-            <key> <string>_params</string> </key>
-            <value> <string>delete_discussion_post_id</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -91,17 +87,14 @@ context.Base_redirect(\'view\', \\\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>0</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>delete_discussion_post_id</string>
-                            <string>getattr</string>
-                            <string>context</string>
-                            <string>discussion_post</string>
                             <string>_getattr_</string>
+                            <string>context</string>
                           </tuple>
                         </value>
                     </item>
@@ -118,7 +111,7 @@ context.Base_redirect(\'view\', \\\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>DiscussionThread_deleteDiscussionPost</string> </value>
+            <value> <string>DiscussionThread_isUserAllowedToPost</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
