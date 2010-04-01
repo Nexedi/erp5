@@ -1,0 +1,3 @@
+[buildout]
+software_home = ${buildout:software_home}
+eggs-directory = ${buildout:eggs-directory}
