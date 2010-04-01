@@ -291,3 +291,19 @@ def caching_instance_method(*args, **kw):
     # which the method is called would not be passed as first parameter.
     return lambda *args, **kw: caching_method(*args, **kw)
   return wrapped
+
+def transactional_cached(key_method=lambda *args: args):
+  def decorator(function):
+    key = repr(function)
+    def wrapper(*args, **kw):
+      cache = getTransactionalVariable(None).setdefault(key, {})
+      subkey = key_method(*args, **kw)
+      try:
+        return cache[subkey]
+      except KeyError:
+        cache[subkey] = result = function(*args, **kw)
+        return result
+    wrapper.__doc__ = function.__doc__
+    wrapper.__name__ = function.__name__
+    return wrapper
+  return decorator
