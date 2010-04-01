@@ -992,4 +992,41 @@ class TemplateTool (BaseTool):
 
       return 0
 
+    def _getBusinessTemplateUrlDict(self):
+      business_template_url_dict = {}
+      for bt in self.getRepositoryBusinessTemplateList():
+        url, name = self.decodeRepositoryBusinessTemplateUid(bt.getUid())
+        business_template_url_dict[name[:-4]] = {
+          'url':  '%s/%s' % (url, name),
+          'revision': bt.getRevision()
+          }
+      return business_template_url_dict
+
+    security.declareProtected(Permissions.ManagePortal,
+        'installBusinessTemplatesFromRepositories' )
+    def installBusinessTemplatesFromRepositories(self, template_list,
+        only_newer=True):
+      """Installs template_list from configured repositories by default only newest"""
+      # XXX-Luke: This method could replace
+      # TemplateTool_installRepositoryBusinessTemplateList while still being
+      # possible to reuse by external callers
+      opreation_log = []
+      template_dict = self._getBusinessTemplateUrlDict()
+      for template_name in template_list:
+        if template_name in template_dict:
+          installed_bt = self.getInstalledBusinessTemplate(template_name)
+          if installed_bt is None or not only_newer or \
+              installed_bt.getRevision() < template_dict[
+              template_name]['revision']:
+            template_document = self.download(template_dict[template_name][
+              'url'])
+            template_document.install()
+            opreation_log.append('Installed %s with revision %s' % (
+              template_document.getTitle(), template_document.getRevision()))
+          else:
+            opreation_log.append('Skipped %s' % template_name)
+        else:
+          opreation_log.append('Not found in repositories %s' % template_name)
+      return opreation_log
+
 InitializeClass(TemplateTool)
