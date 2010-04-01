@@ -90,7 +90,8 @@
     </tal:block>\n
   </tal:block>\n
 \n
-  <tal:block tal:define="expand python: 1">\n
+  <tal:block tal:define="expand python: 1;\n
+                         isUserAllowedToPost python: real_context.DiscussionThread_isUserAllowedToPost()">\n
     <tal:block metal:use-macro="template/macros/ListBoxContainer">\n
       <tal:block metal:fill-slot="ListBoxBody">\n
         <div class="ListContent" style="margin-bottom:5px;">\n
@@ -98,56 +99,65 @@
             <div style="margin:5px; padding:10px; background-color:#ffffff; border-radius: 15px 15px; -moz-border-radius: 10px;"\n
                  tal:define="event line/getBrain;\n
                              event_object event/getObject;\n
-                             event_source event_object/getSourceValue;\n
+                             author_dict event_object/DiscussionPost_getAuthorDict;\n
+                             author_url author_dict/author_url;\n
+                             author_signature author_dict/author_signature;\n
+                             author_title author_dict/author_title;\n
                              event_id event_object/getId;\n
+                             event_uid event_object/getUid;\n
                              event_title event_object/getTitle;\n
-                             event_creation_date event_object/getCreationDate;">\n
+                             event_creation_date event_object/getCreationDate;\n
+                             event_validation_state_title event_object/getTranslatedValidationStateTitle;\n
+                             event_stripped_html event_object/asStrippedHTML;">\n
+\n
               <div style="background-color:#efefef; padding:3px;  height:20px; border-left:solid 3px #DE9435">\n
                 <div style="float:left; height:20px;">\n
-                  <a tal:attributes="href event_id">\n
+                  <a tal:attributes="href string:${event_id}/view">\n
                     <span style="margin:0; color #D98135; padding-left:5px; font:bold 1.2em Helvetica, Arial, sans-serif; margin-top:5px" \n
                           tal:content="event_title"></span>\n
                   </a>\n
                 </div>\n
                 <div style="float:left;height:20px;margin-left:10px;margin-top:3px;">\n
-                  <span tal:content="python: event_object.getTranslatedValidationStateTitle()"></span>\n
+                  <span tal:content="event_validation_state_title"/>\n
                 </div>\n
                 <div style="float:right; height:20px;">\n
                   <span style="color:#333; font-size:90%; margin:2px 0;">\n
                     by \n
-                    <a tal:attributes="href python: event_source.absolute_url()"> \n
-                    <span style="color:#a40;font-size:90%;" \n
-                          tal:content="python: (event_source is not None and event_source.getTitle()) or \'User unknown\'"></span> </a> \n
+                    <a tal:attributes="href author_url"> \n
+                      <span style="color:#a40;font-size:90%;" \n
+                            tal:content="author_title"/>\n
+                    </a> \n
                     on \n
-                    <span tal:replace="event_creation_date"></span>\n
+                    <span tal:replace="event_creation_date"/>\n
                   </span>\n
                 </div>\n
               </div>\n
               <hr>\n
               <div style="margin-left:10px;">\n
                 <span style="color:black;margin-top:10px;margin-bottom:10px;"\n
-                   tal:content="structure python:event_object.asStrippedHTML()">\n
-                </span>\n
-                <br />\n
+                      tal:content="structure event_stripped_html"/>\n
+                <br/>\n
               </div>\n
 \n
-              <tal:block tal:define="signature python: real_context.ERP5Site_getUserPreferredForumSignature(event_source.getReference())"\n
-                         tal:condition="python: signature is not None">\n
+              <tal:block tal:condition="python: author_signature is not None">\n
                 <hr>\n
                 <div style="margin-left:10px;">\n
-                  <span style="color:#aaa" tal:content="signature"></span>\n
+                  <span style="color:#aaa" \n
+                        tal:content="author_signature"/>\n
                 </div>\n
               </tal:block>\n
 \n
               <hr>\n
-              <input type="checkbox" name="good_uid" tal:attributes="value event/getUid; id python: \'listbox_cb_%s\' % (event.getUid())" style="visibility:hidden">\n
-              <button tal:condition="python: real_context.DiscussionThread_isUserAllowedToPost()" \n
+              <input type="checkbox" name="good_uid" \n
+                     tal:attributes="value event_uid; id python: \'listbox_cb_%s\' % (event_uid)" \n
+                     style="visibility: hidden">\n
+              <button tal:condition="isUserAllowedToPost" \n
                       type="submit" \n
                       title="Reply" \n
                       name="DiscussionThread_viewCreateNewDiscussionPostDialog:method" \n
                       style="border:dashed 1px #3D6474; background-color:#eee; padding:3px;" \n
                       tal:attributes="onClick python: \'getElementById(\\\'listbox_cb_%s\\\').checked = true\' % (event_object.getUid())">\n
-                <span>Reply</span>\n
+                Reply\n
               </button>\n
               <tal:block tal:condition="python:real_context.portal_membership.checkPermission(\'Delete objects\', event_object)">\n
                 <button type="submit" \n
@@ -155,7 +165,7 @@
                         name="DiscussionThread_deleteDiscussionPost:method"\n
                         tal:attributes="onClick python: \'deleteDiscussionPost(\\\'%s\\\')\' %event.getId()"\n
                         style="border:dashed 1px #3D6474; background-color:#FF654A; padding:3px;">\n
-                  <span>Delete</span>\n
+                  Delete\n
                 </button>\n
               </tal:block>\n
             </div>\n
