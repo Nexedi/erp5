@@ -176,6 +176,7 @@
                         <string>my_dialog_mode_target_language</string>
                         <string>my_core_mode_money_quantity</string>
                         <string>my_view_mode_version</string>
+                        <string>my_integer_field</string>
                       </list>
                     </value>
                 </item>
