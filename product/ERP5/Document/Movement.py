@@ -36,12 +36,12 @@ from Products.ERP5Type.Base import Base
 #from Products.ERP5.Core import MetaNode, MetaResource
 
 from Products.ERP5Type.XMLObject import XMLObject
-
+from Products.ERP5.mixin.composition import CompositionMixin
 from Products.ERP5.Document.Amount import Amount
 
 from zLOG import LOG, WARNING
 
-class Movement(XMLObject, Amount):
+class Movement(XMLObject, Amount, CompositionMixin):
   """
     The Movement class allows to implement ERP5 universal accounting model.
 

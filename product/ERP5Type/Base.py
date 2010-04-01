@@ -2811,7 +2811,7 @@ class Base( CopyContainer,
           if k != 'SESSION':
             setattr(context, k, REQUEST[k])
       # Define local properties
-      if kw is not None: context.__dict__.update(kw)
+      context.__dict__.update(kw)
       # Make it a temp content
       temp_object = TempBase(self.getId())
       for k in ('isIndexable', 'reindexObject', 'recursiveReindexObject', 'activate', 'setUid', ):

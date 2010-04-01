@@ -2632,6 +2632,7 @@ return current_movement
 
     # change tax trade model line to `movement` level
     tax.edit(target_level=TARGET_LEVEL_MOVEMENT)
+    transaction.commit() # flush transactional cache
 
     def getTotalAmount(amount_list):
       result = 0
