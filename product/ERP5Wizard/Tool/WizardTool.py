@@ -573,6 +573,19 @@ class WizardTool(BaseTool):
                                 install_customer_bt5=True,
                                 use_super_manager=True):
     """ Install or update BT5 files which we get from remote server. """
+    # XXX-Luke: This methods makes very long transaction:
+    #  * download business templates
+    #  * install business templates
+    #  * run after script
+    # It leads in real world to never ending process, as any other activity
+    # in asynchronous system can lead to conflict error and transaction
+    # restart, and again...forever.
+    #
+    # To solve:
+    #  * use activity system
+    #  * download, install and run after script in activities
+    #  * use proper tags to have sequence
+    #  * expose tag initialERP5Setup
     global installation_status
     if use_super_manager:
       # set current security manager to owner of site
