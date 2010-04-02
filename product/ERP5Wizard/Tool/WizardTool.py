@@ -29,16 +29,16 @@
 
 from AccessControl import ClassSecurityInfo
 from ZPublisher.HTTPRequest import FileUpload
-from Globals import InitializeClass, DTMLFile
+from Globals import DTMLFile
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type import Permissions
 from Products.ERP5Wizard import _dtmldir
 from Products.CMFCore.utils import getToolByName
-from zLOG import LOG, INFO, WARNING, ERROR, DEBUG
+from zLOG import LOG, INFO, ERROR
 from cStringIO import StringIO
 from UserDict import UserDict
-import xmlrpclib, socket, sys, traceback, urllib, urllib2, base64, cgi
+import xmlrpclib, socket, traceback, urllib, urllib2, base64, cgi
 from AccessControl.SecurityManagement import setSecurityManager
 from Products.ERP5Type.Utils import _setSuperSecurityManager
 import zLOG, cookielib
