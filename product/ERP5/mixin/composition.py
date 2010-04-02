@@ -95,7 +95,7 @@ def _findPredicateList(*container_list):
   return predicate_list
 
 
-class _asComposedDocument(object):
+class asComposedDocument(object):
   """Return a temporary object which is the composition of all effective models
 
   The returned value is a temporary copy of the given object. The list of all
@@ -106,6 +106,7 @@ class _asComposedDocument(object):
 
   def __new__(cls, orig_self):
     if '_effective_model_list' in orig_self.__dict__:
+      assert False, "not used yet (remove this line if needed)"
       return orig_self # if asComposedDocument is called on a composed
                        # document after any access to its subobjects
     self = orig_self.asContext()
@@ -123,6 +124,7 @@ class _asComposedDocument(object):
     assert False
 
   def asComposedDocument(self):
+    assert False, "not used yet (remove this line if needed)"
     return self # if asComposedDocument is called on a composed
                 # document before any access to its subobjects
 
@@ -134,7 +136,7 @@ class _asComposedDocument(object):
     # we filter out objects without any subobject to make the cache of
     # '_findPredicateList' useful. Otherwise, the key would be always different
     # (starting with 'orig_self').
-    for ob in _findPredicateList(*filter(None, self._effective_model_list)):
+    for ob in _findPredicateList(*filter(len, self._effective_model_list)):
       self._setOb(ob.id, ob)
     return self._folder_handler
 
@@ -149,7 +151,7 @@ class CompositionMixin:
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'asComposedDocument')
-  asComposedDocument = transactional_cached()(_asComposedDocument)
+  asComposedDocument = transactional_cached()(asComposedDocument)
 
   # XXX add accessors to get properties from '_effective_model_list' ?
   #     (cf PaySheetModel)
@@ -187,3 +189,5 @@ class CompositionMixin:
         for model in parent_asComposedDocument()._effective_model_list
         if model not in model_set]
     return model_list
+
+del asComposedDocument
