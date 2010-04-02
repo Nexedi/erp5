@@ -93,6 +93,11 @@ class RoundingTool(BaseTool):
       portal_type='Rounding Model',
       validation_state='validated',
       **kw)
+
+    if property_id is not None:
+      for rounding_model in result:
+        if property_id in rounding_model.getRoundedPropertyIdList():
+          return [rounding_model]
     return result
 
   security.declarePublic('getRoundingProxy')
