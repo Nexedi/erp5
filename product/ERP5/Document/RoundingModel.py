@@ -90,6 +90,7 @@ class RoundingModel(Predicate):
     """
     rounding_model = self
     rounded_property_getter_method_name_list = []
+    rounded_property_special_property_name_list = []
 
     if isinstance(document, RoundingProxy):
       temp_document = document._getOriginalDocument()
@@ -120,6 +121,8 @@ class RoundingModel(Predicate):
         # cannot round the property value so that the return value of getter
         # will be rounded
         rounded_property_getter_method_name_list.append(getter_name)
+        if getter is not None and setter is None:
+          rounded_property_special_property_name_list.append(property_id)
 
     class _RoundingProxy(RoundingProxy):
 
@@ -140,6 +143,13 @@ class RoundingModel(Predicate):
           return original_document.getRoundingModelPrecision(property_id)
         else:
           return None
+
+      def getProperty(self, key, *args, **kw):
+        result = original_document.getProperty(key, *args, **kw)
+        if key in rounded_property_special_property_name_list:
+          return rounding_model.roundValue(result)
+        else:
+          return result
 
       def __getattr__(self, name):
         attribute = getattr(original_document, name)

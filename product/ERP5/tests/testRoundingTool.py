@@ -71,8 +71,11 @@ class TestRoundingTool(ERP5TypeTestCase):
 
     # check values of empty line
     self.assertEqual(sale_order_line.getPrice(), None)
+    self.assertEqual(sale_order_line.getProperty('price'), None)
     self.assertEqual(sale_order_line.getQuantity(), 0.0)
+    self.assertEqual(sale_order_line.getProperty('quantity'), 0.0)
     self.assertEqual(sale_order_line.getTotalPrice(), 0.0)
+    self.assertEqual(sale_order_line.getProperty('total_price'), 0.0)
 
     self.login('developer')
     # rounding model dummy never match to sale order line
@@ -105,8 +108,11 @@ class TestRoundingTool(ERP5TypeTestCase):
     # rounding model does not do anything to empty values like None
     wrapped_line = rounding_tool.getRoundingProxy(sale_order_line, sale_order_line)
     self.assertEqual(wrapped_line.getPrice(), None)
+    self.assertEqual(wrapped_line.getProperty('price'), None)
     self.assertEqual(wrapped_line.getQuantity(), 0.0)
+    self.assertEqual(wrapped_line.getProperty('quantity'), 0.0)
     self.assertEqual(wrapped_line.getTotalPrice(), 0.0)
+    self.assertEqual(wrapped_line.getProperty('total_price'), 0.0)
     self.assertEqual(wrapped_line.getRoundingModelPrecision('price'), 2)
     self.assertEqual(wrapped_line.getRoundingModelPrecision('quantity'), None)
     self.assertEqual(wrapped_line.getRoundingModelPrecision('total_price'), None)
@@ -121,14 +127,20 @@ class TestRoundingTool(ERP5TypeTestCase):
     self.tic()
 
     self.assertEqual(sale_order_line.getPrice(), 123.456)
+    self.assertEqual(sale_order_line.getProperty('price'), 123.456)
     self.assertEqual(sale_order_line.getQuantity(), 78.91)
+    self.assertEqual(sale_order_line.getProperty('quantity'), 78.91)
     self.assertEqual(sale_order_line.getTotalPrice(), 123.456*78.91)
+    self.assertEqual(sale_order_line.getProperty('total_price'), 123.456*78.91)
 
     # check if price is rounded
     wrapped_line = rounding_tool.getRoundingProxy(sale_order_line, sale_order_line)
     self.assertEqual(wrapped_line.getPrice(), 123.45)
+    self.assertEqual(wrapped_line.getProperty('price'), 123.45)
     self.assertEqual(wrapped_line.getQuantity(), 78.91)
+    self.assertEqual(wrapped_line.getProperty('quantity'), 78.91)
     self.assertEqual(wrapped_line.getTotalPrice(), 123.45*78.91)
+    self.assertEqual(wrapped_line.getProperty('total_price'), 123.45*78.91)
     self.assertEqual(wrapped_line.getRoundingModelPrecision('price'), 2)
     self.assertEqual(wrapped_line.getRoundingModelPrecision('quantity'), None)
     self.assertEqual(wrapped_line.getRoundingModelPrecision('total_price'), None)
@@ -149,8 +161,11 @@ class TestRoundingTool(ERP5TypeTestCase):
     # if rounding model is not validated, then it is not applied
     wrapped_line = rounding_tool.getRoundingProxy(sale_order_line, sale_order_line)
     self.assertEqual(wrapped_line.getPrice(), 123.45)
+    self.assertEqual(wrapped_line.getProperty('price'), 123.45)
     self.assertEqual(wrapped_line.getQuantity(), 78.91)
+    self.assertEqual(wrapped_line.getProperty('quantity'), 78.91)
     self.assertEqual(wrapped_line.getTotalPrice(), 123.45*78.91)
+    self.assertEqual(wrapped_line.getProperty('total_price'), 123.45*78.91)
     self.assertEqual(wrapped_line.getRoundingModelPrecision('price'), 2)
     self.assertEqual(wrapped_line.getRoundingModelPrecision('quantity'), None)
     self.assertEqual(wrapped_line.getRoundingModelPrecision('total_price'), None)
@@ -165,8 +180,11 @@ class TestRoundingTool(ERP5TypeTestCase):
     # now, rounding model is validated, so it is applied
     wrapped_line = rounding_tool.getRoundingProxy(sale_order_line, sale_order_line)
     self.assertEqual(wrapped_line.getPrice(), 123.45)
+    self.assertEqual(wrapped_line.getProperty('price'), 123.45)
     self.assertEqual(wrapped_line.getQuantity(), 79.0)
+    self.assertEqual(wrapped_line.getProperty('quantity'), 79.0)
     self.assertEqual(wrapped_line.getTotalPrice(), 123.45*79.0)
+    self.assertEqual(wrapped_line.getProperty('total_price'), 123.45*79.0)
     self.assertEqual(wrapped_line.getRoundingModelPrecision('price'), 2)
     self.assertEqual(wrapped_line.getRoundingModelPrecision('quantity'), 1)
     self.assertEqual(wrapped_line.getRoundingModelPrecision('total_price'), None)
@@ -187,8 +205,11 @@ class TestRoundingTool(ERP5TypeTestCase):
     # check if price and quantity and total price are rounded
     wrapped_line = rounding_tool.getRoundingProxy(sale_order_line, sale_order_line)
     self.assertEqual(wrapped_line.getPrice(), 123.45)
+    self.assertEqual(wrapped_line.getProperty('price'), 123.45)
     self.assertEqual(wrapped_line.getQuantity(), 79.0)
+    self.assertEqual(wrapped_line.getProperty('quantity'), 79.0)
     self.assertEqual(wrapped_line.getTotalPrice(), 9750.0)
+    self.assertEqual(wrapped_line.getProperty('total_price'), 9750.0)
     self.assertEqual(wrapped_line.getRoundingModelPrecision('price'), 2)
     self.assertEqual(wrapped_line.getRoundingModelPrecision('quantity'), 1)
     self.assertEqual(wrapped_line.getRoundingModelPrecision('total_price'), -1)
