@@ -15,7 +15,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts69348811.79</string> </value>
+            <value> <string>ts70214048.17</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -419,6 +419,7 @@ div.block div.list_style ul li div#title{\n
   border:0 none;\n
   background-color:inherit;\n
   vertical-align:middle;\n
+  cursor:pointer;\n
 }\n
 \n
 .pageNavigation button.listbox_first_page .image,\n
@@ -527,7 +528,7 @@ div.gadget_browser a {\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <long>8811</long> </value>
+            <value> <int>8829</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
