@@ -67,7 +67,9 @@ class RoundingModel(Predicate):
           decimal_rounding_option not in ROUNDING_OPTION_DICT):
         raise ValueError, 'Decimal rounding option must be selected.'
       def rounding_method(value, decimal_exponent, precision):
-        if decimal_exponent is None and precision is not None:
+        if precision is None:
+          precision = 0
+        if decimal_exponent is None:
           if precision > 0:
             decimal_exponent = '1.' + '0' * precision
           else:
