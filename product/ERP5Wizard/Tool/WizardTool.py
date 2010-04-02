@@ -583,7 +583,7 @@ class WizardTool(BaseTool):
     bt5_files = server_response.get("filedata", [])
     server_buffer = server_response.get("server_buffer", None)
     if server_buffer is None:
-      # server doesn't comform protocol which means a possible server error 
+      # server doesn't comform protocol which means a possible server error
       raise ValueError("Witch server configuration error")
     bt5_filenames = server_buffer.get("filenames", [])
     portal_templates = getToolByName(portal, 'portal_templates')
