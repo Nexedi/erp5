@@ -257,12 +257,17 @@ class TestXHTML(ERP5TypeTestCase):
           if list_action and list_action != 'list': # We assume that 'list'
                                                     # list_action exists
             if isinstance(list_action, str):
-              method = getattr(self.portal, list_action.split('?')[0], None)
+              try:
+                list_action = list_action.split('?')[0]
+                method = self.portal.restrictedTraverse(list_action)
+              except KeyError:
+                method = None
             else:
               method = list_action
             if not callable(method):
-              error_list.append(('%s/%s' % (form_path, field.id), list_action))
-    self.assertEquals(error_list, [])
+              error_list.append('Form %s/%s : list_action "%s" is not callable.'\
+                  % (form_path, field.id, list_action))
+    self.assert_(not len(error_list), '\n'.join(error_list))
 
   def test_moduleListMethod(self):
     """Make sure that module's list method works."""
