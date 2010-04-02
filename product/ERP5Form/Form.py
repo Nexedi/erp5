@@ -821,7 +821,7 @@ class ERP5Form(ZMIForm, ZopePageTemplate):
             #  return 0
             # XXX keyword match is not useful anymore.Need different approach.
             keyword_match_rate = check_keyword_list(field_id, extract_keyword(id_))
-            if keyword_match_rate>0.5:
+            if keyword_match_rate>0.3:
                 return keyword_match_rate
             else:
                 def split(string):
