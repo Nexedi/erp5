@@ -91,9 +91,9 @@
             <value> <string>CREATE TABLE `content_translation` (\n
   `uid` BIGINT UNSIGNED NOT NULL,\n
   `property_name` VARCHAR(100),\n
-  `language` VARCHAR(100),\n
+  `content_language` VARCHAR(100),\n
   `translated_text` TEXT,\n
-  PRIMARY KEY (`uid`, `property_name`, `language`),\n
+  PRIMARY KEY (`uid`, `property_name`, `content_language`),\n
   FULLTEXT `Translated Text` (`translated_text`)\n
 ) TYPE=MyISAM;\n
 </string> </value>
@@ -135,9 +135,9 @@
                         <value> <string>CREATE TABLE `content_translation` (\n
   `uid` BIGINT UNSIGNED NOT NULL,\n
   `property_name` VARCHAR(100),\n
-  `language` VARCHAR(100),\n
+  `content_language` VARCHAR(100),\n
   `translated_text` TEXT,\n
-  PRIMARY KEY (`uid`, `property_name`, `language`),\n
+  PRIMARY KEY (`uid`, `property_name`, `content_language`),\n
   FULLTEXT `Translated Text` (`translated_text`)\n
 ) TYPE=MyISAM;\n
 </string> </value>

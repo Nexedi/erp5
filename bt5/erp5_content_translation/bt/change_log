@@ -1,3 +1,6 @@
+2010-04-02 yusuke
+* Fixed the column name conflict.
+
 2010-03-03 yusuke
 * Use sql_deferred_connection instead of sql_connection
 

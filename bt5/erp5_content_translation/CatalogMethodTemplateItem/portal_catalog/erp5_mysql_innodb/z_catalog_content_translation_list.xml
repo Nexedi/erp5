@@ -68,7 +68,7 @@ VALUES\n
 <dtml-in "content_translation_dict_list">\n
 (<dtml-sqlvar "_[\'sequence-item\'][\'uid\']" type=int>,\n
  <dtml-sqlvar "_[\'sequence-item\'][\'property_name\']" type=string>,\n
- <dtml-sqlvar "_[\'sequence-item\'][\'language\']" type=string>,\n
+ <dtml-sqlvar "_[\'sequence-item\'][\'content_language\']" type=string>,\n
  <dtml-sqlvar "_[\'sequence-item\'][\'translated_text\']" type=string>\n
 )\n
 <dtml-unless sequence-end>,</dtml-unless>\n
@@ -122,7 +122,7 @@ VALUES\n
 <dtml-in "content_translation_dict_list">\n
 (<dtml-sqlvar "_[\'sequence-item\'][\'uid\']" type=int>,\n
  <dtml-sqlvar "_[\'sequence-item\'][\'property_name\']" type=string>,\n
- <dtml-sqlvar "_[\'sequence-item\'][\'language\']" type=string>,\n
+ <dtml-sqlvar "_[\'sequence-item\'][\'content_language\']" type=string>,\n
  <dtml-sqlvar "_[\'sequence-item\'][\'translated_text\']" type=string>\n
 )\n
 <dtml-unless sequence-end>,</dtml-unless>\n
