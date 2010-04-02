@@ -112,6 +112,14 @@ class TestContentTranslation(ERP5TypeTestCase):
 
     result4 = portal.portal_catalog(content_translation_title='村岡')
     self.assertEquals(len(result4), 0)
+
+    # columns test
+    result5 = portal.portal_catalog(property_name='title')
+    self.assertEquals(len(result5), 2)
+    result6 = portal.portal_catalog(content_language='nob-read')
+    self.assertEquals(len(result6), 2)
+    result7 = portal.portal_catalog(translated_text='XXX YYY')
+    self.assertEquals(len(result7), 1)
  
   def testContentTranslation(self):
     """
