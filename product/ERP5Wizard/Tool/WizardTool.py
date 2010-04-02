@@ -933,7 +933,8 @@ class WizardTool(BaseTool):
     setSecurityManager(original_security_manager)
     return preference_value
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'setExpressConfigurationPreference')
+  security.declareProtected(Permissions.ModifyPortalContent,
+      'setExpressConfigurationPreference')
   def setExpressConfigurationPreference(self, preference_id, value):
     """ Set Express configuration preference """
     portal_preferences = getToolByName(self, 'portal_preferences')
