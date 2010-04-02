@@ -98,6 +98,7 @@
                       <list>
                         <string>my_title</string>
                         <string>my_decimal_rounding_option</string>
+                        <string>my_precision</string>
                         <string>my_decimal_exponent</string>
                         <string>my_rounding_method_id</string>
                         <string>my_rounded_property_id_list</string>
