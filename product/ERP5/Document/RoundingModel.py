@@ -53,9 +53,8 @@ class RoundingModel(Predicate):
 
   security.declareProtected(Permissions.AccessContentsInformation, 'roundValue')
   def roundValue(self, value):
-    """
-    Return rounded value.
-    """
+    if not value:
+      return value
     if self.getRoundingMethodId() is not None:
       rounding_method = getattr(self, self.getRoundingMethodId(), None)
       if rounding_method is None:
@@ -67,10 +66,21 @@ class RoundingModel(Predicate):
       if (decimal_rounding_option is None or
           decimal_rounding_option not in ROUNDING_OPTION_DICT):
         raise ValueError, 'Decimal rounding option must be selected.'
-      def rounding_method(value, decimal_exponent):
-        return float(Decimal(str(value)).quantize(Decimal(decimal_exponent),
-                                                  rounding=decimal_rounding_option))
-    return rounding_method(value, self.getDecimalExponent())
+      def rounding_method(value, decimal_exponent, precision):
+        if decimal_exponent is None and precision is not None:
+          if precision > 0:
+            decimal_exponent = '1.' + '0' * precision
+          else:
+            decimal_exponent = '1'
+        result = float(
+          Decimal(str(value)).quantize(Decimal(decimal_exponent),
+                                       rounding=decimal_rounding_option))
+        if precision < 0:
+          # FIXME!!!!!
+          result = round(result, precision)
+        return result
+
+    return rounding_method(value, self.getDecimalExponent(), self.getPrecision())
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getRoundingProxy')
   def getRoundingProxy(self, document):
@@ -115,9 +125,21 @@ class RoundingModel(Predicate):
 
       def _getOriginalDocument(self):
         if isinstance(original_document, RoundingProxy):
-          return original_document._editOriginalDocument()
+          return original_document._getOriginalDocument()
         else:
           return original_document
+
+      def getRoundingModelPrecision(self, property_id):
+        """
+        Return precision value of rounding model. This is useful for
+        float field.
+        """
+        if property_id in rounding_model.getRoundedPropertyIdList():
+          return rounding_model.getPrecision()
+        elif isinstance(original_document, RoundingProxy):
+          return original_document.getRoundingModelPrecision(property_id)
+        else:
+          return None
 
       def __getattr__(self, name):
         attribute = getattr(original_document, name)

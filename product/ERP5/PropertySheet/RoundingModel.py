@@ -46,4 +46,10 @@ class RoundingModel(DecimalOption):
       'mode'        : 'w',
       'default'     : None,
     },
+    { 'id'          : 'precision',
+      'description' : 'Precision value to be used for rounding. Rounding model accepts negative precision value as same as built-in round function.',
+      'type'        : 'int',
+      'mode'        : 'w',
+      'default'     : None,
+    },
   )
