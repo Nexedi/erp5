@@ -435,6 +435,10 @@ body {\n
   margin-right: 5px;\n
 }\n
 \n
+#main_bar .second {\n
+  display: inline;\n
+}\n
+\n
 #tiologin {\n
   font-size:9pt;\n
   color:#FFFFFF;\n
