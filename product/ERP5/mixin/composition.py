@@ -31,6 +31,7 @@ from AccessControl import ClassSecurityInfo
 from Acquisition import aq_base
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.Cache import transactional_cached
+from Products.ERP5Type.Utils import sortValueList
 from Products.ERP5.Document.Predicate import Predicate
 from Products.ZSQLCatalog.SQLCatalog import Query, ComplexQuery
 
@@ -78,7 +79,6 @@ def _getEffectiveModel(self, start_date=None, stop_date=None):
 def _findPredicateList(*container_list):
   predicate_list = []
   reference_dict = {}
-  line_count = 0
   for container in container_list:
     for ob in container.contentValues():
       if isinstance(ob, Predicate):
@@ -89,9 +89,7 @@ def _findPredicateList(*container_list):
           if reference in reference_set:
             continue
           reference_set.add(reference)
-        id = str(line_count)
-        line_count += 1
-        predicate_list.append(aq_base(ob.asContext(id=id)))
+        predicate_list.append(ob)
   return predicate_list
 
 
@@ -101,20 +99,13 @@ class asComposedDocument(object):
   The returned value is a temporary copy of the given object. The list of all
   effective models (specialise values) is stored in a private attribute.
   Collecting predicates (from effective models) is done lazily. Predicates can
-  be accessed through standard Folder API (ex: contentValues).
+  be accessed through contentValues/objectValues.
   """
 
   def __new__(cls, orig_self):
-    if '_effective_model_list' in orig_self.__dict__:
-      assert False, "not used yet (remove this line if needed)"
-      return orig_self # if asComposedDocument is called on a composed
-                       # document after any access to its subobjects
     self = orig_self.asContext()
-    self._initBTrees()
     base_class = self.__class__
-    # this allows to intercept first access to '_folder_handler'
-    self.__class__ = type(base_class.__name__, (cls, base_class),
-                          {'__module__': base_class.__module__})
+    self.__class__ = type(base_class.__name__, (cls, base_class), {})
     self._effective_model_list = orig_self._findEffectiveSpecialiseValueList()
     return self
 
@@ -125,20 +116,29 @@ class asComposedDocument(object):
 
   def asComposedDocument(self):
     assert False, "not used yet (remove this line if needed)"
-    return self # if asComposedDocument is called on a composed
-                # document before any access to its subobjects
+    return self
 
   @property
   def _folder_handler(self):
-    # restore the original class
-    # because we don't need to hook _folder_handler anymore
-    self.__class__ = self.__class__.__bases__[1]
-    # we filter out objects without any subobject to make the cache of
-    # '_findPredicateList' useful. Otherwise, the key would be always different
-    # (starting with 'orig_self').
-    for ob in _findPredicateList(*filter(len, self._effective_model_list)):
-      self._setOb(ob.id, ob)
-    return self._folder_handler
+    assert False
+
+  def __getattr__(self, name):
+    raise AttributeError(name)
+
+  def objectValues(self, spec=None, meta_type=None, portal_type=None,
+                   sort_on=None, sort_order=None, checked_permission=None,
+                   **kw):
+    assert spec is meta_type is checked_permission is None, "not useful yet"
+    object_list = getattr(aq_base(self), '_predicate_list', None)
+    if object_list is None:
+      object_list = _findPredicateList(*filter(len, self._effective_model_list))
+      self._predicate_list = object_list
+    if portal_type is not None:
+      if isinstance(portal_type, str):
+        portal_type = (portal_type,)
+      object_list = filter(lambda x: x.getPortalType() in portal_type,
+                           object_list)
+    return sortValueList(object_list, sort_on, sort_order, **kw)
 
 
 class CompositionMixin:

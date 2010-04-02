@@ -2476,8 +2476,6 @@ class TestTradeModelLine(TestTradeModelLineMixin):
 
     # change target level to `movement`.
     tax.edit(target_level=TARGET_LEVEL_MOVEMENT)
-    transaction.commit() # flush transactional cache
-
     amount_list = trade_condition.getAggregatedAmountList(order)
     self.assertEqual(2, len(amount_list))
     self.assertEqual(1,
@@ -2578,7 +2576,6 @@ return current_movement
     extra_fee_a.edit(target_level=TARGET_LEVEL_DELIVERY)
     extra_fee_b.edit(target_level=TARGET_LEVEL_DELIVERY)
     tax.edit(target_level=TARGET_LEVEL_DELIVERY)
-    transaction.commit() # flush transactional cache
     amount_list = trade_condition.getAggregatedAmountList(order)
     self.assertEqual(4, len(amount_list))
     self.assertEqual(100 + 1 - 10 + 1500*0.05,
@@ -2637,7 +2634,6 @@ return current_movement
 
     # change tax trade model line to `movement` level
     tax.edit(target_level=TARGET_LEVEL_MOVEMENT)
-    transaction.commit() # flush transactional cache
 
     def getTotalAmount(amount_list):
       result = 0
