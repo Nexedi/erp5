@@ -211,7 +211,7 @@
                         <string>my_dialog_mode_text_format</string>
                         <string>my_view_mode_listbox_title</string>
                         <string>my_dialog_mode_editable_total_price</string>
-                        <string>my_core_mode_total_price</string>
+                        <string>my_view_mode_core_mode_total_price</string>
                         <string>my_view_mode_int_index</string>
                         <string>my_dialog_mode_comment</string>
                         <string>my_dialog_mode_start_date</string>
@@ -273,6 +273,35 @@
                         <string>my_view_mode_listbox_deliverable</string>
                         <string>my_view_mode_purchase_trade_condition_specialise_title</string>
                         <string>my_view_mode_destination_section</string>
+                        <string>my_view_mode_payment_additional_term</string>
+                        <string>my_view_mode_payment_date</string>
+                        <string>my_view_mode_payment_end_of_month</string>
+                        <string>my_view_mode_payment_term</string>
+                        <string>my_view_mode_amount_quantity</string>
+                        <string>my_view_mode_trade_date</string>
+                        <string>my_view_mode_base_application_list</string>
+                        <string>my_view_mode_calculation_script_id</string>
+                        <string>my_view_mode_create_line</string>
+                        <string>my_view_mode_ratio_price</string>
+                        <string>my_view_mode_fixed_quantity</string>
+                        <string>my_view_mode_target_level</string>
+                        <string>my_core_mode_total_price</string>
+                        <string>my_view_mode_listbox_read_only_start_date</string>
+                        <string>my_report_mode_aggregation_level</string>
+                        <string>my_report_mode_delivery_mode</string>
+                        <string>my_report_mode_from_date</string>
+                        <string>my_report_mode_group_by</string>
+                        <string>my_report_mode_incoterm</string>
+                        <string>my_report_mode_order</string>
+                        <string>my_report_mode_section_category</string>
+                        <string>my_dialog_mode_quantity_unit_list</string>
+                        <string>my_view_mode_preferred_client_role_list</string>
+                        <string>my_view_mode_preferred_packing_use_list</string>
+                        <string>my_view_mode_preferred_purchase_use_list</string>
+                        <string>my_view_mode_preferred_sale_use_list</string>
+                        <string>my_view_mode_preferred_supplier_role_list</string>
+                        <string>my_view_mode_listbox_percent_price</string>
+                        <string>my_view_mode_listbox_read_only_use_title_list</string>
                       </list>
                     </value>
                 </item>

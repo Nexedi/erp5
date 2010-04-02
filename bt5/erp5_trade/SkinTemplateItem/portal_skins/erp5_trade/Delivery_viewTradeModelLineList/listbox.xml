@@ -14,7 +14,10 @@
             <value>
               <list>
                 <string>editable_columns</string>
+                <string>title</string>
                 <string>selection_name</string>
+                <string>portal_types</string>
+                <string>columns</string>
               </list>
             </value>
         </item>
@@ -76,6 +79,45 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>title</string>
+                          <string>Title</string>
+                        </tuple>
+                        <tuple>
+                          <string>reference</string>
+                          <string>Reference</string>
+                        </tuple>
+                        <tuple>
+                          <string>resource_title</string>
+                          <string>Service</string>
+                        </tuple>
+                        <tuple>
+                          <string>price</string>
+                          <string>Price</string>
+                        </tuple>
+                        <tuple>
+                          <string>base_application_title_list</string>
+                          <string>Base Applications</string>
+                        </tuple>
+                        <tuple>
+                          <string>base_contribution_title_list</string>
+                          <string>Base Contributions</string>
+                        </tuple>
+                        <tuple>
+                          <string>use_title_list</string>
+                          <string>Use</string>
+                        </tuple>
+                        <tuple>
+                          <string>trade_phase_title</string>
+                          <string>Trade Phase</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
                     <key> <string>editable_columns</string> </key>
                     <value>
                       <list>
@@ -92,11 +134,22 @@
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>listbox</string> </value>
+                    <value> <string>my_view_mode_listbox</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>TradeCondition_viewTradeModelLineList</string> </value>
+                    <value> <string>Base_viewFieldLibrary</string> </value>
+                </item>
+                <item>
+                    <key> <string>portal_types</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>Trade Model Line</string>
+                          <string>Trade Model Line</string>
+                        </tuple>
+                      </list>
+                    </value>
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>
@@ -105,6 +158,10 @@
                 <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value> <string>Trade Model Lines</string> </value>
                 </item>
               </dictionary>
             </value>

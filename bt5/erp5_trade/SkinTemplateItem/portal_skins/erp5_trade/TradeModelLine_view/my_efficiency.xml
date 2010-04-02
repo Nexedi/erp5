@@ -12,10 +12,7 @@
         <item>
             <key> <string>delegated_list</string> </key>
             <value>
-              <list>
-                <string>description</string>
-                <string>title</string>
-              </list>
+              <list/>
             </value>
         </item>
         <item>
@@ -76,24 +73,16 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>description</string> </key>
-                    <value> <string>Percentage of total quantity used as quantity. This is useful for example in the case of taxes which are not applied on the total price, but for example only on 95% of the price.</string> </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_percent</string> </value>
+                    <value> <string>my_view_mode_efficiency</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Base_viewFieldLibrary</string> </value>
+                    <value> <string>Base_viewTradeFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
-                </item>
-                <item>
-                    <key> <string>title</string> </key>
-                    <value> <string>Percentage of Total</string> </value>
                 </item>
               </dictionary>
             </value>

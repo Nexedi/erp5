@@ -13,12 +13,12 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>description</string>
-                <string>title</string>
                 <string>css_class</string>
-                <string>input_style</string>
+                <string>description</string>
                 <string>display_width</string>
+                <string>input_style</string>
                 <string>precision</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -97,7 +97,11 @@
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string>Percentage of total quantity.</string> </value>
+                    <value> <string>Percentage of total quantity used as quantity. This is useful for example in the case of taxes which are not applied on the total price, but for example only on 95% of the price.</string> </value>
+                </item>
+                <item>
+                    <key> <string>display_width</string> </key>
+                    <value> <int>20</int> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
@@ -110,6 +114,10 @@
                 <item>
                     <key> <string>input_style</string> </key>
                     <value> <string>-12.3%</string> </value>
+                </item>
+                <item>
+                    <key> <string>precision</string> </key>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
