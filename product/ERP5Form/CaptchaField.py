@@ -312,12 +312,14 @@ class CaptchaField(ZMIField):
   
   security.declareProtected('Access contents information', 'get_value')
   def get_value(self, id, **kw):
-    if self.values.has_key(id):
+    if id in self.getCaptchaCustomPropertyList():
       return self.values[id]
     return ZMIField.get_value(self, id, **kw)
 
   def getCaptchaCustomPropertyList(self):
-    captcha_type = self.get_value("captcha_type")
+    if hasattr(self, "__extraPropertyList"):
+      return self.__extraPropertyList
+    captcha_type = ZMIField.get_value(self, "captcha_type")
     captcha_provider = CaptchaProviderFactory.getProvider(captcha_type)
     extraPropertyList = captcha_provider.getExtraPropertyList()
     self.__extraPropertyList = [x.id for x in extraPropertyList]
