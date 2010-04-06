@@ -53,38 +53,25 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from AccessControl import getSecurityManager\n
-from zExceptions import Unauthorized\n
-u=getSecurityManager().getUser()\n
-print \'User:\',u\n
-print \'Is owner:\',u.allowed(context,(\'Owner\',))\n
-print \'User roles:\',u.getRoles()\n
-print \'User roles in context:\',u.getRolesInContext(context)\n
-for permission in [\n
-  \'Access contents information\',\n
-  \'Add portal content\',\n
-  \'Delete objects\',\n
-  \'Modify portal content\',\n
-  \'View\',\n
-  \'Manage portal\',\n
-]:\n
-  print permission,u.has_permission(permission,context)\n
-try:\n
-  print u.getGroups()\n
-except AttributeError:\n
-  print \'no getGroups\'\n
+            <value> <string encoding="cdata"><![CDATA[
+
+group_id_list_generator = getattr(context, \'ERP5Type_asSecurityGroupId\')\n
 \n
-print \'\'\'\n
-----------------\n
-Security mapping\n
-----------------\'\'\'\n
-try:\n
-  print context.Base_viewSecurityMappingAsUser(u.getId())\n
-except Unauthorized:\n
-  print "user doesn\'t have permission to security mapping in this context"\n
+security_category_dict = {}\n
+for method_id, base_category_list in context.ERP5Type_getSecurityCategoryMapping():\n
+  security_category_dict.setdefault(tuple(base_category_list), []).extend(\n
+    getattr(context, method_id)(base_category_list, login, context, \'\'))\n
 \n
+for base_category_list, category_value_list in security_category_dict.items():\n
+  print \'base_category_list:\', base_category_list\n
+  for category_dict in category_value_list:\n
+    print \'-> category_dict:\', category_dict\n
+    print \'-->\', group_id_list_generator(category_order=base_category_list,\n
+                                        **category_dict)\n
 return printed\n
-</string> </value>
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -94,7 +81,16 @@ return printed\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string></string> </value>
+            <value> <string>login</string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+                <string>Member</string>
+              </tuple>
+            </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -114,24 +110,27 @@ return printed\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>1</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>login</string>
                             <string>_print_</string>
                             <string>_print</string>
-                            <string>AccessControl</string>
-                            <string>getSecurityManager</string>
-                            <string>zExceptions</string>
-                            <string>Unauthorized</string>
-                            <string>_getattr_</string>
-                            <string>u</string>
+                            <string>getattr</string>
                             <string>context</string>
+                            <string>group_id_list_generator</string>
+                            <string>security_category_dict</string>
                             <string>_getiter_</string>
-                            <string>permission</string>
-                            <string>AttributeError</string>
+                            <string>_getattr_</string>
+                            <string>method_id</string>
+                            <string>base_category_list</string>
+                            <string>tuple</string>
+                            <string>category_value_list</string>
+                            <string>category_dict</string>
+                            <string>_apply_</string>
                           </tuple>
                         </value>
                     </item>
@@ -148,7 +147,7 @@ return printed\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Base_viewSecurity</string> </value>
+            <value> <string>Base_viewSecurityMappingAsUser</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
