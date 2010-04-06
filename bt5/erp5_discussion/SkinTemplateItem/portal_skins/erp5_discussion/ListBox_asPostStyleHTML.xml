@@ -71,6 +71,7 @@
               ">\n
 \n
   <script src="erp5_discussion.js" type="text/javascript"></script>\n
+  <link href="erp5_discussion.css" rel="stylesheet" type="text/css">\n
   \n
   <!-- ListBox starts here.  -->\n
   <input type="hidden" name="list_selection_name" value="default" tal:attributes="value selection_name" />\n
@@ -94,9 +95,9 @@
                          isUserAllowedToPost python: real_context.DiscussionThread_isUserAllowedToPost()">\n
     <tal:block metal:use-macro="template/macros/ListBoxContainer">\n
       <tal:block metal:fill-slot="ListBoxBody">\n
-        <div class="ListContent" style="margin-bottom:5px;">\n
+        <div class="ListContent">\n
           <tal:block tal:repeat="line line_list">\n
-            <div style="margin:5px; padding:10px; background-color:#ffffff; border-radius: 15px 15px; -moz-border-radius: 10px;"\n
+            <div class="discussion-post-listbox-row" \n
                  tal:define="event line/getBrain;\n
                              event_object event/getObject;\n
                              author_dict event_object/DiscussionPost_getAuthorDict;\n
@@ -106,56 +107,56 @@
                              event_id event_object/getId;\n
                              event_uid event_object/getUid;\n
                              event_title event_object/getTitle;\n
+                             event_url event_object/getAbsoluteUrl;\n
                              event_creation_date event_object/getCreationDate;\n
                              event_validation_state_title event_object/getTranslatedValidationStateTitle;\n
                              event_stripped_html event_object/asStrippedHTML;">\n
 \n
-              <div style="background-color:#efefef; padding:3px;  height:20px; border-left:solid 3px #DE9435">\n
-                <div style="float:left; height:20px;">\n
-                  <a tal:attributes="href string:${event_id}/view">\n
-                    <span style="margin:0; color #D98135; padding-left:5px; font:bold 1.2em Helvetica, Arial, sans-serif; margin-top:5px" \n
-                          tal:content="event_title"></span>\n
+              <div class="discussion-post-header">\n
+                <div class="discussion-post-title-container">\n
+                  <a tal:attributes="href string:${event_url}/view">\n
+                    <div class="discussion-post-title"\n
+                          tal:content="event_title"/>\n
                   </a>\n
                 </div>\n
-                <div style="float:left;height:20px;margin-left:10px;margin-top:3px;">\n
-                  <span tal:content="event_validation_state_title"/>\n
+                <div class="discussion-post-state-container">\n
+                  <div class="discussion-post-state"\n
+                        tal:content="event_validation_state_title"/>\n
                 </div>\n
-                <div style="float:right; height:20px;">\n
-                  <span style="color:#333; font-size:90%; margin:2px 0;">\n
+                <div class="discussion-post-creator-container">\n
+                  <div class="discussion-post-creator">\n
                     by \n
-                    <a tal:attributes="href author_url"> \n
-                      <span style="color:#a40;font-size:90%;" \n
-                            tal:content="author_title"/>\n
+                    <a class="discussion-post-creator-title-link"\n
+                       tal:attributes="href author_url"\n
+                       tal:content="author_title"> \n
                     </a> \n
                     on \n
-                    <span tal:replace="event_creation_date"/>\n
-                  </span>\n
+                    <tal:block tal:replace="event_creation_date"/>\n
+                  </div>\n
                 </div>\n
               </div>\n
               <hr>\n
-              <div style="margin-left:10px;">\n
-                <span style="color:black;margin-top:10px;margin-bottom:10px;"\n
-                      tal:content="structure event_stripped_html"/>\n
+              <div class="discussion-post-body-container">\n
+                <div class="discussion-post-body"\n
+                     tal:content="structure event_stripped_html"/>\n
                 <br/>\n
               </div>\n
 \n
               <tal:block tal:condition="python: author_signature is not None">\n
                 <hr>\n
-                <div style="margin-left:10px;">\n
-                  <span style="color:#aaa" \n
-                        tal:content="author_signature"/>\n
-                </div>\n
+                <div class="discussion-post-author-signature-container" \n
+                     tal:content="author_signature"/>\n
+                <hr/>\n
               </tal:block>\n
 \n
-              <hr>\n
-              <input type="checkbox" name="good_uid" \n
-                     tal:attributes="value event_uid; id python: \'listbox_cb_%s\' % (event_uid)" \n
-                     style="visibility: hidden">\n
+              <input type="hidden" \n
+                     name="good_uid" \n
+                     tal:attributes="value event_uid; id python: \'listbox_cb_%s\' % (event_uid)">\n
               <button tal:condition="isUserAllowedToPost" \n
                       type="submit" \n
                       title="Reply" \n
-                      name="DiscussionThread_viewCreateNewDiscussionPostDialog:method" \n
-                      style="border:dashed 1px #3D6474; background-color:#eee; padding:3px;" \n
+                      name="DiscussionThread_viewCreateNewDiscussionPostDialog:method"\n
+                      class="discussion-post-action-button"\n
                       tal:attributes="onClick python: \'getElementById(\\\'listbox_cb_%s\\\').checked = true\' % (event_object.getUid())">\n
                 Reply\n
               </button>\n
@@ -163,15 +164,14 @@
                 <button type="submit" \n
                         title="Delete" \n
                         name="DiscussionThread_deleteDiscussionPost:method"\n
-                        tal:attributes="onClick python: \'deleteDiscussionPost(\\\'%s\\\')\' %event.getId()"\n
-                        style="border:dashed 1px #3D6474; background-color:#FF654A; padding:3px;">\n
+                        class="discussion-post-action-button"\n
+                        tal:attributes="onClick python: \'deleteDiscussionPost(\\\'%s\\\')\' %event.getId()">\n
                   Delete\n
                 </button>\n
               </tal:block>\n
             </div>\n
           </tal:block>\n
-          <div style="width:100%; align:middle" align="middle">\n
-            <div>\n
+          <div class="discussion-post-listbox-navigation">\n
               <a href="#"\n
                  tal:condition="python: field_id.strip() != \'listbox\'"\n
                  tal:repeat="p python: range(0, here.total_pages)"\n
@@ -185,7 +185,6 @@
                  tal:content="python: p+1"\n
                  tal:attributes="class python: p == here.current_page and \'selected\' or nothing;\n
                                  href  python: \'setPage?%s_page_selection=%s&amp;selection_name=%s&amp;form_id=%s&amp;listbox_uid:list=&amp;list_selection_name=%s&amp;list_start=%s&amp;reset=1\' % (field_id, p+1, selection_name, form_id, selection_name, p*listbox_max_lines)"/>\n
-            </div>\n
           </div>\n
         </div>\n
       </tal:block>\n
