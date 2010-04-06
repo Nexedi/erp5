@@ -2336,11 +2336,19 @@ class TestCMFActivity(ERP5TypeTestCase):
     Message.notifyUser = fake_notifyUser
     Organisation.failingMethod = failingMethod
     try:
-      obj.activate(activity=activity, priority=6).failingMethod()
+      # MESSAGE_NOT_EXECUTED
+      obj.activate(activity=activity).failingMethod()
       get_transaction().commit()
       self.assertEqual(len(notification_done), 0)
       self.flushAllActivities(silent=1, loop_size=100)
       self.assertEqual(len(notification_done), 1)
+      # MESSAGE_NOT_EXECUTABLE
+      obj.getParentValue()._delObject(obj.getId())
+      obj.activate(activity=activity).getId()
+      get_transaction().commit()
+      self.assertEqual(len(notification_done), 1)
+      self.flushAllActivities(silent=1, loop_size=100)
+      self.assertEqual(len(notification_done), 2)
     finally:
       Message.notifyUser = original_notifyUser
       delattr(Organisation, 'failingMethod')

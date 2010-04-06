@@ -196,6 +196,7 @@ class SQLBase:
         # something is missing (context object cannot be found, method cannot
         # be accessed on object).
         non_executable_message_list.append(uid)
+        notify_user_list.append((m, False))
     if deletable_uid_list:
       try:
         self._retryOnLockError(activity_tool.SQLBase_delMessage,
