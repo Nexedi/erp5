@@ -143,22 +143,20 @@ class DeliveryCell(MappedValue, Movement, ImmobilisationMovement):
     # This little hack is needed to make the matrixbox working
     # in DeliveryLine_viewIndustrialPhase
     # Generic form (DeliveryLine_viewOption) is required
-    security.declarePrivate('_edit')
-    def _edit(self, REQUEST=None, force_update=0, reindex_object=0, **kw):
+    def _edit(self, **kw):
       """
         Store variation_category_list, in order to store new value of
         industrial_phase after.
       """
-      if kw.has_key('variation_category_list'):
-        self._setVariationCategoryList(kw['variation_category_list'])
-        kw.pop('variation_category_list')
-      MappedValue._edit(self, REQUEST=REQUEST, force_update=force_update,
-                        reindex_object=reindex_object, **kw)
+      edit_order = ['variation_category_list', # edit this one first
+                    'item_id_list']            # this one must be the last
+      edit_order[1:1] = [x for x in kw.pop('edit_order', ())
+                           if x not in edit_order]
+      # Base._edit updates unordered properties first
+      edit_order[1:1] = [x for x in kw if x not in edit_order]
+      MappedValue._edit(self, edit_order=edit_order, **kw)
 #       if self.isSimulated():
 #         self.getRootDeliveryValue().activate().propagateResourceToSimulation()
-      # This one must be the last
-      if kw.has_key('item_id_list'):
-        self._setItemIdList(kw['item_id_list'])
 
     security.declareProtected(Permissions.ModifyPortalContent,
                               'updateSimulationDeliveryProperties')

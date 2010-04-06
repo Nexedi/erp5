@@ -67,16 +67,14 @@ class MappedValue(Predicate, Amount):
                       , PropertySheet.MappedValue
                     )
 
-  security.declarePrivate( '_edit' )
-  def _edit(self, REQUEST=None, force_update = 0, **kw):
+  def _edit(self, **kw):
     # We must first prepare the mapped value before we do the edit
-    if kw.has_key('mapped_value_property_list'):
-      self._setProperty('mapped_value_property_list', kw['mapped_value_property_list'])
-    if kw.has_key('default_mapped_value_property'):
-      self._setProperty('default_mapped_value_property', kw['default_mapped_value_property'])
-    if kw.has_key('mapped_value_property'):
-      self._setProperty('mapped_value_property', kw['mapped_value_property'])
-    if kw.has_key('mapped_value_property_set'):
-      self._setProperty('mapped_value_property_set', kw['mapped_value_property_set'])
-    Predicate._edit(self, REQUEST=REQUEST, force_update = force_update, **kw)
-
+    edit_order = ['mapped_value_property_list',
+                  'default_mapped_value_property',
+                  'mapped_value_property',
+                  'mapped_value_property_set']
+    i = len(edit_order)
+    edit_order += [x for x in kw.pop('edit_order', ()) if x not in edit_order]
+    # Base._edit updates unordered properties first
+    edit_order[i:i] = [x for x in kw if x not in edit_order]
+    return Predicate._edit(self, edit_order=edit_order, **kw)
