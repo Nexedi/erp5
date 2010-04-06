@@ -34,7 +34,9 @@ from pprint import pformat
 
 from Products.CMFCore.utils import UniqueObject
 
+import OFS
 from zExceptions import BadRequest
+from zExceptions import Unauthorized
 from Acquisition import Implicit
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Globals import InitializeClass, DTMLFile
@@ -46,6 +48,7 @@ from Products.ERP5Type import Permissions
 from Products.ERP5Type import _dtmldir
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type.Core.Folder import Folder
+from Products.ERP5Type.Core.Folder import OFS_HANDLER
 from Products.ERP5Type import Document
 
 from Products.ERP5Type.Utils import readLocalPropertySheet, writeLocalPropertySheet, getLocalPropertySheetList
@@ -161,6 +164,71 @@ if allowClassTool():
     def _abort(self):
       shutil.rmtree(self.path, 1)
 
+
+  class FileProxy(OFS.Image.File):
+    """Proxy to a file.
+    """
+    # XXX This meta type to make external editor happy
+    meta_type = 'Script (Python)'
+    def __init__(self, folder, id, read=True):
+      self._folder = folder
+      self._setId(id)
+      self.content_type = 'text/x-python'
+      if read:
+        self.data = self._folder.read(id)
+        self.size = len(self.data)
+
+    def update_data(self, data, content_type=None, size=None):
+      return self._folder.write(self.getId(), data, create=False)
+
+  InitializeClass(FileProxy)
+
+  _MARKER = object()
+
+  class FolderProxy(OFS.Folder.Folder):
+    """Proxy to a Folder
+    """
+    all_meta_types = ()
+    def __init__(self, id, reader, writer, lister, reset_on_write=True):
+      self._setId(id)
+      self.read = reader
+      self.__writer = writer
+      self.__lister = lister
+      self.__reset_on_write = reset_on_write
+
+    def objectIds(self, spec=None):
+      return self.__lister()
+
+    def write(self, class_id, text, create=True):
+      self.__writer(class_id, text, create=create)
+      if self.__reset_on_write:
+        _aq_reset()
+
+    def _getOb(self, key, default=_MARKER ):
+      if key in self.objectIds():
+        return FileProxy(self, key).__of__(self)
+      # maybe the file has just been uploaded, and is still in the temporary
+      # instance home, in such case we return an empty file.
+      if key in getattr(self, '_v_created', {}):
+        return FileProxy(self, key, read=False).__of__(self)
+      if default is not _MARKER:
+        return default
+      raise AttributeError, key
+
+    def PUT_factory(self, name, typ, body):
+      self.write(name, body, create=True)
+      # store the information that this file has just been created, and cannot
+      # be read yet, because the transaction is not commited.
+      self._v_created = {name: True}
+      return self._getOb(name)
+
+    def _verifyObjectPaste(self, ob, validate_src):
+      # we only allow FileProxy (this is used in PUT)
+      if not isinstance(ob, FileProxy):
+        raise Unauthorized
+    
+  InitializeClass(FolderProxy)
+  
   class ClassTool(BaseTool, ClassToolMixIn):
       """
         This is the full-featured version of ClassTool.
@@ -170,6 +238,47 @@ if allowClassTool():
 
       # Declarative Security
       security = ClassSecurityInfo()
+    
+      # we set _folder_handler to OFS_HANDLER to have default behaviour of
+      # using objectIds and _getOb
+      _folder_handler = OFS_HANDLER
+      def objectIds(self, spec=None):
+        return ('PropertySheet', 'Document', 'Constraint', 'Extensions', 'tests')
+
+      def _getOb(self, key, default=_MARKER):
+        if key == 'PropertySheet':
+          return FolderProxy('PropertySheet',
+                             reader=readLocalPropertySheet,
+                             writer=self.writeLocalPropertySheet,
+                             lister=getLocalPropertySheetList,
+                             reset_on_write=True).__of__(self)
+        if key == 'Document':
+          return FolderProxy('Document',
+                             reader=readLocalDocument,
+                             writer=self.writeLocalDocument,
+                             lister=getLocalDocumentList,
+                             reset_on_write=True).__of__(self)
+        if key == 'Constraint':
+          return FolderProxy('Constraint',
+                             reader=readLocalConstraint,
+                             writer=self.writeLocalConstraint,
+                             lister=getLocalConstraintList,
+                             reset_on_write=True).__of__(self)
+        if key == 'Extensions':
+          return FolderProxy('Extensions',
+                              reader=readLocalExtension,
+                              writer=self.writeLocalExtension,
+                              lister=getLocalExtensionList,
+                              reset_on_write=False).__of__(self)
+        if key == 'tests':
+          return FolderProxy('tests',
+                             reader=readLocalTest,
+                             writer=self.writeLocalTest,
+                             lister=getLocalTestList,
+                             reset_on_write=False).__of__(self)
+        if default is not _MARKER:
+          return default
+        raise AttributeError, key
 
       #
       #   ZMI methods
