@@ -38,7 +38,7 @@ Run the Zope 2.12 buildout:
 
   $ cd ~/erp5.buildout
   $ python2.6 bootstrap/bootstrap.py
-  $ bin/buildout -c buildout-2.12.cfg
+  $ bin/buildout -v -c buildout-2.12.cfg
 
 This will download and install the software components needed to run ERP5 on
 Zope 2.12 including Zope 2.12 plus dependencies (including
@@ -101,7 +101,7 @@ following sequence of steps should result in a working "instance" buildout:
 
 $ mkdir ~/instances                     # 0
 $ cd ~/instances                        # 1
-$ ln -s ~/erp5.buildout/*profiles*      # 2
+$ ln -s ~/erp5.buildout/*profiles* .    # 2
 $ cat > buildout.cfg                    # 3
 
 [buildout]
