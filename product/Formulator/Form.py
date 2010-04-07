@@ -184,7 +184,7 @@ class Form:
         """
         group_list = self.group_list
         i = group_list.index(group)
-        if i == 1:
+        if i == 0:
             return False # can't move further up, so we're done
         # swap groups, moving i up
         group_list[i], group_list[i - 1] = group_list[i - 1], group_list[i]
