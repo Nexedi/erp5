@@ -42,6 +42,7 @@ from Products.ERP5Type.Utils import convertToUpperCase
 from Products.ERP5Type.Cache import getReadOnlyTransactionCache, enableReadOnlyTransactionCache, disableReadOnlyTransactionCache
 from Products.ZSQLCatalog.SQLCatalog import SQLQuery
 from Products.ERP5Type.Globals import PersistentMapping
+from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 
 class Predicate(XMLObject):
   """
@@ -197,6 +198,13 @@ class Predicate(XMLObject):
 #            '%s after method %s ' % (result, test_method_id))
     return result
 
+  @UnrestrictedMethod
+  def _unrestrictedResolveCategory(self, *args):
+    # Categories used on predicate can be not available to user query, which
+    # shall be applied with predicate.
+    portal_categories = getToolByName(self, 'portal_categories')
+    return portal_categories.resolveCategory(*args)
+
   security.declareProtected( Permissions.AccessContentsInformation,
                              'buildSQLQuery' )
   def buildSQLQuery(self, strict_membership=0, table='category',
@@ -229,7 +237,6 @@ class Predicate(XMLObject):
         catalog_kw[criterion.property] = criterion.identity
 
     portal_catalog = getToolByName(self, 'portal_catalog')
-    portal_categories = getToolByName(self, 'portal_categories')
 
     from_table_dict = {}
 
@@ -241,7 +248,7 @@ class Predicate(XMLObject):
     for category in self.getMembershipCriterionCategoryList():
       base_category = category.split('/')[0] # Retrieve base category
       if membership_dict.has_key(base_category):
-        category_value = portal_categories.resolveCategory(category, None)
+        category_value = self._unrestrictedResolveCategory(category, None)
         if category_value is not None:
           table_alias = "single_%s_%s" % (table, base_category)
           from_table_dict[table_alias] = 'category'
@@ -263,7 +270,7 @@ class Predicate(XMLObject):
     for category in self.getMembershipCriterionCategoryList():
       base_category = category.split('/')[0] # Retrieve base category
       if multimembership_dict.has_key(base_category):
-        category_value = portal_categories.resolveCategory(category)
+        category_value = self._unrestrictedResolveCategory(category)
         if category_value is not None:
           join_count += 1
           table_alias = "multi_%s_%s" % (table, join_count)
