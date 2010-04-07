@@ -61,145 +61,79 @@ dQEAAAAA</string> </value>
             table:style-name=\'co2\'\n
             table:default-cell-style-name=\'report-column-title\'/>\n
 \n
+      <!-- macro form_layout -->\n
       <tal:block metal:define-macro="form_layout">\n
-\n
-    <!-- if we have other fields to display, calculate max column len, which will be used later to make standard fields (ie. not listbox) using covered cells -->\n
-    <tal:block tal:condition="python: len(form.get_fields()) &gt; 1">\n
-      <tal:block tal:condition="report_item | nothing">\n
-        <tal:block tal:define="global column_len python: report_item.selection_columns and len(report_item.selection_columns) or 0;"/>\n
-      </tal:block>\n
-    <tal:block>\n
-      <tal:block tal:condition="not: column_len | nothing"\n
-                 tal:define="field_list python:form.get_fields_in_group(\'bottom\')"> \n
-        <tal:block tal:define="global column_len python: 5"/>\n
-        <!-- This default is used for the ERP5 Report itself, which often does not contain a listbox directly -->\n
-        <tal:block tal:condition=\'field_list\'>\n
-          <tal:block tal:define="field python:field_list[0]">\n
-            <tal:block tal:condition="python:field.meta_type == \'ListBox\' or (field.meta_type == \'ProxyField\' and field.getRecursiveTemplateField().meta_type == \'ListBox\')">\n
-              <tal:block tal:define="column_list python: field.get_value(\'columns\');\n
-                                     global column_len python: len(column_list)" />\n
-            </tal:block>\n
-          </tal:block>\n
-        </tal:block>\n
-      </tal:block>\n
-    </tal:block>\n
-    </tal:block>\n
-\n
-        <tal:block tal:define="dummy python: request.set(\'here\', here)">\n
-          <tal:block tal:repeat="group python: [g for g in form.get_groups() if g not in (\'bottom\', \'hidden\')]">\n
-            <tal:block tal:define="field_list python: form.get_fields_in_group(group)">\n
-              <tal:block tal:condition="python: field_list not in [None, []]">\n
-                <tal:block tal:repeat="field field_list">\n
-                  <tal:block tal:condition="python:field.meta_type != \'HiddenStringField\' and field.meta_type != \'OOoChart\'">\n
-                    <table:table-row table:style-name=\'ro2\'>\n
-\n
-                      <!-- field title -->\n
-                      <table:table-cell table:number-rows-spanned=\'1\'\n
-                                        table:style-name=\'report-column-title\'\n
-                                        table:number-columns-spanned=\'1\'\n
-                                        office:value-type=\'string\'>\n
-                        <text:p tal:content="python:here.Localizer.erp5_ui.gettext(field.get_value (\'title\')).encode(\'utf-8\')">\n
-                        </text:p>\n
-                      </table:table-cell>\n
-\n
-                      <!-- field value -->\n
-                        <tal:block  tal:define="item_list python:field.has_value(\'items\') and field.get_value(\'items\') or None"\n
-                                 tal:condition="python: field.get_value(\'title\')">\n
-                          <table:table-cell table:number-rows-spanned=\'1\'\n
-                                         table:style-name=\'report-content-heading2-with-lines\'\n
-                                         tal:attributes="table:number-columns-spanned python: column_len-1"\n
-                                         office:value-type=\'string\'\n
-                                         tal:define="value python: field.get_value(\'default\')">\n
-\n
-                            <tal:block tal:condition="python: same_type(value, []) or same_type(value, ())">\n
-                              <tal:block tal:repeat="item value">\n
-                                <text:p tal:condition="not:item_list" tal:content="item"></text:p>\n
-                                <text:p tal:condition="item_list" tal:content="python: [i[0] for i in item_list if i[1] == item][0]"\n
-                                        tal:on-error="item"></text:p>\n
-                              </tal:block>\n
-                            </tal:block>\n
-\n
-                            <tal:block tal:condition="python: (not (same_type(value, []) or same_type(value, ()))) and value is not None">\n
-                              <text:p tal:condition="not: item_list"\n
-                                  tal:content="value">\n
-                              </text:p>\n
-                            <tal:block tal:condition="python: value != \'\'">\n
-                              <tal:block tal:condition="item_list">\n
-                                <tal:block tal:define="displayed_value_list python: [str(i[0]).replace(\'&amp;\', \'\') for i in item_list if i[1] == value]">\n
-                                  <text:p tal:condition="displayed_value_list"\n
-                                    tal:content="python: displayed_value_list[0]" />\n
-                                  <text:p tal:condition="not: displayed_value_list"\n
-                                             tal:content="python: value" />\n
-                                </tal:block>\n
-                              </tal:block>\n
-                            </tal:block>\n
-                            <tal:block tal:condition="python: value is None">\n
-                              <text:p table:style="Default" tal:content="python: \' \'" />\n
-                            </tal:block>\n
-                          </tal:block>\n
-                        </table:table-cell>\n
+        <tal:block tal:define="global group_list python:form.get_groups()"/>\n
+        <!-- Use the user preferences -->\n
+        <tal:block tal:repeat="group python: [g for g in group_list if g not in (\'hidden\', )]">\n
+          <tal:block tal:define="field_list python: form.get_fields_in_group(group)">\n
+            <tal:block tal:condition="python: field_list not in [None, []]">\n
+              <tal:block tal:repeat="field field_list">\n
+                <tal:block tal:condition="python:field.meta_type != \'HiddenStringField\'\n
+                           and field.meta_type == \'OOoChart\' or (field.meta_type == \'ProxyField\' and field.getRecursiveTemplateField().meta_type == \'OOoChart\')">\n
+                  <table:table-row table:style-name=\'ro2\'>\n
+                    <table:table-cell table:number-rows-spanned=\'1\'\n
+                                      table:style-name=\'report-column-title\'\n
+                                      table:number-columns-spanned=\'1\'\n
+                                      office:value-type=\'string\'>\n
+                      <text:p tal:content="python:here.Localizer.erp5_ui.gettext(field.get_value (\'title\')).encode(\'utf-8\')">\n
+                      </text:p>\n
+                    </table:table-cell>\n
+                    <tal:block tal:define="display python: field.get_value(\'image_display\') "\n
+                               tal:condition="display">\n
+                      <tal:block tal:define="preferred_method_height_id python: \'getPreferred%sImageHeight\' % (display.capitalize());\n
+                                 preferred_method_width_id python: \'getPreferred%sImageWidth\'\n
+                                 % (display.capitalize());\n
+                                 " >\n
+                        <tal:block tal:define="global height python:\'%scm\' % (int((getattr(here.portal_preferences, preferred_method_height_id)())) * 0.020) ;\n
+                                   global width  python: \'%scm\' % (int((getattr(here.portal_preferences, preferred_method_width_id)())) * 0.020 );"/>\n
                       </tal:block>\n
+                    </tal:block>\n
+                    <table:table-cell>\n
+                      <draw:frame draw:z-index="0" draw:style-name="gr1" svg:x="0.2cm" svg:y="0.2cm" svg:width="7.996cm" svg:height="6.999cm"\n
+                                  tal:attributes="svg:height python:height;\n
+                                  svg:width python:width">\n
+                        <tal:block tal:replace="structure python: field.render_odf(render_prefix=render_prefix)"/>\n
+                      </draw:frame>\n
+                    </table:table-cell>\n
                   </table:table-row>\n
                 </tal:block>\n
               </tal:block>\n
-\n
-              <table:table-row>\n
-                <table:table-cell table:style-name=\'Default\'/>\n
-              </table:table-row>\n
-\n
             </tal:block>\n
           </tal:block>\n
         </tal:block>\n
-        <tal:block tal:define="field_list python:form.get_fields_in_group(\'bottom\')">\n
-          <tal:block tal:repeat="field field_list">\n
-            <tal:block metal:use-macro="here/field_ods_macro/macros/bottom_group_field" />\n
-          </tal:block>\n
-        </tal:block>\n
-      </tal:block>\n
-    </tal:block>\n
 \n
-   <tal:block tal:repeat="group python: [g for g in form.get_groups() if g not in (\'hidden\', )]">\n
-      <tal:block tal:define="field_list python: form.get_fields_in_group(group)">\n
-        <tal:block tal:condition="python: field_list not in [None, []]">\n
-\n
-          <tal:block tal:repeat="field field_list">\n
-            <tal:block tal:condition="python:field.meta_type != \'HiddenStringField\'\n
-                       and field.meta_type == \'OOoChart\' or (field.meta_type == \'ProxyField\' and field.getRecursiveTemplateField().meta_type == \'OOoChart\')">\n
-              <table:table-row table:style-name=\'ro2\'>\n
-\n
-                <table:table-cell table:number-rows-spanned=\'1\'\n
-                                  table:style-name=\'report-column-title\'\n
-                                  table:number-columns-spanned=\'1\'\n
-                                  office:value-type=\'string\'>\n
-                  <text:p tal:content="python:here.Localizer.erp5_ui.gettext(field.get_value (\'title\')).encode(\'utf-8\')">\n
-                  </text:p>\n
-                </table:table-cell>\n
-                <tal:block tal:define="display python: field.get_value(\'image_display\') "\n
-                           tal:condition="display">\n
-                  <tal:block tal:define="preferred_method_height_id python: \'getPreferred%sImageHeight\' % (display.capitalize());\n
-                             preferred_method_width_id python: \'getPreferred%sImageWidth\'\n
-                             % (display.capitalize());\n
-                             " >\n
-                    <tal:block tal:define="global height python:\'%scm\' % (int((getattr(here.portal_preferences, preferred_method_height_id)())) * 0.020) ;\n
-                               global width  python: \'%scm\' % (int((getattr(here.portal_preferences, preferred_method_width_id)())) * 0.020 );"/>\n
-                  </tal:block>\n
+        <!-- Calculating by group the max length of columns to merge -->\n
+        <tal:block tal:repeat="group python: [g for g in group_list if g not in (\'hidden\', )]">\n
+            <!-- if we have other fields to display, calculate max column len, which will be used \n
+                later to make standard fields (ie. not listbox) using covered cells -->\n
+          <tal:block tal:define="global field_list python: form.get_fields_in_group(group)"/>\n
+          <tal:block tal:condition="python:len(field_list) &gt; 0">\n
+            <tal:block tal:define="global column_len python: 5"/>\n
+            <tal:block tal:condition="report_item | nothing">\n
+               <tal:block tal:define="global column_len python: report_item.selection_columns and len(report_item.selection_columns) or 0;"/>\n
+            </tal:block>\n
+            <tal:block tal:condition="python: column_len &lt; 6">\n
+              <tal:block tal:repeat="field python:field_list">\n
+                <tal:block tal:condition="python:field.meta_type == \'ListBox\' or (field.meta_type == \'ProxyField\' and field.getRecursiveTemplateField().meta_type == \'ListBox\')">\n
+                   <tal:block tal:define="column_list python: field.get_value(\'columns\');\n
+                                         global column_len python: max(column_len, len(column_list))" />\n
                 </tal:block>\n
-                <table:table-cell>\n
-                  <draw:frame draw:z-index="0" draw:style-name="gr1" svg:x="0.2cm" svg:y="0.2cm" svg:width="7.996cm" svg:height="6.999cm"\n
-                              tal:attributes="svg:height python:height;\n
-                              svg:width python:width">\n
-                    <tal:block tal:replace="structure python: field.render_odf(render_prefix=render_prefix)"/>\n
-                  </draw:frame>\n
-                </table:table-cell>\n
-              </table:table-row>\n
+              </tal:block>\n
+            </tal:block>\n
+            <!-- Display field -->\n
+            <tal:block tal:repeat="field python:field_list">\n
+              <tal:block metal:use-macro="form/field_ods_macro/macros/field_render" />\n
             </tal:block>\n
           </tal:block>\n
+          <table:table-row>\n
+            <table:table-cell table:style-name=\'Default\'/>\n
+          </table:table-row>\n
         </tal:block>\n
       </tal:block>\n
-    </tal:block>\n
-  </table:table>\n
-</office:spreadsheet>\n
-</office:body>\n
+      </table:table>\n
+    </office:spreadsheet>\n
+  </office:body>\n
 </office:document-content>\n
 
 
