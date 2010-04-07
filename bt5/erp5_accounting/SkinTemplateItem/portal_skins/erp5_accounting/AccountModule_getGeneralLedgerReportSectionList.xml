@@ -168,9 +168,12 @@ account_type_to_group_by_node = [\n
                   \'account_type/equity\',\n
                   \'account_type/liability\',]\n
 \n
-profit_and_loss_account_type = [\n
-                  \'account_type/expense\',\n
-                  \'account_type/income\',]\n
+profit_and_loss_account_type = []\n
+for account_type_value in (cat_tool.account_type.expense,\n
+                     cat_tool.account_type.income):\n
+  profit_and_loss_account_type.extend(\n
+      [category.getRelativeUrl() for category in\n
+        account_type_value.getIndexableChildValueList()])\n
 \n
 account_type_to_group_by_payment = [ \'account_type/asset/cash/bank\' ]\n
 \n
@@ -255,10 +258,9 @@ for inventory in portal.portal_simulation.getInventoryList(\n
                                              \'ascending\')]))\n
 \n
 \n
-\n
 # profit & loss -> same, but from date limited to the current period\n
 for inventory in portal.portal_simulation.getInventoryList(\n
-                            node_category=profit_and_loss_account_type,\n
+                            node_category_strict_membership=profit_and_loss_account_type,\n
                             portal_type=portal.getPortalAccountingMovementTypeList(),\n
                             from_date=max(from_date, period_start_date),\n
                             at_date=at_date,\n
@@ -513,11 +515,15 @@ return report_section_list\n
                             <string>getFullAccountName</string>
                             <string>account_type_to_group_by_node</string>
                             <string>profit_and_loss_account_type</string>
+                            <string>_getiter_</string>
+                            <string>account_type_value</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>category</string>
                             <string>account_type_to_group_by_payment</string>
                             <string>account_type_to_group_by_mirror_section</string>
                             <string>report_section_list</string>
                             <string>existing_section_dict</string>
-                            <string>_getiter_</string>
                             <string>_apply_</string>
                             <string>inventory</string>
                             <string>key</string>
