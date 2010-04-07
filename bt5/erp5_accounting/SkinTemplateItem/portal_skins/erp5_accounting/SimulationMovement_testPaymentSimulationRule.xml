@@ -142,7 +142,7 @@ return False\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>SimulationMovement_testPaymentRule</string> </value>
+            <value> <string>SimulationMovement_testPaymentSimulationRule</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
