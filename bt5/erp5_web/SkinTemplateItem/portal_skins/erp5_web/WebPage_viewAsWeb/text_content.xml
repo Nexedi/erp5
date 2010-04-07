@@ -114,7 +114,7 @@
               <dictionary>
                 <item>
                     <key> <string>css_class</string> </key>
-                    <value> <string>page hiddenLabel</string> </value>
+                    <value> <string>page hidden_label</string> </value>
                 </item>
                 <item>
                     <key> <string>default</string> </key>
