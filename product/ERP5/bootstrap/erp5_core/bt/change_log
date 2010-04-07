@@ -1,3 +1,6 @@
+2010-04-07 ivan
+* Add captcha form field to library
+
 2010-04-07 yusei
 * Fix ERP5Site_zGetLatestIndexedObjectList. Its id attribute value was wrong.
 
