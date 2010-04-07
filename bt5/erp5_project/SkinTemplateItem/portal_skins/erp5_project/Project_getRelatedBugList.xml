@@ -54,7 +54,7 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>project_uid_list = [x.uid for x in context.portal_catalog(\n
-     relative_url=\'%s%%\' % context.getRelativeUrl())]\n
+     relative_url=\'%s/%%\' % context.getRelativeUrl())]\n
 \n
 return context.portal_catalog(selection=selection, \n
                                                          selection_report=selection_report,\n
