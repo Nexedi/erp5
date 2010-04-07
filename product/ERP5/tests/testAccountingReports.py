@@ -2899,6 +2899,66 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     self.assertEquals(1, len(data_line_list))
     self.checkLineProperties(data_line_list[0], debit=2900, credit=2900)
  
+
+  def testGeneralLedgerGAPFilter(self):
+    # General Ledger filtered by GAP category
+    # we will use the same data set as account statement
+    self.createAccountStatementDataSet(use_two_bank_accounts=0)
+
+    # set request variables and render
+    request_form = self.portal.REQUEST.form
+    request_form['from_date'] = DateTime(2006, 1, 1)
+    request_form['at_date'] = DateTime(2006, 12, 31)
+    request_form['gap'] = 'my_country/my_accounting_standards/4/40'
+    request_form['section_category'] = 'group/demo_group'
+    request_form['section_category_strict'] = False
+    request_form['simulation_state'] = ['delivered']
+
+    report_section_list = self.getReportSectionList(
+                                    self.portal.accounting_module,
+                                    'AccountModule_viewGeneralLedgerReport')
+    self.assertEquals(2, len(report_section_list))
+
+    self.assertEquals('40 - Payable (Client 1)',
+                      report_section_list[0].getTitle())
+    line_list = self.getListBoxLineList(report_section_list[0])
+    data_line_list = [l for l in line_list if l.isDataLine()]
+    
+    self.assertEquals(2, len(data_line_list))
+    self.checkLineProperties(data_line_list[0],
+          Movement_getSpecificReference='1',
+          Movement_getExplanationTitle='Transaction 1',
+          date=DateTime(2006, 2, 1),
+          Movement_getExplanationTranslatedPortalType='Accounting Transaction',
+          Movement_getExplanationReference='AT 1',
+          Movement_getMirrorSectionTitle='Client 1',
+          debit=0, credit=100, running_total_price=-100, )
+    
+    self.checkLineProperties(data_line_list[1],
+          Movement_getSpecificReference='2',
+          Movement_getExplanationTitle='Transaction 2',
+          date=DateTime(2006, 2, 1, 0, 1),
+          Movement_getExplanationTranslatedPortalType='Accounting Transaction',
+          Movement_getExplanationReference='AT 2',
+          Movement_getMirrorSectionTitle='Client 1',
+          debit=200, credit=0, running_total_price=100, )
+    
+    self.failUnless(line_list[-1].isStatLine())
+    self.checkLineProperties(line_list[-1],
+          Movement_getSpecificReference=None,
+          Movement_getExplanationTitle=None,
+          date=None,
+          Movement_getExplanationTranslatedPortalType=None,
+          Movement_getExplanationReference=None,
+          Movement_getMirrorSectionTitle=None,
+          debit=200, credit=100, )
+    
+    self.assertEquals('Total', report_section_list[1].getTitle())
+    line_list = self.getListBoxLineList(report_section_list[1])
+    data_line_list = [l for l in line_list if l.isDataLine()]
+    self.assertEquals(1, len(data_line_list))
+    self.checkLineProperties(data_line_list[0], debit=200, credit=100)
+ 
  
   def testProfitAndLoss(self):
     # Simple test of profit and loss
