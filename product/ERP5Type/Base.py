@@ -726,7 +726,7 @@ class Base( CopyContainer,
     id  --  the standard object id
     rid --  the standard object id in the master ODB the object was
         subsribed from
-    uid --  a global object id which is unique to each ZODB
+    uid --  a global object id which is unique
     sid --  the id of the subscribtion/syncrhonisation object which
         this object was generated from
 
@@ -734,12 +734,6 @@ class Base( CopyContainer,
              process (NONE, SENT, ACKNOWLEDGED, SYNCHRONIZED)
              could work as a workflow but CPU expensive
 
-
-    TODO:
-
-      - assess / fix atomicity
-
-      - assess / fix uid during synchronisation / import
   """
   meta_type = 'ERP5 Base Object'
   portal_type = 'Base Object'
