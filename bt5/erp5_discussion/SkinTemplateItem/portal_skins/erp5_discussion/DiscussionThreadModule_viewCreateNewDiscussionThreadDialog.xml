@@ -79,6 +79,7 @@
                     <value>
                       <list>
                         <string>your_text_content</string>
+                        <string>your_captcha</string>
                       </list>
                     </value>
                 </item>
@@ -86,7 +87,6 @@
                     <key> <string>center</string> </key>
                     <value>
                       <list>
-                        <string>your_captcha</string>
                         <string>my_description</string>
                       </list>
                     </value>
