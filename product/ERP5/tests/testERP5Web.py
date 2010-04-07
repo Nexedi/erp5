@@ -1220,6 +1220,7 @@ Hé Hé Hé!""", page.asText().strip())
     modification_date = rfc1123_date(document.getModificationDate())
     self.assertEqual(modification_date, last_modified_header)
 
+
 class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
   """
   Test for erp5_web with simple security.
@@ -1229,7 +1230,15 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
 
   def getBusinessTemplateList(self):
     return ('erp5_base',
+            'erp5_trade',
+            'erp5_project',
+            'erp5_ingestion_mysql_innodb_catalog',
+            'erp5_ingestion',
             'erp5_web',
+            'erp5_dms',
+            'erp5_knowledge_pad',
+            'erp5_km',
+            'erp5_rss_style',
             )
 
   def getTitle(self):
@@ -1707,6 +1716,59 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
       new_cat_4_renamed = new_category_4.edit(id='new_cat_4_renamed')
     except Unauthorized:
       self.fail("A webmaster should be able to rename a Category.")
+
+  def test_getDocumentValueList_AnonymousUser(self):
+    """
+      For a given Web Site with Predicates:
+      - membership_criterion_base_category: follow_up
+      - membership_criterion_document_list: follow_up/project/object_id
+      
+      When you access website/WebSection_viewContentListAsRSS:
+      - with super user you get the correct result
+      - with anonymous user you do not get the correct result
+
+      In this case, both Web Pages are returned for Anonymous user and this
+      it not the expected behavior.
+
+      Note: The ListBox into WebSection_viewContentListAsRSS has
+            getDocumentValueList defined as ListMethod.
+    """
+    project = self.portal.project_module.newContent(portal_type='Project')
+    project.validate()
+    self.stepTic()
+                                                    
+    website = self.portal.web_site_module.newContent(portal_type='Web Site',
+                                                     id='site')
+    website.setMembershipCriterionBaseCategory('follow_up')
+    website.setMembershipCriterionDocumentList(['follow_up/%s' %
+                                                  project.getRelativeUrl()])
+    self.stepTic()
+
+    web_page_module = self.portal.web_page_module
+    web_page_follow_up = web_page_module.newContent(portal_type="Web Page",
+                                      follow_up=project.getRelativeUrl(),
+                                      id='test_web_page_with_follow_up',
+                                      reference='NXD-Document.Follow.Up.Test',
+                                      version='001',
+                                      language='en',
+                                      text_content='test content')
+    web_page_follow_up.publish()
+    self.stepTic()
+    
+    web_page_no_follow_up = web_page_module.newContent(portal_type="Web Page",
+                                      id='test_web_page_no_follow_up',
+                                      reference='NXD-Document.No.Follow.Up.Test',
+                                      version='001',
+                                      language='en',
+                                      text_content='test content')
+    web_page_no_follow_up.publish()
+    self.stepTic()
+
+    self.assertEquals(1, len(website.WebSection_getDocumentValueList()))
+
+    self.logout()
+    self.assertEquals(1, len(website.WebSection_getDocumentValueList()))
+
 
 class TestERP5WebCategoryPublicationWorkflow(ERP5TypeTestCase):
   """Tests possible transitions for category_publication_workflow"""
