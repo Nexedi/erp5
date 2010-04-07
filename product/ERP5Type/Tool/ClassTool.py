@@ -35,6 +35,7 @@ from pprint import pformat
 from Products.CMFCore.utils import UniqueObject
 
 import OFS
+import transaction
 from zExceptions import BadRequest
 from zExceptions import Unauthorized
 from Acquisition import Implicit
@@ -66,7 +67,7 @@ from DateTime import DateTime
 
 import Products
 
-from zLOG import LOG
+from zLOG import LOG, WARNING
 
 """
   ClassTool allows to create classes from the ZMI using code templates.
@@ -179,7 +180,15 @@ if allowClassTool():
         self.size = len(self.data)
 
     def update_data(self, data, content_type=None, size=None):
+      # in OFS.Image.File, all writes are done through this method, so we
+      # replace it by a method that delegates to portal classes
       return self._folder.write(self.getId(), data, create=False)
+
+    def wl_lockmapping(self, killinvalids=0, create=0):
+      # We store web dav locks on portal classes itself
+      return self.aq_parent.aq_parent.wl_lockmapping(
+                      killinvalids=killinvalids,
+                      create=create)
 
   InitializeClass(FileProxy)
 
@@ -189,21 +198,29 @@ if allowClassTool():
     """Proxy to a Folder
     """
     all_meta_types = ()
-    def __init__(self, id, reader, writer, lister, reset_on_write=True):
+    def __init__(self, id, reader, writer, importer, lister):
       self._setId(id)
       self.read = reader
       self.__writer = writer
+      self.__importer = importer
       self.__lister = lister
-      self.__reset_on_write = reset_on_write
 
     def objectIds(self, spec=None):
       return self.__lister()
 
     def write(self, class_id, text, create=True):
       self.__writer(class_id, text, create=create)
-      if self.__reset_on_write:
-        _aq_reset()
+      current_transaction = transaction.get()
+      if hasattr(current_transaction, 'addAfterCommitHook'):
+        current_transaction.addAfterCommitHook(self.reimport, (class_id, ),)
+      else:
+        LOG('ClassTool', WARNING, 'Transaction does not support '
+             'addAfterCommitHook, code will not be reloaded')
 
+    def reimport(self, status, class_id):
+      if status and self.__importer is not None:
+        self.__importer(class_id)
+      
     def _getOb(self, key, default=_MARKER ):
       if key in self.objectIds():
         return FileProxy(self, key).__of__(self)
@@ -216,13 +233,13 @@ if allowClassTool():
       raise AttributeError, key
 
     def PUT_factory(self, name, typ, body):
-      self.write(name, body, create=True)
       # store the information that this file has just been created, and cannot
       # be read yet, because the transaction is not commited.
       self._v_created = {name: True}
+      self.write(name, body, create=True)
       return self._getOb(name)
 
-    def _verifyObjectPaste(self, ob, validate_src):
+    def _verifyObjectPaste(self, ob, validate_src=True):
       # we only allow FileProxy (this is used in PUT)
       if not isinstance(ob, FileProxy):
         raise Unauthorized
@@ -246,36 +263,44 @@ if allowClassTool():
         return ('PropertySheet', 'Document', 'Constraint', 'Extensions', 'tests')
 
       def _getOb(self, key, default=_MARKER):
+        from Products.ERP5Type.Utils import importLocalPropertySheet
+        from Products.ERP5Type.Utils import importLocalDocument
+        from Products.ERP5Type.Utils import importLocalConstraint
         if key == 'PropertySheet':
           return FolderProxy('PropertySheet',
                              reader=readLocalPropertySheet,
                              writer=self.writeLocalPropertySheet,
+                             importer=importLocalPropertySheet,
                              lister=getLocalPropertySheetList,
-                             reset_on_write=True).__of__(self)
+                             ).__of__(self)
         if key == 'Document':
           return FolderProxy('Document',
                              reader=readLocalDocument,
                              writer=self.writeLocalDocument,
+                             importer=importLocalDocument,
                              lister=getLocalDocumentList,
-                             reset_on_write=True).__of__(self)
+                             ).__of__(self)
         if key == 'Constraint':
           return FolderProxy('Constraint',
                              reader=readLocalConstraint,
                              writer=self.writeLocalConstraint,
+                             importer=importLocalConstraint,
                              lister=getLocalConstraintList,
-                             reset_on_write=True).__of__(self)
+                             ).__of__(self)
         if key == 'Extensions':
           return FolderProxy('Extensions',
-                              reader=readLocalExtension,
-                              writer=self.writeLocalExtension,
-                              lister=getLocalExtensionList,
-                              reset_on_write=False).__of__(self)
+                             reader=readLocalExtension,
+                             writer=self.writeLocalExtension,
+                             importer=None,
+                             lister=getLocalExtensionList,
+                             ).__of__(self)
         if key == 'tests':
           return FolderProxy('tests',
                              reader=readLocalTest,
                              writer=self.writeLocalTest,
+                             importer=None,
                              lister=getLocalTestList,
-                             reset_on_write=False).__of__(self)
+                             ).__of__(self)
         if default is not _MARKER:
           return default
         raise AttributeError, key
