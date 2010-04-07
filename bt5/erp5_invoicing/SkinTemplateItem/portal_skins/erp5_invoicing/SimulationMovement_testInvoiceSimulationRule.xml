@@ -137,7 +137,7 @@ return True\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>SimulationMovement_testInvoicingRule</string> </value>
+            <value> <string>SimulationMovement_testInvoiceSimulationRule</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
