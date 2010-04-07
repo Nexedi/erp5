@@ -111,7 +111,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>SupplyCell_getLocalPredicatePropertyDict </string> </value>
+            <value> <string>SupplyCell_getLocalPredicatePropertyDict</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
