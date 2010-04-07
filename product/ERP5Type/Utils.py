@@ -564,6 +564,9 @@ def writeLocalPropertySheet(class_id, text, create=1, instance_home=None):
     f.write(text)
   finally:
     f.close()
+  # load the file, so that an error is raised if file is invalid
+  module = imp.load_source(class_id, path)
+  getattr(module, class_id)
 
 def importLocalPropertySheet(class_id, path = None):
   from Products.ERP5Type import PropertySheet
@@ -771,6 +774,9 @@ def writeLocalConstraint(class_id, text, create=1, instance_home=None):
     f.write(text)
   finally:
     f.close()
+  # load the file, so that an error is raised if file is invalid
+  module = imp.load_source(class_id, path)
+  getattr(module, class_id)
 
 def removeLocalConstraint(class_id):
   instance_home = getConfiguration().instancehome
@@ -826,6 +832,9 @@ def writeLocalDocument(class_id, text, create=1, instance_home=None):
     f.write(text)
   finally:
     f.close()
+  # load the file, so that an error is raised if file is invalid
+  module = imp.load_source(class_id, path)
+  getattr(module, class_id)
 
 def setDefaultClassProperties(property_holder):
   """Initialize default properties for ERP5Type Documents.
