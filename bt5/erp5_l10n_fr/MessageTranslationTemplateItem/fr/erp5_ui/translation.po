@@ -9831,6 +9831,9 @@ msgstr "Démarrer la tâche"
 msgid "Start date is after stop date."
 msgstr "La date de début est postérieure à la date de fin."
 
+msgid "Start the created periods"
+msgstr "Démarrer les périodes crées"
+
 msgid "Start to Work on It"
 msgstr "Commencer à travailler sur ce thème"
 
