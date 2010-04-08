@@ -323,7 +323,7 @@ class Message(BaseMessage):
       call_traceback = 'Created at:\n%s' % self.call_traceback
 
     fail_count = self.line.retry + 1
-    if m.getExecutionState() == MESSAGE_NOT_EXECUTABLE:
+    if self.getExecutionState() == MESSAGE_NOT_EXECUTABLE:
       message = "Not executable activity"
     elif retry:
       message = "Pending activity already failed %s times" % fail_count
