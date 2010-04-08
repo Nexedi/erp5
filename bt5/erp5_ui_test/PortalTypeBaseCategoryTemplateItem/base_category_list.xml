@@ -4,6 +4,9 @@
   <item>foo_big_category</item>
   <item>foo_category</item>
  </portal_type>
+ <portal_type id="Foo Bar Module">
+  <item>business_application</item>
+ </portal_type>
  <portal_type id="Foo Line">
   <item>foo_category</item>
  </portal_type>
