@@ -98,13 +98,13 @@ for line in transaction.contentValues(filter=dict(\n
            mapping=dict(third_party_name=unicode(\n
                       third_party.getTitle(), \'utf8\')))\n
       \n
-    if bank_account is not None and\\\n
-        bank_account.getValidationState() in invalid_state_list:\n
-      raise ValidationFailed, translateString(\n
-          "Bank Account ${bank_account_reference} is invalid.",\n
-           mapping=dict(bank_account_reference=unicode(\n
-                          bank_account.getReference(), \'utf8\')))\n
-\n
+    if bank_account is not None:\n
+      if bank_account.getValidationState() in invalid_state_list:\n
+        raise ValidationFailed, translateString(\n
+            "Bank Account ${bank_account_reference} is invalid.",\n
+             mapping=dict(bank_account_reference=unicode(\n
+                            bank_account.getReference(), \'utf8\')))\n
+      \n
       if account is not None:\n
         # also check that currencies are consistent if we use this quantity for\n
         # accounting.\n
