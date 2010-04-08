@@ -99,6 +99,7 @@ class TestBug(ERP5TypeTestCase):
   def stepLoginUsualUser(self, **kw):
     portal = self.getPortal()
     uf = portal.acl_users
+    uf._doAddUser('ERP5TypeTestCase', '', ['Assignor','Assignee'], [])
     if not uf.getUser('dummy'):
       uf._doAddUser('manager', '', ['Manager'], [])
       self.login('manager')
@@ -142,6 +143,15 @@ class TestBug(ERP5TypeTestCase):
       portal.portal_caches.clearAllCache()
 
     self.login('dummy')
+
+  def changeUser(self, user_id):
+    """
+      Change the current user to user_id
+    """
+    user_folder = self.getPortal().acl_users
+    user = user_folder.getUserById(user_id).__of__(user_folder)
+    newSecurityManager(None, user)
+
 
   def stepCreateProject(self,sequence=None, sequence_list=None, \
                         **kw):
@@ -570,7 +580,28 @@ class TestBug(ERP5TypeTestCase):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)
 
-
+  def test_09_ResolveBugWithDeletedBugLine(self):
+    """
+    verify that we can still resolve a bug with a
+    deleted bug line
+    """
+    self.login('ERP5TypeTestCase')
+    bug_portal_type = 'Bug'
+    bug_line_portal_type = 'Bug Line'
+    module = self.portal.getDefaultModule(portal_type=bug_portal_type)
+    bug = module.newContent(portal_type=bug_portal_type)
+    bug_line = bug.newContent(portal_type='Bug Line')
+    cloned_bug_line = bug_line.Base_createCloneDocument(batch_mode=1)
+    self.workflow_tool.doActionFor(bug, 'confirm_action', send_event=1)
+    self.assertEquals(bug.getSimulationState(), 'confirmed')
+    get_transaction().commit()
+    self.tic()
+    bug.deleteContent(id='2')
+    get_transaction().commit()
+    self.tic()
+    self.workflow_tool.doActionFor(bug, 'stop_action', send_event=1)
+    self.assertEquals(bug.getSimulationState(), 'stopped')
+ 
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestBug))
