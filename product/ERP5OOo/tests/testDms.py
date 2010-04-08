@@ -1423,7 +1423,7 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.stepTic()
     self.assertSameSet([person1, person2], 
                        doc.getContributorValueList())
-  @expectedFailure
+
   def test_safeHTML_conversion(self):
     """This test create a Web Page and test asSafeHTML conversion.
     Test also with a very non well-formed html document
@@ -1437,6 +1437,10 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
     html_content = """<html>
       <head>
         <title>My dirty title</title>
+        <style type="text/css">
+          a {color: #FFAA44;}
+        </style>
+        <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
       </head>
       <body>
         <div>
@@ -1445,17 +1449,33 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
         <script type="text/javascript" src="http://example.com/something.js"/>
       </body>
     </html>
-    """
+    """.decode('utf-8').encode('iso-8859-1')
     web_page.edit(text_content=html_content)
 
-    # convert web_page into safe-html
-    format = 'text/x-html-safe'
-    safe_html = web_page.asSafeHTML()
+    # Check that outputed stripped html is safe
+
+    safe_html = web_page.asStrippedHTML()
     self.assertTrue('My splendid title' in safe_html)
     self.assertTrue('script' not in safe_html, safe_html)
     self.assertTrue('something.js' not in safe_html, safe_html)
+    self.assertTrue('<body>' not in safe_html)
+    self.assertTrue('<head>' not in safe_html)
+    self.assertTrue('<style' not in safe_html)
+    self.assertTrue('#FFAA44' not in safe_html)
+
+    # Check that outputed entire html is safe
+    entire_html = web_page.asEntireHTML()
+    self.assertTrue('My splendid title' in entire_html)
+    self.assertTrue('script' not in entire_html, entire_html)
+    self.assertTrue('something.js' not in entire_html, entire_html)
+    self.assertTrue('<title>' in entire_html)
+    self.assertTrue('<body>' in entire_html)
+    self.assertTrue('<head>' in entire_html)
+    self.assertTrue('<style' in entire_html)
+    self.assertTrue('#FFAA44' in entire_html)
 
     # now check converted value is stored in cache
+    format = 'html'
     self.assertTrue(web_page.hasConversion(format=format))
     web_page.edit(text_content=None)
     self.assertFalse(web_page.hasConversion(format=format))
@@ -1493,7 +1513,7 @@ v>=0A</body>=0A</html>=0A
 <br>=
 <!-- This is a comment, This string AZERTYY shouldn't be dislayed-->
 <style>
-<!-- This is a comment, This string AZERTYY shouldn't be dislayed-->
+<!-- a {color: #FFAA44;} -->
 </style>
 <table class=3DMoNormalTable border=3D0 cellspacing=3D0 cellpadding=3D0 =
 width=3D64
@@ -1510,14 +1530,10 @@ style=3D'color:black'>05D65812<o:p></o:p></span></p>
 </BODY></HTML>
     """
     web_page.edit(text_content=html_content)
-    safe_html = web_page.asSafeHTML()
+    safe_html = web_page.asStrippedHTML()
     self.assertTrue('inside very broken HTML code' in safe_html)
-    # http://www.w3.org/TR/REC-html40/present/styles.html#edef-STYLE
-    # according to the HTML spec, style nodes contains only
-    # CDATA, so comments nodes are serialised as Text.
-    # The parser is not able to remove these pseudo comments nodes.
-    # Anyway style nodes should be stripped.
     self.assertTrue('AZERTYY' not in safe_html)
+    self.assertTrue('#FFAA44' in safe_html)
 
 class TestDocumentWithSecurity(ERP5TypeTestCase):
 
