@@ -576,15 +576,15 @@ class TestEffectiveTradeCondition(TradeConditionTestCase):
                     start_date=DateTime('2009/06/01'),
                     stop_date=DateTime('2009/06/01')))
 
-    # outside date range, nothing
-    self.assertEquals(None,
-        self.trade_condition.getEffectiveModel(
+    # outside date range: should it raise or return nothing ?
+    self.assertRaises(Exception,
+        self.trade_condition.getEffectiveModel,
                     start_date=DateTime('2008/06/01'),
-                    stop_date=DateTime('2008/06/01')))
-    self.assertEquals(None,
-        self.trade_condition.getEffectiveModel(
+                    stop_date=DateTime('2008/06/01'))
+    self.assertRaises(Exception,
+        self.trade_condition.getEffectiveModel,
                     start_date=DateTime('2010/06/01'),
-                    stop_date=DateTime('2010/06/01')))
+                    stop_date=DateTime('2010/06/01'))
 
   def test_getEffectiveModel_return_self(self):
     # getEffectiveModel returns the trade condition if it's effective
