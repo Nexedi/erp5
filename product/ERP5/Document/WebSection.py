@@ -113,11 +113,13 @@ class WebSection(Domain, PermanentURLMixIn):
             else:
               request.set(web_param, False)
 
+      document = None
       try:
         document = PermanentURLMixIn.__bobo_traverse__(self, request, name)
       except NotFound:
         not_found_page_ref = self.getLayoutProperty('layout_not_found_page_reference')
-        document = PermanentURLMixIn.getDocumentValue(self, name=not_found_page_ref)
+        if not_found_page_ref is not None:
+          document = PermanentURLMixIn.getDocumentValue(self, name=not_found_page_ref)
         if document is None:
           # if no document found, fallback on default page template
           document = PermanentURLMixIn.__bobo_traverse__(self, request,
