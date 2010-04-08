@@ -191,3 +191,6 @@ TODO
  * See if we can use http://pypi.python.org/pypi/zc.sourcerelease/ to generate
    a single (humongous) tarball with all needed software components for fully
    offline operation.
+
+ * Figure out why garbage is left on <software_home>/parts/unit_test after the
+   test run. It can influence later test runs.
